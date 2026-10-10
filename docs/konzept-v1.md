@@ -173,7 +173,7 @@ Erklärung danach:
 Aufgabe: Wer kommt wie? (Symbol zuordnen.) Ist es für die Person gut 😊 oder nicht gut 😟?
 (Mia 🚆 😊, Ben 🚶 😊, Harry 🚗 😟, Declan 🚲 😊)
 
-## 7. [ENTWURF – noch abzusegnen] Mini-Text Station 4: „Ben's Saturday“
+## 7. [abgesegnet 10.10.2026] Mini-Text Station 4: „Ben's Saturday“
 
 > On Saturday, Ben gets up at 8 o'clock. He has breakfast with his mum. At 10 a.m. he cycles to the park. He plays football with his friends. In the evening he watches TV.
 
@@ -343,7 +343,7 @@ Aufgabe: Wer kommt wie? (Symbol zuordnen.) Ist es für die Person gut 😊 oder 
 | Ben gets up at 9 o'clock. | false (at 8 o'clock) |
 | Ben has a dog. | not in the text |
 
-**⭐ Bonus: weitere Hörpaare (Wörter, die ähnlich klingen)**
+**⭐ Bonus: weitere Hörpaare (Wörter, die ähnlich klingen)** – abgesegnet 10.10.2026, in Station 4 „Welches Wort?“ eingebaut
 
 | Paar | Deutsch |
 |---|---|
@@ -389,7 +389,7 @@ Entwürfe der Inhalte:
 - **School clubs:** Clubs und „Most schools …“-Sätze.
 - Nicht übernommen: Hörübungen 1b, 1c, 2a (brauchen Buch-Audio), Spiele, Organisatorisches.
 
-## 12. Station 4 und 5 (gebaut 10.10.2026)
+## 12. Station 4 und 5 (gebaut und abgesegnet 10.10.2026)
 
 **Station 4 „Aufgaben verstehen“:** Erklärung true / false / not in the text („Steht das wirklich im Text? Wenn nicht: not in the text!“) → Leseaufgabe „Ben's Saturday“ (Text aus Abschnitt 7, alle Aussagen auf einer Seite, Text zum Vorlesen, Lösung mit Audio) → „cycle oder circle?“ (Listen and Repeat) → „Welches Wort hörst du?“ (cycle/circle und die Hörpaare aus Abschnitt 8: walk/work, three/tree, thirteen/thirty, fifteen/fifty).
 

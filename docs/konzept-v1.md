@@ -65,8 +65,9 @@ Hintergrund: siehe `docs/briefing.md`.
 ## 4. Stimmen
 
 - Jeder englische Satz wird zweimal gesprochen: erst von einer britischen Männerstimme, dann von einer britischen Frauenstimme. Für das Deutsche gibt es eine deutsche Stimme.
+- **Festgelegt nach der Hörprobe (10.10.2026):** junge britische Männerstimme „Elrond“, britische Frauenstimme „Alice“, deutsche Stimme „Daniel“. Tempo 0,9. Uhrzeiten werden ausgeschrieben an die Stimme gegeben.
 - Die Audios werden einmal vorab mit **ElevenLabs** erzeugt und liegen fest in der App. Google Cloud bleibt die Alternative.
-- **Erster Schritt:** eine Hörprobe mit 3 Sätzen zur Qualitätsprüfung.
+- **Erster Schritt:** eine Hörprobe mit 3 Sätzen zur Qualitätsprüfung (erledigt, siehe `hoerprobe/`).
 - **Backup:** Mr. Alex bekommt eine Liste aller Sprechtexte mit Dateinamen und kann selbst aufnehmen (gleiche Dateinamen ersetzen die KI-Audios).
 
 ---

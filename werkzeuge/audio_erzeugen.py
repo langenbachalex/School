@@ -18,10 +18,14 @@ LISTE = os.path.join(BASIS, "docs", "sprechtexte.md")
 # Stimmen (Stand 10.10.2026): Englisch nur noch eine Stimme – Mr. Alex' eigene Stimme.
 # Weibliche Personen in Hörtexten sprechen mit Alice. Keine deutschen Audios mehr.
 STIMMEN = {
-    # Die eigene Stimme "Alex Langenbach" (AK2WYGe96RmMwFKM5KEz) läuft nur mit MODELL "eleven_v3" und wurde
-    # am 10.10.2026 verworfen (klang nicht nach Mr. Alex). Festgelegt: George.
-    "en":   ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme"),
+    # Mr. Alex' eigene Stimme – funktioniert nur mit Eleven v4 (mit v2/flash/turbo: Serverfehler 500, mit v3: klingt fremd)
+    "en":   ("AK2WYGe96RmMwFKM5KEz", "en", "Alex Langenbach – Mr. Alex' eigene Stimme"),
     "en_f": ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britische Frauenstimme (weibliche Personen in Hörtexten)"),
+}
+# Modell und Einstellungen je Stimme (Alex: wie auf der ElevenLabs-Webseite eingestellt)
+MODELLE = {
+    "en":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
+    "en_f": ("eleven_multilingual_v2", {"stability": 0.6, "similarity_boost": 0.75, "speed": 0.9}),
 }
 ERSATZ = ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme (Ersatz)")
 MODELL = "eleven_multilingual_v2"
@@ -30,20 +34,20 @@ EINSTELLUNGEN = {"stability": 0.6, "similarity_boost": 0.75, "speed": 0.9}
 
 def sprechen(stimme, sprache, text, ziel, tempo=None):
     try:
-        return _sprechen(STIMMEN[stimme][0], sprache, text, ziel, tempo)
+        return _sprechen(STIMMEN[stimme][0], sprache, text, ziel, tempo, *MODELLE[stimme])
     except urllib.error.HTTPError as e:
         body = e.read()
         # Eigene (geklonte) Stimme im Tarif nicht erlaubt -> dauerhaft auf George umstellen
         if stimme == "en" and e.code in (401, 403) and b"quota" not in body:
             print("Stimme Alex nicht verfügbar – nehme George.", body[:160])
             STIMMEN["en"] = ERSATZ
-            return _sprechen(ERSATZ[0], sprache, text, ziel, tempo)
+            return _sprechen(ERSATZ[0], sprache, text, ziel, tempo, MODELL, EINSTELLUNGEN)
         raise urllib.error.HTTPError(e.url, e.code, e.msg, e.hdrs, __import__("io").BytesIO(body))
 
 
-def _sprechen(voice_id, sprache, text, ziel, tempo=None):
-    body = json.dumps({"text": text, "model_id": MODELL, "language_code": sprache,
-                       "voice_settings": {**EINSTELLUNGEN, **({"speed": tempo} if tempo else {})}}).encode()
+def _sprechen(voice_id, sprache, text, ziel, tempo, modell, einstellungen):
+    body = json.dumps({"text": text, "model_id": modell,
+                       "voice_settings": {**einstellungen, **({"speed": tempo} if tempo else {})}}).encode()
     req = urllib.request.Request(
         f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}?output_format=mp3_44100_128",
         data=body, headers={"Content-Type": "application/json"})

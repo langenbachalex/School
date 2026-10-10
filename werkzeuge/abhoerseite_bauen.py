@@ -72,7 +72,7 @@ button.flag[aria-pressed="true"]{{background:var(--warn);border-color:var(--warn
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <main>
 <header style="display:grid;gap:8px"><h1>Kernsätze abhören</h1>
-<p class="intro">{len(daten)} Audios. Jeder Satz hat ein Audio (Englisch, Stimme George). Klingt etwas falsch, tippe auf „⚑ Nochmal“. Die markierten Sätze stehen unten zum Kopieren bereit.</p></header>
+<p class="intro">{len(daten)} Audios. Jeder Satz hat ein Audio (Englisch, Stimme Mr. Alex). Klingt etwas falsch, tippe auf „⚑ Nochmal“. Die markierten Sätze stehen unten zum Kopieren bereit.</p></header>
 <div class="leiste"><span class="now" id="now" aria-live="polite"></span><button id="stop">■ Stopp</button></div>
 {''.join(teile)}
 <section class="merk"><h2>Markiert zum Nachbessern</h2>

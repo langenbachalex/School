@@ -68,7 +68,7 @@ Hintergrund: siehe `docs/briefing.md`.
 ## 4. Stimmen
 
 - **Neu (10.10.2026):** Pro Satz gibt es nur noch **ein Audio, auf Englisch**. Keine Frauenstimme als zweiter Durchgang, keine deutsche Sprachausgabe (spart Credits).
-- Stimme: **George** (britisch, männlich) – festgelegt am 10.10.2026. Die eigene Stimme „Alex Langenbach“ wurde verworfen: Sie läuft nur mit dem Modell eleven_v3 (sonst Serverfehler 500) und klang im Test nicht nach Mr. Alex. Ein späterer Wechsel bleibt möglich (ID und Modell in `werkzeuge/audio_erzeugen.py`, Dateien löschen, neu erzeugen; vorher mit einem Testsatz prüfen).
+- Stimme: **Mr. Alex' eigene Stimme „Alex Langenbach“** (ElevenLabs, Modell **Eleven v4**, Stabilität 0,5, Ähnlichkeit 0,75 – wie auf der Webseite), festgelegt am 10.10.2026. Wichtig: Nur mit v4 klingt sie nach Mr. Alex (v2/flash/turbo: Serverfehler, v3: fremde Stimme). George bleibt als Ersatz im Skript hinterlegt.
 - Weibliche Personen in Hörtexten (z. B. Mia) sprechen weiterhin mit einer weiblichen Stimme (Alice).
 - Deutsch wird nur angezeigt. Der deutsche Merksatz in Station 2 hat damit kein Audio mehr.
 - Fehlt eine Datei, liest die Sprachausgabe des Geräts den englischen Satz vor (Notlösung).

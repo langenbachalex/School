@@ -1,0 +1,15 @@
+# titel: Mia's Monday
+# art: true-false
+# anleitung: Hör zu, was Mia erzählt! Stimmt der Satz? Tipp auf true oder false.
+# status: ENTWURF – noch abzusegnen
+
+@Mia (f): Hi, I'm Mia. On Monday, I get up at 6.45 a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I read a book on the train. {Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train.}
+@Mia (f): School starts at 8 a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at 9 p.m. {School starts at eight a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at nine p.m.}
+
+? Mia gets up at 6.45 a.m. {Mia gets up at six forty-five a.m.} | true
+? Mia has breakfast with her sister. | false | Hör genau hin: Mit wem frühstückt Mia?
+? Mia goes to school by train. | true
+? Mia reads a book on the train. | true
+? School starts at 9 a.m. {School starts at nine a.m.} | false | Hör genau hin: Wann beginnt die Schule?
+? Mia plays football with her grandpa. | false | Hör genau hin: Was spielt Mia mit ihrem Opa?
+? Mia goes to bed at 9 p.m. {Mia goes to bed at nine p.m.} | true

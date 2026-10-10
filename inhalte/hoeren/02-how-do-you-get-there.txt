@@ -1,0 +1,14 @@
+# titel: How do you get there?
+# art: weg
+# anleitung: Hör zu! Wie kommt die Person hin? Ist der Weg für sie gut, nicht gut oder beides?
+# status: ENTWURF – noch abzusegnen (Text aus Konzept Abschnitt 6)
+
+@Mia (f): Hi, I'm Mia. I go to school by train. It's a long way, but I love it! I read on the train.
+@Ben (m): Hi, I'm Ben. I walk to school. It's a short journey. That's great!
+@Harry Kane (m): Hello, I'm Harry. I go to training by car. There's a lot of traffic. I'm stressed!
+@Declan Rice (m): Hi, I'm Declan. I go to training by bike. I cycle every day. I love it!
+
+! Mia | train | gut
+! Ben | walk | gut
+! Harry Kane | car | schlecht
+! Declan Rice | bike | gut

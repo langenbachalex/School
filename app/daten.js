@@ -9,6 +9,7 @@ window.DATEN = {
    "schritte": [
     {
      "art": "lr",
+     "name": "",
      "saetze": [
       "st1_01",
       "st1_02",
@@ -29,7 +30,241 @@ window.DATEN = {
    "titel": "he / she / it + s",
    "symbol": "➕",
    "lob": "bei he/she/it",
-   "schritte": []
+   "schritte": [
+    {
+     "art": "lr",
+     "name": "Teil A",
+     "saetze": [
+      [
+       "st2a_01_i",
+       "st2a_01_he"
+      ],
+      [
+       "st2a_02_i",
+       "st2a_02_he"
+      ],
+      [
+       "st2a_03_i",
+       "st2a_03_he"
+      ],
+      [
+       "st2a_04_i",
+       "st2a_04_he"
+      ],
+      [
+       "st2a_05_i",
+       "st2a_05_he"
+      ],
+      [
+       "st2a_06_i",
+       "st2a_06_he"
+      ]
+     ]
+    },
+    {
+     "art": "erklaerung",
+     "name": "Übersicht",
+     "bloecke": [
+      {
+       "typ": "text",
+       "text": "Schau genau hin: Nur bei he, she und it bekommt das Verb ein -s."
+      },
+      {
+       "typ": "tabelle",
+       "zeilen": [
+        [
+         "I",
+         "walk to school.",
+         "st2u_01"
+        ],
+        [
+         "you",
+         "walk to school.",
+         "st2u_02"
+        ],
+        [
+         "he / she / it",
+         "walks to school.",
+         "st2u_03"
+        ],
+        [
+         "we",
+         "walk to school.",
+         "st2u_04"
+        ],
+        [
+         "you",
+         "walk to school.",
+         "st2u_05"
+        ],
+        [
+         "they",
+         "walk to school.",
+         "st2u_06"
+        ]
+       ],
+       "markiert": 2
+      },
+      {
+       "typ": "merksatz",
+       "text": "he, she, it – das s muss mit!",
+       "audio": "st2_merksatz"
+      }
+     ]
+    },
+    {
+     "art": "lr",
+     "name": "Teil B",
+     "saetze": [
+      [
+       "st2b_01_i",
+       "st2b_01_he"
+      ],
+      [
+       "st2b_02_i",
+       "st2b_02_he"
+      ],
+      [
+       "st2b_03_i",
+       "st2b_03_he"
+      ],
+      [
+       "st2b_04_i",
+       "st2b_04_he"
+      ],
+      [
+       "st2b_05_i",
+       "st2b_05_he"
+      ]
+     ]
+    },
+    {
+     "art": "erklaerung",
+     "name": "Ausnahmen",
+     "bloecke": [
+      {
+       "typ": "text",
+       "text": "Manche Verben bekommen nicht nur ein -s. Lernen wir die Ausnahmen!"
+      },
+      {
+       "typ": "regeln",
+       "punkte": [
+        [
+         "Verben auf -o bekommen -es:",
+         "go → goes, do → does"
+        ],
+        [
+         "Verben auf -sh, -ch, -s, -x bekommen -es:",
+         "wash → washes, watch → watches, kiss → kisses, mix → mixes"
+        ],
+        [
+         "Ganz besonders:",
+         "have → has"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "art": "verbform",
+     "name": "Übung",
+     "aufgaben": [
+      {
+       "satz": "st2a_01_he",
+       "richtig": "plays",
+       "falsch": [
+        "play"
+       ],
+       "hilfe": "Bei he, she, it braucht das Verb ein -s."
+      },
+      {
+       "satz": "st2a_02_he",
+       "richtig": "likes",
+       "falsch": [
+        "like"
+       ],
+       "hilfe": "Bei he, she, it braucht das Verb ein -s."
+      },
+      {
+       "satz": "st2a_03_he",
+       "richtig": "walks",
+       "falsch": [
+        "walk"
+       ],
+       "hilfe": "Bei he, she, it braucht das Verb ein -s."
+      },
+      {
+       "satz": "st2a_04_he",
+       "richtig": "gets",
+       "falsch": [
+        "get"
+       ],
+       "hilfe": "Bei he, she, it braucht das Verb ein -s."
+      },
+      {
+       "satz": "st2a_05_he",
+       "richtig": "reads",
+       "falsch": [
+        "read"
+       ],
+       "hilfe": "Bei he, she, it braucht das Verb ein -s."
+      },
+      {
+       "satz": "st2a_06_he",
+       "richtig": "eats",
+       "falsch": [
+        "eat"
+       ],
+       "hilfe": "Bei he, she, it braucht das Verb ein -s."
+      },
+      {
+       "satz": "st2b_01_he",
+       "richtig": "goes",
+       "falsch": [
+        "go",
+        "gos"
+       ],
+       "hilfe": "Verben auf -o bekommen -es: go → goes, do → does."
+      },
+      {
+       "satz": "st2b_02_he",
+       "richtig": "does",
+       "falsch": [
+        "do",
+        "dos"
+       ],
+       "hilfe": "Verben auf -o bekommen -es: go → goes, do → does."
+      },
+      {
+       "satz": "st2b_03_he",
+       "richtig": "watches",
+       "falsch": [
+        "watch",
+        "watchs"
+       ],
+       "hilfe": "Verben auf -sh und -ch bekommen -es: wash → washes, watch → watches."
+      },
+      {
+       "satz": "st2b_04_he",
+       "richtig": "washes",
+       "falsch": [
+        "wash",
+        "washs"
+       ],
+       "hilfe": "Verben auf -sh und -ch bekommen -es: wash → washes, watch → watches."
+      },
+      {
+       "satz": "st2b_05_he",
+       "richtig": "has",
+       "falsch": [
+        "have",
+        "haves"
+       ],
+       "hilfe": "Ganz besonders: have wird zu has."
+      }
+     ]
+    }
+   ]
   },
   {
    "nr": 3,
@@ -51,6 +286,140 @@ window.DATEN = {
    "symbol": "🎲",
    "lob": "bei den Spielen",
    "schritte": []
+  },
+  {
+   "nr": 6,
+   "titel": "Hörverstehen",
+   "symbol": "🎧",
+   "lob": "beim Hörverstehen",
+   "schritte": [
+    {
+     "art": "hoeren",
+     "name": "Hören 1",
+     "uebung": {
+      "id": "01-mias-monday",
+      "titel": "Mia's Monday",
+      "art": "true-false",
+      "anleitung": "Hör zu, was Mia erzählt! Stimmt der Satz? Tipp auf true oder false.",
+      "teile": [
+       {
+        "sprecher": "Mia",
+        "stimme": "en_f",
+        "text": "Hi, I'm Mia. On Monday, I get up at 6.45 a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I read a book on the train.",
+        "audio": "audio/hoeren/01-mias-monday_text01.mp3"
+       },
+       {
+        "sprecher": "Mia",
+        "stimme": "en_f",
+        "text": "School starts at 8 a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at 9 p.m.",
+        "audio": "audio/hoeren/01-mias-monday_text02.mp3"
+       }
+      ],
+      "aufgaben": [
+       {
+        "aussage": "Mia gets up at 6.45 a.m.",
+        "loesung": "true",
+        "hinweis": "",
+        "audio": "audio/hoeren/01-mias-monday_aussage01.mp3"
+       },
+       {
+        "aussage": "Mia has breakfast with her sister.",
+        "loesung": "false",
+        "hinweis": "Hör genau hin: Mit wem frühstückt Mia?",
+        "audio": "audio/hoeren/01-mias-monday_aussage02.mp3"
+       },
+       {
+        "aussage": "Mia goes to school by train.",
+        "loesung": "true",
+        "hinweis": "",
+        "audio": "audio/hoeren/01-mias-monday_aussage03.mp3"
+       },
+       {
+        "aussage": "Mia reads a book on the train.",
+        "loesung": "true",
+        "hinweis": "",
+        "audio": "audio/hoeren/01-mias-monday_aussage04.mp3"
+       },
+       {
+        "aussage": "School starts at 9 a.m.",
+        "loesung": "false",
+        "hinweis": "Hör genau hin: Wann beginnt die Schule?",
+        "audio": "audio/hoeren/01-mias-monday_aussage05.mp3"
+       },
+       {
+        "aussage": "Mia plays football with her grandpa.",
+        "loesung": "false",
+        "hinweis": "Hör genau hin: Was spielt Mia mit ihrem Opa?",
+        "audio": "audio/hoeren/01-mias-monday_aussage06.mp3"
+       },
+       {
+        "aussage": "Mia goes to bed at 9 p.m.",
+        "loesung": "true",
+        "hinweis": "",
+        "audio": "audio/hoeren/01-mias-monday_aussage07.mp3"
+       }
+      ]
+     }
+    },
+    {
+     "art": "hoeren",
+     "name": "Hören 2",
+     "uebung": {
+      "id": "02-how-do-you-get-there",
+      "titel": "How do you get there?",
+      "art": "weg",
+      "anleitung": "Hör zu! Wie kommt die Person hin? Ist der Weg für sie gut, nicht gut oder beides?",
+      "teile": [
+       {
+        "sprecher": "Mia",
+        "stimme": "en_f",
+        "text": "Hi, I'm Mia. I go to school by train. It's a long way, but I love it! I read on the train.",
+        "audio": "audio/hoeren/02-how-do-you-get-there_text01.mp3"
+       },
+       {
+        "sprecher": "Ben",
+        "stimme": "en_m",
+        "text": "Hi, I'm Ben. I walk to school. It's a short journey. That's great!",
+        "audio": "audio/hoeren/02-how-do-you-get-there_text02.mp3"
+       },
+       {
+        "sprecher": "Harry Kane",
+        "stimme": "en_m",
+        "text": "Hello, I'm Harry. I go to training by car. There's a lot of traffic. I'm stressed!",
+        "audio": "audio/hoeren/02-how-do-you-get-there_text03.mp3"
+       },
+       {
+        "sprecher": "Declan Rice",
+        "stimme": "en_m",
+        "text": "Hi, I'm Declan. I go to training by bike. I cycle every day. I love it!",
+        "audio": "audio/hoeren/02-how-do-you-get-there_text04.mp3"
+       }
+      ],
+      "aufgaben": [
+       {
+        "name": "Mia",
+        "mittel": "train",
+        "gefuehl": "gut"
+       },
+       {
+        "name": "Ben",
+        "mittel": "walk",
+        "gefuehl": "gut"
+       },
+       {
+        "name": "Harry Kane",
+        "mittel": "car",
+        "gefuehl": "schlecht"
+       },
+       {
+        "name": "Declan Rice",
+        "mittel": "bike",
+        "gefuehl": "gut"
+       }
+      ]
+     }
+    }
+   ]
   }
  ],
  "saetze": {
@@ -189,7 +558,7 @@ window.DATEN = {
   "st2a_01_he": {
    "en": "Ben plays football.",
    "de": "Ben spielt Fußball.",
-   "luecke": "",
+   "luecke": "plays",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -213,7 +582,7 @@ window.DATEN = {
   "st2a_02_he": {
    "en": "Mia likes music.",
    "de": "Mia mag Musik.",
-   "luecke": "",
+   "luecke": "likes",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -237,7 +606,7 @@ window.DATEN = {
   "st2a_03_he": {
    "en": "She walks to school.",
    "de": "Sie geht zu Fuß zur Schule.",
-   "luecke": "",
+   "luecke": "walks",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -261,7 +630,7 @@ window.DATEN = {
   "st2a_04_he": {
    "en": "He gets up at 7 o'clock.",
    "de": "Er steht um 7 Uhr auf.",
-   "luecke": "",
+   "luecke": "gets",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -285,7 +654,7 @@ window.DATEN = {
   "st2a_05_he": {
    "en": "Mia reads a book.",
    "de": "Mia liest ein Buch.",
-   "luecke": "",
+   "luecke": "reads",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -309,7 +678,7 @@ window.DATEN = {
   "st2a_06_he": {
    "en": "Ben eats breakfast at 7.30.",
    "de": "Ben frühstückt um 7.30 Uhr.",
-   "luecke": "",
+   "luecke": "eats",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -415,7 +784,7 @@ window.DATEN = {
   "st2b_01_he": {
    "en": "He goes to school.",
    "de": "Er geht zur Schule.",
-   "luecke": "",
+   "luecke": "goes",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -439,7 +808,7 @@ window.DATEN = {
   "st2b_02_he": {
    "en": "She does her homework.",
    "de": "Sie macht ihre Hausaufgaben.",
-   "luecke": "",
+   "luecke": "does",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -463,7 +832,7 @@ window.DATEN = {
   "st2b_03_he": {
    "en": "Ben watches TV.",
    "de": "Ben schaut fern.",
-   "luecke": "",
+   "luecke": "watches",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -487,7 +856,7 @@ window.DATEN = {
   "st2b_04_he": {
    "en": "Mia washes her face.",
    "de": "Mia wäscht sich das Gesicht.",
-   "luecke": "",
+   "luecke": "washes",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -511,7 +880,7 @@ window.DATEN = {
   "st2b_05_he": {
    "en": "He has breakfast.",
    "de": "Er frühstückt.",
-   "luecke": "",
+   "luecke": "has",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -640,5 +1009,12 @@ window.DATEN = {
     "de": "audio/kernsaetze/st4_circle_wort_de.mp3"
    }
   }
+ },
+ "mittel": {
+  "bus": "🚌",
+  "car": "🚗",
+  "bike": "🚲",
+  "train": "🚆",
+  "walk": "🚶"
  }
 };

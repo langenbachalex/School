@@ -7,9 +7,12 @@ Aufruf: python3 werkzeuge/audio_erzeugen.py
 """
 import csv, json, os, re, urllib.request, urllib.error
 
+import hoeren
+
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TSV = os.path.join(BASIS, "inhalte", "kernsaetze.tsv")
-AUDIO = os.path.join(BASIS, "app", "audio", "kernsaetze")
+AUDIO_BASIS = os.path.join(BASIS, "app", "audio")
+AUDIO = os.path.join(AUDIO_BASIS, "kernsaetze")
 LISTE = os.path.join(BASIS, "docs", "sprechtexte.md")
 
 # Festgelegt am 10.10.2026 nach der Hörprobe
@@ -39,32 +42,43 @@ def main():
     os.makedirs(AUDIO, exist_ok=True)
     with open(TSV, encoding="utf-8") as f:
         zeilen = list(csv.DictReader(f, delimiter="\t"))
-    liste, neu, fehler = [], 0, 0
+    # Aufträge: (Unterordner, Dateiname ohne Endung, Stimme, Sprache, Sprechtext, Tempo)
+    auftraege = []
     for z in zeilen:
-        aufgaben = []
+        tempo = float(z["tempo"]) if z.get("tempo") else None
         if z["englisch"]:
             text = z["englisch_gesprochen"] or z["englisch"].replace("[", "").replace("]", "")
-            aufgaben += [("en_m", "en", text), ("en_f", "en", text)]
+            auftraege += [("kernsaetze", f"{z['id']}_en_m", "en_m", "en", text, tempo),
+                          ("kernsaetze", f"{z['id']}_en_f", "en_f", "en", text, tempo)]
         if z["deutsch"]:
-            aufgaben.append(("de", "de", z["deutsch_gesprochen"] or z["deutsch"]))
-        for stimme, sprache, text in aufgaben:
-            name = f"{z['id']}_{stimme}.mp3"
-            ziel = os.path.join(AUDIO, name)
-            liste.append((name, STIMMEN[stimme][2].split(" – ")[0], re.sub(r"\s*<break[^>]*/>", " …", text)))
-            if os.path.exists(ziel):
-                continue
-            try:
-                sprechen(stimme, sprache, text, ziel, float(z["tempo"]) if z.get("tempo") else None)
-                neu += 1
-                print("neu:", name)
-            except urllib.error.HTTPError as e:
-                fehler += 1
-                print("FEHLER:", name, e.code, e.read()[:200])
+            auftraege.append(("kernsaetze", f"{z['id']}_de", "de", "de", z["deutsch_gesprochen"] or z["deutsch"], tempo))
+    for u in hoeren.lesen():
+        for t in u["teile"]:
+            auftraege.append(("hoeren", t["datei"], t["stimme"], "en", t["sprech"], None))
+        for a in u["aufgaben"]:
+            if "datei" in a:
+                auftraege.append(("hoeren", a["datei"], "en_m", "en", a["sprech"], None))
+
+    liste, neu, fehler = [], 0, 0
+    for ordner, datei, stimme, sprache, text, tempo in auftraege:
+        os.makedirs(os.path.join(AUDIO_BASIS, ordner), exist_ok=True)
+        ziel = os.path.join(AUDIO_BASIS, ordner, datei + ".mp3")
+        liste.append((f"{ordner}/{datei}.mp3", STIMMEN[stimme][2].split(" – ")[0],
+                      re.sub(r"\s*<break[^>]*/>", " …", text)))
+        if os.path.exists(ziel):
+            continue
+        try:
+            sprechen(stimme, sprache, text, ziel, tempo)
+            neu += 1
+            print("neu:", ordner, datei)
+        except urllib.error.HTTPError as e:
+            fehler += 1
+            print("FEHLER:", datei, e.code, e.read()[:200])
     with open(LISTE, "w", encoding="utf-8") as f:
-        f.write("# Sprechtexte (Kernsätze)\n\n")
-        f.write("Automatisch erzeugt aus `inhalte/kernsaetze.tsv` durch `werkzeuge/audio_erzeugen.py`.\n\n")
-        f.write("**Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `app/audio/kernsaetze/` ablegen. "
-                "Sie ersetzt dann das KI-Audio.\n\n")
+        f.write("# Sprechtexte\n\n")
+        f.write("Automatisch erzeugt aus `inhalte/kernsaetze.tsv` und `inhalte/hoeren/` durch `werkzeuge/audio_erzeugen.py`.\n\n")
+        f.write("**Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `app/audio/` (im angegebenen Unterordner) "
+                "ablegen. Sie ersetzt dann das KI-Audio.\n\n")
         f.write("Stimmen: " + "; ".join(v[2] for v in STIMMEN.values()) + ".\n\n")
         f.write("| Datei | Stimme | Sprechtext |\n|---|---|---|\n")
         for name, stimme, text in liste:

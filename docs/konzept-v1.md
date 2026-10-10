@@ -50,11 +50,14 @@ Hintergrund: siehe `docs/briefing.md`.
 | 3 Uhrzeiten | Listen and Repeat, Erklärung a.m./p.m., Uhr → Sprechweise wählen |
 | 4 Aufgaben verstehen | true / false / not in the text; cycle vs. circle |
 | 5 Spiele | Memory (Symbol ↔ Wort), -s-Detektiv |
+| 6 Hörverstehen | Hörübungen (true/false oder Weg zuordnen), jede Woche erweiterbar über `inhalte/hoeren/` |
 
 **Listen and Repeat (Assimil):**
 - **Stufe 1:** Englisch hören und nachsprechen. Das Deutsche ist ausgeblendet und lässt sich antippen.
 - **Stufe 2:** Englisch links, Deutsch rechts.
 - **Stufe 3:** Deutsch links (wird gesprochen), Englisch rechts mit Lücke (Zielwort). Danach „Lösung“: der ganze Satz wird gezeigt und gesprochen.
+- **Stufe 4:** Nur der deutsche Satz (wird gesprochen). Das Kind sagt den ganzen englischen Satz. Danach „Lösung“: der Satz wird gezeigt und gesprochen.
+- **Grundsatz:** Wird eine Lösung gezeigt, wird sie immer auch abgespielt.
 - Nach jedem Satz erscheint der Balken **„Jetzt du!“** mit einer Pause zum Nachsprechen.
 - Jedes Schlüsselwort hat ein festes, schlichtes Symbol, das überall gleich bleibt.
 
@@ -93,6 +96,8 @@ Die Fußballer-Sätze werden mit „Stell dir vor …“ eingeleitet, weil sie s
 | That's [great]! | Das ist toll! |
 
 ### Station 2 – he / she / it + s
+Lücke in Stufe 3: das Verb mit -s. Deutsche Übersetzungen siehe `inhalte/kernsaetze.tsv` (abgesegnet nach dem Abhören).
+
 **Teil A: regelmäßig (nur -s)**
 
 | I … | he / she … |
@@ -346,3 +351,17 @@ Aufgabe: Wer kommt wie? (Symbol zuordnen.) Ist es für die Person gut 😊 oder 
 | three – tree | drei – Baum |
 | thirteen – thirty | dreizehn – dreißig |
 | fifteen – fifty | fünfzehn – fünfzig |
+
+---
+
+## 9. [ENTWURF – noch abzusegnen] Station 6: Hörverstehen
+
+Festes Format, abgesegnet am 10.10.2026: eigene Station, jede Woche neue Übungen möglich. Jede Übung ist eine Textdatei in `inhalte/hoeren/` (Aufbau: `inhalte/hoeren/LIESMICH.md`). Ablauf: Text hören → Aufgaben → Text zum Mitlesen.
+
+Arten:
+- **true-false:** Aussage hören und lesen, „true“ oder „false“ tippen. Bei Fehler: „Ich helfe dir: …“ mit Hinweis.
+- **weg:** Pro Person Verkehrsmittel wählen und „gut / nicht gut / beides“.
+
+Entwürfe der Inhalte:
+- `01-mias-monday.txt`: Mias Tagesablauf (true/false, 7 Aussagen)
+- `02-how-do-you-get-there.txt`: Text aus Abschnitt 6 (Weg zuordnen)

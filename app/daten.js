@@ -108,9 +108,7 @@ window.DATEN = {
       {
        "typ": "merksatz",
        "text": "he, she, it – das s muss mit!",
-       "dateien": [
-        "audio/kernsaetze/st2_merksatz_de.mp3"
-       ]
+       "dateien": []
       }
      ]
     },
@@ -819,31 +817,11 @@ window.DATEN = {
          "typ": "merksatz",
          "text": "never – rarely – sometimes – often – always",
          "dateien": [
-          {
-           "tts": "never",
-           "lang": "en-GB",
-           "stimme": "m"
-          },
-          {
-           "tts": "rarely",
-           "lang": "en-GB",
-           "stimme": "m"
-          },
-          {
-           "tts": "sometimes",
-           "lang": "en-GB",
-           "stimme": "m"
-          },
-          {
-           "tts": "often",
-           "lang": "en-GB",
-           "stimme": "m"
-          },
-          {
-           "tts": "always",
-           "lang": "en-GB",
-           "stimme": "m"
-          }
+          "audio/kernsaetze/st8s_never_en.mp3",
+          "audio/kernsaetze/st8s_rarely_en.mp3",
+          "audio/kernsaetze/st8s_sometimes_en.mp3",
+          "audio/kernsaetze/st8s_often_en.mp3",
+          "audio/kernsaetze/st8s_always_en.mp3"
          ]
         }
        ]
@@ -1090,9 +1068,7 @@ window.DATEN = {
    "symbol": "🚌",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_01_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_01_en_f.mp3",
-    "de": "audio/kernsaetze/st1_01_de.mp3"
+    "en": "audio/kernsaetze/st1_01_en.mp3"
    }
   },
   "st1_02": {
@@ -1102,9 +1078,7 @@ window.DATEN = {
    "symbol": "🚗",
    "hinweis": "Stell dir vor …",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_02_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_02_en_f.mp3",
-    "de": "audio/kernsaetze/st1_02_de.mp3"
+    "en": "audio/kernsaetze/st1_02_en.mp3"
    }
   },
   "st1_03": {
@@ -1114,9 +1088,7 @@ window.DATEN = {
    "symbol": "🚌",
    "hinweis": "Stell dir vor …",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_03_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_03_en_f.mp3",
-    "de": "audio/kernsaetze/st1_03_de.mp3"
+    "en": "audio/kernsaetze/st1_03_en.mp3"
    }
   },
   "st1_04": {
@@ -1126,9 +1098,7 @@ window.DATEN = {
    "symbol": "🚲",
    "hinweis": "Stell dir vor …",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_04_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_04_en_f.mp3",
-    "de": "audio/kernsaetze/st1_04_de.mp3"
+    "en": "audio/kernsaetze/st1_04_en.mp3"
    }
   },
   "st1_05": {
@@ -1138,9 +1108,7 @@ window.DATEN = {
    "symbol": "🚆",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_05_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_05_en_f.mp3",
-    "de": "audio/kernsaetze/st1_05_de.mp3"
+    "en": "audio/kernsaetze/st1_05_en.mp3"
    }
   },
   "st1_06": {
@@ -1150,9 +1118,7 @@ window.DATEN = {
    "symbol": "🚶",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_06_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_06_en_f.mp3",
-    "de": "audio/kernsaetze/st1_06_de.mp3"
+    "en": "audio/kernsaetze/st1_06_en.mp3"
    }
   },
   "st1_07": {
@@ -1162,9 +1128,7 @@ window.DATEN = {
    "symbol": "⏱️",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_07_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_07_en_f.mp3",
-    "de": "audio/kernsaetze/st1_07_de.mp3"
+    "en": "audio/kernsaetze/st1_07_en.mp3"
    }
   },
   "st1_08": {
@@ -1174,9 +1138,7 @@ window.DATEN = {
    "symbol": "🛣️",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_08_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_08_en_f.mp3",
-    "de": "audio/kernsaetze/st1_08_de.mp3"
+    "en": "audio/kernsaetze/st1_08_en.mp3"
    }
   },
   "st1_09": {
@@ -1186,9 +1148,7 @@ window.DATEN = {
    "symbol": "😫",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_09_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_09_en_f.mp3",
-    "de": "audio/kernsaetze/st1_09_de.mp3"
+    "en": "audio/kernsaetze/st1_09_en.mp3"
    }
   },
   "st1_10": {
@@ -1198,9 +1158,7 @@ window.DATEN = {
    "symbol": "👍",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st1_10_en_m.mp3",
-    "en_f": "audio/kernsaetze/st1_10_en_f.mp3",
-    "de": "audio/kernsaetze/st1_10_de.mp3"
+    "en": "audio/kernsaetze/st1_10_en.mp3"
    }
   },
   "st2a_01_i": {
@@ -1210,9 +1168,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_01_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_01_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_01_i_de.mp3"
+    "en": "audio/kernsaetze/st2a_01_i_en.mp3"
    }
   },
   "st2a_01_he": {
@@ -1222,9 +1178,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_01_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_01_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_01_he_de.mp3"
+    "en": "audio/kernsaetze/st2a_01_he_en.mp3"
    }
   },
   "st2a_02_i": {
@@ -1234,9 +1188,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_02_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_02_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_02_i_de.mp3"
+    "en": "audio/kernsaetze/st2a_02_i_en.mp3"
    }
   },
   "st2a_02_he": {
@@ -1246,9 +1198,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_02_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_02_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_02_he_de.mp3"
+    "en": "audio/kernsaetze/st2a_02_he_en.mp3"
    }
   },
   "st2a_03_i": {
@@ -1258,9 +1208,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_03_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_03_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_03_i_de.mp3"
+    "en": "audio/kernsaetze/st2a_03_i_en.mp3"
    }
   },
   "st2a_03_he": {
@@ -1270,9 +1218,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_03_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_03_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_03_he_de.mp3"
+    "en": "audio/kernsaetze/st2a_03_he_en.mp3"
    }
   },
   "st2a_04_i": {
@@ -1282,9 +1228,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_04_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_04_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_04_i_de.mp3"
+    "en": "audio/kernsaetze/st2a_04_i_en.mp3"
    }
   },
   "st2a_04_he": {
@@ -1294,9 +1238,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_04_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_04_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_04_he_de.mp3"
+    "en": "audio/kernsaetze/st2a_04_he_en.mp3"
    }
   },
   "st2a_05_i": {
@@ -1306,9 +1248,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_05_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_05_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_05_i_de.mp3"
+    "en": "audio/kernsaetze/st2a_05_i_en.mp3"
    }
   },
   "st2a_05_he": {
@@ -1318,9 +1258,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_05_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_05_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_05_he_de.mp3"
+    "en": "audio/kernsaetze/st2a_05_he_en.mp3"
    }
   },
   "st2a_06_i": {
@@ -1330,9 +1268,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_06_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_06_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_06_i_de.mp3"
+    "en": "audio/kernsaetze/st2a_06_i_en.mp3"
    }
   },
   "st2a_06_he": {
@@ -1342,9 +1278,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2a_06_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2a_06_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2a_06_he_de.mp3"
+    "en": "audio/kernsaetze/st2a_06_he_en.mp3"
    }
   },
   "st2u_01": {
@@ -1354,9 +1288,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2u_01_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2u_01_en_f.mp3",
-    "de": "audio/kernsaetze/st2u_01_de.mp3"
+    "en": "audio/kernsaetze/st2u_01_en.mp3"
    }
   },
   "st2u_02": {
@@ -1366,9 +1298,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2u_02_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2u_02_en_f.mp3",
-    "de": "audio/kernsaetze/st2u_02_de.mp3"
+    "en": "audio/kernsaetze/st2u_02_en.mp3"
    }
   },
   "st2u_03": {
@@ -1378,9 +1308,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2u_03_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2u_03_en_f.mp3",
-    "de": "audio/kernsaetze/st2u_03_de.mp3"
+    "en": "audio/kernsaetze/st2u_03_en.mp3"
    }
   },
   "st2u_04": {
@@ -1390,9 +1318,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2u_04_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2u_04_en_f.mp3",
-    "de": "audio/kernsaetze/st2u_04_de.mp3"
+    "en": "audio/kernsaetze/st2u_04_en.mp3"
    }
   },
   "st2u_05": {
@@ -1402,9 +1328,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2u_05_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2u_05_en_f.mp3",
-    "de": "audio/kernsaetze/st2u_05_de.mp3"
+    "en": "audio/kernsaetze/st2u_05_en.mp3"
    }
   },
   "st2u_06": {
@@ -1414,9 +1338,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2u_06_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2u_06_en_f.mp3",
-    "de": "audio/kernsaetze/st2u_06_de.mp3"
+    "en": "audio/kernsaetze/st2u_06_en.mp3"
    }
   },
   "st2_merksatz": {
@@ -1425,9 +1347,7 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {
-    "de": "audio/kernsaetze/st2_merksatz_de.mp3"
-   }
+   "audio": {}
   },
   "st2b_01_i": {
    "en": "I go to school.",
@@ -1436,9 +1356,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_01_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_01_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_01_i_de.mp3"
+    "en": "audio/kernsaetze/st2b_01_i_en.mp3"
    }
   },
   "st2b_01_he": {
@@ -1448,9 +1366,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_01_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_01_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_01_he_de.mp3"
+    "en": "audio/kernsaetze/st2b_01_he_en.mp3"
    }
   },
   "st2b_02_i": {
@@ -1460,9 +1376,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_02_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_02_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_02_i_de.mp3"
+    "en": "audio/kernsaetze/st2b_02_i_en.mp3"
    }
   },
   "st2b_02_he": {
@@ -1472,9 +1386,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_02_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_02_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_02_he_de.mp3"
+    "en": "audio/kernsaetze/st2b_02_he_en.mp3"
    }
   },
   "st2b_03_i": {
@@ -1484,9 +1396,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_03_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_03_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_03_i_de.mp3"
+    "en": "audio/kernsaetze/st2b_03_i_en.mp3"
    }
   },
   "st2b_03_he": {
@@ -1496,9 +1406,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_03_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_03_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_03_he_de.mp3"
+    "en": "audio/kernsaetze/st2b_03_he_en.mp3"
    }
   },
   "st2b_04_i": {
@@ -1508,9 +1416,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_04_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_04_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_04_i_de.mp3"
+    "en": "audio/kernsaetze/st2b_04_i_en.mp3"
    }
   },
   "st2b_04_he": {
@@ -1520,9 +1426,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_04_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_04_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_04_he_de.mp3"
+    "en": "audio/kernsaetze/st2b_04_he_en.mp3"
    }
   },
   "st2b_05_i": {
@@ -1532,9 +1436,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_05_i_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_05_i_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_05_i_de.mp3"
+    "en": "audio/kernsaetze/st2b_05_i_en.mp3"
    }
   },
   "st2b_05_he": {
@@ -1544,9 +1446,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st2b_05_he_en_m.mp3",
-    "en_f": "audio/kernsaetze/st2b_05_he_en_f.mp3",
-    "de": "audio/kernsaetze/st2b_05_he_de.mp3"
+    "en": "audio/kernsaetze/st2b_05_he_en.mp3"
    }
   },
   "st3_01": {
@@ -1556,9 +1456,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st3_01_en_m.mp3",
-    "en_f": "audio/kernsaetze/st3_01_en_f.mp3",
-    "de": "audio/kernsaetze/st3_01_de.mp3"
+    "en": "audio/kernsaetze/st3_01_en.mp3"
    }
   },
   "st3_02": {
@@ -1568,9 +1466,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st3_02_en_m.mp3",
-    "en_f": "audio/kernsaetze/st3_02_en_f.mp3",
-    "de": "audio/kernsaetze/st3_02_de.mp3"
+    "en": "audio/kernsaetze/st3_02_en.mp3"
    }
   },
   "st3_03": {
@@ -1580,9 +1476,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st3_03_en_m.mp3",
-    "en_f": "audio/kernsaetze/st3_03_en_f.mp3",
-    "de": "audio/kernsaetze/st3_03_de.mp3"
+    "en": "audio/kernsaetze/st3_03_en.mp3"
    }
   },
   "st3_04": {
@@ -1592,9 +1486,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st3_04_en_m.mp3",
-    "en_f": "audio/kernsaetze/st3_04_en_f.mp3",
-    "de": "audio/kernsaetze/st3_04_de.mp3"
+    "en": "audio/kernsaetze/st3_04_en.mp3"
    }
   },
   "st3_05": {
@@ -1604,9 +1496,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st3_05_en_m.mp3",
-    "en_f": "audio/kernsaetze/st3_05_en_f.mp3",
-    "de": "audio/kernsaetze/st3_05_de.mp3"
+    "en": "audio/kernsaetze/st3_05_en.mp3"
    }
   },
   "st3_06": {
@@ -1616,9 +1506,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st3_06_en_m.mp3",
-    "en_f": "audio/kernsaetze/st3_06_en_f.mp3",
-    "de": "audio/kernsaetze/st3_06_de.mp3"
+    "en": "audio/kernsaetze/st3_06_en.mp3"
    }
   },
   "st4_cycle_satz": {
@@ -1628,9 +1516,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st4_cycle_satz_en_m.mp3",
-    "en_f": "audio/kernsaetze/st4_cycle_satz_en_f.mp3",
-    "de": "audio/kernsaetze/st4_cycle_satz_de.mp3"
+    "en": "audio/kernsaetze/st4_cycle_satz_en.mp3"
    }
   },
   "st4_circle_satz": {
@@ -1640,9 +1526,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st4_circle_satz_en_m.mp3",
-    "en_f": "audio/kernsaetze/st4_circle_satz_en_f.mp3",
-    "de": "audio/kernsaetze/st4_circle_satz_de.mp3"
+    "en": "audio/kernsaetze/st4_circle_satz_en.mp3"
    }
   },
   "st4_cycle_wort": {
@@ -1652,9 +1536,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st4_cycle_wort_en_m.mp3",
-    "en_f": "audio/kernsaetze/st4_cycle_wort_en_f.mp3",
-    "de": "audio/kernsaetze/st4_cycle_wort_de.mp3"
+    "en": "audio/kernsaetze/st4_cycle_wort_en.mp3"
    }
   },
   "st4_circle_wort": {
@@ -1664,9 +1546,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": "audio/kernsaetze/st4_circle_wort_en_m.mp3",
-    "en_f": "audio/kernsaetze/st4_circle_wort_en_f.mp3",
-    "de": "audio/kernsaetze/st4_circle_wort_de.mp3"
+    "en": "audio/kernsaetze/st4_circle_wort_en.mp3"
    }
   },
   "st3u_01": {
@@ -1676,21 +1556,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "It's eight p.m.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "It's eight p.m.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Es ist zwanzig Uhr.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st3u_01_en.mp3"
    }
   },
   "st3u_02": {
@@ -1700,21 +1566,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "It's one fifteen p.m.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "It's one fifteen p.m.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Es ist dreizehn Uhr fünfzehn.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st3u_02_en.mp3"
    }
   },
   "st3u_03": {
@@ -1724,21 +1576,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "It's six forty-five a.m.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "It's six forty-five a.m.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Es ist sechs Uhr fünfundvierzig.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st3u_03_en.mp3"
    }
   },
   "st3u_04": {
@@ -1748,21 +1586,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "It's three p.m.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "It's three p.m.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Es ist fünfzehn Uhr.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st3u_04_en.mp3"
    }
   },
   "st3u_05": {
@@ -1772,21 +1596,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "It's seven thirty a.m.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "It's seven thirty a.m.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Es ist sieben Uhr dreißig.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st3u_05_en.mp3"
    }
   },
   "st3u_06": {
@@ -1796,21 +1606,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "It's nine p.m.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "It's nine p.m.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Es ist einundzwanzig Uhr.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st3u_06_en.mp3"
    }
   },
   "st8s_never": {
@@ -1820,21 +1616,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "never",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "never",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "nie",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8s_never_en.mp3"
    }
   },
   "st8s_rarely": {
@@ -1844,21 +1626,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "rarely",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "rarely",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "selten",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8s_rarely_en.mp3"
    }
   },
   "st8s_sometimes": {
@@ -1868,21 +1636,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "sometimes",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "sometimes",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "manchmal",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8s_sometimes_en.mp3"
    }
   },
   "st8s_often": {
@@ -1892,21 +1646,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "often",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "often",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "oft",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8s_often_en.mp3"
    }
   },
   "st8s_always": {
@@ -1916,21 +1656,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "always",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "always",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "immer",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8s_always_en.mp3"
    }
   },
   "st8f_01_i": {
@@ -1940,21 +1666,7 @@ window.DATEN = {
    "symbol": "○○○○○○○",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I never go running.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I never go running.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich gehe nie laufen.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_01_i_en.mp3"
    }
   },
   "st8f_01_he": {
@@ -1964,21 +1676,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "He never goes running.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "He never goes running.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Er geht nie laufen.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_01_he_en.mp3"
    }
   },
   "st8f_02_i": {
@@ -1988,21 +1686,7 @@ window.DATEN = {
    "symbol": "●○○○○○○",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I rarely play cricket.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I rarely play cricket.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich spiele selten Kricket.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_02_i_en.mp3"
    }
   },
   "st8f_02_he": {
@@ -2012,21 +1696,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "She rarely plays cricket.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "She rarely plays cricket.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Sie spielt selten Kricket.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_02_he_en.mp3"
    }
   },
   "st8f_03_i": {
@@ -2036,21 +1706,7 @@ window.DATEN = {
    "symbol": "●●●○○○○",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I sometimes go hiking.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I sometimes go hiking.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich gehe manchmal wandern.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_03_i_en.mp3"
    }
   },
   "st8f_03_he": {
@@ -2060,21 +1716,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "He sometimes goes hiking.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "He sometimes goes hiking.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Er geht manchmal wandern.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_03_he_en.mp3"
    }
   },
   "st8f_04_i": {
@@ -2084,21 +1726,7 @@ window.DATEN = {
    "symbol": "●●●●●○○",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I often go cycling.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I often go cycling.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich fahre oft Rad.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_04_i_en.mp3"
    }
   },
   "st8f_04_he": {
@@ -2108,21 +1736,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "She often goes cycling.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "She often goes cycling.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Sie fährt oft Rad.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_04_he_en.mp3"
    }
   },
   "st8f_05_i": {
@@ -2132,21 +1746,7 @@ window.DATEN = {
    "symbol": "●●●●●●●",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I always sing in the shower.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I always sing in the shower.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich singe immer unter der Dusche.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_05_i_en.mp3"
    }
   },
   "st8f_05_he": {
@@ -2156,21 +1756,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "He always sings in the shower.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "He always sings in the shower.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Er singt immer unter der Dusche.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8f_05_he_en.mp3"
    }
   },
   "st8w_01": {
@@ -2180,21 +1766,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "He never goes running.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "He never goes running.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Er geht nie laufen.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8w_01_en.mp3"
    }
   },
   "st8w_02": {
@@ -2204,21 +1776,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "She sometimes plays cricket.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "She sometimes plays cricket.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Sie spielt manchmal Kricket.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8w_02_en.mp3"
    }
   },
   "st8w_03": {
@@ -2228,21 +1786,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I always sing.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I always sing.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich singe immer.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8w_03_en.mp3"
    }
   },
   "st8w_04": {
@@ -2252,21 +1796,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "We often go cycling.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "We often go cycling.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Wir fahren oft Rad.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8w_04_en.mp3"
    }
   },
   "st8w_05": {
@@ -2276,21 +1806,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "He rarely plays computer games.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "He rarely plays computer games.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Er spielt selten Computerspiele.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8w_05_en.mp3"
    }
   },
   "st8w_06": {
@@ -2300,21 +1816,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "We sometimes go hiking.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "We sometimes go hiking.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Wir gehen manchmal wandern.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8w_06_en.mp3"
    }
   },
   "st8r_01": {
@@ -2324,21 +1826,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "He sometimes plays football.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "He sometimes plays football.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Er spielt manchmal Fußball.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8r_01_en.mp3"
    }
   },
   "st8r_02": {
@@ -2348,21 +1836,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I never go swimming.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I never go swimming.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich gehe nie schwimmen.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8r_02_en.mp3"
    }
   },
   "st8r_03": {
@@ -2372,21 +1846,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "She often goes surfing.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "She often goes surfing.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Sie geht oft surfen.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8r_03_en.mp3"
    }
   },
   "st8r_04": {
@@ -2396,21 +1856,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "You rarely play hockey.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "You rarely play hockey.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Du spielst selten Hockey.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8r_04_en.mp3"
    }
   },
   "st8r_05": {
@@ -2420,21 +1866,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "She always goes cycling.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "She always goes cycling.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Sie fährt immer Rad.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8r_05_en.mp3"
    }
   },
   "st8r_06": {
@@ -2444,21 +1876,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I sometimes play football.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I sometimes play football.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich spiele manchmal Fußball.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8r_06_en.mp3"
    }
   },
   "st8r_07": {
@@ -2468,21 +1886,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "He never goes swimming.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "He never goes swimming.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Er geht nie schwimmen.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8r_07_en.mp3"
    }
   },
   "st8r_08": {
@@ -2492,21 +1896,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I often go cycling.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I often go cycling.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich fahre oft Rad.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8r_08_en.mp3"
    }
   },
   "st8h_01": {
@@ -2516,21 +1906,7 @@ window.DATEN = {
    "symbol": "🎭",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like drama.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like drama.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich mag Schauspiel.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_01_en.mp3"
    }
   },
   "st8h_02": {
@@ -2540,21 +1916,7 @@ window.DATEN = {
    "symbol": "🎨",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like art.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like art.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich mag Kunst.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_02_en.mp3"
    }
   },
   "st8h_03": {
@@ -2564,21 +1926,7 @@ window.DATEN = {
    "symbol": "🎮",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like computer games.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like computer games.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich mag Computerspiele.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_03_en.mp3"
    }
   },
   "st8h_04": {
@@ -2588,21 +1936,7 @@ window.DATEN = {
    "symbol": "🏏",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like cricket.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like cricket.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich mag Kricket.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_04_en.mp3"
    }
   },
   "st8h_05": {
@@ -2612,21 +1946,7 @@ window.DATEN = {
    "symbol": "🚲",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like cycling.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like cycling.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich fahre gern Rad.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_05_en.mp3"
    }
   },
   "st8h_06": {
@@ -2636,21 +1956,7 @@ window.DATEN = {
    "symbol": "💃",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like dancing.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like dancing.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich tanze gern.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_06_en.mp3"
    }
   },
   "st8h_07": {
@@ -2660,21 +1966,7 @@ window.DATEN = {
    "symbol": "🥾",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like hiking.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like hiking.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich gehe gern wandern.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_07_en.mp3"
    }
   },
   "st8h_08": {
@@ -2684,21 +1976,7 @@ window.DATEN = {
    "symbol": "🎵",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like music.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like music.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich mag Musik.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_08_en.mp3"
    }
   },
   "st8h_09": {
@@ -2708,21 +1986,7 @@ window.DATEN = {
    "symbol": "🏃",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like running.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like running.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich laufe gern.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_09_en.mp3"
    }
   },
   "st8h_10": {
@@ -2732,21 +1996,7 @@ window.DATEN = {
    "symbol": "🎤",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like singing.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like singing.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich singe gern.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_10_en.mp3"
    }
   },
   "st8h_11": {
@@ -2756,21 +2006,7 @@ window.DATEN = {
    "symbol": "🏓",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like table tennis.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like table tennis.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich spiele gern Tischtennis.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_11_en.mp3"
    }
   },
   "st8h_12": {
@@ -2780,21 +2016,7 @@ window.DATEN = {
    "symbol": "🤸",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like trampolining.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like trampolining.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich springe gern Trampolin.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_12_en.mp3"
    }
   },
   "st8h_13": {
@@ -2804,21 +2026,7 @@ window.DATEN = {
    "symbol": "🏄",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like windsurfing.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like windsurfing.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich windsurfe gern.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_13_en.mp3"
    }
   },
   "st8h_14": {
@@ -2828,21 +2036,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like singing, but I don't like trampolining.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like singing, but I don't like trampolining.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich singe gern, aber ich springe nicht gern Trampolin.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8h_14_en.mp3"
    }
   },
   "st8p_01": {
@@ -2852,21 +2046,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "Brahim loves drama and singing.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "Brahim loves drama and singing.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Brahim liebt Schauspiel und Gesang.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8p_01_en.mp3"
    }
   },
   "st8p_02": {
@@ -2876,21 +2056,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "Liam does competitions.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "Liam does competitions.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Liam macht bei Wettbewerben mit.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8p_02_en.mp3"
    }
   },
   "st8p_03": {
@@ -2900,21 +2066,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "Annie is in the school band.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "Annie is in the school band.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Annie ist in der Schulband.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8p_03_en.mp3"
    }
   },
   "st8p_04": {
@@ -2924,21 +2076,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "Annie plays cricket.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "Annie plays cricket.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Annie spielt Kricket.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8p_04_en.mp3"
    }
   },
   "st8p_05": {
@@ -2948,21 +2086,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "Rin does a sport in the sea.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "Rin does a sport in the sea.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Rin macht einen Sport im Meer.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8p_05_en.mp3"
    }
   },
   "st8e_01": {
@@ -2972,21 +2096,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like drama, but I don't like science.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like drama, but I don't like science.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich mag Schauspiel, aber ich mag Naturwissenschaften nicht.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8e_01_en.mp3"
    }
   },
   "st8e_02": {
@@ -2996,21 +2106,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like music, but I don't like cricket.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like music, but I don't like cricket.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich mag Musik, aber ich mag Kricket nicht.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8e_02_en.mp3"
    }
   },
   "st8e_03": {
@@ -3020,21 +2116,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like dancing, but I don't like hiking.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like dancing, but I don't like hiking.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich tanze gern, aber ich wandere nicht gern.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8e_03_en.mp3"
    }
   },
   "st8e_04": {
@@ -3044,21 +2126,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I like running, but I don't like art.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I like running, but I don't like art.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich laufe gern, aber ich mag Kunst nicht.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8e_04_en.mp3"
    }
   },
   "st8c_01": {
@@ -3068,21 +2136,7 @@ window.DATEN = {
    "symbol": "💻",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "a computer club",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "a computer club",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "die Computer-AG",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_01_en.mp3"
    }
   },
   "st8c_02": {
@@ -3092,21 +2146,7 @@ window.DATEN = {
    "symbol": "📚",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "a reading club",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "a reading club",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "die Lese-AG",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_02_en.mp3"
    }
   },
   "st8c_03": {
@@ -3116,21 +2156,7 @@ window.DATEN = {
    "symbol": "🎭",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "a drama club",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "a drama club",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "die Theater-AG",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_03_en.mp3"
    }
   },
   "st8c_04": {
@@ -3140,21 +2166,7 @@ window.DATEN = {
    "symbol": "🎨",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "an art club",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "an art club",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "die Kunst-AG",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_04_en.mp3"
    }
   },
   "st8c_05": {
@@ -3164,21 +2176,7 @@ window.DATEN = {
    "symbol": "🏑",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "a hockey club",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "a hockey club",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "die Hockey-AG",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_05_en.mp3"
    }
   },
   "st8c_06": {
@@ -3188,21 +2186,7 @@ window.DATEN = {
    "symbol": "🎬",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "a film club",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "a film club",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "die Film-AG",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_06_en.mp3"
    }
   },
   "st8c_07": {
@@ -3212,21 +2196,7 @@ window.DATEN = {
    "symbol": "🎤",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "a singing club",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "a singing club",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "die Sing-AG",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_07_en.mp3"
    }
   },
   "st8c_08": {
@@ -3236,21 +2206,7 @@ window.DATEN = {
    "symbol": "⚽",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "a football club",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "a football club",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "die Fußball-AG",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_08_en.mp3"
    }
   },
   "st8c_09": {
@@ -3260,21 +2216,7 @@ window.DATEN = {
    "symbol": "🏊",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "a swimming club",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "a swimming club",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "die Schwimm-AG",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_09_en.mp3"
    }
   },
   "st8c_10": {
@@ -3284,21 +2226,7 @@ window.DATEN = {
    "symbol": "🏫",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "Most schools have school clubs.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "Most schools have school clubs.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Die meisten Schulen haben AGs.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_10_en.mp3"
    }
   },
   "st8c_11": {
@@ -3308,21 +2236,7 @@ window.DATEN = {
    "symbol": "",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "Are there clubs like this at your school?",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "Are there clubs like this at your school?",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Gibt es solche AGs an eurer Schule?",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_11_en.mp3"
    }
   },
   "st8c_12": {
@@ -3332,21 +2246,7 @@ window.DATEN = {
    "symbol": "🤔",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "Which clubs do you like?",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "Which clubs do you like?",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Welche AGs magst du?",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_12_en.mp3"
    }
   },
   "st8c_13": {
@@ -3356,21 +2256,7 @@ window.DATEN = {
    "symbol": "🎬",
    "hinweis": "",
    "audio": {
-    "en_m": {
-     "tts": "I want a film club at my school.",
-     "lang": "en-GB",
-     "stimme": "m"
-    },
-    "en_f": {
-     "tts": "I want a film club at my school.",
-     "lang": "en-GB",
-     "stimme": "f"
-    },
-    "de": {
-     "tts": "Ich möchte eine Film-AG an meiner Schule.",
-     "lang": "de-DE",
-     "stimme": "m"
-    }
+    "en": "audio/kernsaetze/st8c_13_en.mp3"
    }
   }
  },
@@ -3383,8 +2269,7 @@ window.DATEN = {
    "satz": "st1_07",
    "luecke": "journey",
    "audio": {
-    "en": "audio/vokabeln/u3_001_journey_en.mp3",
-    "de": "audio/vokabeln/u3_001_journey_de.mp3"
+    "en": "audio/vokabeln/u3_001_journey_en.mp3"
    }
   },
   {
@@ -3395,8 +2280,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "come",
    "audio": {
-    "en": "audio/vokabeln/u3_002_come_en.mp3",
-    "de": "audio/vokabeln/u3_002_come_de.mp3"
+    "en": "audio/vokabeln/u3_002_come_en.mp3"
    }
   },
   {
@@ -3407,8 +2291,7 @@ window.DATEN = {
    "satz": "st1_01",
    "luecke": "bus",
    "audio": {
-    "en": "audio/vokabeln/u3_003_bus_en.mp3",
-    "de": "audio/vokabeln/u3_003_bus_de.mp3"
+    "en": "audio/vokabeln/u3_003_bus_en.mp3"
    }
   },
   {
@@ -3419,8 +2302,7 @@ window.DATEN = {
    "satz": "st1_04",
    "luecke": "by bike",
    "audio": {
-    "en": "audio/vokabeln/u3_004_by_bike_bus_en.mp3",
-    "de": "audio/vokabeln/u3_004_by_bike_bus_de.mp3"
+    "en": "audio/vokabeln/u3_004_by_bike_bus_en.mp3"
    }
   },
   {
@@ -3431,8 +2313,7 @@ window.DATEN = {
    "satz": "st1_02",
    "luecke": "car",
    "audio": {
-    "en": "audio/vokabeln/u3_005_car_en.mp3",
-    "de": "audio/vokabeln/u3_005_car_de.mp3"
+    "en": "audio/vokabeln/u3_005_car_en.mp3"
    }
   },
   {
@@ -3443,8 +2324,7 @@ window.DATEN = {
    "satz": "st1_05",
    "luecke": "train",
    "audio": {
-    "en": "audio/vokabeln/u3_006_train_en.mp3",
-    "de": "audio/vokabeln/u3_006_train_de.mp3"
+    "en": "audio/vokabeln/u3_006_train_en.mp3"
    }
   },
   {
@@ -3455,8 +2335,7 @@ window.DATEN = {
    "satz": "st1_07",
    "luecke": "short",
    "audio": {
-    "en": "audio/vokabeln/u3_007_short_en.mp3",
-    "de": "audio/vokabeln/u3_007_short_de.mp3"
+    "en": "audio/vokabeln/u3_007_short_en.mp3"
    }
   },
   {
@@ -3467,8 +2346,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "weekday",
    "audio": {
-    "en": "audio/vokabeln/u3_008_weekday_en.mp3",
-    "de": "audio/vokabeln/u3_008_weekday_de.mp3"
+    "en": "audio/vokabeln/u3_008_weekday_en.mp3"
    }
   },
   {
@@ -3479,8 +2357,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "at 8 o'clock",
    "audio": {
-    "en": "audio/vokabeln/u3_009_at_8_o_clock_en.mp3",
-    "de": "audio/vokabeln/u3_009_at_8_o_clock_de.mp3"
+    "en": "audio/vokabeln/u3_009_at_8_o_clock_en.mp3"
    }
   },
   {
@@ -3491,8 +2368,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "4 p.m.",
    "audio": {
-    "en": "audio/vokabeln/u3_010_4_p_m_en.mp3",
-    "de": "audio/vokabeln/u3_010_4_p_m_de.mp3"
+    "en": "audio/vokabeln/u3_010_4_p_m_en.mp3"
    }
   },
   {
@@ -3503,8 +2379,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "4 a.m.",
    "audio": {
-    "en": "audio/vokabeln/u3_011_4_a_m_en.mp3",
-    "de": "audio/vokabeln/u3_011_4_a_m_de.mp3"
+    "en": "audio/vokabeln/u3_011_4_a_m_en.mp3"
    }
   },
   {
@@ -3515,8 +2390,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "the United Kingdom (= the UK)",
    "audio": {
-    "en": "audio/vokabeln/u3_012_the_united_kingdom_en.mp3",
-    "de": "audio/vokabeln/u3_012_the_united_kingdom_de.mp3"
+    "en": "audio/vokabeln/u3_012_the_united_kingdom_en.mp3"
    }
   },
   {
@@ -3527,8 +2401,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "hour",
    "audio": {
-    "en": "audio/vokabeln/u3_013_hour_en.mp3",
-    "de": "audio/vokabeln/u3_013_hour_de.mp3"
+    "en": "audio/vokabeln/u3_013_hour_en.mp3"
    }
   },
   {
@@ -3539,8 +2412,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "clock",
    "audio": {
-    "en": "audio/vokabeln/u3_014_clock_en.mp3",
-    "de": "audio/vokabeln/u3_014_clock_de.mp3"
+    "en": "audio/vokabeln/u3_014_clock_en.mp3"
    }
   },
   {
@@ -3551,8 +2423,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "morning",
    "audio": {
-    "en": "audio/vokabeln/u3_015_morning_en.mp3",
-    "de": "audio/vokabeln/u3_015_morning_de.mp3"
+    "en": "audio/vokabeln/u3_015_morning_en.mp3"
    }
   },
   {
@@ -3563,8 +2434,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "evening",
    "audio": {
-    "en": "audio/vokabeln/u3_016_evening_en.mp3",
-    "de": "audio/vokabeln/u3_016_evening_de.mp3"
+    "en": "audio/vokabeln/u3_016_evening_en.mp3"
    }
   },
   {
@@ -3575,8 +2445,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "lunchtime",
    "audio": {
-    "en": "audio/vokabeln/u3_017_lunchtime_en.mp3",
-    "de": "audio/vokabeln/u3_017_lunchtime_de.mp3"
+    "en": "audio/vokabeln/u3_017_lunchtime_en.mp3"
    }
   },
   {
@@ -3587,8 +2456,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "end",
    "audio": {
-    "en": "audio/vokabeln/u3_018_end_en.mp3",
-    "de": "audio/vokabeln/u3_018_end_de.mp3"
+    "en": "audio/vokabeln/u3_018_end_en.mp3"
    }
   },
   {
@@ -3599,8 +2467,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "in the end",
    "audio": {
-    "en": "audio/vokabeln/u3_019_in_the_end_en.mp3",
-    "de": "audio/vokabeln/u3_019_in_the_end_de.mp3"
+    "en": "audio/vokabeln/u3_019_in_the_end_en.mp3"
    }
   },
   {
@@ -3611,8 +2478,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "at the end (of)",
    "audio": {
-    "en": "audio/vokabeln/u3_020_at_the_end_en.mp3",
-    "de": "audio/vokabeln/u3_020_at_the_end_de.mp3"
+    "en": "audio/vokabeln/u3_020_at_the_end_en.mp3"
    }
   },
   {
@@ -3623,8 +2489,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "before (school / the lesson)",
    "audio": {
-    "en": "audio/vokabeln/u3_021_before_en.mp3",
-    "de": "audio/vokabeln/u3_021_before_de.mp3"
+    "en": "audio/vokabeln/u3_021_before_en.mp3"
    }
   },
   {
@@ -3635,8 +2500,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "why",
    "audio": {
-    "en": "audio/vokabeln/u3_022_why_en.mp3",
-    "de": "audio/vokabeln/u3_022_why_de.mp3"
+    "en": "audio/vokabeln/u3_022_why_en.mp3"
    }
   },
   {
@@ -3647,8 +2511,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "newspaper (paper)",
    "audio": {
-    "en": "audio/vokabeln/u3_023_newspaper_en.mp3",
-    "de": "audio/vokabeln/u3_023_newspaper_de.mp3"
+    "en": "audio/vokabeln/u3_023_newspaper_en.mp3"
    }
   },
   {
@@ -3659,8 +2522,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "letter",
    "audio": {
-    "en": "audio/vokabeln/u3_024_letter_en.mp3",
-    "de": "audio/vokabeln/u3_024_letter_de.mp3"
+    "en": "audio/vokabeln/u3_024_letter_en.mp3"
    }
   },
   {
@@ -3671,8 +2533,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "competition",
    "audio": {
-    "en": "audio/vokabeln/u3_025_competition_en.mp3",
-    "de": "audio/vokabeln/u3_025_competition_de.mp3"
+    "en": "audio/vokabeln/u3_025_competition_en.mp3"
    }
   },
   {
@@ -3683,8 +2544,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "choose",
    "audio": {
-    "en": "audio/vokabeln/u3_026_choose_en.mp3",
-    "de": "audio/vokabeln/u3_026_choose_de.mp3"
+    "en": "audio/vokabeln/u3_026_choose_en.mp3"
    }
   },
   {
@@ -3695,8 +2555,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "winner",
    "audio": {
-    "en": "audio/vokabeln/u3_027_winner_en.mp3",
-    "de": "audio/vokabeln/u3_027_winner_de.mp3"
+    "en": "audio/vokabeln/u3_027_winner_en.mp3"
    }
   },
   {
@@ -3707,8 +2566,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "illness",
    "audio": {
-    "en": "audio/vokabeln/u3_028_illness_en.mp3",
-    "de": "audio/vokabeln/u3_028_illness_de.mp3"
+    "en": "audio/vokabeln/u3_028_illness_en.mp3"
    }
   },
   {
@@ -3719,8 +2577,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "wheelchair",
    "audio": {
-    "en": "audio/vokabeln/u3_029_wheelchair_en.mp3",
-    "de": "audio/vokabeln/u3_029_wheelchair_de.mp3"
+    "en": "audio/vokabeln/u3_029_wheelchair_en.mp3"
    }
   },
   {
@@ -3731,8 +2588,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "husband",
    "audio": {
-    "en": "audio/vokabeln/u3_030_husband_en.mp3",
-    "de": "audio/vokabeln/u3_030_husband_de.mp3"
+    "en": "audio/vokabeln/u3_030_husband_en.mp3"
    }
   },
   {
@@ -3743,8 +2599,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "cafe",
    "audio": {
-    "en": "audio/vokabeln/u3_031_cafe_en.mp3",
-    "de": "audio/vokabeln/u3_031_cafe_de.mp3"
+    "en": "audio/vokabeln/u3_031_cafe_en.mp3"
    }
   },
   {
@@ -3755,8 +2610,7 @@ window.DATEN = {
    "satz": "st3_01",
    "luecke": "get up",
    "audio": {
-    "en": "audio/vokabeln/u3_032_get_up_en.mp3",
-    "de": "audio/vokabeln/u3_032_get_up_de.mp3"
+    "en": "audio/vokabeln/u3_032_get_up_en.mp3"
    }
   },
   {
@@ -3767,8 +2621,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "shower",
    "audio": {
-    "en": "audio/vokabeln/u3_033_shower_en.mp3",
-    "de": "audio/vokabeln/u3_033_shower_de.mp3"
+    "en": "audio/vokabeln/u3_033_shower_en.mp3"
    }
   },
   {
@@ -3779,8 +2632,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "get dressed",
    "audio": {
-    "en": "audio/vokabeln/u3_034_get_dressed_en.mp3",
-    "de": "audio/vokabeln/u3_034_get_dressed_de.mp3"
+    "en": "audio/vokabeln/u3_034_get_dressed_en.mp3"
    }
   },
   {
@@ -3791,8 +2643,7 @@ window.DATEN = {
    "satz": "st2b_05_i",
    "luecke": "breakfast",
    "audio": {
-    "en": "audio/vokabeln/u3_035_breakfast_en.mp3",
-    "de": "audio/vokabeln/u3_035_breakfast_de.mp3"
+    "en": "audio/vokabeln/u3_035_breakfast_en.mp3"
    }
   },
   {
@@ -3803,8 +2654,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "take",
    "audio": {
-    "en": "audio/vokabeln/u3_036_take_en.mp3",
-    "de": "audio/vokabeln/u3_036_take_de.mp3"
+    "en": "audio/vokabeln/u3_036_take_en.mp3"
    }
   },
   {
@@ -3815,8 +2665,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "watch (sth.)",
    "audio": {
-    "en": "audio/vokabeln/u3_037_watch_en.mp3",
-    "de": "audio/vokabeln/u3_037_watch_de.mp3"
+    "en": "audio/vokabeln/u3_037_watch_en.mp3"
    }
   },
   {
@@ -3827,8 +2676,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "line",
    "audio": {
-    "en": "audio/vokabeln/u3_038_line_en.mp3",
-    "de": "audio/vokabeln/u3_038_line_de.mp3"
+    "en": "audio/vokabeln/u3_038_line_en.mp3"
    }
   },
   {
@@ -3839,8 +2687,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "shopping",
    "audio": {
-    "en": "audio/vokabeln/u3_039_shopping_en.mp3",
-    "de": "audio/vokabeln/u3_039_shopping_de.mp3"
+    "en": "audio/vokabeln/u3_039_shopping_en.mp3"
    }
   },
   {
@@ -3851,8 +2698,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "afternoon",
    "audio": {
-    "en": "audio/vokabeln/u3_040_afternoon_en.mp3",
-    "de": "audio/vokabeln/u3_040_afternoon_de.mp3"
+    "en": "audio/vokabeln/u3_040_afternoon_en.mp3"
    }
   },
   {
@@ -3863,8 +2709,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "brush",
    "audio": {
-    "en": "audio/vokabeln/u3_041_brush_en.mp3",
-    "de": "audio/vokabeln/u3_041_brush_de.mp3"
+    "en": "audio/vokabeln/u3_041_brush_en.mp3"
    }
   },
   {
@@ -3875,8 +2720,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "tooth, pl teeth",
    "audio": {
-    "en": "audio/vokabeln/u3_042_tooth_pl_teeth_en.mp3",
-    "de": "audio/vokabeln/u3_042_tooth_pl_teeth_de.mp3"
+    "en": "audio/vokabeln/u3_042_tooth_pl_teeth_en.mp3"
    }
   },
   {
@@ -3887,8 +2731,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "everybody",
    "audio": {
-    "en": "audio/vokabeln/u3_043_everybody_en.mp3",
-    "de": "audio/vokabeln/u3_043_everybody_de.mp3"
+    "en": "audio/vokabeln/u3_043_everybody_en.mp3"
    }
   },
   {
@@ -3899,8 +2742,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "project",
    "audio": {
-    "en": "audio/vokabeln/u3_044_project_en.mp3",
-    "de": "audio/vokabeln/u3_044_project_de.mp3"
+    "en": "audio/vokabeln/u3_044_project_en.mp3"
    }
   },
   {
@@ -3911,8 +2753,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "country",
    "audio": {
-    "en": "audio/vokabeln/u3_045_country_en.mp3",
-    "de": "audio/vokabeln/u3_045_country_de.mp3"
+    "en": "audio/vokabeln/u3_045_country_en.mp3"
    }
   },
   {
@@ -3923,8 +2764,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "(school) club",
    "audio": {
-    "en": "audio/vokabeln/u3_046_club_en.mp3",
-    "de": "audio/vokabeln/u3_046_club_de.mp3"
+    "en": "audio/vokabeln/u3_046_club_en.mp3"
    }
   },
   {
@@ -3935,8 +2775,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "drama",
    "audio": {
-    "en": "audio/vokabeln/u3_047_drama_en.mp3",
-    "de": "audio/vokabeln/u3_047_drama_de.mp3"
+    "en": "audio/vokabeln/u3_047_drama_en.mp3"
    }
   },
   {
@@ -3947,8 +2786,7 @@ window.DATEN = {
    "satz": "st4_cycle_satz",
    "luecke": "cycle",
    "audio": {
-    "en": "audio/vokabeln/u3_048_cycle_en.mp3",
-    "de": "audio/vokabeln/u3_048_cycle_de.mp3"
+    "en": "audio/vokabeln/u3_048_cycle_en.mp3"
    }
   },
   {
@@ -3959,8 +2797,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "hike",
    "audio": {
-    "en": "audio/vokabeln/u3_049_hike_en.mp3",
-    "de": "audio/vokabeln/u3_049_hike_de.mp3"
+    "en": "audio/vokabeln/u3_049_hike_en.mp3"
    }
   },
   {
@@ -3971,8 +2808,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "run",
    "audio": {
-    "en": "audio/vokabeln/u3_050_run_en.mp3",
-    "de": "audio/vokabeln/u3_050_run_de.mp3"
+    "en": "audio/vokabeln/u3_050_run_en.mp3"
    }
   },
   {
@@ -3983,8 +2819,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "trampolining",
    "audio": {
-    "en": "audio/vokabeln/u3_051_trampolining_en.mp3",
-    "de": "audio/vokabeln/u3_051_trampolining_de.mp3"
+    "en": "audio/vokabeln/u3_051_trampolining_en.mp3"
    }
   },
   {
@@ -3995,8 +2830,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "most schools",
    "audio": {
-    "en": "audio/vokabeln/u3_052_most_schools_en.mp3",
-    "de": "audio/vokabeln/u3_052_most_schools_de.mp3"
+    "en": "audio/vokabeln/u3_052_most_schools_en.mp3"
    }
   },
   {
@@ -4007,8 +2841,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "Which clubs ...?",
    "audio": {
-    "en": "audio/vokabeln/u3_053_which_clubs_en.mp3",
-    "de": "audio/vokabeln/u3_053_which_clubs_de.mp3"
+    "en": "audio/vokabeln/u3_053_which_clubs_en.mp3"
    }
   },
   {
@@ -4019,8 +2852,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "sea",
    "audio": {
-    "en": "audio/vokabeln/u3_054_sea_en.mp3",
-    "de": "audio/vokabeln/u3_054_sea_de.mp3"
+    "en": "audio/vokabeln/u3_054_sea_en.mp3"
    }
   },
   {
@@ -4031,8 +2863,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "sentence",
    "audio": {
-    "en": "audio/vokabeln/u3_055_sentence_en.mp3",
-    "de": "audio/vokabeln/u3_055_sentence_de.mp3"
+    "en": "audio/vokabeln/u3_055_sentence_en.mp3"
    }
   },
   {
@@ -4043,8 +2874,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "sometimes",
    "audio": {
-    "en": "audio/vokabeln/u3_056_sometimes_en.mp3",
-    "de": "audio/vokabeln/u3_056_sometimes_de.mp3"
+    "en": "audio/vokabeln/u3_056_sometimes_en.mp3"
    }
   },
   {
@@ -4055,8 +2885,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "never",
    "audio": {
-    "en": "audio/vokabeln/u3_057_never_en.mp3",
-    "de": "audio/vokabeln/u3_057_never_de.mp3"
+    "en": "audio/vokabeln/u3_057_never_en.mp3"
    }
   },
   {
@@ -4067,8 +2896,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "rarely",
    "audio": {
-    "en": "audio/vokabeln/u3_058_rarely_en.mp3",
-    "de": "audio/vokabeln/u3_058_rarely_de.mp3"
+    "en": "audio/vokabeln/u3_058_rarely_en.mp3"
    }
   },
   {
@@ -4079,8 +2907,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "secret",
    "audio": {
-    "en": "audio/vokabeln/u3_059_secret_en.mp3",
-    "de": "audio/vokabeln/u3_059_secret_de.mp3"
+    "en": "audio/vokabeln/u3_059_secret_en.mp3"
    }
   },
   {
@@ -4091,8 +2918,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "activity",
    "audio": {
-    "en": "audio/vokabeln/u3_060_activity_en.mp3",
-    "de": "audio/vokabeln/u3_060_activity_de.mp3"
+    "en": "audio/vokabeln/u3_060_activity_en.mp3"
    }
   },
   {
@@ -4103,8 +2929,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "a shame",
    "audio": {
-    "en": "audio/vokabeln/u3_061_a_shame_en.mp3",
-    "de": "audio/vokabeln/u3_061_a_shame_de.mp3"
+    "en": "audio/vokabeln/u3_061_a_shame_en.mp3"
    }
   },
   {
@@ -4115,8 +2940,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "I'd love to.",
    "audio": {
-    "en": "audio/vokabeln/u3_062_i_d_love_to_en.mp3",
-    "de": "audio/vokabeln/u3_062_i_d_love_to_de.mp3"
+    "en": "audio/vokabeln/u3_062_i_d_love_to_en.mp3"
    }
   },
   {
@@ -4127,8 +2951,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "ask sb. to do sth.",
    "audio": {
-    "en": "audio/vokabeln/u3_063_ask_sb_to_do_sth_en.mp3",
-    "de": "audio/vokabeln/u3_063_ask_sb_to_do_sth_de.mp3"
+    "en": "audio/vokabeln/u3_063_ask_sb_to_do_sth_en.mp3"
    }
   },
   {
@@ -4139,8 +2962,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "plan",
    "audio": {
-    "en": "audio/vokabeln/u3_064_plan_en.mp3",
-    "de": "audio/vokabeln/u3_064_plan_de.mp3"
+    "en": "audio/vokabeln/u3_064_plan_en.mp3"
    }
   },
   {
@@ -4151,8 +2973,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "win",
    "audio": {
-    "en": "audio/vokabeln/u3_065_win_en.mp3",
-    "de": "audio/vokabeln/u3_065_win_de.mp3"
+    "en": "audio/vokabeln/u3_065_win_en.mp3"
    }
   },
   {
@@ -4163,8 +2984,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "prize",
    "audio": {
-    "en": "audio/vokabeln/u3_066_prize_en.mp3",
-    "de": "audio/vokabeln/u3_066_prize_de.mp3"
+    "en": "audio/vokabeln/u3_066_prize_en.mp3"
    }
   },
   {
@@ -4175,8 +2995,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "ceremony",
    "audio": {
-    "en": "audio/vokabeln/u3_067_ceremony_en.mp3",
-    "de": "audio/vokabeln/u3_067_ceremony_de.mp3"
+    "en": "audio/vokabeln/u3_067_ceremony_en.mp3"
    }
   },
   {
@@ -4187,8 +3006,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "show",
    "audio": {
-    "en": "audio/vokabeln/u3_068_show_en.mp3",
-    "de": "audio/vokabeln/u3_068_show_de.mp3"
+    "en": "audio/vokabeln/u3_068_show_en.mp3"
    }
   },
   {
@@ -4199,8 +3017,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "article",
    "audio": {
-    "en": "audio/vokabeln/u3_069_article_en.mp3",
-    "de": "audio/vokabeln/u3_069_article_de.mp3"
+    "en": "audio/vokabeln/u3_069_article_en.mp3"
    }
   },
   {
@@ -4211,8 +3028,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "surprised",
    "audio": {
-    "en": "audio/vokabeln/u3_070_surprised_en.mp3",
-    "de": "audio/vokabeln/u3_070_surprised_de.mp3"
+    "en": "audio/vokabeln/u3_070_surprised_en.mp3"
    }
   },
   {
@@ -4223,8 +3039,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "send",
    "audio": {
-    "en": "audio/vokabeln/u3_071_send_en.mp3",
-    "de": "audio/vokabeln/u3_071_send_de.mp3"
+    "en": "audio/vokabeln/u3_071_send_en.mp3"
    }
   },
   {
@@ -4235,8 +3050,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "next",
    "audio": {
-    "en": "audio/vokabeln/u3_072_next_en.mp3",
-    "de": "audio/vokabeln/u3_072_next_de.mp3"
+    "en": "audio/vokabeln/u3_072_next_en.mp3"
    }
   },
   {
@@ -4247,8 +3061,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "guys (pl)",
    "audio": {
-    "en": "audio/vokabeln/u3_073_guys_en.mp3",
-    "de": "audio/vokabeln/u3_073_guys_de.mp3"
+    "en": "audio/vokabeln/u3_073_guys_en.mp3"
    }
   },
   {
@@ -4259,8 +3072,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "feel",
    "audio": {
-    "en": "audio/vokabeln/u3_074_feel_en.mp3",
-    "de": "audio/vokabeln/u3_074_feel_de.mp3"
+    "en": "audio/vokabeln/u3_074_feel_en.mp3"
    }
   },
   {
@@ -4271,8 +3083,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "be/feel sorry for sb.",
    "audio": {
-    "en": "audio/vokabeln/u3_075_be_feel_sorry_for_sb_en.mp3",
-    "de": "audio/vokabeln/u3_075_be_feel_sorry_for_sb_de.mp3"
+    "en": "audio/vokabeln/u3_075_be_feel_sorry_for_sb_en.mp3"
    }
   },
   {
@@ -4283,8 +3094,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "her",
    "audio": {
-    "en": "audio/vokabeln/u3_076_her_en.mp3",
-    "de": "audio/vokabeln/u3_076_her_de.mp3"
+    "en": "audio/vokabeln/u3_076_her_en.mp3"
    }
   },
   {
@@ -4295,8 +3105,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "stupid",
    "audio": {
-    "en": "audio/vokabeln/u3_077_stupid_en.mp3",
-    "de": "audio/vokabeln/u3_077_stupid_de.mp3"
+    "en": "audio/vokabeln/u3_077_stupid_en.mp3"
    }
   },
   {
@@ -4307,8 +3116,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "hate",
    "audio": {
-    "en": "audio/vokabeln/u3_078_hate_en.mp3",
-    "de": "audio/vokabeln/u3_078_hate_de.mp3"
+    "en": "audio/vokabeln/u3_078_hate_en.mp3"
    }
   },
   {
@@ -4319,8 +3127,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "much",
    "audio": {
-    "en": "audio/vokabeln/u3_079_much_en.mp3",
-    "de": "audio/vokabeln/u3_079_much_de.mp3"
+    "en": "audio/vokabeln/u3_079_much_en.mp3"
    }
   },
   {
@@ -4331,8 +3138,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "Well done.",
    "audio": {
-    "en": "audio/vokabeln/u3_080_well_done_en.mp3",
-    "de": "audio/vokabeln/u3_080_well_done_de.mp3"
+    "en": "audio/vokabeln/u3_080_well_done_en.mp3"
    }
   },
   {
@@ -4343,8 +3149,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "news",
    "audio": {
-    "en": "audio/vokabeln/u3_081_news_en.mp3",
-    "de": "audio/vokabeln/u3_081_news_de.mp3"
+    "en": "audio/vokabeln/u3_081_news_en.mp3"
    }
   },
   {
@@ -4355,8 +3160,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "get",
    "audio": {
-    "en": "audio/vokabeln/u3_082_get_en.mp3",
-    "de": "audio/vokabeln/u3_082_get_de.mp3"
+    "en": "audio/vokabeln/u3_082_get_en.mp3"
    }
   },
   {
@@ -4367,8 +3171,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "as the winner",
    "audio": {
-    "en": "audio/vokabeln/u3_083_as_the_winner_en.mp3",
-    "de": "audio/vokabeln/u3_083_as_the_winner_de.mp3"
+    "en": "audio/vokabeln/u3_083_as_the_winner_en.mp3"
    }
   },
   {
@@ -4379,8 +3182,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "money",
    "audio": {
-    "en": "audio/vokabeln/u3_084_money_en.mp3",
-    "de": "audio/vokabeln/u3_084_money_de.mp3"
+    "en": "audio/vokabeln/u3_084_money_en.mp3"
    }
   },
   {
@@ -4391,8 +3193,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "heading",
    "audio": {
-    "en": "audio/vokabeln/u3_085_heading_en.mp3",
-    "de": "audio/vokabeln/u3_085_heading_de.mp3"
+    "en": "audio/vokabeln/u3_085_heading_en.mp3"
    }
   },
   {
@@ -4403,8 +3204,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "find out (about)",
    "audio": {
-    "en": "audio/vokabeln/u3_086_find_out_en.mp3",
-    "de": "audio/vokabeln/u3_086_find_out_de.mp3"
+    "en": "audio/vokabeln/u3_086_find_out_en.mp3"
    }
   },
   {
@@ -4415,8 +3215,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "explain sth. to sb.",
    "audio": {
-    "en": "audio/vokabeln/u3_087_explain_sth_to_sb_en.mp3",
-    "de": "audio/vokabeln/u3_087_explain_sth_to_sb_de.mp3"
+    "en": "audio/vokabeln/u3_087_explain_sth_to_sb_en.mp3"
    }
   },
   {
@@ -4427,8 +3226,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "happen (to sb.)",
    "audio": {
-    "en": "audio/vokabeln/u3_088_happen_en.mp3",
-    "de": "audio/vokabeln/u3_088_happen_de.mp3"
+    "en": "audio/vokabeln/u3_088_happen_en.mp3"
    }
   },
   {
@@ -4439,8 +3237,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "give",
    "audio": {
-    "en": "audio/vokabeln/u3_089_give_en.mp3",
-    "de": "audio/vokabeln/u3_089_give_de.mp3"
+    "en": "audio/vokabeln/u3_089_give_en.mp3"
    }
   },
   {
@@ -4451,8 +3248,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "pay (for sth.)",
    "audio": {
-    "en": "audio/vokabeln/u3_090_pay_en.mp3",
-    "de": "audio/vokabeln/u3_090_pay_de.mp3"
+    "en": "audio/vokabeln/u3_090_pay_en.mp3"
    }
   },
   {
@@ -4463,8 +3259,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "cleaner",
    "audio": {
-    "en": "audio/vokabeln/u3_091_cleaner_en.mp3",
-    "de": "audio/vokabeln/u3_091_cleaner_de.mp3"
+    "en": "audio/vokabeln/u3_091_cleaner_en.mp3"
    }
   },
   {
@@ -4475,8 +3270,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "pound (£)",
    "audio": {
-    "en": "audio/vokabeln/u3_092_pound_en.mp3",
-    "de": "audio/vokabeln/u3_092_pound_de.mp3"
+    "en": "audio/vokabeln/u3_092_pound_en.mp3"
    }
   },
   {
@@ -4487,8 +3281,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "penny (= p), pl pence",
    "audio": {
-    "en": "audio/vokabeln/u3_093_penny_pl_pence_en.mp3",
-    "de": "audio/vokabeln/u3_093_penny_pl_pence_de.mp3"
+    "en": "audio/vokabeln/u3_093_penny_pl_pence_en.mp3"
    }
   },
   {
@@ -4499,8 +3292,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "look sth. up",
    "audio": {
-    "en": "audio/vokabeln/u3_094_look_sth_up_en.mp3",
-    "de": "audio/vokabeln/u3_094_look_sth_up_de.mp3"
+    "en": "audio/vokabeln/u3_094_look_sth_up_en.mp3"
    }
   },
   {
@@ -4511,8 +3303,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "jigsaw (puzzle)",
    "audio": {
-    "en": "audio/vokabeln/u3_095_jigsaw_en.mp3",
-    "de": "audio/vokabeln/u3_095_jigsaw_de.mp3"
+    "en": "audio/vokabeln/u3_095_jigsaw_en.mp3"
    }
   },
   {
@@ -4523,8 +3314,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "collect",
    "audio": {
-    "en": "audio/vokabeln/u3_096_collect_en.mp3",
-    "de": "audio/vokabeln/u3_096_collect_de.mp3"
+    "en": "audio/vokabeln/u3_096_collect_en.mp3"
    }
   },
   {
@@ -4535,8 +3325,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "letter",
    "audio": {
-    "en": "audio/vokabeln/u3_097_letter_en.mp3",
-    "de": "audio/vokabeln/u3_097_letter_de.mp3"
+    "en": "audio/vokabeln/u3_097_letter_en.mp3"
    }
   },
   {
@@ -4547,8 +3336,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "card",
    "audio": {
-    "en": "audio/vokabeln/u3_098_card_en.mp3",
-    "de": "audio/vokabeln/u3_098_card_de.mp3"
+    "en": "audio/vokabeln/u3_098_card_en.mp3"
    }
   },
   {
@@ -4559,8 +3347,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "language",
    "audio": {
-    "en": "audio/vokabeln/u3_099_language_en.mp3",
-    "de": "audio/vokabeln/u3_099_language_de.mp3"
+    "en": "audio/vokabeln/u3_099_language_en.mp3"
    }
   },
   {
@@ -4571,8 +3358,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "group",
    "audio": {
-    "en": "audio/vokabeln/u3_100_group_en.mp3",
-    "de": "audio/vokabeln/u3_100_group_de.mp3"
+    "en": "audio/vokabeln/u3_100_group_en.mp3"
    }
   },
   {
@@ -4583,8 +3369,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "share",
    "audio": {
-    "en": "audio/vokabeln/u3_101_share_en.mp3",
-    "de": "audio/vokabeln/u3_101_share_de.mp3"
+    "en": "audio/vokabeln/u3_101_share_en.mp3"
    }
   },
   {
@@ -4595,8 +3380,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "match",
    "audio": {
-    "en": "audio/vokabeln/u3_102_match_en.mp3",
-    "de": "audio/vokabeln/u3_102_match_de.mp3"
+    "en": "audio/vokabeln/u3_102_match_en.mp3"
    }
   },
   {
@@ -4607,8 +3391,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "light",
    "audio": {
-    "en": "audio/vokabeln/u3_103_light_en.mp3",
-    "de": "audio/vokabeln/u3_103_light_de.mp3"
+    "en": "audio/vokabeln/u3_103_light_en.mp3"
    }
   },
   {
@@ -4619,8 +3402,7 @@ window.DATEN = {
    "satz": "",
    "luecke": "speak clearly/loudly",
    "audio": {
-    "en": "audio/vokabeln/u3_104_speak_clearly_loudly_en.mp3",
-    "de": "audio/vokabeln/u3_104_speak_clearly_loudly_de.mp3"
+    "en": "audio/vokabeln/u3_104_speak_clearly_loudly_en.mp3"
    }
   }
  ],

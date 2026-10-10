@@ -20,7 +20,7 @@
   const STUFEN = {
     1: "Hören wir zu. Sprich nach! Das Deutsche kannst du antippen.",
     2: "Jetzt siehst du Englisch und Deutsch. Hör zu und sprich nach!",
-    3: "Du hörst den deutschen Satz. Sag ihn auf Englisch! Dann tipp auf „Lösung“.",
+    3: "Lies den deutschen Satz. Sag ihn auf Englisch! Dann tipp auf „Lösung“.",
     4: "Jetzt bist du der Profi: Sag den ganzen Satz auf Englisch! Dann tipp auf „Lösung“.",
   };
   const MITTEL_NAME = { bus: "Bus", car: "Auto", bike: "Fahrrad", train: "Zug", walk: "zu Fuß" };
@@ -316,17 +316,17 @@
 
     function englisch() {
       jetztdu.hidden = true;
-      spiele([...ss.map((s) => s.audio.en_m), ...ss.map((s) => s.audio.en_f)]).then((d) => {
+      spiele(ss.map((s) => s.audio.en)).then((d) => {
         if (d === null) return;
         jetztdu.hidden = false;
         jetztdu.classList.remove("laeuft");
         void jetztdu.offsetWidth;
-        jetztdu.style.setProperty("--dauer", Math.max(3, (d / 2) * 1.4 + 1).toFixed(1) + "s");
+        jetztdu.style.setProperty("--dauer", Math.max(3, d * 1.4 + 1).toFixed(1) + "s");
         jetztdu.classList.add("laeuft");
       });
     }
     function abspielen() {
-      if (stufe >= 3 && !geloest) { jetztdu.hidden = true; spiele(ss.map((s) => s.audio.de)); }
+      if (stufe >= 3 && !geloest) { jetztdu.hidden = true; } // Deutsch wird nur angezeigt, nicht gesprochen
       else englisch();
     }
     function loesen() {
@@ -369,7 +369,7 @@
             el("td", { lang: "en" }, i === b.markiert ? verbMitS(rest) : rest),
             el("td", { class: "de" }, s.de),
             el("td", {}, el("button", { class: "knopf leise klein-knopf", "aria-label": "Anhören: " + s.en,
-              onclick: () => spiele([s.audio.en_m]) }, "🔊")));
+              onclick: () => spiele([s.audio.en]) }, "🔊")));
         }))));
       return null;
     });
@@ -404,13 +404,13 @@
           melde(box, "gut", lob());
           weiter.disabled = false;
           lage.weiter = naechstes;
-          spiele([s.audio.en_m, s.audio.en_f]);
+          spiele([s.audio.en]);
         } else {
           e.currentTarget.disabled = true;
           melde(box, "hilfe", `Ich helfe dir: ${a.hilfe} Probier's nochmal!`);
         }
       } }, form)));
-    lage.abspielen = () => spiele(geloest ? [s.audio.en_m, s.audio.en_f] : [s.audio.de]);
+    lage.abspielen = () => { if (geloest) spiele([s.audio.en]); };
     zeige(kopf(st),
       el("p", { class: "ansage" }, "Welche Form passt? Tipp auf das richtige Verb!"),
       karte(teil, `Aufgabe ${lage.pos + 1} von ${lage.reihe.length}`,
@@ -557,7 +557,7 @@
     const loesungZeile = el("p", { class: "satz ziel-satz", lang: "en", hidden: true }, s.en);
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
     weiter.disabled = true;
-    const hoeren = () => spiele([s.audio.en_m, s.audio.en_f]);
+    const hoeren = () => spiele([s.audio.en]);
     const wahl = el("div", { class: "wahl", role: "group", "aria-label": "Antwort wählen" },
       (a.korrektur ? a.optionen : mischen(a.optionen)).map((o) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
         if (geloest) return;
@@ -592,7 +592,7 @@
       woerter.map(() => el("li", { class: "platz" }, "…")));
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
     weiter.disabled = true;
-    const alle = () => spiele(woerter.map((w) => w.audio.en_m));
+    const alle = () => spiele(woerter.map((w) => w.audio.en));
     const knoepfe = mischen(woerter).map((w) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
       if (w === woerter[naechster]) {
         const platz = reihe.children[naechster];
@@ -600,7 +600,7 @@
         platz.classList.add("voll");
         e.currentTarget.hidden = true;
         box.hidden = true;
-        spiele([w.audio.en_m]);
+        spiele([w.audio.en]);
         if (++naechster === woerter.length) {
           melde(box, "gut", lob());
           weiter.disabled = false; lage.weiter = naechstes; lage.abspielen = alle;
@@ -654,9 +654,9 @@
       const loesung = knopf("Lösung", () => {
         geloest = true; loesung.disabled = true;
         satz.replaceChildren(...teileSatz(false));
-        spiele([s.audio.en_m, s.audio.en_f]);
+        spiele([s.audio.en]);
       });
-      lage.abspielen = () => spiele(geloest ? [s.audio.en_m, s.audio.en_f] : [s.audio.de]);
+      lage.abspielen = () => { if (geloest) spiele([s.audio.en]); };
       lage.weiter = naechstes;
       zeige(kopf(st), el("p", { class: "ansage" }, "Welches Wort fehlt? Sag den ganzen Satz auf Englisch! Dann tipp auf „Lösung“."),
         karte(teil, `Satz ${lage.pos + 1} von ${anzahl}`,
@@ -671,14 +671,14 @@
     const frage = enDe ? el("p", { class: "vok-en", lang: "en" }, v.en) : el("p", { class: "vok-en" }, v.de);
     const antwort = el("p", { class: "vok-de", lang: enDe ? "de" : "en", hidden: true }, enDe ? v.de : v.en);
     const bildPlatz = bild(false);
-    const fragen = () => spiele([enDe ? v.audio.en : v.audio.de]);
+    const fragen = () => { if (enDe) spiele([v.audio.en]); };
     const bewerten = el("div", { class: "knopfreihe", hidden: true },
       knopf("✓ Gewusst", naechstes, "haupt"),
       knopf("↻ Nochmal üben", () => { lage.vq.push(v.id); naechstes(); }));
     const loesung = knopf("Lösung", () => {
       loesung.hidden = true; antwort.hidden = false; bewerten.hidden = false;
       bildPlatz.textContent = v.symbol;
-      lage.abspielen = () => spiele([v.audio.en, v.audio.de]);
+      lage.abspielen = () => spiele([v.audio.en]);
       lage.weiter = naechstes;
       lage.abspielen();
     }, "haupt");

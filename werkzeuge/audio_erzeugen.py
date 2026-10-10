@@ -15,19 +15,34 @@ AUDIO_BASIS = os.path.join(BASIS, "app", "audio")
 AUDIO = os.path.join(AUDIO_BASIS, "kernsaetze")
 LISTE = os.path.join(BASIS, "docs", "sprechtexte.md")
 
-# Festgelegt am 10.10.2026 nach der Hörprobe
+# Stimmen (Stand 10.10.2026): Englisch nur noch eine Stimme – Mr. Alex' eigene Stimme.
+# Weibliche Personen in Hörtexten sprechen mit Alice. Keine deutschen Audios mehr.
 STIMMEN = {
-    "en_m": ("5sxKKBj5y1Bji6769iwE", "en", "Elrond – junge britische Männerstimme"),
-    "en_f": ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britische Frauenstimme"),
-    "de":   ("onwK4e9ZLuTAKqWW03F9", "de", "Daniel – deutsche Stimme"),
-    "en_g": ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme (Vokabeln)"),
+    # Wunsch: Mr. Alex' eigene Stimme "Alex" (AK2WYGe96RmMwFKM5KEz). Am 10.10.2026 lieferte ElevenLabs dafür
+    # bei jedem Modell nur "500 Internal Server Error" -> vorerst George. Zum Wechsel: ID hier eintragen,
+    # Dateien in app/audio löschen, Skript neu starten.
+    "en":   ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme"),
+    "en_f": ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britische Frauenstimme (weibliche Personen in Hörtexten)"),
 }
+ERSATZ = ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme (Ersatz)")
 MODELL = "eleven_multilingual_v2"
 EINSTELLUNGEN = {"stability": 0.6, "similarity_boost": 0.75, "speed": 0.9}
 
 
 def sprechen(stimme, sprache, text, ziel, tempo=None):
-    voice_id = STIMMEN[stimme][0]
+    try:
+        return _sprechen(STIMMEN[stimme][0], sprache, text, ziel, tempo)
+    except urllib.error.HTTPError as e:
+        body = e.read()
+        # Eigene (geklonte) Stimme im Tarif nicht erlaubt -> dauerhaft auf George umstellen
+        if stimme == "en" and e.code in (401, 403) and b"quota" not in body:
+            print("Stimme Alex nicht verfügbar – nehme George.", body[:160])
+            STIMMEN["en"] = ERSATZ
+            return _sprechen(ERSATZ[0], sprache, text, ziel, tempo)
+        raise urllib.error.HTTPError(e.url, e.code, e.msg, e.hdrs, __import__("io").BytesIO(body))
+
+
+def _sprechen(voice_id, sprache, text, ziel, tempo=None):
     body = json.dumps({"text": text, "model_id": MODELL, "language_code": sprache,
                        "voice_settings": {**EINSTELLUNGEN, **({"speed": tempo} if tempo else {})}}).encode()
     req = urllib.request.Request(
@@ -49,20 +64,16 @@ def main():
         tempo = float(z["tempo"]) if z.get("tempo") else None
         if z["englisch"]:
             text = z["englisch_gesprochen"] or z["englisch"].replace("[", "").replace("]", "")
-            auftraege += [("kernsaetze", f"{z['id']}_en_m", "en_m", "en", text, tempo),
-                          ("kernsaetze", f"{z['id']}_en_f", "en_f", "en", text, tempo)]
-        if z["deutsch"]:
-            auftraege.append(("kernsaetze", f"{z['id']}_de", "de", "de", z["deutsch_gesprochen"] or z["deutsch"], tempo))
+            auftraege.append(("kernsaetze", f"{z['id']}_en", "en", "en", text, tempo))
     with open(os.path.join(BASIS, "inhalte", "vokabeln.tsv"), encoding="utf-8") as f:
         for v in csv.DictReader(f, delimiter="\t"):
-            auftraege += [("vokabeln", f"{v['id']}_en", "en_g", "en", v["englisch_gesprochen"], None),
-                          ("vokabeln", f"{v['id']}_de", "de", "de", v["deutsch_gesprochen"], None)]
+            auftraege.append(("vokabeln", f"{v['id']}_en", "en", "en", v["englisch_gesprochen"], None))
     for u in hoeren.lesen():
         for t in u["teile"]:
-            auftraege.append(("hoeren", t["datei"], t["stimme"], "en", t["sprech"], None))
+            auftraege.append(("hoeren", t["datei"], "en_f" if t["stimme"] == "en_f" else "en", "en", t["sprech"], None))
         for a in u["aufgaben"]:
             if "datei" in a:
-                auftraege.append(("hoeren", a["datei"], "en_m", "en", a["sprech"], None))
+                auftraege.append(("hoeren", a["datei"], "en", "en", a["sprech"], None))
 
     liste, neu, fehler = [], 0, 0
     for ordner, datei, stimme, sprache, text, tempo in auftraege:

@@ -67,11 +67,12 @@ Hintergrund: siehe `docs/briefing.md`.
 
 ## 4. Stimmen
 
-- Jeder englische Satz wird zweimal gesprochen: erst von einer britischen Männerstimme, dann von einer britischen Frauenstimme. Für das Deutsche gibt es eine deutsche Stimme.
-- **Festgelegt nach der Hörprobe (10.10.2026):** junge britische Männerstimme „Elrond“, britische Frauenstimme „Alice“, deutsche Stimme „Daniel“. Tempo 0,9. Uhrzeiten werden ausgeschrieben an die Stimme gegeben.
-- Die Audios werden einmal vorab mit **ElevenLabs** erzeugt und liegen fest in der App. Google Cloud bleibt die Alternative.
-- **Erster Schritt:** eine Hörprobe mit 3 Sätzen zur Qualitätsprüfung (erledigt, siehe `hoerprobe/`).
-- **Backup:** Mr. Alex bekommt eine Liste aller Sprechtexte mit Dateinamen und kann selbst aufnehmen (gleiche Dateinamen ersetzen die KI-Audios).
+- **Neu (10.10.2026):** Pro Satz gibt es nur noch **ein Audio, auf Englisch**. Keine Frauenstimme als zweiter Durchgang, keine deutsche Sprachausgabe (spart Credits).
+- Stimme: gewünscht ist Mr. Alex' eigene ElevenLabs-Stimme „Alex“. Sie lieferte am 10.10.2026 bei jedem Versuch einen Serverfehler (500), deshalb vorerst **George** (britisch, männlich). Wechsel jederzeit möglich (ID in `werkzeuge/audio_erzeugen.py`, Dateien löschen, neu erzeugen).
+- Weibliche Personen in Hörtexten (z. B. Mia) sprechen weiterhin mit einer weiblichen Stimme (Alice).
+- Deutsch wird nur angezeigt. Der deutsche Merksatz in Station 2 hat damit kein Audio mehr.
+- Fehlt eine Datei, liest die Sprachausgabe des Geräts den englischen Satz vor (Notlösung).
+- **Backup:** Liste aller Sprechtexte mit Dateinamen in `docs/sprechtexte.md`; eigene Aufnahmen mit gleichem Dateinamen ersetzen die KI-Audios.
 
 ---
 

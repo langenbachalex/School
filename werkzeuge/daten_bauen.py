@@ -126,17 +126,14 @@ def main():
     saetze = {}
     for z in lesen("kernsaetze.tsv"):
         luecke = re.search(r"\[([^\]]+)\]", z["englisch"])
-        # Fehlt eine Audiodatei, bekommt die App den Sprechtext für die Sprachausgabe des Geräts (Notlösung)
+        # Ein Audio pro Satz (Englisch). Fehlt die Datei, bekommt die App den Sprechtext für die Sprachausgabe des Geräts.
         audio = {}
-        for k, text, lang in (("en_m", z["englisch_gesprochen"] or z["englisch"], "en-GB"),
-                              ("en_f", z["englisch_gesprochen"] or z["englisch"], "en-GB"),
-                              ("de", z["deutsch_gesprochen"] or z["deutsch"], "de-DE")):
-            if not text:
-                continue
-            if os.path.exists(os.path.join(AUDIO, f"{z['id']}_{k}.mp3")):
-                audio[k] = f"audio/kernsaetze/{z['id']}_{k}.mp3"
+        text = z["englisch_gesprochen"] or z["englisch"]
+        if text:
+            if os.path.exists(os.path.join(AUDIO, f"{z['id']}_en.mp3")):
+                audio["en"] = f"audio/kernsaetze/{z['id']}_en.mp3"
             else:
-                audio[k] = {"tts": re.sub(r"<[^>]+>|\[|\]", "", text), "lang": lang, "stimme": "f" if k == "en_f" else "m"}
+                audio["en"] = {"tts": re.sub(r"<[^>]+>|\[|\]", "", text), "lang": "en-GB", "stimme": "m"}
         saetze[z["id"]] = {
             "en": z["englisch"].replace("[", "").replace("]", ""),
             "de": z["deutsch"],
@@ -163,8 +160,8 @@ def main():
             for b in s.get("bloecke", []):
                 if b["typ"] == "merksatz":
                     ids = b.pop("saetze", [b.pop("audio")] if "audio" in b else [])
-                    sprache = b.pop("sprache", "de")
-                    b["dateien"] = [saetze[i]["audio"].get(sprache) for i in ids]
+                    b.pop("sprache", None)
+                    b["dateien"] = [saetze[i]["audio"]["en"] for i in ids if "en" in saetze[i]["audio"]]
             if s["art"] == "auswahl":
                 for a in s["aufgaben"]:
                     a.setdefault("richtig", a["optionen"][0])
@@ -191,7 +188,7 @@ def main():
             assert luecke.lower() in satz["en"].lower(), f"Vokabel {v['id']} steht nicht im Satz {v['satz']}"
         vokabeln.append({"id": v["id"], "en": v["englisch"], "de": v["deutsch"], "symbol": v["symbol"],
                          "satz": v["satz"], "luecke": luecke,
-                         "audio": {k: f"audio/vokabeln/{v['id']}_{k}.mp3" for k in ("en", "de")}})
+                         "audio": {"en": f"audio/vokabeln/{v['id']}_en.mp3"}})
         if not abschnitte or abschnitte[-1][0] != v["abschnitt"]:
             abschnitte.append((v["abschnitt"], []))
         abschnitte[-1][1].append(v["id"])

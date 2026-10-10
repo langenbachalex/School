@@ -10,7 +10,7 @@ GRUPPEN = [("st1_", "Station 1 – Wege zur Schule"), ("st2a_", "Station 2 – T
            ("st2u_", "Station 2 – Übersicht"), ("st2_merksatz", "Station 2 – Merksatz"),
            ("st2b_", "Station 2 – Teil B: Ausnahmen"), ("st3_", "Station 3 – Uhrzeiten"),
            ("st4_", "Station 4 – Aufgaben verstehen")]
-STIMMEN = [("en_m", "Elrond"), ("en_f", "Alice"), ("de", "Deutsch")]
+STIMMEN = [("en", "🔊 Anhören")]
 
 with open(os.path.join(BASIS, "inhalte", "kernsaetze.tsv"), encoding="utf-8") as f:
     zeilen = list(csv.DictReader(f, delimiter="\t"))
@@ -72,7 +72,7 @@ button.flag[aria-pressed="true"]{{background:var(--warn);border-color:var(--warn
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <main>
 <header style="display:grid;gap:8px"><h1>Kernsätze abhören</h1>
-<p class="intro">{len(daten)} Audios. „Ablauf“ spielt einen Satz wie in der App: Elrond, Alice, dann Deutsch. Klingt etwas falsch, tippe auf „⚑ Nochmal“. Die markierten Sätze stehen unten zum Kopieren bereit.</p></header>
+<p class="intro">{len(daten)} Audios. Jeder Satz hat ein Audio (Englisch, Stimme George). Klingt etwas falsch, tippe auf „⚑ Nochmal“. Die markierten Sätze stehen unten zum Kopieren bereit.</p></header>
 <div class="leiste"><span class="now" id="now" aria-live="polite"></span><button id="stop">■ Stopp</button></div>
 {''.join(teile)}
 <section class="merk"><h2>Markiert zum Nachbessern</h2>
@@ -82,7 +82,7 @@ button.flag[aria-pressed="true"]{{background:var(--warn);border-color:var(--warn
 <script>
 const A={json.dumps(daten)};
 const now=document.getElementById("now"),liste=document.getElementById("liste");
-const NAME={{en_m:"Elrond",en_f:"Alice",de:"Deutsch"}};
+const NAME={{en:"Englisch"}};
 let audio=null,queue=[],run=0;
 function stop(){{run++;queue=[];if(audio)audio.pause();now.textContent="";document.querySelectorAll(".spielt").forEach(x=>x.classList.remove("spielt"))}}
 function play(items){{stop();queue=items;step(run)}}

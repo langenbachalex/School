@@ -1,59 +1,63 @@
-# Konzept-Entwurf: Englisch 9 – Thema „America“
+# Konzept-Entwurf: Englisch 9 – Thema „America“ (Klasse 9.3)
 
 Stand: 10.10.2026. **[ENTWURF – noch abzusegnen]** Grundprinzip wie in Klasse 6: Vor jedem Bauschritt fragt Claude, Mr. Alex segnet ab.
-Grundlage bisher: Vokabelanhang S. 198–207 (Fotos). Die Unterrichtsfolien folgen im nächsten Schritt.
+Grundlagen: Vokabelanhang S. 198–207 (Fotos), Folien „Focus on Language“ Stunde 1–2, 3, 4, 5+6, Arbeitsblatt „Vokabeln / If-Clauses“.
 
 ---
 
-## 1. Was übernommen wird (bewährt aus Klasse 6)
+## 1. Rahmen (Stand der Klasse)
 
-- Eine Web-App, kein Konto, keine Namen; Fortschritt nur auf dem Gerät. Läuft offline, QR-Code, installierbar.
-- Stimme: Mr. Alex (ElevenLabs, Eleven v4), ein Audio pro Satz, nur Englisch. Weibliche Personen in Hörtexten: Frauenstimme.
-- Listen and Repeat in 4 Stufen (hören → mit Deutsch → Lücke → ganzer Satz aus dem Deutschen); jede Lösung mit Audio.
-- Hörverstehen nach dem GLN-Prinzip: erst alle Aufgaben lesen, zweimal komplett hören, dann Lösung.
-- Vokabeln in Buchreihenfolge, nach Abschnitten, Abfrage EN→DE und DE→EN mit „Gewusst / Nochmal üben“; Kahoot-Export.
-- „Neu erklärt“ als Kategorie für neue Grammatik und Themen (Inhalte aus den Folien).
-- Feedback immer „Ich helfe dir: …“, kein rotes X.
+- **Unit 1 (New York)** ist durch: Vokabeln S. 195–197 (bis „to order“), Grammatik **If-Clauses Typ 2**, GLN 1 am 30.9./2.10.
+  - GLN Teil 1: Listening (13 P.), Reading (G-Kurs 10 P., E-Kurs 13 P.), Words (10 P.). Teil 2: Language (If-Sätze) + Writing (Blog post).
+- **Jetzt Übergang zu Unit 2** „The best days of your life?“. Folien dazu folgen.
+- **Schwerpunkt nach dem GLN: Lesen / Leseverstehen.** Dazu viele Listen-and-Repeat-Sätze (wie in den Folien).
+- **Zwei Kurse:** G-Kurs und E-Kurs (Differenzierung wie in den Folien: „Easier / Harder“, unterschiedliche Punkte im Reading).
+- **Eigene Adresse:** z. B. https://langenbachalex.github.io/School/klasse9/ mit eigenem QR-Code, gleiche Technik wie Klasse 6 (offline, installierbar, kein Konto).
+- **Stimmen: durchgehend amerikanisch.** Männliche und weibliche Personen jeweils mit amerikanischer Stimme.
 
-## 2. Was für Klasse 9 anders sein sollte
+## 2. Übernommen aus Klasse 6
 
-- **Ton:** erwachsener. Statt „Du bist ein Superstar!“ z. B. „Nice one!“, „Spot on!“, „Well done – that's exam level.“ Anrede weiter „du/wir“. (Vorschlag – abzusegnen.)
-- **Mehr Eigenproduktion:** Stufe 4 (ganzer Satz) wird Standard; dazu kurze Schreib- und Mediationsaufgaben mit Musterlösung zum Selbstvergleich.
-- **Prüfungsformate:** Aufgaben im Stil des GLN (Hören, Lesen, Mediation, Schreiben); bei jeder Aufgabe der Hinweis, was im GLN anders ist.
-- **Längere Texte:** Lese- und Hörtexte mit 150–250 Wörtern statt 50.
+- Listen and Repeat in Stufen, wie in den Folien: Stufe 1 Deutsch → Englisch mit sichtbarer Lösung, Stufe 2 Lücke bei der Zielvokabel, dazu Stufe 3 ganzer Satz. Jede Lösung mit Audio.
+- Hörverstehen nach dem GLN-Prinzip (Aufgaben zuerst lesen – laut Folie „1 Minute“ –, zweimal hören, dann Lösung, Antworten in Stichpunkten).
+- Vokabeln in Buchreihenfolge nach Abschnitten, Abfrage EN→DE / DE→EN, Kahoot-Export (Excel und PowerPoint).
+- Feedback „Ich helfe dir: …“, kein rotes X. Merksätze, z. B. „If is always in the past — would is always in the present.“
+- Ton erwachsener als in Klasse 6 (Vorschlag: „Nice one!“, „Spot on!“, „That's GLN level!“).
 
-## 3. Mögliche Stationen (Vorschlag)
+## 3. Stationen (Vorschlag, überarbeitet)
 
 | Station | Inhalt | Quelle |
 |---|---|---|
-| 1 Vocabulary | Vokabeln in Buchreihenfolge, nach Abschnitten (siehe 4); Wörter → Lückensätze → Abfrage | Vokabelanhang |
-| 2 British vs American English | Wortpaare aus dem Buch (canteen/cafeteria, mobile/cell phone, rubbish/garbage, ground floor/first floor …) und Aussprache (r in *car, hard*; t wie d in *city, better*). **Hörübung: BE oder AE?** | Kästen S. 198, 200 |
-| 3 Stolperfallen | Die blauen Kästen: bring/take, einsteigen/aussteigen (get on/off, in/out of), each other, just, change, anybody/anyone, look forward to + -ing, get used to, during/while, a piece of …, false friends (Krimi ≠ crime) | Kästen S. 198–206 |
-| 4 Aussprache & Betonung | Wörter mit Betonungshinweis (professional, position, photographer, original, tradition, aggressive, industry …): hören, Betonung antippen | „Betonung auf …“-Hinweise |
-| 5 Hörverstehen | GLN-Format, Thema America (z. B. Road trip California, school life in the US) | Folien / eigene Texte |
-| 6 Lesen & Mediation | Text lesen, Aufgaben; Mediation DE→EN mit Musterlösung | Folien / eigene Texte |
-| 7 Neu erklärt | Grammatik aus den Folien (noch offen) | Folien |
-| 8 Spiele | Memory (BE ↔ AE!), Satz-Detektiv (z. B. look forward to *doing*), Kahoot-Export | — |
+| 1 Vocabulary | Unit 1 (S. 195–207) und Unit 2 in Buchreihenfolge; je Wort ein Listen-and-Repeat-Satz wie auf den Folien („Manhattan is an island.“) | Vokabelanhang, Folien 5–8 (Stunde 5+6), Arbeitsblatt Teil A |
+| **2 Reading (Schwerpunkt)** | Kurze Texte im GLN-Stil (E-Mail, Blogpost, Artikel) zum Unit-Thema. Aufgaben: true/false/not in the text, Multiple Choice, kurze Antworten in Stichpunkten, Überschriften zuordnen. **G-Kurs und E-Kurs** mit eigener Aufgabenmenge. Lösung mit Textbeleg („Steht in Zeile …“) | eigene Texte (Vorbild: „Email from Brooklyn“) |
+| 3 Listening | GLN-Prinzip, amerikanische Stimmen, Antworten in Stichpunkten | eigene Hörtexte (Vorbild: „Lunch at Junior's Diner“, „If I won a million dollars“) |
+| 4 Language: If-Clauses | Regel + Merksatz → Listen and Repeat (Stunde 1–2, 4, 5+6) → „Circle the form“ → „Write the simple past form“ → Mix & Match (Satzhälften kombinieren) → eigene Sätze Easier/Harder mit Musterlösung | Folien Stunde 1–6, Arbeitsblatt Teil B |
+| 5 Writing: Blog post | Musterblog, Checkliste (Aufbau, If-Sätze, Adjektive wie amazing/terrible), eigener Text mit Selbstcheck | GLN Teil 2 |
+| 6 Unit 2 – Neu erklärt | Grammatik und Themen aus den kommenden Unit-2-Folien | Folien folgen |
+| 7 Stolperfallen | Kästen aus dem Vokabelanhang: bring/take, get on/off, look forward to + -ing, get used to, during/while, anybody/anyone, change, just, Krimi ≠ crime | Vokabelanhang |
+| 8 Spiele | Mix & Match (If-Sätze), Memory, Vokabel-Detektiv | Folie „Mix and match“ |
 
-Besonders passend zum Thema America: **Station 2**. Dort ist das amerikanische R erwünscht – dafür bräuchte es eine zweite, amerikanische Stimme (nur für die AE-Beispiele).
+**Station „British vs American English“** aus dem ersten Entwurf: mit durchgehend amerikanischen Stimmen nur noch als kleiner Lese-Teil (Wortpaare cafeteria/canteen usw.) – oder ganz weglassen?
 
-## 4. Vokabeln: was auf den Fotos ist
+## 4. Vokabeln
 
-S. 198–207, in Buchreihenfolge:
+- Unit 1: S. 195–197 (Fotos fehlen noch) und S. 198–201 (Story, Skills training).
+- Unit 2 „The best days of your life?“: S. 201–206 (Start, Theme 1, Theme 2, Focus on language, Story, Skills training).
+- Unit 3 „On the road in California“: S. 206–207 (Anfang) – erst später.
+- Übernommen: Wort, Übersetzung, Abschnitt, Reihenfolge. Lückensätze im Stil der Folien (eigene Sätze).
+- Vokabeltest-Regel aus Stunde 1–2 („wenn du ein Wort auf Deutsch nicht weißt, darfst du es in deiner Sprache schreiben“) – in der App nicht nötig, da Selbstkontrolle.
 
-| Unit | Abschnitte | Seiten |
-|---|---|---|
-| Unit 1 (Ende) | Story, Skills training | 198–201 |
-| Unit 2: The best days of your life? | Start, Theme 1, Theme 2, Focus on language, Story, Skills training | 201–206 |
-| Unit 3: On the road in California | Start, Theme 1 | 206–207 |
+## 5. Stimmen (amerikanisch)
 
-Geschätzt rund 160 Einträge. Übernommen würden wie in Klasse 6: Wort, Übersetzung, Abschnitt, Seitenreihenfolge; Beispielsätze aus dem Buch nicht (eigene Lückensätze stattdessen). Die Lautschrift auf den Seiten könnte als Aussprachehilfe in die App.
+- **Vorschlag A:** Mr. Alex' eigene Stimme mit Akzent „amerikanisch“ (sie klang anfangs ohnehin amerikanisch) + eine amerikanische Frauenstimme aus ElevenLabs für weibliche Personen.
+- **Vorschlag B:** zwei amerikanische Standardstimmen aus ElevenLabs (männlich und weiblich).
+- Vor dem Bauen: Hörprobe mit 2–3 Sätzen je Stimme.
+- Credits (Schätzung): ca. 200 Vokabeln + 150 Sätze + 3–4 Lese-/Hörtexte ≈ 10.000–14.000 Zeichen.
 
-## 5. Offene Fragen an Mr. Alex
+## 6. Offene Fragen an Mr. Alex
 
-1. **Welcher Vokabelbereich gilt?** Alles auf den Fotos (Ende Unit 1 bis Anfang Unit 3) oder nur Unit 3 „On the road in California“ (dann fehlen noch die Seiten danach)?
-2. **Zielgruppe:** ganze Klasse oder wieder einzelne Nachholer? Geräte wie in Klasse 6?
-3. **Ton:** passt der erwachsenere Ton (Abschnitt 2)?
-4. **Zweite Stimme (amerikanisch)** für Station 2 – ja oder nein?
-5. **Welche Prüfungsformate** sind im nächsten GLN dran (Hören, Lesen, Mediation, Schreiben)?
-6. **Technik:** eigene Adresse für Klasse 9 (Vorschlag: https://langenbachalex.github.io/School/klasse9/ mit eigenem QR-Code), gleiche App-Technik wie Klasse 6.
+1. **Stimmen:** Vorschlag A (deine Stimme amerikanisch) oder B?
+2. **G-Kurs / E-Kurs:** eine App, in der man am Anfang den Kurs wählt („Ich bin im G-Kurs / E-Kurs“)? Oder alles für alle mit „Easier / Harder“ wie auf den Folien?
+3. **Unit 1:** Soll Unit 1 (New York, If-Clauses, Vokabeln S. 195–201) als Wiederholung in die App, oder nur noch Unit 2? Für S. 195–197 bräuchte ich noch Fotos.
+4. **Reading-Formate:** Welche Aufgabentypen kamen im GLN-Reading vor (true/false, Multiple Choice, Fragen beantworten, Zuordnen …)?
+5. **Lesetexte:** eigene Texte zum Unit-Thema (wie in Klasse 6) – einverstanden?
+6. **Station British vs American English:** behalten (als Lese-Teil) oder streichen?

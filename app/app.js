@@ -38,13 +38,44 @@
 
   /* ---------- Audio ---------- */
   let lauf = 0, aktuell = null;
-  function stopp() { lauf++; if (aktuell) { aktuell.pause(); aktuell = null; } }
+  function stopp() {
+    lauf++;
+    if (aktuell) { aktuell.pause(); aktuell = null; }
+    if (window.speechSynthesis) speechSynthesis.cancel();
+  }
+  // Notlösung: Sprachausgabe des Geräts, solange eine Audiodatei fehlt
+  const FRAU = /hazel|libby|sonia|susan|kate|serena|female|frau|katja|hedda|anna|vicki|petra/i;
+  function geraeteStimme(lang, stimme) {
+    const alle = (window.speechSynthesis && speechSynthesis.getVoices()) || [];
+    const passend = alle.filter((v) => v.lang.replace("_", "-").startsWith(lang));
+    const kandidaten = passend.length ? passend : alle.filter((v) => v.lang.startsWith(lang.slice(0, 2)));
+    return kandidaten.find((v) => (stimme === "f") === FRAU.test(v.name)) || kandidaten[0] || null;
+  }
+  function sprich(eintrag) {
+    return new Promise((fertig) => {
+      if (!window.speechSynthesis) return fertig(0);
+      const u = new SpeechSynthesisUtterance(eintrag.tts);
+      u.lang = eintrag.lang;
+      u.rate = 0.9;
+      const v = geraeteStimme(eintrag.lang, eintrag.stimme);
+      if (v) u.voice = v;
+      const start = Date.now();
+      let erledigt = false;
+      const ende = () => { if (erledigt) return; erledigt = true; clearTimeout(notbremse); setTimeout(() => fertig((Date.now() - start) / 1000), 350); };
+      // Manche Browser melden das Ende nie: spätestens nach geschätzter Sprechdauer weiter
+      const notbremse = setTimeout(ende, 2500 + eintrag.tts.split(/\s+/).length * 700);
+      u.onend = ende;
+      u.onerror = ende;
+      speechSynthesis.speak(u);
+    });
+  }
   function spiele(dateien) {
     stopp();
     const meinLauf = lauf;
     let gesamt = 0;
     return dateien.filter(Boolean).reduce((kette, datei) => kette.then(() => new Promise((fertig) => {
       if (meinLauf !== lauf) return fertig();
+      if (typeof datei === "object") return sprich(datei).then((d) => { gesamt += d; fertig(); });
       const a = new Audio(datei);
       aktuell = a;
       a.onended = () => { gesamt += a.duration || 0; setTimeout(fertig, 350); };

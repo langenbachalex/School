@@ -11,3 +11,5 @@ Fortschritt und notierte Fragen bleiben nur im Browser dieses Geräts.
 3. `python3 werkzeuge/daten_bauen.py` erzeugt `app/daten.js` neu.
 
 **Eigene Aufnahmen:** MP3 mit gleichem Namen in `app/audio/kernsaetze/` ablegen (Liste: `docs/sprechtexte.md`).
+
+**Fehlt eine Audiodatei** (z. B. weil das ElevenLabs-Kontingent aufgebraucht ist), liest die Sprachausgabe des Geräts den Satz vor (britisches Englisch bzw. Deutsch). Sobald die Datei erzeugt ist, nimmt die App automatisch die ElevenLabs-Aufnahme.

@@ -819,11 +819,31 @@ window.DATEN = {
          "typ": "merksatz",
          "text": "never – rarely – sometimes – often – always",
          "dateien": [
-          null,
-          null,
-          null,
-          null,
-          null
+          {
+           "tts": "never",
+           "lang": "en-GB",
+           "stimme": "m"
+          },
+          {
+           "tts": "rarely",
+           "lang": "en-GB",
+           "stimme": "m"
+          },
+          {
+           "tts": "sometimes",
+           "lang": "en-GB",
+           "stimme": "m"
+          },
+          {
+           "tts": "often",
+           "lang": "en-GB",
+           "stimme": "m"
+          },
+          {
+           "tts": "always",
+           "lang": "en-GB",
+           "stimme": "m"
+          }
          ]
         }
        ]
@@ -1655,7 +1675,23 @@ window.DATEN = {
    "luecke": "8 p.m.",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "It's eight p.m.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "It's eight p.m.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Es ist zwanzig Uhr.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st3u_02": {
    "en": "It's 1.15 p.m.",
@@ -1663,7 +1699,23 @@ window.DATEN = {
    "luecke": "1.15 p.m.",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "It's one fifteen p.m.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "It's one fifteen p.m.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Es ist dreizehn Uhr fünfzehn.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st3u_03": {
    "en": "It's 6.45 a.m.",
@@ -1671,7 +1723,23 @@ window.DATEN = {
    "luecke": "6.45 a.m.",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "It's six forty-five a.m.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "It's six forty-five a.m.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Es ist sechs Uhr fünfundvierzig.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st3u_04": {
    "en": "It's 3 p.m.",
@@ -1679,7 +1747,23 @@ window.DATEN = {
    "luecke": "3 p.m.",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "It's three p.m.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "It's three p.m.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Es ist fünfzehn Uhr.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st3u_05": {
    "en": "It's 7.30 a.m.",
@@ -1687,7 +1771,23 @@ window.DATEN = {
    "luecke": "7.30 a.m.",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "It's seven thirty a.m.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "It's seven thirty a.m.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Es ist sieben Uhr dreißig.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st3u_06": {
    "en": "It's 9 p.m.",
@@ -1695,7 +1795,23 @@ window.DATEN = {
    "luecke": "9 p.m.",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "It's nine p.m.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "It's nine p.m.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Es ist einundzwanzig Uhr.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8s_never": {
    "en": "never",
@@ -1703,7 +1819,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "never",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "never",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "nie",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8s_rarely": {
    "en": "rarely",
@@ -1711,7 +1843,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "rarely",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "rarely",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "selten",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8s_sometimes": {
    "en": "sometimes",
@@ -1719,7 +1867,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "sometimes",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "sometimes",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "manchmal",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8s_often": {
    "en": "often",
@@ -1727,7 +1891,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "often",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "often",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "oft",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8s_always": {
    "en": "always",
@@ -1735,7 +1915,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "always",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "always",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "immer",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_01_i": {
    "en": "I never go running.",
@@ -1743,7 +1939,23 @@ window.DATEN = {
    "luecke": "never",
    "symbol": "○○○○○○○",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I never go running.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I never go running.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich gehe nie laufen.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_01_he": {
    "en": "He never goes running.",
@@ -1751,7 +1963,23 @@ window.DATEN = {
    "luecke": "goes",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "He never goes running.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "He never goes running.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Er geht nie laufen.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_02_i": {
    "en": "I rarely play cricket.",
@@ -1759,7 +1987,23 @@ window.DATEN = {
    "luecke": "rarely",
    "symbol": "●○○○○○○",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I rarely play cricket.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I rarely play cricket.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich spiele selten Kricket.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_02_he": {
    "en": "She rarely plays cricket.",
@@ -1767,7 +2011,23 @@ window.DATEN = {
    "luecke": "plays",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "She rarely plays cricket.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "She rarely plays cricket.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Sie spielt selten Kricket.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_03_i": {
    "en": "I sometimes go hiking.",
@@ -1775,7 +2035,23 @@ window.DATEN = {
    "luecke": "sometimes",
    "symbol": "●●●○○○○",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I sometimes go hiking.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I sometimes go hiking.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich gehe manchmal wandern.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_03_he": {
    "en": "He sometimes goes hiking.",
@@ -1783,7 +2059,23 @@ window.DATEN = {
    "luecke": "goes",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "He sometimes goes hiking.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "He sometimes goes hiking.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Er geht manchmal wandern.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_04_i": {
    "en": "I often go cycling.",
@@ -1791,7 +2083,23 @@ window.DATEN = {
    "luecke": "often",
    "symbol": "●●●●●○○",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I often go cycling.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I often go cycling.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich fahre oft Rad.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_04_he": {
    "en": "She often goes cycling.",
@@ -1799,7 +2107,23 @@ window.DATEN = {
    "luecke": "goes",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "She often goes cycling.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "She often goes cycling.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Sie fährt oft Rad.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_05_i": {
    "en": "I always sing in the shower.",
@@ -1807,7 +2131,23 @@ window.DATEN = {
    "luecke": "always",
    "symbol": "●●●●●●●",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I always sing in the shower.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I always sing in the shower.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich singe immer unter der Dusche.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8f_05_he": {
    "en": "He always sings in the shower.",
@@ -1815,7 +2155,23 @@ window.DATEN = {
    "luecke": "sings",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "He always sings in the shower.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "He always sings in the shower.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Er singt immer unter der Dusche.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8w_01": {
    "en": "He never goes running.",
@@ -1823,7 +2179,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "He never goes running.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "He never goes running.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Er geht nie laufen.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8w_02": {
    "en": "She sometimes plays cricket.",
@@ -1831,7 +2203,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "She sometimes plays cricket.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "She sometimes plays cricket.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Sie spielt manchmal Kricket.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8w_03": {
    "en": "I always sing.",
@@ -1839,7 +2227,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I always sing.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I always sing.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich singe immer.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8w_04": {
    "en": "We often go cycling.",
@@ -1847,7 +2251,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "We often go cycling.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "We often go cycling.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Wir fahren oft Rad.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8w_05": {
    "en": "He rarely plays computer games.",
@@ -1855,7 +2275,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "He rarely plays computer games.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "He rarely plays computer games.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Er spielt selten Computerspiele.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8w_06": {
    "en": "We sometimes go hiking.",
@@ -1863,7 +2299,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "We sometimes go hiking.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "We sometimes go hiking.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Wir gehen manchmal wandern.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8r_01": {
    "en": "He sometimes plays football.",
@@ -1871,7 +2323,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "He sometimes plays football.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "He sometimes plays football.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Er spielt manchmal Fußball.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8r_02": {
    "en": "I never go swimming.",
@@ -1879,7 +2347,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I never go swimming.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I never go swimming.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich gehe nie schwimmen.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8r_03": {
    "en": "She often goes surfing.",
@@ -1887,7 +2371,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "She often goes surfing.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "She often goes surfing.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Sie geht oft surfen.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8r_04": {
    "en": "You rarely play hockey.",
@@ -1895,7 +2395,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "You rarely play hockey.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "You rarely play hockey.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Du spielst selten Hockey.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8r_05": {
    "en": "She always goes cycling.",
@@ -1903,7 +2419,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "She always goes cycling.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "She always goes cycling.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Sie fährt immer Rad.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8r_06": {
    "en": "I sometimes play football.",
@@ -1911,7 +2443,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I sometimes play football.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I sometimes play football.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich spiele manchmal Fußball.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8r_07": {
    "en": "He never goes swimming.",
@@ -1919,7 +2467,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "He never goes swimming.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "He never goes swimming.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Er geht nie schwimmen.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8r_08": {
    "en": "I often go cycling.",
@@ -1927,7 +2491,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I often go cycling.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I often go cycling.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich fahre oft Rad.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_01": {
    "en": "I like drama.",
@@ -1935,7 +2515,23 @@ window.DATEN = {
    "luecke": "drama",
    "symbol": "🎭",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like drama.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like drama.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich mag Schauspiel.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_02": {
    "en": "I like art.",
@@ -1943,7 +2539,23 @@ window.DATEN = {
    "luecke": "art",
    "symbol": "🎨",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like art.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like art.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich mag Kunst.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_03": {
    "en": "I like computer games.",
@@ -1951,7 +2563,23 @@ window.DATEN = {
    "luecke": "computer games",
    "symbol": "🎮",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like computer games.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like computer games.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich mag Computerspiele.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_04": {
    "en": "I like cricket.",
@@ -1959,7 +2587,23 @@ window.DATEN = {
    "luecke": "cricket",
    "symbol": "🏏",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like cricket.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like cricket.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich mag Kricket.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_05": {
    "en": "I like cycling.",
@@ -1967,7 +2611,23 @@ window.DATEN = {
    "luecke": "cycling",
    "symbol": "🚲",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like cycling.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like cycling.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich fahre gern Rad.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_06": {
    "en": "I like dancing.",
@@ -1975,7 +2635,23 @@ window.DATEN = {
    "luecke": "dancing",
    "symbol": "💃",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like dancing.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like dancing.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich tanze gern.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_07": {
    "en": "I like hiking.",
@@ -1983,7 +2659,23 @@ window.DATEN = {
    "luecke": "hiking",
    "symbol": "🥾",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like hiking.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like hiking.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich gehe gern wandern.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_08": {
    "en": "I like music.",
@@ -1991,7 +2683,23 @@ window.DATEN = {
    "luecke": "music",
    "symbol": "🎵",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like music.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like music.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich mag Musik.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_09": {
    "en": "I like running.",
@@ -1999,7 +2707,23 @@ window.DATEN = {
    "luecke": "running",
    "symbol": "🏃",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like running.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like running.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich laufe gern.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_10": {
    "en": "I like singing.",
@@ -2007,7 +2731,23 @@ window.DATEN = {
    "luecke": "singing",
    "symbol": "🎤",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like singing.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like singing.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich singe gern.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_11": {
    "en": "I like table tennis.",
@@ -2015,7 +2755,23 @@ window.DATEN = {
    "luecke": "table tennis",
    "symbol": "🏓",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like table tennis.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like table tennis.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich spiele gern Tischtennis.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_12": {
    "en": "I like trampolining.",
@@ -2023,7 +2779,23 @@ window.DATEN = {
    "luecke": "trampolining",
    "symbol": "🤸",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like trampolining.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like trampolining.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich springe gern Trampolin.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_13": {
    "en": "I like windsurfing.",
@@ -2031,7 +2803,23 @@ window.DATEN = {
    "luecke": "windsurfing",
    "symbol": "🏄",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like windsurfing.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like windsurfing.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich windsurfe gern.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8h_14": {
    "en": "I like singing, but I don't like trampolining.",
@@ -2039,7 +2827,23 @@ window.DATEN = {
    "luecke": "but",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like singing, but I don't like trampolining.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like singing, but I don't like trampolining.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich singe gern, aber ich springe nicht gern Trampolin.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8p_01": {
    "en": "Brahim loves drama and singing.",
@@ -2047,7 +2851,23 @@ window.DATEN = {
    "luecke": "loves",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "Brahim loves drama and singing.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "Brahim loves drama and singing.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Brahim liebt Schauspiel und Gesang.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8p_02": {
    "en": "Liam does competitions.",
@@ -2055,7 +2875,23 @@ window.DATEN = {
    "luecke": "does",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "Liam does competitions.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "Liam does competitions.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Liam macht bei Wettbewerben mit.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8p_03": {
    "en": "Annie is in the school band.",
@@ -2063,7 +2899,23 @@ window.DATEN = {
    "luecke": "is",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "Annie is in the school band.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "Annie is in the school band.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Annie ist in der Schulband.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8p_04": {
    "en": "Annie plays cricket.",
@@ -2071,7 +2923,23 @@ window.DATEN = {
    "luecke": "plays",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "Annie plays cricket.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "Annie plays cricket.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Annie spielt Kricket.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8p_05": {
    "en": "Rin does a sport in the sea.",
@@ -2079,7 +2947,23 @@ window.DATEN = {
    "luecke": "does",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "Rin does a sport in the sea.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "Rin does a sport in the sea.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Rin macht einen Sport im Meer.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8e_01": {
    "en": "I like drama, but I don't like science.",
@@ -2087,7 +2971,23 @@ window.DATEN = {
    "luecke": "don't like",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like drama, but I don't like science.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like drama, but I don't like science.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich mag Schauspiel, aber ich mag Naturwissenschaften nicht.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8e_02": {
    "en": "I like music, but I don't like cricket.",
@@ -2095,7 +2995,23 @@ window.DATEN = {
    "luecke": "don't like",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like music, but I don't like cricket.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like music, but I don't like cricket.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich mag Musik, aber ich mag Kricket nicht.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8e_03": {
    "en": "I like dancing, but I don't like hiking.",
@@ -2103,7 +3019,23 @@ window.DATEN = {
    "luecke": "don't like",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like dancing, but I don't like hiking.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like dancing, but I don't like hiking.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich tanze gern, aber ich wandere nicht gern.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8e_04": {
    "en": "I like running, but I don't like art.",
@@ -2111,7 +3043,23 @@ window.DATEN = {
    "luecke": "don't like",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I like running, but I don't like art.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I like running, but I don't like art.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich laufe gern, aber ich mag Kunst nicht.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_01": {
    "en": "a computer club",
@@ -2119,7 +3067,23 @@ window.DATEN = {
    "luecke": "computer",
    "symbol": "💻",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "a computer club",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "a computer club",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "die Computer-AG",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_02": {
    "en": "a reading club",
@@ -2127,7 +3091,23 @@ window.DATEN = {
    "luecke": "reading",
    "symbol": "📚",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "a reading club",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "a reading club",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "die Lese-AG",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_03": {
    "en": "a drama club",
@@ -2135,7 +3115,23 @@ window.DATEN = {
    "luecke": "drama",
    "symbol": "🎭",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "a drama club",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "a drama club",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "die Theater-AG",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_04": {
    "en": "an art club",
@@ -2143,7 +3139,23 @@ window.DATEN = {
    "luecke": "art",
    "symbol": "🎨",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "an art club",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "an art club",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "die Kunst-AG",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_05": {
    "en": "a hockey club",
@@ -2151,7 +3163,23 @@ window.DATEN = {
    "luecke": "hockey",
    "symbol": "🏑",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "a hockey club",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "a hockey club",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "die Hockey-AG",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_06": {
    "en": "a film club",
@@ -2159,7 +3187,23 @@ window.DATEN = {
    "luecke": "film",
    "symbol": "🎬",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "a film club",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "a film club",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "die Film-AG",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_07": {
    "en": "a singing club",
@@ -2167,7 +3211,23 @@ window.DATEN = {
    "luecke": "singing",
    "symbol": "🎤",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "a singing club",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "a singing club",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "die Sing-AG",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_08": {
    "en": "a football club",
@@ -2175,7 +3235,23 @@ window.DATEN = {
    "luecke": "football",
    "symbol": "⚽",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "a football club",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "a football club",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "die Fußball-AG",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_09": {
    "en": "a swimming club",
@@ -2183,7 +3259,23 @@ window.DATEN = {
    "luecke": "swimming",
    "symbol": "🏊",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "a swimming club",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "a swimming club",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "die Schwimm-AG",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_10": {
    "en": "Most schools have school clubs.",
@@ -2191,7 +3283,23 @@ window.DATEN = {
    "luecke": "Most schools",
    "symbol": "🏫",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "Most schools have school clubs.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "Most schools have school clubs.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Die meisten Schulen haben AGs.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_11": {
    "en": "Are there clubs like this at your school?",
@@ -2199,7 +3307,23 @@ window.DATEN = {
    "luecke": "",
    "symbol": "",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "Are there clubs like this at your school?",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "Are there clubs like this at your school?",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Gibt es solche AGs an eurer Schule?",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_12": {
    "en": "Which clubs do you like?",
@@ -2207,7 +3331,23 @@ window.DATEN = {
    "luecke": "Which clubs",
    "symbol": "🤔",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "Which clubs do you like?",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "Which clubs do you like?",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Welche AGs magst du?",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   },
   "st8c_13": {
    "en": "I want a film club at my school.",
@@ -2215,7 +3355,23 @@ window.DATEN = {
    "luecke": "film club",
    "symbol": "🎬",
    "hinweis": "",
-   "audio": {}
+   "audio": {
+    "en_m": {
+     "tts": "I want a film club at my school.",
+     "lang": "en-GB",
+     "stimme": "m"
+    },
+    "en_f": {
+     "tts": "I want a film club at my school.",
+     "lang": "en-GB",
+     "stimme": "f"
+    },
+    "de": {
+     "tts": "Ich möchte eine Film-AG an meiner Schule.",
+     "lang": "de-DE",
+     "stimme": "m"
+    }
+   }
   }
  },
  "vokabeln": [

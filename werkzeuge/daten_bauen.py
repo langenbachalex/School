@@ -126,8 +126,17 @@ def main():
     saetze = {}
     for z in lesen("kernsaetze.tsv"):
         luecke = re.search(r"\[([^\]]+)\]", z["englisch"])
-        audio = {k: f"audio/kernsaetze/{z['id']}_{k}.mp3" for k in ("en_m", "en_f", "de")
-                 if os.path.exists(os.path.join(AUDIO, f"{z['id']}_{k}.mp3"))}
+        # Fehlt eine Audiodatei, bekommt die App den Sprechtext für die Sprachausgabe des Geräts (Notlösung)
+        audio = {}
+        for k, text, lang in (("en_m", z["englisch_gesprochen"] or z["englisch"], "en-GB"),
+                              ("en_f", z["englisch_gesprochen"] or z["englisch"], "en-GB"),
+                              ("de", z["deutsch_gesprochen"] or z["deutsch"], "de-DE")):
+            if not text:
+                continue
+            if os.path.exists(os.path.join(AUDIO, f"{z['id']}_{k}.mp3")):
+                audio[k] = f"audio/kernsaetze/{z['id']}_{k}.mp3"
+            else:
+                audio[k] = {"tts": re.sub(r"<[^>]+>|\[|\]", "", text), "lang": lang, "stimme": "f" if k == "en_f" else "m"}
         saetze[z["id"]] = {
             "en": z["englisch"].replace("[", "").replace("]", ""),
             "de": z["deutsch"],

@@ -4,7 +4,7 @@ Automatisch erzeugt aus `inhalte/kernsaetze.tsv`, `inhalte/vokabeln.tsv` und `in
 
 **Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `app/audio/` (im angegebenen Unterordner) ablegen. Sie ersetzt dann das KI-Audio.
 
-Stimmen: Elrond – junge britische Männerstimme; Alice – britische Frauenstimme; Daniel – deutsche Stimme.
+Stimmen: Elrond – junge britische Männerstimme; Alice – britische Frauenstimme; Daniel – deutsche Stimme; George – britische Männerstimme (Vokabeln).
 
 | Datei | Stimme | Sprechtext |
 |---|---|---|
@@ -153,42 +153,214 @@ Stimmen: Elrond – junge britische Männerstimme; Alice – britische Frauensti
 | `kernsaetze/st4_circle_wort_en_m.mp3` | Elrond | circle |
 | `kernsaetze/st4_circle_wort_en_f.mp3` | Alice | circle |
 | `kernsaetze/st4_circle_wort_de.mp3` | Daniel | Kreis |
-| `vokabeln/bus_en_m.mp3` | Elrond | bus |
-| `vokabeln/bus_de.mp3` | Daniel | der Bus |
-| `vokabeln/car_en_m.mp3` | Elrond | car |
-| `vokabeln/car_de.mp3` | Daniel | das Auto |
-| `vokabeln/bike_en_m.mp3` | Elrond | bike |
-| `vokabeln/bike_de.mp3` | Daniel | das Fahrrad |
-| `vokabeln/train_en_m.mp3` | Elrond | train |
-| `vokabeln/train_de.mp3` | Daniel | der Zug |
-| `vokabeln/walk_en_m.mp3` | Elrond | walk |
-| `vokabeln/walk_de.mp3` | Daniel | zu Fuß gehen |
-| `vokabeln/short_en_m.mp3` | Elrond | short |
-| `vokabeln/short_de.mp3` | Daniel | kurz |
-| `vokabeln/journey_en_m.mp3` | Elrond | journey |
-| `vokabeln/journey_de.mp3` | Daniel | die Fahrt |
-| `vokabeln/long_en_m.mp3` | Elrond | long |
-| `vokabeln/long_de.mp3` | Daniel | lang, weit |
-| `vokabeln/way_en_m.mp3` | Elrond | way |
-| `vokabeln/way_de.mp3` | Daniel | der Weg |
-| `vokabeln/stressed_en_m.mp3` | Elrond | stressed |
-| `vokabeln/stressed_de.mp3` | Daniel | gestresst |
-| `vokabeln/great_en_m.mp3` | Elrond | great |
-| `vokabeln/great_de.mp3` | Daniel | toll |
-| `vokabeln/training_en_m.mp3` | Elrond | training |
-| `vokabeln/training_de.mp3` | Daniel | das Training |
-| `vokabeln/stadium_en_m.mp3` | Elrond | stadium |
-| `vokabeln/stadium_de.mp3` | Daniel | das Stadion |
-| `vokabeln/football_en_m.mp3` | Elrond | football |
-| `vokabeln/football_de.mp3` | Daniel | Fußball |
-| `vokabeln/breakfast_en_m.mp3` | Elrond | breakfast |
-| `vokabeln/breakfast_de.mp3` | Daniel | das Frühstück |
-| `vokabeln/homework_en_m.mp3` | Elrond | homework |
-| `vokabeln/homework_de.mp3` | Daniel | die Hausaufgaben |
-| `vokabeln/face_en_m.mp3` | Elrond | face |
-| `vokabeln/face_de.mp3` | Daniel | das Gesicht |
-| `vokabeln/get_up_en_m.mp3` | Elrond | get up |
-| `vokabeln/get_up_de.mp3` | Daniel | aufstehen |
+| `vokabeln/u3_001_journey_en.mp3` | George | journey |
+| `vokabeln/u3_001_journey_de.mp3` | Daniel | die Reise, die Fahrt; der Weg |
+| `vokabeln/u3_002_come_en.mp3` | George | to come |
+| `vokabeln/u3_002_come_de.mp3` | Daniel | kommen, mitkommen |
+| `vokabeln/u3_003_bus_en.mp3` | George | bus |
+| `vokabeln/u3_003_bus_de.mp3` | Daniel | der Bus |
+| `vokabeln/u3_004_by_bike_bus_en.mp3` | George | by bike, by bus |
+| `vokabeln/u3_004_by_bike_bus_de.mp3` | Daniel | mit dem Fahrrad, mit dem Bus |
+| `vokabeln/u3_005_car_en.mp3` | George | car |
+| `vokabeln/u3_005_car_de.mp3` | Daniel | das Auto |
+| `vokabeln/u3_006_train_en.mp3` | George | train |
+| `vokabeln/u3_006_train_de.mp3` | Daniel | der Zug, die Eisenbahn |
+| `vokabeln/u3_007_short_en.mp3` | George | short |
+| `vokabeln/u3_007_short_de.mp3` | Daniel | kurz; klein |
+| `vokabeln/u3_008_weekday_en.mp3` | George | weekday |
+| `vokabeln/u3_008_weekday_de.mp3` | Daniel | der Werktag, der Wochentag |
+| `vokabeln/u3_009_at_8_o_clock_en.mp3` | George | at eight o'clock |
+| `vokabeln/u3_009_at_8_o_clock_de.mp3` | Daniel | um acht Uhr |
+| `vokabeln/u3_010_4_p_m_en.mp3` | George | four p.m. |
+| `vokabeln/u3_010_4_p_m_de.mp3` | Daniel | vier Uhr nachmittags, sechzehn Uhr |
+| `vokabeln/u3_011_4_a_m_en.mp3` | George | four a.m. |
+| `vokabeln/u3_011_4_a_m_de.mp3` | Daniel | vier Uhr morgens |
+| `vokabeln/u3_012_the_united_kingdom_en.mp3` | George | the United Kingdom, the U.K. |
+| `vokabeln/u3_012_the_united_kingdom_de.mp3` | Daniel | das Vereinigte Königreich |
+| `vokabeln/u3_013_hour_en.mp3` | George | hour |
+| `vokabeln/u3_013_hour_de.mp3` | Daniel | die Stunde |
+| `vokabeln/u3_014_clock_en.mp3` | George | clock |
+| `vokabeln/u3_014_clock_de.mp3` | Daniel | die Uhr |
+| `vokabeln/u3_015_morning_en.mp3` | George | morning |
+| `vokabeln/u3_015_morning_de.mp3` | Daniel | der Morgen |
+| `vokabeln/u3_016_evening_en.mp3` | George | evening |
+| `vokabeln/u3_016_evening_de.mp3` | Daniel | der Abend |
+| `vokabeln/u3_017_lunchtime_en.mp3` | George | lunchtime |
+| `vokabeln/u3_017_lunchtime_de.mp3` | Daniel | die Mittagszeit |
+| `vokabeln/u3_018_end_en.mp3` | George | end |
+| `vokabeln/u3_018_end_de.mp3` | Daniel | das Ende, der Schluss |
+| `vokabeln/u3_019_in_the_end_en.mp3` | George | in the end |
+| `vokabeln/u3_019_in_the_end_de.mp3` | Daniel | schließlich; zum Schluss |
+| `vokabeln/u3_020_at_the_end_en.mp3` | George | at the end of |
+| `vokabeln/u3_020_at_the_end_de.mp3` | Daniel | am Ende von |
+| `vokabeln/u3_021_before_en.mp3` | George | before school, before the lesson |
+| `vokabeln/u3_021_before_de.mp3` | Daniel | vor der Schule, vor der Unterrichtsstunde |
+| `vokabeln/u3_022_why_en.mp3` | George | why |
+| `vokabeln/u3_022_why_de.mp3` | Daniel | warum |
+| `vokabeln/u3_023_newspaper_en.mp3` | George | newspaper, paper |
+| `vokabeln/u3_023_newspaper_de.mp3` | Daniel | die Zeitung, die Tageszeitung |
+| `vokabeln/u3_024_letter_en.mp3` | George | letter |
+| `vokabeln/u3_024_letter_de.mp3` | Daniel | der Brief |
+| `vokabeln/u3_025_competition_en.mp3` | George | competition |
+| `vokabeln/u3_025_competition_de.mp3` | Daniel | der Wettbewerb |
+| `vokabeln/u3_026_choose_en.mp3` | George | to choose |
+| `vokabeln/u3_026_choose_de.mp3` | Daniel | wählen, auswählen |
+| `vokabeln/u3_027_winner_en.mp3` | George | winner |
+| `vokabeln/u3_027_winner_de.mp3` | Daniel | der Gewinner, die Gewinnerin; der Sieger, die Siegerin |
+| `vokabeln/u3_028_illness_en.mp3` | George | illness |
+| `vokabeln/u3_028_illness_de.mp3` | Daniel | die Krankheit |
+| `vokabeln/u3_029_wheelchair_en.mp3` | George | wheelchair |
+| `vokabeln/u3_029_wheelchair_de.mp3` | Daniel | der Rollstuhl |
+| `vokabeln/u3_030_husband_en.mp3` | George | husband |
+| `vokabeln/u3_030_husband_de.mp3` | Daniel | der Ehemann |
+| `vokabeln/u3_031_cafe_en.mp3` | George | cafe |
+| `vokabeln/u3_031_cafe_de.mp3` | Daniel | das Café |
+| `vokabeln/u3_032_get_up_en.mp3` | George | to get up |
+| `vokabeln/u3_032_get_up_de.mp3` | Daniel | aufstehen |
+| `vokabeln/u3_033_shower_en.mp3` | George | shower |
+| `vokabeln/u3_033_shower_de.mp3` | Daniel | die Dusche |
+| `vokabeln/u3_034_get_dressed_en.mp3` | George | to get dressed |
+| `vokabeln/u3_034_get_dressed_de.mp3` | Daniel | sich anziehen |
+| `vokabeln/u3_035_breakfast_en.mp3` | George | breakfast |
+| `vokabeln/u3_035_breakfast_de.mp3` | Daniel | das Frühstück |
+| `vokabeln/u3_036_take_en.mp3` | George | to take |
+| `vokabeln/u3_036_take_de.mp3` | Daniel | dauern, Zeit brauchen |
+| `vokabeln/u3_037_watch_en.mp3` | George | to watch something |
+| `vokabeln/u3_037_watch_de.mp3` | Daniel | sich etwas anschauen; etwas beobachten |
+| `vokabeln/u3_038_line_en.mp3` | George | line |
+| `vokabeln/u3_038_line_de.mp3` | Daniel | die Zeile; die Reihe |
+| `vokabeln/u3_039_shopping_en.mp3` | George | shopping |
+| `vokabeln/u3_039_shopping_de.mp3` | Daniel | das Einkaufen; die Einkäufe |
+| `vokabeln/u3_040_afternoon_en.mp3` | George | afternoon |
+| `vokabeln/u3_040_afternoon_de.mp3` | Daniel | der Nachmittag |
+| `vokabeln/u3_041_brush_en.mp3` | George | to brush |
+| `vokabeln/u3_041_brush_de.mp3` | Daniel | bürsten |
+| `vokabeln/u3_042_tooth_pl_teeth_en.mp3` | George | tooth, teeth |
+| `vokabeln/u3_042_tooth_pl_teeth_de.mp3` | Daniel | der Zahn, die Zähne |
+| `vokabeln/u3_043_everybody_en.mp3` | George | everybody |
+| `vokabeln/u3_043_everybody_de.mp3` | Daniel | jeder; alle |
+| `vokabeln/u3_044_project_en.mp3` | George | project |
+| `vokabeln/u3_044_project_de.mp3` | Daniel | das Projekt |
+| `vokabeln/u3_045_country_en.mp3` | George | country |
+| `vokabeln/u3_045_country_de.mp3` | Daniel | das Land; die ländliche Gegend |
+| `vokabeln/u3_046_club_en.mp3` | George | school club |
+| `vokabeln/u3_046_club_de.mp3` | Daniel | die AG |
+| `vokabeln/u3_047_drama_en.mp3` | George | drama |
+| `vokabeln/u3_047_drama_de.mp3` | Daniel | das Schauspiel, die darstellende Kunst |
+| `vokabeln/u3_048_cycle_en.mp3` | George | to cycle |
+| `vokabeln/u3_048_cycle_de.mp3` | Daniel | Rad fahren |
+| `vokabeln/u3_049_hike_en.mp3` | George | to hike |
+| `vokabeln/u3_049_hike_de.mp3` | Daniel | wandern |
+| `vokabeln/u3_050_run_en.mp3` | George | to run |
+| `vokabeln/u3_050_run_de.mp3` | Daniel | rennen, laufen |
+| `vokabeln/u3_051_trampolining_en.mp3` | George | trampolining |
+| `vokabeln/u3_051_trampolining_de.mp3` | Daniel | das Trampolinspringen |
+| `vokabeln/u3_052_most_schools_en.mp3` | George | most schools |
+| `vokabeln/u3_052_most_schools_de.mp3` | Daniel | die meisten Schulen |
+| `vokabeln/u3_053_which_clubs_en.mp3` | George | Which clubs? |
+| `vokabeln/u3_053_which_clubs_de.mp3` | Daniel | Welche AGs? |
+| `vokabeln/u3_054_sea_en.mp3` | George | sea |
+| `vokabeln/u3_054_sea_de.mp3` | Daniel | das Meer, die See |
+| `vokabeln/u3_055_sentence_en.mp3` | George | sentence |
+| `vokabeln/u3_055_sentence_de.mp3` | Daniel | der Satz |
+| `vokabeln/u3_056_sometimes_en.mp3` | George | sometimes |
+| `vokabeln/u3_056_sometimes_de.mp3` | Daniel | manchmal |
+| `vokabeln/u3_057_never_en.mp3` | George | never |
+| `vokabeln/u3_057_never_de.mp3` | Daniel | nie, niemals |
+| `vokabeln/u3_058_rarely_en.mp3` | George | rarely |
+| `vokabeln/u3_058_rarely_de.mp3` | Daniel | selten |
+| `vokabeln/u3_059_secret_en.mp3` | George | secret |
+| `vokabeln/u3_059_secret_de.mp3` | Daniel | das Geheimnis; geheim |
+| `vokabeln/u3_060_activity_en.mp3` | George | activity |
+| `vokabeln/u3_060_activity_de.mp3` | Daniel | die Aktivität, die Tätigkeit |
+| `vokabeln/u3_061_a_shame_en.mp3` | George | a shame |
+| `vokabeln/u3_061_a_shame_de.mp3` | Daniel | schade; eine Schande |
+| `vokabeln/u3_062_i_d_love_to_en.mp3` | George | I'd love to. |
+| `vokabeln/u3_062_i_d_love_to_de.mp3` | Daniel | Sehr gerne. Das würde ich sehr gerne. |
+| `vokabeln/u3_063_ask_sb_to_do_sth_en.mp3` | George | to ask somebody to do something |
+| `vokabeln/u3_063_ask_sb_to_do_sth_de.mp3` | Daniel | jemanden bitten, etwas zu tun |
+| `vokabeln/u3_064_plan_en.mp3` | George | plan |
+| `vokabeln/u3_064_plan_de.mp3` | Daniel | der Plan |
+| `vokabeln/u3_065_win_en.mp3` | George | to win |
+| `vokabeln/u3_065_win_de.mp3` | Daniel | gewinnen |
+| `vokabeln/u3_066_prize_en.mp3` | George | prize |
+| `vokabeln/u3_066_prize_de.mp3` | Daniel | der Preis, der Gewinn |
+| `vokabeln/u3_067_ceremony_en.mp3` | George | ceremony |
+| `vokabeln/u3_067_ceremony_de.mp3` | Daniel | die Feier, die Zeremonie |
+| `vokabeln/u3_068_show_en.mp3` | George | to show |
+| `vokabeln/u3_068_show_de.mp3` | Daniel | zeigen |
+| `vokabeln/u3_069_article_en.mp3` | George | article |
+| `vokabeln/u3_069_article_de.mp3` | Daniel | der Artikel |
+| `vokabeln/u3_070_surprised_en.mp3` | George | surprised |
+| `vokabeln/u3_070_surprised_de.mp3` | Daniel | überrascht |
+| `vokabeln/u3_071_send_en.mp3` | George | to send |
+| `vokabeln/u3_071_send_de.mp3` | Daniel | senden, schicken |
+| `vokabeln/u3_072_next_en.mp3` | George | next |
+| `vokabeln/u3_072_next_de.mp3` | Daniel | nächste |
+| `vokabeln/u3_073_guys_en.mp3` | George | guys |
+| `vokabeln/u3_073_guys_de.mp3` | Daniel | Leute |
+| `vokabeln/u3_074_feel_en.mp3` | George | to feel |
+| `vokabeln/u3_074_feel_de.mp3` | Daniel | sich fühlen; fühlen |
+| `vokabeln/u3_075_be_feel_sorry_for_sb_en.mp3` | George | to be sorry for somebody, to feel sorry for somebody |
+| `vokabeln/u3_075_be_feel_sorry_for_sb_de.mp3` | Daniel | Mitleid haben mit jemandem |
+| `vokabeln/u3_076_her_en.mp3` | George | her |
+| `vokabeln/u3_076_her_de.mp3` | Daniel | sie; ihr |
+| `vokabeln/u3_077_stupid_en.mp3` | George | stupid |
+| `vokabeln/u3_077_stupid_de.mp3` | Daniel | dumm, blöd; albern |
+| `vokabeln/u3_078_hate_en.mp3` | George | to hate |
+| `vokabeln/u3_078_hate_de.mp3` | Daniel | hassen |
+| `vokabeln/u3_079_much_en.mp3` | George | much |
+| `vokabeln/u3_079_much_de.mp3` | Daniel | viel; sehr |
+| `vokabeln/u3_080_well_done_en.mp3` | George | Well done. |
+| `vokabeln/u3_080_well_done_de.mp3` | Daniel | Gut gemacht! |
+| `vokabeln/u3_081_news_en.mp3` | George | news |
+| `vokabeln/u3_081_news_de.mp3` | Daniel | die Nachrichten |
+| `vokabeln/u3_082_get_en.mp3` | George | to get |
+| `vokabeln/u3_082_get_de.mp3` | Daniel | sich etwas holen, besorgen; bekommen |
+| `vokabeln/u3_083_as_the_winner_en.mp3` | George | as the winner |
+| `vokabeln/u3_083_as_the_winner_de.mp3` | Daniel | als Gewinner, als Gewinnerin |
+| `vokabeln/u3_084_money_en.mp3` | George | money |
+| `vokabeln/u3_084_money_de.mp3` | Daniel | das Geld |
+| `vokabeln/u3_085_heading_en.mp3` | George | heading |
+| `vokabeln/u3_085_heading_de.mp3` | Daniel | die Überschrift |
+| `vokabeln/u3_086_find_out_en.mp3` | George | to find out about |
+| `vokabeln/u3_086_find_out_de.mp3` | Daniel | herausfinden; sich informieren über |
+| `vokabeln/u3_087_explain_sth_to_sb_en.mp3` | George | to explain something to somebody |
+| `vokabeln/u3_087_explain_sth_to_sb_de.mp3` | Daniel | jemandem etwas erklären |
+| `vokabeln/u3_088_happen_en.mp3` | George | to happen to somebody |
+| `vokabeln/u3_088_happen_de.mp3` | Daniel | jemandem geschehen, passieren |
+| `vokabeln/u3_089_give_en.mp3` | George | to give |
+| `vokabeln/u3_089_give_de.mp3` | Daniel | geben |
+| `vokabeln/u3_090_pay_en.mp3` | George | to pay for something |
+| `vokabeln/u3_090_pay_de.mp3` | Daniel | zahlen; etwas bezahlen |
+| `vokabeln/u3_091_cleaner_en.mp3` | George | cleaner |
+| `vokabeln/u3_091_cleaner_de.mp3` | Daniel | die Reinigungskraft |
+| `vokabeln/u3_092_pound_en.mp3` | George | pound |
+| `vokabeln/u3_092_pound_de.mp3` | Daniel | das Pfund |
+| `vokabeln/u3_093_penny_pl_pence_en.mp3` | George | penny, pence |
+| `vokabeln/u3_093_penny_pl_pence_de.mp3` | Daniel | der Penny, die Pence |
+| `vokabeln/u3_094_look_sth_up_en.mp3` | George | to look something up |
+| `vokabeln/u3_094_look_sth_up_de.mp3` | Daniel | etwas nachschlagen, nachschauen |
+| `vokabeln/u3_095_jigsaw_en.mp3` | George | jigsaw puzzle |
+| `vokabeln/u3_095_jigsaw_de.mp3` | Daniel | das Puzzle |
+| `vokabeln/u3_096_collect_en.mp3` | George | to collect |
+| `vokabeln/u3_096_collect_de.mp3` | Daniel | sammeln, einsammeln |
+| `vokabeln/u3_097_letter_en.mp3` | George | letter |
+| `vokabeln/u3_097_letter_de.mp3` | Daniel | der Buchstabe |
+| `vokabeln/u3_098_card_en.mp3` | George | card |
+| `vokabeln/u3_098_card_de.mp3` | Daniel | die Karte |
+| `vokabeln/u3_099_language_en.mp3` | George | language |
+| `vokabeln/u3_099_language_de.mp3` | Daniel | die Sprache |
+| `vokabeln/u3_100_group_en.mp3` | George | group |
+| `vokabeln/u3_100_group_de.mp3` | Daniel | die Gruppe |
+| `vokabeln/u3_101_share_en.mp3` | George | to share |
+| `vokabeln/u3_101_share_de.mp3` | Daniel | teilen |
+| `vokabeln/u3_102_match_en.mp3` | George | match |
+| `vokabeln/u3_102_match_de.mp3` | Daniel | das Spiel, der Wettkampf |
+| `vokabeln/u3_103_light_en.mp3` | George | light |
+| `vokabeln/u3_103_light_de.mp3` | Daniel | das Licht; die Lampe |
+| `vokabeln/u3_104_speak_clearly_loudly_en.mp3` | George | to speak clearly, to speak loudly |
+| `vokabeln/u3_104_speak_clearly_loudly_de.mp3` | Daniel | deutlich sprechen, laut sprechen |
 | `hoeren/01-mias-monday_text01.mp3` | Alice | Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train. |
 | `hoeren/01-mias-monday_text02.mp3` | Alice | School starts at eight a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at nine p.m. |
 | `hoeren/01-mias-monday_aussage01.mp3` | Elrond | Mia gets up at six forty-five a.m. |

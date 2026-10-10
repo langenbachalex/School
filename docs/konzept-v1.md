@@ -370,8 +370,10 @@ Entwürfe der Inhalte:
 - `01-mias-monday.txt`: Mias Tagesablauf (true/false, 7 Aussagen)
 - `02-how-do-you-get-there.txt`: Text aus Abschnitt 6 (Weg zuordnen)
 
-## 10. [ENTWURF – noch abzusegnen] Station 7: Vokabeln (Vorbereitung KLN)
+## 10. Station 7: Vokabeln (Vorbereitung KLN)
 
-Ablauf: Wörter (Bild, Englisch, Deutsch; Audio nur Männerstimme, „Jetzt du!“) → Lückensätze (Sätze aus den Stationen, Lücke = Vokabel) → Abfrage Englisch → Deutsch → Abfrage Deutsch → Englisch. Bei der Lösung wird Englisch und Deutsch gesprochen; danach „Gewusst“ oder „Nochmal üben“ (kommt am Ende wieder).
-
-Bilder: vorerst die festen Symbole (Emojis). Wortliste (Entwurf): `inhalte/vokabeln.tsv` (18 Wörter aus den Kernsätzen).
+- Wortschatz: komplette Unit 3 aus dem Vokabelteil des Buchs (S. 234–239), **in Buchreihenfolge**, gegliedert nach Unit-Start, Topic 1–3, Story, Study skills, Unit task (`inhalte/vokabeln.tsv`, 104 Einträge). Nur für den internen Gebrauch, nicht öffentlich.
+- In der Station wird zuerst ein Abschnitt gewählt; lange Abschnitte sind in Teile mit höchstens 13 Wörtern geteilt. Jeder Abschnitt bekommt ein eigenes Häkchen.
+- Ablauf je Abschnitt: Wörter (Bild, Englisch, Deutsch, „Jetzt du!“) → Lückensätze (nur wo es einen passenden Kernsatz gibt) → Englisch → Deutsch → Deutsch → Englisch. Bei der Lösung wird Englisch und Deutsch gesprochen; danach „Gewusst“ oder „Nochmal üben“.
+- Stimme Englisch: **George** (britisch, männlich). Deutsch: Daniel.
+- Bilder: vorerst feste Symbole (Emojis).

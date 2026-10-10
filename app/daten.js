@@ -447,6 +447,172 @@ window.DATEN = {
      "name": "Deutsch → Englisch",
      "richtung": "de_en"
     }
+   ],
+   "gruppen": [
+    {
+     "name": "Unit 3: My day",
+     "vokabeln": [
+      "u3_001_journey",
+      "u3_002_come",
+      "u3_003_bus",
+      "u3_004_by_bike_bus",
+      "u3_005_car",
+      "u3_006_train",
+      "u3_007_short"
+     ]
+    },
+    {
+     "name": "Topic 1 · Teil 1",
+     "vokabeln": [
+      "u3_008_weekday",
+      "u3_009_at_8_o_clock",
+      "u3_010_4_p_m",
+      "u3_011_4_a_m",
+      "u3_012_the_united_kingdom",
+      "u3_013_hour",
+      "u3_014_clock",
+      "u3_015_morning",
+      "u3_016_evening",
+      "u3_017_lunchtime",
+      "u3_018_end",
+      "u3_019_in_the_end",
+      "u3_020_at_the_end"
+     ]
+    },
+    {
+     "name": "Topic 1 · Teil 2",
+     "vokabeln": [
+      "u3_021_before",
+      "u3_022_why",
+      "u3_023_newspaper",
+      "u3_024_letter",
+      "u3_025_competition",
+      "u3_026_choose",
+      "u3_027_winner",
+      "u3_028_illness",
+      "u3_029_wheelchair",
+      "u3_030_husband",
+      "u3_031_cafe",
+      "u3_032_get_up",
+      "u3_033_shower"
+     ]
+    },
+    {
+     "name": "Topic 1 · Teil 3",
+     "vokabeln": [
+      "u3_034_get_dressed",
+      "u3_035_breakfast",
+      "u3_036_take",
+      "u3_037_watch",
+      "u3_038_line",
+      "u3_039_shopping",
+      "u3_040_afternoon",
+      "u3_041_brush",
+      "u3_042_tooth_pl_teeth",
+      "u3_043_everybody",
+      "u3_044_project",
+      "u3_045_country"
+     ]
+    },
+    {
+     "name": "Topic 2 · Teil 1",
+     "vokabeln": [
+      "u3_046_club",
+      "u3_047_drama",
+      "u3_048_cycle",
+      "u3_049_hike",
+      "u3_050_run",
+      "u3_051_trampolining",
+      "u3_052_most_schools",
+      "u3_053_which_clubs"
+     ]
+    },
+    {
+     "name": "Topic 2 · Teil 2",
+     "vokabeln": [
+      "u3_054_sea",
+      "u3_055_sentence",
+      "u3_056_sometimes",
+      "u3_057_never",
+      "u3_058_rarely",
+      "u3_059_secret",
+      "u3_060_activity"
+     ]
+    },
+    {
+     "name": "Topic 3",
+     "vokabeln": [
+      "u3_061_a_shame",
+      "u3_062_i_d_love_to",
+      "u3_063_ask_sb_to_do_sth",
+      "u3_064_plan"
+     ]
+    },
+    {
+     "name": "Story · Teil 1",
+     "vokabeln": [
+      "u3_065_win",
+      "u3_066_prize",
+      "u3_067_ceremony",
+      "u3_068_show",
+      "u3_069_article",
+      "u3_070_surprised",
+      "u3_071_send",
+      "u3_072_next",
+      "u3_073_guys",
+      "u3_074_feel"
+     ]
+    },
+    {
+     "name": "Story · Teil 2",
+     "vokabeln": [
+      "u3_075_be_feel_sorry_for_sb",
+      "u3_076_her",
+      "u3_077_stupid",
+      "u3_078_hate",
+      "u3_079_much",
+      "u3_080_well_done",
+      "u3_081_news",
+      "u3_082_get",
+      "u3_083_as_the_winner",
+      "u3_084_money"
+     ]
+    },
+    {
+     "name": "Story · Teil 3",
+     "vokabeln": [
+      "u3_085_heading",
+      "u3_086_find_out",
+      "u3_087_explain_sth_to_sb",
+      "u3_088_happen",
+      "u3_089_give",
+      "u3_090_pay",
+      "u3_091_cleaner",
+      "u3_092_pound",
+      "u3_093_penny_pl_pence"
+     ]
+    },
+    {
+     "name": "Study skills",
+     "vokabeln": [
+      "u3_094_look_sth_up",
+      "u3_095_jigsaw",
+      "u3_096_collect",
+      "u3_097_letter",
+      "u3_098_card",
+      "u3_099_language",
+      "u3_100_group"
+     ]
+    },
+    {
+     "name": "Unit task",
+     "vokabeln": [
+      "u3_101_share",
+      "u3_102_match",
+      "u3_103_light",
+      "u3_104_speak_clearly_loudly"
+     ]
+    }
    ]
   }
  ],
@@ -1040,201 +1206,1251 @@ window.DATEN = {
  },
  "vokabeln": [
   {
-   "id": "bus",
+   "id": "u3_001_journey",
+   "en": "journey",
+   "de": "die Reise, die Fahrt; der Weg",
+   "symbol": "🧳",
+   "satz": "st1_07",
+   "luecke": "journey",
+   "audio": {
+    "en": "audio/vokabeln/u3_001_journey_en.mp3",
+    "de": "audio/vokabeln/u3_001_journey_de.mp3"
+   }
+  },
+  {
+   "id": "u3_002_come",
+   "en": "(to) come",
+   "de": "(mit)kommen",
+   "symbol": "➡️",
+   "satz": "",
+   "luecke": "come",
+   "audio": {
+    "en": "audio/vokabeln/u3_002_come_en.mp3",
+    "de": "audio/vokabeln/u3_002_come_de.mp3"
+   }
+  },
+  {
+   "id": "u3_003_bus",
    "en": "bus",
    "de": "der Bus",
    "symbol": "🚌",
    "satz": "st1_01",
+   "luecke": "bus",
    "audio": {
-    "en_m": "audio/vokabeln/bus_en_m.mp3",
-    "de": "audio/vokabeln/bus_de.mp3"
+    "en": "audio/vokabeln/u3_003_bus_en.mp3",
+    "de": "audio/vokabeln/u3_003_bus_de.mp3"
    }
   },
   {
-   "id": "car",
+   "id": "u3_004_by_bike_bus",
+   "en": "by bike/bus/...",
+   "de": "mit dem Fahrrad/Bus/...",
+   "symbol": "🚲",
+   "satz": "st1_04",
+   "luecke": "by bike",
+   "audio": {
+    "en": "audio/vokabeln/u3_004_by_bike_bus_en.mp3",
+    "de": "audio/vokabeln/u3_004_by_bike_bus_de.mp3"
+   }
+  },
+  {
+   "id": "u3_005_car",
    "en": "car",
    "de": "das Auto",
    "symbol": "🚗",
    "satz": "st1_02",
+   "luecke": "car",
    "audio": {
-    "en_m": "audio/vokabeln/car_en_m.mp3",
-    "de": "audio/vokabeln/car_de.mp3"
+    "en": "audio/vokabeln/u3_005_car_en.mp3",
+    "de": "audio/vokabeln/u3_005_car_de.mp3"
    }
   },
   {
-   "id": "bike",
-   "en": "bike",
-   "de": "das Fahrrad",
-   "symbol": "🚲",
-   "satz": "st1_04",
-   "audio": {
-    "en_m": "audio/vokabeln/bike_en_m.mp3",
-    "de": "audio/vokabeln/bike_de.mp3"
-   }
-  },
-  {
-   "id": "train",
+   "id": "u3_006_train",
    "en": "train",
-   "de": "der Zug",
+   "de": "der Zug, die Eisenbahn",
    "symbol": "🚆",
    "satz": "st1_05",
+   "luecke": "train",
    "audio": {
-    "en_m": "audio/vokabeln/train_en_m.mp3",
-    "de": "audio/vokabeln/train_de.mp3"
+    "en": "audio/vokabeln/u3_006_train_en.mp3",
+    "de": "audio/vokabeln/u3_006_train_de.mp3"
    }
   },
   {
-   "id": "walk",
-   "en": "walk",
-   "de": "zu Fuß gehen",
-   "symbol": "🚶",
-   "satz": "st1_06",
-   "audio": {
-    "en_m": "audio/vokabeln/walk_en_m.mp3",
-    "de": "audio/vokabeln/walk_de.mp3"
-   }
-  },
-  {
-   "id": "short",
+   "id": "u3_007_short",
    "en": "short",
-   "de": "kurz",
-   "symbol": "⏱️",
+   "de": "kurz; klein (Person)",
+   "symbol": "📏",
    "satz": "st1_07",
+   "luecke": "short",
    "audio": {
-    "en_m": "audio/vokabeln/short_en_m.mp3",
-    "de": "audio/vokabeln/short_de.mp3"
+    "en": "audio/vokabeln/u3_007_short_en.mp3",
+    "de": "audio/vokabeln/u3_007_short_de.mp3"
    }
   },
   {
-   "id": "journey",
-   "en": "journey",
-   "de": "die Fahrt",
-   "symbol": "🧳",
-   "satz": "st1_07",
+   "id": "u3_008_weekday",
+   "en": "weekday",
+   "de": "der Werktag, der Wochentag",
+   "symbol": "📅",
+   "satz": "",
+   "luecke": "weekday",
    "audio": {
-    "en_m": "audio/vokabeln/journey_en_m.mp3",
-    "de": "audio/vokabeln/journey_de.mp3"
+    "en": "audio/vokabeln/u3_008_weekday_en.mp3",
+    "de": "audio/vokabeln/u3_008_weekday_de.mp3"
    }
   },
   {
-   "id": "long",
-   "en": "long",
-   "de": "lang, weit",
-   "symbol": "🛣️",
-   "satz": "st1_08",
+   "id": "u3_009_at_8_o_clock",
+   "en": "at 8 o'clock",
+   "de": "um 8 Uhr",
+   "symbol": "🕗",
+   "satz": "",
+   "luecke": "at 8 o'clock",
    "audio": {
-    "en_m": "audio/vokabeln/long_en_m.mp3",
-    "de": "audio/vokabeln/long_de.mp3"
+    "en": "audio/vokabeln/u3_009_at_8_o_clock_en.mp3",
+    "de": "audio/vokabeln/u3_009_at_8_o_clock_de.mp3"
    }
   },
   {
-   "id": "way",
-   "en": "way",
-   "de": "der Weg",
-   "symbol": "🗺️",
-   "satz": "st1_08",
+   "id": "u3_010_4_p_m",
+   "en": "4 p.m.",
+   "de": "4 Uhr nachmittags, 16 Uhr",
+   "symbol": "🕓",
+   "satz": "",
+   "luecke": "4 p.m.",
    "audio": {
-    "en_m": "audio/vokabeln/way_en_m.mp3",
-    "de": "audio/vokabeln/way_de.mp3"
+    "en": "audio/vokabeln/u3_010_4_p_m_en.mp3",
+    "de": "audio/vokabeln/u3_010_4_p_m_de.mp3"
    }
   },
   {
-   "id": "stressed",
-   "en": "stressed",
-   "de": "gestresst",
-   "symbol": "😫",
-   "satz": "st1_09",
+   "id": "u3_011_4_a_m",
+   "en": "4 a.m.",
+   "de": "4 Uhr (früh)morgens",
+   "symbol": "🌙",
+   "satz": "",
+   "luecke": "4 a.m.",
    "audio": {
-    "en_m": "audio/vokabeln/stressed_en_m.mp3",
-    "de": "audio/vokabeln/stressed_de.mp3"
+    "en": "audio/vokabeln/u3_011_4_a_m_en.mp3",
+    "de": "audio/vokabeln/u3_011_4_a_m_de.mp3"
    }
   },
   {
-   "id": "great",
-   "en": "great",
-   "de": "toll",
-   "symbol": "👍",
-   "satz": "st1_10",
+   "id": "u3_012_the_united_kingdom",
+   "en": "the United Kingdom (= the UK)",
+   "de": "das Vereinigte Königreich",
+   "symbol": "🇬🇧",
+   "satz": "",
+   "luecke": "the United Kingdom (= the UK)",
    "audio": {
-    "en_m": "audio/vokabeln/great_en_m.mp3",
-    "de": "audio/vokabeln/great_de.mp3"
+    "en": "audio/vokabeln/u3_012_the_united_kingdom_en.mp3",
+    "de": "audio/vokabeln/u3_012_the_united_kingdom_de.mp3"
    }
   },
   {
-   "id": "training",
-   "en": "training",
-   "de": "das Training",
-   "symbol": "🏃",
-   "satz": "st1_02",
+   "id": "u3_013_hour",
+   "en": "hour",
+   "de": "die Stunde",
+   "symbol": "⏳",
+   "satz": "",
+   "luecke": "hour",
    "audio": {
-    "en_m": "audio/vokabeln/training_en_m.mp3",
-    "de": "audio/vokabeln/training_de.mp3"
+    "en": "audio/vokabeln/u3_013_hour_en.mp3",
+    "de": "audio/vokabeln/u3_013_hour_de.mp3"
    }
   },
   {
-   "id": "stadium",
-   "en": "stadium",
-   "de": "das Stadion",
-   "symbol": "🏟️",
-   "satz": "st1_03",
+   "id": "u3_014_clock",
+   "en": "clock",
+   "de": "die (Wand-, Stand-, Turm-)Uhr",
+   "symbol": "🕰️",
+   "satz": "",
+   "luecke": "clock",
    "audio": {
-    "en_m": "audio/vokabeln/stadium_en_m.mp3",
-    "de": "audio/vokabeln/stadium_de.mp3"
+    "en": "audio/vokabeln/u3_014_clock_en.mp3",
+    "de": "audio/vokabeln/u3_014_clock_de.mp3"
    }
   },
   {
-   "id": "football",
-   "en": "football",
-   "de": "Fußball",
-   "symbol": "⚽",
-   "satz": "st2a_01_i",
+   "id": "u3_015_morning",
+   "en": "morning",
+   "de": "der Morgen",
+   "symbol": "🌅",
+   "satz": "",
+   "luecke": "morning",
    "audio": {
-    "en_m": "audio/vokabeln/football_en_m.mp3",
-    "de": "audio/vokabeln/football_de.mp3"
+    "en": "audio/vokabeln/u3_015_morning_en.mp3",
+    "de": "audio/vokabeln/u3_015_morning_de.mp3"
    }
   },
   {
-   "id": "breakfast",
+   "id": "u3_016_evening",
+   "en": "evening",
+   "de": "der Abend",
+   "symbol": "🌆",
+   "satz": "",
+   "luecke": "evening",
+   "audio": {
+    "en": "audio/vokabeln/u3_016_evening_en.mp3",
+    "de": "audio/vokabeln/u3_016_evening_de.mp3"
+   }
+  },
+  {
+   "id": "u3_017_lunchtime",
+   "en": "lunchtime",
+   "de": "die Mittagszeit",
+   "symbol": "🥪",
+   "satz": "",
+   "luecke": "lunchtime",
+   "audio": {
+    "en": "audio/vokabeln/u3_017_lunchtime_en.mp3",
+    "de": "audio/vokabeln/u3_017_lunchtime_de.mp3"
+   }
+  },
+  {
+   "id": "u3_018_end",
+   "en": "end",
+   "de": "das Ende, der Schluss",
+   "symbol": "🏁",
+   "satz": "",
+   "luecke": "end",
+   "audio": {
+    "en": "audio/vokabeln/u3_018_end_en.mp3",
+    "de": "audio/vokabeln/u3_018_end_de.mp3"
+   }
+  },
+  {
+   "id": "u3_019_in_the_end",
+   "en": "in the end",
+   "de": "schließlich; zum Schluss",
+   "symbol": "🔚",
+   "satz": "",
+   "luecke": "in the end",
+   "audio": {
+    "en": "audio/vokabeln/u3_019_in_the_end_en.mp3",
+    "de": "audio/vokabeln/u3_019_in_the_end_de.mp3"
+   }
+  },
+  {
+   "id": "u3_020_at_the_end",
+   "en": "at the end (of)",
+   "de": "am Ende (von)",
+   "symbol": "📍",
+   "satz": "",
+   "luecke": "at the end (of)",
+   "audio": {
+    "en": "audio/vokabeln/u3_020_at_the_end_en.mp3",
+    "de": "audio/vokabeln/u3_020_at_the_end_de.mp3"
+   }
+  },
+  {
+   "id": "u3_021_before",
+   "en": "before (school / the lesson)",
+   "de": "vor (der Schule / der Unterrichtsstunde)",
+   "symbol": "⏮️",
+   "satz": "",
+   "luecke": "before (school / the lesson)",
+   "audio": {
+    "en": "audio/vokabeln/u3_021_before_en.mp3",
+    "de": "audio/vokabeln/u3_021_before_de.mp3"
+   }
+  },
+  {
+   "id": "u3_022_why",
+   "en": "why",
+   "de": "warum",
+   "symbol": "❓",
+   "satz": "",
+   "luecke": "why",
+   "audio": {
+    "en": "audio/vokabeln/u3_022_why_en.mp3",
+    "de": "audio/vokabeln/u3_022_why_de.mp3"
+   }
+  },
+  {
+   "id": "u3_023_newspaper",
+   "en": "newspaper (paper)",
+   "de": "die (Tages-)Zeitung",
+   "symbol": "📰",
+   "satz": "",
+   "luecke": "newspaper (paper)",
+   "audio": {
+    "en": "audio/vokabeln/u3_023_newspaper_en.mp3",
+    "de": "audio/vokabeln/u3_023_newspaper_de.mp3"
+   }
+  },
+  {
+   "id": "u3_024_letter",
+   "en": "letter",
+   "de": "der Brief",
+   "symbol": "✉️",
+   "satz": "",
+   "luecke": "letter",
+   "audio": {
+    "en": "audio/vokabeln/u3_024_letter_en.mp3",
+    "de": "audio/vokabeln/u3_024_letter_de.mp3"
+   }
+  },
+  {
+   "id": "u3_025_competition",
+   "en": "competition",
+   "de": "der Wettbewerb",
+   "symbol": "🎯",
+   "satz": "",
+   "luecke": "competition",
+   "audio": {
+    "en": "audio/vokabeln/u3_025_competition_en.mp3",
+    "de": "audio/vokabeln/u3_025_competition_de.mp3"
+   }
+  },
+  {
+   "id": "u3_026_choose",
+   "en": "(to) choose",
+   "de": "(aus)wählen",
+   "symbol": "👉",
+   "satz": "",
+   "luecke": "choose",
+   "audio": {
+    "en": "audio/vokabeln/u3_026_choose_en.mp3",
+    "de": "audio/vokabeln/u3_026_choose_de.mp3"
+   }
+  },
+  {
+   "id": "u3_027_winner",
+   "en": "winner",
+   "de": "der Gewinner, die Gewinnerin; der Sieger, die Siegerin",
+   "symbol": "🏅",
+   "satz": "",
+   "luecke": "winner",
+   "audio": {
+    "en": "audio/vokabeln/u3_027_winner_en.mp3",
+    "de": "audio/vokabeln/u3_027_winner_de.mp3"
+   }
+  },
+  {
+   "id": "u3_028_illness",
+   "en": "illness",
+   "de": "die Krankheit",
+   "symbol": "🤒",
+   "satz": "",
+   "luecke": "illness",
+   "audio": {
+    "en": "audio/vokabeln/u3_028_illness_en.mp3",
+    "de": "audio/vokabeln/u3_028_illness_de.mp3"
+   }
+  },
+  {
+   "id": "u3_029_wheelchair",
+   "en": "wheelchair",
+   "de": "der Rollstuhl",
+   "symbol": "🦽",
+   "satz": "",
+   "luecke": "wheelchair",
+   "audio": {
+    "en": "audio/vokabeln/u3_029_wheelchair_en.mp3",
+    "de": "audio/vokabeln/u3_029_wheelchair_de.mp3"
+   }
+  },
+  {
+   "id": "u3_030_husband",
+   "en": "husband",
+   "de": "der Ehemann",
+   "symbol": "💍",
+   "satz": "",
+   "luecke": "husband",
+   "audio": {
+    "en": "audio/vokabeln/u3_030_husband_en.mp3",
+    "de": "audio/vokabeln/u3_030_husband_de.mp3"
+   }
+  },
+  {
+   "id": "u3_031_cafe",
+   "en": "cafe",
+   "de": "das Café",
+   "symbol": "☕",
+   "satz": "",
+   "luecke": "cafe",
+   "audio": {
+    "en": "audio/vokabeln/u3_031_cafe_en.mp3",
+    "de": "audio/vokabeln/u3_031_cafe_de.mp3"
+   }
+  },
+  {
+   "id": "u3_032_get_up",
+   "en": "(to) get up",
+   "de": "aufstehen",
+   "symbol": "⏰",
+   "satz": "st3_01",
+   "luecke": "get up",
+   "audio": {
+    "en": "audio/vokabeln/u3_032_get_up_en.mp3",
+    "de": "audio/vokabeln/u3_032_get_up_de.mp3"
+   }
+  },
+  {
+   "id": "u3_033_shower",
+   "en": "shower",
+   "de": "die Dusche",
+   "symbol": "🚿",
+   "satz": "",
+   "luecke": "shower",
+   "audio": {
+    "en": "audio/vokabeln/u3_033_shower_en.mp3",
+    "de": "audio/vokabeln/u3_033_shower_de.mp3"
+   }
+  },
+  {
+   "id": "u3_034_get_dressed",
+   "en": "(to) get dressed",
+   "de": "sich anziehen",
+   "symbol": "👕",
+   "satz": "",
+   "luecke": "get dressed",
+   "audio": {
+    "en": "audio/vokabeln/u3_034_get_dressed_en.mp3",
+    "de": "audio/vokabeln/u3_034_get_dressed_de.mp3"
+   }
+  },
+  {
+   "id": "u3_035_breakfast",
    "en": "breakfast",
    "de": "das Frühstück",
    "symbol": "🥣",
    "satz": "st2b_05_i",
+   "luecke": "breakfast",
    "audio": {
-    "en_m": "audio/vokabeln/breakfast_en_m.mp3",
-    "de": "audio/vokabeln/breakfast_de.mp3"
+    "en": "audio/vokabeln/u3_035_breakfast_en.mp3",
+    "de": "audio/vokabeln/u3_035_breakfast_de.mp3"
    }
   },
   {
-   "id": "homework",
-   "en": "homework",
-   "de": "die Hausaufgaben",
-   "symbol": "📝",
-   "satz": "st2b_02_i",
+   "id": "u3_036_take",
+   "en": "(to) take",
+   "de": "dauern, (Zeit) brauchen",
+   "symbol": "⌛",
+   "satz": "",
+   "luecke": "take",
    "audio": {
-    "en_m": "audio/vokabeln/homework_en_m.mp3",
-    "de": "audio/vokabeln/homework_de.mp3"
+    "en": "audio/vokabeln/u3_036_take_en.mp3",
+    "de": "audio/vokabeln/u3_036_take_de.mp3"
    }
   },
   {
-   "id": "face",
-   "en": "face",
-   "de": "das Gesicht",
-   "symbol": "🙂",
-   "satz": "st2b_04_i",
+   "id": "u3_037_watch",
+   "en": "(to) watch (sth.)",
+   "de": "(sich etwas) anschauen; (etwas) beobachten",
+   "symbol": "👀",
+   "satz": "",
+   "luecke": "watch (sth.)",
    "audio": {
-    "en_m": "audio/vokabeln/face_en_m.mp3",
-    "de": "audio/vokabeln/face_de.mp3"
+    "en": "audio/vokabeln/u3_037_watch_en.mp3",
+    "de": "audio/vokabeln/u3_037_watch_de.mp3"
    }
   },
   {
-   "id": "get_up",
-   "en": "get up",
-   "de": "aufstehen",
-   "symbol": "⏰",
-   "satz": "st3_01",
+   "id": "u3_038_line",
+   "en": "line",
+   "de": "die Zeile; die Reihe",
+   "symbol": "🏘️",
+   "satz": "",
+   "luecke": "line",
    "audio": {
-    "en_m": "audio/vokabeln/get_up_en_m.mp3",
-    "de": "audio/vokabeln/get_up_de.mp3"
+    "en": "audio/vokabeln/u3_038_line_en.mp3",
+    "de": "audio/vokabeln/u3_038_line_de.mp3"
+   }
+  },
+  {
+   "id": "u3_039_shopping",
+   "en": "shopping",
+   "de": "das Einkaufen; die Einkäufe",
+   "symbol": "🛍️",
+   "satz": "",
+   "luecke": "shopping",
+   "audio": {
+    "en": "audio/vokabeln/u3_039_shopping_en.mp3",
+    "de": "audio/vokabeln/u3_039_shopping_de.mp3"
+   }
+  },
+  {
+   "id": "u3_040_afternoon",
+   "en": "afternoon",
+   "de": "der Nachmittag",
+   "symbol": "☀️",
+   "satz": "",
+   "luecke": "afternoon",
+   "audio": {
+    "en": "audio/vokabeln/u3_040_afternoon_en.mp3",
+    "de": "audio/vokabeln/u3_040_afternoon_de.mp3"
+   }
+  },
+  {
+   "id": "u3_041_brush",
+   "en": "(to) brush",
+   "de": "bürsten",
+   "symbol": "🪥",
+   "satz": "",
+   "luecke": "brush",
+   "audio": {
+    "en": "audio/vokabeln/u3_041_brush_en.mp3",
+    "de": "audio/vokabeln/u3_041_brush_de.mp3"
+   }
+  },
+  {
+   "id": "u3_042_tooth_pl_teeth",
+   "en": "tooth, pl teeth",
+   "de": "der Zahn",
+   "symbol": "🦷",
+   "satz": "",
+   "luecke": "tooth, pl teeth",
+   "audio": {
+    "en": "audio/vokabeln/u3_042_tooth_pl_teeth_en.mp3",
+    "de": "audio/vokabeln/u3_042_tooth_pl_teeth_de.mp3"
+   }
+  },
+  {
+   "id": "u3_043_everybody",
+   "en": "everybody",
+   "de": "jeder; alle",
+   "symbol": "🌍",
+   "satz": "",
+   "luecke": "everybody",
+   "audio": {
+    "en": "audio/vokabeln/u3_043_everybody_en.mp3",
+    "de": "audio/vokabeln/u3_043_everybody_de.mp3"
+   }
+  },
+  {
+   "id": "u3_044_project",
+   "en": "project",
+   "de": "das Projekt",
+   "symbol": "📋",
+   "satz": "",
+   "luecke": "project",
+   "audio": {
+    "en": "audio/vokabeln/u3_044_project_en.mp3",
+    "de": "audio/vokabeln/u3_044_project_de.mp3"
+   }
+  },
+  {
+   "id": "u3_045_country",
+   "en": "country",
+   "de": "das Land; die ländliche Gegend",
+   "symbol": "🌾",
+   "satz": "",
+   "luecke": "country",
+   "audio": {
+    "en": "audio/vokabeln/u3_045_country_en.mp3",
+    "de": "audio/vokabeln/u3_045_country_de.mp3"
+   }
+  },
+  {
+   "id": "u3_046_club",
+   "en": "(school) club",
+   "de": "die AG (in der Schule)",
+   "symbol": "🎨",
+   "satz": "",
+   "luecke": "(school) club",
+   "audio": {
+    "en": "audio/vokabeln/u3_046_club_en.mp3",
+    "de": "audio/vokabeln/u3_046_club_de.mp3"
+   }
+  },
+  {
+   "id": "u3_047_drama",
+   "en": "drama",
+   "de": "das Schauspiel, die darstellende Kunst",
+   "symbol": "🎭",
+   "satz": "",
+   "luecke": "drama",
+   "audio": {
+    "en": "audio/vokabeln/u3_047_drama_en.mp3",
+    "de": "audio/vokabeln/u3_047_drama_de.mp3"
+   }
+  },
+  {
+   "id": "u3_048_cycle",
+   "en": "(to) cycle",
+   "de": "Rad fahren",
+   "symbol": "🚴",
+   "satz": "st4_cycle_satz",
+   "luecke": "cycle",
+   "audio": {
+    "en": "audio/vokabeln/u3_048_cycle_en.mp3",
+    "de": "audio/vokabeln/u3_048_cycle_de.mp3"
+   }
+  },
+  {
+   "id": "u3_049_hike",
+   "en": "(to) hike",
+   "de": "wandern",
+   "symbol": "🥾",
+   "satz": "",
+   "luecke": "hike",
+   "audio": {
+    "en": "audio/vokabeln/u3_049_hike_en.mp3",
+    "de": "audio/vokabeln/u3_049_hike_de.mp3"
+   }
+  },
+  {
+   "id": "u3_050_run",
+   "en": "(to) run",
+   "de": "rennen, laufen",
+   "symbol": "🏃",
+   "satz": "",
+   "luecke": "run",
+   "audio": {
+    "en": "audio/vokabeln/u3_050_run_en.mp3",
+    "de": "audio/vokabeln/u3_050_run_de.mp3"
+   }
+  },
+  {
+   "id": "u3_051_trampolining",
+   "en": "trampolining",
+   "de": "das Trampolinspringen",
+   "symbol": "🤸",
+   "satz": "",
+   "luecke": "trampolining",
+   "audio": {
+    "en": "audio/vokabeln/u3_051_trampolining_en.mp3",
+    "de": "audio/vokabeln/u3_051_trampolining_de.mp3"
+   }
+  },
+  {
+   "id": "u3_052_most_schools",
+   "en": "most schools",
+   "de": "die meisten Schulen",
+   "symbol": "🏫",
+   "satz": "",
+   "luecke": "most schools",
+   "audio": {
+    "en": "audio/vokabeln/u3_052_most_schools_en.mp3",
+    "de": "audio/vokabeln/u3_052_most_schools_de.mp3"
+   }
+  },
+  {
+   "id": "u3_053_which_clubs",
+   "en": "Which clubs ...?",
+   "de": "Welche AGs ...?",
+   "symbol": "🤔",
+   "satz": "",
+   "luecke": "Which clubs ...?",
+   "audio": {
+    "en": "audio/vokabeln/u3_053_which_clubs_en.mp3",
+    "de": "audio/vokabeln/u3_053_which_clubs_de.mp3"
+   }
+  },
+  {
+   "id": "u3_054_sea",
+   "en": "sea",
+   "de": "das Meer, die See",
+   "symbol": "🌊",
+   "satz": "",
+   "luecke": "sea",
+   "audio": {
+    "en": "audio/vokabeln/u3_054_sea_en.mp3",
+    "de": "audio/vokabeln/u3_054_sea_de.mp3"
+   }
+  },
+  {
+   "id": "u3_055_sentence",
+   "en": "sentence",
+   "de": "der Satz",
+   "symbol": "💬",
+   "satz": "",
+   "luecke": "sentence",
+   "audio": {
+    "en": "audio/vokabeln/u3_055_sentence_en.mp3",
+    "de": "audio/vokabeln/u3_055_sentence_de.mp3"
+   }
+  },
+  {
+   "id": "u3_056_sometimes",
+   "en": "sometimes",
+   "de": "manchmal",
+   "symbol": "🌤️",
+   "satz": "",
+   "luecke": "sometimes",
+   "audio": {
+    "en": "audio/vokabeln/u3_056_sometimes_en.mp3",
+    "de": "audio/vokabeln/u3_056_sometimes_de.mp3"
+   }
+  },
+  {
+   "id": "u3_057_never",
+   "en": "never",
+   "de": "nie, niemals",
+   "symbol": "🚫",
+   "satz": "",
+   "luecke": "never",
+   "audio": {
+    "en": "audio/vokabeln/u3_057_never_en.mp3",
+    "de": "audio/vokabeln/u3_057_never_de.mp3"
+   }
+  },
+  {
+   "id": "u3_058_rarely",
+   "en": "rarely",
+   "de": "selten",
+   "symbol": "🔅",
+   "satz": "",
+   "luecke": "rarely",
+   "audio": {
+    "en": "audio/vokabeln/u3_058_rarely_en.mp3",
+    "de": "audio/vokabeln/u3_058_rarely_de.mp3"
+   }
+  },
+  {
+   "id": "u3_059_secret",
+   "en": "secret",
+   "de": "das Geheimnis; geheim",
+   "symbol": "🤫",
+   "satz": "",
+   "luecke": "secret",
+   "audio": {
+    "en": "audio/vokabeln/u3_059_secret_en.mp3",
+    "de": "audio/vokabeln/u3_059_secret_de.mp3"
+   }
+  },
+  {
+   "id": "u3_060_activity",
+   "en": "activity",
+   "de": "die Aktivität, die Tätigkeit",
+   "symbol": "🏓",
+   "satz": "",
+   "luecke": "activity",
+   "audio": {
+    "en": "audio/vokabeln/u3_060_activity_en.mp3",
+    "de": "audio/vokabeln/u3_060_activity_de.mp3"
+   }
+  },
+  {
+   "id": "u3_061_a_shame",
+   "en": "a shame",
+   "de": "schade; eine Schande",
+   "symbol": "😞",
+   "satz": "",
+   "luecke": "a shame",
+   "audio": {
+    "en": "audio/vokabeln/u3_061_a_shame_en.mp3",
+    "de": "audio/vokabeln/u3_061_a_shame_de.mp3"
+   }
+  },
+  {
+   "id": "u3_062_i_d_love_to",
+   "en": "I'd love to.",
+   "de": "Sehr gerne. / Das würde ich sehr gerne.",
+   "symbol": "😍",
+   "satz": "",
+   "luecke": "I'd love to.",
+   "audio": {
+    "en": "audio/vokabeln/u3_062_i_d_love_to_en.mp3",
+    "de": "audio/vokabeln/u3_062_i_d_love_to_de.mp3"
+   }
+  },
+  {
+   "id": "u3_063_ask_sb_to_do_sth",
+   "en": "(to) ask sb. to do sth.",
+   "de": "jn. bitten, etwas zu tun",
+   "symbol": "🙋",
+   "satz": "",
+   "luecke": "ask sb. to do sth.",
+   "audio": {
+    "en": "audio/vokabeln/u3_063_ask_sb_to_do_sth_en.mp3",
+    "de": "audio/vokabeln/u3_063_ask_sb_to_do_sth_de.mp3"
+   }
+  },
+  {
+   "id": "u3_064_plan",
+   "en": "plan",
+   "de": "der Plan",
+   "symbol": "🗓️",
+   "satz": "",
+   "luecke": "plan",
+   "audio": {
+    "en": "audio/vokabeln/u3_064_plan_en.mp3",
+    "de": "audio/vokabeln/u3_064_plan_de.mp3"
+   }
+  },
+  {
+   "id": "u3_065_win",
+   "en": "(to) win",
+   "de": "gewinnen",
+   "symbol": "🏆",
+   "satz": "",
+   "luecke": "win",
+   "audio": {
+    "en": "audio/vokabeln/u3_065_win_en.mp3",
+    "de": "audio/vokabeln/u3_065_win_de.mp3"
+   }
+  },
+  {
+   "id": "u3_066_prize",
+   "en": "prize",
+   "de": "der Preis, der Gewinn",
+   "symbol": "🏵️",
+   "satz": "",
+   "luecke": "prize",
+   "audio": {
+    "en": "audio/vokabeln/u3_066_prize_en.mp3",
+    "de": "audio/vokabeln/u3_066_prize_de.mp3"
+   }
+  },
+  {
+   "id": "u3_067_ceremony",
+   "en": "ceremony",
+   "de": "die Feier, die Zeremonie",
+   "symbol": "🎉",
+   "satz": "",
+   "luecke": "ceremony",
+   "audio": {
+    "en": "audio/vokabeln/u3_067_ceremony_en.mp3",
+    "de": "audio/vokabeln/u3_067_ceremony_de.mp3"
+   }
+  },
+  {
+   "id": "u3_068_show",
+   "en": "(to) show",
+   "de": "zeigen",
+   "symbol": "🖼️",
+   "satz": "",
+   "luecke": "show",
+   "audio": {
+    "en": "audio/vokabeln/u3_068_show_en.mp3",
+    "de": "audio/vokabeln/u3_068_show_de.mp3"
+   }
+  },
+  {
+   "id": "u3_069_article",
+   "en": "article",
+   "de": "der Artikel",
+   "symbol": "📄",
+   "satz": "",
+   "luecke": "article",
+   "audio": {
+    "en": "audio/vokabeln/u3_069_article_en.mp3",
+    "de": "audio/vokabeln/u3_069_article_de.mp3"
+   }
+  },
+  {
+   "id": "u3_070_surprised",
+   "en": "surprised",
+   "de": "überrascht",
+   "symbol": "😲",
+   "satz": "",
+   "luecke": "surprised",
+   "audio": {
+    "en": "audio/vokabeln/u3_070_surprised_en.mp3",
+    "de": "audio/vokabeln/u3_070_surprised_de.mp3"
+   }
+  },
+  {
+   "id": "u3_071_send",
+   "en": "(to) send",
+   "de": "senden, schicken",
+   "symbol": "📤",
+   "satz": "",
+   "luecke": "send",
+   "audio": {
+    "en": "audio/vokabeln/u3_071_send_en.mp3",
+    "de": "audio/vokabeln/u3_071_send_de.mp3"
+   }
+  },
+  {
+   "id": "u3_072_next",
+   "en": "next",
+   "de": "nächste(r, s)",
+   "symbol": "⏭️",
+   "satz": "",
+   "luecke": "next",
+   "audio": {
+    "en": "audio/vokabeln/u3_072_next_en.mp3",
+    "de": "audio/vokabeln/u3_072_next_de.mp3"
+   }
+  },
+  {
+   "id": "u3_073_guys",
+   "en": "guys (pl)",
+   "de": "Leute (als Anrede)",
+   "symbol": "🙌",
+   "satz": "",
+   "luecke": "guys (pl)",
+   "audio": {
+    "en": "audio/vokabeln/u3_073_guys_en.mp3",
+    "de": "audio/vokabeln/u3_073_guys_de.mp3"
+   }
+  },
+  {
+   "id": "u3_074_feel",
+   "en": "(to) feel",
+   "de": "sich fühlen; fühlen",
+   "symbol": "💭",
+   "satz": "",
+   "luecke": "feel",
+   "audio": {
+    "en": "audio/vokabeln/u3_074_feel_en.mp3",
+    "de": "audio/vokabeln/u3_074_feel_de.mp3"
+   }
+  },
+  {
+   "id": "u3_075_be_feel_sorry_for_sb",
+   "en": "(to) be/feel sorry for sb.",
+   "de": "Mitleid haben mit jm.",
+   "symbol": "😢",
+   "satz": "",
+   "luecke": "be/feel sorry for sb.",
+   "audio": {
+    "en": "audio/vokabeln/u3_075_be_feel_sorry_for_sb_en.mp3",
+    "de": "audio/vokabeln/u3_075_be_feel_sorry_for_sb_de.mp3"
+   }
+  },
+  {
+   "id": "u3_076_her",
+   "en": "her",
+   "de": "sie; ihr",
+   "symbol": "👧",
+   "satz": "",
+   "luecke": "her",
+   "audio": {
+    "en": "audio/vokabeln/u3_076_her_en.mp3",
+    "de": "audio/vokabeln/u3_076_her_de.mp3"
+   }
+  },
+  {
+   "id": "u3_077_stupid",
+   "en": "stupid",
+   "de": "dumm, blöd; albern",
+   "symbol": "🤪",
+   "satz": "",
+   "luecke": "stupid",
+   "audio": {
+    "en": "audio/vokabeln/u3_077_stupid_en.mp3",
+    "de": "audio/vokabeln/u3_077_stupid_de.mp3"
+   }
+  },
+  {
+   "id": "u3_078_hate",
+   "en": "(to) hate",
+   "de": "hassen",
+   "symbol": "😠",
+   "satz": "",
+   "luecke": "hate",
+   "audio": {
+    "en": "audio/vokabeln/u3_078_hate_en.mp3",
+    "de": "audio/vokabeln/u3_078_hate_de.mp3"
+   }
+  },
+  {
+   "id": "u3_079_much",
+   "en": "much",
+   "de": "viel; sehr",
+   "symbol": "➕",
+   "satz": "",
+   "luecke": "much",
+   "audio": {
+    "en": "audio/vokabeln/u3_079_much_en.mp3",
+    "de": "audio/vokabeln/u3_079_much_de.mp3"
+   }
+  },
+  {
+   "id": "u3_080_well_done",
+   "en": "Well done.",
+   "de": "Gut gemacht!",
+   "symbol": "👏",
+   "satz": "",
+   "luecke": "Well done.",
+   "audio": {
+    "en": "audio/vokabeln/u3_080_well_done_en.mp3",
+    "de": "audio/vokabeln/u3_080_well_done_de.mp3"
+   }
+  },
+  {
+   "id": "u3_081_news",
+   "en": "news",
+   "de": "die Nachrichten",
+   "symbol": "📺",
+   "satz": "",
+   "luecke": "news",
+   "audio": {
+    "en": "audio/vokabeln/u3_081_news_en.mp3",
+    "de": "audio/vokabeln/u3_081_news_de.mp3"
+   }
+  },
+  {
+   "id": "u3_082_get",
+   "en": "(to) get",
+   "de": "(sich etwas) holen, besorgen; bekommen",
+   "symbol": "🤲",
+   "satz": "",
+   "luecke": "get",
+   "audio": {
+    "en": "audio/vokabeln/u3_082_get_en.mp3",
+    "de": "audio/vokabeln/u3_082_get_de.mp3"
+   }
+  },
+  {
+   "id": "u3_083_as_the_winner",
+   "en": "as the winner",
+   "de": "als Gewinner/in",
+   "symbol": "🥇",
+   "satz": "",
+   "luecke": "as the winner",
+   "audio": {
+    "en": "audio/vokabeln/u3_083_as_the_winner_en.mp3",
+    "de": "audio/vokabeln/u3_083_as_the_winner_de.mp3"
+   }
+  },
+  {
+   "id": "u3_084_money",
+   "en": "money",
+   "de": "das Geld",
+   "symbol": "💰",
+   "satz": "",
+   "luecke": "money",
+   "audio": {
+    "en": "audio/vokabeln/u3_084_money_en.mp3",
+    "de": "audio/vokabeln/u3_084_money_de.mp3"
+   }
+  },
+  {
+   "id": "u3_085_heading",
+   "en": "heading",
+   "de": "die Überschrift",
+   "symbol": "🔠",
+   "satz": "",
+   "luecke": "heading",
+   "audio": {
+    "en": "audio/vokabeln/u3_085_heading_en.mp3",
+    "de": "audio/vokabeln/u3_085_heading_de.mp3"
+   }
+  },
+  {
+   "id": "u3_086_find_out",
+   "en": "(to) find out (about)",
+   "de": "herausfinden; sich informieren (über)",
+   "symbol": "🔍",
+   "satz": "",
+   "luecke": "find out (about)",
+   "audio": {
+    "en": "audio/vokabeln/u3_086_find_out_en.mp3",
+    "de": "audio/vokabeln/u3_086_find_out_de.mp3"
+   }
+  },
+  {
+   "id": "u3_087_explain_sth_to_sb",
+   "en": "(to) explain sth. to sb.",
+   "de": "jm. etwas erklären",
+   "symbol": "🧑‍🏫",
+   "satz": "",
+   "luecke": "explain sth. to sb.",
+   "audio": {
+    "en": "audio/vokabeln/u3_087_explain_sth_to_sb_en.mp3",
+    "de": "audio/vokabeln/u3_087_explain_sth_to_sb_de.mp3"
+   }
+  },
+  {
+   "id": "u3_088_happen",
+   "en": "(to) happen (to sb.)",
+   "de": "(jm.) geschehen, passieren",
+   "symbol": "💥",
+   "satz": "",
+   "luecke": "happen (to sb.)",
+   "audio": {
+    "en": "audio/vokabeln/u3_088_happen_en.mp3",
+    "de": "audio/vokabeln/u3_088_happen_de.mp3"
+   }
+  },
+  {
+   "id": "u3_089_give",
+   "en": "(to) give",
+   "de": "geben",
+   "symbol": "🎁",
+   "satz": "",
+   "luecke": "give",
+   "audio": {
+    "en": "audio/vokabeln/u3_089_give_en.mp3",
+    "de": "audio/vokabeln/u3_089_give_de.mp3"
+   }
+  },
+  {
+   "id": "u3_090_pay",
+   "en": "(to) pay (for sth.)",
+   "de": "zahlen; (etwas) bezahlen",
+   "symbol": "💳",
+   "satz": "",
+   "luecke": "pay (for sth.)",
+   "audio": {
+    "en": "audio/vokabeln/u3_090_pay_en.mp3",
+    "de": "audio/vokabeln/u3_090_pay_de.mp3"
+   }
+  },
+  {
+   "id": "u3_091_cleaner",
+   "en": "cleaner",
+   "de": "die Reinigungskraft",
+   "symbol": "🧹",
+   "satz": "",
+   "luecke": "cleaner",
+   "audio": {
+    "en": "audio/vokabeln/u3_091_cleaner_en.mp3",
+    "de": "audio/vokabeln/u3_091_cleaner_de.mp3"
+   }
+  },
+  {
+   "id": "u3_092_pound",
+   "en": "pound (£)",
+   "de": "das Pfund (britische Währung)",
+   "symbol": "💷",
+   "satz": "",
+   "luecke": "pound (£)",
+   "audio": {
+    "en": "audio/vokabeln/u3_092_pound_en.mp3",
+    "de": "audio/vokabeln/u3_092_pound_de.mp3"
+   }
+  },
+  {
+   "id": "u3_093_penny_pl_pence",
+   "en": "penny (= p), pl pence",
+   "de": "der Penny, Pence (Plural)",
+   "symbol": "🪙",
+   "satz": "",
+   "luecke": "penny (= p), pl pence",
+   "audio": {
+    "en": "audio/vokabeln/u3_093_penny_pl_pence_en.mp3",
+    "de": "audio/vokabeln/u3_093_penny_pl_pence_de.mp3"
+   }
+  },
+  {
+   "id": "u3_094_look_sth_up",
+   "en": "(to) look sth. up",
+   "de": "etwas nachschlagen, nachschauen",
+   "symbol": "📖",
+   "satz": "",
+   "luecke": "look sth. up",
+   "audio": {
+    "en": "audio/vokabeln/u3_094_look_sth_up_en.mp3",
+    "de": "audio/vokabeln/u3_094_look_sth_up_de.mp3"
+   }
+  },
+  {
+   "id": "u3_095_jigsaw",
+   "en": "jigsaw (puzzle)",
+   "de": "das Puzzle",
+   "symbol": "🧩",
+   "satz": "",
+   "luecke": "jigsaw (puzzle)",
+   "audio": {
+    "en": "audio/vokabeln/u3_095_jigsaw_en.mp3",
+    "de": "audio/vokabeln/u3_095_jigsaw_de.mp3"
+   }
+  },
+  {
+   "id": "u3_096_collect",
+   "en": "(to) collect",
+   "de": "(ein)sammeln",
+   "symbol": "🗃️",
+   "satz": "",
+   "luecke": "collect",
+   "audio": {
+    "en": "audio/vokabeln/u3_096_collect_en.mp3",
+    "de": "audio/vokabeln/u3_096_collect_de.mp3"
+   }
+  },
+  {
+   "id": "u3_097_letter",
+   "en": "letter",
+   "de": "der Buchstabe",
+   "symbol": "🔤",
+   "satz": "",
+   "luecke": "letter",
+   "audio": {
+    "en": "audio/vokabeln/u3_097_letter_en.mp3",
+    "de": "audio/vokabeln/u3_097_letter_de.mp3"
+   }
+  },
+  {
+   "id": "u3_098_card",
+   "en": "card",
+   "de": "die Karte",
+   "symbol": "🃏",
+   "satz": "",
+   "luecke": "card",
+   "audio": {
+    "en": "audio/vokabeln/u3_098_card_en.mp3",
+    "de": "audio/vokabeln/u3_098_card_de.mp3"
+   }
+  },
+  {
+   "id": "u3_099_language",
+   "en": "language",
+   "de": "die Sprache",
+   "symbol": "🗣️",
+   "satz": "",
+   "luecke": "language",
+   "audio": {
+    "en": "audio/vokabeln/u3_099_language_en.mp3",
+    "de": "audio/vokabeln/u3_099_language_de.mp3"
+   }
+  },
+  {
+   "id": "u3_100_group",
+   "en": "group",
+   "de": "die Gruppe",
+   "symbol": "👥",
+   "satz": "",
+   "luecke": "group",
+   "audio": {
+    "en": "audio/vokabeln/u3_100_group_en.mp3",
+    "de": "audio/vokabeln/u3_100_group_de.mp3"
+   }
+  },
+  {
+   "id": "u3_101_share",
+   "en": "(to) share",
+   "de": "teilen",
+   "symbol": "🤝",
+   "satz": "",
+   "luecke": "share",
+   "audio": {
+    "en": "audio/vokabeln/u3_101_share_en.mp3",
+    "de": "audio/vokabeln/u3_101_share_de.mp3"
+   }
+  },
+  {
+   "id": "u3_102_match",
+   "en": "match",
+   "de": "das Spiel, der Wettkampf",
+   "symbol": "⚽",
+   "satz": "",
+   "luecke": "match",
+   "audio": {
+    "en": "audio/vokabeln/u3_102_match_en.mp3",
+    "de": "audio/vokabeln/u3_102_match_de.mp3"
+   }
+  },
+  {
+   "id": "u3_103_light",
+   "en": "light",
+   "de": "das Licht; die Lampe",
+   "symbol": "💡",
+   "satz": "",
+   "luecke": "light",
+   "audio": {
+    "en": "audio/vokabeln/u3_103_light_en.mp3",
+    "de": "audio/vokabeln/u3_103_light_de.mp3"
+   }
+  },
+  {
+   "id": "u3_104_speak_clearly_loudly",
+   "en": "(to) speak clearly/loudly",
+   "de": "deutlich/laut sprechen",
+   "symbol": "📢",
+   "satz": "",
+   "luecke": "speak clearly/loudly",
+   "audio": {
+    "en": "audio/vokabeln/u3_104_speak_clearly_loudly_en.mp3",
+    "de": "audio/vokabeln/u3_104_speak_clearly_loudly_de.mp3"
    }
   }
  ],

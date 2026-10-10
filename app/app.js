@@ -114,6 +114,7 @@
 
   function starteStation(nr) {
     const st = station(nr);
+    if (st.gruppen) return zeigeGruppen(st);
     const t = teileVon(st);
     if (!t.length) return platzhalter(st);
     lage = { nr, teile: t, teil: 0, pos: 0 };
@@ -122,8 +123,8 @@
 
   function kopf(st) {
     return el("header", { class: "kopf" },
-      knopf("← Start", startseite, "leise"),
-      el("h1", {}, `Station ${st.nr}: ${st.titel}`),
+      lage && lage.vok ? knopf("← Abschnitte", () => zeigeGruppen(st), "leise") : knopf("← Start", startseite, "leise"),
+      el("h1", {}, `Station ${st.nr}: ${st.titel}` + (lage && lage.vok ? ` · ${st.gruppen[lage.gruppe].name}` : "")),
       lage && el("ol", { class: "schritte", "aria-label": "Schritte" },
         lage.teile.map((t, i) => el("li", { class: i === lage.teil ? "jetzt" : i < lage.teil ? "fertig" : "",
           "aria-current": i === lage.teil ? "step" : false }, t.name))));
@@ -152,8 +153,9 @@
   function laenge(teil) {
     if (teil.art === "lr") return teil.saetze.length;
     if (teil.art === "verbform") return teil.aufgaben.length;
-    if (teil.art === "vok_abfrage") return lage.vq ? lage.vq.length : D.vokabeln.length; // wächst bei „Nochmal üben“
-    if (teil.art === "vok_lernen" || teil.art === "vok_luecke") return D.vokabeln.length;
+    if (teil.art === "vok_abfrage") return lage.vq ? lage.vq.length : lage.vok.length; // wächst bei „Nochmal üben“
+    if (teil.art === "vok_lernen") return lage.vok.length;
+    if (teil.art === "vok_luecke") return lage.vok.filter((v) => v.satz).length;
     return 1;
   }
 
@@ -168,7 +170,49 @@
       knopf("Weiter ➜", lage.weiter, "haupt")));
   }
 
+  /* Station mit Abschnitten (Vokabeln): erst Abschnitt wählen, jeder Abschnitt bekommt ein eigenes Häkchen */
+  function zeigeGruppen(st) {
+    lage = null;
+    const fertig = (stand.gruppen && stand.gruppen[st.nr]) || [];
+    zeige(kopf(st),
+      el("p", { class: "ansage" }, "Wähl einen Abschnitt. Die Wörter kommen in derselben Reihenfolge wie im Buch."),
+      el("nav", { class: "kacheln gruppen", "aria-label": "Abschnitte" }, st.gruppen.map((g, i) => {
+        const ok = fertig.includes(g.name);
+        return el("button", { class: "kachel" + (ok ? " erledigt" : ""), onclick: () => starteGruppe(st, i),
+          "aria-label": `${g.name}, ${g.vokabeln.length} Wörter${ok ? " (geschafft)" : ""}` },
+          el("span", { class: "nr" }, `${g.vokabeln.length} Wörter`),
+          el("span", { class: "titel" }, g.name),
+          el("span", { class: "vorschau", "aria-hidden": "true" },
+            g.vokabeln.slice(0, 5).map((id) => D.vokabeln.find((v) => v.id === id).symbol).join(" ")),
+          ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
+      })));
+  }
+
+  function starteGruppe(st, i) {
+    const vok = st.gruppen[i].vokabeln.map((id) => D.vokabeln.find((v) => v.id === id));
+    const t = st.schritte.filter((s) => s.art !== "vok_luecke" || vok.some((v) => v.satz));
+    lage = { nr: st.nr, gruppe: i, vok, teile: t, teil: 0, pos: 0 };
+    zeigeTeil();
+  }
+
+  function gruppeGeschafft() {
+    const st = station(lage.nr), g = st.gruppen[lage.gruppe];
+    stand.gruppen = stand.gruppen || {};
+    const liste = (stand.gruppen[st.nr] = stand.gruppen[st.nr] || []);
+    if (!liste.includes(g.name)) liste.push(g.name);
+    const alle = st.gruppen.every((x) => liste.includes(x.name));
+    if (alle && !stand.erledigt.includes(st.nr)) stand.erledigt.push(st.nr);
+    speichern();
+    lage = null;
+    zeige(kopf(st), el("section", { class: "geschafft" },
+      el("h2", {}, `${g.name} geschafft!`),
+      el("p", { class: "ansage" }, alle ? `Station ${st.nr} geschafft! Du bist ein Superstar ${st.lob}!` : lob()),
+      el("div", { class: "knopfreihe" },
+        knopf("Weitere Abschnitte", () => zeigeGruppen(st), "haupt"), knopf("Zur Startseite", startseite))));
+  }
+
   function stationGeschafft() {
+    if (lage.vok) return gruppeGeschafft();
     const st = station(lage.nr);
     if (!stand.erledigt.includes(st.nr)) { stand.erledigt.push(st.nr); speichern(); }
     lage = null;
@@ -468,15 +512,16 @@
   /* ---------- Vokabeln ---------- */
   function zeigeVokabel(teil) {
     const st = station(lage.nr);
-    if (teil.art === "vok_abfrage" && lage.pos === 0) lage.vq = mischen(D.vokabeln.map((v) => v.id));
-    const v = teil.art === "vok_abfrage" ? D.vokabeln.find((x) => x.id === lage.vq[lage.pos]) : D.vokabeln[lage.pos];
+    if (teil.art === "vok_abfrage" && lage.pos === 0) lage.vq = mischen(lage.vok.map((v) => v.id));
+    const v = teil.art === "vok_abfrage" ? lage.vok.find((x) => x.id === lage.vq[lage.pos])
+      : teil.art === "vok_luecke" ? lage.vok.filter((x) => x.satz)[lage.pos] : lage.vok[lage.pos];
     const anzahl = laenge(teil);
     const bild = (sichtbar) => el("span", { class: "vok-bild", "aria-hidden": "true" }, sichtbar ? v.symbol : "❔");
 
     if (teil.art === "vok_lernen") {
       const jetztdu = el("div", { class: "jetztdu", hidden: true, role: "status" }, "Jetzt du! Sprich nach.",
         el("span", { class: "balken", "aria-hidden": "true" }));
-      const abspielen = () => { jetztdu.hidden = true; spiele([v.audio.en_m]).then((d) => {
+      const abspielen = () => { jetztdu.hidden = true; spiele([v.audio.en]).then((d) => {
         if (d === null) return;
         jetztdu.hidden = false; jetztdu.classList.remove("laeuft"); void jetztdu.offsetWidth;
         jetztdu.style.setProperty("--dauer", Math.max(2.5, d * 1.4 + 1).toFixed(1) + "s"); jetztdu.classList.add("laeuft");
@@ -493,10 +538,10 @@
 
     if (teil.art === "vok_luecke") {
       const s = D.saetze[v.satz];
-      const i = s.en.toLowerCase().indexOf(v.en.toLowerCase());
+      const w = v.luecke, i = s.en.toLowerCase().indexOf(w.toLowerCase());
       const teileSatz = (luecke) => [s.en.slice(0, i), luecke
-        ? el("span", { class: "luecke", "aria-label": "Lücke" }, v.en.replace(/./g, "_"))
-        : el("strong", { class: "ziel" }, s.en.slice(i, i + v.en.length)), s.en.slice(i + v.en.length)];
+        ? el("span", { class: "luecke", "aria-label": "Lücke" }, w.replace(/./g, "_"))
+        : el("strong", { class: "ziel" }, s.en.slice(i, i + w.length)), s.en.slice(i + w.length)];
       const satz = el("p", { class: "satz", lang: "en" }, teileSatz(true));
       let geloest = false;
       const loesung = knopf("Lösung", () => {
@@ -517,16 +562,16 @@
     // Abfrage Englisch → Deutsch oder Deutsch → Englisch, mit Selbstkontrolle
     const enDe = teil.richtung === "en_de";
     const frage = enDe ? el("p", { class: "vok-en", lang: "en" }, v.en) : el("p", { class: "vok-en" }, v.de);
-    const antwort = el("p", { class: enDe ? "vok-de" : "vok-de", lang: enDe ? "de" : "en", hidden: true }, enDe ? v.de : v.en);
+    const antwort = el("p", { class: "vok-de", lang: enDe ? "de" : "en", hidden: true }, enDe ? v.de : v.en);
     const bildPlatz = bild(false);
-    const fragen = () => spiele([enDe ? v.audio.en_m : v.audio.de]);
+    const fragen = () => spiele([enDe ? v.audio.en : v.audio.de]);
     const bewerten = el("div", { class: "knopfreihe", hidden: true },
       knopf("✓ Gewusst", naechstes, "haupt"),
       knopf("↻ Nochmal üben", () => { lage.vq.push(v.id); naechstes(); }));
     const loesung = knopf("Lösung", () => {
       loesung.hidden = true; antwort.hidden = false; bewerten.hidden = false;
       bildPlatz.textContent = v.symbol;
-      lage.abspielen = () => spiele([v.audio.en_m, v.audio.de]);
+      lage.abspielen = () => spiele([v.audio.en, v.audio.de]);
       lage.weiter = naechstes;
       lage.abspielen();
     }, "haupt");

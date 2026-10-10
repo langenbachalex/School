@@ -1,19 +1,105 @@
-id	englisch	deutsch	symbol	satz
-bus	bus	der Bus	🚌	st1_01
-car	car	das Auto	🚗	st1_02
-bike	bike	das Fahrrad	🚲	st1_04
-train	train	der Zug	🚆	st1_05
-walk	walk	zu Fuß gehen	🚶	st1_06
-short	short	kurz	⏱️	st1_07
-journey	journey	die Fahrt	🧳	st1_07
-long	long	lang, weit	🛣️	st1_08
-way	way	der Weg	🗺️	st1_08
-stressed	stressed	gestresst	😫	st1_09
-great	great	toll	👍	st1_10
-training	training	das Training	🏃	st1_02
-stadium	stadium	das Stadion	🏟️	st1_03
-football	football	Fußball	⚽	st2a_01_i
-breakfast	breakfast	das Frühstück	🥣	st2b_05_i
-homework	homework	die Hausaufgaben	📝	st2b_02_i
-face	face	das Gesicht	🙂	st2b_04_i
-get_up	get up	aufstehen	⏰	st3_01
+id	abschnitt	englisch	deutsch	englisch_gesprochen	deutsch_gesprochen	symbol	satz	luecke
+u3_001_journey	Unit 3: My day	journey	die Reise, die Fahrt; der Weg	journey	die Reise, die Fahrt; der Weg	🧳	st1_07	
+u3_002_come	Unit 3: My day	(to) come	(mit)kommen	to come	kommen, mitkommen	➡️		
+u3_003_bus	Unit 3: My day	bus	der Bus	bus	der Bus	🚌	st1_01	
+u3_004_by_bike_bus	Unit 3: My day	by bike/bus/...	mit dem Fahrrad/Bus/...	by bike, by bus	mit dem Fahrrad, mit dem Bus	🚲	st1_04	by bike
+u3_005_car	Unit 3: My day	car	das Auto	car	das Auto	🚗	st1_02	
+u3_006_train	Unit 3: My day	train	der Zug, die Eisenbahn	train	der Zug, die Eisenbahn	🚆	st1_05	
+u3_007_short	Unit 3: My day	short	kurz; klein (Person)	short	kurz; klein	📏	st1_07	
+u3_008_weekday	Topic 1	weekday	der Werktag, der Wochentag	weekday	der Werktag, der Wochentag	📅		
+u3_009_at_8_o_clock	Topic 1	at 8 o'clock	um 8 Uhr	at eight o'clock	um acht Uhr	🕗		
+u3_010_4_p_m	Topic 1	4 p.m.	4 Uhr nachmittags, 16 Uhr	four p.m.	vier Uhr nachmittags, sechzehn Uhr	🕓		
+u3_011_4_a_m	Topic 1	4 a.m.	4 Uhr (früh)morgens	four a.m.	vier Uhr morgens	🌙		
+u3_012_the_united_kingdom	Topic 1	the United Kingdom (= the UK)	das Vereinigte Königreich	the United Kingdom, the U.K.	das Vereinigte Königreich	🇬🇧		
+u3_013_hour	Topic 1	hour	die Stunde	hour	die Stunde	⏳		
+u3_014_clock	Topic 1	clock	die (Wand-, Stand-, Turm-)Uhr	clock	die Uhr	🕰️		
+u3_015_morning	Topic 1	morning	der Morgen	morning	der Morgen	🌅		
+u3_016_evening	Topic 1	evening	der Abend	evening	der Abend	🌆		
+u3_017_lunchtime	Topic 1	lunchtime	die Mittagszeit	lunchtime	die Mittagszeit	🥪		
+u3_018_end	Topic 1	end	das Ende, der Schluss	end	das Ende, der Schluss	🏁		
+u3_019_in_the_end	Topic 1	in the end	schließlich; zum Schluss	in the end	schließlich; zum Schluss	🔚		
+u3_020_at_the_end	Topic 1	at the end (of)	am Ende (von)	at the end of	am Ende von	📍		
+u3_021_before	Topic 1	before (school / the lesson)	vor (der Schule / der Unterrichtsstunde)	before school, before the lesson	vor der Schule, vor der Unterrichtsstunde	⏮️		
+u3_022_why	Topic 1	why	warum	why	warum	❓		
+u3_023_newspaper	Topic 1	newspaper (paper)	die (Tages-)Zeitung	newspaper, paper	die Zeitung, die Tageszeitung	📰		
+u3_024_letter	Topic 1	letter	der Brief	letter	der Brief	✉️		
+u3_025_competition	Topic 1	competition	der Wettbewerb	competition	der Wettbewerb	🎯		
+u3_026_choose	Topic 1	(to) choose	(aus)wählen	to choose	wählen, auswählen	👉		
+u3_027_winner	Topic 1	winner	der Gewinner, die Gewinnerin; der Sieger, die Siegerin	winner	der Gewinner, die Gewinnerin; der Sieger, die Siegerin	🏅		
+u3_028_illness	Topic 1	illness	die Krankheit	illness	die Krankheit	🤒		
+u3_029_wheelchair	Topic 1	wheelchair	der Rollstuhl	wheelchair	der Rollstuhl	🦽		
+u3_030_husband	Topic 1	husband	der Ehemann	husband	der Ehemann	💍		
+u3_031_cafe	Topic 1	cafe	das Café	cafe	das Café	☕		
+u3_032_get_up	Topic 1	(to) get up	aufstehen	to get up	aufstehen	⏰	st3_01	
+u3_033_shower	Topic 1	shower	die Dusche	shower	die Dusche	🚿		
+u3_034_get_dressed	Topic 1	(to) get dressed	sich anziehen	to get dressed	sich anziehen	👕		
+u3_035_breakfast	Topic 1	breakfast	das Frühstück	breakfast	das Frühstück	🥣	st2b_05_i	
+u3_036_take	Topic 1	(to) take	dauern, (Zeit) brauchen	to take	dauern, Zeit brauchen	⌛		
+u3_037_watch	Topic 1	(to) watch (sth.)	(sich etwas) anschauen; (etwas) beobachten	to watch something	sich etwas anschauen; etwas beobachten	👀		
+u3_038_line	Topic 1	line	die Zeile; die Reihe	line	die Zeile; die Reihe	🏘️		
+u3_039_shopping	Topic 1	shopping	das Einkaufen; die Einkäufe	shopping	das Einkaufen; die Einkäufe	🛍️		
+u3_040_afternoon	Topic 1	afternoon	der Nachmittag	afternoon	der Nachmittag	☀️		
+u3_041_brush	Topic 1	(to) brush	bürsten	to brush	bürsten	🪥		
+u3_042_tooth_pl_teeth	Topic 1	tooth, pl teeth	der Zahn	tooth, teeth	der Zahn, die Zähne	🦷		
+u3_043_everybody	Topic 1	everybody	jeder; alle	everybody	jeder; alle	🌍		
+u3_044_project	Topic 1	project	das Projekt	project	das Projekt	📋		
+u3_045_country	Topic 1	country	das Land; die ländliche Gegend	country	das Land; die ländliche Gegend	🌾		
+u3_046_club	Topic 2	(school) club	die AG (in der Schule)	school club	die AG	🎨		
+u3_047_drama	Topic 2	drama	das Schauspiel, die darstellende Kunst	drama	das Schauspiel, die darstellende Kunst	🎭		
+u3_048_cycle	Topic 2	(to) cycle	Rad fahren	to cycle	Rad fahren	🚴	st4_cycle_satz	
+u3_049_hike	Topic 2	(to) hike	wandern	to hike	wandern	🥾		
+u3_050_run	Topic 2	(to) run	rennen, laufen	to run	rennen, laufen	🏃		
+u3_051_trampolining	Topic 2	trampolining	das Trampolinspringen	trampolining	das Trampolinspringen	🤸		
+u3_052_most_schools	Topic 2	most schools	die meisten Schulen	most schools	die meisten Schulen	🏫		
+u3_053_which_clubs	Topic 2	Which clubs ...?	Welche AGs ...?	Which clubs?	Welche AGs?	🤔		
+u3_054_sea	Topic 2	sea	das Meer, die See	sea	das Meer, die See	🌊		
+u3_055_sentence	Topic 2	sentence	der Satz	sentence	der Satz	💬		
+u3_056_sometimes	Topic 2	sometimes	manchmal	sometimes	manchmal	🌤️		
+u3_057_never	Topic 2	never	nie, niemals	never	nie, niemals	🚫		
+u3_058_rarely	Topic 2	rarely	selten	rarely	selten	🔅		
+u3_059_secret	Topic 2	secret	das Geheimnis; geheim	secret	das Geheimnis; geheim	🤫		
+u3_060_activity	Topic 2	activity	die Aktivität, die Tätigkeit	activity	die Aktivität, die Tätigkeit	🏓		
+u3_061_a_shame	Topic 3	a shame	schade; eine Schande	a shame	schade; eine Schande	😞		
+u3_062_i_d_love_to	Topic 3	I'd love to.	Sehr gerne. / Das würde ich sehr gerne.	I'd love to.	Sehr gerne. Das würde ich sehr gerne.	😍		
+u3_063_ask_sb_to_do_sth	Topic 3	(to) ask sb. to do sth.	jn. bitten, etwas zu tun	to ask somebody to do something	jemanden bitten, etwas zu tun	🙋		
+u3_064_plan	Topic 3	plan	der Plan	plan	der Plan	🗓️		
+u3_065_win	Story	(to) win	gewinnen	to win	gewinnen	🏆		
+u3_066_prize	Story	prize	der Preis, der Gewinn	prize	der Preis, der Gewinn	🏵️		
+u3_067_ceremony	Story	ceremony	die Feier, die Zeremonie	ceremony	die Feier, die Zeremonie	🎉		
+u3_068_show	Story	(to) show	zeigen	to show	zeigen	🖼️		
+u3_069_article	Story	article	der Artikel	article	der Artikel	📄		
+u3_070_surprised	Story	surprised	überrascht	surprised	überrascht	😲		
+u3_071_send	Story	(to) send	senden, schicken	to send	senden, schicken	📤		
+u3_072_next	Story	next	nächste(r, s)	next	nächste	⏭️		
+u3_073_guys	Story	guys (pl)	Leute (als Anrede)	guys	Leute	🙌		
+u3_074_feel	Story	(to) feel	sich fühlen; fühlen	to feel	sich fühlen; fühlen	💭		
+u3_075_be_feel_sorry_for_sb	Story	(to) be/feel sorry for sb.	Mitleid haben mit jm.	to be sorry for somebody, to feel sorry for somebody	Mitleid haben mit jemandem	😢		
+u3_076_her	Story	her	sie; ihr	her	sie; ihr	👧		
+u3_077_stupid	Story	stupid	dumm, blöd; albern	stupid	dumm, blöd; albern	🤪		
+u3_078_hate	Story	(to) hate	hassen	to hate	hassen	😠		
+u3_079_much	Story	much	viel; sehr	much	viel; sehr	➕		
+u3_080_well_done	Story	Well done.	Gut gemacht!	Well done.	Gut gemacht!	👏		
+u3_081_news	Story	news	die Nachrichten	news	die Nachrichten	📺		
+u3_082_get	Story	(to) get	(sich etwas) holen, besorgen; bekommen	to get	sich etwas holen, besorgen; bekommen	🤲		
+u3_083_as_the_winner	Story	as the winner	als Gewinner/in	as the winner	als Gewinner, als Gewinnerin	🥇		
+u3_084_money	Story	money	das Geld	money	das Geld	💰		
+u3_085_heading	Story	heading	die Überschrift	heading	die Überschrift	🔠		
+u3_086_find_out	Story	(to) find out (about)	herausfinden; sich informieren (über)	to find out about	herausfinden; sich informieren über	🔍		
+u3_087_explain_sth_to_sb	Story	(to) explain sth. to sb.	jm. etwas erklären	to explain something to somebody	jemandem etwas erklären	🧑‍🏫		
+u3_088_happen	Story	(to) happen (to sb.)	(jm.) geschehen, passieren	to happen to somebody	jemandem geschehen, passieren	💥		
+u3_089_give	Story	(to) give	geben	to give	geben	🎁		
+u3_090_pay	Story	(to) pay (for sth.)	zahlen; (etwas) bezahlen	to pay for something	zahlen; etwas bezahlen	💳		
+u3_091_cleaner	Story	cleaner	die Reinigungskraft	cleaner	die Reinigungskraft	🧹		
+u3_092_pound	Story	pound (£)	das Pfund (britische Währung)	pound	das Pfund	💷		
+u3_093_penny_pl_pence	Story	penny (= p), pl pence	der Penny, Pence (Plural)	penny, pence	der Penny, die Pence	🪙		
+u3_094_look_sth_up	Study skills	(to) look sth. up	etwas nachschlagen, nachschauen	to look something up	etwas nachschlagen, nachschauen	📖		
+u3_095_jigsaw	Study skills	jigsaw (puzzle)	das Puzzle	jigsaw puzzle	das Puzzle	🧩		
+u3_096_collect	Study skills	(to) collect	(ein)sammeln	to collect	sammeln, einsammeln	🗃️		
+u3_097_letter	Study skills	letter	der Buchstabe	letter	der Buchstabe	🔤		
+u3_098_card	Study skills	card	die Karte	card	die Karte	🃏		
+u3_099_language	Study skills	language	die Sprache	language	die Sprache	🗣️		
+u3_100_group	Study skills	group	die Gruppe	group	die Gruppe	👥		
+u3_101_share	Unit task	(to) share	teilen	to share	teilen	🤝		
+u3_102_match	Unit task	match	das Spiel, der Wettkampf	match	das Spiel, der Wettkampf	⚽		
+u3_103_light	Unit task	light	das Licht; die Lampe	light	das Licht; die Lampe	💡		
+u3_104_speak_clearly_loudly	Unit task	(to) speak clearly/loudly	deutlich/laut sprechen	to speak clearly, to speak loudly	deutlich sprechen, laut sprechen	📢		

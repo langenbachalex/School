@@ -52,6 +52,7 @@ STATIONEN = [
     {"nr": 4, "titel": "Aufgaben verstehen", "symbol": "🔍", "lob": "beim Aufgaben-Verstehen", "schritte": []},
     {"nr": 5, "titel": "Spiele", "symbol": "🎲", "lob": "bei den Spielen", "schritte": []},
     {"nr": 6, "titel": "Hörverstehen", "symbol": "🎧", "lob": "beim Hörverstehen", "schritte": []},  # aus inhalte/hoeren
+    # Vokabeln (Unit 3): erst Abschnitt wählen, dann je Abschnitt diese Schritte
     {"nr": 7, "titel": "Vokabeln", "symbol": "📖", "lob": "bei den Vokabeln",
      "schritte": [
          {"art": "vok_lernen", "name": "Wörter"},
@@ -104,13 +105,27 @@ def main():
                     richtig = saetze[sid]["luecke"]
                     falsch, hilfe = VERBFORMEN[richtig]
                     s["aufgaben"].append({"satz": sid, "richtig": richtig, "falsch": falsch, "hilfe": hilfe})
-    vokabeln = []
+    vokabeln, abschnitte = [], []
     for v in lesen("vokabeln.tsv"):
-        satz = saetze.get(v["satz"])
-        assert satz, f"Vokabel {v['id']}: Satz {v['satz']} fehlt"
-        assert v["englisch"].lower() in satz["en"].lower(), f"Vokabel {v['id']} steht nicht im Satz {v['satz']}"
+        luecke = v.get("luecke") or re.sub(r"^\(to\) ", "", v["englisch"])
+        if v["satz"]:
+            satz = saetze.get(v["satz"])
+            assert satz, f"Vokabel {v['id']}: Satz {v['satz']} fehlt"
+            assert luecke.lower() in satz["en"].lower(), f"Vokabel {v['id']} steht nicht im Satz {v['satz']}"
         vokabeln.append({"id": v["id"], "en": v["englisch"], "de": v["deutsch"], "symbol": v["symbol"],
-                         "satz": v["satz"], "audio": {k: f"audio/vokabeln/{v['id']}_{k}.mp3" for k in ("en_m", "de")}})
+                         "satz": v["satz"], "luecke": luecke,
+                         "audio": {k: f"audio/vokabeln/{v['id']}_{k}.mp3" for k in ("en", "de")}})
+        if not abschnitte or abschnitte[-1][0] != v["abschnitt"]:
+            abschnitte.append((v["abschnitt"], []))
+        abschnitte[-1][1].append(v["id"])
+    # Abschnitte wie im Buch; lange Abschnitte in Teile mit höchstens 13 Wörtern
+    gruppen = []
+    for name, ids in abschnitte:
+        n = -(-len(ids) // 13)
+        groesse = -(-len(ids) // n)
+        for t in range(n):
+            gruppen.append({"name": name + (f" · Teil {t + 1}" if n > 1 else ""), "vokabeln": ids[t * groesse:(t + 1) * groesse]})
+    STATIONEN[6]["gruppen"] = gruppen
     daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")}}
     ziel = os.path.join(BASIS, "app", "daten.js")

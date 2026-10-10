@@ -152,6 +152,8 @@ p { margin: 0; }
 .gln { font-weight: 700; color: var(--gelb-text); background: var(--gelb); border-radius: 12px; padding: 10px 14px; }
 
 /* Vokabeln */
+.gruppen .kachel { min-height: 7rem; }
+.kachel .vorschau { font-size: 1.3rem; letter-spacing: .1em; }
 .vok { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .vok > div { min-width: 0; display: grid; gap: 4px; }
 .vok-bild { font-size: 4rem; line-height: 1; width: 5.5rem; height: 5.5rem; display: grid; place-items: center; border-radius: 18px; background: var(--bg); }

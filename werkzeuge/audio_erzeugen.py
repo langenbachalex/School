@@ -20,6 +20,7 @@ STIMMEN = {
     "en_m": ("5sxKKBj5y1Bji6769iwE", "en", "Elrond – junge britische Männerstimme"),
     "en_f": ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britische Frauenstimme"),
     "de":   ("onwK4e9ZLuTAKqWW03F9", "de", "Daniel – deutsche Stimme"),
+    "en_g": ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme (Vokabeln)"),
 }
 MODELL = "eleven_multilingual_v2"
 EINSTELLUNGEN = {"stability": 0.6, "similarity_boost": 0.75, "speed": 0.9}
@@ -54,8 +55,8 @@ def main():
             auftraege.append(("kernsaetze", f"{z['id']}_de", "de", "de", z["deutsch_gesprochen"] or z["deutsch"], tempo))
     with open(os.path.join(BASIS, "inhalte", "vokabeln.tsv"), encoding="utf-8") as f:
         for v in csv.DictReader(f, delimiter="\t"):
-            auftraege += [("vokabeln", f"{v['id']}_en_m", "en_m", "en", v["englisch"], None),
-                          ("vokabeln", f"{v['id']}_de", "de", "de", v["deutsch"], None)]
+            auftraege += [("vokabeln", f"{v['id']}_en", "en_g", "en", v["englisch_gesprochen"], None),
+                          ("vokabeln", f"{v['id']}_de", "de", "de", v["deutsch_gesprochen"], None)]
     for u in hoeren.lesen():
         for t in u["teile"]:
             auftraege.append(("hoeren", t["datei"], t["stimme"], "en", t["sprech"], None))

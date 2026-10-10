@@ -27,7 +27,7 @@ st2u_03	He walks to school. She walks to school. It walks to school.		Er geht zu
 st2u_04	We walk to school.		Wir gehen zu Fuß zur Schule.		
 st2u_05	You walk to school.		Ihr geht zu Fuß zur Schule.		
 st2u_06	They walk to school.		Sie gehen zu Fuß zur Schule.		
-st2_merksatz			He, she, it – das s muss mit!	"He, <break time=""0.4s""/> she, <break time=""0.4s""/> it – <break time=""0.6s""/> das Ess muss mit!"	0.7
+st2_merksatz			He, she, it – das s muss mit!	"He, she, it – <break time=""0.6s""/> das Ess muss mit!"	0.7
 st2b_01_i	I go to school.		Ich gehe zur Schule.		
 st2b_01_he	He goes to school.		Er geht zur Schule.		
 st2b_02_i	I do my homework.		Ich mache meine Hausaufgaben.		

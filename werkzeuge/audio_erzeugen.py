@@ -18,9 +18,8 @@ LISTE = os.path.join(BASIS, "docs", "sprechtexte.md")
 # Stimmen (Stand 10.10.2026): Englisch nur noch eine Stimme – Mr. Alex' eigene Stimme.
 # Weibliche Personen in Hörtexten sprechen mit Alice. Keine deutschen Audios mehr.
 STIMMEN = {
-    # Wunsch: Mr. Alex' eigene Stimme "Alex" (AK2WYGe96RmMwFKM5KEz). Am 10.10.2026 lieferte ElevenLabs dafür
-    # bei jedem Modell nur "500 Internal Server Error" -> vorerst George. Zum Wechsel: ID hier eintragen,
-    # Dateien in app/audio löschen, Skript neu starten.
+    # Die eigene Stimme "Alex Langenbach" (AK2WYGe96RmMwFKM5KEz) läuft nur mit MODELL "eleven_v3" und wurde
+    # am 10.10.2026 verworfen (klang nicht nach Mr. Alex). Festgelegt: George.
     "en":   ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme"),
     "en_f": ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britische Frauenstimme (weibliche Personen in Hörtexten)"),
 }

@@ -92,7 +92,7 @@ Stimmen: Elrond – junge britische Männerstimme; Alice – britische Frauensti
 | `st2u_06_en_m.mp3` | Elrond | They walk to school. |
 | `st2u_06_en_f.mp3` | Alice | They walk to school. |
 | `st2u_06_de.mp3` | Daniel | Sie gehen zu Fuß zur Schule. |
-| `st2_merksatz_de.mp3` | Daniel | He, she, it – das s muss mit! |
+| `st2_merksatz_de.mp3` | Daniel | He, she, it – das Es muss mit! |
 | `st2b_01_i_en_m.mp3` | Elrond | I go to school. |
 | `st2b_01_i_en_f.mp3` | Alice | I go to school. |
 | `st2b_01_i_de.mp3` | Daniel | Ich gehe zur Schule. |

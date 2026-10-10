@@ -1,6 +1,8 @@
 # Auffrischen mit Mr. Alex – App
 
-**Starten:** `index.html` doppelklicken (Laptop oder Handy). Ein Server und ein Konto sind nicht nötig.
+**Im Internet:** https://langenbachalex.github.io/School/ (QR-Code: `docs/qr-code-app.png`). Nach dem ersten Öffnen läuft die App auch offline und lässt sich auf den Startbildschirm legen („Zum Startbildschirm hinzufügen“ bzw. „App installieren“).
+
+**Ohne Internet-Adresse:** `index.html` doppelklicken (Laptop). Ein Server und ein Konto sind nicht nötig.
 Fortschritt und notierte Fragen bleiben nur im Browser dieses Geräts.
 
 **Tasten am Laptop:** Leertaste = Abspielen, Pfeil rechts = Weiter.
@@ -13,3 +15,5 @@ Fortschritt und notierte Fragen bleiben nur im Browser dieses Geräts.
 **Eigene Aufnahmen:** MP3 mit gleichem Namen in `app/audio/kernsaetze/` ablegen (Liste: `docs/sprechtexte.md`).
 
 **Fehlt eine Audiodatei** (z. B. weil das ElevenLabs-Kontingent aufgebraucht ist), liest die Sprachausgabe des Geräts den Satz vor (britisches Englisch bzw. Deutsch). Sobald die Datei erzeugt ist, nimmt die App automatisch die ElevenLabs-Aufnahme.
+
+**Veröffentlichen:** Jede Änderung im Ordner `app/` wird über `.github/workflows/pages.yml` automatisch neu veröffentlicht.

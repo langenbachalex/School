@@ -905,4 +905,9 @@
   });
 
   startseite();
+
+  // Offline-Speicher (nur wenn die App über eine Webadresse läuft, nicht per Doppelklick)
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    navigator.serviceWorker.register("sw.js").catch(() => { /* ohne Offline-Speicher geht es trotzdem */ });
+  }
 })();

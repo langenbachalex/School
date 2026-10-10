@@ -267,6 +267,8 @@ def main():
         f.write("// Automatisch erzeugt von werkzeuge/daten_bauen.py – bitte nicht von Hand ändern.\n")
         f.write("window.DATEN = " + json.dumps(daten, ensure_ascii=False, indent=1) + ";\n")
     print(ziel, len(saetze), "Sätze")
+    import webapp_bauen
+    webapp_bauen.main()
 
 
 if __name__ == "__main__":

@@ -153,6 +153,219 @@ Stimmen: Elrond – junge britische Männerstimme; Alice – britische Frauensti
 | `kernsaetze/st4_circle_wort_en_m.mp3` | Elrond | circle |
 | `kernsaetze/st4_circle_wort_en_f.mp3` | Alice | circle |
 | `kernsaetze/st4_circle_wort_de.mp3` | Daniel | Kreis |
+| `kernsaetze/st3u_01_en_m.mp3` | Elrond | It's eight p.m. |
+| `kernsaetze/st3u_01_en_f.mp3` | Alice | It's eight p.m. |
+| `kernsaetze/st3u_01_de.mp3` | Daniel | Es ist zwanzig Uhr. |
+| `kernsaetze/st3u_02_en_m.mp3` | Elrond | It's one fifteen p.m. |
+| `kernsaetze/st3u_02_en_f.mp3` | Alice | It's one fifteen p.m. |
+| `kernsaetze/st3u_02_de.mp3` | Daniel | Es ist dreizehn Uhr fünfzehn. |
+| `kernsaetze/st3u_03_en_m.mp3` | Elrond | It's six forty-five a.m. |
+| `kernsaetze/st3u_03_en_f.mp3` | Alice | It's six forty-five a.m. |
+| `kernsaetze/st3u_03_de.mp3` | Daniel | Es ist sechs Uhr fünfundvierzig. |
+| `kernsaetze/st3u_04_en_m.mp3` | Elrond | It's three p.m. |
+| `kernsaetze/st3u_04_en_f.mp3` | Alice | It's three p.m. |
+| `kernsaetze/st3u_04_de.mp3` | Daniel | Es ist fünfzehn Uhr. |
+| `kernsaetze/st3u_05_en_m.mp3` | Elrond | It's seven thirty a.m. |
+| `kernsaetze/st3u_05_en_f.mp3` | Alice | It's seven thirty a.m. |
+| `kernsaetze/st3u_05_de.mp3` | Daniel | Es ist sieben Uhr dreißig. |
+| `kernsaetze/st3u_06_en_m.mp3` | Elrond | It's nine p.m. |
+| `kernsaetze/st3u_06_en_f.mp3` | Alice | It's nine p.m. |
+| `kernsaetze/st3u_06_de.mp3` | Daniel | Es ist einundzwanzig Uhr. |
+| `kernsaetze/st8s_never_en_m.mp3` | Elrond | never |
+| `kernsaetze/st8s_never_en_f.mp3` | Alice | never |
+| `kernsaetze/st8s_never_de.mp3` | Daniel | nie |
+| `kernsaetze/st8s_rarely_en_m.mp3` | Elrond | rarely |
+| `kernsaetze/st8s_rarely_en_f.mp3` | Alice | rarely |
+| `kernsaetze/st8s_rarely_de.mp3` | Daniel | selten |
+| `kernsaetze/st8s_sometimes_en_m.mp3` | Elrond | sometimes |
+| `kernsaetze/st8s_sometimes_en_f.mp3` | Alice | sometimes |
+| `kernsaetze/st8s_sometimes_de.mp3` | Daniel | manchmal |
+| `kernsaetze/st8s_often_en_m.mp3` | Elrond | often |
+| `kernsaetze/st8s_often_en_f.mp3` | Alice | often |
+| `kernsaetze/st8s_often_de.mp3` | Daniel | oft |
+| `kernsaetze/st8s_always_en_m.mp3` | Elrond | always |
+| `kernsaetze/st8s_always_en_f.mp3` | Alice | always |
+| `kernsaetze/st8s_always_de.mp3` | Daniel | immer |
+| `kernsaetze/st8f_01_i_en_m.mp3` | Elrond | I never go running. |
+| `kernsaetze/st8f_01_i_en_f.mp3` | Alice | I never go running. |
+| `kernsaetze/st8f_01_i_de.mp3` | Daniel | Ich gehe nie laufen. |
+| `kernsaetze/st8f_01_he_en_m.mp3` | Elrond | He never goes running. |
+| `kernsaetze/st8f_01_he_en_f.mp3` | Alice | He never goes running. |
+| `kernsaetze/st8f_01_he_de.mp3` | Daniel | Er geht nie laufen. |
+| `kernsaetze/st8f_02_i_en_m.mp3` | Elrond | I rarely play cricket. |
+| `kernsaetze/st8f_02_i_en_f.mp3` | Alice | I rarely play cricket. |
+| `kernsaetze/st8f_02_i_de.mp3` | Daniel | Ich spiele selten Kricket. |
+| `kernsaetze/st8f_02_he_en_m.mp3` | Elrond | She rarely plays cricket. |
+| `kernsaetze/st8f_02_he_en_f.mp3` | Alice | She rarely plays cricket. |
+| `kernsaetze/st8f_02_he_de.mp3` | Daniel | Sie spielt selten Kricket. |
+| `kernsaetze/st8f_03_i_en_m.mp3` | Elrond | I sometimes go hiking. |
+| `kernsaetze/st8f_03_i_en_f.mp3` | Alice | I sometimes go hiking. |
+| `kernsaetze/st8f_03_i_de.mp3` | Daniel | Ich gehe manchmal wandern. |
+| `kernsaetze/st8f_03_he_en_m.mp3` | Elrond | He sometimes goes hiking. |
+| `kernsaetze/st8f_03_he_en_f.mp3` | Alice | He sometimes goes hiking. |
+| `kernsaetze/st8f_03_he_de.mp3` | Daniel | Er geht manchmal wandern. |
+| `kernsaetze/st8f_04_i_en_m.mp3` | Elrond | I often go cycling. |
+| `kernsaetze/st8f_04_i_en_f.mp3` | Alice | I often go cycling. |
+| `kernsaetze/st8f_04_i_de.mp3` | Daniel | Ich fahre oft Rad. |
+| `kernsaetze/st8f_04_he_en_m.mp3` | Elrond | She often goes cycling. |
+| `kernsaetze/st8f_04_he_en_f.mp3` | Alice | She often goes cycling. |
+| `kernsaetze/st8f_04_he_de.mp3` | Daniel | Sie fährt oft Rad. |
+| `kernsaetze/st8f_05_i_en_m.mp3` | Elrond | I always sing in the shower. |
+| `kernsaetze/st8f_05_i_en_f.mp3` | Alice | I always sing in the shower. |
+| `kernsaetze/st8f_05_i_de.mp3` | Daniel | Ich singe immer unter der Dusche. |
+| `kernsaetze/st8f_05_he_en_m.mp3` | Elrond | He always sings in the shower. |
+| `kernsaetze/st8f_05_he_en_f.mp3` | Alice | He always sings in the shower. |
+| `kernsaetze/st8f_05_he_de.mp3` | Daniel | Er singt immer unter der Dusche. |
+| `kernsaetze/st8w_01_en_m.mp3` | Elrond | He never goes running. |
+| `kernsaetze/st8w_01_en_f.mp3` | Alice | He never goes running. |
+| `kernsaetze/st8w_01_de.mp3` | Daniel | Er geht nie laufen. |
+| `kernsaetze/st8w_02_en_m.mp3` | Elrond | She sometimes plays cricket. |
+| `kernsaetze/st8w_02_en_f.mp3` | Alice | She sometimes plays cricket. |
+| `kernsaetze/st8w_02_de.mp3` | Daniel | Sie spielt manchmal Kricket. |
+| `kernsaetze/st8w_03_en_m.mp3` | Elrond | I always sing. |
+| `kernsaetze/st8w_03_en_f.mp3` | Alice | I always sing. |
+| `kernsaetze/st8w_03_de.mp3` | Daniel | Ich singe immer. |
+| `kernsaetze/st8w_04_en_m.mp3` | Elrond | We often go cycling. |
+| `kernsaetze/st8w_04_en_f.mp3` | Alice | We often go cycling. |
+| `kernsaetze/st8w_04_de.mp3` | Daniel | Wir fahren oft Rad. |
+| `kernsaetze/st8w_05_en_m.mp3` | Elrond | He rarely plays computer games. |
+| `kernsaetze/st8w_05_en_f.mp3` | Alice | He rarely plays computer games. |
+| `kernsaetze/st8w_05_de.mp3` | Daniel | Er spielt selten Computerspiele. |
+| `kernsaetze/st8w_06_en_m.mp3` | Elrond | We sometimes go hiking. |
+| `kernsaetze/st8w_06_en_f.mp3` | Alice | We sometimes go hiking. |
+| `kernsaetze/st8w_06_de.mp3` | Daniel | Wir gehen manchmal wandern. |
+| `kernsaetze/st8r_01_en_m.mp3` | Elrond | He sometimes plays football. |
+| `kernsaetze/st8r_01_en_f.mp3` | Alice | He sometimes plays football. |
+| `kernsaetze/st8r_01_de.mp3` | Daniel | Er spielt manchmal Fußball. |
+| `kernsaetze/st8r_02_en_m.mp3` | Elrond | I never go swimming. |
+| `kernsaetze/st8r_02_en_f.mp3` | Alice | I never go swimming. |
+| `kernsaetze/st8r_02_de.mp3` | Daniel | Ich gehe nie schwimmen. |
+| `kernsaetze/st8r_03_en_m.mp3` | Elrond | She often goes surfing. |
+| `kernsaetze/st8r_03_en_f.mp3` | Alice | She often goes surfing. |
+| `kernsaetze/st8r_03_de.mp3` | Daniel | Sie geht oft surfen. |
+| `kernsaetze/st8r_04_en_m.mp3` | Elrond | You rarely play hockey. |
+| `kernsaetze/st8r_04_en_f.mp3` | Alice | You rarely play hockey. |
+| `kernsaetze/st8r_04_de.mp3` | Daniel | Du spielst selten Hockey. |
+| `kernsaetze/st8r_05_en_m.mp3` | Elrond | She always goes cycling. |
+| `kernsaetze/st8r_05_en_f.mp3` | Alice | She always goes cycling. |
+| `kernsaetze/st8r_05_de.mp3` | Daniel | Sie fährt immer Rad. |
+| `kernsaetze/st8r_06_en_m.mp3` | Elrond | I sometimes play football. |
+| `kernsaetze/st8r_06_en_f.mp3` | Alice | I sometimes play football. |
+| `kernsaetze/st8r_06_de.mp3` | Daniel | Ich spiele manchmal Fußball. |
+| `kernsaetze/st8r_07_en_m.mp3` | Elrond | He never goes swimming. |
+| `kernsaetze/st8r_07_en_f.mp3` | Alice | He never goes swimming. |
+| `kernsaetze/st8r_07_de.mp3` | Daniel | Er geht nie schwimmen. |
+| `kernsaetze/st8r_08_en_m.mp3` | Elrond | I often go cycling. |
+| `kernsaetze/st8r_08_en_f.mp3` | Alice | I often go cycling. |
+| `kernsaetze/st8r_08_de.mp3` | Daniel | Ich fahre oft Rad. |
+| `kernsaetze/st8h_01_en_m.mp3` | Elrond | I like drama. |
+| `kernsaetze/st8h_01_en_f.mp3` | Alice | I like drama. |
+| `kernsaetze/st8h_01_de.mp3` | Daniel | Ich mag Schauspiel. |
+| `kernsaetze/st8h_02_en_m.mp3` | Elrond | I like art. |
+| `kernsaetze/st8h_02_en_f.mp3` | Alice | I like art. |
+| `kernsaetze/st8h_02_de.mp3` | Daniel | Ich mag Kunst. |
+| `kernsaetze/st8h_03_en_m.mp3` | Elrond | I like computer games. |
+| `kernsaetze/st8h_03_en_f.mp3` | Alice | I like computer games. |
+| `kernsaetze/st8h_03_de.mp3` | Daniel | Ich mag Computerspiele. |
+| `kernsaetze/st8h_04_en_m.mp3` | Elrond | I like cricket. |
+| `kernsaetze/st8h_04_en_f.mp3` | Alice | I like cricket. |
+| `kernsaetze/st8h_04_de.mp3` | Daniel | Ich mag Kricket. |
+| `kernsaetze/st8h_05_en_m.mp3` | Elrond | I like cycling. |
+| `kernsaetze/st8h_05_en_f.mp3` | Alice | I like cycling. |
+| `kernsaetze/st8h_05_de.mp3` | Daniel | Ich fahre gern Rad. |
+| `kernsaetze/st8h_06_en_m.mp3` | Elrond | I like dancing. |
+| `kernsaetze/st8h_06_en_f.mp3` | Alice | I like dancing. |
+| `kernsaetze/st8h_06_de.mp3` | Daniel | Ich tanze gern. |
+| `kernsaetze/st8h_07_en_m.mp3` | Elrond | I like hiking. |
+| `kernsaetze/st8h_07_en_f.mp3` | Alice | I like hiking. |
+| `kernsaetze/st8h_07_de.mp3` | Daniel | Ich gehe gern wandern. |
+| `kernsaetze/st8h_08_en_m.mp3` | Elrond | I like music. |
+| `kernsaetze/st8h_08_en_f.mp3` | Alice | I like music. |
+| `kernsaetze/st8h_08_de.mp3` | Daniel | Ich mag Musik. |
+| `kernsaetze/st8h_09_en_m.mp3` | Elrond | I like running. |
+| `kernsaetze/st8h_09_en_f.mp3` | Alice | I like running. |
+| `kernsaetze/st8h_09_de.mp3` | Daniel | Ich laufe gern. |
+| `kernsaetze/st8h_10_en_m.mp3` | Elrond | I like singing. |
+| `kernsaetze/st8h_10_en_f.mp3` | Alice | I like singing. |
+| `kernsaetze/st8h_10_de.mp3` | Daniel | Ich singe gern. |
+| `kernsaetze/st8h_11_en_m.mp3` | Elrond | I like table tennis. |
+| `kernsaetze/st8h_11_en_f.mp3` | Alice | I like table tennis. |
+| `kernsaetze/st8h_11_de.mp3` | Daniel | Ich spiele gern Tischtennis. |
+| `kernsaetze/st8h_12_en_m.mp3` | Elrond | I like trampolining. |
+| `kernsaetze/st8h_12_en_f.mp3` | Alice | I like trampolining. |
+| `kernsaetze/st8h_12_de.mp3` | Daniel | Ich springe gern Trampolin. |
+| `kernsaetze/st8h_13_en_m.mp3` | Elrond | I like windsurfing. |
+| `kernsaetze/st8h_13_en_f.mp3` | Alice | I like windsurfing. |
+| `kernsaetze/st8h_13_de.mp3` | Daniel | Ich windsurfe gern. |
+| `kernsaetze/st8h_14_en_m.mp3` | Elrond | I like singing, but I don't like trampolining. |
+| `kernsaetze/st8h_14_en_f.mp3` | Alice | I like singing, but I don't like trampolining. |
+| `kernsaetze/st8h_14_de.mp3` | Daniel | Ich singe gern, aber ich springe nicht gern Trampolin. |
+| `kernsaetze/st8p_01_en_m.mp3` | Elrond | Brahim loves drama and singing. |
+| `kernsaetze/st8p_01_en_f.mp3` | Alice | Brahim loves drama and singing. |
+| `kernsaetze/st8p_01_de.mp3` | Daniel | Brahim liebt Schauspiel und Gesang. |
+| `kernsaetze/st8p_02_en_m.mp3` | Elrond | Liam does competitions. |
+| `kernsaetze/st8p_02_en_f.mp3` | Alice | Liam does competitions. |
+| `kernsaetze/st8p_02_de.mp3` | Daniel | Liam macht bei Wettbewerben mit. |
+| `kernsaetze/st8p_03_en_m.mp3` | Elrond | Annie is in the school band. |
+| `kernsaetze/st8p_03_en_f.mp3` | Alice | Annie is in the school band. |
+| `kernsaetze/st8p_03_de.mp3` | Daniel | Annie ist in der Schulband. |
+| `kernsaetze/st8p_04_en_m.mp3` | Elrond | Annie plays cricket. |
+| `kernsaetze/st8p_04_en_f.mp3` | Alice | Annie plays cricket. |
+| `kernsaetze/st8p_04_de.mp3` | Daniel | Annie spielt Kricket. |
+| `kernsaetze/st8p_05_en_m.mp3` | Elrond | Rin does a sport in the sea. |
+| `kernsaetze/st8p_05_en_f.mp3` | Alice | Rin does a sport in the sea. |
+| `kernsaetze/st8p_05_de.mp3` | Daniel | Rin macht einen Sport im Meer. |
+| `kernsaetze/st8e_01_en_m.mp3` | Elrond | I like drama, but I don't like science. |
+| `kernsaetze/st8e_01_en_f.mp3` | Alice | I like drama, but I don't like science. |
+| `kernsaetze/st8e_01_de.mp3` | Daniel | Ich mag Schauspiel, aber ich mag Naturwissenschaften nicht. |
+| `kernsaetze/st8e_02_en_m.mp3` | Elrond | I like music, but I don't like cricket. |
+| `kernsaetze/st8e_02_en_f.mp3` | Alice | I like music, but I don't like cricket. |
+| `kernsaetze/st8e_02_de.mp3` | Daniel | Ich mag Musik, aber ich mag Kricket nicht. |
+| `kernsaetze/st8e_03_en_m.mp3` | Elrond | I like dancing, but I don't like hiking. |
+| `kernsaetze/st8e_03_en_f.mp3` | Alice | I like dancing, but I don't like hiking. |
+| `kernsaetze/st8e_03_de.mp3` | Daniel | Ich tanze gern, aber ich wandere nicht gern. |
+| `kernsaetze/st8e_04_en_m.mp3` | Elrond | I like running, but I don't like art. |
+| `kernsaetze/st8e_04_en_f.mp3` | Alice | I like running, but I don't like art. |
+| `kernsaetze/st8e_04_de.mp3` | Daniel | Ich laufe gern, aber ich mag Kunst nicht. |
+| `kernsaetze/st8c_01_en_m.mp3` | Elrond | a computer club |
+| `kernsaetze/st8c_01_en_f.mp3` | Alice | a computer club |
+| `kernsaetze/st8c_01_de.mp3` | Daniel | die Computer-AG |
+| `kernsaetze/st8c_02_en_m.mp3` | Elrond | a reading club |
+| `kernsaetze/st8c_02_en_f.mp3` | Alice | a reading club |
+| `kernsaetze/st8c_02_de.mp3` | Daniel | die Lese-AG |
+| `kernsaetze/st8c_03_en_m.mp3` | Elrond | a drama club |
+| `kernsaetze/st8c_03_en_f.mp3` | Alice | a drama club |
+| `kernsaetze/st8c_03_de.mp3` | Daniel | die Theater-AG |
+| `kernsaetze/st8c_04_en_m.mp3` | Elrond | an art club |
+| `kernsaetze/st8c_04_en_f.mp3` | Alice | an art club |
+| `kernsaetze/st8c_04_de.mp3` | Daniel | die Kunst-AG |
+| `kernsaetze/st8c_05_en_m.mp3` | Elrond | a hockey club |
+| `kernsaetze/st8c_05_en_f.mp3` | Alice | a hockey club |
+| `kernsaetze/st8c_05_de.mp3` | Daniel | die Hockey-AG |
+| `kernsaetze/st8c_06_en_m.mp3` | Elrond | a film club |
+| `kernsaetze/st8c_06_en_f.mp3` | Alice | a film club |
+| `kernsaetze/st8c_06_de.mp3` | Daniel | die Film-AG |
+| `kernsaetze/st8c_07_en_m.mp3` | Elrond | a singing club |
+| `kernsaetze/st8c_07_en_f.mp3` | Alice | a singing club |
+| `kernsaetze/st8c_07_de.mp3` | Daniel | die Sing-AG |
+| `kernsaetze/st8c_08_en_m.mp3` | Elrond | a football club |
+| `kernsaetze/st8c_08_en_f.mp3` | Alice | a football club |
+| `kernsaetze/st8c_08_de.mp3` | Daniel | die Fußball-AG |
+| `kernsaetze/st8c_09_en_m.mp3` | Elrond | a swimming club |
+| `kernsaetze/st8c_09_en_f.mp3` | Alice | a swimming club |
+| `kernsaetze/st8c_09_de.mp3` | Daniel | die Schwimm-AG |
+| `kernsaetze/st8c_10_en_m.mp3` | Elrond | Most schools have school clubs. |
+| `kernsaetze/st8c_10_en_f.mp3` | Alice | Most schools have school clubs. |
+| `kernsaetze/st8c_10_de.mp3` | Daniel | Die meisten Schulen haben AGs. |
+| `kernsaetze/st8c_11_en_m.mp3` | Elrond | Are there clubs like this at your school? |
+| `kernsaetze/st8c_11_en_f.mp3` | Alice | Are there clubs like this at your school? |
+| `kernsaetze/st8c_11_de.mp3` | Daniel | Gibt es solche AGs an eurer Schule? |
+| `kernsaetze/st8c_12_en_m.mp3` | Elrond | Which clubs do you like? |
+| `kernsaetze/st8c_12_en_f.mp3` | Alice | Which clubs do you like? |
+| `kernsaetze/st8c_12_de.mp3` | Daniel | Welche AGs magst du? |
+| `kernsaetze/st8c_13_en_m.mp3` | Elrond | I want a film club at my school. |
+| `kernsaetze/st8c_13_en_f.mp3` | Alice | I want a film club at my school. |
+| `kernsaetze/st8c_13_de.mp3` | Daniel | Ich möchte eine Film-AG an meiner Schule. |
 | `vokabeln/u3_001_journey_en.mp3` | George | journey |
 | `vokabeln/u3_001_journey_de.mp3` | Daniel | die Reise, die Fahrt; der Weg |
 | `vokabeln/u3_002_come_en.mp3` | George | to come |
@@ -161,7 +374,7 @@ Stimmen: Elrond – junge britische Männerstimme; Alice – britische Frauensti
 | `vokabeln/u3_003_bus_de.mp3` | Daniel | der Bus |
 | `vokabeln/u3_004_by_bike_bus_en.mp3` | George | by bike, by bus |
 | `vokabeln/u3_004_by_bike_bus_de.mp3` | Daniel | mit dem Fahrrad, mit dem Bus |
-| `vokabeln/u3_005_car_en.mp3` | George | car |
+| `vokabeln/u3_005_car_en.mp3` | George | the car |
 | `vokabeln/u3_005_car_de.mp3` | Daniel | das Auto |
 | `vokabeln/u3_006_train_en.mp3` | George | train |
 | `vokabeln/u3_006_train_de.mp3` | Daniel | der Zug, die Eisenbahn |

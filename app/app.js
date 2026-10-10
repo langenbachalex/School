@@ -103,7 +103,7 @@
   function teileVon(st) {
     const t = [];
     st.schritte.forEach((s) => {
-      if (s.art === "lr") [1, 2, 3, 4].forEach((stufe) =>
+      if (s.art === "lr") (s.stufen || [1, 2, 3, 4]).forEach((stufe) =>
         t.push({ art: "lr", stufe, saetze: s.saetze, name: (s.name ? s.name + " · " : "") + "Stufe " + stufe }));
       else t.push(s);
     });
@@ -123,8 +123,8 @@
 
   function kopf(st) {
     return el("header", { class: "kopf" },
-      lage && lage.vok ? knopf("← Abschnitte", () => zeigeGruppen(st), "leise") : knopf("← Start", startseite, "leise"),
-      el("h1", {}, `Station ${st.nr}: ${st.titel}` + (lage && lage.vok ? ` · ${st.gruppen[lage.gruppe].name}` : "")),
+      lage && lage.gruppe != null ? knopf(st.gruppen[0].vokabeln ? "← Abschnitte" : "← Themen", () => zeigeGruppen(st), "leise") : knopf("← Start", startseite, "leise"),
+      el("h1", {}, `Station ${st.nr}: ${st.titel}` + (lage && lage.gruppe != null ? ` · ${st.gruppen[lage.gruppe].name}` : "")),
       lage && el("ol", { class: "schritte", "aria-label": "Schritte" },
         lage.teile.map((t, i) => el("li", { class: i === lage.teil ? "jetzt" : i < lage.teil ? "fertig" : "",
           "aria-current": i === lage.teil ? "step" : false }, t.name))));
@@ -141,7 +141,8 @@
     lage.abspielen = null; lage.weiter = null;
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, hoeren: zeigeHoeren,
-       vok_lernen: zeigeVokabel, vok_luecke: zeigeVokabel, vok_abfrage: zeigeVokabel })[teil.art](teil);
+       vok_lernen: zeigeVokabel, vok_luecke: zeigeVokabel, vok_abfrage: zeigeVokabel,
+       auswahl: zeigeAuswahl, reihenfolge: zeigeReihenfolge })[teil.art](teil);
   }
 
   function naechstes() {
@@ -152,7 +153,7 @@
   }
   function laenge(teil) {
     if (teil.art === "lr") return teil.saetze.length;
-    if (teil.art === "verbform") return teil.aufgaben.length;
+    if (teil.art === "verbform" || teil.art === "auswahl") return teil.aufgaben.length;
     if (teil.art === "vok_abfrage") return lage.vq ? lage.vq.length : lage.vok.length; // wächst bei „Nochmal üben“
     if (teil.art === "vok_lernen") return lage.vok.length;
     if (teil.art === "vok_luecke") return lage.vok.filter((v) => v.satz).length;
@@ -175,21 +176,27 @@
     lage = null;
     const fertig = (stand.gruppen && stand.gruppen[st.nr]) || [];
     zeige(kopf(st),
-      el("p", { class: "ansage" }, "Wähl einen Abschnitt. Die Wörter kommen in derselben Reihenfolge wie im Buch."),
+      el("p", { class: "ansage" }, st.gruppen[0].vokabeln ? "Wähl einen Abschnitt. Die Wörter kommen in derselben Reihenfolge wie im Buch."
+        : "Wähl ein Thema. Hier lernen wir Neues: erst die Erklärung, dann üben."),
       el("nav", { class: "kacheln gruppen", "aria-label": "Abschnitte" }, st.gruppen.map((g, i) => {
         const ok = fertig.includes(g.name);
         return el("button", { class: "kachel" + (ok ? " erledigt" : ""), onclick: () => starteGruppe(st, i),
-          "aria-label": `${g.name}, ${g.vokabeln.length} Wörter${ok ? " (geschafft)" : ""}` },
-          el("span", { class: "nr" }, `${g.vokabeln.length} Wörter`),
+          "aria-label": `${g.name}${g.vokabeln ? `, ${g.vokabeln.length} Wörter` : ""}${ok ? " (geschafft)" : ""}` },
+          el("span", { class: "nr" }, g.vokabeln ? `${g.vokabeln.length} Wörter` : `Thema ${i + 1}`),
           el("span", { class: "titel" }, g.name),
           el("span", { class: "vorschau", "aria-hidden": "true" },
-            g.vokabeln.slice(0, 5).map((id) => D.vokabeln.find((v) => v.id === id).symbol).join(" ")),
+            g.symbol || g.vokabeln.slice(0, 5).map((id) => D.vokabeln.find((v) => v.id === id).symbol).join(" ")),
           ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
       })));
   }
 
   function starteGruppe(st, i) {
-    const vok = st.gruppen[i].vokabeln.map((id) => D.vokabeln.find((v) => v.id === id));
+    const g = st.gruppen[i];
+    if (g.schritte) { // Thema mit eigenen Schritten (Neu erklärt)
+      lage = { nr: st.nr, gruppe: i, teile: teileVon(g), teil: 0, pos: 0 };
+      return zeigeTeil();
+    }
+    const vok = g.vokabeln.map((id) => D.vokabeln.find((v) => v.id === id));
     const t = st.schritte.filter((s) => s.art !== "vok_luecke" || vok.some((v) => v.satz));
     lage = { nr: st.nr, gruppe: i, vok, teile: t, teil: 0, pos: 0 };
     zeigeTeil();
@@ -212,7 +219,7 @@
   }
 
   function stationGeschafft() {
-    if (lage.vok) return gruppeGeschafft();
+    if (lage.gruppe != null) return gruppeGeschafft();
     const st = station(lage.nr);
     if (!stand.erledigt.includes(st.nr)) { stand.erledigt.push(st.nr); speichern(); }
     lage = null;
@@ -244,7 +251,7 @@
 
     const enBlock = (mitLuecke) => el("div", { class: "spalte", lang: "en" },
       el("span", { class: "sprache" }, "Englisch"),
-      symbol && el("span", { class: "symbol", "aria-hidden": "true" }, symbol),
+      symbol && el("span", { class: /[○●]/.test(symbol) ? "symbol punkte-zeile" : "symbol", "aria-hidden": "true" }, symbol),
       ss.map((s) => el("p", { class: "satz" }, lueckenSatz(s, mitLuecke))));
     const deBlock = () => el("div", { class: "spalte", lang: "de" },
       el("span", { class: "sprache" }, "Deutsch"),
@@ -320,7 +327,7 @@
       if (b.typ === "merksatz") return el("div", { class: "merksatz" },
         el("span", { class: "sprache" }, "Merksatz"),
         el("p", {}, b.text),
-        knopf("🔊 Anhören", () => spiele([D.saetze[b.audio].audio.de])));
+        b.dateien && b.dateien.length && knopf("🔊 Anhören", () => spiele(b.dateien)));
       if (b.typ === "regeln") return el("ul", { class: "regeln" },
         b.punkte.map(([regel, beispiel]) => el("li", {}, el("strong", {}, regel), " ", el("span", { lang: "en" }, beispiel))));
       if (b.typ === "tabelle") return el("div", { class: "tabelle-rahmen" }, el("table", { class: "tabelle" },
@@ -507,6 +514,75 @@
         warten),
       mitlesen,
       el("div", { class: "hv-spieler" }, el("div", { class: "knopfreihe" }, hoerKnopf, stoppKnopf), zaehler));
+  }
+
+  /* ---------- Übung: Auswahl (eine richtige Antwort; Lösung immer mit Audio) ---------- */
+  function zeigeAuswahl(teil) {
+    const st = station(lage.nr);
+    const a = teil.aufgaben[lage.pos];
+    const s = D.saetze[a.satz];
+    let geloest = false;
+    const box = rueckmeldung();
+    const loesungZeile = el("p", { class: "satz ziel-satz", lang: "en", hidden: true }, s.en);
+    const weiter = knopf("Weiter ➜", naechstes, "haupt");
+    weiter.disabled = true;
+    const hoeren = () => spiele([s.audio.en_m, s.audio.en_f]);
+    const wahl = el("div", { class: "wahl", role: "group", "aria-label": "Antwort wählen" },
+      (a.korrektur ? a.optionen : mischen(a.optionen)).map((o) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
+        if (geloest) return;
+        if (o === a.richtig) {
+          geloest = true;
+          e.currentTarget.classList.add("richtig");
+          melde(box, "gut", lob() + (a.korrektur ? (a.frage === s.en ? " Der Satz stimmt." : " So ist es richtig:") : ""));
+          loesungZeile.hidden = false;
+          weiter.disabled = false; lage.weiter = naechstes; lage.abspielen = hoeren;
+          hoeren();
+        } else {
+          e.currentTarget.disabled = true;
+          melde(box, "hilfe", `Ich helfe dir: ${a.hilfe} Probier's nochmal!`);
+        }
+      } }, o)));
+    lage.abspielen = null;
+    zeige(kopf(st),
+      el("p", { class: "ansage" }, teil.ansage || "Tipp auf die richtige Antwort!"),
+      karte(teil, `Aufgabe ${lage.pos + 1} von ${teil.aufgaben.length}`,
+        el("p", { class: "satz", lang: a.korrektur ? "en" : "de" }, a.frage),
+        wahl, box, loesungZeile,
+        el("div", { class: "knopfreihe" }, weiter)));
+  }
+
+  /* ---------- Übung: Wörter in die richtige Reihenfolge bringen ---------- */
+  function zeigeReihenfolge(teil) {
+    const st = station(lage.nr);
+    const woerter = teil.woerter.map((id) => D.saetze[id]);
+    let naechster = 0;
+    const box = rueckmeldung();
+    const reihe = el("ol", { class: "reihe", "aria-label": "Deine Reihenfolge" },
+      woerter.map(() => el("li", { class: "platz" }, "…")));
+    const weiter = knopf("Weiter ➜", naechstes, "haupt");
+    weiter.disabled = true;
+    const alle = () => spiele(woerter.map((w) => w.audio.en_m));
+    const knoepfe = mischen(woerter).map((w) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
+      if (w === woerter[naechster]) {
+        const platz = reihe.children[naechster];
+        platz.textContent = ""; platz.append(el("span", { class: "punkte", "aria-hidden": "true" }, w.symbol || ""), " " + w.en);
+        platz.classList.add("voll");
+        e.currentTarget.hidden = true;
+        box.hidden = true;
+        spiele([w.audio.en_m]);
+        if (++naechster === woerter.length) {
+          melde(box, "gut", lob());
+          weiter.disabled = false; lage.weiter = naechstes; lage.abspielen = alle;
+          setTimeout(alle, 900);
+        }
+      } else {
+        melde(box, "hilfe", `Ich helfe dir: ${teil.hilfe} Probier's nochmal!`);
+      }
+    } }, w.en));
+    lage.abspielen = null;
+    zeige(kopf(st),
+      el("p", { class: "ansage" }, "Bring die Wörter in die richtige Reihenfolge: von „nie“ bis „immer“. Tipp sie nacheinander an!"),
+      karte(teil, null, reihe, el("div", { class: "wahl" }, knoepfe), box, el("div", { class: "knopfreihe" }, weiter)));
   }
 
   /* ---------- Vokabeln ---------- */

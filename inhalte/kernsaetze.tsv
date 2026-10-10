@@ -38,13 +38,84 @@ st2b_04_i	I wash my face.		Ich wasche mir das Gesicht.
 st2b_04_he	Mia [washes] her face.		Mia wäscht sich das Gesicht.			
 st2b_05_i	I have breakfast.		Ich frühstücke.			
 st2b_05_he	He [has] breakfast.		Er frühstückt.			
-st3_01	I get up at 6.45 a.m.	I get up at six forty-five a.m.	Ich stehe um 6.45 Uhr auf.	Ich stehe um sechs Uhr fünfundvierzig auf.		
-st3_02	She gets up at 7 o'clock.	She gets up at seven o'clock.	Sie steht um 7 Uhr auf.	Sie steht um sieben Uhr auf.		
-st3_03	He has breakfast at 7.15 a.m.	He has breakfast at seven fifteen a.m.	Er frühstückt um 7.15 Uhr.	Er frühstückt um sieben Uhr fünfzehn.		
-st3_04	School starts at 8 a.m.	School starts at eight a.m.	Die Schule beginnt um 8 Uhr.	Die Schule beginnt um acht Uhr.		
-st3_05	Mia meets Ben at 3.20 p.m.	Mia meets Ben at three twenty p.m.	Mia trifft Ben um 15.20 Uhr.	Mia trifft Ben um fünfzehn Uhr zwanzig.		
-st3_06	He goes to bed at 9 p.m.	He goes to bed at nine p.m.	Er geht um 21 Uhr ins Bett.	Er geht um einundzwanzig Uhr ins Bett.		
+st3_01	I get up at [6.45 a.m.]	I get up at six forty-five a.m.	Ich stehe um 6.45 Uhr auf.	Ich stehe um sechs Uhr fünfundvierzig auf.		
+st3_02	She gets up at [7 o'clock].	She gets up at seven o'clock.	Sie steht um 7 Uhr auf.	Sie steht um sieben Uhr auf.		
+st3_03	He has breakfast at [7.15 a.m.]	He has breakfast at seven fifteen a.m.	Er frühstückt um 7.15 Uhr.	Er frühstückt um sieben Uhr fünfzehn.		
+st3_04	School starts at [8 a.m.]	School starts at eight a.m.	Die Schule beginnt um 8 Uhr.	Die Schule beginnt um acht Uhr.		
+st3_05	Mia meets Ben at [3.20 p.m.]	Mia meets Ben at three twenty p.m.	Mia trifft Ben um 15.20 Uhr.	Mia trifft Ben um fünfzehn Uhr zwanzig.		
+st3_06	He goes to bed at [9 p.m.]	He goes to bed at nine p.m.	Er geht um 21 Uhr ins Bett.	Er geht um einundzwanzig Uhr ins Bett.		
 st4_cycle_satz	I cycle to school.		Ich fahre mit dem Rad zur Schule.			
 st4_circle_satz	Draw a circle.		Zeichne einen Kreis.			
 st4_cycle_wort	cycle		Rad fahren			
 st4_circle_wort	circle		Kreis			
+st3u_01	It's [8 p.m.]	It's eight p.m.	Es ist 20 Uhr.	Es ist zwanzig Uhr.		
+st3u_02	It's [1.15 p.m.]	It's one fifteen p.m.	Es ist 13.15 Uhr.	Es ist dreizehn Uhr fünfzehn.		
+st3u_03	It's [6.45 a.m.]	It's six forty-five a.m.	Es ist 6.45 Uhr.	Es ist sechs Uhr fünfundvierzig.		
+st3u_04	It's [3 p.m.]	It's three p.m.	Es ist 15 Uhr.	Es ist fünfzehn Uhr.		
+st3u_05	It's [7.30 a.m.]	It's seven thirty a.m.	Es ist 7.30 Uhr.	Es ist sieben Uhr dreißig.		
+st3u_06	It's [9 p.m.]	It's nine p.m.	Es ist 21 Uhr.	Es ist einundzwanzig Uhr.		
+st8s_never	never		nie			
+st8s_rarely	rarely		selten			
+st8s_sometimes	sometimes		manchmal			
+st8s_often	often		oft			
+st8s_always	always		immer			
+st8f_01_i	I [never] go running.		Ich gehe nie laufen.			
+st8f_01_he	He never [goes] running.		Er geht nie laufen.			
+st8f_02_i	I [rarely] play cricket.		Ich spiele selten Kricket.			
+st8f_02_he	She rarely [plays] cricket.		Sie spielt selten Kricket.			
+st8f_03_i	I [sometimes] go hiking.		Ich gehe manchmal wandern.			
+st8f_03_he	He sometimes [goes] hiking.		Er geht manchmal wandern.			
+st8f_04_i	I [often] go cycling.		Ich fahre oft Rad.			
+st8f_04_he	She often [goes] cycling.		Sie fährt oft Rad.			
+st8f_05_i	I [always] sing in the shower.		Ich singe immer unter der Dusche.			
+st8f_05_he	He always [sings] in the shower.		Er singt immer unter der Dusche.			
+st8w_01	He never goes running.		Er geht nie laufen.			
+st8w_02	She sometimes plays cricket.		Sie spielt manchmal Kricket.			
+st8w_03	I always sing.		Ich singe immer.			
+st8w_04	We often go cycling.		Wir fahren oft Rad.			
+st8w_05	He rarely plays computer games.		Er spielt selten Computerspiele.			
+st8w_06	We sometimes go hiking.		Wir gehen manchmal wandern.			
+st8r_01	He sometimes plays football.		Er spielt manchmal Fußball.			
+st8r_02	I never go swimming.		Ich gehe nie schwimmen.			
+st8r_03	She often goes surfing.		Sie geht oft surfen.			
+st8r_04	You rarely play hockey.		Du spielst selten Hockey.			
+st8r_05	She always goes cycling.		Sie fährt immer Rad.			
+st8r_06	I sometimes play football.		Ich spiele manchmal Fußball.			
+st8r_07	He never goes swimming.		Er geht nie schwimmen.			
+st8r_08	I often go cycling.		Ich fahre oft Rad.			
+st8h_01	I like [drama].		Ich mag Schauspiel.			
+st8h_02	I like [art].		Ich mag Kunst.			
+st8h_03	I like [computer games].		Ich mag Computerspiele.			
+st8h_04	I like [cricket].		Ich mag Kricket.			
+st8h_05	I like [cycling].		Ich fahre gern Rad.			
+st8h_06	I like [dancing].		Ich tanze gern.			
+st8h_07	I like [hiking].		Ich gehe gern wandern.			
+st8h_08	I like [music].		Ich mag Musik.			
+st8h_09	I like [running].		Ich laufe gern.			
+st8h_10	I like [singing].		Ich singe gern.			
+st8h_11	I like [table tennis].		Ich spiele gern Tischtennis.			
+st8h_12	I like [trampolining].		Ich springe gern Trampolin.			
+st8h_13	I like [windsurfing].		Ich windsurfe gern.			
+st8h_14	I like singing, [but] I don't like trampolining.		Ich singe gern, aber ich springe nicht gern Trampolin.			
+st8p_01	Brahim [loves] drama and singing.		Brahim liebt Schauspiel und Gesang.			
+st8p_02	Liam [does] competitions.		Liam macht bei Wettbewerben mit.			
+st8p_03	Annie [is] in the school band.		Annie ist in der Schulband.			
+st8p_04	Annie [plays] cricket.		Annie spielt Kricket.			
+st8p_05	Rin [does] a sport in the sea.		Rin macht einen Sport im Meer.			
+st8e_01	I like drama, but I [don't like] science.		Ich mag Schauspiel, aber ich mag Naturwissenschaften nicht.			
+st8e_02	I like music, but I [don't like] cricket.		Ich mag Musik, aber ich mag Kricket nicht.			
+st8e_03	I like dancing, but I [don't like] hiking.		Ich tanze gern, aber ich wandere nicht gern.			
+st8e_04	I like running, but I [don't like] art.		Ich laufe gern, aber ich mag Kunst nicht.			
+st8c_01	a [computer] club		die Computer-AG			
+st8c_02	a [reading] club		die Lese-AG			
+st8c_03	a [drama] club		die Theater-AG			
+st8c_04	an [art] club		die Kunst-AG			
+st8c_05	a [hockey] club		die Hockey-AG			
+st8c_06	a [film] club		die Film-AG			
+st8c_07	a [singing] club		die Sing-AG			
+st8c_08	a [football] club		die Fußball-AG			
+st8c_09	a [swimming] club		die Schwimm-AG			
+st8c_10	[Most schools] have school clubs.		Die meisten Schulen haben AGs.			
+st8c_11	Are there clubs like this at your school?		Gibt es solche AGs an eurer Schule?			
+st8c_12	[Which clubs] do you like?		Welche AGs magst du?			
+st8c_13	I want a [film club] at my school.		Ich möchte eine Film-AG an meiner Schule.			

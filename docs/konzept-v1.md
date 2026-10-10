@@ -377,3 +377,13 @@ Entwürfe der Inhalte:
 - Ablauf je Abschnitt: Wörter (Bild, Englisch, Deutsch, „Jetzt du!“) → Lückensätze (nur wo es einen passenden Kernsatz gibt) → Englisch → Deutsch → Deutsch → Englisch. Bei der Lösung wird Englisch und Deutsch gesprochen; danach „Gewusst“ oder „Nochmal üben“.
 - Stimme Englisch: **George** (britisch, männlich). Deutsch: Daniel.
 - Bilder: vorerst feste Symbole (Emojis).
+
+## 11. Station 3 Uhrzeiten (gebaut) und Station 8 „Neu erklärt“ (Vorschlag)
+
+**Station 3:** Listen and Repeat (Lücke = Uhrzeit, Vorschlag) → Erklärung a.m./p.m. (aus EN6 Woche 9, Folie 5) → Übung „Uhrzeit → Sprechweise wählen“.
+
+**Station 8 „Neu erklärt“** (Name ist ein Vorschlag): Kategorie für neue Inhalte. Jedes Thema ist ein Abschnitt mit eigenem Häkchen: Erklärung → Listen and Repeat → Übung. Inhalte aus EN6 Woche 9 (Doppelstunden 1 und 2):
+- **How often? (never … always):** Skala mit Punkten (Tage pro Woche), Regel „vor dem Verb, bei he/she trotzdem -s“, Satzpaare I/he, Übung „Ordnen“, Übung „Right or wrong?“ (Surfing sentences), Übersetzen (Arbeitsblatt-Sätze, nur Stufe 4).
+- **Sports and hobbies:** „I like …“ (13 Hobbys + like/but), „Who does what?“ (Lücke = Verb), „like … but“ (Lücke = don't like).
+- **School clubs:** Clubs und „Most schools …“-Sätze.
+- Nicht übernommen: Hörübungen 1b, 1c, 2a (brauchen Buch-Audio), Spiele, Organisatorisches.

@@ -48,10 +48,63 @@ STATIONEN = [
                  ["Ganz besonders:", "have → has"]]}]},
          {"art": "verbform", "name": "Übung", "saetze": [p[1] for p in A_PAARE + B_PAARE]},
      ]},
-    {"nr": 3, "titel": "Uhrzeiten", "symbol": "🕖", "lob": "bei den Uhrzeiten", "schritte": []},
+    {"nr": 3, "titel": "Uhrzeiten", "symbol": "🕖", "lob": "bei den Uhrzeiten",
+     "schritte": [
+         {"art": "lr", "name": "", "saetze": [f"st3_{i:02d}" for i in range(1, 7)]},
+         {"art": "erklaerung", "name": "a.m. / p.m.", "bloecke": [
+             {"typ": "text", "text": "Lernen wir a.m. und p.m.! Im Englischen zählen wir die Stunden nur bis 12."},
+             {"typ": "regeln", "punkte": [
+                 ["a.m. = vormittags:", "von Mitternacht bis Mittag · 6.45 a.m. = 6:45 Uhr morgens"],
+                 ["p.m. = nachmittags / abends:", "von Mittag bis Mitternacht · 3.20 p.m. = 15:20 Uhr (15 – 12 = 3)"]]},
+             {"typ": "tabelle", "zeilen": [["20.00", "→ It's eight p.m.", "st3u_01"], ["13.15", "→ It's one fifteen p.m.", "st3u_02"],
+                                           ["6.45", "→ It's six forty-five a.m.", "st3u_03"]], "markiert": -1},
+             {"typ": "merksatz", "text": "Ab 13 Uhr: minus 12 – und dahinter p.m.!"}]},
+         {"art": "auswahl", "name": "Übung", "ansage": "Wie sagst du die Uhrzeit auf Englisch? Tipp auf die richtige Antwort!",
+          "aufgaben": [
+              {"frage": "20.00 Uhr", "optionen": ["It's 8 p.m.", "It's 8 a.m.", "It's 20 p.m."], "satz": "st3u_01", "hilfe": "20 – 12 = 8. Und abends heißt p.m."},
+              {"frage": "13.15 Uhr", "optionen": ["It's 1.15 p.m.", "It's 1.15 a.m.", "It's 13.15 p.m."], "satz": "st3u_02", "hilfe": "13 – 12 = 1. Und nachmittags heißt p.m."},
+              {"frage": "6.45 Uhr", "optionen": ["It's 6.45 a.m.", "It's 6.45 p.m.", "It's 18.45 a.m."], "satz": "st3u_03", "hilfe": "Morgens, also vor Mittag, heißt a.m."},
+              {"frage": "15.00 Uhr", "optionen": ["It's 3 p.m.", "It's 3 a.m.", "It's 15 p.m."], "satz": "st3u_04", "hilfe": "15 – 12 = 3. Und nachmittags heißt p.m."},
+              {"frage": "7.30 Uhr", "optionen": ["It's 7.30 a.m.", "It's 7.30 p.m.", "It's 19.30 a.m."], "satz": "st3u_05", "hilfe": "Vor Mittag heißt a.m."},
+              {"frage": "21.00 Uhr", "optionen": ["It's 9 p.m.", "It's 9 a.m.", "It's 21 p.m."], "satz": "st3u_06", "hilfe": "21 – 12 = 9. Und abends heißt p.m."}]},
+     ]},
     {"nr": 4, "titel": "Aufgaben verstehen", "symbol": "🔍", "lob": "beim Aufgaben-Verstehen", "schritte": []},
     {"nr": 5, "titel": "Spiele", "symbol": "🎲", "lob": "bei den Spielen", "schritte": []},
     {"nr": 6, "titel": "Hörverstehen", "symbol": "🎧", "lob": "beim Hörverstehen", "schritte": []},  # aus inhalte/hoeren
+    # Neu erklärt: neue Inhalte als Abschnitte (je Erklärung, Listen and Repeat, Übung); Woche für Woche erweiterbar
+    {"nr": 8, "titel": "Neu erklärt", "symbol": "💡", "lob": "bei den neuen Themen", "schritte": [], "gruppen": [
+        {"name": "How often? (never … always)", "symbol": "●●●○○○○", "schritte": [
+            {"art": "erklaerung", "name": "Erklärung", "bloecke": [
+                {"typ": "text", "text": "How often? – Wie oft? Die Punkte zeigen die sieben Tage einer Woche."},
+                {"typ": "tabelle", "zeilen": [[w, d, f"st8s_{w}"] for w, d in [
+                    ("never", "○○○○○○○"), ("rarely", "●○○○○○○"), ("sometimes", "●●●○○○○"), ("often", "●●●●●○○"), ("always", "●●●●●●●")]],
+                 "markiert": -1},
+                {"typ": "regeln", "punkte": [
+                    ["Das Wort steht vor dem Verb:", "I often go cycling."],
+                    ["Bei he / she / it bekommt das Verb trotzdem das -s:", "She often goes cycling."]]},
+                {"typ": "merksatz", "text": "never – rarely – sometimes – often – always",
+                 "saetze": [f"st8s_{w}" for w in ("never", "rarely", "sometimes", "often", "always")], "sprache": "en_m"}]},
+            {"art": "lr", "name": "Sätze", "saetze": [[f"st8f_{i:02d}_i", f"st8f_{i:02d}_he"] for i in range(1, 6)]},
+            {"art": "reihenfolge", "name": "Ordnen", "woerter": [f"st8s_{w}" for w in ("never", "rarely", "sometimes", "often", "always")],
+             "hilfe": "Denk an die Punkte: An wie vielen Tagen pro Woche? Wir fangen bei „nie“ an."},
+            {"art": "auswahl", "name": "Right or wrong?", "ansage": "Stimmt der Satz? Schau genau aufs Verb!", "aufgaben": [
+                {"frage": t, "optionen": ["That's right.", "No, that's wrong."], "richtig": "That's right." if ok else "No, that's wrong.",
+                 "satz": f"st8r_{i:02d}", "korrektur": True,
+                 "hilfe": "Schau aufs Verb: I / you → play, go. He / she → plays, goes."}
+                for i, (t, ok) in enumerate([("He sometimes play football.", False), ("I never go swimming.", True),
+                    ("She often goes surfing.", True), ("You rarely plays hockey.", False), ("She always go cycling.", False),
+                    ("I sometimes play football.", True), ("He never goes swimming.", True), ("I often goes cycling.", False)], 1)]},
+            {"art": "lr", "name": "Übersetzen", "stufen": [4], "saetze": [f"st8w_{i:02d}" for i in range(1, 7)]},
+        ]},
+        {"name": "Sports and hobbies", "symbol": "🎭 🎨 🏏", "schritte": [
+            {"art": "lr", "name": "I like …", "stufen": [1, 3], "saetze": [f"st8h_{i:02d}" for i in range(1, 15)]},
+            {"art": "lr", "name": "Who does what?", "saetze": [f"st8p_{i:02d}" for i in range(1, 6)]},
+            {"art": "lr", "name": "like … but", "saetze": [f"st8e_{i:02d}" for i in range(1, 5)]},
+        ]},
+        {"name": "School clubs", "symbol": "🏫 🎬 ⚽", "schritte": [
+            {"art": "lr", "name": "Clubs", "stufen": [1, 2, 3], "saetze": [f"st8c_{i:02d}" for i in range(1, 14)]},
+        ]},
+    ]},
     # Vokabeln (Unit 3): erst Abschnitt wählen, dann je Abschnitt diese Schritte
     {"nr": 7, "titel": "Vokabeln", "symbol": "📖", "lob": "bei den Vokabeln",
      "schritte": [
@@ -92,10 +145,25 @@ def main():
         for a in u["aufgaben"]:
             if "mittel" in a:
                 assert a["mittel"] in symbole, f"Unbekanntes Verkehrsmittel {a['mittel']} in {u['id']}"
-        STATIONEN[5]["schritte"].append({"art": "hoeren", "name": f"Hören {len(STATIONEN[5]['schritte']) + 1}", "uebung": u})
+        hv = next(x for x in STATIONEN if x["nr"] == 6)
+        hv["schritte"].append({"art": "hoeren", "name": f"Hören {len(hv['schritte']) + 1}", "uebung": u})
 
+    alle_schritte = lambda st: st["schritte"] + [x for g in st.get("gruppen", []) for x in g.get("schritte", [])]
     for st in STATIONEN:
-        for s in st["schritte"]:
+        for s in alle_schritte(st):
+            for b in s.get("bloecke", []):
+                if b["typ"] == "merksatz":
+                    ids = b.pop("saetze", [b.pop("audio")] if "audio" in b else [])
+                    sprache = b.pop("sprache", "de")
+                    b["dateien"] = [saetze[i]["audio"].get(sprache) for i in ids]
+            if s["art"] == "auswahl":
+                for a in s["aufgaben"]:
+                    a.setdefault("richtig", a["optionen"][0])
+                    assert a["satz"] in saetze, a["satz"]
+            if s["art"] == "reihenfolge":
+                for w in s["woerter"]:
+                    assert w in saetze, w
+        for s in alle_schritte(st):
             for eintrag in s.get("saetze", []):
                 for sid in (eintrag if isinstance(eintrag, list) else [eintrag]):
                     assert sid in saetze, f"Satz {sid} fehlt in kernsaetze.tsv"
@@ -125,7 +193,8 @@ def main():
         groesse = -(-len(ids) // n)
         for t in range(n):
             gruppen.append({"name": name + (f" · Teil {t + 1}" if n > 1 else ""), "vokabeln": ids[t * groesse:(t + 1) * groesse]})
-    STATIONEN[6]["gruppen"] = gruppen
+    next(x for x in STATIONEN if x["nr"] == 7)["gruppen"] = gruppen
+    STATIONEN.sort(key=lambda x: x["nr"])
     daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")}}
     ziel = os.path.join(BASIS, "app", "daten.js")

@@ -108,7 +108,9 @@ window.DATEN = {
       {
        "typ": "merksatz",
        "text": "he, she, it – das s muss mit!",
-       "audio": "st2_merksatz"
+       "dateien": [
+        "audio/kernsaetze/st2_merksatz_de.mp3"
+       ]
       }
      ]
     },
@@ -271,7 +273,142 @@ window.DATEN = {
    "titel": "Uhrzeiten",
    "symbol": "🕖",
    "lob": "bei den Uhrzeiten",
-   "schritte": []
+   "schritte": [
+    {
+     "art": "lr",
+     "name": "",
+     "saetze": [
+      "st3_01",
+      "st3_02",
+      "st3_03",
+      "st3_04",
+      "st3_05",
+      "st3_06"
+     ]
+    },
+    {
+     "art": "erklaerung",
+     "name": "a.m. / p.m.",
+     "bloecke": [
+      {
+       "typ": "text",
+       "text": "Lernen wir a.m. und p.m.! Im Englischen zählen wir die Stunden nur bis 12."
+      },
+      {
+       "typ": "regeln",
+       "punkte": [
+        [
+         "a.m. = vormittags:",
+         "von Mitternacht bis Mittag · 6.45 a.m. = 6:45 Uhr morgens"
+        ],
+        [
+         "p.m. = nachmittags / abends:",
+         "von Mittag bis Mitternacht · 3.20 p.m. = 15:20 Uhr (15 – 12 = 3)"
+        ]
+       ]
+      },
+      {
+       "typ": "tabelle",
+       "zeilen": [
+        [
+         "20.00",
+         "→ It's eight p.m.",
+         "st3u_01"
+        ],
+        [
+         "13.15",
+         "→ It's one fifteen p.m.",
+         "st3u_02"
+        ],
+        [
+         "6.45",
+         "→ It's six forty-five a.m.",
+         "st3u_03"
+        ]
+       ],
+       "markiert": -1
+      },
+      {
+       "typ": "merksatz",
+       "text": "Ab 13 Uhr: minus 12 – und dahinter p.m.!",
+       "dateien": []
+      }
+     ]
+    },
+    {
+     "art": "auswahl",
+     "name": "Übung",
+     "ansage": "Wie sagst du die Uhrzeit auf Englisch? Tipp auf die richtige Antwort!",
+     "aufgaben": [
+      {
+       "frage": "20.00 Uhr",
+       "optionen": [
+        "It's 8 p.m.",
+        "It's 8 a.m.",
+        "It's 20 p.m."
+       ],
+       "satz": "st3u_01",
+       "hilfe": "20 – 12 = 8. Und abends heißt p.m.",
+       "richtig": "It's 8 p.m."
+      },
+      {
+       "frage": "13.15 Uhr",
+       "optionen": [
+        "It's 1.15 p.m.",
+        "It's 1.15 a.m.",
+        "It's 13.15 p.m."
+       ],
+       "satz": "st3u_02",
+       "hilfe": "13 – 12 = 1. Und nachmittags heißt p.m.",
+       "richtig": "It's 1.15 p.m."
+      },
+      {
+       "frage": "6.45 Uhr",
+       "optionen": [
+        "It's 6.45 a.m.",
+        "It's 6.45 p.m.",
+        "It's 18.45 a.m."
+       ],
+       "satz": "st3u_03",
+       "hilfe": "Morgens, also vor Mittag, heißt a.m.",
+       "richtig": "It's 6.45 a.m."
+      },
+      {
+       "frage": "15.00 Uhr",
+       "optionen": [
+        "It's 3 p.m.",
+        "It's 3 a.m.",
+        "It's 15 p.m."
+       ],
+       "satz": "st3u_04",
+       "hilfe": "15 – 12 = 3. Und nachmittags heißt p.m.",
+       "richtig": "It's 3 p.m."
+      },
+      {
+       "frage": "7.30 Uhr",
+       "optionen": [
+        "It's 7.30 a.m.",
+        "It's 7.30 p.m.",
+        "It's 19.30 a.m."
+       ],
+       "satz": "st3u_05",
+       "hilfe": "Vor Mittag heißt a.m.",
+       "richtig": "It's 7.30 a.m."
+      },
+      {
+       "frage": "21.00 Uhr",
+       "optionen": [
+        "It's 9 p.m.",
+        "It's 9 a.m.",
+        "It's 21 p.m."
+       ],
+       "satz": "st3u_06",
+       "hilfe": "21 – 12 = 9. Und abends heißt p.m.",
+       "richtig": "It's 9 p.m."
+      }
+     ]
+    }
+   ]
   },
   {
    "nr": 4,
@@ -611,6 +748,315 @@ window.DATEN = {
       "u3_102_match",
       "u3_103_light",
       "u3_104_speak_clearly_loudly"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 8,
+   "titel": "Neu erklärt",
+   "symbol": "💡",
+   "lob": "bei den neuen Themen",
+   "schritte": [],
+   "gruppen": [
+    {
+     "name": "How often? (never … always)",
+     "symbol": "●●●○○○○",
+     "schritte": [
+      {
+       "art": "erklaerung",
+       "name": "Erklärung",
+       "bloecke": [
+        {
+         "typ": "text",
+         "text": "How often? – Wie oft? Die Punkte zeigen die sieben Tage einer Woche."
+        },
+        {
+         "typ": "tabelle",
+         "zeilen": [
+          [
+           "never",
+           "○○○○○○○",
+           "st8s_never"
+          ],
+          [
+           "rarely",
+           "●○○○○○○",
+           "st8s_rarely"
+          ],
+          [
+           "sometimes",
+           "●●●○○○○",
+           "st8s_sometimes"
+          ],
+          [
+           "often",
+           "●●●●●○○",
+           "st8s_often"
+          ],
+          [
+           "always",
+           "●●●●●●●",
+           "st8s_always"
+          ]
+         ],
+         "markiert": -1
+        },
+        {
+         "typ": "regeln",
+         "punkte": [
+          [
+           "Das Wort steht vor dem Verb:",
+           "I often go cycling."
+          ],
+          [
+           "Bei he / she / it bekommt das Verb trotzdem das -s:",
+           "She often goes cycling."
+          ]
+         ]
+        },
+        {
+         "typ": "merksatz",
+         "text": "never – rarely – sometimes – often – always",
+         "dateien": [
+          null,
+          null,
+          null,
+          null,
+          null
+         ]
+        }
+       ]
+      },
+      {
+       "art": "lr",
+       "name": "Sätze",
+       "saetze": [
+        [
+         "st8f_01_i",
+         "st8f_01_he"
+        ],
+        [
+         "st8f_02_i",
+         "st8f_02_he"
+        ],
+        [
+         "st8f_03_i",
+         "st8f_03_he"
+        ],
+        [
+         "st8f_04_i",
+         "st8f_04_he"
+        ],
+        [
+         "st8f_05_i",
+         "st8f_05_he"
+        ]
+       ]
+      },
+      {
+       "art": "reihenfolge",
+       "name": "Ordnen",
+       "woerter": [
+        "st8s_never",
+        "st8s_rarely",
+        "st8s_sometimes",
+        "st8s_often",
+        "st8s_always"
+       ],
+       "hilfe": "Denk an die Punkte: An wie vielen Tagen pro Woche? Wir fangen bei „nie“ an."
+      },
+      {
+       "art": "auswahl",
+       "name": "Right or wrong?",
+       "ansage": "Stimmt der Satz? Schau genau aufs Verb!",
+       "aufgaben": [
+        {
+         "frage": "He sometimes play football.",
+         "optionen": [
+          "That's right.",
+          "No, that's wrong."
+         ],
+         "richtig": "No, that's wrong.",
+         "satz": "st8r_01",
+         "korrektur": true,
+         "hilfe": "Schau aufs Verb: I / you → play, go. He / she → plays, goes."
+        },
+        {
+         "frage": "I never go swimming.",
+         "optionen": [
+          "That's right.",
+          "No, that's wrong."
+         ],
+         "richtig": "That's right.",
+         "satz": "st8r_02",
+         "korrektur": true,
+         "hilfe": "Schau aufs Verb: I / you → play, go. He / she → plays, goes."
+        },
+        {
+         "frage": "She often goes surfing.",
+         "optionen": [
+          "That's right.",
+          "No, that's wrong."
+         ],
+         "richtig": "That's right.",
+         "satz": "st8r_03",
+         "korrektur": true,
+         "hilfe": "Schau aufs Verb: I / you → play, go. He / she → plays, goes."
+        },
+        {
+         "frage": "You rarely plays hockey.",
+         "optionen": [
+          "That's right.",
+          "No, that's wrong."
+         ],
+         "richtig": "No, that's wrong.",
+         "satz": "st8r_04",
+         "korrektur": true,
+         "hilfe": "Schau aufs Verb: I / you → play, go. He / she → plays, goes."
+        },
+        {
+         "frage": "She always go cycling.",
+         "optionen": [
+          "That's right.",
+          "No, that's wrong."
+         ],
+         "richtig": "No, that's wrong.",
+         "satz": "st8r_05",
+         "korrektur": true,
+         "hilfe": "Schau aufs Verb: I / you → play, go. He / she → plays, goes."
+        },
+        {
+         "frage": "I sometimes play football.",
+         "optionen": [
+          "That's right.",
+          "No, that's wrong."
+         ],
+         "richtig": "That's right.",
+         "satz": "st8r_06",
+         "korrektur": true,
+         "hilfe": "Schau aufs Verb: I / you → play, go. He / she → plays, goes."
+        },
+        {
+         "frage": "He never goes swimming.",
+         "optionen": [
+          "That's right.",
+          "No, that's wrong."
+         ],
+         "richtig": "That's right.",
+         "satz": "st8r_07",
+         "korrektur": true,
+         "hilfe": "Schau aufs Verb: I / you → play, go. He / she → plays, goes."
+        },
+        {
+         "frage": "I often goes cycling.",
+         "optionen": [
+          "That's right.",
+          "No, that's wrong."
+         ],
+         "richtig": "No, that's wrong.",
+         "satz": "st8r_08",
+         "korrektur": true,
+         "hilfe": "Schau aufs Verb: I / you → play, go. He / she → plays, goes."
+        }
+       ]
+      },
+      {
+       "art": "lr",
+       "name": "Übersetzen",
+       "stufen": [
+        4
+       ],
+       "saetze": [
+        "st8w_01",
+        "st8w_02",
+        "st8w_03",
+        "st8w_04",
+        "st8w_05",
+        "st8w_06"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Sports and hobbies",
+     "symbol": "🎭 🎨 🏏",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "I like …",
+       "stufen": [
+        1,
+        3
+       ],
+       "saetze": [
+        "st8h_01",
+        "st8h_02",
+        "st8h_03",
+        "st8h_04",
+        "st8h_05",
+        "st8h_06",
+        "st8h_07",
+        "st8h_08",
+        "st8h_09",
+        "st8h_10",
+        "st8h_11",
+        "st8h_12",
+        "st8h_13",
+        "st8h_14"
+       ]
+      },
+      {
+       "art": "lr",
+       "name": "Who does what?",
+       "saetze": [
+        "st8p_01",
+        "st8p_02",
+        "st8p_03",
+        "st8p_04",
+        "st8p_05"
+       ]
+      },
+      {
+       "art": "lr",
+       "name": "like … but",
+       "saetze": [
+        "st8e_01",
+        "st8e_02",
+        "st8e_03",
+        "st8e_04"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "School clubs",
+     "symbol": "🏫 🎬 ⚽",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "Clubs",
+       "stufen": [
+        1,
+        2,
+        3
+       ],
+       "saetze": [
+        "st8c_01",
+        "st8c_02",
+        "st8c_03",
+        "st8c_04",
+        "st8c_05",
+        "st8c_06",
+        "st8c_07",
+        "st8c_08",
+        "st8c_09",
+        "st8c_10",
+        "st8c_11",
+        "st8c_12",
+        "st8c_13"
+       ]
+      }
      ]
     }
    ]
@@ -1086,7 +1532,7 @@ window.DATEN = {
   "st3_01": {
    "en": "I get up at 6.45 a.m.",
    "de": "Ich stehe um 6.45 Uhr auf.",
-   "luecke": "",
+   "luecke": "6.45 a.m.",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -1098,7 +1544,7 @@ window.DATEN = {
   "st3_02": {
    "en": "She gets up at 7 o'clock.",
    "de": "Sie steht um 7 Uhr auf.",
-   "luecke": "",
+   "luecke": "7 o'clock",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -1110,7 +1556,7 @@ window.DATEN = {
   "st3_03": {
    "en": "He has breakfast at 7.15 a.m.",
    "de": "Er frühstückt um 7.15 Uhr.",
-   "luecke": "",
+   "luecke": "7.15 a.m.",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -1122,7 +1568,7 @@ window.DATEN = {
   "st3_04": {
    "en": "School starts at 8 a.m.",
    "de": "Die Schule beginnt um 8 Uhr.",
-   "luecke": "",
+   "luecke": "8 a.m.",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -1134,7 +1580,7 @@ window.DATEN = {
   "st3_05": {
    "en": "Mia meets Ben at 3.20 p.m.",
    "de": "Mia trifft Ben um 15.20 Uhr.",
-   "luecke": "",
+   "luecke": "3.20 p.m.",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -1146,7 +1592,7 @@ window.DATEN = {
   "st3_06": {
    "en": "He goes to bed at 9 p.m.",
    "de": "Er geht um 21 Uhr ins Bett.",
-   "luecke": "",
+   "luecke": "9 p.m.",
    "symbol": "",
    "hinweis": "",
    "audio": {
@@ -1202,6 +1648,574 @@ window.DATEN = {
     "en_f": "audio/kernsaetze/st4_circle_wort_en_f.mp3",
     "de": "audio/kernsaetze/st4_circle_wort_de.mp3"
    }
+  },
+  "st3u_01": {
+   "en": "It's 8 p.m.",
+   "de": "Es ist 20 Uhr.",
+   "luecke": "8 p.m.",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st3u_02": {
+   "en": "It's 1.15 p.m.",
+   "de": "Es ist 13.15 Uhr.",
+   "luecke": "1.15 p.m.",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st3u_03": {
+   "en": "It's 6.45 a.m.",
+   "de": "Es ist 6.45 Uhr.",
+   "luecke": "6.45 a.m.",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st3u_04": {
+   "en": "It's 3 p.m.",
+   "de": "Es ist 15 Uhr.",
+   "luecke": "3 p.m.",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st3u_05": {
+   "en": "It's 7.30 a.m.",
+   "de": "Es ist 7.30 Uhr.",
+   "luecke": "7.30 a.m.",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st3u_06": {
+   "en": "It's 9 p.m.",
+   "de": "Es ist 21 Uhr.",
+   "luecke": "9 p.m.",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8s_never": {
+   "en": "never",
+   "de": "nie",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8s_rarely": {
+   "en": "rarely",
+   "de": "selten",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8s_sometimes": {
+   "en": "sometimes",
+   "de": "manchmal",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8s_often": {
+   "en": "often",
+   "de": "oft",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8s_always": {
+   "en": "always",
+   "de": "immer",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_01_i": {
+   "en": "I never go running.",
+   "de": "Ich gehe nie laufen.",
+   "luecke": "never",
+   "symbol": "○○○○○○○",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_01_he": {
+   "en": "He never goes running.",
+   "de": "Er geht nie laufen.",
+   "luecke": "goes",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_02_i": {
+   "en": "I rarely play cricket.",
+   "de": "Ich spiele selten Kricket.",
+   "luecke": "rarely",
+   "symbol": "●○○○○○○",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_02_he": {
+   "en": "She rarely plays cricket.",
+   "de": "Sie spielt selten Kricket.",
+   "luecke": "plays",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_03_i": {
+   "en": "I sometimes go hiking.",
+   "de": "Ich gehe manchmal wandern.",
+   "luecke": "sometimes",
+   "symbol": "●●●○○○○",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_03_he": {
+   "en": "He sometimes goes hiking.",
+   "de": "Er geht manchmal wandern.",
+   "luecke": "goes",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_04_i": {
+   "en": "I often go cycling.",
+   "de": "Ich fahre oft Rad.",
+   "luecke": "often",
+   "symbol": "●●●●●○○",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_04_he": {
+   "en": "She often goes cycling.",
+   "de": "Sie fährt oft Rad.",
+   "luecke": "goes",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_05_i": {
+   "en": "I always sing in the shower.",
+   "de": "Ich singe immer unter der Dusche.",
+   "luecke": "always",
+   "symbol": "●●●●●●●",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8f_05_he": {
+   "en": "He always sings in the shower.",
+   "de": "Er singt immer unter der Dusche.",
+   "luecke": "sings",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8w_01": {
+   "en": "He never goes running.",
+   "de": "Er geht nie laufen.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8w_02": {
+   "en": "She sometimes plays cricket.",
+   "de": "Sie spielt manchmal Kricket.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8w_03": {
+   "en": "I always sing.",
+   "de": "Ich singe immer.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8w_04": {
+   "en": "We often go cycling.",
+   "de": "Wir fahren oft Rad.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8w_05": {
+   "en": "He rarely plays computer games.",
+   "de": "Er spielt selten Computerspiele.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8w_06": {
+   "en": "We sometimes go hiking.",
+   "de": "Wir gehen manchmal wandern.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8r_01": {
+   "en": "He sometimes plays football.",
+   "de": "Er spielt manchmal Fußball.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8r_02": {
+   "en": "I never go swimming.",
+   "de": "Ich gehe nie schwimmen.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8r_03": {
+   "en": "She often goes surfing.",
+   "de": "Sie geht oft surfen.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8r_04": {
+   "en": "You rarely play hockey.",
+   "de": "Du spielst selten Hockey.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8r_05": {
+   "en": "She always goes cycling.",
+   "de": "Sie fährt immer Rad.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8r_06": {
+   "en": "I sometimes play football.",
+   "de": "Ich spiele manchmal Fußball.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8r_07": {
+   "en": "He never goes swimming.",
+   "de": "Er geht nie schwimmen.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8r_08": {
+   "en": "I often go cycling.",
+   "de": "Ich fahre oft Rad.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_01": {
+   "en": "I like drama.",
+   "de": "Ich mag Schauspiel.",
+   "luecke": "drama",
+   "symbol": "🎭",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_02": {
+   "en": "I like art.",
+   "de": "Ich mag Kunst.",
+   "luecke": "art",
+   "symbol": "🎨",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_03": {
+   "en": "I like computer games.",
+   "de": "Ich mag Computerspiele.",
+   "luecke": "computer games",
+   "symbol": "🎮",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_04": {
+   "en": "I like cricket.",
+   "de": "Ich mag Kricket.",
+   "luecke": "cricket",
+   "symbol": "🏏",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_05": {
+   "en": "I like cycling.",
+   "de": "Ich fahre gern Rad.",
+   "luecke": "cycling",
+   "symbol": "🚲",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_06": {
+   "en": "I like dancing.",
+   "de": "Ich tanze gern.",
+   "luecke": "dancing",
+   "symbol": "💃",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_07": {
+   "en": "I like hiking.",
+   "de": "Ich gehe gern wandern.",
+   "luecke": "hiking",
+   "symbol": "🥾",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_08": {
+   "en": "I like music.",
+   "de": "Ich mag Musik.",
+   "luecke": "music",
+   "symbol": "🎵",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_09": {
+   "en": "I like running.",
+   "de": "Ich laufe gern.",
+   "luecke": "running",
+   "symbol": "🏃",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_10": {
+   "en": "I like singing.",
+   "de": "Ich singe gern.",
+   "luecke": "singing",
+   "symbol": "🎤",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_11": {
+   "en": "I like table tennis.",
+   "de": "Ich spiele gern Tischtennis.",
+   "luecke": "table tennis",
+   "symbol": "🏓",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_12": {
+   "en": "I like trampolining.",
+   "de": "Ich springe gern Trampolin.",
+   "luecke": "trampolining",
+   "symbol": "🤸",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_13": {
+   "en": "I like windsurfing.",
+   "de": "Ich windsurfe gern.",
+   "luecke": "windsurfing",
+   "symbol": "🏄",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8h_14": {
+   "en": "I like singing, but I don't like trampolining.",
+   "de": "Ich singe gern, aber ich springe nicht gern Trampolin.",
+   "luecke": "but",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8p_01": {
+   "en": "Brahim loves drama and singing.",
+   "de": "Brahim liebt Schauspiel und Gesang.",
+   "luecke": "loves",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8p_02": {
+   "en": "Liam does competitions.",
+   "de": "Liam macht bei Wettbewerben mit.",
+   "luecke": "does",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8p_03": {
+   "en": "Annie is in the school band.",
+   "de": "Annie ist in der Schulband.",
+   "luecke": "is",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8p_04": {
+   "en": "Annie plays cricket.",
+   "de": "Annie spielt Kricket.",
+   "luecke": "plays",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8p_05": {
+   "en": "Rin does a sport in the sea.",
+   "de": "Rin macht einen Sport im Meer.",
+   "luecke": "does",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8e_01": {
+   "en": "I like drama, but I don't like science.",
+   "de": "Ich mag Schauspiel, aber ich mag Naturwissenschaften nicht.",
+   "luecke": "don't like",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8e_02": {
+   "en": "I like music, but I don't like cricket.",
+   "de": "Ich mag Musik, aber ich mag Kricket nicht.",
+   "luecke": "don't like",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8e_03": {
+   "en": "I like dancing, but I don't like hiking.",
+   "de": "Ich tanze gern, aber ich wandere nicht gern.",
+   "luecke": "don't like",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8e_04": {
+   "en": "I like running, but I don't like art.",
+   "de": "Ich laufe gern, aber ich mag Kunst nicht.",
+   "luecke": "don't like",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_01": {
+   "en": "a computer club",
+   "de": "die Computer-AG",
+   "luecke": "computer",
+   "symbol": "💻",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_02": {
+   "en": "a reading club",
+   "de": "die Lese-AG",
+   "luecke": "reading",
+   "symbol": "📚",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_03": {
+   "en": "a drama club",
+   "de": "die Theater-AG",
+   "luecke": "drama",
+   "symbol": "🎭",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_04": {
+   "en": "an art club",
+   "de": "die Kunst-AG",
+   "luecke": "art",
+   "symbol": "🎨",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_05": {
+   "en": "a hockey club",
+   "de": "die Hockey-AG",
+   "luecke": "hockey",
+   "symbol": "🏑",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_06": {
+   "en": "a film club",
+   "de": "die Film-AG",
+   "luecke": "film",
+   "symbol": "🎬",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_07": {
+   "en": "a singing club",
+   "de": "die Sing-AG",
+   "luecke": "singing",
+   "symbol": "🎤",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_08": {
+   "en": "a football club",
+   "de": "die Fußball-AG",
+   "luecke": "football",
+   "symbol": "⚽",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_09": {
+   "en": "a swimming club",
+   "de": "die Schwimm-AG",
+   "luecke": "swimming",
+   "symbol": "🏊",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_10": {
+   "en": "Most schools have school clubs.",
+   "de": "Die meisten Schulen haben AGs.",
+   "luecke": "Most schools",
+   "symbol": "🏫",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_11": {
+   "en": "Are there clubs like this at your school?",
+   "de": "Gibt es solche AGs an eurer Schule?",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_12": {
+   "en": "Which clubs do you like?",
+   "de": "Welche AGs magst du?",
+   "luecke": "Which clubs",
+   "symbol": "🤔",
+   "hinweis": "",
+   "audio": {}
+  },
+  "st8c_13": {
+   "en": "I want a film club at my school.",
+   "de": "Ich möchte eine Film-AG an meiner Schule.",
+   "luecke": "film club",
+   "symbol": "🎬",
+   "hinweis": "",
+   "audio": {}
   }
  },
  "vokabeln": [

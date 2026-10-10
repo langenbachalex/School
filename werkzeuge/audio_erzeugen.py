@@ -2,9 +2,10 @@
 
 Vorhandene Dateien werden nicht überschrieben (eigene Aufnahmen bleiben erhalten).
 Neu erzeugen: Datei löschen und Skript erneut starten.
+Spalte "tempo" (optional): eigenes Sprechtempo für die Zeile, 0.7 bis 1.2 (Standard 0.9).
 Aufruf: python3 werkzeuge/audio_erzeugen.py
 """
-import csv, json, os, urllib.request, urllib.error
+import csv, json, os, re, urllib.request, urllib.error
 
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TSV = os.path.join(BASIS, "inhalte", "kernsaetze.tsv")
@@ -21,10 +22,10 @@ MODELL = "eleven_multilingual_v2"
 EINSTELLUNGEN = {"stability": 0.6, "similarity_boost": 0.75, "speed": 0.9}
 
 
-def sprechen(stimme, sprache, text, ziel):
+def sprechen(stimme, sprache, text, ziel, tempo=None):
     voice_id = STIMMEN[stimme][0]
     body = json.dumps({"text": text, "model_id": MODELL, "language_code": sprache,
-                       "voice_settings": EINSTELLUNGEN}).encode()
+                       "voice_settings": {**EINSTELLUNGEN, **({"speed": tempo} if tempo else {})}}).encode()
     req = urllib.request.Request(
         f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}?output_format=mp3_44100_128",
         data=body, headers={"Content-Type": "application/json"})
@@ -49,11 +50,11 @@ def main():
         for stimme, sprache, text in aufgaben:
             name = f"{z['id']}_{stimme}.mp3"
             ziel = os.path.join(AUDIO, name)
-            liste.append((name, STIMMEN[stimme][2].split(" – ")[0], text))
+            liste.append((name, STIMMEN[stimme][2].split(" – ")[0], re.sub(r"\s*<break[^>]*/>", " …", text)))
             if os.path.exists(ziel):
                 continue
             try:
-                sprechen(stimme, sprache, text, ziel)
+                sprechen(stimme, sprache, text, ziel, float(z["tempo"]) if z.get("tempo") else None)
                 neu += 1
                 print("neu:", name)
             except urllib.error.HTTPError as e:

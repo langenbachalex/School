@@ -1,7 +1,7 @@
 """Baut abhoeren/kernsaetze.html: alle Kernsatz-Audios zum Durchhören (Audios eingebettet).
 Aufruf: python3 werkzeuge/abhoerseite_bauen.py
 """
-import base64, csv, html, json, os
+import base64, csv, html, json, os, re
 
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AUDIO = os.path.join(BASIS, "audio", "kernsaetze")
@@ -34,6 +34,7 @@ for praefix, titel in GRUPPEN:
                 knoepfe.append(f'<button data-k="{schluessel}">{name}</button>')
         en = html.escape(z["englisch"].replace("[", "").replace("]", ""))
         gespr = z["englisch_gesprochen"] or z["deutsch_gesprochen"]
+        gespr = re.sub(r"\s*<break[^>]*/>", " …", gespr or "")
         karten.append(f'''<li class="z" data-id="{z['id']}">
 <div class="txt"><p class="en" lang="en">{en}</p><p class="de" lang="de">{html.escape(z['deutsch'])}</p>
 {f'<p class="sp">gesprochen: {html.escape(gespr)}</p>' if gespr else ''}<p class="id">{z['id']}</p></div>

@@ -1,50 +1,50 @@
-id	englisch	englisch_gesprochen	deutsch	deutsch_gesprochen
-st1_01	I go to school by [bus].		Ich fahre mit dem Bus zur Schule.	
-st1_02	Harry Kane goes to training by [car].		Harry Kane fährt mit dem Auto zum Training.	
-st1_03	Jude Bellingham goes to the stadium by [bus].		Jude Bellingham fährt mit dem Bus zum Stadion.	
-st1_04	Bukayo Saka goes to training by [bike].		Bukayo Saka fährt mit dem Fahrrad zum Training.	
-st1_05	Mia goes to school by [train].		Mia fährt mit dem Zug zur Schule.	
-st1_06	I [walk] to school.		Ich gehe zu Fuß zur Schule.	
-st1_07	It's a [short] journey.		Es ist eine kurze Fahrt.	
-st1_08	It's a [long] way.		Es ist ein weiter Weg.	
-st1_09	I'm [stressed].		Ich bin gestresst.	
-st1_10	That's [great]!		Das ist toll!	
-st2a_01_i	I play football.		Ich spiele Fußball.	
-st2a_01_he	Ben plays football.		Ben spielt Fußball.	
-st2a_02_i	I like music.		Ich mag Musik.	
-st2a_02_he	Mia likes music.		Mia mag Musik.	
-st2a_03_i	I walk to school.		Ich gehe zu Fuß zur Schule.	
-st2a_03_he	She walks to school.		Sie geht zu Fuß zur Schule.	
-st2a_04_i	I get up at 7 o'clock.	I get up at seven o'clock.	Ich stehe um 7 Uhr auf.	Ich stehe um sieben Uhr auf.
-st2a_04_he	He gets up at 7 o'clock.	He gets up at seven o'clock.	Er steht um 7 Uhr auf.	Er steht um sieben Uhr auf.
-st2a_05_i	I read a book.	I reed a book.	Ich lese ein Buch.	
-st2a_05_he	Mia reads a book.		Mia liest ein Buch.	
-st2a_06_i	I eat breakfast at 7.30.	I eat breakfast at seven thirty.	Ich frühstücke um 7.30 Uhr.	Ich frühstücke um sieben Uhr dreißig.
-st2a_06_he	Ben eats breakfast at 7.30.	Ben eats breakfast at seven thirty.	Ben frühstückt um 7.30 Uhr.	Ben frühstückt um sieben Uhr dreißig.
-st2u_01	I walk to school.		Ich gehe zu Fuß zur Schule.	
-st2u_02	You walk to school.		Du gehst zu Fuß zur Schule.	
-st2u_03	He walks to school. She walks to school. It walks to school.		Er geht zu Fuß zur Schule. Sie geht zu Fuß zur Schule. Es geht zu Fuß zur Schule.	
-st2u_04	We walk to school.		Wir gehen zu Fuß zur Schule.	
-st2u_05	You walk to school.		Ihr geht zu Fuß zur Schule.	
-st2u_06	They walk to school.		Sie gehen zu Fuß zur Schule.	
-st2_merksatz			He, she, it – das s muss mit!	He, she, it – das Es muss mit!
-st2b_01_i	I go to school.		Ich gehe zur Schule.	
-st2b_01_he	He goes to school.		Er geht zur Schule.	
-st2b_02_i	I do my homework.		Ich mache meine Hausaufgaben.	
-st2b_02_he	She does her homework.		Sie macht ihre Hausaufgaben.	
-st2b_03_i	I watch TV.		Ich schaue fern.	
-st2b_03_he	Ben watches TV.		Ben schaut fern.	
-st2b_04_i	I wash my face.		Ich wasche mir das Gesicht.	
-st2b_04_he	Mia washes her face.		Mia wäscht sich das Gesicht.	
-st2b_05_i	I have breakfast.		Ich frühstücke.	
-st2b_05_he	He has breakfast.		Er frühstückt.	
-st3_01	I get up at 6.45 a.m.	I get up at six forty-five a.m.	Ich stehe um 6.45 Uhr auf.	Ich stehe um sechs Uhr fünfundvierzig auf.
-st3_02	She gets up at 7 o'clock.	She gets up at seven o'clock.	Sie steht um 7 Uhr auf.	Sie steht um sieben Uhr auf.
-st3_03	He has breakfast at 7.15 a.m.	He has breakfast at seven fifteen a.m.	Er frühstückt um 7.15 Uhr.	Er frühstückt um sieben Uhr fünfzehn.
-st3_04	School starts at 8 a.m.	School starts at eight a.m.	Die Schule beginnt um 8 Uhr.	Die Schule beginnt um acht Uhr.
-st3_05	Mia meets Ben at 3.20 p.m.	Mia meets Ben at three twenty p.m.	Mia trifft Ben um 15.20 Uhr.	Mia trifft Ben um fünfzehn Uhr zwanzig.
-st3_06	He goes to bed at 9 p.m.	He goes to bed at nine p.m.	Er geht um 21 Uhr ins Bett.	Er geht um einundzwanzig Uhr ins Bett.
-st4_cycle_satz	I cycle to school.		Ich fahre mit dem Rad zur Schule.	
-st4_circle_satz	Draw a circle.		Zeichne einen Kreis.	
-st4_cycle_wort	cycle		Rad fahren	
-st4_circle_wort	circle		Kreis	
+id	englisch	englisch_gesprochen	deutsch	deutsch_gesprochen	tempo
+st1_01	I go to school by [bus].		Ich fahre mit dem Bus zur Schule.		
+st1_02	Harry Kane goes to training by [car].		Harry Kane fährt mit dem Auto zum Training.		
+st1_03	Jude Bellingham goes to the stadium by [bus].		Jude Bellingham fährt mit dem Bus zum Stadion.		
+st1_04	Bukayo Saka goes to training by [bike].		Bukayo Saka fährt mit dem Fahrrad zum Training.		
+st1_05	Mia goes to school by [train].		Mia fährt mit dem Zug zur Schule.		
+st1_06	I [walk] to school.		Ich gehe zu Fuß zur Schule.		
+st1_07	It's a [short] journey.		Es ist eine kurze Fahrt.		
+st1_08	It's a [long] way.		Es ist ein weiter Weg.		
+st1_09	I'm [stressed].		Ich bin gestresst.		
+st1_10	That's [great]!		Das ist toll!		
+st2a_01_i	I play football.		Ich spiele Fußball.		
+st2a_01_he	Ben plays football.		Ben spielt Fußball.		
+st2a_02_i	I like music.		Ich mag Musik.		
+st2a_02_he	Mia likes music.		Mia mag Musik.		
+st2a_03_i	I walk to school.		Ich gehe zu Fuß zur Schule.		
+st2a_03_he	She walks to school.		Sie geht zu Fuß zur Schule.		
+st2a_04_i	I get up at 7 o'clock.	I get up at seven o'clock.	Ich stehe um 7 Uhr auf.	Ich stehe um sieben Uhr auf.	
+st2a_04_he	He gets up at 7 o'clock.	He gets up at seven o'clock.	Er steht um 7 Uhr auf.	Er steht um sieben Uhr auf.	
+st2a_05_i	I read a book.	I reed a book.	Ich lese ein Buch.		
+st2a_05_he	Mia reads a book.		Mia liest ein Buch.		
+st2a_06_i	I eat breakfast at 7.30.	I eat breakfast at seven thirty.	Ich frühstücke um 7.30 Uhr.	Ich frühstücke um sieben Uhr dreißig.	
+st2a_06_he	Ben eats breakfast at 7.30.	Ben eats breakfast at seven thirty.	Ben frühstückt um 7.30 Uhr.	Ben frühstückt um sieben Uhr dreißig.	
+st2u_01	I walk to school.		Ich gehe zu Fuß zur Schule.		
+st2u_02	You walk to school.		Du gehst zu Fuß zur Schule.		
+st2u_03	He walks to school. She walks to school. It walks to school.		Er geht zu Fuß zur Schule. Sie geht zu Fuß zur Schule. Es geht zu Fuß zur Schule.		
+st2u_04	We walk to school.		Wir gehen zu Fuß zur Schule.		
+st2u_05	You walk to school.		Ihr geht zu Fuß zur Schule.		
+st2u_06	They walk to school.		Sie gehen zu Fuß zur Schule.		
+st2_merksatz			He, she, it – das s muss mit!	"He, <break time=""0.4s""/> she, <break time=""0.4s""/> it – <break time=""0.6s""/> das Ess muss mit!"	0.7
+st2b_01_i	I go to school.		Ich gehe zur Schule.		
+st2b_01_he	He goes to school.		Er geht zur Schule.		
+st2b_02_i	I do my homework.		Ich mache meine Hausaufgaben.		
+st2b_02_he	She does her homework.		Sie macht ihre Hausaufgaben.		
+st2b_03_i	I watch TV.		Ich schaue fern.		
+st2b_03_he	Ben watches TV.		Ben schaut fern.		
+st2b_04_i	I wash my face.		Ich wasche mir das Gesicht.		
+st2b_04_he	Mia washes her face.		Mia wäscht sich das Gesicht.		
+st2b_05_i	I have breakfast.		Ich frühstücke.		
+st2b_05_he	He has breakfast.		Er frühstückt.		
+st3_01	I get up at 6.45 a.m.	I get up at six forty-five a.m.	Ich stehe um 6.45 Uhr auf.	Ich stehe um sechs Uhr fünfundvierzig auf.	
+st3_02	She gets up at 7 o'clock.	She gets up at seven o'clock.	Sie steht um 7 Uhr auf.	Sie steht um sieben Uhr auf.	
+st3_03	He has breakfast at 7.15 a.m.	He has breakfast at seven fifteen a.m.	Er frühstückt um 7.15 Uhr.	Er frühstückt um sieben Uhr fünfzehn.	
+st3_04	School starts at 8 a.m.	School starts at eight a.m.	Die Schule beginnt um 8 Uhr.	Die Schule beginnt um acht Uhr.	
+st3_05	Mia meets Ben at 3.20 p.m.	Mia meets Ben at three twenty p.m.	Mia trifft Ben um 15.20 Uhr.	Mia trifft Ben um fünfzehn Uhr zwanzig.	
+st3_06	He goes to bed at 9 p.m.	He goes to bed at nine p.m.	Er geht um 21 Uhr ins Bett.	Er geht um einundzwanzig Uhr ins Bett.	
+st4_cycle_satz	I cycle to school.		Ich fahre mit dem Rad zur Schule.		
+st4_circle_satz	Draw a circle.		Zeichne einen Kreis.		
+st4_cycle_wort	cycle		Rad fahren		
+st4_circle_wort	circle		Kreis		

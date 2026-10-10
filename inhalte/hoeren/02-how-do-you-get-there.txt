@@ -1,6 +1,7 @@
 # titel: How do you get there?
 # art: weg
-# anleitung: Hör zu! Wie kommt die Person hin? Ist der Weg für sie gut, nicht gut oder beides?
+# instruction: Listen and match: How do they get there? Is it good for them?
+# anleitung: Lies dir zuerst alle Namen und Bilder durch, damit du weißt, worauf du beim Hören achten musst.
 # status: ENTWURF – noch abzusegnen (Text aus Konzept Abschnitt 6)
 
 @Mia (f): Hi, I'm Mia. I go to school by train. It's a long way, but I love it! I read on the train.

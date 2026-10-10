@@ -52,6 +52,10 @@ def main():
                           ("kernsaetze", f"{z['id']}_en_f", "en_f", "en", text, tempo)]
         if z["deutsch"]:
             auftraege.append(("kernsaetze", f"{z['id']}_de", "de", "de", z["deutsch_gesprochen"] or z["deutsch"], tempo))
+    with open(os.path.join(BASIS, "inhalte", "vokabeln.tsv"), encoding="utf-8") as f:
+        for v in csv.DictReader(f, delimiter="\t"):
+            auftraege += [("vokabeln", f"{v['id']}_en_m", "en_m", "en", v["englisch"], None),
+                          ("vokabeln", f"{v['id']}_de", "de", "de", v["deutsch"], None)]
     for u in hoeren.lesen():
         for t in u["teile"]:
             auftraege.append(("hoeren", t["datei"], t["stimme"], "en", t["sprech"], None))
@@ -76,7 +80,7 @@ def main():
             print("FEHLER:", datei, e.code, e.read()[:200])
     with open(LISTE, "w", encoding="utf-8") as f:
         f.write("# Sprechtexte\n\n")
-        f.write("Automatisch erzeugt aus `inhalte/kernsaetze.tsv` und `inhalte/hoeren/` durch `werkzeuge/audio_erzeugen.py`.\n\n")
+        f.write("Automatisch erzeugt aus `inhalte/kernsaetze.tsv`, `inhalte/vokabeln.tsv` und `inhalte/hoeren/` durch `werkzeuge/audio_erzeugen.py`.\n\n")
         f.write("**Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `app/audio/` (im angegebenen Unterordner) "
                 "ablegen. Sie ersetzt dann das KI-Audio.\n\n")
         f.write("Stimmen: " + "; ".join(v[2] for v in STIMMEN.values()) + ".\n\n")

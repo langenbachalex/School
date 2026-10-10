@@ -1,6 +1,7 @@
 # titel: Mia's Monday
 # art: true-false
-# anleitung: Hör zu, was Mia erzählt! Stimmt der Satz? Tipp auf true oder false.
+# instruction: Listen and tick: true or false?
+# anleitung: Lies dir zuerst alle Sätze durch, damit du weißt, worauf du beim Hören achten musst.
 # status: ENTWURF – noch abzusegnen
 
 @Mia (f): Hi, I'm Mia. On Monday, I get up at 6.45 a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I read a book on the train. {Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train.}

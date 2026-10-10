@@ -358,10 +358,20 @@ Aufgabe: Wer kommt wie? (Symbol zuordnen.) Ist es für die Person gut 😊 oder 
 
 Festes Format, abgesegnet am 10.10.2026: eigene Station, jede Woche neue Übungen möglich. Jede Übung ist eine Textdatei in `inhalte/hoeren/` (Aufbau: `inhalte/hoeren/LIESMICH.md`). Ablauf: Text hören → Aufgaben → Text zum Mitlesen.
 
-Arten:
-- **true-false:** Aussage hören und lesen, „true“ oder „false“ tippen. Bei Fehler: „Ich helfe dir: …“ mit Hinweis.
-- **weg:** Pro Person Verkehrsmittel wählen und „gut / nicht gut / beides“.
+**Grundprinzip (abgesegnet):**
+1. Überschrift, englische Anweisung (z. B. „Listen and tick: true or false?“), alle Aufgaben untereinander und der Hinweis „Lies dir zuerst alle Sätze durch, damit du weißt, worauf du beim Hören achten musst.“
+2. Der ganze Text wird gehört; markiert wird währenddessen auf derselben Seite und bleibt änderbar. Die Aussagen haben dabei kein Audio.
+3. Immer zwei Durchgänge. Keine Hörbegrenzung, aber nach zwei kompletten Durchgängen der Hinweis „Achtung: Im GLN gibt es nur zwei Hörversuche. Zum Üben darfst du gerne öfter hören.“ Erst dann erscheint „Lösung zeigen“.
+4. Lösung mit Audio, danach Text zum Mitlesen.
+
+Arten: **true-false** und **weg** (pro Person Verkehrsmittel und „gut / nicht gut / beides“), beide nach demselben Prinzip.
 
 Entwürfe der Inhalte:
 - `01-mias-monday.txt`: Mias Tagesablauf (true/false, 7 Aussagen)
 - `02-how-do-you-get-there.txt`: Text aus Abschnitt 6 (Weg zuordnen)
+
+## 10. [ENTWURF – noch abzusegnen] Station 7: Vokabeln (Vorbereitung KLN)
+
+Ablauf: Wörter (Bild, Englisch, Deutsch; Audio nur Männerstimme, „Jetzt du!“) → Lückensätze (Sätze aus den Stationen, Lücke = Vokabel) → Abfrage Englisch → Deutsch → Abfrage Deutsch → Englisch. Bei der Lösung wird Englisch und Deutsch gesprochen; danach „Gewusst“ oder „Nochmal üben“ (kommt am Ende wieder).
+
+Bilder: vorerst die festen Symbole (Emojis). Wortliste (Entwurf): `inhalte/vokabeln.tsv` (18 Wörter aus den Kernsätzen).

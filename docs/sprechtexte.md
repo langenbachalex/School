@@ -1,6 +1,6 @@
 # Sprechtexte
 
-Automatisch erzeugt aus `inhalte/kernsaetze.tsv` und `inhalte/hoeren/` durch `werkzeuge/audio_erzeugen.py`.
+Automatisch erzeugt aus `inhalte/kernsaetze.tsv`, `inhalte/vokabeln.tsv` und `inhalte/hoeren/` durch `werkzeuge/audio_erzeugen.py`.
 
 **Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `app/audio/` (im angegebenen Unterordner) ablegen. Sie ersetzt dann das KI-Audio.
 
@@ -153,6 +153,42 @@ Stimmen: Elrond – junge britische Männerstimme; Alice – britische Frauensti
 | `kernsaetze/st4_circle_wort_en_m.mp3` | Elrond | circle |
 | `kernsaetze/st4_circle_wort_en_f.mp3` | Alice | circle |
 | `kernsaetze/st4_circle_wort_de.mp3` | Daniel | Kreis |
+| `vokabeln/bus_en_m.mp3` | Elrond | bus |
+| `vokabeln/bus_de.mp3` | Daniel | der Bus |
+| `vokabeln/car_en_m.mp3` | Elrond | car |
+| `vokabeln/car_de.mp3` | Daniel | das Auto |
+| `vokabeln/bike_en_m.mp3` | Elrond | bike |
+| `vokabeln/bike_de.mp3` | Daniel | das Fahrrad |
+| `vokabeln/train_en_m.mp3` | Elrond | train |
+| `vokabeln/train_de.mp3` | Daniel | der Zug |
+| `vokabeln/walk_en_m.mp3` | Elrond | walk |
+| `vokabeln/walk_de.mp3` | Daniel | zu Fuß gehen |
+| `vokabeln/short_en_m.mp3` | Elrond | short |
+| `vokabeln/short_de.mp3` | Daniel | kurz |
+| `vokabeln/journey_en_m.mp3` | Elrond | journey |
+| `vokabeln/journey_de.mp3` | Daniel | die Fahrt |
+| `vokabeln/long_en_m.mp3` | Elrond | long |
+| `vokabeln/long_de.mp3` | Daniel | lang, weit |
+| `vokabeln/way_en_m.mp3` | Elrond | way |
+| `vokabeln/way_de.mp3` | Daniel | der Weg |
+| `vokabeln/stressed_en_m.mp3` | Elrond | stressed |
+| `vokabeln/stressed_de.mp3` | Daniel | gestresst |
+| `vokabeln/great_en_m.mp3` | Elrond | great |
+| `vokabeln/great_de.mp3` | Daniel | toll |
+| `vokabeln/training_en_m.mp3` | Elrond | training |
+| `vokabeln/training_de.mp3` | Daniel | das Training |
+| `vokabeln/stadium_en_m.mp3` | Elrond | stadium |
+| `vokabeln/stadium_de.mp3` | Daniel | das Stadion |
+| `vokabeln/football_en_m.mp3` | Elrond | football |
+| `vokabeln/football_de.mp3` | Daniel | Fußball |
+| `vokabeln/breakfast_en_m.mp3` | Elrond | breakfast |
+| `vokabeln/breakfast_de.mp3` | Daniel | das Frühstück |
+| `vokabeln/homework_en_m.mp3` | Elrond | homework |
+| `vokabeln/homework_de.mp3` | Daniel | die Hausaufgaben |
+| `vokabeln/face_en_m.mp3` | Elrond | face |
+| `vokabeln/face_de.mp3` | Daniel | das Gesicht |
+| `vokabeln/get_up_en_m.mp3` | Elrond | get up |
+| `vokabeln/get_up_de.mp3` | Daniel | aufstehen |
 | `hoeren/01-mias-monday_text01.mp3` | Alice | Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train. |
 | `hoeren/01-mias-monday_text02.mp3` | Alice | School starts at eight a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at nine p.m. |
 | `hoeren/01-mias-monday_aussage01.mp3` | Elrond | Mia gets up at six forty-five a.m. |

@@ -300,7 +300,8 @@ window.DATEN = {
       "id": "01-mias-monday",
       "titel": "Mia's Monday",
       "art": "true-false",
-      "anleitung": "Hör zu, was Mia erzählt! Stimmt der Satz? Tipp auf true oder false.",
+      "anleitung": "Lies dir zuerst alle Sätze durch, damit du weißt, worauf du beim Hören achten musst.",
+      "instruction": "Listen and tick: true or false?",
       "teile": [
        {
         "sprecher": "Mia",
@@ -368,7 +369,8 @@ window.DATEN = {
       "id": "02-how-do-you-get-there",
       "titel": "How do you get there?",
       "art": "weg",
-      "anleitung": "Hör zu! Wie kommt die Person hin? Ist der Weg für sie gut, nicht gut oder beides?",
+      "anleitung": "Lies dir zuerst alle Namen und Bilder durch, damit du weißt, worauf du beim Hören achten musst.",
+      "instruction": "Listen and match: How do they get there? Is it good for them?",
       "teile": [
        {
         "sprecher": "Mia",
@@ -418,6 +420,32 @@ window.DATEN = {
        }
       ]
      }
+    }
+   ]
+  },
+  {
+   "nr": 7,
+   "titel": "Vokabeln",
+   "symbol": "📖",
+   "lob": "bei den Vokabeln",
+   "schritte": [
+    {
+     "art": "vok_lernen",
+     "name": "Wörter"
+    },
+    {
+     "art": "vok_luecke",
+     "name": "Lückensätze"
+    },
+    {
+     "art": "vok_abfrage",
+     "name": "Englisch → Deutsch",
+     "richtung": "en_de"
+    },
+    {
+     "art": "vok_abfrage",
+     "name": "Deutsch → Englisch",
+     "richtung": "de_en"
     }
    ]
   }
@@ -1010,6 +1038,206 @@ window.DATEN = {
    }
   }
  },
+ "vokabeln": [
+  {
+   "id": "bus",
+   "en": "bus",
+   "de": "der Bus",
+   "symbol": "🚌",
+   "satz": "st1_01",
+   "audio": {
+    "en_m": "audio/vokabeln/bus_en_m.mp3",
+    "de": "audio/vokabeln/bus_de.mp3"
+   }
+  },
+  {
+   "id": "car",
+   "en": "car",
+   "de": "das Auto",
+   "symbol": "🚗",
+   "satz": "st1_02",
+   "audio": {
+    "en_m": "audio/vokabeln/car_en_m.mp3",
+    "de": "audio/vokabeln/car_de.mp3"
+   }
+  },
+  {
+   "id": "bike",
+   "en": "bike",
+   "de": "das Fahrrad",
+   "symbol": "🚲",
+   "satz": "st1_04",
+   "audio": {
+    "en_m": "audio/vokabeln/bike_en_m.mp3",
+    "de": "audio/vokabeln/bike_de.mp3"
+   }
+  },
+  {
+   "id": "train",
+   "en": "train",
+   "de": "der Zug",
+   "symbol": "🚆",
+   "satz": "st1_05",
+   "audio": {
+    "en_m": "audio/vokabeln/train_en_m.mp3",
+    "de": "audio/vokabeln/train_de.mp3"
+   }
+  },
+  {
+   "id": "walk",
+   "en": "walk",
+   "de": "zu Fuß gehen",
+   "symbol": "🚶",
+   "satz": "st1_06",
+   "audio": {
+    "en_m": "audio/vokabeln/walk_en_m.mp3",
+    "de": "audio/vokabeln/walk_de.mp3"
+   }
+  },
+  {
+   "id": "short",
+   "en": "short",
+   "de": "kurz",
+   "symbol": "⏱️",
+   "satz": "st1_07",
+   "audio": {
+    "en_m": "audio/vokabeln/short_en_m.mp3",
+    "de": "audio/vokabeln/short_de.mp3"
+   }
+  },
+  {
+   "id": "journey",
+   "en": "journey",
+   "de": "die Fahrt",
+   "symbol": "🧳",
+   "satz": "st1_07",
+   "audio": {
+    "en_m": "audio/vokabeln/journey_en_m.mp3",
+    "de": "audio/vokabeln/journey_de.mp3"
+   }
+  },
+  {
+   "id": "long",
+   "en": "long",
+   "de": "lang, weit",
+   "symbol": "🛣️",
+   "satz": "st1_08",
+   "audio": {
+    "en_m": "audio/vokabeln/long_en_m.mp3",
+    "de": "audio/vokabeln/long_de.mp3"
+   }
+  },
+  {
+   "id": "way",
+   "en": "way",
+   "de": "der Weg",
+   "symbol": "🗺️",
+   "satz": "st1_08",
+   "audio": {
+    "en_m": "audio/vokabeln/way_en_m.mp3",
+    "de": "audio/vokabeln/way_de.mp3"
+   }
+  },
+  {
+   "id": "stressed",
+   "en": "stressed",
+   "de": "gestresst",
+   "symbol": "😫",
+   "satz": "st1_09",
+   "audio": {
+    "en_m": "audio/vokabeln/stressed_en_m.mp3",
+    "de": "audio/vokabeln/stressed_de.mp3"
+   }
+  },
+  {
+   "id": "great",
+   "en": "great",
+   "de": "toll",
+   "symbol": "👍",
+   "satz": "st1_10",
+   "audio": {
+    "en_m": "audio/vokabeln/great_en_m.mp3",
+    "de": "audio/vokabeln/great_de.mp3"
+   }
+  },
+  {
+   "id": "training",
+   "en": "training",
+   "de": "das Training",
+   "symbol": "🏃",
+   "satz": "st1_02",
+   "audio": {
+    "en_m": "audio/vokabeln/training_en_m.mp3",
+    "de": "audio/vokabeln/training_de.mp3"
+   }
+  },
+  {
+   "id": "stadium",
+   "en": "stadium",
+   "de": "das Stadion",
+   "symbol": "🏟️",
+   "satz": "st1_03",
+   "audio": {
+    "en_m": "audio/vokabeln/stadium_en_m.mp3",
+    "de": "audio/vokabeln/stadium_de.mp3"
+   }
+  },
+  {
+   "id": "football",
+   "en": "football",
+   "de": "Fußball",
+   "symbol": "⚽",
+   "satz": "st2a_01_i",
+   "audio": {
+    "en_m": "audio/vokabeln/football_en_m.mp3",
+    "de": "audio/vokabeln/football_de.mp3"
+   }
+  },
+  {
+   "id": "breakfast",
+   "en": "breakfast",
+   "de": "das Frühstück",
+   "symbol": "🥣",
+   "satz": "st2b_05_i",
+   "audio": {
+    "en_m": "audio/vokabeln/breakfast_en_m.mp3",
+    "de": "audio/vokabeln/breakfast_de.mp3"
+   }
+  },
+  {
+   "id": "homework",
+   "en": "homework",
+   "de": "die Hausaufgaben",
+   "symbol": "📝",
+   "satz": "st2b_02_i",
+   "audio": {
+    "en_m": "audio/vokabeln/homework_en_m.mp3",
+    "de": "audio/vokabeln/homework_de.mp3"
+   }
+  },
+  {
+   "id": "face",
+   "en": "face",
+   "de": "das Gesicht",
+   "symbol": "🙂",
+   "satz": "st2b_04_i",
+   "audio": {
+    "en_m": "audio/vokabeln/face_en_m.mp3",
+    "de": "audio/vokabeln/face_de.mp3"
+   }
+  },
+  {
+   "id": "get_up",
+   "en": "get up",
+   "de": "aufstehen",
+   "symbol": "⏰",
+   "satz": "st3_01",
+   "audio": {
+    "en_m": "audio/vokabeln/get_up_en_m.mp3",
+    "de": "audio/vokabeln/get_up_de.mp3"
+   }
+  }
+ ],
  "mittel": {
   "bus": "🚌",
   "car": "🚗",

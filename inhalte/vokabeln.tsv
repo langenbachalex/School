@@ -1,0 +1,19 @@
+id	englisch	deutsch	symbol	satz
+bus	bus	der Bus	🚌	st1_01
+car	car	das Auto	🚗	st1_02
+bike	bike	das Fahrrad	🚲	st1_04
+train	train	der Zug	🚆	st1_05
+walk	walk	zu Fuß gehen	🚶	st1_06
+short	short	kurz	⏱️	st1_07
+journey	journey	die Fahrt	🧳	st1_07
+long	long	lang, weit	🛣️	st1_08
+way	way	der Weg	🗺️	st1_08
+stressed	stressed	gestresst	😫	st1_09
+great	great	toll	👍	st1_10
+training	training	das Training	🏃	st1_02
+stadium	stadium	das Stadion	🏟️	st1_03
+football	football	Fußball	⚽	st2a_01_i
+breakfast	breakfast	das Frühstück	🥣	st2b_05_i
+homework	homework	die Hausaufgaben	📝	st2b_02_i
+face	face	das Gesicht	🙂	st2b_04_i
+get_up	get up	aufstehen	⏰	st3_01

@@ -52,6 +52,13 @@ STATIONEN = [
     {"nr": 4, "titel": "Aufgaben verstehen", "symbol": "🔍", "lob": "beim Aufgaben-Verstehen", "schritte": []},
     {"nr": 5, "titel": "Spiele", "symbol": "🎲", "lob": "bei den Spielen", "schritte": []},
     {"nr": 6, "titel": "Hörverstehen", "symbol": "🎧", "lob": "beim Hörverstehen", "schritte": []},  # aus inhalte/hoeren
+    {"nr": 7, "titel": "Vokabeln", "symbol": "📖", "lob": "bei den Vokabeln",
+     "schritte": [
+         {"art": "vok_lernen", "name": "Wörter"},
+         {"art": "vok_luecke", "name": "Lückensätze"},
+         {"art": "vok_abfrage", "name": "Englisch → Deutsch", "richtung": "en_de"},
+         {"art": "vok_abfrage", "name": "Deutsch → Englisch", "richtung": "de_en"},
+     ]},
 ]
 
 
@@ -97,7 +104,14 @@ def main():
                     richtig = saetze[sid]["luecke"]
                     falsch, hilfe = VERBFORMEN[richtig]
                     s["aufgaben"].append({"satz": sid, "richtig": richtig, "falsch": falsch, "hilfe": hilfe})
-    daten = {"stationen": STATIONEN, "saetze": saetze,
+    vokabeln = []
+    for v in lesen("vokabeln.tsv"):
+        satz = saetze.get(v["satz"])
+        assert satz, f"Vokabel {v['id']}: Satz {v['satz']} fehlt"
+        assert v["englisch"].lower() in satz["en"].lower(), f"Vokabel {v['id']} steht nicht im Satz {v['satz']}"
+        vokabeln.append({"id": v["id"], "en": v["englisch"], "de": v["deutsch"], "symbol": v["symbol"],
+                         "satz": v["satz"], "audio": {k: f"audio/vokabeln/{v['id']}_{k}.mp3" for k in ("en_m", "de")}})
+    daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")}}
     ziel = os.path.join(BASIS, "app", "daten.js")
     with open(ziel, "w", encoding="utf-8") as f:

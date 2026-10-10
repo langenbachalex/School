@@ -3,12 +3,20 @@
 Jede Datei `*.txt` in diesem Ordner ist eine Hörübung. Sie erscheinen in der App in der Reihenfolge der Dateinamen
 (darum mit Nummer beginnen, z. B. `03-ben-friday.txt`). Neue Woche = neue Datei.
 
+## Ablauf in der App (Grundprinzip)
+
+1. Überschrift, englische Anweisung, Lese-Hinweis und **alle Aufgaben** stehen auf einer Seite.
+2. Das Kind liest zuerst und hört dann den ganzen Text; es markiert während des Hörens (änderbar).
+3. Zwei komplette Durchgänge, danach Hinweis „Im GLN gibt es nur zwei Hörversuche“ und erst dann der Knopf „Lösung zeigen“.
+4. Lösung mit Audio (Aussagen bzw. Personen werden vorgelesen), danach Text zum Mitlesen.
+
 ## Aufbau
 
 ```
 # titel: Mia's Monday
 # art: true-false            (oder: weg)
-# anleitung: Hör zu! Stimmt der Satz – true oder false?
+# instruction: Listen and tick: true or false?   (Anweisung auf Englisch)
+# anleitung: Lies dir zuerst alle Sätze durch, …  (Lese-Hinweis auf Deutsch)
 
 @Mia (f): Hi, I'm Mia. ...    ← gesprochener Text; (f) = Frauenstimme, (m) = Männerstimme
 @Ben (m): Hi, I'm Ben. ...      jede @-Zeile wird eine Audiodatei

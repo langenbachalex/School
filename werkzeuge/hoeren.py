@@ -15,7 +15,7 @@ def lesen():
     uebungen = []
     for pfad in sorted(glob.glob(os.path.join(ORDNER, "*.txt"))):
         name = os.path.splitext(os.path.basename(pfad))[0]
-        u = {"id": name, "titel": name, "art": "true-false", "anleitung": "", "teile": [], "aufgaben": []}
+        u = {"id": name, "titel": name, "art": "true-false", "anleitung": "", "instruction": "", "teile": [], "aufgaben": []}
         with open(pfad, encoding="utf-8") as f:
             for nr, zeile in enumerate(f, 1):
                 zeile = zeile.strip()
@@ -24,7 +24,7 @@ def lesen():
                 ort = f"{os.path.basename(pfad)}, Zeile {nr}"
                 if zeile.startswith("#"):
                     k, _, v = zeile[1:].partition(":")
-                    if k.strip() in ("titel", "art", "anleitung"):
+                    if k.strip() in ("titel", "art", "anleitung", "instruction"):
                         u[k.strip()] = v.strip()
                 elif zeile.startswith("@"):
                     m = re.match(r"@(.+?)\s*\((m|f)\)\s*:\s*(.+)", zeile)

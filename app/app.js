@@ -110,7 +110,7 @@
     return t;
   }
 
-  let lage = null; // { nr, teile, teil, pos (Position im Teil), reihe, abspielen, weiter }
+  let lage = null; // { nr, teile, teil, pos (Position im Teil), reihe, vq, abspielen, weiter }
 
   function starteStation(nr) {
     const st = station(nr);
@@ -139,7 +139,8 @@
   function zeigeTeil() {
     lage.abspielen = null; lage.weiter = null;
     const teil = lage.teile[lage.teil];
-    ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, hoeren: zeigeHoeren })[teil.art](teil);
+    ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, hoeren: zeigeHoeren,
+       vok_lernen: zeigeVokabel, vok_luecke: zeigeVokabel, vok_abfrage: zeigeVokabel })[teil.art](teil);
   }
 
   function naechstes() {
@@ -151,7 +152,8 @@
   function laenge(teil) {
     if (teil.art === "lr") return teil.saetze.length;
     if (teil.art === "verbform") return teil.aufgaben.length;
-    if (teil.art === "hoeren") return teil.uebung.aufgaben.length + 2; // Einstieg, Aufgaben, Text zum Mitlesen
+    if (teil.art === "vok_abfrage") return lage.vq ? lage.vq.length : D.vokabeln.length; // wächst bei „Nochmal üben“
+    if (teil.art === "vok_lernen" || teil.art === "vok_luecke") return D.vokabeln.length;
     return 1;
   }
 
@@ -336,93 +338,207 @@
     lage.abspielen();
   }
 
-  /* ---------- Hörverstehen ---------- */
+  /* ---------- Hörverstehen ----------
+     Grundprinzip: 1. Überschrift und alle Aufgaben lesen, 2. hören und dabei markieren,
+     3. zwei komplette Durchgänge, erst danach gibt es die Lösung (mit Audio). */
+  const GLN_HINWEIS = "Achtung: Im GLN gibt es nur zwei Hörversuche. Zum Üben darfst du gerne öfter hören.";
   function zeigeHoeren(teil) {
     const st = station(lage.nr);
     const u = teil.uebung;
-    const alles = () => spiele(u.teile.map((t) => t.audio));
-    const n = u.aufgaben.length;
+    const tf = u.art === "true-false";
+    const antworten = u.aufgaben.map(() => (tf ? null : { mittel: null, gefuehl: null }));
+    let durchgaenge = 0, geloest = false;
 
-    if (lage.pos === 0) { // Einstieg
-      lage.abspielen = alles;
-      lage.weiter = naechstes;
-      zeige(kopf(st),
-        el("p", { class: "ansage" }, u.anleitung || "Hör gut zu!"),
-        karte(teil, null, el("h2", { lang: "en" }, u.titel),
-          el("p", {}, "Du kannst den Text so oft hören, wie du willst."),
-          el("div", { class: "knopfreihe" }, knopf("🔊 Text hören", alles), knopf("Zu den Aufgaben ➜", naechstes, "haupt"))));
-      return alles();
-    }
-    if (lage.pos === n + 1) { // Text zum Mitlesen
-      lage.abspielen = alles;
-      lage.weiter = naechstes;
-      return zeige(kopf(st),
-        el("p", { class: "ansage" }, "Super gemacht! Hier ist der Text zum Mitlesen."),
-        karte(teil, null, el("div", { class: "mitlesen", lang: "en" }, u.teile.map((t) => el("p", {},
-          el("strong", {}, t.sprecher + ": "), t.text, " ",
-          el("button", { class: "knopf leise klein-knopf", "aria-label": "Anhören: " + t.sprecher, onclick: () => spiele([t.audio]) }, "🔊")))),
-          el("div", { class: "knopfreihe" }, knopf("Weiter ➜", naechstes, "haupt"))));
+    // Eine Auswahlgruppe (Umschalter, jederzeit änderbar bis zur Lösung)
+    function umschalter(optionen, setze, label, gross) {
+      const knoepfe = optionen.map(([wert, inhalt, name]) => el("button", {
+        class: "knopf wahl-knopf" + (gross ? " gross" : ""), "aria-pressed": "false", "aria-label": name || null,
+        "data-wert": wert, onclick: () => {
+          if (geloest) return;
+          setze(wert);
+          knoepfe.forEach((k) => k.setAttribute("aria-pressed", String(k.dataset.wert === wert)));
+        } }, inhalt));
+      return el("div", { class: "wahl", role: "group", "aria-label": label }, knoepfe);
     }
 
-    const a = u.aufgaben[lage.pos - 1];
-    const box = rueckmeldung();
-    const weiter = knopf("Weiter ➜", naechstes, "haupt");
-    weiter.disabled = true;
-    const fertig = () => { melde(box, "gut", lob()); weiter.disabled = false; lage.weiter = naechstes; };
-    const zaehler = `Aufgabe ${lage.pos} von ${n}`;
+    const zeilen = u.aufgaben.map((a, i) => {
+      if (tf) return el("li", { class: "hv-zeile" },
+        el("p", { class: "hv-aussage", lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), a.aussage),
+        umschalter([["true", "true"], ["false", "false"]], (w) => { antworten[i] = w; }, "true oder false"),
+        el("p", { class: "rueckmeldung", hidden: true }));
+      const mittel = Object.entries(D.mittel).map(([k, sym]) => [k,
+        [el("span", { class: "wahl-sym", "aria-hidden": "true" }, sym), el("span", {}, MITTEL_NAME[k] || k)], MITTEL_NAME[k] || k]);
+      const gefuehl = GEFUEHL.map(([w, sym, text]) => [w,
+        [el("span", { class: "wahl-sym", "aria-hidden": "true" }, sym), el("span", {}, text)], text]);
+      return el("li", { class: "hv-zeile" },
+        el("h3", {}, el("span", { class: "hv-nr" }, i + 1 + ". "), a.name),
+        umschalter(mittel, (w) => { antworten[i].mittel = w; }, `Wie kommt ${a.name} hin?`, true),
+        umschalter(gefuehl, (w) => { antworten[i].gefuehl = w; }, `Ist der Weg für ${a.name} gut?`, true),
+        el("p", { class: "rueckmeldung", hidden: true }));
+    });
 
-    if (u.art === "true-false") {
+    const hoerKnopf = knopf("▶ Hörtext abspielen (1. Durchgang)", hoeren, "haupt");
+    const stoppKnopf = knopf("■ Stopp", () => { stopp(); hoerKnopf.disabled = false; stoppKnopf.hidden = true; });
+    stoppKnopf.hidden = true;
+    const zaehler = el("p", { class: "klein", "aria-live": "polite" }, "Du hast den Text noch nicht gehört.");
+    const gln = el("p", { class: "gln", hidden: true }, GLN_HINWEIS);
+    const loesungKnopf = knopf("Lösung zeigen", loesen, "haupt");
+    loesungKnopf.hidden = true;
+    const ergebnis = el("div", { class: "rueckmeldung", hidden: true, role: "status" });
+    const warten = el("p", { class: "klein" }, "Die Lösung kommt, wenn du den Text zweimal ganz gehört hast.");
+    const mitlesen = el("section", { class: "satzkarte", hidden: true },
+      el("h2", {}, "Text zum Mitlesen"),
+      el("div", { class: "mitlesen", lang: "en" }, u.teile.map((t) => el("p", {},
+        el("strong", {}, t.sprecher + ": "), t.text, " ",
+        el("button", { class: "knopf leise klein-knopf", "aria-label": "Anhören: " + t.sprecher, onclick: () => spiele([t.audio]) }, "🔊")))),
+      el("div", { class: "knopfreihe" }, knopf("Weiter ➜", naechstes, "haupt")));
+
+    function hoeren() {
+      hoerKnopf.disabled = true; stoppKnopf.hidden = false;
+      spiele(u.teile.map((t) => t.audio)).then((d) => {
+        if (d === null) return; // abgebrochen: zählt nicht
+        hoerKnopf.disabled = false; stoppKnopf.hidden = true;
+        durchgaenge++;
+        zaehler.textContent = durchgaenge === 1 ? "1. Durchgang geschafft! Hör den Text ein zweites Mal."
+          : `${durchgaenge} Durchgänge gehört.`;
+        hoerKnopf.textContent = durchgaenge === 1 ? "▶ Noch mal hören (2. Durchgang)" : "▶ Noch mal hören (Übung)";
+        if (durchgaenge >= 2) { gln.hidden = false; warten.hidden = true; if (!geloest) loesungKnopf.hidden = false; }
+      });
+    }
+
+    async function loesen() {
+      geloest = true;
+      loesungKnopf.hidden = true;
+      app.querySelectorAll(".hv-liste .wahl button").forEach((b) => { b.disabled = true; });
+      let richtig = 0;
+      u.aufgaben.forEach((a, i) => {
+        const zeile = zeilen[i], box = zeile.querySelector(".rueckmeldung");
+        let ok, hilfe;
+        if (tf) {
+          ok = antworten[i] === a.loesung;
+          hilfe = antworten[i] === null ? `Du hast nichts markiert. Richtig ist: ${a.loesung}.`
+            : `Richtig ist: ${a.loesung}. ${a.hinweis || ""}`;
+        } else {
+          ok = antworten[i].mittel === a.mittel && antworten[i].gefuehl === a.gefuehl;
+          const g = GEFUEHL.find((x) => x[0] === a.gefuehl);
+          hilfe = `Richtig ist: ${D.mittel[a.mittel]} ${MITTEL_NAME[a.mittel]} und ${g[1]} ${g[2]}.`;
+        }
+        if (ok) richtig++;
+        zeile.classList.add(ok ? "ok" : "falsch");
+        box.hidden = false;
+        box.className = "rueckmeldung " + (ok ? "gut" : "hilfe");
+        box.textContent = ok ? "✓ Richtig!" : `Ich helfe dir: ${hilfe.trim()}`;
+        // richtige Antwort markieren
+        zeile.querySelectorAll(".wahl button").forEach((b) => {
+          const w = b.dataset.wert;
+          if (tf ? w === a.loesung : w === a.mittel || w === a.gefuehl) b.classList.add("richtig");
+        });
+      });
+      ergebnis.hidden = false;
+      ergebnis.className = "rueckmeldung " + (richtig === u.aufgaben.length ? "gut" : "hilfe");
+      ergebnis.textContent = richtig === u.aufgaben.length ? `${lob()} Alles richtig!`
+        : `Du hast ${richtig} von ${u.aufgaben.length} richtig. Hör dir die Lösung an!`;
+      mitlesen.hidden = false;
+      lage.weiter = naechstes;
+      // Lösung mit Audio: jede Aufgabe nacheinander vorlesen
+      for (let i = 0; i < u.aufgaben.length; i++) {
+        const a = u.aufgaben[i];
+        const datei = tf ? a.audio : (u.teile.find((t) => t.sprecher === a.name) || {}).audio;
+        zeilen.forEach((z) => z.classList.remove("spricht"));
+        zeilen[i].classList.add("spricht");
+        const d = await spiele([datei]);
+        if (d === null) break;
+      }
+      zeilen.forEach((z) => z.classList.remove("spricht"));
+    }
+
+    lage.abspielen = () => { if (!hoerKnopf.disabled) hoeren(); };
+    zeige(kopf(st),
+      el("section", { class: "satzkarte" },
+        el("h2", { lang: "en" }, u.titel),
+        el("p", { class: "ansage", lang: "en" }, u.instruction || (tf ? "Listen and tick: true or false?" : "Listen and match.")),
+        el("p", { class: "hinweis-kasten" }, "📖 " + (u.anleitung || "Lies dir zuerst alle Aufgaben durch, damit du weißt, worauf du beim Hören achten musst.")),
+        el("ol", { class: "hv-liste" }, zeilen)),
+      el("section", { class: "satzkarte" }, gln, el("div", { class: "knopfreihe" }, loesungKnopf), ergebnis,
+        warten),
+      mitlesen,
+      el("div", { class: "hv-spieler" }, el("div", { class: "knopfreihe" }, hoerKnopf, stoppKnopf), zaehler));
+  }
+
+  /* ---------- Vokabeln ---------- */
+  function zeigeVokabel(teil) {
+    const st = station(lage.nr);
+    if (teil.art === "vok_abfrage" && lage.pos === 0) lage.vq = mischen(D.vokabeln.map((v) => v.id));
+    const v = teil.art === "vok_abfrage" ? D.vokabeln.find((x) => x.id === lage.vq[lage.pos]) : D.vokabeln[lage.pos];
+    const anzahl = laenge(teil);
+    const bild = (sichtbar) => el("span", { class: "vok-bild", "aria-hidden": "true" }, sichtbar ? v.symbol : "❔");
+
+    if (teil.art === "vok_lernen") {
+      const jetztdu = el("div", { class: "jetztdu", hidden: true, role: "status" }, "Jetzt du! Sprich nach.",
+        el("span", { class: "balken", "aria-hidden": "true" }));
+      const abspielen = () => { jetztdu.hidden = true; spiele([v.audio.en_m]).then((d) => {
+        if (d === null) return;
+        jetztdu.hidden = false; jetztdu.classList.remove("laeuft"); void jetztdu.offsetWidth;
+        jetztdu.style.setProperty("--dauer", Math.max(2.5, d * 1.4 + 1).toFixed(1) + "s"); jetztdu.classList.add("laeuft");
+      }); };
+      lage.abspielen = abspielen; lage.weiter = naechstes;
+      zeige(kopf(st), el("p", { class: "ansage" }, "Lernen wir die Wörter! Hör zu und sprich nach."),
+        karte(teil, `Wort ${lage.pos + 1} von ${anzahl}`,
+          el("div", { class: "vok" }, bild(true),
+            el("div", {}, el("p", { class: "vok-en", lang: "en" }, v.en), el("p", { class: "vok-de" }, v.de))),
+          jetztdu,
+          el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", abspielen), knopf("Weiter ➜", naechstes, "haupt"))));
+      return abspielen();
+    }
+
+    if (teil.art === "vok_luecke") {
+      const s = D.saetze[v.satz];
+      const i = s.en.toLowerCase().indexOf(v.en.toLowerCase());
+      const teileSatz = (luecke) => [s.en.slice(0, i), luecke
+        ? el("span", { class: "luecke", "aria-label": "Lücke" }, v.en.replace(/./g, "_"))
+        : el("strong", { class: "ziel" }, s.en.slice(i, i + v.en.length)), s.en.slice(i + v.en.length)];
+      const satz = el("p", { class: "satz", lang: "en" }, teileSatz(true));
       let geloest = false;
-      const wahl = el("div", { class: "wahl", role: "group", "aria-label": "true oder false" },
-        [["true", "true ✔"], ["false", "false ✘"]].map(([wert, text]) => el("button", { class: "knopf wahl-knopf", lang: "en",
-          onclick: (e) => {
-            if (geloest) return;
-            if (wert === a.loesung) {
-              geloest = true; e.currentTarget.classList.add("richtig"); fertig();
-              spiele([a.audio]);
-            } else {
-              e.currentTarget.disabled = true;
-              melde(box, "hilfe", `Ich helfe dir: ${a.hinweis || "Hör den Text noch einmal genau an."} Probier's nochmal!`);
-            }
-          } }, text)));
-      lage.abspielen = () => spiele([a.audio]);
-      zeige(kopf(st), el("p", { class: "ansage" }, u.anleitung),
-        karte(teil, zaehler, el("p", { class: "satz", lang: "en" }, a.aussage), wahl, box,
-          el("div", { class: "knopfreihe" }, knopf("🔊 Satz hören", () => spiele([a.audio])), knopf("🔊 Text hören", alles), weiter)));
-      return spiele([a.audio]);
+      const loesung = knopf("Lösung", () => {
+        geloest = true; loesung.disabled = true;
+        satz.replaceChildren(...teileSatz(false));
+        spiele([s.audio.en_m, s.audio.en_f]);
+      });
+      lage.abspielen = () => spiele(geloest ? [s.audio.en_m, s.audio.en_f] : [s.audio.de]);
+      lage.weiter = naechstes;
+      zeige(kopf(st), el("p", { class: "ansage" }, "Welches Wort fehlt? Sag den ganzen Satz auf Englisch! Dann tipp auf „Lösung“."),
+        karte(teil, `Satz ${lage.pos + 1} von ${anzahl}`,
+          el("div", { class: "vok" }, bild(true), el("p", { class: "satz de" }, s.de)),
+          satz,
+          el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", () => lage.abspielen()), loesung, knopf("Weiter ➜", naechstes, "haupt"))));
+      return lage.abspielen();
     }
 
-    // art "weg": Verkehrsmittel und Gefühl zuordnen
-    const sprecherTeil = u.teile.find((t) => t.sprecher === a.name);
-    const hoeren = () => spiele([sprecherTeil && sprecherTeil.audio]);
-    const ok = { mittel: false, gefuehl: false };
-    function gruppe(art, optionen, richtig, hilfe, label) {
-      return el("div", { class: "wahl", role: "group", "aria-label": label },
-        optionen.map(([wert, sym, text]) => el("button", { class: "knopf wahl-knopf gross", "aria-label": text,
-          onclick: (e) => {
-            if (ok[art]) return;
-            if (wert === richtig) {
-              ok[art] = true; e.currentTarget.classList.add("richtig");
-              e.currentTarget.parentElement.querySelectorAll("button").forEach((b) => { b.disabled = b !== e.currentTarget; });
-              if (ok.mittel && ok.gefuehl) { fertig(); hoeren(); } else box.hidden = true;
-            } else {
-              e.currentTarget.disabled = true;
-              melde(box, "hilfe", `Ich helfe dir: ${hilfe} Probier's nochmal!`);
-            }
-          } }, el("span", { class: "wahl-sym", "aria-hidden": "true" }, sym), el("span", {}, text))));
-    }
-    lage.abspielen = hoeren;
-    zeige(kopf(st), el("p", { class: "ansage" }, u.anleitung),
-      karte(teil, zaehler,
-        el("h2", {}, a.name),
-        el("p", { class: "frage" }, `Wie kommt ${a.name} hin?`),
-        gruppe("mittel", Object.entries(D.mittel).map(([k, sym]) => [k, sym, MITTEL_NAME[k] || k]), a.mittel,
-          `Hör noch einmal, wie ${a.name} hinkommt.`, "Verkehrsmittel"),
-        el("p", { class: "frage" }, `Ist der Weg für ${a.name} gut?`),
-        gruppe("gefuehl", GEFUEHL, a.gefuehl, `Hör noch einmal, was ${a.name} über den Weg sagt.`, "Gut oder nicht gut"),
-        box,
-        el("div", { class: "knopfreihe" }, knopf(`🔊 ${a.name} hören`, hoeren), weiter)));
-    hoeren();
+    // Abfrage Englisch → Deutsch oder Deutsch → Englisch, mit Selbstkontrolle
+    const enDe = teil.richtung === "en_de";
+    const frage = enDe ? el("p", { class: "vok-en", lang: "en" }, v.en) : el("p", { class: "vok-en" }, v.de);
+    const antwort = el("p", { class: enDe ? "vok-de" : "vok-de", lang: enDe ? "de" : "en", hidden: true }, enDe ? v.de : v.en);
+    const bildPlatz = bild(false);
+    const fragen = () => spiele([enDe ? v.audio.en_m : v.audio.de]);
+    const bewerten = el("div", { class: "knopfreihe", hidden: true },
+      knopf("✓ Gewusst", naechstes, "haupt"),
+      knopf("↻ Nochmal üben", () => { lage.vq.push(v.id); naechstes(); }));
+    const loesung = knopf("Lösung", () => {
+      loesung.hidden = true; antwort.hidden = false; bewerten.hidden = false;
+      bildPlatz.textContent = v.symbol;
+      lage.abspielen = () => spiele([v.audio.en_m, v.audio.de]);
+      lage.weiter = naechstes;
+      lage.abspielen();
+    }, "haupt");
+    lage.abspielen = fragen;
+    zeige(kopf(st),
+      el("p", { class: "ansage" }, enDe ? "Was heißt das auf Deutsch? Sag es laut! Dann tipp auf „Lösung“."
+        : "Was heißt das auf Englisch? Sag es laut! Dann tipp auf „Lösung“."),
+      karte(teil, `Wort ${lage.pos + 1} von ${lage.vq.length}`,
+        el("div", { class: "vok" }, bildPlatz, el("div", {}, frage, antwort)),
+        el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", () => lage.abspielen()), loesung),
+        bewerten));
+    fragen();
   }
 
   /* ---------- Fragen für Mr. Alex ---------- */

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Auffrischen mit Mr. Alex</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+
+<dialog id="fragen" aria-labelledby="fragen-titel">
+  <form method="dialog" class="fragen-kopf">
+    <h2 id="fragen-titel">✏️ Frage für Mr. Alex</h2>
+    <button class="knopf leise" value="zu" aria-label="Schließen">✕</button>
+  </form>
+  <p class="klein">Schreib deine Frage auf. Sie bleibt nur auf diesem Gerät. Zeig sie mir am Mittwoch!</p>
+  <label for="frage-text" class="unsichtbar">Deine Frage</label>
+  <textarea id="frage-text" rows="3" placeholder="Was ist dir unklar?"></textarea>
+  <button class="knopf haupt" id="frage-speichern" type="button">Frage speichern</button>
+  <ol id="fragen-liste" class="fragen-liste"></ol>
+</dialog>
+
+<script src="daten.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

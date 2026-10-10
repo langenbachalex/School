@@ -2,7 +2,7 @@
 
 Automatisch erzeugt aus `inhalte/kernsaetze.tsv` durch `werkzeuge/audio_erzeugen.py`.
 
-**Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `audio/kernsaetze/` ablegen. Sie ersetzt dann das KI-Audio.
+**Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `app/audio/kernsaetze/` ablegen. Sie ersetzt dann das KI-Audio.
 
 Stimmen: Elrond – junge britische Männerstimme; Alice – britische Frauenstimme; Daniel – deutsche Stimme.
 

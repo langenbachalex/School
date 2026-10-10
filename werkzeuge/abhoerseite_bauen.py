@@ -4,7 +4,7 @@ Aufruf: python3 werkzeuge/abhoerseite_bauen.py
 import base64, csv, html, json, os, re
 
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-AUDIO = os.path.join(BASIS, "audio", "kernsaetze")
+AUDIO = os.path.join(BASIS, "app", "audio", "kernsaetze")
 ZIEL = os.path.join(BASIS, "abhoeren", "kernsaetze.html")
 GRUPPEN = [("st1_", "Station 1 – Wege zur Schule"), ("st2a_", "Station 2 – Teil A: regelmäßig"),
            ("st2u_", "Station 2 – Übersicht"), ("st2_merksatz", "Station 2 – Merksatz"),

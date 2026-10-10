@@ -9,7 +9,7 @@ import csv, json, os, re, urllib.request, urllib.error
 
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TSV = os.path.join(BASIS, "inhalte", "kernsaetze.tsv")
-AUDIO = os.path.join(BASIS, "audio", "kernsaetze")
+AUDIO = os.path.join(BASIS, "app", "audio", "kernsaetze")
 LISTE = os.path.join(BASIS, "docs", "sprechtexte.md")
 
 # Festgelegt am 10.10.2026 nach der Hörprobe
@@ -63,7 +63,7 @@ def main():
     with open(LISTE, "w", encoding="utf-8") as f:
         f.write("# Sprechtexte (Kernsätze)\n\n")
         f.write("Automatisch erzeugt aus `inhalte/kernsaetze.tsv` durch `werkzeuge/audio_erzeugen.py`.\n\n")
-        f.write("**Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `audio/kernsaetze/` ablegen. "
+        f.write("**Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `app/audio/kernsaetze/` ablegen. "
                 "Sie ersetzt dann das KI-Audio.\n\n")
         f.write("Stimmen: " + "; ".join(v[2] for v in STIMMEN.values()) + ".\n\n")
         f.write("| Datei | Stimme | Sprechtext |\n|---|---|---|\n")

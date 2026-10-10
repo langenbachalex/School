@@ -40,60 +40,89 @@ Stimmen: Elrond – junge britische Männerstimme; Alice – britische Frauensti
 | `st1_10_de.mp3` | Daniel | Das ist toll! |
 | `st2a_01_i_en_m.mp3` | Elrond | I play football. |
 | `st2a_01_i_en_f.mp3` | Alice | I play football. |
+| `st2a_01_i_de.mp3` | Daniel | Ich spiele Fußball. |
 | `st2a_01_he_en_m.mp3` | Elrond | Ben plays football. |
 | `st2a_01_he_en_f.mp3` | Alice | Ben plays football. |
+| `st2a_01_he_de.mp3` | Daniel | Ben spielt Fußball. |
 | `st2a_02_i_en_m.mp3` | Elrond | I like music. |
 | `st2a_02_i_en_f.mp3` | Alice | I like music. |
+| `st2a_02_i_de.mp3` | Daniel | Ich mag Musik. |
 | `st2a_02_he_en_m.mp3` | Elrond | Mia likes music. |
 | `st2a_02_he_en_f.mp3` | Alice | Mia likes music. |
+| `st2a_02_he_de.mp3` | Daniel | Mia mag Musik. |
 | `st2a_03_i_en_m.mp3` | Elrond | I walk to school. |
 | `st2a_03_i_en_f.mp3` | Alice | I walk to school. |
+| `st2a_03_i_de.mp3` | Daniel | Ich gehe zu Fuß zur Schule. |
 | `st2a_03_he_en_m.mp3` | Elrond | She walks to school. |
 | `st2a_03_he_en_f.mp3` | Alice | She walks to school. |
+| `st2a_03_he_de.mp3` | Daniel | Sie geht zu Fuß zur Schule. |
 | `st2a_04_i_en_m.mp3` | Elrond | I get up at seven o'clock. |
 | `st2a_04_i_en_f.mp3` | Alice | I get up at seven o'clock. |
+| `st2a_04_i_de.mp3` | Daniel | Ich stehe um sieben Uhr auf. |
 | `st2a_04_he_en_m.mp3` | Elrond | He gets up at seven o'clock. |
 | `st2a_04_he_en_f.mp3` | Alice | He gets up at seven o'clock. |
-| `st2a_05_i_en_m.mp3` | Elrond | I read a book. |
-| `st2a_05_i_en_f.mp3` | Alice | I read a book. |
+| `st2a_04_he_de.mp3` | Daniel | Er steht um sieben Uhr auf. |
+| `st2a_05_i_en_m.mp3` | Elrond | I reed a book. |
+| `st2a_05_i_en_f.mp3` | Alice | I reed a book. |
+| `st2a_05_i_de.mp3` | Daniel | Ich lese ein Buch. |
 | `st2a_05_he_en_m.mp3` | Elrond | Mia reads a book. |
 | `st2a_05_he_en_f.mp3` | Alice | Mia reads a book. |
+| `st2a_05_he_de.mp3` | Daniel | Mia liest ein Buch. |
 | `st2a_06_i_en_m.mp3` | Elrond | I eat breakfast at seven thirty. |
 | `st2a_06_i_en_f.mp3` | Alice | I eat breakfast at seven thirty. |
+| `st2a_06_i_de.mp3` | Daniel | Ich frühstücke um sieben Uhr dreißig. |
 | `st2a_06_he_en_m.mp3` | Elrond | Ben eats breakfast at seven thirty. |
 | `st2a_06_he_en_f.mp3` | Alice | Ben eats breakfast at seven thirty. |
+| `st2a_06_he_de.mp3` | Daniel | Ben frühstückt um sieben Uhr dreißig. |
 | `st2u_01_en_m.mp3` | Elrond | I walk to school. |
 | `st2u_01_en_f.mp3` | Alice | I walk to school. |
+| `st2u_01_de.mp3` | Daniel | Ich gehe zu Fuß zur Schule. |
 | `st2u_02_en_m.mp3` | Elrond | You walk to school. |
 | `st2u_02_en_f.mp3` | Alice | You walk to school. |
+| `st2u_02_de.mp3` | Daniel | Du gehst zu Fuß zur Schule. |
 | `st2u_03_en_m.mp3` | Elrond | He walks to school. She walks to school. It walks to school. |
 | `st2u_03_en_f.mp3` | Alice | He walks to school. She walks to school. It walks to school. |
+| `st2u_03_de.mp3` | Daniel | Er geht zu Fuß zur Schule. Sie geht zu Fuß zur Schule. Es geht zu Fuß zur Schule. |
 | `st2u_04_en_m.mp3` | Elrond | We walk to school. |
 | `st2u_04_en_f.mp3` | Alice | We walk to school. |
+| `st2u_04_de.mp3` | Daniel | Wir gehen zu Fuß zur Schule. |
 | `st2u_05_en_m.mp3` | Elrond | You walk to school. |
 | `st2u_05_en_f.mp3` | Alice | You walk to school. |
+| `st2u_05_de.mp3` | Daniel | Ihr geht zu Fuß zur Schule. |
 | `st2u_06_en_m.mp3` | Elrond | They walk to school. |
 | `st2u_06_en_f.mp3` | Alice | They walk to school. |
+| `st2u_06_de.mp3` | Daniel | Sie gehen zu Fuß zur Schule. |
+| `st2_merksatz_de.mp3` | Daniel | He, she, it – das s muss mit! |
 | `st2b_01_i_en_m.mp3` | Elrond | I go to school. |
 | `st2b_01_i_en_f.mp3` | Alice | I go to school. |
+| `st2b_01_i_de.mp3` | Daniel | Ich gehe zur Schule. |
 | `st2b_01_he_en_m.mp3` | Elrond | He goes to school. |
 | `st2b_01_he_en_f.mp3` | Alice | He goes to school. |
+| `st2b_01_he_de.mp3` | Daniel | Er geht zur Schule. |
 | `st2b_02_i_en_m.mp3` | Elrond | I do my homework. |
 | `st2b_02_i_en_f.mp3` | Alice | I do my homework. |
+| `st2b_02_i_de.mp3` | Daniel | Ich mache meine Hausaufgaben. |
 | `st2b_02_he_en_m.mp3` | Elrond | She does her homework. |
 | `st2b_02_he_en_f.mp3` | Alice | She does her homework. |
+| `st2b_02_he_de.mp3` | Daniel | Sie macht ihre Hausaufgaben. |
 | `st2b_03_i_en_m.mp3` | Elrond | I watch TV. |
 | `st2b_03_i_en_f.mp3` | Alice | I watch TV. |
+| `st2b_03_i_de.mp3` | Daniel | Ich schaue fern. |
 | `st2b_03_he_en_m.mp3` | Elrond | Ben watches TV. |
 | `st2b_03_he_en_f.mp3` | Alice | Ben watches TV. |
+| `st2b_03_he_de.mp3` | Daniel | Ben schaut fern. |
 | `st2b_04_i_en_m.mp3` | Elrond | I wash my face. |
 | `st2b_04_i_en_f.mp3` | Alice | I wash my face. |
+| `st2b_04_i_de.mp3` | Daniel | Ich wasche mir das Gesicht. |
 | `st2b_04_he_en_m.mp3` | Elrond | Mia washes her face. |
 | `st2b_04_he_en_f.mp3` | Alice | Mia washes her face. |
+| `st2b_04_he_de.mp3` | Daniel | Mia wäscht sich das Gesicht. |
 | `st2b_05_i_en_m.mp3` | Elrond | I have breakfast. |
 | `st2b_05_i_en_f.mp3` | Alice | I have breakfast. |
+| `st2b_05_i_de.mp3` | Daniel | Ich frühstücke. |
 | `st2b_05_he_en_m.mp3` | Elrond | He has breakfast. |
 | `st2b_05_he_en_f.mp3` | Alice | He has breakfast. |
+| `st2b_05_he_de.mp3` | Daniel | Er frühstückt. |
 | `st3_01_en_m.mp3` | Elrond | I get up at six forty-five a.m. |
 | `st3_01_en_f.mp3` | Alice | I get up at six forty-five a.m. |
 | `st3_01_de.mp3` | Daniel | Ich stehe um sechs Uhr fünfundvierzig auf. |

@@ -127,6 +127,21 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `kernsaetze/st8c_11_en.mp3` | Alex Langenbach | Are there clubs like this at your school? |
 | `kernsaetze/st8c_12_en.mp3` | Alex Langenbach | Which clubs do you like? |
 | `kernsaetze/st8c_13_en.mp3` | Alex Langenbach | I want a film club at my school. |
+| `kernsaetze/st4_text_en.mp3` | Alex Langenbach | On Saturday, Ben gets up at eight o'clock. He has breakfast with his mum. At ten a.m. he cycles to the park. He plays football with his friends. In the evening he watches TV. |
+| `kernsaetze/st4_a_01_en.mp3` | Alex Langenbach | Ben gets up at eight o'clock. |
+| `kernsaetze/st4_a_02_en.mp3` | Alex Langenbach | Ben has breakfast with his dad. |
+| `kernsaetze/st4_a_03_en.mp3` | Alex Langenbach | Ben goes to the park by bus. |
+| `kernsaetze/st4_a_04_en.mp3` | Alex Langenbach | Ben's friends are eleven years old. |
+| `kernsaetze/st4_a_05_en.mp3` | Alex Langenbach | Ben watches TV in the evening. |
+| `kernsaetze/st4_a_06_en.mp3` | Alex Langenbach | Ben likes chess. |
+| `kernsaetze/st4w_walk_en.mp3` | Alex Langenbach | walk |
+| `kernsaetze/st4w_work_en.mp3` | Alex Langenbach | work |
+| `kernsaetze/st4w_three_en.mp3` | Alex Langenbach | three |
+| `kernsaetze/st4w_tree_en.mp3` | Alex Langenbach | tree |
+| `kernsaetze/st4w_thirteen_en.mp3` | Alex Langenbach | thirteen |
+| `kernsaetze/st4w_thirty_en.mp3` | Alex Langenbach | thirty |
+| `kernsaetze/st4w_fifteen_en.mp3` | Alex Langenbach | fifteen |
+| `kernsaetze/st4w_fifty_en.mp3` | Alex Langenbach | fifty |
 | `vokabeln/u3_001_journey_en.mp3` | Alex Langenbach | journey |
 | `vokabeln/u3_002_come_en.mp3` | Alex Langenbach | to come |
 | `vokabeln/u3_003_bus_en.mp3` | Alex Langenbach | bus |

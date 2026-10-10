@@ -163,7 +163,7 @@ Erklärung danach:
 
 ---
 
-## 6. [ENTWURF – noch abzusegnen] Hörtext Station 1: „How do you get there?“
+## 6. [abgesegnet 10.10.2026] Hörtext Station 1: „How do you get there?“
 
 > **Mia:** Hi, I'm Mia. I go to school by train. It's a long way, but I love it! I read on the train.
 > **Ben:** Hi, I'm Ben. I walk to school. It's a short journey. That's great!
@@ -355,7 +355,7 @@ Aufgabe: Wer kommt wie? (Symbol zuordnen.) Ist es für die Person gut 😊 oder 
 
 ---
 
-## 9. [ENTWURF – noch abzusegnen] Station 6: Hörverstehen
+## 9. [abgesegnet 10.10.2026] Station 6: Hörverstehen
 
 Festes Format, abgesegnet am 10.10.2026: eigene Station, jede Woche neue Übungen möglich. Jede Übung ist eine Textdatei in `inhalte/hoeren/` (Aufbau: `inhalte/hoeren/LIESMICH.md`). Ablauf: Text hören → Aufgaben → Text zum Mitlesen.
 
@@ -373,7 +373,7 @@ Entwürfe der Inhalte:
 
 ## 10. Station 7: Vokabeln (Vorbereitung KLN)
 
-- Wortschatz: komplette Unit 3 aus dem Vokabelteil des Buchs (S. 234–239), **in Buchreihenfolge**, gegliedert nach Unit-Start, Topic 1–3, Story, Study skills, Unit task (`inhalte/vokabeln.tsv`, 104 Einträge). Nur für den internen Gebrauch, nicht öffentlich.
+- Wortschatz (abgesegnet 10.10.2026): komplette Unit 3 aus dem Vokabelteil des Buchs (S. 234–239), **in Buchreihenfolge**, gegliedert nach Unit-Start, Topic 1–3, Story, Study skills, Unit task (`inhalte/vokabeln.tsv`, 104 Einträge). Nur für den internen Gebrauch, nicht öffentlich.
 - In der Station wird zuerst ein Abschnitt gewählt; lange Abschnitte sind in Teile mit höchstens 13 Wörtern geteilt. Jeder Abschnitt bekommt ein eigenes Häkchen.
 - Ablauf je Abschnitt: Wörter (Bild, Englisch, Deutsch, „Jetzt du!“) → Lückensätze (nur wo es einen passenden Kernsatz gibt) → Englisch → Deutsch → Deutsch → Englisch. Bei der Lösung wird Englisch und Deutsch gesprochen; danach „Gewusst“ oder „Nochmal üben“.
 - Stimme Englisch: **George** (britisch, männlich). Deutsch: Daniel.
@@ -383,8 +383,16 @@ Entwürfe der Inhalte:
 
 **Station 3:** Listen and Repeat (Lücke = Uhrzeit, Vorschlag) → Erklärung a.m./p.m. (aus EN6 Woche 9, Folie 5) → Übung „Uhrzeit → Sprechweise wählen“.
 
-**Station 8 „Neu erklärt“** (Name ist ein Vorschlag): Kategorie für neue Inhalte. Jedes Thema ist ein Abschnitt mit eigenem Häkchen: Erklärung → Listen and Repeat → Übung. Inhalte aus EN6 Woche 9 (Doppelstunden 1 und 2):
+**Station 8 „Neu erklärt“** (Inhalte und Übersetzungen abgesegnet 10.10.2026): Kategorie für neue Inhalte. Jedes Thema ist ein Abschnitt mit eigenem Häkchen: Erklärung → Listen and Repeat → Übung. Inhalte aus EN6 Woche 9 (Doppelstunden 1 und 2):
 - **How often? (never … always):** Skala mit Punkten (Tage pro Woche), Regel „vor dem Verb, bei he/she trotzdem -s“, Satzpaare I/he, Übung „Ordnen“, Übung „Right or wrong?“ (Surfing sentences), Übersetzen (Arbeitsblatt-Sätze, nur Stufe 4).
 - **Sports and hobbies:** „I like …“ (13 Hobbys + like/but), „Who does what?“ (Lücke = Verb), „like … but“ (Lücke = don't like).
 - **School clubs:** Clubs und „Most schools …“-Sätze.
 - Nicht übernommen: Hörübungen 1b, 1c, 2a (brauchen Buch-Audio), Spiele, Organisatorisches.
+
+## 12. Station 4 und 5 (gebaut 10.10.2026)
+
+**Station 4 „Aufgaben verstehen“:** Erklärung true / false / not in the text („Steht das wirklich im Text? Wenn nicht: not in the text!“) → Leseaufgabe „Ben's Saturday“ (Text aus Abschnitt 7, alle Aussagen auf einer Seite, Text zum Vorlesen, Lösung mit Audio) → „cycle oder circle?“ (Listen and Repeat) → „Welches Wort hörst du?“ (cycle/circle und die Hörpaare aus Abschnitt 8: walk/work, three/tree, thirteen/thirty, fifteen/fifty).
+
+**Station 5 „Spiele“:** Memory (Symbol ↔ englisches Wort, 6 Paare, zufällig aus den Vokabeln; beim Aufdecken wird das Wort gesprochen) → -s-Detektiv (8 Sätze aus festen Bausteinen, nur gelesen; in manchen fehlt das -s: Verb antippen und reparieren, sonst „Alles richtig!“).
+
+**Postvokalisches R:** Bei einigen Einzelwörtern spricht die Stimme das R amerikanisch (Liste: `docs/postvokales-r.md`). Bewusst so gelassen.

@@ -72,6 +72,9 @@ def main():
             if "datei" in a:
                 eintraege.append(("Hörtexte", f"hoeren/{a['datei']}.mp3", "Aussage", a["sprech"]))
 
+    # Nur Einzelwörter (Vokabeln und Wort-Audios): In ganzen Sätzen spricht die Stimme das R korrekt britisch.
+    eintraege = [("Wort-Audios" if e[0] == "Sätze" else e[0],) + e[1:] for e in eintraege
+                 if e[0] == "Vokabeln" or re.search(r"(st8s_|_wort_)", e[1])]
     betroffen, alle_woerter = [], {}
     for bereich, datei, anzeige, text in eintraege:
         markiert, woerter, bindung = markieren(text)
@@ -82,8 +85,10 @@ def main():
 
     ziel = os.path.join(ae.BASIS, "docs", "postvokales-r.md")
     with open(ziel, "w", encoding="utf-8") as f:
-        f.write("# Postvokalisches R in den Sprechtexten (Stimme Mr. Alex)\n\n")
-        f.write("Automatisch erzeugt durch `werkzeuge/postvokales_r.py`.\n\n")
+        f.write("# Postvokalisches R bei Einzelwörtern (Stimme Mr. Alex)\n\n")
+        f.write("Automatisch erzeugt durch `werkzeuge/postvokales_r.py`. Nur Einzelwörter: In ganzen Sätzen spricht "
+                "die Stimme das R korrekt britisch, bei einzelnen Wörtern teilweise amerikanisch. "
+                "Stand 10.10.2026: bewusst so gelassen.\n\n")
         f.write(f"**{len(betroffen)} von {len(eintraege)} Audios** enthalten mindestens ein postvokalisches R "
                 f"({len(alle_woerter)} verschiedene Wörter).\n\n")
         f.write("Markiert (**fett**): R nach Vokal, das nicht vor einem Vokal steht – im amerikanischen Englisch "
@@ -91,14 +96,14 @@ def main():
                 "dann spricht man es auch im Britischen (z. B. *never ever*).\n\n")
         f.write("## Alle betroffenen Wörter\n\n")
         f.write(", ".join(f"{w} ({n})" for w, n in sorted(alle_woerter.items())) + "\n")
-        for bereich in ("Sätze", "Vokabeln", "Hörtexte"):
+        for bereich in ("Wort-Audios", "Vokabeln"):
             zeilen = [b for b in betroffen if b[0] == bereich]
             gesamt = sum(1 for e in eintraege if e[0] == bereich)
             f.write(f"\n## {bereich} ({len(zeilen)} von {gesamt})\n\n| Datei | Sprechtext |\n|---|---|\n")
             for _, datei, anzeige, markiert, _, _ in zeilen:
                 f.write(f"| `{datei}` | {markiert} |\n")
     print(ziel, len(betroffen), "von", len(eintraege))
-    for bereich in ("Sätze", "Vokabeln", "Hörtexte"):
+    for bereich in ("Wort-Audios", "Vokabeln"):
         print(bereich, sum(1 for b in betroffen if b[0] == bereich), "von", sum(1 for e in eintraege if e[0] == bereich))
     print(", ".join(sorted(alle_woerter)))
 

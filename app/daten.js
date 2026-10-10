@@ -413,14 +413,384 @@ window.DATEN = {
    "titel": "Aufgaben verstehen",
    "symbol": "🔍",
    "lob": "beim Aufgaben-Verstehen",
-   "schritte": []
+   "schritte": [
+    {
+     "art": "erklaerung",
+     "name": "true / false / not in the text",
+     "bloecke": [
+      {
+       "typ": "text",
+       "text": "Lernen wir, Aufgaben genau zu verstehen! Erst lesen, dann verstehen, dann lösen."
+      },
+      {
+       "typ": "regeln",
+       "punkte": [
+        [
+         "true:",
+         "Das steht so im Text."
+        ],
+        [
+         "false:",
+         "Der Text sagt etwas anderes."
+        ],
+        [
+         "not in the text:",
+         "Davon steht gar nichts im Text."
+        ]
+       ]
+      },
+      {
+       "typ": "merksatz",
+       "text": "Steht das wirklich im Text? Wenn nicht: not in the text!",
+       "dateien": []
+      }
+     ]
+    },
+    {
+     "art": "lesen",
+     "name": "Ben's Saturday",
+     "titel": "Ben's Saturday",
+     "text": "st4_text",
+     "instruction": "Read the text. True, false or not in the text?",
+     "optionen": [
+      "true",
+      "false",
+      "not in the text"
+     ],
+     "aufgaben": [
+      {
+       "satz": "st4_a_01",
+       "loesung": "true"
+      },
+      {
+       "satz": "st4_a_02",
+       "loesung": "false",
+       "hinweis": "Im Text steht: with his mum."
+      },
+      {
+       "satz": "st4_a_03",
+       "loesung": "false",
+       "hinweis": "Im Text steht: he cycles – er fährt mit dem Rad."
+      },
+      {
+       "satz": "st4_a_04",
+       "loesung": "not in the text",
+       "hinweis": "Steht das wirklich im Text? Wenn nicht: not in the text!"
+      },
+      {
+       "satz": "st4_a_05",
+       "loesung": "true"
+      },
+      {
+       "satz": "st4_a_06",
+       "loesung": "not in the text",
+       "hinweis": "Steht das wirklich im Text? Wenn nicht: not in the text!"
+      }
+     ]
+    },
+    {
+     "art": "lr",
+     "name": "cycle oder circle?",
+     "stufen": [
+      1,
+      2
+     ],
+     "saetze": [
+      "st4_cycle_satz",
+      "st4_circle_satz"
+     ]
+    },
+    {
+     "art": "hoerwahl",
+     "name": "Welches Wort?",
+     "paare": [
+      {
+       "optionen": [
+        {
+         "wort": "cycle",
+         "symbol": "🚴",
+         "audio": "audio/kernsaetze/st4_cycle_wort_en.mp3"
+        },
+        {
+         "wort": "circle",
+         "symbol": "⭕",
+         "audio": "audio/kernsaetze/st4_circle_wort_en.mp3"
+        }
+       ],
+       "hilfe": "cycle klingt wie „sei-kl“ (Rad fahren), circle wie „sö-kl“ (Kreis)."
+      },
+      {
+       "optionen": [
+        {
+         "wort": "walk",
+         "symbol": "🚶",
+         "audio": "audio/kernsaetze/st4w_walk_en.mp3"
+        },
+        {
+         "wort": "work",
+         "symbol": "💼",
+         "audio": "audio/kernsaetze/st4w_work_en.mp3"
+        }
+       ],
+       "hilfe": "walk klingt wie „wook“ (gehen), work wie „wöök“ (arbeiten)."
+      },
+      {
+       "optionen": [
+        {
+         "wort": "three",
+         "symbol": "3️⃣",
+         "audio": "audio/kernsaetze/st4w_three_en.mp3"
+        },
+        {
+         "wort": "tree",
+         "symbol": "🌳",
+         "audio": "audio/kernsaetze/st4w_tree_en.mp3"
+        }
+       ],
+       "hilfe": "three beginnt mit dem th-Laut (Zunge zwischen die Zähne), tree mit einem normalen t."
+      },
+      {
+       "optionen": [
+        {
+         "wort": "thirteen",
+         "symbol": "13",
+         "audio": "audio/kernsaetze/st4w_thirteen_en.mp3"
+        },
+        {
+         "wort": "thirty",
+         "symbol": "30",
+         "audio": "audio/kernsaetze/st4w_thirty_en.mp3"
+        }
+       ],
+       "hilfe": "thirteen wird hinten betont: thir-TEEN. thirty wird vorne betont: THIR-ty."
+      },
+      {
+       "optionen": [
+        {
+         "wort": "fifteen",
+         "symbol": "15",
+         "audio": "audio/kernsaetze/st4w_fifteen_en.mp3"
+        },
+        {
+         "wort": "fifty",
+         "symbol": "50",
+         "audio": "audio/kernsaetze/st4w_fifty_en.mp3"
+        }
+       ],
+       "hilfe": "fifteen wird hinten betont: fif-TEEN. fifty wird vorne betont: FIF-ty."
+      }
+     ]
+    }
+   ]
   },
   {
    "nr": 5,
    "titel": "Spiele",
    "symbol": "🎲",
    "lob": "bei den Spielen",
-   "schritte": []
+   "schritte": [
+    {
+     "art": "memory",
+     "name": "Memory",
+     "paare": 6,
+     "karten": [
+      {
+       "id": "u3_003_bus",
+       "wort": "bus",
+       "symbol": "🚌",
+       "audio": "audio/vokabeln/u3_003_bus_en.mp3"
+      },
+      {
+       "id": "u3_005_car",
+       "wort": "car",
+       "symbol": "🚗",
+       "audio": "audio/vokabeln/u3_005_car_en.mp3"
+      },
+      {
+       "id": "u3_006_train",
+       "wort": "train",
+       "symbol": "🚆",
+       "audio": "audio/vokabeln/u3_006_train_en.mp3"
+      },
+      {
+       "id": "u3_029_wheelchair",
+       "wort": "wheelchair",
+       "symbol": "🦽",
+       "audio": "audio/vokabeln/u3_029_wheelchair_en.mp3"
+      },
+      {
+       "id": "u3_033_shower",
+       "wort": "shower",
+       "symbol": "🚿",
+       "audio": "audio/vokabeln/u3_033_shower_en.mp3"
+      },
+      {
+       "id": "u3_035_breakfast",
+       "wort": "breakfast",
+       "symbol": "🥣",
+       "audio": "audio/vokabeln/u3_035_breakfast_en.mp3"
+      },
+      {
+       "id": "u3_023_newspaper",
+       "wort": "newspaper",
+       "symbol": "📰",
+       "audio": "audio/vokabeln/u3_023_newspaper_en.mp3"
+      },
+      {
+       "id": "u3_014_clock",
+       "wort": "clock",
+       "symbol": "🕰️",
+       "audio": "audio/vokabeln/u3_014_clock_en.mp3"
+      },
+      {
+       "id": "u3_024_letter",
+       "wort": "letter",
+       "symbol": "✉️",
+       "audio": "audio/vokabeln/u3_024_letter_en.mp3"
+      },
+      {
+       "id": "u3_098_card",
+       "wort": "card",
+       "symbol": "🃏",
+       "audio": "audio/vokabeln/u3_098_card_en.mp3"
+      },
+      {
+       "id": "u3_054_sea",
+       "wort": "sea",
+       "symbol": "🌊",
+       "audio": "audio/vokabeln/u3_054_sea_en.mp3"
+      },
+      {
+       "id": "u3_084_money",
+       "wort": "money",
+       "symbol": "💰",
+       "audio": "audio/vokabeln/u3_084_money_en.mp3"
+      },
+      {
+       "id": "u3_103_light",
+       "wort": "light",
+       "symbol": "💡",
+       "audio": "audio/vokabeln/u3_103_light_en.mp3"
+      },
+      {
+       "id": "u3_031_cafe",
+       "wort": "cafe",
+       "symbol": "☕",
+       "audio": "audio/vokabeln/u3_031_cafe_en.mp3"
+      },
+      {
+       "id": "u3_042_tooth_pl_teeth",
+       "wort": "tooth",
+       "symbol": "🦷",
+       "audio": "audio/vokabeln/u3_042_tooth_pl_teeth_en.mp3"
+      }
+     ]
+    },
+    {
+     "art": "detektiv",
+     "name": "-s-Detektiv",
+     "runden": 8,
+     "personen": [
+      [
+       "I",
+       false
+      ],
+      [
+       "You",
+       false
+      ],
+      [
+       "We",
+       false
+      ],
+      [
+       "They",
+       false
+      ],
+      [
+       "He",
+       true
+      ],
+      [
+       "She",
+       true
+      ],
+      [
+       "Emily",
+       true
+      ],
+      [
+       "Ben",
+       true
+      ],
+      [
+       "Mia",
+       true
+      ],
+      [
+       "My dad",
+       true
+      ]
+     ],
+     "verben": [
+      [
+       "get",
+       "gets",
+       "up at 7."
+      ],
+      [
+       "play",
+       "plays",
+       "football."
+      ],
+      [
+       "go",
+       "goes",
+       "to school by bus."
+      ],
+      [
+       "watch",
+       "watches",
+       "TV."
+      ],
+      [
+       "have",
+       "has",
+       "breakfast at 7.30."
+      ],
+      [
+       "like",
+       "likes",
+       "music."
+      ],
+      [
+       "read",
+       "reads",
+       "a book."
+      ],
+      [
+       "walk",
+       "walks",
+       "to school."
+      ],
+      [
+       "wash",
+       "washes",
+       "the car."
+      ],
+      [
+       "eat",
+       "eats",
+       "an apple."
+      ],
+      [
+       "do",
+       "does",
+       "the shopping."
+      ]
+     ]
+    }
+   ]
   },
   {
    "nr": 6,
@@ -2257,6 +2627,156 @@ window.DATEN = {
    "hinweis": "",
    "audio": {
     "en": "audio/kernsaetze/st8c_13_en.mp3"
+   }
+  },
+  "st4_text": {
+   "en": "On Saturday, Ben gets up at 8 o'clock. He has breakfast with his mum. At 10 a.m. he cycles to the park. He plays football with his friends. In the evening he watches TV.",
+   "de": "Am Samstag steht Ben um 8 Uhr auf. Er frühstückt mit seiner Mama. Um 10 Uhr fährt er mit dem Rad in den Park. Er spielt mit seinen Freunden Fußball. Am Abend schaut er fern.",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4_text_en.mp3"
+   }
+  },
+  "st4_a_01": {
+   "en": "Ben gets up at 8 o'clock.",
+   "de": "",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4_a_01_en.mp3"
+   }
+  },
+  "st4_a_02": {
+   "en": "Ben has breakfast with his dad.",
+   "de": "",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4_a_02_en.mp3"
+   }
+  },
+  "st4_a_03": {
+   "en": "Ben goes to the park by bus.",
+   "de": "",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4_a_03_en.mp3"
+   }
+  },
+  "st4_a_04": {
+   "en": "Ben's friends are eleven years old.",
+   "de": "",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4_a_04_en.mp3"
+   }
+  },
+  "st4_a_05": {
+   "en": "Ben watches TV in the evening.",
+   "de": "",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4_a_05_en.mp3"
+   }
+  },
+  "st4_a_06": {
+   "en": "Ben likes chess.",
+   "de": "",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4_a_06_en.mp3"
+   }
+  },
+  "st4w_walk": {
+   "en": "walk",
+   "de": "gehen",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4w_walk_en.mp3"
+   }
+  },
+  "st4w_work": {
+   "en": "work",
+   "de": "arbeiten",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4w_work_en.mp3"
+   }
+  },
+  "st4w_three": {
+   "en": "three",
+   "de": "drei",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4w_three_en.mp3"
+   }
+  },
+  "st4w_tree": {
+   "en": "tree",
+   "de": "Baum",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4w_tree_en.mp3"
+   }
+  },
+  "st4w_thirteen": {
+   "en": "thirteen",
+   "de": "dreizehn",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4w_thirteen_en.mp3"
+   }
+  },
+  "st4w_thirty": {
+   "en": "thirty",
+   "de": "dreißig",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4w_thirty_en.mp3"
+   }
+  },
+  "st4w_fifteen": {
+   "en": "fifteen",
+   "de": "fünfzehn",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4w_fifteen_en.mp3"
+   }
+  },
+  "st4w_fifty": {
+   "en": "fifty",
+   "de": "fünfzig",
+   "luecke": "",
+   "symbol": "",
+   "hinweis": "",
+   "audio": {
+    "en": "audio/kernsaetze/st4w_fifty_en.mp3"
    }
   }
  },

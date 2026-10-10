@@ -68,8 +68,50 @@ STATIONEN = [
               {"frage": "7.30 Uhr", "optionen": ["It's 7.30 a.m.", "It's 7.30 p.m.", "It's 19.30 a.m."], "satz": "st3u_05", "hilfe": "Vor Mittag heißt a.m."},
               {"frage": "21.00 Uhr", "optionen": ["It's 9 p.m.", "It's 9 a.m.", "It's 21 p.m."], "satz": "st3u_06", "hilfe": "21 – 12 = 9. Und abends heißt p.m."}]},
      ]},
-    {"nr": 4, "titel": "Aufgaben verstehen", "symbol": "🔍", "lob": "beim Aufgaben-Verstehen", "schritte": []},
-    {"nr": 5, "titel": "Spiele", "symbol": "🎲", "lob": "bei den Spielen", "schritte": []},
+    {"nr": 4, "titel": "Aufgaben verstehen", "symbol": "🔍", "lob": "beim Aufgaben-Verstehen",
+     "schritte": [
+         {"art": "erklaerung", "name": "true / false / not in the text", "bloecke": [
+             {"typ": "text", "text": "Lernen wir, Aufgaben genau zu verstehen! Erst lesen, dann verstehen, dann lösen."},
+             {"typ": "regeln", "punkte": [
+                 ["true:", "Das steht so im Text."],
+                 ["false:", "Der Text sagt etwas anderes."],
+                 ["not in the text:", "Davon steht gar nichts im Text."]]},
+             {"typ": "merksatz", "text": "Steht das wirklich im Text? Wenn nicht: not in the text!"}]},
+         {"art": "lesen", "name": "Ben's Saturday", "titel": "Ben's Saturday", "text": "st4_text",
+          "instruction": "Read the text. True, false or not in the text?",
+          "optionen": ["true", "false", "not in the text"], "aufgaben": [
+              {"satz": "st4_a_01", "loesung": "true"},
+              {"satz": "st4_a_02", "loesung": "false", "hinweis": "Im Text steht: with his mum."},
+              {"satz": "st4_a_03", "loesung": "false", "hinweis": "Im Text steht: he cycles – er fährt mit dem Rad."},
+              {"satz": "st4_a_04", "loesung": "not in the text", "hinweis": "Steht das wirklich im Text? Wenn nicht: not in the text!"},
+              {"satz": "st4_a_05", "loesung": "true"},
+              {"satz": "st4_a_06", "loesung": "not in the text", "hinweis": "Steht das wirklich im Text? Wenn nicht: not in the text!"}]},
+         {"art": "lr", "name": "cycle oder circle?", "stufen": [1, 2], "saetze": ["st4_cycle_satz", "st4_circle_satz"]},
+         {"art": "hoerwahl", "name": "Welches Wort?", "paare": [
+             [["st4_cycle_wort", "🚴", "cycle"], ["st4_circle_wort", "⭕", "circle"],
+              "cycle klingt wie „sei-kl“ (Rad fahren), circle wie „sö-kl“ (Kreis)."],
+             [["st4w_walk", "🚶", "walk"], ["st4w_work", "💼", "work"],
+              "walk klingt wie „wook“ (gehen), work wie „wöök“ (arbeiten)."],
+             [["st4w_three", "3️⃣", "three"], ["st4w_tree", "🌳", "tree"],
+              "three beginnt mit dem th-Laut (Zunge zwischen die Zähne), tree mit einem normalen t."],
+             [["st4w_thirteen", "13", "thirteen"], ["st4w_thirty", "30", "thirty"],
+              "thirteen wird hinten betont: thir-TEEN. thirty wird vorne betont: THIR-ty."],
+             [["st4w_fifteen", "15", "fifteen"], ["st4w_fifty", "50", "fifty"],
+              "fifteen wird hinten betont: fif-TEEN. fifty wird vorne betont: FIF-ty."]]},
+     ]},
+    {"nr": 5, "titel": "Spiele", "symbol": "🎲", "lob": "bei den Spielen",
+     "schritte": [
+         {"art": "memory", "name": "Memory", "paare": 6,
+          "pool": ["bus", "car", "train", "wheelchair", "shower", "breakfast", "newspaper", "clock", "letter",
+                   "card", "sea", "money", "light", "cafe", "tooth"]},
+         {"art": "detektiv", "name": "-s-Detektiv", "runden": 8,
+          "personen": [["I", False], ["You", False], ["We", False], ["They", False],
+                       ["He", True], ["She", True], ["Emily", True], ["Ben", True], ["Mia", True], ["My dad", True]],
+          "verben": [["get", "gets", "up at 7."], ["play", "plays", "football."], ["go", "goes", "to school by bus."],
+                     ["watch", "watches", "TV."], ["have", "has", "breakfast at 7.30."], ["like", "likes", "music."],
+                     ["read", "reads", "a book."], ["walk", "walks", "to school."], ["wash", "washes", "the car."],
+                     ["eat", "eats", "an apple."], ["do", "does", "the shopping."]]},
+     ]},
     {"nr": 6, "titel": "Hörverstehen", "symbol": "🎧", "lob": "beim Hörverstehen", "schritte": []},  # aus inhalte/hoeren
     # Neu erklärt: neue Inhalte als Abschnitte (je Erklärung, Listen and Repeat, Übung); Woche für Woche erweiterbar
     {"nr": 8, "titel": "Neu erklärt", "symbol": "💡", "lob": "bei den neuen Themen", "schritte": [], "gruppen": [
@@ -166,6 +208,13 @@ def main():
                 for a in s["aufgaben"]:
                     a.setdefault("richtig", a["optionen"][0])
                     assert a["satz"] in saetze, a["satz"]
+            if s["art"] == "lesen":
+                assert s["text"] in saetze
+                for a in s["aufgaben"]:
+                    assert a["satz"] in saetze and a["loesung"] in s["optionen"], a
+            if s["art"] == "hoerwahl":
+                s["paare"] = [{"optionen": [{"wort": w, "symbol": sym, "audio": saetze[i]["audio"]["en"]} for i, sym, w in p[:2]],
+                               "hilfe": p[2]} for p in s["paare"]]
             if s["art"] == "reihenfolge":
                 for w in s["woerter"]:
                     assert w in saetze, w
@@ -200,6 +249,16 @@ def main():
         for t in range(n):
             gruppen.append({"name": name + (f" · Teil {t + 1}" if n > 1 else ""), "vokabeln": ids[t * groesse:(t + 1) * groesse]})
     next(x for x in STATIONEN if x["nr"] == 7)["gruppen"] = gruppen
+    # Memory-Karten aus den Vokabeln (Symbol, Wort, Audio)
+    kurz = lambda en: re.sub(r"\s*\(.*?\)|,.*$", "", re.sub(r"^\(to\) ", "", en)).strip()
+    vok = {}
+    for v in vokabeln:  # bei doppelten Wörtern (letter) zählt die erste Bedeutung
+        vok.setdefault(kurz(v["en"]).lower(), v)
+    for st in STATIONEN:
+        for s in st["schritte"]:
+            if s["art"] == "memory":
+                s["karten"] = [{"id": vok[w]["id"], "wort": kurz(vok[w]["en"]), "symbol": vok[w]["symbol"],
+                                "audio": vok[w]["audio"]["en"]} for w in s.pop("pool")]
     STATIONEN.sort(key=lambda x: x["nr"])
     daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")}}

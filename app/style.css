@@ -159,6 +159,26 @@ p { margin: 0; }
 .punkte { display: block; font-size: .8rem; letter-spacing: .1em; color: var(--blau); }
 .ziel-satz { color: var(--gruen); }
 
+/* Lesen */
+.lesetext { background: var(--bg); border-radius: 14px; padding: 14px 16px; font-size: 1.2rem; line-height: 1.6; max-width: 65ch; }
+
+/* Memory */
+.memory { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.mem-karte { aspect-ratio: 4 / 3; max-width: 100%; min-height: 72px; border-radius: 14px; border: 2px solid var(--blau);
+  background: var(--blau); color: var(--blau-text); font: 600 1.6rem var(--display); cursor: pointer; display: grid; place-items: center; padding: 4px; hyphens: auto; overflow-wrap: break-word; }
+.mem-karte.auf { background: var(--karte); color: var(--text); font-size: 1.15rem; }
+.mem-karte.paar { border-color: var(--gruen); background: var(--gruen-hell); }
+.mem-karte:focus-visible { outline: 3px solid var(--blau); outline-offset: 3px; }
+.mem-sym { font-size: 2.2rem; }
+.mem-lang { font-size: .95rem; }
+@media (max-width: 640px) { .memory { grid-template-columns: repeat(3, minmax(0, 1fr)); } .mem-lang { font-size: .85rem; } }
+
+/* -s-Detektiv */
+.detektiv-satz { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
+.wort-knopf { font: inherit; min-height: 52px; padding: 4px 10px; border-radius: 10px; border: 2px dashed var(--linie); background: transparent; color: var(--text); cursor: pointer; }
+.wort-knopf:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
+.wort-knopf.repariert { border-style: solid; border-color: var(--gruen); background: var(--gruen-hell); }
+
 /* Vokabeln */
 .gruppen .kachel { min-height: 7rem; }
 .kachel .vorschau { font-size: 1.3rem; letter-spacing: .1em; }

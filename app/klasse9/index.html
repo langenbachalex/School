@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>America with Mr. Alex</title>
+<meta name="theme-color" content="#182c5c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mr. Alex 9">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="basis.css">
+<link rel="stylesheet" href="klasse9.css">
+</head>
+<body>
+<div class="niveau-leiste">
+  <span class="niveau-name">America · 9.3</span>
+  <div class="niveau" role="group" aria-label="Kurs / Course">
+    <button type="button" data-niveau="G" aria-pressed="true">G</button>
+    <button type="button" data-niveau="E" aria-pressed="false">E</button>
+  </div>
+</div>
+<main id="app" aria-live="polite"></main>
+
+<dialog id="fragen" aria-labelledby="fragen-titel">
+  <form method="dialog" class="fragen-kopf">
+    <h2 id="fragen-titel">✏️ Question for Mr. Alex</h2>
+    <button class="knopf leise" value="zu" aria-label="Close">✕</button>
+  </form>
+  <p class="klein" id="fragen-info"></p>
+  <label for="frage-text" class="unsichtbar">Question</label>
+  <textarea id="frage-text" rows="3"></textarea>
+  <button class="knopf haupt" id="frage-speichern" type="button">Save</button>
+  <ol id="fragen-liste" class="fragen-liste"></ol>
+</dialog>
+
+<script src="daten.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

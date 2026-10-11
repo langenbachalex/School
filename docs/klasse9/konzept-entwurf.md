@@ -1,6 +1,7 @@
 # Konzept-Entwurf: Englisch 9 – Thema „America“ (Klasse 9.3)
 
-Stand: 11.10.2026 (2. Fassung). **[ENTWURF – Entwicklungsphase, noch nichts bauen]** Material kommt Stück für Stück (Folien, GLN).
+Stand: 11.10.2026 (3. Fassung). **Bau gestartet am 11.10.** (Mr. Alex: „Let's go“). App: https://langenbachalex.github.io/School/klasse9/ (QR: `docs/klasse9/qr-code-app9.png`).
+Gebaut: Gerüst (3×3, G/E-Schalter, Navigation wie Klasse 6), Reading „Task words“, Vocabulary Unit 2 (114 Wörter, Sätze, Find the word, Abfrage), Language „-ing form & prepositions“. Audios noch nicht erzeugt (bis dahin Gerätestimme) – erst nach Freigabe der Hörprobe (`docs/klasse9/hoerprobe/`). Material kommt Stück für Stück (Folien, GLN).
 Grundprinzip wie in Klasse 6: Vor jedem Bauschritt fragt Claude, Mr. Alex segnet ab.
 Grundlagen bisher: Vokabelanhang S. 194–207, Language File LF 1–4 (S. 176–179), Skills File Writing (S. 168–169),
 Folien „Focus on Language“ Stunde 1–6, Arbeitsblatt „Vokabeln / If-Clauses“, If-Clauses Rule Sheet, GLN 1 (G- und E-Kurs), Aufgabenbank Unit 2 und Plan GLN 2.

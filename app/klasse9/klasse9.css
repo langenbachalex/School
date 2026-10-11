@@ -1,0 +1,82 @@
+/* Klasse 9 – America: ergänzt basis.css (Kopie der Klasse-6-Gestaltung) */
+:root { --blau: #1d3f8f; --rot: #c8283a; --neu: #8a3ffc; --neu-hell: #f1e9ff; --bg: #f4f6fb; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --blau: #8fb0ff; --rot: #ff6b7a; --neu: #c3a2ff; --neu-hell: #2a2140; }
+}
+:root[data-theme="dark"] { --blau: #8fb0ff; --rot: #ff6b7a; --neu: #c3a2ff; --neu-hell: #2a2140; }
+
+/* Leiste oben: Kurs G | E, auf jeder Seite */
+.niveau-leiste {
+  position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 8px 16px; background: var(--blau); color: var(--blau-text);
+  border-bottom: 4px solid var(--rot);
+}
+.niveau-name { font: 600 1rem var(--display); letter-spacing: .02em; }
+.niveau { display: inline-flex; border: 2px solid var(--blau-text); border-radius: 999px; overflow: hidden; }
+.niveau button {
+  font: 700 1rem var(--body); min-width: 52px; min-height: 40px; border: 0; cursor: pointer;
+  background: transparent; color: var(--blau-text);
+}
+.niveau button[aria-pressed="true"] { background: var(--blau-text); color: var(--blau); }
+.niveau button:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
+
+/* Startseite: 3 × 3 – auch auf dem Handy */
+.raster9 { grid-template-columns: repeat(3, 1fr); }
+.kachel .unter { font-size: .9rem; color: var(--leise); }
+.kachel.bald { opacity: .62; }
+.bald-schild { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--leise); }
+.kachel.neu { border-color: var(--neu); background: var(--neu-hell); }
+.kachel.neu .titel { color: var(--neu); }
+@media (max-width: 640px) {
+  .raster9 { gap: 8px; }
+  .raster9 .kachel { padding: 10px 8px; min-height: 7.2rem; justify-items: center; text-align: center; gap: 4px; }
+  .raster9 .kachel .sym { font-size: 1.8rem; height: 2.1rem; }
+  .raster9 .kachel .titel { font-size: .98rem; }
+  .raster9 .kachel .unter { font-size: .72rem; line-height: 1.2; }
+  .raster9 .kachel .haken { width: 24px; height: 24px; top: 6px; right: 6px; font-size: .8rem; }
+}
+
+/* Ansage: Englisch, darunter (G-Kurs) Deutsch */
+.ansage-de { font: 400 1.05rem/1.4 var(--body); color: var(--leise); margin-top: 4px; }
+
+/* Unit-Reiter */
+.reiter { display: flex; gap: 8px; flex-wrap: wrap; }
+.reiter-knopf {
+  font: 600 1rem var(--body); min-height: 44px; padding: 0 18px; border-radius: 999px; cursor: pointer;
+  border: 2px solid var(--linie); background: var(--karte); color: var(--text);
+}
+.reiter-knopf[aria-selected="true"] { background: var(--blau); border-color: var(--blau); color: var(--blau-text); }
+
+/* „Noch einfacher“-Hilfen */
+.knopf.tipp { min-height: 44px; padding: 0 12px; font-weight: 600; color: var(--blau); }
+
+.wahl.senkrecht { flex-direction: column; align-items: stretch; }
+.wahl.senkrecht .wahl-knopf { justify-content: flex-start; text-align: left; font-size: 1.05rem; padding-block: 10px; }
+.satz.aufgabe, .satz.definition { font-size: 1.4rem; }
+
+/* Bilder ankreuzen */
+.bilder { display: grid; grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); gap: 10px; }
+.bild-kachel {
+  position: relative; display: grid; justify-items: center; gap: 4px; padding: 14px 8px; min-height: 6.5rem;
+  border-radius: 16px; border: 3px solid var(--linie); background: var(--karte); color: var(--text); cursor: pointer; font: inherit;
+}
+.bild-sym { font-size: 2.6rem; line-height: 1; }
+.bild-text { font-size: .9rem; text-align: center; }
+.bild-haken {
+  display: none; position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--blau); color: var(--blau-text); place-items: center; font-weight: 700;
+}
+.bild-kachel[aria-pressed="true"] { border-color: var(--blau); }
+.bild-kachel[aria-pressed="true"] .bild-haken { display: grid; }
+.bild-kachel.soll { border-color: var(--gruen); background: var(--gruen-hell); }
+.bild-kachel.nicht.falsch { border-color: var(--rot); border-style: dashed; }
+.bild-kachel.soll.falsch::after { content: "!"; position: absolute; top: 6px; left: 10px; font-weight: 700; color: var(--rot); }
+.lesesatz.beleg { background: var(--gelb); color: var(--gelb-text); border-radius: 6px; }
+
+/* Eintippen (E-Kurs) */
+.eingabe-bereich { display: grid; gap: 10px; }
+.eingabe {
+  font: 500 1.3rem var(--body); min-height: 52px; padding: 0 14px; border-radius: 14px; flex: 1 1 14rem; min-width: 0;
+  border: 2px solid var(--linie); background: var(--bg); color: var(--text);
+}
+.eingabe:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }

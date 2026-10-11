@@ -105,3 +105,23 @@
 .dz.spricht { border-color: var(--blau); box-shadow: 0 0 0 3px var(--blau); }
 .falsch-vorher { color: var(--rot); text-decoration: line-through; text-decoration-thickness: 2px; font-size: 1.3rem; }
 .wortliste li { font: 500 1.15rem/1.4 var(--display); }
+
+/* Writing */
+.mustertext { display: grid; gap: 14px; }
+.muster-abschnitt { display: grid; gap: 6px; border-left: 4px solid var(--linie); padding-left: 12px; }
+.muster-label { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--leise); }
+.muster-abschnitt p[lang="en"] { font-size: 1.2rem; line-height: 1.6; }
+.muster-satz { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; display: inline; }
+.muster-satz.spricht { background: var(--gelb); color: var(--gelb-text); border-radius: 6px; }
+.schreib-raster { display: grid; grid-template-columns: minmax(14rem, 1fr) 2fr; gap: 20px; align-items: start; }
+@media (max-width: 760px) { .schreib-raster { grid-template-columns: 1fr; } }
+.schreib-raster h3 { font-size: 1.05rem; margin: 6px 0 4px; }
+.schreib-spalte { display: grid; gap: 10px; }
+.checkliste { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.checkliste li { color: var(--leise); }
+.checkliste li.ok { color: var(--gruen); font-weight: 700; }
+.check-sym { display: inline-block; width: 1.2em; }
+.bausteine { display: flex; flex-wrap: wrap; gap: 6px; }
+.baustein { font: 500 .95rem var(--body); padding: 6px 10px; border-radius: 10px; border: 2px dashed var(--blau); background: var(--karte); color: var(--text); cursor: pointer; text-align: left; }
+.schreibfeld { width: 100%; font: 1.1rem/1.5 var(--body); padding: 12px; border-radius: 12px; border: 2px solid var(--linie); background: var(--bg); color: var(--text); min-height: 14rem; }
+.muster-satz.eigene-zeile { display: block; }

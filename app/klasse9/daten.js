@@ -2090,6 +2090,146 @@ window.DATEN = {
    "luecke": "downtown",
    "stimme": "f",
    "audio": "audio/saetze/hv_16.mp3"
+  },
+  "wm_01": {
+   "en": "Hi Ryan,",
+   "de": "Hallo Ryan,",
+   "luecke": null,
+   "stimme": "f",
+   "audio": "audio/saetze/wm_01.mp3"
+  },
+  "wm_02": {
+   "en": "My name is Lena, and next month I'm going to be in your class.",
+   "de": "Ich heiße Lena und bin ab nächstem Monat in deiner Klasse.",
+   "luecke": null,
+   "stimme": "f",
+   "audio": "audio/saetze/wm_02.mp3"
+  },
+  "wm_03": {
+   "en": "I'm writing to tell you about my school.",
+   "de": "Ich schreibe dir, um dir von meiner Schule zu erzählen.",
+   "luecke": "I'm writing to tell you",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_03.mp3"
+  },
+  "wm_04": {
+   "en": "Our school is called Park School, and it has about 900 students.",
+   "de": "Unsere Schule heißt Park School und hat ungefähr 900 Schüler.",
+   "luecke": "is called",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_04.mp3"
+  },
+  "wm_05": {
+   "en": "School starts at 7:45 and ends at 1:15, but on Tuesdays we stay until 3:15.",
+   "de": "Die Schule beginnt um 7:45 Uhr und endet um 13:15 Uhr, aber dienstags bleiben wir bis 15:15 Uhr.",
+   "luecke": "starts at",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_05.mp3"
+  },
+  "wm_06": {
+   "en": "My favourite subject is art because our teacher is really creative.",
+   "de": "Mein Lieblingsfach ist Kunst, weil unsere Lehrerin richtig kreativ ist.",
+   "luecke": "My favourite subject",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_06.mp3"
+  },
+  "wm_07": {
+   "en": "There are lots of clubs after school, for example a robotics club and a school band.",
+   "de": "Nach der Schule gibt es viele AGs, zum Beispiel eine Robotik-AG und eine Schulband.",
+   "luecke": "for example",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_07.mp3"
+  },
+  "wm_08": {
+   "en": "We have a huge schoolyard and a small cafeteria, but the food is delicious!",
+   "de": "Wir haben einen riesigen Schulhof und eine kleine Cafeteria, aber das Essen ist lecker!",
+   "luecke": "We have",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_08.mp3"
+  },
+  "wm_09": {
+   "en": "We don't wear school uniforms, so you can wear your own clothes.",
+   "de": "Wir tragen keine Schuluniformen, du kannst also deine eigene Kleidung tragen.",
+   "luecke": "don't wear",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_09.mp3"
+  },
+  "wm_10": {
+   "en": "What I like best about my school is the friendly atmosphere.",
+   "de": "Was mir an meiner Schule am besten gefällt, ist die freundliche Atmosphäre.",
+   "luecke": "What I like best",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_10.mp3"
+  },
+  "wm_11": {
+   "en": "I'm really looking forward to meeting you!",
+   "de": "Ich freue mich richtig darauf, dich kennenzulernen!",
+   "luecke": "looking forward to meeting",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_11.mp3"
+  },
+  "wm_12": {
+   "en": "Best wishes, Lena",
+   "de": "Viele Grüße, Lena",
+   "luecke": "Best wishes",
+   "stimme": "f",
+   "audio": "audio/saetze/wm_12.mp3"
+  },
+  "wk_01": {
+   "en": "I'm interested in sports.",
+   "de": "Ich interessiere mich für Sport.",
+   "luecke": "in",
+   "stimme": "m",
+   "audio": "audio/saetze/wk_01.mp3"
+  },
+  "wk_02": {
+   "en": "That was fun.",
+   "de": "Das hat Spaß gemacht.",
+   "luecke": "was",
+   "stimme": "f",
+   "audio": "audio/saetze/wk_02.mp3"
+  },
+  "wk_03": {
+   "en": "My school is huge.",
+   "de": "Meine Schule ist riesig.",
+   "luecke": "huge",
+   "stimme": "m",
+   "audio": "audio/saetze/wk_03.mp3"
+  },
+  "wk_04": {
+   "en": "Can I borrow your pen?",
+   "de": "Kann ich mir deinen Stift leihen?",
+   "luecke": "borrow",
+   "stimme": "f",
+   "audio": "audio/saetze/wk_04.mp3"
+  },
+  "wk_05": {
+   "en": "If I had more time, I would join the band.",
+   "de": "Wenn ich mehr Zeit hätte, würde ich in die Band gehen.",
+   "luecke": "had",
+   "stimme": "m",
+   "audio": "audio/saetze/wk_05.mp3"
+  },
+  "wk_06": {
+   "en": "We go to school by bus.",
+   "de": "Wir fahren mit dem Bus zur Schule.",
+   "luecke": "by bus",
+   "stimme": "f",
+   "audio": "audio/saetze/wk_06.mp3"
+  },
+  "wk_07": {
+   "en": "In my opinion, school uniforms are a good idea.",
+   "de": "Meiner Meinung nach sind Schuluniformen eine gute Idee.",
+   "luecke": "In my opinion",
+   "stimme": "m",
+   "audio": "audio/saetze/wk_07.mp3"
+  },
+  "wk_08": {
+   "en": "We went to Central Park in the morning.",
+   "de": "Wir sind morgens in den Central Park gegangen.",
+   "luecke": "to Central Park in the morning",
+   "stimme": "f",
+   "audio": "audio/saetze/wk_08.mp3"
   }
  },
  "vokabeln": [
@@ -3975,7 +4115,288 @@ window.DATEN = {
     "E": "Writing texts"
    },
    "symbol": "✍️",
-   "bald": true
+   "gruppen": [
+    {
+     "name": "Information about your school",
+     "symbol": "🏫 ✉️",
+     "schritte": [
+      {
+       "art": "mustertext",
+       "name": "Model text",
+       "titel": "An email to Ryan from Texas",
+       "abschnitte": [
+        {
+         "label": {
+          "G": "Anfang (beginning)",
+          "E": "Beginning"
+         },
+         "saetze": [
+          "wm_01",
+          "wm_02",
+          "wm_03"
+         ]
+        },
+        {
+         "label": {
+          "G": "Mittelteil (middle)",
+          "E": "Middle"
+         },
+         "saetze": [
+          "wm_04",
+          "wm_05",
+          "wm_06",
+          "wm_07",
+          "wm_08",
+          "wm_09"
+         ]
+        },
+        {
+         "label": {
+          "G": "Schluss (end)",
+          "E": "End"
+         },
+         "saetze": [
+          "wm_10",
+          "wm_11",
+          "wm_12"
+         ]
+        }
+       ]
+      },
+      {
+       "art": "lr",
+       "name": "Useful phrases",
+       "saetze": [
+        "wm_03",
+        "wm_04",
+        "wm_05",
+        "wm_06",
+        "wm_07",
+        "wm_08",
+        "wm_09",
+        "wm_10",
+        "wm_11",
+        "wm_12"
+       ]
+      },
+      {
+       "art": "schreiben",
+       "name": "Your text",
+       "speicher": "schule",
+       "aufgabe": {
+        "G": "Ryan from Texas is going to be in your class soon. Write him an email about your school. – Ryan aus Texas kommt bald in deine Klasse. Schreib ihm eine E-Mail über deine Schule.",
+        "E": "Ryan from Texas is going to be in your class soon. Write him an email about your school."
+       },
+       "min": {
+        "G": 6,
+        "E": 9
+       },
+       "inhalt": [
+        {
+         "G": "Name und Größe der Schule",
+         "E": "name and size of your school",
+         "muster": "called|students|big|small|huge"
+        },
+        {
+         "G": "Schultag (Uhrzeiten)",
+         "E": "your school day (times)",
+         "muster": "\\d|start|end|o'clock"
+        },
+        {
+         "G": "Lieblingsfach und warum",
+         "E": "your favourite subject and why",
+         "muster": "subject|because"
+        },
+        {
+         "G": "AGs / Freizeit an der Schule",
+         "E": "clubs and activities",
+         "muster": "club|band|team|after school"
+        },
+        {
+         "G": "Was dir am besten gefällt",
+         "E": "what you like best",
+         "muster": "like|love|best"
+        }
+       ],
+       "bausteine": [
+        "Hi Ryan,",
+        "I'm writing to tell you about my school.",
+        "Our school is called … and it has about … students.",
+        "School starts at … and ends at …",
+        "My favourite subject is … because …",
+        "There are lots of clubs, for example …",
+        "We have …",
+        "We don't wear school uniforms.",
+        "What I like best about my school is …",
+        "I'm really looking forward to meeting you!",
+        "Best wishes,"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Check and correct",
+     "symbol": "🔍 ✔️",
+     "schritte": [
+      {
+       "art": "erklaerung",
+       "name": "Checklist",
+       "bloecke": [
+        {
+         "typ": "text",
+         "G": "Lies deinen Text am Ende mehrmals durch. So bekommst du mehr Punkte (Kriterien A–F):",
+         "E": "Read your text several times at the end. This gets you more points (criteria A–F):"
+        },
+        {
+         "typ": "liste_de",
+         "punkte": [
+          {
+           "G": "Alle Punkte der Aufgabe drin? (Inhalt ist am wichtigsten!)",
+           "E": "Did you write about all points of the task? (Content matters most!)"
+          },
+          {
+           "G": "Anfang – Mittelteil – Schluss",
+           "E": "Beginning – middle – end"
+          },
+          {
+           "G": "Ganze Sätze und Verbindungswörter: and, but, because, so, for example",
+           "E": "Full sentences and linking words: and, but, because, so, for example"
+          },
+          {
+           "G": "Starke Wörter statt good / nice: amazing, huge, delicious …",
+           "E": "Strong words instead of good / nice: amazing, huge, delicious …"
+          },
+          {
+           "G": "„I“ immer groß!",
+           "E": "Always write “I” with a capital letter!"
+          },
+          {
+           "G": "Zeitform richtig? he/she/it + s? Wortstellung: Ort vor Zeit",
+           "E": "Right tense? he/she/it + s? Word order: place before time"
+          }
+         ]
+        },
+        {
+         "typ": "merksatz",
+         "G": "A = 13–15 Punkte: alles drin, gut verständlich, nur wenige Fehler.",
+         "E": "A = 13–15 points: everything is there, easy to understand, only a few mistakes."
+        }
+       ]
+      },
+      {
+       "art": "verbform",
+       "name": "Fix it!",
+       "ansage": {
+        "G": "Which is right? – Typische Fehler aus dem Skills File. Was ist richtig?",
+        "E": "Which is right? Typical mistakes from the Skills File."
+       },
+       "hilfe": {
+        "G": "Denk an die Tipps aus dem Skills File (S. 168).",
+        "E": "Think of the tips in the Skills File (p. 168)."
+       },
+       "aufgaben": [
+        {
+         "satz": "wk_01",
+         "richtig": "in",
+         "falsch": [
+          "for",
+          "at"
+         ],
+         "vorher": "I'm interested for sports",
+         "hilfe": {
+          "G": "be interested in – lern die Präposition immer mit!",
+          "E": "be interested in – always learn the preposition!"
+         }
+        },
+        {
+         "satz": "wk_02",
+         "richtig": "was",
+         "falsch": [
+          "made"
+         ],
+         "vorher": "That made fun",
+         "hilfe": {
+          "G": "„Das hat Spaß gemacht“ heißt: That was fun.",
+          "E": "In English we say: That was fun."
+         }
+        },
+        {
+         "satz": "wk_03",
+         "richtig": "huge",
+         "falsch": [
+          "great"
+         ],
+         "vorher": "My school is great (= groß)",
+         "hilfe": {
+          "G": "great = großartig; groß = big / huge.",
+          "E": "great = wonderful; big / huge = large."
+         }
+        },
+        {
+         "satz": "wk_04",
+         "richtig": "borrow",
+         "falsch": [
+          "lend"
+         ],
+         "vorher": "Can I lend your pen?",
+         "hilfe": {
+          "G": "leihen (von jemandem) = borrow; verleihen = lend.",
+          "E": "You borrow from someone, you lend to someone."
+         }
+        },
+        {
+         "satz": "wk_05",
+         "richtig": "had",
+         "falsch": [
+          "would have"
+         ],
+         "vorher": "If I would have more time …",
+         "hilfe": {
+          "G": "If-Satz Typ 2: im if-Teil simple past, im Hauptsatz would.",
+          "E": "If-clause type 2: simple past in the if-clause, would in the main clause."
+         }
+        },
+        {
+         "satz": "wk_06",
+         "richtig": "by bus",
+         "falsch": [
+          "with the bus"
+         ],
+         "vorher": "We go with the bus to school",
+         "hilfe": {
+          "G": "mit dem Bus = by bus.",
+          "E": "We say: by bus, by car, by train."
+         }
+        },
+        {
+         "satz": "wk_07",
+         "richtig": "In my opinion",
+         "falsch": [
+          "After my opinion"
+         ],
+         "vorher": "After my opinion, …",
+         "hilfe": {
+          "G": "meiner Meinung nach = in my opinion.",
+          "E": "We say: in my opinion."
+         }
+        },
+        {
+         "satz": "wk_08",
+         "richtig": "to Central Park in the morning",
+         "falsch": [
+          "in the morning to Central Park"
+         ],
+         "vorher": "We went in the morning to Central Park",
+         "hilfe": {
+          "G": "Im Englischen: Ort vor Zeit.",
+          "E": "In English: place before time."
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
   },
   {
    "nr": 6,

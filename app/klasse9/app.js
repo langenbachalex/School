@@ -309,7 +309,8 @@
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, auswahl: zeigeAuswahl, bilder: zeigeBilder,
        vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition,
-       beae_quiz: zeigeBeaeQuiz, hoeren: zeigeHoeren, dialog: zeigeDialog })[teil.art](teil);
+       beae_quiz: zeigeBeaeQuiz, hoeren: zeigeHoeren, dialog: zeigeDialog,
+       mustertext: zeigeMustertext, schreiben: zeigeSchreiben })[teil.art](teil);
     navErgaenzen();
   }
   function naechstes() {
@@ -686,11 +687,108 @@
         el("div", { class: "knopfreihe" }, weiterKnopf())));
   }
 
+  /* ---------- Writing: Mustertext mit Aufbau (Anfang – Mittelteil – Schluss) ---------- */
+  function zeigeMustertext(teil) {
+    const k = kategorie(lage.nr);
+    const alle = teil.abschnitte.flatMap((a) => a.saetze);
+    const spans = {};
+    const absaetze = teil.abschnitte.map((a) => el("div", { class: "muster-abschnitt" },
+      el("span", { class: "muster-label" }, tx(a.label)),
+      el("p", { lang: "en" }, a.saetze.map((id) => {
+        const s = D.saetze[id];
+        spans[id] = el("button", { class: "muster-satz" + ((teil.zeilen || []).includes(id) ? " eigene-zeile" : ""), title: E() ? "" : s.de, onclick: () => vorlesen([id]) }, ...lueckenSatz(s, "voll"), " ");
+        return spans[id];
+      })),
+      !E() && el("p", { class: "klein", lang: "de" }, a.saetze.map((id) => D.saetze[id].de).join(" "))));
+    async function vorlesen(ids) {
+      for (const id of ids) {
+        Object.values(spans).forEach((x) => x.classList.toggle("spricht", x === spans[id]));
+        if ((await spiele([tonSatz(D.saetze[id])])) === null) break;
+      }
+      Object.values(spans).forEach((x) => x.classList.remove("spricht"));
+    }
+    lage.abspielen = () => vorlesen(alle); lage.weiter = naechstes;
+    zeige(kopf(k),
+      ansage("Read and listen. Look at the structure and the useful phrases (blue).",
+        "Lies und hör zu. Achte auf den Aufbau und die blauen Redemittel – die kannst du in deinem Text benutzen."),
+      el("section", { class: "satzkarte" },
+        el("h2", { lang: "en" }, teil.titel),
+        el("div", { class: "mustertext" }, absaetze),
+        el("div", { class: "knopfreihe" }, knopf(T("🔊 Ganzen Text vorlesen", "🔊 Read the whole text"), () => vorlesen(alle)), weiterKnopf())));
+  }
+
+  /* ---------- Writing: eigener Text mit Checkliste (bleibt nur auf diesem Gerät) ---------- */
+  const STARK = /\b(amazing|awesome|fantastic|unbelievable|exciting|incredible|delicious|huge|tiny|wonderful|great|cool|friendly|creative|interesting|beautiful|modern|excited|proud|relaxed)\b/i;
+  const VERBINDER = /\b(and|but|because|so|for example|also|first|then|after that|finally)\b/gi;
+  function zeigeSchreiben(teil) {
+    const k = kategorie(lage.nr);
+    stand.texte = stand.texte || {};
+    const feld = el("textarea", { class: "schreibfeld", lang: "en", rows: 12, spellcheck: "true",
+      "aria-label": T("Dein Text", "Your text"), oninput: pruefen }, );
+    feld.value = stand.texte[teil.speicher] || "";
+    const zaehler = el("p", { class: "klein" });
+    const punkte = [];
+    const zeile = (text) => { const li = el("li", {}, el("span", { class: "check-sym", "aria-hidden": "true" }, "○"), " ", text); punkte.push(li); return li; };
+    const min = tx(teil.min);
+    const inhalt = el("ul", { class: "checkliste" }, teil.inhalt.map((x) => zeile(tx(x))));
+    const formListe = [
+      [T("Anrede: Hi … / Dear …", "Greeting: Hi … / Dear …"), (t) => /^\s*(hi|hello|dear)\b/i.test(t)],
+      [T(`Mindestens ${min} Sätze`, `At least ${min} sentences`), (t) => (t.match(/[.!?]+(\s|$)/g) || []).length >= min],
+      [T("Verbindungswörter (and, but, because …)", "Linking words (and, but, because …)"), (t) => (t.match(VERBINDER) || []).length >= 3],
+      [T("Ein starkes Wort (amazing, huge, delicious …)", "A strong word (amazing, huge, delicious …)"), (t) => STARK.test(t)],
+      [T("„I“ immer groß", "“I” always with a capital letter"), (t) => /\bI\b/.test(t) && !/(^|[^\w'])i([\s'’]|$)/.test(t)],
+      [T("Schluss: Best wishes / Bye / See you", "Ending: Best wishes / Bye / See you"), (t) => /(best wishes|bye|see you|write back|love,|regards)/i.test(t)],
+    ];
+    const form = el("ul", { class: "checkliste" }, formListe.map(([text]) => zeile(text)));
+    const tests = [...teil.inhalt.map((x) => (t) => new RegExp(x.muster, "i").test(t)), ...formListe.map(([, f]) => f)];
+    function pruefen() {
+      const t = feld.value;
+      stand.texte[teil.speicher] = t; speichern();
+      const woerter = (t.match(/[A-Za-z']+/g) || []).length;
+      zaehler.textContent = T(`${woerter} Wörter`, `${woerter} words`);
+      tests.forEach((f, i) => { const ok = !!t.trim() && f(t); punkte[i].classList.toggle("ok", ok); punkte[i].firstChild.textContent = ok ? "✓" : "○"; });
+    }
+    const einfuegen = (b) => {
+      const a = feld.selectionStart ?? feld.value.length, e = feld.selectionEnd ?? a;
+      const vor = feld.value.slice(0, a), rest = feld.value.slice(e);
+      const trenner = !vor || /\s$/.test(vor) ? "" : (b === "Best wishes," || /,$/.test(vor) ? "\n" : " ");
+      feld.value = vor + trenner + b + (b.endsWith(",") ? "\n" : " ") + rest;
+      feld.focus(); pruefen();
+    };
+    const bausteine = el("div", { class: "bausteine", hidden: E() }, teil.bausteine.map((b) =>
+      el("button", { class: "baustein", lang: "en", onclick: () => einfuegen(b) }, b)));
+    const kopieren = knopf(T("📋 Text kopieren", "📋 Copy text"), () => {
+      feld.select();
+      (navigator.clipboard ? navigator.clipboard.writeText(feld.value) : Promise.reject()).catch(() => document.execCommand && document.execCommand("copy"));
+      kopieren.textContent = T("✓ Kopiert", "✓ Copied");
+    });
+    const neu = knopf(T("🗑️ Neu anfangen", "🗑️ Start again"), () => {
+      if (feld.value && !confirm(T("Deinen Text wirklich löschen?", "Really delete your text?"))) return;
+      feld.value = ""; pruefen();
+    });
+    lage.abspielen = null; lage.weiter = naechstes;
+    zeige(kopf(k),
+      el("section", { class: "satzkarte" },
+        ansage(...(E() ? [tx(teil.aufgabe)] : tx(teil.aufgabe).split(" – "))),
+        el("p", { class: "hinweis-kasten" }, "📝 " + T("Schreib über diese Punkte. Die Checkliste hakt automatisch ab, was schon drin ist. Dein Text bleibt nur auf diesem Gerät.",
+          "Write about these points. The checklist ticks off what is already there. Your text stays on this device only.")),
+        el("div", { class: "schreib-raster" },
+          el("div", {}, el("h3", {}, T("Inhalt", "Content")), inhalt, el("h3", {}, T("Form", "Form")), form),
+          el("div", { class: "schreib-spalte" },
+            !E() && el("p", { class: "klein" }, T("Redemittel – tipp drauf, dann landen sie in deinem Text:", "")),
+            E() && el("div", { class: "knopfreihe" }, tipp("Easier: show useful phrases", (e) => { e.currentTarget.hidden = true; bausteine.hidden = false; })),
+            bausteine, feld, zaehler,
+            el("div", { class: "knopfreihe" }, kopieren, neu)))),
+      el("div", { class: "knopfreihe" }, weiterKnopf()));
+    pruefen();
+  }
+
   /* ---------- Erklärung ---------- */
   function zeigeErklaerung(teil) {
     const k = kategorie(lage.nr);
     const bloecke = teil.bloecke.map((b) => {
       if (b.typ === "text") return el("p", { class: "ansage" }, tx(b));
+      if (b.typ === "liste_de") return el("ul", { class: "regeln" }, b.punkte.map((x) => el("li", {}, tx(x))));
       if (b.typ === "liste") return el("ul", { class: "regeln wortliste", lang: "en" }, b.punkte.map((x) => el("li", {}, x)));
       if (b.typ === "merksatz") return el("div", { class: "merksatz" }, el("span", { class: "sprache" }, T("Merksatz", "Remember")), el("p", {}, tx(b)));
       if (b.typ === "regeln") return el("ul", { class: "regeln" }, b.punkte.map(([regel, sid]) => {

@@ -70,12 +70,21 @@ p { margin: 0; }
 }
 
 /* Station */
-.kopf { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.kopf { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; min-width: 0; max-width: 100%; }
 .kopf h1 { font-size: 1.6rem; flex: 1 1 14rem; }
-.schritte { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
-.schritte li { font-size: .85rem; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--linie); color: var(--leise); }
-.schritte li.jetzt { background: var(--blau); border-color: var(--blau); color: var(--blau-text); }
-.schritte li.fertig { border-color: var(--gruen); color: var(--gruen); }
+.schritte { display: flex; flex-wrap: wrap; gap: 6px 8px; list-style: none; margin: 0; padding: 0; align-items: center; }
+.schritte > li { display: flex; align-items: center; gap: 4px; }
+.sprung-label { font-size: .8rem; color: var(--leise); margin-right: 2px; white-space: nowrap; }
+.sprung { font: 600 .85rem var(--body); min-height: 36px; min-width: 36px; padding: 2px 10px; border-radius: 99px;
+  border: 1.5px solid var(--linie); background: var(--karte); color: var(--leise); cursor: pointer; white-space: nowrap; position: relative; }
+.sprung:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
+.sprung.fertig { border-color: var(--gruen); color: var(--gruen); }
+.sprung.fertig::after { content: " ✓"; }
+.sprung.jetzt { background: var(--blau); border-color: var(--blau); color: var(--blau-text); }
+.sprung.start::before { content: "Start"; position: absolute; top: -9px; right: -6px; font-size: .62rem; font-weight: 700;
+  background: var(--gelb); color: var(--gelb-text); border-radius: 99px; padding: 0 5px; line-height: 1.4; }
+.zurueck-knopf { order: -1; }
+.navleiste { justify-content: flex-start; }
 .ansage { font: 500 1.25rem/1.35 var(--display); }
 
 .satzkarte { background: var(--karte); border: 2px solid var(--linie); border-radius: 20px; padding: 20px; display: grid; gap: 16px; }
@@ -200,6 +209,7 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
 
 /* Handy: Englisch oben, Deutsch darunter */
 @media (max-width: 640px) {
+  .schritte { flex-wrap: nowrap; overflow-x: auto; flex: 1 1 100%; min-width: 0; max-width: 100%; padding: 10px 2px 6px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
   .tabelle td.de { display: none; }
   body { font-size: 17px; }
   .spalten { grid-template-columns: 1fr; }

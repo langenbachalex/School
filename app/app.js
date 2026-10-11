@@ -150,20 +150,65 @@
     const t = [];
     st.schritte.forEach((s) => {
       if (s.art === "lr") (s.stufen || [1, 2, 3, 4]).forEach((stufe) =>
-        t.push({ art: "lr", stufe, saetze: s.saetze, name: (s.name ? s.name + " · " : "") + "Stufe " + stufe }));
+        t.push({ art: "lr", stufe, saetze: s.saetze, basis: s.name || "", name: (s.name ? s.name + " · " : "") + "Stufe " + stufe }));
       else t.push(s);
     });
     return t;
   }
 
-  let lage = null; // { nr, teile, teil, pos (Position im Teil), reihe, vq, abspielen, weiter }
+  let lage = null; // { nr, gruppe?, teile, teil, pos (Position im Teil), reihe, runden, detektiv, vq, abspielen, weiter }
+
+  function neueLage(werte) {
+    lage = Object.assign({ teil: 0, pos: 0 }, werte);
+    return lage;
+  }
+  // Übungszustand eines Teils (Reihenfolge, Runden …) – wird bei jedem Betreten eines Teils neu gemischt.
+  function teilZuruecksetzen() { lage.reihe = lage.runden = lage.detektiv = lage.vq = null; }
+
+  /* ---------- Fortschritt pro Teil (gespeichert) ---------- */
+  function teilSchluessel(i) { return `${lage.nr}|${lage.gruppe != null ? lage.gruppe : ""}|${i}`; }
+  function istFertig(i) { return !!(stand.teile && stand.teile[teilSchluessel(i)]); }
+  function teilFertig(i) {
+    stand.teile = stand.teile || {};
+    stand.teile[teilSchluessel(i)] = true;
+    speichern();
+  }
+  const alleTeileFertig = () => lage.teile.every((_, i) => istFertig(i));
+
+  /* ---------- Springen, Vor und Zurück ---------- */
+  function springe(i) {
+    lage.teil = i; lage.pos = 0; lage.ende = false; teilZuruecksetzen();
+    zeigeTeil();
+  }
+  // Zurück: im Teil einen Schritt zurück; am Anfang ans Ende des vorigen Teils
+  // (Übungsteile beginnen dabei immer von vorne).
+  function zurueck() {
+    if (lage.pos > 0) { lage.pos--; return zeigeTeil(); }
+    if (lage.teil === 0) return;
+    lage.teil--; teilZuruecksetzen();
+    const t = lage.teile[lage.teil];
+    lage.pos = ["lr", "vok_lernen", "vok_luecke"].includes(t.art) ? laenge(t) - 1 : 0;
+    zeigeTeil();
+  }
+  // „◀ Zurück“ neben den Weiter-Knopf der Seite setzen (oder unten anfügen, falls der noch versteckt ist)
+  function navErgaenzen(zurueckFn) {
+    if (!lage) return;
+    const z = knopf("◀ Zurück", zurueckFn || zurueck);
+    z.classList.add("zurueck-knopf");
+    if (!zurueckFn && lage.teil === 0 && lage.pos === 0) z.disabled = true;
+    const w = [...app.querySelectorAll("button")].find((b) => /^Weiter/.test(b.textContent));
+    if (w && !w.closest("[hidden]")) w.before(z);
+    else app.append(el("div", { class: "knopfreihe navleiste" }, z));
+    const jetzt = app.querySelector(".sprung.jetzt");
+    if (jetzt && jetzt.scrollIntoView) jetzt.scrollIntoView({ block: "nearest", inline: "center" });
+  }
 
   function starteStation(nr) {
     const st = station(nr);
     if (st.gruppen) return zeigeGruppen(st);
     const t = teileVon(st);
     if (!t.length) return platzhalter(st);
-    lage = { nr, teile: t, teil: 0, pos: 0 };
+    neueLage({ nr, teile: t });
     zeigeTeil();
   }
 
@@ -171,9 +216,37 @@
     return el("header", { class: "kopf" },
       lage && lage.gruppe != null ? knopf(st.gruppen[0].vokabeln ? "← Abschnitte" : "← Themen", () => zeigeGruppen(st), "leise") : knopf("← Start", startseite, "leise"),
       el("h1", {}, `Station ${st.nr}: ${st.titel}` + (lage && lage.gruppe != null ? ` · ${st.gruppen[lage.gruppe].name}` : "")),
-      lage && el("ol", { class: "schritte", "aria-label": "Schritte" },
-        lage.teile.map((t, i) => el("li", { class: i === lage.teil ? "jetzt" : i < lage.teil ? "fertig" : "",
-          "aria-current": i === lage.teil ? "step" : false }, t.name))));
+      lage && sprungleiste());
+  }
+
+  // Alle Teile oben direkt anklickbar; Stufen eines Listen-and-Repeat-Teils kompakt: „Teil A ① ② ③ ④“
+  function sprungleiste() {
+    const nochNichts = !lage.teile.some((_, i) => istFertig(i));
+    const ZIFFERN = ["①", "②", "③", "④", "⑤"];
+    const sprung = (i, text) => {
+      const t = lage.teile[i], fertig = istFertig(i), jetzt = i === lage.teil && !lage.ende;
+      const start = nochNichts && i === 0;
+      return el("button", { class: "sprung" + (jetzt ? " jetzt" : "") + (fertig ? " fertig" : "") + (start ? " start" : ""),
+        "aria-current": jetzt ? "step" : false, title: t.name,
+        "aria-label": `${t.name}${fertig ? " (geschafft)" : ""}${start ? " – hier starten" : ""}`,
+        onclick: () => springe(i) }, text);
+    };
+    const eintraege = [];
+    for (let i = 0; i < lage.teile.length;) {
+      const t = lage.teile[i];
+      if (t.art === "lr") {
+        const gruppe = el("li", { class: "sprung-gruppe" }, el("span", { class: "sprung-label" }, t.basis || "Stufe"));
+        while (i < lage.teile.length && lage.teile[i].art === "lr" && lage.teile[i].saetze === t.saetze) {
+          gruppe.append(sprung(i, ZIFFERN[lage.teile[i].stufe - 1] || String(lage.teile[i].stufe)));
+          i++;
+        }
+        eintraege.push(gruppe);
+      } else {
+        eintraege.push(el("li", {}, sprung(i, t.name)));
+        i++;
+      }
+    }
+    return el("ol", { class: "schritte", "aria-label": "Teile – direkt anspringen" }, eintraege);
   }
 
   function platzhalter(st) {
@@ -190,13 +263,28 @@
        vok_lernen: zeigeVokabel, vok_luecke: zeigeVokabel, vok_abfrage: zeigeVokabel,
        auswahl: zeigeAuswahl, reihenfolge: zeigeReihenfolge, lesen: zeigeLesen, hoerwahl: zeigeHoerwahl,
        memory: zeigeMemory, detektiv: zeigeDetektiv })[teil.art](teil);
+    navErgaenzen();
   }
 
   function naechstes() {
     const teil = lage.teile[lage.teil];
     if (lage.pos + 1 < laenge(teil)) { lage.pos++; return zeigeTeil(); }
+    teilFertig(lage.teil);
+    if (alleTeileFertig()) return stationGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
-    stationGeschafft();
+    fastGeschafft();
+  }
+
+  // Letzter Teil fertig, aber vorher wurde etwas übersprungen
+  function fastGeschafft() {
+    const st = station(lage.nr);
+    lage.ende = true; lage.abspielen = null; lage.weiter = null;
+    const offen = lage.teile.map((t, i) => [t, i]).filter(([, i]) => !istFertig(i));
+    zeige(kopf(st), el("section", { class: "geschafft" },
+      el("h2", { lang: "en" }, lob()),
+      el("p", { class: "ansage" }, "Fast geschafft! Diese Teile fehlen noch:"),
+      el("div", { class: "knopfreihe" }, offen.map(([t, i]) => knopf(t.name, () => { lage.ende = false; springe(i); }))),
+      knopf("Zur Startseite", startseite)));
   }
   function laenge(teil) {
     if (teil.art === "lr") return teil.saetze.length;
@@ -213,11 +301,12 @@
     const st = station(lage.nr);
     const fertig = lage.teile[lage.teil];
     lage.abspielen = null;
-    lage.weiter = () => { lage.teil++; lage.pos = 0; zeigeTeil(); };
+    lage.weiter = () => { lage.teil++; lage.pos = 0; teilZuruecksetzen(); zeigeTeil(); };
     zeige(kopf(st), el("section", { class: "geschafft" },
       el("h2", {}, lob()),
       el("p", {}, `${fertig.name} geschafft!`),
       knopf("Weiter ➜", lage.weiter, "haupt")));
+    navErgaenzen(() => zeigeTeil());
   }
 
   /* Station mit Abschnitten (Vokabeln): erst Abschnitt wählen, jeder Abschnitt bekommt ein eigenes Häkchen */
@@ -242,12 +331,12 @@
   function starteGruppe(st, i) {
     const g = st.gruppen[i];
     if (g.schritte) { // Thema mit eigenen Schritten (Neu erklärt)
-      lage = { nr: st.nr, gruppe: i, teile: teileVon(g), teil: 0, pos: 0 };
+      neueLage({ nr: st.nr, gruppe: i, teile: teileVon(g) });
       return zeigeTeil();
     }
     const vok = g.vokabeln.map((id) => D.vokabeln.find((v) => v.id === id));
     const t = st.schritte.filter((s) => s.art !== "vok_luecke" || vok.some((v) => v.satz));
-    lage = { nr: st.nr, gruppe: i, vok, teile: t, teil: 0, pos: 0 };
+    neueLage({ nr: st.nr, gruppe: i, vok, teile: t });
     zeigeTeil();
   }
 
@@ -412,7 +501,7 @@
   /* ---------- Übung: richtige Verbform wählen ---------- */
   function zeigeVerbform(teil) {
     const st = station(lage.nr);
-    if (lage.pos === 0 || !lage.reihe) lage.reihe = mischen(teil.aufgaben);
+    if (!lage.reihe) lage.reihe = mischen(teil.aufgaben);
     const a = lage.reihe[lage.pos];
     const s = D.saetze[a.satz];
     let geloest = false;
@@ -702,7 +791,7 @@
   /* ---------- Hörwahl: Wort hören, richtiges Bild wählen ---------- */
   function zeigeHoerwahl(teil) {
     const st = station(lage.nr);
-    if (lage.pos === 0 || !lage.runden)
+    if (!lage.runden)
       lage.runden = mischen(teil.paare.flatMap((p) => p.optionen.map((_, i) => ({ paar: p, richtig: i }))));
     const r = lage.runden[lage.pos];
     const ziel = r.paar.optionen[r.richtig];
@@ -776,13 +865,13 @@
     zeige(kopf(st),
       el("p", { class: "ansage" }, "Finde die Paare: Bild und englisches Wort. Beim Aufdecken hörst du das Wort."),
       karte(teil, null, feld, zaehler, box,
-        el("div", { class: "knopfreihe" }, weiter, knopf("↻ Neu mischen", () => zeigeMemory(teil)))));
+        el("div", { class: "knopfreihe" }, weiter, knopf("↻ Neu mischen", () => zeigeTeil()))));
   }
 
   /* ---------- -s-Detektiv: fehlendes -s finden und reparieren (nur lesen) ---------- */
   function zeigeDetektiv(teil) {
     const st = station(lage.nr);
-    if (lage.pos === 0 || !lage.detektiv) {
+    if (!lage.detektiv) {
       const he = teil.personen.filter((p) => p[1]), ich = teil.personen.filter((p) => !p[1]);
       const verben = mischen(teil.verben);
       const plan = mischen([...Array(4).fill("falsch"), ...Array(2).fill("he"), ...Array(teil.runden - 6).fill("ich")]);
@@ -830,7 +919,7 @@
 
   function zeigeVokabel(teil) {
     const st = station(lage.nr);
-    if (teil.art === "vok_abfrage" && lage.pos === 0) lage.vq = mischen(lage.vok.map((v) => v.id));
+    if (teil.art === "vok_abfrage" && !lage.vq) lage.vq = mischen(lage.vok.map((v) => v.id));
     const v = teil.art === "vok_abfrage" ? lage.vok.find((x) => x.id === lage.vq[lage.pos])
       : teil.art === "vok_luecke" ? lage.vok.filter((x) => x.satz)[lage.pos] : lage.vok[lage.pos];
     const anzahl = laenge(teil);
@@ -926,6 +1015,10 @@
     if (dlg.open || e.target.closest("textarea, input")) return;
     if (e.code === "Space" && lage && lage.abspielen) { e.preventDefault(); lage.abspielen(); }
     else if (e.code === "ArrowRight" && lage && lage.weiter) { e.preventDefault(); lage.weiter(); }
+    else if (e.code === "ArrowLeft" && lage && !lage.ende) {
+      const z = app.querySelector(".zurueck-knopf");
+      if (z && !z.disabled) { e.preventDefault(); z.click(); }
+    }
   });
 
   startseite();

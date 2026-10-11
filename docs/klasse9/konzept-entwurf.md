@@ -68,6 +68,23 @@ Spiele (Mix & Match, Memory) und Extras („Power“) wandern in die passenden K
 - **Unit-1-Restvokabular als Sätze** (fertig aus den Folien/Blättern): „Aus euren eigenen Texten“ (12 Sätze), AE/BE S. 20 (8 Sätze: cafeteria, candy, cell phone, eraser, fall, flashlight, garbage, vacation), „Trapped“ S. 21–23 (8 Sätze), Vokabel-Check Kernvokabular (16 Sätze).
 - **Unit-2-Einstieg:** Foto beschreiben mit Satzanfängen (This is me … · In this picture, I … · I felt … · I like this photo because …).
 
+## 2d. Navigation – Grundprinzip für beide Apps (Vorschlag, noch abzusegnen)
+
+- **Oben alle Teile anklickbar** (Sprungmarken): jeder Teil einer Station bzw. eines Abschnitts ist direkt erreichbar, z. B. „Teil A ① ② ③ ④ · Übersicht · Teil B ① ② ③ ④ · Ausnahmen · Übung“. Nichts ist gesperrt.
+- **Unten „◀ Zurück“ und „Weiter ▶“** auf jeder Karte (auch Tasten ← und →). Zurück am ersten Satz eines Teils springt ans Ende des vorigen Teils.
+- **Fortschritt pro Teil:** Jeder fertig durchlaufene Teil bekommt oben ein ✓ (bleibt gespeichert). Die Station ist geschafft, wenn alle Teile ein ✓ haben – egal in welcher Reihenfolge.
+- **Empfehlung statt Sperre:** Beim ersten Besuch ist Teil 1 markiert („Hier starten“); danach frei wählbar.
+- **Handy:** Sprungmarken als waagerecht wischbare Leiste; der aktuelle Teil rollt automatisch ins Bild.
+- Lob-Zwischenseite nur beim normalen Weiter, nicht beim Springen.
+
+## 2e. Material Unit 1 / „USA – here we come“ (Wochen 1–5) → Kategorien
+
+- **Speaking:** Redemittel Starting / Asking / Agreeing („I'd like to go to … because …“, „I'm not so sure about that.“, „OK, I agree — let's go to …!“), Dialog 1 „Quick agreement“, Dialog 2 „Disagree, then agree“, feste Dialoge „New York — Yes or No?“ und „Brooklyn or Bust?“ (Double Circle; E-Kurs freie Version), „Most interesting fact?“ (A/B), Voice-over-Sätze.
+- **Reading:** „New York City Facts“ (Skyscraper City, Welcome to Liberty, Central Park, A Bridge That Moves) – Leseband-Ablauf mit Key words/Key numbers in context; eigene Paralleltexte für die Aufgaben.
+- **Listening:** Format „Choose A or B“ (Interviews „On the Streets of New York City“) und „Check words first“ (Antwortwörter vorher klären).
+- **Vocabulary:** Kern- und Extra-Wörter „USA – here we come“ (immigrant … soccer), Wörter Woche 1–4 (canyon, fog, wildlife, geyser …), Board words (exciting, city/cities, agree).
+- **Spiele/Quiz:** USA-Quiz (Hauptstadt, 50 Sterne, Statue of Liberty …) und Homework-Check-Fragen (Flaggenfarben, Dollar, White House).
+
 ## 2c. Zeitplan
 
 - 11.10.: Konzept. Bau in den nächsten Tagen, damit die App **zum Ferienende** steht (erste Stunde: **20.10.**).

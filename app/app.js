@@ -932,6 +932,14 @@
 
   // Offline-Speicher (nur wenn die App über eine Webadresse läuft, nicht per Doppelklick)
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    navigator.serviceWorker.register("sw.js").catch(() => { /* ohne Offline-Speicher geht es trotzdem */ });
+    // Neue Version veröffentlicht? Dann sofort holen und einmal neu laden (nur wenn schon eine alte Version lief).
+    const hatteAlteVersion = !!navigator.serviceWorker.controller;
+    let neuGeladen = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (hatteAlteVersion && !neuGeladen) { neuGeladen = true; location.reload(); }
+    });
+    navigator.serviceWorker.register("sw.js", { updateViaCache: "none" })
+      .then((r) => r.update())
+      .catch(() => { /* ohne Offline-Speicher geht es trotzdem */ });
   }
 })();

@@ -696,7 +696,7 @@
       el("span", { class: "muster-label" }, tx(a.label)),
       el("p", { lang: "en" }, a.saetze.map((id) => {
         const s = D.saetze[id];
-        spans[id] = el("button", { class: "muster-satz" + ((teil.zeilen || []).includes(id) ? " eigene-zeile" : ""), title: E() ? "" : s.de, onclick: () => vorlesen([id]) }, ...lueckenSatz(s, "voll"), " ");
+        spans[id] = el("button", { class: "muster-satz" + ((teil.eigene_zeile || []).includes(id) ? " eigene-zeile" : ""), title: E() ? "" : s.de, onclick: () => vorlesen([id]) }, ...lueckenSatz(s, "voll"), " ");
         return spans[id];
       })),
       !E() && el("p", { class: "klein", lang: "de" }, a.saetze.map((id) => D.saetze[id].de).join(" "))));

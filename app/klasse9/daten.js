@@ -4124,6 +4124,10 @@ window.DATEN = {
        "art": "mustertext",
        "name": "Model text",
        "titel": "An email to Ryan from Texas",
+       "eigene_zeile": [
+        "wm_01",
+        "wm_12"
+       ],
        "abschnitte": [
         {
          "label": {

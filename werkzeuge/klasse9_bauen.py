@@ -154,7 +154,7 @@ KATEGORIEN = [
     {"nr": 5, "titel": "Writing", "unter": {"G": "Schreiben", "E": "Writing texts"}, "symbol": "✍️",
      "gruppen": [
          {"name": "Information about your school", "symbol": "🏫 ✉️", "schritte": [
-             {"art": "mustertext", "name": "Model text", "titel": "An email to Ryan from Texas", "zeilen": ["wm_01", "wm_12"],
+             {"art": "mustertext", "name": "Model text", "titel": "An email to Ryan from Texas", "eigene_zeile": ["wm_01", "wm_12"],
               "abschnitte": [
                   {"label": {"G": "Anfang (beginning)", "E": "Beginning"}, "saetze": ["wm_01", "wm_02", "wm_03"]},
                   {"label": {"G": "Mittelteil (middle)", "E": "Middle"}, "saetze": ["wm_04", "wm_05", "wm_06", "wm_07", "wm_08", "wm_09"]},

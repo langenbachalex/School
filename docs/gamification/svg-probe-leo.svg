@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" width="600" height="840">
+  <defs>
+    <linearGradient id="holo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7ef9ff"/><stop offset=".25" stop-color="#b48cff"/>
+      <stop offset=".5" stop-color="#ffd36e"/><stop offset=".75" stop-color="#ff7eb6"/><stop offset="1" stop-color="#7ef9ff"/>
+    </linearGradient>
+    <radialGradient id="bg" cx=".5" cy=".42" r=".75">
+      <stop offset="0" stop-color="#2a3f8f"/><stop offset=".6" stop-color="#121a3d"/><stop offset="1" stop-color="#070a18"/>
+    </radialGradient>
+    <linearGradient id="mane" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffcf5a"/><stop offset="1" stop-color="#c46a12"/>
+    </linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe2a3"/><stop offset="1" stop-color="#e2a24f"/>
+    </linearGradient>
+    <clipPath id="innen"><rect x="14" y="14" width="272" height="392" rx="14"/></clipPath>
+  </defs>
+  <!-- Rahmen -->
+  <rect width="300" height="420" rx="22" fill="url(#holo)"/>
+  <rect x="14" y="14" width="272" height="392" rx="14" fill="url(#bg)"/>
+  <g clip-path="url(#innen)">
+    <!-- Lichtstrahlen -->
+    <g opacity=".22" fill="url(#holo)">
+      <polygon points="150,170 -40,40 -40,90"/><polygon points="150,170 340,30 340,80"/>
+      <polygon points="150,170 -40,260 -40,320"/><polygon points="150,170 340,250 340,310"/>
+      <polygon points="150,170 120,-20 180,-20"/>
+    </g>
+    <!-- Geschwindigkeitslinien -->
+    <g stroke="#7ef9ff" stroke-linecap="round" opacity=".8">
+      <line x1="20" y1="120" x2="70" y2="120" stroke-width="3"/><line x1="10" y1="150" x2="60" y2="150" stroke-width="5"/>
+      <line x1="25" y1="185" x2="62" y2="185" stroke-width="3"/><line x1="12" y1="220" x2="72" y2="220" stroke-width="4"/>
+    </g>
+    <!-- Blitze -->
+    <g fill="#ffe36e" stroke="#fff6c2" stroke-width="1.5" stroke-linejoin="round">
+      <polygon points="236,72 222,104 236,104 224,136 252,96 238,96 250,72"/>
+      <polygon points="60,250 52,268 60,268 54,286 70,262 62,262 68,250"/>
+    </g>
+    <!-- Mähne -->
+    <g transform="translate(152 172)">
+      <polygon fill="url(#mane)" stroke="#8a4508" stroke-width="2" stroke-linejoin="round"
+        points="0,-92 20,-70 46,-82 50,-54 80,-52 66,-26 92,-10 68,8 84,34 56,40 58,70 30,62 18,90 0,72 -18,90 -30,62 -58,70 -56,40 -84,34 -68,8 -92,-10 -66,-26 -80,-52 -50,-54 -46,-82 -20,-70"/>
+      <!-- Ohren -->
+      <circle cx="-36" cy="-40" r="13" fill="#e2a24f" stroke="#8a4508" stroke-width="2"/>
+      <circle cx="36" cy="-40" r="13" fill="#e2a24f" stroke="#8a4508" stroke-width="2"/>
+      <!-- Gesicht -->
+      <path d="M-44,-20 Q-46,-48 0,-50 Q46,-48 44,-20 Q42,22 22,40 Q0,54 -22,40 Q-42,22 -44,-20 Z" fill="url(#face)" stroke="#8a4508" stroke-width="2"/>
+      <!-- Augen (entschlossen) -->
+      <path d="M-30,-14 L-10,-10 L-14,-2 Q-26,-2 -30,-14 Z" fill="#fff"/><circle cx="-17" cy="-7" r="3.6" fill="#1b2a52"/>
+      <path d="M30,-14 L10,-10 L14,-2 Q26,-2 30,-14 Z" fill="#fff"/><circle cx="17" cy="-7" r="3.6" fill="#1b2a52"/>
+      <path d="M-34,-20 L-8,-15" stroke="#6b3405" stroke-width="3" stroke-linecap="round"/>
+      <path d="M34,-20 L8,-15" stroke="#6b3405" stroke-width="3" stroke-linecap="round"/>
+      <!-- Nase und Maul -->
+      <path d="M-11,8 L11,8 L0,20 Z" fill="#5a2a0a"/>
+      <path d="M0,20 L0,28 M0,28 Q-10,36 -18,30 M0,28 Q10,36 18,30" stroke="#5a2a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- Maske des Superhelden -->
+      <path d="M-46,-24 Q0,-34 46,-24 L40,-4 Q22,-12 0,-6 Q-22,-12 -40,-4 Z" fill="#b3122e" opacity=".9"/>
+      <path d="M-30,-14 L-10,-10 L-14,-2 Q-26,-2 -30,-14 Z" fill="#fff"/><circle cx="-17" cy="-7" r="3.6" fill="#1b2a52"/>
+      <path d="M30,-14 L10,-10 L14,-2 Q26,-2 30,-14 Z" fill="#fff"/><circle cx="17" cy="-7" r="3.6" fill="#1b2a52"/>
+    </g>
+    <!-- Namensfeld -->
+    <rect x="30" y="300" width="240" height="84" rx="12" fill="#0b1030" stroke="url(#holo)" stroke-width="2"/>
+    <text x="150" y="332" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="22" fill="#fff">LEO THE LION</text>
+    <text x="150" y="358" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#7ef9ff" letter-spacing="2">SUPER SPEED</text>
+    <text x="150" y="376" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#c7cff5">He runs faster than a car.</text>
+  </g>
+</svg>

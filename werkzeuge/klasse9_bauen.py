@@ -230,7 +230,12 @@ KATEGORIEN = [
              {"art": "lr", "name": "Sentences", "saetze": [f"ba_{i:02d}" for i in range(9, 18)]},
              {"art": "beae_quiz", "name": "British or American?", "paare": [f"ba_{i:02d}" for i in range(9, 18)]}]},
      ]},
-    {"nr": 8, "titel": "New", "unter": {"G": "Neu diese Woche", "E": "New this week"}, "symbol": "✨", "farbe": "neu", "bald": True},
+    {"nr": 8, "titel": "New", "unter": {"G": "Neu diese Woche", "E": "New this week"}, "symbol": "✨", "farbe": "neu",
+     # Woche für Woche: hier die neuen Inhalte eintragen (Vokabeln über ihre IDs aus vokabeln.tsv)
+     "gruppen": [
+         {"name": "Unit 2 · Start", "symbol": "🦁 📸", "vokabeln": [f"u2_{i:03d}" for i in range(1, 6)]},
+         {"name": "Unit 2 · Theme 1", "symbol": "🏫 🔐", "vokabeln": [f"u2_{i:03d}" for i in range(6, 23)]},
+     ]},
     {"nr": 9, "titel": "Hall of Fame", "unter": {"G": "Aus euren Texten", "E": "From your texts"}, "symbol": "🏆",
      "gruppen": [
          {"name": "Strong moments", "symbol": "🌟 ✍️", "schritte": [
@@ -347,7 +352,9 @@ def main():
             lob.setdefault(art, []).append({"text": lob_alle[i], "audio": audio(f"audio/lob/{i}.mp3")})
     for k in KATEGORIEN:  # Satz-IDs prüfen
         for g in k.get("gruppen", []):
-            for s in g["schritte"]:
+            for vid in g.get("vokabeln", []):
+                assert any(v["id"] == vid for v in vokabeln), vid
+            for s in g.get("schritte", []):
                 for sid in s.get("saetze", []) + s.get("text", []) + s.get("paare", []) + [x[0] for x in s.get("zeilen", [])] + [a["satz"] for a in s.get("aufgaben", [])]:
                     assert sid in saetze, sid
     daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren}

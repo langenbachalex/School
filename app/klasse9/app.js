@@ -225,18 +225,24 @@
   function neueLage(werte) { lage = Object.assign({ teil: 0, pos: 0 }, werte); return lage; }
   function teilZuruecksetzen() { lage.reihe = lage.vq = null; }
 
+  // Vokabel-Abschnitt: Wörter, Sätze in 3 Stufen, Find the word, Abfrage in beide Richtungen
+  function vokSchritte(vok) {
+    const schritte = [{ art: "vok_lernen", name: "Words" },
+      { art: "lr", name: "Sentences", saetze: vok.map((v) => v.satz) }];
+    if (vok.some((v) => v.def)) schritte.push({ art: "vok_def", name: "Find the word" });
+    schritte.push({ art: "vok_abfrage", name: "EN → DE", richtung: "en_de" }, { art: "vok_abfrage", name: "DE → EN", richtung: "de_en" });
+    return schritte;
+  }
   function starteGruppe(k, i) {
     const g = k.gruppen[i];
-    neueLage({ nr: k.nr, gruppe: g.name, titel: g.name, teile: teileVon(g.schritte), zurueckZu: () => zeigeGruppen(k) });
+    const vok = g.vokabeln ? g.vokabeln.map(vokabel) : null; // z. B. New: Wörter der Woche
+    neueLage({ nr: k.nr, gruppe: g.name, titel: g.name, vok, teile: teileVon(vok ? vokSchritte(vok) : g.schritte), zurueckZu: () => zeigeGruppen(k) });
     zeigeTeil();
   }
   function starteUnitGruppe(k, unit, i) {
     const g = D.units[unit][i];
     const vok = g.vokabeln.map(vokabel);
-    const schritte = [{ art: "vok_lernen", name: "Words" },
-      { art: "lr", name: "Sentences", saetze: vok.map((v) => v.satz) }];
-    if (vok.some((v) => v.def)) schritte.push({ art: "vok_def", name: "Find the word" });
-    schritte.push({ art: "vok_abfrage", name: "EN → DE", richtung: "en_de" }, { art: "vok_abfrage", name: "DE → EN", richtung: "de_en" });
+    const schritte = vokSchritte(vok);
     neueLage({ nr: k.nr, gruppe: `u${unit}:${g.name}`, titel: `Unit ${unit} · ${g.name}`, vok, teile: teileVon(schritte),
       zurueckZu: () => zeigeUnits(k) });
     zeigeTeil();

@@ -53,6 +53,15 @@ Folien „Focus on Language“ Stunde 1–6, Arbeitsblatt „Vokabeln / If-Claus
 | Language | Task 15 Gerundien + Task 16 Präpositionen (Focus on Language S. 41) | 11 / 14 P. | Station 3: Listen and Repeat, Lücken, eigene Sätze |
 | Writing | Task 9 „Information about your school“ (S. 39 Nr. 3 + S. 48) | 12 P. mit Redemittelbox / 15 P. offen | Station 7: Musterlösung, Redemittel, Checkliste |
 
+## 2b. Erkenntnisse aus „GLN 1 – Starke Momente“, Rückgabe-Blättern und Vokabel-Check (Woche 9)
+
+- **Listen and Repeat in 3 Stufen** (wie in den Folien Klasse 9): Stufe 1 Deutsch → Englisch mit sichtbarer Lösung · Stufe 2 Lücke bei der Zielvokabel · Stufe 3 nur Deutsch, ganzer Satz. (Klasse 6 hat 4 Stufen; für Klasse 9 gilt dieses 3-Stufen-Schema.)
+- **Leseverstehen wie im Leseband:** vorlesen (Audio), im Chor / Listen and Repeat, danach Verständnisfragen.
+- **Aufgaben auf Englisch lesen und verstehen:** Formate immer wieder üben (ankreuzen, richtig/falsch, Kurzantworten …), bevor sie im GLN drankommen. Im G-Kurs wurde in GLN 1 ein Reading-Format nicht verstanden → eigener Trainingsteil „Task words“ (siehe Fragen).
+- **Writing** (Klassenschnitt GLN 1: 7,5 von 15 Punkten): Bewertungskriterien A–F (15 Rohpunkte) als Selbstcheck; „starke Wörter“ statt good/nice (amazing, awesome, fantastic, unbelievable, exciting, incredible, delicious, shocked, weird, scary, boring, huge, tiny); Tipp „I“ immer groß; Muster für gute Sätze („I would recommend going to …“, „It feels like being in a historical movie.“).
+- **Unit-1-Restvokabular als Sätze** (fertig aus den Folien/Blättern): „Aus euren eigenen Texten“ (12 Sätze), AE/BE S. 20 (8 Sätze: cafeteria, candy, cell phone, eraser, fall, flashlight, garbage, vacation), „Trapped“ S. 21–23 (8 Sätze), Vokabel-Check Kernvokabular (16 Sätze).
+- **Unit-2-Einstieg:** Foto beschreiben mit Satzanfängen (This is me … · In this picture, I … · I felt … · I like this photo because …).
+
 ## 3. Vokabeln – Bestand
 
 | Bereich | Abschnitte | Seiten |

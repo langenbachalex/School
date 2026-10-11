@@ -33,7 +33,7 @@ Folien „Focus on Language“ Stunde 1–6, Arbeitsblatt „Vokabeln / If-Claus
 |---|---|---|
 | **1 Reading** (G: Leseverstehen) – Schwerpunkt | **2 Vocabulary** – Unit 1 / 2 / 3 | **3 Language** |
 | **4 Listening** | **5 Writing** | **6 Speaking** (Dialoge) |
-| **7 BE vs AE** | **8 New** (eigene Farbe) | **9 Klassen-Kategorie** (Name offen: z. B. „Your Lines“, „Class Corner“, „From Your Texts“) |
+| **7 BE vs AE** | **8 New** (eigene Farbe) | **9 Hall of Fame** (Name festgelegt 11.10.) |
 
 | # | Kategorie | Inhalt | Material |
 |---|---|---|---|
@@ -45,7 +45,7 @@ Folien „Focus on Language“ Stunde 1–6, Arbeitsblatt „Vokabeln / If-Claus
 | 6 | **Speaking** | **Dialogpraxis:** feste Dialoge mit Rolle A und B (z. B. „Brooklyn or Bust?“). Ablauf: Dialog hören (A = Jeremy B., B = Jessica) → Listen and Repeat → **eine Rolle übernehmen**: die App spricht die andere Rolle, du sprichst deine Zeilen in die Pause. E: freie Version mit Wortliste („Make your own dialogue“) | Folien Week 5, Dialog-Druckblatt |
 | 7 | **BE vs AE** | Ganze Sätze gegenübergestellt: britisch (Mr. Alex) ↔ amerikanisch (Jeremy B./Jessica) | S. 20, Vokabel-Check, Vokabelanhang |
 | 8 | **New** | Neue Inhalte der aktuellen Woche (eigene Farbe) | Folien Woche für Woche |
-| 9 | **Klassen-Kategorie** | Aus euren Texten: gelungene Sätze („I felt so proud when we won!“), häufige Fehler ✗/✓ (he don't → he doesn't; I like she → I like her), Vocabulary Boost (excited, relieved, proud, grateful, relaxed), Starke Momente, Unit-1-Restsätze (eigene Texte, Trapped) | Class Feedback, Starke Momente, Rückgabe-Blätter |
+| 9 | **Hall of Fame** | Aus euren Texten: gelungene Sätze („I felt so proud when we won!“), häufige Fehler ✗/✓ (he don't → he doesn't; I like she → I like her), Vocabulary Boost (excited, relieved, proud, grateful, relaxed), Starke Momente, Unit-1-Restsätze (eigene Texte, Trapped) | Class Feedback, Starke Momente, Rückgabe-Blätter |
 
 Spiele (Mix & Match, Memory) und Extras („Power“) wandern in die passenden Kategorien (Language, Vocabulary), damit es bei 9 Kacheln bleibt.
 

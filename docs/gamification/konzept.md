@@ -1,6 +1,6 @@
 # Gamification – Konzept zum Absegnen (Stufe A)
 
-Stand: 12.10.2026. **[ENTWURF – noch nichts gebaut]**
+Stand: 12.10.2026. **Abgesegnet.** Klasse 6 gebaut (Bilder: Gemini, Stil D; Audio: Mr. Alex). Klasse 9 folgt.
 Grundsatz: kein gegenseitiger Wettbewerb, keine Bestenliste. Jeder sammelt für sich. Alles bleibt nur auf dem Gerät (kein Konto, keine Namen).
 
 ## 1. Für beide Apps

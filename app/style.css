@@ -219,3 +219,63 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
 @media (prefers-reduced-motion: reduce) {
   .jetztdu.laeuft .balken { animation: none; transform: scaleX(1); }
 }
+
+/* Belohnungen: Statusleiste, Sammlung, Feier */
+.statusleiste { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 8px; padding: 10px 14px;
+  border-radius: 16px; background: var(--karte); border: 2px solid var(--linie); font-weight: 700; }
+.statusleiste .knopf { margin-left: auto; min-height: 44px; }
+.statusleiste.gold, .titel-karte.gold { border-color: #d4a017; box-shadow: 0 0 0 3px #f5d76e; }
+.status-titel { font-family: var(--display); font-size: 1.15rem; }
+.fortschritt { height: 14px; border-radius: 999px; background: var(--bg); overflow: hidden; border: 1px solid var(--linie); }
+.fortschritt span { display: block; height: 100%; background: linear-gradient(90deg, var(--gelb), var(--gruen)); }
+.wochenleiste { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; list-style: none; margin: 0; padding: 0; text-align: center; }
+.wochenleiste li { border: 2px solid var(--linie); border-radius: 12px; padding: 8px 0; display: grid; gap: 2px; }
+.wochenleiste li.ok { border-color: var(--gruen); background: var(--gruen-hell); }
+.wochenleiste li.frei { opacity: .5; border-style: dashed; }
+.wochenleiste b { font-size: 1.3rem; }
+.heldenraster { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); gap: 10px; }
+.held-knopf { padding: 0; border: 0; background: none; cursor: pointer; text-align: left; color: inherit; font: inherit; }
+.heldenkarte { margin: 0; display: grid; gap: 4px; }
+.heldenkarte img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; display: block; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.heldenkarte figcaption { display: grid; font-size: .9rem; }
+.heldenkarte figcaption span { color: var(--leise); }
+.heldenkarte.gross { max-width: 300px; margin-inline: auto; }
+.heldenkarte.gross figcaption { text-align: center; font-size: 1.05rem; }
+.held-zu { aspect-ratio: 3 / 4; border-radius: 12px; border: 2px dashed var(--linie); display: grid; place-content: center; text-align: center; color: var(--leise); }
+.held-zu span { font: 600 1.8rem var(--display); }
+.held-zu small { font-size: .7rem; }
+.london-rahmen { width: 100%; overflow: hidden; border-radius: 12px; }
+.london { width: 100%; height: auto; display: block; }
+.l-land { fill: #e8efe0; }
+.l-park { fill: #b9dca2; }
+.l-fluss { fill: none; stroke: #6aa7e8; stroke-width: 9; stroke-linecap: round; }
+.l-name { font: italic 9px var(--body); fill: #2f6fb0; }
+.l-ort circle { fill: #c9ced8; stroke: #fff; stroke-width: 2; }
+.l-ort text { font-size: 11px; fill: #6b7385; font-weight: 700; }
+.l-ort.offen { cursor: pointer; }
+.l-ort.offen circle { fill: #fff; stroke: #e2384d; }
+.l-ort.offen text { font-size: 13px; }
+.l-ort.offen:focus { outline: none; }
+.l-ort.offen:focus circle, .l-ort.offen:hover circle { stroke: var(--blau); stroke-width: 3; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .l-land { fill: #23304a; } :root:not([data-theme="light"]) .l-park { fill: #2f5a3a; } }
+.fakt { border-radius: 14px; background: var(--bg); padding: 12px 14px; display: grid; gap: 8px; justify-items: start; }
+.abzeichen { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: 8px; }
+.abzeichen li { display: flex; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 12px; border: 2px solid var(--linie); opacity: .45; filter: grayscale(1); }
+.abzeichen li.ok { opacity: 1; filter: none; border-color: var(--gruen); background: var(--gruen-hell); }
+.abzeichen li span:first-child { font-size: 1.5rem; }
+.toasts { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); display: grid; gap: 8px; z-index: 20; pointer-events: none; width: max-content; max-width: calc(100vw - 32px); }
+.toast { background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 999px; font-weight: 700; text-align: center; transition: opacity .5s, transform .5s; }
+.toast.weg { opacity: 0; transform: translateY(10px); }
+.feier { border: 0; border-radius: 20px; padding: 24px; max-width: min(92vw, 420px); background: var(--karte); color: var(--text); text-align: center; overflow: hidden; }
+.feier::backdrop { background: rgba(10, 15, 30, .65); }
+.feier > * { position: relative; }
+.feier .knopfreihe { justify-content: center; margin-top: 14px; }
+.feier-symbol { font-size: 4rem; line-height: 1.1; }
+.feier h2 { margin: 8px 0; }
+.feier-klein { font-weight: 700; margin-bottom: 10px; }
+.steckbrief { margin-top: 12px; font-size: 1.05rem; line-height: 1.45; }
+.konfetti { position: absolute !important; inset: 0; pointer-events: none; overflow: hidden; }
+.konfetti span { position: absolute; top: -12px; width: 8px; height: 14px; border-radius: 2px; opacity: .9; animation: konfetti 2.4s ease-in forwards; }
+@keyframes konfetti { to { transform: translateY(520px) rotate(540deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .konfetti { display: none; } }
+@media (max-width: 640px) { .statusleiste .knopf { margin-left: 0; width: 100%; } }

@@ -1,7 +1,7 @@
 """Baut app/daten.js aus inhalte/*.tsv (damit die App auch per Doppelklick ohne Server läuft).
 Aufruf: python3 werkzeuge/daten_bauen.py
 """
-import csv, json, os, re
+import csv, json, os, re, sys
 
 import hoeren
 
@@ -163,6 +163,34 @@ def lesen(name):
         return list(csv.DictReader(f, delimiter="\t"))
 
 
+# Belohnungen (Stufe A, docs/gamification/konzept.md): Titel nach Punkten, London-Orte, Superhelden
+TITEL = [(0, "Rookie"), (100, "Tourist"), (300, "Explorer"), (700, "Londoner"), (1200, "Royal Guard"), (2000, "Legend")]
+SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
+    "titel_tourist": "Congratulations! You are now a Tourist!",
+    "titel_explorer": "Congratulations! You are now an Explorer!",
+    "titel_londoner": "Congratulations! You are now a real Londoner!",
+    "titel_royal_guard": "Congratulations! You are now a Royal Guard!",
+    "titel_legend": "Wow! You are a Legend now! I'm so proud of you!",
+    "feuer": "You're on fire! Three days in a row!",
+    "woche": "Perfect week! You practised every school day. Here is your new superhero!",
+    "monat": "Four perfect weeks in a row! You are a true champion!",
+    "team": "You collected all ten superheroes. Your team is complete. You are a legend!",
+}
+
+
+def spieldaten():
+    a = lambda pfad: pfad if os.path.exists(os.path.join(BASIS, "app", pfad)) else None
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import frei_saarland
+    return {
+        "titel": [{"ab": ab, "name": n, "audio": a(f"audio/spiel/titel_{n.lower().replace(' ', '_')}.mp3")} for ab, n in TITEL],
+        "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
+        "orte": [dict(z, x=int(z["x"]), y=int(z["y"]), audio=a(f"audio/london/{z['id']}.mp3")) for z in lesen("london.tsv")],
+        "helden": [dict(z, bild=f"bilder/helden/{z['bild']}.jpg", audio=a(f"audio/helden/{z['id']}.mp3")) for z in lesen("helden.tsv")],
+        "frei": frei_saarland.als_daten(),
+    }
+
+
 def main():
     symbole = {z["wort"]: z["symbol"] for z in lesen("symbole.tsv")}
     saetze = {}
@@ -266,7 +294,8 @@ def main():
             lob.setdefault(z["art"], []).append({"text": z["text"], "audio": f"audio/lob/{z['id']}.mp3"})
     STATIONEN.sort(key=lambda x: x["nr"])
     daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob,
-             "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")}}
+             "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")},
+             "spiel": spieldaten()}
     ziel = os.path.join(BASIS, "app", "daten.js")
     with open(ziel, "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/daten_bauen.py – bitte nicht von Hand ändern.\n")

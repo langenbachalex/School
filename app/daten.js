@@ -4062,5 +4062,443 @@ window.DATEN = {
   "bike": "🚲",
   "train": "🚆",
   "walk": "🚶"
+ },
+ "spiel": {
+  "titel": [
+   {
+    "ab": 0,
+    "name": "Rookie",
+    "audio": null
+   },
+   {
+    "ab": 100,
+    "name": "Tourist",
+    "audio": "audio/spiel/titel_tourist.mp3"
+   },
+   {
+    "ab": 300,
+    "name": "Explorer",
+    "audio": "audio/spiel/titel_explorer.mp3"
+   },
+   {
+    "ab": 700,
+    "name": "Londoner",
+    "audio": "audio/spiel/titel_londoner.mp3"
+   },
+   {
+    "ab": 1200,
+    "name": "Royal Guard",
+    "audio": "audio/spiel/titel_royal_guard.mp3"
+   },
+   {
+    "ab": 2000,
+    "name": "Legend",
+    "audio": "audio/spiel/titel_legend.mp3"
+   }
+  ],
+  "texte": {
+   "titel_tourist": {
+    "text": "Congratulations! You are now a Tourist!",
+    "audio": "audio/spiel/titel_tourist.mp3"
+   },
+   "titel_explorer": {
+    "text": "Congratulations! You are now an Explorer!",
+    "audio": "audio/spiel/titel_explorer.mp3"
+   },
+   "titel_londoner": {
+    "text": "Congratulations! You are now a real Londoner!",
+    "audio": "audio/spiel/titel_londoner.mp3"
+   },
+   "titel_royal_guard": {
+    "text": "Congratulations! You are now a Royal Guard!",
+    "audio": "audio/spiel/titel_royal_guard.mp3"
+   },
+   "titel_legend": {
+    "text": "Wow! You are a Legend now! I'm so proud of you!",
+    "audio": "audio/spiel/titel_legend.mp3"
+   },
+   "feuer": {
+    "text": "You're on fire! Three days in a row!",
+    "audio": "audio/spiel/feuer.mp3"
+   },
+   "woche": {
+    "text": "Perfect week! You practised every school day. Here is your new superhero!",
+    "audio": "audio/spiel/woche.mp3"
+   },
+   "monat": {
+    "text": "Four perfect weeks in a row! You are a true champion!",
+    "audio": "audio/spiel/monat.mp3"
+   },
+   "team": {
+    "text": "You collected all ten superheroes. Your team is complete. You are a legend!",
+    "audio": "audio/spiel/team.mp3"
+   }
+  },
+  "orte": [
+   {
+    "id": "big_ben",
+    "name": "Big Ben",
+    "symbol": "🔔",
+    "x": 200,
+    "y": 143,
+    "fakt": "Big Ben is the name of the bell, not the tower!",
+    "audio": "audio/london/big_ben.mp3"
+   },
+   {
+    "id": "london_eye",
+    "name": "London Eye",
+    "symbol": "🎡",
+    "x": 214,
+    "y": 128,
+    "fakt": "The London Eye is 135 metres tall. One ride takes 30 minutes.",
+    "audio": "audio/london/london_eye.mp3"
+   },
+   {
+    "id": "tower_bridge",
+    "name": "Tower Bridge",
+    "symbol": "🌉",
+    "x": 302,
+    "y": 128,
+    "fakt": "Tower Bridge can open in the middle to let big ships through.",
+    "audio": "audio/london/tower_bridge.mp3"
+   },
+   {
+    "id": "buckingham",
+    "name": "Buckingham Palace",
+    "symbol": "👑",
+    "x": 163,
+    "y": 136,
+    "fakt": "Buckingham Palace has 775 rooms – and 78 bathrooms!",
+    "audio": "audio/london/buckingham.mp3"
+   },
+   {
+    "id": "tower",
+    "name": "Tower of London",
+    "symbol": "🏰",
+    "x": 290,
+    "y": 112,
+    "fakt": "Ravens live at the Tower of London. People say the kingdom will fall if they ever leave.",
+    "audio": "audio/london/tower.mp3"
+   },
+   {
+    "id": "hyde_park",
+    "name": "Hyde Park",
+    "symbol": "🌳",
+    "x": 128,
+    "y": 112,
+    "fakt": "Hyde Park is bigger than 200 football pitches.",
+    "audio": "audio/london/hyde_park.mp3"
+   },
+   {
+    "id": "trafalgar",
+    "name": "Trafalgar Square",
+    "symbol": "🦁",
+    "x": 192,
+    "y": 114,
+    "fakt": "Four big metal lions sit in Trafalgar Square.",
+    "audio": "audio/london/trafalgar.mp3"
+   },
+   {
+    "id": "piccadilly",
+    "name": "Piccadilly Circus",
+    "symbol": "📺",
+    "x": 172,
+    "y": 104,
+    "fakt": "Piccadilly Circus has huge, bright screens. They are on day and night.",
+    "audio": "audio/london/piccadilly.mp3"
+   },
+   {
+    "id": "st_pauls",
+    "name": "St Paul's Cathedral",
+    "symbol": "⛪",
+    "x": 246,
+    "y": 100,
+    "fakt": "In St Paul's Cathedral, you can whisper on one side of a gallery, and people on the other side can hear you.",
+    "audio": "audio/london/st_pauls.mp3"
+   },
+   {
+    "id": "westminster",
+    "name": "Westminster Abbey",
+    "symbol": "✨",
+    "x": 186,
+    "y": 152,
+    "fakt": "Kings and queens get their crowns in Westminster Abbey.",
+    "audio": "audio/london/westminster.mp3"
+   },
+   {
+    "id": "camden",
+    "name": "Camden Market",
+    "symbol": "🛍️",
+    "x": 180,
+    "y": 42,
+    "fakt": "Camden Market has more than one thousand shops and food stalls.",
+    "audio": "audio/london/camden.mp3"
+   },
+   {
+    "id": "british_museum",
+    "name": "British Museum",
+    "symbol": "🏛️",
+    "x": 203,
+    "y": 80,
+    "fakt": "The British Museum has about eight million objects – and it's free!",
+    "audio": "audio/london/british_museum.mp3"
+   },
+   {
+    "id": "natural_history",
+    "name": "Natural History Museum",
+    "symbol": "🐋",
+    "x": 112,
+    "y": 142,
+    "fakt": "In the Natural History Museum, you can see the skeleton of a giant blue whale.",
+    "audio": "audio/london/natural_history.mp3"
+   },
+   {
+    "id": "shard",
+    "name": "The Shard",
+    "symbol": "🔺",
+    "x": 276,
+    "y": 146,
+    "fakt": "The Shard is the tallest building in the UK. It is 310 metres tall.",
+    "audio": "audio/london/shard.mp3"
+   },
+   {
+    "id": "wembley",
+    "name": "Wembley Stadium",
+    "symbol": "⚽",
+    "x": 62,
+    "y": 30,
+    "fakt": "Wembley Stadium has 90,000 seats. Its big arch is 133 metres tall.",
+    "audio": "audio/london/wembley.mp3"
+   },
+   {
+    "id": "tube",
+    "name": "The Tube",
+    "symbol": "🚇",
+    "x": 228,
+    "y": 62,
+    "fakt": "The London Underground is the oldest underground railway in the world. It opened in 1863.",
+    "audio": "audio/london/tube.mp3"
+   },
+   {
+    "id": "bus",
+    "name": "Double-decker bus",
+    "symbol": "🚌",
+    "x": 150,
+    "y": 180,
+    "fakt": "London's red buses have two floors. Sit upstairs at the front for the best view!",
+    "audio": "audio/london/bus.mp3"
+   },
+   {
+    "id": "covent_garden",
+    "name": "Covent Garden",
+    "symbol": "🎭",
+    "x": 208,
+    "y": 102,
+    "fakt": "In Covent Garden, street artists perform for people every day.",
+    "audio": "audio/london/covent_garden.mp3"
+   },
+   {
+    "id": "notting_hill",
+    "name": "Notting Hill",
+    "symbol": "🎨",
+    "x": 90,
+    "y": 92,
+    "fakt": "Notting Hill has colourful houses and a big street carnival every August.",
+    "audio": "audio/london/notting_hill.mp3"
+   },
+   {
+    "id": "greenwich",
+    "name": "Greenwich",
+    "symbol": "🧭",
+    "x": 362,
+    "y": 160,
+    "fakt": "In Greenwich, you can stand with one foot in the east and one foot in the west.",
+    "audio": "audio/london/greenwich.mp3"
+   },
+   {
+    "id": "thames",
+    "name": "River Thames",
+    "symbol": "🌊",
+    "x": 330,
+    "y": 132,
+    "fakt": "The River Thames is 346 kilometres long. It flows right through London.",
+    "audio": "audio/london/thames.mp3"
+   },
+   {
+    "id": "kew",
+    "name": "Kew Gardens",
+    "symbol": "🌺",
+    "x": 22,
+    "y": 172,
+    "fakt": "Kew Gardens has about fifty thousand different plants.",
+    "audio": "audio/london/kew.mp3"
+   },
+   {
+    "id": "borough",
+    "name": "Borough Market",
+    "symbol": "🧀",
+    "x": 262,
+    "y": 140,
+    "fakt": "Borough Market is one of the oldest food markets in London – about one thousand years old.",
+    "audio": "audio/london/borough.mp3"
+   },
+   {
+    "id": "zoo",
+    "name": "London Zoo",
+    "symbol": "🦒",
+    "x": 156,
+    "y": 52,
+    "fakt": "London Zoo is the oldest scientific zoo in the world. It opened in 1828.",
+    "audio": "audio/london/zoo.mp3"
+   },
+   {
+    "id": "globe",
+    "name": "Shakespeare's Globe",
+    "symbol": "🎟️",
+    "x": 246,
+    "y": 134,
+    "fakt": "Shakespeare's Globe is a copy of his theatre from 1599. Many people stand to watch the plays.",
+    "audio": "audio/london/globe.mp3"
+   }
+  ],
+  "helden": [
+   {
+    "id": "leo",
+    "name": "Leo the Lion",
+    "kraft": "Super speed",
+    "bild": "bilder/helden/01-leo-lion.jpg",
+    "steckbrief": "Leo is the fastest hero in the world. He can run faster than a car. Every morning he runs around London before breakfast.",
+    "audio": "audio/helden/leo.mp3"
+   },
+   {
+    "id": "camilla",
+    "name": "Camilla the Camel",
+    "kraft": "Super strength",
+    "bild": "bilder/helden/02-camilla-camel.jpg",
+    "steckbrief": "Camilla is super strong. She can carry a car on her back. She never gets thirsty, even in the desert.",
+    "audio": "audio/helden/camilla.mp3"
+   },
+   {
+    "id": "ellie",
+    "name": "Ellie the Elephant",
+    "kraft": "Super memory",
+    "bild": "bilder/helden/03-ellie-elephant.jpg",
+    "steckbrief": "Ellie never forgets a word. She can remember every page of every book. She helps her friends with their homework.",
+    "audio": "audio/helden/ellie.mp3"
+   },
+   {
+    "id": "olivia",
+    "name": "Olivia the Owl",
+    "kraft": "Night vision",
+    "bild": "bilder/helden/04-olivia-owl.jpg",
+    "steckbrief": "Olivia can see in the dark. She watches the city at night and finds lost things. She sleeps during the day.",
+    "audio": "audio/helden/olivia.mp3"
+   },
+   {
+    "id": "kenji",
+    "name": "Kenji the Kangaroo",
+    "kraft": "Super jump",
+    "bild": "bilder/helden/05-kenji-kangaroo.jpg",
+    "steckbrief": "Kenji can jump over houses. He often jumps from roof to roof. He goes to school in one big jump.",
+    "audio": "audio/helden/kenji.mp3"
+   },
+   {
+    "id": "zara",
+    "name": "Zara the Zebra",
+    "kraft": "Invisibility",
+    "bild": "bilder/helden/06-zara-zebra.jpg",
+    "steckbrief": "Zara can become invisible. Nobody sees her when she wants to hide. She loves surprises.",
+    "audio": "audio/helden/zara.mp3"
+   },
+   {
+    "id": "penny",
+    "name": "Penny the Penguin",
+    "kraft": "Ice powers",
+    "bild": "bilder/helden/07-penny-penguin.jpg",
+    "steckbrief": "Penny has ice powers. She can freeze water in one second. On hot days, she makes ice cream for everybody.",
+    "audio": "audio/helden/penny.mp3"
+   },
+   {
+    "id": "felix",
+    "name": "Felix the Falcon",
+    "kraft": "Super flight",
+    "bild": "bilder/helden/08-felix-falcon.jpg",
+    "steckbrief": "Felix can fly around the world in one day. He sees everything from the sky. He often visits his friends in different countries.",
+    "audio": "audio/helden/felix.mp3"
+   },
+   {
+    "id": "tessa",
+    "name": "Tessa the Turtle",
+    "kraft": "Unbreakable",
+    "bild": "bilder/helden/09-tessa-turtle.jpg",
+    "steckbrief": "Tessa is unbreakable. Nothing can hurt her shell. She is slow, but she always finishes what she starts.",
+    "audio": "audio/helden/tessa.mp3"
+   },
+   {
+    "id": "max",
+    "name": "Max the Monkey",
+    "kraft": "Genius inventor",
+    "bild": "bilder/helden/10-max-monkey.jpg",
+    "steckbrief": "Max is a genius inventor. He builds a new gadget every day. His best invention is a robot that does homework.",
+    "audio": "audio/helden/max.mp3"
+   }
+  ],
+  "frei": [
+   {
+    "von": "2026-10-05",
+    "bis": "2026-10-16",
+    "name": "Herbstferien"
+   },
+   {
+    "von": "2026-12-21",
+    "bis": "2027-01-03",
+    "name": "Weihnachtsferien"
+   },
+   {
+    "von": "2027-02-08",
+    "bis": "2027-02-12",
+    "name": "Winterferien (Fastnacht)"
+   },
+   {
+    "von": "2027-03-26",
+    "bis": "2027-03-26",
+    "name": "Karfreitag"
+   },
+   {
+    "von": "2027-03-29",
+    "bis": "2027-04-09",
+    "name": "Ostermontag und Osterferien"
+   },
+   {
+    "von": "2027-05-06",
+    "bis": "2027-05-07",
+    "name": "Christi Himmelfahrt und beweglicher Ferientag"
+   },
+   {
+    "von": "2027-05-17",
+    "bis": "2027-05-17",
+    "name": "Pfingstmontag"
+   },
+   {
+    "von": "2027-05-27",
+    "bis": "2027-05-28",
+    "name": "Fronleichnam und beweglicher Ferientag"
+   },
+   {
+    "von": "2027-06-28",
+    "bis": "2027-08-06",
+    "name": "Sommerferien"
+   },
+   {
+    "von": "2027-10-04",
+    "bis": "2027-10-15",
+    "name": "Herbstferien"
+   },
+   {
+    "von": "2027-12-20",
+    "bis": "2027-12-31",
+    "name": "Weihnachtsferien"
+   }
+  ]
  }
 };

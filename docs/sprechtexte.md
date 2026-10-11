@@ -275,6 +275,50 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `lob/geschafft_outstanding.mp3` | Alex Langenbach | That was outstanding – well done! |
 | `lob/voll_fullmarks.mp3` | Alex Langenbach | Full marks! Amazing! |
 | `lob/doch_seeyoucan.mp3` | Alex Langenbach | See? You can do it! |
+| `london/big_ben.mp3` | Alex Langenbach | Big Ben. Big Ben is the name of the bell, not the tower! |
+| `london/london_eye.mp3` | Alex Langenbach | London Eye. The London Eye is 135 metres tall. One ride takes 30 minutes. |
+| `london/tower_bridge.mp3` | Alex Langenbach | Tower Bridge. Tower Bridge can open in the middle to let big ships through. |
+| `london/buckingham.mp3` | Alex Langenbach | Buckingham Palace. Buckingham Palace has 775 rooms – and 78 bathrooms! |
+| `london/tower.mp3` | Alex Langenbach | Tower of London. Ravens live at the Tower of London. People say the kingdom will fall if they ever leave. |
+| `london/hyde_park.mp3` | Alex Langenbach | Hyde Park. Hyde Park is bigger than 200 football pitches. |
+| `london/trafalgar.mp3` | Alex Langenbach | Trafalgar Square. Four big metal lions sit in Trafalgar Square. |
+| `london/piccadilly.mp3` | Alex Langenbach | Piccadilly Circus. Piccadilly Circus has huge, bright screens. They are on day and night. |
+| `london/st_pauls.mp3` | Alex Langenbach | St Paul's Cathedral. In St Paul's Cathedral, you can whisper on one side of a gallery, and people on the other side can hear you. |
+| `london/westminster.mp3` | Alex Langenbach | Westminster Abbey. Kings and queens get their crowns in Westminster Abbey. |
+| `london/camden.mp3` | Alex Langenbach | Camden Market. Camden Market has more than one thousand shops and food stalls. |
+| `london/british_museum.mp3` | Alex Langenbach | British Museum. The British Museum has about eight million objects – and it's free! |
+| `london/natural_history.mp3` | Alex Langenbach | Natural History Museum. In the Natural History Museum, you can see the skeleton of a giant blue whale. |
+| `london/shard.mp3` | Alex Langenbach | The Shard. The Shard is the tallest building in the UK. It is 310 metres tall. |
+| `london/wembley.mp3` | Alex Langenbach | Wembley Stadium. Wembley Stadium has 90,000 seats. Its big arch is 133 metres tall. |
+| `london/tube.mp3` | Alex Langenbach | The Tube. The London Underground is the oldest underground railway in the world. It opened in 1863. |
+| `london/bus.mp3` | Alex Langenbach | Double-decker bus. London's red buses have two floors. Sit upstairs at the front for the best view! |
+| `london/covent_garden.mp3` | Alex Langenbach | Covent Garden. In Covent Garden, street artists perform for people every day. |
+| `london/notting_hill.mp3` | Alex Langenbach | Notting Hill. Notting Hill has colourful houses and a big street carnival every August. |
+| `london/greenwich.mp3` | Alex Langenbach | Greenwich. In Greenwich, you can stand with one foot in the east and one foot in the west. |
+| `london/thames.mp3` | Alex Langenbach | River Thames. The River Thames is 346 kilometres long. It flows right through London. |
+| `london/kew.mp3` | Alex Langenbach | Kew Gardens. Kew Gardens has about fifty thousand different plants. |
+| `london/borough.mp3` | Alex Langenbach | Borough Market. Borough Market is one of the oldest food markets in London – about one thousand years old. |
+| `london/zoo.mp3` | Alex Langenbach | London Zoo. London Zoo is the oldest scientific zoo in the world. It opened in 1828. |
+| `london/globe.mp3` | Alex Langenbach | Shakespeare's Globe. Shakespeare's Globe is a copy of his theatre from 1599. Many people stand to watch the plays. |
+| `helden/leo.mp3` | Alex Langenbach | Leo the Lion. Leo is the fastest hero in the world. He can run faster than a car. Every morning he runs around London before breakfast. |
+| `helden/camilla.mp3` | Alex Langenbach | Camilla the Camel. Camilla is super strong. She can carry a car on her back. She never gets thirsty, even in the desert. |
+| `helden/ellie.mp3` | Alex Langenbach | Ellie the Elephant. Ellie never forgets a word. She can remember every page of every book. She helps her friends with their homework. |
+| `helden/olivia.mp3` | Alex Langenbach | Olivia the Owl. Olivia can see in the dark. She watches the city at night and finds lost things. She sleeps during the day. |
+| `helden/kenji.mp3` | Alex Langenbach | Kenji the Kangaroo. Kenji can jump over houses. He often jumps from roof to roof. He goes to school in one big jump. |
+| `helden/zara.mp3` | Alex Langenbach | Zara the Zebra. Zara can become invisible. Nobody sees her when she wants to hide. She loves surprises. |
+| `helden/penny.mp3` | Alex Langenbach | Penny the Penguin. Penny has ice powers. She can freeze water in one second. On hot days, she makes ice cream for everybody. |
+| `helden/felix.mp3` | Alex Langenbach | Felix the Falcon. Felix can fly around the world in one day. He sees everything from the sky. He often visits his friends in different countries. |
+| `helden/tessa.mp3` | Alex Langenbach | Tessa the Turtle. Tessa is unbreakable. Nothing can hurt her shell. She is slow, but she always finishes what she starts. |
+| `helden/max.mp3` | Alex Langenbach | Max the Monkey. Max is a genius inventor. He builds a new gadget every day. His best invention is a robot that does homework. |
+| `spiel/titel_tourist.mp3` | Alex Langenbach | Congratulations! You are now a Tourist! |
+| `spiel/titel_explorer.mp3` | Alex Langenbach | Congratulations! You are now an Explorer! |
+| `spiel/titel_londoner.mp3` | Alex Langenbach | Congratulations! You are now a real Londoner! |
+| `spiel/titel_royal_guard.mp3` | Alex Langenbach | Congratulations! You are now a Royal Guard! |
+| `spiel/titel_legend.mp3` | Alex Langenbach | Wow! You are a Legend now! I'm so proud of you! |
+| `spiel/feuer.mp3` | Alex Langenbach | You're on fire! Three days in a row! |
+| `spiel/woche.mp3` | Alex Langenbach | Perfect week! You practised every school day. Here is your new superhero! |
+| `spiel/monat.mp3` | Alex Langenbach | Four perfect weeks in a row! You are a true champion! |
+| `spiel/team.mp3` | Alex Langenbach | You collected all ten superheroes. Your team is complete. You are a legend! |
 | `hoeren/01-mias-monday_text01.mp3` | Alice | Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train. |
 | `hoeren/01-mias-monday_text02.mp3` | Alice | School starts at eight a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at nine p.m. |
 | `hoeren/01-mias-monday_aussage01.mp3` | Alex Langenbach | Mia gets up at six forty-five a.m. |

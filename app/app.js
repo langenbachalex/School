@@ -126,7 +126,8 @@
     zeige(
       el("header", { class: "gruss" },
         el("h1", {}, "Dein Mr. Alex (6.3)"),
-        el("p", { class: "klein" }, "Hallo! Wähl eine Station. Wenn du fertig bist, bekommt sie ein Häkchen.")),
+        el("p", { class: "klein" }, "Hallo! Wähl eine Station. Wenn du fertig bist, bekommt sie ein Häkchen."),
+        statusleiste()),
       alleFertig && el("section", { class: "geschafft" },
         el("h2", {}, "Wahnsinn, du hast alles geschafft!"),
         el("p", {}, "Wenn etwas unklar ist, frag mich am Mittwoch – ich helfe dir gern. Dein Mr. Alex")),
@@ -269,7 +270,9 @@
   function naechstes() {
     const teil = lage.teile[lage.teil];
     if (lage.pos + 1 < laenge(teil)) { lage.pos++; return zeigeTeil(); }
+    const erstesMal = !istFertig(lage.teil);
     teilFertig(lage.teil);
+    belohne(erstesMal);
     if (alleTeileFertig()) return stationGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
     fastGeschafft();
@@ -344,7 +347,7 @@
     const st = station(lage.nr), g = st.gruppen[lage.gruppe];
     stand.gruppen = stand.gruppen || {};
     const liste = (stand.gruppen[st.nr] = stand.gruppen[st.nr] || []);
-    if (!liste.includes(g.name)) liste.push(g.name);
+    if (!liste.includes(g.name)) { liste.push(g.name); einheitBonus(); }
     const alle = st.gruppen.every((x) => liste.includes(x.name));
     if (alle && !stand.erledigt.includes(st.nr)) stand.erledigt.push(st.nr);
     speichern();
@@ -360,7 +363,7 @@
   function stationGeschafft() {
     if (lage.gruppe != null) return gruppeGeschafft();
     const st = station(lage.nr);
-    if (!stand.erledigt.includes(st.nr)) { stand.erledigt.push(st.nr); speichern(); }
+    if (!stand.erledigt.includes(st.nr)) { stand.erledigt.push(st.nr); speichern(); einheitBonus(); }
     lage = null;
     zeige(kopf(st), el("section", { class: "geschafft" },
       el("h2", {}, `Station ${st.nr} geschafft!`),
@@ -993,6 +996,242 @@
     fragen();
   }
 
+  /* ---------- Belohnungen (docs/gamification/konzept.md) ----------
+     Punkte nur für fertige Teile. Serien zählen Schultage (Mo–Fr ohne Ferien, Feiertage, freie Brückentage):
+     🔥 3 Schultage am Stück · ⭐ Perfect week = jeden Schultag der Woche geübt → neuer Superheld
+     👑 4 perfekte Wochen hintereinander (Ferienwochen halten an) · 🏖️ Wochenende = Bonus, keine Pflicht.
+     London: jeder 4. neu geschaffte Teil schaltet einen Ort frei. Alles nur auf diesem Gerät. */
+  const SP = D.spiel;
+  const PUNKTE = { teil: 10, wiederholung: 5, einheit: 50, feuer: 30, wochenende: 20, woche: 100, monat: 200 };
+  const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const heute = () => (window.__heute ? new Date(window.__heute + "T12:00:00") : new Date());
+  const plusTage = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const montag = (d) => plusTage(d, -((d.getDay() + 6) % 7));
+  const istFrei = (t) => SP.frei.some((f) => t >= f.von && t <= f.bis);
+  const istSchultag = (d) => d.getDay() >= 1 && d.getDay() <= 5 && !istFrei(iso(d));
+  const schultageDerWoche = (mo) => [0, 1, 2, 3, 4].map((i) => plusTage(mo, i)).filter(istSchultag);
+
+  function spielstand() {
+    if (!stand.spiel) { // Erstes Mal: was schon geschafft ist, zählt mit
+      const n = Object.keys(stand.teile || {}).length;
+      const einheiten = stand.erledigt.length + Object.values(stand.gruppen || {}).reduce((a, l) => a + l.length, 0);
+      stand.spiel = { punkte: n * PUNKTE.teil + einheiten * PUNKTE.einheit, tage: {}, wochen: [], feuer: [], wochenende: [], helden: [], abzeichen: [], titel: 0 };
+      stand.spiel.titel = titelIndex(stand.spiel.punkte);
+      speichern();
+    }
+    return stand.spiel;
+  }
+  const titelIndex = (p) => SP.titel.reduce((i, t, k) => (p >= t.ab ? k : i), 0);
+  const neueTeile = () => Object.keys(stand.teile || {}).length;
+  const orteBei = (n) => (n ? Math.min(SP.orte.length, Math.floor((n - 1) / 4) + 1) : 0);
+  const orteFrei = () => orteBei(neueTeile());
+
+  // Serie: Schultage am Stück bis heute (Ferien und Feiertage werden übersprungen, nicht gebrochen)
+  function serie() {
+    const sp = spielstand();
+    let d = heute(), n = 0;
+    if (!sp.tage[iso(d)]) d = plusTage(d, -1); // heute noch nicht geübt: Serie von gestern zählt noch
+    for (let i = 0; i < 400; i++, d = plusTage(d, -1)) {
+      if (!istSchultag(d)) continue;
+      if (sp.tage[iso(d)]) n++; else break;
+    }
+    return n;
+  }
+  // Perfekte Wochen hintereinander, endend mit der Woche wo (Wochen ohne Schultage halten an)
+  function wochenSerie(mo) {
+    const sp = spielstand();
+    let n = 0;
+    for (let w = mo, i = 0; i < 60; i++, w = plusTage(w, -7)) {
+      if (!schultageDerWoche(w).length) continue;
+      if (sp.wochen.includes(iso(w))) n++; else break;
+    }
+    return n;
+  }
+
+  const ereignisse = [];
+  function belohne(erstesMal) {
+    const sp = spielstand(), d = heute(), tag = iso(d);
+    const orteVorher = orteBei(neueTeile() - (erstesMal ? 1 : 0));
+    let plus = erstesMal ? PUNKTE.teil : PUNKTE.wiederholung;
+    const ersterDesTages = !sp.tage[tag];
+    sp.tage[tag] = (sp.tage[tag] || 0) + 1;
+    if (orteFrei() > orteVorher) ereignisse.push({ art: "ort", ort: SP.orte[orteFrei() - 1] });
+    if (ersterDesTages) {
+      if (!istSchultag(d)) {
+        if (d.getDay() === 0 || d.getDay() === 6) { sp.wochenende.push(tag); plus += PUNKTE.wochenende; ereignisse.push({ art: "toast", text: `🏖️ Weekend bonus +${PUNKTE.wochenende}` }); }
+      } else {
+        const n = serie();
+        if (n >= 3 && n % 3 === 0 && !sp.feuer.includes(tag)) {
+          sp.feuer.push(tag); plus += PUNKTE.feuer;
+          ereignisse.push({ art: "feier", symbol: "🔥", titel: `On fire! ${n} days in a row`, text: `${n} Schultage am Stück – +${PUNKTE.feuer} Punkte!`, ton: SP.texte.feuer });
+        }
+        const mo = montag(d);
+        if (schultageDerWoche(mo).every((x) => sp.tage[iso(x)]) && !sp.wochen.includes(iso(mo))) {
+          sp.wochen.push(iso(mo)); plus += PUNKTE.woche;
+          const held = SP.helden.find((h) => !sp.helden.includes(h.id));
+          if (held) { sp.helden.push(held.id); ereignisse.push({ art: "held", held }); }
+          if (sp.helden.length === SP.helden.length && !sp.abzeichen.includes("team")) {
+            sp.abzeichen.push("team");
+            ereignisse.push({ art: "feier", symbol: "🦸", titel: "Your team is complete!", text: "Du hast alle zehn Superhelden gesammelt. Du bist eine Legende!", ton: SP.texte.team });
+          }
+          const ws = wochenSerie(mo);
+          if (ws >= 4 && ws % 4 === 0) {
+            plus += PUNKTE.monat; if (!sp.abzeichen.includes("monat")) sp.abzeichen.push("monat");
+            ereignisse.push({ art: "feier", symbol: "👑", titel: "Perfect month!", text: `${ws} perfekte Wochen hintereinander – +${PUNKTE.monat} Punkte und ein goldener Rahmen!`, ton: SP.texte.monat });
+          }
+        }
+      }
+    }
+    punkteDazu(plus);
+  }
+  function einheitBonus() { punkteDazu(PUNKTE.einheit); }
+  function punkteDazu(plus) {
+    const sp = spielstand();
+    sp.punkte += plus;
+    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐` });
+    const t = titelIndex(sp.punkte);
+    if (t > sp.titel) {
+      sp.titel = t;
+      const ti = SP.titel[t];
+      ereignisse.push({ art: "feier", symbol: t === SP.titel.length - 1 ? "👑" : "🏅", titel: ti.name, text: `Neuer Titel: ${ti.name}!`, ton: ti });
+    }
+    speichern();
+    setTimeout(zeigeEreignisse, 50);
+  }
+
+  /* Anzeige: kleine Meldungen unten, große Momente als Feier-Fenster (nacheinander) */
+  const toastBox = el("div", { class: "toasts", "aria-live": "polite" });
+  document.body.append(toastBox);
+  const feier = el("dialog", { class: "feier", "aria-labelledby": "feier-titel" });
+  document.body.append(feier);
+  function toast(text) {
+    const t = el("div", { class: "toast" }, text);
+    toastBox.append(t);
+    setTimeout(() => t.classList.add("weg"), 2200);
+    setTimeout(() => t.remove(), 2800);
+  }
+  function zeigeEreignisse() {
+    while (ereignisse.length && (ereignisse[0].art === "toast" || ereignisse[0].art === "ort")) {
+      const e = ereignisse.shift();
+      toast(e.art === "ort" ? `🗺️ Neuer Ort in London: ${e.ort.symbol} ${e.ort.name}` : e.text);
+    }
+    if (!ereignisse.length || feier.open) return;
+    const e = ereignisse.shift();
+    const ton = e.art === "held" ? e.held : e.ton;
+    const inhalt = e.art === "held"
+      ? [el("p", { class: "feier-klein" }, "⭐ Perfect week! Neuer Superheld:"), heldenKarte(e.held, true),
+         el("p", { class: "steckbrief", lang: "en" }, e.held.steckbrief)]
+      : [el("div", { class: "feier-symbol", "aria-hidden": "true" }, e.symbol), el("h2", { id: "feier-titel", lang: "en" }, e.titel), el("p", {}, e.text)];
+    feier.replaceChildren(konfetti(), ...inhalt,
+      el("div", { class: "knopfreihe" },
+        ton && ton.audio && knopf("🔊 Anhören", () => spiele([ton.audio])),
+        knopf("Weiter ➜", () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
+    feier.showModal();
+    if (ton && ton.audio) setTimeout(() => { if (feier.open) spiele([ton.audio]); }, 900);
+  }
+  function konfetti() {
+    const farben = ["#ffd23f", "#1f5fd1", "#e2384d", "#1d8a4e", "#b48cff"];
+    return el("div", { class: "konfetti", "aria-hidden": "true" }, Array.from({ length: 36 }, (_, i) =>
+      el("span", { style: `left:${(i * 37) % 100}%;background:${farben[i % 5]};animation-delay:${(i % 9) * 0.12}s` })));
+  }
+
+  function statusleiste() {
+    const sp = spielstand(), t = SP.titel[sp.titel], n = serie();
+    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") },
+      el("span", { class: "status-titel" }, (sp.titel === SP.titel.length - 1 ? "👑 " : "🏅 ") + t.name),
+      el("span", {}, `⭐ ${sp.punkte} Punkte`),
+      el("span", { title: "Schultage am Stück" }, `🔥 ${n}`),
+      knopf("🏆 Meine Sammlung", sammlung, "haupt"));
+  }
+
+  function heldenKarte(h, gross) {
+    return el("figure", { class: "heldenkarte" + (gross ? " gross" : "") },
+      el("img", { src: h.bild, alt: `${h.name}: ${h.kraft}`, loading: "lazy" }),
+      el("figcaption", { lang: "en" }, el("strong", {}, h.name), el("span", {}, h.kraft)));
+  }
+
+  function sammlung() {
+    lage = null;
+    const sp = spielstand(), t = sp.titel, naechster = SP.titel[t + 1];
+    const mo = montag(heute());
+    const woche = ["Mo", "Di", "Mi", "Do", "Fr"].map((name, i) => {
+      const d = plusTage(mo, i), frei = !istSchultag(d), ok = !!sp.tage[iso(d)];
+      return el("li", { class: frei ? "frei" : ok ? "ok" : "" }, el("span", {}, name), el("b", {}, frei ? "–" : ok ? "🔥" : "○"));
+    });
+    const abz = [
+      ["🔥", "On fire", sp.feuer.length > 0], ["⭐", "Perfect week", sp.wochen.length > 0], ["🏅", "5 × perfect", sp.wochen.length >= 5],
+      ["👑", "Perfect month", sp.abzeichen.includes("monat")], ["🏖️", "Weekend hero", sp.wochenende.length > 0],
+      ["🗺️", "London complete", orteFrei() === SP.orte.length], ["🦸", "Team complete", sp.abzeichen.includes("team")],
+      ["🏆", "All stations", D.stationen.every((s) => stand.erledigt.includes(s.nr))],
+    ];
+    const fakt = el("div", { class: "fakt", hidden: true, "aria-live": "polite" });
+    const frei = orteFrei();
+    const karte = londonKarte(frei, (o) => {
+      fakt.hidden = false;
+      fakt.replaceChildren(el("h3", { lang: "en" }, `${o.symbol} ${o.name}`), el("p", { lang: "en" }, o.fakt),
+        o.audio && knopf("🔊 Anhören", () => spiele([o.audio])));
+      if (o.audio) spiele([o.audio]);
+    });
+    const helden = el("div", { class: "heldenraster" }, SP.helden.map((h) => sp.helden.includes(h.id)
+      ? el("button", { class: "held-knopf", onclick: () => heldZeigen(h) }, heldenKarte(h))
+      : el("div", { class: "held-zu", "aria-label": "Noch nicht gesammelt" }, el("span", {}, "?"), el("small", {}, "Perfect week"))));
+    zeige(
+      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Meine Sammlung")),
+      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") },
+        el("p", { class: "klein" }, "Dein Titel"),
+        el("h2", { lang: "en" }, (t === SP.titel.length - 1 ? "👑 " : "🏅 ") + SP.titel[t].name),
+        el("p", {}, `⭐ ${sp.punkte} Punkte`),
+        naechster && el("div", { class: "fortschritt" }, el("span", { style: `width:${Math.round(100 * (sp.punkte - SP.titel[t].ab) / (naechster.ab - SP.titel[t].ab))}%` })),
+        naechster && el("p", { class: "klein" }, `Noch ${naechster.ab - sp.punkte} Punkte bis „${naechster.name}“`)),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, "Diese Woche"),
+        el("ol", { class: "wochenleiste" }, woche),
+        el("p", { class: "klein" }, `🔥 ${serie()} Schultage am Stück · ⭐ ${sp.wochen.length} perfekte Wochen. Übst du an jedem Schultag, bekommst du einen neuen Superhelden! Ferien und Feiertage zählen nicht – deine Serie bleibt.`)),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, `🦸 Superhelden (${sp.helden.length} von ${SP.helden.length})`), helden),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, `🗺️ London (${frei} von ${SP.orte.length} Orten)`),
+        el("p", { class: "klein" }, "Alle 4 geschafften Teile schaltest du einen neuen Ort frei. Tipp auf einen Ort!"),
+        karte, fakt),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, "Abzeichen"),
+        el("ul", { class: "abzeichen" }, abz.map(([sym, name, ok]) => el("li", { class: ok ? "ok" : "" },
+          el("span", { "aria-hidden": "true" }, sym), el("span", { lang: "en" }, name), el("span", { class: "unsichtbar" }, ok ? "geschafft" : "noch nicht"))))));
+  }
+
+  function heldZeigen(h) {
+    feier.replaceChildren(heldenKarte(h, true), el("p", { class: "steckbrief", lang: "en" }, h.steckbrief),
+      el("div", { class: "knopfreihe" }, h.audio && knopf("🔊 Anhören", () => spiele([h.audio])),
+        knopf("Schließen", () => { feier.close(); stopp(); }, "haupt")));
+    feier.showModal();
+    if (h.audio) spiele([h.audio]);
+  }
+
+  function londonKarte(frei, waehle) {
+    const NS = "http://www.w3.org/2000/svg";
+    const s = (tag, attrs, ...kinder) => { const e = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v)); kinder.forEach((k) => e.append(k)); return e; };
+    const svg = s("svg", { viewBox: "0 0 400 200", class: "london", role: "img", "aria-label": "Karte von London" });
+    svg.append(
+      s("rect", { x: 0, y: 0, width: 400, height: 200, rx: 12, class: "l-land" }),
+      s("ellipse", { cx: 128, cy: 116, rx: 22, ry: 13, class: "l-park" }),
+      s("ellipse", { cx: 158, cy: 52, rx: 18, ry: 12, class: "l-park" }),
+      s("path", { d: "M0,170 C40,166 70,152 110,154 C150,156 170,164 196,152 C222,140 226,122 254,124 C284,126 300,124 326,136 C352,148 372,174 400,168", class: "l-fluss" }),
+      s("text", { x: 300, y: 158, class: "l-name" }, "River Thames"));
+    SP.orte.forEach((o, i) => {
+      const offen = i < frei;
+      const g = s("g", { class: "l-ort" + (offen ? " offen" : ""), transform: `translate(${o.x} ${o.y})`, tabindex: offen ? 0 : -1,
+        role: offen ? "button" : "img", "aria-label": offen ? o.name : "Noch nicht freigeschaltet" },
+        s("circle", { r: 12 }), s("text", { y: 4.5, "text-anchor": "middle" }, offen ? o.symbol : "?"));
+      if (offen) {
+        g.addEventListener("click", () => waehle(o));
+        g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); waehle(o); } });
+      }
+      svg.append(g);
+    });
+    return el("div", { class: "london-rahmen" }, svg);
+  }
+
   /* ---------- Fragen für Mr. Alex ---------- */
   const dlg = document.getElementById("fragen");
   const feld = document.getElementById("frage-text");
@@ -1012,7 +1251,7 @@
 
   /* ---------- Tasten: Leertaste = Abspielen, Pfeil rechts = Weiter ---------- */
   document.addEventListener("keydown", (e) => {
-    if (dlg.open || e.target.closest("textarea, input")) return;
+    if (dlg.open || feier.open || e.target.closest("textarea, input")) return;
     if (e.code === "Space" && lage && lage.abspielen) { e.preventDefault(); lage.abspielen(); }
     else if (e.code === "ArrowRight" && lage && lage.weiter) { e.preventDefault(); lage.weiter(); }
     else if (e.code === "ArrowLeft" && lage && !lage.ende) {

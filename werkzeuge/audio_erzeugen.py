@@ -75,6 +75,14 @@ def main():
     with open(os.path.join(BASIS, "inhalte", "lob.tsv"), encoding="utf-8") as f:
         for z in csv.DictReader(f, delimiter="\t"):
             auftraege.append(("lob", z["id"], "en", "en", z["text"], None))
+    # Belohnungen: London-Fakten, Superhelden-Steckbriefe, Titel und Serien (alles Mr. Alex)
+    import daten_bauen
+    for z in daten_bauen.lesen("london.tsv"):
+        auftraege.append(("london", z["id"], "en", "en", f"{z['name']}. {z['fakt']}", None))
+    for z in daten_bauen.lesen("helden.tsv"):
+        auftraege.append(("helden", z["id"], "en", "en", f"{z['name']}. {z['steckbrief']}", None))
+    for k, t in daten_bauen.SPIEL_TEXTE.items():
+        auftraege.append(("spiel", k, "en", "en", t, None))
     for u in hoeren.lesen():
         for t in u["teile"]:
             auftraege.append(("hoeren", t["datei"], "en_f" if t["stimme"] == "en_f" else "en", "en", t["sprech"], None))

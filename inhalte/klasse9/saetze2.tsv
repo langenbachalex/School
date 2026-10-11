@@ -1,0 +1,106 @@
+id	englisch	deutsch	luecke	stimme
+sp_01	I'd like to go to New York because I like big cities.	Ich würde gern nach New York fahren, weil ich große Städte mag.	I'd like to go to	
+sp_02	I like nature, mountains and the sea.	Ich mag die Natur, Berge und das Meer.	I like	
+sp_03	I want to see the Statue of Liberty.	Ich will die Freiheitsstatue sehen.	I want to see	
+sp_04	Where do you want to go? What's your favourite place?	Wohin willst du fahren? Was ist dein Lieblingsort?	favourite place	
+sp_05	Well, I'd prefer to go to Florida because I like hot weather.	Na ja, ich würde lieber nach Florida fahren, weil ich heißes Wetter mag.	I'd prefer to go	
+sp_06	What do you think about that?	Was hältst du davon?	What do you think	
+sp_07	I'm not so sure about that.	Da bin ich mir nicht so sicher.	not so sure	
+sp_08	I think we should go to the Rocky Mountains because it's more exciting.	Ich finde, wir sollten in die Rocky Mountains fahren, weil es spannender ist.	we should go	
+sp_09	OK, I agree — let's go to New York!	Okay, einverstanden – lass uns nach New York fahren!	I agree	
+sp_10	Our favourite place is New York because we both like big cities.	Unser Lieblingsort ist New York, weil wir beide große Städte mögen.	Our favourite place	
+d1_01	Where would you like to go in the US?	Wohin würdest du gern in den USA fahren?	would you like	m
+d1_02	I'd like to go to New York because I like big cities and I want to see the Statue of Liberty.	Ich würde gern nach New York fahren, weil ich große Städte mag und die Freiheitsstatue sehen will.	I'd like to go	f
+d1_03	Me too! I like big cities.	Ich auch! Ich mag große Städte.	Me too	m
+d1_04	What do you think about that?	Was hältst du davon?	What do you think	f
+d1_05	I agree — let's go to New York!	Einverstanden – lass uns nach New York fahren!	I agree	m
+d1_06	Great! Our favourite place is New York because we both like big cities.	Super! Unser Lieblingsort ist New York, weil wir beide große Städte mögen.	Our favourite place	f
+d2_01	Where would you like to go in the US?	Wohin würdest du gern in den USA fahren?	would you like	m
+d2_02	I'd like to go to the Rocky Mountains because I like nature and I want to go camping.	Ich würde gern in die Rocky Mountains fahren, weil ich die Natur mag und zelten gehen will.	I'd like to go	f
+d2_03	Well, I'd prefer to go to Florida because I like hot weather and the sea.	Na ja, ich würde lieber nach Florida fahren, weil ich heißes Wetter und das Meer mag.	I'd prefer	m
+d2_04	I'm not so sure about that. I think we should go to the Rocky Mountains because it's more exciting.	Da bin ich mir nicht so sicher. Ich finde, wir sollten in die Rocky Mountains fahren, weil es spannender ist.	not so sure	f
+d2_05	Hmm, OK. What about this: we go to Florida first, and then to the Rocky Mountains?	Hm, okay. Wie wäre es damit: Wir fahren zuerst nach Florida und dann in die Rocky Mountains?	What about this	m
+d2_06	OK, I agree — let's go to Florida and the Rocky Mountains!	Okay, einverstanden – lass uns nach Florida und in die Rocky Mountains fahren!	I agree	f
+d2_07	Great! We picked both places because we like the sea and nature.	Super! Wir haben beide Orte gewählt, weil wir das Meer und die Natur mögen.	We picked	m
+d3_01	Hi! What do you like about the USA?	Hi! Was gefällt dir an den USA?	What do you like	m
+d3_02	Oh, I love Central Park in New York City. It's so relaxing.	Oh, ich liebe den Central Park in New York. Er ist so entspannend.	relaxing	f
+d3_03	Relaxing? I think it's terrible — so busy, so loud!	Entspannend? Ich finde es schrecklich – so viel los, so laut!	terrible	m
+d3_04	Busy is exciting! Where would you like to go?	Viel los ist spannend! Wohin würdest du gern fahren?	exciting	f
+d3_05	I'd like to go to Yellowstone, because I want to see a real geyser!	Ich würde gern in den Yellowstone-Park fahren, weil ich einen echten Geysir sehen will!	geyser	m
+d3_06	A geyser? Hot water shooting into the air? Sounds terrifying!	Ein Geysir? Heißes Wasser, das in die Luft schießt? Klingt furchtbar!	terrifying	f
+d3_07	Terrifying? No way — it's awesome!	Furchtbar? Auf keinen Fall – das ist großartig!	No way	m
+d3_08	Okay, I agree, that does sound exciting. Is New York safe, though?	Okay, einverstanden, das klingt wirklich spannend. Aber ist New York sicher?	safe	f
+d3_09	Well, some people say no... but I think it's awesome, day and night.	Na ja, manche sagen nein … aber ich finde es großartig, Tag und Nacht.	day and night	m
+d3_10	"""This city never sleeps"" — but I definitely need my sleep! Bye!"	„Diese Stadt schläft nie“ – aber ich brauche auf jeden Fall meinen Schlaf! Tschüss!	never sleeps	f
+d3_11	Bye! See you next time!	Tschüss! Bis zum nächsten Mal!	See you	m
+d4_01	Guess what — I found Jayden's blog. He sits on his stoop every day!	Rate mal – ich habe Jaydens Blog gefunden. Er sitzt jeden Tag auf seiner Eingangstreppe!	stoop	m
+d4_02	On his stoop? That sounds boring. I'd rather be inside.	Auf seiner Treppe? Das klingt langweilig. Ich wäre lieber drinnen.	I'd rather	f
+d4_03	Boring? No way, it's awesome — his neighbors just come by and chat!	Langweilig? Auf keinen Fall, das ist großartig – seine Nachbarn kommen einfach vorbei und plaudern!	come by	m
+d4_04	Okay, but he fell asleep on the subway once. That's embarrassing!	Okay, aber er ist mal in der U-Bahn eingeschlafen. Das ist peinlich!	embarrassing	f
+d4_05	True, but everyone falls asleep sometimes. What about his diner?	Stimmt, aber jeder schläft mal ein. Und was ist mit seinem Diner?	falls asleep	m
+d4_06	Junior's? I checked that out — apparently it's amazing.	Junior's? Das habe ich mir angeschaut – anscheinend ist es super.	checked that out	f
+d4_07	See, I told you Brooklyn was cool! I'm in a great mood just talking about it.	Siehst du, ich hab dir gesagt, dass Brooklyn cool ist! Ich habe schon gute Laune, wenn ich nur darüber rede.	mood	m
+d4_08	Ha, fine, you win. Let's check out more of his posts!	Ha, na gut, du hast gewonnen. Lass uns mehr von seinen Posts anschauen!	you win	f
+d4_09	Deal! I bet the next one makes you cheer.	Abgemacht! Ich wette, beim nächsten jubelst du.	cheer	m
+d4_10	We'll see about that!	Das werden wir ja sehen!	We'll see	f
+hf_01	I felt so proud when we won!	Ich war so stolz, als wir gewonnen haben!	proud	
+hf_02	It made my day when we laughed together.	Es hat meinen Tag gerettet, als wir zusammen gelacht haben.	made my day	
+hf_03	I was grateful to spend time with my family.	Ich war dankbar, Zeit mit meiner Familie zu verbringen.	grateful	
+hf_04	I hope tomorrow will be better.	Ich hoffe, morgen wird es besser.	will be better	
+hf_05	I felt relieved and happy at the end of the day.	Am Ende des Tages war ich erleichtert und glücklich.	relieved	
+hf_06	Family members and friends of the victims still come here to mourn and leave flowers.	Angehörige und Freunde der Opfer kommen immer noch hierher, um zu trauern und Blumen niederzulegen.	mourn	
+hf_07	It's a weird feeling to be there.	Es ist ein seltsames Gefühl, dort zu sein.	weird feeling	
+hf_08	I still loved it, and I would go back anytime again without hesitation.	Ich habe es trotzdem geliebt und würde jederzeit ohne Zögern wieder hinfahren.	without hesitation	
+hf_09	It feels like being in a historical movie.	Es fühlt sich an, als wäre man in einem historischen Film.	feels like being	
+hf_10	When she saw the price, she was absolutely shocked.	Als sie den Preis sah, war sie völlig schockiert.	absolutely shocked	
+hf_11	I would recommend going to New York.	Ich würde empfehlen, nach New York zu fahren.	recommend going	
+hm_01	He doesn't take me to school.	Er bringt mich nicht zur Schule.	doesn't	
+hm_02	She understands me.	Sie versteht mich.	understands	
+hm_03	It doesn't matter.	Das ist egal.	doesn't	
+hm_04	I like her.	Ich mag sie.	her	
+hm_05	I talk with her every day.	Ich rede jeden Tag mit ihr.	her	
+hm_06	My brother doesn't like pizza.	Mein Bruder mag keine Pizza.	doesn't	
+hm_07	Yesterday I went to the park with my friends.	Gestern bin ich mit meinen Freunden in den Park gegangen.	I	
+hb_01	I was so excited before the trip.	Vor der Reise war ich so aufgeregt.	excited	
+hb_02	I felt relaxed at the beach.	Am Strand war ich entspannt.	relaxed	
+hb_03	The view from the top was amazing.	Die Aussicht von oben war unglaublich schön.	amazing	
+hb_04	The burger was really delicious.	Der Burger war richtig lecker.	delicious	
+hb_05	The haunted house was a bit scary.	Das Geisterhaus war ein bisschen gruselig.	scary	
+hb_06	The skyscrapers are huge, and our hotel room was tiny.	Die Wolkenkratzer sind riesig, und unser Hotelzimmer war winzig.	huge	
+hb_07	The show was unbelievable!	Die Show war unglaublich!	unbelievable	
+he_01	I ordered breakfast at the café.	Ich bestellte ein Frühstück im Café.	ordered	
+he_02	We used a car for our trip.	Wir benutzten ein Auto für unseren Ausflug.	used	
+he_03	It was quieter than Times Square.	Es war ruhiger als der Times Square.	than	
+he_04	The statue was bigger than I thought.	Die Statue war größer, als ich dachte.	than	
+he_05	There was so much food there.	Es gab dort so viel Essen.	was	
+he_06	It was so quiet in the park.	Es war so ruhig im Park.	quiet	
+he_07	She said she would come with me.	Sie sagte, sie würde mitkommen.	would	
+he_08	Her taste in fashion was fantastic.	Ihr Modegeschmack war fantastisch.	was	
+he_09	We ordered burgers at the diner.	Wir bestellten Burger im Diner.	diner	
+he_10	We ate pizza at the restaurant.	Wir aßen Pizza im Restaurant.	restaurant	
+he_11	I didn't understand that.	Ich verstand das nicht.	understand	
+he_12	The people there were very friendly.	Die Leute dort waren sehr freundlich.	were	
+ht_01	Crime is a problem in big cities.	Verbrechen sind in großen Städten ein Problem.	Crime	
+ht_02	The man looked suspicious.	Der Mann sah verdächtig aus.	suspicious	
+ht_03	I'm innocent!	Ich bin unschuldig!	innocent	
+ht_04	My friendship with him is important to me.	Die Freundschaft mit ihm ist mir wichtig.	friendship	
+ht_05	I felt trapped in the kitchen.	Ich fühlte mich in der Küche gefangen.	trapped	
+ht_06	I practise basketball every day.	Ich übe jeden Tag Basketball.	practise	
+ht_07	He stared at her for a long time.	Er starrte sie lange an.	stared	
+ht_08	That was the turning point of the story.	Das war der Wendepunkt der Geschichte.	turning point	
+hv_01	Manhattan is an island.	Manhattan ist eine Insel.	island	
+hv_02	The skyscraper is very tall.	Der Wolkenkratzer ist sehr hoch.	skyscraper	
+hv_03	They have a small backyard.	Sie haben einen kleinen Garten.	backyard	
+hv_04	It's a suspension bridge.	Es ist eine Hängebrücke.	suspension	
+hv_05	I'm in a good mood today.	Ich bin heute guter Laune.	mood	
+hv_06	We live in a small apartment.	Wir wohnen in einer kleinen Wohnung.	apartment	
+hv_07	It was so embarrassing!	Es war so peinlich!	embarrassing	
+hv_08	I take the subway to school.	Ich fahre mit der U-Bahn zur Schule.	subway	
+hv_09	We had breakfast at a diner.	Wir haben in einem Diner gefrühstückt.	diner	
+hv_10	Can I order a burger, please?	Kann ich bitte einen Burger bestellen?	order	
+hv_11	I love my neighborhood.	Ich liebe meine Nachbarschaft.	neighborhood	
+hv_12	The subway was really crowded.	Die U-Bahn war wirklich überfüllt.	crowded	
+hv_13	There's a great view from here.	Von hier hat man eine tolle Aussicht.	view	
+hv_14	We sat on the stoop and talked.	Wir saßen auf der Treppe und redeten.	stoop	
+hv_15	It was a total disaster!	Es war eine totale Katastrophe!	disaster	
+hv_16	Let's meet downtown.	Lass uns in der Innenstadt treffen.	downtown	

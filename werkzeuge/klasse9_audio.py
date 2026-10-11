@@ -36,6 +36,11 @@ def auftraege():
         liste.append((f"audio/hoeren/{wid}.mp3", "mf"[stimme % 2], en)); stimme += 1
     for t in hv["teile"]:
         liste.append((f"audio/hoeren/{t['id']}.mp3", t["stimme"], t["text"]))
+    for z in k9.tsv("saetze2.tsv"):
+        st = z["stimme"] or "mf"[stimme % 2]
+        if not z["stimme"]:
+            stimme += 1
+        liste.append((f"audio/saetze/{z['id']}.mp3", st, z["englisch"]))
     return liste
 
 

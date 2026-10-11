@@ -91,3 +91,17 @@
 .wahl-knopf.kompakt { min-height: 44px; min-width: 0; padding: 0 12px; font-size: 1rem; gap: 6px; }
 .wahl-knopf.kompakt .wahl-sym { font-size: 1.3rem; }
 .hv-zeile .wahl { gap: 8px; }
+
+/* Speaking: Dialog A/B */
+.dialog { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.dz { display: grid; grid-template-columns: 2.4rem 1fr; gap: 10px; align-items: start; padding: 10px 12px; border-radius: 14px; border: 2px solid var(--linie); }
+.dz-rolle { width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #fff; }
+.rolle-A .dz-rolle { background: var(--blau); }
+.rolle-B .dz-rolle { background: var(--rot); }
+:root[data-theme="dark"] .dz-rolle { color: #0f1522; }
+.dz-en { font: 500 1.2rem/1.35 var(--display); }
+.dz.meine { background: var(--gelb); color: var(--gelb-text); border-color: var(--gelb); }
+.dz.meine .klein { color: var(--gelb-text); }
+.dz.spricht { border-color: var(--blau); box-shadow: 0 0 0 3px var(--blau); }
+.falsch-vorher { color: var(--rot); text-decoration: line-through; text-decoration-thickness: 2px; font-size: 1.3rem; }
+.wortliste li { font: 500 1.15rem/1.4 var(--display); }

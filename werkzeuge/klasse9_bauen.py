@@ -23,6 +23,23 @@ ABSCHNITTE = {"start": "Start", "theme1": "Theme 1", "theme2": "Theme 2", "fol":
               "story": "Story", "skills": "Skills training"}
 MAX_GRUPPE = 14  # größere Abschnitte werden geteilt (Story 1, Story 2)
 
+def dialog(name, symbol, praefix, zeilen, eigene=False):
+    """Fester Dialog A/B: hören, nachsprechen, Rolle A, Rolle B (A = Jeremy B., B = Jessica)."""
+    z = [[f"{praefix}_{i:02d}", "AB"[(i - 1) % 2]] for i in range(1, zeilen + 1)]
+    schritte = [{"art": "dialog", "name": "Listen", "zeilen": z, "rolle": None},
+                {"art": "lr", "name": "Lines", "stufen": [1, 3], "saetze": [x[0] for x in z]},
+                {"art": "dialog", "name": "You are A", "zeilen": z, "rolle": "A"},
+                {"art": "dialog", "name": "You are B", "zeilen": z, "rolle": "B"}]
+    if eigene:
+        schritte.append({"art": "erklaerung", "name": "Your own dialogue", "bloecke": [
+            {"typ": "text", "G": "Jetzt du mit einem Partner: Macht euren eigenen Dialog! (E-Kurs: Pflicht, G-Kurs: Bonus)",
+             "E": "Now you and a partner: make your own dialogue!"},
+            {"typ": "liste", "punkte": ["mood · come by · apartment · embarrassing", "fall asleep · subway · diner · check out",
+                                        "stoop · cheer", "That sounds awesome / boring / embarrassing!"]},
+            {"typ": "merksatz", "G": "Mindestens 5 Wechsel pro Person!", "E": "Aim for at least 5 exchanges each!"}]})
+    return {"name": name, "symbol": symbol, "schritte": schritte}
+
+
 # Die 9 Kategorien (3×3). „bald“ = noch ohne Inhalt.
 KATEGORIEN = [
     {"nr": 1, "titel": "Reading", "unter": {"G": "Leseverstehen", "E": "Reading comprehension"}, "symbol": "📖",
@@ -135,7 +152,15 @@ KATEGORIEN = [
           ]},
      ]},
     {"nr": 5, "titel": "Writing", "unter": {"G": "Schreiben", "E": "Writing texts"}, "symbol": "✍️", "bald": True},
-    {"nr": 6, "titel": "Speaking", "unter": {"G": "Dialoge sprechen", "E": "Dialogues"}, "symbol": "💬", "bald": True},
+    {"nr": 6, "titel": "Speaking", "unter": {"G": "Dialoge sprechen", "E": "Dialogues"}, "symbol": "💬",
+     "gruppen": [
+         {"name": "Useful phrases", "symbol": "🗣️ 👍 🤔", "schritte": [
+             {"art": "lr", "name": "Phrases", "saetze": [f"sp_{i:02d}" for i in range(1, 11)]}]},
+         dialog("Dialogue 1 · Quick agreement", "🗽 🏙️", "d1", 6),
+         dialog("Dialogue 2 · Disagree, then agree", "⛰️ 🏖️", "d2", 7),
+         dialog("New York — Yes or No?", "🌳 ♨️", "d3", 11),
+         dialog("Brooklyn or Bust?", "🏠 🚇 🍔", "d4", 10, eigene=True),
+     ]},
     {"nr": 7, "titel": "BE vs AE", "unter": {"G": "Britisch und amerikanisch", "E": "British and American English"},
      "symbol": "🇬🇧 🇺🇸", "gruppen": [
          {"name": "Unit 1 · p. 20", "symbol": "🍬 🔦 🗑️", "schritte": [
@@ -146,7 +171,45 @@ KATEGORIEN = [
              {"art": "beae_quiz", "name": "British or American?", "paare": [f"ba_{i:02d}" for i in range(9, 18)]}]},
      ]},
     {"nr": 8, "titel": "New", "unter": {"G": "Neu diese Woche", "E": "New this week"}, "symbol": "✨", "farbe": "neu", "bald": True},
-    {"nr": 9, "titel": "Hall of Fame", "unter": {"G": "Aus euren Texten", "E": "From your texts"}, "symbol": "🏆", "bald": True},
+    {"nr": 9, "titel": "Hall of Fame", "unter": {"G": "Aus euren Texten", "E": "From your texts"}, "symbol": "🏆",
+     "gruppen": [
+         {"name": "Strong moments", "symbol": "🌟 ✍️", "schritte": [
+             {"art": "lr", "name": "Your best sentences", "saetze": [f"hf_{i:02d}" for i in range(1, 12)]}]},
+         {"name": "Common mistakes", "symbol": "✗ → ✓", "schritte": [
+             {"art": "verbform", "name": "Fix it!", "ansage": {
+                 "G": "Fix the mistake! – Diese Fehler kamen in euren Texten oft vor. Welche Form ist richtig?",
+                 "E": "Fix the mistake! These mistakes were common in your texts. Which form is right?"},
+              "hilfe": {"G": "Bei he, she, it: doesn't und -s am Verb.", "E": "With he, she, it: doesn't and -s on the verb."},
+              "aufgaben": [
+                  {"satz": "hm_01", "richtig": "doesn't", "falsch": ["don't"], "vorher": "he don't take me"},
+                  {"satz": "hm_02", "richtig": "understands", "falsch": ["understand"], "vorher": "she understand me"},
+                  {"satz": "hm_03", "richtig": "doesn't", "falsch": ["don't"], "vorher": "it don't matter"},
+                  {"satz": "hm_04", "richtig": "her", "falsch": ["she"], "vorher": "I like she",
+                   "hilfe": {"G": "she macht etwas (Subjekt), her bekommt etwas ab (Objekt): I like her.",
+                             "E": "she does the action (subject), her is the object: I like her."}},
+                  {"satz": "hm_05", "richtig": "her", "falsch": ["she"], "vorher": "I talk with she",
+                   "hilfe": {"G": "Nach with, to, for … kommt her, nicht she.", "E": "After with, to, for … use her, not she."}},
+                  {"satz": "hm_06", "richtig": "doesn't", "falsch": ["don't"], "vorher": "my brother don't like pizza"},
+                  {"satz": "hm_07", "richtig": "I", "falsch": ["i"], "vorher": "yesterday i went to the park",
+                   "hilfe": {"G": "„I“ (ich) schreibt man im Englischen immer groß – egal wo im Satz.",
+                             "E": "We always write “I” with a capital letter – wherever it is in the sentence."}},
+              ]},
+             {"art": "lr", "name": "Say it right", "stufen": [1, 3], "saetze": [f"hm_{i:02d}" for i in range(1, 8)]}]},
+         {"name": "Vocabulary boost", "symbol": "😃 😌 🤩", "schritte": [
+             {"art": "erklaerung", "name": "Strong words", "bloecke": [
+                 {"typ": "text", "G": "Statt immer nur happy, good oder nice: Viele von euch haben starke Wörter benutzt. Genau so!",
+                  "E": "Instead of happy, good or nice every time: many of you used strong words. Keep it up!"},
+                 {"typ": "liste", "punkte": ["excited · relieved · proud · grateful · relaxed",
+                                             "amazing · awesome · fantastic · unbelievable · exciting · incredible",
+                                             "delicious · shocked · weird · scary · boring · huge · tiny"]}]},
+             {"art": "lr", "name": "Sentences", "saetze": [f"hb_{i:02d}" for i in range(1, 8)]}]},
+         {"name": "From your texts (GLN 1)", "symbol": "📝", "schritte": [
+             {"art": "lr", "name": "Sentences", "saetze": [f"he_{i:02d}" for i in range(1, 13)]}]},
+         {"name": "Trapped (Unit 1)", "symbol": "🔒 🕵️", "schritte": [
+             {"art": "lr", "name": "Sentences", "saetze": [f"ht_{i:02d}" for i in range(1, 9)]}]},
+         {"name": "Unit 1 check", "symbol": "🗽 🌉", "schritte": [
+             {"art": "lr", "name": "Sentences", "saetze": [f"hv_{i:02d}" for i in range(1, 17)]}]},
+     ]},
 ]
 
 
@@ -191,6 +254,13 @@ def main():
         stimme += 1
     for t in hv["teile"]:
         t["audio"] = audio(f"audio/hoeren/{t['id']}.mp3")
+    # Speaking und Hall of Fame (Dialogzeilen mit fester Stimme: A = Jeremy B., B = Jessica)
+    for z in tsv("saetze2.tsv"):
+        st = z["stimme"] or "mf"[stimme % 2]
+        if not z["stimme"]:
+            stimme += 1
+        saetze[z["id"]] = {"en": z["englisch"], "de": z["deutsch"], "luecke": z["luecke"] or None,
+                           "stimme": st, "audio": audio(f"audio/saetze/{z['id']}.mp3")}
     hoeren = {hv["id"]: hv}
     # Abschnitte je Unit (Reihenfolge wie im Buch), große Abschnitte teilen
     for unit in units:
@@ -218,7 +288,7 @@ def main():
     for k in KATEGORIEN:  # Satz-IDs prüfen
         for g in k.get("gruppen", []):
             for s in g["schritte"]:
-                for sid in s.get("saetze", []) + s.get("text", []) + s.get("paare", []) + [a["satz"] for a in s.get("aufgaben", [])]:
+                for sid in s.get("saetze", []) + s.get("text", []) + s.get("paare", []) + [x[0] for x in s.get("zeilen", [])] + [a["satz"] for a in s.get("aufgaben", [])]:
                     assert sid in saetze, sid
     daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren}
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:

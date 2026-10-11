@@ -122,7 +122,7 @@
     for (const k of kinder.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
     return e;
   }
-  function zeige(...inhalt) { stopp(); app.replaceChildren(...inhalt.filter(Boolean)); if (!leise) window.scrollTo(0, 0); }
+  function zeige(...inhalt) { dialogLauf++; stopp(); app.replaceChildren(...inhalt.filter(Boolean)); if (!leise) window.scrollTo(0, 0); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -309,7 +309,7 @@
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, auswahl: zeigeAuswahl, bilder: zeigeBilder,
        vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition,
-       beae_quiz: zeigeBeaeQuiz, hoeren: zeigeHoeren })[teil.art](teil);
+       beae_quiz: zeigeBeaeQuiz, hoeren: zeigeHoeren, dialog: zeigeDialog })[teil.art](teil);
     navErgaenzen();
   }
   function naechstes() {
@@ -626,11 +626,72 @@
       el("div", { class: "hv-spieler" }, el("div", { class: "knopfreihe" }, hoerKnopf, stoppKnopf), zaehler));
   }
 
+  /* ---------- Speaking: Dialog A/B ----------
+     Ohne Rolle: ganzen Dialog hören (A = Jeremy B., B = Jessica).
+     Mit Rolle: die App spricht die andere Rolle, du sprichst deine Zeilen in die Pause. */
+  let dialogLauf = 0;
+  const warte = (ms) => new Promise((ok) => setTimeout(ok, ms));
+  function zeigeDialog(teil) {
+    const k = kategorie(lage.nr);
+    const meine = teil.rolle;
+    const zeilen = teil.zeilen.map(([id, rolle]) => ({ s: D.saetze[id], rolle }));
+    let versteckt = !!meine && E();
+    const balken = el("div", { class: "jetztdu", hidden: true, role: "status" }, T("Jetzt du! Sprich deine Zeile.", "Your turn! Say your line."),
+      el("span", { class: "balken", "aria-hidden": "true" }));
+    const box = rueckmeldung();
+    const liste = el("ol", { class: "dialog" }, zeilen.map(({ s, rolle }) => {
+      const eigen = rolle === meine;
+      return el("li", { class: "dz rolle-" + rolle + (eigen ? " meine" : "") },
+        el("span", { class: "dz-rolle", "aria-label": T("Rolle ", "Role ") + rolle }, rolle),
+        el("div", {},
+          el("p", { class: "dz-en", lang: "en" }, eigen && versteckt ? "…" : s.en),
+          !E() && el("p", { class: "dz-de klein", lang: "de" }, s.de)));
+    }));
+    const zeigeMeine = () => { versteckt = false; zeilen.forEach(({ s, rolle }, i) => { if (rolle === meine) liste.children[i].querySelector(".dz-en").textContent = s.en; }); };
+    const startKnopf = knopf(meine ? T("▶ Dialog starten", "▶ Start the dialogue") : T("▶ Dialog anhören", "▶ Listen to the dialogue"), starten, "haupt");
+    const stoppKnopf = knopf("■ Stop", () => { dialogLauf++; stopp(); fertig(false); });
+    stoppKnopf.hidden = true;
+    function fertig(ganz) {
+      startKnopf.hidden = false; stoppKnopf.hidden = true; balken.hidden = true;
+      [...liste.children].forEach((li) => li.classList.remove("spricht"));
+      if (ganz) melde(box, "gut", lob() + " " + (meine ? T("Tausch jetzt die Rolle – oder noch mal!", "Now swap roles – or try again!") : T("Jetzt sprich mit!", "Now join in!")));
+    }
+    async function starten() {
+      const meinLauf = ++dialogLauf;
+      startKnopf.hidden = true; stoppKnopf.hidden = false; box.hidden = true;
+      for (let i = 0; i < zeilen.length; i++) {
+        if (meinLauf !== dialogLauf) return;
+        const { s, rolle } = zeilen[i];
+        [...liste.children].forEach((li, j) => li.classList.toggle("spricht", j === i));
+        if (liste.children[i].scrollIntoView) liste.children[i].scrollIntoView({ block: "nearest", behavior: "smooth" });
+        if (rolle === meine) { // Pause zum Sprechen, so lang wie die Zeile
+          const dauer = Math.max(2.5, s.en.split(/\s+/).length * 0.55 + 1.2);
+          balken.hidden = false; balken.classList.remove("laeuft"); void balken.offsetWidth;
+          balken.style.setProperty("--dauer", dauer.toFixed(1) + "s"); balken.classList.add("laeuft");
+          await warte(dauer * 1000);
+          balken.hidden = true;
+        } else if ((await spiele([tonSatz(s)])) === null) return;
+      }
+      if (meinLauf === dialogLauf) fertig(true);
+    }
+    lage.abspielen = () => { if (!startKnopf.hidden) starten(); };
+    lage.weiter = naechstes;
+    zeige(kopf(k),
+      meine ? ansage(`You are ${meine}. Say your lines when it's your turn. The app speaks the other role.`,
+        `Du bist ${meine}. Sprich deine Zeilen, wenn du dran bist. Die App spricht die andere Rolle.`)
+        : ansage("Listen to the dialogue. A and B.", "Hör dir den Dialog an: A und B."),
+      karte(null, liste, balken,
+        meine && versteckt && el("div", { class: "knopfreihe" }, tipp("Easier: show my lines", (e) => { e.currentTarget.hidden = true; zeigeMeine(); })),
+        el("div", { class: "knopfreihe" }, startKnopf, stoppKnopf), box,
+        el("div", { class: "knopfreihe" }, weiterKnopf())));
+  }
+
   /* ---------- Erklärung ---------- */
   function zeigeErklaerung(teil) {
     const k = kategorie(lage.nr);
     const bloecke = teil.bloecke.map((b) => {
       if (b.typ === "text") return el("p", { class: "ansage" }, tx(b));
+      if (b.typ === "liste") return el("ul", { class: "regeln wortliste", lang: "en" }, b.punkte.map((x) => el("li", {}, x)));
       if (b.typ === "merksatz") return el("div", { class: "merksatz" }, el("span", { class: "sprache" }, T("Merksatz", "Remember")), el("p", {}, tx(b)));
       if (b.typ === "regeln") return el("ul", { class: "regeln" }, b.punkte.map(([regel, sid]) => {
         const s = D.saetze[sid];
@@ -667,13 +728,14 @@
           spiele([tonSatz(s)]);
         } else {
           e.currentTarget.disabled = true;
-          melde(box, "hilfe", `${tx(teil.hilfe)} ${NOCHMAL()}`);
+          melde(box, "hilfe", `${tx(a.hilfe || teil.hilfe)} ${NOCHMAL()}`);
         }
       } }, form)));
     lage.abspielen = () => { if (geloest) spiele([tonSatz(s)]); };
     zeige(kopf(k),
       ansage(...(E() ? [tx(teil.ansage)] : tx(teil.ansage).split(" – "))),
       karte(T(`Aufgabe ${lage.pos + 1} von ${lage.reihe.length}`, `Task ${lage.pos + 1} of ${lage.reihe.length}`),
+        a.vorher && el("p", { class: "satz falsch-vorher", lang: "en" }, el("span", { "aria-hidden": "true" }, "✗ "), a.vorher),
         de, satz, wahl, box,
         E() && el("div", { class: "knopfreihe" }, tipp("Easier: show the German sentence", (e) => { e.currentTarget.hidden = true; de.hidden = false; })),
         el("div", { class: "knopfreihe" }, weiter)));

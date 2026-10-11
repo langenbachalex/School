@@ -1355,6 +1355,741 @@ window.DATEN = {
    "luecke": "practice",
    "stimme": "m",
    "audio": "audio/hoeren/hw_06.mp3"
+  },
+  "sp_01": {
+   "en": "I'd like to go to New York because I like big cities.",
+   "de": "Ich würde gern nach New York fahren, weil ich große Städte mag.",
+   "luecke": "I'd like to go to",
+   "stimme": "f",
+   "audio": "audio/saetze/sp_01.mp3"
+  },
+  "sp_02": {
+   "en": "I like nature, mountains and the sea.",
+   "de": "Ich mag die Natur, Berge und das Meer.",
+   "luecke": "I like",
+   "stimme": "m",
+   "audio": "audio/saetze/sp_02.mp3"
+  },
+  "sp_03": {
+   "en": "I want to see the Statue of Liberty.",
+   "de": "Ich will die Freiheitsstatue sehen.",
+   "luecke": "I want to see",
+   "stimme": "f",
+   "audio": "audio/saetze/sp_03.mp3"
+  },
+  "sp_04": {
+   "en": "Where do you want to go? What's your favourite place?",
+   "de": "Wohin willst du fahren? Was ist dein Lieblingsort?",
+   "luecke": "favourite place",
+   "stimme": "m",
+   "audio": "audio/saetze/sp_04.mp3"
+  },
+  "sp_05": {
+   "en": "Well, I'd prefer to go to Florida because I like hot weather.",
+   "de": "Na ja, ich würde lieber nach Florida fahren, weil ich heißes Wetter mag.",
+   "luecke": "I'd prefer to go",
+   "stimme": "f",
+   "audio": "audio/saetze/sp_05.mp3"
+  },
+  "sp_06": {
+   "en": "What do you think about that?",
+   "de": "Was hältst du davon?",
+   "luecke": "What do you think",
+   "stimme": "m",
+   "audio": "audio/saetze/sp_06.mp3"
+  },
+  "sp_07": {
+   "en": "I'm not so sure about that.",
+   "de": "Da bin ich mir nicht so sicher.",
+   "luecke": "not so sure",
+   "stimme": "f",
+   "audio": "audio/saetze/sp_07.mp3"
+  },
+  "sp_08": {
+   "en": "I think we should go to the Rocky Mountains because it's more exciting.",
+   "de": "Ich finde, wir sollten in die Rocky Mountains fahren, weil es spannender ist.",
+   "luecke": "we should go",
+   "stimme": "m",
+   "audio": "audio/saetze/sp_08.mp3"
+  },
+  "sp_09": {
+   "en": "OK, I agree — let's go to New York!",
+   "de": "Okay, einverstanden – lass uns nach New York fahren!",
+   "luecke": "I agree",
+   "stimme": "f",
+   "audio": "audio/saetze/sp_09.mp3"
+  },
+  "sp_10": {
+   "en": "Our favourite place is New York because we both like big cities.",
+   "de": "Unser Lieblingsort ist New York, weil wir beide große Städte mögen.",
+   "luecke": "Our favourite place",
+   "stimme": "m",
+   "audio": "audio/saetze/sp_10.mp3"
+  },
+  "d1_01": {
+   "en": "Where would you like to go in the US?",
+   "de": "Wohin würdest du gern in den USA fahren?",
+   "luecke": "would you like",
+   "stimme": "m",
+   "audio": "audio/saetze/d1_01.mp3"
+  },
+  "d1_02": {
+   "en": "I'd like to go to New York because I like big cities and I want to see the Statue of Liberty.",
+   "de": "Ich würde gern nach New York fahren, weil ich große Städte mag und die Freiheitsstatue sehen will.",
+   "luecke": "I'd like to go",
+   "stimme": "f",
+   "audio": "audio/saetze/d1_02.mp3"
+  },
+  "d1_03": {
+   "en": "Me too! I like big cities.",
+   "de": "Ich auch! Ich mag große Städte.",
+   "luecke": "Me too",
+   "stimme": "m",
+   "audio": "audio/saetze/d1_03.mp3"
+  },
+  "d1_04": {
+   "en": "What do you think about that?",
+   "de": "Was hältst du davon?",
+   "luecke": "What do you think",
+   "stimme": "f",
+   "audio": "audio/saetze/d1_04.mp3"
+  },
+  "d1_05": {
+   "en": "I agree — let's go to New York!",
+   "de": "Einverstanden – lass uns nach New York fahren!",
+   "luecke": "I agree",
+   "stimme": "m",
+   "audio": "audio/saetze/d1_05.mp3"
+  },
+  "d1_06": {
+   "en": "Great! Our favourite place is New York because we both like big cities.",
+   "de": "Super! Unser Lieblingsort ist New York, weil wir beide große Städte mögen.",
+   "luecke": "Our favourite place",
+   "stimme": "f",
+   "audio": "audio/saetze/d1_06.mp3"
+  },
+  "d2_01": {
+   "en": "Where would you like to go in the US?",
+   "de": "Wohin würdest du gern in den USA fahren?",
+   "luecke": "would you like",
+   "stimme": "m",
+   "audio": "audio/saetze/d2_01.mp3"
+  },
+  "d2_02": {
+   "en": "I'd like to go to the Rocky Mountains because I like nature and I want to go camping.",
+   "de": "Ich würde gern in die Rocky Mountains fahren, weil ich die Natur mag und zelten gehen will.",
+   "luecke": "I'd like to go",
+   "stimme": "f",
+   "audio": "audio/saetze/d2_02.mp3"
+  },
+  "d2_03": {
+   "en": "Well, I'd prefer to go to Florida because I like hot weather and the sea.",
+   "de": "Na ja, ich würde lieber nach Florida fahren, weil ich heißes Wetter und das Meer mag.",
+   "luecke": "I'd prefer",
+   "stimme": "m",
+   "audio": "audio/saetze/d2_03.mp3"
+  },
+  "d2_04": {
+   "en": "I'm not so sure about that. I think we should go to the Rocky Mountains because it's more exciting.",
+   "de": "Da bin ich mir nicht so sicher. Ich finde, wir sollten in die Rocky Mountains fahren, weil es spannender ist.",
+   "luecke": "not so sure",
+   "stimme": "f",
+   "audio": "audio/saetze/d2_04.mp3"
+  },
+  "d2_05": {
+   "en": "Hmm, OK. What about this: we go to Florida first, and then to the Rocky Mountains?",
+   "de": "Hm, okay. Wie wäre es damit: Wir fahren zuerst nach Florida und dann in die Rocky Mountains?",
+   "luecke": "What about this",
+   "stimme": "m",
+   "audio": "audio/saetze/d2_05.mp3"
+  },
+  "d2_06": {
+   "en": "OK, I agree — let's go to Florida and the Rocky Mountains!",
+   "de": "Okay, einverstanden – lass uns nach Florida und in die Rocky Mountains fahren!",
+   "luecke": "I agree",
+   "stimme": "f",
+   "audio": "audio/saetze/d2_06.mp3"
+  },
+  "d2_07": {
+   "en": "Great! We picked both places because we like the sea and nature.",
+   "de": "Super! Wir haben beide Orte gewählt, weil wir das Meer und die Natur mögen.",
+   "luecke": "We picked",
+   "stimme": "m",
+   "audio": "audio/saetze/d2_07.mp3"
+  },
+  "d3_01": {
+   "en": "Hi! What do you like about the USA?",
+   "de": "Hi! Was gefällt dir an den USA?",
+   "luecke": "What do you like",
+   "stimme": "m",
+   "audio": "audio/saetze/d3_01.mp3"
+  },
+  "d3_02": {
+   "en": "Oh, I love Central Park in New York City. It's so relaxing.",
+   "de": "Oh, ich liebe den Central Park in New York. Er ist so entspannend.",
+   "luecke": "relaxing",
+   "stimme": "f",
+   "audio": "audio/saetze/d3_02.mp3"
+  },
+  "d3_03": {
+   "en": "Relaxing? I think it's terrible — so busy, so loud!",
+   "de": "Entspannend? Ich finde es schrecklich – so viel los, so laut!",
+   "luecke": "terrible",
+   "stimme": "m",
+   "audio": "audio/saetze/d3_03.mp3"
+  },
+  "d3_04": {
+   "en": "Busy is exciting! Where would you like to go?",
+   "de": "Viel los ist spannend! Wohin würdest du gern fahren?",
+   "luecke": "exciting",
+   "stimme": "f",
+   "audio": "audio/saetze/d3_04.mp3"
+  },
+  "d3_05": {
+   "en": "I'd like to go to Yellowstone, because I want to see a real geyser!",
+   "de": "Ich würde gern in den Yellowstone-Park fahren, weil ich einen echten Geysir sehen will!",
+   "luecke": "geyser",
+   "stimme": "m",
+   "audio": "audio/saetze/d3_05.mp3"
+  },
+  "d3_06": {
+   "en": "A geyser? Hot water shooting into the air? Sounds terrifying!",
+   "de": "Ein Geysir? Heißes Wasser, das in die Luft schießt? Klingt furchtbar!",
+   "luecke": "terrifying",
+   "stimme": "f",
+   "audio": "audio/saetze/d3_06.mp3"
+  },
+  "d3_07": {
+   "en": "Terrifying? No way — it's awesome!",
+   "de": "Furchtbar? Auf keinen Fall – das ist großartig!",
+   "luecke": "No way",
+   "stimme": "m",
+   "audio": "audio/saetze/d3_07.mp3"
+  },
+  "d3_08": {
+   "en": "Okay, I agree, that does sound exciting. Is New York safe, though?",
+   "de": "Okay, einverstanden, das klingt wirklich spannend. Aber ist New York sicher?",
+   "luecke": "safe",
+   "stimme": "f",
+   "audio": "audio/saetze/d3_08.mp3"
+  },
+  "d3_09": {
+   "en": "Well, some people say no... but I think it's awesome, day and night.",
+   "de": "Na ja, manche sagen nein … aber ich finde es großartig, Tag und Nacht.",
+   "luecke": "day and night",
+   "stimme": "m",
+   "audio": "audio/saetze/d3_09.mp3"
+  },
+  "d3_10": {
+   "en": "\"This city never sleeps\" — but I definitely need my sleep! Bye!",
+   "de": "„Diese Stadt schläft nie“ – aber ich brauche auf jeden Fall meinen Schlaf! Tschüss!",
+   "luecke": "never sleeps",
+   "stimme": "f",
+   "audio": "audio/saetze/d3_10.mp3"
+  },
+  "d3_11": {
+   "en": "Bye! See you next time!",
+   "de": "Tschüss! Bis zum nächsten Mal!",
+   "luecke": "See you",
+   "stimme": "m",
+   "audio": "audio/saetze/d3_11.mp3"
+  },
+  "d4_01": {
+   "en": "Guess what — I found Jayden's blog. He sits on his stoop every day!",
+   "de": "Rate mal – ich habe Jaydens Blog gefunden. Er sitzt jeden Tag auf seiner Eingangstreppe!",
+   "luecke": "stoop",
+   "stimme": "m",
+   "audio": "audio/saetze/d4_01.mp3"
+  },
+  "d4_02": {
+   "en": "On his stoop? That sounds boring. I'd rather be inside.",
+   "de": "Auf seiner Treppe? Das klingt langweilig. Ich wäre lieber drinnen.",
+   "luecke": "I'd rather",
+   "stimme": "f",
+   "audio": "audio/saetze/d4_02.mp3"
+  },
+  "d4_03": {
+   "en": "Boring? No way, it's awesome — his neighbors just come by and chat!",
+   "de": "Langweilig? Auf keinen Fall, das ist großartig – seine Nachbarn kommen einfach vorbei und plaudern!",
+   "luecke": "come by",
+   "stimme": "m",
+   "audio": "audio/saetze/d4_03.mp3"
+  },
+  "d4_04": {
+   "en": "Okay, but he fell asleep on the subway once. That's embarrassing!",
+   "de": "Okay, aber er ist mal in der U-Bahn eingeschlafen. Das ist peinlich!",
+   "luecke": "embarrassing",
+   "stimme": "f",
+   "audio": "audio/saetze/d4_04.mp3"
+  },
+  "d4_05": {
+   "en": "True, but everyone falls asleep sometimes. What about his diner?",
+   "de": "Stimmt, aber jeder schläft mal ein. Und was ist mit seinem Diner?",
+   "luecke": "falls asleep",
+   "stimme": "m",
+   "audio": "audio/saetze/d4_05.mp3"
+  },
+  "d4_06": {
+   "en": "Junior's? I checked that out — apparently it's amazing.",
+   "de": "Junior's? Das habe ich mir angeschaut – anscheinend ist es super.",
+   "luecke": "checked that out",
+   "stimme": "f",
+   "audio": "audio/saetze/d4_06.mp3"
+  },
+  "d4_07": {
+   "en": "See, I told you Brooklyn was cool! I'm in a great mood just talking about it.",
+   "de": "Siehst du, ich hab dir gesagt, dass Brooklyn cool ist! Ich habe schon gute Laune, wenn ich nur darüber rede.",
+   "luecke": "mood",
+   "stimme": "m",
+   "audio": "audio/saetze/d4_07.mp3"
+  },
+  "d4_08": {
+   "en": "Ha, fine, you win. Let's check out more of his posts!",
+   "de": "Ha, na gut, du hast gewonnen. Lass uns mehr von seinen Posts anschauen!",
+   "luecke": "you win",
+   "stimme": "f",
+   "audio": "audio/saetze/d4_08.mp3"
+  },
+  "d4_09": {
+   "en": "Deal! I bet the next one makes you cheer.",
+   "de": "Abgemacht! Ich wette, beim nächsten jubelst du.",
+   "luecke": "cheer",
+   "stimme": "m",
+   "audio": "audio/saetze/d4_09.mp3"
+  },
+  "d4_10": {
+   "en": "We'll see about that!",
+   "de": "Das werden wir ja sehen!",
+   "luecke": "We'll see",
+   "stimme": "f",
+   "audio": "audio/saetze/d4_10.mp3"
+  },
+  "hf_01": {
+   "en": "I felt so proud when we won!",
+   "de": "Ich war so stolz, als wir gewonnen haben!",
+   "luecke": "proud",
+   "stimme": "f",
+   "audio": "audio/saetze/hf_01.mp3"
+  },
+  "hf_02": {
+   "en": "It made my day when we laughed together.",
+   "de": "Es hat meinen Tag gerettet, als wir zusammen gelacht haben.",
+   "luecke": "made my day",
+   "stimme": "m",
+   "audio": "audio/saetze/hf_02.mp3"
+  },
+  "hf_03": {
+   "en": "I was grateful to spend time with my family.",
+   "de": "Ich war dankbar, Zeit mit meiner Familie zu verbringen.",
+   "luecke": "grateful",
+   "stimme": "f",
+   "audio": "audio/saetze/hf_03.mp3"
+  },
+  "hf_04": {
+   "en": "I hope tomorrow will be better.",
+   "de": "Ich hoffe, morgen wird es besser.",
+   "luecke": "will be better",
+   "stimme": "m",
+   "audio": "audio/saetze/hf_04.mp3"
+  },
+  "hf_05": {
+   "en": "I felt relieved and happy at the end of the day.",
+   "de": "Am Ende des Tages war ich erleichtert und glücklich.",
+   "luecke": "relieved",
+   "stimme": "f",
+   "audio": "audio/saetze/hf_05.mp3"
+  },
+  "hf_06": {
+   "en": "Family members and friends of the victims still come here to mourn and leave flowers.",
+   "de": "Angehörige und Freunde der Opfer kommen immer noch hierher, um zu trauern und Blumen niederzulegen.",
+   "luecke": "mourn",
+   "stimme": "m",
+   "audio": "audio/saetze/hf_06.mp3"
+  },
+  "hf_07": {
+   "en": "It's a weird feeling to be there.",
+   "de": "Es ist ein seltsames Gefühl, dort zu sein.",
+   "luecke": "weird feeling",
+   "stimme": "f",
+   "audio": "audio/saetze/hf_07.mp3"
+  },
+  "hf_08": {
+   "en": "I still loved it, and I would go back anytime again without hesitation.",
+   "de": "Ich habe es trotzdem geliebt und würde jederzeit ohne Zögern wieder hinfahren.",
+   "luecke": "without hesitation",
+   "stimme": "m",
+   "audio": "audio/saetze/hf_08.mp3"
+  },
+  "hf_09": {
+   "en": "It feels like being in a historical movie.",
+   "de": "Es fühlt sich an, als wäre man in einem historischen Film.",
+   "luecke": "feels like being",
+   "stimme": "f",
+   "audio": "audio/saetze/hf_09.mp3"
+  },
+  "hf_10": {
+   "en": "When she saw the price, she was absolutely shocked.",
+   "de": "Als sie den Preis sah, war sie völlig schockiert.",
+   "luecke": "absolutely shocked",
+   "stimme": "m",
+   "audio": "audio/saetze/hf_10.mp3"
+  },
+  "hf_11": {
+   "en": "I would recommend going to New York.",
+   "de": "Ich würde empfehlen, nach New York zu fahren.",
+   "luecke": "recommend going",
+   "stimme": "f",
+   "audio": "audio/saetze/hf_11.mp3"
+  },
+  "hm_01": {
+   "en": "He doesn't take me to school.",
+   "de": "Er bringt mich nicht zur Schule.",
+   "luecke": "doesn't",
+   "stimme": "m",
+   "audio": "audio/saetze/hm_01.mp3"
+  },
+  "hm_02": {
+   "en": "She understands me.",
+   "de": "Sie versteht mich.",
+   "luecke": "understands",
+   "stimme": "f",
+   "audio": "audio/saetze/hm_02.mp3"
+  },
+  "hm_03": {
+   "en": "It doesn't matter.",
+   "de": "Das ist egal.",
+   "luecke": "doesn't",
+   "stimme": "m",
+   "audio": "audio/saetze/hm_03.mp3"
+  },
+  "hm_04": {
+   "en": "I like her.",
+   "de": "Ich mag sie.",
+   "luecke": "her",
+   "stimme": "f",
+   "audio": "audio/saetze/hm_04.mp3"
+  },
+  "hm_05": {
+   "en": "I talk with her every day.",
+   "de": "Ich rede jeden Tag mit ihr.",
+   "luecke": "her",
+   "stimme": "m",
+   "audio": "audio/saetze/hm_05.mp3"
+  },
+  "hm_06": {
+   "en": "My brother doesn't like pizza.",
+   "de": "Mein Bruder mag keine Pizza.",
+   "luecke": "doesn't",
+   "stimme": "f",
+   "audio": "audio/saetze/hm_06.mp3"
+  },
+  "hm_07": {
+   "en": "Yesterday I went to the park with my friends.",
+   "de": "Gestern bin ich mit meinen Freunden in den Park gegangen.",
+   "luecke": "I",
+   "stimme": "m",
+   "audio": "audio/saetze/hm_07.mp3"
+  },
+  "hb_01": {
+   "en": "I was so excited before the trip.",
+   "de": "Vor der Reise war ich so aufgeregt.",
+   "luecke": "excited",
+   "stimme": "f",
+   "audio": "audio/saetze/hb_01.mp3"
+  },
+  "hb_02": {
+   "en": "I felt relaxed at the beach.",
+   "de": "Am Strand war ich entspannt.",
+   "luecke": "relaxed",
+   "stimme": "m",
+   "audio": "audio/saetze/hb_02.mp3"
+  },
+  "hb_03": {
+   "en": "The view from the top was amazing.",
+   "de": "Die Aussicht von oben war unglaublich schön.",
+   "luecke": "amazing",
+   "stimme": "f",
+   "audio": "audio/saetze/hb_03.mp3"
+  },
+  "hb_04": {
+   "en": "The burger was really delicious.",
+   "de": "Der Burger war richtig lecker.",
+   "luecke": "delicious",
+   "stimme": "m",
+   "audio": "audio/saetze/hb_04.mp3"
+  },
+  "hb_05": {
+   "en": "The haunted house was a bit scary.",
+   "de": "Das Geisterhaus war ein bisschen gruselig.",
+   "luecke": "scary",
+   "stimme": "f",
+   "audio": "audio/saetze/hb_05.mp3"
+  },
+  "hb_06": {
+   "en": "The skyscrapers are huge, and our hotel room was tiny.",
+   "de": "Die Wolkenkratzer sind riesig, und unser Hotelzimmer war winzig.",
+   "luecke": "huge",
+   "stimme": "m",
+   "audio": "audio/saetze/hb_06.mp3"
+  },
+  "hb_07": {
+   "en": "The show was unbelievable!",
+   "de": "Die Show war unglaublich!",
+   "luecke": "unbelievable",
+   "stimme": "f",
+   "audio": "audio/saetze/hb_07.mp3"
+  },
+  "he_01": {
+   "en": "I ordered breakfast at the café.",
+   "de": "Ich bestellte ein Frühstück im Café.",
+   "luecke": "ordered",
+   "stimme": "m",
+   "audio": "audio/saetze/he_01.mp3"
+  },
+  "he_02": {
+   "en": "We used a car for our trip.",
+   "de": "Wir benutzten ein Auto für unseren Ausflug.",
+   "luecke": "used",
+   "stimme": "f",
+   "audio": "audio/saetze/he_02.mp3"
+  },
+  "he_03": {
+   "en": "It was quieter than Times Square.",
+   "de": "Es war ruhiger als der Times Square.",
+   "luecke": "than",
+   "stimme": "m",
+   "audio": "audio/saetze/he_03.mp3"
+  },
+  "he_04": {
+   "en": "The statue was bigger than I thought.",
+   "de": "Die Statue war größer, als ich dachte.",
+   "luecke": "than",
+   "stimme": "f",
+   "audio": "audio/saetze/he_04.mp3"
+  },
+  "he_05": {
+   "en": "There was so much food there.",
+   "de": "Es gab dort so viel Essen.",
+   "luecke": "was",
+   "stimme": "m",
+   "audio": "audio/saetze/he_05.mp3"
+  },
+  "he_06": {
+   "en": "It was so quiet in the park.",
+   "de": "Es war so ruhig im Park.",
+   "luecke": "quiet",
+   "stimme": "f",
+   "audio": "audio/saetze/he_06.mp3"
+  },
+  "he_07": {
+   "en": "She said she would come with me.",
+   "de": "Sie sagte, sie würde mitkommen.",
+   "luecke": "would",
+   "stimme": "m",
+   "audio": "audio/saetze/he_07.mp3"
+  },
+  "he_08": {
+   "en": "Her taste in fashion was fantastic.",
+   "de": "Ihr Modegeschmack war fantastisch.",
+   "luecke": "was",
+   "stimme": "f",
+   "audio": "audio/saetze/he_08.mp3"
+  },
+  "he_09": {
+   "en": "We ordered burgers at the diner.",
+   "de": "Wir bestellten Burger im Diner.",
+   "luecke": "diner",
+   "stimme": "m",
+   "audio": "audio/saetze/he_09.mp3"
+  },
+  "he_10": {
+   "en": "We ate pizza at the restaurant.",
+   "de": "Wir aßen Pizza im Restaurant.",
+   "luecke": "restaurant",
+   "stimme": "f",
+   "audio": "audio/saetze/he_10.mp3"
+  },
+  "he_11": {
+   "en": "I didn't understand that.",
+   "de": "Ich verstand das nicht.",
+   "luecke": "understand",
+   "stimme": "m",
+   "audio": "audio/saetze/he_11.mp3"
+  },
+  "he_12": {
+   "en": "The people there were very friendly.",
+   "de": "Die Leute dort waren sehr freundlich.",
+   "luecke": "were",
+   "stimme": "f",
+   "audio": "audio/saetze/he_12.mp3"
+  },
+  "ht_01": {
+   "en": "Crime is a problem in big cities.",
+   "de": "Verbrechen sind in großen Städten ein Problem.",
+   "luecke": "Crime",
+   "stimme": "m",
+   "audio": "audio/saetze/ht_01.mp3"
+  },
+  "ht_02": {
+   "en": "The man looked suspicious.",
+   "de": "Der Mann sah verdächtig aus.",
+   "luecke": "suspicious",
+   "stimme": "f",
+   "audio": "audio/saetze/ht_02.mp3"
+  },
+  "ht_03": {
+   "en": "I'm innocent!",
+   "de": "Ich bin unschuldig!",
+   "luecke": "innocent",
+   "stimme": "m",
+   "audio": "audio/saetze/ht_03.mp3"
+  },
+  "ht_04": {
+   "en": "My friendship with him is important to me.",
+   "de": "Die Freundschaft mit ihm ist mir wichtig.",
+   "luecke": "friendship",
+   "stimme": "f",
+   "audio": "audio/saetze/ht_04.mp3"
+  },
+  "ht_05": {
+   "en": "I felt trapped in the kitchen.",
+   "de": "Ich fühlte mich in der Küche gefangen.",
+   "luecke": "trapped",
+   "stimme": "m",
+   "audio": "audio/saetze/ht_05.mp3"
+  },
+  "ht_06": {
+   "en": "I practise basketball every day.",
+   "de": "Ich übe jeden Tag Basketball.",
+   "luecke": "practise",
+   "stimme": "f",
+   "audio": "audio/saetze/ht_06.mp3"
+  },
+  "ht_07": {
+   "en": "He stared at her for a long time.",
+   "de": "Er starrte sie lange an.",
+   "luecke": "stared",
+   "stimme": "m",
+   "audio": "audio/saetze/ht_07.mp3"
+  },
+  "ht_08": {
+   "en": "That was the turning point of the story.",
+   "de": "Das war der Wendepunkt der Geschichte.",
+   "luecke": "turning point",
+   "stimme": "f",
+   "audio": "audio/saetze/ht_08.mp3"
+  },
+  "hv_01": {
+   "en": "Manhattan is an island.",
+   "de": "Manhattan ist eine Insel.",
+   "luecke": "island",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_01.mp3"
+  },
+  "hv_02": {
+   "en": "The skyscraper is very tall.",
+   "de": "Der Wolkenkratzer ist sehr hoch.",
+   "luecke": "skyscraper",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_02.mp3"
+  },
+  "hv_03": {
+   "en": "They have a small backyard.",
+   "de": "Sie haben einen kleinen Garten.",
+   "luecke": "backyard",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_03.mp3"
+  },
+  "hv_04": {
+   "en": "It's a suspension bridge.",
+   "de": "Es ist eine Hängebrücke.",
+   "luecke": "suspension",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_04.mp3"
+  },
+  "hv_05": {
+   "en": "I'm in a good mood today.",
+   "de": "Ich bin heute guter Laune.",
+   "luecke": "mood",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_05.mp3"
+  },
+  "hv_06": {
+   "en": "We live in a small apartment.",
+   "de": "Wir wohnen in einer kleinen Wohnung.",
+   "luecke": "apartment",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_06.mp3"
+  },
+  "hv_07": {
+   "en": "It was so embarrassing!",
+   "de": "Es war so peinlich!",
+   "luecke": "embarrassing",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_07.mp3"
+  },
+  "hv_08": {
+   "en": "I take the subway to school.",
+   "de": "Ich fahre mit der U-Bahn zur Schule.",
+   "luecke": "subway",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_08.mp3"
+  },
+  "hv_09": {
+   "en": "We had breakfast at a diner.",
+   "de": "Wir haben in einem Diner gefrühstückt.",
+   "luecke": "diner",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_09.mp3"
+  },
+  "hv_10": {
+   "en": "Can I order a burger, please?",
+   "de": "Kann ich bitte einen Burger bestellen?",
+   "luecke": "order",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_10.mp3"
+  },
+  "hv_11": {
+   "en": "I love my neighborhood.",
+   "de": "Ich liebe meine Nachbarschaft.",
+   "luecke": "neighborhood",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_11.mp3"
+  },
+  "hv_12": {
+   "en": "The subway was really crowded.",
+   "de": "Die U-Bahn war wirklich überfüllt.",
+   "luecke": "crowded",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_12.mp3"
+  },
+  "hv_13": {
+   "en": "There's a great view from here.",
+   "de": "Von hier hat man eine tolle Aussicht.",
+   "luecke": "view",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_13.mp3"
+  },
+  "hv_14": {
+   "en": "We sat on the stoop and talked.",
+   "de": "Wir saßen auf der Treppe und redeten.",
+   "luecke": "stoop",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_14.mp3"
+  },
+  "hv_15": {
+   "en": "It was a total disaster!",
+   "de": "Es war eine totale Katastrophe!",
+   "luecke": "disaster",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_15.mp3"
+  },
+  "hv_16": {
+   "en": "Let's meet downtown.",
+   "de": "Lass uns in der Innenstadt treffen.",
+   "luecke": "downtown",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_16.mp3"
   }
  },
  "vokabeln": [
@@ -3250,7 +3985,645 @@ window.DATEN = {
     "E": "Dialogues"
    },
    "symbol": "💬",
-   "bald": true
+   "gruppen": [
+    {
+     "name": "Useful phrases",
+     "symbol": "🗣️ 👍 🤔",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "Phrases",
+       "saetze": [
+        "sp_01",
+        "sp_02",
+        "sp_03",
+        "sp_04",
+        "sp_05",
+        "sp_06",
+        "sp_07",
+        "sp_08",
+        "sp_09",
+        "sp_10"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Dialogue 1 · Quick agreement",
+     "symbol": "🗽 🏙️",
+     "schritte": [
+      {
+       "art": "dialog",
+       "name": "Listen",
+       "zeilen": [
+        [
+         "d1_01",
+         "A"
+        ],
+        [
+         "d1_02",
+         "B"
+        ],
+        [
+         "d1_03",
+         "A"
+        ],
+        [
+         "d1_04",
+         "B"
+        ],
+        [
+         "d1_05",
+         "A"
+        ],
+        [
+         "d1_06",
+         "B"
+        ]
+       ],
+       "rolle": null
+      },
+      {
+       "art": "lr",
+       "name": "Lines",
+       "stufen": [
+        1,
+        3
+       ],
+       "saetze": [
+        "d1_01",
+        "d1_02",
+        "d1_03",
+        "d1_04",
+        "d1_05",
+        "d1_06"
+       ]
+      },
+      {
+       "art": "dialog",
+       "name": "You are A",
+       "zeilen": [
+        [
+         "d1_01",
+         "A"
+        ],
+        [
+         "d1_02",
+         "B"
+        ],
+        [
+         "d1_03",
+         "A"
+        ],
+        [
+         "d1_04",
+         "B"
+        ],
+        [
+         "d1_05",
+         "A"
+        ],
+        [
+         "d1_06",
+         "B"
+        ]
+       ],
+       "rolle": "A"
+      },
+      {
+       "art": "dialog",
+       "name": "You are B",
+       "zeilen": [
+        [
+         "d1_01",
+         "A"
+        ],
+        [
+         "d1_02",
+         "B"
+        ],
+        [
+         "d1_03",
+         "A"
+        ],
+        [
+         "d1_04",
+         "B"
+        ],
+        [
+         "d1_05",
+         "A"
+        ],
+        [
+         "d1_06",
+         "B"
+        ]
+       ],
+       "rolle": "B"
+      }
+     ]
+    },
+    {
+     "name": "Dialogue 2 · Disagree, then agree",
+     "symbol": "⛰️ 🏖️",
+     "schritte": [
+      {
+       "art": "dialog",
+       "name": "Listen",
+       "zeilen": [
+        [
+         "d2_01",
+         "A"
+        ],
+        [
+         "d2_02",
+         "B"
+        ],
+        [
+         "d2_03",
+         "A"
+        ],
+        [
+         "d2_04",
+         "B"
+        ],
+        [
+         "d2_05",
+         "A"
+        ],
+        [
+         "d2_06",
+         "B"
+        ],
+        [
+         "d2_07",
+         "A"
+        ]
+       ],
+       "rolle": null
+      },
+      {
+       "art": "lr",
+       "name": "Lines",
+       "stufen": [
+        1,
+        3
+       ],
+       "saetze": [
+        "d2_01",
+        "d2_02",
+        "d2_03",
+        "d2_04",
+        "d2_05",
+        "d2_06",
+        "d2_07"
+       ]
+      },
+      {
+       "art": "dialog",
+       "name": "You are A",
+       "zeilen": [
+        [
+         "d2_01",
+         "A"
+        ],
+        [
+         "d2_02",
+         "B"
+        ],
+        [
+         "d2_03",
+         "A"
+        ],
+        [
+         "d2_04",
+         "B"
+        ],
+        [
+         "d2_05",
+         "A"
+        ],
+        [
+         "d2_06",
+         "B"
+        ],
+        [
+         "d2_07",
+         "A"
+        ]
+       ],
+       "rolle": "A"
+      },
+      {
+       "art": "dialog",
+       "name": "You are B",
+       "zeilen": [
+        [
+         "d2_01",
+         "A"
+        ],
+        [
+         "d2_02",
+         "B"
+        ],
+        [
+         "d2_03",
+         "A"
+        ],
+        [
+         "d2_04",
+         "B"
+        ],
+        [
+         "d2_05",
+         "A"
+        ],
+        [
+         "d2_06",
+         "B"
+        ],
+        [
+         "d2_07",
+         "A"
+        ]
+       ],
+       "rolle": "B"
+      }
+     ]
+    },
+    {
+     "name": "New York — Yes or No?",
+     "symbol": "🌳 ♨️",
+     "schritte": [
+      {
+       "art": "dialog",
+       "name": "Listen",
+       "zeilen": [
+        [
+         "d3_01",
+         "A"
+        ],
+        [
+         "d3_02",
+         "B"
+        ],
+        [
+         "d3_03",
+         "A"
+        ],
+        [
+         "d3_04",
+         "B"
+        ],
+        [
+         "d3_05",
+         "A"
+        ],
+        [
+         "d3_06",
+         "B"
+        ],
+        [
+         "d3_07",
+         "A"
+        ],
+        [
+         "d3_08",
+         "B"
+        ],
+        [
+         "d3_09",
+         "A"
+        ],
+        [
+         "d3_10",
+         "B"
+        ],
+        [
+         "d3_11",
+         "A"
+        ]
+       ],
+       "rolle": null
+      },
+      {
+       "art": "lr",
+       "name": "Lines",
+       "stufen": [
+        1,
+        3
+       ],
+       "saetze": [
+        "d3_01",
+        "d3_02",
+        "d3_03",
+        "d3_04",
+        "d3_05",
+        "d3_06",
+        "d3_07",
+        "d3_08",
+        "d3_09",
+        "d3_10",
+        "d3_11"
+       ]
+      },
+      {
+       "art": "dialog",
+       "name": "You are A",
+       "zeilen": [
+        [
+         "d3_01",
+         "A"
+        ],
+        [
+         "d3_02",
+         "B"
+        ],
+        [
+         "d3_03",
+         "A"
+        ],
+        [
+         "d3_04",
+         "B"
+        ],
+        [
+         "d3_05",
+         "A"
+        ],
+        [
+         "d3_06",
+         "B"
+        ],
+        [
+         "d3_07",
+         "A"
+        ],
+        [
+         "d3_08",
+         "B"
+        ],
+        [
+         "d3_09",
+         "A"
+        ],
+        [
+         "d3_10",
+         "B"
+        ],
+        [
+         "d3_11",
+         "A"
+        ]
+       ],
+       "rolle": "A"
+      },
+      {
+       "art": "dialog",
+       "name": "You are B",
+       "zeilen": [
+        [
+         "d3_01",
+         "A"
+        ],
+        [
+         "d3_02",
+         "B"
+        ],
+        [
+         "d3_03",
+         "A"
+        ],
+        [
+         "d3_04",
+         "B"
+        ],
+        [
+         "d3_05",
+         "A"
+        ],
+        [
+         "d3_06",
+         "B"
+        ],
+        [
+         "d3_07",
+         "A"
+        ],
+        [
+         "d3_08",
+         "B"
+        ],
+        [
+         "d3_09",
+         "A"
+        ],
+        [
+         "d3_10",
+         "B"
+        ],
+        [
+         "d3_11",
+         "A"
+        ]
+       ],
+       "rolle": "B"
+      }
+     ]
+    },
+    {
+     "name": "Brooklyn or Bust?",
+     "symbol": "🏠 🚇 🍔",
+     "schritte": [
+      {
+       "art": "dialog",
+       "name": "Listen",
+       "zeilen": [
+        [
+         "d4_01",
+         "A"
+        ],
+        [
+         "d4_02",
+         "B"
+        ],
+        [
+         "d4_03",
+         "A"
+        ],
+        [
+         "d4_04",
+         "B"
+        ],
+        [
+         "d4_05",
+         "A"
+        ],
+        [
+         "d4_06",
+         "B"
+        ],
+        [
+         "d4_07",
+         "A"
+        ],
+        [
+         "d4_08",
+         "B"
+        ],
+        [
+         "d4_09",
+         "A"
+        ],
+        [
+         "d4_10",
+         "B"
+        ]
+       ],
+       "rolle": null
+      },
+      {
+       "art": "lr",
+       "name": "Lines",
+       "stufen": [
+        1,
+        3
+       ],
+       "saetze": [
+        "d4_01",
+        "d4_02",
+        "d4_03",
+        "d4_04",
+        "d4_05",
+        "d4_06",
+        "d4_07",
+        "d4_08",
+        "d4_09",
+        "d4_10"
+       ]
+      },
+      {
+       "art": "dialog",
+       "name": "You are A",
+       "zeilen": [
+        [
+         "d4_01",
+         "A"
+        ],
+        [
+         "d4_02",
+         "B"
+        ],
+        [
+         "d4_03",
+         "A"
+        ],
+        [
+         "d4_04",
+         "B"
+        ],
+        [
+         "d4_05",
+         "A"
+        ],
+        [
+         "d4_06",
+         "B"
+        ],
+        [
+         "d4_07",
+         "A"
+        ],
+        [
+         "d4_08",
+         "B"
+        ],
+        [
+         "d4_09",
+         "A"
+        ],
+        [
+         "d4_10",
+         "B"
+        ]
+       ],
+       "rolle": "A"
+      },
+      {
+       "art": "dialog",
+       "name": "You are B",
+       "zeilen": [
+        [
+         "d4_01",
+         "A"
+        ],
+        [
+         "d4_02",
+         "B"
+        ],
+        [
+         "d4_03",
+         "A"
+        ],
+        [
+         "d4_04",
+         "B"
+        ],
+        [
+         "d4_05",
+         "A"
+        ],
+        [
+         "d4_06",
+         "B"
+        ],
+        [
+         "d4_07",
+         "A"
+        ],
+        [
+         "d4_08",
+         "B"
+        ],
+        [
+         "d4_09",
+         "A"
+        ],
+        [
+         "d4_10",
+         "B"
+        ]
+       ],
+       "rolle": "B"
+      },
+      {
+       "art": "erklaerung",
+       "name": "Your own dialogue",
+       "bloecke": [
+        {
+         "typ": "text",
+         "G": "Jetzt du mit einem Partner: Macht euren eigenen Dialog! (E-Kurs: Pflicht, G-Kurs: Bonus)",
+         "E": "Now you and a partner: make your own dialogue!"
+        },
+        {
+         "typ": "liste",
+         "punkte": [
+          "mood · come by · apartment · embarrassing",
+          "fall asleep · subway · diner · check out",
+          "stoop · cheer",
+          "That sounds awesome / boring / embarrassing!"
+         ]
+        },
+        {
+         "typ": "merksatz",
+         "G": "Mindestens 5 Wechsel pro Person!",
+         "E": "Aim for at least 5 exchanges each!"
+        }
+       ]
+      }
+     ]
+    }
+   ]
   },
   {
    "nr": 7,
@@ -3352,7 +4725,246 @@ window.DATEN = {
     "E": "From your texts"
    },
    "symbol": "🏆",
-   "bald": true
+   "gruppen": [
+    {
+     "name": "Strong moments",
+     "symbol": "🌟 ✍️",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "Your best sentences",
+       "saetze": [
+        "hf_01",
+        "hf_02",
+        "hf_03",
+        "hf_04",
+        "hf_05",
+        "hf_06",
+        "hf_07",
+        "hf_08",
+        "hf_09",
+        "hf_10",
+        "hf_11"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Common mistakes",
+     "symbol": "✗ → ✓",
+     "schritte": [
+      {
+       "art": "verbform",
+       "name": "Fix it!",
+       "ansage": {
+        "G": "Fix the mistake! – Diese Fehler kamen in euren Texten oft vor. Welche Form ist richtig?",
+        "E": "Fix the mistake! These mistakes were common in your texts. Which form is right?"
+       },
+       "hilfe": {
+        "G": "Bei he, she, it: doesn't und -s am Verb.",
+        "E": "With he, she, it: doesn't and -s on the verb."
+       },
+       "aufgaben": [
+        {
+         "satz": "hm_01",
+         "richtig": "doesn't",
+         "falsch": [
+          "don't"
+         ],
+         "vorher": "he don't take me"
+        },
+        {
+         "satz": "hm_02",
+         "richtig": "understands",
+         "falsch": [
+          "understand"
+         ],
+         "vorher": "she understand me"
+        },
+        {
+         "satz": "hm_03",
+         "richtig": "doesn't",
+         "falsch": [
+          "don't"
+         ],
+         "vorher": "it don't matter"
+        },
+        {
+         "satz": "hm_04",
+         "richtig": "her",
+         "falsch": [
+          "she"
+         ],
+         "vorher": "I like she",
+         "hilfe": {
+          "G": "she macht etwas (Subjekt), her bekommt etwas ab (Objekt): I like her.",
+          "E": "she does the action (subject), her is the object: I like her."
+         }
+        },
+        {
+         "satz": "hm_05",
+         "richtig": "her",
+         "falsch": [
+          "she"
+         ],
+         "vorher": "I talk with she",
+         "hilfe": {
+          "G": "Nach with, to, for … kommt her, nicht she.",
+          "E": "After with, to, for … use her, not she."
+         }
+        },
+        {
+         "satz": "hm_06",
+         "richtig": "doesn't",
+         "falsch": [
+          "don't"
+         ],
+         "vorher": "my brother don't like pizza"
+        },
+        {
+         "satz": "hm_07",
+         "richtig": "I",
+         "falsch": [
+          "i"
+         ],
+         "vorher": "yesterday i went to the park",
+         "hilfe": {
+          "G": "„I“ (ich) schreibt man im Englischen immer groß – egal wo im Satz.",
+          "E": "We always write “I” with a capital letter – wherever it is in the sentence."
+         }
+        }
+       ]
+      },
+      {
+       "art": "lr",
+       "name": "Say it right",
+       "stufen": [
+        1,
+        3
+       ],
+       "saetze": [
+        "hm_01",
+        "hm_02",
+        "hm_03",
+        "hm_04",
+        "hm_05",
+        "hm_06",
+        "hm_07"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Vocabulary boost",
+     "symbol": "😃 😌 🤩",
+     "schritte": [
+      {
+       "art": "erklaerung",
+       "name": "Strong words",
+       "bloecke": [
+        {
+         "typ": "text",
+         "G": "Statt immer nur happy, good oder nice: Viele von euch haben starke Wörter benutzt. Genau so!",
+         "E": "Instead of happy, good or nice every time: many of you used strong words. Keep it up!"
+        },
+        {
+         "typ": "liste",
+         "punkte": [
+          "excited · relieved · proud · grateful · relaxed",
+          "amazing · awesome · fantastic · unbelievable · exciting · incredible",
+          "delicious · shocked · weird · scary · boring · huge · tiny"
+         ]
+        }
+       ]
+      },
+      {
+       "art": "lr",
+       "name": "Sentences",
+       "saetze": [
+        "hb_01",
+        "hb_02",
+        "hb_03",
+        "hb_04",
+        "hb_05",
+        "hb_06",
+        "hb_07"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "From your texts (GLN 1)",
+     "symbol": "📝",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "Sentences",
+       "saetze": [
+        "he_01",
+        "he_02",
+        "he_03",
+        "he_04",
+        "he_05",
+        "he_06",
+        "he_07",
+        "he_08",
+        "he_09",
+        "he_10",
+        "he_11",
+        "he_12"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Trapped (Unit 1)",
+     "symbol": "🔒 🕵️",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "Sentences",
+       "saetze": [
+        "ht_01",
+        "ht_02",
+        "ht_03",
+        "ht_04",
+        "ht_05",
+        "ht_06",
+        "ht_07",
+        "ht_08"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Unit 1 check",
+     "symbol": "🗽 🌉",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "Sentences",
+       "saetze": [
+        "hv_01",
+        "hv_02",
+        "hv_03",
+        "hv_04",
+        "hv_05",
+        "hv_06",
+        "hv_07",
+        "hv_08",
+        "hv_09",
+        "hv_10",
+        "hv_11",
+        "hv_12",
+        "hv_13",
+        "hv_14",
+        "hv_15",
+        "hv_16"
+       ]
+      }
+     ]
+    }
+   ]
   }
  ],
  "hoeren": {

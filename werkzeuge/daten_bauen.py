@@ -113,8 +113,8 @@ STATIONEN = [
                      ["eat", "eats", "an apple."], ["do", "does", "the shopping."]]},
      ]},
     {"nr": 6, "titel": "Hörverstehen", "symbol": "🎧", "lob": "beim Hörverstehen", "schritte": []},  # aus inhalte/hoeren
-    # Neu erklärt: neue Inhalte als Abschnitte (je Erklärung, Listen and Repeat, Übung); Woche für Woche erweiterbar
-    {"nr": 8, "titel": "Neu erklärt", "symbol": "💡", "lob": "bei den neuen Themen", "schritte": [], "gruppen": [
+    # Neu: neue Inhalte als Abschnitte (je Erklärung, Listen and Repeat, Übung); Woche für Woche erweiterbar
+    {"nr": 8, "titel": "Neu", "symbol": "💡", "lob": "bei den neuen Themen", "schritte": [], "gruppen": [
         {"name": "How often? (never … always)", "symbol": "●●●○○○○", "schritte": [
             {"art": "erklaerung", "name": "Erklärung", "bloecke": [
                 {"typ": "text", "text": "How often? – Wie oft? Die Punkte zeigen die sieben Tage einer Woche."},

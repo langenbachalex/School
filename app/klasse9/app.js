@@ -155,7 +155,7 @@
             k.bald && el("span", { class: "bald-schild" }, T("kommt bald", "coming soon")),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
-      el("div", { class: "knopfreihe" }, knopf(T("✏️ Frage für Mr. Alex notieren", "✏️ Write down a question for Mr. Alex"), fragenOeffnen)));
+      el("div", { class: "knopfreihe" }, knopf(T("✏️ Frage für meinen Lehrer", "✏️ Question for my teacher"), fragenOeffnen)));
   }
 
   function starteKategorie(nr) {
@@ -702,7 +702,7 @@
   const feld = document.getElementById("frage-text");
   const liste = document.getElementById("fragen-liste");
   function dialogTexte() {
-    document.getElementById("fragen-titel").textContent = T("✏️ Frage für Mr. Alex", "✏️ Question for Mr. Alex");
+    document.getElementById("fragen-titel").textContent = T("✏️ Frage für meinen Lehrer", "✏️ Question for my teacher");
     document.getElementById("fragen-info").textContent = T("Schreib deine Frage auf. Sie bleibt nur auf diesem Gerät. Zeig sie mir in der nächsten Stunde!",
       "Write down your question. It stays on this device only. Show it to me in the next lesson!");
     feld.placeholder = T("Was ist dir unklar?", "What is not clear?");

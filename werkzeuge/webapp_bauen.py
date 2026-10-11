@@ -17,8 +17,8 @@ def icon(groesse, ziel):
     d = ImageDraw.Draw(img)
     gross = ImageFont.truetype(SCHRIFT, int(groesse * 0.5))
     klein = ImageFont.truetype(SCHRIFT, int(groesse * 0.16))
-    d.text((groesse / 2, groesse * 0.47), "A", font=gross, fill=WEISS, anchor="mm")
-    d.text((groesse / 2, groesse * 0.8), "Mr.", font=klein, fill=GELB, anchor="mm")
+    d.text((groesse / 2, groesse * 0.47), "6", font=gross, fill=WEISS, anchor="mm")
+    d.text((groesse / 2, groesse * 0.8), "English", font=klein, fill=GELB, anchor="mm")
     img.save(ziel)
 
 
@@ -27,7 +27,7 @@ def main():
     for g in (180, 192, 512):
         icon(g, os.path.join(APP, "icons", f"icon-{g}.png"))
     manifest = {
-        "name": "Auffrischen mit Mr. Alex", "short_name": "Mr. Alex", "lang": "de",
+        "name": "English 6", "short_name": "English 6", "lang": "de",
         "start_url": "./", "scope": "./", "display": "standalone",
         "background_color": "#f3f6fb", "theme_color": "#1f5fd1",
         "icons": [{"src": f"icons/icon-{g}.png", "sizes": f"{g}x{g}", "type": "image/png", "purpose": "any maskable"}

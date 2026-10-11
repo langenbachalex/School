@@ -1,4 +1,4 @@
-/* Auffrischen mit Mr. Alex – Version 1
+/* English 6 – Dein Mr. Alex (6.3)
    Kein Konto, keine Namen. Fortschritt und Fragen bleiben nur auf diesem Gerät (localStorage).
    Grundsatz: Wird eine Lösung gezeigt, wird sie auch abgespielt. */
 (function () {
@@ -125,8 +125,8 @@
     const alleFertig = D.stationen.every((s) => stand.erledigt.includes(s.nr));
     zeige(
       el("header", { class: "gruss" },
-        el("h1", {}, "Hallo! Frischen wir zusammen auf!"),
-        el("p", { class: "klein" }, "Wähl eine Station. Wenn du fertig bist, bekommt sie ein Häkchen. Dein Mr. Alex")),
+        el("h1", {}, "Dein Mr. Alex (6.3)"),
+        el("p", { class: "klein" }, "Hallo! Wähl eine Station. Wenn du fertig bist, bekommt sie ein Häkchen.")),
       alleFertig && el("section", { class: "geschafft" },
         el("h2", {}, "Wahnsinn, du hast alles geschafft!"),
         el("p", {}, "Wenn etwas unklar ist, frag mich am Mittwoch – ich helfe dir gern. Dein Mr. Alex")),
@@ -140,7 +140,7 @@
             el("span", { class: "titel" }, s.titel),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
-      el("div", { class: "knopfreihe" }, knopf("✏️ Frage für Mr. Alex notieren", fragenOeffnen))
+      el("div", { class: "knopfreihe" }, knopf("✏️ Frage für meinen Lehrer", fragenOeffnen))
     );
   }
 
@@ -330,7 +330,7 @@
 
   function starteGruppe(st, i) {
     const g = st.gruppen[i];
-    if (g.schritte) { // Thema mit eigenen Schritten (Neu erklärt)
+    if (g.schritte) { // Thema mit eigenen Schritten (Neu)
       neueLage({ nr: st.nr, gruppe: i, teile: teileVon(g) });
       return zeigeTeil();
     }

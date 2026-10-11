@@ -1122,7 +1122,7 @@ window.DATEN = {
   },
   {
    "nr": 8,
-   "titel": "Neu erklärt",
+   "titel": "Neu",
    "symbol": "💡",
    "lob": "bei den neuen Themen",
    "schritte": [],

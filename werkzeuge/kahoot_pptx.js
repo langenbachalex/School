@@ -31,7 +31,7 @@ for (const v of vok) {
     t.background = { color: BLAU };
     t.addText("Unit 3 · Vocabulary", { x: 0.6, y: 1.3, w: 8.8, h: 0.6, fontSize: 20, color: GELB, bold: true, isTextBox: true, margin: 0 });
     t.addText(titel, { x: 0.6, y: 1.9, w: 8.8, h: 1.2, fontSize: 44, color: "FFFFFF", bold: true, isTextBox: true, margin: 0 });
-    t.addText(`${a.woerter.length} Wörter · Auffrischen mit Mr. Alex`, { x: 0.6, y: 3.2, w: 8.8, h: 0.5, fontSize: 16, color: "FFFFFF", isTextBox: true, margin: 0 });
+    t.addText(`${a.woerter.length} Wörter · English 6`, { x: 0.6, y: 3.2, w: 8.8, h: 0.5, fontSize: 16, color: "FFFFFF", isTextBox: true, margin: 0 });
 
     a.woerter.forEach((v, n) => {
       const s = pres.addSlide();

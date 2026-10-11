@@ -1,4 +1,6 @@
-# Konzept Version 1: Nachhol-App Englisch 6 („Auffrischen mit Mr. Alex“)
+# Konzept Version 1: Nachhol-App Englisch 6 („English 6“, früher „Auffrischen mit Mr. Alex“)
+
+**Umbenannt 11.10.2026 (Mr. Alex):** App heißt „English 6“, Überschrift „Dein Mr. Alex (6.3)“, Knopf „✏️ Frage für meinen Lehrer“, Station 8 heißt „Neu“.
 
 Stand: 10.10.2026. Abgesegnet von Mr. Alex, außer den Abschnitten mit **[ENTWURF – noch abzusegnen]**.
 Grundprinzip: **Vor jedem Bauschritt wird Mr. Alex gefragt und segnet ab.**

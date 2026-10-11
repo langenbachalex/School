@@ -126,11 +126,25 @@ KATEGORIEN = [
                            "E": "Learn the pairs: good at, interested in, afraid of, think about, instead of, tired of, thanks for."}},
           ]},
      ]},
-    {"nr": 4, "titel": "Listening", "unter": {"G": "Hörverstehen", "E": "Listening comprehension"}, "symbol": "🎧", "bald": True},
+    {"nr": 4, "titel": "Listening", "unter": {"G": "Hörverstehen", "E": "Listening comprehension"}, "symbol": "🎧",
+     "gruppen": [
+         {"name": "After-school activities", "symbol": "🤖 📰 🐶 📣",
+          "schritte": [
+              {"art": "lr", "name": "Words first", "stufen": [1, 2], "saetze": ["hw_01", "hw_02", "hw_03", "hw_04", "hw_05", "hw_06"]},
+              {"art": "hoeren", "name": "Listening", "uebung": "after_school"},
+          ]},
+     ]},
     {"nr": 5, "titel": "Writing", "unter": {"G": "Schreiben", "E": "Writing texts"}, "symbol": "✍️", "bald": True},
     {"nr": 6, "titel": "Speaking", "unter": {"G": "Dialoge sprechen", "E": "Dialogues"}, "symbol": "💬", "bald": True},
     {"nr": 7, "titel": "BE vs AE", "unter": {"G": "Britisch und amerikanisch", "E": "British and American English"},
-     "symbol": "🇬🇧 🇺🇸", "bald": True},
+     "symbol": "🇬🇧 🇺🇸", "gruppen": [
+         {"name": "Unit 1 · p. 20", "symbol": "🍬 🔦 🗑️", "schritte": [
+             {"art": "lr", "name": "Sentences", "saetze": [f"ba_{i:02d}" for i in range(1, 9)]},
+             {"art": "beae_quiz", "name": "British or American?", "paare": [f"ba_{i:02d}" for i in range(1, 9)]}]},
+         {"name": "More words", "symbol": "🚇 👟 🍟", "schritte": [
+             {"art": "lr", "name": "Sentences", "saetze": [f"ba_{i:02d}" for i in range(9, 18)]},
+             {"art": "beae_quiz", "name": "British or American?", "paare": [f"ba_{i:02d}" for i in range(9, 18)]}]},
+     ]},
     {"nr": 8, "titel": "New", "unter": {"G": "Neu diese Woche", "E": "New this week"}, "symbol": "✨", "farbe": "neu", "bald": True},
     {"nr": 9, "titel": "Hall of Fame", "unter": {"G": "Aus euren Texten", "E": "From your texts"}, "symbol": "🏆", "bald": True},
 ]
@@ -163,6 +177,21 @@ def main():
                          "def": v["definition"] or None, "stimme": "mf"[stimme % 2],
                          "audio": audio(f"audio/vokabeln/{v['id']}.mp3")})
         stimme += 1
+    # BE vs AE: amerikanischer Satz (Jeremy B./Jessica) mit britischem Gegenstück (Mr. Alex' Stimme)
+    for z in tsv("beae.tsv"):
+        saetze[z["id"]] = {"en": z["amerikanisch"], "de": z["deutsch"], "luecke": z["luecke"], "stimme": "mf"[stimme % 2],
+                           "audio": audio(f"audio/beae/{z['id']}.mp3"),
+                           "be": {"en": z["britisch"], "audio": audio(f"audio/beae/{z['id']}_be.mp3")}}
+        stimme += 1
+    # Listening: Wörter vorab und Hörtext
+    with open(os.path.join(INHALTE, "listening.json"), encoding="utf-8") as f:
+        hv = json.load(f)
+    for wid, en, de, luecke in hv.pop("woerter"):
+        saetze[wid] = {"en": en, "de": de, "luecke": luecke, "stimme": "mf"[stimme % 2], "audio": audio(f"audio/hoeren/{wid}.mp3")}
+        stimme += 1
+    for t in hv["teile"]:
+        t["audio"] = audio(f"audio/hoeren/{t['id']}.mp3")
+    hoeren = {hv["id"]: hv}
     # Abschnitte je Unit (Reihenfolge wie im Buch), große Abschnitte teilen
     for unit in units:
         reihe = [v for v in tsv("vokabeln.tsv") if v["unit"] == unit]
@@ -189,9 +218,9 @@ def main():
     for k in KATEGORIEN:  # Satz-IDs prüfen
         for g in k.get("gruppen", []):
             for s in g["schritte"]:
-                for sid in s.get("saetze", []) + s.get("text", []) + [a["satz"] for a in s.get("aufgaben", [])]:
+                for sid in s.get("saetze", []) + s.get("text", []) + s.get("paare", []) + [a["satz"] for a in s.get("aufgaben", [])]:
                     assert sid in saetze, sid
-    daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN}
+    daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren}
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – bitte nicht von Hand ändern.\n")
         f.write("window.DATEN = " + json.dumps(daten, ensure_ascii=False, indent=1) + ";\n")

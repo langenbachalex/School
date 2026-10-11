@@ -11,6 +11,8 @@ import klasse9_bauen as k9
 STIMMEN = {"m": "btaSeNTVh1pGx4pjFzub",  # Jeremy B. – Casual, Warm, Natural
            "f": "cgSgspJ2msm6clMCkdW9"}  # Jessica – Playful, Bright, Warm
 MODELL, EINSTELLUNGEN = "eleven_multilingual_v2", {"stability": 0.5, "similarity_boost": 0.75}
+# Britische Sätze (BE vs AE): Mr. Alex' eigene Stimme – nur mit Eleven v4
+ALEX = ("AK2WYGe96RmMwFKM5KEz", "eleven_v4", {"stability": 0.5, "similarity_boost": 0.75})
 
 
 def sprechtext(t):
@@ -25,6 +27,15 @@ def auftraege():
         s = "mf"[stimme % 2]; stimme += 1
         liste.append((f"audio/vokabeln/{v['id']}.mp3", s, sprechtext(v["englisch"])))
         liste.append((f"audio/vokabeln/{v['id']}_s.mp3", s, v["satz_en"]))
+    for z in k9.tsv("beae.tsv"):
+        liste.append((f"audio/beae/{z['id']}.mp3", "mf"[stimme % 2], z["amerikanisch"])); stimme += 1
+        liste.append((f"audio/beae/{z['id']}_be.mp3", "alex", z["britisch"]))
+    with open(os.path.join(k9.INHALTE, "listening.json"), encoding="utf-8") as f:
+        hv = json.load(f)
+    for wid, en, _, _ in hv["woerter"]:
+        liste.append((f"audio/hoeren/{wid}.mp3", "mf"[stimme % 2], en)); stimme += 1
+    for t in hv["teile"]:
+        liste.append((f"audio/hoeren/{t['id']}.mp3", t["stimme"], t["text"]))
     return liste
 
 
@@ -37,8 +48,9 @@ def main():
     for pfad, stimme, text in offen:
         ziel = os.path.join(k9.APP, pfad)
         os.makedirs(os.path.dirname(ziel), exist_ok=True)
-        body = json.dumps({"text": text, "model_id": MODELL, "voice_settings": EINSTELLUNGEN}).encode()
-        req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{STIMMEN[stimme]}?output_format=mp3_44100_128",
+        stimm_id, modell, einst = ALEX if stimme == "alex" else (STIMMEN[stimme], MODELL, EINSTELLUNGEN)
+        body = json.dumps({"text": text, "model_id": modell, "voice_settings": einst}).encode()
+        req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{stimm_id}?output_format=mp3_44100_128",
                                      data=body, headers={"Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req) as r:

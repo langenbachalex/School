@@ -1,0 +1,47 @@
+{
+ "id": "after_school",
+ "titel": "After-school activities at Riverside High",
+ "instruction": {"G": "Listen to four students. What do they do after school, and when? Tick the right answers.",
+                 "E": "Listen to four students. Fill in the table: What do they do after school? When?"},
+ "anleitung": {"G": "Lies zuerst die Aufgabe und alle Antworten. Dann weißt du, worauf du beim Hören achten musst.",
+               "E": "Read the task and the table first. Then you know what to listen for."},
+ "woerter": [
+  ["hw_01", "the robotics club", "die Robotik-AG", "robotics club"],
+  ["hw_02", "the school newspaper", "die Schülerzeitung", "newspaper"],
+  ["hw_03", "an editor", "ein Redakteur / eine Redakteurin", "editor"],
+  ["hw_04", "an animal shelter", "ein Tierheim", "animal shelter"],
+  ["hw_05", "to volunteer", "ehrenamtlich arbeiten", "volunteer"],
+  ["hw_06", "to practice", "trainieren, üben", "practice"]
+ ],
+ "teile": [
+  {"id": "as_ethan", "sprecher": "Ethan", "stimme": "m",
+   "text": "Hi, I'm Ethan. After school, I go to the robotics club. We build small robots and program them. It's on Tuesdays and Thursdays, from three thirty to five. Last month, our robot won a prize!"},
+  {"id": "as_chloe", "sprecher": "Chloe", "stimme": "f",
+   "text": "Hey, I'm Chloe. I write for the school newspaper. I'm one of the editors, so I check the other students' articles. We meet every Monday after school. I love it because I can write about things that really matter."},
+  {"id": "as_marcus", "sprecher": "Marcus", "stimme": "m",
+   "text": "My name is Marcus. I'm not really into sports or clubs. On Saturdays, I volunteer at an animal shelter. I walk the dogs and clean the cages. It's community service, but honestly, it doesn't feel like work."},
+  {"id": "as_lily", "sprecher": "Lily", "stimme": "f",
+   "text": "Hi, I'm Lily, and I'm a cheerleader. We practice every day after school, and on Fridays we cheer at the football games. It's tough, but the team spirit is amazing!"}
+ ],
+ "was": [
+  {"key": "robotics", "symbol": "🤖", "en": "robotics club"},
+  {"key": "newspaper", "symbol": "📰", "en": "school newspaper"},
+  {"key": "shelter", "symbol": "🐶", "en": "animal shelter"},
+  {"key": "cheer", "symbol": "📣", "en": "cheerleading"},
+  {"key": "drama", "symbol": "🎭", "en": "drama club"},
+  {"key": "swim", "symbol": "🏊", "en": "swim team"}
+ ],
+ "wann": [
+  {"key": "mon", "en": "Mondays"},
+  {"key": "tuethu", "en": "Tuesdays and Thursdays"},
+  {"key": "fri", "en": "Fridays"},
+  {"key": "sat", "en": "Saturdays"},
+  {"key": "daily", "en": "every day"}
+ ],
+ "aufgaben": [
+  {"teil": "as_ethan", "was": "robotics", "wann": "tuethu", "was_e": [["robot"]], "wann_e": [["tue"], ["thu"]]},
+  {"teil": "as_chloe", "was": "newspaper", "wann": "mon", "was_e": [["newspaper", "paper", "editor"]], "wann_e": [["mon"]]},
+  {"teil": "as_marcus", "was": "shelter", "wann": "sat", "was_e": [["animal", "shelter", "dog", "volunteer"]], "wann_e": [["sat"]]},
+  {"teil": "as_lily", "was": "cheer", "wann": "daily", "was_e": [["cheer"]], "wann_e": [["every day", "everyday", "daily", "each day"]]}
+ ]
+}

@@ -80,3 +80,14 @@
   border: 2px solid var(--linie); background: var(--bg); color: var(--text);
 }
 .eingabe:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
+
+/* BE vs AE */
+.satz.be { font-size: 1.4rem; color: var(--leise); }
+.beae-paar { display: grid; gap: 6px; font-size: 1.2rem; background: var(--bg); border-radius: 12px; padding: 10px 14px; }
+
+/* Listening E-Kurs: Tabelle zum Ausfüllen */
+.hv-tabelle { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+@media (max-width: 640px) { .hv-tabelle { grid-template-columns: 1fr; } }
+.wahl-knopf.kompakt { min-height: 44px; min-width: 0; padding: 0 12px; font-size: 1rem; gap: 6px; }
+.wahl-knopf.kompakt .wahl-sym { font-size: 1.3rem; }
+.hv-zeile .wahl { gap: 8px; }

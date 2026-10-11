@@ -308,7 +308,8 @@
     lage.abspielen = null; lage.weiter = null;
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, auswahl: zeigeAuswahl, bilder: zeigeBilder,
-       vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition })[teil.art](teil);
+       vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition,
+       beae_quiz: zeigeBeaeQuiz, hoeren: zeigeHoeren })[teil.art](teil);
     navErgaenzen();
   }
   function naechstes() {
@@ -323,6 +324,7 @@
     if (teil.art === "lr") return teil.saetze.length;
     if (teil.art === "verbform" || teil.art === "auswahl") return teil.aufgaben.length;
     if (teil.art === "vok_lernen") return lage.vok.length;
+    if (teil.art === "beae_quiz") return teil.paare.length;
     if (teil.art === "vok_def") return lage.vok.filter((v) => v.def).length;
     if (teil.art === "vok_abfrage") return lage.vq ? lage.vq.length : lage.vok.length;
     return 1;
@@ -407,7 +409,7 @@
   }
   function nachsprechen(balken, ton) {
     balken.hidden = true;
-    return spiele([ton]).then((d) => {
+    return spiele([].concat(ton)).then((d) => {
       if (d === null) return;
       balken.hidden = false; balken.classList.remove("laeuft"); void balken.offsetWidth;
       balken.style.setProperty("--dauer", Math.max(3, d * 1.4 + 1).toFixed(1) + "s");
@@ -424,17 +426,29 @@
     2: ["Which word is missing? Say the whole sentence. Then tap “Solution”.", "Welches Wort fehlt? Sag den ganzen Satz! Dann tipp auf „Lösung“."],
     3: ["Say the sentence in English. Then tap “Solution”.", "Sag den Satz auf Englisch! Dann tipp auf „Lösung“."],
   };
+  const STUFEN_BEAE = {
+    1: ["Listen: first British, then American English. Repeat the American sentence.", "Hör zu: erst britisch (Mr. Alex), dann amerikanisch. Sprich den amerikanischen Satz nach!"],
+    2: ["Which American word is missing? Say the whole sentence. Then tap “Solution”.", "Welches amerikanische Wort fehlt? Sag den ganzen Satz! Dann tipp auf „Lösung“."],
+    3: ["Say the sentence in American English. Then tap “Solution”.", "Sag den Satz auf Amerikanisch! Dann tipp auf „Lösung“."],
+  };
   function zeigeSatz(teil) {
     const k = kategorie(lage.nr);
     const s = D.saetze[teil.saetze[lage.pos]];
     const stufe = teil.stufe;
     let geloest = stufe === 1;
     const balken = jetztDu();
+    const be = s.be; // BE vs AE: links der britische Satz (Mr. Alex), rechts der amerikanische
+    const tonBE = be && (be.audio || { text: be.en, stimme: "m" });
     const en = el("p", { class: "satz", lang: "en" }, lueckenSatz(s, stufe === 1 ? "voll" : "luecke"));
-    const enSpalte = el("div", { class: "spalte", lang: "en" }, el("span", { class: "sprache" }, T("Englisch", "English")), en);
-    if (stufe === 3) en.replaceChildren(el("span", { class: "profi" }, T("Sag den ganzen Satz auf Englisch!", "Say the whole sentence in English!")));
-    const deSpalte = el("div", { class: "spalte", lang: "de" }, el("span", { class: "sprache" }, T("Deutsch", "German")),
-      el("p", { class: "satz de" }, s.de));
+    const enSpalte = el("div", { class: "spalte", lang: "en" },
+      el("span", { class: "sprache" }, be ? "🇺🇸 American English" : T("Englisch", "English")), en);
+    if (stufe === 3) en.replaceChildren(el("span", { class: "profi" }, be ? T("Sag den Satz auf Amerikanisch!", "Say it in American English!")
+      : T("Sag den ganzen Satz auf Englisch!", "Say the whole sentence in English!")));
+    const deSpalte = be
+      ? el("div", { class: "spalte", lang: "en" }, el("span", { class: "sprache" }, "🇬🇧 British English"),
+        el("p", { class: "satz be" }, be.en), !E() && el("p", { class: "klein", lang: "de" }, s.de))
+      : el("div", { class: "spalte", lang: "de" }, el("span", { class: "sprache" }, T("Deutsch", "German")),
+        el("p", { class: "satz de" }, s.de));
     const loesung = stufe > 1 ? knopf(T("Lösung", "Solution"), loesen) : null;
     const hilfen = el("div", { class: "knopfreihe" });
     if (stufe === 2 && s.luecke) hilfen.append(tipp(T("Noch einfacher: erster Buchstabe", "Easier: first letter"),
@@ -446,15 +460,170 @@
       en.replaceChildren(...lueckenSatz(s, "voll"));
       nachsprechen(balken, tonSatz(s));
     }
-    lage.abspielen = () => { if (geloest) nachsprechen(balken, tonSatz(s)); };
+    lage.abspielen = () => {
+      if (geloest) nachsprechen(balken, be ? [tonBE, tonSatz(s)] : tonSatz(s));
+      else if (be) spiele([tonBE]); // erst nur britisch hören, dann selbst amerikanisch sagen
+    };
     lage.weiter = naechstes;
     zeige(kopf(k),
-      ansage(...STUFEN[stufe]),
+      ansage(...(be ? STUFEN_BEAE : STUFEN)[stufe]),
       karte(T(`Satz ${lage.pos + 1} von ${teil.saetze.length}`, `Sentence ${lage.pos + 1} of ${teil.saetze.length}`),
         el("div", { class: "spalten" }, deSpalte, enSpalte),
         hilfen, balken,
         el("div", { class: "knopfreihe" }, knopf(T("🔊 Nochmal", "🔊 Again"), () => lage.abspielen()), loesung, weiterKnopf())));
     lage.abspielen();
+  }
+
+  /* ---------- BE vs AE: British or American? ---------- */
+  function zeigeBeaeQuiz(teil) {
+    const k = kategorie(lage.nr);
+    if (!lage.reihe) lage.reihe = mischen(teil.paare).map((id) => ({ id, seite: Math.random() < 0.5 ? "be" : "ae" }));
+    const { id, seite } = lage.reihe[lage.pos];
+    const s = D.saetze[id];
+    const tonBE = s.be.audio || { text: s.be.en, stimme: "m" };
+    let geloest = false;
+    const box = rueckmeldung();
+    const weiter = weiterKnopf(); weiter.disabled = true;
+    const beide = el("div", { class: "beae-paar", hidden: true },
+      el("p", { lang: "en" }, "🇬🇧 ", s.be.en), el("p", { lang: "en" }, "🇺🇸 ", ...lueckenSatz(s, "voll")),
+      !E() && el("p", { class: "klein", lang: "de" }, s.de));
+    const hoeren = () => spiele([tonBE, tonSatz(s)]);
+    const wahl = el("div", { class: "wahl", role: "group" }, [["be", "🇬🇧 British"], ["ae", "🇺🇸 American"]].map(([w, text]) =>
+      el("button", { class: "knopf wahl-knopf gross", onclick: (e) => {
+        if (geloest) return;
+        if (w === seite) {
+          geloest = true; e.currentTarget.classList.add("richtig");
+          melde(box, "gut", lob()); beide.hidden = false;
+          weiter.disabled = false; lage.weiter = naechstes; lage.abspielen = hoeren;
+          hoeren();
+        } else {
+          e.currentTarget.disabled = true;
+          melde(box, "hilfe", T(`Welches Wort ist typisch? Denk an Paare wie sweets 🇬🇧 – candy 🇺🇸. ${NOCHMAL()}`,
+            `Which word is typical? Think of pairs like sweets 🇬🇧 – candy 🇺🇸. ${NOCHMAL()}`));
+        }
+      } }, text)));
+    lage.abspielen = null;
+    zeige(kopf(k),
+      ansage("Is this British or American English? Tap the flag.", "Ist das britisches oder amerikanisches Englisch? Tipp auf die Flagge."),
+      karte(T(`Satz ${lage.pos + 1} von ${lage.reihe.length}`, `Sentence ${lage.pos + 1} of ${lage.reihe.length}`),
+        el("p", { class: "satz", lang: "en" }, seite === "be" ? s.be.en : s.en),
+        wahl, box, beide, el("div", { class: "knopfreihe" }, weiter)));
+  }
+
+  /* ---------- Listening (GLN-Prinzip) ----------
+     1. Aufgabe und alle Antworten lesen, 2. hören und dabei markieren,
+     3. zwei komplette Durchgänge, erst danach gibt es die Lösung (mit Audio).
+     G: ankreuzen · E: Tabelle frei ausfüllen */
+  function zeigeHoeren(teil) {
+    const k = kategorie(lage.nr);
+    const u = D.hoeren[teil.uebung];
+    const teilVon = (id) => u.teile.find((t) => t.id === id);
+    const antworten = u.aufgaben.map(() => ({ was: null, wann: null }));
+    let durchgaenge = 0, geloest = false;
+    const norm = (t) => (t || "").toLowerCase().replace(/[^a-z ]/g, " ").replace(/\s+/g, " ");
+    const passt = (text, gruppen) => gruppen.every((alt) => alt.some((w) => norm(text).includes(w)));
+
+    function umschalter(optionen, setze, label) {
+      const knoepfe = optionen.map((o) => el("button", { class: "knopf wahl-knopf kompakt", lang: "en",
+        "aria-pressed": "false", "data-wert": o.key, onclick: () => {
+          if (geloest) return;
+          setze(o.key);
+          knoepfe.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.wert === o.key)));
+        } }, o.symbol && el("span", { class: "wahl-sym", "aria-hidden": "true" }, o.symbol), el("span", {}, o.en)));
+      return el("div", { class: "wahl", role: "group", "aria-label": label }, knoepfe);
+    }
+    const zeilen = u.aufgaben.map((a, i) => {
+      const name = teilVon(a.teil).sprecher;
+      const box = el("p", { class: "rueckmeldung", hidden: true });
+      if (!E()) return el("li", { class: "hv-zeile" },
+        el("h3", { lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), name),
+        el("p", { class: "klein" }, "What? – Was macht " + name + "?"),
+        umschalter(u.was, (w) => { antworten[i].was = w; }, "What?"),
+        el("p", { class: "klein" }, "When? – Wann?"),
+        umschalter(u.wann, (w) => { antworten[i].wann = w; }, "When?"),
+        box);
+      const feld = (art, label) => el("input", { type: "text", class: "eingabe", lang: "en", autocomplete: "off",
+        "aria-label": `${name}: ${label}`, placeholder: label, oninput: (e) => { antworten[i][art] = e.target.value; } });
+      return el("li", { class: "hv-zeile" },
+        el("h3", { lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), name),
+        el("div", { class: "hv-tabelle" }, feld("was", "What does " + name + " do?"), feld("wann", "When?")),
+        box);
+    });
+
+    const hoerKnopf = knopf(T("▶ Hörtext abspielen (1. Durchgang)", "▶ Play the recording (1st time)"), hoeren, "haupt");
+    const stoppKnopf = knopf("■ Stop", () => { stopp(); hoerKnopf.disabled = false; stoppKnopf.hidden = true; });
+    stoppKnopf.hidden = true;
+    const zaehler = el("p", { class: "klein", "aria-live": "polite" }, T("Du hast den Text noch nicht gehört.", "You haven't listened yet."));
+    const gln = el("p", { class: "gln", hidden: true }, T("Achtung: Im GLN gibt es nur zwei Hörversuche. Zum Üben darfst du gerne öfter hören.",
+      "Remember: In the test you can only listen twice. For practice, you can listen as often as you like."));
+    const loesungKnopf = knopf(T("Lösung zeigen", "Show the answers"), loesen, "haupt");
+    loesungKnopf.hidden = true;
+    const ergebnis = el("div", { class: "rueckmeldung", hidden: true, role: "status" });
+    const warten = el("p", { class: "klein" }, T("Die Lösung kommt, wenn du den Text zweimal ganz gehört hast.",
+      "You can check your answers after listening twice."));
+    const mitlesen = el("section", { class: "satzkarte", hidden: true },
+      el("h2", {}, T("Text zum Mitlesen", "Transcript")),
+      el("div", { class: "mitlesen", lang: "en" }, u.teile.map((t) => el("p", {},
+        el("strong", {}, t.sprecher + ": "), t.text, " ",
+        el("button", { class: "knopf leise klein-knopf", "aria-label": "Listen: " + t.sprecher,
+          onclick: () => spiele([t.audio || { text: t.text, stimme: t.stimme }]) }, "🔊")))),
+      el("div", { class: "knopfreihe" }, weiterKnopf()));
+    const tonTeil = (t) => t.audio || { text: t.text, stimme: t.stimme };
+
+    function hoeren() {
+      hoerKnopf.disabled = true; stoppKnopf.hidden = false;
+      spiele(u.teile.map(tonTeil)).then((d) => {
+        if (d === null) return;
+        hoerKnopf.disabled = false; stoppKnopf.hidden = true;
+        durchgaenge++;
+        zaehler.textContent = durchgaenge === 1 ? T("1. Durchgang geschafft! Hör den Text ein zweites Mal.", "1st time done! Listen a second time.")
+          : T(`${durchgaenge} Durchgänge gehört.`, `You listened ${durchgaenge} times.`);
+        hoerKnopf.textContent = durchgaenge === 1 ? T("▶ Noch mal hören (2. Durchgang)", "▶ Listen again (2nd time)")
+          : T("▶ Noch mal hören (Übung)", "▶ Listen again (practice)");
+        if (durchgaenge >= 2) { gln.hidden = false; warten.hidden = true; if (!geloest) loesungKnopf.hidden = false; }
+      });
+    }
+
+    async function loesen() {
+      geloest = true; loesungKnopf.hidden = true;
+      app.querySelectorAll(".hv-liste .wahl button, .hv-liste input").forEach((b) => { b.disabled = true; });
+      let richtig = 0;
+      const was = (key) => u.was.find((o) => o.key === key), wann = (key) => u.wann.find((o) => o.key === key);
+      u.aufgaben.forEach((a, i) => {
+        const zeile = zeilen[i], box = zeile.querySelector(".rueckmeldung");
+        const ok = E() ? passt(antworten[i].was, a.was_e) && passt(antworten[i].wann, a.wann_e)
+          : antworten[i].was === a.was && antworten[i].wann === a.wann;
+        if (ok) richtig++;
+        zeile.classList.add(ok ? "ok" : "falsch");
+        box.hidden = false; box.className = "rueckmeldung " + (ok ? "gut" : "hilfe");
+        const loesung = `${was(a.was).en} – ${wann(a.wann).en}`;
+        box.textContent = ok ? T(`✓ Richtig! (${loesung})`, `✓ Correct! (${loesung})`) : `${HILFE()} ${T("Richtig ist:", "The answer is:")} ${loesung}.`;
+        zeile.querySelectorAll(".wahl button").forEach((b) => { if (b.dataset.wert === a.was || b.dataset.wert === a.wann) b.classList.add("richtig"); });
+      });
+      ergebnis.hidden = false;
+      ergebnis.className = "rueckmeldung " + (richtig === u.aufgaben.length ? "gut" : "hilfe");
+      ergebnis.textContent = richtig === u.aufgaben.length ? `${ruf("voll") || lob()} ${T("Alles richtig!", "All correct!")}`
+        : T(`Du hast ${richtig} von ${u.aufgaben.length} Personen richtig. Hör dir die Lösung an!`,
+          `You got ${richtig} of ${u.aufgaben.length} people right. Listen to the answers!`);
+      mitlesen.hidden = false; lage.weiter = naechstes;
+      for (let i = 0; i < u.aufgaben.length; i++) { // Lösung mit Audio: jede Person nacheinander
+        zeilen.forEach((z) => z.classList.remove("spricht"));
+        zeilen[i].classList.add("spricht");
+        if ((await spiele([tonTeil(teilVon(u.aufgaben[i].teil))])) === null) break;
+      }
+      zeilen.forEach((z) => z.classList.remove("spricht"));
+    }
+
+    lage.abspielen = () => { if (!hoerKnopf.disabled) hoeren(); };
+    zeige(kopf(k),
+      el("section", { class: "satzkarte" },
+        el("h2", { lang: "en" }, u.titel),
+        el("p", { class: "ansage", lang: "en" }, tx(u.instruction)),
+        el("p", { class: "hinweis-kasten" }, "📖 " + tx(u.anleitung)),
+        el("ol", { class: "hv-liste" }, zeilen)),
+      el("section", { class: "satzkarte" }, gln, el("div", { class: "knopfreihe" }, loesungKnopf), ergebnis, warten),
+      mitlesen,
+      el("div", { class: "hv-spieler" }, el("div", { class: "knopfreihe" }, hoerKnopf, stoppKnopf), zaehler));
   }
 
   /* ---------- Erklärung ---------- */

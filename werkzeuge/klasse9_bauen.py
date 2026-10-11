@@ -19,7 +19,7 @@ LOB9 = {
     "doch": ["doch_seeyoucan"],
 }
 
-ABSCHNITTE = {"start": "Start", "theme1": "Theme 1", "theme2": "Theme 2", "fol": "Focus on language",
+ABSCHNITTE = {"usa": "USA – here we come", "start": "Start", "theme1": "Theme 1", "theme2": "Theme 2", "fol": "Focus on language",
               "story": "Story", "skills": "Skills training"}
 MAX_GRUPPE = 14  # größere Abschnitte werden geteilt (Story 1, Story 2)
 
@@ -297,10 +297,14 @@ def main():
                            "stimme": "mf"[stimme % 2], "audio": audio(f"audio/saetze/{z['id']}.mp3")}
         stimme += 1
     vokabeln, units = [], {"1": [], "2": [], "3": []}
+    verweise = []  # Vokabeln, deren Satz schon anderswo vertont ist (satz_id)
     for v in tsv("vokabeln.tsv"):
         sid = v["id"] + "_s"
-        saetze[sid] = {"en": v["satz_en"], "de": v["satz_de"], "luecke": v["luecke"],
-                       "stimme": "mf"[stimme % 2], "audio": audio(f"audio/vokabeln/{sid}.mp3")}
+        if v.get("satz_id"):
+            verweise.append((sid, v["satz_id"], v["luecke"]))
+        else:
+            saetze[sid] = {"en": v["satz_en"], "de": v["satz_de"], "luecke": v["luecke"],
+                           "stimme": "mf"[stimme % 2], "audio": audio(f"audio/vokabeln/{sid}.mp3")}
         vokabeln.append({"id": v["id"], "unit": v["unit"], "en": v["englisch"], "de": v["deutsch"], "satz": sid,
                          "def": v["definition"] or None, "stimme": "mf"[stimme % 2],
                          "audio": audio(f"audio/vokabeln/{v['id']}.mp3")})
@@ -327,6 +331,9 @@ def main():
         saetze[z["id"]] = {"en": z["englisch"], "de": z["deutsch"], "luecke": z["luecke"] or None,
                            "stimme": st, "audio": audio(f"audio/saetze/{z['id']}.mp3")}
     hoeren = {hv["id"]: hv}
+    for sid, quelle, luecke in verweise:  # gleicher Satz, gleiches Audio – nur die Lücke kann anders sein
+        saetze[sid] = dict(saetze[quelle], luecke=luecke or saetze[quelle]["luecke"])
+        assert saetze[sid]["luecke"] in saetze[sid]["en"], sid
     # Abschnitte je Unit (Reihenfolge wie im Buch), große Abschnitte teilen
     for unit in units:
         reihe = [v for v in tsv("vokabeln.tsv") if v["unit"] == unit]

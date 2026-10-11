@@ -26,7 +26,8 @@ def auftraege():
     for v in k9.tsv("vokabeln.tsv"):
         s = "mf"[stimme % 2]; stimme += 1
         liste.append((f"audio/vokabeln/{v['id']}.mp3", s, sprechtext(v["englisch"])))
-        liste.append((f"audio/vokabeln/{v['id']}_s.mp3", s, v["satz_en"]))
+        if not v.get("satz_id"):  # sonst ist der Satz schon vertont (Hall of Fame, Speaking)
+            liste.append((f"audio/vokabeln/{v['id']}_s.mp3", s, v["satz_en"]))
     for z in k9.tsv("beae.tsv"):
         liste.append((f"audio/beae/{z['id']}.mp3", "mf"[stimme % 2], z["amerikanisch"])); stimme += 1
         liste.append((f"audio/beae/{z['id']}_be.mp3", "alex", z["britisch"]))

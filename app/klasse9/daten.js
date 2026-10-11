@@ -1127,6 +1127,678 @@ window.DATEN = {
    "stimme": "f",
    "audio": "audio/vokabeln/u2_114_s.mp3"
   },
+  "u1_001_s": {
+   "en": "My great-grandfather was an immigrant from Italy.",
+   "de": "Mein Urgroßvater war ein Einwanderer aus Italien.",
+   "luecke": "immigrant",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_001_s.mp3"
+  },
+  "u1_002_s": {
+   "en": "There are lots of alligators in Florida.",
+   "de": "In Florida gibt es viele Alligatoren.",
+   "luecke": "alligators",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_002_s.mp3"
+  },
+  "u1_003_s": {
+   "en": "Thousands of buffalo lived on the Great Plains.",
+   "de": "Tausende Bisons lebten in den Great Plains.",
+   "luecke": "buffalo",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_003_s.mp3"
+  },
+  "u1_004_s": {
+   "en": "I love nature, so I'd like to go camping.",
+   "de": "Ich liebe die Natur, deshalb würde ich gern zelten gehen.",
+   "luecke": "nature",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_004_s.mp3"
+  },
+  "u1_005_s": {
+   "en": "There are 50 stars on the American flag.",
+   "de": "Auf der amerikanischen Flagge sind 50 Sterne.",
+   "luecke": "stars",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_005_s.mp3"
+  },
+  "u1_006_s": {
+   "en": "Texas is a big state in the south of the USA.",
+   "de": "Texas ist ein großer Staat im Süden der USA.",
+   "luecke": "state",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_006_s.mp3"
+  },
+  "u1_007_s": {
+   "en": "Native Americans lived in America long before the Europeans came.",
+   "de": "Die amerikanischen Ureinwohner lebten in Amerika lange bevor die Europäer kamen.",
+   "luecke": "Native Americans",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_007_s.mp3"
+  },
+  "u1_008_s": {
+   "en": "Many slaves had to work on big farms in the South.",
+   "de": "Viele Sklaven mussten auf großen Farmen im Süden arbeiten.",
+   "luecke": "slaves",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_008_s.mp3"
+  },
+  "u1_009_s": {
+   "en": "I'm Italian and French, but I just feel European.",
+   "de": "Ich bin Italienerin und Französin, aber ich fühle mich einfach europäisch.",
+   "luecke": "European",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_009_s.mp3"
+  },
+  "u1_010_s": {
+   "en": "The first settlers built small houses of wood.",
+   "de": "Die ersten Siedler bauten kleine Häuser aus Holz.",
+   "luecke": "settlers",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_010_s.mp3"
+  },
+  "u1_011_s": {
+   "en": "The Americans fought the British for their independence.",
+   "de": "Die Amerikaner kämpften für ihre Unabhängigkeit gegen die Briten.",
+   "luecke": "fought",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_011_s.mp3"
+  },
+  "u1_012_s": {
+   "en": "Many people died in the war.",
+   "de": "Im Krieg starben viele Menschen.",
+   "luecke": "war",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_012_s.mp3"
+  },
+  "u1_013_s": {
+   "en": "July 4th is Independence Day in the USA.",
+   "de": "Der 4. Juli ist in den USA der Unabhängigkeitstag.",
+   "luecke": "Independence",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_013_s.mp3"
+  },
+  "u1_014_s": {
+   "en": "The hurricane destroyed many houses in Florida.",
+   "de": "Der Hurrikan zerstörte viele Häuser in Florida.",
+   "luecke": "hurricane",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_014_s.mp3"
+  },
+  "u1_015_s": {
+   "en": "In the USA, football is a different sport, so they say soccer.",
+   "de": "In den USA ist Football ein anderer Sport, deshalb sagt man soccer.",
+   "luecke": "soccer",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_015_s.mp3"
+  },
+  "u1_016_s": {
+   "en": "The Statue of Liberty is in New York.",
+   "de": "Die Freiheitsstatue steht in New York.",
+   "luecke": "Statue",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_016_s.mp3"
+  },
+  "u1_017_s": {
+   "en": "The statue is a symbol of liberty.",
+   "de": "Die Statue ist ein Symbol der Freiheit.",
+   "luecke": "liberty",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_017_s.mp3"
+  },
+  "u1_018_s": {
+   "en": "Many immigrants came to America for freedom.",
+   "de": "Viele Einwanderer kamen wegen der Freiheit nach Amerika.",
+   "luecke": "freedom",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_018_s.mp3"
+  },
+  "u1_021_s": {
+   "en": "The Manhattan skyline is famous all over the world.",
+   "de": "Die Skyline von Manhattan ist auf der ganzen Welt berühmt.",
+   "luecke": "skyline",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_021_s.mp3"
+  },
+  "u1_022_s": {
+   "en": "There are no clouds in the sky today.",
+   "de": "Heute sind keine Wolken am Himmel.",
+   "luecke": "sky",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_022_s.mp3"
+  },
+  "u1_023_s": {
+   "en": "5th Avenue is the most important shopping street in New York City.",
+   "de": "Die 5th Avenue ist die wichtigste Einkaufsstraße in New York.",
+   "luecke": "Avenue",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_023_s.mp3"
+  },
+  "u1_024_s": {
+   "en": "This beach is paradise!",
+   "de": "Dieser Strand ist das Paradies!",
+   "luecke": "paradise",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_024_s.mp3"
+  },
+  "u1_025_s": {
+   "en": "The view from the top was awesome!",
+   "de": "Die Aussicht von oben war großartig!",
+   "luecke": "awesome",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_025_s.mp3"
+  },
+  "u1_027_s": {
+   "en": "They built the Empire State Building in only one year.",
+   "de": "Sie haben das Empire State Building in nur einem Jahr gebaut.",
+   "luecke": "built",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_027_s.mp3"
+  },
+  "u1_028_s": {
+   "en": "The fire destroyed their house.",
+   "de": "Das Feuer zerstörte ihr Haus.",
+   "luecke": "destroyed",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_028_s.mp3"
+  },
+  "u1_029_s": {
+   "en": "The memorial remembers the people who died in the terrorist attack.",
+   "de": "Das Denkmal erinnert an die Menschen, die bei dem Terroranschlag starben.",
+   "luecke": "terrorist",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_029_s.mp3"
+  },
+  "u1_030_s": {
+   "en": "There are 354 steps to the crown of the statue.",
+   "de": "Bis zur Krone der Statue sind es 354 Stufen.",
+   "luecke": "steps",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_030_s.mp3"
+  },
+  "u1_031_s": {
+   "en": "The Statue of Liberty wears a crown.",
+   "de": "Die Freiheitsstatue trägt eine Krone.",
+   "luecke": "crown",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_031_s.mp3"
+  },
+  "u1_032_s": {
+   "en": "The statue's nose is more than one meter long.",
+   "de": "Die Nase der Statue ist mehr als einen Meter lang.",
+   "luecke": "nose",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_032_s.mp3"
+  },
+  "u1_033_s": {
+   "en": "About 1.6 million people live in Manhattan.",
+   "de": "Ungefähr 1,6 Millionen Menschen leben in Manhattan.",
+   "luecke": "1.6 million",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_033_s.mp3"
+  },
+  "u1_034_s": {
+   "en": "Let's play basketball on the court in the park.",
+   "de": "Lass uns auf dem Platz im Park Basketball spielen.",
+   "luecke": "court",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_034_s.mp3"
+  },
+  "u1_035_s": {
+   "en": "The little kids are on the playground.",
+   "de": "Die kleinen Kinder sind auf dem Spielplatz.",
+   "luecke": "playground",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_035_s.mp3"
+  },
+  "u1_036_s": {
+   "en": "In winter there's an ice rink in Central Park.",
+   "de": "Im Winter gibt es im Central Park eine Eisbahn.",
+   "luecke": "ice rink",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_036_s.mp3"
+  },
+  "u1_037_s": {
+   "en": "The bridge connects the two parts of the city.",
+   "de": "Die Brücke verbindet die beiden Teile der Stadt.",
+   "luecke": "connects",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_037_s.mp3"
+  },
+  "u1_039_s": {
+   "en": "A big flag hung from the window.",
+   "de": "Eine große Flagge hing aus dem Fenster.",
+   "luecke": "hung",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_039_s.mp3"
+  },
+  "u1_040_s": {
+   "en": "The bridge hangs on huge cables.",
+   "de": "Die Brücke hängt an riesigen Drahtseilen.",
+   "luecke": "cables",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_040_s.mp3"
+  },
+  "u1_041_s": {
+   "en": "Let's meet after school.",
+   "de": "Lass uns nach der Schule treffen.",
+   "luecke": "after",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_041_s.mp3"
+  },
+  "u1_042_s": {
+   "en": "After we came home, we watched a movie.",
+   "de": "Nachdem wir nach Hause gekommen waren, haben wir einen Film geschaut.",
+   "luecke": "After",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_042_s.mp3"
+  },
+  "u1_043_s": {
+   "en": "Here's an interesting fact about New York.",
+   "de": "Hier ist eine interessante Tatsache über New York.",
+   "luecke": "fact",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_043_s.mp3"
+  },
+  "u1_044_s": {
+   "en": "What else do you know about the USA?",
+   "de": "Was weißt du sonst noch über die USA?",
+   "luecke": "What else",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_044_s.mp3"
+  },
+  "u1_045_s": {
+   "en": "Do you know the meaning of this word?",
+   "de": "Kennst du die Bedeutung dieses Wortes?",
+   "luecke": "meaning",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_045_s.mp3"
+  },
+  "u1_046_s": {
+   "en": "There were a lot of unknown words in the text.",
+   "de": "Im Text waren viele unbekannte Wörter.",
+   "luecke": "unknown",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_046_s.mp3"
+  },
+  "u1_047_s": {
+   "en": "Often the context helps you to guess the meaning of unknown words.",
+   "de": "Oft hilft dir der Zusammenhang, die Bedeutung unbekannter Wörter zu erraten.",
+   "luecke": "context",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_047_s.mp3"
+  },
+  "u1_051_s": {
+   "en": "That's us in the photo.",
+   "de": "Das sind wir auf dem Foto.",
+   "luecke": "That's us",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_051_s.mp3"
+  },
+  "u1_052_s": {
+   "en": "My mom drives me to school every morning.",
+   "de": "Meine Mama fährt mich jeden Morgen zur Schule.",
+   "luecke": "mom",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_052_s.mp3"
+  },
+  "u1_054_s": {
+   "en": "The film was so boring that I fell asleep.",
+   "de": "Der Film war so langweilig, dass ich eingeschlafen bin.",
+   "luecke": "fell asleep",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_054_s.mp3"
+  },
+  "u1_055_s": {
+   "en": "It was 11 o'clock, but Sue was still asleep.",
+   "de": "Es war 11 Uhr, aber Sue schlief noch.",
+   "luecke": "was still asleep",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_055_s.mp3"
+  },
+  "u1_059_s": {
+   "en": "I think live music is way cooler than music on your phone.",
+   "de": "Ich finde, Livemusik ist viel cooler als Musik auf dem Handy.",
+   "luecke": "way cooler than",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_059_s.mp3"
+  },
+  "u1_060_s": {
+   "en": "What's the title of the story?",
+   "de": "Wie heißt der Titel der Geschichte?",
+   "luecke": "title",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_060_s.mp3"
+  },
+  "u1_061_s": {
+   "en": "If I had the chance, I would go to New York and work for the summer.",
+   "de": "Wenn ich die Gelegenheit hätte, würde ich nach New York gehen und den Sommer über arbeiten.",
+   "luecke": "chance",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_061_s.mp3"
+  },
+  "u1_062_s": {
+   "en": "We have to choose a name for our new band.",
+   "de": "Wir müssen einen Namen für unsere neue Band aussuchen.",
+   "luecke": "choose",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_062_s.mp3"
+  },
+  "u1_063_s": {
+   "en": "There are 75 different pizzas on their menu!",
+   "de": "Auf ihrer Speisekarte stehen 75 verschiedene Pizzas!",
+   "luecke": "menu",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_063_s.mp3"
+  },
+  "u1_064_s": {
+   "en": "I can recommend the music store on 3rd Street. They have great stuff!",
+   "de": "Ich kann den Musikladen in der 3rd Street empfehlen. Die haben tolle Sachen!",
+   "luecke": "recommend",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_064_s.mp3"
+  },
+  "u1_066_s": {
+   "en": "Can I take your order?",
+   "de": "Darf ich Ihre Bestellung aufnehmen?",
+   "luecke": "order",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_066_s.mp3"
+  },
+  "u1_067_s": {
+   "en": "When I make my bed and clean my room, I get extra pocket money.",
+   "de": "Wenn ich mein Bett mache und mein Zimmer aufräume, bekomme ich zusätzliches Taschengeld.",
+   "luecke": "extra",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_067_s.mp3"
+  },
+  "u1_068_s": {
+   "en": "Bring me the paper, Max. And now take it to Dad.",
+   "de": "Bring mir die Zeitung, Max. Und jetzt bring sie zu Papa.",
+   "luecke": "take",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_068_s.mp3"
+  },
+  "u1_069_s": {
+   "en": "Some homeless people sleep in the subway.",
+   "de": "Manche Obdachlose schlafen in der U-Bahn.",
+   "luecke": "homeless",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_069_s.mp3"
+  },
+  "u1_070_s": {
+   "en": "We bought a guide to New York City.",
+   "de": "Wir haben einen Reiseführer für New York gekauft.",
+   "luecke": "guide",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_070_s.mp3"
+  },
+  "u1_071_s": {
+   "en": "I'm tired. I need a rest.",
+   "de": "Ich bin müde. Ich brauche eine Pause.",
+   "luecke": "rest",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_071_s.mp3"
+  },
+  "u1_072_s": {
+   "en": "Check your spelling before you hand in your text.",
+   "de": "Prüf deine Rechtschreibung, bevor du deinen Text abgibst.",
+   "luecke": "spelling",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_072_s.mp3"
+  },
+  "u1_073_s": {
+   "en": "Experience live music every Friday at the youth club!",
+   "de": "Erlebe jeden Freitag Livemusik im Jugendclub!",
+   "luecke": "Experience",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_073_s.mp3"
+  },
+  "u1_074_s": {
+   "en": "My grandparents went on a cruise to Alaska.",
+   "de": "Meine Großeltern haben eine Kreuzfahrt nach Alaska gemacht.",
+   "luecke": "cruise",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_074_s.mp3"
+  },
+  "u1_075_s": {
+   "en": "This book is a good introduction to American English.",
+   "de": "Dieses Buch ist eine gute Einführung in das amerikanische Englisch.",
+   "luecke": "introduction",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_075_s.mp3"
+  },
+  "u1_077_s": {
+   "en": "I think there's too much violence on TV.",
+   "de": "Ich finde, es gibt zu viel Gewalt im Fernsehen.",
+   "luecke": "violence",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_077_s.mp3"
+  },
+  "u1_080_s": {
+   "en": "Who is the author of this book?",
+   "de": "Wer ist der Autor dieses Buches?",
+   "luecke": "author",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_080_s.mp3"
+  },
+  "u1_083_s": {
+   "en": "The original film is 30 minutes longer.",
+   "de": "Der Originalfilm ist 30 Minuten länger.",
+   "luecke": "original",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_083_s.mp3"
+  },
+  "u1_085_s": {
+   "en": "I have basketball practice at 4 o'clock today.",
+   "de": "Ich habe heute um 4 Uhr Basketballtraining.",
+   "luecke": "practice",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_085_s.mp3"
+  },
+  "u1_086_s": {
+   "en": "I pulled in next to the school and waited for my son.",
+   "de": "Ich hielt neben der Schule an und wartete auf meinen Sohn.",
+   "luecke": "pulled in",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_086_s.mp3"
+  },
+  "u1_087_s": {
+   "en": "The driver stopped, and we got out of the taxi.",
+   "de": "Der Fahrer hielt an, und wir stiegen aus dem Taxi aus.",
+   "luecke": "got out of",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_087_s.mp3"
+  },
+  "u1_088_s": {
+   "en": "After the race, my T-shirt was wet with sweat.",
+   "de": "Nach dem Rennen war mein T-Shirt nass vor Schweiß.",
+   "luecke": "sweat",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_088_s.mp3"
+  },
+  "u1_089_s": {
+   "en": "Alex and Stan like each other.",
+   "de": "Alex und Stan mögen sich.",
+   "luecke": "each other",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_089_s.mp3"
+  },
+  "u1_090_s": {
+   "en": "On Saturday night, they cruised around town in their car.",
+   "de": "Am Samstagabend fuhren sie mit ihrem Auto in der Stadt herum.",
+   "luecke": "cruised",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_090_s.mp3"
+  },
+  "u1_091_s": {
+   "en": "Why is everybody shouting? What's going on?",
+   "de": "Warum schreien alle? Was ist los?",
+   "luecke": "What's going on",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_091_s.mp3"
+  },
+  "u1_092_s": {
+   "en": "I ate my sandwiches as I waited for the bus.",
+   "de": "Ich aß meine Sandwiches, während ich auf den Bus wartete.",
+   "luecke": "as I waited",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_092_s.mp3"
+  },
+  "u1_093_s": {
+   "en": "Getting up at six is part of my morning routine.",
+   "de": "Um sechs aufzustehen gehört zu meiner Morgenroutine.",
+   "luecke": "routine",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_093_s.mp3"
+  },
+  "u1_094_s": {
+   "en": "He's leaning forward to talk to the driver.",
+   "de": "Er beugt sich nach vorn, um mit dem Fahrer zu sprechen.",
+   "luecke": "leaning",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_094_s.mp3"
+  },
+  "u1_095_s": {
+   "en": "Try a cup of tea – it might help.",
+   "de": "Probier eine Tasse Tee – vielleicht hilft es.",
+   "luecke": "it might help",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_095_s.mp3"
+  },
+  "u1_096_s": {
+   "en": "I guess I'll leave school next year.",
+   "de": "Ich nehme an, ich gehe nächstes Jahr von der Schule ab.",
+   "luecke": "I guess",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_096_s.mp3"
+  },
+  "u1_097_s": {
+   "en": "Don't forget your manners. Switch off your phone.",
+   "de": "Vergiss deine Manieren nicht. Schalte dein Handy aus.",
+   "luecke": "manners",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_097_s.mp3"
+  },
+  "u1_098_s": {
+   "en": "Don't just sit there. Help me.",
+   "de": "Sitz da nicht einfach nur rum. Hilf mir.",
+   "luecke": "just",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_098_s.mp3"
+  },
+  "u1_099_s": {
+   "en": "I'll never learn Spanish verbs. I give up.",
+   "de": "Ich lerne die spanischen Verben nie. Ich gebe auf.",
+   "luecke": "give up",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_099_s.mp3"
+  },
+  "u1_100_s": {
+   "en": "They laughed at me, but who cares? They aren't my real friends.",
+   "de": "Sie haben mich ausgelacht, aber na und? Sie sind nicht meine echten Freunde.",
+   "luecke": "who cares",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_100_s.mp3"
+  },
+  "u1_101_s": {
+   "en": "The café is close to our school – just a five-minute walk.",
+   "de": "Das Café ist nahe bei unserer Schule – nur fünf Minuten zu Fuß.",
+   "luecke": "close to",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_101_s.mp3"
+  },
+  "u1_103_s": {
+   "en": "She hit me with her shopping bag.",
+   "de": "Sie hat mich mit ihrer Einkaufstasche geschlagen.",
+   "luecke": "hit",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_103_s.mp3"
+  },
+  "u1_104_s": {
+   "en": "Put your bag on the table, not on the floor.",
+   "de": "Stell deine Tasche auf den Tisch, nicht auf den Fußboden.",
+   "luecke": "floor",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_104_s.mp3"
+  },
+  "u1_105_s": {
+   "en": "I love you. I want to grow old with you.",
+   "de": "Ich liebe dich. Ich will mit dir alt werden.",
+   "luecke": "grow old",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_105_s.mp3"
+  },
+  "u1_106_s": {
+   "en": "There was a fight in the schoolyard.",
+   "de": "Auf dem Schulhof gab es eine Schlägerei.",
+   "luecke": "fight",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_106_s.mp3"
+  },
+  "u1_108_s": {
+   "en": "It's polite to say \"please\" and \"thank you\".",
+   "de": "Es ist höflich, „bitte“ und „danke“ zu sagen.",
+   "luecke": "polite",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_108_s.mp3"
+  },
+  "u1_109_s": {
+   "en": "Our classroom is on the second floor.",
+   "de": "Unser Klassenzimmer ist im ersten Stock.",
+   "luecke": "second floor",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_109_s.mp3"
+  },
+  "u1_110_s": {
+   "en": "You don't need to feed the cats. I've already fed them.",
+   "de": "Du musst die Katzen nicht füttern. Ich habe sie schon gefüttert.",
+   "luecke": "need to",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_110_s.mp3"
+  },
+  "u1_111_s": {
+   "en": "Can you explain that to me?",
+   "de": "Kannst du mir das erklären?",
+   "luecke": "explain",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_111_s.mp3"
+  },
+  "u1_112_s": {
+   "en": "You don't need every word. Just get the gist.",
+   "de": "Du brauchst nicht jedes Wort. Versteh einfach das Wesentliche.",
+   "luecke": "the gist",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_112_s.mp3"
+  },
+  "u1_113_s": {
+   "en": "We sat in a booth at the back of the diner.",
+   "de": "Wir saßen in einer Sitzecke hinten im Diner.",
+   "luecke": "booth",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_113_s.mp3"
+  },
+  "u1_114_s": {
+   "en": "On Sundays we often have scrambled eggs for breakfast.",
+   "de": "Sonntags essen wir oft Rührei zum Frühstück.",
+   "luecke": "scrambled eggs",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_114_s.mp3"
+  },
+  "u1_115_s": {
+   "en": "Scan the text and find the numbers.",
+   "de": "Überflieg den Text und finde die Zahlen.",
+   "luecke": "Scan the text",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_115_s.mp3"
+  },
+  "u1_116_s": {
+   "en": "She wants to be a professional photographer.",
+   "de": "Sie will Profifotografin werden.",
+   "luecke": "professional",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_116_s.mp3"
+  },
   "ba_01": {
    "en": "I eat lunch at the cafeteria.",
    "de": "Ich esse in der Kantine zu Mittag.",
@@ -2230,6 +2902,146 @@ window.DATEN = {
    "luecke": "to Central Park in the morning",
    "stimme": "f",
    "audio": "audio/saetze/wk_08.mp3"
+  },
+  "u1_019_s": {
+   "en": "There's a great view from here.",
+   "de": "Von hier hat man eine tolle Aussicht.",
+   "luecke": "view",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_13.mp3"
+  },
+  "u1_020_s": {
+   "en": "Manhattan is an island.",
+   "de": "Manhattan ist eine Insel.",
+   "luecke": "island",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_01.mp3"
+  },
+  "u1_026_s": {
+   "en": "The skyscraper is very tall.",
+   "de": "Der Wolkenkratzer ist sehr hoch.",
+   "luecke": "skyscraper",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_02.mp3"
+  },
+  "u1_038_s": {
+   "en": "It's a suspension bridge.",
+   "de": "Es ist eine Hängebrücke.",
+   "luecke": "suspension",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_04.mp3"
+  },
+  "u1_048_s": {
+   "en": "I'm in a good mood today.",
+   "de": "Ich bin heute guter Laune.",
+   "luecke": "mood",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_05.mp3"
+  },
+  "u1_049_s": {
+   "en": "Boring? No way, it's awesome — his neighbors just come by and chat!",
+   "de": "Langweilig? Auf keinen Fall, das ist großartig – seine Nachbarn kommen einfach vorbei und plaudern!",
+   "luecke": "come by",
+   "stimme": "m",
+   "audio": "audio/saetze/d4_03.mp3"
+  },
+  "u1_050_s": {
+   "en": "We live in a small apartment.",
+   "de": "Wir wohnen in einer kleinen Wohnung.",
+   "luecke": "apartment",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_06.mp3"
+  },
+  "u1_053_s": {
+   "en": "It was so embarrassing!",
+   "de": "Es war so peinlich!",
+   "luecke": "embarrassing",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_07.mp3"
+  },
+  "u1_056_s": {
+   "en": "I take the subway to school.",
+   "de": "Ich fahre mit der U-Bahn zur Schule.",
+   "luecke": "subway",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_08.mp3"
+  },
+  "u1_057_s": {
+   "en": "Junior's? I checked that out — apparently it's amazing.",
+   "de": "Junior's? Das habe ich mir angeschaut – anscheinend ist es super.",
+   "luecke": "checked that out",
+   "stimme": "f",
+   "audio": "audio/saetze/d4_06.mp3"
+  },
+  "u1_058_s": {
+   "en": "We had breakfast at a diner.",
+   "de": "Wir haben in einem Diner gefrühstückt.",
+   "luecke": "diner",
+   "stimme": "m",
+   "audio": "audio/saetze/hv_09.mp3"
+  },
+  "u1_065_s": {
+   "en": "Can I order a burger, please?",
+   "de": "Kann ich bitte einen Burger bestellen?",
+   "luecke": "order",
+   "stimme": "f",
+   "audio": "audio/saetze/hv_10.mp3"
+  },
+  "u1_076_s": {
+   "en": "Crime is a problem in big cities.",
+   "de": "Verbrechen sind in großen Städten ein Problem.",
+   "luecke": "Crime",
+   "stimme": "m",
+   "audio": "audio/saetze/ht_01.mp3"
+  },
+  "u1_078_s": {
+   "en": "The man looked suspicious.",
+   "de": "Der Mann sah verdächtig aus.",
+   "luecke": "suspicious",
+   "stimme": "f",
+   "audio": "audio/saetze/ht_02.mp3"
+  },
+  "u1_079_s": {
+   "en": "I'm innocent!",
+   "de": "Ich bin unschuldig!",
+   "luecke": "innocent",
+   "stimme": "m",
+   "audio": "audio/saetze/ht_03.mp3"
+  },
+  "u1_081_s": {
+   "en": "I felt trapped in the kitchen.",
+   "de": "Ich fühlte mich in der Küche gefangen.",
+   "luecke": "trapped",
+   "stimme": "m",
+   "audio": "audio/saetze/ht_05.mp3"
+  },
+  "u1_082_s": {
+   "en": "My friendship with him is important to me.",
+   "de": "Die Freundschaft mit ihm ist mir wichtig.",
+   "luecke": "friendship",
+   "stimme": "f",
+   "audio": "audio/saetze/ht_04.mp3"
+  },
+  "u1_084_s": {
+   "en": "I practise basketball every day.",
+   "de": "Ich übe jeden Tag Basketball.",
+   "luecke": "practise",
+   "stimme": "f",
+   "audio": "audio/saetze/ht_06.mp3"
+  },
+  "u1_102_s": {
+   "en": "He stared at her for a long time.",
+   "de": "Er starrte sie lange an.",
+   "luecke": "stared",
+   "stimme": "m",
+   "audio": "audio/saetze/ht_07.mp3"
+  },
+  "u1_107_s": {
+   "en": "That was the turning point of the story.",
+   "de": "Das war der Wendepunkt der Geschichte.",
+   "luecke": "turning point",
+   "stimme": "f",
+   "audio": "audio/saetze/ht_08.mp3"
   }
  },
  "vokabeln": [
@@ -3372,10 +4184,1342 @@ window.DATEN = {
    "def": "something that helps you to be better or more successful than others",
    "stimme": "f",
    "audio": "audio/vokabeln/u2_114.mp3"
+  },
+  {
+   "id": "u1_001",
+   "unit": "1",
+   "en": "immigrant",
+   "de": "Einwanderer/Einwanderin",
+   "satz": "u1_001_s",
+   "def": "a person who comes to live in a new country",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_001.mp3"
+  },
+  {
+   "id": "u1_002",
+   "unit": "1",
+   "en": "alligator",
+   "de": "Alligator",
+   "satz": "u1_002_s",
+   "def": "a big animal with a long mouth and lots of teeth that lives in rivers",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_002.mp3"
+  },
+  {
+   "id": "u1_003",
+   "unit": "1",
+   "en": "buffalo",
+   "de": "Büffel; Bison",
+   "satz": "u1_003_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_003.mp3"
+  },
+  {
+   "id": "u1_004",
+   "unit": "1",
+   "en": "nature",
+   "de": "Natur",
+   "satz": "u1_004_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_004.mp3"
+  },
+  {
+   "id": "u1_005",
+   "unit": "1",
+   "en": "star",
+   "de": "Stern",
+   "satz": "u1_005_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_005.mp3"
+  },
+  {
+   "id": "u1_006",
+   "unit": "1",
+   "en": "state",
+   "de": "Staat",
+   "satz": "u1_006_s",
+   "def": "one of the 50 parts of the USA, for example Texas or Florida",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_006.mp3"
+  },
+  {
+   "id": "u1_007",
+   "unit": "1",
+   "en": "Native American",
+   "de": "amerikanischer Ureinwohner/amerikanische Ureinwohnerin",
+   "satz": "u1_007_s",
+   "def": "a person whose family lived in America before the Europeans came",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_007.mp3"
+  },
+  {
+   "id": "u1_008",
+   "unit": "1",
+   "en": "slave",
+   "de": "Sklave/Sklavin",
+   "satz": "u1_008_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_008.mp3"
+  },
+  {
+   "id": "u1_009",
+   "unit": "1",
+   "en": "European",
+   "de": "Europäer/in; europäisch",
+   "satz": "u1_009_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_009.mp3"
+  },
+  {
+   "id": "u1_010",
+   "unit": "1",
+   "en": "settler",
+   "de": "Siedler/in",
+   "satz": "u1_010_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_010.mp3"
+  },
+  {
+   "id": "u1_011",
+   "unit": "1",
+   "en": "fight sb., fought, fought",
+   "de": "jn. bekämpfen, gegen jn. kämpfen",
+   "satz": "u1_011_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_011.mp3"
+  },
+  {
+   "id": "u1_012",
+   "unit": "1",
+   "en": "war",
+   "de": "Krieg",
+   "satz": "u1_012_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_012.mp3"
+  },
+  {
+   "id": "u1_013",
+   "unit": "1",
+   "en": "independence",
+   "de": "Unabhängigkeit",
+   "satz": "u1_013_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_013.mp3"
+  },
+  {
+   "id": "u1_014",
+   "unit": "1",
+   "en": "hurricane",
+   "de": "Hurrikan, Orkan",
+   "satz": "u1_014_s",
+   "def": "a very strong storm with a lot of wind and rain",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_014.mp3"
+  },
+  {
+   "id": "u1_015",
+   "unit": "1",
+   "en": "soccer",
+   "de": "Fußball",
+   "satz": "u1_015_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_015.mp3"
+  },
+  {
+   "id": "u1_016",
+   "unit": "1",
+   "en": "statue",
+   "de": "Statue",
+   "satz": "u1_016_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_016.mp3"
+  },
+  {
+   "id": "u1_017",
+   "unit": "1",
+   "en": "liberty",
+   "de": "Freiheit",
+   "satz": "u1_017_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_017.mp3"
+  },
+  {
+   "id": "u1_018",
+   "unit": "1",
+   "en": "freedom",
+   "de": "Freiheit",
+   "satz": "u1_018_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_018.mp3"
+  },
+  {
+   "id": "u1_019",
+   "unit": "1",
+   "en": "view",
+   "de": "Blick, Aussicht",
+   "satz": "u1_019_s",
+   "def": "the things you can see from a high place",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_019.mp3"
+  },
+  {
+   "id": "u1_020",
+   "unit": "1",
+   "en": "island",
+   "de": "Insel",
+   "satz": "u1_020_s",
+   "def": "a piece of land with water all around it",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_020.mp3"
+  },
+  {
+   "id": "u1_021",
+   "unit": "1",
+   "en": "skyline",
+   "de": "Skyline",
+   "satz": "u1_021_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_021.mp3"
+  },
+  {
+   "id": "u1_022",
+   "unit": "1",
+   "en": "sky",
+   "de": "Himmel",
+   "satz": "u1_022_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_022.mp3"
+  },
+  {
+   "id": "u1_023",
+   "unit": "1",
+   "en": "avenue",
+   "de": "Allee, Prachtstraße",
+   "satz": "u1_023_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_023.mp3"
+  },
+  {
+   "id": "u1_024",
+   "unit": "1",
+   "en": "paradise",
+   "de": "Paradies",
+   "satz": "u1_024_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_024.mp3"
+  },
+  {
+   "id": "u1_025",
+   "unit": "1",
+   "en": "awesome (AE, infml)",
+   "de": "klasse, stark, großartig",
+   "satz": "u1_025_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_025.mp3"
+  },
+  {
+   "id": "u1_026",
+   "unit": "1",
+   "en": "skyscraper",
+   "de": "Wolkenkratzer",
+   "satz": "u1_026_s",
+   "def": "a very, very tall building in a city",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_026.mp3"
+  },
+  {
+   "id": "u1_027",
+   "unit": "1",
+   "en": "build, built, built",
+   "de": "bauen",
+   "satz": "u1_027_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_027.mp3"
+  },
+  {
+   "id": "u1_028",
+   "unit": "1",
+   "en": "destroy",
+   "de": "zerstören",
+   "satz": "u1_028_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_028.mp3"
+  },
+  {
+   "id": "u1_029",
+   "unit": "1",
+   "en": "terrorist",
+   "de": "terroristisch, Terror-; Terrorist/in",
+   "satz": "u1_029_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_029.mp3"
+  },
+  {
+   "id": "u1_030",
+   "unit": "1",
+   "en": "step",
+   "de": "Stufe",
+   "satz": "u1_030_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_030.mp3"
+  },
+  {
+   "id": "u1_031",
+   "unit": "1",
+   "en": "crown",
+   "de": "Krone",
+   "satz": "u1_031_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_031.mp3"
+  },
+  {
+   "id": "u1_032",
+   "unit": "1",
+   "en": "nose",
+   "de": "Nase",
+   "satz": "u1_032_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_032.mp3"
+  },
+  {
+   "id": "u1_033",
+   "unit": "1",
+   "en": "1.6 million",
+   "de": "1,6 Millionen",
+   "satz": "u1_033_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_033.mp3"
+  },
+  {
+   "id": "u1_034",
+   "unit": "1",
+   "en": "court",
+   "de": "Platz, Court (Tennis, Basketball)",
+   "satz": "u1_034_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_034.mp3"
+  },
+  {
+   "id": "u1_035",
+   "unit": "1",
+   "en": "playground",
+   "de": "Spielplatz",
+   "satz": "u1_035_s",
+   "def": "a place outside where children can play",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_035.mp3"
+  },
+  {
+   "id": "u1_036",
+   "unit": "1",
+   "en": "ice rink",
+   "de": "Schlittschuhbahn, Eisbahn",
+   "satz": "u1_036_s",
+   "def": "a place where you can skate on ice",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_036.mp3"
+  },
+  {
+   "id": "u1_037",
+   "unit": "1",
+   "en": "connect",
+   "de": "verbinden",
+   "satz": "u1_037_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_037.mp3"
+  },
+  {
+   "id": "u1_038",
+   "unit": "1",
+   "en": "suspension bridge",
+   "de": "Hängebrücke",
+   "satz": "u1_038_s",
+   "def": "a bridge that hangs on strong cables",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_038.mp3"
+  },
+  {
+   "id": "u1_039",
+   "unit": "1",
+   "en": "hang, hung, hung",
+   "de": "hängen",
+   "satz": "u1_039_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_039.mp3"
+  },
+  {
+   "id": "u1_040",
+   "unit": "1",
+   "en": "cable",
+   "de": "Kabel, Drahtseil",
+   "satz": "u1_040_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_040.mp3"
+  },
+  {
+   "id": "u1_041",
+   "unit": "1",
+   "en": "after (prep)",
+   "de": "nach",
+   "satz": "u1_041_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_041.mp3"
+  },
+  {
+   "id": "u1_042",
+   "unit": "1",
+   "en": "after (conj)",
+   "de": "nachdem",
+   "satz": "u1_042_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_042.mp3"
+  },
+  {
+   "id": "u1_043",
+   "unit": "1",
+   "en": "fact",
+   "de": "Tatsache, Fakt",
+   "satz": "u1_043_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_043.mp3"
+  },
+  {
+   "id": "u1_044",
+   "unit": "1",
+   "en": "What else …?",
+   "de": "Was (sonst) noch …?",
+   "satz": "u1_044_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_044.mp3"
+  },
+  {
+   "id": "u1_045",
+   "unit": "1",
+   "en": "meaning",
+   "de": "Bedeutung",
+   "satz": "u1_045_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_045.mp3"
+  },
+  {
+   "id": "u1_046",
+   "unit": "1",
+   "en": "unknown",
+   "de": "unbekannt",
+   "satz": "u1_046_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_046.mp3"
+  },
+  {
+   "id": "u1_047",
+   "unit": "1",
+   "en": "context",
+   "de": "(Text-)Zusammenhang",
+   "satz": "u1_047_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_047.mp3"
+  },
+  {
+   "id": "u1_048",
+   "unit": "1",
+   "en": "mood",
+   "de": "Stimmung, Laune",
+   "satz": "u1_048_s",
+   "def": "how you feel, for example happy or angry",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_048.mp3"
+  },
+  {
+   "id": "u1_049",
+   "unit": "1",
+   "en": "come by (AE)",
+   "de": "vorbeikommen (besuchen)",
+   "satz": "u1_049_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_049.mp3"
+  },
+  {
+   "id": "u1_050",
+   "unit": "1",
+   "en": "apartment",
+   "de": "Wohnung",
+   "satz": "u1_050_s",
+   "def": "a home with a few rooms in a bigger building",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_050.mp3"
+  },
+  {
+   "id": "u1_051",
+   "unit": "1",
+   "en": "That's us.",
+   "de": "Das sind wir.",
+   "satz": "u1_051_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_051.mp3"
+  },
+  {
+   "id": "u1_052",
+   "unit": "1",
+   "en": "mom (AE)",
+   "de": "Mama, Mutti",
+   "satz": "u1_052_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_052.mp3"
+  },
+  {
+   "id": "u1_053",
+   "unit": "1",
+   "en": "embarrassing",
+   "de": "peinlich",
+   "satz": "u1_053_s",
+   "def": "making you feel silly in front of other people",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_053.mp3"
+  },
+  {
+   "id": "u1_054",
+   "unit": "1",
+   "en": "fall asleep",
+   "de": "einschlafen",
+   "satz": "u1_054_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_054.mp3"
+  },
+  {
+   "id": "u1_055",
+   "unit": "1",
+   "en": "be asleep",
+   "de": "schlafen",
+   "satz": "u1_055_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_055.mp3"
+  },
+  {
+   "id": "u1_056",
+   "unit": "1",
+   "en": "subway (AE)",
+   "de": "U-Bahn",
+   "satz": "u1_056_s",
+   "def": "a train that goes under the ground in a city",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_056.mp3"
+  },
+  {
+   "id": "u1_057",
+   "unit": "1",
+   "en": "check sth. out (infml)",
+   "de": "sich etwas anschauen, anhören",
+   "satz": "u1_057_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_057.mp3"
+  },
+  {
+   "id": "u1_058",
+   "unit": "1",
+   "en": "diner (AE)",
+   "de": "(kleines, preiswertes) Restaurant",
+   "satz": "u1_058_s",
+   "def": "a small, cheap restaurant in the USA",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_058.mp3"
+  },
+  {
+   "id": "u1_059",
+   "unit": "1",
+   "en": "it's way cooler than … (infml)",
+   "de": "es ist viel cooler als …",
+   "satz": "u1_059_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_059.mp3"
+  },
+  {
+   "id": "u1_060",
+   "unit": "1",
+   "en": "title",
+   "de": "Titel, Überschrift",
+   "satz": "u1_060_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_060.mp3"
+  },
+  {
+   "id": "u1_061",
+   "unit": "1",
+   "en": "chance",
+   "de": "Gelegenheit, Möglichkeit, Chance",
+   "satz": "u1_061_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_061.mp3"
+  },
+  {
+   "id": "u1_062",
+   "unit": "1",
+   "en": "choose, chose, chosen",
+   "de": "(sich) aussuchen, (aus)wählen",
+   "satz": "u1_062_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_062.mp3"
+  },
+  {
+   "id": "u1_063",
+   "unit": "1",
+   "en": "menu",
+   "de": "Speisekarte",
+   "satz": "u1_063_s",
+   "def": "a list of the food you can order in a restaurant",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_063.mp3"
+  },
+  {
+   "id": "u1_064",
+   "unit": "1",
+   "en": "recommend sth. (to sb.)",
+   "de": "(jm.) etwas empfehlen",
+   "satz": "u1_064_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_064.mp3"
+  },
+  {
+   "id": "u1_065",
+   "unit": "1",
+   "en": "order",
+   "de": "bestellen",
+   "satz": "u1_065_s",
+   "def": "to ask for food or drinks in a restaurant",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_065.mp3"
+  },
+  {
+   "id": "u1_066",
+   "unit": "1",
+   "en": "order",
+   "de": "Bestellung",
+   "satz": "u1_066_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_066.mp3"
+  },
+  {
+   "id": "u1_067",
+   "unit": "1",
+   "en": "extra",
+   "de": "zusätzlich",
+   "satz": "u1_067_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_067.mp3"
+  },
+  {
+   "id": "u1_068",
+   "unit": "1",
+   "en": "take, took, taken",
+   "de": "(weg-, hin)bringen",
+   "satz": "u1_068_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_068.mp3"
+  },
+  {
+   "id": "u1_069",
+   "unit": "1",
+   "en": "homeless",
+   "de": "obdachlos",
+   "satz": "u1_069_s",
+   "def": "without a home",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_069.mp3"
+  },
+  {
+   "id": "u1_070",
+   "unit": "1",
+   "en": "guide",
+   "de": "Ratgeber, Führung",
+   "satz": "u1_070_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_070.mp3"
+  },
+  {
+   "id": "u1_071",
+   "unit": "1",
+   "en": "rest",
+   "de": "(Erholungs-)Pause",
+   "satz": "u1_071_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_071.mp3"
+  },
+  {
+   "id": "u1_072",
+   "unit": "1",
+   "en": "spelling",
+   "de": "Rechtschreibung; Schreibweise",
+   "satz": "u1_072_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_072.mp3"
+  },
+  {
+   "id": "u1_073",
+   "unit": "1",
+   "en": "experience",
+   "de": "erfahren, erleben",
+   "satz": "u1_073_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_073.mp3"
+  },
+  {
+   "id": "u1_074",
+   "unit": "1",
+   "en": "cruise",
+   "de": "Kreuzfahrt",
+   "satz": "u1_074_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_074.mp3"
+  },
+  {
+   "id": "u1_075",
+   "unit": "1",
+   "en": "introduction",
+   "de": "Einleitung, Einführung",
+   "satz": "u1_075_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_075.mp3"
+  },
+  {
+   "id": "u1_076",
+   "unit": "1",
+   "en": "crime",
+   "de": "Kriminalität; Verbrechen",
+   "satz": "u1_076_s",
+   "def": "things people do that are against the law",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_076.mp3"
+  },
+  {
+   "id": "u1_077",
+   "unit": "1",
+   "en": "violence",
+   "de": "Gewalt",
+   "satz": "u1_077_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_077.mp3"
+  },
+  {
+   "id": "u1_078",
+   "unit": "1",
+   "en": "suspicious",
+   "de": "verdächtig",
+   "satz": "u1_078_s",
+   "def": "looking like somebody who did something wrong",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_078.mp3"
+  },
+  {
+   "id": "u1_079",
+   "unit": "1",
+   "en": "innocent",
+   "de": "unschuldig",
+   "satz": "u1_079_s",
+   "def": "not guilty – you didn't do it",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_079.mp3"
+  },
+  {
+   "id": "u1_080",
+   "unit": "1",
+   "en": "author",
+   "de": "Autor/in",
+   "satz": "u1_080_s",
+   "def": "a person who writes books",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_080.mp3"
+  },
+  {
+   "id": "u1_081",
+   "unit": "1",
+   "en": "trapped",
+   "de": "gefangen (in einer Falle)",
+   "satz": "u1_081_s",
+   "def": "not able to get out",
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_081.mp3"
+  },
+  {
+   "id": "u1_082",
+   "unit": "1",
+   "en": "friendship",
+   "de": "Freundschaft",
+   "satz": "u1_082_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_082.mp3"
+  },
+  {
+   "id": "u1_083",
+   "unit": "1",
+   "en": "original",
+   "de": "Original-, ursprünglich; Original",
+   "satz": "u1_083_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_083.mp3"
+  },
+  {
+   "id": "u1_084",
+   "unit": "1",
+   "en": "practise (BE) / practice (AE)",
+   "de": "üben; trainieren",
+   "satz": "u1_084_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_084.mp3"
+  },
+  {
+   "id": "u1_085",
+   "unit": "1",
+   "en": "practice",
+   "de": "Übung; Training",
+   "satz": "u1_085_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_085.mp3"
+  },
+  {
+   "id": "u1_086",
+   "unit": "1",
+   "en": "pull in",
+   "de": "anhalten, an den Straßenrand fahren",
+   "satz": "u1_086_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_086.mp3"
+  },
+  {
+   "id": "u1_087",
+   "unit": "1",
+   "en": "get out (of a car)",
+   "de": "(aus einem Auto) aussteigen",
+   "satz": "u1_087_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_087.mp3"
+  },
+  {
+   "id": "u1_088",
+   "unit": "1",
+   "en": "sweat",
+   "de": "Schweiß",
+   "satz": "u1_088_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_088.mp3"
+  },
+  {
+   "id": "u1_089",
+   "unit": "1",
+   "en": "each other",
+   "de": "einander; sich (gegenseitig)",
+   "satz": "u1_089_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_089.mp3"
+  },
+  {
+   "id": "u1_090",
+   "unit": "1",
+   "en": "cruise",
+   "de": "herumfahren (ohne festes Ziel)",
+   "satz": "u1_090_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_090.mp3"
+  },
+  {
+   "id": "u1_091",
+   "unit": "1",
+   "en": "What's going on?",
+   "de": "Was ist los? / Was gibt's?",
+   "satz": "u1_091_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_091.mp3"
+  },
+  {
+   "id": "u1_092",
+   "unit": "1",
+   "en": "as",
+   "de": "als, während",
+   "satz": "u1_092_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_092.mp3"
+  },
+  {
+   "id": "u1_093",
+   "unit": "1",
+   "en": "routine",
+   "de": "Routine",
+   "satz": "u1_093_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_093.mp3"
+  },
+  {
+   "id": "u1_094",
+   "unit": "1",
+   "en": "lean",
+   "de": "sich lehnen; sich beugen",
+   "satz": "u1_094_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_094.mp3"
+  },
+  {
+   "id": "u1_095",
+   "unit": "1",
+   "en": "it might help",
+   "de": "es hilft vielleicht; es könnte (vielleicht) helfen",
+   "satz": "u1_095_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_095.mp3"
+  },
+  {
+   "id": "u1_096",
+   "unit": "1",
+   "en": "I guess …",
+   "de": "Ich nehme an, … / Ich glaube, …",
+   "satz": "u1_096_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_096.mp3"
+  },
+  {
+   "id": "u1_097",
+   "unit": "1",
+   "en": "manners (pl)",
+   "de": "Manieren",
+   "satz": "u1_097_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_097.mp3"
+  },
+  {
+   "id": "u1_098",
+   "unit": "1",
+   "en": "just",
+   "de": "einfach (so)",
+   "satz": "u1_098_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_098.mp3"
+  },
+  {
+   "id": "u1_099",
+   "unit": "1",
+   "en": "give up",
+   "de": "aufgeben, aufhören",
+   "satz": "u1_099_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_099.mp3"
+  },
+  {
+   "id": "u1_100",
+   "unit": "1",
+   "en": "Who cares?",
+   "de": "Wen interessiert das? / Na und?",
+   "satz": "u1_100_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_100.mp3"
+  },
+  {
+   "id": "u1_101",
+   "unit": "1",
+   "en": "close (to)",
+   "de": "nahe (bei, an)",
+   "satz": "u1_101_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_101.mp3"
+  },
+  {
+   "id": "u1_102",
+   "unit": "1",
+   "en": "stare",
+   "de": "starren",
+   "satz": "u1_102_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_102.mp3"
+  },
+  {
+   "id": "u1_103",
+   "unit": "1",
+   "en": "hit, hit, hit",
+   "de": "jn./etwas schlagen",
+   "satz": "u1_103_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_103.mp3"
+  },
+  {
+   "id": "u1_104",
+   "unit": "1",
+   "en": "floor",
+   "de": "Fußboden",
+   "satz": "u1_104_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_104.mp3"
+  },
+  {
+   "id": "u1_105",
+   "unit": "1",
+   "en": "grow, grew, grown",
+   "de": "(allmählich) werden",
+   "satz": "u1_105_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_105.mp3"
+  },
+  {
+   "id": "u1_106",
+   "unit": "1",
+   "en": "fight",
+   "de": "Kampf",
+   "satz": "u1_106_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_106.mp3"
+  },
+  {
+   "id": "u1_107",
+   "unit": "1",
+   "en": "turning point",
+   "de": "Wendepunkt",
+   "satz": "u1_107_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_107.mp3"
+  },
+  {
+   "id": "u1_108",
+   "unit": "1",
+   "en": "polite",
+   "de": "höflich",
+   "satz": "u1_108_s",
+   "def": "friendly and with good manners",
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_108.mp3"
+  },
+  {
+   "id": "u1_109",
+   "unit": "1",
+   "en": "floor",
+   "de": "Stock(werk)",
+   "satz": "u1_109_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_109.mp3"
+  },
+  {
+   "id": "u1_110",
+   "unit": "1",
+   "en": "need to do sth.",
+   "de": "etwas tun müssen",
+   "satz": "u1_110_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_110.mp3"
+  },
+  {
+   "id": "u1_111",
+   "unit": "1",
+   "en": "explain sth. (to sb.)",
+   "de": "(jm.) etwas erklären",
+   "satz": "u1_111_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_111.mp3"
+  },
+  {
+   "id": "u1_112",
+   "unit": "1",
+   "en": "the gist",
+   "de": "das Wesentliche; die Kernaussage(n)",
+   "satz": "u1_112_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_112.mp3"
+  },
+  {
+   "id": "u1_113",
+   "unit": "1",
+   "en": "booth",
+   "de": "Nische, (Sitz-)Ecke (im Restaurant)",
+   "satz": "u1_113_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_113.mp3"
+  },
+  {
+   "id": "u1_114",
+   "unit": "1",
+   "en": "scrambled eggs",
+   "de": "Rührei",
+   "satz": "u1_114_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_114.mp3"
+  },
+  {
+   "id": "u1_115",
+   "unit": "1",
+   "en": "scan a text",
+   "de": "einen Text schnell nach bestimmten Wörtern/Informationen absuchen",
+   "satz": "u1_115_s",
+   "def": null,
+   "stimme": "m",
+   "audio": "audio/vokabeln/u1_115.mp3"
+  },
+  {
+   "id": "u1_116",
+   "unit": "1",
+   "en": "professional",
+   "de": "professionell, Profi-",
+   "satz": "u1_116_s",
+   "def": null,
+   "stimme": "f",
+   "audio": "audio/vokabeln/u1_116.mp3"
   }
  ],
  "units": {
-  "1": [],
+  "1": [
+   {
+    "name": "USA – here we come · Part 1",
+    "vokabeln": [
+     "u1_001",
+     "u1_002",
+     "u1_003",
+     "u1_004",
+     "u1_005",
+     "u1_006",
+     "u1_007",
+     "u1_008",
+     "u1_009"
+    ]
+   },
+   {
+    "name": "USA – here we come · Part 2",
+    "vokabeln": [
+     "u1_010",
+     "u1_011",
+     "u1_012",
+     "u1_013",
+     "u1_014",
+     "u1_015",
+     "u1_016",
+     "u1_017",
+     "u1_018"
+    ]
+   },
+   {
+    "name": "Start",
+    "vokabeln": [
+     "u1_019",
+     "u1_020",
+     "u1_021",
+     "u1_022",
+     "u1_023",
+     "u1_024",
+     "u1_025"
+    ]
+   },
+   {
+    "name": "Theme 1 · Part 1",
+    "vokabeln": [
+     "u1_026",
+     "u1_027",
+     "u1_028",
+     "u1_029",
+     "u1_030",
+     "u1_031",
+     "u1_032",
+     "u1_033",
+     "u1_034",
+     "u1_035",
+     "u1_036"
+    ]
+   },
+   {
+    "name": "Theme 1 · Part 2",
+    "vokabeln": [
+     "u1_037",
+     "u1_038",
+     "u1_039",
+     "u1_040",
+     "u1_041",
+     "u1_042",
+     "u1_043",
+     "u1_044",
+     "u1_045",
+     "u1_046",
+     "u1_047"
+    ]
+   },
+   {
+    "name": "Theme 2",
+    "vokabeln": [
+     "u1_048",
+     "u1_049",
+     "u1_050",
+     "u1_051",
+     "u1_052",
+     "u1_053",
+     "u1_054",
+     "u1_055",
+     "u1_056",
+     "u1_057",
+     "u1_058",
+     "u1_059",
+     "u1_060"
+    ]
+   },
+   {
+    "name": "Focus on language",
+    "vokabeln": [
+     "u1_061",
+     "u1_062",
+     "u1_063",
+     "u1_064",
+     "u1_065",
+     "u1_066",
+     "u1_067",
+     "u1_068",
+     "u1_069",
+     "u1_070",
+     "u1_071",
+     "u1_072",
+     "u1_073",
+     "u1_074"
+    ]
+   },
+   {
+    "name": "Story · Part 1",
+    "vokabeln": [
+     "u1_075",
+     "u1_076",
+     "u1_077",
+     "u1_078",
+     "u1_079",
+     "u1_080",
+     "u1_081",
+     "u1_082",
+     "u1_083",
+     "u1_084",
+     "u1_085"
+    ]
+   },
+   {
+    "name": "Story · Part 2",
+    "vokabeln": [
+     "u1_086",
+     "u1_087",
+     "u1_088",
+     "u1_089",
+     "u1_090",
+     "u1_091",
+     "u1_092",
+     "u1_093",
+     "u1_094",
+     "u1_095",
+     "u1_096"
+    ]
+   },
+   {
+    "name": "Story · Part 3",
+    "vokabeln": [
+     "u1_097",
+     "u1_098",
+     "u1_099",
+     "u1_100",
+     "u1_101",
+     "u1_102",
+     "u1_103",
+     "u1_104",
+     "u1_105",
+     "u1_106",
+     "u1_107"
+    ]
+   },
+   {
+    "name": "Skills training",
+    "vokabeln": [
+     "u1_108",
+     "u1_109",
+     "u1_110",
+     "u1_111",
+     "u1_112",
+     "u1_113",
+     "u1_114",
+     "u1_115",
+     "u1_116"
+    ]
+   }
+  ],
   "2": [
    {
     "name": "Start",

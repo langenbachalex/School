@@ -1,115 +1,231 @@
-id	unit	abschnitt	englisch	deutsch	satz_en	satz_de	luecke	definition
-u2_001	2	start	lion	Löwe	The lion is sleeping in the shade.	Der Löwe schläft im Schatten.	lion	a big wild cat from Africa with a lot of hair around its head
-u2_002	2	start	position	Position, Stelle, Platz	There's a waitress position available at the diner.	Im Diner ist eine Stelle als Kellnerin frei.	position	a job that you can apply for
-u2_003	2	start	available	erhältlich, verfügbar; (Stelle) frei	Tickets for the concert will be available soon.	Karten für das Konzert sind bald erhältlich.	available	you can get it or buy it
-u2_004	2	start	photographer	Fotograf/in	The photographer took a picture of our whole class.	Der Fotograf hat ein Foto von unserer ganzen Klasse gemacht.	photographer	a person who takes pictures as a job
-u2_005	2	start	anytime	jederzeit	You can come by anytime on Saturday.	Du kannst am Samstag jederzeit vorbeikommen.	anytime	at any time you like
-u2_006	2	theme1	get lost	sich verirren, sich verlaufen	The shopping mall is huge. You can easily get lost.	Das Einkaufszentrum ist riesig. Man kann sich leicht verlaufen.	get lost	
-u2_007	2	theme1	I don't mind …	Es macht mir nichts aus …	I don't mind walking if the weather is nice.	Es macht mir nichts aus, zu Fuß zu gehen, wenn das Wetter schön ist.	don't mind	
-u2_008	2	theme1	grade (AE)	Klassenstufe, Jahrgang	My little sister is in fifth grade.	Meine kleine Schwester ist in der fünften Klasse.	grade	
-u2_009	2	theme1	intimidating	beängstigend, einschüchternd	My new school is so big and intimidating!	Meine neue Schule ist so groß und einschüchternd!	intimidating	making you feel nervous or a little afraid
-u2_010	2	theme1	ancient	(ur)alt; antik	Mr Ford is ancient! He must be at least 80!	Mr Ford ist uralt! Er muss mindestens 80 sein!	ancient	very, very old
-u2_011	2	theme1	change	wechseln	American kids change rooms between classes.	Amerikanische Kinder wechseln zwischen den Stunden das Klassenzimmer.	change	
-u2_012	2	theme1	library	Bücherei, Bibliothek	I borrowed three books from the school library.	Ich habe drei Bücher aus der Schulbibliothek ausgeliehen.	library	a room or building where you can borrow books
-u2_013	2	theme1	trust	trauen, vertrauen	He's a friend of mine. You can trust him.	Er ist ein Freund von mir. Du kannst ihm vertrauen.	trust	to believe that somebody is honest and good
-u2_014	2	theme1	debate	debattieren, diskutieren	We debated about getting a cat or a dog for two weeks.	Wir haben zwei Wochen lang diskutiert, ob wir eine Katze oder einen Hund bekommen.	debated	
-u2_015	2	theme1	incredible	unglaublich	It was our first concert – and more than 200 people came. It was incredible.	Es war unser erstes Konzert – und mehr als 200 Leute kamen. Es war unglaublich.	incredible	so good or so surprising that it is hard to believe
-u2_016	2	theme1	I didn't know anybody.	Ich kannte niemanden.	On my first day, I didn't know anybody.	An meinem ersten Tag kannte ich niemanden.	anybody	
-u2_017	2	theme1	disability	Behinderung	Our school has elevators for students with a disability.	Unsere Schule hat Aufzüge für Schüler mit Behinderung.	disability	
-u2_018	2	theme1	Plus, …	Und außerdem …	The gym is not expensive. Plus, I can use the pool anytime I want.	Das Fitnessstudio ist nicht teuer. Und außerdem kann ich das Schwimmbad jederzeit benutzen.	Plus	
-u2_019	2	theme1	elevator (AE)	Fahrstuhl, Aufzug, Lift	Let's take the elevator to the third floor.	Lass uns mit dem Aufzug in den dritten Stock fahren.	elevator	a machine that takes you up and down in a building
-u2_020	2	theme1	size	Größe	Do you have these sneakers in my size?	Haben Sie diese Turnschuhe in meiner Größe?	size	
-u2_021	2	theme1	hallway (AE)	Korridor, Gang	Don't run in the hallway!	Renn nicht im Gang!	hallway	a long, narrow way inside a building with doors to the rooms
-u2_022	2	theme1	locker	Spind, Schließfach	I keep my books in my locker.	Ich bewahre meine Bücher in meinem Spind auf.	locker	a small cupboard at school where you can lock away your things
-u2_023	2	theme2	highlight	Höhepunkt	The highlight of our trip was the boat tour.	Der Höhepunkt unserer Reise war die Bootstour.	highlight	the best part of something
-u2_024	2	theme2	common	häufig; weit verbreitet	One of the most common names for girls in Britain today is Olivia.	Einer der häufigsten Mädchennamen in Großbritannien ist heute Olivia.	common	
-u2_025	2	theme2	… are organized …	… werden organisiert …	School dances are organized by the students.	Schulbälle werden von den Schülern organisiert.	organized	
-u2_026	2	theme2	as much as …	bis zu …; nicht weniger als …	The concert tickets cost as much as 150 dollars.	Die Konzertkarten kosten bis zu 150 Dollar.	as much as	
-u2_027	2	theme2	cost a fortune	ein Vermögen kosten	Prom dresses can cost a fortune.	Ballkleider können ein Vermögen kosten.	cost a fortune	
-u2_028	2	theme2	fund-raising event	Event zur Beschaffung von Geld/Spenden	We sold cakes at a fund-raising event for our school trip.	Wir haben bei einer Spendenaktion für unsere Klassenfahrt Kuchen verkauft.	fund-raising event	
-u2_029	2	theme2	so that	sodass, damit	We want to start fund-raising so that we can help the local youth club.	Wir wollen Spenden sammeln, damit wir dem Jugendclub vor Ort helfen können.	so that	
-u2_030	2	theme2	rent	mieten, leihen	I don't want to buy the movie, I just want to rent it.	Ich will den Film nicht kaufen, ich will ihn nur leihen.	rent	to pay money to use something for a short time
-u2_031	2	theme2	the only one	der/die/das Einzige	You're scared of snakes? Don't worry, you're not the only one.	Du hast Angst vor Schlangen? Keine Sorge, du bist nicht der Einzige.	the only one	
-u2_032	2	theme2	date	Verabredung, Date	I have a date with Carla on Friday.	Ich habe am Freitag ein Date mit Carla.	date	
-u2_033	2	theme2	contract	Vertrag	Read the contract carefully before you sign it.	Lies den Vertrag genau, bevor du ihn unterschreibst.	contract	a paper with rules that two people or groups agree on and sign
-u2_034	2	theme2	get drunk	sich betrinken	At our prom, nobody is allowed to get drunk.	Bei unserem Abschlussball darf sich niemand betrinken.	get drunk	
-u2_035	2	theme2	sign	unterschreiben	Please sign your name at the bottom of the page.	Bitte unterschreib unten auf der Seite.	sign	
-u2_036	2	theme2	promise	versprechen	I won't tell anybody. I promise.	Ich sage es niemandem. Ich verspreche es.	promise	to say that you will really do something
-u2_037	2	theme2	behave	sich verhalten, sich benehmen	Little Robin had to promise to behave well before his parents took him to the cinema.	Der kleine Robin musste versprechen, sich gut zu benehmen, bevor seine Eltern ihn ins Kino mitnahmen.	behave	
-u2_038	2	theme2	alcohol	Alkohol	There is no alcohol at the school party.	Auf der Schulparty gibt es keinen Alkohol.	alcohol	
-u2_039	2	theme2	drug	Droge	Drugs are dangerous for your body and your brain.	Drogen sind gefährlich für deinen Körper und dein Gehirn.	Drugs	
-u2_040	2	theme2	break	brechen; zerbrechen; kaputt gehen	John had an accident and broke his leg.	John hatte einen Unfall und hat sich das Bein gebrochen.	broke	
-u2_041	2	fol	flute	Querflöte	My sister plays the flute in the school band.	Meine Schwester spielt Querflöte in der Schulband.	flute	a musical instrument that you hold to the side and blow into
-u2_042	2	fol	look forward to doing sth.	sich darauf freuen, etwas zu tun	We look forward to hearing from you.	Wir freuen uns darauf, von Ihnen zu hören.	look forward to	
-u2_043	2	fol	get used to sth.	sich an etwas gewöhnen	When we were in England, it was difficult to drive on the left, but we soon got used to it.	Als wir in England waren, war es schwierig, links zu fahren, aber wir haben uns schnell daran gewöhnt.	got used to	
-u2_044	2	fol	bump into sb.	mit jm. zusammenstoßen	A man bumped into me and I fell down.	Ein Mann ist mit mir zusammengestoßen und ich bin hingefallen.	bumped into	
-u2_045	2	fol	dream (about, of)	träumen (von)	I often dream about living in New York.	Ich träume oft davon, in New York zu leben.	dream about	
-u2_046	2	fol	cheerleader	Cheerleader	The cheerleaders danced at the football game.	Die Cheerleader haben beim Footballspiel getanzt.	cheerleaders	a person who dances and shouts to support a sports team
-u2_047	2	fol	cheer	jubeln, anfeuern	We cheered loudly when Amy's team won the match.	Wir haben laut gejubelt, als Amys Mannschaft das Spiel gewonnen hat.	cheered	
-u2_048	2	fol	discuss sth.	über etwas diskutieren; etwas besprechen	Dad and I discussed my pocket money again.	Papa und ich haben schon wieder über mein Taschengeld diskutiert.	discussed	
-u2_049	2	fol	argue	argumentieren	She can argue really well in a debate.	Sie kann in einer Debatte richtig gut argumentieren.	argue	
-u2_050	2	fol	artistic	künstlerisch; künstlerisch begabt	My son is quite artistic – those are his pictures on the wall.	Mein Sohn ist ziemlich künstlerisch begabt – das sind seine Bilder an der Wand.	artistic	
-u2_051	2	fol	volunteer	freiwillig/ehrenamtlich arbeiten	My mother volunteered to be the assistant soccer coach this year.	Meine Mutter hat sich dieses Jahr freiwillig als Co-Trainerin der Fußballmannschaft gemeldet.	volunteered	to do work without getting money for it
-u2_052	2	fol	To start with, …	Erstens …; Zunächst einmal …	To start with, you need two eggs, some flour and some milk.	Zunächst brauchst du zwei Eier, etwas Mehl und etwas Milch.	To start with	
-u2_053	2	fol	… is a must.	… ist ein Muss.	A good pair of sneakers is a must.	Ein gutes Paar Turnschuhe ist ein Muss.	is a must	
-u2_054	2	fol	try hard	sich sehr bemühen, sich anstrengen	I tried really hard, but I just couldn't run that last kilometer!	Ich habe mich richtig angestrengt, aber den letzten Kilometer konnte ich einfach nicht laufen!	tried really hard	
-u2_055	2	fol	a piece of advice	ein Rat, ein Ratschlag	Can I give you a piece of advice? Start studying early.	Darf ich dir einen Rat geben? Fang früh an zu lernen.	a piece of advice	
-u2_056	2	fol	preposition	Präposition	"""About"", ""in"" and ""with"" are prepositions."	„About“, „in“ und „with“ sind Präpositionen.	prepositions	
-u2_057	2	fol	likes and dislikes	Vorlieben und Abneigungen	He knows my likes and dislikes!	Er kennt meine Vorlieben und Abneigungen!	likes and dislikes	
-u2_058	2	fol	communicate (with sb.)	(mit jm.) kommunizieren; sich (mit jm.) verständigen	We communicate with our friends in the USA by video chat.	Wir verständigen uns mit unseren Freunden in den USA per Videochat.	communicate	
-u2_059	2	story	community service	gemeinnützige Arbeit, Sozialdienst	He had to do 20 hours of community service.	Er musste 20 Stunden gemeinnützige Arbeit leisten.	community service	
-u2_060	2	story	roll	rollen	The ball rolled under the car.	Der Ball ist unter das Auto gerollt.	rolled	
-u2_061	2	story	go off	losgehen (Wecker, Alarm …)	It was 6 o'clock, and my alarm clock went off.	Es war 6 Uhr, und mein Wecker ging los.	went off	
-u2_062	2	story	shorts	Shorts, kurze Hose	Your shorts aren't clean. Can you change them, please?	Deine Shorts sind nicht sauber. Kannst du sie bitte wechseln?	shorts	
-u2_063	2	story	clean	sauber	My room is finally clean.	Mein Zimmer ist endlich sauber.	clean	
-u2_064	2	story	like that	so, auf diese Weise	You can't go to the prom like that. You have to wear a formal dress.	So kannst du nicht zum Abschlussball gehen. Du musst ein festliches Kleid tragen.	like that	
-u2_065	2	story	ignore	nicht beachten, ignorieren	She didn't look at me, she didn't talk to me – she just ignored me.	Sie hat mich nicht angesehen, nicht mit mir geredet – sie hat mich einfach ignoriert.	ignored	
-u2_066	2	story	grocery store	Lebensmittelgeschäft	He went to the grocery store to buy some cheese and eggs.	Er ging ins Lebensmittelgeschäft, um Käse und Eier zu kaufen.	grocery store	a store where you buy food
-u2_067	2	story	push	schieben, stoßen, drücken	I had to push my bike all the way home. The chain was broken.	Ich musste mein Fahrrad den ganzen Weg nach Hause schieben. Die Kette war kaputt.	push	
-u2_068	2	story	Do you mind?	Entschuldige mal! / Was fällt dir ein?	Do you mind? I was watching that show!	Was fällt dir ein? Ich habe die Sendung geschaut!	Do you mind	
-u2_069	2	story	smart	schick; schlau, clever	She's so smart, she won the math contest.	Sie ist so schlau, sie hat den Mathewettbewerb gewonnen.	smart	
-u2_070	2	story	during	während	My father met my mother during his stay in London.	Mein Vater hat meine Mutter während seines Aufenthalts in London kennengelernt.	during	
-u2_071	2	story	cheek	Wange	She gave her grandma a kiss on the cheek.	Sie gab ihrer Oma einen Kuss auf die Wange.	cheek	
-u2_072	2	story	Hurry up.	Beeil dich.	Hurry up or you'll be late for school.	Beeil dich, sonst kommst du zu spät zur Schule.	Hurry up	
-u2_073	2	story	excitement	Aufregung, Begeisterung	The excitement about our trip to Australia made it hard to sleep.	Die Aufregung wegen unserer Reise nach Australien machte es schwer zu schlafen.	excitement	the feeling of being very happy and not calm because something good will happen
-u2_074	2	story	movie (AE)	Film	Let's watch a movie tonight.	Lass uns heute Abend einen Film schauen.	movie	
-u2_075	2	story	prison	Gefängnis	Nelson Mandela was in prison for 27 years.	Nelson Mandela war 27 Jahre lang im Gefängnis.	prison	a building where criminals have to stay
-u2_076	2	story	I was arrested.	Ich wurde verhaftet.	The thief was arrested by the police.	Der Dieb wurde von der Polizei verhaftet.	arrested	
-u2_077	2	story	keep away from sb.	sich fernhalten von jm.	You should keep away from those boys on the playground.	Du solltest dich von den Jungs auf dem Spielplatz fernhalten.	keep away from	
-u2_078	2	story	lobby	Eingangshalle	Let's meet in the hotel lobby at eight.	Treffen wir uns um acht in der Hotellobby.	lobby	the big room near the entrance of a hotel or building
-u2_079	2	story	responsible	verantwortungsbewusst; verantwortlich	He always cleans his room and gets up on time. He's a very responsible boy.	Er räumt immer sein Zimmer auf und steht pünktlich auf. Er ist ein sehr verantwortungsbewusster Junge.	responsible	
-u2_080	2	story	corner	Ecke	The bus stop is just around the corner.	Die Bushaltestelle ist gleich um die Ecke.	corner	
-u2_081	2	story	seem	scheinen	He seems very sad. What's wrong?	Er scheint sehr traurig zu sein. Was ist los?	seems	
-u2_082	2	story	hold	halten	Can you hold my books for a moment?	Kannst du kurz meine Bücher halten?	hold	
-u2_083	2	story	belly button	Bauchnabel	The baby laughed when I touched her belly button.	Das Baby lachte, als ich seinen Bauchnabel berührte.	belly button	
-u2_084	2	story	kill	töten	Smoking can kill you.	Rauchen kann dich töten.	kill	
-u2_085	2	story	head for sth.	auf etwas zugehen/zusteuern	She got up and headed for the door.	Sie stand auf und ging auf die Tür zu.	headed for	
-u2_086	2	story	fix sth. (infml)	etwas in Ordnung bringen	Did you sleep in your shirt? Fix it! It looks terrible.	Hast du in deinem Hemd geschlafen? Bring das in Ordnung! Es sieht schrecklich aus.	Fix	
-u2_087	2	story	tooth, teeth	Zahn, Zähne	Brush your teeth before you go to bed.	Putz dir die Zähne, bevor du ins Bett gehst.	teeth	
-u2_088	2	story	Are you kidding?	Machst du Witze? / Willst du mich auf den Arm nehmen?	You won the lottery? Are you kidding?	Du hast im Lotto gewonnen? Machst du Witze?	Are you kidding	
-u2_089	2	story	whole	ganze(r, s), gesamte(r, s)	Yesterday I played cards the whole evening.	Gestern habe ich den ganzen Abend Karten gespielt.	whole	
-u2_090	2	story	image	Image	The team wants a better image.	Die Mannschaft will ein besseres Image.	image	
-u2_091	2	skills	announcement	Durchsage, Ansage; Bekanntgabe	Listen! There's an announcement about our train.	Hör mal! Da kommt eine Durchsage zu unserem Zug.	announcement	information that somebody tells many people, for example at a station
-u2_092	2	skills	off the seat	von dem Sitz herunter	Take your shoes off the seat! Now!	Nimm deine Schuhe vom Sitz! Sofort!	off the seat	
-u2_093	2	skills	belongings	Sachen, Hab und Gut	You can leave your belongings in one of the lockers at the station.	Du kannst deine Sachen in einem der Schließfächer am Bahnhof lassen.	belongings	the things that you own and carry with you
-u2_094	2	skills	memorial (to sb./sth.)	Denkmal (für jn./etwas)	In many places you find memorials to men who fought and died in the two world wars.	An vielen Orten findet man Denkmäler für Männer, die in den beiden Weltkriegen gekämpft haben und gestorben sind.	memorials	something that is built to help people remember a person or an event
-u2_095	2	skills	visitor pass	Besucherausweis	Every guest needs a visitor pass.	Jeder Gast braucht einen Besucherausweis.	visitor pass	
-u2_096	2	skills	editor	Herausgeber/in; Redakteur/in	I wrote a letter to the editor of our school newspaper.	Ich habe einen Leserbrief an die Redaktion unserer Schülerzeitung geschrieben.	editor	
-u2_097	2	skills	tough	(knall)hart	Rugby is a tough game, and rugby players need to be tough.	Rugby ist ein harter Sport, und Rugbyspieler müssen hart sein.	tough	
-u2_098	2	skills	tradition	Tradition	Turkey on Thanksgiving is an American tradition.	Truthahn an Thanksgiving ist eine amerikanische Tradition.	tradition	something that people have done in the same way for a very long time
-u2_099	2	skills	Thanksgiving	Erntedankfest (amerikanischer Feiertag am vierten Donnerstag im November)	On Thanksgiving, the whole family has dinner together.	An Thanksgiving isst die ganze Familie zusammen zu Abend.	Thanksgiving	an American holiday on the fourth Thursday in November
-u2_100	2	skills	dress	sich anziehen, sich kleiden	She has very nice clothes and always dresses well.	Sie hat sehr schöne Kleidung und zieht sich immer gut an.	dresses	
-u2_101	2	skills	spirit	Geist, Stimmung	Our team has a great team spirit.	Unsere Mannschaft hat einen tollen Teamgeist.	spirit	
-u2_102	2	skills	aggressive	aggressiv	Some people get aggressive when they drink alcohol.	Manche Leute werden aggressiv, wenn sie Alkohol trinken.	aggressive	
-u2_103	2	skills	while	während	Jack phoned while we were watching the football game.	Jack rief an, während wir das Footballspiel schauten.	while	
-u2_104	2	skills	be banned	verboten sein/werden	Cell phones are banned at our school.	Handys sind an unserer Schule verboten.	banned	
-u2_105	2	skills	Sincerely … (AE)	Mit freundlichen Grüßen (Briefschluss)	Sincerely, Emma Miller	Mit freundlichen Grüßen, Emma Miller	Sincerely	
-u2_106	2	skills	end	enden, zu Ende gehen	School ends at three o'clock.	Die Schule endet um drei Uhr.	ends	
-u2_107	2	skills	compare	vergleichen	Work with a partner and compare your notes.	Arbeite mit einem Partner und vergleicht eure Notizen.	compare	
-u2_108	2	skills	smoke	rauchen	Smoking is banned on the school grounds.	Rauchen ist auf dem Schulgelände verboten.	Smoking	
-u2_109	2	skills	dress	Kleidung	Is there a dress code at your school?	Gibt es an deiner Schule eine Kleiderordnung?	dress	
-u2_110	2	skills	appropriate	angemessen, passend, geeignet	You need appropriate clothes for a job interview.	Für ein Vorstellungsgespräch brauchst du passende Kleidung.	appropriate	
-u2_111	2	skills	similar (to sth./sb.)	(etwas/jm.) ähnlich	These socks look so similar to Isabelle's.	Diese Socken sehen Isabelles so ähnlich.	similar	
-u2_112	2	skills	in some ways	in mancher Hinsicht	My brother and I are similar in some ways but quite different in others.	Mein Bruder und ich sind uns in mancher Hinsicht ähnlich, in anderer aber ganz verschieden.	in some ways	
-u2_113	2	skills	improve	verbessern	You should read more if you want to improve your vocabulary.	Du solltest mehr lesen, wenn du deinen Wortschatz verbessern willst.	improve	to make something better
-u2_114	2	skills	advantage	Vorteil	Rafael has an advantage in Spanish class; he speaks Spanish at home.	Rafael hat im Spanischunterricht einen Vorteil; er spricht zu Hause Spanisch.	advantage	something that helps you to be better or more successful than others
+id	unit	abschnitt	englisch	deutsch	satz_en	satz_de	luecke	definition	satz_id
+u2_001	2	start	lion	Löwe	The lion is sleeping in the shade.	Der Löwe schläft im Schatten.	lion	a big wild cat from Africa with a lot of hair around its head	
+u2_002	2	start	position	Position, Stelle, Platz	There's a waitress position available at the diner.	Im Diner ist eine Stelle als Kellnerin frei.	position	a job that you can apply for	
+u2_003	2	start	available	erhältlich, verfügbar; (Stelle) frei	Tickets for the concert will be available soon.	Karten für das Konzert sind bald erhältlich.	available	you can get it or buy it	
+u2_004	2	start	photographer	Fotograf/in	The photographer took a picture of our whole class.	Der Fotograf hat ein Foto von unserer ganzen Klasse gemacht.	photographer	a person who takes pictures as a job	
+u2_005	2	start	anytime	jederzeit	You can come by anytime on Saturday.	Du kannst am Samstag jederzeit vorbeikommen.	anytime	at any time you like	
+u2_006	2	theme1	get lost	sich verirren, sich verlaufen	The shopping mall is huge. You can easily get lost.	Das Einkaufszentrum ist riesig. Man kann sich leicht verlaufen.	get lost		
+u2_007	2	theme1	I don't mind …	Es macht mir nichts aus …	I don't mind walking if the weather is nice.	Es macht mir nichts aus, zu Fuß zu gehen, wenn das Wetter schön ist.	don't mind		
+u2_008	2	theme1	grade (AE)	Klassenstufe, Jahrgang	My little sister is in fifth grade.	Meine kleine Schwester ist in der fünften Klasse.	grade		
+u2_009	2	theme1	intimidating	beängstigend, einschüchternd	My new school is so big and intimidating!	Meine neue Schule ist so groß und einschüchternd!	intimidating	making you feel nervous or a little afraid	
+u2_010	2	theme1	ancient	(ur)alt; antik	Mr Ford is ancient! He must be at least 80!	Mr Ford ist uralt! Er muss mindestens 80 sein!	ancient	very, very old	
+u2_011	2	theme1	change	wechseln	American kids change rooms between classes.	Amerikanische Kinder wechseln zwischen den Stunden das Klassenzimmer.	change		
+u2_012	2	theme1	library	Bücherei, Bibliothek	I borrowed three books from the school library.	Ich habe drei Bücher aus der Schulbibliothek ausgeliehen.	library	a room or building where you can borrow books	
+u2_013	2	theme1	trust	trauen, vertrauen	He's a friend of mine. You can trust him.	Er ist ein Freund von mir. Du kannst ihm vertrauen.	trust	to believe that somebody is honest and good	
+u2_014	2	theme1	debate	debattieren, diskutieren	We debated about getting a cat or a dog for two weeks.	Wir haben zwei Wochen lang diskutiert, ob wir eine Katze oder einen Hund bekommen.	debated		
+u2_015	2	theme1	incredible	unglaublich	It was our first concert – and more than 200 people came. It was incredible.	Es war unser erstes Konzert – und mehr als 200 Leute kamen. Es war unglaublich.	incredible	so good or so surprising that it is hard to believe	
+u2_016	2	theme1	I didn't know anybody.	Ich kannte niemanden.	On my first day, I didn't know anybody.	An meinem ersten Tag kannte ich niemanden.	anybody		
+u2_017	2	theme1	disability	Behinderung	Our school has elevators for students with a disability.	Unsere Schule hat Aufzüge für Schüler mit Behinderung.	disability		
+u2_018	2	theme1	Plus, …	Und außerdem …	The gym is not expensive. Plus, I can use the pool anytime I want.	Das Fitnessstudio ist nicht teuer. Und außerdem kann ich das Schwimmbad jederzeit benutzen.	Plus		
+u2_019	2	theme1	elevator (AE)	Fahrstuhl, Aufzug, Lift	Let's take the elevator to the third floor.	Lass uns mit dem Aufzug in den dritten Stock fahren.	elevator	a machine that takes you up and down in a building	
+u2_020	2	theme1	size	Größe	Do you have these sneakers in my size?	Haben Sie diese Turnschuhe in meiner Größe?	size		
+u2_021	2	theme1	hallway (AE)	Korridor, Gang	Don't run in the hallway!	Renn nicht im Gang!	hallway	a long, narrow way inside a building with doors to the rooms	
+u2_022	2	theme1	locker	Spind, Schließfach	I keep my books in my locker.	Ich bewahre meine Bücher in meinem Spind auf.	locker	a small cupboard at school where you can lock away your things	
+u2_023	2	theme2	highlight	Höhepunkt	The highlight of our trip was the boat tour.	Der Höhepunkt unserer Reise war die Bootstour.	highlight	the best part of something	
+u2_024	2	theme2	common	häufig; weit verbreitet	One of the most common names for girls in Britain today is Olivia.	Einer der häufigsten Mädchennamen in Großbritannien ist heute Olivia.	common		
+u2_025	2	theme2	… are organized …	… werden organisiert …	School dances are organized by the students.	Schulbälle werden von den Schülern organisiert.	organized		
+u2_026	2	theme2	as much as …	bis zu …; nicht weniger als …	The concert tickets cost as much as 150 dollars.	Die Konzertkarten kosten bis zu 150 Dollar.	as much as		
+u2_027	2	theme2	cost a fortune	ein Vermögen kosten	Prom dresses can cost a fortune.	Ballkleider können ein Vermögen kosten.	cost a fortune		
+u2_028	2	theme2	fund-raising event	Event zur Beschaffung von Geld/Spenden	We sold cakes at a fund-raising event for our school trip.	Wir haben bei einer Spendenaktion für unsere Klassenfahrt Kuchen verkauft.	fund-raising event		
+u2_029	2	theme2	so that	sodass, damit	We want to start fund-raising so that we can help the local youth club.	Wir wollen Spenden sammeln, damit wir dem Jugendclub vor Ort helfen können.	so that		
+u2_030	2	theme2	rent	mieten, leihen	I don't want to buy the movie, I just want to rent it.	Ich will den Film nicht kaufen, ich will ihn nur leihen.	rent	to pay money to use something for a short time	
+u2_031	2	theme2	the only one	der/die/das Einzige	You're scared of snakes? Don't worry, you're not the only one.	Du hast Angst vor Schlangen? Keine Sorge, du bist nicht der Einzige.	the only one		
+u2_032	2	theme2	date	Verabredung, Date	I have a date with Carla on Friday.	Ich habe am Freitag ein Date mit Carla.	date		
+u2_033	2	theme2	contract	Vertrag	Read the contract carefully before you sign it.	Lies den Vertrag genau, bevor du ihn unterschreibst.	contract	a paper with rules that two people or groups agree on and sign	
+u2_034	2	theme2	get drunk	sich betrinken	At our prom, nobody is allowed to get drunk.	Bei unserem Abschlussball darf sich niemand betrinken.	get drunk		
+u2_035	2	theme2	sign	unterschreiben	Please sign your name at the bottom of the page.	Bitte unterschreib unten auf der Seite.	sign		
+u2_036	2	theme2	promise	versprechen	I won't tell anybody. I promise.	Ich sage es niemandem. Ich verspreche es.	promise	to say that you will really do something	
+u2_037	2	theme2	behave	sich verhalten, sich benehmen	Little Robin had to promise to behave well before his parents took him to the cinema.	Der kleine Robin musste versprechen, sich gut zu benehmen, bevor seine Eltern ihn ins Kino mitnahmen.	behave		
+u2_038	2	theme2	alcohol	Alkohol	There is no alcohol at the school party.	Auf der Schulparty gibt es keinen Alkohol.	alcohol		
+u2_039	2	theme2	drug	Droge	Drugs are dangerous for your body and your brain.	Drogen sind gefährlich für deinen Körper und dein Gehirn.	Drugs		
+u2_040	2	theme2	break	brechen; zerbrechen; kaputt gehen	John had an accident and broke his leg.	John hatte einen Unfall und hat sich das Bein gebrochen.	broke		
+u2_041	2	fol	flute	Querflöte	My sister plays the flute in the school band.	Meine Schwester spielt Querflöte in der Schulband.	flute	a musical instrument that you hold to the side and blow into	
+u2_042	2	fol	look forward to doing sth.	sich darauf freuen, etwas zu tun	We look forward to hearing from you.	Wir freuen uns darauf, von Ihnen zu hören.	look forward to		
+u2_043	2	fol	get used to sth.	sich an etwas gewöhnen	When we were in England, it was difficult to drive on the left, but we soon got used to it.	Als wir in England waren, war es schwierig, links zu fahren, aber wir haben uns schnell daran gewöhnt.	got used to		
+u2_044	2	fol	bump into sb.	mit jm. zusammenstoßen	A man bumped into me and I fell down.	Ein Mann ist mit mir zusammengestoßen und ich bin hingefallen.	bumped into		
+u2_045	2	fol	dream (about, of)	träumen (von)	I often dream about living in New York.	Ich träume oft davon, in New York zu leben.	dream about		
+u2_046	2	fol	cheerleader	Cheerleader	The cheerleaders danced at the football game.	Die Cheerleader haben beim Footballspiel getanzt.	cheerleaders	a person who dances and shouts to support a sports team	
+u2_047	2	fol	cheer	jubeln, anfeuern	We cheered loudly when Amy's team won the match.	Wir haben laut gejubelt, als Amys Mannschaft das Spiel gewonnen hat.	cheered		
+u2_048	2	fol	discuss sth.	über etwas diskutieren; etwas besprechen	Dad and I discussed my pocket money again.	Papa und ich haben schon wieder über mein Taschengeld diskutiert.	discussed		
+u2_049	2	fol	argue	argumentieren	She can argue really well in a debate.	Sie kann in einer Debatte richtig gut argumentieren.	argue		
+u2_050	2	fol	artistic	künstlerisch; künstlerisch begabt	My son is quite artistic – those are his pictures on the wall.	Mein Sohn ist ziemlich künstlerisch begabt – das sind seine Bilder an der Wand.	artistic		
+u2_051	2	fol	volunteer	freiwillig/ehrenamtlich arbeiten	My mother volunteered to be the assistant soccer coach this year.	Meine Mutter hat sich dieses Jahr freiwillig als Co-Trainerin der Fußballmannschaft gemeldet.	volunteered	to do work without getting money for it	
+u2_052	2	fol	To start with, …	Erstens …; Zunächst einmal …	To start with, you need two eggs, some flour and some milk.	Zunächst brauchst du zwei Eier, etwas Mehl und etwas Milch.	To start with		
+u2_053	2	fol	… is a must.	… ist ein Muss.	A good pair of sneakers is a must.	Ein gutes Paar Turnschuhe ist ein Muss.	is a must		
+u2_054	2	fol	try hard	sich sehr bemühen, sich anstrengen	I tried really hard, but I just couldn't run that last kilometer!	Ich habe mich richtig angestrengt, aber den letzten Kilometer konnte ich einfach nicht laufen!	tried really hard		
+u2_055	2	fol	a piece of advice	ein Rat, ein Ratschlag	Can I give you a piece of advice? Start studying early.	Darf ich dir einen Rat geben? Fang früh an zu lernen.	a piece of advice		
+u2_056	2	fol	preposition	Präposition	"""About"", ""in"" and ""with"" are prepositions."	„About“, „in“ und „with“ sind Präpositionen.	prepositions		
+u2_057	2	fol	likes and dislikes	Vorlieben und Abneigungen	He knows my likes and dislikes!	Er kennt meine Vorlieben und Abneigungen!	likes and dislikes		
+u2_058	2	fol	communicate (with sb.)	(mit jm.) kommunizieren; sich (mit jm.) verständigen	We communicate with our friends in the USA by video chat.	Wir verständigen uns mit unseren Freunden in den USA per Videochat.	communicate		
+u2_059	2	story	community service	gemeinnützige Arbeit, Sozialdienst	He had to do 20 hours of community service.	Er musste 20 Stunden gemeinnützige Arbeit leisten.	community service		
+u2_060	2	story	roll	rollen	The ball rolled under the car.	Der Ball ist unter das Auto gerollt.	rolled		
+u2_061	2	story	go off	losgehen (Wecker, Alarm …)	It was 6 o'clock, and my alarm clock went off.	Es war 6 Uhr, und mein Wecker ging los.	went off		
+u2_062	2	story	shorts	Shorts, kurze Hose	Your shorts aren't clean. Can you change them, please?	Deine Shorts sind nicht sauber. Kannst du sie bitte wechseln?	shorts		
+u2_063	2	story	clean	sauber	My room is finally clean.	Mein Zimmer ist endlich sauber.	clean		
+u2_064	2	story	like that	so, auf diese Weise	You can't go to the prom like that. You have to wear a formal dress.	So kannst du nicht zum Abschlussball gehen. Du musst ein festliches Kleid tragen.	like that		
+u2_065	2	story	ignore	nicht beachten, ignorieren	She didn't look at me, she didn't talk to me – she just ignored me.	Sie hat mich nicht angesehen, nicht mit mir geredet – sie hat mich einfach ignoriert.	ignored		
+u2_066	2	story	grocery store	Lebensmittelgeschäft	He went to the grocery store to buy some cheese and eggs.	Er ging ins Lebensmittelgeschäft, um Käse und Eier zu kaufen.	grocery store	a store where you buy food	
+u2_067	2	story	push	schieben, stoßen, drücken	I had to push my bike all the way home. The chain was broken.	Ich musste mein Fahrrad den ganzen Weg nach Hause schieben. Die Kette war kaputt.	push		
+u2_068	2	story	Do you mind?	Entschuldige mal! / Was fällt dir ein?	Do you mind? I was watching that show!	Was fällt dir ein? Ich habe die Sendung geschaut!	Do you mind		
+u2_069	2	story	smart	schick; schlau, clever	She's so smart, she won the math contest.	Sie ist so schlau, sie hat den Mathewettbewerb gewonnen.	smart		
+u2_070	2	story	during	während	My father met my mother during his stay in London.	Mein Vater hat meine Mutter während seines Aufenthalts in London kennengelernt.	during		
+u2_071	2	story	cheek	Wange	She gave her grandma a kiss on the cheek.	Sie gab ihrer Oma einen Kuss auf die Wange.	cheek		
+u2_072	2	story	Hurry up.	Beeil dich.	Hurry up or you'll be late for school.	Beeil dich, sonst kommst du zu spät zur Schule.	Hurry up		
+u2_073	2	story	excitement	Aufregung, Begeisterung	The excitement about our trip to Australia made it hard to sleep.	Die Aufregung wegen unserer Reise nach Australien machte es schwer zu schlafen.	excitement	the feeling of being very happy and not calm because something good will happen	
+u2_074	2	story	movie (AE)	Film	Let's watch a movie tonight.	Lass uns heute Abend einen Film schauen.	movie		
+u2_075	2	story	prison	Gefängnis	Nelson Mandela was in prison for 27 years.	Nelson Mandela war 27 Jahre lang im Gefängnis.	prison	a building where criminals have to stay	
+u2_076	2	story	I was arrested.	Ich wurde verhaftet.	The thief was arrested by the police.	Der Dieb wurde von der Polizei verhaftet.	arrested		
+u2_077	2	story	keep away from sb.	sich fernhalten von jm.	You should keep away from those boys on the playground.	Du solltest dich von den Jungs auf dem Spielplatz fernhalten.	keep away from		
+u2_078	2	story	lobby	Eingangshalle	Let's meet in the hotel lobby at eight.	Treffen wir uns um acht in der Hotellobby.	lobby	the big room near the entrance of a hotel or building	
+u2_079	2	story	responsible	verantwortungsbewusst; verantwortlich	He always cleans his room and gets up on time. He's a very responsible boy.	Er räumt immer sein Zimmer auf und steht pünktlich auf. Er ist ein sehr verantwortungsbewusster Junge.	responsible		
+u2_080	2	story	corner	Ecke	The bus stop is just around the corner.	Die Bushaltestelle ist gleich um die Ecke.	corner		
+u2_081	2	story	seem	scheinen	He seems very sad. What's wrong?	Er scheint sehr traurig zu sein. Was ist los?	seems		
+u2_082	2	story	hold	halten	Can you hold my books for a moment?	Kannst du kurz meine Bücher halten?	hold		
+u2_083	2	story	belly button	Bauchnabel	The baby laughed when I touched her belly button.	Das Baby lachte, als ich seinen Bauchnabel berührte.	belly button		
+u2_084	2	story	kill	töten	Smoking can kill you.	Rauchen kann dich töten.	kill		
+u2_085	2	story	head for sth.	auf etwas zugehen/zusteuern	She got up and headed for the door.	Sie stand auf und ging auf die Tür zu.	headed for		
+u2_086	2	story	fix sth. (infml)	etwas in Ordnung bringen	Did you sleep in your shirt? Fix it! It looks terrible.	Hast du in deinem Hemd geschlafen? Bring das in Ordnung! Es sieht schrecklich aus.	Fix		
+u2_087	2	story	tooth, teeth	Zahn, Zähne	Brush your teeth before you go to bed.	Putz dir die Zähne, bevor du ins Bett gehst.	teeth		
+u2_088	2	story	Are you kidding?	Machst du Witze? / Willst du mich auf den Arm nehmen?	You won the lottery? Are you kidding?	Du hast im Lotto gewonnen? Machst du Witze?	Are you kidding		
+u2_089	2	story	whole	ganze(r, s), gesamte(r, s)	Yesterday I played cards the whole evening.	Gestern habe ich den ganzen Abend Karten gespielt.	whole		
+u2_090	2	story	image	Image	The team wants a better image.	Die Mannschaft will ein besseres Image.	image		
+u2_091	2	skills	announcement	Durchsage, Ansage; Bekanntgabe	Listen! There's an announcement about our train.	Hör mal! Da kommt eine Durchsage zu unserem Zug.	announcement	information that somebody tells many people, for example at a station	
+u2_092	2	skills	off the seat	von dem Sitz herunter	Take your shoes off the seat! Now!	Nimm deine Schuhe vom Sitz! Sofort!	off the seat		
+u2_093	2	skills	belongings	Sachen, Hab und Gut	You can leave your belongings in one of the lockers at the station.	Du kannst deine Sachen in einem der Schließfächer am Bahnhof lassen.	belongings	the things that you own and carry with you	
+u2_094	2	skills	memorial (to sb./sth.)	Denkmal (für jn./etwas)	In many places you find memorials to men who fought and died in the two world wars.	An vielen Orten findet man Denkmäler für Männer, die in den beiden Weltkriegen gekämpft haben und gestorben sind.	memorials	something that is built to help people remember a person or an event	
+u2_095	2	skills	visitor pass	Besucherausweis	Every guest needs a visitor pass.	Jeder Gast braucht einen Besucherausweis.	visitor pass		
+u2_096	2	skills	editor	Herausgeber/in; Redakteur/in	I wrote a letter to the editor of our school newspaper.	Ich habe einen Leserbrief an die Redaktion unserer Schülerzeitung geschrieben.	editor		
+u2_097	2	skills	tough	(knall)hart	Rugby is a tough game, and rugby players need to be tough.	Rugby ist ein harter Sport, und Rugbyspieler müssen hart sein.	tough		
+u2_098	2	skills	tradition	Tradition	Turkey on Thanksgiving is an American tradition.	Truthahn an Thanksgiving ist eine amerikanische Tradition.	tradition	something that people have done in the same way for a very long time	
+u2_099	2	skills	Thanksgiving	Erntedankfest (amerikanischer Feiertag am vierten Donnerstag im November)	On Thanksgiving, the whole family has dinner together.	An Thanksgiving isst die ganze Familie zusammen zu Abend.	Thanksgiving	an American holiday on the fourth Thursday in November	
+u2_100	2	skills	dress	sich anziehen, sich kleiden	She has very nice clothes and always dresses well.	Sie hat sehr schöne Kleidung und zieht sich immer gut an.	dresses		
+u2_101	2	skills	spirit	Geist, Stimmung	Our team has a great team spirit.	Unsere Mannschaft hat einen tollen Teamgeist.	spirit		
+u2_102	2	skills	aggressive	aggressiv	Some people get aggressive when they drink alcohol.	Manche Leute werden aggressiv, wenn sie Alkohol trinken.	aggressive		
+u2_103	2	skills	while	während	Jack phoned while we were watching the football game.	Jack rief an, während wir das Footballspiel schauten.	while		
+u2_104	2	skills	be banned	verboten sein/werden	Cell phones are banned at our school.	Handys sind an unserer Schule verboten.	banned		
+u2_105	2	skills	Sincerely … (AE)	Mit freundlichen Grüßen (Briefschluss)	Sincerely, Emma Miller	Mit freundlichen Grüßen, Emma Miller	Sincerely		
+u2_106	2	skills	end	enden, zu Ende gehen	School ends at three o'clock.	Die Schule endet um drei Uhr.	ends		
+u2_107	2	skills	compare	vergleichen	Work with a partner and compare your notes.	Arbeite mit einem Partner und vergleicht eure Notizen.	compare		
+u2_108	2	skills	smoke	rauchen	Smoking is banned on the school grounds.	Rauchen ist auf dem Schulgelände verboten.	Smoking		
+u2_109	2	skills	dress	Kleidung	Is there a dress code at your school?	Gibt es an deiner Schule eine Kleiderordnung?	dress		
+u2_110	2	skills	appropriate	angemessen, passend, geeignet	You need appropriate clothes for a job interview.	Für ein Vorstellungsgespräch brauchst du passende Kleidung.	appropriate		
+u2_111	2	skills	similar (to sth./sb.)	(etwas/jm.) ähnlich	These socks look so similar to Isabelle's.	Diese Socken sehen Isabelles so ähnlich.	similar		
+u2_112	2	skills	in some ways	in mancher Hinsicht	My brother and I are similar in some ways but quite different in others.	Mein Bruder und ich sind uns in mancher Hinsicht ähnlich, in anderer aber ganz verschieden.	in some ways		
+u2_113	2	skills	improve	verbessern	You should read more if you want to improve your vocabulary.	Du solltest mehr lesen, wenn du deinen Wortschatz verbessern willst.	improve	to make something better	
+u2_114	2	skills	advantage	Vorteil	Rafael has an advantage in Spanish class; he speaks Spanish at home.	Rafael hat im Spanischunterricht einen Vorteil; er spricht zu Hause Spanisch.	advantage	something that helps you to be better or more successful than others	
+u1_001	1	usa	immigrant	Einwanderer/Einwanderin	My great-grandfather was an immigrant from Italy.	Mein Urgroßvater war ein Einwanderer aus Italien.	immigrant	a person who comes to live in a new country	
+u1_002	1	usa	alligator	Alligator	There are lots of alligators in Florida.	In Florida gibt es viele Alligatoren.	alligators	a big animal with a long mouth and lots of teeth that lives in rivers	
+u1_003	1	usa	buffalo	Büffel; Bison	Thousands of buffalo lived on the Great Plains.	Tausende Bisons lebten in den Great Plains.	buffalo		
+u1_004	1	usa	nature	Natur	I love nature, so I'd like to go camping.	Ich liebe die Natur, deshalb würde ich gern zelten gehen.	nature		
+u1_005	1	usa	star	Stern	There are 50 stars on the American flag.	Auf der amerikanischen Flagge sind 50 Sterne.	stars		
+u1_006	1	usa	state	Staat	Texas is a big state in the south of the USA.	Texas ist ein großer Staat im Süden der USA.	state	one of the 50 parts of the USA, for example Texas or Florida	
+u1_007	1	usa	Native American	amerikanischer Ureinwohner/amerikanische Ureinwohnerin	Native Americans lived in America long before the Europeans came.	Die amerikanischen Ureinwohner lebten in Amerika lange bevor die Europäer kamen.	Native Americans	a person whose family lived in America before the Europeans came	
+u1_008	1	usa	slave	Sklave/Sklavin	Many slaves had to work on big farms in the South.	Viele Sklaven mussten auf großen Farmen im Süden arbeiten.	slaves		
+u1_009	1	usa	European	Europäer/in; europäisch	I'm Italian and French, but I just feel European.	Ich bin Italienerin und Französin, aber ich fühle mich einfach europäisch.	European		
+u1_010	1	usa	settler	Siedler/in	The first settlers built small houses of wood.	Die ersten Siedler bauten kleine Häuser aus Holz.	settlers		
+u1_011	1	usa	fight sb., fought, fought	jn. bekämpfen, gegen jn. kämpfen	The Americans fought the British for their independence.	Die Amerikaner kämpften für ihre Unabhängigkeit gegen die Briten.	fought		
+u1_012	1	usa	war	Krieg	Many people died in the war.	Im Krieg starben viele Menschen.	war		
+u1_013	1	usa	independence	Unabhängigkeit	July 4th is Independence Day in the USA.	Der 4. Juli ist in den USA der Unabhängigkeitstag.	Independence		
+u1_014	1	usa	hurricane	Hurrikan, Orkan	The hurricane destroyed many houses in Florida.	Der Hurrikan zerstörte viele Häuser in Florida.	hurricane	a very strong storm with a lot of wind and rain	
+u1_015	1	usa	soccer	Fußball	In the USA, football is a different sport, so they say soccer.	In den USA ist Football ein anderer Sport, deshalb sagt man soccer.	soccer		
+u1_016	1	usa	statue	Statue	The Statue of Liberty is in New York.	Die Freiheitsstatue steht in New York.	Statue		
+u1_017	1	usa	liberty	Freiheit	The statue is a symbol of liberty.	Die Statue ist ein Symbol der Freiheit.	liberty		
+u1_018	1	usa	freedom	Freiheit	Many immigrants came to America for freedom.	Viele Einwanderer kamen wegen der Freiheit nach Amerika.	freedom		
+u1_019	1	start	view	Blick, Aussicht				the things you can see from a high place	hv_13
+u1_020	1	start	island	Insel				a piece of land with water all around it	hv_01
+u1_021	1	start	skyline	Skyline	The Manhattan skyline is famous all over the world.	Die Skyline von Manhattan ist auf der ganzen Welt berühmt.	skyline		
+u1_022	1	start	sky	Himmel	There are no clouds in the sky today.	Heute sind keine Wolken am Himmel.	sky		
+u1_023	1	start	avenue	Allee, Prachtstraße	5th Avenue is the most important shopping street in New York City.	Die 5th Avenue ist die wichtigste Einkaufsstraße in New York.	Avenue		
+u1_024	1	start	paradise	Paradies	This beach is paradise!	Dieser Strand ist das Paradies!	paradise		
+u1_025	1	start	awesome (AE, infml)	klasse, stark, großartig	The view from the top was awesome!	Die Aussicht von oben war großartig!	awesome		
+u1_026	1	theme1	skyscraper	Wolkenkratzer				a very, very tall building in a city	hv_02
+u1_027	1	theme1	build, built, built	bauen	They built the Empire State Building in only one year.	Sie haben das Empire State Building in nur einem Jahr gebaut.	built		
+u1_028	1	theme1	destroy	zerstören	The fire destroyed their house.	Das Feuer zerstörte ihr Haus.	destroyed		
+u1_029	1	theme1	terrorist	terroristisch, Terror-; Terrorist/in	The memorial remembers the people who died in the terrorist attack.	Das Denkmal erinnert an die Menschen, die bei dem Terroranschlag starben.	terrorist		
+u1_030	1	theme1	step	Stufe	There are 354 steps to the crown of the statue.	Bis zur Krone der Statue sind es 354 Stufen.	steps		
+u1_031	1	theme1	crown	Krone	The Statue of Liberty wears a crown.	Die Freiheitsstatue trägt eine Krone.	crown		
+u1_032	1	theme1	nose	Nase	The statue's nose is more than one meter long.	Die Nase der Statue ist mehr als einen Meter lang.	nose		
+u1_033	1	theme1	1.6 million	1,6 Millionen	About 1.6 million people live in Manhattan.	Ungefähr 1,6 Millionen Menschen leben in Manhattan.	1.6 million		
+u1_034	1	theme1	court	Platz, Court (Tennis, Basketball)	Let's play basketball on the court in the park.	Lass uns auf dem Platz im Park Basketball spielen.	court		
+u1_035	1	theme1	playground	Spielplatz	The little kids are on the playground.	Die kleinen Kinder sind auf dem Spielplatz.	playground	a place outside where children can play	
+u1_036	1	theme1	ice rink	Schlittschuhbahn, Eisbahn	In winter there's an ice rink in Central Park.	Im Winter gibt es im Central Park eine Eisbahn.	ice rink	a place where you can skate on ice	
+u1_037	1	theme1	connect	verbinden	The bridge connects the two parts of the city.	Die Brücke verbindet die beiden Teile der Stadt.	connects		
+u1_038	1	theme1	suspension bridge	Hängebrücke				a bridge that hangs on strong cables	hv_04
+u1_039	1	theme1	hang, hung, hung	hängen	A big flag hung from the window.	Eine große Flagge hing aus dem Fenster.	hung		
+u1_040	1	theme1	cable	Kabel, Drahtseil	The bridge hangs on huge cables.	Die Brücke hängt an riesigen Drahtseilen.	cables		
+u1_041	1	theme1	after (prep)	nach	Let's meet after school.	Lass uns nach der Schule treffen.	after		
+u1_042	1	theme1	after (conj)	nachdem	After we came home, we watched a movie.	Nachdem wir nach Hause gekommen waren, haben wir einen Film geschaut.	After		
+u1_043	1	theme1	fact	Tatsache, Fakt	Here's an interesting fact about New York.	Hier ist eine interessante Tatsache über New York.	fact		
+u1_044	1	theme1	What else …?	Was (sonst) noch …?	What else do you know about the USA?	Was weißt du sonst noch über die USA?	What else		
+u1_045	1	theme1	meaning	Bedeutung	Do you know the meaning of this word?	Kennst du die Bedeutung dieses Wortes?	meaning		
+u1_046	1	theme1	unknown	unbekannt	There were a lot of unknown words in the text.	Im Text waren viele unbekannte Wörter.	unknown		
+u1_047	1	theme1	context	(Text-)Zusammenhang	Often the context helps you to guess the meaning of unknown words.	Oft hilft dir der Zusammenhang, die Bedeutung unbekannter Wörter zu erraten.	context		
+u1_048	1	theme2	mood	Stimmung, Laune				how you feel, for example happy or angry	hv_05
+u1_049	1	theme2	come by (AE)	vorbeikommen (besuchen)			come by		d4_03
+u1_050	1	theme2	apartment	Wohnung				a home with a few rooms in a bigger building	hv_06
+u1_051	1	theme2	That's us.	Das sind wir.	That's us in the photo.	Das sind wir auf dem Foto.	That's us		
+u1_052	1	theme2	mom (AE)	Mama, Mutti	My mom drives me to school every morning.	Meine Mama fährt mich jeden Morgen zur Schule.	mom		
+u1_053	1	theme2	embarrassing	peinlich				making you feel silly in front of other people	hv_07
+u1_054	1	theme2	fall asleep	einschlafen	The film was so boring that I fell asleep.	Der Film war so langweilig, dass ich eingeschlafen bin.	fell asleep		
+u1_055	1	theme2	be asleep	schlafen	It was 11 o'clock, but Sue was still asleep.	Es war 11 Uhr, aber Sue schlief noch.	was still asleep		
+u1_056	1	theme2	subway (AE)	U-Bahn				a train that goes under the ground in a city	hv_08
+u1_057	1	theme2	check sth. out (infml)	sich etwas anschauen, anhören			checked that out		d4_06
+u1_058	1	theme2	diner (AE)	(kleines, preiswertes) Restaurant				a small, cheap restaurant in the USA	hv_09
+u1_059	1	theme2	it's way cooler than … (infml)	es ist viel cooler als …	I think live music is way cooler than music on your phone.	Ich finde, Livemusik ist viel cooler als Musik auf dem Handy.	way cooler than		
+u1_060	1	theme2	title	Titel, Überschrift	What's the title of the story?	Wie heißt der Titel der Geschichte?	title		
+u1_061	1	fol	chance	Gelegenheit, Möglichkeit, Chance	If I had the chance, I would go to New York and work for the summer.	Wenn ich die Gelegenheit hätte, würde ich nach New York gehen und den Sommer über arbeiten.	chance		
+u1_062	1	fol	choose, chose, chosen	(sich) aussuchen, (aus)wählen	We have to choose a name for our new band.	Wir müssen einen Namen für unsere neue Band aussuchen.	choose		
+u1_063	1	fol	menu	Speisekarte	There are 75 different pizzas on their menu!	Auf ihrer Speisekarte stehen 75 verschiedene Pizzas!	menu	a list of the food you can order in a restaurant	
+u1_064	1	fol	recommend sth. (to sb.)	(jm.) etwas empfehlen	I can recommend the music store on 3rd Street. They have great stuff!	Ich kann den Musikladen in der 3rd Street empfehlen. Die haben tolle Sachen!	recommend		
+u1_065	1	fol	order	bestellen				to ask for food or drinks in a restaurant	hv_10
+u1_066	1	fol	order	Bestellung	Can I take your order?	Darf ich Ihre Bestellung aufnehmen?	order		
+u1_067	1	fol	extra	zusätzlich	When I make my bed and clean my room, I get extra pocket money.	Wenn ich mein Bett mache und mein Zimmer aufräume, bekomme ich zusätzliches Taschengeld.	extra		
+u1_068	1	fol	take, took, taken	(weg-, hin)bringen	Bring me the paper, Max. And now take it to Dad.	Bring mir die Zeitung, Max. Und jetzt bring sie zu Papa.	take		
+u1_069	1	fol	homeless	obdachlos	Some homeless people sleep in the subway.	Manche Obdachlose schlafen in der U-Bahn.	homeless	without a home	
+u1_070	1	fol	guide	Ratgeber, Führung	We bought a guide to New York City.	Wir haben einen Reiseführer für New York gekauft.	guide		
+u1_071	1	fol	rest	(Erholungs-)Pause	I'm tired. I need a rest.	Ich bin müde. Ich brauche eine Pause.	rest		
+u1_072	1	fol	spelling	Rechtschreibung; Schreibweise	Check your spelling before you hand in your text.	Prüf deine Rechtschreibung, bevor du deinen Text abgibst.	spelling		
+u1_073	1	fol	experience	erfahren, erleben	Experience live music every Friday at the youth club!	Erlebe jeden Freitag Livemusik im Jugendclub!	Experience		
+u1_074	1	fol	cruise	Kreuzfahrt	My grandparents went on a cruise to Alaska.	Meine Großeltern haben eine Kreuzfahrt nach Alaska gemacht.	cruise		
+u1_075	1	story	introduction	Einleitung, Einführung	This book is a good introduction to American English.	Dieses Buch ist eine gute Einführung in das amerikanische Englisch.	introduction		
+u1_076	1	story	crime	Kriminalität; Verbrechen				things people do that are against the law	ht_01
+u1_077	1	story	violence	Gewalt	I think there's too much violence on TV.	Ich finde, es gibt zu viel Gewalt im Fernsehen.	violence		
+u1_078	1	story	suspicious	verdächtig				looking like somebody who did something wrong	ht_02
+u1_079	1	story	innocent	unschuldig				not guilty – you didn't do it	ht_03
+u1_080	1	story	author	Autor/in	Who is the author of this book?	Wer ist der Autor dieses Buches?	author	a person who writes books	
+u1_081	1	story	trapped	gefangen (in einer Falle)				not able to get out	ht_05
+u1_082	1	story	friendship	Freundschaft					ht_04
+u1_083	1	story	original	Original-, ursprünglich; Original	The original film is 30 minutes longer.	Der Originalfilm ist 30 Minuten länger.	original		
+u1_084	1	story	practise (BE) / practice (AE)	üben; trainieren					ht_06
+u1_085	1	story	practice	Übung; Training	I have basketball practice at 4 o'clock today.	Ich habe heute um 4 Uhr Basketballtraining.	practice		
+u1_086	1	story	pull in	anhalten, an den Straßenrand fahren	I pulled in next to the school and waited for my son.	Ich hielt neben der Schule an und wartete auf meinen Sohn.	pulled in		
+u1_087	1	story	get out (of a car)	(aus einem Auto) aussteigen	The driver stopped, and we got out of the taxi.	Der Fahrer hielt an, und wir stiegen aus dem Taxi aus.	got out of		
+u1_088	1	story	sweat	Schweiß	After the race, my T-shirt was wet with sweat.	Nach dem Rennen war mein T-Shirt nass vor Schweiß.	sweat		
+u1_089	1	story	each other	einander; sich (gegenseitig)	Alex and Stan like each other.	Alex und Stan mögen sich.	each other		
+u1_090	1	story	cruise	herumfahren (ohne festes Ziel)	On Saturday night, they cruised around town in their car.	Am Samstagabend fuhren sie mit ihrem Auto in der Stadt herum.	cruised		
+u1_091	1	story	What's going on?	Was ist los? / Was gibt's?	Why is everybody shouting? What's going on?	Warum schreien alle? Was ist los?	What's going on		
+u1_092	1	story	as	als, während	I ate my sandwiches as I waited for the bus.	Ich aß meine Sandwiches, während ich auf den Bus wartete.	as I waited		
+u1_093	1	story	routine	Routine	Getting up at six is part of my morning routine.	Um sechs aufzustehen gehört zu meiner Morgenroutine.	routine		
+u1_094	1	story	lean	sich lehnen; sich beugen	He's leaning forward to talk to the driver.	Er beugt sich nach vorn, um mit dem Fahrer zu sprechen.	leaning		
+u1_095	1	story	it might help	es hilft vielleicht; es könnte (vielleicht) helfen	Try a cup of tea – it might help.	Probier eine Tasse Tee – vielleicht hilft es.	it might help		
+u1_096	1	story	I guess …	Ich nehme an, … / Ich glaube, …	I guess I'll leave school next year.	Ich nehme an, ich gehe nächstes Jahr von der Schule ab.	I guess		
+u1_097	1	story	manners (pl)	Manieren	Don't forget your manners. Switch off your phone.	Vergiss deine Manieren nicht. Schalte dein Handy aus.	manners		
+u1_098	1	story	just	einfach (so)	Don't just sit there. Help me.	Sitz da nicht einfach nur rum. Hilf mir.	just		
+u1_099	1	story	give up	aufgeben, aufhören	I'll never learn Spanish verbs. I give up.	Ich lerne die spanischen Verben nie. Ich gebe auf.	give up		
+u1_100	1	story	Who cares?	Wen interessiert das? / Na und?	They laughed at me, but who cares? They aren't my real friends.	Sie haben mich ausgelacht, aber na und? Sie sind nicht meine echten Freunde.	who cares		
+u1_101	1	story	close (to)	nahe (bei, an)	The café is close to our school – just a five-minute walk.	Das Café ist nahe bei unserer Schule – nur fünf Minuten zu Fuß.	close to		
+u1_102	1	story	stare	starren					ht_07
+u1_103	1	story	hit, hit, hit	jn./etwas schlagen	She hit me with her shopping bag.	Sie hat mich mit ihrer Einkaufstasche geschlagen.	hit		
+u1_104	1	story	floor	Fußboden	Put your bag on the table, not on the floor.	Stell deine Tasche auf den Tisch, nicht auf den Fußboden.	floor		
+u1_105	1	story	grow, grew, grown	(allmählich) werden	I love you. I want to grow old with you.	Ich liebe dich. Ich will mit dir alt werden.	grow old		
+u1_106	1	story	fight	Kampf	There was a fight in the schoolyard.	Auf dem Schulhof gab es eine Schlägerei.	fight		
+u1_107	1	story	turning point	Wendepunkt					ht_08
+u1_108	1	skills	polite	höflich	"It's polite to say ""please"" and ""thank you""."	Es ist höflich, „bitte“ und „danke“ zu sagen.	polite	friendly and with good manners	
+u1_109	1	skills	floor	Stock(werk)	Our classroom is on the second floor.	Unser Klassenzimmer ist im ersten Stock.	second floor		
+u1_110	1	skills	need to do sth.	etwas tun müssen	You don't need to feed the cats. I've already fed them.	Du musst die Katzen nicht füttern. Ich habe sie schon gefüttert.	need to		
+u1_111	1	skills	explain sth. (to sb.)	(jm.) etwas erklären	Can you explain that to me?	Kannst du mir das erklären?	explain		
+u1_112	1	skills	the gist	das Wesentliche; die Kernaussage(n)	You don't need every word. Just get the gist.	Du brauchst nicht jedes Wort. Versteh einfach das Wesentliche.	the gist		
+u1_113	1	skills	booth	Nische, (Sitz-)Ecke (im Restaurant)	We sat in a booth at the back of the diner.	Wir saßen in einer Sitzecke hinten im Diner.	booth		
+u1_114	1	skills	scrambled eggs	Rührei	On Sundays we often have scrambled eggs for breakfast.	Sonntags essen wir oft Rührei zum Frühstück.	scrambled eggs		
+u1_115	1	skills	scan a text	einen Text schnell nach bestimmten Wörtern/Informationen absuchen	Scan the text and find the numbers.	Überflieg den Text und finde die Zahlen.	Scan the text		
+u1_116	1	skills	professional	professionell, Profi-	She wants to be a professional photographer.	Sie will Profifotografin werden.	professional		

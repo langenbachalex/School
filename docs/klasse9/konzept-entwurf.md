@@ -27,21 +27,27 @@ Folien „Focus on Language“ Stunde 1–6, Arbeitsblatt „Vokabeln / If-Claus
 - **Übungsprinzip „phrasal“:** immer in ganzen Sätzen mit Lücke – Kontext statt Einzelwort.
 - **Hörtexte:** Personen sprechen passend zum Geschlecht (Frauen Jessica, Männer Jeremy B.).
 
-## 2. Stationen (orientiert an Klasse 6; Reading Comprehension auf Platz 1)
+## 2. Die 9 Kategorien (3×3, auch fürs Handy) – Vorschlag
 
-| # | Station | Inhalt | Material |
+| | | |
+|---|---|---|
+| **1 Reading** (G: Leseverstehen) – Schwerpunkt | **2 Vocabulary** – Unit 1 / 2 / 3 | **3 Language** |
+| **4 Listening** | **5 Writing** | **6 Speaking** (Dialoge) |
+| **7 BE vs AE** | **8 New** (eigene Farbe) | **9 Klassen-Kategorie** (Name offen: z. B. „Your Lines“, „Class Corner“, „From Your Texts“) |
+
+| # | Kategorie | Inhalt | Material |
 |---|---|---|---|
-| 1 | **Reading Comprehension** (G: „Leseverstehen“) – Schwerpunkt | Texte im GLN-Stil mit den GLN-Formaten: true/false/not in the text · Multiple Choice a)–d) · Bilder/Aussagen ankreuzen (G) · **Aushänge Personen zuordnen** („Notice board“, GLN 2) · Fragen in Stichpunkten. G und E mit eigener Aufgabenmenge (wie GLN: G 6 Aushänge, E 8). Lösung mit Textbeleg. Tipp: geht auch als reine Hörübung | GLN 1 Reading, Aufgabenbank Task 7; eigene Texte |
-| 2 | **Vocabulary** | Auswahl Unit 1 / Unit 2 / (später) Unit 3, alle Vokabeln immer verfügbar; Start mit Unit 2. Ganze Sätze mit Lücke („phrasal“), dann Abfrage. Zusätzlich das GLN-Format **„Find the word“**: englische Definition → Wort (E), deutsche Umschreibung oder Wortspeicher (G) | Vokabelanhang ab S. 194; GLN 1/2 Words |
-| 3 | **Language** | Unit 1: If-Clauses Typ 2 (Rule Sheet, Merksatz; G: Form ankreuzen, Satzhälften verbinden – E: Form einsetzen, eigene Sätze) und Zeiten LF 1–4. **Unit 2 (GLN 2): -ing-Form (Gerund)** nach like / enjoy / don't mind / hate / (not) good at / interested in / dream of („Playing badminton is easy.“) und **Präposition + -ing**: nervous about, worry about, get used to, take part in, be bad at, be interested in, be excited about, look forward to | Folien, Rule Sheet, Aufgabenbank Task 15/16 |
-| 4 | **British vs American English** | Ganze Sätze gegenübergestellt: britisch (Mr. Alex) ↔ amerikanisch (Jeremy B./Jessica) | Vokabelanhang, Folien |
-| 5 | **Games** | Mix & Match (If-Sätze, Satzhälften), Memory (BE ↔ AE), Satz-Detektiv | Folien |
-| 6 | **Listening** | GLN-Prinzip (1 Minute lesen, zweimal hören, Stichpunkte). Unit 2: Interviews über **After-school activities** (Tabelle ausfüllen – E; Multiple Choice – G) | Aufgabenbank Task 2 |
-| 7 | **Writing** | Unit 1: Blog post (120 Wörter). Unit 2: **„Information about your school“** (ca. 100 Wörter; G mit Redemittelbox) und E-Mail an eine Gastfamilie. Checkliste „Check and correct“, Musterlösung zum Selbstvergleich | Skills File S. 168–169, Aufgabenbank Task 8/9 |
-| 8 | **New** (eigene Farbe) | Neue Inhalte aus den Unit-2-Folien | Folien folgen |
-| + | **Power** (oder „Bonus“) | Extras (z. B. Aussprache, Zusatzsätze) | später |
+| 1 | **Reading Comprehension** | **Start: „Task words“** – die englischen Operatoren verstehen (tick, mark, match, complete, put, there are … you don't need, write the correct information in a full sentence …), mit Beispiel; G zusätzlich auf Deutsch erklärt. Danach Leseband-Ablauf: Text hören + mitlesen → Schlüsselsätze Listen and Repeat → Aufgaben im GLN-Format (true/false/not in the text, Multiple Choice, **Bilder ankreuzen** – das Format, das der G-Kurs in GLN 1 nicht verstanden hat –, Aushänge zuordnen, Kurzantworten). G und E mit eigener Aufgabenmenge, Lösung mit Textbeleg. Tipp: geht auch als reine Hörübung | GLN 1, Aufgabenbank Task 7, eigene Texte |
+| 2 | **Vocabulary** | Unit 1 / Unit 2 / (später) Unit 3 wählbar, alle Vokabeln immer da; Start mit Unit 2. Ganze Sätze mit Lücke, 3 Stufen; Abfrage; „Find the word“ (Definition → Wort); Memory; Kahoot-Export | Vokabelanhang S. 194–207 |
+| 3 | **Language** | If-Clauses Typ 2 (Rule Sheet, Mix & Match), Zeiten LF 1–4, Unit 2: -ing-Form und Präposition + -ing | Folien, Rule Sheet, Task 15/16 |
+| 4 | **Listening** | GLN-Prinzip; Unit 2: After-school activities (parallel) | Task 2 |
+| 5 | **Writing** | Blog post, Information about your school, E-Mail; Word web, Checkliste (title, date, mood, at least 5 sentences …), Kriterien A–F als Selbstcheck, starke Adjektive, „I“ groß | Skills File, Folien Week 5, Starke Momente |
+| 6 | **Speaking** | **Dialogpraxis:** feste Dialoge mit Rolle A und B (z. B. „Brooklyn or Bust?“). Ablauf: Dialog hören (A = Jeremy B., B = Jessica) → Listen and Repeat → **eine Rolle übernehmen**: die App spricht die andere Rolle, du sprichst deine Zeilen in die Pause. E: freie Version mit Wortliste („Make your own dialogue“) | Folien Week 5, Dialog-Druckblatt |
+| 7 | **BE vs AE** | Ganze Sätze gegenübergestellt: britisch (Mr. Alex) ↔ amerikanisch (Jeremy B./Jessica) | S. 20, Vokabel-Check, Vokabelanhang |
+| 8 | **New** | Neue Inhalte der aktuellen Woche (eigene Farbe) | Folien Woche für Woche |
+| 9 | **Klassen-Kategorie** | Aus euren Texten: gelungene Sätze („I felt so proud when we won!“), häufige Fehler ✗/✓ (he don't → he doesn't; I like she → I like her), Vocabulary Boost (excited, relieved, proud, grateful, relaxed), Starke Momente, Unit-1-Restsätze (eigene Texte, Trapped) | Class Feedback, Starke Momente, Rückgabe-Blätter |
 
-**Wichtig:** Die echten GLN-Aufgaben kommen **nicht** in die App (sonst kennen die Schüler die Prüfung). Die App übt **dieselben Formate mit eigenen, parallelen Texten und Sätzen**.
+Spiele (Mix & Match, Memory) und Extras („Power“) wandern in die passenden Kategorien (Language, Vocabulary), damit es bei 9 Kacheln bleibt.
 
 ## 2a. GLN 2 (geplant) → Stationen
 
@@ -61,6 +67,12 @@ Folien „Focus on Language“ Stunde 1–6, Arbeitsblatt „Vokabeln / If-Claus
 - **Writing** (Klassenschnitt GLN 1: 7,5 von 15 Punkten): Bewertungskriterien A–F (15 Rohpunkte) als Selbstcheck; „starke Wörter“ statt good/nice (amazing, awesome, fantastic, unbelievable, exciting, incredible, delicious, shocked, weird, scary, boring, huge, tiny); Tipp „I“ immer groß; Muster für gute Sätze („I would recommend going to …“, „It feels like being in a historical movie.“).
 - **Unit-1-Restvokabular als Sätze** (fertig aus den Folien/Blättern): „Aus euren eigenen Texten“ (12 Sätze), AE/BE S. 20 (8 Sätze: cafeteria, candy, cell phone, eraser, fall, flashlight, garbage, vacation), „Trapped“ S. 21–23 (8 Sätze), Vokabel-Check Kernvokabular (16 Sätze).
 - **Unit-2-Einstieg:** Foto beschreiben mit Satzanfängen (This is me … · In this picture, I … · I felt … · I like this photo because …).
+
+## 2c. Zeitplan
+
+- 11.10.: Konzept. Bau in den nächsten Tagen, damit die App **zum Ferienende** steht (erste Stunde: **20.10.**).
+- Danach: Woche für Woche neue Inhalte einpflegen (v. a. Kategorie 8 „New“ und 9).
+- **GLN 2: letzte Novemberwoche.**
 
 ## 3. Vokabeln – Bestand
 

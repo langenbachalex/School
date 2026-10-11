@@ -3926,6 +3926,136 @@ window.DATEN = {
    }
   }
  ],
+ "lob": {
+  "lob": [
+   {
+    "text": "Amazing!",
+    "audio": "audio/lob/lob_amazing.mp3"
+   },
+   {
+    "text": "Fantastic!",
+    "audio": "audio/lob/lob_fantastic.mp3"
+   },
+   {
+    "text": "Wonderful!",
+    "audio": "audio/lob/lob_wonderful.mp3"
+   },
+   {
+    "text": "Great!",
+    "audio": "audio/lob/lob_great.mp3"
+   },
+   {
+    "text": "You are a superstar!",
+    "audio": "audio/lob/lob_superstar.mp3"
+   },
+   {
+    "text": "That's outstanding!",
+    "audio": "audio/lob/lob_outstanding.mp3"
+   },
+   {
+    "text": "I love it!",
+    "audio": "audio/lob/lob_love.mp3"
+   },
+   {
+    "text": "Brilliant!",
+    "audio": "audio/lob/lob_brilliant.mp3"
+   },
+   {
+    "text": "Excellent!",
+    "audio": "audio/lob/lob_excellent.mp3"
+   },
+   {
+    "text": "Perfect!",
+    "audio": "audio/lob/lob_perfect.mp3"
+   },
+   {
+    "text": "Well done!",
+    "audio": "audio/lob/lob_welldone.mp3"
+   },
+   {
+    "text": "Nice one!",
+    "audio": "audio/lob/lob_niceone.mp3"
+   },
+   {
+    "text": "Spot on!",
+    "audio": "audio/lob/lob_spoton.mp3"
+   },
+   {
+    "text": "High five!",
+    "audio": "audio/lob/lob_highfive.mp3"
+   },
+   {
+    "text": "I'm so proud of you!",
+    "audio": "audio/lob/lob_proud.mp3"
+   }
+  ],
+  "fehler": [
+   {
+    "text": "Almost!",
+    "audio": "audio/lob/fehler_almost.mp3"
+   },
+   {
+    "text": "So close!",
+    "audio": "audio/lob/fehler_close.mp3"
+   },
+   {
+    "text": "Try again – you can do it!",
+    "audio": "audio/lob/fehler_tryagain.mp3"
+   },
+   {
+    "text": "No problem – have another go!",
+    "audio": "audio/lob/fehler_noproblem.mp3"
+   },
+   {
+    "text": "Oh no!",
+    "audio": "audio/lob/fehler_ohno.mp3"
+   },
+   {
+    "text": "Sorry!",
+    "audio": "audio/lob/fehler_sorry.mp3"
+   }
+  ],
+  "spiel": [
+   {
+    "text": "That's terrible!",
+    "audio": "audio/lob/spiel_terrible.mp3"
+   },
+   {
+    "text": "Oops!",
+    "audio": "audio/lob/spiel_oops.mp3"
+   },
+   {
+    "text": "Oh no – not again!",
+    "audio": "audio/lob/spiel_notagain.mp3"
+   },
+   {
+    "text": "WHAAAT? You serious?",
+    "audio": "audio/lob/spiel_whaaat.mp3"
+   }
+  ],
+  "geschafft": [
+   {
+    "text": "You did it! Station complete!",
+    "audio": "audio/lob/geschafft_didit.mp3"
+   },
+   {
+    "text": "That was outstanding – well done!",
+    "audio": "audio/lob/geschafft_outstanding.mp3"
+   }
+  ],
+  "voll": [
+   {
+    "text": "Full marks! Amazing!",
+    "audio": "audio/lob/voll_fullmarks.mp3"
+   }
+  ],
+  "doch": [
+   {
+    "text": "See? You can do it!",
+    "audio": "audio/lob/doch_seeyoucan.mp3"
+   }
+  ]
+ },
  "mittel": {
   "bus": "🚌",
   "car": "🚗",

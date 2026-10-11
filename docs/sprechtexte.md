@@ -246,6 +246,35 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `vokabeln/u3_102_match_en.mp3` | Alex Langenbach | match |
 | `vokabeln/u3_103_light_en.mp3` | Alex Langenbach | light |
 | `vokabeln/u3_104_speak_clearly_loudly_en.mp3` | Alex Langenbach | to speak clearly, to speak loudly |
+| `lob/lob_amazing.mp3` | Alex Langenbach | Amazing! |
+| `lob/lob_fantastic.mp3` | Alex Langenbach | Fantastic! |
+| `lob/lob_wonderful.mp3` | Alex Langenbach | Wonderful! |
+| `lob/lob_great.mp3` | Alex Langenbach | Great! |
+| `lob/lob_superstar.mp3` | Alex Langenbach | You are a superstar! |
+| `lob/lob_outstanding.mp3` | Alex Langenbach | That's outstanding! |
+| `lob/lob_love.mp3` | Alex Langenbach | I love it! |
+| `lob/lob_brilliant.mp3` | Alex Langenbach | Brilliant! |
+| `lob/lob_excellent.mp3` | Alex Langenbach | Excellent! |
+| `lob/lob_perfect.mp3` | Alex Langenbach | Perfect! |
+| `lob/lob_welldone.mp3` | Alex Langenbach | Well done! |
+| `lob/lob_niceone.mp3` | Alex Langenbach | Nice one! |
+| `lob/lob_spoton.mp3` | Alex Langenbach | Spot on! |
+| `lob/lob_highfive.mp3` | Alex Langenbach | High five! |
+| `lob/lob_proud.mp3` | Alex Langenbach | I'm so proud of you! |
+| `lob/fehler_almost.mp3` | Alex Langenbach | Almost! |
+| `lob/fehler_close.mp3` | Alex Langenbach | So close! |
+| `lob/fehler_tryagain.mp3` | Alex Langenbach | Try again – you can do it! |
+| `lob/fehler_noproblem.mp3` | Alex Langenbach | No problem – have another go! |
+| `lob/fehler_ohno.mp3` | Alex Langenbach | Oh no! |
+| `lob/fehler_sorry.mp3` | Alex Langenbach | Sorry! |
+| `lob/spiel_terrible.mp3` | Alex Langenbach | That's terrible! |
+| `lob/spiel_oops.mp3` | Alex Langenbach | Oops! |
+| `lob/spiel_notagain.mp3` | Alex Langenbach | Oh no – not again! |
+| `lob/spiel_whaaat.mp3` | Alex Langenbach | WHAAAT? You serious? |
+| `lob/geschafft_didit.mp3` | Alex Langenbach | You did it! Station complete! |
+| `lob/geschafft_outstanding.mp3` | Alex Langenbach | That was outstanding – well done! |
+| `lob/voll_fullmarks.mp3` | Alex Langenbach | Full marks! Amazing! |
+| `lob/doch_seeyoucan.mp3` | Alex Langenbach | See? You can do it! |
 | `hoeren/01-mias-monday_text01.mp3` | Alice | Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train. |
 | `hoeren/01-mias-monday_text02.mp3` | Alice | School starts at eight a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at nine p.m. |
 | `hoeren/01-mias-monday_aussage01.mp3` | Alex Langenbach | Mia gets up at six forty-five a.m. |

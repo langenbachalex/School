@@ -8,13 +8,27 @@
   const app = document.getElementById("app");
   const SPEICHER = "auffrischen-v1";
 
-  const LOB = ["Du bist ein Superstar!", "Wahnsinn!", "Superpower!", "Ich kann es nicht glauben, wie krass du bist!"];
-  let letztesLob = -1;
-  function lob() {
+  // Lob und Rückmeldungen – gesprochen von Mr. Alex (inhalte/lob.tsv).
+  // Arten: lob, fehler, spiel (nur Station Spiele), geschafft, voll (alles richtig), doch (nach mehreren Fehlern geschafft)
+  const RUF = D.lob || {};
+  const zuletzt = {};
+  let vorLob = null, fehlerSerie = 0;
+  function ruf(art) {
+    const liste = RUF[art] || [];
+    if (!liste.length) return "";
     let i;
-    do { i = Math.floor(Math.random() * LOB.length); } while (i === letztesLob && LOB.length > 1);
-    letztesLob = i;
-    return LOB[i];
+    do { i = Math.floor(Math.random() * liste.length); } while (liste.length > 1 && i === zuletzt[art]);
+    zuletzt[art] = i;
+    const r = liste[i];
+    // Das Audio wird vor das nächste spiele() gesetzt; folgt keins, spielt es allein.
+    vorLob = r.audio;
+    setTimeout(() => { if (vorLob === r.audio) { vorLob = null; spiele([r.audio]); } }, 0);
+    return r.text;
+  }
+  function lob() {
+    const art = fehlerSerie >= 2 && RUF.doch ? "doch" : "lob";
+    fehlerSerie = 0;
+    return ruf(art);
   }
 
   const STUFEN = {
@@ -70,6 +84,7 @@
     });
   }
   function spiele(dateien) {
+    if (vorLob) { dateien = [vorLob, ...dateien]; vorLob = null; }
     stopp();
     const meinLauf = lauf;
     let gesamt = 0;
@@ -247,7 +262,8 @@
     lage = null;
     zeige(kopf(st), el("section", { class: "geschafft" },
       el("h2", {}, `${g.name} geschafft!`),
-      el("p", { class: "ansage" }, alle ? `Station ${st.nr} geschafft! Du bist ein Superstar ${st.lob}!` : lob()),
+      el("p", { class: "ansage" }, alle ? `Station ${st.nr} geschafft! Du bist ein Superstar ${st.lob}!` : ""),
+      el("p", { class: "ansage", lang: "en" }, alle ? ruf("geschafft") : lob()),
       el("div", { class: "knopfreihe" },
         knopf("Weitere Abschnitte", () => zeigeGruppen(st), "haupt"), knopf("Zur Startseite", startseite))));
   }
@@ -260,6 +276,7 @@
     zeige(kopf(st), el("section", { class: "geschafft" },
       el("h2", {}, `Station ${st.nr} geschafft!`),
       el("p", { class: "ansage" }, `Du bist ein Superstar ${st.lob}!`),
+      el("p", { class: "ansage", lang: "en" }, ruf("geschafft")),
       knopf("Zur Startseite", startseite, "haupt")));
   }
 
@@ -268,7 +285,13 @@
     return el("section", { class: "satzkarte" }, zaehlerText && el("p", { class: "zaehler" }, zaehlerText), ...inhalt);
   }
   function rueckmeldung() { return el("div", { class: "rueckmeldung", hidden: true, role: "status" }); }
-  function melde(box, art, text) { box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text; }
+  function melde(box, art, text) {
+    if (art === "hilfe") { // nach einem Fehler: kurze Ermutigung (in den Spielen humorvoll), dann „Ich helfe dir“
+      fehlerSerie++;
+      text = `${ruf(lage && lage.nr === 5 && RUF.spiel ? "spiel" : "fehler")} ${text}`;
+    }
+    box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text;
+  }
 
   /* ---------- Listen and Repeat (Stufe 1–4, auch mit Satzpaaren) ---------- */
   function zeigeSatz(teil) {
@@ -521,7 +544,7 @@
       });
       ergebnis.hidden = false;
       ergebnis.className = "rueckmeldung " + (richtig === u.aufgaben.length ? "gut" : "hilfe");
-      ergebnis.textContent = richtig === u.aufgaben.length ? `${lob()} Alles richtig!`
+      ergebnis.textContent = richtig === u.aufgaben.length ? `${ruf("voll") || lob()} Alles richtig!`
         : `Du hast ${richtig} von ${u.aufgaben.length} richtig. Hör dir die Lösung an!`;
       mitlesen.hidden = false;
       lage.weiter = naechstes;
@@ -655,7 +678,7 @@
       });
       ergebnis.hidden = false;
       ergebnis.className = "rueckmeldung " + (richtig === teil.aufgaben.length ? "gut" : "hilfe");
-      ergebnis.textContent = richtig === teil.aufgaben.length ? `${lob()} Alles richtig!`
+      ergebnis.textContent = richtig === teil.aufgaben.length ? `${ruf("voll") || lob()} Alles richtig!`
         : `Du hast ${richtig} von ${teil.aufgaben.length} richtig. Hör dir die Lösung an!`;
       for (let i = 0; i < teil.aufgaben.length; i++) { // Lösung mit Audio
         zeilen.forEach((z) => z.classList.remove("spricht"));
@@ -741,6 +764,7 @@
         } else {
           sperre = true;
           setTimeout(() => {
+            if (Math.random() < 0.3) ruf("spiel"); // ab und zu ein humorvoller Kommentar
             [x, y].forEach(({ b }) => { b.classList.remove("auf"); b.replaceChildren("?"); b.setAttribute("aria-label", "Verdeckte Karte"); });
             sperre = false;
           }, 1300);

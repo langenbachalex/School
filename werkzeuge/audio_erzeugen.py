@@ -71,6 +71,10 @@ def main():
     with open(os.path.join(BASIS, "inhalte", "vokabeln.tsv"), encoding="utf-8") as f:
         for v in csv.DictReader(f, delimiter="\t"):
             auftraege.append(("vokabeln", f"{v['id']}_en", "en", "en", v["englisch_gesprochen"], None))
+    # Lob und Rückmeldungen (Mr. Alex' eigene Stimme)
+    with open(os.path.join(BASIS, "inhalte", "lob.tsv"), encoding="utf-8") as f:
+        for z in csv.DictReader(f, delimiter="\t"):
+            auftraege.append(("lob", z["id"], "en", "en", z["text"], None))
     for u in hoeren.lesen():
         for t in u["teile"]:
             auftraege.append(("hoeren", t["datei"], "en_f" if t["stimme"] == "en_f" else "en", "en", t["sprech"], None))

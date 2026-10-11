@@ -1,6 +1,6 @@
 # Lob und Rückmeldungen – Vorschläge (Klasse 6 und Klasse 9)
 
-**[ENTWURF – noch abzusegnen]** Alles gesprochen von **Mr. Alex' eigener Stimme** (ElevenLabs, Eleven v4).
+**Stand 11.10.2026: abgesegnet und in Klasse 6 eingebaut** (`inhalte/lob.tsv`, Audios `app/audio/lob/`). Ergänzt um „WHAAAT? You serious?“ (D). Alles gesprochen von **Mr. Alex' eigener Stimme** (ElevenLabs, Eleven v4).
 Ein Satz = eine Audiodatei; die App wählt zufällig, aber nie zweimal hintereinander denselben.
 
 ## Gesetzt (von Mr. Alex)
@@ -27,7 +27,7 @@ Ein Satz = eine Audiodatei; die App wählt zufällig, aber nie zweimal hinterein
 - Beim Start einer Station (optional): „Let's go!“ · „Ready? Let's practise!“
 
 **D. Humorvoll (sparsam, z. B. nur bei Spielen)**
-- Oops! · Oh no – not again! · Terrible, oh no! (nur mit Augenzwinkern, nie bei Prüfungsformaten)
+- Oops! · Oh no – not again! · That's terrible! · WHAAAT? You serious? (nur mit Augenzwinkern, nur in der Station Spiele)
 
 ## Umfang und Kosten (Schätzung)
 

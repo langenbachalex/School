@@ -259,8 +259,13 @@ def main():
             if s["art"] == "memory":
                 s["karten"] = [{"id": vok[w]["id"], "wort": kurz(vok[w]["en"]), "symbol": vok[w]["symbol"],
                                 "audio": vok[w]["audio"]["en"]} for w in s.pop("pool")]
+    # Lob und Rückmeldungen (gesprochen von Mr. Alex), nach Art gruppiert
+    lob = {}
+    for z in lesen("lob.tsv"):
+        if os.path.exists(os.path.join(BASIS, "app", "audio", "lob", z["id"] + ".mp3")):
+            lob.setdefault(z["art"], []).append({"text": z["text"], "audio": f"audio/lob/{z['id']}.mp3"})
     STATIONEN.sort(key=lambda x: x["nr"])
-    daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln,
+    daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")}}
     ziel = os.path.join(BASIS, "app", "daten.js")
     with open(ziel, "w", encoding="utf-8") as f:

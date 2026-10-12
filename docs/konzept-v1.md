@@ -398,3 +398,7 @@ Entwürfe der Inhalte:
 **Station 5 „Spiele“:** Memory (Symbol ↔ englisches Wort, 6 Paare, zufällig aus den Vokabeln; beim Aufdecken wird das Wort gesprochen) → -s-Detektiv (8 Sätze aus festen Bausteinen, nur gelesen; in manchen fehlt das -s: Verb antippen und reparieren, sonst „Alles richtig!“).
 
 **Postvokalisches R:** Bei einigen Einzelwörtern spricht die Stimme das R amerikanisch (Liste: `docs/postvokales-r.md`). Bewusst so gelassen.
+
+## Vorgemerkte Ideen (noch nicht bauen)
+
+- **„Fehlertext korrigieren“ – Schüler sind die Lehrer** (Wunsch Mr. Alex, 12.10.): ein kurzer Text voller Fehler, die Schüler finden und verbessern sie. Für Klasse 6 passend zum Stoff: he/she/it + s (he play → he plays), Uhrzeiten, never/always an der richtigen Stelle, Vokabeln Unit 3. Umsetzung wie in Klasse 9 geplant: Fehlerwort antippen → richtige Form wählen; Zähler „Noch 4 Fehler versteckt“; am Ende der korrigierte Text mit Audio. Kommt erst nach Absprache.

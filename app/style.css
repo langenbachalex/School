@@ -50,6 +50,10 @@ p { margin: 0; }
 .knopf.haupt { background: var(--blau); border-color: var(--blau); color: var(--blau-text); }
 .knopf.leise { border-color: transparent; background: transparent; }
 .knopf:disabled { opacity: .45; cursor: default; }
+/* Gesperrter Knopf (Sprechzeit/Denkzeit): füllt sich von links, dann frei */
+.knopf.wartet { position: relative; overflow: hidden; }
+.knopf.wartet::after { content: ""; position: absolute; inset: 0; background: currentColor; opacity: .22; transform: scaleX(0); transform-origin: left; pointer-events: none; }
+.knopf.wartet.laeuft::after { animation: fuellen var(--warte, 3s) linear forwards; }
 .knopfreihe { display: flex; flex-wrap: wrap; gap: 10px; }
 
 /* Startseite */

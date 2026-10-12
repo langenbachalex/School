@@ -132,6 +132,35 @@
   const station = (nr) => D.stationen.find((s) => s.nr === nr);
   const knopf = (text, fn, art) => el("button", { class: "knopf" + (art ? " " + art : ""), onclick: fn }, text);
 
+  /* ---------- Sprechzeit: „Weiter“ erst nach Hören + Nachsprechen, „Lösung“ erst nach Denkzeit ----------
+     Der gesperrte Knopf füllt sich sichtbar. Schon freigegebene Sätze (Teil:Position) bleiben frei,
+     z. B. nach „Zurück“ oder beim Umschalten. */
+  const freiSchluessel = () => lage.teil + ":" + lage.pos;
+  function sperre(k) {
+    if (!lage.frei) lage.frei = new Set();
+    if (lage.frei.has(freiSchluessel())) return k;
+    k.disabled = true; k.classList.add("wartet");
+    return k;
+  }
+  function gibFrei(k, sek, merken = true) {
+    if (!k.disabled || k.dataset.frei) return;
+    k.dataset.frei = "1";
+    k.style.setProperty("--warte", sek.toFixed(1) + "s");
+    k.classList.add("laeuft");
+    const menge = lage.frei, schluessel = freiSchluessel();
+    setTimeout(() => { k.disabled = false; k.classList.remove("wartet", "laeuft"); if (merken && menge) menge.add(schluessel); }, sek * 1000);
+  }
+  const sprechDauer = (d, min = 3) => Math.max(min, d * 1.4 + 1);
+  const denkzeit = (text) => Math.min(8, Math.max(3, 2 + String(text).split(/\s+/).length * 0.35));
+  const wennFrei = (k, fn) => () => { if (!k.disabled) fn(); };
+  // Prüfung C: Sprechteile, die viel schneller fertig sind als möglich, bringen keine Punkte
+  function zuSchnell(teil) {
+    const proEintrag = SPRECH_MIN[teil.art];
+    if (!proEintrag || !lage.start) return false;
+    return (Date.now() - lage.start) / 1000 < laenge(teil) * proEintrag;
+  }
+  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, vok_luecke: 2 }; // Sekunden pro Satz/Wort mindestens
+
   /* ---------- Startseite ---------- */
   function startseite() {
     lage = null;
@@ -272,6 +301,7 @@
 
   function zeigeTeil() {
     lage.abspielen = null; lage.weiter = null;
+    if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = Date.now(); }
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, hoeren: zeigeHoeren,
        vok_lernen: zeigeVokabel, vok_luecke: zeigeVokabel, vok_abfrage: zeigeVokabel,
@@ -283,12 +313,24 @@
   function naechstes() {
     const teil = lage.teile[lage.teil];
     if (lage.pos + 1 < laenge(teil)) { lage.pos++; return zeigeTeil(); }
+    if (zuSchnell(teil)) return zuSchnellSeite();
     const erstesMal = !istFertig(lage.teil);
     teilFertig(lage.teil);
     belohne(erstesMal);
     if (alleTeileFertig()) return stationGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
     fastGeschafft();
+  }
+
+  // Prüfung C: zu schnell durchgeklickt – kein Lob, keine Punkte, Teil noch mal
+  function zuSchnellSeite() {
+    const st = station(lage.nr);
+    const nochmal = () => { lage.frei = null; lage.startTeil = null; springe(lage.teil); };
+    lage.abspielen = null; lage.weiter = nochmal;
+    zeige(kopf(st), el("section", { class: "geschafft" },
+      el("h2", {}, "⏱️ Zu schnell!"),
+      el("p", { class: "ansage" }, "Sprich die Sätze wirklich mit. Dann gibt es auch Punkte. Versuch es noch mal!"),
+      knopf("Noch mal ➜", nochmal, "haupt")));
   }
 
   // Letzter Teil fertig, aber vorher wurde etwas übersprungen
@@ -435,7 +477,9 @@
         el("p", { class: "profi" }, "Sag den ganzen Satz auf Englisch!"));
     }
 
-    const loesung = stufe >= 3 ? knopf("Lösung", loesen) : null;
+    const loesung = stufe >= 3 ? sperre(knopf("Lösung", loesen)) : null;
+    const weiter = sperre(knopf("Weiter ➜", naechstes, "haupt"));
+    if (loesung) gibFrei(loesung, denkzeit(ss.map((s) => s.en).join(" ")), false);
 
     zeige(kopf(st),
       el("p", { class: "ansage" }, STUFEN[stufe]),
@@ -443,7 +487,7 @@
         hinweis && el("p", { class: "hinweis" }, hinweis),
         el("div", { class: "spalten" }, links, rechts),
         jetztdu,
-        el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", abspielen), loesung, knopf("Weiter ➜", naechstes, "haupt"))));
+        el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", abspielen), loesung, weiter)));
 
     function englisch() {
       jetztdu.hidden = true;
@@ -452,8 +496,9 @@
         jetztdu.hidden = false;
         jetztdu.classList.remove("laeuft");
         void jetztdu.offsetWidth;
-        jetztdu.style.setProperty("--dauer", Math.max(3, d * 1.4 + 1).toFixed(1) + "s");
+        jetztdu.style.setProperty("--dauer", sprechDauer(d).toFixed(1) + "s");
         jetztdu.classList.add("laeuft");
+        gibFrei(weiter, sprechDauer(d));
       });
     }
     function abspielen() {
@@ -468,7 +513,7 @@
       englisch();
     }
     lage.abspielen = abspielen;
-    lage.weiter = naechstes;
+    lage.weiter = wennFrei(weiter, naechstes);
     abspielen();
   }
 
@@ -947,15 +992,17 @@
       const abspielen = () => { jetztdu.hidden = true; spiele([v.audio.en]).then((d) => {
         if (d === null) return;
         jetztdu.hidden = false; jetztdu.classList.remove("laeuft"); void jetztdu.offsetWidth;
-        jetztdu.style.setProperty("--dauer", Math.max(2.5, d * 1.4 + 1).toFixed(1) + "s"); jetztdu.classList.add("laeuft");
+        jetztdu.style.setProperty("--dauer", sprechDauer(d, 2.5).toFixed(1) + "s"); jetztdu.classList.add("laeuft");
+        gibFrei(weiter, sprechDauer(d, 2.5));
       }); };
-      lage.abspielen = abspielen; lage.weiter = naechstes;
+      const weiter = sperre(knopf("Weiter ➜", naechstes, "haupt"));
+      lage.abspielen = abspielen; lage.weiter = wennFrei(weiter, naechstes);
       zeige(kopf(st), el("p", { class: "ansage" }, "Lernen wir die Wörter! Hör zu und sprich nach."),
         karte(teil, `Wort ${lage.pos + 1} von ${anzahl}`,
           el("div", { class: "vok" }, bild(true),
             el("div", {}, el("p", { class: "vok-en", lang: "en" }, v.en), el("p", { class: "vok-de" }, v.de))),
           jetztdu,
-          el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", abspielen), knopf("Weiter ➜", naechstes, "haupt"))));
+          el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", abspielen), weiter)));
       return abspielen();
     }
 
@@ -967,18 +1014,20 @@
         : el("strong", { class: "ziel" }, s.en.slice(i, i + w.length)), s.en.slice(i + w.length)];
       const satz = el("p", { class: "satz", lang: "en" }, teileSatz(true));
       let geloest = false;
-      const loesung = knopf("Lösung", () => {
+      const weiter = sperre(knopf("Weiter ➜", naechstes, "haupt"));
+      const loesung = sperre(knopf("Lösung", () => {
         geloest = true; loesung.disabled = true;
         satz.replaceChildren(...teileSatz(false));
-        spiele([s.audio.en]);
-      });
+        spiele([s.audio.en]).then((d) => { if (d !== null) gibFrei(weiter, sprechDauer(d)); });
+      }));
+      gibFrei(loesung, denkzeit(s.en), false);
       lage.abspielen = () => { if (geloest) spiele([s.audio.en]); };
-      lage.weiter = naechstes;
+      lage.weiter = wennFrei(weiter, naechstes);
       zeige(kopf(st), el("p", { class: "ansage" }, "Welches Wort fehlt? Sag den ganzen Satz auf Englisch! Dann tipp auf „Lösung“."),
         karte(teil, `Satz ${lage.pos + 1} von ${anzahl}`,
           el("div", { class: "vok" }, bild(true), el("p", { class: "satz de" }, s.de)),
           satz,
-          el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", () => lage.abspielen()), loesung, knopf("Weiter ➜", naechstes, "haupt"))));
+          el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", () => lage.abspielen()), loesung, weiter)));
       return lage.abspielen();
     }
 
@@ -991,13 +1040,14 @@
     const bewerten = el("div", { class: "knopfreihe", hidden: true },
       knopf("✓ Gewusst", naechstes, "haupt"),
       knopf("↻ Nochmal üben", () => { lage.vq.push(v.id); naechstes(); }));
-    const loesung = knopf("Lösung", () => {
+    const loesung = sperre(knopf("Lösung", () => {
       loesung.hidden = true; antwort.hidden = false; bewerten.hidden = false;
       bildPlatz.textContent = v.symbol;
       lage.abspielen = () => spiele([v.audio.en]);
       lage.weiter = naechstes;
       lage.abspielen();
-    }, "haupt");
+    }, "haupt"));
+    gibFrei(loesung, 3, false);
     lage.abspielen = fragen;
     zeige(kopf(st),
       el("p", { class: "ansage" }, enDe ? "Was heißt das auf Deutsch? Sag es laut! Dann tipp auf „Lösung“."

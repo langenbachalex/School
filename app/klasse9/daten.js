@@ -5925,6 +5925,7 @@ window.DATEN = {
         },
         {
          "symbol": "🛗",
+         "bild": "bilder/lesen/02-elevator.jpg",
          "G": "Aufzug fahren",
          "E": "take the elevator"
         },
@@ -5937,6 +5938,7 @@ window.DATEN = {
         },
         {
          "symbol": "📚",
+         "bild": "bilder/lesen/04-library.jpg",
          "G": "in die Bibliothek gehen",
          "E": "go to the library"
         },
@@ -5949,6 +5951,7 @@ window.DATEN = {
         },
         {
          "symbol": "🎵",
+         "bild": "bilder/lesen/06-flute.jpg",
          "G": "Querflöte spielen",
          "E": "play the flute"
         },
@@ -5962,6 +5965,7 @@ window.DATEN = {
         },
         {
          "symbol": "🔐",
+         "bild": "bilder/lesen/08-locker.jpg",
          "G": "den Spind öffnen",
          "E": "open the locker",
          "nur": "E"

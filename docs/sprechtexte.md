@@ -275,6 +275,61 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `lob/geschafft_outstanding.mp3` | Alex Langenbach | That was outstanding – well done! |
 | `lob/voll_fullmarks.mp3` | Alex Langenbach | Full marks! Amazing! |
 | `lob/doch_seeyoucan.mp3` | Alex Langenbach | See? You can do it! |
+| `lob/lob_wow.mp3` | Alex Langenbach | Wow! |
+| `lob/lob_yes.mp3` | Alex Langenbach | Yes! |
+| `lob/lob_super.mp3` | Alex Langenbach | Super! |
+| `lob/lob_cool.mp3` | Alex Langenbach | Cool! |
+| `lob/lob_bingo.mp3` | Alex Langenbach | Bingo! |
+| `lob/lob_boom.mp3` | Alex Langenbach | Boom! |
+| `lob/lob_awesome.mp3` | Alex Langenbach | Awesome! |
+| `lob/lob_lovely.mp3` | Alex Langenbach | Lovely! |
+| `lob/lob_terrific.mp3` | Alex Langenbach | Terrific! |
+| `lob/lob_splendid.mp3` | Alex Langenbach | Splendid! |
+| `lob/lob_thatsright.mp3` | Alex Langenbach | That's right! |
+| `lob/lob_exactly.mp3` | Alex Langenbach | Exactly! |
+| `lob/lob_yougotit.mp3` | Alex Langenbach | You got it! |
+| `lob/lob_thatsit.mp3` | Alex Langenbach | That's it! |
+| `lob/lob_correct.mp3` | Alex Langenbach | Correct! |
+| `lob/lob_righton.mp3` | Alex Langenbach | Right on! |
+| `lob/lob_absolutely.mp3` | Alex Langenbach | Absolutely! |
+| `lob/lob_goodjob.mp3` | Alex Langenbach | Good job! |
+| `lob/lob_greatwork.mp3` | Alex Langenbach | Great work! |
+| `lob/lob_nicework.mp3` | Alex Langenbach | Nice work! |
+| `lob/lob_waytogo.mp3` | Alex Langenbach | Way to go! |
+| `lob/lob_lookinggood.mp3` | Alex Langenbach | Looking good! |
+| `lob/lob_lovethat.mp3` | Alex Langenbach | Love that! |
+| `lob/lob_topclass.mp3` | Alex Langenbach | Top class! |
+| `lob/lob_mega.mp3` | Alex Langenbach | Mega! |
+| `lob/lob_dingding.mp3` | Alex Langenbach | Ding ding ding! |
+| `lob/lob_kaching.mp3` | Alex Langenbach | Ka-ching! |
+| `lob/lob_bravo.mp3` | Alex Langenbach | Bravo! |
+| `lob/lob_impressive.mp3` | Alex Langenbach | Impressive! |
+| `lob/lob_exactlyright.mp3` | Alex Langenbach | Exactly right! |
+| `lob/lob_topjob.mp3` | Alex Langenbach | Top job! |
+| `lob/lob_yesthatsit.mp3` | Alex Langenbach | Yes! That's it! |
+| `lob/lob_marvellous.mp3` | Alex Langenbach | Marvellous! |
+| `lob/lob_cracking.mp3` | Alex Langenbach | Cracking! |
+| `lob/lob_smashing.mp3` | Alex Langenbach | Smashing! |
+| `lob/lob_fabulous.mp3` | Alex Langenbach | Fabulous! |
+| `lob/lob_lovelyjob.mp3` | Alex Langenbach | Lovely job! |
+| `lob/lob_cleveryou.mp3` | Alex Langenbach | Clever you! |
+| `lob/lob_sweet.mp3` | Alex Langenbach | Sweet! |
+| `lob/lob_yourock.mp3` | Alex Langenbach | You rock! |
+| `lob/lob_keepitup.mp3` | Alex Langenbach | Keep it up! |
+| `lob/lob_nowyouretalking.mp3` | Alex Langenbach | Now you're talking! |
+| `lob/lob_thatstheway.mp3` | Alex Langenbach | That's the way! |
+| `lob/lob_impressed.mp3` | Alex Langenbach | I'm impressed! |
+| `lob/lob_lookeasy.mp3` | Alex Langenbach | You make it look easy! |
+| `lob/lob_wanted.mp3` | Alex Langenbach | That's exactly what I wanted to hear! |
+| `lob/lob_onfire.mp3` | Alex Langenbach | You're on fire! |
+| `lob/lob_flying.mp3` | Alex Langenbach | You're flying today! |
+| `lob/lob_nailedit.mp3` | Alex Langenbach | Nailed it! |
+| `lob/lob_performance.mp3` | Alex Langenbach | What a performance! |
+| `lob/lob_crushedit.mp3` | Alex Langenbach | Crushed it! |
+| `lob/fehler_notquite.mp3` | Alex Langenbach | Not quite! |
+| `lob/fehler_nearly.mp3` | Alex Langenbach | Nearly there! |
+| `lob/fehler_goodtry.mp3` | Alex Langenbach | Good try – look again! |
+| `lob/fehler_hmm.mp3` | Alex Langenbach | Hmm, not quite! |
 | `london/big_ben.mp3` | Alex Langenbach | Big Ben. Big Ben is the name of the bell, not the tower! |
 | `london/london_eye.mp3` | Alex Langenbach | London Eye. The London Eye is 135 metres tall. One ride takes 30 minutes. |
 | `london/tower_bridge.mp3` | Alex Langenbach | Tower Bridge. Tower Bridge can open in the middle to let big ships through. |

@@ -11,22 +11,35 @@
   // Lob und Rückmeldungen – gesprochen von Mr. Alex (inhalte/lob.tsv).
   // Arten: lob, fehler, spiel (nur Station Spiele), geschafft, voll (alles richtig), doch (nach mehreren Fehlern geschafft)
   const RUF = D.lob || {};
-  const zuletzt = {};
-  let vorLob = null, fehlerSerie = 0;
-  function ruf(art) {
+  // Gegen Wiederholung: derselbe Spruch erst nach 10 anderen derselben Art, und kein Schlüsselwort
+  // (gruppe in inhalte/lob.tsv, z. B. „right“) aus den letzten 3 Sprüchen. Reicht die Liste nicht, wird gelockert.
+  const verlauf = [];
+  function waehleRuf(art) {
     const liste = RUF[art] || [];
-    if (!liste.length) return "";
-    let i;
-    do { i = Math.floor(Math.random() * liste.length); } while (liste.length > 1 && i === zuletzt[art]);
-    zuletzt[art] = i;
-    const r = liste[i];
+    if (!liste.length) return null;
+    const gleicheArt = verlauf.filter((v) => v.art === art).slice(-10).map((v) => v.r);
+    const nahGruppen = new Set(verlauf.slice(-3).flatMap((v) => v.r.gruppe || []));
+    const frisch = (r) => !gleicheArt.includes(r);
+    const andereGruppe = (r) => !(r.gruppe || []).some((g) => nahGruppen.has(g));
+    const pool = [liste.filter((r) => frisch(r) && andereGruppe(r)), liste.filter(frisch),
+      liste.filter((r) => r !== (verlauf[verlauf.length - 1] || {}).r), liste].find((p) => p.length);
+    const r = pool[Math.floor(Math.random() * pool.length)];
+    verlauf.push({ art, r }); if (verlauf.length > 40) verlauf.shift();
+    return r;
+  }
+  let vorLob = null, fehlerSerie = 0, richtigSerie = 0;
+  function ruf(art) {
+    const r = waehleRuf(art);
+    if (!r) return "";
     // Das Audio wird vor das nächste spiele() gesetzt; folgt keins, spielt es allein.
     vorLob = r.audio;
     setTimeout(() => { if (vorLob === r.audio) { vorLob = null; spiele([r.audio]); } }, 0);
     return r.text;
   }
-  function lob() {
-    const art = fehlerSerie >= 2 && RUF.doch ? "doch" : "lob";
+  function lob(stark) {
+    // Kurze Sprüche für normale Antworten; starke für jede 5. richtige Antwort in Folge und fertige Teile (stark = true)
+    richtigSerie++;
+    const art = fehlerSerie >= 2 && RUF.doch ? "doch" : (stark || richtigSerie % 5 === 0) && RUF.stark ? "stark" : "lob";
     fehlerSerie = 0;
     return ruf(art);
   }
@@ -284,7 +297,7 @@
     lage.ende = true; lage.abspielen = null; lage.weiter = null;
     const offen = lage.teile.map((t, i) => [t, i]).filter(([, i]) => !istFertig(i));
     zeige(kopf(st), el("section", { class: "geschafft" },
-      el("h2", { lang: "en" }, lob()),
+      el("h2", { lang: "en" }, lob(true)),
       el("p", { class: "ansage" }, "Fast geschafft! Diese Teile fehlen noch:"),
       el("div", { class: "knopfreihe" }, offen.map(([t, i]) => knopf(t.name, () => { lage.ende = false; springe(i); }))),
       knopf("Zur Startseite", startseite)));
@@ -306,7 +319,7 @@
     lage.abspielen = null;
     lage.weiter = () => { lage.teil++; lage.pos = 0; teilZuruecksetzen(); zeigeTeil(); };
     zeige(kopf(st), el("section", { class: "geschafft" },
-      el("h2", {}, lob()),
+      el("h2", {}, lob(true)),
       el("p", {}, `${fertig.name} geschafft!`),
       knopf("Weiter ➜", lage.weiter, "haupt")));
     navErgaenzen(() => zeigeTeil());
@@ -355,7 +368,7 @@
     zeige(kopf(st), el("section", { class: "geschafft" },
       el("h2", {}, `${g.name} geschafft!`),
       el("p", { class: "ansage" }, alle ? `Station ${st.nr} geschafft! Du bist ein Superstar ${st.lob}!` : ""),
-      el("p", { class: "ansage", lang: "en" }, alle ? ruf("geschafft") : lob()),
+      el("p", { class: "ansage", lang: "en" }, alle ? ruf("geschafft") : lob(true)),
       el("div", { class: "knopfreihe" },
         knopf("Weitere Abschnitte", () => zeigeGruppen(st), "haupt"), knopf("Zur Startseite", startseite))));
   }
@@ -379,7 +392,7 @@
   function rueckmeldung() { return el("div", { class: "rueckmeldung", hidden: true, role: "status" }); }
   function melde(box, art, text) {
     if (art === "hilfe") { // nach einem Fehler: kurze Ermutigung (in den Spielen humorvoll), dann „Ich helfe dir“
-      fehlerSerie++;
+      fehlerSerie++; richtigSerie = 0;
       text = `${ruf(lage && lage.nr === 5 && RUF.spiel ? "spiel" : "fehler")} ${text}`;
     }
     box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text;

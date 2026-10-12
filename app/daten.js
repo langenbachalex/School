@@ -3930,129 +3930,578 @@ window.DATEN = {
   "lob": [
    {
     "text": "Amazing!",
-    "audio": "audio/lob/lob_amazing.mp3"
+    "audio": "audio/lob/lob_amazing.mp3",
+    "gruppe": [
+     "amazing"
+    ]
    },
    {
     "text": "Fantastic!",
-    "audio": "audio/lob/lob_fantastic.mp3"
+    "audio": "audio/lob/lob_fantastic.mp3",
+    "gruppe": [
+     "fantastic"
+    ]
    },
    {
     "text": "Wonderful!",
-    "audio": "audio/lob/lob_wonderful.mp3"
+    "audio": "audio/lob/lob_wonderful.mp3",
+    "gruppe": [
+     "wonderful"
+    ]
    },
    {
     "text": "Great!",
-    "audio": "audio/lob/lob_great.mp3"
-   },
-   {
-    "text": "You are a superstar!",
-    "audio": "audio/lob/lob_superstar.mp3"
-   },
-   {
-    "text": "That's outstanding!",
-    "audio": "audio/lob/lob_outstanding.mp3"
+    "audio": "audio/lob/lob_great.mp3",
+    "gruppe": [
+     "great"
+    ]
    },
    {
     "text": "I love it!",
-    "audio": "audio/lob/lob_love.mp3"
+    "audio": "audio/lob/lob_love.mp3",
+    "gruppe": [
+     "love"
+    ]
    },
    {
     "text": "Brilliant!",
-    "audio": "audio/lob/lob_brilliant.mp3"
+    "audio": "audio/lob/lob_brilliant.mp3",
+    "gruppe": [
+     "brilliant"
+    ]
    },
    {
     "text": "Excellent!",
-    "audio": "audio/lob/lob_excellent.mp3"
+    "audio": "audio/lob/lob_excellent.mp3",
+    "gruppe": [
+     "excellent"
+    ]
    },
    {
     "text": "Perfect!",
-    "audio": "audio/lob/lob_perfect.mp3"
+    "audio": "audio/lob/lob_perfect.mp3",
+    "gruppe": [
+     "perfect"
+    ]
    },
    {
     "text": "Well done!",
-    "audio": "audio/lob/lob_welldone.mp3"
+    "audio": "audio/lob/lob_welldone.mp3",
+    "gruppe": [
+     "well"
+    ]
    },
    {
     "text": "Nice one!",
-    "audio": "audio/lob/lob_niceone.mp3"
+    "audio": "audio/lob/lob_niceone.mp3",
+    "gruppe": [
+     "nice"
+    ]
    },
    {
     "text": "Spot on!",
-    "audio": "audio/lob/lob_spoton.mp3"
+    "audio": "audio/lob/lob_spoton.mp3",
+    "gruppe": [
+     "spot"
+    ]
    },
    {
     "text": "High five!",
-    "audio": "audio/lob/lob_highfive.mp3"
+    "audio": "audio/lob/lob_highfive.mp3",
+    "gruppe": [
+     "five"
+    ]
+   },
+   {
+    "text": "Wow!",
+    "audio": "audio/lob/lob_wow.mp3",
+    "gruppe": [
+     "wow"
+    ]
+   },
+   {
+    "text": "Yes!",
+    "audio": "audio/lob/lob_yes.mp3",
+    "gruppe": [
+     "yes"
+    ]
+   },
+   {
+    "text": "Super!",
+    "audio": "audio/lob/lob_super.mp3",
+    "gruppe": [
+     "super"
+    ]
+   },
+   {
+    "text": "Cool!",
+    "audio": "audio/lob/lob_cool.mp3",
+    "gruppe": [
+     "cool"
+    ]
+   },
+   {
+    "text": "Bingo!",
+    "audio": "audio/lob/lob_bingo.mp3",
+    "gruppe": [
+     "bingo"
+    ]
+   },
+   {
+    "text": "Boom!",
+    "audio": "audio/lob/lob_boom.mp3",
+    "gruppe": [
+     "boom"
+    ]
+   },
+   {
+    "text": "Awesome!",
+    "audio": "audio/lob/lob_awesome.mp3",
+    "gruppe": [
+     "awesome"
+    ]
+   },
+   {
+    "text": "Lovely!",
+    "audio": "audio/lob/lob_lovely.mp3",
+    "gruppe": [
+     "lovely"
+    ]
+   },
+   {
+    "text": "Terrific!",
+    "audio": "audio/lob/lob_terrific.mp3",
+    "gruppe": [
+     "terrific"
+    ]
+   },
+   {
+    "text": "Splendid!",
+    "audio": "audio/lob/lob_splendid.mp3",
+    "gruppe": [
+     "splendid"
+    ]
+   },
+   {
+    "text": "That's right!",
+    "audio": "audio/lob/lob_thatsright.mp3",
+    "gruppe": [
+     "right"
+    ]
+   },
+   {
+    "text": "Exactly!",
+    "audio": "audio/lob/lob_exactly.mp3",
+    "gruppe": [
+     "exact"
+    ]
+   },
+   {
+    "text": "You got it!",
+    "audio": "audio/lob/lob_yougotit.mp3",
+    "gruppe": [
+     "got"
+    ]
+   },
+   {
+    "text": "That's it!",
+    "audio": "audio/lob/lob_thatsit.mp3",
+    "gruppe": [
+     "thatsit"
+    ]
+   },
+   {
+    "text": "Correct!",
+    "audio": "audio/lob/lob_correct.mp3",
+    "gruppe": [
+     "correct"
+    ]
+   },
+   {
+    "text": "Right on!",
+    "audio": "audio/lob/lob_righton.mp3",
+    "gruppe": [
+     "right"
+    ]
+   },
+   {
+    "text": "Absolutely!",
+    "audio": "audio/lob/lob_absolutely.mp3",
+    "gruppe": [
+     "absolute"
+    ]
+   },
+   {
+    "text": "Good job!",
+    "audio": "audio/lob/lob_goodjob.mp3",
+    "gruppe": [
+     "good",
+     "job"
+    ]
+   },
+   {
+    "text": "Great work!",
+    "audio": "audio/lob/lob_greatwork.mp3",
+    "gruppe": [
+     "great",
+     "work"
+    ]
+   },
+   {
+    "text": "Nice work!",
+    "audio": "audio/lob/lob_nicework.mp3",
+    "gruppe": [
+     "nice",
+     "work"
+    ]
+   },
+   {
+    "text": "Way to go!",
+    "audio": "audio/lob/lob_waytogo.mp3",
+    "gruppe": [
+     "way"
+    ]
+   },
+   {
+    "text": "Looking good!",
+    "audio": "audio/lob/lob_lookinggood.mp3",
+    "gruppe": [
+     "good"
+    ]
+   },
+   {
+    "text": "Love that!",
+    "audio": "audio/lob/lob_lovethat.mp3",
+    "gruppe": [
+     "love"
+    ]
+   },
+   {
+    "text": "Top class!",
+    "audio": "audio/lob/lob_topclass.mp3",
+    "gruppe": [
+     "top"
+    ]
+   },
+   {
+    "text": "Mega!",
+    "audio": "audio/lob/lob_mega.mp3",
+    "gruppe": [
+     "mega"
+    ]
+   },
+   {
+    "text": "Ding ding ding!",
+    "audio": "audio/lob/lob_dingding.mp3",
+    "gruppe": [
+     "ding"
+    ]
+   },
+   {
+    "text": "Ka-ching!",
+    "audio": "audio/lob/lob_kaching.mp3",
+    "gruppe": [
+     "ding"
+    ]
+   },
+   {
+    "text": "Bravo!",
+    "audio": "audio/lob/lob_bravo.mp3",
+    "gruppe": [
+     "bravo"
+    ]
+   },
+   {
+    "text": "Impressive!",
+    "audio": "audio/lob/lob_impressive.mp3",
+    "gruppe": [
+     "impress"
+    ]
+   },
+   {
+    "text": "Exactly right!",
+    "audio": "audio/lob/lob_exactlyright.mp3",
+    "gruppe": [
+     "exact",
+     "right"
+    ]
+   },
+   {
+    "text": "Top job!",
+    "audio": "audio/lob/lob_topjob.mp3",
+    "gruppe": [
+     "top",
+     "job"
+    ]
+   },
+   {
+    "text": "Yes! That's it!",
+    "audio": "audio/lob/lob_yesthatsit.mp3",
+    "gruppe": [
+     "yes",
+     "thatsit"
+    ]
+   },
+   {
+    "text": "Marvellous!",
+    "audio": "audio/lob/lob_marvellous.mp3",
+    "gruppe": [
+     "marvellous"
+    ]
+   },
+   {
+    "text": "Cracking!",
+    "audio": "audio/lob/lob_cracking.mp3",
+    "gruppe": [
+     "cracking"
+    ]
+   },
+   {
+    "text": "Smashing!",
+    "audio": "audio/lob/lob_smashing.mp3",
+    "gruppe": [
+     "smashing"
+    ]
+   },
+   {
+    "text": "Fabulous!",
+    "audio": "audio/lob/lob_fabulous.mp3",
+    "gruppe": [
+     "fabulous"
+    ]
+   },
+   {
+    "text": "Lovely job!",
+    "audio": "audio/lob/lob_lovelyjob.mp3",
+    "gruppe": [
+     "lovely",
+     "job"
+    ]
+   },
+   {
+    "text": "Clever you!",
+    "audio": "audio/lob/lob_cleveryou.mp3",
+    "gruppe": [
+     "clever"
+    ]
+   }
+  ],
+  "stark": [
+   {
+    "text": "You are a superstar!",
+    "audio": "audio/lob/lob_superstar.mp3",
+    "gruppe": [
+     "star"
+    ]
+   },
+   {
+    "text": "That's outstanding!",
+    "audio": "audio/lob/lob_outstanding.mp3",
+    "gruppe": [
+     "outstanding"
+    ]
    },
    {
     "text": "I'm so proud of you!",
-    "audio": "audio/lob/lob_proud.mp3"
+    "audio": "audio/lob/lob_proud.mp3",
+    "gruppe": [
+     "proud"
+    ]
+   },
+   {
+    "text": "Keep it up!",
+    "audio": "audio/lob/lob_keepitup.mp3",
+    "gruppe": [
+     "keep"
+    ]
+   },
+   {
+    "text": "Now you're talking!",
+    "audio": "audio/lob/lob_nowyouretalking.mp3",
+    "gruppe": [
+     "talking"
+    ]
+   },
+   {
+    "text": "That's the way!",
+    "audio": "audio/lob/lob_thatstheway.mp3",
+    "gruppe": [
+     "way",
+     "thatsit"
+    ]
+   },
+   {
+    "text": "I'm impressed!",
+    "audio": "audio/lob/lob_impressed.mp3",
+    "gruppe": [
+     "impress"
+    ]
+   },
+   {
+    "text": "You make it look easy!",
+    "audio": "audio/lob/lob_lookeasy.mp3",
+    "gruppe": [
+     "easy"
+    ]
+   },
+   {
+    "text": "That's exactly what I wanted to hear!",
+    "audio": "audio/lob/lob_wanted.mp3",
+    "gruppe": [
+     "exact"
+    ]
+   },
+   {
+    "text": "You're on fire!",
+    "audio": "audio/lob/lob_onfire.mp3",
+    "gruppe": [
+     "fire"
+    ]
+   },
+   {
+    "text": "You're flying today!",
+    "audio": "audio/lob/lob_flying.mp3",
+    "gruppe": [
+     "flying"
+    ]
+   },
+   {
+    "text": "Nailed it!",
+    "audio": "audio/lob/lob_nailedit.mp3",
+    "gruppe": [
+     "nailed"
+    ]
+   },
+   {
+    "text": "What a performance!",
+    "audio": "audio/lob/lob_performance.mp3",
+    "gruppe": [
+     "performance"
+    ]
    }
   ],
   "fehler": [
    {
     "text": "Almost!",
-    "audio": "audio/lob/fehler_almost.mp3"
+    "audio": "audio/lob/fehler_almost.mp3",
+    "gruppe": [
+     "almost"
+    ]
    },
    {
     "text": "So close!",
-    "audio": "audio/lob/fehler_close.mp3"
+    "audio": "audio/lob/fehler_close.mp3",
+    "gruppe": [
+     "close"
+    ]
    },
    {
     "text": "Try again – you can do it!",
-    "audio": "audio/lob/fehler_tryagain.mp3"
+    "audio": "audio/lob/fehler_tryagain.mp3",
+    "gruppe": [
+     "try"
+    ]
    },
    {
     "text": "No problem – have another go!",
-    "audio": "audio/lob/fehler_noproblem.mp3"
+    "audio": "audio/lob/fehler_noproblem.mp3",
+    "gruppe": [
+     "problem"
+    ]
    },
    {
     "text": "Oh no!",
-    "audio": "audio/lob/fehler_ohno.mp3"
+    "audio": "audio/lob/fehler_ohno.mp3",
+    "gruppe": [
+     "ohno"
+    ]
    },
    {
     "text": "Sorry!",
-    "audio": "audio/lob/fehler_sorry.mp3"
+    "audio": "audio/lob/fehler_sorry.mp3",
+    "gruppe": [
+     "sorry"
+    ]
+   },
+   {
+    "text": "Not quite!",
+    "audio": "audio/lob/fehler_notquite.mp3",
+    "gruppe": [
+     "quite"
+    ]
+   },
+   {
+    "text": "Nearly there!",
+    "audio": "audio/lob/fehler_nearly.mp3",
+    "gruppe": [
+     "nearly"
+    ]
+   },
+   {
+    "text": "Good try – look again!",
+    "audio": "audio/lob/fehler_goodtry.mp3",
+    "gruppe": [
+     "try"
+    ]
+   },
+   {
+    "text": "Hmm, not quite!",
+    "audio": "audio/lob/fehler_hmm.mp3",
+    "gruppe": [
+     "quite"
+    ]
    }
   ],
   "spiel": [
    {
     "text": "That's terrible!",
-    "audio": "audio/lob/spiel_terrible.mp3"
+    "audio": "audio/lob/spiel_terrible.mp3",
+    "gruppe": []
    },
    {
     "text": "Oops!",
-    "audio": "audio/lob/spiel_oops.mp3"
+    "audio": "audio/lob/spiel_oops.mp3",
+    "gruppe": []
    },
    {
     "text": "Oh no – not again!",
-    "audio": "audio/lob/spiel_notagain.mp3"
+    "audio": "audio/lob/spiel_notagain.mp3",
+    "gruppe": []
    },
    {
     "text": "WHAAAT? You serious?",
-    "audio": "audio/lob/spiel_whaaat.mp3"
+    "audio": "audio/lob/spiel_whaaat.mp3",
+    "gruppe": []
    }
   ],
   "geschafft": [
    {
     "text": "You did it! Station complete!",
-    "audio": "audio/lob/geschafft_didit.mp3"
+    "audio": "audio/lob/geschafft_didit.mp3",
+    "gruppe": []
    },
    {
     "text": "That was outstanding – well done!",
-    "audio": "audio/lob/geschafft_outstanding.mp3"
+    "audio": "audio/lob/geschafft_outstanding.mp3",
+    "gruppe": [
+     "outstanding"
+    ]
    }
   ],
   "voll": [
    {
     "text": "Full marks! Amazing!",
-    "audio": "audio/lob/voll_fullmarks.mp3"
+    "audio": "audio/lob/voll_fullmarks.mp3",
+    "gruppe": [
+     "amazing"
+    ]
    }
   ],
   "doch": [
    {
     "text": "See? You can do it!",
-    "audio": "audio/lob/doch_seeyoucan.mp3"
+    "audio": "audio/lob/doch_seeyoucan.mp3",
+    "gruppe": []
    }
   ]
  },

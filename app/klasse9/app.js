@@ -40,23 +40,36 @@
 
   /* ---------- Lob (Mr. Alex' Stimme) ---------- */
   const RUF = D.lob || {};
-  const zuletzt = {};
-  let vorLob = null, fehlerSerie = 0;
-  function ruf(art) {
+  // Gegen Wiederholung: derselbe Spruch erst nach 10 anderen derselben Art, und kein Schlüsselwort
+  // (gruppe in inhalte/lob.tsv, z. B. „right“) aus den letzten 3 Sprüchen. Reicht die Liste nicht, wird gelockert.
+  const verlauf = [];
+  function waehleRuf(art) {
     const liste = RUF[art] || [];
-    if (!liste.length) return "";
-    let i;
-    do { i = Math.floor(Math.random() * liste.length); } while (liste.length > 1 && i === zuletzt[art]);
-    zuletzt[art] = i;
-    const r = liste[i];
+    if (!liste.length) return null;
+    const gleicheArt = verlauf.filter((v) => v.art === art).slice(-10).map((v) => v.r);
+    const nahGruppen = new Set(verlauf.slice(-3).flatMap((v) => v.r.gruppe || []));
+    const frisch = (r) => !gleicheArt.includes(r);
+    const andereGruppe = (r) => !(r.gruppe || []).some((g) => nahGruppen.has(g));
+    const pool = [liste.filter((r) => frisch(r) && andereGruppe(r)), liste.filter(frisch),
+      liste.filter((r) => r !== (verlauf[verlauf.length - 1] || {}).r), liste].find((p) => p.length);
+    const r = pool[Math.floor(Math.random() * pool.length)];
+    verlauf.push({ art, r }); if (verlauf.length > 40) verlauf.shift();
+    return r;
+  }
+  let vorLob = null, fehlerSerie = 0, richtigSerie = 0;
+  function ruf(art) {
+    const r = waehleRuf(art);
+    if (!r) return "";
     if (!leise && r.audio) {
       vorLob = r.audio;
       setTimeout(() => { if (vorLob === r.audio) { vorLob = null; spiele([r.audio]); } }, 0);
     }
     return r.text;
   }
-  function lob() {
-    const art = fehlerSerie >= 2 && RUF.doch ? "doch" : "lob";
+  function lob(stark) {
+    // Kurze Sprüche für normale Antworten; starke für jede 5. richtige Antwort in Folge und fertige Teile (stark = true)
+    richtigSerie++;
+    const art = fehlerSerie >= 2 && RUF.doch ? "doch" : (stark || richtigSerie % 5 === 0) && RUF.stark ? "stark" : "lob";
     fehlerSerie = 0;
     return ruf(art);
   }
@@ -344,7 +357,7 @@
   function zwischenstand() {
     const k = kategorie(lage.nr), fertig = lage.teile[lage.teil];
     lage.abspielen = null;
-    const text = lob();
+    const text = lob(true);
     const weiter = () => { lage.teil++; lage.pos = 0; teilZuruecksetzen(); zeigeTeil(); };
     function zeigeZwischen() {
       lage.weiter = weiter;
@@ -361,7 +374,7 @@
   function fastGeschafft() {
     const k = kategorie(lage.nr);
     lage.ende = true; lage.abspielen = null; lage.weiter = null;
-    const text = lob();
+    const text = lob(true);
     const offen = lage.teile.map((t, i) => [t, i]).filter(([, i]) => !istFertig(i));
     const zeichne = () => zeige(kopf(k), el("section", { class: "geschafft" },
       el("h2", { lang: "en" }, text),
@@ -383,7 +396,7 @@
     if (alle && !stand.erledigt.includes(k.nr)) stand.erledigt.push(k.nr);
     speichern();
     const titel = lage.titel, zurueckZu = lage.zurueckZu;
-    const text = alle ? ruf("geschafft") : lob();
+    const text = alle ? ruf("geschafft") : lob(true);
     lage = null;
     const zeichne = () => zeige(kopf(k), el("section", { class: "geschafft" },
       el("h2", {}, T(`${titel} geschafft!`, `${titel}: done!`)),
@@ -401,7 +414,7 @@
     el("section", { class: "satzkarte" }, zaehlerText && el("p", { class: "zaehler" }, zaehlerText), ...inhalt);
   const rueckmeldung = () => el("div", { class: "rueckmeldung", hidden: true, role: "status" });
   function melde(box, art, text) {
-    if (art === "hilfe") { fehlerSerie++; text = `${ruf("fehler")} ${HILFE()} ${text}`; }
+    if (art === "hilfe") { fehlerSerie++; richtigSerie = 0; text = `${ruf("fehler")} ${HILFE()} ${text}`; }
     box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text;
   }
   // Satz mit Lücke: art "voll" | "luecke" | "buchstabe" (erster Buchstabe jedes Lückenworts)

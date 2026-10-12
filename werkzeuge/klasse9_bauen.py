@@ -10,15 +10,9 @@ INHALTE = os.path.join(BASIS, "inhalte", "klasse9")
 APP = os.path.join(BASIS, "app", "klasse9")
 SCHRIFT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
-# Lob von Mr. Alex (dieselben Audios wie in Klasse 6, inhalte/lob.tsv)
-LOB9 = {
-    "lob": ["lob_amazing", "lob_fantastic", "lob_wonderful", "lob_great", "lob_superstar", "lob_outstanding",
-            "lob_love", "lob_niceone", "lob_spoton"],
-    "fehler": ["fehler_ohno", "fehler_sorry", "spiel_terrible"],
-    "geschafft": ["geschafft_didit", "geschafft_outstanding"],
-    "voll": ["voll_fullmarks"],
-    "doch": ["doch_seeyoucan"],
-}
+# Lob von Mr. Alex (dieselben Audios wie in Klasse 6, inhalte/lob.tsv; Spalte klasse: leer = beide, 6 oder 9)
+LOB9_ARTEN = {"lob", "stark", "fehler", "geschafft", "voll", "doch"}
+LOB9_EXTRA = {"spiel_terrible": "fehler"}
 
 ABSCHNITTE = {"usa": "USA – here we come", "start": "Start", "theme1": "Theme 1", "theme2": "Theme 2", "fol": "Focus on language",
               "story": "Story", "skills": "Skills training"}
@@ -366,15 +360,18 @@ def main():
             for k in range(teile):
                 name = ABSCHNITTE.get(ab, ab) + (f" · Part {k + 1}" if teile > 1 else "")
                 units[unit].append({"name": name, "vokabeln": ids[k * groesse:(k + 1) * groesse]})
-    lob_alle = {z["id"]: z["text"] for z in csv.DictReader(open(os.path.join(BASIS, "inhalte", "lob.tsv"), encoding="utf-8"), delimiter="\t")}
     os.makedirs(os.path.join(APP, "audio", "lob"), exist_ok=True)
     lob = {}
-    for art, ids in LOB9.items():
-        for i in ids:
-            quelle = os.path.join(BASIS, "app", "audio", "lob", i + ".mp3")
-            if os.path.exists(quelle):
-                shutil.copyfile(quelle, os.path.join(APP, "audio", "lob", i + ".mp3"))
-            lob.setdefault(art, []).append({"text": lob_alle[i], "audio": audio(f"audio/lob/{i}.mp3")})
+    for z in csv.DictReader(open(os.path.join(BASIS, "inhalte", "lob.tsv"), encoding="utf-8"), delimiter="\t"):
+        art = LOB9_EXTRA.get(z["id"], z["art"])
+        if z["klasse"] == "6" or art not in LOB9_ARTEN:
+            continue
+        quelle = os.path.join(BASIS, "app", "audio", "lob", z["id"] + ".mp3")
+        if not os.path.exists(quelle):
+            continue
+        shutil.copyfile(quelle, os.path.join(APP, "audio", "lob", z["id"] + ".mp3"))
+        lob.setdefault(art, []).append({"text": z["text"], "audio": audio(f"audio/lob/{z['id']}.mp3"),
+                                        "gruppe": [g for g in z["gruppe"].split(",") if g]})
     for k in KATEGORIEN:  # Satz-IDs prüfen
         for g in k.get("gruppen", []):
             for vid in g.get("vokabeln", []):

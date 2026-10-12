@@ -290,9 +290,13 @@ def main():
                                 "audio": vok[w]["audio"]["en"]} for w in s.pop("pool")]
     # Lob und Rückmeldungen (gesprochen von Mr. Alex), nach Art gruppiert
     lob = {}
+    # Arten: lob (kurz), stark (Serie von 5 / fertiger Teil), fehler, spiel, geschafft, voll, doch; gruppe: Schlüsselwörter gegen Wortwiederholung
     for z in lesen("lob.tsv"):
+        if z["klasse"] == "9":
+            continue
         if os.path.exists(os.path.join(BASIS, "app", "audio", "lob", z["id"] + ".mp3")):
-            lob.setdefault(z["art"], []).append({"text": z["text"], "audio": f"audio/lob/{z['id']}.mp3"})
+            lob.setdefault(z["art"], []).append({"text": z["text"], "audio": f"audio/lob/{z['id']}.mp3",
+                                                 "gruppe": [g for g in z["gruppe"].split(",") if g]})
     STATIONEN.sort(key=lambda x: x["nr"])
     daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")},

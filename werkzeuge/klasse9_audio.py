@@ -42,6 +42,13 @@ def auftraege():
         if not z["stimme"]:
             stimme += 1
         liste.append((f"audio/saetze/{z['id']}.mp3", st, z["englisch"]))
+    # Belohnungen: Fun Facts der Staaten und Landmark-Steckbriefe (abwechselnd), Titel und Serien (Mr. Alex)
+    for i, z in enumerate(k9.tsv("staaten.tsv")):
+        liste.append((f"audio/staaten/{z['id']}.mp3", "mf"[i % 2], f"{z['name']}. {z['fakt']}"))
+    for i, z in enumerate(k9.tsv("landmarks.tsv")):
+        liste.append((f"audio/landmarks/{z['id']}.mp3", "fm"[i % 2], f"{z['name']}. {z['steckbrief']}"))
+    for k, t in k9.SPIEL_TEXTE.items():
+        liste.append((f"audio/spiel/{k}.mp3", "alex", t))
     return liste
 
 

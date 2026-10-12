@@ -134,7 +134,8 @@
   const weiterKnopf = (fn) => knopf(T("Weiter ➜", "Next ➜"), fn || naechstes, "haupt weiter");
   // Ansage: im G-Kurs Englisch + Deutsch, im E-Kurs nur Englisch
   const ansage = (en, de) => el("div", { class: "ansage" }, el("p", { lang: "en" }, en), !E() && de && el("p", { class: "ansage-de", lang: "de" }, de));
-  const tipp = (text, fn) => el("button", { class: "knopf leise tipp" , onclick: fn }, "💡 " + text);
+  // „Noch einfacher“-Hilfe; wer sie benutzt, bekommt für diesen Teil keinen „ohne Hilfe“-Bonus (aber keinen Abzug)
+  const tipp = (text, fn) => el("button", { class: "knopf leise tipp", onclick: (e) => { if (lage) lage.hilfe = true; fn(e); } }, "💡 " + text);
 
   /* ---------- Startseite ---------- */
   function startseite() {
@@ -156,6 +157,7 @@
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
       el("div", { class: "knopfreihe" }, knopf(T("✏️ Frage für meinen Lehrer", "✏️ Question for my teacher"), fragenOeffnen)));
+    app.querySelector(".gruss").append(statusleiste());
   }
 
   function starteKategorie(nr) {
@@ -223,7 +225,7 @@
   let lage = null; // { nr, gruppe (Schlüssel), titel, teile, teil, pos, vok, reihe, vq, ende, abspielen, weiter, zurueckZu }
 
   function neueLage(werte) { lage = Object.assign({ teil: 0, pos: 0 }, werte); return lage; }
-  function teilZuruecksetzen() { lage.reihe = lage.vq = null; }
+  function teilZuruecksetzen() { lage.reihe = lage.vq = null; lage.hilfe = false; }
 
   // Vokabel-Abschnitt: Wörter, Sätze in 3 Stufen, Find the word, Abfrage in beide Richtungen
   function vokSchritte(vok) {
@@ -322,7 +324,9 @@
   function naechstes() {
     const teil = lage.teile[lage.teil];
     if (lage.pos + 1 < laenge(teil)) { lage.pos++; return zeigeTeil(); }
+    const erstesMal = !istFertig(lage.teil);
     teilFertig(lage.teil);
+    belohne(erstesMal, !lage.hilfe);
     if (alleTeileFertig()) return gruppeGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
     fastGeschafft();
@@ -372,7 +376,7 @@
     const k = kategorie(lage.nr);
     stand.gruppen = stand.gruppen || {};
     const liste = (stand.gruppen[k.nr] = stand.gruppen[k.nr] || []);
-    if (!liste.includes(lage.gruppe)) liste.push(lage.gruppe);
+    if (!liste.includes(lage.gruppe)) { liste.push(lage.gruppe); einheitBonus(); }
     const alleGruppen = k.vokabeln ? Object.entries(D.units).flatMap(([u, gs]) => gs.map((g) => `u${u}:${g.name}`))
       : k.gruppen.map((g) => g.name);
     const alle = alleGruppen.every((x) => liste.includes(x));
@@ -1032,6 +1036,243 @@
     fragen();
   }
 
+  /* ---------- Belohnungen (docs/gamification/konzept.md) ----------
+     Punkte nur für fertige Teile (+5 extra ohne 💡-Hilfe). Serien zählen Schultage (Mo–Fr ohne Ferien, Feiertage,
+     freie Brückentage im Saarland): 🔥 3 Schultage am Stück · ⭐ Perfect week → neue Landmark-Karte
+     👑 4 perfekte Wochen hintereinander (Ferienwochen halten an) · 🏖️ Wochenende = Bonus, keine Pflicht.
+     USA-Karte: jeder 4. neu geschaffte Teil schaltet einen Staat frei. Alles nur auf diesem Gerät. */
+  const SP = D.spiel;
+  const PUNKTE = { teil: 10, wiederholung: 5, ohneHilfe: 5, einheit: 50, feuer: 30, wochenende: 20, woche: 100, monat: 200 };
+  const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const heute = () => (window.__heute ? new Date(window.__heute + "T12:00:00") : new Date());
+  const plusTage = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const montag = (d) => plusTage(d, -((d.getDay() + 6) % 7));
+  const istFrei = (t) => SP.frei.some((f) => t >= f.von && t <= f.bis);
+  const istSchultag = (d) => d.getDay() >= 1 && d.getDay() <= 5 && !istFrei(iso(d));
+  const schultageDerWoche = (mo) => [0, 1, 2, 3, 4].map((i) => plusTage(mo, i)).filter(istSchultag);
+  const titelIndex = (p) => SP.titel.reduce((i, t, k) => (p >= t.ab ? k : i), 0);
+  const neueTeile = () => Object.keys(stand.teile || {}).length;
+  const staatenBei = (n) => (n ? Math.min(SP.staaten.length, Math.floor((n - 1) / 4) + 1) : 0);
+  const staatenFrei = () => staatenBei(neueTeile());
+
+  function spielstand() {
+    if (!stand.spiel) { // Erstes Mal: was schon geschafft ist, zählt mit
+      const einheiten = stand.erledigt.length + Object.values(stand.gruppen || {}).reduce((a, l) => a + l.length, 0);
+      stand.spiel = { punkte: neueTeile() * PUNKTE.teil + einheiten * PUNKTE.einheit, tage: {}, wochen: [], feuer: [], wochenende: [], karten: [], abzeichen: [], titel: 0 };
+      stand.spiel.titel = titelIndex(stand.spiel.punkte);
+      speichern();
+    }
+    return stand.spiel;
+  }
+  function serie() {
+    const sp = spielstand();
+    let d = heute(), n = 0;
+    if (!sp.tage[iso(d)]) d = plusTage(d, -1);
+    for (let i = 0; i < 400; i++, d = plusTage(d, -1)) {
+      if (!istSchultag(d)) continue;
+      if (sp.tage[iso(d)]) n++; else break;
+    }
+    return n;
+  }
+  function wochenSerie(mo) {
+    const sp = spielstand();
+    let n = 0;
+    for (let w = mo, i = 0; i < 60; i++, w = plusTage(w, -7)) {
+      if (!schultageDerWoche(w).length) continue;
+      if (sp.wochen.includes(iso(w))) n++; else break;
+    }
+    return n;
+  }
+
+  const ereignisse = [];
+  function belohne(erstesMal, ohneHilfe) {
+    const sp = spielstand(), d = heute(), tag = iso(d);
+    const vorher = staatenBei(neueTeile() - (erstesMal ? 1 : 0));
+    let plus = erstesMal ? PUNKTE.teil : PUNKTE.wiederholung;
+    if (erstesMal && ohneHilfe) { plus += PUNKTE.ohneHilfe; ereignisse.push({ art: "toast", text: T(`💪 Ohne Hilfe +${PUNKTE.ohneHilfe}`, `💪 No hints +${PUNKTE.ohneHilfe}`) }); }
+    const ersterDesTages = !sp.tage[tag];
+    sp.tage[tag] = (sp.tage[tag] || 0) + 1;
+    if (staatenFrei() > vorher) ereignisse.push({ art: "staat", staat: SP.staaten[staatenFrei() - 1] });
+    if (ersterDesTages) {
+      if (!istSchultag(d)) {
+        if (d.getDay() === 0 || d.getDay() === 6) { sp.wochenende.push(tag); plus += PUNKTE.wochenende; ereignisse.push({ art: "toast", text: `🏖️ Weekend bonus +${PUNKTE.wochenende}` }); }
+      } else {
+        const n = serie();
+        if (n >= 3 && n % 3 === 0 && !sp.feuer.includes(tag)) {
+          sp.feuer.push(tag); plus += PUNKTE.feuer;
+          ereignisse.push({ art: "feier", symbol: "🔥", titel: `On fire! ${n} days in a row`,
+            text: T(`${n} Schultage am Stück – +${PUNKTE.feuer} Punkte!`, `${n} school days in a row – +${PUNKTE.feuer} points!`), ton: SP.texte.feuer });
+        }
+        const mo = montag(d);
+        if (schultageDerWoche(mo).every((x) => sp.tage[iso(x)]) && !sp.wochen.includes(iso(mo))) {
+          sp.wochen.push(iso(mo)); plus += PUNKTE.woche;
+          const karte = SP.landmarks.find((l) => !sp.karten.includes(l.id));
+          if (karte) { sp.karten.push(karte.id); ereignisse.push({ art: "karte", karte }); }
+          if (sp.karten.length === SP.landmarks.length && !sp.abzeichen.includes("roadtrip")) {
+            sp.abzeichen.push("roadtrip");
+            ereignisse.push({ art: "feier", symbol: "🇺🇸", titel: "Great American Road Trip complete!",
+              text: T("Du hast alle zehn Landmark-Karten gesammelt!", "You collected all ten landmark cards!"), ton: SP.texte.team });
+          }
+          const ws = wochenSerie(mo);
+          if (ws >= 4 && ws % 4 === 0) {
+            plus += PUNKTE.monat; if (!sp.abzeichen.includes("monat")) sp.abzeichen.push("monat");
+            ereignisse.push({ art: "feier", symbol: "👑", titel: "Perfect month!",
+              text: T(`${ws} perfekte Wochen hintereinander – +${PUNKTE.monat} Punkte und ein goldener Rahmen!`,
+                `${ws} perfect weeks in a row – +${PUNKTE.monat} points and a golden frame!`), ton: SP.texte.monat });
+          }
+        }
+      }
+    }
+    punkteDazu(plus);
+  }
+  function einheitBonus() { punkteDazu(PUNKTE.einheit); }
+  function punkteDazu(plus) {
+    const sp = spielstand();
+    sp.punkte += plus;
+    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐` });
+    const t = titelIndex(sp.punkte);
+    if (t > sp.titel) {
+      sp.titel = t;
+      const ti = SP.titel[t];
+      ereignisse.push({ art: "feier", symbol: t === SP.titel.length - 1 ? "👑" : "🎓", titel: ti.name, text: T(`Neuer Titel: ${ti.name}!`, `New title: ${ti.name}!`), ton: ti });
+    }
+    speichern();
+    setTimeout(zeigeEreignisse, 50);
+  }
+
+  const toastBox = el("div", { class: "toasts", "aria-live": "polite" });
+  document.body.append(toastBox);
+  const feier = el("dialog", { class: "feier", "aria-labelledby": "feier-titel" });
+  document.body.append(feier);
+  function toast(text) {
+    const t = el("div", { class: "toast" }, text);
+    toastBox.append(t);
+    setTimeout(() => t.classList.add("weg"), 2200);
+    setTimeout(() => t.remove(), 2800);
+  }
+  function zeigeEreignisse() {
+    while (ereignisse.length && (ereignisse[0].art === "toast" || ereignisse[0].art === "staat")) {
+      const e = ereignisse.shift();
+      toast(e.art === "staat" ? T(`🗺️ Neuer Staat: ${e.staat.name}`, `🗺️ New state: ${e.staat.name}`) : e.text);
+    }
+    if (!ereignisse.length || feier.open) return;
+    const e = ereignisse.shift();
+    const ton = e.art === "karte" ? e.karte : e.ton;
+    const inhalt = e.art === "karte"
+      ? [el("p", { class: "feier-klein" }, T("⭐ Perfect week! Neue Landmark-Karte:", "⭐ Perfect week! New landmark card:")), landmarkKarte(e.karte, true),
+         el("p", { class: "steckbrief", lang: "en" }, e.karte.steckbrief)]
+      : [el("div", { class: "feier-symbol", "aria-hidden": "true" }, e.symbol), el("h2", { id: "feier-titel", lang: "en" }, e.titel), el("p", {}, e.text)];
+    feier.replaceChildren(konfetti(), ...inhalt,
+      el("div", { class: "knopfreihe" },
+        ton && ton.audio && knopf(T("🔊 Anhören", "🔊 Listen"), () => spiele([ton.audio])),
+        knopf(T("Weiter ➜", "Next ➜"), () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
+    feier.showModal();
+    if (ton && ton.audio) setTimeout(() => { if (feier.open) spiele([ton.audio]); }, 900);
+  }
+  function konfetti() {
+    const farben = ["#c8283a", "#1d3f8f", "#ffffff", "#ffd23f", "#8fb0ff"];
+    return el("div", { class: "konfetti", "aria-hidden": "true" }, Array.from({ length: 36 }, (_, i) =>
+      el("span", { style: `left:${(i * 37) % 100}%;background:${farben[i % 5]};animation-delay:${(i % 9) * 0.12}s` })));
+  }
+
+  function statusleiste() {
+    const sp = spielstand(), t = SP.titel[sp.titel];
+    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") },
+      el("span", { class: "status-titel", lang: "en" }, (sp.titel === SP.titel.length - 1 ? "👑 " : "🎓 ") + t.name),
+      el("span", {}, `⭐ ${sp.punkte} ${T("Punkte", "points")}`),
+      el("span", { title: T("Schultage am Stück", "School days in a row") }, `🔥 ${serie()}`),
+      knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung, "haupt"));
+  }
+
+  function landmarkKarte(l, gross) {
+    return el("figure", { class: "landmarkkarte" + (gross ? " gross" : "") },
+      el("div", { class: "holo" }, el("img", { src: l.bild, alt: l.name, loading: "lazy" })),
+      el("figcaption", { lang: "en" }, el("strong", {}, l.name)));
+  }
+
+  function sammlung() {
+    lage = null; ansicht = sammlung;
+    const sp = spielstand(), t = sp.titel, naechster = SP.titel[t + 1];
+    const mo = montag(heute());
+    const TAGE = E() ? ["Mon", "Tue", "Wed", "Thu", "Fri"] : ["Mo", "Di", "Mi", "Do", "Fr"];
+    const woche = TAGE.map((name, i) => {
+      const d = plusTage(mo, i), frei = !istSchultag(d), ok = !!sp.tage[iso(d)];
+      return el("li", { class: frei ? "frei" : ok ? "ok" : "" }, el("span", {}, name), el("b", {}, frei ? "–" : ok ? "🔥" : "○"));
+    });
+    const abz = [
+      ["🔥", "On fire", sp.feuer.length > 0], ["⭐", "Perfect week", sp.wochen.length > 0], ["🏅", "5 × perfect", sp.wochen.length >= 5],
+      ["👑", "Perfect month", sp.abzeichen.includes("monat")], ["🏖️", "Weekend hero", sp.wochenende.length > 0],
+      ["🗺️", "All 50 states", staatenFrei() === SP.staaten.length], ["🇺🇸", "Road trip complete", sp.abzeichen.includes("roadtrip")],
+      ["🏆", "All categories", D.kategorien.filter((k) => !k.bald).every((k) => stand.erledigt.includes(k.nr))],
+    ];
+    const fakt = el("div", { class: "fakt", hidden: true, "aria-live": "polite" });
+    const frei = staatenFrei();
+    const karte = usaKarte(frei, (s) => {
+      fakt.hidden = false;
+      fakt.replaceChildren(el("h3", { lang: "en" }, s.name), el("p", { lang: "en" }, s.fakt),
+        s.audio && knopf(T("🔊 Anhören", "🔊 Listen"), () => spiele([s.audio])));
+      if (s.audio) spiele([s.audio]);
+    });
+    const karten = el("div", { class: "heldenraster" }, SP.landmarks.map((l) => sp.karten.includes(l.id)
+      ? el("button", { class: "held-knopf", onclick: () => karteZeigen(l) }, landmarkKarte(l))
+      : el("div", { class: "held-zu", "aria-label": T("Noch nicht gesammelt", "Not collected yet") }, el("span", {}, "?"), el("small", {}, "Perfect week"))));
+    zeige(
+      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, T("🏆 Meine Sammlung", "🏆 My collection"))),
+      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") },
+        el("p", { class: "klein" }, T("Dein Titel", "Your title")),
+        el("h2", { lang: "en" }, (t === SP.titel.length - 1 ? "👑 " : "🎓 ") + SP.titel[t].name),
+        el("p", {}, `⭐ ${sp.punkte} ${T("Punkte", "points")}`),
+        naechster && el("div", { class: "fortschritt" }, el("span", { style: `width:${Math.round(100 * (sp.punkte - SP.titel[t].ab) / (naechster.ab - SP.titel[t].ab))}%` })),
+        naechster && el("p", { class: "klein" }, T(`Noch ${naechster.ab - sp.punkte} Punkte bis „${naechster.name}“`, `${naechster.ab - sp.punkte} more points to “${naechster.name}”`))),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, T("Diese Woche", "This week")),
+        el("ol", { class: "wochenleiste" }, woche),
+        el("p", { class: "klein" }, T(`🔥 ${serie()} Schultage am Stück · ⭐ ${sp.wochen.length} perfekte Wochen. Übst du an jedem Schultag, bekommst du eine neue Landmark-Karte! Ferien und Feiertage zählen nicht – deine Serie bleibt.`,
+          `🔥 ${serie()} school days in a row · ⭐ ${sp.wochen.length} perfect weeks. Practise every school day and you get a new landmark card! Holidays don't count – your streak stays.`))),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, `🏞️ Landmarks (${sp.karten.length} / ${SP.landmarks.length})`), karten),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, `🗺️ USA (${frei} / ${SP.staaten.length} ${T("Staaten", "states")})`),
+        el("p", { class: "klein" }, T("Alle 4 geschafften Teile schaltest du einen neuen Staat frei. Tipp auf einen Staat!", "Every 4 parts you finish unlock a new state. Tap a state!")),
+        karte, fakt),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, T("Abzeichen", "Badges")),
+        el("ul", { class: "abzeichen" }, abz.map(([sym, name, ok]) => el("li", { class: ok ? "ok" : "" },
+          el("span", { "aria-hidden": "true" }, sym), el("span", { lang: "en" }, name), el("span", { class: "unsichtbar" }, ok ? "✓" : "–"))))),
+      el("p", { class: "klein bildnachweis" }, T("Fotos: Carol M. Highsmith, Library of Congress (frei nutzbar). Karte: US Census Bureau / us-atlas.",
+        "Photos: Carol M. Highsmith, Library of Congress (no known restrictions). Map: US Census Bureau / us-atlas.")));
+  }
+
+  function karteZeigen(l) {
+    feier.replaceChildren(landmarkKarte(l, true), el("p", { class: "steckbrief", lang: "en" }, l.steckbrief),
+      el("div", { class: "knopfreihe" }, l.audio && knopf(T("🔊 Anhören", "🔊 Listen"), () => spiele([l.audio])),
+        knopf(T("Schließen", "Close"), () => { feier.close(); stopp(); }, "haupt")));
+    feier.showModal();
+    if (l.audio) spiele([l.audio]);
+  }
+
+  function usaKarte(frei, waehle) {
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 975 610"); svg.setAttribute("class", "usa"); svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", T("Karte der USA", "Map of the USA"));
+    const offen = new Map(SP.staaten.slice(0, frei).map((s) => [s.id, s]));
+    Object.entries(SP.karte).forEach(([id, d]) => {
+      const p = document.createElementNS(NS, "path");
+      p.setAttribute("d", d);
+      const s = offen.get(id);
+      p.setAttribute("class", "u-staat" + (s ? " offen" : ""));
+      if (s) {
+        p.setAttribute("tabindex", "0"); p.setAttribute("role", "button"); p.setAttribute("aria-label", s.name);
+        const t = document.createElementNS(NS, "title"); t.textContent = s.name; p.append(t);
+        p.addEventListener("click", () => waehle(s));
+        p.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); waehle(s); } });
+      }
+      svg.append(p);
+    });
+    return el("div", { class: "usa-rahmen" }, svg);
+  }
+
   /* ---------- Fragen für Mr. Alex ---------- */
   const dlg = document.getElementById("fragen");
   const feld = document.getElementById("frage-text");
@@ -1058,7 +1299,7 @@
 
   /* ---------- Tasten: Leertaste = Abspielen, Pfeile = Weiter / Zurück ---------- */
   document.addEventListener("keydown", (e) => {
-    if (dlg.open || e.target.closest("textarea, input")) return;
+    if (dlg.open || feier.open || e.target.closest("textarea, input")) return;
     if (e.code === "Space" && lage && lage.abspielen) { e.preventDefault(); lage.abspielen(); }
     else if (e.code === "ArrowRight" && lage && lage.weiter) { e.preventDefault(); lage.weiter(); }
     else if (e.code === "ArrowLeft" && lage && !lage.ende) {

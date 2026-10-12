@@ -1,9 +1,10 @@
 """Baut die App Klasse 9 (America) in app/klasse9/: daten.js, basis.css, Lob-Audios, Icons, Manifest, sw.js.
 Inhalte: inhalte/klasse9/*.tsv. Aufruf: python3 werkzeuge/klasse9_bauen.py
 """
-import csv, hashlib, json, os, shutil
+import csv, hashlib, json, os, shutil, sys
 from PIL import Image, ImageDraw, ImageFont
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INHALTE = os.path.join(BASIS, "inhalte", "klasse9")
 APP = os.path.join(BASIS, "app", "klasse9")
@@ -364,7 +365,8 @@ def main():
             for s in g.get("schritte", []):
                 for sid in s.get("saetze", []) + s.get("text", []) + s.get("paare", []) + [x[0] for x in s.get("zeilen", [])] + [a["satz"] for a in s.get("aufgaben", [])]:
                     assert sid in saetze, sid
-    daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren}
+    daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren,
+             "spiel": spieldaten()}
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – bitte nicht von Hand ändern.\n")
         f.write("window.DATEN = " + json.dumps(daten, ensure_ascii=False, indent=1) + ";\n")
@@ -372,6 +374,36 @@ def main():
     webapp()
     print("Klasse 9:", len(vokabeln), "Vokabeln,", len(saetze), "Sätze,",
           sum(1 for s in saetze.values() if s["audio"]), "mit Audio")
+
+
+# Belohnungen (docs/gamification/konzept.md): High-School-Titel, USA-Karte (50 Staaten), Landmark-Karten
+TITEL = [(0, "Freshman"), (300, "Sophomore"), (900, "Junior"), (1800, "Senior"), (3000, "Graduate"), (4500, "All-American Legend")]
+SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
+    "titel_sophomore": "Congratulations! You are a Sophomore now!",
+    "titel_junior": "Congratulations! You are a Junior now!",
+    "titel_senior": "Congratulations! You are a Senior now!",
+    "titel_graduate": "Congratulations! You graduated! Amazing work!",
+    "titel_all_american_legend": "Wow! You are an All-American Legend! I'm so proud of you!",
+    "feuer": "You're on fire! Three days in a row!",
+    "woche": "Perfect week! You practised every school day. Here is your new landmark card!",
+    "monat": "Four perfect weeks in a row! You are a true champion!",
+    "team": "You collected all ten landmark cards. Your Great American Road Trip is complete!",
+}
+
+
+def spieldaten():
+    import frei_saarland, usa_karte
+    a = lambda pfad: audio(pfad)
+    quellen = {q["datei"]: q for q in json.load(open(os.path.join(BASIS, "docs", "gamification", "landmarks", "quellen.json"), encoding="utf-8"))}
+    return {
+        "titel": [{"ab": ab, "name": n, "audio": a(f"audio/spiel/titel_{n.lower().replace(' ', '_').replace('-', '_')}.mp3")} for ab, n in TITEL],
+        "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
+        "staaten": [dict(z, audio=a(f"audio/staaten/{z['id']}.mp3")) for z in tsv("staaten.tsv")],
+        "landmarks": [dict(z, bild=f"bilder/landmarks/{z['bild']}.jpg", audio=a(f"audio/landmarks/{z['id']}.mp3"),
+                           quelle=quellen[z["bild"] + ".jpg"]["link"]) for z in tsv("landmarks.tsv")],
+        "karte": usa_karte.pfade(os.path.join(INHALTE, "karte", "states-albers-10m.json")),
+        "frei": frei_saarland.als_daten(),
+    }
 
 
 ROT, NAVY, WEISS = (200, 40, 50), (24, 44, 92), (255, 255, 255)

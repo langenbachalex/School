@@ -1,6 +1,6 @@
 # Gamification – Konzept zum Absegnen (Stufe A)
 
-Stand: 12.10.2026. **Abgesegnet.** Klasse 6 gebaut (Bilder: Gemini, Stil D; Audio: Mr. Alex). Klasse 9 folgt.
+Stand: 12.10.2026. **Abgesegnet.** Klasse 6 gebaut (Bilder: Gemini, Stil D; Audio: Mr. Alex). Klasse 9 gebaut (Landmark-Fotos: Carol M. Highsmith, Library of Congress; USA-Karte: US Census Bureau / us-atlas; Fun Facts und Steckbriefe: Jeremy B./Jessica; Titel und Serien: Mr. Alex).
 Grundsatz: kein gegenseitiger Wettbewerb, keine Bestenliste. Jeder sammelt für sich. Alles bleibt nur auf dem Gerät (kein Konto, keine Namen).
 
 ## 1. Für beide Apps

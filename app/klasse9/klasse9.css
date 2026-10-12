@@ -125,3 +125,21 @@
 .baustein { font: 500 .95rem var(--body); padding: 6px 10px; border-radius: 10px; border: 2px dashed var(--blau); background: var(--karte); color: var(--text); cursor: pointer; text-align: left; }
 .schreibfeld { width: 100%; font: 1.1rem/1.5 var(--body); padding: 12px; border-radius: 12px; border: 2px solid var(--linie); background: var(--bg); color: var(--text); min-height: 14rem; }
 .muster-satz.eigene-zeile { display: block; }
+
+/* Belohnungen Klasse 9: Landmark-Karten mit Holo-Rahmen, USA-Karte */
+.landmarkkarte { margin: 0; display: grid; gap: 4px; }
+.landmarkkarte .holo { padding: 6px; border-radius: 14px; background: linear-gradient(135deg, #e9edf5, #9aa3b5 25%, #f7f9fc 45%, #b48cff 60%, #7ef9ff 75%, #ffd36e 90%, #c9d0dc);
+  box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+.landmarkkarte img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 9px; display: block; border: 2px solid #3a4152; }
+.landmarkkarte figcaption { font-size: .9rem; }
+.landmarkkarte.gross { max-width: 300px; margin-inline: auto; }
+.landmarkkarte.gross figcaption { text-align: center; font-size: 1.05rem; }
+.usa-rahmen { width: 100%; border-radius: 12px; background: #dfe8f5; padding: 6px; }
+.usa { width: 100%; height: auto; display: block; }
+.u-staat { fill: #c9ced8; stroke: #fff; stroke-width: 1; }
+.u-staat.offen { fill: var(--rot); cursor: pointer; }
+.u-staat.offen:nth-child(3n) { fill: var(--blau); }
+.u-staat.offen:nth-child(3n+1) { fill: #e0606e; }
+.u-staat.offen:hover, .u-staat.offen:focus { fill: var(--gelb); outline: none; stroke: #222; stroke-width: 2; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .usa-rahmen { background: #1b2540; } :root:not([data-theme="light"]) .u-staat { fill: #3a4560; stroke: #1b2540; } }
+.bildnachweis { text-align: center; }

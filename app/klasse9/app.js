@@ -947,7 +947,9 @@
   function zeigeBilder(teil) {
     const k = kategorie(lage.nr);
     const text = teil.text.map((id) => ({ id, s: D.saetze[id] }));
-    const bilder = teil.bilder.filter((b) => !b.nur || b.nur === stand.niveau);
+    // Wie in der Klassenarbeit: Bilder gemischt, nicht in der Reihenfolge des Textes (bleibt beim G/E-Wechsel gleich)
+    if (!lage.reihe) lage.reihe = mischen(teil.bilder);
+    const bilder = lage.reihe.filter((b) => !b.nur || b.nur === stand.niveau);
     const gewaehlt = new Set();
     let geloest = false, mitText = false;
     const saetze = text.map(({ id, s }) => el("span", { class: "lesesatz", "data-id": id }, s.en + " "));

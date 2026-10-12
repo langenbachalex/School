@@ -896,7 +896,9 @@
         gewaehlt.has(i) ? gewaehlt.delete(i) : gewaehlt.add(i);
         e.currentTarget.setAttribute("aria-pressed", String(gewaehlt.has(i)));
       } },
-      el("span", { class: "bild-sym", "aria-hidden": "true" }, b.symbol),
+      el("span", { class: "bild-nr", "aria-hidden": "true" }, String(i + 1)),
+      b.bild ? el("img", { class: "bild-foto", src: b.bild, alt: "" })
+        : el("span", { class: "bild-sym", "aria-hidden": "true" }, b.symbol),
       el("span", { class: "bild-text", lang: E() ? "en" : "de", hidden: true }, tx(b)),
       el("span", { class: "bild-haken", "aria-hidden": "true" }, "✓")));
     const vorlesen = () => spiele(text.map(({ s }) => tonSatz(s)));

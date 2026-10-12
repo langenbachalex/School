@@ -5918,6 +5918,7 @@ window.DATEN = {
        "bilder": [
         {
          "symbol": "🧭",
+         "bild": "bilder/lesen/01-lost.jpg",
          "G": "sich verlaufen",
          "E": "get lost",
          "beleg": "rd1_02"
@@ -5929,6 +5930,7 @@ window.DATEN = {
         },
         {
          "symbol": "📣",
+         "bild": "bilder/lesen/03-cheerleader.jpg",
          "G": "eine Cheerleaderin treffen",
          "E": "meet a cheerleader",
          "beleg": "rd1_04"
@@ -5940,6 +5942,7 @@ window.DATEN = {
         },
         {
          "symbol": "🍕",
+         "bild": "bilder/lesen/05-pizza.jpg",
          "G": "Pizza essen",
          "E": "eat pizza",
          "beleg": "rd1_05"
@@ -5951,6 +5954,7 @@ window.DATEN = {
         },
         {
          "symbol": "🚌",
+         "bild": "bilder/lesen/07-bus.jpg",
          "G": "mit dem Bus fahren",
          "E": "take the bus",
          "beleg": "rd1_07",

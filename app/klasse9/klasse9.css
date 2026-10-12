@@ -149,3 +149,15 @@
 .faktenblatt dt { font-weight: 700; color: var(--blau); }
 .faktenblatt dd { margin: 0; }
 @media (max-width: 640px) { .faktenblatt dl { grid-template-columns: 1fr; } .faktenblatt dd { margin-bottom: 6px; } }
+
+/* Lesen: Bilder im GLN-Stil (Strichzeichnungen), nummeriert */
+.bilder { grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); }
+.bild-foto { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; background: #fff; display: block; }
+.bild-kachel:has(.bild-foto) { padding: 8px; }
+.bild-kachel:has(.bild-sym) { align-content: center; }
+.bild-nr {
+  position: absolute; top: 6px; left: 6px; z-index: 1; min-width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 700; background: var(--karte); color: var(--text); border: 2px solid var(--linie);
+}
+.bild-kachel.soll.falsch::after { z-index: 2; left: 38px; }
+@media (max-width: 640px) { .bilder { grid-template-columns: repeat(2, 1fr); } }

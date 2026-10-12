@@ -1173,6 +1173,38 @@
     setTimeout(() => t.classList.add("weg"), 2200);
     setTimeout(() => t.remove(), 2800);
   }
+  // Klang zum Stempel: „Tock“ (Aufschlag) + „Bling“ (zwei Glockentöne), im Browser erzeugt, leiser als die Stimme
+  let klangCtx = null;
+  const KLANG_LAUT = 0.5;
+  function stempelKlang(verzoegerung) {
+    try {
+      if (!klangCtx) klangCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (klangCtx.state === "suspended") klangCtx.resume();
+    } catch { return; }
+    const c = klangCtx, t = c.currentTime + verzoegerung;
+    const glocke = (start, f, dauer, vol) => {
+      const m = c.createGain();
+      m.gain.setValueAtTime(0.0001, start);
+      m.gain.exponentialRampToValueAtTime(vol * KLANG_LAUT, start + 0.006);
+      m.gain.exponentialRampToValueAtTime(0.0001, start + dauer);
+      m.connect(c.destination);
+      [[1, 1], [2.76, 0.22], [5.4, 0.08]].forEach(([mal, v]) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.frequency.value = f * mal; g.gain.value = v;
+        o.connect(g).connect(m); o.start(start); o.stop(start + dauer + 0.05);
+      });
+    };
+    const o = c.createOscillator(), g = c.createGain();
+    o.frequency.setValueAtTime(190, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.09);
+    g.gain.setValueAtTime(0.9 * KLANG_LAUT, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+    o.connect(g).connect(c.destination); o.start(t); o.stop(t + 0.14);
+    const len = Math.ceil(c.sampleRate * 0.05), buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    const q = c.createBufferSource(), f = c.createBiquadFilter(), gq = c.createGain();
+    q.buffer = buf; f.type = "lowpass"; f.frequency.value = 900; gq.gain.value = 0.45 * KLANG_LAUT;
+    q.connect(f).connect(gq).connect(c.destination); q.start(t);
+    glocke(t + 0.11, 1318.5, 0.7, 0.32); glocke(t + 0.2, 1760, 0.9, 0.3);
+  }
   // Reisestempel beim Freischalten eines neuen Ortes in London: kurz (2 s), antippen schließt, hält die Übung nicht auf
   function stempel(bild, name, unter) {
     const farben = ["#e2384d", "#1f5fd1", "#f2b705"];
@@ -1182,6 +1214,7 @@
         el("div", { class: "sterne", "aria-hidden": "true" }, Array.from({ length: 10 }, (_, i) =>
           el("span", { style: `--w:${i * 36}deg;--f:${farben[i % 3]}` }, "★")))));
     document.body.append(box);
+    stempelKlang(0.72); // wenn der Stempel aufschlägt (Animation: 0,4 s Pause + 0,35 s)
     setTimeout(() => box.classList.add("weg"), 2000);
     setTimeout(() => box.remove(), 2500);
     return box;

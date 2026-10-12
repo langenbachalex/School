@@ -288,46 +288,60 @@ window.DATEN = {
    "audio": "audio/saetze/la_14.mp3"
   },
   "rd1_01": {
-   "en": "My first day at Lincoln High was crazy.",
-   "de": "Mein erster Tag an der Lincoln High war verrückt.",
+   "en": "Everybody told me that high school would be fun, but my first day at Lincoln High was a bit intimidating.",
+   "de": "Alle hatten mir gesagt, dass die High School Spaß machen würde, aber mein erster Tag an der Lincoln High war ein bisschen einschüchternd.",
    "luecke": null,
    "stimme": "m",
    "audio": "audio/saetze/rd1_01.mp3"
   },
   "rd1_02": {
-   "en": "The school is huge, and on my way to math class I got lost in the hallways.",
-   "de": "Die Schule ist riesig, und auf dem Weg zum Matheunterricht habe ich mich in den Gängen verlaufen.",
+   "en": "The school has more than 2,000 students, and on my way to math class I got lost in the endless hallways.",
+   "de": "Die Schule hat mehr als 2.000 Schüler, und auf dem Weg zum Matheunterricht habe ich mich in den endlosen Gängen verlaufen.",
    "luecke": null,
    "stimme": "f",
    "audio": "audio/saetze/rd1_02.mp3"
   },
   "rd1_03": {
-   "en": "A girl with a big smile helped me. She's a cheerleader, and now she's my friend.",
-   "de": "Ein Mädchen mit einem breiten Lächeln hat mir geholfen. Sie ist Cheerleaderin, und jetzt ist sie meine Freundin.",
+   "en": "There is an elevator, but only students with a disability can use it, so I ran up the stairs.",
+   "de": "Es gibt einen Aufzug, aber nur Schüler mit Behinderung dürfen ihn benutzen, also bin ich die Treppe hochgerannt.",
    "luecke": null,
    "stimme": "m",
    "audio": "audio/saetze/rd1_03.mp3"
   },
   "rd1_04": {
-   "en": "At lunch, we ate pizza in the cafeteria.",
-   "de": "Mittags haben wir in der Cafeteria Pizza gegessen.",
+   "en": "Luckily, a girl in a cheerleading jacket noticed me and showed me the way. Her name is Kayla, and we've been friends ever since.",
+   "de": "Zum Glück hat mich ein Mädchen in einer Cheerleader-Jacke bemerkt und mir den Weg gezeigt. Sie heißt Kayla, und seitdem sind wir befreundet.",
    "luecke": null,
    "stimme": "f",
    "audio": "audio/saetze/rd1_04.mp3"
   },
   "rd1_05": {
-   "en": "After school, I took the bus home.",
-   "de": "Nach der Schule bin ich mit dem Bus nach Hause gefahren.",
+   "en": "At lunch, I was worried about sitting alone, but Kayla invited me to her table, and we shared a huge pizza in the cafeteria.",
+   "de": "Mittags hatte ich Angst, allein zu sitzen, aber Kayla hat mich an ihren Tisch eingeladen, und wir haben uns in der Cafeteria eine riesige Pizza geteilt.",
    "luecke": null,
    "stimme": "m",
    "audio": "audio/saetze/rd1_05.mp3"
   },
   "rd1_06": {
-   "en": "I was tired, but happy.",
-   "de": "Ich war müde, aber glücklich.",
+   "en": "I didn't have time to find my locker, so I carried all my books around the whole day.",
+   "de": "Ich hatte keine Zeit, meinen Spind zu suchen, also habe ich den ganzen Tag alle meine Bücher herumgetragen.",
    "luecke": null,
    "stimme": "f",
    "audio": "audio/saetze/rd1_06.mp3"
+  },
+  "rd1_07": {
+   "en": "After school, I was too tired to wait for my mom, so I took the bus home.",
+   "de": "Nach der Schule war ich zu müde, um auf meine Mutter zu warten, also bin ich mit dem Bus nach Hause gefahren.",
+   "luecke": null,
+   "stimme": "m",
+   "audio": "audio/saetze/rd1_07.mp3"
+  },
+  "rd1_08": {
+   "en": "I'm looking forward to tomorrow – but this time I'll bring a map!",
+   "de": "Ich freue mich auf morgen – aber diesmal bringe ich eine Karte mit!",
+   "luecke": null,
+   "stimme": "f",
+   "audio": "audio/saetze/rd1_08.mp3"
   },
   "u2_001_s": {
    "en": "The lion is sleeping in the shade.",
@@ -2463,50 +2477,50 @@ window.DATEN = {
    "audio": "audio/saetze/hm_07.mp3"
   },
   "hb_01": {
-   "en": "I was so excited before the trip.",
-   "de": "Vor der Reise war ich so aufgeregt.",
+   "en": "I was so excited the night before our trip that I couldn't sleep.",
+   "de": "Ich war in der Nacht vor unserer Reise so aufgeregt, dass ich nicht schlafen konnte.",
    "luecke": "excited",
    "stimme": "f",
    "audio": "audio/saetze/hb_01.mp3"
   },
   "hb_02": {
-   "en": "I felt relaxed at the beach.",
-   "de": "Am Strand war ich entspannt.",
+   "en": "After a stressful week, I felt really relaxed at the beach.",
+   "de": "Nach einer stressigen Woche war ich am Strand richtig entspannt.",
    "luecke": "relaxed",
    "stimme": "m",
    "audio": "audio/saetze/hb_02.mp3"
   },
   "hb_03": {
-   "en": "The view from the top was amazing.",
-   "de": "Die Aussicht von oben war unglaublich schön.",
+   "en": "The view from the top of the Empire State Building was absolutely amazing.",
+   "de": "Die Aussicht von der Spitze des Empire State Building war absolut atemberaubend.",
    "luecke": "amazing",
    "stimme": "f",
    "audio": "audio/saetze/hb_03.mp3"
   },
   "hb_04": {
-   "en": "The burger was really delicious.",
-   "de": "Der Burger war richtig lecker.",
+   "en": "The burgers at the diner were so delicious that we ordered a second one.",
+   "de": "Die Burger im Diner waren so lecker, dass wir noch einen zweiten bestellt haben.",
    "luecke": "delicious",
    "stimme": "m",
    "audio": "audio/saetze/hb_04.mp3"
   },
   "hb_05": {
-   "en": "The haunted house was a bit scary.",
-   "de": "Das Geisterhaus war ein bisschen gruselig.",
+   "en": "The haunted house was scary, but I didn't want to look like a coward.",
+   "de": "Das Geisterhaus war gruselig, aber ich wollte nicht wie ein Feigling aussehen.",
    "luecke": "scary",
    "stimme": "f",
    "audio": "audio/saetze/hb_05.mp3"
   },
   "hb_06": {
-   "en": "The skyscrapers are huge, and our hotel room was tiny.",
-   "de": "Die Wolkenkratzer sind riesig, und unser Hotelzimmer war winzig.",
+   "en": "The skyscrapers were huge, but our hotel room was tiny.",
+   "de": "Die Wolkenkratzer waren riesig, aber unser Hotelzimmer war winzig.",
    "luecke": "huge",
    "stimme": "m",
    "audio": "audio/saetze/hb_06.mp3"
   },
   "hb_07": {
-   "en": "The show was unbelievable!",
-   "de": "Die Show war unglaublich!",
+   "en": "The light show in Times Square was unbelievable – I took about 200 photos!",
+   "de": "Die Lichtshow am Times Square war unglaublich – ich habe ungefähr 200 Fotos gemacht!",
    "luecke": "unbelievable",
    "stimme": "f",
    "audio": "audio/saetze/hb_07.mp3"
@@ -5896,7 +5910,9 @@ window.DATEN = {
         "rd1_03",
         "rd1_04",
         "rd1_05",
-        "rd1_06"
+        "rd1_06",
+        "rd1_07",
+        "rd1_08"
        ],
        "instruction": "Look at the pictures and tick the events in the text. There are more pictures than you need.",
        "bilder": [
@@ -5915,7 +5931,7 @@ window.DATEN = {
          "symbol": "📣",
          "G": "eine Cheerleaderin treffen",
          "E": "meet a cheerleader",
-         "beleg": "rd1_03"
+         "beleg": "rd1_04"
         },
         {
          "symbol": "📚",
@@ -5926,7 +5942,7 @@ window.DATEN = {
          "symbol": "🍕",
          "G": "Pizza essen",
          "E": "eat pizza",
-         "beleg": "rd1_04"
+         "beleg": "rd1_05"
         },
         {
          "symbol": "🎵",
@@ -5937,7 +5953,7 @@ window.DATEN = {
          "symbol": "🚌",
          "G": "mit dem Bus fahren",
          "E": "take the bus",
-         "beleg": "rd1_05",
+         "beleg": "rd1_07",
          "nur": "E"
         },
         {

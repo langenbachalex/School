@@ -136,12 +136,22 @@
 .landmarkkarte.gross figcaption { text-align: center; font-size: 1.05rem; }
 .usa-rahmen { width: 100%; border-radius: 12px; background: #dfe8f5; padding: 6px; }
 .usa { width: 100%; height: auto; display: block; }
-.u-staat { fill: #c9ced8; stroke: #fff; stroke-width: 1; }
-.u-staat.offen { fill: var(--rot); cursor: pointer; }
-.u-staat.offen:nth-child(3n) { fill: var(--blau); }
-.u-staat.offen:nth-child(3n+1) { fill: #e0606e; }
-.u-staat.offen:hover, .u-staat.offen:focus { fill: var(--gelb); outline: none; stroke: #222; stroke-width: 2; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .usa-rahmen { background: #1b2540; } :root:not([data-theme="light"]) .u-staat { fill: #3a4560; stroke: #1b2540; } }
+/* Staaten: gesperrt blass, freigeschaltet kräftig rot/blau mit dunklem Rand. Eigene Farbvariablen, damit der Dunkelmodus nichts überschreibt. */
+.usa-rahmen { --zu: #d3d8e1; --zu-rand: #ffffff; --auf1: #c8283a; --auf2: #1d3f8f; --auf-rand: #10162a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .usa-rahmen { background: #1b2540; --zu: #3a4560; --zu-rand: #1b2540; --auf1: #ff5c6e; --auf2: #7fa6ff; --auf-rand: #ffffff; } }
+:root[data-theme="dark"] .usa-rahmen { background: #1b2540; --zu: #3a4560; --zu-rand: #1b2540; --auf1: #ff5c6e; --auf2: #7fa6ff; --auf-rand: #ffffff; }
+.usa .u-staat { fill: var(--zu); stroke: var(--zu-rand); stroke-width: 1; }
+.usa .u-staat.offen { fill: var(--auf1); stroke: var(--auf-rand); stroke-width: 1.5; cursor: pointer; }
+.usa .u-staat.offen.b { fill: var(--auf2); }
+.usa .u-staat.neu { animation: neu-staat 1.2s ease-in-out 3; }
+@keyframes neu-staat { 50% { fill: var(--gelb); } }
+@media (prefers-reduced-motion: reduce) { .usa .u-staat.neu { animation: none; } }
+.usa .u-staat.offen:hover, .usa .u-staat.offen:focus { fill: var(--gelb); outline: none; stroke-width: 2.5; }
+.staaten-zahl { font-weight: 700; margin: 6px 0 0; }
+.staaten-liste { display: flex; flex-wrap: wrap; gap: 6px; }
+.staat-chip { font: 600 .95rem var(--body); min-height: 40px; padding: 0 12px; border-radius: 999px; cursor: pointer;
+  border: 2px solid var(--rot); background: var(--karte); color: var(--text); }
+.staat-chip.b { border-color: var(--blau); }
 .bildnachweis { text-align: center; }
 .faktenblatt { border: 2px dashed var(--blau); border-radius: 14px; padding: 12px 14px; background: var(--bg); }
 .faktenblatt h3 { margin: 0 0 6px; font-size: 1.05rem; }
@@ -161,3 +171,6 @@
 }
 .bild-kachel.soll.falsch::after { z-index: 2; left: 38px; }
 @media (max-width: 640px) { .bilder { grid-template-columns: repeat(2, 1fr); } }
+
+/* Hilfe „erster Buchstabe“: Buchstaben in der Lücke sichtbar (sonst ist .luecke durchsichtig) */
+.luecke.mit-buchstaben { color: var(--blau); letter-spacing: .08em; font-weight: 700; }

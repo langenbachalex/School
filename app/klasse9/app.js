@@ -410,7 +410,7 @@
     const i = w ? s.en.indexOf(w) : -1;
     if (i < 0) return [s.en];
     const mitte = art === "voll" ? el("strong", { class: "ziel" }, w)
-      : el("span", { class: "luecke", "aria-label": T("Lücke", "gap") },
+      : el("span", { class: "luecke" + (art === "buchstabe" ? " mit-buchstaben" : ""), "aria-label": T("Lücke", "gap") },
         art === "buchstabe" ? w.replace(/\S+/g, (x) => x[0] + x.slice(1).replace(/./g, "_")) : w.replace(/\S/g, "_"));
     return [s.en.slice(0, i), mitte, s.en.slice(i + w.length)];
   }
@@ -1261,7 +1261,8 @@
       const p = document.createElementNS(NS, "path");
       p.setAttribute("d", d);
       const s = offen.get(id);
-      p.setAttribute("class", "u-staat" + (s ? " offen" : ""));
+      const nr = s ? SP.staaten.indexOf(s) : -1;
+      p.setAttribute("class", "u-staat" + (s ? " offen" + (nr % 2 ? " b" : "") + (nr === frei - 1 ? " neu" : "") : ""));
       if (s) {
         p.setAttribute("tabindex", "0"); p.setAttribute("role", "button"); p.setAttribute("aria-label", s.name);
         const t = document.createElementNS(NS, "title"); t.textContent = s.name; p.append(t);
@@ -1270,7 +1271,11 @@
       }
       svg.append(p);
     });
-    return el("div", { class: "usa-rahmen" }, svg);
+    const liste = SP.staaten.slice(0, frei).map((s, i) => el("button", { class: "staat-chip" + (i % 2 ? " b" : ""), lang: "en",
+      onclick: () => waehle(s) }, s.name));
+    return el("div", { class: "usa-block" }, el("div", { class: "usa-rahmen" }, svg),
+      el("p", { class: "staaten-zahl" }, T(`${frei} von ${SP.staaten.length} Staaten freigeschaltet`, `${frei} of ${SP.staaten.length} states unlocked`)),
+      el("div", { class: "staaten-liste" }, liste));
   }
 
   /* ---------- Fragen für Mr. Alex ---------- */

@@ -283,3 +283,24 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
 @keyframes konfetti { to { transform: translateY(520px) rotate(540deg); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .konfetti { display: none; } }
 @media (max-width: 640px) { .statusleiste .knopf { margin-left: 0; width: 100%; } }
+
+/* Reisestempel beim Freischalten (London-Ort / US-Staat) */
+.stempel-box { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 16px; background: rgba(0, 0, 0, .28); transition: opacity .4s; }
+.stempel-box.weg { opacity: 0; }
+.stempel-karte { position: relative; width: min(260px, 80vw); padding: 18px 18px 64px; border-radius: 18px; background: var(--karte); box-shadow: 0 10px 30px rgba(0,0,0,.35); animation: stempel-auf .3s ease-out; }
+.stempel-bild { display: block; width: 100%; height: 130px; }
+.stempel-bild path { fill: var(--rot, #d6283c); stroke: var(--text); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.symbol-bild { display: grid; place-items: center; font-size: 5rem; line-height: 1; }
+.stempel { position: absolute; left: 50%; bottom: 14px; display: grid; justify-items: center; gap: 2px; padding: 6px 14px; border: 4px double var(--rot, #d6283c); border-radius: 10px;
+  color: var(--rot, #d6283c); font: 800 1.1rem/1.1 var(--display); letter-spacing: .06em; background: var(--karte); white-space: nowrap; max-width: 95%;
+  opacity: 0; transform: translateX(-50%) rotate(-8deg) scale(2.4); animation: stempeln .35s .4s cubic-bezier(.3, 1.6, .6, 1) forwards; }
+.stempel span { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
+.sterne span { position: absolute; left: 50%; top: 45%; color: var(--f); font-size: 1.3rem; opacity: 0; animation: stern .9s .65s ease-out forwards; }
+@keyframes stempel-auf { from { transform: scale(.85); opacity: 0; } }
+@keyframes stempeln { to { opacity: .95; transform: translateX(-50%) rotate(-8deg) scale(1); } }
+@keyframes stern { 0% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--w)) translateY(0); } 100% { opacity: 0; transform: translate(-50%, -50%) rotate(var(--w)) translateY(-140px); } }
+@media (prefers-reduced-motion: reduce) {
+  .stempel-karte, .stempel { animation: none; }
+  .stempel { opacity: .95; transform: translateX(-50%) rotate(-8deg); }
+  .sterne { display: none; }
+}

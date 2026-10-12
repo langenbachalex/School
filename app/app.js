@@ -1173,10 +1173,24 @@
     setTimeout(() => t.classList.add("weg"), 2200);
     setTimeout(() => t.remove(), 2800);
   }
+  // Reisestempel beim Freischalten eines neuen Ortes in London: kurz (2 s), antippen schließt, hält die Übung nicht auf
+  function stempel(bild, name, unter) {
+    const farben = ["#e2384d", "#1f5fd1", "#f2b705"];
+    const box = el("div", { class: "stempel-box", role: "status", onclick: () => box.remove() },
+      el("div", { class: "stempel-karte" }, bild,
+        el("div", { class: "stempel", lang: "en" }, el("strong", {}, name.toUpperCase()), el("span", {}, unter)),
+        el("div", { class: "sterne", "aria-hidden": "true" }, Array.from({ length: 10 }, (_, i) =>
+          el("span", { style: `--w:${i * 36}deg;--f:${farben[i % 3]}` }, "★")))));
+    document.body.append(box);
+    setTimeout(() => box.classList.add("weg"), 2000);
+    setTimeout(() => box.remove(), 2500);
+    return box;
+  }
   function zeigeEreignisse() {
     while (ereignisse.length && (ereignisse[0].art === "toast" || ereignisse[0].art === "ort")) {
       const e = ereignisse.shift();
-      toast(e.art === "ort" ? `🗺️ Neuer Ort in London: ${e.ort.symbol} ${e.ort.name}` : e.text);
+      if (e.art === "ort") stempel(el("div", { class: "stempel-bild symbol-bild", "aria-hidden": "true" }, e.ort.symbol), e.ort.name, "London ✓");
+      else toast(e.text);
     }
     if (!ereignisse.length || feier.open) return;
     const e = ereignisse.shift();

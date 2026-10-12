@@ -1217,10 +1217,37 @@
     setTimeout(() => t.classList.add("weg"), 2200);
     setTimeout(() => t.remove(), 2800);
   }
+  // Reisestempel beim Freischalten eines neuen Staates: kurz (2 s), antippen schließt, hält die Übung nicht auf
+  function stempel(bild, name, unter) {
+    const farben = ["#c8283a", "#1d3f8f", "#f2b705"];
+    const box = el("div", { class: "stempel-box", role: "status", onclick: () => box.remove() },
+      el("div", { class: "stempel-karte" }, bild,
+        el("div", { class: "stempel", lang: "en" }, el("strong", {}, name.toUpperCase()), el("span", {}, unter)),
+        el("div", { class: "sterne", "aria-hidden": "true" }, Array.from({ length: 10 }, (_, i) =>
+          el("span", { style: `--w:${i * 36}deg;--f:${farben[i % 3]}` }, "★")))));
+    document.body.append(box);
+    setTimeout(() => box.classList.add("weg"), 2000);
+    setTimeout(() => box.remove(), 2500);
+    return box;
+  }
+  // Umriss des Staates, Ausschnitt passend zugeschnitten
+  function staatStempel(staat) {
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "stempel-bild"); svg.setAttribute("aria-hidden", "true");
+    const pfad = document.createElementNS(NS, "path");
+    pfad.setAttribute("d", SP.karte[staat.id] || ""); svg.append(pfad);
+    stempel(svg, staat.name, "Visited ✓");
+    try {
+      const b = pfad.getBBox(), rand = Math.max(b.width, b.height) * 0.12;
+      svg.setAttribute("viewBox", `${b.x - rand} ${b.y - rand} ${b.width + 2 * rand} ${b.height + 2 * rand}`);
+    } catch { svg.setAttribute("viewBox", "0 0 975 610"); }
+  }
   function zeigeEreignisse() {
     while (ereignisse.length && (ereignisse[0].art === "toast" || ereignisse[0].art === "staat")) {
       const e = ereignisse.shift();
-      toast(e.art === "staat" ? T(`🗺️ Neuer Staat: ${e.staat.name}`, `🗺️ New state: ${e.staat.name}`) : e.text);
+      if (e.art === "staat") staatStempel(e.staat);
+      else toast(e.text);
     }
     if (!ereignisse.length || feier.open) return;
     const e = ereignisse.shift();

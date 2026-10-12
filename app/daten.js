@@ -4901,8 +4901,8 @@ window.DATEN = {
   "frei": [
    {
     "von": "2026-10-05",
-    "bis": "2026-10-16",
-    "name": "Herbstferien"
+    "bis": "2026-10-11",
+    "name": "Herbstferien (ab 12.10. zählt jeder Wochentag – Wunsch Mr. Alex: App schon in den Ferien nutzbar)"
    },
    {
     "von": "2026-12-21",

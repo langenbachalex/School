@@ -59,7 +59,7 @@ Quelle: kalenderpedia.de (ohne Gewähr; schulinterne Tage werden nicht berücksi
 
 | Art | Datum |
 |---|---|
-| Herbstferien | 5.–16.10.2026 |
+| Herbstferien | 5.–16.10.2026 (in den Apps zählen ab 12.10. die Wochentage schon als Schultage, damit man in den Ferien Serien sammeln kann) |
 | Weihnachtsferien | 21.12.2026 – 3.1.2027 |
 | Winterferien (Fastnacht) | 8.–12.2.2027 |
 | Karfreitag / Ostermontag | 26.3. / 29.3.2027 |

@@ -114,3 +114,8 @@ Spiele (Mix & Match, Memory) und Extras („Power“) wandern in die passenden K
 1. **Material:** weitere Folien (Unit 2) – kommen von Mr. Alex.
 2. **Kategorie „Power“ oder „Bonus“?**
 3. **Lob-Liste** absegnen (`docs/lob-vorschlaege.md`), dann Vertonung mit Mr. Alex' Stimme – für Klasse 9 und Klasse 6.
+
+## 6. Vorgemerkte Ideen (noch nicht bauen)
+
+- **Writing: „Fehlertext korrigieren“** (Wunsch Mr. Alex, 12.10.): ein Text voller Fehler, die Schüler finden und verbessern sie (macht Mr. Alex auch im Unterricht, die Schüler lieben das). Idee zur Umsetzung: Fehlerwörter antippen → richtige Form wählen (G) bzw. eintippen (E); Zähler „Noch 5 Fehler versteckt“; Fehlerarten aus dem Skills File (S. 168) und Class Feedback (he don't, she/her, i, Wortstellung). Kommt erst nach Absprache.
+- **Escape Room** als eigene App (Material bei Mr. Alex) – später besprechen.

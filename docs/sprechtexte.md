@@ -310,11 +310,11 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `helden/felix.mp3` | Alex Langenbach | Felix the Falcon. Felix can fly around the world in one day. He sees everything from the sky. He often visits his friends in different countries. |
 | `helden/tessa.mp3` | Alex Langenbach | Tessa the Turtle. Tessa is unbreakable. Nothing can hurt her shell. She is slow, but she always finishes what she starts. |
 | `helden/max.mp3` | Alex Langenbach | Max the Monkey. Max is a genius inventor. He builds a new gadget every day. His best invention is a robot that does homework. |
-| `spiel/titel_tourist.mp3` | Alex Langenbach | Congratulations! You are now a Tourist! |
-| `spiel/titel_explorer.mp3` | Alex Langenbach | Congratulations! You are now an Explorer! |
-| `spiel/titel_londoner.mp3` | Alex Langenbach | Congratulations! You are now a real Londoner! |
-| `spiel/titel_royal_guard.mp3` | Alex Langenbach | Congratulations! You are now a Royal Guard! |
-| `spiel/titel_legend.mp3` | Alex Langenbach | Wow! You are a Legend now! I'm so proud of you! |
+| `spiel/titel_sidekick.mp3` | Alex Langenbach | Congratulations! You are a Sidekick now! |
+| `spiel/titel_hero_in_training.mp3` | Alex Langenbach | Congratulations! You are a Hero in Training now! |
+| `spiel/titel_hero.mp3` | Alex Langenbach | Congratulations! You are a real Hero now! |
+| `spiel/titel_superhero.mp3` | Alex Langenbach | Congratulations! You are a Superhero now! |
+| `spiel/titel_mega_hero.mp3` | Alex Langenbach | Wow! You are a Mega Hero now! I'm so proud of you! |
 | `spiel/feuer.mp3` | Alex Langenbach | You're on fire! Three days in a row! |
 | `spiel/woche.mp3` | Alex Langenbach | Perfect week! You practised every school day. Here is your new superhero! |
 | `spiel/monat.mp3` | Alex Langenbach | Four perfect weeks in a row! You are a true champion! |

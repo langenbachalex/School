@@ -164,13 +164,14 @@ def lesen(name):
 
 
 # Belohnungen (Stufe A, docs/gamification/konzept.md): Titel nach Punkten, London-Orte, Superhelden
-TITEL = [(0, "Rookie"), (100, "Tourist"), (300, "Explorer"), (700, "Londoner"), (1200, "Royal Guard"), (2000, "Legend")]
+TITEL = [(0, "Butterfingers", "🧈"), (100, "Sidekick", "🎒"), (300, "Hero in Training", "🦸"), (700, "Hero", "⚡"),
+         (1200, "Superhero", "🌟"), (2000, "Mega Hero", "👑")]
 SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
-    "titel_tourist": "Congratulations! You are now a Tourist!",
-    "titel_explorer": "Congratulations! You are now an Explorer!",
-    "titel_londoner": "Congratulations! You are now a real Londoner!",
-    "titel_royal_guard": "Congratulations! You are now a Royal Guard!",
-    "titel_legend": "Wow! You are a Legend now! I'm so proud of you!",
+    "titel_sidekick": "Congratulations! You are a Sidekick now!",
+    "titel_hero_in_training": "Congratulations! You are a Hero in Training now!",
+    "titel_hero": "Congratulations! You are a real Hero now!",
+    "titel_superhero": "Congratulations! You are a Superhero now!",
+    "titel_mega_hero": "Wow! You are a Mega Hero now! I'm so proud of you!",
     "feuer": "You're on fire! Three days in a row!",
     "woche": "Perfect week! You practised every school day. Here is your new superhero!",
     "monat": "Four perfect weeks in a row! You are a true champion!",
@@ -183,7 +184,7 @@ def spieldaten():
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import frei_saarland
     return {
-        "titel": [{"ab": ab, "name": n, "audio": a(f"audio/spiel/titel_{n.lower().replace(' ', '_')}.mp3")} for ab, n in TITEL],
+        "titel": [{"ab": ab, "name": n, "symbol": sym, "audio": a(f"audio/spiel/titel_{n.lower().replace(' ', '_')}.mp3")} for ab, n, sym in TITEL],
         "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
         "orte": [dict(z, x=int(z["x"]), y=int(z["y"]), audio=a(f"audio/london/{z['id']}.mp3")) for z in lesen("london.tsv")],
         "helden": [dict(z, bild=f"bilder/helden/{z['bild']}.jpg", audio=a(f"audio/helden/{z['id']}.mp3")) for z in lesen("helden.tsv")],

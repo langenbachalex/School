@@ -1093,7 +1093,7 @@
     if (t > sp.titel) {
       sp.titel = t;
       const ti = SP.titel[t];
-      ereignisse.push({ art: "feier", symbol: t === SP.titel.length - 1 ? "👑" : "🏅", titel: ti.name, text: `Neuer Titel: ${ti.name}!`, ton: ti });
+      ereignisse.push({ art: "feier", symbol: ti.symbol, titel: ti.name, text: `Neuer Titel: ${ti.name}!`, ton: ti });
     }
     speichern();
     setTimeout(zeigeEreignisse, 50);
@@ -1138,7 +1138,7 @@
   function statusleiste() {
     const sp = spielstand(), t = SP.titel[sp.titel], n = serie();
     return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") },
-      el("span", { class: "status-titel" }, (sp.titel === SP.titel.length - 1 ? "👑 " : "🏅 ") + t.name),
+      el("span", { class: "status-titel" }, t.symbol + " " + t.name),
       el("span", {}, `⭐ ${sp.punkte} Punkte`),
       el("span", { title: "Schultage am Stück" }, `🔥 ${n}`),
       knopf("🏆 Meine Sammlung", sammlung, "haupt"));
@@ -1179,7 +1179,7 @@
       el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Meine Sammlung")),
       el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") },
         el("p", { class: "klein" }, "Dein Titel"),
-        el("h2", { lang: "en" }, (t === SP.titel.length - 1 ? "👑 " : "🏅 ") + SP.titel[t].name),
+        el("h2", { lang: "en" }, SP.titel[t].symbol + " " + SP.titel[t].name),
         el("p", {}, `⭐ ${sp.punkte} Punkte`),
         naechster && el("div", { class: "fortschritt" }, el("span", { style: `width:${Math.round(100 * (sp.punkte - SP.titel[t].ab) / (naechster.ab - SP.titel[t].ab))}%` })),
         naechster && el("p", { class: "klein" }, `Noch ${naechster.ab - sp.punkte} Punkte bis „${naechster.name}“`)),

@@ -44,7 +44,7 @@ Karte bzw. Karten-Album, Titel mit Fortschrittsbalken, Wochen-Kalender (Mo–Fr 
   - Tessa the Turtle – unzerstörbar
   - Max the Monkey – Erfinder-Genie
 - **Alle Karten voll:** Team-Poster aller Superhelden und eine persönliche Audio-Botschaft von Mr. Alex.
-- **Titel:** Rookie → Tourist → Explorer → Londoner → Royal Guard → **Legend 👑**
+- **Titel (geändert 12.10., Vorschlag A):** 🧈 Butterfingers → 🎒 Sidekick → 🦸 Hero in Training → ⚡ Hero → 🌟 Superhero → 👑 **Mega Hero**
 
 ## 3. Klasse 9 – USA
 

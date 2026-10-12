@@ -4067,55 +4067,61 @@ window.DATEN = {
   "titel": [
    {
     "ab": 0,
-    "name": "Rookie",
+    "name": "Butterfingers",
+    "symbol": "🧈",
     "audio": null
    },
    {
     "ab": 100,
-    "name": "Tourist",
-    "audio": "audio/spiel/titel_tourist.mp3"
+    "name": "Sidekick",
+    "symbol": "🎒",
+    "audio": "audio/spiel/titel_sidekick.mp3"
    },
    {
     "ab": 300,
-    "name": "Explorer",
-    "audio": "audio/spiel/titel_explorer.mp3"
+    "name": "Hero in Training",
+    "symbol": "🦸",
+    "audio": "audio/spiel/titel_hero_in_training.mp3"
    },
    {
     "ab": 700,
-    "name": "Londoner",
-    "audio": "audio/spiel/titel_londoner.mp3"
+    "name": "Hero",
+    "symbol": "⚡",
+    "audio": "audio/spiel/titel_hero.mp3"
    },
    {
     "ab": 1200,
-    "name": "Royal Guard",
-    "audio": "audio/spiel/titel_royal_guard.mp3"
+    "name": "Superhero",
+    "symbol": "🌟",
+    "audio": "audio/spiel/titel_superhero.mp3"
    },
    {
     "ab": 2000,
-    "name": "Legend",
-    "audio": "audio/spiel/titel_legend.mp3"
+    "name": "Mega Hero",
+    "symbol": "👑",
+    "audio": "audio/spiel/titel_mega_hero.mp3"
    }
   ],
   "texte": {
-   "titel_tourist": {
-    "text": "Congratulations! You are now a Tourist!",
-    "audio": "audio/spiel/titel_tourist.mp3"
+   "titel_sidekick": {
+    "text": "Congratulations! You are a Sidekick now!",
+    "audio": "audio/spiel/titel_sidekick.mp3"
    },
-   "titel_explorer": {
-    "text": "Congratulations! You are now an Explorer!",
-    "audio": "audio/spiel/titel_explorer.mp3"
+   "titel_hero_in_training": {
+    "text": "Congratulations! You are a Hero in Training now!",
+    "audio": "audio/spiel/titel_hero_in_training.mp3"
    },
-   "titel_londoner": {
-    "text": "Congratulations! You are now a real Londoner!",
-    "audio": "audio/spiel/titel_londoner.mp3"
+   "titel_hero": {
+    "text": "Congratulations! You are a real Hero now!",
+    "audio": "audio/spiel/titel_hero.mp3"
    },
-   "titel_royal_guard": {
-    "text": "Congratulations! You are now a Royal Guard!",
-    "audio": "audio/spiel/titel_royal_guard.mp3"
+   "titel_superhero": {
+    "text": "Congratulations! You are a Superhero now!",
+    "audio": "audio/spiel/titel_superhero.mp3"
    },
-   "titel_legend": {
-    "text": "Wow! You are a Legend now! I'm so proud of you!",
-    "audio": "audio/spiel/titel_legend.mp3"
+   "titel_mega_hero": {
+    "text": "Wow! You are a Mega Hero now! I'm so proud of you!",
+    "audio": "audio/spiel/titel_mega_hero.mp3"
    },
    "feuer": {
     "text": "You're on fire! Three days in a row!",

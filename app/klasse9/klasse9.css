@@ -143,3 +143,9 @@
 .u-staat.offen:hover, .u-staat.offen:focus { fill: var(--gelb); outline: none; stroke: #222; stroke-width: 2; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .usa-rahmen { background: #1b2540; } :root:not([data-theme="light"]) .u-staat { fill: #3a4560; stroke: #1b2540; } }
 .bildnachweis { text-align: center; }
+.faktenblatt { border: 2px dashed var(--blau); border-radius: 14px; padding: 12px 14px; background: var(--bg); }
+.faktenblatt h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.faktenblatt dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; }
+.faktenblatt dt { font-weight: 700; color: var(--blau); }
+.faktenblatt dd { margin: 0; }
+@media (max-width: 640px) { .faktenblatt dl { grid-template-columns: 1fr; } .faktenblatt dd { margin-bottom: 6px; } }

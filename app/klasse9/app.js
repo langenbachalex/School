@@ -529,35 +529,34 @@
     const k = kategorie(lage.nr);
     const u = D.hoeren[teil.uebung];
     const teilVon = (id) => u.teile.find((t) => t.id === id);
-    const antworten = u.aufgaben.map(() => ({ was: null, wann: null }));
+    const fragen = u.fragen.filter((f) => !f.nur || f.nur === stand.niveau); // z. B. „What is difficult?“ nur im E-Kurs
+    const antworten = u.aufgaben.map(() => ({}));
     let durchgaenge = 0, geloest = false;
     const norm = (t) => (t || "").toLowerCase().replace(/[^a-z ]/g, " ").replace(/\s+/g, " ");
     const passt = (text, gruppen) => gruppen.every((alt) => alt.some((w) => norm(text).includes(w)));
 
-    function umschalter(optionen, setze, label) {
+    function umschalter(optionen, setze, label, schluessel) {
       const knoepfe = optionen.map((o) => el("button", { class: "knopf wahl-knopf kompakt", lang: "en",
         "aria-pressed": "false", "data-wert": o.key, onclick: () => {
           if (geloest) return;
           setze(o.key);
           knoepfe.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.wert === o.key)));
         } }, o.symbol && el("span", { class: "wahl-sym", "aria-hidden": "true" }, o.symbol), el("span", {}, o.en)));
-      return el("div", { class: "wahl", role: "group", "aria-label": label }, knoepfe);
+      return el("div", { class: "wahl", role: "group", "aria-label": label, "data-frage": schluessel }, knoepfe);
     }
     const zeilen = u.aufgaben.map((a, i) => {
       const name = teilVon(a.teil).sprecher;
       const box = el("p", { class: "rueckmeldung", hidden: true });
+      const frage = (f) => tx(f).replace("{name}", name);
       if (!E()) return el("li", { class: "hv-zeile" },
         el("h3", { lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), name),
-        el("p", { class: "klein" }, "What? – Was macht " + name + "?"),
-        umschalter(u.was, (w) => { antworten[i].was = w; }, "What?"),
-        el("p", { class: "klein" }, "When? – Wann?"),
-        umschalter(u.wann, (w) => { antworten[i].wann = w; }, "When?"),
+        fragen.flatMap((f) => [el("p", { class: "klein" }, frage(f)), umschalter(f.optionen, (w) => { antworten[i][f.key] = w; }, frage(f), f.key)]),
         box);
-      const feld = (art, label) => el("input", { type: "text", class: "eingabe", lang: "en", autocomplete: "off",
-        "aria-label": `${name}: ${label}`, placeholder: label, oninput: (e) => { antworten[i][art] = e.target.value; } });
+      const feld = (f) => el("input", { type: "text", class: "eingabe", lang: "en", autocomplete: "off",
+        "aria-label": frage(f), placeholder: frage(f), oninput: (e) => { antworten[i][f.key] = e.target.value; } });
       return el("li", { class: "hv-zeile" },
         el("h3", { lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), name),
-        el("div", { class: "hv-tabelle" }, feld("was", "What does " + name + " do?"), feld("wann", "When?")),
+        el("div", { class: "hv-tabelle" }, fragen.map(feld)),
         box);
     });
 
@@ -599,17 +598,16 @@
       geloest = true; loesungKnopf.hidden = true;
       app.querySelectorAll(".hv-liste .wahl button, .hv-liste input").forEach((b) => { b.disabled = true; });
       let richtig = 0;
-      const was = (key) => u.was.find((o) => o.key === key), wann = (key) => u.wann.find((o) => o.key === key);
+      const textVon = (f, a) => (f.optionen ? f.optionen.find((o) => o.key === a[f.key]).en : a[f.key + "_text"]);
       u.aufgaben.forEach((a, i) => {
         const zeile = zeilen[i], box = zeile.querySelector(".rueckmeldung");
-        const ok = E() ? passt(antworten[i].was, a.was_e) && passt(antworten[i].wann, a.wann_e)
-          : antworten[i].was === a.was && antworten[i].wann === a.wann;
+        const ok = fragen.every((f) => (E() ? passt(antworten[i][f.key], a[f.key + "_e"]) : antworten[i][f.key] === a[f.key]));
         if (ok) richtig++;
         zeile.classList.add(ok ? "ok" : "falsch");
         box.hidden = false; box.className = "rueckmeldung " + (ok ? "gut" : "hilfe");
-        const loesung = `${was(a.was).en} – ${wann(a.wann).en}`;
+        const loesung = fragen.map((f) => textVon(f, a)).join(" – ");
         box.textContent = ok ? T(`✓ Richtig! (${loesung})`, `✓ Correct! (${loesung})`) : `${HILFE()} ${T("Richtig ist:", "The answer is:")} ${loesung}.`;
-        zeile.querySelectorAll(".wahl button").forEach((b) => { if (b.dataset.wert === a.was || b.dataset.wert === a.wann) b.classList.add("richtig"); });
+        zeile.querySelectorAll(".wahl button").forEach((b) => { if (b.dataset.wert === a[b.closest(".wahl").dataset.frage]) b.classList.add("richtig"); });
       });
       ergebnis.hidden = false;
       ergebnis.className = "rueckmeldung " + (richtig === u.aufgaben.length ? "gut" : "hilfe");
@@ -698,6 +696,10 @@
   }
 
   /* ---------- Writing: Mustertext mit Aufbau (Anfang – Mittelteil – Schluss) ---------- */
+  function faktenblatt(f) {
+    return f && el("aside", { class: "faktenblatt", lang: "en" }, el("h3", {}, "📋 Fact sheet: " + f.name),
+      el("dl", {}, f.punkte.flatMap(([k, v]) => [el("dt", {}, k), el("dd", {}, v)])));
+  }
   function zeigeMustertext(teil) {
     const k = kategorie(lage.nr);
     const alle = teil.abschnitte.flatMap((a) => a.saetze);
@@ -723,13 +725,12 @@
         "Lies und hör zu. Achte auf den Aufbau und die blauen Redemittel – die kannst du in deinem Text benutzen."),
       el("section", { class: "satzkarte" },
         el("h2", { lang: "en" }, teil.titel),
+        faktenblatt(teil.fakten),
         el("div", { class: "mustertext" }, absaetze),
         el("div", { class: "knopfreihe" }, knopf(T("🔊 Ganzen Text vorlesen", "🔊 Read the whole text"), () => vorlesen(alle)), weiterKnopf())));
   }
 
   /* ---------- Writing: eigener Text mit Checkliste (bleibt nur auf diesem Gerät) ---------- */
-  const STARK = /\b(amazing|awesome|fantastic|unbelievable|exciting|incredible|delicious|huge|tiny|wonderful|great|cool|friendly|creative|interesting|beautiful|modern|excited|proud|relaxed)\b/i;
-  const VERBINDER = /\b(and|but|because|so|for example|also|first|then|after that|finally)\b/gi;
   function zeigeSchreiben(teil) {
     const k = kategorie(lage.nr);
     stand.texte = stand.texte || {};
@@ -741,14 +742,10 @@
     const zeile = (text) => { const li = el("li", {}, el("span", { class: "check-sym", "aria-hidden": "true" }, "○"), " ", text); punkte.push(li); return li; };
     const min = tx(teil.min);
     const inhalt = el("ul", { class: "checkliste" }, teil.inhalt.map((x) => zeile(tx(x))));
-    const formListe = [
-      [T("Anrede: Hi … / Dear …", "Greeting: Hi … / Dear …"), (t) => /^\s*(hi|hello|dear)\b/i.test(t)],
-      [T(`Mindestens ${min} Sätze`, `At least ${min} sentences`), (t) => (t.match(/[.!?]+(\s|$)/g) || []).length >= min],
-      [T("Verbindungswörter (and, but, because …)", "Linking words (and, but, because …)"), (t) => (t.match(VERBINDER) || []).length >= 3],
-      [T("Ein starkes Wort (amazing, huge, delicious …)", "A strong word (amazing, huge, delicious …)"), (t) => STARK.test(t)],
-      [T("„I“ immer groß", "“I” always with a capital letter"), (t) => /\bI\b/.test(t) && !/(^|[^\w'])i([\s'’]|$)/.test(t)],
-      [T("Schluss: Best wishes / Bye / See you", "Ending: Best wishes / Bye / See you"), (t) => /(best wishes|bye|see you|write back|love,|regards)/i.test(t)],
-    ];
+    const ichGross = (t) => /\bI\b/.test(t) && !/(^|[^\w'])i([\s'’]|$)/.test(t);
+    const formListe = [[T(`Mindestens ${min} Sätze`, `At least ${min} sentences`), (t) => (t.match(/[.!?]+(\s|$)/g) || []).length >= min],
+      ...(teil.form || []).map((x) => [tx(x), x.test === "ich_gross" ? ichGross
+        : (t) => (t.match(new RegExp(x.muster, "gi")) || []).length >= (x.anzahl || 1)])];
     const form = el("ul", { class: "checkliste" }, formListe.map(([text]) => zeile(text)));
     const tests = [...teil.inhalt.map((x) => (t) => new RegExp(x.muster, "i").test(t)), ...formListe.map(([, f]) => f)];
     function pruefen() {
@@ -782,6 +779,7 @@
         ansage(...(E() ? [tx(teil.aufgabe)] : tx(teil.aufgabe).split(" – "))),
         el("p", { class: "hinweis-kasten" }, "📝 " + T("Schreib über diese Punkte. Die Checkliste hakt automatisch ab, was schon drin ist. Dein Text bleibt nur auf diesem Gerät.",
           "Write about these points. The checklist ticks off what is already there. Your text stays on this device only.")),
+        faktenblatt(teil.fakten),
         el("div", { class: "schreib-raster" },
           el("div", {}, el("h3", {}, T("Inhalt", "Content")), inhalt, el("h3", {}, T("Form", "Form")), form),
           el("div", { class: "schreib-spalte" },

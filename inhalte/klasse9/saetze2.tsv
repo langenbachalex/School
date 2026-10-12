@@ -104,18 +104,6 @@ hv_13	There's a great view from here.	Von hier hat man eine tolle Aussicht.	view
 hv_14	We sat on the stoop and talked.	Wir saßen auf der Treppe und redeten.	stoop	
 hv_15	It was a total disaster!	Es war eine totale Katastrophe!	disaster	
 hv_16	Let's meet downtown.	Lass uns in der Innenstadt treffen.	downtown	
-wm_01	Hi Ryan,	Hallo Ryan,		f
-wm_02	My name is Lena, and next month I'm going to be in your class.	Ich heiße Lena und bin ab nächstem Monat in deiner Klasse.		f
-wm_03	I'm writing to tell you about my school.	Ich schreibe dir, um dir von meiner Schule zu erzählen.	I'm writing to tell you	f
-wm_04	Our school is called Park School, and it has about 900 students.	Unsere Schule heißt Park School und hat ungefähr 900 Schüler.	is called	f
-wm_05	School starts at 7:45 and ends at 1:15, but on Tuesdays we stay until 3:15.	Die Schule beginnt um 7:45 Uhr und endet um 13:15 Uhr, aber dienstags bleiben wir bis 15:15 Uhr.	starts at	f
-wm_06	My favourite subject is art because our teacher is really creative.	Mein Lieblingsfach ist Kunst, weil unsere Lehrerin richtig kreativ ist.	My favourite subject	f
-wm_07	There are lots of clubs after school, for example a robotics club and a school band.	Nach der Schule gibt es viele AGs, zum Beispiel eine Robotik-AG und eine Schulband.	for example	f
-wm_08	We have a huge schoolyard and a small cafeteria, but the food is delicious!	Wir haben einen riesigen Schulhof und eine kleine Cafeteria, aber das Essen ist lecker!	We have	f
-wm_09	We don't wear school uniforms, so you can wear your own clothes.	Wir tragen keine Schuluniformen, du kannst also deine eigene Kleidung tragen.	don't wear	f
-wm_10	What I like best about my school is the friendly atmosphere.	Was mir an meiner Schule am besten gefällt, ist die freundliche Atmosphäre.	What I like best	f
-wm_11	I'm really looking forward to meeting you!	Ich freue mich richtig darauf, dich kennenzulernen!	looking forward to meeting	f
-wm_12	Best wishes, Lena	Viele Grüße, Lena	Best wishes	f
 wk_01	I'm interested in sports.	Ich interessiere mich für Sport.	in	
 wk_02	That was fun.	Das hat Spaß gemacht.	was	
 wk_03	My school is huge.	Meine Schule ist riesig.	huge	
@@ -124,3 +112,14 @@ wk_05	If I had more time, I would join the band.	Wenn ich mehr Zeit hätte, wür
 wk_06	We go to school by bus.	Wir fahren mit dem Bus zur Schule.	by bus	
 wk_07	In my opinion, school uniforms are a good idea.	Meiner Meinung nach sind Schuluniformen eine gute Idee.	In my opinion	
 wk_08	We went to Central Park in the morning.	Wir sind morgens in den Central Park gegangen.	to Central Park in the morning	
+wn_01	Our school and Lincoln High School are similar in some ways, but quite different in others.	Unsere Schule und die Lincoln High School sind sich in mancher Hinsicht ähnlich, in anderer aber ziemlich verschieden.	similar in some ways	f
+wn_02	Firstly, Lincoln High is much bigger than our school.	Erstens ist die Lincoln High viel größer als unsere Schule.	bigger than	f
+wn_03	It has about 1,500 students between 14 and 18. Our school only has about 700 students.	Sie hat ungefähr 1.500 Schüler zwischen 14 und 18. Unsere Schule hat nur etwa 700 Schüler.	only has	f
+wn_04	Secondly, the school day is different.	Zweitens ist der Schultag anders.	Secondly	f
+wn_05	At Lincoln High, school starts at 7:45 and ends at 2:15. After that, lots of clubs start.	An der Lincoln High beginnt die Schule um 7:45 Uhr und endet um 14:15 Uhr. Danach fangen viele AGs an.	After that	f
+wn_06	We usually finish at 1:15, and there are only a few clubs in the afternoon.	Wir haben meistens um 13:15 Uhr Schluss, und am Nachmittag gibt es nur wenige AGs.	only a few	f
+wn_07	When it comes to rules, the two schools are quite similar.	Was die Regeln angeht, sind sich die beiden Schulen ziemlich ähnlich.	When it comes to	f
+wn_08	For example, students can't use their cell phones in class, and smoking is banned at both schools.	Zum Beispiel dürfen die Schüler im Unterricht ihre Handys nicht benutzen, und Rauchen ist an beiden Schulen verboten.	For example	f
+wn_09	On the other hand, students at Lincoln High have to wear appropriate clothes and can't wear hats. We don't have a dress code.	Andererseits müssen die Schüler an der Lincoln High angemessene Kleidung tragen und dürfen keine Mützen tragen. Wir haben keine Kleiderordnung.	On the other hand	f
+wn_10	One big advantage of Lincoln High is the huge number of after-school activities.	Ein großer Vorteil der Lincoln High ist die riesige Zahl an Aktivitäten nach der Schule.	One big advantage	f
+wn_11	To sum up, I would love to spend a year at Lincoln High – but I'm also happy at my school.	Zusammengefasst: Ich würde sehr gern ein Jahr an der Lincoln High verbringen – aber ich bin auch an meiner Schule glücklich.	To sum up	f

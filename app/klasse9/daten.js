@@ -1986,47 +1986,47 @@ window.DATEN = {
     "audio": "audio/beae/ba_17_be.mp3"
    }
   },
-  "hw_01": {
-   "en": "the robotics club",
-   "de": "die Robotik-AG",
-   "luecke": "robotics club",
+  "lw_01": {
+   "en": "the debate team",
+   "de": "die Debattier-AG",
+   "luecke": "debate team",
    "stimme": "f",
-   "audio": "audio/hoeren/hw_01.mp3"
+   "audio": "audio/hoeren/lw_01.mp3"
   },
-  "hw_02": {
-   "en": "the school newspaper",
-   "de": "die Schülerzeitung",
-   "luecke": "newspaper",
+  "lw_02": {
+   "en": "the stage crew",
+   "de": "die Bühnentechnik-Gruppe (Theater)",
+   "luecke": "stage crew",
    "stimme": "m",
-   "audio": "audio/hoeren/hw_02.mp3"
+   "audio": "audio/hoeren/lw_02.mp3"
   },
-  "hw_03": {
-   "en": "an editor",
-   "de": "ein Redakteur / eine Redakteurin",
-   "luecke": "editor",
+  "lw_03": {
+   "en": "a fund-raising event",
+   "de": "eine Spendenaktion",
+   "luecke": "fund-raising event",
    "stimme": "f",
-   "audio": "audio/hoeren/hw_03.mp3"
+   "audio": "audio/hoeren/lw_03.mp3"
   },
-  "hw_04": {
-   "en": "an animal shelter",
-   "de": "ein Tierheim",
-   "luecke": "animal shelter",
+  "lw_04": {
+   "en": "the marching band",
+   "de": "die Marschkapelle",
+   "luecke": "marching band",
    "stimme": "m",
-   "audio": "audio/hoeren/hw_04.mp3"
+   "audio": "audio/hoeren/lw_04.mp3"
   },
-  "hw_05": {
-   "en": "to volunteer",
-   "de": "ehrenamtlich arbeiten",
-   "luecke": "volunteer",
+  "lw_05": {
+   "en": "You get used to it.",
+   "de": "Man gewöhnt sich daran.",
+   "luecke": "get used to",
    "stimme": "f",
-   "audio": "audio/hoeren/hw_05.mp3"
+   "audio": "audio/hoeren/lw_05.mp3"
   },
-  "hw_06": {
-   "en": "to practice",
-   "de": "trainieren, üben",
-   "luecke": "practice",
+  "lw_06": {
+   "en": "team spirit",
+   "de": "Teamgeist",
+   "luecke": "team spirit",
    "stimme": "m",
-   "audio": "audio/hoeren/hw_06.mp3"
+   "audio": "audio/hoeren/lw_06.mp3"
   },
   "sp_01": {
    "en": "I'd like to go to New York because I like big cities.",
@@ -2763,90 +2763,6 @@ window.DATEN = {
    "stimme": "f",
    "audio": "audio/saetze/hv_16.mp3"
   },
-  "wm_01": {
-   "en": "Hi Ryan,",
-   "de": "Hallo Ryan,",
-   "luecke": null,
-   "stimme": "f",
-   "audio": "audio/saetze/wm_01.mp3"
-  },
-  "wm_02": {
-   "en": "My name is Lena, and next month I'm going to be in your class.",
-   "de": "Ich heiße Lena und bin ab nächstem Monat in deiner Klasse.",
-   "luecke": null,
-   "stimme": "f",
-   "audio": "audio/saetze/wm_02.mp3"
-  },
-  "wm_03": {
-   "en": "I'm writing to tell you about my school.",
-   "de": "Ich schreibe dir, um dir von meiner Schule zu erzählen.",
-   "luecke": "I'm writing to tell you",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_03.mp3"
-  },
-  "wm_04": {
-   "en": "Our school is called Park School, and it has about 900 students.",
-   "de": "Unsere Schule heißt Park School und hat ungefähr 900 Schüler.",
-   "luecke": "is called",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_04.mp3"
-  },
-  "wm_05": {
-   "en": "School starts at 7:45 and ends at 1:15, but on Tuesdays we stay until 3:15.",
-   "de": "Die Schule beginnt um 7:45 Uhr und endet um 13:15 Uhr, aber dienstags bleiben wir bis 15:15 Uhr.",
-   "luecke": "starts at",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_05.mp3"
-  },
-  "wm_06": {
-   "en": "My favourite subject is art because our teacher is really creative.",
-   "de": "Mein Lieblingsfach ist Kunst, weil unsere Lehrerin richtig kreativ ist.",
-   "luecke": "My favourite subject",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_06.mp3"
-  },
-  "wm_07": {
-   "en": "There are lots of clubs after school, for example a robotics club and a school band.",
-   "de": "Nach der Schule gibt es viele AGs, zum Beispiel eine Robotik-AG und eine Schulband.",
-   "luecke": "for example",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_07.mp3"
-  },
-  "wm_08": {
-   "en": "We have a huge schoolyard and a small cafeteria, but the food is delicious!",
-   "de": "Wir haben einen riesigen Schulhof und eine kleine Cafeteria, aber das Essen ist lecker!",
-   "luecke": "We have",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_08.mp3"
-  },
-  "wm_09": {
-   "en": "We don't wear school uniforms, so you can wear your own clothes.",
-   "de": "Wir tragen keine Schuluniformen, du kannst also deine eigene Kleidung tragen.",
-   "luecke": "don't wear",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_09.mp3"
-  },
-  "wm_10": {
-   "en": "What I like best about my school is the friendly atmosphere.",
-   "de": "Was mir an meiner Schule am besten gefällt, ist die freundliche Atmosphäre.",
-   "luecke": "What I like best",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_10.mp3"
-  },
-  "wm_11": {
-   "en": "I'm really looking forward to meeting you!",
-   "de": "Ich freue mich richtig darauf, dich kennenzulernen!",
-   "luecke": "looking forward to meeting",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_11.mp3"
-  },
-  "wm_12": {
-   "en": "Best wishes, Lena",
-   "de": "Viele Grüße, Lena",
-   "luecke": "Best wishes",
-   "stimme": "f",
-   "audio": "audio/saetze/wm_12.mp3"
-  },
   "wk_01": {
    "en": "I'm interested in sports.",
    "de": "Ich interessiere mich für Sport.",
@@ -2902,6 +2818,83 @@ window.DATEN = {
    "luecke": "to Central Park in the morning",
    "stimme": "f",
    "audio": "audio/saetze/wk_08.mp3"
+  },
+  "wn_01": {
+   "en": "Our school and Lincoln High School are similar in some ways, but quite different in others.",
+   "de": "Unsere Schule und die Lincoln High School sind sich in mancher Hinsicht ähnlich, in anderer aber ziemlich verschieden.",
+   "luecke": "similar in some ways",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_01.mp3"
+  },
+  "wn_02": {
+   "en": "Firstly, Lincoln High is much bigger than our school.",
+   "de": "Erstens ist die Lincoln High viel größer als unsere Schule.",
+   "luecke": "bigger than",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_02.mp3"
+  },
+  "wn_03": {
+   "en": "It has about 1,500 students between 14 and 18. Our school only has about 700 students.",
+   "de": "Sie hat ungefähr 1.500 Schüler zwischen 14 und 18. Unsere Schule hat nur etwa 700 Schüler.",
+   "luecke": "only has",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_03.mp3"
+  },
+  "wn_04": {
+   "en": "Secondly, the school day is different.",
+   "de": "Zweitens ist der Schultag anders.",
+   "luecke": "Secondly",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_04.mp3"
+  },
+  "wn_05": {
+   "en": "At Lincoln High, school starts at 7:45 and ends at 2:15. After that, lots of clubs start.",
+   "de": "An der Lincoln High beginnt die Schule um 7:45 Uhr und endet um 14:15 Uhr. Danach fangen viele AGs an.",
+   "luecke": "After that",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_05.mp3"
+  },
+  "wn_06": {
+   "en": "We usually finish at 1:15, and there are only a few clubs in the afternoon.",
+   "de": "Wir haben meistens um 13:15 Uhr Schluss, und am Nachmittag gibt es nur wenige AGs.",
+   "luecke": "only a few",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_06.mp3"
+  },
+  "wn_07": {
+   "en": "When it comes to rules, the two schools are quite similar.",
+   "de": "Was die Regeln angeht, sind sich die beiden Schulen ziemlich ähnlich.",
+   "luecke": "When it comes to",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_07.mp3"
+  },
+  "wn_08": {
+   "en": "For example, students can't use their cell phones in class, and smoking is banned at both schools.",
+   "de": "Zum Beispiel dürfen die Schüler im Unterricht ihre Handys nicht benutzen, und Rauchen ist an beiden Schulen verboten.",
+   "luecke": "For example",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_08.mp3"
+  },
+  "wn_09": {
+   "en": "On the other hand, students at Lincoln High have to wear appropriate clothes and can't wear hats. We don't have a dress code.",
+   "de": "Andererseits müssen die Schüler an der Lincoln High angemessene Kleidung tragen und dürfen keine Mützen tragen. Wir haben keine Kleiderordnung.",
+   "luecke": "On the other hand",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_09.mp3"
+  },
+  "wn_10": {
+   "en": "One big advantage of Lincoln High is the huge number of after-school activities.",
+   "de": "Ein großer Vorteil der Lincoln High ist die riesige Zahl an Aktivitäten nach der Schule.",
+   "luecke": "One big advantage",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_10.mp3"
+  },
+  "wn_11": {
+   "en": "To sum up, I would love to spend a year at Lincoln High – but I'm also happy at my school.",
+   "de": "Zusammengefasst: Ich würde sehr gern ein Jahr an der Lincoln High verbringen – aber ich bin auch an meiner Schule glücklich.",
+   "luecke": "To sum up",
+   "stimme": "f",
+   "audio": "audio/saetze/wn_11.mp3"
   },
   "u1_019_s": {
    "en": "There's a great view from here.",
@@ -6223,8 +6216,8 @@ window.DATEN = {
    "symbol": "🎧",
    "gruppen": [
     {
-     "name": "After-school activities",
-     "symbol": "🤖 📰 🐶 📣",
+     "name": "After class at Lincoln High",
+     "symbol": "🎤 🎭 🤝 🎺",
      "schritte": [
       {
        "art": "lr",
@@ -6234,18 +6227,18 @@ window.DATEN = {
         2
        ],
        "saetze": [
-        "hw_01",
-        "hw_02",
-        "hw_03",
-        "hw_04",
-        "hw_05",
-        "hw_06"
+        "lw_01",
+        "lw_02",
+        "lw_03",
+        "lw_04",
+        "lw_05",
+        "lw_06"
        ]
       },
       {
        "art": "hoeren",
        "name": "Listening",
-       "uebung": "after_school"
+       "uebung": "after_class"
       }
      ]
     }
@@ -6261,52 +6254,80 @@ window.DATEN = {
    "symbol": "✍️",
    "gruppen": [
     {
-     "name": "Information about your school",
-     "symbol": "🏫 ✉️",
+     "name": "Our school and a US high school",
+     "symbol": "🏫 🇺🇸",
      "schritte": [
       {
        "art": "mustertext",
        "name": "Model text",
-       "titel": "An email to Ryan from Texas",
-       "eigene_zeile": [
-        "wm_01",
-        "wm_12"
-       ],
+       "titel": "Our school and Lincoln High School",
+       "fakten": {
+        "name": "Lincoln High School",
+        "punkte": [
+         [
+          "students",
+          "about 1,500 · grades 9–12 · age 14–18"
+         ],
+         [
+          "school day",
+          "7:45 a.m. – 2:15 p.m. · clubs start at 2:45 p.m. · homework every day"
+         ],
+         [
+          "rules",
+          "no cell phones in class · no smoking · appropriate clothes, no hats · students can't leave school during the day"
+         ]
+        ]
+       },
        "abschnitte": [
         {
          "label": {
-          "G": "Anfang (beginning)",
-          "E": "Beginning"
+          "G": "Einleitung (opening sentence)",
+          "E": "Opening sentence"
          },
          "saetze": [
-          "wm_01",
-          "wm_02",
-          "wm_03"
+          "wn_01"
          ]
         },
         {
          "label": {
-          "G": "Mittelteil (middle)",
-          "E": "Middle"
+          "G": "Schüler (students)",
+          "E": "Students"
          },
          "saetze": [
-          "wm_04",
-          "wm_05",
-          "wm_06",
-          "wm_07",
-          "wm_08",
-          "wm_09"
+          "wn_02",
+          "wn_03"
          ]
         },
         {
          "label": {
-          "G": "Schluss (end)",
-          "E": "End"
+          "G": "Schultag (school day)",
+          "E": "School day"
          },
          "saetze": [
-          "wm_10",
-          "wm_11",
-          "wm_12"
+          "wn_04",
+          "wn_05",
+          "wn_06"
+         ]
+        },
+        {
+         "label": {
+          "G": "Regeln (rules)",
+          "E": "Rules"
+         },
+         "saetze": [
+          "wn_07",
+          "wn_08",
+          "wn_09"
+         ]
+        },
+        {
+         "label": {
+          "G": "Schluss (to sum up)",
+          "E": "Conclusion"
+         },
+         "saetze": [
+          "wn_10",
+          "wn_11"
          ]
         }
        ]
@@ -6315,69 +6336,123 @@ window.DATEN = {
        "art": "lr",
        "name": "Useful phrases",
        "saetze": [
-        "wm_03",
-        "wm_04",
-        "wm_05",
-        "wm_06",
-        "wm_07",
-        "wm_08",
-        "wm_09",
-        "wm_10",
-        "wm_11",
-        "wm_12"
+        "wn_01",
+        "wn_02",
+        "wn_03",
+        "wn_04",
+        "wn_05",
+        "wn_06",
+        "wn_07",
+        "wn_08",
+        "wn_09",
+        "wn_10",
+        "wn_11"
        ]
       },
       {
        "art": "schreiben",
        "name": "Your text",
-       "speicher": "schule",
+       "speicher": "vergleich",
+       "fakten": {
+        "name": "Lincoln High School",
+        "punkte": [
+         [
+          "students",
+          "about 1,500 · grades 9–12 · age 14–18"
+         ],
+         [
+          "school day",
+          "7:45 a.m. – 2:15 p.m. · clubs start at 2:45 p.m. · homework every day"
+         ],
+         [
+          "rules",
+          "no cell phones in class · no smoking · appropriate clothes, no hats · students can't leave school during the day"
+         ]
+        ]
+       },
        "aufgabe": {
-        "G": "Ryan from Texas is going to be in your class soon. Write him an email about your school. – Ryan aus Texas kommt bald in deine Klasse. Schreib ihm eine E-Mail über deine Schule.",
-        "E": "Ryan from Texas is going to be in your class soon. Write him an email about your school."
+        "G": "Write a text comparing your school and Lincoln High School. Use the fact sheet. – Vergleiche deine Schule mit der Lincoln High School. Benutze das Fact sheet.",
+        "E": "Write a text comparing your school and Lincoln High School. Use the fact sheet."
        },
        "min": {
-        "G": 6,
-        "E": 9
+        "G": 7,
+        "E": 10
        },
        "inhalt": [
         {
-         "G": "Name und Größe der Schule",
-         "E": "name and size of your school",
-         "muster": "called|students|big|small|huge"
+         "G": "Einleitungssatz (similar / different)",
+         "E": "Opening sentence (similar / different)",
+         "muster": "similar|different|same"
         },
         {
-         "G": "Schultag (Uhrzeiten)",
-         "E": "your school day (times)",
-         "muster": "\\d|start|end|o'clock"
+         "G": "Schüler: Größe, Alter, Klassen",
+         "E": "Students: size, age, grades",
+         "muster": "students|grades?\\b|years old|between \\d+ and"
         },
         {
-         "G": "Lieblingsfach und warum",
-         "E": "your favourite subject and why",
-         "muster": "subject|because"
+         "G": "Schultag: Beginn, Ende, AGs",
+         "E": "School day: start, end, clubs",
+         "muster": "starts?|ends?|finish|clubs?"
         },
         {
-         "G": "AGs / Freizeit an der Schule",
-         "E": "clubs and activities",
-         "muster": "club|band|team|after school"
+         "G": "Regeln (phones, clothes, …)",
+         "E": "Rules (phones, clothes, …)",
+         "muster": "rules?|phones?|smok|clothes|hats?|dress code|leave school"
         },
         {
-         "G": "Was dir am besten gefällt",
-         "E": "what you like best",
-         "muster": "like|love|best"
+         "G": "Schluss mit deiner Meinung",
+         "E": "Conclusion with your opinion",
+         "muster": "to sum up|in my opinion|I think|I would|all in all"
+        }
+       ],
+       "form": [
+        {
+         "G": "Verbindungswörter: firstly, secondly, also, plus …",
+         "E": "Linking words: firstly, secondly, also, plus …",
+         "muster": "\\b(firstly|secondly|thirdly|also|plus|and)\\b",
+         "anzahl": 3
+        },
+        {
+         "G": "Gegensatz: but, on the other hand",
+         "E": "Contrast: but, on the other hand",
+         "muster": "\\b(but|on the other hand|however)\\b"
+        },
+        {
+         "G": "Vergleich: bigger than, the same as …",
+         "E": "Comparison: bigger than, the same as …",
+         "muster": "\\b\\w+er than\\b|more \\w+ than|the same as|as \\w+ as"
+        },
+        {
+         "G": "Beispiel: for example",
+         "E": "Example: for example",
+         "muster": "for example|for instance|such as"
+        },
+        {
+         "G": "One big advantage / difference …",
+         "E": "One big advantage / difference …",
+         "muster": "advantage|difference"
+        },
+        {
+         "G": "„I“ immer groß",
+         "E": "“I” always with a capital letter",
+         "test": "ich_gross"
         }
        ],
        "bausteine": [
-        "Hi Ryan,",
-        "I'm writing to tell you about my school.",
-        "Our school is called … and it has about … students.",
-        "School starts at … and ends at …",
-        "My favourite subject is … because …",
-        "There are lots of clubs, for example …",
-        "We have …",
-        "We don't wear school uniforms.",
-        "What I like best about my school is …",
-        "I'm really looking forward to meeting you!",
-        "Best wishes,"
+        "Our school and Lincoln High School are quite different.",
+        "Our school and Lincoln High School are similar in some ways, but quite different in others.",
+        "Firstly, …",
+        "Secondly, …",
+        "Lincoln High is bigger than our school.",
+        "At Lincoln High, school starts at … and ends at …",
+        "We usually finish at …",
+        "When it comes to rules, …",
+        "For example, …",
+        "On the other hand, …",
+        "One big difference between our school and Lincoln High is …",
+        "One big advantage of our school is …",
+        "As a result, …",
+        "To sum up, …"
        ]
       }
      ]
@@ -7572,12 +7647,12 @@ window.DATEN = {
   }
  ],
  "hoeren": {
-  "after_school": {
-   "id": "after_school",
-   "titel": "After-school activities at Riverside High",
+  "after_class": {
+   "id": "after_class",
+   "titel": "After class at Lincoln High",
    "instruction": {
-    "G": "Listen to four students. What do they do after school, and when? Tick the right answers.",
-    "E": "Listen to four students. Fill in the table: What do they do after school? When?"
+    "G": "Listen to four students at Lincoln High School. What do they do after class, and what do they like most? Tick the right answers.",
+    "E": "Listen to four students at Lincoln High School. Fill in the table: What do they do after class? What do they like most? What is difficult for them?"
    },
    "anleitung": {
     "G": "Lies zuerst die Aufgabe und alle Antworten. Dann weißt du, worauf du beim Hören achten musst.",
@@ -7585,157 +7660,224 @@ window.DATEN = {
    },
    "teile": [
     {
-     "id": "as_ethan",
+     "id": "ls_destiny",
+     "sprecher": "Destiny",
+     "stimme": "f",
+     "text": "When I started at Lincoln High, everything was intimidating – the hallways, the noise, the seniors. Then I joined the debate team. I'm really good at arguing – just ask my parents! We practise on Mondays and Wednesdays, and next month we're going to a competition in Seattle. I'm a bit nervous about speaking in front of the judges, but I'm really looking forward to it.",
+     "audio": "audio/hoeren/ls_destiny.mp3"
+    },
+    {
+     "id": "ls_ethan",
      "sprecher": "Ethan",
      "stimme": "m",
-     "text": "Hi, I'm Ethan. After school, I go to the robotics club. We build small robots and program them. It's on Tuesdays and Thursdays, from three thirty to five. Last month, our robot won a prize!",
-     "audio": "audio/hoeren/as_ethan.mp3"
+     "text": "Sports have never really been my thing. I prefer making things, so I joined the stage crew for the school play. We build the sets and do the lights. It's hard work, and before a show we sometimes stay until nine at night. But when the curtain goes up and everything works – that's incredible.",
+     "audio": "audio/hoeren/ls_ethan.mp3"
     },
     {
-     "id": "as_chloe",
-     "sprecher": "Chloe",
+     "id": "ls_maya",
+     "sprecher": "Maya",
      "stimme": "f",
-     "text": "Hey, I'm Chloe. I write for the school newspaper. I'm one of the editors, so I check the other students' articles. We meet every Monday after school. I love it because I can write about things that really matter.",
-     "audio": "audio/hoeren/as_chloe.mp3"
+     "text": "I'm on the volunteering committee. We organize fund-raising events like car washes and bake sales, so that we can help a homeless shelter downtown. Last year we raised as much as three thousand dollars. Sometimes it's hard to find enough volunteers on a Saturday morning. But I love helping people – and it looks great on college applications, too.",
+     "audio": "audio/hoeren/ls_maya.mp3"
     },
     {
-     "id": "as_marcus",
-     "sprecher": "Marcus",
+     "id": "ls_jordan",
+     "sprecher": "Jordan",
      "stimme": "m",
-     "text": "My name is Marcus. I'm not really into sports or clubs. On Saturdays, I volunteer at an animal shelter. I walk the dogs and clean the cages. It's community service, but honestly, it doesn't feel like work.",
-     "audio": "audio/hoeren/as_marcus.mp3"
-    },
-    {
-     "id": "as_lily",
-     "sprecher": "Lily",
-     "stimme": "f",
-     "text": "Hi, I'm Lily, and I'm a cheerleader. We practice every day after school, and on Fridays we cheer at the football games. It's tough, but the team spirit is amazing!",
-     "audio": "audio/hoeren/as_lily.mp3"
+     "text": "I'm interested in music, so I play the trumpet in the marching band. We play at every football game and at homecoming. Marching and playing at the same time isn't easy, but you get used to it. The best thing is the team spirit – we're like a big family.",
+     "audio": "audio/hoeren/ls_jordan.mp3"
     }
    ],
-   "was": [
+   "fragen": [
     {
-     "key": "robotics",
-     "symbol": "🤖",
-     "en": "robotics club"
+     "key": "was",
+     "G": "What? – Was macht {name} nach der Schule?",
+     "E": "What does {name} do after class?",
+     "optionen": [
+      {
+       "key": "debate",
+       "symbol": "🎤",
+       "en": "debate team"
+      },
+      {
+       "key": "stage",
+       "symbol": "🎭",
+       "en": "stage crew"
+      },
+      {
+       "key": "volunteer",
+       "symbol": "🤝",
+       "en": "volunteering committee"
+      },
+      {
+       "key": "band",
+       "symbol": "🎺",
+       "en": "marching band"
+      },
+      {
+       "key": "cheer",
+       "symbol": "📣",
+       "en": "cheerleading"
+      },
+      {
+       "key": "paper",
+       "symbol": "📰",
+       "en": "school newspaper"
+      }
+     ]
     },
     {
-     "key": "newspaper",
-     "symbol": "📰",
-     "en": "school newspaper"
+     "key": "gut",
+     "G": "Best part? – Was gefällt {name} am meisten oder worauf freut er/sie sich?",
+     "E": "What does {name} like most or look forward to?",
+     "optionen": [
+      {
+       "key": "competition",
+       "en": "a competition in Seattle"
+      },
+      {
+       "key": "show",
+       "en": "when the show works"
+      },
+      {
+       "key": "helping",
+       "en": "helping people"
+      },
+      {
+       "key": "spirit",
+       "en": "the team spirit"
+      },
+      {
+       "key": "prizes",
+       "en": "winning prizes"
+      },
+      {
+       "key": "food",
+       "en": "free food"
+      }
+     ]
     },
     {
-     "key": "shelter",
-     "symbol": "🐶",
-     "en": "animal shelter"
-    },
-    {
-     "key": "cheer",
-     "symbol": "📣",
-     "en": "cheerleading"
-    },
-    {
-     "key": "drama",
-     "symbol": "🎭",
-     "en": "drama club"
-    },
-    {
-     "key": "swim",
-     "symbol": "🏊",
-     "en": "swim team"
-    }
-   ],
-   "wann": [
-    {
-     "key": "mon",
-     "en": "Mondays"
-    },
-    {
-     "key": "tuethu",
-     "en": "Tuesdays and Thursdays"
-    },
-    {
-     "key": "fri",
-     "en": "Fridays"
-    },
-    {
-     "key": "sat",
-     "en": "Saturdays"
-    },
-    {
-     "key": "daily",
-     "en": "every day"
+     "key": "schwer",
+     "nur": "E",
+     "E": "What is difficult for {name}?"
     }
    ],
    "aufgaben": [
     {
-     "teil": "as_ethan",
-     "was": "robotics",
-     "wann": "tuethu",
+     "teil": "ls_destiny",
+     "was": "debate",
+     "gut": "competition",
+     "schwer_text": "speaking in front of the judges",
      "was_e": [
       [
-       "robot"
+       "debat"
       ]
      ],
-     "wann_e": [
+     "gut_e": [
       [
-       "tue"
-      ],
+       "competition",
+       "seattle",
+       "arguing",
+       "argue"
+      ]
+     ],
+     "schwer_e": [
       [
-       "thu"
+       "nervous",
+       "judge",
+       "speak",
+       "intimidating"
       ]
      ]
     },
     {
-     "teil": "as_chloe",
-     "was": "newspaper",
-     "wann": "mon",
+     "teil": "ls_ethan",
+     "was": "stage",
+     "gut": "show",
+     "schwer_text": "hard work, staying late",
      "was_e": [
       [
-       "newspaper",
-       "paper",
-       "editor"
+       "stage",
+       "play",
+       "theater",
+       "theatre",
+       "set",
+       "light"
       ]
      ],
-     "wann_e": [
+     "gut_e": [
       [
-       "mon"
+       "work",
+       "curtain",
+       "show",
+       "incredible",
+       "making"
+      ]
+     ],
+     "schwer_e": [
+      [
+       "hard",
+       "late",
+       "nine",
+       "stay"
       ]
      ]
     },
     {
-     "teil": "as_marcus",
-     "was": "shelter",
-     "wann": "sat",
+     "teil": "ls_maya",
+     "was": "volunteer",
+     "gut": "helping",
+     "schwer_text": "finding enough volunteers on Saturdays",
      "was_e": [
       [
-       "animal",
+       "volunteer",
+       "fund",
+       "charity",
        "shelter",
-       "dog",
-       "volunteer"
+       "car wash",
+       "bake sale"
       ]
      ],
-     "wann_e": [
+     "gut_e": [
       [
-       "sat"
+       "help",
+       "college"
+      ]
+     ],
+     "schwer_e": [
+      [
+       "volunteer",
+       "saturday",
+       "find",
+       "enough"
       ]
      ]
     },
     {
-     "teil": "as_lily",
-     "was": "cheer",
-     "wann": "daily",
+     "teil": "ls_jordan",
+     "was": "band",
+     "gut": "spirit",
+     "schwer_text": "marching and playing at the same time",
      "was_e": [
       [
-       "cheer"
+       "band",
+       "trumpet",
+       "music"
       ]
      ],
-     "wann_e": [
+     "gut_e": [
       [
-       "every day",
-       "everyday",
-       "daily",
-       "each day"
+       "spirit",
+       "family",
+       "team"
+      ]
+     ],
+     "schwer_e": [
+      [
+       "march",
+       "same time",
+       "playing"
       ]
      ]
     }

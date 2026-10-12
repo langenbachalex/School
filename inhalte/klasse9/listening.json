@@ -1,47 +1,55 @@
 {
- "id": "after_school",
- "titel": "After-school activities at Riverside High",
- "instruction": {"G": "Listen to four students. What do they do after school, and when? Tick the right answers.",
-                 "E": "Listen to four students. Fill in the table: What do they do after school? When?"},
+ "id": "after_class",
+ "titel": "After class at Lincoln High",
+ "instruction": {"G": "Listen to four students at Lincoln High School. What do they do after class, and what do they like most? Tick the right answers.",
+                 "E": "Listen to four students at Lincoln High School. Fill in the table: What do they do after class? What do they like most? What is difficult for them?"},
  "anleitung": {"G": "Lies zuerst die Aufgabe und alle Antworten. Dann weißt du, worauf du beim Hören achten musst.",
                "E": "Read the task and the table first. Then you know what to listen for."},
  "woerter": [
-  ["hw_01", "the robotics club", "die Robotik-AG", "robotics club"],
-  ["hw_02", "the school newspaper", "die Schülerzeitung", "newspaper"],
-  ["hw_03", "an editor", "ein Redakteur / eine Redakteurin", "editor"],
-  ["hw_04", "an animal shelter", "ein Tierheim", "animal shelter"],
-  ["hw_05", "to volunteer", "ehrenamtlich arbeiten", "volunteer"],
-  ["hw_06", "to practice", "trainieren, üben", "practice"]
+  ["lw_01", "the debate team", "die Debattier-AG", "debate team"],
+  ["lw_02", "the stage crew", "die Bühnentechnik-Gruppe (Theater)", "stage crew"],
+  ["lw_03", "a fund-raising event", "eine Spendenaktion", "fund-raising event"],
+  ["lw_04", "the marching band", "die Marschkapelle", "marching band"],
+  ["lw_05", "You get used to it.", "Man gewöhnt sich daran.", "get used to"],
+  ["lw_06", "team spirit", "Teamgeist", "team spirit"]
  ],
  "teile": [
-  {"id": "as_ethan", "sprecher": "Ethan", "stimme": "m",
-   "text": "Hi, I'm Ethan. After school, I go to the robotics club. We build small robots and program them. It's on Tuesdays and Thursdays, from three thirty to five. Last month, our robot won a prize!"},
-  {"id": "as_chloe", "sprecher": "Chloe", "stimme": "f",
-   "text": "Hey, I'm Chloe. I write for the school newspaper. I'm one of the editors, so I check the other students' articles. We meet every Monday after school. I love it because I can write about things that really matter."},
-  {"id": "as_marcus", "sprecher": "Marcus", "stimme": "m",
-   "text": "My name is Marcus. I'm not really into sports or clubs. On Saturdays, I volunteer at an animal shelter. I walk the dogs and clean the cages. It's community service, but honestly, it doesn't feel like work."},
-  {"id": "as_lily", "sprecher": "Lily", "stimme": "f",
-   "text": "Hi, I'm Lily, and I'm a cheerleader. We practice every day after school, and on Fridays we cheer at the football games. It's tough, but the team spirit is amazing!"}
+  {"id": "ls_destiny", "sprecher": "Destiny", "stimme": "f",
+   "text": "When I started at Lincoln High, everything was intimidating – the hallways, the noise, the seniors. Then I joined the debate team. I'm really good at arguing – just ask my parents! We practise on Mondays and Wednesdays, and next month we're going to a competition in Seattle. I'm a bit nervous about speaking in front of the judges, but I'm really looking forward to it."},
+  {"id": "ls_ethan", "sprecher": "Ethan", "stimme": "m",
+   "text": "Sports have never really been my thing. I prefer making things, so I joined the stage crew for the school play. We build the sets and do the lights. It's hard work, and before a show we sometimes stay until nine at night. But when the curtain goes up and everything works – that's incredible."},
+  {"id": "ls_maya", "sprecher": "Maya", "stimme": "f",
+   "text": "I'm on the volunteering committee. We organize fund-raising events like car washes and bake sales, so that we can help a homeless shelter downtown. Last year we raised as much as three thousand dollars. Sometimes it's hard to find enough volunteers on a Saturday morning. But I love helping people – and it looks great on college applications, too."},
+  {"id": "ls_jordan", "sprecher": "Jordan", "stimme": "m",
+   "text": "I'm interested in music, so I play the trumpet in the marching band. We play at every football game and at homecoming. Marching and playing at the same time isn't easy, but you get used to it. The best thing is the team spirit – we're like a big family."}
  ],
- "was": [
-  {"key": "robotics", "symbol": "🤖", "en": "robotics club"},
-  {"key": "newspaper", "symbol": "📰", "en": "school newspaper"},
-  {"key": "shelter", "symbol": "🐶", "en": "animal shelter"},
-  {"key": "cheer", "symbol": "📣", "en": "cheerleading"},
-  {"key": "drama", "symbol": "🎭", "en": "drama club"},
-  {"key": "swim", "symbol": "🏊", "en": "swim team"}
- ],
- "wann": [
-  {"key": "mon", "en": "Mondays"},
-  {"key": "tuethu", "en": "Tuesdays and Thursdays"},
-  {"key": "fri", "en": "Fridays"},
-  {"key": "sat", "en": "Saturdays"},
-  {"key": "daily", "en": "every day"}
+ "fragen": [
+  {"key": "was", "G": "What? – Was macht {name} nach der Schule?", "E": "What does {name} do after class?",
+   "optionen": [
+    {"key": "debate", "symbol": "🎤", "en": "debate team"},
+    {"key": "stage", "symbol": "🎭", "en": "stage crew"},
+    {"key": "volunteer", "symbol": "🤝", "en": "volunteering committee"},
+    {"key": "band", "symbol": "🎺", "en": "marching band"},
+    {"key": "cheer", "symbol": "📣", "en": "cheerleading"},
+    {"key": "paper", "symbol": "📰", "en": "school newspaper"}]},
+  {"key": "gut", "G": "Best part? – Was gefällt {name} am meisten oder worauf freut er/sie sich?", "E": "What does {name} like most or look forward to?",
+   "optionen": [
+    {"key": "competition", "en": "a competition in Seattle"},
+    {"key": "show", "en": "when the show works"},
+    {"key": "helping", "en": "helping people"},
+    {"key": "spirit", "en": "the team spirit"},
+    {"key": "prizes", "en": "winning prizes"},
+    {"key": "food", "en": "free food"}]},
+  {"key": "schwer", "nur": "E", "E": "What is difficult for {name}?"}
  ],
  "aufgaben": [
-  {"teil": "as_ethan", "was": "robotics", "wann": "tuethu", "was_e": [["robot"]], "wann_e": [["tue"], ["thu"]]},
-  {"teil": "as_chloe", "was": "newspaper", "wann": "mon", "was_e": [["newspaper", "paper", "editor"]], "wann_e": [["mon"]]},
-  {"teil": "as_marcus", "was": "shelter", "wann": "sat", "was_e": [["animal", "shelter", "dog", "volunteer"]], "wann_e": [["sat"]]},
-  {"teil": "as_lily", "was": "cheer", "wann": "daily", "was_e": [["cheer"]], "wann_e": [["every day", "everyday", "daily", "each day"]]}
+  {"teil": "ls_destiny", "was": "debate", "gut": "competition", "schwer_text": "speaking in front of the judges",
+   "was_e": [["debat"]], "gut_e": [["competition", "seattle", "arguing", "argue"]], "schwer_e": [["nervous", "judge", "speak", "intimidating"]]},
+  {"teil": "ls_ethan", "was": "stage", "gut": "show", "schwer_text": "hard work, staying late",
+   "was_e": [["stage", "play", "theater", "theatre", "set", "light"]], "gut_e": [["work", "curtain", "show", "incredible", "making"]], "schwer_e": [["hard", "late", "nine", "stay"]]},
+  {"teil": "ls_maya", "was": "volunteer", "gut": "helping", "schwer_text": "finding enough volunteers on Saturdays",
+   "was_e": [["volunteer", "fund", "charity", "shelter", "car wash", "bake sale"]], "gut_e": [["help", "college"]], "schwer_e": [["volunteer", "saturday", "find", "enough"]]},
+  {"teil": "ls_jordan", "was": "band", "gut": "spirit", "schwer_text": "marching and playing at the same time",
+   "was_e": [["band", "trumpet", "music"]], "gut_e": [["spirit", "family", "team"]], "schwer_e": [["march", "same time", "playing"]]}
  ]
 }

@@ -41,6 +41,13 @@ def dialog(name, symbol, praefix, zeilen, eigene=False):
     return {"name": name, "symbol": symbol, "schritte": schritte}
 
 
+# Fact sheet zur Writing-Aufgabe (Paralleltext zu S. 48, Hingham High School)
+FAKTEN_LINCOLN = {"name": "Lincoln High School", "punkte": [
+    ["students", "about 1,500 · grades 9–12 · age 14–18"],
+    ["school day", "7:45 a.m. – 2:15 p.m. · clubs start at 2:45 p.m. · homework every day"],
+    ["rules", "no cell phones in class · no smoking · appropriate clothes, no hats · students can't leave school during the day"]]}
+
+
 # Die 9 Kategorien (3×3). „bald“ = noch ohne Inhalt.
 KATEGORIEN = [
     {"nr": 1, "titel": "Reading", "unter": {"G": "Leseverstehen", "E": "Reading comprehension"}, "symbol": "📖",
@@ -146,35 +153,45 @@ KATEGORIEN = [
      ]},
     {"nr": 4, "titel": "Listening", "unter": {"G": "Hörverstehen", "E": "Listening comprehension"}, "symbol": "🎧",
      "gruppen": [
-         {"name": "After-school activities", "symbol": "🤖 📰 🐶 📣",
+         {"name": "After class at Lincoln High", "symbol": "🎤 🎭 🤝 🎺",
           "schritte": [
-              {"art": "lr", "name": "Words first", "stufen": [1, 2], "saetze": ["hw_01", "hw_02", "hw_03", "hw_04", "hw_05", "hw_06"]},
-              {"art": "hoeren", "name": "Listening", "uebung": "after_school"},
+              {"art": "lr", "name": "Words first", "stufen": [1, 2], "saetze": [f"lw_{i:02d}" for i in range(1, 7)]},
+              {"art": "hoeren", "name": "Listening", "uebung": "after_class"},
           ]},
      ]},
     {"nr": 5, "titel": "Writing", "unter": {"G": "Schreiben", "E": "Writing texts"}, "symbol": "✍️",
      "gruppen": [
-         {"name": "Information about your school", "symbol": "🏫 ✉️", "schritte": [
-             {"art": "mustertext", "name": "Model text", "titel": "An email to Ryan from Texas", "eigene_zeile": ["wm_01", "wm_12"],
+         {"name": "Our school and a US high school", "symbol": "🏫 🇺🇸", "schritte": [
+             {"art": "mustertext", "name": "Model text", "titel": "Our school and Lincoln High School", "fakten": FAKTEN_LINCOLN,
               "abschnitte": [
-                  {"label": {"G": "Anfang (beginning)", "E": "Beginning"}, "saetze": ["wm_01", "wm_02", "wm_03"]},
-                  {"label": {"G": "Mittelteil (middle)", "E": "Middle"}, "saetze": ["wm_04", "wm_05", "wm_06", "wm_07", "wm_08", "wm_09"]},
-                  {"label": {"G": "Schluss (end)", "E": "End"}, "saetze": ["wm_10", "wm_11", "wm_12"]}]},
-             {"art": "lr", "name": "Useful phrases", "saetze": ["wm_03", "wm_04", "wm_05", "wm_06", "wm_07", "wm_08", "wm_09", "wm_10", "wm_11", "wm_12"]},
-             {"art": "schreiben", "name": "Your text", "speicher": "schule",
-              "aufgabe": {"G": "Ryan from Texas is going to be in your class soon. Write him an email about your school. – Ryan aus Texas kommt bald in deine Klasse. Schreib ihm eine E-Mail über deine Schule.",
-                          "E": "Ryan from Texas is going to be in your class soon. Write him an email about your school."},
-              "min": {"G": 6, "E": 9},
+                  {"label": {"G": "Einleitung (opening sentence)", "E": "Opening sentence"}, "saetze": ["wn_01"]},
+                  {"label": {"G": "Schüler (students)", "E": "Students"}, "saetze": ["wn_02", "wn_03"]},
+                  {"label": {"G": "Schultag (school day)", "E": "School day"}, "saetze": ["wn_04", "wn_05", "wn_06"]},
+                  {"label": {"G": "Regeln (rules)", "E": "Rules"}, "saetze": ["wn_07", "wn_08", "wn_09"]},
+                  {"label": {"G": "Schluss (to sum up)", "E": "Conclusion"}, "saetze": ["wn_10", "wn_11"]}]},
+             {"art": "lr", "name": "Useful phrases", "saetze": [f"wn_{i:02d}" for i in range(1, 12)]},
+             {"art": "schreiben", "name": "Your text", "speicher": "vergleich", "fakten": FAKTEN_LINCOLN,
+              "aufgabe": {"G": "Write a text comparing your school and Lincoln High School. Use the fact sheet. – Vergleiche deine Schule mit der Lincoln High School. Benutze das Fact sheet.",
+                          "E": "Write a text comparing your school and Lincoln High School. Use the fact sheet."},
+              "min": {"G": 7, "E": 10},
               "inhalt": [
-                  {"G": "Name und Größe der Schule", "E": "name and size of your school", "muster": "called|students|big|small|huge"},
-                  {"G": "Schultag (Uhrzeiten)", "E": "your school day (times)", "muster": "\\d|start|end|o'clock"},
-                  {"G": "Lieblingsfach und warum", "E": "your favourite subject and why", "muster": "subject|because"},
-                  {"G": "AGs / Freizeit an der Schule", "E": "clubs and activities", "muster": "club|band|team|after school"},
-                  {"G": "Was dir am besten gefällt", "E": "what you like best", "muster": "like|love|best"}],
-              "bausteine": ["Hi Ryan,", "I'm writing to tell you about my school.", "Our school is called … and it has about … students.",
-                            "School starts at … and ends at …", "My favourite subject is … because …",
-                            "There are lots of clubs, for example …", "We have …", "We don't wear school uniforms.",
-                            "What I like best about my school is …", "I'm really looking forward to meeting you!", "Best wishes,"]},
+                  {"G": "Einleitungssatz (similar / different)", "E": "Opening sentence (similar / different)", "muster": "similar|different|same"},
+                  {"G": "Schüler: Größe, Alter, Klassen", "E": "Students: size, age, grades", "muster": "students|grades?\\b|years old|between \\d+ and"},
+                  {"G": "Schultag: Beginn, Ende, AGs", "E": "School day: start, end, clubs", "muster": "starts?|ends?|finish|clubs?"},
+                  {"G": "Regeln (phones, clothes, …)", "E": "Rules (phones, clothes, …)", "muster": "rules?|phones?|smok|clothes|hats?|dress code|leave school"},
+                  {"G": "Schluss mit deiner Meinung", "E": "Conclusion with your opinion", "muster": "to sum up|in my opinion|I think|I would|all in all"}],
+              "form": [
+                  {"G": "Verbindungswörter: firstly, secondly, also, plus …", "E": "Linking words: firstly, secondly, also, plus …",
+                   "muster": "\\b(firstly|secondly|thirdly|also|plus|and)\\b", "anzahl": 3},
+                  {"G": "Gegensatz: but, on the other hand", "E": "Contrast: but, on the other hand", "muster": "\\b(but|on the other hand|however)\\b"},
+                  {"G": "Vergleich: bigger than, the same as …", "E": "Comparison: bigger than, the same as …", "muster": "\\b\\w+er than\\b|more \\w+ than|the same as|as \\w+ as"},
+                  {"G": "Beispiel: for example", "E": "Example: for example", "muster": "for example|for instance|such as"},
+                  {"G": "One big advantage / difference …", "E": "One big advantage / difference …", "muster": "advantage|difference"},
+                  {"G": "„I“ immer groß", "E": "“I” always with a capital letter", "test": "ich_gross"}],
+              "bausteine": ["Our school and Lincoln High School are quite different.", "Our school and Lincoln High School are similar in some ways, but quite different in others.",
+                            "Firstly, …", "Secondly, …", "Lincoln High is bigger than our school.", "At Lincoln High, school starts at … and ends at …",
+                            "We usually finish at …", "When it comes to rules, …", "For example, …", "On the other hand, …",
+                            "One big difference between our school and Lincoln High is …", "One big advantage of our school is …", "As a result, …", "To sum up, …"]},
          ]},
          {"name": "Check and correct", "symbol": "🔍 ✔️", "schritte": [
              {"art": "erklaerung", "name": "Checklist", "bloecke": [

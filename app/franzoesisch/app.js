@@ -350,8 +350,9 @@
     const alles = [...plan.wdh, ...plan.neu].every((id) => plan.fertig.includes(id));
     const erstesMal = alles && !plan.geschafft;
     if (erstesMal) { plan.geschafft = true; speichern(); belohne(true, true); }
-    const text = alles ? ruf("geschafft") : lob(true);
-    const fini = SP.texte.fini;
+    // Lob und „À demain“ hintereinander (nicht gleichzeitig, sonst schneidet das eine das andere ab)
+    const r = waehleRuf(alles ? "geschafft" : "stark"), text = r ? r.text : "";
+    const fini = erstesMal && SP.texte.fini;
     const zeichne = () => zeige(seanceKopf(), el("section", { class: "geschafft" },
       el("h2", { lang: "fr" }, alles ? "C'est fini pour aujourd'hui !" : "Pause !"),
       el("p", { class: "ansage", lang: "fr" }, text),
@@ -362,7 +363,7 @@
       el("div", { class: "knopfreihe" }, knopf("Accueil", startseite, "haupt"), knopf("🏆 Ma collection", sammlung))));
     ansicht = zeichne; seance = null; tasten(null, null);
     zeichne();
-    if (erstesMal && fini) setTimeout(() => spiele([fini.audio || { text: fini.text }]), 1500);
+    setTimeout(() => spiele([r && tonLob(r), fini && (fini.audio || { text: fini.text })]), 300);
   }
 
   /* ---------- Themen: Teile und Lage ---------- */

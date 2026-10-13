@@ -98,4 +98,5 @@ Idee, noch nicht gebaut. Die vier Nasale **[ɑ̃] en/an – [ɔ̃] on – [ɛ̃]
 1. Inhaltsprobe `inhalte/franzoesisch/entre_profs.tsv`: Format und Ton in Ordnung?
 2. Held der Geschichte: Name, Beruf, Ausgangspunkt.
 3. Titel: Delikatessen-Reihe so in Ordnung, oder Tour de France?
-4. Nächster Schritt – Vorschlag: Audios erzeugen (174 Dateien, ca. 5.100 Zeichen), Veröffentlichung unter `/franzoesisch/` (Option A, 13.10.: Französisch-Branch in den Hauptbranch `claude/awesome-dijkstra-dy57ir` mergen), dann Dialoge mit Aurélien und die Frankreich-Karte.
+4. Reihenfolge (Mr. Alex, 13.10.): **1. Dialoge mit Aurélien (mit Humor) · 2. Frankreich-Karte · 3. Nasallaute.** Lob-Liste: `docs/franzoesisch/lob-vorschlag.md` (zum Absegnen).
+5. Früherer Vorschlag: Audios erzeugen (174 Dateien, ca. 5.100 Zeichen), Veröffentlichung unter `/franzoesisch/` (Option A, 13.10.: Französisch-Branch in den Hauptbranch `claude/awesome-dijkstra-dy57ir` mergen), dann Dialoge mit Aurélien und die Frankreich-Karte.

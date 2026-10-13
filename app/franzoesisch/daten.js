@@ -2464,6 +2464,198 @@ window.DATEN = {
      "audio": "audio/geschichte/k01_14.mp3"
     }
    ]
+  },
+  {
+   "nr": 2,
+   "titel": "Le train",
+   "absaetze": [
+    {
+     "id": "k02_01",
+     "fr": "Le train pour Paris mettait une heure et demie. Julien avait un livre, un café et une question.",
+     "de": "Der Zug nach Paris brauchte anderthalb Stunden. Julien hatte ein Buch, einen Kaffee und eine Frage.",
+     "audio": "audio/geschichte/k02_01.mp3"
+    },
+    {
+     "id": "k02_02",
+     "fr": "L'homme en face de lui lisait toujours le journal. Le chat gris, lui, ne lisait pas. Il regardait Julien. **Ça ne le dérangeait pas**, apparemment.",
+     "de": "Der Mann ihm gegenüber las immer noch Zeitung. Die graue Katze las nicht. Sie sah Julien an. Das störte sie offenbar nicht.",
+     "audio": "audio/geschichte/k02_02.mp3"
+    },
+    {
+     "id": "k02_03",
+     "fr": "« Il est **indépendant** », a dit l'homme sans lever les yeux. « Il choisit les gens. »",
+     "de": "„Er ist unabhängig“, sagte der Mann, ohne aufzusehen. „Er sucht sich die Leute aus.“",
+     "audio": "audio/geschichte/k02_03.mp3"
+    },
+    {
+     "id": "k02_04",
+     "fr": "« Et il m'a choisi ? » a demandé Julien.",
+     "de": "„Und er hat mich ausgesucht?“, fragte Julien.",
+     "audio": "audio/geschichte/k02_04.mp3"
+    },
+    {
+     "id": "k02_05",
+     "fr": "« Non. Il vous a reconnu. Ce n'est pas la même chose. »",
+     "de": "„Nein. Er hat Sie erkannt. Das ist nicht dasselbe.“",
+     "audio": "audio/geschichte/k02_05.mp3"
+    },
+    {
+     "id": "k02_06",
+     "fr": "Julien a souri poliment. Il avait l'habitude des gens bizarres. Il était professeur.",
+     "de": "Julien lächelte höflich. Er war seltsame Leute gewohnt. Er war Lehrer.",
+     "audio": "audio/geschichte/k02_06.mp3"
+    },
+    {
+     "id": "k02_07",
+     "fr": "Entre Châlons et Paris, l'homme a plié son journal. Il a posé sur la table une petite clé en laiton, très vieille, avec un numéro : 13.",
+     "de": "Zwischen Châlons und Paris faltete der Mann seine Zeitung zusammen. Er legte einen kleinen, sehr alten Messingschlüssel auf den Tisch, mit einer Nummer: 13.",
+     "audio": "audio/geschichte/k02_07.mp3"
+    },
+    {
+     "id": "k02_08",
+     "fr": "« Vous allez chercher la salle 13 », a-t-il dit. « Elle n'est pas sur le plan. Elle n'est pas sur Internet. Elle est entre la salle 12 et la salle 14. Évidemment. »",
+     "de": "„Sie werden Saal 13 suchen“, sagte er. „Er steht nicht auf dem Plan. Er steht nicht im Internet. Er liegt zwischen Saal 12 und Saal 14. Natürlich.“",
+     "audio": "audio/geschichte/k02_08.mp3"
+    },
+    {
+     "id": "k02_09",
+     "fr": "« Évidemment », a répété Julien. Il **avait du mal à** garder son sérieux. Et en même temps, il **avait le cœur lourd**, sans savoir pourquoi.",
+     "de": "„Natürlich“, wiederholte Julien. Er hatte Mühe, ernst zu bleiben. Und gleichzeitig war ihm schwer ums Herz, ohne zu wissen, warum.",
+     "audio": "audio/geschichte/k02_09.mp3"
+    },
+    {
+     "id": "k02_10",
+     "fr": "« Une dernière chose, monsieur Lefèvre. » L'homme connaissait son nom. « Dans la salle 13, ne chantez pas. »",
+     "de": "„Noch etwas, Monsieur Lefèvre.“ Der Mann kannte seinen Namen. „In Saal 13: Singen Sie nicht.“",
+     "audio": "audio/geschichte/k02_10.mp3"
+    },
+    {
+     "id": "k02_11",
+     "fr": "Le train est entré en gare de l'Est. Quand Julien s'est retourné, l'homme n'était plus là. Le chat non plus.",
+     "de": "Der Zug fuhr in den Gare de l'Est ein. Als Julien sich umdrehte, war der Mann nicht mehr da. Die Katze auch nicht.",
+     "audio": "audio/geschichte/k02_11.mp3"
+    },
+    {
+     "id": "k02_12",
+     "fr": "Sur la table, il y avait la clé. Et un poil gris.",
+     "de": "Auf dem Tisch lagen der Schlüssel. Und ein graues Haar.",
+     "audio": "audio/geschichte/k02_12.mp3"
+    },
+    {
+     "id": "k02_13",
+     "fr": "Julien a pris les deux. **Du coup**, il était maintenant un professeur de Metz avec une clé, un poil de chat et un rendez-vous dans une salle qui n'existait pas.",
+     "de": "Julien nahm beides. Und so war er jetzt ein Lehrer aus Metz mit einem Schlüssel, einem Katzenhaar und einer Verabredung in einem Saal, den es nicht gab.",
+     "audio": "audio/geschichte/k02_13.mp3"
+    },
+    {
+     "id": "k02_14",
+     "fr": "Un samedi normal, en somme.",
+     "de": "Ein normaler Samstag, alles in allem.",
+     "audio": "audio/geschichte/k02_14.mp3"
+    },
+    {
+     "id": "k02_15",
+     "fr": "À suivre.",
+     "de": "Fortsetzung folgt.",
+     "audio": "audio/geschichte/k02_15.mp3"
+    }
+   ]
+  },
+  {
+   "nr": 3,
+   "titel": "La salle 13",
+   "absaetze": [
+    {
+     "id": "k03_01",
+     "fr": "Dix heures. Sous la pyramide, il y avait du monde, des valises, des enfants et un guide qui criait « Mona Lisa, par ici ! » en quatre langues.",
+     "de": "Zehn Uhr. Unter der Pyramide waren Menschen, Koffer, Kinder und ein Führer, der „Mona Lisa, hier entlang!“ in vier Sprachen rief.",
+     "audio": "audio/geschichte/k03_01.mp3"
+    },
+    {
+     "id": "k03_02",
+     "fr": "Julien a montré son billet. La machine a dit *bip*. Un bip normal. Il était presque déçu.",
+     "de": "Julien zeigte seine Karte. Die Maschine machte *piep*. Ein normales Piep. Er war fast enttäuscht.",
+     "audio": "audio/geschichte/k03_02.mp3"
+    },
+    {
+     "id": "k03_03",
+     "fr": "L'aile Denon, premier étage. Salle 12 : des peintures italiennes. Salle 14 : des peintures italiennes. Entre les deux : un mur.",
+     "de": "Flügel Denon, erster Stock. Saal 12: italienische Malerei. Saal 14: italienische Malerei. Dazwischen: eine Wand.",
+     "audio": "audio/geschichte/k03_03.mp3"
+    },
+    {
+     "id": "k03_04",
+     "fr": "Julien a regardé le mur pendant cinq minutes. Un gardien a regardé Julien pendant cinq minutes. Puis le gardien est parti. **Ça fait longtemps** qu'il travaillait ici ; il avait vu des choses plus étranges.",
+     "de": "Julien sah die Wand fünf Minuten lang an. Ein Wärter sah Julien fünf Minuten lang an. Dann ging der Wärter. Er arbeitete schon lange hier; er hatte seltsamere Dinge gesehen.",
+     "audio": "audio/geschichte/k03_04.mp3"
+    },
+    {
+     "id": "k03_05",
+     "fr": "Dans le mur, à hauteur de main, il y avait une petite plaque en laiton. Et dans la plaque, un trou de serrure.",
+     "de": "In der Wand, auf Handhöhe, war ein kleines Messingschild. Und im Schild ein Schlüsselloch.",
+     "audio": "audio/geschichte/k03_05.mp3"
+    },
+    {
+     "id": "k03_06",
+     "fr": "Julien a sorti la clé. Il a hésité. Il **avait un peu peur**, maintenant. Pas de la porte. De lui-même : il allait vraiment le faire.",
+     "de": "Julien holte den Schlüssel heraus. Er zögerte. Jetzt hatte er ein bisschen Angst. Nicht vor der Tür. Vor sich selbst: Er würde es wirklich tun.",
+     "audio": "audio/geschichte/k03_06.mp3"
+    },
+    {
+     "id": "k03_07",
+     "fr": "La clé est entrée. Le mur s'est ouvert, sans bruit, comme une porte qui a l'habitude.",
+     "de": "Der Schlüssel passte. Die Wand öffnete sich, lautlos, wie eine Tür, die das gewohnt ist.",
+     "audio": "audio/geschichte/k03_07.mp3"
+    },
+    {
+     "id": "k03_08",
+     "fr": "La salle 13 était petite, **sombre** et **paisible**. Pas de visiteurs. Pas de guide. Un seul tableau, au fond, éclairé par une lampe.",
+     "de": "Saal 13 war klein, düster und friedlich. Keine Besucher. Kein Führer. Ein einziges Gemälde, hinten, von einer Lampe beleuchtet.",
+     "audio": "audio/geschichte/k03_08.mp3"
+    },
+    {
+     "id": "k03_09",
+     "fr": "Sur le tableau, un chat gris dormait sur une pile de papiers. Des copies, aurait dit Julien. Le tableau datait de 1911.",
+     "de": "Auf dem Gemälde schlief eine graue Katze auf einem Stapel Papiere. Arbeiten, hätte Julien gesagt. Das Bild stammte von 1911.",
+     "audio": "audio/geschichte/k03_09.mp3"
+    },
+    {
+     "id": "k03_10",
+     "fr": "Julien s'est approché. Il a entendu quelque chose. Un bruit doux, régulier, impossible.",
+     "de": "Julien trat näher. Er hörte etwas. Ein leises, gleichmäßiges, unmögliches Geräusch.",
+     "audio": "audio/geschichte/k03_10.mp3"
+    },
+    {
+     "id": "k03_11",
+     "fr": "Le tableau **ronronnait**.",
+     "de": "Das Gemälde schnurrte.",
+     "audio": "audio/geschichte/k03_11.mp3"
+    },
+    {
+     "id": "k03_12",
+     "fr": "« **Ça, c'est inquiétant** », a dit Julien à voix haute. Puis, parce qu'il était nerveux, il a fait ce qu'il faisait toujours quand il était nerveux. Il a fredonné.",
+     "de": "„Das ist beunruhigend“, sagte Julien laut. Dann tat er, weil er nervös war, was er immer tat, wenn er nervös war. Er summte.",
+     "audio": "audio/geschichte/k03_12.mp3"
+    },
+    {
+     "id": "k03_13",
+     "fr": "Trois notes. « Ne me quitte pas ».",
+     "de": "Drei Töne. „Ne me quitte pas“.",
+     "audio": "audio/geschichte/k03_13.mp3"
+    },
+    {
+     "id": "k03_14",
+     "fr": "Le ronronnement s'est arrêté.",
+     "de": "Das Schnurren hörte auf.",
+     "audio": "audio/geschichte/k03_14.mp3"
+    },
+    {
+     "id": "k03_15",
+     "fr": "À suivre.",
+     "de": "Fortsetzung folgt.",
+     "audio": "audio/geschichte/k03_15.mp3"
+    }
+   ]
   }
  ],
  "lob": {

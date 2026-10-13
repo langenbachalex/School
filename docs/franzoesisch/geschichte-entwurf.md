@@ -53,7 +53,7 @@ Etwa 260 Wörter, Audio ca. 1.500 Zeichen pro Kapitel.
 
 ---
 
-**Kapitel 1 gebaut und veröffentlicht (13.10.).** Darunter Kapitel 2 und 3 als Vorrat, zum Absegnen.
+**Kapitel 1–3 gebaut, vertont und veröffentlicht (13.10.).** Kapitel 2 und 3 unten, abgesegnet („Passt“).
 
 ## Chapitre 2 – Le train
 

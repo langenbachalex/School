@@ -156,6 +156,38 @@ window.DATEN = {
     "hi_23",
     "hi_24"
    ]
+  },
+  {
+   "id": "sport",
+   "name": "Sport et kung-fu",
+   "de": "Sport und Kung-Fu",
+   "symbol": "🥋",
+   "wendungen": [
+    "sp_01",
+    "sp_02",
+    "sp_03",
+    "sp_04",
+    "sp_05",
+    "sp_06",
+    "sp_07",
+    "sp_08",
+    "sp_09",
+    "sp_10",
+    "sp_11",
+    "sp_12",
+    "sp_13",
+    "sp_14",
+    "sp_15",
+    "sp_16",
+    "sp_17",
+    "sp_18",
+    "sp_19",
+    "sp_20",
+    "sp_21",
+    "sp_22",
+    "sp_23",
+    "sp_24"
+   ]
   }
  ],
  "wendungen": [
@@ -2507,6 +2539,498 @@ window.DATEN = {
     "de": "Guten Tag, könnten Sie mir ein Buch empfehlen? Ein bisschen düster, ein bisschen magisch.",
     "luecke": "pourriez-vous me conseiller",
     "audio": "audio/saetze/hi_24.mp3"
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_01",
+   "thema": "sport",
+   "fr": "s'entraîner",
+   "de": "trainieren",
+   "register": "tu",
+   "anker": "s'entraîner",
+   "audio": null,
+   "satz": {
+    "fr": "Je m'entraîne trois fois par semaine. Deux, si je suis honnête.",
+    "de": "Ich trainiere dreimal die Woche. Zweimal, wenn ich ehrlich bin.",
+    "luecke": "m'entraîne",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Je me suis entraîné trois fois cette semaine.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais m'entraîner trois fois cette semaine. Deux.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_02",
+   "thema": "sport",
+   "fr": "un coup de pied",
+   "de": "ein Tritt",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Un bon coup de pied, c'est d'abord une bonne position.",
+    "de": "Ein guter Tritt ist zuerst ein guter Stand.",
+    "luecke": "coup de pied",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_03",
+   "thema": "sport",
+   "fr": "un coup de poing",
+   "de": "ein Fausthieb",
+   "register": "tu",
+   "anker": "partir",
+   "audio": null,
+   "satz": {
+    "fr": "En kung-fu, le coup de poing part de la hanche, pas du bras.",
+    "de": "Im Kung-Fu kommt der Fausthieb aus der Hüfte, nicht aus dem Arm.",
+    "luecke": "coup de poing",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_04",
+   "thema": "sport",
+   "fr": "la souplesse",
+   "de": "die Beweglichkeit",
+   "register": "tu",
+   "anker": "travailler",
+   "audio": null,
+   "satz": {
+    "fr": "À quarante ans, la souplesse se travaille tous les jours. Sinon, elle part.",
+    "de": "Mit vierzig muss man die Beweglichkeit täglich üben. Sonst geht sie.",
+    "luecke": "souplesse",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_05",
+   "thema": "sport",
+   "fr": "garder son calme",
+   "de": "ruhig bleiben",
+   "register": "tu",
+   "anker": "garder",
+   "audio": null,
+   "satz": {
+    "fr": "En combat comme en classe : garder son calme, respirer, attendre.",
+    "de": "Im Kampf wie in der Klasse: ruhig bleiben, atmen, abwarten.",
+    "luecke": "garder son calme",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai gardé mon calme. Presque.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais garder mon calme. Promis.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_06",
+   "thema": "sport",
+   "fr": "s'échauffer",
+   "de": "sich aufwärmen",
+   "register": "tu",
+   "anker": "s'échauffer",
+   "audio": null,
+   "satz": {
+    "fr": "Avant de m'entraîner, je m'échauffe dix minutes. Mon dos me dit merci.",
+    "de": "Vor dem Training wärme ich mich zehn Minuten auf. Mein Rücken dankt es mir.",
+    "luecke": "m'échauffe",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Je me suis échauffé dix minutes.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais m'échauffer dix minutes.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_07",
+   "thema": "sport",
+   "fr": "avoir des courbatures",
+   "de": "Muskelkater haben",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Le lendemain, j'ai des courbatures partout. Même dans les oreilles.",
+    "de": "Am nächsten Tag habe ich überall Muskelkater. Sogar in den Ohren.",
+    "luecke": "ai des courbatures",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Le lendemain, j'ai eu des courbatures partout.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Demain, je vais avoir des courbatures partout.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_08",
+   "thema": "sport",
+   "fr": "être en forme",
+   "de": "fit sein",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Je suis en forme le matin. L'après-midi, je suis prof.",
+    "de": "Morgens bin ich fit. Nachmittags bin ich Lehrer.",
+    "luecke": "en forme",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai été en forme toute la semaine.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais être en forme pour le stage.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_09",
+   "thema": "sport",
+   "fr": "tenir une position",
+   "de": "eine Stellung halten",
+   "register": "tu",
+   "anker": "tenir",
+   "audio": null,
+   "satz": {
+    "fr": "Tenir la position du cavalier pendant deux minutes : simple. Pas facile.",
+    "de": "Die Reiterstellung zwei Minuten halten: einfach. Nicht leicht.",
+    "luecke": "Tenir la position",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_10",
+   "thema": "sport",
+   "fr": "la respiration",
+   "de": "die Atmung",
+   "register": "tu",
+   "anker": "commencer",
+   "audio": null,
+   "satz": {
+    "fr": "En kung-fu, tout commence par la respiration. En classe aussi.",
+    "de": "Im Kung-Fu beginnt alles mit der Atmung. In der Klasse auch.",
+    "luecke": "respiration",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_11",
+   "thema": "sport",
+   "fr": "le maître",
+   "de": "der Meister",
+   "register": "tu",
+   "anker": "dire",
+   "audio": null,
+   "satz": {
+    "fr": "Mon maître dit : « Lentement, c'est vite. » Je n'ai pas encore compris.",
+    "de": "Mein Meister sagt: „Langsam ist schnell.“ Ich habe es noch nicht verstanden.",
+    "luecke": "maître",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_12",
+   "thema": "sport",
+   "fr": "un enchaînement",
+   "de": "eine Abfolge (Form, Kombination)",
+   "register": "tu",
+   "anker": "apprendre",
+   "audio": null,
+   "satz": {
+    "fr": "J'apprends un nouvel enchaînement. Douze mouvements. J'en connais quatre.",
+    "de": "Ich lerne eine neue Form. Zwölf Bewegungen. Vier kann ich.",
+    "luecke": "enchaînement",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai appris un nouvel enchaînement.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais apprendre un nouvel enchaînement.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_13",
+   "thema": "sport",
+   "fr": "esquiver",
+   "de": "ausweichen",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Esquiver, c'est mieux que bloquer. Ça marche aussi en réunion.",
+    "de": "Ausweichen ist besser als blocken. Das funktioniert auch in Konferenzen.",
+    "luecke": "Esquiver",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_14",
+   "thema": "sport",
+   "fr": "transpirer",
+   "de": "schwitzen",
+   "register": "tu",
+   "anker": "transpirer",
+   "audio": null,
+   "satz": {
+    "fr": "Après l'entraînement, je transpire comme une fontaine. Une fontaine heureuse.",
+    "de": "Nach dem Training schwitze ich wie ein Brunnen. Ein glücklicher Brunnen.",
+    "luecke": "transpire",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai transpiré comme une fontaine.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais transpirer, c'est le but.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_15",
+   "thema": "sport",
+   "fr": "se blesser",
+   "de": "sich verletzen",
+   "register": "tu",
+   "anker": "se blesser",
+   "audio": null,
+   "satz": {
+    "fr": "Je ne me blesse jamais. Sauf en ouvrant une boîte de pâtée.",
+    "de": "Ich verletze mich nie. Außer beim Öffnen einer Dose Katzenfutter.",
+    "luecke": "me blesse",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Je me suis blessé en ouvrant une boîte.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je ne vais pas me blesser. Normalement.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_16",
+   "thema": "sport",
+   "fr": "faire des étirements",
+   "de": "sich dehnen",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Je fais des étirements le soir, devant la télé. Le chat me regarde, perplexe.",
+    "de": "Ich dehne mich abends vor dem Fernseher. Die Katze schaut ratlos zu.",
+    "luecke": "fais des étirements",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai fait des étirements après le kung-fu.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais faire des étirements ce soir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_17",
+   "thema": "sport",
+   "fr": "reprendre son souffle",
+   "de": "wieder zu Atem kommen",
+   "register": "tu",
+   "anker": "reprendre",
+   "audio": null,
+   "satz": {
+    "fr": "Entre deux séries, je reprends mon souffle. Longtemps.",
+    "de": "Zwischen zwei Sätzen komme ich wieder zu Atem. Lange.",
+    "luecke": "reprends mon souffle",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai repris mon souffle sur le banc.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais reprendre mon souffle, une minute.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_18",
+   "thema": "sport",
+   "fr": "avoir de l'équilibre",
+   "de": "Gleichgewicht haben",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Sur une jambe, j'ai de l'équilibre. Sur deux, ça dépend du jour.",
+    "de": "Auf einem Bein habe ich Gleichgewicht. Auf zweien hängt es vom Tag ab.",
+    "luecke": "ai de l'équilibre",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_19",
+   "thema": "sport",
+   "fr": "aller courir",
+   "de": "laufen gehen",
+   "register": "tu",
+   "anker": "aller",
+   "audio": null,
+   "satz": {
+    "fr": "Le dimanche matin, je vais courir. Le dimanche soir, je regrette.",
+    "de": "Sonntagmorgens gehe ich laufen. Sonntagabends bereue ich es.",
+    "luecke": "vais courir",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Dimanche, je suis allé courir.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Dimanche, je vais aller courir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_20",
+   "thema": "sport",
+   "fr": "la ceinture",
+   "de": "der Gürtel",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "La ceinture ne fait pas le maître. Mais elle tient le pantalon.",
+    "de": "Der Gürtel macht nicht den Meister. Aber er hält die Hose.",
+    "luecke": "ceinture",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_21",
+   "thema": "sport",
+   "fr": "faire des progrès",
+   "de": "Fortschritte machen",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Je fais des progrès. Lentement. Comme dit mon maître, c'est vite.",
+    "de": "Ich mache Fortschritte. Langsam. Wie mein Meister sagt: Das ist schnell.",
+    "luecke": "fais des progrès",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai fait des progrès cette année.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais faire des progrès, j'en suis sûr.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "sp_22",
+   "thema": "sport",
+   "fr": "se dépasser",
+   "de": "über sich hinauswachsen",
+   "register": "tu",
+   "anker": "se dépasser",
+   "audio": null,
+   "satz": {
+    "fr": "Aujourd'hui, je me suis dépassé : trente pompes. Hier, vingt-neuf.",
+    "de": "Heute bin ich über mich hinausgewachsen: dreißig Liegestütze. Gestern neunundzwanzig.",
+    "luecke": "me suis dépassé",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_23",
+   "thema": "sport",
+   "fr": "le corps et l'esprit",
+   "de": "Körper und Geist",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Le kung-fu, c'est le corps et l'esprit. Le mien discute souvent avec mon corps.",
+    "de": "Kung-Fu ist Körper und Geist. Meiner diskutiert oft mit meinem Körper.",
+    "luecke": "le corps et l'esprit",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "sp_24",
+   "thema": "sport",
+   "fr": "Est-ce que je peux m'inscrire ?",
+   "de": "Kann ich mich anmelden? (höflich)",
+   "register": "vous",
+   "anker": "pouvoir",
+   "audio": null,
+   "satz": {
+    "fr": "Bonjour, est-ce que je peux m'inscrire au cours du mardi soir ?",
+    "de": "Guten Tag, kann ich mich für den Kurs am Dienstagabend anmelden?",
+    "luecke": "est-ce que je peux m'inscrire",
+    "audio": null
    },
    "zeit": null
   }

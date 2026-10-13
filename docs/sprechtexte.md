@@ -10,7 +10,7 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 |---|---|---|
 | `kernsaetze/st1_01_en.mp3` | Alex Langenbach | I go to school by bus. |
 | `kernsaetze/st1_02_en.mp3` | Alex Langenbach | Harry Kane goes to training by car. |
-| `kernsaetze/st1_03_en.mp3` | Alex Langenbach | Jude Bellingham goes to the stadium by bus. |
+| `kernsaetze/st1_03_en.mp3` | Alex Langenbach | Jude Bellingam goes to the stadium by bus. |
 | `kernsaetze/st1_04_en.mp3` | Alex Langenbach | Bukayo Saka goes to training by bike. |
 | `kernsaetze/st1_05_en.mp3` | Alex Langenbach | Mia goes to school by train. |
 | `kernsaetze/st1_06_en.mp3` | Alex Langenbach | I walk to school. |

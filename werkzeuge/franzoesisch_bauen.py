@@ -19,6 +19,7 @@ THEMEN = [
     {"id": "musique", "name": "Musique et langue", "de": "Musik und Sprache", "symbol": "🎵", "datei": "musique.tsv"},
     {"id": "histoires", "name": "Histoires et fantasy", "de": "Geschichten und Fantasy", "symbol": "🐉", "datei": "histoires.tsv"},
     {"id": "sport", "name": "Sport et kung-fu", "de": "Sport und Kung-Fu", "symbol": "🥋", "datei": "sport.tsv"},
+    {"id": "manger", "name": "Manger et bien vivre", "de": "Essen und gut leben", "symbol": "🥖", "datei": "manger.tsv"},
 ]
 
 # Titel – französische Delikatessen, vom kleinen Éclair bis zum Kaviar (Vorschlag, docs/franzoesisch/konzept.md)

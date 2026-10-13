@@ -112,8 +112,9 @@
     let gesamt = 0;
     return dateien.filter(Boolean).reduce((kette, datei) => kette.then(() => new Promise((fertig) => {
       if (meinLauf !== lauf) return fertig();
-      if (typeof datei === "object") return sprich(datei.text).then((d) => { gesamt += d; fertig(); });
-      const a = new Audio(datei);
+      if (typeof datei === "object" && !datei.src) return sprich(datei.text).then((d) => { gesamt += d; fertig(); });
+      const a = new Audio(datei.src || datei);
+      if (datei.rate) a.playbackRate = datei.rate;
       aktuell = a;
       a.onended = () => { gesamt += a.duration || 0; setTimeout(fertig, 350); };
       a.onerror = fertig;
@@ -241,6 +242,14 @@
           el("span", { class: "zahl" }, `${d.zeilen.length} répliques`),
           ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
       })),
+      el("h2", {}, frde("Prononciation", "Aussprache")),
+      el("nav", { class: "kacheln themen", "aria-label": "Prononciation" },
+        el("button", { class: "kachel" + (nasaleFertig() ? " erledigt" : ""), onclick: starteNasale, "aria-label": "Les nasales" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "👃"),
+          el("span", { class: "titel", lang: "fr" }, "Les nasales"),
+          el("span", { class: "unter", lang: "fr" }, "[ɑ̃] en · [ɔ̃] on · [ɛ̃] in · [œ̃] un – écouter, distinguer, les deux dans un mot"),
+          el("span", { class: "zahl" }, `${nasaleTeile().filter((_, i) => stand.teile[`nasale|0|${i}`]).length} / ${nasaleTeile().length} parties`),
+          nasaleFertig() && el("span", { class: "haken", "aria-hidden": "true" }, "✓"))),
       el("p", { class: "klein" }, frde(`${gelernt} expressions dans ta boîte · ${Object.values(stand.karten).filter((k) => k.s >= 3).length} bien ancrées · ${orteFrei()} / ${SP.orte.length} lieux visités`,
         `${gelernt} Wendungen in deinem Kasten · ${Object.values(stand.karten).filter((k) => k.s >= 3).length} fest verankert (ab Stufe 3) · ${orteFrei()} / ${SP.orte.length} Orte besucht`)));
     app.querySelector(".gruss").append(statusleiste());
@@ -487,9 +496,98 @@
         el("div", { class: "knopfreihe" }, weiter)));
   }
 
+  /* ---------- Prononciation: les nasales ----------
+     1. Écouter: Wörter nach Klang, erst langsam, dann normal, nachsprechen
+     2. Distinguer: Minimalpaare – ein Wort hören, das richtige antippen
+     3. Les deux: beide Klänge in einem Wort, Klänge farbig markiert */
+  const KLANG = { an: ["[ɑ̃]", "en · an · em · am", "bouche ouverte, langue en bas", "Mund offen, Zunge unten (wie in « enfant »)"],
+    on: ["[ɔ̃]", "on · om", "lèvres arrondies, bouche presque fermée", "Lippen rund, Mund fast zu (wie in « bon »)"],
+    in: ["[ɛ̃]", "in · ain · ein · aim", "bouche étirée, comme un « ä » nasal", "Mund breit, wie ein nasales „ä“ (wie in « vin »)"],
+    un: ["[œ̃]", "un · um", "comme [ɛ̃], mais lèvres légèrement arrondies", "wie [ɛ̃], aber Lippen leicht gerundet (wie in « brun »)"] };
+  const N = D.nasale;
+  function nasaleTeile() {
+    const t = ["an", "on", "in", "un"].map((k) => ({ art: "nasal_wort", name: `${KLANG[k][0]} ${k}`, klang: k, woerter: N.klaenge[k] }));
+    [["p1", "en ou on ?"], ["p2", "in ou en ?"], ["p3", "in ou on ?"]].forEach(([g, name]) => t.push({ art: "nasal_paar", name: "🎯 " + name, paare: N.paare.filter((p) => p.gruppe === g) }));
+    t.push({ art: "nasal_beide", name: "👑 Les deux", woerter: N.beide });
+    return t;
+  }
+  const nasaleFertig = () => nasaleTeile().every((_, i) => stand.teile[`nasale|0|${i}`]);
+  function starteNasale() {
+    lage = { thema: "nasale", gruppe: 0, nasale: true, titel: "Les nasales", teile: nasaleTeile(), teil: 0, pos: 0, zurueckZu: startseite };
+    seance = null;
+    zeigeTeil();
+  }
+  const tonLangsam = (w) => (w.audio ? { src: w.audio, rate: 0.7 } : { text: w.wort });
+  const tonWort = (w) => w.audio || { text: w.wort };
+  const klangSchild = (k) => el("span", { class: "klang-schild klang-" + k }, KLANG[k][0], " ", el("small", {}, KLANG[k][1]));
+  // Markup comm{an|en}ç{on|on}s → Buchstaben, Nasale farbig
+  function markiert(markup) {
+    const teile = [];
+    markup.split(/(\{[a-z]+\|[^}]*\})/).forEach((t) => {
+      const m = t.match(/^\{([a-z]+)\|([^}]*)\}$/);
+      teile.push(m ? el("span", { class: "nasal klang-" + m[1], title: KLANG[m[1]][0] }, m[2]) : t);
+    });
+    return teile;
+  }
+  function zeigeNasalWort(teil) {
+    const w = teil.woerter[lage.pos], beide = teil.art === "nasal_beide";
+    const balken = jetztDu();
+    const weiter = sperre(weiterKnopf());
+    const hoeren = (liste) => nachsprechen(balken, liste).then((sek) => { if (sek) gibFrei(weiter, sek); });
+    const abspielen = () => hoeren([tonLangsam(w), tonWort(w)]);
+    tasten(abspielen, wennFrei(weiter, naechstes));
+    zeige(kopf(),
+      beide ? ansage("Deux nasales dans un mot. Écoute lentement, puis à vitesse normale – et répète en soignant chaque voyelle.",
+        "Zwei Nasale in einem Wort. Hör langsam, dann normal – und sprich nach, jede Nasale sauber.")
+        : ansage(`${KLANG[teil.klang][0]} – ${KLANG[teil.klang][2]}. Écoute lentement, puis normalement. Répète !`, `${KLANG[teil.klang][0]} – ${KLANG[teil.klang][3]}. Hör langsam, dann normal. Sprich nach!`),
+      karte(`Mot ${lage.pos + 1} / ${teil.woerter.length}`,
+        el("div", { class: "vok" }, el("div", {},
+          el("p", { class: "nasal-wort", lang: "fr" }, beide ? markiert(w.markup) : w.wort),
+          el("p", { class: "wendung-de", lang: "de" }, w.de),
+          el("p", { class: "klang-zeile" }, (beide ? w.klaenge : [teil.klang]).map(klangSchild)))),
+        balken,
+        el("div", { class: "knopfreihe" }, knopf("🐢 Lentement", () => hoeren([tonLangsam(w)])), knopf("🔊 Normal", () => hoeren([tonWort(w)])), weiter)));
+    abspielen();
+  }
+  function zeigeNasalPaar(teil) {
+    if (!lage.reihe) lage.reihe = mischen(teil.paare).map((p) => ({ p, ziel: Math.random() < 0.5 ? "a" : "b", links: Math.random() < 0.5 }));
+    const { p, ziel, links } = lage.reihe[lage.pos];
+    const a = p, b = p.b, gesucht = ziel === "a" ? a : b;
+    let geloest = false;
+    const box = el("div", { class: "rueckmeldung", hidden: true, role: "status" });
+    const weiter = weiterKnopf(); weiter.disabled = true;
+    const hoeren = () => spiele([tonWort(gesucht)]);
+    const beideHoeren = () => spiele([tonWort(a), tonWort(b)]);
+    const wahlKnopf = (w) => el("button", { class: "knopf wahl-knopf gross", lang: "fr", onclick: (e) => {
+      if (geloest) return;
+      if (w === gesucht) {
+        geloest = true; e.currentTarget.classList.add("richtig");
+        box.hidden = false; box.className = "rueckmeldung gut"; box.textContent = `${lob()} ${gesucht.wort} ${KLANG[gesucht.klang][0]} – ${gesucht.de}`;
+        weiter.disabled = false; tasten(beideHoeren, naechstes);
+        beideHoeren();
+      } else {
+        e.currentTarget.disabled = true;
+        box.hidden = false; box.className = "rueckmeldung hilfe";
+        box.replaceChildren(frde(`${ruf("fehler")} Je t'aide : ${KLANG[a.klang][0]} ${KLANG[a.klang][2]} · ${KLANG[b.klang][0]} ${KLANG[b.klang][2]}. Écoute encore !`,
+          `Ich helfe dir: ${KLANG[a.klang][0]} ${KLANG[a.klang][3]} · ${KLANG[b.klang][0]} ${KLANG[b.klang][3]}. Hör noch mal!`));
+        hoeren();
+      }
+    } }, el("span", {}, w.wort), el("small", { class: "klang-" + w.klang }, KLANG[w.klang][0]));
+    const knoepfe = [wahlKnopf(a), wahlKnopf(b)];
+    tasten(hoeren, null);
+    zeige(kopf(),
+      ansage("Écoute le mot. Lequel est-ce ? Touche le bon.", "Hör das Wort. Welches ist es? Tipp auf das richtige."),
+      karte(`Paire ${lage.pos + 1} / ${lage.reihe.length}`,
+        el("div", { class: "knopfreihe" }, knopf("🔊 Écouter", hoeren, "haupt")),
+        el("div", { class: "wahl" }, links ? knoepfe : knoepfe.reverse()),
+        box,
+        el("div", { class: "knopfreihe" }, tipp("Plus facile : écouter les deux", "Noch einfacher: beide hören", beideHoeren), weiter)));
+    hoeren();
+  }
+
   function kopf() {
     return el("header", { class: "kopf" },
-      knopf(lage.dialog ? "← Accueil" : "← Thème", lage.zurueckZu, "leise"),
+      knopf(lage.dialog || lage.nasale ? "← Accueil" : "← Thème", lage.zurueckZu, "leise"),
       el("h1", { lang: "fr" }, lage.titel),
       sprungleiste());
   }
@@ -536,11 +634,12 @@
     tasten(null, null);
     if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = Date.now(); }
     const teil = lage.teile[lage.teil];
-    ({ lr: zeigeSatz, zeit: zeigeZeitmaschine, abfrage: zeigeAbfrage, dialog: zeigeDialog })[teil.art](teil);
+    ({ lr: zeigeSatz, zeit: zeigeZeitmaschine, abfrage: zeigeAbfrage, dialog: zeigeDialog,
+       nasal_wort: zeigeNasalWort, nasal_beide: zeigeNasalWort, nasal_paar: zeigeNasalPaar })[teil.art](teil);
     navErgaenzen();
   }
-  const laenge = (teil) => (teil.art === "abfrage" && lage.reihe ? lage.reihe.length : teil.art === "dialog" ? 1 : (teil.saetze || teil.ids).length);
-  const SPRECH_MIN = { lr: 2, zeit: 3 }; // Sekunden pro Satz mindestens – schneller geht nicht ehrlich
+  const laenge = (teil) => (teil.art === "abfrage" && lage.reihe ? lage.reihe.length : teil.art === "dialog" ? 1 : (teil.saetze || teil.woerter || teil.paare || teil.ids).length);
+  const SPRECH_MIN = { lr: 2, zeit: 3, nasal_wort: 1.5, nasal_beide: 2 }; // Sekunden pro Satz mindestens – schneller geht nicht ehrlich
   const zuSchnell = (teil) => SPRECH_MIN[teil.art] && lage.start && (Date.now() - lage.start) / 1000 < laenge(teil) * SPRECH_MIN[teil.art];
   function naechstes() {
     const teil = lage.teile[lage.teil];

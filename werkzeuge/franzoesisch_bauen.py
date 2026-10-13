@@ -37,6 +37,12 @@ def tsv(name):
         return list(csv.DictReader(f, delimiter="\t"))
 
 
+def rein(markup):
+    """comm{an|en}ç{on|on}s → commençons"""
+    import re
+    return re.sub(r"\{[a-z]+\|([^}]*)\}", r"\1", markup)
+
+
 def audio(rel):
     """Pfad relativ zu app/franzoesisch, nur wenn die Datei existiert (sonst Sprachausgabe des Geräts)."""
     return rel if os.path.exists(os.path.join(APP, rel)) else None
@@ -68,11 +74,27 @@ def main():
         if not dialoge or dialoge[-1]["id"] != z["dialog"]:
             dialoge.append({"id": z["dialog"], "titel": z["titel"], "ort": z["ort"], "zeilen": []})
         dialoge[-1]["zeilen"].append({"id": z["id"], "rolle": z["rolle"], "fr": z["fr"], "de": z["de"], "audio": audio(f"audio/dialoge/{z['id']}.mp3")})
+    # Prononciation – Nasallaute: Klänge, Minimalpaare, beide Klänge in einem Wort (Markup {klang|buchstaben})
+    nasale = {"klaenge": {}, "paare": [], "beide": []}
+    zeilen = tsv("nasale.tsv")
+    for z in zeilen:
+        wort = rein(z["wort"])
+        eintrag = {"id": z["id"], "wort": wort, "de": z["de"], "klang": z["klang"], "audio": audio(f"audio/nasale/{z['id']}.mp3")}
+        if z["teil"] == "klang":
+            nasale["klaenge"].setdefault(z["klang"], []).append(eintrag)
+        elif z["teil"] == "paar" and z["id"].endswith("a"):
+            b = next(x for x in zeilen if x["id"] == z["partner"])
+            eintrag["gruppe"] = z["id"].split("_")[0]
+            eintrag["b"] = {"id": b["id"], "wort": rein(b["wort"]), "de": b["de"], "klang": b["klang"], "audio": audio(f"audio/nasale/{b['id']}.mp3")}
+            nasale["paare"].append(eintrag)
+        elif z["teil"] == "beide":
+            eintrag["markup"] = z["wort"]; eintrag["klaenge"] = z["klang"].split(",")
+            nasale["beide"].append(eintrag)
     lob = {}
     for z in tsv("lob.tsv"):
         lob.setdefault(z["art"], []).append({"text": z["text"], "audio": audio(f"audio/lob/{z['id']}.mp3"),
                                              "gruppe": [g for g in z["gruppe"].split(",") if g]})
-    daten = {"themen": themen, "wendungen": wendungen, "dialoge": dialoge, "lob": lob, "pensum": PENSUM, "intervalle": INTERVALLE,
+    daten = {"themen": themen, "wendungen": wendungen, "dialoge": dialoge, "nasale": nasale, "lob": lob, "pensum": PENSUM, "intervalle": INTERVALLE,
              "spiel": spieldaten()}
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/franzoesisch_bauen.py – bitte nicht von Hand ändern.\n")

@@ -77,9 +77,9 @@ Dialoge: Mr. Alex' Stimme spricht beide Rollen. **[OFFEN]** Aurélien fragen, ob
 - **Titel – französische Delikatessen** (Mr. Alex, 13.10.: klein anfangen, bis zur großen Delikatesse): **[OFFEN]** Vorschlag 🥐 Petit éclair → Croissant → Baguette → Crêpe → Fromage → Huîtres → **Caviar**. Alternative: Tour-de-France-Trikots.
 - **Lob auf Französisch** in Mr. Alex' Stimme, **[OFFEN]** Liste z. B. *Génial ! · Chapeau ! · Trop fort ! · Magnifique ! · Bravo, champion !*
 
-## 6a. Vorgemerkt: Kategorie „Prononciation“ – Nasallaute (Mr. Alex, 13.10.)
+## 6a. Kategorie „Prononciation“ – Nasallaute (Mr. Alex, 13.10.) – **gebaut 13.10.**
 
-Idee, noch nicht gebaut. Die vier Nasale **[ɑ̃] en/an – [ɔ̃] on – [ɛ̃] in/ain – [œ̃] un** hören und unterscheiden lernen, vor allem das Paar **en ↔ on**.
+`inhalte/franzoesisch/nasale.tsv`: 30 Wörter nach Klang, 22 Minimalpaare (en↔on, in↔en, in↔on/un), 12 Wörter mit zwei Nasalen (Markup `{klang|buchstaben}` → farbig). „Langsam“ = dieselbe Datei mit 0,7-facher Geschwindigkeit im Browser (ElevenLabs ignoriert bei Mr. Alex' Stimme den Tempo-Parameter). Ursprüngliche Idee: Die vier Nasale **[ɑ̃] en/an – [ɔ̃] on – [ɛ̃] in/ain – [œ̃] un** hören und unterscheiden lernen, vor allem das Paar **en ↔ on**.
 - **Stufe 1 – Hören und nachsprechen:** Wörter auf Wortbasis, nach Klang sortiert (*enfant, temps, vent* · *bon, pont, mon* · *vin, pain, main* · *un, brun*).
 - **Stufe 2 – Gegenüberstellen (Minimalpaare):** *vent – vont · lent – long · banc – bon · sans – son · tant – ton · dent – don*. Hören, dann tippen: welches Wort war das? Zwei Knöpfe.
 - **Königsstufe – beide Klänge in einem Wort:** *commençons, montant, pension, mon enfant, en avion, onction, bonbon (on-on), maintenant (in-an)*. Hören, nachsprechen, Klänge markieren.

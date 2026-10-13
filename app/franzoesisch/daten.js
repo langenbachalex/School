@@ -1122,6 +1122,707 @@ window.DATEN = {
    ]
   }
  ],
+ "nasale": {
+  "klaenge": {
+   "an": [
+    {
+     "id": "an_01",
+     "wort": "enfant",
+     "de": "Kind",
+     "klang": "an",
+     "audio": "audio/nasale/an_01.mp3"
+    },
+    {
+     "id": "an_02",
+     "wort": "temps",
+     "de": "Zeit, Wetter",
+     "klang": "an",
+     "audio": "audio/nasale/an_02.mp3"
+    },
+    {
+     "id": "an_03",
+     "wort": "vent",
+     "de": "Wind",
+     "klang": "an",
+     "audio": "audio/nasale/an_03.mp3"
+    },
+    {
+     "id": "an_04",
+     "wort": "chanter",
+     "de": "singen",
+     "klang": "an",
+     "audio": "audio/nasale/an_04.mp3"
+    },
+    {
+     "id": "an_05",
+     "wort": "lentement",
+     "de": "langsam",
+     "klang": "an",
+     "audio": "audio/nasale/an_05.mp3"
+    },
+    {
+     "id": "an_06",
+     "wort": "dans",
+     "de": "in",
+     "klang": "an",
+     "audio": "audio/nasale/an_06.mp3"
+    },
+    {
+     "id": "an_07",
+     "wort": "grand",
+     "de": "groß",
+     "klang": "an",
+     "audio": "audio/nasale/an_07.mp3"
+    },
+    {
+     "id": "an_08",
+     "wort": "blanc",
+     "de": "weiß",
+     "klang": "an",
+     "audio": "audio/nasale/an_08.mp3"
+    }
+   ],
+   "on": [
+    {
+     "id": "on_01",
+     "wort": "bon",
+     "de": "gut",
+     "klang": "on",
+     "audio": "audio/nasale/on_01.mp3"
+    },
+    {
+     "id": "on_02",
+     "wort": "pont",
+     "de": "Brücke",
+     "klang": "on",
+     "audio": "audio/nasale/on_02.mp3"
+    },
+    {
+     "id": "on_03",
+     "wort": "mon",
+     "de": "mein",
+     "klang": "on",
+     "audio": "audio/nasale/on_03.mp3"
+    },
+    {
+     "id": "on_04",
+     "wort": "chanson",
+     "de": "Lied",
+     "klang": "on",
+     "audio": "audio/nasale/on_04.mp3"
+    },
+    {
+     "id": "on_05",
+     "wort": "maison",
+     "de": "Haus",
+     "klang": "on",
+     "audio": "audio/nasale/on_05.mp3"
+    },
+    {
+     "id": "on_06",
+     "wort": "long",
+     "de": "lang",
+     "klang": "on",
+     "audio": "audio/nasale/on_06.mp3"
+    },
+    {
+     "id": "on_07",
+     "wort": "nom",
+     "de": "Name",
+     "klang": "on",
+     "audio": "audio/nasale/on_07.mp3"
+    },
+    {
+     "id": "on_08",
+     "wort": "ronron",
+     "de": "Schnurren",
+     "klang": "on",
+     "audio": "audio/nasale/on_08.mp3"
+    }
+   ],
+   "in": [
+    {
+     "id": "in_01",
+     "wort": "vin",
+     "de": "Wein",
+     "klang": "in",
+     "audio": "audio/nasale/in_01.mp3"
+    },
+    {
+     "id": "in_02",
+     "wort": "pain",
+     "de": "Brot",
+     "klang": "in",
+     "audio": "audio/nasale/in_02.mp3"
+    },
+    {
+     "id": "in_03",
+     "wort": "main",
+     "de": "Hand",
+     "klang": "in",
+     "audio": "audio/nasale/in_03.mp3"
+    },
+    {
+     "id": "in_04",
+     "wort": "matin",
+     "de": "Morgen",
+     "klang": "in",
+     "audio": "audio/nasale/in_04.mp3"
+    },
+    {
+     "id": "in_05",
+     "wort": "chemin",
+     "de": "Weg",
+     "klang": "in",
+     "audio": "audio/nasale/in_05.mp3"
+    },
+    {
+     "id": "in_06",
+     "wort": "bien",
+     "de": "gut",
+     "klang": "in",
+     "audio": "audio/nasale/in_06.mp3"
+    },
+    {
+     "id": "in_07",
+     "wort": "plein",
+     "de": "voll",
+     "klang": "in",
+     "audio": "audio/nasale/in_07.mp3"
+    },
+    {
+     "id": "in_08",
+     "wort": "train",
+     "de": "Zug",
+     "klang": "in",
+     "audio": "audio/nasale/in_08.mp3"
+    }
+   ],
+   "un": [
+    {
+     "id": "un_01",
+     "wort": "un",
+     "de": "ein",
+     "klang": "un",
+     "audio": "audio/nasale/un_01.mp3"
+    },
+    {
+     "id": "un_02",
+     "wort": "brun",
+     "de": "braun",
+     "klang": "un",
+     "audio": "audio/nasale/un_02.mp3"
+    },
+    {
+     "id": "un_03",
+     "wort": "lundi",
+     "de": "Montag",
+     "klang": "un",
+     "audio": "audio/nasale/un_03.mp3"
+    },
+    {
+     "id": "un_04",
+     "wort": "parfum",
+     "de": "Parfüm, Duft",
+     "klang": "un",
+     "audio": "audio/nasale/un_04.mp3"
+    },
+    {
+     "id": "un_05",
+     "wort": "chacun",
+     "de": "jeder",
+     "klang": "un",
+     "audio": "audio/nasale/un_05.mp3"
+    },
+    {
+     "id": "un_06",
+     "wort": "quelqu'un",
+     "de": "jemand",
+     "klang": "un",
+     "audio": "audio/nasale/un_06.mp3"
+    }
+   ]
+  },
+  "paare": [
+   {
+    "id": "p1_01a",
+    "wort": "vent",
+    "de": "Wind",
+    "klang": "an",
+    "audio": "audio/nasale/p1_01a.mp3",
+    "gruppe": "p1",
+    "b": {
+     "id": "p1_01b",
+     "wort": "vont",
+     "de": "(sie) gehen",
+     "klang": "on",
+     "audio": "audio/nasale/p1_01b.mp3"
+    }
+   },
+   {
+    "id": "p1_02a",
+    "wort": "lent",
+    "de": "langsam",
+    "klang": "an",
+    "audio": "audio/nasale/p1_02a.mp3",
+    "gruppe": "p1",
+    "b": {
+     "id": "p1_02b",
+     "wort": "long",
+     "de": "lang",
+     "klang": "on",
+     "audio": "audio/nasale/p1_02b.mp3"
+    }
+   },
+   {
+    "id": "p1_03a",
+    "wort": "banc",
+    "de": "Bank (zum Sitzen)",
+    "klang": "an",
+    "audio": "audio/nasale/p1_03a.mp3",
+    "gruppe": "p1",
+    "b": {
+     "id": "p1_03b",
+     "wort": "bon",
+     "de": "gut",
+     "klang": "on",
+     "audio": "audio/nasale/p1_03b.mp3"
+    }
+   },
+   {
+    "id": "p1_04a",
+    "wort": "sans",
+    "de": "ohne",
+    "klang": "an",
+    "audio": "audio/nasale/p1_04a.mp3",
+    "gruppe": "p1",
+    "b": {
+     "id": "p1_04b",
+     "wort": "son",
+     "de": "sein, ihr",
+     "klang": "on",
+     "audio": "audio/nasale/p1_04b.mp3"
+    }
+   },
+   {
+    "id": "p1_05a",
+    "wort": "tant",
+    "de": "so viel",
+    "klang": "an",
+    "audio": "audio/nasale/p1_05a.mp3",
+    "gruppe": "p1",
+    "b": {
+     "id": "p1_05b",
+     "wort": "ton",
+     "de": "dein",
+     "klang": "on",
+     "audio": "audio/nasale/p1_05b.mp3"
+    }
+   },
+   {
+    "id": "p1_06a",
+    "wort": "dent",
+    "de": "Zahn",
+    "klang": "an",
+    "audio": "audio/nasale/p1_06a.mp3",
+    "gruppe": "p1",
+    "b": {
+     "id": "p1_06b",
+     "wort": "don",
+     "de": "Gabe, Spende",
+     "klang": "on",
+     "audio": "audio/nasale/p1_06b.mp3"
+    }
+   },
+   {
+    "id": "p1_07a",
+    "wort": "rang",
+    "de": "Reihe, Rang",
+    "klang": "an",
+    "audio": "audio/nasale/p1_07a.mp3",
+    "gruppe": "p1",
+    "b": {
+     "id": "p1_07b",
+     "wort": "rond",
+     "de": "rund",
+     "klang": "on",
+     "audio": "audio/nasale/p1_07b.mp3"
+    }
+   },
+   {
+    "id": "p1_08a",
+    "wort": "blanc",
+    "de": "weiß",
+    "klang": "an",
+    "audio": "audio/nasale/p1_08a.mp3",
+    "gruppe": "p1",
+    "b": {
+     "id": "p1_08b",
+     "wort": "blond",
+     "de": "blond",
+     "klang": "on",
+     "audio": "audio/nasale/p1_08b.mp3"
+    }
+   },
+   {
+    "id": "p2_01a",
+    "wort": "pain",
+    "de": "Brot",
+    "klang": "in",
+    "audio": "audio/nasale/p2_01a.mp3",
+    "gruppe": "p2",
+    "b": {
+     "id": "p2_01b",
+     "wort": "pan",
+     "de": "Seite, Zipfel",
+     "klang": "an",
+     "audio": "audio/nasale/p2_01b.mp3"
+    }
+   },
+   {
+    "id": "p2_02a",
+    "wort": "vin",
+    "de": "Wein",
+    "klang": "in",
+    "audio": "audio/nasale/p2_02a.mp3",
+    "gruppe": "p2",
+    "b": {
+     "id": "p2_02b",
+     "wort": "vent",
+     "de": "Wind",
+     "klang": "an",
+     "audio": "audio/nasale/p2_02b.mp3"
+    }
+   },
+   {
+    "id": "p2_03a",
+    "wort": "bain",
+    "de": "Bad",
+    "klang": "in",
+    "audio": "audio/nasale/p2_03a.mp3",
+    "gruppe": "p2",
+    "b": {
+     "id": "p2_03b",
+     "wort": "banc",
+     "de": "Bank",
+     "klang": "an",
+     "audio": "audio/nasale/p2_03b.mp3"
+    }
+   },
+   {
+    "id": "p2_04a",
+    "wort": "main",
+    "de": "Hand",
+    "klang": "in",
+    "audio": "audio/nasale/p2_04a.mp3",
+    "gruppe": "p2",
+    "b": {
+     "id": "p2_04b",
+     "wort": "ment",
+     "de": "(er) lügt",
+     "klang": "an",
+     "audio": "audio/nasale/p2_04b.mp3"
+    }
+   },
+   {
+    "id": "p2_05a",
+    "wort": "fin",
+    "de": "Ende",
+    "klang": "in",
+    "audio": "audio/nasale/p2_05a.mp3",
+    "gruppe": "p2",
+    "b": {
+     "id": "p2_05b",
+     "wort": "fend",
+     "de": "(er) spaltet",
+     "klang": "an",
+     "audio": "audio/nasale/p2_05b.mp3"
+    }
+   },
+   {
+    "id": "p2_06a",
+    "wort": "teint",
+    "de": "Teint, Hautfarbe",
+    "klang": "in",
+    "audio": "audio/nasale/p2_06a.mp3",
+    "gruppe": "p2",
+    "b": {
+     "id": "p2_06b",
+     "wort": "temps",
+     "de": "Zeit",
+     "klang": "an",
+     "audio": "audio/nasale/p2_06b.mp3"
+    }
+   },
+   {
+    "id": "p2_07a",
+    "wort": "lin",
+    "de": "Leinen",
+    "klang": "in",
+    "audio": "audio/nasale/p2_07a.mp3",
+    "gruppe": "p2",
+    "b": {
+     "id": "p2_07b",
+     "wort": "lent",
+     "de": "langsam",
+     "klang": "an",
+     "audio": "audio/nasale/p2_07b.mp3"
+    }
+   },
+   {
+    "id": "p2_08a",
+    "wort": "sain",
+    "de": "gesund",
+    "klang": "in",
+    "audio": "audio/nasale/p2_08a.mp3",
+    "gruppe": "p2",
+    "b": {
+     "id": "p2_08b",
+     "wort": "sans",
+     "de": "ohne",
+     "klang": "an",
+     "audio": "audio/nasale/p2_08b.mp3"
+    }
+   },
+   {
+    "id": "p3_01a",
+    "wort": "bain",
+    "de": "Bad",
+    "klang": "in",
+    "audio": "audio/nasale/p3_01a.mp3",
+    "gruppe": "p3",
+    "b": {
+     "id": "p3_01b",
+     "wort": "bon",
+     "de": "gut",
+     "klang": "on",
+     "audio": "audio/nasale/p3_01b.mp3"
+    }
+   },
+   {
+    "id": "p3_02a",
+    "wort": "sain",
+    "de": "gesund",
+    "klang": "in",
+    "audio": "audio/nasale/p3_02a.mp3",
+    "gruppe": "p3",
+    "b": {
+     "id": "p3_02b",
+     "wort": "son",
+     "de": "sein, ihr",
+     "klang": "on",
+     "audio": "audio/nasale/p3_02b.mp3"
+    }
+   },
+   {
+    "id": "p3_03a",
+    "wort": "lin",
+    "de": "Leinen",
+    "klang": "in",
+    "audio": "audio/nasale/p3_03a.mp3",
+    "gruppe": "p3",
+    "b": {
+     "id": "p3_03b",
+     "wort": "long",
+     "de": "lang",
+     "klang": "on",
+     "audio": "audio/nasale/p3_03b.mp3"
+    }
+   },
+   {
+    "id": "p3_04a",
+    "wort": "daim",
+    "de": "Damhirsch, Wildleder",
+    "klang": "in",
+    "audio": "audio/nasale/p3_04a.mp3",
+    "gruppe": "p3",
+    "b": {
+     "id": "p3_04b",
+     "wort": "don",
+     "de": "Gabe",
+     "klang": "on",
+     "audio": "audio/nasale/p3_04b.mp3"
+    }
+   },
+   {
+    "id": "p3_05a",
+    "wort": "brin",
+    "de": "Halm",
+    "klang": "in",
+    "audio": "audio/nasale/p3_05a.mp3",
+    "gruppe": "p3",
+    "b": {
+     "id": "p3_05b",
+     "wort": "brun",
+     "de": "braun",
+     "klang": "un",
+     "audio": "audio/nasale/p3_05b.mp3"
+    }
+   },
+   {
+    "id": "p3_06a",
+    "wort": "pin",
+    "de": "Kiefer",
+    "klang": "in",
+    "audio": "audio/nasale/p3_06a.mp3",
+    "gruppe": "p3",
+    "b": {
+     "id": "p3_06b",
+     "wort": "pont",
+     "de": "Brücke",
+     "klang": "on",
+     "audio": "audio/nasale/p3_06b.mp3"
+    }
+   }
+  ],
+  "beide": [
+   {
+    "id": "b_01",
+    "wort": "commençons",
+    "de": "wir fangen an",
+    "klang": "an,on",
+    "audio": "audio/nasale/b_01.mp3",
+    "markup": "comm{an|en}ç{on|on}s",
+    "klaenge": [
+     "an",
+     "on"
+    ]
+   },
+   {
+    "id": "b_02",
+    "wort": "montant",
+    "de": "Betrag",
+    "klang": "on,an",
+    "audio": "audio/nasale/b_02.mp3",
+    "markup": "m{on|on}t{an|an}t",
+    "klaenge": [
+     "on",
+     "an"
+    ]
+   },
+   {
+    "id": "b_03",
+    "wort": "maintenant",
+    "de": "jetzt",
+    "klang": "in,an",
+    "audio": "audio/nasale/b_03.mp3",
+    "markup": "m{in|ain}t{an|en}{an|an}t",
+    "klaenge": [
+     "in",
+     "an"
+    ]
+   },
+   {
+    "id": "b_04",
+    "wort": "pension",
+    "de": "Pension, Rente",
+    "klang": "an,on",
+    "audio": "audio/nasale/b_04.mp3",
+    "markup": "p{an|en}si{on|on}",
+    "klaenge": [
+     "an",
+     "on"
+    ]
+   },
+   {
+    "id": "b_05",
+    "wort": "bonbon",
+    "de": "Bonbon",
+    "klang": "on,on",
+    "audio": "audio/nasale/b_05.mp3",
+    "markup": "b{on|on}b{on|on}",
+    "klaenge": [
+     "on",
+     "on"
+    ]
+   },
+   {
+    "id": "b_06",
+    "wort": "mon enfant",
+    "de": "mein Kind",
+    "klang": "on,an",
+    "audio": "audio/nasale/b_06.mp3",
+    "markup": "m{on|on} {an|en}f{an|an}t",
+    "klaenge": [
+     "on",
+     "an"
+    ]
+   },
+   {
+    "id": "b_07",
+    "wort": "en avion",
+    "de": "im Flugzeug",
+    "klang": "an,on",
+    "audio": "audio/nasale/b_07.mp3",
+    "markup": "{an|en} avi{on|on}",
+    "klaenge": [
+     "an",
+     "on"
+    ]
+   },
+   {
+    "id": "b_08",
+    "wort": "un bon vin blanc",
+    "de": "ein guter Weißwein",
+    "klang": "un,on,in,an",
+    "audio": "audio/nasale/b_08.mp3",
+    "markup": "{un|un} b{on|on} v{in|in} bl{an|an}c",
+    "klaenge": [
+     "un",
+     "on",
+     "in",
+     "an"
+    ]
+   },
+   {
+    "id": "b_09",
+    "wort": "attention",
+    "de": "Achtung",
+    "klang": "an,on",
+    "audio": "audio/nasale/b_09.mp3",
+    "markup": "att{an|en}ti{on|on}",
+    "klaenge": [
+     "an",
+     "on"
+    ]
+   },
+   {
+    "id": "b_10",
+    "wort": "tant mieux",
+    "de": "umso besser",
+    "klang": "an",
+    "audio": "audio/nasale/b_10.mp3",
+    "markup": "t{an|an}t mieux",
+    "klaenge": [
+     "an"
+    ]
+   },
+   {
+    "id": "b_11",
+    "wort": "lentement",
+    "de": "langsam",
+    "klang": "an,an",
+    "audio": "audio/nasale/b_11.mp3",
+    "markup": "l{an|en}tem{an|en}t",
+    "klaenge": [
+     "an",
+     "an"
+    ]
+   },
+   {
+    "id": "b_12",
+    "wort": "invitation",
+    "de": "Einladung",
+    "klang": "in,on",
+    "audio": "audio/nasale/b_12.mp3",
+    "markup": "{in|in}vitati{on|on}",
+    "klaenge": [
+     "in",
+     "on"
+    ]
+   }
+  ]
+ },
  "lob": {
   "lob": [
    {

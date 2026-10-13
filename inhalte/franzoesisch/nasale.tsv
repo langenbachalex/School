@@ -1,0 +1,87 @@
+id	teil	klang	wort	de	partner
+an_01	klang	an	enfant	Kind
+an_02	klang	an	temps	Zeit, Wetter
+an_03	klang	an	vent	Wind
+an_04	klang	an	chanter	singen
+an_05	klang	an	lentement	langsam
+an_06	klang	an	dans	in
+an_07	klang	an	grand	groß
+an_08	klang	an	blanc	weiß
+on_01	klang	on	bon	gut
+on_02	klang	on	pont	Brücke
+on_03	klang	on	mon	mein
+on_04	klang	on	chanson	Lied
+on_05	klang	on	maison	Haus
+on_06	klang	on	long	lang
+on_07	klang	on	nom	Name
+on_08	klang	on	ronron	Schnurren
+in_01	klang	in	vin	Wein
+in_02	klang	in	pain	Brot
+in_03	klang	in	main	Hand
+in_04	klang	in	matin	Morgen
+in_05	klang	in	chemin	Weg
+in_06	klang	in	bien	gut
+in_07	klang	in	plein	voll
+in_08	klang	in	train	Zug
+un_01	klang	un	un	ein
+un_02	klang	un	brun	braun
+un_03	klang	un	lundi	Montag
+un_04	klang	un	parfum	Parfüm, Duft
+un_05	klang	un	chacun	jeder
+un_06	klang	un	quelqu'un	jemand
+p1_01a	paar	an	vent	Wind	p1_01b
+p1_01b	paar	on	vont	(sie) gehen	p1_01a
+p1_02a	paar	an	lent	langsam	p1_02b
+p1_02b	paar	on	long	lang	p1_02a
+p1_03a	paar	an	banc	Bank (zum Sitzen)	p1_03b
+p1_03b	paar	on	bon	gut	p1_03a
+p1_04a	paar	an	sans	ohne	p1_04b
+p1_04b	paar	on	son	sein, ihr	p1_04a
+p1_05a	paar	an	tant	so viel	p1_05b
+p1_05b	paar	on	ton	dein	p1_05a
+p1_06a	paar	an	dent	Zahn	p1_06b
+p1_06b	paar	on	don	Gabe, Spende	p1_06a
+p1_07a	paar	an	rang	Reihe, Rang	p1_07b
+p1_07b	paar	on	rond	rund	p1_07a
+p1_08a	paar	an	blanc	weiß	p1_08b
+p1_08b	paar	on	blond	blond	p1_08a
+p2_01a	paar	in	pain	Brot	p2_01b
+p2_01b	paar	an	pan	Seite, Zipfel	p2_01a
+p2_02a	paar	in	vin	Wein	p2_02b
+p2_02b	paar	an	vent	Wind	p2_02a
+p2_03a	paar	in	bain	Bad	p2_03b
+p2_03b	paar	an	banc	Bank	p2_03a
+p2_04a	paar	in	main	Hand	p2_04b
+p2_04b	paar	an	ment	(er) lügt	p2_04a
+p2_05a	paar	in	fin	Ende	p2_05b
+p2_05b	paar	an	fend	(er) spaltet	p2_05a
+p2_06a	paar	in	teint	Teint, Hautfarbe	p2_06b
+p2_06b	paar	an	temps	Zeit	p2_06a
+p2_07a	paar	in	lin	Leinen	p2_07b
+p2_07b	paar	an	lent	langsam	p2_07a
+p2_08a	paar	in	sain	gesund	p2_08b
+p2_08b	paar	an	sans	ohne	p2_08a
+p3_01a	paar	in	bain	Bad	p3_01b
+p3_01b	paar	on	bon	gut	p3_01a
+p3_02a	paar	in	sain	gesund	p3_02b
+p3_02b	paar	on	son	sein, ihr	p3_02a
+p3_03a	paar	in	lin	Leinen	p3_03b
+p3_03b	paar	on	long	lang	p3_03a
+p3_04a	paar	in	daim	Damhirsch, Wildleder	p3_04b
+p3_04b	paar	on	don	Gabe	p3_04a
+p3_05a	paar	in	brin	Halm	p3_05b
+p3_05b	paar	un	brun	braun	p3_05a
+p3_06a	paar	in	pin	Kiefer	p3_06b
+p3_06b	paar	on	pont	Brücke	p3_06a
+b_01	beide	an,on	comm{an|en}ç{on|on}s	wir fangen an
+b_02	beide	on,an	m{on|on}t{an|an}t	Betrag
+b_03	beide	in,an	m{in|ain}t{an|en}{an|an}t	jetzt
+b_04	beide	an,on	p{an|en}si{on|on}	Pension, Rente
+b_05	beide	on,on	b{on|on}b{on|on}	Bonbon
+b_06	beide	on,an	m{on|on} {an|en}f{an|an}t	mein Kind
+b_07	beide	an,on	{an|en} avi{on|on}	im Flugzeug
+b_08	beide	un,on,in,an	{un|un} b{on|on} v{in|in} bl{an|an}c	ein guter Weißwein
+b_09	beide	an,on	att{an|en}ti{on|on}	Achtung
+b_10	beide	an	t{an|an}t mieux	umso besser
+b_11	beide	an,an	l{an|en}tem{an|en}t	langsam
+b_12	beide	in,on	{in|in}vitati{on|on}	Einladung

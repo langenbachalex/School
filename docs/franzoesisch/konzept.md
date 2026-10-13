@@ -1,6 +1,6 @@
 # Konzept-Entwurf: Französisch-App (persönlich, für Mr. Alex)
 
-Stand: 13.10.2026 (2. Fassung). **Noch nichts gebaut.** Inhaltsproben zum Durchsehen: `inhalte/franzoesisch/entre_profs.tsv` (20 Wendungen „Entre profs“), `inhalte/franzoesisch/sentiments.tsv` (24 Wendungen „Sentiments et ambiances“).
+Stand: 13.10.2026 (3. Fassung). **Gerüst gebaut (13.10., Mr. Alex: „fang mit dem Gerüst an“):** `app/franzoesisch/` – Startseite, Ma séance du jour (5 + 15, Leitner), Themen mit Écouter et répéter (3 Stufen), Machine à remonter le temps, Trouve l'expression, Punkte/Serien/Titel, Sammlung. Noch ohne Audio (Stimme des Geräts als Notlösung), Karte und Geschichte in Vorbereitung. Humor-Wunsch (13.10.): Dialoge und Geschichte im Assimil-Stil – ein bisschen lustig, ein bisschen schräg (wie die taube Dame im Bus in Lyon). Inhaltsproben zum Durchsehen: `inhalte/franzoesisch/entre_profs.tsv` (20 Wendungen „Entre profs“), `inhalte/franzoesisch/sentiments.tsv` (24 Wendungen „Sentiments et ambiances“).
 Grundprinzip wie in den Schul-Apps: Vor jedem Bauschritt fragt Claude, Mr. Alex segnet ab.
 Abschnitte mit **[OFFEN]** sind noch zu entscheiden.
 
@@ -72,7 +72,7 @@ Dialoge: Mr. Alex' Stimme spricht beide Rollen. **[OFFEN]** Aurélien fragen, ob
 
 - **Punkte, Serien, Wochen-Kalender, Abzeichen:** wie im Gamification-Konzept (Schultage Saarland).
 - **Frankreich-Karte (täglich):** Jede fertige Séance schaltet einen Ort frei, Start in **Metz** (Nachbar des Saarlands). Etwa 50 Orte über alle 13 Regionen (Strasbourg, Paris, Lyon, Marseille, Mont-Saint-Michel, Bordeaux, Carcassonne, Chamonix …). Zu jedem Ort ein **Fait amusant** auf Französisch in Mr. Alex' Stimme (antippen = Deutsch). Reisestempel mit Klang.
-- **Geschichte (Perfect week):** Jede perfekte Woche schaltet ein **Kapitel** einer fortlaufenden Geschichte frei, erzählt in Mr. Alex' Stimme, im Passé composé und Imparfait, mit den Wendungen der Woche. **Festgelegt (13.10.):** Held ist eine **echte Person, ein Franzose** (kein Tier); Genre **Mystery / Suspense** in Frankreich – Paris, ein Abenteuer im Louvre o. Ä. –, mit etwas Fantastischem. **Vorschlag Held: Julien Lefèvre**, Lehrer aus Metz, der in den Ferien nach Paris fährt und im Louvre auf ein Geheimnis stößt. Alternativen: Étienne Moreau, Mathieu Garnier.
+- **Geschichte (Perfect week):** Jede perfekte Woche schaltet ein **Kapitel** einer fortlaufenden Geschichte frei, erzählt in Mr. Alex' Stimme, im Passé composé und Imparfait, mit den Wendungen der Woche. **Festgelegt (13.10.):** Held ist eine **echte Person, ein Franzose** (kein Tier); Genre **Mystery / Suspense** in Frankreich – Paris, ein Abenteuer im Louvre o. Ä. –, mit etwas Fantastischem. **Held (festgelegt 13.10.): Julien Lefèvre**, Lehrer aus Metz, der in den Ferien nach Paris fährt und im Louvre auf ein Geheimnis stößt. Alternativen: Étienne Moreau, Mathieu Garnier.
 - **Titel – französische Delikatessen** (Mr. Alex, 13.10.: klein anfangen, bis zur großen Delikatesse): **[OFFEN]** Vorschlag 🥐 Petit éclair → Croissant → Baguette → Crêpe → Fromage → Huîtres → **Caviar**. Alternative: Tour-de-France-Trikots.
 - **Lob auf Französisch** in Mr. Alex' Stimme, **[OFFEN]** Liste z. B. *Génial ! · Chapeau ! · Trop fort ! · Magnifique ! · Bravo, champion !*
 
@@ -90,4 +90,4 @@ Dialoge: Mr. Alex' Stimme spricht beide Rollen. **[OFFEN]** Aurélien fragen, ob
 1. Inhaltsprobe `inhalte/franzoesisch/entre_profs.tsv`: Format und Ton in Ordnung?
 2. Held der Geschichte: Name, Beruf, Ausgangspunkt.
 3. Titel: Delikatessen-Reihe so in Ordnung, oder Tour de France?
-4. Nächster Schritt – Vorschlag: Bau des App-Gerüsts (Startseite, Séance, Listen and Repeat) mit den beiden Proben.
+4. Nächster Schritt – Vorschlag: Audios erzeugen (174 Dateien, ca. 5.100 Zeichen), Veröffentlichung unter `/franzoesisch/` (Workflow `pages.yml` muss den Branch kennen), dann Dialoge mit Aurélien und die Frankreich-Karte.

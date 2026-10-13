@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mon français</title>
+<meta name="theme-color" content="#0a2a6b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Français">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="basis.css">
+<link rel="stylesheet" href="franzoesisch.css">
+</head>
+<body>
+<div class="niveau-leiste">
+  <span class="niveau-name">Mon français</span>
+  <div class="niveau" role="group" aria-label="Aide en allemand / Deutsche Hilfe">
+    <button type="button" data-de="0" aria-pressed="true">FR</button>
+    <button type="button" data-de="1" aria-pressed="false">FR + DE</button>
+  </div>
+</div>
+<main id="app" aria-live="polite"></main>
+<script src="daten.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

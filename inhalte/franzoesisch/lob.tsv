@@ -1,0 +1,33 @@
+id	art	text	gruppe
+lob_genial	lob	Génial !	genial
+lob_chapeau	lob	Chapeau !	chapeau
+lob_trop_fort	lob	Trop fort !	fort
+lob_magnifique	lob	Magnifique !	magnifique
+lob_bravo	lob	Bravo !	bravo
+lob_parfait	lob	Parfait !	parfait
+lob_excellent	lob	Excellent !	excellent
+lob_super	lob	Super !	super
+lob_nickel	lob	Nickel !	nickel
+lob_impeccable	lob	Impeccable !	impeccable
+lob_exactement	lob	Exactement !	exact
+lob_voila	lob	Voilà !	voila
+lob_cest_ca	lob	C'est ça !	exact
+lob_bien_joue	lob	Bien joué !	joue
+lob_tu_geres	lob	Tu gères !	gere
+lob_la_classe	lob	La classe !	classe
+lob_formidable	lob	Formidable !	formidable
+lob_top	lob	Top !	top
+stark_champion	stark	Bravo, champion !	bravo
+stark_incroyable	stark	Incroyable ! Tu es en feu !	feu
+stark_fier	stark	Je suis fier de toi !	fier
+stark_superbe	stark	Superbe ! Continue comme ça !	superbe
+stark_machine	stark	Quelle machine !	machine
+fehler_presque	fehler	Presque !	presque
+fehler_pas_tout_a_fait	fehler	Pas tout à fait.	pas
+fehler_encore	fehler	Encore un essai !	encore
+fehler_pas_grave	fehler	Pas grave !	grave
+fehler_oh_la_la	fehler	Oh là là !	oh
+fehler_hmm	fehler	Hmm…	hmm
+geschafft_fini	geschafft	C'est fini pour aujourd'hui ! Chapeau !	fini
+geschafft_bravo	geschafft	Bravo, tu as tout fait ! À demain !	bravo
+geschafft_fier	geschafft	Tu peux être fier de toi. À demain !	fier

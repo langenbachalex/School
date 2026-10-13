@@ -1,0 +1,79 @@
+/* Französisch (persönlich) – ergänzt basis.css (Kopie der Klasse-6-Gestaltung). Farben: Trikolore, ruhig. */
+:root { --blau: #0a2a6b; --rot: #c8102e; --bg: #f4f6fb; --creme: #fff7e6; --creme-text: #4a3a10; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --blau: #8fb0ff; --rot: #ff6b7a; --creme: #3a3020; --creme-text: #ffe9b8; }
+}
+:root[data-theme="dark"] { --blau: #8fb0ff; --rot: #ff6b7a; --creme: #3a3020; --creme-text: #ffe9b8; }
+
+/* Leiste oben: FR | FR + DE, auf jeder Seite */
+.niveau-leiste {
+  position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 8px 16px; background: var(--blau); color: var(--blau-text);
+  border-bottom: 4px solid var(--rot);
+}
+.niveau-name { font: 600 1rem var(--display); letter-spacing: .02em; }
+.niveau { display: inline-flex; border: 2px solid var(--blau-text); border-radius: 999px; overflow: hidden; }
+.niveau button { font: 700 .95rem var(--body); min-width: 52px; min-height: 40px; padding: 0 12px; border: 0; cursor: pointer; background: transparent; color: var(--blau-text); white-space: nowrap; }
+.niveau button[aria-pressed="true"] { background: var(--blau-text); color: var(--blau); }
+.niveau button:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
+
+/* Französisch mit antippbarer deutscher Hilfe: Tipp auf den Text → Deutsch erscheint darunter */
+.frde { cursor: pointer; border-bottom: 1px dotted var(--leise); }
+.frde-de { display: block; font: 400 .95rem/1.4 var(--body); color: var(--leise); margin-top: 2px; }
+.frde-de[hidden] { display: none !important; }
+.ansage .frde { border-bottom: 0; }
+.ansage .frde-de { font-size: 1.05rem; }
+
+/* Startseite */
+.seance-knopf {
+  display: grid; gap: 6px; justify-items: start; text-align: left; padding: 22px 24px; border-radius: 22px;
+  border: 0; background: var(--blau); color: var(--blau-text); cursor: pointer; font: inherit; width: 100%;
+}
+.seance-knopf:focus-visible { outline: 3px solid var(--gelb); outline-offset: 3px; }
+.seance-knopf .gross { font: 600 1.7rem/1.15 var(--display); }
+.seance-knopf .unter { opacity: .9; }
+.seance-knopf.fertig { background: var(--gruen); }
+.seance-fortschritt { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.seance-fortschritt span { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,.35); }
+.seance-fortschritt span.ok { background: var(--gelb); }
+.seance-fortschritt span.wdh { border-radius: 4px; }
+.themen { grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.kachel .unter { font-size: .95rem; color: var(--leise); }
+.kachel .zahl { font-size: .8rem; color: var(--leise); margin-top: auto; }
+.kachel .bald-schild { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--leise); }
+.kachel.bald { opacity: .62; }
+
+/* Wendung auf der Karte */
+.wendung { font: 600 2rem/1.15 var(--display); color: var(--blau); overflow-wrap: anywhere; }
+.wendung-de { font-size: 1.3rem; color: var(--leise); }
+.register { display: inline-block; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; background: var(--creme); color: var(--creme-text); }
+.satz.fr { font-size: 1.55rem; }
+.satz.de { color: var(--leise); }
+.luecke { color: transparent; }
+
+/* Zeitmaschine: drei Zeilen, Lösung klappt auf */
+.zeiten { display: grid; gap: 12px; }
+.zeit { display: grid; grid-template-columns: 7.5rem 1fr; gap: 10px; align-items: start; padding: 12px 14px; border-radius: 14px; border: 2px solid var(--linie); }
+.zeit.jetzt { border-color: var(--blau); }
+.zeit.offen { background: var(--gruen-hell); border-color: var(--gruen); }
+.zeit-label { font: 600 .85rem/1.3 var(--display); letter-spacing: .04em; text-transform: uppercase; color: var(--leise); display: grid; gap: 2px; }
+.zeit-label b { font-size: 1.05rem; color: var(--text); text-transform: none; letter-spacing: 0; }
+.zeit-satz { font: 500 1.35rem/1.3 var(--display); overflow-wrap: anywhere; }
+.zeit-satz .profi { display: inline-block; }
+@media (max-width: 640px) { .zeit { grid-template-columns: 1fr; } }
+
+/* Séance: Selbsteinschätzung */
+.bewerten { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.bewerten .knopf { min-height: 64px; font-size: 1.15rem; }
+.knopf.encore { border-color: var(--rot); color: var(--rot); }
+.karten-info { font-size: .85rem; color: var(--leise); }
+
+/* „Noch einfacher“-Hilfen */
+.knopf.tipp { min-height: 44px; padding: 0 12px; font-weight: 600; color: var(--blau); }
+
+/* Sammlung: Titel mit Symbol */
+.titel-symbol { font-size: 3rem; line-height: 1; }
+.bildnachweis { margin-top: 8px; }
+@media (max-width: 640px) {
+  .seance-knopf .gross { font-size: 1.4rem; }
+}

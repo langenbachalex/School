@@ -7,15 +7,15 @@ ep_05	profs	la récré	die Pause	On se retrouve en salle des profs à la récré
 ep_06	profs	avoir hâte de	es kaum erwarten können	J'ai hâte d'être en vacances.	Ich kann die Ferien kaum erwarten.	ai hâte d'	J'avais hâte d'être en vacances.	Je vais avoir hâte d'être en vacances.	tu	avoir
 ep_07	profs	en avoir marre	die Nase voll haben	J'en ai marre des réunions qui n'en finissent pas.	Ich habe die Nase voll von Besprechungen, die kein Ende nehmen.	en ai marre			tu	avoir
 ep_08	profs	avoir du mal à	Schwierigkeiten haben zu	J'ai du mal à les faire taire le vendredi après-midi.	Freitagnachmittags fällt es mir schwer, sie ruhig zu kriegen.	ai du mal à	J'ai eu du mal à les faire taire vendredi après-midi.	Je vais avoir du mal à les faire taire vendredi après-midi.	tu	avoir
-ep_09	profs	ça fait longtemps	das ist lange her	Salut Aurélien ! Ça fait longtemps !	Hallo Aurélien! Lange nicht gesehen!	ça fait longtemps			tu	faire
+ep_09	profs	ça fait longtemps	das ist lange her	Salut Aurélien ! Ça fait longtemps !	Hallo Aurélien! Lange nicht gesehen!	Ça fait longtemps			tu	faire
 ep_10	profs	du coup	also, deshalb (umgangssprachlich)	Le prof de sport est malade, du coup je prends sa classe.	Der Sportlehrer ist krank, also übernehme ich seine Klasse.	du coup	Le prof de sport était malade, du coup j'ai pris sa classe.	Le prof de sport est malade, du coup je vais prendre sa classe.	tu	prendre
-ep_11	profs	en fait	eigentlich, genau genommen	En fait, j'aime bien mes élèves de neuvième.	Eigentlich mag ich meine Neuner sehr gern.	en fait			tu	aimer
+ep_11	profs	en fait	eigentlich, genau genommen	En fait, j'aime bien mes élèves de neuvième.	Eigentlich mag ich meine Neuner sehr gern.	En fait			tu	aimer
 ep_12	profs	quand même	trotzdem, immerhin	C'est fatigant, mais j'adore ce métier quand même.	Es ist anstrengend, aber ich liebe diesen Beruf trotzdem.	quand même			tu	adorer
 ep_13	profs	ça vaut le coup	das lohnt sich	Préparer un bon cours, ça prend du temps, mais ça vaut le coup.	Eine gute Stunde vorzubereiten dauert, aber es lohnt sich.	ça vaut le coup	Ça a pris du temps, mais ça valait le coup.	Ça va prendre du temps, mais ça va valoir le coup.	tu	valoir
 ep_14	profs	se débrouiller	zurechtkommen	Les élèves se débrouillent bien tout seuls.	Die Schüler kommen allein gut zurecht.	se débrouillent	Les élèves se sont bien débrouillés tout seuls.	Les élèves vont bien se débrouiller tout seuls.	tu	se débrouiller
 ep_15	profs	être à fond	voll dabei sein	Aujourd'hui, les sixièmes étaient à fond.	Heute waren die Sechser voll dabei.	à fond			tu	être
 ep_16	profs	rendre les copies	Arbeiten zurückgeben	Je rends les copies lundi.	Ich gebe die Arbeiten am Montag zurück.	rends les copies	J'ai rendu les copies lundi.	Je vais rendre les copies lundi.	tu	rendre
 ep_17	profs	une réunion	eine Besprechung, Konferenz	On a une réunion à seize heures, tu viens ?	Wir haben um 16 Uhr eine Konferenz, kommst du?	une réunion			tu	venir
-ep_18	profs	ça ne fait rien	das macht nichts	Tu as oublié mon livre ? Ça ne fait rien.	Du hast mein Buch vergessen? Macht nichts.	ça ne fait rien			tu	faire
-ep_19	profs	prendre son temps	sich Zeit lassen	Prends ton temps, on a toute la soirée.	Lass dir Zeit, wir haben den ganzen Abend.	prends ton temps			tu	prendre
+ep_18	profs	ça ne fait rien	das macht nichts	Tu as oublié mon livre ? Ça ne fait rien.	Du hast mein Buch vergessen? Macht nichts.	Ça ne fait rien			tu	faire
+ep_19	profs	prendre son temps	sich Zeit lassen	Prends ton temps, on a toute la soirée.	Lass dir Zeit, wir haben den ganzen Abend.	Prends ton temps			tu	prendre
 ep_20	profs	pourriez-vous … ?	könnten Sie … ? (höflich)	Excusez-moi, pourriez-vous m'indiquer la salle des profs ?	Entschuldigung, könnten Sie mir das Lehrerzimmer zeigen?	pourriez-vous			vous	pouvoir

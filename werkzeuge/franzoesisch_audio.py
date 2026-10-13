@@ -17,7 +17,7 @@ AURELIEN = ("eOwAMwUJEGkP44SKOXIH", "eleven_multilingual_v2")  # Julien – Prof
 
 
 # Aussprache-Korrekturen für die Stimme (Mr. Alex, 13.10.: „Metz“ klang falsch – richtig ist „Mess“)
-AUSSPRACHE = {"Metz": "Mess"}
+AUSSPRACHE = {"Metz": "Mess", "\u203f": ""}  # ‿ (Liaison-Bogen) nur im Text, nicht gesprochen
 
 
 def sprechtext(t):
@@ -31,11 +31,11 @@ def auftraege():
     for t in fb.THEMEN:
         for z in fb.tsv(t["datei"]):
             wid = z["id"]
-            liste.append((f"audio/wendungen/{wid}.mp3", z["wendung"]))
-            liste.append((f"audio/saetze/{wid}.mp3", z["satz_fr"]))
+            liste.append((f"audio/wendungen/{wid}.mp3", sprechtext(z["wendung"])))
+            liste.append((f"audio/saetze/{wid}.mp3", sprechtext(z["satz_fr"])))
             if z["passe_compose"]:
-                liste.append((f"audio/saetze/{wid}_pc.mp3", z["passe_compose"]))
-                liste.append((f"audio/saetze/{wid}_fp.mp3", z["futur_proche"]))
+                liste.append((f"audio/saetze/{wid}_pc.mp3", sprechtext(z["passe_compose"])))
+                liste.append((f"audio/saetze/{wid}_fp.mp3", sprechtext(z["futur_proche"])))
     for z in fb.tsv("dialoge.tsv"):
         liste.append((f"audio/dialoge/{z['id']}.mp3", z["fr"], "alex" if z["rolle"] == "A" else "aurelien"))
     for z in fb.tsv("nasale.tsv"):

@@ -2374,6 +2374,98 @@ window.DATEN = {
    }
   ]
  },
+ "geschichte": [
+  {
+   "nr": 1,
+   "titel": "Le billet",
+   "absaetze": [
+    {
+     "id": "k01_01",
+     "fr": "Julien Lefèvre était professeur à Metz. Un professeur normal. Enfin, presque.",
+     "de": "Julien Lefèvre war Lehrer in Metz. Ein normaler Lehrer. Na ja, fast.",
+     "audio": "audio/geschichte/k01_01.mp3"
+    },
+    {
+     "id": "k01_02",
+     "fr": "Ce vendredi soir, il **corrigeait des copies**, comme tous les vendredis. Il **était crevé**. Dehors, il pleuvait. Dedans, son chat **faisait la sieste** sur les copies déjà corrigées.",
+     "de": "An diesem Freitagabend korrigierte er Arbeiten, wie jeden Freitag. Er war fix und fertig. Draußen regnete es. Drinnen machte seine Katze ein Nickerchen auf den schon korrigierten Arbeiten.",
+     "audio": "audio/geschichte/k01_02.mp3"
+    },
+    {
+     "id": "k01_03",
+     "fr": "La dix-septième copie était celle de Mehdi, un élève de troisième qui écrivait peu, mais bien.",
+     "de": "Die siebzehnte Arbeit war die von Mehdi, einem Neuntklässler, der wenig schrieb, aber gut.",
+     "audio": "audio/geschichte/k01_03.mp3"
+    },
+    {
+     "id": "k01_04",
+     "fr": "Entre la page deux et la page trois, il y avait quelque chose. Un billet. Un billet d'entrée pour le musée du Louvre.",
+     "de": "Zwischen Seite zwei und Seite drei lag etwas. Eine Karte. Eine Eintrittskarte für den Louvre.",
+     "audio": "audio/geschichte/k01_04.mp3"
+    },
+    {
+     "id": "k01_05",
+     "fr": "Julien a regardé la date. Demain. Samedi. Dix heures.",
+     "de": "Julien sah auf das Datum. Morgen. Samstag. Zehn Uhr.",
+     "audio": "audio/geschichte/k01_05.mp3"
+    },
+    {
+     "id": "k01_06",
+     "fr": "Au dos du billet, quelqu'un avait écrit, en lettres bleues : « Salle 13. Venez seul. Et n'ayez pas peur. »",
+     "de": "Auf der Rückseite hatte jemand in blauen Buchstaben geschrieben: „Saal 13. Kommen Sie allein. Und haben Sie keine Angst.“",
+     "audio": "audio/geschichte/k01_06.mp3"
+    },
+    {
+     "id": "k01_07",
+     "fr": "Julien n'**avait pas peur**. Pas encore. Il **avait du mal à** comprendre, c'est tout.",
+     "de": "Julien hatte keine Angst. Noch nicht. Er hatte nur Schwierigkeiten, das zu verstehen, das war alles.",
+     "audio": "audio/geschichte/k01_07.mp3"
+    },
+    {
+     "id": "k01_08",
+     "fr": "Il a relu la copie de Mehdi. Un bon devoir. Treize sur vingt. Mais à la fin, une phrase ne faisait pas partie de la rédaction : « Monsieur, il faut y aller. Le chat le sait. »",
+     "de": "Er las Mehdis Arbeit noch einmal. Eine gute Arbeit. Dreizehn von zwanzig. Aber am Ende stand ein Satz, der nicht zum Aufsatz gehörte: „Monsieur, Sie müssen hingehen. Die Katze weiß es.“",
+     "audio": "audio/geschichte/k01_08.mp3"
+    },
+    {
+     "id": "k01_09",
+     "fr": "Julien a regardé son chat. Le chat a ouvert un œil. Puis il **a ronronné**. Une seule fois. Comme un oui.",
+     "de": "Julien sah seine Katze an. Die Katze öffnete ein Auge. Dann schnurrte sie. Ein einziges Mal. Wie ein Ja.",
+     "audio": "audio/geschichte/k01_09.mp3"
+    },
+    {
+     "id": "k01_10",
+     "fr": "« **Ça ne fait rien** », a dit Julien à voix haute. « Je n'irai pas. »",
+     "de": "„Macht nichts“, sagte Julien laut. „Ich gehe nicht hin.“",
+     "audio": "audio/geschichte/k01_10.mp3"
+    },
+    {
+     "id": "k01_11",
+     "fr": "Il a mis le billet dans sa poche. **Du coup**, à six heures du matin, il était dans le train pour Paris.",
+     "de": "Er steckte die Karte in seine Tasche. Und so saß er um sechs Uhr morgens im Zug nach Paris.",
+     "audio": "audio/geschichte/k01_11.mp3"
+    },
+    {
+     "id": "k01_12",
+     "fr": "**Ça fait longtemps** qu'il n'avait pas vu le Louvre. Il **avait hâte**. Et, pour être honnête, un petit peu **le cafard**.",
+     "de": "Es war lange her, dass er den Louvre gesehen hatte. Er konnte es kaum erwarten. Und, ehrlich gesagt, war ihm ein bisschen schwer ums Herz.",
+     "audio": "audio/geschichte/k01_12.mp3"
+    },
+    {
+     "id": "k01_13",
+     "fr": "Dans le wagon, en face de lui, un homme lisait le journal. Sur ses genoux, un chat gris le regardait. Le chat, pas l'homme.",
+     "de": "Im Waggon, ihm gegenüber, las ein Mann Zeitung. Auf seinem Schoß sah ihn eine graue Katze an. Die Katze, nicht der Mann.",
+     "audio": "audio/geschichte/k01_13.mp3"
+    },
+    {
+     "id": "k01_14",
+     "fr": "À suivre.",
+     "de": "Fortsetzung folgt.",
+     "audio": "audio/geschichte/k01_14.mp3"
+    }
+   ]
+  }
+ ],
  "lob": {
   "lob": [
    {

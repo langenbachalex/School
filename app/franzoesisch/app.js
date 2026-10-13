@@ -242,8 +242,13 @@
           el("span", { class: "zahl" }, `${d.zeilen.length} répliques`),
           ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
       })),
-      el("h2", {}, frde("Prononciation", "Aussprache")),
-      el("nav", { class: "kacheln themen", "aria-label": "Prononciation" },
+      el("h2", {}, frde("Prononciation et histoire", "Aussprache und Geschichte")),
+      el("nav", { class: "kacheln themen", "aria-label": "Prononciation et histoire" },
+        el("button", { class: "kachel", onclick: () => zeigeKapitel(kapitelFrei()), "aria-label": "L'histoire" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "📖"),
+          el("span", { class: "titel", lang: "fr" }, "Le secret du Louvre"),
+          el("span", { class: "unter", lang: "fr" }, "Julien Lefèvre, professeur à Metz – un billet, une salle qui n'existe pas, un chat qui sait."),
+          el("span", { class: "zahl" }, `${kapitelFrei()} / ${D.geschichte.length} chapitres · un nouveau par semaine parfaite`)),
         el("button", { class: "kachel" + (nasaleFertig() ? " erledigt" : ""), onclick: starteNasale, "aria-label": "Les nasales" },
           el("span", { class: "sym", "aria-hidden": "true" }, "👃"),
           el("span", { class: "titel", lang: "fr" }, "Les nasales"),
@@ -494,6 +499,46 @@
         meine && el("div", { class: "knopfreihe" }, tipp("Plus facile : montrer mes répliques", "Noch einfacher: meine Zeilen zeigen", (e) => { e.currentTarget.hidden = true; zeigeMeine(); })),
         el("div", { class: "knopfreihe" }, startKnopf, stoppKnopf), box,
         el("div", { class: "knopfreihe" }, weiter)));
+  }
+
+  /* ---------- L'histoire « Le secret du Louvre » ----------
+     Kapitel 1 ist frei, jede perfekte Woche schaltet das nächste frei. Absätze hören (alle oder einzeln), antippen = Deutsch. */
+  const kapitelFrei = () => Math.min(D.geschichte.length, 1 + spielstand().wochen.length);
+  const fett = (text) => text.split(/(\*\*[^*]+\*\*)/).map((t) => (t.startsWith("**") ? el("strong", { class: "ziel" }, t.slice(2, -2)) : t));
+  const tonAbsatz = (a) => a.audio || { text: a.fr.replace(/\*\*/g, "") };
+  function zeigeKapitel(nr) {
+    const k = D.geschichte[nr - 1];
+    lage = null; seance = null; ansicht = () => zeigeKapitel(nr);
+    if (!k || nr > kapitelFrei()) return sammlung();
+    const absaetze = k.absaetze.map((a) => {
+      const de = el("p", { class: "absatz-de", lang: "de", hidden: !stand.de }, a.de);
+      return el("div", { class: "absatz", role: "button", tabindex: "0", onclick: () => { de.hidden = !de.hidden; },
+        onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); de.hidden = !de.hidden; } } },
+        el("p", { class: "absatz-fr", lang: "fr" }, fett(a.fr),
+          el("button", { class: "knopf leise klein-knopf", "aria-label": "Écouter", onclick: (e) => { e.stopPropagation(); vorlesen([a]); } }, "🔊")), de);
+    });
+    async function vorlesen(liste) {
+      for (const a of liste) {
+        absaetze.forEach((x, i) => x.classList.toggle("spricht", k.absaetze[i] === a));
+        if ((await spiele([tonAbsatz(a)])) === null) break;
+      }
+      absaetze.forEach((x) => x.classList.remove("spricht"));
+    }
+    const kapitelLeiste = el("div", { class: "knopfreihe" }, D.geschichte.map((x) =>
+      el("button", { class: "sprung" + (x.nr === nr ? " jetzt" : "") + (x.nr <= kapitelFrei() ? "" : " zu"), disabled: x.nr > kapitelFrei(),
+        onclick: () => zeigeKapitel(x.nr), "aria-current": x.nr === nr ? "page" : false }, x.nr <= kapitelFrei() ? `${x.nr}` : `${x.nr} 🔒`)));
+    tasten(() => vorlesen(k.absaetze), nr < kapitelFrei() ? () => zeigeKapitel(nr + 1) : null);
+    zeige(
+      el("header", { class: "kopf" }, knopf("← Accueil", startseite, "leise"), el("h1", { lang: "fr" }, `📖 Chapitre ${k.nr} – ${k.titel}`), kapitelLeiste),
+      ansage("Écoute le chapitre, ou lis-le à voix haute. Touche un paragraphe pour l'allemand.", "Hör das Kapitel, oder lies es laut. Tipp auf einen Absatz für Deutsch."),
+      el("section", { class: "satzkarte geschichte" },
+        el("div", { class: "knopfreihe" }, knopf("▶ Écouter tout le chapitre", () => vorlesen(k.absaetze), "haupt"), knopf("■ Stop", stopp)),
+        el("div", { class: "absaetze" }, absaetze),
+        el("div", { class: "knopfreihe" },
+          nr < kapitelFrei() ? knopf("Chapitre suivant ➜", () => zeigeKapitel(nr + 1), "haupt")
+            : nr < D.geschichte.length ? el("p", { class: "klein" }, frde("Le chapitre suivant se débloque avec ta prochaine semaine parfaite.", "Das nächste Kapitel kommt mit deiner nächsten perfekten Woche."))
+            : el("p", { class: "klein" }, frde("La suite est en cours d'écriture.", "Die Fortsetzung wird gerade geschrieben.")),
+          knopf("🏆 Ma collection", sammlung))));
   }
 
   /* ---------- Prononciation: les nasales ----------
@@ -865,8 +910,9 @@
         const mo = montag(d);
         if (schultageDerWoche(mo).every((x) => sp.tage[iso(x)]) && !sp.wochen.includes(iso(mo))) {
           sp.wochen.push(iso(mo)); plus += PUNKTE.woche;
+          const kap = D.geschichte[Math.min(D.geschichte.length, 1 + sp.wochen.length) - 1];
           ereignisse.push({ art: "feier", symbol: "⭐", titel: "Semaine parfaite !",
-            text: `Tu as travaillé chaque jour d'école – +${PUNKTE.woche} points. Chapitre ${sp.wochen.length} de l'histoire : en préparation !`, ton: SP.texte.woche });
+            text: `Tu as travaillé chaque jour d'école – +${PUNKTE.woche} points.` + (sp.wochen.length < D.geschichte.length ? ` Nouveau chapitre : « ${kap.titel} » !` : " La suite de l'histoire arrive bientôt."), ton: SP.texte.woche });
           const ws = wochenSerie(mo);
           if (ws >= 4 && ws % 4 === 0) {
             plus += PUNKTE.monat; if (!sp.abzeichen.includes("monat")) sp.abzeichen.push("monat");
@@ -1028,9 +1074,12 @@
         el("p", { class: "klein" }, frde("Niveau 0 = nouvelle ou oubliée · à partir du niveau 3, l'expression est bien ancrée.", "Stufe 0 = neu oder vergessen · ab Stufe 3 sitzt die Wendung.")),
         el("ul", { class: "abzeichen" }, stufen.map((n, i) => el("li", { class: n ? "ok" : "" }, el("span", {}, `${i}`), el("span", {}, `${n} · ${INTERVALLE[i]} j`))))),
       el("section", { class: "satzkarte" },
-        el("h2", {}, `📖 L'histoire (${sp.wochen.length} chapitres)`),
-        el("p", { class: "klein" }, frde("Chaque semaine parfaite débloque un chapitre : Julien Lefèvre, professeur à Metz, et le mystère du Louvre. En préparation.",
-          "Jede perfekte Woche schaltet ein Kapitel frei: Julien Lefèvre, Lehrer aus Metz, und das Geheimnis des Louvre. In Vorbereitung."))),
+        el("h2", {}, `📖 Le secret du Louvre (${kapitelFrei()} / ${D.geschichte.length} chapitres)`),
+        el("p", { class: "klein" }, frde("Chaque semaine parfaite débloque un chapitre : Julien Lefèvre, professeur à Metz, et le mystère du Louvre.",
+          "Jede perfekte Woche schaltet ein Kapitel frei: Julien Lefèvre, Lehrer aus Metz, und das Geheimnis des Louvre.")),
+        el("div", { class: "heldenraster" }, D.geschichte.map((k) => k.nr <= kapitelFrei()
+          ? el("button", { class: "kapitel-karte", onclick: () => zeigeKapitel(k.nr) }, el("span", { class: "kapitel-nr" }, `Chapitre ${k.nr}`), el("strong", { lang: "fr" }, k.titel))
+          : el("div", { class: "held-zu", "aria-label": "Pas encore débloqué" }, el("span", {}, "?"), el("small", {}, "Semaine parfaite"))))),
       el("section", { class: "satzkarte" },
         el("h2", {}, `🗺️ La France (${frei} / ${SP.orte.length} lieux)`),
         el("p", { class: "klein" }, frde("Chaque séance terminée et chaque partie terminée débloquent un lieu, en partant de Metz. Touche un lieu !",

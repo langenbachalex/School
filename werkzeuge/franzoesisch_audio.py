@@ -40,6 +40,8 @@ def auftraege():
         liste.append((f"audio/dialoge/{z['id']}.mp3", z["fr"], "alex" if z["rolle"] == "A" else "aurelien"))
     for z in fb.tsv("nasale.tsv"):
         liste.append((f"audio/nasale/{z['id']}.mp3", fb.rein(z["wort"])))
+    for z in fb.tsv("geschichte.tsv"):
+        liste.append((f"audio/geschichte/k{int(z['kapitel']):02d}_{int(z['nr']):02d}.mp3", sprechtext(z["fr"].replace("**", ""))))
     for z in fb.tsv("orte.tsv"):
         liste.append((f"audio/orte/{z['id']}.mp3", sprechtext(f"{z['name']}. {z['fakt_fr']}")))
     for z in fb.tsv("lob.tsv"):

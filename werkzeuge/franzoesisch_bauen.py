@@ -91,11 +91,18 @@ def main():
         elif z["teil"] == "beide":
             eintrag["markup"] = z["wort"]; eintrag["klaenge"] = z["klang"].split(",")
             nasale["beide"].append(eintrag)
+    # Geschichte « Le secret du Louvre »: ein Kapitel je perfekte Woche (Kapitel 1 frei), Absätze mit **Wendungen**
+    geschichte = []
+    for z in tsv("geschichte.tsv"):
+        if not geschichte or geschichte[-1]["nr"] != int(z["kapitel"]):
+            geschichte.append({"nr": int(z["kapitel"]), "titel": z["titel"], "absaetze": []})
+        aid = f"k{int(z['kapitel']):02d}_{int(z['nr']):02d}"
+        geschichte[-1]["absaetze"].append({"id": aid, "fr": z["fr"], "de": z["de"], "audio": audio(f"audio/geschichte/{aid}.mp3")})
     lob = {}
     for z in tsv("lob.tsv"):
         lob.setdefault(z["art"], []).append({"text": z["text"], "audio": audio(f"audio/lob/{z['id']}.mp3"),
                                              "gruppe": [g for g in z["gruppe"].split(",") if g]})
-    daten = {"themen": themen, "wendungen": wendungen, "dialoge": dialoge, "nasale": nasale, "lob": lob, "pensum": PENSUM, "intervalle": INTERVALLE,
+    daten = {"themen": themen, "wendungen": wendungen, "dialoge": dialoge, "nasale": nasale, "geschichte": geschichte, "lob": lob, "pensum": PENSUM, "intervalle": INTERVALLE,
              "spiel": spieldaten()}
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/franzoesisch_bauen.py – bitte nicht von Hand ändern.\n")

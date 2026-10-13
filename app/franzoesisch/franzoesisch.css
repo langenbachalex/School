@@ -119,3 +119,15 @@
 .klang-schild { display: inline-flex; gap: 6px; align-items: baseline; font: 600 1.1rem var(--display); padding: 2px 10px; border-radius: 99px; border: 2px solid currentColor; }
 .klang-schild small { font: 400 .8rem var(--body); color: var(--leise); }
 .wahl-knopf.gross small { font-size: .95rem; }
+
+/* Geschichte: Absätze, antippen zeigt Deutsch; Kapitelkarten in der Sammlung */
+.absaetze { display: grid; gap: 14px; }
+.absatz { padding: 10px 12px; border-radius: 14px; border: 2px solid transparent; cursor: pointer; }
+.absatz.spricht { border-color: var(--blau); }
+.absatz:focus-visible { outline: 3px solid var(--blau); }
+.absatz-fr { font: 500 1.3rem/1.5 var(--display); }
+.absatz-fr .klein-knopf { vertical-align: middle; margin-left: 6px; }
+.absatz-de { font: 400 1rem/1.45 var(--body); color: var(--leise); margin-top: 4px; }
+.kapitel-karte { display: grid; gap: 4px; aspect-ratio: 3 / 4; padding: 12px; border-radius: 12px; border: 2px solid var(--blau); background: var(--karte); color: var(--text); cursor: pointer; font: inherit; text-align: left; align-content: end; }
+.kapitel-nr { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--leise); }
+.sprung.zu { opacity: .5; }

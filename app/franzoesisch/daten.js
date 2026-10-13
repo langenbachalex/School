@@ -124,6 +124,38 @@ window.DATEN = {
     "mu_23",
     "mu_24"
    ]
+  },
+  {
+   "id": "histoires",
+   "name": "Histoires et fantasy",
+   "de": "Geschichten und Fantasy",
+   "symbol": "🐉",
+   "wendungen": [
+    "hi_01",
+    "hi_02",
+    "hi_03",
+    "hi_04",
+    "hi_05",
+    "hi_06",
+    "hi_07",
+    "hi_08",
+    "hi_09",
+    "hi_10",
+    "hi_11",
+    "hi_12",
+    "hi_13",
+    "hi_14",
+    "hi_15",
+    "hi_16",
+    "hi_17",
+    "hi_18",
+    "hi_19",
+    "hi_20",
+    "hi_21",
+    "hi_22",
+    "hi_23",
+    "hi_24"
+   ]
   }
  ],
  "wendungen": [
@@ -2028,6 +2060,453 @@ window.DATEN = {
     "de": "Entschuldigung, könnten Sie das langsamer wiederholen? Ich höre die Musik, nicht die Wörter.",
     "luecke": "pourriez-vous répéter",
     "audio": "audio/saetze/mu_24.mp3"
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_01",
+   "thema": "histoires",
+   "fr": "il était une fois",
+   "de": "es war einmal",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Il était une fois un professeur qui ne corrigeait jamais ses copies. C'est un conte.",
+    "de": "Es war einmal ein Lehrer, der nie seine Arbeiten korrigierte. Das ist ein Märchen.",
+    "luecke": "Il était une fois",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_02",
+   "thema": "histoires",
+   "fr": "raconter une histoire",
+   "de": "eine Geschichte erzählen",
+   "register": "tu",
+   "anker": "raconter",
+   "audio": null,
+   "satz": {
+    "fr": "Le soir, je raconte une histoire à mon chat. Il s'endort avant la fin.",
+    "de": "Abends erzähle ich meiner Katze eine Geschichte. Sie schläft vor dem Ende ein.",
+    "luecke": "raconte une histoire",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Hier soir, j'ai raconté une histoire à mon chat.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Ce soir, je vais raconter une histoire à mon chat.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "hi_03",
+   "thema": "histoires",
+   "fr": "la quête",
+   "de": "die Suche, die Queste",
+   "register": "tu",
+   "anker": "commencer",
+   "audio": null,
+   "satz": {
+    "fr": "Chaque bon roman commence par une quête. Même si c'est juste chercher ses clés.",
+    "de": "Jeder gute Roman beginnt mit einer Suche. Auch wenn es nur um die Schlüssel geht.",
+    "luecke": "quête",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_04",
+   "thema": "histoires",
+   "fr": "au fond de la forêt",
+   "de": "tief im Wald",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Au fond de la forêt, il y avait une maison. Et dans la maison, une lumière.",
+    "de": "Tief im Wald stand ein Haus. Und im Haus brannte ein Licht.",
+    "luecke": "Au fond de la forêt",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_05",
+   "thema": "histoires",
+   "fr": "un dragon",
+   "de": "ein Drache",
+   "register": "tu",
+   "anker": "cracher",
+   "audio": null,
+   "satz": {
+    "fr": "Le dragon ne crachait pas de feu. Il crachait des devoirs.",
+    "de": "Der Drache spuckte kein Feuer. Er spuckte Hausaufgaben.",
+    "luecke": "dragon",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_06",
+   "thema": "histoires",
+   "fr": "une épée",
+   "de": "ein Schwert",
+   "register": "tu",
+   "anker": "prendre",
+   "audio": null,
+   "satz": {
+    "fr": "Le héros a pris son épée. Elle était lourde, comme un lundi.",
+    "de": "Der Held nahm sein Schwert. Es war schwer, wie ein Montag.",
+    "luecke": "épée",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_07",
+   "thema": "histoires",
+   "fr": "un sortilège",
+   "de": "ein Zauber",
+   "register": "tu",
+   "anker": "transformer",
+   "audio": null,
+   "satz": {
+    "fr": "Un sortilège a transformé la classe en silence. Ça n'a duré que trois minutes.",
+    "de": "Ein Zauber verwandelte die Klasse in Stille. Es hielt nur drei Minuten.",
+    "luecke": "sortilège",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Un sortilège a transformé la classe.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Un sortilège va transformer la classe.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "hi_08",
+   "thema": "histoires",
+   "fr": "d'un coup",
+   "de": "plötzlich, mit einem Schlag",
+   "register": "tu",
+   "anker": "ouvrir",
+   "audio": null,
+   "satz": {
+    "fr": "D'un coup, la porte s'est ouverte. Personne. Juste le vent. Enfin, j'espère.",
+    "de": "Plötzlich ging die Tür auf. Niemand. Nur der Wind. Hoffe ich zumindest.",
+    "luecke": "D'un coup",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_09",
+   "thema": "histoires",
+   "fr": "avoir un secret",
+   "de": "ein Geheimnis haben",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Tout le monde a un secret dans cette histoire. Même le chat.",
+    "de": "Jeder in dieser Geschichte hat ein Geheimnis. Sogar die Katze.",
+    "luecke": "a un secret",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_10",
+   "thema": "histoires",
+   "fr": "un royaume",
+   "de": "ein Königreich",
+   "register": "tu",
+   "anker": "parler",
+   "audio": null,
+   "satz": {
+    "fr": "Dans ce royaume, les livres parlaient et les gens écoutaient.",
+    "de": "In diesem Königreich sprachen die Bücher, und die Menschen hörten zu.",
+    "luecke": "royaume",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_11",
+   "thema": "histoires",
+   "fr": "un sorcier / une sorcière",
+   "de": "ein Zauberer / eine Hexe",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "La sorcière n'était pas méchante. Elle était fatiguée. Je la comprends.",
+    "de": "Die Hexe war nicht böse. Sie war müde. Ich verstehe sie.",
+    "luecke": "sorcière",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_12",
+   "thema": "histoires",
+   "fr": "se transformer en",
+   "de": "sich verwandeln in",
+   "register": "tu",
+   "anker": "se transformer",
+   "audio": null,
+   "satz": {
+    "fr": "À minuit, le prof se transforme en lecteur. Jusqu'à deux heures du matin.",
+    "de": "Um Mitternacht verwandelt sich der Lehrer in einen Leser. Bis zwei Uhr morgens.",
+    "luecke": "se transforme en",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "À minuit, le prof s'est transformé en lecteur.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "À minuit, le prof va se transformer en lecteur.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "hi_13",
+   "thema": "histoires",
+   "fr": "tout à coup",
+   "de": "auf einmal",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Tout à coup, le silence. Puis une voix : « Monsieur, c'est quand la pause ? »",
+    "de": "Auf einmal Stille. Dann eine Stimme: „Monsieur, wann ist Pause?“",
+    "luecke": "Tout à coup",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_14",
+   "thema": "histoires",
+   "fr": "un héros / une héroïne",
+   "de": "ein Held / eine Heldin",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Le héros de mon roman préféré a peur de tout. C'est pour ça qu'il est courageux.",
+    "de": "Der Held meines Lieblingsromans hat vor allem Angst. Deshalb ist er mutig.",
+    "luecke": "héros",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_15",
+   "thema": "histoires",
+   "fr": "le méchant",
+   "de": "der Bösewicht",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Le méchant de l'histoire, c'est le réveil. Six heures. Chaque jour.",
+    "de": "Der Bösewicht der Geschichte ist der Wecker. Sechs Uhr. Jeden Tag.",
+    "luecke": "méchant",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_16",
+   "thema": "histoires",
+   "fr": "une carte au trésor",
+   "de": "eine Schatzkarte",
+   "register": "tu",
+   "anker": "trouver",
+   "audio": null,
+   "satz": {
+    "fr": "J'ai trouvé une carte au trésor dans un cahier. C'était un plan de la cantine.",
+    "de": "Ich habe eine Schatzkarte in einem Heft gefunden. Es war ein Plan der Mensa.",
+    "luecke": "carte au trésor",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai trouvé une carte au trésor.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais trouver une carte au trésor, un jour.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "hi_17",
+   "thema": "histoires",
+   "fr": "il paraît que",
+   "de": "es heißt, dass",
+   "register": "tu",
+   "anker": "paraître",
+   "audio": null,
+   "satz": {
+    "fr": "Il paraît que la salle 13 existe. Il paraît aussi que le chat y dort.",
+    "de": "Es heißt, Saal 13 gibt es. Es heißt auch, die Katze schläft dort.",
+    "luecke": "Il paraît que",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_18",
+   "thema": "histoires",
+   "fr": "disparaître",
+   "de": "verschwinden",
+   "register": "tu",
+   "anker": "disparaître",
+   "audio": null,
+   "satz": {
+    "fr": "Dans ce roman, les gens disparaissent. Dans ma classe, ce sont les stylos.",
+    "de": "In diesem Roman verschwinden Menschen. In meiner Klasse sind es die Stifte.",
+    "luecke": "disparaissent",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Dans ce roman, trois personnes ont disparu.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Dans ce roman, tout le monde va disparaître.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "hi_19",
+   "thema": "histoires",
+   "fr": "la suite",
+   "de": "die Fortsetzung",
+   "register": "tu",
+   "anker": "lire",
+   "audio": null,
+   "satz": {
+    "fr": "Je veux lire la suite tout de suite. Mais il est minuit. Je lis la suite.",
+    "de": "Ich will sofort die Fortsetzung lesen. Aber es ist Mitternacht. Ich lese die Fortsetzung.",
+    "luecke": "suite",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_20",
+   "thema": "histoires",
+   "fr": "en haleine",
+   "de": "in Atem (gespannt)",
+   "register": "tu",
+   "anker": "tenir",
+   "audio": null,
+   "satz": {
+    "fr": "Ce livre me tient en haleine depuis trois nuits.",
+    "de": "Dieses Buch hält mich seit drei Nächten in Atem.",
+    "luecke": "en haleine",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Ce livre m'a tenu en haleine toute la nuit.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Ce livre va me tenir en haleine, je le sais.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "hi_21",
+   "thema": "histoires",
+   "fr": "frissonner",
+   "de": "schaudern, zittern",
+   "register": "tu",
+   "anker": "frissonner",
+   "audio": null,
+   "satz": {
+    "fr": "Je frissonne à chaque chapitre. Et je continue. C'est ça, la fantasy.",
+    "de": "Ich schaudere bei jedem Kapitel. Und lese weiter. Das ist Fantasy.",
+    "luecke": "frissonne",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai frissonné à la fin du chapitre.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Tu vas frissonner, c'est promis.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "hi_22",
+   "thema": "histoires",
+   "fr": "un rebondissement",
+   "de": "eine Wendung (in der Handlung)",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Un rebondissement à la page 200 : le chat était le roi depuis le début.",
+    "de": "Eine Wendung auf Seite 200: Die Katze war von Anfang an der König.",
+    "luecke": "rebondissement",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_23",
+   "thema": "histoires",
+   "fr": "la fin",
+   "de": "das Ende",
+   "register": "tu",
+   "anker": "raconter",
+   "audio": null,
+   "satz": {
+    "fr": "La fin de cette histoire ? Je ne la raconte pas. Lis le livre.",
+    "de": "Das Ende dieser Geschichte? Ich verrate es nicht. Lies das Buch.",
+    "luecke": "fin",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "hi_24",
+   "thema": "histoires",
+   "fr": "Pourriez-vous me conseiller un livre ?",
+   "de": "Könnten Sie mir ein Buch empfehlen? (höflich)",
+   "register": "vous",
+   "anker": "pouvoir",
+   "audio": null,
+   "satz": {
+    "fr": "Bonjour, pourriez-vous me conseiller un livre ? Un peu sombre, un peu magique.",
+    "de": "Guten Tag, könnten Sie mir ein Buch empfehlen? Ein bisschen düster, ein bisschen magisch.",
+    "luecke": "pourriez-vous me conseiller",
+    "audio": null
    },
    "zeit": null
   }

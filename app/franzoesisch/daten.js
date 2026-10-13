@@ -252,6 +252,38 @@ window.DATEN = {
     "en_23",
     "en_24"
    ]
+  },
+  {
+   "id": "faux_amis",
+   "name": "Faux amis",
+   "de": "Falsche Freunde Englisch–Französisch (Bonus)",
+   "symbol": "⚡",
+   "wendungen": [
+    "fa_01",
+    "fa_02",
+    "fa_03",
+    "fa_04",
+    "fa_05",
+    "fa_06",
+    "fa_07",
+    "fa_08",
+    "fa_09",
+    "fa_10",
+    "fa_11",
+    "fa_12",
+    "fa_13",
+    "fa_14",
+    "fa_15",
+    "fa_16",
+    "fa_17",
+    "fa_18",
+    "fa_19",
+    "fa_20",
+    "fa_21",
+    "fa_22",
+    "fa_23",
+    "fa_24"
+   ]
   }
  ],
  "wendungen": [
@@ -4097,6 +4129,462 @@ window.DATEN = {
     "de": "Er ist bezaubernd. Wie alt ist Ihr Kind? – Vierzehn Monate. Und vier Zähne.",
     "luecke": "Quel âge a votre enfant",
     "audio": "audio/saetze/en_24.mp3"
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_01",
+   "thema": "faux_amis",
+   "fr": "actuellement",
+   "de": "zurzeit, derzeit (≠ actually = en fait)",
+   "register": "tu",
+   "anker": "corriger",
+   "audio": null,
+   "satz": {
+    "fr": "Actuellement, je corrige des copies. En fait, je regarde le chat.",
+    "de": "Zurzeit korrigiere ich Arbeiten. Eigentlich schaue ich die Katze an.",
+    "luecke": "Actuellement",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_02",
+   "thema": "faux_amis",
+   "fr": "une librairie",
+   "de": "eine Buchhandlung (≠ library = une bibliothèque)",
+   "register": "tu",
+   "anker": "acheter",
+   "audio": null,
+   "satz": {
+    "fr": "À la librairie, on achète. À la bibliothèque, on emprunte. Et on rend. En théorie.",
+    "de": "In der Buchhandlung kauft man. In der Bibliothek leiht man. Und gibt zurück. Theoretisch.",
+    "luecke": "librairie",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_03",
+   "thema": "faux_amis",
+   "fr": "assister à",
+   "de": "beiwohnen, teilnehmen an (≠ to assist = aider)",
+   "register": "tu",
+   "anker": "assister",
+   "audio": null,
+   "satz": {
+    "fr": "J'assiste à une réunion. Je n'aide personne. Je suis juste là.",
+    "de": "Ich nehme an einer Konferenz teil. Ich helfe niemandem. Ich bin nur da.",
+    "luecke": "assiste à",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai assisté à une réunion de trois heures.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais assister à une réunion. Encore.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "fa_04",
+   "thema": "faux_amis",
+   "fr": "attendre",
+   "de": "warten (≠ to attend = assister à)",
+   "register": "tu",
+   "anker": "attendre",
+   "audio": null,
+   "satz": {
+    "fr": "J'attends le bus. Le bus ne m'attend pas. C'est injuste.",
+    "de": "Ich warte auf den Bus. Der Bus wartet nicht auf mich. Das ist ungerecht.",
+    "luecke": "attends",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai attendu le bus vingt minutes.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais attendre le bus sous la pluie.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "fa_05",
+   "thema": "faux_amis",
+   "fr": "blesser",
+   "de": "verletzen (≠ to bless = bénir)",
+   "register": "tu",
+   "anker": "blesser",
+   "audio": null,
+   "satz": {
+    "fr": "Attention : « blesser » n'est pas gentil. Mon chat le sait bien.",
+    "de": "Vorsicht: „blesser“ ist nicht nett. Meine Katze weiß das genau.",
+    "luecke": "blesser",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Il m'a blessé. Avec ses griffes, pas avec des mots.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Il va me blesser si je continue.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "fa_06",
+   "thema": "faux_amis",
+   "fr": "demander",
+   "de": "fragen, bitten (≠ to demand = exiger)",
+   "register": "tu",
+   "anker": "demander",
+   "audio": null,
+   "satz": {
+    "fr": "Je demande le silence. Je ne l'exige pas. Nuance de prof.",
+    "de": "Ich bitte um Ruhe. Ich fordere sie nicht. Lehrer-Nuance.",
+    "luecke": "demande",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai demandé le silence. Poliment.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais demander le silence. Encore une fois.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "fa_07",
+   "thema": "faux_amis",
+   "fr": "rester",
+   "de": "bleiben (≠ to rest = se reposer)",
+   "register": "tu",
+   "anker": "rester",
+   "audio": null,
+   "satz": {
+    "fr": "Je reste à la maison. Je ne me repose pas : j'ai des copies.",
+    "de": "Ich bleibe zu Hause. Ich ruhe mich nicht aus: Ich habe Arbeiten.",
+    "luecke": "reste",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Je suis resté à la maison tout le week-end.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais rester à la maison ce soir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "fa_08",
+   "thema": "faux_amis",
+   "fr": "sensible",
+   "de": "empfindlich, sensibel (≠ sensible = raisonnable)",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Mon chat est sensible. Pas raisonnable. Sensible.",
+    "de": "Meine Katze ist empfindlich. Nicht vernünftig. Empfindlich.",
+    "luecke": "sensible",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_09",
+   "thema": "faux_amis",
+   "fr": "éventuellement",
+   "de": "möglicherweise (≠ eventually = finalement)",
+   "register": "tu",
+   "anker": "venir",
+   "audio": null,
+   "satz": {
+    "fr": "Éventuellement, je viendrai. Finalement, je suis venu. Ce n'est pas pareil.",
+    "de": "Möglicherweise komme ich. Schließlich bin ich gekommen. Das ist nicht dasselbe.",
+    "luecke": "Éventuellement",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_10",
+   "thema": "faux_amis",
+   "fr": "un coin",
+   "de": "eine Ecke (≠ coin = une pièce de monnaie)",
+   "register": "tu",
+   "anker": "dormir",
+   "audio": null,
+   "satz": {
+    "fr": "Le chat dort dans un coin. Pas sur une pièce. Dans un coin.",
+    "de": "Die Katze schläft in einer Ecke. Nicht auf einer Münze. In einer Ecke.",
+    "luecke": "coin",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_11",
+   "thema": "faux_amis",
+   "fr": "une journée",
+   "de": "ein Tag (Verlauf) (≠ journey = un voyage)",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Bonne journée ! Ce n'est pas un voyage. Juste un jour. Mais un bon.",
+    "de": "Schönen Tag! Das ist keine Reise. Nur ein Tag. Aber ein guter.",
+    "luecke": "journée",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_12",
+   "thema": "faux_amis",
+   "fr": "un préservatif",
+   "de": "ein Kondom (≠ preservative = un conservateur)",
+   "register": "tu",
+   "anker": "dire",
+   "audio": null,
+   "satz": {
+    "fr": "« Sans préservatifs » sur une confiture ? Non. On dit « sans conservateurs ».",
+    "de": "„Ohne Kondome“ auf einer Marmelade? Nein. Man sagt „ohne Konservierungsstoffe“.",
+    "luecke": "préservatif",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_13",
+   "thema": "faux_amis",
+   "fr": "un bras",
+   "de": "ein Arm (≠ bra = un soutien-gorge)",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Il a un bras cassé. Un bras. Faites attention au mot anglais.",
+    "de": "Er hat einen gebrochenen Arm. Einen Arm. Vorsicht mit dem englischen Wort.",
+    "luecke": "bras",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_14",
+   "thema": "faux_amis",
+   "fr": "la monnaie",
+   "de": "das Wechselgeld, Kleingeld (≠ money = l'argent)",
+   "register": "vous",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Vous avez la monnaie ? – Non, j'ai de l'argent, mais pas de monnaie.",
+    "de": "Haben Sie Kleingeld? – Nein, ich habe Geld, aber kein Kleingeld.",
+    "luecke": "monnaie",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_15",
+   "thema": "faux_amis",
+   "fr": "une déception",
+   "de": "eine Enttäuschung (≠ deception = une tromperie)",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "La note ? Une déception. Pas une tromperie. Juste une déception.",
+    "de": "Die Note? Eine Enttäuschung. Keine Täuschung. Nur eine Enttäuschung.",
+    "luecke": "déception",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_16",
+   "thema": "faux_amis",
+   "fr": "un habit",
+   "de": "ein Kleidungsstück (≠ habit = une habitude)",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Mes habits du dimanche : un jogging. C'est aussi une habitude.",
+    "de": "Meine Sonntagskleidung: eine Jogginghose. Das ist auch eine Gewohnheit.",
+    "luecke": "habits",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_17",
+   "thema": "faux_amis",
+   "fr": "ignorer",
+   "de": "nicht wissen (≠ to ignore = ne pas tenir compte de)",
+   "register": "tu",
+   "anker": "ignorer",
+   "audio": null,
+   "satz": {
+    "fr": "J'ignore la réponse. Je ne l'ignore pas : je ne la connais pas.",
+    "de": "Ich weiß die Antwort nicht. Ich ignoriere sie nicht: Ich kenne sie nicht.",
+    "luecke": "ignore",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai ignoré la réponse pendant tout le cours.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais ignorer la réponse jusqu'à demain.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "fa_18",
+   "thema": "faux_amis",
+   "fr": "un stage",
+   "de": "ein Praktikum (≠ stage = une scène)",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Mon élève fait un stage. Pas sur une scène. Dans une boulangerie.",
+    "de": "Mein Schüler macht ein Praktikum. Nicht auf einer Bühne. In einer Bäckerei.",
+    "luecke": "stage",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Il a fait un stage de deux semaines.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Il va faire un stage en juin.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "fa_19",
+   "thema": "faux_amis",
+   "fr": "une lecture",
+   "de": "das Lesen, Lektüre (≠ lecture = un cours, une conférence)",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Ma lecture du soir : un roman. Pas un cours. Un roman.",
+    "de": "Meine Abendlektüre: ein Roman. Keine Vorlesung. Ein Roman.",
+    "luecke": "lecture",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_20",
+   "thema": "faux_amis",
+   "fr": "un médecin",
+   "de": "ein Arzt (≠ medicine = un médicament)",
+   "register": "tu",
+   "anker": "donner",
+   "audio": null,
+   "satz": {
+    "fr": "Le médecin donne un médicament. Le médicament n'est pas le médecin.",
+    "de": "Der Arzt gibt ein Medikament. Das Medikament ist nicht der Arzt.",
+    "luecke": "médecin",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_21",
+   "thema": "faux_amis",
+   "fr": "prétendre",
+   "de": "behaupten (≠ to pretend = faire semblant)",
+   "register": "tu",
+   "anker": "prétendre",
+   "audio": null,
+   "satz": {
+    "fr": "Il prétend avoir fait ses devoirs. Il fait semblant de chercher son cahier.",
+    "de": "Er behauptet, seine Hausaufgaben gemacht zu haben. Er tut so, als suche er sein Heft.",
+    "luecke": "prétend",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Il a prétendu avoir fait ses devoirs.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Il va prétendre avoir fait ses devoirs.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "fa_22",
+   "thema": "faux_amis",
+   "fr": "la location",
+   "de": "die Vermietung, Miete (≠ location = un lieu, un endroit)",
+   "register": "tu",
+   "anker": "louer",
+   "audio": null,
+   "satz": {
+    "fr": "Location de vélos. Ce n'est pas un lieu. C'est un vélo qu'on loue.",
+    "de": "Fahrradverleih. Das ist kein Ort. Das ist ein Fahrrad, das man mietet.",
+    "luecke": "Location",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_23",
+   "thema": "faux_amis",
+   "fr": "un raisin",
+   "de": "eine Weintraube (≠ raisin = un raisin sec)",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Un raisin, c'est frais. Un raisin sec, c'est sec. Logique française.",
+    "de": "Eine Traube ist frisch. Eine Rosine ist trocken. Französische Logik.",
+    "luecke": "raisin",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "fa_24",
+   "thema": "faux_amis",
+   "fr": "Excusez-moi, je cherche la bibliothèque.",
+   "de": "Entschuldigung, ich suche die Bibliothek. (höflich)",
+   "register": "vous",
+   "anker": "chercher",
+   "audio": null,
+   "satz": {
+    "fr": "Excusez-moi, je cherche la bibliothèque. – La librairie ? – Non, la bibliothèque. Avec les livres gratuits.",
+    "de": "Entschuldigung, ich suche die Bibliothek. – Die Buchhandlung? – Nein, die Bibliothek. Mit den kostenlosen Büchern.",
+    "luecke": "je cherche la bibliothèque",
+    "audio": null
    },
    "zeit": null
   }

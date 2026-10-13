@@ -3606,21 +3606,21 @@ window.DATEN = {
    "de": "durchschlafen (Baby)",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/en_01.mp3",
    "satz": {
     "fr": "Le bébé de ma collègue fait ses nuits. Elle, pas encore.",
     "de": "Das Baby meiner Kollegin schläft durch. Sie noch nicht.",
     "luecke": "fait ses nuits",
-    "audio": null
+    "audio": "audio/saetze/en_01.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Le bébé a fait ses nuits cette semaine.",
-     "audio": null
+     "audio": "audio/saetze/en_01_pc.mp3"
     },
     "fp": {
      "fr": "Le bébé va faire ses nuits. Un jour.",
-     "audio": null
+     "audio": "audio/saetze/en_01_fp.mp3"
     }
    }
   },
@@ -3631,12 +3631,12 @@ window.DATEN = {
    "de": "ein Kuscheltier, Schmusetuch",
    "register": "tu",
    "anker": "dormir",
-   "audio": null,
+   "audio": "audio/wendungen/en_02.mp3",
    "satz": {
     "fr": "Sans son doudou, impossible de dormir. Je parle du bébé. Enfin, surtout.",
     "de": "Ohne sein Kuscheltier: unmöglich zu schlafen. Ich spreche vom Baby. Na ja, hauptsächlich.",
     "luecke": "doudou",
-    "audio": null
+    "audio": "audio/saetze/en_02.mp3"
    },
    "zeit": null
   },
@@ -3647,21 +3647,21 @@ window.DATEN = {
    "de": "Unsinn anstellen",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/en_03.mp3",
    "satz": {
     "fr": "Les enfants font des bêtises. C'est leur métier. Le mien, c'est de sourire.",
     "de": "Kinder stellen Unsinn an. Das ist ihr Beruf. Meiner ist es, zu lächeln.",
     "luecke": "font des bêtises",
-    "audio": null
+    "audio": "audio/saetze/en_03.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Ils ont fait des bêtises toute la matinée.",
-     "audio": null
+     "audio": "audio/saetze/en_03_pc.mp3"
     },
     "fp": {
      "fr": "Ils vont faire des bêtises, c'est sûr.",
-     "audio": null
+     "audio": "audio/saetze/en_03_fp.mp3"
     }
    }
   },
@@ -3672,21 +3672,21 @@ window.DATEN = {
    "de": "in den Arm nehmen",
    "register": "tu",
    "anker": "prendre",
-   "audio": null,
+   "audio": "audio/wendungen/en_04.mp3",
    "satz": {
     "fr": "Quand un enfant pleure, on le prend dans ses bras. C'est la seule règle.",
     "de": "Wenn ein Kind weint, nimmt man es in den Arm. Das ist die einzige Regel.",
     "luecke": "prend dans ses bras",
-    "audio": null
+    "audio": "audio/saetze/en_04.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Je l'ai pris dans mes bras.",
-     "audio": null
+     "audio": "audio/saetze/en_04_pc.mp3"
     },
     "fp": {
      "fr": "Je vais le prendre dans mes bras.",
-     "audio": null
+     "audio": "audio/saetze/en_04_fp.mp3"
     }
    }
   },
@@ -3697,12 +3697,12 @@ window.DATEN = {
    "de": "ein Baby",
    "register": "tu",
    "anker": "dire",
-   "audio": null,
+   "audio": "audio/wendungen/en_05.mp3",
    "satz": {
     "fr": "Un bébé, ça ne parle pas, mais ça dit tout.",
     "de": "Ein Baby spricht nicht, aber es sagt alles.",
     "luecke": "bébé",
-    "audio": null
+    "audio": "audio/saetze/en_05.mp3"
    },
    "zeit": null
   },
@@ -3713,21 +3713,21 @@ window.DATEN = {
    "de": "lächeln (jemanden anlächeln)",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/en_06.mp3",
    "satz": {
     "fr": "Le bébé m'a fait un sourire. Ma journée était gagnée.",
     "de": "Das Baby hat mich angelächelt. Mein Tag war gerettet.",
     "luecke": "a fait un sourire",
-    "audio": null
+    "audio": "audio/saetze/en_06.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Le bébé m'a fait un sourire.",
-     "audio": null
+     "audio": "audio/saetze/en_06_pc.mp3"
     },
     "fp": {
      "fr": "Le bébé va me faire un sourire. J'attends.",
-     "audio": null
+     "audio": "audio/saetze/en_06_fp.mp3"
     }
    }
   },
@@ -3738,21 +3738,21 @@ window.DATEN = {
    "de": "wachsen, groß werden",
    "register": "tu",
    "anker": "grandir",
-   "audio": null,
+   "audio": "audio/wendungen/en_07.mp3",
    "satz": {
     "fr": "Les enfants grandissent trop vite. Les copies, elles, restent.",
     "de": "Kinder werden zu schnell groß. Die Arbeiten bleiben.",
     "luecke": "grandissent",
-    "audio": null
+    "audio": "audio/saetze/en_07.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Ils ont grandi pendant les vacances.",
-     "audio": null
+     "audio": "audio/saetze/en_07_pc.mp3"
     },
     "fp": {
      "fr": "Ils vont grandir, et moi je vais vieillir.",
-     "audio": null
+     "audio": "audio/saetze/en_07_fp.mp3"
     }
    }
   },
@@ -3763,21 +3763,21 @@ window.DATEN = {
    "de": "schlecht einschlafen",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/en_08.mp3",
    "satz": {
     "fr": "Le petit a du mal à s'endormir. Alors je chante. Ça marche. Il pleure moins fort.",
     "de": "Der Kleine schläft schlecht ein. Also singe ich. Es funktioniert. Er weint leiser.",
     "luecke": "a du mal à s'endormir",
-    "audio": null
+    "audio": "audio/saetze/en_08.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Il a eu du mal à s'endormir.",
-     "audio": null
+     "audio": "audio/saetze/en_08_pc.mp3"
     },
     "fp": {
      "fr": "Il va avoir du mal à s'endormir.",
-     "audio": null
+     "audio": "audio/saetze/en_08_fp.mp3"
     }
    }
   },
@@ -3788,12 +3788,12 @@ window.DATEN = {
    "de": "eine Windel",
    "register": "tu",
    "anker": "changer",
-   "audio": null,
+   "audio": "audio/wendungen/en_09.mp3",
    "satz": {
     "fr": "Changer une couche en trois minutes : ça, c'est un vrai enchaînement de kung-fu.",
     "de": "Eine Windel in drei Minuten wechseln: Das ist eine echte Kung-Fu-Form.",
     "luecke": "couche",
-    "audio": null
+    "audio": "audio/saetze/en_09.mp3"
    },
    "zeit": null
   },
@@ -3804,12 +3804,12 @@ window.DATEN = {
    "de": "brav sein",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/en_10.mp3",
    "satz": {
     "fr": "« Sois sage ! » – « Je suis sage. » – « Alors pourquoi le chat est-il dans le lave-linge ? »",
     "de": "„Sei brav!“ – „Ich bin brav.“ – „Und warum ist die Katze in der Waschmaschine?“",
     "luecke": "sage",
-    "audio": null
+    "audio": "audio/saetze/en_10.mp3"
    },
    "zeit": null
   },
@@ -3820,21 +3820,21 @@ window.DATEN = {
    "de": "Verstecken spielen",
    "register": "tu",
    "anker": "jouer",
-   "audio": null,
+   "audio": "audio/wendungen/en_11.mp3",
    "satz": {
     "fr": "On joue à cache-cache. Il se cache toujours derrière le rideau. Avec ses pieds dehors.",
     "de": "Wir spielen Verstecken. Er versteckt sich immer hinter dem Vorhang. Mit den Füßen draußen.",
     "luecke": "joue à cache-cache",
-    "audio": null
+    "audio": "audio/saetze/en_11.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "On a joué à cache-cache tout l'après-midi.",
-     "audio": null
+     "audio": "audio/saetze/en_11_pc.mp3"
     },
     "fp": {
      "fr": "On va jouer à cache-cache après le goûter.",
-     "audio": null
+     "audio": "audio/saetze/en_11_fp.mp3"
     }
    }
   },
@@ -3845,21 +3845,21 @@ window.DATEN = {
    "de": "eine Gute-Nacht-Geschichte erzählen",
    "register": "tu",
    "anker": "raconter",
-   "audio": null,
+   "audio": "audio/wendungen/en_12.mp3",
    "satz": {
     "fr": "Je raconte une histoire pour s'endormir. Au bout de trois pages, je dors.",
     "de": "Ich erzähle eine Gute-Nacht-Geschichte. Nach drei Seiten schlafe ich.",
     "luecke": "raconte une histoire",
-    "audio": null
+    "audio": "audio/saetze/en_12.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai raconté une histoire pour s'endormir.",
-     "audio": null
+     "audio": "audio/saetze/en_12_pc.mp3"
     },
     "fp": {
      "fr": "Je vais raconter une histoire pour s'endormir.",
-     "audio": null
+     "audio": "audio/saetze/en_12_fp.mp3"
     }
    }
   },
@@ -3870,21 +3870,21 @@ window.DATEN = {
    "de": "weinen",
    "register": "tu",
    "anker": "pleurer",
-   "audio": null,
+   "audio": "audio/wendungen/en_13.mp3",
    "satz": {
     "fr": "Le bébé pleure. Puis il rit. Puis il pleure. C'est un concert.",
     "de": "Das Baby weint. Dann lacht es. Dann weint es. Es ist ein Konzert.",
     "luecke": "pleure",
-    "audio": null
+    "audio": "audio/saetze/en_13.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Le bébé a pleuré toute la nuit.",
-     "audio": null
+     "audio": "audio/saetze/en_13_pc.mp3"
     },
     "fp": {
      "fr": "Le bébé va pleurer, et je vais chanter.",
-     "audio": null
+     "audio": "audio/saetze/en_13_fp.mp3"
     }
    }
   },
@@ -3895,12 +3895,12 @@ window.DATEN = {
    "de": "eine Umarmung, ein Kuscheln",
    "register": "tu",
    "anker": "commencer",
-   "audio": null,
+   "audio": "audio/wendungen/en_14.mp3",
    "satz": {
     "fr": "Un câlin avant l'école, et la journée commence bien. Pour les deux.",
     "de": "Eine Umarmung vor der Schule, und der Tag beginnt gut. Für beide.",
     "luecke": "câlin",
-    "audio": null
+    "audio": "audio/saetze/en_14.mp3"
    },
    "zeit": null
   },
@@ -3911,21 +3911,21 @@ window.DATEN = {
    "de": "laufen lernen",
    "register": "tu",
    "anker": "apprendre",
-   "audio": null,
+   "audio": "audio/wendungen/en_15.mp3",
    "satz": {
     "fr": "Elle apprend à marcher. Trois pas, une chute, un rire. C'est la vie en miniature.",
     "de": "Sie lernt laufen. Drei Schritte, ein Sturz, ein Lachen. Das Leben im Kleinen.",
     "luecke": "apprend à marcher",
-    "audio": null
+    "audio": "audio/saetze/en_15.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Elle a appris à marcher cet été.",
-     "audio": null
+     "audio": "audio/saetze/en_15_pc.mp3"
     },
     "fp": {
      "fr": "Elle va apprendre à marcher bientôt.",
-     "audio": null
+     "audio": "audio/saetze/en_15_fp.mp3"
     }
    }
   },
@@ -3936,12 +3936,12 @@ window.DATEN = {
    "de": "stolz sein auf",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/en_16.mp3",
    "satz": {
     "fr": "Je suis fier de mes élèves. Surtout quand ils ne le savent pas.",
     "de": "Ich bin stolz auf meine Schüler. Vor allem, wenn sie es nicht wissen.",
     "luecke": "fier de",
-    "audio": null
+    "audio": "audio/saetze/en_16.mp3"
    },
    "zeit": null
   },
@@ -3952,12 +3952,12 @@ window.DATEN = {
    "de": "die ersten Wörter",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/en_17.mp3",
    "satz": {
     "fr": "Ses premiers mots : « papa », « chat », « non ». Dans cet ordre.",
     "de": "Seine ersten Wörter: „Papa“, „Katze“, „Nein“. In dieser Reihenfolge.",
     "luecke": "premiers mots",
-    "audio": null
+    "audio": "audio/saetze/en_17.mp3"
    },
    "zeit": null
   },
@@ -3968,21 +3968,21 @@ window.DATEN = {
    "de": "Geduld haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/en_18.mp3",
    "satz": {
     "fr": "Avec les enfants, il faut avoir de la patience. J'en ai. Elle finit à dix-sept heures.",
     "de": "Mit Kindern braucht man Geduld. Ich habe welche. Sie endet um fünf.",
     "luecke": "avoir de la patience",
-    "audio": null
+    "audio": "audio/saetze/en_18.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai eu de la patience toute la journée.",
-     "audio": null
+     "audio": "audio/saetze/en_18_pc.mp3"
     },
     "fp": {
      "fr": "Je vais avoir de la patience. Jusqu'à midi.",
-     "audio": null
+     "audio": "audio/saetze/en_18_fp.mp3"
     }
    }
   },
@@ -3993,12 +3993,12 @@ window.DATEN = {
    "de": "der Nachmittagssnack",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/en_19.mp3",
    "satz": {
     "fr": "À seize heures, c'est le goûter. Pour les enfants. Et pour moi, par solidarité.",
     "de": "Um vier gibt es den Nachmittagssnack. Für die Kinder. Und für mich, aus Solidarität.",
     "luecke": "goûter",
-    "audio": null
+    "audio": "audio/saetze/en_19.mp3"
    },
    "zeit": null
   },
@@ -4009,21 +4009,21 @@ window.DATEN = {
    "de": "schallend lachen",
    "register": "tu",
    "anker": "rire",
-   "audio": null,
+   "audio": "audio/wendungen/en_20.mp3",
    "satz": {
     "fr": "Le bébé rit aux éclats quand le chat éternue. Moi aussi, d'ailleurs.",
     "de": "Das Baby lacht schallend, wenn die Katze niest. Ich übrigens auch.",
     "luecke": "rit aux éclats",
-    "audio": null
+    "audio": "audio/saetze/en_20.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Le bébé a ri aux éclats.",
-     "audio": null
+     "audio": "audio/saetze/en_20_pc.mp3"
     },
     "fp": {
      "fr": "Le bébé va rire aux éclats.",
-     "audio": null
+     "audio": "audio/saetze/en_20_fp.mp3"
     }
    }
   },
@@ -4034,21 +4034,21 @@ window.DATEN = {
    "de": "Mittagsschlaf halten",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/en_21.mp3",
    "satz": {
     "fr": "Les petits font la sieste. Les grands aussi, en secret.",
     "de": "Die Kleinen halten Mittagsschlaf. Die Großen auch, heimlich.",
     "luecke": "font la sieste",
-    "audio": null
+    "audio": "audio/saetze/en_21.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Les petits ont fait la sieste.",
-     "audio": null
+     "audio": "audio/saetze/en_21_pc.mp3"
     },
     "fp": {
      "fr": "Les petits vont faire la sieste.",
-     "audio": null
+     "audio": "audio/saetze/en_21_fp.mp3"
     }
    }
   },
@@ -4059,12 +4059,12 @@ window.DATEN = {
    "de": "Angst im Dunkeln haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/en_22.mp3",
    "satz": {
     "fr": "Il a peur du noir. Alors on laisse la porte ouverte. Et le chat de garde.",
     "de": "Er hat Angst im Dunkeln. Also lassen wir die Tür offen. Und die Katze als Wache.",
     "luecke": "a peur du noir",
-    "audio": null
+    "audio": "audio/saetze/en_22.mp3"
    },
    "zeit": null
   },
@@ -4075,12 +4075,12 @@ window.DATEN = {
    "de": "es ist Badezeit",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/en_23.mp3",
    "satz": {
     "fr": "C'est l'heure du bain ! Tout le monde est mouillé. Même ceux qui ne se baignent pas.",
     "de": "Es ist Badezeit! Alle sind nass. Auch die, die nicht baden.",
     "luecke": "l'heure du bain",
-    "audio": null
+    "audio": "audio/saetze/en_23.mp3"
    },
    "zeit": null
   },
@@ -4091,12 +4091,12 @@ window.DATEN = {
    "de": "Wie alt ist Ihr Kind? (höflich)",
    "register": "vous",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/en_24.mp3",
    "satz": {
     "fr": "Il est adorable. Quel âge a votre enfant ? – Quatorze mois. Et quatre dents.",
     "de": "Er ist bezaubernd. Wie alt ist Ihr Kind? – Vierzehn Monate. Und vier Zähne.",
     "luecke": "Quel âge a votre enfant",
-    "audio": null
+    "audio": "audio/saetze/en_24.mp3"
    },
    "zeit": null
   }

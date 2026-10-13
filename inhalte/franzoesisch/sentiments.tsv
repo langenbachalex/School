@@ -1,0 +1,25 @@
+id	thema	wendung	deutsch	satz_fr	satz_de	luecke	passe_compose	futur_proche	register	anker
+se_01	sentiments	ça me touche	das berührt mich	Cette chanson me touche à chaque fois.	Dieses Lied berührt mich jedes Mal.	me touche	Cette chanson m'a touché.	Cette chanson va me toucher.	tu	toucher
+se_02	sentiments	avoir le cafard	Trübsal blasen, niedergeschlagen sein	Le dimanche soir, j'ai souvent le cafard.	Sonntagabends bin ich oft niedergeschlagen.	ai le cafard	Dimanche soir, j'ai eu le cafard.	Dimanche soir, je vais avoir le cafard.	tu	avoir
+se_03	sentiments	sombre	düster, dunkel	J'aime les histoires sombres, avec une forêt et un secret.	Ich mag düstere Geschichten, mit einem Wald und einem Geheimnis.	sombres			tu	aimer
+se_04	sentiments	mélancolique	melancholisch	Ce morceau de piano est mélancolique, mais tellement beau.	Dieses Klavierstück ist melancholisch, aber so schön.	mélancolique			tu	être
+se_05	sentiments	ça me fend le cœur	das bricht mir das Herz	Voir un enfant pleurer tout seul, ça me fend le cœur.	Ein Kind ganz allein weinen zu sehen, bricht mir das Herz.	me fend le cœur	Ça m'a fendu le cœur.	Ça va me fendre le cœur.	tu	fendre
+se_06	sentiments	être ému	gerührt, bewegt sein	À la fin du concert, j'étais ému aux larmes.	Am Ende des Konzerts war ich zu Tränen gerührt.	ému			tu	être
+se_07	sentiments	inquiétant	beunruhigend, unheimlich	La maison était silencieuse, c'était inquiétant.	Das Haus war still, das war unheimlich.	inquiétant			tu	être
+se_08	sentiments	apaisant	beruhigend, wohltuend	Le ronronnement de mon chat est apaisant.	Das Schnurren meiner Katze ist beruhigend.	apaisant			tu	être
+se_09	sentiments	avoir les larmes aux yeux	Tränen in den Augen haben	Quand j'écoute cette voix, j'ai les larmes aux yeux.	Wenn ich diese Stimme höre, habe ich Tränen in den Augen.	ai les larmes aux yeux	J'ai eu les larmes aux yeux.	Je vais avoir les larmes aux yeux.	tu	avoir
+se_10	sentiments	ça me donne des frissons	das gibt mir Gänsehaut	Le refrain me donne des frissons.	Der Refrain gibt mir Gänsehaut.	me donne des frissons	Le refrain m'a donné des frissons.	Le refrain va me donner des frissons.	tu	donner
+se_11	sentiments	avoir peur de	Angst haben vor	Je n'ai pas peur du noir, mais du silence.	Ich habe keine Angst vor der Dunkelheit, sondern vor der Stille.	ai peur	Je n'ai pas eu peur du noir.	Je ne vais pas avoir peur du noir.	tu	avoir
+se_12	sentiments	être de bonne humeur	gut gelaunt sein	Ce matin, je suis de bonne humeur, le soleil est là.	Heute Morgen bin ich gut gelaunt, die Sonne ist da.	de bonne humeur	Ce matin, j'étais de bonne humeur.	Demain, je vais être de bonne humeur.	tu	être
+se_13	sentiments	être de mauvaise humeur	schlecht gelaunt sein	Ne lui parle pas, il est de mauvaise humeur.	Sprich ihn nicht an, er ist schlecht gelaunt.	de mauvaise humeur			tu	être
+se_14	sentiments	ça me manque	das fehlt mir	Mes chats me manquent quand je suis en voyage.	Meine Katzen fehlen mir, wenn ich unterwegs bin.	me manquent	Mes chats m'ont manqué.	Mes chats vont me manquer.	tu	manquer
+se_15	sentiments	en avoir gros sur le cœur	schwer ums Herz sein, viel auf dem Herzen haben	Après cette journée, j'en ai gros sur le cœur.	Nach diesem Tag ist mir schwer ums Herz.	en ai gros sur le cœur	J'en ai eu gros sur le cœur.	Je vais en avoir gros sur le cœur.	tu	avoir
+se_16	sentiments	bouleversant	erschütternd, zutiefst bewegend	La fin du film est bouleversante.	Das Ende des Films ist zutiefst bewegend.	bouleversante			tu	être
+se_17	sentiments	se sentir bien / mal	sich gut / schlecht fühlen	Après le kung-fu, je me sens bien, léger.	Nach dem Kung-Fu fühle ich mich gut, leicht.	me sens bien	Après le kung-fu, je me suis senti bien.	Après le kung-fu, je vais me sentir bien.	tu	se sentir
+se_18	sentiments	avoir le cœur lourd	ein schweres Herz haben	Elle est partie, et j'ai le cœur lourd.	Sie ist gegangen, und mir ist schwer ums Herz.	ai le cœur lourd	J'ai eu le cœur lourd.	Je vais avoir le cœur lourd.	tu	avoir
+se_19	sentiments	ça me rend triste / heureux	das macht mich traurig / glücklich	La pluie sur Paris me rend un peu triste.	Der Regen über Paris macht mich ein bisschen traurig.	me rend triste	La pluie m'a rendu un peu triste.	La pluie va me rendre un peu triste.	tu	rendre
+se_20	sentiments	le clair-obscur	das Halbdunkel, Hell-Dunkel	J'adore le clair-obscur dans les tableaux du Louvre.	Ich liebe das Hell-Dunkel in den Gemälden im Louvre.	clair-obscur			tu	adorer
+se_21	sentiments	paisible	friedlich	Le soir, le jardin est paisible.	Abends ist der Garten friedlich.	paisible			tu	être
+se_22	sentiments	angoissant	beklemmend, angsteinflößend	Le couloir vide du musée était angoissant.	Der leere Gang im Museum war beklemmend.	angoissant			tu	être
+se_23	sentiments	avoir du chagrin	Kummer haben	Il a du chagrin depuis la mort de son chat.	Er hat Kummer, seit seine Katze gestorben ist.	a du chagrin	Il a eu du chagrin.	Il va avoir du chagrin.	tu	avoir
+se_24	sentiments	je suis désolé(e)	es tut mir leid (höflich)	Je suis désolé, madame, je ne voulais pas vous déranger.	Es tut mir leid, Madame, ich wollte Sie nicht stören.	suis désolé			vous	être

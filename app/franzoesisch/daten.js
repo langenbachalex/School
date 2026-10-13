@@ -60,6 +60,38 @@ window.DATEN = {
     "se_23",
     "se_24"
    ]
+  },
+  {
+   "id": "chats",
+   "name": "Les chats",
+   "de": "Die Katzen",
+   "symbol": "🐈",
+   "wendungen": [
+    "ch_01",
+    "ch_02",
+    "ch_03",
+    "ch_04",
+    "ch_05",
+    "ch_06",
+    "ch_07",
+    "ch_08",
+    "ch_09",
+    "ch_10",
+    "ch_11",
+    "ch_12",
+    "ch_13",
+    "ch_14",
+    "ch_15",
+    "ch_16",
+    "ch_17",
+    "ch_18",
+    "ch_19",
+    "ch_20",
+    "ch_21",
+    "ch_22",
+    "ch_23",
+    "ch_24"
+   ]
   }
  ],
  "wendungen": [
@@ -962,6 +994,525 @@ window.DATEN = {
     "de": "Es tut mir leid, Madame, ich wollte Sie nicht stören.",
     "luecke": "suis désolé",
     "audio": "audio/saetze/se_24.mp3"
+   },
+   "zeit": null
+  },
+  {
+   "id": "ch_01",
+   "thema": "chats",
+   "fr": "ronronner",
+   "de": "schnurren",
+   "register": "tu",
+   "anker": "ronronner",
+   "audio": null,
+   "satz": {
+    "fr": "Mon chat ronronne dès que je m'assieds.",
+    "de": "Meine Katze schnurrt, sobald ich mich hinsetze.",
+    "luecke": "ronronne",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Mon chat a ronronné dès que je me suis assis.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Mon chat va ronronner dès que je vais m'asseoir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_02",
+   "thema": "chats",
+   "fr": "faire un câlin",
+   "de": "kuscheln, schmusen",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Le soir, elle vient me faire un câlin sur le canapé.",
+    "de": "Abends kommt sie auf dem Sofa zu mir zum Schmusen.",
+    "luecke": "faire un câlin",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Hier soir, elle est venue me faire un câlin.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Ce soir, elle va venir me faire un câlin.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_03",
+   "thema": "chats",
+   "fr": "griffer",
+   "de": "kratzen (mit Krallen)",
+   "register": "tu",
+   "anker": "griffer",
+   "audio": null,
+   "satz": {
+    "fr": "Attention, il griffe quand on le caresse trop longtemps.",
+    "de": "Vorsicht, er kratzt, wenn man ihn zu lange streichelt.",
+    "luecke": "griffe",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Il m'a griffé quand je l'ai caressé trop longtemps.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Il va te griffer si tu le caresses trop longtemps.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_04",
+   "thema": "chats",
+   "fr": "faire sa toilette",
+   "de": "sich putzen",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Après le repas, il fait sa toilette pendant dix minutes.",
+    "de": "Nach dem Essen putzt er sich zehn Minuten lang.",
+    "luecke": "fait sa toilette",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Après le repas, il a fait sa toilette pendant dix minutes.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Après le repas, il va faire sa toilette.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_05",
+   "thema": "chats",
+   "fr": "miauler",
+   "de": "miauen",
+   "register": "tu",
+   "anker": "miauler",
+   "audio": null,
+   "satz": {
+    "fr": "Elle miaule devant la porte de la cuisine à six heures du matin.",
+    "de": "Sie miaut um sechs Uhr morgens vor der Küchentür.",
+    "luecke": "miaule",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Elle a miaulé devant la porte à six heures du matin.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Elle va miauler devant la porte à six heures du matin.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_06",
+   "thema": "chats",
+   "fr": "avoir faim",
+   "de": "Hunger haben",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "D'après lui, il a toujours faim.",
+    "de": "Wenn es nach ihm geht, hat er immer Hunger.",
+    "luecke": "a toujours faim",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "D'après lui, il a eu faim toute la journée.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "D'après lui, il va avoir faim dans cinq minutes.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_07",
+   "thema": "chats",
+   "fr": "caresser",
+   "de": "streicheln",
+   "register": "tu",
+   "anker": "caresser",
+   "audio": null,
+   "satz": {
+    "fr": "Je caresse ma chatte derrière les oreilles, elle adore ça.",
+    "de": "Ich streichle meine Katze hinter den Ohren, das liebt sie.",
+    "luecke": "caresse",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Je l'ai caressée derrière les oreilles.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais la caresser derrière les oreilles.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_08",
+   "thema": "chats",
+   "fr": "faire ses griffes",
+   "de": "seine Krallen wetzen",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Il fait ses griffes sur le fauteuil, jamais sur le griffoir.",
+    "de": "Er wetzt seine Krallen am Sessel, nie am Kratzbaum.",
+    "luecke": "fait ses griffes",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Il a fait ses griffes sur le fauteuil.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Il va faire ses griffes sur le fauteuil, c'est sûr.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_09",
+   "thema": "chats",
+   "fr": "un félin",
+   "de": "eine Raubkatze, ein Katzentier",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Un chat, c'est un petit félin qui a décidé de vivre avec nous.",
+    "de": "Eine Katze ist eine kleine Raubkatze, die beschlossen hat, bei uns zu leben.",
+    "luecke": "félin",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "ch_10",
+   "thema": "chats",
+   "fr": "faire la sieste",
+   "de": "ein Nickerchen machen",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Mon chat fait la sieste seize heures par jour. Quelle vie.",
+    "de": "Meine Katze macht sechzehn Stunden am Tag Nickerchen. Was für ein Leben.",
+    "luecke": "fait la sieste",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Mon chat a fait la sieste toute la journée.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Mon chat va faire la sieste toute la journée.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_11",
+   "thema": "chats",
+   "fr": "se frotter contre",
+   "de": "sich reiben an",
+   "register": "tu",
+   "anker": "se frotter",
+   "audio": null,
+   "satz": {
+    "fr": "Elle se frotte contre mes jambes quand je rentre.",
+    "de": "Sie reibt sich an meinen Beinen, wenn ich nach Hause komme.",
+    "luecke": "se frotte contre",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Elle s'est frottée contre mes jambes quand je suis rentré.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Elle va se frotter contre mes jambes quand je vais rentrer.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_12",
+   "thema": "chats",
+   "fr": "les croquettes",
+   "de": "das Trockenfutter",
+   "register": "tu",
+   "anker": "préférer",
+   "audio": null,
+   "satz": {
+    "fr": "Il préfère les croquettes du voisin aux siennes.",
+    "de": "Er mag das Trockenfutter des Nachbarn lieber als seins.",
+    "luecke": "croquettes",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "ch_13",
+   "thema": "chats",
+   "fr": "la pâtée",
+   "de": "das Nassfutter",
+   "register": "tu",
+   "anker": "savoir",
+   "audio": null,
+   "satz": {
+    "fr": "À midi, c'est la pâtée, et il le sait.",
+    "de": "Mittags gibt es Nassfutter, und das weiß er.",
+    "luecke": "pâtée",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "ch_14",
+   "thema": "chats",
+   "fr": "avoir un regard",
+   "de": "einen Blick haben",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Elle a un regard qui dit : « Tu es en retard. »",
+    "de": "Sie hat einen Blick, der sagt: „Du bist spät dran.“",
+    "luecke": "a un regard",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "ch_15",
+   "thema": "chats",
+   "fr": "sauter sur",
+   "de": "springen auf",
+   "register": "tu",
+   "anker": "sauter",
+   "audio": null,
+   "satz": {
+    "fr": "Il saute sur le bureau pendant que je corrige des copies.",
+    "de": "Er springt auf den Schreibtisch, während ich Arbeiten korrigiere.",
+    "luecke": "saute sur",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Il a sauté sur le bureau pendant que je corrigeais.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Il va sauter sur le bureau, comme d'habitude.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_16",
+   "thema": "chats",
+   "fr": "se cacher",
+   "de": "sich verstecken",
+   "register": "tu",
+   "anker": "se cacher",
+   "audio": null,
+   "satz": {
+    "fr": "Quand l'aspirateur sort, elle se cache sous le lit.",
+    "de": "Wenn der Staubsauger rauskommt, versteckt sie sich unterm Bett.",
+    "luecke": "se cache",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Quand l'aspirateur est sorti, elle s'est cachée sous le lit.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Quand l'aspirateur va sortir, elle va se cacher sous le lit.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_17",
+   "thema": "chats",
+   "fr": "tenir compagnie",
+   "de": "Gesellschaft leisten",
+   "register": "tu",
+   "anker": "tenir",
+   "audio": null,
+   "satz": {
+    "fr": "Mes chats me tiennent compagnie quand je prépare mes cours.",
+    "de": "Meine Katzen leisten mir Gesellschaft, wenn ich Unterricht vorbereite.",
+    "luecke": "tiennent compagnie",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Mes chats m'ont tenu compagnie toute la soirée.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Mes chats vont me tenir compagnie ce soir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_18",
+   "thema": "chats",
+   "fr": "un chat de gouttière",
+   "de": "eine Hauskatze (ohne Rasse)",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Ce n'est pas un chat de race, c'est un chat de gouttière, et il est parfait.",
+    "de": "Es ist keine Rassekatze, es ist eine ganz normale Hauskatze, und er ist perfekt.",
+    "luecke": "chat de gouttière",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "ch_19",
+   "thema": "chats",
+   "fr": "faire des bêtises",
+   "de": "Unsinn machen",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Quand je ne suis pas là, ils font des bêtises.",
+    "de": "Wenn ich nicht da bin, machen sie Unsinn.",
+    "luecke": "font des bêtises",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Quand je n'étais pas là, ils ont fait des bêtises.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Quand je ne vais pas être là, ils vont faire des bêtises.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_20",
+   "thema": "chats",
+   "fr": "le vétérinaire",
+   "de": "der Tierarzt",
+   "register": "tu",
+   "anker": "devenir",
+   "audio": null,
+   "satz": {
+    "fr": "Chez le vétérinaire, mon chat devient très, très calme.",
+    "de": "Beim Tierarzt wird meine Katze sehr, sehr ruhig.",
+    "luecke": "vétérinaire",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "ch_21",
+   "thema": "chats",
+   "fr": "ça ne le dérange pas",
+   "de": "das stört ihn nicht",
+   "register": "tu",
+   "anker": "déranger",
+   "audio": null,
+   "satz": {
+    "fr": "Je chante faux, mais ça ne le dérange pas. Enfin, je crois.",
+    "de": "Ich singe schief, aber das stört ihn nicht. Glaube ich zumindest.",
+    "luecke": "ça ne le dérange pas",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "ch_22",
+   "thema": "chats",
+   "fr": "être indépendant",
+   "de": "unabhängig sein",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Un chat est indépendant. Il revient quand il a faim.",
+    "de": "Eine Katze ist unabhängig. Sie kommt zurück, wenn sie Hunger hat.",
+    "luecke": "indépendant",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "ch_23",
+   "thema": "chats",
+   "fr": "ronronner de plaisir",
+   "de": "vor Wohlbehagen schnurren",
+   "register": "tu",
+   "anker": "ronronner",
+   "audio": null,
+   "satz": {
+    "fr": "Au soleil, elle ronronne de plaisir, les yeux fermés.",
+    "de": "In der Sonne schnurrt sie vor Wohlbehagen, mit geschlossenen Augen.",
+    "luecke": "ronronne de plaisir",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Au soleil, elle a ronronné de plaisir.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Au soleil, elle va ronronner de plaisir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "ch_24",
+   "thema": "chats",
+   "fr": "Est-ce que vous avez un chat ?",
+   "de": "Haben Sie eine Katze? (höflich)",
+   "register": "vous",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Excusez-moi, madame, est-ce que vous avez un chat ? Il y en a un sur votre toit.",
+    "de": "Entschuldigung, Madame, haben Sie eine Katze? Da sitzt eine auf Ihrem Dach.",
+    "luecke": "est-ce que vous avez",
+    "audio": null
    },
    "zeit": null
   }

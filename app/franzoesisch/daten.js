@@ -3073,21 +3073,21 @@ window.DATEN = {
    "de": "ausgewogen essen",
    "register": "tu",
    "anker": "manger",
-   "audio": null,
+   "audio": "audio/wendungen/ma_01.mp3",
    "satz": {
     "fr": "J'essaie de manger équilibré. Le croissant du matin ne compte pas.",
     "de": "Ich versuche, ausgewogen zu essen. Das Croissant am Morgen zählt nicht.",
     "luecke": "manger équilibré",
-    "audio": null
+    "audio": "audio/saetze/ma_01.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Cette semaine, j'ai mangé équilibré. Sauf vendredi.",
-     "audio": null
+     "audio": "audio/saetze/ma_01_pc.mp3"
     },
     "fp": {
      "fr": "Je vais manger équilibré. À partir de lundi.",
-     "audio": null
+     "audio": "audio/saetze/ma_01_fp.mp3"
     }
    }
   },
@@ -3098,21 +3098,21 @@ window.DATEN = {
    "de": "früh ins Bett gehen",
    "register": "tu",
    "anker": "se coucher",
-   "audio": null,
+   "audio": "audio/wendungen/ma_02.mp3",
    "satz": {
     "fr": "Je me couche tôt le dimanche. Le reste de la semaine, j'essaie.",
     "de": "Sonntags gehe ich früh ins Bett. Den Rest der Woche versuche ich es.",
     "luecke": "me couche tôt",
-    "audio": null
+    "audio": "audio/saetze/ma_02.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Hier, je me suis couché tôt. Enfin, avant minuit.",
-     "audio": null
+     "audio": "audio/saetze/ma_02_pc.mp3"
     },
     "fp": {
      "fr": "Ce soir, je vais me coucher tôt. Vraiment.",
-     "audio": null
+     "audio": "audio/saetze/ma_02_fp.mp3"
     }
    }
   },
@@ -3123,12 +3123,12 @@ window.DATEN = {
    "de": "auf sich achten",
    "register": "tu",
    "anker": "prendre",
-   "audio": null,
+   "audio": "audio/wendungen/ma_03.mp3",
    "satz": {
     "fr": "Prendre soin de soi, c'est aussi dire non. Même à un éclair.",
     "de": "Auf sich zu achten heißt auch, Nein zu sagen. Sogar zu einem Éclair.",
     "luecke": "Prendre soin de soi",
-    "audio": null
+    "audio": "audio/saetze/ma_03.mp3"
    },
    "zeit": null
   },
@@ -3139,21 +3139,21 @@ window.DATEN = {
    "de": "einkaufen gehen",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/ma_04.mp3",
    "satz": {
     "fr": "Je fais les courses le samedi, avec une liste. Je rentre avec autre chose.",
     "de": "Ich kaufe samstags ein, mit einer Liste. Ich komme mit etwas anderem nach Hause.",
     "luecke": "fais les courses",
-    "audio": null
+    "audio": "audio/saetze/ma_04.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai fait les courses ce matin.",
-     "audio": null
+     "audio": "audio/saetze/ma_04_pc.mp3"
     },
     "fp": {
      "fr": "Je vais faire les courses demain.",
-     "audio": null
+     "audio": "audio/saetze/ma_04_fp.mp3"
     }
    }
   },
@@ -3164,21 +3164,21 @@ window.DATEN = {
    "de": "kochen",
    "register": "tu",
    "anker": "cuisiner",
-   "audio": null,
+   "audio": "audio/wendungen/ma_05.mp3",
    "satz": {
     "fr": "Le soir, je cuisine en écoutant de la musique. Le chat supervise.",
     "de": "Abends koche ich mit Musik. Die Katze überwacht.",
     "luecke": "cuisine",
-    "audio": null
+    "audio": "audio/saetze/ma_05.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai cuisiné un gratin pour Aurélien.",
-     "audio": null
+     "audio": "audio/saetze/ma_05_pc.mp3"
     },
     "fp": {
      "fr": "Je vais cuisiner quelque chose de simple.",
-     "audio": null
+     "audio": "audio/saetze/ma_05_fp.mp3"
     }
    }
   },
@@ -3189,12 +3189,12 @@ window.DATEN = {
    "de": "ein Gericht",
    "register": "tu",
    "anker": "préparer",
-   "audio": null,
+   "audio": "audio/wendungen/ma_06.mp3",
    "satz": {
     "fr": "Mon plat préféré ? Celui que quelqu'un d'autre a préparé.",
     "de": "Mein Lieblingsgericht? Das, das jemand anderes gekocht hat.",
     "luecke": "plat",
-    "audio": null
+    "audio": "audio/saetze/ma_06.mp3"
    },
    "zeit": null
   },
@@ -3205,21 +3205,21 @@ window.DATEN = {
    "de": "ein bisschen Hunger haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/ma_07.mp3",
    "satz": {
     "fr": "À seize heures, j'ai un petit creux. À seize heures cinq aussi.",
     "de": "Um vier habe ich ein bisschen Hunger. Um fünf nach vier auch.",
     "luecke": "ai un petit creux",
-    "audio": null
+    "audio": "audio/saetze/ma_07.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "À seize heures, j'ai eu un petit creux.",
-     "audio": null
+     "audio": "audio/saetze/ma_07_pc.mp3"
     },
     "fp": {
      "fr": "À seize heures, je vais avoir un petit creux. Comme toujours.",
-     "audio": null
+     "audio": "audio/saetze/ma_07_fp.mp3"
     }
    }
   },
@@ -3230,21 +3230,21 @@ window.DATEN = {
    "de": "es sich schmecken lassen",
    "register": "tu",
    "anker": "se régaler",
-   "audio": null,
+   "audio": "audio/wendungen/ma_08.mp3",
    "satz": {
     "fr": "Chez Aurélien, on se régale. Sa mère lui envoie des recettes.",
     "de": "Bei Aurélien lässt man es sich schmecken. Seine Mutter schickt ihm Rezepte.",
     "luecke": "se régale",
-    "audio": null
+    "audio": "audio/saetze/ma_08.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Chez Aurélien, on s'est régalés.",
-     "audio": null
+     "audio": "audio/saetze/ma_08_pc.mp3"
     },
     "fp": {
      "fr": "Chez Aurélien, on va se régaler.",
-     "audio": null
+     "audio": "audio/saetze/ma_08_fp.mp3"
     }
    }
   },
@@ -3255,12 +3255,12 @@ window.DATEN = {
    "de": "guten Appetit!",
    "register": "tu",
    "anker": "manger",
-   "audio": null,
+   "audio": "audio/wendungen/ma_09.mp3",
    "satz": {
     "fr": "« Bon appétit ! » – « Merci, toi aussi. » – « Moi, je ne mange pas. » – « Ah. »",
     "de": "„Guten Appetit!“ – „Danke, dir auch.“ – „Ich esse nicht.“ – „Ah.“",
     "luecke": "Bon appétit",
-    "audio": null
+    "audio": "audio/saetze/ma_09.mp3"
    },
    "zeit": null
   },
@@ -3271,12 +3271,12 @@ window.DATEN = {
    "de": "eine Bäckerei",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/ma_10.mp3",
    "satz": {
     "fr": "Il y a une boulangerie à côté de l'école. C'est un problème. Un bon problème.",
     "de": "Neben der Schule ist eine Bäckerei. Das ist ein Problem. Ein gutes Problem.",
     "luecke": "boulangerie",
-    "audio": null
+    "audio": "audio/saetze/ma_10.mp3"
    },
    "zeit": null
   },
@@ -3287,21 +3287,21 @@ window.DATEN = {
    "de": "Wasser trinken",
    "register": "tu",
    "anker": "boire",
-   "audio": null,
+   "audio": "audio/wendungen/ma_11.mp3",
    "satz": {
     "fr": "Je bois de l'eau toute la journée. Et un café. Ou deux. L'eau, c'est entre.",
     "de": "Ich trinke den ganzen Tag Wasser. Und einen Kaffee. Oder zwei. Das Wasser ist dazwischen.",
     "luecke": "bois de l'eau",
-    "audio": null
+    "audio": "audio/saetze/ma_11.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai bu de l'eau toute la journée.",
-     "audio": null
+     "audio": "audio/saetze/ma_11_pc.mp3"
     },
     "fp": {
      "fr": "Je vais boire de l'eau. Plus.",
-     "audio": null
+     "audio": "audio/saetze/ma_11_fp.mp3"
     }
    }
   },
@@ -3312,21 +3312,21 @@ window.DATEN = {
    "de": "naschen, knabbern",
    "register": "tu",
    "anker": "grignoter",
-   "audio": null,
+   "audio": "audio/wendungen/ma_12.mp3",
    "satz": {
     "fr": "Je grignote devant les copies. Chaque faute, un carré de chocolat.",
     "de": "Ich nasche beim Korrigieren. Jeder Fehler, ein Stück Schokolade.",
     "luecke": "grignote",
-    "audio": null
+    "audio": "audio/saetze/ma_12.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai grignoté toute la soirée.",
-     "audio": null
+     "audio": "audio/saetze/ma_12_pc.mp3"
     },
     "fp": {
      "fr": "Je ne vais pas grignoter ce soir. On verra.",
-     "audio": null
+     "audio": "audio/saetze/ma_12_fp.mp3"
     }
    }
   },
@@ -3337,12 +3337,12 @@ window.DATEN = {
    "de": "sich wohl in seiner Haut fühlen",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/ma_13.mp3",
    "satz": {
     "fr": "Après le sport, je suis bien dans ma peau. Avant, aussi, mais moins.",
     "de": "Nach dem Sport fühle ich mich wohl in meiner Haut. Davor auch, aber weniger.",
     "luecke": "bien dans ma peau",
-    "audio": null
+    "audio": "audio/saetze/ma_13.mp3"
    },
    "zeit": null
   },
@@ -3353,21 +3353,21 @@ window.DATEN = {
    "de": "eine Pause machen",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/ma_14.mp3",
    "satz": {
     "fr": "Je fais une pause toutes les heures. Parfois, la pause dure une heure.",
     "de": "Ich mache jede Stunde eine Pause. Manchmal dauert die Pause eine Stunde.",
     "luecke": "fais une pause",
-    "audio": null
+    "audio": "audio/saetze/ma_14.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai fait une pause de dix minutes.",
-     "audio": null
+     "audio": "audio/saetze/ma_14_pc.mp3"
     },
     "fp": {
      "fr": "Je vais faire une pause. Maintenant.",
-     "audio": null
+     "audio": "audio/saetze/ma_14_fp.mp3"
     }
    }
   },
@@ -3378,21 +3378,21 @@ window.DATEN = {
    "de": "wie ein Baby schlafen",
    "register": "tu",
    "anker": "dormir",
-   "audio": null,
+   "audio": "audio/wendungen/ma_15.mp3",
    "satz": {
     "fr": "Après le kung-fu, je dors comme un bébé. Un bébé qui ronfle.",
     "de": "Nach dem Kung-Fu schlafe ich wie ein Baby. Ein Baby, das schnarcht.",
     "luecke": "dors comme un bébé",
-    "audio": null
+    "audio": "audio/saetze/ma_15.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai dormi comme un bébé.",
-     "audio": null
+     "audio": "audio/saetze/ma_15_pc.mp3"
     },
     "fp": {
      "fr": "Je vais dormir comme un bébé.",
-     "audio": null
+     "audio": "audio/saetze/ma_15_fp.mp3"
     }
    }
   },
@@ -3403,12 +3403,12 @@ window.DATEN = {
    "de": "fit und munter sein",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/ma_16.mp3",
    "satz": {
     "fr": "Ce matin, j'ai la pêche ! C'est suspect. Il est six heures.",
     "de": "Heute Morgen bin ich fit und munter! Verdächtig. Es ist sechs Uhr.",
     "luecke": "ai la pêche",
-    "audio": null
+    "audio": "audio/saetze/ma_16.mp3"
    },
    "zeit": null
   },
@@ -3419,21 +3419,21 @@ window.DATEN = {
    "de": "frische Luft schnappen",
    "register": "tu",
    "anker": "prendre",
-   "audio": null,
+   "audio": "audio/wendungen/ma_17.mp3",
    "satz": {
     "fr": "À midi, je prends l'air dix minutes. Sans téléphone. Enfin, presque.",
     "de": "Mittags schnappe ich zehn Minuten frische Luft. Ohne Handy. Na ja, fast.",
     "luecke": "prends l'air",
-    "audio": null
+    "audio": "audio/saetze/ma_17.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "À midi, j'ai pris l'air.",
-     "audio": null
+     "audio": "audio/saetze/ma_17_pc.mp3"
     },
     "fp": {
      "fr": "À midi, je vais prendre l'air.",
-     "audio": null
+     "audio": "audio/saetze/ma_17_fp.mp3"
     }
    }
   },
@@ -3444,12 +3444,12 @@ window.DATEN = {
    "de": "ein Rezept",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/ma_18.mp3",
    "satz": {
     "fr": "J'ai une recette de quiche. Elle vient d'Aurélien, qui la tient de sa mère.",
     "de": "Ich habe ein Rezept für Quiche. Es kommt von Aurélien, der es von seiner Mutter hat.",
     "luecke": "recette",
-    "audio": null
+    "audio": "audio/saetze/ma_18.mp3"
    },
    "zeit": null
   },
@@ -3460,21 +3460,21 @@ window.DATEN = {
    "de": "probieren, kosten",
    "register": "tu",
    "anker": "goûter",
-   "audio": null,
+   "audio": "audio/wendungen/ma_19.mp3",
    "satz": {
     "fr": "Goûte ça. Non, vraiment, goûte. Ensuite, tu peux dire que tu n'aimes pas.",
     "de": "Probier das. Nein, wirklich, probier. Danach darfst du sagen, dass du es nicht magst.",
     "luecke": "Goûte",
-    "audio": null
+    "audio": "audio/saetze/ma_19.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai goûté. Je n'aime pas.",
-     "audio": null
+     "audio": "audio/saetze/ma_19_pc.mp3"
     },
     "fp": {
      "fr": "Je vais goûter. Un petit bout.",
-     "audio": null
+     "audio": "audio/saetze/ma_19_fp.mp3"
     }
    }
   },
@@ -3485,12 +3485,12 @@ window.DATEN = {
    "de": "das ist köstlich",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/ma_20.mp3",
    "satz": {
     "fr": "C'est délicieux ! Qu'est-ce que c'est ? – Il vaut mieux ne pas savoir.",
     "de": "Das ist köstlich! Was ist das? – Besser, du weißt es nicht.",
     "luecke": "délicieux",
-    "audio": null
+    "audio": "audio/saetze/ma_20.mp3"
    },
    "zeit": null
   },
@@ -3501,21 +3501,21 @@ window.DATEN = {
    "de": "Durst haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/ma_21.mp3",
    "satz": {
     "fr": "Après le cours de sport, les élèves ont soif. Moi, j'ai soif de silence.",
     "de": "Nach dem Sportunterricht haben die Schüler Durst. Ich habe Durst nach Stille.",
     "luecke": "ont soif",
-    "audio": null
+    "audio": "audio/saetze/ma_21.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Après le sport, les élèves ont eu soif.",
-     "audio": null
+     "audio": "audio/saetze/ma_21_pc.mp3"
     },
     "fp": {
      "fr": "Après le sport, les élèves vont avoir soif.",
-     "audio": null
+     "audio": "audio/saetze/ma_21_fp.mp3"
     }
    }
   },
@@ -3526,12 +3526,12 @@ window.DATEN = {
    "de": "mit dem richtigen Fuß aufstehen",
    "register": "tu",
    "anker": "se lever",
-   "audio": null,
+   "audio": "audio/wendungen/ma_22.mp3",
    "satz": {
     "fr": "Aujourd'hui, je me suis levé du bon pied. Le gauche. Comme d'habitude.",
     "de": "Heute bin ich mit dem richtigen Fuß aufgestanden. Dem linken. Wie immer.",
     "luecke": "me suis levé du bon pied",
-    "audio": null
+    "audio": "audio/saetze/ma_22.mp3"
    },
    "zeit": null
   },
@@ -3542,12 +3542,12 @@ window.DATEN = {
    "de": "ein kleines Vergnügen",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/ma_23.mp3",
    "satz": {
     "fr": "Un petit plaisir par jour. Aujourd'hui : une tarte. Demain : une autre tarte.",
     "de": "Ein kleines Vergnügen am Tag. Heute: eine Tarte. Morgen: eine andere Tarte.",
     "luecke": "petit plaisir",
-    "audio": null
+    "audio": "audio/saetze/ma_23.mp3"
    },
    "zeit": null
   },
@@ -3558,12 +3558,12 @@ window.DATEN = {
    "de": "Ich hätte gern ein Baguette, bitte. (höflich)",
    "register": "vous",
    "anker": "vouloir",
-   "audio": null,
+   "audio": "audio/wendungen/ma_24.mp3",
    "satz": {
     "fr": "Bonjour, je voudrais une baguette, s'il vous plaît. Pas trop cuite.",
     "de": "Guten Tag, ich hätte gern ein Baguette, bitte. Nicht zu dunkel.",
     "luecke": "je voudrais",
-    "audio": null
+    "audio": "audio/saetze/ma_24.mp3"
    },
    "zeit": null
   }

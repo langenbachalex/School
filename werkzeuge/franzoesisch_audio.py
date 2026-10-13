@@ -16,6 +16,16 @@ EINSTELLUNGEN = {"stability": 0.5, "similarity_boost": 0.75}
 AURELIEN = ("eOwAMwUJEGkP44SKOXIH", "eleven_multilingual_v2")  # Julien – Professional (gewählt 13.10.)
 
 
+# Aussprache-Korrekturen für die Stimme (Mr. Alex, 13.10.: „Metz“ klang falsch – richtig ist „Mess“)
+AUSSPRACHE = {"Metz": "Mess"}
+
+
+def sprechtext(t):
+    for a, b in AUSSPRACHE.items():
+        t = t.replace(a, b)
+    return t
+
+
 def auftraege():
     liste = []
     for t in fb.THEMEN:
@@ -31,7 +41,7 @@ def auftraege():
     for z in fb.tsv("nasale.tsv"):
         liste.append((f"audio/nasale/{z['id']}.mp3", fb.rein(z["wort"])))
     for z in fb.tsv("orte.tsv"):
-        liste.append((f"audio/orte/{z['id']}.mp3", f"{z['name']}. {z['fakt_fr']}"))
+        liste.append((f"audio/orte/{z['id']}.mp3", sprechtext(f"{z['name']}. {z['fakt_fr']}")))
     for z in fb.tsv("lob.tsv"):
         liste.append((f"audio/lob/{z['id']}.mp3", z["text"]))
     for k, t in fb.SPIEL_TEXTE.items():

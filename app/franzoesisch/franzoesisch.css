@@ -77,3 +77,13 @@
 @media (max-width: 640px) {
   .seance-knopf .gross { font-size: 1.4rem; }
 }
+
+/* Dialoge: Zeilen A (Alex) links, B (Aurélien) rechts, Sprechende hervorgehoben */
+.dialog { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.dz { display: grid; grid-template-columns: 5.5rem 1fr; gap: 10px; align-items: start; padding: 10px 12px; border-radius: 14px; border: 2px solid transparent; }
+.dz.rolle-B { background: var(--bg); }
+.dz.meine { border-color: var(--gelb); }
+.dz.spricht { border-color: var(--blau); }
+.dz-rolle { font: 600 .9rem/1.3 var(--display); color: var(--leise); padding-top: 4px; }
+.dz-en { font: 500 1.25rem/1.3 var(--display); overflow-wrap: anywhere; }
+@media (max-width: 640px) { .dz { grid-template-columns: 1fr; gap: 2px; } }

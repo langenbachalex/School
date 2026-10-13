@@ -231,6 +231,16 @@
           el("span", { class: "titel", lang: "fr" }, "Bientôt"),
           el("span", { class: "unter", lang: "fr" }, "Musique et langue · Histoires et fantasy · Les chats · Sport et kung-fu …"),
           el("span", { class: "bald-schild" }, "en préparation"))),
+      el("h2", {}, frde("Dialogues avec Aurélien", "Dialoge mit Aurélien")),
+      el("nav", { class: "kacheln themen", "aria-label": "Dialogues" }, D.dialoge.map((d, i) => {
+        const ok = dialogFertig(d.id);
+        return el("button", { class: "kachel" + (ok ? " erledigt" : ""), onclick: () => starteDialog(d.id), "aria-label": `Dialogue ${i + 1} : ${d.titel}${ok ? " ✓" : ""}` },
+          el("span", { class: "sym", "aria-hidden": "true" }, "💬"),
+          el("span", { class: "titel", lang: "fr" }, `« ${d.titel} »`),
+          el("span", { class: "unter", lang: "fr" }, d.ort),
+          el("span", { class: "zahl" }, `${d.zeilen.length} répliques`),
+          ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
+      })),
       el("p", { class: "klein" }, frde(`${gelernt} expressions dans ta boîte · ${Object.values(stand.karten).filter((k) => k.s >= 3).length} bien ancrées`,
         `${gelernt} Wendungen in deinem Kasten · ${Object.values(stand.karten).filter((k) => k.s >= 3).length} fest verankert (ab Stufe 3)`)));
     app.querySelector(".gruss").append(statusleiste());
@@ -372,8 +382,10 @@
     for (let i = 0; i < t.wendungen.length; i += GRUPPE) g.push(t.wendungen.slice(i, i + GRUPPE));
     return g;
   }
+  const satzVon = (id) => Object.assign({ titel: WENDUNG[id].fr }, WENDUNG[id].satz);
   function teileVon(ids) {
-    const t = [1, 2, 3].map((stufe) => ({ art: "lr", stufe, ids, name: "Étape " + stufe }));
+    const saetze = ids.map(satzVon);
+    const t = [1, 2, 3].map((stufe) => ({ art: "lr", stufe, saetze, name: "Étape " + stufe }));
     const mitZeit = ids.filter((id) => WENDUNG[id].zeit);
     if (mitZeit.length) t.push({ art: "zeit", ids: mitZeit, name: "⏳ Machine à remonter le temps" });
     t.push({ art: "abfrage", ids, name: "🔎 Trouve l'expression" });
@@ -407,9 +419,77 @@
     lage = { thema: tid, gruppe: g, titel: `${t.name} · Partie ${g + 1}`, teile: teileVon(ids), teil: 0, pos: 0, zurueckZu: () => zeigeThema(tid) };
     zeigeTeil();
   }
+  /* ---------- Dialoge mit Aurélien ----------
+     Ablauf: anhören → Zeilen nachsprechen (Stufe 1 und 3) → „Tu es Alex“ (die App spricht Aurélien, du sprichst in die Pause) → Rollentausch. */
+  const ROLLEN = { A: "Alex", B: "Aurélien" };
+  function dialogTeile(d) {
+    const saetze = d.zeilen.map((z) => Object.assign({ titel: ROLLEN[z.rolle] }, z));
+    return [{ art: "dialog", name: "👂 Écouter", dialog: d, rolle: null },
+      { art: "lr", stufe: 1, saetze, name: "Répéter ①" }, { art: "lr", stufe: 3, saetze, name: "Répéter ③" },
+      { art: "dialog", name: "🎭 Tu es Alex", dialog: d, rolle: "A" }, { art: "dialog", name: "🎭 Tu es Aurélien", dialog: d, rolle: "B" }];
+  }
+  const dialogFertig = (id) => dialogTeile(D.dialoge.find((d) => d.id === id)).every((_, i) => stand.teile[`dialog:${id}|0|${i}`]);
+  function starteDialog(id) {
+    const d = D.dialoge.find((x) => x.id === id);
+    lage = { thema: "dialog:" + id, gruppe: 0, dialog: d, titel: `« ${d.titel} »`, teile: dialogTeile(d), teil: 0, pos: 0, zurueckZu: startseite };
+    seance = null;
+    zeigeTeil();
+  }
+  let dialogLauf = 0;
+  const warte = (ms) => new Promise((ok) => setTimeout(ok, ms));
+  function zeigeDialog(teil) {
+    const meine = teil.rolle, zeilen = teil.dialog.zeilen;
+    let versteckt = !!meine;
+    const balken = el("div", { class: "jetztdu", hidden: true, role: "status" }, "À toi ! Dis ta réplique.", el("span", { class: "balken", "aria-hidden": "true" }));
+    const box = el("div", { class: "rueckmeldung", hidden: true, role: "status" });
+    const liste = el("ol", { class: "dialog" }, zeilen.map((z) => {
+      const eigen = z.rolle === meine;
+      return el("li", { class: "dz rolle-" + z.rolle + (eigen ? " meine" : "") },
+        el("span", { class: "dz-rolle", "aria-label": "Rôle " + ROLLEN[z.rolle] }, ROLLEN[z.rolle]),
+        el("div", {}, el("p", { class: "dz-en", lang: "fr" }, eigen && versteckt ? "…" : z.fr), el("p", { class: "dz-de klein", lang: "de", hidden: !stand.de && !!meine }, z.de)));
+    }));
+    const zeigeMeine = () => { versteckt = false; zeilen.forEach((z, i) => { if (z.rolle === meine) liste.children[i].querySelector(".dz-en").textContent = z.fr; }); };
+    const startKnopf = knopf(meine ? "▶ Commencer le dialogue" : "▶ Écouter le dialogue", starten, "haupt");
+    const stoppKnopf = knopf("■ Stop", () => { dialogLauf++; stopp(); fertig(false); });
+    stoppKnopf.hidden = true;
+    function fertig(ganz) {
+      startKnopf.hidden = false; stoppKnopf.hidden = true; balken.hidden = true;
+      [...liste.children].forEach((li) => li.classList.remove("spricht"));
+      if (ganz) { gibFrei(weiter, 0.6); box.hidden = false; box.className = "rueckmeldung gut"; box.textContent = lob() + " " + (meine ? "Change de rôle – ou encore une fois !" : "Maintenant, à toi de parler !"); }
+    }
+    async function starten() {
+      const meinLauf = ++dialogLauf;
+      startKnopf.hidden = true; stoppKnopf.hidden = false; box.hidden = true;
+      for (let i = 0; i < zeilen.length; i++) {
+        if (meinLauf !== dialogLauf) return;
+        const z = zeilen[i];
+        [...liste.children].forEach((li, j) => li.classList.toggle("spricht", j === i));
+        if (liste.children[i].scrollIntoView) liste.children[i].scrollIntoView({ block: "nearest", behavior: "smooth" });
+        if (z.rolle === meine) { // Pause zum Sprechen, so lang wie die Zeile
+          const dauer = Math.max(2.5, z.fr.split(/\s+/).length * 0.6 + 1.2);
+          balken.hidden = false; balken.classList.remove("laeuft"); void balken.offsetWidth;
+          balken.style.setProperty("--dauer", dauer.toFixed(1) + "s"); balken.classList.add("laeuft");
+          await warte(dauer * 1000);
+          balken.hidden = true;
+        } else if ((await spiele([ton(z)])) === null) return;
+      }
+      if (meinLauf === dialogLauf) fertig(true);
+    }
+    const weiter = sperre(weiterKnopf());
+    tasten(() => { if (!startKnopf.hidden) starten(); }, wennFrei(weiter, naechstes));
+    zeige(kopf(),
+      meine ? ansage(`Tu es ${ROLLEN[meine]}. Dis tes répliques quand c'est ton tour – l'appli parle pour ${ROLLEN[meine === "A" ? "B" : "A"]}.`,
+        `Du bist ${ROLLEN[meine]}. Sprich deine Zeilen, wenn du dran bist – die App spricht ${ROLLEN[meine === "A" ? "B" : "A"]}.`)
+        : ansage(`« ${teil.dialog.titel} » – ${teil.dialog.ort}. Écoute le dialogue.`, `„${teil.dialog.titel}“ – ${teil.dialog.ort}. Hör dir den Dialog an.`),
+      karte(null, liste, balken,
+        meine && el("div", { class: "knopfreihe" }, tipp("Plus facile : montrer mes répliques", "Noch einfacher: meine Zeilen zeigen", (e) => { e.currentTarget.hidden = true; zeigeMeine(); })),
+        el("div", { class: "knopfreihe" }, startKnopf, stoppKnopf), box,
+        el("div", { class: "knopfreihe" }, weiter)));
+  }
+
   function kopf() {
     return el("header", { class: "kopf" },
-      knopf("← Thème", lage.zurueckZu, "leise"),
+      knopf(lage.dialog ? "← Accueil" : "← Thème", lage.zurueckZu, "leise"),
       el("h1", { lang: "fr" }, lage.titel),
       sprungleiste());
   }
@@ -426,7 +506,7 @@
       const t = lage.teile[i];
       if (t.art === "lr") {
         const gruppe = el("li", { class: "sprung-gruppe" }, el("span", { class: "sprung-label", lang: "fr" }, "Écouter et répéter"));
-        while (i < lage.teile.length && lage.teile[i].art === "lr") { gruppe.append(sprung(i, ZIFFERN[lage.teile[i].stufe - 1])); i++; }
+        while (i < lage.teile.length && lage.teile[i].art === "lr" && lage.teile[i].saetze === t.saetze) { gruppe.append(sprung(i, ZIFFERN[lage.teile[i].stufe - 1])); i++; }
         eintraege.push(gruppe);
       } else { eintraege.push(el("li", {}, sprung(i, t.name))); i++; }
     }
@@ -456,10 +536,10 @@
     tasten(null, null);
     if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = Date.now(); }
     const teil = lage.teile[lage.teil];
-    ({ lr: zeigeSatz, zeit: zeigeZeitmaschine, abfrage: zeigeAbfrage })[teil.art](teil);
+    ({ lr: zeigeSatz, zeit: zeigeZeitmaschine, abfrage: zeigeAbfrage, dialog: zeigeDialog })[teil.art](teil);
     navErgaenzen();
   }
-  const laenge = (teil) => (teil.art === "abfrage" && lage.reihe ? lage.reihe.length : teil.ids.length);
+  const laenge = (teil) => (teil.art === "abfrage" && lage.reihe ? lage.reihe.length : teil.art === "dialog" ? 1 : (teil.saetze || teil.ids).length);
   const SPRECH_MIN = { lr: 2, zeit: 3 }; // Sekunden pro Satz mindestens – schneller geht nicht ehrlich
   const zuSchnell = (teil) => SPRECH_MIN[teil.art] && lage.start && (Date.now() - lage.start) / 1000 < laenge(teil) * SPRECH_MIN[teil.art];
   function naechstes() {
@@ -508,16 +588,16 @@
     stand.gruppen = stand.gruppen || {};
     const schluessel = `${tid}|${g}`;
     if (!stand.gruppen[schluessel]) { stand.gruppen[schluessel] = true; punkteDazu(PUNKTE.einheit); }
-    const t = thema(tid), alle = gruppenVon(t).every((_, i) => gruppeFertig(tid, i));
+    const t = thema(tid), alle = !!t && gruppenVon(t).every((_, i) => gruppeFertig(tid, i));
     speichern();
     const text = lob(true);
     lage = null; tasten(null, null);
-    const zeichne = () => zeige(el("header", { class: "kopf" }, knopf("← Thème", zurueckZu, "leise"), el("h1", { lang: "fr" }, titel)),
+    const zeichne = () => zeige(el("header", { class: "kopf" }, knopf(t ? "← Thème" : "← Accueil", zurueckZu, "leise"), el("h1", { lang: "fr" }, titel)),
       el("section", { class: "geschafft" },
         el("h2", { lang: "fr" }, `${titel} : terminé !`),
         el("p", { class: "ansage", lang: "fr" }, text),
         alle && el("p", { class: "ansage", lang: "fr" }, `Tout le thème « ${t.name} » est terminé. Chapeau !`),
-        el("div", { class: "knopfreihe" }, knopf("Autres parties", zurueckZu, "haupt"), knopf("Accueil", startseite))));
+        el("div", { class: "knopfreihe" }, t ? knopf("Autres parties", zurueckZu, "haupt") : knopf("Accueil", startseite, "haupt"), t && knopf("Accueil", startseite))));
     ansicht = zeichne; zeichne();
   }
 
@@ -531,7 +611,7 @@
     3: ["Dis la phrase en français, puis « Solution ».", "Sag den Satz auf Französisch, dann „Solution“."],
   };
   function zeigeSatz(teil) {
-    const w = WENDUNG[teil.ids[lage.pos]], s = w.satz, stufe = teil.stufe;
+    const s = teil.saetze[lage.pos], stufe = teil.stufe;
     let geloest = stufe === 1;
     const balken = jetztDu();
     const fr = el("p", { class: "satz fr", lang: "fr" }, lueckenSatz(s, stufe === 1 ? "voll" : "luecke"));
@@ -552,7 +632,7 @@
     tasten(abspielen, wennFrei(weiter, naechstes));
     zeige(kopf(),
       ansage(...STUFEN[stufe]),
-      karte(`Phrase ${lage.pos + 1} / ${teil.ids.length} · ${w.fr}`,
+      karte(`Phrase ${lage.pos + 1} / ${teil.saetze.length}${s.titel ? " · " + s.titel : ""}`,
         el("div", { class: "spalten" }, stufe === 3 ? [deSpalte, frSpalte] : [frSpalte, deSpalte]),
         hilfen, balken,
         el("div", { class: "knopfreihe" }, knopf("🔊 Encore", abspielen), loesung, weiter)));

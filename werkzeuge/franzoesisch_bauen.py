@@ -62,11 +62,17 @@ def main():
             wendungen.append(w)
             ids.append(wid)
         themen.append({"id": t["id"], "name": t["name"], "de": t["de"], "symbol": t["symbol"], "wendungen": ids})
+    # Dialoge mit Aurélien: A = Alex (Mr. Alex' Stimme), B = Aurélien (zweite Stimme, siehe franzoesisch_audio.py)
+    dialoge = []
+    for z in tsv("dialoge.tsv"):
+        if not dialoge or dialoge[-1]["id"] != z["dialog"]:
+            dialoge.append({"id": z["dialog"], "titel": z["titel"], "ort": z["ort"], "zeilen": []})
+        dialoge[-1]["zeilen"].append({"id": z["id"], "rolle": z["rolle"], "fr": z["fr"], "de": z["de"], "audio": audio(f"audio/dialoge/{z['id']}.mp3")})
     lob = {}
     for z in tsv("lob.tsv"):
         lob.setdefault(z["art"], []).append({"text": z["text"], "audio": audio(f"audio/lob/{z['id']}.mp3"),
                                              "gruppe": [g for g in z["gruppe"].split(",") if g]})
-    daten = {"themen": themen, "wendungen": wendungen, "lob": lob, "pensum": PENSUM, "intervalle": INTERVALLE,
+    daten = {"themen": themen, "wendungen": wendungen, "dialoge": dialoge, "lob": lob, "pensum": PENSUM, "intervalle": INTERVALLE,
              "spiel": spieldaten()}
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/franzoesisch_bauen.py – bitte nicht von Hand ändern.\n")

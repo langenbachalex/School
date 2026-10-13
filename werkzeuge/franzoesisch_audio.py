@@ -11,6 +11,9 @@ import franzoesisch_bauen as fb
 # Mr. Alex' Klon „Alex Langenbach“ – nur mit Eleven v4; language_code fr macht daraus Französisch
 STIMME, MODELL = "AK2WYGe96RmMwFKM5KEz", "eleven_v4"
 EINSTELLUNGEN = {"stability": 0.5, "similarity_boost": 0.75}
+# Aurélien (Rolle B in den Dialogen): zweite männliche französische Stimme aus der ElevenLabs-Bibliothek.
+# None = noch nicht gewählt (Hörproben: docs/franzoesisch/hoerprobe/aurelien_*.mp3); dann werden B-Zeilen übersprungen.
+AURELIEN = None  # z. B. ("eOwAMwUJEGkP44SKOXIH", "eleven_multilingual_v2")
 
 
 def auftraege():
@@ -23,6 +26,8 @@ def auftraege():
             if z["passe_compose"]:
                 liste.append((f"audio/saetze/{wid}_pc.mp3", z["passe_compose"]))
                 liste.append((f"audio/saetze/{wid}_fp.mp3", z["futur_proche"]))
+    for z in fb.tsv("dialoge.tsv"):
+        liste.append((f"audio/dialoge/{z['id']}.mp3", z["fr"], "alex" if z["rolle"] == "A" else "aurelien"))
     for z in fb.tsv("lob.tsv"):
         liste.append((f"audio/lob/{z['id']}.mp3", z["text"]))
     for k, t in fb.SPIEL_TEXTE.items():
@@ -35,15 +40,21 @@ def auftraege():
 
 def main():
     offen = [a for a in auftraege() if not os.path.exists(os.path.join(fb.APP, a[0]))]
+    offen = [a for a in offen if len(a) < 3 or a[2] == "alex" or AURELIEN]
     print(len(offen), "Audios fehlen,", sum(len(a[1]) for a in offen), "Zeichen")
     if "--zaehlen" in sys.argv:
         return
     neu = fehler = 0
-    for pfad, text in offen:
+    for pfad, text, *rest in offen:
         ziel = os.path.join(fb.APP, pfad)
         os.makedirs(os.path.dirname(ziel), exist_ok=True)
-        body = json.dumps({"text": text, "model_id": MODELL, "language_code": "fr", "voice_settings": EINSTELLUNGEN}).encode()
-        req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{STIMME}?output_format=mp3_44100_128",
+        if rest and rest[0] == "aurelien":
+            stimme, modell = AURELIEN
+            body = json.dumps({"text": text, "model_id": modell, "voice_settings": EINSTELLUNGEN}).encode()
+        else:
+            stimme = STIMME
+            body = json.dumps({"text": text, "model_id": MODELL, "language_code": "fr", "voice_settings": EINSTELLUNGEN}).encode()
+        req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{stimme}?output_format=mp3_44100_128",
                                      data=body, headers={"Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req) as r:

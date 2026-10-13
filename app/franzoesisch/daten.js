@@ -966,6 +966,162 @@ window.DATEN = {
    "zeit": null
   }
  ],
+ "dialoge": [
+  {
+   "id": "d1",
+   "titel": "Le vendredi après-midi",
+   "ort": "Salle des profs",
+   "zeilen": [
+    {
+     "id": "d1_01",
+     "rolle": "A",
+     "fr": "Salut Aurélien ! Ça fait longtemps !",
+     "de": "Hallo Aurélien! Lange nicht gesehen!",
+     "audio": "audio/dialoge/d1_01.mp3"
+    },
+    {
+     "id": "d1_02",
+     "rolle": "B",
+     "fr": "Salut Alex. Trois jours. Mais oui, ça fait longtemps.",
+     "de": "Hallo Alex. Drei Tage. Aber ja, eine Ewigkeit.",
+     "audio": null
+    },
+    {
+     "id": "d1_03",
+     "rolle": "A",
+     "fr": "Alors, ton cours avec les troisièmes, ça s'est bien passé ?",
+     "de": "Und, deine Stunde mit den Neunern, gut gelaufen?",
+     "audio": "audio/dialoge/d1_03.mp3"
+    },
+    {
+     "id": "d1_04",
+     "rolle": "B",
+     "fr": "Très bien. Ils ont dormi. Moi aussi, presque.",
+     "de": "Sehr gut. Sie haben geschlafen. Ich fast auch.",
+     "audio": null
+    },
+    {
+     "id": "d1_05",
+     "rolle": "A",
+     "fr": "Moi, j'ai du mal à les faire taire le vendredi.",
+     "de": "Ich kriege sie freitags kaum ruhig.",
+     "audio": "audio/dialoge/d1_05.mp3"
+    },
+    {
+     "id": "d1_06",
+     "rolle": "B",
+     "fr": "Facile. Tu parles de grammaire. Silence total.",
+     "de": "Ganz einfach. Du redest über Grammatik. Totenstille.",
+     "audio": null
+    },
+    {
+     "id": "d1_07",
+     "rolle": "A",
+     "fr": "Et toi, tu n'es pas crevé ?",
+     "de": "Und du, bist du nicht fix und fertig?",
+     "audio": "audio/dialoge/d1_07.mp3"
+    },
+    {
+     "id": "d1_08",
+     "rolle": "B",
+     "fr": "Si. Du coup, ce soir, je corrige des copies… devant un film.",
+     "de": "Doch. Deshalb korrigiere ich heute Abend Arbeiten … vor einem Film.",
+     "audio": null
+    },
+    {
+     "id": "d1_09",
+     "rolle": "A",
+     "fr": "Un bon film ?",
+     "de": "Ein guter Film?",
+     "audio": "audio/dialoge/d1_09.mp3"
+    },
+    {
+     "id": "d1_10",
+     "rolle": "B",
+     "fr": "Je ne sais pas. Je regarde les copies.",
+     "de": "Keine Ahnung. Ich schaue die Arbeiten an.",
+     "audio": null
+    }
+   ]
+  },
+  {
+   "id": "d2",
+   "titel": "Le chat mélancolique",
+   "ort": "Devant la machine à café",
+   "zeilen": [
+    {
+     "id": "d2_01",
+     "rolle": "B",
+     "fr": "Ça va, Alex ? Tu as l'air sombre.",
+     "de": "Alles klar, Alex? Du siehst düster aus.",
+     "audio": null
+    },
+    {
+     "id": "d2_02",
+     "rolle": "A",
+     "fr": "J'ai le cafard. Mon chat ne me regarde plus.",
+     "de": "Ich bin niedergeschlagen. Meine Katze schaut mich nicht mehr an.",
+     "audio": "audio/dialoge/d2_02.mp3"
+    },
+    {
+     "id": "d2_03",
+     "rolle": "B",
+     "fr": "Depuis quand ?",
+     "de": "Seit wann?",
+     "audio": null
+    },
+    {
+     "id": "d2_04",
+     "rolle": "A",
+     "fr": "Depuis que j'ai chanté en français.",
+     "de": "Seit ich auf Französisch gesungen habe.",
+     "audio": "audio/dialoge/d2_04.mp3"
+    },
+    {
+     "id": "d2_05",
+     "rolle": "B",
+     "fr": "Ah. Et c'était quelle chanson ?",
+     "de": "Ah. Und welches Lied war es?",
+     "audio": null
+    },
+    {
+     "id": "d2_06",
+     "rolle": "A",
+     "fr": "« Ne me quitte pas ». Deux fois.",
+     "de": "„Ne me quitte pas“. Zweimal.",
+     "audio": "audio/dialoge/d2_06.mp3"
+    },
+    {
+     "id": "d2_07",
+     "rolle": "B",
+     "fr": "Alex… ça me fend le cœur, mais ton chat a raison.",
+     "de": "Alex … das bricht mir das Herz, aber deine Katze hat recht.",
+     "audio": null
+    },
+    {
+     "id": "d2_08",
+     "rolle": "A",
+     "fr": "Tu trouves ça inquiétant ?",
+     "de": "Findest du das beunruhigend?",
+     "audio": "audio/dialoge/d2_08.mp3"
+    },
+    {
+     "id": "d2_09",
+     "rolle": "B",
+     "fr": "Non. Je trouve ça apaisant. Pour le chat, c'est fini.",
+     "de": "Nein. Ich finde es beruhigend. Für die Katze ist es vorbei.",
+     "audio": null
+    },
+    {
+     "id": "d2_10",
+     "rolle": "A",
+     "fr": "Merci, Aurélien. Ça me touche. Je crois.",
+     "de": "Danke, Aurélien. Das berührt mich. Glaube ich.",
+     "audio": "audio/dialoge/d2_10.mp3"
+    }
+   ]
+  }
+ ],
  "lob": {
   "lob": [
    {

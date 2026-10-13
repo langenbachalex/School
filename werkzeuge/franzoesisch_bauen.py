@@ -84,8 +84,17 @@ def main():
 
 
 def spieldaten():
-    import frei_saarland
+    import frei_saarland, frankreich_karte
+    karte, departement, proj = frankreich_karte.laden(os.path.join(INHALTE, "karte"))
+    orte = []
+    for z in tsv("orte.tsv"):
+        lon, lat = float(z["lon"]), float(z["lat"])
+        x, y = proj(lon, lat)
+        dep = departement(lon, lat)
+        orte.append({"id": z["id"], "name": z["name"], "region": z["region"], "dep": dep, "dep_name": karte[dep]["nom"],
+                     "x": x, "y": y, "fakt": z["fakt_fr"], "fakt_de": z["fakt_de"], "audio": audio(f"audio/orte/{z['id']}.mp3")})
     return {
+        "orte": orte, "karte": karte,
         "titel": [{"ab": ab, "name": n, "symbol": s, "audio": audio(f"audio/spiel/titel_{i}.mp3")} for i, (ab, n, s) in enumerate(TITEL)],
         "texte": {k: {"text": t, "audio": audio(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
         "frei": frei_saarland.als_daten(),

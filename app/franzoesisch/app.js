@@ -241,8 +241,8 @@
           el("span", { class: "zahl" }, `${d.zeilen.length} répliques`),
           ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
       })),
-      el("p", { class: "klein" }, frde(`${gelernt} expressions dans ta boîte · ${Object.values(stand.karten).filter((k) => k.s >= 3).length} bien ancrées`,
-        `${gelernt} Wendungen in deinem Kasten · ${Object.values(stand.karten).filter((k) => k.s >= 3).length} fest verankert (ab Stufe 3)`)));
+      el("p", { class: "klein" }, frde(`${gelernt} expressions dans ta boîte · ${Object.values(stand.karten).filter((k) => k.s >= 3).length} bien ancrées · ${orteFrei()} / ${SP.orte.length} lieux visités`,
+        `${gelernt} Wendungen in deinem Kasten · ${Object.values(stand.karten).filter((k) => k.s >= 3).length} fest verankert (ab Stufe 3) · ${orteFrei()} / ${SP.orte.length} Orte besucht`)));
     app.querySelector(".gruss").append(statusleiste());
   }
   function gruss() {
@@ -718,9 +718,14 @@
   const titelIndex = (p) => SP.titel.reduce((i, t, k) => (p >= t.ab ? k : i), 0);
 
   function spielstand() {
-    if (!stand.spiel) { stand.spiel = { punkte: 0, tage: {}, wochen: [], feuer: [], wochenende: [], abzeichen: [], titel: 0 }; speichern(); }
+    if (!stand.spiel) { stand.spiel = { punkte: 0, tage: {}, wochen: [], feuer: [], wochenende: [], abzeichen: [], titel: 0, seances: 0 }; speichern(); }
+    if (stand.spiel.seances == null) stand.spiel.seances = 0;
     return stand.spiel;
   }
+  // Frankreich-Karte: jede fertige Séance und jeder zum ersten Mal fertige Teil schalten den nächsten Ort frei
+  const neueTeile = () => Object.keys(stand.teile).length;
+  const orteBei = (n) => Math.min(SP.orte.length, n);
+  const orteFrei = () => orteBei(neueTeile() + spielstand().seances);
   function serie() {
     const sp = spielstand();
     let d = heute(), n = 0;
@@ -743,6 +748,9 @@
   const ereignisse = [];
   function belohne(erstesMal, istSeance) {
     const sp = spielstand(), d = heute(), tag = iso(d);
+    const vorher = orteBei(neueTeile() + sp.seances - (istSeance ? 0 : erstesMal ? 1 : 0));
+    if (istSeance) sp.seances++;
+    if (orteFrei() > vorher) ereignisse.push({ art: "ort", ort: SP.orte[orteFrei() - 1] });
     let plus = istSeance ? PUNKTE.seance : erstesMal ? PUNKTE.teil : PUNKTE.wiederholung;
     const ersterDesTages = !sp.tage[tag];
     sp.tage[tag] = (sp.tage[tag] || 0) + 1;
@@ -793,8 +801,67 @@
     setTimeout(() => t.classList.add("weg"), 2200);
     setTimeout(() => t.remove(), 2800);
   }
+  // Klang zum Stempel: „Tock“ (Aufschlag) + „Bling“ (zwei Glockentöne), im Browser erzeugt, leiser als die Stimme
+  let klangCtx = null;
+  const KLANG_LAUT = 0.5;
+  function stempelKlang(verzoegerung) {
+    try {
+      if (!klangCtx) klangCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (klangCtx.state === "suspended") klangCtx.resume();
+    } catch { return; }
+    const c = klangCtx, t = c.currentTime + verzoegerung;
+    const glocke = (start, f, dauer, vol) => {
+      const m = c.createGain();
+      m.gain.setValueAtTime(0.0001, start);
+      m.gain.exponentialRampToValueAtTime(vol * KLANG_LAUT, start + 0.006);
+      m.gain.exponentialRampToValueAtTime(0.0001, start + dauer);
+      m.connect(c.destination);
+      [[1, 1], [2.76, 0.22], [5.4, 0.08]].forEach(([mal, v]) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.frequency.value = f * mal; g.gain.value = v;
+        o.connect(g).connect(m); o.start(start); o.stop(start + dauer + 0.05);
+      });
+    };
+    const o = c.createOscillator(), g = c.createGain();
+    o.frequency.setValueAtTime(190, t); o.frequency.exponentialRampToValueAtTime(70, t + 0.09);
+    g.gain.setValueAtTime(0.9 * KLANG_LAUT, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+    o.connect(g).connect(c.destination); o.start(t); o.stop(t + 0.14);
+    const len = Math.ceil(c.sampleRate * 0.05), buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    const q = c.createBufferSource(), f = c.createBiquadFilter(), gq = c.createGain();
+    q.buffer = buf; f.type = "lowpass"; f.frequency.value = 900; gq.gain.value = 0.45 * KLANG_LAUT;
+    q.connect(f).connect(gq).connect(c.destination); q.start(t);
+    glocke(t + 0.11, 1318.5, 0.7, 0.32); glocke(t + 0.2, 1760, 0.9, 0.3);
+  }
+  // Reisestempel beim Freischalten eines Ortes: Umriss des Départements, kurz (2 s), antippen schließt
+  function ortStempel(ort) {
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "stempel-bild"); svg.setAttribute("aria-hidden", "true");
+    const pfad = document.createElementNS(NS, "path");
+    pfad.setAttribute("d", SP.karte[ort.dep].d); svg.append(pfad);
+    const punkt = document.createElementNS(NS, "circle");
+    punkt.setAttribute("cx", ort.x); punkt.setAttribute("cy", ort.y); punkt.setAttribute("r", "3"); punkt.setAttribute("class", "stempel-punkt"); svg.append(punkt);
+    const farben = ["#0055a4", "#ffffff", "#ef4135"];
+    const box = el("div", { class: "stempel-box", role: "status", onclick: () => box.remove() },
+      el("div", { class: "stempel-karte" }, svg,
+        el("div", { class: "stempel", lang: "fr" }, el("strong", {}, ort.name.toUpperCase()), el("span", {}, `${ort.dep_name} (${ort.dep}) · visité ✓`)),
+        el("div", { class: "sterne", "aria-hidden": "true" }, Array.from({ length: 10 }, (_, i) =>
+          el("span", { style: `--w:${i * 36}deg;--f:${farben[i % 3]}` }, "★")))));
+    document.body.append(box);
+    stempelKlang(0.72);
+    try {
+      const b = pfad.getBBox(), rand = Math.max(b.width, b.height) * 0.15;
+      svg.setAttribute("viewBox", `${b.x - rand} ${b.y - rand} ${b.width + 2 * rand} ${b.height + 2 * rand}`);
+    } catch { svg.setAttribute("viewBox", "0 0 600 600"); }
+    setTimeout(() => box.classList.add("weg"), 2200);
+    setTimeout(() => box.remove(), 2700);
+  }
   function zeigeEreignisse() {
-    while (ereignisse.length && ereignisse[0].art === "toast") toast(ereignisse.shift().text);
+    while (ereignisse.length && (ereignisse[0].art === "toast" || ereignisse[0].art === "ort")) {
+      const e = ereignisse.shift();
+      if (e.art === "ort") ortStempel(e.ort); else toast(e.text);
+    }
     if (!ereignisse.length || feier.open) return;
     const e = ereignisse.shift();
     const tonE = e.ton && (e.ton.audio || { text: e.ton.text });
@@ -830,10 +897,18 @@
     });
     const karten = Object.values(stand.karten);
     const stufen = INTERVALLE.map((_, i) => karten.filter((k) => k.s === i).length);
+    const fakt = el("div", { class: "fakt", hidden: true, "aria-live": "polite" });
+    const frei = orteFrei();
+    const karte = frankreichKarte(frei, (o) => {
+      fakt.hidden = false;
+      fakt.replaceChildren(el("h3", { lang: "fr" }, `${o.name} · ${o.dep_name} (${o.dep}) · ${o.region}`), frde(o.fakt, o.fakt_de, "p"),
+        knopf("🔊 Écouter", () => spiele([o.audio || { text: o.fakt }])));
+      spiele([o.audio || { text: o.fakt }]);
+    });
     const abz = [
       ["🔥", "En feu", sp.feuer.length > 0], ["⭐", "Semaine parfaite", sp.wochen.length > 0], ["🏅", "5 × parfaite", sp.wochen.length >= 5],
       ["👑", "Mois parfait", sp.abzeichen.includes("monat")], ["🏖️", "Héros du week-end", sp.wochenende.length > 0],
-      ["📦", "100 expressions", karten.length >= 100], ["🧠", "50 bien ancrées", karten.filter((k) => k.s >= 3).length >= 50],
+      ["🗺️", "Tour de France", orteFrei() === SP.orte.length], ["📦", "100 expressions", karten.length >= 100], ["🧠", "50 bien ancrées", karten.filter((k) => k.s >= 3).length >= 50],
     ];
     zeige(
       el("header", { class: "kopf" }, knopf("← Accueil", startseite, "leise"), el("h1", {}, "🏆 Ma collection")),
@@ -858,12 +933,45 @@
         el("p", { class: "klein" }, frde("Chaque semaine parfaite débloque un chapitre : Julien Lefèvre, professeur à Metz, et le mystère du Louvre. En préparation.",
           "Jede perfekte Woche schaltet ein Kapitel frei: Julien Lefèvre, Lehrer aus Metz, und das Geheimnis des Louvre. In Vorbereitung."))),
       el("section", { class: "satzkarte" },
-        el("h2", {}, "🗺️ La carte de France"),
-        el("p", { class: "klein" }, frde("Chaque séance terminée débloque un lieu, en partant de Metz. En préparation.", "Jede fertige Séance schaltet einen Ort frei, Start in Metz. In Vorbereitung."))),
+        el("h2", {}, `🗺️ La France (${frei} / ${SP.orte.length} lieux)`),
+        el("p", { class: "klein" }, frde("Chaque séance terminée et chaque partie terminée débloquent un lieu, en partant de Metz. Touche un lieu !",
+          "Jede fertige Séance und jeder fertige Teil schalten einen Ort frei, Start in Metz. Tipp auf einen Ort!")),
+        karte, fakt),
       el("section", { class: "satzkarte" },
         el("h2", {}, "Badges"),
         el("ul", { class: "abzeichen" }, abz.map(([sym, name, ok]) => el("li", { class: ok ? "ok" : "" },
           el("span", { "aria-hidden": "true" }, sym), el("span", { lang: "fr" }, name), el("span", { class: "unsichtbar" }, ok ? "✓" : "–"))))));
+  }
+
+  function frankreichKarte(frei, waehle) {
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 600 600"); svg.setAttribute("class", "france"); svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Carte de France");
+    const offen = SP.orte.slice(0, frei);
+    const besucht = new Set(offen.map((o) => o.dep));
+    Object.entries(SP.karte).forEach(([code, d]) => {
+      const p = document.createElementNS(NS, "path");
+      p.setAttribute("d", d.d);
+      p.setAttribute("class", "f-dep" + (besucht.has(code) ? " offen" : ""));
+      const t = document.createElementNS(NS, "title"); t.textContent = `${d.nom} (${code}) · ${d.region}`; p.append(t);
+      svg.append(p);
+    });
+    offen.forEach((o, i) => {
+      const g = document.createElementNS(NS, "g");
+      g.setAttribute("class", "f-ort" + (i === frei - 1 ? " neu" : "")); g.setAttribute("tabindex", "0"); g.setAttribute("role", "button"); g.setAttribute("aria-label", o.name);
+      const c = document.createElementNS(NS, "circle");
+      c.setAttribute("cx", o.x); c.setAttribute("cy", o.y); c.setAttribute("r", "7"); g.append(c);
+      const t = document.createElementNS(NS, "title"); t.textContent = o.name; g.append(t);
+      g.addEventListener("click", () => waehle(o));
+      g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); waehle(o); } });
+      svg.append(g);
+    });
+    const liste = offen.map((o, i) => el("button", { class: "staat-chip" + (i % 2 ? " b" : ""), lang: "fr", onclick: () => waehle(o) }, o.name));
+    return el("div", { class: "usa-block" }, el("div", { class: "france-rahmen" }, svg),
+      el("p", { class: "staaten-zahl" }, `${frei} / ${SP.orte.length} lieux · ${new Set(offen.map((o) => o.dep)).size} départements`),
+      el("div", { class: "staaten-liste" }, liste),
+      el("p", { class: "klein bildnachweis" }, "Carte : IGN Admin Express via france-geojson (Licence ouverte)."));
   }
 
   /* ---------- Tasten: Leertaste = Abspielen, Pfeile = Weiter / Zurück ---------- */

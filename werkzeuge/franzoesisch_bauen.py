@@ -21,6 +21,7 @@ THEMEN = [
     {"id": "sport", "name": "Sport et kung-fu", "de": "Sport und Kung-Fu", "symbol": "🥋", "datei": "sport.tsv"},
     {"id": "manger", "name": "Manger et bien vivre", "de": "Essen und gut leben", "symbol": "🥖", "datei": "manger.tsv"},
     {"id": "enfants", "name": "Enfants et bébés", "de": "Kinder und Babys", "symbol": "👶", "datei": "enfants.tsv"},
+    {"id": "faux_amis", "name": "Faux amis", "de": "Falsche Freunde Englisch–Französisch (Bonus)", "symbol": "⚡", "datei": "faux_amis.tsv"},
 ]
 
 # Titel – französische Delikatessen, vom kleinen Éclair bis zum Kaviar (Vorschlag, docs/franzoesisch/konzept.md)

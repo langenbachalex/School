@@ -15,7 +15,8 @@ Abschnitte mit **[OFFEN]** sind noch zu entscheiden.
 - **Oberfläche auf Französisch.** Jeder Text lässt sich antippen und zeigt dann Deutsch.
 - **Tonfall:** persönlich, überwiegend **tu**. Gelegentlich **vous** (Fremde ansprechen, Bäckerei, Behörden), weil das Französische da streng ist.
 - **Aurélien** (französischer Freund, Lehrer) darf mit Vornamen in den Dialogen vorkommen.
-- **Stimme: nur Mr. Alex' eigene Stimme** (ElevenLabs-Klon „Alex Langenbach“, Eleven v4, `language_code: fr`, stability 0.5, similarity 0.75). Hörprobe gefällt („klingt super“): `docs/franzoesisch/hoerprobe/alex_fr_1.mp3`. Keine weibliche Stimme.
+- **Aurélien (Rolle B in den Dialogen): ElevenLabs-Stimme „Julien – Professional“** (ID eOwAMwUJEGkP44SKOXIH, multilingual v2; gewählt 13.10. nach Hörprobe gegen Guillaume und Victor, `docs/franzoesisch/hoerprobe/aurelien_*.mp3`).
+- **Stimme: sonst nur Mr. Alex' eigene Stimme** (ElevenLabs-Klon „Alex Langenbach“, Eleven v4, `language_code: fr`, stability 0.5, similarity 0.75). Hörprobe gefällt („klingt super“): `docs/franzoesisch/hoerprobe/alex_fr_1.mp3`. Keine weibliche Stimme.
 - **Serien, Punkte, Lob, Sammlung wie bisher** (Schultage-Logik Saarland, On fire, Perfect week, Weekend bonus …).
 - **Sammlung:** eine fortlaufende **Geschichte** und eine **Frankreich-Karte** (wie die USA-Karte in Klasse 9). Landeskunde gern nebenbei, auf Bonus-Ebene.
 

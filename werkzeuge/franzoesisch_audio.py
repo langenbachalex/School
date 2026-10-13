@@ -13,7 +13,7 @@ STIMME, MODELL = "AK2WYGe96RmMwFKM5KEz", "eleven_v4"
 EINSTELLUNGEN = {"stability": 0.5, "similarity_boost": 0.75}
 # Aurélien (Rolle B in den Dialogen): zweite männliche französische Stimme aus der ElevenLabs-Bibliothek.
 # None = noch nicht gewählt (Hörproben: docs/franzoesisch/hoerprobe/aurelien_*.mp3); dann werden B-Zeilen übersprungen.
-AURELIEN = None  # z. B. ("eOwAMwUJEGkP44SKOXIH", "eleven_multilingual_v2")
+AURELIEN = ("eOwAMwUJEGkP44SKOXIH", "eleven_multilingual_v2")  # Julien – Professional (gewählt 13.10.)
 
 
 def auftraege():

@@ -984,7 +984,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Salut Alex. Trois jours. Mais oui, ça fait longtemps.",
      "de": "Hallo Alex. Drei Tage. Aber ja, eine Ewigkeit.",
-     "audio": null
+     "audio": "audio/dialoge/d1_02.mp3"
     },
     {
      "id": "d1_03",
@@ -998,7 +998,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Très bien. Ils ont dormi. Moi aussi, presque.",
      "de": "Sehr gut. Sie haben geschlafen. Ich fast auch.",
-     "audio": null
+     "audio": "audio/dialoge/d1_04.mp3"
     },
     {
      "id": "d1_05",
@@ -1012,7 +1012,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Facile. Tu parles de grammaire. Silence total.",
      "de": "Ganz einfach. Du redest über Grammatik. Totenstille.",
-     "audio": null
+     "audio": "audio/dialoge/d1_06.mp3"
     },
     {
      "id": "d1_07",
@@ -1026,7 +1026,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Si. Du coup, ce soir, je corrige des copies… devant un film.",
      "de": "Doch. Deshalb korrigiere ich heute Abend Arbeiten … vor einem Film.",
-     "audio": null
+     "audio": "audio/dialoge/d1_08.mp3"
     },
     {
      "id": "d1_09",
@@ -1040,7 +1040,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Je ne sais pas. Je regarde les copies.",
      "de": "Keine Ahnung. Ich schaue die Arbeiten an.",
-     "audio": null
+     "audio": "audio/dialoge/d1_10.mp3"
     }
    ]
   },
@@ -1054,7 +1054,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Ça va, Alex ? Tu as l'air sombre.",
      "de": "Alles klar, Alex? Du siehst düster aus.",
-     "audio": null
+     "audio": "audio/dialoge/d2_01.mp3"
     },
     {
      "id": "d2_02",
@@ -1068,7 +1068,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Depuis quand ?",
      "de": "Seit wann?",
-     "audio": null
+     "audio": "audio/dialoge/d2_03.mp3"
     },
     {
      "id": "d2_04",
@@ -1082,7 +1082,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Ah. Et c'était quelle chanson ?",
      "de": "Ah. Und welches Lied war es?",
-     "audio": null
+     "audio": "audio/dialoge/d2_05.mp3"
     },
     {
      "id": "d2_06",
@@ -1096,7 +1096,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Alex… ça me fend le cœur, mais ton chat a raison.",
      "de": "Alex … das bricht mir das Herz, aber deine Katze hat recht.",
-     "audio": null
+     "audio": "audio/dialoge/d2_07.mp3"
     },
     {
      "id": "d2_08",
@@ -1110,7 +1110,7 @@ window.DATEN = {
      "rolle": "B",
      "fr": "Non. Je trouve ça apaisant. Pour le chat, c'est fini.",
      "de": "Nein. Ich finde es beruhigend. Für die Katze ist es vorbei.",
-     "audio": null
+     "audio": "audio/dialoge/d2_09.mp3"
     },
     {
      "id": "d2_10",

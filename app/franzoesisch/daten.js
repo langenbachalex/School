@@ -2549,21 +2549,21 @@ window.DATEN = {
    "de": "trainieren",
    "register": "tu",
    "anker": "s'entraîner",
-   "audio": null,
+   "audio": "audio/wendungen/sp_01.mp3",
    "satz": {
     "fr": "Je m'entraîne trois fois par semaine. Deux, si je suis honnête.",
     "de": "Ich trainiere dreimal die Woche. Zweimal, wenn ich ehrlich bin.",
     "luecke": "m'entraîne",
-    "audio": null
+    "audio": "audio/saetze/sp_01.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Je me suis entraîné trois fois cette semaine.",
-     "audio": null
+     "audio": "audio/saetze/sp_01_pc.mp3"
     },
     "fp": {
      "fr": "Je vais m'entraîner trois fois cette semaine. Deux.",
-     "audio": null
+     "audio": "audio/saetze/sp_01_fp.mp3"
     }
    }
   },
@@ -2574,12 +2574,12 @@ window.DATEN = {
    "de": "ein Tritt",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/sp_02.mp3",
    "satz": {
     "fr": "Un bon coup de pied, c'est d'abord une bonne position.",
     "de": "Ein guter Tritt ist zuerst ein guter Stand.",
     "luecke": "coup de pied",
-    "audio": null
+    "audio": "audio/saetze/sp_02.mp3"
    },
    "zeit": null
   },
@@ -2590,12 +2590,12 @@ window.DATEN = {
    "de": "ein Fausthieb",
    "register": "tu",
    "anker": "partir",
-   "audio": null,
+   "audio": "audio/wendungen/sp_03.mp3",
    "satz": {
     "fr": "En kung-fu, le coup de poing part de la hanche, pas du bras.",
     "de": "Im Kung-Fu kommt der Fausthieb aus der Hüfte, nicht aus dem Arm.",
     "luecke": "coup de poing",
-    "audio": null
+    "audio": "audio/saetze/sp_03.mp3"
    },
    "zeit": null
   },
@@ -2606,12 +2606,12 @@ window.DATEN = {
    "de": "die Beweglichkeit",
    "register": "tu",
    "anker": "travailler",
-   "audio": null,
+   "audio": "audio/wendungen/sp_04.mp3",
    "satz": {
     "fr": "À quarante ans, la souplesse se travaille tous les jours. Sinon, elle part.",
     "de": "Mit vierzig muss man die Beweglichkeit täglich üben. Sonst geht sie.",
     "luecke": "souplesse",
-    "audio": null
+    "audio": "audio/saetze/sp_04.mp3"
    },
    "zeit": null
   },
@@ -2622,21 +2622,21 @@ window.DATEN = {
    "de": "ruhig bleiben",
    "register": "tu",
    "anker": "garder",
-   "audio": null,
+   "audio": "audio/wendungen/sp_05.mp3",
    "satz": {
     "fr": "En combat comme en classe : garder son calme, respirer, attendre.",
     "de": "Im Kampf wie in der Klasse: ruhig bleiben, atmen, abwarten.",
     "luecke": "garder son calme",
-    "audio": null
+    "audio": "audio/saetze/sp_05.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai gardé mon calme. Presque.",
-     "audio": null
+     "audio": "audio/saetze/sp_05_pc.mp3"
     },
     "fp": {
      "fr": "Je vais garder mon calme. Promis.",
-     "audio": null
+     "audio": "audio/saetze/sp_05_fp.mp3"
     }
    }
   },
@@ -2647,21 +2647,21 @@ window.DATEN = {
    "de": "sich aufwärmen",
    "register": "tu",
    "anker": "s'échauffer",
-   "audio": null,
+   "audio": "audio/wendungen/sp_06.mp3",
    "satz": {
     "fr": "Avant de m'entraîner, je m'échauffe dix minutes. Mon dos me dit merci.",
     "de": "Vor dem Training wärme ich mich zehn Minuten auf. Mein Rücken dankt es mir.",
     "luecke": "m'échauffe",
-    "audio": null
+    "audio": "audio/saetze/sp_06.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Je me suis échauffé dix minutes.",
-     "audio": null
+     "audio": "audio/saetze/sp_06_pc.mp3"
     },
     "fp": {
      "fr": "Je vais m'échauffer dix minutes.",
-     "audio": null
+     "audio": "audio/saetze/sp_06_fp.mp3"
     }
    }
   },
@@ -2672,21 +2672,21 @@ window.DATEN = {
    "de": "Muskelkater haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/sp_07.mp3",
    "satz": {
     "fr": "Le lendemain, j'ai des courbatures partout. Même dans les oreilles.",
     "de": "Am nächsten Tag habe ich überall Muskelkater. Sogar in den Ohren.",
     "luecke": "ai des courbatures",
-    "audio": null
+    "audio": "audio/saetze/sp_07.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Le lendemain, j'ai eu des courbatures partout.",
-     "audio": null
+     "audio": "audio/saetze/sp_07_pc.mp3"
     },
     "fp": {
      "fr": "Demain, je vais avoir des courbatures partout.",
-     "audio": null
+     "audio": "audio/saetze/sp_07_fp.mp3"
     }
    }
   },
@@ -2697,21 +2697,21 @@ window.DATEN = {
    "de": "fit sein",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/sp_08.mp3",
    "satz": {
     "fr": "Je suis en forme le matin. L'après-midi, je suis prof.",
     "de": "Morgens bin ich fit. Nachmittags bin ich Lehrer.",
     "luecke": "en forme",
-    "audio": null
+    "audio": "audio/saetze/sp_08.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai été en forme toute la semaine.",
-     "audio": null
+     "audio": "audio/saetze/sp_08_pc.mp3"
     },
     "fp": {
      "fr": "Je vais être en forme pour le stage.",
-     "audio": null
+     "audio": "audio/saetze/sp_08_fp.mp3"
     }
    }
   },
@@ -2722,12 +2722,12 @@ window.DATEN = {
    "de": "eine Stellung halten",
    "register": "tu",
    "anker": "tenir",
-   "audio": null,
+   "audio": "audio/wendungen/sp_09.mp3",
    "satz": {
     "fr": "Tenir la position du cavalier pendant deux minutes : simple. Pas facile.",
     "de": "Die Reiterstellung zwei Minuten halten: einfach. Nicht leicht.",
     "luecke": "Tenir la position",
-    "audio": null
+    "audio": "audio/saetze/sp_09.mp3"
    },
    "zeit": null
   },
@@ -2738,12 +2738,12 @@ window.DATEN = {
    "de": "die Atmung",
    "register": "tu",
    "anker": "commencer",
-   "audio": null,
+   "audio": "audio/wendungen/sp_10.mp3",
    "satz": {
     "fr": "En kung-fu, tout commence par la respiration. En classe aussi.",
     "de": "Im Kung-Fu beginnt alles mit der Atmung. In der Klasse auch.",
     "luecke": "respiration",
-    "audio": null
+    "audio": "audio/saetze/sp_10.mp3"
    },
    "zeit": null
   },
@@ -2754,12 +2754,12 @@ window.DATEN = {
    "de": "der Meister",
    "register": "tu",
    "anker": "dire",
-   "audio": null,
+   "audio": "audio/wendungen/sp_11.mp3",
    "satz": {
     "fr": "Mon maître dit : « Lentement, c'est vite. » Je n'ai pas encore compris.",
     "de": "Mein Meister sagt: „Langsam ist schnell.“ Ich habe es noch nicht verstanden.",
     "luecke": "maître",
-    "audio": null
+    "audio": "audio/saetze/sp_11.mp3"
    },
    "zeit": null
   },
@@ -2770,21 +2770,21 @@ window.DATEN = {
    "de": "eine Abfolge (Form, Kombination)",
    "register": "tu",
    "anker": "apprendre",
-   "audio": null,
+   "audio": "audio/wendungen/sp_12.mp3",
    "satz": {
     "fr": "J'apprends un nouvel enchaînement. Douze mouvements. J'en connais quatre.",
     "de": "Ich lerne eine neue Form. Zwölf Bewegungen. Vier kann ich.",
     "luecke": "enchaînement",
-    "audio": null
+    "audio": "audio/saetze/sp_12.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai appris un nouvel enchaînement.",
-     "audio": null
+     "audio": "audio/saetze/sp_12_pc.mp3"
     },
     "fp": {
      "fr": "Je vais apprendre un nouvel enchaînement.",
-     "audio": null
+     "audio": "audio/saetze/sp_12_fp.mp3"
     }
    }
   },
@@ -2795,12 +2795,12 @@ window.DATEN = {
    "de": "ausweichen",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/sp_13.mp3",
    "satz": {
     "fr": "Esquiver, c'est mieux que bloquer. Ça marche aussi en réunion.",
     "de": "Ausweichen ist besser als blocken. Das funktioniert auch in Konferenzen.",
     "luecke": "Esquiver",
-    "audio": null
+    "audio": "audio/saetze/sp_13.mp3"
    },
    "zeit": null
   },
@@ -2811,21 +2811,21 @@ window.DATEN = {
    "de": "schwitzen",
    "register": "tu",
    "anker": "transpirer",
-   "audio": null,
+   "audio": "audio/wendungen/sp_14.mp3",
    "satz": {
     "fr": "Après l'entraînement, je transpire comme une fontaine. Une fontaine heureuse.",
     "de": "Nach dem Training schwitze ich wie ein Brunnen. Ein glücklicher Brunnen.",
     "luecke": "transpire",
-    "audio": null
+    "audio": "audio/saetze/sp_14.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai transpiré comme une fontaine.",
-     "audio": null
+     "audio": "audio/saetze/sp_14_pc.mp3"
     },
     "fp": {
      "fr": "Je vais transpirer, c'est le but.",
-     "audio": null
+     "audio": "audio/saetze/sp_14_fp.mp3"
     }
    }
   },
@@ -2836,21 +2836,21 @@ window.DATEN = {
    "de": "sich verletzen",
    "register": "tu",
    "anker": "se blesser",
-   "audio": null,
+   "audio": "audio/wendungen/sp_15.mp3",
    "satz": {
     "fr": "Je ne me blesse jamais. Sauf en ouvrant une boîte de pâtée.",
     "de": "Ich verletze mich nie. Außer beim Öffnen einer Dose Katzenfutter.",
     "luecke": "me blesse",
-    "audio": null
+    "audio": "audio/saetze/sp_15.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Je me suis blessé en ouvrant une boîte.",
-     "audio": null
+     "audio": "audio/saetze/sp_15_pc.mp3"
     },
     "fp": {
      "fr": "Je ne vais pas me blesser. Normalement.",
-     "audio": null
+     "audio": "audio/saetze/sp_15_fp.mp3"
     }
    }
   },
@@ -2861,21 +2861,21 @@ window.DATEN = {
    "de": "sich dehnen",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/sp_16.mp3",
    "satz": {
     "fr": "Je fais des étirements le soir, devant la télé. Le chat me regarde, perplexe.",
     "de": "Ich dehne mich abends vor dem Fernseher. Die Katze schaut ratlos zu.",
     "luecke": "fais des étirements",
-    "audio": null
+    "audio": "audio/saetze/sp_16.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai fait des étirements après le kung-fu.",
-     "audio": null
+     "audio": "audio/saetze/sp_16_pc.mp3"
     },
     "fp": {
      "fr": "Je vais faire des étirements ce soir.",
-     "audio": null
+     "audio": "audio/saetze/sp_16_fp.mp3"
     }
    }
   },
@@ -2886,21 +2886,21 @@ window.DATEN = {
    "de": "wieder zu Atem kommen",
    "register": "tu",
    "anker": "reprendre",
-   "audio": null,
+   "audio": "audio/wendungen/sp_17.mp3",
    "satz": {
     "fr": "Entre deux séries, je reprends mon souffle. Longtemps.",
     "de": "Zwischen zwei Sätzen komme ich wieder zu Atem. Lange.",
     "luecke": "reprends mon souffle",
-    "audio": null
+    "audio": "audio/saetze/sp_17.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai repris mon souffle sur le banc.",
-     "audio": null
+     "audio": "audio/saetze/sp_17_pc.mp3"
     },
     "fp": {
      "fr": "Je vais reprendre mon souffle, une minute.",
-     "audio": null
+     "audio": "audio/saetze/sp_17_fp.mp3"
     }
    }
   },
@@ -2911,12 +2911,12 @@ window.DATEN = {
    "de": "Gleichgewicht haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/sp_18.mp3",
    "satz": {
     "fr": "Sur une jambe, j'ai de l'équilibre. Sur deux, ça dépend du jour.",
     "de": "Auf einem Bein habe ich Gleichgewicht. Auf zweien hängt es vom Tag ab.",
     "luecke": "ai de l'équilibre",
-    "audio": null
+    "audio": "audio/saetze/sp_18.mp3"
    },
    "zeit": null
   },
@@ -2927,21 +2927,21 @@ window.DATEN = {
    "de": "laufen gehen",
    "register": "tu",
    "anker": "aller",
-   "audio": null,
+   "audio": "audio/wendungen/sp_19.mp3",
    "satz": {
     "fr": "Le dimanche matin, je vais courir. Le dimanche soir, je regrette.",
     "de": "Sonntagmorgens gehe ich laufen. Sonntagabends bereue ich es.",
     "luecke": "vais courir",
-    "audio": null
+    "audio": "audio/saetze/sp_19.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Dimanche, je suis allé courir.",
-     "audio": null
+     "audio": "audio/saetze/sp_19_pc.mp3"
     },
     "fp": {
      "fr": "Dimanche, je vais aller courir.",
-     "audio": null
+     "audio": "audio/saetze/sp_19_fp.mp3"
     }
    }
   },
@@ -2952,12 +2952,12 @@ window.DATEN = {
    "de": "der Gürtel",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/sp_20.mp3",
    "satz": {
     "fr": "La ceinture ne fait pas le maître. Mais elle tient le pantalon.",
     "de": "Der Gürtel macht nicht den Meister. Aber er hält die Hose.",
     "luecke": "ceinture",
-    "audio": null
+    "audio": "audio/saetze/sp_20.mp3"
    },
    "zeit": null
   },
@@ -2968,21 +2968,21 @@ window.DATEN = {
    "de": "Fortschritte machen",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/sp_21.mp3",
    "satz": {
     "fr": "Je fais des progrès. Lentement. Comme dit mon maître, c'est vite.",
     "de": "Ich mache Fortschritte. Langsam. Wie mein Meister sagt: Das ist schnell.",
     "luecke": "fais des progrès",
-    "audio": null
+    "audio": "audio/saetze/sp_21.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai fait des progrès cette année.",
-     "audio": null
+     "audio": "audio/saetze/sp_21_pc.mp3"
     },
     "fp": {
      "fr": "Je vais faire des progrès, j'en suis sûr.",
-     "audio": null
+     "audio": "audio/saetze/sp_21_fp.mp3"
     }
    }
   },
@@ -2993,12 +2993,12 @@ window.DATEN = {
    "de": "über sich hinauswachsen",
    "register": "tu",
    "anker": "se dépasser",
-   "audio": null,
+   "audio": "audio/wendungen/sp_22.mp3",
    "satz": {
     "fr": "Aujourd'hui, je me suis dépassé : trente pompes. Hier, vingt-neuf.",
     "de": "Heute bin ich über mich hinausgewachsen: dreißig Liegestütze. Gestern neunundzwanzig.",
     "luecke": "me suis dépassé",
-    "audio": null
+    "audio": "audio/saetze/sp_22.mp3"
    },
    "zeit": null
   },
@@ -3009,12 +3009,12 @@ window.DATEN = {
    "de": "Körper und Geist",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/sp_23.mp3",
    "satz": {
     "fr": "Le kung-fu, c'est le corps et l'esprit. Le mien discute souvent avec mon corps.",
     "de": "Kung-Fu ist Körper und Geist. Meiner diskutiert oft mit meinem Körper.",
     "luecke": "le corps et l'esprit",
-    "audio": null
+    "audio": "audio/saetze/sp_23.mp3"
    },
    "zeit": null
   },
@@ -3025,12 +3025,12 @@ window.DATEN = {
    "de": "Kann ich mich anmelden? (höflich)",
    "register": "vous",
    "anker": "pouvoir",
-   "audio": null,
+   "audio": "audio/wendungen/sp_24.mp3",
    "satz": {
     "fr": "Bonjour, est-ce que je peux m'inscrire au cours du mardi soir ?",
     "de": "Guten Tag, kann ich mich für den Kurs am Dienstagabend anmelden?",
     "luecke": "est-ce que je peux m'inscrire",
-    "audio": null
+    "audio": "audio/saetze/sp_24.mp3"
    },
    "zeit": null
   }

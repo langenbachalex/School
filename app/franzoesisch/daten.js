@@ -92,6 +92,38 @@ window.DATEN = {
     "ch_23",
     "ch_24"
    ]
+  },
+  {
+   "id": "musique",
+   "name": "Musique et langue",
+   "de": "Musik und Sprache",
+   "symbol": "🎵",
+   "wendungen": [
+    "mu_01",
+    "mu_02",
+    "mu_03",
+    "mu_04",
+    "mu_05",
+    "mu_06",
+    "mu_07",
+    "mu_08",
+    "mu_09",
+    "mu_10",
+    "mu_11",
+    "mu_12",
+    "mu_13",
+    "mu_14",
+    "mu_15",
+    "mu_16",
+    "mu_17",
+    "mu_18",
+    "mu_19",
+    "mu_20",
+    "mu_21",
+    "mu_22",
+    "mu_23",
+    "mu_24"
+   ]
   }
  ],
  "wendungen": [
@@ -1513,6 +1545,489 @@ window.DATEN = {
     "de": "Entschuldigung, Madame, haben Sie eine Katze? Da sitzt eine auf Ihrem Dach.",
     "luecke": "est-ce que vous avez",
     "audio": "audio/saetze/ch_24.mp3"
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_01",
+   "thema": "musique",
+   "fr": "chanter juste",
+   "de": "richtig (sauber) singen",
+   "register": "tu",
+   "anker": "chanter",
+   "audio": null,
+   "satz": {
+    "fr": "Mon frère chante juste, moi je chante avec le cœur.",
+    "de": "Mein Bruder singt sauber, ich singe mit dem Herzen.",
+    "luecke": "chante juste",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Hier, j'ai chanté juste. Une fois.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Demain, je vais chanter juste. Promis.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_02",
+   "thema": "musique",
+   "fr": "chanter faux",
+   "de": "schief singen",
+   "register": "tu",
+   "anker": "chanter",
+   "audio": null,
+   "satz": {
+    "fr": "Je chante faux, mais fort. Ça compense.",
+    "de": "Ich singe schief, aber laut. Das gleicht es aus.",
+    "luecke": "chante faux",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai chanté faux pendant tout le concert.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais chanter faux, et alors ?",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_03",
+   "thema": "musique",
+   "fr": "le refrain",
+   "de": "der Refrain",
+   "register": "tu",
+   "anker": "connaître",
+   "audio": null,
+   "satz": {
+    "fr": "Je ne connais pas les paroles, mais le refrain, oui.",
+    "de": "Ich kenne den Text nicht, aber den Refrain schon.",
+    "luecke": "refrain",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_04",
+   "thema": "musique",
+   "fr": "les paroles",
+   "de": "der Liedtext",
+   "register": "tu",
+   "anker": "donner",
+   "audio": null,
+   "satz": {
+    "fr": "Les paroles de cette chanson me donnent des frissons.",
+    "de": "Der Text dieses Liedes gibt mir Gänsehaut.",
+    "luecke": "paroles",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_05",
+   "thema": "musique",
+   "fr": "ça sonne bien",
+   "de": "das klingt gut",
+   "register": "tu",
+   "anker": "sonner",
+   "audio": null,
+   "satz": {
+    "fr": "En français, cette phrase sonne bien. En allemand, moins.",
+    "de": "Auf Französisch klingt dieser Satz gut. Auf Deutsch weniger.",
+    "luecke": "sonne bien",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Ça a sonné bien du premier coup.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Ça va sonner bien, tu vas voir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_06",
+   "thema": "musique",
+   "fr": "avoir l'oreille",
+   "de": "ein gutes Gehör haben",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Aurélien a l'oreille : il entend mon accent allemand tout de suite.",
+    "de": "Aurélien hat ein gutes Gehör: Er hört meinen deutschen Akzent sofort.",
+    "luecke": "a l'oreille",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_07",
+   "thema": "musique",
+   "fr": "l'accent",
+   "de": "der Akzent",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Mon accent, c'est un mélange de Sarre et de bonne volonté.",
+    "de": "Mein Akzent ist eine Mischung aus Saarland und gutem Willen.",
+    "luecke": "accent",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_08",
+   "thema": "musique",
+   "fr": "la musique de la langue",
+   "de": "die Musik der Sprache",
+   "register": "tu",
+   "anker": "aimer",
+   "audio": null,
+   "satz": {
+    "fr": "Ce que j'aime en français, c'est la musique de la langue.",
+    "de": "Was ich am Französischen liebe, ist die Musik der Sprache.",
+    "luecke": "musique de la langue",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_09",
+   "thema": "musique",
+   "fr": "jouer d'un instrument",
+   "de": "ein Instrument spielen",
+   "register": "tu",
+   "anker": "jouer",
+   "audio": null,
+   "satz": {
+    "fr": "Tu joues d'un instrument ? – Oui, de la guitare, mal.",
+    "de": "Spielst du ein Instrument? – Ja, Gitarre, schlecht.",
+    "luecke": "joues d'un instrument",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai joué de la guitare toute la soirée.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais jouer de la guitare ce soir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_10",
+   "thema": "musique",
+   "fr": "écouter en boucle",
+   "de": "in Dauerschleife hören",
+   "register": "tu",
+   "anker": "écouter",
+   "audio": null,
+   "satz": {
+    "fr": "J'écoute cette chanson en boucle depuis trois jours.",
+    "de": "Ich höre dieses Lied seit drei Tagen in Dauerschleife.",
+    "luecke": "en boucle",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai écouté cette chanson en boucle tout le week-end.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais l'écouter en boucle, je le sens.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_11",
+   "thema": "musique",
+   "fr": "avoir une chanson dans la tête",
+   "de": "einen Ohrwurm haben",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "J'ai « Ne me quitte pas » dans la tête depuis ce matin. Merci, Aurélien.",
+    "de": "Ich habe seit heute Morgen „Ne me quitte pas“ als Ohrwurm. Danke, Aurélien.",
+    "luecke": "dans la tête",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_12",
+   "thema": "musique",
+   "fr": "fredonner",
+   "de": "summen",
+   "register": "tu",
+   "anker": "fredonner",
+   "audio": null,
+   "satz": {
+    "fr": "Je fredonne en corrigeant des copies. Les élèves ne le savent pas.",
+    "de": "Ich summe beim Korrigieren. Die Schüler wissen das nicht.",
+    "luecke": "fredonne",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai fredonné toute la matinée.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais fredonner toute la journée.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_13",
+   "thema": "musique",
+   "fr": "le rythme",
+   "de": "der Rhythmus",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Le français a un rythme : on accentue la fin des mots.",
+    "de": "Das Französische hat einen Rhythmus: Man betont das Wortende.",
+    "luecke": "rythme",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_14",
+   "thema": "musique",
+   "fr": "la liaison",
+   "de": "die Liaison (Bindung)",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Les‿enfants, les‿amis : la liaison, c'est la musique entre les mots.",
+    "de": "Les‿enfants, les‿amis: Die Liaison ist die Musik zwischen den Wörtern.",
+    "luecke": "liaison",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_15",
+   "thema": "musique",
+   "fr": "prononcer",
+   "de": "aussprechen",
+   "register": "tu",
+   "anker": "prononcer",
+   "audio": null,
+   "satz": {
+    "fr": "Je n'arrive pas à prononcer « grenouille ». Je dis « grenade ».",
+    "de": "Ich kann „grenouille“ nicht aussprechen. Ich sage „grenade“.",
+    "luecke": "prononcer",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai prononcé « grenouille » correctement. Une fois.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais prononcer ce mot cent fois.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_16",
+   "thema": "musique",
+   "fr": "un morceau",
+   "de": "ein Musikstück",
+   "register": "tu",
+   "anker": "rendre",
+   "audio": null,
+   "satz": {
+    "fr": "Ce morceau de piano me rend heureux et triste en même temps.",
+    "de": "Dieses Klavierstück macht mich gleichzeitig glücklich und traurig.",
+    "luecke": "morceau",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_17",
+   "thema": "musique",
+   "fr": "à tue-tête",
+   "de": "aus voller Kehle",
+   "register": "tu",
+   "anker": "chanter",
+   "audio": null,
+   "satz": {
+    "fr": "Dans la voiture, je chante à tue-tête. Seul. Toujours seul.",
+    "de": "Im Auto singe ich aus voller Kehle. Allein. Immer allein.",
+    "luecke": "à tue-tête",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_18",
+   "thema": "musique",
+   "fr": "une voix grave / aiguë",
+   "de": "eine tiefe / hohe Stimme",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Il a une voix grave, elle a une voix aiguë, et moi j'ai une voix de prof.",
+    "de": "Er hat eine tiefe Stimme, sie eine hohe, und ich habe eine Lehrerstimme.",
+    "luecke": "voix grave",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_19",
+   "thema": "musique",
+   "fr": "ça me parle",
+   "de": "das spricht mich an",
+   "register": "tu",
+   "anker": "parler",
+   "audio": null,
+   "satz": {
+    "fr": "Cette chanson me parle. Je ne comprends pas tout, mais elle me parle.",
+    "de": "Dieses Lied spricht mich an. Ich verstehe nicht alles, aber es spricht mich an.",
+    "luecke": "me parle",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Cette chanson m'a parlé tout de suite.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Cette chanson va te parler, j'en suis sûr.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_20",
+   "thema": "musique",
+   "fr": "apprendre par cœur",
+   "de": "auswendig lernen",
+   "register": "tu",
+   "anker": "apprendre",
+   "audio": null,
+   "satz": {
+    "fr": "J'apprends les paroles par cœur, c'est mon vocabulaire préféré.",
+    "de": "Ich lerne die Liedtexte auswendig, das ist mein liebstes Vokabular.",
+    "luecke": "par cœur",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai appris le refrain par cœur.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais apprendre toute la chanson par cœur.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_21",
+   "thema": "musique",
+   "fr": "se tromper de mot",
+   "de": "das falsche Wort erwischen",
+   "register": "tu",
+   "anker": "se tromper",
+   "audio": null,
+   "satz": {
+    "fr": "Je me trompe souvent de mot, mais la mélodie est juste.",
+    "de": "Ich erwische oft das falsche Wort, aber die Melodie stimmt.",
+    "luecke": "me trompe",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Je me suis trompé de mot. Encore.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais me tromper de mot, c'est sûr.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_22",
+   "thema": "musique",
+   "fr": "ça me fait du bien",
+   "de": "das tut mir gut",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Chanter le soir, ça me fait du bien.",
+    "de": "Abends singen tut mir gut.",
+    "luecke": "me fait du bien",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Ça m'a fait du bien.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Ça va me faire du bien.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "mu_23",
+   "thema": "musique",
+   "fr": "une langue chantante",
+   "de": "eine singende (melodische) Sprache",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Le français est une langue chantante. Même quand on râle.",
+    "de": "Französisch ist eine singende Sprache. Sogar wenn man meckert.",
+    "luecke": "chantante",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "mu_24",
+   "thema": "musique",
+   "fr": "Pourriez-vous répéter plus lentement ?",
+   "de": "Könnten Sie das langsamer wiederholen? (höflich)",
+   "register": "vous",
+   "anker": "pouvoir",
+   "audio": null,
+   "satz": {
+    "fr": "Pardon, pourriez-vous répéter plus lentement ? J'écoute la musique, pas les mots.",
+    "de": "Entschuldigung, könnten Sie das langsamer wiederholen? Ich höre die Musik, nicht die Wörter.",
+    "luecke": "pourriez-vous répéter",
+    "audio": null
    },
    "zeit": null
   }

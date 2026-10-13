@@ -1,6 +1,6 @@
 # Französisch-App (persönlich) – Startnotiz
 
-Stand: 13.10.2026. **Noch nichts bauen.** Zuerst Brainstorming mit Mr. Alex, dann Konzept (`docs/franzoesisch/konzept.md`), dann vor jedem Bauschritt fragen.
+Stand: 13.10.2026. **Noch nichts bauen.** Konzept-Entwurf: `docs/franzoesisch/konzept.md`. Zuerst Brainstorming mit Mr. Alex, dann Konzept (`docs/franzoesisch/konzept.md`), dann vor jedem Bauschritt fragen.
 
 ## Ziel
 Eine persönliche App für Mr. Alex im Stil der Schul-Apps (Klasse 6 in `app/`, Klasse 9 in `app/klasse9/`):

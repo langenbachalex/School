@@ -41,7 +41,7 @@ def main():
         for n in sorted(namen):
             pfad = os.path.join(wurzel, n)
             rel = os.path.relpath(pfad, APP).replace(os.sep, "/")
-            if rel in ("sw.js", "LIESMICH.md") or rel.startswith("klasse9/"):  # Klasse 9: eigene App
+            if rel in ("sw.js", "LIESMICH.md") or rel.startswith(("klasse9/", "franzoesisch/")):  # eigene Apps mit eigenem Offline-Speicher
                 continue
             dateien.append(rel)
             with open(pfad, "rb") as f:
@@ -55,7 +55,8 @@ self.addEventListener("install", (e) => {{
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN)).then(() => self.skipWaiting()));
 }});
 self.addEventListener("activate", (e) => {{
-  e.waitUntil(caches.keys().then((alle) => Promise.all(alle.filter((k) => k.startsWith("mralex-") && k !== VERSION).map((k) => caches.delete(k))))
+  // nur eigene alte Speicher löschen – nicht die von Klasse 9 (mralex9-) oder Französisch (mralex-fr-)
+  e.waitUntil(caches.keys().then((alle) => Promise.all(alle.filter((k) => /^mralex-[0-9a-f]+$/.test(k) && k !== VERSION).map((k) => caches.delete(k))))
     .then(() => self.clients.claim()));
 }});
 self.addEventListener("fetch", (e) => {{

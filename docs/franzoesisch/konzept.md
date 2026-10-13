@@ -76,6 +76,14 @@ Dialoge: Mr. Alex' Stimme spricht beide Rollen. **[OFFEN]** Aurélien fragen, ob
 - **Titel – französische Delikatessen** (Mr. Alex, 13.10.: klein anfangen, bis zur großen Delikatesse): **[OFFEN]** Vorschlag 🥐 Petit éclair → Croissant → Baguette → Crêpe → Fromage → Huîtres → **Caviar**. Alternative: Tour-de-France-Trikots.
 - **Lob auf Französisch** in Mr. Alex' Stimme, **[OFFEN]** Liste z. B. *Génial ! · Chapeau ! · Trop fort ! · Magnifique ! · Bravo, champion !*
 
+## 6a. Vorgemerkt: Kategorie „Prononciation“ – Nasallaute (Mr. Alex, 13.10.)
+
+Idee, noch nicht gebaut. Die vier Nasale **[ɑ̃] en/an – [ɔ̃] on – [ɛ̃] in/ain – [œ̃] un** hören und unterscheiden lernen, vor allem das Paar **en ↔ on**.
+- **Stufe 1 – Hören und nachsprechen:** Wörter auf Wortbasis, nach Klang sortiert (*enfant, temps, vent* · *bon, pont, mon* · *vin, pain, main* · *un, brun*).
+- **Stufe 2 – Gegenüberstellen (Minimalpaare):** *vent – vont · lent – long · banc – bon · sans – son · tant – ton · dent – don*. Hören, dann tippen: welches Wort war das? Zwei Knöpfe.
+- **Königsstufe – beide Klänge in einem Wort:** *commençons, montant, pension, mon enfant, en avion, onction, bonbon (on-on), maintenant (in-an)*. Hören, nachsprechen, Klänge markieren.
+- Wie überall: Mr. Alex' Stimme, Sprechzeit-Sperre, langsam und dann normal. Später vielleicht auch *é/è* und *u/ou* nach demselben Muster.
+
 ## 7. Technik (bewährt)
 
 - Adresse: `app/franzoesisch/` → https://langenbachalex.github.io/School/franzoesisch/
@@ -90,4 +98,4 @@ Dialoge: Mr. Alex' Stimme spricht beide Rollen. **[OFFEN]** Aurélien fragen, ob
 1. Inhaltsprobe `inhalte/franzoesisch/entre_profs.tsv`: Format und Ton in Ordnung?
 2. Held der Geschichte: Name, Beruf, Ausgangspunkt.
 3. Titel: Delikatessen-Reihe so in Ordnung, oder Tour de France?
-4. Nächster Schritt – Vorschlag: Audios erzeugen (174 Dateien, ca. 5.100 Zeichen), Veröffentlichung unter `/franzoesisch/` (Workflow `pages.yml` muss den Branch kennen), dann Dialoge mit Aurélien und die Frankreich-Karte.
+4. Nächster Schritt – Vorschlag: Audios erzeugen (174 Dateien, ca. 5.100 Zeichen), Veröffentlichung unter `/franzoesisch/` (Option A, 13.10.: Französisch-Branch in den Hauptbranch `claude/awesome-dijkstra-dy57ir` mergen), dann Dialoge mit Aurélien und die Frankreich-Karte.

@@ -70,21 +70,21 @@ window.DATEN = {
    "de": "Klassenarbeiten korrigieren",
    "register": "tu",
    "anker": "corriger",
-   "audio": null,
+   "audio": "audio/wendungen/ep_01.mp3",
    "satz": {
     "fr": "Ce soir, je corrige des copies de sixième.",
     "de": "Heute Abend korrigiere ich Arbeiten der Sechsten.",
     "luecke": "corrige des copies",
-    "audio": null
+    "audio": "audio/saetze/ep_01.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Hier soir, j'ai corrigé des copies de sixième.",
-     "audio": null
+     "audio": "audio/saetze/ep_01_pc.mp3"
     },
     "fp": {
      "fr": "Ce soir, je vais corriger des copies de sixième.",
-     "audio": null
+     "audio": "audio/saetze/ep_01_fp.mp3"
     }
    }
   },
@@ -95,21 +95,21 @@ window.DATEN = {
    "de": "fix und fertig sein",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/ep_02.mp3",
    "satz": {
     "fr": "Après six heures de cours, je suis crevé.",
     "de": "Nach sechs Stunden Unterricht bin ich fix und fertig.",
     "luecke": "crevé",
-    "audio": null
+    "audio": "audio/saetze/ep_02.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Après six heures de cours, j'étais crevé.",
-     "audio": null
+     "audio": "audio/saetze/ep_02_pc.mp3"
     },
     "fp": {
      "fr": "Après six heures de cours, je vais être crevé.",
-     "audio": null
+     "audio": "audio/saetze/ep_02_fp.mp3"
     }
    }
   },
@@ -120,12 +120,12 @@ window.DATEN = {
    "de": "ist es gut gelaufen?",
    "register": "tu",
    "anker": "se passer",
-   "audio": null,
+   "audio": "audio/wendungen/ep_03.mp3",
    "satz": {
     "fr": "Alors, ton cours avec les troisièmes, ça s'est bien passé ?",
     "de": "Und, deine Stunde mit den Neunern, ist sie gut gelaufen?",
     "luecke": "ça s'est bien passé",
-    "audio": null
+    "audio": "audio/saetze/ep_03.mp3"
    },
    "zeit": null
   },
@@ -136,21 +136,21 @@ window.DATEN = {
    "de": "Unterricht halten",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/ep_04.mp3",
    "satz": {
     "fr": "Je fais cours en anglais toute la matinée.",
     "de": "Ich unterrichte den ganzen Vormittag Englisch.",
     "luecke": "fais cours",
-    "audio": null
+    "audio": "audio/saetze/ep_04.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai fait cours en anglais toute la matinée.",
-     "audio": null
+     "audio": "audio/saetze/ep_04_pc.mp3"
     },
     "fp": {
      "fr": "Je vais faire cours en anglais toute la matinée.",
-     "audio": null
+     "audio": "audio/saetze/ep_04_fp.mp3"
     }
    }
   },
@@ -161,12 +161,12 @@ window.DATEN = {
    "de": "die Pause",
    "register": "tu",
    "anker": "retrouver",
-   "audio": null,
+   "audio": "audio/wendungen/ep_05.mp3",
    "satz": {
     "fr": "On se retrouve en salle des profs à la récré ?",
     "de": "Treffen wir uns in der Pause im Lehrerzimmer?",
     "luecke": "à la récré",
-    "audio": null
+    "audio": "audio/saetze/ep_05.mp3"
    },
    "zeit": null
   },
@@ -177,21 +177,21 @@ window.DATEN = {
    "de": "es kaum erwarten können",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/ep_06.mp3",
    "satz": {
     "fr": "J'ai hâte d'être en vacances.",
     "de": "Ich kann die Ferien kaum erwarten.",
     "luecke": "ai hâte d'",
-    "audio": null
+    "audio": "audio/saetze/ep_06.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'avais hâte d'être en vacances.",
-     "audio": null
+     "audio": "audio/saetze/ep_06_pc.mp3"
     },
     "fp": {
      "fr": "Je vais avoir hâte d'être en vacances.",
-     "audio": null
+     "audio": "audio/saetze/ep_06_fp.mp3"
     }
    }
   },
@@ -202,12 +202,12 @@ window.DATEN = {
    "de": "die Nase voll haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/ep_07.mp3",
    "satz": {
     "fr": "J'en ai marre des réunions qui n'en finissent pas.",
     "de": "Ich habe die Nase voll von Besprechungen, die kein Ende nehmen.",
     "luecke": "en ai marre",
-    "audio": null
+    "audio": "audio/saetze/ep_07.mp3"
    },
    "zeit": null
   },
@@ -218,21 +218,21 @@ window.DATEN = {
    "de": "Schwierigkeiten haben zu",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/ep_08.mp3",
    "satz": {
     "fr": "J'ai du mal à les faire taire le vendredi après-midi.",
     "de": "Freitagnachmittags fällt es mir schwer, sie ruhig zu kriegen.",
     "luecke": "ai du mal à",
-    "audio": null
+    "audio": "audio/saetze/ep_08.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai eu du mal à les faire taire vendredi après-midi.",
-     "audio": null
+     "audio": "audio/saetze/ep_08_pc.mp3"
     },
     "fp": {
      "fr": "Je vais avoir du mal à les faire taire vendredi après-midi.",
-     "audio": null
+     "audio": "audio/saetze/ep_08_fp.mp3"
     }
    }
   },
@@ -243,12 +243,12 @@ window.DATEN = {
    "de": "das ist lange her",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/ep_09.mp3",
    "satz": {
     "fr": "Salut Aurélien ! Ça fait longtemps !",
     "de": "Hallo Aurélien! Lange nicht gesehen!",
     "luecke": "Ça fait longtemps",
-    "audio": null
+    "audio": "audio/saetze/ep_09.mp3"
    },
    "zeit": null
   },
@@ -259,21 +259,21 @@ window.DATEN = {
    "de": "also, deshalb (umgangssprachlich)",
    "register": "tu",
    "anker": "prendre",
-   "audio": null,
+   "audio": "audio/wendungen/ep_10.mp3",
    "satz": {
     "fr": "Le prof de sport est malade, du coup je prends sa classe.",
     "de": "Der Sportlehrer ist krank, also übernehme ich seine Klasse.",
     "luecke": "du coup",
-    "audio": null
+    "audio": "audio/saetze/ep_10.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Le prof de sport était malade, du coup j'ai pris sa classe.",
-     "audio": null
+     "audio": "audio/saetze/ep_10_pc.mp3"
     },
     "fp": {
      "fr": "Le prof de sport est malade, du coup je vais prendre sa classe.",
-     "audio": null
+     "audio": "audio/saetze/ep_10_fp.mp3"
     }
    }
   },
@@ -284,12 +284,12 @@ window.DATEN = {
    "de": "eigentlich, genau genommen",
    "register": "tu",
    "anker": "aimer",
-   "audio": null,
+   "audio": "audio/wendungen/ep_11.mp3",
    "satz": {
     "fr": "En fait, j'aime bien mes élèves de neuvième.",
     "de": "Eigentlich mag ich meine Neuner sehr gern.",
     "luecke": "En fait",
-    "audio": null
+    "audio": "audio/saetze/ep_11.mp3"
    },
    "zeit": null
   },
@@ -300,12 +300,12 @@ window.DATEN = {
    "de": "trotzdem, immerhin",
    "register": "tu",
    "anker": "adorer",
-   "audio": null,
+   "audio": "audio/wendungen/ep_12.mp3",
    "satz": {
     "fr": "C'est fatigant, mais j'adore ce métier quand même.",
     "de": "Es ist anstrengend, aber ich liebe diesen Beruf trotzdem.",
     "luecke": "quand même",
-    "audio": null
+    "audio": "audio/saetze/ep_12.mp3"
    },
    "zeit": null
   },
@@ -316,21 +316,21 @@ window.DATEN = {
    "de": "das lohnt sich",
    "register": "tu",
    "anker": "valoir",
-   "audio": null,
+   "audio": "audio/wendungen/ep_13.mp3",
    "satz": {
     "fr": "Préparer un bon cours, ça prend du temps, mais ça vaut le coup.",
     "de": "Eine gute Stunde vorzubereiten dauert, aber es lohnt sich.",
     "luecke": "ça vaut le coup",
-    "audio": null
+    "audio": "audio/saetze/ep_13.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Ça a pris du temps, mais ça valait le coup.",
-     "audio": null
+     "audio": "audio/saetze/ep_13_pc.mp3"
     },
     "fp": {
      "fr": "Ça va prendre du temps, mais ça va valoir le coup.",
-     "audio": null
+     "audio": "audio/saetze/ep_13_fp.mp3"
     }
    }
   },
@@ -341,21 +341,21 @@ window.DATEN = {
    "de": "zurechtkommen",
    "register": "tu",
    "anker": "se débrouiller",
-   "audio": null,
+   "audio": "audio/wendungen/ep_14.mp3",
    "satz": {
     "fr": "Les élèves se débrouillent bien tout seuls.",
     "de": "Die Schüler kommen allein gut zurecht.",
     "luecke": "se débrouillent",
-    "audio": null
+    "audio": "audio/saetze/ep_14.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Les élèves se sont bien débrouillés tout seuls.",
-     "audio": null
+     "audio": "audio/saetze/ep_14_pc.mp3"
     },
     "fp": {
      "fr": "Les élèves vont bien se débrouiller tout seuls.",
-     "audio": null
+     "audio": "audio/saetze/ep_14_fp.mp3"
     }
    }
   },
@@ -366,12 +366,12 @@ window.DATEN = {
    "de": "voll dabei sein",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/ep_15.mp3",
    "satz": {
     "fr": "Aujourd'hui, les sixièmes étaient à fond.",
     "de": "Heute waren die Sechser voll dabei.",
     "luecke": "à fond",
-    "audio": null
+    "audio": "audio/saetze/ep_15.mp3"
    },
    "zeit": null
   },
@@ -382,21 +382,21 @@ window.DATEN = {
    "de": "Arbeiten zurückgeben",
    "register": "tu",
    "anker": "rendre",
-   "audio": null,
+   "audio": "audio/wendungen/ep_16.mp3",
    "satz": {
     "fr": "Je rends les copies lundi.",
     "de": "Ich gebe die Arbeiten am Montag zurück.",
     "luecke": "rends les copies",
-    "audio": null
+    "audio": "audio/saetze/ep_16.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai rendu les copies lundi.",
-     "audio": null
+     "audio": "audio/saetze/ep_16_pc.mp3"
     },
     "fp": {
      "fr": "Je vais rendre les copies lundi.",
-     "audio": null
+     "audio": "audio/saetze/ep_16_fp.mp3"
     }
    }
   },
@@ -407,12 +407,12 @@ window.DATEN = {
    "de": "eine Besprechung, Konferenz",
    "register": "tu",
    "anker": "venir",
-   "audio": null,
+   "audio": "audio/wendungen/ep_17.mp3",
    "satz": {
     "fr": "On a une réunion à seize heures, tu viens ?",
     "de": "Wir haben um 16 Uhr eine Konferenz, kommst du?",
     "luecke": "une réunion",
-    "audio": null
+    "audio": "audio/saetze/ep_17.mp3"
    },
    "zeit": null
   },
@@ -423,12 +423,12 @@ window.DATEN = {
    "de": "das macht nichts",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/ep_18.mp3",
    "satz": {
     "fr": "Tu as oublié mon livre ? Ça ne fait rien.",
     "de": "Du hast mein Buch vergessen? Macht nichts.",
     "luecke": "Ça ne fait rien",
-    "audio": null
+    "audio": "audio/saetze/ep_18.mp3"
    },
    "zeit": null
   },
@@ -439,12 +439,12 @@ window.DATEN = {
    "de": "sich Zeit lassen",
    "register": "tu",
    "anker": "prendre",
-   "audio": null,
+   "audio": "audio/wendungen/ep_19.mp3",
    "satz": {
     "fr": "Prends ton temps, on a toute la soirée.",
     "de": "Lass dir Zeit, wir haben den ganzen Abend.",
     "luecke": "Prends ton temps",
-    "audio": null
+    "audio": "audio/saetze/ep_19.mp3"
    },
    "zeit": null
   },
@@ -455,12 +455,12 @@ window.DATEN = {
    "de": "könnten Sie … ? (höflich)",
    "register": "vous",
    "anker": "pouvoir",
-   "audio": null,
+   "audio": "audio/wendungen/ep_20.mp3",
    "satz": {
     "fr": "Excusez-moi, pourriez-vous m'indiquer la salle des profs ?",
     "de": "Entschuldigung, könnten Sie mir das Lehrerzimmer zeigen?",
     "luecke": "pourriez-vous",
-    "audio": null
+    "audio": "audio/saetze/ep_20.mp3"
    },
    "zeit": null
   },
@@ -471,21 +471,21 @@ window.DATEN = {
    "de": "das berührt mich",
    "register": "tu",
    "anker": "toucher",
-   "audio": null,
+   "audio": "audio/wendungen/se_01.mp3",
    "satz": {
     "fr": "Cette chanson me touche à chaque fois.",
     "de": "Dieses Lied berührt mich jedes Mal.",
     "luecke": "me touche",
-    "audio": null
+    "audio": "audio/saetze/se_01.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Cette chanson m'a touché.",
-     "audio": null
+     "audio": "audio/saetze/se_01_pc.mp3"
     },
     "fp": {
      "fr": "Cette chanson va me toucher.",
-     "audio": null
+     "audio": "audio/saetze/se_01_fp.mp3"
     }
    }
   },
@@ -496,21 +496,21 @@ window.DATEN = {
    "de": "Trübsal blasen, niedergeschlagen sein",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/se_02.mp3",
    "satz": {
     "fr": "Le dimanche soir, j'ai souvent le cafard.",
     "de": "Sonntagabends bin ich oft niedergeschlagen.",
     "luecke": "le cafard",
-    "audio": null
+    "audio": "audio/saetze/se_02.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Dimanche soir, j'ai eu le cafard.",
-     "audio": null
+     "audio": "audio/saetze/se_02_pc.mp3"
     },
     "fp": {
      "fr": "Dimanche soir, je vais avoir le cafard.",
-     "audio": null
+     "audio": "audio/saetze/se_02_fp.mp3"
     }
    }
   },
@@ -521,12 +521,12 @@ window.DATEN = {
    "de": "düster, dunkel",
    "register": "tu",
    "anker": "aimer",
-   "audio": null,
+   "audio": "audio/wendungen/se_03.mp3",
    "satz": {
     "fr": "J'aime les histoires sombres, avec une forêt et un secret.",
     "de": "Ich mag düstere Geschichten, mit einem Wald und einem Geheimnis.",
     "luecke": "sombres",
-    "audio": null
+    "audio": "audio/saetze/se_03.mp3"
    },
    "zeit": null
   },
@@ -537,12 +537,12 @@ window.DATEN = {
    "de": "melancholisch",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_04.mp3",
    "satz": {
     "fr": "Ce morceau de piano est mélancolique, mais tellement beau.",
     "de": "Dieses Klavierstück ist melancholisch, aber so schön.",
     "luecke": "mélancolique",
-    "audio": null
+    "audio": "audio/saetze/se_04.mp3"
    },
    "zeit": null
   },
@@ -553,21 +553,21 @@ window.DATEN = {
    "de": "das bricht mir das Herz",
    "register": "tu",
    "anker": "fendre",
-   "audio": null,
+   "audio": "audio/wendungen/se_05.mp3",
    "satz": {
     "fr": "Voir un enfant pleurer tout seul, ça me fend le cœur.",
     "de": "Ein Kind ganz allein weinen zu sehen, bricht mir das Herz.",
     "luecke": "me fend le cœur",
-    "audio": null
+    "audio": "audio/saetze/se_05.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Ça m'a fendu le cœur.",
-     "audio": null
+     "audio": "audio/saetze/se_05_pc.mp3"
     },
     "fp": {
      "fr": "Ça va me fendre le cœur.",
-     "audio": null
+     "audio": "audio/saetze/se_05_fp.mp3"
     }
    }
   },
@@ -578,12 +578,12 @@ window.DATEN = {
    "de": "gerührt, bewegt sein",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_06.mp3",
    "satz": {
     "fr": "À la fin du concert, j'étais ému aux larmes.",
     "de": "Am Ende des Konzerts war ich zu Tränen gerührt.",
     "luecke": "ému",
-    "audio": null
+    "audio": "audio/saetze/se_06.mp3"
    },
    "zeit": null
   },
@@ -594,12 +594,12 @@ window.DATEN = {
    "de": "beunruhigend, unheimlich",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_07.mp3",
    "satz": {
     "fr": "La maison était silencieuse, c'était inquiétant.",
     "de": "Das Haus war still, das war unheimlich.",
     "luecke": "inquiétant",
-    "audio": null
+    "audio": "audio/saetze/se_07.mp3"
    },
    "zeit": null
   },
@@ -610,12 +610,12 @@ window.DATEN = {
    "de": "beruhigend, wohltuend",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_08.mp3",
    "satz": {
     "fr": "Le ronronnement de mon chat est apaisant.",
     "de": "Das Schnurren meiner Katze ist beruhigend.",
     "luecke": "apaisant",
-    "audio": null
+    "audio": "audio/saetze/se_08.mp3"
    },
    "zeit": null
   },
@@ -626,21 +626,21 @@ window.DATEN = {
    "de": "Tränen in den Augen haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/se_09.mp3",
    "satz": {
     "fr": "Quand j'écoute cette voix, j'ai les larmes aux yeux.",
     "de": "Wenn ich diese Stimme höre, habe ich Tränen in den Augen.",
     "luecke": "ai les larmes aux yeux",
-    "audio": null
+    "audio": "audio/saetze/se_09.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai eu les larmes aux yeux.",
-     "audio": null
+     "audio": "audio/saetze/se_09_pc.mp3"
     },
     "fp": {
      "fr": "Je vais avoir les larmes aux yeux.",
-     "audio": null
+     "audio": "audio/saetze/se_09_fp.mp3"
     }
    }
   },
@@ -651,21 +651,21 @@ window.DATEN = {
    "de": "das gibt mir Gänsehaut",
    "register": "tu",
    "anker": "donner",
-   "audio": null,
+   "audio": "audio/wendungen/se_10.mp3",
    "satz": {
     "fr": "Le refrain me donne des frissons.",
     "de": "Der Refrain gibt mir Gänsehaut.",
     "luecke": "me donne des frissons",
-    "audio": null
+    "audio": "audio/saetze/se_10.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Le refrain m'a donné des frissons.",
-     "audio": null
+     "audio": "audio/saetze/se_10_pc.mp3"
     },
     "fp": {
      "fr": "Le refrain va me donner des frissons.",
-     "audio": null
+     "audio": "audio/saetze/se_10_fp.mp3"
     }
    }
   },
@@ -676,21 +676,21 @@ window.DATEN = {
    "de": "Angst haben vor",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/se_11.mp3",
    "satz": {
     "fr": "Je n'ai pas peur du noir, mais du silence.",
     "de": "Ich habe keine Angst vor der Dunkelheit, sondern vor der Stille.",
     "luecke": "ai pas peur",
-    "audio": null
+    "audio": "audio/saetze/se_11.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Je n'ai pas eu peur du noir.",
-     "audio": null
+     "audio": "audio/saetze/se_11_pc.mp3"
     },
     "fp": {
      "fr": "Je ne vais pas avoir peur du noir.",
-     "audio": null
+     "audio": "audio/saetze/se_11_fp.mp3"
     }
    }
   },
@@ -701,21 +701,21 @@ window.DATEN = {
    "de": "gut gelaunt sein",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_12.mp3",
    "satz": {
     "fr": "Ce matin, je suis de bonne humeur, le soleil est là.",
     "de": "Heute Morgen bin ich gut gelaunt, die Sonne ist da.",
     "luecke": "de bonne humeur",
-    "audio": null
+    "audio": "audio/saetze/se_12.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Ce matin, j'étais de bonne humeur.",
-     "audio": null
+     "audio": "audio/saetze/se_12_pc.mp3"
     },
     "fp": {
      "fr": "Demain, je vais être de bonne humeur.",
-     "audio": null
+     "audio": "audio/saetze/se_12_fp.mp3"
     }
    }
   },
@@ -726,12 +726,12 @@ window.DATEN = {
    "de": "schlecht gelaunt sein",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_13.mp3",
    "satz": {
     "fr": "Ne lui parle pas, il est de mauvaise humeur.",
     "de": "Sprich ihn nicht an, er ist schlecht gelaunt.",
     "luecke": "de mauvaise humeur",
-    "audio": null
+    "audio": "audio/saetze/se_13.mp3"
    },
    "zeit": null
   },
@@ -742,21 +742,21 @@ window.DATEN = {
    "de": "das fehlt mir",
    "register": "tu",
    "anker": "manquer",
-   "audio": null,
+   "audio": "audio/wendungen/se_14.mp3",
    "satz": {
     "fr": "Mes chats me manquent quand je suis en voyage.",
     "de": "Meine Katzen fehlen mir, wenn ich unterwegs bin.",
     "luecke": "me manquent",
-    "audio": null
+    "audio": "audio/saetze/se_14.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Mes chats m'ont manqué.",
-     "audio": null
+     "audio": "audio/saetze/se_14_pc.mp3"
     },
     "fp": {
      "fr": "Mes chats vont me manquer.",
-     "audio": null
+     "audio": "audio/saetze/se_14_fp.mp3"
     }
    }
   },
@@ -767,21 +767,21 @@ window.DATEN = {
    "de": "schwer ums Herz sein, viel auf dem Herzen haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/se_15.mp3",
    "satz": {
     "fr": "Après cette journée, j'en ai gros sur le cœur.",
     "de": "Nach diesem Tag ist mir schwer ums Herz.",
     "luecke": "en ai gros sur le cœur",
-    "audio": null
+    "audio": "audio/saetze/se_15.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'en ai eu gros sur le cœur.",
-     "audio": null
+     "audio": "audio/saetze/se_15_pc.mp3"
     },
     "fp": {
      "fr": "Je vais en avoir gros sur le cœur.",
-     "audio": null
+     "audio": "audio/saetze/se_15_fp.mp3"
     }
    }
   },
@@ -792,12 +792,12 @@ window.DATEN = {
    "de": "erschütternd, zutiefst bewegend",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_16.mp3",
    "satz": {
     "fr": "La fin du film est bouleversante.",
     "de": "Das Ende des Films ist zutiefst bewegend.",
     "luecke": "bouleversante",
-    "audio": null
+    "audio": "audio/saetze/se_16.mp3"
    },
    "zeit": null
   },
@@ -808,21 +808,21 @@ window.DATEN = {
    "de": "sich gut / schlecht fühlen",
    "register": "tu",
    "anker": "se sentir",
-   "audio": null,
+   "audio": "audio/wendungen/se_17.mp3",
    "satz": {
     "fr": "Après le kung-fu, je me sens bien, léger.",
     "de": "Nach dem Kung-Fu fühle ich mich gut, leicht.",
     "luecke": "me sens bien",
-    "audio": null
+    "audio": "audio/saetze/se_17.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Après le kung-fu, je me suis senti bien.",
-     "audio": null
+     "audio": "audio/saetze/se_17_pc.mp3"
     },
     "fp": {
      "fr": "Après le kung-fu, je vais me sentir bien.",
-     "audio": null
+     "audio": "audio/saetze/se_17_fp.mp3"
     }
    }
   },
@@ -833,21 +833,21 @@ window.DATEN = {
    "de": "ein schweres Herz haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/se_18.mp3",
    "satz": {
     "fr": "Elle est partie, et j'ai le cœur lourd.",
     "de": "Sie ist gegangen, und mir ist schwer ums Herz.",
     "luecke": "ai le cœur lourd",
-    "audio": null
+    "audio": "audio/saetze/se_18.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai eu le cœur lourd.",
-     "audio": null
+     "audio": "audio/saetze/se_18_pc.mp3"
     },
     "fp": {
      "fr": "Je vais avoir le cœur lourd.",
-     "audio": null
+     "audio": "audio/saetze/se_18_fp.mp3"
     }
    }
   },
@@ -858,21 +858,21 @@ window.DATEN = {
    "de": "das macht mich traurig / glücklich",
    "register": "tu",
    "anker": "rendre",
-   "audio": null,
+   "audio": "audio/wendungen/se_19.mp3",
    "satz": {
     "fr": "La pluie sur Paris me rend un peu triste.",
     "de": "Der Regen über Paris macht mich ein bisschen traurig.",
     "luecke": "me rend",
-    "audio": null
+    "audio": "audio/saetze/se_19.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "La pluie m'a rendu un peu triste.",
-     "audio": null
+     "audio": "audio/saetze/se_19_pc.mp3"
     },
     "fp": {
      "fr": "La pluie va me rendre un peu triste.",
-     "audio": null
+     "audio": "audio/saetze/se_19_fp.mp3"
     }
    }
   },
@@ -883,12 +883,12 @@ window.DATEN = {
    "de": "das Halbdunkel, Hell-Dunkel",
    "register": "tu",
    "anker": "adorer",
-   "audio": null,
+   "audio": "audio/wendungen/se_20.mp3",
    "satz": {
     "fr": "J'adore le clair-obscur dans les tableaux du Louvre.",
     "de": "Ich liebe das Hell-Dunkel in den Gemälden im Louvre.",
     "luecke": "clair-obscur",
-    "audio": null
+    "audio": "audio/saetze/se_20.mp3"
    },
    "zeit": null
   },
@@ -899,12 +899,12 @@ window.DATEN = {
    "de": "friedlich",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_21.mp3",
    "satz": {
     "fr": "Le soir, le jardin est paisible.",
     "de": "Abends ist der Garten friedlich.",
     "luecke": "paisible",
-    "audio": null
+    "audio": "audio/saetze/se_21.mp3"
    },
    "zeit": null
   },
@@ -915,12 +915,12 @@ window.DATEN = {
    "de": "beklemmend, angsteinflößend",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_22.mp3",
    "satz": {
     "fr": "Le couloir vide du musée était angoissant.",
     "de": "Der leere Gang im Museum war beklemmend.",
     "luecke": "angoissant",
-    "audio": null
+    "audio": "audio/saetze/se_22.mp3"
    },
    "zeit": null
   },
@@ -931,21 +931,21 @@ window.DATEN = {
    "de": "Kummer haben",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/se_23.mp3",
    "satz": {
     "fr": "Il a du chagrin depuis la mort de son chat.",
     "de": "Er hat Kummer, seit seine Katze gestorben ist.",
     "luecke": "a du chagrin",
-    "audio": null
+    "audio": "audio/saetze/se_23.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Il a eu du chagrin.",
-     "audio": null
+     "audio": "audio/saetze/se_23_pc.mp3"
     },
     "fp": {
      "fr": "Il va avoir du chagrin.",
-     "audio": null
+     "audio": "audio/saetze/se_23_fp.mp3"
     }
    }
   },
@@ -956,12 +956,12 @@ window.DATEN = {
    "de": "es tut mir leid (höflich)",
    "register": "vous",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/se_24.mp3",
    "satz": {
     "fr": "Je suis désolé, madame, je ne voulais pas vous déranger.",
     "de": "Es tut mir leid, Madame, ich wollte Sie nicht stören.",
     "luecke": "suis désolé",
-    "audio": null
+    "audio": "audio/saetze/se_24.mp3"
    },
    "zeit": null
   }
@@ -970,126 +970,126 @@ window.DATEN = {
   "lob": [
    {
     "text": "Génial !",
-    "audio": null,
+    "audio": "audio/lob/lob_genial.mp3",
     "gruppe": [
      "genial"
     ]
    },
    {
     "text": "Chapeau !",
-    "audio": null,
+    "audio": "audio/lob/lob_chapeau.mp3",
     "gruppe": [
      "chapeau"
     ]
    },
    {
     "text": "Trop fort !",
-    "audio": null,
+    "audio": "audio/lob/lob_trop_fort.mp3",
     "gruppe": [
      "fort"
     ]
    },
    {
     "text": "Magnifique !",
-    "audio": null,
+    "audio": "audio/lob/lob_magnifique.mp3",
     "gruppe": [
      "magnifique"
     ]
    },
    {
     "text": "Bravo !",
-    "audio": null,
+    "audio": "audio/lob/lob_bravo.mp3",
     "gruppe": [
      "bravo"
     ]
    },
    {
     "text": "Parfait !",
-    "audio": null,
+    "audio": "audio/lob/lob_parfait.mp3",
     "gruppe": [
      "parfait"
     ]
    },
    {
     "text": "Excellent !",
-    "audio": null,
+    "audio": "audio/lob/lob_excellent.mp3",
     "gruppe": [
      "excellent"
     ]
    },
    {
     "text": "Super !",
-    "audio": null,
+    "audio": "audio/lob/lob_super.mp3",
     "gruppe": [
      "super"
     ]
    },
    {
     "text": "Nickel !",
-    "audio": null,
+    "audio": "audio/lob/lob_nickel.mp3",
     "gruppe": [
      "nickel"
     ]
    },
    {
     "text": "Impeccable !",
-    "audio": null,
+    "audio": "audio/lob/lob_impeccable.mp3",
     "gruppe": [
      "impeccable"
     ]
    },
    {
     "text": "Exactement !",
-    "audio": null,
+    "audio": "audio/lob/lob_exactement.mp3",
     "gruppe": [
      "exact"
     ]
    },
    {
     "text": "Voilà !",
-    "audio": null,
+    "audio": "audio/lob/lob_voila.mp3",
     "gruppe": [
      "voila"
     ]
    },
    {
     "text": "C'est ça !",
-    "audio": null,
+    "audio": "audio/lob/lob_cest_ca.mp3",
     "gruppe": [
      "exact"
     ]
    },
    {
     "text": "Bien joué !",
-    "audio": null,
+    "audio": "audio/lob/lob_bien_joue.mp3",
     "gruppe": [
      "joue"
     ]
    },
    {
     "text": "Tu gères !",
-    "audio": null,
+    "audio": "audio/lob/lob_tu_geres.mp3",
     "gruppe": [
      "gere"
     ]
    },
    {
     "text": "La classe !",
-    "audio": null,
+    "audio": "audio/lob/lob_la_classe.mp3",
     "gruppe": [
      "classe"
     ]
    },
    {
     "text": "Formidable !",
-    "audio": null,
+    "audio": "audio/lob/lob_formidable.mp3",
     "gruppe": [
      "formidable"
     ]
    },
    {
     "text": "Top !",
-    "audio": null,
+    "audio": "audio/lob/lob_top.mp3",
     "gruppe": [
      "top"
     ]
@@ -1098,35 +1098,35 @@ window.DATEN = {
   "stark": [
    {
     "text": "Bravo, champion !",
-    "audio": null,
+    "audio": "audio/lob/stark_champion.mp3",
     "gruppe": [
      "bravo"
     ]
    },
    {
     "text": "Incroyable ! Tu es en feu !",
-    "audio": null,
+    "audio": "audio/lob/stark_incroyable.mp3",
     "gruppe": [
      "feu"
     ]
    },
    {
     "text": "Je suis fier de toi !",
-    "audio": null,
+    "audio": "audio/lob/stark_fier.mp3",
     "gruppe": [
      "fier"
     ]
    },
    {
     "text": "Superbe ! Continue comme ça !",
-    "audio": null,
+    "audio": "audio/lob/stark_superbe.mp3",
     "gruppe": [
      "superbe"
     ]
    },
    {
     "text": "Quelle machine !",
-    "audio": null,
+    "audio": "audio/lob/stark_machine.mp3",
     "gruppe": [
      "machine"
     ]
@@ -1135,42 +1135,42 @@ window.DATEN = {
   "fehler": [
    {
     "text": "Presque !",
-    "audio": null,
+    "audio": "audio/lob/fehler_presque.mp3",
     "gruppe": [
      "presque"
     ]
    },
    {
     "text": "Pas tout à fait.",
-    "audio": null,
+    "audio": "audio/lob/fehler_pas_tout_a_fait.mp3",
     "gruppe": [
      "pas"
     ]
    },
    {
     "text": "Encore un essai !",
-    "audio": null,
+    "audio": "audio/lob/fehler_encore.mp3",
     "gruppe": [
      "encore"
     ]
    },
    {
     "text": "Pas grave !",
-    "audio": null,
+    "audio": "audio/lob/fehler_pas_grave.mp3",
     "gruppe": [
      "grave"
     ]
    },
    {
     "text": "Oh là là !",
-    "audio": null,
+    "audio": "audio/lob/fehler_oh_la_la.mp3",
     "gruppe": [
      "oh"
     ]
    },
    {
     "text": "Hmm…",
-    "audio": null,
+    "audio": "audio/lob/fehler_hmm.mp3",
     "gruppe": [
      "hmm"
     ]
@@ -1179,21 +1179,21 @@ window.DATEN = {
   "geschafft": [
    {
     "text": "C'est fini pour aujourd'hui ! Chapeau !",
-    "audio": null,
+    "audio": "audio/lob/geschafft_fini.mp3",
     "gruppe": [
      "fini"
     ]
    },
    {
     "text": "Bravo, tu as tout fait ! À demain !",
-    "audio": null,
+    "audio": "audio/lob/geschafft_bravo.mp3",
     "gruppe": [
      "bravo"
     ]
    },
    {
     "text": "Tu peux être fier de toi. À demain !",
-    "audio": null,
+    "audio": "audio/lob/geschafft_fier.mp3",
     "gruppe": [
      "fier"
     ]
@@ -1225,55 +1225,55 @@ window.DATEN = {
     "ab": 300,
     "name": "Croissant",
     "symbol": "🥐",
-    "audio": null
+    "audio": "audio/spiel/titel_1.mp3"
    },
    {
     "ab": 900,
     "name": "Baguette",
     "symbol": "🥖",
-    "audio": null
+    "audio": "audio/spiel/titel_2.mp3"
    },
    {
     "ab": 1800,
     "name": "Crêpe",
     "symbol": "🥞",
-    "audio": null
+    "audio": "audio/spiel/titel_3.mp3"
    },
    {
     "ab": 3000,
     "name": "Fromage",
     "symbol": "🧀",
-    "audio": null
+    "audio": "audio/spiel/titel_4.mp3"
    },
    {
     "ab": 4500,
     "name": "Huîtres",
     "symbol": "🦪",
-    "audio": null
+    "audio": "audio/spiel/titel_5.mp3"
    },
    {
     "ab": 6500,
     "name": "Caviar",
     "symbol": "✨",
-    "audio": null
+    "audio": "audio/spiel/titel_6.mp3"
    }
   ],
   "texte": {
    "feuer": {
     "text": "Tu es en feu ! Trois jours de suite !",
-    "audio": null
+    "audio": "audio/spiel/feuer.mp3"
    },
    "woche": {
     "text": "Semaine parfaite ! Tu as travaillé chaque jour d'école. Bravo !",
-    "audio": null
+    "audio": "audio/spiel/woche.mp3"
    },
    "monat": {
     "text": "Quatre semaines parfaites de suite ! Quel champion !",
-    "audio": null
+    "audio": "audio/spiel/monat.mp3"
    },
    "fini": {
     "text": "C'est fini pour aujourd'hui. À demain !",
-    "audio": null
+    "audio": "audio/spiel/fini.mp3"
    }
   },
   "frei": [

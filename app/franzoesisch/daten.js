@@ -220,6 +220,38 @@ window.DATEN = {
     "ma_23",
     "ma_24"
    ]
+  },
+  {
+   "id": "enfants",
+   "name": "Enfants et bébés",
+   "de": "Kinder und Babys",
+   "symbol": "👶",
+   "wendungen": [
+    "en_01",
+    "en_02",
+    "en_03",
+    "en_04",
+    "en_05",
+    "en_06",
+    "en_07",
+    "en_08",
+    "en_09",
+    "en_10",
+    "en_11",
+    "en_12",
+    "en_13",
+    "en_14",
+    "en_15",
+    "en_16",
+    "en_17",
+    "en_18",
+    "en_19",
+    "en_20",
+    "en_21",
+    "en_22",
+    "en_23",
+    "en_24"
+   ]
   }
  ],
  "wendungen": [
@@ -3564,6 +3596,507 @@ window.DATEN = {
     "de": "Guten Tag, ich hätte gern ein Baguette, bitte. Nicht zu dunkel.",
     "luecke": "je voudrais",
     "audio": "audio/saetze/ma_24.mp3"
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_01",
+   "thema": "enfants",
+   "fr": "faire ses nuits",
+   "de": "durchschlafen (Baby)",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Le bébé de ma collègue fait ses nuits. Elle, pas encore.",
+    "de": "Das Baby meiner Kollegin schläft durch. Sie noch nicht.",
+    "luecke": "fait ses nuits",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Le bébé a fait ses nuits cette semaine.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Le bébé va faire ses nuits. Un jour.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_02",
+   "thema": "enfants",
+   "fr": "un doudou",
+   "de": "ein Kuscheltier, Schmusetuch",
+   "register": "tu",
+   "anker": "dormir",
+   "audio": null,
+   "satz": {
+    "fr": "Sans son doudou, impossible de dormir. Je parle du bébé. Enfin, surtout.",
+    "de": "Ohne sein Kuscheltier: unmöglich zu schlafen. Ich spreche vom Baby. Na ja, hauptsächlich.",
+    "luecke": "doudou",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_03",
+   "thema": "enfants",
+   "fr": "faire des bêtises",
+   "de": "Unsinn anstellen",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Les enfants font des bêtises. C'est leur métier. Le mien, c'est de sourire.",
+    "de": "Kinder stellen Unsinn an. Das ist ihr Beruf. Meiner ist es, zu lächeln.",
+    "luecke": "font des bêtises",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Ils ont fait des bêtises toute la matinée.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Ils vont faire des bêtises, c'est sûr.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_04",
+   "thema": "enfants",
+   "fr": "prendre dans ses bras",
+   "de": "in den Arm nehmen",
+   "register": "tu",
+   "anker": "prendre",
+   "audio": null,
+   "satz": {
+    "fr": "Quand un enfant pleure, on le prend dans ses bras. C'est la seule règle.",
+    "de": "Wenn ein Kind weint, nimmt man es in den Arm. Das ist die einzige Regel.",
+    "luecke": "prend dans ses bras",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Je l'ai pris dans mes bras.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais le prendre dans mes bras.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_05",
+   "thema": "enfants",
+   "fr": "un bébé",
+   "de": "ein Baby",
+   "register": "tu",
+   "anker": "dire",
+   "audio": null,
+   "satz": {
+    "fr": "Un bébé, ça ne parle pas, mais ça dit tout.",
+    "de": "Ein Baby spricht nicht, aber es sagt alles.",
+    "luecke": "bébé",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_06",
+   "thema": "enfants",
+   "fr": "faire un sourire",
+   "de": "lächeln (jemanden anlächeln)",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Le bébé m'a fait un sourire. Ma journée était gagnée.",
+    "de": "Das Baby hat mich angelächelt. Mein Tag war gerettet.",
+    "luecke": "a fait un sourire",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Le bébé m'a fait un sourire.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Le bébé va me faire un sourire. J'attends.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_07",
+   "thema": "enfants",
+   "fr": "grandir",
+   "de": "wachsen, groß werden",
+   "register": "tu",
+   "anker": "grandir",
+   "audio": null,
+   "satz": {
+    "fr": "Les enfants grandissent trop vite. Les copies, elles, restent.",
+    "de": "Kinder werden zu schnell groß. Die Arbeiten bleiben.",
+    "luecke": "grandissent",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Ils ont grandi pendant les vacances.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Ils vont grandir, et moi je vais vieillir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_08",
+   "thema": "enfants",
+   "fr": "avoir du mal à s'endormir",
+   "de": "schlecht einschlafen",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Le petit a du mal à s'endormir. Alors je chante. Ça marche. Il pleure moins fort.",
+    "de": "Der Kleine schläft schlecht ein. Also singe ich. Es funktioniert. Er weint leiser.",
+    "luecke": "a du mal à s'endormir",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Il a eu du mal à s'endormir.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Il va avoir du mal à s'endormir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_09",
+   "thema": "enfants",
+   "fr": "une couche",
+   "de": "eine Windel",
+   "register": "tu",
+   "anker": "changer",
+   "audio": null,
+   "satz": {
+    "fr": "Changer une couche en trois minutes : ça, c'est un vrai enchaînement de kung-fu.",
+    "de": "Eine Windel in drei Minuten wechseln: Das ist eine echte Kung-Fu-Form.",
+    "luecke": "couche",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_10",
+   "thema": "enfants",
+   "fr": "être sage",
+   "de": "brav sein",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "« Sois sage ! » – « Je suis sage. » – « Alors pourquoi le chat est-il dans le lave-linge ? »",
+    "de": "„Sei brav!“ – „Ich bin brav.“ – „Und warum ist die Katze in der Waschmaschine?“",
+    "luecke": "sage",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_11",
+   "thema": "enfants",
+   "fr": "jouer à cache-cache",
+   "de": "Verstecken spielen",
+   "register": "tu",
+   "anker": "jouer",
+   "audio": null,
+   "satz": {
+    "fr": "On joue à cache-cache. Il se cache toujours derrière le rideau. Avec ses pieds dehors.",
+    "de": "Wir spielen Verstecken. Er versteckt sich immer hinter dem Vorhang. Mit den Füßen draußen.",
+    "luecke": "joue à cache-cache",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "On a joué à cache-cache tout l'après-midi.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "On va jouer à cache-cache après le goûter.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_12",
+   "thema": "enfants",
+   "fr": "raconter une histoire pour s'endormir",
+   "de": "eine Gute-Nacht-Geschichte erzählen",
+   "register": "tu",
+   "anker": "raconter",
+   "audio": null,
+   "satz": {
+    "fr": "Je raconte une histoire pour s'endormir. Au bout de trois pages, je dors.",
+    "de": "Ich erzähle eine Gute-Nacht-Geschichte. Nach drei Seiten schlafe ich.",
+    "luecke": "raconte une histoire",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai raconté une histoire pour s'endormir.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais raconter une histoire pour s'endormir.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_13",
+   "thema": "enfants",
+   "fr": "pleurer",
+   "de": "weinen",
+   "register": "tu",
+   "anker": "pleurer",
+   "audio": null,
+   "satz": {
+    "fr": "Le bébé pleure. Puis il rit. Puis il pleure. C'est un concert.",
+    "de": "Das Baby weint. Dann lacht es. Dann weint es. Es ist ein Konzert.",
+    "luecke": "pleure",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Le bébé a pleuré toute la nuit.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Le bébé va pleurer, et je vais chanter.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_14",
+   "thema": "enfants",
+   "fr": "un câlin",
+   "de": "eine Umarmung, ein Kuscheln",
+   "register": "tu",
+   "anker": "commencer",
+   "audio": null,
+   "satz": {
+    "fr": "Un câlin avant l'école, et la journée commence bien. Pour les deux.",
+    "de": "Eine Umarmung vor der Schule, und der Tag beginnt gut. Für beide.",
+    "luecke": "câlin",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_15",
+   "thema": "enfants",
+   "fr": "apprendre à marcher",
+   "de": "laufen lernen",
+   "register": "tu",
+   "anker": "apprendre",
+   "audio": null,
+   "satz": {
+    "fr": "Elle apprend à marcher. Trois pas, une chute, un rire. C'est la vie en miniature.",
+    "de": "Sie lernt laufen. Drei Schritte, ein Sturz, ein Lachen. Das Leben im Kleinen.",
+    "luecke": "apprend à marcher",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Elle a appris à marcher cet été.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Elle va apprendre à marcher bientôt.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_16",
+   "thema": "enfants",
+   "fr": "être fier de",
+   "de": "stolz sein auf",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Je suis fier de mes élèves. Surtout quand ils ne le savent pas.",
+    "de": "Ich bin stolz auf meine Schüler. Vor allem, wenn sie es nicht wissen.",
+    "luecke": "fier de",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_17",
+   "thema": "enfants",
+   "fr": "les premiers mots",
+   "de": "die ersten Wörter",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "Ses premiers mots : « papa », « chat », « non ». Dans cet ordre.",
+    "de": "Seine ersten Wörter: „Papa“, „Katze“, „Nein“. In dieser Reihenfolge.",
+    "luecke": "premiers mots",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_18",
+   "thema": "enfants",
+   "fr": "avoir de la patience",
+   "de": "Geduld haben",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Avec les enfants, il faut avoir de la patience. J'en ai. Elle finit à dix-sept heures.",
+    "de": "Mit Kindern braucht man Geduld. Ich habe welche. Sie endet um fünf.",
+    "luecke": "avoir de la patience",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "J'ai eu de la patience toute la journée.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Je vais avoir de la patience. Jusqu'à midi.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_19",
+   "thema": "enfants",
+   "fr": "le goûter",
+   "de": "der Nachmittagssnack",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "À seize heures, c'est le goûter. Pour les enfants. Et pour moi, par solidarité.",
+    "de": "Um vier gibt es den Nachmittagssnack. Für die Kinder. Und für mich, aus Solidarität.",
+    "luecke": "goûter",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_20",
+   "thema": "enfants",
+   "fr": "rire aux éclats",
+   "de": "schallend lachen",
+   "register": "tu",
+   "anker": "rire",
+   "audio": null,
+   "satz": {
+    "fr": "Le bébé rit aux éclats quand le chat éternue. Moi aussi, d'ailleurs.",
+    "de": "Das Baby lacht schallend, wenn die Katze niest. Ich übrigens auch.",
+    "luecke": "rit aux éclats",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Le bébé a ri aux éclats.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Le bébé va rire aux éclats.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_21",
+   "thema": "enfants",
+   "fr": "faire la sieste",
+   "de": "Mittagsschlaf halten",
+   "register": "tu",
+   "anker": "faire",
+   "audio": null,
+   "satz": {
+    "fr": "Les petits font la sieste. Les grands aussi, en secret.",
+    "de": "Die Kleinen halten Mittagsschlaf. Die Großen auch, heimlich.",
+    "luecke": "font la sieste",
+    "audio": null
+   },
+   "zeit": {
+    "pc": {
+     "fr": "Les petits ont fait la sieste.",
+     "audio": null
+    },
+    "fp": {
+     "fr": "Les petits vont faire la sieste.",
+     "audio": null
+    }
+   }
+  },
+  {
+   "id": "en_22",
+   "thema": "enfants",
+   "fr": "avoir peur du noir",
+   "de": "Angst im Dunkeln haben",
+   "register": "tu",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Il a peur du noir. Alors on laisse la porte ouverte. Et le chat de garde.",
+    "de": "Er hat Angst im Dunkeln. Also lassen wir die Tür offen. Und die Katze als Wache.",
+    "luecke": "a peur du noir",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_23",
+   "thema": "enfants",
+   "fr": "c'est l'heure du bain",
+   "de": "es ist Badezeit",
+   "register": "tu",
+   "anker": "être",
+   "audio": null,
+   "satz": {
+    "fr": "C'est l'heure du bain ! Tout le monde est mouillé. Même ceux qui ne se baignent pas.",
+    "de": "Es ist Badezeit! Alle sind nass. Auch die, die nicht baden.",
+    "luecke": "l'heure du bain",
+    "audio": null
+   },
+   "zeit": null
+  },
+  {
+   "id": "en_24",
+   "thema": "enfants",
+   "fr": "Quel âge a votre enfant ?",
+   "de": "Wie alt ist Ihr Kind? (höflich)",
+   "register": "vous",
+   "anker": "avoir",
+   "audio": null,
+   "satz": {
+    "fr": "Il est adorable. Quel âge a votre enfant ? – Quatorze mois. Et quatre dents.",
+    "de": "Er ist bezaubernd. Wie alt ist Ihr Kind? – Vierzehn Monate. Und vier Zähne.",
+    "luecke": "Quel âge a votre enfant",
+    "audio": null
    },
    "zeit": null
   }

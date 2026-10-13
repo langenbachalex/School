@@ -1,6 +1,6 @@
 # Lob auf Französisch – Vorschlag zum Absegnen
 
-Stand: 13.10.2026. Analog zu `inhalte/lob.tsv` der Schul-Apps (52 kurze Lobe, 14 starke, 10 Fehler-Rufe, Abschluss, „voll“, „doch“).
+Stand: 13.10.2026. **Abgesegnet („alles gut“), eingebaut und vertont.** Analog zu `inhalte/lob.tsv` der Schul-Apps (52 kurze Lobe, 14 starke, 10 Fehler-Rufe, Abschluss, „voll“, „doch“).
 Alles in Mr. Alex' Stimme, auf Französisch. Die App wählt ohne Wiederholung (derselbe Spruch frühestens nach 10 anderen, kein gleiches Schlüsselwort in 3 Rufen hintereinander).
 Nach dem OK ersetzt die Liste `inhalte/franzoesisch/lob.tsv`, dann Audio (ca. 1.400 Zeichen).
 

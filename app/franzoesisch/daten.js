@@ -1056,14 +1056,14 @@ window.DATEN = {
     "text": "C'est ça !",
     "audio": "audio/lob/lob_cest_ca.mp3",
     "gruppe": [
-     "exact"
+     "ca"
     ]
    },
    {
     "text": "Bien joué !",
     "audio": "audio/lob/lob_bien_joue.mp3",
     "gruppe": [
-     "joue"
+     "bien"
     ]
    },
    {
@@ -1092,6 +1092,258 @@ window.DATEN = {
     "audio": "audio/lob/lob_top.mp3",
     "gruppe": [
      "top"
+    ]
+   },
+   {
+    "text": "Oui !",
+    "audio": "audio/lob/lob_oui.mp3",
+    "gruppe": [
+     "oui"
+    ]
+   },
+   {
+    "text": "Tout à fait !",
+    "audio": "audio/lob/lob_tout_a_fait.mp3",
+    "gruppe": [
+     "fait"
+    ]
+   },
+   {
+    "text": "Exact !",
+    "audio": "audio/lob/lob_exact.mp3",
+    "gruppe": [
+     "exact"
+    ]
+   },
+   {
+    "text": "C'est tout bon !",
+    "audio": "audio/lob/lob_tout_bon.mp3",
+    "gruppe": [
+     "bon"
+    ]
+   },
+   {
+    "text": "Bien vu !",
+    "audio": "audio/lob/lob_bien_vu.mp3",
+    "gruppe": [
+     "bien"
+    ]
+   },
+   {
+    "text": "Joli !",
+    "audio": "audio/lob/lob_joli.mp3",
+    "gruppe": [
+     "joli"
+    ]
+   },
+   {
+    "text": "Pile-poil !",
+    "audio": "audio/lob/lob_pile_poil.mp3",
+    "gruppe": [
+     "poil"
+    ]
+   },
+   {
+    "text": "Très bien !",
+    "audio": "audio/lob/lob_tres_bien.mp3",
+    "gruppe": [
+     "bien"
+    ]
+   },
+   {
+    "text": "Et voilà !",
+    "audio": "audio/lob/lob_et_voila.mp3",
+    "gruppe": [
+     "voila"
+    ]
+   },
+   {
+    "text": "Ça, c'est bien !",
+    "audio": "audio/lob/lob_ca_cest_bien.mp3",
+    "gruppe": [
+     "bien"
+    ]
+   },
+   {
+    "text": "Bien dit !",
+    "audio": "audio/lob/lob_bien_dit.mp3",
+    "gruppe": [
+     "bien"
+    ]
+   },
+   {
+    "text": "Juste !",
+    "audio": "audio/lob/lob_juste.mp3",
+    "gruppe": [
+     "juste"
+    ]
+   },
+   {
+    "text": "Au poil !",
+    "audio": "audio/lob/lob_au_poil.mp3",
+    "gruppe": [
+     "poil"
+    ]
+   },
+   {
+    "text": "Sans faute !",
+    "audio": "audio/lob/lob_sans_faute.mp3",
+    "gruppe": [
+     "faute"
+    ]
+   },
+   {
+    "text": "Tu assures !",
+    "audio": "audio/lob/lob_tu_assures.mp3",
+    "gruppe": [
+     "assure"
+    ]
+   },
+   {
+    "text": "Comme un chef !",
+    "audio": "audio/lob/lob_comme_un_chef.mp3",
+    "gruppe": [
+     "chef"
+    ]
+   },
+   {
+    "text": "Dans le mille !",
+    "audio": "audio/lob/lob_dans_le_mille.mp3",
+    "gruppe": [
+     "mille"
+    ]
+   },
+   {
+    "text": "Bingo !",
+    "audio": "audio/lob/lob_bingo.mp3",
+    "gruppe": [
+     "bingo"
+    ]
+   },
+   {
+    "text": "Ça roule !",
+    "audio": "audio/lob/lob_ca_roule.mp3",
+    "gruppe": [
+     "roule"
+    ]
+   },
+   {
+    "text": "Extra !",
+    "audio": "audio/lob/lob_extra.mp3",
+    "gruppe": [
+     "extra"
+    ]
+   },
+   {
+    "text": "Terrible !",
+    "audio": "audio/lob/lob_terrible.mp3",
+    "gruppe": [
+     "terrible"
+    ]
+   },
+   {
+    "text": "Canon !",
+    "audio": "audio/lob/lob_canon.mp3",
+    "gruppe": [
+     "canon"
+    ]
+   },
+   {
+    "text": "Ça, c'est du français !",
+    "audio": "audio/lob/lob_du_francais.mp3",
+    "gruppe": [
+     "francais"
+    ]
+   },
+   {
+    "text": "Quel accent !",
+    "audio": "audio/lob/lob_quel_accent.mp3",
+    "gruppe": [
+     "accent"
+    ]
+   },
+   {
+    "text": "Du premier coup !",
+    "audio": "audio/lob/lob_premier_coup.mp3",
+    "gruppe": [
+     "coup"
+    ]
+   },
+   {
+    "text": "Rien à dire !",
+    "audio": "audio/lob/lob_rien_a_dire.mp3",
+    "gruppe": [
+     "dire"
+    ]
+   },
+   {
+    "text": "C'est exactement ça !",
+    "audio": "audio/lob/lob_exactement_ca.mp3",
+    "gruppe": [
+     "exact"
+    ]
+   },
+   {
+    "text": "Bien, Monsieur le professeur !",
+    "audio": "audio/lob/lob_monsieur_prof.mp3",
+    "gruppe": [
+     "prof"
+    ]
+   },
+   {
+    "text": "Un vrai Français !",
+    "audio": "audio/lob/lob_vrai_francais.mp3",
+    "gruppe": [
+     "francais"
+    ]
+   },
+   {
+    "text": "Parfaitement !",
+    "audio": "audio/lob/lob_parfaitement.mp3",
+    "gruppe": [
+     "parfait"
+    ]
+   },
+   {
+    "text": "Tu as l'oreille !",
+    "audio": "audio/lob/lob_oreille.mp3",
+    "gruppe": [
+     "oreille"
+    ]
+   },
+   {
+    "text": "Ça sonne bien !",
+    "audio": "audio/lob/lob_ca_sonne.mp3",
+    "gruppe": [
+     "sonne"
+    ]
+   },
+   {
+    "text": "Quelle musique !",
+    "audio": "audio/lob/lob_musique.mp3",
+    "gruppe": [
+     "musique"
+    ]
+   },
+   {
+    "text": "J'adore !",
+    "audio": "audio/lob/lob_jadore.mp3",
+    "gruppe": [
+     "adore"
+    ]
+   },
+   {
+    "text": "Tu progresses !",
+    "audio": "audio/lob/lob_progresses.mp3",
+    "gruppe": [
+     "progresse"
+    ]
+   },
+   {
+    "text": "Encore un point !",
+    "audio": "audio/lob/lob_encore_un_point.mp3",
+    "gruppe": [
+     "point"
     ]
    }
   ],
@@ -1129,6 +1381,69 @@ window.DATEN = {
     "audio": "audio/lob/stark_machine.mp3",
     "gruppe": [
      "machine"
+    ]
+   },
+   {
+    "text": "Tu es une star !",
+    "audio": "audio/lob/stark_star.mp3",
+    "gruppe": [
+     "star"
+    ]
+   },
+   {
+    "text": "Ça, c'est remarquable !",
+    "audio": "audio/lob/stark_remarquable.mp3",
+    "gruppe": [
+     "remarquable"
+    ]
+   },
+   {
+    "text": "Impressionnant !",
+    "audio": "audio/lob/stark_impressionnant.mp3",
+    "gruppe": [
+     "impressionnant"
+    ]
+   },
+   {
+    "text": "Tu rends ça facile !",
+    "audio": "audio/lob/stark_facile.mp3",
+    "gruppe": [
+     "facile"
+    ]
+   },
+   {
+    "text": "C'est exactement ce que je voulais entendre !",
+    "audio": "audio/lob/stark_entendre.mp3",
+    "gruppe": [
+     "exact"
+    ]
+   },
+   {
+    "text": "Tu voles aujourd'hui !",
+    "audio": "audio/lob/stark_voles.mp3",
+    "gruppe": [
+     "vole"
+    ]
+   },
+   {
+    "text": "En plein dans le mille !",
+    "audio": "audio/lob/stark_plein_mille.mp3",
+    "gruppe": [
+     "mille"
+    ]
+   },
+   {
+    "text": "Quelle performance !",
+    "audio": "audio/lob/stark_performance.mp3",
+    "gruppe": [
+     "performance"
+    ]
+   },
+   {
+    "text": "Tu l'as écrasé !",
+    "audio": "audio/lob/stark_ecrase.mp3",
+    "gruppe": [
+     "ecrase"
     ]
    }
   ],
@@ -1174,6 +1489,34 @@ window.DATEN = {
     "gruppe": [
      "hmm"
     ]
+   },
+   {
+    "text": "Pas loin !",
+    "audio": "audio/lob/fehler_pas_loin.mp3",
+    "gruppe": [
+     "loin"
+    ]
+   },
+   {
+    "text": "Presque, presque !",
+    "audio": "audio/lob/fehler_presque_presque.mp3",
+    "gruppe": [
+     "presque"
+    ]
+   },
+   {
+    "text": "Pas cette fois !",
+    "audio": "audio/lob/fehler_pas_cette_fois.mp3",
+    "gruppe": [
+     "fois"
+    ]
+   },
+   {
+    "text": "Ce n'est pas grave, on recommence !",
+    "audio": "audio/lob/fehler_on_recommence.mp3",
+    "gruppe": [
+     "grave"
+    ]
    }
   ],
   "geschafft": [
@@ -1196,6 +1539,24 @@ window.DATEN = {
     "audio": "audio/lob/geschafft_fier.mp3",
     "gruppe": [
      "fier"
+    ]
+   }
+  ],
+  "voll": [
+   {
+    "text": "Sans faute ! Magnifique !",
+    "audio": "audio/lob/voll_sans_faute.mp3",
+    "gruppe": [
+     "faute"
+    ]
+   }
+  ],
+  "doch": [
+   {
+    "text": "Tu vois ? Tu y arrives !",
+    "audio": "audio/lob/doch_tu_vois.mp3",
+    "gruppe": [
+     "vois"
     ]
    }
   ]

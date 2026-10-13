@@ -11,23 +11,74 @@ lob_nickel	lob	Nickel !	nickel
 lob_impeccable	lob	Impeccable !	impeccable
 lob_exactement	lob	Exactement !	exact
 lob_voila	lob	Voilà !	voila
-lob_cest_ca	lob	C'est ça !	exact
-lob_bien_joue	lob	Bien joué !	joue
+lob_cest_ca	lob	C'est ça !	ca
+lob_bien_joue	lob	Bien joué !	bien
 lob_tu_geres	lob	Tu gères !	gere
 lob_la_classe	lob	La classe !	classe
 lob_formidable	lob	Formidable !	formidable
 lob_top	lob	Top !	top
+lob_oui	lob	Oui !	oui
+lob_tout_a_fait	lob	Tout à fait !	fait
+lob_exact	lob	Exact !	exact
+lob_tout_bon	lob	C'est tout bon !	bon
+lob_bien_vu	lob	Bien vu !	bien
+lob_joli	lob	Joli !	joli
+lob_pile_poil	lob	Pile-poil !	poil
+lob_tres_bien	lob	Très bien !	bien
+lob_et_voila	lob	Et voilà !	voila
+lob_ca_cest_bien	lob	Ça, c'est bien !	bien
+lob_bien_dit	lob	Bien dit !	bien
+lob_juste	lob	Juste !	juste
+lob_au_poil	lob	Au poil !	poil
+lob_sans_faute	lob	Sans faute !	faute
+lob_tu_assures	lob	Tu assures !	assure
+lob_comme_un_chef	lob	Comme un chef !	chef
+lob_dans_le_mille	lob	Dans le mille !	mille
+lob_bingo	lob	Bingo !	bingo
+lob_ca_roule	lob	Ça roule !	roule
+lob_extra	lob	Extra !	extra
+lob_terrible	lob	Terrible !	terrible
+lob_canon	lob	Canon !	canon
+lob_du_francais	lob	Ça, c'est du français !	francais
+lob_quel_accent	lob	Quel accent !	accent
+lob_premier_coup	lob	Du premier coup !	coup
+lob_rien_a_dire	lob	Rien à dire !	dire
+lob_exactement_ca	lob	C'est exactement ça !	exact
+lob_monsieur_prof	lob	Bien, Monsieur le professeur !	prof
+lob_vrai_francais	lob	Un vrai Français !	francais
+lob_parfaitement	lob	Parfaitement !	parfait
+lob_oreille	lob	Tu as l'oreille !	oreille
+lob_ca_sonne	lob	Ça sonne bien !	sonne
+lob_musique	lob	Quelle musique !	musique
+lob_jadore	lob	J'adore !	adore
+lob_progresses	lob	Tu progresses !	progresse
+lob_encore_un_point	lob	Encore un point !	point
 stark_champion	stark	Bravo, champion !	bravo
 stark_incroyable	stark	Incroyable ! Tu es en feu !	feu
 stark_fier	stark	Je suis fier de toi !	fier
 stark_superbe	stark	Superbe ! Continue comme ça !	superbe
 stark_machine	stark	Quelle machine !	machine
+stark_star	stark	Tu es une star !	star
+stark_remarquable	stark	Ça, c'est remarquable !	remarquable
+stark_impressionnant	stark	Impressionnant !	impressionnant
+stark_facile	stark	Tu rends ça facile !	facile
+stark_entendre	stark	C'est exactement ce que je voulais entendre !	exact
+stark_voles	stark	Tu voles aujourd'hui !	vole
+stark_plein_mille	stark	En plein dans le mille !	mille
+stark_performance	stark	Quelle performance !	performance
+stark_ecrase	stark	Tu l'as écrasé !	ecrase
 fehler_presque	fehler	Presque !	presque
 fehler_pas_tout_a_fait	fehler	Pas tout à fait.	pas
 fehler_encore	fehler	Encore un essai !	encore
 fehler_pas_grave	fehler	Pas grave !	grave
 fehler_oh_la_la	fehler	Oh là là !	oh
 fehler_hmm	fehler	Hmm…	hmm
+fehler_pas_loin	fehler	Pas loin !	loin
+fehler_presque_presque	fehler	Presque, presque !	presque
+fehler_pas_cette_fois	fehler	Pas cette fois !	fois
+fehler_on_recommence	fehler	Ce n'est pas grave, on recommence !	grave
 geschafft_fini	geschafft	C'est fini pour aujourd'hui ! Chapeau !	fini
 geschafft_bravo	geschafft	Bravo, tu as tout fait ! À demain !	bravo
 geschafft_fier	geschafft	Tu peux être fier de toi. À demain !	fier
+voll_sans_faute	voll	Sans faute ! Magnifique !	faute
+doch_tu_vois	doch	Tu vois ? Tu y arrives !	vois

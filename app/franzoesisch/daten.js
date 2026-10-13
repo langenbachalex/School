@@ -4139,12 +4139,12 @@ window.DATEN = {
    "de": "zurzeit, derzeit (≠ actually = en fait)",
    "register": "tu",
    "anker": "corriger",
-   "audio": null,
+   "audio": "audio/wendungen/fa_01.mp3",
    "satz": {
     "fr": "Actuellement, je corrige des copies. En fait, je regarde le chat.",
     "de": "Zurzeit korrigiere ich Arbeiten. Eigentlich schaue ich die Katze an.",
     "luecke": "Actuellement",
-    "audio": null
+    "audio": "audio/saetze/fa_01.mp3"
    },
    "zeit": null
   },
@@ -4155,12 +4155,12 @@ window.DATEN = {
    "de": "eine Buchhandlung (≠ library = une bibliothèque)",
    "register": "tu",
    "anker": "acheter",
-   "audio": null,
+   "audio": "audio/wendungen/fa_02.mp3",
    "satz": {
     "fr": "À la librairie, on achète. À la bibliothèque, on emprunte. Et on rend. En théorie.",
     "de": "In der Buchhandlung kauft man. In der Bibliothek leiht man. Und gibt zurück. Theoretisch.",
     "luecke": "librairie",
-    "audio": null
+    "audio": "audio/saetze/fa_02.mp3"
    },
    "zeit": null
   },
@@ -4171,21 +4171,21 @@ window.DATEN = {
    "de": "beiwohnen, teilnehmen an (≠ to assist = aider)",
    "register": "tu",
    "anker": "assister",
-   "audio": null,
+   "audio": "audio/wendungen/fa_03.mp3",
    "satz": {
     "fr": "J'assiste à une réunion. Je n'aide personne. Je suis juste là.",
     "de": "Ich nehme an einer Konferenz teil. Ich helfe niemandem. Ich bin nur da.",
     "luecke": "assiste à",
-    "audio": null
+    "audio": "audio/saetze/fa_03.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai assisté à une réunion de trois heures.",
-     "audio": null
+     "audio": "audio/saetze/fa_03_pc.mp3"
     },
     "fp": {
      "fr": "Je vais assister à une réunion. Encore.",
-     "audio": null
+     "audio": "audio/saetze/fa_03_fp.mp3"
     }
    }
   },
@@ -4196,21 +4196,21 @@ window.DATEN = {
    "de": "warten (≠ to attend = assister à)",
    "register": "tu",
    "anker": "attendre",
-   "audio": null,
+   "audio": "audio/wendungen/fa_04.mp3",
    "satz": {
     "fr": "J'attends le bus. Le bus ne m'attend pas. C'est injuste.",
     "de": "Ich warte auf den Bus. Der Bus wartet nicht auf mich. Das ist ungerecht.",
     "luecke": "attends",
-    "audio": null
+    "audio": "audio/saetze/fa_04.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai attendu le bus vingt minutes.",
-     "audio": null
+     "audio": "audio/saetze/fa_04_pc.mp3"
     },
     "fp": {
      "fr": "Je vais attendre le bus sous la pluie.",
-     "audio": null
+     "audio": "audio/saetze/fa_04_fp.mp3"
     }
    }
   },
@@ -4221,21 +4221,21 @@ window.DATEN = {
    "de": "verletzen (≠ to bless = bénir)",
    "register": "tu",
    "anker": "blesser",
-   "audio": null,
+   "audio": "audio/wendungen/fa_05.mp3",
    "satz": {
     "fr": "Attention : « blesser » n'est pas gentil. Mon chat le sait bien.",
     "de": "Vorsicht: „blesser“ ist nicht nett. Meine Katze weiß das genau.",
     "luecke": "blesser",
-    "audio": null
+    "audio": "audio/saetze/fa_05.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Il m'a blessé. Avec ses griffes, pas avec des mots.",
-     "audio": null
+     "audio": "audio/saetze/fa_05_pc.mp3"
     },
     "fp": {
      "fr": "Il va me blesser si je continue.",
-     "audio": null
+     "audio": "audio/saetze/fa_05_fp.mp3"
     }
    }
   },
@@ -4246,21 +4246,21 @@ window.DATEN = {
    "de": "fragen, bitten (≠ to demand = exiger)",
    "register": "tu",
    "anker": "demander",
-   "audio": null,
+   "audio": "audio/wendungen/fa_06.mp3",
    "satz": {
     "fr": "Je demande le silence. Je ne l'exige pas. Nuance de prof.",
     "de": "Ich bitte um Ruhe. Ich fordere sie nicht. Lehrer-Nuance.",
     "luecke": "demande",
-    "audio": null
+    "audio": "audio/saetze/fa_06.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai demandé le silence. Poliment.",
-     "audio": null
+     "audio": "audio/saetze/fa_06_pc.mp3"
     },
     "fp": {
      "fr": "Je vais demander le silence. Encore une fois.",
-     "audio": null
+     "audio": "audio/saetze/fa_06_fp.mp3"
     }
    }
   },
@@ -4271,21 +4271,21 @@ window.DATEN = {
    "de": "bleiben (≠ to rest = se reposer)",
    "register": "tu",
    "anker": "rester",
-   "audio": null,
+   "audio": "audio/wendungen/fa_07.mp3",
    "satz": {
     "fr": "Je reste à la maison. Je ne me repose pas : j'ai des copies.",
     "de": "Ich bleibe zu Hause. Ich ruhe mich nicht aus: Ich habe Arbeiten.",
     "luecke": "reste",
-    "audio": null
+    "audio": "audio/saetze/fa_07.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Je suis resté à la maison tout le week-end.",
-     "audio": null
+     "audio": "audio/saetze/fa_07_pc.mp3"
     },
     "fp": {
      "fr": "Je vais rester à la maison ce soir.",
-     "audio": null
+     "audio": "audio/saetze/fa_07_fp.mp3"
     }
    }
   },
@@ -4296,12 +4296,12 @@ window.DATEN = {
    "de": "empfindlich, sensibel (≠ sensible = raisonnable)",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/fa_08.mp3",
    "satz": {
     "fr": "Mon chat est sensible. Pas raisonnable. Sensible.",
     "de": "Meine Katze ist empfindlich. Nicht vernünftig. Empfindlich.",
     "luecke": "sensible",
-    "audio": null
+    "audio": "audio/saetze/fa_08.mp3"
    },
    "zeit": null
   },
@@ -4312,12 +4312,12 @@ window.DATEN = {
    "de": "möglicherweise (≠ eventually = finalement)",
    "register": "tu",
    "anker": "venir",
-   "audio": null,
+   "audio": "audio/wendungen/fa_09.mp3",
    "satz": {
     "fr": "Éventuellement, je viendrai. Finalement, je suis venu. Ce n'est pas pareil.",
     "de": "Möglicherweise komme ich. Schließlich bin ich gekommen. Das ist nicht dasselbe.",
     "luecke": "Éventuellement",
-    "audio": null
+    "audio": "audio/saetze/fa_09.mp3"
    },
    "zeit": null
   },
@@ -4328,12 +4328,12 @@ window.DATEN = {
    "de": "eine Ecke (≠ coin = une pièce de monnaie)",
    "register": "tu",
    "anker": "dormir",
-   "audio": null,
+   "audio": "audio/wendungen/fa_10.mp3",
    "satz": {
     "fr": "Le chat dort dans un coin. Pas sur une pièce. Dans un coin.",
     "de": "Die Katze schläft in einer Ecke. Nicht auf einer Münze. In einer Ecke.",
     "luecke": "coin",
-    "audio": null
+    "audio": "audio/saetze/fa_10.mp3"
    },
    "zeit": null
   },
@@ -4344,12 +4344,12 @@ window.DATEN = {
    "de": "ein Tag (Verlauf) (≠ journey = un voyage)",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/fa_11.mp3",
    "satz": {
     "fr": "Bonne journée ! Ce n'est pas un voyage. Juste un jour. Mais un bon.",
     "de": "Schönen Tag! Das ist keine Reise. Nur ein Tag. Aber ein guter.",
     "luecke": "journée",
-    "audio": null
+    "audio": "audio/saetze/fa_11.mp3"
    },
    "zeit": null
   },
@@ -4360,12 +4360,12 @@ window.DATEN = {
    "de": "ein Kondom (≠ preservative = un conservateur)",
    "register": "tu",
    "anker": "dire",
-   "audio": null,
+   "audio": "audio/wendungen/fa_12.mp3",
    "satz": {
     "fr": "« Sans préservatifs » sur une confiture ? Non. On dit « sans conservateurs ».",
     "de": "„Ohne Kondome“ auf einer Marmelade? Nein. Man sagt „ohne Konservierungsstoffe“.",
     "luecke": "préservatif",
-    "audio": null
+    "audio": "audio/saetze/fa_12.mp3"
    },
    "zeit": null
   },
@@ -4376,12 +4376,12 @@ window.DATEN = {
    "de": "ein Arm (≠ bra = un soutien-gorge)",
    "register": "tu",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/fa_13.mp3",
    "satz": {
     "fr": "Il a un bras cassé. Un bras. Faites attention au mot anglais.",
     "de": "Er hat einen gebrochenen Arm. Einen Arm. Vorsicht mit dem englischen Wort.",
     "luecke": "bras",
-    "audio": null
+    "audio": "audio/saetze/fa_13.mp3"
    },
    "zeit": null
   },
@@ -4392,12 +4392,12 @@ window.DATEN = {
    "de": "das Wechselgeld, Kleingeld (≠ money = l'argent)",
    "register": "vous",
    "anker": "avoir",
-   "audio": null,
+   "audio": "audio/wendungen/fa_14.mp3",
    "satz": {
     "fr": "Vous avez la monnaie ? – Non, j'ai de l'argent, mais pas de monnaie.",
     "de": "Haben Sie Kleingeld? – Nein, ich habe Geld, aber kein Kleingeld.",
     "luecke": "monnaie",
-    "audio": null
+    "audio": "audio/saetze/fa_14.mp3"
    },
    "zeit": null
   },
@@ -4408,12 +4408,12 @@ window.DATEN = {
    "de": "eine Enttäuschung (≠ deception = une tromperie)",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/fa_15.mp3",
    "satz": {
     "fr": "La note ? Une déception. Pas une tromperie. Juste une déception.",
     "de": "Die Note? Eine Enttäuschung. Keine Täuschung. Nur eine Enttäuschung.",
     "luecke": "déception",
-    "audio": null
+    "audio": "audio/saetze/fa_15.mp3"
    },
    "zeit": null
   },
@@ -4424,12 +4424,12 @@ window.DATEN = {
    "de": "ein Kleidungsstück (≠ habit = une habitude)",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/fa_16.mp3",
    "satz": {
     "fr": "Mes habits du dimanche : un jogging. C'est aussi une habitude.",
     "de": "Meine Sonntagskleidung: eine Jogginghose. Das ist auch eine Gewohnheit.",
     "luecke": "habits",
-    "audio": null
+    "audio": "audio/saetze/fa_16.mp3"
    },
    "zeit": null
   },
@@ -4440,21 +4440,21 @@ window.DATEN = {
    "de": "nicht wissen (≠ to ignore = ne pas tenir compte de)",
    "register": "tu",
    "anker": "ignorer",
-   "audio": null,
+   "audio": "audio/wendungen/fa_17.mp3",
    "satz": {
     "fr": "J'ignore la réponse. Je ne l'ignore pas : je ne la connais pas.",
     "de": "Ich weiß die Antwort nicht. Ich ignoriere sie nicht: Ich kenne sie nicht.",
     "luecke": "ignore",
-    "audio": null
+    "audio": "audio/saetze/fa_17.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "J'ai ignoré la réponse pendant tout le cours.",
-     "audio": null
+     "audio": "audio/saetze/fa_17_pc.mp3"
     },
     "fp": {
      "fr": "Je vais ignorer la réponse jusqu'à demain.",
-     "audio": null
+     "audio": "audio/saetze/fa_17_fp.mp3"
     }
    }
   },
@@ -4465,21 +4465,21 @@ window.DATEN = {
    "de": "ein Praktikum (≠ stage = une scène)",
    "register": "tu",
    "anker": "faire",
-   "audio": null,
+   "audio": "audio/wendungen/fa_18.mp3",
    "satz": {
     "fr": "Mon élève fait un stage. Pas sur une scène. Dans une boulangerie.",
     "de": "Mein Schüler macht ein Praktikum. Nicht auf einer Bühne. In einer Bäckerei.",
     "luecke": "stage",
-    "audio": null
+    "audio": "audio/saetze/fa_18.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Il a fait un stage de deux semaines.",
-     "audio": null
+     "audio": "audio/saetze/fa_18_pc.mp3"
     },
     "fp": {
      "fr": "Il va faire un stage en juin.",
-     "audio": null
+     "audio": "audio/saetze/fa_18_fp.mp3"
     }
    }
   },
@@ -4490,12 +4490,12 @@ window.DATEN = {
    "de": "das Lesen, Lektüre (≠ lecture = un cours, une conférence)",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/fa_19.mp3",
    "satz": {
     "fr": "Ma lecture du soir : un roman. Pas un cours. Un roman.",
     "de": "Meine Abendlektüre: ein Roman. Keine Vorlesung. Ein Roman.",
     "luecke": "lecture",
-    "audio": null
+    "audio": "audio/saetze/fa_19.mp3"
    },
    "zeit": null
   },
@@ -4506,12 +4506,12 @@ window.DATEN = {
    "de": "ein Arzt (≠ medicine = un médicament)",
    "register": "tu",
    "anker": "donner",
-   "audio": null,
+   "audio": "audio/wendungen/fa_20.mp3",
    "satz": {
     "fr": "Le médecin donne un médicament. Le médicament n'est pas le médecin.",
     "de": "Der Arzt gibt ein Medikament. Das Medikament ist nicht der Arzt.",
     "luecke": "médecin",
-    "audio": null
+    "audio": "audio/saetze/fa_20.mp3"
    },
    "zeit": null
   },
@@ -4522,21 +4522,21 @@ window.DATEN = {
    "de": "behaupten (≠ to pretend = faire semblant)",
    "register": "tu",
    "anker": "prétendre",
-   "audio": null,
+   "audio": "audio/wendungen/fa_21.mp3",
    "satz": {
     "fr": "Il prétend avoir fait ses devoirs. Il fait semblant de chercher son cahier.",
     "de": "Er behauptet, seine Hausaufgaben gemacht zu haben. Er tut so, als suche er sein Heft.",
     "luecke": "prétend",
-    "audio": null
+    "audio": "audio/saetze/fa_21.mp3"
    },
    "zeit": {
     "pc": {
      "fr": "Il a prétendu avoir fait ses devoirs.",
-     "audio": null
+     "audio": "audio/saetze/fa_21_pc.mp3"
     },
     "fp": {
      "fr": "Il va prétendre avoir fait ses devoirs.",
-     "audio": null
+     "audio": "audio/saetze/fa_21_fp.mp3"
     }
    }
   },
@@ -4547,12 +4547,12 @@ window.DATEN = {
    "de": "die Vermietung, Miete (≠ location = un lieu, un endroit)",
    "register": "tu",
    "anker": "louer",
-   "audio": null,
+   "audio": "audio/wendungen/fa_22.mp3",
    "satz": {
     "fr": "Location de vélos. Ce n'est pas un lieu. C'est un vélo qu'on loue.",
     "de": "Fahrradverleih. Das ist kein Ort. Das ist ein Fahrrad, das man mietet.",
     "luecke": "Location",
-    "audio": null
+    "audio": "audio/saetze/fa_22.mp3"
    },
    "zeit": null
   },
@@ -4563,12 +4563,12 @@ window.DATEN = {
    "de": "eine Weintraube (≠ raisin = un raisin sec)",
    "register": "tu",
    "anker": "être",
-   "audio": null,
+   "audio": "audio/wendungen/fa_23.mp3",
    "satz": {
     "fr": "Un raisin, c'est frais. Un raisin sec, c'est sec. Logique française.",
     "de": "Eine Traube ist frisch. Eine Rosine ist trocken. Französische Logik.",
     "luecke": "raisin",
-    "audio": null
+    "audio": "audio/saetze/fa_23.mp3"
    },
    "zeit": null
   },
@@ -4579,12 +4579,12 @@ window.DATEN = {
    "de": "Entschuldigung, ich suche die Bibliothek. (höflich)",
    "register": "vous",
    "anker": "chercher",
-   "audio": null,
+   "audio": "audio/wendungen/fa_24.mp3",
    "satz": {
     "fr": "Excusez-moi, je cherche la bibliothèque. – La librairie ? – Non, la bibliothèque. Avec les livres gratuits.",
     "de": "Entschuldigung, ich suche die Bibliothek. – Die Buchhandlung? – Nein, die Bibliothek. Mit den kostenlosen Büchern.",
     "luecke": "je cherche la bibliothèque",
-    "audio": null
+    "audio": "audio/saetze/fa_24.mp3"
    },
    "zeit": null
   }

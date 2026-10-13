@@ -1,6 +1,6 @@
 # Konzept-Entwurf: Französisch-App (persönlich, für Mr. Alex)
 
-Stand: 13.10.2026 (1. Fassung, aus dem Brainstorming). **Noch nichts gebaut.**
+Stand: 13.10.2026 (2. Fassung). **Noch nichts gebaut.** Inhaltsprobe zum Durchsehen: `inhalte/franzoesisch/entre_profs.tsv` (20 Wendungen „Entre profs“).
 Grundprinzip wie in den Schul-Apps: Vor jedem Bauschritt fragt Claude, Mr. Alex segnet ab.
 Abschnitte mit **[OFFEN]** sind noch zu entscheiden.
 
@@ -30,14 +30,15 @@ Abschnitte mit **[OFFEN]** sind noch zu entscheiden.
 | 5 | **Les chats** | *ronronner, faire un câlin, griffer, il fait sa toilette* |
 | 6 | **Manger et bien vivre** | *manger équilibré, se coucher tôt, prendre soin de soi* |
 | 7 | **Enfants et bébés** | *faire ses nuits, un doudou, faire des bêtises* |
+| ★ | **Sentiments et ambiances** – früh einbauen (Mr. Alex, 13.10.): Gefühle und Stimmungen, auch düster, traurig, melancholisch | *ça me touche, j'ai le cafard, c'est sombre, mélancolique, ça me fend le cœur, je suis ému, inquiétant, apaisant, j'en ai les larmes aux yeux* |
 | ⚡ | **Bonus Anglais:** faux amis EN–FR | *actually ≠ actuellement, library ≠ librairie, sensible ≠ sensible* |
 
-Reihenfolge = Vorschlag. Weitere Themen jederzeit ergänzbar.
+Reihenfolge = Vorschlag. „Sentiments et ambiances“ kommt gleich nach „Entre profs“, damit Mr. Alex über das reden kann, was er liebt. Weitere Themen jederzeit ergänzbar.
 
 ## 3. Die tägliche Séance (Kern der App)
 
 - Ein großer Knopf **„Ma séance du jour“**, etwa 10 Minuten.
-- **Obergrenze pro Tag:** **[OFFEN]** Vorschlag 5 neue Wendungen + höchstens 15 Wiederholungen (alternativ 3 + 10). In den Einstellungen änderbar.
+- **Obergrenze pro Tag:** **5 neue Wendungen + höchstens 15 Wiederholungen** (festgelegt 13.10.). In den Einstellungen änderbar.
 - **Kein Schuldenberg:** Fällige Karten über der Grenze werden still auf die nächsten Tage verteilt. Keine roten Zahlen.
 - **Selbsteinschätzung mit zwei Knöpfen:** „Je savais 😊“ / „Encore 🔁“. Intervalle nach Leitner (z. B. 1 – 3 – 7 – 14 – 30 Tage).
 - Am Ende: „C'est fini pour aujourd'hui !“ mit Lob in Mr. Alex' Stimme.
@@ -71,8 +72,8 @@ Dialoge: Mr. Alex' Stimme spricht beide Rollen. **[OFFEN]** Aurélien fragen, ob
 
 - **Punkte, Serien, Wochen-Kalender, Abzeichen:** wie im Gamification-Konzept (Schultage Saarland).
 - **Frankreich-Karte (täglich):** Jede fertige Séance schaltet einen Ort frei, Start in **Metz** (Nachbar des Saarlands). Etwa 50 Orte über alle 13 Regionen (Strasbourg, Paris, Lyon, Marseille, Mont-Saint-Michel, Bordeaux, Carcassonne, Chamonix …). Zu jedem Ort ein **Fait amusant** auf Französisch in Mr. Alex' Stimme (antippen = Deutsch). Reisestempel mit Klang.
-- **Geschichte (Perfect week):** Jede perfekte Woche schaltet ein **Kapitel** einer fortlaufenden Fantasy-Geschichte frei, erzählt in Mr. Alex' Stimme, im Passé composé und Imparfait, mit den Wendungen der Woche. **[OFFEN]** Held: Vorschlag ein Kung-Fu-Kater (Name noch frei).
-- **Titel – Vorschlag Kung-Fu-Gürtel:** Ceinture blanche → jaune → orange → verte → bleue → marron → **noire**.
+- **Geschichte (Perfect week):** Jede perfekte Woche schaltet ein **Kapitel** einer fortlaufenden Geschichte frei, erzählt in Mr. Alex' Stimme, im Passé composé und Imparfait, mit den Wendungen der Woche. **Festgelegt (13.10.):** Held ist eine **echte Person, ein Franzose** (kein Tier); Genre **Mystery / Suspense** in Frankreich – Paris, ein Abenteuer im Louvre o. Ä. –, mit etwas Fantastischem. **[OFFEN]** Name und Beruf des Helden (Vorschlag: ein Lehrer aus Metz, der in den Ferien nach Paris fährt).
+- **Titel – französische Delikatessen** (Mr. Alex, 13.10.: klein anfangen, bis zur großen Delikatesse): **[OFFEN]** Vorschlag 🥐 Petit éclair → Croissant → Baguette → Crêpe → Fromage → Huîtres → **Caviar**. Alternative: Tour-de-France-Trikots.
 - **Lob auf Französisch** in Mr. Alex' Stimme, **[OFFEN]** Liste z. B. *Génial ! · Chapeau ! · Trop fort ! · Magnifique ! · Bravo, champion !*
 
 ## 7. Technik (bewährt)
@@ -86,7 +87,7 @@ Dialoge: Mr. Alex' Stimme spricht beide Rollen. **[OFFEN]** Aurélien fragen, ob
 
 ## 8. Offene Fragen
 
-1. Tagespensum: 5 + 15 oder 3 + 10?
-2. Held und Ton der Geschichte (Kung-Fu-Kater? Name?).
-3. Titel als Kung-Fu-Gürtel – passt das?
-4. Erster Bauschritt – Vorschlag: **Inhaltsprobe** mit 20 Wendungen zum Thema „Entre profs“ als TSV, zum Durchsehen, noch ohne App.
+1. Inhaltsprobe `inhalte/franzoesisch/entre_profs.tsv`: Format und Ton in Ordnung?
+2. Held der Geschichte: Name, Beruf, Ausgangspunkt.
+3. Titel: Delikatessen-Reihe so in Ordnung, oder Tour de France?
+4. Nächster Schritt – Vorschlag: Thema „Sentiments et ambiances“ als zweite Inhaltsprobe, dann Bau des App-Gerüsts.

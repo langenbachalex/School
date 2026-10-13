@@ -1,6 +1,11 @@
 # Französisch-App (persönlich) – Startnotiz
 
-Stand: 13.10.2026. **Noch nichts bauen.** Konzept-Entwurf: `docs/franzoesisch/konzept.md`. Zuerst Brainstorming mit Mr. Alex, dann Konzept (`docs/franzoesisch/konzept.md`), dann vor jedem Bauschritt fragen.
+Stand: 13.10.2026 abends. **Gebaut und veröffentlicht:** https://langenbachalex.github.io/School/franzoesisch/ (Konzept und Stand: `docs/franzoesisch/konzept.md`).
+Mr. Alex probiert die App jetzt **eine Woche** aus und meldet, was im Alltag stört (Pensum, Sprechzeiten, Reihenfolge, Lob-Häufigkeit). Danach: Dialog 3 mit Aurélien (Brel-Running-Gag), Kapitel 4 und 5 der Geschichte (`docs/franzoesisch/geschichte-entwurf.md`).
+Grundsatz bleibt: vor jedem Bauschritt fragen. Veröffentlichen = Französisch-Branch in `claude/awesome-dijkstra-dy57ir` mergen (Option A, 13.10.).
+
+---
+*Ursprüngliche Startnotiz (13.10. morgens):* Zuerst Brainstorming mit Mr. Alex, dann Konzept (`docs/franzoesisch/konzept.md`), dann vor jedem Bauschritt fragen.
 
 ## Ziel
 Eine persönliche App für Mr. Alex im Stil der Schul-Apps (Klasse 6 in `app/`, Klasse 9 in `app/klasse9/`):

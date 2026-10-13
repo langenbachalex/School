@@ -16,6 +16,7 @@ THEMEN = [
     {"id": "profs", "name": "Entre profs", "de": "Unter Lehrern – mit Aurélien", "symbol": "🧑‍🏫", "datei": "entre_profs.tsv"},
     {"id": "sentiments", "name": "Sentiments et ambiances", "de": "Gefühle und Stimmungen", "symbol": "🎭", "datei": "sentiments.tsv"},
     {"id": "chats", "name": "Les chats", "de": "Die Katzen", "symbol": "🐈", "datei": "chats.tsv"},
+    {"id": "musique", "name": "Musique et langue", "de": "Musik und Sprache", "symbol": "🎵", "datei": "musique.tsv"},
 ]
 
 # Titel – französische Delikatessen, vom kleinen Éclair bis zum Kaviar (Vorschlag, docs/franzoesisch/konzept.md)

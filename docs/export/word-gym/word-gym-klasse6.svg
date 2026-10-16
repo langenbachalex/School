@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" width="240" height="200" role="img" aria-label="Word Gym">
+  
+  <path d="M60 66 L40 34 M60 66 L80 34" fill="none" stroke="#1f5fd1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="60" cy="52" r="8.5" fill="#1f5fd1" stroke="#fff" stroke-width="3"/>
+  <path d="M60 62 V78 M60 78 L49 96 M60 78 L71 96" fill="none" stroke="#1f5fd1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(0 34)">
+    <line x1="22" y1="0" x2="98" y2="0" stroke="#18213a" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="30" cy="0" r="5.5" fill="#18213a"/><circle cx="90" cy="0" r="5.5" fill="#18213a"/>
+    <g transform="translate(0 0)"><rect x="2" y="-13" width="26" height="8" rx="1.5" fill="#e2384d" stroke="#18213a" stroke-width="1.5"/><rect x="4" y="-4" width="22" height="8" rx="1.5" fill="#ffd23f" stroke="#18213a" stroke-width="1.5"/><rect x="1" y="5" width="28" height="8" rx="1.5" fill="#1f5fd1" stroke="#18213a" stroke-width="1.5"/></g><g transform="translate(90 0)"><rect x="2" y="-13" width="26" height="8" rx="1.5" fill="#e2384d" stroke="#18213a" stroke-width="1.5"/><rect x="4" y="-4" width="22" height="8" rx="1.5" fill="#ffd23f" stroke="#18213a" stroke-width="1.5"/><rect x="1" y="5" width="28" height="8" rx="1.5" fill="#1f5fd1" stroke="#18213a" stroke-width="1.5"/></g>
+    <circle cx="40" cy="0" r="5" fill="#1f5fd1"/><circle cx="80" cy="0" r="5" fill="#1f5fd1"/>
+  </g>
+</svg>

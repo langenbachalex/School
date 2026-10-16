@@ -1,4 +1,4 @@
-# English 6 – App
+# English Power Game – App
 
 **Im Internet:** https://langenbachalex.github.io/School/ (QR-Code: `docs/qr-code-app.png`). Nach dem ersten Öffnen läuft die App auch offline und lässt sich auf den Startbildschirm legen („Zum Startbildschirm hinzufügen“ bzw. „App installieren“).
 

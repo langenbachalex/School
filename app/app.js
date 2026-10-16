@@ -1,4 +1,4 @@
-/* English 6
+/* English Power Game
    Kein Konto, keine Namen. Fortschritt und Fragen bleiben nur auf diesem Gerät (localStorage).
    Grundsatz: Wird eine Lösung gezeigt, wird sie auch abgespielt. */
 (function () {
@@ -168,7 +168,7 @@
     const alleFertig = D.stationen.every((s) => stand.erledigt.includes(s.nr));
     zeige(
       el("header", { class: "gruss" },
-        el("h1", {}, "English 6"),
+        el("h1", {}, "English Power Game"),
         el("p", { class: "klein" }, "Hallo! Wähl eine Station. Wenn du fertig bist, bekommt sie ein Häkchen."),
         statusleiste()),
       gymKarte(),

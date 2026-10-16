@@ -439,7 +439,7 @@ def webapp():
             d.rectangle([0, g * (0.78 + i * 0.055), g, g * (0.78 + i * 0.055) + g * 0.0275], fill=ROT)
         d.text((g / 2, g * 0.4), "9", font=ImageFont.truetype(SCHRIFT, int(g * 0.5)), fill=WEISS, anchor="mm")
         img.save(ziel)
-    manifest = {"name": "America with Mr. Alex", "short_name": "Mr. Alex 9", "lang": "en",
+    manifest = {"name": "Road Trip USA", "short_name": "Road Trip USA", "lang": "en",
                 "start_url": "./", "scope": "./", "display": "standalone",
                 "background_color": "#f4f6fb", "theme_color": "#182c5c",
                 "icons": [{"src": f"icons/icon-{g}.png", "sizes": f"{g}x{g}", "type": "image/png", "purpose": "any maskable"}

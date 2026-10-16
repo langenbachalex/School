@@ -27,7 +27,7 @@ def main():
     for g in (180, 192, 512):
         icon(g, os.path.join(APP, "icons", f"icon-{g}.png"))
     manifest = {
-        "name": "English 6", "short_name": "English 6", "lang": "de",
+        "name": "English Power Game", "short_name": "English Power", "lang": "de",
         "start_url": "./", "scope": "./", "display": "standalone",
         "background_color": "#f3f6fb", "theme_color": "#1f5fd1",
         "icons": [{"src": f"icons/icon-{g}.png", "sizes": f"{g}x{g}", "type": "image/png", "purpose": "any maskable"}

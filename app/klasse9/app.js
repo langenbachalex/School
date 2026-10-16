@@ -1,4 +1,4 @@
-/* America with Mr. Alex – Klasse 9.3
+/* Road Trip USA – Klasse 9
    Kein Konto, keine Namen. Fortschritt und Fragen bleiben nur auf diesem Gerät (localStorage).
    Grundsätze wie in Klasse 6: Wird eine Lösung gezeigt, wird sie auch abgespielt.
    Navigation: oben alle Teile anklickbar, „◀ Zurück“ / „Weiter“, verlassene Teile beginnen von vorne.

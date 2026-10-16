@@ -1,85 +1,85 @@
-id	art	text	gruppe	klasse
-lob_amazing	lob	Amazing!	amazing	
-lob_fantastic	lob	Fantastic!	fantastic	
-lob_wonderful	lob	Wonderful!	wonderful	
-lob_great	lob	Great!	great	
-lob_superstar	stark	You are a superstar!	star	
-lob_outstanding	stark	That's outstanding!	outstanding	
-lob_love	lob	I love it!	love	
-lob_brilliant	lob	Brilliant!	brilliant	
-lob_excellent	lob	Excellent!	excellent	
-lob_perfect	lob	Perfect!	perfect	
-lob_welldone	lob	Well done!	well	
-lob_niceone	lob	Nice one!	nice	
-lob_spoton	lob	Spot on!	spot	
-lob_highfive	lob	High five!	five	
-lob_proud	stark	I'm so proud of you!	proud	
-fehler_almost	fehler	Almost!	almost	
-fehler_close	fehler	So close!	close	
-fehler_tryagain	fehler	Try again – you can do it!	try	
-fehler_noproblem	fehler	No problem – have another go!	problem	
-fehler_ohno	fehler	Oh no!	ohno	
-fehler_sorry	fehler	Sorry!	sorry	
-spiel_terrible	spiel	That's terrible!		
-spiel_oops	spiel	Oops!		
-spiel_notagain	spiel	Oh no – not again!		
-spiel_whaaat	spiel	WHAAAT? You serious?		
-geschafft_didit	geschafft	You did it! Station complete!		
-geschafft_outstanding	geschafft	That was outstanding – well done!	outstanding	
-voll_fullmarks	voll	Full marks! Amazing!	amazing	
-doch_seeyoucan	doch	See? You can do it!		
-lob_wow	lob	Wow!	wow	
-lob_yes	lob	Yes!	yes	
-lob_super	lob	Super!	super	
-lob_cool	lob	Cool!	cool	
-lob_bingo	lob	Bingo!	bingo	
-lob_boom	lob	Boom!	boom	
-lob_awesome	lob	Awesome!	awesome	
-lob_lovely	lob	Lovely!	lovely	
-lob_terrific	lob	Terrific!	terrific	
-lob_splendid	lob	Splendid!	splendid	
-lob_thatsright	lob	That's right!	right	
-lob_exactly	lob	Exactly!	exact	
-lob_yougotit	lob	You got it!	got	
-lob_thatsit	lob	That's it!	thatsit	
-lob_correct	lob	Correct!	correct	
-lob_righton	lob	Right on!	right	
-lob_absolutely	lob	Absolutely!	absolute	
-lob_goodjob	lob	Good job!	good,job	
-lob_greatwork	lob	Great work!	great,work	
-lob_nicework	lob	Nice work!	nice,work	
-lob_waytogo	lob	Way to go!	way	
-lob_lookinggood	lob	Looking good!	good	
-lob_lovethat	lob	Love that!	love	
-lob_topclass	lob	Top class!	top	
-lob_mega	lob	Mega!	mega	
-lob_dingding	lob	Ding ding ding!	ding	
-lob_kaching	lob	Ka-ching!	ding	
-lob_bravo	lob	Bravo!	bravo	
-lob_impressive	lob	Impressive!	impress	
-lob_exactlyright	lob	Exactly right!	exact,right	
-lob_topjob	lob	Top job!	top,job	
-lob_yesthatsit	lob	Yes! That's it!	yes,thatsit	
-lob_marvellous	lob	Marvellous!	marvellous	6
-lob_cracking	lob	Cracking!	cracking	6
-lob_smashing	lob	Smashing!	smashing	6
-lob_fabulous	lob	Fabulous!	fabulous	6
-lob_lovelyjob	lob	Lovely job!	lovely,job	6
-lob_cleveryou	lob	Clever you!	clever	6
-lob_sweet	lob	Sweet!	sweet	9
-lob_yourock	lob	You rock!	rock	9
-lob_keepitup	stark	Keep it up!	keep	
-lob_nowyouretalking	stark	Now you're talking!	talking	
-lob_thatstheway	stark	That's the way!	way,thatsit	
-lob_impressed	stark	I'm impressed!	impress	
-lob_lookeasy	stark	You make it look easy!	easy	
-lob_wanted	stark	That's exactly what I wanted to hear!	exact	
-lob_onfire	stark	You're on fire!	fire	
-lob_flying	stark	You're flying today!	flying	
-lob_nailedit	stark	Nailed it!	nailed	
-lob_performance	stark	What a performance!	performance	
-lob_crushedit	stark	Crushed it!	crushed	9
-fehler_notquite	fehler	Not quite!	quite	
-fehler_nearly	fehler	Nearly there!	nearly	
-fehler_goodtry	fehler	Good try – look again!	try	
-fehler_hmm	fehler	Hmm, not quite!	quite	
+id	art	text	gruppe	klasse	de
+lob_amazing	lob	Amazing!	amazing		Unglaublich!
+lob_fantastic	lob	Fantastic!	fantastic		Fantastisch!
+lob_wonderful	lob	Wonderful!	wonderful		Wunderbar!
+lob_great	lob	Great!	great		Großartig!
+lob_superstar	stark	You are a superstar!	star		Du bist ein Superstar!
+lob_outstanding	stark	That's outstanding!	outstanding		Das ist herausragend!
+lob_love	lob	I love it!	love		Ich liebe es!
+lob_brilliant	lob	Brilliant!	brilliant		Brillant!
+lob_excellent	lob	Excellent!	excellent		Ausgezeichnet!
+lob_perfect	lob	Perfect!	perfect		Perfekt!
+lob_welldone	lob	Well done!	well		Gut gemacht!
+lob_niceone	lob	Nice one!	nice		Gut gemacht!
+lob_spoton	lob	Spot on!	spot		Genau richtig!
+lob_highfive	lob	High five!	five		High five – Abklatschen!
+lob_proud	stark	I'm so proud of you!	proud		Ich bin so stolz auf dich!
+fehler_almost	fehler	Almost!	almost		Fast!
+fehler_close	fehler	So close!	close		So knapp!
+fehler_tryagain	fehler	Try again – you can do it!	try		Versuch's noch mal – du schaffst das!
+fehler_noproblem	fehler	No problem – have another go!	problem		Kein Problem – noch ein Versuch!
+fehler_ohno	fehler	Oh no!	ohno		Oh nein!
+fehler_sorry	fehler	Sorry!	sorry		Tut mir leid!
+spiel_terrible	spiel	That's terrible!			Das ist ja furchtbar!
+spiel_oops	spiel	Oops!			Hoppla!
+spiel_notagain	spiel	Oh no – not again!			Oh nein – nicht schon wieder!
+spiel_whaaat	spiel	WHAAAT? You serious?			WAAAS? Im Ernst?
+geschafft_didit	geschafft	You did it! Station complete!			Du hast es geschafft! Station fertig!
+geschafft_outstanding	geschafft	That was outstanding – well done!	outstanding		Das war herausragend – gut gemacht!
+voll_fullmarks	voll	Full marks! Amazing!	amazing		Volle Punktzahl! Unglaublich!
+doch_seeyoucan	doch	See? You can do it!			Siehst du? Du kannst es!
+lob_wow	lob	Wow!	wow		Wow!
+lob_yes	lob	Yes!	yes		Ja!
+lob_super	lob	Super!	super		Super!
+lob_cool	lob	Cool!	cool		Cool!
+lob_bingo	lob	Bingo!	bingo		Bingo!
+lob_boom	lob	Boom!	boom		Bumm!
+lob_awesome	lob	Awesome!	awesome		Großartig!
+lob_lovely	lob	Lovely!	lovely		Wunderbar!
+lob_terrific	lob	Terrific!	terrific		Toll!
+lob_splendid	lob	Splendid!	splendid		Prächtig!
+lob_thatsright	lob	That's right!	right		Das ist richtig!
+lob_exactly	lob	Exactly!	exact		Genau!
+lob_yougotit	lob	You got it!	got		Du hast es!
+lob_thatsit	lob	That's it!	thatsit		Das ist es!
+lob_correct	lob	Correct!	correct		Richtig!
+lob_righton	lob	Right on!	right		Volltreffer!
+lob_absolutely	lob	Absolutely!	absolute		Absolut!
+lob_goodjob	lob	Good job!	good,job		Gute Arbeit!
+lob_greatwork	lob	Great work!	great,work		Großartige Arbeit!
+lob_nicework	lob	Nice work!	nice,work		Schöne Arbeit!
+lob_waytogo	lob	Way to go!	way		So geht's!
+lob_lookinggood	lob	Looking good!	good		Sieht gut aus!
+lob_lovethat	lob	Love that!	love		Das liebe ich!
+lob_topclass	lob	Top class!	top		Spitzenklasse!
+lob_mega	lob	Mega!	mega		Mega!
+lob_dingding	lob	Ding ding ding!	ding		Ding ding ding!
+lob_kaching	lob	Ka-ching!	ding		Ka-ching!
+lob_bravo	lob	Bravo!	bravo		Bravo!
+lob_impressive	lob	Impressive!	impress		Beeindruckend!
+lob_exactlyright	lob	Exactly right!	exact,right		Genau richtig!
+lob_topjob	lob	Top job!	top,job		Spitzenleistung!
+lob_yesthatsit	lob	Yes! That's it!	yes,thatsit		Ja! Das ist es!
+lob_marvellous	lob	Marvellous!	marvellous	6	Wunderbar!
+lob_cracking	lob	Cracking!	cracking	6	Klasse!
+lob_smashing	lob	Smashing!	smashing	6	Spitze!
+lob_fabulous	lob	Fabulous!	fabulous	6	Fabelhaft!
+lob_lovelyjob	lob	Lovely job!	lovely,job	6	Wunderbar gemacht!
+lob_cleveryou	lob	Clever you!	clever	6	Du Schlaukopf!
+lob_sweet	lob	Sweet!	sweet	9	Süß – sehr gut!
+lob_yourock	lob	You rock!	rock	9	Du rockst!
+lob_keepitup	stark	Keep it up!	keep		Weiter so!
+lob_nowyouretalking	stark	Now you're talking!	talking		Jetzt reden wir!
+lob_thatstheway	stark	That's the way!	way,thatsit		So macht man das!
+lob_impressed	stark	I'm impressed!	impress		Ich bin beeindruckt!
+lob_lookeasy	stark	You make it look easy!	easy		Bei dir sieht es leicht aus!
+lob_wanted	stark	That's exactly what I wanted to hear!	exact		Genau das wollte ich hören!
+lob_onfire	stark	You're on fire!	fire		Du bist nicht zu stoppen!
+lob_flying	stark	You're flying today!	flying		Du fliegst heute!
+lob_nailedit	stark	Nailed it!	nailed		Auf den Punkt!
+lob_performance	stark	What a performance!	performance		Was für eine Leistung!
+lob_crushedit	stark	Crushed it!	crushed	9	Du hast es gerockt!
+fehler_notquite	fehler	Not quite!	quite		Nicht ganz!
+fehler_nearly	fehler	Nearly there!	nearly		Fast geschafft!
+fehler_goodtry	fehler	Good try – look again!	try		Guter Versuch – schau noch mal!
+fehler_hmm	fehler	Hmm, not quite!	quite		Hmm, nicht ganz!

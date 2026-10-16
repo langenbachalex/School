@@ -371,7 +371,7 @@ def main():
             continue
         shutil.copyfile(quelle, os.path.join(APP, "audio", "lob", z["id"] + ".mp3"))
         lob.setdefault(art, []).append({"text": z["text"], "audio": audio(f"audio/lob/{z['id']}.mp3"),
-                                        "gruppe": [g for g in z["gruppe"].split(",") if g]})
+                                        "gruppe": [g for g in z["gruppe"].split(",") if g], "de": z["de"]})
     for k in KATEGORIEN:  # Satz-IDs prüfen
         for g in k.get("gruppen", []):
             for vid in g.get("vokabeln", []):
@@ -380,7 +380,7 @@ def main():
                 for sid in s.get("saetze", []) + s.get("text", []) + s.get("paare", []) + [x[0] for x in s.get("zeilen", [])] + [a["satz"] for a in s.get("aufgaben", [])]:
                     assert sid in saetze, sid
     daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren,
-             "spiel": spieldaten()}
+             "spiel": spieldaten(), "gym": GYM}
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – bitte nicht von Hand ändern.\n")
         f.write("window.DATEN = " + json.dumps(daten, ensure_ascii=False, indent=1) + ";\n")
@@ -402,7 +402,11 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
     "woche": "Perfect week! You practised every school day. Here is your new landmark card!",
     "monat": "Four perfect weeks in a row! You are a true champion!",
     "team": "You collected all ten landmark cards. Your Great American Road Trip is complete!",
+    "gym_fini": "That's it for today. See you tomorrow!",
+    "gym_pause": "Break! Come back later and finish your Word Gym.",
 }
+# Word Gym (docs/word-gym/konzept.md): Standard-Pensum und Boxen-Intervalle in Tagen
+GYM = {"pensum": {"neu": 4, "wdh": 8}, "grenzen": {"neu": [1, 6], "wdh": [4, 12]}, "intervalle": [1, 3, 7, 14, 30, 60, 120]}
 
 
 def spieldaten():

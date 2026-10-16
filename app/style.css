@@ -304,3 +304,42 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
   .stempel { opacity: .95; transform: translateX(-50%) rotate(-8deg); }
   .sterne { display: none; }
 }
+
+/* Word Gym: tägliches Vokabeltraining (docs/word-gym/konzept.md) */
+.gym-karte { display: grid; grid-template-columns: auto 1fr auto; gap: 8px 16px; align-items: center; padding: 14px 16px; border-radius: 20px;
+  background: var(--karte); border: 3px solid var(--blau); }
+.gym-karte.fertig { border-color: var(--gruen); background: var(--gruen-hell); }
+.gym-text { min-width: 0; display: grid; gap: 4px; }
+.gym-text h2 { margin: 0; font-size: 1.5rem; }
+.gym-punkte { display: flex; flex-wrap: wrap; gap: 5px; }
+.gym-punkte span { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--blau); background: transparent; }
+.gym-punkte span.wdh { border-radius: 3px; }
+.gym-punkte span.fertig { background: var(--blau); }
+.gym-knoepfe { display: flex; gap: 6px; align-items: center; }
+.gym-knoepfe .knopf.leise { min-width: 44px; padding: 0 8px; font-size: 1.3rem; }
+.gym-einstellung { grid-column: 1 / -1; display: grid; gap: 8px; padding-top: 8px; border-top: 1px solid var(--linie); }
+.gym-einstellung label { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-weight: 700; }
+.gym-einstellung select { font: 600 1rem var(--body); min-height: 44px; padding: 0 10px; border-radius: 10px; border: 2px solid var(--linie); background: var(--bg); color: var(--text); }
+@media (max-width: 640px) {
+  .gym-karte { grid-template-columns: auto 1fr; }
+  .gym-knoepfe { grid-column: 1 / -1; }
+  .gym-knoepfe .knopf.haupt { flex: 1; }
+}
+.gym-titel { display: inline-flex; align-items: center; gap: 10px; }
+.gym-icon { display: block; overflow: visible; --figur: var(--blau); --kopf: var(--blau); --stange: var(--text); --b1: var(--rot, #d6283c); --b2: var(--gelb); --b3: var(--blau); --rand: var(--text); }
+.gym-icon .figur, .gym-icon .arme { fill: none; stroke: var(--figur); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.gym-icon .kopf, .gym-icon .hand { fill: var(--kopf); }
+.gym-icon .kopf { stroke: var(--karte); stroke-width: 3; }
+.gym-icon .stange { stroke: var(--stange); stroke-width: 7; stroke-linecap: round; }
+.gym-icon .stange-f { fill: var(--stange); }
+.gym-icon .b1 { fill: var(--b1); } .gym-icon .b2 { fill: var(--b2); } .gym-icon .b3 { fill: var(--b3); }
+.gym-icon rect { stroke: var(--rand); stroke-width: 1.5; }
+.gym-ende { justify-items: center; text-align: center; }
+.gym-ende .knopfreihe { justify-content: center; }
+.gym-lob { font-size: 1.3rem; }
+.gym-lob span { color: var(--leise); font-size: 1.05rem; }
+.gym-antwort { display: grid; gap: 12px; }
+.knopf.encore { border-color: var(--gelb); background: var(--gelb); color: var(--gelb-text); }
+.lob-toast { display: grid; gap: 2px; padding: 12px 20px; border-radius: 16px; font-size: 1.25rem; pointer-events: none; }
+.lob-toast span { font-size: .95rem; font-weight: 400; opacity: .85; }
+@media (prefers-reduced-motion: reduce) { .gym-icon animate, .gym-icon animateTransform { display: none; } }

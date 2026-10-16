@@ -296,7 +296,7 @@ def main():
             continue
         if os.path.exists(os.path.join(BASIS, "app", "audio", "lob", z["id"] + ".mp3")):
             lob.setdefault(z["art"], []).append({"text": z["text"], "audio": f"audio/lob/{z['id']}.mp3",
-                                                 "gruppe": [g for g in z["gruppe"].split(",") if g]})
+                                                 "gruppe": [g for g in z["gruppe"].split(",") if g], "de": z["de"]})
     STATIONEN.sort(key=lambda x: x["nr"])
     daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")},

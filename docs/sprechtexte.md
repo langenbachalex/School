@@ -246,6 +246,101 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `vokabeln/u3_102_match_en.mp3` | Alex Langenbach | match |
 | `vokabeln/u3_103_light_en.mp3` | Alex Langenbach | light |
 | `vokabeln/u3_104_speak_clearly_loudly_en.mp3` | Alex Langenbach | to speak clearly, to speak loudly |
+| `gym/u3_002_come_en.mp3` | Alex Langenbach | Can you come to my house after school? |
+| `gym/u3_008_weekday_en.mp3` | Alex Langenbach | On a weekday I get up at seven. |
+| `gym/u3_009_at_8_o_clock_en.mp3` | Alex Langenbach | School starts at 8 o'clock. |
+| `gym/u3_010_4_p_m_en.mp3` | Alex Langenbach | Football club is at 4 p.m. |
+| `gym/u3_011_4_a_m_en.mp3` | Alex Langenbach | My dad gets up at 4 a.m. for work. |
+| `gym/u3_012_the_united_kingdom_en.mp3` | Alex Langenbach | London is in the United Kingdom. |
+| `gym/u3_013_hour_en.mp3` | Alex Langenbach | A lesson is not an hour, it's 45 minutes. |
+| `gym/u3_014_clock_en.mp3` | Alex Langenbach | The clock on the wall says ten past nine. |
+| `gym/u3_015_morning_en.mp3` | Alex Langenbach | In the morning I have a shower. |
+| `gym/u3_016_evening_en.mp3` | Alex Langenbach | In the evening we watch TV. |
+| `gym/u3_017_lunchtime_en.mp3` | Alex Langenbach | At lunchtime we play football. |
+| `gym/u3_018_end_en.mp3` | Alex Langenbach | At the end of the day I'm tired. |
+| `gym/u3_019_in_the_end_en.mp3` | Alex Langenbach | In the end, we won the match. |
+| `gym/u3_020_at_the_end_en.mp3` | Alex Langenbach | My room is at the end of the hall. |
+| `gym/u3_021_before_en.mp3` | Alex Langenbach | I brush my teeth before school. |
+| `gym/u3_022_why_en.mp3` | Alex Langenbach | Why are you late? |
+| `gym/u3_023_newspaper_en.mp3` | Alex Langenbach | My grandad reads the newspaper every morning. |
+| `gym/u3_024_letter_en.mp3` | Alex Langenbach | I write a letter to my friend in London. |
+| `gym/u3_025_competition_en.mp3` | Alex Langenbach | Our class is in a photo competition. |
+| `gym/u3_026_choose_en.mp3` | Alex Langenbach | You can choose a club: drama or football. |
+| `gym/u3_027_winner_en.mp3` | Alex Langenbach | And the winner is … Class 6! |
+| `gym/u3_028_illness_en.mp3` | Alex Langenbach | She can't come to school because of her illness. |
+| `gym/u3_029_wheelchair_en.mp3` | Alex Langenbach | My uncle is in a wheelchair. |
+| `gym/u3_030_husband_en.mp3` | Alex Langenbach | Mrs Smith's husband is a doctor. |
+| `gym/u3_031_cafe_en.mp3` | Alex Langenbach | We have a milkshake in the cafe. |
+| `gym/u3_033_shower_en.mp3` | Alex Langenbach | After football I need a shower. |
+| `gym/u3_034_get_dressed_en.mp3` | Alex Langenbach | I get dressed in five minutes. |
+| `gym/u3_036_take_en.mp3` | Alex Langenbach | The bus takes twenty minutes. |
+| `gym/u3_037_watch_en.mp3` | Alex Langenbach | We watch a film on Friday evening. |
+| `gym/u3_038_line_en.mp3` | Alex Langenbach | Read the first line of the text. |
+| `gym/u3_039_shopping_en.mp3` | Alex Langenbach | On Saturday I go shopping with my mum. |
+| `gym/u3_040_afternoon_en.mp3` | Alex Langenbach | In the afternoon I do my homework. |
+| `gym/u3_041_brush_en.mp3` | Alex Langenbach | I brush my hair before school. |
+| `gym/u3_042_tooth_pl_teeth_en.mp3` | Alex Langenbach | I brush my teeth two times a day. |
+| `gym/u3_043_everybody_en.mp3` | Alex Langenbach | Everybody in my class likes pizza. |
+| `gym/u3_044_project_en.mp3` | Alex Langenbach | We do a project about London. |
+| `gym/u3_045_country_en.mp3` | Alex Langenbach | My grandparents live in the country. |
+| `gym/u3_046_club_en.mp3` | Alex Langenbach | I'm in the drama club at school. |
+| `gym/u3_047_drama_en.mp3` | Alex Langenbach | We have drama on Wednesday afternoon. |
+| `gym/u3_049_hike_en.mp3` | Alex Langenbach | We hike in the hills on Sunday. |
+| `gym/u3_050_run_en.mp3` | Alex Langenbach | I run to the bus stop every morning. |
+| `gym/u3_051_trampolining_en.mp3` | Alex Langenbach | Trampolining is my favourite club. |
+| `gym/u3_052_most_schools_en.mp3` | Alex Langenbach | Most schools in the UK have clubs. |
+| `gym/u3_053_which_clubs_en.mp3` | Alex Langenbach | Which clubs are there at your school? |
+| `gym/u3_054_sea_en.mp3` | Alex Langenbach | In summer we swim in the sea. |
+| `gym/u3_055_sentence_en.mp3` | Alex Langenbach | Write one sentence about your day. |
+| `gym/u3_056_sometimes_en.mp3` | Alex Langenbach | Sometimes I go to school by bike. |
+| `gym/u3_057_never_en.mp3` | Alex Langenbach | I never get up before six. |
+| `gym/u3_058_rarely_en.mp3` | Alex Langenbach | We rarely eat pizza for breakfast. |
+| `gym/u3_059_secret_en.mp3` | Alex Langenbach | Don't tell anybody, it's a secret! |
+| `gym/u3_060_activity_en.mp3` | Alex Langenbach | My favourite activity is swimming. |
+| `gym/u3_061_a_shame_en.mp3` | Alex Langenbach | It's a shame that you can't come. |
+| `gym/u3_062_i_d_love_to_en.mp3` | Alex Langenbach | Come to my party? I'd love to! |
+| `gym/u3_063_ask_sb_to_do_sth_en.mp3` | Alex Langenbach | I ask my sister to help me. |
+| `gym/u3_064_plan_en.mp3` | Alex Langenbach | What's your plan for the weekend? |
+| `gym/u3_065_win_en.mp3` | Alex Langenbach | I hope we win the match on Saturday. |
+| `gym/u3_066_prize_en.mp3` | Alex Langenbach | The first prize is a trip to London. |
+| `gym/u3_067_ceremony_en.mp3` | Alex Langenbach | The prize ceremony is in the school hall. |
+| `gym/u3_068_show_en.mp3` | Alex Langenbach | Can you show me your new bike? |
+| `gym/u3_069_article_en.mp3` | Alex Langenbach | There is an article about our school in the paper. |
+| `gym/u3_070_surprised_en.mp3` | Alex Langenbach | I was surprised when I saw the prize. |
+| `gym/u3_071_send_en.mp3` | Alex Langenbach | I send a photo to my grandma. |
+| `gym/u3_072_next_en.mp3` | Alex Langenbach | The next bus comes at ten past eight. |
+| `gym/u3_073_guys_en.mp3` | Alex Langenbach | Hi guys, let's play football! |
+| `gym/u3_074_feel_en.mp3` | Alex Langenbach | I feel great after sport. |
+| `gym/u3_075_be_feel_sorry_for_sb_en.mp3` | Alex Langenbach | I feel sorry for my friend, she is ill. |
+| `gym/u3_076_her_en.mp3` | Alex Langenbach | That's Lucy. Do you know her? |
+| `gym/u3_077_stupid_en.mp3` | Alex Langenbach | That was a stupid idea. |
+| `gym/u3_078_hate_en.mp3` | Alex Langenbach | I hate getting up early. |
+| `gym/u3_079_much_en.mp3` | Alex Langenbach | I don't have much time today. |
+| `gym/u3_080_well_done_en.mp3` | Alex Langenbach | Well done, that was a great goal! |
+| `gym/u3_081_news_en.mp3` | Alex Langenbach | I've got good news: no homework today! |
+| `gym/u3_082_get_en.mp3` | Alex Langenbach | Can you get me a glass of water? |
+| `gym/u3_083_as_the_winner_en.mp3` | Alex Langenbach | As the winner, you get a free ticket. |
+| `gym/u3_084_money_en.mp3` | Alex Langenbach | I haven't got any money for the cafe. |
+| `gym/u3_085_heading_en.mp3` | Alex Langenbach | Write a heading for your text. |
+| `gym/u3_086_find_out_en.mp3` | Alex Langenbach | Let's find out who the winner is. |
+| `gym/u3_087_explain_sth_to_sb_en.mp3` | Alex Langenbach | Can you explain the game to me? |
+| `gym/u3_088_happen_en.mp3` | Alex Langenbach | What happened at school today? |
+| `gym/u3_089_give_en.mp3` | Alex Langenbach | Give the book to your teacher, please. |
+| `gym/u3_090_pay_en.mp3` | Alex Langenbach | My mum pays for the tickets. |
+| `gym/u3_091_cleaner_en.mp3` | Alex Langenbach | The cleaner comes after the last lesson. |
+| `gym/u3_092_pound_en.mp3` | Alex Langenbach | The ticket is two pounds. |
+| `gym/u3_093_penny_pl_pence_en.mp3` | Alex Langenbach | A banana is fifty pence. |
+| `gym/u3_094_look_sth_up_en.mp3` | Alex Langenbach | Look the word up in your dictionary. |
+| `gym/u3_095_jigsaw_en.mp3` | Alex Langenbach | We do a jigsaw with 500 pieces. |
+| `gym/u3_096_collect_en.mp3` | Alex Langenbach | I collect football stickers. |
+| `gym/u3_097_letter_en.mp3` | Alex Langenbach | The first letter of the word is B. |
+| `gym/u3_098_card_en.mp3` | Alex Langenbach | Take a card and read the word. |
+| `gym/u3_099_language_en.mp3` | Alex Langenbach | English is my favourite language. |
+| `gym/u3_100_group_en.mp3` | Alex Langenbach | Work in a group of four. |
+| `gym/u3_101_share_en.mp3` | Alex Langenbach | I share my sandwich with my friend. |
+| `gym/u3_102_match_en.mp3` | Alex Langenbach | The football match starts at three. |
+| `gym/u3_103_light_en.mp3` | Alex Langenbach | Please turn off the light. |
+| `gym/u3_104_speak_clearly_loudly_en.mp3` | Alex Langenbach | Please speak clearly in the video. |
 | `lob/lob_amazing.mp3` | Alex Langenbach | Amazing! |
 | `lob/lob_fantastic.mp3` | Alex Langenbach | Fantastic! |
 | `lob/lob_wonderful.mp3` | Alex Langenbach | Wonderful! |
@@ -374,6 +469,8 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `spiel/woche.mp3` | Alex Langenbach | Perfect week! You practised every school day. Here is your new superhero! |
 | `spiel/monat.mp3` | Alex Langenbach | Four perfect weeks in a row! You are a true champion! |
 | `spiel/team.mp3` | Alex Langenbach | You collected all ten superheroes. Your team is complete. You are a legend! |
+| `spiel/gym_fini.mp3` | Alex Langenbach | That's it for today. See you tomorrow! |
+| `spiel/gym_pause.mp3` | Alex Langenbach | Break! Come back later and finish your Word Gym. |
 | `hoeren/01-mias-monday_text01.mp3` | Alice | Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train. |
 | `hoeren/01-mias-monday_text02.mp3` | Alice | School starts at eight a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at nine p.m. |
 | `hoeren/01-mias-monday_aussage01.mp3` | Alex Langenbach | Mia gets up at six forty-five a.m. |

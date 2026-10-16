@@ -71,6 +71,10 @@ def main():
     with open(os.path.join(BASIS, "inhalte", "vokabeln.tsv"), encoding="utf-8") as f:
         for v in csv.DictReader(f, delimiter="\t"):
             auftraege.append(("vokabeln", f"{v['id']}_en", "en", "en", v["englisch_gesprochen"], None))
+    # Word Gym: Beispielsätze für Wörter ohne Kernsatz (inhalte/gym_saetze6.tsv)
+    with open(os.path.join(BASIS, "inhalte", "gym_saetze6.tsv"), encoding="utf-8") as f:
+        for z in csv.DictReader(f, delimiter="\t"):
+            auftraege.append(("gym", f"{z['id']}_en", "en", "en", z["englisch"], None))
     # Lob und Rückmeldungen (Mr. Alex' eigene Stimme)
     with open(os.path.join(BASIS, "inhalte", "lob.tsv"), encoding="utf-8") as f:
         for z in csv.DictReader(f, delimiter="\t"):

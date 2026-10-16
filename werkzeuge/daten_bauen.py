@@ -166,6 +166,8 @@ def lesen(name):
 # Belohnungen (Stufe A, docs/gamification/konzept.md): Titel nach Punkten, London-Orte, Superhelden
 TITEL = [(0, "Butterfingers", "🧈"), (100, "Sidekick", "🎒"), (300, "Hero in Training", "🦸"), (700, "Hero", "⚡"),
          (1200, "Superhero", "🌟"), (2000, "Mega Hero", "👑")]
+# Word Gym (docs/word-gym/konzept.md): Standard-Pensum und Boxen-Intervalle in Tagen
+GYM = {"pensum": {"neu": 3, "wdh": 6}, "grenzen": {"neu": [1, 6], "wdh": [4, 12]}, "intervalle": [1, 3, 7, 14, 30, 60, 120]}
 SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
     "titel_sidekick": "Congratulations! You are a Sidekick now!",
     "titel_hero_in_training": "Congratulations! You are a Hero in Training now!",
@@ -176,6 +178,8 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
     "woche": "Perfect week! You practised every school day. Here is your new superhero!",
     "monat": "Four perfect weeks in a row! You are a true champion!",
     "team": "You collected all ten superheroes. Your team is complete. You are a legend!",
+    "gym_fini": "That's it for today. See you tomorrow!",
+    "gym_pause": "Break! Come back later and finish your Word Gym.",
 }
 
 
@@ -258,6 +262,12 @@ def main():
                     falsch, hilfe = VERBFORMEN[richtig]
                     s["aufgaben"].append({"satz": sid, "richtig": richtig, "falsch": falsch, "hilfe": hilfe})
     vokabeln, abschnitte = [], []
+    # Word Gym: Beispielsätze für Wörter ohne Kernsatz (gesprochen von Mr. Alex, audio/gym/)
+    gym_saetze = {}
+    for z in lesen("gym_saetze6.tsv"):
+        assert z["luecke"] in z["englisch"], z["id"]
+        saetze["gym_" + z["id"]] = {"en": z["englisch"], "de": z["deutsch"], "luecke": z["luecke"], "audio": {"en": f"audio/gym/{z['id']}_en.mp3"}}
+        gym_saetze[z["id"]] = "gym_" + z["id"]
     for v in lesen("vokabeln.tsv"):
         luecke = v.get("luecke") or re.sub(r"^\(to\) ", "", v["englisch"])
         if v["satz"]:
@@ -265,7 +275,7 @@ def main():
             assert satz, f"Vokabel {v['id']}: Satz {v['satz']} fehlt"
             assert luecke.lower() in satz["en"].lower(), f"Vokabel {v['id']} steht nicht im Satz {v['satz']}"
         vokabeln.append({"id": v["id"], "en": v["englisch"], "de": v["deutsch"], "symbol": v["symbol"],
-                         "satz": v["satz"], "luecke": luecke,
+                         "satz": v["satz"], "luecke": luecke, "gymsatz": v["satz"] or gym_saetze.get(v["id"], ""),
                          "audio": {"en": f"audio/vokabeln/{v['id']}_en.mp3"}})
         if not abschnitte or abschnitte[-1][0] != v["abschnitt"]:
             abschnitte.append((v["abschnitt"], []))
@@ -298,7 +308,7 @@ def main():
             lob.setdefault(z["art"], []).append({"text": z["text"], "audio": f"audio/lob/{z['id']}.mp3",
                                                  "gruppe": [g for g in z["gruppe"].split(",") if g], "de": z["de"]})
     STATIONEN.sort(key=lambda x: x["nr"])
-    daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob,
+    daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob, "gym": GYM,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")},
              "spiel": spieldaten()}
     ziel = os.path.join(BASIS, "app", "daten.js")

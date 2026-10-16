@@ -2778,6 +2778,766 @@ window.DATEN = {
    "audio": {
     "en": "audio/kernsaetze/st4w_fifty_en.mp3"
    }
+  },
+  "gym_u3_002_come": {
+   "en": "Can you come to my house after school?",
+   "de": "Kannst du nach der Schule zu mir kommen?",
+   "luecke": "come",
+   "audio": {
+    "en": "audio/gym/u3_002_come_en.mp3"
+   }
+  },
+  "gym_u3_008_weekday": {
+   "en": "On a weekday I get up at seven.",
+   "de": "An einem Wochentag stehe ich um sieben auf.",
+   "luecke": "weekday",
+   "audio": {
+    "en": "audio/gym/u3_008_weekday_en.mp3"
+   }
+  },
+  "gym_u3_009_at_8_o_clock": {
+   "en": "School starts at 8 o'clock.",
+   "de": "Die Schule beginnt um 8 Uhr.",
+   "luecke": "at 8 o'clock",
+   "audio": {
+    "en": "audio/gym/u3_009_at_8_o_clock_en.mp3"
+   }
+  },
+  "gym_u3_010_4_p_m": {
+   "en": "Football club is at 4 p.m.",
+   "de": "Die Fußball-AG ist um 16 Uhr.",
+   "luecke": "4 p.m.",
+   "audio": {
+    "en": "audio/gym/u3_010_4_p_m_en.mp3"
+   }
+  },
+  "gym_u3_011_4_a_m": {
+   "en": "My dad gets up at 4 a.m. for work.",
+   "de": "Mein Vater steht für die Arbeit um 4 Uhr morgens auf.",
+   "luecke": "4 a.m.",
+   "audio": {
+    "en": "audio/gym/u3_011_4_a_m_en.mp3"
+   }
+  },
+  "gym_u3_012_the_united_kingdom": {
+   "en": "London is in the United Kingdom.",
+   "de": "London liegt im Vereinigten Königreich.",
+   "luecke": "the United Kingdom",
+   "audio": {
+    "en": "audio/gym/u3_012_the_united_kingdom_en.mp3"
+   }
+  },
+  "gym_u3_013_hour": {
+   "en": "A lesson is not an hour, it's 45 minutes.",
+   "de": "Eine Unterrichtsstunde ist keine Stunde, sie dauert 45 Minuten.",
+   "luecke": "hour",
+   "audio": {
+    "en": "audio/gym/u3_013_hour_en.mp3"
+   }
+  },
+  "gym_u3_014_clock": {
+   "en": "The clock on the wall says ten past nine.",
+   "de": "Die Uhr an der Wand zeigt zehn nach neun.",
+   "luecke": "clock",
+   "audio": {
+    "en": "audio/gym/u3_014_clock_en.mp3"
+   }
+  },
+  "gym_u3_015_morning": {
+   "en": "In the morning I have a shower.",
+   "de": "Morgens dusche ich.",
+   "luecke": "morning",
+   "audio": {
+    "en": "audio/gym/u3_015_morning_en.mp3"
+   }
+  },
+  "gym_u3_016_evening": {
+   "en": "In the evening we watch TV.",
+   "de": "Abends schauen wir fern.",
+   "luecke": "evening",
+   "audio": {
+    "en": "audio/gym/u3_016_evening_en.mp3"
+   }
+  },
+  "gym_u3_017_lunchtime": {
+   "en": "At lunchtime we play football.",
+   "de": "In der Mittagszeit spielen wir Fußball.",
+   "luecke": "lunchtime",
+   "audio": {
+    "en": "audio/gym/u3_017_lunchtime_en.mp3"
+   }
+  },
+  "gym_u3_018_end": {
+   "en": "At the end of the day I'm tired.",
+   "de": "Am Ende des Tages bin ich müde.",
+   "luecke": "end",
+   "audio": {
+    "en": "audio/gym/u3_018_end_en.mp3"
+   }
+  },
+  "gym_u3_019_in_the_end": {
+   "en": "In the end, we won the match.",
+   "de": "Schließlich haben wir das Spiel gewonnen.",
+   "luecke": "In the end",
+   "audio": {
+    "en": "audio/gym/u3_019_in_the_end_en.mp3"
+   }
+  },
+  "gym_u3_020_at_the_end": {
+   "en": "My room is at the end of the hall.",
+   "de": "Mein Zimmer ist am Ende des Flurs.",
+   "luecke": "at the end of",
+   "audio": {
+    "en": "audio/gym/u3_020_at_the_end_en.mp3"
+   }
+  },
+  "gym_u3_021_before": {
+   "en": "I brush my teeth before school.",
+   "de": "Ich putze mir vor der Schule die Zähne.",
+   "luecke": "before",
+   "audio": {
+    "en": "audio/gym/u3_021_before_en.mp3"
+   }
+  },
+  "gym_u3_022_why": {
+   "en": "Why are you late?",
+   "de": "Warum bist du zu spät?",
+   "luecke": "Why",
+   "audio": {
+    "en": "audio/gym/u3_022_why_en.mp3"
+   }
+  },
+  "gym_u3_023_newspaper": {
+   "en": "My grandad reads the newspaper every morning.",
+   "de": "Mein Opa liest jeden Morgen die Zeitung.",
+   "luecke": "newspaper",
+   "audio": {
+    "en": "audio/gym/u3_023_newspaper_en.mp3"
+   }
+  },
+  "gym_u3_024_letter": {
+   "en": "I write a letter to my friend in London.",
+   "de": "Ich schreibe einen Brief an meinen Freund in London.",
+   "luecke": "letter",
+   "audio": {
+    "en": "audio/gym/u3_024_letter_en.mp3"
+   }
+  },
+  "gym_u3_025_competition": {
+   "en": "Our class is in a photo competition.",
+   "de": "Unsere Klasse macht bei einem Fotowettbewerb mit.",
+   "luecke": "competition",
+   "audio": {
+    "en": "audio/gym/u3_025_competition_en.mp3"
+   }
+  },
+  "gym_u3_026_choose": {
+   "en": "You can choose a club: drama or football.",
+   "de": "Du kannst eine AG wählen: Theater oder Fußball.",
+   "luecke": "choose",
+   "audio": {
+    "en": "audio/gym/u3_026_choose_en.mp3"
+   }
+  },
+  "gym_u3_027_winner": {
+   "en": "And the winner is … Class 6!",
+   "de": "Und der Gewinner ist … Klasse 6!",
+   "luecke": "winner",
+   "audio": {
+    "en": "audio/gym/u3_027_winner_en.mp3"
+   }
+  },
+  "gym_u3_028_illness": {
+   "en": "She can't come to school because of her illness.",
+   "de": "Sie kann wegen ihrer Krankheit nicht zur Schule kommen.",
+   "luecke": "illness",
+   "audio": {
+    "en": "audio/gym/u3_028_illness_en.mp3"
+   }
+  },
+  "gym_u3_029_wheelchair": {
+   "en": "My uncle is in a wheelchair.",
+   "de": "Mein Onkel sitzt im Rollstuhl.",
+   "luecke": "wheelchair",
+   "audio": {
+    "en": "audio/gym/u3_029_wheelchair_en.mp3"
+   }
+  },
+  "gym_u3_030_husband": {
+   "en": "Mrs Smith's husband is a doctor.",
+   "de": "Der Ehemann von Frau Smith ist Arzt.",
+   "luecke": "husband",
+   "audio": {
+    "en": "audio/gym/u3_030_husband_en.mp3"
+   }
+  },
+  "gym_u3_031_cafe": {
+   "en": "We have a milkshake in the cafe.",
+   "de": "Wir trinken einen Milchshake im Café.",
+   "luecke": "cafe",
+   "audio": {
+    "en": "audio/gym/u3_031_cafe_en.mp3"
+   }
+  },
+  "gym_u3_033_shower": {
+   "en": "After football I need a shower.",
+   "de": "Nach dem Fußball brauche ich eine Dusche.",
+   "luecke": "shower",
+   "audio": {
+    "en": "audio/gym/u3_033_shower_en.mp3"
+   }
+  },
+  "gym_u3_034_get_dressed": {
+   "en": "I get dressed in five minutes.",
+   "de": "Ich ziehe mich in fünf Minuten an.",
+   "luecke": "get dressed",
+   "audio": {
+    "en": "audio/gym/u3_034_get_dressed_en.mp3"
+   }
+  },
+  "gym_u3_036_take": {
+   "en": "The bus takes twenty minutes.",
+   "de": "Der Bus braucht zwanzig Minuten.",
+   "luecke": "takes",
+   "audio": {
+    "en": "audio/gym/u3_036_take_en.mp3"
+   }
+  },
+  "gym_u3_037_watch": {
+   "en": "We watch a film on Friday evening.",
+   "de": "Wir schauen am Freitagabend einen Film.",
+   "luecke": "watch",
+   "audio": {
+    "en": "audio/gym/u3_037_watch_en.mp3"
+   }
+  },
+  "gym_u3_038_line": {
+   "en": "Read the first line of the text.",
+   "de": "Lies die erste Zeile des Textes.",
+   "luecke": "line",
+   "audio": {
+    "en": "audio/gym/u3_038_line_en.mp3"
+   }
+  },
+  "gym_u3_039_shopping": {
+   "en": "On Saturday I go shopping with my mum.",
+   "de": "Am Samstag gehe ich mit meiner Mutter einkaufen.",
+   "luecke": "shopping",
+   "audio": {
+    "en": "audio/gym/u3_039_shopping_en.mp3"
+   }
+  },
+  "gym_u3_040_afternoon": {
+   "en": "In the afternoon I do my homework.",
+   "de": "Am Nachmittag mache ich meine Hausaufgaben.",
+   "luecke": "afternoon",
+   "audio": {
+    "en": "audio/gym/u3_040_afternoon_en.mp3"
+   }
+  },
+  "gym_u3_041_brush": {
+   "en": "I brush my hair before school.",
+   "de": "Ich bürste mir vor der Schule die Haare.",
+   "luecke": "brush",
+   "audio": {
+    "en": "audio/gym/u3_041_brush_en.mp3"
+   }
+  },
+  "gym_u3_042_tooth_pl_teeth": {
+   "en": "I brush my teeth two times a day.",
+   "de": "Ich putze mir zweimal am Tag die Zähne.",
+   "luecke": "teeth",
+   "audio": {
+    "en": "audio/gym/u3_042_tooth_pl_teeth_en.mp3"
+   }
+  },
+  "gym_u3_043_everybody": {
+   "en": "Everybody in my class likes pizza.",
+   "de": "Alle in meiner Klasse mögen Pizza.",
+   "luecke": "Everybody",
+   "audio": {
+    "en": "audio/gym/u3_043_everybody_en.mp3"
+   }
+  },
+  "gym_u3_044_project": {
+   "en": "We do a project about London.",
+   "de": "Wir machen ein Projekt über London.",
+   "luecke": "project",
+   "audio": {
+    "en": "audio/gym/u3_044_project_en.mp3"
+   }
+  },
+  "gym_u3_045_country": {
+   "en": "My grandparents live in the country.",
+   "de": "Meine Großeltern leben auf dem Land.",
+   "luecke": "country",
+   "audio": {
+    "en": "audio/gym/u3_045_country_en.mp3"
+   }
+  },
+  "gym_u3_046_club": {
+   "en": "I'm in the drama club at school.",
+   "de": "Ich bin in der Theater-AG an der Schule.",
+   "luecke": "club",
+   "audio": {
+    "en": "audio/gym/u3_046_club_en.mp3"
+   }
+  },
+  "gym_u3_047_drama": {
+   "en": "We have drama on Wednesday afternoon.",
+   "de": "Wir haben am Mittwochnachmittag Schauspiel.",
+   "luecke": "drama",
+   "audio": {
+    "en": "audio/gym/u3_047_drama_en.mp3"
+   }
+  },
+  "gym_u3_049_hike": {
+   "en": "We hike in the hills on Sunday.",
+   "de": "Wir wandern am Sonntag in den Hügeln.",
+   "luecke": "hike",
+   "audio": {
+    "en": "audio/gym/u3_049_hike_en.mp3"
+   }
+  },
+  "gym_u3_050_run": {
+   "en": "I run to the bus stop every morning.",
+   "de": "Ich renne jeden Morgen zur Bushaltestelle.",
+   "luecke": "run",
+   "audio": {
+    "en": "audio/gym/u3_050_run_en.mp3"
+   }
+  },
+  "gym_u3_051_trampolining": {
+   "en": "Trampolining is my favourite club.",
+   "de": "Trampolinspringen ist meine Lieblings-AG.",
+   "luecke": "Trampolining",
+   "audio": {
+    "en": "audio/gym/u3_051_trampolining_en.mp3"
+   }
+  },
+  "gym_u3_052_most_schools": {
+   "en": "Most schools in the UK have clubs.",
+   "de": "Die meisten Schulen im Vereinigten Königreich haben AGs.",
+   "luecke": "Most schools",
+   "audio": {
+    "en": "audio/gym/u3_052_most_schools_en.mp3"
+   }
+  },
+  "gym_u3_053_which_clubs": {
+   "en": "Which clubs are there at your school?",
+   "de": "Welche AGs gibt es an deiner Schule?",
+   "luecke": "Which clubs",
+   "audio": {
+    "en": "audio/gym/u3_053_which_clubs_en.mp3"
+   }
+  },
+  "gym_u3_054_sea": {
+   "en": "In summer we swim in the sea.",
+   "de": "Im Sommer schwimmen wir im Meer.",
+   "luecke": "sea",
+   "audio": {
+    "en": "audio/gym/u3_054_sea_en.mp3"
+   }
+  },
+  "gym_u3_055_sentence": {
+   "en": "Write one sentence about your day.",
+   "de": "Schreib einen Satz über deinen Tag.",
+   "luecke": "sentence",
+   "audio": {
+    "en": "audio/gym/u3_055_sentence_en.mp3"
+   }
+  },
+  "gym_u3_056_sometimes": {
+   "en": "Sometimes I go to school by bike.",
+   "de": "Manchmal fahre ich mit dem Fahrrad zur Schule.",
+   "luecke": "Sometimes",
+   "audio": {
+    "en": "audio/gym/u3_056_sometimes_en.mp3"
+   }
+  },
+  "gym_u3_057_never": {
+   "en": "I never get up before six.",
+   "de": "Ich stehe nie vor sechs auf.",
+   "luecke": "never",
+   "audio": {
+    "en": "audio/gym/u3_057_never_en.mp3"
+   }
+  },
+  "gym_u3_058_rarely": {
+   "en": "We rarely eat pizza for breakfast.",
+   "de": "Wir essen selten Pizza zum Frühstück.",
+   "luecke": "rarely",
+   "audio": {
+    "en": "audio/gym/u3_058_rarely_en.mp3"
+   }
+  },
+  "gym_u3_059_secret": {
+   "en": "Don't tell anybody, it's a secret!",
+   "de": "Erzähl es niemandem, es ist ein Geheimnis!",
+   "luecke": "secret",
+   "audio": {
+    "en": "audio/gym/u3_059_secret_en.mp3"
+   }
+  },
+  "gym_u3_060_activity": {
+   "en": "My favourite activity is swimming.",
+   "de": "Meine Lieblingsaktivität ist Schwimmen.",
+   "luecke": "activity",
+   "audio": {
+    "en": "audio/gym/u3_060_activity_en.mp3"
+   }
+  },
+  "gym_u3_061_a_shame": {
+   "en": "It's a shame that you can't come.",
+   "de": "Es ist schade, dass du nicht kommen kannst.",
+   "luecke": "a shame",
+   "audio": {
+    "en": "audio/gym/u3_061_a_shame_en.mp3"
+   }
+  },
+  "gym_u3_062_i_d_love_to": {
+   "en": "Come to my party? I'd love to!",
+   "de": "Zu meiner Party kommen? Sehr gerne!",
+   "luecke": "I'd love to",
+   "audio": {
+    "en": "audio/gym/u3_062_i_d_love_to_en.mp3"
+   }
+  },
+  "gym_u3_063_ask_sb_to_do_sth": {
+   "en": "I ask my sister to help me.",
+   "de": "Ich bitte meine Schwester, mir zu helfen.",
+   "luecke": "ask",
+   "audio": {
+    "en": "audio/gym/u3_063_ask_sb_to_do_sth_en.mp3"
+   }
+  },
+  "gym_u3_064_plan": {
+   "en": "What's your plan for the weekend?",
+   "de": "Was ist dein Plan fürs Wochenende?",
+   "luecke": "plan",
+   "audio": {
+    "en": "audio/gym/u3_064_plan_en.mp3"
+   }
+  },
+  "gym_u3_065_win": {
+   "en": "I hope we win the match on Saturday.",
+   "de": "Ich hoffe, wir gewinnen das Spiel am Samstag.",
+   "luecke": "win",
+   "audio": {
+    "en": "audio/gym/u3_065_win_en.mp3"
+   }
+  },
+  "gym_u3_066_prize": {
+   "en": "The first prize is a trip to London.",
+   "de": "Der erste Preis ist eine Reise nach London.",
+   "luecke": "prize",
+   "audio": {
+    "en": "audio/gym/u3_066_prize_en.mp3"
+   }
+  },
+  "gym_u3_067_ceremony": {
+   "en": "The prize ceremony is in the school hall.",
+   "de": "Die Preisverleihung ist in der Aula.",
+   "luecke": "ceremony",
+   "audio": {
+    "en": "audio/gym/u3_067_ceremony_en.mp3"
+   }
+  },
+  "gym_u3_068_show": {
+   "en": "Can you show me your new bike?",
+   "de": "Kannst du mir dein neues Fahrrad zeigen?",
+   "luecke": "show",
+   "audio": {
+    "en": "audio/gym/u3_068_show_en.mp3"
+   }
+  },
+  "gym_u3_069_article": {
+   "en": "There is an article about our school in the paper.",
+   "de": "In der Zeitung steht ein Artikel über unsere Schule.",
+   "luecke": "article",
+   "audio": {
+    "en": "audio/gym/u3_069_article_en.mp3"
+   }
+  },
+  "gym_u3_070_surprised": {
+   "en": "I was surprised when I saw the prize.",
+   "de": "Ich war überrascht, als ich den Preis sah.",
+   "luecke": "surprised",
+   "audio": {
+    "en": "audio/gym/u3_070_surprised_en.mp3"
+   }
+  },
+  "gym_u3_071_send": {
+   "en": "I send a photo to my grandma.",
+   "de": "Ich schicke meiner Oma ein Foto.",
+   "luecke": "send",
+   "audio": {
+    "en": "audio/gym/u3_071_send_en.mp3"
+   }
+  },
+  "gym_u3_072_next": {
+   "en": "The next bus comes at ten past eight.",
+   "de": "Der nächste Bus kommt um zehn nach acht.",
+   "luecke": "next",
+   "audio": {
+    "en": "audio/gym/u3_072_next_en.mp3"
+   }
+  },
+  "gym_u3_073_guys": {
+   "en": "Hi guys, let's play football!",
+   "de": "Hallo Leute, lasst uns Fußball spielen!",
+   "luecke": "guys",
+   "audio": {
+    "en": "audio/gym/u3_073_guys_en.mp3"
+   }
+  },
+  "gym_u3_074_feel": {
+   "en": "I feel great after sport.",
+   "de": "Nach dem Sport fühle ich mich großartig.",
+   "luecke": "feel",
+   "audio": {
+    "en": "audio/gym/u3_074_feel_en.mp3"
+   }
+  },
+  "gym_u3_075_be_feel_sorry_for_sb": {
+   "en": "I feel sorry for my friend, she is ill.",
+   "de": "Ich habe Mitleid mit meiner Freundin, sie ist krank.",
+   "luecke": "feel sorry for",
+   "audio": {
+    "en": "audio/gym/u3_075_be_feel_sorry_for_sb_en.mp3"
+   }
+  },
+  "gym_u3_076_her": {
+   "en": "That's Lucy. Do you know her?",
+   "de": "Das ist Lucy. Kennst du sie?",
+   "luecke": "her",
+   "audio": {
+    "en": "audio/gym/u3_076_her_en.mp3"
+   }
+  },
+  "gym_u3_077_stupid": {
+   "en": "That was a stupid idea.",
+   "de": "Das war eine dumme Idee.",
+   "luecke": "stupid",
+   "audio": {
+    "en": "audio/gym/u3_077_stupid_en.mp3"
+   }
+  },
+  "gym_u3_078_hate": {
+   "en": "I hate getting up early.",
+   "de": "Ich hasse es, früh aufzustehen.",
+   "luecke": "hate",
+   "audio": {
+    "en": "audio/gym/u3_078_hate_en.mp3"
+   }
+  },
+  "gym_u3_079_much": {
+   "en": "I don't have much time today.",
+   "de": "Ich habe heute nicht viel Zeit.",
+   "luecke": "much",
+   "audio": {
+    "en": "audio/gym/u3_079_much_en.mp3"
+   }
+  },
+  "gym_u3_080_well_done": {
+   "en": "Well done, that was a great goal!",
+   "de": "Gut gemacht, das war ein tolles Tor!",
+   "luecke": "Well done",
+   "audio": {
+    "en": "audio/gym/u3_080_well_done_en.mp3"
+   }
+  },
+  "gym_u3_081_news": {
+   "en": "I've got good news: no homework today!",
+   "de": "Ich habe gute Nachrichten: heute keine Hausaufgaben!",
+   "luecke": "news",
+   "audio": {
+    "en": "audio/gym/u3_081_news_en.mp3"
+   }
+  },
+  "gym_u3_082_get": {
+   "en": "Can you get me a glass of water?",
+   "de": "Kannst du mir ein Glas Wasser holen?",
+   "luecke": "get",
+   "audio": {
+    "en": "audio/gym/u3_082_get_en.mp3"
+   }
+  },
+  "gym_u3_083_as_the_winner": {
+   "en": "As the winner, you get a free ticket.",
+   "de": "Als Gewinner bekommst du eine Freikarte.",
+   "luecke": "As the winner",
+   "audio": {
+    "en": "audio/gym/u3_083_as_the_winner_en.mp3"
+   }
+  },
+  "gym_u3_084_money": {
+   "en": "I haven't got any money for the cafe.",
+   "de": "Ich habe kein Geld fürs Café.",
+   "luecke": "money",
+   "audio": {
+    "en": "audio/gym/u3_084_money_en.mp3"
+   }
+  },
+  "gym_u3_085_heading": {
+   "en": "Write a heading for your text.",
+   "de": "Schreib eine Überschrift für deinen Text.",
+   "luecke": "heading",
+   "audio": {
+    "en": "audio/gym/u3_085_heading_en.mp3"
+   }
+  },
+  "gym_u3_086_find_out": {
+   "en": "Let's find out who the winner is.",
+   "de": "Lass uns herausfinden, wer der Gewinner ist.",
+   "luecke": "find out",
+   "audio": {
+    "en": "audio/gym/u3_086_find_out_en.mp3"
+   }
+  },
+  "gym_u3_087_explain_sth_to_sb": {
+   "en": "Can you explain the game to me?",
+   "de": "Kannst du mir das Spiel erklären?",
+   "luecke": "explain",
+   "audio": {
+    "en": "audio/gym/u3_087_explain_sth_to_sb_en.mp3"
+   }
+  },
+  "gym_u3_088_happen": {
+   "en": "What happened at school today?",
+   "de": "Was ist heute in der Schule passiert?",
+   "luecke": "happened",
+   "audio": {
+    "en": "audio/gym/u3_088_happen_en.mp3"
+   }
+  },
+  "gym_u3_089_give": {
+   "en": "Give the book to your teacher, please.",
+   "de": "Gib das Buch bitte deiner Lehrerin.",
+   "luecke": "Give",
+   "audio": {
+    "en": "audio/gym/u3_089_give_en.mp3"
+   }
+  },
+  "gym_u3_090_pay": {
+   "en": "My mum pays for the tickets.",
+   "de": "Meine Mutter bezahlt die Karten.",
+   "luecke": "pay",
+   "audio": {
+    "en": "audio/gym/u3_090_pay_en.mp3"
+   }
+  },
+  "gym_u3_091_cleaner": {
+   "en": "The cleaner comes after the last lesson.",
+   "de": "Die Reinigungskraft kommt nach der letzten Stunde.",
+   "luecke": "cleaner",
+   "audio": {
+    "en": "audio/gym/u3_091_cleaner_en.mp3"
+   }
+  },
+  "gym_u3_092_pound": {
+   "en": "The ticket is two pounds.",
+   "de": "Die Karte kostet zwei Pfund.",
+   "luecke": "pounds",
+   "audio": {
+    "en": "audio/gym/u3_092_pound_en.mp3"
+   }
+  },
+  "gym_u3_093_penny_pl_pence": {
+   "en": "A banana is fifty pence.",
+   "de": "Eine Banane kostet fünfzig Pence.",
+   "luecke": "pence",
+   "audio": {
+    "en": "audio/gym/u3_093_penny_pl_pence_en.mp3"
+   }
+  },
+  "gym_u3_094_look_sth_up": {
+   "en": "Look the word up in your dictionary.",
+   "de": "Schlag das Wort in deinem Wörterbuch nach.",
+   "luecke": "Look",
+   "audio": {
+    "en": "audio/gym/u3_094_look_sth_up_en.mp3"
+   }
+  },
+  "gym_u3_095_jigsaw": {
+   "en": "We do a jigsaw with 500 pieces.",
+   "de": "Wir machen ein Puzzle mit 500 Teilen.",
+   "luecke": "jigsaw",
+   "audio": {
+    "en": "audio/gym/u3_095_jigsaw_en.mp3"
+   }
+  },
+  "gym_u3_096_collect": {
+   "en": "I collect football stickers.",
+   "de": "Ich sammle Fußballsticker.",
+   "luecke": "collect",
+   "audio": {
+    "en": "audio/gym/u3_096_collect_en.mp3"
+   }
+  },
+  "gym_u3_097_letter": {
+   "en": "The first letter of the word is B.",
+   "de": "Der erste Buchstabe des Wortes ist B.",
+   "luecke": "letter",
+   "audio": {
+    "en": "audio/gym/u3_097_letter_en.mp3"
+   }
+  },
+  "gym_u3_098_card": {
+   "en": "Take a card and read the word.",
+   "de": "Nimm eine Karte und lies das Wort.",
+   "luecke": "card",
+   "audio": {
+    "en": "audio/gym/u3_098_card_en.mp3"
+   }
+  },
+  "gym_u3_099_language": {
+   "en": "English is my favourite language.",
+   "de": "Englisch ist meine Lieblingssprache.",
+   "luecke": "language",
+   "audio": {
+    "en": "audio/gym/u3_099_language_en.mp3"
+   }
+  },
+  "gym_u3_100_group": {
+   "en": "Work in a group of four.",
+   "de": "Arbeitet in einer Vierergruppe.",
+   "luecke": "group",
+   "audio": {
+    "en": "audio/gym/u3_100_group_en.mp3"
+   }
+  },
+  "gym_u3_101_share": {
+   "en": "I share my sandwich with my friend.",
+   "de": "Ich teile mein Sandwich mit meinem Freund.",
+   "luecke": "share",
+   "audio": {
+    "en": "audio/gym/u3_101_share_en.mp3"
+   }
+  },
+  "gym_u3_102_match": {
+   "en": "The football match starts at three.",
+   "de": "Das Fußballspiel beginnt um drei.",
+   "luecke": "match",
+   "audio": {
+    "en": "audio/gym/u3_102_match_en.mp3"
+   }
+  },
+  "gym_u3_103_light": {
+   "en": "Please turn off the light.",
+   "de": "Bitte mach das Licht aus.",
+   "luecke": "light",
+   "audio": {
+    "en": "audio/gym/u3_103_light_en.mp3"
+   }
+  },
+  "gym_u3_104_speak_clearly_loudly": {
+   "en": "Please speak clearly in the video.",
+   "de": "Bitte sprich im Video deutlich.",
+   "luecke": "speak clearly",
+   "audio": {
+    "en": "audio/gym/u3_104_speak_clearly_loudly_en.mp3"
+   }
   }
  },
  "vokabeln": [
@@ -2788,6 +3548,7 @@ window.DATEN = {
    "symbol": "🧳",
    "satz": "st1_07",
    "luecke": "journey",
+   "gymsatz": "st1_07",
    "audio": {
     "en": "audio/vokabeln/u3_001_journey_en.mp3"
    }
@@ -2799,6 +3560,7 @@ window.DATEN = {
    "symbol": "➡️",
    "satz": "",
    "luecke": "come",
+   "gymsatz": "gym_u3_002_come",
    "audio": {
     "en": "audio/vokabeln/u3_002_come_en.mp3"
    }
@@ -2810,6 +3572,7 @@ window.DATEN = {
    "symbol": "🚌",
    "satz": "st1_01",
    "luecke": "bus",
+   "gymsatz": "st1_01",
    "audio": {
     "en": "audio/vokabeln/u3_003_bus_en.mp3"
    }
@@ -2821,6 +3584,7 @@ window.DATEN = {
    "symbol": "🚲",
    "satz": "st1_04",
    "luecke": "by bike",
+   "gymsatz": "st1_04",
    "audio": {
     "en": "audio/vokabeln/u3_004_by_bike_bus_en.mp3"
    }
@@ -2832,6 +3596,7 @@ window.DATEN = {
    "symbol": "🚗",
    "satz": "st1_02",
    "luecke": "car",
+   "gymsatz": "st1_02",
    "audio": {
     "en": "audio/vokabeln/u3_005_car_en.mp3"
    }
@@ -2843,6 +3608,7 @@ window.DATEN = {
    "symbol": "🚆",
    "satz": "st1_05",
    "luecke": "train",
+   "gymsatz": "st1_05",
    "audio": {
     "en": "audio/vokabeln/u3_006_train_en.mp3"
    }
@@ -2854,6 +3620,7 @@ window.DATEN = {
    "symbol": "📏",
    "satz": "st1_07",
    "luecke": "short",
+   "gymsatz": "st1_07",
    "audio": {
     "en": "audio/vokabeln/u3_007_short_en.mp3"
    }
@@ -2865,6 +3632,7 @@ window.DATEN = {
    "symbol": "📅",
    "satz": "",
    "luecke": "weekday",
+   "gymsatz": "gym_u3_008_weekday",
    "audio": {
     "en": "audio/vokabeln/u3_008_weekday_en.mp3"
    }
@@ -2876,6 +3644,7 @@ window.DATEN = {
    "symbol": "🕗",
    "satz": "",
    "luecke": "at 8 o'clock",
+   "gymsatz": "gym_u3_009_at_8_o_clock",
    "audio": {
     "en": "audio/vokabeln/u3_009_at_8_o_clock_en.mp3"
    }
@@ -2887,6 +3656,7 @@ window.DATEN = {
    "symbol": "🕓",
    "satz": "",
    "luecke": "4 p.m.",
+   "gymsatz": "gym_u3_010_4_p_m",
    "audio": {
     "en": "audio/vokabeln/u3_010_4_p_m_en.mp3"
    }
@@ -2898,6 +3668,7 @@ window.DATEN = {
    "symbol": "🌙",
    "satz": "",
    "luecke": "4 a.m.",
+   "gymsatz": "gym_u3_011_4_a_m",
    "audio": {
     "en": "audio/vokabeln/u3_011_4_a_m_en.mp3"
    }
@@ -2909,6 +3680,7 @@ window.DATEN = {
    "symbol": "🇬🇧",
    "satz": "",
    "luecke": "the United Kingdom (= the UK)",
+   "gymsatz": "gym_u3_012_the_united_kingdom",
    "audio": {
     "en": "audio/vokabeln/u3_012_the_united_kingdom_en.mp3"
    }
@@ -2920,6 +3692,7 @@ window.DATEN = {
    "symbol": "⏳",
    "satz": "",
    "luecke": "hour",
+   "gymsatz": "gym_u3_013_hour",
    "audio": {
     "en": "audio/vokabeln/u3_013_hour_en.mp3"
    }
@@ -2931,6 +3704,7 @@ window.DATEN = {
    "symbol": "🕰️",
    "satz": "",
    "luecke": "clock",
+   "gymsatz": "gym_u3_014_clock",
    "audio": {
     "en": "audio/vokabeln/u3_014_clock_en.mp3"
    }
@@ -2942,6 +3716,7 @@ window.DATEN = {
    "symbol": "🌅",
    "satz": "",
    "luecke": "morning",
+   "gymsatz": "gym_u3_015_morning",
    "audio": {
     "en": "audio/vokabeln/u3_015_morning_en.mp3"
    }
@@ -2953,6 +3728,7 @@ window.DATEN = {
    "symbol": "🌆",
    "satz": "",
    "luecke": "evening",
+   "gymsatz": "gym_u3_016_evening",
    "audio": {
     "en": "audio/vokabeln/u3_016_evening_en.mp3"
    }
@@ -2964,6 +3740,7 @@ window.DATEN = {
    "symbol": "🥪",
    "satz": "",
    "luecke": "lunchtime",
+   "gymsatz": "gym_u3_017_lunchtime",
    "audio": {
     "en": "audio/vokabeln/u3_017_lunchtime_en.mp3"
    }
@@ -2975,6 +3752,7 @@ window.DATEN = {
    "symbol": "🏁",
    "satz": "",
    "luecke": "end",
+   "gymsatz": "gym_u3_018_end",
    "audio": {
     "en": "audio/vokabeln/u3_018_end_en.mp3"
    }
@@ -2986,6 +3764,7 @@ window.DATEN = {
    "symbol": "🔚",
    "satz": "",
    "luecke": "in the end",
+   "gymsatz": "gym_u3_019_in_the_end",
    "audio": {
     "en": "audio/vokabeln/u3_019_in_the_end_en.mp3"
    }
@@ -2997,6 +3776,7 @@ window.DATEN = {
    "symbol": "📍",
    "satz": "",
    "luecke": "at the end (of)",
+   "gymsatz": "gym_u3_020_at_the_end",
    "audio": {
     "en": "audio/vokabeln/u3_020_at_the_end_en.mp3"
    }
@@ -3008,6 +3788,7 @@ window.DATEN = {
    "symbol": "⏮️",
    "satz": "",
    "luecke": "before (school / the lesson)",
+   "gymsatz": "gym_u3_021_before",
    "audio": {
     "en": "audio/vokabeln/u3_021_before_en.mp3"
    }
@@ -3019,6 +3800,7 @@ window.DATEN = {
    "symbol": "❓",
    "satz": "",
    "luecke": "why",
+   "gymsatz": "gym_u3_022_why",
    "audio": {
     "en": "audio/vokabeln/u3_022_why_en.mp3"
    }
@@ -3030,6 +3812,7 @@ window.DATEN = {
    "symbol": "📰",
    "satz": "",
    "luecke": "newspaper (paper)",
+   "gymsatz": "gym_u3_023_newspaper",
    "audio": {
     "en": "audio/vokabeln/u3_023_newspaper_en.mp3"
    }
@@ -3041,6 +3824,7 @@ window.DATEN = {
    "symbol": "✉️",
    "satz": "",
    "luecke": "letter",
+   "gymsatz": "gym_u3_024_letter",
    "audio": {
     "en": "audio/vokabeln/u3_024_letter_en.mp3"
    }
@@ -3052,6 +3836,7 @@ window.DATEN = {
    "symbol": "🎯",
    "satz": "",
    "luecke": "competition",
+   "gymsatz": "gym_u3_025_competition",
    "audio": {
     "en": "audio/vokabeln/u3_025_competition_en.mp3"
    }
@@ -3063,6 +3848,7 @@ window.DATEN = {
    "symbol": "👉",
    "satz": "",
    "luecke": "choose",
+   "gymsatz": "gym_u3_026_choose",
    "audio": {
     "en": "audio/vokabeln/u3_026_choose_en.mp3"
    }
@@ -3074,6 +3860,7 @@ window.DATEN = {
    "symbol": "🏅",
    "satz": "",
    "luecke": "winner",
+   "gymsatz": "gym_u3_027_winner",
    "audio": {
     "en": "audio/vokabeln/u3_027_winner_en.mp3"
    }
@@ -3085,6 +3872,7 @@ window.DATEN = {
    "symbol": "🤒",
    "satz": "",
    "luecke": "illness",
+   "gymsatz": "gym_u3_028_illness",
    "audio": {
     "en": "audio/vokabeln/u3_028_illness_en.mp3"
    }
@@ -3096,6 +3884,7 @@ window.DATEN = {
    "symbol": "🦽",
    "satz": "",
    "luecke": "wheelchair",
+   "gymsatz": "gym_u3_029_wheelchair",
    "audio": {
     "en": "audio/vokabeln/u3_029_wheelchair_en.mp3"
    }
@@ -3107,6 +3896,7 @@ window.DATEN = {
    "symbol": "💍",
    "satz": "",
    "luecke": "husband",
+   "gymsatz": "gym_u3_030_husband",
    "audio": {
     "en": "audio/vokabeln/u3_030_husband_en.mp3"
    }
@@ -3118,6 +3908,7 @@ window.DATEN = {
    "symbol": "☕",
    "satz": "",
    "luecke": "cafe",
+   "gymsatz": "gym_u3_031_cafe",
    "audio": {
     "en": "audio/vokabeln/u3_031_cafe_en.mp3"
    }
@@ -3129,6 +3920,7 @@ window.DATEN = {
    "symbol": "⏰",
    "satz": "st3_01",
    "luecke": "get up",
+   "gymsatz": "st3_01",
    "audio": {
     "en": "audio/vokabeln/u3_032_get_up_en.mp3"
    }
@@ -3140,6 +3932,7 @@ window.DATEN = {
    "symbol": "🚿",
    "satz": "",
    "luecke": "shower",
+   "gymsatz": "gym_u3_033_shower",
    "audio": {
     "en": "audio/vokabeln/u3_033_shower_en.mp3"
    }
@@ -3151,6 +3944,7 @@ window.DATEN = {
    "symbol": "👕",
    "satz": "",
    "luecke": "get dressed",
+   "gymsatz": "gym_u3_034_get_dressed",
    "audio": {
     "en": "audio/vokabeln/u3_034_get_dressed_en.mp3"
    }
@@ -3162,6 +3956,7 @@ window.DATEN = {
    "symbol": "🥣",
    "satz": "st2b_05_i",
    "luecke": "breakfast",
+   "gymsatz": "st2b_05_i",
    "audio": {
     "en": "audio/vokabeln/u3_035_breakfast_en.mp3"
    }
@@ -3173,6 +3968,7 @@ window.DATEN = {
    "symbol": "⌛",
    "satz": "",
    "luecke": "take",
+   "gymsatz": "gym_u3_036_take",
    "audio": {
     "en": "audio/vokabeln/u3_036_take_en.mp3"
    }
@@ -3184,6 +3980,7 @@ window.DATEN = {
    "symbol": "👀",
    "satz": "",
    "luecke": "watch (sth.)",
+   "gymsatz": "gym_u3_037_watch",
    "audio": {
     "en": "audio/vokabeln/u3_037_watch_en.mp3"
    }
@@ -3195,6 +3992,7 @@ window.DATEN = {
    "symbol": "🏘️",
    "satz": "",
    "luecke": "line",
+   "gymsatz": "gym_u3_038_line",
    "audio": {
     "en": "audio/vokabeln/u3_038_line_en.mp3"
    }
@@ -3206,6 +4004,7 @@ window.DATEN = {
    "symbol": "🛍️",
    "satz": "",
    "luecke": "shopping",
+   "gymsatz": "gym_u3_039_shopping",
    "audio": {
     "en": "audio/vokabeln/u3_039_shopping_en.mp3"
    }
@@ -3217,6 +4016,7 @@ window.DATEN = {
    "symbol": "☀️",
    "satz": "",
    "luecke": "afternoon",
+   "gymsatz": "gym_u3_040_afternoon",
    "audio": {
     "en": "audio/vokabeln/u3_040_afternoon_en.mp3"
    }
@@ -3228,6 +4028,7 @@ window.DATEN = {
    "symbol": "🪥",
    "satz": "",
    "luecke": "brush",
+   "gymsatz": "gym_u3_041_brush",
    "audio": {
     "en": "audio/vokabeln/u3_041_brush_en.mp3"
    }
@@ -3239,6 +4040,7 @@ window.DATEN = {
    "symbol": "🦷",
    "satz": "",
    "luecke": "tooth, pl teeth",
+   "gymsatz": "gym_u3_042_tooth_pl_teeth",
    "audio": {
     "en": "audio/vokabeln/u3_042_tooth_pl_teeth_en.mp3"
    }
@@ -3250,6 +4052,7 @@ window.DATEN = {
    "symbol": "🌍",
    "satz": "",
    "luecke": "everybody",
+   "gymsatz": "gym_u3_043_everybody",
    "audio": {
     "en": "audio/vokabeln/u3_043_everybody_en.mp3"
    }
@@ -3261,6 +4064,7 @@ window.DATEN = {
    "symbol": "📋",
    "satz": "",
    "luecke": "project",
+   "gymsatz": "gym_u3_044_project",
    "audio": {
     "en": "audio/vokabeln/u3_044_project_en.mp3"
    }
@@ -3272,6 +4076,7 @@ window.DATEN = {
    "symbol": "🌾",
    "satz": "",
    "luecke": "country",
+   "gymsatz": "gym_u3_045_country",
    "audio": {
     "en": "audio/vokabeln/u3_045_country_en.mp3"
    }
@@ -3283,6 +4088,7 @@ window.DATEN = {
    "symbol": "🎨",
    "satz": "",
    "luecke": "(school) club",
+   "gymsatz": "gym_u3_046_club",
    "audio": {
     "en": "audio/vokabeln/u3_046_club_en.mp3"
    }
@@ -3294,6 +4100,7 @@ window.DATEN = {
    "symbol": "🎭",
    "satz": "",
    "luecke": "drama",
+   "gymsatz": "gym_u3_047_drama",
    "audio": {
     "en": "audio/vokabeln/u3_047_drama_en.mp3"
    }
@@ -3305,6 +4112,7 @@ window.DATEN = {
    "symbol": "🚴",
    "satz": "st4_cycle_satz",
    "luecke": "cycle",
+   "gymsatz": "st4_cycle_satz",
    "audio": {
     "en": "audio/vokabeln/u3_048_cycle_en.mp3"
    }
@@ -3316,6 +4124,7 @@ window.DATEN = {
    "symbol": "🥾",
    "satz": "",
    "luecke": "hike",
+   "gymsatz": "gym_u3_049_hike",
    "audio": {
     "en": "audio/vokabeln/u3_049_hike_en.mp3"
    }
@@ -3327,6 +4136,7 @@ window.DATEN = {
    "symbol": "🏃",
    "satz": "",
    "luecke": "run",
+   "gymsatz": "gym_u3_050_run",
    "audio": {
     "en": "audio/vokabeln/u3_050_run_en.mp3"
    }
@@ -3338,6 +4148,7 @@ window.DATEN = {
    "symbol": "🤸",
    "satz": "",
    "luecke": "trampolining",
+   "gymsatz": "gym_u3_051_trampolining",
    "audio": {
     "en": "audio/vokabeln/u3_051_trampolining_en.mp3"
    }
@@ -3349,6 +4160,7 @@ window.DATEN = {
    "symbol": "🏫",
    "satz": "",
    "luecke": "most schools",
+   "gymsatz": "gym_u3_052_most_schools",
    "audio": {
     "en": "audio/vokabeln/u3_052_most_schools_en.mp3"
    }
@@ -3360,6 +4172,7 @@ window.DATEN = {
    "symbol": "🤔",
    "satz": "",
    "luecke": "Which clubs ...?",
+   "gymsatz": "gym_u3_053_which_clubs",
    "audio": {
     "en": "audio/vokabeln/u3_053_which_clubs_en.mp3"
    }
@@ -3371,6 +4184,7 @@ window.DATEN = {
    "symbol": "🌊",
    "satz": "",
    "luecke": "sea",
+   "gymsatz": "gym_u3_054_sea",
    "audio": {
     "en": "audio/vokabeln/u3_054_sea_en.mp3"
    }
@@ -3382,6 +4196,7 @@ window.DATEN = {
    "symbol": "💬",
    "satz": "",
    "luecke": "sentence",
+   "gymsatz": "gym_u3_055_sentence",
    "audio": {
     "en": "audio/vokabeln/u3_055_sentence_en.mp3"
    }
@@ -3393,6 +4208,7 @@ window.DATEN = {
    "symbol": "🌤️",
    "satz": "",
    "luecke": "sometimes",
+   "gymsatz": "gym_u3_056_sometimes",
    "audio": {
     "en": "audio/vokabeln/u3_056_sometimes_en.mp3"
    }
@@ -3404,6 +4220,7 @@ window.DATEN = {
    "symbol": "🚫",
    "satz": "",
    "luecke": "never",
+   "gymsatz": "gym_u3_057_never",
    "audio": {
     "en": "audio/vokabeln/u3_057_never_en.mp3"
    }
@@ -3415,6 +4232,7 @@ window.DATEN = {
    "symbol": "🔅",
    "satz": "",
    "luecke": "rarely",
+   "gymsatz": "gym_u3_058_rarely",
    "audio": {
     "en": "audio/vokabeln/u3_058_rarely_en.mp3"
    }
@@ -3426,6 +4244,7 @@ window.DATEN = {
    "symbol": "🤫",
    "satz": "",
    "luecke": "secret",
+   "gymsatz": "gym_u3_059_secret",
    "audio": {
     "en": "audio/vokabeln/u3_059_secret_en.mp3"
    }
@@ -3437,6 +4256,7 @@ window.DATEN = {
    "symbol": "🏓",
    "satz": "",
    "luecke": "activity",
+   "gymsatz": "gym_u3_060_activity",
    "audio": {
     "en": "audio/vokabeln/u3_060_activity_en.mp3"
    }
@@ -3448,6 +4268,7 @@ window.DATEN = {
    "symbol": "😞",
    "satz": "",
    "luecke": "a shame",
+   "gymsatz": "gym_u3_061_a_shame",
    "audio": {
     "en": "audio/vokabeln/u3_061_a_shame_en.mp3"
    }
@@ -3459,6 +4280,7 @@ window.DATEN = {
    "symbol": "😍",
    "satz": "",
    "luecke": "I'd love to.",
+   "gymsatz": "gym_u3_062_i_d_love_to",
    "audio": {
     "en": "audio/vokabeln/u3_062_i_d_love_to_en.mp3"
    }
@@ -3470,6 +4292,7 @@ window.DATEN = {
    "symbol": "🙋",
    "satz": "",
    "luecke": "ask sb. to do sth.",
+   "gymsatz": "gym_u3_063_ask_sb_to_do_sth",
    "audio": {
     "en": "audio/vokabeln/u3_063_ask_sb_to_do_sth_en.mp3"
    }
@@ -3481,6 +4304,7 @@ window.DATEN = {
    "symbol": "🗓️",
    "satz": "",
    "luecke": "plan",
+   "gymsatz": "gym_u3_064_plan",
    "audio": {
     "en": "audio/vokabeln/u3_064_plan_en.mp3"
    }
@@ -3492,6 +4316,7 @@ window.DATEN = {
    "symbol": "🏆",
    "satz": "",
    "luecke": "win",
+   "gymsatz": "gym_u3_065_win",
    "audio": {
     "en": "audio/vokabeln/u3_065_win_en.mp3"
    }
@@ -3503,6 +4328,7 @@ window.DATEN = {
    "symbol": "🏵️",
    "satz": "",
    "luecke": "prize",
+   "gymsatz": "gym_u3_066_prize",
    "audio": {
     "en": "audio/vokabeln/u3_066_prize_en.mp3"
    }
@@ -3514,6 +4340,7 @@ window.DATEN = {
    "symbol": "🎉",
    "satz": "",
    "luecke": "ceremony",
+   "gymsatz": "gym_u3_067_ceremony",
    "audio": {
     "en": "audio/vokabeln/u3_067_ceremony_en.mp3"
    }
@@ -3525,6 +4352,7 @@ window.DATEN = {
    "symbol": "🖼️",
    "satz": "",
    "luecke": "show",
+   "gymsatz": "gym_u3_068_show",
    "audio": {
     "en": "audio/vokabeln/u3_068_show_en.mp3"
    }
@@ -3536,6 +4364,7 @@ window.DATEN = {
    "symbol": "📄",
    "satz": "",
    "luecke": "article",
+   "gymsatz": "gym_u3_069_article",
    "audio": {
     "en": "audio/vokabeln/u3_069_article_en.mp3"
    }
@@ -3547,6 +4376,7 @@ window.DATEN = {
    "symbol": "😲",
    "satz": "",
    "luecke": "surprised",
+   "gymsatz": "gym_u3_070_surprised",
    "audio": {
     "en": "audio/vokabeln/u3_070_surprised_en.mp3"
    }
@@ -3558,6 +4388,7 @@ window.DATEN = {
    "symbol": "📤",
    "satz": "",
    "luecke": "send",
+   "gymsatz": "gym_u3_071_send",
    "audio": {
     "en": "audio/vokabeln/u3_071_send_en.mp3"
    }
@@ -3569,6 +4400,7 @@ window.DATEN = {
    "symbol": "⏭️",
    "satz": "",
    "luecke": "next",
+   "gymsatz": "gym_u3_072_next",
    "audio": {
     "en": "audio/vokabeln/u3_072_next_en.mp3"
    }
@@ -3580,6 +4412,7 @@ window.DATEN = {
    "symbol": "🙌",
    "satz": "",
    "luecke": "guys (pl)",
+   "gymsatz": "gym_u3_073_guys",
    "audio": {
     "en": "audio/vokabeln/u3_073_guys_en.mp3"
    }
@@ -3591,6 +4424,7 @@ window.DATEN = {
    "symbol": "💭",
    "satz": "",
    "luecke": "feel",
+   "gymsatz": "gym_u3_074_feel",
    "audio": {
     "en": "audio/vokabeln/u3_074_feel_en.mp3"
    }
@@ -3602,6 +4436,7 @@ window.DATEN = {
    "symbol": "😢",
    "satz": "",
    "luecke": "be/feel sorry for sb.",
+   "gymsatz": "gym_u3_075_be_feel_sorry_for_sb",
    "audio": {
     "en": "audio/vokabeln/u3_075_be_feel_sorry_for_sb_en.mp3"
    }
@@ -3613,6 +4448,7 @@ window.DATEN = {
    "symbol": "👧",
    "satz": "",
    "luecke": "her",
+   "gymsatz": "gym_u3_076_her",
    "audio": {
     "en": "audio/vokabeln/u3_076_her_en.mp3"
    }
@@ -3624,6 +4460,7 @@ window.DATEN = {
    "symbol": "🤪",
    "satz": "",
    "luecke": "stupid",
+   "gymsatz": "gym_u3_077_stupid",
    "audio": {
     "en": "audio/vokabeln/u3_077_stupid_en.mp3"
    }
@@ -3635,6 +4472,7 @@ window.DATEN = {
    "symbol": "😠",
    "satz": "",
    "luecke": "hate",
+   "gymsatz": "gym_u3_078_hate",
    "audio": {
     "en": "audio/vokabeln/u3_078_hate_en.mp3"
    }
@@ -3646,6 +4484,7 @@ window.DATEN = {
    "symbol": "➕",
    "satz": "",
    "luecke": "much",
+   "gymsatz": "gym_u3_079_much",
    "audio": {
     "en": "audio/vokabeln/u3_079_much_en.mp3"
    }
@@ -3657,6 +4496,7 @@ window.DATEN = {
    "symbol": "👏",
    "satz": "",
    "luecke": "Well done.",
+   "gymsatz": "gym_u3_080_well_done",
    "audio": {
     "en": "audio/vokabeln/u3_080_well_done_en.mp3"
    }
@@ -3668,6 +4508,7 @@ window.DATEN = {
    "symbol": "📺",
    "satz": "",
    "luecke": "news",
+   "gymsatz": "gym_u3_081_news",
    "audio": {
     "en": "audio/vokabeln/u3_081_news_en.mp3"
    }
@@ -3679,6 +4520,7 @@ window.DATEN = {
    "symbol": "🤲",
    "satz": "",
    "luecke": "get",
+   "gymsatz": "gym_u3_082_get",
    "audio": {
     "en": "audio/vokabeln/u3_082_get_en.mp3"
    }
@@ -3690,6 +4532,7 @@ window.DATEN = {
    "symbol": "🥇",
    "satz": "",
    "luecke": "as the winner",
+   "gymsatz": "gym_u3_083_as_the_winner",
    "audio": {
     "en": "audio/vokabeln/u3_083_as_the_winner_en.mp3"
    }
@@ -3701,6 +4544,7 @@ window.DATEN = {
    "symbol": "💰",
    "satz": "",
    "luecke": "money",
+   "gymsatz": "gym_u3_084_money",
    "audio": {
     "en": "audio/vokabeln/u3_084_money_en.mp3"
    }
@@ -3712,6 +4556,7 @@ window.DATEN = {
    "symbol": "🔠",
    "satz": "",
    "luecke": "heading",
+   "gymsatz": "gym_u3_085_heading",
    "audio": {
     "en": "audio/vokabeln/u3_085_heading_en.mp3"
    }
@@ -3723,6 +4568,7 @@ window.DATEN = {
    "symbol": "🔍",
    "satz": "",
    "luecke": "find out (about)",
+   "gymsatz": "gym_u3_086_find_out",
    "audio": {
     "en": "audio/vokabeln/u3_086_find_out_en.mp3"
    }
@@ -3734,6 +4580,7 @@ window.DATEN = {
    "symbol": "🧑‍🏫",
    "satz": "",
    "luecke": "explain sth. to sb.",
+   "gymsatz": "gym_u3_087_explain_sth_to_sb",
    "audio": {
     "en": "audio/vokabeln/u3_087_explain_sth_to_sb_en.mp3"
    }
@@ -3745,6 +4592,7 @@ window.DATEN = {
    "symbol": "💥",
    "satz": "",
    "luecke": "happen (to sb.)",
+   "gymsatz": "gym_u3_088_happen",
    "audio": {
     "en": "audio/vokabeln/u3_088_happen_en.mp3"
    }
@@ -3756,6 +4604,7 @@ window.DATEN = {
    "symbol": "🎁",
    "satz": "",
    "luecke": "give",
+   "gymsatz": "gym_u3_089_give",
    "audio": {
     "en": "audio/vokabeln/u3_089_give_en.mp3"
    }
@@ -3767,6 +4616,7 @@ window.DATEN = {
    "symbol": "💳",
    "satz": "",
    "luecke": "pay (for sth.)",
+   "gymsatz": "gym_u3_090_pay",
    "audio": {
     "en": "audio/vokabeln/u3_090_pay_en.mp3"
    }
@@ -3778,6 +4628,7 @@ window.DATEN = {
    "symbol": "🧹",
    "satz": "",
    "luecke": "cleaner",
+   "gymsatz": "gym_u3_091_cleaner",
    "audio": {
     "en": "audio/vokabeln/u3_091_cleaner_en.mp3"
    }
@@ -3789,6 +4640,7 @@ window.DATEN = {
    "symbol": "💷",
    "satz": "",
    "luecke": "pound (£)",
+   "gymsatz": "gym_u3_092_pound",
    "audio": {
     "en": "audio/vokabeln/u3_092_pound_en.mp3"
    }
@@ -3800,6 +4652,7 @@ window.DATEN = {
    "symbol": "🪙",
    "satz": "",
    "luecke": "penny (= p), pl pence",
+   "gymsatz": "gym_u3_093_penny_pl_pence",
    "audio": {
     "en": "audio/vokabeln/u3_093_penny_pl_pence_en.mp3"
    }
@@ -3811,6 +4664,7 @@ window.DATEN = {
    "symbol": "📖",
    "satz": "",
    "luecke": "look sth. up",
+   "gymsatz": "gym_u3_094_look_sth_up",
    "audio": {
     "en": "audio/vokabeln/u3_094_look_sth_up_en.mp3"
    }
@@ -3822,6 +4676,7 @@ window.DATEN = {
    "symbol": "🧩",
    "satz": "",
    "luecke": "jigsaw (puzzle)",
+   "gymsatz": "gym_u3_095_jigsaw",
    "audio": {
     "en": "audio/vokabeln/u3_095_jigsaw_en.mp3"
    }
@@ -3833,6 +4688,7 @@ window.DATEN = {
    "symbol": "🗃️",
    "satz": "",
    "luecke": "collect",
+   "gymsatz": "gym_u3_096_collect",
    "audio": {
     "en": "audio/vokabeln/u3_096_collect_en.mp3"
    }
@@ -3844,6 +4700,7 @@ window.DATEN = {
    "symbol": "🔤",
    "satz": "",
    "luecke": "letter",
+   "gymsatz": "gym_u3_097_letter",
    "audio": {
     "en": "audio/vokabeln/u3_097_letter_en.mp3"
    }
@@ -3855,6 +4712,7 @@ window.DATEN = {
    "symbol": "🃏",
    "satz": "",
    "luecke": "card",
+   "gymsatz": "gym_u3_098_card",
    "audio": {
     "en": "audio/vokabeln/u3_098_card_en.mp3"
    }
@@ -3866,6 +4724,7 @@ window.DATEN = {
    "symbol": "🗣️",
    "satz": "",
    "luecke": "language",
+   "gymsatz": "gym_u3_099_language",
    "audio": {
     "en": "audio/vokabeln/u3_099_language_en.mp3"
    }
@@ -3877,6 +4736,7 @@ window.DATEN = {
    "symbol": "👥",
    "satz": "",
    "luecke": "group",
+   "gymsatz": "gym_u3_100_group",
    "audio": {
     "en": "audio/vokabeln/u3_100_group_en.mp3"
    }
@@ -3888,6 +4748,7 @@ window.DATEN = {
    "symbol": "🤝",
    "satz": "",
    "luecke": "share",
+   "gymsatz": "gym_u3_101_share",
    "audio": {
     "en": "audio/vokabeln/u3_101_share_en.mp3"
    }
@@ -3899,6 +4760,7 @@ window.DATEN = {
    "symbol": "⚽",
    "satz": "",
    "luecke": "match",
+   "gymsatz": "gym_u3_102_match",
    "audio": {
     "en": "audio/vokabeln/u3_102_match_en.mp3"
    }
@@ -3910,6 +4772,7 @@ window.DATEN = {
    "symbol": "💡",
    "satz": "",
    "luecke": "light",
+   "gymsatz": "gym_u3_103_light",
    "audio": {
     "en": "audio/vokabeln/u3_103_light_en.mp3"
    }
@@ -3921,6 +4784,7 @@ window.DATEN = {
    "symbol": "📢",
    "satz": "",
    "luecke": "speak clearly/loudly",
+   "gymsatz": "gym_u3_104_speak_clearly_loudly",
    "audio": {
     "en": "audio/vokabeln/u3_104_speak_clearly_loudly_en.mp3"
    }
@@ -4586,6 +5450,31 @@ window.DATEN = {
    }
   ]
  },
+ "gym": {
+  "pensum": {
+   "neu": 3,
+   "wdh": 6
+  },
+  "grenzen": {
+   "neu": [
+    1,
+    6
+   ],
+   "wdh": [
+    4,
+    12
+   ]
+  },
+  "intervalle": [
+   1,
+   3,
+   7,
+   14,
+   30,
+   60,
+   120
+  ]
+ },
  "mittel": {
   "bus": "🚌",
   "car": "🚗",
@@ -4668,6 +5557,14 @@ window.DATEN = {
    "team": {
     "text": "You collected all ten superheroes. Your team is complete. You are a legend!",
     "audio": "audio/spiel/team.mp3"
+   },
+   "gym_fini": {
+    "text": "That's it for today. See you tomorrow!",
+    "audio": "audio/spiel/gym_fini.mp3"
+   },
+   "gym_pause": {
+    "text": "Break! Come back later and finish your Word Gym.",
+    "audio": "audio/spiel/gym_pause.mp3"
    }
   },
   "orte": [

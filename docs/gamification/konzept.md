@@ -17,6 +17,7 @@ Grundsatz: kein gegenseitiger Wettbewerb, keine Bestenliste. Jeder sammelt für 
 | 🔥 On fire | 3 Schultage am Stück | +30 Punkte, Flammen-Abzeichen |
 | ⭐ Perfect week | an **jedem Schultag** der Woche (Mo–Fr) mindestens 1 Teil fertig | **große Wochenbelohnung** (Klasse 6: Superheld, Klasse 9: Landmark-Karte) |
 | 🏖️ Weekend bonus | Übung am Samstag oder Sonntag | +20 Punkte; wer am Wochenende nicht übt, verliert nichts |
+| 🌴 Holiday bonus | Übung an einem Ferien-, Feiertags- oder Brückentag unter der Woche (16.10.) | +20 Punkte und Abzeichen „Holiday hero“; an Wochenenden gilt nur der Weekend-Bonus; zählt nicht für Serien |
 | 👑 Perfect month | 4 perfekte Wochen hintereinander | Spezial-Abzeichen und goldener Rahmen um den Titel |
 | 🏅 5 × perfect | insgesamt 5 perfekte Wochen (auch mit Lücken) | Sammel-Abzeichen |
 

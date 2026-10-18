@@ -343,3 +343,9 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
 .lob-toast { display: grid; gap: 2px; padding: 12px 20px; border-radius: 16px; font-size: 1.25rem; pointer-events: none; }
 .lob-toast span { font-size: .95rem; font-weight: 400; opacity: .85; }
 @media (prefers-reduced-motion: reduce) { .gym-icon animate, .gym-icon animateTransform { display: none; } }
+
+/* Sprechtempo-Knopf (1,0 · 0,7 · 0,5) */
+.tempo-knopf { font: 700 .95rem var(--body); min-height: 40px; min-width: 76px; padding: 0 12px; border-radius: 999px; cursor: pointer;
+  border: 2px solid var(--linie); background: var(--karte); color: var(--text); font-variant-numeric: tabular-nums; }
+.tempo-knopf:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
+.tempo-leiste { display: flex; justify-content: flex-end; padding: 8px 16px 0; max-width: 60rem; margin: 0 auto; }

@@ -174,3 +174,8 @@
 
 /* Hilfe „erster Buchstabe“: Buchstaben in der Lücke sichtbar (sonst ist .luecke durchsichtig) */
 .luecke.mit-buchstaben { color: var(--blau); letter-spacing: .08em; font-weight: 700; }
+
+/* Tempo-Knopf in der blauen Leiste */
+.niveau-leiste .tempo-knopf { margin-left: auto; margin-right: 10px; min-height: 40px; background: transparent; color: var(--blau-text); border-color: var(--blau-text); }
+.niveau-leiste { justify-content: flex-start; }
+.niveau-leiste .niveau { margin-left: 0; }

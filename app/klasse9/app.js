@@ -75,6 +75,20 @@
     return ruf(art);
   }
 
+  // Sprechtempo: 1,0 · 0,7 · 0,5 (Knopf oben, wird auf dem Gerät gemerkt); gilt für alle Aufnahmen und die Geräte-Stimme
+  const TEMPI = [1, 0.7, 0.5];
+  const tempo = () => (TEMPI.includes(stand.tempo) ? stand.tempo : 1);
+  const tempoText = (t) => String(t).replace(".", ",").replace(/^1$/, "1,0");
+  function tempoKnopf() {
+    const k = document.getElementById("tempo");
+    if (!k) return;
+    const zeige_ = () => { k.textContent = (tempo() < 1 ? "🐢 " : "🔊 ") + tempoText(tempo()) + "×"; k.setAttribute("aria-label", "Sprechtempo " + tempoText(tempo())); };
+    k.addEventListener("click", () => {
+      stand.tempo = TEMPI[(TEMPI.indexOf(tempo()) + 1) % TEMPI.length]; speichern(); zeige_();
+      if (aktuell) { aktuell.playbackRate = tempo(); aktuell.preservesPitch = true; } // läuft gerade etwas, wird es sofort langsamer
+    });
+    zeige_();
+  }
   /* ---------- Audio ---------- */
   let lauf = 0, aktuell = null;
   function stopp() {
@@ -94,7 +108,7 @@
     return new Promise((fertig) => {
       if (!window.speechSynthesis) return fertig(0);
       const u = new SpeechSynthesisUtterance(text);
-      u.lang = "en-US"; u.rate = 0.9;
+      u.lang = "en-US"; u.rate = 0.9 * tempo();
       const v = geraeteStimme(stimme);
       if (v) u.voice = v;
       const start = Date.now();
@@ -117,7 +131,8 @@
       if (typeof datei === "object") return sprich(datei.text, datei.stimme).then((d) => { gesamt += d; fertig(); });
       const a = new Audio(datei);
       aktuell = a;
-      a.onended = () => { gesamt += a.duration || 0; setTimeout(fertig, 350); };
+      a.playbackRate = tempo(); a.preservesPitch = true; // langsamer, ohne dass die Stimme tiefer klingt
+      a.onended = () => { gesamt += (a.duration || 0) / (a.playbackRate || 1); setTimeout(fertig, 350); }; // Sprechzeit passt sich an
       a.onerror = fertig;
       a.play().catch(fertig);
     })), Promise.resolve()).then(() => (meinLauf === lauf ? gesamt : null));
@@ -1641,6 +1656,7 @@
   });
 
   setzeNiveau(stand.niveau === "E" ? "E" : "G");
+  tempoKnopf();
   startseite();
 
   // Offline-Speicher (nur über eine Webadresse)

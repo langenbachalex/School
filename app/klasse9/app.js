@@ -75,8 +75,8 @@
     return ruf(art);
   }
 
-  // Sprechtempo: 1,0 · 0,7 · 0,5 (Knopf oben, wird auf dem Gerät gemerkt); gilt für alle Aufnahmen und die Geräte-Stimme
-  const TEMPI = [1, 0.7, 0.5];
+  // Sprechtempo: 1,0 · 0,7 (Knopf oben, wird auf dem Gerät gemerkt); gilt für alle Aufnahmen und die Geräte-Stimme
+  const TEMPI = [1, 0.7];
   const tempo = () => (TEMPI.includes(stand.tempo) ? stand.tempo : 1);
   const tempoText = (t) => String(t).replace(".", ",").replace(/^1$/, "1,0");
   function tempoKnopf() {

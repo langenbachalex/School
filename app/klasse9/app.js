@@ -195,6 +195,21 @@
   const tipp = (text, fn) => el("button", { class: "knopf leise tipp", onclick: (e) => { if (lage) lage.hilfe = true; fn(e); } }, "💡 " + text);
 
   /* ---------- Startseite ---------- */
+  // Countdown in Wochen bis zum nächsten Termin (D.termin, in klasse9_bauen.py): zählt Kalenderwochen, Montag bis Sonntag
+  function terminZeile() {
+    const t = D.termin;
+    if (!t) return null;
+    const ziel = new Date(t.datum + "T12:00:00"), jetzt = heute();
+    const wochen = Math.round((montag(ziel) - montag(jetzt)) / (7 * 86400000));
+    const tage = Math.round((ziel - new Date(iso(jetzt) + "T12:00:00")) / 86400000);
+    if (tage < 0) return null;
+    const text = tage === 0 ? T(`Heute ist ${t.name} – viel Erfolg!`, `Today is ${t.name} – good luck!`)
+      : wochen === 0 ? T(`Diese Woche ist ${t.name}.`, `${t.name} is this week.`)
+      : wochen === 1 ? T(`Nächste Woche ist ${t.name}.`, `${t.name} is next week.`)
+      : T(`Noch ${wochen} Wochen bis ${t.name}`, `${wochen} weeks until ${t.name}`);
+    return el("p", { class: "termin", role: "status" }, "📅 " + text);
+  }
+
   function startseite() {
     lage = null; ansicht = startseite;
     zeige(
@@ -216,6 +231,7 @@
         })),
       el("div", { class: "knopfreihe" }, knopf(T("✏️ Frage für meinen Lehrer", "✏️ Question for my teacher"), fragenOeffnen)));
     app.querySelector(".gruss").append(statusleiste());
+    const tz = terminZeile(); if (tz) app.querySelector(".gruss").append(tz);
   }
 
   function starteKategorie(nr) {

@@ -380,7 +380,7 @@ def main():
                 for sid in s.get("saetze", []) + s.get("text", []) + s.get("paare", []) + [x[0] for x in s.get("zeilen", [])] + [a["satz"] for a in s.get("aufgaben", [])]:
                     assert sid in saetze, sid
     daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren,
-             "spiel": spieldaten(), "gym": GYM}
+             "spiel": spieldaten(), "gym": GYM, "termin": TERMIN}
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – bitte nicht von Hand ändern.\n")
         f.write("window.DATEN = " + json.dumps(daten, ensure_ascii=False, indent=1) + ";\n")
@@ -406,6 +406,8 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
     "gym_pause": "Break! Come back later and finish your Word Gym.",
 }
 # Word Gym (docs/word-gym/konzept.md): Standard-Pensum und Boxen-Intervalle in Tagen
+# Nächster Termin für den Countdown auf der Startseite (in Wochen); nach dem Termin verschwindet er
+TERMIN = {"name": "GLN 2", "datum": "2026-11-24"}
 GYM = {"pensum": {"neu": 4, "wdh": 8}, "grenzen": {"neu": [1, 6], "wdh": [4, 12]}, "intervalle": [1, 3, 7, 14, 30, 60, 120]}
 
 

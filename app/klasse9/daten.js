@@ -9045,5 +9045,9 @@ window.DATEN = {
    60,
    120
   ]
+ },
+ "termin": {
+  "name": "GLN 2",
+  "datum": "2026-11-24"
  }
 };

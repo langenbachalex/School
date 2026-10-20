@@ -90,7 +90,7 @@ Spiele (Mix & Match, Memory) und Extras („Power“) wandern in die passenden K
 
 - 11.10.: Konzept. Bau in den nächsten Tagen, damit die App **zum Ferienende** steht (erste Stunde: **20.10.**).
 - Danach: Woche für Woche neue Inhalte einpflegen (v. a. Kategorie 8 „New“ und 9).
-- **GLN 2: letzte Novemberwoche.**
+- **GLN 2: Dienstag, 24.11.2026** (bestätigt von Mr. Alex am 20.10.).
 
 ## 3. Vokabeln – Bestand
 

@@ -11,6 +11,9 @@ import klasse9_bauen as k9
 STIMMEN = {"m": "btaSeNTVh1pGx4pjFzub",  # Jeremy B. – Casual, Warm, Natural
            "f": "cgSgspJ2msm6clMCkdW9"}  # Jessica – Playful, Bright, Warm
 MODELL, EINSTELLUNGEN = "eleven_multilingual_v2", {"stability": 0.5, "similarity_boost": 0.75}
+# Jeremy B. (m) ab 23.10.2026 mit Eleven v4 (Variante B der Hörprobe, Stabilität 0,5); Jessica (f) bleibt auf Version 2.
+# Ältere Jeremy-Dateien bleiben, bis sie gelöscht und neu erzeugt werden (docs/klasse9/stimme-jeremy-v4.md).
+MODELLE = {"m": ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75})}
 # Britische Sätze (BE vs AE): Mr. Alex' eigene Stimme – nur mit Eleven v4
 ALEX = ("AK2WYGe96RmMwFKM5KEz", "eleven_v4", {"stability": 0.5, "similarity_boost": 0.75})
 
@@ -61,7 +64,7 @@ def main():
     for pfad, stimme, text in offen:
         ziel = os.path.join(k9.APP, pfad)
         os.makedirs(os.path.dirname(ziel), exist_ok=True)
-        stimm_id, modell, einst = ALEX if stimme == "alex" else (STIMMEN[stimme], MODELL, EINSTELLUNGEN)
+        stimm_id, modell, einst = ALEX if stimme == "alex" else (STIMMEN[stimme], *MODELLE.get(stimme, (MODELL, EINSTELLUNGEN)))
         body = json.dumps({"text": text, "model_id": modell, "voice_settings": einst}).encode()
         req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{stimm_id}?output_format=mp3_44100_128",
                                      data=body, headers={"Content-Type": "application/json"})

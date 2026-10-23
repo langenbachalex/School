@@ -349,3 +349,6 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
   border: 2px solid var(--linie); background: var(--karte); color: var(--text); font-variant-numeric: tabular-nums; }
 .tempo-knopf:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
 .tempo-leiste { display: flex; justify-content: flex-end; padding: 8px 16px 0; max-width: 60rem; margin: 0 auto; }
+
+/* Countdown bis zum nächsten Termin (GLN) */
+.termin { margin: 8px 0 0; padding: 8px 14px; border-radius: 12px; background: var(--gelb); color: var(--gelb-text); font-weight: 700; width: fit-content; max-width: 100%; }

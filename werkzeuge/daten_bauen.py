@@ -166,6 +166,8 @@ def lesen(name):
 # Belohnungen (Stufe A, docs/gamification/konzept.md): Titel nach Punkten, London-Orte, Superhelden
 TITEL = [(0, "Butterfingers", "🧈"), (100, "Sidekick", "🎒"), (300, "Hero in Training", "🦸"), (700, "Hero", "⚡"),
          (1200, "Superhero", "🌟"), (2000, "Mega Hero", "👑")]
+# Nächster Termin für den Countdown auf der Startseite (in Wochen); nach dem Termin verschwindet er
+TERMIN = {"name": "GLN 2", "datum": "2026-11-24"}
 # Word Gym (docs/word-gym/konzept.md): Standard-Pensum und Boxen-Intervalle in Tagen
 GYM = {"pensum": {"neu": 3, "wdh": 6}, "grenzen": {"neu": [1, 6], "wdh": [4, 12]}, "intervalle": [1, 3, 7, 14, 30, 60, 120]}
 SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
@@ -308,7 +310,7 @@ def main():
             lob.setdefault(z["art"], []).append({"text": z["text"], "audio": f"audio/lob/{z['id']}.mp3",
                                                  "gruppe": [g for g in z["gruppe"].split(",") if g], "de": z["de"]})
     STATIONEN.sort(key=lambda x: x["nr"])
-    daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob, "gym": GYM,
+    daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob, "gym": GYM, "termin": TERMIN,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")},
              "spiel": spieldaten()}
     ziel = os.path.join(BASIS, "app", "daten.js")

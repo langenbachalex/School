@@ -178,6 +178,21 @@
   const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, vok_luecke: 2 }; // Sekunden pro Satz/Wort mindestens
 
   /* ---------- Startseite ---------- */
+  // Countdown in Wochen bis zum nächsten Termin (D.termin, in daten_bauen.py): zählt Kalenderwochen, Montag bis Sonntag
+  function terminZeile() {
+    const t = D.termin;
+    if (!t) return null;
+    const ziel = new Date(t.datum + "T12:00:00"), jetzt = heute();
+    const wochen = Math.round((montag(ziel) - montag(jetzt)) / (7 * 86400000));
+    const tage = Math.round((ziel - new Date(iso(jetzt) + "T12:00:00")) / 86400000);
+    if (tage < 0) return null;
+    const text = tage === 0 ? `Heute ist ${t.name} – viel Erfolg!`
+      : wochen === 0 ? `Diese Woche ist ${t.name}.`
+      : wochen === 1 ? `Nächste Woche ist ${t.name}.`
+      : `Noch ${wochen} Wochen bis ${t.name}`;
+    return el("p", { class: "termin", role: "status" }, "📅 " + text);
+  }
+
   function startseite() {
     lage = null;
     const alleFertig = D.stationen.every((s) => stand.erledigt.includes(s.nr));
@@ -185,7 +200,7 @@
       el("header", { class: "gruss" },
         el("h1", {}, "English Power Game"),
         el("p", { class: "klein" }, "Hallo! Wähl eine Station. Wenn du fertig bist, bekommt sie ein Häkchen."),
-        statusleiste()),
+        statusleiste(), terminZeile()),
       gymKarte(),
       alleFertig && el("section", { class: "geschafft" },
         el("h2", {}, "Wahnsinn, du hast alles geschafft!"),

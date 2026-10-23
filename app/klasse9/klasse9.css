@@ -179,6 +179,3 @@
 .niveau-leiste .tempo-knopf { margin-left: auto; margin-right: 10px; min-height: 40px; background: transparent; color: var(--blau-text); border-color: var(--blau-text); }
 .niveau-leiste { justify-content: flex-start; }
 .niveau-leiste .niveau { margin-left: 0; }
-
-/* Countdown bis zum nächsten Termin (GLN) */
-.termin { margin: 8px 0 0; padding: 8px 14px; border-radius: 12px; background: var(--gelb); color: var(--gelb-text); font-weight: 700; width: fit-content; max-width: 100%; }

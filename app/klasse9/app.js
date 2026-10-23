@@ -185,7 +185,8 @@
     const menge = lage.frei, schluessel = freiSchluessel();
     setTimeout(() => { k.disabled = false; k.classList.remove("wartet", "laeuft"); if (merken && menge) menge.add(schluessel); }, sek * 1000);
   }
-  const sprechDauer = (d, min = 3) => Math.max(min, d * 1.4 + 1);
+  // Nachsprech-Pause = Länge der Aufnahme (so lange sie bei der gewählten Geschwindigkeit wirklich läuft); nur bei ganz kurzen Aufnahmen gilt ein Minimum (70 % des früheren)
+  const sprechDauer = (d, min = 3) => Math.max(min * 0.7, d);
   const denkzeit = (text) => Math.min(8, Math.max(3, 2 + String(text).split(/\s+/).length * 0.35));
   const wennFrei = (k, fn) => () => { if (!k.disabled) fn(); };
   // Prüfung C: Sprechteile, die viel schneller fertig sind als möglich, bringen keine Punkte
@@ -1413,12 +1414,49 @@
           `🔥 ${serie()} school days in a row · ⭐ ${sp.wochen.length} perfect weeks. Practise every school day and you get a new landmark card! Holidays don't count – your streak stays.`))),
       el("section", { class: "satzkarte" },
         el("h2", {}, `🏞️ Landmarks (${sp.karten.length} / ${SP.landmarks.length})`), karten),
+      aktenBereich(),
       el("section", { class: "satzkarte" },
         el("h2", {}, T("Abzeichen", "Badges")),
         el("ul", { class: "abzeichen" }, abz.map(([sym, name, ok]) => el("li", { class: ok ? "ok" : "" },
           el("span", { "aria-hidden": "true" }, sym), el("span", { lang: "en" }, name), el("span", { class: "unsichtbar" }, ok ? "✓" : "–"))))),
       el("p", { class: "klein bildnachweis" }, T("Fotos: Carol M. Highsmith, Library of Congress (frei nutzbar). Karte: US Census Bureau / us-atlas.",
         "Photos: Carol M. Highsmith, Library of Congress (no known restrictions). Map: US Census Bureau / us-atlas.")));
+  }
+
+  /* ---------- Geheimakten (docs/secret-level): öffnen sich, wenn Figur/Karte UND Ort/Staat freigeschaltet sind ---------- */
+  function aktenWoerter(absatz) {
+    return absatz.split(/(\{[^}]+\})/).map((t) => {
+      const m = t.match(/^\{(.+)\|(.+)\}$/);
+      if (!m) return t;
+      return el("button", { class: "akten-wort", type: "button", lang: "en", onclick: (e) => { e.currentTarget.classList.toggle("auf"); } },
+        m[1], el("span", { class: "akten-de", lang: "de" }, m[2]));
+    });
+  }
+  function aktenZeigen(a) {
+    feier.classList.add("akte");
+    feier.replaceChildren(
+      el("h2", { lang: "en" }, a.titel),
+      el("p", { class: "klein" }, T("Tipp auf ein farbiges Wort: Dann siehst du die Bedeutung.", "Tap a coloured word to see what it means.")),
+      ...a.absaetze.map((x) => el("p", { class: "akten-text", lang: "en" }, aktenWoerter(x))),
+      el("h3", {}, "Questions"),
+      el("ol", { class: "akten-fragen" }, a.fragen.map((f) => {
+        const lsg = el("p", { class: "akten-antwort", lang: "en", hidden: true }, f.antwort);
+        return el("li", {}, el("span", { lang: "en" }, f.frage), " ", knopf(T("Lösung", "Solution"), () => { lsg.hidden = !lsg.hidden; }, "leise"), lsg);
+      })),
+      el("div", { class: "knopfreihe" }, knopf(T("Schließen", "Close"), () => { feier.close(); feier.classList.remove("akte"); }, "haupt")));
+    feier.addEventListener("close", () => feier.classList.remove("akte"), { once: true });
+    feier.showModal();
+  }
+  function aktenBereich() {
+    const kacheln = SP.akten.map((a) => {
+      const offen = spielstand().karten.includes(a.figur) && SP.staaten.findIndex((s) => s.id === a.ort) < staatenFrei();
+      return offen
+        ? el("button", { class: "akte-kachel offen", onclick: () => aktenZeigen(a) }, el("span", { "aria-hidden": "true" }, "📂"), el("strong", { lang: "en" }, a.titel))
+        : el("div", { class: "akte-kachel zu" }, el("span", { "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, a.titel.replace(/ – .*/, "")),
+            el("small", {}, T("Du brauchst: ", "You need: ") + (SP.landmarks.find((l) => l.id === a.figur) || {}).name + " + " + (SP.staaten.find((s) => s.id === a.ort) || {}).name));
+    });
+    return el("section", { class: "satzkarte" }, el("h2", {}, `🔒 Road Trip Files (${SP.akten.filter((a) => spielstand().karten.includes(a.figur) && SP.staaten.findIndex((s) => s.id === a.ort) < staatenFrei()).length} / ${SP.akten.length})`),
+      el("p", { class: "klein" }, T("Eine Akte öffnet sich, wenn du die Landmark-Karte hast und den Staat freigeschaltet hast.", "A file opens when you have the landmark card and have unlocked the state.")), el("div", { class: "akten" }, kacheln));
   }
 
   function karteZeigen(l) {

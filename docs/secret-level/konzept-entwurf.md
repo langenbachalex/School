@@ -1,4 +1,4 @@
-# Geheime Level – Entwurf (nur Vorschläge, nichts gebaut, keine Audios)
+# Geheime Level – Entwurf (Stand 24.10.: je Klasse eine Akte gebaut, keine Audios)
 
 Stand: 23.10.2026. Mr. Alex: keine Fußballer, lieber Superhelden bzw. Mini-Geschichten in London, verbunden mit dem, was das Kind freigeschaltet hat. **Audios erst später**, um Credits zu sparen.
 
@@ -30,3 +30,6 @@ Stand: 23.10.2026. Mr. Alex: keine Fußballer, lieber Superhelden bzw. Mini-Gesc
 
 ## Credits
 Eine Akte mit 150 Wörtern = etwa 900 Zeichen Audio. Die Wortaufnahmen gibt es größtenteils schon. **Jetzt kein Audio erzeugen**; erst Texte, Layout und Wörter-Markierung, dann Audio nach Freigabe.
+
+## Gebaut (24.10.2026)
+Klasse 6 `inhalte/geheimakten.tsv`, Klasse 9 `inhalte/klasse9/geheimakten.tsv` (Texte: `probe-geschichten.md`). In „Meine Sammlung“ erscheint der Bereich Geheimakten; Akte offen = Superheld/Landmark-Karte und Ort/Staat frei (Regel A). Wörter im Text `{Wort|Bedeutung}` sind antippbar, 3 Fragen mit Lösung. Weitere Akten = neue Zeilen im TSV (Figur-ID, Ort-ID, Titel, Text, Fragen).

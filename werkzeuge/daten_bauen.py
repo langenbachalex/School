@@ -195,6 +195,7 @@ def spieldaten():
         "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
         "orte": [dict(z, x=int(z["x"]), y=int(z["y"]), audio=a(f"audio/london/{z['id']}.mp3")) for z in lesen("london.tsv")],
         "helden": [dict(z, bild=f"bilder/helden/{z['bild']}.jpg", audio=a(f"audio/helden/{z['id']}.mp3")) for z in lesen("helden.tsv")],
+        "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in lesen("geheimakten.tsv")],
         "frei": frei_saarland.als_daten(),
     }
 

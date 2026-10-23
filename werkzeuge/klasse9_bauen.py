@@ -422,6 +422,7 @@ def spieldaten():
         "landmarks": [dict(z, bild=f"bilder/landmarks/{z['bild']}.jpg", audio=a(f"audio/landmarks/{z['id']}.mp3"),
                            quelle=quellen[z["bild"] + ".jpg"]["link"]) for z in tsv("landmarks.tsv")],
         "karte": usa_karte.pfade(os.path.join(INHALTE, "karte", "states-albers-10m.json")),
+        "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in tsv("geheimakten.tsv")],
         "frei": frei_saarland.als_daten(),
     }
 

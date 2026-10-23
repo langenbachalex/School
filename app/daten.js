@@ -6196,6 +6196,36 @@ window.DATEN = {
     "audio": "audio/helden/max.mp3"
    }
   ],
+  "akten": [
+   {
+    "id": "leo_big_ben",
+    "figur": "leo",
+    "ort": "big_ben",
+    "titel": "Hero File 01 – Leo the Lion and the Missing Hour",
+    "text": "It is {morning|der Morgen} in London. Leo the Lion runs to Big Ben. He looks at the {clock|die Uhr} and he is surprised. It says {ten past nine|zehn nach neun}, but his watch says ten past eight! ¶ “Why is the clock wrong?” Leo asks. He {finds out|findet heraus} that a little bird sits on the big hand. The clock can’t move. ¶ Leo is super fast, but today he needs a plan. He calls his friend Tessa the Turtle. “Can you {come|kommen} to Big Ben?” he asks. “It {takes|braucht} me ten minutes,” says Tessa. “I am slow, but I always come.” ¶ At {8 o’clock|8 Uhr} Tessa is there. She is calm. She {shows|zeigt} the bird a sandwich. The bird flies away, and the clock moves again. ¶ “{Well done|Gut gemacht}, Tessa!” says Leo. {In the end|Schließlich}, the clock is right, and everybody in London is on time.",
+    "fragen": [
+     {
+      "frage": "What does Leo see on the clock?",
+      "antwort": "It says ten past nine."
+     },
+     {
+      "frage": "Why can’t the clock move?",
+      "antwort": "A little bird sits on the big hand."
+     },
+     {
+      "frage": "How does Tessa help?",
+      "antwort": "She shows the bird a sandwich and the bird flies away."
+     }
+    ],
+    "absaetze": [
+     "It is {morning|der Morgen} in London. Leo the Lion runs to Big Ben. He looks at the {clock|die Uhr} and he is surprised. It says {ten past nine|zehn nach neun}, but his watch says ten past eight!",
+     "“Why is the clock wrong?” Leo asks. He {finds out|findet heraus} that a little bird sits on the big hand. The clock can’t move.",
+     "Leo is super fast, but today he needs a plan. He calls his friend Tessa the Turtle. “Can you {come|kommen} to Big Ben?” he asks. “It {takes|braucht} me ten minutes,” says Tessa. “I am slow, but I always come.”",
+     "At {8 o’clock|8 Uhr} Tessa is there. She is calm. She {shows|zeigt} the bird a sandwich. The bird flies away, and the clock moves again.",
+     "“{Well done|Gut gemacht}, Tessa!” says Leo. {In the end|Schließlich}, the clock is right, and everybody in London is on time."
+    ]
+   }
+  ],
   "frei": [
    {
     "von": "2026-10-05",

@@ -362,3 +362,18 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
   border: 2px solid var(--linie); background: var(--bg); color: var(--text); }
 .eingabe:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
 .vok-bild.gross { font-size: 6rem; width: 9rem; height: 9rem; border-radius: 24px; }
+
+/* Geheimakten */
+.akten { display: grid; gap: 10px; }
+.akte-kachel { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: center; text-align: left; padding: 12px 14px; border-radius: 12px; border: 2px dashed var(--linie); background: transparent; color: var(--text); font: inherit; }
+.akte-kachel span { grid-row: span 2; font-size: 1.8rem; }
+.akte-kachel small { color: var(--leise); }
+.akte-kachel.offen { border-style: solid; border-color: var(--blau); background: var(--karte); cursor: pointer; }
+.akte-kachel.zu { color: var(--leise); }
+dialog.feier.akte { max-height: 88vh; overflow-y: auto; text-align: left; }
+.akten-text { line-height: 1.6; font-size: 1.05rem; }
+.akten-wort { font: inherit; color: var(--blau); background: none; border: 0; border-bottom: 2px dotted var(--blau); padding: 0; cursor: pointer; }
+.akten-wort .akten-de { display: none; }
+.akten-wort.auf .akten-de { display: inline; margin-left: .3em; padding: 0 .35em; border-radius: 6px; background: var(--gelb, #ffd84a); color: #222; font-size: .9em; }
+.akten-fragen li { margin: 8px 0; }
+.akten-antwort { margin: 4px 0 0; color: var(--leise); }

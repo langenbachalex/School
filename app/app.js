@@ -1462,10 +1462,47 @@
         el("p", { class: "klein" }, `🔥 ${serie()} Schultage am Stück · ⭐ ${sp.wochen.length} perfekte Wochen. Übst du an jedem Schultag, bekommst du einen neuen Superhelden! Ferien und Feiertage zählen nicht – deine Serie bleibt.`)),
       el("section", { class: "satzkarte" },
         el("h2", {}, `🦸 Superhelden (${sp.helden.length} von ${SP.helden.length})`), helden),
+      aktenBereich(),
       el("section", { class: "satzkarte" },
         el("h2", {}, "Abzeichen"),
         el("ul", { class: "abzeichen" }, abz.map(([sym, name, ok]) => el("li", { class: ok ? "ok" : "" },
           el("span", { "aria-hidden": "true" }, sym), el("span", { lang: "en" }, name), el("span", { class: "unsichtbar" }, ok ? "geschafft" : "noch nicht"))))));
+  }
+
+  /* ---------- Geheimakten (docs/secret-level): öffnen sich, wenn Figur/Karte UND Ort/Staat freigeschaltet sind ---------- */
+  function aktenWoerter(absatz) {
+    return absatz.split(/(\{[^}]+\})/).map((t) => {
+      const m = t.match(/^\{(.+)\|(.+)\}$/);
+      if (!m) return t;
+      return el("button", { class: "akten-wort", type: "button", lang: "en", onclick: (e) => { e.currentTarget.classList.toggle("auf"); } },
+        m[1], el("span", { class: "akten-de", lang: "de" }, m[2]));
+    });
+  }
+  function aktenZeigen(a) {
+    feier.classList.add("akte");
+    feier.replaceChildren(
+      el("h2", { lang: "en" }, a.titel),
+      el("p", { class: "klein" }, "Tipp auf ein farbiges Wort: Dann siehst du die Bedeutung."),
+      ...a.absaetze.map((x) => el("p", { class: "akten-text", lang: "en" }, aktenWoerter(x))),
+      el("h3", {}, "Questions"),
+      el("ol", { class: "akten-fragen" }, a.fragen.map((f) => {
+        const lsg = el("p", { class: "akten-antwort", lang: "en", hidden: true }, f.antwort);
+        return el("li", {}, el("span", { lang: "en" }, f.frage), " ", knopf("Lösung", () => { lsg.hidden = !lsg.hidden; }, "leise"), lsg);
+      })),
+      el("div", { class: "knopfreihe" }, knopf("Schließen", () => { feier.close(); feier.classList.remove("akte"); }, "haupt")));
+    feier.addEventListener("close", () => feier.classList.remove("akte"), { once: true });
+    feier.showModal();
+  }
+  function aktenBereich() {
+    const kacheln = SP.akten.map((a) => {
+      const offen = spielstand().helden.includes(a.figur) && SP.orte.findIndex((o) => o.id === a.ort) < orteFrei();
+      return offen
+        ? el("button", { class: "akte-kachel offen", onclick: () => aktenZeigen(a) }, el("span", { "aria-hidden": "true" }, "📂"), el("strong", { lang: "en" }, a.titel))
+        : el("div", { class: "akte-kachel zu" }, el("span", { "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, a.titel.replace(/ – .*/, "")),
+            el("small", {}, `Du brauchst: ${(SP.helden.find((h) => h.id === a.figur) || {}).name} + ${(SP.orte.find((o) => o.id === a.ort) || {}).name}`));
+    });
+    return el("section", { class: "satzkarte" }, el("h2", {}, `🔒 Geheimakten (${SP.akten.filter((a) => spielstand().helden.includes(a.figur) && SP.orte.findIndex((o) => o.id === a.ort) < orteFrei()).length} von ${SP.akten.length})`),
+      el("p", { class: "klein" }, "Eine Akte öffnet sich, wenn du den Superhelden hast und seinen Ort in London freigeschaltet hast."), el("div", { class: "akten" }, kacheln));
   }
 
   function heldZeigen(h) {

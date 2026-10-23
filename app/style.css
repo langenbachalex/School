@@ -377,3 +377,4 @@ dialog.feier.akte { max-height: 88vh; overflow-y: auto; text-align: left; }
 .akten-wort.auf .akten-de { display: inline; margin-left: .3em; padding: 0 .35em; border-radius: 6px; background: var(--gelb, #ffd84a); color: #222; font-size: .9em; }
 .akten-fragen li { margin: 8px 0; }
 .akten-antwort { margin: 4px 0 0; color: var(--leise); }
+.gym-lob:empty { display: none; }

@@ -1433,6 +1433,7 @@
     });
   }
   function aktenZeigen(a) {
+    const gesehen = new Set(), lobBox = el("p", { class: "gym-lob", "aria-live": "polite" });
     feier.classList.add("akte");
     feier.replaceChildren(
       el("h2", { lang: "en" }, a.titel),
@@ -1441,8 +1442,9 @@
       el("h3", {}, "Questions"),
       el("ol", { class: "akten-fragen" }, a.fragen.map((f) => {
         const lsg = el("p", { class: "akten-antwort", lang: "en", hidden: true }, f.antwort);
-        return el("li", {}, el("span", { lang: "en" }, f.frage), " ", knopf(T("Lösung", "Solution"), () => { lsg.hidden = !lsg.hidden; }, "leise"), lsg);
+        return el("li", {}, el("span", { lang: "en" }, f.frage), " ", knopf(T("Lösung", "Solution"), () => { lsg.hidden = false; gesehen.add(f); if (gesehen.size === a.fragen.length && !lobBox.textContent) lobBox.textContent = lob(true); }, "leise"), lsg);
       })),
+      lobBox,
       el("div", { class: "knopfreihe" }, knopf(T("Schließen", "Close"), () => { feier.close(); feier.classList.remove("akte"); }, "haupt")));
     feier.addEventListener("close", () => feier.classList.remove("akte"), { once: true });
     feier.showModal();

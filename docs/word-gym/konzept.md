@@ -47,3 +47,8 @@ Alle Wörter und Sätze sind vorhanden. Neu (Mr. Alex): „That's it for today. 
 
 ## Erfahrungen aus der Französisch-App (übernommen)
 Sprechen vor „Next“ erzwingen; Lob übersetzen; Datum in Ortszeit; Tagesplan zwischenspeichern; Pensum klein halten.
+
+## Ergänzungen (23.10.2026)
+- **Spiel nach dem Tagespensum (Klasse 9, Lösung B):** Ist das Word Gym des Tages fertig, erscheint auf der Endseite und auf der Startkarte „🎲 Memory“. Die Paare kommen aus den Wörtern von heute (englisches Wort ↔ deutsche Bedeutung, 6 Paare, bei wenigen Wörtern aufgefüllt mit schon geübten). Keine Punkte, damit niemand Punkte „farmt“. Klasse 6 bekommt es später.
+- **Vokabeln Klasse 6 (Satztechnik):** Wörter mit Beispielsatz (Audio), neuer Schritt „Bild → Wort“ (27 eindeutig bebilderte Wörter), Lückensätze für alle 104 Wörter, bei der Abfrage erscheint nach „Lösung“ der Satz.
+- **Eintippen (Klasse 6, ⌨-Knopf oben):** an/aus, auf dem Gerät gemerkt. Gilt für Bild → Wort, Lückensätze und Deutsch → Englisch (nur Wörter, die man eindeutig tippen kann). 0 Fehler = richtig · 1 Fehler = richtig, die genaue Schreibweise wird gezeigt · mehr als 1 Fehler = neutral „OK. So schreibt man es: …“ ohne Lob (bei der Abfrage kommt das Wort zum Wiederholen). Wörter bis 2 Buchstaben müssen genau stimmen.

@@ -169,6 +169,50 @@
   const sprechDauer = (d, min = 3) => Math.max(min, d * 1.4 + 1);
   const denkzeit = (text) => Math.min(8, Math.max(3, 2 + String(text).split(/\s+/).length * 0.35));
   const wennFrei = (k, fn) => () => { if (!k.disabled) fn(); };
+
+  /* ---------- Eintippen (optional, ⌨-Knopf oben): Antworten tippen statt auswählen ----------
+     0 Fehler = richtig · 1 Fehler = gilt auch als richtig, die richtige Schreibweise wird gezeigt ·
+     mehr als 1 Fehler = „OK“ mit der richtigen Schreibweise (ohne Lob). Sehr kurze Wörter (bis 2 Buchstaben) müssen genau stimmen. */
+  const tippen = () => !!stand.tippen;
+  const normT = (t) => String(t).toLowerCase().replace(/[’`´]/g, "'").replace(/[.,!?;:"“”]/g, "").replace(/\s+/g, " ").trim();
+  function abstand(a, b) { // Damerau-Levenshtein: Vertauschen zweier Buchstaben zählt als 1 Fehler
+    const d = Array.from({ length: a.length + 1 }, (_, i) => { const z = new Array(b.length + 1).fill(0); z[0] = i; return z; });
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) {
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+    }
+    return d[a.length][b.length];
+  }
+  function pruefeTipp(eingabe, ziele) { // 0 genau · 1 ein Fehler · 2 mehr
+    const e = normT(eingabe); let best = 9;
+    for (const z of [].concat(ziele)) {
+      const zz = normT(z);
+      best = Math.min(best, zz.length <= 2 ? (e === zz ? 0 : 9) : abstand(e, zz));
+    }
+    return best > 1 ? 2 : best;
+  }
+  function tippFeld(pruefen) {
+    const feld = el("input", { type: "text", class: "eingabe", lang: "en", autocomplete: "off", autocapitalize: "off", autocorrect: "off",
+      spellcheck: "false", "aria-label": "Deine Antwort", enterkeyhint: "done",
+      onkeydown: (e) => { if (e.key === "Enter") { e.stopPropagation(); e.preventDefault(); los(); } } });
+    const knopf_ = knopf("Prüfen", () => los(), "haupt");
+    const los = () => { if (feld.value.trim()) pruefen(feld.value, { feld, knopf: knopf_ }); };
+    return el("div", { class: "eingabe-bereich" }, el("div", { class: "knopfreihe" }, feld, knopf_));
+  }
+  // Rückmeldung zum Tippen: Stufe 0/1 mit Lob (bei 1 Fehler zusätzlich die richtige Schreibweise), Stufe 2 neutral
+  function tippRueckmeldung(box, stufe, richtig) {
+    box.hidden = false;
+    if (stufe === 2) { box.className = "rueckmeldung hilfe"; box.textContent = `OK. So schreibt man es: ${richtig}`; return; }
+    box.className = "rueckmeldung gut";
+    box.textContent = lob() + (stufe === 1 ? ` So schreibt man es genau: ${richtig}` : "");
+  }
+  // Beispielsatz zu einem Wort: Kernsatz oder Word-Gym-Satz. Bei Kernsätzen ist die Lücke das Wort der Karte.
+  function gymSatzFuer(v) {
+    if (!v.gymsatz) return null;
+    const s = D.saetze[v.gymsatz];
+    return v.gymsatz.startsWith("gym_") ? s : { ...s, luecke: v.luecke };
+  }
   // Prüfung C: Sprechteile, die viel schneller fertig sind als möglich, bringen keine Punkte
   function zuSchnell(teil) {
     const proEintrag = SPRECH_MIN[teil.art];
@@ -262,7 +306,7 @@
     if (lage.teil === 0) return;
     lage.teil--; teilZuruecksetzen();
     const t = lage.teile[lage.teil];
-    lage.pos = ["lr", "vok_lernen", "vok_luecke"].includes(t.art) ? laenge(t) - 1 : 0;
+    lage.pos = ["lr", "vok_lernen", "vok_luecke", "vok_bild"].includes(t.art) ? laenge(t) - 1 : 0;
     zeigeTeil();
   }
   // „◀ Zurück“ neben den Weiter-Knopf der Seite setzen (oder unten anfügen, falls der noch versteckt ist)
@@ -336,7 +380,7 @@
     if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = Date.now(); }
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, hoeren: zeigeHoeren,
-       vok_lernen: zeigeVokabel, vok_luecke: zeigeVokabel, vok_abfrage: zeigeVokabel,
+       vok_lernen: zeigeVokabel, vok_luecke: zeigeVokabel, vok_bild: zeigeVokabel, vok_abfrage: zeigeVokabel,
        auswahl: zeigeAuswahl, reihenfolge: zeigeReihenfolge, lesen: zeigeLesen, hoerwahl: zeigeHoerwahl,
        memory: zeigeMemory, detektiv: zeigeDetektiv })[teil.art](teil);
     navErgaenzen();
@@ -383,7 +427,8 @@
     if (teil.art === "detektiv") return teil.runden;
     if (teil.art === "vok_abfrage") return lage.vq ? lage.vq.length : lage.vok.length; // wächst bei „Nochmal üben“
     if (teil.art === "vok_lernen") return lage.vok.length;
-    if (teil.art === "vok_luecke") return lage.vok.filter((v) => v.satz).length;
+    if (teil.art === "vok_luecke") return lage.vok.filter((v) => v.gymsatz).length;
+    if (teil.art === "vok_bild") return lage.vok.filter((v) => v.bild).length;
     return 1;
   }
 
@@ -425,7 +470,7 @@
       return zeigeTeil();
     }
     const vok = g.vokabeln.map((id) => D.vokabeln.find((v) => v.id === id));
-    const t = st.schritte.filter((s) => s.art !== "vok_luecke" || vok.some((v) => v.satz));
+    const t = st.schritte.filter((s) => (s.art !== "vok_luecke" || vok.some((v) => v.gymsatz)) && (s.art !== "vok_bild" || vok.filter((v) => v.bild).length >= 2));
     neueLage({ nr: st.nr, gruppe: i, vok, teile: t });
     zeigeTeil();
   }
@@ -1014,14 +1059,20 @@
     const st = station(lage.nr);
     if (teil.art === "vok_abfrage" && !lage.vq) lage.vq = mischen(lage.vok.map((v) => v.id));
     const v = teil.art === "vok_abfrage" ? lage.vok.find((x) => x.id === lage.vq[lage.pos])
-      : teil.art === "vok_luecke" ? lage.vok.filter((x) => x.satz)[lage.pos] : lage.vok[lage.pos];
+      : teil.art === "vok_luecke" ? lage.vok.filter((x) => x.gymsatz)[lage.pos]
+      : teil.art === "vok_bild" ? lage.vok.filter((x) => x.bild)[lage.pos] : lage.vok[lage.pos];
     const anzahl = laenge(teil);
     const bild = (sichtbar) => el("span", { class: "vok-bild", "aria-hidden": "true" }, sichtbar ? v.symbol : "❔");
 
+    const satzBlock = (s, mitLuecke) => s && el("div", { class: "spalten" },
+      el("div", { class: "spalte", lang: "en" }, el("span", { class: "sprache" }, "Beispiel"), el("p", { class: "satz" }, lueckenSatz(s, mitLuecke))),
+      el("div", { class: "spalte", lang: "de" }, el("span", { class: "sprache" }, "Deutsch"), el("p", { class: "satz de" }, s.de)));
+
     if (teil.art === "vok_lernen") {
+      const s = gymSatzFuer(v);
       const jetztdu = el("div", { class: "jetztdu", hidden: true, role: "status" }, "Jetzt du! Sprich nach.",
         el("span", { class: "balken", "aria-hidden": "true" }));
-      const abspielen = () => { jetztdu.hidden = true; spiele([v.audio.en]).then((d) => {
+      const abspielen = () => { jetztdu.hidden = true; spiele([v.audio.en, s && s.audio.en]).then((d) => {
         if (d === null) return;
         jetztdu.hidden = false; jetztdu.classList.remove("laeuft"); void jetztdu.offsetWidth;
         jetztdu.style.setProperty("--dauer", sprechDauer(d, 2.5).toFixed(1) + "s"); jetztdu.classList.add("laeuft");
@@ -1033,59 +1084,115 @@
         karte(teil, `Wort ${lage.pos + 1} von ${anzahl}`,
           el("div", { class: "vok" }, bild(true),
             el("div", {}, el("p", { class: "vok-en", lang: "en" }, v.en), el("p", { class: "vok-de" }, v.de))),
+          satzBlock(s, false),
           jetztdu,
           el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", abspielen), weiter)));
       return abspielen();
     }
 
+    // Bild → Wort: das Symbol zeigt ein Wort; auswählen oder (⌨) eintippen
+    if (teil.art === "vok_bild") {
+      const box = rueckmeldung();
+      const weiter = knopf("Weiter ➜", naechstes, "haupt"); weiter.disabled = true;
+      const wortZeile = el("p", { class: "vok-en ziel-satz", lang: "en", hidden: true }, v.form);
+      let geloest = false;
+      const geschafft = (stufe) => {
+        geloest = true; wortZeile.hidden = false; weiter.disabled = false; lage.weiter = naechstes;
+        tippRueckmeldung(box, stufe, v.form);
+        lage.abspielen = () => spiele([v.audio.en]); lage.abspielen();
+      };
+      let bereich;
+      if (tippen()) bereich = tippFeld((text, ui) => { if (geloest) return; ui.feld.disabled = ui.knopf.disabled = true; geschafft(pruefeTipp(text, [v.form, v.en])); });
+      else {
+        const pool = D.vokabeln.filter((x) => x.bild && x.id !== v.id);
+        bereich = el("div", { class: "wahl", role: "group" }, mischen([v, ...mischen(pool).slice(0, 3)]).map((x) =>
+          el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
+            if (geloest) return;
+            if (x === v) { e.currentTarget.classList.add("richtig"); geschafft(0); }
+            else { e.currentTarget.disabled = true; melde(box, "hilfe", "Schau dir das Bild noch mal an. Probier's nochmal!"); }
+          } }, x.form)));
+      }
+      lage.abspielen = null; lage.weiter = null;
+      zeige(kopf(st), el("p", { class: "ansage" }, tippen() ? "Was ist das? Tipp das englische Wort ein." : "Was ist das? Wähl das englische Wort."),
+        karte(teil, `Bild ${lage.pos + 1} von ${anzahl}`,
+          el("div", { class: "vok" }, el("span", { class: "vok-bild gross", "aria-hidden": "true" }, v.symbol)),
+          bereich, wortZeile, box, el("div", { class: "knopfreihe" }, weiter)));
+      return;
+    }
+
     if (teil.art === "vok_luecke") {
-      const s = D.saetze[v.satz];
-      const w = v.luecke, i = s.en.toLowerCase().indexOf(w.toLowerCase());
+      const s = gymSatzFuer(v);
+      const w = s.luecke, i = s.en.toLowerCase().indexOf(w.toLowerCase());
       const teileSatz = (luecke) => [s.en.slice(0, i), luecke
         ? el("span", { class: "luecke", "aria-label": "Lücke" }, w.replace(/./g, "_"))
         : el("strong", { class: "ziel" }, s.en.slice(i, i + w.length)), s.en.slice(i + w.length)];
       const satz = el("p", { class: "satz", lang: "en" }, teileSatz(true));
       let geloest = false;
+      const box = rueckmeldung();
       const weiter = sperre(knopf("Weiter ➜", naechstes, "haupt"));
-      const loesung = sperre(knopf("Lösung", () => {
-        geloest = true; loesung.disabled = true;
+      let ui = null;
+      const aufloesen = () => {
+        geloest = true; loesung.disabled = true; if (ui) ui.feld.disabled = ui.knopf.disabled = true;
         satz.replaceChildren(...teileSatz(false));
         spiele([s.audio.en]).then((d) => { if (d !== null) gibFrei(weiter, sprechDauer(d)); });
-      }));
+      };
+      const loesung = sperre(knopf("Lösung", aufloesen));
       gibFrei(loesung, denkzeit(s.en), false);
+      let bereich = null;
+      if (tippen()) bereich = tippFeld((text, u) => { if (geloest) return; ui = u; tippRueckmeldung(box, pruefeTipp(text, w), w); aufloesen(); });
       lage.abspielen = () => { if (geloest) spiele([s.audio.en]); };
       lage.weiter = wennFrei(weiter, naechstes);
-      zeige(kopf(st), el("p", { class: "ansage" }, "Welches Wort fehlt? Sag den ganzen Satz auf Englisch! Dann tipp auf „Lösung“."),
+      zeige(kopf(st), el("p", { class: "ansage" }, tippen() ? "Welches Wort fehlt? Tipp es ein. Du kannst auch „Lösung“ antippen."
+        : "Welches Wort fehlt? Sag den ganzen Satz auf Englisch! Dann tipp auf „Lösung“."),
         karte(teil, `Satz ${lage.pos + 1} von ${anzahl}`,
           el("div", { class: "vok" }, bild(true), el("p", { class: "satz de" }, s.de)),
-          satz,
+          satz, bereich, box,
           el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", () => lage.abspielen()), loesung, weiter)));
       return lage.abspielen();
     }
 
-    // Abfrage Englisch → Deutsch oder Deutsch → Englisch, mit Selbstkontrolle
+    // Abfrage Englisch → Deutsch oder Deutsch → Englisch, mit Selbstkontrolle (Deutsch → Englisch auf Wunsch zum Eintippen)
     const enDe = teil.richtung === "en_de";
+    const s = gymSatzFuer(v);
     const frage = enDe ? el("p", { class: "vok-en", lang: "en" }, v.en) : el("p", { class: "vok-en" }, v.de);
     const antwort = el("p", { class: "vok-de", lang: enDe ? "de" : "en", hidden: true }, enDe ? v.de : v.en);
+    const satzZeile = el("div", { hidden: true }, satzBlock(s, false));
+    const box = rueckmeldung();
     const bildPlatz = bild(false);
     const fragen = () => { if (enDe) spiele([v.audio.en]); };
     const bewerten = el("div", { class: "knopfreihe", hidden: true },
       knopf("✓ Gewusst", naechstes, "haupt"),
       knopf("↻ Nochmal üben", () => { lage.vq.push(v.id); naechstes(); }));
-    const loesung = sperre(knopf("Lösung", () => {
-      loesung.hidden = true; antwort.hidden = false; bewerten.hidden = false;
+    const zeigeLoesung = () => {
+      loesung.hidden = true; antwort.hidden = false; satzZeile.hidden = !s;
       bildPlatz.textContent = v.symbol;
-      lage.abspielen = () => spiele([v.audio.en]);
-      lage.weiter = naechstes;
+      lage.abspielen = () => spiele([v.audio.en, s && s.audio.en]);
       lage.abspielen();
-    }, "haupt"));
+    };
+    const loesung = sperre(knopf("Lösung", () => { zeigeLoesung(); bewerten.hidden = false; if (bereich) bereich.hidden = true; lage.weiter = naechstes; }, "haupt"));
     gibFrei(loesung, 3, false);
+    let bereich = null;
+    const tippModus = tippen() && !enDe && v.tippbar;
+    if (tippModus) {
+      const weiterT = knopf("Weiter ➜", null, "haupt"); weiterT.hidden = true;
+      bereich = el("div", {}, tippFeld((text, ui) => {
+        ui.feld.disabled = ui.knopf.disabled = true; loesung.hidden = true;
+        const stufe = pruefeTipp(text, [v.form, v.en]);
+        tippRueckmeldung(box, stufe, v.form);
+        zeigeLoesung();
+        weiterT.hidden = false;
+        weiterT.onclick = () => { if (stufe === 2) lage.vq.push(v.id); naechstes(); };
+        lage.weiter = weiterT.onclick;
+      }), el("div", { class: "knopfreihe" }, weiterT));
+    }
     lage.abspielen = fragen;
     zeige(kopf(st),
       el("p", { class: "ansage" }, enDe ? "Was heißt das auf Deutsch? Sag es laut! Dann tipp auf „Lösung“."
-        : "Was heißt das auf Englisch? Sag es laut! Dann tipp auf „Lösung“."),
+        : tippModus ? "Was heißt das auf Englisch? Tipp es ein. Du kannst auch „Lösung“ antippen."
+          : "Was heißt das auf Englisch? Sag es laut! Dann tipp auf „Lösung“."),
       karte(teil, `Wort ${lage.pos + 1} von ${lage.vq.length}`,
         el("div", { class: "vok" }, bildPlatz, el("div", {}, frage, antwort)),
+        satzZeile, bereich, box,
         el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", () => lage.abspielen()), loesung),
         bewerten));
     fragen();
@@ -1490,7 +1597,7 @@
   function gymZeige() {
     const plan = gymPlan(), g = gymStand();
     const id = gym.schlange[gym.pos], v = vokabel(id);
-    const s = v.gymsatz ? { ...D.saetze[v.gymsatz], luecke: v.luecke } : null; // Lücke = das Wort der Karte, auch im Kernsatz
+    const s = gymSatzFuer(v);
     lage = { gym: true, teil: "gym", pos: id, frei: gymFrei };
     const zaehler = `${gym.pos + 1} / ${gym.schlange.length}`;
     if (plan.neu.includes(id) && !g.karten[id]) gymNeu(v, s, zaehler); else gymWiederholung(v, s, zaehler);
@@ -1614,6 +1721,13 @@
   });
 
   tempoKnopf();
+  (function tippKnopf() { // ⌨ oben: Antworten eintippen statt auswählen (an/aus, auf dem Gerät gemerkt)
+    const k = document.getElementById("tippen");
+    if (!k) return;
+    const z = () => { k.setAttribute("aria-pressed", String(tippen())); k.title = tippen() ? "Eintippen ist an" : "Eintippen ist aus"; };
+    k.addEventListener("click", () => { stand.tippen = !tippen(); speichern(); z(); });
+    z();
+  })();
   startseite();
 
   // Offline-Speicher (nur wenn die App über eine Webadresse läuft, nicht per Doppelklick)

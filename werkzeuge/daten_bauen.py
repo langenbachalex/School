@@ -151,6 +151,7 @@ STATIONEN = [
     {"nr": 7, "titel": "Vokabeln", "symbol": "📖", "lob": "bei den Vokabeln",
      "schritte": [
          {"art": "vok_lernen", "name": "Wörter"},
+         {"art": "vok_bild", "name": "Bild → Wort"},
          {"art": "vok_luecke", "name": "Lückensätze"},
          {"art": "vok_abfrage", "name": "Englisch → Deutsch", "richtung": "en_de"},
          {"art": "vok_abfrage", "name": "Deutsch → Englisch", "richtung": "de_en"},
@@ -264,6 +265,15 @@ def main():
                     falsch, hilfe = VERBFORMEN[richtig]
                     s["aufgaben"].append({"satz": sid, "richtig": richtig, "falsch": falsch, "hilfe": hilfe})
     vokabeln, abschnitte = [], []
+    # Wörter, deren Symbol das Wort eindeutig zeigt (für „Bild → Wort“)
+    BILD = {"bus", "car", "train", "clock", "morning", "evening", "newspaper", "wheelchair", "cafe", "shower", "breakfast",
+            "tooth_pl_teeth", "brush", "sea", "money", "pound", "penny_pl_pence", "jigsaw", "drama", "cycle", "hike", "run",
+            "trampolining", "light", "card", "group", "letter"}
+    def antwortform(en):  # was man eintippt: ohne „(to)“, Klammern und Zweitformen
+        f = re.sub(r"\s*\(.*?\)", "", re.sub(r"^\(to\) ", "", en)).split(",")[0].strip()
+        return f
+    def tippbar(f):
+        return not re.search(r"[/…]|\.\.\.|\bsb\.|\bsth\.|=|\d", f) and len(f.split()) <= 4
     # Word Gym: Beispielsätze für Wörter ohne Kernsatz (gesprochen von Mr. Alex, audio/gym/)
     gym_saetze = {}
     for z in lesen("gym_saetze6.tsv"):
@@ -276,7 +286,9 @@ def main():
             satz = saetze.get(v["satz"])
             assert satz, f"Vokabel {v['id']}: Satz {v['satz']} fehlt"
             assert luecke.lower() in satz["en"].lower(), f"Vokabel {v['id']} steht nicht im Satz {v['satz']}"
+        form = antwortform(v["englisch"])
         vokabeln.append({"id": v["id"], "en": v["englisch"], "de": v["deutsch"], "symbol": v["symbol"],
+                         "form": form, "tippbar": tippbar(form), "bild": v["id"].split("_", 1)[1].split("_", 1)[1] in BILD and v["id"] != "u3_097_letter",
                          "satz": v["satz"], "luecke": luecke, "gymsatz": v["satz"] or gym_saetze.get(v["id"], ""),
                          "audio": {"en": f"audio/vokabeln/{v['id']}_en.mp3"}})
         if not abschnitte or abschnitte[-1][0] != v["abschnitt"]:

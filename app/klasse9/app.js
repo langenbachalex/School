@@ -1519,6 +1519,7 @@
         el("p", { class: "klein" }, stand_), gesamt > 0 && punkte),
       el("div", { class: "gym-knoepfe" },
         knopf(plan.geschafft || gesamt === 0 ? T("Ansehen", "Have a look") : fertig ? T("▶ Weiter", "▶ Continue") : T("▶ Los geht's", "▶ Let's go"), gymStart, plan.geschafft ? "" : "haupt"),
+        plan.geschafft && knopf(T("🎲 Memory", "🎲 Memory"), gymMemory, "haupt"),
         el("button", { class: "knopf leise", "aria-label": T("Pensum einstellen", "Set workload"), "aria-expanded": "false",
           onclick: (e) => { einstellung.hidden = !einstellung.hidden; e.currentTarget.setAttribute("aria-expanded", String(!einstellung.hidden)); } }, "⚙")),
       einstellung);
@@ -1613,6 +1614,48 @@
     gymWeiter();
   }
 
+  /* ---------- Word Gym: Memory als Tages-Spiel (frei nach dem Tagespensum, Lösung B) ----------
+     Paare aus den Wörtern von heute: englisches Wort ↔ deutsche Bedeutung. Beim Aufdecken hört man das englische Wort. */
+  function gymMemory() {
+    const plan = gymPlan(), g = gymStand();
+    const kurz = (de) => de.split(/[;,]/)[0].replace(/\(.*?\)/g, "").replace(/\s+/g, " ").trim();
+    const ok = (v) => v && kurz(v.de).length > 0 && kurz(v.de).length <= 24 && v.en.length <= 24;
+    let ws = [...plan.wdh, ...plan.neu].map(vokabel).filter(ok);
+    if (ws.length < 6) ws.push(...mischen(Object.keys(g.karten).map(vokabel).filter((v) => ok(v) && !ws.includes(v))).slice(0, 6 - ws.length));
+    ws = mischen(ws).slice(0, 6);
+    ansicht = null; lage = null;
+    if (ws.length < 3) { zeige(gymKopf(), el("section", { class: "satzkarte" }, el("p", {}, T("Für das Spiel brauchst du erst ein paar geübte Wörter.", "You need a few words before you can play.")), knopf(T("Zur Startseite", "Home"), startseite, "haupt"))); return; }
+    const karten = mischen(ws.flatMap((v) => [{ v, art: "en" }, { v, art: "de" }]));
+    let offen = [], gefunden = 0, zuege = 0, wartet = false;
+    const box = rueckmeldung();
+    const zaehler = el("p", { class: "klein", "aria-live": "polite" }, T("Züge: 0", "Moves: 0"));
+    const nochmal = knopf(T("↻ Neu mischen", "↻ Shuffle again"), gymMemory);
+    const feld = el("div", { class: "memory" }, karten.map((c) => {
+      const b = el("button", { class: "mem-karte", "aria-label": T("Verdeckte Karte", "Hidden card"), onclick: () => {
+        if (wartet || b.classList.contains("auf")) return;
+        b.classList.add("auf");
+        const text = c.art === "en" ? c.v.en.replace(/\s*\(.*?\)/g, "") : kurz(c.v.de);
+        b.replaceChildren(el("span", { lang: c.art === "en" ? "en" : "de", class: text.length > 11 ? "mem-lang" : "" }, text));
+        if (c.art === "en") spiele([tonWort(c.v)]);
+        offen.push({ b, c });
+        if (offen.length < 2) return;
+        zuege++; zaehler.textContent = T(`Züge: ${zuege}`, `Moves: ${zuege}`);
+        const [x, y] = offen; offen = [];
+        if (x.c.v === y.c.v && x.c.art !== y.c.art) {
+          x.b.classList.add("paar"); y.b.classList.add("paar"); x.b.disabled = y.b.disabled = true;
+          if (++gefunden === ws.length) melde(box, "gut", `${lob(true)} ${T(`Alle ${ws.length} Paare in ${zuege} Zügen!`, `All ${ws.length} pairs in ${zuege} moves!`)}`);
+        } else {
+          wartet = true;
+          setTimeout(() => { [x, y].forEach(({ b: k }) => { k.classList.remove("auf"); k.replaceChildren("?"); k.setAttribute("aria-label", T("Verdeckte Karte", "Hidden card")); }); wartet = false; }, 1300);
+        }
+      } }, "?");
+      return b;
+    }));
+    lage = { gym: true, teil: "gym-memory", pos: 0, titel: "Word Gym" };
+    zeige(gymKopf(), ansage("Memory: Find the pairs! English word and German meaning.", "Memory: Finde die Paare! Englisches Wort und deutsche Bedeutung."),
+      karte(null, feld, zaehler, box, el("div", { class: "knopfreihe" }, nochmal, knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
+  }
+
   function gymEnde() {
     const plan = gymPlan(), alles = gymAlles(plan), erstesMal = alles && !plan.geschafft;
     if (erstesMal) { plan.geschafft = true; gymStand().seances++; speichern(); }
@@ -1627,7 +1670,8 @@
         el("p", {}, alles ? T("Alle Wörter von heute sind geübt. Morgen gibt es neue und die fälligen von heute kommen wieder.",
           "All of today's words are done. Tomorrow brings new ones, and today's come back when they are due.")
           : T("Erledigtes bleibt gespeichert. Komm später wieder und mach den Rest fertig.", "What you did is saved. Come back later and finish the rest.")),
-        el("div", { class: "knopfreihe" }, knopf(T("Zur Startseite", "Home"), startseite, "haupt"), knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung))));
+        el("div", { class: "knopfreihe" }, knopf(T("Zur Startseite", "Home"), startseite, "haupt"),
+          alles && knopf(T("🎲 Memory spielen", "🎲 Play Memory"), gymMemory), knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung))));
       if (icon.heben) setTimeout(icon.heben, 400);
     };
     ansicht = zeichne; gym = null; lage = null;

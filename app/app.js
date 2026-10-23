@@ -33,6 +33,8 @@
     letzterRuf = r || null;
     if (!r) return "";
     // Das Audio wird vor das nächste spiele() gesetzt; folgt keins, spielt es allein.
+    // Steht ein großes Pop-up mit eigener Stimme an (Titel, Superheld, Serie), spricht nur dieses: kein Lob davor.
+    if (ereignisse.some(grossEreignis)) return r.text;
     vorLob = r.audio;
     setTimeout(() => { if (vorLob === r.audio) { vorLob = null; spiele([r.audio]); } }, 0);
     return r.text;
@@ -111,12 +113,16 @@
       speechSynthesis.speak(u);
     });
   }
-  function spiele(dateien) {
+  // Ende der zuletzt gestarteten Wiedergabe. spiele(…, { warten: true }) reiht sich dahinter ein, statt die laufende abzuschneiden
+  // (für Belohnungs-Stimmen: Lob, Schlusssatz, Pop-up). Seitenwechsel oder „Weiter“ im Pop-up (stopp) bricht auch wartende ab.
+  let audioEnde = Promise.resolve();
+  function spiele(dateien, opt = {}) {
     if (vorLob) { dateien = [vorLob, ...dateien]; vorLob = null; }
-    stopp();
+    if (!opt.warten) stopp();
     const meinLauf = lauf;
     let gesamt = 0;
-    return dateien.filter(Boolean).reduce((kette, datei) => kette.then(() => new Promise((fertig) => {
+    const davor = opt.warten ? audioEnde : Promise.resolve();
+    const lauf_ = davor.then(() => dateien.filter(Boolean).reduce((kette, datei) => kette.then(() => new Promise((fertig) => {
       if (meinLauf !== lauf) return fertig();
       if (typeof datei === "object") return sprich(datei).then((d) => { gesamt += d; fertig(); });
       const a = new Audio(datei);
@@ -125,7 +131,9 @@
       a.onended = () => { gesamt += (a.duration || 0) / (a.playbackRate || 1); setTimeout(fertig, 350); }; // Sprechzeit passt sich an
       a.onerror = fertig;
       a.play().catch(fertig);
-    })), Promise.resolve()).then(() => (meinLauf === lauf ? gesamt : null));
+    })), Promise.resolve()));
+    audioEnde = lauf_.catch(() => {});
+    return lauf_.then(() => (meinLauf === lauf ? gesamt : null));
   }
 
   /* ---------- Hilfen ---------- */
@@ -1360,14 +1368,24 @@
     setTimeout(() => box.remove(), 2500);
     return box;
   }
+  // Reihenfolge (nie gleichzeitig): kleine Hinweise sofort · großes Pop-up mit Stimme zuerst · Stempel danach, wenn es still ist
+  const grossEreignis = (e) => e.art === "feier" || e.art === "held";
+  let stempelLaeuft = false;
   function zeigeEreignisse() {
-    while (ereignisse.length && (ereignisse[0].art === "toast" || ereignisse[0].art === "ort")) {
-      const e = ereignisse.shift();
-      if (e.art === "ort") stempel(el("div", { class: "stempel-bild symbol-bild", "aria-hidden": "true" }, e.ort.symbol), e.ort.name, "London ✓");
-      else toast(e.text);
-    }
-    if (!ereignisse.length || feier.open) return;
-    const e = ereignisse.shift();
+    for (let i = 0; i < ereignisse.length;) { if (ereignisse[i].art === "toast") toast(ereignisse.splice(i, 1)[0].text); else i++; }
+    if (feier.open || stempelLaeuft) return;
+    const gi = ereignisse.findIndex(grossEreignis);
+    if (gi >= 0) return zeigeFeier(ereignisse.splice(gi, 1)[0]);
+    const si = ereignisse.findIndex((e) => e.art === "ort");
+    if (si < 0) return;
+    const e = ereignisse.splice(si, 1)[0];
+    stempelLaeuft = true;
+    audioEnde.then(() => setTimeout(() => {
+      stempel(el("div", { class: "stempel-bild symbol-bild", "aria-hidden": "true" }, e.ort.symbol), e.ort.name, "London ✓");
+      setTimeout(() => { stempelLaeuft = false; zeigeEreignisse(); }, 2700);
+    }, 250));
+  }
+  function zeigeFeier(e) {
     const ton = e.art === "held" ? e.held : e.ton;
     const inhalt = e.art === "held"
       ? [el("p", { class: "feier-klein" }, "⭐ Perfect week! Neuer Superheld:"), heldenKarte(e.held, true),
@@ -1378,7 +1396,7 @@
         ton && ton.audio && knopf("🔊 Anhören", () => spiele([ton.audio])),
         knopf("Weiter ➜", () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
     feier.showModal();
-    if (ton && ton.audio) setTimeout(() => { if (feier.open) spiele([ton.audio]); }, 900);
+    if (ton && ton.audio) spiele([ton.audio], { warten: true }); // wartet, falls noch ein Lob läuft
   }
   function konfetti() {
     const farben = ["#ffd23f", "#1f5fd1", "#e2384d", "#1d8a4e", "#b48cff"];
@@ -1688,8 +1706,9 @@
     };
     gym = null; lage = null;
     zeichne();
-    setTimeout(() => spiele([r && r.audio, fini && fini.audio]), 300);
+    // erst belohnen (reiht Pop-ups ein), dann sprechen: das Pop-up wartet auf die Schlussstimme, statt sie abzuschneiden
     if (erstesMal) belohne(true, true);
+    spiele([!ereignisse.some(grossEreignis) && r && r.audio, fini && fini.audio]);
   }
 
   /* ---------- Fragen für Mr. Alex ---------- */

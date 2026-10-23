@@ -61,7 +61,7 @@
     const r = waehleRuf(art);
     letzterRuf = r || null;
     if (!r) return "";
-    if (!leise && r.audio) {
+    if (!leise && r.audio && !ereignisse.some(grossEreignis)) { // großes Pop-up mit eigener Stimme ansteht: kein Lob davor
       vorLob = r.audio;
       setTimeout(() => { if (vorLob === r.audio) { vorLob = null; spiele([r.audio]); } }, 0);
     }
@@ -120,13 +120,17 @@
     });
   }
   // Einträge: Dateipfad (String) oder { text, stimme } für die Geräte-Stimme
-  function spiele(dateien) {
+  // Ende der zuletzt gestarteten Wiedergabe. spiele(…, { warten: true }) reiht sich dahinter ein, statt die laufende abzuschneiden
+  // (für Belohnungs-Stimmen: Lob, Schlusssatz, Pop-up). Seitenwechsel oder „Weiter“ im Pop-up (stopp) bricht auch wartende ab.
+  let audioEnde = Promise.resolve();
+  function spiele(dateien, opt = {}) {
     if (leise) return Promise.resolve(null);
     if (vorLob) { dateien = [vorLob, ...dateien]; vorLob = null; }
-    stopp();
+    if (!opt.warten) stopp();
     const meinLauf = lauf;
     let gesamt = 0;
-    return dateien.filter(Boolean).reduce((kette, datei) => kette.then(() => new Promise((fertig) => {
+    const davor = opt.warten ? audioEnde : Promise.resolve();
+    const lauf_ = davor.then(() => dateien.filter(Boolean).reduce((kette, datei) => kette.then(() => new Promise((fertig) => {
       if (meinLauf !== lauf) return fertig();
       if (typeof datei === "object") return sprich(datei.text, datei.stimme).then((d) => { gesamt += d; fertig(); });
       const a = new Audio(datei);
@@ -135,7 +139,9 @@
       a.onended = () => { gesamt += (a.duration || 0) / (a.playbackRate || 1); setTimeout(fertig, 350); }; // Sprechzeit passt sich an
       a.onerror = fertig;
       a.play().catch(fertig);
-    })), Promise.resolve()).then(() => (meinLauf === lauf ? gesamt : null));
+    })), Promise.resolve()));
+    audioEnde = lauf_.catch(() => {});
+    return lauf_.then(() => (meinLauf === lauf ? gesamt : null));
   }
   const tonSatz = (s) => s.audio || { text: s.en.replace(/[–—]/g, ","), stimme: s.stimme };
   const tonWort = (v) => v.audio || { text: v.en.replace(/\((AE|BE|infml|pl)\)/g, "").replace(/\bsth\./g, "something").replace(/\bsb\./g, "somebody"), stimme: v.stimme };
@@ -1142,7 +1148,7 @@
      👑 4 perfekte Wochen hintereinander (Ferienwochen halten an) · 🏖️ Wochenende = Bonus, keine Pflicht.
      USA-Karte: jeder 4. neu geschaffte Teil schaltet einen Staat frei. Alles nur auf diesem Gerät. */
   const SP = D.spiel;
-  const PUNKTE = { teil: 10, wiederholung: 5, ohneHilfe: 5, seance: 30, einheit: 50, feuer: 30, wochenende: 20, ferien: 20, woche: 100, monat: 200 };
+  const PUNKTE = { teil: 10, wiederholung: 5, ohneHilfe: 5, seance: 30, einheit: 50, feuer: 30, wochenende: 20, ferien: 20, spiel: 10, woche: 100, monat: 200 };
   const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const heute = () => (window.__heute ? new Date(window.__heute + "T12:00:00") : new Date());
   const plusTage = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
@@ -1311,14 +1317,24 @@
       svg.setAttribute("viewBox", `${b.x - rand} ${b.y - rand} ${b.width + 2 * rand} ${b.height + 2 * rand}`);
     } catch { svg.setAttribute("viewBox", "0 0 975 610"); }
   }
+  // Reihenfolge (nie gleichzeitig): kleine Hinweise sofort · großes Pop-up mit Stimme zuerst · Stempel danach, wenn es still ist
+  const grossEreignis = (e) => e.art === "feier" || e.art === "karte";
+  let stempelLaeuft = false;
   function zeigeEreignisse() {
-    while (ereignisse.length && (ereignisse[0].art === "toast" || ereignisse[0].art === "staat")) {
-      const e = ereignisse.shift();
-      if (e.art === "staat") staatStempel(e.staat);
-      else toast(e.text);
-    }
-    if (!ereignisse.length || feier.open) return;
-    const e = ereignisse.shift();
+    for (let i = 0; i < ereignisse.length;) { if (ereignisse[i].art === "toast") toast(ereignisse.splice(i, 1)[0].text); else i++; }
+    if (feier.open || stempelLaeuft) return;
+    const gi = ereignisse.findIndex(grossEreignis);
+    if (gi >= 0) return zeigeFeier(ereignisse.splice(gi, 1)[0]);
+    const si = ereignisse.findIndex((e) => e.art === "staat");
+    if (si < 0) return;
+    const e = ereignisse.splice(si, 1)[0];
+    stempelLaeuft = true;
+    audioEnde.then(() => setTimeout(() => {
+      staatStempel(e.staat);
+      setTimeout(() => { stempelLaeuft = false; zeigeEreignisse(); }, 2700);
+    }, 250));
+  }
+  function zeigeFeier(e) {
     const ton = e.art === "karte" ? e.karte : e.ton;
     const inhalt = e.art === "karte"
       ? [el("p", { class: "feier-klein" }, T("⭐ Perfect week! Neue Landmark-Karte:", "⭐ Perfect week! New landmark card:")), landmarkKarte(e.karte, true),
@@ -1329,7 +1345,7 @@
         ton && ton.audio && knopf(T("🔊 Anhören", "🔊 Listen"), () => spiele([ton.audio])),
         knopf(T("Weiter ➜", "Next ➜"), () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
     feier.showModal();
-    if (ton && ton.audio) setTimeout(() => { if (feier.open) spiele([ton.audio]); }, 900);
+    if (ton && ton.audio) spiele([ton.audio], { warten: true }); // wartet, falls noch ein Lob läuft
   }
   function konfetti() {
     const farben = ["#c8283a", "#1d3f8f", "#ffffff", "#ffd23f", "#8fb0ff"];
@@ -1643,7 +1659,12 @@
         const [x, y] = offen; offen = [];
         if (x.c.v === y.c.v && x.c.art !== y.c.art) {
           x.b.classList.add("paar"); y.b.classList.add("paar"); x.b.disabled = y.b.disabled = true;
-          if (++gefunden === ws.length) melde(box, "gut", `${lob(true)} ${T(`Alle ${ws.length} Paare in ${zuege} Zügen!`, `All ${ws.length} pairs in ${zuege} moves!`)}`);
+          if (++gefunden === ws.length) {
+            const tag = iso(heute());
+            const punkte = g.memoryTag !== tag; // Punkte nur beim ersten gewonnenen Memory des Tages
+            if (punkte) { g.memoryTag = tag; punkteDazu(PUNKTE.spiel); }
+            melde(box, "gut", `${lob(true)} ${T(`Alle ${ws.length} Paare in ${zuege} Zügen!`, `All ${ws.length} pairs in ${zuege} moves!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)")}`);
+          }
         } else {
           wartet = true;
           setTimeout(() => { [x, y].forEach(({ b: k }) => { k.classList.remove("auf"); k.replaceChildren("?"); k.setAttribute("aria-label", T("Verdeckte Karte", "Hidden card")); }); wartet = false; }, 1300);
@@ -1676,8 +1697,9 @@
     };
     ansicht = zeichne; gym = null; lage = null;
     zeichne();
-    setTimeout(() => spiele([r && r.audio, fini && fini.audio]), 300);
+    // erst belohnen (reiht Pop-ups ein), dann sprechen: das Pop-up wartet auf die Schlussstimme, statt sie abzuschneiden
     if (erstesMal) belohne(true, true, true);
+    spiele([!ereignisse.some(grossEreignis) && r && r.audio, fini && fini.audio]);
   }
 
   /* ---------- Fragen für Mr. Alex ---------- */

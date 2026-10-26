@@ -66,6 +66,33 @@
   }
   const stand = laden();
 
+  // Speicher-Wächter: Warnt, wenn der Fortschritt auf diesem Gerät nicht gespeichert werden kann (privater Modus, gesperrter Speicher),
+  // und bittet den Browser, die Daten dauerhaft zu behalten (gegen automatisches Aufräumen).
+  function speicherPruefen() {
+    try {
+      localStorage.setItem(SPEICHER + "-test", "1");
+      if (localStorage.getItem(SPEICHER + "-test") !== "1") throw new Error("lesen");
+      localStorage.removeItem(SPEICHER + "-test");
+    } catch (e) { return false; }
+    return true;
+  }
+  function speicherWarnung() {
+    if (speicherPruefen()) {
+      try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* egal */ }
+      return;
+    }
+    const box = document.createElement("div");
+    box.className = "speicher-warnung"; box.setAttribute("role", "alert");
+    const text = document.createElement("span");
+    text.textContent = "⚠️ Dein Fortschritt kann auf diesem Gerät nicht gespeichert werden. Wahrscheinlich ist der private Modus an. Öffne die App im normalen Browser-Fenster, am besten über „Zum Home-Bildschirm“, sonst sind deine Punkte beim Schließen weg.";
+    const zu = document.createElement("button");
+    zu.type = "button"; zu.textContent = "✕"; zu.setAttribute("aria-label", "OK");
+    zu.onclick = () => box.remove();
+    box.append(text, zu);
+    document.body.prepend(box);
+  }
+  speicherWarnung();
+
   // Sprechtempo: 1,0 · 0,7 (Knopf oben, wird auf dem Gerät gemerkt); gilt für alle Aufnahmen und die Geräte-Stimme
   const TEMPI = [1, 0.7];
   const tempo = () => (TEMPI.includes(stand.tempo) ? stand.tempo : 1);

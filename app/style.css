@@ -378,3 +378,6 @@ dialog.feier.akte { max-height: 88vh; overflow-y: auto; text-align: left; }
 .akten-fragen li { margin: 8px 0; }
 .akten-antwort { margin: 4px 0 0; color: var(--leise); }
 .gym-lob:empty { display: none; }
+
+.speicher-warnung { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; background: #ffd84a; color: #222; font-size: .95rem; line-height: 1.4; }
+.speicher-warnung button { flex: none; border: 0; background: transparent; font-size: 1.1rem; cursor: pointer; color: inherit; }

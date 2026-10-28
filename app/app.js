@@ -57,12 +57,41 @@
   const GEFUEHL = [["gut", "😊", "gut"], ["schlecht", "😟", "nicht gut"], ["beides", "😊😟", "beides"]];
 
   /* ---------- Speicher (nur lokal) ---------- */
+  // Manipulationsschutz (Spielstand nur auf dem Gerät): Punkte, Spiel, Word Gym und erledigte Teile tragen ein Siegel.
+  // Wer den Speicher von Hand ändert, passt nicht mehr zum Siegel: Die App nimmt dann die letzte gültige Sicherung
+  // oder setzt Punkte und Fortschritt zurück. Kein Server nötig – ein Hindernis, keine Festung.
+  const SIEGEL_SALZ = "mrAlex·2026·six·p7Qx";
+  const SIEGEL_BIS = Date.parse("2026-11-09"); // bis dahin werden ältere, noch ungesiegelte Spielstände einmalig übernommen
+  const siegel = (o) => {
+    const t = SIEGEL_SALZ + JSON.stringify([o.spiel || null, o.gym || null, o.erledigt || null]);
+    let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for (let i = 0; i < t.length; i++) { const c = t.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+  };
+  let manipuliert = false, letzterGueltig = null;
+  const lies = (key) => { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; } };
+  const echt = (o) => o && typeof o === "object" && o._s === siegel(o);
+  const grund = () => ({ erledigt: [], fragen: [] });
   function laden() {
-    try { return Object.assign({ erledigt: [], fragen: [] }, JSON.parse(localStorage.getItem(SPEICHER) || "{}")); }
-    catch (e) { return { erledigt: [], fragen: [] }; }
+    const haupt = lies(SPEICHER), sicherung = lies(SPEICHER + "-b");
+    if (echt(haupt)) { letzterGueltig = JSON.stringify(haupt); return Object.assign(grund(), haupt); }
+    if (!haupt || typeof haupt !== "object") return grund();
+    if (echt(sicherung)) { manipuliert = true; letzterGueltig = JSON.stringify(sicherung); try { localStorage.setItem(SPEICHER, letzterGueltig); } catch (e) { /* egal */ } return Object.assign(grund(), sicherung); }
+    if (!haupt._s && Date.now() < SIEGEL_BIS) return Object.assign(grund(), haupt); // älterer Spielstand: einmal übernehmen, ab jetzt gesiegelt
+    manipuliert = true; // verändert, oder ungesiegelt nach der Übergangszeit: Punkte und Fortschritt zurück, Einstellungen bleiben
+    const rest = Object.assign(grund(), haupt); delete rest.spiel; delete rest.gym; delete rest._s; rest.erledigt = [];
+    return rest;
   }
   function speichern() {
-    try { localStorage.setItem(SPEICHER, JSON.stringify(stand)); } catch (e) { /* ohne Speicher geht es trotzdem */ }
+    try {
+      stand._s = siegel(stand);
+      const neu = JSON.stringify(stand);
+      localStorage.setItem(SPEICHER + "-b", neu); // Zweitkopie: Wer nur den Hauptspeicher ändert, bekommt den letzten echten Stand zurück
+      localStorage.setItem(SPEICHER, neu);
+      letzterGueltig = neu;
+    } catch (e) { /* ohne Speicher geht es trotzdem */ }
   }
   const stand = laden();
 
@@ -81,10 +110,13 @@
       try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* egal */ }
       return;
     }
+    warnBanner("⚠️ Dein Fortschritt kann auf diesem Gerät nicht gespeichert werden. Wahrscheinlich ist der private Modus an. Öffne die App im normalen Browser-Fenster, am besten über „Zum Home-Bildschirm“, sonst sind deine Punkte beim Schließen weg.");
+  }
+  function warnBanner(meldung) {
     const box = document.createElement("div");
     box.className = "speicher-warnung"; box.setAttribute("role", "alert");
     const text = document.createElement("span");
-    text.textContent = "⚠️ Dein Fortschritt kann auf diesem Gerät nicht gespeichert werden. Wahrscheinlich ist der private Modus an. Öffne die App im normalen Browser-Fenster, am besten über „Zum Home-Bildschirm“, sonst sind deine Punkte beim Schließen weg.";
+    text.textContent = meldung;
     const zu = document.createElement("button");
     zu.type = "button"; zu.textContent = "✕"; zu.setAttribute("aria-label", "OK");
     zu.onclick = () => box.remove();
@@ -92,6 +124,7 @@
     document.body.prepend(box);
   }
   speicherWarnung();
+  if (manipuliert) warnBanner("⚠️ Dein Spielstand passte nicht mehr zu sich selbst und wurde zurückgesetzt. Punkte bekommst du nur durch Üben in der App.");
 
   // Sprechtempo: 1,0 · 0,7 (Knopf oben, wird auf dem Gerät gemerkt); gilt für alle Aufnahmen und die Geräte-Stimme
   const TEMPI = [1, 0.7];

@@ -61,7 +61,7 @@
   // Wer den Speicher von Hand ändert, passt nicht mehr zum Siegel: Die App nimmt dann die letzte gültige Sicherung
   // oder setzt Punkte und Fortschritt zurück. Kein Server nötig – ein Hindernis, keine Festung.
   const SIEGEL_SALZ = "mrAlex·2026·six·p7Qx";
-  const SIEGEL_BIS = Date.parse("2026-11-09"); // bis dahin werden ältere, noch ungesiegelte Spielstände einmalig übernommen
+  const SIEGEL_BIS = Date.parse("2026-12-01"); // bis dahin werden ältere, noch ungesiegelte Spielstände einmalig übernommen
   const siegel = (o) => {
     const t = SIEGEL_SALZ + JSON.stringify([o.spiel || null, o.gym || null, o.erledigt || null]);
     let h1 = 0xdeadbeef, h2 = 0x41c6ce57;

@@ -181,7 +181,12 @@
     return a;
   }
   const station = (nr) => D.stationen.find((s) => s.nr === nr);
-  const knopf = (text, fn, art) => el("button", { class: "knopf" + (art ? " " + art : ""), onclick: fn }, text);
+  // Sperren (Sprechzeit, Denkzeit, „erst richtig antworten“) gelten im Programm, nicht nur am Knopf: Wer im Browser das disabled-Attribut
+  // entfernt, kommt trotzdem nicht weiter. GESPERRT ist von außen (Konsole) nicht erreichbar.
+  const GESPERRT = new WeakSet();
+  const sperrt = (k) => { GESPERRT.add(k); k.disabled = true; return k; };
+  const entsperrt = (k) => { GESPERRT.delete(k); k.disabled = false; return k; };
+  const knopf = (text, fn, art) => el("button", { class: "knopf" + (art ? " " + art : ""), onclick: (e) => { if (GESPERRT.has(e.currentTarget)) return; fn(e); } }, text);
 
   /* ---------- Sprechzeit: „Weiter“ erst nach Hören + Nachsprechen, „Lösung“ erst nach Denkzeit ----------
      Der gesperrte Knopf füllt sich sichtbar. Schon freigegebene Sätze (Teil:Position) bleiben frei,
@@ -190,20 +195,20 @@
   function sperre(k) {
     if (!lage.frei) lage.frei = new Set();
     if (lage.frei.has(freiSchluessel())) return k;
-    k.disabled = true; k.classList.add("wartet");
+    sperrt(k); k.classList.add("wartet");
     return k;
   }
   function gibFrei(k, sek, merken = true) {
-    if (!k.disabled || k.dataset.frei) return;
+    if (!GESPERRT.has(k) || k.dataset.frei) return;
     k.dataset.frei = "1";
     k.style.setProperty("--warte", sek.toFixed(1) + "s");
     k.classList.add("laeuft");
     const menge = lage.frei, schluessel = freiSchluessel();
-    setTimeout(() => { k.disabled = false; k.classList.remove("wartet", "laeuft"); if (merken && menge) menge.add(schluessel); }, sek * 1000);
+    setTimeout(() => { entsperrt(k); k.classList.remove("wartet", "laeuft"); if (merken && menge) menge.add(schluessel); }, sek * 1000);
   }
   const sprechDauer = (d, min = 3) => Math.max(min, d * 1.4 + 1);
   const denkzeit = (text) => Math.min(8, Math.max(3, 2 + String(text).split(/\s+/).length * 0.35));
-  const wennFrei = (k, fn) => () => { if (!k.disabled) fn(); };
+  const wennFrei = (k, fn) => () => { if (!k.disabled && !GESPERRT.has(k)) fn(); };
 
   /* ---------- Eintippen (optional, ⌨-Knopf oben): Antworten tippen statt auswählen ----------
      0 Fehler = richtig · 1 Fehler = gilt auch als richtig, die richtige Schreibweise wird gezeigt ·
@@ -681,7 +686,7 @@
     const satz = el("p", { class: "satz", lang: "en" }, lueckenSatz(s, true));
     const box = rueckmeldung();
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
-    weiter.disabled = true;
+    sperrt(weiter);
     const wahl = el("div", { class: "wahl", role: "group", "aria-label": "Verbform wählen" },
       mischen([a.richtig, ...a.falsch]).map((form) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
         if (geloest) return;
@@ -690,7 +695,7 @@
           e.currentTarget.classList.add("richtig");
           satz.replaceChildren(...[].concat(lueckenSatz(s, false)));
           melde(box, "gut", lob());
-          weiter.disabled = false;
+          entsperrt(weiter);
           lage.weiter = naechstes;
           spiele([s.audio.en]);
         } else {
@@ -844,7 +849,7 @@
     const box = rueckmeldung();
     const loesungZeile = el("p", { class: "satz ziel-satz", lang: "en", hidden: true }, s.en);
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
-    weiter.disabled = true;
+    sperrt(weiter);
     const hoeren = () => spiele([s.audio.en]);
     const wahl = el("div", { class: "wahl", role: "group", "aria-label": "Antwort wählen" },
       (a.korrektur ? a.optionen : mischen(a.optionen)).map((o) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
@@ -854,7 +859,7 @@
           e.currentTarget.classList.add("richtig");
           melde(box, "gut", lob() + (a.korrektur ? (a.frage === s.en ? " Der Satz stimmt." : " So ist es richtig:") : ""));
           loesungZeile.hidden = false;
-          weiter.disabled = false; lage.weiter = naechstes; lage.abspielen = hoeren;
+          entsperrt(weiter); lage.weiter = naechstes; lage.abspielen = hoeren;
           hoeren();
         } else {
           e.currentTarget.disabled = true;
@@ -879,7 +884,7 @@
     const reihe = el("ol", { class: "reihe", "aria-label": "Deine Reihenfolge" },
       woerter.map(() => el("li", { class: "platz" }, "…")));
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
-    weiter.disabled = true;
+    sperrt(weiter);
     const alle = () => spiele(woerter.map((w) => w.audio.en));
     const knoepfe = mischen(woerter).map((w) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
       if (w === woerter[naechster]) {
@@ -891,7 +896,7 @@
         spiele([w.audio.en]);
         if (++naechster === woerter.length) {
           melde(box, "gut", lob());
-          weiter.disabled = false; lage.weiter = naechstes; lage.abspielen = alle;
+          entsperrt(weiter); lage.weiter = naechstes; lage.abspielen = alle;
           setTimeout(alle, 900);
         }
       } else {
@@ -971,14 +976,14 @@
     let geloest = false;
     const box = rueckmeldung();
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
-    weiter.disabled = true;
+    sperrt(weiter);
     const hoeren = () => spiele([ziel.audio]);
     const wahl = el("div", { class: "wahl", role: "group", "aria-label": "Welches Wort?" },
       r.paar.optionen.map((o) => el("button", { class: "knopf wahl-knopf gross", lang: "en", onclick: (e) => {
         if (geloest) return;
         if (o === ziel) {
           geloest = true; e.currentTarget.classList.add("richtig");
-          melde(box, "gut", lob()); weiter.disabled = false; lage.weiter = naechstes;
+          melde(box, "gut", lob()); entsperrt(weiter); lage.weiter = naechstes;
           hoeren();
         } else {
           e.currentTarget.disabled = true;
@@ -1058,9 +1063,9 @@
     let geloest = false;
     const box = rueckmeldung();
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
-    weiter.disabled = true;
+    sperrt(weiter);
     const verbAnzeige = s.falsch ? s.basis : (s.dritte ? s.sform : s.basis);
-    const fertig = (text) => { geloest = true; melde(box, "gut", text); weiter.disabled = false; lage.weiter = naechstes; };
+    const fertig = (text) => { geloest = true; melde(box, "gut", text); entsperrt(weiter); lage.weiter = naechstes; };
     const verbKnopf = el("button", { class: "wort-knopf", lang: "en", onclick: () => {
       if (geloest) return;
       if (s.falsch) {
@@ -1128,11 +1133,11 @@
     // Bild → Wort: das Symbol zeigt ein Wort; auswählen oder (⌨) eintippen
     if (teil.art === "vok_bild") {
       const box = rueckmeldung();
-      const weiter = knopf("Weiter ➜", naechstes, "haupt"); weiter.disabled = true;
+      const weiter = knopf("Weiter ➜", naechstes, "haupt"); sperrt(weiter);
       const wortZeile = el("p", { class: "vok-en ziel-satz", lang: "en", hidden: true }, v.form);
       let geloest = false;
       const geschafft = (stufe) => {
-        geloest = true; wortZeile.hidden = false; weiter.disabled = false; lage.weiter = naechstes;
+        geloest = true; wortZeile.hidden = false; entsperrt(weiter); lage.weiter = naechstes;
         tippRueckmeldung(box, stufe, v.form);
         lage.abspielen = () => spiele([v.audio.en]); lage.abspielen();
       };

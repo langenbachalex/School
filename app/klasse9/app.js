@@ -260,7 +260,9 @@
     if (!proEintrag || !lage.start) return false;
     return (Date.now() - lage.start) / 1000 < laenge(teil) * proEintrag;
   }
-  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5 }; // Sekunden pro Satz/Wort mindestens; Dialoge: „Weiter“ erst nach dem ganzen Dialog
+  const QUIZ_MIN = 2.5; // Quizteile: blindes Durchklicken (alle Antworten probieren) bringt keine Punkte
+  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, beae_quiz: QUIZ_MIN, vok_def: QUIZ_MIN, vok_abfrage: QUIZ_MIN };
+  const istQuiz = (teil) => (SPRECH_MIN[teil.art] || 0) === QUIZ_MIN; // Sekunden pro Satz/Wort mindestens; Dialoge: „Weiter“ erst nach dem ganzen Dialog
   // Ansage: im G-Kurs Englisch + Deutsch, im E-Kurs nur Englisch
   const ansage = (en, de) => el("div", { class: "ansage" }, el("p", { lang: "en" }, en), !E() && de && el("p", { class: "ansage-de", lang: "de" }, de));
   // „Noch einfacher“-Hilfe; wer sie benutzt, bekommt für diesen Teil keinen „ohne Hilfe“-Bonus (aber keinen Abzug)
@@ -471,7 +473,7 @@
   function naechstes() {
     const teil = lage.teile[lage.teil];
     if (lage.pos + 1 < laenge(teil)) { lage.pos++; return zeigeTeil(); }
-    if (zuSchnell(teil)) return zuSchnellSeite();
+    if (zuSchnell(teil)) return zuSchnellSeite(teil);
     const erstesMal = !istFertig(lage.teil);
     teilFertig(lage.teil);
     belohne(erstesMal, !lage.hilfe);
@@ -490,13 +492,15 @@
   }
 
   // Prüfung C: zu schnell durchgeklickt – kein Lob, keine Punkte, Teil noch mal
-  function zuSchnellSeite() {
+  function zuSchnellSeite(teil) {
     const k = kategorie(lage.nr);
     const nochmal = () => { lage.frei = null; lage.startTeil = null; springe(lage.teil); };
     lage.abspielen = null; lage.weiter = nochmal;
     const zeichne = () => zeige(kopf(k), el("section", { class: "geschafft" },
       el("h2", {}, T("⏱️ Zu schnell!", "⏱️ Too fast!")),
-      ansage("Really say the sentences out loud. Then you get points. Try again!",
+      istQuiz(teil) ? ansage("Read the tasks carefully and think before you answer. Then you get points. Try again!",
+        "Lies die Aufgaben in Ruhe und überleg, bevor du antwortest. Dann gibt es auch Punkte. Versuch es noch mal!")
+        : ansage("Really say the sentences out loud. Then you get points. Try again!",
         "Sprich die Sätze wirklich mit. Dann gibt es auch Punkte. Versuch es noch mal!"),
       knopf(T("Noch mal ➜", "Try again ➜"), nochmal, "haupt")));
     ansicht = zeichne;

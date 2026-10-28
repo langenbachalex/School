@@ -292,7 +292,10 @@
     if (!proEintrag || !lage.start) return false;
     return (Date.now() - lage.start) / 1000 < laenge(teil) * proEintrag;
   }
-  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, vok_luecke: 2 }; // Sekunden pro Satz/Wort mindestens
+  // Sekunden pro Satz/Wort/Frage mindestens. Quizteile (Q): blindes Durchklicken (alle Antworten probieren) bringt keine Punkte.
+  const QUIZ_MIN = 2.5;
+  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, vok_luecke: 2, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, hoerwahl: QUIZ_MIN, detektiv: QUIZ_MIN, vok_bild: QUIZ_MIN, vok_abfrage: QUIZ_MIN };
+  const istQuiz = (teil) => (SPRECH_MIN[teil.art] || 0) === QUIZ_MIN;
 
   /* ---------- Startseite ---------- */
   // Countdown in Wochen bis zum nächsten Termin (D.termin, in daten_bauen.py): zählt Kalenderwochen, Montag bis Sonntag
@@ -462,7 +465,7 @@
   function naechstes() {
     const teil = lage.teile[lage.teil];
     if (lage.pos + 1 < laenge(teil)) { lage.pos++; return zeigeTeil(); }
-    if (zuSchnell(teil)) return zuSchnellSeite();
+    if (zuSchnell(teil)) return zuSchnellSeite(teil);
     const erstesMal = !istFertig(lage.teil);
     teilFertig(lage.teil);
     belohne(erstesMal);
@@ -472,13 +475,13 @@
   }
 
   // Prüfung C: zu schnell durchgeklickt – kein Lob, keine Punkte, Teil noch mal
-  function zuSchnellSeite() {
+  function zuSchnellSeite(teil) {
     const st = station(lage.nr);
     const nochmal = () => { lage.frei = null; lage.startTeil = null; springe(lage.teil); };
     lage.abspielen = null; lage.weiter = nochmal;
     zeige(kopf(st), el("section", { class: "geschafft" },
       el("h2", {}, "⏱️ Zu schnell!"),
-      el("p", { class: "ansage" }, "Sprich die Sätze wirklich mit. Dann gibt es auch Punkte. Versuch es noch mal!"),
+      el("p", { class: "ansage" }, istQuiz(teil) ? "Lies die Aufgaben in Ruhe und überleg, bevor du antwortest. Dann gibt es auch Punkte. Versuch es noch mal!" : "Sprich die Sätze wirklich mit. Dann gibt es auch Punkte. Versuch es noch mal!"),
       knopf("Noch mal ➜", nochmal, "haupt")));
   }
 

@@ -1,6 +1,6 @@
 # Hörverstehen 3 „Talking about free time“ – Vorschlag (Klasse 6, GLN-2-nah, nichts gebaut)
 
-Stand: 29.10.2026. Text und Aufgaben: `inhalte/hoeren/03-talking-about-free-time.txt` (Entwurf). Keine echte GLN-Aufgabe, nur gleiches Format und Thema.
+Stand: 29.10.2026. Text und Aufgaben: `docs/hoerverstehen/03-talking-about-free-time.entwurf.txt` (Entwurf; kommt nach Freigabe nach `inhalte/hoeren/`). Keine echte GLN-Aufgabe, nur gleiches Format und Thema.
 
 ## Warum schwerer als 01/02
 | | 01 Mia's Monday / 02 How do you get there? | 03 Talking about free time |

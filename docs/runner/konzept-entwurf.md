@@ -1,0 +1,95 @@
+# Runner – Konzept-Entwurf (Road Trip Run / London Run)
+
+Stand: 29.10.2026. Zum Absegnen durch Mr. Alex. Nichts davon ist in die Apps eingebaut; es gibt nur den Prototyp.
+
+**Anfassen:** `docs/runner/prototyp/index.html` – eine Datei, läuft per Doppelklick (Laptop) und auf dem Handy (am besten quer). Stil-Proben: `stil-a-cartoon.png`, `stil-b-foto.png`, Figur-Skins: `figur-skins.png`.
+
+## 1. Steuerung
+- **Auto-Runner:** Die Figur läuft von selbst nach rechts. Ein Finger reicht.
+- **Tippen / Leertaste = springen**, **länger halten = höher** (kurzer Tipp ≈ 1 Kistenhöhe, voll gehalten ≈ 2 Kisten bzw. Plattformhöhe). Im Prototyp: Tipp ≈ 72 Einheiten, voll gehalten ≈ 144 Einheiten bei 80 Einheiten Figurhöhe.
+- Gegner kann man **überspringen oder von oben plattdrücken** (Giana-/Mario-Gefühl). Berührung von der Seite = ein Leben weg.
+- Kisten von der Seite blockieren den Lauf, man muss drüber.
+- Boss-Frage: drei Antwortknöpfe (Touch) oder Tasten 1–3.
+
+## 2. Level-Aufbau
+- **Welt = Staat/Landmark** (Klasse 9: New York → Statue of Liberty, Kalifornien → Golden Gate, Arizona → Grand Canyon … entlang der vorhandenen Landmark-Reihenfolge; Klasse 6: London-Stationen).
+- **1 Level = 60–90 s** Laufzeit. Bei 230 Einheiten/s sind das 14.000–20.000 Einheiten Strecke. Der Prototyp ist bewusst kürzer (≈ 7.900 Einheiten, ≈ 35 s), damit man alles schnell sieht.
+- Bausteine je Level: Boden mit Lücken (Wasser/Schlucht), schwebende Plattformen, Kisten (einzeln und gestapelt), 2 Gegnerarten je Welt (New York: Taube und Waschbär), 8–10 Wort-Diamanten, 1–2 Frage-Tore, am Ende Endboss + Tür.
+- **Levelziel passend zum Landmark:** Kulisse zeigt das Landmark (Silhouette, kommt per Parallaxe näher), die Tür am Ende trägt das Landmark-Emblem, Abschluss „You found the Statue of Liberty!“.
+- Checkpoints: nach einem Sturz geht es am letzten festen Boden weiter (nicht am Levelanfang), damit der Frust klein bleibt.
+
+## 3. Wortschatz-Einbindung
+Drei Stufen, von passiv bis aktiv:
+1. **Wort-Diamanten (passiv):** Jeder Diamant trägt ein Wort der aktuellen Unit. Beim Einsammeln: Klang, Wort groß eingeblendet (Englisch + Deutsch), Wort gesprochen. Im Prototyp Geräte-Stimme (`speechSynthesis`, abschaltbar), später die Aufnahmen aus der App (Unit-Wörter sind für Klasse 9 größtenteils vertont).
+2. **Frage-Tor (wählen):** Oben steht das deutsche Wort („Welcher Diamant heißt ‚Aufzug'?“), drei goldene Diamanten auf drei Höhen tragen englische Wörter; unten = laufen, Mitte = kurzer Sprung, oben = langer Sprung. Der erste berührte Diamant zählt. Richtig = Extra-Diamant + Klang; falsch = Buzzer + Einblendung der richtigen Lösung, **kein Lebensverlust** (Vorschlag: falsch = kurz langsamer, wie im Spiele-Konzept).
+3. **Endboss (antworten):** Der Boss (New York: Alligator aus der Kanalisation; weitere: Grizzly, Kojote, Klapperschlange …) stellt eine Frage („Was heißt ‚Bücherei'?“), drei Antworten. Richtig = Tür geht auf, Level geschafft. Falsch = ein Leben weg und neue Frage. Fragen kommen aus den Wörtern des Levels, also aus dem, was man gerade eingesammelt hat.
+
+Wortquelle: `inhalte/klasse9/vokabeln.tsv` (Spalten `englisch`, `deutsch`, dazu `satz_en`/`satz_de` für spätere Satz-Fragen). Der Prototyp nutzt 8 Wörter aus Unit 2: lion, library, trust, incredible, elevator, locker, highlight, promise. Für die Klasse-6-App dieselbe Logik mit deren Wortlisten.
+
+## 4. Leben und Scheitern
+- **3 Leben** pro Eintritt. Verlust durch Sturz (Wasser/Schlucht), Gegner von der Seite, falsche Boss-Antwort.
+- 0 Leben = „Game over“, Diamanten/Wörter des Durchgangs bleiben sichtbar (Lerneffekt bleibt), neuer Eintritt kostet wieder Coins.
+- Shop-Artikel „zweites Leben“ (schon im Ideenspeicher): +1 Herz am Start.
+- Schwierigkeit: Level 1 ohne Doppelsprung-Pflicht; spätere Level mit engeren Lücken und schnelleren Gegnern. Tempo konstant, damit die Sprache lesbar bleibt.
+
+## 5. Belohnung: Trophäen und Runner-Titel (keine Coins zurück)
+- **Trophäe je Level** (Landmark-Pokal, z. B. „Liberty Finder“), sichtbar auf der Landmark-Karte / in der Hall of Fame. Gold, wenn alle Diamanten und das Tor richtig; Silber sonst.
+- **Runner-Titel** (Vorschlag, nach Zahl geschaffter Level): Rookie Runner → Highway Hopper → Landmark Hunter → State Crosser → Coast-to-Coast Legend. Klasse 6: Rookie Runner → Tube Jumper → Bus Hopper → London Hero → Superhero of London.
+- Der Titel steht neben dem Punkte-Titel, ersetzt ihn nicht. Keine Punkte, keine Coins aus dem Runner.
+
+## 6. Eintritt (Coins)
+- Eintritt pro Durchgang, Vorschlag **20 Coins** (≈ ein Word-Gym-Tag; Wertigkeit ist im Ideenspeicher noch offen). Wird beim Start abgebucht, auch wenn man scheitert.
+- Nichts gratis (Beschluss 29.10.). Der Prototyp zeigt nur den Text „Eintritt: 20 Coins“, es gibt noch kein Wallet.
+- Technisch: Wallet/Shop kommen aus dem parallelen Coins-Umbau; der Runner fragt nur `coins >= preis` und bucht ab.
+
+## 7. Skins – wie sie als Ebenen funktionieren
+Die Figur ist **keine Grafikdatei**, sondern wird im Canvas aus Vektor-Ebenen gezeichnet (Prototyp: Funktion `zeichneFigur`). Reihenfolge von hinten nach vorn: Aura → hinteres Bein → Shorts → vorderes Bein → hinterer Arm → Oberteil → vorderer Arm → Kopf (Ohr, Nase, Mund) → Auge/Brille → Schnurrbart → Frisur → Hut. Jede Ebene liest ihre Variante und Farbe aus einem Skin-Objekt, z. B. `{haar:'zopf', hut:'cap', brille:'an', top:'hoodie', topfarbe:'rot', aura:'an'}`. Ein neuer Skin ist eine kleine Zeichenfunktion plus ein Shop-Eintrag, keine Bilddatei.
+
+Sichtbarkeit bei Spielgröße (Figur = 1/5 der Bildhöhe, auf dem Handy quer ≈ 80 px): Hüte, Frisuren, Brille, Oberteil-Farbe, Aura und Schuhfarbe sind klar erkennbar (siehe `figur-skins.png`, rechts die Spielgröße). Schnurrbart, Nase, Ohrringe/Kette sind bei Spielgröße nur schwach zu sehen – sie lohnen sich eher für die große Vorschau im Menü/Shop.
+
+Liste aus dem Ideenspeicher, Stand im Prototyp:
+| Skin | Prototyp | Bemerkung |
+|---|---|---|
+| Frisuren | kurz, Zopf, Locken + 4 Haarfarben | Zopf wippt beim Laufen |
+| Hüte | Cap, Cowboyhut, Zylinder | weitere: Krone, Mütze, Helm |
+| Sonnenbrille | an/aus | gut sichtbar |
+| Schnurrbart | an/aus | bei Spielgröße klein |
+| Oberteile | T-Shirt, Hoodie + 4 Farben | Muster/Logo möglich |
+| Shorts | eine Variante | Farbe später wählbar |
+| Schuhe | weiß, rot, schwarz | |
+| Aura (Superkraft) | an/aus (gelb, pulsiert, Funken) | je Superheld eigene Farbe/Form |
+| Nase, Ohrringe/Kette, Haarschmuck, Accessoires | noch nicht | Ebenen vorbereitet (Kopf/Hals), ein paar Stunden je Teil |
+| Autos mit Stickern | nicht im Runner | Autos gehören zum Road-Trip-Meter/Word Race, Sticker sind dort eine eigene Ebene |
+
+## 8. Audio-Bedarf (Zeichen je Stimme, grob)
+Alles zunächst ohne Audio; Texte werden in die Vormerkliste im Ideenspeicher übernommen (dort steht für den Runner „je ≈ 1.500“).
+| Posten | Stimme | Zeichen |
+|---|---|---|
+| Diamant-Rufe („A lion!“, „Elevator!“ – 10 Wörter × 5 Level) | Jeremy, Jessica | je ≈ 600 (vorhandene Wortaufnahmen können einen Teil ersetzen) |
+| Tor-Ansagen („Which one is ‚Aufzug'?“, „Correct!“, „Oops – it's elevator.“) | Mr. Alex | ≈ 300 |
+| Boss-Fragen + Sprüche (5 Bosse × 3 Sätze) | Mr. Alex (Boss-Stimme) | ≈ 900 |
+| Levelstart/-ende („Let's find the Statue of Liberty!“, „We made it!“) | Jeremy, Jessica | je ≈ 400 |
+| Lob/Trost (5 Sätze) | Mr. Alex | ≈ 250 |
+| **Summe** | | **Jeremy ≈ 1.000 · Jessica ≈ 1.000 · Mr. Alex ≈ 1.450** |
+Klasse 6 (London Run) noch einmal ähnlich für Mr. Alex (≈ 1.500). Alle Klänge (Sprung, Diamant, Buzzer, Fanfare) kommen aus Web Audio, keine Dateien, keine Credits.
+
+## 9. Aufwandsschätzung für die Integration
+Prototyp ist da (≈ 800 Zeilen, keine Abhängigkeiten). Übernahme in die Apps:
+| Schritt | Aufwand |
+|---|---|
+| Runner als Modul in Klasse 9 (eigene Seite, Wörter aus der Unit, Coins-Abbuchung, Trophäe speichern) | 2 Tage |
+| 5 Welten/Level mit Kulissen (Statue of Liberty, Golden Gate, Grand Canyon, Route 66, Mount Rushmore) und je 2 Gegnern + Boss | 3 Tage (ca. ½ Tag je Welt) |
+| Skins + Shop-Anbindung (Ebenen gibt es, Shop-Daten und Vorschau) | 1 Tag |
+| Audio einbauen, sobald vertont | ½ Tag |
+| Klasse 6: London Run (Bus statt Kisten, Themse, London Eye/Big Ben, Superhelden-Aura je Held, Wortlisten Klasse 6) | 2 Tage zusätzlich |
+| Test auf Schulhandys (Tempo, Touch, Ton) | ½ Tag |
+| **Summe** | **≈ 7 Tage Klasse 9, + 2 Tage Klasse 6** |
+Voraussetzung: Coins/Shop existieren (parallel geplant). Nicht geprüft: Leistung auf alten Schulhandys und iOS-Safari-Ton (im Prototyp nur Chromium headless: 60 fps bei 1280×800 gemessen).
+
+## 10. Offene Fragen an Mr. Alex
+1. **Grafikstil A oder B?** A = flacher Cartoon (`stil-a-cartoon.png`), alles aus Vektoren, einheitlich mit der Figur, kein Foto nötig. B = Landmark-Foto als Kulisse (`stil-b-foto.png`); Figur und Plattformen „schweben“ vor dem Foto, Text ist schwerer lesbar, pro Landmark ein Foto im Querformat nötig (die vorhandenen sind Hochformat). Empfehlung: A, mit dem Foto als Belohnungsbild am Levelende.
+2. **Schwierigkeit:** Falsches Tor = nur Buzzer (Prototyp) oder auch ein Leben weg? Gegner nur ausweichen oder auch plattdrücken (Prototyp: beides)?
+3. **Länge:** 60 s oder 90 s pro Level? Wie viele Diamanten (8–10)? Ein oder zwei Frage-Tore?
+4. **Eintrittspreis** (20 Coins?) und Preis für das zweite Leben.
+5. **Figur:** eine neutrale Figur mit Skins oder Jeremy/Jessica als Vorlagen (Prototyp: eine Figur, Jeremy-/Jessica-Vorbelegung über Skins)?
+6. **Titel-Reihe** Rookie Runner → Coast-to-Coast Legend so in Ordnung?

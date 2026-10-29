@@ -455,8 +455,8 @@ function update(dt) {
           tor.erledigt = true; torErgebnis = s.richtig;
           const w = WOERTER[s.wort];
           if (s.richtig) { klang.richtig(); popup = { en: w.en + ' ✓', de: tor.de, zeit: 2, art:'richtig' }; gesammelt++; }
-          else { klang.falsch(); popup = { en: w.en + ' ✗', de: w.de + ' – richtig wäre: ' + WOERTER[tor.wort].en, zeit: 2.4, art:'falsch' }; }
-          sprich(WOERTER[tor.wort].en);
+          else { klang.falsch(); popup = { en: w.en + ' ✗', de: w.de + ' – richtig wäre: ' + WOERTER[level.tor.wort].en, zeit: 2.4, art:'falsch' }; }
+          sprich(WOERTER[level.tor.wort].en);
           break;
         }
       }
@@ -661,10 +661,12 @@ function hintergrund(c) {
   const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
   c.fillStyle = g; c.fillRect(0, 0, viewW, H);
   if (einstellungen.foto && fotoBild) {
-    const s = Math.max(viewW * 1.4 / fotoBild.width, H / fotoBild.height);
+    // Foto als Kulisse: Himmelsfarbe des Fotos als Fläche, Foto in voller Höhe (Statue ganz sichtbar), langsame Parallaxe
+    c.fillStyle = '#2b5fb6'; c.fillRect(0, 0, viewW, H);
+    const s = (H * 1.3) / fotoBild.height;
     const bw = fotoBild.width * s, bh = fotoBild.height * s;
-    const ox = -Math.min(bw - viewW, kamera * 0.15);
-    c.drawImage(fotoBild, ox, Math.min(0, H - bh) * 0.15, bw, bh);
+    const ox = viewW * 0.55 - kamera * 0.06 - bw / 2;
+    c.drawImage(fotoBild, ox, -40, bw, bh);
     const sch = c.createLinearGradient(0, BODEN_Y - 120, 0, BODEN_Y); sch.addColorStop(0, 'rgba(24,33,58,0)'); sch.addColorStop(1, 'rgba(24,33,58,.35)');
     c.fillStyle = sch; c.fillRect(0, BODEN_Y - 120, viewW, 120);
     return;
@@ -884,7 +886,7 @@ window.__runner = {
   start() { audioAn(); menu.hidden = true; neuesSpiel(); zustand = 'spiel'; },
   springe(haltenMs = 250) { sprungStart(); setTimeout(sprungEnde, haltenMs); },
   stand() { return { zustand, x: spieler.x, y: spieler.y, amBoden: spieler.amBoden, leben, diamanten: gesammelt, kamera, fps, popup: popup ? popup.en : null, torErgebnis, frageOffen: !frageBox.hidden, bossFrage: bossFrage ? bossFrage.opt.map(i => WOERTER[i].en) : null, richtig: bossFrage ? WOERTER[bossFrage.richtig].en : null }; },
-  teleport(x) { spieler.x = x; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; kamera = Math.max(0, x - viewW * 0.33); },
+  teleport(x) { tot = 0; spieler.unverwundbar = 0; spieler.x = x; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; kamera = Math.max(0, x - viewW * 0.33); },
   antwort(n) { antwortGeben(n); },
   setSkin(o) { Object.assign(skin, o); skinMenueBauen(); },
   setFoto: fotoSetzen,

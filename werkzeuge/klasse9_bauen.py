@@ -423,12 +423,28 @@ GYM = {"pensum": {"neu": 4, "wdh": 8}, "grenzen": {"neu": [1, 6], "wdh": [4, 12]
 
 # Shop (Coins = gespiegelte Punkte, nicht rückwirkend; docs/gamification/konzept.md „Coins und Shop“). Erweiterbar: neue Artikel hier eintragen.
 # Texte mit G/E wie bei "unter" der Kacheln (tx). bald: gezeigt, noch nicht kaufbar · rahmen: CSS-Klasse rahmen-<farbe> für Titel-Schild und Startkarte
+# runner: Ticket wird nicht im Shop gekauft, sondern beim Start des Spiels abgebucht (app.js runnerSpiel); der Artikel führt zur Startseite des Runners.
+# skin: Figur-Teil für den Runner (app/klasse9/runner.js SKIN_GRUPPEN; die ersten zwei Werte je Option sind frei, Muskeln ganz), id = skin_<option>_<wert>.
+SKIN_PREIS = 30
+SKIN_ARTIKEL = [  # (option, wert, Name G, Name E)
+    ("haar", "zopf", "Frisur: Zopf", "Hair: ponytail"), ("haar", "locken", "Frisur: Locken", "Hair: curly"), ("haar", "afro", "Frisur: Afro", "Hair: afro"),
+    ("haarfarbe", "schwarz", "Haarfarbe: schwarz", "Hair colour: black"), ("haarfarbe", "rot", "Haarfarbe: rot", "Hair colour: red"),
+    ("haarschmuck", "haarband", "Haarband", "Headband"),
+    ("hut", "cowboy", "Cowboyhut", "Cowboy hat"), ("hut", "zylinder", "Zylinder", "Top hat"),
+    ("nase", "knubbel", "Knubbelnase", "Button nose"),
+    ("schmuck", "kette", "Kette", "Necklace"), ("schmuck", "beides", "Ohrring + Kette", "Earring + necklace"),
+    ("topfarbe", "gelb", "Oberteil: gelb", "Top: yellow"), ("topfarbe", "grün", "Oberteil: grün", "Top: green"),
+    ("schuhe", "schwarz", "Schuhe: schwarz", "Shoes: black"),
+    ("bauch", "kräftig", "Körper: kräftiger Bauch", "Body: big belly"), ("brust", "kräftig", "Körper: breite Schultern", "Body: broad shoulders"),
+]
 SHOP = [
-    {"id": "runner", "symbol": "🎮", "name": {"G": "Runner-Ticket", "E": "Runner ticket"}, "unter": {"G": "Eintritt für das Jump'n'Run", "E": "Entry to the jump'n'run"}, "preis": 100, "bald": True,
-     "hinweis": {"G": "Das Spiel kommt bald. Spar schon mal!", "E": "The game is coming soon. Start saving!"}},
+    {"id": "runner", "symbol": "🏃", "name": {"G": "Runner-Ticket", "E": "Runner ticket"}, "unter": {"G": "Eintritt für Road Trip Run – wird beim Start abgebucht", "E": "Entry to Road Trip Run – paid when you start"}, "preis": 100, "runner": True},
     {"id": "rahmen_rot", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Rot", "E": "Red"}, "preis": 50, "rahmen": "rot"},
     {"id": "rahmen_blau", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Blau", "E": "Blue"}, "preis": 50, "rahmen": "blau"},
     {"id": "rahmen_gruen", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Grün", "E": "Green"}, "preis": 50, "rahmen": "gruen"},
+] + [
+    {"id": f"skin_{o}_{w}", "symbol": "🎨", "name": {"G": g, "E": e}, "unter": {"G": "Figur im Road Trip Run", "E": "Your Road Trip Run character"}, "preis": SKIN_PREIS, "skin": [o, w]}
+    for o, w, g, e in SKIN_ARTIKEL
 ]
 
 

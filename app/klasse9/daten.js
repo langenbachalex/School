@@ -9156,21 +9156,17 @@ window.DATEN = {
   "shop": [
    {
     "id": "runner",
-    "symbol": "🎮",
+    "symbol": "🏃",
     "name": {
      "G": "Runner-Ticket",
      "E": "Runner ticket"
     },
     "unter": {
-     "G": "Eintritt für das Jump'n'Run",
-     "E": "Entry to the jump'n'run"
+     "G": "Eintritt für Road Trip Run – wird beim Start abgebucht",
+     "E": "Entry to Road Trip Run – paid when you start"
     },
     "preis": 100,
-    "bald": true,
-    "hinweis": {
-     "G": "Das Spiel kommt bald. Spar schon mal!",
-     "E": "The game is coming soon. Start saving!"
-    }
+    "runner": true
    },
    {
     "id": "rahmen_rot",
@@ -9213,6 +9209,278 @@ window.DATEN = {
     },
     "preis": 50,
     "rahmen": "gruen"
+   },
+   {
+    "id": "skin_haar_zopf",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Zopf",
+     "E": "Hair: ponytail"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haar",
+     "zopf"
+    ]
+   },
+   {
+    "id": "skin_haar_locken",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Locken",
+     "E": "Hair: curly"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haar",
+     "locken"
+    ]
+   },
+   {
+    "id": "skin_haar_afro",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Afro",
+     "E": "Hair: afro"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haar",
+     "afro"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_schwarz",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarfarbe: schwarz",
+     "E": "Hair colour: black"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haarfarbe",
+     "schwarz"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_rot",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarfarbe: rot",
+     "E": "Hair colour: red"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haarfarbe",
+     "rot"
+    ]
+   },
+   {
+    "id": "skin_haarschmuck_haarband",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarband",
+     "E": "Headband"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haarschmuck",
+     "haarband"
+    ]
+   },
+   {
+    "id": "skin_hut_cowboy",
+    "symbol": "🎨",
+    "name": {
+     "G": "Cowboyhut",
+     "E": "Cowboy hat"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "hut",
+     "cowboy"
+    ]
+   },
+   {
+    "id": "skin_hut_zylinder",
+    "symbol": "🎨",
+    "name": {
+     "G": "Zylinder",
+     "E": "Top hat"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "hut",
+     "zylinder"
+    ]
+   },
+   {
+    "id": "skin_nase_knubbel",
+    "symbol": "🎨",
+    "name": {
+     "G": "Knubbelnase",
+     "E": "Button nose"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "nase",
+     "knubbel"
+    ]
+   },
+   {
+    "id": "skin_schmuck_kette",
+    "symbol": "🎨",
+    "name": {
+     "G": "Kette",
+     "E": "Necklace"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "schmuck",
+     "kette"
+    ]
+   },
+   {
+    "id": "skin_schmuck_beides",
+    "symbol": "🎨",
+    "name": {
+     "G": "Ohrring + Kette",
+     "E": "Earring + necklace"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "schmuck",
+     "beides"
+    ]
+   },
+   {
+    "id": "skin_topfarbe_gelb",
+    "symbol": "🎨",
+    "name": {
+     "G": "Oberteil: gelb",
+     "E": "Top: yellow"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "topfarbe",
+     "gelb"
+    ]
+   },
+   {
+    "id": "skin_topfarbe_grün",
+    "symbol": "🎨",
+    "name": {
+     "G": "Oberteil: grün",
+     "E": "Top: green"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "topfarbe",
+     "grün"
+    ]
+   },
+   {
+    "id": "skin_schuhe_schwarz",
+    "symbol": "🎨",
+    "name": {
+     "G": "Schuhe: schwarz",
+     "E": "Shoes: black"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "schuhe",
+     "schwarz"
+    ]
+   },
+   {
+    "id": "skin_bauch_kräftig",
+    "symbol": "🎨",
+    "name": {
+     "G": "Körper: kräftiger Bauch",
+     "E": "Body: big belly"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "bauch",
+     "kräftig"
+    ]
+   },
+   {
+    "id": "skin_brust_kräftig",
+    "symbol": "🎨",
+    "name": {
+     "G": "Körper: breite Schultern",
+     "E": "Body: broad shoulders"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "brust",
+     "kräftig"
+    ]
    }
   ]
  },

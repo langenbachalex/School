@@ -253,7 +253,7 @@
     for (const k of kinder.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
     return e;
   }
-  function zeige(...inhalt) { dialogLauf++; stopp(); app.replaceChildren(...inhalt.filter(Boolean)); if (!leise) window.scrollTo(0, 0); hwLeiste(); }
+  function zeige(...inhalt) { dialogLauf++; stopp(); runnerAus(); app.replaceChildren(...inhalt.filter(Boolean)); if (!leise) window.scrollTo(0, 0); hwLeiste(); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -1729,6 +1729,7 @@
           `🔥 ${serie()} school days in a row · ⭐ ${sp.wochen.length} perfect weeks. Practise every school day and you get a new landmark card! Holidays don't count – your streak stays.`))),
       el("section", { class: "satzkarte" },
         el("h2", {}, `🏞️ Landmarks (${sp.karten.length} / ${SP.landmarks.length})`), karten),
+      runnerSammlung(),
       aktenBereich(),
       el("section", { class: "satzkarte" },
         el("h2", {}, T("Abzeichen", "Badges")),
@@ -1749,42 +1750,53 @@
   function kaufe(a) {
     const sp = spielstand();
     if (a.bald) { toast(tx(a.hinweis)); return false; }
-    if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } return false; }
+    if (a.runner) { runnerStart(); return false; } // Eintritt wird beim Start des Spiels abgebucht
+    if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } if (a.skin) { skinSetzen(a.skin[0], a.skin[1]); } return false; }
     if (sp.coins < a.preis) { toast(T(`Noch ${a.preis - sp.coins} Coins`, `${a.preis - sp.coins} more coins`)); return false; }
     if (!confirm(T(`Für ${a.preis} Coins kaufen?`, `Buy for ${a.preis} coins?`))) return false;
     sp.coins -= a.preis; sp.ausgegeben += a.preis; sp.gekauft.push(a.id);
     if (a.rahmen) sp.rahmen = a.rahmen;
+    if (a.skin) skinSetzen(a.skin[0], a.skin[1]);
     speichern();
     ereignisse.push({ art: "toast", text: `🪙 −${a.preis}` });
     setTimeout(zeigeEreignisse, 50); konfettiFrei();
     return true;
   }
-  function shop() {
-    lage = null; ansicht = shop;
+  // opt (optional): { zurueck: fn, artikel: id } – Rücksprung z. B. zur Figur-Seite des Runners, ein Artikel wird hervorgehoben
+  function shop(opt) {
+    opt = opt && typeof opt.zurueck === "function" ? opt : {};
+    lage = null; ansicht = () => shop(opt);
     const sp = spielstand();
-    const artikel = (SP.shop || []).map((a) => {
-      const hat = sp.gekauft.includes(a.id), fehlt = a.preis - sp.coins, aktiv = a.rahmen && sp.rahmen === a.rahmen && hat;
+    const artikel = (a) => {
+      const hat = sp.gekauft.includes(a.id), fehlt = a.preis - sp.coins;
+      const aktiv = hat && ((a.rahmen && sp.rahmen === a.rahmen) || (a.skin && skinWirksam()[a.skin[0]] === a.skin[1]));
       let k;
       if (a.bald) k = el("span", { class: "shop-hinweis" }, tx(a.hinweis));
-      else if (hat && a.rahmen) k = aktiv ? el("span", { class: "shop-hinweis ok" }, T("✓ Angelegt", "✓ Wearing it")) : knopf(T("Anlegen", "Put it on"), () => { kaufe(a); shop(); });
+      else if (a.runner) k = knopf(T("▶ Zum Spiel", "▶ To the game"), () => runnerStart(), "haupt");
+      else if (hat && (a.rahmen || a.skin)) k = aktiv ? el("span", { class: "shop-hinweis ok" }, T("✓ Angelegt", "✓ Wearing it")) : knopf(T("Anlegen", "Put it on"), () => { kaufe(a); shop(opt); });
       else if (hat) k = el("span", { class: "shop-hinweis ok" }, T("✓ Gekauft", "✓ Bought"));
-      else if (fehlt > 0) k = sperrt(knopf(T(`Noch ${fehlt} Coins`, `${fehlt} more coins`), () => { kaufe(a); shop(); }));
-      else k = knopf(T("Kaufen", "Buy"), () => { if (kaufe(a)) shop(); }, "haupt");
-      return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.bald ? " bald" : "") + (a.rahmen ? " rahmen-" + a.rahmen : ""), "data-artikel": a.id },
+      else if (fehlt > 0) k = sperrt(knopf(T(`Noch ${fehlt} Coins`, `${fehlt} more coins`), () => { kaufe(a); shop(opt); }));
+      else k = knopf(T("Kaufen", "Buy"), () => { if (kaufe(a)) shop(opt); }, "haupt");
+      return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.bald ? " bald" : "") + (a.rahmen ? " rahmen-" + a.rahmen : "") + (a.id === opt.artikel ? " hervor" : ""), "data-artikel": a.id },
         el("span", { class: "sym", "aria-hidden": "true" }, a.symbol),
         el("strong", {}, tx(a.name)), a.unter && el("span", { class: "unter" }, tx(a.unter)),
         el("span", { class: "preis" }, `🪙 ${a.preis}`),
         a.bald && el("span", { class: "bald-schild" }, T("kommt bald", "coming soon")),
         k);
-    });
+    };
+    const alle = SP.shop || [], skins = alle.filter((a) => a.skin);
     zeige(
-      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🛍️ Shop")),
+      el("header", { class: "kopf" }, knopf(opt.zurueck ? T("← Zurück", "← Back") : "← Start", opt.zurueck || startseite, "leise"), el("h1", {}, "🛍️ Shop")),
       el("section", { class: "satzkarte shop-stand" },
         el("p", { class: "shop-coins" }, `🪙 ${sp.coins} Coins`),
         el("p", { class: "klein" }, T("Jeder Punkt bringt dir auch einen Coin. Punkte bleiben – Coins kannst du hier ausgeben.",
           "Every point also gives you a coin. Points stay – coins are yours to spend here."))),
-      el("div", { class: "shop-raster" }, artikel),
+      el("div", { class: "shop-raster" }, alle.filter((a) => !a.skin).map(artikel)),
+      skins.length > 0 && el("h2", { class: "shop-gruppe" }, T("🎨 Figur für Road Trip Run", "🎨 Road Trip Run character"), " ", knopf(T("Figur ansehen", "View character"), () => runnerSkins(), "leise")),
+      skins.length > 0 && el("div", { class: "shop-raster" }, skins.map(artikel)),
       el("div", { class: "knopfreihe" }, knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung)));
+    const h = opt.artikel && app.querySelector(".shop-artikel.hervor");
+    if (h && !leise) h.scrollIntoView({ block: "center" });
   }
 
   /* ---------- Mini-Reward beim Vokabellernen (Word Gym, Vocabulary-Abfrage): ab 3 richtigen in Folge ----------
@@ -2150,7 +2162,11 @@
           el("span", { class: "sym", "aria-hidden": "true" }, "🐝"),
           el("span", { class: "titel", lang: "en" }, "Spelling Bee"),
           el("span", { class: "unter" }, T("Wort hören und richtig schreiben", "Hear the word and spell it"))),
-        el("button", { class: "kachel shop-kachel", onclick: shop, "aria-label": "Shop" },
+        el("button", { class: "kachel runner-kachel", onclick: () => runnerStart(k), "aria-label": "Road Trip Run" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🏃"),
+          el("span", { class: "titel", lang: "en" }, "Road Trip Run"),
+          el("span", { class: "unter" }, `Jump'n'Run · ${T("Eintritt", "Entry")} ${RUNNER.preis} 🪙`)),
+        el("button", { class: "kachel shop-kachel", onclick: () => shop(), "aria-label": "Shop" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🛍️"),
           el("span", { class: "titel", lang: "en" }, "Shop"),
           el("span", { class: "unter" }, T(`🪙 ${spielstand().coins} Coins – Rahmen und mehr`, `🪙 ${spielstand().coins} coins – frames and more`)))));
@@ -2494,6 +2510,221 @@
       ansage("Listen and spell the word. One small mistake is okay – you'll see the exact spelling.", "Hör zu und schreib das Wort. Ein kleiner Fehler ist okay – du siehst dann die genaue Schreibweise."),
       karteEl);
     zeigeWort();
+  }
+
+  /* ---------- Games: Road Trip Run – Jump'n'Run (Modul app/klasse9/runner.js; Konzept docs/runner/konzept-entwurf.md „Einbau Klasse 9“) ----------
+     Eintritt 100 Coins je Durchgang, Sperre im Programm (runnerSpiel), keine Punkte, keine Coins zurück. Belohnung: Trophäe je Welt
+     (Gold = alle Diamanten + beide Tore richtig, sonst Silber) und Runner-Titel nach geschafften Leveln (1 · 3 · 6 · 10 · 15).
+     Stand in stand.spiel.runner = { level: { ny: "gold"|"silber" }, gespielt, geschafft, titel }, Figur in stand.spiel.skin – beides im Siegel.
+     Wörter: 12 aus dem gewählten Abschnitt (wie Catch the Word), aufgefüllt aus der Unit; gesprochen mit den Wortaufnahmen (tonWort).
+     Boss-Banner/-Sprüche und Skin-Namen: bis zur Vertonung (Mr. Alex, 13.11.) Geräte-Stimme wie bei fehlenden Aufnahmen (spiele([{ text, stimme }])). */
+  const RUNNER = { preis: 100, skinPreis: 30, woerter: 12, titel: ["Noob", "Rookie", "Pro", "Elite", "Legend"], ab: [1, 3, 6, 10, 15],
+    welten: [{ id: "ny", name: "New York", ziel: "Statue of Liberty", trophaee: "Liberty Finder", symbol: "🗽" },
+      { id: "ca", name: "California", ziel: "Golden Gate", trophaee: "Gate Crosser", symbol: "🌉", bald: true },
+      { id: "az", name: "Arizona", ziel: "Grand Canyon", trophaee: "Canyon Hero", symbol: "🏜️", bald: true }] };
+  const WELT = RUNNER.welten[0];
+  const R = () => window.Runner || null;
+  const spieleKategorie = () => D.kategorien.find((k) => k.spiele);
+  function runnerStand() {
+    const sp = spielstand();
+    if (!sp.runner || typeof sp.runner !== "object") sp.runner = { level: {}, gespielt: 0, geschafft: 0, titel: 0 };
+    if (!sp.runner.level) sp.runner.level = {};
+    if (!sp.skin || typeof sp.skin !== "object") sp.skin = {};
+    return sp.runner;
+  }
+  const runnerTitelIndex = (n) => RUNNER.ab.filter((a) => n >= a).length; // 0 = noch keiner, 1 = Noob … 5 = Legend
+  const runnerTitelName = (i) => (i > 0 ? RUNNER.titel[i - 1] : null);
+  const skinWirksam = () => (runnerStand(), R() ? R().powerAnwenden(spielstand().skin, spielstand().titel) : spielstand().skin); // Power-Körper nach Punkte-Titel-Stufe
+  const skinFrei = (key, wert) => !R() || R().skinFrei(key, wert) || spielstand().gekauft.includes(R().skinArtikel(key, wert));
+  function skinSetzen(key, wert) {
+    const s = (runnerStand(), spielstand().skin);
+    if (key === "muskeln" && (s.power || "an") === "an") s.muskelnManuell = wert; // Power-Körper an: Muskeln von Hand überschreiben
+    else { s[key] = wert; if (key === "power" && wert === "an") delete s.muskelnManuell; }
+    speichern();
+  }
+  const tx2 = (p) => (Array.isArray(p) ? (E() ? p[1] : p[0]) : String(p));
+  // Vorschau-Figur (Canvas), läuft nur solange sie in der Seite ist; bei prefers-reduced-motion ein Standbild
+  function figurVorschau(breite, hoehe) {
+    const cv = el("canvas", { class: "runner-vorschau", width: breite * 2, height: hoehe * 2, style: `width:${breite}px;height:${hoehe}px`, "aria-hidden": "true" });
+    const c = cv.getContext("2d");
+    const male = (pose, t) => {
+      c.setTransform(2, 0, 0, 2, 0, 0); c.clearRect(0, 0, breite, hoehe);
+      c.fillStyle = "#e9f4ff"; c.beginPath(); c.roundRect(0, 0, breite, hoehe, 18); c.fill();
+      if (R()) R().zeichneFigur(c, breite / 2, hoehe * 0.93, hoehe * 0.78, skinWirksam(), pose, t);
+    };
+    const lauf = () => { if (!cv.isConnected) return; male("lauf", performance.now() / 1000); requestAnimationFrame(lauf); };
+    requestAnimationFrame(() => (ruhig() ? male("steh", 0) : lauf()));
+    return cv;
+  }
+  // 12 Wörter: zuerst der gewählte Abschnitt (gemischt), dann Wörter der übrigen Abschnitte der Unit
+  function runnerWoerter(unit, i) {
+    const gruppen = D.units[unit] || [], g = gruppen[i];
+    if (!g) return [];
+    const ok = (v) => catchOk(v) && v.de;
+    const eigene = mischen(g.vokabeln.map(vokabel).filter(ok));
+    const rest = mischen(gruppen.filter((x) => x !== g).flatMap((x) => x.vokabeln).map(vokabel).filter((v) => ok(v) && !eigene.includes(v)));
+    return eigene.concat(rest).slice(0, RUNNER.woerter);
+  }
+  let runnerWahl = null, runnerLauf = null, skinTab = "haare";
+  function runnerAus() {
+    if (runnerLauf) { try { runnerLauf.stopp(); } catch (e) { /* egal */ } runnerLauf = null; }
+    document.body.classList.remove("runner-aktiv");
+  }
+  const runnerFehlt = () => Math.max(0, RUNNER.preis - spielstand().coins);
+  const trophaeenText = (st) => (st === "gold" ? "🥇 Gold" : st === "silber" ? T("🥈 Silber", "🥈 Silver") : "–");
+  // Startseite: Welt, Figur, Wörter wählen (Unit/Abschnitt wie bei Catch the Word), Coins, Spielen
+  function runnerStart(k) {
+    k = k || spieleKategorie();
+    lage = null; ansicht = () => runnerStart(k);
+    const sp = spielstand(), r = runnerStand(), unit = aktuelleUnit(), gruppen = D.units[unit];
+    if (!runnerWahl || runnerWahl.unit !== unit || !gruppen[runnerWahl.i]) runnerWahl = { unit, i: 0 };
+    const fehlt = runnerFehlt(), ws = runnerWoerter(unit, runnerWahl.i), titel = runnerTitelName(r.titel);
+    const spielen = knopf(`▶ ${T("Spielen", "Play")} – ${RUNNER.preis} 🪙`, () => runnerSpiel(k, unit, runnerWahl.i), "haupt runner-spielen");
+    if (fehlt > 0 || ws.length < 4 || !R()) sperrt(spielen);
+    zeige(spielKopf(k, "Road Trip Run", () => zeigeSpiele(k)),
+      el("section", { class: "satzkarte runner-start" },
+        el("div", { class: "runner-welt" },
+          el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, WELT.symbol),
+          el("div", {},
+            el("h2", { lang: "en" }, `Level 1 · ${WELT.name}`),
+            el("p", { class: "runner-ziel", lang: "en" }, `Find the ${WELT.ziel}!`),
+            el("p", { class: "klein" }, T("Tippen oder Leertaste = springen, länger halten = höher. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von Mr. Alligator – gut 2 Minuten. Am besten das Handy quer halten.",
+              "Tap or space = jump, hold longer = jump higher. Collect the 12 word diamonds, take the right gates and answer Mr. Alligator's question – about 2 minutes. Best in landscape mode.")))),
+        el("div", { class: "runner-figur" }, figurVorschau(110, 140),
+          el("div", { class: "runner-figur-text" },
+            el("p", { class: "klein" }, T("Deine Figur", "Your character")),
+            knopf(T("🎨 Figur", "🎨 Character"), () => runnerSkins(k)))),
+        el("p", { class: "runner-stand" },
+          el("span", {}, `🏃 ${titel || T("noch kein Titel", "no title yet")}`),
+          el("span", {}, `🏆 ${WELT.trophaee}: ${trophaeenText(r.level[WELT.id])}`),
+          el("span", {}, `🎮 ${r.gespielt} ${T("Spiele", "games")}`))),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, T("Welche Wörter?", "Which words?")),
+        unitReiter(() => runnerStart(k)),
+        gruppen.length ? el("div", { class: "reiter runner-gruppen", role: "listbox", "aria-label": T("Abschnitt", "Part") }, gruppen.map((g, i) =>
+          el("button", { class: "reiter-knopf", role: "option", "aria-selected": String(i === runnerWahl.i), onclick: () => { runnerWahl = { unit, i }; runnerStart(k); } }, g.name)))
+          : ansage("Coming soon!", "Diese Unit kommt bald."),
+        ws.length > 0 && el("p", { class: "klein runner-woerter", lang: "en" }, ws.map(spielWort).join(" · "))),
+      el("section", { class: "satzkarte runner-kasse" },
+        el("p", { class: "shop-coins" }, `🪙 ${sp.coins} Coins`),
+        fehlt > 0 ? el("p", { class: "runner-hinweis", role: "status" }, T(`Noch ${fehlt} Coins – übe weiter!`, `${fehlt} more coins – keep practising!`))
+          : el("p", { class: "klein" }, T("Der Eintritt wird beim Start abgebucht – auch wenn du scheiterst. Keine Punkte und keine Coins zurück, dafür Trophäe und Runner-Titel.",
+            "The ticket is paid when you start – even if you fail. No points and no coins back, but a trophy and a runner title.")),
+        el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", () => shop({ zurueck: () => runnerStart(k) })))));
+  }
+  // Spiel: Eintritt abbuchen, Vollbild-Bühne ohne Kopfzeile, ✕ mit Rückfrage
+  function runnerSpiel(k, unit, i) {
+    const sp = spielstand(), r = runnerStand(), ws = runnerWoerter(unit, i);
+    if (!R()) { toast(T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet.")); return; }
+    if (ws.length < 4) return runnerStart(k);
+    if (sp.coins < RUNNER.preis) { toast(T(`Noch ${RUNNER.preis - sp.coins} Coins – übe weiter!`, `${RUNNER.preis - sp.coins} more coins – keep practising!`)); return; }
+    sp.coins -= RUNNER.preis; sp.ausgegeben += RUNNER.preis; r.gespielt++; speichern();
+    toast(`🪙 −${RUNNER.preis}`);
+    ansicht = null; lage = null;
+    const buehne = el("div", { class: "runner-buehne" });
+    const abbruch = knopf("✕", () => { if (confirm(T("Abbrechen? Der Eintritt ist weg.", "Quit? Your ticket is gone."))) runnerStart(k); }, "runner-x");
+    abbruch.setAttribute("aria-label", T("Spiel abbrechen", "Quit game"));
+    zeige(buehne, abbruch);
+    document.body.classList.add("runner-aktiv");
+    runnerLauf = R().start({
+      wrapper: buehne, skin: skinWirksam(),
+      woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
+      texte: {
+        quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
+        tor: (de) => T(`Welcher Diamant heißt „${de}“?`, `Which diamond means “${de}”?`), richtigWaere: T(" – richtig wäre: ", " – correct: "),
+        sequenz: T("Zwischensequenz …", "Cutscene …"), boss: T("Boss! Beantworte die Frage.", "Boss! Answer the question."),
+        bossTitel: T("Mr. Alligator fragt …", "Mr. Alligator asks …"), bossHinweis: T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
+        frage: (de) => T(`„Was heißt ‚${de}‘ auf Englisch?“`, `“What's ‘${de}’ in English?”`),
+      },
+      stimme: { wort: (j) => spiele([tonWort(ws[j % ws.length])]), boss: (text) => spiele([{ text, stimme: "m" }]) },
+      onEnde: (e) => runnerEnde(k, unit, i, e, ws),
+    });
+  }
+  // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (wieder 100) oder Startseite
+  function runnerEnde(k, unit, i, e, ws) {
+    const r = runnerStand();
+    let stufe = null;
+    if (e.geschafft) {
+      r.geschafft++;
+      stufe = e.diamanten >= e.max && e.toreRichtig >= 2 ? "gold" : "silber";
+      if (stufe === "gold" || !r.level[WELT.id]) r.level[WELT.id] = stufe;
+      const t = runnerTitelIndex(r.geschafft);
+      if (t > (r.titel || 0)) {
+        r.titel = t;
+        const name = runnerTitelName(t);
+        ereignisse.push({ art: "feier", symbol: t === RUNNER.titel.length ? "👑" : "🏃", titel: `Runner: ${name}`,
+          text: T(`Neuer Runner-Titel: ${name}!`, `New runner title: ${name}!`), ton: waehleRuf("stark") });
+      }
+    }
+    speichern();
+    const ruf = waehleRuf(e.geschafft ? "stark" : "fehler");
+    const minuten = `${Math.floor(e.dauer / 60)}:${String(e.dauer % 60).padStart(2, "0")}`;
+    const zeichne = () => {
+      zeige(spielKopf(k, "Road Trip Run", () => runnerStart(k)),
+        el("section", { class: (e.geschafft ? "geschafft" : "satzkarte") + " runner-ende" },
+          el("div", { class: "runner-pokal", "aria-hidden": "true" }, e.geschafft ? (stufe === "gold" ? "🥇" : "🥈") : "💤"),
+          el("h2", { lang: "en" }, e.geschafft ? "Level complete!" : "Game over"),
+          ruf && el("p", { class: "gym-lob" }, el("strong", { lang: "en" }, ruf.text), !E() && ruf.de && el("span", { lang: "de" }, " – " + ruf.de)),
+          e.geschafft ? el("p", { lang: "en" }, `You found the ${WELT.ziel}!`)
+            : el("p", {}, T("Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!", "No lives left. You still saw the words – next time you'll make it!")),
+          el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
+          e.geschafft && el("p", {}, el("strong", {}, `🏆 ${WELT.trophaee} – ${stufe === "gold" ? "Gold" : T("Silber", "Silver")}`),
+            stufe !== "gold" ? T(" (Gold: alle Diamanten und beide Tore richtig)", " (gold: all diamonds and both gates right)") : ""),
+          el("p", { class: "klein" }, `🏃 ${T("Runner-Titel", "Runner title")}: ${runnerTitelName(r.titel) || "–"} · ${r.geschafft} ${T("Level geschafft", "levels done")}`)),
+        el("section", { class: "satzkarte" },
+          el("h2", {}, T("Die Wörter", "The words")),
+          el("ul", { class: "wortliste runner-woerterliste" }, ws.map((v) => el("li", {},
+            knopf("🔊", () => spiele([tonWort(v)]), "leise"), " ", el("strong", { lang: "en" }, spielWort(v)), " – ", el("span", { lang: "de" }, v.de))))),
+        el("div", { class: "knopfreihe" },
+          knopf(`↻ ${T("Noch mal", "Again")} (${RUNNER.preis} 🪙)`, () => runnerSpiel(k, unit, i), "haupt"),
+          knopf(T("Zur Startseite", "Home"), startseite, "leise")));
+    };
+    ansicht = zeichne; lage = null; zeichne();
+    setTimeout(zeigeEreignisse, 50);
+    if (ruf && ruf.audio && !ereignisse.some(grossEreignis)) spiele([ruf.audio]);
+  }
+  // Hall of Fame: Abschnitt in der Sammlung
+  function runnerSammlung() {
+    const r = runnerStand(), naechste = RUNNER.ab[r.titel || 0];
+    return el("section", { class: "satzkarte runner-sammlung" },
+      el("h2", {}, "🏃 Road Trip Run"),
+      el("p", {}, `${T("Runner-Titel", "Runner title")}: `, el("strong", { lang: "en" }, runnerTitelName(r.titel) || T("noch keiner", "none yet")),
+        ` · ${r.geschafft} ${T("Level geschafft", "levels done")} · ${r.gespielt} ${T("Spiele", "games")}`),
+      naechste && el("p", { class: "klein" }, T(`Noch ${naechste - r.geschafft} geschaffte Level bis „${RUNNER.titel[r.titel || 0]}“`, `${naechste - r.geschafft} more levels to “${RUNNER.titel[r.titel || 0]}”`)),
+      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.map((w) => {
+        const st = r.level[w.id];
+        return el("li", { class: st ? "ok" : "" },
+          el("span", { "aria-hidden": "true" }, st === "gold" ? "🥇" : st === "silber" ? "🥈" : w.bald ? "🔒" : "🏆"),
+          el("span", { lang: "en" }, w.trophaee, el("small", {}, ` · ${w.name}${w.bald ? T(" (bald)", " (soon)") : ""}`)),
+          el("span", { class: "unsichtbar" }, st ? "✓" : "–"));
+      })),
+      el("div", { class: "knopfreihe" }, knopf("🏃 Road Trip Run", () => runnerStart(), "leise")));
+  }
+  // Figur: Reiter je Gruppe, Auswahl sofort sichtbar und gespeichert; gesperrte Teile führen in den Shop (30 Coins)
+  function runnerSkins(k) {
+    k = k || spieleKategorie();
+    lage = null; ansicht = () => runnerSkins(k);
+    const sp = spielstand(), M = R();
+    runnerStand();
+    if (!M) { zeige(spielKopf(k, T("Figur", "Character"), () => runnerStart(k)), el("p", {}, T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet."))); return; }
+    const gruppe = M.SKIN_GRUPPEN.find((g) => g.id === skinTab) || M.SKIN_GRUPPEN[0], wirksam = skinWirksam();
+    const waehle = (o, w) => { skinSetzen(o.key, w); runnerSkins(k); spiele([{ text: M.sprechText(skinWirksam(), o.key, w), stimme: "m" }]); }; // erst neu zeichnen (zeige stoppt Audio), dann sprechen
+    zeige(spielKopf(k, T("Figur", "Character"), () => runnerStart(k)),
+      el("section", { class: "satzkarte runner-skins" },
+        el("div", { class: "runner-skin-kopf" }, figurVorschau(150, 190),
+          el("p", { class: "klein" }, T(`Grundausstattung ist frei, weitere Teile gibt es im Shop für ${RUNNER.skinPreis} 🪙. Power-Körper: Mit deinem Punkte-Titel (Stufe ${sp.titel} von 5) werden die Muskeln von selbst stärker, ab Stufe 4 mit kleiner Aura – die Muskeln kannst du trotzdem von Hand umstellen.`,
+            `The basics are free, more parts are in the shop for ${RUNNER.skinPreis} 🪙. Power body: with your points title (level ${sp.titel} of 5) the muscles grow by themselves, from level 4 with a small aura – you can still set the muscles by hand.`))),
+        el("div", { class: "reiter runner-tabs", role: "tablist" }, M.SKIN_GRUPPEN.map((g) =>
+          el("button", { class: "reiter-knopf", role: "tab", "aria-selected": String(g.id === gruppe.id), onclick: () => { skinTab = g.id; runnerSkins(k); } }, `${g.symbol} ${tx2(g.titel)}`))),
+        gruppe.optionen.map((o) => el("div", { class: "runner-option", "data-option": o.key },
+          el("h3", {}, tx2(o.label)),
+          el("div", { class: "runner-werte" }, o.werte.map((w) => {
+            const frei = skinFrei(o.key, w), aktiv = wirksam[o.key] === w;
+            return el("button", { class: "knopf runner-wert" + (aktiv ? " haupt" : "") + (frei ? "" : " gesperrt"), "aria-pressed": String(aktiv), "data-skin": `${o.key}_${w}`,
+              onclick: () => (frei ? waehle(o, w) : shop({ artikel: M.skinArtikel(o.key, w), zurueck: () => runnerSkins(k) })) },
+              frei ? tx2(o.namen[w]) : `🔒 ${tx2(o.namen[w])} · ${RUNNER.skinPreis} 🪙`);
+          })))),
+        el("div", { class: "knopfreihe" }, knopf(T("← Zum Spiel", "← To the game"), () => runnerStart(k), "haupt"), knopf("🛍️ Shop", () => shop({ zurueck: () => runnerSkins(k) })))));
   }
 
   function gymEnde() {

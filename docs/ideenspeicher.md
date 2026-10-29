@@ -13,8 +13,9 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Mini-Rewards: Combo-Sprüche (≈ 5 Sätze) | Mr. Alex, Jeremy, Jessica | je ≈ 250 | vorgemerkt |
 | Border Patrol: 34 Einzelwörter (17 britisch Mr. Alex, 17 amerikanisch Jeremy; bis dahin Geräte-Stimme) | Mr. Alex, Jeremy | 225 gesamt | vorgemerkt (in klasse9_audio.py eingetragen) |
 | Border Patrol: Grenzer-Sprüche (≈ 10 Sätze) | Jeremy, Mr. Alex | je ≈ 300 | vorgemerkt |
-| Runner: Skin-Menü spricht die Auswahl („Long hair“, „Short hair“, „Curly“, „Afro“, Hüte, Brille …) – ≈ 40 kurze Wörter | Jeremy, Jessica | je ≈ 300 | vorgemerkt |
-| Runner: Rufe beim Einsammeln (Jeremy/Jessica), Boss-Intro und Boss-Fragen (Mr. Alex) | Jeremy, Jessica, Mr. Alex | je ≈ 1.500 | später |
+| Runner: Skin-Menü spricht die Auswahl – 57 Wendungen in `docs/runner/skin-stimme.txt` („Long hair“, „Cowboy hat“, „Sunglasses on“, „Strong arms“ …); seit 29.10. in der App per Geräte-Stimme | Jeremy, Jessica | je ≈ 620 | vorgemerkt |
+| Runner: Boss-Banner + Boss-Sprüche Welt 1 („It's time for Mr. Alligator!“, „Correct – the door opens!“, „Not this time!“; in der App seit 29.10. per Geräte-Stimme) | Mr. Alex | 67 | vorgemerkt – zuerst |
+| Runner: Boss-Fragen/Tor-Ansagen (≈ 300), Levelstart/-ende („Let's find the Statue of Liberty!“, „We made it!“), Diamant-Rufe (Wortaufnahmen decken Welt 1 ab) | Mr. Alex, Jeremy, Jessica | Mr. Alex ≈ 1.000 · Jeremy/Jessica je ≈ 400 | später |
 | Hörverstehen 3 Klasse 6 „Talking about free time“ | Elrond, John Shaw, Emmaline, Alice (v4), Lösungen Mr. Alex | ≈ 1.500 | **vertont 29.10.** |
 | Hörübungen 01/02 Klasse 6 neu mit Jugendstimmen (Mia, Ben, Harry, Declan) | Elrond, John Shaw, Emmaline | ≈ 600 | offen – nur auf Wunsch |
 
@@ -22,11 +23,11 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | **Manipulations-Reset** | aufgeschoben (29.10.) | Mr. Alex will keine versehentlichen Punktverluste; Reset nur als bewusste „Strafe“ für echte Manipulation, kein Regelfall. Heute: Reset nur, wenn Haupt- und Zweitkopie beide ungültig sind; erledigte Teile bleiben dabei stehen (Punkte auf 0). Nochmal besprechen: z. B. Punkte einfrieren statt löschen, oder nur Banner ohne Reset. |
 | Idee | Stand | Entscheidung offen |
 |---|---|---|
-| **Arcade-Kachel** für Klasse 9 | aufgeschoben (29.10.) | Stattdessen erst Kachel **Games** mit Lernspielen; der Runner könnte später hinter Coins liegen, ohne eigene Kachel. |
-| **Coins: Wertigkeit und Zeitkopplung** | aufgeschoben (29.10.) – Coins und Shop sind gebaut (Rahmen 50, Runner-Ticket 100 als Platzhalter) | Startwert ≈ 100 Punkte = 1 Spielrunde; Alternative: Punkte kaufen Spielzeit (z. B. 100 Punkte = 5 Minuten). Preise für beide Klassen festlegen, dann Schüler-Feedback abwarten. |
+| **Arcade-Kachel** für Klasse 9 | erledigt (29.10.) | Keine eigene Kachel: **Road Trip Run** liegt als Kachel in **Games** hinter 100 Coins Eintritt. |
+| **Coins: Wertigkeit und Zeitkopplung** | aufgeschoben (29.10.) – Coins und Shop sind gebaut (Rahmen 50, Runner-Eintritt 100 echt, Skin-Teile 30) | Startwert ≈ 100 Punkte = 1 Spielrunde; Alternative: Punkte kaufen Spielzeit (z. B. 100 Punkte = 5 Minuten). Preise für beide Klassen festlegen, dann Schüler-Feedback abwarten. |
 | **Auto beim Vokabellernen** (Schülerwunsch) | aufgeschoben (29.10.) | Zu aufwendig als Dauer-Grafik. Stattdessen Mini-Rewards – **gebaut 29.10.** (Flamme, Münzen, Auto/Bus im Wechsel, siehe unten). |
-| **Grafikstil Runner** | beschlossen (29.10.): Cartoon | Konzept Fassung 2 in `runner/konzept-entwurf.md` Abschnitt 11; nächster Schritt Prototyp v2 (2 Minuten, Boss-Sequenz, Körperform-Skins). |
-| **Klasse 6 mitziehen** (Games-Umbau, Coins, Runner) | Klasse 6 nachgezogen (29.10.) | Coins, Shop, Mini-Rewards und die Games-Kachel (Station 5 „Spiele“: Memory, Catch the Word, Spelling Bee, -s-Detektiv, Shop) sind in beiden Klassen; Runner offen. |
+| **Grafikstil Runner** | beschlossen (29.10.): Cartoon – **Welt 1 gebaut 29.10.** | `runner/konzept-entwurf.md` Abschnitt 13 (Einbau Klasse 9): Kachel in Games, 100 Coins, Trophäe Liberty Finder, Titel Noob → Legend, Skins + Shop-Teile, Power-Körper. Offen: Welten 2–5, Audio ab 13.11., zweites Leben. |
+| **Klasse 6 mitziehen** (Games-Umbau, Coins, Runner) | Klasse 6 nachgezogen (29.10.) | Coins, Shop, Mini-Rewards und die Games-Kachel (Station 5 „Spiele“: Memory, Catch the Word, Spelling Bee, -s-Detektiv, Shop) sind in beiden Klassen; Runner (London Run) für Klasse 6 offen – Modul `app/klasse9/runner.js` ist dafür vorbereitet (Wörter, Texte, Skin von außen). |
 
 ## Beschlossen (29.10.2026, zweite Runde)
 - **Coins nicht rückwirkend**: Zählung beginnt mit dem Update; alte Punkte bringen keine Coins (sonst hängen Kinder mit Hunderten Coins nur am Spiel). **Gebaut 29.10.** (beide Apps, `stand.spiel.coins`).
@@ -46,7 +47,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 
 ## Aufgeschoben (zweite Runde) – bitte erinnern
 | **Nachhaltigkeit „alles grün“ → ⚡ Power Up** | gebaut (29.10.) | Erledigtes wird nach 30 / 60 / 120 Tagen wieder fällig (gelbes Schild ⚡ Power Up), erneut durchmachen gibt 5 Punkte und Stufe +1; GLN-Kopplung an; kürzere Timer bei Wiederholung. Audio „Powered up!“ folgt mit den Credits. Details: `docs/nachhaltigkeit-entwurf.md`. |
-| **Runner-Belohnung** (Titel statt Coins) | offen | brainstormen |
+| **Runner-Belohnung** (Titel statt Coins) | gebaut (29.10.) | Trophäe je Welt (Gold/Silber) + Runner-Titel Noob 1 · Rookie 3 · Pro 6 · Elite 10 · Legend 15, keine Coins zurück. |
 | **Dialog-Duell in Speaking** | offen | brainstormen, vorhandene Dialoge nutzen |
 
 ## Beschlossen (29.10.2026), noch nicht gebaut
@@ -72,8 +73,8 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 - Spelling Bee – **gebaut 29.10.** (Games, Klasse 9; **Klasse 6 nachgezogen 29.10.**): Wort hören, deutsche Bedeutung lesen, eintippen (1-Fehler-Toleranz wie Klasse 6); 8 Wörter, 🍯 Honey bei 3 in Folge, +10 einmal pro Tag ab 6 richtig
 - Sentence Sprint – offen
 - Dialog-Duell – offen (Beschreibung folgt)
-- Runner – beschlossen, Planung läuft
-- Shop-Artikel: Auto-/Figur-Skins, Sticker für USA-/London-Karte, zweites Leben im Runner – beschlossen (Coins); erste Artikel gebaut 29.10. (Titel-Rahmen, Runner-Ticket als Platzhalter)
+- Runner – **Welt 1 gebaut 29.10.** (Klasse 9, Games: „Road Trip Run“, Eintritt 100 Coins; Details `runner/konzept-entwurf.md` Abschnitt 13); Welten 2–5 und Klasse 6 offen
+- Shop-Artikel: Auto-/Figur-Skins, Sticker für USA-/London-Karte, zweites Leben im Runner – beschlossen (Coins); erste Artikel gebaut 29.10. (Titel-Rahmen, Runner-Ticket → Spielstart, 16 Figur-Teile à 30 Coins für den Runner); zweites Leben offen
 
 ## Ältere Ideen
 - Symbole für ~60 Klasse-9-Wörter (Bild → Wort) – offen

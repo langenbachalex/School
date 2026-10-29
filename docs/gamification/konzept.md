@@ -24,11 +24,15 @@ Erledigte Teile bleiben nicht für immer grün: nach **30 / 60 / 120 Tagen** (St
 
 | Artikel | Preis | Stand |
 |---|---|---|
-| 🎮 Runner-Ticket | 100 Coins | „kommt bald“ – sichtbar, noch nicht kaufbar („Das Spiel kommt bald. Spar schon mal!“) |
+| 🏃 Runner-Ticket (Klasse 9) | 100 Coins | kein Kauf im Shop – der Knopf „▶ Zum Spiel“ führt zur Startseite von **Road Trip Run**; der Eintritt wird dort beim Start abgebucht (Klasse 6: weiter „kommt bald“) |
+| 🎨 Figur für Road Trip Run (Klasse 9) – 16 Teile (Frisuren, Haarfarben, Haarband, Hüte, Nase, Schmuck, Oberteil-Farben, Schuhe, Körperform) | je 30 Coins | kaufbar; wird sofort angelegt, `skin_<option>_<wert>`; Grundausstattung (je Option zwei Werte) ist frei |
 | 🎨 Rahmen für dein Titel-Schild – Rot / Blau / Grün | je 50 Coins | kaufbar; wirkt sofort als farbiger Rahmen auf Titel-Schild (Sammlung) und Startkarte; gekaufte Rahmen lassen sich gratis wechseln („Anlegen“) |
 | 🔊 Extra-Stimme beim Lob | – | **nicht** gebaut (kein Audio bis zu den neuen Credits) |
 
-- **Offen:** Wertigkeit der Coins und Preise nach Schüler-Feedback (Ideenspeicher „Coins: Wertigkeit und Zeitkopplung“); Runner-Belohnung; Name des Shops.
+- **Offen:** Wertigkeit der Coins und Preise nach Schüler-Feedback (Ideenspeicher „Coins: Wertigkeit und Zeitkopplung“); Name des Shops.
+
+### 🏃 Road Trip Run (29.10.2026, Klasse 9)
+Jump'n'Run in **Games** (Modul `app/klasse9/runner.js`, Konzept und Einbau in `docs/runner/konzept-entwurf.md` Abschnitt 13). **Eintritt 100 Coins** je Durchgang, beim Start abgebucht (auch bei Scheitern), Sperre im Programm. Welt 1: New York – Find the Statue of Liberty: 12 Wort-Diamanten aus dem gewählten Abschnitt (gesprochen mit den Wortaufnahmen), 2 Frage-Tore, 2 Checkpoints, 3 Leben, Boss-Zwischensequenz und Boss-Frage (Mr. Alligator), gut 2 Minuten. **Belohnung ohne Punkte und ohne Coins:** Trophäe je Welt (Gold = alle Diamanten + beide Tore richtig, sonst Silber) und **Runner-Titel** nach geschafften Leveln: Noob 1 · Rookie 3 · Pro 6 · Elite 10 · Legend 15 (Feier mit Konfetti). Beides in der Sammlung („🏃 Road Trip Run“). Figur mit Skins (8 Gruppen, Shop-Teile à 30 Coins) und **Power-Körper**: Mit dem Punkte-Titel werden die Muskeln automatisch stärker. Speicher: `stand.spiel.runner`, `stand.spiel.skin` (im Siegel).
 
 ### 📝 Homework (29.10.2026, beide Apps)
 Mr. Alex trägt die Hausaufgabe als Zeile in `inhalte/hausaufgabe.tsv` (Klasse 6) bzw. `inhalte/klasse9/hausaufgabe.tsv` (Klasse 9) ein: `von	bis	ziel	text`. `ziel` ist eine ganze Station/Kategorie (`6`), eine Gruppe (`6/3`, `2/u2:Start`, `1/Task words`), ein Teil (`7/Topic 1 · Teil 1/2`) oder – Klasse 9 – eine ganze Unit (`2/u1` = jeder Abschnitt ein Ziel); **mehrere Ziele** durch `;` (`6/3; 8`, `4; 2/u1`) bilden eine **Kette** in dieser Reihenfolge. Schema mit Beispielen in der `LIESMICH.md` neben der TSV. Das Bauskript prüft jedes Ziel gegen die Daten (Abbruch mit Liste der Möglichkeiten) und schreibt `D.hausaufgaben` mit `ziele: [{ziel, nr, gruppe, teil, name, schluessel}]`. Kein Server: alle Schüler sehen dieselbe Hausaufgabe.

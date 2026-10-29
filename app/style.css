@@ -165,6 +165,11 @@ p { margin: 0; }
 .hv-liste > li { padding: 10px 12px; border-radius: 14px; border: 2px solid transparent; display: grid; gap: 8px; }
 .hv-liste > li.spricht { border-color: var(--blau); }
 .hv-aussage { font: 500 1.25rem/1.3 var(--display); }
+.hv-kopf { display: flex; align-items: flex-start; gap: 8px; }
+.hv-kopf .hv-aussage { flex: 1 1 auto; margin: 0; }
+.hv-hilfe { flex: 0 0 auto; font-size: 1.2rem; }
+.hv-hilfe:disabled { opacity: .4; }
+.hv-hinweis { margin: 0; }
 .wahl-knopf[aria-pressed="true"] { border-color: var(--blau); background: var(--blau); color: var(--blau-text); }
 .wahl-knopf[aria-pressed="true"].richtig, .wahl-knopf.richtig { border-color: var(--gruen); background: var(--gruen-hell); color: var(--text); }
 .wahl-knopf:disabled[aria-pressed="true"]:not(.richtig) { opacity: .7; }

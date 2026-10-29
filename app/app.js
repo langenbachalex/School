@@ -354,14 +354,14 @@
     return t;
   }
 
-  let lage = null; // { nr, gruppe?, teile, teil, pos (Position im Teil), reihe, runden, detektiv, vq, abspielen, weiter }
+  let lage = null; // { nr, gruppe?, teile, teil, pos (Position im Teil), reihe, runden, detektiv, vq, hilfe (💡 benutzt), abspielen, weiter }
 
   function neueLage(werte) {
     lage = Object.assign({ teil: 0, pos: 0 }, werte);
     return lage;
   }
   // Übungszustand eines Teils (Reihenfolge, Runden …) – wird bei jedem Betreten eines Teils neu gemischt.
-  function teilZuruecksetzen() { lage.reihe = lage.runden = lage.detektiv = lage.vq = null; }
+  function teilZuruecksetzen() { lage.reihe = lage.runden = lage.detektiv = lage.vq = null; lage.hilfe = false; }
 
   /* ---------- Fortschritt pro Teil (gespeichert) ---------- */
   // stand.teile[schluessel] = { am: "JJJJ-MM-TT", s: Stufe } – Stufe steigt bei jedem Power Up (Wiederholung eines fälligen Teils)
@@ -514,7 +514,7 @@
     teilFertig(lage.teil, aufladen);
     if (aufladen) ereignisse.push({ art: "toast", text: "⚡ Aufgeladen!" });
     if (aufladen && SP.texte.powerup && SP.texte.powerup.audio) setTimeout(() => spiele([SP.texte.powerup.audio], { warten: true }), 600); // Stimme nach dem Lob, nicht darüber
-    belohne(erstesMal);
+    belohne(erstesMal, !lage.hilfe);
     if (alleTeileFertig()) return stationGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
     fastGeschafft();
@@ -819,11 +819,25 @@
       return el("div", { class: "wahl", role: "group", "aria-label": label }, knoepfe);
     }
 
+    // 💡 pro Aussage mit Hinweis: erst nach dem ersten kompletten Durchgang sichtbar (kein Spoiler vor dem Hören);
+    // antippen zeigt den Hinweis und kostet den „Ohne Hilfe“-Bonus (lage.hilfe)
+    const hilfeKnoepfe = [];
+    function hilfeKnopf(a) {
+      const text = el("p", { class: "hinweis hv-hinweis", hidden: true }, "💡 " + a.hinweis);
+      const k = el("button", { class: "knopf leise klein-knopf hv-hilfe", hidden: true, "aria-label": "Hilfe zu dieser Aussage",
+        onclick: () => { lage.hilfe = true; text.hidden = false; k.disabled = true; } }, "💡");
+      hilfeKnoepfe.push(k);
+      return [k, text];
+    }
     const zeilen = u.aufgaben.map((a, i) => {
-      if (tf) return el("li", { class: "hv-zeile" },
-        el("p", { class: "hv-aussage", lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), a.aussage),
-        umschalter([["true", "true"], ["false", "false"]], (w) => { antworten[i] = w; }, "true oder false"),
-        el("p", { class: "rueckmeldung", hidden: true }));
+      if (tf) {
+        const [k, hinweis] = a.hinweis ? hilfeKnopf(a) : [null, null];
+        return el("li", { class: "hv-zeile" },
+          el("div", { class: "hv-kopf" }, el("p", { class: "hv-aussage", lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), a.aussage), k),
+          hinweis,
+          umschalter([["true", "true"], ["false", "false"]], (w) => { antworten[i] = w; }, "true oder false"),
+          el("p", { class: "rueckmeldung", hidden: true }));
+      }
       const mittel = Object.entries(D.mittel).map(([k, sym]) => [k,
         [el("span", { class: "wahl-sym", "aria-hidden": "true" }, sym), el("span", {}, MITTEL_NAME[k] || k)], MITTEL_NAME[k] || k]);
       const gefuehl = GEFUEHL.map(([w, sym, text]) => [w,
@@ -857,6 +871,7 @@
         if (d === null) return; // abgebrochen: zählt nicht
         hoerKnopf.disabled = false; stoppKnopf.hidden = true;
         durchgaenge++;
+        hilfeKnoepfe.forEach((k) => { k.hidden = false; });
         zaehler.textContent = durchgaenge === 1 ? "1. Durchgang geschafft! Hör den Text ein zweites Mal."
           : `${durchgaenge} Durchgänge gehört.`;
         hoerKnopf.textContent = durchgaenge === 1 ? "▶ Noch mal hören (2. Durchgang)" : "▶ Noch mal hören (Übung)";
@@ -1327,7 +1342,7 @@
      👑 4 perfekte Wochen hintereinander (Ferienwochen halten an) · 🏖️ Wochenende = Bonus, keine Pflicht.
      London: jeder 4. neu geschaffte Teil schaltet einen Ort frei. Alles nur auf diesem Gerät. */
   const SP = D.spiel;
-  const PUNKTE = { teil: 10, wiederholung: 5, seance: 30, einheit: 50, feuer: 30, wochenende: 20, ferien: 20, woche: 100, monat: 200 };
+  const PUNKTE = { teil: 10, wiederholung: 5, ohneHilfe: 5, seance: 30, einheit: 50, feuer: 30, wochenende: 20, ferien: 20, woche: 100, monat: 200 };
   const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const heute = () => (window.__heute ? new Date(window.__heute + "T12:00:00") : new Date());
   const plusTage = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
@@ -1380,10 +1395,12 @@
   }
 
   const ereignisse = [];
-  function belohne(erstesMal, istGym) {
+  // ohneHilfe: im Teil kein 💡 benutzt → +5 beim ersten Mal (Hilfen kosten nie Punkte, wie in Klasse 9)
+  function belohne(erstesMal, ohneHilfe, istGym) {
     const sp = spielstand(), d = heute(), tag = iso(d);
     const orteVorher = orteBei(teileZaehler() - (erstesMal ? 1 : 0));
     let plus = istGym ? PUNKTE.seance : erstesMal ? PUNKTE.teil : PUNKTE.wiederholung;
+    if (erstesMal && ohneHilfe && !istGym) { plus += PUNKTE.ohneHilfe; ereignisse.push({ art: "toast", text: `💪 Ohne Hilfe +${PUNKTE.ohneHilfe}` }); }
     const ersterDesTages = !sp.tage[tag];
     sp.tage[tag] = (sp.tage[tag] || 0) + 1;
     if (orteFrei() > orteVorher) ereignisse.push({ art: "ort", ort: SP.orte[orteFrei() - 1] });
@@ -1955,7 +1972,7 @@
     gym = null; lage = null;
     zeichne();
     // erst belohnen (reiht Pop-ups ein), dann sprechen: das Pop-up wartet auf die Schlussstimme, statt sie abzuschneiden
-    if (erstesMal) belohne(true, true);
+    if (erstesMal) belohne(true, true, true);
     spiele([!ereignisse.some(grossEreignis) && r && r.audio, fini && fini.audio]);
   }
 

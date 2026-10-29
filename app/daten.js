@@ -925,6 +925,171 @@ window.DATEN = {
        }
       ]
      }
+    },
+    {
+     "art": "hoeren",
+     "name": "Hören 3",
+     "uebung": {
+      "id": "03-talking-about-free-time",
+      "titel": "Talking about free time",
+      "art": "true-false",
+      "anleitung": "Lies dir zuerst alle zehn Sätze durch, damit du weißt, worauf du beim Hören achten musst. Achte auf Uhrzeiten (a.m./p.m.), Tage und Wörter wie sometimes, never, often.",
+      "instruction": "Listen and tick: true or false?",
+      "teile": [
+       {
+        "sprecher": "Mia",
+        "stimme": "en_f",
+        "text": "Hi, I'm Mia. After school I go to the drama club. It's on Monday at 4 p.m. We play short scenes and I love it! Sometimes we show a play to our parents.",
+        "audio": {
+         "tts": "Hi, I'm Mia. After school I go to the drama club. It's on Monday at four p.m. We play short scenes and I love it! Sometimes we show a play to our parents.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "sprecher": "Ben",
+        "stimme": "en_m",
+        "text": "Hello, I'm Ben. I'm in the football club. We train on Wednesday afternoon, at half past three. My friends say I'm good, but I don't like it. Our coach is too strict. I'd love to go to the trampolining club instead!",
+        "audio": {
+         "tts": "Hello, I'm Ben. I'm in the football club. We train on Wednesday afternoon, at half past three. My friends say I'm good, but I don't like it. Our coach is too strict. I'd love to go to the trampolining club instead!",
+         "lang": "en-GB",
+         "stimme": "m"
+        }
+       },
+       {
+        "sprecher": "Priya",
+        "stimme": "en_f",
+        "text": "Hi, I'm Priya. On Saturday morning I go to the swimming club. We start at 8 a.m. – that's very early! But I like it, because we often go to the sea in summer. I never miss a training.",
+        "audio": {
+         "tts": "Hi, I'm Priya. On Saturday morning I go to the swimming club. We start at eight a.m. – that's very early! But I like it, because we often go to the sea in summer. I never miss a training.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "sprecher": "Luca",
+        "stimme": "en_m",
+        "text": "Hi, I'm Luca. My club is the hiking club. We hike in the hills on Friday afternoon. It's a long way and it's a bit boring, but the food at the end is great.",
+        "audio": {
+         "tts": "Hi, I'm Luca. My club is the hiking club. We hike in the hills on Friday afternoon. It's a long way and it's a bit boring, but the food at the end is great.",
+         "lang": "en-GB",
+         "stimme": "m"
+        }
+       },
+       {
+        "sprecher": "Noah",
+        "stimme": "en_m",
+        "text": "Hey, I'm Noah. I don't go to a sports club. I'm in the newspaper club on Thursday at 2 p.m. We write articles about our school. Last week we had a photo competition – and I won the first prize!",
+        "audio": {
+         "tts": "Hey, I'm Noah. I don't go to a sports club. I'm in the newspaper club on Thursday at two p.m. We write articles about our school. Last week we had a photo competition – and I won the first prize!",
+         "lang": "en-GB",
+         "stimme": "m"
+        }
+       }
+      ],
+      "aufgaben": [
+       {
+        "aussage": "Mia's drama club is on Monday.",
+        "loesung": "true",
+        "hinweis": "",
+        "audio": {
+         "tts": "Mia's drama club is on Monday.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "aussage": "Mia never shows a play to her parents.",
+        "loesung": "false",
+        "hinweis": "Hör genau hin: never oder sometimes?",
+        "audio": {
+         "tts": "Mia never shows a play to her parents.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "aussage": "Ben trains at half past three.",
+        "loesung": "true",
+        "hinweis": "",
+        "audio": {
+         "tts": "Ben trains at half past three.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "aussage": "Ben loves football.",
+        "loesung": "false",
+        "hinweis": "Hör genau hin: Was sagt Ben über den Fußball-Club?",
+        "audio": {
+         "tts": "Ben loves football.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "aussage": "Ben is in the trampolining club.",
+        "loesung": "false",
+        "hinweis": "Ben nennt den Trampolin-Club nur als Wunsch: „I'd love to …“",
+        "audio": {
+         "tts": "Ben is in the trampolining club.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "aussage": "Priya's swimming club starts at 8 p.m.",
+        "loesung": "false",
+        "hinweis": "a.m. oder p.m.? Morgens oder abends?",
+        "audio": {
+         "tts": "Priya's swimming club starts at eight p.m.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "aussage": "Priya often goes to the sea in summer.",
+        "loesung": "true",
+        "hinweis": "",
+        "audio": {
+         "tts": "Priya often goes to the sea in summer.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "aussage": "Luca thinks hiking is a bit boring.",
+        "loesung": "true",
+        "hinweis": "",
+        "audio": {
+         "tts": "Luca thinks hiking is a bit boring.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "aussage": "Noah is in a sports club.",
+        "loesung": "false",
+        "hinweis": "Hör genau hin: „I don't go to a …“",
+        "audio": {
+         "tts": "Noah is in a sports club.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       },
+       {
+        "aussage": "Noah won the first prize in a photo competition.",
+        "loesung": "true",
+        "hinweis": "",
+        "audio": {
+         "tts": "Noah won the first prize in a photo competition.",
+         "lang": "en-GB",
+         "stimme": "f"
+        }
+       }
+      ]
+     }
     }
    ]
   },

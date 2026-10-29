@@ -7,7 +7,7 @@ Grundsatz: kein gegenseitiger Wettbewerb, keine Bestenliste. Jeder sammelt für 
 
 ### Punkte
 - Fertiger Teil: **10 Punkte**. Station / Thema komplett: **+50**.
-- Klasse 9: **+5 „ohne Hilfe“**, wenn kein 💡 benutzt wurde. Hilfen kosten nie Punkte.
+- Beide Klassen: **+5 „ohne Hilfe“**, wenn kein 💡 benutzt wurde (Klasse 6 seit 29.10., bisher nur bei den true/false-Hörübungen mit 💡; Teile ohne Hilfen bekommen den Bonus automatisch). Hilfen kosten nie Punkte.
 - Punkte gibt es nur für Teile, die bis zum Ende gemacht wurden. Durchklicken oder Springen bringt nichts.
 - **Sprechzeit (13.10.):** Bei Sprechübungen ist „Weiter“ gesperrt, bis der Satz gehört und die Sprechzeit (Balken „Jetzt du!“) abgelaufen ist. „Lösung“ kommt erst nach einer Denkzeit (3–8 s je nach Satzlänge). Wer einen Sprechteil trotzdem viel zu schnell beendet (unter 2 s pro Satz, 1,5 s pro Wort), bekommt kein Lob und keine Punkte, sondern „Zu schnell! Versuch es noch mal“.
 

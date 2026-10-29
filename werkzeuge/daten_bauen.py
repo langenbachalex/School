@@ -236,7 +236,10 @@ def main():
     for u in uebungen:
         for t in u["teile"] + u["aufgaben"]:
             if "datei" in t:
-                t["audio"] = f"audio/hoeren/{t.pop('datei')}.mp3"
+                # Fehlt die Audiodatei, bekommt die App den Sprechtext für die Sprachausgabe des Geräts (wie bei den Kernsätzen)
+                datei = f"audio/hoeren/{t.pop('datei')}.mp3"
+                stimme = t.get("stimme", "en_f")[-1]
+                t["audio"] = datei if os.path.exists(os.path.join(BASIS, "app", datei)) else {"tts": t["sprech"], "lang": "en-GB", "stimme": stimme}
                 t.pop("sprech", None)
         for a in u["aufgaben"]:
             if "mittel" in a:

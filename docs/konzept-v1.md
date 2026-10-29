@@ -372,6 +372,9 @@ Arten: **true-false** und **weg** (pro Person Verkehrsmittel und „gut / nicht 
 Entwürfe der Inhalte:
 - `01-mias-monday.txt`: Mias Tagesablauf (true/false, 7 Aussagen)
 - `02-how-do-you-get-there.txt`: Text aus Abschnitt 6 (Weg zuordnen)
+- `03-talking-about-free-time.txt`: fünf Sprecher und ihre Clubs (true/false, 10 Aussagen, Ablenker; Format wie GLN 2, Aufgabe 2). Solange die Audiodateien fehlen, spricht die Gerätestimme Hörtext und Lösung (Fallback aus `daten_bauen.py`).
+
+**Hilfe-Knopf 💡 und Ohne-Hilfe-Bonus (29.10.):** Bei true/false-Übungen steht neben jeder Aussage mit Hinweis ein kleiner 💡-Knopf. Er erscheint erst nach dem ersten kompletten Durchgang (kein Spoiler vor dem Hören). Antippen zeigt den Hinweis unter der Aussage (z. B. „💡 a.m. oder p.m.? Morgens oder abends?“), der Knopf wird danach ausgegraut; in der Lösung stehen die Hinweise weiterhin wie bisher. Wer in einem Teil kein 💡 benutzt, bekommt beim ersten Abschluss **+5 „Ohne Hilfe“** (Toast „💪 Ohne Hilfe +5“) – wie in Klasse 9. Hilfen kosten nie Punkte. Andere Teile haben noch keine Hilfen und bekommen den Bonus automatisch.
 
 ## 10. Station 7: Vokabeln (Vorbereitung KLN)
 

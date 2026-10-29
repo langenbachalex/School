@@ -20,7 +20,8 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Hörübungen 01/02 Klasse 6 neu mit Jugendstimmen (Mia, Ben, Harry, Declan) | Elrond, John Shaw, Emmaline | ≈ 600 | offen – nur auf Wunsch |
 
 ## Aufgeschoben – bitte erinnern
-| **Runner-Figur: Feintuning** | vorgemerkt (29.10.) | Mr. Alex hat noch Anmerkungen zum Feintuning der Figur (Details folgen von ihm). Beim nächsten Figur-Durchgang abfragen. Stand: Figur v2 mit Hütchen oben auf dem Riesen-Afro. |
+| **Runner-Figur: Feintuning** | teilweise erledigt (29.10.) | Riesen-Afro ist jetzt eine kompakte Glocke (≈ 1,7× Kopf statt 2,8×), Hütchen klein (0,5) oben auf der Kante (`05-afro-klein.png`). Weitere Anmerkungen von Mr. Alex beim nächsten Figur-Durchgang abfragen. |
+| **Runner: Wortanzeige** (Sprechblase, Wortbank, Echo) | gebaut (29.10., Paket 1 + 2 + 6) | Sprechblase an der Figur statt Mittel-Pop-up, Wortbank-Chips im HUD („+n“ ab 9), Echo 6–8 s später leiser (0,6) mit Untertitel „🔁 wort – deutsch“. Details `runner/konzept-entwurf.md` „Wortanzeige“. Offen: Pakete 3–5 (falls gewünscht), Lautstärke-Balance nach Gehör. |
 | **Manipulations-Reset** | aufgeschoben (29.10.) | Mr. Alex will keine versehentlichen Punktverluste; Reset nur als bewusste „Strafe“ für echte Manipulation, kein Regelfall. Heute: Reset nur, wenn Haupt- und Zweitkopie beide ungültig sind; erledigte Teile bleiben dabei stehen (Punkte auf 0). Nochmal besprechen: z. B. Punkte einfrieren statt löschen, oder nur Banner ohne Reset. |
 | Idee | Stand | Entscheidung offen |
 |---|---|---|
@@ -74,7 +75,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 - Spelling Bee – **gebaut 29.10.** (Games, Klasse 9; **Klasse 6 nachgezogen 29.10.**): Wort hören, deutsche Bedeutung lesen, eintippen (1-Fehler-Toleranz wie Klasse 6); 8 Wörter, 🍯 Honey bei 3 in Folge, +10 einmal pro Tag ab 6 richtig
 - Sentence Sprint – offen
 - Dialog-Duell – offen (Beschreibung folgt)
-- Runner – **Welt 1 gebaut 29.10.** (Klasse 9, Games: „Road Trip Run“, Eintritt 100 Coins; Details `runner/konzept-entwurf.md` Abschnitt 13); **Streak-Effekte + Gegner-Sounds gebaut 29.10.** (Combo 3× Funken, 5× goldene Spur, 8+ On fire, Beste Serie auf der Endseite; Taube/Waschbär/Eichhörnchen/Plopp aus Web Audio); Welten 2–5 und Klasse 6 offen
+- Runner – **Welt 1 gebaut 29.10.** (Klasse 9, Games: „Road Trip Run“, Eintritt 100 Coins; Details `runner/konzept-entwurf.md` Abschnitt 13); **Streak-Effekte + Gegner-Sounds gebaut 29.10.** (Combo 3× Funken, 5× goldene Spur, 8+ On fire, Beste Serie auf der Endseite; Taube/Waschbär/Eichhörnchen/Plopp aus Web Audio); **Wortanzeige gebaut 29.10.** (Sprechblase an der Figur, Wortbank-Chips, Echo nach 6–8 s); Welten 2–5 und Klasse 6 offen
 - Shop-Artikel: Auto-/Figur-Skins, Sticker für USA-/London-Karte, zweites Leben im Runner – beschlossen (Coins); erste Artikel gebaut 29.10. (Titel-Rahmen, Runner-Ticket → Spielstart, 16 Figur-Teile à 30 Coins für den Runner); zweites Leben offen
 
 ## Ältere Ideen

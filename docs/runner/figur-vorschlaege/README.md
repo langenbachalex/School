@@ -11,6 +11,7 @@ Hier nur **Vorschläge als Grafik** – `app/klasse9/runner.js` ist unverändert
 - `02-frisuren-baerte.png` – 9 Frisuren + 6 Bärte (+ eine Kombination mit Zylinder), je groß und in 80 px.
 - `03-farben-gesichter.png` – 8 Haarfarben (an Wuschelkopf und „lang“) + 4 Gesichtsausdrücke (+ 3 Kombinationen), je groß und in 80 px.
 - `04-umgesetzt.png` – **Stand nach Umsetzung** (29.10.): sechs lustige Kombis, Körper-Übertreibungen und die drei Spiel-Gesichter, gezeichnet mit `Runner.zeichneFigur` aus `app/klasse9/runner.js`, groß und in 80 px.
+- `05-afro-klein.png` – **Riesen-Afro neu** (29.10., Entscheidung Mr. Alex): kompakte Glocke ≈ 1,7× Kopf, Hütchen (Faktor 0,5) oben auf der Kante, mit Cap/Cowboy/Zylinder/ohne Hut, daneben der normale Afro; aus der echten `runner.js`-Funktion.
 
 Gerendert mit Playwright/Chromium (Skript im Scratchpad, nicht im Repo).
 

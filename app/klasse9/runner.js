@@ -3,7 +3,9 @@
    Schnittstelle: window.Runner.start({ wrapper, woerter:[{en,de}], skin, texte, stimme:{ wort(i), boss(text) }, onEnde(ergebnis) })
    → zeichnet ein Canvas (plus Boss-Frage als Overlay) in wrapper; ergebnis = { geschafft, diamanten, max, toreRichtig, leben, dauer, maxCombo }.
    Figur v2 (29.10.): zeichneFigur mit Hals/Proportionen, 14 Frisuren, 7 Bärte, 12 Haarfarben, Körper-Übertreibungen (Giraffenhals, Kugelbauch, Hulk, Riesenfüße) und Gesichtsausdruck als Spielreaktion (Parameter ausdruck).
+   Mittel-Pop-up nur noch für Tor-Ergebnis und Boss-Antwort; Combo-Texte und Boss-Banner bleiben mittig.
    Combo (29.10.): Wort-Diamanten in Serie → 3 Funken + Jingle, 5 goldene Spur, 8+ „On fire!“ mit Flammen; Reset bei Lebensverlust oder verpasstem Diamant.
+   Wortanzeige (29.10., Mr. Alex): Sprechblase an der Figur (1,6 s, folgt auch im Sprung, kippt am rechten Rand), Wortbank als Chip-Leiste im HUD, Echo 6–8 s später (stimme.wort(i, {leise:true}) + Untertitel unten).
    Gegner-Klänge (Web Audio): Taube flattert, Waschbär knurrt, Eichhörnchen zirpt (je Art höchstens alle 1,5 s, nie in Sequenz/Boss), Plattdrücken = Plopp + Sternchen.
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …). */
@@ -353,11 +355,13 @@
     if (haar === 'afro') {
       c.beginPath(); c.arc(-2, HY - 4, 19.5, 0, Math.PI * 2); c.fill();
       for (let i = 0; i < 9; i++) { const a = Math.PI * 0.9 + i * (Math.PI * 1.1 / 8); c.beginPath(); c.arc(-2 + Math.cos(a) * 17.5, HY - 4 + Math.sin(a) * 17.5, 6, 0, Math.PI * 2); c.fill(); }
-    } else if (haar === 'riesenafro') {   // deutlich größer, viele kleine Locken am Rand
-      c.beginPath(); c.arc(-3, HY - 10, 32, 0, Math.PI * 2); c.fill();
-      for (let i = 0; i < 22; i++) { const a = i * (Math.PI * 2 / 22); c.beginPath(); c.arc(-3 + Math.cos(a) * 30, HY - 10 + Math.sin(a) * 30, 6.5, 0, Math.PI * 2); c.fill(); }
-      for (let i = 0; i < 16; i++) { const a = i * (Math.PI * 2 / 16) + 0.2; c.beginPath(); c.arc(-3 + Math.cos(a) * 22, HY - 10 + Math.sin(a) * 22, 5, 0, Math.PI * 2); c.fill(); }
-      c.fillStyle = 'rgba(255,255,255,.16)'; c.beginPath(); c.arc(-12, HY - 24, 8, 0, Math.PI * 2); c.fill();
+    } else if (haar === 'riesenafro') {   // kompakte Glocke (≈ 1,7× Kopf), umschließt den Kopf oben und hinten, viele kleine Locken am Rand (29.10.: kleiner statt r 32)
+      const AX0 = -3, AY0 = HY - 8, AR = 21;
+      c.beginPath(); c.arc(AX0, AY0, AR, Math.PI * 0.72, Math.PI * 1.74); c.lineTo(10, HY - 9); c.lineTo(-4, HY + 11); c.closePath(); c.fill();
+      for (let i = 0; i <= 12; i++) { const a = Math.PI * (0.75 + i / 12); c.beginPath(); c.arc(AX0 + Math.cos(a) * 20, AY0 + Math.sin(a) * 20, 4.6, 0, Math.PI * 2); c.fill(); }
+      c.fillStyle = haarDunkel();
+      for (let i = 0; i < 7; i++) { const a = Math.PI * (0.85 + i * 0.13); c.beginPath(); c.arc(AX0 + Math.cos(a) * 13, AY0 + Math.sin(a) * 13, 2.2, 0, Math.PI * 2); c.fill(); }
+      c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.arc(-10, HY - 20, 5, 0, Math.PI * 2); c.fill();
     } else if (haar === 'lang') {
       c.beginPath(); c.moveTo(-6, HY - 10); c.quadraticCurveTo(-19, HY - 2 + wipp, -16, HY + 34 + wipp);
       c.quadraticCurveTo(-8, HY + 36 + wipp, -2, HY + 28); c.lineTo(4, HY + 10); c.closePath(); c.fill();
@@ -470,8 +474,8 @@
       for (let i = 0; i < 7; i++) { const a = Math.PI * 1.0 + i * (Math.PI / 6.5); c.beginPath(); c.arc(Math.cos(a) * 11.5, HY - 1.5 + Math.sin(a) * 11.5, 5.2, 0, Math.PI * 2); c.fill(); }
     } else if (haar === 'afro') {
       for (let i = 0; i < 5; i++) { const a = Math.PI * 1.15 + i * 0.3; c.beginPath(); c.arc(-2 + Math.cos(a) * 16.5, HY - 4 + Math.sin(a) * 16.5, 6.5, 0, Math.PI * 2); c.fill(); }
-    } else if (haar === 'riesenafro') {
-      for (let i = 0; i < 7; i++) { const a = Math.PI * 1.1 + i * 0.22; c.beginPath(); c.arc(-3 + Math.cos(a) * 27, HY - 10 + Math.sin(a) * 27, 6.5, 0, Math.PI * 2); c.fill(); }
+    } else if (haar === 'riesenafro') {   // Haaransatz: kleine Locken über der Stirn
+      for (let i = 0; i < 6; i++) { const a = Math.PI * (1.12 + i * 0.13); c.beginPath(); c.arc(-3 + Math.cos(a) * 16, HY - 8 + Math.sin(a) * 16, 4.4, 0, Math.PI * 2); c.fill(); }
     } else if (haar === 'irokese' || haar === 'mohawk') {
       // Kamm von Nacken bis Stirn; mit Hut nur der hintere Teil (der Hut sitzt vorn)
       const hoch = haar === 'mohawk' ? 30 : 20, n = haar === 'mohawk' ? 6 : 5;
@@ -537,7 +541,7 @@
     }
 
     // ---- Haarschmuck (sitzt auf der Frisur)
-    const hoch = { afro: -16, riesenafro: -30, irokese: -18, mohawk: -28, tolle: mitHut ? 0 : -20, dutt: -14, wuschel: mitHut ? -4 : -20, flattop: mitHut ? -8 : -20, locken: -4 }[haar] || 0;
+    const hoch = { afro: -16, riesenafro: -17, irokese: -18, mohawk: -28, tolle: mitHut ? 0 : -20, dutt: -14, wuschel: mitHut ? -4 : -20, flattop: mitHut ? -8 : -20, locken: -4 }[haar] || 0;
     if (s.haarschmuck === 'schleife') {
       c.fillStyle = '#e8467c';
       c.beginPath(); c.moveTo(-6, HY - 12 + hoch); c.lineTo(-14, HY - 18 + hoch); c.lineTo(-13, HY - 7 + hoch); c.closePath(); c.fill();
@@ -550,9 +554,9 @@
 
     // ---- Hüte: immer direkt auf dem Kopf; bei Irokese/Mohawk/Dutt etwas nach vorn gerückt (Frisur ragt hinten heraus)
     const hutDX = (haar === 'irokese' || haar === 'mohawk' || haar === 'dutt') ? 4 : 0;
-    // Riesen-Afro: ein kleines Hütchen thront oben auf der Frisur (Wunsch Mr. Alex) – verkleinert um den Hutboden herum
+    // Riesen-Afro: ein kleines Hütchen (Faktor 0,5) sitzt oben auf der Kante der Glocke (Hutboden auf HY − 29,5, Lockenrand reicht bis ≈ HY − 33), nicht versunken
     const aufAfro = haar === 'riesenafro';
-    const hutAn = () => { c.save(); c.translate(hutDX, 0); if (aufAfro) { c.translate(-3, HY - 11); c.scale(0.62, 0.62); c.translate(0, -(HY - 11) - 42); } };
+    const hutAn = () => { c.save(); c.translate(hutDX, 0); if (aufAfro) { c.translate(-3, HY - 11); c.scale(0.5, 0.5); c.translate(0, -(HY - 11) - 37); } };
     if (s.hut === 'cap') {
       hutAn();
       c.fillStyle = '#1d3f8f'; c.beginPath(); c.arc(HX, HY - 8, 13, Math.PI, 0); c.closePath(); c.fill();
@@ -577,8 +581,8 @@
     s = Object.assign({}, SKIN_STANDARD, s);
     const mitHut = !!s.hut && s.hut !== 'keiner';
     const hutH = { cap: 8, cowboy: 13, zylinder: 19 }[s.hut] || 0;
-    const haarH = ({ irokese: 20, mohawk: 30, riesenafro: 35, afro: 10, tolle: mitHut ? 0 : 17, dutt: mitHut ? 9 : 14, wuschel: mitHut ? 0 : 21, flattop: mitHut ? 0 : 13, dreihaare: mitHut ? 0 : 14, locken: 3 })[s.haar] || 0;
-    if (s.haar === 'riesenafro' && mitHut) return 88 + (s.hals === 'giraffe' ? 24 : 0) + haarH + Math.round(hutH * 0.62); // Hütchen oben auf dem Afro
+    const haarH = ({ irokese: 20, mohawk: 30, riesenafro: 20, afro: 10, tolle: mitHut ? 0 : 17, dutt: mitHut ? 9 : 14, wuschel: mitHut ? 0 : 21, flattop: mitHut ? 0 : 13, dreihaare: mitHut ? 0 : 14, locken: 3 })[s.haar] || 0;
+    if (s.haar === 'riesenafro' && mitHut) return 88 + (s.hals === 'giraffe' ? 24 : 0) + haarH + Math.round(hutH * 0.5); // Hütchen (0,5) oben auf der Afro-Kante
     return 88 + (s.hals === 'giraffe' ? 24 : 0) + Math.max(hutH, haarH);
   }
 
@@ -644,6 +648,9 @@
   let halten = false, haltZeit = 0, sprungGedrueckt = false;
   // Combo + Effekte
   let combo = 0, maxCombo = 0, comboText = null, hudPuls = 0, spur = 0, onfire = false, partikel = [], spurPunkte = [];
+  // Wortanzeige: Sprechblase an der Figur, Wortbank (Chips im HUD), Echo-Warteschlange (Wort 6–8 s später noch einmal, Untertitel unten)
+  let blase = null, wortbank = [], echoWarteschlange = [], echo = null, echoLetzte = -9, echos = 0, stimmeAufrufe = 0;
+  const BLASE_DAUER = 1.6, ECHO_MIN = 6, ECHO_MAX = 8, ECHO_ABSTAND = 2.5, ECHO_DAUER = 1.4, CHIP_MAX = 8, CHIP_ZEICHEN = 12;
   let erstauntZeit = 0, zungeZeit = 0;   // Gesichtsausdruck: erstaunt 0,8 s nach Treffer, Zunge raus 1 s bei „5× Combo!“ und solange On fire
   const ausdruckAktuell = () => (erstauntZeit > 0 ? "erstaunt" : (onfire || zungeZeit > 0) ? "zunge" : "grinsend");
   const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9 };   // letzter Klang je Art (Spielzeit)
@@ -674,6 +681,7 @@
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
+    blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
   }
 
   /* ---------- Combo, Partikel, Gegner-Klänge ---------- */
@@ -690,8 +698,10 @@
   function diamantSammeln(d) {
     d.weg = true; gesammelt++; klang.wort();
     const w = woerter[d.wort];
-    popup = { en: w.en, de: w.de, zeit: 1.8, art: 'wort' };
-    stimme.wort(d.wort);
+    blase = { en: w.en, de: kurzDe(w.de) || w.de, zeit: BLASE_DAUER };
+    if (!wortbank.some((b) => b.wort === d.wort)) wortbank.push({ wort: d.wort, en: w.en, puls: 1 });
+    if (!echoWarteschlange.some((e) => e.wort === d.wort)) echoWarteschlange.push({ wort: d.wort, faellig: zeit + ECHO_MIN + Math.random() * (ECHO_MAX - ECHO_MIN) });   // nur ein Echo je Wort
+    stimmeAufrufe++; stimme.wort(d.wort);
     combo++; if (combo > maxCombo) maxCombo = combo; hudPuls = 1;
     const fx = spieler.x, fy = spieler.y - 40;
     if (combo === 3) {
@@ -735,7 +745,20 @@
       } else if (nah) gegnerKlang(g.art);
     }
   }
+  // Echo: fällige Wörter nacheinander (≥ 2,5 s Abstand), nur im laufenden Spiel ohne Sprechblase/Combo-Text/Pop-up (nie in Sequenz/Boss)
+  function echoBewegen(dt) {
+    if (blase) { blase.zeit -= dt; if (blase.zeit <= 0) blase = null; }
+    if (echo) { echo.zeit -= dt; if (echo.zeit <= 0) echo = null; }
+    for (const b of wortbank) if (b.puls > 0) b.puls = Math.max(0, b.puls - dt * 2);
+    if (zustand !== 'spiel' || tot > 0 || blase || comboText || popup || !echoWarteschlange.length) return;
+    if (zeit - echoLetzte < ECHO_ABSTAND || echoWarteschlange[0].faellig > zeit) return;
+    const e = echoWarteschlange.shift(), w = woerter[e.wort];
+    echoLetzte = zeit; echos++;
+    echo = { text: `🔁 ${w.en} – ${kurzDe(w.de) || w.de}`, zeit: ECHO_DAUER };
+    stimmeAufrufe++; stimme.wort(e.wort, { leise: true });
+  }
   function effekteBewegen(dt) {
+    echoBewegen(dt);
     if (hudPuls > 0) hudPuls = Math.max(0, hudPuls - dt * 2.2);
     if (comboText) { comboText.zeit -= dt; if (comboText.zeit <= 0) comboText = null; }
     if (erstauntZeit > 0) erstauntZeit = Math.max(0, erstauntZeit - dt);
@@ -1284,6 +1307,62 @@
       c.globalAlpha = 1;
     }
     effekteZeichnen(c);
+    if (blase && tot <= 0) wortBlase(c);
+  }
+  // Comic-Sprechblase rechts oben neben dem Kopf (folgt der Figur, auch im Sprung); am rechten Rand nach links gekippt; Pop-in (reduced-motion: ohne)
+  function wortBlase(c) {
+    const kopfX = spieler.x - kamera + 11, kopfY = spieler.y - 74 - (skin.hals === 'giraffe' ? 24 : 0) - 6;   // Anker: rechte Kopfseite
+    c.save();
+    c.font = 'bold 20px system-ui, sans-serif'; const enW = c.measureText(blase.en).width;
+    c.font = '600 13px system-ui, sans-serif'; const deW = c.measureText(blase.de).width;
+    const w = Math.max(enW, deW, 60) + 26, h = 50;
+    let links = kopfX + 12, oben = kopfY - 22 - h, rechts = false;
+    if (links + w > viewW - 8) { rechts = true; links = kopfX - 22 - w - 12; }
+    if (links < 4) links = 4;
+    oben = Math.max(70, oben);
+    const auf = BLASE_DAUER - blase.zeit;
+    const a = Math.min(1, blase.zeit / 0.25);
+    const sk = ruhig() ? 1 : (auf < 0.18 ? 0.4 + 0.6 * (auf / 0.18) * (1.25 - 0.25 * (auf / 0.18)) : (auf < 0.3 ? 1 + 0.08 * (1 - (auf - 0.18) / 0.12) : 1));
+    const ax = rechts ? kopfX - 10 : kopfX + 10, ay = kopfY - 4;   // Schwänzchen-Spitze am Kopf
+    c.globalAlpha = a; c.translate(ax, ay); c.scale(sk, sk); c.translate(-ax, -ay);
+    c.fillStyle = '#fff'; c.strokeStyle = '#18213a'; c.lineWidth = 2.5; c.lineJoin = 'round';
+    c.beginPath(); c.roundRect(links, oben, w, h, 12); c.fill(); c.stroke();
+    const sx = rechts ? links + w - 22 : links + 22;
+    c.beginPath(); c.moveTo(sx - 8, oben + h - 1); c.lineTo(ax, ay); c.lineTo(sx + 8, oben + h - 1); c.closePath(); c.fill();
+    c.strokeStyle = '#18213a'; c.beginPath(); c.moveTo(sx - 8, oben + h - 1); c.lineTo(ax, ay); c.lineTo(sx + 8, oben + h - 1); c.stroke();
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.font = 'bold 20px system-ui, sans-serif'; c.fillStyle = '#1d3f8f'; c.fillText(blase.en, links + w / 2, oben + 18);
+    c.font = '600 13px system-ui, sans-serif'; c.fillStyle = '#444'; c.fillText(blase.de, links + w / 2, oben + 37);
+    c.restore();
+  }
+  // Wortbank: Chips (englisches Wort, max. 12 Zeichen) in einer Leiste unter der Herz-/Fortschrittszeile, von links; passen nicht alle, steht links ein Zähler „+n“ für die ältesten
+  function wortbankZeichnen(c) {
+    if (!wortbank.length) return;
+    const y = 54, hh = 22, gap = 6, x0 = 14, frei = viewW - 70 - x0;   // rechts Platz für den ✕-Knopf der App
+    c.save(); c.font = 'bold 13px system-ui, sans-serif'; c.textBaseline = 'middle';
+    const chips = wortbank.map((b) => { const txt = b.en.length > CHIP_ZEICHEN ? b.en.slice(0, CHIP_ZEICHEN - 1) + '…' : b.en; return { b, txt, w: c.measureText(txt).width + 16 }; });
+    let sichtbar = [], breite = 0, rest = 0;
+    for (let i = chips.length - 1; i >= 0; i--) {
+      const zaehlerW = i > 0 ? 40 : 0;   // Platz für „+n“, falls noch ältere übrig bleiben
+      if (sichtbar.length >= CHIP_MAX || breite + chips[i].w + zaehlerW > frei) { rest = i + 1; break; }
+      sichtbar.unshift(chips[i]); breite += chips[i].w + gap;
+    }
+    let x = x0;
+    if (rest > 0) {
+      const t = `+${rest}`, w = c.measureText(t).width + 14;
+      c.fillStyle = 'rgba(24,33,58,.55)'; c.beginPath(); c.roundRect(x, y - hh / 2, w, hh, hh / 2); c.fill();
+      c.fillStyle = '#fff'; c.textAlign = 'center'; c.fillText(t, x + w / 2, y + 1); x += w + gap;
+    }
+    for (let k = 0; k < sichtbar.length; k++) {
+      const ch = sichtbar[k], neu = k === sichtbar.length - 1 && ch.b.puls > 0 && !ruhig();
+      const sk = neu ? 1 + 0.18 * Math.sin(Math.min(1, ch.b.puls) * Math.PI) : 1;
+      c.save(); c.translate(x + ch.w / 2, y); c.scale(sk, sk);
+      c.fillStyle = neu ? 'rgba(255,217,61,.95)' : 'rgba(255,255,255,.9)'; c.strokeStyle = 'rgba(24,33,58,.35)'; c.lineWidth = 1;
+      c.beginPath(); c.roundRect(-ch.w / 2, -hh / 2, ch.w, hh, hh / 2); c.fill(); c.stroke();
+      c.fillStyle = '#18213a'; c.textAlign = 'center'; c.fillText(ch.txt, 0, 1);
+      c.restore(); x += ch.w + gap;
+    }
+    c.restore();
   }
   function sprechblase(c, x, y, text) {
     c.save(); c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
@@ -1320,6 +1399,15 @@
     for (const t of level.tore) { c.fillStyle = '#e0a400'; c.fillRect(bx + bwid * t.x / ende - 1.5, 13, 3, 14); }
     for (const cp of level.checkpoints) { c.fillStyle = '#2e9e5b'; c.fillRect(bx + bwid * cp.x / ende - 1.5, 13, 3, 14); }
     freiheitsstatue(c, viewW / 2 + 92, 34, 0.14, '#1d3f8f');
+    wortbankZeichnen(c);
+    if (echo) {   // Echo-Untertitel unten mittig
+      const a = Math.min(1, echo.zeit / 0.3, (ECHO_DAUER - echo.zeit) / 0.15);
+      c.save(); c.globalAlpha = Math.max(0, a); c.font = '600 15px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      const w = c.measureText(echo.text).width + 24;
+      c.fillStyle = 'rgba(24,33,58,.78)'; c.beginPath(); c.roundRect(viewW / 2 - w / 2, H - 36, w, 26, 13); c.fill();
+      c.fillStyle = '#fff'; c.fillText(echo.text, viewW / 2, H - 23);
+      c.restore();
+    }
     // Tor-Hinweis
     if (zustand === 'spiel') {
       const tor = tore.find(t => !t.erledigt && spieler.x > t.x - 520 && spieler.x < t.x + 40);
@@ -1327,8 +1415,8 @@
         c.font = 'bold 20px system-ui, sans-serif'; c.textAlign = 'center';
         const txt = texte.tor(tor.de);
         const w = c.measureText(txt).width + 28;
-        c.fillStyle = 'rgba(224,164,0,.92)'; c.beginPath(); c.roundRect(viewW / 2 - w / 2, 40, w, 34, 10); c.fill();
-        c.fillStyle = '#18213a'; c.fillText(txt, viewW / 2, 57);
+        c.fillStyle = 'rgba(224,164,0,.92)'; c.beginPath(); c.roundRect(viewW / 2 - w / 2, 72, w, 34, 10); c.fill();   // unter der Wortbank-Leiste
+        c.fillStyle = '#18213a'; c.fillText(txt, viewW / 2, 89);
       }
     }
     if (popup) {
@@ -1474,6 +1562,8 @@
         koerper: { bauch: skin.bauch, brust: skin.brust, muskeln: skin.muskeln, power: skin.power, powerAura: skin.powerAura || 0 },
         hochformatHinweis: bereich.y > 0, viewW, speed: SPEED, strecke: level.stopX, sequenzMinDauer: SEQUENZ_MIN, woerter: woerter.map((w) => w.en),
         combo, maxCombo, comboText: comboText ? comboText.text : null, partikel: partikel.length, spur: spur > 0, spurPunkte: spurPunkte.length, onfire, ruhig: ruhig(), ausdruck: ausdruckAktuell(),
+        blase: blase ? { en: blase.en, de: blase.de, zeit: Math.round(blase.zeit * 100) / 100 } : null, wortbank: wortbank.map((b) => b.en),
+        echoWarteschlange: echoWarteschlange.map((e) => ({ wort: woerter[e.wort].en, in: Math.round((e.faellig - zeit) * 100) / 100 })), echo: echo ? echo.text : null, echos, stimmeAufrufe,
         gegnerKlaenge, gegnerNah: gegner.filter((g) => g.tot <= 0 && g.x - spieler.x > -40 && g.x - spieler.x < GEGNER_NAEHE).map((g) => g.art),
       };
     },

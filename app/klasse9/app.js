@@ -218,6 +218,7 @@
   // Einträge: Dateipfad (String) oder { text, stimme } für die Geräte-Stimme
   // Ende der zuletzt gestarteten Wiedergabe. spiele(…, { warten: true }) reiht sich dahinter ein, statt die laufende abzuschneiden
   // (für Belohnungs-Stimmen: Lob, Schlusssatz, Pop-up). Seitenwechsel oder „Weiter“ im Pop-up (stopp) bricht auch wartende ab.
+  // spiele(…, { laut: 0.6 }) spielt Dateien leiser (Runner-Echo); die Geräte-Stimme kennt keine Lautstärke und bleibt normal.
   let audioEnde = Promise.resolve();
   function spiele(dateien, opt = {}) {
     if (leise) return Promise.resolve(null);
@@ -232,6 +233,7 @@
       const a = new Audio(datei);
       aktuell = a;
       a.playbackRate = tempo(); a.preservesPitch = true; // langsamer, ohne dass die Stimme tiefer klingt
+      if (typeof opt.laut === "number") a.volume = Math.max(0, Math.min(1, opt.laut));
       a.onended = () => { gesamt += (a.duration || 0) / (a.playbackRate || 1); setTimeout(fertig, 350); }; // Sprechzeit passt sich an
       a.onerror = fertig;
       a.play().catch(fertig);
@@ -2666,7 +2668,8 @@
         bossTitel: T("Mr. Alligator fragt …", "Mr. Alligator asks …"), bossHinweis: T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
         frage: (de) => T(`„Was heißt ‚${de}‘ auf Englisch?“`, `“What's ‘${de}’ in English?”`),
       },
-      stimme: { wort: (j) => spiele([tonWort(ws[j % ws.length])]), boss: (text) => spiele([{ text, stimme: "m" }]) },
+      // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
+      stimme: { wort: (j, o) => spiele([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : {}), boss: (text) => spiele([{ text, stimme: "m" }]) },
       onEnde: (e) => runnerEnde(k, unit, i, e, ws),
     });
   }

@@ -13,6 +13,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Mini-Rewards: Combo-Sprüche (≈ 5 Sätze) | Mr. Alex, Jeremy, Jessica | je ≈ 250 | vorgemerkt |
 | Border Patrol: 34 Einzelwörter (17 britisch Mr. Alex, 17 amerikanisch Jeremy; bis dahin Geräte-Stimme) | Mr. Alex, Jeremy | 225 gesamt | vorgemerkt (in klasse9_audio.py eingetragen) |
 | Border Patrol: Grenzer-Sprüche (≈ 10 Sätze) | Jeremy, Mr. Alex | je ≈ 300 | vorgemerkt |
+| Runner: Skin-Menü spricht die Auswahl („Long hair“, „Short hair“, „Curly“, „Afro“, Hüte, Brille …) – ≈ 40 kurze Wörter | Jeremy, Jessica | je ≈ 300 | vorgemerkt |
 | Runner: Rufe beim Einsammeln (Jeremy/Jessica), Boss-Intro und Boss-Fragen (Mr. Alex) | Jeremy, Jessica, Mr. Alex | je ≈ 1.500 | später |
 | Hörverstehen 3 Klasse 6 „Talking about free time“ (5 Sprecher + 10 Aussagen) | Mr. Alex | ≈ 1.500 | vorgemerkt, Entwurf wartet auf Freigabe |
 
@@ -36,6 +37,10 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 - **Runner (Rückmeldung 29.10. zum Prototyp):** Cartoon-Stil passt. Spieldauer ≥ 2 Minuten. Vor dem Endboss kleine Zwischensequenz: Kamera fährt herunter, Figur läuft automatisch, kurz eingefroren, Mr. Alex spricht („It's time for Mr. Alligator!“). Endboss-Stimme = Mr. Alex (mehr Mr.-Alex-Stimme in Klasse 9 gewünscht). Skins zusätzlich: Körperform (Bauch, Brust, Muskeln) – Idee: mit mehr Punkten wird die Figur muskulöser. Probe ist unvertont.
 - **Runner**: Levelziel passend zum Level (z. B. die Statue of Liberty finden, vorher vorbereitet); **Boss/Endboss** kennen die Schüler: Der Endboss stellt eine Frage, richtige Antwort schließt eine Tür auf.
 - **Belohnung im Runner**: keine Coins zurück (wäre komisch); stattdessen eigene Titel/Trophäen fürs normale Spiel – noch brainstormen.
+
+## Fragen von Mr. Alex (29.10.), beantwortet, nichts gebaut
+- **Shop gegen Developer-Mode:** Coins, Käufe und Rahmen liegen in `spiel` und damit unter demselben Siegel wie die Punkte (Zweitkopie, Reset bei Fälschung). Kaufsperre wird im Programm geprüft, nicht am Knopf. Grenze wie bei den Punkten: Wer den Programmcode liest, kann das Siegel nachbauen.
+- **Ton-Warnung:** Ob der Ton am Gerät aus oder leise ist, kann eine Web-App nicht sehen (keine Lautstärke-API, iPhone-Stummschalter unsichtbar). Möglich: ein **Ton-Check beim Start** (kurzer Klang + „Hörst du das? 🔊 Ja / Nein“), Erkennung blockierter Wiedergabe (Autoplay) und ein Hinweis, wenn Hör-Teile mehrfach ohne abgespieltes Audio „geschafft“ wurden. Vorschlag: Ton-Check einmal pro Tag auf der Startseite, Text „Bitte Ton an – sonst verschwendest du Learn Power!“ Noch nicht gebaut.
 
 ## Aufgeschoben (zweite Runde) – bitte erinnern
 | **Nachhaltigkeit „alles grün“ → ⚡ Power Up** | gebaut (29.10.) | Erledigtes wird nach 30 / 60 / 120 Tagen wieder fällig (gelbes Schild ⚡ Power Up), erneut durchmachen gibt 5 Punkte und Stufe +1; GLN-Kopplung an; kürzere Timer bei Wiederholung. Audio „Powered up!“ folgt mit den Credits. Details: `docs/nachhaltigkeit-entwurf.md`. |

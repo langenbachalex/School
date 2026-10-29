@@ -34,6 +34,9 @@ def auftraege():
     for z in k9.tsv("beae.tsv"):
         liste.append((f"audio/beae/{z['id']}.mp3", "mf"[stimme % 2], z["amerikanisch"])); stimme += 1
         liste.append((f"audio/beae/{z['id']}_be.mp3", "alex", z["britisch"]))
+        # Border Patrol: Einzelwörter (vorgemerkt, Credits ab 13.11.)
+        liste.append((f"audio/beae/w_{z['id']}_be.mp3", "alex", z["be_wort"]))
+        liste.append((f"audio/beae/w_{z['id']}_ae.mp3", "m", z["luecke"]))
     with open(os.path.join(k9.INHALTE, "listening.json"), encoding="utf-8") as f:
         hv = json.load(f)
     for wid, en, _, _ in hv["woerter"]:

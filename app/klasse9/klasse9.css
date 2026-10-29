@@ -202,3 +202,22 @@
 .niveau-leiste .tempo-knopf { margin-left: auto; margin-right: 10px; min-height: 40px; background: transparent; color: var(--blau-text); border-color: var(--blau-text); }
 .niveau-leiste { justify-content: flex-start; }
 .niveau-leiste .niveau { margin-left: 0; }
+
+/* Games: Border Patrol */
+.patrol-stand { display: flex; justify-content: space-between; margin: 0 0 8px; font-weight: 600; }
+.patrol-himmel { position: relative; height: 52vh; min-height: 340px; overflow: hidden; border-radius: 14px;
+  background: linear-gradient(#dbe8ff, var(--karte)); border: 2px solid var(--linie); touch-action: none; }
+.patrol-wort { position: absolute; transform: translateX(-50%); padding: 8px 14px; border-radius: 999px; border: 2px solid var(--blau);
+  background: var(--karte); color: var(--text); font: 600 1.15rem var(--display); cursor: pointer; touch-action: none; user-select: none; white-space: nowrap;
+  transition: opacity .6s, transform .6s, background .2s; }
+.patrol-wort.aktiv { background: var(--gelb, #ffd84a); color: #222; border-color: #b58b00; box-shadow: 0 0 0 4px rgba(255, 216, 74, .35); }
+.patrol-wort.weg-be { transform: translateX(-140%) rotate(-12deg); opacity: 0; background: var(--gruen-hell); border-color: var(--gruen); }
+.patrol-wort.weg-ae { transform: translateX(40%) rotate(12deg); opacity: 0; background: var(--gruen-hell); border-color: var(--gruen); }
+.patrol-wort.falsch { background: #ffd7d7; border-color: var(--rot, #c62828); color: #7a1010; opacity: 0; transition-delay: .5s; }
+.patrol-zonen { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+.patrol-zone { display: grid; place-items: center; gap: 2px; padding: 10px; border-radius: 14px; border: 2px dashed var(--linie); background: transparent; color: var(--text); font: 600 1rem var(--display); cursor: pointer; }
+.patrol-zone.be { border-color: #1d3f8f; } .patrol-zone.ae { border-color: #b22234; }
+.patrol-flagge { font-size: 2rem; }
+.patrol-liste { margin-top: 12px; } .patrol-liste table { width: 100%; border-collapse: collapse; } .patrol-liste td { padding: 4px 6px; border-bottom: 1px solid var(--linie); }
+.rueckmeldung.neutral { background: var(--gelb-hell, #fff6cc); color: var(--text); }
+@media (max-width: 640px) { .patrol-himmel { height: 46vh; } .patrol-wort { font-size: 1.05rem; padding: 7px 12px; } }

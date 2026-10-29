@@ -420,6 +420,9 @@ def spieldaten():
                            quelle=quellen[z["bild"] + ".jpg"]["link"]) for z in tsv("landmarks.tsv")],
         "karte": usa_karte.pfade(os.path.join(INHALTE, "karte", "states-albers-10m.json")),
         "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in tsv("geheimakten.tsv")],
+        # Border Patrol (Games): Wortpaare britisch/amerikanisch; Einzelwort-Audios kommen nach Freigabe (sonst Geräte-Stimme)
+        "patrol": [{"id": z["id"], "be": z["be_wort"], "ae": z["luecke"], "de": z["wort_de"],
+                    "audio_be": a(f"audio/beae/w_{z['id']}_be.mp3"), "audio_ae": a(f"audio/beae/w_{z['id']}_ae.mp3")} for z in tsv("beae.tsv")],
         "frei": frei_saarland.als_daten(),
     }
 

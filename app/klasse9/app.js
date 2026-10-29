@@ -1906,7 +1906,11 @@
         el("button", { class: "kachel", onclick: () => memoryWahl(k), "aria-label": "Memory" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🎲"),
           el("span", { class: "titel", lang: "en" }, "Memory"),
-          el("span", { class: "unter" }, T("Wort und Bedeutung finden – 6 Paare", "Match word and meaning – 6 pairs")))));
+          el("span", { class: "unter" }, T("Wort und Bedeutung finden – 6 Paare", "Match word and meaning – 6 pairs"))),
+        el("button", { class: "kachel", onclick: () => spielPatrol(k), "aria-label": "Border Patrol" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🛂"),
+          el("span", { class: "titel", lang: "en" }, "Border Patrol"),
+          el("span", { class: "unter" }, T("Britisch oder amerikanisch? Wörter einsortieren", "British or American? Sort the words")))));
   }
   // Memory: Unit und Abschnitt wählen (wie in Vocabulary), dann 6 Paare aus diesen Wörtern
   function memoryWahl(k) {
@@ -1930,6 +1934,102 @@
       karte(null, m.feld, m.zaehler, m.box, el("div", { class: "knopfreihe" },
         knopf(T("↻ Neu mischen", "↻ Shuffle again"), () => spielMemory(k, unit, i)), knopf(T("Andere Wörter", "Other words"), zurueck),
         knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
+  }
+
+  /* ---------- Games: Border Patrol – Wörter sinken, antippen = hören, nach links 🇬🇧 oder rechts 🇺🇸 wischen ----------
+     Pro Runde jedes Paar einmal (zufällig britisch oder amerikanisch). 3 Leben: falsch einsortiert oder durchgefallen kostet eins.
+     Punkte (+10) beim ersten geschafften Durchgang des Tages (mind. 13 von 17 richtig), Tagesmarke gym.patrolTag. */
+  const PATROL = { leben: 3, tempo: 26, abstand: 2600, ziel: 13 };
+  function spielPatrol(k) {
+    ansicht = null; lage = null; stopp();
+    const g = gymStand();
+    const reihe = mischen(SP.patrol).map((p) => ({ p, seite: Math.random() < 0.5 ? "be" : "ae" }));
+    let leben = PATROL.leben, richtig = 0, naechster = 0, aktiv = null, laeuft = true, letzter = 0, offen = [], zeitstempel = null;
+    const zurueck = () => { laeuft = false; stopp(); zeigeSpiele(k); };
+    const himmel = el("div", { class: "patrol-himmel", role: "group", "aria-label": "Border Patrol" });
+    const stand = el("p", { class: "patrol-stand", "aria-live": "polite" });
+    const box = rueckmeldung();
+    const zeigeStand = () => { stand.replaceChildren(el("span", {}, "❤️".repeat(leben) + "🖤".repeat(PATROL.leben - leben)), el("span", {}, `✓ ${richtig} / ${reihe.length}`)); };
+    const tonFuer = (w) => (w.seite === "be" ? (w.p.audio_be || { text: w.p.be, stimme: "m" }) : (w.p.audio_ae || { text: w.p.ae, stimme: "m" }));
+    const wort = (w) => (w.seite === "be" ? w.p.be : w.p.ae);
+    const flagge = (seite) => (seite === "be" ? "🇬🇧" : "🇺🇸");
+    const zonen = [["be", "🇬🇧", "British"], ["ae", "🇺🇸", "American"]].map(([seite, fl, name]) =>
+      el("button", { class: "patrol-zone " + seite, onclick: () => { if (aktiv) sortiere(aktiv, seite); } }, el("span", { class: "patrol-flagge", "aria-hidden": "true" }, fl), el("span", { lang: "en" }, name)));
+    function entferne(w) { offen = offen.filter((x) => x !== w); if (aktiv === w) aktiv = null; setTimeout(() => w.el.remove(), 700); }
+    function sortiere(w, seite) {
+      if (!laeuft || w.fertig) return;
+      w.fertig = true;
+      if (seite === w.seite) {
+        richtig++; w.el.classList.add("weg-" + seite); richtigSerie++;
+      } else {
+        leben--; w.el.classList.add("falsch"); w.el.append(el("small", {}, " " + flagge(w.seite)));
+      }
+      zeigeStand(); entferne(w); pruefeEnde();
+    }
+    function durchgefallen(w) {
+      if (w.fertig) return;
+      w.fertig = true; leben--;
+      w.el.classList.add("falsch"); w.el.append(el("small", {}, " " + flagge(w.seite)));
+      zeigeStand(); entferne(w); pruefeEnde();
+    }
+    function waehle(w) {
+      if (!laeuft || w.fertig) return;
+      if (aktiv && aktiv !== w) aktiv.el.classList.remove("aktiv");
+      aktiv = w; w.el.classList.add("aktiv");
+      spiele([tonFuer(w)]);
+    }
+    function neues() {
+      if (naechster >= reihe.length) return;
+      const w = reihe[naechster++]; w.y = -40; w.x = 8 + Math.random() * 64;
+      const text = wort(w);
+      w.el = el("button", { class: "patrol-wort", lang: "en", style: `left:${w.x}%; top:${w.y}px`, "aria-label": T(`Wort: ${text}. Links britisch, rechts amerikanisch.`, `Word: ${text}. Left British, right American.`) }, text);
+      let startX = null;
+      w.el.addEventListener("pointerdown", (e) => { startX = e.clientX; w.el.setPointerCapture(e.pointerId); });
+      w.el.addEventListener("pointerup", (e) => {
+        const dx = startX === null ? 0 : e.clientX - startX; startX = null;
+        if (Math.abs(dx) > 40) { waehleLeise(w); sortiere(w, dx < 0 ? "be" : "ae"); } else waehle(w);
+      });
+      w.el.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") { e.preventDefault(); sortiere(w, "be"); } if (e.key === "ArrowRight") { e.preventDefault(); sortiere(w, "ae"); } });
+      himmel.append(w.el); offen.push(w);
+    }
+    const waehleLeise = (w) => { if (aktiv && aktiv !== w) aktiv.el.classList.remove("aktiv"); aktiv = w; };
+    function schritt(t) {
+      if (!laeuft) return;
+      if (zeitstempel === null) zeitstempel = t;
+      const dt = Math.min(0.05, (t - zeitstempel) / 1000); zeitstempel = t;
+      if (t - letzter > PATROL.abstand && offen.filter((w) => !w.fertig).length < 3) { neues(); letzter = t; }
+      const tempo = PATROL.tempo * (1 + richtig * 0.05) * (window.__patrolTempo || 1);
+      const boden = himmel.clientHeight;
+      offen.forEach((w) => {
+        if (w.fertig || w === aktiv) return;
+        w.y += tempo * dt; w.el.style.top = w.y + "px";
+        if (w.y > boden - 10) durchgefallen(w);
+      });
+      requestAnimationFrame(schritt);
+    }
+    function pruefeEnde() {
+      if (!laeuft) return;
+      const alleRaus = naechster >= reihe.length && offen.every((w) => w.fertig);
+      if (leben > 0 && !alleRaus) return;
+      laeuft = false;
+      const geschafft = leben > 0 && richtig >= PATROL.ziel;
+      const tag = iso(heute()), punkte = geschafft && g.patrolTag !== tag;
+      if (punkte) { g.patrolTag = tag; punkteDazu(PUNKTE.spiel); } else speichern();
+      const text = geschafft ? `${lob(true)} ${T(`${richtig} von ${reihe.length} Wörtern richtig einsortiert!`, `${richtig} of ${reihe.length} words sorted correctly!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : (g.patrolTag === tag ? T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)") : "")}`
+        : leben <= 0 ? T(`Die Grenze ist dicht! ${richtig} richtig. Du schaffst es – versuch es noch mal.`, `The border is closed! ${richtig} correct. You can do it – try again.`)
+        : T(`${richtig} von ${reihe.length} richtig. Für Punkte brauchst du ${PATROL.ziel}. Noch mal?`, `${richtig} of ${reihe.length} correct. You need ${PATROL.ziel} for points. Again?`);
+      melde(box, geschafft ? "gut" : "neutral", text);
+      liste.hidden = false;
+    }
+    const liste = el("details", { class: "patrol-liste", hidden: true }, el("summary", {}, T("Alle Paare ansehen", "Show all pairs")),
+      el("table", {}, el("tbody", {}, SP.patrol.map((p) => el("tr", {}, el("td", { lang: "en" }, "🇬🇧 " + p.be), el("td", { lang: "en" }, "🇺🇸 " + p.ae), !E() && el("td", { lang: "de" }, p.de))))));
+    zeigeStand();
+    zeige(spielKopf(k, "Border Patrol", zurueck),
+      ansage("Words are coming to the border! Tap a word to hear it, then swipe it left (British) or right (American). Don't let them fall through!",
+        "Wörter kommen an die Grenze! Tipp ein Wort an, um es zu hören, dann wisch es nach links (britisch) oder rechts (amerikanisch). Lass keins durchfallen!"),
+      el("section", { class: "satzkarte patrol" }, stand, himmel, el("div", { class: "patrol-zonen" }, ...zonen), box, liste,
+        el("div", { class: "knopfreihe" }, knopf(T("↻ Noch mal", "↻ Play again"), () => spielPatrol(k)), knopf(T("Andere Spiele", "Other games"), zurueck), knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
+    requestAnimationFrame(schritt);
   }
 
   function gymEnde() {

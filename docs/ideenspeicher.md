@@ -11,6 +11,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Geheimakten: Leo/Big Ben (Kl. 6), The Last Ferry (Kl. 9) | Mr. Alex / Jeremy + Jessica | je ≈ 900 | vorgemerkt |
 | Power Up: „Powered up! Your English is fully charged again.“ | Mr. Alex (beide Klassen) | 48 × 2 | **vertont 29.10.** |
 | Mini-Rewards: Combo-Sprüche (≈ 5 Sätze) | Mr. Alex, Jeremy, Jessica | je ≈ 250 | vorgemerkt |
+| Border Patrol: 34 Einzelwörter (17 britisch Mr. Alex, 17 amerikanisch Jeremy; bis dahin Geräte-Stimme) | Mr. Alex, Jeremy | 225 gesamt | vorgemerkt (in klasse9_audio.py eingetragen) |
 | Border Patrol: Grenzer-Sprüche (≈ 10 Sätze) | Jeremy, Mr. Alex | je ≈ 300 | vorgemerkt |
 | Runner: Rufe beim Einsammeln, Boss-Fragen | Jeremy, Jessica, Mr. Alex | je ≈ 1.500 | später |
 
@@ -58,7 +59,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 ## Spiele-Ideen (Details in `spiele/konzept-entwurf.md`)
 - Word Race (Autorennen, drei Spuren) – offen
 - Catch the Word – beschlossen (Games)
-- Border Patrol – beschlossen (Games); Variante: Wörter sinken nach unten, antippen = Aussprache, dann links 🇬🇧 / rechts 🇺🇸 wischen; durchgefallen = Minuspunkt
+- Border Patrol – **gebaut 29.10.** (Games, Klasse 9); Variante: Wörter sinken nach unten, antippen = Aussprache, dann links 🇬🇧 / rechts 🇺🇸 wischen; durchgefallen = Minuspunkt
 - Spelling Bee – beschlossen (Games)
 - Sentence Sprint – offen
 - Dialog-Duell – offen (Beschreibung folgt)

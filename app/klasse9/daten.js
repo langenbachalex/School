@@ -8958,6 +8958,144 @@ window.DATEN = {
     ]
    }
   ],
+  "patrol": [
+   {
+    "id": "ba_01",
+    "be": "canteen",
+    "ae": "cafeteria",
+    "de": "die Kantine",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_02",
+    "be": "sweets",
+    "ae": "candy",
+    "de": "Süßigkeiten",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_03",
+    "be": "mobile",
+    "ae": "cell phone",
+    "de": "das Handy",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_04",
+    "be": "rubber",
+    "ae": "eraser",
+    "de": "der Radiergummi",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_05",
+    "be": "autumn",
+    "ae": "fall",
+    "de": "der Herbst",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_06",
+    "be": "torch",
+    "ae": "flashlight",
+    "de": "die Taschenlampe",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_07",
+    "be": "rubbish",
+    "ae": "garbage",
+    "de": "der Müll",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_08",
+    "be": "holiday",
+    "ae": "vacation",
+    "de": "die Ferien",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_09",
+    "be": "underground",
+    "ae": "subway",
+    "de": "die U-Bahn",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_10",
+    "be": "trainers",
+    "ae": "sneakers",
+    "de": "die Turnschuhe",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_11",
+    "be": "toilet",
+    "ae": "restroom",
+    "de": "die Toilette",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_12",
+    "be": "crisps",
+    "ae": "chips",
+    "de": "die Chips",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_13",
+    "be": "chips",
+    "ae": "French fries",
+    "de": "die Pommes",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_14",
+    "be": "Maths",
+    "ae": "Math",
+    "de": "Mathe",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_15",
+    "be": "flat",
+    "ae": "apartment",
+    "de": "die Wohnung",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_16",
+    "be": "mum",
+    "ae": "mom",
+    "de": "Mama",
+    "audio_be": null,
+    "audio_ae": null
+   },
+   {
+    "id": "ba_17",
+    "be": "trousers",
+    "ae": "pants",
+    "de": "die Hose",
+    "audio_be": null,
+    "audio_ae": null
+   }
+  ],
   "frei": [
    {
     "von": "2026-10-05",

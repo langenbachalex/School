@@ -68,6 +68,15 @@ p { margin: 0; }
 .kachel .nr { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--leise); }
 .kachel .titel { font: 600 1.2rem/1.2 var(--display); }
 .kachel.erledigt { border-color: var(--gruen); background: var(--gruen-hell); }
+/* ⚡ Power Up: fälliger Teil, Abschnitt oder Station (gelb statt grün, Schild wie .neu-schild) */
+.kachel.powerup { border-color: var(--gelb); }
+.powerup-schild { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--gelb-text); background: var(--gelb); border-radius: 999px; padding: 2px 8px; }
+.powerup-zeile { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 14px; background: var(--gelb); color: var(--gelb-text); }
+.powerup-text { font-weight: 700; }
+.powerup-zeile .knopf { min-height: 36px; padding: 0 12px; font-size: .95rem; border-color: var(--gelb-text); color: var(--gelb-text); background: transparent; }
+.sprung.powerup { border-color: var(--gelb); background: var(--gelb); color: var(--gelb-text); }
+.sprung.powerup::after { content: " ⚡"; }
+@media (max-width: 640px) { .raster9 .kachel .powerup-schild { font-size: .65rem; padding: 1px 6px; } }
 .kachel .haken {
   position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border-radius: 50%;
   background: var(--gruen); color: var(--karte); display: grid; place-items: center; font-weight: 700;

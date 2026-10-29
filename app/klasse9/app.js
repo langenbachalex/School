@@ -16,8 +16,9 @@
   // oder setzt Punkte und Fortschritt zurück. Kein Server nötig – ein Hindernis, keine Festung.
   const SIEGEL_SALZ = "mrAlex·2026·nine·p7Qx";
   const SIEGEL_BIS = Date.parse("2026-12-01"); // bis dahin werden ältere, noch ungesiegelte Spielstände einmalig übernommen
-  const siegel = (o) => {
-    const t = SIEGEL_SALZ + JSON.stringify([o.spiel || null, o.gym || null, o.erledigt || null]);
+  // Siegel-Version 2 (Power Up): auch die erledigten Teile (stand.teile) stecken im Siegel; ein Stand ohne _v wird noch mit dem alten Siegel geprüft und beim Laden neu gesiegelt.
+  const siegel = (o, alt) => {
+    const t = SIEGEL_SALZ + JSON.stringify(alt ? [o.spiel || null, o.gym || null, o.erledigt || null] : [o.spiel || null, o.gym || null, o.erledigt || null, o.teile || null]);
     let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
     for (let i = 0; i < t.length; i++) { const c = t.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
     h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
@@ -26,7 +27,7 @@
   };
   let manipuliert = false, letzterGueltig = null;
   const lies = (key) => { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; } };
-  const echt = (o) => o && typeof o === "object" && o._s === siegel(o);
+  const echt = (o) => o && typeof o === "object" && (o._v >= 2 ? o._s === siegel(o) : o._s === siegel(o, true));
   const grund = () => ({ erledigt: [], fragen: [], niveau: "G" });
   function laden() {
     const haupt = lies(SPEICHER), sicherung = lies(SPEICHER + "-b");
@@ -35,12 +36,12 @@
     if (echt(sicherung)) { manipuliert = true; letzterGueltig = JSON.stringify(sicherung); try { localStorage.setItem(SPEICHER, letzterGueltig); } catch (e) { /* egal */ } return Object.assign(grund(), sicherung); }
     if (!haupt._s && Date.now() < SIEGEL_BIS) return Object.assign(grund(), haupt); // älterer Spielstand: einmal übernehmen, ab jetzt gesiegelt
     manipuliert = true; // verändert, oder ungesiegelt nach der Übergangszeit: Punkte und Fortschritt zurück, Einstellungen bleiben
-    const rest = Object.assign(grund(), haupt); delete rest.spiel; delete rest.gym; delete rest._s; rest.erledigt = [];
+    const rest = Object.assign(grund(), haupt); delete rest.spiel; delete rest.gym; delete rest._s; delete rest.teile; delete rest.gruppen; rest.erledigt = [];
     return rest;
   }
   function speichern() {
     try {
-      stand._s = siegel(stand);
+      stand._v = 2; stand._s = siegel(stand);
       const neu = JSON.stringify(stand);
       localStorage.setItem(SPEICHER + "-b", neu); // Zweitkopie: Wer nur den Hauptspeicher ändert, bekommt den letzten echten Stand zurück
       localStorage.setItem(SPEICHER, neu);
@@ -282,14 +283,14 @@
     setTimeout(() => { entsperrt(k); k.classList.remove("wartet", "laeuft"); if (merken && menge) menge.add(schluessel); }, sek * 1000);
   }
   // Nachsprech-Pause = Länge der Aufnahme (so lange sie bei der gewählten Geschwindigkeit wirklich läuft); nur bei ganz kurzen Aufnahmen gilt ein Minimum (70 % des früheren)
-  const sprechDauer = (d, min = 3) => Math.max(min * 0.7, d);
-  const denkzeit = (text) => Math.min(8, Math.max(3, 2 + String(text).split(/\s+/).length * 0.35));
+  const sprechDauer = (d, min = 3) => Math.max(min * 0.7, d) * eile();
+  const denkzeit = (text) => Math.min(8, Math.max(3, 2 + String(text).split(/\s+/).length * 0.35)) * eile();
   const wennFrei = (k, fn) => () => { if (!k.disabled && !GESPERRT.has(k)) fn(); };
   // Prüfung C: Sprechteile, die viel schneller fertig sind als möglich, bringen keine Punkte
   function zuSchnell(teil) {
     const proEintrag = SPRECH_MIN[teil.art];
     if (!proEintrag || !lage.start) return false;
-    return (Date.now() - lage.start) / 1000 < laenge(teil) * proEintrag;
+    return (Date.now() - lage.start) / 1000 < laenge(teil) * proEintrag * eile();
   }
   const QUIZ_MIN = 2.5; // Quizteile: blindes Durchklicken (alle Antworten probieren) bringt keine Punkte
   const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, beae_quiz: QUIZ_MIN, vok_def: QUIZ_MIN, vok_abfrage: QUIZ_MIN };
@@ -336,17 +337,17 @@
         el("p", { class: "klein" }, T("Wähl eine Kategorie. Oben rechts stellst du deinen Kurs ein: G oder E. Dein Mr. Alex",
           "Choose a category. Top right: choose your course, G or E. Your Mr. Alex"))),
       gymKarte(),
-      neuZeile(),
+      neuZeile(), powerupZeile(),
       el("nav", { class: "kacheln raster9", "aria-label": T("Kategorien", "Categories") },
         D.kategorien.map((k) => {
-          const fertig = stand.erledigt.includes(k.nr), neu = istNeu(k) || (k.gruppen || []).some(istNeu);
-          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (k.bald ? " bald" : "") + (neu ? " frisch" : "") + (k.farbe ? " " + k.farbe : ""),
-            onclick: () => starteKategorie(k.nr), "aria-label": `${k.nr} ${k.titel}${k.bald ? T(" (kommt bald)", " (coming soon)") : ""}${neu ? T(" (neu)", " (new)") : ""}${fertig ? " ✓" : ""}` },
+          const auf = faellige(k.nr + "|") > 0, fertig = stand.erledigt.includes(k.nr) && !auf, neu = istNeu(k) || (k.gruppen || []).some(istNeu);
+          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : "") + (k.bald ? " bald" : "") + (neu ? " frisch" : "") + (k.farbe ? " " + k.farbe : ""),
+            onclick: () => starteKategorie(k.nr), "aria-label": `${k.nr} ${k.titel}${k.bald ? T(" (kommt bald)", " (coming soon)") : ""}${neu ? T(" (neu)", " (new)") : ""}${auf ? " (Power Up)" : ""}${fertig ? " ✓" : ""}` },
             el("span", { class: "sym", "aria-hidden": "true" }, k.symbol),
             el("span", { class: "titel", lang: "en" }, k.titel),
             el("span", { class: "unter" }, tx(k.unter)),
             k.bald && el("span", { class: "bald-schild" }, T("kommt bald", "coming soon")),
-            neu && neuSchild(),
+            neu && neuSchild(), auf && powerupSchild(),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
       el("div", { class: "knopfreihe" }, knopf(T("✏️ Frage für meinen Lehrer", "✏️ Question for my teacher"), fragenOeffnen)));
@@ -373,14 +374,14 @@
   const gruppenFertig = (nr) => (stand.gruppen && stand.gruppen[nr]) || [];
 
   function gruppenKachel(k, g, schluessel, nrText, onclick) {
-    const ok = gruppenFertig(k.nr).includes(schluessel), neu = istNeu(g);
-    return el("button", { class: "kachel" + (ok ? " erledigt" : "") + (neu ? " frisch" : ""), onclick,
-      "aria-label": `${g.name}${neu ? T(" (neu)", " (new)") : ""}${ok ? " ✓" : ""}` },
+    const auf = faellige(`${k.nr}|${schluessel}|`) > 0, ok = gruppenFertig(k.nr).includes(schluessel) && !auf, neu = istNeu(g);
+    return el("button", { class: "kachel" + (ok ? " erledigt" : "") + (auf ? " powerup" : "") + (neu ? " frisch" : ""), onclick,
+      "aria-label": `${g.name}${neu ? T(" (neu)", " (new)") : ""}${auf ? " (Power Up)" : ""}${ok ? " ✓" : ""}` },
       el("span", { class: "nr" }, nrText),
       el("span", { class: "titel", lang: "en" }, g.name),
       g.unter && el("span", { class: "unter", lang: "en" }, g.unter),
       g.symbol && el("span", { class: "vorschau", "aria-hidden": "true" }, g.symbol),
-      neu && neuSchild(),
+      neu && neuSchild(), auf && powerupSchild(),
       ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
   }
 
@@ -450,10 +451,55 @@
   }
 
   /* ---------- Fortschritt pro Teil ---------- */
+  // stand.teile[schluessel] = { am: "JJJJ-MM-TT", s: Stufe } – Stufe steigt bei jedem Power Up (Wiederholung eines fälligen Teils)
   function teilSchluessel(i) { return `${lage.nr}|${lage.gruppe}|${i}`; }
   function istFertig(i) { return !!(stand.teile && stand.teile[teilSchluessel(i)]); }
-  function teilFertig(i) { stand.teile = stand.teile || {}; stand.teile[teilSchluessel(i)] = true; speichern(); }
+  const teilFaellig = (i) => faellig(stand.teile && stand.teile[teilSchluessel(i)]);
+  function teilFertig(i, aufladen) {
+    stand.teile = stand.teile || {};
+    const k = teilSchluessel(i), alt = stand.teile[k];
+    if (!alt) stand.teile[k] = { am: iso(heute()), s: 0 };
+    else if (aufladen) stand.teile[k] = { am: iso(heute()), s: (alt.s || 0) + 1 };
+    speichern();
+  }
   const alleTeileFertig = () => lage.teile.every((_, i) => istFertig(i));
+
+  /* ---------- ⚡ Power Up (docs/nachhaltigkeit-entwurf.md): Erledigtes wird nach 30 / 60 / 120 Tagen wieder fällig ----------
+     Fällig = gelbes Schild statt grün; erneut durchmachen gibt Wiederholungspunkte, Stufe +1, kürzere Timer. Ab Stufe 3 bleibt es grün.
+     GLN-Kopplung (D.termin.powerup): 14 Tage vor dem Termin ist alles fällig, was nicht in diesem Fenster erledigt oder aufgeladen wurde. */
+  const FRIST = [30, 60, 120];
+  const POWERUP_FENSTER = 14;
+  function faellig(e) {
+    if (!e || typeof e !== "object" || !e.am || e.s >= 3) return false;
+    const t = iso(heute());
+    if (t >= iso(plusTage(new Date(e.am + "T12:00:00"), FRIST[e.s] || FRIST[2]))) return true;
+    const te = D.termin;
+    if (!te || !te.powerup || !te.datum) return false;
+    const start = iso(plusTage(new Date(te.datum + "T12:00:00"), -POWERUP_FENSTER));
+    return t >= start && t <= te.datum && e.am < start;
+  }
+  // Fällige Teile hinter einem Schlüsselanfang („2|“ = ganze Kategorie, „2|u2:Start|“ = ein Abschnitt)
+  const faellige = (anfang) => Object.entries(stand.teile || {}).filter(([k, e]) => k.startsWith(anfang) && faellig(e)).length;
+  const powerupSchild = () => el("span", { class: "powerup-schild" }, "⚡ Power Up");
+  function powerupZeile() {
+    const n = faellige("");
+    if (!n) return null;
+    const erste = D.kategorien.find((k) => faellige(k.nr + "|"));
+    return el("div", { class: "powerup-zeile", role: "status" },
+      el("span", { class: "powerup-text" }, n === 1 ? T("⚡ 1 Teil fast leer – aufladen!", "⚡ 1 part running low – power up!")
+        : T(`⚡ ${n} Teile fast leer – aufladen!`, `⚡ ${n} parts running low – power up!`)),
+      erste && knopf("⚡ Power Up", () => starteKategorie(erste.nr), "leise"));
+  }
+  // Alte Einträge (true, auch aus umbau()) bekommen Datum und Stufe 0; danach ist der Stand mit Version 2 gesiegelt (einmalig, idempotent)
+  function powerupMigration() {
+    let geaendert = stand._v !== 2;
+    for (const k of Object.keys(stand.teile || {})) if (typeof stand.teile[k] !== "object") { stand.teile[k] = { am: iso(heute()), s: 0 }; geaendert = true; }
+    if (geaendert) speichern();
+  }
+  // Timer bei Wiederholung kürzer: Teil hat schon einen Eintrag → Faktor je Stufe (Word Gym bleibt, hat kein lage.tempoFaktor)
+  const TEMPO = [0.5, 0.35, 0.25];
+  function tempoFaktor(i) { const e = stand.teile && stand.teile[teilSchluessel(i)]; return e ? TEMPO[Math.min(e.s || 0, 2)] : 1; }
+  const eile = () => (lage && lage.tempoFaktor) || 1;
 
   /* ---------- Springen, Vor und Zurück ---------- */
   function springe(i) { lage.teil = i; lage.pos = 0; lage.ende = false; teilZuruecksetzen(); zeigeTeil(); }
@@ -482,6 +528,7 @@
     return el("header", { class: "kopf" },
       knopf(zurueckZu ? T("← Themen", "← Topics") : T("← Start", "← Start"), zurueckZu || startseite, "leise"),
       el("h1", { lang: "en" }, `${k.titel}` + (lage ? ` · ${lage.titel}` : "")),
+      lage && lage.teile && !lage.ende && teilFaellig(lage.teil) && powerupSchild(),
       lage && sprungleiste());
   }
 
@@ -489,11 +536,11 @@
     const nochNichts = !lage.teile.some((_, i) => istFertig(i));
     const ZIFFERN = ["①", "②", "③", "④"];
     const sprung = (i, text) => {
-      const t = lage.teile[i], fertig = istFertig(i), jetzt = i === lage.teil && !lage.ende;
+      const t = lage.teile[i], auf = teilFaellig(i), fertig = istFertig(i) && !auf, jetzt = i === lage.teil && !lage.ende;
       const start = nochNichts && i === 0;
-      return el("button", { class: "sprung" + (jetzt ? " jetzt" : "") + (fertig ? " fertig" : "") + (start ? " start" : ""),
+      return el("button", { class: "sprung" + (jetzt ? " jetzt" : "") + (fertig ? " fertig" : "") + (auf ? " powerup" : "") + (start ? " start" : ""),
         "aria-current": jetzt ? "step" : false, title: t.name,
-        "aria-label": `${t.name}${fertig ? " ✓" : ""}${start ? T(" – hier starten", " – start here") : ""}`,
+        "aria-label": `${t.name}${fertig ? " ✓" : ""}${auf ? " (Power Up)" : ""}${start ? T(" – hier starten", " – start here") : ""}`,
         onclick: () => springe(i) }, text);
     };
     const eintraege = [];
@@ -513,7 +560,7 @@
   function zeigeTeil() {
     ansicht = zeigeTeil;
     lage.abspielen = null; lage.weiter = null;
-    if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = Date.now(); }
+    if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = Date.now(); lage.tempoFaktor = tempoFaktor(lage.teil); }
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, auswahl: zeigeAuswahl, bilder: zeigeBilder,
        vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition,
@@ -525,8 +572,9 @@
     const teil = lage.teile[lage.teil];
     if (lage.pos + 1 < laenge(teil)) { lage.pos++; return zeigeTeil(); }
     if (zuSchnell(teil)) return zuSchnellSeite(teil);
-    const erstesMal = !istFertig(lage.teil);
-    teilFertig(lage.teil);
+    const erstesMal = !istFertig(lage.teil), aufladen = teilFaellig(lage.teil);
+    teilFertig(lage.teil, aufladen);
+    if (aufladen) ereignisse.push({ art: "toast", text: T("⚡ Aufgeladen!", "⚡ Powered up!") });
     belohne(erstesMal, !lage.hilfe);
     if (alleTeileFertig()) return gruppeGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
@@ -1279,6 +1327,7 @@
   const istFrei = (t) => SP.frei.some((f) => t >= f.von && t <= f.bis);
   const istSchultag = (d) => d.getDay() >= 1 && d.getDay() <= 5 && !istFrei(iso(d));
   const schultageDerWoche = (mo) => [0, 1, 2, 3, 4].map((i) => plusTage(mo, i)).filter(istSchultag);
+  powerupMigration();
   const titelIndex = (p) => SP.titel.reduce((i, t, k) => (p >= t.ab ? k : i), 0);
   const neueTeile = () => Object.keys(stand.teile || {}).length;
   const staatenBei = (n) => (n ? Math.min(SP.staaten.length, Math.floor((n - 1) / 4) + 1) : 0);
@@ -1504,7 +1553,7 @@
       ["🔥", "On fire", sp.feuer.length > 0], ["⭐", "Perfect week", sp.wochen.length > 0], ["🏅", "5 × perfect", sp.wochen.length >= 5],
       ["👑", "Perfect month", sp.abzeichen.includes("monat")], ["🏖️", "Weekend hero", sp.wochenende.length > 0], ["🌴", "Holiday hero", (sp.ferien || []).length > 0],
       ["🗺️", "All 50 states", staatenFrei() === SP.staaten.length], ["🇺🇸", "Road trip complete", sp.abzeichen.includes("roadtrip")],
-      ["🏆", "All categories", D.kategorien.filter((k) => !k.bald && !k.spiele).every((k) => stand.erledigt.includes(k.nr))],
+      ["🏆", "All categories", D.kategorien.filter((k) => !k.bald && !k.spiele).every((k) => stand.erledigt.includes(k.nr) && !faellige(k.nr + "|"))],
     ];
     const fakt = el("div", { class: "fakt", hidden: true, "aria-live": "polite" });
     const frei = staatenFrei();

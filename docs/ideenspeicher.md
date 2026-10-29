@@ -34,7 +34,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 - **Belohnung im Runner**: keine Coins zurück (wäre komisch); stattdessen eigene Titel/Trophäen fürs normale Spiel – noch brainstormen.
 
 ## Aufgeschoben (zweite Runde) – bitte erinnern
-| **Nachhaltigkeit „alles grün“** | offen | Schüler haben schnell alles erledigt. Idee: Erledigtes nach ~30 Tagen wieder „fällig“ (gelb ↻), erneutes Durchmachen gibt Wiederholungspunkte und wieder grün – Spaced Repetition auf Teil-Ebene. Vorschlag in Arbeit. |
+| **Nachhaltigkeit „alles grün“ → ⚡ Power Up** | gebaut (29.10.) | Erledigtes wird nach 30 / 60 / 120 Tagen wieder fällig (gelbes Schild ⚡ Power Up), erneut durchmachen gibt 5 Punkte und Stufe +1; GLN-Kopplung an; kürzere Timer bei Wiederholung. Audio „Powered up!“ folgt mit den Credits. Details: `docs/nachhaltigkeit-entwurf.md`. |
 | **Runner-Belohnung** (Titel statt Coins) | offen | brainstormen |
 | **Dialog-Duell in Speaking** | offen | brainstormen, vorhandene Dialoge nutzen |
 

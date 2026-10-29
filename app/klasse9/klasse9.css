@@ -44,13 +44,16 @@
 .neu-zeile .knopf { min-height: 36px; padding: 0 12px; font-size: .95rem; border-color: var(--neu); color: var(--neu); }
 @media (max-width: 640px) { .raster9 .kachel .neu-schild { font-size: .65rem; padding: 1px 6px; } }
 
-/* Games: Memory mit größeren Karten als im Word Gym */
-.memory.gross { gap: 14px; }
-.memory.gross .mem-karte { aspect-ratio: 1; min-height: 110px; font-size: 2rem; }
-.memory.gross .mem-karte.auf { font-size: 1.35rem; }
-.memory.gross .mem-lang { font-size: 1.05rem; }
+/* Games: Memory wie in Klasse 6 (4 × 3 Karten), aber so bemessen, dass alle 12 ohne Scrollen auf einen Bildschirm passen */
+.memory.gross { gap: 12px; max-width: 560px; margin: 0 auto; }
+.memory.gross .mem-karte { aspect-ratio: 4 / 3; min-height: 0; max-height: 19vh; font-size: 1.6rem; }
+.memory.gross .mem-karte.auf { font-size: 1.2rem; }
 @media (max-width: 640px) {
-  .memory.gross { gap: 10px; }
+  .memory.gross { gap: 8px; }
+  .memory.gross .mem-karte { max-height: 13vh; font-size: 1.4rem; }
+  .memory.gross .mem-karte.auf { font-size: 1.05rem; }
+  .memory.gross .mem-lang { font-size: .85rem; }
+}
   .memory.gross .mem-karte { min-height: 96px; }
   .memory.gross .mem-karte.auf { font-size: 1.15rem; }
   .memory.gross .mem-lang { font-size: .9rem; }

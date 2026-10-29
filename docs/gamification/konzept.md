@@ -11,6 +11,9 @@ Grundsatz: kein gegenseitiger Wettbewerb, keine Bestenliste. Jeder sammelt für 
 - Punkte gibt es nur für Teile, die bis zum Ende gemacht wurden. Durchklicken oder Springen bringt nichts.
 - **Sprechzeit (13.10.):** Bei Sprechübungen ist „Weiter“ gesperrt, bis der Satz gehört und die Sprechzeit (Balken „Jetzt du!“) abgelaufen ist. „Lösung“ kommt erst nach einer Denkzeit (3–8 s je nach Satzlänge). Wer einen Sprechteil trotzdem viel zu schnell beendet (unter 2 s pro Satz, 1,5 s pro Wort), bekommt kein Lob und keine Punkte, sondern „Zu schnell! Versuch es noch mal“.
 
+### ⚡ Power Up (29.10.2026, beide Apps)
+Erledigte Teile bleiben nicht für immer grün: nach **30 / 60 / 120 Tagen** (Stufe 0 / 1 / 2, ab Stufe 3 nie mehr) wird ein Teil **fällig** – Kachel, Abschnitt und Teil zeigen dann ein gelbes Schild „⚡ Power Up“ statt ✓, die Startseite eine Zeile „⚡ 3 Teile fast leer – aufladen!“ mit Sprung zur ersten fälligen Kachel. Erneut durchmachen: **5 Punkte** (Wiederholung), Toast „⚡ Aufgeladen!“, Stufe +1, zählt als Übungstag. Wer ein Teil schon kennt, bekommt kürzere Sprech-, Denk- und Mindestzeiten (50 % / 35 % / 25 % je Stufe). 14 Tage vor einem GLN-Termin (`TERMIN` mit `powerup`) ist alles fällig, was nicht in diesem Fenster gemacht wurde. Punkte, Titel und Abzeichen gehen nie verloren; nur „All stations“ / „All categories“ gilt, solange nichts fällig ist. Details: `docs/nachhaltigkeit-entwurf.md`.
+
 ### Serien (Mr. Alex besonders wichtig)
 | Serie | Bedingung | Belohnung |
 |---|---|---|

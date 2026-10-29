@@ -5793,7 +5793,8 @@ window.DATEN = {
  },
  "termin": {
   "name": "GLN 2",
-  "datum": "2026-11-24"
+  "datum": "2026-11-24",
+  "powerup": true
  },
  "mittel": {
   "bus": "🚌",

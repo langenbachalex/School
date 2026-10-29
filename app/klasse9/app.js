@@ -1750,7 +1750,14 @@
   function kaufe(a) {
     const sp = spielstand();
     if (a.bald) { toast(tx(a.hinweis)); return false; }
-    if (a.runner) { runnerStart(); return false; } // Eintritt wird beim Start des Spiels abgebucht
+    if (a.runner) { // Ticket: mehrfach kaufbar, ein Ticket = ein Durchgang (wird beim Start eingelöst)
+      if (sp.coins < a.preis) { toast(T(`Noch ${a.preis - sp.coins} Coins`, `${a.preis - sp.coins} more coins`)); return false; }
+      if (!confirm(T(`Ein Ticket für ${a.preis} Coins kaufen?`, `Buy a ticket for ${a.preis} coins?`))) return false;
+      sp.coins -= a.preis; sp.ausgegeben += a.preis; runnerStand().tickets = (runnerStand().tickets || 0) + 1; speichern();
+      ereignisse.push({ art: "toast", text: `🎟️ +1 · 🪙 −${a.preis}` });
+      setTimeout(zeigeEreignisse, 50); konfettiFrei();
+      return true;
+    }
     if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } if (a.skin) { skinSetzen(a.skin[0], a.skin[1]); } return false; }
     if (sp.coins < a.preis) { toast(T(`Noch ${a.preis - sp.coins} Coins`, `${a.preis - sp.coins} more coins`)); return false; }
     if (!confirm(T(`Für ${a.preis} Coins kaufen?`, `Buy for ${a.preis} coins?`))) return false;
@@ -1772,7 +1779,10 @@
       const aktiv = hat && ((a.rahmen && sp.rahmen === a.rahmen) || (a.skin && skinWirksam()[a.skin[0]] === a.skin[1]));
       let k;
       if (a.bald) k = el("span", { class: "shop-hinweis" }, tx(a.hinweis));
-      else if (a.runner) k = knopf(T("▶ Zum Spiel", "▶ To the game"), () => runnerStart(), "haupt");
+      else if (a.runner) k = el("div", { class: "knopfreihe ticket-reihe" },
+        el("span", { class: "shop-hinweis" }, `🎟️ ${runnerStand().tickets || 0} ${T("Tickets", "tickets")}`),
+        fehlt > 0 ? sperrt(knopf(T(`Noch ${fehlt} Coins`, `${fehlt} more coins`), () => { kaufe(a); shop(opt); })) : knopf(T("Ticket kaufen", "Buy ticket"), () => { if (kaufe(a)) shop(opt); }, "haupt"),
+        (runnerStand().tickets || 0) > 0 && knopf(T("▶ Zum Spiel", "▶ To the game"), () => runnerStart()));
       else if (hat && (a.rahmen || a.skin)) k = aktiv ? el("span", { class: "shop-hinweis ok" }, T("✓ Angelegt", "✓ Wearing it")) : knopf(T("Anlegen", "Put it on"), () => { kaufe(a); shop(opt); });
       else if (hat) k = el("span", { class: "shop-hinweis ok" }, T("✓ Gekauft", "✓ Bought"));
       else if (fehlt > 0) k = sperrt(knopf(T(`Noch ${fehlt} Coins`, `${fehlt} more coins`), () => { kaufe(a); shop(opt); }));
@@ -2165,7 +2175,7 @@
         el("button", { class: "kachel runner-kachel", onclick: () => runnerStart(k), "aria-label": "Road Trip Run" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🏃"),
           el("span", { class: "titel", lang: "en" }, "Road Trip Run"),
-          el("span", { class: "unter" }, `Jump'n'Run · ${T("Eintritt", "Entry")} ${RUNNER.preis} 🪙`)),
+          el("span", { class: "unter" }, `Jump'n'Run · 🎟️ ${T("Ticket", "ticket")} ${RUNNER.preis} 🪙`)),
         el("button", { class: "kachel shop-kachel", onclick: () => shop(), "aria-label": "Shop" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🛍️"),
           el("span", { class: "titel", lang: "en" }, "Shop"),
@@ -2578,9 +2588,13 @@
     lage = null; ansicht = () => runnerStart(k);
     const sp = spielstand(), r = runnerStand(), unit = aktuelleUnit(), gruppen = D.units[unit];
     if (!runnerWahl || runnerWahl.unit !== unit || !gruppen[runnerWahl.i]) runnerWahl = { unit, i: 0 };
-    const fehlt = runnerFehlt(), ws = runnerWoerter(unit, runnerWahl.i), titel = runnerTitelName(r.titel);
-    const spielen = knopf(`▶ ${T("Spielen", "Play")} – ${RUNNER.preis} 🪙`, () => runnerSpiel(k, unit, runnerWahl.i), "haupt runner-spielen");
-    if (fehlt > 0 || ws.length < 4 || !R()) sperrt(spielen);
+    const tickets = r.tickets || 0, fehlt = runnerFehlt(), ws = runnerWoerter(unit, runnerWahl.i), titel = runnerTitelName(r.titel);
+    const zumShop = () => shop({ zurueck: () => runnerStart(k), artikel: "runner" });
+    // Ohne Ticket führt der Hauptknopf in den Shop (Ticket hervorgehoben), damit klar ist, wo man hin muss
+    const spielen = tickets > 0
+      ? knopf(`▶ ${T("Spielen", "Play")} (🎟️ 1)`, () => runnerSpiel(k, unit, runnerWahl.i), "haupt runner-spielen")
+      : knopf(T(`🎟️ Erst Ticket kaufen – ${RUNNER.preis} 🪙`, `🎟️ Buy a ticket first – ${RUNNER.preis} 🪙`), zumShop, "haupt runner-spielen");
+    if (tickets > 0 && (ws.length < 4 || !R())) sperrt(spielen);
     zeige(spielKopf(k, "Road Trip Run", () => zeigeSpiele(k)),
       el("section", { class: "satzkarte runner-start" },
         el("div", { class: "runner-welt" },
@@ -2606,23 +2620,25 @@
           : ansage("Coming soon!", "Diese Unit kommt bald."),
         ws.length > 0 && el("p", { class: "klein runner-woerter", lang: "en" }, ws.map(spielWort).join(" · "))),
       el("section", { class: "satzkarte runner-kasse" },
-        el("p", { class: "shop-coins" }, `🪙 ${sp.coins} Coins`),
-        fehlt > 0 ? el("p", { class: "runner-hinweis", role: "status" }, T(`Noch ${fehlt} Coins – übe weiter!`, `${fehlt} more coins – keep practising!`))
-          : el("p", { class: "klein" }, T("Der Eintritt wird beim Start abgebucht – auch wenn du scheiterst. Keine Punkte und keine Coins zurück, dafür Trophäe und Runner-Titel.",
-            "The ticket is paid when you start – even if you fail. No points and no coins back, but a trophy and a runner title.")),
-        el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", () => shop({ zurueck: () => runnerStart(k) })))));
+        el("p", { class: "shop-coins" }, `🎟️ ${tickets} ${T("Tickets", "tickets")} · 🪙 ${sp.coins} Coins`),
+        tickets === 0 ? el("p", { class: "runner-hinweis", role: "status" }, fehlt > 0
+            ? T(`Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Dir fehlen noch ${fehlt} Coins – übe weiter!`, `You need a ticket from the shop (${RUNNER.preis} coins). ${fehlt} more coins – keep practising!`)
+            : T(`Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Kauf erst ein Ticket, dann geht's los!`, `You need a ticket from the shop (${RUNNER.preis} coins). Buy a ticket first, then off you go!`))
+          : el("p", { class: "klein" }, T("Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Punkte und keine Coins zurück, dafür Trophäe und Runner-Titel.",
+            "One ticket is one run – even if you fail. No points and no coins back, but a trophy and a runner title.")),
+        el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumShop))));
   }
   // Spiel: Eintritt abbuchen, Vollbild-Bühne ohne Kopfzeile, ✕ mit Rückfrage
   function runnerSpiel(k, unit, i) {
     const sp = spielstand(), r = runnerStand(), ws = runnerWoerter(unit, i);
     if (!R()) { toast(T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet.")); return; }
     if (ws.length < 4) return runnerStart(k);
-    if (sp.coins < RUNNER.preis) { toast(T(`Noch ${RUNNER.preis - sp.coins} Coins – übe weiter!`, `${RUNNER.preis - sp.coins} more coins – keep practising!`)); return; }
-    sp.coins -= RUNNER.preis; sp.ausgegeben += RUNNER.preis; r.gespielt++; speichern();
-    toast(`🪙 −${RUNNER.preis}`);
+    if (!(r.tickets > 0)) { toast(T("Kauf erst ein Ticket im Shop.", "Buy a ticket in the shop first.")); return shop({ zurueck: () => runnerStart(k), artikel: "runner" }); }
+    r.tickets--; r.gespielt++; speichern();
+    toast(T("🎟️ Ticket eingelöst", "🎟️ Ticket used"));
     ansicht = null; lage = null;
     const buehne = el("div", { class: "runner-buehne" });
-    const abbruch = knopf("✕", () => { if (confirm(T("Abbrechen? Der Eintritt ist weg.", "Quit? Your ticket is gone."))) runnerStart(k); }, "runner-x");
+    const abbruch = knopf("✕", () => { if (confirm(T("Abbrechen? Das Ticket ist weg.", "Quit? Your ticket is gone."))) runnerStart(k); }, "runner-x");
     abbruch.setAttribute("aria-label", T("Spiel abbrechen", "Quit game"));
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
@@ -2676,7 +2692,8 @@
           el("ul", { class: "wortliste runner-woerterliste" }, ws.map((v) => el("li", {},
             knopf("🔊", () => spiele([tonWort(v)]), "leise"), " ", el("strong", { lang: "en" }, spielWort(v)), " – ", el("span", { lang: "de" }, v.de))))),
         el("div", { class: "knopfreihe" },
-          knopf(`↻ ${T("Noch mal", "Again")} (${RUNNER.preis} 🪙)`, () => runnerSpiel(k, unit, i), "haupt"),
+          (r.tickets || 0) > 0 ? knopf(`↻ ${T("Noch mal", "Again")} (🎟️ 1)`, () => runnerSpiel(k, unit, i), "haupt")
+            : knopf(T(`🎟️ Erst Ticket kaufen – ${RUNNER.preis} 🪙`, `🎟️ Buy a ticket first – ${RUNNER.preis} 🪙`), () => shop({ zurueck: () => runnerStart(k), artikel: "runner" }), "haupt"),
           knopf(T("Zur Startseite", "Home"), startseite, "leise")));
     };
     ansicht = zeichne; lage = null; zeichne();

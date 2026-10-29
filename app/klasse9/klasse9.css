@@ -256,6 +256,13 @@
 @keyframes honig-auf { from { transform: translate(-50%, -30%) scale(.6); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
 
 /* Games: Road Trip Run (Runner-Modul runner.js) – Startseite, Figur-Seite, Spielbühne */
+.runner-welten { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding: 2px 0 6px; -webkit-overflow-scrolling: touch; }
+.runner-welten .reiter-knopf { flex: 0 0 auto; min-height: 40px; padding: 0 12px; font-size: .95rem; white-space: nowrap; }
+.runner-welten .reiter-knopf[aria-selected="true"] { font-weight: 700; box-shadow: 0 0 0 3px var(--gelb); }
+.runner-welten .reiter-knopf.gesperrt { border-style: dashed; color: var(--leise); opacity: .85; }
+.runner-welt-hinweis { margin: 0; color: var(--rot); font-weight: 600; min-height: 0; }
+.runner-welt-hinweis:empty { display: none; }
+.runner-neu-offen { font-weight: 700; color: var(--blau); }
 .runner-start .runner-welt { display: flex; gap: 14px; align-items: flex-start; }
 .runner-welt-sym { font-size: 3rem; line-height: 1; }
 .runner-welt h2 { margin: 0 0 4px; }

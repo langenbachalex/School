@@ -7,6 +7,8 @@
    Combo (29.10.): Wort-Diamanten in Serie → 3 Funken + Jingle, 5 goldene Spur, 8+ „On fire!“ mit Flammen; Reset bei Lebensverlust oder verpasstem Diamant.
    Wortanzeige (29.10., Mr. Alex): Sprechblase an der Figur (1,6 s, folgt auch im Sprung, kippt am rechten Rand), Wortbank als Chip-Leiste im HUD, Echo 6–8 s später (stimme.wort(i, {leise:true}) + Untertitel unten).
    Gegner-Klänge (Web Audio): Taube flattert, Waschbär knurrt, Eichhörnchen zirpt (je Art höchstens alle 1,5 s, nie in Sequenz/Boss), Plattdrücken = Plopp + Sternchen.
+   Welten (29.10., Plan docs/runner/welten-2-5-plan.md): Runner.start({ …, welt: "ny" | "route66" }); je Welt ein Objekt in WELTEN (Kulisse, Boden, Kisten, Gegnerarten, Boss + Tür, Banner, Level-Muster).
+   Welt 2 Route 66: Autos/Trucks (drüberspringen, Berührung = Leben weg), Ölflecken (0,6 s rutschen ohne Sprung), Reifenstapel, Kojote/Roadrunner/Gürteltier (rollt weg), Boss Big Rig Bob (Hupe), Mautstation mit Schlagbaum.
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …). */
 (function () {
@@ -201,6 +203,15 @@
     klick() { ton(900, 0.05, "square", 0.04); },
     grollen() { ton(70, 0.9, "sawtooth", 0.09); ton(55, 1.1, "sawtooth", 0.07, 0.2); ton(95, 0.4, "square", 0.04, 0.6); },
     dramatik() { [196, 185, 175].forEach((f, i) => ton(f, 0.5, "triangle", 0.09, i * 0.35)); },
+    // Welt 2 Route 66: Kojote heult, Roadrunner „meep meep“, Gürteltier rasselt/rollt, Ölfleck quietscht, Auto rauscht vorbei, Big Rig Bob hupt + Diesel
+    kojote() { ton(380, 0.5, "sine", 0.035, 0, 720); ton(700, 0.4, "sine", 0.03, 0.45, 420); },
+    roadrunner() { ton(1100, 0.07, "square", 0.03, 0, 1500); ton(1100, 0.07, "square", 0.03, 0.11, 1500); },
+    guerteltier() { for (let i = 0; i < 4; i++) ton(160 + i * 10, 0.05, "sawtooth", 0.03, i * 0.07); rauschen(0.3, 0.025, 0, { typ: "lowpass", freq: 500 }); },
+    rollt() { rauschen(0.5, 0.04, 0, { typ: "lowpass", freq: 600 }); ton(140, 0.4, "sawtooth", 0.03, 0, 90); },
+    rutsch() { ton(1500, 0.35, "sine", 0.04, 0, 900); rauschen(0.3, 0.03, 0, { typ: "bandpass", freq: 2200 }); },
+    auto() { rauschen(0.45, 0.035, 0, { typ: "lowpass", freq: 700 }); ton(90, 0.4, "sawtooth", 0.025, 0, 60); },
+    hupe() { ton(185, 0.75, "sawtooth", 0.07); ton(233, 0.75, "sawtooth", 0.06); ton(185, 0.5, "sawtooth", 0.06, 0.95); ton(233, 0.5, "sawtooth", 0.05, 0.95); },
+    diesel() { ton(60, 1.2, "sawtooth", 0.07, 0, 48); ton(45, 1.3, "square", 0.04, 0.1); rauschen(1.0, 0.03, 0, { typ: "lowpass", freq: 300 }); },
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -586,49 +597,87 @@
     return 88 + (s.hals === 'giraffe' ? 24 : 0) + Math.max(hutH, haarH);
   }
 
-  /* ---------- Level (aus Abschnitts-Mustern; ≈ 28.000 Einheiten, ≥ 2 Minuten) ---------- */
+  /* ---------- Level (aus Abschnitts-Mustern je Welt; ≈ 28.000 Einheiten, ≥ 2 Minuten) ---------- */
   const KISTE = 40;
-  function levelBauen() {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[] };
+  // Welt-Muster: jeder Abschnitt ist (h) => { … h.vor(breite) } mit h = { plat, kiste, dia, geg, luecke, tor, cp, auto, oel, vor }
+  const MUSTER_NY = [
+      (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                             // 1 Aufwärmen
+      (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(950); },       // 2 Plattform + Taube
+      (h) => { h.kiste(200); h.kiste(240, 2); h.dia(260, 215); h.vor(750); },                          // 3 Kistenstufe
+      (h) => { h.luecke(250, 170); h.vor(950); },                                                  // 4 erste Lücke
+      (h) => { h.geg('waschbaer', 150, 450); h.plat(650, 240, 150); h.dia(725, 200); h.vor(1000); },   // 5 Waschbär + Plattform
+      (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.dia(250, 180); h.vor(800); },           // 6 Treppe hoch (elevator)
+      (h) => { h.geg('eichhoernchen', 200, 600); h.vor(800); },                                    // 7 Eichhörnchen
+      (h) => { h.luecke(200, 200); h.plat(150, 230, 300); h.dia(300, 190); h.vor(900); },              // 8 Plattform über Lücke
+      (h) => { h.geg('taube', 200, 400); h.kiste(600); h.vor(850); },                                // 9
+      (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },           // 10 Doppelplattform
+      (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                               // 11 TOR 1: Aufzug → elevator
+      (h) => { h.cp(150); h.geg('waschbaer', 450, 750); h.vor(1000); },                              // 12 CHECKPOINT 1
+      (h) => { h.luecke(250, 160); h.luecke(660, 160); h.vor(1150); },                               // 13 Doppellücke
+      (h) => { h.kiste(200, 2); h.kiste(240, 2); h.geg('eichhoernchen', 450, 800); h.vor(1000); },     // 14 Kistenmauer
+      (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 15 Dreier-Plattform
+      (h) => { h.geg('taube', 150, 350); h.luecke(500, 180); h.vor(1100); },                         // 16
+      (h) => { h.kiste(150); h.kiste(190); h.kiste(230); h.geg('waschbaer', 500, 800); h.vor(1000); },   // 17 Kistenreihe
+      (h) => { h.plat(200, 235, 200); h.dia(300, 195); h.kiste(650); h.vor(950); },                    // 18
+      (h) => { h.geg('eichhoernchen', 150, 500); h.luecke(650, 170); h.vor(1050); },                 // 19
+      (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); },// 20 (debate, contract)
+      (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                              // 21 TOR 2: Vertrag → contract
+      (h) => { h.cp(150); h.kiste(500); h.kiste(540, 2); h.vor(850); },                                // 22 CHECKPOINT 2
+      (h) => { h.geg('waschbaer', 100, 400); h.geg('taube', 550, 750); h.vor(1000); },               // 23 Gegner-Paar
+      (h) => { h.luecke(200, 190); h.plat(150, 230, 320); h.dia(310, 190); h.geg('eichhoernchen', 650, 950); h.vor(1150); }, // 24
+      (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.vor(750); }, // 25 Pyramide
+      (h) => { h.geg('taube', 150, 350); h.luecke(500, 160); h.geg('waschbaer', 800, 1050); h.vor(1200); }, // 26
+      (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('eichhoernchen', 850, 1100); h.vor(1250); }, // 27
+      (h) => { h.luecke(200, 170); h.kiste(600); h.kiste(640); h.vor(950); },                          // 28
+  ];
+  // Welt 2 Route 66: Verkehr (Autos/Trucks fahren von rechts nach links, drüberspringen), Ölflecken (rutschen), Reifenstapel statt Kisten; Lücken = Baugruben
+  const MUSTER_ROUTE66 = [
+    (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                                   // 1 Aufwärmen
+    (h) => { h.auto('auto', 150, 950); h.dia(500, 250); h.vor(1000); },                                 // 2 erstes Auto
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('kojote', 450, 750); h.vor(950); },          // 3 Plattform + Kojote
+    (h) => { h.kiste(200); h.kiste(240, 2); h.dia(260, 215); h.vor(750); },                             // 4 Reifenstufe
+    (h) => { h.oel(300); h.geg('roadrunner', 500, 900); h.vor(1000); },                                 // 5 Ölfleck + Roadrunner
+    (h) => { h.luecke(250, 170); h.vor(950); },                                                         // 6 erste Baugrube
+    (h) => { h.auto('truck', 100, 1000); h.plat(600, 230, 160); h.dia(680, 190); h.vor(1100); },        // 7 Truck + Plattform
+    (h) => { h.geg('guerteltier', 150, 500); h.kiste(650); h.kiste(690, 2); h.dia(710, 220); h.vor(900); }, // 8 Gürteltier
+    (h) => { h.auto('auto', 100, 900); h.oel(550); h.vor(1000); },                                      // 9 Auto + Öl
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('kojote', 450, 750); h.vor(1000); },                                      // 12 CHECKPOINT 1
+    (h) => { h.auto('auto', 100, 1000); h.dia(500, 250); h.auto('truck', 1000, 1900); h.vor(2000); },   // 13 Verkehr
+    (h) => { h.kiste(200, 2); h.kiste(240, 2); h.geg('roadrunner', 450, 850); h.vor(1000); },           // 14 Reifenmauer + Roadrunner
+    (h) => { h.luecke(250, 160); h.oel(600); h.vor(1000); },                                            // 15 Baugrube + Öl
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 16 Dreier-Plattform
+    (h) => { h.geg('guerteltier', 150, 450); h.auto('auto', 500, 1300); h.vor(1400); },                 // 17 Gürteltier + Auto
+    (h) => { h.plat(200, 235, 200); h.dia(300, 195); h.kiste(650); h.vor(950); },                       // 18
+    (h) => { h.oel(200); h.geg('kojote', 450, 800); h.vor(1000); },                                     // 19 Öl + Kojote
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 20
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 21 TOR 2
+    (h) => { h.cp(150); h.kiste(500); h.kiste(540, 2); h.vor(850); },                                   // 22 CHECKPOINT 2
+    (h) => { h.auto('truck', 100, 1000); h.geg('roadrunner', 1000, 1400); h.vor(1500); },               // 23 Truck + Roadrunner
+    (h) => { h.luecke(200, 190); h.plat(150, 230, 320); h.geg('guerteltier', 650, 950); h.vor(1150); },                // 24 Plattform über Grube + Gürteltier
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.vor(750); }, // 25 Reifen-Pyramide
+    (h) => { h.oel(150); h.auto('auto', 300, 1100); h.geg('kojote', 1150, 1400); h.vor(1500); },        // 26 Öl + Auto + Kojote
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('roadrunner', 850, 1250); h.vor(1300); }, // 27
+    (h) => { h.luecke(200, 170); h.auto('truck', 500, 1300); h.kiste(1350); h.vor(1500); },             // 28 Schluss-Verkehr
+  ];
+  function levelBauen(muster) {
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[] };
     let x = 0, bodenAb = 0, wort = 0;
-    const plat = (dx, y, w) => L.plattformen.push({ x:x + dx, y, w });
-    const kiste = (dx, n = 1) => { for (let i = 0; i < n; i++) L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE * (i + 1) }); };
-    const dia = (dx, y = 298) => L.diamanten.push({ x:x + dx, y, wort:wort++ });
-    const geg = (art, von, bis) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1 });
-    const luecke = (dx, w) => { L.boden.push([bodenAb, x + dx]); bodenAb = x + dx + w; };
-    const tor = (dx, wort, falsch) => L.tore.push({ x:x + dx, wort, falsch });
-    const cp = dx => L.checkpoints.push({ x:x + dx });
-    const abschnitte = [
-      () => { dia(350); kiste(650); x += 900; },                                             // 1 Aufwärmen
-      () => { plat(150, 235, 160); dia(230, 195); geg('taube', 500, 720); x += 950; },       // 2 Plattform + Taube
-      () => { kiste(200); kiste(240, 2); dia(260, 215); x += 750; },                          // 3 Kistenstufe
-      () => { luecke(250, 170); x += 950; },                                                  // 4 erste Lücke
-      () => { geg('waschbaer', 150, 450); plat(650, 240, 150); dia(725, 200); x += 1000; },   // 5 Waschbär + Plattform
-      () => { kiste(150); kiste(190, 2); kiste(230, 3); dia(250, 180); x += 800; },           // 6 Treppe hoch (elevator)
-      () => { geg('eichhoernchen', 200, 600); x += 800; },                                    // 7 Eichhörnchen
-      () => { luecke(200, 200); plat(150, 230, 300); dia(300, 190); x += 900; },              // 8 Plattform über Lücke
-      () => { geg('taube', 200, 400); kiste(600); x += 850; },                                // 9
-      () => { plat(100, 245, 140); plat(380, 185, 140); dia(450, 145); x += 950; },           // 10 Doppelplattform
-      () => { tor(400, 4, [5, 1]); x += 900; },                                               // 11 TOR 1: Aufzug → elevator
-      () => { cp(150); geg('waschbaer', 450, 750); x += 1000; },                              // 12 CHECKPOINT 1
-      () => { luecke(250, 160); luecke(660, 160); x += 1150; },                               // 13 Doppellücke
-      () => { kiste(200, 2); kiste(240, 2); geg('eichhoernchen', 450, 800); x += 1000; },     // 14 Kistenmauer
-      () => { plat(150, 240, 160); plat(400, 180, 160); plat(650, 240, 160); dia(480, 140); x += 1050; }, // 15 Dreier-Plattform
-      () => { geg('taube', 150, 350); luecke(500, 180); x += 1100; },                         // 16
-      () => { kiste(150); kiste(190); kiste(230); geg('waschbaer', 500, 800); x += 1000; },   // 17 Kistenreihe
-      () => { plat(200, 235, 200); dia(300, 195); kiste(650); x += 950; },                    // 18
-      () => { geg('eichhoernchen', 150, 500); luecke(650, 170); x += 1050; },                 // 19
-      () => { dia(200); plat(450, 240, 140); plat(700, 175, 140); dia(770, 135); x += 1050; },// 20 (debate, contract)
-      () => { tor(350, 10, [7, 9]); x += 850; },                                              // 21 TOR 2: Vertrag → contract
-      () => { cp(150); kiste(500); kiste(540, 2); x += 850; },                                // 22 CHECKPOINT 2
-      () => { geg('waschbaer', 100, 400); geg('taube', 550, 750); x += 1000; },               // 23 Gegner-Paar
-      () => { luecke(200, 190); plat(150, 230, 320); dia(310, 190); geg('eichhoernchen', 650, 950); x += 1150; }, // 24
-      () => { kiste(150); kiste(190, 2); kiste(230, 3); kiste(270, 2); kiste(310); x += 750; }, // 25 Pyramide
-      () => { geg('taube', 150, 350); luecke(500, 160); geg('waschbaer', 800, 1050); x += 1200; }, // 26
-      () => { plat(150, 240, 150); plat(400, 180, 150); plat(650, 240, 150); geg('eichhoernchen', 850, 1100); x += 1250; }, // 27
-      () => { luecke(200, 170); kiste(600); kiste(640); x += 950; },                          // 28
-    ];
-    for (const a of abschnitte) a();
+    const h = {
+      plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
+      kiste: (dx, n = 1) => { for (let i = 0; i < n; i++) L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE * (i + 1) }); },
+      dia: (dx, y = 298) => L.diamanten.push({ x:x + dx, y, wort:wort++ }),
+      geg: (art, von, bis) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1 }),
+      luecke: (dx, w) => { L.boden.push([bodenAb, x + dx]); bodenAb = x + dx + w; },
+      tor: (dx, wort, falsch) => L.tore.push({ x:x + dx, wort, falsch }),
+      cp: (dx) => L.checkpoints.push({ x:x + dx }),
+      // Auto/Truck pendelt auf der Strecke von..bis (fährt nach links, erscheint rechts wieder) – so trifft man es sicher einmal
+      auto: (art, von, bis) => L.autos.push({ art, von:x + von, bis:x + bis, start:x + bis - (art === 'truck' ? 260 : 180), tempo: art === 'truck' ? 230 : 270, w: art === 'truck' ? 130 : 80, h: art === 'truck' ? 48 : 34 }),
+      oel: (dx, w = 90) => L.oel.push({ x:x + dx, w }),
+      vor: (dx) => { x += dx; },
+    };
+    for (const a of muster) a(h);
     L.sequenzX = x + 250;             // hier übernimmt das Spiel (≈ 600 vor dem Boss)
     L.stopX = L.sequenzX + 430;       // hier bleibt die Figur stehen
     L.bossX = L.stopX + 170;
@@ -637,13 +686,18 @@
     L.boden.push([bodenAb, L.ende]);
     return L;
   }
-  const level = levelBauen();
+  const LEVEL_NY = levelBauen(MUSTER_NY);   // Welt 1 (Export Runner.level für die App/Tests); das laufende Spiel baut sein Level in start()
+  let level = LEVEL_NY, W = null;           // W = aktive Welt (WELTEN[id]), level = ihr Level
 
   /* ---------- Spielzustand (ein Spiel zu einer Zeit) ---------- */
   let opt = null, woerter = [], skin = Object.assign({}, SKIN_STANDARD), stimme = { wort() {}, boss() {} }, texte = TEXTE;
   let laeuft = false, rafId = 0, startZeit = 0, endeGemeldet = false;
   let zustand = "aus";   // aus | spiel | sequenz | boss | finale | fertig | gameover
   let spieler, diamanten, gegner, tore, checkpoints, leben, gesammelt, kamera, zeit, popup, meldung, checkpoint, boss, tuer, tot, bossFrage, torErgebnisse;
+  // Welt 2: Autos/Trucks (rollende Hindernisse), Ölflecken (rutschen 0,6 s ohne Sprung), Hupen-Zähler (Tests)
+  let autos = [], oel = [], rutscht = 0, hupen = 0;
+  const RUTSCH_DAUER = 0.6, AUTO_KLANG_ABSTAND = 1.2;
+  let autoKlangZeit = -9;
   let sequenz = null, zoom = 1, banner = null, bossSpruch = null;
   let halten = false, haltZeit = 0, sprungGedrueckt = false;
   // Combo + Effekte
@@ -653,7 +707,8 @@
   const BLASE_DAUER = 1.6, ECHO_MIN = 6, ECHO_MAX = 8, ECHO_ABSTAND = 2.5, ECHO_DAUER = 1.4, CHIP_MAX = 8, CHIP_ZEICHEN = 12;
   let erstauntZeit = 0, zungeZeit = 0;   // Gesichtsausdruck: erstaunt 0,8 s nach Treffer, Zunge raus 1 s bei „5× Combo!“ und solange On fire
   const ausdruckAktuell = () => (erstauntZeit > 0 ? "erstaunt" : (onfire || zungeZeit > 0) ? "zunge" : "grinsend");
-  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9 };   // letzter Klang je Art (Spielzeit)
+  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9 };   // letzter Klang je Art (Spielzeit)
+  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60 };
   let gegnerKlaenge = 0;   // Zähler für Tests
   const GEGNER_KLANG_ABSTAND = 1.5, GEGNER_NAEHE = 260, COMBO_TEXT_DAUER = 1.3;
   const ruhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
@@ -661,7 +716,7 @@
   const PW = 30, PH = 84;  // Trefferbox (Figur v2 ist ≈ 88 Einheiten hoch; Hut/Frisur zählen nicht)
   const SEQUENZ = { zoom: 1.5, stand: 1.0, banner: 2.4, boss: 1.3, zurueck: 0.8 };
   const SEQUENZ_MIN = Object.values(SEQUENZ).reduce((a, b) => a + b, 0);
-  const BANNER_TEXT = "It's time for Mr. Alligator!";
+  const BANNER_TEXT = "It's time for Mr. Alligator!";   // Welt 1 (je Welt: W.banner)
   const BOSS_RICHTIG = "Correct – the door opens!", BOSS_FALSCH = "Not this time!";
 
   function torBauen(w) {
@@ -678,6 +733,7 @@
     torErgebnisse = tore.map(() => null);
     leben = 3; gesammelt = 0; kamera = 0; zeit = 0; popup = null; meldung = null; tot = 0;
     checkpoint = 120; boss = { maul:0, weg:0, sichtbar:0, deckel:0 }; tuer = { offen:0 }; bossFrage = null;
+    autos = level.autos.map(a => ({ ...a, x:a.start, rad:0 })); oel = level.oel.map(o => ({ ...o, aktiv:false })); rutscht = 0; hupen = 0; autoKlangZeit = -9;
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
@@ -718,14 +774,15 @@
     }
   }
   function gegnerPlatt(g) {
-    g.tot = 0.01; spieler.vy = -320; spieler.amBoden = false;
-    gegnerKlang("plopp");
+    spieler.vy = -320; spieler.amBoden = false;
+    if (g.art === 'guerteltier') { g.rollt = true; g.richtung = 1; g.harmlos = true; gegnerKlang("plopp"); gegnerKlang("rollt"); }   // Gürteltier: rollt als Kugel weg (= platt)
+    else { g.tot = 0.01; gegnerKlang("plopp"); }
     const b = gegnerBox(g); funken(b.x + b.w / 2, b.y + b.h / 2, 10, ["#fff6c0", "#ffd93d", "#ffffff"], 170, 0.5, "stern");
   }
   // Gegner-Klang: nur im laufenden Spiel (nie in Sequenz/Boss), je Art höchstens alle 1,5 s; "plopp" ist ein Ereignis ohne Sperre
   function gegnerKlang(art) {
     if (zustand !== 'spiel') return false;
-    if (art !== "plopp") {
+    if (art !== "plopp" && art !== "rollt") {
       if (zeit - gegnerKlangZeit[art] < GEGNER_KLANG_ABSTAND) return false;
       gegnerKlangZeit[art] = zeit;
     }
@@ -735,7 +792,7 @@
   }
   function gegnerKlaengeNaehe() {
     for (const g of gegner) {
-      if (g.tot > 0) continue;
+      if (g.tot > 0 || g.harmlos) continue;
       const abstand = g.x - spieler.x;
       const nah = abstand > -40 && abstand < GEGNER_NAEHE;
       if (g.art === 'eichhoernchen') {   // Zirpen beim Absprung (Hüpfphase beginnt) – oder sofort, wenn es gerade nahe kommt
@@ -796,6 +853,7 @@
   function sprungStart() {
     audioAn();
     if (zustand !== 'spiel') return;          // in der Sequenz und beim Boss ist die Eingabe gesperrt
+    if (rutscht > 0) return;                  // auf dem Ölfleck: kein Sprung möglich
     if (spieler.amBoden && tot <= 0) {
       spieler.vy = SPRUNG_V; spieler.amBoden = false; halten = true; haltZeit = 0; klang.sprung();
     }
@@ -827,9 +885,9 @@
 
   function schaden(grund) {
     if (spieler.unverwundbar > 0 || tot > 0) return;
-    leben--; klang.aua(); comboReset(); erstauntZeit = 0.8;
+    leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0;
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
-    tot = 0.9; meldung = { text: grund === 'wasser' ? 'Splash! 💦' : 'Ouch!', zeit: 1.2 };
+    tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : grund === 'auto' ? 'Crash! 🚗' : 'Ouch!', zeit: 1.2 };
   }
   function wiederbeleben() {
     spieler.x = checkpoint; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.6;
@@ -839,16 +897,26 @@
     for (const g of gegner) {
       g.flug += dt;
       if (g.tot > 0) { g.tot += dt; continue; }
-      g.x += g.richtung * (g.art === 'taube' ? 70 : (g.art === 'eichhoernchen' ? 95 : 55)) * dt;
+      if (g.rollt) { g.x += 420 * dt; g.roll = (g.roll || 0) + dt * 14; if (g.x > g.bis + 900) g.tot = 1; continue; }   // weggerollte Kugel: schnell nach rechts, dann weg
+      g.x += g.richtung * GEGNER_TEMPO[g.art] * dt;
+      if (g.art === 'roadrunner') { if (g.x < g.von) g.x = g.bis; continue; }   // Roadrunner läuft immer entgegen (nach links) und erscheint rechts wieder
       if (g.x < g.von) g.richtung = 1; if (g.x > g.bis) g.richtung = -1;
+    }
+    for (const a of autos) {   // Verkehr: nach links, am linken Ende wieder rechts
+      a.x -= a.tempo * dt; a.rad += a.tempo * dt / 12;
+      if (a.x + a.w < a.von) a.x = a.bis;
     }
   }
   function gegnerBox(g) {
     if (g.art === 'taube') return { x: g.x - 16, y: g.y - 14 + Math.sin(g.flug * 3) * 8, w: 32, h: 26 };
     if (g.art === 'eichhoernchen') { const hop = Math.abs(Math.sin(g.flug * 6)) * 14; return { x: g.x - 15, y: g.y - 24 - hop, w: 30, h: 24 }; }
+    if (g.art === 'roadrunner') return { x: g.x - 16, y: g.y - 22, w: 32, h: 22 };
+    if (g.art === 'guerteltier') return { x: g.x - 15, y: g.y - 24, w: 30, h: 24 };
+    if (g.art === 'kojote') return { x: g.x - 22, y: g.y - 30, w: 44, h: 30 };
     return { x: g.x - 20, y: g.y - 26, w: 40, h: 26 };
   }
-  const SOLIDE = solideOben();
+  const autoBox = (a) => ({ x: a.x, y: BODEN_Y - a.h, w: a.w, h: a.h });
+  let SOLIDE = [];
 
   function update(dt) {
     const eingefroren = zustand === 'sequenz' && sequenz.phase === 'stand';
@@ -861,9 +929,10 @@
     if (zustand === 'spiel') {
       if (tot > 0) { tot -= dt; if (tot <= 0) wiederbeleben(); return; }
       if (spieler.unverwundbar > 0) spieler.unverwundbar -= dt;
+      if (rutscht > 0) { rutscht = Math.max(0, rutscht - dt); if (rutscht === 0) halten = false; }
 
-      // Horizontal
-      let nx = spieler.x + SPEED * dt;
+      // Horizontal (auf dem Ölfleck gleitet die Figur etwas schneller)
+      let nx = spieler.x + SPEED * (rutscht > 0 ? 1.15 : 1) * dt;
       const oben = spieler.y - PH;
       for (const s of SOLIDE) {
         if (!s.voll) continue;
@@ -902,8 +971,14 @@
         for (const s of SOLIDE) if (spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w && Math.abs(spieler.y - s.y) < 0.5) hatBoden = true;
         if (!hatBoden) spieler.amBoden = false;
       }
-      spieler.pose = spieler.amBoden ? 'lauf' : 'sprung';
+      spieler.pose = rutscht > 0 && spieler.amBoden ? 'steh' : spieler.amBoden ? 'lauf' : 'sprung';
       if (spieler.y > H + 20) { schaden('wasser'); return; }
+      // Ölflecken: beim Betreten (am Boden) 0,6 s rutschen ohne Sprung; wirkt je Fleck einmal pro Überquerung
+      for (const o of oel) {
+        const drauf = spieler.amBoden && spieler.x + PW / 2 > o.x && spieler.x - PW / 2 < o.x + o.w;
+        if (drauf && !o.aktiv && tot <= 0) { o.aktiv = true; rutscht = RUTSCH_DAUER; halten = false; klang.rutsch(); meldung = { text: 'Whoa! 🛢️', zeit: 0.7 }; }
+        else if (!drauf && o.aktiv && spieler.x - PW / 2 > o.x + o.w) o.aktiv = false;
+      }
 
       // Checkpoints (Fahnen)
       for (const cp of checkpoints) {
@@ -936,12 +1011,18 @@
       });
       // Gegner
       for (const g of gegner) {
-        if (g.tot > 0) continue;
+        if (g.tot > 0 || g.harmlos) continue;
         const gb = gegnerBox(g);
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, gb.x, gb.y, gb.w, gb.h)) {
           if (spieler.vy > 0 && altY <= gb.y + 14) gegnerPlatt(g);
           else schaden('gegner');
         }
+      }
+      // Verkehr: Berührung = Leben weg, nicht plattzudrücken (drüberspringen!)
+      for (const a of autos) {
+        const ab = autoBox(a);
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, ab.x + 4, ab.y + 2, ab.w - 8, ab.h - 2)) { schaden('auto'); break; }
+        if (zeit - autoKlangZeit > AUTO_KLANG_ABSTAND && ab.x - spieler.x > 0 && ab.x - spieler.x < 320) { autoKlangZeit = zeit; klang.auto(); }
       }
       gegnerKlaengeNaehe();
       // Boss-Sequenz beginnt
@@ -958,10 +1039,10 @@
         else spieler.pose = 'steh';
         if (spieler.x >= level.stopX && sequenz.t >= SEQUENZ.zoom) { sequenz = { phase:'stand', t:0 }; spieler.pose = 'steh'; }
       } else if (ph === 'stand') {
-        if (sequenz.t >= SEQUENZ.stand) { sequenz = { phase:'banner', t:0 }; banner = { text:BANNER_TEXT, zeit:SEQUENZ.banner }; stimme.boss(BANNER_TEXT); }
+        if (sequenz.t >= SEQUENZ.stand) { sequenz = { phase:'banner', t:0 }; banner = { text:W.banner, zeit:SEQUENZ.banner }; stimme.boss(W.banner); }
       } else if (ph === 'banner') {
         banner.zeit -= dt;
-        if (sequenz.t >= SEQUENZ.banner) { sequenz = { phase:'boss', t:0 }; banner = null; klang.grollen(); }
+        if (sequenz.t >= SEQUENZ.banner) { sequenz = { phase:'boss', t:0 }; banner = null; W.bossKlang(); }
       } else if (ph === 'boss') {
         const f = Math.min(1, sequenz.t / SEQUENZ.boss);
         boss.sichtbar = 1 - Math.pow(1 - f, 3);
@@ -994,7 +1075,7 @@
   function frageBauen() {
     frageBox = el("div", "runner-frage"); frageBox.hidden = true;
     const box = el("div", "runner-frage-box");
-    box.append(el("h2", null, "🐊 " + texte.bossTitel), el("p", "klein", texte.bossHinweis));
+    box.append(el("h2", null, W.bossSymbol + " " + texte.bossTitel), el("p", "klein", texte.bossHinweis));
     spruchEl = el("p", "spruch"); frageText = el("p", "frage-text"); antworten = el("div", "antworten");
     box.append(spruchEl, frageText, antworten); frageBox.append(box);
     return frageBox;
@@ -1015,7 +1096,7 @@
     frageBox.hidden = false;
   }
   function bossSagt(text, dauer = 2.5) {
-    bossSpruch = { text, zeit: dauer }; spruchEl.textContent = "🐊 " + text;
+    bossSpruch = { text, zeit: dauer }; spruchEl.textContent = W.bossSymbol + " " + text;
     try { stimme.boss(text); } catch (e) { /* stumm */ }
   }
   function antwortGeben(n) {
@@ -1221,7 +1302,214 @@
     c.lineWidth = 2; for (let i = -3; i <= 3; i++) { const a = -Math.PI / 2 + i * 0.32; c.beginPath(); c.moveTo(Math.cos(a) * 7, -138 + Math.sin(a) * 7); c.lineTo(Math.cos(a) * 15, -138 + Math.sin(a) * 15); c.stroke(); }
     c.restore();
   }
-  function hintergrund(c) {
+  /* ---------- Welt 2 Route 66: Kulisse, Straße, Reifen, Verkehr, Öl, Gegner, Boss Big Rig Bob, Mautstation ---------- */
+  const mischFarbe = (a, b, f) => {   // zwei Hex-Farben mischen (f 0..1)
+    const p = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+    const x = p(a), y = p(b); return `rgb(${x.map((v, i) => Math.round(v + (y[i] - v) * f)).join(',')})`;
+  };
+  function schild66(c, x, y, s, farbe, text) {   // Route-66-Schild (Wappenform) mit Schrift
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = farbe; c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(-30, -40); c.lineTo(30, -40); c.lineTo(30, -5); c.quadraticCurveTo(28, 20, 0, 34); c.quadraticCurveTo(-28, 20, -30, -5); c.closePath(); c.fill(); c.stroke();
+    if (text !== false) {
+      c.fillStyle = '#18213a'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.font = 'bold 11px system-ui, sans-serif'; c.fillText('ROUTE', 0, -26);
+      c.font = 'bold 30px system-ui, sans-serif'; c.fillText('66', 0, 2);
+      c.font = 'bold 8px system-ui, sans-serif'; c.fillText('ILLINOIS', 0, 22);
+    }
+    c.restore();
+  }
+  function hintergrundRoute66(c) {
+    const naehe = Math.min(1, kamera / level.ende);   // nach rechts (Westen) wird die Wüste gelber/rötlicher, die Sonne tiefer
+    const g = c.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, mischFarbe('#5fb4ee', '#f08a4b', naehe * 0.7)); g.addColorStop(0.55, mischFarbe('#bfe3fa', '#ffb36b', naehe)); g.addColorStop(1, mischFarbe('#f6e3b4', '#ffcf8a', naehe));
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    // Sonne tief über dem Horizont (steht fast still), wird im Westen größer und röter
+    const sx = viewW * 0.78 - kamera * 0.01, sy = 120 + naehe * 70, sr = 26 + naehe * 14;
+    const sg = c.createRadialGradient(sx, sy, sr * 0.5, sx, sy, sr * 3); sg.addColorStop(0, 'rgba(255,230,150,.55)'); sg.addColorStop(1, 'rgba(255,200,120,0)');
+    c.fillStyle = sg; c.beginPath(); c.arc(sx, sy, sr * 3, 0, Math.PI * 2); c.fill();
+    c.fillStyle = mischFarbe('#ffe27a', '#ff7a3d', naehe); c.beginPath(); c.arc(sx, sy, sr, 0, Math.PI * 2); c.fill();
+    // ferne Tafelberge (Parallaxe 0,06)
+    c.fillStyle = mischFarbe('#c9a37c', '#c0552f', naehe);
+    for (let i = 0; i < 9; i++) {
+      const bx = ((i * 310 - kamera * 0.06) % (viewW + 400) + viewW + 400) % (viewW + 400) - 200, bh = 36 + ((i * 53) % 50), bw = 120 + ((i * 37) % 90);
+      c.beginPath(); c.moveTo(bx, 250); c.lineTo(bx + 22, 250 - bh); c.lineTo(bx + bw - 22, 250 - bh); c.lineTo(bx + bw, 250); c.closePath(); c.fill();
+    }
+    // Route-66-Schild als Zielmarke: kommt über das Level näher (Parallaxe + Größe)
+    schild66(c, viewW * (0.8 - 0.5 * naehe), 212 - naehe * 12, 0.6 + naehe * 1.0, '#f4f4f4', true);   // wandert langsam von rechts in die Mitte und wächst bis zum Boss
+    // Wüstenboden hinter der Straße (Sand → Rot), Lücken in der Straße zeigen ihn als Baugrube
+    c.fillStyle = mischFarbe('#e8cf93', '#d98a4e', naehe); c.fillRect(-viewW, 250, viewW * 3, H * 2);
+    c.fillStyle = mischFarbe('#d9b97a', '#c2703a', naehe); c.fillRect(-viewW, 250, viewW * 3, 6);
+    // Mittelgrund (Parallaxe 0,35): Tankstelle, Motel-Schilder, Reklametafeln, Kakteen, Telegrafenmasten
+    const n = viewW + 500;
+    for (let i = 0; i < 10; i++) {
+      const bx = ((i * 520 + 60 - kamera * 0.35) % n + n) % n - 250, art = i % 5;
+      if (art === 0) {   // Tankstelle: Dach auf Stützen, Zapfsäulen, Schild „GAS“
+        c.fillStyle = '#e63946'; c.fillRect(bx, 196, 110, 10); c.fillStyle = '#f4f4f4'; c.fillRect(bx + 8, 206, 5, 44); c.fillRect(bx + 97, 206, 5, 44);
+        c.fillStyle = '#d9d9d9'; c.fillRect(bx + 60, 212, 50, 38); c.fillStyle = '#2a6cff'; c.fillRect(bx + 66, 218, 14, 16);
+        c.fillStyle = '#f4f4f4'; c.fillRect(bx + 24, 226, 12, 24); c.fillRect(bx + 42, 226, 12, 24); c.fillStyle = '#e63946'; c.fillRect(bx + 26, 230, 8, 8); c.fillRect(bx + 44, 230, 8, 8);
+        c.fillStyle = '#555'; c.fillRect(bx + 118, 170, 4, 80); c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(bx + 120, 166, 16, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#18213a'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GAS', bx + 120, 166);
+      } else if (art === 1) {   // Motel-Schild mit Pfeil und „VACANCY“
+        c.fillStyle = '#555'; c.fillRect(bx + 20, 160, 5, 90);
+        c.fillStyle = '#1d3f8f'; c.beginPath(); c.roundRect(bx - 20, 140, 86, 30, 6); c.fill();
+        c.fillStyle = '#ffd93d'; c.font = 'bold 15px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MOTEL', bx + 23, 155);
+        c.fillStyle = '#e63946'; c.beginPath(); c.moveTo(bx + 66, 155); c.lineTo(bx + 82, 155); c.lineTo(bx + 82, 148); c.lineTo(bx + 94, 158); c.lineTo(bx + 82, 168); c.lineTo(bx + 82, 161); c.lineTo(bx + 66, 161); c.closePath(); c.fill();
+        c.fillStyle = Math.floor(zeit * 2 + i) % 2 ? '#ff5d5d' : '#ffb3b3'; c.font = 'bold 8px system-ui, sans-serif'; c.fillText('VACANCY', bx + 23, 178);
+        c.fillStyle = '#c99a6a'; c.fillRect(bx - 40, 212, 120, 38); c.fillStyle = '#7a4a16'; for (let k = 0; k < 4; k++) c.fillRect(bx - 32 + k * 30, 222, 14, 28);
+      } else if (art === 2) {   // Reklametafel
+        c.fillStyle = '#555'; c.fillRect(bx + 10, 190, 4, 60); c.fillRect(bx + 70, 190, 4, 60);
+        c.fillStyle = '#f4f4f4'; c.fillRect(bx - 6, 158, 96, 36); c.strokeStyle = '#7a4a16'; c.lineWidth = 2; c.strokeRect(bx - 6, 158, 96, 36);
+        c.fillStyle = '#c8283a'; c.font = 'bold 12px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(i % 2 ? 'DINER 2 mi' : 'ROUTE 66', bx + 42, 176);
+      } else if (art === 3) {   // Kakteen
+        c.fillStyle = '#3f8a3e'; c.beginPath(); c.roundRect(bx, 196, 12, 54, 6); c.roundRect(bx - 12, 210, 8, 22, 4); c.roundRect(bx + 16, 204, 8, 26, 4); c.fill();
+        c.fillRect(bx - 12, 214, 14, 7); c.fillRect(bx + 10, 208, 14, 7);
+      } else {   // Telegrafenmast mit Leitung
+        c.fillStyle = '#7a5a3a'; c.fillRect(bx, 170, 5, 80); c.fillRect(bx - 12, 178, 29, 4);
+        c.strokeStyle = 'rgba(60,40,30,.5)'; c.lineWidth = 1; c.beginPath(); c.moveTo(bx - 12, 180); c.quadraticCurveTo(bx + 250, 196, bx + 520 - 12, 180); c.stroke();
+      }
+    }
+  }
+  function strasseZeichnen(c, x0, w, a, b, links, rechts) {   // Highway: Asphalt, weiße Randlinie, gelber Mittelstreifen, Leitpfosten am Rand
+    c.fillStyle = '#4a4a50'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#6a6a72'; c.fillRect(x0, BODEN_Y, w, 8);
+    c.fillStyle = '#f4f4f4'; c.fillRect(x0, BODEN_Y + 12, w, 3);
+    c.fillStyle = '#ffd93d';
+    for (let x = Math.max(Math.ceil(a / 60) * 60, Math.floor(links / 60) * 60); x < Math.min(b, rechts); x += 60) c.fillRect(Math.max(x, a) - kamera, BODEN_Y + 44, Math.min(34, b - x), 5);
+    for (let x = Math.max(Math.ceil(a / 400) * 400 + 200, Math.floor(links / 400) * 400 - 200); x < Math.min(b, rechts); x += 400) {   // Leitpfosten (weiß mit Reflektor)
+      if (x < a + 10 || x > b - 10) continue; const px = x - kamera;
+      c.fillStyle = '#f4f4f4'; c.fillRect(px - 2, BODEN_Y - 30, 5, 30); c.fillStyle = '#18213a'; c.fillRect(px - 2, BODEN_Y - 30, 5, 5); c.fillStyle = '#ff9f1c'; c.fillRect(px - 2, BODEN_Y - 24, 5, 4);
+    }
+  }
+  function baugrube(c, a, b) {   // Lücke in der Straße: dunkle Grube + rot-weiße Absperrung an beiden Rändern
+    const x0 = a - kamera, w = b - a;
+    c.fillStyle = '#3a2a1c'; c.fillRect(x0, BODEN_Y + 30, w, H);
+    for (const x of [x0 - 10, x0 + w - 8]) { c.fillStyle = '#f4f4f4'; c.fillRect(x, BODEN_Y - 22, 18, 7); c.fillStyle = '#e63946'; c.fillRect(x, BODEN_Y - 22, 6, 7); c.fillRect(x + 12, BODEN_Y - 22, 6, 7); c.fillStyle = '#555'; c.fillRect(x + 2, BODEN_Y - 15, 3, 15); c.fillRect(x + 13, BODEN_Y - 15, 3, 15); }
+  }
+  function reifen(c, x, y) {   // ein Reifen (liegend, 40 × 40) für Reifenstapel
+    c.fillStyle = '#1a1a1a'; c.beginPath(); c.roundRect(x, y + 2, KISTE, KISTE - 4, 12); c.fill();
+    c.fillStyle = '#3a3a3a'; c.beginPath(); c.ellipse(x + KISTE / 2, y + 10, 16, 5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#777'; c.beginPath(); c.ellipse(x + KISTE / 2, y + 10, 7, 2.5, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#444'; c.lineWidth = 1.5; for (let k = 0; k < 4; k++) { c.beginPath(); c.moveTo(x + 6 + k * 9, y + 18); c.lineTo(x + 4 + k * 9, y + KISTE - 4); c.stroke(); }
+  }
+  function autoZeichnen(c, a) {   // Verkehr fährt nach links: Front links, Scheinwerfer an, Räder drehen sich
+    const x = a.x - kamera, y = BODEN_Y;
+    c.save(); c.translate(x, y);
+    const karosse = a.art === 'truck' ? '#2a6cff' : ['#e63946', '#2e9e5b', '#ff9f1c', '#8a3ffc'][Math.abs(Math.round(a.von / 7)) % 4];
+    if (a.art === 'truck') {
+      c.fillStyle = '#e9e9e9'; c.beginPath(); c.roundRect(34, -a.h, a.w - 36, a.h - 12, 4); c.fill();   // Anhänger
+      c.fillStyle = '#c8283a'; c.fillRect(40, -a.h + 12, a.w - 48, 6);
+      c.fillStyle = karosse; c.beginPath(); c.roundRect(0, -a.h + 10, 38, a.h - 22, 6); c.fill();   // Fahrerhaus
+      c.fillStyle = '#bfe3fa'; c.fillRect(4, -a.h + 14, 14, 12);
+      c.fillStyle = '#ffd93d'; c.fillRect(-2, -16, 6, 6);
+      c.fillStyle = '#555'; c.fillRect(-4, -12, a.w + 4, 4);
+    } else {
+      c.fillStyle = karosse; c.beginPath(); c.roundRect(0, -a.h + 14, a.w, a.h - 22, 7); c.fill();   // Unterbau
+      c.beginPath(); c.moveTo(16, -a.h + 14); c.quadraticCurveTo(22, -a.h, 36, -a.h); c.lineTo(62, -a.h); c.quadraticCurveTo(70, -a.h, 70, -a.h + 14); c.closePath(); c.fill();   // Dach
+      c.fillStyle = '#bfe3fa'; c.beginPath(); c.moveTo(22, -a.h + 13); c.quadraticCurveTo(26, -a.h + 3, 36, -a.h + 3); c.lineTo(62, -a.h + 3); c.lineTo(66, -a.h + 13); c.closePath(); c.fill();
+      c.fillStyle = '#ffd93d'; c.fillRect(-1, -a.h + 18, 6, 6); c.fillStyle = '#e63946'; c.fillRect(a.w - 5, -a.h + 18, 5, 6);
+      c.fillStyle = '#555'; c.fillRect(-3, -10, 8, 4); c.fillRect(a.w - 5, -10, 8, 4);
+    }
+    const raeder = a.art === 'truck' ? [16, a.w - 50, a.w - 22] : [16, a.w - 18];
+    for (const rx of raeder) {
+      c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(rx, -8, 9, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#aaa'; c.beginPath(); c.arc(rx, -8, 4, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#1a1a1a'; c.lineWidth = 2; c.beginPath(); c.moveTo(rx + Math.cos(a.rad) * 4, -8 + Math.sin(a.rad) * 4); c.lineTo(rx - Math.cos(a.rad) * 4, -8 - Math.sin(a.rad) * 4); c.stroke();
+    }
+    // Lichtkegel nach links
+    c.fillStyle = 'rgba(255,240,170,.28)'; c.beginPath(); c.moveTo(0, -a.h + 20); c.lineTo(-46, -a.h + 6); c.lineTo(-46, -a.h + 36); c.closePath(); c.fill();
+    c.restore();
+  }
+  function oelZeichnen(c, o) {   // Ölfleck: dunkle Pfütze mit Regenbogen-Glanz; warnt durch Glitzern, solange die Figur noch davor ist
+    const x = o.x - kamera; const w = o.w;
+    c.save(); c.translate(x + w / 2, BODEN_Y + 4);
+    c.fillStyle = '#141a22'; c.beginPath(); c.ellipse(0, 0, w / 2, 7, 0, 0, Math.PI * 2); c.ellipse(-w / 4, 3, w / 5, 4, 0, 0, Math.PI * 2); c.fill();
+    const gl = 0.5 + 0.5 * Math.sin(zeit * 6 + o.x);
+    c.globalAlpha = 0.35 + 0.4 * gl; c.strokeStyle = '#8a3ffc'; c.lineWidth = 2; c.beginPath(); c.ellipse(4, -1, w / 3, 3.5, 0, 0, Math.PI * 2); c.stroke();
+    c.strokeStyle = '#19d3c5'; c.beginPath(); c.ellipse(-2, 1, w / 5, 2, 0, 0, Math.PI * 2); c.stroke();
+    c.globalAlpha = 0.6 + 0.4 * gl; c.fillStyle = '#fff';
+    c.beginPath(); c.moveTo(-w / 4, -4); c.lineTo(-w / 4 + 2, 0); c.lineTo(-w / 4, 4); c.lineTo(-w / 4 - 2, 0); c.closePath(); c.fill();
+    c.restore();
+  }
+  function kojote(c, g) {   // Kojote: läuft wie der Waschbär, grau-braun, spitze Ohren, langer Schwanz
+    const b = gegnerBox(g); const cx = b.x + 22, cy = b.y + 30;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+    const w = Math.sin(g.flug * 10) * 3;
+    c.lineCap = 'round'; c.lineWidth = 6; c.strokeStyle = '#a0866a'; c.beginPath(); c.moveTo(16, -16); c.quadraticCurveTo(30, -20 + w, 30, -34 + w); c.stroke();
+    c.fillStyle = '#b89a78'; c.beginPath(); c.ellipse(0, -14, 20, 10, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#e6d4b8'; c.beginPath(); c.ellipse(-2, -10, 11, 5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#b89a78'; c.beginPath(); c.ellipse(-18, -20, 10, 8, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(-30, -22); c.lineTo(-34, -24); c.lineTo(-30, -18); c.closePath(); c.fill();   // Schnauze
+    c.beginPath(); c.moveTo(-22, -26); c.lineTo(-22, -36); c.lineTo(-16, -27); c.closePath(); c.moveTo(-14, -27); c.lineTo(-11, -36); c.lineTo(-8, -26); c.closePath(); c.fill();   // Ohren
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-21, -22, 1.8, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(-33, -23, 1.6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#8a6a48'; c.beginPath(); c.roundRect(-12 + w, -6, 6, 6, 2); c.roundRect(6 - w, -6, 6, 6, 2); c.fill();
+    c.restore();
+  }
+  function roadrunner(c, g) {   // Roadrunner: schneller Laufvogel, blau-lila Federn, langer Schwanz, Beine als Wirbel
+    const b = gegnerBox(g); const cx = b.x + 16, cy = b.y + 22;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+    c.strokeStyle = 'rgba(80,80,120,.5)'; c.lineWidth = 2;   // Lauf-Wirbel
+    for (let k = 0; k < 3; k++) { c.beginPath(); c.arc(-2 + k * 3, -4, 5 + k * 2, Math.PI * 0.2, Math.PI * 0.9); c.stroke(); }
+    c.fillStyle = '#4b4f9a'; c.beginPath(); c.moveTo(6, -12); c.lineTo(24, -22); c.lineTo(22, -10); c.closePath(); c.fill();   // Schwanz
+    c.fillStyle = '#5f6ac4'; c.beginPath(); c.ellipse(0, -11, 11, 7, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c9d2ff'; c.beginPath(); c.ellipse(-2, -8, 6, 3.5, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#5f6ac4'; c.lineWidth = 3; c.beginPath(); c.moveTo(-8, -14); c.lineTo(-12, -20); c.stroke();   // Hals
+    c.fillStyle = '#5f6ac4'; c.beginPath(); c.arc(-14, -21, 4.5, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(-12, -25); c.lineTo(-10, -30); c.lineTo(-8, -24); c.closePath(); c.fill();   // Federkamm
+    c.fillStyle = '#ffd93d'; c.beginPath(); c.moveTo(-18, -21); c.lineTo(-26, -20); c.lineTo(-18, -19); c.closePath(); c.fill();   // Schnabel
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-15, -22, 1.3, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function guerteltier(c, g) {   // Gürteltier: rollt als Kugel; plattgedrückt rollt es als geschlossene Kugel schnell weg
+    const b = gegnerBox(g); const cx = b.x + 15, cy = b.y + 24;
+    c.save(); c.translate(cx, cy - 12);
+    const roll = g.rollt ? g.roll : g.flug * 5 * -g.richtung;
+    c.rotate(roll);
+    c.fillStyle = '#9a7b5b'; c.beginPath(); c.arc(0, 0, 12, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#6b5236'; c.lineWidth = 2; for (let k = -2; k <= 2; k++) { c.beginPath(); c.moveTo(k * 5, -11); c.quadraticCurveTo(k * 5 + 2, 0, k * 5, 11); c.stroke(); }
+    if (!g.rollt) { c.fillStyle = '#c9ad8c'; c.beginPath(); c.ellipse(-10, 4, 6, 4, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#18213a'; c.beginPath(); c.arc(-12, 2, 1.2, 0, Math.PI * 2); c.fill(); }   // Kopf (eingerollt: weg)
+    c.restore();
+  }
+  function mautstation(c, x, y) {   // Tür der Welt 2: Mautstation mit Schlagbaum, der sich beim Öffnen hebt
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#d9d9d9'; c.fillRect(-70, -150, 240, 150); c.fillStyle = '#c8283a'; c.fillRect(-70, -162, 240, 14);
+    c.fillStyle = '#18213a'; c.font = 'bold 13px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText('TOLL  ·  ROUTE 66', 50, -155);
+    c.fillStyle = '#9aa3b0'; c.fillRect(-40, -120, 40, 120); c.fillStyle = '#bfe3fa'; c.fillRect(-34, -112, 28, 30);   // Häuschen
+    c.fillStyle = '#555'; c.fillRect(4, -40, 10, 40); c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(9, -44, 7, 0, Math.PI * 2); c.fill();
+    c.save(); c.translate(9, -40); c.rotate(-tuer.offen * Math.PI / 2.2);   // Schlagbaum hebt sich
+    c.fillStyle = '#f4f4f4'; c.fillRect(0, -5, 120, 10); c.fillStyle = '#e63946'; for (let k = 0; k < 4; k++) c.fillRect(10 + k * 30, -5, 15, 10);
+    c.restore();
+    if (tuer.offen > 0) { c.fillStyle = `rgba(255,240,180,${0.5 * tuer.offen})`; c.fillRect(0, -110, 110, 70); }
+    c.fillStyle = tuer.offen > 0.5 ? '#2e9e5b' : '#e63946'; c.beginPath(); c.arc(60, -128, 7, 0, Math.PI * 2); c.fill();   // Ampel
+    c.restore();
+  }
+  function bigRigBob(c, x, y) {   // Boss Welt 2: brummiger Truck mit Gesicht – Scheinwerfer-Augen, Kühlergrill-Mund; fährt von rechts heran, fährt am Ende nach rechts weg
+    if (boss.sichtbar <= 0) return;
+    c.save();
+    c.translate(x + (1 - boss.sichtbar) * 520 + boss.weg * 700, y); c.globalAlpha = 1 - boss.weg * 0.6;
+    const m = boss.maul, wackel = Math.sin(zeit * 18) * (zustand === 'boss' ? 1.2 : 0.6);
+    c.translate(0, wackel);
+    c.fillStyle = '#e9e9e9'; c.beginPath(); c.roundRect(70, -118, 190, 90, 6); c.fill(); c.fillStyle = '#c8283a'; c.fillRect(80, -100, 170, 8);   // Anhänger
+    c.fillStyle = '#18213a'; c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('BIG RIG BOB', 165, -72);
+    c.fillStyle = '#c8283a'; c.beginPath(); c.roundRect(-70, -112, 140, 86, 10); c.fill();   // Fahrerhaus
+    c.fillStyle = '#8a1c2a'; c.fillRect(-70, -40, 140, 14);
+    c.fillStyle = '#bfe3fa'; c.fillRect(-60, -104, 110, 30);   // Windschutzscheibe
+    c.fillStyle = '#555'; c.fillRect(30, -150, 8, 40); c.fillStyle = '#777'; c.fillRect(26, -156, 16, 8);   // Auspuff
+    if (zustand !== 'finale' || boss.weg < 0.5) { c.fillStyle = 'rgba(90,90,90,.35)'; for (let k = 0; k < 3; k++) { const t = (zeit * 1.3 + k * 0.33) % 1; c.beginPath(); c.arc(34 + t * 12, -160 - t * 40, 5 + t * 9, 0, Math.PI * 2); c.fill(); } }   // Qualm
+    // Gesicht: Scheinwerfer-Augen (mit Pupillen), Kühlergrill-Mund (öffnet sich beim Reden), Stoßstange als Kinn
+    for (const ex of [-46, 46]) { c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(ex, -62, 12, 0, Math.PI * 2); c.fill(); c.fillStyle = '#18213a'; c.beginPath(); c.arc(ex - 4, -62, 5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#fff'; c.beginPath(); c.arc(ex - 6, -64, 1.8, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#8a1c2a'; c.lineWidth = 4; c.beginPath(); c.moveTo(-60, -80); c.lineTo(-34, -74); c.moveTo(60, -80); c.lineTo(34, -74); c.stroke();   // strenge Brauen
+    c.fillStyle = '#3a3a3a'; c.beginPath(); c.roundRect(-40, -48, 80, 10 + m * 14, 5); c.fill();
+    c.fillStyle = '#d9d9d9'; for (let k = 0; k < 6; k++) c.fillRect(-36 + k * 13, -46, 8, 4 + m * 6);
+    c.fillStyle = '#9aa3b0'; c.beginPath(); c.roundRect(-78, -30, 156, 10, 4); c.fill();   // Stoßstange
+    for (const rx of [-40, 40, 110, 150, 230]) { c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(rx, -14, 14, 0, Math.PI * 2); c.fill(); c.fillStyle = '#aaa'; c.beginPath(); c.arc(rx, -14, 6, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+
+  function hintergrund(c) { W.kulisse(c); }
+  function hintergrundNY(c) {
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
     c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
     c.fillStyle = 'rgba(255,255,255,.9)';
@@ -1252,26 +1540,21 @@
   }
   function welt(c) {
     const links = kamera - 100, rechts = kamera + viewW + 100;
+    if (W.grube) for (let i = 1; i < level.boden.length; i++) { const a = level.boden[i - 1][1], b = level.boden[i][0]; if (b >= links && a <= rechts) W.grube(c, a, b); }
     for (const [a, b] of level.boden) {
       if (b < links || a > rechts) continue;
-      const x0 = a - kamera, w = b - a;
-      c.fillStyle = '#b9ad9a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
-      c.fillStyle = '#d9cfbb'; c.fillRect(x0, BODEN_Y, w, 10);
-      c.strokeStyle = 'rgba(0,0,0,.12)'; c.lineWidth = 1;
-      for (let x = Math.max(Math.ceil(a / 40) * 40, Math.floor(links / 40) * 40); x < Math.min(b, rechts); x += 40) { c.beginPath(); c.moveTo(x - kamera, BODEN_Y + 10); c.lineTo(x - kamera, H); c.stroke(); }
-      c.fillStyle = '#8f8472'; c.fillRect(x0, BODEN_Y + 10, w, 2);
+      W.boden(c, a - kamera, b - a, a, b, links, rechts);
     }
     for (const p of level.plattformen) {
       const x = p.x - kamera; if (x > viewW + 100 || x + p.w < -100) continue;
-      c.fillStyle = '#8b5a2b'; c.beginPath(); c.roundRect(x, p.y, p.w, 14, 4); c.fill();
-      c.fillStyle = '#4fae5f'; c.beginPath(); c.roundRect(x - 2, p.y - 3, p.w + 4, 7, 3); c.fill();
+      c.fillStyle = W.farben.plattform; c.beginPath(); c.roundRect(x, p.y, p.w, 14, 4); c.fill();
+      c.fillStyle = W.farben.plattformOben; c.beginPath(); c.roundRect(x - 2, p.y - 3, p.w + 4, 7, 3); c.fill();
     }
     for (const k of level.kisten) {
       const x = k.x - kamera; if (x > viewW + 100 || x + KISTE < -100) continue;
-      c.fillStyle = '#c98a3e'; c.fillRect(x, k.y, KISTE, KISTE);
-      c.strokeStyle = '#7a4a16'; c.lineWidth = 3; c.strokeRect(x + 1.5, k.y + 1.5, KISTE - 3, KISTE - 3);
-      c.beginPath(); c.moveTo(x + 4, k.y + 4); c.lineTo(x + KISTE - 4, k.y + KISTE - 4); c.moveTo(x + KISTE - 4, k.y + 4); c.lineTo(x + 4, k.y + KISTE - 4); c.stroke();
+      W.kiste(c, x, k.y);
     }
+    for (const o of oel) { const x = o.x - kamera; if (x > viewW + 100 || x + o.w < -100) continue; oelZeichnen(c, o); }
     for (const cp of checkpoints) { const x = cp.x - kamera; if (x > -60 && x < viewW + 60) fahne(c, x, BODEN_Y, cp.erreicht); }
     for (const d of diamanten) {
       if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue;
@@ -1291,19 +1574,21 @@
     for (const g of gegner) {
       if (g.tot > 0.6) continue; const x = g.x - kamera; if (x < -60 || x > viewW + 60) continue;
       c.save(); c.translate(-kamera, 0);
-      if (g.art === 'taube') taube(c, g); else if (g.art === 'eichhoernchen') eichhoernchen(c, g); else waschbaer(c, g);
+      (GEGNER_ZEICHNER[g.art] || waschbaer)(c, g);
       c.restore();
     }
+    for (const a of autos) { const x = a.x - kamera; if (x > viewW + 100 || x + a.w < -100) continue; autoZeichnen(c, a); }
     if (level.tuerX - kamera < viewW + 400) {
-      tuerZeichnen(c, level.tuerX - kamera, BODEN_Y);
-      kanaldeckel(c, level.bossX - kamera, BODEN_Y);
-      alligator(c, level.bossX - kamera, BODEN_Y);
-      if (bossSpruch) sprechblase(c, level.bossX - kamera - 20, BODEN_Y - 70, bossSpruch.text);
+      W.tuer(c, level.tuerX - kamera, BODEN_Y);
+      W.boss(c, level.bossX - kamera, BODEN_Y);
+      if (bossSpruch) sprechblase(c, level.bossX - kamera - 20, BODEN_Y - W.sprechblaseHoehe, bossSpruch.text);
     }
     if (tot <= 0) {
       const blink = spieler.unverwundbar > 0 && Math.floor(zeit * 12) % 2 === 0;
       c.globalAlpha = blink ? 0.35 : 1;
-      zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, ausdruckAktuell());
+      if (rutscht > 0) { c.save(); c.translate(spieler.x - kamera, spieler.y); c.rotate(-0.22 - 0.06 * Math.sin(zeit * 30)); c.translate(-(spieler.x - kamera), -spieler.y); }   // rutscht: Figur kippt leicht nach hinten
+      zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, rutscht > 0 ? 'erstaunt' : ausdruckAktuell());
+      if (rutscht > 0) c.restore();
       c.globalAlpha = 1;
     }
     effekteZeichnen(c);
@@ -1398,7 +1683,7 @@
     c.fillStyle = '#1d3f8f'; c.beginPath(); c.roundRect(bx, 16, bwid * f, 8, 4); c.fill();
     for (const t of level.tore) { c.fillStyle = '#e0a400'; c.fillRect(bx + bwid * t.x / ende - 1.5, 13, 3, 14); }
     for (const cp of level.checkpoints) { c.fillStyle = '#2e9e5b'; c.fillRect(bx + bwid * cp.x / ende - 1.5, 13, 3, 14); }
-    freiheitsstatue(c, viewW / 2 + 92, 34, 0.14, '#1d3f8f');
+    W.hudSymbol(c, viewW / 2 + 92, 34);
     wortbankZeichnen(c);
     if (echo) {   // Echo-Untertitel unten mittig
       const a = Math.min(1, echo.zeit / 0.3, (ECHO_DAUER - echo.zeit) / 0.15);
@@ -1504,6 +1789,32 @@
     rafId = requestAnimationFrame(schleife);
   }
 
+  /* ---------- Welten: je Welt Kulisse, Boden, Kisten, Gegnerarten, Boss (Zeichner + Klang), Tür, Banner, Level-Muster ---------- */
+  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier };
+  function bodenNY(c, x0, w, a, b, links, rechts) {
+    c.fillStyle = '#b9ad9a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#d9cfbb'; c.fillRect(x0, BODEN_Y, w, 10);
+    c.strokeStyle = 'rgba(0,0,0,.12)'; c.lineWidth = 1;
+    for (let x = Math.max(Math.ceil(a / 40) * 40, Math.floor(links / 40) * 40); x < Math.min(b, rechts); x += 40) { c.beginPath(); c.moveTo(x - kamera, BODEN_Y + 10); c.lineTo(x - kamera, H); c.stroke(); }
+    c.fillStyle = '#8f8472'; c.fillRect(x0, BODEN_Y + 10, w, 2);
+  }
+  function kisteNY(c, x, y) {
+    c.fillStyle = '#c98a3e'; c.fillRect(x, y, KISTE, KISTE);
+    c.strokeStyle = '#7a4a16'; c.lineWidth = 3; c.strokeRect(x + 1.5, y + 1.5, KISTE - 3, KISTE - 3);
+    c.beginPath(); c.moveTo(x + 4, y + 4); c.lineTo(x + KISTE - 4, y + KISTE - 4); c.moveTo(x + KISTE - 4, y + 4); c.lineTo(x + 4, y + KISTE - 4); c.stroke();
+  }
+  const WELTEN = {
+    ny: { id: 'ny', name: 'New York', staat: 'New York', ziel: 'Statue of Liberty', bossName: 'Mr. Alligator', bossSymbol: '🐊', banner: BANNER_TEXT, sturz: 'Splash! 💦',
+      gegnerarten: ['taube', 'waschbaer', 'eichhoernchen'], farben: { plattform: '#8b5a2b', plattformOben: '#4fae5f', hud: '#1d3f8f' }, muster: MUSTER_NY, sprechblaseHoehe: 70,
+      kulisse: hintergrundNY, boden: bodenNY, grube: null, kiste: kisteNY, hudSymbol: (c, x, y) => freiheitsstatue(c, x, y, 0.14, '#1d3f8f'),
+      boss: (c, x, y) => { kanaldeckel(c, x, y); alligator(c, x, y); }, tuer: tuerZeichnen, bossKlang: () => klang.grollen() },
+    route66: { id: 'route66', name: 'Route 66', staat: 'Illinois', ziel: 'Route 66 sign', bossName: 'Big Rig Bob', bossSymbol: '🚚', banner: 'Here comes Big Rig Bob!', sturz: 'Crash! 🕳️',
+      gegnerarten: ['kojote', 'roadrunner', 'guerteltier'], farben: { plattform: '#7a4a16', plattformOben: '#c99a6a', hud: '#c8283a' }, muster: MUSTER_ROUTE66, sprechblaseHoehe: 150,
+      kulisse: hintergrundRoute66, boden: strasseZeichnen, grube: baugrube, kiste: reifen, hudSymbol: (c, x, y) => schild66(c, x, y + 4, 0.28, '#c8283a', false),
+      boss: bigRigBob, tuer: mautstation, bossKlang: () => { hupen++; klang.hupe(); klang.diesel(); } },
+  };
+  const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner }));
+
   /* ---------- Start / Stopp ---------- */
   function start(o) {
     stopp();
@@ -1517,7 +1828,10 @@
     woerter = woerter.slice(0, 12);
     skin = Object.assign({}, SKIN_STANDARD, opt.skin || {});
     stimme = Object.assign({ wort() {}, boss() {} }, opt.stimme || {});
-    texte = Object.assign({}, TEXTE, opt.texte || {});
+    W = WELTEN[opt.welt] || WELTEN.ny;
+    level = W.id === 'ny' ? LEVEL_NY : levelBauen(W.muster);
+    SOLIDE = solideOben();
+    texte = Object.assign({}, TEXTE, { bossTitel: `${W.bossName} fragt …` }, opt.texte || {});
     canvas = el("canvas", "runner-canvas"); canvas.setAttribute("aria-label", "Road Trip Run");
     ctx = canvas.getContext("2d");
     wrapper.append(canvas, frageBauen());
@@ -1564,7 +1878,9 @@
         combo, maxCombo, comboText: comboText ? comboText.text : null, partikel: partikel.length, spur: spur > 0, spurPunkte: spurPunkte.length, onfire, ruhig: ruhig(), ausdruck: ausdruckAktuell(),
         blase: blase ? { en: blase.en, de: blase.de, zeit: Math.round(blase.zeit * 100) / 100 } : null, wortbank: wortbank.map((b) => b.en),
         echoWarteschlange: echoWarteschlange.map((e) => ({ wort: woerter[e.wort].en, in: Math.round((e.faellig - zeit) * 100) / 100 })), echo: echo ? echo.text : null, echos, stimmeAufrufe,
-        gegnerKlaenge, gegnerNah: gegner.filter((g) => g.tot <= 0 && g.x - spieler.x > -40 && g.x - spieler.x < GEGNER_NAEHE).map((g) => g.art),
+        gegnerKlaenge, gegnerNah: gegner.filter((g) => g.tot <= 0 && !g.harmlos && g.x - spieler.x > -40 && g.x - spieler.x < GEGNER_NAEHE).map((g) => g.art),
+        welt: W.id, rutscht: rutscht > 0, hupen, gegner: gegner.map((g) => ({ art: g.art, x: Math.round(g.x), tot: g.tot > 0, rollt: !!g.rollt })),
+        autos: autos.map((a) => ({ art: a.art, x: Math.round(a.x), w: a.w, h: a.h })), oel: oel.map((o) => ({ x: o.x, w: o.w, aktiv: o.aktiv })),
       };
     },
     sammle(i) { const d = diamanten[i]; if (d && !d.weg && zustand === "spiel") diamantSammeln(d); },   // Diamant i direkt einsammeln (Test)
@@ -1574,9 +1890,10 @@
     teleportBoss() { this.teleport(level.sequenzX - 250); },
     antwort(n) { antwortGeben(n); },
     schaden() { schaden("gegner"); },
+    setLeben(n) { leben = Math.max(1, Math.min(3, Number(n) || 3)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
     setSkin(o) { Object.assign(skin, o); },
-    sprechListe, level, SEQUENZ, BANNER_TEXT,
+    sprechListe, get level() { return level; }, SEQUENZ, BANNER_TEXT, get welt() { return W.id; },
   };
 
-  window.Runner = { start, stopp, zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level, SEQUENZ, BANNER_TEXT };
+  window.Runner = { start, stopp, zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
 })();

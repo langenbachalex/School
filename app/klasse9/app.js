@@ -2542,11 +2542,17 @@
      Stand in stand.spiel.runner = { level: { ny: "gold"|"silber" }, gespielt, geschafft, titel }, Figur in stand.spiel.skin – beides im Siegel.
      Wörter: 12 aus dem gewählten Abschnitt (wie Catch the Word), aufgefüllt aus der Unit; gesprochen mit den Wortaufnahmen (tonWort).
      Boss-Banner/-Sprüche und Skin-Namen: bis zur Vertonung (Mr. Alex, 13.11.) Geräte-Stimme wie bei fehlenden Aufnahmen (spiele([{ text, stimme }])). */
+  // Welten (docs/runner/welten-2-5-plan.md): Reihenfolge = Landmark-Route; Welt n+1 öffnet sich mit Silber in Welt n; 3–5 noch „bald“ (nur Daten-Platzhalter).
+  // unit = vorbelegte Unit beim Wählen der Welt (der Schüler darf umschalten); boss = Name für Texte/Frage-Titel.
   const RUNNER = { preis: 100, skinPreis: 30, skinPreisTeuer: 60, woerter: 12, titel: ["Noob", "Rookie", "Pro", "Elite", "Legend"], ab: [1, 3, 6, 10, 15],
-    welten: [{ id: "ny", name: "New York", ziel: "Statue of Liberty", trophaee: "Liberty Finder", symbol: "🗽" },
-      { id: "ca", name: "California", ziel: "Golden Gate", trophaee: "Gate Crosser", symbol: "🌉", bald: true },
-      { id: "az", name: "Arizona", ziel: "Grand Canyon", trophaee: "Canyon Hero", symbol: "🏜️", bald: true }] };
-  const WELT = RUNNER.welten[0];
+    welten: [{ id: "ny", name: "New York", staat: "New York", ziel: "Statue of Liberty", trophaee: "Liberty Finder", symbol: "🗽", boss: "Mr. Alligator" },
+      { id: "route66", name: "Route 66", staat: "Illinois", ziel: "Route 66 sign", trophaee: "Route 66 Rider", symbol: "🛣️", boss: "Big Rig Bob", unit: "1" },
+      { id: "az", name: "Grand Canyon", staat: "Arizona", ziel: "Grand Canyon", trophaee: "Canyon Climber", symbol: "🏜️", boss: "Sheriff Rattlesnake", bald: true },
+      { id: "sd", name: "Mount Rushmore", staat: "South Dakota", ziel: "Mount Rushmore", trophaee: "Rushmore Ranger", symbol: "🗿", boss: "Grizzly Grandpa", bald: true },
+      { id: "ca", name: "Golden Gate", staat: "California", ziel: "Golden Gate Bridge", trophaee: "Golden Gate Legend", symbol: "🌉", boss: "Captain Fog", bald: true }] };
+  // Welt n ist offen, wenn sie gebaut ist (nicht bald) und die Vorwelt mindestens Silber hat
+  const runnerWeltOffen = (w) => { const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
+  const runnerWeltVon = (id) => RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0];
   const R = () => window.Runner || null;
   const spieleKategorie = () => D.kategorien.find((k) => k.spiele);
   function runnerStand() {
@@ -2603,31 +2609,49 @@
     k = k || spieleKategorie();
     lage = null; ansicht = () => runnerStart(k);
     const sp = spielstand(), r = runnerStand(), unit = aktuelleUnit(), gruppen = D.units[unit];
-    if (!runnerWahl || runnerWahl.unit !== unit || !gruppen[runnerWahl.i]) runnerWahl = { unit, i: 0 };
+    if (!runnerWahl || runnerWahl.unit !== unit || !gruppen[runnerWahl.i]) runnerWahl = { unit, i: 0, welt: runnerWahl && runnerWahl.welt };
+    let W = runnerWeltVon(runnerWahl.welt);
+    if (!runnerWeltOffen(W)) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
     const tickets = r.tickets || 0, fehlt = runnerFehlt(), ws = runnerWoerter(unit, runnerWahl.i), titel = runnerTitelName(r.titel);
     const zumShop = () => shop({ zurueck: () => runnerStart(k), artikel: "runner" });
     // Ohne Ticket führt der Hauptknopf in den Shop (Ticket hervorgehoben), damit klar ist, wo man hin muss
     const spielen = tickets > 0
-      ? knopf(`▶ ${T("Spielen", "Play")} (🎟️ 1)`, () => runnerSpiel(k, unit, runnerWahl.i), "haupt runner-spielen")
+      ? knopf(`▶ ${T("Spielen", "Play")} (🎟️ 1)`, () => runnerSpiel(k, unit, runnerWahl.i, W.id), "haupt runner-spielen")
       : knopf(T(`🎟️ Erst Ticket kaufen – ${RUNNER.preis} 🪙`, `🎟️ Buy a ticket first – ${RUNNER.preis} 🪙`), zumShop, "haupt runner-spielen");
     if (tickets > 0 && (ws.length < 4 || !R())) sperrt(spielen);
+    // Welt-Reiter: offen = wählbar (Welt 2 belegt Unit 1 vor, umschaltbar), gesperrt = 🔒 mit Hinweis auf Silber in der Vorwelt, bald = 🔒 ohne Spiel
+    const weltHinweis = el("p", { class: "klein runner-welt-hinweis", role: "status" });
+    const weltReiter = el("div", { class: "reiter runner-welten", role: "listbox", "aria-label": T("Welt", "World") }, RUNNER.welten.map((w, i) => {
+      const offen = runnerWeltOffen(w), vor = RUNNER.welten[i - 1];
+      return el("button", { class: "reiter-knopf" + (offen ? "" : " gesperrt"), role: "option", "aria-selected": String(w.id === W.id), "aria-disabled": String(!offen), "data-welt": w.id,
+        onclick: () => {
+          if (!offen) { weltHinweis.textContent = w.bald ? T(`${w.name} kommt bald.`, `${w.name} is coming soon.`) : T(`🔒 Silber in ${vor.name} nötig – schaff erst Level ${i}!`, `🔒 You need silver in ${vor.name} – finish level ${i} first!`); toast(weltHinweis.textContent); return; }
+          runnerWahl = { unit: w.unit && D.units[w.unit] && D.units[w.unit].length ? w.unit : unit, i: 0, welt: w.id };
+          if (runnerWahl.unit !== unit) { stand.unit = runnerWahl.unit; speichern(); }
+          runnerStart(k);
+        } }, `${offen ? w.symbol : "🔒"} ${i + 1} · ${w.name}`);
+    }));
     zeige(spielKopf(k, "Road Trip Run", () => zeigeSpiele(k)),
       el("section", { class: "satzkarte runner-start" },
+        weltReiter, weltHinweis,
         el("div", { class: "runner-welt" },
-          el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, WELT.symbol),
+          el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, W.symbol),
           el("div", {},
-            el("h2", { lang: "en" }, `Level 1 · ${WELT.name}`),
-            el("p", { class: "runner-ziel", lang: "en" }, `Find the ${WELT.ziel}!`),
-            el("p", { class: "klein" }, T("Tippen oder Leertaste = springen, länger halten = höher. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von Mr. Alligator – gut 2 Minuten. Am besten das Handy quer halten.",
-              "Tap or space = jump, hold longer = jump higher. Collect the 12 word diamonds, take the right gates and answer Mr. Alligator's question – about 2 minutes. Best in landscape mode.")))),
+            el("h2", { lang: "en" }, `Level ${RUNNER.welten.indexOf(W) + 1} · ${W.name}`),
+            el("p", { class: "runner-ziel", lang: "en" }, `Find the ${W.ziel}!`),
+            el("p", { class: "klein" }, W.id === "route66"
+              ? T(`Tippen oder Leertaste = springen, länger halten = höher (über Trucks!). Autos kommen von rechts – drüberspringen, Ölflecken lassen dich kurz rutschen. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} an der Mautstation – gut 2 Minuten. Am besten das Handy quer halten.`,
+                `Tap or space = jump, hold longer = jump higher (over trucks!). Cars come from the right – jump over them, oil slicks make you slide. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the toll booth – about 2 minutes. Best in landscape mode.`)
+              : T(`Tippen oder Leertaste = springen, länger halten = höher. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} – gut 2 Minuten. Am besten das Handy quer halten.`,
+                `Tap or space = jump, hold longer = jump higher. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question – about 2 minutes. Best in landscape mode.`)))),
         el("div", { class: "runner-figur" }, figurVorschau(110, 140),
           el("div", { class: "runner-figur-text" },
             el("p", { class: "klein" }, T("Deine Figur", "Your character")),
             knopf(T("🎨 Figur", "🎨 Character"), () => runnerSkins(k)))),
         el("p", { class: "runner-stand" },
           el("span", {}, `🏃 ${titel || T("noch kein Titel", "no title yet")}`),
-          el("span", {}, `🏆 ${WELT.trophaee}: ${trophaeenText(r.level[WELT.id])}`),
-          el("span", {}, `🎮 ${r.gespielt} ${T("Spiele", "games")}`))),
+          el("span", {}, `🏆 ${W.trophaee}: ${trophaeenText(r.level[W.id])}`),
+          el("span", {}, `🎮 ${r.gespielt} ${T("Spiele", "games")} · ${r.geschafft} ${T("Level geschafft", "levels done")}`))),
       el("section", { class: "satzkarte" },
         el("h2", {}, T("Welche Wörter?", "Which words?")),
         unitReiter(() => runnerStart(k)),
@@ -2645,8 +2669,9 @@
         el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumShop))));
   }
   // Spiel: Eintritt abbuchen, Vollbild-Bühne ohne Kopfzeile, ✕ mit Rückfrage
-  function runnerSpiel(k, unit, i) {
-    const sp = spielstand(), r = runnerStand(), ws = runnerWoerter(unit, i);
+  function runnerSpiel(k, unit, i, welt) {
+    const sp = spielstand(), r = runnerStand(), ws = runnerWoerter(unit, i), W = runnerWeltVon(welt);
+    if (!runnerWeltOffen(W)) return runnerStart(k);
     if (!R()) { toast(T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet.")); return; }
     if (ws.length < 4) return runnerStart(k);
     if (!(r.tickets > 0)) { toast(T("Kauf erst ein Ticket im Shop.", "Buy a ticket in the shop first.")); return shop({ zurueck: () => runnerStart(k), artikel: "runner" }); }
@@ -2659,28 +2684,29 @@
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
-      wrapper: buehne, skin: skinWirksam(),
+      wrapper: buehne, skin: skinWirksam(), welt: W.id,
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: {
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
         tor: (de) => T(`Welcher Diamant heißt „${de}“?`, `Which diamond means “${de}”?`), richtigWaere: T(" – richtig wäre: ", " – correct: "),
         sequenz: T("Zwischensequenz …", "Cutscene …"), boss: T("Boss! Beantworte die Frage.", "Boss! Answer the question."),
-        bossTitel: T("Mr. Alligator fragt …", "Mr. Alligator asks …"), bossHinweis: T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
+        bossTitel: T(`${W.boss} fragt …`, `${W.boss} asks …`), bossHinweis: W.id === "route66" ? T("Richtig = der Schlagbaum geht hoch. Falsch = ein Leben weg.", "Right = the barrier lifts. Wrong = you lose a life.") : T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
         frage: (de) => T(`„Was heißt ‚${de}‘ auf Englisch?“`, `“What's ‘${de}’ in English?”`),
       },
       // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
       stimme: { wort: (j, o) => spiele([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : {}), boss: (text) => spiele([{ text, stimme: "m" }]) },
-      onEnde: (e) => runnerEnde(k, unit, i, e, ws),
+      onEnde: (e) => runnerEnde(k, unit, i, e, ws, W.id),
     });
   }
   // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (wieder 100) oder Startseite
-  function runnerEnde(k, unit, i, e, ws) {
-    const r = runnerStand();
-    let stufe = null;
+  function runnerEnde(k, unit, i, e, ws, welt) {
+    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
+    let stufe = null, neuOffen = false;
     if (e.geschafft) {
       r.geschafft++;
       stufe = e.diamanten >= e.max && e.toreRichtig >= 2 ? "gold" : "silber";
-      if (stufe === "gold" || !r.level[WELT.id]) r.level[WELT.id] = stufe;
+      neuOffen = !r.level[W.id] && !!naechsteWelt && !naechsteWelt.bald;
+      if (stufe === "gold" || !r.level[W.id]) r.level[W.id] = stufe;
       const t = runnerTitelIndex(r.geschafft);
       if (t > (r.titel || 0)) {
         r.titel = t;
@@ -2698,19 +2724,20 @@
           el("div", { class: "runner-pokal", "aria-hidden": "true" }, e.geschafft ? (stufe === "gold" ? "🥇" : "🥈") : "💤"),
           el("h2", { lang: "en" }, e.geschafft ? "Level complete!" : "Game over"),
           ruf && el("p", { class: "gym-lob" }, el("strong", { lang: "en" }, ruf.text), !E() && ruf.de && el("span", { lang: "de" }, " – " + ruf.de)),
-          e.geschafft ? el("p", { lang: "en" }, `You found the ${WELT.ziel}!`)
+          e.geschafft ? el("p", { lang: "en" }, `You found the ${W.ziel}!`)
             : el("p", {}, T("Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!", "No lives left. You still saw the words – next time you'll make it!")),
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
           e.maxCombo > 0 && el("p", { class: "klein runner-serie" }, T(`🔥 Beste Serie: ×${e.maxCombo}`, `🔥 Best streak: ×${e.maxCombo}`)),
-          e.geschafft && el("p", {}, el("strong", {}, `🏆 ${WELT.trophaee} – ${stufe === "gold" ? "Gold" : T("Silber", "Silver")}`),
+          e.geschafft && el("p", {}, el("strong", {}, `🏆 ${W.trophaee} – ${stufe === "gold" ? "Gold" : T("Silber", "Silver")}`),
             stufe !== "gold" ? T(" (Gold: alle Diamanten und beide Tore richtig)", " (gold: all diamonds and both gates right)") : ""),
+          neuOffen && el("p", { class: "runner-neu-offen" }, `🔓 ${T(`Neue Welt frei: ${naechsteWelt.symbol} ${naechsteWelt.name} (${naechsteWelt.staat})!`, `New world unlocked: ${naechsteWelt.symbol} ${naechsteWelt.name} (${naechsteWelt.staat})!`)}`),
           el("p", { class: "klein" }, `🏃 ${T("Runner-Titel", "Runner title")}: ${runnerTitelName(r.titel) || "–"} · ${r.geschafft} ${T("Level geschafft", "levels done")}`)),
         el("section", { class: "satzkarte" },
           el("h2", {}, T("Die Wörter", "The words")),
           el("ul", { class: "wortliste runner-woerterliste" }, ws.map((v) => el("li", {},
             knopf("🔊", () => spiele([tonWort(v)]), "leise"), " ", el("strong", { lang: "en" }, spielWort(v)), " – ", el("span", { lang: "de" }, v.de))))),
         el("div", { class: "knopfreihe" },
-          (r.tickets || 0) > 0 ? knopf(`↻ ${T("Noch mal", "Again")} (🎟️ 1)`, () => runnerSpiel(k, unit, i), "haupt")
+          (r.tickets || 0) > 0 ? knopf(`↻ ${T("Noch mal", "Again")} (🎟️ 1)`, () => runnerSpiel(k, unit, i, W.id), "haupt")
             : knopf(T(`🎟️ Erst Ticket kaufen – ${RUNNER.preis} 🪙`, `🎟️ Buy a ticket first – ${RUNNER.preis} 🪙`), () => shop({ zurueck: () => runnerStart(k), artikel: "runner" }), "haupt"),
           knopf(T("Zur Startseite", "Home"), startseite, "leise")));
     };
@@ -2728,9 +2755,9 @@
       naechste && el("p", { class: "klein" }, T(`Noch ${naechste - r.geschafft} geschaffte Level bis „${RUNNER.titel[r.titel || 0]}“`, `${naechste - r.geschafft} more levels to “${RUNNER.titel[r.titel || 0]}”`)),
       el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.map((w) => {
         const st = r.level[w.id];
-        return el("li", { class: st ? "ok" : "" },
+        return el("li", { class: st ? "ok" : "", "data-welt": w.id },
           el("span", { "aria-hidden": "true" }, st === "gold" ? "🥇" : st === "silber" ? "🥈" : w.bald ? "🔒" : "🏆"),
-          el("span", { lang: "en" }, w.trophaee, el("small", {}, ` · ${w.name}${w.bald ? T(" (bald)", " (soon)") : ""}`)),
+          el("span", { lang: "en" }, w.trophaee, el("small", {}, ` · ${w.staat}${w.bald ? T(" (bald)", " (soon)") : ""}`)),
           el("span", { class: "unsichtbar" }, st ? "✓" : "–"));
       })),
       el("div", { class: "knopfreihe" }, knopf("🏃 Road Trip Run", () => runnerStart(), "leise")));

@@ -12,6 +12,21 @@ Pflege: Jede neue Idee aus einem Chat kommt hier hinein, auch wenn sie nicht gle
 | **Grafikstil Runner** | offen | Flach/Cartoon wie die Word-Gym-Figur oder Landmark-Fotos mit kleiner Figur davor. Nächster Schritt nach der Games-Kachel. |
 | **Klasse 6 mitziehen** (Games-Umbau, Coins, Runner) | offen | Erst Klasse 9, dann entscheiden. |
 
+## Beschlossen (29.10.2026, zweite Runde)
+- **Coins nicht rückwirkend**: Zählung beginnt mit dem Update; alte Punkte bringen keine Coins (sonst hängen Kinder mit Hunderten Coins nur am Spiel).
+- **Zwei Arten von Spielen**: *Lernspiele* (Games-Kachel: Memory, Border Patrol, Catch the Word, Spelling Bee – Lernen im Vordergrund, frei spielbar, kleine Punkte) und *verdiente Spiele* (Runner – Spaß im Vordergrund, kostet Coins, passiv Englisch, Rätsel/Frage-Diamanten).
+- **Shop** heißt vorerst „Shop“ (Name später brainstormen).
+- **Skins für den Runner** (müssen bei der Figurgröße deutlich sichtbar sein): Hüte, Tops, Schuhe, Shorts, Frisuren und Haarschmuck, Sonnenbrille, Schnurrbart, Nase, Ohrringe/Kette, Accessoires; Jungs: angedeutete Superkräfte nach den Superhelden der Sammlung; Autos: Sticker.
+- **Mini-Rewards beim Vokabellernen**: Mini-Flamme mit Coins-Symbol und Coins-Speicher; im Wechsel wie beim Lob (Flamme, Münz-Kassieren, Auto flitzt).
+- **Dialog-Duell** gehört zu **Speaking**, nicht in Games; zuerst mit den vorhandenen Dialogen. Noch brainstormen.
+- **Runner**: Levelziel passend zum Level (z. B. die Statue of Liberty finden, vorher vorbereitet); **Boss/Endboss** kennen die Schüler: Der Endboss stellt eine Frage, richtige Antwort schließt eine Tür auf.
+- **Belohnung im Runner**: keine Coins zurück (wäre komisch); stattdessen eigene Titel/Trophäen fürs normale Spiel – noch brainstormen.
+
+## Aufgeschoben (zweite Runde) – bitte erinnern
+| **Nachhaltigkeit „alles grün“** | offen | Schüler haben schnell alles erledigt. Idee: Erledigtes nach ~30 Tagen wieder „fällig“ (gelb ↻), erneutes Durchmachen gibt Wiederholungspunkte und wieder grün – Spaced Repetition auf Teil-Ebene. Vorschlag in Arbeit. |
+| **Runner-Belohnung** (Titel statt Coins) | offen | brainstormen |
+| **Dialog-Duell in Speaking** | offen | brainstormen, vorhandene Dialoge nutzen |
+
 ## Beschlossen (29.10.2026), noch nicht gebaut
 - Klasse 9: **BE vs AE** wird Gruppe in **Vocabulary**.
 - Klasse 9: **„New“ auflösen** – neue Inhalte direkt in ihre Kategorie, 14 Tage ✨-Schild an Kachel und Gruppe, Startseite zeigt „✨ Neu diese Woche“.

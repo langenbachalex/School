@@ -25,7 +25,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | **Arcade-Kachel** für Klasse 9 | aufgeschoben (29.10.) | Stattdessen erst Kachel **Games** mit Lernspielen; der Runner könnte später hinter Coins liegen, ohne eigene Kachel. |
 | **Coins: Wertigkeit und Zeitkopplung** | aufgeschoben (29.10.) – Coins und Shop sind gebaut (Rahmen 50, Runner-Ticket 100 als Platzhalter) | Startwert ≈ 100 Punkte = 1 Spielrunde; Alternative: Punkte kaufen Spielzeit (z. B. 100 Punkte = 5 Minuten). Preise für beide Klassen festlegen, dann Schüler-Feedback abwarten. |
 | **Auto beim Vokabellernen** (Schülerwunsch) | aufgeschoben (29.10.) | Zu aufwendig als Dauer-Grafik. Stattdessen Mini-Rewards – **gebaut 29.10.** (Flamme, Münzen, Auto/Bus im Wechsel, siehe unten). |
-| **Grafikstil Runner** | offen | Flach/Cartoon wie die Word-Gym-Figur oder Landmark-Fotos mit kleiner Figur davor. Nächster Schritt nach der Games-Kachel. |
+| **Grafikstil Runner** | beschlossen (29.10.): Cartoon | Konzept Fassung 2 in `runner/konzept-entwurf.md` Abschnitt 11; nächster Schritt Prototyp v2 (2 Minuten, Boss-Sequenz, Körperform-Skins). |
 | **Klasse 6 mitziehen** (Games-Umbau, Coins, Runner) | Klasse 6 nachgezogen (29.10.) | Coins, Shop, Mini-Rewards und die Games-Kachel (Station 5 „Spiele“: Memory, Catch the Word, Spelling Bee, -s-Detektiv, Shop) sind in beiden Klassen; Runner offen. |
 
 ## Beschlossen (29.10.2026, zweite Runde)

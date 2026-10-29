@@ -93,3 +93,19 @@ Voraussetzung: Coins/Shop existieren (parallel geplant). Nicht geprüft: Leistun
 4. **Eintrittspreis** (20 Coins?) und Preis für das zweite Leben.
 5. **Figur:** eine neutrale Figur mit Skins oder Jeremy/Jessica als Vorlagen (Prototyp: eine Figur, Jeremy-/Jessica-Vorbelegung über Skins)?
 6. **Titel-Reihe** Rookie Runner → Coast-to-Coast Legend so in Ordnung?
+
+## 11. Fassung 2 (29.10.2026) – Rückmeldung von Mr. Alex eingearbeitet
+Entscheidungen:
+- **Grafikstil A (Cartoon)** – beschlossen.
+- **Spieldauer ≥ 2 Minuten** je Level (statt 60–90 s): ≈ 28.000 Einheiten Strecke bei 230 Einheiten/s; 12 Wort-Diamanten, 2 Frage-Tore, 2 Checkpoints, 3 Gegnerarten je Welt. Der Prototyp (≈ 35 s) wird entsprechend verlängert.
+- **Boss-Zwischensequenz:** Kurz vor dem Endboss übernimmt das Spiel: Die Kamera fährt herunter/heran, die Figur läuft automatisch weiter, das Bild friert einen Moment ein, Mr. Alex spricht („It's time for Mr. Alligator!“), dann erscheint der Boss. Danach normale Boss-Frage. Während der Sequenz keine Eingabe (keine Leben-Verluste möglich).
+- **Endboss-Stimme = Mr. Alex** (Boss-Intro, Fragen, „Correct – the door opens!“, „Not this time!“). Jeremy/Jessica sprechen weiterhin Diamanten und Levelstart/-ende. Mehr Mr.-Alex-Stimme in Klasse 9 ist ausdrücklich gewünscht.
+- **Skin-Menü mit Stimme:** Jede Auswahl wird gesprochen („Long hair“, „Short hair“, „Curly“, „Afro“, „Cap“, „Cowboy hat“, „Sunglasses on“, „Red hoodie“ …), ≈ 40 kurze Wörter/Wendungen je Stimme (Jeremy für Jungen-, Jessica für Mädchen-Figur, oder immer die Stimme der gewählten Figur). Vormerkliste.
+- **Körperform als Skin:** Bauch, Brust/Schultern und Muskeln als eigene Ebenen mit je drei Stufen (schmal · normal · kräftig). Zusätzlich **„Power-Körper“**: Mit steigenden Punkten (Titel-Stufen) wird die Figur automatisch muskulöser – sichtbar an Armen/Schultern und einer kleinen Aura; manuell kann man es im Skin-Menü wieder zurückstellen. Technisch: die Figur wird aus Vektor-Ebenen gezeichnet (`zeichneFigur`), Körperbreite/Arm-Dicke werden Parameter.
+- **Eintritt:** Startwert **100 Coins** je Durchgang (Zahl von Mr. Alex, 29.10.; Konzept schlug 20 vor). Anpassung nach Schüler-Feedback, Wertigkeit bleibt im Ideenspeicher offen.
+- **Belohnung:** keine Coins zurück; Trophäe je Level (Gold/Silber), Runner-Titel (Rookie Runner → Highway Hopper → Landmark Hunter → State Crosser → Coast-to-Coast Legend), freigeschaltete Skins als Levelbelohnung.
+- **Probe ist unvertont** – alle Stimmen kommen erst mit den Credits (13.11.), bis dahin Geräte-Stimme oder stumm.
+
+Nächster Schritt (Prototyp v2, ohne App-Einbau, ≈ 2 Tage): Level auf 2 Minuten verlängern (2 Tore, 12 Diamanten, 2 Checkpoints, 3 Gegner), Boss-Zwischensequenz mit Platzhalter-Text, Körperform-Ebenen + Power-Körper, Skin-Stimme über Geräte-TTS als Platzhalter, Nase/Ohrringe/Haarschmuck als weitere Ebenen, Taube überarbeiten. Danach Abnahme, dann Einbau in Klasse 9 (Coins-Abbuchung 100, Trophäen in der Hall of Fame).
+
+Offene Fragen (Rest): Schwierigkeit (falsches Tor = Leben weg?), Figur neutral oder Jeremy/Jessica als Vorlagen, Titel-Reihe in Ordnung?

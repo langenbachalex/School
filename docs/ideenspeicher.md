@@ -26,7 +26,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | **Arcade-Kachel** für Klasse 9 | erledigt (29.10.) | Keine eigene Kachel: **Road Trip Run** liegt als Kachel in **Games** hinter 100 Coins Eintritt. |
 | **Coins: Wertigkeit und Zeitkopplung** | aufgeschoben (29.10.) – Coins und Shop sind gebaut (Rahmen 50, Runner-Eintritt 100 echt, Skin-Teile 30) | Startwert ≈ 100 Punkte = 1 Spielrunde; Alternative: Punkte kaufen Spielzeit (z. B. 100 Punkte = 5 Minuten). Preise für beide Klassen festlegen, dann Schüler-Feedback abwarten. |
 | **Auto beim Vokabellernen** (Schülerwunsch) | aufgeschoben (29.10.) | Zu aufwendig als Dauer-Grafik. Stattdessen Mini-Rewards – **gebaut 29.10.** (Flamme, Münzen, Auto/Bus im Wechsel, siehe unten). |
-| **Grafikstil Runner** | beschlossen (29.10.): Cartoon – **Welt 1 gebaut 29.10.** | `runner/konzept-entwurf.md` Abschnitt 13 (Einbau Klasse 9): Kachel in Games, 100 Coins, Trophäe Liberty Finder, Titel Noob → Legend, Skins + Shop-Teile, Power-Körper. Offen: Welten 2–5, Audio ab 13.11., zweites Leben. |
+| **Grafikstil Runner** | beschlossen (29.10.): Cartoon – **Welt 1 gebaut 29.10.** | `runner/konzept-entwurf.md` Abschnitt 13 (Einbau Klasse 9): Kachel in Games, 100 Coins, Trophäe Liberty Finder, Titel Noob → Legend, Skins + Shop-Teile, Power-Körper. **Streak-Effekte (Combo 3/5/8, „Beste Serie“) und Gegner-Sounds (Web Audio) gebaut 29.10.** Offen: Welten 2–5, Audio ab 13.11., zweites Leben. |
 | **Klasse 6 mitziehen** (Games-Umbau, Coins, Runner) | Klasse 6 nachgezogen (29.10.) | Coins, Shop, Mini-Rewards und die Games-Kachel (Station 5 „Spiele“: Memory, Catch the Word, Spelling Bee, -s-Detektiv, Shop) sind in beiden Klassen; Runner (London Run) für Klasse 6 offen – Modul `app/klasse9/runner.js` ist dafür vorbereitet (Wörter, Texte, Skin von außen). |
 
 ## Beschlossen (29.10.2026, zweite Runde)
@@ -73,7 +73,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 - Spelling Bee – **gebaut 29.10.** (Games, Klasse 9; **Klasse 6 nachgezogen 29.10.**): Wort hören, deutsche Bedeutung lesen, eintippen (1-Fehler-Toleranz wie Klasse 6); 8 Wörter, 🍯 Honey bei 3 in Folge, +10 einmal pro Tag ab 6 richtig
 - Sentence Sprint – offen
 - Dialog-Duell – offen (Beschreibung folgt)
-- Runner – **Welt 1 gebaut 29.10.** (Klasse 9, Games: „Road Trip Run“, Eintritt 100 Coins; Details `runner/konzept-entwurf.md` Abschnitt 13); Welten 2–5 und Klasse 6 offen
+- Runner – **Welt 1 gebaut 29.10.** (Klasse 9, Games: „Road Trip Run“, Eintritt 100 Coins; Details `runner/konzept-entwurf.md` Abschnitt 13); **Streak-Effekte + Gegner-Sounds gebaut 29.10.** (Combo 3× Funken, 5× goldene Spur, 8+ On fire, Beste Serie auf der Endseite; Taube/Waschbär/Eichhörnchen/Plopp aus Web Audio); Welten 2–5 und Klasse 6 offen
 - Shop-Artikel: Auto-/Figur-Skins, Sticker für USA-/London-Karte, zweites Leben im Runner – beschlossen (Coins); erste Artikel gebaut 29.10. (Titel-Rahmen, Runner-Ticket → Spielstart, 16 Figur-Teile à 30 Coins für den Runner); zweites Leben offen
 
 ## Ältere Ideen

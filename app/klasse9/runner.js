@@ -1,7 +1,9 @@
 /* Road Trip Run – Runner-Modul für Klasse 9 (aus docs/runner/prototyp/index.html herausgelöst, Konzept docs/runner/konzept-entwurf.md).
    Kein eigenes Menü: Start, Skins, Coins und Ende kommen aus der App (app.js „Games: Road Trip Run“).
    Schnittstelle: window.Runner.start({ wrapper, woerter:[{en,de}], skin, texte, stimme:{ wort(i), boss(text) }, onEnde(ergebnis) })
-   → zeichnet ein Canvas (plus Boss-Frage als Overlay) in wrapper; ergebnis = { geschafft, diamanten, max, toreRichtig, leben, dauer }.
+   → zeichnet ein Canvas (plus Boss-Frage als Overlay) in wrapper; ergebnis = { geschafft, diamanten, max, toreRichtig, leben, dauer, maxCombo }.
+   Combo (29.10.): Wort-Diamanten in Serie → 3 Funken + Jingle, 5 goldene Spur, 8+ „On fire!“ mit Flammen; Reset bei Lebensverlust oder verpasstem Diamant.
+   Gegner-Klänge (Web Audio): Taube flattert, Waschbär knurrt, Eichhörnchen zirpt (je Art höchstens alle 1,5 s, nie in Sequenz/Boss), Plattdrücken = Plopp + Sternchen.
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …). */
 (function () {
@@ -132,14 +134,32 @@
   let actx = null;
   function audioAn() { if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { /* ohne Klang */ } } if (actx && actx.state === "suspended") actx.resume(); }
   function audioAus() { if (actx) { try { actx.close(); } catch (e) { /* egal */ } actx = null; } }
-  function ton(freq, dauer, typ = "square", lautst = 0.08, start = 0) {
+  const EFFEKT_LAUT = 0.6;   // globaler Lautstärke-Faktor für alle Effekte (Gegner-Klänge sind zusätzlich leiser als Diamant/Wort)
+  function huelle(g, t0, dauer, lautst) {
+    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, lautst * EFFEKT_LAUT), t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dauer);
+  }
+  function ton(freq, dauer, typ = "square", lautst = 0.08, start = 0, freqEnde = null) {
     if (!actx) return;
     const o = actx.createOscillator(), g = actx.createGain();
     o.type = typ; o.frequency.value = freq;
     const t0 = actx.currentTime + start;
-    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(lautst, t0 + 0.01);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dauer);
+    if (freqEnde != null) { o.frequency.setValueAtTime(freq, t0); o.frequency.exponentialRampToValueAtTime(Math.max(20, freqEnde), t0 + dauer); }   // Tonhöhe gleitet
+    huelle(g, t0, dauer, lautst);
     o.connect(g); g.connect(actx.destination); o.start(t0); o.stop(t0 + dauer + 0.02);
+  }
+  // Rauschen mit Hüllkurve (Flattern, Rascheln); filter = { typ, freq } optional
+  function rauschen(dauer, lautst = 0.05, start = 0, filter = null) {
+    if (!actx) return;
+    const sr = actx.sampleRate || 44100, n = Math.max(1, Math.floor(sr * dauer));
+    const buf = actx.createBuffer(1, n, sr), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    const q = actx.createBufferSource(); q.buffer = buf;
+    const g = actx.createGain(); const t0 = actx.currentTime + start;
+    huelle(g, t0, dauer, lautst);
+    let kopf = q;
+    if (filter && actx.createBiquadFilter) { const f = actx.createBiquadFilter(); f.type = filter.typ; f.frequency.value = filter.freq; q.connect(f); kopf = f; }
+    kopf.connect(g); g.connect(actx.destination); q.start(t0); q.stop(t0 + dauer + 0.02);
   }
   const klang = {
     sprung() { ton(300, 0.12, "square", 0.05); ton(520, 0.1, "square", 0.04, 0.05); },
@@ -147,8 +167,16 @@
     wort() { [523, 659, 784, 1047].forEach((f, i) => ton(f, 0.18, "triangle", 0.1, i * 0.09)); },
     richtig() { [659, 784, 988, 1319].forEach((f, i) => ton(f, 0.2, "triangle", 0.1, i * 0.1)); },
     falsch() { ton(180, 0.3, "sawtooth", 0.08); ton(140, 0.35, "sawtooth", 0.08, 0.15); },
-    aua() { ton(220, 0.15, "square", 0.08); ton(160, 0.25, "square", 0.08, 0.12); },
-    stampf() { ton(200, 0.08, "square", 0.08); ton(120, 0.1, "square", 0.06, 0.06); },
+    aua() { ton(220, 0.15, "square", 0.08); ton(160, 0.25, "square", 0.08, 0.12); ton(180, 0.32, "sine", 0.1, 0.02, 70); },   // Autsch: dumpf, fällt ab
+    combo(stufe) {   // kurzer aufsteigender Jingle: 3 Töne (3×), 4 Töne (5×), 5 Töne (8+)
+      const noten = stufe >= 8 ? [523, 659, 784, 1047, 1319] : stufe >= 5 ? [659, 784, 988, 1319] : [660, 880, 1100];
+      noten.forEach((f, i) => ton(f, 0.14, "triangle", 0.09, i * 0.07));
+    },
+    // Gegner-Klänge: leiser als Diamant/Wort
+    taube() { for (let i = 0; i < 3; i++) rauschen(0.06, 0.05, i * 0.085, { typ: "bandpass", freq: 1400 }); },        // Flattern: 3 Rausch-Pulse
+    waschbaer() { ton(110, 0.3, "sawtooth", 0.035, 0, 150); ton(140, 0.25, "sawtooth", 0.03, 0.16, 95); for (let i = 0; i < 3; i++) ton(620 + i * 60, 0.03, "square", 0.025, 0.42 + i * 0.06); },   // Knurren + Schnattern
+    eichhoernchen() { ton(2400, 0.06, "sine", 0.035, 0, 3300); ton(2600, 0.06, "sine", 0.03, 0.09, 3500); },   // hohes Zirpen
+    plopp() { ton(520, 0.13, "sine", 0.09, 0, 130); rauschen(0.05, 0.03, 0.02, { typ: "lowpass", freq: 900 }); },
     fanfare() { [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => ton(f, 0.25, "triangle", 0.1, i * 0.14)); },
     tuer() { ton(110, 0.6, "sawtooth", 0.05); ton(220, 0.5, "triangle", 0.05, 0.3); },
     checkpoint() { [784, 1047].forEach((f, i) => ton(f, 0.16, "triangle", 0.09, i * 0.12)); },
@@ -423,6 +451,12 @@
   let spieler, diamanten, gegner, tore, checkpoints, leben, gesammelt, kamera, zeit, popup, meldung, checkpoint, boss, tuer, tot, bossFrage, torErgebnisse;
   let sequenz = null, zoom = 1, banner = null, bossSpruch = null;
   let halten = false, haltZeit = 0, sprungGedrueckt = false;
+  // Combo + Effekte
+  let combo = 0, maxCombo = 0, comboText = null, hudPuls = 0, spur = 0, onfire = false, partikel = [], spurPunkte = [];
+  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9 };   // letzter Klang je Art (Spielzeit)
+  let gegnerKlaenge = 0;   // Zähler für Tests
+  const GEGNER_KLANG_ABSTAND = 1.5, GEGNER_NAEHE = 260, COMBO_TEXT_DAUER = 1.3;
+  const ruhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
   const SPEED = 230, GRAV = 1600, GRAV_HALT = 800, SPRUNG_V = -480, HALT_MAX = 0.32;
   const PW = 30, PH = 78;  // Trefferbox
   const SEQUENZ = { zoom: 1.5, stand: 1.0, banner: 2.4, boss: 1.3, zurueck: 0.8 };
@@ -445,6 +479,99 @@
     leben = 3; gesammelt = 0; kamera = 0; zeit = 0; popup = null; meldung = null; tot = 0;
     checkpoint = 120; boss = { maul:0, weg:0, sichtbar:0, deckel:0 }; tuer = { offen:0 }; bossFrage = null;
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
+    combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0;
+    for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
+  }
+
+  /* ---------- Combo, Partikel, Gegner-Klänge ---------- */
+  function funken(x, y, n, farben, tempo, dauer, art = "funke") {
+    if (ruhig()) return;
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, v = tempo * (0.4 + Math.random() * 0.6);
+      partikel.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - tempo * 0.3, zeit: dauer * (0.6 + Math.random() * 0.4), dauer, farbe: farben[i % farben.length], r: 2 + Math.random() * 2.5, art });
+    }
+  }
+  function comboReset() {
+    combo = 0; onfire = false; spur = 0;
+  }
+  function diamantSammeln(d) {
+    d.weg = true; gesammelt++; klang.wort();
+    const w = woerter[d.wort];
+    popup = { en: w.en, de: w.de, zeit: 1.8, art: 'wort' };
+    stimme.wort(d.wort);
+    combo++; if (combo > maxCombo) maxCombo = combo; hudPuls = 1;
+    const fx = spieler.x, fy = spieler.y - 40;
+    if (combo === 3) {
+      comboText = { text: "3× Combo!", zeit: COMBO_TEXT_DAUER, stufe: 3 }; klang.combo(3);
+      funken(fx, fy, 26, ["#ffd93d", "#fff6c0", "#ff9f1c"], 260, 0.8);
+    } else if (combo === 5) {
+      comboText = { text: "5× Combo!", zeit: COMBO_TEXT_DAUER, stufe: 5 }; klang.combo(5);
+      funken(fx, fy, 40, ["#ffd93d", "#fff6c0", "#ff9f1c", "#ffffff"], 320, 0.9);
+      if (!ruhig()) spur = 3;
+    } else if (combo >= 8) {
+      comboText = { text: "On fire! 🔥", zeit: COMBO_TEXT_DAUER, stufe: 8 };
+      if (combo === 8) { klang.combo(8); funken(fx, fy, 40, ["#ff4d1c", "#ff9f1c", "#ffd93d"], 320, 0.9); }
+      onfire = !ruhig();
+    }
+  }
+  function gegnerPlatt(g) {
+    g.tot = 0.01; spieler.vy = -320; spieler.amBoden = false;
+    gegnerKlang("plopp");
+    const b = gegnerBox(g); funken(b.x + b.w / 2, b.y + b.h / 2, 10, ["#fff6c0", "#ffd93d", "#ffffff"], 170, 0.5, "stern");
+  }
+  // Gegner-Klang: nur im laufenden Spiel (nie in Sequenz/Boss), je Art höchstens alle 1,5 s; "plopp" ist ein Ereignis ohne Sperre
+  function gegnerKlang(art) {
+    if (zustand !== 'spiel') return false;
+    if (art !== "plopp") {
+      if (zeit - gegnerKlangZeit[art] < GEGNER_KLANG_ABSTAND) return false;
+      gegnerKlangZeit[art] = zeit;
+    }
+    gegnerKlaenge++;
+    if (klang[art]) klang[art]();
+    return true;
+  }
+  function gegnerKlaengeNaehe() {
+    for (const g of gegner) {
+      if (g.tot > 0) continue;
+      const abstand = g.x - spieler.x;
+      const nah = abstand > -40 && abstand < GEGNER_NAEHE;
+      if (g.art === 'eichhoernchen') {   // Zirpen beim Absprung (Hüpfphase beginnt) – oder sofort, wenn es gerade nahe kommt
+        const phase = Math.sin(g.flug * 6) >= 0;
+        if (nah && ((phase && g.hopPhase === false) || !g.nahWar)) gegnerKlang('eichhoernchen');
+        g.hopPhase = phase; g.nahWar = nah;
+      } else if (nah) gegnerKlang(g.art);
+    }
+  }
+  function effekteBewegen(dt) {
+    if (hudPuls > 0) hudPuls = Math.max(0, hudPuls - dt * 2.2);
+    if (comboText) { comboText.zeit -= dt; if (comboText.zeit <= 0) comboText = null; }
+    if (spur > 0) spur = Math.max(0, spur - dt);
+    for (const q of partikel) { q.zeit -= dt; q.x += q.vx * dt; q.y += q.vy * dt; if (q.art !== "flamme") q.vy += 420 * dt; }
+    partikel = partikel.filter((q) => q.zeit > 0);
+    for (const q of spurPunkte) q.zeit -= dt;
+    spurPunkte = spurPunkte.filter((q) => q.zeit > 0);
+    if (zustand === 'spiel' && tot <= 0) {
+      if (spur > 0) spurPunkte.push({ x: spieler.x - 6, y: spieler.y - 36 + Math.sin(zeit * 20) * 6, zeit: 0.6, r: 5 + Math.random() * 3 });
+      if (onfire && partikel.length < 160) for (let i = 0; i < 2; i++) partikel.push({ x: spieler.x - 10 + Math.random() * 20, y: spieler.y - 2, vx: -60 - Math.random() * 60, vy: -40 - Math.random() * 60,
+        zeit: 0.42, dauer: 0.42, farbe: ["#ff4d1c", "#ff9f1c", "#ffd93d"][i % 3], r: 3 + Math.random() * 3, art: "flamme" });
+    }
+  }
+  function effekteZeichnen(c) {
+    for (const q of spurPunkte) {
+      c.globalAlpha = Math.max(0, q.zeit / 0.6) * 0.8;
+      c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(q.x - kamera, q.y, q.r * (0.4 + q.zeit / 0.6), 0, Math.PI * 2); c.fill();
+    }
+    for (const q of partikel) {
+      const f = Math.max(0, q.zeit / q.dauer);
+      c.globalAlpha = Math.min(1, f * 1.4);
+      c.fillStyle = q.farbe;
+      const x = q.x - kamera, r = q.art === "flamme" ? q.r * f : q.r;
+      if (q.art === "stern") {
+        c.beginPath(); for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2; c.moveTo(x, q.y); c.lineTo(x + Math.cos(a) * r * 2, q.y + Math.sin(a) * r * 2); }
+        c.strokeStyle = q.farbe; c.lineWidth = 1.5; c.stroke();
+      } else { c.beginPath(); c.arc(x, q.y, Math.max(0.3, r), 0, Math.PI * 2); c.fill(); }
+    }
+    c.globalAlpha = 1;
   }
 
   /* ---------- Eingabe ---------- */
@@ -482,7 +609,7 @@
 
   function schaden(grund) {
     if (spieler.unverwundbar > 0 || tot > 0) return;
-    leben--; klang.aua();
+    leben--; klang.aua(); comboReset();
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     tot = 0.9; meldung = { text: grund === 'wasser' ? 'Splash! 💦' : 'Ouch!', zeit: 1.2 };
   }
@@ -511,7 +638,7 @@
     if (popup) { popup.zeit -= dt; if (popup.zeit <= 0) popup = null; }
     if (meldung) { meldung.zeit -= dt; if (meldung.zeit <= 0) meldung = null; }
     if (bossSpruch) { bossSpruch.zeit -= dt; if (bossSpruch.zeit <= 0) bossSpruch = null; }
-    if (!eingefroren) { gegnerBewegen(dt); for (const d of diamanten) d.funkel += dt; }
+    if (!eingefroren) { gegnerBewegen(dt); for (const d of diamanten) d.funkel += dt; effekteBewegen(dt); }
 
     if (zustand === 'spiel') {
       if (tot > 0) { tot -= dt; if (tot <= 0) wiederbeleben(); return; }
@@ -572,12 +699,8 @@
       const box = { x: spieler.x - PW / 2, y: spieler.y - PH, w: PW, h: PH };
       for (const d of diamanten) {
         if (d.weg) continue;
-        if (ueberlappt(box.x, box.y, box.w, box.h, d.x - 14, d.y - 16, 28, 32)) {
-          d.weg = true; gesammelt++; klang.wort();
-          const w = woerter[d.wort];
-          popup = { en: w.en, de: w.de, zeit: 1.8, art:'wort' };
-          stimme.wort(d.wort);
-        }
+        if (ueberlappt(box.x, box.y, box.w, box.h, d.x - 14, d.y - 16, 28, 32)) diamantSammeln(d);
+        else if (!d.verpasst && d.x < spieler.x - PW / 2 - 20) { d.verpasst = true; comboReset(); }   // Diamant hinter der Figur: Serie reißt
       }
       // Frage-Tore
       tore.forEach((tor, ti) => {
@@ -598,10 +721,11 @@
         if (g.tot > 0) continue;
         const gb = gegnerBox(g);
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, gb.x, gb.y, gb.w, gb.h)) {
-          if (spieler.vy > 0 && altY <= gb.y + 14) { g.tot = 0.01; spieler.vy = -320; spieler.amBoden = false; klang.stampf(); }
+          if (spieler.vy > 0 && altY <= gb.y + 14) gegnerPlatt(g);
           else schaden('gegner');
         }
       }
+      gegnerKlaengeNaehe();
       // Boss-Sequenz beginnt
       if (spieler.x >= level.sequenzX && spieler.amBoden) {
         zustand = 'sequenz'; sequenz = { phase:'zoom', t:0 }; halten = false; spieler.unverwundbar = 0;
@@ -686,7 +810,7 @@
       popup = { en: woerter[i].en + " ✓", de: woerter[i].de, zeit: 2.5, art: "richtig" };
       bossSagt(BOSS_RICHTIG, 3);
     } else {
-      klang.falsch(); leben--;
+      klang.falsch(); leben--; comboReset();
       popup = { en: woerter[i].en + " ✗", de: woerter[i].de, zeit: 2, art: "falsch" };
       if (leben <= 0) { frageBox.hidden = true; bossFrage = null; zustand = "gameover"; zeigeEnde(false); }
       else { bossFragen(); bossSagt(BOSS_FALSCH); }
@@ -696,7 +820,7 @@
   /* ---------- Ende: Ergebnis an die App ---------- */
   const ergebnis = (geschafft) => ({
     geschafft, diamanten: gesammelt, max: woerter.length + level.tore.length,
-    toreRichtig: torErgebnisse.filter(Boolean).length, leben, dauer: Math.round((performance.now() - startZeit) / 1000),
+    toreRichtig: torErgebnisse.filter(Boolean).length, leben, dauer: Math.round((performance.now() - startZeit) / 1000), maxCombo,
   });
   function zeigeEnde(gewonnen) {
     if (endeGemeldet) return;
@@ -964,6 +1088,7 @@
       zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit);
       c.globalAlpha = 1;
     }
+    effekteZeichnen(c);
   }
   function sprechblase(c, x, y, text) {
     c.save(); c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
@@ -983,6 +1108,15 @@
     diamant(c, viewW - 118, 24, 10, '#39c6f0');   // Platz für den ✕-Knopf der App rechts oben
     c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle';
     c.fillStyle = '#18213a'; c.fillText(`${gesammelt} / ${max}`, viewW - 102, 24);
+    if (combo >= 2) {   // Combo-Zähler links neben dem Diamanten, pulsiert bei Erhöhung
+      const puls = ruhig() ? 1 : 1 + 0.35 * Math.sin(Math.min(1, hudPuls) * Math.PI);
+      c.save(); c.translate(viewW - 140, 24); c.scale(puls, puls);
+      c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'right'; c.textBaseline = 'middle';
+      const txt = `🔥 ×${combo}`, tw = c.measureText(txt).width + 14;
+      c.fillStyle = onfire ? 'rgba(255,77,28,.9)' : 'rgba(255,217,61,.9)'; c.beginPath(); c.roundRect(-tw, -13, tw, 26, 13); c.fill();
+      c.fillStyle = onfire ? '#fff' : '#18213a'; c.fillText(txt, -7, 1);
+      c.restore();
+    }
     // Fortschritt mit Marken für Tore (gold) und Checkpoints (grün)
     const ende = level.tuerX; const f = Math.min(1, spieler.x / ende);
     const bx = viewW / 2 - 90, bwid = 180;
@@ -1016,6 +1150,16 @@
     if (meldung) {
       c.font = 'bold 30px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
       c.fillStyle = '#fff'; c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 5; c.strokeText(meldung.text, viewW / 2, 210); c.fillText(meldung.text, viewW / 2, 210);
+    }
+    if (comboText) {   // Combo-Einblendung: springt auf, bleibt, blendet aus (reduced-motion: nur Text)
+      const rest = comboText.zeit, auf = COMBO_TEXT_DAUER - rest;
+      const a = Math.min(1, rest / 0.3, auf / 0.1 + 0.2);
+      const s = ruhig() ? 1 : 1 + 0.45 * Math.max(0, 1 - auf / 0.25);
+      const farbe = comboText.stufe >= 8 ? '#ff4d1c' : '#ffd93d';
+      c.save(); c.globalAlpha = Math.max(0, a); c.translate(viewW / 2, 250); c.scale(s, s);
+      c.font = `bold ${comboText.stufe >= 5 ? 36 : 30}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillStyle = farbe; c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 6; c.strokeText(comboText.text, 0, 0); c.fillText(comboText.text, 0, 0);
+      c.restore();
     }
     // Banner der Zwischensequenz (Platzhalter für Mr. Alex' Stimme)
     if (banner) {
@@ -1134,8 +1278,13 @@
         bossSichtbar: boss.sichtbar, bossSpruch: bossSpruch ? bossSpruch.text : null,
         koerper: { bauch: skin.bauch, brust: skin.brust, muskeln: skin.muskeln, power: skin.power, powerAura: skin.powerAura || 0 },
         hochformatHinweis: bereich.y > 0, viewW, speed: SPEED, strecke: level.stopX, sequenzMinDauer: SEQUENZ_MIN, woerter: woerter.map((w) => w.en),
+        combo, maxCombo, comboText: comboText ? comboText.text : null, partikel: partikel.length, spur: spur > 0, spurPunkte: spurPunkte.length, onfire, ruhig: ruhig(),
+        gegnerKlaenge, gegnerNah: gegner.filter((g) => g.tot <= 0 && g.x - spieler.x > -40 && g.x - spieler.x < GEGNER_NAEHE).map((g) => g.art),
       };
     },
+    sammle(i) { const d = diamanten[i]; if (d && !d.weg && zustand === "spiel") diamantSammeln(d); },   // Diamant i direkt einsammeln (Test)
+    stampfe(i) { const g = gegner[i]; if (g && g.tot <= 0 && zustand === "spiel") gegnerPlatt(g); },                             // Gegner i plattdrücken (Test)
+    gegnerKlang,
     teleport(x) { tot = 0; spieler.unverwundbar = 0; spieler.x = x; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; kamera = Math.max(0, Math.min(x - viewW * 0.33, level.ende - viewW)); },
     teleportBoss() { this.teleport(level.sequenzX - 250); },
     antwort(n) { antwortGeben(n); },

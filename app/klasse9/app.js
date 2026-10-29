@@ -2697,6 +2697,7 @@
           e.geschafft ? el("p", { lang: "en" }, `You found the ${WELT.ziel}!`)
             : el("p", {}, T("Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!", "No lives left. You still saw the words – next time you'll make it!")),
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
+          e.maxCombo > 0 && el("p", { class: "klein runner-serie" }, T(`🔥 Beste Serie: ×${e.maxCombo}`, `🔥 Best streak: ×${e.maxCombo}`)),
           e.geschafft && el("p", {}, el("strong", {}, `🏆 ${WELT.trophaee} – ${stufe === "gold" ? "Gold" : T("Silber", "Silver")}`),
             stufe !== "gold" ? T(" (Gold: alle Diamanten und beide Tore richtig)", " (gold: all diamonds and both gates right)") : ""),
           el("p", { class: "klein" }, `🏃 ${T("Runner-Titel", "Runner title")}: ${runnerTitelName(r.titel) || "–"} · ${r.geschafft} ${T("Level geschafft", "levels done")}`)),

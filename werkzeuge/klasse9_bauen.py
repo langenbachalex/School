@@ -5,6 +5,7 @@ import csv, hashlib, json, os, shutil, sys
 from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hausaufgaben
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INHALTE = os.path.join(BASIS, "inhalte", "klasse9")
 APP = os.path.join(BASIS, "app", "klasse9")
@@ -375,8 +376,21 @@ def main():
             for s in g.get("schritte", []):
                 for sid in s.get("saetze", []) + s.get("text", []) + s.get("paare", []) + [x[0] for x in s.get("zeilen", [])] + [a["satz"] for a in s.get("aufgaben", [])]:
                     assert sid in saetze, sid
+    # 📝 Hausaufgabe (inhalte/klasse9/hausaufgabe.tsv, Schema in inhalte/klasse9/LIESMICH.md): Ziele gegen die Teile prüfen, wie die App sie zählt
+    def vok_teile(ids):  # wie vokSchritte() in der App
+        namen = ["Words"] + [f"Sentences · Step {i}" for i in (1, 2, 3)]
+        if any(next(v for v in vokabeln if v["id"] == i)["def"] for i in ids):
+            namen.append("Find the word")
+        return namen + ["EN → DE", "DE → EN"]
+    def gruppen_von(k):
+        g = [{"schluessel": f"u{u}:{x['name']}", "name": f"Unit {u} · {x['name']}", "teile": vok_teile(x["vokabeln"])} for u, xs in units.items() for x in xs] if k.get("vokabeln") else []
+        g += [{"schluessel": x["name"], "name": x["name"], "teile": vok_teile(x["vokabeln"]) if x.get("vokabeln") else hausaufgaben.teile_namen(x["schritte"], [1, 2, 3], "Step")}
+              for x in k.get("gruppen", [])]
+        return g or None
+    einheiten = [{"nr": k["nr"], "titel": k["titel"], "gruppen": gruppen_von(k), "teile": None} for k in KATEGORIEN]
+    hw = hausaufgaben.lesen(os.path.join(INHALTE, "hausaufgabe.tsv"), einheiten)
     daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren,
-             "spiel": spieldaten(), "gym": GYM, "termin": TERMIN}
+             "spiel": spieldaten(), "gym": GYM, "termin": TERMIN, "hausaufgaben": hw}
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – bitte nicht von Hand ändern.\n")
         f.write("window.DATEN = " + json.dumps(daten, ensure_ascii=False, indent=1) + ";\n")

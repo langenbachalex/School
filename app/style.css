@@ -364,6 +364,24 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
 .tempo-knopf:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
 .tempo-leiste { display: flex; justify-content: flex-end; padding: 8px 16px 0; max-width: 60rem; margin: 0 auto; }
 
+/* 📝 Homework (inhalte/hausaufgabe.tsv): Chip-Zeile über dem Word Gym, Knopf in der Leiste, Schild an Kachel, Abschnitt und Teil */
+:root { --hw: #d6283c; --hw-text: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hw: #ff7b89; --hw-text: #2a0008; } }
+:root[data-theme="dark"] { --hw: #ff7b89; --hw-text: #2a0008; }
+.hw-zeile { display: flex; align-items: center; gap: 10px; min-height: 40px; min-width: 0; margin-bottom: -8px; }
+.hw-chip, .hw-knopf { font: 700 .95rem var(--body); min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+  border: 2px solid var(--hw); background: var(--karte); color: var(--hw); }
+.hw-chip:focus-visible, .hw-knopf:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
+.hw-zeile.fertig .hw-chip, .hw-knopf.fertig { border-color: var(--gruen); color: var(--gruen); background: var(--gruen-hell); }
+.hw-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.hw-zeile.fertig .hw-text { color: var(--gruen); }
+.hw-schild { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--hw-text); background: var(--hw); border-radius: 999px; padding: 2px 8px; }
+.kachel.hw { border-color: var(--hw); }
+.sprung.hw { border-color: var(--hw); }
+.sprung.hw::after { content: " 📝"; }
+.sprung.hw.fertig::after { content: " 📝✓"; }
+@media (max-width: 640px) { .raster9 .kachel .hw-schild { font-size: .65rem; padding: 1px 6px; } }
+
 /* Countdown bis zum nächsten Termin (GLN) */
 .termin { margin: 8px 0 0; padding: 8px 14px; border-radius: 12px; background: var(--gelb); color: var(--gelb-text); font-weight: 700; width: fit-content; max-width: 100%; }
 

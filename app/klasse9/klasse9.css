@@ -202,6 +202,9 @@
 .niveau-leiste .tempo-knopf { margin-left: auto; margin-right: 10px; min-height: 40px; background: transparent; color: var(--blau-text); border-color: var(--blau-text); }
 .niveau-leiste { justify-content: flex-start; }
 .niveau-leiste .niveau { margin-left: 0; }
+.niveau-leiste .hw-knopf { margin-right: 10px; background: var(--karte); color: var(--hw); border-color: var(--hw); }
+.niveau-leiste .hw-knopf.fertig { color: var(--gruen); border-color: var(--gruen); background: var(--gruen-hell); }
+@media (max-width: 480px) { .niveau-leiste:has(.hw-knopf) .niveau-name { display: none; } }
 
 /* Games: Border Patrol */
 .patrol-stand { display: flex; justify-content: space-between; margin: 0 0 8px; font-weight: 600; }

@@ -6428,5 +6428,20 @@ window.DATEN = {
     "rahmen": "gruen"
    }
   ]
- }
+ },
+ "hausaufgaben": [
+  {
+   "von": "2026-11-02",
+   "bis": "2026-11-08",
+   "ziel": "6/3",
+   "text": "Hörübung 3 „Talking about free time“",
+   "nr": 6,
+   "gruppe": null,
+   "teil": 2,
+   "name": "Station 6: Hörverstehen · Hören 3",
+   "schluessel": [
+    "6||2"
+   ]
+  }
+ ]
 };

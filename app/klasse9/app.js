@@ -17,8 +17,12 @@
   const SIEGEL_SALZ = "mrAlex·2026·nine·p7Qx";
   const SIEGEL_BIS = Date.parse("2026-12-01"); // bis dahin werden ältere, noch ungesiegelte Spielstände einmalig übernommen
   // Siegel-Version 2 (Power Up): auch die erledigten Teile (stand.teile) stecken im Siegel; ein Stand ohne _v wird noch mit dem alten Siegel geprüft und beim Laden neu gesiegelt.
-  const siegel = (o, alt) => {
-    const t = SIEGEL_SALZ + JSON.stringify(alt ? [o.spiel || null, o.gym || null, o.erledigt || null] : [o.spiel || null, o.gym || null, o.erledigt || null, o.teile || null]);
+  // Siegel-Version 3 (Homework): auch die Hausaufgaben-Boni (stand.hw) stecken im Siegel; ältere Stände werden mit ihrer Version geprüft und beim nächsten Speichern als v3 gesiegelt.
+  const siegel = (o, v = 3) => {
+    const inhalt = [o.spiel || null, o.gym || null, o.erledigt || null];
+    if (v >= 2) inhalt.push(o.teile || null);
+    if (v >= 3) inhalt.push(o.hw || null);
+    const t = SIEGEL_SALZ + JSON.stringify(inhalt);
     let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
     for (let i = 0; i < t.length; i++) { const c = t.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
     h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
@@ -27,7 +31,7 @@
   };
   let manipuliert = false, letzterGueltig = null;
   const lies = (key) => { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; } };
-  const echt = (o) => o && typeof o === "object" && (o._v >= 2 ? o._s === siegel(o) : o._s === siegel(o, true));
+  const echt = (o) => o && typeof o === "object" && o._s === siegel(o, o._v >= 2 ? o._v : 1);
   const grund = () => ({ erledigt: [], fragen: [], niveau: "G" });
   function laden() {
     const haupt = lies(SPEICHER), sicherung = lies(SPEICHER + "-b");
@@ -41,7 +45,7 @@
   }
   function speichern() {
     try {
-      stand._v = 2; stand._s = siegel(stand);
+      stand._v = 3; stand._s = siegel(stand);
       const neu = JSON.stringify(stand);
       localStorage.setItem(SPEICHER + "-b", neu); // Zweitkopie: Wer nur den Hauptspeicher ändert, bekommt den letzten echten Stand zurück
       localStorage.setItem(SPEICHER, neu);
@@ -249,7 +253,7 @@
     for (const k of kinder.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
     return e;
   }
-  function zeige(...inhalt) { dialogLauf++; stopp(); app.replaceChildren(...inhalt.filter(Boolean)); if (!leise) window.scrollTo(0, 0); }
+  function zeige(...inhalt) { dialogLauf++; stopp(); app.replaceChildren(...inhalt.filter(Boolean)); if (!leise) window.scrollTo(0, 0); hwLeiste(); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -336,18 +340,18 @@
         el("h1", { lang: "en" }, "Hi! Let's practise together."),
         el("p", { class: "klein" }, T("Wähl eine Kategorie. Oben rechts stellst du deinen Kurs ein: G oder E. Dein Mr. Alex",
           "Choose a category. Top right: choose your course, G or E. Your Mr. Alex"))),
-      gymKarte(),
+      hwZeile(), gymKarte(),
       neuZeile(), powerupZeile(),
       el("nav", { class: "kacheln raster9", "aria-label": T("Kategorien", "Categories") },
         D.kategorien.map((k) => {
-          const auf = faellige(k.nr + "|") > 0, fertig = stand.erledigt.includes(k.nr) && !auf, neu = istNeu(k) || (k.gruppen || []).some(istNeu);
-          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : "") + (k.bald ? " bald" : "") + (neu ? " frisch" : "") + (k.farbe ? " " + k.farbe : ""),
-            onclick: () => starteKategorie(k.nr), "aria-label": `${k.nr} ${k.titel}${k.bald ? T(" (kommt bald)", " (coming soon)") : ""}${neu ? T(" (neu)", " (new)") : ""}${auf ? " (Power Up)" : ""}${fertig ? " ✓" : ""}` },
+          const auf = faellige(k.nr + "|") > 0, fertig = stand.erledigt.includes(k.nr) && !auf, neu = istNeu(k) || (k.gruppen || []).some(istNeu), hw = hwBei(k.nr);
+          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : "") + (k.bald ? " bald" : "") + (neu ? " frisch" : "") + (hw ? " hw" : "") + (k.farbe ? " " + k.farbe : ""),
+            onclick: () => starteKategorie(k.nr), "aria-label": `${k.nr} ${k.titel}${k.bald ? T(" (kommt bald)", " (coming soon)") : ""}${neu ? T(" (neu)", " (new)") : ""}${auf ? " (Power Up)" : ""}${hw ? " (Homework)" : ""}${fertig ? " ✓" : ""}` },
             el("span", { class: "sym", "aria-hidden": "true" }, k.symbol),
             el("span", { class: "titel", lang: "en" }, k.titel),
             el("span", { class: "unter" }, tx(k.unter)),
             k.bald && el("span", { class: "bald-schild" }, T("kommt bald", "coming soon")),
-            neu && neuSchild(), auf && powerupSchild(),
+            hw && hwSchild(), neu && neuSchild(), auf && powerupSchild(),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
       el("div", { class: "knopfreihe" }, knopf(T("✏️ Frage für meinen Lehrer", "✏️ Question for my teacher"), fragenOeffnen)));
@@ -374,14 +378,14 @@
   const gruppenFertig = (nr) => (stand.gruppen && stand.gruppen[nr]) || [];
 
   function gruppenKachel(k, g, schluessel, nrText, onclick) {
-    const auf = faellige(`${k.nr}|${schluessel}|`) > 0, ok = gruppenFertig(k.nr).includes(schluessel) && !auf, neu = istNeu(g);
-    return el("button", { class: "kachel" + (ok ? " erledigt" : "") + (auf ? " powerup" : "") + (neu ? " frisch" : ""), onclick,
-      "aria-label": `${g.name}${neu ? T(" (neu)", " (new)") : ""}${auf ? " (Power Up)" : ""}${ok ? " ✓" : ""}` },
+    const auf = faellige(`${k.nr}|${schluessel}|`) > 0, ok = gruppenFertig(k.nr).includes(schluessel) && !auf, neu = istNeu(g), hw = hwBei(k.nr, `${k.nr}|${schluessel}|`);
+    return el("button", { class: "kachel" + (ok ? " erledigt" : "") + (auf ? " powerup" : "") + (neu ? " frisch" : "") + (hw ? " hw" : ""), onclick,
+      "aria-label": `${g.name}${neu ? T(" (neu)", " (new)") : ""}${auf ? " (Power Up)" : ""}${hw ? " (Homework)" : ""}${ok ? " ✓" : ""}` },
       el("span", { class: "nr" }, nrText),
       el("span", { class: "titel", lang: "en" }, g.name),
       g.unter && el("span", { class: "unter", lang: "en" }, g.unter),
       g.symbol && el("span", { class: "vorschau", "aria-hidden": "true" }, g.symbol),
-      neu && neuSchild(), auf && powerupSchild(),
+      hw && hwSchild(), neu && neuSchild(), auf && powerupSchild(),
       ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
   }
 
@@ -492,10 +496,60 @@
   }
   // Alte Einträge (true, auch aus umbau()) bekommen Datum und Stufe 0; danach ist der Stand mit Version 2 gesiegelt (einmalig, idempotent)
   function powerupMigration() {
-    let geaendert = stand._v !== 2;
+    let geaendert = stand._v !== 3;
     for (const k of Object.keys(stand.teile || {})) if (typeof stand.teile[k] !== "object") { stand.teile[k] = { am: iso(heute()), s: 0 }; geaendert = true; }
     if (geaendert) speichern();
   }
+  /* ---------- 📝 Homework (inhalte/klasse9/hausaufgabe.tsv → D.hausaufgaben, Schema in inhalte/klasse9/LIESMICH.md) ----------
+     Gilt von ≤ heute ≤ bis (Ortszeit). Dann: Knopf „📝 HW“ in der Leiste, Chip-Zeile über dem Word Gym, Schild an Kachel, Abschnitt und Teil.
+     Jeder Teil der Hausaufgabe bringt im Zeitraum +50 % auf die Teil-Punkte (aufgerundet) – einmal je Teil und Hausaufgabe
+     (stand.hw["<von>|<ziel>"] = [Teilschlüssel …], steckt im Siegel). Erledigt = alle Teile fertig oder in diesem Zeitraum gemacht. */
+  const hwAktiv = () => { const t = iso(heute()); return (D.hausaufgaben || []).find((h) => h.von <= t && t <= h.bis) || null; };
+  const hwId = (h) => `${h.von}|${h.ziel}`;
+  const hwGemacht = (h) => (stand.hw && stand.hw[hwId(h)]) || [];
+  const hwTrifft = (k) => { const h = hwAktiv(); return !!h && h.schluessel.includes(k); };
+  const hwBei = (nr, anfang) => { const h = hwAktiv(); return !!h && h.nr === nr && (!anfang || h.schluessel.some((k) => k.startsWith(anfang))); };
+  const hwErledigt = (h) => h.schluessel.length > 0 && h.schluessel.every((k) => (stand.teile && stand.teile[k]) || hwGemacht(h).includes(k));
+  const hwSchild = () => el("span", { class: "hw-schild" }, "📝 HW");
+  const hwDatum = (t) => { const d = new Date(t + "T12:00:00"); return E() ? `${["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][d.getDay()]} ${d.getDate()} ${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][d.getMonth()]}`
+    : `${["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"][d.getDay()]} ${d.getDate()}.${d.getMonth() + 1}.`; };
+  function hwBonus(basis) {
+    const h = hwAktiv();
+    if (!h || !lage || !lage.teile) return 0;
+    const k = teilSchluessel(lage.teil);
+    if (!h.schluessel.includes(k) || hwGemacht(h).includes(k)) return 0;
+    (stand.hw = stand.hw || {})[hwId(h)] = [...hwGemacht(h), k];
+    return Math.ceil(basis / 2);
+  }
+  // Direktsprung zum Ziel: Kategorie, Gruppe (Unit-Abschnitt „u2:Start“ oder feste Gruppe) oder Teil
+  function hwStart(h) {
+    const k = kategorie(h.nr);
+    if (h.gruppe == null) return starteKategorie(h.nr);
+    const m = h.gruppe.match(/^u(\d+):(.*)$/);
+    if (m) { stand.unit = m[1]; starteUnitGruppe(k, m[1], D.units[m[1]].findIndex((g) => g.name === m[2])); }
+    else starteGruppe(k, k.gruppen.findIndex((g) => g.name === h.gruppe));
+    if (h.teil != null && lage) springe(h.teil);
+  }
+  // Knopf „📝 HW“ oben in der Leiste neben dem Tempo-Knopf (bei jedem Seitenwechsel aktualisiert)
+  function hwLeiste() {
+    const h = hwAktiv(), alt = document.getElementById("hw");
+    if (!h) { if (alt) alt.remove(); return; }
+    const fertig = hwErledigt(h);
+    const k = alt || el("button", { id: "hw", type: "button", class: "tempo-knopf hw-knopf", onclick: () => { const x = hwAktiv(); if (x) hwStart(x); } });
+    k.textContent = fertig ? "📝 HW ✓" : "📝 HW"; k.classList.toggle("fertig", fertig);
+    k.setAttribute("aria-label", (fertig ? T("Hausaufgabe erledigt: ", "Homework done: ") : T("Hausaufgabe: ", "Homework: ")) + h.text);
+    if (!alt) { const t = document.getElementById("tempo"); if (t) t.after(k); }
+  }
+  // Chip-Zeile auf der Startseite direkt über dem Word Gym
+  function hwZeile() {
+    const h = hwAktiv();
+    if (!h) return null;
+    const fertig = hwErledigt(h);
+    return el("div", { class: "hw-zeile" + (fertig ? " fertig" : ""), role: "status" },
+      el("button", { class: "hw-chip", onclick: () => hwStart(h), "aria-label": (fertig ? T("Hausaufgabe erledigt: ", "Homework done: ") : T("Hausaufgabe öffnen: ", "Open homework: ")) + h.text }, fertig ? "📝 HW ✓" : "📝 HW"),
+      el("span", { class: "hw-text", title: h.text }, fertig ? T(`Erledigt: ${h.text}`, `Done: ${h.text}`) : `${h.text} · ${T("bis", "due")} ${hwDatum(h.bis)} · +50 %`));
+  }
+
   // Timer bei Wiederholung kürzer: Teil hat schon einen Eintrag → Faktor je Stufe (Word Gym bleibt, hat kein lage.tempoFaktor)
   const TEMPO = [0.5, 0.35, 0.25];
   function tempoFaktor(i) { const e = stand.teile && stand.teile[teilSchluessel(i)]; return e ? TEMPO[Math.min(e.s || 0, 2)] : 1; }
@@ -528,6 +582,7 @@
     return el("header", { class: "kopf" },
       knopf(zurueckZu ? T("← Themen", "← Topics") : T("← Start", "← Start"), zurueckZu || startseite, "leise"),
       el("h1", { lang: "en" }, `${k.titel}` + (lage ? ` · ${lage.titel}` : "")),
+      lage && lage.teile && !lage.ende && hwTrifft(teilSchluessel(lage.teil)) && hwSchild(),
       lage && lage.teile && !lage.ende && teilFaellig(lage.teil) && powerupSchild(),
       lage && sprungleiste());
   }
@@ -536,11 +591,11 @@
     const nochNichts = !lage.teile.some((_, i) => istFertig(i));
     const ZIFFERN = ["①", "②", "③", "④"];
     const sprung = (i, text) => {
-      const t = lage.teile[i], auf = teilFaellig(i), fertig = istFertig(i) && !auf, jetzt = i === lage.teil && !lage.ende;
+      const t = lage.teile[i], auf = teilFaellig(i), fertig = istFertig(i) && !auf, jetzt = i === lage.teil && !lage.ende, hw = hwTrifft(teilSchluessel(i));
       const start = nochNichts && i === 0;
-      return el("button", { class: "sprung" + (jetzt ? " jetzt" : "") + (fertig ? " fertig" : "") + (auf ? " powerup" : "") + (start ? " start" : ""),
+      return el("button", { class: "sprung" + (jetzt ? " jetzt" : "") + (fertig ? " fertig" : "") + (auf ? " powerup" : "") + (start ? " start" : "") + (hw ? " hw" : ""),
         "aria-current": jetzt ? "step" : false, title: t.name,
-        "aria-label": `${t.name}${fertig ? " ✓" : ""}${auf ? " (Power Up)" : ""}${start ? T(" – hier starten", " – start here") : ""}`,
+        "aria-label": `${t.name}${fertig ? " ✓" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Homework)" : ""}${start ? T(" – hier starten", " – start here") : ""}`,
         onclick: () => springe(i) }, text);
     };
     const eintraege = [];
@@ -1374,6 +1429,8 @@
     const vorher = staatenBei(teileZaehler() - (erstesMal ? 1 : 0));
     let plus = istGym ? PUNKTE.seance : erstesMal ? PUNKTE.teil : PUNKTE.wiederholung;
     if (erstesMal && ohneHilfe && !istGym) { plus += PUNKTE.ohneHilfe; ereignisse.push({ art: "toast", text: T(`💪 Ohne Hilfe +${PUNKTE.ohneHilfe}`, `💪 No hints +${PUNKTE.ohneHilfe}`) }); }
+    const bonus = istGym ? 0 : hwBonus(plus); // 📝 Homework: +50 % auf die Teil-Punkte (aufgerundet), je Teil einmal pro Hausaufgabe
+    if (bonus) { plus += bonus; ereignisse.push({ art: "toast", text: `📝 Homework +${bonus}` }); }
     const ersterDesTages = !sp.tage[tag];
     sp.tage[tag] = (sp.tage[tag] || 0) + 1;
     if (staatenFrei() > vorher) ereignisse.push({ art: "staat", staat: SP.staaten[staatenFrei() - 1] });

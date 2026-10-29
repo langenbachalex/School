@@ -63,8 +63,12 @@
   const SIEGEL_SALZ = "mrAlex·2026·six·p7Qx";
   const SIEGEL_BIS = Date.parse("2026-12-01"); // bis dahin werden ältere, noch ungesiegelte Spielstände einmalig übernommen
   // Siegel-Version 2 (Power Up): auch die erledigten Teile (stand.teile) stecken im Siegel; ein Stand ohne _v wird noch mit dem alten Siegel geprüft und beim Laden neu gesiegelt.
-  const siegel = (o, alt) => {
-    const t = SIEGEL_SALZ + JSON.stringify(alt ? [o.spiel || null, o.gym || null, o.erledigt || null] : [o.spiel || null, o.gym || null, o.erledigt || null, o.teile || null]);
+  // Siegel-Version 3 (Homework): auch die Hausaufgaben-Boni (stand.hw) stecken im Siegel; ältere Stände werden mit ihrer Version geprüft und beim nächsten Speichern als v3 gesiegelt.
+  const siegel = (o, v = 3) => {
+    const inhalt = [o.spiel || null, o.gym || null, o.erledigt || null];
+    if (v >= 2) inhalt.push(o.teile || null);
+    if (v >= 3) inhalt.push(o.hw || null);
+    const t = SIEGEL_SALZ + JSON.stringify(inhalt);
     let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
     for (let i = 0; i < t.length; i++) { const c = t.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
     h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
@@ -73,7 +77,7 @@
   };
   let manipuliert = false, letzterGueltig = null;
   const lies = (key) => { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; } };
-  const echt = (o) => o && typeof o === "object" && (o._v >= 2 ? o._s === siegel(o) : o._s === siegel(o, true));
+  const echt = (o) => o && typeof o === "object" && o._s === siegel(o, o._v >= 2 ? o._v : 1);
   const grund = () => ({ erledigt: [], fragen: [] });
   function laden() {
     const haupt = lies(SPEICHER), sicherung = lies(SPEICHER + "-b");
@@ -87,7 +91,7 @@
   }
   function speichern() {
     try {
-      stand._v = 2; stand._s = siegel(stand);
+      stand._v = 3; stand._s = siegel(stand);
       const neu = JSON.stringify(stand);
       localStorage.setItem(SPEICHER + "-b", neu); // Zweitkopie: Wer nur den Hauptspeicher ändert, bekommt den letzten echten Stand zurück
       localStorage.setItem(SPEICHER, neu);
@@ -208,7 +212,7 @@
     for (const k of kinder.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
     return e;
   }
-  function zeige(...inhalt) { stopp(); app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); }
+  function zeige(...inhalt) { stopp(); app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); hwLeiste(); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -322,20 +326,20 @@
         el("h1", {}, "English Power Game"),
         el("p", { class: "klein" }, "Hallo! Wähl eine Station. Wenn du fertig bist, bekommt sie ein Häkchen."),
         statusleiste(), terminZeile()),
-      gymKarte(),
+      hwZeile(), gymKarte(),
       powerupZeile(),
       alleFertig && el("section", { class: "geschafft" },
         el("h2", {}, "Wahnsinn, du hast alles geschafft!"),
         el("p", {}, "Wenn etwas unklar ist, frag mich am Mittwoch – ich helfe dir gern. Dein Mr. Alex")),
       el("nav", { class: "kacheln", "aria-label": "Stationen" },
         D.stationen.map((s) => {
-          const auf = faellige(s.nr + "|") > 0, fertig = stand.erledigt.includes(s.nr) && !auf;
-          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : ""), onclick: () => starteStation(s.nr),
-            "aria-label": `Station ${s.nr}: ${s.titel}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}` },
+          const auf = faellige(s.nr + "|") > 0, fertig = stand.erledigt.includes(s.nr) && !auf, hw = hwBei(s.nr);
+          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : "") + (hw ? " hw" : ""), onclick: () => starteStation(s.nr),
+            "aria-label": `Station ${s.nr}: ${s.titel}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}` },
             el("span", { class: "sym", "aria-hidden": "true" }, s.symbol),
             el("span", { class: "nr" }, "Station " + s.nr),
             el("span", { class: "titel" }, s.titel),
-            auf && powerupSchild(),
+            hw && hwSchild(), auf && powerupSchild(),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
       el("div", { class: "knopfreihe" }, knopf("✏️ Frage für meinen Lehrer", fragenOeffnen))
@@ -404,10 +408,56 @@
   }
   // Alte Einträge (true) bekommen Datum und Stufe 0; danach ist der Stand mit Version 2 gesiegelt (einmalig, idempotent)
   function powerupMigration() {
-    let geaendert = stand._v !== 2;
+    let geaendert = stand._v !== 3;
     for (const k of Object.keys(stand.teile || {})) if (typeof stand.teile[k] !== "object") { stand.teile[k] = { am: iso(heute()), s: 0 }; geaendert = true; }
     if (geaendert) speichern();
   }
+  /* ---------- 📝 Homework (inhalte/hausaufgabe.tsv → D.hausaufgaben, Schema in inhalte/LIESMICH.md) ----------
+     Gilt von ≤ heute ≤ bis (Ortszeit). Dann: Knopf „📝 HW“ in der Leiste, Chip-Zeile über dem Word Gym, Schild an Kachel, Abschnitt und Teil.
+     Jeder Teil der Hausaufgabe bringt im Zeitraum +50 % auf die Teil-Punkte (aufgerundet) – einmal je Teil und Hausaufgabe
+     (stand.hw["<von>|<ziel>"] = [Teilschlüssel …], steckt im Siegel). Erledigt = alle Teile fertig oder in diesem Zeitraum gemacht. */
+  const hwAktiv = () => { const t = iso(heute()); return (D.hausaufgaben || []).find((h) => h.von <= t && t <= h.bis) || null; };
+  const hwId = (h) => `${h.von}|${h.ziel}`;
+  const hwGemacht = (h) => (stand.hw && stand.hw[hwId(h)]) || [];
+  const hwTrifft = (k) => { const h = hwAktiv(); return !!h && h.schluessel.includes(k); };
+  const hwBei = (nr, anfang) => { const h = hwAktiv(); return !!h && h.nr === nr && (!anfang || h.schluessel.some((k) => k.startsWith(anfang))); };
+  const hwErledigt = (h) => h.schluessel.length > 0 && h.schluessel.every((k) => (stand.teile && stand.teile[k]) || hwGemacht(h).includes(k));
+  const hwSchild = () => el("span", { class: "hw-schild" }, "📝 HW");
+  const hwDatum = (t) => { const d = new Date(t + "T12:00:00"); return `${["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"][d.getDay()]} ${d.getDate()}.${d.getMonth() + 1}.`; };
+  function hwBonus(basis) {
+    const h = hwAktiv();
+    if (!h || !lage || !lage.teile) return 0;
+    const k = teilSchluessel(lage.teil);
+    if (!h.schluessel.includes(k) || hwGemacht(h).includes(k)) return 0;
+    (stand.hw = stand.hw || {})[hwId(h)] = [...hwGemacht(h), k];
+    return Math.ceil(basis / 2);
+  }
+  // Direktsprung zum Ziel: Station, Abschnitt oder Teil
+  function hwStart(h) {
+    const st = station(h.nr);
+    if (h.gruppe != null) starteGruppe(st, h.gruppe); else starteStation(h.nr);
+    if (h.teil != null && lage) springe(h.teil);
+  }
+  // Knopf „📝 HW“ oben in der Leiste neben dem Tempo-Knopf (bei jedem Seitenwechsel aktualisiert)
+  function hwLeiste() {
+    const h = hwAktiv(), alt = document.getElementById("hw");
+    if (!h) { if (alt) alt.remove(); return; }
+    const fertig = hwErledigt(h);
+    const k = alt || el("button", { id: "hw", type: "button", class: "tempo-knopf hw-knopf", onclick: () => { const x = hwAktiv(); if (x) hwStart(x); } });
+    k.textContent = fertig ? "📝 HW ✓" : "📝 HW"; k.classList.toggle("fertig", fertig);
+    k.setAttribute("aria-label", (fertig ? "Hausaufgabe erledigt: " : "Hausaufgabe: ") + h.text);
+    if (!alt) { const t = document.getElementById("tempo"); if (t) t.after(k); }
+  }
+  // Chip-Zeile auf der Startseite direkt über dem Word Gym
+  function hwZeile() {
+    const h = hwAktiv();
+    if (!h) return null;
+    const fertig = hwErledigt(h);
+    return el("div", { class: "hw-zeile" + (fertig ? " fertig" : ""), role: "status" },
+      el("button", { class: "hw-chip", onclick: () => hwStart(h), "aria-label": (fertig ? "Hausaufgabe erledigt: " : "Hausaufgabe öffnen: ") + h.text }, fertig ? "📝 HW ✓" : "📝 HW"),
+      el("span", { class: "hw-text", title: h.text }, fertig ? `Erledigt: ${h.text}` : `${h.text} · bis ${hwDatum(h.bis)} · +50 %`));
+  }
+
   // Timer bei Wiederholung kürzer: Teil hat schon einen Eintrag → Faktor je Stufe (Word Gym bleibt, hat kein lage.tempoFaktor)
   const TEMPO = [0.5, 0.35, 0.25];
   function tempoFaktor(i) { const e = stand.teile && stand.teile[teilSchluessel(i)]; return e ? TEMPO[Math.min(e.s || 0, 2)] : 1; }
@@ -454,6 +504,7 @@
     return el("header", { class: "kopf" },
       lage && lage.gruppe != null ? knopf(st.gruppen[0].vokabeln ? "← Abschnitte" : "← Themen", () => zeigeGruppen(st), "leise") : knopf("← Start", startseite, "leise"),
       el("h1", {}, `Station ${st.nr}: ${st.titel}` + (lage && lage.gruppe != null ? ` · ${st.gruppen[lage.gruppe].name}` : "")),
+      lage && lage.teile && !lage.ende && hwTrifft(teilSchluessel(lage.teil)) && hwSchild(),
       lage && lage.teile && !lage.ende && teilFaellig(lage.teil) && powerupSchild(),
       lage && sprungleiste());
   }
@@ -463,11 +514,11 @@
     const nochNichts = !lage.teile.some((_, i) => istFertig(i));
     const ZIFFERN = ["①", "②", "③", "④", "⑤"];
     const sprung = (i, text) => {
-      const t = lage.teile[i], auf = teilFaellig(i), fertig = istFertig(i) && !auf, jetzt = i === lage.teil && !lage.ende;
+      const t = lage.teile[i], auf = teilFaellig(i), fertig = istFertig(i) && !auf, jetzt = i === lage.teil && !lage.ende, hw = hwTrifft(teilSchluessel(i));
       const start = nochNichts && i === 0;
-      return el("button", { class: "sprung" + (jetzt ? " jetzt" : "") + (fertig ? " fertig" : "") + (auf ? " powerup" : "") + (start ? " start" : ""),
+      return el("button", { class: "sprung" + (jetzt ? " jetzt" : "") + (fertig ? " fertig" : "") + (auf ? " powerup" : "") + (start ? " start" : "") + (hw ? " hw" : ""),
         "aria-current": jetzt ? "step" : false, title: t.name,
-        "aria-label": `${t.name}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${start ? " – hier starten" : ""}`,
+        "aria-label": `${t.name}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}${start ? " – hier starten" : ""}`,
         onclick: () => springe(i) }, text);
     };
     const eintraege = [];
@@ -574,14 +625,14 @@
       el("p", { class: "ansage" }, st.gruppen[0].vokabeln ? "Wähl einen Abschnitt. Die Wörter kommen in derselben Reihenfolge wie im Buch."
         : "Wähl ein Thema. Hier lernen wir Neues: erst die Erklärung, dann üben."),
       el("nav", { class: "kacheln gruppen", "aria-label": "Abschnitte" }, st.gruppen.map((g, i) => {
-        const auf = faellige(`${st.nr}|${i}|`) > 0, ok = fertig.includes(g.name) && !auf;
-        return el("button", { class: "kachel" + (ok ? " erledigt" : "") + (auf ? " powerup" : ""), onclick: () => starteGruppe(st, i),
-          "aria-label": `${g.name}${g.vokabeln ? `, ${g.vokabeln.length} Wörter` : ""}${ok ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}` },
+        const auf = faellige(`${st.nr}|${i}|`) > 0, ok = fertig.includes(g.name) && !auf, hw = hwBei(st.nr, `${st.nr}|${i}|`);
+        return el("button", { class: "kachel" + (ok ? " erledigt" : "") + (auf ? " powerup" : "") + (hw ? " hw" : ""), onclick: () => starteGruppe(st, i),
+          "aria-label": `${g.name}${g.vokabeln ? `, ${g.vokabeln.length} Wörter` : ""}${ok ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}` },
           el("span", { class: "nr" }, g.vokabeln ? `${g.vokabeln.length} Wörter` : `Thema ${i + 1}`),
           el("span", { class: "titel" }, g.name),
           el("span", { class: "vorschau", "aria-hidden": "true" },
             g.symbol || g.vokabeln.slice(0, 5).map((id) => D.vokabeln.find((v) => v.id === id).symbol).join(" ")),
-          auf && powerupSchild(),
+          hw && hwSchild(), auf && powerupSchild(),
           ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
       })));
   }
@@ -1401,6 +1452,8 @@
     const orteVorher = orteBei(teileZaehler() - (erstesMal ? 1 : 0));
     let plus = istGym ? PUNKTE.seance : erstesMal ? PUNKTE.teil : PUNKTE.wiederholung;
     if (erstesMal && ohneHilfe && !istGym) { plus += PUNKTE.ohneHilfe; ereignisse.push({ art: "toast", text: `💪 Ohne Hilfe +${PUNKTE.ohneHilfe}` }); }
+    const bonus = istGym ? 0 : hwBonus(plus); // 📝 Homework: +50 % auf die Teil-Punkte (aufgerundet), je Teil einmal pro Hausaufgabe
+    if (bonus) { plus += bonus; ereignisse.push({ art: "toast", text: `📝 Homework +${bonus}` }); }
     const ersterDesTages = !sp.tage[tag];
     sp.tage[tag] = (sp.tage[tag] || 0) + 1;
     if (orteFrei() > orteVorher) ereignisse.push({ art: "ort", ort: SP.orte[orteFrei() - 1] });

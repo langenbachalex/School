@@ -9245,5 +9245,26 @@ window.DATEN = {
   "name": "GLN 2",
   "datum": "2026-11-24",
   "powerup": true
- }
+ },
+ "hausaufgaben": [
+  {
+   "von": "2026-11-02",
+   "bis": "2026-11-08",
+   "ziel": "2/u2:Start",
+   "text": "Vocabulary Unit 2 · Start",
+   "nr": 2,
+   "gruppe": "u2:Start",
+   "teil": null,
+   "name": "Vocabulary · Unit 2 · Start",
+   "schluessel": [
+    "2|u2:Start|0",
+    "2|u2:Start|1",
+    "2|u2:Start|2",
+    "2|u2:Start|3",
+    "2|u2:Start|4",
+    "2|u2:Start|5",
+    "2|u2:Start|6"
+   ]
+  }
+ ]
 };

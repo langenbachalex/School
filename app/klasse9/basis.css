@@ -165,6 +165,11 @@ p { margin: 0; }
 .hv-liste > li { padding: 10px 12px; border-radius: 14px; border: 2px solid transparent; display: grid; gap: 8px; }
 .hv-liste > li.spricht { border-color: var(--blau); }
 .hv-aussage { font: 500 1.25rem/1.3 var(--display); }
+.hv-kopf { display: flex; align-items: flex-start; gap: 8px; }
+.hv-kopf .hv-aussage { flex: 1 1 auto; margin: 0; }
+.hv-hilfe { flex: 0 0 auto; font-size: 1.2rem; }
+.hv-hilfe:disabled { opacity: .4; }
+.hv-hinweis { margin: 0; }
 .wahl-knopf[aria-pressed="true"] { border-color: var(--blau); background: var(--blau); color: var(--blau-text); }
 .wahl-knopf[aria-pressed="true"].richtig, .wahl-knopf.richtig { border-color: var(--gruen); background: var(--gruen-hell); color: var(--text); }
 .wahl-knopf:disabled[aria-pressed="true"]:not(.richtig) { opacity: .7; }
@@ -358,6 +363,24 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
   border: 2px solid var(--linie); background: var(--karte); color: var(--text); font-variant-numeric: tabular-nums; }
 .tempo-knopf:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
 .tempo-leiste { display: flex; justify-content: flex-end; padding: 8px 16px 0; max-width: 60rem; margin: 0 auto; }
+
+/* 📝 Homework (inhalte/hausaufgabe.tsv): Chip-Zeile über dem Word Gym, Knopf in der Leiste, Schild an Kachel, Abschnitt und Teil */
+:root { --hw: #d6283c; --hw-text: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hw: #ff7b89; --hw-text: #2a0008; } }
+:root[data-theme="dark"] { --hw: #ff7b89; --hw-text: #2a0008; }
+.hw-zeile { display: flex; align-items: center; gap: 10px; min-height: 40px; min-width: 0; margin-bottom: -8px; }
+.hw-chip, .hw-knopf { font: 700 .95rem var(--body); min-height: 40px; padding: 0 14px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+  border: 2px solid var(--hw); background: var(--karte); color: var(--hw); }
+.hw-chip:focus-visible, .hw-knopf:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
+.hw-zeile.fertig .hw-chip, .hw-knopf.fertig { border-color: var(--gruen); color: var(--gruen); background: var(--gruen-hell); }
+.hw-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.hw-zeile.fertig .hw-text { color: var(--gruen); }
+.hw-schild { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--hw-text); background: var(--hw); border-radius: 999px; padding: 2px 8px; }
+.kachel.hw { border-color: var(--hw); }
+.sprung.hw { border-color: var(--hw); }
+.sprung.hw::after { content: " 📝"; }
+.sprung.hw.fertig::after { content: " 📝✓"; }
+@media (max-width: 640px) { .raster9 .kachel .hw-schild { font-size: .65rem; padding: 1px 6px; } }
 
 /* Countdown bis zum nächsten Termin (GLN) */
 .termin { margin: 8px 0 0; padding: 8px 14px; border-radius: 12px; background: var(--gelb); color: var(--gelb-text); font-weight: 700; width: fit-content; max-width: 100%; }

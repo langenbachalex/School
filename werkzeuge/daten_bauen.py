@@ -3,7 +3,7 @@ Aufruf: python3 werkzeuge/daten_bauen.py
 """
 import csv, json, os, re, sys
 
-import hoeren
+import hoeren, hausaufgaben
 
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INHALTE = os.path.join(BASIS, "inhalte")
@@ -337,9 +337,21 @@ def main():
             lob.setdefault(z["art"], []).append({"text": z["text"], "audio": f"audio/lob/{z['id']}.mp3",
                                                  "gruppe": [g for g in z["gruppe"].split(",") if g], "de": z["de"]})
     STATIONEN.sort(key=lambda x: x["nr"])
+    # 📝 Hausaufgabe (inhalte/hausaufgabe.tsv, Schema in inhalte/LIESMICH.md): Ziele gegen die Teile prüfen, wie die App sie zählt
+    vok_von = lambda ids: [next(v for v in vokabeln if v["id"] == i) for i in ids]
+    def teile_gruppe(st, g):
+        if g.get("schritte"):
+            return hausaufgaben.teile_namen(g["schritte"], [1, 2, 3, 4], "Stufe")
+        vok = vok_von(g["vokabeln"])  # wie starteGruppe(): Lückensätze nur mit Sätzen, Bild → Wort nur mit 2 Bildern
+        return [s["name"] for s in st["schritte"] if (s["art"] != "vok_luecke" or any(v["gymsatz"] for v in vok))
+                and (s["art"] != "vok_bild" or len([v for v in vok if v["bild"]]) >= 2)]
+    einheiten = [{"nr": st["nr"], "titel": f"Station {st['nr']}: {st['titel']}",
+                  "gruppen": [{"schluessel": i, "name": g["name"], "teile": teile_gruppe(st, g)} for i, g in enumerate(st["gruppen"])] if st.get("gruppen") else None,
+                  "teile": None if st.get("gruppen") else hausaufgaben.teile_namen(st["schritte"], [1, 2, 3, 4], "Stufe")} for st in STATIONEN]
+    hw = hausaufgaben.lesen(os.path.join(INHALTE, "hausaufgabe.tsv"), einheiten)
     daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob, "gym": GYM, "termin": TERMIN,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")},
-             "spiel": spieldaten()}
+             "spiel": spieldaten(), "hausaufgaben": hw}
     ziel = os.path.join(BASIS, "app", "daten.js")
     with open(ziel, "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/daten_bauen.py – bitte nicht von Hand ändern.\n")

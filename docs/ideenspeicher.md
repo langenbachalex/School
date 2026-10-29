@@ -37,7 +37,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 - **Dialog-Duell** gehört zu **Speaking**, nicht in Games; zuerst mit den vorhandenen Dialogen. Noch brainstormen.
 - **Runner (Rückmeldung 29.10. zum Prototyp):** Cartoon-Stil passt. Spieldauer ≥ 2 Minuten. Vor dem Endboss kleine Zwischensequenz: Kamera fährt herunter, Figur läuft automatisch, kurz eingefroren, Mr. Alex spricht („It's time for Mr. Alligator!“). Endboss-Stimme = Mr. Alex (mehr Mr.-Alex-Stimme in Klasse 9 gewünscht). Skins zusätzlich: Körperform (Bauch, Brust, Muskeln) – Idee: mit mehr Punkten wird die Figur muskulöser. Probe ist unvertont.
 - **Runner**: Levelziel passend zum Level (z. B. die Statue of Liberty finden, vorher vorbereitet); **Boss/Endboss** kennen die Schüler: Der Endboss stellt eine Frage, richtige Antwort schließt eine Tür auf.
-- **Belohnung im Runner**: keine Coins zurück (wäre komisch); stattdessen eigene Titel/Trophäen fürs normale Spiel – noch brainstormen.
+- **Belohnung im Runner**: keine Coins zurück; Trophäen je Level und Runner-Titel **Noob → Rookie → Pro → Elite → Legend** (beschlossen 29.10.).
 
 ## Fragen von Mr. Alex (29.10.), beantwortet, nichts gebaut
 - **Shop gegen Developer-Mode:** Coins, Käufe und Rahmen liegen in `spiel` und damit unter demselben Siegel wie die Punkte (Zweitkopie, Reset bei Fälschung). Kaufsperre wird im Programm geprüft, nicht am Knopf. Grenze wie bei den Punkten: Wer den Programmcode liest, kann das Siegel nachbauen.

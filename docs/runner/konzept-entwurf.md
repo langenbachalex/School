@@ -123,3 +123,5 @@ Datei weiterhin `docs/runner/prototyp/index.html` (eine Datei, keine Abhängigke
 - **Eintritt:** Startmenü und Game-over-Text zeigen „100 Coins". Ende-Text nennt Gold (alle 14 Diamanten inkl. Tore) oder Silber.
 - **Test-Hook `window.__runner`:** `stand()` liefert zusätzlich `zoom`, `sequenz` (Phase), `eingabeGesperrt`, `banner`, `bossSichtbar`, `bossSpruch`, `torErgebnisse`, `checkpoints`, `koerper`, `hochformatHinweis`, `strecke`, `sequenzMinDauer`; neu `teleportBoss()`, `setKoerper()`, `menue()`, `sprechListe()`.
 - **Messung:** 60 fps bei 1280×800 (Chromium headless), 390×844 zeigt den Querformat-Hinweis, 844×390 ohne Überlauf (Skin-Menü scrollt in der Box). Nicht auf Schulhandys getestet.
+
+**Titel-Reihe beschlossen (29.10.): Noob → Rookie → Pro → Elite → Legend** (je Anzahl geschaffter Level, Vorschlag: 1 · 3 · 6 · 10 · 15).

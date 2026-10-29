@@ -1,5 +1,7 @@
 # Spiele und Kacheln Klasse 9 – Vorschläge und Machbarkeit (Entwurf, nichts gebaut)
 
+> Entscheidungen vom 29.10. stehen in `../ideenspeicher.md`. Kurz: BE vs AE → Vocabulary, „New“ auflösen (14 Tage ✨), Kachel **Games** statt Arcade, Coins gespiegelt und nichts gratis, Runner als Hauptspiel hinter Coins, Auto beim Vokabellernen zurückgestellt.
+
 Stand: 29.10.2026. Zum Absegnen durch Mr. Alex. Grundsatz bleibt: offline, keine Konten, alles auf dem Gerät, gesprochene Sprache überall.
 
 ## 1. Kacheln: BE vs AE unterbringen, „New“ auflösen

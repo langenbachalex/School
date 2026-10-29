@@ -4,6 +4,7 @@ Hier landen alle Ideen und aufgeschobenen Entscheidungen, damit nichts verloren 
 Pflege: Jede neue Idee aus einem Chat kommt hier hinein, auch wenn sie nicht gleich gebaut wird.
 
 ## Audio-Vormerkliste (ElevenLabs: neue Credits ab 13.11.2026 – bis dahin nichts vertonen)
+Credits-Stand 29.10.: **6.000**. Beobachtung: Eleven v4 kostet nach den Zwischenständen nur **≈ 0,4–0,5 Credits je Zeichen** (23.10.: 11.734 Zeichen → 4.347 Credits; danach 1.391 Zeichen → ≈ 650 Credits). Mit 6.000 Credits sind also grob **12.000 Zeichen** V4 möglich – vor dem 13.11. ist Spielraum für kleine Posten.
 Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13.11. nach Freigabe vertont (Erinnerung ist eingestellt).
 | Posten | Stimme(n) | Zeichen (ca.) | Status |
 |---|---|---|---|

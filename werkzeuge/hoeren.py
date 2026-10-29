@@ -27,12 +27,24 @@ def lesen():
                     if k.strip() in ("titel", "art", "anleitung", "instruction"):
                         u[k.strip()] = v.strip()
                 elif zeile.startswith("@"):
-                    m = re.match(r"@(.+?)\s*\((m|f)\)\s*:\s*(.+)", zeile)
+                    m = re.match(r"@(.+?)\s*\((m|f|alex)\)\s*:\s*(.+)", zeile)
                     if not m:
-                        raise ValueError(f"{ort}: erwartet '@Name (m|f): Text'")
+                        raise ValueError(f"{ort}: erwartet '@Name (m|f|alex): Text'")
+                    if m.group(2) == "alex":
+                        anzeige, sprech = _sprechfassung(m.group(3))
+                        i = len(u["teile"]) + 1
+                        u["teile"].append({"sprecher": m.group(1), "stimme": "en", "text": anzeige, "sprech": sprech, "datei": f"{name}_text{i:02d}"})
+                        continue
                     anzeige, sprech = _sprechfassung(m.group(3))
                     i = len(u["teile"]) + 1
-                    u["teile"].append({"sprecher": m.group(1), "stimme": "en_" + m.group(2), "text": anzeige,
+                    # Jugendstimmen (29.10.): je Geschlecht zwei Stimmen, nach Reihenfolge des ersten Auftretens abwechselnd
+                    # (1. Junge m1, 2. Junge m2, 3. wieder m1 …). "(alex)" = Mr. Alex als Lehrer/Interviewer.
+                    sprecher, g = m.group(1), m.group(2)
+                    namen = u.setdefault("_namen", {"m": [], "f": []})
+                    if sprecher not in namen[g]:
+                        namen[g].append(sprecher)
+                    stimme = f"{g}{namen[g].index(sprecher) % 2 + 1}"
+                    u["teile"].append({"sprecher": sprecher, "stimme": stimme, "text": anzeige,
                                        "sprech": sprech, "datei": f"{name}_text{i:02d}"})
                 elif zeile.startswith("?"):
                     teile = [t.strip() for t in zeile[1:].split("|")]
@@ -50,5 +62,6 @@ def lesen():
                     u["aufgaben"].append({"name": teile[0], "mittel": teile[1], "gefuehl": teile[2]})
         if u["art"] not in ("true-false", "weg"):
             raise ValueError(f"{pfad}: art muss true-false oder weg sein")
+        u.pop("_namen", None)
         uebungen.append(u)
     return uebungen

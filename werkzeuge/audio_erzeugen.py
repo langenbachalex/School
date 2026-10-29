@@ -20,12 +20,22 @@ LISTE = os.path.join(BASIS, "docs", "sprechtexte.md")
 STIMMEN = {
     # Mr. Alex' eigene Stimme – funktioniert nur mit Eleven v4 (mit v2/flash/turbo: Serverfehler 500, mit v3: klingt fremd)
     "en":   ("AK2WYGe96RmMwFKM5KEz", "en", "Alex Langenbach – Mr. Alex' eigene Stimme"),
-    "en_f": ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britische Frauenstimme (weibliche Personen in Hörtexten)"),
+    "en_f": ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britische Frauenstimme (weibliche Personen in Hörtexten bis 28.10.)"),
+    # Jugendstimmen für Hörtexte (Wahl von Mr. Alex, 29.10.2026, Hörprobe docs/klasse6/hoerprobe/jugend): alle Eleven v4.
+    # Mr. Alex spricht in Hörtexten nur noch Lehrer/Interviewer "(alex)" und die Lösungs-Aussagen. Archiv: docs/stimmen.md
+    "m1":   ("5sxKKBj5y1Bji6769iwE", "en", "Elrond – britisch, jung (1. Junge)"),
+    "m2":   ("qxjGnozOAtD4eqNuXms4", "en", "John Shaw – britisch, jung (2. Junge)"),
+    "f1":   ("nDJIICjR9zfJExIFeSCN", "en", "Emmaline – britisches Mädchen (1. Mädchen)"),
+    "f2":   ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britisch (2. Mädchen)"),
 }
 # Modell und Einstellungen je Stimme (Alex: wie auf der ElevenLabs-Webseite eingestellt)
 MODELLE = {
     "en":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
     "en_f": ("eleven_multilingual_v2", {"stability": 0.6, "similarity_boost": 0.75, "speed": 0.9}),
+    "m1":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
+    "m2":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
+    "f1":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
+    "f2":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
 }
 ERSATZ = ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme (Ersatz)")
 MODELL = "eleven_multilingual_v2"
@@ -89,7 +99,7 @@ def main():
         auftraege.append(("spiel", k, "en", "en", t, None))
     for u in hoeren.lesen():
         for t in u["teile"]:
-            auftraege.append(("hoeren", t["datei"], "en_f" if t["stimme"] == "en_f" else "en", "en", t["sprech"], None))
+            auftraege.append(("hoeren", t["datei"], t["stimme"] if t["stimme"] in STIMMEN else "en", "en", t["sprech"], None))
         for a in u["aufgaben"]:
             if "datei" in a:
                 auftraege.append(("hoeren", a["datei"], "en", "en", a["sprech"], None))

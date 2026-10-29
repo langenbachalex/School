@@ -238,7 +238,7 @@ def main():
             if "datei" in t:
                 # Fehlt die Audiodatei, bekommt die App den Sprechtext für die Sprachausgabe des Geräts (wie bei den Kernsätzen)
                 datei = f"audio/hoeren/{t.pop('datei')}.mp3"
-                stimme = t.get("stimme", "en_f")[-1]
+                stimme = "f" if t.get("stimme", "").startswith(("f", "en_f")) else "m"  # Geräte-Stimme: nur Geschlecht
                 t["audio"] = datei if os.path.exists(os.path.join(BASIS, "app", datei)) else {"tts": t["sprech"], "lang": "en-GB", "stimme": stimme}
                 t.pop("sprech", None)
         for a in u["aufgaben"]:

@@ -810,13 +810,13 @@ window.DATEN = {
       "teile": [
        {
         "sprecher": "Mia",
-        "stimme": "en_f",
+        "stimme": "f1",
         "text": "Hi, I'm Mia. On Monday, I get up at 6.45 a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I read a book on the train.",
         "audio": "audio/hoeren/01-mias-monday_text01.mp3"
        },
        {
         "sprecher": "Mia",
-        "stimme": "en_f",
+        "stimme": "f1",
         "text": "School starts at 8 a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at 9 p.m.",
         "audio": "audio/hoeren/01-mias-monday_text02.mp3"
        }
@@ -879,25 +879,25 @@ window.DATEN = {
       "teile": [
        {
         "sprecher": "Mia",
-        "stimme": "en_f",
+        "stimme": "f1",
         "text": "Hi, I'm Mia. I go to school by train. It's a long way, but I love it! I read on the train.",
         "audio": "audio/hoeren/02-how-do-you-get-there_text01.mp3"
        },
        {
         "sprecher": "Ben",
-        "stimme": "en_m",
+        "stimme": "m1",
         "text": "Hi, I'm Ben. I walk to school. It's a short journey. That's great!",
         "audio": "audio/hoeren/02-how-do-you-get-there_text02.mp3"
        },
        {
         "sprecher": "Harry Kane",
-        "stimme": "en_m",
+        "stimme": "m2",
         "text": "Hello, I'm Harry. I go to training by car. There's a lot of traffic. I'm stressed!",
         "audio": "audio/hoeren/02-how-do-you-get-there_text03.mp3"
        },
        {
         "sprecher": "Declan Rice",
-        "stimme": "en_m",
+        "stimme": "m1",
         "text": "Hi, I'm Declan. I go to training by bike. I cycle every day. I love it!",
         "audio": "audio/hoeren/02-how-do-you-get-there_text04.mp3"
        }
@@ -938,53 +938,33 @@ window.DATEN = {
       "teile": [
        {
         "sprecher": "Mia",
-        "stimme": "en_f",
+        "stimme": "f1",
         "text": "Hi, I'm Mia. After school I go to the drama club. It's on Monday at 4 p.m. We play short scenes and I love it! Sometimes we show a play to our parents.",
-        "audio": {
-         "tts": "Hi, I'm Mia. After school I go to the drama club. It's on Monday at four p.m. We play short scenes and I love it! Sometimes we show a play to our parents.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_text01.mp3"
        },
        {
         "sprecher": "Ben",
-        "stimme": "en_m",
+        "stimme": "m1",
         "text": "Hello, I'm Ben. I'm in the football club. We train on Wednesday afternoon, at half past three. My friends say I'm good, but I don't like it. Our coach is too strict. I'd love to go to the trampolining club instead!",
-        "audio": {
-         "tts": "Hello, I'm Ben. I'm in the football club. We train on Wednesday afternoon, at half past three. My friends say I'm good, but I don't like it. Our coach is too strict. I'd love to go to the trampolining club instead!",
-         "lang": "en-GB",
-         "stimme": "m"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_text02.mp3"
        },
        {
         "sprecher": "Priya",
-        "stimme": "en_f",
+        "stimme": "f2",
         "text": "Hi, I'm Priya. On Saturday morning I go to the swimming club. We start at 8 a.m. – that's very early! But I like it, because we often go to the sea in summer. I never miss a training.",
-        "audio": {
-         "tts": "Hi, I'm Priya. On Saturday morning I go to the swimming club. We start at eight a.m. – that's very early! But I like it, because we often go to the sea in summer. I never miss a training.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_text03.mp3"
        },
        {
         "sprecher": "Luca",
-        "stimme": "en_m",
+        "stimme": "m2",
         "text": "Hi, I'm Luca. My club is the hiking club. We hike in the hills on Friday afternoon. It's a long way and it's a bit boring, but the food at the end is great.",
-        "audio": {
-         "tts": "Hi, I'm Luca. My club is the hiking club. We hike in the hills on Friday afternoon. It's a long way and it's a bit boring, but the food at the end is great.",
-         "lang": "en-GB",
-         "stimme": "m"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_text04.mp3"
        },
        {
         "sprecher": "Noah",
-        "stimme": "en_m",
+        "stimme": "m1",
         "text": "Hey, I'm Noah. I don't go to a sports club. I'm in the newspaper club on Thursday at 2 p.m. We write articles about our school. Last week we had a photo competition – and I won the first prize!",
-        "audio": {
-         "tts": "Hey, I'm Noah. I don't go to a sports club. I'm in the newspaper club on Thursday at two p.m. We write articles about our school. Last week we had a photo competition – and I won the first prize!",
-         "lang": "en-GB",
-         "stimme": "m"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_text05.mp3"
        }
       ],
       "aufgaben": [
@@ -992,101 +972,61 @@ window.DATEN = {
         "aussage": "Mia's drama club is on Monday.",
         "loesung": "true",
         "hinweis": "",
-        "audio": {
-         "tts": "Mia's drama club is on Monday.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage01.mp3"
        },
        {
         "aussage": "Mia never shows a play to her parents.",
         "loesung": "false",
         "hinweis": "Hör genau hin: never oder sometimes?",
-        "audio": {
-         "tts": "Mia never shows a play to her parents.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage02.mp3"
        },
        {
         "aussage": "Ben trains at half past three.",
         "loesung": "true",
         "hinweis": "",
-        "audio": {
-         "tts": "Ben trains at half past three.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage03.mp3"
        },
        {
         "aussage": "Ben loves football.",
         "loesung": "false",
         "hinweis": "Hör genau hin: Was sagt Ben über den Fußball-Club?",
-        "audio": {
-         "tts": "Ben loves football.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage04.mp3"
        },
        {
         "aussage": "Ben is in the trampolining club.",
         "loesung": "false",
         "hinweis": "Ben nennt den Trampolin-Club nur als Wunsch: „I'd love to …“",
-        "audio": {
-         "tts": "Ben is in the trampolining club.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage05.mp3"
        },
        {
         "aussage": "Priya's swimming club starts at 8 p.m.",
         "loesung": "false",
         "hinweis": "a.m. oder p.m.? Morgens oder abends?",
-        "audio": {
-         "tts": "Priya's swimming club starts at eight p.m.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage06.mp3"
        },
        {
         "aussage": "Priya often goes to the sea in summer.",
         "loesung": "true",
         "hinweis": "",
-        "audio": {
-         "tts": "Priya often goes to the sea in summer.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage07.mp3"
        },
        {
         "aussage": "Luca thinks hiking is a bit boring.",
         "loesung": "true",
         "hinweis": "",
-        "audio": {
-         "tts": "Luca thinks hiking is a bit boring.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage08.mp3"
        },
        {
         "aussage": "Noah is in a sports club.",
         "loesung": "false",
         "hinweis": "Hör genau hin: „I don't go to a …“",
-        "audio": {
-         "tts": "Noah is in a sports club.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage09.mp3"
        },
        {
         "aussage": "Noah won the first prize in a photo competition.",
         "loesung": "true",
         "hinweis": "",
-        "audio": {
-         "tts": "Noah won the first prize in a photo competition.",
-         "lang": "en-GB",
-         "stimme": "f"
-        }
+        "audio": "audio/hoeren/03-talking-about-free-time_aussage10.mp3"
        }
       ]
      }

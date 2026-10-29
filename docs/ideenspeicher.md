@@ -15,7 +15,8 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Border Patrol: Grenzer-Sprüche (≈ 10 Sätze) | Jeremy, Mr. Alex | je ≈ 300 | vorgemerkt |
 | Runner: Skin-Menü spricht die Auswahl („Long hair“, „Short hair“, „Curly“, „Afro“, Hüte, Brille …) – ≈ 40 kurze Wörter | Jeremy, Jessica | je ≈ 300 | vorgemerkt |
 | Runner: Rufe beim Einsammeln (Jeremy/Jessica), Boss-Intro und Boss-Fragen (Mr. Alex) | Jeremy, Jessica, Mr. Alex | je ≈ 1.500 | später |
-| Hörverstehen 3 Klasse 6 „Talking about free time“ (5 Sprecher + 10 Aussagen) | Mr. Alex | ≈ 1.500 | vorgemerkt, Entwurf wartet auf Freigabe |
+| Hörverstehen 3 Klasse 6 „Talking about free time“ | Elrond, John Shaw, Emmaline, Alice (v4), Lösungen Mr. Alex | ≈ 1.500 | **vertont 29.10.** |
+| Hörübungen 01/02 Klasse 6 neu mit Jugendstimmen (Mia, Ben, Harry, Declan) | Elrond, John Shaw, Emmaline | ≈ 600 | offen – nur auf Wunsch |
 
 ## Aufgeschoben – bitte erinnern
 | **Manipulations-Reset** | aufgeschoben (29.10.) | Mr. Alex will keine versehentlichen Punktverluste; Reset nur als bewusste „Strafe“ für echte Manipulation, kein Regelfall. Heute: Reset nur, wenn Haupt- und Zweitkopie beide ungültig sind; erledigte Teile bleiben dabei stehen (Punkte auf 0). Nochmal besprechen: z. B. Punkte einfrieren statt löschen, oder nur Banner ohne Reset. |

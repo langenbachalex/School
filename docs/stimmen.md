@@ -9,7 +9,15 @@ Stand: 29.10.2026. Pflicht: Jede neue Stimme oder Einstellung wird hier eingetra
 | `en_f` | **Alice** – britische Frauenstimme | `Xb7hH8MSUJpSbSDYk0k2` | eleven_multilingual_v2 | stability 0.6, similarity 0.75, speed 0.9 | weibliche Figuren in Hörtexten (Mia in 01 und 02) |
 | Ersatz | George – britische Männerstimme | `JBFqnCBsd6RMkjVDRZzb` | multilingual_v2 | 0.6 / 0.75 / 0.9 | nur Notfall, falls die eigene Stimme nicht verfügbar ist |
 
-Geplante Änderung (29.10., Mr. Alex): Mr. Alex spricht in Hörtexten nur noch als Lehrer/Interviewer und die Lösungen. Jugendliche bekommen Jugendstimmen: eine weibliche (Alice bleibt, aber auf v4) und eine männliche, ggf. mit verschiedenen Einstellungen für verschiedene Jungen. Auswahl der männlichen Stimme: siehe Hörprobe (folgt).
+**Jugendstimmen für Hörtexte (Wahl von Mr. Alex, 29.10.2026, nach Hörprobe `docs/klasse6/hoerprobe/jugend/`, alle Eleven v4, stability 0.5, similarity 0.75):**
+| Kürzel | Stimme | Voice-ID | Rolle |
+|---|---|---|---|
+| `m1` | **Elrond** – britisch, jung | `5sxKKBj5y1Bji6769iwE` | 1. Junge einer Hörübung (3. Junge wieder m1) |
+| `m2` | **John Shaw** – britisch, jung | `qxjGnozOAtD4eqNuXms4` | 2. Junge |
+| `f1` | **Emmaline** – britisches Mädchen | `nDJIICjR9zfJExIFeSCN` | 1. Mädchen |
+| `f2` | **Alice** (jetzt v4) | `Xb7hH8MSUJpSbSDYk0k2` | 2. Mädchen |
+| `en` | Mr. Alex | s. o. | nur Lehrer/Interviewer `(alex)` und Lösungs-Aussagen |
+Zuordnung automatisch nach Reihenfolge des ersten Auftretens in der Datei (`werkzeuge/hoeren.py`). Hörübung 03: Mia f1, Ben m1, Priya f2, Luca m2, Noah m1. Hörübungen 01/02 behalten ihre alten Aufnahmen (Mia = Alice v2, Jungen = Mr. Alex), bis Mr. Alex eine Neuvertonung freigibt.
 
 ## Klasse 9 – Road Trip USA (`werkzeuge/klasse9_audio.py`)
 | Kürzel | Stimme | Voice-ID | Modell | Einstellungen | Wofür |

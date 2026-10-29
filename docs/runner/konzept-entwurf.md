@@ -109,3 +109,5 @@ Entscheidungen:
 Nächster Schritt (Prototyp v2, ohne App-Einbau, ≈ 2 Tage): Level auf 2 Minuten verlängern (2 Tore, 12 Diamanten, 2 Checkpoints, 3 Gegner), Boss-Zwischensequenz mit Platzhalter-Text, Körperform-Ebenen + Power-Körper, Skin-Stimme über Geräte-TTS als Platzhalter, Nase/Ohrringe/Haarschmuck als weitere Ebenen, Taube überarbeiten. Danach Abnahme, dann Einbau in Klasse 9 (Coins-Abbuchung 100, Trophäen in der Hall of Fame).
 
 Offene Fragen (Rest): Schwierigkeit (falsches Tor = Leben weg?), Figur neutral oder Jeremy/Jessica als Vorlagen, Titel-Reihe in Ordnung?
+
+**Restfragen beantwortet (29.10.):** falsches Tor = nur Buzzer (kein Leben weg) · neutrale Figur mit Skins (keine Jeremy/Jessica-Vorlagen) · Titel-Reihe: coole, einfache Titel aus gängigen Spielen statt „Rookie Runner → …“. Vorschläge (5 Stufen, kurz, kennen die Schüler): **Noob → Rookie → Pro → Elite → Legend** (Empfehlung) · Alternativen: Bronze → Silver → Gold → Platinum → Diamond (Rang-System wie in Shootern/Fortnite) · Level 1 → Level 5 mit Sternen · Newbie → Player → Champion → Master → Legend.

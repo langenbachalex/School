@@ -1,0 +1,59 @@
+# Skin-Stimme – gesprochene Wendungen im Skin-Menü (Runner-Prototyp v2, en-US)
+# Eine Zeile je Wendung; Platzhalter per Geräte-TTS, später Jeremy/Jessica.
+Short hair
+Long hair
+Ponytail
+Curly
+Afro
+Brown hair
+Blond hair
+Black hair
+Red hair
+No hair accessory
+Bow
+Headband
+No hat
+Cap
+Cowboy hat
+Top hat
+Sunglasses off
+Sunglasses on
+Round nose
+Pointy nose
+Button nose
+Moustache off
+Moustache on
+No jewelry
+Earring
+Necklace
+Earring and necklace
+White shoes
+Red shoes
+Black shoes
+Aura off
+Super aura on
+Slim belly
+Normal belly
+Big belly
+Narrow shoulders
+Normal shoulders
+Broad shoulders
+Thin arms
+Normal arms
+Strong arms
+Power body off
+Power body on
+Red T-shirt
+Red hoodie
+Blue T-shirt
+Blue hoodie
+Yellow T-shirt
+Yellow hoodie
+Green T-shirt
+Green hoodie
+Power level 0
+Power level 1
+Power level 2
+Power level 3
+Power level 4
+Power level 5

@@ -212,7 +212,7 @@
     for (const k of kinder.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
     return e;
   }
-  function zeige(...inhalt) { stopp(); app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); hwLeiste(); }
+  function zeige(...inhalt) { stopp(); imSpiel = false; app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); hwLeiste(); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -299,7 +299,7 @@
   }
   // Sekunden pro Satz/Wort/Frage mindestens. Quizteile (Q): blindes Durchklicken (alle Antworten probieren) bringt keine Punkte.
   const QUIZ_MIN = 2.5;
-  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, vok_luecke: 2, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, hoerwahl: QUIZ_MIN, detektiv: QUIZ_MIN, vok_bild: QUIZ_MIN, vok_abfrage: QUIZ_MIN };
+  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, vok_luecke: 2, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, hoerwahl: QUIZ_MIN, vok_bild: QUIZ_MIN, vok_abfrage: QUIZ_MIN };
   const istQuiz = (teil) => (SPRECH_MIN[teil.art] || 0) === QUIZ_MIN;
 
   /* ---------- Startseite ---------- */
@@ -320,7 +320,7 @@
 
   function startseite() {
     lage = null;
-    const alleFertig = D.stationen.every((s) => stand.erledigt.includes(s.nr)) && !faellige("");
+    const alleFertig = D.stationen.every((s) => s.spiele || stand.erledigt.includes(s.nr)) && !faellige("");
     zeige(
       el("header", { class: "gruss" },
         el("h1", {}, "English Power Game"),
@@ -333,12 +333,13 @@
         el("p", {}, "Wenn etwas unklar ist, frag mich am Mittwoch – ich helfe dir gern. Dein Mr. Alex")),
       el("nav", { class: "kacheln", "aria-label": "Stationen" },
         D.stationen.map((s) => {
-          const auf = faellige(s.nr + "|") > 0, fertig = stand.erledigt.includes(s.nr) && !auf, hw = hwBei(s.nr);
+          const auf = !s.spiele && faellige(s.nr + "|") > 0, fertig = !s.spiele && stand.erledigt.includes(s.nr) && !auf, hw = hwBei(s.nr);
           return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : "") + (hw ? " hw" : ""), onclick: () => starteStation(s.nr),
             "aria-label": `Station ${s.nr}: ${s.titel}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}` },
             el("span", { class: "sym", "aria-hidden": "true" }, s.symbol),
             el("span", { class: "nr" }, "Station " + s.nr),
             el("span", { class: "titel" }, s.titel),
+            s.unter && el("span", { class: "unter" }, s.unter),
             hw && hwSchild(), auf && powerupSchild(),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
@@ -358,14 +359,14 @@
     return t;
   }
 
-  let lage = null; // { nr, gruppe?, teile, teil, pos (Position im Teil), reihe, runden, detektiv, vq, hilfe (💡 benutzt), abspielen, weiter }
+  let lage = null; // { nr, gruppe?, teile, teil, pos (Position im Teil), reihe, runden, vq, hilfe (💡 benutzt), abspielen, weiter }
 
   function neueLage(werte) {
     lage = Object.assign({ teil: 0, pos: 0 }, werte);
     return lage;
   }
   // Übungszustand eines Teils (Reihenfolge, Runden …) – wird bei jedem Betreten eines Teils neu gemischt.
-  function teilZuruecksetzen() { lage.reihe = lage.runden = lage.detektiv = lage.vq = null; lage.hilfe = false; }
+  function teilZuruecksetzen() { lage.reihe = lage.runden = lage.vq = null; lage.hilfe = false; }
 
   /* ---------- Fortschritt pro Teil (gespeichert) ---------- */
   // stand.teile[schluessel] = { am: "JJJJ-MM-TT", s: Stufe } – Stufe steigt bei jedem Power Up (Wiederholung eines fälligen Teils)
@@ -547,6 +548,7 @@
 
   function starteStation(nr) {
     const st = station(nr);
+    if (st.spiele) return zeigeSpiele();
     if (st.gruppen) return zeigeGruppen(st);
     const t = teileVon(st);
     if (!t.length) return platzhalter(st);
@@ -606,8 +608,7 @@
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, hoeren: zeigeHoeren,
        vok_lernen: zeigeVokabel, vok_luecke: zeigeVokabel, vok_bild: zeigeVokabel, vok_abfrage: zeigeVokabel,
-       auswahl: zeigeAuswahl, reihenfolge: zeigeReihenfolge, lesen: zeigeLesen, hoerwahl: zeigeHoerwahl,
-       memory: zeigeMemory, detektiv: zeigeDetektiv })[teil.art](teil);
+       auswahl: zeigeAuswahl, reihenfolge: zeigeReihenfolge, lesen: zeigeLesen, hoerwahl: zeigeHoerwahl })[teil.art](teil);
     navErgaenzen();
   }
 
@@ -651,7 +652,6 @@
     if (teil.art === "lr") return teil.saetze.length;
     if (teil.art === "verbform" || teil.art === "auswahl") return teil.aufgaben.length;
     if (teil.art === "hoerwahl") return lage.runden ? lage.runden.length : teil.paare.length * 2;
-    if (teil.art === "detektiv") return teil.runden;
     if (teil.art === "vok_abfrage") return lage.vq ? lage.vq.length : lage.vok.length; // wächst bei „Nochmal üben“
     if (teil.art === "vok_lernen") return lage.vok.length;
     if (teil.art === "vok_luecke") return lage.vok.filter((v) => v.gymsatz).length;
@@ -740,7 +740,7 @@
   function melde(box, art, text) {
     if (art === "hilfe") { // nach einem Fehler: kurze Ermutigung (in den Spielen humorvoll), dann „Ich helfe dir“
       fehlerSerie++; comboBruch();
-      text = `${ruf(lage && lage.nr === 5 && RUF.spiel ? "spiel" : "fehler")} ${text}`;
+      text = `${ruf(imSpiel && RUF.spiel ? "spiel" : "fehler")} ${text}`;
     }
     box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text;
   }
@@ -1203,97 +1203,340 @@
     hoeren();
   }
 
-  /* ---------- Memory: Symbol und englisches Wort finden zusammen ---------- */
-  function zeigeMemory(teil) {
-    const st = station(lage.nr);
-    const paare = mischen(teil.karten).slice(0, teil.paare);
-    const karten = mischen(paare.flatMap((k) => [{ k, art: "symbol" }, { k, art: "wort" }]));
-    let offen = [], gefunden = 0, zuege = 0, sperre = false;
+  /* ---------- Station 5 „Spiele“: Lernspiele wie die Games-Kachel in Klasse 9 (docs/spiele/konzept-entwurf.md) ----------
+     Frei spielbar, keine Teile, kein Häkchen, zählt nicht für „All stations“. Je Spiel +10 Punkte beim ersten Erfolg des Tages
+     (Tagesmarken gym.memoryTag / catchTag / beeTag / detektivTag). Memory, Catch the Word und Spelling Bee nehmen die
+     Wörter eines Abschnitts aus Station 7 (Vokabeln); der -s-Detektiv baut seine Sätze aus festen Bausteinen (D.stationen[5].detektiv). */
+  let imSpiel = false; // für die humorvollen Sprüche (lob.tsv, Art „spiel“) in melde()
+  const ansage = (en, de) => el("p", { class: "ansage" }, el("strong", { lang: "en" }, en), " ", de);
+  const spielKopf = (titel, zurueckFn) => el("header", { class: "kopf" },
+    knopf("← Zurück", zurueckFn, "leise"), el("h1", {}, `🎲 Spiele · ${titel}`));
+  const spielWort = (v) => (v.form || v.en).replace(/\s+/g, " ").trim(); // Grundform ohne „(to)“, Klammern, Zweitformen
+  const memKurz = (de) => de.replace(/\(.*?\)/g, "").split(/[;,]/)[0].replace(/\s+/g, " ").trim(); // erst Klammern weg („die (Wand-, Turm)uhr“), dann die erste Bedeutung
+  const memOk = (v) => v && memKurz(v.de).length > 0 && memKurz(v.de).length <= 24 && spielWort(v).length <= 24;
+  const catchOk = (v) => v && spielWort(v).length >= 2 && spielWort(v).length <= 24;
+  const beeOk = (v) => { if (!v || !v.tippbar) return false; const t = spielWort(v); return t.length >= 2 && t.length <= 20 && t.split(" ").length <= 3 && !/[()…,/]/.test(t); };
+  const spielTag = () => iso(heute());
+  // Punkte einmal pro Tag und Spiel: Tagesmarke setzen, Text für die Rückmeldung
+  function spielPunkte(marke, geschafft) {
+    const g = gymStand(), tag = spielTag(), punkte = geschafft && g[marke] !== tag;
+    if (punkte) { g[marke] = tag; punkteDazu(PUNKTE.spiel); } else speichern();
+    return punkte ? ` +${PUNKTE.spiel} ⭐` : geschafft && g[marke] === tag ? " (Punkte gibt es einmal pro Tag.)" : "";
+  }
+  function zeigeSpiele() {
+    const st = station(5);
+    lage = null;
+    const kachel = (sym, titel, unter, fn) => el("button", { class: "kachel", onclick: fn, "aria-label": titel },
+      el("span", { class: "sym", "aria-hidden": "true" }, sym), el("span", { class: "titel", lang: "en" }, titel), el("span", { class: "unter" }, unter));
+    zeige(el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, `Station ${st.nr}: ${st.titel}`), hwBei(st.nr) && hwSchild()),
+      ansage("Choose a game.", "Wähl ein Spiel. Jedes Spiel bringt dir einmal am Tag 10 Punkte."),
+      el("nav", { class: "kacheln gruppen", "aria-label": "Spiele" },
+        kachel("🎲", "Memory", "Wort und Bedeutung finden – 6 Paare", () => spielWahl("Memory", spielMemory)),
+        kachel("🎯", "Catch the Word", "Wort hören und fangen, bevor es unten ist", () => spielWahl("Catch the Word", spielCatch)),
+        kachel("🐝", "Spelling Bee", "Wort hören und richtig schreiben", () => spielWahl("Spelling Bee", spielBee)),
+        kachel("🔎", "-s-Detektiv", "Fehlt ein -s? Finde es und repariere den Satz", spielDetektiv),
+        el("button", { class: "kachel shop-kachel", onclick: shop, "aria-label": "Shop" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🛍️"), el("span", { class: "titel", lang: "en" }, "Shop"),
+          el("span", { class: "unter" }, `🪙 ${spielstand().coins} Coins – Rahmen und mehr`))));
+    imSpiel = true;
+  }
+  // Abschnitt aus Station 7 wählen (Kacheln wie in Vocabulary), dann das Spiel mit diesen Wörtern
+  function spielWahl(titel, spiel) {
+    const st = station(7);
+    lage = null;
+    zeige(spielKopf(titel, zeigeSpiele),
+      ansage("Which words do you want to play with?", "Mit welchen Wörtern willst du spielen? Wähl einen Abschnitt."),
+      el("nav", { class: "kacheln gruppen", "aria-label": "Abschnitte" }, st.gruppen.map((g, i) =>
+        el("button", { class: "kachel", onclick: () => spiel(i), "aria-label": `${g.name}, ${g.vokabeln.length} Wörter` },
+          el("span", { class: "nr" }, `${g.vokabeln.length} Wörter`),
+          el("span", { class: "titel" }, g.name),
+          el("span", { class: "vorschau", "aria-hidden": "true" }, g.vokabeln.slice(0, 5).map((id) => vokabel(id).symbol).join(" "))))));
+    imSpiel = true;
+  }
+  const zuWenig = (titel, zurueckFn) => zeige(spielKopf(titel, zurueckFn), el("section", { class: "satzkarte" },
+    el("p", {}, "Für dieses Spiel passen zu wenige Wörter aus dem Abschnitt – wähl einen anderen."),
+    knopf("Andere Wörter", zurueckFn, "haupt")));
+
+  /* Memory: englisches Wort ↔ deutsche Bedeutung, 6 Paare, alle Karten auf einen Blick (.memory.gross).
+     Wörter mit Symbol zeigen es auf der englischen Karte. Beim Aufdecken hört man das englische Wort. */
+  function memoryFeld(ws) {
+    const karten = mischen(ws.flatMap((v) => [{ v, art: "en" }, { v, art: "de" }]));
+    let offen = [], gefunden = 0, zuege = 0, wartet = false;
     const box = rueckmeldung();
     const zaehler = el("p", { class: "klein", "aria-live": "polite" }, "Züge: 0");
-    const weiter = knopf("Weiter ➜", naechstes, "haupt");
-    weiter.hidden = true;
-    const feld = el("div", { class: "memory" }, karten.map((c) => {
+    const feld = el("div", { class: "memory gross" }, karten.map((c) => {
       const b = el("button", { class: "mem-karte", "aria-label": "Verdeckte Karte", onclick: () => {
-        if (sperre || b.classList.contains("auf")) return;
+        if (wartet || b.classList.contains("auf")) return;
         b.classList.add("auf");
-        b.replaceChildren(c.art === "symbol" ? el("span", { class: "mem-sym" }, c.k.symbol)
-          : el("span", { lang: "en", class: c.k.wort.length > 7 ? "mem-lang" : "" }, c.k.wort));
-        b.setAttribute("aria-label", c.art === "symbol" ? `Bild: ${c.k.wort}` : c.k.wort);
-        spiele([c.k.audio]);
+        const text = c.art === "en" ? spielWort(c.v) : memKurz(c.v.de);
+        b.replaceChildren(...[c.art === "en" && c.v.symbol && el("span", { class: "mem-sym", "aria-hidden": "true" }, c.v.symbol),
+          el("span", { lang: c.art, class: text.length > 11 ? "mem-lang" : "" }, text)].filter(Boolean));
+        b.setAttribute("aria-label", text);
+        if (c.art === "en") spiele([c.v.audio.en]);
         offen.push({ b, c });
         if (offen.length < 2) return;
         zuege++; zaehler.textContent = "Züge: " + zuege;
         const [x, y] = offen; offen = [];
-        if (x.c.k === y.c.k) {
+        if (x.c.v === y.c.v && x.c.art !== y.c.art) {
           x.b.classList.add("paar"); y.b.classList.add("paar"); x.b.disabled = y.b.disabled = true;
-          if (++gefunden === paare.length) {
-            melde(box, "gut", `${lob()} Alle ${paare.length} Paare gefunden – in ${zuege} Zügen!`);
-            weiter.hidden = false; lage.weiter = naechstes;
-          }
+          if (++gefunden === ws.length) melde(box, "gut", `${lob(true)} Alle ${ws.length} Paare in ${zuege} Zügen!${spielPunkte("memoryTag", true)}`);
         } else {
-          sperre = true;
+          wartet = true;
           setTimeout(() => {
             if (Math.random() < 0.3) ruf("spiel"); // ab und zu ein humorvoller Kommentar
-            [x, y].forEach(({ b }) => { b.classList.remove("auf"); b.replaceChildren("?"); b.setAttribute("aria-label", "Verdeckte Karte"); });
-            sperre = false;
+            [x, y].forEach(({ b: k }) => { k.classList.remove("auf"); k.replaceChildren("?"); k.setAttribute("aria-label", "Verdeckte Karte"); });
+            wartet = false;
           }, 1300);
         }
       } }, "?");
       return b;
     }));
-    lage.abspielen = null;
-    zeige(kopf(st),
-      el("p", { class: "ansage" }, "Finde die Paare: Bild und englisches Wort. Beim Aufdecken hörst du das Wort."),
-      karte(teil, null, feld, zaehler, box,
-        el("div", { class: "knopfreihe" }, weiter, knopf("↻ Neu mischen", () => zeigeTeil()))));
+    return { feld, zaehler, box };
+  }
+  function spielMemory(i) {
+    const g = station(7).gruppen[i], zurueckFn = () => spielWahl("Memory", spielMemory);
+    const ws = mischen(g.vokabeln.map(vokabel).filter(memOk)).slice(0, 6);
+    lage = null;
+    if (ws.length < 3) return zuWenig("Memory", zurueckFn);
+    const m = memoryFeld(ws);
+    zeige(spielKopf("Memory", zurueckFn),
+      ansage("Find the pairs!", `${g.name}: Finde die Paare – englisches Wort und deutsche Bedeutung.`),
+      karte(null, null, m.feld, m.zaehler, m.box, el("div", { class: "knopfreihe" },
+        knopf("↻ Neu mischen", () => spielMemory(i)), knopf("Andere Wörter", zurueckFn), knopf("Zur Startseite", startseite, "leise"))));
+    imSpiel = true;
   }
 
-  /* ---------- -s-Detektiv: fehlendes -s finden und reparieren (nur lesen) ---------- */
-  function zeigeDetektiv(teil) {
-    const st = station(lage.nr);
-    if (!lage.detektiv) {
-      const he = teil.personen.filter((p) => p[1]), ich = teil.personen.filter((p) => !p[1]);
-      const verben = mischen(teil.verben);
-      const plan = mischen([...Array(4).fill("falsch"), ...Array(2).fill("he"), ...Array(teil.runden - 6).fill("ich")]);
-      lage.detektiv = plan.map((typ, i) => {
-        const p = typ === "ich" ? ich[Math.floor(Math.random() * ich.length)] : he[Math.floor(Math.random() * he.length)];
-        const v = verben[i % verben.length];
-        return { person: p[0], dritte: p[1], basis: v[0], sform: v[1], rest: v[2], falsch: typ === "falsch" };
-      });
-    }
-    const s = lage.detektiv[lage.pos];
-    let geloest = false;
-    const box = rueckmeldung();
-    const weiter = knopf("Weiter ➜", naechstes, "haupt");
-    sperrt(weiter);
-    const verbAnzeige = s.falsch ? s.basis : (s.dritte ? s.sform : s.basis);
-    const fertig = (text) => { geloest = true; melde(box, "gut", text); entsperrt(weiter); lage.weiter = naechstes; };
-    const verbKnopf = el("button", { class: "wort-knopf", lang: "en", onclick: () => {
-      if (geloest) return;
-      if (s.falsch) {
-        verbKnopf.replaceChildren(el("strong", { class: "ziel" }, s.sform));
-        verbKnopf.classList.add("repariert");
-        fertig(`${lob()} Repariert: ${s.basis} → ${s.sform}`);
-      } else {
-        melde(box, "hilfe", s.dritte ? "Ich helfe dir: Schau noch mal – das Verb hat sein -s schon. Probier's nochmal!"
-          : "Ich helfe dir: Bei I, you, we und they bleibt das Verb ohne -s. Probier's nochmal!");
-      }
-    } }, verbAnzeige);
-    const andere = (t) => el("button", { class: "wort-knopf", lang: "en", onclick: () => {
-      if (!geloest) melde(box, "hilfe", "Ich helfe dir: Schau aufs Verb. Bei he, she, it braucht das Verb ein -s. Probier's nochmal!");
-    } }, t);
-    const allesRichtig = knopf("✓ Alles richtig!", () => {
-      if (geloest) return;
-      if (s.falsch) melde(box, "hilfe", "Ich helfe dir: Hier fehlt etwas. Bei he, she, it braucht das Verb ein -s. Probier's nochmal!");
-      else fertig(`${lob()} Der Satz stimmt.`);
+  /* Catch the Word: ein Wort wird gesprochen, 4–6 Wörter des Abschnitts fallen, das richtige antippen.
+     10 Runden, 3 Leben: falsches Wort angetippt oder das richtige durchgefallen kostet eins. Treffer = kurzer Klang, dann die deutsche Bedeutung.
+     Punkte (+10) beim ersten Durchgang des Tages mit mindestens 7 Treffern (Tagesmarke gym.catchTag). */
+  const CATCH = { leben: 3, runden: 10, tempo: 22, ziel: 7 };
+  // Treffer-Klang: zwei kurze helle Töne, im Browser erzeugt (keine Stimme)
+  function trefferKlang() {
+    try {
+      if (!klangCtx) klangCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (klangCtx.state === "suspended") klangCtx.resume();
+    } catch { return; }
+    const c = klangCtx, t = c.currentTime;
+    [[880, 0], [1320, 0.09]].forEach(([f, ab]) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = "triangle"; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t + ab); g.gain.exponentialRampToValueAtTime(0.35 * KLANG_LAUT, t + ab + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + ab + 0.22);
+      o.connect(g).connect(c.destination); o.start(t + ab); o.stop(t + ab + 0.25);
     });
-    lage.abspielen = null;
-    zeige(kopf(st),
-      el("p", { class: "ansage" }, "Du bist der -s-Detektiv! Fehlt ein -s? Dann tipp auf das Verb und repariere es. Sonst: „Alles richtig!“"),
-      karte(teil, `Satz ${lage.pos + 1} von ${lage.detektiv.length}`,
-        el("p", { class: "satz detektiv-satz" }, s.person.split(" ").map(andere), verbKnopf, s.rest.split(" ").map(andere)),
-        el("div", { class: "knopfreihe" }, allesRichtig), box, el("div", { class: "knopfreihe" }, weiter)));
+  }
+  function spielCatch(i) {
+    lage = null; stopp();
+    const gruppe = station(7).gruppen[i];
+    const ws = gruppe.vokabeln.map(vokabel).filter(catchOk);
+    let laeuft = true;
+    const zurueckFn = () => { laeuft = false; stopp(); spielWahl("Catch the Word", spielCatch); };
+    if (ws.length < 4) return zuWenig("Catch the Word", zurueckFn);
+    let ziele = [];
+    while (ziele.length < CATCH.runden) ziele.push(...mischen(ws));
+    ziele = ziele.slice(0, CATCH.runden);
+    let leben = CATCH.leben, treffer = 0, runde = 0, ziel = null, offen = [], pause = false, zeitstempel = null;
+    const himmel = el("div", { class: "spiel-himmel", role: "group", "aria-label": "Catch the Word" });
+    const stand_ = el("p", { class: "spiel-stand", "aria-live": "polite" });
+    const info = el("p", { class: "catch-info", role: "status", hidden: true });
+    const box = rueckmeldung();
+    const zeigeStand = () => stand_.replaceChildren(el("span", {}, "❤️".repeat(leben) + "🖤".repeat(Math.max(0, CATCH.leben - leben))),
+      el("span", {}, `Runde ${Math.min(runde, CATCH.runden)} / ${CATCH.runden} · ✓ ${treffer}`));
+    const hoeren = () => { if (ziel && laeuft) spiele([ziel.audio.en]); };
+    const hoerKnopf = knopf("🔊 Noch mal hören", hoeren);
+    function raeume() { offen.forEach((w) => { w.fertig = true; w.el.classList.add("weg"); setTimeout(() => w.el.remove(), 700); }); offen = []; }
+    function naechsteRunde() {
+      if (!laeuft) return;
+      if (runde >= CATCH.runden) return ende();
+      ziel = ziele[runde++]; info.hidden = true; pause = false;
+      const andere = mischen(ws.filter((v) => v !== ziel)).slice(0, 3 + Math.floor(Math.random() * 3));
+      const reihe = mischen([ziel, ...andere]);
+      reihe.forEach((v, j) => {
+        // Spalten gleichmäßig über die Breite, Höhe versetzt (3 Reihen), damit auch lange Wörter sich nicht überdecken
+        const w = { v, y: -40 - (j % 3) * 64 - Math.random() * 16, x: Math.min(92, Math.max(8, (j + 0.5) / reihe.length * 100 + (Math.random() - 0.5) * 10)) };
+        w.el = el("button", { class: "spiel-wort catch-wort", lang: "en", style: `left:${w.x}%; top:${w.y}px`, onclick: () => fange(w) }, spielWort(v));
+        himmel.append(w.el); offen.push(w);
+        // Lange Wörter ganz ins Bild rücken (links/rechts nicht abschneiden)
+        const breite = himmel.clientWidth, halb = w.el.offsetWidth / 2 + 4;
+        if (breite && halb * 2 < breite) w.el.style.left = Math.min(breite - halb, Math.max(halb, w.x / 100 * breite)) + "px";
+      });
+      zeigeStand(); hoeren();
+    }
+    const bedeutung = (v) => [el("strong", { lang: "en" }, spielWort(v)), " = ", el("span", { lang: "de" }, memKurz(v.de) || v.de)];
+    function fange(w) {
+      if (!laeuft || pause || w.fertig) return;
+      if (w.v === ziel) {
+        treffer++; w.fertig = true; pause = true; richtigSerie++;
+        w.el.classList.add("treffer"); trefferKlang();
+        info.hidden = false; info.replaceChildren(...bedeutung(ziel));
+        zeigeStand();
+        setTimeout(() => { raeume(); naechsteRunde(); }, 1400);
+      } else {
+        leben--; w.fertig = true; w.el.classList.add("falsch"); w.el.disabled = true;
+        zeigeStand();
+        if (leben <= 0) ende();
+      }
+    }
+    function durchgefallen(w) {
+      if (w.fertig) return;
+      w.fertig = true;
+      if (w.v !== ziel) { w.el.classList.add("weg"); setTimeout(() => w.el.remove(), 700); return; }
+      leben--; pause = true; w.el.classList.add("falsch");
+      info.hidden = false; info.replaceChildren("Das war: ", ...bedeutung(ziel));
+      zeigeStand();
+      if (leben <= 0) return ende();
+      setTimeout(() => { raeume(); naechsteRunde(); }, 1600);
+    }
+    function schritt(t) {
+      if (!laeuft) return;
+      if (zeitstempel === null) zeitstempel = t;
+      const dt = Math.min(0.05, (t - zeitstempel) / 1000); zeitstempel = t;
+      const tempo_ = CATCH.tempo * (1 + treffer * 0.06) * (window.__catchTempo || 1);
+      const boden = himmel.clientHeight;
+      if (!pause) offen.forEach((w) => {
+        if (w.fertig) return;
+        w.y += tempo_ * dt; w.el.style.top = w.y + "px";
+        if (w.y > boden - 10) durchgefallen(w);
+      });
+      requestAnimationFrame(schritt);
+    }
+    function ende() {
+      if (!laeuft) return;
+      laeuft = false; pause = true; hoerKnopf.disabled = true;
+      offen.forEach((w) => { if (!w.fertig) { w.fertig = true; w.el.classList.add("weg"); } });
+      const geschafft = leben > 0 && treffer >= CATCH.ziel;
+      const text = geschafft ? `${lob(true)} ${treffer} von ${CATCH.runden} Wörtern gefangen!${spielPunkte("catchTag", true)}`
+        : leben <= 0 ? `Alle Leben weg! ${treffer} gefangen. Hör genau hin und versuch es noch mal.`
+        : `${treffer} von ${CATCH.runden} gefangen. Für Punkte brauchst du ${CATCH.ziel}. Noch mal?`;
+      if (!geschafft) speichern();
+      melde(box, geschafft ? "gut" : "neutral", text);
+    }
+    zeigeStand();
+    zeige(spielKopf("Catch the Word", zurueckFn),
+      ansage("Listen! Which word did you hear?", "Hör zu! Welches Wort hast du gehört? Tipp es an, bevor es unten ist."),
+      el("section", { class: "satzkarte catch" }, stand_, info, himmel, el("div", { class: "knopfreihe" }, hoerKnopf), box,
+        el("div", { class: "knopfreihe" }, knopf("↻ Noch mal", () => spielCatch(i)), knopf("Andere Wörter", zurueckFn), knopf("Zur Startseite", startseite, "leise"))));
+    imSpiel = true;
+    naechsteRunde();
+    requestAnimationFrame(schritt);
+  }
+
+  /* Spelling Bee: Wort hören, deutsche Bedeutung (bei Bildwörtern das Symbol groß) lesen, englisch eintippen (1-Fehler-Toleranz).
+     8 tippbare Wörter des Abschnitts. 3 richtig in Folge = 🍯 Honey! Punkte (+10) beim ersten Durchgang des Tages mit mindestens 6 richtigen (gym.beeTag). */
+  const BEE = { anzahl: 8, honig: 3 };
+  function spielBee(i) {
+    lage = null;
+    const gruppe = station(7).gruppen[i], zurueckFn = () => spielWahl("Spelling Bee", spielBee);
+    const ws = mischen(gruppe.vokabeln.map(vokabel).filter(beeOk)).slice(0, BEE.anzahl);
+    if (ws.length < 4) return zuWenig("Spelling Bee", zurueckFn);
+    const ziel = Math.ceil(ws.length * 0.75);
+    let pos = 0, richtig = 0, serie = 0;
+    const stand_ = el("p", { class: "spiel-stand", "aria-live": "polite" });
+    const frage = el("div", { class: "bee-frage" });
+    const box = rueckmeldung();
+    const bereich = el("div", { class: "bee-eingabe" });
+    const weiter = el("button", { class: "knopf haupt weiter", hidden: true, onclick: () => { pos++; zeigeWort(); } }, "Weiter ➜");
+    const hoerKnopf = knopf("🔊 Noch mal hören", () => { if (pos < ws.length) spiele([ws[pos].audio.en]); });
+    const zeigeStand = () => stand_.replaceChildren(el("span", {}, `Wort ${Math.min(pos + 1, ws.length)} / ${ws.length}`), el("span", {}, `✓ ${richtig}` + (serie >= 2 ? ` · 🐝 ${serie}` : "")));
+    function honig() {
+      const h = el("div", { class: "honig", role: "status", "aria-live": "polite" }, "🍯 Honey!");
+      karteEl.append(h);
+      setTimeout(() => h.classList.add("weg"), 1500);
+      setTimeout(() => h.remove(), 2000);
+    }
+    function zeigeWort() {
+      box.hidden = true; weiter.hidden = true;
+      if (pos >= ws.length) return ende();
+      const v = ws[pos], wort = spielWort(v);
+      frage.replaceChildren(...[v.bild && v.symbol && el("div", { class: "vok-bild", "aria-hidden": "true" }, v.symbol), el("p", { class: "vok-de", lang: "de" }, v.de)].filter(Boolean));
+      const feld = tippFeld((text, ui) => {
+        ui.feld.disabled = true; ui.knopf.hidden = true;
+        const stufe = pruefeTipp(text, [wort]);
+        if (stufe === 2) { serie = 0; melde(box, "hilfe", `Nicht ganz. So schreibt man es: ${wort}`); }
+        else { richtig++; serie++; tippRueckmeldung(box, stufe, wort); if (serie % BEE.honig === 0) honig(); }
+        zeigeStand(); weiter.hidden = false; weiter.focus();
+      });
+      bereich.replaceChildren(feld); zeigeStand();
+      spiele([v.audio.en]);
+      feld.querySelector("input").focus({ preventScroll: true });
+    }
+    function ende() {
+      hoerKnopf.disabled = true; bereich.replaceChildren(); frage.replaceChildren();
+      const geschafft = richtig >= ziel;
+      const text = geschafft ? `${lob(true)} ${richtig} von ${ws.length} Wörtern richtig geschrieben!${spielPunkte("beeTag", true)}`
+        : `${richtig} von ${ws.length} richtig. Für Punkte brauchst du ${ziel}. Noch mal?`;
+      melde(box, geschafft ? "gut" : "neutral", text);
+    }
+    const karteEl = el("section", { class: "satzkarte bee" }, stand_, frage, el("div", { class: "knopfreihe" }, hoerKnopf), bereich, box,
+      el("div", { class: "knopfreihe" }, weiter),
+      el("div", { class: "knopfreihe" }, knopf("↻ Noch mal", () => spielBee(i)), knopf("Andere Wörter", zurueckFn), knopf("Zur Startseite", startseite, "leise")));
+    zeige(spielKopf("Spelling Bee", zurueckFn),
+      ansage("Listen and spell the word.", "Hör zu und schreib das Wort. Ein kleiner Fehler ist okay – du siehst dann die genaue Schreibweise."),
+      karteEl);
+    imSpiel = true;
+    zeigeWort();
+  }
+
+  /* -s-Detektiv: fehlendes -s finden und reparieren (nur lesen). 8 Sätze aus festen Bausteinen (4 falsch, 2 he/she/it richtig, 2 I/you/we/they).
+     Ein Satz zählt, wenn er ohne Hilfe gelöst wird. Punkte (+10) beim ersten Durchgang des Tages mit mindestens 6 richtigen (gym.detektivTag). */
+  const DETEKTIV_ZIEL = 6;
+  function spielDetektiv() {
+    lage = null;
+    const d = station(5).detektiv;
+    const he = d.personen.filter((p) => p[1]), ich = d.personen.filter((p) => !p[1]);
+    const verben = mischen(d.verben);
+    const plan = mischen([...Array(4).fill("falsch"), ...Array(2).fill("he"), ...Array(d.runden - 6).fill("ich")]);
+    const saetze = plan.map((typ, i) => {
+      const p = typ === "ich" ? ich[Math.floor(Math.random() * ich.length)] : he[Math.floor(Math.random() * he.length)];
+      const v = verben[i % verben.length];
+      return { person: p[0], dritte: p[1], basis: v[0], sform: v[1], rest: v[2], falsch: typ === "falsch" };
+    });
+    let pos = 0, richtig = 0;
+    const zurueckFn = zeigeSpiele;
+    const knoepfe = () => el("div", { class: "knopfreihe" }, knopf("↻ Noch mal", spielDetektiv), knopf("Andere Spiele", zurueckFn), knopf("Zur Startseite", startseite, "leise"));
+    function zeigeSatz_() {
+      const s = saetze[pos];
+      let geloest = false, hilfe = false;
+      const box = rueckmeldung();
+      const weiter = knopf("Weiter ➜", () => { pos++; if (pos < saetze.length) zeigeSatz_(); else ende(); }, "haupt");
+      sperrt(weiter);
+      const verbAnzeige = s.falsch ? s.basis : (s.dritte ? s.sform : s.basis);
+      const fertig = (text) => { geloest = true; if (!hilfe) richtig++; melde(box, "gut", text); entsperrt(weiter); };
+      const hilf = (text) => { hilfe = true; melde(box, "hilfe", text); };
+      const verbKnopf = el("button", { class: "wort-knopf", lang: "en", onclick: () => {
+        if (geloest) return;
+        if (s.falsch) {
+          verbKnopf.replaceChildren(el("strong", { class: "ziel" }, s.sform));
+          verbKnopf.classList.add("repariert");
+          fertig(`${lob()} Repariert: ${s.basis} → ${s.sform}`);
+        } else {
+          hilf(s.dritte ? "Ich helfe dir: Schau noch mal – das Verb hat sein -s schon. Probier's nochmal!"
+            : "Ich helfe dir: Bei I, you, we und they bleibt das Verb ohne -s. Probier's nochmal!");
+        }
+      } }, verbAnzeige);
+      const andere = (t) => el("button", { class: "wort-knopf", lang: "en", onclick: () => {
+        if (!geloest) hilf("Ich helfe dir: Schau aufs Verb. Bei he, she, it braucht das Verb ein -s. Probier's nochmal!");
+      } }, t);
+      const allesRichtig = knopf("✓ Alles richtig!", () => {
+        if (geloest) return;
+        if (s.falsch) hilf("Ich helfe dir: Hier fehlt etwas. Bei he, she, it braucht das Verb ein -s. Probier's nochmal!");
+        else fertig(`${lob()} Der Satz stimmt.`);
+      });
+      zeige(spielKopf("-s-Detektiv", zurueckFn),
+        ansage("Is there an -s missing?", "Du bist der -s-Detektiv! Fehlt ein -s? Dann tipp auf das Verb und repariere es. Sonst: „Alles richtig!“"),
+        karte(null, `Satz ${pos + 1} von ${saetze.length} · ✓ ${richtig}`,
+          el("p", { class: "satz detektiv-satz" }, s.person.split(" ").map(andere), verbKnopf, s.rest.split(" ").map(andere)),
+          el("div", { class: "knopfreihe" }, allesRichtig), box, el("div", { class: "knopfreihe" }, weiter)));
+      imSpiel = true;
+    }
+    function ende() {
+      const geschafft = richtig >= DETEKTIV_ZIEL, box = rueckmeldung();
+      melde(box, geschafft ? "gut" : "neutral", geschafft ? `${lob(true)} ${richtig} von ${saetze.length} Sätzen ohne Hilfe gelöst!${spielPunkte("detektivTag", true)}`
+        : `${richtig} von ${saetze.length} ohne Hilfe gelöst. Für Punkte brauchst du ${DETEKTIV_ZIEL}. Noch mal?`);
+      if (!geschafft) speichern();
+      zeige(spielKopf("-s-Detektiv", zurueckFn), el("section", { class: "satzkarte detektiv-ende" }, el("h2", {}, "🔎 Fall gelöst!"), box, knoepfe()));
+      imSpiel = true;
+    }
+    zeigeSatz_();
   }
 
   /* ---------- Vokabeln ---------- */
@@ -1447,7 +1690,7 @@
      👑 4 perfekte Wochen hintereinander (Ferienwochen halten an) · 🏖️ Wochenende = Bonus, keine Pflicht.
      London: jeder 4. neu geschaffte Teil schaltet einen Ort frei. Alles nur auf diesem Gerät. */
   const SP = D.spiel;
-  const PUNKTE = { teil: 10, wiederholung: 5, ohneHilfe: 5, seance: 30, einheit: 50, feuer: 30, wochenende: 20, ferien: 20, woche: 100, monat: 200 };
+  const PUNKTE = { teil: 10, wiederholung: 5, ohneHilfe: 5, seance: 30, einheit: 50, feuer: 30, wochenende: 20, ferien: 20, spiel: 10, woche: 100, monat: 200 };
   const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const heute = () => (window.__heute ? new Date(window.__heute + "T12:00:00") : new Date());
   const plusTage = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
@@ -1676,7 +1919,7 @@
       ["🔥", "On fire", sp.feuer.length > 0], ["⭐", "Perfect week", sp.wochen.length > 0], ["🏅", "5 × perfect", sp.wochen.length >= 5],
       ["👑", "Perfect month", sp.abzeichen.includes("monat")], ["🏖️", "Weekend hero", sp.wochenende.length > 0], ["🌴", "Holiday hero", (sp.ferien || []).length > 0],
       ["🗺️", "London complete", orteFrei() === SP.orte.length], ["🦸", "Team complete", sp.abzeichen.includes("team")],
-      ["🏆", "All stations", D.stationen.every((s) => stand.erledigt.includes(s.nr) && !faellige(s.nr + "|"))],
+      ["🏆", "All stations", D.stationen.filter((s) => !s.spiele).every((s) => stand.erledigt.includes(s.nr) && !faellige(s.nr + "|"))],
     ];
     const fakt = el("div", { class: "fakt", hidden: true, "aria-live": "polite" });
     const frei = orteFrei();

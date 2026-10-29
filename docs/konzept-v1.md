@@ -51,7 +51,7 @@ Hintergrund: siehe `docs/briefing.md`.
 | 2 he / she / it + s | Teil A regelmäßig, Übersicht, Teil B Ausnahmen, Ausnahmen-Übersicht |
 | 3 Uhrzeiten | Listen and Repeat, Erklärung a.m./p.m., Uhr → Sprechweise wählen |
 | 4 Aufgaben verstehen | true / false / not in the text; cycle vs. circle |
-| 5 Spiele | Memory (Symbol ↔ Wort), -s-Detektiv |
+| 5 Spiele | Lernspiele-Kachel wie „Games“ in Klasse 9: Memory, Catch the Word, Spelling Bee, -s-Detektiv, Shop – frei spielbar, kein Häkchen |
 | 6 Hörverstehen | Hörübungen (true/false oder Weg zuordnen), jede Woche erweiterbar über `inhalte/hoeren/` |
 
 **Listen and Repeat (Assimil):**
@@ -159,9 +159,13 @@ Erklärung danach:
 - Mini-Text „Ben's Saturday“ mit Aussagen zu true / false / not in the text. Der Hinweis dazu: „Steht das wirklich im Text? Wenn nicht: not in the text!“
 - Hörpaar: *I cycle to school.* (Rad fahren) und *Draw a circle.* (Kreis). Danach hört das Kind ein Wort und wählt das richtige Bild.
 
-### Station 5 – Spiele
-- **Memory:** Symbol und englisches Wort finden zusammen. Beim Aufdecken wird das Wort gesprochen.
-- **-s-Detektiv:** In manchen Sätzen fehlt das -s (*Emily get up at 7.*). Das Kind tippt das Verb an und repariert es. Die Sätze werden aus festen Bausteinen zusammengesetzt und nur gelesen, nicht gesprochen.
+### Station 5 – Spiele [umgebaut 29.10.2026: Games-Kachel wie Klasse 9]
+Keine Teile und kein Stations-Häkchen mehr; die Station zählt nicht für „All stations“. Jedes Spiel ist frei spielbar und bringt **einmal pro Tag +10 Punkte** (Tagesmarken `gym.memoryTag / catchTag / beeTag / detektivTag`). Memory, Catch the Word und Spelling Bee nehmen die Wörter eines Abschnitts aus Station 7 (Abschnittskacheln wie in den Vokabeln). Als Hausaufgaben-Ziel bleibt `5` möglich (nur Sprung und Schild, kein Bonus – wie `8` Games in Klasse 9).
+- **Memory:** englisches Wort ↔ deutsche Bedeutung, 6 Paare, große Karten (alle sichtbar: 4 × 3 Laptop, 3 × 4 Handy). Wörter mit Symbol zeigen es auf der englischen Karte; beim Aufdecken wird das Wort gesprochen. +10 beim ersten Gewinn des Tages.
+- **Catch the Word:** ein Wort wird gesprochen, 4–6 Wörter des Abschnitts fallen, das richtige antippen. 10 Runden, 3 Leben, Treffer-Klang und deutsche Bedeutung. +10 ab 7 Treffern.
+- **Spelling Bee:** Wort hören, deutsche Bedeutung (bei Bildwörtern das Symbol groß) lesen, englisch eintippen (1-Fehler-Toleranz, nur `tippbar`-Wörter). 8 Wörter, 🍯 Honey bei 3 in Folge. +10 ab 6 richtig (bei weniger Wörtern ¾).
+- **-s-Detektiv:** In manchen Sätzen fehlt das -s (*Emily get up at 7.*). Das Kind tippt das Verb an und repariert es, sonst „Alles richtig!“. 8 Sätze aus festen Bausteinen, nur gelesen. Am Ende Lob; +10, wenn mindestens 6 Sätze ohne Hilfe gelöst sind.
+- **Shop:** Kachel zum vorhandenen Coin-Shop.
 
 ---
 
@@ -398,7 +402,7 @@ Entwürfe der Inhalte:
 
 **Station 4 „Aufgaben verstehen“:** Erklärung true / false / not in the text („Steht das wirklich im Text? Wenn nicht: not in the text!“) → Leseaufgabe „Ben's Saturday“ (Text aus Abschnitt 7, alle Aussagen auf einer Seite, Text zum Vorlesen, Lösung mit Audio) → „cycle oder circle?“ (Listen and Repeat) → „Welches Wort hörst du?“ (cycle/circle und die Hörpaare aus Abschnitt 8: walk/work, three/tree, thirteen/thirty, fifteen/fifty).
 
-**Station 5 „Spiele“:** Memory (Symbol ↔ englisches Wort, 6 Paare, zufällig aus den Vokabeln; beim Aufdecken wird das Wort gesprochen) → -s-Detektiv (8 Sätze aus festen Bausteinen, nur gelesen; in manchen fehlt das -s: Verb antippen und reparieren, sonst „Alles richtig!“).
+**Station 5 „Spiele“:** seit 29.10.2026 Lernspiele-Kachel (Memory, Catch the Word, Spelling Bee, -s-Detektiv, Shop) ohne Teile und Häkchen – Details in Abschnitt „Station 5 – Spiele“ oben. Vorher: Memory (Symbol ↔ Wort) → -s-Detektiv als zwei Stations-Teile.
 
 **Postvokalisches R:** Bei einigen Einzelwörtern spricht die Stimme das R amerikanisch (Liste: `docs/postvokales-r.md`). Bewusst so gelassen.
 

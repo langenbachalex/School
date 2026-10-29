@@ -99,19 +99,17 @@ STATIONEN = [
              [["st4w_fifteen", "15", "fifteen"], ["st4w_fifty", "50", "fifty"],
               "fifteen wird hinten betont: fif-TEEN. fifty wird vorne betont: FIF-ty."]]},
      ]},
-    {"nr": 5, "titel": "Spiele", "symbol": "🎲", "lob": "bei den Spielen",
-     "schritte": [
-         {"art": "memory", "name": "Memory", "paare": 6,
-          "pool": ["bus", "car", "train", "wheelchair", "shower", "breakfast", "newspaper", "clock", "letter",
-                   "card", "sea", "money", "light", "cafe", "tooth"]},
-         {"art": "detektiv", "name": "-s-Detektiv", "runden": 8,
-          "personen": [["I", False], ["You", False], ["We", False], ["They", False],
-                       ["He", True], ["She", True], ["Emily", True], ["Ben", True], ["Mia", True], ["My dad", True]],
-          "verben": [["get", "gets", "up at 7."], ["play", "plays", "football."], ["go", "goes", "to school by bus."],
-                     ["watch", "watches", "TV."], ["have", "has", "breakfast at 7.30."], ["like", "likes", "music."],
-                     ["read", "reads", "a book."], ["walk", "walks", "to school."], ["wash", "washes", "the car."],
-                     ["eat", "eats", "an apple."], ["do", "does", "the shopping."]]},
-     ]},
+    # Spiele: Games-Kachel wie in Klasse 9 (Lernspiele, frei spielbar, +10 einmal pro Tag und Spiel). Keine Teile, kein Häkchen,
+    # zählt nicht für „All stations“ (spiele = True). Memory, Catch the Word und Spelling Bee nehmen die Abschnitte der Station 7;
+    # der -s-Detektiv baut seine Sätze aus diesen Bausteinen.
+    {"nr": 5, "titel": "Spiele", "unter": "Lernspiele", "symbol": "🎲", "lob": "bei den Spielen", "spiele": True, "schritte": [],
+     "detektiv": {"runden": 8,
+                  "personen": [["I", False], ["You", False], ["We", False], ["They", False],
+                               ["He", True], ["She", True], ["Emily", True], ["Ben", True], ["Mia", True], ["My dad", True]],
+                  "verben": [["get", "gets", "up at 7."], ["play", "plays", "football."], ["go", "goes", "to school by bus."],
+                             ["watch", "watches", "TV."], ["have", "has", "breakfast at 7.30."], ["like", "likes", "music."],
+                             ["read", "reads", "a book."], ["walk", "walks", "to school."], ["wash", "washes", "the car."],
+                             ["eat", "eats", "an apple."], ["do", "does", "the shopping."]]}},
     {"nr": 6, "titel": "Hörverstehen", "symbol": "🎧", "lob": "beim Hörverstehen", "schritte": []},  # aus inhalte/hoeren
     # Neu: neue Inhalte als Abschnitte (je Erklärung, Listen and Repeat, Übung); Woche für Woche erweiterbar
     {"nr": 8, "titel": "Neu", "symbol": "💡", "lob": "bei den neuen Themen", "schritte": [], "gruppen": [
@@ -317,16 +315,6 @@ def main():
         for t in range(n):
             gruppen.append({"name": name + (f" · Teil {t + 1}" if n > 1 else ""), "vokabeln": ids[t * groesse:(t + 1) * groesse]})
     next(x for x in STATIONEN if x["nr"] == 7)["gruppen"] = gruppen
-    # Memory-Karten aus den Vokabeln (Symbol, Wort, Audio)
-    kurz = lambda en: re.sub(r"\s*\(.*?\)|,.*$", "", re.sub(r"^\(to\) ", "", en)).strip()
-    vok = {}
-    for v in vokabeln:  # bei doppelten Wörtern (letter) zählt die erste Bedeutung
-        vok.setdefault(kurz(v["en"]).lower(), v)
-    for st in STATIONEN:
-        for s in st["schritte"]:
-            if s["art"] == "memory":
-                s["karten"] = [{"id": vok[w]["id"], "wort": kurz(vok[w]["en"]), "symbol": vok[w]["symbol"],
-                                "audio": vok[w]["audio"]["en"]} for w in s.pop("pool")]
     # Lob und Rückmeldungen (gesprochen von Mr. Alex), nach Art gruppiert
     lob = {}
     # Arten: lob (kurz), stark (Serie von 5 / fertiger Teil), fehler, spiel, geschafft, voll, doch; gruppe: Schlüsselwörter gegen Wortwiederholung

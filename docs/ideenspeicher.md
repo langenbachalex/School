@@ -26,7 +26,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | **Coins: Wertigkeit und Zeitkopplung** | aufgeschoben (29.10.) – Coins und Shop sind gebaut (Rahmen 50, Runner-Ticket 100 als Platzhalter) | Startwert ≈ 100 Punkte = 1 Spielrunde; Alternative: Punkte kaufen Spielzeit (z. B. 100 Punkte = 5 Minuten). Preise für beide Klassen festlegen, dann Schüler-Feedback abwarten. |
 | **Auto beim Vokabellernen** (Schülerwunsch) | aufgeschoben (29.10.) | Zu aufwendig als Dauer-Grafik. Stattdessen Mini-Rewards – **gebaut 29.10.** (Flamme, Münzen, Auto/Bus im Wechsel, siehe unten). |
 | **Grafikstil Runner** | offen | Flach/Cartoon wie die Word-Gym-Figur oder Landmark-Fotos mit kleiner Figur davor. Nächster Schritt nach der Games-Kachel. |
-| **Klasse 6 mitziehen** (Games-Umbau, Coins, Runner) | teils gebaut (29.10.) | Coins, Shop und Mini-Rewards sind in beiden Klassen; Games-Umbau und Runner offen. |
+| **Klasse 6 mitziehen** (Games-Umbau, Coins, Runner) | Klasse 6 nachgezogen (29.10.) | Coins, Shop, Mini-Rewards und die Games-Kachel (Station 5 „Spiele“: Memory, Catch the Word, Spelling Bee, -s-Detektiv, Shop) sind in beiden Klassen; Runner offen. |
 
 ## Beschlossen (29.10.2026, zweite Runde)
 - **Coins nicht rückwirkend**: Zählung beginnt mit dem Update; alte Punkte bringen keine Coins (sonst hängen Kinder mit Hunderten Coins nur am Spiel). **Gebaut 29.10.** (beide Apps, `stand.spiel.coins`).
@@ -67,9 +67,9 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 
 ## Spiele-Ideen (Details in `spiele/konzept-entwurf.md`)
 - Word Race (Autorennen, drei Spuren) – offen
-- Catch the Word – **gebaut 29.10.** (Games, Klasse 9): Wort hören, 4–6 Wörter des Abschnitts fallen, das richtige antippen; 10 Runden, 3 Leben, +10 einmal pro Tag ab 7 Treffern
+- Catch the Word – **gebaut 29.10.** (Games, Klasse 9; **Klasse 6 nachgezogen 29.10.**): Wort hören, 4–6 Wörter des Abschnitts fallen, das richtige antippen; 10 Runden, 3 Leben, +10 einmal pro Tag ab 7 Treffern
 - Border Patrol – **gebaut 29.10.** (Games, Klasse 9); Variante: Wörter sinken nach unten, antippen = Aussprache, dann links 🇬🇧 / rechts 🇺🇸 wischen; durchgefallen = Minuspunkt
-- Spelling Bee – **gebaut 29.10.** (Games, Klasse 9): Wort hören, deutsche Bedeutung lesen, eintippen (1-Fehler-Toleranz wie Klasse 6); 8 Wörter, 🍯 Honey bei 3 in Folge, +10 einmal pro Tag ab 6 richtig
+- Spelling Bee – **gebaut 29.10.** (Games, Klasse 9; **Klasse 6 nachgezogen 29.10.**): Wort hören, deutsche Bedeutung lesen, eintippen (1-Fehler-Toleranz wie Klasse 6); 8 Wörter, 🍯 Honey bei 3 in Folge, +10 einmal pro Tag ab 6 richtig
 - Sentence Sprint – offen
 - Dialog-Duell – offen (Beschreibung folgt)
 - Runner – beschlossen, Planung läuft
@@ -77,7 +77,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 
 ## Ältere Ideen
 - Symbole für ~60 Klasse-9-Wörter (Bild → Wort) – offen
-- Klasse 6: Memory im Word Gym – offen
+- Klasse 6: Memory im Word Gym – offen (Memory gibt es seit 29.10. in Station 5 „Spiele“ mit Abschnittswahl; die Tagesmarke `gym.memoryTag` ist dafür schon vorbereitet)
 - E-Kurs Klasse 9: Eintippen wie Klasse 6 – offen
 - Geheimakten: weitere Akten (je Superheld/Landmark), Audio nach Freigabe – offen
 - Hörverstehen: erst hören, dann antworten – offen (nur auf Wunsch)

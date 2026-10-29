@@ -586,211 +586,113 @@ window.DATEN = {
   {
    "nr": 5,
    "titel": "Spiele",
+   "unter": "Lernspiele",
    "symbol": "🎲",
    "lob": "bei den Spielen",
-   "schritte": [
-    {
-     "art": "memory",
-     "name": "Memory",
-     "paare": 6,
-     "karten": [
-      {
-       "id": "u3_003_bus",
-       "wort": "bus",
-       "symbol": "🚌",
-       "audio": "audio/vokabeln/u3_003_bus_en.mp3"
-      },
-      {
-       "id": "u3_005_car",
-       "wort": "car",
-       "symbol": "🚗",
-       "audio": "audio/vokabeln/u3_005_car_en.mp3"
-      },
-      {
-       "id": "u3_006_train",
-       "wort": "train",
-       "symbol": "🚆",
-       "audio": "audio/vokabeln/u3_006_train_en.mp3"
-      },
-      {
-       "id": "u3_029_wheelchair",
-       "wort": "wheelchair",
-       "symbol": "🦽",
-       "audio": "audio/vokabeln/u3_029_wheelchair_en.mp3"
-      },
-      {
-       "id": "u3_033_shower",
-       "wort": "shower",
-       "symbol": "🚿",
-       "audio": "audio/vokabeln/u3_033_shower_en.mp3"
-      },
-      {
-       "id": "u3_035_breakfast",
-       "wort": "breakfast",
-       "symbol": "🥣",
-       "audio": "audio/vokabeln/u3_035_breakfast_en.mp3"
-      },
-      {
-       "id": "u3_023_newspaper",
-       "wort": "newspaper",
-       "symbol": "📰",
-       "audio": "audio/vokabeln/u3_023_newspaper_en.mp3"
-      },
-      {
-       "id": "u3_014_clock",
-       "wort": "clock",
-       "symbol": "🕰️",
-       "audio": "audio/vokabeln/u3_014_clock_en.mp3"
-      },
-      {
-       "id": "u3_024_letter",
-       "wort": "letter",
-       "symbol": "✉️",
-       "audio": "audio/vokabeln/u3_024_letter_en.mp3"
-      },
-      {
-       "id": "u3_098_card",
-       "wort": "card",
-       "symbol": "🃏",
-       "audio": "audio/vokabeln/u3_098_card_en.mp3"
-      },
-      {
-       "id": "u3_054_sea",
-       "wort": "sea",
-       "symbol": "🌊",
-       "audio": "audio/vokabeln/u3_054_sea_en.mp3"
-      },
-      {
-       "id": "u3_084_money",
-       "wort": "money",
-       "symbol": "💰",
-       "audio": "audio/vokabeln/u3_084_money_en.mp3"
-      },
-      {
-       "id": "u3_103_light",
-       "wort": "light",
-       "symbol": "💡",
-       "audio": "audio/vokabeln/u3_103_light_en.mp3"
-      },
-      {
-       "id": "u3_031_cafe",
-       "wort": "cafe",
-       "symbol": "☕",
-       "audio": "audio/vokabeln/u3_031_cafe_en.mp3"
-      },
-      {
-       "id": "u3_042_tooth_pl_teeth",
-       "wort": "tooth",
-       "symbol": "🦷",
-       "audio": "audio/vokabeln/u3_042_tooth_pl_teeth_en.mp3"
-      }
-     ]
-    },
-    {
-     "art": "detektiv",
-     "name": "-s-Detektiv",
-     "runden": 8,
-     "personen": [
-      [
-       "I",
-       false
-      ],
-      [
-       "You",
-       false
-      ],
-      [
-       "We",
-       false
-      ],
-      [
-       "They",
-       false
-      ],
-      [
-       "He",
-       true
-      ],
-      [
-       "She",
-       true
-      ],
-      [
-       "Emily",
-       true
-      ],
-      [
-       "Ben",
-       true
-      ],
-      [
-       "Mia",
-       true
-      ],
-      [
-       "My dad",
-       true
-      ]
+   "spiele": true,
+   "schritte": [],
+   "detektiv": {
+    "runden": 8,
+    "personen": [
+     [
+      "I",
+      false
      ],
-     "verben": [
-      [
-       "get",
-       "gets",
-       "up at 7."
-      ],
-      [
-       "play",
-       "plays",
-       "football."
-      ],
-      [
-       "go",
-       "goes",
-       "to school by bus."
-      ],
-      [
-       "watch",
-       "watches",
-       "TV."
-      ],
-      [
-       "have",
-       "has",
-       "breakfast at 7.30."
-      ],
-      [
-       "like",
-       "likes",
-       "music."
-      ],
-      [
-       "read",
-       "reads",
-       "a book."
-      ],
-      [
-       "walk",
-       "walks",
-       "to school."
-      ],
-      [
-       "wash",
-       "washes",
-       "the car."
-      ],
-      [
-       "eat",
-       "eats",
-       "an apple."
-      ],
-      [
-       "do",
-       "does",
-       "the shopping."
-      ]
+     [
+      "You",
+      false
+     ],
+     [
+      "We",
+      false
+     ],
+     [
+      "They",
+      false
+     ],
+     [
+      "He",
+      true
+     ],
+     [
+      "She",
+      true
+     ],
+     [
+      "Emily",
+      true
+     ],
+     [
+      "Ben",
+      true
+     ],
+     [
+      "Mia",
+      true
+     ],
+     [
+      "My dad",
+      true
      ]
-    }
-   ]
+    ],
+    "verben": [
+     [
+      "get",
+      "gets",
+      "up at 7."
+     ],
+     [
+      "play",
+      "plays",
+      "football."
+     ],
+     [
+      "go",
+      "goes",
+      "to school by bus."
+     ],
+     [
+      "watch",
+      "watches",
+      "TV."
+     ],
+     [
+      "have",
+      "has",
+      "breakfast at 7.30."
+     ],
+     [
+      "like",
+      "likes",
+      "music."
+     ],
+     [
+      "read",
+      "reads",
+      "a book."
+     ],
+     [
+      "walk",
+      "walks",
+      "to school."
+     ],
+     [
+      "wash",
+      "washes",
+      "the car."
+     ],
+     [
+      "eat",
+      "eats",
+      "an apple."
+     ],
+     [
+      "do",
+      "does",
+      "the shopping."
+     ]
+    ]
+   }
   },
   {
    "nr": 6,

@@ -20,20 +20,40 @@
 .niveau button[aria-pressed="true"] { background: var(--blau-text); color: var(--blau); }
 .niveau button:focus-visible { outline: 3px solid var(--gelb); outline-offset: -3px; }
 
-/* Startseite: 3 × 3 – auch auf dem Handy */
-.raster9 { grid-template-columns: repeat(3, 1fr); }
+/* Startseite: 8 Kacheln – 4 × 2, auf dem Handy 2 × 4 */
+.raster9 { grid-template-columns: repeat(4, 1fr); }
 .kachel .unter { font-size: .9rem; color: var(--leise); }
 .kachel.bald { opacity: .62; }
 .bald-schild { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--leise); }
 .kachel.neu { border-color: var(--neu); background: var(--neu-hell); }
 .kachel.neu .titel { color: var(--neu); }
 @media (max-width: 640px) {
-  .raster9 { gap: 8px; }
+  .raster9 { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .raster9 .kachel { padding: 10px 8px; min-height: 7.2rem; justify-items: center; text-align: center; gap: 4px; }
   .raster9 .kachel .sym { font-size: 1.8rem; height: 2.1rem; }
   .raster9 .kachel .titel { font-size: .98rem; }
   .raster9 .kachel .unter { font-size: .72rem; line-height: 1.2; }
   .raster9 .kachel .haken { width: 24px; height: 24px; top: 6px; right: 6px; font-size: .8rem; }
+}
+
+/* ✨ Neu: 14 Tage ab neu_ab (Kachel, Gruppe, Zeile über den Kacheln) */
+.kachel.frisch { border-color: var(--neu); }
+.neu-schild { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--neu); background: var(--neu-hell); border-radius: 999px; padding: 2px 8px; }
+.neu-zeile { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 14px; background: var(--neu-hell); color: var(--text); }
+.neu-text { font-weight: 700; color: var(--neu); }
+.neu-zeile .knopf { min-height: 36px; padding: 0 12px; font-size: .95rem; border-color: var(--neu); color: var(--neu); }
+@media (max-width: 640px) { .raster9 .kachel .neu-schild { font-size: .65rem; padding: 1px 6px; } }
+
+/* Games: Memory mit größeren Karten als im Word Gym */
+.memory.gross { gap: 14px; }
+.memory.gross .mem-karte { aspect-ratio: 1; min-height: 110px; font-size: 2rem; }
+.memory.gross .mem-karte.auf { font-size: 1.35rem; }
+.memory.gross .mem-lang { font-size: 1.05rem; }
+@media (max-width: 640px) {
+  .memory.gross { gap: 10px; }
+  .memory.gross .mem-karte { min-height: 96px; }
+  .memory.gross .mem-karte.auf { font-size: 1.15rem; }
+  .memory.gross .mem-lang { font-size: .9rem; }
 }
 
 /* Ansage: Englisch, darunter (G-Kurs) Deutsch */

@@ -42,7 +42,15 @@ FAKTEN_LINCOLN = {"name": "Lincoln High School", "punkte": [
     ["rules", "no cell phones in class · no smoking · appropriate clothes, no hats · students can't leave school during the day"]]}
 
 
-# Die 9 Kategorien (3×3). „bald“ = noch ohne Inhalt.
+# BE vs AE (seit 29.10.2026 als Gruppen in Vocabulary): amerikanischer Satz ↔ britisches Gegenstück
+def beae(name, ids):
+    return {"name": name, "reihe": "BE vs AE", "symbol": "🇬🇧🇺🇸", "unter": "British or American?", "neu_ab": "2026-10-29", "schritte": [
+        {"art": "lr", "name": "Sentences", "saetze": ids},
+        {"art": "beae_quiz", "name": "British or American?", "paare": ids}]}
+
+
+# Die 8 Kategorien (Reihenfolge nach nr). „bald“ = noch ohne Inhalt, „spiele“ = zählt nicht für „All categories“.
+# neu_ab: "YYYY-MM-DD" (Kategorie oder Gruppe) zeigt 14 Tage lang ein ✨-Schild und einen Sprung auf der Startseite.
 KATEGORIEN = [
     {"nr": 1, "titel": "Reading", "unter": {"G": "Leseverstehen", "E": "Reading comprehension"}, "symbol": "📖",
      "gruppen": [
@@ -103,7 +111,9 @@ KATEGORIEN = [
           ]},
      ]},
     {"nr": 2, "titel": "Vocabulary", "unter": {"G": "Wörter in ganzen Sätzen", "E": "Words in whole sentences"},
-     "symbol": "🔤", "vokabeln": True},
+     "symbol": "🔤", "vokabeln": True,  # Units/Abschnitte entstehen in der App aus D.units; dazu feste Gruppen:
+     "gruppen": [beae("Unit 1 · p. 20", [f"ba_{i:02d}" for i in range(1, 9)]),
+                 beae("More words", [f"ba_{i:02d}" for i in range(9, 18)])]},
     {"nr": 3, "titel": "Language", "unter": {"G": "So funktioniert die Sprache", "E": "How English works"}, "symbol": "🧩",
      "gruppen": [
          {"name": "-ing form & prepositions", "symbol": "➕ ing",
@@ -233,21 +243,7 @@ KATEGORIEN = [
          dialog("New York — Yes or No?", "🌳 ♨️", "d3", 11),
          dialog("Brooklyn or Bust?", "🏠 🚇 🍔", "d4", 10, eigene=True),
      ]},
-    {"nr": 7, "titel": "BE vs AE", "unter": {"G": "Britisch und amerikanisch", "E": "British and American English"},
-     "symbol": "🇬🇧 🇺🇸", "gruppen": [
-         {"name": "Unit 1 · p. 20", "symbol": "🍬 🔦 🗑️", "schritte": [
-             {"art": "lr", "name": "Sentences", "saetze": [f"ba_{i:02d}" for i in range(1, 9)]},
-             {"art": "beae_quiz", "name": "British or American?", "paare": [f"ba_{i:02d}" for i in range(1, 9)]}]},
-         {"name": "More words", "symbol": "🚇 👟 🍟", "schritte": [
-             {"art": "lr", "name": "Sentences", "saetze": [f"ba_{i:02d}" for i in range(9, 18)]},
-             {"art": "beae_quiz", "name": "British or American?", "paare": [f"ba_{i:02d}" for i in range(9, 18)]}]},
-     ]},
-    {"nr": 8, "titel": "New", "unter": {"G": "Neu diese Woche", "E": "New this week"}, "symbol": "✨", "farbe": "neu",
-     # Woche für Woche: hier die neuen Inhalte eintragen (Vokabeln über ihre IDs aus vokabeln.tsv)
-     "gruppen": [
-         {"name": "Unit 2 · Start", "symbol": "🦁 📸", "vokabeln": [f"u2_{i:03d}" for i in range(1, 6)]},
-         {"name": "Unit 2 · Theme 1", "symbol": "🏫 🔐", "vokabeln": [f"u2_{i:03d}" for i in range(6, 23)]},
-     ]},
+    {"nr": 8, "titel": "Games", "unter": {"G": "Lernspiele", "E": "Learning games"}, "symbol": "🎮", "spiele": True, "neu_ab": "2026-10-29"},
     {"nr": 9, "titel": "Hall of Fame", "unter": {"G": "Aus euren Texten", "E": "From your texts"}, "symbol": "🏆",
      "gruppen": [
          {"name": "Strong moments", "symbol": "🌟 ✍️", "schritte": [

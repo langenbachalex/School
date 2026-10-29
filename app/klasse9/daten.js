@@ -6523,7 +6523,85 @@ window.DATEN = {
     "E": "Words in whole sentences"
    },
    "symbol": "🔤",
-   "vokabeln": true
+   "vokabeln": true,
+   "gruppen": [
+    {
+     "name": "Unit 1 · p. 20",
+     "reihe": "BE vs AE",
+     "symbol": "🇬🇧🇺🇸",
+     "unter": "British or American?",
+     "neu_ab": "2026-10-29",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "Sentences",
+       "saetze": [
+        "ba_01",
+        "ba_02",
+        "ba_03",
+        "ba_04",
+        "ba_05",
+        "ba_06",
+        "ba_07",
+        "ba_08"
+       ]
+      },
+      {
+       "art": "beae_quiz",
+       "name": "British or American?",
+       "paare": [
+        "ba_01",
+        "ba_02",
+        "ba_03",
+        "ba_04",
+        "ba_05",
+        "ba_06",
+        "ba_07",
+        "ba_08"
+       ]
+      }
+     ]
+    },
+    {
+     "name": "More words",
+     "reihe": "BE vs AE",
+     "symbol": "🇬🇧🇺🇸",
+     "unter": "British or American?",
+     "neu_ab": "2026-10-29",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "Sentences",
+       "saetze": [
+        "ba_09",
+        "ba_10",
+        "ba_11",
+        "ba_12",
+        "ba_13",
+        "ba_14",
+        "ba_15",
+        "ba_16",
+        "ba_17"
+       ]
+      },
+      {
+       "art": "beae_quiz",
+       "name": "British or American?",
+       "paare": [
+        "ba_09",
+        "ba_10",
+        "ba_11",
+        "ba_12",
+        "ba_13",
+        "ba_14",
+        "ba_15",
+        "ba_16",
+        "ba_17"
+       ]
+      }
+     ]
+    }
+   ]
   },
   {
    "nr": 3,
@@ -7833,131 +7911,15 @@ window.DATEN = {
    ]
   },
   {
-   "nr": 7,
-   "titel": "BE vs AE",
-   "unter": {
-    "G": "Britisch und amerikanisch",
-    "E": "British and American English"
-   },
-   "symbol": "🇬🇧 🇺🇸",
-   "gruppen": [
-    {
-     "name": "Unit 1 · p. 20",
-     "symbol": "🍬 🔦 🗑️",
-     "schritte": [
-      {
-       "art": "lr",
-       "name": "Sentences",
-       "saetze": [
-        "ba_01",
-        "ba_02",
-        "ba_03",
-        "ba_04",
-        "ba_05",
-        "ba_06",
-        "ba_07",
-        "ba_08"
-       ]
-      },
-      {
-       "art": "beae_quiz",
-       "name": "British or American?",
-       "paare": [
-        "ba_01",
-        "ba_02",
-        "ba_03",
-        "ba_04",
-        "ba_05",
-        "ba_06",
-        "ba_07",
-        "ba_08"
-       ]
-      }
-     ]
-    },
-    {
-     "name": "More words",
-     "symbol": "🚇 👟 🍟",
-     "schritte": [
-      {
-       "art": "lr",
-       "name": "Sentences",
-       "saetze": [
-        "ba_09",
-        "ba_10",
-        "ba_11",
-        "ba_12",
-        "ba_13",
-        "ba_14",
-        "ba_15",
-        "ba_16",
-        "ba_17"
-       ]
-      },
-      {
-       "art": "beae_quiz",
-       "name": "British or American?",
-       "paare": [
-        "ba_09",
-        "ba_10",
-        "ba_11",
-        "ba_12",
-        "ba_13",
-        "ba_14",
-        "ba_15",
-        "ba_16",
-        "ba_17"
-       ]
-      }
-     ]
-    }
-   ]
-  },
-  {
    "nr": 8,
-   "titel": "New",
+   "titel": "Games",
    "unter": {
-    "G": "Neu diese Woche",
-    "E": "New this week"
+    "G": "Lernspiele",
+    "E": "Learning games"
    },
-   "symbol": "✨",
-   "farbe": "neu",
-   "gruppen": [
-    {
-     "name": "Unit 2 · Start",
-     "symbol": "🦁 📸",
-     "vokabeln": [
-      "u2_001",
-      "u2_002",
-      "u2_003",
-      "u2_004",
-      "u2_005"
-     ]
-    },
-    {
-     "name": "Unit 2 · Theme 1",
-     "symbol": "🏫 🔐",
-     "vokabeln": [
-      "u2_006",
-      "u2_007",
-      "u2_008",
-      "u2_009",
-      "u2_010",
-      "u2_011",
-      "u2_012",
-      "u2_013",
-      "u2_014",
-      "u2_015",
-      "u2_016",
-      "u2_017",
-      "u2_018",
-      "u2_019",
-      "u2_020",
-      "u2_021",
-      "u2_022"
-     ]
-    }
-   ]
+   "symbol": "🎮",
+   "spiele": true,
+   "neu_ab": "2026-10-29"
   },
   {
    "nr": 9,

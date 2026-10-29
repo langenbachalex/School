@@ -49,6 +49,37 @@
   }
   const stand = laden();
 
+  // Umbau 29.10.2026: „BE vs AE“ (nr 7) sind jetzt Gruppen in Vocabulary (nr 2), „New“ (nr 8, Wörter Unit 2 Start/Theme 1)
+  // ist in Vocabulary/Unit 2 aufgegangen, nr 8 heißt jetzt „Games“. Alter Fortschritt wandert einmalig mit (vor dem Siegeln),
+  // Punkte bleiben. Idempotent über stand.umbau; der Siegelmechanismus bleibt unverändert.
+  function umbau() {
+    if (stand.umbau >= 1) return;
+    const ZIEL = { "8|Unit 2 · Start": ["2|u2:Start"], "8|Unit 2 · Theme 1": ["2|u2:Theme 1 · Part 1", "2|u2:Theme 1 · Part 2"] };
+    const neuePlaetze = (alt) => (alt.startsWith("7|") ? ["2|" + alt.slice(2)] : ZIEL[alt] || []);
+    const teile = stand.teile || {};
+    for (const alt of Object.keys(teile)) {
+      const m = alt.match(/^([78]\|.+)\|(\d+)$/);
+      if (!m) continue;
+      neuePlaetze(m[1]).forEach((z) => { teile[`${z}|${m[2]}`] = true; });
+      delete teile[alt];
+    }
+    const gr = stand.gruppen || {};
+    [7, 8].forEach((nr) => {
+      (gr[nr] || []).forEach((name) => neuePlaetze(`${nr}|${name}`).forEach((z) => {
+        const liste = (gr[2] = gr[2] || []), g = z.slice(2);
+        if (!liste.includes(g)) liste.push(g);
+      }));
+      delete gr[nr];
+    });
+    if (Object.keys(gr).length) stand.gruppen = gr;
+    stand.erledigt = stand.erledigt.filter((nr) => nr !== 7 && nr !== 8);
+    const vok = D.kategorien.find((k) => k.vokabeln);
+    if (vok && gr[2] && kategorieGruppen(vok).every((g) => gr[2].includes(g)) && !stand.erledigt.includes(vok.nr)) stand.erledigt.push(vok.nr);
+    stand.umbau = 1;
+    speichern();
+  }
+  umbau();
+
   // Speicher-Wächter: Warnt, wenn der Fortschritt auf diesem Gerät nicht gespeichert werden kann (privater Modus, gesperrter Speicher),
   // und bittet den Browser, die Daten dauerhaft zu behalten (gegen automatisches Aufräumen).
   function speicherPruefen() {
@@ -284,6 +315,19 @@
     return el("p", { class: "termin", role: "status" }, "📅 " + text);
   }
 
+  // ✨ „Neu“: 14 Tage ab neu_ab (Kategorie oder Gruppe, in klasse9_bauen.py) – Schild auf Kachel und Gruppe, Zeile auf der Startseite
+  const istNeu = (o) => { if (!o || !o.neu_ab) return false; const t = iso(heute()); return t >= o.neu_ab && t < iso(plusTage(new Date(o.neu_ab + "T12:00:00"), 14)); };
+  const neuSchild = () => el("span", { class: "neu-schild" }, "✨ " + T("Neu", "New"));
+  function neuZeile() {
+    const spruenge = [];
+    D.kategorien.forEach((k) => {
+      if (istNeu(k)) spruenge.push(knopf(`${k.symbol} ${k.titel}`, () => starteKategorie(k.nr), "leise"));
+      (k.gruppen || []).forEach((g, i) => { if (istNeu(g)) spruenge.push(knopf(`${g.symbol ? g.symbol + " " : ""}${g.name}`, () => starteGruppe(k, i), "leise")); });
+    });
+    if (!spruenge.length) return null;
+    return el("div", { class: "neu-zeile", role: "status" }, el("span", { class: "neu-text" }, "✨ " + T("Neu diese Woche:", "New this week:")), spruenge);
+  }
+
   function startseite() {
     lage = null; ansicht = startseite;
     zeige(
@@ -292,15 +336,17 @@
         el("p", { class: "klein" }, T("Wähl eine Kategorie. Oben rechts stellst du deinen Kurs ein: G oder E. Dein Mr. Alex",
           "Choose a category. Top right: choose your course, G or E. Your Mr. Alex"))),
       gymKarte(),
+      neuZeile(),
       el("nav", { class: "kacheln raster9", "aria-label": T("Kategorien", "Categories") },
         D.kategorien.map((k) => {
-          const fertig = stand.erledigt.includes(k.nr);
-          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (k.bald ? " bald" : "") + (k.farbe ? " " + k.farbe : ""),
-            onclick: () => starteKategorie(k.nr), "aria-label": `${k.nr} ${k.titel}${k.bald ? T(" (kommt bald)", " (coming soon)") : ""}${fertig ? " ✓" : ""}` },
+          const fertig = stand.erledigt.includes(k.nr), neu = istNeu(k) || (k.gruppen || []).some(istNeu);
+          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (k.bald ? " bald" : "") + (neu ? " frisch" : "") + (k.farbe ? " " + k.farbe : ""),
+            onclick: () => starteKategorie(k.nr), "aria-label": `${k.nr} ${k.titel}${k.bald ? T(" (kommt bald)", " (coming soon)") : ""}${neu ? T(" (neu)", " (new)") : ""}${fertig ? " ✓" : ""}` },
             el("span", { class: "sym", "aria-hidden": "true" }, k.symbol),
             el("span", { class: "titel", lang: "en" }, k.titel),
             el("span", { class: "unter" }, tx(k.unter)),
             k.bald && el("span", { class: "bald-schild" }, T("kommt bald", "coming soon")),
+            neu && neuSchild(),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
       el("div", { class: "knopfreihe" }, knopf(T("✏️ Frage für meinen Lehrer", "✏️ Question for my teacher"), fragenOeffnen)));
@@ -311,6 +357,7 @@
   function starteKategorie(nr) {
     const k = kategorie(nr);
     if (k.bald) return platzhalter(k);
+    if (k.spiele) return zeigeSpiele(k);
     if (k.vokabeln) return zeigeUnits(k);
     zeigeGruppen(k);
   }
@@ -326,12 +373,14 @@
   const gruppenFertig = (nr) => (stand.gruppen && stand.gruppen[nr]) || [];
 
   function gruppenKachel(k, g, schluessel, nrText, onclick) {
-    const ok = gruppenFertig(k.nr).includes(schluessel);
-    return el("button", { class: "kachel" + (ok ? " erledigt" : ""), onclick,
-      "aria-label": `${g.name}${ok ? " ✓" : ""}` },
+    const ok = gruppenFertig(k.nr).includes(schluessel), neu = istNeu(g);
+    return el("button", { class: "kachel" + (ok ? " erledigt" : "") + (neu ? " frisch" : ""), onclick,
+      "aria-label": `${g.name}${neu ? T(" (neu)", " (new)") : ""}${ok ? " ✓" : ""}` },
       el("span", { class: "nr" }, nrText),
       el("span", { class: "titel", lang: "en" }, g.name),
+      g.unter && el("span", { class: "unter", lang: "en" }, g.unter),
       g.symbol && el("span", { class: "vorschau", "aria-hidden": "true" }, g.symbol),
+      neu && neuSchild(),
       ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
   }
 
@@ -343,20 +392,21 @@
         gruppenKachel(k, g, g.name, "Topic " + (i + 1), () => starteGruppe(k, i)))));
   }
 
-  // Vocabulary: Unit wählen, dann Abschnitt
+  // Vocabulary: Unit wählen, dann Abschnitt; dahinter die festen Gruppen der Kategorie (BE vs AE)
+  const aktuelleUnit = () => (stand.unit && D.units[stand.unit].length ? stand.unit : "2");
+  const unitReiter = (zeichne) => el("div", { class: "reiter", role: "tablist" }, Object.keys(D.units).map((u) =>
+    el("button", { class: "reiter-knopf", role: "tab", "aria-selected": String(u === aktuelleUnit()),
+      onclick: () => { stand.unit = u; speichern(); zeichne(); } }, "Unit " + u)));
   function zeigeUnits(k) {
     lage = null; ansicht = () => zeigeUnits(k);
-    const unit = stand.unit && D.units[stand.unit].length ? stand.unit : "2";
-    const reiter = el("div", { class: "reiter", role: "tablist" }, Object.keys(D.units).map((u) =>
-      el("button", { class: "reiter-knopf", role: "tab", "aria-selected": String(u === unit),
-        onclick: () => { stand.unit = u; speichern(); zeigeUnits(k); } }, "Unit " + u)));
-    const gruppen = D.units[unit];
-    zeige(kopf(k), reiter,
+    const unit = aktuelleUnit(), gruppen = D.units[unit];
+    zeige(kopf(k), unitReiter(() => zeigeUnits(k)),
       gruppen.length ? ansage("Choose a part of the unit. The words come in the same order as in your book.",
         "Wähl einen Abschnitt. Die Wörter kommen in derselben Reihenfolge wie im Buch.")
         : ansage("Coming soon!", "Diese Unit kommt bald."),
-      el("nav", { class: "kacheln gruppen" }, gruppen.map((g, i) =>
-        gruppenKachel(k, g, `u${unit}:${g.name}`, `${g.vokabeln.length} words`, () => starteUnitGruppe(k, unit, i)))));
+      el("nav", { class: "kacheln gruppen" },
+        gruppen.map((g, i) => gruppenKachel(k, g, `u${unit}:${g.name}`, `${g.vokabeln.length} words`, () => starteUnitGruppe(k, unit, i))),
+        (k.gruppen || []).map((g, i) => gruppenKachel(k, g, g.name, g.reihe || "Topic " + (i + 1), () => starteGruppe(k, i)))));
   }
 
   /* ---------- Teile und Lage ---------- */
@@ -385,8 +435,9 @@
   }
   function starteGruppe(k, i) {
     const g = k.gruppen[i];
-    const vok = g.vokabeln ? g.vokabeln.map(vokabel) : null; // z. B. New: Wörter der Woche
-    neueLage({ nr: k.nr, gruppe: g.name, titel: g.name, vok, teile: teileVon(vok ? vokSchritte(vok) : g.schritte), zurueckZu: () => zeigeGruppen(k) });
+    const vok = g.vokabeln ? g.vokabeln.map(vokabel) : null; // Gruppe aus einer Wortliste (IDs aus vokabeln.tsv)
+    neueLage({ nr: k.nr, gruppe: g.name, titel: g.name, vok, teile: teileVon(vok ? vokSchritte(vok) : g.schritte),
+      zurueckZu: () => (k.vokabeln ? zeigeUnits(k) : zeigeGruppen(k)) });
     zeigeTeil();
   }
   function starteUnitGruppe(k, unit, i) {
@@ -538,14 +589,16 @@
     zeichne();
   }
 
+  // Schlüssel aller Gruppen einer Kategorie: Unit-Abschnitte (u2:Start) und feste Gruppen (Name)
+  function kategorieGruppen(k) {
+    return [...(k.vokabeln ? Object.entries(D.units).flatMap(([u, gs]) => gs.map((g) => `u${u}:${g.name}`)) : []), ...(k.gruppen || []).map((g) => g.name)];
+  }
   function gruppeGeschafft() {
     const k = kategorie(lage.nr);
     stand.gruppen = stand.gruppen || {};
     const liste = (stand.gruppen[k.nr] = stand.gruppen[k.nr] || []);
     if (!liste.includes(lage.gruppe)) { liste.push(lage.gruppe); einheitBonus(); }
-    const alleGruppen = k.vokabeln ? Object.entries(D.units).flatMap(([u, gs]) => gs.map((g) => `u${u}:${g.name}`))
-      : k.gruppen.map((g) => g.name);
-    const alle = alleGruppen.every((x) => liste.includes(x));
+    const alle = kategorieGruppen(k).every((x) => liste.includes(x));
     if (alle && !stand.erledigt.includes(k.nr)) stand.erledigt.push(k.nr);
     speichern();
     const titel = lage.titel, zurueckZu = lage.zurueckZu;
@@ -1451,7 +1504,7 @@
       ["🔥", "On fire", sp.feuer.length > 0], ["⭐", "Perfect week", sp.wochen.length > 0], ["🏅", "5 × perfect", sp.wochen.length >= 5],
       ["👑", "Perfect month", sp.abzeichen.includes("monat")], ["🏖️", "Weekend hero", sp.wochenende.length > 0], ["🌴", "Holiday hero", (sp.ferien || []).length > 0],
       ["🗺️", "All 50 states", staatenFrei() === SP.staaten.length], ["🇺🇸", "Road trip complete", sp.abzeichen.includes("roadtrip")],
-      ["🏆", "All categories", D.kategorien.filter((k) => !k.bald).every((k) => stand.erledigt.includes(k.nr))],
+      ["🏆", "All categories", D.kategorien.filter((k) => !k.bald && !k.spiele).every((k) => stand.erledigt.includes(k.nr))],
     ];
     const fakt = el("div", { class: "fakt", hidden: true, "aria-live": "polite" });
     const frei = staatenFrei();
@@ -1741,25 +1794,21 @@
 
   /* ---------- Word Gym: Memory als Tages-Spiel (frei nach dem Tagespensum, Lösung B) ----------
      Paare aus den Wörtern von heute: englisches Wort ↔ deutsche Bedeutung. Beim Aufdecken hört man das englische Wort. */
-  function gymMemory() {
-    const plan = gymPlan(), g = gymStand();
-    const kurz = (de) => de.split(/[;,]/)[0].replace(/\(.*?\)/g, "").replace(/\s+/g, " ").trim();
-    const ok = (v) => v && kurz(v.de).length > 0 && kurz(v.de).length <= 24 && v.en.length <= 24;
-    let ws = [...plan.wdh, ...plan.neu].map(vokabel).filter(ok);
-    if (ws.length < 6) ws.push(...mischen(Object.keys(g.karten).map(vokabel).filter((v) => ok(v) && !ws.includes(v))).slice(0, 6 - ws.length));
-    ws = mischen(ws).slice(0, 6);
-    ansicht = null; lage = null;
-    if (ws.length < 3) { zeige(gymKopf(), el("section", { class: "satzkarte" }, el("p", {}, T("Für das Spiel brauchst du erst ein paar geübte Wörter.", "You need a few words before you can play.")), knopf(T("Zur Startseite", "Home"), startseite, "haupt"))); return; }
+  // Memory-Spielfeld (Word Gym und Games): englisches Wort ↔ deutsche Bedeutung, Wort beim Aufdecken vorspielen.
+  // Punkte (+10) nur beim ersten gewonnenen Memory des Tages – eine Tagesmarke (gym.memoryTag) für beide Spiele.
+  const memKurz = (de) => de.split(/[;,]/)[0].replace(/\(.*?\)/g, "").replace(/\s+/g, " ").trim();
+  const memOk = (v) => v && memKurz(v.de).length > 0 && memKurz(v.de).length <= 24 && v.en.length <= 24;
+  function memoryFeld(ws, gross) {
+    const g = gymStand();
     const karten = mischen(ws.flatMap((v) => [{ v, art: "en" }, { v, art: "de" }]));
     let offen = [], gefunden = 0, zuege = 0, wartet = false;
     const box = rueckmeldung();
     const zaehler = el("p", { class: "klein", "aria-live": "polite" }, T("Züge: 0", "Moves: 0"));
-    const nochmal = knopf(T("↻ Neu mischen", "↻ Shuffle again"), gymMemory);
-    const feld = el("div", { class: "memory" }, karten.map((c) => {
+    const feld = el("div", { class: "memory" + (gross ? " gross" : "") }, karten.map((c) => {
       const b = el("button", { class: "mem-karte", "aria-label": T("Verdeckte Karte", "Hidden card"), onclick: () => {
         if (wartet || b.classList.contains("auf")) return;
         b.classList.add("auf");
-        const text = c.art === "en" ? c.v.en.replace(/\s*\(.*?\)/g, "") : kurz(c.v.de);
+        const text = c.art === "en" ? c.v.en.replace(/\s*\(.*?\)/g, "") : memKurz(c.v.de);
         b.replaceChildren(el("span", { lang: c.art === "en" ? "en" : "de", class: text.length > 11 ? "mem-lang" : "" }, text));
         if (c.art === "en") spiele([tonWort(c.v)]);
         offen.push({ b, c });
@@ -1781,9 +1830,56 @@
       } }, "?");
       return b;
     }));
+    return { feld, zaehler, box };
+  }
+
+  function gymMemory() {
+    const plan = gymPlan(), g = gymStand();
+    let ws = [...plan.wdh, ...plan.neu].map(vokabel).filter(memOk);
+    if (ws.length < 6) ws.push(...mischen(Object.keys(g.karten).map(vokabel).filter((v) => memOk(v) && !ws.includes(v))).slice(0, 6 - ws.length));
+    ws = mischen(ws).slice(0, 6);
+    ansicht = null; lage = null;
+    if (ws.length < 3) { zeige(gymKopf(), el("section", { class: "satzkarte" }, el("p", {}, T("Für das Spiel brauchst du erst ein paar geübte Wörter.", "You need a few words before you can play.")), knopf(T("Zur Startseite", "Home"), startseite, "haupt"))); return; }
+    const m = memoryFeld(ws);
     lage = { gym: true, teil: "gym-memory", pos: 0, titel: "Word Gym" };
     zeige(gymKopf(), ansage("Memory: Find the pairs! English word and German meaning.", "Memory: Finde die Paare! Englisches Wort und deutsche Bedeutung."),
-      karte(null, feld, zaehler, box, el("div", { class: "knopfreihe" }, nochmal, knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
+      karte(null, m.feld, m.zaehler, m.box, el("div", { class: "knopfreihe" }, knopf(T("↻ Neu mischen", "↻ Shuffle again"), gymMemory), knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
+  }
+
+  /* ---------- Games: Lernspiele (Kategorie mit „spiele“) – erstes Spiel: Memory mit den Wörtern eines Unit-Abschnitts ---------- */
+  const spielKopf = (k, titel, zurueck) => el("header", { class: "kopf" },
+    knopf(T("← Zurück", "← Back"), zurueck, "leise"), el("h1", { lang: "en" }, `${k.titel} · ${titel}`));
+  function zeigeSpiele(k) {
+    lage = null; ansicht = () => zeigeSpiele(k);
+    zeige(kopf(k), ansage("Choose a game.", "Wähl ein Spiel."),
+      el("nav", { class: "kacheln gruppen" },
+        el("button", { class: "kachel", onclick: () => memoryWahl(k), "aria-label": "Memory" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🎲"),
+          el("span", { class: "titel", lang: "en" }, "Memory"),
+          el("span", { class: "unter" }, T("Wort und Bedeutung finden – 6 Paare", "Match word and meaning – 6 pairs")))));
+  }
+  // Memory: Unit und Abschnitt wählen (wie in Vocabulary), dann 6 Paare aus diesen Wörtern
+  function memoryWahl(k) {
+    lage = null; ansicht = () => memoryWahl(k);
+    const unit = aktuelleUnit(), gruppen = D.units[unit];
+    zeige(spielKopf(k, "Memory", () => zeigeSpiele(k)), unitReiter(() => memoryWahl(k)),
+      gruppen.length ? ansage("Which words do you want to play with? Choose a part of the unit.", "Mit welchen Wörtern willst du spielen? Wähl einen Abschnitt.")
+        : ansage("Coming soon!", "Diese Unit kommt bald."),
+      el("nav", { class: "kacheln gruppen" }, gruppen.map((g, i) =>
+        gruppenKachel(k, g, `u${unit}:${g.name}`, `${g.vokabeln.length} words`, () => spielMemory(k, unit, i)))));
+  }
+  function spielMemory(k, unit, i) {
+    const g = D.units[unit][i];
+    const ws = mischen(g.vokabeln.map(vokabel).filter(memOk)).slice(0, 6);
+    ansicht = null; lage = null;
+    const zurueck = () => memoryWahl(k);
+    if (ws.length < 3) { zeige(spielKopf(k, "Memory", zurueck), el("section", { class: "satzkarte" }, el("p", {}, T("Diese Wörter sind zu lang für das Memory – wähl einen anderen Abschnitt.", "These words are too long for Memory – choose another part.")), knopf(T("Andere Wörter", "Other words"), zurueck, "haupt"))); return; }
+    const m = memoryFeld(ws, true);
+    zeige(spielKopf(k, "Memory", zurueck),
+      ansage(`Unit ${unit} · ${g.name}: Find the pairs! English word and German meaning.`, "Finde die Paare! Englisches Wort und deutsche Bedeutung."),
+      karte(null, m.feld, m.zaehler, m.box, el("div", { class: "knopfreihe" },
+        knopf(T("↻ Neu mischen", "↻ Shuffle again"), () => spielMemory(k, unit, i)), knopf(T("Andere Wörter", "Other words"), zurueck),
+        knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
   }
 
   function gymEnde() {

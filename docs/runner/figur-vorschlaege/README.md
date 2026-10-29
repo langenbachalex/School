@@ -1,5 +1,7 @@
 # Runner-Figur – Vorschläge „lustiger + bessere Proportionen“ (29.10.)
 
+> **Status (29.10.): umgesetzt** – Entscheidungen von Mr. Alex sind in `app/klasse9/runner.js` (`zeichneFigur`) eingebaut: Proportionen aus `zeichneFigurNeu` (Figur ≈ 8 % höher, Trefferbox angepasst), alle 9 Frisuren, 6 Bärte (Bart = Auswahl, `an` → `schnauzer`), 8 Haarfarben, dazu Körper-Übertreibungen (Giraffenhals, Kugelbauch, Hulk, Riesenfüße), Schmuck größer, Hut sitzt immer auf dem Kopf (keine Luft; Frisur darunter gestaucht oder hinten/oben herausragend), Riesen-Afro größer und lockiger. Gesichtsausdruck ist **keine Skin-Option**, sondern Spielreaktion (erstaunt bei Treffer, Zunge bei 5× Combo/On fire; „cool“ = Sonnenbrille-Skin). Preise: 30 🪙, Showstücke 60 🪙 (Mohawk, Regenbogen, Riesen-Afro, Giraffenhals, Hulk, Kugelbauch, Riesenfüße, Fu-Manchu); Wuschelkopf und Pink frei. Ergebnis: `04-umgesetzt.png` (aus der echten runner.js-Funktion). Details: `docs/runner/konzept-entwurf.md` „Figur v2 übernommen“. Die Blätter 01–03 und `zeichne.html` bleiben als Entwurfsstand.
+
 Rückmeldung Mr. Alex (Englisch, Klasse 9): Figur soll lustiger werden können (Frisuren, Schnurrbärte, Haarfarben); Übergang Gesicht → Körper wirkt unförmig.
 Hier nur **Vorschläge als Grafik** – `app/klasse9/runner.js` ist unverändert.
 
@@ -8,6 +10,7 @@ Hier nur **Vorschläge als Grafik** – `app/klasse9/runner.js` ist unverändert
 - `01-proportionen.png` – alt gegen neu, groß (330 px) und in Spielgröße 80 px (stehen, 3 Laufphasen, Sprung, Körper kräftig/schmal).
 - `02-frisuren-baerte.png` – 9 Frisuren + 6 Bärte (+ eine Kombination mit Zylinder), je groß und in 80 px.
 - `03-farben-gesichter.png` – 8 Haarfarben (an Wuschelkopf und „lang“) + 4 Gesichtsausdrücke (+ 3 Kombinationen), je groß und in 80 px.
+- `04-umgesetzt.png` – **Stand nach Umsetzung** (29.10.): sechs lustige Kombis, Körper-Übertreibungen und die drei Spiel-Gesichter, gezeichnet mit `Runner.zeichneFigur` aus `app/klasse9/runner.js`, groß und in 80 px.
 
 Gerendert mit Playwright/Chromium (Skript im Scratchpad, nicht im Repo).
 

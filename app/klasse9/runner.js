@@ -2,6 +2,7 @@
    Kein eigenes Menü: Start, Skins, Coins und Ende kommen aus der App (app.js „Games: Road Trip Run“).
    Schnittstelle: window.Runner.start({ wrapper, woerter:[{en,de}], skin, texte, stimme:{ wort(i), boss(text) }, onEnde(ergebnis) })
    → zeichnet ein Canvas (plus Boss-Frage als Overlay) in wrapper; ergebnis = { geschafft, diamanten, max, toreRichtig, leben, dauer, maxCombo }.
+   Figur v2 (29.10.): zeichneFigur mit Hals/Proportionen, 14 Frisuren, 7 Bärte, 12 Haarfarben, Körper-Übertreibungen (Giraffenhals, Kugelbauch, Hulk, Riesenfüße) und Gesichtsausdruck als Spielreaktion (Parameter ausdruck).
    Combo (29.10.): Wort-Diamanten in Serie → 3 Funken + Jingle, 5 goldene Spur, 8+ „On fire!“ mit Flammen; Reset bei Lebensverlust oder verpasstem Diamant.
    Gegner-Klänge (Web Audio): Taube flattert, Waschbär knurrt, Eichhörnchen zirpt (je Art höchstens alle 1,5 s, nie in Sequenz/Boss), Plattdrücken = Plopp + Sternchen.
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
@@ -12,17 +13,22 @@
   /* ---------- Skins: Gruppen (Reiter in der App), Werte, Namen (G/E) und was ohne Kauf frei ist (frei = erste n Werte) ---------- */
   const SKIN_GRUPPEN = [
     { id: "haare", symbol: "💇", titel: ["Haare", "Hair"], optionen: [
-      { key: "haar", label: ["Frisur", "Hairstyle"], werte: ["kurz", "lang", "zopf", "locken", "afro"], namen: { kurz: ["kurz", "short"], lang: ["lang", "long"], zopf: ["Zopf", "ponytail"], locken: ["Locken", "curly"], afro: ["Afro", "afro"] } },
-      { key: "haarfarbe", label: ["Haarfarbe", "Hair colour"], werte: ["braun", "blond", "schwarz", "rot"], namen: { braun: ["braun", "brown"], blond: ["blond", "blond"], schwarz: ["schwarz", "black"], rot: ["rot", "red"] } },
+      { key: "haar", label: ["Frisur", "Hairstyle"], werte: ["kurz", "lang", "wuschel", "zopf", "locken", "afro", "irokese", "tolle", "zoepfe", "dutt", "flattop", "dreihaare", "riesenafro", "mohawk"], frei: 3, preis: { riesenafro: 60, mohawk: 60 },
+        namen: { kurz: ["kurz", "short"], lang: ["lang", "long"], wuschel: ["Wuschelkopf", "messy"], zopf: ["Zopf", "ponytail"], locken: ["Locken", "curly"], afro: ["Afro", "afro"], irokese: ["Irokese", "mohawk"], tolle: ["Elvis-Tolle", "quiff"],
+          zoepfe: ["Zöpfe", "pigtails"], dutt: ["Dutt", "bun"], flattop: ["Flat-Top", "flat top"], dreihaare: ["drei Haare", "three hairs"], riesenafro: ["Riesen-Afro", "giant afro"], mohawk: ["Regenbogen-Mohawk", "rainbow mohawk"] } },
+      { key: "haarfarbe", label: ["Haarfarbe", "Hair colour"], werte: ["braun", "blond", "pink", "schwarz", "rot", "türkis", "lila", "neongrün", "feuerrot", "blau", "silber", "regenbogen"], frei: 3, preis: { regenbogen: 60 },
+        namen: { braun: ["braun", "brown"], blond: ["blond", "blond"], pink: ["pink", "pink"], schwarz: ["schwarz", "black"], rot: ["rot", "red"], "türkis": ["türkis", "turquoise"], lila: ["lila", "purple"], "neongrün": ["neongrün", "neon green"],
+          feuerrot: ["feuerrot", "fire red"], blau: ["blau", "blue"], silber: ["silber", "silver"], regenbogen: ["Regenbogen", "rainbow"] } },
       { key: "haarschmuck", label: ["Haarschmuck", "Hair accessory"], werte: ["keiner", "schleife", "haarband"], namen: { keiner: ["keiner", "none"], schleife: ["Schleife", "bow"], haarband: ["Haarband", "headband"] } },
     ] },
     { id: "hut", symbol: "🧢", titel: ["Hut", "Hat"], optionen: [
       { key: "hut", label: ["Kopfbedeckung", "Headwear"], werte: ["keiner", "cap", "cowboy", "zylinder"], namen: { keiner: ["keine", "none"], cap: ["Cap", "cap"], cowboy: ["Cowboyhut", "cowboy hat"], zylinder: ["Zylinder", "top hat"] } },
     ] },
     { id: "gesicht", symbol: "😎", titel: ["Gesicht", "Face"], optionen: [
-      { key: "brille", label: ["Sonnenbrille", "Sunglasses"], werte: ["aus", "an"], namen: { aus: ["aus", "off"], an: ["an", "on"] } },
-      { key: "bart", label: ["Schnurrbart", "Moustache"], werte: ["aus", "an"], namen: { aus: ["aus", "off"], an: ["an", "on"] } },
+      { key: "brille", label: ["Sonnenbrille (cool)", "Sunglasses (cool)"], werte: ["aus", "an"], namen: { aus: ["aus", "off"], an: ["an", "on"] } },
       { key: "nase", label: ["Nase", "Nose"], werte: ["rund", "spitz", "knubbel"], namen: { rund: ["rund", "round"], spitz: ["spitz", "pointy"], knubbel: ["Knubbel", "button"] } },
+      { key: "bart", label: ["Bart", "Beard"], werte: ["aus", "schnauzer", "zwirbel", "walross", "kinnbart", "monobraue", "fumanchu"], preis: { fumanchu: 60 },
+        namen: { aus: ["keiner", "none"], schnauzer: ["Schnauzer", "moustache"], zwirbel: ["Zwirbelbart", "handlebar"], walross: ["Walross", "walrus"], kinnbart: ["Kinnbart", "goatee"], monobraue: ["Monobraue + Schnauzer", "unibrow + moustache"], fumanchu: ["Fu-Manchu", "Fu Manchu"] } },
     ] },
     { id: "oberteil", symbol: "👕", titel: ["Oberteil", "Top"], optionen: [
       { key: "top", label: ["Oberteil", "Top"], werte: ["shirt", "hoodie"], namen: { shirt: ["T-Shirt", "T-shirt"], hoodie: ["Hoodie", "hoodie"] } },
@@ -35,9 +41,11 @@
       { key: "schmuck", label: ["Schmuck", "Jewelry"], werte: ["keiner", "ohrring", "kette", "beides"], namen: { keiner: ["keiner", "none"], ohrring: ["Ohrring", "earring"], kette: ["Kette", "necklace"], beides: ["beides", "both"] } },
     ] },
     { id: "koerper", symbol: "💪", titel: ["Körper", "Body"], optionen: [
-      { key: "bauch", label: ["Bauch", "Belly"], werte: ["schmal", "normal", "kräftig"], namen: { schmal: ["schmal", "slim"], normal: ["normal", "normal"], "kräftig": ["kräftig", "big"] } },
+      { key: "hals", label: ["Hals", "Neck"], werte: ["normal", "giraffe"], frei: 1, preis: { giraffe: 60 }, namen: { normal: ["normal", "normal"], giraffe: ["Giraffenhals", "giraffe neck"] } },
+      { key: "bauch", label: ["Bauch", "Belly"], werte: ["schmal", "normal", "kräftig", "kugel"], preis: { kugel: 60 }, namen: { schmal: ["schmal", "slim"], normal: ["normal", "normal"], "kräftig": ["kräftig", "big"], kugel: ["Kugelbauch", "ball belly"] } },
       { key: "brust", label: ["Brust/Schultern", "Chest/shoulders"], werte: ["schmal", "normal", "kräftig"], namen: { schmal: ["schmal", "narrow"], normal: ["normal", "normal"], "kräftig": ["breit", "broad"] } },
-      { key: "muskeln", label: ["Muskeln", "Muscles"], werte: ["schmal", "normal", "kräftig"], frei: 3, namen: { schmal: ["dünn", "thin"], normal: ["normal", "normal"], "kräftig": ["stark", "strong"] } },
+      { key: "muskeln", label: ["Muskeln", "Muscles"], werte: ["schmal", "normal", "kräftig", "hulk"], frei: 3, preis: { hulk: 60 }, namen: { schmal: ["dünn", "thin"], normal: ["normal", "normal"], "kräftig": ["stark", "strong"], hulk: ["Hulk", "Hulk"] } },
+      { key: "fuesse", label: ["Füße", "Feet"], werte: ["normal", "riesen"], frei: 1, preis: { riesen: 60 }, namen: { normal: ["normal", "normal"], riesen: ["Riesenfüße", "giant feet"] } },
       { key: "power", label: ["Power-Körper nach Punkten", "Power body by points"], werte: ["aus", "an"], namen: { aus: ["aus", "off"], an: ["an", "on"] } },
     ] },
     { id: "aura", symbol: "✨", titel: ["Aura", "Aura"], optionen: [
@@ -47,13 +55,18 @@
   const SKIN_OPTIONEN = SKIN_GRUPPEN.flatMap((g) => g.optionen);
   const SKIN_STANDARD = {
     haar: "kurz", haarfarbe: "braun", haarschmuck: "keiner", hut: "cap", brille: "aus", nase: "rund", bart: "aus", schmuck: "keiner",
-    top: "shirt", topfarbe: "rot", schuhe: "weiß", aura: "aus", bauch: "normal", brust: "normal", muskeln: "normal", power: "an",
+    top: "shirt", topfarbe: "rot", schuhe: "weiß", aura: "aus", hals: "normal", bauch: "normal", brust: "normal", muskeln: "normal", fuesse: "normal", power: "an",
   };
-  const STUFE = { schmal: 0, normal: 1, "kräftig": 2 };
+  const STUFE = { schmal: 0, normal: 1, "kräftig": 2, kugel: 3, hulk: 3 };   // Stufe 3 nur bei Bauch (Kugelbauch) und Muskeln (Hulk)
   const FARBEN = { braun: "#6b3e1e", blond: "#e7c35a", schwarz: "#1a1a1a", rot: "#c8283a", blau: "#1d3f8f", gelb: "#e0a400", "grün": "#2e9e5b", "weiß": "#f4f4f4" };
-  // frei ohne Kauf: die ersten n Werte einer Option (Standard 2); alles andere ist ein Shop-Artikel skin_<key>_<wert> (30 Coins)
+  // Haarfarben: eigene Tabelle (Oberteil/Schuhe behalten FARBEN); regenbogen = senkrechter Verlauf, Regenbogen-Mohawk ist immer bunt
+  const HAARFARBEN = Object.assign({}, FARBEN, { pink: "#ff3fa4", "türkis": "#19d3c5", lila: "#8a3ffc", "neongrün": "#7CFC00", feuerrot: "#ff3b1f", blau: "#2a6cff", silber: "#c9ced6", regenbogen: "regenbogen" });
+  const REGENBOGEN = ["#ff2d2d", "#ff9f1a", "#ffe21a", "#2ecc71", "#2a8cff", "#9b4dff"];
+  // frei ohne Kauf: die ersten n Werte einer Option (Standard 2); alles andere ist ein Shop-Artikel skin_<key>_<wert> (30 Coins, Ausgefallenes 60: o.preis[wert])
+  const SKIN_PREIS = 30;
   const skinFrei = (key, wert) => { const o = SKIN_OPTIONEN.find((x) => x.key === key); return !o || o.werte.indexOf(wert) < (o.frei || 2); };
   const skinArtikel = (key, wert) => `skin_${key}_${wert}`;
+  const skinPreis = (key, wert) => { const o = SKIN_OPTIONEN.find((x) => x.key === key); return (o && o.preis && o.preis[wert]) || SKIN_PREIS; };
   // Power-Körper: Punkte-Titel-Stufe (0–5) → Muskeln + kleine Aura; s.muskelnManuell überschreibt die Muskeln von Hand. Liefert die wirksame Kopie.
   function powerAnwenden(s, stufe) {
     const w = Object.assign({}, SKIN_STANDARD, s);
@@ -66,25 +79,28 @@
   }
   // Skin-Stimme: gesprochene Wendung je Auswahl (Liste docs/runner/skin-stimme.txt; bis zur Vertonung Geräte-Stimme oder stumm)
   const SPRECH = {
-    haar: { kurz: "Short hair", lang: "Long hair", zopf: "Ponytail", locken: "Curly", afro: "Afro" },
-    haarfarbe: { braun: "Brown hair", blond: "Blond hair", schwarz: "Black hair", rot: "Red hair" },
+    haar: { kurz: "Short hair", lang: "Long hair", wuschel: "Messy hair", zopf: "Ponytail", locken: "Curly", afro: "Afro", irokese: "Mohawk", tolle: "Quiff", zoepfe: "Pigtails", dutt: "Bun", flattop: "Flat top", dreihaare: "Three hairs", riesenafro: "Giant afro", mohawk: "Rainbow mohawk" },
+    haarfarbe: { braun: "Brown hair", blond: "Blond hair", pink: "Pink hair", schwarz: "Black hair", rot: "Red hair", "türkis": "Turquoise hair", lila: "Purple hair", "neongrün": "Neon green hair", feuerrot: "Fire red hair", blau: "Blue hair", silber: "Silver hair", regenbogen: "Rainbow hair" },
     haarschmuck: { keiner: "No hair accessory", schleife: "Bow", haarband: "Headband" },
     hut: { keiner: "No hat", cap: "Cap", cowboy: "Cowboy hat", zylinder: "Top hat" },
     brille: { aus: "Sunglasses off", an: "Sunglasses on" },
     nase: { rund: "Round nose", spitz: "Pointy nose", knubbel: "Button nose" },
-    bart: { aus: "Moustache off", an: "Moustache on" },
+    bart: { aus: "No beard", schnauzer: "Moustache", zwirbel: "Handlebar moustache", walross: "Walrus moustache", kinnbart: "Goatee", monobraue: "Unibrow and moustache", fumanchu: "Fu Manchu" },
     schmuck: { keiner: "No jewelry", ohrring: "Earring", kette: "Necklace", beides: "Earring and necklace" },
     schuhe: { "weiß": "White shoes", rot: "Red shoes", schwarz: "Black shoes" },
     aura: { aus: "Aura off", an: "Super aura on" },
-    bauch: { schmal: "Slim belly", normal: "Normal belly", "kräftig": "Big belly" },
+    hals: { normal: "Normal neck", giraffe: "Giraffe neck" },
+    bauch: { schmal: "Slim belly", normal: "Normal belly", "kräftig": "Big belly", kugel: "Ball belly" },
     brust: { schmal: "Narrow shoulders", normal: "Normal shoulders", "kräftig": "Broad shoulders" },
-    muskeln: { schmal: "Thin arms", normal: "Normal arms", "kräftig": "Strong arms" },
+    muskeln: { schmal: "Thin arms", normal: "Normal arms", "kräftig": "Strong arms", hulk: "Hulk arms" },
+    fuesse: { normal: "Normal feet", riesen: "Giant feet" },
     power: { aus: "Power body off", an: "Power body on" },
   };
   const FARBE_EN = { rot: "Red", blau: "Blue", gelb: "Yellow", "grün": "Green" };
   const TOP_EN = { shirt: "T-shirt", hoodie: "hoodie" };
   function sprechText(s, key, wert) {
     if (key === "top" || key === "topfarbe") return `${FARBE_EN[s.topfarbe] || "Red"} ${TOP_EN[s.top] || "T-shirt"}`;
+    if (key === "bart" && wert === "an") wert = "schnauzer";   // alter Spielstand (Schnurrbart an/aus)
     return (SPRECH[key] || {})[wert] || String(wert);
   }
   function sprechListe() {
@@ -185,54 +201,74 @@
     dramatik() { [196, 185, 175].forEach((f, i) => ton(f, 0.5, "triangle", 0.09, i * 0.35)); },
   };
 
-  /* ---------- Figur (Ebenen; aus dem Prototyp) ---------- */
-  // (x, y) = Fußpunkt Mitte, h = Körperhöhe, pose = 'lauf' | 'sprung' | 'steh', t = Zeit; s.bauch/brust/muskeln = schmal|normal|kräftig, s.powerAura 0..1
-  function zeichneFigur(c, x, y, h, s, pose, t) {
+  /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
+  // (x, y) = Fußpunkt Mitte, h = Körperhöhe in 80 Einheiten (die Figur selbst ist ≈ 88 hoch, Kopf ≈ 1/3), pose = 'lauf' | 'sprung' | 'steh', t = Zeit.
+  // ausdruck = 'grinsend' (Standard) | 'erstaunt' (Treffer) | 'zunge' (On fire / 5× Combo) – Spielreaktion, keine Skin-Option; Sonnenbrille (s.brille) = „cool“.
+  // Ebenen: Aura → Beine → Shorts → hinterer Arm → Hals → Torso → vorderer Arm → Haare hinten → Kopf → Gesicht → Bart → Haare vorn → Haarschmuck → Hut.
+  // Hut sitzt immer direkt auf dem Kopf (nie Luft dazwischen): große Frisuren werden darunter gestaucht oder ragen hinten/oben heraus.
+  function zeichneFigur(c, x, y, h, s, pose, t, ausdruck) {
+    s = Object.assign({}, SKIN_STANDARD, s);
     const u = h / 80;
     c.save(); c.translate(x, y); c.scale(u, u);
-    const haut = '#f1c27d', hautD = '#d9a866';
+    const haut = '#f1c27d', hautD = '#d9a866', wange = 'rgba(255,120,110,.28)';
     const topF = FARBEN[s.topfarbe] || '#c8283a';
-    const haarF = FARBEN[s.haarfarbe] || '#6b3e1e';
     const schuhF = FARBEN[s.schuhe] || '#f4f4f4';
     const shortsF = '#2a4a8a';
     const p = pose === 'lauf' ? t * 13 : 0;
-    const st = v => typeof v === 'number' ? Math.max(0, Math.min(2, v)) : (STUFE[v] ?? 1);
-    const bauch = st(s.bauch), brust = st(s.brust), musk = st(s.muskeln);
-    const sw = [10, 12, 15][brust];          // Schulter-Halbbreite
-    const hw = [10, 12, 14][bauch];          // Hüft-Halbbreite
-    const armB = [5, 6.5, 9][musk];          // Arm-Dicke
-    const beinB = [6.5, 8, 10.5][musk];      // Bein-Dicke
-    const schulterR = [5, 6, 8][brust];
+    const st = (v, max) => Math.max(0, Math.min(max, typeof v === 'number' ? v : (STUFE[v] ?? 1)));
+    const bauch = st(s.bauch, 3), brust = st(s.brust, 2), musk = st(s.muskeln, 3);   // Stufe 3 = Kugelbauch bzw. Hulk
+    const giraffe = s.hals === 'giraffe', riesenfuss = s.fuesse === 'riesen', mitHut = !!s.hut && s.hut !== 'keiner';
+    const hulk = musk === 3;
+    const sw = [11, 13, 16][brust] + (hulk ? 3 : 0);     // Schulter-Halbbreite (immer breiter als der Hals, 4)
+    const hw = [10, 12, 14, 17][bauch];                   // Hüft-Halbbreite
+    const armB = [5, 6.5, 9, 12][musk];
+    const beinB = [6.5, 8, 10.5, 13][musk];
+    const schulterR = [5, 6, 8][brust] + (hulk ? 3 : 0);
+    const HX = 0, HY = -74 - (giraffe ? 24 : 0), HR = 13;   // Kopf (Giraffenhals: 24 höher)
+    const SCH = -54, AX = 1, AY = -49;                      // Schulterlinie, Armgelenk
+    const g = ausdruck === 'erstaunt' || ausdruck === 'zunge' ? ausdruck : 'grinsend';
     const powerAura = Math.max(0, Math.min(1, Number(s.powerAura) || 0));
+    const haar = s.haar;
 
-    // Aura (hinter allem)
+    // Haarfarbe: Farbe oder Regenbogen-Verlauf (senkrecht über die Haarzone)
+    const haarF = () => {
+      const f = HAARFARBEN[s.haarfarbe] || '#6b3e1e';
+      if (f !== 'regenbogen') return f;
+      const gr = c.createLinearGradient(0, HY - 34, 0, HY + 30);
+      REGENBOGEN.forEach((col, i) => gr.addColorStop(i / (REGENBOGEN.length - 1), col));
+      return gr;
+    };
+    const haarDunkel = () => 'rgba(0,0,0,.22)';
+    const braueF = () => { const f = HAARFARBEN[s.haarfarbe]; return (!f || f === 'regenbogen' || f === HAARFARBEN.silber || f === HAARFARBEN.blond) ? '#4a2c12' : f; };
+
+    // ---- Aura (hinter allem)
     if (s.aura === 'an') {
       const puls = 1 + 0.08 * Math.sin(t * 6);
-      const g = c.createRadialGradient(0, -42, 10, 0, -42, 56 * puls);
-      g.addColorStop(0, 'rgba(255,230,80,0.55)'); g.addColorStop(0.6, 'rgba(255,200,40,0.25)'); g.addColorStop(1, 'rgba(255,200,40,0)');
-      c.fillStyle = g; c.beginPath(); c.arc(0, -42, 56 * puls, 0, Math.PI * 2); c.fill();
+      const gr = c.createRadialGradient(0, -44, 10, 0, -44, 58 * puls);
+      gr.addColorStop(0, 'rgba(255,230,80,0.55)'); gr.addColorStop(0.6, 'rgba(255,200,40,0.25)'); gr.addColorStop(1, 'rgba(255,200,40,0)');
+      c.fillStyle = gr; c.beginPath(); c.arc(0, -44, 58 * puls, 0, Math.PI * 2); c.fill();
       c.fillStyle = '#fff3a0';
       for (let i = 0; i < 5; i++) {
-        const a = t * 2 + i * 1.26, r = 46 + 6 * Math.sin(t * 5 + i);
-        const sx = Math.cos(a) * r, sy = -42 + Math.sin(a) * r * 0.9;
+        const a = t * 2 + i * 1.26, r = 48 + 6 * Math.sin(t * 5 + i);
+        const sx = Math.cos(a) * r, sy = -44 + Math.sin(a) * r * 0.9;
         c.beginPath(); c.moveTo(sx, sy - 4); c.lineTo(sx + 1.5, sy); c.lineTo(sx, sy + 4); c.lineTo(sx - 1.5, sy); c.closePath(); c.fill();
       }
     }
-    // Power-Aura (klein, orange, um Schultern/Arme)
+    // ---- Power-Aura (klein, orange, um Schultern/Arme)
     if (powerAura > 0) {
       const r = 24 + 10 * powerAura + 2 * Math.sin(t * 8);
-      const g = c.createRadialGradient(0, -52, 6, 0, -52, r);
-      g.addColorStop(0, `rgba(255,120,30,${0.45 * powerAura})`); g.addColorStop(1, 'rgba(255,120,30,0)');
-      c.fillStyle = g; c.beginPath(); c.ellipse(0, -52, r * 1.25, r, 0, 0, Math.PI * 2); c.fill();
+      const gr = c.createRadialGradient(0, AY, 6, 0, AY, r);
+      gr.addColorStop(0, `rgba(255,120,30,${0.45 * powerAura})`); gr.addColorStop(1, 'rgba(255,120,30,0)');
+      c.fillStyle = gr; c.beginPath(); c.ellipse(0, AY, r * 1.25, r, 0, 0, Math.PI * 2); c.fill();
       c.fillStyle = '#ffb347';
       const n = 2 + Math.round(powerAura * 3);
       for (let i = 0; i < n; i++) {
         const a = t * 3 + i * (Math.PI * 2 / n), rr = 20 + 4 * powerAura;
-        c.beginPath(); c.arc(Math.cos(a) * rr * 1.3, -52 + Math.sin(a) * rr, 1.6, 0, Math.PI * 2); c.fill();
+        c.beginPath(); c.arc(Math.cos(a) * rr * 1.3, AY + Math.sin(a) * rr, 1.6, 0, Math.PI * 2); c.fill();
       }
     }
 
-    // Beine
+    // ---- Beine (Riesenfüße: lange Schuhe nach vorn)
     let beinHinten, beinVorn;
     if (pose === 'lauf') {
       beinHinten = { fx: 12 * Math.sin(p), fy: -Math.max(0, -Math.cos(p)) * 9 };
@@ -244,151 +280,302 @@
     }
     const bein = (b, farbe, schuh) => {
       c.lineCap = 'round'; c.lineWidth = beinB; c.strokeStyle = farbe;
-      c.beginPath(); c.moveTo(0, -34);
-      c.quadraticCurveTo(b.fx * 0.5 + 6, -20 + b.fy * 0.5, b.fx, b.fy - 3); c.stroke();
-      if (musk === 2) { c.lineWidth = beinB + 3; c.beginPath(); c.moveTo(0, -34); c.quadraticCurveTo(b.fx * 0.25 + 3, -27 + b.fy * 0.25, b.fx * 0.4 + 4, -22 + b.fy * 0.4); c.stroke(); } // Oberschenkel kräftiger
-      // Schuh
+      c.beginPath(); c.moveTo(0, -30);
+      c.quadraticCurveTo(b.fx * 0.5 + 6, -18 + b.fy * 0.5, b.fx, b.fy - 3); c.stroke();
+      if (musk >= 2) { c.lineWidth = beinB + (hulk ? 5 : 3); c.beginPath(); c.moveTo(0, -30); c.quadraticCurveTo(b.fx * 0.25 + 3, -24 + b.fy * 0.25, b.fx * 0.4 + 4, -19 + b.fy * 0.4); c.stroke(); }
       c.fillStyle = schuh; c.strokeStyle = '#333'; c.lineWidth = 1.2;
-      c.beginPath(); c.ellipse(b.fx + 3, b.fy - 1.5, 8, 4.2, 0, 0, Math.PI * 2); c.fill(); c.stroke();
+      if (riesenfuss) {
+        c.beginPath(); c.ellipse(b.fx + 9, b.fy - 1.8, 15, 4.8, 0, 0, Math.PI * 2); c.fill(); c.stroke();
+        c.fillStyle = 'rgba(0,0,0,.14)'; c.beginPath(); c.ellipse(b.fx + 17, b.fy - 1.8, 5, 3.2, 0, 0, Math.PI * 2); c.fill();   // Schuhspitze
+        c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(b.fx + 2, b.fy - 4); c.lineTo(b.fx + 10, b.fy - 4.5); c.stroke(); // Schnürung
+      } else { c.beginPath(); c.ellipse(b.fx + 3, b.fy - 1.5, 8, 4.2, 0, 0, Math.PI * 2); c.fill(); c.stroke(); }
     };
     bein(beinHinten, hautD, schuhF);
-    // Shorts (über den Hüften)
-    c.fillStyle = shortsF; c.beginPath(); c.roundRect(-hw, -40, hw * 2, 16, 5); c.fill();
-    c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(-hw, -30, hw * 2, 2);
+    c.fillStyle = shortsF; c.beginPath(); c.roundRect(-hw, -36, hw * 2, 15, 5); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(-hw, -27, hw * 2, 2);
     bein(beinVorn, haut, schuhF);
 
-    // Arme
+    // ---- Arme (Gelenk auf Schulterhöhe; Hulk: dicke Oberarme)
     const armWinkel = pose === 'lauf' ? Math.sin(p) * 0.9 : (pose === 'sprung' ? -2.2 : 0.3);
     const arm = (w, farbe) => {
       c.lineCap = 'round'; c.lineWidth = armB; c.strokeStyle = farbe;
-      const ex = Math.sin(w) * 10, ey = -54 + Math.cos(w) * 11;
-      c.beginPath(); c.moveTo(0, -54); c.lineTo(ex, ey);
+      const ex = AX + Math.sin(w) * 10, ey = AY + Math.cos(w) * 11;
+      c.beginPath(); c.moveTo(AX, AY); c.lineTo(ex, ey);
       c.lineTo(ex + Math.cos(w) * 10, ey - Math.sin(w) * 10 + 6); c.stroke();
-      if (musk === 2) { c.lineWidth = armB + 3; c.beginPath(); c.moveTo(0, -54); c.lineTo(ex * 0.6, -54 + (ey + 54) * 0.6); c.stroke(); } // Oberarm/Bizeps kräftiger
+      if (musk >= 2) { c.lineWidth = armB + (hulk ? 6 : 3); c.beginPath(); c.moveTo(AX, AY); c.lineTo(AX + (ex - AX) * 0.6, AY + (ey - AY) * 0.6); c.stroke(); }
+      if (hulk) { c.fillStyle = farbe; c.beginPath(); c.arc(AX + (ex - AX) * 0.45, AY + (ey - AY) * 0.45, 8.5, 0, Math.PI * 2); c.fill();     // Bizeps
+        c.fillStyle = 'rgba(255,255,255,.22)'; c.beginPath(); c.arc(AX + (ex - AX) * 0.4 - 2, AY + (ey - AY) * 0.4 - 2.5, 2.6, 0, Math.PI * 2); c.fill(); }
     };
     arm(-armWinkel, hautD);
 
-    // Torso / Oberteil (Schultern sw, Hüfte hw)
+    // ---- Hals (sichtbar, schmaler als die Schultern; Giraffenhals: lang mit Flecken)
+    c.fillStyle = haut; c.beginPath(); c.roundRect(-4, HY + 10, 8.5, SCH + 1 - (HY + 10), 2); c.fill();
+    if (giraffe) { c.fillStyle = 'rgba(140,80,20,.35)'; [[-2, HY + 18], [1.5, HY + 25], [-1.5, HY + 32], [1.5, HY + 39]].forEach(([fx, fy]) => { c.beginPath(); c.ellipse(fx, fy, 2.2, 2.6, 0, 0, Math.PI * 2); c.fill(); }); }
+    c.fillStyle = 'rgba(0,0,0,.12)'; c.beginPath(); c.roundRect(-4, HY + 12, 8.5, 3, 1); c.fill();   // Schatten unter dem Kinn
+
+    // ---- Torso / Oberteil: runde Schultern; Kugelbauch wölbt sich weit nach vorn
+    const wölb = bauch === 3 ? 10 : bauch === 2 ? 5 : 1;
     const torso = () => {
-      c.beginPath(); c.moveTo(-sw, -60); c.lineTo(sw, -60);
-      c.quadraticCurveTo(sw + (bauch === 2 ? 4 : 0), -46, hw, -32); c.lineTo(-hw, -32);
-      c.quadraticCurveTo(-sw - (bauch === 2 ? 1 : 0), -46, -sw, -60); c.closePath();
+      c.beginPath();
+      c.moveTo(-sw + 3, SCH); c.lineTo(sw - 3, SCH);
+      c.quadraticCurveTo(sw + 1, SCH, sw + 0.5, SCH + 4);
+      c.quadraticCurveTo(sw + wölb, -42, hw, -29); c.lineTo(-hw, -29);
+      c.quadraticCurveTo(-sw - (bauch >= 2 ? 1 : 0), -42, -sw - 0.5, SCH + 4);
+      c.quadraticCurveTo(-sw - 1, SCH, -sw + 3, SCH); c.closePath();
     };
     c.fillStyle = topF; torso(); c.fill();
-    if (bauch === 2) { c.beginPath(); c.ellipse(hw - 4, -40, 9, 8.5, 0, 0, Math.PI * 2); c.fill(); }   // Bauch
+    if (bauch === 2) { c.beginPath(); c.ellipse(hw - 4, -37, 9, 8.5, 0, 0, Math.PI * 2); c.fill(); }
+    if (bauch === 3) {
+      c.beginPath(); c.ellipse(hw - 5, -38, 15, 13, 0, 0, Math.PI * 2); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.ellipse(hw + 1, -43, 5, 3.5, -0.4, 0, Math.PI * 2); c.fill();
+      c.fillStyle = 'rgba(0,0,0,.2)'; c.beginPath(); c.arc(hw + 3, -36, 1.6, 0, Math.PI * 2); c.fill();   // Bauchnabel durchs Shirt
+    }
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(0, SCH, 6, 2.2, 0, 0, Math.PI); c.fill();   // Kragen
     if (s.top === 'hoodie') {
-      c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.roundRect(-hw + 1, -48, hw * 2 - 2, 10, 3); c.fill(); // Tasche
-      c.fillStyle = topF; c.beginPath(); c.ellipse(0, -60, sw + 2, 7, 0, Math.PI, 0); c.fill(); // Kapuze
-      c.strokeStyle = '#fff'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-3, -58); c.lineTo(-4, -46); c.moveTo(3, -58); c.lineTo(4, -46); c.stroke(); // Kordeln
+      c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.roundRect(-hw + 1, -43, hw * 2 - 2, 9, 3); c.fill();
+      c.fillStyle = topF; c.beginPath(); c.ellipse(0, SCH, sw + 2, 6, 0, Math.PI, 0); c.fill();
+      c.strokeStyle = '#fff'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-3, SCH + 2); c.lineTo(-4, -42); c.moveTo(3, SCH + 2); c.lineTo(4, -42); c.stroke();
     } else {
-      c.fillStyle = 'rgba(255,255,255,.75)'; c.beginPath(); c.arc(3, -47, 5, 0, Math.PI * 2); c.fill(); // Logo
-      c.fillStyle = topF; c.beginPath(); c.arc(3, -47, 2.5, 0, Math.PI * 2); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.75)'; c.beginPath(); c.arc(3, -42, 5, 0, Math.PI * 2); c.fill();
+      c.fillStyle = topF; c.beginPath(); c.arc(3, -42, 2.5, 0, Math.PI * 2); c.fill();
     }
-    // Kette (am Hals, vor dem Oberteil)
-    if (s.schmuck === 'kette' || s.schmuck === 'beides') {
-      c.strokeStyle = '#e0a400'; c.lineWidth = 1.8; c.beginPath(); c.moveTo(-7, -59); c.quadraticCurveTo(0, -50, 8, -58); c.stroke();
-      c.fillStyle = '#e0a400'; c.beginPath(); c.arc(1, -53, 3, 0, Math.PI * 2); c.fill();
-      c.fillStyle = '#fff6c0'; c.beginPath(); c.arc(0, -54, 1.1, 0, Math.PI * 2); c.fill();
+    if (s.schmuck === 'kette' || s.schmuck === 'beides') {   // Kette: dicker, größerer Anhänger
+      c.strokeStyle = '#e0a400'; c.lineWidth = 2.6; c.lineCap = 'round'; c.beginPath(); c.moveTo(-7, SCH + 1); c.quadraticCurveTo(0, -43, 8, SCH + 1); c.stroke();
+      c.fillStyle = '#e0a400'; c.beginPath(); c.arc(1, -46.5, 4.2, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#fff6c0'; c.beginPath(); c.arc(0, -47.5, 1.5, 0, Math.PI * 2); c.fill();
     }
-    // Ärmel vorn (Schulterkappe)
-    c.fillStyle = topF; c.beginPath(); c.arc(0, -54, schulterR, 0, Math.PI * 2); c.fill();
-    // Vorderer Arm
+    c.fillStyle = topF; c.beginPath(); c.arc(AX, AY, schulterR, 0, Math.PI * 2); c.fill();   // Ärmel/Schulterkappe
     arm(armWinkel, haut);
 
-    // Afro (hinterer Teil vor dem Kopf zeichnen, damit das Gesicht frei bleibt)
-    if (s.haar === 'afro') {
-      c.fillStyle = haarF; c.beginPath(); c.arc(-2, -72, 19, 0, Math.PI * 2); c.fill();
-      for (let i = 0; i < 9; i++) { const a = Math.PI * 0.9 + i * (Math.PI * 1.1 / 8); c.beginPath(); c.arc(-2 + Math.cos(a) * 17, -72 + Math.sin(a) * 17, 6, 0, Math.PI * 2); c.fill(); }
+    // ---- Haare HINTEN (vor dem Kopf gezeichnet, Gesicht bleibt frei)
+    const wipp = pose === 'lauf' ? Math.sin(t * 13) * 2.5 : 0;
+    c.fillStyle = haarF();
+    if (haar === 'afro') {
+      c.beginPath(); c.arc(-2, HY - 4, 19.5, 0, Math.PI * 2); c.fill();
+      for (let i = 0; i < 9; i++) { const a = Math.PI * 0.9 + i * (Math.PI * 1.1 / 8); c.beginPath(); c.arc(-2 + Math.cos(a) * 17.5, HY - 4 + Math.sin(a) * 17.5, 6, 0, Math.PI * 2); c.fill(); }
+    } else if (haar === 'riesenafro') {   // deutlich größer, viele kleine Locken am Rand
+      c.beginPath(); c.arc(-3, HY - 10, 32, 0, Math.PI * 2); c.fill();
+      for (let i = 0; i < 22; i++) { const a = i * (Math.PI * 2 / 22); c.beginPath(); c.arc(-3 + Math.cos(a) * 30, HY - 10 + Math.sin(a) * 30, 6.5, 0, Math.PI * 2); c.fill(); }
+      for (let i = 0; i < 16; i++) { const a = i * (Math.PI * 2 / 16) + 0.2; c.beginPath(); c.arc(-3 + Math.cos(a) * 22, HY - 10 + Math.sin(a) * 22, 5, 0, Math.PI * 2); c.fill(); }
+      c.fillStyle = 'rgba(255,255,255,.16)'; c.beginPath(); c.arc(-12, HY - 24, 8, 0, Math.PI * 2); c.fill();
+    } else if (haar === 'lang') {
+      c.beginPath(); c.moveTo(-6, HY - 10); c.quadraticCurveTo(-19, HY - 2 + wipp, -16, HY + 34 + wipp);
+      c.quadraticCurveTo(-8, HY + 36 + wipp, -2, HY + 28); c.lineTo(4, HY + 10); c.closePath(); c.fill();
+    } else if (haar === 'wuschel') {
+      const pts = mitHut ? [[-14, -6], [-16, -12], [15, -10], [-8, -12], [12, -14]] : [[-14, -6], [-16, -14], [-12, -22], [-4, -26], [5, -25], [12, -20], [15, -12], [-8, -12], [2, -16]];
+      for (const [dx, dy] of pts) { c.beginPath(); c.arc(HX + dx, HY + dy, 8.5, 0, Math.PI * 2); c.fill(); }
+    } else if (haar === 'zoepfe') {
+      for (let i = 0; i < 5; i++) { c.beginPath(); c.ellipse(-13 + Math.sin(i * 1.3 + wipp * 0.3) * 1.5, HY - 2 + i * 6, 4.2, 3.8, 0, 0, Math.PI * 2); c.fill(); }
+      c.fillStyle = haarDunkel();
+      for (let i = 0; i < 5; i++) { c.beginPath(); c.ellipse(-13 + Math.sin(i * 1.3 + wipp * 0.3) * 1.5 - 1.2, HY - 2 + i * 6 + 1, 2.4, 2.2, 0, 0, Math.PI * 2); c.fill(); }
     }
-    // Lange Haare (hinten, hinter dem Kopf)
-    if (s.haar === 'lang') {
-      const wipp = pose === 'lauf' ? Math.sin(t * 13) * 2.5 : 0;
-      c.fillStyle = haarF; c.beginPath(); c.moveTo(-6, -78); c.quadraticCurveTo(-18, -70 + wipp, -15, -46 + wipp);
-      c.quadraticCurveTo(-8, -44 + wipp, -2, -50); c.lineTo(4, -58); c.closePath(); c.fill();
-    }
-    // Kopf
-    c.fillStyle = haut; c.beginPath(); c.arc(0, -68, 12.5, 0, Math.PI * 2); c.fill();
-    // Ohr
-    c.fillStyle = hautD; c.beginPath(); c.arc(-9, -68, 3, 0, Math.PI * 2); c.fill();
-    // Ohrring
+
+    // ---- Kopf: leicht eiförmig, runde Wange, Ohr, Ohrring (groß)
+    c.fillStyle = haut;
+    c.beginPath(); c.ellipse(HX, HY, HR, HR + 0.5, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.arc(HX + 5, HY + 7, 7, 0, Math.PI * 2); c.fill();
+    c.fillStyle = wange; c.beginPath(); c.ellipse(HX + 8, HY + 6, 3.6, 2.4, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = hautD; c.beginPath(); c.ellipse(HX - 10.5, HY + 1, 3.4, 4, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.12)'; c.beginPath(); c.ellipse(HX - 10.5, HY + 1.5, 1.6, 2, 0, 0, Math.PI * 2); c.fill();
     if (s.schmuck === 'ohrring' || s.schmuck === 'beides') {
-      c.strokeStyle = '#e0a400'; c.lineWidth = 1.8; c.beginPath(); c.arc(-9.5, -62.5, 3.2, 0, Math.PI * 2); c.stroke();
+      c.strokeStyle = '#e0a400'; c.lineWidth = 2.4; c.beginPath(); c.arc(HX - 11, HY + 8.5, 4.4, 0, Math.PI * 2); c.stroke();
+      c.fillStyle = '#fff6c0'; c.beginPath(); c.arc(HX - 12.5, HY + 7, 1.1, 0, Math.PI * 2); c.fill();
     }
-    // Nase (3 Formen)
+    // Nase
     c.fillStyle = hautD;
-    if (s.nase === 'spitz') { c.beginPath(); c.moveTo(11, -70); c.lineTo(17.5, -65); c.lineTo(11, -63); c.closePath(); c.fill(); }
-    else if (s.nase === 'knubbel') { c.beginPath(); c.arc(12.8, -65.5, 3.6, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.arc(12, -66.5, 1.2, 0, Math.PI * 2); c.fill(); }
-    else { c.beginPath(); c.arc(12, -66, 2.6, 0, Math.PI * 2); c.fill(); }
-    // Mund
-    c.strokeStyle = '#8a3b2b'; c.lineWidth = 1.4; c.beginPath(); c.arc(6, -62, 3.5, 0.2, Math.PI - 0.4); c.stroke();
-    // Auge
-    if (s.brille === 'an') {
-      c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(2, -73, 12, 7, 3); c.fill();
-      c.strokeStyle = '#18213a'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(2, -70); c.lineTo(-9, -71); c.stroke();
-      c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(4, -72, 4, 2);
+    if (s.nase === 'spitz') { c.beginPath(); c.moveTo(11.5, HY - 2); c.lineTo(18.5, HY + 3); c.lineTo(11.5, HY + 5); c.closePath(); c.fill(); }
+    else if (s.nase === 'knubbel') { c.beginPath(); c.arc(13.5, HY + 3, 4, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.arc(12.6, HY + 2, 1.3, 0, Math.PI * 2); c.fill(); }
+    else { c.beginPath(); c.arc(12.8, HY + 2.5, 3, 0, Math.PI * 2); c.fill(); }
+
+    // ---- Gesicht: Auge + Braue + Mund je Ausdruck; Sonnenbrille = cool
+    const EX = 6.5, EY = HY - 2.5;
+    const auge = (r, pupille) => {
+      c.fillStyle = '#fff'; c.beginPath(); c.ellipse(EX, EY, r, r + 0.6, 0, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#18213a'; c.beginPath(); c.arc(EX + 1.2, EY + 0.4, pupille, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#fff'; c.beginPath(); c.arc(EX + 2, EY - 1, 0.9, 0, Math.PI * 2); c.fill();
+    };
+    const braue = (dy, neigung) => {
+      c.strokeStyle = braueF(); c.lineCap = 'round'; c.lineWidth = 2.1;
+      c.beginPath(); c.moveTo(1.5, EY - 7 + dy + neigung); c.quadraticCurveTo(6.5, EY - 10 + dy, 11.5, EY - 7.5 + dy - neigung); c.stroke();
+    };
+    const grinsen = (breit) => {
+      c.fillStyle = '#7a2b22'; c.beginPath(); c.moveTo(2, HY + 7); c.quadraticCurveTo(7, HY + 7 + breit, 12.5, HY + 6); c.quadraticCurveTo(8, HY + 9, 2, HY + 7); c.closePath(); c.fill();
+      c.fillStyle = '#fff'; c.beginPath(); c.moveTo(3, HY + 7.2); c.lineTo(11.5, HY + 6.3); c.lineTo(10.5, HY + 8.2); c.lineTo(4, HY + 8.8); c.closePath(); c.fill();
+    };
+    const zunge = () => {
+      c.fillStyle = '#f05a7a'; c.beginPath(); c.ellipse(9.5, HY + 11, 3.2, 4, 0.3, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = 'rgba(0,0,0,.18)'; c.lineWidth = 1; c.beginPath(); c.moveTo(9.3, HY + 9); c.lineTo(10.3, HY + 13.5); c.stroke();
+    };
+    const oMund = () => {
+      c.fillStyle = '#7a2b22'; c.beginPath(); c.ellipse(8, HY + 8, 3, 3.8, 0, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#c0453a'; c.beginPath(); c.ellipse(8, HY + 9.6, 1.8, 1.4, 0, 0, Math.PI * 2); c.fill();
+    };
+    if (s.brille === 'an') {   // große Sonnenbrille („cool“)
+      c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(1, EY - 4.5, 13.5, 8.5, 3.5); c.fill();
+      c.strokeStyle = '#18213a'; c.lineWidth = 1.8; c.beginPath(); c.moveTo(1, EY - 1); c.lineTo(-10, EY - 2); c.stroke();
+      c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.roundRect(3.5, EY - 3, 4.5, 2, 1); c.fill();
+      if (g === 'erstaunt') { oMund(); braue(-3, 0); }
+      else if (g === 'zunge') { grinsen(4); zunge(); }
+      else { c.strokeStyle = '#7a2b22'; c.lineWidth = 1.8; c.lineCap = 'round'; c.beginPath(); c.moveTo(4, HY + 7.5); c.quadraticCurveTo(9, HY + 10, 13, HY + 6); c.stroke(); braue(-1.5, -1); }
+    } else if (g === 'erstaunt') {
+      auge(5.2, 2.2); braue(-3.5, 0); oMund();
+    } else if (g === 'zunge') {
+      c.strokeStyle = '#18213a'; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath(); c.arc(EX, EY + 1, 3.8, Math.PI * 1.15, Math.PI * 1.85); c.stroke();
+      braue(0.5, 0.5); grinsen(4); zunge();
     } else {
-      c.fillStyle = '#fff'; c.beginPath(); c.arc(7, -70, 3.4, 0, Math.PI * 2); c.fill();
-      c.fillStyle = '#18213a'; c.beginPath(); c.arc(8, -70, 1.8, 0, Math.PI * 2); c.fill();
+      auge(4.4, 2.6); braue(0, 0.5); grinsen(6);
     }
-    // Schnurrbart
-    if (s.bart === 'an') {
-      c.fillStyle = haarF; c.beginPath(); c.moveTo(12, -63.5); c.quadraticCurveTo(7, -67, 3, -62); c.quadraticCurveTo(8, -62, 12, -63.5); c.fill();
+
+    // ---- Bärte (Farbe = Haarfarbe)
+    const bartF = haarF();
+    c.fillStyle = bartF; c.strokeStyle = bartF; c.lineCap = 'round';
+    const BY = HY + 5.5;
+    const schnauzer = () => { c.beginPath(); c.roundRect(2.5, BY - 1.5, 12, 3.6, 1.8); c.fill(); };
+    if (s.bart === 'an' || s.bart === 'schnauzer') schnauzer();
+    else if (s.bart === 'zwirbel') {
+      c.lineWidth = 2.3;
+      c.beginPath(); c.moveTo(8, BY); c.quadraticCurveTo(13, BY + 1, 17, BY - 3); c.quadraticCurveTo(19.5, BY - 6, 16.5, BY - 6.5); c.stroke();
+      c.beginPath(); c.moveTo(8, BY); c.quadraticCurveTo(3, BY + 1, 0, BY - 3); c.quadraticCurveTo(-2, BY - 6, 1, BY - 6.5); c.stroke();
+      c.beginPath(); c.arc(8, BY + 0.3, 1.6, 0, Math.PI * 2); c.fill();
+    } else if (s.bart === 'walross') {
+      c.beginPath(); c.moveTo(1.5, BY - 1); c.lineTo(14.5, BY - 1.5);
+      c.quadraticCurveTo(16.5, BY + 4, 13.5, BY + 9); c.quadraticCurveTo(11, BY + 11, 9, BY + 8);
+      c.quadraticCurveTo(7, BY + 11, 4.5, BY + 9); c.quadraticCurveTo(0.5, BY + 5, 1.5, BY - 1); c.closePath(); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.ellipse(9, BY + 2.5, 4.5, 1.4, 0, 0, Math.PI * 2); c.fill();
+    } else if (s.bart === 'fumanchu') {
+      c.beginPath(); c.roundRect(3.5, BY - 1.2, 10.5, 2.6, 1.3); c.fill();
+      c.lineWidth = 2.4;
+      c.beginPath(); c.moveTo(13.5, BY); c.quadraticCurveTo(16.5, BY + 8, 15, BY + 18 + wipp); c.stroke();
+      c.beginPath(); c.moveTo(4, BY); c.quadraticCurveTo(2, BY + 8, 3.5, BY + 16 + wipp); c.stroke();
+    } else if (s.bart === 'kinnbart') {
+      c.beginPath(); c.roundRect(4, BY - 1.2, 9.5, 2.6, 1.3); c.fill();
+      c.beginPath(); c.moveTo(2, HY + 11); c.lineTo(11, HY + 11.5); c.lineTo(7, HY + 21); c.closePath(); c.fill();
+    } else if (s.bart === 'monobraue') {
+      schnauzer();
+      c.lineWidth = 3.4; c.beginPath(); c.moveTo(-6, EY - 8); c.quadraticCurveTo(4, EY - 11, 13, EY - 8); c.stroke();
     }
-    // Haare (oben)
-    c.fillStyle = haarF;
-    if (s.haar === 'kurz') {
-      c.beginPath(); c.arc(0, -70, 12.8, Math.PI * 1.05, Math.PI * 1.95); c.lineTo(10, -74); c.lineTo(-5, -70); c.closePath(); c.fill();
-    } else if (s.haar === 'lang') {
-      c.beginPath(); c.arc(0, -70, 12.8, Math.PI * 1.0, Math.PI * 1.97); c.lineTo(11, -73); c.lineTo(-8, -66); c.closePath(); c.fill();
-    } else if (s.haar === 'zopf') {
-      c.beginPath(); c.arc(0, -70, 12.8, Math.PI * 1.02, Math.PI * 1.98); c.lineTo(11, -73); c.lineTo(-6, -69); c.closePath(); c.fill();
-      const wipp = pose === 'lauf' ? Math.sin(t * 13) * 3 : 0;
-      c.lineCap = 'round'; c.lineWidth = 6; c.strokeStyle = haarF;
-      c.beginPath(); c.moveTo(-11, -72); c.quadraticCurveTo(-22, -70 + wipp, -20, -56 + wipp); c.stroke();
-      c.fillStyle = '#c8283a'; c.beginPath(); c.arc(-12, -72, 2.6, 0, Math.PI * 2); c.fill(); // Haargummi
-    } else if (s.haar === 'locken') {
-      for (let i = 0; i < 7; i++) {
-        const a = Math.PI * 1.0 + i * (Math.PI / 6.5);
-        c.beginPath(); c.arc(Math.cos(a) * 11, -70 + Math.sin(a) * 11, 5, 0, Math.PI * 2); c.fill();
+
+    // ---- Haare VORN / oben (unter einem Hut gestaucht: Tolle, Wuschel, Flat-Top, drei Haare)
+    c.fillStyle = haarF(); c.strokeStyle = haarF(); c.lineCap = 'round';
+    const kappe = (von, bis, stirnX, stirnY, nackenX, nackenY) => {
+      c.beginPath(); c.arc(HX, HY - 1.5, HR + 0.6, Math.PI * von, Math.PI * bis); c.lineTo(stirnX, stirnY); c.lineTo(nackenX, nackenY); c.closePath(); c.fill();
+    };
+    if (haar === 'kurz') kappe(1.05, 1.95, 10, HY - 7, -5, HY - 3);
+    else if (haar === 'lang') kappe(1.0, 1.97, 11, HY - 6, -8, HY + 2);
+    else if (haar === 'zopf') {
+      kappe(1.02, 1.98, 11, HY - 6, -6, HY - 2);
+      c.lineWidth = 6; c.beginPath(); c.moveTo(-11, HY - 4); c.quadraticCurveTo(-23, HY - 2 + wipp, -21, HY + 14 + wipp); c.stroke();
+      c.fillStyle = '#c8283a'; c.beginPath(); c.arc(-12, HY - 4, 2.6, 0, Math.PI * 2); c.fill();
+    } else if (haar === 'locken') {
+      for (let i = 0; i < 7; i++) { const a = Math.PI * 1.0 + i * (Math.PI / 6.5); c.beginPath(); c.arc(Math.cos(a) * 11.5, HY - 1.5 + Math.sin(a) * 11.5, 5.2, 0, Math.PI * 2); c.fill(); }
+    } else if (haar === 'afro') {
+      for (let i = 0; i < 5; i++) { const a = Math.PI * 1.15 + i * 0.3; c.beginPath(); c.arc(-2 + Math.cos(a) * 16.5, HY - 4 + Math.sin(a) * 16.5, 6.5, 0, Math.PI * 2); c.fill(); }
+    } else if (haar === 'riesenafro') {
+      for (let i = 0; i < 7; i++) { const a = Math.PI * 1.1 + i * 0.22; c.beginPath(); c.arc(-3 + Math.cos(a) * 27, HY - 10 + Math.sin(a) * 27, 6.5, 0, Math.PI * 2); c.fill(); }
+    } else if (haar === 'irokese' || haar === 'mohawk') {
+      // Kamm von Nacken bis Stirn; mit Hut nur der hintere Teil (der Hut sitzt vorn)
+      const hoch = haar === 'mohawk' ? 30 : 20, n = haar === 'mohawk' ? 6 : 5;
+      const a0 = Math.PI * 1.08, a1 = mitHut ? Math.PI * 1.45 : Math.PI * 1.92, r0 = HR - 1;
+      c.beginPath(); c.moveTo(HX + Math.cos(a0) * r0, HY - 1.5 + Math.sin(a0) * r0);
+      for (let i = 1; i <= n; i++) {
+        const a = a0 + (a1 - a0) * i / n, am = a0 + (a1 - a0) * (i - 0.5) / n;
+        const hh = r0 + hoch - (haar === 'mohawk' ? Math.abs(i - 0.5 - n / 2) * 4 : 0);
+        c.lineTo(HX + Math.cos(am) * hh, HY - 1.5 + Math.sin(am) * hh);
+        c.lineTo(HX + Math.cos(a) * r0, HY - 1.5 + Math.sin(a) * r0);
       }
-    } else if (s.haar === 'afro') {
-      for (let i = 0; i < 5; i++) { const a = Math.PI * 1.15 + i * 0.3; c.beginPath(); c.arc(-2 + Math.cos(a) * 16, -72 + Math.sin(a) * 16, 6.5, 0, Math.PI * 2); c.fill(); }
+      c.closePath();
+      if (haar === 'mohawk') {
+        const g2 = c.createLinearGradient(-16, 0, 16, 0);
+        REGENBOGEN.forEach((col, i) => { g2.addColorStop(i / REGENBOGEN.length, col); g2.addColorStop((i + 1) / REGENBOGEN.length - 0.001, col); });
+        c.fillStyle = g2;
+      }
+      c.fill();
+      c.fillStyle = haarF();
+      c.beginPath(); c.arc(HX, HY - 1.5, r0, Math.PI * 1.08, Math.PI * 1.92); c.closePath(); c.fill();
+    } else if (haar === 'tolle') {
+      kappe(1.0, 1.95, 11, HY - 8, -7, HY + 2);
+      if (!mitHut) {
+        c.beginPath(); c.moveTo(-9, HY - 11); c.quadraticCurveTo(-2, HY - 30, 14, HY - 26); c.quadraticCurveTo(24, HY - 22, 17, HY - 14);
+        c.quadraticCurveTo(14, HY - 9, 9, HY - 11); c.quadraticCurveTo(13, HY - 17, 7, HY - 19); c.quadraticCurveTo(0, HY - 18, -9, HY - 11); c.closePath(); c.fill();
+        c.fillStyle = 'rgba(255,255,255,.22)'; c.beginPath(); c.ellipse(6, HY - 22, 7, 2.2, -0.2, 0, Math.PI * 2); c.fill();
+      }
+      c.fillStyle = haarF(); c.beginPath(); c.roundRect(-10, HY - 4, 3.2, 10, 1.5); c.fill();   // Kotelette
+    } else if (haar === 'zoepfe') {
+      kappe(1.02, 1.98, 11, HY - 6, -6, HY - 2);
+      c.strokeStyle = haarDunkel(); c.lineWidth = 1; c.beginPath(); c.moveTo(-8, HY - 12); c.lineTo(10, HY - 7); c.stroke();
+      for (let i = 0; i < 5; i++) { c.fillStyle = haarF(); c.beginPath(); c.ellipse(-7 + Math.sin(i * 1.3 + wipp * 0.3) * 1.5, HY + 4 + i * 6, 4.4, 4, 0, 0, Math.PI * 2); c.fill(); }
+      const schleife = (x0, y0) => {
+        c.fillStyle = '#e8467c';
+        c.beginPath(); c.moveTo(x0, y0); c.lineTo(x0 - 6, y0 - 5); c.lineTo(x0 - 5, y0 + 3); c.closePath(); c.fill();
+        c.beginPath(); c.moveTo(x0, y0); c.lineTo(x0 + 5, y0 - 5.5); c.lineTo(x0 + 6, y0 + 2); c.closePath(); c.fill();
+        c.fillStyle = '#b2224f'; c.beginPath(); c.arc(x0, y0, 2, 0, Math.PI * 2); c.fill();
+      };
+      schleife(-13, HY - 3); schleife(-7, HY + 3);
+    } else if (haar === 'dutt') {   // mit Hut rutscht der Dutt nach hinten, der Hut sitzt vorn
+      kappe(1.0, 1.97, 11, HY - 6, -7, HY);
+      const dx = mitHut ? -11 : -2, dy = mitHut ? HY - 15 : HY - 20;
+      c.beginPath(); c.arc(dx, dy, 7.5, 0, Math.PI * 2); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.2)'; c.beginPath(); c.arc(dx - 2, dy - 2, 3, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#e8467c'; c.lineWidth = 2.2; c.beginPath(); c.arc(dx, dy + 6.5, 3.2, Math.PI * 0.1, Math.PI * 0.9); c.stroke();
+    } else if (haar === 'wuschel') {
+      const pts = mitHut ? [[-12, -8], [13, -6]] : [[-10, -10], [-2, -14], [7, -12], [13, -6], [-6, -16], [4, -18]];
+      for (const [dx, dy] of pts) { c.beginPath(); c.arc(HX + dx, HY + dy, 8, 0, Math.PI * 2); c.fill(); }
+      if (!mitHut) { c.lineWidth = 2.5; c.beginPath(); c.moveTo(-14, HY - 20); c.lineTo(-20, HY - 28); c.moveTo(4, HY - 25); c.lineTo(6, HY - 33); c.moveTo(14, HY - 18); c.lineTo(21, HY - 24); c.stroke(); }
+    } else if (haar === 'dreihaare') {
+      if (!mitHut) {
+        c.lineWidth = 1.8;
+        c.beginPath(); c.moveTo(-3, HY - 13); c.quadraticCurveTo(-8, HY - 22, -14, HY - 20); c.stroke();
+        c.beginPath(); c.moveTo(1, HY - 13.5); c.quadraticCurveTo(0, HY - 25, 3, HY - 27); c.stroke();
+        c.beginPath(); c.moveTo(5, HY - 12.5); c.quadraticCurveTo(10, HY - 20, 15, HY - 18); c.stroke();
+        c.fillStyle = 'rgba(255,255,255,.3)'; c.beginPath(); c.ellipse(-2, HY - 8, 5, 2.4, 0.2, 0, Math.PI * 2); c.fill();
+      }
+    } else if (haar === 'flattop') {
+      const oben = mitHut ? HY - 13 : HY - 26;
+      c.beginPath(); c.moveTo(-14, HY - 4); c.lineTo(-14, oben); c.lineTo(14, oben); c.lineTo(14, HY - 9); c.lineTo(10, HY - 9);
+      c.quadraticCurveTo(0, HY - 12, -11, HY - 2); c.closePath(); c.fill();
+      if (!mitHut) { c.fillStyle = haarDunkel(); c.fillRect(-14, oben, 28, 2.2); }
     }
-    // Haarschmuck
-    const hutOben = s.haar === 'afro' ? -14 : 0;
+
+    // ---- Haarschmuck (sitzt auf der Frisur)
+    const hoch = { afro: -16, riesenafro: -30, irokese: -18, mohawk: -28, tolle: mitHut ? 0 : -20, dutt: -14, wuschel: mitHut ? -4 : -20, flattop: mitHut ? -8 : -20, locken: -4 }[haar] || 0;
     if (s.haarschmuck === 'schleife') {
       c.fillStyle = '#e8467c';
-      c.beginPath(); c.moveTo(-6, -80 + hutOben); c.lineTo(-14, -86 + hutOben); c.lineTo(-13, -75 + hutOben); c.closePath(); c.fill();
-      c.beginPath(); c.moveTo(-6, -80 + hutOben); c.lineTo(1, -87 + hutOben); c.lineTo(3, -77 + hutOben); c.closePath(); c.fill();
-      c.fillStyle = '#b2224f'; c.beginPath(); c.arc(-6, -80 + hutOben, 2.4, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.moveTo(-6, HY - 12 + hoch); c.lineTo(-14, HY - 18 + hoch); c.lineTo(-13, HY - 7 + hoch); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(-6, HY - 12 + hoch); c.lineTo(1, HY - 19 + hoch); c.lineTo(3, HY - 9 + hoch); c.closePath(); c.fill();
+      c.fillStyle = '#b2224f'; c.beginPath(); c.arc(-6, HY - 12 + hoch, 2.4, 0, Math.PI * 2); c.fill();
     } else if (s.haarschmuck === 'haarband') {
       c.strokeStyle = '#e8467c'; c.lineWidth = 3.2; c.lineCap = 'butt';
-      const r = s.haar === 'afro' ? 19.5 : 13;
-      c.beginPath(); c.arc(s.haar === 'afro' ? -2 : 0, -70 - (s.haar === 'afro' ? 2 : 0), r, Math.PI * 1.1, Math.PI * 1.85); c.stroke();
+      c.beginPath(); c.arc(HX, HY - 1.5, HR + 0.8, Math.PI * 1.1, Math.PI * 1.85); c.stroke();
     }
-    // Hüte
+
+    // ---- Hüte: immer direkt auf dem Kopf; bei Irokese/Mohawk/Dutt etwas nach vorn gerückt (Frisur ragt hinten heraus)
+    const hutDX = (haar === 'irokese' || haar === 'mohawk' || haar === 'dutt') ? 4 : 0;
     if (s.hut === 'cap') {
-      c.save(); c.translate(0, hutOben);
-      c.fillStyle = '#1d3f8f'; c.beginPath(); c.arc(0, -75, 12, Math.PI, 0); c.closePath(); c.fill();
-      c.beginPath(); c.roundRect(2, -77, 20, 4, 2); c.fill();
-      c.fillStyle = '#e0a400'; c.beginPath(); c.arc(0, -84, 2.2, 0, Math.PI * 2); c.fill();
+      c.save(); c.translate(hutDX, 0);
+      c.fillStyle = '#1d3f8f'; c.beginPath(); c.arc(HX, HY - 8, 13, Math.PI, 0); c.closePath(); c.fill();
+      c.beginPath(); c.roundRect(2, HY - 10, 21, 4.2, 2); c.fill();
+      c.fillStyle = '#e0a400'; c.beginPath(); c.arc(HX, HY - 18, 2.3, 0, Math.PI * 2); c.fill();
       c.restore();
     } else if (s.hut === 'cowboy') {
-      c.save(); c.translate(0, hutOben);
-      c.fillStyle = '#8a5a2b';
-      c.beginPath(); c.ellipse(0, -77, 20, 4.5, 0, 0, Math.PI * 2); c.fill();
-      c.beginPath(); c.roundRect(-9, -92, 18, 16, 4); c.fill();
-      c.fillStyle = '#5a3a18'; c.fillRect(-9, -80, 18, 3);
-      c.restore();
+      c.save(); c.translate(hutDX, 0); c.fillStyle = '#8a5a2b';
+      c.beginPath(); c.ellipse(0, HY - 11, 21, 4.5, 0, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.roundRect(-9.5, HY - 26, 19, 16, 4); c.fill();
+      c.fillStyle = '#5a3a18'; c.fillRect(-9.5, HY - 14, 19, 3); c.restore();
     } else if (s.hut === 'zylinder') {
-      c.save(); c.translate(0, hutOben);
-      c.fillStyle = '#18213a';
-      c.beginPath(); c.ellipse(0, -77, 16, 3.5, 0, 0, Math.PI * 2); c.fill();
-      c.fillRect(-9, -98, 18, 22);
-      c.fillStyle = '#c8283a'; c.fillRect(-9, -80, 18, 3);
-      c.restore();
+      c.save(); c.translate(hutDX, 0); c.fillStyle = '#18213a';
+      c.beginPath(); c.ellipse(0, HY - 11, 17, 3.5, 0, 0, Math.PI * 2); c.fill();
+      c.fillRect(-9.5, HY - 32, 19, 22);
+      c.fillStyle = '#c8283a'; c.fillRect(-9.5, HY - 14, 19, 3); c.restore();
     }
     c.restore();
+  }
+  // Sichtbare Höhe der Figur in Einheiten (Fußpunkt bis Haar-/Hutspitze) – für die Vorschau-Skalierung in der App
+  function figurHoehe(s) {
+    s = Object.assign({}, SKIN_STANDARD, s);
+    const mitHut = !!s.hut && s.hut !== 'keiner';
+    const hutH = { cap: 8, cowboy: 13, zylinder: 19 }[s.hut] || 0;
+    const haarH = ({ irokese: 20, mohawk: 30, riesenafro: 35, afro: 10, tolle: mitHut ? 0 : 17, dutt: mitHut ? 9 : 14, wuschel: mitHut ? 0 : 21, flattop: mitHut ? 0 : 13, dreihaare: mitHut ? 0 : 14, locken: 3 })[s.haar] || 0;
+    return 88 + (s.hals === 'giraffe' ? 24 : 0) + Math.max(hutH, haarH);
   }
 
   /* ---------- Level (aus Abschnitts-Mustern; ≈ 28.000 Einheiten, ≥ 2 Minuten) ---------- */
@@ -453,12 +640,14 @@
   let halten = false, haltZeit = 0, sprungGedrueckt = false;
   // Combo + Effekte
   let combo = 0, maxCombo = 0, comboText = null, hudPuls = 0, spur = 0, onfire = false, partikel = [], spurPunkte = [];
+  let erstauntZeit = 0, zungeZeit = 0;   // Gesichtsausdruck: erstaunt 0,8 s nach Treffer, Zunge raus 1 s bei „5× Combo!“ und solange On fire
+  const ausdruckAktuell = () => (erstauntZeit > 0 ? "erstaunt" : (onfire || zungeZeit > 0) ? "zunge" : "grinsend");
   const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9 };   // letzter Klang je Art (Spielzeit)
   let gegnerKlaenge = 0;   // Zähler für Tests
   const GEGNER_KLANG_ABSTAND = 1.5, GEGNER_NAEHE = 260, COMBO_TEXT_DAUER = 1.3;
   const ruhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
   const SPEED = 230, GRAV = 1600, GRAV_HALT = 800, SPRUNG_V = -480, HALT_MAX = 0.32;
-  const PW = 30, PH = 78;  // Trefferbox
+  const PW = 30, PH = 84;  // Trefferbox (Figur v2 ist ≈ 88 Einheiten hoch; Hut/Frisur zählen nicht)
   const SEQUENZ = { zoom: 1.5, stand: 1.0, banner: 2.4, boss: 1.3, zurueck: 0.8 };
   const SEQUENZ_MIN = Object.values(SEQUENZ).reduce((a, b) => a + b, 0);
   const BANNER_TEXT = "It's time for Mr. Alligator!";
@@ -479,7 +668,7 @@
     leben = 3; gesammelt = 0; kamera = 0; zeit = 0; popup = null; meldung = null; tot = 0;
     checkpoint = 120; boss = { maul:0, weg:0, sichtbar:0, deckel:0 }; tuer = { offen:0 }; bossFrage = null;
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
-    combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0;
+    combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
   }
 
@@ -505,7 +694,7 @@
       comboText = { text: "3× Combo!", zeit: COMBO_TEXT_DAUER, stufe: 3 }; klang.combo(3);
       funken(fx, fy, 26, ["#ffd93d", "#fff6c0", "#ff9f1c"], 260, 0.8);
     } else if (combo === 5) {
-      comboText = { text: "5× Combo!", zeit: COMBO_TEXT_DAUER, stufe: 5 }; klang.combo(5);
+      comboText = { text: "5× Combo!", zeit: COMBO_TEXT_DAUER, stufe: 5 }; klang.combo(5); zungeZeit = 1;
       funken(fx, fy, 40, ["#ffd93d", "#fff6c0", "#ff9f1c", "#ffffff"], 320, 0.9);
       if (!ruhig()) spur = 3;
     } else if (combo >= 8) {
@@ -545,6 +734,8 @@
   function effekteBewegen(dt) {
     if (hudPuls > 0) hudPuls = Math.max(0, hudPuls - dt * 2.2);
     if (comboText) { comboText.zeit -= dt; if (comboText.zeit <= 0) comboText = null; }
+    if (erstauntZeit > 0) erstauntZeit = Math.max(0, erstauntZeit - dt);
+    if (zungeZeit > 0) zungeZeit = Math.max(0, zungeZeit - dt);
     if (spur > 0) spur = Math.max(0, spur - dt);
     for (const q of partikel) { q.zeit -= dt; q.x += q.vx * dt; q.y += q.vy * dt; if (q.art !== "flamme") q.vy += 420 * dt; }
     partikel = partikel.filter((q) => q.zeit > 0);
@@ -609,7 +800,7 @@
 
   function schaden(grund) {
     if (spieler.unverwundbar > 0 || tot > 0) return;
-    leben--; klang.aua(); comboReset();
+    leben--; klang.aua(); comboReset(); erstauntZeit = 0.8;
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     tot = 0.9; meldung = { text: grund === 'wasser' ? 'Splash! 💦' : 'Ouch!', zeit: 1.2 };
   }
@@ -810,7 +1001,7 @@
       popup = { en: woerter[i].en + " ✓", de: woerter[i].de, zeit: 2.5, art: "richtig" };
       bossSagt(BOSS_RICHTIG, 3);
     } else {
-      klang.falsch(); leben--; comboReset();
+      klang.falsch(); leben--; comboReset(); erstauntZeit = 0.8;
       popup = { en: woerter[i].en + " ✗", de: woerter[i].de, zeit: 2, art: "falsch" };
       if (leben <= 0) { frageBox.hidden = true; bossFrage = null; zustand = "gameover"; zeigeEnde(false); }
       else { bossFragen(); bossSagt(BOSS_FALSCH); }
@@ -1085,7 +1276,7 @@
     if (tot <= 0) {
       const blink = spieler.unverwundbar > 0 && Math.floor(zeit * 12) % 2 === 0;
       c.globalAlpha = blink ? 0.35 : 1;
-      zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit);
+      zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, ausdruckAktuell());
       c.globalAlpha = 1;
     }
     effekteZeichnen(c);
@@ -1278,7 +1469,7 @@
         bossSichtbar: boss.sichtbar, bossSpruch: bossSpruch ? bossSpruch.text : null,
         koerper: { bauch: skin.bauch, brust: skin.brust, muskeln: skin.muskeln, power: skin.power, powerAura: skin.powerAura || 0 },
         hochformatHinweis: bereich.y > 0, viewW, speed: SPEED, strecke: level.stopX, sequenzMinDauer: SEQUENZ_MIN, woerter: woerter.map((w) => w.en),
-        combo, maxCombo, comboText: comboText ? comboText.text : null, partikel: partikel.length, spur: spur > 0, spurPunkte: spurPunkte.length, onfire, ruhig: ruhig(),
+        combo, maxCombo, comboText: comboText ? comboText.text : null, partikel: partikel.length, spur: spur > 0, spurPunkte: spurPunkte.length, onfire, ruhig: ruhig(), ausdruck: ausdruckAktuell(),
         gegnerKlaenge, gegnerNah: gegner.filter((g) => g.tot <= 0 && g.x - spieler.x > -40 && g.x - spieler.x < GEGNER_NAEHE).map((g) => g.art),
       };
     },
@@ -1293,5 +1484,5 @@
     sprechListe, level, SEQUENZ, BANNER_TEXT,
   };
 
-  window.Runner = { start, stopp, zeichneFigur, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, level, SEQUENZ, BANNER_TEXT };
+  window.Runner = { start, stopp, zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level, SEQUENZ, BANNER_TEXT };
 })();

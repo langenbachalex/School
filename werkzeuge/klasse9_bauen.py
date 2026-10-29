@@ -424,18 +424,32 @@ GYM = {"pensum": {"neu": 4, "wdh": 8}, "grenzen": {"neu": [1, 6], "wdh": [4, 12]
 # Shop (Coins = gespiegelte Punkte, nicht rückwirkend; docs/gamification/konzept.md „Coins und Shop“). Erweiterbar: neue Artikel hier eintragen.
 # Texte mit G/E wie bei "unter" der Kacheln (tx). bald: gezeigt, noch nicht kaufbar · rahmen: CSS-Klasse rahmen-<farbe> für Titel-Schild und Startkarte
 # runner: Ticket wird nicht im Shop gekauft, sondern beim Start des Spiels abgebucht (app.js runnerSpiel); der Artikel führt zur Startseite des Runners.
-# skin: Figur-Teil für den Runner (app/klasse9/runner.js SKIN_GRUPPEN; die ersten zwei Werte je Option sind frei, Muskeln ganz), id = skin_<option>_<wert>.
+# skin: Figur-Teil für den Runner (app/klasse9/runner.js SKIN_GRUPPEN; frei sind die ersten Werte je Option, s. dort `frei`), id = skin_<option>_<wert>.
+# Preis 30, Ausgefallenes 60 (5. Feld; muss zu `preis` in SKIN_GRUPPEN passen). Figur v2 (29.10.): neue Frisuren, Bärte, Haarfarben, Körper-Übertreibungen.
 SKIN_PREIS = 30
-SKIN_ARTIKEL = [  # (option, wert, Name G, Name E)
+SKIN_PREIS_TEUER = 60
+SKIN_ARTIKEL = [  # (option, wert, Name G, Name E[, Preis])
     ("haar", "zopf", "Frisur: Zopf", "Hair: ponytail"), ("haar", "locken", "Frisur: Locken", "Hair: curly"), ("haar", "afro", "Frisur: Afro", "Hair: afro"),
+    ("haar", "irokese", "Frisur: Irokese", "Hair: mohawk"), ("haar", "tolle", "Frisur: Elvis-Tolle", "Hair: quiff"), ("haar", "zoepfe", "Frisur: Zöpfe mit Schleifen", "Hair: pigtails with bows"),
+    ("haar", "dutt", "Frisur: Dutt", "Hair: bun"), ("haar", "flattop", "Frisur: Flat-Top", "Hair: flat top"), ("haar", "dreihaare", "Frisur: Glatze mit drei Haaren", "Hair: three hairs"),
+    ("haar", "riesenafro", "Frisur: Riesen-Afro", "Hair: giant afro", SKIN_PREIS_TEUER), ("haar", "mohawk", "Frisur: Regenbogen-Mohawk", "Hair: rainbow mohawk", SKIN_PREIS_TEUER),
     ("haarfarbe", "schwarz", "Haarfarbe: schwarz", "Hair colour: black"), ("haarfarbe", "rot", "Haarfarbe: rot", "Hair colour: red"),
+    ("haarfarbe", "türkis", "Haarfarbe: türkis", "Hair colour: turquoise"), ("haarfarbe", "lila", "Haarfarbe: lila", "Hair colour: purple"), ("haarfarbe", "neongrün", "Haarfarbe: neongrün", "Hair colour: neon green"),
+    ("haarfarbe", "feuerrot", "Haarfarbe: feuerrot", "Hair colour: fire red"), ("haarfarbe", "blau", "Haarfarbe: blau", "Hair colour: blue"), ("haarfarbe", "silber", "Haarfarbe: silber", "Hair colour: silver"),
+    ("haarfarbe", "regenbogen", "Haarfarbe: Regenbogen", "Hair colour: rainbow", SKIN_PREIS_TEUER),
     ("haarschmuck", "haarband", "Haarband", "Headband"),
     ("hut", "cowboy", "Cowboyhut", "Cowboy hat"), ("hut", "zylinder", "Zylinder", "Top hat"),
     ("nase", "knubbel", "Knubbelnase", "Button nose"),
+    ("bart", "zwirbel", "Bart: Zwirbelbart", "Beard: handlebar moustache"), ("bart", "walross", "Bart: Walross", "Beard: walrus moustache"), ("bart", "kinnbart", "Bart: Kinnbart", "Beard: goatee"),
+    ("bart", "monobraue", "Bart: Monobraue + Schnauzer", "Beard: unibrow + moustache"), ("bart", "fumanchu", "Bart: Fu-Manchu", "Beard: Fu Manchu", SKIN_PREIS_TEUER),
     ("schmuck", "kette", "Kette", "Necklace"), ("schmuck", "beides", "Ohrring + Kette", "Earring + necklace"),
     ("topfarbe", "gelb", "Oberteil: gelb", "Top: yellow"), ("topfarbe", "grün", "Oberteil: grün", "Top: green"),
     ("schuhe", "schwarz", "Schuhe: schwarz", "Shoes: black"),
-    ("bauch", "kräftig", "Körper: kräftiger Bauch", "Body: big belly"), ("brust", "kräftig", "Körper: breite Schultern", "Body: broad shoulders"),
+    ("hals", "giraffe", "Körper: Giraffenhals", "Body: giraffe neck", SKIN_PREIS_TEUER),
+    ("bauch", "kräftig", "Körper: kräftiger Bauch", "Body: big belly"), ("bauch", "kugel", "Körper: Kugelbauch", "Body: ball belly", SKIN_PREIS_TEUER),
+    ("brust", "kräftig", "Körper: breite Schultern", "Body: broad shoulders"),
+    ("muskeln", "hulk", "Körper: Hulk-Muskeln", "Body: Hulk muscles", SKIN_PREIS_TEUER),
+    ("fuesse", "riesen", "Körper: Riesenfüße", "Body: giant feet", SKIN_PREIS_TEUER),
 ]
 SHOP = [
     {"id": "runner", "symbol": "🏃", "name": {"G": "Runner-Ticket", "E": "Runner ticket"}, "unter": {"G": "Eintritt für Road Trip Run – wird beim Start abgebucht", "E": "Entry to Road Trip Run – paid when you start"}, "preis": 100, "runner": True},
@@ -443,8 +457,8 @@ SHOP = [
     {"id": "rahmen_blau", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Blau", "E": "Blue"}, "preis": 50, "rahmen": "blau"},
     {"id": "rahmen_gruen", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Grün", "E": "Green"}, "preis": 50, "rahmen": "gruen"},
 ] + [
-    {"id": f"skin_{o}_{w}", "symbol": "🎨", "name": {"G": g, "E": e}, "unter": {"G": "Figur im Road Trip Run", "E": "Your Road Trip Run character"}, "preis": SKIN_PREIS, "skin": [o, w]}
-    for o, w, g, e in SKIN_ARTIKEL
+    {"id": f"skin_{a[0]}_{a[1]}", "symbol": "🎨", "name": {"G": a[2], "E": a[3]}, "unter": {"G": "Figur im Road Trip Run", "E": "Your Road Trip Run character"}, "preis": a[4] if len(a) > 4 else SKIN_PREIS, "skin": [a[0], a[1]]}
+    for a in SKIN_ARTIKEL
 ]
 
 

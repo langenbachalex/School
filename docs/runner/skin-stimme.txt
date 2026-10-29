@@ -1,14 +1,31 @@
-# Skin-Stimme – gesprochene Wendungen im Skin-Menü (Runner-Prototyp v2, en-US)
+# Skin-Stimme – gesprochene Wendungen im Skin-Menü (Road Trip Run, en-US; Figur v2 vom 29.10.)
 # Eine Zeile je Wendung; Platzhalter per Geräte-TTS, später Jeremy/Jessica.
 Short hair
 Long hair
+Messy hair
 Ponytail
 Curly
 Afro
+Mohawk
+Quiff
+Pigtails
+Bun
+Flat top
+Three hairs
+Giant afro
+Rainbow mohawk
 Brown hair
 Blond hair
+Pink hair
 Black hair
 Red hair
+Turquoise hair
+Purple hair
+Neon green hair
+Fire red hair
+Blue hair
+Silver hair
+Rainbow hair
 No hair accessory
 Bow
 Headband
@@ -21,8 +38,13 @@ Sunglasses on
 Round nose
 Pointy nose
 Button nose
-Moustache off
-Moustache on
+No beard
+Moustache
+Handlebar moustache
+Walrus moustache
+Goatee
+Unibrow and moustache
+Fu Manchu
 No jewelry
 Earring
 Necklace
@@ -32,15 +54,21 @@ Red shoes
 Black shoes
 Aura off
 Super aura on
+Normal neck
+Giraffe neck
 Slim belly
 Normal belly
 Big belly
+Ball belly
 Narrow shoulders
 Normal shoulders
 Broad shoulders
 Thin arms
 Normal arms
 Strong arms
+Hulk arms
+Normal feet
+Giant feet
 Power body off
 Power body on
 Red T-shirt

@@ -13,7 +13,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Mini-Rewards: Combo-Sprüche (≈ 5 Sätze) | Mr. Alex, Jeremy, Jessica | je ≈ 250 | vorgemerkt |
 | Border Patrol: 34 Einzelwörter (17 britisch Mr. Alex, 17 amerikanisch Jeremy; bis dahin Geräte-Stimme) | Mr. Alex, Jeremy | 225 gesamt | vorgemerkt (in klasse9_audio.py eingetragen) |
 | Border Patrol: Grenzer-Sprüche (≈ 10 Sätze) | Jeremy, Mr. Alex | je ≈ 300 | vorgemerkt |
-| Runner: Skin-Menü spricht die Auswahl – 57 Wendungen in `docs/runner/skin-stimme.txt` („Long hair“, „Cowboy hat“, „Sunglasses on“, „Strong arms“ …); seit 29.10. in der App per Geräte-Stimme | Jeremy, Jessica | je ≈ 620 | vorgemerkt |
+| Runner: Skin-Menü spricht die Auswahl – **85 Wendungen** in `docs/runner/skin-stimme.txt` („Long hair“, „Rainbow mohawk“, „Walrus moustache“, „Giraffe neck“, „Hulk arms“ …; seit Figur v2 am 29.10. statt 57); seit 29.10. in der App per Geräte-Stimme | Jeremy, Jessica | je ≈ 920 | vorgemerkt |
 | Runner: Boss-Banner + Boss-Sprüche Welt 1 („It's time for Mr. Alligator!“, „Correct – the door opens!“, „Not this time!“; in der App seit 29.10. per Geräte-Stimme) | Mr. Alex | 67 | vorgemerkt – zuerst |
 | Runner: Boss-Fragen/Tor-Ansagen (≈ 300), Levelstart/-ende („Let's find the Statue of Liberty!“, „We made it!“), Diamant-Rufe (Wortaufnahmen decken Welt 1 ab) | Mr. Alex, Jeremy, Jessica | Mr. Alex ≈ 1.000 · Jeremy/Jessica je ≈ 400 | später |
 | Hörverstehen 3 Klasse 6 „Talking about free time“ | Elrond, John Shaw, Emmaline, Alice (v4), Lösungen Mr. Alex | ≈ 1.500 | **vertont 29.10.** |

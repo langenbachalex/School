@@ -9262,6 +9262,142 @@ window.DATEN = {
     ]
    },
    {
+    "id": "skin_haar_irokese",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Irokese",
+     "E": "Hair: mohawk"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haar",
+     "irokese"
+    ]
+   },
+   {
+    "id": "skin_haar_tolle",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Elvis-Tolle",
+     "E": "Hair: quiff"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haar",
+     "tolle"
+    ]
+   },
+   {
+    "id": "skin_haar_zoepfe",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Zöpfe mit Schleifen",
+     "E": "Hair: pigtails with bows"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haar",
+     "zoepfe"
+    ]
+   },
+   {
+    "id": "skin_haar_dutt",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Dutt",
+     "E": "Hair: bun"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haar",
+     "dutt"
+    ]
+   },
+   {
+    "id": "skin_haar_flattop",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Flat-Top",
+     "E": "Hair: flat top"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haar",
+     "flattop"
+    ]
+   },
+   {
+    "id": "skin_haar_dreihaare",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Glatze mit drei Haaren",
+     "E": "Hair: three hairs"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haar",
+     "dreihaare"
+    ]
+   },
+   {
+    "id": "skin_haar_riesenafro",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Riesen-Afro",
+     "E": "Hair: giant afro"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "haar",
+     "riesenafro"
+    ]
+   },
+   {
+    "id": "skin_haar_mohawk",
+    "symbol": "🎨",
+    "name": {
+     "G": "Frisur: Regenbogen-Mohawk",
+     "E": "Hair: rainbow mohawk"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "haar",
+     "mohawk"
+    ]
+   },
+   {
     "id": "skin_haarfarbe_schwarz",
     "symbol": "🎨",
     "name": {
@@ -9293,6 +9429,125 @@ window.DATEN = {
     "skin": [
      "haarfarbe",
      "rot"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_türkis",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarfarbe: türkis",
+     "E": "Hair colour: turquoise"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haarfarbe",
+     "türkis"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_lila",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarfarbe: lila",
+     "E": "Hair colour: purple"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haarfarbe",
+     "lila"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_neongrün",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarfarbe: neongrün",
+     "E": "Hair colour: neon green"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haarfarbe",
+     "neongrün"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_feuerrot",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarfarbe: feuerrot",
+     "E": "Hair colour: fire red"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haarfarbe",
+     "feuerrot"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_blau",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarfarbe: blau",
+     "E": "Hair colour: blue"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haarfarbe",
+     "blau"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_silber",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarfarbe: silber",
+     "E": "Hair colour: silver"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "haarfarbe",
+     "silber"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_regenbogen",
+    "symbol": "🎨",
+    "name": {
+     "G": "Haarfarbe: Regenbogen",
+     "E": "Hair colour: rainbow"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "haarfarbe",
+     "regenbogen"
     ]
    },
    {
@@ -9361,6 +9616,91 @@ window.DATEN = {
     "skin": [
      "nase",
      "knubbel"
+    ]
+   },
+   {
+    "id": "skin_bart_zwirbel",
+    "symbol": "🎨",
+    "name": {
+     "G": "Bart: Zwirbelbart",
+     "E": "Beard: handlebar moustache"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "bart",
+     "zwirbel"
+    ]
+   },
+   {
+    "id": "skin_bart_walross",
+    "symbol": "🎨",
+    "name": {
+     "G": "Bart: Walross",
+     "E": "Beard: walrus moustache"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "bart",
+     "walross"
+    ]
+   },
+   {
+    "id": "skin_bart_kinnbart",
+    "symbol": "🎨",
+    "name": {
+     "G": "Bart: Kinnbart",
+     "E": "Beard: goatee"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "bart",
+     "kinnbart"
+    ]
+   },
+   {
+    "id": "skin_bart_monobraue",
+    "symbol": "🎨",
+    "name": {
+     "G": "Bart: Monobraue + Schnauzer",
+     "E": "Beard: unibrow + moustache"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "bart",
+     "monobraue"
+    ]
+   },
+   {
+    "id": "skin_bart_fumanchu",
+    "symbol": "🎨",
+    "name": {
+     "G": "Bart: Fu-Manchu",
+     "E": "Beard: Fu Manchu"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "bart",
+     "fumanchu"
     ]
    },
    {
@@ -9449,6 +9789,23 @@ window.DATEN = {
     ]
    },
    {
+    "id": "skin_hals_giraffe",
+    "symbol": "🎨",
+    "name": {
+     "G": "Körper: Giraffenhals",
+     "E": "Body: giraffe neck"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "hals",
+     "giraffe"
+    ]
+   },
+   {
     "id": "skin_bauch_kräftig",
     "symbol": "🎨",
     "name": {
@@ -9466,6 +9823,23 @@ window.DATEN = {
     ]
    },
    {
+    "id": "skin_bauch_kugel",
+    "symbol": "🎨",
+    "name": {
+     "G": "Körper: Kugelbauch",
+     "E": "Body: ball belly"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "bauch",
+     "kugel"
+    ]
+   },
+   {
     "id": "skin_brust_kräftig",
     "symbol": "🎨",
     "name": {
@@ -9480,6 +9854,40 @@ window.DATEN = {
     "skin": [
      "brust",
      "kräftig"
+    ]
+   },
+   {
+    "id": "skin_muskeln_hulk",
+    "symbol": "🎨",
+    "name": {
+     "G": "Körper: Hulk-Muskeln",
+     "E": "Body: Hulk muscles"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "muskeln",
+     "hulk"
+    ]
+   },
+   {
+    "id": "skin_fuesse_riesen",
+    "symbol": "🎨",
+    "name": {
+     "G": "Körper: Riesenfüße",
+     "E": "Body: giant feet"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "fuesse",
+     "riesen"
     ]
    }
   ]

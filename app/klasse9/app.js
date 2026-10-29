@@ -2540,7 +2540,7 @@
      Stand in stand.spiel.runner = { level: { ny: "gold"|"silber" }, gespielt, geschafft, titel }, Figur in stand.spiel.skin – beides im Siegel.
      Wörter: 12 aus dem gewählten Abschnitt (wie Catch the Word), aufgefüllt aus der Unit; gesprochen mit den Wortaufnahmen (tonWort).
      Boss-Banner/-Sprüche und Skin-Namen: bis zur Vertonung (Mr. Alex, 13.11.) Geräte-Stimme wie bei fehlenden Aufnahmen (spiele([{ text, stimme }])). */
-  const RUNNER = { preis: 100, skinPreis: 30, woerter: 12, titel: ["Noob", "Rookie", "Pro", "Elite", "Legend"], ab: [1, 3, 6, 10, 15],
+  const RUNNER = { preis: 100, skinPreis: 30, skinPreisTeuer: 60, woerter: 12, titel: ["Noob", "Rookie", "Pro", "Elite", "Legend"], ab: [1, 3, 6, 10, 15],
     welten: [{ id: "ny", name: "New York", ziel: "Statue of Liberty", trophaee: "Liberty Finder", symbol: "🗽" },
       { id: "ca", name: "California", ziel: "Golden Gate", trophaee: "Gate Crosser", symbol: "🌉", bald: true },
       { id: "az", name: "Arizona", ziel: "Grand Canyon", trophaee: "Canyon Hero", symbol: "🏜️", bald: true }] };
@@ -2552,6 +2552,7 @@
     if (!sp.runner || typeof sp.runner !== "object") sp.runner = { level: {}, gespielt: 0, geschafft: 0, titel: 0 };
     if (!sp.runner.level) sp.runner.level = {};
     if (!sp.skin || typeof sp.skin !== "object") sp.skin = {};
+    if (sp.skin.bart === "an") sp.skin.bart = "schnauzer"; // Figur v2 (29.10.): Schnurrbart an/aus → Bart-Auswahl
     return sp.runner;
   }
   const runnerTitelIndex = (n) => RUNNER.ab.filter((a) => n >= a).length; // 0 = noch keiner, 1 = Noob … 5 = Legend
@@ -2572,7 +2573,7 @@
     const male = (pose, t) => {
       c.setTransform(2, 0, 0, 2, 0, 0); c.clearRect(0, 0, breite, hoehe);
       c.fillStyle = "#e9f4ff"; c.beginPath(); c.roundRect(0, 0, breite, hoehe, 18); c.fill();
-      if (R()) R().zeichneFigur(c, breite / 2, hoehe * 0.93, hoehe * 0.78, skinWirksam(), pose, t);
+      if (R()) { const s = skinWirksam(); R().zeichneFigur(c, breite / 2, hoehe * 0.95, Math.min(hoehe * 0.72, hoehe * 0.9 * 80 / R().figurHoehe(s)), s, pose, t); } // Figur v2: ≈ 88 Einheiten + Hut/Frisur/Giraffenhals → passend skaliert
     };
     const lauf = () => { if (!cv.isConnected) return; male("lauf", performance.now() / 1000); requestAnimationFrame(lauf); };
     requestAnimationFrame(() => (ruhig() ? male("steh", 0) : lauf()));
@@ -2734,8 +2735,9 @@
   // Figur-Seite (Fassung 29.10.): Figur + Erklärtext oben (sticky), Reiter-Zeile, darunter die Optionen der Gruppe als Chips, unten feste Knopfzeile.
   // Auswahl und Reiterwechsel zeichnen NICHT die Seite neu (kein Scrollsprung): nur Vorschau + Chips bzw. der Options-Bereich werden aktualisiert.
   const SKIN_SYMBOL = { haar: "💇", haarfarbe: "🎨", haarschmuck: "🎀", hut: { keiner: "🚫", cap: "🧢", cowboy: "🤠", zylinder: "🎩" }, brille: "🕶️", bart: "🥸", nase: "👃",
-    top: { shirt: "👕", hoodie: "🧥" }, topfarbe: "🎨", schuhe: "👟", schmuck: { keiner: "🚫", ohrring: "💎", kette: "📿", beides: "💍" }, bauch: "🫃", brust: "🧍", muskeln: "💪", power: "⚡", aura: "✨" };
-  const SKIN_FARBOPTION = { haarfarbe: 1, topfarbe: 1, schuhe: 1 }; // Farben als runde Farbpunkte
+    top: { shirt: "👕", hoodie: "🧥" }, topfarbe: "🎨", schuhe: "👟", schmuck: { keiner: "🚫", ohrring: "💎", kette: "📿", beides: "💍" }, hals: "🦒", bauch: "🫃", brust: "🧍", muskeln: "💪", fuesse: "🦶", power: "⚡", aura: "✨" };
+  const SKIN_FARBOPTION = { haarfarbe: 1, topfarbe: 1, schuhe: 1 }; // Farben als runde Farbpunkte (Haarfarben aus HAARFARBEN, Regenbogen als Verlauf)
+  const skinFarbe = (M, key, w) => { const f = key === "haarfarbe" ? M.HAARFARBEN[w] : M.FARBEN[w]; return f === "regenbogen" ? "linear-gradient(180deg,#ff2d2d,#ff9f1a,#ffe21a,#2ecc71,#2a8cff,#9b4dff)" : f; };
   function runnerSkins(k) {
     k = k || spieleKategorie();
     lage = null; ansicht = () => runnerSkins(k);
@@ -2758,13 +2760,13 @@
     };
     const waehle = (o, w) => { skinSetzen(o.key, w); markiere(); vorschau.neuMalen(); spiele([{ text: M.sprechText(skinWirksam(), o.key, w), stimme: "m" }]); };
     const chip = (o, w) => {
-      const frei = skinFrei(o.key, w), farbe = SKIN_FARBOPTION[o.key] && M.FARBEN[w];
+      const frei = skinFrei(o.key, w), farbe = SKIN_FARBOPTION[o.key] && skinFarbe(M, o.key, w), preis = M.skinPreis(o.key, w);
       return el("button", { class: "knopf runner-wert" + (frei ? "" : " gesperrt"), "aria-pressed": "false", "data-skin": `${o.key}_${w}`, "data-key": o.key, "data-wert": w,
         onclick: () => (frei ? waehle(o, w) : zumShop(M.skinArtikel(o.key, w))) },
         el("span", { class: "haken", "aria-hidden": "true" }),
         !frei && el("span", { "aria-hidden": "true" }, "🔒 "),
         farbe ? el("span", { class: "farbpunkt", style: `background:${farbe}`, "aria-hidden": "true" }) : el("span", { class: "sym", "aria-hidden": "true" }, symbol(o, w)),
-        tx2(o.namen[w]), !frei && el("span", { class: "preis" }, ` · ${RUNNER.skinPreis} 🪙`));
+        tx2(o.namen[w]), !frei && el("span", { class: "preis" }, ` · ${preis} 🪙`));
     };
     const zeichneGruppe = () => {
       bereich.replaceChildren(...gruppe.optionen.map((o) => el("div", { class: "runner-option", "data-option": o.key },
@@ -2785,7 +2787,7 @@
     const kopf = el("div", { class: "runner-skin-kopf" }, vorschau,
           el("div", { class: "runner-skin-text" },
             el("p", {}, T("Die Grundausstattung ist frei.", "The basics are free.")),
-            el("p", {}, T(`Weitere Teile (🔒) gibt es im Shop für ${RUNNER.skinPreis} 🪙.`, `More parts (🔒) are in the shop for ${RUNNER.skinPreis} 🪙.`)),
+            el("p", {}, T(`Weitere Teile (🔒) gibt es im Shop für ${RUNNER.skinPreis} 🪙, Ausgefallenes für ${RUNNER.skinPreisTeuer} 🪙.`, `More parts (🔒) are in the shop for ${RUNNER.skinPreis} 🪙, special ones for ${RUNNER.skinPreisTeuer} 🪙.`)),
             el("p", {}, T(`⚡ Power-Körper: Muskeln wachsen mit deinem Punkte-Titel (Stufe ${sp.titel} von 5).`, `⚡ Power body: muscles grow with your points title (level ${sp.titel} of 5).`))));
     zeige(spielKopf(k, T("Figur", "Character"), () => runnerStart(k)),
       el("section", { class: "satzkarte runner-skins" }, kopf, tabs, bereich,

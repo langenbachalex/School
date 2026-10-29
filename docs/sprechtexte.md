@@ -471,6 +471,7 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `spiel/team.mp3` | Alex Langenbach | You collected all ten superheroes. Your team is complete. You are a legend! |
 | `spiel/gym_fini.mp3` | Alex Langenbach | That's it for today. See you tomorrow! |
 | `spiel/gym_pause.mp3` | Alex Langenbach | Break! Come back later and finish your Word Gym. |
+| `spiel/powerup.mp3` | Alex Langenbach | Powered up! Your English is fully charged again. |
 | `hoeren/01-mias-monday_text01.mp3` | Alice | Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train. |
 | `hoeren/01-mias-monday_text02.mp3` | Alice | School starts at eight a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at nine p.m. |
 | `hoeren/01-mias-monday_aussage01.mp3` | Alex Langenbach | Mia gets up at six forty-five a.m. |

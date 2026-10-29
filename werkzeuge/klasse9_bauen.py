@@ -400,6 +400,7 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
     "team": "You collected all ten landmark cards. Your Great American Road Trip is complete!",
     "gym_fini": "That's it for today. See you tomorrow!",
     "gym_pause": "Break! Come back later and finish your Word Gym.",
+    "powerup": "Powered up! Your English is fully charged again.",
 }
 # Word Gym (docs/word-gym/konzept.md): Standard-Pensum und Boxen-Intervalle in Tagen
 # Nächster Termin für den Countdown auf der Startseite (in Wochen); nach dem Termin verschwindet er

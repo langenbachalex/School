@@ -5886,6 +5886,10 @@ window.DATEN = {
    "gym_pause": {
     "text": "Break! Come back later and finish your Word Gym.",
     "audio": "audio/spiel/gym_pause.mp3"
+   },
+   "powerup": {
+    "text": "Powered up! Your English is fully charged again.",
+    "audio": "audio/spiel/powerup.mp3"
    }
   },
   "orte": [

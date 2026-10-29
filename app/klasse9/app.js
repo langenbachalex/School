@@ -36,7 +36,7 @@
     if (echt(sicherung)) { manipuliert = true; letzterGueltig = JSON.stringify(sicherung); try { localStorage.setItem(SPEICHER, letzterGueltig); } catch (e) { /* egal */ } return Object.assign(grund(), sicherung); }
     if (!haupt._s && Date.now() < SIEGEL_BIS) return Object.assign(grund(), haupt); // älterer Spielstand: einmal übernehmen, ab jetzt gesiegelt
     manipuliert = true; // verändert, oder ungesiegelt nach der Übergangszeit: Punkte und Fortschritt zurück, Einstellungen bleiben
-    const rest = Object.assign(grund(), haupt); delete rest.spiel; delete rest.gym; delete rest._s; delete rest.teile; delete rest.gruppen; rest.erledigt = [];
+    const rest = Object.assign(grund(), haupt); delete rest.spiel; delete rest.gym; delete rest._s; rest.erledigt = [];
     return rest;
   }
   function speichern() {
@@ -575,6 +575,7 @@
     const erstesMal = !istFertig(lage.teil), aufladen = teilFaellig(lage.teil);
     teilFertig(lage.teil, aufladen);
     if (aufladen) ereignisse.push({ art: "toast", text: T("⚡ Aufgeladen!", "⚡ Powered up!") });
+    if (aufladen && SP.texte.powerup && SP.texte.powerup.audio) setTimeout(() => spiele([SP.texte.powerup.audio], { warten: true }), 600); // Stimme nach dem Lob, nicht darüber
     belohne(erstesMal, !lage.hilfe);
     if (alleTeileFertig()) return gruppeGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();

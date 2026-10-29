@@ -9,12 +9,13 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Posten | Stimme(n) | Zeichen (ca.) | Status |
 |---|---|---|---|
 | Geheimakten: Leo/Big Ben (Kl. 6), The Last Ferry (Kl. 9) | Mr. Alex / Jeremy + Jessica | je ≈ 900 | vorgemerkt |
-| Power Up: Spruch beim Aufladen („Powered up!“ u. ä., ≈ 3 Sätze) | Mr. Alex, Jeremy, Jessica | je ≈ 150 | vorgemerkt |
+| Power Up: „Powered up! Your English is fully charged again.“ | Mr. Alex (beide Klassen) | 48 × 2 | **vertont 29.10.** |
 | Mini-Rewards: Combo-Sprüche (≈ 5 Sätze) | Mr. Alex, Jeremy, Jessica | je ≈ 250 | vorgemerkt |
 | Border Patrol: Grenzer-Sprüche (≈ 10 Sätze) | Jeremy, Mr. Alex | je ≈ 300 | vorgemerkt |
 | Runner: Rufe beim Einsammeln, Boss-Fragen | Jeremy, Jessica, Mr. Alex | je ≈ 1.500 | später |
 
 ## Aufgeschoben – bitte erinnern
+| **Manipulations-Reset** | aufgeschoben (29.10.) | Mr. Alex will keine versehentlichen Punktverluste; Reset nur als bewusste „Strafe“ für echte Manipulation, kein Regelfall. Heute: Reset nur, wenn Haupt- und Zweitkopie beide ungültig sind; erledigte Teile bleiben dabei stehen (Punkte auf 0). Nochmal besprechen: z. B. Punkte einfrieren statt löschen, oder nur Banner ohne Reset. |
 | Idee | Stand | Entscheidung offen |
 |---|---|---|
 | **Arcade-Kachel** für Klasse 9 | aufgeschoben (29.10.) | Stattdessen erst Kachel **Games** mit Lernspielen; der Runner könnte später hinter Coins liegen, ohne eigene Kachel. |

@@ -183,6 +183,7 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
     "team": "You collected all ten superheroes. Your team is complete. You are a legend!",
     "gym_fini": "That's it for today. See you tomorrow!",
     "gym_pause": "Break! Come back later and finish your Word Gym.",
+    "powerup": "Powered up! Your English is fully charged again.",
 }
 
 

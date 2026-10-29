@@ -2576,6 +2576,7 @@
     };
     const lauf = () => { if (!cv.isConnected) return; male("lauf", performance.now() / 1000); requestAnimationFrame(lauf); };
     requestAnimationFrame(() => (ruhig() ? male("steh", 0) : lauf()));
+    cv.neuMalen = () => male(ruhig() ? "steh" : "lauf", performance.now() / 1000); // nach einer Skin-Änderung sofort nachziehen (auch im Standbild)
     return cv;
   }
   // 12 Wörter: zuerst der gewählte Abschnitt (gemischt), dann Wörter der übrigen Abschnitte der Unit
@@ -2729,31 +2730,67 @@
       })),
       el("div", { class: "knopfreihe" }, knopf("🏃 Road Trip Run", () => runnerStart(), "leise")));
   }
-  // Figur: Reiter je Gruppe, Auswahl sofort sichtbar und gespeichert; gesperrte Teile führen in den Shop (30 Coins)
+  // Figur-Seite (Fassung 29.10.): Figur + Erklärtext oben (sticky), Reiter-Zeile, darunter die Optionen der Gruppe als Chips, unten feste Knopfzeile.
+  // Auswahl und Reiterwechsel zeichnen NICHT die Seite neu (kein Scrollsprung): nur Vorschau + Chips bzw. der Options-Bereich werden aktualisiert.
+  const SKIN_SYMBOL = { haar: "💇", haarfarbe: "🎨", haarschmuck: "🎀", hut: { keiner: "🚫", cap: "🧢", cowboy: "🤠", zylinder: "🎩" }, brille: "🕶️", bart: "🥸", nase: "👃",
+    top: { shirt: "👕", hoodie: "🧥" }, topfarbe: "🎨", schuhe: "👟", schmuck: { keiner: "🚫", ohrring: "💎", kette: "📿", beides: "💍" }, bauch: "🫃", brust: "🧍", muskeln: "💪", power: "⚡", aura: "✨" };
+  const SKIN_FARBOPTION = { haarfarbe: 1, topfarbe: 1, schuhe: 1 }; // Farben als runde Farbpunkte
   function runnerSkins(k) {
     k = k || spieleKategorie();
     lage = null; ansicht = () => runnerSkins(k);
     const sp = spielstand(), M = R();
     runnerStand();
     if (!M) { zeige(spielKopf(k, T("Figur", "Character"), () => runnerStart(k)), el("p", {}, T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet."))); return; }
-    const gruppe = M.SKIN_GRUPPEN.find((g) => g.id === skinTab) || M.SKIN_GRUPPEN[0], wirksam = skinWirksam();
-    const waehle = (o, w) => { skinSetzen(o.key, w); runnerSkins(k); spiele([{ text: M.sprechText(skinWirksam(), o.key, w), stimme: "m" }]); }; // erst neu zeichnen (zeige stoppt Audio), dann sprechen
+    let gruppe = M.SKIN_GRUPPEN.find((g) => g.id === skinTab) || M.SKIN_GRUPPEN[0];
+    const breit = Math.max(96, Math.min(150, Math.floor((app.clientWidth - 40) * 0.4))), vorschau = figurVorschau(breit, Math.round(breit * 1.27));
+    const bereich = el("div", { class: "runner-skin-optionen" });
+    const zumShop = (artikel) => shop({ zurueck: () => runnerSkins(k), artikel });
+    const symbol = (o, w) => { const sy = SKIN_SYMBOL[o.key]; return typeof sy === "object" ? sy[w] || "" : sy || ""; };
+    // Chips der angezeigten Gruppe nachziehen (aktiv/✓), ohne Neuaufbau – auch nach dem Power-Schalter (ändert die wirksamen Muskeln)
+    const markiere = () => {
+      const w = skinWirksam();
+      for (const b of bereich.querySelectorAll(".runner-wert")) {
+        const aktiv = w[b.dataset.key] === b.dataset.wert;
+        b.classList.toggle("aktiv", aktiv); b.classList.toggle("haupt", aktiv); b.setAttribute("aria-pressed", String(aktiv));
+        b.querySelector(".haken").textContent = aktiv ? "✓ " : "";
+      }
+    };
+    const waehle = (o, w) => { skinSetzen(o.key, w); markiere(); vorschau.neuMalen(); spiele([{ text: M.sprechText(skinWirksam(), o.key, w), stimme: "m" }]); };
+    const chip = (o, w) => {
+      const frei = skinFrei(o.key, w), farbe = SKIN_FARBOPTION[o.key] && M.FARBEN[w];
+      return el("button", { class: "knopf runner-wert" + (frei ? "" : " gesperrt"), "aria-pressed": "false", "data-skin": `${o.key}_${w}`, "data-key": o.key, "data-wert": w,
+        onclick: () => (frei ? waehle(o, w) : zumShop(M.skinArtikel(o.key, w))) },
+        el("span", { class: "haken", "aria-hidden": "true" }),
+        !frei && el("span", { "aria-hidden": "true" }, "🔒 "),
+        farbe ? el("span", { class: "farbpunkt", style: `background:${farbe}`, "aria-hidden": "true" }) : el("span", { class: "sym", "aria-hidden": "true" }, symbol(o, w)),
+        tx2(o.namen[w]), !frei && el("span", { class: "preis" }, ` · ${RUNNER.skinPreis} 🪙`));
+    };
+    const zeichneGruppe = () => {
+      bereich.replaceChildren(...gruppe.optionen.map((o) => el("div", { class: "runner-option", "data-option": o.key },
+        el("h3", {}, tx2(o.label)),
+        el("div", { class: "runner-werte" }, o.werte.map((w) => chip(o, w))),
+        o.key === "power" && el("p", { class: "klein" }, T(`Mit deinem Punkte-Titel (Stufe ${sp.titel} von 5) werden die Muskeln von selbst stärker, ab Stufe 4 mit kleiner Aura. Die Muskeln kannst du trotzdem von Hand umstellen.`,
+          `With your points title (level ${sp.titel} of 5) the muscles grow by themselves, from level 4 with a small aura. You can still set the muscles by hand.`)))));
+      markiere();
+    };
+    const tabs = el("div", { class: "reiter runner-tabs", role: "tablist" }, M.SKIN_GRUPPEN.map((g) =>
+      el("button", { class: "reiter-knopf", role: "tab", "aria-selected": String(g.id === gruppe.id), "data-gruppe": g.id, onclick: (e) => {
+        skinTab = g.id; gruppe = g;
+        for (const t of tabs.children) t.setAttribute("aria-selected", String(t === e.currentTarget));
+        e.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" }); // nur die Reiter-Zeile, kein Seitensprung
+        zeichneGruppe();
+      } }, `${g.symbol} ${tx2(g.titel)}`)));
+    zeichneGruppe();
+    const kopf = el("div", { class: "runner-skin-kopf" }, vorschau,
+          el("div", { class: "runner-skin-text" },
+            el("p", {}, T("Die Grundausstattung ist frei.", "The basics are free.")),
+            el("p", {}, T(`Weitere Teile (🔒) gibt es im Shop für ${RUNNER.skinPreis} 🪙.`, `More parts (🔒) are in the shop for ${RUNNER.skinPreis} 🪙.`)),
+            el("p", {}, T(`⚡ Power-Körper: Muskeln wachsen mit deinem Punkte-Titel (Stufe ${sp.titel} von 5).`, `⚡ Power body: muscles grow with your points title (level ${sp.titel} of 5).`))));
     zeige(spielKopf(k, T("Figur", "Character"), () => runnerStart(k)),
-      el("section", { class: "satzkarte runner-skins" },
-        el("div", { class: "runner-skin-kopf" }, figurVorschau(150, 190),
-          el("p", { class: "klein" }, T(`Grundausstattung ist frei, weitere Teile gibt es im Shop für ${RUNNER.skinPreis} 🪙. Power-Körper: Mit deinem Punkte-Titel (Stufe ${sp.titel} von 5) werden die Muskeln von selbst stärker, ab Stufe 4 mit kleiner Aura – die Muskeln kannst du trotzdem von Hand umstellen.`,
-            `The basics are free, more parts are in the shop for ${RUNNER.skinPreis} 🪙. Power body: with your points title (level ${sp.titel} of 5) the muscles grow by themselves, from level 4 with a small aura – you can still set the muscles by hand.`))),
-        el("div", { class: "reiter runner-tabs", role: "tablist" }, M.SKIN_GRUPPEN.map((g) =>
-          el("button", { class: "reiter-knopf", role: "tab", "aria-selected": String(g.id === gruppe.id), onclick: () => { skinTab = g.id; runnerSkins(k); } }, `${g.symbol} ${tx2(g.titel)}`))),
-        gruppe.optionen.map((o) => el("div", { class: "runner-option", "data-option": o.key },
-          el("h3", {}, tx2(o.label)),
-          el("div", { class: "runner-werte" }, o.werte.map((w) => {
-            const frei = skinFrei(o.key, w), aktiv = wirksam[o.key] === w;
-            return el("button", { class: "knopf runner-wert" + (aktiv ? " haupt" : "") + (frei ? "" : " gesperrt"), "aria-pressed": String(aktiv), "data-skin": `${o.key}_${w}`,
-              onclick: () => (frei ? waehle(o, w) : shop({ artikel: M.skinArtikel(o.key, w), zurueck: () => runnerSkins(k) })) },
-              frei ? tx2(o.namen[w]) : `🔒 ${tx2(o.namen[w])} · ${RUNNER.skinPreis} 🪙`);
-          })))),
-        el("div", { class: "knopfreihe" }, knopf(T("← Zum Spiel", "← To the game"), () => runnerStart(k), "haupt"), knopf("🛍️ Shop", () => shop({ zurueck: () => runnerSkins(k) })))));
+      el("section", { class: "satzkarte runner-skins" }, kopf, tabs, bereich,
+        el("div", { class: "knopfreihe runner-skin-fuss" }, knopf(T("✓ Fertig – zum Spiel", "✓ Done – to the game"), () => runnerStart(k), "haupt"), knopf("🛍️ Shop", () => zumShop()))));
+    const leiste = document.querySelector(".niveau-leiste"); // Kopf klebt genau unter der blauen Leiste (Höhe je nach Knöpfen 60–64 px)
+    if (leiste) kopf.style.setProperty("--leiste-h", leiste.offsetHeight + "px");
   }
 
   function gymEnde() {

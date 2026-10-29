@@ -274,15 +274,37 @@
 .runner-woerterliste li { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .runner-woerterliste .knopf { min-height: 40px; padding: 0 8px; }
 .runner-trophaeen small { color: var(--leise); font-weight: 400; }
-/* Figur-Seite */
-.runner-skin-kopf { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-.runner-skin-kopf .klein { flex: 1 1 14rem; margin: 0; }
-.runner-tabs .reiter-knopf { min-height: 40px; padding: 0 12px; font-size: .95rem; }
+/* Figur-Seite: Kopf (Figur + Text) klebt unter der blauen Leiste, Reiter-Zeile scrollt waagerecht, Optionen als Chips, unten feste Knopfzeile */
+:root { --leiste-h: 64px; }
+.runner-skins { gap: 14px; }
+.runner-skin-kopf { position: sticky; top: var(--leiste-h); z-index: 2; display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center;
+  margin: -20px -20px 0; padding: 14px 20px 10px; background: var(--karte); border-radius: 18px 18px 0 0; border-bottom: 2px solid var(--linie); }
+.runner-skin-text { display: grid; gap: 6px; min-width: 0; }
+.runner-skin-text p { margin: 0; font-size: .95rem; line-height: 1.35; }
+.runner-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding: 2px 0 6px; -webkit-overflow-scrolling: touch; }
+.runner-tabs .reiter-knopf { flex: 0 0 auto; min-height: 40px; padding: 0 12px; font-size: .95rem; white-space: nowrap; }
+.runner-tabs .reiter-knopf[aria-selected="true"] { font-weight: 700; box-shadow: 0 0 0 3px var(--gelb); }
+.runner-skin-optionen { display: grid; gap: 14px; min-height: 50vh; align-content: start; }
 .runner-option { display: grid; gap: 6px; }
-.runner-option h3 { margin: 0; font-size: 1.05rem; }
+.runner-option h3 { margin: 0; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--leise); }
+.runner-option .klein { margin: 0; }
 .runner-werte { display: flex; flex-wrap: wrap; gap: 8px; }
-.runner-wert { min-height: 42px; padding: 0 14px; }
+.runner-wert { min-height: 42px; padding: 0 12px; font-size: .95rem; gap: 6px; }
+.runner-wert .haken:empty { display: none; }
+.runner-wert .sym { font-size: 1.1rem; line-height: 1; }
+.runner-wert .sym:empty { display: none; }
+.runner-wert .farbpunkt { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--linie); flex: none; }
+.runner-wert.aktiv .farbpunkt { border-color: var(--blau-text); }
 .runner-wert.gesperrt { border-style: dashed; color: var(--leise); }
+.runner-wert.gesperrt .preis { font-weight: 400; }
+.runner-skin-fuss { position: sticky; bottom: 0; z-index: 2; margin: 0 -20px -20px; padding: 10px 20px 14px; background: var(--karte); border-top: 2px solid var(--linie); border-radius: 0 0 18px 18px; }
+.runner-skin-fuss .knopf { padding: 0 12px; font-size: 1rem; white-space: nowrap; }
+.runner-skin-fuss .knopf.haupt { flex: 1 1 10rem; }
+@media (max-width: 480px) {
+  .runner-skin-kopf { grid-template-columns: 40% 1fr; gap: 10px; }
+  .runner-skin-text p { font-size: .85rem; }
+}
+@media (max-height: 600px) { .runner-skin-kopf, .runner-skin-fuss { position: static; } }
 .shop-artikel.hervor { border-color: var(--gelb); box-shadow: 0 0 0 4px rgba(255, 210, 63, .45); }
 .shop-gruppe { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 1.2rem; margin: 6px 0 0; }
 /* Spielbühne: Vollbild ohne Kopfzeile, ✕ oben rechts, Boss-Frage als Overlay im Canvas-Bereich */

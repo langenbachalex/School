@@ -20,7 +20,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Hörübungen 01/02 Klasse 6 neu mit Jugendstimmen (Mia, Ben, Harry, Declan) | Elrond, John Shaw, Emmaline | ≈ 600 | offen – nur auf Wunsch |
 
 ## Aufgeschoben – bitte erinnern
-| **Runner-Figur: Feintuning** | teilweise erledigt (29.10.) | Riesen-Afro ist jetzt eine kompakte Glocke (≈ 1,7× Kopf statt 2,8×), Hütchen klein (0,5) oben auf der Kante (`05-afro-klein.png`). Weitere Anmerkungen von Mr. Alex beim nächsten Figur-Durchgang abfragen. |
+| **Runner-Figur: Feintuning** | teilweise erledigt (29.10.) | Riesen-Afro ist jetzt eine kompakte Glocke (≈ 1,7× Kopf statt 2,8×), Hütchen klein (0,5) oben auf der Kante (`05-afro-klein.png`). Weitere Anmerkungen von Mr. Alex beim nächsten Figur-Durchgang abfragen. | Neue Skin-Ideen (29.10.): **Rucksack, Rollschuhe, Handschuhe** (Rollschuhe ggf. mit Roll-Animation).
 | **Runner: Wortanzeige** (Sprechblase, Wortbank, Echo) | gebaut (29.10., Paket 1 + 2 + 6) | Sprechblase an der Figur statt Mittel-Pop-up, Wortbank-Chips im HUD („+n“ ab 9), Echo 6–8 s später leiser (0,6) mit Untertitel „🔁 wort – deutsch“. Details `runner/konzept-entwurf.md` „Wortanzeige“. Offen: Pakete 3–5 (falls gewünscht), Lautstärke-Balance nach Gehör. |
 | **Manipulations-Reset** | aufgeschoben (29.10.) | Mr. Alex will keine versehentlichen Punktverluste; Reset nur als bewusste „Strafe“ für echte Manipulation, kein Regelfall. Heute: Reset nur, wenn Haupt- und Zweitkopie beide ungültig sind; erledigte Teile bleiben dabei stehen (Punkte auf 0). Nochmal besprechen: z. B. Punkte einfrieren statt löschen, oder nur Banner ohne Reset. |
 | Idee | Stand | Entscheidung offen |

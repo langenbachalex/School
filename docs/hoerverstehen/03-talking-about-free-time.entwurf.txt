@@ -1,29 +1,22 @@
 # titel: Talking about free time
-# art: zuordnen
-# instruction: Listen and match: Which club does each person go to? When? How do they like it?
-# anleitung: Lies dir zuerst die Namen und die Tabelle durch. Beim Hören musst du drei Dinge finden: die AG, den Tag oder die Uhrzeit und ob die Person es mag. Nicht alle AGs aus der Liste kommen vor!
-# status: ENTWURF – noch abzusegnen (Vorschlag 29.10., schwerer als 01 und 02: drei Infos pro Person, Ablenker, Uhrzeiten mit a.m./p.m., Häufigkeitswörter)
+# art: true-false
+# instruction: Listen and tick: true or false?
+# anleitung: Lies dir zuerst alle zehn Sätze durch, damit du weißt, worauf du beim Hören achten musst. Achte auf Uhrzeiten (a.m./p.m.), Tage und Wörter wie sometimes, never, often.
+# status: ENTWURF – noch abzusegnen (Format wie GLN 2, Aufgabe 2 „Talking about free time“: true/false, 10 Punkte; schwerer als 01: fünf Sprecher, drei Infos pro Person, Ablenker)
 
 @Mia (f): Hi, I'm Mia. After school I go to the drama club. It's on Monday at 4 p.m. We play short scenes and I love it! Sometimes we show a play to our parents. {Hi, I'm Mia. After school I go to the drama club. It's on Monday at four p.m. We play short scenes and I love it! Sometimes we show a play to our parents.}
 @Ben (m): Hello, I'm Ben. I'm in the football club. We train on Wednesday afternoon, at half past three. My friends say I'm good, but I don't like it. Our coach is too strict. I'd love to go to the trampolining club instead! {Hello, I'm Ben. I'm in the football club. We train on Wednesday afternoon, at half past three. My friends say I'm good, but I don't like it. Our coach is too strict. I'd love to go to the trampolining club instead!}
 @Priya (f): Hi, I'm Priya. On Saturday morning I go to the swimming club. We start at 8 a.m. – that's very early! But I like it, because we often go to the sea in summer. I never miss a training. {Hi, I'm Priya. On Saturday morning I go to the swimming club. We start at eight a.m. – that's very early! But I like it, because we often go to the sea in summer. I never miss a training.}
-@Luca (m): Hi, I'm Luca. My club is the hiking club. We hike in the hills on Friday afternoon. It's a long way and it's a bit boring, but the food at the end is great. So: it's OK. {Hi, I'm Luca. My club is the hiking club. We hike in the hills on Friday afternoon. It's a long way and it's a bit boring, but the food at the end is great. So: it's OK.}
-@Noah (m): Hey, I'm Noah. I don't go to a sports club. I'm in the newspaper club on Thursday at 2 p.m. We write articles about our school. Last week we had a photo competition – and I won the first prize! I love it. {Hey, I'm Noah. I don't go to a sports club. I'm in the newspaper club on Thursday at two p.m. We write articles about our school. Last week we had a photo competition – and I won the first prize! I love it.}
+@Luca (m): Hi, I'm Luca. My club is the hiking club. We hike in the hills on Friday afternoon. It's a long way and it's a bit boring, but the food at the end is great. {Hi, I'm Luca. My club is the hiking club. We hike in the hills on Friday afternoon. It's a long way and it's a bit boring, but the food at the end is great.}
+@Noah (m): Hey, I'm Noah. I don't go to a sports club. I'm in the newspaper club on Thursday at 2 p.m. We write articles about our school. Last week we had a photo competition – and I won the first prize! {Hey, I'm Noah. I don't go to a sports club. I'm in the newspaper club on Thursday at two p.m. We write articles about our school. Last week we had a photo competition – and I won the first prize!}
 
-# Angebote (mehr als nötig, Ablenker: trampolining, chess, cycling):
-# clubs: drama | football | swimming | hiking | newspaper | trampolining | chess | cycling
-
-! Mia | drama | Monday, 4 p.m. {Monday, four p.m.} | gut
-! Ben | football | Wednesday, 3.30 p.m. {Wednesday, half past three} | schlecht
-! Priya | swimming | Saturday, 8 a.m. {Saturday, eight a.m.} | gut
-! Luca | hiking | Friday afternoon | beides
-! Noah | newspaper | Thursday, 2 p.m. {Thursday, two p.m.} | gut
-
-# Teil 2 (dieselben Texte, zweite Aufgabe nach dem Zuordnen): richtig / falsch / nicht gesagt
 ? Mia's drama club is on Monday. | true
-? Ben is good at football. | true | Hör genau hin: Was sagen seine Freunde?
-? Ben likes his coach. | false | Hör genau hin: Wie findet Ben den Trainer?
-? Priya's club starts at 8 p.m. {Priya's club starts at eight p.m.} | false | a.m. oder p.m.? Morgens oder abends?
-? Priya sometimes misses a training. | false | Hör genau hin: never oder sometimes?
-? Luca's hiking club meets at 5 p.m. {Luca's hiking club meets at five p.m.} | nicht gesagt | Luca nennt nur den Nachmittag, keine Uhrzeit.
-? Noah won a prize in a photo competition. | true
+? Mia never shows a play to her parents. | false | Hör genau hin: never oder sometimes?
+? Ben trains at half past three. | true
+? Ben loves football. | false | Hör genau hin: Was sagt Ben über den Fußball-Club?
+? Ben is in the trampolining club. | false | Ben nennt den Trampolin-Club nur als Wunsch: „I'd love to …“
+? Priya's swimming club starts at 8 p.m. {Priya's swimming club starts at eight p.m.} | false | a.m. oder p.m.? Morgens oder abends?
+? Priya often goes to the sea in summer. | true
+? Luca thinks hiking is a bit boring. | true
+? Noah is in a sports club. | false | Hör genau hin: „I don't go to a …“
+? Noah won the first prize in a photo competition. | true

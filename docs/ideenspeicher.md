@@ -13,25 +13,27 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Mini-Rewards: Combo-Sprüche (≈ 5 Sätze) | Mr. Alex, Jeremy, Jessica | je ≈ 250 | vorgemerkt |
 | Border Patrol: 34 Einzelwörter (17 britisch Mr. Alex, 17 amerikanisch Jeremy; bis dahin Geräte-Stimme) | Mr. Alex, Jeremy | 225 gesamt | vorgemerkt (in klasse9_audio.py eingetragen) |
 | Border Patrol: Grenzer-Sprüche (≈ 10 Sätze) | Jeremy, Mr. Alex | je ≈ 300 | vorgemerkt |
-| Runner: Rufe beim Einsammeln, Boss-Fragen | Jeremy, Jessica, Mr. Alex | je ≈ 1.500 | später |
+| Runner: Rufe beim Einsammeln (Jeremy/Jessica), Boss-Intro und Boss-Fragen (Mr. Alex) | Jeremy, Jessica, Mr. Alex | je ≈ 1.500 | später |
+| Hörverstehen 3 Klasse 6 „Talking about free time“ (5 Sprecher + 10 Aussagen) | Mr. Alex | ≈ 1.500 | vorgemerkt, Entwurf wartet auf Freigabe |
 
 ## Aufgeschoben – bitte erinnern
 | **Manipulations-Reset** | aufgeschoben (29.10.) | Mr. Alex will keine versehentlichen Punktverluste; Reset nur als bewusste „Strafe“ für echte Manipulation, kein Regelfall. Heute: Reset nur, wenn Haupt- und Zweitkopie beide ungültig sind; erledigte Teile bleiben dabei stehen (Punkte auf 0). Nochmal besprechen: z. B. Punkte einfrieren statt löschen, oder nur Banner ohne Reset. |
 | Idee | Stand | Entscheidung offen |
 |---|---|---|
 | **Arcade-Kachel** für Klasse 9 | aufgeschoben (29.10.) | Stattdessen erst Kachel **Games** mit Lernspielen; der Runner könnte später hinter Coins liegen, ohne eigene Kachel. |
-| **Coins: Wertigkeit und Zeitkopplung** | aufgeschoben (29.10.) | Startwert ≈ 100 Punkte = 1 Spielrunde; Alternative: Punkte kaufen Spielzeit (z. B. 100 Punkte = 5 Minuten). Preise für beide Klassen festlegen, dann Schüler-Feedback abwarten. |
-| **Auto beim Vokabellernen** (Schülerwunsch) | aufgeschoben (29.10.) | Zu aufwendig als Dauer-Grafik. Stattdessen kleine, billige Mini-Rewards sammeln (siehe unten). |
+| **Coins: Wertigkeit und Zeitkopplung** | aufgeschoben (29.10.) – Coins und Shop sind gebaut (Rahmen 50, Runner-Ticket 100 als Platzhalter) | Startwert ≈ 100 Punkte = 1 Spielrunde; Alternative: Punkte kaufen Spielzeit (z. B. 100 Punkte = 5 Minuten). Preise für beide Klassen festlegen, dann Schüler-Feedback abwarten. |
+| **Auto beim Vokabellernen** (Schülerwunsch) | aufgeschoben (29.10.) | Zu aufwendig als Dauer-Grafik. Stattdessen Mini-Rewards – **gebaut 29.10.** (Flamme, Münzen, Auto/Bus im Wechsel, siehe unten). |
 | **Grafikstil Runner** | offen | Flach/Cartoon wie die Word-Gym-Figur oder Landmark-Fotos mit kleiner Figur davor. Nächster Schritt nach der Games-Kachel. |
-| **Klasse 6 mitziehen** (Games-Umbau, Coins, Runner) | offen | Erst Klasse 9, dann entscheiden. |
+| **Klasse 6 mitziehen** (Games-Umbau, Coins, Runner) | teils gebaut (29.10.) | Coins, Shop und Mini-Rewards sind in beiden Klassen; Games-Umbau und Runner offen. |
 
 ## Beschlossen (29.10.2026, zweite Runde)
-- **Coins nicht rückwirkend**: Zählung beginnt mit dem Update; alte Punkte bringen keine Coins (sonst hängen Kinder mit Hunderten Coins nur am Spiel).
+- **Coins nicht rückwirkend**: Zählung beginnt mit dem Update; alte Punkte bringen keine Coins (sonst hängen Kinder mit Hunderten Coins nur am Spiel). **Gebaut 29.10.** (beide Apps, `stand.spiel.coins`).
 - **Zwei Arten von Spielen**: *Lernspiele* (Games-Kachel: Memory, Border Patrol, Catch the Word, Spelling Bee – Lernen im Vordergrund, frei spielbar, kleine Punkte) und *verdiente Spiele* (Runner – Spaß im Vordergrund, kostet Coins, passiv Englisch, Rätsel/Frage-Diamanten).
-- **Shop** heißt vorerst „Shop“ (Name später brainstormen).
+- **Shop** heißt vorerst „Shop“ (Name später brainstormen). **Gebaut 29.10.**: Kachel in Games (Kl. 9) bzw. Knopf auf der Startseite (Kl. 6) und in der Sammlung; Artikel in `SHOP` der Bauskripte: Runner-Ticket 100 (kommt bald), drei Titel-Rahmen je 50. Details: `gamification/konzept.md` „Coins und Shop“.
 - **Skins für den Runner** (müssen bei der Figurgröße deutlich sichtbar sein): Hüte, Tops, Schuhe, Shorts, Frisuren und Haarschmuck, Sonnenbrille, Schnurrbart, Nase, Ohrringe/Kette, Accessoires; Jungs: angedeutete Superkräfte nach den Superhelden der Sammlung; Autos: Sticker.
-- **Mini-Rewards beim Vokabellernen**: Mini-Flamme mit Coins-Symbol und Coins-Speicher; im Wechsel wie beim Lob (Flamme, Münz-Kassieren, Auto flitzt).
+- **Mini-Rewards beim Vokabellernen**: Mini-Flamme mit Coins-Symbol und Coins-Speicher; im Wechsel wie beim Lob (Flamme, Münz-Kassieren, Auto flitzt). **Gebaut 29.10.** (ohne Audio; Ideen 1, 2 und 6 unten ohne Töne – Hupe/Münzklang und Combo-Sprüche folgen mit den Credits).
 - **Dialog-Duell** gehört zu **Speaking**, nicht in Games; zuerst mit den vorhandenen Dialogen. Noch brainstormen.
+- **Runner (Rückmeldung 29.10. zum Prototyp):** Cartoon-Stil passt. Spieldauer ≥ 2 Minuten. Vor dem Endboss kleine Zwischensequenz: Kamera fährt herunter, Figur läuft automatisch, kurz eingefroren, Mr. Alex spricht („It's time for Mr. Alligator!“). Endboss-Stimme = Mr. Alex (mehr Mr.-Alex-Stimme in Klasse 9 gewünscht). Skins zusätzlich: Körperform (Bauch, Brust, Muskeln) – Idee: mit mehr Punkten wird die Figur muskulöser. Probe ist unvertont.
 - **Runner**: Levelziel passend zum Level (z. B. die Statue of Liberty finden, vorher vorbereitet); **Boss/Endboss** kennen die Schüler: Der Endboss stellt eine Frage, richtige Antwort schließt eine Tür auf.
 - **Belohnung im Runner**: keine Coins zurück (wäre komisch); stattdessen eigene Titel/Trophäen fürs normale Spiel – noch brainstormen.
 
@@ -44,7 +46,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 - Klasse 9: **BE vs AE** wird Gruppe in **Vocabulary**.
 - Klasse 9: **„New“ auflösen** – neue Inhalte direkt in ihre Kategorie, 14 Tage ✨-Schild an Kachel und Gruppe, Startseite zeigt „✨ Neu diese Woche“.
 - Klasse 9: Kachel **Games** (wie Klasse 6) an der Stelle von „New“: Memory (aus Klasse 6, größere Karten), Border Patrol, Catch the Word, Spelling Bee = **Lernspiele**.
-- **Coins**: gespiegelte Währung (jeder Punkt = ein Coin), ausgebbar; **nichts gratis**, erste Runde nicht geschenkt. Coins kann man schon sammeln, bevor der Runner fertig ist.
+- **Coins**: gespiegelte Währung (jeder Punkt = ein Coin), ausgebbar; **nichts gratis**, erste Runde nicht geschenkt. Coins kann man schon sammeln, bevor der Runner fertig ist. → **gebaut 29.10.**
 - **Runner** (Jump'n'Run, Giana-Sisters-Gefühl, Tippen = Springen, Diamanten sammeln, Wörter versteckt) = Hauptspiel, liegt hinter Coins. Viel Lob.
 - Punkte sinken nie (Titel, Serien bleiben).
 
@@ -64,7 +66,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 - Sentence Sprint – offen
 - Dialog-Duell – offen (Beschreibung folgt)
 - Runner – beschlossen, Planung läuft
-- Shop-Artikel: Auto-/Figur-Skins, Sticker für USA-/London-Karte, zweites Leben im Runner – beschlossen (Coins)
+- Shop-Artikel: Auto-/Figur-Skins, Sticker für USA-/London-Karte, zweites Leben im Runner – beschlossen (Coins); erste Artikel gebaut 29.10. (Titel-Rahmen, Runner-Ticket als Platzhalter)
 
 ## Ältere Ideen
 - Symbole für ~60 Klasse-9-Wörter (Bild → Wort) – offen

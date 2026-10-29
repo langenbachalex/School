@@ -39,3 +39,5 @@ Gleiche Regel, gleiche Fristen (Stationen statt Kategorien). Word Gym bleibt wie
 | Save the words | 🧠 Save me! | „🧠 Dein Gehirn will 3 Teile vergessen – rette sie!“ / “🧠 Your brain is about to forget 3 parts – save them!” |
 | Recharge | 🔋 Recharge | „🔋 3 Teile fast leer – aufladen!“ / “🔋 3 parts running low – recharge!” |
 | Fading | 👻 Fading… | „👻 3 Teile verblassen – hol sie zurück!“ / “👻 3 parts are fading – bring them back!” |
+
+**Name gewählt (29.10.): „Power Up“** – Schild ⚡ Power Up; Startseite G „⚡ 3 Teile fast leer – aufladen!“ / E “⚡ 3 parts running low – power up!”; Knopf im Teil „⚡ Power Up“; nach dem Durchgang „⚡ Aufgeladen!“ / “⚡ Powered up!”.

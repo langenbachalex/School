@@ -465,3 +465,20 @@ dialog.feier.akte { max-height: 88vh; overflow-y: auto; text-align: left; }
   .combo-flamme.wachs, .combo-text { animation: none; }
   .combo-muenze, .combo-fahrzeug, .combo-puff, .konfetti-frei { display: none; }
 }
+/* 📝 Homework-Kette: ▾ am Chip (Übersicht), Übersichts-Dialog, „Nächste Hausaufgabe“ auf den Abschluss-Seiten */
+.hw-knopf { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; touch-action: manipulation; }
+.hw-liste-knopf { flex: none; min-width: 36px; min-height: 36px; border-radius: 999px; border: 2px solid var(--linie); background: var(--karte); color: var(--hw); font: 700 1rem var(--body); cursor: pointer; }
+.hw-liste-knopf:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
+.hw-zeile.fertig .hw-liste-knopf { color: var(--gruen); }
+dialog.feier.hw-liste { max-height: 88vh; overflow-y: auto; text-align: left; }
+.hw-liste h2 { font-size: 1.3rem; margin: 0 0 4px; }
+.hw-liste-text { font-weight: 600; margin: 0 0 2px; }
+.hw-liste .klein { color: var(--leise); margin: 0 0 10px; }
+.hw-liste-ziele { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.hw-liste-ziele li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 12px; border: 2px solid var(--linie); }
+.hw-liste-ziele li.fertig { border-color: var(--gruen); background: var(--gruen-hell); }
+.hw-haken { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; border: 2px solid var(--hw); color: var(--hw); }
+.hw-liste-ziele li.fertig .hw-haken { border-color: var(--gruen); background: var(--gruen); color: #fff; }
+.hw-liste-ziele .hw-name { min-width: 0; overflow-wrap: anywhere; }
+.hw-liste-ziele .knopf { min-height: 36px; padding: 0 12px; color: var(--blau); }
+.knopf.hw-weiter { border-color: var(--hw); color: var(--hw-text); background: var(--hw); }

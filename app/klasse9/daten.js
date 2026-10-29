@@ -9250,20 +9250,195 @@ window.DATEN = {
   {
    "von": "2026-11-02",
    "bis": "2026-11-08",
-   "ziel": "2/u2:Start",
-   "text": "Vocabulary Unit 2 · Start",
-   "nr": 2,
-   "gruppe": "u2:Start",
-   "teil": null,
-   "name": "Vocabulary · Unit 2 · Start",
-   "schluessel": [
-    "2|u2:Start|0",
-    "2|u2:Start|1",
-    "2|u2:Start|2",
-    "2|u2:Start|3",
-    "2|u2:Start|4",
-    "2|u2:Start|5",
-    "2|u2:Start|6"
+   "ziel": "4; 2/u1",
+   "text": "Listening + Vocabulary Unit 1 (alle Abschnitte)",
+   "ziele": [
+    {
+     "ziel": "4",
+     "nr": 4,
+     "gruppe": null,
+     "teil": null,
+     "name": "Listening",
+     "schluessel": [
+      "4|After class at Lincoln High|0",
+      "4|After class at Lincoln High|1",
+      "4|After class at Lincoln High|2"
+     ]
+    },
+    {
+     "ziel": "2/u1:USA – here we come · Part 1",
+     "nr": 2,
+     "gruppe": "u1:USA – here we come · Part 1",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · USA – here we come · Part 1",
+     "schluessel": [
+      "2|u1:USA – here we come · Part 1|0",
+      "2|u1:USA – here we come · Part 1|1",
+      "2|u1:USA – here we come · Part 1|2",
+      "2|u1:USA – here we come · Part 1|3",
+      "2|u1:USA – here we come · Part 1|4",
+      "2|u1:USA – here we come · Part 1|5",
+      "2|u1:USA – here we come · Part 1|6"
+     ]
+    },
+    {
+     "ziel": "2/u1:USA – here we come · Part 2",
+     "nr": 2,
+     "gruppe": "u1:USA – here we come · Part 2",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · USA – here we come · Part 2",
+     "schluessel": [
+      "2|u1:USA – here we come · Part 2|0",
+      "2|u1:USA – here we come · Part 2|1",
+      "2|u1:USA – here we come · Part 2|2",
+      "2|u1:USA – here we come · Part 2|3",
+      "2|u1:USA – here we come · Part 2|4",
+      "2|u1:USA – here we come · Part 2|5",
+      "2|u1:USA – here we come · Part 2|6"
+     ]
+    },
+    {
+     "ziel": "2/u1:Start",
+     "nr": 2,
+     "gruppe": "u1:Start",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · Start",
+     "schluessel": [
+      "2|u1:Start|0",
+      "2|u1:Start|1",
+      "2|u1:Start|2",
+      "2|u1:Start|3",
+      "2|u1:Start|4",
+      "2|u1:Start|5",
+      "2|u1:Start|6"
+     ]
+    },
+    {
+     "ziel": "2/u1:Theme 1 · Part 1",
+     "nr": 2,
+     "gruppe": "u1:Theme 1 · Part 1",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · Theme 1 · Part 1",
+     "schluessel": [
+      "2|u1:Theme 1 · Part 1|0",
+      "2|u1:Theme 1 · Part 1|1",
+      "2|u1:Theme 1 · Part 1|2",
+      "2|u1:Theme 1 · Part 1|3",
+      "2|u1:Theme 1 · Part 1|4",
+      "2|u1:Theme 1 · Part 1|5",
+      "2|u1:Theme 1 · Part 1|6"
+     ]
+    },
+    {
+     "ziel": "2/u1:Theme 1 · Part 2",
+     "nr": 2,
+     "gruppe": "u1:Theme 1 · Part 2",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · Theme 1 · Part 2",
+     "schluessel": [
+      "2|u1:Theme 1 · Part 2|0",
+      "2|u1:Theme 1 · Part 2|1",
+      "2|u1:Theme 1 · Part 2|2",
+      "2|u1:Theme 1 · Part 2|3",
+      "2|u1:Theme 1 · Part 2|4",
+      "2|u1:Theme 1 · Part 2|5",
+      "2|u1:Theme 1 · Part 2|6"
+     ]
+    },
+    {
+     "ziel": "2/u1:Theme 2",
+     "nr": 2,
+     "gruppe": "u1:Theme 2",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · Theme 2",
+     "schluessel": [
+      "2|u1:Theme 2|0",
+      "2|u1:Theme 2|1",
+      "2|u1:Theme 2|2",
+      "2|u1:Theme 2|3",
+      "2|u1:Theme 2|4",
+      "2|u1:Theme 2|5",
+      "2|u1:Theme 2|6"
+     ]
+    },
+    {
+     "ziel": "2/u1:Focus on language",
+     "nr": 2,
+     "gruppe": "u1:Focus on language",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · Focus on language",
+     "schluessel": [
+      "2|u1:Focus on language|0",
+      "2|u1:Focus on language|1",
+      "2|u1:Focus on language|2",
+      "2|u1:Focus on language|3",
+      "2|u1:Focus on language|4",
+      "2|u1:Focus on language|5",
+      "2|u1:Focus on language|6"
+     ]
+    },
+    {
+     "ziel": "2/u1:Story · Part 1",
+     "nr": 2,
+     "gruppe": "u1:Story · Part 1",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · Story · Part 1",
+     "schluessel": [
+      "2|u1:Story · Part 1|0",
+      "2|u1:Story · Part 1|1",
+      "2|u1:Story · Part 1|2",
+      "2|u1:Story · Part 1|3",
+      "2|u1:Story · Part 1|4",
+      "2|u1:Story · Part 1|5",
+      "2|u1:Story · Part 1|6"
+     ]
+    },
+    {
+     "ziel": "2/u1:Story · Part 2",
+     "nr": 2,
+     "gruppe": "u1:Story · Part 2",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · Story · Part 2",
+     "schluessel": [
+      "2|u1:Story · Part 2|0",
+      "2|u1:Story · Part 2|1",
+      "2|u1:Story · Part 2|2",
+      "2|u1:Story · Part 2|3",
+      "2|u1:Story · Part 2|4",
+      "2|u1:Story · Part 2|5"
+     ]
+    },
+    {
+     "ziel": "2/u1:Story · Part 3",
+     "nr": 2,
+     "gruppe": "u1:Story · Part 3",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · Story · Part 3",
+     "schluessel": [
+      "2|u1:Story · Part 3|0",
+      "2|u1:Story · Part 3|1",
+      "2|u1:Story · Part 3|2",
+      "2|u1:Story · Part 3|3",
+      "2|u1:Story · Part 3|4",
+      "2|u1:Story · Part 3|5"
+     ]
+    },
+    {
+     "ziel": "2/u1:Skills training",
+     "nr": 2,
+     "gruppe": "u1:Skills training",
+     "teil": null,
+     "name": "Vocabulary · Unit 1 · Skills training",
+     "schluessel": [
+      "2|u1:Skills training|0",
+      "2|u1:Skills training|1",
+      "2|u1:Skills training|2",
+      "2|u1:Skills training|3",
+      "2|u1:Skills training|4",
+      "2|u1:Skills training|5",
+      "2|u1:Skills training|6"
+     ]
+    }
    ]
   }
  ]

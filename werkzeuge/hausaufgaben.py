@@ -1,5 +1,7 @@
 """📝 Hausaufgabe: liest inhalte/hausaufgabe.tsv (Klasse 6) bzw. inhalte/klasse9/hausaufgabe.tsv (Klasse 9),
 prüft jedes Ziel gegen die App-Daten und gibt D.hausaufgaben aus. Schema der Spalte ziel: siehe LIESMICH.md neben der TSV.
+Je Hausaufgabe: {"von", "bis", "ziel" (Rohtext), "text", "ziele": [{"ziel", "nr", "gruppe", "teil", "name", "schluessel": [Teilschlüssel …]} …]}.
+Mehrere Ziele durch „;“ (Kette in dieser Reihenfolge); `2/u1` = alle Abschnitte der Unit 1 (je Abschnitt ein Ziel).
 Wird von daten_bauen.py und klasse9_bauen.py benutzt.
 
 einheiten: Liste je Station/Kategorie {"nr", "titel", "gruppen": [{"schluessel", "name", "teile": [Teilnamen]}] oder None,
@@ -28,6 +30,53 @@ def _finde(liste, wunsch, was, pfad, zeile, namen=lambda x: [x]):
     fehler(pfad, zeile, f"{was} „{wunsch}“ gibt es nicht. Möglich: {auswahl}")
 
 
+def _ziel(ziel, einheiten, gruppe_leer, pfad, n):
+    """Löst ein einzelnes Ziel (Station[/Gruppe[/Teil]]) auf. `2/u1` (ganze Unit) ergibt je Abschnitt ein Ziel."""
+    teile = [t.strip() for t in ziel.split("/")]
+    if not teile[0].isdigit():
+        fehler(pfad, n, f"ziel „{ziel}“ muss mit der Nummer der Station/Kategorie beginnen")
+    nr = int(teile[0])
+    einheit = next((e for e in einheiten if e["nr"] == nr), None)
+    if not einheit:
+        fehler(pfad, n, f"Station/Kategorie {nr} gibt es nicht. Möglich: " + ", ".join(f"{e['nr']} = {e['titel']}" for e in einheiten))
+    rest = teile[1:]
+    if rest and re.match(r"^u\d+$", rest[0]) and einheit.get("gruppen"):  # ganze Unit: alle Abschnitte, jeder ein eigenes Ziel
+        abschnitte = [g for g in einheit["gruppen"] if isinstance(g["schluessel"], str) and g["schluessel"].startswith(rest[0] + ":")]
+        if not abschnitte:
+            fehler(pfad, n, f"ziel „{ziel}“: Unit {rest[0][1:]} hat keine Abschnitte")
+        if len(rest) > 1:
+            fehler(pfad, n, f"ziel „{ziel}“: bei einer ganzen Unit kann kein Teil gewählt werden (dafür z. B. {nr}/{abschnitte[0]['schluessel']}/1)")
+        return [_ziel(f"{nr}/{g['schluessel']}", einheiten, gruppe_leer, pfad, n)[0] for g in abschnitte]
+    h = {"ziel": ziel, "nr": nr, "gruppe": None, "teil": None, "name": einheit["titel"]}
+    gruppe_schluessel, teilnamen = gruppe_leer, einheit.get("teile")
+    if einheit.get("gruppen"):
+        if rest:
+            gi = _finde(einheit["gruppen"], rest.pop(0), "Gruppe", pfad, n, lambda g: ([g["schluessel"]] if isinstance(g["schluessel"], str) else []) + [g["name"]])
+            g = einheit["gruppen"][gi]
+            h["gruppe"], gruppe_schluessel, teilnamen = g["schluessel"], g["schluessel"], g["teile"]
+            h["name"] += " · " + g["name"]
+        else:
+            teilnamen = None
+    if rest:
+        if teilnamen is None:
+            fehler(pfad, n, f"ziel „{ziel}“: hier kann kein Teil gewählt werden (erst Gruppe angeben oder nur die Nummer)")
+        ti = _finde(teilnamen, rest.pop(0), "Teil", pfad, n)
+        h["teil"] = ti
+        h["name"] += " · " + teilnamen[ti]
+    if rest:
+        fehler(pfad, n, f"ziel „{ziel}“ hat zu viele Teile (höchstens Station/Gruppe/Teil)")
+    # Alle Teilschlüssel, die zum Ziel gehören (für Schild, Erledigt-Prüfung und Bonus)
+    if h["teil"] is not None:
+        h["schluessel"] = [f"{nr}|{gruppe_schluessel}|{h['teil']}"]
+    elif h["gruppe"] is not None:
+        h["schluessel"] = [f"{nr}|{gruppe_schluessel}|{i}" for i in range(len(teilnamen))]
+    elif einheit.get("gruppen"):
+        h["schluessel"] = [f"{nr}|{g['schluessel']}|{i}" for g in einheit["gruppen"] for i in range(len(g["teile"]))]
+    else:
+        h["schluessel"] = [f"{nr}|{gruppe_leer}|{i}" for i in range(len(teilnamen or []))]
+    return [h]
+
+
 def lesen(pfad, einheiten, gruppe_leer=""):
     """Gibt die aufgelösten Hausaufgaben zurück (leer, wenn die Datei fehlt)."""
     if not os.path.exists(pfad):
@@ -45,41 +94,12 @@ def lesen(pfad, einheiten, gruppe_leer=""):
             fehler(pfad, n, f"von ({von}) liegt nach bis ({bis})")
         if not text:
             fehler(pfad, n, "text fehlt")
-        teile = [t.strip() for t in ziel.split("/")]
-        if not teile[0].isdigit():
-            fehler(pfad, n, f"ziel „{ziel}“ muss mit der Nummer der Station/Kategorie beginnen")
-        nr = int(teile[0])
-        einheit = next((e for e in einheiten if e["nr"] == nr), None)
-        if not einheit:
-            fehler(pfad, n, f"Station/Kategorie {nr} gibt es nicht. Möglich: " + ", ".join(f"{e['nr']} = {e['titel']}" for e in einheiten))
-        h = {"von": von, "bis": bis, "ziel": ziel, "text": text, "nr": nr, "gruppe": None, "teil": None, "name": einheit["titel"]}
-        rest = teile[1:]
-        gruppe_schluessel, teilnamen = gruppe_leer, einheit.get("teile")
-        if einheit.get("gruppen"):
-            if rest:
-                gi = _finde(einheit["gruppen"], rest.pop(0), "Gruppe", pfad, n, lambda g: ([g["schluessel"]] if isinstance(g["schluessel"], str) else []) + [g["name"]])
-                g = einheit["gruppen"][gi]
-                h["gruppe"], gruppe_schluessel, teilnamen = g["schluessel"], g["schluessel"], g["teile"]
-                h["name"] += " · " + g["name"]
-            else:
-                teilnamen = None
-        if rest:
-            if teilnamen is None:
-                fehler(pfad, n, f"ziel „{ziel}“: hier kann kein Teil gewählt werden (erst Gruppe angeben oder nur die Nummer)")
-            ti = _finde(teilnamen, rest.pop(0), "Teil", pfad, n)
-            h["teil"] = ti
-            h["name"] += " · " + teilnamen[ti]
-        if rest:
-            fehler(pfad, n, f"ziel „{ziel}“ hat zu viele Teile (höchstens Station/Gruppe/Teil)")
-        # Alle Teilschlüssel, die zur Hausaufgabe gehören (für Schild, Erledigt-Prüfung und Bonus)
-        if h["teil"] is not None:
-            h["schluessel"] = [f"{nr}|{gruppe_schluessel}|{h['teil']}"]
-        elif h["gruppe"] is not None:
-            h["schluessel"] = [f"{nr}|{gruppe_schluessel}|{i}" for i in range(len(teilnamen))]
-        elif einheit.get("gruppen"):
-            h["schluessel"] = [f"{nr}|{g['schluessel']}|{i}" for g in einheit["gruppen"] for i in range(len(g["teile"]))]
-        else:
-            h["schluessel"] = [f"{nr}|{gruppe_leer}|{i}" for i in range(len(teilnamen or []))]
+        ziele = [z.strip() for z in ziel.split(";") if z.strip()]
+        if not ziele:
+            fehler(pfad, n, "ziel fehlt")
+        h = {"von": von, "bis": bis, "ziel": ziel, "text": text, "ziele": []}
+        for z in ziele:
+            h["ziele"] += _ziel(z, einheiten, gruppe_leer, pfad, n)
         ergebnis.append(h)
     ergebnis.sort(key=lambda h: (h["von"], h["bis"]))
     return ergebnis

@@ -6433,14 +6433,49 @@ window.DATEN = {
   {
    "von": "2026-11-02",
    "bis": "2026-11-08",
-   "ziel": "6/3",
-   "text": "Hörübung 3 „Talking about free time“",
-   "nr": 6,
-   "gruppe": null,
-   "teil": 2,
-   "name": "Station 6: Hörverstehen · Hören 3",
-   "schluessel": [
-    "6||2"
+   "ziel": "6/3; 8",
+   "text": "Hörübung 3 + Neu: How often, Sports and hobbies, School clubs",
+   "ziele": [
+    {
+     "ziel": "6/3",
+     "nr": 6,
+     "gruppe": null,
+     "teil": 2,
+     "name": "Station 6: Hörverstehen · Hören 3",
+     "schluessel": [
+      "6||2"
+     ]
+    },
+    {
+     "ziel": "8",
+     "nr": 8,
+     "gruppe": null,
+     "teil": null,
+     "name": "Station 8: Neu",
+     "schluessel": [
+      "8|0|0",
+      "8|0|1",
+      "8|0|2",
+      "8|0|3",
+      "8|0|4",
+      "8|0|5",
+      "8|0|6",
+      "8|0|7",
+      "8|1|0",
+      "8|1|1",
+      "8|1|2",
+      "8|1|3",
+      "8|1|4",
+      "8|1|5",
+      "8|1|6",
+      "8|1|7",
+      "8|1|8",
+      "8|1|9",
+      "8|2|0",
+      "8|2|1",
+      "8|2|2"
+     ]
+    }
    ]
   }
  ]

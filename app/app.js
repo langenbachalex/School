@@ -414,48 +414,102 @@
   }
   /* ---------- 📝 Homework (inhalte/hausaufgabe.tsv → D.hausaufgaben, Schema in inhalte/LIESMICH.md) ----------
      Gilt von ≤ heute ≤ bis (Ortszeit). Dann: Knopf „📝 HW“ in der Leiste, Chip-Zeile über dem Word Gym, Schild an Kachel, Abschnitt und Teil.
-     Jeder Teil der Hausaufgabe bringt im Zeitraum +50 % auf die Teil-Punkte (aufgerundet) – einmal je Teil und Hausaufgabe
-     (stand.hw["<von>|<ziel>"] = [Teilschlüssel …], steckt im Siegel). Erledigt = alle Teile fertig oder in diesem Zeitraum gemacht. */
+     Eine Hausaufgabe ist eine Kette von Zielen (h.ziele, Reihenfolge wie in der TSV); Knopf und Chip springen zum ersten offenen Ziel,
+     der Chip zählt „HW 1/4“. Jeder Teil der Hausaufgabe bringt im Zeitraum +50 % auf die Teil-Punkte (aufgerundet) – einmal je Teil und
+     Hausaufgabe (stand.hw["<von>|<ziel>"] = [Teilschlüssel …], steckt im Siegel). Ziel erledigt = alle Teile fertig oder in diesem Zeitraum
+     gemacht; alles erledigt → einmalige Feier (stand.hw["<von>|<ziel>|fertig"] = true). */
   const hwAktiv = () => { const t = iso(heute()); return (D.hausaufgaben || []).find((h) => h.von <= t && t <= h.bis) || null; };
   const hwId = (h) => `${h.von}|${h.ziel}`;
   const hwGemacht = (h) => (stand.hw && stand.hw[hwId(h)]) || [];
-  const hwTrifft = (k) => { const h = hwAktiv(); return !!h && h.schluessel.includes(k); };
-  const hwBei = (nr, anfang) => { const h = hwAktiv(); return !!h && h.nr === nr && (!anfang || h.schluessel.some((k) => k.startsWith(anfang))); };
-  const hwErledigt = (h) => h.schluessel.length > 0 && h.schluessel.every((k) => (stand.teile && stand.teile[k]) || hwGemacht(h).includes(k));
+  const hwSchluessel = (h) => h.ziele.flatMap((z) => z.schluessel);
+  const hwTrifft = (k) => { const h = hwAktiv(); return !!h && hwSchluessel(h).includes(k); };
+  const hwBei = (nr, anfang) => { const h = hwAktiv(); return !!h && h.ziele.some((z) => z.nr === nr && (!anfang || z.schluessel.some((k) => k.startsWith(anfang)))); };
+  const hwZielFertig = (h, z) => z.schluessel.length > 0 && z.schluessel.every((k) => (stand.teile && stand.teile[k]) || hwGemacht(h).includes(k));
+  const hwOffen = (h) => h.ziele.find((z) => !hwZielFertig(h, z)) || null; // erstes offenes Ziel der Kette
+  const hwErledigt = (h) => h.ziele.length > 0 && !hwOffen(h);
+  const hwZaehler = (h) => `${h.ziele.filter((z) => hwZielFertig(h, z)).length}/${h.ziele.length}`;
   const hwSchild = () => el("span", { class: "hw-schild" }, "📝 HW");
   const hwDatum = (t) => { const d = new Date(t + "T12:00:00"); return `${["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"][d.getDay()]} ${d.getDate()}.${d.getMonth() + 1}.`; };
   function hwBonus(basis) {
     const h = hwAktiv();
     if (!h || !lage || !lage.teile) return 0;
     const k = teilSchluessel(lage.teil);
-    if (!h.schluessel.includes(k) || hwGemacht(h).includes(k)) return 0;
-    (stand.hw = stand.hw || {})[hwId(h)] = [...hwGemacht(h), k];
-    return Math.ceil(basis / 2);
+    if (!hwSchluessel(h).includes(k)) return 0;
+    const neu = !hwGemacht(h).includes(k);
+    stand.hw = stand.hw || {};
+    if (neu) stand.hw[hwId(h)] = [...hwGemacht(h), k];
+    const f = hwId(h) + "|fertig"; // letztes Ziel geschafft → einmalige Feier
+    if (!stand.hw[f] && hwErledigt(h)) {
+      stand.hw[f] = true;
+      ereignisse.push({ art: "feier", symbol: "📝", titel: "Homework done!", text: `Alle Hausaufgaben bis ${hwDatum(h.bis)} sind erledigt. Stark!`, ton: SP.texte.gym_fini });
+    }
+    return neu ? Math.ceil(basis / 2) : 0;
   }
-  // Direktsprung zum Ziel: Station, Abschnitt oder Teil
-  function hwStart(h) {
-    const st = station(h.nr);
-    if (h.gruppe != null) starteGruppe(st, h.gruppe); else starteStation(h.nr);
-    if (h.teil != null && lage) springe(h.teil);
+  // Direktsprung zu einem Ziel: Station, Abschnitt oder Teil – bei ganzer Station/Abschnitt zum ersten offenen Abschnitt/Teil
+  function hwStart(z) {
+    const st = station(z.nr), offen = (k) => !(stand.teile && stand.teile[k]);
+    let g = z.gruppe;
+    if (g == null && st.gruppen) { // Abschnitte des Ziels: der erste mit offenen Teilen, sonst der erste
+      const gs = st.gruppen.map((_, i) => i).filter((i) => z.schluessel.some((k) => k.startsWith(`${z.nr}|${i}|`)));
+      g = gs.find((i) => z.schluessel.some((k) => k.startsWith(`${z.nr}|${i}|`) && offen(k))) ?? gs[0];
+    }
+    if (g != null) starteGruppe(st, g); else starteStation(z.nr);
+    if (!lage) return;
+    const i = z.teil != null ? z.teil : lage.teile.findIndex((_, i) => z.schluessel.includes(teilSchluessel(i)) && !istFertig(i));
+    if (i > 0) springe(i);
   }
-  // Knopf „📝 HW“ oben in der Leiste neben dem Tempo-Knopf (bei jedem Seitenwechsel aktualisiert)
+  const hwWeiterStart = () => { const h = hwAktiv(), z = h && hwOffen(h); if (z) hwStart(z); };
+  // Knopf „📝 HW“ oben in der Leiste neben dem Tempo-Knopf (bei jedem Seitenwechsel aktualisiert); langes Drücken öffnet die Übersicht
   function hwLeiste() {
     const h = hwAktiv(), alt = document.getElementById("hw");
     if (!h) { if (alt) alt.remove(); return; }
     const fertig = hwErledigt(h);
-    const k = alt || el("button", { id: "hw", type: "button", class: "tempo-knopf hw-knopf", onclick: () => { const x = hwAktiv(); if (x) hwStart(x); } });
+    let lang = null, gehalten = false;
+    const k = alt || el("button", { id: "hw", type: "button", class: "tempo-knopf hw-knopf",
+      onpointerdown: () => { gehalten = false; clearTimeout(lang); lang = setTimeout(() => { gehalten = true; hwUebersicht(); }, 500); },
+      onpointerup: () => clearTimeout(lang), onpointerleave: () => clearTimeout(lang), onpointercancel: () => clearTimeout(lang),
+      oncontextmenu: (e) => e.preventDefault(),
+      onclick: () => { if (gehalten) { gehalten = false; return; } hwWeiterStart(); } });
     k.textContent = fertig ? "📝 HW ✓" : "📝 HW"; k.classList.toggle("fertig", fertig);
-    k.setAttribute("aria-label", (fertig ? "Hausaufgabe erledigt: " : "Hausaufgabe: ") + h.text);
+    k.setAttribute("aria-label", (fertig ? "Hausaufgabe erledigt: " : "Hausaufgabe: ") + h.text + " (lange drücken: Übersicht)");
     if (!alt) { const t = document.getElementById("tempo"); if (t) t.after(k); }
   }
-  // Chip-Zeile auf der Startseite direkt über dem Word Gym
+  // Chip-Zeile auf der Startseite direkt über dem Word Gym: „HW 1/4“ + Text, ▾ öffnet die Übersicht
   function hwZeile() {
     const h = hwAktiv();
     if (!h) return null;
     const fertig = hwErledigt(h);
     return el("div", { class: "hw-zeile" + (fertig ? " fertig" : ""), role: "status" },
-      el("button", { class: "hw-chip", onclick: () => hwStart(h), "aria-label": (fertig ? "Hausaufgabe erledigt: " : "Hausaufgabe öffnen: ") + h.text }, fertig ? "📝 HW ✓" : "📝 HW"),
-      el("span", { class: "hw-text", title: h.text }, fertig ? `Erledigt: ${h.text}` : `${h.text} · bis ${hwDatum(h.bis)} · +50 %`));
+      el("button", { class: "hw-chip", onclick: hwWeiterStart, "aria-label": (fertig ? "Hausaufgabe erledigt: " : `Hausaufgabe öffnen (${hwZaehler(h)} erledigt): `) + h.text }, fertig ? "📝 HW ✓" : `📝 HW ${hwZaehler(h)}`),
+      el("span", { class: "hw-text", title: h.text }, fertig ? `Erledigt: ${h.text}` : `${h.text} · bis ${hwDatum(h.bis)} · +50 %`),
+      el("button", { class: "hw-liste-knopf", onclick: hwUebersicht, "aria-label": "Alle Hausaufgaben zeigen" }, "▾"));
+  }
+  // Übersicht aller Ziele der Kette: ✓ / ○, Name, ▶ Sprung
+  const hwDialog = el("dialog", { class: "feier hw-liste", "aria-label": "Homework" });
+  document.body.append(hwDialog);
+  function hwUebersicht() {
+    const h = hwAktiv();
+    if (!h) return;
+    const zu = () => hwDialog.close();
+    hwDialog.replaceChildren(
+      el("h2", {}, `📝 Homework · bis ${hwDatum(h.bis)}`),
+      el("p", { class: "hw-liste-text" }, h.text),
+      el("p", { class: "klein" }, "+50 % Punkte für jeden Teil"),
+      el("ul", { class: "hw-liste-ziele" }, h.ziele.map((z) => { const f = hwZielFertig(h, z);
+        return el("li", { class: f ? "fertig" : "" },
+          el("span", { class: "hw-haken", "aria-label": f ? "erledigt" : "offen" }, f ? "✓" : "○"),
+          el("span", { class: "hw-name" }, z.name),
+          knopf("▶", () => { zu(); hwStart(z); }, "leise")); })),
+      el("div", { class: "knopfreihe" }, knopf("Schließen", zu, "haupt")));
+    hwDialog.showModal();
+  }
+  // Abschluss-Seiten: „Nächste Hausaufgabe ➜“, wenn der eben fertige Teil ein Ziel abgeschlossen hat und noch eins offen ist
+  function hwWeiterKnopf(k) {
+    const h = hwAktiv();
+    if (!h) return null;
+    const ziele = h.ziele.filter((z) => z.schluessel.includes(k));
+    if (!ziele.length || !ziele.every((z) => hwZielFertig(h, z)) || !hwOffen(h)) return null;
+    return knopf("📝 Nächste Hausaufgabe ➜", hwWeiterStart, "hw-weiter");
   }
 
   // Timer bei Wiederholung kürzer: Teil hat schon einen Eintrag → Faktor je Stufe (Word Gym bleibt, hat kein lage.tempoFaktor)
@@ -584,14 +638,14 @@
 
   // Letzter Teil fertig, aber vorher wurde etwas übersprungen
   function fastGeschafft() {
-    const st = station(lage.nr);
+    const st = station(lage.nr), hwWeiter = hwWeiterKnopf(teilSchluessel(lage.teil));
     lage.ende = true; lage.abspielen = null; lage.weiter = null;
     const offen = lage.teile.map((t, i) => [t, i]).filter(([, i]) => !istFertig(i));
     zeige(kopf(st), el("section", { class: "geschafft" },
       el("h2", { lang: "en" }, lob(true)),
       el("p", { class: "ansage" }, "Fast geschafft! Diese Teile fehlen noch:"),
       el("div", { class: "knopfreihe" }, offen.map(([t, i]) => knopf(t.name, () => { lage.ende = false; springe(i); }))),
-      knopf("Zur Startseite", startseite)));
+      hwWeiter, knopf("Zur Startseite", startseite)));
   }
   function laenge(teil) {
     if (teil.art === "lr") return teil.saetze.length;
@@ -613,7 +667,7 @@
     zeige(kopf(st), el("section", { class: "geschafft" },
       el("h2", {}, lob(true)),
       el("p", {}, `${fertig.name} geschafft!`),
-      knopf("Weiter ➜", lage.weiter, "haupt")));
+      knopf("Weiter ➜", lage.weiter, "haupt"), hwWeiterKnopf(teilSchluessel(lage.teil))));
     navErgaenzen(() => zeigeTeil());
   }
 
@@ -650,7 +704,7 @@
   }
 
   function gruppeGeschafft() {
-    const st = station(lage.nr), g = st.gruppen[lage.gruppe];
+    const st = station(lage.nr), g = st.gruppen[lage.gruppe], hwWeiter = hwWeiterKnopf(teilSchluessel(lage.teil));
     stand.gruppen = stand.gruppen || {};
     const liste = (stand.gruppen[st.nr] = stand.gruppen[st.nr] || []);
     if (!liste.includes(g.name)) { liste.push(g.name); einheitBonus(); }
@@ -663,19 +717,19 @@
       el("p", { class: "ansage" }, alle ? `Station ${st.nr} geschafft! Du bist ein Superstar ${st.lob}!` : ""),
       el("p", { class: "ansage", lang: "en" }, alle ? ruf("geschafft") : lob(true)),
       el("div", { class: "knopfreihe" },
-        knopf("Weitere Abschnitte", () => zeigeGruppen(st), "haupt"), knopf("Zur Startseite", startseite))));
+        hwWeiter, knopf("Weitere Abschnitte", () => zeigeGruppen(st), hwWeiter ? "" : "haupt"), knopf("Zur Startseite", startseite))));
   }
 
   function stationGeschafft() {
     if (lage.gruppe != null) return gruppeGeschafft();
-    const st = station(lage.nr);
+    const st = station(lage.nr), hwWeiter = hwWeiterKnopf(teilSchluessel(lage.teil));
     if (!stand.erledigt.includes(st.nr)) { stand.erledigt.push(st.nr); speichern(); einheitBonus(); }
     lage = null;
     zeige(kopf(st), el("section", { class: "geschafft" },
       el("h2", {}, `Station ${st.nr} geschafft!`),
       el("p", { class: "ansage" }, `Du bist ein Superstar ${st.lob}!`),
       el("p", { class: "ansage", lang: "en" }, ruf("geschafft")),
-      knopf("Zur Startseite", startseite, "haupt")));
+      el("div", { class: "knopfreihe" }, hwWeiter, knopf("Zur Startseite", startseite, hwWeiter ? "" : "haupt"))));
   }
 
   // Gemeinsamer Rahmen für eine Aufgabe/Karte

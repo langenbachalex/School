@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Road Trip Run – Prototyp</title>
+<style>
+  :root { --blau:#1d3f8f; --rot:#c8283a; --gold:#e0a400; --dunkel:#18213a; --karte:#fff; }
+  html, body { margin:0; height:100%; background:#18213a; overflow:hidden; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #spiel { position:fixed; inset:0; width:100%; height:100%; display:block; touch-action:none; user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent; }
+  .overlay { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; padding:12px; box-sizing:border-box; background:rgba(24,33,58,.55); }
+  .overlay[hidden] { display:none; }
+  .box { background:var(--karte); color:var(--dunkel); border-radius:18px; padding:18px 20px; max-width:440px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,.35); box-sizing:border-box; max-height:96vh; overflow:auto; }
+  h1 { margin:0 0 4px; font-size:1.5rem; color:var(--blau); }
+  .klein { font-size:.85rem; color:#555; margin:0 0 10px; }
+  .zeile { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:4px 0; font-size:.95rem; }
+  .zeile b { min-width:88px; }
+  .wahl { display:flex; align-items:center; gap:6px; }
+  .wahl span { min-width:92px; text-align:center; font-weight:600; }
+  button { font: inherit; cursor:pointer; border:0; border-radius:12px; padding:8px 14px; background:#e9edf7; color:var(--dunkel); font-weight:600; }
+  button.pfeil { padding:6px 10px; }
+  button.gross { width:100%; padding:14px; font-size:1.15rem; background:var(--blau); color:#fff; margin-top:12px; }
+  button.gross:active { transform:scale(.98); }
+  button.antwort { display:block; width:100%; margin:8px 0; padding:14px; font-size:1.1rem; background:#e9edf7; text-align:left; }
+  button.antwort:hover { background:#d9e0f3; }
+  #vorschau { display:block; margin:0 auto 6px; width:150px; height:190px; }
+  .frage-text { font-size:1.25rem; font-weight:700; margin:6px 0 10px; }
+  .pokal { font-size:3rem; text-align:center; margin:4px 0; }
+  .zentriert { text-align:center; }
+  .schalter { display:flex; gap:8px; margin-top:8px; }
+  .schalter button { flex:1; }
+  .schalter button.an { background:var(--blau); color:#fff; }
+</style>
+</head>
+<body>
+<canvas id="spiel"></canvas>
+
+<div id="menu" class="overlay">
+  <div class="box">
+    <h1>Road Trip Run</h1>
+    <p class="klein">Prototyp · Level 1: New York – Find the Statue of Liberty!<br>Tippen / Leertaste = springen · länger halten = höher springen.</p>
+    <canvas id="vorschau" width="300" height="380"></canvas>
+    <div id="skinzeilen"></div>
+    <div class="schalter">
+      <button id="btn-stimme" class="an">🔊 Wort sprechen: an</button>
+      <button id="btn-foto">🖼️ Hintergrund: Cartoon</button>
+    </div>
+    <button id="btn-start" class="gross">▶ Los geht's! (Eintritt: 20 Coins)</button>
+  </div>
+</div>
+
+<div id="frage" class="overlay" hidden>
+  <div class="box">
+    <h1>🐊 Der Alligator fragt …</h1>
+    <p class="klein">Richtige Antwort = die Tür geht auf. Falsch = ein Leben weg.</p>
+    <div class="frage-text" id="frage-text"></div>
+    <div id="antworten"></div>
+  </div>
+</div>
+
+<div id="ende" class="overlay" hidden>
+  <div class="box zentriert">
+    <div class="pokal" id="ende-icon">🏆</div>
+    <h1 id="ende-titel">Level complete!</h1>
+    <p id="ende-text" class="klein"></p>
+    <button id="btn-nochmal" class="gross">Nochmal</button>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+// ---------- Wortschatz (inhalte/klasse9/vokabeln.tsv, Unit 2) ----------
+const WOERTER = [
+  { en:'lion', de:'Löwe' },
+  { en:'library', de:'Bücherei' },
+  { en:'trust', de:'vertrauen' },
+  { en:'incredible', de:'unglaublich' },
+  { en:'elevator', de:'Aufzug' },
+  { en:'locker', de:'Spind' },
+  { en:'highlight', de:'Höhepunkt' },
+  { en:'promise', de:'versprechen' },
+];
+
+// ---------- Skins ----------
+const SKIN_OPTIONEN = [
+  { key:'haar',   label:'Frisur',   werte:['kurz','zopf','locken'] },
+  { key:'haarfarbe', label:'Haarfarbe', werte:['braun','blond','schwarz','rot'] },
+  { key:'hut',    label:'Hut',      werte:['keiner','cap','cowboy','zylinder'] },
+  { key:'brille', label:'Brille',   werte:['aus','an'] },
+  { key:'bart',   label:'Schnurrbart', werte:['aus','an'] },
+  { key:'top',    label:'Oberteil', werte:['shirt','hoodie'] },
+  { key:'topfarbe', label:'Farbe Top', werte:['rot','blau','gelb','grün'] },
+  { key:'schuhe', label:'Schuhe',   werte:['weiß','rot','schwarz'] },
+  { key:'aura',   label:'Aura',     werte:['aus','an'] },
+];
+const FARBEN = {
+  braun:'#6b3e1e', blond:'#e7c35a', schwarz:'#1a1a1a', rot:'#c8283a',
+  blau:'#1d3f8f', gelb:'#e0a400', grün:'#2e9e5b', weiß:'#f4f4f4',
+};
+const skin = { haar:'kurz', haarfarbe:'braun', hut:'cap', brille:'aus', bart:'aus', top:'shirt', topfarbe:'rot', schuhe:'weiß', aura:'aus' };
+const einstellungen = { stimme:true, foto:false };
+
+// ---------- Canvas / Skalierung ----------
+const canvas = document.getElementById('spiel');
+const ctx = canvas.getContext('2d');
+const H = 400;                 // logische Höhe
+const BODEN_Y = 330;           // Oberkante Boden
+let dpr = 1, cssW = 0, cssH = 0, bereich = { x:0, y:0, w:0, h:0 }, skala = 1, viewW = 640;
+
+function groesseAnpassen() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cssW = window.innerWidth; cssH = window.innerHeight;
+  canvas.width = Math.round(cssW * dpr); canvas.height = Math.round(cssH * dpr);
+  canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
+  if (cssW / cssH < 1.2) {            // Hochformat: 16:10-Fenster, Rest dunkel
+    const h = Math.round(cssW / 1.6);
+    bereich = { x:0, y:Math.round((cssH - h) / 2), w:cssW, h };
+  } else {
+    bereich = { x:0, y:0, w:cssW, h:cssH };
+  }
+  skala = bereich.h / H;
+  viewW = bereich.w / skala;
+}
+window.addEventListener('resize', groesseAnpassen);
+groesseAnpassen();
+
+// ---------- Audio (Web Audio, keine Dateien) ----------
+let actx = null;
+function audioAn() { if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (actx && actx.state === 'suspended') actx.resume(); }
+function ton(freq, dauer, typ = 'square', lautst = 0.08, start = 0) {
+  if (!actx) return;
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type = typ; o.frequency.value = freq;
+  const t0 = actx.currentTime + start;
+  g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(lautst, t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dauer);
+  o.connect(g); g.connect(actx.destination); o.start(t0); o.stop(t0 + dauer + 0.02);
+}
+const klang = {
+  sprung() { ton(300, 0.12, 'square', 0.05); ton(520, 0.1, 'square', 0.04, 0.05); },
+  diamant() { ton(880, 0.1, 'triangle', 0.1); ton(1320, 0.14, 'triangle', 0.1, 0.08); ton(1760, 0.2, 'triangle', 0.08, 0.16); },
+  wort() { [523, 659, 784, 1047].forEach((f, i) => ton(f, 0.18, 'triangle', 0.1, i * 0.09)); },
+  richtig() { [659, 784, 988, 1319].forEach((f, i) => ton(f, 0.2, 'triangle', 0.1, i * 0.1)); },
+  falsch() { ton(180, 0.3, 'sawtooth', 0.08); ton(140, 0.35, 'sawtooth', 0.08, 0.15); },
+  aua() { ton(220, 0.15, 'square', 0.08); ton(160, 0.25, 'square', 0.08, 0.12); },
+  stampf() { ton(200, 0.08, 'square', 0.08); ton(120, 0.1, 'square', 0.06, 0.06); },
+  fanfare() { [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => ton(f, 0.25, 'triangle', 0.1, i * 0.14)); },
+  tuer() { ton(110, 0.6, 'sawtooth', 0.05); ton(220, 0.5, 'triangle', 0.05, 0.3); },
+};
+function sprich(text) {
+  if (!einstellungen.stimme || !('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = 0.95;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+
+// ---------- Figur (Ebenen) ----------
+// (x, y) = Fußpunkt Mitte, h = Körperhöhe, pose = 'lauf' | 'sprung' | 'steh', t = Zeit
+function zeichneFigur(c, x, y, h, s, pose, t) {
+  const u = h / 80;
+  c.save(); c.translate(x, y); c.scale(u, u);
+  const haut = '#f1c27d', hautD = '#d9a866';
+  const topF = FARBEN[s.topfarbe] || '#c8283a';
+  const haarF = FARBEN[s.haarfarbe] || '#6b3e1e';
+  const schuhF = FARBEN[s.schuhe] || '#f4f4f4';
+  const shortsF = '#2a4a8a';
+  const p = pose === 'lauf' ? t * 13 : 0;
+
+  // Aura (hinter allem)
+  if (s.aura === 'an') {
+    const puls = 1 + 0.08 * Math.sin(t * 6);
+    const g = c.createRadialGradient(0, -42, 10, 0, -42, 56 * puls);
+    g.addColorStop(0, 'rgba(255,230,80,0.55)'); g.addColorStop(0.6, 'rgba(255,200,40,0.25)'); g.addColorStop(1, 'rgba(255,200,40,0)');
+    c.fillStyle = g; c.beginPath(); c.arc(0, -42, 56 * puls, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#fff3a0';
+    for (let i = 0; i < 5; i++) {
+      const a = t * 2 + i * 1.26, r = 46 + 6 * Math.sin(t * 5 + i);
+      const sx = Math.cos(a) * r, sy = -42 + Math.sin(a) * r * 0.9;
+      c.beginPath(); c.moveTo(sx, sy - 4); c.lineTo(sx + 1.5, sy); c.lineTo(sx, sy + 4); c.lineTo(sx - 1.5, sy); c.closePath(); c.fill();
+    }
+  }
+
+  // Beine
+  let beinHinten, beinVorn;
+  if (pose === 'lauf') {
+    beinHinten = { fx: 12 * Math.sin(p), fy: -Math.max(0, -Math.cos(p)) * 9 };
+    beinVorn   = { fx: 12 * Math.sin(p + Math.PI), fy: -Math.max(0, Math.cos(p)) * 9 };
+  } else if (pose === 'sprung') {
+    beinHinten = { fx: -8, fy: -14 }; beinVorn = { fx: 9, fy: -8 };
+  } else {
+    beinHinten = { fx: -4, fy: 0 }; beinVorn = { fx: 5, fy: 0 };
+  }
+  const bein = (b, farbe, schuh) => {
+    c.lineCap = 'round'; c.lineWidth = 8; c.strokeStyle = farbe;
+    c.beginPath(); c.moveTo(0, -34);
+    c.quadraticCurveTo(b.fx * 0.5 + 6, -20 + b.fy * 0.5, b.fx, b.fy - 3); c.stroke();
+    // Schuh
+    c.fillStyle = schuh; c.strokeStyle = '#333'; c.lineWidth = 1.2;
+    c.beginPath(); c.ellipse(b.fx + 3, b.fy - 1.5, 8, 4.2, 0, 0, Math.PI * 2); c.fill(); c.stroke();
+  };
+  bein(beinHinten, hautD, schuhF);
+  // Shorts (über den Hüften)
+  c.fillStyle = shortsF; c.beginPath(); c.roundRect(-12, -40, 24, 16, 5); c.fill();
+  c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(-12, -30, 24, 2);
+  bein(beinVorn, haut, schuhF);
+
+  // Hinterer Arm
+  const armWinkel = pose === 'lauf' ? Math.sin(p) * 0.9 : (pose === 'sprung' ? -2.2 : 0.3);
+  const arm = (w, farbe) => {
+    c.lineCap = 'round'; c.lineWidth = 6.5; c.strokeStyle = farbe;
+    c.beginPath(); c.moveTo(0, -54);
+    c.lineTo(Math.sin(w) * 10, -54 + Math.cos(w) * 11);
+    c.lineTo(Math.sin(w) * 10 + Math.cos(w) * 10, -54 + Math.cos(w) * 11 - Math.sin(w) * 10 + 6); c.stroke();
+  };
+  arm(-armWinkel, hautD);
+
+  // Torso / Oberteil
+  c.fillStyle = topF; c.beginPath(); c.roundRect(-12, -60, 24, 28, 6); c.fill();
+  if (s.top === 'hoodie') {
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.roundRect(-12, -48, 24, 10, 3); c.fill(); // Tasche
+    c.fillStyle = topF; c.beginPath(); c.ellipse(0, -60, 14, 7, 0, Math.PI, 0); c.fill(); // Kapuze
+    c.strokeStyle = '#fff'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-3, -58); c.lineTo(-4, -46); c.moveTo(3, -58); c.lineTo(4, -46); c.stroke(); // Kordeln
+  } else {
+    c.fillStyle = 'rgba(255,255,255,.75)'; c.beginPath(); c.arc(3, -47, 5, 0, Math.PI * 2); c.fill(); // Logo
+    c.fillStyle = topF; c.beginPath(); c.arc(3, -47, 2.5, 0, Math.PI * 2); c.fill();
+  }
+  // Ärmel vorn
+  c.fillStyle = topF; c.beginPath(); c.arc(0, -54, 6, 0, Math.PI * 2); c.fill();
+  // Vorderer Arm
+  arm(armWinkel, haut);
+
+  // Kopf
+  c.fillStyle = haut; c.beginPath(); c.arc(0, -68, 12.5, 0, Math.PI * 2); c.fill();
+  // Ohr
+  c.fillStyle = hautD; c.beginPath(); c.arc(-9, -68, 3, 0, Math.PI * 2); c.fill();
+  // Nase
+  c.fillStyle = hautD; c.beginPath(); c.arc(12, -66, 2.6, 0, Math.PI * 2); c.fill();
+  // Mund
+  c.strokeStyle = '#8a3b2b'; c.lineWidth = 1.4; c.beginPath(); c.arc(6, -62, 3.5, 0.2, Math.PI - 0.4); c.stroke();
+  // Auge
+  if (s.brille === 'an') {
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(2, -73, 12, 7, 3); c.fill();
+    c.strokeStyle = '#18213a'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(2, -70); c.lineTo(-9, -71); c.stroke();
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(4, -72, 4, 2);
+  } else {
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(7, -70, 3.4, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(8, -70, 1.8, 0, Math.PI * 2); c.fill();
+  }
+  // Schnurrbart
+  if (s.bart === 'an') {
+    c.fillStyle = haarF; c.beginPath(); c.moveTo(12, -63.5); c.quadraticCurveTo(7, -67, 3, -62); c.quadraticCurveTo(8, -62, 12, -63.5); c.fill();
+  }
+  // Haare
+  c.fillStyle = haarF;
+  if (s.haar === 'kurz') {
+    c.beginPath(); c.arc(0, -70, 12.8, Math.PI * 1.05, Math.PI * 1.95); c.lineTo(10, -74); c.lineTo(-5, -70); c.closePath(); c.fill();
+  } else if (s.haar === 'zopf') {
+    c.beginPath(); c.arc(0, -70, 12.8, Math.PI * 1.02, Math.PI * 1.98); c.lineTo(11, -73); c.lineTo(-6, -69); c.closePath(); c.fill();
+    const wipp = pose === 'lauf' ? Math.sin(t * 13) * 3 : 0;
+    c.lineCap = 'round'; c.lineWidth = 6; c.strokeStyle = haarF;
+    c.beginPath(); c.moveTo(-11, -72); c.quadraticCurveTo(-22, -70 + wipp, -20, -56 + wipp); c.stroke();
+    c.fillStyle = '#c8283a'; c.beginPath(); c.arc(-12, -72, 2.6, 0, Math.PI * 2); c.fill(); // Haargummi
+  } else { // locken
+    for (let i = 0; i < 7; i++) {
+      const a = Math.PI * 1.0 + i * (Math.PI / 6.5);
+      c.beginPath(); c.arc(Math.cos(a) * 11, -70 + Math.sin(a) * 11, 5, 0, Math.PI * 2); c.fill();
+    }
+  }
+  // Hüte
+  if (s.hut === 'cap') {
+    c.fillStyle = '#1d3f8f'; c.beginPath(); c.arc(0, -75, 12, Math.PI, 0); c.closePath(); c.fill();
+    c.beginPath(); c.roundRect(2, -77, 20, 4, 2); c.fill();
+    c.fillStyle = '#e0a400'; c.beginPath(); c.arc(0, -84, 2.2, 0, Math.PI * 2); c.fill();
+  } else if (s.hut === 'cowboy') {
+    c.fillStyle = '#8a5a2b';
+    c.beginPath(); c.ellipse(0, -77, 20, 4.5, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.roundRect(-9, -92, 18, 16, 4); c.fill();
+    c.fillStyle = '#5a3a18'; c.fillRect(-9, -80, 18, 3);
+  } else if (s.hut === 'zylinder') {
+    c.fillStyle = '#18213a';
+    c.beginPath(); c.ellipse(0, -77, 16, 3.5, 0, 0, Math.PI * 2); c.fill();
+    c.fillRect(-9, -98, 18, 22);
+    c.fillStyle = '#c8283a'; c.fillRect(-9, -80, 18, 3);
+  }
+  c.restore();
+}
+
+// ---------- Level ----------
+const level = {
+  boden: [[0, 1500], [1650, 2700], [2880, 3900], [4080, 5300], [5500, 6500], [6660, 7900]],
+  plattformen: [
+    { x:600, y:230, w:160 }, { x:1000, y:255, w:120 }, { x:2000, y:240, w:200 },
+    { x:3200, y:235, w:150 }, { x:3450, y:170, w:120 }, { x:4480, y:240, w:160 }, { x:5900, y:235, w:180 },
+  ],
+  kisten: [
+    { x:800, y:290 }, { x:1300, y:290 }, { x:1300, y:250 }, { x:2400, y:290 }, { x:3000, y:290 },
+    { x:4300, y:290 }, { x:4300, y:250 }, { x:5700, y:290 }, { x:6200, y:290 },
+  ],
+  gegner: [
+    { art:'taube', x:1150, y:262, von:1080, bis:1250, richtung:-1 },
+    { art:'waschbaer', x:2300, y:BODEN_Y, von:2200, bis:2520, richtung:1 },
+    { art:'taube', x:3700, y:262, von:3620, bis:3820, richtung:-1 },
+    { art:'waschbaer', x:5000, y:BODEN_Y, von:4900, bis:5180, richtung:-1 },
+    { art:'taube', x:6350, y:262, von:6280, bis:6450, richtung:-1 },
+  ],
+  diamanten: [
+    { x:400, y:298, wort:0 }, { x:680, y:195, wort:1 }, { x:1900, y:298, wort:2 }, { x:2100, y:200, wort:3 },
+    { x:3510, y:130, wort:4 }, { x:4560, y:200, wort:5 }, { x:5600, y:298, wort:6 }, { x:5990, y:195, wort:7 },
+  ],
+  tor: { x:4800, wort:4, falsch:[5, 1] },   // "Aufzug" → elevator / locker / library
+  bossX: 7600, tuerX: 7730, stopX: 7430,
+};
+const KISTE = 40;
+
+// ---------- Spielzustand ----------
+let zustand = 'menu';   // menu | spiel | boss | finale | fertig | gameover
+let spieler, diamanten, gegner, tor, leben, gesammelt, kamera, zeit, popup, meldung, checkpoint, boss, tuer, tot, bossFrage, torErgebnis;
+let halten = false, haltZeit = 0, sprungGedrueckt = false;
+const SPEED = 230, GRAV = 1600, GRAV_HALT = 800, SPRUNG_V = -480, HALT_MAX = 0.32;
+const PW = 30, PH = 78;  // Trefferbox
+
+function neuesSpiel() {
+  spieler = { x:120, y:BODEN_Y, vy:0, amBoden:true, unverwundbar:0, pose:'lauf' };
+  diamanten = level.diamanten.map(d => ({ ...d, weg:false, funkel:Math.random() * 6 }));
+  gegner = level.gegner.map(g => ({ ...g, tot:0, flug:Math.random() * 6 }));
+  const w = level.tor;
+  const optionen = [ { wort:w.wort, richtig:true }, { wort:w.falsch[0], richtig:false }, { wort:w.falsch[1], richtig:false } ];
+  optionen.sort(() => Math.random() - 0.5);
+  tor = { x:w.x, de:WOERTER[w.wort].de, erledigt:false, steine:optionen.map((o, i) => ({ ...o, y:[305, 220, 130][i] })) };
+  torErgebnis = null;
+  leben = 3; gesammelt = 0; kamera = 0; zeit = 0; popup = null; meldung = null; tot = 0;
+  checkpoint = 120; boss = { maul:0, weg:0 }; tuer = { offen:0 }; bossFrage = null;
+}
+
+// ---------- Eingabe ----------
+function sprungStart() {
+  audioAn();
+  if (zustand !== 'spiel') return;
+  if (spieler.amBoden && tot <= 0) {
+    spieler.vy = SPRUNG_V; spieler.amBoden = false; halten = true; haltZeit = 0; klang.sprung();
+  }
+}
+function sprungEnde() { halten = false; }
+canvas.addEventListener('pointerdown', e => { e.preventDefault(); sprungStart(); });
+canvas.addEventListener('pointerup', sprungEnde);
+canvas.addEventListener('pointercancel', sprungEnde);
+window.addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') { e.preventDefault(); if (!sprungGedrueckt) { sprungGedrueckt = true; sprungStart(); } }
+  if (zustand === 'boss' && bossFrage && ['Digit1', 'Digit2', 'Digit3'].includes(e.code)) antwortGeben(Number(e.code.slice(-1)) - 1);
+});
+window.addEventListener('keyup', e => { if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') { sprungGedrueckt = false; sprungEnde(); } });
+
+// ---------- Logik ----------
+function ueberlappt(ax, ay, aw, ah, bx, by, bw, bh) { return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by; }
+
+function solideOben() {  // alle Flächen, auf denen man landen kann: {x, y(top), w, voll}
+  const liste = [];
+  for (const [a, b] of level.boden) liste.push({ x:a, y:BODEN_Y, w:b - a, h:H - BODEN_Y, voll:false });
+  for (const p of level.plattformen) liste.push({ x:p.x, y:p.y, w:p.w, h:14, voll:false });
+  for (const k of level.kisten) liste.push({ x:k.x, y:k.y, w:KISTE, h:KISTE, voll:true });
+  return liste;
+}
+const SOLIDE = solideOben();
+
+function schaden(grund) {
+  if (spieler.unverwundbar > 0 || tot > 0) return;
+  leben--; klang.aua();
+  if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
+  tot = 0.9; meldung = { text: grund === 'wasser' ? 'Splash! 💦' : 'Ouch!', zeit: 1.2 };
+}
+function wiederbeleben() {
+  spieler.x = checkpoint; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.6;
+}
+
+function update(dt) {
+  zeit += dt;
+  if (popup) { popup.zeit -= dt; if (popup.zeit <= 0) popup = null; }
+  if (meldung) { meldung.zeit -= dt; if (meldung.zeit <= 0) meldung = null; }
+  for (const g of gegner) {
+    g.flug += dt;
+    if (g.tot > 0) { g.tot += dt; continue; }
+    g.x += g.richtung * (g.art === 'taube' ? 70 : 55) * dt;
+    if (g.x < g.von) g.richtung = 1; if (g.x > g.bis) g.richtung = -1;
+  }
+  for (const d of diamanten) d.funkel += dt;
+
+  if (zustand === 'spiel') {
+    if (tot > 0) { tot -= dt; if (tot <= 0) wiederbeleben(); return; }
+    if (spieler.unverwundbar > 0) spieler.unverwundbar -= dt;
+
+    // Horizontal
+    let nx = spieler.x + SPEED * dt;
+    const oben = spieler.y - PH;
+    for (const s of SOLIDE) {
+      if (!s.voll) continue;
+      if (ueberlappt(nx - PW / 2, oben, PW, PH - 2, s.x, s.y, s.w, s.h) && spieler.y > s.y + 4) {
+        nx = Math.min(nx, s.x - PW / 2);
+      }
+    }
+    spieler.x = nx;
+
+    // Vertikal
+    if (!spieler.amBoden) {
+      const g = (halten && spieler.vy < 0 && haltZeit < HALT_MAX) ? GRAV_HALT : GRAV;
+      if (halten) haltZeit += dt;
+      spieler.vy += g * dt;
+    }
+    const altY = spieler.y;
+    spieler.y += spieler.vy * dt;
+    let gelandet = false;
+    if (spieler.vy >= 0) {
+      for (const s of SOLIDE) {
+        if (spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w && altY <= s.y + 0.01 && spieler.y >= s.y) {
+          spieler.y = s.y; spieler.vy = 0; gelandet = true;
+          if (s.y === BODEN_Y && spieler.x < s.x + s.w - 90) checkpoint = Math.max(checkpoint, Math.max(s.x + 40, spieler.x - 20));
+        }
+      }
+    } else {
+      for (const s of SOLIDE) {
+        if (!s.voll) continue;
+        if (spieler.x + PW / 2 > s.x + 3 && spieler.x - PW / 2 < s.x + s.w - 3 && altY - PH >= s.y + s.h - 0.01 && spieler.y - PH < s.y + s.h) {
+          spieler.y = s.y + s.h + PH; spieler.vy = 0;
+        }
+      }
+    }
+    spieler.amBoden = gelandet;
+    if (spieler.amBoden && spieler.vy === 0) {
+      // Prüfen, ob noch Boden unter den Füßen ist
+      let hatBoden = false;
+      for (const s of SOLIDE) if (spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w && Math.abs(spieler.y - s.y) < 0.5) hatBoden = true;
+      if (!hatBoden) spieler.amBoden = false;
+    }
+    spieler.pose = spieler.amBoden ? 'lauf' : 'sprung';
+    if (spieler.y > H + 20) { schaden('wasser'); return; }
+
+    // Diamanten
+    const box = { x: spieler.x - PW / 2, y: spieler.y - PH, w: PW, h: PH };
+    for (const d of diamanten) {
+      if (d.weg) continue;
+      if (ueberlappt(box.x, box.y, box.w, box.h, d.x - 14, d.y - 16, 28, 32)) {
+        d.weg = true; gesammelt++; klang.wort();
+        const w = WOERTER[d.wort];
+        popup = { en: w.en, de: w.de, zeit: 1.8, art:'wort' };
+        sprich(w.en);
+      }
+    }
+    // Frage-Tor
+    if (!tor.erledigt) {
+      for (const s of tor.steine) {
+        if (ueberlappt(box.x, box.y, box.w, box.h, tor.x - 16, s.y - 18, 32, 36)) {
+          tor.erledigt = true; torErgebnis = s.richtig;
+          const w = WOERTER[s.wort];
+          if (s.richtig) { klang.richtig(); popup = { en: w.en + ' ✓', de: tor.de, zeit: 2, art:'richtig' }; gesammelt++; }
+          else { klang.falsch(); popup = { en: w.en + ' ✗', de: w.de + ' – richtig wäre: ' + WOERTER[tor.wort].en, zeit: 2.4, art:'falsch' }; }
+          sprich(WOERTER[tor.wort].en);
+          break;
+        }
+      }
+    }
+    // Gegner
+    for (const g of gegner) {
+      if (g.tot > 0) continue;
+      const gb = gegnerBox(g);
+      if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, gb.x, gb.y, gb.w, gb.h)) {
+        if (spieler.vy > 0 && altY <= gb.y + 14) { g.tot = 0.01; spieler.vy = -320; spieler.amBoden = false; klang.stampf(); }
+        else schaden('gegner');
+      }
+    }
+    // Boss erreicht
+    if (spieler.x >= level.stopX) { spieler.x = level.stopX; zustand = 'boss'; spieler.pose = 'steh'; bossFragen(); }
+  } else if (zustand === 'boss') {
+    boss.maul = 0.5 + 0.5 * Math.sin(zeit * 4);
+  } else if (zustand === 'finale') {
+    tuer.offen = Math.min(1, tuer.offen + dt * 1.2);
+    boss.weg = Math.min(1, boss.weg + dt * 0.8);
+    boss.maul = 0;
+    if (tuer.offen > 0.6) {
+      spieler.pose = 'lauf';
+      spieler.x += SPEED * 0.8 * dt;
+      if (spieler.x > level.tuerX + 10) { zustand = 'fertig'; klang.fanfare(); zeigeEnde(true); }
+    }
+  }
+  const ziel = Math.max(0, Math.min(spieler.x - viewW * (viewW < 450 ? 0.28 : 0.33), level.boden[level.boden.length - 1][1] - viewW));
+  kamera += (ziel - kamera) * Math.min(1, dt * 10);
+}
+function gegnerBox(g) {
+  return g.art === 'taube' ? { x: g.x - 16, y: g.y - 14 + Math.sin(g.flug * 3) * 8, w: 32, h: 26 } : { x: g.x - 20, y: g.y - 26, w: 40, h: 26 };
+}
+
+// ---------- Boss-Frage ----------
+const frageBox = document.getElementById('frage'), frageText = document.getElementById('frage-text'), antworten = document.getElementById('antworten');
+let frageZaehler = 0;
+function bossFragen() {
+  const pool = WOERTER.map((w, i) => i).filter(i => i !== level.tor.wort);
+  const richtig = pool[(frageZaehler * 3 + 1) % pool.length]; frageZaehler++;
+  const andere = pool.filter(i => i !== richtig).sort(() => Math.random() - 0.5).slice(0, 2);
+  const opt = [richtig, ...andere].sort(() => Math.random() - 0.5);
+  bossFrage = { richtig, opt };
+  frageText.textContent = `„Was heißt ‚${WOERTER[richtig].de}' auf Englisch?"`;
+  antworten.innerHTML = '';
+  opt.forEach((i, n) => {
+    const b = document.createElement('button'); b.className = 'antwort';
+    b.textContent = `${n + 1}. ${WOERTER[i].en}`; b.addEventListener('click', () => antwortGeben(n));
+    antworten.appendChild(b);
+  });
+  frageBox.hidden = false;
+}
+function antwortGeben(n) {
+  if (!bossFrage) return;
+  const i = bossFrage.opt[n];
+  if (i === bossFrage.richtig) {
+    klang.richtig(); klang.tuer(); sprich(WOERTER[i].en);
+    frageBox.hidden = true; bossFrage = null; zustand = 'finale';
+    popup = { en: WOERTER[i].en + ' ✓', de: 'The door is open!', zeit: 2.5, art:'richtig' };
+  } else {
+    klang.falsch(); leben--;
+    popup = { en: WOERTER[i].en + ' ✗', de: WOERTER[i].de, zeit: 2, art:'falsch' };
+    if (leben <= 0) { frageBox.hidden = true; bossFrage = null; zustand = 'gameover'; zeigeEnde(false); }
+    else bossFragen();
+  }
+}
+
+// ---------- Ende ----------
+const endeBox = document.getElementById('ende');
+function zeigeEnde(gewonnen) {
+  document.getElementById('ende-icon').textContent = gewonnen ? '🏆' : '💤';
+  document.getElementById('ende-titel').textContent = gewonnen ? 'Level complete!' : 'Game over';
+  document.getElementById('ende-text').innerHTML = gewonnen
+    ? `You found the Statue of Liberty!<br>💎 ${gesammelt} / ${WOERTER.length + 1} Diamanten · ❤️ ${leben} Leben übrig<br><b>Trophäe: Liberty Finder</b> · Titel: Rookie Runner`
+    : `Keine Leben mehr. 💎 ${gesammelt} Diamanten gesammelt.<br>Nochmal? Eintritt wieder 20 Coins.`;
+  setTimeout(() => { endeBox.hidden = false; }, gewonnen ? 900 : 500);
+}
+document.getElementById('btn-nochmal').addEventListener('click', () => { endeBox.hidden = true; neuesSpiel(); zustand = 'spiel'; });
+
+// ---------- Zeichnen ----------
+function diamant(c, x, y, r, farbe, label) {
+  c.save(); c.translate(x, y);
+  c.fillStyle = farbe; c.beginPath();
+  c.moveTo(-r, -r * 0.25); c.lineTo(-r * 0.5, -r); c.lineTo(r * 0.5, -r); c.lineTo(r, -r * 0.25); c.lineTo(0, r); c.closePath(); c.fill();
+  c.fillStyle = 'rgba(255,255,255,.55)'; c.beginPath(); c.moveTo(-r * 0.5, -r); c.lineTo(r * 0.1, -r); c.lineTo(-r * 0.3, -r * 0.25); c.lineTo(-r, -r * 0.25); c.closePath(); c.fill();
+  c.strokeStyle = 'rgba(0,40,80,.5)'; c.lineWidth = 1.5; c.beginPath();
+  c.moveTo(-r, -r * 0.25); c.lineTo(-r * 0.5, -r); c.lineTo(r * 0.5, -r); c.lineTo(r, -r * 0.25); c.lineTo(0, r); c.closePath(); c.stroke();
+  c.beginPath(); c.moveTo(-r, -r * 0.25); c.lineTo(r, -r * 0.25); c.stroke();
+  if (label) {
+    c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillStyle = '#fff'; c.strokeStyle = 'rgba(0,0,0,.6)'; c.lineWidth = 3; c.strokeText(label, 0, r + 14); c.fillText(label, 0, r + 14);
+  }
+  c.restore();
+}
+function taube(c, g) {
+  const b = gegnerBox(g); const cx = b.x + 16, cy = b.y + 14;
+  c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+  if (g.tot > 0) c.scale(1, Math.max(0.2, 1 - g.tot * 2));
+  c.fillStyle = '#8d93a3'; c.beginPath(); c.ellipse(0, 2, 14, 9, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#6a7080'; const fl = Math.sin(g.flug * 14) * 8;
+  c.beginPath(); c.moveTo(-4, 0); c.lineTo(10, -8 - fl); c.lineTo(6, 2); c.closePath(); c.fill();
+  c.fillStyle = '#9aa0b0'; c.beginPath(); c.arc(-11, -5, 6, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#e8a33a'; c.beginPath(); c.moveTo(-17, -5); c.lineTo(-22, -3); c.lineTo(-17, -2); c.closePath(); c.fill();
+  c.fillStyle = '#18213a'; c.beginPath(); c.arc(-13, -6, 1.5, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#c56ad0'; c.beginPath(); c.ellipse(-4, 2, 5, 3, 0, 0, Math.PI * 2); c.fill();
+  c.restore();
+}
+function waschbaer(c, g) {
+  const b = gegnerBox(g); const cx = b.x + 20, cy = b.y + 26;
+  c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+  if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+  const w = Math.sin(g.flug * 10) * 3;
+  c.fillStyle = '#6e6a66'; c.beginPath(); c.ellipse(0, -11, 18, 10, 0, 0, Math.PI * 2); c.fill();
+  // Schwanz geringelt
+  c.lineCap = 'round'; c.lineWidth = 7; c.strokeStyle = '#6e6a66'; c.beginPath(); c.moveTo(14, -12); c.quadraticCurveTo(28, -24 + w, 24, -30 + w); c.stroke();
+  c.strokeStyle = '#2a2622'; c.lineWidth = 7; c.setLineDash([4, 5]); c.beginPath(); c.moveTo(14, -12); c.quadraticCurveTo(28, -24 + w, 24, -30 + w); c.stroke(); c.setLineDash([]);
+  // Kopf
+  c.fillStyle = '#8a8580'; c.beginPath(); c.arc(-14, -16, 9, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#8a8580'; c.beginPath(); c.moveTo(-20, -22); c.lineTo(-18, -29); c.lineTo(-13, -23); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(-10, -23); c.lineTo(-7, -29); c.lineTo(-5, -21); c.closePath(); c.fill();
+  c.fillStyle = '#2a2622'; c.beginPath(); c.ellipse(-16, -16, 8, 3.5, 0, 0, Math.PI * 2); c.fill(); // Maske
+  c.fillStyle = '#fff'; c.beginPath(); c.arc(-18, -16, 1.8, 0, Math.PI * 2); c.arc(-12, -16, 1.8, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#2a2622'; c.beginPath(); c.arc(-22, -11, 1.8, 0, Math.PI * 2); c.fill();
+  // Beine
+  c.fillStyle = '#4a4542';
+  c.beginPath(); c.roundRect(-10 + w, -5, 6, 5, 2); c.roundRect(4 - w, -5, 6, 5, 2); c.fill();
+  c.restore();
+}
+function alligator(c, x, y) {
+  c.save(); c.translate(x + boss.weg * 260, y); c.globalAlpha = 1 - boss.weg * 0.9;
+  const m = boss.maul;
+  c.fillStyle = '#3f8a3e';
+  c.beginPath(); c.ellipse(20, -22, 46, 20, 0, 0, Math.PI * 2); c.fill();        // Körper
+  c.fillStyle = '#2f6b2e';
+  for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(-6 + i * 14, -40); c.lineTo(1 + i * 14, -50); c.lineTo(8 + i * 14, -40); c.closePath(); c.fill(); }
+  c.fillStyle = '#3f8a3e';
+  c.beginPath(); c.moveTo(60, -30); c.quadraticCurveTo(95, -40, 110, -15); c.quadraticCurveTo(90, -22, 60, -12); c.closePath(); c.fill(); // Schwanz
+  // Beine
+  c.fillStyle = '#2f6b2e'; c.beginPath(); c.roundRect(-10, -10, 14, 10, 3); c.roundRect(30, -10, 14, 10, 3); c.fill();
+  // Kopf + Maul (zeigt nach links zum Spieler)
+  c.save(); c.translate(-26, -30);
+  c.fillStyle = '#4b9a48';
+  c.beginPath(); c.roundRect(-44, -4, 50, 14, 5); c.fill();          // Unterkiefer
+  c.save(); c.translate(0, -2); c.rotate(-0.55 * m);
+  c.fillStyle = '#3f8a3e'; c.beginPath(); c.roundRect(-46, -14, 54, 14, 6); c.fill();  // Oberkiefer
+  c.fillStyle = '#fff'; for (let i = 0; i < 6; i++) { c.beginPath(); c.moveTo(-42 + i * 8, 0); c.lineTo(-39 + i * 8, 5); c.lineTo(-36 + i * 8, 0); c.closePath(); c.fill(); }
+  c.fillStyle = '#18213a'; c.beginPath(); c.arc(-36, -10, 1.6, 0, Math.PI * 2); c.fill(); // Nasenloch
+  c.restore();
+  c.fillStyle = '#fff'; for (let i = 0; i < 6; i++) { c.beginPath(); c.moveTo(-40 + i * 8, -3); c.lineTo(-37 + i * 8, -8 - 0.01); c.lineTo(-34 + i * 8, -3); c.closePath(); c.fill(); }
+  // Augen
+  c.fillStyle = '#e9e9c0'; c.beginPath(); c.arc(-2, -14, 6, 0, Math.PI * 2); c.fill();
+  c.fillStyle = '#18213a'; c.beginPath(); c.ellipse(-4, -14, 1.8, 3.5, 0, 0, Math.PI * 2); c.fill();
+  c.restore();
+  c.restore();
+}
+function tuerZeichnen(c, x, y) {
+  c.save(); c.translate(x, y);
+  // Mauer
+  c.fillStyle = '#9b8d7c'; c.fillRect(-70, -170, 240, 170);
+  c.strokeStyle = 'rgba(0,0,0,.18)'; c.lineWidth = 1.5;
+  for (let r = 0; r < 9; r++) { const yy = -170 + r * 19; c.beginPath(); c.moveTo(-70, yy); c.lineTo(170, yy); c.stroke();
+    for (let k = 0; k < 7; k++) { const xx = -70 + k * 36 + (r % 2) * 18; c.beginPath(); c.moveTo(xx, yy); c.lineTo(xx, yy + 19); c.stroke(); } }
+  // Türbogen
+  c.fillStyle = '#5a4634'; c.beginPath(); c.moveTo(-34, 0); c.lineTo(-34, -90); c.arc(0, -90, 34, Math.PI, 0); c.lineTo(34, 0); c.closePath(); c.fill();
+  // Türflügel (öffnet nach hinten = wird schmaler)
+  const offen = tuer.offen;
+  const bw = 30 * (1 - offen);
+  c.fillStyle = '#8b5a2b'; c.beginPath(); c.moveTo(-30, -2); c.lineTo(-30, -90); c.arc(0, -90, 30, Math.PI, 0); c.lineTo(30, -2); c.closePath();
+  c.save(); c.clip();
+  c.fillRect(-30, -130, 60, 130);
+  c.fillStyle = '#6f4420'; c.fillRect(-30, -130, 60 - bw * 2 > 0 ? 0 : 0, 0);
+  // Öffnung: helles Licht
+  if (offen > 0) { c.fillStyle = `rgba(255,240,180,${0.9 * offen})`; c.fillRect(-30 + bw, -130, 60 - 2 * bw, 130); }
+  c.restore();
+  c.strokeStyle = '#3d2a14'; c.lineWidth = 3; c.stroke();
+  if (offen < 0.5) { c.fillStyle = '#e0a400'; c.beginPath(); c.arc(-14, -40, 5, 0, Math.PI * 2); c.fill(); c.fillRect(-16, -40, 4, 10); }
+  // Freiheits-Emblem über der Tür
+  c.fillStyle = '#e0a400'; c.beginPath(); c.arc(0, -140, 12, 0, Math.PI * 2); c.fill();
+  c.strokeStyle = '#e0a400'; c.lineWidth = 2.5; for (let i = 0; i < 7; i++) { const a = -Math.PI + i * (Math.PI / 6); c.beginPath(); c.moveTo(Math.cos(a) * 13, -140 + Math.sin(a) * 13); c.lineTo(Math.cos(a) * 21, -140 + Math.sin(a) * 21); c.stroke(); }
+  c.restore();
+}
+function freiheitsstatue(c, x, y, s, farbe) {
+  c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe; c.strokeStyle = farbe; c.lineCap = 'round';
+  // Sockel
+  c.fillRect(-34, -20, 68, 20); c.fillRect(-26, -46, 52, 26); c.fillRect(-18, -60, 36, 14);
+  // Robe
+  c.beginPath(); c.moveTo(-16, -60); c.lineTo(-10, -130); c.lineTo(10, -130); c.lineTo(18, -60); c.closePath(); c.fill();
+  // Tafel-Arm (links)
+  c.lineWidth = 6; c.beginPath(); c.moveTo(-8, -118); c.lineTo(-20, -104); c.stroke(); c.fillRect(-26, -112, 8, 12);
+  // Fackel-Arm (rechts, hoch)
+  c.beginPath(); c.moveTo(8, -122); c.lineTo(16, -158); c.stroke();
+  c.fillRect(13, -168, 6, 12);
+  c.beginPath(); c.moveTo(16, -168); c.quadraticCurveTo(24, -176, 16, -184); c.quadraticCurveTo(8, -176, 16, -168); c.fill();
+  // Kopf + Krone
+  c.beginPath(); c.arc(0, -138, 7, 0, Math.PI * 2); c.fill();
+  c.lineWidth = 2; for (let i = -3; i <= 3; i++) { const a = -Math.PI / 2 + i * 0.32; c.beginPath(); c.moveTo(Math.cos(a) * 7, -138 + Math.sin(a) * 7); c.lineTo(Math.cos(a) * 15, -138 + Math.sin(a) * 15); c.stroke(); }
+  c.restore();
+}
+let fotoBild = null;
+function hintergrund(c) {
+  // Himmel
+  const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
+  c.fillStyle = g; c.fillRect(0, 0, viewW, H);
+  if (einstellungen.foto && fotoBild) {
+    const s = Math.max(viewW * 1.4 / fotoBild.width, H / fotoBild.height);
+    const bw = fotoBild.width * s, bh = fotoBild.height * s;
+    const ox = -Math.min(bw - viewW, kamera * 0.15);
+    c.drawImage(fotoBild, ox, Math.min(0, H - bh) * 0.15, bw, bh);
+    const sch = c.createLinearGradient(0, BODEN_Y - 120, 0, BODEN_Y); sch.addColorStop(0, 'rgba(24,33,58,0)'); sch.addColorStop(1, 'rgba(24,33,58,.35)');
+    c.fillStyle = sch; c.fillRect(0, BODEN_Y - 120, viewW, 120);
+    return;
+  }
+  // Sonne
+  c.fillStyle = '#fff2a8'; c.beginPath(); c.arc(viewW * 0.82 - kamera * 0.01, 60, 28, 0, Math.PI * 2); c.fill();
+  // Wolken
+  c.fillStyle = 'rgba(255,255,255,.9)';
+  for (let i = 0; i < 6; i++) {
+    const wx = ((i * 330 + 80 - kamera * 0.12) % (viewW + 300) + viewW + 300) % (viewW + 300) - 150, wy = 40 + (i % 3) * 28;
+    c.beginPath(); c.arc(wx, wy, 18, 0, Math.PI * 2); c.arc(wx + 20, wy - 8, 22, 0, Math.PI * 2); c.arc(wx + 44, wy, 16, 0, Math.PI * 2); c.fill();
+  }
+  // Skyline (weit)
+  c.fillStyle = '#9fb6cf';
+  for (let i = 0; i < 40; i++) {
+    const bx = ((i * 70 - kamera * 0.08) % (viewW + 200) + viewW + 200) % (viewW + 200) - 100;
+    const bh = 40 + ((i * 37) % 70); c.fillRect(bx, 240 - bh, 46, bh + 10);
+    if (i % 5 === 0) c.fillRect(bx + 18, 240 - bh - 22, 8, 22);
+  }
+  // Statue of Liberty (Silhouette, sehr langsame Parallaxe)
+  freiheitsstatue(c, viewW * 0.72 - kamera * 0.05, 250, 1.05, '#4f7f8c');
+  // Wasser
+  c.fillStyle = '#4f9bd6'; c.fillRect(0, 250, viewW, H - 250);
+  c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 2;
+  for (let i = 0; i < 14; i++) {
+    const wx = ((i * 110 - kamera * 0.3 + Math.sin(zeit + i) * 6) % (viewW + 120) + viewW + 120) % (viewW + 120) - 60;
+    c.beginPath(); c.moveTo(wx, 262 + (i % 4) * 16); c.quadraticCurveTo(wx + 10, 258 + (i % 4) * 16, wx + 20, 262 + (i % 4) * 16); c.stroke();
+  }
+  // Büsche (nah)
+  c.fillStyle = '#4fae5f';
+  for (let i = 0; i < 12; i++) {
+    const bx = ((i * 190 + 40 - kamera * 0.6) % (viewW + 200) + viewW + 200) % (viewW + 200) - 100;
+    c.beginPath(); c.arc(bx, 330, 16, Math.PI, 0); c.arc(bx + 22, 330, 20, Math.PI, 0); c.arc(bx + 44, 330, 14, Math.PI, 0); c.fill();
+  }
+}
+function welt(c) {
+  // Boden (Promenade auf Liberty Island)
+  for (const [a, b] of level.boden) {
+    const x0 = a - kamera, w = b - a;
+    c.fillStyle = '#b9ad9a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y);
+    c.fillStyle = '#d9cfbb'; c.fillRect(x0, BODEN_Y, w, 10);
+    c.strokeStyle = 'rgba(0,0,0,.12)'; c.lineWidth = 1;
+    for (let x = Math.ceil(a / 40) * 40; x < b; x += 40) { c.beginPath(); c.moveTo(x - kamera, BODEN_Y + 10); c.lineTo(x - kamera, H); c.stroke(); }
+    c.fillStyle = '#8f8472'; c.fillRect(x0, BODEN_Y + 10, w, 2);
+  }
+  // Plattformen
+  for (const p of level.plattformen) {
+    const x = p.x - kamera; if (x > viewW + 50 || x + p.w < -50) continue;
+    c.fillStyle = '#8b5a2b'; c.beginPath(); c.roundRect(x, p.y, p.w, 14, 4); c.fill();
+    c.fillStyle = '#4fae5f'; c.beginPath(); c.roundRect(x - 2, p.y - 3, p.w + 4, 7, 3); c.fill();
+  }
+  // Kisten
+  for (const k of level.kisten) {
+    const x = k.x - kamera; if (x > viewW + 50 || x + KISTE < -50) continue;
+    c.fillStyle = '#c98a3e'; c.fillRect(x, k.y, KISTE, KISTE);
+    c.strokeStyle = '#7a4a16'; c.lineWidth = 3; c.strokeRect(x + 1.5, k.y + 1.5, KISTE - 3, KISTE - 3);
+    c.beginPath(); c.moveTo(x + 4, k.y + 4); c.lineTo(x + KISTE - 4, k.y + KISTE - 4); c.moveTo(x + KISTE - 4, k.y + 4); c.lineTo(x + 4, k.y + KISTE - 4); c.stroke();
+  }
+  // Diamanten
+  for (const d of diamanten) {
+    if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue;
+    const schweb = Math.sin(d.funkel * 3) * 4;
+    diamant(c, x, d.y + schweb, 14, '#39c6f0');
+    c.fillStyle = 'rgba(255,255,255,.9)'; const fs = 2 + Math.sin(d.funkel * 7) * 1.5;
+    c.beginPath(); c.arc(x + 9, d.y + schweb - 14, Math.max(0.5, fs), 0, Math.PI * 2); c.fill();
+  }
+  // Frage-Tor
+  if (!tor.erledigt) {
+    const x = tor.x - kamera;
+    if (x > -60 && x < viewW + 60) {
+      c.strokeStyle = 'rgba(224,164,0,.6)'; c.lineWidth = 4; c.setLineDash([8, 10]); c.beginPath(); c.moveTo(x, 90); c.lineTo(x, BODEN_Y); c.stroke(); c.setLineDash([]);
+      for (const s of tor.steine) diamant(c, x, s.y, 16, '#e0a400', WOERTER[s.wort].en);
+    }
+  }
+  // Gegner
+  for (const g of gegner) {
+    if (g.tot > 0.6) continue; const x = g.x - kamera; if (x < -60 || x > viewW + 60) continue;
+    c.save(); c.translate(-kamera, 0); if (g.art === 'taube') taube(c, g); else waschbaer(c, g); c.restore();
+  }
+  // Tür + Boss
+  if (level.tuerX - kamera < viewW + 300) {
+    tuerZeichnen(c, level.tuerX - kamera, BODEN_Y);
+    alligator(c, level.bossX - kamera, BODEN_Y);
+  }
+  // Spieler
+  if (tot <= 0) {
+    const blink = spieler.unverwundbar > 0 && Math.floor(zeit * 12) % 2 === 0;
+    c.globalAlpha = blink ? 0.35 : 1;
+    zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit);
+    c.globalAlpha = 1;
+  }
+}
+function hud(c) {
+  // Leben
+  for (let i = 0; i < 3; i++) {
+    c.fillStyle = i < leben ? '#e63946' : 'rgba(0,0,0,.2)';
+    herz(c, 24 + i * 26, 24, 9);
+  }
+  // Diamanten
+  diamant(c, viewW - 70, 24, 10, '#39c6f0');
+  c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle';
+  c.fillStyle = '#18213a'; c.fillText(`${gesammelt} / ${WOERTER.length + 1}`, viewW - 54, 24);
+  // Fortschritt
+  const ende = level.tuerX; const f = Math.min(1, spieler.x / ende);
+  c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.roundRect(viewW / 2 - 90, 16, 180, 8, 4); c.fill();
+  c.fillStyle = '#1d3f8f'; c.beginPath(); c.roundRect(viewW / 2 - 90, 16, 180 * f, 8, 4); c.fill();
+  freiheitsstatue(c, viewW / 2 + 92, 34, 0.14, '#1d3f8f');
+  // Tor-Hinweis
+  if (!tor.erledigt && spieler.x > tor.x - 520 && spieler.x < tor.x + 40) {
+    c.font = 'bold 20px system-ui, sans-serif'; c.textAlign = 'center';
+    const txt = `Welcher Diamant heißt „${tor.de}"?`;
+    const w = c.measureText(txt).width + 28;
+    c.fillStyle = 'rgba(224,164,0,.92)'; c.beginPath(); c.roundRect(viewW / 2 - w / 2, 40, w, 34, 10); c.fill();
+    c.fillStyle = '#18213a'; c.fillText(txt, viewW / 2, 57);
+  }
+  // Wort-Popup
+  if (popup) {
+    const a = Math.min(1, popup.zeit / 0.4);
+    c.globalAlpha = a;
+    const farbe = popup.art === 'falsch' ? '#c8283a' : (popup.art === 'richtig' ? '#2e9e5b' : '#1d3f8f');
+    c.font = 'bold 40px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    const w = Math.max(c.measureText(popup.en).width, 180) + 50;
+    c.fillStyle = 'rgba(255,255,255,.92)'; c.beginPath(); c.roundRect(viewW / 2 - w / 2, 100, w, 84, 16); c.fill();
+    c.fillStyle = farbe; c.fillText(popup.en, viewW / 2, 128);
+    c.font = '600 20px system-ui, sans-serif'; c.fillStyle = '#444'; c.fillText(popup.de, viewW / 2, 164);
+    c.globalAlpha = 1;
+  }
+  if (meldung) {
+    c.font = 'bold 30px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillStyle = '#fff'; c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 5; c.strokeText(meldung.text, viewW / 2, 210); c.fillText(meldung.text, viewW / 2, 210);
+  }
+  if (zustand === 'boss' || zustand === 'finale') {
+    c.font = 'bold 22px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillStyle = '#fff'; c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 5;
+    const t = zustand === 'boss' ? 'Boss! Beantworte die Frage.' : 'The door is open – go!';
+    c.strokeText(t, viewW / 2, 100); c.fillText(t, viewW / 2, 100);
+  }
+}
+function herz(c, x, y, r) {
+  c.beginPath(); c.moveTo(x, y + r);
+  c.bezierCurveTo(x - r * 1.4, y - r * 0.2, x - r * 0.6, y - r * 1.2, x, y - r * 0.4);
+  c.bezierCurveTo(x + r * 0.6, y - r * 1.2, x + r * 1.4, y - r * 0.2, x, y + r); c.fill();
+}
+
+function zeichnen() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = '#18213a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (bereich.y > 0) {
+    ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.font = `${Math.round(16 * dpr)}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Tipp: Handy quer halten 📱↔', canvas.width / 2, (bereich.y + bereich.h + 40) * dpr);
+  }
+  ctx.setTransform(dpr * skala, 0, 0, dpr * skala, dpr * bereich.x, dpr * bereich.y);
+  ctx.save(); ctx.beginPath(); ctx.rect(0, 0, viewW, H); ctx.clip();
+  hintergrund(ctx);
+  welt(ctx);
+  if (zustand !== 'menu') hud(ctx);
+  ctx.restore();
+}
+
+// ---------- Schleife ----------
+let letzte = performance.now(), frames = 0, fpsZeit = 0, fps = 0;
+function schleife(now) {
+  let dt = (now - letzte) / 1000; letzte = now;
+  if (dt > 0.05) dt = 0.05;
+  frames++; fpsZeit += dt; if (fpsZeit >= 1) { fps = frames; frames = 0; fpsZeit = 0; }
+  if (zustand !== 'menu') update(dt); else { zeit += dt; kamera = 0; }
+  zeichnen();
+  requestAnimationFrame(schleife);
+}
+
+// ---------- Menü ----------
+const menu = document.getElementById('menu'), vorschau = document.getElementById('vorschau'), vctx = vorschau.getContext('2d');
+function skinMenueBauen() {
+  const wrap = document.getElementById('skinzeilen'); wrap.innerHTML = '';
+  for (const o of SKIN_OPTIONEN) {
+    const z = document.createElement('div'); z.className = 'zeile';
+    const b = document.createElement('b'); b.textContent = o.label; z.appendChild(b);
+    const w = document.createElement('div'); w.className = 'wahl';
+    const l = document.createElement('button'); l.className = 'pfeil'; l.textContent = '◀';
+    const s = document.createElement('span'); s.textContent = skin[o.key];
+    const r = document.createElement('button'); r.className = 'pfeil'; r.textContent = '▶';
+    const wechsel = d => { const i = o.werte.indexOf(skin[o.key]); skin[o.key] = o.werte[(i + d + o.werte.length) % o.werte.length]; s.textContent = skin[o.key]; };
+    l.addEventListener('click', () => wechsel(-1)); r.addEventListener('click', () => wechsel(1));
+    w.append(l, s, r); z.appendChild(w); wrap.appendChild(z);
+  }
+}
+skinMenueBauen();
+function vorschauZeichnen() {
+  if (menu.hidden) return;
+  vctx.setTransform(1, 0, 0, 1, 0, 0); vctx.clearRect(0, 0, vorschau.width, vorschau.height);
+  vctx.fillStyle = '#e9f4ff'; vctx.beginPath(); vctx.roundRect(0, 0, 300, 380, 24); vctx.fill();
+  zeichneFigur(vctx, 150, 350, 300, skin, 'lauf', performance.now() / 1000);
+  requestAnimationFrame(vorschauZeichnen);
+}
+vorschauZeichnen();
+const btnStimme = document.getElementById('btn-stimme'), btnFoto = document.getElementById('btn-foto');
+btnStimme.addEventListener('click', () => { einstellungen.stimme = !einstellungen.stimme; btnStimme.textContent = einstellungen.stimme ? '🔊 Wort sprechen: an' : '🔇 Wort sprechen: aus'; btnStimme.classList.toggle('an', einstellungen.stimme); });
+function fotoSetzen(src) {
+  return new Promise(res => {
+    const img = new Image(); img.onload = () => { fotoBild = img; einstellungen.foto = true; btnFoto.textContent = '🖼️ Hintergrund: Foto'; res(true); };
+    img.onerror = () => { einstellungen.foto = false; btnFoto.textContent = '🖼️ Hintergrund: Cartoon (Foto fehlt)'; res(false); };
+    img.src = src;
+  });
+}
+btnFoto.addEventListener('click', () => {
+  if (einstellungen.foto) { einstellungen.foto = false; btnFoto.textContent = '🖼️ Hintergrund: Cartoon'; return; }
+  if (fotoBild) { einstellungen.foto = true; btnFoto.textContent = '🖼️ Hintergrund: Foto'; return; }
+  fotoSetzen('../../../app/klasse9/bilder/landmarks/01-liberty.jpg');   // nur im Repo vorhanden; sonst bleibt Cartoon
+});
+document.getElementById('btn-start').addEventListener('click', () => { audioAn(); menu.hidden = true; neuesSpiel(); zustand = 'spiel'; });
+
+neuesSpiel();
+requestAnimationFrame(schleife);
+
+// ---------- Test-Haken ----------
+window.__runner = {
+  start() { audioAn(); menu.hidden = true; neuesSpiel(); zustand = 'spiel'; },
+  springe(haltenMs = 250) { sprungStart(); setTimeout(sprungEnde, haltenMs); },
+  stand() { return { zustand, x: spieler.x, y: spieler.y, amBoden: spieler.amBoden, leben, diamanten: gesammelt, kamera, fps, popup: popup ? popup.en : null, torErgebnis, frageOffen: !frageBox.hidden, bossFrage: bossFrage ? bossFrage.opt.map(i => WOERTER[i].en) : null, richtig: bossFrage ? WOERTER[bossFrage.richtig].en : null }; },
+  teleport(x) { spieler.x = x; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; kamera = Math.max(0, x - viewW * 0.33); },
+  antwort(n) { antwortGeben(n); },
+  setSkin(o) { Object.assign(skin, o); skinMenueBauen(); },
+  setFoto: fotoSetzen,
+  zeichneFigur, WOERTER, level, skin,
+};
+})();
+</script>
+</body>
+</html>

@@ -2103,7 +2103,9 @@
       if (naechster >= reihe.length) return;
       const w = reihe[naechster++]; w.y = -40; w.x = 8 + Math.random() * 64;
       const text = wort(w);
-      w.el = el("button", { class: "patrol-wort", lang: "en", style: `left:${w.x}%; top:${w.y}px`, "aria-label": T(`Wort: ${text}. Links britisch, rechts amerikanisch.`, `Word: ${text}. Left British, right American.`) }, text);
+      // Deutsche Bedeutung klein darunter, damit klar ist, welches Wort gemeint ist (z. B. subway · U-Bahn)
+      w.el = el("button", { class: "patrol-wort", style: `left:${w.x}%; top:${w.y}px`, "aria-label": T(`Wort: ${text} (${w.p.de}). Links britisch, rechts amerikanisch.`, `Word: ${text} (${w.p.de}). Left British, right American.`) },
+        el("span", { lang: "en" }, text), el("small", { lang: "de" }, w.p.de));
       let startX = null;
       w.el.addEventListener("pointerdown", (e) => { startX = e.clientX; w.el.setPointerCapture(e.pointerId); });
       w.el.addEventListener("pointerup", (e) => {

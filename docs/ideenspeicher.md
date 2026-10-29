@@ -82,3 +82,10 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 - Geheimakten: weitere Akten (je Superheld/Landmark), Audio nach Freigabe – offen
 - Hörverstehen: erst hören, dann antworten – offen (nur auf Wunsch)
 - Secret Level Regel B (goldene Akte nach Serien) – offen
+
+## Hausaufgaben-Knopf „HW“ (Machbarkeit, 29.10.2026) – nichts gebaut
+- **Machbar, einfach.** Die App kennt jeden Teil über Station/Kategorie, Gruppe und Teilnummer; ein Direktsprung existiert schon (Neu-Zeile, Power-Up-Zeile). Aufwand ≈ ½ Tag je App.
+- **Pflege durch Mr. Alex:** eine Zeile in `inhalte/hausaufgabe.tsv` (Klasse 9: `inhalte/klasse9/hausaufgabe.tsv`): `von | bis | ziel | text`, z. B. `2026-11-02 | 2026-11-08 | hoeren:03 | Hörübung 3 „Talking about free time“`. Mehrere Zeilen = mehrere Wochen im Voraus; die App zeigt die, die heute gilt. Danach `daten_bauen.py` + Push (oder ich trage es nach Zuruf im Chat ein).
+- **Anzeige:** Knopf „📝 HW“ oben in der Leiste (neben Tempo) **und** eine Zeile auf der Startseite „📝 Homework bis So 8.11.: Hörübung 3“ mit Sprung; am Zielteil ein Schild „HW“ (wie ✨/⚡). Erledigt (Teil fertig) → Häkchen am Knopf, Zeile wird grün. Keine Extra-Punkte (oder kleiner Bonus, offen).
+- **Mehrere Aufgaben pro Woche:** Liste statt Zeile. **Kein Server:** Die Hausaufgabe steht in den Daten der App, alle Schüler sehen dieselbe.
+- Offen: Bonus ja/nein; Erinnerung am Vorabend (nur möglich, wenn App offen ist – kein Push ohne Server).

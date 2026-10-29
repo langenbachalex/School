@@ -4,7 +4,7 @@ Automatisch erzeugt aus `inhalte/kernsaetze.tsv`, `inhalte/vokabeln.tsv` und `in
 
 **Eigene Aufnahme:** Datei als MP3 mit genau diesem Namen in `app/audio/` (im angegebenen Unterordner) ablegen. Sie ersetzt dann das KI-Audio.
 
-Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauenstimme (weibliche Personen in Hörtexten).
+Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauenstimme (weibliche Personen in Hörtexten bis 28.10.); Elrond – britisch, jung (1. Junge); John Shaw – britisch, jung (2. Junge); Emmaline – britisches Mädchen (1. Mädchen); Alice – britisch (2. Mädchen).
 
 | Datei | Stimme | Sprechtext |
 |---|---|---|
@@ -472,8 +472,8 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `spiel/gym_fini.mp3` | Alex Langenbach | That's it for today. See you tomorrow! |
 | `spiel/gym_pause.mp3` | Alex Langenbach | Break! Come back later and finish your Word Gym. |
 | `spiel/powerup.mp3` | Alex Langenbach | Powered up! Your English is fully charged again. |
-| `hoeren/01-mias-monday_text01.mp3` | Alice | Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train. |
-| `hoeren/01-mias-monday_text02.mp3` | Alice | School starts at eight a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at nine p.m. |
+| `hoeren/01-mias-monday_text01.mp3` | Emmaline | Hi, I'm Mia. On Monday, I get up at six forty-five a.m. I have breakfast with my brother Ben. Then I go to school by train. It's a long way, but I love it! I reed a book on the train. |
+| `hoeren/01-mias-monday_text02.mp3` | Emmaline | School starts at eight a.m. After school, I play chess with my grandpa. In the evening, I watch TV. I go to bed at nine p.m. |
 | `hoeren/01-mias-monday_aussage01.mp3` | Alex Langenbach | Mia gets up at six forty-five a.m. |
 | `hoeren/01-mias-monday_aussage02.mp3` | Alex Langenbach | Mia has breakfast with her sister. |
 | `hoeren/01-mias-monday_aussage03.mp3` | Alex Langenbach | Mia goes to school by train. |
@@ -481,7 +481,22 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `hoeren/01-mias-monday_aussage05.mp3` | Alex Langenbach | School starts at nine a.m. |
 | `hoeren/01-mias-monday_aussage06.mp3` | Alex Langenbach | Mia plays football with her grandpa. |
 | `hoeren/01-mias-monday_aussage07.mp3` | Alex Langenbach | Mia goes to bed at nine p.m. |
-| `hoeren/02-how-do-you-get-there_text01.mp3` | Alice | Hi, I'm Mia. I go to school by train. It's a long way, but I love it! I read on the train. |
-| `hoeren/02-how-do-you-get-there_text02.mp3` | Alex Langenbach | Hi, I'm Ben. I walk to school. It's a short journey. That's great! |
-| `hoeren/02-how-do-you-get-there_text03.mp3` | Alex Langenbach | Hello, I'm Harry. I go to training by car. There's a lot of traffic. I'm stressed! |
-| `hoeren/02-how-do-you-get-there_text04.mp3` | Alex Langenbach | Hi, I'm Declan. I go to training by bike. I cycle every day. I love it! |
+| `hoeren/02-how-do-you-get-there_text01.mp3` | Emmaline | Hi, I'm Mia. I go to school by train. It's a long way, but I love it! I read on the train. |
+| `hoeren/02-how-do-you-get-there_text02.mp3` | Elrond | Hi, I'm Ben. I walk to school. It's a short journey. That's great! |
+| `hoeren/02-how-do-you-get-there_text03.mp3` | John Shaw | Hello, I'm Harry. I go to training by car. There's a lot of traffic. I'm stressed! |
+| `hoeren/02-how-do-you-get-there_text04.mp3` | Elrond | Hi, I'm Declan. I go to training by bike. I cycle every day. I love it! |
+| `hoeren/03-talking-about-free-time_text01.mp3` | Emmaline | Hi, I'm Mia. After school I go to the drama club. It's on Monday at four p.m. We play short scenes and I love it! Sometimes we show a play to our parents. |
+| `hoeren/03-talking-about-free-time_text02.mp3` | Elrond | Hello, I'm Ben. I'm in the football club. We train on Wednesday afternoon, at half past three. My friends say I'm good, but I don't like it. Our coach is too strict. I'd love to go to the trampolining club instead! |
+| `hoeren/03-talking-about-free-time_text03.mp3` | Alice | Hi, I'm Priya. On Saturday morning I go to the swimming club. We start at eight a.m. – that's very early! But I like it, because we often go to the sea in summer. I never miss a training. |
+| `hoeren/03-talking-about-free-time_text04.mp3` | John Shaw | Hi, I'm Luca. My club is the hiking club. We hike in the hills on Friday afternoon. It's a long way and it's a bit boring, but the food at the end is great. |
+| `hoeren/03-talking-about-free-time_text05.mp3` | Elrond | Hey, I'm Noah. I don't go to a sports club. I'm in the newspaper club on Thursday at two p.m. We write articles about our school. Last week we had a photo competition – and I won the first prize! |
+| `hoeren/03-talking-about-free-time_aussage01.mp3` | Alex Langenbach | Mia's drama club is on Monday. |
+| `hoeren/03-talking-about-free-time_aussage02.mp3` | Alex Langenbach | Mia never shows a play to her parents. |
+| `hoeren/03-talking-about-free-time_aussage03.mp3` | Alex Langenbach | Ben trains at half past three. |
+| `hoeren/03-talking-about-free-time_aussage04.mp3` | Alex Langenbach | Ben loves football. |
+| `hoeren/03-talking-about-free-time_aussage05.mp3` | Alex Langenbach | Ben is in the trampolining club. |
+| `hoeren/03-talking-about-free-time_aussage06.mp3` | Alex Langenbach | Priya's swimming club starts at eight p.m. |
+| `hoeren/03-talking-about-free-time_aussage07.mp3` | Alex Langenbach | Priya often goes to the sea in summer. |
+| `hoeren/03-talking-about-free-time_aussage08.mp3` | Alex Langenbach | Luca thinks hiking is a bit boring. |
+| `hoeren/03-talking-about-free-time_aussage09.mp3` | Alex Langenbach | Noah is in a sports club. |
+| `hoeren/03-talking-about-free-time_aussage10.mp3` | Alex Langenbach | Noah won the first prize in a photo competition. |

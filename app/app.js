@@ -41,7 +41,7 @@
   }
   function lob(stark) {
     // Kurze Sprüche für normale Antworten; starke für jede 5. richtige Antwort in Folge und fertige Teile (stark = true)
-    richtigSerie++;
+    richtigSerie++; comboPruefen();
     const art = fehlerSerie >= 2 && RUF.doch ? "doch" : (stark || richtigSerie % 5 === 0) && RUF.stark ? "stark" : "lob";
     fehlerSerie = 0;
     return ruf(art);
@@ -629,12 +629,12 @@
 
   // Gemeinsamer Rahmen für eine Aufgabe/Karte
   function karte(teil, zaehlerText, ...inhalt) {
-    return el("section", { class: "satzkarte" }, zaehlerText && el("p", { class: "zaehler" }, zaehlerText), ...inhalt);
+    return el("section", { class: "satzkarte" }, zaehlerText && el("p", { class: "zaehler" }, zaehlerText, comboFlamme()), ...inhalt);
   }
   function rueckmeldung() { return el("div", { class: "rueckmeldung", hidden: true, role: "status" }); }
   function melde(box, art, text) {
     if (art === "hilfe") { // nach einem Fehler: kurze Ermutigung (in den Spielen humorvoll), dann „Ich helfe dir“
-      fehlerSerie++; richtigSerie = 0;
+      fehlerSerie++; comboBruch();
       text = `${ruf(lage && lage.nr === 5 && RUF.spiel ? "spiel" : "fehler")} ${text}`;
     }
     box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text;
@@ -1284,8 +1284,8 @@
     const bildPlatz = bild(false);
     const fragen = () => { if (enDe) spiele([v.audio.en]); };
     const bewerten = el("div", { class: "knopfreihe", hidden: true },
-      knopf("✓ Gewusst", naechstes, "haupt"),
-      knopf("↻ Nochmal üben", () => { lage.vq.push(v.id); naechstes(); }));
+      knopf("✓ Gewusst", () => { comboTreffer(); naechstes(); }, "haupt"),
+      knopf("↻ Nochmal üben", () => { comboBruch(); lage.vq.push(v.id); naechstes(); }));
     const zeigeLoesung = () => {
       loesung.hidden = true; antwort.hidden = false; satzZeile.hidden = !s;
       bildPlatz.textContent = v.symbol;
@@ -1345,7 +1345,11 @@
       stand.spiel.titel = titelIndex(stand.spiel.punkte);
       speichern();
     }
-    return stand.spiel;
+    const sp = stand.spiel; // Coins (29.10.2026): gespiegelte Währung, nicht rückwirkend – ein älterer Stand startet bei 0
+    if (!(sp.coins >= 0)) sp.coins = 0;
+    if (!Array.isArray(sp.gekauft)) sp.gekauft = [];
+    if (!(sp.ausgegeben >= 0)) sp.ausgegeben = 0;
+    return sp;
   }
   const titelIndex = (p) => SP.titel.reduce((i, t, k) => (p >= t.ab ? k : i), 0);
   const neueTeile = () => Object.keys(stand.teile || {}).length;
@@ -1415,8 +1419,8 @@
   function einheitBonus() { punkteDazu(PUNKTE.einheit); }
   function punkteDazu(plus) {
     const sp = spielstand();
-    sp.punkte += plus;
-    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐` });
+    sp.punkte += plus; sp.coins += plus; // jeder Punkt bringt auch einen Coin (Coins sinken nur im Shop)
+    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐ · +${plus} 🪙` });
     const t = titelIndex(sp.punkte);
     if (t > sp.titel) {
       sp.titel = t;
@@ -1522,11 +1526,12 @@
 
   function statusleiste() {
     const sp = spielstand(), t = SP.titel[sp.titel], n = serie();
-    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") },
+    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() },
       el("span", { class: "status-titel" }, t.symbol + " " + t.name),
       el("span", {}, `⭐ ${sp.punkte} Punkte`),
+      el("span", { class: "status-coins", title: "Coins" }, `🪙 ${sp.coins}`),
       el("span", { title: "Schultage am Stück" }, `🔥 ${n}`),
-      knopf("🏆 Meine Sammlung", sammlung, "haupt"));
+      knopf("🏆 Meine Sammlung", sammlung, "haupt"), knopf("🛍️ Shop", shop));
   }
 
   function heldenKarte(h, gross) {
@@ -1562,10 +1567,11 @@
       : el("div", { class: "held-zu", "aria-label": "Noch nicht gesammelt" }, el("span", {}, "?"), el("small", {}, "Perfect week"))));
     zeige(
       el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Meine Sammlung")),
-      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") },
+      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() },
         el("p", { class: "klein" }, "Dein Titel"),
         el("h2", { lang: "en" }, SP.titel[t].symbol + " " + SP.titel[t].name),
         el("p", {}, `⭐ ${sp.punkte} Punkte`),
+        el("p", { class: "coins-zeile" }, `🪙 Coins: ${sp.coins} · ausgegeben: ${sp.ausgegeben}`, " ", knopf("🛍️ Shop", shop, "leise")),
         naechster && el("div", { class: "fortschritt" }, el("span", { style: `width:${Math.round(100 * (sp.punkte - SP.titel[t].ab) / (naechster.ab - SP.titel[t].ab))}%` })),
         naechster && el("p", { class: "klein" }, `Noch ${naechster.ab - sp.punkte} Punkte bis „${naechster.name}“`)),
       el("section", { class: "satzkarte" },
@@ -1583,6 +1589,93 @@
         el("h2", {}, "Abzeichen"),
         el("ul", { class: "abzeichen" }, abz.map(([sym, name, ok]) => el("li", { class: ok ? "ok" : "" },
           el("span", { "aria-hidden": "true" }, sym), el("span", { lang: "en" }, name), el("span", { class: "unsichtbar" }, ok ? "geschafft" : "noch nicht"))))));
+  }
+
+  /* ---------- 🛍️ Shop (Coins; docs/gamification/konzept.md „Coins und Shop“) ----------
+     Artikel kommen aus D.spiel.shop (Bauskript). Nichts ist gratis. Die Sperre bei zu wenig Coins gilt im Programm (kaufe), nicht nur am Knopf. */
+  const rahmenKlasse = () => { const sp = spielstand(); return sp.rahmen && sp.gekauft.includes("rahmen_" + sp.rahmen) ? " rahmen-" + sp.rahmen : ""; };
+  function konfettiFrei() {
+    const box = el("div", { class: "konfetti-frei", "aria-hidden": "true" }, konfetti());
+    document.body.append(box);
+    setTimeout(() => box.remove(), 2800);
+  }
+  function kaufe(a) {
+    const sp = spielstand();
+    if (a.bald) { toast(a.hinweis); return false; }
+    if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } return false; }
+    if (sp.coins < a.preis) { toast(`Noch ${a.preis - sp.coins} Coins`); return false; }
+    if (!confirm(`Für ${a.preis} Coins kaufen?`)) return false;
+    sp.coins -= a.preis; sp.ausgegeben += a.preis; sp.gekauft.push(a.id);
+    if (a.rahmen) sp.rahmen = a.rahmen;
+    speichern();
+    ereignisse.push({ art: "toast", text: `🪙 −${a.preis}` });
+    setTimeout(zeigeEreignisse, 50); konfettiFrei();
+    return true;
+  }
+  function shop() {
+    lage = null;
+    const sp = spielstand();
+    const artikel = (SP.shop || []).map((a) => {
+      const hat = sp.gekauft.includes(a.id), fehlt = a.preis - sp.coins, aktiv = a.rahmen && sp.rahmen === a.rahmen && hat;
+      let k;
+      if (a.bald) k = el("span", { class: "shop-hinweis" }, a.hinweis);
+      else if (hat && a.rahmen) k = aktiv ? el("span", { class: "shop-hinweis ok" }, "✓ Angelegt") : knopf("Anlegen", () => { kaufe(a); shop(); });
+      else if (hat) k = el("span", { class: "shop-hinweis ok" }, "✓ Gekauft");
+      else if (fehlt > 0) k = sperrt(knopf(`Noch ${fehlt} Coins`, () => { kaufe(a); shop(); }));
+      else k = knopf("Kaufen", () => { if (kaufe(a)) shop(); }, "haupt");
+      return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.bald ? " bald" : "") + (a.rahmen ? " rahmen-" + a.rahmen : ""), "data-artikel": a.id },
+        el("span", { class: "sym", "aria-hidden": "true" }, a.symbol),
+        el("strong", {}, a.name), a.unter && el("span", { class: "unter" }, a.unter),
+        el("span", { class: "preis" }, `🪙 ${a.preis}`),
+        a.bald && el("span", { class: "bald-schild" }, "kommt bald"),
+        k);
+    });
+    zeige(
+      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🛍️ Shop")),
+      el("section", { class: "satzkarte shop-stand" },
+        el("p", { class: "shop-coins" }, `🪙 ${sp.coins} Coins`),
+        el("p", { class: "klein" }, "Jeder Punkt bringt dir auch einen Coin. Punkte bleiben – Coins kannst du hier ausgeben.")),
+      el("div", { class: "shop-raster" }, artikel),
+      el("div", { class: "knopfreihe" }, knopf("🏆 Meine Sammlung", sammlung)));
+  }
+
+  /* ---------- Mini-Reward beim Vokabellernen (Word Gym, Vokabel-Abfrage, Bild, Lücke): ab 3 richtigen in Folge ----------
+     Nur Show, keine Punkte. Im Wechsel: Flamme wächst · Münzen fliegen ins 🪙 · ein Bus flitzt vorbei. Bei prefers-reduced-motion nur Text. */
+  const COMBO_AB = 3, COMBO_FAHRZEUG = "🚌", COMBO_TEILE = ["vok_abfrage", "vok_bild", "vok_luecke"];
+  const comboErlaubt = () => !!lage && (!!lage.gym || (lage.teile && lage.teile[lage.teil] && COMBO_TEILE.includes(lage.teile[lage.teil].art)));
+  const comboFlamme = () => (comboErlaubt() && richtigSerie >= COMBO_AB
+    ? el("span", { class: "combo-flamme", style: `--n:${Math.min(richtigSerie - COMBO_AB, 8)}`, role: "status", "aria-label": `${richtigSerie} richtig in Folge` },
+        `🔥 ${richtigSerie}`, el("span", { class: "combo-ziel", "aria-hidden": "true" }, "🪙"))
+    : null);
+  const ruhig = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function comboTreffer() { richtigSerie++; fehlerSerie = 0; comboPruefen(); }
+  function comboPruefen() {
+    if (!comboErlaubt() || richtigSerie < COMBO_AB) return;
+    const art = (richtigSerie - COMBO_AB) % 3;
+    setTimeout(() => comboAnimation(art), 80); // die nächste Karte ist dann schon gezeichnet
+  }
+  function comboAnimation(art) {
+    const flamme = app.querySelector(".combo-flamme");
+    if (!flamme) return;
+    if (ruhig()) { flamme.classList.add("text"); return; }
+    if (art === 0) { flamme.classList.remove("wachs"); void flamme.offsetWidth; flamme.classList.add("wachs"); return; }
+    if (art === 2) { const f = el("div", { class: "combo-fahrzeug", "aria-hidden": "true" }, COMBO_FAHRZEUG); document.body.append(f); setTimeout(() => f.remove(), 1800); return; }
+    const ziel = flamme.querySelector(".combo-ziel"), r = ziel.getBoundingClientRect();
+    const zx = r.left + r.width / 2, zy = r.top + r.height / 2, sx = innerWidth / 2, sy = innerHeight * 0.55;
+    const box = el("div", { class: "combo-muenzen", "aria-hidden": "true" },
+      el("span", { class: "combo-text", style: `left:${sx}px;top:${sy - 40}px` }, "🪙 +Combo"),
+      Array.from({ length: 6 }, (_, i) => el("span", { class: "combo-muenze", style: `left:${sx + (i - 2.5) * 22}px;top:${sy}px;--dx:${zx - sx - (i - 2.5) * 22}px;--dy:${zy - sy}px;animation-delay:${i * 0.07}s` }, "🪙")));
+    document.body.append(box);
+    setTimeout(() => box.remove(), 1600);
+  }
+  function comboBruch() {
+    const war = richtigSerie; richtigSerie = 0;
+    const flamme = app.querySelector(".combo-flamme");
+    if (war < COMBO_AB || !flamme || ruhig()) return;
+    const r = flamme.getBoundingClientRect();
+    const puff = el("div", { class: "combo-puff", "aria-hidden": "true", style: `left:${r.left}px;top:${r.top}px` }, "💨");
+    document.body.append(puff);
+    setTimeout(() => puff.remove(), 900);
   }
 
   /* ---------- Geheimakten (docs/secret-level): öffnen sich, wenn Figur/Karte UND Ort/Staat freigeschaltet sind ---------- */
@@ -1835,7 +1928,7 @@
       gymMerke(v.id);
       lob(); if (letzterRuf) gymLobToast(letzterRuf);
     } else {
-      k.s = 0; k.f = gymFaellig(0); fehlerSerie++; richtigSerie = 0;
+      k.s = 0; k.f = gymFaellig(0); fehlerSerie++; comboBruch();
       if (!gym.wieder.has(v.id)) { gym.wieder.add(v.id); gym.schlange.push(v.id); } else gymMerke(v.id);
       toast("Kein Problem – kommt gleich noch mal.");
     }

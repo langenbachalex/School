@@ -161,7 +161,7 @@
   }
   function lob(stark) {
     // Kurze Sprüche für normale Antworten; starke für jede 5. richtige Antwort in Folge und fertige Teile (stark = true)
-    richtigSerie++;
+    richtigSerie++; comboPruefen();
     const art = fehlerSerie >= 2 && RUF.doch ? "doch" : (stark || richtigSerie % 5 === 0) && RUF.stark ? "stark" : "lob";
     fehlerSerie = 0;
     return ruf(art);
@@ -666,10 +666,10 @@
 
   /* ---------- Bausteine ---------- */
   const karte = (zaehlerText, ...inhalt) =>
-    el("section", { class: "satzkarte" }, zaehlerText && el("p", { class: "zaehler" }, zaehlerText), ...inhalt);
+    el("section", { class: "satzkarte" }, zaehlerText && el("p", { class: "zaehler" }, zaehlerText, comboFlamme()), ...inhalt);
   const rueckmeldung = () => el("div", { class: "rueckmeldung", hidden: true, role: "status" });
   function melde(box, art, text) {
-    if (art === "hilfe") { fehlerSerie++; richtigSerie = 0; text = `${ruf("fehler")} ${HILFE()} ${text}`; }
+    if (art === "hilfe") { fehlerSerie++; comboBruch(); text = `${ruf("fehler")} ${HILFE()} ${text}`; }
     box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text;
   }
   // Satz mit Lücke: art "voll" | "luecke" | "buchstabe" (erster Buchstabe jedes Lückenworts)
@@ -1295,8 +1295,8 @@
     const satzZeile = el("p", { class: "klein", lang: "en", hidden: true }, D.saetze[v.satz].en);
     const fragen = () => { if (enDe) spiele([tonWort(v)]); };
     const bewerten = el("div", { class: "knopfreihe", hidden: true },
-      knopf(T("✓ Gewusst", "✓ I knew it"), naechstes, "haupt weiter"),
-      knopf(T("↻ Nochmal üben", "↻ Practise again"), () => { lage.vq.push(v.id); naechstes(); }));
+      knopf(T("✓ Gewusst", "✓ I knew it"), () => { comboTreffer(); naechstes(); }, "haupt weiter"),
+      knopf(T("↻ Nochmal üben", "↻ Practise again"), () => { comboBruch(); lage.vq.push(v.id); naechstes(); }));
     const loesung = sperre(knopf(T("Lösung", "Solution"), () => {
       loesung.hidden = true; antwort.hidden = false; bewerten.hidden = false; satzZeile.hidden = false;
       lage.abspielen = () => spiele([tonWort(v)]); lage.weiter = naechstes;
@@ -1342,7 +1342,11 @@
       stand.spiel.titel = titelIndex(stand.spiel.punkte);
       speichern();
     }
-    return stand.spiel;
+    const sp = stand.spiel; // Coins (29.10.2026): gespiegelte Währung, nicht rückwirkend – ein älterer Stand startet bei 0
+    if (!(sp.coins >= 0)) sp.coins = 0;
+    if (!Array.isArray(sp.gekauft)) sp.gekauft = [];
+    if (!(sp.ausgegeben >= 0)) sp.ausgegeben = 0;
+    return sp;
   }
   function serie() {
     const sp = spielstand();
@@ -1409,8 +1413,8 @@
   function einheitBonus() { punkteDazu(PUNKTE.einheit); }
   function punkteDazu(plus) {
     const sp = spielstand();
-    sp.punkte += plus;
-    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐` });
+    sp.punkte += plus; sp.coins += plus; // jeder Punkt bringt auch einen Coin (Coins sinken nur im Shop)
+    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐ · +${plus} 🪙` });
     const t = titelIndex(sp.punkte);
     if (t > sp.titel) {
       sp.titel = t;
@@ -1528,9 +1532,10 @@
 
   function statusleiste() {
     const sp = spielstand(), t = SP.titel[sp.titel];
-    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") },
+    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() },
       el("span", { class: "status-titel", lang: "en" }, (sp.titel === SP.titel.length - 1 ? "👑 " : "🎓 ") + t.name),
       el("span", {}, `⭐ ${sp.punkte} ${T("Punkte", "points")}`),
+      el("span", { class: "status-coins", title: "Coins" }, `🪙 ${sp.coins}`),
       el("span", { title: T("Schultage am Stück", "School days in a row") }, `🔥 ${serie()}`),
       knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung, "haupt"));
   }
@@ -1569,10 +1574,11 @@
       : el("div", { class: "held-zu", "aria-label": T("Noch nicht gesammelt", "Not collected yet") }, el("span", {}, "?"), el("small", {}, "Perfect week"))));
     zeige(
       el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, T("🏆 Meine Sammlung", "🏆 My collection"))),
-      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") },
+      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() },
         el("p", { class: "klein" }, T("Dein Titel", "Your title")),
         el("h2", { lang: "en" }, (t === SP.titel.length - 1 ? "👑 " : "🎓 ") + SP.titel[t].name),
         el("p", {}, `⭐ ${sp.punkte} ${T("Punkte", "points")}`),
+        el("p", { class: "coins-zeile" }, `🪙 Coins: ${sp.coins} · ${T("ausgegeben", "spent")}: ${sp.ausgegeben}`, " ", knopf("🛍️ Shop", shop, "leise")),
         naechster && el("div", { class: "fortschritt" }, el("span", { style: `width:${Math.round(100 * (sp.punkte - SP.titel[t].ab) / (naechster.ab - SP.titel[t].ab))}%` })),
         naechster && el("p", { class: "klein" }, T(`Noch ${naechster.ab - sp.punkte} Punkte bis „${naechster.name}“`, `${naechster.ab - sp.punkte} more points to “${naechster.name}”`))),
       el("section", { class: "satzkarte" },
@@ -1593,6 +1599,94 @@
           el("span", { "aria-hidden": "true" }, sym), el("span", { lang: "en" }, name), el("span", { class: "unsichtbar" }, ok ? "✓" : "–"))))),
       el("p", { class: "klein bildnachweis" }, T("Fotos: Carol M. Highsmith, Library of Congress (frei nutzbar). Karte: US Census Bureau / us-atlas.",
         "Photos: Carol M. Highsmith, Library of Congress (no known restrictions). Map: US Census Bureau / us-atlas.")));
+  }
+
+  /* ---------- 🛍️ Shop (Coins; docs/gamification/konzept.md „Coins und Shop“) ----------
+     Artikel kommen aus D.spiel.shop (Bauskript). Nichts ist gratis. Die Sperre bei zu wenig Coins gilt im Programm (kaufe), nicht nur am Knopf. */
+  const rahmenKlasse = () => { const sp = spielstand(); return sp.rahmen && sp.gekauft.includes("rahmen_" + sp.rahmen) ? " rahmen-" + sp.rahmen : ""; };
+  function konfettiFrei() {
+    const box = el("div", { class: "konfetti-frei", "aria-hidden": "true" }, konfetti());
+    document.body.append(box);
+    setTimeout(() => box.remove(), 2800);
+  }
+  function kaufe(a) {
+    const sp = spielstand();
+    if (a.bald) { toast(tx(a.hinweis)); return false; }
+    if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } return false; }
+    if (sp.coins < a.preis) { toast(T(`Noch ${a.preis - sp.coins} Coins`, `${a.preis - sp.coins} more coins`)); return false; }
+    if (!confirm(T(`Für ${a.preis} Coins kaufen?`, `Buy for ${a.preis} coins?`))) return false;
+    sp.coins -= a.preis; sp.ausgegeben += a.preis; sp.gekauft.push(a.id);
+    if (a.rahmen) sp.rahmen = a.rahmen;
+    speichern();
+    ereignisse.push({ art: "toast", text: `🪙 −${a.preis}` });
+    setTimeout(zeigeEreignisse, 50); konfettiFrei();
+    return true;
+  }
+  function shop() {
+    lage = null; ansicht = shop;
+    const sp = spielstand();
+    const artikel = (SP.shop || []).map((a) => {
+      const hat = sp.gekauft.includes(a.id), fehlt = a.preis - sp.coins, aktiv = a.rahmen && sp.rahmen === a.rahmen && hat;
+      let k;
+      if (a.bald) k = el("span", { class: "shop-hinweis" }, tx(a.hinweis));
+      else if (hat && a.rahmen) k = aktiv ? el("span", { class: "shop-hinweis ok" }, T("✓ Angelegt", "✓ Wearing it")) : knopf(T("Anlegen", "Put it on"), () => { kaufe(a); shop(); });
+      else if (hat) k = el("span", { class: "shop-hinweis ok" }, T("✓ Gekauft", "✓ Bought"));
+      else if (fehlt > 0) k = sperrt(knopf(T(`Noch ${fehlt} Coins`, `${fehlt} more coins`), () => { kaufe(a); shop(); }));
+      else k = knopf(T("Kaufen", "Buy"), () => { if (kaufe(a)) shop(); }, "haupt");
+      return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.bald ? " bald" : "") + (a.rahmen ? " rahmen-" + a.rahmen : ""), "data-artikel": a.id },
+        el("span", { class: "sym", "aria-hidden": "true" }, a.symbol),
+        el("strong", {}, tx(a.name)), a.unter && el("span", { class: "unter" }, tx(a.unter)),
+        el("span", { class: "preis" }, `🪙 ${a.preis}`),
+        a.bald && el("span", { class: "bald-schild" }, T("kommt bald", "coming soon")),
+        k);
+    });
+    zeige(
+      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🛍️ Shop")),
+      el("section", { class: "satzkarte shop-stand" },
+        el("p", { class: "shop-coins" }, `🪙 ${sp.coins} Coins`),
+        el("p", { class: "klein" }, T("Jeder Punkt bringt dir auch einen Coin. Punkte bleiben – Coins kannst du hier ausgeben.",
+          "Every point also gives you a coin. Points stay – coins are yours to spend here."))),
+      el("div", { class: "shop-raster" }, artikel),
+      el("div", { class: "knopfreihe" }, knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung)));
+  }
+
+  /* ---------- Mini-Reward beim Vokabellernen (Word Gym, Vocabulary-Abfrage): ab 3 richtigen in Folge ----------
+     Nur Show, keine Punkte. Im Wechsel: Flamme wächst · Münzen fliegen ins 🪙 · ein Auto flitzt vorbei. Bei prefers-reduced-motion nur Text. */
+  const COMBO_AB = 3, COMBO_FAHRZEUG = "🚗";
+  const comboErlaubt = () => !!lage && (!!lage.gym || (lage.teile && lage.teile[lage.teil] && lage.teile[lage.teil].art === "vok_abfrage"));
+  const comboFlamme = () => (comboErlaubt() && richtigSerie >= COMBO_AB
+    ? el("span", { class: "combo-flamme", style: `--n:${Math.min(richtigSerie - COMBO_AB, 8)}`, role: "status", "aria-label": T(`${richtigSerie} richtig in Folge`, `${richtigSerie} in a row`) },
+        `🔥 ${richtigSerie}`, el("span", { class: "combo-ziel", "aria-hidden": "true" }, "🪙"))
+    : null);
+  const ruhig = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function comboTreffer() { richtigSerie++; fehlerSerie = 0; comboPruefen(); }
+  function comboPruefen() {
+    if (!comboErlaubt() || richtigSerie < COMBO_AB) return;
+    const art = (richtigSerie - COMBO_AB) % 3;
+    setTimeout(() => comboAnimation(art), 80); // die nächste Karte ist dann schon gezeichnet
+  }
+  function comboAnimation(art) {
+    const flamme = app.querySelector(".combo-flamme");
+    if (!flamme) return;
+    if (ruhig()) { flamme.classList.add("text"); return; }
+    if (art === 0) { flamme.classList.remove("wachs"); void flamme.offsetWidth; flamme.classList.add("wachs"); return; }
+    if (art === 2) { const f = el("div", { class: "combo-fahrzeug", "aria-hidden": "true" }, COMBO_FAHRZEUG); document.body.append(f); setTimeout(() => f.remove(), 1800); return; }
+    const ziel = flamme.querySelector(".combo-ziel"), r = ziel.getBoundingClientRect();
+    const zx = r.left + r.width / 2, zy = r.top + r.height / 2, sx = innerWidth / 2, sy = innerHeight * 0.55;
+    const box = el("div", { class: "combo-muenzen", "aria-hidden": "true" },
+      el("span", { class: "combo-text", style: `left:${sx}px;top:${sy - 40}px` }, "🪙 +Combo"),
+      Array.from({ length: 6 }, (_, i) => el("span", { class: "combo-muenze", style: `left:${sx + (i - 2.5) * 22}px;top:${sy}px;--dx:${zx - sx - (i - 2.5) * 22}px;--dy:${zy - sy}px;animation-delay:${i * 0.07}s` }, "🪙")));
+    document.body.append(box);
+    setTimeout(() => box.remove(), 1600);
+  }
+  function comboBruch() {
+    const war = richtigSerie; richtigSerie = 0;
+    const flamme = app.querySelector(".combo-flamme");
+    if (war < COMBO_AB || !flamme || ruhig()) return;
+    const r = flamme.getBoundingClientRect();
+    const puff = el("div", { class: "combo-puff", "aria-hidden": "true", style: `left:${r.left}px;top:${r.top}px` }, "💨");
+    document.body.append(puff);
+    setTimeout(() => puff.remove(), 900);
   }
 
   /* ---------- Geheimakten (docs/secret-level): öffnen sich, wenn Figur/Karte UND Ort/Staat freigeschaltet sind ---------- */
@@ -1834,7 +1928,7 @@
       gymMerke(v.id);
       lob(); if (letzterRuf) gymLobToast(letzterRuf);
     } else {
-      k.s = 0; k.f = gymFaellig(0); fehlerSerie++; richtigSerie = 0;
+      k.s = 0; k.f = gymFaellig(0); fehlerSerie++; comboBruch();
       if (!gym.wieder.has(v.id)) { gym.wieder.add(v.id); gym.schlange.push(v.id); } else gymMerke(v.id);
       toast(T("Kein Problem – kommt gleich noch mal.", "No problem – it comes back in a moment."));
     }
@@ -1910,7 +2004,11 @@
         el("button", { class: "kachel", onclick: () => spielPatrol(k), "aria-label": "Border Patrol" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🛂"),
           el("span", { class: "titel", lang: "en" }, "Border Patrol"),
-          el("span", { class: "unter" }, T("Britisch oder amerikanisch? Wörter einsortieren", "British or American? Sort the words")))));
+          el("span", { class: "unter" }, T("Britisch oder amerikanisch? Wörter einsortieren", "British or American? Sort the words"))),
+        el("button", { class: "kachel shop-kachel", onclick: shop, "aria-label": "Shop" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🛍️"),
+          el("span", { class: "titel", lang: "en" }, "Shop"),
+          el("span", { class: "unter" }, T(`🪙 ${spielstand().coins} Coins – Rahmen und mehr`, `🪙 ${spielstand().coins} coins – frames and more`)))));
   }
   // Memory: Unit und Abschnitt wählen (wie in Vocabulary), dann 6 Paare aus diesen Wörtern
   function memoryWahl(k) {
@@ -1940,21 +2038,44 @@
      Pro Runde jedes Paar einmal (zufällig britisch oder amerikanisch). 3 Leben: falsch einsortiert oder durchgefallen kostet eins.
      Punkte (+10) beim ersten geschafften Durchgang des Tages (mind. 13 von 17 richtig), Tagesmarke gym.patrolTag. */
   const PATROL = { leben: 3, tempo: 26, abstand: 2600, ziel: 13 };
+  // Flaggen als SVG, weil Emoji-Flaggen auf Windows nur als Buchstaben erscheinen
+  function flaggeSvg(seite, klasse) {
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 60 36"); svg.setAttribute("class", "flagge " + (klasse || "")); svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", seite === "be" ? "British" : "American");
+    const r = (x, y, w, h, f) => { const e = document.createElementNS(NS, "rect"); e.setAttribute("x", x); e.setAttribute("y", y); e.setAttribute("width", w); e.setAttribute("height", h); e.setAttribute("fill", f); svg.append(e); };
+    const l = (p, f, w) => { const e = document.createElementNS(NS, "path"); e.setAttribute("d", p); e.setAttribute("stroke", f); e.setAttribute("stroke-width", w); svg.append(e); };
+    if (seite === "be") {
+      r(0, 0, 60, 36, "#012169");
+      l("M0 0L60 36M60 0L0 36", "#fff", 7); l("M0 0L60 36M60 0L0 36", "#C8102E", 2.5);
+      l("M30 0V36M0 18H60", "#fff", 11); l("M30 0V36M0 18H60", "#C8102E", 6);
+    } else {
+      r(0, 0, 60, 36, "#fff");
+      for (let i = 0; i < 13; i += 2) r(0, i * 36 / 13, 60, 36 / 13, "#B22234");
+      r(0, 0, 24, 36 * 7 / 13, "#3C3B6E");
+      for (let y = 0; y < 5; y++) for (let x = 0; x < 6; x++) { const c = document.createElementNS(NS, "circle"); c.setAttribute("cx", 2.2 + x * 4); c.setAttribute("cy", 2 + y * 3.9); c.setAttribute("r", 0.9); c.setAttribute("fill", "#fff"); svg.append(c); }
+    }
+    return svg;
+  }
   function spielPatrol(k) {
     ansicht = null; lage = null; stopp();
     const g = gymStand();
     const reihe = mischen(SP.patrol).map((p) => ({ p, seite: Math.random() < 0.5 ? "be" : "ae" }));
     let leben = PATROL.leben, richtig = 0, naechster = 0, aktiv = null, laeuft = true, letzter = 0, offen = [], zeitstempel = null;
     const zurueck = () => { laeuft = false; stopp(); zeigeSpiele(k); };
-    const himmel = el("div", { class: "patrol-himmel", role: "group", "aria-label": "Border Patrol" });
+    const himmel = el("div", { class: "patrol-himmel", role: "group", "aria-label": "Border Patrol" },
+      flaggeSvg("be", "patrol-rand links"), flaggeSvg("ae", "patrol-rand rechts"));
     const stand = el("p", { class: "patrol-stand", "aria-live": "polite" });
     const box = rueckmeldung();
     const zeigeStand = () => { stand.replaceChildren(el("span", {}, "❤️".repeat(leben) + "🖤".repeat(PATROL.leben - leben)), el("span", {}, `✓ ${richtig} / ${reihe.length}`)); };
-    const tonFuer = (w) => (w.seite === "be" ? (w.p.audio_be || { text: w.p.be, stimme: "m" }) : (w.p.audio_ae || { text: w.p.ae, stimme: "m" }));
+    // Antippen spielt den ganzen Satz (vorhandene Aufnahmen: britisch Mr. Alex, amerikanisch Jeremy/Jessica); solange er läuft, bleibt alles stehen
+    const tonFuer = (w) => { const satz = D.saetze[w.p.id]; return w.seite === "be" ? (satz.be.audio || { text: satz.be.en, stimme: "m" }) : tonSatz(satz); };
+    let pause = false;
     const wort = (w) => (w.seite === "be" ? w.p.be : w.p.ae);
-    const flagge = (seite) => (seite === "be" ? "🇬🇧" : "🇺🇸");
-    const zonen = [["be", "🇬🇧", "British"], ["ae", "🇺🇸", "American"]].map(([seite, fl, name]) =>
-      el("button", { class: "patrol-zone " + seite, onclick: () => { if (aktiv) sortiere(aktiv, seite); } }, el("span", { class: "patrol-flagge", "aria-hidden": "true" }, fl), el("span", { lang: "en" }, name)));
+    const flagge = (seite) => flaggeSvg(seite);
+    const zonen = [["be", "British"], ["ae", "American"]].map(([seite, name]) =>
+      el("button", { class: "patrol-zone " + seite, onclick: () => { if (aktiv) sortiere(aktiv, seite); } }, flaggeSvg(seite, "patrol-flagge"), el("span", { lang: "en" }, name)));
     function entferne(w) { offen = offen.filter((x) => x !== w); if (aktiv === w) aktiv = null; setTimeout(() => w.el.remove(), 700); }
     function sortiere(w, seite) {
       if (!laeuft || w.fertig) return;
@@ -1962,21 +2083,21 @@
       if (seite === w.seite) {
         richtig++; w.el.classList.add("weg-" + seite); richtigSerie++;
       } else {
-        leben--; w.el.classList.add("falsch"); w.el.append(el("small", {}, " " + flagge(w.seite)));
+        leben--; w.el.classList.add("falsch"); w.el.append(flagge(w.seite));
       }
       zeigeStand(); entferne(w); pruefeEnde();
     }
     function durchgefallen(w) {
       if (w.fertig) return;
       w.fertig = true; leben--;
-      w.el.classList.add("falsch"); w.el.append(el("small", {}, " " + flagge(w.seite)));
+      w.el.classList.add("falsch"); w.el.append(flagge(w.seite));
       zeigeStand(); entferne(w); pruefeEnde();
     }
     function waehle(w) {
       if (!laeuft || w.fertig) return;
       if (aktiv && aktiv !== w) aktiv.el.classList.remove("aktiv");
       aktiv = w; w.el.classList.add("aktiv");
-      spiele([tonFuer(w)]);
+      pause = true; spiele([tonFuer(w)]).then(() => { pause = false; });
     }
     function neues() {
       if (naechster >= reihe.length) return;
@@ -1997,11 +2118,12 @@
       if (!laeuft) return;
       if (zeitstempel === null) zeitstempel = t;
       const dt = Math.min(0.05, (t - zeitstempel) / 1000); zeitstempel = t;
-      if (t - letzter > PATROL.abstand && offen.filter((w) => !w.fertig).length < 3) { neues(); letzter = t; }
+      if (pause) letzter = t - Math.min(t - letzter, PATROL.abstand - 400);
+      else if (t - letzter > PATROL.abstand && offen.filter((w) => !w.fertig).length < 3) { neues(); letzter = t; }
       const tempo = PATROL.tempo * (1 + richtig * 0.05) * (window.__patrolTempo || 1);
       const boden = himmel.clientHeight;
       offen.forEach((w) => {
-        if (w.fertig || w === aktiv) return;
+        if (w.fertig || w === aktiv || pause) return;
         w.y += tempo * dt; w.el.style.top = w.y + "px";
         if (w.y > boden - 10) durchgefallen(w);
       });

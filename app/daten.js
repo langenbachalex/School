@@ -6287,6 +6287,41 @@ window.DATEN = {
     "bis": "2027-12-31",
     "name": "Weihnachtsferien"
    }
+  ],
+  "shop": [
+   {
+    "id": "runner",
+    "symbol": "🎮",
+    "name": "Runner-Ticket",
+    "unter": "Eintritt für das Jump'n'Run",
+    "preis": 100,
+    "bald": true,
+    "hinweis": "Das Spiel kommt bald. Spar schon mal!"
+   },
+   {
+    "id": "rahmen_rot",
+    "symbol": "🎨",
+    "name": "Rahmen für dein Titel-Schild",
+    "unter": "Rot",
+    "preis": 50,
+    "rahmen": "rot"
+   },
+   {
+    "id": "rahmen_blau",
+    "symbol": "🎨",
+    "name": "Rahmen für dein Titel-Schild",
+    "unter": "Blau",
+    "preis": 50,
+    "rahmen": "blau"
+   },
+   {
+    "id": "rahmen_gruen",
+    "symbol": "🎨",
+    "name": "Rahmen für dein Titel-Schild",
+    "unter": "Grün",
+    "preis": 50,
+    "rahmen": "gruen"
+   }
   ]
  }
 };

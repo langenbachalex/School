@@ -9152,6 +9152,68 @@ window.DATEN = {
     "bis": "2027-12-31",
     "name": "Weihnachtsferien"
    }
+  ],
+  "shop": [
+   {
+    "id": "runner",
+    "symbol": "🎮",
+    "name": {
+     "G": "Runner-Ticket",
+     "E": "Runner ticket"
+    },
+    "unter": {
+     "G": "Eintritt für das Jump'n'Run",
+     "E": "Entry to the jump'n'run"
+    },
+    "preis": 100,
+    "bald": true,
+    "hinweis": {
+     "G": "Das Spiel kommt bald. Spar schon mal!",
+     "E": "The game is coming soon. Start saving!"
+    }
+   },
+   {
+    "id": "rahmen_rot",
+    "symbol": "🎨",
+    "name": {
+     "G": "Rahmen für dein Titel-Schild",
+     "E": "Frame for your title card"
+    },
+    "unter": {
+     "G": "Rot",
+     "E": "Red"
+    },
+    "preis": 50,
+    "rahmen": "rot"
+   },
+   {
+    "id": "rahmen_blau",
+    "symbol": "🎨",
+    "name": {
+     "G": "Rahmen für dein Titel-Schild",
+     "E": "Frame for your title card"
+    },
+    "unter": {
+     "G": "Blau",
+     "E": "Blue"
+    },
+    "preis": 50,
+    "rahmen": "blau"
+   },
+   {
+    "id": "rahmen_gruen",
+    "symbol": "🎨",
+    "name": {
+     "G": "Rahmen für dein Titel-Schild",
+     "E": "Frame for your title card"
+    },
+    "unter": {
+     "G": "Grün",
+     "E": "Green"
+    },
+    "preis": 50,
+    "rahmen": "gruen"
+   }
   ]
  },
  "gym": {

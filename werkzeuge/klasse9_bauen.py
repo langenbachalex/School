@@ -407,6 +407,16 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
 TERMIN = {"name": "GLN 2", "datum": "2026-11-24", "powerup": True}  # powerup: 14 Tage vorher werden alle erledigten Teile fällig (⚡ Power Up)
 GYM = {"pensum": {"neu": 4, "wdh": 8}, "grenzen": {"neu": [1, 6], "wdh": [4, 12]}, "intervalle": [1, 3, 7, 14, 30, 60, 120]}
 
+# Shop (Coins = gespiegelte Punkte, nicht rückwirkend; docs/gamification/konzept.md „Coins und Shop“). Erweiterbar: neue Artikel hier eintragen.
+# Texte mit G/E wie bei "unter" der Kacheln (tx). bald: gezeigt, noch nicht kaufbar · rahmen: CSS-Klasse rahmen-<farbe> für Titel-Schild und Startkarte
+SHOP = [
+    {"id": "runner", "symbol": "🎮", "name": {"G": "Runner-Ticket", "E": "Runner ticket"}, "unter": {"G": "Eintritt für das Jump'n'Run", "E": "Entry to the jump'n'run"}, "preis": 100, "bald": True,
+     "hinweis": {"G": "Das Spiel kommt bald. Spar schon mal!", "E": "The game is coming soon. Start saving!"}},
+    {"id": "rahmen_rot", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Rot", "E": "Red"}, "preis": 50, "rahmen": "rot"},
+    {"id": "rahmen_blau", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Blau", "E": "Blue"}, "preis": 50, "rahmen": "blau"},
+    {"id": "rahmen_gruen", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Grün", "E": "Green"}, "preis": 50, "rahmen": "gruen"},
+]
+
 
 def spieldaten():
     import frei_saarland, usa_karte
@@ -424,6 +434,7 @@ def spieldaten():
         "patrol": [{"id": z["id"], "be": z["be_wort"], "ae": z["luecke"], "de": z["wort_de"],
                     "audio_be": a(f"audio/beae/w_{z['id']}_be.mp3"), "audio_ae": a(f"audio/beae/w_{z['id']}_ae.mp3")} for z in tsv("beae.tsv")],
         "frei": frei_saarland.als_daten(),
+        "shop": SHOP,
     }
 
 

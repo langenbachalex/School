@@ -259,6 +259,30 @@
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
     return a;
   }
+  // Tipp-Prüfung (wie Klasse 6): 0 genau · 1 ein Fehler (Vertauschen zählt als einer) · 2 mehr; bis 2 Buchstaben muss es genau stimmen
+  const normT = (t) => String(t).toLowerCase().replace(/[’`´]/g, "'").replace(/[.,!?;:"“”]/g, "").replace(/\s+/g, " ").trim();
+  function abstand(a, b) { // Damerau-Levenshtein
+    const d = Array.from({ length: a.length + 1 }, (_, i) => { const z = new Array(b.length + 1).fill(0); z[0] = i; return z; });
+    for (let j = 1; j <= b.length; j++) d[0][j] = j;
+    for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) {
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+    }
+    return d[a.length][b.length];
+  }
+  function pruefeTipp(eingabe, ziele) {
+    const e = normT(eingabe); let best = 9;
+    for (const z of [].concat(ziele)) { const zz = normT(z); best = Math.min(best, zz.length <= 2 ? (e === zz ? 0 : 9) : abstand(e, zz)); }
+    return best > 1 ? 2 : best;
+  }
+  function tippFeld(pruefen) {
+    const feld = el("input", { type: "text", class: "eingabe", lang: "en", inputmode: "text", autocomplete: "off", autocapitalize: "off", autocorrect: "off",
+      spellcheck: "false", "aria-label": T("Deine Antwort", "Your answer"), enterkeyhint: "done",
+      onkeydown: (e) => { if (e.key === "Enter") { e.stopPropagation(); e.preventDefault(); los(); } } });
+    const knopf_ = knopf(T("Prüfen", "Check"), () => los(), "haupt");
+    const los = () => { if (feld.value.trim()) pruefen(feld.value, { feld, knopf: knopf_ }); };
+    return el("div", { class: "eingabe-bereich" }, el("div", { class: "knopfreihe" }, feld, knopf_));
+  }
   const kategorie = (nr) => D.kategorien.find((k) => k.nr === nr);
   const vokabel = (id) => D.vokabeln.find((v) => v.id === id);
   // Sperren (Sprechzeit, Denkzeit, „erst richtig antworten“) gelten im Programm, nicht nur am Knopf: Wer im Browser das disabled-Attribut
@@ -2118,6 +2142,14 @@
           el("span", { class: "sym", "aria-hidden": "true" }, "🛂"),
           el("span", { class: "titel", lang: "en" }, "Border Patrol"),
           el("span", { class: "unter" }, T("Britisch oder amerikanisch? Wörter einsortieren", "British or American? Sort the words"))),
+        el("button", { class: "kachel", onclick: () => catchWahl(k), "aria-label": "Catch the Word" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🎯"),
+          el("span", { class: "titel", lang: "en" }, "Catch the Word"),
+          el("span", { class: "unter" }, T("Wort hören und fangen, bevor es unten ist", "Hear the word and catch it before it lands"))),
+        el("button", { class: "kachel", onclick: () => beeWahl(k), "aria-label": "Spelling Bee" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🐝"),
+          el("span", { class: "titel", lang: "en" }, "Spelling Bee"),
+          el("span", { class: "unter" }, T("Wort hören und richtig schreiben", "Hear the word and spell it"))),
         el("button", { class: "kachel shop-kachel", onclick: shop, "aria-label": "Shop" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🛍️"),
           el("span", { class: "titel", lang: "en" }, "Shop"),
@@ -2267,6 +2299,201 @@
       el("section", { class: "satzkarte patrol" }, stand, himmel, el("div", { class: "patrol-zonen" }, ...zonen), box, liste,
         el("div", { class: "knopfreihe" }, knopf(T("↻ Noch mal", "↻ Play again"), () => spielPatrol(k)), knopf(T("Andere Spiele", "Other games"), zurueck), knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
     requestAnimationFrame(schritt);
+  }
+
+  /* ---------- Games: Catch the Word – ein Wort wird gesprochen, 4–6 Wörter des Abschnitts fallen, das richtige antippen ----------
+     10 Runden, 3 Leben: falsches Wort angetippt oder das richtige durchgefallen kostet eins. Treffer = kurzer Klang, dann die deutsche Bedeutung.
+     Punkte (+10) beim ersten Durchgang des Tages mit mindestens 7 Treffern (Tagesmarke gym.catchTag). */
+  const CATCH = { leben: 3, runden: 10, tempo: 22, ziel: 7 };
+  const spielWort = (v) => v.en.replace(/\s*\((AE|BE|infml|pl)\)/g, "").replace(/\s+/g, " ").trim();
+  const catchOk = (v) => v && v.en && spielWort(v).length <= 24;
+  // Treffer-Klang: zwei kurze helle Töne, im Browser erzeugt (keine Stimme)
+  function trefferKlang() {
+    try {
+      if (!klangCtx) klangCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (klangCtx.state === "suspended") klangCtx.resume();
+    } catch { return; }
+    const c = klangCtx, t = c.currentTime;
+    [[880, 0], [1320, 0.09]].forEach(([f, ab]) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = "triangle"; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t + ab); g.gain.exponentialRampToValueAtTime(0.35 * KLANG_LAUT, t + ab + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + ab + 0.22);
+      o.connect(g).connect(c.destination); o.start(t + ab); o.stop(t + ab + 0.25);
+    });
+  }
+  // Unit und Abschnitt wählen (wie beim Memory) – für Catch the Word und Spelling Bee
+  function spielWahl(k, titel, spiel, zeichne) {
+    lage = null; ansicht = zeichne;
+    const unit = aktuelleUnit(), gruppen = D.units[unit];
+    zeige(spielKopf(k, titel, () => zeigeSpiele(k)), unitReiter(zeichne),
+      gruppen.length ? ansage("Which words do you want to play with? Choose a part of the unit.", "Mit welchen Wörtern willst du spielen? Wähl einen Abschnitt.")
+        : ansage("Coming soon!", "Diese Unit kommt bald."),
+      el("nav", { class: "kacheln gruppen" }, gruppen.map((g, i) =>
+        gruppenKachel(k, g, `u${unit}:${g.name}`, `${g.vokabeln.length} words`, () => spiel(k, unit, i)))));
+  }
+  const zuWenig = (k, titel, zurueck) => zeige(spielKopf(k, titel, zurueck), el("section", { class: "satzkarte" },
+    el("p", {}, T("Für dieses Spiel passen zu wenige Wörter aus dem Abschnitt – wähl einen anderen.", "Too few words of this part fit this game – choose another one.")),
+    knopf(T("Andere Wörter", "Other words"), zurueck, "haupt")));
+  const catchWahl = (k) => spielWahl(k, "Catch the Word", spielCatch, () => catchWahl(k));
+  function spielCatch(k, unit, i) {
+    ansicht = null; lage = null; stopp();
+    const g = gymStand(), gruppe = D.units[unit][i];
+    const ws = gruppe.vokabeln.map(vokabel).filter(catchOk);
+    const zurueck = () => { laeuft = false; stopp(); catchWahl(k); };
+    if (ws.length < 4) return zuWenig(k, "Catch the Word", zurueck);
+    let ziele = [];
+    while (ziele.length < CATCH.runden) ziele.push(...mischen(ws));
+    ziele = ziele.slice(0, CATCH.runden);
+    let leben = CATCH.leben, treffer = 0, runde = 0, ziel = null, offen = [], laeuft = true, pause = false, zeitstempel = null;
+    const himmel = el("div", { class: "patrol-himmel catch-himmel", role: "group", "aria-label": "Catch the Word" });
+    const stand = el("p", { class: "patrol-stand", "aria-live": "polite" });
+    const info = el("p", { class: "catch-info", role: "status", hidden: true });
+    const box = rueckmeldung();
+    const zeigeStand = () => stand.replaceChildren(el("span", {}, "❤️".repeat(leben) + "🖤".repeat(Math.max(0, CATCH.leben - leben))),
+      el("span", {}, `${T("Runde", "Round")} ${Math.min(runde, CATCH.runden)} / ${CATCH.runden} · ✓ ${treffer}`));
+    const hoeren = () => { if (ziel && laeuft) spiele([tonWort(ziel)]); };
+    const hoerKnopf = knopf(T("🔊 Nochmal", "🔊 Again"), hoeren);
+    function raeume() { offen.forEach((w) => { w.fertig = true; w.el.classList.add("weg"); setTimeout(() => w.el.remove(), 700); }); offen = []; }
+    function naechsteRunde() {
+      if (!laeuft) return;
+      if (runde >= CATCH.runden) return ende();
+      ziel = ziele[runde++]; info.hidden = true; pause = false;
+      const andere = mischen(ws.filter((v) => v !== ziel)).slice(0, 3 + Math.floor(Math.random() * 3));
+      const reihe = mischen([ziel, ...andere]);
+      reihe.forEach((v, j) => {
+        const text = spielWort(v);
+        // Spalten gleichmäßig über die Breite, Höhe versetzt (3 Reihen), damit auch lange Wörter sich nicht überdecken
+        const w = { v, y: -40 - (j % 3) * 64 - Math.random() * 16, x: Math.min(92, Math.max(8, (j + 0.5) / reihe.length * 100 + (Math.random() - 0.5) * 10)) };
+        w.el = el("button", { class: "patrol-wort catch-wort", lang: "en", style: `left:${w.x}%; top:${w.y}px`, onclick: () => fange(w) }, text);
+        himmel.append(w.el); offen.push(w);
+        // Lange Wörter ganz ins Bild rücken (links/rechts nicht abschneiden)
+        const breite = himmel.clientWidth, halb = w.el.offsetWidth / 2 + 4;
+        if (breite && halb * 2 < breite) w.el.style.left = Math.min(breite - halb, Math.max(halb, w.x / 100 * breite)) + "px";
+      });
+      zeigeStand(); hoeren();
+    }
+    function fange(w) {
+      if (!laeuft || pause || w.fertig) return;
+      if (w.v === ziel) {
+        treffer++; w.fertig = true; pause = true; richtigSerie++;
+        w.el.classList.add("treffer"); trefferKlang();
+        info.hidden = false; info.replaceChildren(el("strong", { lang: "en" }, spielWort(ziel)), " = ", el("span", { lang: "de" }, memKurz(ziel.de) || ziel.de));
+        zeigeStand();
+        setTimeout(() => { raeume(); naechsteRunde(); }, 1400);
+      } else {
+        leben--; w.fertig = true; w.el.classList.add("falsch"); w.el.disabled = true;
+        zeigeStand();
+        if (leben <= 0) ende();
+      }
+    }
+    function durchgefallen(w) {
+      if (w.fertig) return;
+      w.fertig = true;
+      if (w.v !== ziel) { w.el.classList.add("weg"); setTimeout(() => w.el.remove(), 700); return; }
+      leben--; pause = true; w.el.classList.add("falsch");
+      info.hidden = false; info.replaceChildren(T("Das war: ", "That was: "), el("strong", { lang: "en" }, spielWort(ziel)), " = ", el("span", { lang: "de" }, memKurz(ziel.de) || ziel.de));
+      zeigeStand();
+      if (leben <= 0) return ende();
+      setTimeout(() => { raeume(); naechsteRunde(); }, 1600);
+    }
+    function schritt(t) {
+      if (!laeuft) return;
+      if (zeitstempel === null) zeitstempel = t;
+      const dt = Math.min(0.05, (t - zeitstempel) / 1000); zeitstempel = t;
+      const tempo = CATCH.tempo * (1 + treffer * 0.06) * (window.__catchTempo || 1);
+      const boden = himmel.clientHeight;
+      if (!pause) offen.forEach((w) => {
+        if (w.fertig) return;
+        w.y += tempo * dt; w.el.style.top = w.y + "px";
+        if (w.y > boden - 10) durchgefallen(w);
+      });
+      requestAnimationFrame(schritt);
+    }
+    function ende() {
+      if (!laeuft) return;
+      laeuft = false; pause = true; hoerKnopf.disabled = true;
+      offen.forEach((w) => { if (!w.fertig) { w.fertig = true; w.el.classList.add("weg"); } });
+      const geschafft = leben > 0 && treffer >= CATCH.ziel;
+      const tag = iso(heute()), punkte = geschafft && g.catchTag !== tag;
+      if (punkte) { g.catchTag = tag; punkteDazu(PUNKTE.spiel); } else speichern();
+      const text = geschafft ? `${lob(true)} ${T(`${treffer} von ${CATCH.runden} Wörtern gefangen!`, `${treffer} of ${CATCH.runden} words caught!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : (g.catchTag === tag ? T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)") : "")}`
+        : leben <= 0 ? T(`Alle Leben weg! ${treffer} gefangen. Hör genau hin und versuch es noch mal.`, `No lives left! ${treffer} caught. Listen closely and try again.`)
+        : T(`${treffer} von ${CATCH.runden} gefangen. Für Punkte brauchst du ${CATCH.ziel}. Noch mal?`, `${treffer} of ${CATCH.runden} caught. You need ${CATCH.ziel} for points. Again?`);
+      melde(box, geschafft ? "gut" : "neutral", text);
+    }
+    zeigeStand();
+    zeige(spielKopf(k, "Catch the Word", zurueck),
+      ansage("Listen! Which word did you hear? Tap it before it lands.", "Hör zu! Welches Wort hast du gehört? Tipp es an, bevor es unten ist."),
+      el("section", { class: "satzkarte patrol catch" }, stand, info, himmel, el("div", { class: "knopfreihe" }, hoerKnopf), box,
+        el("div", { class: "knopfreihe" }, knopf(T("↻ Noch mal", "↻ Play again"), () => spielCatch(k, unit, i)), knopf(T("Andere Wörter", "Other words"), zurueck), knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
+    naechsteRunde();
+    requestAnimationFrame(schritt);
+  }
+
+  /* ---------- Games: Spelling Bee – Wort hören, deutsche Bedeutung lesen, englisch eintippen (1-Fehler-Toleranz wie Klasse 6) ----------
+     8 Wörter des Abschnitts, nur eindeutig tippbare (keine Klammern, kein sth./sb., keine Formenreihe). 3 richtig in Folge = 🍯 Honey!
+     Punkte (+10) beim ersten Durchgang des Tages mit mindestens 6 richtigen (Tagesmarke gym.beeTag). */
+  const BEE = { anzahl: 8, honig: 3 };
+  const beeOk = (v) => { if (!v || !v.en) return false; const t = spielWort(v); return t.length >= 2 && t.length <= 20 && t.split(" ").length <= 3 && !/[()…,/]|\bsth\.|\bsb\./.test(t); };
+  const beeWahl = (k) => spielWahl(k, "Spelling Bee", spielBee, () => beeWahl(k));
+  function spielBee(k, unit, i) {
+    ansicht = null; lage = null;
+    const g = gymStand(), gruppe = D.units[unit][i];
+    const ws = mischen(gruppe.vokabeln.map(vokabel).filter(beeOk)).slice(0, BEE.anzahl);
+    const zurueck = () => beeWahl(k);
+    if (ws.length < 4) return zuWenig(k, "Spelling Bee", zurueck);
+    const ziel = Math.ceil(ws.length * 0.75);
+    let pos = 0, richtig = 0, serie = 0;
+    const stand = el("p", { class: "patrol-stand", "aria-live": "polite" });
+    const frage = el("div", { class: "bee-frage" });
+    const box = rueckmeldung();
+    const bereich = el("div", { class: "bee-eingabe" });
+    const weiter = el("button", { class: "knopf haupt weiter", hidden: true, onclick: () => { pos++; zeigeWort(); } }, T("Weiter ➜", "Next ➜"));
+    const hoerKnopf = knopf(T("🔊 Nochmal", "🔊 Again"), () => { if (pos < ws.length) spiele([tonWort(ws[pos])]); });
+    const zeigeStand = () => stand.replaceChildren(el("span", {}, `${T("Wort", "Word")} ${Math.min(pos + 1, ws.length)} / ${ws.length}`), el("span", {}, `✓ ${richtig}` + (serie >= 2 ? ` · 🐝 ${serie}` : "")));
+    function honig() {
+      const h = el("div", { class: "honig", role: "status", "aria-live": "polite" }, "🍯 Honey!");
+      karteEl.append(h);
+      setTimeout(() => h.classList.add("weg"), 1500);
+      setTimeout(() => h.remove(), 2000);
+    }
+    function zeigeWort() {
+      box.hidden = true; weiter.hidden = true;
+      if (pos >= ws.length) return ende();
+      const v = ws[pos], wort = spielWort(v);
+      frage.replaceChildren(el("p", { class: "vok-de", lang: "de" }, v.de));
+      const feld = tippFeld((text, ui) => {
+        ui.feld.disabled = true; ui.knopf.hidden = true;
+        const stufe = pruefeTipp(text, [wort]);
+        box.hidden = false;
+        if (stufe === 2) { serie = 0; box.className = "rueckmeldung hilfe"; box.textContent = T(`Nicht ganz. So schreibt man es: ${wort}`, `Not quite. This is how you spell it: ${wort}`); }
+        else {
+          richtig++; serie++;
+          box.className = "rueckmeldung gut"; box.textContent = lob() + (stufe === 1 ? T(` So schreibt man es genau: ${wort}`, ` The exact spelling: ${wort}`) : "");
+          if (serie % BEE.honig === 0) honig();
+        }
+        zeigeStand(); weiter.hidden = false; weiter.focus();
+      });
+      bereich.replaceChildren(feld); zeigeStand();
+      spiele([tonWort(v)]);
+      feld.querySelector("input").focus({ preventScroll: true });
+    }
+    function ende() {
+      hoerKnopf.disabled = true; bereich.replaceChildren(); frage.replaceChildren();
+      const geschafft = richtig >= ziel;
+      const tag = iso(heute()), punkte = geschafft && g.beeTag !== tag;
+      if (punkte) { g.beeTag = tag; punkteDazu(PUNKTE.spiel); } else speichern();
+      const text = geschafft ? `${lob(true)} ${T(`${richtig} von ${ws.length} Wörtern richtig geschrieben!`, `${richtig} of ${ws.length} words spelled correctly!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : (g.beeTag === tag ? T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)") : "")}`
+        : T(`${richtig} von ${ws.length} richtig. Für Punkte brauchst du ${ziel}. Noch mal?`, `${richtig} of ${ws.length} correct. You need ${ziel} for points. Again?`);
+      melde(box, geschafft ? "gut" : "neutral", text);
+    }
+    const karteEl = el("section", { class: "satzkarte bee" }, stand, frage, el("div", { class: "knopfreihe" }, hoerKnopf), bereich, box,
+      el("div", { class: "knopfreihe" }, weiter),
+      el("div", { class: "knopfreihe" }, knopf(T("↻ Noch mal", "↻ Play again"), () => spielBee(k, unit, i)), knopf(T("Andere Wörter", "Other words"), zurueck), knopf(T("Zur Startseite", "Home"), startseite, "leise")));
+    zeige(spielKopf(k, "Spelling Bee", zurueck),
+      ansage("Listen and spell the word. One small mistake is okay – you'll see the exact spelling.", "Hör zu und schreib das Wort. Ein kleiner Fehler ist okay – du siehst dann die genaue Schreibweise."),
+      karteEl);
+    zeigeWort();
   }
 
   function gymEnde() {

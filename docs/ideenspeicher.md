@@ -52,7 +52,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 ## Beschlossen (29.10.2026), noch nicht gebaut
 - Klasse 9: **BE vs AE** wird Gruppe in **Vocabulary**.
 - Klasse 9: **„New“ auflösen** – neue Inhalte direkt in ihre Kategorie, 14 Tage ✨-Schild an Kachel und Gruppe, Startseite zeigt „✨ Neu diese Woche“.
-- Klasse 9: Kachel **Games** (wie Klasse 6) an der Stelle von „New“: Memory (aus Klasse 6, größere Karten), Border Patrol, Catch the Word, Spelling Bee = **Lernspiele**.
+- Klasse 9: Kachel **Games** (wie Klasse 6) an der Stelle von „New“: Memory (aus Klasse 6, größere Karten), Border Patrol, Catch the Word, Spelling Bee = **Lernspiele**. → **alle vier gebaut 29.10.**
 - **Coins**: gespiegelte Währung (jeder Punkt = ein Coin), ausgebbar; **nichts gratis**, erste Runde nicht geschenkt. Coins kann man schon sammeln, bevor der Runner fertig ist. → **gebaut 29.10.**
 - **Runner** (Jump'n'Run, Giana-Sisters-Gefühl, Tippen = Springen, Diamanten sammeln, Wörter versteckt) = Hauptspiel, liegt hinter Coins. Viel Lob.
 - Punkte sinken nie (Titel, Serien bleiben).
@@ -67,9 +67,9 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 
 ## Spiele-Ideen (Details in `spiele/konzept-entwurf.md`)
 - Word Race (Autorennen, drei Spuren) – offen
-- Catch the Word – beschlossen (Games)
+- Catch the Word – **gebaut 29.10.** (Games, Klasse 9): Wort hören, 4–6 Wörter des Abschnitts fallen, das richtige antippen; 10 Runden, 3 Leben, +10 einmal pro Tag ab 7 Treffern
 - Border Patrol – **gebaut 29.10.** (Games, Klasse 9); Variante: Wörter sinken nach unten, antippen = Aussprache, dann links 🇬🇧 / rechts 🇺🇸 wischen; durchgefallen = Minuspunkt
-- Spelling Bee – beschlossen (Games)
+- Spelling Bee – **gebaut 29.10.** (Games, Klasse 9): Wort hören, deutsche Bedeutung lesen, eintippen (1-Fehler-Toleranz wie Klasse 6); 8 Wörter, 🍯 Honey bei 3 in Folge, +10 einmal pro Tag ab 6 richtig
 - Sentence Sprint – offen
 - Dialog-Duell – offen (Beschreibung folgt)
 - Runner – beschlossen, Planung läuft

@@ -525,3 +525,7 @@ dialog.feier.hw-liste { max-height: 88vh; overflow-y: auto; text-align: left; }
 .hw-liste-ziele .hw-name { min-width: 0; overflow-wrap: anywhere; }
 .hw-liste-ziele .knopf { min-height: 36px; padding: 0 12px; color: var(--blau); }
 .knopf.hw-weiter { border-color: var(--hw); color: var(--hw-text); background: var(--hw); }
+
+/* Bestätigungsdialog (statt confirm) */
+dialog.feier.frage { max-width: 360px; text-align: center; }
+dialog.feier.frage .frage-text { font-size: 1.1rem; margin: 6px 0 16px; }

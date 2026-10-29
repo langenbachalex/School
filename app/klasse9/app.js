@@ -1179,8 +1179,8 @@
       kopieren.textContent = T("✓ Kopiert", "✓ Copied");
     });
     const neu = knopf(T("🗑️ Neu anfangen", "🗑️ Start again"), () => {
-      if (feld.value && !confirm(T("Deinen Text wirklich löschen?", "Really delete your text?"))) return;
-      feld.value = ""; pruefen();
+      const los = () => { feld.value = ""; pruefen(); };
+      if (feld.value) frage(T("Deinen Text wirklich löschen?", "Really delete your text?"), T("🗑️ Löschen", "🗑️ Delete")).then((ok) => { if (ok) los(); }); else los();
     });
     lage.abspielen = null; lage.weiter = naechstes;
     zeige(kopf(k),
@@ -1648,6 +1648,18 @@
       setTimeout(() => { stempelLaeuft = false; zeigeEreignisse(); }, 2700);
     }, 250));
   }
+  // Eigener Bestätigungsdialog statt confirm(): funktioniert auch in eingebetteten Rahmen (Vorschau) und sieht aus wie die App
+  const frageDialog = el("dialog", { class: "feier frage" });
+  document.body.append(frageDialog);
+  function frage(text, ja, nein) {
+    return new Promise((fertig) => {
+      const zu = (antwort) => { frageDialog.close(); fertig(antwort); };
+      frageDialog.replaceChildren(el("p", { class: "frage-text" }, text),
+        el("div", { class: "knopfreihe" }, knopf(ja || T("Ja", "Yes"), () => zu(true), "haupt"), knopf(nein || T("Abbrechen", "Cancel"), () => zu(false), "leise")));
+      frageDialog.onclose = () => fertig(false);
+      frageDialog.showModal();
+    });
+  }
   function zeigeFeier(e) {
     const ton = e.art === "karte" ? e.karte : e.ton;
     const inhalt = e.art === "karte"
@@ -1747,12 +1759,12 @@
     document.body.append(box);
     setTimeout(() => box.remove(), 2800);
   }
-  function kaufe(a) {
+  async function kaufe(a) {
     const sp = spielstand();
     if (a.bald) { toast(tx(a.hinweis)); return false; }
     if (a.runner) { // Ticket: mehrfach kaufbar, ein Ticket = ein Durchgang (wird beim Start eingelöst)
       if (sp.coins < a.preis) { toast(T(`Noch ${a.preis - sp.coins} Coins`, `${a.preis - sp.coins} more coins`)); return false; }
-      if (!confirm(T(`Ein Ticket für ${a.preis} Coins kaufen?`, `Buy a ticket for ${a.preis} coins?`))) return false;
+      if (!(await frage(T(`Ein Ticket für ${a.preis} Coins kaufen?`, `Buy a ticket for ${a.preis} coins?`), T("🎟️ Kaufen", "🎟️ Buy")))) return false;
       sp.coins -= a.preis; sp.ausgegeben += a.preis; runnerStand().tickets = (runnerStand().tickets || 0) + 1; speichern();
       ereignisse.push({ art: "toast", text: `🎟️ +1 · 🪙 −${a.preis}` });
       setTimeout(zeigeEreignisse, 50); konfettiFrei();
@@ -1760,7 +1772,7 @@
     }
     if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } if (a.skin) { skinSetzen(a.skin[0], a.skin[1]); } return false; }
     if (sp.coins < a.preis) { toast(T(`Noch ${a.preis - sp.coins} Coins`, `${a.preis - sp.coins} more coins`)); return false; }
-    if (!confirm(T(`Für ${a.preis} Coins kaufen?`, `Buy for ${a.preis} coins?`))) return false;
+    if (!(await frage(T(`Für ${a.preis} Coins kaufen?`, `Buy for ${a.preis} coins?`), T("Kaufen", "Buy")))) return false;
     sp.coins -= a.preis; sp.ausgegeben += a.preis; sp.gekauft.push(a.id);
     if (a.rahmen) sp.rahmen = a.rahmen;
     if (a.skin) skinSetzen(a.skin[0], a.skin[1]);
@@ -1781,12 +1793,12 @@
       if (a.bald) k = el("span", { class: "shop-hinweis" }, tx(a.hinweis));
       else if (a.runner) k = el("div", { class: "knopfreihe ticket-reihe" },
         el("span", { class: "shop-hinweis" }, `🎟️ ${runnerStand().tickets || 0} ${T("Tickets", "tickets")}`),
-        fehlt > 0 ? sperrt(knopf(T(`Noch ${fehlt} Coins`, `${fehlt} more coins`), () => { kaufe(a); shop(opt); })) : knopf(T("Ticket kaufen", "Buy ticket"), () => { if (kaufe(a)) shop(opt); }, "haupt"),
+        fehlt > 0 ? sperrt(knopf(T(`Noch ${fehlt} Coins`, `${fehlt} more coins`), () => { kaufe(a); shop(opt); })) : knopf(T("Ticket kaufen", "Buy ticket"), () => { kaufe(a).then((ok) => { if (ok) shop(opt); }); }, "haupt"),
         (runnerStand().tickets || 0) > 0 && knopf(T("▶ Zum Spiel", "▶ To the game"), () => runnerStart()));
-      else if (hat && (a.rahmen || a.skin)) k = aktiv ? el("span", { class: "shop-hinweis ok" }, T("✓ Angelegt", "✓ Wearing it")) : knopf(T("Anlegen", "Put it on"), () => { kaufe(a); shop(opt); });
+      else if (hat && (a.rahmen || a.skin)) k = aktiv ? el("span", { class: "shop-hinweis ok" }, T("✓ Angelegt", "✓ Wearing it")) : knopf(T("Anlegen", "Put it on"), () => { kaufe(a).then(() => shop(opt)); });
       else if (hat) k = el("span", { class: "shop-hinweis ok" }, T("✓ Gekauft", "✓ Bought"));
       else if (fehlt > 0) k = sperrt(knopf(T(`Noch ${fehlt} Coins`, `${fehlt} more coins`), () => { kaufe(a); shop(opt); }));
-      else k = knopf(T("Kaufen", "Buy"), () => { if (kaufe(a)) shop(opt); }, "haupt");
+      else k = knopf(T("Kaufen", "Buy"), () => { kaufe(a).then((ok) => { if (ok) shop(opt); }); }, "haupt");
       return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.bald ? " bald" : "") + (a.rahmen ? " rahmen-" + a.rahmen : "") + (a.id === opt.artikel ? " hervor" : ""), "data-artikel": a.id },
         el("span", { class: "sym", "aria-hidden": "true" }, a.symbol),
         el("strong", {}, tx(a.name)), a.unter && el("span", { class: "unter" }, tx(a.unter)),
@@ -2638,7 +2650,7 @@
     toast(T("🎟️ Ticket eingelöst", "🎟️ Ticket used"));
     ansicht = null; lage = null;
     const buehne = el("div", { class: "runner-buehne" });
-    const abbruch = knopf("✕", () => { if (confirm(T("Abbrechen? Das Ticket ist weg.", "Quit? Your ticket is gone."))) runnerStart(k); }, "runner-x");
+    const abbruch = knopf("✕", () => { frage(T("Abbrechen? Das Ticket ist weg.", "Quit? Your ticket is gone."), T("Abbrechen", "Quit"), T("Weiterspielen", "Keep playing")).then((ok) => { if (ok) runnerStart(k); }); }, "runner-x");
     abbruch.setAttribute("aria-label", T("Spiel abbrechen", "Quit game"));
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");

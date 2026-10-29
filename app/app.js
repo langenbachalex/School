@@ -1872,6 +1872,18 @@
       setTimeout(() => { stempelLaeuft = false; zeigeEreignisse(); }, 2700);
     }, 250));
   }
+  // Eigener Bestätigungsdialog statt confirm(): funktioniert auch in eingebetteten Rahmen (Vorschau) und sieht aus wie die App
+  const frageDialog = el("dialog", { class: "feier frage" });
+  document.body.append(frageDialog);
+  function frage(text, ja, nein) {
+    return new Promise((fertig) => {
+      const zu = (antwort) => { frageDialog.close(); fertig(antwort); };
+      frageDialog.replaceChildren(el("p", { class: "frage-text" }, text),
+        el("div", { class: "knopfreihe" }, knopf(ja || "Ja", () => zu(true), "haupt"), knopf(nein || "Abbrechen", () => zu(false), "leise")));
+      frageDialog.onclose = () => fertig(false);
+      frageDialog.showModal();
+    });
+  }
   function zeigeFeier(e) {
     const ton = e.art === "held" ? e.held : e.ton;
     const inhalt = e.art === "held"
@@ -1966,12 +1978,12 @@
     document.body.append(box);
     setTimeout(() => box.remove(), 2800);
   }
-  function kaufe(a) {
+  async function kaufe(a) {
     const sp = spielstand();
     if (a.bald) { toast(a.hinweis); return false; }
     if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } return false; }
     if (sp.coins < a.preis) { toast(`Noch ${a.preis - sp.coins} Coins`); return false; }
-    if (!confirm(`Für ${a.preis} Coins kaufen?`)) return false;
+    if (!(await frage(`Für ${a.preis} Coins kaufen?`, "Kaufen"))) return false;
     sp.coins -= a.preis; sp.ausgegeben += a.preis; sp.gekauft.push(a.id);
     if (a.rahmen) sp.rahmen = a.rahmen;
     speichern();
@@ -1986,10 +1998,10 @@
       const hat = sp.gekauft.includes(a.id), fehlt = a.preis - sp.coins, aktiv = a.rahmen && sp.rahmen === a.rahmen && hat;
       let k;
       if (a.bald) k = el("span", { class: "shop-hinweis" }, a.hinweis);
-      else if (hat && a.rahmen) k = aktiv ? el("span", { class: "shop-hinweis ok" }, "✓ Angelegt") : knopf("Anlegen", () => { kaufe(a); shop(); });
+      else if (hat && a.rahmen) k = aktiv ? el("span", { class: "shop-hinweis ok" }, "✓ Angelegt") : knopf("Anlegen", () => { kaufe(a).then(() => shop()); });
       else if (hat) k = el("span", { class: "shop-hinweis ok" }, "✓ Gekauft");
       else if (fehlt > 0) k = sperrt(knopf(`Noch ${fehlt} Coins`, () => { kaufe(a); shop(); }));
-      else k = knopf("Kaufen", () => { if (kaufe(a)) shop(); }, "haupt");
+      else k = knopf("Kaufen", () => { kaufe(a).then((ok) => { if (ok) shop(); }); }, "haupt");
       return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.bald ? " bald" : "") + (a.rahmen ? " rahmen-" + a.rahmen : ""), "data-artikel": a.id },
         el("span", { class: "sym", "aria-hidden": "true" }, a.symbol),
         el("strong", {}, a.name), a.unter && el("span", { class: "unter" }, a.unter),

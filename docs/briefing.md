@@ -51,3 +51,8 @@ GLN 1 war am 30.09.2026 (Lead-in und Topic 1, S. 80 bis 85). Nach den Herbstferi
 - Woche 6: Welche der beiden Dateien war der Freitag (Doppelstunde1 vermutet)?
 - Stimme: eigene Aufnahme, KI-Stimme oder Mischweg?
 - Wo wird die App gehostet (intern, Schulserver oder privat geteilter Link)?
+
+## Nachricht aus dem App-Chat (29.10.2026) – für die nächste Stunde Englisch 6
+- **Ton und Nachsprechen thematisieren:** Mr. Alex spricht mit der Klasse darüber, dass die App gehört werden muss (Ton an) und vor allem, dass beim „Jetzt du!“-Balken wirklich laut nachgesprochen wird. In Klasse 6 trauen sich die schwächeren Schüler im Klassenraum noch nicht so. Ein technischer Ton-Check wird bewusst nicht gebaut.
+- **Folie für die nächste Stunde:** daran erinnern, immer „Listen and Repeat“ zu machen – „das ist noch mal 50 % extra Power“.
+- Stand der App (für Folien/Planung): Power Up (erledigte Teile werden nach 30 Tagen und 14 Tage vor dem GLN wieder fällig), Coins und Shop, Combo-Flamme beim Vokabellernen, Geheimakte „Leo the Lion and the Missing Hour“, Hörübung 3 „Talking about free time“ (GLN-2-Format, true/false, 10 Aussagen, mit 💡-Hilfen) im Bau. GLN 2 Klasse 6: Mittwoch 25.11.2026.

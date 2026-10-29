@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Runner-Figur – Vorschläge (Proportionen, Frisuren, Bärte, Farben, Gesichter)</title>
+<style>
+  body { margin: 0; padding: 16px; background: #e9f1fb; font-family: Inter, system-ui, sans-serif; color: #1d2b3a; }
+  h2 { margin: 24px 0 8px; font-size: 16px; }
+  canvas { display: block; background: #e9f1fb; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<p>Standalone-Vorschlag für die Runner-Figur (Road Trip Run, Klasse 9). Nichts hiervon ist in der App – runner.js bleibt unverändert.
+Die Funktion <code>zeichneFigurAlt</code> ist eine wörtliche Kopie aus app/klasse9/runner.js, <code>zeichneFigurNeu</code> der Vorschlag.</p>
+<h2>01 – Proportionen alt / neu</h2>
+<canvas id="s1"></canvas>
+<h2>02 – Frisuren und Bärte</h2>
+<canvas id="s2"></canvas>
+<h2>03 – Haarfarben und Gesichtsausdrücke</h2>
+<canvas id="s3"></canvas>
+
+<script>
+"use strict";
+/* ============================================================
+   Gemeinsame Werte (wie runner.js) + neue Farben
+   ============================================================ */
+const STUFE = { schmal: 0, normal: 1, "kräftig": 2 };
+const FARBEN = { braun: "#6b3e1e", blond: "#e7c35a", schwarz: "#1a1a1a", rot: "#c8283a", blau: "#1d3f8f", gelb: "#e0a400", "grün": "#2e9e5b", "weiß": "#f4f4f4" };
+// Vorschlag: knallige Haarfarben (eigene Tabelle, damit Oberteil/Schuhe die alten Namen behalten)
+const HAARFARBEN = Object.assign({}, FARBEN, {
+  pink: "#ff3fa4", "türkis": "#19d3c5", lila: "#8a3ffc", neongrün: "#7CFC00", feuerrot: "#ff3b1f", blau: "#2a6cff", silber: "#c9ced6", regenbogen: "regenbogen",
+});
+const REGENBOGEN = ["#ff2d2d", "#ff9f1a", "#ffe21a", "#2ecc71", "#2a8cff", "#9b4dff"];
+const SKIN_STANDARD = {
+  haar: "kurz", haarfarbe: "braun", haarschmuck: "keiner", hut: "cap", brille: "aus", nase: "rund", bart: "aus", schmuck: "keiner",
+  top: "shirt", topfarbe: "rot", schuhe: "weiß", aura: "aus", bauch: "normal", brust: "normal", muskeln: "normal", power: "an",
+  gesicht: "grinsend",
+};
+
+/* ============================================================
+   ALT: wörtliche Kopie von zeichneFigur aus app/klasse9/runner.js (Stand 29.10.)
+   ============================================================ */
+function zeichneFigurAlt(c, x, y, h, s, pose, t) {
+    const u = h / 80;
+    c.save(); c.translate(x, y); c.scale(u, u);
+    const haut = '#f1c27d', hautD = '#d9a866';
+    const topF = FARBEN[s.topfarbe] || '#c8283a';
+    const haarF = FARBEN[s.haarfarbe] || '#6b3e1e';
+    const schuhF = FARBEN[s.schuhe] || '#f4f4f4';
+    const shortsF = '#2a4a8a';
+    const p = pose === 'lauf' ? t * 13 : 0;
+    const st = v => typeof v === 'number' ? Math.max(0, Math.min(2, v)) : (STUFE[v] ?? 1);
+    const bauch = st(s.bauch), brust = st(s.brust), musk = st(s.muskeln);
+    const sw = [10, 12, 15][brust];
+    const hw = [10, 12, 14][bauch];
+    const armB = [5, 6.5, 9][musk];
+    const beinB = [6.5, 8, 10.5][musk];
+    const schulterR = [5, 6, 8][brust];
+    let beinHinten, beinVorn;
+    if (pose === 'lauf') {
+      beinHinten = { fx: 12 * Math.sin(p), fy: -Math.max(0, -Math.cos(p)) * 9 };
+      beinVorn   = { fx: 12 * Math.sin(p + Math.PI), fy: -Math.max(0, Math.cos(p)) * 9 };
+    } else if (pose === 'sprung') {
+      beinHinten = { fx: -8, fy: -14 }; beinVorn = { fx: 9, fy: -8 };
+    } else {
+      beinHinten = { fx: -4, fy: 0 }; beinVorn = { fx: 5, fy: 0 };
+    }
+    const bein = (b, farbe, schuh) => {
+      c.lineCap = 'round'; c.lineWidth = beinB; c.strokeStyle = farbe;
+      c.beginPath(); c.moveTo(0, -34);
+      c.quadraticCurveTo(b.fx * 0.5 + 6, -20 + b.fy * 0.5, b.fx, b.fy - 3); c.stroke();
+      if (musk === 2) { c.lineWidth = beinB + 3; c.beginPath(); c.moveTo(0, -34); c.quadraticCurveTo(b.fx * 0.25 + 3, -27 + b.fy * 0.25, b.fx * 0.4 + 4, -22 + b.fy * 0.4); c.stroke(); }
+      c.fillStyle = schuh; c.strokeStyle = '#333'; c.lineWidth = 1.2;
+      c.beginPath(); c.ellipse(b.fx + 3, b.fy - 1.5, 8, 4.2, 0, 0, Math.PI * 2); c.fill(); c.stroke();
+    };
+    bein(beinHinten, hautD, schuhF);
+    c.fillStyle = shortsF; c.beginPath(); c.roundRect(-hw, -40, hw * 2, 16, 5); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(-hw, -30, hw * 2, 2);
+    bein(beinVorn, haut, schuhF);
+    const armWinkel = pose === 'lauf' ? Math.sin(p) * 0.9 : (pose === 'sprung' ? -2.2 : 0.3);
+    const arm = (w, farbe) => {
+      c.lineCap = 'round'; c.lineWidth = armB; c.strokeStyle = farbe;
+      const ex = Math.sin(w) * 10, ey = -54 + Math.cos(w) * 11;
+      c.beginPath(); c.moveTo(0, -54); c.lineTo(ex, ey);
+      c.lineTo(ex + Math.cos(w) * 10, ey - Math.sin(w) * 10 + 6); c.stroke();
+      if (musk === 2) { c.lineWidth = armB + 3; c.beginPath(); c.moveTo(0, -54); c.lineTo(ex * 0.6, -54 + (ey + 54) * 0.6); c.stroke(); }
+    };
+    arm(-armWinkel, hautD);
+    const torso = () => {
+      c.beginPath(); c.moveTo(-sw, -60); c.lineTo(sw, -60);
+      c.quadraticCurveTo(sw + (bauch === 2 ? 4 : 0), -46, hw, -32); c.lineTo(-hw, -32);
+      c.quadraticCurveTo(-sw - (bauch === 2 ? 1 : 0), -46, -sw, -60); c.closePath();
+    };
+    c.fillStyle = topF; torso(); c.fill();
+    if (bauch === 2) { c.beginPath(); c.ellipse(hw - 4, -40, 9, 8.5, 0, 0, Math.PI * 2); c.fill(); }
+    if (s.top === 'hoodie') {
+      c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.roundRect(-hw + 1, -48, hw * 2 - 2, 10, 3); c.fill();
+      c.fillStyle = topF; c.beginPath(); c.ellipse(0, -60, sw + 2, 7, 0, Math.PI, 0); c.fill();
+      c.strokeStyle = '#fff'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-3, -58); c.lineTo(-4, -46); c.moveTo(3, -58); c.lineTo(4, -46); c.stroke();
+    } else {
+      c.fillStyle = 'rgba(255,255,255,.75)'; c.beginPath(); c.arc(3, -47, 5, 0, Math.PI * 2); c.fill();
+      c.fillStyle = topF; c.beginPath(); c.arc(3, -47, 2.5, 0, Math.PI * 2); c.fill();
+    }
+    if (s.schmuck === 'kette' || s.schmuck === 'beides') {
+      c.strokeStyle = '#e0a400'; c.lineWidth = 1.8; c.beginPath(); c.moveTo(-7, -59); c.quadraticCurveTo(0, -50, 8, -58); c.stroke();
+      c.fillStyle = '#e0a400'; c.beginPath(); c.arc(1, -53, 3, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#fff6c0'; c.beginPath(); c.arc(0, -54, 1.1, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = topF; c.beginPath(); c.arc(0, -54, schulterR, 0, Math.PI * 2); c.fill();
+    arm(armWinkel, haut);
+    if (s.haar === 'afro') {
+      c.fillStyle = haarF; c.beginPath(); c.arc(-2, -72, 19, 0, Math.PI * 2); c.fill();
+      for (let i = 0; i < 9; i++) { const a = Math.PI * 0.9 + i * (Math.PI * 1.1 / 8); c.beginPath(); c.arc(-2 + Math.cos(a) * 17, -72 + Math.sin(a) * 17, 6, 0, Math.PI * 2); c.fill(); }
+    }
+    if (s.haar === 'lang') {
+      const wipp = pose === 'lauf' ? Math.sin(t * 13) * 2.5 : 0;
+      c.fillStyle = haarF; c.beginPath(); c.moveTo(-6, -78); c.quadraticCurveTo(-18, -70 + wipp, -15, -46 + wipp);
+      c.quadraticCurveTo(-8, -44 + wipp, -2, -50); c.lineTo(4, -58); c.closePath(); c.fill();
+    }
+    c.fillStyle = haut; c.beginPath(); c.arc(0, -68, 12.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = hautD; c.beginPath(); c.arc(-9, -68, 3, 0, Math.PI * 2); c.fill();
+    if (s.schmuck === 'ohrring' || s.schmuck === 'beides') {
+      c.strokeStyle = '#e0a400'; c.lineWidth = 1.8; c.beginPath(); c.arc(-9.5, -62.5, 3.2, 0, Math.PI * 2); c.stroke();
+    }
+    c.fillStyle = hautD;
+    if (s.nase === 'spitz') { c.beginPath(); c.moveTo(11, -70); c.lineTo(17.5, -65); c.lineTo(11, -63); c.closePath(); c.fill(); }
+    else if (s.nase === 'knubbel') { c.beginPath(); c.arc(12.8, -65.5, 3.6, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.arc(12, -66.5, 1.2, 0, Math.PI * 2); c.fill(); }
+    else { c.beginPath(); c.arc(12, -66, 2.6, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#8a3b2b'; c.lineWidth = 1.4; c.beginPath(); c.arc(6, -62, 3.5, 0.2, Math.PI - 0.4); c.stroke();
+    if (s.brille === 'an') {
+      c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(2, -73, 12, 7, 3); c.fill();
+      c.strokeStyle = '#18213a'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(2, -70); c.lineTo(-9, -71); c.stroke();
+      c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(4, -72, 4, 2);
+    } else {
+      c.fillStyle = '#fff'; c.beginPath(); c.arc(7, -70, 3.4, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#18213a'; c.beginPath(); c.arc(8, -70, 1.8, 0, Math.PI * 2); c.fill();
+    }
+    if (s.bart === 'an') {
+      c.fillStyle = haarF; c.beginPath(); c.moveTo(12, -63.5); c.quadraticCurveTo(7, -67, 3, -62); c.quadraticCurveTo(8, -62, 12, -63.5); c.fill();
+    }
+    c.fillStyle = haarF;
+    if (s.haar === 'kurz') {
+      c.beginPath(); c.arc(0, -70, 12.8, Math.PI * 1.05, Math.PI * 1.95); c.lineTo(10, -74); c.lineTo(-5, -70); c.closePath(); c.fill();
+    } else if (s.haar === 'lang') {
+      c.beginPath(); c.arc(0, -70, 12.8, Math.PI * 1.0, Math.PI * 1.97); c.lineTo(11, -73); c.lineTo(-8, -66); c.closePath(); c.fill();
+    } else if (s.haar === 'zopf') {
+      c.beginPath(); c.arc(0, -70, 12.8, Math.PI * 1.02, Math.PI * 1.98); c.lineTo(11, -73); c.lineTo(-6, -69); c.closePath(); c.fill();
+      const wipp = pose === 'lauf' ? Math.sin(t * 13) * 3 : 0;
+      c.lineCap = 'round'; c.lineWidth = 6; c.strokeStyle = haarF;
+      c.beginPath(); c.moveTo(-11, -72); c.quadraticCurveTo(-22, -70 + wipp, -20, -56 + wipp); c.stroke();
+      c.fillStyle = '#c8283a'; c.beginPath(); c.arc(-12, -72, 2.6, 0, Math.PI * 2); c.fill();
+    } else if (s.haar === 'locken') {
+      for (let i = 0; i < 7; i++) {
+        const a = Math.PI * 1.0 + i * (Math.PI / 6.5);
+        c.beginPath(); c.arc(Math.cos(a) * 11, -70 + Math.sin(a) * 11, 5, 0, Math.PI * 2); c.fill();
+      }
+    } else if (s.haar === 'afro') {
+      for (let i = 0; i < 5; i++) { const a = Math.PI * 1.15 + i * 0.3; c.beginPath(); c.arc(-2 + Math.cos(a) * 16, -72 + Math.sin(a) * 16, 6.5, 0, Math.PI * 2); c.fill(); }
+    }
+    const hutOben = s.haar === 'afro' ? -14 : 0;
+    if (s.hut === 'cap') {
+      c.save(); c.translate(0, hutOben);
+      c.fillStyle = '#1d3f8f'; c.beginPath(); c.arc(0, -75, 12, Math.PI, 0); c.closePath(); c.fill();
+      c.beginPath(); c.roundRect(2, -77, 20, 4, 2); c.fill();
+      c.fillStyle = '#e0a400'; c.beginPath(); c.arc(0, -84, 2.2, 0, Math.PI * 2); c.fill();
+      c.restore();
+    }
+    c.restore();
+}
+
+/* ============================================================
+   NEU: Vorschlag. Gleiche Schnittstelle, gleiche Ebenenfolge
+   (Beine → Shorts → hinterer Arm → Hals → Torso → vorderer Arm →
+    Haare hinten → Kopf → Gesicht → Bart → Haare vorn → Haarschmuck → Hut).
+   Neue Skin-Keys: haar (+9 Werte), bart (7 Werte), haarfarbe (+8), gesicht (4).
+   Koordinaten: (0,0) = Fußpunkt, Einheit = h/80. Kopf: Mitte (0,-74), rx 13 / ry 13.5
+   → Kopf ≈ 27 von ≈ 88 Gesamthöhe ≈ 1/3 (Cartoon). Hals -61…-53, Schultern ab -54.
+   ============================================================ */
+function zeichneFigurNeu(c, x, y, h, s, pose, t) {
+  s = Object.assign({}, SKIN_STANDARD, s);
+  const u = h / 80;
+  c.save(); c.translate(x, y); c.scale(u, u);
+  const haut = '#f1c27d', hautD = '#d9a866', wange = 'rgba(255,120,110,.28)';
+  const topF = FARBEN[s.topfarbe] || '#c8283a';
+  const schuhF = FARBEN[s.schuhe] || '#f4f4f4';
+  const shortsF = '#2a4a8a';
+  const p = pose === 'lauf' ? t * 13 : 0;
+  const st = v => typeof v === 'number' ? Math.max(0, Math.min(2, v)) : (STUFE[v] ?? 1);
+  const bauch = st(s.bauch), brust = st(s.brust), musk = st(s.muskeln);
+  const sw = [11, 13, 16][brust];        // Schulter-Halbbreite (immer breiter als der Hals, 4)
+  const hw = [10, 12, 14][bauch];
+  const armB = [5, 6.5, 9][musk];
+  const beinB = [6.5, 8, 10.5][musk];
+  const schulterR = [5, 6, 8][brust];
+  const HX = 0, HY = -74, HR = 13;      // Kopf
+  const SCH = -54;                       // Schulterlinie
+  const AX = 1, AY = -49;                // Armgelenk
+
+  // Haarfarbe: normale Farbe oder Regenbogen-Verlauf (senkrecht über Kopf/Haarzone)
+  const haarF = () => {
+    const f = HAARFARBEN[s.haarfarbe] || '#6b3e1e';
+    if (f !== 'regenbogen') return f;
+    const g = c.createLinearGradient(0, -104, 0, -62);
+    REGENBOGEN.forEach((col, i) => g.addColorStop(i / (REGENBOGEN.length - 1), col));
+    return g;
+  };
+  const haarDunkel = () => { // für Kontur/Schatten; bei Regenbogen/Silber neutral
+    const f = HAARFARBEN[s.haarfarbe] || '#6b3e1e';
+    return (f === 'regenbogen' || f === HAARFARBEN.silber) ? 'rgba(0,0,0,.25)' : 'rgba(0,0,0,.22)';
+  };
+
+  // ---- Beine
+  let beinHinten, beinVorn;
+  if (pose === 'lauf') {
+    beinHinten = { fx: 12 * Math.sin(p), fy: -Math.max(0, -Math.cos(p)) * 9 };
+    beinVorn   = { fx: 12 * Math.sin(p + Math.PI), fy: -Math.max(0, Math.cos(p)) * 9 };
+  } else if (pose === 'sprung') {
+    beinHinten = { fx: -8, fy: -14 }; beinVorn = { fx: 9, fy: -8 };
+  } else {
+    beinHinten = { fx: -4, fy: 0 }; beinVorn = { fx: 5, fy: 0 };
+  }
+  const bein = (b, farbe, schuh) => {
+    c.lineCap = 'round'; c.lineWidth = beinB; c.strokeStyle = farbe;
+    c.beginPath(); c.moveTo(0, -30);
+    c.quadraticCurveTo(b.fx * 0.5 + 6, -18 + b.fy * 0.5, b.fx, b.fy - 3); c.stroke();
+    if (musk === 2) { c.lineWidth = beinB + 3; c.beginPath(); c.moveTo(0, -30); c.quadraticCurveTo(b.fx * 0.25 + 3, -24 + b.fy * 0.25, b.fx * 0.4 + 4, -19 + b.fy * 0.4); c.stroke(); }
+    c.fillStyle = schuh; c.strokeStyle = '#333'; c.lineWidth = 1.2;
+    c.beginPath(); c.ellipse(b.fx + 3, b.fy - 1.5, 8, 4.2, 0, 0, Math.PI * 2); c.fill(); c.stroke();
+  };
+  bein(beinHinten, hautD, schuhF);
+  c.fillStyle = shortsF; c.beginPath(); c.roundRect(-hw, -36, hw * 2, 15, 5); c.fill();
+  c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(-hw, -27, hw * 2, 2);
+  bein(beinVorn, haut, schuhF);
+
+  // ---- Arme (Gelenk auf Schulterhöhe, nicht mehr im Hals)
+  const armWinkel = pose === 'lauf' ? Math.sin(p) * 0.9 : (pose === 'sprung' ? -2.2 : 0.3);
+  const arm = (w, farbe) => {
+    c.lineCap = 'round'; c.lineWidth = armB; c.strokeStyle = farbe;
+    const ex = AX + Math.sin(w) * 10, ey = AY + Math.cos(w) * 11;
+    c.beginPath(); c.moveTo(AX, AY); c.lineTo(ex, ey);
+    c.lineTo(ex + Math.cos(w) * 10, ey - Math.sin(w) * 10 + 6); c.stroke();
+    if (musk === 2) { c.lineWidth = armB + 3; c.beginPath(); c.moveTo(AX, AY); c.lineTo(AX + (ex - AX) * 0.6, AY + (ey - AY) * 0.6); c.stroke(); }
+  };
+  arm(-armWinkel, hautD);
+
+  // ---- Hals (klar sichtbar, schmaler als Schultern, Schatten unter dem Kinn)
+  c.fillStyle = haut; c.beginPath(); c.roundRect(-4, -64, 8.5, 13, 2); c.fill();
+  c.fillStyle = 'rgba(0,0,0,.12)'; c.beginPath(); c.roundRect(-4, -62, 8.5, 3, 1); c.fill();
+
+  // ---- Torso / Oberteil: Schultern gerundet, breiter als Halsansatz
+  const torso = () => {
+    c.beginPath();
+    c.moveTo(-sw + 3, SCH); c.lineTo(sw - 3, SCH);
+    c.quadraticCurveTo(sw + 1, SCH, sw + 0.5, SCH + 4);                       // runde Schulter vorn
+    c.quadraticCurveTo(sw + (bauch === 2 ? 5 : 1), -42, hw, -29); c.lineTo(-hw, -29);
+    c.quadraticCurveTo(-sw - (bauch === 2 ? 1 : 0), -42, -sw - 0.5, SCH + 4);
+    c.quadraticCurveTo(-sw - 1, SCH, -sw + 3, SCH); c.closePath();
+  };
+  c.fillStyle = topF; torso(); c.fill();
+  if (bauch === 2) { c.beginPath(); c.ellipse(hw - 4, -37, 9, 8.5, 0, 0, Math.PI * 2); c.fill(); }
+  // Kragen (Halsausschnitt), macht den Übergang Hals→Oberteil lesbar
+  c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(0, SCH, 6, 2.2, 0, 0, Math.PI); c.fill();
+  if (s.top === 'hoodie') {
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.roundRect(-hw + 1, -43, hw * 2 - 2, 9, 3); c.fill();
+    c.fillStyle = topF; c.beginPath(); c.ellipse(0, SCH, sw + 2, 6, 0, Math.PI, 0); c.fill();
+    c.strokeStyle = '#fff'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-3, SCH + 2); c.lineTo(-4, -42); c.moveTo(3, SCH + 2); c.lineTo(4, -42); c.stroke();
+  } else {
+    c.fillStyle = 'rgba(255,255,255,.75)'; c.beginPath(); c.arc(3, -42, 5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = topF; c.beginPath(); c.arc(3, -42, 2.5, 0, Math.PI * 2); c.fill();
+  }
+  if (s.schmuck === 'kette' || s.schmuck === 'beides') {
+    c.strokeStyle = '#e0a400'; c.lineWidth = 1.8; c.beginPath(); c.moveTo(-6, SCH + 1); c.quadraticCurveTo(0, -45, 7, SCH + 1); c.stroke();
+    c.fillStyle = '#e0a400'; c.beginPath(); c.arc(1, -48, 3, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#fff6c0'; c.beginPath(); c.arc(0, -49, 1.1, 0, Math.PI * 2); c.fill();
+  }
+  c.fillStyle = topF; c.beginPath(); c.arc(AX, AY, schulterR, 0, Math.PI * 2); c.fill(); // Ärmel/Schulterkappe
+  arm(armWinkel, haut);
+
+  // ---- Haare HINTEN (vor dem Kopf gezeichnet, Gesicht bleibt frei)
+  const wipp = pose === 'lauf' ? Math.sin(t * 13) * 2.5 : 0;
+  c.fillStyle = haarF();
+  if (s.haar === 'afro') {
+    c.beginPath(); c.arc(-2, HY - 4, 19.5, 0, Math.PI * 2); c.fill();
+    for (let i = 0; i < 9; i++) { const a = Math.PI * 0.9 + i * (Math.PI * 1.1 / 8); c.beginPath(); c.arc(-2 + Math.cos(a) * 17.5, HY - 4 + Math.sin(a) * 17.5, 6, 0, Math.PI * 2); c.fill(); }
+  } else if (s.haar === 'riesenafro') {
+    c.beginPath(); c.arc(-3, HY - 8, 28, 0, Math.PI * 2); c.fill();
+    for (let i = 0; i < 14; i++) { const a = i * (Math.PI * 2 / 14); c.beginPath(); c.arc(-3 + Math.cos(a) * 25, HY - 8 + Math.sin(a) * 25, 8, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.arc(-10, HY - 20, 7, 0, Math.PI * 2); c.fill();
+  } else if (s.haar === 'lang') {
+    c.beginPath(); c.moveTo(-6, HY - 10); c.quadraticCurveTo(-19, HY - 2 + wipp, -16, -40 + wipp);
+    c.quadraticCurveTo(-8, -38 + wipp, -2, -46); c.lineTo(4, HY + 10); c.closePath(); c.fill();
+  } else if (s.haar === 'wuschel') {
+    const pts = [[-14,-6],[-16,-14],[-12,-22],[-4,-26],[5,-25],[12,-20],[15,-12],[-8,-12],[2,-16]];
+    for (const [dx, dy] of pts) { c.beginPath(); c.arc(HX + dx, HY + dy, 8.5, 0, Math.PI * 2); c.fill(); }
+  } else if (s.haar === 'zoepfe') {
+    // hinterer Zopf (hinter dem Kopf)
+    const z = (x0, y0, n, schatten) => {
+      c.fillStyle = schatten ? haarDunkel() : haarF();
+      for (let i = 0; i < n; i++) { c.beginPath(); c.ellipse(x0 + Math.sin(i * 1.3 + wipp * 0.3) * 1.5, y0 + i * 6, 4.2, 3.8, 0, 0, Math.PI * 2); c.fill(); if (schatten) { c.fillStyle = haarF(); } }
+    };
+    c.fillStyle = haarF(); z(-13, HY - 2, 5, false);
+    c.fillStyle = 'rgba(0,0,0,.22)'; z(-13, HY - 2, 5, true);
+  }
+
+  // ---- Kopf: weicher, leicht eiförmig, Wange rund
+  c.fillStyle = haut;
+  c.beginPath(); c.ellipse(HX, HY, HR, HR + 0.5, 0, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.arc(HX + 5, HY + 7, 7, 0, Math.PI * 2); c.fill();              // Wange/Kinn weich
+  c.fillStyle = wange; c.beginPath(); c.ellipse(HX + 8, HY + 6, 3.6, 2.4, 0, 0, Math.PI * 2); c.fill(); // Röte
+  // Ohr
+  c.fillStyle = hautD; c.beginPath(); c.ellipse(HX - 10.5, HY + 1, 3.4, 4, 0, 0, Math.PI * 2); c.fill();
+  c.fillStyle = 'rgba(0,0,0,.12)'; c.beginPath(); c.ellipse(HX - 10.5, HY + 1.5, 1.6, 2, 0, 0, Math.PI * 2); c.fill();
+  if (s.schmuck === 'ohrring' || s.schmuck === 'beides') {
+    c.strokeStyle = '#e0a400'; c.lineWidth = 1.8; c.beginPath(); c.arc(HX - 11, HY + 7, 3.2, 0, Math.PI * 2); c.stroke();
+  }
+  // Nase (3 Formen, etwas höher und größer)
+  c.fillStyle = hautD;
+  if (s.nase === 'spitz') { c.beginPath(); c.moveTo(11.5, HY - 2); c.lineTo(18.5, HY + 3); c.lineTo(11.5, HY + 5); c.closePath(); c.fill(); }
+  else if (s.nase === 'knubbel') { c.beginPath(); c.arc(13.5, HY + 3, 4, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.arc(12.6, HY + 2, 1.3, 0, Math.PI * 2); c.fill(); }
+  else { c.beginPath(); c.arc(12.8, HY + 2.5, 3, 0, Math.PI * 2); c.fill(); }
+
+  // ---- Gesicht: Auge + Braue + Mund je Ausdruck
+  const g = s.gesicht;
+  const EX = 6.5, EY = HY - 2.5;
+  const auge = (r, pupille) => {
+    c.fillStyle = '#fff'; c.beginPath(); c.ellipse(EX, EY, r, r + 0.6, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(EX + 1.2, EY + 0.4, pupille, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(EX + 2, EY - 1, 0.9, 0, Math.PI * 2); c.fill();
+  };
+  const braue = (dy, neigung) => {
+    c.strokeStyle = haarDunkelBraue(); c.lineCap = 'round'; c.lineWidth = 2.1;
+    c.beginPath(); c.moveTo(1.5, EY - 7 + dy + neigung); c.quadraticCurveTo(6.5, EY - 10 + dy, 11.5, EY - 7.5 + dy - neigung); c.stroke();
+  };
+  function haarDunkelBraue() { const f = HAARFARBEN[s.haarfarbe]; return (!f || f === 'regenbogen' || f === HAARFARBEN.silber || f === HAARFARBEN.blond) ? '#4a2c12' : f; }
+  const grinsen = (breit) => { // offenes Grinsen mit Zähnen
+    c.fillStyle = '#7a2b22'; c.beginPath(); c.moveTo(2, HY + 7); c.quadraticCurveTo(7, HY + 7 + breit, 12.5, HY + 6); c.quadraticCurveTo(8, HY + 9, 2, HY + 7); c.closePath(); c.fill();
+    c.fillStyle = '#fff'; c.beginPath(); c.moveTo(3, HY + 7.2); c.lineTo(11.5, HY + 6.3); c.lineTo(10.5, HY + 8.2); c.lineTo(4, HY + 8.8); c.closePath(); c.fill();
+  };
+  if (s.brille === 'an' || g === 'cool') {
+    // große Sonnenbrille
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(1, EY - 4.5, 13.5, 8.5, 3.5); c.fill();
+    c.strokeStyle = '#18213a'; c.lineWidth = 1.8; c.beginPath(); c.moveTo(1, EY - 1); c.lineTo(-10, EY - 2); c.stroke();
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.roundRect(3.5, EY - 3, 4.5, 2, 1); c.fill();
+    if (g === 'cool') { // schiefes Lächeln, Braue drüber
+      c.strokeStyle = '#7a2b22'; c.lineWidth = 1.8; c.lineCap = 'round'; c.beginPath(); c.moveTo(4, HY + 7.5); c.quadraticCurveTo(9, HY + 10, 13, HY + 6); c.stroke();
+      braue(-1.5, -1);
+    } else if (g === 'erstaunt') { c.fillStyle = '#7a2b22'; c.beginPath(); c.ellipse(8, HY + 8, 3, 3.6, 0, 0, Math.PI * 2); c.fill(); braue(-3, 0); }
+    else if (g === 'zunge') { grinsen(4); zunge(); }
+    else { grinsen(5); }
+  } else if (g === 'erstaunt') {
+    auge(5.2, 2.2); braue(-3.5, 0);
+    c.fillStyle = '#7a2b22'; c.beginPath(); c.ellipse(8, HY + 8, 3, 3.8, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c0453a'; c.beginPath(); c.ellipse(8, HY + 9.6, 1.8, 1.4, 0, 0, Math.PI * 2); c.fill();
+  } else if (g === 'zunge') {
+    // zugekniffenes fröhliches Auge
+    c.strokeStyle = '#18213a'; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath(); c.arc(EX, EY + 1, 3.8, Math.PI * 1.15, Math.PI * 1.85); c.stroke();
+    braue(0.5, 0.5);
+    grinsen(4); zunge();
+  } else { // grinsend (Standard)
+    auge(4.4, 2.6); braue(0, 0.5);
+    grinsen(6);
+  }
+  function zunge() {
+    c.fillStyle = '#f05a7a'; c.beginPath(); c.ellipse(9.5, HY + 11, 3.2, 4, 0.3, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(0,0,0,.18)'; c.lineWidth = 1; c.beginPath(); c.moveTo(9.3, HY + 9); c.lineTo(10.3, HY + 13.5); c.stroke();
+  }
+
+  // ---- Bärte (unter der Nase, Farbe = Haarfarbe)
+  const bartF = haarF();
+  c.fillStyle = bartF; c.strokeStyle = bartF; c.lineCap = 'round';
+  const BY = HY + 5.5;                                   // Oberlippe
+  const schnauzer = () => { c.beginPath(); c.roundRect(2.5, BY - 1.5, 12, 3.6, 1.8); c.fill(); };
+  if (s.bart === 'an' || s.bart === 'schnauzer') schnauzer();
+  else if (s.bart === 'zwirbel') {
+    c.lineWidth = 2.3;
+    c.beginPath(); c.moveTo(8, BY); c.quadraticCurveTo(13, BY + 1, 17, BY - 3); c.quadraticCurveTo(19.5, BY - 6, 16.5, BY - 6.5); c.stroke();
+    c.beginPath(); c.moveTo(8, BY); c.quadraticCurveTo(3, BY + 1, 0, BY - 3); c.quadraticCurveTo(-2, BY - 6, 1, BY - 6.5); c.stroke();
+    c.beginPath(); c.arc(8, BY + 0.3, 1.6, 0, Math.PI * 2); c.fill();
+  } else if (s.bart === 'walross') {
+    c.beginPath(); c.moveTo(1.5, BY - 1); c.lineTo(14.5, BY - 1.5);
+    c.quadraticCurveTo(16.5, BY + 4, 13.5, BY + 9); c.quadraticCurveTo(11, BY + 11, 9, BY + 8);
+    c.quadraticCurveTo(7, BY + 11, 4.5, BY + 9); c.quadraticCurveTo(0.5, BY + 5, 1.5, BY - 1); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.ellipse(9, BY + 2.5, 4.5, 1.4, 0, 0, Math.PI * 2); c.fill();
+  } else if (s.bart === 'fumanchu') {
+    c.beginPath(); c.roundRect(3.5, BY - 1.2, 10.5, 2.6, 1.3); c.fill();
+    c.lineWidth = 2.4;
+    c.beginPath(); c.moveTo(13.5, BY); c.quadraticCurveTo(16.5, BY + 8, 15, BY + 18 + wipp); c.stroke();
+    c.beginPath(); c.moveTo(4, BY); c.quadraticCurveTo(2, BY + 8, 3.5, BY + 16 + wipp); c.stroke();
+  } else if (s.bart === 'kinnbart') {
+    c.beginPath(); c.roundRect(4, BY - 1.2, 9.5, 2.6, 1.3); c.fill();          // kleiner Schnurrbart
+    c.beginPath(); c.moveTo(2, HY + 11); c.lineTo(11, HY + 11.5); c.lineTo(7, HY + 21); c.closePath(); c.fill(); // Spitzbart
+  } else if (s.bart === 'monobraue') {
+    schnauzer();
+    c.strokeStyle = bartF; c.lineWidth = 3.4; c.beginPath(); c.moveTo(-6, EY - 8); c.quadraticCurveTo(4, EY - 11, 13, EY - 8); c.stroke(); // über Stirn + Auge
+  }
+
+  // ---- Haare VORN / oben
+  c.fillStyle = haarF(); c.strokeStyle = haarF(); c.lineCap = 'round';
+  const kappe = (von, bis, stirnX, stirnY, nackenX, nackenY) => {   // Standard-Haarkappe um den Kopf
+    c.beginPath(); c.arc(HX, HY - 1.5, HR + 0.6, Math.PI * von, Math.PI * bis); c.lineTo(stirnX, stirnY); c.lineTo(nackenX, nackenY); c.closePath(); c.fill();
+  };
+  const haar = s.haar;
+  if (haar === 'kurz') kappe(1.05, 1.95, 10, HY - 7, -5, HY - 3);
+  else if (haar === 'lang') kappe(1.0, 1.97, 11, HY - 6, -8, HY + 2);
+  else if (haar === 'zopf') {
+    kappe(1.02, 1.98, 11, HY - 6, -6, HY - 2);
+    c.lineWidth = 6; c.beginPath(); c.moveTo(-11, HY - 4); c.quadraticCurveTo(-23, HY - 2 + wipp, -21, HY + 14 + wipp); c.stroke();
+    c.fillStyle = '#c8283a'; c.beginPath(); c.arc(-12, HY - 4, 2.6, 0, Math.PI * 2); c.fill();
+  } else if (haar === 'locken') {
+    for (let i = 0; i < 7; i++) { const a = Math.PI * 1.0 + i * (Math.PI / 6.5); c.beginPath(); c.arc(Math.cos(a) * 11.5, HY - 1.5 + Math.sin(a) * 11.5, 5.2, 0, Math.PI * 2); c.fill(); }
+  } else if (haar === 'afro') {
+    for (let i = 0; i < 5; i++) { const a = Math.PI * 1.15 + i * 0.3; c.beginPath(); c.arc(-2 + Math.cos(a) * 16.5, HY - 4 + Math.sin(a) * 16.5, 6.5, 0, Math.PI * 2); c.fill(); }
+  } else if (haar === 'riesenafro') {
+    for (let i = 0; i < 5; i++) { const a = Math.PI * 1.2 + i * 0.26; c.beginPath(); c.arc(-3 + Math.cos(a) * 24, HY - 8 + Math.sin(a) * 24, 8, 0, Math.PI * 2); c.fill(); }
+  } else if (haar === 'irokese' || haar === 'mohawk') {
+    // Kamm: Zacken auf dem Scheitel von Nacken bis Stirn; Mohawk = größer + Regenbogen-Streifen
+    const hoch = haar === 'mohawk' ? 30 : 20, n = haar === 'mohawk' ? 6 : 5;
+    const a0 = Math.PI * 1.08, a1 = Math.PI * 1.92, r0 = HR - 1;
+    c.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const a = a0 + (a1 - a0) * i / n, am = a0 + (a1 - a0) * (i - 0.5) / n;
+      if (i > 0) c.lineTo(HX + Math.cos(am) * (r0 + hoch - (haar === 'mohawk' ? Math.abs(i - 0.5 - n / 2) * 4 : 0)), HY - 1.5 + Math.sin(am) * (r0 + hoch - (haar === 'mohawk' ? Math.abs(i - 0.5 - n / 2) * 4 : 0)));
+      c.lineTo(HX + Math.cos(a) * r0, HY - 1.5 + Math.sin(a) * r0);
+    }
+    c.closePath();
+    if (haar === 'mohawk') {
+      const g2 = c.createLinearGradient(-16, 0, 16, 0);
+      REGENBOGEN.forEach((col, i) => { g2.addColorStop(i / REGENBOGEN.length, col); g2.addColorStop((i + 1) / REGENBOGEN.length - 0.001, col); });
+      c.fillStyle = g2;
+    }
+    c.fill();
+    c.fillStyle = haarF();
+    c.beginPath(); c.arc(HX, HY - 1.5, r0, Math.PI * 1.08, Math.PI * 1.92); c.closePath(); c.fill(); // Haaransatz schmal
+  } else if (haar === 'tolle') {
+    // Elvis: große Schmalztolle nach vorn-oben, Koteletten
+    kappe(1.0, 1.95, 11, HY - 8, -7, HY + 2);
+    c.beginPath(); c.moveTo(-9, HY - 11); c.quadraticCurveTo(-2, HY - 30, 14, HY - 26); c.quadraticCurveTo(24, HY - 22, 17, HY - 14);
+    c.quadraticCurveTo(14, HY - 9, 9, HY - 11); c.quadraticCurveTo(13, HY - 17, 7, HY - 19); c.quadraticCurveTo(0, HY - 18, -9, HY - 11); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.22)'; c.beginPath(); c.ellipse(6, HY - 22, 7, 2.2, -0.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = haarF(); c.beginPath(); c.roundRect(-10, HY - 4, 3.2, 10, 1.5); c.fill(); // Kotelette
+  } else if (haar === 'zoepfe') {
+    kappe(1.02, 1.98, 11, HY - 6, -6, HY - 2);
+    c.strokeStyle = haarDunkel(); c.lineWidth = 1; c.beginPath(); c.moveTo(-8, HY - 12); c.lineTo(10, HY - 7); c.stroke(); // Scheitel
+    // vorderer Zopf (seitlich am Kopf)
+    for (let i = 0; i < 5; i++) { c.fillStyle = haarF(); c.beginPath(); c.ellipse(-7 + Math.sin(i * 1.3 + wipp * 0.3) * 1.5, HY + 4 + i * 6, 4.4, 4, 0, 0, Math.PI * 2); c.fill(); }
+    // Schleifen (an beiden Zöpfen)
+    const schleife = (x0, y0) => {
+      c.fillStyle = '#e8467c';
+      c.beginPath(); c.moveTo(x0, y0); c.lineTo(x0 - 6, y0 - 5); c.lineTo(x0 - 5, y0 + 3); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(x0, y0); c.lineTo(x0 + 5, y0 - 5.5); c.lineTo(x0 + 6, y0 + 2); c.closePath(); c.fill();
+      c.fillStyle = '#b2224f'; c.beginPath(); c.arc(x0, y0, 2, 0, Math.PI * 2); c.fill();
+    };
+    schleife(-13, HY - 3); schleife(-7, HY + 3);
+  } else if (haar === 'dutt') {
+    kappe(1.0, 1.97, 11, HY - 6, -7, HY);
+    c.beginPath(); c.arc(-2, HY - 20, 7.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.2)'; c.beginPath(); c.arc(-4, HY - 22, 3, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#e8467c'; c.lineWidth = 2.2; c.beginPath(); c.arc(-2, HY - 13.5, 3.2, Math.PI * 0.1, Math.PI * 0.9); c.stroke(); // Haargummi
+  } else if (haar === 'wuschel') {
+    const pts = [[-10,-10],[-2,-14],[7,-12],[13,-6],[-6,-16],[4,-18]];
+    for (const [dx, dy] of pts) { c.beginPath(); c.arc(HX + dx, HY + dy, 8, 0, Math.PI * 2); c.fill(); }
+    // ein paar abstehende Strähnen
+    c.lineWidth = 2.5; c.beginPath(); c.moveTo(-14, HY - 20); c.lineTo(-20, HY - 28); c.moveTo(4, HY - 25); c.lineTo(6, HY - 33); c.moveTo(14, HY - 18); c.lineTo(21, HY - 24); c.stroke();
+  } else if (haar === 'dreihaare') {
+    c.lineWidth = 1.8;
+    c.beginPath(); c.moveTo(-3, HY - 13); c.quadraticCurveTo(-8, HY - 22, -14, HY - 20); c.stroke();
+    c.beginPath(); c.moveTo(1, HY - 13.5); c.quadraticCurveTo(0, HY - 25, 3, HY - 27); c.stroke();
+    c.beginPath(); c.moveTo(5, HY - 12.5); c.quadraticCurveTo(10, HY - 20, 15, HY - 18); c.stroke();
+    c.fillStyle = 'rgba(255,255,255,.3)'; c.beginPath(); c.ellipse(-2, HY - 8, 5, 2.4, 0.2, 0, Math.PI * 2); c.fill(); // Glanz auf der Glatze
+  } else if (haar === 'flattop') {
+    c.beginPath(); c.moveTo(-14, HY - 4); c.lineTo(-14, HY - 26); c.lineTo(14, HY - 26); c.lineTo(14, HY - 9); c.lineTo(10, HY - 9);
+    c.quadraticCurveTo(0, HY - 12, -11, HY - 2); c.closePath(); c.fill();
+    c.fillStyle = haarDunkel(); c.fillRect(-14, HY - 26, 28, 2.2);
+  }
+
+  // ---- Haarschmuck (Schleife/Haarband) – auf Kopfhöhe, Frisur-Offset grob
+  const hoch = { afro: -16, riesenafro: -26, irokese: -18, mohawk: -28, tolle: -20, dutt: -18, wuschel: -20, flattop: -20, locken: -4 }[haar] || 0;
+  if (s.haarschmuck === 'schleife') {
+    c.fillStyle = '#e8467c';
+    c.beginPath(); c.moveTo(-6, HY - 12 + hoch); c.lineTo(-14, HY - 18 + hoch); c.lineTo(-13, HY - 7 + hoch); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(-6, HY - 12 + hoch); c.lineTo(1, HY - 19 + hoch); c.lineTo(3, HY - 9 + hoch); c.closePath(); c.fill();
+    c.fillStyle = '#b2224f'; c.beginPath(); c.arc(-6, HY - 12 + hoch, 2.4, 0, Math.PI * 2); c.fill();
+  } else if (s.haarschmuck === 'haarband') {
+    c.strokeStyle = '#e8467c'; c.lineWidth = 3.2; c.lineCap = 'butt';
+    c.beginPath(); c.arc(HX, HY - 1.5, HR + 0.8, Math.PI * 1.1, Math.PI * 1.85); c.stroke();
+  }
+
+  // ---- Hüte (sitzen auf der Frisur; bei großen Frisuren per Offset)
+  if (s.hut === 'cap') {
+    c.save(); c.translate(0, hoch);
+    c.fillStyle = '#1d3f8f'; c.beginPath(); c.arc(HX, HY - 8, 13, Math.PI, 0); c.closePath(); c.fill();
+    c.beginPath(); c.roundRect(2, HY - 10, 21, 4.2, 2); c.fill();
+    c.fillStyle = '#e0a400'; c.beginPath(); c.arc(HX, HY - 18, 2.3, 0, Math.PI * 2); c.fill();
+    c.restore();
+  } else if (s.hut === 'cowboy') {
+    c.save(); c.translate(0, hoch); c.fillStyle = '#8a5a2b';
+    c.beginPath(); c.ellipse(0, HY - 11, 21, 4.5, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.roundRect(-9.5, HY - 26, 19, 16, 4); c.fill();
+    c.fillStyle = '#5a3a18'; c.fillRect(-9.5, HY - 14, 19, 3); c.restore();
+  } else if (s.hut === 'zylinder') {
+    c.save(); c.translate(0, hoch); c.fillStyle = '#18213a';
+    c.beginPath(); c.ellipse(0, HY - 11, 17, 3.5, 0, 0, Math.PI * 2); c.fill();
+    c.fillRect(-9.5, HY - 32, 19, 22);
+    c.fillStyle = '#c8283a'; c.fillRect(-9.5, HY - 14, 19, 3); c.restore();
+  }
+  c.restore();
+}
+
+/* ============================================================
+   Übersichtsblätter
+   ============================================================ */
+const DPR = 2;
+function blatt(id, w, h, zeichne) {
+  const cv = document.getElementById(id);
+  cv.width = w * DPR; cv.height = h * DPR; cv.style.width = w + 'px'; cv.style.height = h + 'px';
+  const c = cv.getContext('2d'); c.scale(DPR, DPR);
+  c.fillStyle = '#e9f1fb'; c.fillRect(0, 0, w, h);
+  zeichne(c);
+}
+function text(c, s, x, y, size = 16, farbe = '#1d2b3a', align = 'center', bold = false) {
+  c.fillStyle = farbe; c.font = `${bold ? '700' : '500'} ${size}px Inter, system-ui, sans-serif`; c.textAlign = align; c.textBaseline = 'alphabetic'; c.fillText(s, x, y);
+}
+function titel(c, s, y = 36) { text(c, s, 32, y, 24, '#1d2b3a', 'left', true); }
+function linie(c, y, w) { c.strokeStyle = 'rgba(29,43,58,.22)'; c.lineWidth = 1; c.beginPath(); c.moveTo(32, y); c.lineTo(w - 32, y); c.stroke(); }
+const NEU = (o) => Object.assign({}, SKIN_STANDARD, { hut: 'keiner' }, o);
+
+/* ---- 01: Proportionen ---- */
+blatt('s1', 1600, 880, (c) => {
+  titel(c, 'Vorschlag 01 – Proportionen: alt (runner.js) gegen neu');
+  text(c, 'Neu: klarer Hals (schmaler als die Schultern), runde Schultern, Kopf ≈ 1/3 der Gesamthöhe, weiche Wange, großes Auge mit Braue, offenes Grinsen. Ebenenfolge wie bisher.', 32, 62, 15, '#4a5a6a', 'left');
+  const H = 330, yB = 510;
+  const alt = Object.assign({}, SKIN_STANDARD);
+  // Groß: alt (Cap) · neu (Cap) · neu ohne Cap · neu Laufen
+  const spalten = [
+    ['ALT – wie im Spiel (Cap)', (x) => zeichneFigurAlt(c, x, yB, H, alt, 'steh', 0)],
+    ['NEU – mit Cap', (x) => zeichneFigurNeu(c, x, yB, H, NEU({ hut: 'cap' }), 'steh', 0)],
+    ['NEU – ohne Cap', (x) => zeichneFigurNeu(c, x, yB, H, NEU({}), 'steh', 0)],
+    ['NEU – Laufen', (x) => zeichneFigurNeu(c, x, yB, H, NEU({ hut: 'cap' }), 'lauf', 0.9)],
+    ['NEU – Sprung', (x) => zeichneFigurNeu(c, x, yB, H, NEU({ hut: 'cap' }), 'sprung', 0)],
+  ];
+  const x0 = 170, dx = 250;
+  spalten.forEach(([l, f], i) => { f(x0 + i * dx); text(c, l, x0 + i * dx, yB + 36, 16, '#1d2b3a', 'center', true); });
+  // Maßlinien (neu, Spalte 3): Kopf / Hals / Schultern
+  const u = H / 80, mx = x0 + 2 * dx + 95;
+  const mass = (yA, yE, label) => {
+    c.strokeStyle = '#c0392b'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(mx, yB + yA * u); c.lineTo(mx, yB + yE * u); c.stroke();
+    c.beginPath(); c.moveTo(mx - 5, yB + yA * u); c.lineTo(mx + 5, yB + yA * u); c.moveTo(mx - 5, yB + yE * u); c.lineTo(mx + 5, yB + yE * u); c.stroke();
+    text(c, label, mx + 10, yB + ((yA + yE) / 2) * u + 5, 13, '#c0392b', 'left');
+  };
+  mass(-88, -60.5, 'Kopf ≈ 1/3');
+  mass(-60.5, -54, 'Hals');
+  mass(-54, 0, 'Körper ≈ 2/3');
+  // Alt: Hinweise
+  text(c, 'Alt: Kopf sitzt direkt auf der', x0, yB + 60, 13, '#4a5a6a'); text(c, 'Schulterlinie, kein Hals, Kopf ≈ 1/4', x0, yB + 78, 13, '#4a5a6a');
+  text(c, 'Neu: Hals 6–7 Einheiten, Schulter-', x0 + dx, yB + 60, 13, '#4a5a6a'); text(c, 'Halbbreite 13 > Hals 4', x0 + dx, yB + 78, 13, '#4a5a6a');
+  // Spielgröße
+  linie(c, 630, 1600);
+  text(c, 'Spielgröße (80 px Körperhöhe) – alt / neu: stehen, laufen (3 Phasen), springen', 32, 662, 16, '#1d2b3a', 'left', true);
+  const y80 = 800, sx = 120, sdx = 100;
+  const posen = [['steh', 0], ['lauf', 0], ['lauf', 0.08], ['lauf', 0.16], ['sprung', 0]];
+  text(c, 'alt', 60, y80 - 40, 14, '#4a5a6a', 'left');
+  posen.forEach(([p, t], i) => zeichneFigurAlt(c, sx + i * sdx, y80, 80, alt, p, t));
+  text(c, 'neu', 60 + 6 * sdx, y80 - 40, 14, '#4a5a6a', 'left');
+  posen.forEach(([p, t], i) => zeichneFigurNeu(c, sx + (i + 6) * sdx, y80, 80, NEU({ hut: 'cap' }), p, t));
+  text(c, 'neu, Körper „kräftig“ / „schmal“', 60 + 12 * sdx, y80 - 110, 14, '#4a5a6a', 'left');
+  zeichneFigurNeu(c, sx + 12 * sdx, y80, 80, NEU({ hut: 'cap', bauch: 'kräftig', brust: 'kräftig', muskeln: 'kräftig' }), 'lauf', 0.05);
+  zeichneFigurNeu(c, sx + 13 * sdx, y80, 80, NEU({ hut: 'cap', bauch: 'schmal', brust: 'schmal', muskeln: 'schmal' }), 'lauf', 0.05);
+  // Bodenlinie
+  c.strokeStyle = 'rgba(29,43,58,.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(60, y80 + 2); c.lineTo(1540, y80 + 2); c.stroke();
+});
+
+/* ---- 02: Frisuren und Bärte ---- */
+const FRISUREN = [
+  ['irokese', 'Irokese'], ['riesenafro', 'Riesen-Afro'], ['tolle', 'Elvis-Tolle'], ['zoepfe', 'Zöpfe + Schleifen'], ['dutt', 'Dutt oben'],
+  ['mohawk', 'Regenbogen-Mohawk'], ['wuschel', 'Wuschelkopf'], ['dreihaare', 'Glatze, 3 Haare'], ['flattop', 'Flat-Top'],
+];
+const BAERTE = [
+  ['zwirbel', 'Zwirbelbart'], ['walross', 'Walross'], ['fumanchu', 'Fu-Manchu'], ['schnauzer', 'Schnauzer'], ['kinnbart', 'Kinnbart'], ['monobraue', 'Monobraue + Schnauzer'],
+];
+blatt('s2', 1700, 1130, (c) => {
+  titel(c, 'Vorschlag 02 – lustige Frisuren (9) und alberne Bärte (6) an der neuen Figur');
+  text(c, 'Alle ohne Hut, Haarfarbe braun (außer Regenbogen-Mohawk). Jede Reihe darunter in Spielgröße 80 px.', 32, 62, 15, '#4a5a6a', 'left');
+  const H = 190, x0 = 120, dx = 182;
+  // Frisuren groß
+  let yB = 340;
+  FRISUREN.forEach(([k, l], i) => { zeichneFigurNeu(c, x0 + i * dx, yB, H, NEU({ haar: k }), 'steh', 0); text(c, l, x0 + i * dx, yB + 28, 14, '#1d2b3a', 'center', true); });
+  // Frisuren 80 px
+  let y80 = 490;
+  text(c, '80 px:', 40, y80 - 30, 13, '#4a5a6a', 'left');
+  FRISUREN.forEach(([k], i) => zeichneFigurNeu(c, x0 + i * dx, y80, 80, NEU({ haar: k }), 'lauf', 0.05));
+  c.strokeStyle = 'rgba(29,43,58,.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(60, y80 + 2); c.lineTo(1640, y80 + 2); c.stroke();
+  linie(c, 540, 1700);
+  // Bärte groß (Frisur kurz, damit der Bart im Blick ist)
+  yB = 870;
+  text(c, 'Bärte (Haarfarbe = Bartfarbe; Bart und Frisur frei kombinierbar)', 32, 590, 16, '#1d2b3a', 'left', true);
+  const bx0 = 170, bdx = 215;
+  BAERTE.forEach(([k, l], i) => { zeichneFigurNeu(c, bx0 + i * bdx, yB, H, NEU({ bart: k, haar: 'kurz' }), 'steh', 0); text(c, l, bx0 + i * bdx, yB + 28, 14, '#1d2b3a', 'center', true); });
+  // Kombinationen (Beispiel rechts)
+  zeichneFigurNeu(c, bx0 + 6 * bdx + 20, yB, H, NEU({ bart: 'zwirbel', haar: 'tolle', haarfarbe: 'schwarz', hut: 'zylinder' }), 'steh', 0);
+  text(c, 'Kombi: Tolle + Zwirbel + Zylinder', bx0 + 6 * bdx + 20, yB + 28, 14, '#1d2b3a', 'center', true);
+  y80 = 1010;
+  text(c, '80 px:', 40, y80 - 30, 13, '#4a5a6a', 'left');
+  BAERTE.forEach(([k], i) => zeichneFigurNeu(c, bx0 + i * bdx, y80, 80, NEU({ bart: k, haar: 'kurz' }), 'lauf', 0.05));
+  zeichneFigurNeu(c, bx0 + 6 * bdx + 20, y80, 80, NEU({ bart: 'zwirbel', haar: 'tolle', haarfarbe: 'schwarz', hut: 'zylinder' }), 'lauf', 0.05);
+  c.beginPath(); c.moveTo(60, y80 + 2); c.lineTo(1640, y80 + 2); c.stroke();
+  text(c, 'Alte Frisuren (kurz, lang, Zopf, Locken, Afro) bleiben erhalten und sind in zeichneFigurNeu übernommen – siehe Blatt 03 rechts.', 32, 1090, 13, '#4a5a6a', 'left');
+});
+
+/* ---- 03: Haarfarben und Gesichter ---- */
+const HAARF = [['pink', 'Pink'], ['türkis', 'Türkis'], ['lila', 'Lila'], ['neongrün', 'Neon-Grün'], ['feuerrot', 'Feuerrot'], ['blau', 'Blau'], ['regenbogen', 'Regenbogen'], ['silber', 'Silber']];
+const GESICHTER = [['grinsend', 'grinsend'], ['cool', 'cool'], ['erstaunt', 'erstaunt'], ['zunge', 'Zunge raus']];
+blatt('s3', 1700, 1130, (c) => {
+  titel(c, 'Vorschlag 03 – knallige Haarfarben (8) und Gesichtsausdrücke (4)');
+  text(c, 'Farben an der Frisur „Wuschelkopf“ (viel Fläche) und in 80 px zusätzlich an „lang“. Bart übernimmt die Haarfarbe.', 32, 62, 15, '#4a5a6a', 'left');
+  const H = 190, x0 = 120, dx = 182;
+  let yB = 340;
+  HAARF.forEach(([k, l], i) => { zeichneFigurNeu(c, x0 + i * dx, yB, H, NEU({ haar: 'wuschel', haarfarbe: k }), 'steh', 0); text(c, l, x0 + i * dx, yB + 28, 14, '#1d2b3a', 'center', true); });
+  // alte Frisuren rechts als Referenz
+  zeichneFigurNeu(c, x0 + 8 * dx + 10, yB, H, NEU({ haar: 'lang', haarfarbe: 'braun' }), 'steh', 0); text(c, 'alt: lang, braun', x0 + 8 * dx + 10, yB + 28, 14, '#1d2b3a', 'center', true);
+  let y80 = 490;
+  text(c, '80 px (Wuschel / lang):', 40, y80 - 100, 13, '#4a5a6a', 'left');
+  HAARF.forEach(([k], i) => { zeichneFigurNeu(c, x0 + i * dx - 35, y80, 80, NEU({ haar: 'wuschel', haarfarbe: k }), 'lauf', 0.05); zeichneFigurNeu(c, x0 + i * dx + 35, y80, 80, NEU({ haar: 'lang', haarfarbe: k }), 'lauf', 0.05); });
+  [['kurz'], ['zopf'], ['locken'], ['afro']].forEach(([k], i) => zeichneFigurNeu(c, x0 + 8 * dx - 60 + i * 50, y80, 80, NEU({ haar: k }), 'lauf', 0.05));
+  c.strokeStyle = 'rgba(29,43,58,.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(60, y80 + 2); c.lineTo(1640, y80 + 2); c.stroke();
+  linie(c, 540, 1700);
+  // Gesichter
+  text(c, 'Gesichtsausdrücke (Skin-Option „Gesicht“; „cool“ ersetzt die Sonnenbrille-Option oder ergänzt sie)', 32, 590, 16, '#1d2b3a', 'left', true);
+  yB = 870;
+  const gx0 = 170, gdx = 215, kdx = 250;
+  GESICHTER.forEach(([k, l], i) => { zeichneFigurNeu(c, gx0 + i * gdx, yB, H, NEU({ gesicht: k, haar: 'kurz' }), 'steh', 0); text(c, l, gx0 + i * gdx, yB + 28, 14, '#1d2b3a', 'center', true); });
+  // Ausdrücke mit Bart/Frisur kombiniert
+  const kombis = [
+    [{ gesicht: 'erstaunt', haar: 'irokese', haarfarbe: 'pink' }, 'erstaunt + Irokese'],
+    [{ gesicht: 'zunge', haar: 'riesenafro', haarfarbe: 'regenbogen', bart: 'walross' }, 'Zunge + Afro + Walross'],
+    [{ gesicht: 'cool', haar: 'flattop', haarfarbe: 'silber', bart: 'kinnbart', hut: 'keiner' }, 'cool + Flat-Top + Kinnbart'],
+  ];
+  kombis.forEach(([sk, l], i) => { zeichneFigurNeu(c, gx0 + 4 * gdx + i * kdx + 30, yB, H, NEU(sk), 'steh', 0); text(c, l, gx0 + 4 * gdx + i * kdx + 30, yB + 28, 14, '#1d2b3a', 'center', true); });
+  y80 = 1010;
+  text(c, '80 px:', 40, y80 - 30, 13, '#4a5a6a', 'left');
+  GESICHTER.forEach(([k], i) => zeichneFigurNeu(c, gx0 + i * gdx, y80, 80, NEU({ gesicht: k, haar: 'kurz', hut: 'cap' }), 'lauf', 0.05));
+  kombis.forEach(([sk], i) => zeichneFigurNeu(c, gx0 + 4 * gdx + i * kdx + 30, y80, 80, NEU(sk), 'lauf', 0.05));
+  c.beginPath(); c.moveTo(60, y80 + 2); c.lineTo(1640, y80 + 2); c.stroke();
+});
+window.__fertig = true;
+</script>
+</body>
+</html>

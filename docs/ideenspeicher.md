@@ -3,6 +3,16 @@
 Hier landen alle Ideen und aufgeschobenen Entscheidungen, damit nichts verloren geht. Status: **offen** · **aufgeschoben** (Mr. Alex entscheidet später, bitte erinnern) · **beschlossen** · **gebaut**.
 Pflege: Jede neue Idee aus einem Chat kommt hier hinein, auch wenn sie nicht gleich gebaut wird.
 
+## Audio-Vormerkliste (ElevenLabs: neue Credits ab 13.11.2026 – bis dahin nichts vertonen)
+Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13.11. nach Freigabe vertont (Erinnerung ist eingestellt).
+| Posten | Stimme(n) | Zeichen (ca.) | Status |
+|---|---|---|---|
+| Geheimakten: Leo/Big Ben (Kl. 6), The Last Ferry (Kl. 9) | Mr. Alex / Jeremy + Jessica | je ≈ 900 | vorgemerkt |
+| Power Up: Spruch beim Aufladen („Powered up!“ u. ä., ≈ 3 Sätze) | Mr. Alex, Jeremy, Jessica | je ≈ 150 | vorgemerkt |
+| Mini-Rewards: Combo-Sprüche (≈ 5 Sätze) | Mr. Alex, Jeremy, Jessica | je ≈ 250 | vorgemerkt |
+| Border Patrol: Grenzer-Sprüche (≈ 10 Sätze) | Jeremy, Mr. Alex | je ≈ 300 | vorgemerkt |
+| Runner: Rufe beim Einsammeln, Boss-Fragen | Jeremy, Jessica, Mr. Alex | je ≈ 1.500 | später |
+
 ## Aufgeschoben – bitte erinnern
 | Idee | Stand | Entscheidung offen |
 |---|---|---|

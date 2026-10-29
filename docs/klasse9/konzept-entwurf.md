@@ -34,7 +34,7 @@ Folien „Focus on Language“ Stunde 1–6, Arbeitsblatt „Vokabeln / If-Claus
 |---|---|---|
 | **1 Reading** (G: Leseverstehen) – Schwerpunkt | **2 Vocabulary** – Unit 1 / 2 / 3 | **3 Language** |
 | **4 Listening** | **5 Writing** | **6 Speaking** (Dialoge) |
-| **7 BE vs AE** | **8 New** (eigene Farbe) | **9 Hall of Fame** (Name festgelegt 11.10.) |
+| ~~7 BE vs AE~~ (seit 29.10. in Vocabulary) | **8 Games** 🎮 (seit 29.10., vorher „New“) | **9 Hall of Fame** (Name festgelegt 11.10.) |
 
 | # | Kategorie | Inhalt | Material |
 |---|---|---|---|
@@ -49,6 +49,15 @@ Folien „Focus on Language“ Stunde 1–6, Arbeitsblatt „Vokabeln / If-Claus
 | 9 | **Hall of Fame** | Aus euren Texten: gelungene Sätze („I felt so proud when we won!“), häufige Fehler ✗/✓ (he don't → he doesn't; I like she → I like her), Vocabulary Boost (excited, relieved, proud, grateful, relaxed), Starke Momente, Unit-1-Restsätze (eigene Texte, Trapped) | Class Feedback, Starke Momente, Rückgabe-Blätter |
 
 Spiele (Mix & Match, Memory) und Extras („Power“) wandern in die passenden Kategorien (Language, Vocabulary), damit es bei 9 Kacheln bleibt.
+
+### Umbau 29.10.2026 (beschlossen von Mr. Alex) – 8 Kacheln
+
+- **BE vs AE (nr 7) → Vocabulary (nr 2):** Die beiden Gruppen „Unit 1 · p. 20“ und „More words“ (Listen and Repeat + Quiz „British or American?“) stehen jetzt in der Vocabulary-Kachel hinter den Unit-Abschnitten (Kennung „BE vs AE“, Symbol 🇬🇧🇺🇸, Untertitel „British or American?“). Audio unverändert (britisch Mr. Alex, amerikanisch Jeremy B./Jessica). Kachel 7 entfällt.
+- **New (nr 8) aufgelöst:** Die Wörter „Unit 2 · Start“ (u2_001–005) und „Unit 2 · Theme 1“ (u2_006–022) waren bereits in Vocabulary/Unit 2 (Abschnitte „Start“, „Theme 1 · Part 1/2“) enthalten – die Doppelung ist weg.
+- **Neu-Hinweis statt Neu-Kachel:** Jede Kategorie/Gruppe kann in `werkzeuge/klasse9_bauen.py` ein Feld `neu_ab: "YYYY-MM-DD"` bekommen. 14 Tage ab diesem Datum zeigen Kachel und Gruppe ein ✨-Schild („Neu“/„New“), und die Startseite zeigt über den Kacheln die Zeile „✨ Neu diese Woche: …“ mit Direktsprung-Knöpfen (nur wenn es Neues gibt). Aktuell: BE/AE-Gruppen und Games (`neu_ab: "2026-10-29"`).
+- **Games 🎮 (nr 8, „Lernspiele“ / „Learning games“):** erstes Spiel **Memory** – Unit und Abschnitt wählen (wie in Vocabulary), dann 6 Paare englisches Wort ↔ deutsche Bedeutung aus diesen Wörtern, Wort wird beim Aufdecken vorgespielt; Karten größer als im Word Gym (`.memory.gross` in `klasse9.css`). +10 Punkte beim ersten gewonnenen Memory pro Tag – Word-Gym-Memory und Games-Memory teilen sich die Tagesmarke (`gym.memoryTag`), sonst „Punkte gibt es einmal pro Tag.“ Games zählt nicht für das Abzeichen „All categories“ (`spiele: True`).
+- **Startseite:** 8 Kacheln, Laptop 4 × 2, Handy 2 × 4 (Reihenfolge nach nr: 1–6, 8, 9).
+- **Fortschritt wandert mit** (`umbau()` in `app/klasse9/app.js`, einmalig beim Laden vor dem Siegeln, idempotent über `stand.umbau`): Teile `7|<Gruppe>|i` → `2|<Gruppe>|i`; `8|Unit 2 · Start|i` → `2|u2:Start|i`; `8|Unit 2 · Theme 1|i` → `2|u2:Theme 1 · Part 1|i` und `…Part 2|i`; `gruppen[7]/[8]` entsprechend nach `gruppen[2]`; 7 und 8 aus `erledigt`; Punkte unverändert. Der Siegelmechanismus selbst ist unverändert.
 
 ## 2a. GLN 2 (geplant) → Stationen
 

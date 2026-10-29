@@ -26,3 +26,16 @@ Gleiche Regel, gleiche Fristen (Stationen statt Kategorien). Word Gym bleibt wie
 1. 30 / 60 / 120 Tage in Ordnung, oder lieber kürzer (z. B. 21 Tage) für den Start?
 2. GLN-Kopplung (zwei Wochen vorher alles fällig) anschalten?
 3. Klasse 6 gleich mit?
+
+## Entscheidungen (29.10.2026)
+- Fristen 30 / 60 / 120 Tage · GLN-Kopplung **an** · **Klasse 6 gleich mit**.
+- Das Wort „Auffrischen“ wird **nicht** benutzt (altmodisch). Richtung: Wörter retten / Gehirn droht zu vergessen. Name wird gewählt (Vorschläge unten).
+- **Timer bei Wiederholung kürzer:** Sprechzeit, Denkzeit und Mindestzeiten auf **50 %** bei der ersten Wiederholung (Stufe 1), **35 %** bei Stufe 2, **25 %** ab Stufe 3 – wer es kann, darf zügig durch.
+
+## Namensvorschläge (Schild an Kachel/Gruppe, Zeile auf der Startseite)
+| Name | Schild | Startseite G / E |
+|---|---|---|
+| **Rescue** (Empfehlung) | 🆘 Rescue | „🆘 3 Teile brauchen dich!“ / “🆘 3 parts need you!” |
+| Save the words | 🧠 Save me! | „🧠 Dein Gehirn will 3 Teile vergessen – rette sie!“ / “🧠 Your brain is about to forget 3 parts – save them!” |
+| Recharge | 🔋 Recharge | „🔋 3 Teile fast leer – aufladen!“ / “🔋 3 parts running low – recharge!” |
+| Fading | 👻 Fading… | „👻 3 Teile verblassen – hol sie zurück!“ / “👻 3 parts are fading – bring them back!” |

@@ -20,6 +20,7 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Hörübungen 01/02 Klasse 6 neu mit Jugendstimmen (Mia, Ben, Harry, Declan) | Elrond, John Shaw, Emmaline | ≈ 600 | offen – nur auf Wunsch |
 
 ## Aufgeschoben – bitte erinnern
+| **Runner-Figur: Feintuning** | vorgemerkt (29.10.) | Mr. Alex hat noch Anmerkungen zum Feintuning der Figur (Details folgen von ihm). Beim nächsten Figur-Durchgang abfragen. Stand: Figur v2 mit Hütchen oben auf dem Riesen-Afro. |
 | **Manipulations-Reset** | aufgeschoben (29.10.) | Mr. Alex will keine versehentlichen Punktverluste; Reset nur als bewusste „Strafe“ für echte Manipulation, kein Regelfall. Heute: Reset nur, wenn Haupt- und Zweitkopie beide ungültig sind; erledigte Teile bleiben dabei stehen (Punkte auf 0). Nochmal besprechen: z. B. Punkte einfrieren statt löschen, oder nur Banner ohne Reset. |
 | Idee | Stand | Entscheidung offen |
 |---|---|---|

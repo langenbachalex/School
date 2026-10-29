@@ -550,19 +550,22 @@
 
     // ---- Hüte: immer direkt auf dem Kopf; bei Irokese/Mohawk/Dutt etwas nach vorn gerückt (Frisur ragt hinten heraus)
     const hutDX = (haar === 'irokese' || haar === 'mohawk' || haar === 'dutt') ? 4 : 0;
+    // Riesen-Afro: ein kleines Hütchen thront oben auf der Frisur (Wunsch Mr. Alex) – verkleinert um den Hutboden herum
+    const aufAfro = haar === 'riesenafro';
+    const hutAn = () => { c.save(); c.translate(hutDX, 0); if (aufAfro) { c.translate(-3, HY - 11); c.scale(0.62, 0.62); c.translate(0, -(HY - 11) - 42); } };
     if (s.hut === 'cap') {
-      c.save(); c.translate(hutDX, 0);
+      hutAn();
       c.fillStyle = '#1d3f8f'; c.beginPath(); c.arc(HX, HY - 8, 13, Math.PI, 0); c.closePath(); c.fill();
       c.beginPath(); c.roundRect(2, HY - 10, 21, 4.2, 2); c.fill();
       c.fillStyle = '#e0a400'; c.beginPath(); c.arc(HX, HY - 18, 2.3, 0, Math.PI * 2); c.fill();
       c.restore();
     } else if (s.hut === 'cowboy') {
-      c.save(); c.translate(hutDX, 0); c.fillStyle = '#8a5a2b';
+      hutAn(); c.fillStyle = '#8a5a2b';
       c.beginPath(); c.ellipse(0, HY - 11, 21, 4.5, 0, 0, Math.PI * 2); c.fill();
       c.beginPath(); c.roundRect(-9.5, HY - 26, 19, 16, 4); c.fill();
       c.fillStyle = '#5a3a18'; c.fillRect(-9.5, HY - 14, 19, 3); c.restore();
     } else if (s.hut === 'zylinder') {
-      c.save(); c.translate(hutDX, 0); c.fillStyle = '#18213a';
+      hutAn(); c.fillStyle = '#18213a';
       c.beginPath(); c.ellipse(0, HY - 11, 17, 3.5, 0, 0, Math.PI * 2); c.fill();
       c.fillRect(-9.5, HY - 32, 19, 22);
       c.fillStyle = '#c8283a'; c.fillRect(-9.5, HY - 14, 19, 3); c.restore();
@@ -575,6 +578,7 @@
     const mitHut = !!s.hut && s.hut !== 'keiner';
     const hutH = { cap: 8, cowboy: 13, zylinder: 19 }[s.hut] || 0;
     const haarH = ({ irokese: 20, mohawk: 30, riesenafro: 35, afro: 10, tolle: mitHut ? 0 : 17, dutt: mitHut ? 9 : 14, wuschel: mitHut ? 0 : 21, flattop: mitHut ? 0 : 13, dreihaare: mitHut ? 0 : 14, locken: 3 })[s.haar] || 0;
+    if (s.haar === 'riesenafro' && mitHut) return 88 + (s.hals === 'giraffe' ? 24 : 0) + haarH + Math.round(hutH * 0.62); // Hütchen oben auf dem Afro
     return 88 + (s.hals === 'giraffe' ? 24 : 0) + Math.max(hutH, haarH);
   }
 

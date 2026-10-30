@@ -1,5 +1,7 @@
 # Story-Modus London Run – Welt 1 „The Guard Who Never Moved“ (freigegeben 30.10.2026, Mr. Alex)
 
+**Status: gebaut (31.10.2026).** Engine `app/klasse9/runner.js` (Option `story`, `MUSTER_WESTMINSTER_STORY`, Stationen, Film, `Runner.film`; Kopie `app/runner.js`), App `app/app.js` (`STORY.westminster` mit diesem Text, Punkte, Story Library), `app/london-run.css`. Details `docs/runner/konzept-entwurf.md` Abschnitt 15. Audio: bis zur Vertonung Geräte-Stimme (`STORY.westminster.audio` nimmt später die Dateien je Stück auf).
+
 ## Spielprinzip (Entscheidungen Mr. Alex, 30.10.)
 - **Zwei Sorten Sammelobjekte:** Story-Kristalle ♪ (12 je Lauf: Erzähler spricht ein Stück, Text schreibt sich oben langsam ein, höchstens ca. 8 Wörter je Stück) und Punkte-Diamanten 💎 (15–20 je Lauf, auch an kniffligen Stellen, zählen für die Combo).
 - **Handlungsstränge über den Laufweg:** Gabelung nach Stück 4 – ein ♪ oben auf einem Doppeldecker (Strang B), eins unten auf der Straße (Strang A); welches man zuerst nimmt, entscheidet den Strang. Zwei Enden je Welt.

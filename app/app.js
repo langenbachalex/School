@@ -2095,7 +2095,8 @@
   }
 
   /* ---------- Spiele: 🇬🇧 London Run – Jump'n'Run (Engine runner.js = Kopie von app/klasse9/runner.js; Konzept docs/runner/konzept-entwurf.md „London Run Klasse 6 – Welt 1“) ----------
-     Wie Road Trip Run in Klasse 9: Ticket 150 Coins je Durchgang (im Shop kaufen, beim Start eingelöst; Sperre im Programm in runnerSpiel), keine Punkte, keine Coins zurück.
+     Wie Road Trip Run in Klasse 9: Ticket 150 Coins je Durchgang (im Shop kaufen, beim Start eingelöst; Sperre im Programm in runnerSpiel), keine Coins zurück.
+     Story-Modus Welt 1 (31.10., STORY unten): ♪-Kristalle erzählen „The Guard Who Never Moved“ (zwei Enden), Punkte nur bei geschafftem Level (1 ⭐ je 💎, +10 je ganzer Geschichte, max. 30), Story Library in der Hall of Fame.
      Belohnung: Trophäe je Welt (Gold = alle Diamanten + beide Tore richtig, sonst Silber) und Runner-Titel nach geschafften Leveln (1 · 3 · 6 · 10 · 15).
      Stand in stand.spiel.runner = { level: { westminster: "gold"|"silber" }, gespielt, geschafft, titel, tickets }, Figur in stand.spiel.skin – beides im Siegel.
      Wörter: 12 aus dem gewählten Abschnitt von Station 7 (eigene zuerst, aufgefüllt aus den anderen Abschnitten), gesprochen mit den Vokabel-Aufnahmen.
@@ -2107,6 +2108,36 @@
       { id: "bridge", name: "Tower Bridge", staat: "London", ziel: "Tower Bridge", trophaee: "Tower Bridge", symbol: "🌉", bald: true },
       { id: "tube", name: "The Tube", staat: "London", ziel: "The Tube", trophaee: "The Tube", symbol: "🚇", bald: true },
       { id: "wembley", name: "Wembley", staat: "London", ziel: "Wembley", trophaee: "Wembley", symbol: "🏟️", bald: true }] };
+  // Story-Modus Welt 1 „The Guard Who Never Moved“ (freigegeben 30.10., Text wörtlich aus docs/runner/story-london-01.md; Erzähler Mr. Alex – bis zur Vertonung Geräte-Stimme,
+  // audio: { key: "audio/…mp3" } kann später je Stück ergänzt werden). Punkte (gegen Farmen): 1 ⭐ je Punkte-Diamant, +10 ⭐ einmalig je vollständiger Geschichte (alle 12 ♪ eines Endes),
+  // höchstens 30 ⭐ je Lauf, nur wenn das Level geschafft ist (Game over/Abbruch: keine); läuft über mrAlexWacht (Zeitlog) und punkteDazu (Coins halb).
+  // Stand in stand.spiel.runner.story = { westminster: { enden: ["A"], voll: ["A"], beste: { A: 12 } } } (im Siegel).
+  const STORY = {
+    westminster: { id: "westminster", titel: "The Guard Who Never Moved", teile: {
+      1: "Every morning, Sergeant Bearskin stands at the gate.", 2: "He never moves. He never smiles.", 3: "But today, something is wrong.", 4: "His big black hat is gone!",
+      A5: "A fox runs past with something black.", A6: "It's the hat! The fox runs to the river.", A7: "The fox jumps onto a red bus.", A8: "You jump too. The chase is on!",
+      B5: "A pigeon sits on Big Ben.", B6: "She has a new nest. The nest is a hat!", B7: "Three baby pigeons sleep in it.", B8: "You climb up. Shhh … quiet!",
+      9: "At five o'clock, the King's horses come.", 10: "But the Sergeant has no hat. Oh no!",
+      A11: "You give the hat back to the Sergeant.", A12: "He smiles. Just once. Nobody sees it … only you.",
+      B11: "The babies need the hat. You give him your cap.", B12: "Sergeant Bearskin laughs! Everybody sees it!" }, audio: {} },
+  };
+  const STORY_PUNKTE = { diamant: 1, ganz: 10, max: 30 };
+  const STORY_ENDEN = { A: { symbol: "🦊", name: "The fox" }, B: { symbol: "🕊️", name: "The pigeon" } };
+  function storyStand(welt) {
+    const r = runnerStand();
+    if (!r.story || typeof r.story !== "object") r.story = {};
+    const w = r.story[welt] && typeof r.story[welt] === "object" ? r.story[welt] : (r.story[welt] = {});
+    if (!Array.isArray(w.enden)) w.enden = [];
+    if (!Array.isArray(w.voll)) w.voll = [];
+    if (!w.beste || typeof w.beste !== "object") w.beste = {};
+    return w;
+  }
+  // Erzähler: Aufnahme(n), falls vorhanden, sonst Geräte-Stimme (britisch, männlich); im Lauf hinter einer laufenden Wiedergabe, an Station/Film sofort
+  const erzaehlerStimme = (text, o) => {
+    const dateien = o && o.audio ? [].concat(o.audio) : [];
+    const liste = dateien.length && dateien.every(Boolean) ? dateien : [{ tts: text, lang: "en-GB", stimme: "m" }];
+    return spiele(liste, o && o.sofort ? {} : { warten: true });
+  };
   const HELD_STIMME = { leo: "m", kenji: "m", felix: "m", max: "m", camilla: "f", ellie: "f", olivia: "f", zara: "f", penny: "f", tessa: "f" }; // Geräte-Stimme bis zur Vertonung (Jugendstimmen)
   const runnerWeltOffen = (w) => { const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
   const runnerWeltVon = (id) => RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0];
@@ -2195,7 +2226,7 @@
           el("div", {},
             el("h2", { lang: "en" }, `Level ${RUNNER.welten.indexOf(W) + 1} · ${W.name}`),
             el("p", { class: "runner-ziel", lang: "en" }, `Find ${W.ziel}!`),
-            el("p", { class: "klein" }, `Tippen oder Leertaste = springen, länger halten = höher (über Doppeldecker!). Black Cabs und rote Busse kommen dir entgegen – drüberspringen! In Pfützen rutschst du kurz. Telefonzellen und Postkästen sind Stufen, in die Themse fällst du hinein. Tauben, Füchse und Eichhörnchen kannst du plattdrücken. Manchmal helfen dir die geheimen Superhelden. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Tor der Horse Guards – gut 2 Minuten. Am besten das Handy quer halten.`))),
+            el("p", { class: "klein" }, `Tippen oder Leertaste = springen, länger halten = höher (über Doppeldecker!). Black Cabs und rote Busse kommen dir entgegen – drüberspringen! In Pfützen rutschst du kurz. Telefonzellen und Postkästen sind Stufen, in die Themse fällst du hinein. Tauben, Füchse und Eichhörnchen kannst du plattdrücken. Manchmal helfen dir die geheimen Superhelden. ${STORY[W.id] ? `Die violetten ♪-Kristalle erzählen die Geschichte „${STORY[W.id].titel}“ – oben auf dem Bus oder unten auf der Straße? Du entscheidest, wie sie ausgeht. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐.` : "Sammle die 12 Wort-Diamanten,"} Nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Tor der Horse Guards – gut 2 Minuten. Am besten das Handy quer halten.`))),
         el("div", { class: "runner-figur" }, figurVorschau(110, 140),
           el("div", { class: "runner-figur-text" },
             el("p", { class: "klein" }, "Deine Figur"),
@@ -2214,7 +2245,7 @@
         tickets === 0 ? el("p", { class: "runner-hinweis", role: "status" }, fehlt > 0
             ? `Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Dir fehlen noch ${fehlt} Coins – übe weiter!`
             : `Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Kauf erst ein Ticket, dann geht's los!`)
-          : el("p", { class: "klein" }, "Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Punkte und keine Coins zurück, dafür Trophäe und Runner-Titel."),
+          : el("p", { class: "klein" }, "Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Coins zurück, dafür Trophäe und Runner-Titel. Punkte nur, wenn du das Level schaffst: 1 ⭐ je 💎, +10 ⭐ einmal je ganzer Geschichte (höchstens 30 ⭐ je Lauf)."),
         el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumRunnerShop))));
   }
   // Spiel: Ticket einlösen, Vollbild-Bühne ohne Kopfzeile, ✕ mit Rückfrage
@@ -2228,16 +2259,20 @@
     toast("🎟️ Ticket eingelöst");
     lage = null;
     const buehne = el("div", { class: "runner-buehne" });
-    const abbruch = knopf("✕", () => { frage("Abbrechen? Das Ticket ist weg.", "Abbrechen", "Weiterspielen").then((ok) => { if (ok) runnerStart(); }); }, "runner-x");
+    const abbruch = knopf("✕", () => {
+      if (R().ueberspringen && R().ueberspringen()) return; // im Film am Ende: ✕ überspringt nur den Film (das Ergebnis bleibt)
+      frage("Abbrechen? Das Ticket ist weg.", "Abbrechen", "Weiterspielen").then((ok) => { if (ok) runnerStart(); });
+    }, "runner-x");
     abbruch.setAttribute("aria-label", "Spiel abbrechen");
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
-      wrapper: buehne, skin: skinWirksam(), welt: W.id, titel: "London Run", cameos: runnerCameos(),
+      wrapper: buehne, skin: skinWirksam(), welt: W.id, titel: "London Run", cameos: runnerCameos(), story: STORY[W.id] || null,
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: { bossTitel: `${W.boss} fragt …`, bossHinweis: "Richtig = das Tor der Horse Guards geht auf. Falsch = ein Leben weg." },
       // wort(j, { leise: true }) = Echo im Spiel: leiser und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
-      stimme: { wort: (j, o) => spiele([ws[j % ws.length].audio.en], o && o.leise ? { laut: 0.6, warten: true } : {}),
+      stimme: { wort: (j, o) => spiele([ws[j % ws.length].audio.en], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
+        erzaehler: erzaehlerStimme, still: () => stopp(),
         boss: (text) => spiele([{ tts: text, lang: "en-GB", stimme: "m" }]),
         cameo: (text, id) => spiele([{ tts: text, lang: "en-GB", stimme: HELD_STIMME[id] || "f" }], { warten: true }) },
       onEnde: (e) => runnerEnde(i, e, ws, W.id),
@@ -2246,12 +2281,23 @@
   // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (neues Ticket) oder Startseite
   function runnerEnde(i, e, ws, welt) {
     const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
-    let stufe = null, neuOffen = false;
+    let stufe = null, neuOffen = false, storyPunkte = 0, storyNeuFrei = false;
     if (e.geschafft) {
       r.geschafft++;
       stufe = e.diamanten >= e.max && e.toreRichtig >= 2 ? "gold" : "silber";
       neuOffen = !r.level[W.id] && !!naechsteWelt && !naechsteWelt.bald;
       if (stufe === "gold" || !r.level[W.id]) r.level[W.id] = stufe;
+      if (e.story && e.story.ende) { // Story: Ende freigespielt, beste ♪-Zahl je Ende, Punkte (nur bei geschafftem Level)
+        const ws_ = storyStand(W.id), en = e.story.ende;
+        if (!ws_.enden.includes(en)) { ws_.enden.push(en); storyNeuFrei = true; }
+        ws_.beste[en] = Math.max(ws_.beste[en] || 0, e.story.anzahl);
+        const dia = Math.max(0, e.punkteDiamanten || 0) * STORY_PUNKTE.diamant;
+        const ganz = e.story.vollstaendig && !ws_.voll.includes(en) ? STORY_PUNKTE.ganz : 0;
+        if (e.story.vollstaendig && !ws_.voll.includes(en)) ws_.voll.push(en);
+        storyPunkte = Math.min(STORY_PUNKTE.max, dia + ganz);
+        if (dia > 0) ereignisse.push({ art: "toast", text: `+${dia} ⭐ Diamanten` });
+        if (ganz > 0) ereignisse.push({ art: "toast", text: `📖 Ganze Geschichte +${ganz}` });
+      }
       const t = runnerTitelIndex(r.geschafft);
       if (t > (r.titel || 0)) {
         r.titel = t;
@@ -2259,8 +2305,10 @@
         ereignisse.push({ art: "feier", symbol: t === RUNNER.titel.length ? "🦸" : "🏃", titel: `London Run: ${name}`, text: `Neuer Runner-Titel: ${name}!`, ton: waehleRuf("stark") });
       }
     }
+    if (storyPunkte > 0) { mrAlexWacht(spielstand(), storyPunkte); punkteDazu(storyPunkte); } // Zeitlog zuerst, damit Farmen im London Run auffällt
     speichern();
     const r_ = waehleRuf(e.geschafft ? "stark" : "fehler");
+    const sEnde = e.story && e.story.ende ? STORY_ENDEN[e.story.ende] : null;
     const minuten = `${Math.floor(e.dauer / 60)}:${String(e.dauer % 60).padStart(2, "0")}`;
     const zeichne = () => {
       zeige(spielKopf("London Run", runnerStart),
@@ -2271,6 +2319,12 @@
           e.geschafft ? el("p", { lang: "en" }, `You found ${W.ziel}!`)
             : el("p", {}, "Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!"),
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
+          e.story && el("p", { class: "runner-story-ende" }, `♪ ${e.story.anzahl}/12 Geschichte`,
+            sEnde ? ` · 📖 Ending ${e.story.ende} – ${sEnde.symbol} ${sEnde.name}` : "", e.story.vollstaendig ? " · ✓ ganze Geschichte" : ""),
+          e.story && el("p", { class: "runner-story-punkte" }, e.geschafft
+            ? `⭐ Punkte in diesem Lauf: ${storyPunkte}` + (storyPunkte >= STORY_PUNKTE.max ? " (höchstens 30)" : "")
+            : "⭐ Punkte gibt es nur, wenn du das Level schaffst."),
+          storyNeuFrei && el("p", { class: "runner-neu-offen" }, `📖 Neu in der Story Library: Ending ${e.story.ende}!`),
           e.maxCombo > 0 && el("p", { class: "klein runner-serie" }, `🔥 Beste Serie: ×${e.maxCombo}`),
           e.geschafft && el("p", {}, el("strong", {}, `🏆 ${W.trophaee} – ${stufe === "gold" ? "Gold" : "Silber"}`), stufe !== "gold" ? " (Gold: alle Diamanten und beide Tore richtig)" : ""),
           neuOffen && el("p", { class: "runner-neu-offen" }, `🔓 Neue Welt frei: ${naechsteWelt.symbol} ${naechsteWelt.name}!`),
@@ -2301,7 +2355,34 @@
           el("span", { lang: "en" }, w.trophaee, el("small", {}, w.bald ? " · bald" : ` · ${w.staat}`)),
           el("span", { class: "unsichtbar" }, st ? "geschafft" : "noch nicht"));
       })),
+      storyLibrary(),
       el("div", { class: "knopfreihe" }, knopf("🇬🇧 London Run", () => runnerStart(), "leise")));
+  }
+  // 📖 Story Library: freigespielte Enden als Karten (Tap = Film mit der eigenen Figur), nicht freigespielte 🔒
+  function storyLibrary() {
+    const welt = "westminster", st = storyStand(welt), S = STORY[welt];
+    return el("div", { class: "story-library" },
+      el("h3", {}, "📖 Story Library"),
+      el("p", { class: "klein", lang: "en" }, `Level 1 · ${S.titel}`),
+      el("div", { class: "story-karten" }, ["A", "B"].map((en) => {
+        const frei = st.enden.includes(en), E = STORY_ENDEN[en];
+        if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"));
+        return el("button", { class: "story-karte", type: "button", "data-ende": en, onclick: () => storyFilm(welt, en) },
+          el("span", { class: "story-sym", "aria-hidden": "true" }, E.symbol),
+          el("strong", { lang: "en" }, `Ending ${en} – ${E.name}`),
+          el("small", {}, `♪ ${st.beste[en] || 0}/12${st.voll.includes(en) ? " · ✓ ganze Geschichte" : ""} · ▶ Film`));
+      })));
+  }
+  function storyFilm(welt, ende) {
+    if (!R() || !R().film) { toast("Das Spiel ist noch nicht geladen."); return; }
+    lage = null;
+    const buehne = el("div", { class: "runner-buehne" });
+    const zu = knopf("✕", () => sammlung(), "runner-x");
+    zu.setAttribute("aria-label", "Film schließen");
+    zeige(buehne, zu);
+    document.body.classList.add("runner-aktiv");
+    runnerLauf = R().film({ wrapper: buehne, skin: skinWirksam(), ende, story: STORY[welt], titel: "Story Library",
+      stimme: { erzaehler: erzaehlerStimme, still: () => stopp() }, onEnde: () => sammlung() });
   }
   // Figur-Seite (wie Klasse 9): Figur + Erklärtext oben (sticky), Reiter-Zeile, darunter die Optionen der Gruppe als Chips, unten feste Knopfzeile.
   // Auswahl und Reiterwechsel zeichnen NICHT die Seite neu (kein Scrollsprung): nur Vorschau + Chips bzw. der Options-Bereich werden aktualisiert.

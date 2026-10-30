@@ -20,7 +20,11 @@
    Cameos (31.10., Option cameos: [{ id, name, bild, kraft }]): 2–3 Gastauftritte der geheimen Superhelden je Lauf (rundes Kartenbild, Umhang, Sprechblase ≈ 2,5 s) mit kleinem Effekt (CAMEO);
    ohne die Option (Klasse 9) gibt es keine Cameos. stimme.cameo(text, id) spricht den Satz (optional).
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
-   Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …). */
+   Story-Modus (31.10., nur mit Option story – Klasse 6 London Run Welt 1, docs/runner/story-london-01.md; Klasse 9 übergibt keine, dort ändert sich nichts): eigene Strecke MUSTER_WESTMINSTER_STORY
+   mit 12 Story-Kristallen ♪ (violett, Goldkante, Notensymbol, Glühen; Erzähler über stimme.erzaehler(text, { key, audio, sofort }), Text oben mittig als Schreibmaschine, Warteschlange ohne Überlagerung),
+   Gabelung nach Stück 4 (♪A5 Straße / ♪B5 auf einem geparkten Doppeldecker: das zuerst genommene legt den Strang fest), 18 Punkte-Diamanten 💎 (Wort wie bisher), Stationen „The story so far“ an den Checkpoints
+   (Spiel steht, Tap = weiter), Film am Ende (3 Szenen + Titelkarte mit der eigenen Figur, Tap = überspringen) und Runner.film(…) für die Story Library. Ergebnis zusätzlich { punkteDiamanten, diamantenMax, story }.
+   Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …; Story: story, gabelung, kristall, stationWeiter, filmStart, filmSkip). */
 (function () {
   "use strict";
 
@@ -267,6 +271,10 @@
     signal() { [392, 523, 659, 784, 659, 784].forEach((f, i) => ton(f, i === 5 ? 0.5 : 0.16, "triangle", 0.08, 1.05 + i * 0.17)); },
     cameo() { rauschen(0.35, 0.04, 0, { typ: "highpass", freq: 1800 }); [1047, 1319, 1568, 2093].forEach((f, i) => ton(f, 0.12, "triangle", 0.07, 0.12 + i * 0.07)); },
     schild() { ton(880, 0.4, "sine", 0.08); ton(1320, 0.35, "sine", 0.05, 0.05); },
+    // Story-Modus: Kristall = Harfen-Arpeggio (anders als der Diamant-/Wort-Jingle), Puff = verschwindendes ♪ an der Gabelung, Station = zwei weiche Glocken
+    kristall() { [784, 988, 1175, 1568].forEach((f, i) => ton(f, 0.32, "sine", 0.07, i * 0.06)); ton(392, 0.5, "triangle", 0.04); },
+    puff() { rauschen(0.22, 0.04, 0, { typ: "lowpass", freq: 1200 }); ton(700, 0.18, "sine", 0.03, 0, 300); },
+    station() { ton(523, 0.6, "sine", 0.06); ton(784, 0.7, "sine", 0.05, 0.18); },
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -906,10 +914,47 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('fuchs', 850, 1250); h.vor(1300); }, // 27
     (h) => { h.luecke(200, 170); h.auto('bus', 500, 1300); h.post(1350); h.vor(1500); },                // 28 Schluss: Themse + Bus
   ];
+  // Story-Modus London Welt 1 „The Guard Who Never Moved“ (31.10., docs/runner/story-london-01.md; nur mit Option story): dieselbe Strecke wie MUSTER_WESTMINSTER, dazu
+  // 12 Story-Kristalle ♪ je Lauf (h.kristall(dx, y, nr, strang): Anfang 1–4 · Gabelung nach 4: A5 unten auf der Straße, B5 oben auf einem geparkten Doppeldecker (h.parkbus) ·
+  // Strang A (unten) / B (oben) 6–8 an denselben Stellen · gemeinsam 9–10 · Ende 11–12 (strang 'E' = folgt dem Strang) hinter dem Boss im Finale),
+  // Abstand ≥ 1.390 Einheiten (≈ 6 s = Schreibmaschine + 3,5 s stehen + Ausblenden), nie in den 520 vor einem Tor; 18 Punkte-Diamanten (6 mehr: über Lücken, auf Stufen, über der Busspur);
+  // hinter den Checkpoints kein Gegner/Fahrzeug in den ersten 550 (nach der Station „The story so far“ fair weiter).
+  const MUSTER_WESTMINSTER_STORY = [
+    (h) => { h.dia(350); h.kristall(500, 290, 1); h.kiste(650); h.vor(900); },                         // 1 Aufwärmen · ♪1
+    (h) => { h.auto('cab', 150, 950); h.dia(500, 250); h.vor(1000); },                                  // 2 erstes Black Cab
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.kristall(450, 290, 2); h.geg('taube', 500, 720); h.vor(950); }, // 3 · ♪2
+    (h) => { h.post(200); h.zelle(240); h.dia(260, 215); h.vor(750); },                                 // 4 Postkasten → Telefonzelle
+    (h) => { h.pfuetze(300); h.geg('fuchs', 500, 900); h.vor(1000); },                                  // 5 Pfütze + Stadtfuchs
+    (h) => { h.luecke(250, 170); h.dia(335, 250); h.kristall(700, 290, 3); h.vor(950); },               // 6 Themse-Lücke (💎 darüber) · ♪3
+    (h) => { h.auto('bus', 100, 1000); h.plat(600, 230, 160); h.dia(680, 190); h.vor(1100); },          // 7 Doppeldecker + Plattform
+    (h) => { h.geg('eichhoernchen', 150, 500); h.post(650); h.kristall(670, 262, 4); h.zelle(690); h.dia(710, 190); h.vor(900); }, // 8 · ♪4 über dem Postkasten
+    (h) => { h.auto('cab', 100, 900); h.pfuetze(550); h.vor(1000); },                                   // 9 Cab + Pfütze
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('fuchs', 700, 950); h.vor(1000); },                                       // 12 CHECKPOINT 1 · Station 1 (Fuchs erst 550 dahinter)
+    (h) => { h.kristall(200, 290, 5, 'A'); h.parkbus(300); h.kristall(360, 246, 5, 'B'); h.vor(1100); }, // 13 GABELUNG: ♪A5 Straße, ♪B5 auf dem Doppeldecker
+    (h) => { h.auto('cab', 100, 1000); h.dia(500, 250); h.kristall(800, 290, 6, 'A'); h.kristall(800, 180, 6, 'B'); h.auto('bus', 1000, 1900); h.vor(2000); }, // 14 Rushhour · ♪6
+    (h) => { h.zelle(200); h.zelle(240); h.dia(260, 222); h.geg('taube', 450, 850); h.vor(1000); },     // 15 zwei Telefonzellen (💎 oben) + Taube
+    (h) => { h.luecke(250, 160); h.kristall(330, 200, 7, 'B'); h.kristall(800, 290, 7, 'A'); h.pfuetze(600); h.vor(1000); }, // 16 Themse (♪B7 darüber) + Pfütze · ♪A7
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 17 Dreier-Plattform
+    (h) => { h.geg('eichhoernchen', 150, 450); h.auto('bus', 500, 1300); h.dia(850, 240); h.vor(1400); }, // 18 Eichhörnchen + Bus (💎 über der Busspur)
+    (h) => { h.kristall(100, 290, 8, 'A'); h.plat(200, 235, 200); h.dia(300, 195); h.post(650); h.kristall(750, 180, 8, 'B'); h.vor(950); }, // 19 · ♪A8 / ♪B8 (Sprung vom Postkasten)
+    (h) => { h.pfuetze(200); h.geg('fuchs', 450, 800); h.vor(1000); },                                  // 20 Pfütze + Fuchs
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 21
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 22 TOR 2
+    (h) => { h.cp(150); h.kristall(350, 290, 9); h.post(500); h.zelle(540); h.vor(850); },              // 23 CHECKPOINT 2 · Station 2 · ♪9
+    (h) => { h.auto('bus', 100, 1000); h.geg('taube', 1000, 1400); h.vor(1500); },                      // 24 Bus + Taube
+    (h) => { h.luecke(200, 190); h.plat(150, 230, 320); h.kristall(310, 200, 10); h.geg('fuchs', 650, 950); h.vor(1150); }, // 25 Plattform über der Themse · ♪10
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.dia(250, 180); h.vor(750); }, // 26 Teekisten-Pyramide (💎 oben)
+    (h) => { h.pfuetze(150); h.auto('cab', 300, 1100); h.geg('eichhoernchen', 1150, 1400); h.vor(1500); }, // 27 Pfütze + Cab + Eichhörnchen
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.dia(475, 150); h.geg('fuchs', 850, 1250); h.vor(1300); }, // 28 (💎 auf der hohen Plattform)
+    (h) => { h.luecke(200, 170); h.dia(285, 250); h.auto('bus', 500, 1300); h.post(1350); h.vor(1500); }, // 29 Schluss: Themse (💎 darüber) + Bus
+  ];
+  const PARKBUS_W = 118, PARKBUS_H = 54;   // geparkter Doppeldecker an der Gabelung (fest, begehbar)
   // Fahrzeuge: Breite/Höhe, Tempo, Startabstand vor dem rechten Ende (auto/truck wie seit Welt 2; bus/cab Welt Westminster)
   const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
   function levelBauen(muster) {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[] };
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[] };
     let x = 0, bodenAb = 0, wort = 0;
     const h = {
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
@@ -938,6 +983,9 @@
       nebel: (dx, w) => L.nebel.push({ x:x + dx, w }),
       seilbahn: (dx, w) => { h.luecke(dx, w); L.seilbahnen.push({ x:x + dx, w, phase: L.seilbahnen.length * 2.1 }); },
       surf: (dx, w = 240) => L.surfs.push({ x:x + dx, w }),
+      // Story-Modus: Story-Kristall ♪ (nr 1–12, strang null | 'A' | 'B' | 'E' = Ende folgt dem Strang), geparkter Doppeldecker (feste Stufe 118 × 54)
+      kristall: (dx, y, nr, strang = null) => L.kristalle.push({ x:x + dx, y, nr, strang }),
+      parkbus: (dx) => L.parkbusse.push({ x:x + dx }),
       vor: (dx) => { x += dx; },
     };
     for (const a of muster) a(h);
@@ -946,6 +994,7 @@
     L.bossX = L.stopX + 170;
     L.tuerX = L.bossX + 130;
     L.ende = L.tuerX + 400;
+    if (L.kristalle.length) L.kristalle.push({ x:L.stopX + 95, y:290, nr:11, strang:'E' }, { x:L.tuerX - 25, y:290, nr:12, strang:'E' });   // Ende 11–12: hinter dem Boss, im Finale eingesammelt
     L.boden.push([bodenAb, L.ende]);
     return L;
   }
@@ -972,6 +1021,9 @@
   const NEBEL_RAND = 160, NEBEL_MAX = 0.78, GONDEL_W = 130, GONDEL_Y = BODEN_Y - 30, GONDEL_T = 7, SURF_NACH = 0.3, SURF_TEMPO = 1.6;
   // Welt Westminster: Trommelwirbel-Zähler (Tests)
   let trommelt = 0;
+  // Story-Modus (Klasse 6, Option story; Klasse 9 ohne → story = null, nichts ändert sich): Kristalle ♪, Erzähl-Warteschlange (nie zwei Stücke gleichzeitig), Stationen, Film am Ende
+  let storyOpt = null, story = null, kristalle = [], diaGesammelt = 0, film = null, nurFilm = false;
+  const TIPP_TEMPO = 24, STORY_STEHT = 3.5, STORY_AUS = 0.6, STORY_LUECKE = 0.3, STATION_MIN = 3, STATION_MAX = 40, STATION_SPERRE = 0.4;
   // Cameos (Klasse 6): Liste der Helden (opt.cameos), geladene Kartenbilder, Auftrittsplan (x-Marken), laufender Auftritt, Effekte (Restzeit in s)
   let cameoListe = [], cameoBilder = {}, cameoPlan = [], cameo = null, cameosGezeigt = 0, cameoEffekt = null;
   let schild = 0, sprungBonus = 0, durchlaessig = 0, eisZeit = 0, traegt = 0, traegtAktiv = false, eule = null;
@@ -1005,7 +1057,7 @@
   }
   function neuesSpiel() {
     spieler = { x:120, y:BODEN_Y, vy:0, amBoden:true, unverwundbar:0, pose:'lauf' };
-    diamanten = level.diamanten.map(d => ({ ...d, weg:false, funkel:Math.random() * 6 }));
+    diamanten = level.diamanten.map(d => ({ ...d, wort:d.wort % woerter.length, weg:false, funkel:Math.random() * 6 }));   // Story-Level: 18 Diamanten auf 12 Wörter
     gegner = level.gegner.map(g => ({ ...g, tot:0, flug:Math.random() * 6 }));
     tore = level.tore.map(torBauen);
     checkpoints = level.checkpoints.map(c => ({ ...c, erreicht:false }));
@@ -1022,6 +1074,7 @@
     trommelt = 0; cameo = null; cameosGezeigt = 0; cameoEffekt = null; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoPlan = cameoPlanBauen();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
+    diaGesammelt = 0; film = null; storyNeu();
   }
 
   /* ---------- Combo, Partikel, Gegner-Klänge ---------- */
@@ -1036,12 +1089,12 @@
     combo = 0; onfire = false; spur = 0;
   }
   function diamantSammeln(d) {
-    d.weg = true; gesammelt++; klang.wort();
+    d.weg = true; gesammelt++; diaGesammelt++; klang.wort();
     const w = woerter[d.wort];
     blase = { en: w.en, de: kurzDe(w.de) || w.de, zeit: BLASE_DAUER };
     if (!wortbank.some((b) => b.wort === d.wort)) wortbank.push({ wort: d.wort, en: w.en, puls: 1 });
     if (!echoWarteschlange.some((e) => e.wort === d.wort)) echoWarteschlange.push({ wort: d.wort, faellig: zeit + ECHO_MIN + Math.random() * (ECHO_MAX - ECHO_MIN) });   // nur ein Echo je Wort
-    stimmeAufrufe++; stimme.wort(d.wort);
+    stimmeAufrufe++; if (story && story.aktiv) stimme.wort(d.wort, { warten: true }); else stimme.wort(d.wort);   // Story: das Wort wartet, bis der Erzähler fertig ist
     combo++; if (combo > maxCombo) maxCombo = combo; hudPuls = 1;
     const fx = spieler.x, fy = spieler.y - 40;
     if (combo === 3) {
@@ -1097,6 +1150,7 @@
     return anteile.map((f, i) => {
       let x = Math.round(level.sequenzX * f);
       for (const t of level.tore) if (x > t.x - 600 && x < t.x + 600) x = t.x + 650;   // nicht mit Tor-Hinweis/Tor-Ergebnis zusammen
+      if (storyOpt) for (const k of level.kristalle) if (x > k.x - 250 && x < k.x + 1450) x = k.x + 1500;   // Story-Modus: nicht während ein Stück erzählt wird
       return { x, held: cameoListe[i], erledigt: false };
     });
   }
@@ -1141,6 +1195,114 @@
     if (eule && (eule.erledigt || spieler.x > eule.x + 40)) eule = null;
     if (!cameo && tot <= 0 && !popup) { const pl = cameoPlan.find((p) => !p.erledigt && spieler.x >= p.x); if (pl) { pl.erledigt = true; cameoStart(pl.held); } }
   }
+  /* ---------- Story-Modus (Klasse 6, docs/runner/story-london-01.md): Kristalle ♪, Gabelung, Erzähl-Warteschlange, Stationen ----------
+     Option story = { id, titel, teile: { "1"…"4", "A5"…"A8", "B5"…"B8", "9", "10", "A11", "A12", "B11", "B12": Text }, audio: { key: Datei } (optional, später) }.
+     stimme.erzaehler(text, { key, audio, sofort }) spricht ein Stück (Geräte-Stimme, bis die Aufnahmen da sind) und darf ein Promise liefern (Ende der Lesung);
+     stimme.still() bricht eine Lesung ab (Station/Film übersprungen). Wörter, die während eines Stücks gesammelt werden, warten hinter dem Erzähler (stimme.wort(i, { warten: true })). */
+  const kristallKey = (k) => (k.nr <= 4 || k.nr === 9 || k.nr === 10) ? String(k.nr) : (k.strang === 'E' ? (story.strang || 'A') : k.strang) + k.nr;
+  const storyText = (key) => (storyOpt && storyOpt.teile && storyOpt.teile[key]) || '';
+  const storyAudio = (key) => (storyOpt && storyOpt.audio && storyOpt.audio[key]) || null;
+  function kristallSichtbar(k) {
+    if (k.weg) return false;
+    if (!k.strang || k.strang === 'E') return true;
+    if (k.nr === 5) return !story.strang || story.strang === k.strang;   // Gabelung: beide, bis eins genommen ist
+    return story.strang === k.strang;                                    // danach nur der gewählte Strang
+  }
+  function storyNeu() {
+    if (!storyOpt) { story = null; kristalle = []; return; }
+    story = { strang: null, auto: false, gesammelt: [], schlange: [], aktiv: null, pause: 0, gesprochen: 0, station: null, stationen: 0, filmFertig: null };
+    kristalle = level.kristalle.map((k) => ({ ...k, weg: false, funkel: Math.random() * 6, puff: 0 }));
+  }
+  function erzaehle(text, o) {
+    story.gesprochen++;
+    try { return stimme.erzaehler ? stimme.erzaehler(text, o) : null; } catch (e) { return null; }
+  }
+  function kristallSammeln(k, still) {
+    k.weg = true;
+    const key = kristallKey(k);
+    if (!story.gesammelt.includes(key)) story.gesammelt.push(key);
+    klang.kristall(); hudPuls = 1;
+    funken(k.x, k.y, 24, ['#b07cff', '#ffd36b', '#fff6c0', '#ffffff'], 240, 0.8);
+    if (k.nr === 5 && !story.strang) gabelLoesen(k.strang, false);
+    if (!still) story.schlange.push(key);   // Ende 11–12 (im Finale): der Film erzählt sie
+  }
+  // Gabelung: das zuerst genommene ♪5 legt den Strang fest, das andere verschwindet mit einem kleinen Puff; ohne beide → Strang A (auto)
+  function gabelLoesen(strang, auto) {
+    story.strang = strang; story.auto = !!auto;
+    for (const k of kristalle) if (k.nr === 5 && k.strang !== strang && !k.weg) { k.weg = true; k.puff = 0.6; klang.puff(); funken(k.x, k.y, 14, ['#c9c9d6', '#ffffff', '#b07cff'], 150, 0.5); }
+  }
+  // Warteschlange: ein Stück nach dem anderen – Schreibmaschine (24 Zeichen/s), 3,5 s stehen, 0,6 s ausblenden, 0,3 s Pause
+  function storyBewegen(dt) {
+    for (const k of kristalle) { k.funkel += dt; if (k.puff > 0) k.puff = Math.max(0, k.puff - dt); }
+    const a = story.aktiv;
+    if (a) { a.t += dt; if (a.t >= a.dauer) { story.aktiv = null; story.pause = STORY_LUECKE; } return; }
+    if (story.pause > 0) { story.pause -= dt; return; }
+    if (!story.schlange.length) return;
+    const key = story.schlange.shift(), text = storyText(key), tipp = ruhig() ? 0 : text.length / TIPP_TEMPO;
+    story.aktiv = { key, text, t: 0, tipp, dauer: tipp + STORY_STEHT + STORY_AUS };
+    erzaehle(text, { key, audio: storyAudio(key) });
+  }
+  // Stationen an den Checkpoints: Spiel hält an, „The story so far“ mit allen bisherigen Stücken (verpasste „…“), der Erzähler liest die gesammelten noch einmal;
+  // weiter nach der Lesung (mindestens 3 s) oder mit Tap/Leertaste (frühestens nach 0,4 s). Danach 1,2 s unverwundbar, Fahrzeuge vor der Figur fahren neu ein.
+  function stationKeys(nr) { const st = story.strang || 'A', l = ['1', '2', '3', '4']; if (nr >= 2) l.push(st + '5', st + '6', st + '7', st + '8'); return l; }
+  function stationStart(nr) {
+    story.schlange = []; story.aktiv = null; story.pause = 0;
+    zustand = 'station'; halten = false; spieler.pose = 'steh'; spieler.vy = 0;
+    const keys = stationKeys(nr), gelesen = keys.filter((k) => story.gesammelt.includes(k)).map(storyText);
+    const st = { nr, t: 0, keys, gelesen: false, lesezeit: 2 + gelesen.join(' ').split(/\s+/).filter(Boolean).length * 0.45 };
+    story.station = st; story.stationen++;
+    klang.station();
+    const r = erzaehle(['The story so far.'].concat(gelesen).join(' '), { key: 'station' + nr, audio: null, sofort: true });
+    if (r && typeof r.then === 'function') { st.lesezeit = STATION_MAX; r.then(() => { st.gelesen = true; }, () => { st.gelesen = true; }); }
+  }
+  function stationBewegen(dt) {
+    const st = story.station; st.t += dt;
+    if ((st.t >= STATION_MIN && (st.gelesen || st.t >= st.lesezeit)) || st.t >= STATION_MAX) stationEnde(false);
+  }
+  function stationEnde(getippt) {
+    if (!story || !story.station) return;
+    if (getippt) { if (story.station.t < STATION_SPERRE) return; try { if (stimme.still) stimme.still(); } catch (e) { /* egal */ } }
+    story.station = null; zustand = 'spiel'; halten = false;
+    spieler.unverwundbar = Math.max(spieler.unverwundbar, 1.2);
+    for (const a of autos) if (a.x > spieler.x - 60 && a.x < spieler.x + 450) a.x = a.bis;   // fair weiter: kein Fahrzeug direkt vor der Figur
+  }
+
+  /* ---------- Film am Ende (Story-Modus): 3 Szenen mit der eigenen Figur + Titelkarte; Tap überspringt ----------
+     Ende A (Fuchs): Pferde kommen, Sergeant ohne Mütze → Figur bringt die Bärenfellmütze → setzt sie ihm auf, er lächelt kurz.
+     Ende B (Taube): Pferde kommen → Babytauben im Hut auf Big Ben, Figur nimmt ihre Cap ab → setzt sie ihm auf, er lacht, alle lachen mit. */
+  const FILM_SZENEN = { A: [['9', '10'], ['A11'], ['A12'], null], B: [['9', '10'], ['B11'], ['B12'], null] };
+  let filmAllein = null;   // Optionen von Runner.film (Story Library), sonst null
+  function filmStart(ende) {
+    film = { ende: ende === 'B' ? 'B' : 'A', szene: -1, t: 0, gesamt: 0, gelesen: false, dauer: 0, text: '' };
+    zustand = 'film'; tuer = { offen: 1 }; halten = false; zoom = 1; partikel = []; spurPunkte = []; blase = null; echo = null; popup = null; meldung = null; bossSpruch = null;
+    if (frageBox) frageBox.hidden = true;
+    if (story) story.schlange = [], story.aktiv = null;
+    filmSzene(0);
+  }
+  function filmSzene(i) {
+    film.szene = i; film.t = 0; film.gelesen = false;
+    const keys = FILM_SZENEN[film.ende][i];
+    if (!keys) { film.text = ''; film.dauer = 3.5; film.gelesen = true; klang.fanfare(); return; }
+    film.text = keys.map(storyText).join(' ');
+    film.dauer = Math.max(4.8, film.text.split(/\s+/).length * 0.42 + 1.6);
+    const r = story ? erzaehle(film.text, { key: 'film' + film.ende + (i + 1), audio: keys.map(storyAudio), sofort: true }) : null;
+    if (r && typeof r.then === 'function') r.then(() => { if (film && film.szene === i) film.gelesen = true; }, () => { if (film && film.szene === i) film.gelesen = true; });
+    else film.gelesen = true;
+  }
+  function filmBewegen(dt) {
+    film.t += dt; film.gesamt += dt;
+    if (film.t >= film.dauer && (film.gelesen || film.t >= film.dauer + 4)) { if (film.szene < 3) filmSzene(film.szene + 1); else filmEnde(false); }
+  }
+  function filmEnde(getippt) {
+    if (!film || zustand !== 'film') return;
+    if (getippt) { if (film.gesamt < STATION_SPERRE) return; try { if (stimme.still) stimme.still(); } catch (e) { /* egal */ } }
+    const ende = film.ende;
+    if (story) story.filmFertig = { ende, uebersprungen: !!getippt, szene: film.szene };
+    zustand = 'fertig';
+    if (filmAllein) { const o = filmAllein; film.szene = 3; film.t = 99; setTimeout(() => { if (laeuft && opt === o && typeof o.onEnde === 'function') o.onEnde({ film: true, ende, uebersprungen: !!getippt }); }, 150); return; }
+    film = null; zeigeEnde(true);
+  }
+
   // Gegner-Klang: nur im laufenden Spiel (nie in Sequenz/Boss), je Art höchstens alle 1,5 s; "plopp" ist ein Ereignis ohne Sperre
   function gegnerKlang(art) {
     if (zustand !== 'spiel') return false;
@@ -1214,6 +1376,8 @@
   /* ---------- Eingabe ---------- */
   function sprungStart() {
     audioAn();
+    if (zustand === 'station') { stationEnde(true); return; }   // Story-Station: Tap = weiter
+    if (zustand === 'film') { filmEnde(true); return; }         // Film: Tap = überspringen
     if (zustand !== 'spiel') return;          // in der Sequenz und beim Boss ist die Eingabe gesperrt
     if (rutscht > 0) return;                  // auf dem Ölfleck: kein Sprung möglich
     if (spieler.amBoden && tot <= 0) {
@@ -1244,6 +1408,7 @@
     for (const k of level.kisten) liste.push({ x:k.x, y:k.y, w:KISTE, h:KISTE, voll:true });
     level.bruecken.forEach((b, i) => liste.push({ x:b.x, y:BODEN_Y, w:b.w, h:14, voll:false, bruecke:i }));   // Hängebrücke: trägt, bis ein Brett bricht
     level.seilbahnen.forEach((g, i) => liste.push({ x:g.x + 30, y:GONDEL_Y, w:GONDEL_W, h:14, voll:false, gondel:i }));   // Welt 5: Gondel (x wird jeden Frame nachgeführt)
+    for (const b of level.parkbusse) liste.push({ x:b.x, y:BODEN_Y - PARKBUS_H, w:PARKBUS_W, h:PARKBUS_H, voll:true });   // Story: geparkter Doppeldecker an der Gabelung
     return liste;
   }
 
@@ -1348,12 +1513,15 @@
   let SOLIDE = [];
 
   function update(dt) {
+    if (zustand === 'film') { zeit += dt; filmBewegen(dt); return; }   // Story: Film am Ende (eigene Szene, keine Spielwelt)
+    if (nurFilm) return;
+    if (zustand === 'station') { stationBewegen(dt); return; }         // Story-Station: alles steht still
     const eingefroren = zustand === 'sequenz' && sequenz.phase === 'stand';
     if (!eingefroren) zeit += dt;
     if (popup) { popup.zeit -= dt; if (popup.zeit <= 0) popup = null; }
     if (meldung) { meldung.zeit -= dt; if (meldung.zeit <= 0) meldung = null; }
     if (bossSpruch) { bossSpruch.zeit -= dt; if (bossSpruch.zeit <= 0) bossSpruch = null; }
-    if (!eingefroren) { gegnerBewegen(dt); hindernisseBewegen(dt); for (const d of diamanten) d.funkel += dt; effekteBewegen(dt); }
+    if (!eingefroren) { gegnerBewegen(dt); hindernisseBewegen(dt); for (const d of diamanten) d.funkel += dt; effekteBewegen(dt); if (story) storyBewegen(dt); }
 
     if (zustand === 'spiel') {
       if (tot > 0) { tot -= dt; if (tot <= 0) wiederbeleben(); return; }
@@ -1443,6 +1611,7 @@
         if (!cp.erreicht && spieler.x >= cp.x) {
           cp.erreicht = true; checkpoint = cp.x; klang.checkpoint();
           meldung = { text:'Checkpoint! 🚩', zeit:1.4 };
+          if (story) { stationStart(checkpoints.indexOf(cp) + 1); return; }   // Story: Station „The story so far“
         }
       }
 
@@ -1453,6 +1622,11 @@
         if (ueberlappt(box.x, box.y, box.w, box.h, d.x - 14, d.y - 16, 28, 32)) diamantSammeln(d);
         else if (!d.verpasst && d.x < spieler.x - PW / 2 - 20) { d.verpasst = true; comboReset(); }   // Diamant hinter der Figur: Serie reißt
       }
+      // Story-Kristalle ♪ (zählen nicht für die Combo); Gabelung ohne Wahl → Strang A
+      if (story) {
+        for (const k of kristalle) if (kristallSichtbar(k) && ueberlappt(box.x, box.y, box.w, box.h, k.x - 15, k.y - 20, 30, 40)) kristallSammeln(k, false);
+        if (!story.strang) { const g = kristalle.filter((k) => k.nr === 5); if (g.length && spieler.x > Math.max(...g.map((k) => k.x)) + 40) gabelLoesen('A', true); }
+      }
       // Frage-Tore
       tore.forEach((tor, ti) => {
         if (tor.erledigt) return;
@@ -1462,7 +1636,7 @@
             const w = woerter[s.wort];
             if (s.richtig) { klang.richtig(); popup = { en: w.en + ' ✓', de: tor.de, zeit: 2, art:'richtig' }; gesammelt++; }
             else { klang.falsch(); popup = { en: w.en + ' ✗', de: kurzDe(w.de) + texte.richtigWaere + woerter[tor.wort].en, zeit: 2.4, art:'falsch' }; }
-            stimme.wort(tor.wort);
+            if (story && story.aktiv) stimme.wort(tor.wort, { warten: true }); else stimme.wort(tor.wort);
             break;
           }
         }
@@ -1541,7 +1715,8 @@
       if (tuer.offen > 0.6) {
         spieler.pose = 'lauf';
         spieler.x += SPEED * 0.8 * dt;
-        if (spieler.x > level.tuerX + 10) { zustand = 'fertig'; klang.fanfare(); zeigeEnde(true); }
+        if (story) for (const k of kristalle) if (k.strang === 'E' && !k.weg && Math.abs(spieler.x - k.x) < 20) kristallSammeln(k, true);   // Ende 11–12 hinter dem Boss (erzählt im Film)
+        if (spieler.x > level.tuerX + 10) { zustand = 'fertig'; klang.fanfare(); if (story) filmStart(story.strang || 'A'); else zeigeEnde(true); }
       }
     }
     const ziel = Math.max(0, Math.min(spieler.x - viewW * (viewW < 450 ? 0.28 : 0.33), level.ende - viewW));
@@ -1596,10 +1771,13 @@
   }
 
   /* ---------- Ende: Ergebnis an die App ---------- */
-  const ergebnis = (geschafft) => ({
-    geschafft, diamanten: gesammelt, max: woerter.length + level.tore.length,
+  const ergebnis = (geschafft) => Object.assign({
+    geschafft, diamanten: gesammelt, max: (story ? diamanten.length : woerter.length) + level.tore.length,
     toreRichtig: torErgebnisse.filter(Boolean).length, leben, dauer: Math.round((performance.now() - startZeit) / 1000), maxCombo,
-  });
+  }, story ? {   // Story-Modus: Punkte-Diamanten (ohne Tore) und die Geschichte (Strang = Ende, vollständig = alle 12 ♪ dieses Endes)
+    punkteDiamanten: diaGesammelt, diamantenMax: diamanten.length,
+    story: { id: storyOpt.id || W.id, ende: story.strang, gesammelt: story.gesammelt.slice(), anzahl: story.gesammelt.length, vollstaendig: !!story.strang && story.gesammelt.length >= 12 },
+  } : {});
   function zeigeEnde(gewonnen) {
     if (endeGemeldet) return;
     endeGemeldet = true;
@@ -3018,7 +3196,14 @@
     const auf = boss.sichtbar, weg = boss.weg;
     const gx = x + (1 - auf) * 46 + weg * 240;   // tritt aus dem Schilderhaus (sichtbar) und marschiert im Finale zur Seite (weg)
     const marsch = weg > 0 && !ruhig() ? Math.sin(zeit * 9) : 0;
-    c.save(); c.translate(gx, y); c.globalAlpha = 1 - weg * 0.85;
+    const blick = (zustand === 'boss' || zustand === 'sequenz') ? -2 : (Math.sin(zeit * 0.8) > 0.35 ? 2 : Math.sin(zeit * 0.8) < -0.35 ? -2 : 0);   // nur die Augen bewegen sich
+    gardist(c, gx, y, { alpha: 1 - weg * 0.85, marsch, blick });
+  }
+  // Gardist (Sergeant Bearskin) an (gx, y): o = { alpha, marsch, blick, hut: 'fell' | 'keiner' | 'cap', laecheln 0..1, lachen 0..1 } – Boss nutzt nur alpha/marsch/blick, der Film auch Hut und Mund
+  function gardist(c, gx, y, o) {
+    const marsch = o.marsch || 0, blick = o.blick || 0, hut = o.hut || 'fell', lachen = o.lachen || 0, laecheln = o.laecheln || 0;
+    c.save(); c.translate(gx, y); c.globalAlpha = o.alpha == null ? 1 : o.alpha;
+    if (lachen > 0) c.translate(0, -Math.abs(Math.sin(zeit * 16)) * 2 * lachen);   // lacht: hüpft leicht
     for (const [bx, w] of [[-7, marsch], [7, -marsch]]) {   // Beine (navy mit rotem Streifen), Stiefel
       c.save(); c.translate(bx, -52); c.rotate(w * 0.3);
       c.fillStyle = '#16213d'; c.fillRect(-5, 0, 10, 50); c.fillStyle = UK_ROT; c.fillRect(-1, 0, 2, 48);
@@ -3036,15 +3221,43 @@
     c.fillStyle = '#e0a400'; c.fillRect(-28, -112, 11, 4); c.fillRect(17, -112, 11, 4);   // Schulterstücke
     c.fillStyle = '#f4f4f4'; c.beginPath(); c.arc(-22.5, -57, 5, 0, Math.PI * 2); c.arc(22.5, -57, 5, 0, Math.PI * 2); c.fill();   // weiße Handschuhe
     c.fillStyle = '#f1c9a5'; c.beginPath(); c.arc(0, -124, 11, 0, Math.PI * 2); c.fill();   // Kopf
-    const blick = (zustand === 'boss' || zustand === 'sequenz') ? -2 : (Math.sin(zeit * 0.8) > 0.35 ? 2 : Math.sin(zeit * 0.8) < -0.35 ? -2 : 0);   // nur die Augen bewegen sich
-    c.fillStyle = '#fff'; c.beginPath(); c.ellipse(-4.6, -125, 3.7, 2.9, 0, 0, Math.PI * 2); c.ellipse(4.6, -125, 3.7, 2.9, 0, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-4.6 + blick, -125, 1.7, 0, Math.PI * 2); c.arc(4.6 + blick, -125, 1.7, 0, Math.PI * 2); c.fill();
+    if (lachen > 0.5) {   // lacht: Augen zu (Bögen)
+      c.strokeStyle = '#18213a'; c.lineWidth = 1.6; for (const ax of [-4.6, 4.6]) { c.beginPath(); c.arc(ax, -123, 3, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
+    } else {
+      c.fillStyle = '#fff'; c.beginPath(); c.ellipse(-4.6, -125, 3.7, 2.9, 0, 0, Math.PI * 2); c.ellipse(4.6, -125, 3.7, 2.9, 0, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#18213a'; c.beginPath(); c.arc(-4.6 + blick, -125, 1.7, 0, Math.PI * 2); c.arc(4.6 + blick, -125, 1.7, 0, Math.PI * 2); c.fill();
+    }
     c.fillStyle = '#e3a98a'; c.beginPath(); c.ellipse(0, -122, 2, 2.6, 0, 0, Math.PI * 2); c.fill();   // Nase
+    if (lachen > 0) {   // offener Mund unter dem Schnurrbart
+      c.fillStyle = '#7a1f1f'; c.beginPath(); c.ellipse(0, -114.5, 4.2, 3.6 * lachen, 0, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#fff'; c.fillRect(-2.6, -117.5, 5.2, 1.4);
+    } else if (laecheln > 0) {   // ein kleines Lächeln
+      c.strokeStyle = '#7a2a1a'; c.lineWidth = 1.5; c.lineCap = 'round'; c.beginPath(); c.arc(0, -119.5, 5, Math.PI * (0.5 - 0.32 * laecheln), Math.PI * (0.5 + 0.32 * laecheln)); c.stroke();
+    }
     c.fillStyle = '#5a3a22'; c.beginPath(); c.moveTo(0, -119); c.quadraticCurveTo(-6, -121, -10, -116); c.quadraticCurveTo(-5, -117, 0, -117); c.quadraticCurveTo(5, -117, 10, -116); c.quadraticCurveTo(6, -121, 0, -119); c.fill();   // Schnurrbart
-    c.fillStyle = '#0d0d0d'; c.beginPath(); c.moveTo(-15, -130); c.quadraticCurveTo(-21, -188, 0, -196); c.quadraticCurveTo(21, -188, 15, -130); c.closePath(); c.fill();   // Bärenfellmütze (lässt die Augen frei)
+    if (hut === 'fell') {
+      c.fillStyle = '#0d0d0d'; c.beginPath(); c.moveTo(-15, -130); c.quadraticCurveTo(-21, -188, 0, -196); c.quadraticCurveTo(21, -188, 15, -130); c.closePath(); c.fill();   // Bärenfellmütze (lässt die Augen frei)
+      c.strokeStyle = '#2b2b2b'; c.lineWidth = 2;
+      for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(-9 + (k % 3) * 9, -176 + Math.floor(k / 3) * 22, 5, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
+      c.strokeStyle = '#e0a400'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(-11, -129); c.quadraticCurveTo(-9, -112, 0, -111); c.quadraticCurveTo(9, -112, 11, -129); c.stroke();   // Kinnriemen
+    } else {
+      c.fillStyle = '#8a4b22'; c.beginPath(); c.arc(0, -126, 11.4, Math.PI * 1.05, Math.PI * 1.95); c.closePath(); c.fill();   // ohne Mütze: kurze rotbraune Haare
+      if (hut === 'cap') capZeichnen(c, 0, -131, 1);
+    }
+    c.restore();
+  }
+  function capZeichnen(c, x, y, s) {   // blaue Cap (wie bei der Figur): Kuppel, Schirm nach rechts, goldener Knopf; (x, y) = Unterkante Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#1d3f8f'; c.beginPath(); c.arc(0, 2, 12.5, Math.PI, 0); c.closePath(); c.fill();
+    c.beginPath(); c.roundRect(2, 0, 20, 4, 2); c.fill();
+    c.fillStyle = '#e0a400'; c.beginPath(); c.arc(0, -9.5, 2.2, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function fellmuetze(c, x, y, s) {   // Bärenfellmütze als Gegenstand (Film): (x, y) = Unterkante Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#0d0d0d'; c.beginPath(); c.moveTo(-15, 0); c.quadraticCurveTo(-21, -58, 0, -66); c.quadraticCurveTo(21, -58, 15, 0); c.closePath(); c.fill();
     c.strokeStyle = '#2b2b2b'; c.lineWidth = 2;
-    for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(-9 + (k % 3) * 9, -176 + Math.floor(k / 3) * 22, 5, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
-    c.strokeStyle = '#e0a400'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(-11, -129); c.quadraticCurveTo(-9, -112, 0, -111); c.quadraticCurveTo(9, -112, 11, -129); c.stroke();   // Kinnriemen
+    for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(-9 + (k % 3) * 9, -46 + Math.floor(k / 3) * 22, 5, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
     c.restore();
   }
   function horseGuardsTor(c, x, y) {   // Tür der Welt Westminster: Tor der Horse Guards – helle Steinfassade mit Uhrtürmchen, Rundbogen, schwarzes Gittertor mit Goldspitzen, das aufschwingt
@@ -3124,6 +3337,260 @@
     }
   }
 
+  /* ---------- Story-Modus: Zeichnen (Kristall ♪, Erzähltext oben, Station, Film) ---------- */
+  // Story-Kristall: hohes violettes Prisma mit Goldkante und weißem ♪, sanftes Glühen (pulsiert) – klar anders als der türkise Punkte-Diamant
+  function kristallZeichnen(c, x, y, t, alpha) {
+    c.save(); c.translate(x, y);
+    const glow = c.createRadialGradient(0, 0, 2, 0, 0, 32);
+    glow.addColorStop(0, 'rgba(255,211,107,.6)'); glow.addColorStop(0.45, 'rgba(176,124,255,.32)'); glow.addColorStop(1, 'rgba(176,124,255,0)');
+    c.globalAlpha = alpha * (ruhig() ? 0.85 : 0.7 + 0.3 * Math.sin(t * 4)); c.fillStyle = glow; c.beginPath(); c.arc(0, 0, 32, 0, Math.PI * 2); c.fill();
+    c.globalAlpha = alpha;
+    const g = c.createLinearGradient(-11, -20, 11, 20); g.addColorStop(0, '#e3ccff'); g.addColorStop(0.45, '#9b5cff'); g.addColorStop(1, '#4a1a9e');
+    c.fillStyle = g; c.beginPath(); c.moveTo(0, -21); c.lineTo(12, -9); c.lineTo(12, 9); c.lineTo(0, 21); c.lineTo(-12, 9); c.lineTo(-12, -9); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.moveTo(0, -21); c.lineTo(-12, -9); c.lineTo(-12, 9); c.lineTo(-4, 4); c.lineTo(-4, -12); c.closePath(); c.fill();
+    c.strokeStyle = '#ffd36b'; c.lineWidth = 2; c.lineJoin = 'round';
+    c.beginPath(); c.moveTo(0, -21); c.lineTo(12, -9); c.lineTo(12, 9); c.lineTo(0, 21); c.lineTo(-12, 9); c.lineTo(-12, -9); c.closePath(); c.stroke();
+    c.font = 'bold 19px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.lineWidth = 3; c.strokeStyle = 'rgba(60,20,110,.8)'; c.strokeText('♪', 0, 1); c.fillStyle = '#fff'; c.fillText('♪', 0, 1);
+    if (!ruhig()) { const f = 1.5 + Math.sin(t * 6) * 1.2; c.fillStyle = '#fff6c0'; c.beginPath(); c.arc(9, -16, Math.max(0.4, f), 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function kristalleZeichnen(c) {
+    for (const k of kristalle) {
+      const x = k.x - kamera; if (x < -50 || x > viewW + 50) continue;
+      if (k.puff > 0) {   // das andere ♪ an der Gabelung verschwindet: schrumpft + Ring
+        const f = k.puff / 0.6;
+        kristallZeichnen(c, x, k.y, k.funkel, f * 0.8);
+        c.save(); c.globalAlpha = f; c.strokeStyle = '#d9c8ff'; c.lineWidth = 3; c.beginPath(); c.arc(x, k.y, 14 + (1 - f) * 30, 0, Math.PI * 2); c.stroke(); c.restore();
+        continue;
+      }
+      if (!kristallSichtbar(k)) continue;
+      const schweb = ruhig() ? 0 : Math.sin(k.funkel * 2.5) * 4;
+      kristallZeichnen(c, x, k.y + schweb, k.funkel, 1);
+      if (k.nr === 5 && !story.strang) {   // Gabelung: wer steckt dahinter?
+        c.font = '20px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.fillText(k.strang === 'A' ? '🦊' : '🕊️', x, k.y + schweb - 36);
+      }
+    }
+  }
+  function parkbusZeichnen(c) {   // geparkter Doppeldecker (Gabelung): wie der fahrende, ohne Scheinwerferkegel, mit Warnblinker
+    for (const b of level.parkbusse) {
+      const x = b.x - kamera; if (x > viewW + 140 || x + PARKBUS_W < -140) continue;
+      londonFahrzeug(c, { art: 'bus', x: b.x, w: PARKBUS_W, h: PARKBUS_H, rad: 0 });
+      if (Math.floor(zeit * 2) % 2 === 0) { c.fillStyle = '#ffb000'; c.fillRect(x - 1, BODEN_Y - 15, 5, 5); c.fillRect(x + PARKBUS_W - 4, BODEN_Y - 15, 5, 5); }
+    }
+  }
+  function zeilenUmbruch(c, text, maxW) {
+    const woerter_ = String(text).split(' '), zeilen = []; let z = '';
+    for (const w of woerter_) { const t = z ? z + ' ' + w : w; if (z && c.measureText(t).width > maxW) { zeilen.push(z); z = w; } else z = t; }
+    if (z) zeilen.push(z);
+    return zeilen;
+  }
+  // Erzähltext oben mittig: schreibt sich ein (Schreibmaschine, Cursor), bleibt 3,5 s, blasst aus; Box-Größe steht von Anfang an (kein Springen)
+  function storyTextZeichnen(c) {
+    const a = story.aktiv; if (!a) return;
+    const n = a.tipp > 0 ? Math.min(a.text.length, Math.floor(a.t * TIPP_TEMPO)) : a.text.length;
+    const alpha = Math.max(0, Math.min(1, a.t / 0.2, (a.dauer - a.t) / STORY_AUS));
+    const gr = viewW < 700 ? 19 : 24;
+    c.save(); c.globalAlpha = alpha;
+    c.font = `bold ${gr}px system-ui, sans-serif`;
+    const zeilen = zeilenUmbruch(c, a.text, Math.min(viewW - 120, 760));
+    const lh = gr + 8, w = Math.max(...zeilen.map((z) => c.measureText(z).width)) + 78, h = zeilen.length * lh + 26;
+    const x = viewW / 2 - w / 2, y = 70;
+    c.fillStyle = 'rgba(48,18,96,.88)'; c.strokeStyle = '#ffd36b'; c.lineWidth = 2.5;
+    c.beginPath(); c.roundRect(x, y, w, h, 14); c.fill(); c.stroke();
+    c.textBaseline = 'middle'; c.textAlign = 'center'; c.fillStyle = '#ffd36b'; c.fillText('♪', x + 26, y + h / 2);
+    c.textAlign = 'left'; c.fillStyle = '#fff';
+    let rest = n;
+    zeilen.forEach((z, i) => {
+      const teil = z.slice(0, Math.max(0, rest)); rest -= z.length + 1;
+      c.fillText(teil, x + 50, y + 13 + lh * i + lh / 2);
+      if (n < a.text.length && rest < 0 && rest > -z.length - 2 && Math.floor(a.t * 4) % 2 === 0) { const cx = x + 50 + c.measureText(teil).width + 2; c.fillStyle = '#ffd36b'; c.fillRect(cx, y + 13 + lh * i + 5, 3, lh - 10); c.fillStyle = '#fff'; }
+    });
+    c.font = '600 11px system-ui, sans-serif'; c.textAlign = 'right'; c.fillStyle = 'rgba(255,211,107,.85)'; c.fillText('🎙 Mr. Alex', x + w - 10, y + h - 9);
+    c.restore();
+  }
+  function storyHud(c) {   // ♪-Zähler neben den Herzen
+    const txt = `♪ ${story.gesammelt.length} / 12`;
+    c.save(); c.font = 'bold 16px system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'center';
+    const w = c.measureText(txt).width + 18, puls = ruhig() ? 1 : 1 + 0.12 * Math.sin(Math.min(1, hudPuls) * Math.PI);
+    c.translate(96 + w / 2, 24); c.scale(puls, puls);
+    c.fillStyle = 'rgba(74,26,158,.9)'; c.strokeStyle = '#ffd36b'; c.lineWidth = 1.5; c.beginPath(); c.roundRect(-w / 2, -13, w, 26, 13); c.fill(); c.stroke();
+    c.fillStyle = '#fff'; c.fillText(txt, 0, 1);
+    c.restore();
+  }
+  // Station „The story so far“: Spiel steht, Liste aller bisherigen Stücke (verpasste „…“), Knopf „Weiter ▶“ (Tap irgendwo)
+  function stationZeichnen(c) {
+    const st = story.station;
+    c.fillStyle = 'rgba(24,10,48,.66)'; c.fillRect(0, 0, viewW, H);
+    const lh = st.keys.length > 4 ? 25 : 31, fs = st.keys.length > 4 ? 16 : 18;
+    const w = Math.min(viewW - 32, 640), h = 84 + st.keys.length * lh + 58, x = viewW / 2 - w / 2, y = Math.max(6, (H - h) / 2);
+    const auf = ruhig() ? 1 : Math.min(1, st.t / 0.25);
+    c.save(); c.globalAlpha = auf;
+    c.fillStyle = '#fbf6ff'; c.strokeStyle = '#7a3ff0'; c.lineWidth = 3; c.beginPath(); c.roundRect(x, y, w, h, 16); c.fill(); c.stroke();
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.font = 'bold 24px system-ui, sans-serif'; c.fillStyle = '#4b1fa0'; c.fillText('📖 The story so far', viewW / 2, y + 28);
+    c.font = 'italic 600 13px system-ui, sans-serif'; c.fillStyle = '#7a6a99'; c.fillText(`${(storyOpt && storyOpt.titel) || ''} · Station ${st.nr}`, viewW / 2, y + 54);
+    c.textAlign = 'left';
+    st.keys.forEach((k, i) => {
+      const da = story.gesammelt.includes(k), ly = y + 80 + i * lh + lh / 2;
+      c.font = `bold ${fs}px system-ui, sans-serif`; c.fillStyle = da ? '#9b5cff' : '#c9c0d9'; c.fillText('♪', x + 22, ly);
+      c.font = `600 ${fs}px system-ui, sans-serif`; c.fillStyle = da ? '#18213a' : '#9a92aa';
+      c.fillText(da ? storyText(k) : '…', x + 44, ly);
+      if (i === 3 && st.keys.length > 4) { c.strokeStyle = 'rgba(122,63,240,.25)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x + 22, ly + lh / 2); c.lineTo(x + w - 22, ly + lh / 2); c.stroke(); }
+    });
+    const bw = 150, bx = viewW / 2 - bw / 2, by = y + h - 48;
+    c.fillStyle = '#7a3ff0'; c.beginPath(); c.roundRect(bx, by, bw, 36, 18); c.fill();
+    c.font = 'bold 17px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = '#fff'; c.fillText('Weiter ▶', viewW / 2, by + 18);
+    c.font = '600 11px system-ui, sans-serif'; c.fillStyle = '#7a6a99'; c.fillText('🎙 Mr. Alex liest vor · Tippen = weiter', viewW / 2, by - 10);
+    c.restore();
+  }
+
+  /* Film: Bühne in Weltkoordinaten (Paradeplatz der Horse Guards, Big Ben links dahinter), Kamera je Szene mit sanftem Schwenk/Zoom */
+  const FILM_BB = { x: 300, s: 1.25 }, FILM_TOR = 720, FILM_SGT = 585;
+  const sanft = (f) => { f = Math.max(0, Math.min(1, f)); return f * f * (3 - 2 * f); };
+  const lerp = (a, b, f) => a + (b - a) * f;
+  function filmKamera(sz, f, ende) {   // [x, y, zoom] der Bildmitte
+    const K = {
+      A: [[[250, 215, 1.0], [540, 235, 1.2]], [[360, 235, 1.25], [535, 245, 1.55]], [[548, 228, 1.6], [578, 208, 2.2]]],
+      B: [[[250, 215, 1.0], [540, 235, 1.2]], [[FILM_BB.x, 70, 2.1], [530, 245, 1.45]], [[545, 230, 1.5], [560, 228, 1.75]]],
+    }[ende][sz];
+    const g = ende === 'B' && sz === 1 ? sanft((f - 0.38) / 0.5) : sanft(f);   // Ende B Szene 2: erst das Nest, dann Schwenk hinunter zur Figur
+    return [lerp(K[0][0], K[1][0], g), lerp(K[0][1], K[1][1], g), lerp(K[0][2], K[1][2], g)];
+  }
+  function pferd(c, x, y, t) {   // Pferd der Household Cavalry (schwarz) mit Reiter (rote Jacke, Silberhelm, weißer Federbusch); läuft nach rechts
+    const b = ruhig() ? 0 : Math.sin(t * 10);
+    c.save(); c.translate(x, y - Math.abs(b) * 2);
+    c.strokeStyle = '#141414'; c.lineWidth = 6; c.lineCap = 'round';
+    for (const [lx, ph] of [[-22, 0], [-14, 1.6], [16, 0.8], [24, 2.4]]) { const w = ruhig() ? 0 : Math.sin(t * 10 + ph) * 0.45; c.beginPath(); c.moveTo(lx, -38); c.lineTo(lx + Math.sin(w) * 16, -4); c.stroke(); }
+    c.fillStyle = '#141414'; c.beginPath(); c.ellipse(0, -46, 34, 15, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(24, -54); c.lineTo(40, -84); c.lineTo(52, -80); c.lineTo(36, -46); c.closePath(); c.fill();   // Hals
+    c.beginPath(); c.ellipse(50, -82, 12, 7, 0.5, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(-32, -50); c.quadraticCurveTo(-48, -40, -44, -18); c.lineTo(-38, -40); c.closePath(); c.fill();   // Schweif
+    c.fillStyle = '#e0a400'; c.fillRect(-8, -62, 18, 6);   // Sattel
+    c.fillStyle = UK_ROT; c.beginPath(); c.roundRect(-6, -92, 16, 30, 4); c.fill();
+    c.fillStyle = '#16213d'; c.fillRect(-6, -64, 16, 5);
+    c.fillStyle = '#f1c9a5'; c.beginPath(); c.arc(2, -98, 7, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c9ced6'; c.beginPath(); c.arc(2, -101, 8, Math.PI, 0); c.fill();
+    c.fillStyle = '#f4f4f4'; c.beginPath(); c.ellipse(-2, -110, 4, 9, -0.4, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function babyTauben(c, x, y, t, wach) {   // Bärenfellmütze als Nest (liegt, Öffnung oben) mit drei Babytauben und der Mutter daneben
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#0d0d0d'; c.beginPath(); c.ellipse(0, 0, 30, 14, 0, 0, Math.PI); c.fill(); c.fillRect(-30, -6, 60, 6);
+    c.strokeStyle = '#2b2b2b'; c.lineWidth = 2; for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(-18 + k * 12, 4, 5, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
+    [-14, 0, 14].forEach((bx, i) => {
+      const nick = ruhig() ? 0 : Math.sin(t * (wach ? 7 : 2) + i * 1.7) * (wach ? 3 : 1.2);
+      c.fillStyle = '#b8bcc8'; c.beginPath(); c.arc(bx, -10 + nick, 8, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#e8e2d2'; c.beginPath(); c.arc(bx - 2, -15 + nick, 2.5, 0, Math.PI * 2); c.arc(bx + 3, -16 + nick, 2, 0, Math.PI * 2); c.fill();   // Flaum
+      c.fillStyle = '#f0a020'; c.beginPath(); c.moveTo(bx + 5, -10 + nick); c.lineTo(bx + 10, -8 + nick); c.lineTo(bx + 5, -7 + nick); c.closePath(); c.fill();
+      c.strokeStyle = '#18213a'; c.lineWidth = 1.3; c.beginPath();
+      if (wach) c.arc(bx + 2, -12 + nick, 1.3, 0, Math.PI * 2); else c.arc(bx + 2, -12 + nick, 2, Math.PI * 0.1, Math.PI * 0.9);
+      c.stroke();
+    });
+    c.fillStyle = '#8f96a8'; c.beginPath(); c.ellipse(46, -12, 15, 11, 0, 0, Math.PI * 2); c.fill();   // Mutter-Taube
+    c.fillStyle = '#7a8296'; c.beginPath(); c.arc(56, -26, 7, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#4fa38a'; c.fillRect(51, -21, 10, 4);
+    c.fillStyle = '#f0a020'; c.beginPath(); c.moveTo(62, -27); c.lineTo(68, -25); c.lineTo(62, -23); c.closePath(); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(58, -28, 1.4, 0, Math.PI * 2); c.fill();
+    if (!wach && !ruhig()) { c.font = 'bold 12px system-ui, sans-serif'; c.fillStyle = '#5a6a8a'; c.textAlign = 'center'; c.fillText('z', -22, -26 - (t * 8) % 10); c.fillText('Z', -30, -36 - (t * 6) % 10); }
+    c.restore();
+  }
+  function zuschauer(c, x, y, t, lachen) {   // Touristen vorn im Bild (Ende B): Silhouetten, lachen und winken
+    const farben = ['#2a6cff', '#e0a400', '#2e9e5b', '#e8467c', '#8a3ffc', '#ff7a1a'];
+    for (let i = 0; i < 6; i++) {
+      const px = x + i * 46, hb = ruhig() ? 0 : Math.abs(Math.sin(t * 9 + i)) * 4 * lachen;
+      c.fillStyle = farben[i]; c.beginPath(); c.roundRect(px - 13, y - 34 - hb, 26, 40, 9); c.fill();
+      c.fillStyle = '#f1c27d'; c.beginPath(); c.arc(px, y - 46 - hb, 10, 0, Math.PI * 2); c.fill();
+      if (lachen > 0) { c.strokeStyle = farben[i]; c.lineWidth = 5; c.lineCap = 'round'; c.beginPath(); c.moveTo(px - 11, y - 28 - hb); c.lineTo(px - 18, y - 52 - hb); c.moveTo(px + 11, y - 28 - hb); c.lineTo(px + 18, y - 52 - hb); c.stroke();
+        c.fillStyle = '#7a1f1f'; c.beginPath(); c.arc(px + 2, y - 43 - hb, 3.5, 0, Math.PI); c.fill(); }
+    }
+  }
+  function filmKulisse(c) {
+    const g = c.createLinearGradient(0, -400, 0, BODEN_Y); g.addColorStop(0, '#4f9fdc'); g.addColorStop(0.7, '#bfe3fa'); g.addColorStop(1, '#eef6fb');
+    c.fillStyle = g; c.fillRect(-400, -500, 1800, BODEN_Y + 500);
+    c.save(); c.globalAlpha = 0.55; c.lineWidth = 9; REGENBOGEN.forEach((f, i) => { c.strokeStyle = f; c.beginPath(); c.arc(520, BODEN_Y - 20, 330 - i * 9, Math.PI, 0); c.stroke(); }); c.restore();
+    c.fillStyle = 'rgba(255,255,255,.9)'; for (const [wx, wy] of [[60, 40], [460, -10], [880, 60]]) { c.beginPath(); c.arc(wx, wy, 18, 0, Math.PI * 2); c.arc(wx + 22, wy - 8, 22, 0, Math.PI * 2); c.arc(wx + 46, wy, 16, 0, Math.PI * 2); c.fill(); }
+    parlament(c, FILM_BB.x - 22, BODEN_Y, 1.05, '#c9b48a');
+    bigBen(c, FILM_BB.x, BODEN_Y, FILM_BB.s, '#c9b48a');
+    c.fillStyle = '#d9cfb5'; c.fillRect(-400, BODEN_Y, 1800, 300);
+    c.fillStyle = 'rgba(0,0,0,.06)'; for (let k = -10; k < 40; k++) c.fillRect(k * 40, BODEN_Y + 6 + (k % 3) * 9, 22, 2);
+    horseGuardsTor(c, FILM_TOR, BODEN_Y);
+  }
+  // Figur des Schülers im Film: aktuelle Figur (Skin) per zeichneFigur; ohneCap = die Cap ist verschenkt (Ende B)
+  function filmFigur(c, x, pose, ausdruck, ohneCap) {
+    const s = ohneCap && skin.hut === 'cap' ? Object.assign({}, skin, { hut: 'keiner' }) : skin;
+    zeichneFigur(c, x, BODEN_Y, 80, s, pose, zeit, ausdruck);
+  }
+  function filmZeichnen(c) {
+    const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
+    if (sz >= 3) return filmTitel(c, f);
+    const [kx, ky, kz] = filmKamera(sz, p, ende);
+    c.save(); c.translate(viewW / 2, H / 2); c.scale(kz, kz); c.translate(-kx, -ky);
+    filmKulisse(c);
+    if (sz === 0) {   // Pferde kommen (Uhr: fünf), der Sergeant hat keine Mütze und schaut sich erschrocken um
+      for (let i = 0; i < 2; i++) pferd(c, -160 + i * 110 + Math.min(1, tt / 4.2) * 380, BODEN_Y, zeit + i);
+      gardist(c, FILM_SGT, BODEN_Y, { hut: 'keiner', blick: Math.sin(tt * 3) > 0 ? -2 : 2 });
+      if (tt > 2.4) { c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('!', FILM_SGT + 22, BODEN_Y - 176 - (ruhig() ? 0 : Math.abs(Math.sin(tt * 6)) * 4)); }
+    } else if (ende === 'A' && sz === 1) {   // die Figur rennt mit der Mütze über dem Kopf herbei
+      const fx = lerp(120, FILM_SGT - 85, sanft(tt / 3.2)), laeuft_ = tt < 3.2;
+      gardist(c, FILM_SGT, BODEN_Y, { hut: 'keiner', blick: -2 });
+      filmFigur(c, fx, laeuft_ ? 'lauf' : 'steh', 'grinsend');
+      fellmuetze(c, fx + 4, BODEN_Y - 96 - (laeuft_ && !ruhig() ? Math.abs(Math.sin(zeit * 13)) * 3 : 0), 0.62);
+    } else if (ende === 'A' && sz === 2) {   // die Mütze wandert auf seinen Kopf – er lächelt kurz (nur einmal)
+      const fx = FILM_SGT - 85, g = sanft(tt / 1.3);
+      filmFigur(c, fx, 'steh', tt > 1.4 ? 'grinsend' : 'erstaunt');
+      const lae = tt > 1.6 && tt < 3.3 ? Math.min(1, (tt - 1.6) / 0.3, (3.3 - tt) / 0.3) : 0;
+      gardist(c, FILM_SGT, BODEN_Y, { hut: g >= 1 ? 'fell' : 'keiner', blick: -2, laecheln: lae });
+      if (g < 1) fellmuetze(c, lerp(fx + 4, FILM_SGT, g), lerp(BODEN_Y - 96, BODEN_Y - 130, g) - Math.sin(g * Math.PI) * 30, lerp(0.62, 1, g));
+      if (lae > 0 && !ruhig()) { c.fillStyle = '#ffd36b'; for (let k = 0; k < 4; k++) { const a = zeit * 3 + k * 1.6; c.beginPath(); c.arc(FILM_SGT + 18 + Math.cos(a) * 10, BODEN_Y - 118 + Math.sin(a) * 8, 1.6, 0, Math.PI * 2); c.fill(); } }
+    } else if (ende === 'B' && sz === 1) {   // Babytauben schlafen im Hut auf Big Ben; Schwenk hinunter: die Figur nimmt ihre Cap ab
+      babyTauben(c, FILM_BB.x - 2, BODEN_Y - 210 * FILM_BB.s + 2, zeit, false);
+      gardist(c, FILM_SGT, BODEN_Y, { hut: 'keiner', blick: -2 });
+      const fx = lerp(330, FILM_SGT - 85, sanft((tt - 1.6) / 2.4)), hebt = sanft((tt - 3.6) / 0.8);
+      filmFigur(c, fx, tt > 1.6 && tt < 4 ? 'lauf' : 'steh', 'grinsend', hebt > 0);
+      if (hebt > 0) capZeichnen(c, fx + 16, BODEN_Y - 60 - hebt * 34, 0.9);
+    } else {   // Ende B Szene 3: die Cap wandert auf seinen Kopf – er lacht laut, alle sehen es und lachen mit
+      const fx = FILM_SGT - 85, g = sanft(tt / 1.2), lacht = tt > 1.4 ? Math.min(1, (tt - 1.4) / 0.3) : 0;
+      filmFigur(c, fx, 'steh', lacht > 0 ? 'zunge' : 'grinsend', true);
+      gardist(c, FILM_SGT, BODEN_Y, { hut: g >= 1 ? 'cap' : 'keiner', blick: -2, lachen: lacht });
+      if (g < 1) capZeichnen(c, lerp(fx + 16, FILM_SGT, g), lerp(BODEN_Y - 94, BODEN_Y - 131, g) - Math.sin(g * Math.PI) * 26, lerp(0.9, 1, g));
+      if (lacht > 0) {
+        c.font = 'bold 15px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT;
+        for (let k = 0; k < 3; k++) { const q = ruhig() ? 0.5 : ((tt * 0.7 + k * 0.33) % 1); c.globalAlpha = 1 - q; c.fillText('HA!', FILM_SGT + 30 + k * 10, BODEN_Y - 150 - q * 40); }
+        c.globalAlpha = 1;
+      }
+      zuschauer(c, FILM_SGT - 150, BODEN_Y + 34, zeit, lacht);
+    }
+    c.restore();
+    filmUntertitel(c, f);
+  }
+  function filmUntertitel(c, f) {
+    c.save();
+    const gr = viewW < 700 ? 18 : 21; c.font = `600 ${gr}px system-ui, sans-serif`;
+    const zeilen = zeilenUmbruch(c, f.text, Math.min(viewW - 80, 820)), lh = gr + 7, h = zeilen.length * lh + 18;
+    c.globalAlpha = Math.max(0, Math.min(1, f.t / 0.35));
+    c.fillStyle = 'rgba(12,8,28,.72)'; c.fillRect(0, H - h - 8, viewW, h + 8);
+    c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    zeilen.forEach((z, i) => c.fillText(z, viewW / 2, H - h + 1 + lh * i + lh / 2));
+    c.globalAlpha = 1; c.font = '600 12px system-ui, sans-serif'; c.textAlign = 'left'; c.fillStyle = 'rgba(255,255,255,.9)';
+    c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 3; c.strokeText('🎬 Tippen = überspringen', 12, 18); c.fillText('🎬 Tippen = überspringen', 12, 18);
+    c.restore();
+  }
+  function filmTitel(c, f) {   // Titelkarte: „The End – Ending A (1 of 2)“, Figur und Sergeant klein
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2a1060'); g.addColorStop(1, '#18213a');
+    c.fillStyle = g; c.fillRect(0, 0, viewW, H);
+    const a = ruhig() ? 1 : Math.min(1, f.t / 0.6);
+    c.save(); c.globalAlpha = a; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.font = 'italic 600 16px system-ui, sans-serif'; c.fillStyle = '#c9b8ff'; c.fillText((storyOpt && storyOpt.titel) || '', viewW / 2, 64);
+    c.font = `bold ${viewW < 700 ? 30 : 40}px system-ui, sans-serif`; c.fillStyle = '#ffd36b'; c.fillText(`The End – Ending ${f.ende} (1 of 2)`, viewW / 2, 108);
+    zeichneFigur(c, viewW / 2 - 50, 300, 70, f.ende === 'B' && skin.hut === 'cap' ? Object.assign({}, skin, { hut: 'keiner' }) : skin, 'steh', zeit, 'grinsend');
+    c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, { hut: f.ende === 'B' ? 'cap' : 'fell', laecheln: f.ende === 'A' ? 1 : 0, lachen: f.ende === 'B' ? 0.6 : 0, blick: -2 }); c.restore();
+    c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'A' ? '🦊 🎩' : '🕊️ 🧢', viewW / 2, 340);
+    c.fillText('Tippen = weiter', viewW / 2, 368);
+    c.restore();
+  }
+
   function hintergrund(c) { W.kulisse(c); }
   function hintergrundNY(c) {
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
@@ -3179,6 +3646,7 @@
     for (const g of gondeln) { const x = g.x - kamera; if (x > viewW + 100 || x + g.w < -100) continue; seilbahnZeichnen(c, g); }   // Welt 5
     for (const s of surfs) { const x = s.x - kamera; if (x > viewW + 100 || x + s.w < -100) continue; surfZeichnen(c, s); }
     for (const cp of checkpoints) { const x = cp.x - kamera; if (x > -60 && x < viewW + 60) fahne(c, x, BODEN_Y, cp.erreicht); }
+    if (story) { parkbusZeichnen(c); kristalleZeichnen(c); }
     for (const d of diamanten) {
       if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue;
       const schweb = Math.sin(d.funkel * 3) * 4;
@@ -3310,7 +3778,8 @@
     const max = woerter.length + level.tore.length;
     diamant(c, viewW - 118, 24, 10, '#39c6f0');   // Platz für den ✕-Knopf der App rechts oben
     c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle';
-    c.fillStyle = '#18213a'; c.fillText(`${gesammelt} / ${max}`, viewW - 102, 24);
+    c.fillStyle = '#18213a'; c.fillText(story ? `${diaGesammelt} / ${diamanten.length}` : `${gesammelt} / ${max}`, viewW - 102, 24);   // Story: 💎 = Punkte-Diamanten
+    if (story) storyHud(c);
     if (combo >= 2) {   // Combo-Zähler links neben dem Diamanten, pulsiert bei Erhöhung
       const puls = ruhig() ? 1 : 1 + 0.35 * Math.sin(Math.min(1, hudPuls) * Math.PI);
       c.save(); c.translate(viewW - 140, 24); c.scale(puls, puls);
@@ -3395,6 +3864,7 @@
       const t = zustand === 'boss' ? texte.boss : texte.tuer;
       c.strokeText(t, viewW / 2, 100); c.fillText(t, viewW / 2, 100);
     }
+    if (story) { storyTextZeichnen(c); if (story.station) stationZeichnen(c); }
   }
   // Tor-Hinweis: ab 520 vor dem Tor; mit Cameo Olivia (eule) schon sofort für das nächste Tor
   function torHinweis() {
@@ -3432,6 +3902,8 @@
     }
     ctx.setTransform(dpr * skala, 0, 0, dpr * skala, dpr * bereich.x, dpr * bereich.y);
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, viewW, H); ctx.clip();
+    if (film) { filmZeichnen(ctx); ctx.restore(); return; }   // Story: Film am Ende / Story Library
+    if (nurFilm) { ctx.fillStyle = '#18213a'; ctx.fillRect(0, 0, viewW, H); ctx.restore(); return; }
     if (zoom !== 1) {   // Kamera fährt heran und herunter: Zoom um die Figur
       const fx = Math.min(viewW * 0.6, spieler.x - kamera), fy = spieler.y - 30;
       ctx.translate(fx, fy); ctx.scale(zoom, zoom); ctx.translate(-fx, -fy);
@@ -3492,7 +3964,7 @@
       boss: (c, x, y) => { nebelbank(c, x, y); captainFog(c, x, y); }, tuer: brueckenTor, bossKlang: () => { tutet++; klang.nebelhorn(); } },
     // Klasse 6 „London Run“ (31.10.): Welt 1 Westminster · Big Ben
     westminster: { id: 'westminster', name: 'Westminster', staat: 'London', ziel: 'Big Ben', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is on duty!', sturz: 'Splash! 🌊',
-      gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WESTMINSTER, sprechblaseHoehe: 220,
+      gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WESTMINSTER, musterStory: MUSTER_WESTMINSTER_STORY, sprechblaseHoehe: 220,
       kulisse: hintergrundLondon, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => bigBen(c, x, y, 0.075, '#1d3f8f'),
       boss: (c, x, y) => { schilderhaus(c, x, y); sergeantBearskin(c, x, y); }, tuer: horseGuardsTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
   };
@@ -3512,7 +3984,8 @@
     skin = Object.assign({}, SKIN_STANDARD, opt.skin || {});
     stimme = Object.assign({ wort() {}, boss() {} }, opt.stimme || {});
     W = WELTEN[opt.welt] || WELTEN.ny;
-    level = W.id === 'ny' ? LEVEL_NY : levelBauen(W.muster);
+    storyOpt = opt.story && W.musterStory ? opt.story : null; nurFilm = false; filmAllein = null; film = null;   // Story-Modus nur mit Option story (Klasse 6) und einer Welt mit Story-Strecke
+    level = W.id === 'ny' ? LEVEL_NY : levelBauen(storyOpt ? W.musterStory : W.muster);
     SOLIDE = solideOben();
     texte = Object.assign({}, TEXTE, { bossTitel: `${W.bossName} fragt …` }, opt.texte || {});
     // Cameos (nur wenn die App Helden übergibt): Kartenbilder vorab laden; Ladefehler → Kreis mit Initiale
@@ -3535,9 +4008,32 @@
     if (location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__runner = haken; // Test-Haken nur lokal, nie auf der Live-Seite (30.10.)
     return { stopp };
   }
+  // Story Library: nur den Film eines Endes abspielen (eigene Figur), Runner.film({ wrapper, skin, ende: 'A'|'B', story, stimme: { erzaehler, still }, onEnde({ film, ende, uebersprungen }) })
+  function filmAlleinStart(o) {
+    stopp();
+    opt = o || {}; wrapper = opt.wrapper;
+    if (!wrapper) throw new Error("Runner.film: wrapper fehlt");
+    skin = Object.assign({}, SKIN_STANDARD, opt.skin || {});
+    stimme = Object.assign({ wort() {}, boss() {} }, opt.stimme || {});
+    W = WELTEN.westminster; storyOpt = opt.story || null; texte = TEXTE;
+    story = { strang: opt.ende === 'B' ? 'B' : 'A', auto: false, gesammelt: [], schlange: [], aktiv: null, pause: 0, gesprochen: 0, station: null, stationen: 0, filmFertig: null };
+    canvas = el("canvas", "runner-canvas"); canvas.setAttribute("aria-label", opt.titel || "Story Library");
+    ctx = canvas.getContext("2d"); wrapper.append(canvas);
+    groesseAnpassen();
+    zeit = 0; endeGemeldet = true; nurFilm = true; filmAllein = opt; laeuft = true;
+    filmStart(story.strang);
+    startZeit = performance.now(); letzte = startZeit; frames = 0; fpsZeit = 0; fps = 0;
+    canvas.addEventListener("pointerdown", aufPointerDown); canvas.addEventListener("pointerup", aufPointerUp); canvas.addEventListener("pointercancel", aufPointerUp);
+    window.addEventListener("keydown", aufKeyDown); window.addEventListener("keyup", aufKeyUp); window.addEventListener("resize", aufResize);
+    rafId = requestAnimationFrame(schleife);
+    if (location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__runner = haken;
+    return { stopp };
+  }
+  // ✕ der App während des Films: Film überspringen statt Lauf abbrechen (das Ergebnis geht sonst verloren)
+  function ueberspringen() { if (zustand === 'film' && film) { film.gesamt = Math.max(film.gesamt, 1); filmEnde(true); return true; } return false; }
   function stopp() {
     if (!laeuft && !canvas) return;
-    laeuft = false; zustand = "aus";
+    laeuft = false; zustand = "aus"; film = null; filmAllein = null; nurFilm = false;
     if (rafId) cancelAnimationFrame(rafId); rafId = 0;
     window.removeEventListener("keydown", aufKeyDown);
     window.removeEventListener("keyup", aufKeyUp);
@@ -3553,6 +4049,7 @@
   const haken = {
     springe(haltenMs = 250) { sprungStart(); setTimeout(sprungEnde, haltenMs); },
     stand() {
+      if (nurFilm) return { zustand, laeuft, nurFilm: true, fps, viewW };
       return {
         zustand, laeuft, x: spieler.x, y: spieler.y, amBoden: spieler.amBoden, leben, diamanten: gesammelt, kamera, fps,
         popup: popup ? popup.en : null, torErgebnisse: [...torErgebnisse], checkpoint, checkpoints: checkpoints.map((c) => c.erreicht),
@@ -3594,7 +4091,25 @@
     setSkin(o) { Object.assign(skin, o); },
     cameo(id) { if (zustand !== 'spiel') return false; const h = cameoListe.find((x) => x.id === id) || (id ? { id, name: id } : cameoListe[0]); if (!h) return false; cameo = null; cameoStart(h); return true; },   // Test: Cameo sofort auslösen
     sprechListe, get level() { return level; }, SEQUENZ, BANNER_TEXT, get welt() { return W.id; },
+    // Story-Modus (Tests): Zustand, Sprung zur Gabelung, Kristall i einsammeln, Station weiter, Film starten/überspringen
+    story() {
+      if (!story) return null;
+      const a = story.aktiv, st = story.station;
+      return {
+        strang: story.strang, auto: story.auto, gesammelt: story.gesammelt.slice(), anzahl: story.gesammelt.length, warteschlange: story.schlange.slice(), gesprochen: story.gesprochen,
+        aktiv: a ? { key: a.key, text: a.text, t: Math.round(a.t * 100) / 100, dauer: Math.round(a.dauer * 100) / 100, sichtbar: a.tipp > 0 ? Math.min(a.text.length, Math.floor(a.t * TIPP_TEMPO)) : a.text.length } : null,
+        station: st ? { nr: st.nr, t: Math.round(st.t * 100) / 100, keys: st.keys.slice(), zeilen: st.keys.map((k) => story.gesammelt.includes(k) ? storyText(k) : '…'), gelesen: st.gelesen } : null, stationen: story.stationen,
+        film: film ? { ende: film.ende, szene: film.szene, t: Math.round(film.t * 100) / 100, text: film.text } : null, filmFertig: story.filmFertig,
+        kristalle: kristalle.map((k) => ({ nr: k.nr, strang: k.strang, key: kristallKey(k), x: k.x, y: k.y, weg: k.weg, sichtbar: kristallSichtbar(k) })),
+        diamanten: diaGesammelt, diamantenMax: diamanten ? diamanten.length : 0, parkbusse: level.parkbusse.map((b) => b.x),
+      };
+    },
+    gabelung(dx = 300) { const g = kristalle.filter((k) => k.nr === 5); if (g.length) this.teleport(Math.min(...g.map((k) => k.x)) - dx); },
+    kristall(i) { const k = kristalle[i]; if (story && k && kristallSichtbar(k) && zustand === 'spiel') { kristallSammeln(k, false); return true; } return false; },
+    stationWeiter() { if (story && story.station) { story.station.t = Math.max(story.station.t, STATION_SPERRE); stationEnde(true); } },
+    filmStart(ende) { if (story) filmStart(ende || story.strang || 'A'); },
+    filmSkip() { return ueberspringen(); },
   };
 
-  window.Runner = { start, stopp, zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  window.Runner = { start, stopp, film: filmAlleinStart, ueberspringen, zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
 })();

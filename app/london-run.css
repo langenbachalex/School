@@ -84,3 +84,13 @@ body.runner-aktiv .tempo-leiste { visibility: hidden; }
 .runner-frage-box .frage-text { font-size: 1.2rem; font-weight: 700; margin: 4px 0 8px; }
 .runner-frage-box .antwort { display: block; width: 100%; margin: 6px 0; text-align: left; font-size: 1.1rem; background: #e9edf7; color: #18213a; border-color: transparent; }
 @media (max-height: 420px) { .runner-frage-box { padding: 10px 14px; } .runner-frage-box h2 { font-size: 1.1rem; } .runner-frage-box .klein { display: none; } .runner-frage-box .antwort { min-height: 40px; margin: 4px 0; } }
+/* Story Library (Hall of Fame, Story-Modus Welt 1): freigespielte Enden als Karten (Tap = Film), gesperrte 🔒 */
+.story-library { margin-top: 14px; padding-top: 10px; border-top: 2px dashed rgba(122, 63, 240, .3); }
+.story-library h3 { margin: 0 0 2px; color: #4b1fa0; }
+.story-karten { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 10px; margin-top: 8px; }
+.story-karte { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 12px 14px; border-radius: 14px; text-align: left; font: inherit; cursor: pointer;
+  background: linear-gradient(135deg, #4a1a9e, #7a3ff0); color: #fff; border: 2px solid #ffd36b; min-height: 44px; }
+.story-karte small { color: #ffe9b0; }
+.story-karte .story-sym { font-size: 1.6rem; }
+.story-karte.gesperrt { background: #eee9f6; color: #7a6a99; border: 2px dashed #c9c0d9; cursor: default; }
+.runner-story-ende { font-weight: 700; color: #4b1fa0; }

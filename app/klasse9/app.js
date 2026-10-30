@@ -9,6 +9,9 @@
   const D = window.DATEN;
   const app = document.getElementById("app");
   const SPEICHER = "america9-v1";
+  // Test-Haken (window.__heute, __catchTempo, __patrolTempo, __updateTest) wirken nur beim Testen auf dem eigenen Rechner,
+  // nie auf der Live-Seite (30.10.2026: sonst ließen sich z. B. über ein anderes Datum Tagesboni beliebig oft abholen).
+  const LOKAL = location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
 
   /* ---------- Speicher (nur lokal) ---------- */
   // Manipulationsschutz (Spielstand nur auf dem Gerät): Punkte, Spiel, Word Gym und erledigte Teile tragen ein Siegel.
@@ -717,8 +720,15 @@
     // · Wiederholung eines schon erledigten Teils: +5 nur bei Teilen mit Mindestzeit (Sprechen, Quiz – SPRECH_MIN);
     //   alles, was sich schnell noch einmal durchklicken lässt (Lesen, Reihenfolge, Hören, Dialog, Schreiben …), gibt beim Wiederholen keine Punkte.
     //   Power Up (fälliger Teil wird aufgeladen) gibt weiter Punkte – das geht je Teil nur alle 30/60/120 Tage.
-    const ohnePunkte = teil.art === "erklaerung" || (!erstesMal && !aufladen && !SPRECH_MIN[teil.art]);
-    if (!ohnePunkte) belohne(erstesMal, !lage.hilfe);
+    // · Wiederholungen mit Mindestzeit (30.10.): jede weitere Wiederholung halbiert – 5, 2, 1, dann 0; ein Power Up setzt den Zähler (stand.teile[k].w) zurück.
+    let wdh = null;
+    if (!erstesMal && !aufladen && SPRECH_MIN[teil.art]) {
+      const e = stand.teile && stand.teile[teilSchluessel(lage.teil)], w = (e && e.w) || 0;
+      wdh = Math.floor(PUNKTE.wiederholung / 2 ** w);
+      if (e) e.w = w + 1;
+    }
+    const ohnePunkte = teil.art === "erklaerung" || (!erstesMal && !aufladen && !SPRECH_MIN[teil.art]) || wdh === 0;
+    if (!ohnePunkte) belohne(erstesMal, !lage.hilfe, false, wdh);
     else { hwBonus(0); speichern(); setTimeout(zeigeEreignisse, 50); } // ohne Punkte zählt der Teil trotzdem für die Hausaufgabe (inkl. Feier „Homework done!“)
     if (alleTeileFertig()) return gruppeGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
@@ -1466,7 +1476,7 @@
   const SP = D.spiel;
   const PUNKTE = { teil: 10, wiederholung: 5, ohneHilfe: 5, seance: 30, einheit: 50, feuer: 30, wochenende: 20, ferien: 20, spiel: 10, woche: 100, monat: 200 };
   const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-  const heute = () => (window.__heute ? new Date(window.__heute + "T12:00:00") : new Date());
+  const heute = () => (LOKAL && window.__heute ? new Date(window.__heute + "T12:00:00") : new Date());
   const plusTage = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
   const montag = (d) => plusTage(d, -((d.getDay() + 6) % 7));
   const istFrei = (t) => SP.frei.some((f) => t >= f.von && t <= f.bis);
@@ -1513,10 +1523,43 @@
   }
 
   const ereignisse = [];
-  function belohne(erstesMal, ohneHilfe, istGym) {
+  // Zeitlog „Mr. Alex is watching you“ (30.10.2026, Mr. Alex): mehr als 200 Übungspunkte in 10 Minuten → die App sperrt sich,
+  // bis Mr. Alex sie mit seiner Lehrer-PIN freischaltet. Die Punkte bleiben (gute Schüler sollen nicht bestraft werden); im Lehrer-Bereich
+  // kann er sie bei Bedarf korrigieren. Gezählt werden nur Punkte für Teile und Word Gym (ohne Boni wie Hausaufgabe, Serie, Woche, Station).
+  // Log, Sperre und Warnungen stecken in stand.spiel (Siegel) – Neuladen hebt die Sperre nicht auf. Jede Warnung bleibt mit Zeitpunkt gespeichert.
+  const WACHE = { fenster: 10 * 60000, grenze: 200 };
+  function mrAlexWacht(sp, basis) {
+    const jetzt = Date.now();
+    sp.log = (Array.isArray(sp.log) ? sp.log : []).filter((e) => Array.isArray(e) && e[0] <= jetzt && jetzt - e[0] < WACHE.fenster);
+    sp.log.push([jetzt, basis]);
+    if (sp.log.reduce((a, e) => a + e[1], 0) > WACHE.grenze) {
+      sp.gesperrt = jetzt; sp.log = [];
+      (sp.warnungen = Array.isArray(sp.warnungen) ? sp.warnungen : []).push(new Date(jetzt).toISOString());
+      setTimeout(sperreZeigen, 900); // nach Lob und Toasts
+    }
+    return true;
+  }
+  const sperreDialog = el("dialog", { class: "feier frage sperre" });
+  sperreDialog.addEventListener("cancel", (e) => e.preventDefault());
+  document.body.append(sperreDialog);
+  function sperreZeigen() {
+    if (!(stand.spiel && stand.spiel.gesperrt)) return;
+    stopp();
+    sperreDialog.replaceChildren(el("div", { class: "feier-symbol", "aria-hidden": "true" }, "👀"),
+      el("h2", { lang: "en" }, "Mr. Alex is watching you!"),
+      el("p", { class: "sperre-gross", lang: "en" }, "You are either great or cheating. 😉"),
+      el("p", {}, T("Du hast in sehr kurzer Zeit sehr viele Punkte gesammelt. Deine Punkte bleiben. Zeig die App Mr. Alex – er schaltet sie mit seiner PIN wieder frei.", "You collected a lot of points in a very short time. Your points stay. Show the app to Mr. Alex – he unlocks it with his PIN.")),
+      el("div", { class: "knopfreihe" }, knopf(T("👩‍🏫 Lehrer-PIN", "👩‍🏫 Teacher PIN"), () => { sperreDialog.close(); lehrerStart(); }, "haupt")));
+    if (!sperreDialog.open) sperreDialog.showModal();
+  }
+  function belohne(erstesMal, ohneHilfe, istGym, wdh) {
     const sp = spielstand(), d = heute(), tag = iso(d);
     const vorher = staatenBei(teileZaehler() - (erstesMal ? 1 : 0));
-    let plus = istGym ? PUNKTE.seance : erstesMal ? PUNKTE.teil : PUNKTE.wiederholung;
+    let plus = istGym ? PUNKTE.seance : erstesMal ? PUNKTE.teil : (wdh != null ? wdh : PUNKTE.wiederholung);
+    if (!mrAlexWacht(sp, plus + (erstesMal && ohneHilfe && !istGym ? PUNKTE.ohneHilfe : 0))) { // Zeitlog: zu viele Punkte in zu kurzer Zeit
+      if (!istGym) hwBonus(0); // zählt trotzdem für die Hausaufgabe
+      speichern(); setTimeout(zeigeEreignisse, 50); return;
+    }
     if (erstesMal && ohneHilfe && !istGym) { plus += PUNKTE.ohneHilfe; ereignisse.push({ art: "toast", text: T(`💪 Ohne Hilfe +${PUNKTE.ohneHilfe}`, `💪 No hints +${PUNKTE.ohneHilfe}`) }); }
     const bonus = istGym ? 0 : hwBonus(plus); // 📝 Homework: +50 % auf die Teil-Punkte (aufgerundet), je Teil einmal pro Hausaufgabe
     if (bonus) { plus += bonus; ereignisse.push({ art: "toast", text: `📝 Homework +${bonus}` }); }
@@ -2314,7 +2357,7 @@
       const dt = Math.min(0.05, (t - zeitstempel) / 1000); zeitstempel = t;
       if (pause) letzter = t - Math.min(t - letzter, PATROL.abstand - 400);
       else if (t - letzter > PATROL.abstand && offen.filter((w) => !w.fertig).length < 3) { neues(); letzter = t; }
-      const tempo = PATROL.tempo * (1 + richtig * 0.05) * (window.__patrolTempo || 1);
+      const tempo = PATROL.tempo * (1 + richtig * 0.05) * ((LOKAL && window.__patrolTempo) || 1);
       const boden = himmel.clientHeight;
       offen.forEach((w) => {
         if (w.fertig || w === aktiv || pause) return;
@@ -2447,7 +2490,7 @@
       if (!laeuft) return;
       if (zeitstempel === null) zeitstempel = t;
       const dt = Math.min(0.05, (t - zeitstempel) / 1000); zeitstempel = t;
-      const tempo = CATCH.tempo * (1 + treffer * 0.06) * (window.__catchTempo || 1);
+      const tempo = CATCH.tempo * (1 + treffer * 0.06) * ((LOKAL && window.__catchTempo) || 1);
       const boden = himmel.clientHeight;
       if (!pause) offen.forEach((w) => {
         if (w.fertig) return;
@@ -2921,8 +2964,8 @@
   }
   const lehrerDialog = el("dialog", { class: "feier frage lehrer" });
   document.body.append(lehrerDialog);
-  const lehrerZu = () => lehrerDialog.close();
-  const lehrerFenster = (...inhalt) => { lehrerDialog.replaceChildren(...inhalt); if (!lehrerDialog.open) lehrerDialog.showModal(); };
+  const lehrerZu = () => { lehrerDialog.close(); if (stand.spiel && stand.spiel.gesperrt) setTimeout(sperreZeigen, 50); };
+  const lehrerFenster = (...inhalt) => { lehrerDialog.replaceChildren(...inhalt.filter(Boolean)); if (!lehrerDialog.open) lehrerDialog.showModal(); };
   const lehrerLies = () => { try { return JSON.parse(localStorage.getItem(SPEICHER + "-l") || "{}") || {}; } catch (e) { return {}; } };
   const lehrerSchreib = (o) => { try { localStorage.setItem(SPEICHER + "-l", JSON.stringify(o)); } catch (e) { /* egal */ } };
   function lehrerStart() {
@@ -2956,9 +2999,13 @@
     const zahl = (wert, name) => el("input", { type: "number", min: "0", step: "1", inputmode: "numeric", value: String(wert), "aria-label": name, class: "lehrer-zahl" });
     const p = zahl(sp.punkte, "Punkte"), c = zahl(sp.coins, "Coins");
     const zeile = (text, feld) => el("label", { class: "lehrer-zeile" }, el("span", {}, text), feld);
+    const zwei = (n) => String(n).padStart(2, "0");
+    const warnungen = (Array.isArray(sp.warnungen) ? sp.warnungen : []).slice(-8).reverse().map((t) => { const d = new Date(t); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; });
+    const gesperrt = !!sp.gesperrt;
     const sichern = () => {
       const np = Math.max(0, Math.floor(Number(p.value) || 0)), nc = Math.max(0, Math.floor(Number(c.value) || 0));
       sp.punkte = np; sp.coins = nc; sp.titel = titelIndex(np);
+      delete sp.gesperrt; delete sp.pauseBis; sp.log = []; // Speichern im Lehrer-Bereich schaltet die App wieder frei
       speichern(); lehrerZu();
       toast(`👩‍🏫 Gespeichert: ⭐ ${np} · 🪙 ${nc}`);
       if (!beschaeftigt()) startseite();
@@ -2966,6 +3013,8 @@
     lehrerFenster(el("h2", {}, "👩‍🏫 Spielstand ändern"),
       el("p", { class: "klein" }, "Gilt nur für dieses Gerät. Erledigte Teile, Hausaufgaben, Käufe und Einstellungen bleiben."),
       zeile("⭐ Punkte", p), zeile("🪙 Coins", c),
+      el("p", { class: "klein lehrer-wache" }, warnungen.length ? `👀 Warnungen „Mr. Alex is watching you“ (${(sp.warnungen || []).length}): ${warnungen.join(" · ")}` : "👀 Keine Warnungen „Mr. Alex is watching you“."),
+      gesperrt && el("p", { class: "lehrer-sperre" }, "🔒 Die App ist gesperrt (zu viele Punkte in zu kurzer Zeit). „Speichern“ schaltet sie wieder frei – die Punkte oben kannst du vorher anpassen."),
       el("div", { class: "knopfreihe" }, knopf("Coins auf 0", () => { c.value = "0"; }, "leise"), knopf("Punkte auf 0", () => { p.value = "0"; }, "leise")),
       el("div", { class: "knopfreihe" }, knopf("Speichern", sichern, "haupt"), knopf("Abbrechen", lehrerZu, "leise")));
   }
@@ -2996,7 +3045,8 @@
     updateDialog.showModal();
   }
   setInterval(updateHinweis, 3000);
-  window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da
+  setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
+  if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da
 
   // Offline-Speicher (nur über eine Webadresse)
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {

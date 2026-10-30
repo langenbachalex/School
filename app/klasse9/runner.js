@@ -3007,7 +3007,7 @@
     window.addEventListener("keyup", aufKeyUp);
     window.addEventListener("resize", aufResize);
     rafId = requestAnimationFrame(schleife);
-    window.__runner = haken;
+    if (location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__runner = haken; // Test-Haken nur lokal, nie auf der Live-Seite (30.10.)
     return { stopp };
   }
   function stopp() {

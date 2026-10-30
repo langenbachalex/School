@@ -83,3 +83,27 @@ fehler_notquite	fehler	Not quite!	quite		Nicht ganz!
 fehler_nearly	fehler	Nearly there!	nearly		Fast geschafft!
 fehler_goodtry	fehler	Good try – look again!	try		Guter Versuch – schau noch mal!
 fehler_hmm	fehler	Hmm, not quite!	quite		Hmm, nicht ganz!
+lob_fab	lob	Fab!	fab		Fabelhaft!
+lob_nicelydone	lob	Nicely done!	nice,done		Schön gemacht!
+lob_superb	lob	Superb!	superb		Hervorragend!
+lob_ace	lob	Ace!	ace		Spitze!
+lob_genius	lob	Genius!	genius		Genial!
+lob_bullseye	lob	Bullseye!	bullseye		Volltreffer!
+lob_youreright	lob	You're right!	right		Du hast recht!
+lob_greatstuff	lob	Great stuff!	great		Starke Sache!
+lob_wellspotted	lob	Well spotted!	spotted		Gut erkannt!
+lob_goodthinking	lob	Good thinking!	thinking		Gut mitgedacht!
+lob_keepgoing	lob	Keep going!	keepgoing		Weiter so!
+lob_wicked	lob	Wicked!	wicked	9	Krass gut!
+lob_legend	lob	Legend!	legend	9	Legende!
+lob_unstoppable	stark	You're unstoppable!	unstoppable		Du bist nicht zu stoppen!
+lob_englishpro	stark	You're a real English pro!	pro		Du bist ein echter Englisch-Profi!
+lob_smile	stark	That makes me smile!	smile		Da muss ich lächeln!
+lob_rockstar	stark	You're a rock star!	rockstar		Du bist ein Rockstar!
+lob_blownaway	stark	Wow – I'm blown away!	blown	9	Wow – das haut mich um!
+lob_classproud	stark	The whole class can be proud of you!	classproud		Die ganze Klasse kann stolz auf dich sein!
+fehler_nextone	fehler	Don't worry – the next one is yours!	next		Keine Sorge – der nächste gehört dir!
+fehler_onemore	fehler	Almost there – one more try!	onemore		Fast geschafft – noch ein Versuch!
+fehler_learn	fehler	Mistakes help us learn!	learn		Fehler helfen beim Lernen!
+fehler_thinkagain	fehler	Think again – you know this!	think		Denk noch mal nach – das weißt du!
+fehler_lookagain	fehler	Take it easy – look again!	lookagain		Ganz ruhig – schau noch mal!

@@ -5521,6 +5521,95 @@ window.DATEN = {
      "clever"
     ],
     "de": "Du Schlaukopf!"
+   },
+   {
+    "text": "Fab!",
+    "audio": "audio/lob/lob_fab.mp3",
+    "gruppe": [
+     "fab"
+    ],
+    "de": "Fabelhaft!"
+   },
+   {
+    "text": "Nicely done!",
+    "audio": "audio/lob/lob_nicelydone.mp3",
+    "gruppe": [
+     "nice",
+     "done"
+    ],
+    "de": "Schön gemacht!"
+   },
+   {
+    "text": "Superb!",
+    "audio": "audio/lob/lob_superb.mp3",
+    "gruppe": [
+     "superb"
+    ],
+    "de": "Hervorragend!"
+   },
+   {
+    "text": "Ace!",
+    "audio": "audio/lob/lob_ace.mp3",
+    "gruppe": [
+     "ace"
+    ],
+    "de": "Spitze!"
+   },
+   {
+    "text": "Genius!",
+    "audio": "audio/lob/lob_genius.mp3",
+    "gruppe": [
+     "genius"
+    ],
+    "de": "Genial!"
+   },
+   {
+    "text": "Bullseye!",
+    "audio": "audio/lob/lob_bullseye.mp3",
+    "gruppe": [
+     "bullseye"
+    ],
+    "de": "Volltreffer!"
+   },
+   {
+    "text": "You're right!",
+    "audio": "audio/lob/lob_youreright.mp3",
+    "gruppe": [
+     "right"
+    ],
+    "de": "Du hast recht!"
+   },
+   {
+    "text": "Great stuff!",
+    "audio": "audio/lob/lob_greatstuff.mp3",
+    "gruppe": [
+     "great"
+    ],
+    "de": "Starke Sache!"
+   },
+   {
+    "text": "Well spotted!",
+    "audio": "audio/lob/lob_wellspotted.mp3",
+    "gruppe": [
+     "spotted"
+    ],
+    "de": "Gut erkannt!"
+   },
+   {
+    "text": "Good thinking!",
+    "audio": "audio/lob/lob_goodthinking.mp3",
+    "gruppe": [
+     "thinking"
+    ],
+    "de": "Gut mitgedacht!"
+   },
+   {
+    "text": "Keep going!",
+    "audio": "audio/lob/lob_keepgoing.mp3",
+    "gruppe": [
+     "keepgoing"
+    ],
+    "de": "Weiter so!"
    }
   ],
   "stark": [
@@ -5628,6 +5717,46 @@ window.DATEN = {
      "performance"
     ],
     "de": "Was für eine Leistung!"
+   },
+   {
+    "text": "You're unstoppable!",
+    "audio": "audio/lob/lob_unstoppable.mp3",
+    "gruppe": [
+     "unstoppable"
+    ],
+    "de": "Du bist nicht zu stoppen!"
+   },
+   {
+    "text": "You're a real English pro!",
+    "audio": "audio/lob/lob_englishpro.mp3",
+    "gruppe": [
+     "pro"
+    ],
+    "de": "Du bist ein echter Englisch-Profi!"
+   },
+   {
+    "text": "That makes me smile!",
+    "audio": "audio/lob/lob_smile.mp3",
+    "gruppe": [
+     "smile"
+    ],
+    "de": "Da muss ich lächeln!"
+   },
+   {
+    "text": "You're a rock star!",
+    "audio": "audio/lob/lob_rockstar.mp3",
+    "gruppe": [
+     "rockstar"
+    ],
+    "de": "Du bist ein Rockstar!"
+   },
+   {
+    "text": "The whole class can be proud of you!",
+    "audio": "audio/lob/lob_classproud.mp3",
+    "gruppe": [
+     "classproud"
+    ],
+    "de": "Die ganze Klasse kann stolz auf dich sein!"
    }
   ],
   "fehler": [
@@ -5710,6 +5839,46 @@ window.DATEN = {
      "quite"
     ],
     "de": "Hmm, nicht ganz!"
+   },
+   {
+    "text": "Don't worry – the next one is yours!",
+    "audio": "audio/lob/fehler_nextone.mp3",
+    "gruppe": [
+     "next"
+    ],
+    "de": "Keine Sorge – der nächste gehört dir!"
+   },
+   {
+    "text": "Almost there – one more try!",
+    "audio": "audio/lob/fehler_onemore.mp3",
+    "gruppe": [
+     "onemore"
+    ],
+    "de": "Fast geschafft – noch ein Versuch!"
+   },
+   {
+    "text": "Mistakes help us learn!",
+    "audio": "audio/lob/fehler_learn.mp3",
+    "gruppe": [
+     "learn"
+    ],
+    "de": "Fehler helfen beim Lernen!"
+   },
+   {
+    "text": "Think again – you know this!",
+    "audio": "audio/lob/fehler_thinkagain.mp3",
+    "gruppe": [
+     "think"
+    ],
+    "de": "Denk noch mal nach – das weißt du!"
+   },
+   {
+    "text": "Take it easy – look again!",
+    "audio": "audio/lob/fehler_lookagain.mp3",
+    "gruppe": [
+     "lookagain"
+    ],
+    "de": "Ganz ruhig – schau noch mal!"
    }
   ],
   "spiel": [

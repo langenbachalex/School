@@ -1254,7 +1254,8 @@
     const st = { nr, t: 0, keys, gelesen: false, lesezeit: 2 + gelesen.join(' ').split(/\s+/).filter(Boolean).length * 0.45 };
     story.station = st; story.stationen++;
     klang.station();
-    const r = erzaehle(['The story so far.'].concat(gelesen).join(' '), { key: 'station' + nr, audio: null, sofort: true });
+    const dateien = [storyAudio('sofar')].concat(keys.filter((k) => story.gesammelt.includes(k)).map(storyAudio)); // Aufnahmen (31.10.): „The story so far.“ + gesammelte Stücke
+    const r = erzaehle(['The story so far.'].concat(gelesen).join(' '), { key: 'station' + nr, audio: dateien.every(Boolean) ? dateien : null, sofort: true });
     if (r && typeof r.then === 'function') { st.lesezeit = STATION_MAX; r.then(() => { st.gelesen = true; }, () => { st.gelesen = true; }); }
   }
   function stationBewegen(dt) {

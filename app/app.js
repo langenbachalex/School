@@ -2119,7 +2119,9 @@
       B5: "A pigeon sits on Big Ben.", B6: "She has a new nest. The nest is a hat!", B7: "Three baby pigeons sleep in it.", B8: "You climb up. Shhh … quiet!",
       9: "At five o'clock, the King's horses come.", 10: "But the Sergeant has no hat. Oh no!",
       A11: "You give the hat back to the Sergeant.", A12: "He smiles. Just once. Nobody sees it … only you.",
-      B11: "The babies need the hat. You give him your cap.", B12: "Sergeant Bearskin laughs! Everybody sees it!" }, audio: {} },
+      B11: "The babies need the hat. You give him your cap.", B12: "Sergeant Bearskin laughs! Everybody sees it!" },
+      // Erzähler Mr. Alex (vertont 31.10., werkzeuge/story_audio.py): je Stück audio/story/westminster_<key>.mp3, dazu „The story so far.“
+      audio: Object.fromEntries(["1", "2", "3", "4", "A5", "A6", "A7", "A8", "B5", "B6", "B7", "B8", "9", "10", "A11", "A12", "B11", "B12", "sofar"].map((k) => [k, `audio/story/westminster_${k}.mp3`])) },
   };
   const STORY_PUNKTE = { diamant: 1, ganz: 10, max: 30 };
   const STORY_ENDEN = { A: { symbol: "🦊", name: "The fox" }, B: { symbol: "🕊️", name: "The pigeon" } };

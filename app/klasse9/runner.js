@@ -13,6 +13,8 @@
    Klapperschlange/Geier/Skorpion, Boss Sheriff Rattlesnake (richtet sich aus dem Felsspalt auf, Rassel), Holztor einer Westernstadt.
    Welt 4 Mount Rushmore (30.10.): rollende Baumstämme (rollen los, sobald die Figur ≈ 520 davor ist; drüberspringen), Bäche (Lücke mit Wasser + Trittsteine), Windböen (0,5 s Blätter als Warnung, dann 0,8 s Schub
    zurück/vorwärts, währenddessen halber Sprung), Bärenhöhlen (Bär schaut 0,6 s heraus, dann Pranke davor), Büffel (nicht plattdrückbar – jede Berührung = Leben weg)/Biber/Adler, Boss Grizzly Grandpa (gähnt aus der Höhle, Brummen), Ranger-Station-Tor.
+   Welt 5 California · Golden Gate Bridge (30.10.): Nebelabschnitte (Schleier über dem Spielfeld, Diamanten glühen durch), Seilbahn-Plattformen (Gondel pendelt am Seil über dem Pazifik, trägt die Figur mit), Surfbrett-Rutsche (Tempo × 1,6, springen erlaubt),
+   Pazifik-Lücken, Möwe (klaut bei Berührung einen Diamanten statt ein Leben – plattdrücken oder mit gehaltenem Sprung drüber)/Seelöwe/Skater, Boss Captain Fog (Nebelgeist mit Kapitänsmütze, Nebelhorn), Brückentor (Golden-Gate-Pfeiler mit Gitter).
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …). */
 (function () {
@@ -235,6 +237,14 @@
     baer() { ton(95, 0.4, "sawtooth", 0.04, 0, 130); ton(120, 0.3, "sawtooth", 0.035, 0.3, 80); },
     pranke() { rauschen(0.18, 0.06, 0, { typ: "bandpass", freq: 1500 }); ton(600, 0.15, "sine", 0.04, 0, 200); },
     brummen() { ton(60, 1.4, "sawtooth", 0.09, 0, 45); ton(90, 1.2, "square", 0.04, 0.1, 70); rauschen(1.2, 0.03, 0, { typ: "lowpass", freq: 200 }); ton(220, 0.9, "sine", 0.06, 1.0, 330); ton(330, 0.7, "sine", 0.05, 1.7, 180); },   // Grollen, dann Gähnen (auf und ab)
+    // Welt 5 Golden Gate: Möwe kreischt, Seelöwe bellt, Skater rollt (Rollen + Klick), Möwe klaut (Diamant-Jingle rückwärts), Surfbrett rauscht (Welle), Gondel knarrt, Captain Fog = Nebelhorn (zwei tiefe Stöße + Meeresrauschen)
+    moewe() { ton(1500, 0.18, "sawtooth", 0.03, 0, 900); ton(1700, 0.14, "sawtooth", 0.028, 0.22, 1000); },
+    seeloewe() { for (let i = 0; i < 2; i++) { ton(150, 0.16, "square", 0.04, i * 0.24, 110); rauschen(0.12, 0.035, i * 0.24, { typ: "bandpass", freq: 600 }); } },
+    skater() { rauschen(0.45, 0.035, 0, { typ: "bandpass", freq: 1800 }); for (let i = 0; i < 3; i++) ton(900, 0.03, "square", 0.025, 0.1 + i * 0.12); },
+    klau() { [1760, 1320, 880].forEach((f, i) => ton(f, 0.14, "triangle", 0.09, i * 0.09)); rauschen(0.08, 0.04, 0, { typ: "bandpass", freq: 1400 }); },
+    welle() { rauschen(0.55, 0.05, 0, { typ: "bandpass", freq: 700 }); ton(280, 0.45, "sine", 0.03, 0, 620); },
+    gondel() { ton(230, 0.3, "sawtooth", 0.025, 0, 180); },
+    nebelhorn() { ton(110, 1.5, "sawtooth", 0.09); ton(138, 1.5, "sawtooth", 0.05); ton(55, 1.6, "sine", 0.07); rauschen(2.6, 0.025, 0, { typ: "lowpass", freq: 400 }); ton(110, 0.9, "sawtooth", 0.08, 1.8); ton(138, 0.9, "sawtooth", 0.045, 1.8); ton(55, 1.0, "sine", 0.06, 1.8); },
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -748,14 +758,46 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('biber', 850, 1150); h.vor(1300); }, // 27
     (h) => { h.bach(150, 200); h.stamm(950); h.kiste(1250); h.vor(1500); },                             // 28 Schluss: Bach + Baumstamm
   ];
+  // Welt 5 Golden Gate: Nebelabschnitte (h.nebel(dx, w): Schleier über dem Spielfeld, weiche Ränder 160; Gegner darin nur schemenhaft, Diamanten glühen durch), Seilbahn-Plattformen (h.seilbahn(dx, w): Pazifik-Lücke w + Gondel 130 breit,
+  // pendelt am Seil über der Lücke, trägt die Figur mit – Timing beim Absprung), Surfbrett-Rutsche (h.surf(dx, w): nasser Streifen, Tempo × 1,6, springen erlaubt), Pazifik-Lücken (h.luecke), Hafenkisten statt Kisten
+  const MUSTER_CA = [
+    (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                                   // 1 Aufwärmen
+    (h) => { h.geg('seeloewe', 300, 700); h.dia(500, 250); h.vor(1000); },                              // 2 erster Seelöwe
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('moewe', 550, 850); h.vor(950); },           // 3 Plattform + erste Möwe (klaut!)
+    (h) => { h.kiste(200); h.kiste(240, 2); h.dia(260, 215); h.vor(750); },                             // 4 Kistenstufe
+    (h) => { h.luecke(250, 180); h.vor(850); },                                                         // 5 erste Pazifik-Lücke
+    (h) => { h.nebel(100, 700); h.geg('seeloewe', 350, 650); h.vor(1000); },                            // 6 erster Nebel (Seelöwe darin)
+    (h) => { h.seilbahn(250, 360); h.vor(850); },                                                       // 7 erste Seilbahn-Gondel
+    (h) => { h.surf(150, 240); h.dia(500, 250); h.geg('skater', 700, 1000); h.vor(1100); },             // 8 Surfbrett-Rutsche, dann Skater
+    (h) => { h.geg('skater', 150, 800); h.kiste(850); h.kiste(890, 2); h.dia(910, 220); h.vor(1100); },  // 9 Skater + Kistenstufe
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('seeloewe', 450, 800); h.vor(1000); },                                    // 12 CHECKPOINT 1
+    (h) => { h.nebel(150, 900); h.dia(500, 250); h.geg('moewe', 600, 900); h.vor(1200); },              // 13 Nebel mit Diamant und Möwe
+    (h) => { h.seilbahn(200, 400); h.vor(900); },                                                       // 14 breite Seilbahn-Lücke
+    (h) => { h.kiste(200, 2); h.kiste(240, 2); h.geg('skater', 500, 900); h.vor(1000); },               // 15 Kistenmauer + Skater
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 16 Dreier-Plattform
+    (h) => { h.surf(150, 260); h.luecke(600, 170); h.vor(1000); },                                      // 17 Surf, dann Lücke
+    (h) => { h.plat(200, 235, 200); h.dia(300, 195); h.geg('moewe', 650, 950); h.vor(1050); },          // 18 Plattform + Möwe
+    (h) => { h.luecke(250, 190); h.geg('seeloewe', 600, 950); h.vor(1100); },                           // 19 Lücke + Seelöwe
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 20
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 21 TOR 2
+    (h) => { h.cp(150); h.kiste(500); h.kiste(540, 2); h.vor(850); },                                   // 22 CHECKPOINT 2
+    (h) => { h.nebel(100, 1100); h.geg('seeloewe', 350, 650); h.geg('moewe', 800, 1100); h.vor(1300); },// 23 langer Nebel: Seelöwe + Möwe
+    (h) => { h.seilbahn(200, 420); h.vor(1000); },                                                      // 24 breiteste Seilbahn-Lücke
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.vor(750); }, // 25 Kistenpyramide
+    (h) => { h.surf(150, 240); h.geg('skater', 700, 1100); h.vor(1200); },                              // 26 Surf + Skater
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('moewe', 850, 1150); h.vor(1300); }, // 27
+    (h) => { h.luecke(200, 180); h.nebel(500, 600); h.kiste(1000); h.vor(1300); },                      // 28 Schluss: Lücke, Nebel, Kiste
+  ];
   function levelBauen(muster) {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[] };
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[] };
     let x = 0, bodenAb = 0, wort = 0;
     const h = {
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
       kiste: (dx, n = 1) => { for (let i = 0; i < n; i++) L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE * (i + 1) }); },
       dia: (dx, y = 298) => L.diamanten.push({ x:x + dx, y, wort:wort++ }),
-      geg: (art, von, bis) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' || art === 'adler' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1 }),
+      geg: (art, von, bis) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' || art === 'adler' || art === 'moewe' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1 }),
       luecke: (dx, w) => { L.boden.push([bodenAb, x + dx]); bodenAb = x + dx + w; },
       tor: (dx, wort, falsch) => L.tore.push({ x:x + dx, wort, falsch }),
       cp: (dx) => L.checkpoints.push({ x:x + dx }),
@@ -770,6 +812,10 @@
       bach: (dx, w) => { h.luecke(dx, w); L.baeche.push({ x:x + dx, w }); const n = w > 260 ? 2 : 1; for (let i = 1; i <= n; i++) L.plattformen.push({ x:x + dx + (w * i) / (n + 1) - TRITT_W / 2, y:BODEN_Y, w:TRITT_W, art:'stein' }); },
       wind: (dx, richtung = -1) => L.winde.push({ x:x + dx, richtung }),
       hoehle: (dx) => L.hoehlen.push({ x:x + dx }),
+      // Welt 5: Nebelabschnitt, Seilbahn = Pazifik-Lücke + Gondel (pendelt zwischen 30 und w − 160 relativ zum linken Ufer), Surfbrett-Rutsche
+      nebel: (dx, w) => L.nebel.push({ x:x + dx, w }),
+      seilbahn: (dx, w) => { h.luecke(dx, w); L.seilbahnen.push({ x:x + dx, w, phase: L.seilbahnen.length * 2.1 }); },
+      surf: (dx, w = 240) => L.surfs.push({ x:x + dx, w }),
       vor: (dx) => { x += dx; },
     };
     for (const a of muster) a(h);
@@ -799,6 +845,9 @@
   let staemme = [], winde = [], hoehlen = [], wind = null, brummt = 0;
   const STAMM_VORLAUF = 520, STAMM_TEMPO = 260, STAMM_R = 20, WIND_WARNUNG = 0.5, WIND_SCHUB = 0.8, WIND_KRAFT = 150, WIND_SPRUNG = 0.72;
   const HOEHLE_VORLAUF = 340, HOEHLE_SCHAUT = 0.6, HOEHLE_PRANKE = 0.9, HOEHLE_W = 70, PRANKE_H = 44;
+  // Welt 5: Nebeldichte an der Figur (0..1), Gondeln (gx = aktuelle linke Kante, vx = Tempo), Index der Gondel unter der Figur, Surf-Timer (Tempo × 1,6), Zähler geklaute Diamanten / Nebelhorn (Tests)
+  let nebelDichte = 0, gondeln = [], aufGondel = null, surfs = [], surft = 0, geklaut = 0, tutet = 0;
+  const NEBEL_RAND = 160, NEBEL_MAX = 0.78, GONDEL_W = 130, GONDEL_Y = BODEN_Y - 30, GONDEL_T = 7, SURF_NACH = 0.3, SURF_TEMPO = 1.6;
   let autoKlangZeit = -9;
   let sequenz = null, zoom = 1, banner = null, bossSpruch = null;
   let halten = false, haltZeit = 0, sprungGedrueckt = false;
@@ -809,8 +858,8 @@
   const BLASE_DAUER = 1.6, ECHO_MIN = 6, ECHO_MAX = 8, ECHO_ABSTAND = 2.5, ECHO_DAUER = 1.4, CHIP_MAX = 8, CHIP_ZEICHEN = 12;
   let erstauntZeit = 0, zungeZeit = 0;   // Gesichtsausdruck: erstaunt 0,8 s nach Treffer, Zunge raus 1 s bei „5× Combo!“ und solange On fire
   const ausdruckAktuell = () => (erstauntZeit > 0 ? "erstaunt" : (onfire || zungeZeit > 0) ? "zunge" : "grinsend");
-  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9, bueffel: -9, biber: -9, adler: -9 };   // letzter Klang je Art (Spielzeit)
-  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150, bueffel: 170, biber: 65, adler: 90 };
+  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9, bueffel: -9, biber: -9, adler: -9, moewe: -9, seeloewe: -9, skater: -9 };   // letzter Klang je Art (Spielzeit)
+  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150, bueffel: 170, biber: 65, adler: 90, moewe: 80, seeloewe: 50, skater: 140 };
   let gegnerKlaenge = 0;   // Zähler für Tests
   const GEGNER_KLANG_ABSTAND = 1.5, GEGNER_NAEHE = 260, COMBO_TEXT_DAUER = 1.3;
   const ruhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
@@ -838,6 +887,7 @@
     autos = level.autos.map(a => ({ ...a, x:a.start, rad:0 })); oel = level.oel.map(o => ({ ...o, aktiv:false })); rutscht = 0; hupen = 0; autoKlangZeit = -9;
     steine = level.steine.map(s => ({ ...s, phase:'ruhe', t:0, y:-60, vy:0 })); bruecken = level.bruecken.map(b => ({ ...b, zeit:0, gebrochen:false, knarrte:false, bruch:0, bruchX:0 })); kakteen = level.kakteen.map(k => ({ ...k })); rasseln = 0;
     staemme = level.staemme.map(s => ({ ...s, phase:'ruhe', rx:s.x, rot:0 })); winde = level.winde.map(w => ({ ...w, aktiv:false })); hoehlen = level.hoehlen.map(h => ({ ...h, phase:'ruhe', t:0 })); wind = null; brummt = 0;
+    gondeln = level.seilbahnen.map(g => ({ ...g, gx:g.x + 30, vx:0, knarrte:-9 })); aufGondel = null; surfs = level.surfs.map(s => ({ ...s, aktiv:false })); surft = 0; nebelDichte = 0; geklaut = 0; tutet = 0;
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
@@ -883,6 +933,14 @@
     if (g.art === 'guerteltier') { g.rollt = true; g.richtung = 1; g.harmlos = true; gegnerKlang("plopp"); gegnerKlang("rollt"); }   // Gürteltier: rollt als Kugel weg (= platt)
     else { g.tot = 0.01; gegnerKlang("plopp"); }
     const b = gegnerBox(g); funken(b.x + b.w / 2, b.y + b.h / 2, 10, ["#fff6c0", "#ffd93d", "#ffffff"], 170, 0.5, "stern");
+  }
+  // Welt 5: die Möwe nimmt kein Leben, sondern klaut einen Diamanten (Zähler −1, nie unter 0) und fliegt damit nach oben rechts davon; Serie reißt, Figur schaut erstaunt
+  function moeweKlaut(g) {
+    g.harmlos = true; g.klaut = 0.01; g.richtung = 1; g.beute = gesammelt > 0;
+    comboReset(); erstauntZeit = 0.8; klang.klau();
+    if (g.beute) { gesammelt--; geklaut++; hudPuls = 1; }
+    meldung = { text: g.beute ? 'My diamond! 🐦' : 'Nothing to steal! 🐦', zeit: 1.2 };
+    const b = gegnerBox(g); funken(b.x + b.w / 2, b.y + b.h / 2, 12, ["#39c6f0", "#bfefff", "#ffffff"], 170, 0.5);
   }
   // Gegner-Klang: nur im laufenden Spiel (nie in Sequenz/Boss), je Art höchstens alle 1,5 s; "plopp" ist ein Ereignis ohne Sperre
   function gegnerKlang(art) {
@@ -985,13 +1043,14 @@
     for (const p of level.plattformen) liste.push({ x:p.x, y:p.y, w:p.w, h:14, voll:false });
     for (const k of level.kisten) liste.push({ x:k.x, y:k.y, w:KISTE, h:KISTE, voll:true });
     level.bruecken.forEach((b, i) => liste.push({ x:b.x, y:BODEN_Y, w:b.w, h:14, voll:false, bruecke:i }));   // Hängebrücke: trägt, bis ein Brett bricht
+    level.seilbahnen.forEach((g, i) => liste.push({ x:g.x + 30, y:GONDEL_Y, w:GONDEL_W, h:14, voll:false, gondel:i }));   // Welt 5: Gondel (x wird jeden Frame nachgeführt)
     return liste;
   }
 
 
   function schaden(grund) {
     if (spieler.unverwundbar > 0 || tot > 0) return;
-    leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0; wind = null;
+    leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0; wind = null; surft = 0; aufGondel = null;
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
   }
@@ -1005,6 +1064,7 @@
     for (const h of hoehlen) if (h.x > checkpoint) { h.phase = 'ruhe'; h.t = 0; }
     for (const w of winde) if (w.x > checkpoint) w.aktiv = false;
     wind = null;
+    for (const s of surfs) s.aktiv = false; surft = 0; aufGondel = null;   // Welt 5
   }
   // Welt 3: Steine fallen, sobald die Figur ≈ 300 davor ist (Staub + Schatten 0,6 s, dann Sturz; liegen 1,4 s gefährlich, dann zerbröseln); Brücken-Bruchstücke fallen nach
   function hindernisseBewegen(dt) {
@@ -1033,6 +1093,19 @@
     }
     // Windböe: Warnung (Blätter) 0,5 s, dann Schub 0,8 s
     if (wind) { wind.t += dt; if (wind.phase === 'warnung' && wind.t >= WIND_WARNUNG) { wind.phase = 'schub'; wind.t = 0; klang.wind(); } else if (wind.phase === 'schub' && wind.t >= WIND_SCHUB) wind = null; }
+    // Welt 5: Gondeln pendeln am Seil über der Lücke (Sinus, Periode 7 s, Weg 30 … w − 160 relativ zum linken Ufer); die Kollisionsflächen werden nachgeführt
+    for (const g of gondeln) {
+      const weg = Math.max(0, g.w - GONDEL_W - 60), a = zeit * Math.PI * 2 / GONDEL_T + g.phase;
+      g.gx = g.x + 30 + weg * (0.5 + 0.5 * Math.sin(a)); g.vx = weg * 0.5 * Math.cos(a) * Math.PI * 2 / GONDEL_T;
+    }
+    for (const s of SOLIDE) if (s.gondel != null) s.x = gondeln[s.gondel].gx;
+    nebelDichte = nebelDichteBei(spieler.x);
+  }
+  // Nebeldichte an einer Stelle: 1 im Abschnitt, weiche Ränder 160 davor/dahinter
+  function nebelDichteBei(x) {
+    let d = 0;
+    for (const n of level.nebel) { const a = n.x - NEBEL_RAND, b = n.x + n.w + NEBEL_RAND; if (x <= a || x >= b) continue; d = Math.max(d, Math.min(1, (x - a) / NEBEL_RAND, (b - x) / NEBEL_RAND)); }
+    return d;
   }
   const steinBox = (s) => ({ x: s.x - 20, y: s.y - 40, w: 40, h: 40 });
   const kaktusBox = (k) => ({ x: k.x - KAKTUS_W / 2, y: BODEN_Y - KAKTUS_H, w: KAKTUS_W, h: KAKTUS_H });
@@ -1041,8 +1114,9 @@
       g.flug += dt;
       if (g.tot > 0) { g.tot += dt; continue; }
       if (g.rollt) { g.x += 420 * dt; g.roll = (g.roll || 0) + dt * 14; if (g.x > g.bis + 900) g.tot = 1; continue; }   // weggerollte Kugel: schnell nach rechts, dann weg
+      if (g.klaut) { g.klaut += dt; g.x += 170 * dt; g.y -= 130 * dt; if (g.klaut > 1.6) g.tot = 1; continue; }   // Möwe mit Beute: fliegt nach oben rechts davon
       g.x += g.richtung * GEGNER_TEMPO[g.art] * dt;
-      if (g.art === 'roadrunner') { if (g.x < g.von) g.x = g.bis; continue; }   // Roadrunner läuft immer entgegen (nach links) und erscheint rechts wieder
+      if (g.art === 'roadrunner' || g.art === 'skater') { if (g.x < g.von) g.x = g.bis; continue; }   // Roadrunner/Skater laufen immer entgegen (nach links) und erscheinen rechts wieder
       if (g.art === 'bueffel') { if (g.x < g.von) { if (spieler.x < g.bis - 450) g.x = g.bis; else g.tot = 1; } continue; }   // Büffel rennt durch; kommt nur wieder, wenn die Figur noch weit genug vor dem Ende seiner Strecke ist
       if (g.x < g.von) g.richtung = 1; if (g.x > g.bis) g.richtung = -1;
     }
@@ -1063,6 +1137,9 @@
     if (g.art === 'bueffel') return { x: g.x - 36, y: g.y - 46, w: 72, h: 46 };
     if (g.art === 'biber') return { x: g.x - 16, y: g.y - 20, w: 32, h: 20 };
     if (g.art === 'adler') return { x: g.x - 26, y: g.y - 14 + Math.sin(g.flug * 2.5) * 10, w: 52, h: 26 };
+    if (g.art === 'moewe') return { x: g.x - 18, y: g.y - 12 + (g.klaut ? 0 : Math.sin(g.flug * 2.8) * 8), w: 36, h: 24 };
+    if (g.art === 'seeloewe') return { x: g.x - 25, y: g.y - 28, w: 50, h: 28 };
+    if (g.art === 'skater') return { x: g.x - 15, y: g.y - 44, w: 30, h: 44 };
     return { x: g.x - 20, y: g.y - 26, w: 40, h: 26 };
   }
   const autoBox = (a) => ({ x: a.x, y: BODEN_Y - a.h, w: a.w, h: a.h });
@@ -1084,8 +1161,9 @@
       // Welt 4: Windböe auslösen (Figur passiert die Marke), schiebt in der Phase schub mit 150/s zurück oder vorwärts
       for (const w of winde) if (!w.aktiv && spieler.x >= w.x && spieler.x < w.x + 120) { w.aktiv = true; if (!wind) { wind = { phase:'warnung', t:0, richtung:w.richtung }; klang.blaetter(); } }
       const schub = wind && wind.phase === 'schub' ? wind.richtung * WIND_KRAFT : 0;
-      // Horizontal (auf dem Ölfleck gleitet die Figur etwas schneller)
-      let nx = spieler.x + (SPEED * (rutscht > 0 ? 1.15 : 1) + schub) * dt;
+      if (surft > 0) surft = Math.max(0, surft - dt);
+      // Horizontal (auf dem Ölfleck gleitet die Figur etwas schneller, auf dem Surfbrett deutlich; die Gondel trägt die Figur mit)
+      let nx = spieler.x + (SPEED * (rutscht > 0 ? 1.15 : surft > 0 ? SURF_TEMPO : 1) + schub + (aufGondel != null && spieler.amBoden ? gondeln[aufGondel].vx : 0)) * dt;
       const oben = spieler.y - PH;
       for (const s of SOLIDE) {
         if (!s.voll) continue;
@@ -1120,12 +1198,20 @@
         }
       }
       spieler.amBoden = gelandet;
+      aufGondel = null;
       if (spieler.amBoden && spieler.vy === 0) {
         let hatBoden = false;
-        for (const s of SOLIDE) if (!(s.bruecke != null && bruecken[s.bruecke].gebrochen) && spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w && Math.abs(spieler.y - s.y) < 0.5) hatBoden = true;
+        for (const s of SOLIDE) if (!(s.bruecke != null && bruecken[s.bruecke].gebrochen) && spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w && Math.abs(spieler.y - s.y) < 0.5) { hatBoden = true; if (s.gondel != null) aufGondel = s.gondel; }
         if (!hatBoden) spieler.amBoden = false;
       }
-      spieler.pose = rutscht > 0 && spieler.amBoden ? 'steh' : spieler.amBoden ? 'lauf' : 'sprung';
+      if (aufGondel != null && zeit - gondeln[aufGondel].knarrte > 1.2) { gondeln[aufGondel].knarrte = zeit; klang.gondel(); }   // Welt 5: Gondel knarrt unter der Figur
+      spieler.pose = (rutscht > 0 || surft > 0) && spieler.amBoden ? 'steh' : spieler.amBoden ? 'lauf' : 'sprung';
+      // Welt 5: Surfbrett-Rutsche – auf dem nassen Streifen (am Boden) Tempo × 1,6, läuft 0,3 s nach; springen bleibt erlaubt; Meldung + Welle je Streifen einmal pro Überquerung
+      for (const s of surfs) {
+        const drauf = spieler.amBoden && spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w;
+        if (drauf) { surft = SURF_NACH; if (!s.aktiv) { s.aktiv = true; klang.welle(); meldung = { text: 'Whoosh! 🏄', zeit: 0.7 }; } }
+        else if (s.aktiv && spieler.x - PW / 2 > s.x + s.w) s.aktiv = false;
+      }
       // Hängebrücken: Bodenzeit auf der Brücke zählt (Sprung zählt nicht); ab 1,0 s knarrt es, ab 1,5 s bricht das Brett unter der Figur → Sturz in die Schlucht
       for (const b of bruecken) {
         const drueber = spieler.x + PW / 2 > b.x && spieler.x - PW / 2 < b.x + b.w;
@@ -1179,6 +1265,7 @@
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, gb.x, gb.y, gb.w, gb.h)) {
           if (g.art === 'bueffel') schaden('bueffel');   // Büffel: auch von oben = Leben weg (nur überspringen)
           else if (spieler.vy > 0 && altY <= gb.y + 14) gegnerPlatt(g);
+          else if (g.art === 'moewe') moeweKlaut(g);     // Möwe: klaut einen Diamanten statt ein Leben zu nehmen
           else schaden('gegner');
         }
       }
@@ -2225,6 +2312,258 @@
     c.restore();
   }
 
+  /* ---------- Welt 5 California · Golden Gate Bridge (30.10.) ---------- */
+  const GG_ROT = '#c0462b';   // „International Orange“ der Golden Gate
+  function brueckenTurm(c, x, y, h, w, farbe) {   // Golden-Gate-Pfeiler: zwei Stiele mit Querriegeln (Art déco); (x, y) = Fußpunkt Mitte, h = Höhe, w = Breite
+    c.fillStyle = farbe;
+    c.fillRect(x - w / 2, y - h, w * 0.3, h); c.fillRect(x + w / 2 - w * 0.3, y - h, w * 0.3, h);
+    for (let k = 0; k < 4; k++) c.fillRect(x - w / 2, y - h + h * (0.04 + k * 0.27), w, h * 0.07);
+    c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(x + w / 2 - w * 0.3, y - h, w * 0.1, h);
+  }
+  function goldenGateFern(c, x, y, s) {   // die Brücke in der Ferne: zwei Türme, Hauptkabel mit Durchhang, Hänger, Fahrbahn, Nebel darunter; (x, y) = Fahrbahnmitte, s = Größe
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const kabelY = (hx) => Math.abs(hx) <= 120 ? -150 + (1 - (hx / 120) ** 2) * 110 : -150 + 130 * Math.min(1, (Math.abs(hx) - 120) / 140);
+    c.strokeStyle = GG_ROT; c.lineCap = 'round'; c.lineWidth = 1;
+    for (let hx = -240; hx <= 240; hx += 20) { if (Math.abs(hx) === 120) continue; c.beginPath(); c.moveTo(hx, kabelY(hx)); c.lineTo(hx, -8); c.stroke(); }
+    c.lineWidth = 3.5; c.beginPath(); c.moveTo(-260, -20); c.quadraticCurveTo(-200, -120, -120, -150); c.quadraticCurveTo(0, 70 - 150, 120, -150); c.quadraticCurveTo(200, -120, 260, -20); c.stroke();
+    c.fillStyle = GG_ROT; c.fillRect(-270, -10, 540, 7); c.fillStyle = 'rgba(0,0,0,.2)'; c.fillRect(-270, -4, 540, 2);
+    brueckenTurm(c, -120, -8, 160, 22, GG_ROT); brueckenTurm(c, 120, -8, 160, 22, GG_ROT);
+    c.fillStyle = 'rgba(240,244,248,.75)';   // Nebel zieht unter der Fahrbahn durch
+    for (let k = 0; k < 5; k++) { const nx = ((k * 130 + zeit * 14) % 560) - 280; c.beginPath(); c.ellipse(nx, 8 + (k % 2) * 8, 70, 14, 0, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function hollywoodSign(c, x, y) {   // Bonus am Ende: grüner Hügel mit den weißen HOLLYWOOD-Buchstaben
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#7fa35a'; c.beginPath(); c.moveTo(-170, 0); c.quadraticCurveTo(-60, -96, 60, -80); c.quadraticCurveTo(140, -70, 190, 0); c.closePath(); c.fill();
+    c.fillStyle = '#5f8a44'; c.beginPath(); c.moveTo(-170, 0); c.quadraticCurveTo(-120, -40, -40, -50); c.lineTo(-40, 0); c.closePath(); c.fill();
+    c.save(); c.translate(-14, -64); c.rotate(-0.06); c.fillStyle = '#fff'; c.font = 'bold 15px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 3; c.strokeText('HOLLYWOOD', 0, 0); c.fillText('HOLLYWOOD', 0, 0); c.restore();
+    c.restore();
+  }
+  function tramZeichnen(c, x, y, s) {   // Cable Car: weinroter Wagen mit cremefarbenem Fensterband, Dach, Glocke, Trittbrett; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#4a2a2a'; c.fillRect(-52, -6, 104, 4);
+    c.fillStyle = '#8b1e2d'; c.beginPath(); c.roundRect(-50, -44, 100, 38, 4); c.fill();
+    c.fillStyle = '#f3e3b6'; c.fillRect(-46, -40, 92, 16);
+    c.fillStyle = '#9fd3ee'; for (let k = 0; k < 5; k++) c.fillRect(-42 + k * 18, -38, 12, 12);
+    c.fillStyle = '#5a1420'; c.beginPath(); c.roundRect(-54, -50, 108, 8, 3); c.fill();
+    c.fillStyle = '#e0a400'; c.beginPath(); c.arc(0, -54, 3, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#2a2a2a'; c.beginPath(); c.arc(-30, -3, 4, 0, Math.PI * 2); c.arc(30, -3, 4, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function hintergrundGoldenGate(c) {
+    const naehe = Math.min(1, kamera / level.ende);
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#78b2e2'); g.addColorStop(0.55, '#d3e4f0'); g.addColorStop(1, '#e9eff3');   // dunstiger Küstenhimmel
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    c.fillStyle = 'rgba(255,246,214,.9)'; c.beginPath(); c.arc(viewW * 0.18, 66, 26, 0, Math.PI * 2); c.fill();   // blasse Sonne
+    c.fillStyle = 'rgba(255,255,255,.85)';   // dünne Wolken (Parallaxe 0,06)
+    for (let i = 0; i < 5; i++) { const n = viewW + 400, wx = ((i * 410 + 90 - kamera * 0.06) % n + n) % n - 200, wy = 42 + (i % 3) * 22; c.beginPath(); c.ellipse(wx, wy, 52, 9, 0, 0, Math.PI * 2); c.ellipse(wx + 30, wy - 6, 30, 7, 0, 0, Math.PI * 2); c.fill(); }
+    for (let i = 0; i < 7; i++) {   // Marin-Hügel am Horizont (Parallaxe 0,04)
+      const n = viewW + 700, hx = ((i * 420 - kamera * 0.04) % n + n) % n - 350;
+      c.fillStyle = i % 2 ? '#8e9c7c' : '#7f8f6e'; c.beginPath(); c.moveTo(hx, 248); c.quadraticCurveTo(hx + 150, 248 - 70 - ((i * 37) % 40), hx + 320, 248); c.closePath(); c.fill();
+    }
+    if (kamera > level.ende - 5200) hollywoodSign(c, viewW + 260 - (kamera - (level.ende - 5200)) * 0.13, 249);   // Bonus-Hintergrund: schiebt sich auf den letzten 5.200 Einheiten herein
+    goldenGateFern(c, viewW * (0.82 - 0.4 * naehe) - kamera * 0.01, 250 - naehe * 6, 0.55 + naehe * 0.95);   // die Golden Gate wandert in die Mitte und wächst bis zum Boss
+    for (let i = 0; i < 3; i++) tramZeichnen(c, (((i * 760 + 200 + zeit * 22 - kamera * 0.12) % (viewW + 300)) + viewW + 300) % (viewW + 300) - 150, 249, 0.5);   // Cable Cars am gegenüberliegenden Ufer (Parallaxe 0,12)
+    c.fillStyle = '#3f86b8'; c.fillRect(-viewW, 248, viewW * 3, H * 2);   // Pazifik
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(-viewW, 248, viewW * 3, 3);
+    for (let i = 0; i < 3; i++) {   // Segelboote (Parallaxe 0,2)
+      const n = viewW + 500, bx = ((i * 640 + 300 - kamera * 0.2) % n + n) % n - 250, by = 262 + i * 6 + Math.sin(zeit * 1.5 + i) * 1.5;
+      c.fillStyle = '#fff'; c.beginPath(); c.moveTo(bx, by - 4); c.lineTo(bx, by - 24); c.lineTo(bx + 12, by - 5); c.closePath(); c.fill();
+      c.fillStyle = '#2a2a2a'; c.beginPath(); c.moveTo(bx - 9, by - 3); c.lineTo(bx + 11, by - 3); c.lineTo(bx + 8, by + 2); c.lineTo(bx - 7, by + 2); c.closePath(); c.fill();
+    }
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 2;   // Wellen (Parallaxe 0,3)
+    for (let i = 0; i < 16; i++) { const n = viewW + 120, wx = ((i * 100 - kamera * 0.3 + Math.sin(zeit + i) * 6) % n + n) % n - 60, wy = 266 + (i % 4) * 16; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 10, wy - 4, wx + 20, wy); c.stroke(); }
+    c.fillStyle = 'rgba(236,241,246,.7)';   // Nebelbänke tief über dem Wasser (Parallaxe 0,15)
+    for (let i = 0; i < 6; i++) { const n = viewW + 500, nx = ((i * 330 + zeit * 9 - kamera * 0.15) % n + n) % n - 250, ny = 300 + (i % 3) * 9; c.beginPath(); c.ellipse(nx, ny, 110, 11, 0, 0, Math.PI * 2); c.ellipse(nx + 70, ny + 4, 70, 8, 0, 0, Math.PI * 2); c.fill(); }
+  }
+  function promenade(c, x0, w, a, b, links, rechts) {   // Boden: Küstenpromenade – helle Platten mit Fugen, oranger Bordstein, kleine Pfützen
+    c.fillStyle = '#b4b0a6'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#d6d2c8'; c.fillRect(x0, BODEN_Y, w, 8);
+    c.fillStyle = GG_ROT; c.fillRect(x0, BODEN_Y + 8, w, 3);
+    c.strokeStyle = 'rgba(0,0,0,.13)'; c.lineWidth = 1;
+    for (let x = Math.max(Math.ceil(a / 60) * 60, Math.floor(links / 60) * 60); x < Math.min(b, rechts); x += 60) { c.beginPath(); c.moveTo(x - kamera, BODEN_Y + 11); c.lineTo(x - kamera, H); c.stroke(); }
+    for (let yy = BODEN_Y + 36; yy < H; yy += 26) { c.beginPath(); c.moveTo(x0, yy); c.lineTo(x0 + w, yy); c.stroke(); }
+    c.fillStyle = 'rgba(120,170,210,.35)';
+    for (let x = Math.max(Math.ceil(a / 150) * 150, Math.floor(links / 150) * 150); x < Math.min(b, rechts); x += 150) { c.beginPath(); c.ellipse(x - kamera + 40, BODEN_Y + 22, 12, 3, 0, 0, Math.PI * 2); c.fill(); }
+  }
+  function pazifik(c, a, b) {   // Lücke = Pazifik: Wasser mit Wellen und Gischt an den Kaikanten, ein Felsen
+    const x0 = a - kamera, w = b - a;
+    const g = c.createLinearGradient(0, BODEN_Y, 0, H); g.addColorStop(0, '#5fb0dd'); g.addColorStop(1, '#1f5f9e');
+    c.fillStyle = g; c.fillRect(x0, BODEN_Y + 8, w, H);
+    c.fillStyle = '#8f8a80'; c.fillRect(x0 - 2, BODEN_Y, 6, H - BODEN_Y); c.fillRect(x0 + w - 4, BODEN_Y, 6, H - BODEN_Y);
+    c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2;
+    for (let i = 0; i < Math.ceil(w / 44); i++) { const wx = x0 + 6 + ((i * 44 + zeit * 50) % Math.max(1, w - 24)), wy = BODEN_Y + 20 + (i % 3) * 14; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 8, wy - 5, wx + 16, wy); c.stroke(); }
+    c.fillStyle = 'rgba(255,255,255,.55)'; c.beginPath(); c.ellipse(x0 + 8, BODEN_Y + 12, 10 + Math.sin(zeit * 6) * 2, 4, 0, 0, Math.PI * 2); c.ellipse(x0 + w - 8, BODEN_Y + 12, 10 + Math.cos(zeit * 6) * 2, 4, 0, 0, Math.PI * 2); c.fill();
+    if (w > 300) { c.fillStyle = '#5c5a56'; c.beginPath(); c.ellipse(x0 + w / 2, BODEN_Y + 40, 18, 9, 0, 0, Math.PI * 2); c.fill(); }
+  }
+  function hafenkiste(c, x, y) {   // Hafenkiste statt Kiste (40 × 40): blaue Fischkiste mit Latten, Griffloch und Seestern-Aufkleber
+    c.fillStyle = '#2a6cff'; c.fillRect(x, y, KISTE, KISTE);
+    c.fillStyle = '#1d4fc0'; for (let k = 0; k < 3; k++) c.fillRect(x, y + 6 + k * 12, KISTE, 3);
+    c.fillStyle = '#5a93ff'; c.fillRect(x, y, KISTE, 4);
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(x + 13, y + 9, 14, 4, 2); c.fill();
+    c.fillStyle = '#ff9f1c'; c.save(); c.translate(x + 29, y + 29); c.beginPath(); for (let k = 0; k < 10; k++) { const r = k % 2 ? 2.5 : 6, a = k * Math.PI / 5 - Math.PI / 2; c.lineTo(Math.cos(a) * r, Math.sin(a) * r); } c.closePath(); c.fill(); c.restore();
+  }
+  function nebelZeichnen(c, d) {   // Nebelschleier (Bildschirmkoordinaten): halbtransparente Decke + ziehende Schwaden; d = Dichte 0..1
+    c.save();
+    c.globalAlpha = d * NEBEL_MAX; c.fillStyle = '#dfe6ec'; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    c.globalAlpha = d * 0.5; c.fillStyle = '#f4f7fa';
+    for (let i = 0; i < 9; i++) { const n = viewW + 420, nx = ((i * 230 + zeit * (18 + (i % 3) * 7) - kamera * 0.5) % n + n) % n - 210, ny = 40 + ((i * 71) % 300) + Math.sin(zeit * 0.8 + i) * 10; c.beginPath(); c.ellipse(nx, ny, 120 + (i % 2) * 40, 18 + (i % 3) * 6, 0, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function seilbahnZeichnen(c, g) {   // Seilbahn über dem Pazifik: zwei rote Masten an den Ufern, durchhängendes Seil, Hänger, Gondel (Cable-Car-Wagen, Dach = Plattform)
+    const x0 = g.x - 12 - kamera, x1 = g.x + g.w + 12 - kamera, gx = g.gx - kamera, top = BODEN_Y - 170;
+    c.fillStyle = GG_ROT; c.fillRect(x0 - 5, top, 10, 170); c.fillRect(x1 - 5, top, 10, 170);
+    c.fillStyle = '#8e3220'; c.fillRect(x0 - 9, top - 4, 18, 6); c.fillRect(x1 - 9, top - 4, 18, 6);
+    const seilY = (hx) => { const t = (hx - x0) / (x1 - x0); return (1 - t) * (1 - t) * top + 2 * (1 - t) * t * (top + 58) + t * t * top; };
+    c.strokeStyle = '#3a3a3a'; c.lineWidth = 3; c.beginPath(); c.moveTo(x0, top); c.quadraticCurveTo((x0 + x1) / 2, top + 58, x1, top); c.stroke();
+    const hx = gx + GONDEL_W / 2, hy = seilY(hx), schwank = Math.sin(zeit * 2.2 + g.phase) * 2;
+    c.lineWidth = 2.5; c.beginPath(); c.moveTo(hx, hy); c.lineTo(hx + schwank, GONDEL_Y - 2); c.stroke();
+    c.fillStyle = '#3a3a3a'; c.beginPath(); c.arc(hx, hy, 5, 0, Math.PI * 2); c.fill();
+    c.save(); c.translate(gx + GONDEL_W / 2 + schwank, GONDEL_Y);
+    c.fillStyle = '#8b1e2d'; c.beginPath(); c.roundRect(-GONDEL_W / 2, 6, GONDEL_W, 26, 4); c.fill();
+    c.fillStyle = '#f3e3b6'; c.fillRect(-GONDEL_W / 2 + 6, 10, GONDEL_W - 12, 12);
+    c.fillStyle = '#9fd3ee'; for (let k = 0; k < 6; k++) c.fillRect(-GONDEL_W / 2 + 10 + k * 20, 12, 13, 8);
+    c.fillStyle = '#5a1420'; c.beginPath(); c.roundRect(-GONDEL_W / 2 - 3, -3, GONDEL_W + 6, 10, 4); c.fill();   // Dach = Plattform
+    c.fillStyle = '#e0a400'; c.beginPath(); c.arc(0, -6, 3, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function surfZeichnen(c, s) {   // Surfbrett-Rutsche: nasser, glänzender Streifen mit Gischt und einem Surfbrett-Schild am Anfang
+    const x = s.x - kamera;
+    const g = c.createLinearGradient(x, 0, x + s.w, 0); g.addColorStop(0, 'rgba(120,200,240,.0)'); g.addColorStop(0.15, 'rgba(120,200,240,.75)'); g.addColorStop(0.85, 'rgba(120,200,240,.75)'); g.addColorStop(1, 'rgba(120,200,240,.0)');
+    c.fillStyle = g; c.fillRect(x, BODEN_Y - 2, s.w, 10);
+    c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 2;
+    for (let i = 0; i < Math.ceil(s.w / 36); i++) { const wx = x + 12 + ((i * 36 + zeit * 90) % Math.max(1, s.w - 24)); c.beginPath(); c.moveTo(wx, BODEN_Y + 3); c.quadraticCurveTo(wx + 6, BODEN_Y - 3, wx + 12, BODEN_Y + 3); c.stroke(); }
+    c.save(); c.translate(x - 14, BODEN_Y); c.rotate(-0.35);   // Surfbrett als Schild
+    c.fillStyle = '#ffd93d'; c.beginPath(); c.ellipse(0, -30, 7, 30, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#ff5e5e'; c.lineWidth = 2; c.beginPath(); c.moveTo(0, -56); c.lineTo(0, -6); c.stroke();
+    c.restore();
+  }
+  function surfbrett(c, x, y) {   // Brett unter der Figur, solange sie surft (mit Gischt hinten)
+    c.save(); c.translate(x, y + 2);
+    c.fillStyle = 'rgba(255,255,255,.7)'; for (let k = 0; k < 3; k++) { const t = (zeit * 4 + k * 0.33) % 1; c.beginPath(); c.arc(-26 - t * 16, -2 - t * 10, 3 + t * 4, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#ffd93d'; c.beginPath(); c.ellipse(4, 0, 32, 6, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#ff5e5e'; c.fillRect(-20, -1.5, 44, 3);
+    c.restore();
+  }
+  function moewe(c, g) {   // Möwe: weißer Körper, graue Flügel mit schwarzen Spitzen, gelber Schnabel mit rotem Punkt; mit Beute trägt sie einen kleinen Diamanten im Schnabel
+    const b = gegnerBox(g); const cx = b.x + 18, cy = b.y + 12;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.2, 1 - g.tot * 2));
+    const fl = Math.sin(g.flug * (g.klaut ? 16 : 10));
+    c.fillStyle = '#9aa3ad'; c.beginPath(); c.moveTo(-2, -2); c.quadraticCurveTo(10, -14 - fl * 12, 24, -8 - fl * 16); c.quadraticCurveTo(12, 0, 2, 3); c.closePath(); c.fill();
+    c.fillStyle = '#2a2a2a'; c.beginPath(); c.moveTo(18, -7 - fl * 14); c.lineTo(26, -8 - fl * 16); c.lineTo(22, -3 - fl * 12); c.closePath(); c.fill();
+    c.fillStyle = '#ffffff'; c.beginPath(); c.ellipse(0, 3, 14, 7, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#d9dee3'; for (let i = -1; i <= 1; i++) { c.beginPath(); c.moveTo(10, 2); c.lineTo(20, i * 3.5 + 1); c.lineTo(20, 5 + i * 3.5); c.closePath(); c.fill(); }
+    c.fillStyle = '#ffffff'; c.beginPath(); c.arc(-13, -4, 6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#ffd93d'; c.beginPath(); c.moveTo(-18, -5); c.lineTo(-27, -3); c.lineTo(-18, -1); c.closePath(); c.fill();
+    c.fillStyle = '#e63946'; c.beginPath(); c.arc(-23, -2.5, 1.1, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-14.5, -6, 1.4, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#ff9f1c'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-3, 9); c.lineTo(-5, 12); c.moveTo(1, 9); c.lineTo(0, 12); c.stroke();
+    c.fillStyle = '#b8c0c8'; c.beginPath(); c.moveTo(-3, 0); c.quadraticCurveTo(8, -12 + fl * 12, 22, -4 + fl * 16); c.quadraticCurveTo(10, 2, 0, 5); c.closePath(); c.fill();
+    if (g.beute) diamant(c, -27, 2, 6, '#39c6f0');
+    c.restore();
+  }
+  function seeloewe(c, g) {   // Seelöwe: watschelt am Boden, hebt den Kopf, klatscht mit den Flossen, Ball auf der Nase; plattgedrückt flach
+    const b = gegnerBox(g); const cx = b.x + 25, cy = b.y + 28;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+    const w = Math.sin(g.flug * 6), klatsch = Math.abs(Math.sin(g.flug * 3));
+    c.fillStyle = '#6b5a4a'; c.beginPath(); c.moveTo(22, 0); c.quadraticCurveTo(24, -6, 12, -8 + w); c.lineTo(10, 0); c.closePath(); c.fill();   // Schwanzflosse
+    c.fillStyle = '#7d6a58'; c.beginPath(); c.moveTo(-14, 0); c.quadraticCurveTo(-18, -22, -4, -22); c.quadraticCurveTo(18, -20, 20, 0); c.closePath(); c.fill();   // Körper
+    c.fillStyle = '#8f7c69'; c.beginPath(); c.ellipse(0, -6, 10, 5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#6b5a4a'; c.beginPath(); c.ellipse(-2, -8, 7, 3, 0.9 - klatsch * 0.9, 0, Math.PI * 2); c.fill();   // Flosse
+    c.fillStyle = '#7d6a58'; c.beginPath(); c.arc(-14, -20, 8, 0, Math.PI * 2); c.fill();   // Kopf
+    c.fillStyle = '#4a3a2e'; c.beginPath(); c.ellipse(-21, -19, 3, 2.2, 0, 0, Math.PI * 2); c.fill();   // Nase
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-15, -23, 1.5, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 1; c.beginPath(); c.moveTo(-20, -17); c.lineTo(-27, -15); c.moveTo(-20, -16); c.lineTo(-27, -12); c.stroke();   // Schnurrhaare
+    c.fillStyle = '#ff5e5e'; c.beginPath(); c.arc(-22, -30 + w, 5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#fff'; c.beginPath(); c.arc(-22, -30 + w, 5, -0.6, 0.9); c.lineTo(-22, -30 + w); c.closePath(); c.fill();   // Ball
+    c.restore();
+  }
+  function skater(c, g) {   // Skater: rollt schnell entgegen – Board mit Rollen, Knie gebeugt, Hoodie, Helm, Arme ausgestreckt; plattdrückbar oder überspringen
+    const b = gegnerBox(g); const cx = b.x + 15, cy = b.y + 44;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+    const rad = g.flug * 18, wipp = Math.sin(g.flug * 9) * 1.5;
+    c.fillStyle = '#3a2a22'; c.beginPath(); c.roundRect(-18, -6, 36, 4, 2); c.fill();
+    for (const rx of [-11, 11]) { c.fillStyle = '#e63946'; c.beginPath(); c.arc(rx, -2, 3.2, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 1; c.beginPath(); c.moveTo(rx, -2); c.lineTo(rx + Math.cos(rad) * 3, -2 + Math.sin(rad) * 3); c.stroke(); }
+    c.translate(0, wipp);
+    c.strokeStyle = '#2f3b5c'; c.lineCap = 'round'; c.lineWidth = 5; c.beginPath(); c.moveTo(-6, -22); c.lineTo(-10, -14); c.lineTo(-8, -7); c.moveTo(6, -22); c.lineTo(10, -14); c.lineTo(8, -7); c.stroke();   // Beine
+    c.fillStyle = '#19d3c5'; c.beginPath(); c.roundRect(-9, -36, 18, 16, 5); c.fill();   // Hoodie
+    c.strokeStyle = '#19d3c5'; c.lineWidth = 4; c.beginPath(); c.moveTo(-8, -32); c.lineTo(-20, -36); c.moveTo(8, -32); c.lineTo(20, -36 + wipp); c.stroke();   // Arme
+    c.fillStyle = '#f1c27d'; c.beginPath(); c.arc(-21, -37, 2.5, 0, Math.PI * 2); c.arc(21, -37 + wipp, 2.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#f1c27d'; c.beginPath(); c.arc(-1, -41, 6, 0, Math.PI * 2); c.fill();   // Kopf
+    c.fillStyle = '#e0a400'; c.beginPath(); c.arc(-1, -42, 6.6, Math.PI, 0); c.closePath(); c.fill();   // Helm
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-4, -40.5, 1.1, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function nebelbank(c, x, y) {   // Nebelbank am Boss-Platz: dichte Schwaden am Boden, eine Glockenboje; beim Auftauchen des Captains wirbelt der Nebel
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#e0a400'; c.beginPath(); c.moveTo(-70, 0); c.lineTo(-62, -36); c.lineTo(-46, -36); c.lineTo(-38, 0); c.closePath(); c.fill();   // Boje
+    c.fillStyle = '#8e3220'; c.fillRect(-58, -48, 8, 14); c.fillStyle = '#c9c9c9'; c.beginPath(); c.arc(-54, -50, 5, Math.PI, 0); c.closePath(); c.fill();
+    const wirbel = boss.sichtbar > 0 && boss.sichtbar < 1 ? 1 : 0;
+    for (let k = 0; k < 7; k++) {
+      const t = (zeit * 0.5 + k * 0.14) % 1, nx = -90 + k * 30 + Math.sin(zeit * 1.1 + k) * 10, ny = -10 - (k % 3) * 8 - wirbel * t * 60;
+      c.fillStyle = `rgba(236,241,246,${0.55 + (k % 2) * 0.2 - wirbel * t * 0.4})`; c.beginPath(); c.ellipse(nx, ny, 52 - wirbel * t * 20, 14, 0, 0, Math.PI * 2); c.fill();
+    }
+    c.restore();
+  }
+  function captainFog(c, x, y) {   // Boss Welt 5: Captain Fog – halbtransparenter Nebelgeist mit Kapitänsmütze, leuchtenden Augen, Nebelbart und Pfeife; wabert, spricht mit boss.maul, löst sich im Finale auf
+    if (boss.sichtbar <= 0) return;
+    const auf = boss.sichtbar * (1 - boss.weg), wab = zeit * 2.6, m = boss.maul;
+    c.save(); c.translate(x - 10, y - 30 - boss.weg * 150 + Math.sin(zeit * 1.7) * 6); c.globalAlpha = Math.min(0.88, auf * 1.1);
+    const s = 0.85 * (0.5 + 0.5 * Math.min(1, boss.sichtbar)); c.scale(s, s);
+    c.fillStyle = 'rgba(236,241,246,.45)';   // Schwaden um den Geist
+    for (let k = 0; k < 3; k++) { const a = wab * 0.5 + k * 2.1; c.beginPath(); c.ellipse(Math.cos(a) * 70, -80 + Math.sin(a) * 40, 38, 12, 0, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = 'rgba(238,243,248,.92)';   // Körper: Wolkenform, unten ausgefranster Schweif, der wabert
+    c.beginPath(); c.moveTo(-62, -40); c.quadraticCurveTo(-74, -150, 0, -162); c.quadraticCurveTo(74, -150, 62, -40);
+    for (let k = 0; k < 5; k++) { const x2 = 62 - (k + 1) * 24.8, cxk = x2 + 12.4; c.quadraticCurveTo(cxk, -40 + 30 + Math.sin(wab + k) * 8, x2, -40 + 4 + Math.cos(wab * 1.3 + k) * 5); }
+    c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.6)'; c.beginPath(); c.ellipse(-20, -120, 26, 30, 0.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(238,243,248,.9)'; c.beginPath(); c.ellipse(-78 + Math.sin(wab) * 4, -92, 24, 13, -0.5, 0, Math.PI * 2); c.ellipse(78 + Math.cos(wab) * 4, -88, 24, 13, 0.5, 0, Math.PI * 2); c.fill();   // Arme
+    c.fillStyle = 'rgba(210,220,230,.9)';   // Nebelbart
+    for (const [bx, by, r] of [[-22, -72, 14], [-6, -64, 16], [12, -66, 15], [26, -74, 12], [0, -50, 13], [-14, -54, 11], [14, -52, 11]]) { c.beginPath(); c.arc(bx, by, r, 0, Math.PI * 2); c.fill(); }
+    for (const ex of [-20, 20]) {   // leuchtende Augen mit Brauen
+      c.save(); c.shadowColor = '#7fe6ff'; c.shadowBlur = 14; c.fillStyle = '#bff4ff'; c.beginPath(); c.ellipse(ex, -112, 9, 7, 0, 0, Math.PI * 2); c.fill(); c.restore();
+      c.fillStyle = '#18213a'; c.beginPath(); c.arc(ex + (zustand === 'boss' ? 2 : 0), -111, 3.2, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#9aa8b4'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); c.moveTo(ex - 10, -124 - (ex < 0 ? 0 : 4)); c.lineTo(ex + 10, -124 - (ex < 0 ? 4 : 0)); c.stroke();
+    }
+    c.fillStyle = '#2a3a4a'; c.beginPath(); c.ellipse(0, -86, 8 * (0.4 + m * 0.6), 3 + m * 7, 0, 0, Math.PI * 2); c.fill();   // Mund
+    c.strokeStyle = '#5a3a22'; c.lineWidth = 3; c.beginPath(); c.moveTo(8, -84); c.lineTo(30, -78); c.stroke(); c.fillStyle = '#5a3a22'; c.beginPath(); c.roundRect(28, -84, 10, 10, 3); c.fill();   // Pfeife
+    c.fillStyle = 'rgba(255,255,255,.7)'; for (let k = 0; k < 3; k++) { const t = (zeit * 0.9 + k * 0.33) % 1; c.beginPath(); c.arc(34 + t * 10, -92 - t * 30, 2 + t * 5, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#18213a'; c.beginPath(); c.ellipse(0, -150, 42, 9, 0, 0, Math.PI * 2); c.fill();   // Kapitänsmütze: Schirm, Band, weißer Deckel, goldener Anker
+    c.fillStyle = '#f6f6f6'; c.beginPath(); c.moveTo(-36, -152); c.quadraticCurveTo(-38, -190, 0, -192); c.quadraticCurveTo(38, -190, 36, -152); c.closePath(); c.fill();
+    c.fillStyle = '#18213a'; c.fillRect(-36, -160, 72, 9);
+    c.strokeStyle = '#e0a400'; c.lineWidth = 2; c.beginPath(); c.moveTo(-36, -159); c.lineTo(36, -159); c.stroke();
+    c.strokeStyle = '#e0a400'; c.lineWidth = 2.2; c.beginPath(); c.moveTo(0, -182); c.lineTo(0, -166); c.moveTo(-6, -178); c.lineTo(6, -178); c.arc(0, -170, 7, Math.PI * 0.15, Math.PI * 0.85); c.stroke(); c.beginPath(); c.arc(0, -185, 2.2, 0, Math.PI * 2); c.stroke();
+    c.restore();
+  }
+  function brueckenTor(c, x, y) {   // Tür der Welt 5: Brückentor – zwei Golden-Gate-Pfeiler mit Querbalken „GOLDEN GATE BRIDGE“, dazwischen ein Gitter, das zur Seite fährt; Kabel und Fahrbahn dahinter, Leuchte rot → grün
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#6b6f76'; c.fillRect(-80, -8, 260, 8); c.fillStyle = GG_ROT; c.fillRect(-80, -12, 260, 4);
+    c.strokeStyle = GG_ROT; c.lineWidth = 4; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(-96, -50); c.quadraticCurveTo(-70, -170, -50, -206); c.moveTo(50, -206); c.quadraticCurveTo(90, -150, 190, -60); c.stroke();   // Hauptkabel
+    c.lineWidth = 1.5; for (let k = 0; k < 6; k++) { const hx = 70 + k * 20, t = (hx - 50) / 140; const ky = (1 - t) * (1 - t) * -206 + 2 * (1 - t) * t * -150 + t * t * -60; c.beginPath(); c.moveTo(hx, ky); c.lineTo(hx, -12); c.stroke(); }
+    brueckenTurm(c, -50, 0, 200, 28, GG_ROT); brueckenTurm(c, 50, 0, 200, 28, GG_ROT);
+    c.fillStyle = GG_ROT; c.fillRect(-66, -210, 132, 12);
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(-60, -196, 120, 22, 4); c.fill();
+    c.fillStyle = '#ffd36b'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GOLDEN GATE BRIDGE', 0, -185);
+    const offen = tuer.offen;
+    if (offen > 0) { c.fillStyle = `rgba(255,240,180,${0.55 * offen})`; c.fillRect(-36, -150, 72, 150); }
+    for (const seite of [-1, 1]) {   // zwei Gitterflügel fahren in die Pfeiler
+      c.save(); c.translate(seite * -36, 0); c.scale(Math.max(0.04, 1 - offen * 0.96), 1);
+      const x0 = seite > 0 ? -36 : 0;
+      c.fillStyle = '#8e3220'; c.fillRect(x0, -150, 36, 150);
+      c.strokeStyle = '#ffb37a'; c.lineWidth = 2;
+      for (let k = 1; k < 4; k++) { c.beginPath(); c.moveTo(x0 + k * 9, -146); c.lineTo(x0 + k * 9, -4); c.stroke(); }
+      for (let k = 1; k < 6; k++) { c.beginPath(); c.moveTo(x0 + 2, -150 + k * 25); c.lineTo(x0 + 34, -150 + k * 25); c.stroke(); }
+      c.restore();
+    }
+    c.fillStyle = '#3a3a3a'; c.fillRect(-3, -172, 6, 14);
+    c.fillStyle = offen > 0.3 ? '#2ecc71' : '#e63946'; c.beginPath(); c.arc(0, -176, 6, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+
   function hintergrund(c) { W.kulisse(c); }
   function hintergrundNY(c) {
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
@@ -2277,6 +2616,8 @@
     for (const k of kakteen) { const x = k.x - kamera; if (x > viewW + 60 || x < -60) continue; kaktusZeichnen(c, k); }
     for (const h of hoehlen) { const x = h.x - kamera; if (x > viewW + 120 || x < -120) continue; hoehleZeichnen(c, h); }
     for (const s of staemme) { if (s.phase === 'weg') continue; const x = (s.phase === 'rollt' ? s.rx : s.x) - kamera; if (x > viewW + 80 || x < -80) continue; stammZeichnen(c, s); }
+    for (const g of gondeln) { const x = g.x - kamera; if (x > viewW + 100 || x + g.w < -100) continue; seilbahnZeichnen(c, g); }   // Welt 5
+    for (const s of surfs) { const x = s.x - kamera; if (x > viewW + 100 || x + s.w < -100) continue; surfZeichnen(c, s); }
     for (const cp of checkpoints) { const x = cp.x - kamera; if (x > -60 && x < viewW + 60) fahne(c, x, BODEN_Y, cp.erreicht); }
     for (const d of diamanten) {
       if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue;
@@ -2306,12 +2647,23 @@
       W.boss(c, level.bossX - kamera, BODEN_Y);
       if (bossSpruch) sprechblase(c, level.bossX - kamera - 20, BODEN_Y - W.sprechblaseHoehe, bossSpruch.text);
     }
+    if (nebelDichte > 0) {   // Welt 5: Nebelschleier über allem bisher Gezeichneten; die Diamanten glühen durch den Nebel, die Figur bleibt sichtbar
+      nebelZeichnen(c, nebelDichte);
+      for (const d of diamanten) {
+        if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue;
+        const schweb = Math.sin(d.funkel * 3) * 4;
+        c.save(); c.globalAlpha = nebelDichte * (0.3 + 0.15 * Math.sin(d.funkel * 5)); c.fillStyle = '#7fe6ff'; c.beginPath(); c.arc(x, d.y + schweb, 30, 0, Math.PI * 2); c.fill(); c.restore();
+        c.save(); c.globalAlpha = nebelDichte; c.shadowColor = '#7fe6ff'; c.shadowBlur = 18; diamant(c, x, d.y + schweb, 14, '#39c6f0'); c.restore();
+      }
+    }
     if (tot <= 0) {
       const blink = spieler.unverwundbar > 0 && Math.floor(zeit * 12) % 2 === 0;
       c.globalAlpha = blink ? 0.35 : 1;
-      if (rutscht > 0) { c.save(); c.translate(spieler.x - kamera, spieler.y); c.rotate(-0.22 - 0.06 * Math.sin(zeit * 30)); c.translate(-(spieler.x - kamera), -spieler.y); }   // rutscht: Figur kippt leicht nach hinten
-      zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, rutscht > 0 ? 'erstaunt' : ausdruckAktuell());
-      if (rutscht > 0) c.restore();
+      const surfend = surft > 0 && spieler.amBoden && rutscht <= 0;
+      if (surfend) surfbrett(c, spieler.x - kamera, spieler.y);   // Welt 5: Surfbrett unter der Figur, Figur lehnt sich nach vorn
+      if (rutscht > 0 || surfend) { c.save(); c.translate(spieler.x - kamera, spieler.y); c.rotate(surfend ? 0.16 : -0.22 - 0.06 * Math.sin(zeit * 30)); c.translate(-(spieler.x - kamera), -spieler.y); }   // rutscht: Figur kippt leicht nach hinten
+      zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, rutscht > 0 ? 'erstaunt' : surfend ? 'zunge' : ausdruckAktuell());
+      if (rutscht > 0 || surfend) c.restore();
       c.globalAlpha = 1;
     }
     effekteZeichnen(c);
@@ -2514,7 +2866,7 @@
   }
 
   /* ---------- Welten: je Welt Kulisse, Boden, Kisten, Gegnerarten, Boss (Zeichner + Klang), Tür, Banner, Level-Muster ---------- */
-  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler };
+  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler, moewe, seeloewe, skater };
   function bodenNY(c, x0, w, a, b, links, rechts) {
     c.fillStyle = '#b9ad9a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
     c.fillStyle = '#d9cfbb'; c.fillRect(x0, BODEN_Y, w, 10);
@@ -2544,6 +2896,10 @@
       gegnerarten: ['bueffel', 'biber', 'adler'], farben: { plattform: '#6b4a2e', plattformOben: '#5fa84a', hud: '#2e7d4f' }, muster: MUSTER_SD, sprechblaseHoehe: 200,
       kulisse: hintergrundRushmore, boden: waldboden, grube: bachZeichnen, kiste: holzstapel, stein: trittstein, hudSymbol: (c, x, y) => schildRushmore(c, x, y + 14, 0.34, false),
       boss: (c, x, y) => { baerenhoehleBoss(c, x, y); grizzlyGrandpa(c, x, y); }, tuer: rangerTor, bossKlang: () => { brummt++; klang.brummen(); } },
+    ca: { id: 'ca', name: 'Golden Gate', staat: 'California', ziel: 'Golden Gate Bridge', bossName: 'Captain Fog', bossSymbol: '👻', banner: 'Captain Fog is blocking the bridge!', sturz: 'Splash! 🌊',
+      gegnerarten: ['moewe', 'seeloewe', 'skater'], farben: { plattform: '#8e3220', plattformOben: '#e8714a', hud: '#c0462b' }, muster: MUSTER_CA, sprechblaseHoehe: 240,
+      kulisse: hintergrundGoldenGate, boden: promenade, grube: pazifik, kiste: hafenkiste, hudSymbol: (c, x, y) => goldenGateFern(c, x, y + 12, 0.11),
+      boss: (c, x, y) => { nebelbank(c, x, y); captainFog(c, x, y); }, tuer: brueckenTor, bossKlang: () => { tutet++; klang.nebelhorn(); } },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner }));
 
@@ -2611,12 +2967,14 @@
         blase: blase ? { en: blase.en, de: blase.de, zeit: Math.round(blase.zeit * 100) / 100 } : null, wortbank: wortbank.map((b) => b.en),
         echoWarteschlange: echoWarteschlange.map((e) => ({ wort: woerter[e.wort].en, in: Math.round((e.faellig - zeit) * 100) / 100 })), echo: echo ? echo.text : null, echos, stimmeAufrufe,
         gegnerKlaenge, gegnerNah: gegner.filter((g) => g.tot <= 0 && !g.harmlos && g.x - spieler.x > -40 && g.x - spieler.x < GEGNER_NAEHE).map((g) => g.art),
-        welt: W.id, rutscht: rutscht > 0, hupen, gegner: gegner.map((g) => ({ art: g.art, x: Math.round(g.x), tot: g.tot > 0, rollt: !!g.rollt })),
+        welt: W.id, rutscht: rutscht > 0, hupen, gegner: gegner.map((g) => ({ art: g.art, x: Math.round(g.x), tot: g.tot > 0, rollt: !!g.rollt, harmlos: !!g.harmlos })),
         autos: autos.map((a) => ({ art: a.art, x: Math.round(a.x), w: a.w, h: a.h })), oel: oel.map((o) => ({ x: o.x, w: o.w, aktiv: o.aktiv })),
         rasseln, steine: steine.map((s) => ({ x: s.x, phase: s.phase, y: Math.round(s.y) })), bruecken: bruecken.map((b) => ({ x: b.x, w: b.w, zeit: Math.round(b.zeit * 100) / 100, gebrochen: b.gebrochen })),
         kakteen: kakteen.map((k) => k.x), meldung: meldung ? meldung.text : null,
         staemme: staemme.map((s) => ({ x: s.x, phase: s.phase, rx: Math.round(s.rx) })), hoehlen: hoehlen.map((h) => ({ x: h.x, phase: h.phase })), winde: winde.map((w) => ({ x: w.x, richtung: w.richtung, aktiv: w.aktiv })),
         wind: wind ? { phase: wind.phase, richtung: wind.richtung, t: Math.round(wind.t * 100) / 100 } : null, sprungFaktor: wind && wind.phase === 'schub' ? WIND_SPRUNG : 1, brummt, baeche: level.baeche.map((b) => ({ x: b.x, w: b.w })),
+        nebel: level.nebel.map((n) => ({ x: n.x, w: n.w })), nebelDichte: Math.round(nebelDichte * 100) / 100, gondeln: gondeln.map((g) => ({ x: g.x, w: g.w, gx: Math.round(g.gx), vx: Math.round(g.vx), y: GONDEL_Y })), aufGondel,
+        surfs: surfs.map((s) => ({ x: s.x, w: s.w, aktiv: s.aktiv })), surft: surft > 0, geklaut, tutet,
       };
     },
     sammle(i) { const d = diamanten[i]; if (d && !d.weg && zustand === "spiel") diamantSammeln(d); },   // Diamant i direkt einsammeln (Test)

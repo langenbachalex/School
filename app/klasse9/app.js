@@ -2542,14 +2542,14 @@
      Stand in stand.spiel.runner = { level: { ny: "gold"|"silber" }, gespielt, geschafft, titel }, Figur in stand.spiel.skin – beides im Siegel.
      Wörter: 12 aus dem gewählten Abschnitt (wie Catch the Word), aufgefüllt aus der Unit; gesprochen mit den Wortaufnahmen (tonWort).
      Boss-Banner/-Sprüche und Skin-Namen: bis zur Vertonung (Mr. Alex, 13.11.) Geräte-Stimme wie bei fehlenden Aufnahmen (spiele([{ text, stimme }])). */
-  // Welten (docs/runner/welten-2-5-plan.md): Reihenfolge = Landmark-Route; Welt n+1 öffnet sich mit Silber in Welt n; Welt 5 noch „bald“ (nur Daten-Platzhalter).
+  // Welten (docs/runner/welten-2-5-plan.md): Reihenfolge = Landmark-Route; Welt n+1 öffnet sich mit Silber in Welt n; alle fünf Welten gebaut (Welt 5 Golden Gate 30.10.).
   // unit = vorbelegte Unit beim Wählen der Welt (der Schüler darf umschalten); boss = Name für Texte/Frage-Titel.
   const RUNNER = { preis: 100, skinPreis: 30, skinPreisTeuer: 60, woerter: 12, titel: ["Noob", "Rookie", "Pro", "Elite", "Legend"], ab: [1, 3, 6, 10, 15],
     welten: [{ id: "ny", name: "New York", staat: "New York", ziel: "Statue of Liberty", trophaee: "Liberty Finder", symbol: "🗽", boss: "Mr. Alligator" },
       { id: "route66", name: "Route 66", staat: "Illinois", ziel: "Route 66 sign", trophaee: "Route 66 Rider", symbol: "🛣️", boss: "Big Rig Bob", unit: "1" },
       { id: "az", name: "Grand Canyon", staat: "Arizona", ziel: "Grand Canyon", trophaee: "Canyon Climber", symbol: "🏜️", boss: "Sheriff Rattlesnake", unit: "2" },
       { id: "sd", name: "Mount Rushmore", staat: "South Dakota", ziel: "Mount Rushmore", trophaee: "Rushmore Ranger", symbol: "🗿", boss: "Grizzly Grandpa", unit: "2" },
-      { id: "ca", name: "Golden Gate", staat: "California", ziel: "Golden Gate Bridge", trophaee: "Golden Gate Legend", symbol: "🌉", boss: "Captain Fog", bald: true }] };
+      { id: "ca", name: "Golden Gate", staat: "California", ziel: "Golden Gate Bridge", trophaee: "Golden Gate Legend", symbol: "🌉", boss: "Captain Fog", unit: "2" }] };
   // Welt n ist offen, wenn sie gebaut ist (nicht bald) und die Vorwelt mindestens Silber hat
   const runnerWeltOffen = (w) => { const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
   const runnerWeltVon = (id) => RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0];
@@ -2619,7 +2619,7 @@
       ? knopf(`▶ ${T("Spielen", "Play")} (🎟️ 1)`, () => runnerSpiel(k, unit, runnerWahl.i, W.id), "haupt runner-spielen")
       : knopf(T(`🎟️ Erst Ticket kaufen – ${RUNNER.preis} 🪙`, `🎟️ Buy a ticket first – ${RUNNER.preis} 🪙`), zumShop, "haupt runner-spielen");
     if (tickets > 0 && (ws.length < 4 || !R())) sperrt(spielen);
-    // Welt-Reiter: offen = wählbar (Welt 2 belegt Unit 1 vor, Welt 3 und 4 Unit 2; umschaltbar), gesperrt = 🔒 mit Hinweis auf Silber in der Vorwelt, bald = 🔒 ohne Spiel
+    // Welt-Reiter: offen = wählbar (Welt 2 belegt Unit 1 vor, Welten 3–5 Unit 2; umschaltbar), gesperrt = 🔒 mit Hinweis auf Silber in der Vorwelt, bald = 🔒 ohne Spiel (derzeit keine)
     const weltHinweis = el("p", { class: "klein runner-welt-hinweis", role: "status" });
     const weltReiter = el("div", { class: "reiter runner-welten", role: "listbox", "aria-label": T("Welt", "World") }, RUNNER.welten.map((w, i) => {
       const offen = runnerWeltOffen(w), vor = RUNNER.welten[i - 1];
@@ -2639,7 +2639,10 @@
           el("div", {},
             el("h2", { lang: "en" }, `Level ${RUNNER.welten.indexOf(W) + 1} · ${W.name}`),
             el("p", { class: "runner-ziel", lang: "en" }, `Find the ${W.ziel}!`),
-            el("p", { class: "klein" }, W.id === "sd"
+            el("p", { class: "klein" }, W.id === "ca"
+              ? T(`Tippen oder Leertaste = springen, länger halten = höher. Im Nebel siehst du wenig – die Diamanten leuchten durch, auf Geräusche achten! Über den Pazifik bringen dich Seilbahn-Gondeln: Spring drauf, wenn sie nah ist, und rechtzeitig wieder ab. Auf der Surfbrett-Rutsche bist du kurz richtig schnell. Vorsicht Möwe: Berührt sie dich, klaut sie einen Diamanten (kein Leben) – drauf springen oder mit langem Sprung drüber. Seelöwen und Skater kannst du plattdrücken. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Brückentor – gut 2 Minuten. Am besten das Handy quer halten.`,
+                `Tap or space = jump, hold longer = jump higher. In the fog you can't see much – the diamonds glow through, listen for sounds! Cable-car gondolas carry you across the Pacific: jump on when one is close, and jump off in time. On the surfboard slide you're really fast for a moment. Beware of the seagull: if it touches you, it steals a diamond (not a life) – stomp it or clear it with a long jump. Sea lions and skaters can be squashed. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the bridge gate – about 2 minutes. Best in landscape mode.`)
+              : W.id === "sd"
               ? T(`Tippen oder Leertaste = springen, länger halten = höher. Baumstämme rollen den Hang herunter – drüberspringen! Über Bäche hüpfst du auf den Steinen. Wenn Blätter fliegen, kommt eine Windböe: Sie schiebt dich kurz, und du springst nur halb so hoch. Vor Bärenhöhlen nicht trödeln (Pranke!). Büffel kannst du nicht plattdrücken – nur überspringen. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} an der Ranger-Station – gut 2 Minuten. Am besten das Handy quer halten.`,
                 `Tap or space = jump, hold longer = jump higher. Logs roll down the hill – jump over them! Cross the streams on the stepping stones. Flying leaves mean a gust of wind: it pushes you for a moment and you only jump half as high. Don't dawdle in front of bear caves (paw!). You can't squash buffalos – only jump over them. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the ranger station – about 2 minutes. Best in landscape mode.`)
               : W.id === "az"
@@ -2696,7 +2699,7 @@
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
         tor: (de) => T(`Welcher Diamant heißt „${de}“?`, `Which diamond means “${de}”?`), richtigWaere: T(" – richtig wäre: ", " – correct: "),
         sequenz: T("Zwischensequenz …", "Cutscene …"), boss: T("Boss! Beantworte die Frage.", "Boss! Answer the question."),
-        bossTitel: T(`${W.boss} fragt …`, `${W.boss} asks …`), bossHinweis: W.id === "route66" ? T("Richtig = der Schlagbaum geht hoch. Falsch = ein Leben weg.", "Right = the barrier lifts. Wrong = you lose a life.") : W.id === "sd" ? T("Richtig = das Ranger-Tor geht auf. Falsch = ein Leben weg.", "Right = the ranger gate opens. Wrong = you lose a life.") : W.id === "az" ? T("Richtig = das Holztor geht auf. Falsch = ein Leben weg.", "Right = the wooden gate opens. Wrong = you lose a life.") : T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
+        bossTitel: T(`${W.boss} fragt …`, `${W.boss} asks …`), bossHinweis: W.id === "route66" ? T("Richtig = der Schlagbaum geht hoch. Falsch = ein Leben weg.", "Right = the barrier lifts. Wrong = you lose a life.") : W.id === "ca" ? T("Richtig = das Brückentor geht auf. Falsch = ein Leben weg.", "Right = the bridge gate opens. Wrong = you lose a life.") : W.id === "sd" ? T("Richtig = das Ranger-Tor geht auf. Falsch = ein Leben weg.", "Right = the ranger gate opens. Wrong = you lose a life.") : W.id === "az" ? T("Richtig = das Holztor geht auf. Falsch = ein Leben weg.", "Right = the wooden gate opens. Wrong = you lose a life.") : T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
         frage: (de) => T(`„Was heißt ‚${de}‘ auf Englisch?“`, `“What's ‘${de}’ in English?”`),
       },
       // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden

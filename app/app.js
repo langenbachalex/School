@@ -229,6 +229,27 @@
   const sperrt = (k) => { GESPERRT.add(k); k.disabled = true; return k; };
   const entsperrt = (k) => { GESPERRT.delete(k); k.disabled = false; return k; };
   const knopf = (text, fn, art) => el("button", { class: "knopf" + (art ? " " + art : ""), onclick: (e) => { if (GESPERRT.has(e.currentTarget)) return; fn(e); } }, text);
+  /* ---------- Arbeitssperre (30.10.2026, Mr. Alex) – wie die Lesezeit-Sperre in zeigeLesen, für weitere Teile ----------
+     Knopf k („Lösung zeigen“ / „Weiter“) bleibt im Programm gesperrt (GESPERRT), bis 1. die Mindestzeit sek ab start um ist
+     und 2. offen() nichts mehr meldet (Text = Hinweis, true = gesperrt ohne Hinweis, ""/0/null = alles bearbeitet).
+     uhr zeigt den Countdown (zeitText(„0:30“)) bzw. was noch fehlt. bereit() prüft neu und gibt true zurück, wenn frei. */
+  function arbeitsSperre(k, { sek = 0, start = Date.now(), zeitText, offen }) {
+    const gebaut = Date.now();
+    const uhr = el("p", { class: "klein lese-uhr", role: "status" });
+    const rest = () => Math.max(0, Math.ceil(sek - (Date.now() - start) / 1000));
+    let aus = false;
+    function bereit() {
+      if (aus) return false;
+      const r = rest(), n = offen ? offen() : "";
+      uhr.textContent = r > 0 ? zeitText(`${Math.floor(r / 60)}:${String(r % 60).padStart(2, "0")}`) : typeof n === "string" ? n : "";
+      const ok = r === 0 && !n;
+      if (ok) entsperrt(k); else sperrt(k);
+      return ok;
+    }
+    const takt = setInterval(() => { if (!uhr.isConnected && Date.now() - gebaut > 2000) return clearInterval(takt); bereit(); }, 500);
+    bereit();
+    return { uhr, bereit, ende: () => { aus = true; clearInterval(takt); uhr.textContent = ""; } };
+  }
 
   /* ---------- Sprechzeit: „Weiter“ erst nach Hören + Nachsprechen, „Lösung“ erst nach Denkzeit ----------
      Der gesperrte Knopf füllt sich sichtbar. Schon freigegebene Sätze (Teil:Position) bleiben frei,
@@ -303,6 +324,7 @@
   }
   // Sekunden pro Satz/Wort/Frage mindestens. Quizteile (Q): blindes Durchklicken (alle Antworten probieren) bringt keine Punkte.
   const QUIZ_MIN = 2.5;
+  const LESE_WPM = 80, LESE_JE_AUSSAGE = 3; // Lesezeit-Sperre für Lesen-Teile (Klasse 6): Wörter pro Minute + Sekunden je Aussage
   const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, vok_luecke: 2, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, hoerwahl: QUIZ_MIN, vok_bild: QUIZ_MIN, vok_abfrage: QUIZ_MIN };
   const istQuiz = (teil) => (SPRECH_MIN[teil.art] || 0) === QUIZ_MIN;
 
@@ -938,6 +960,7 @@
           if (geloest) return;
           setze(wert);
           knoepfe.forEach((k) => k.setAttribute("aria-pressed", String(k.dataset.wert === wert)));
+          if (sperre_) sperre_.bereit();
         } }, inhalt));
       return el("div", { class: "wahl", role: "group", "aria-label": label }, knoepfe);
     }
@@ -979,6 +1002,14 @@
     const gln = el("p", { class: "gln", hidden: true }, GLN_HINWEIS);
     const loesungKnopf = knopf("Lösung zeigen", loesen, "haupt");
     loesungKnopf.hidden = true;
+    // Sperre (30.10.2026, Mr. Alex): „Lösung zeigen“ erst nach zwei ganzen Hör-Durchgängen UND wenn jede Aufgabe eine Antwort hat –
+    // im Programm (GESPERRT + Prüfung in loesen), nicht nur am versteckten Knopf.
+    const offenZahl = () => (tf ? antworten.filter((a) => a === null).length : antworten.filter((a) => !a.mittel || !a.gefuehl).length);
+    const sperre_ = arbeitsSperre(loesungKnopf, { offen: () => {
+      if (durchgaenge < 2) return true; // Hinweis steht schon darunter („… zweimal ganz gehört …“)
+      const n = offenZahl();
+      return !n ? "" : tf ? `✏️ Kreuze bei jeder Aussage etwas an (noch ${n}).` : `✏️ Wähl bei jeder Person beides aus: wie sie hinkommt und ob der Weg gut ist (noch ${n}).`;
+    } });
     const ergebnis = el("div", { class: "rueckmeldung", hidden: true, role: "status" });
     const warten = el("p", { class: "klein" }, "Die Lösung kommt, wenn du den Text zweimal ganz gehört hast.");
     const mitlesen = el("section", { class: "satzkarte", hidden: true },
@@ -999,10 +1030,13 @@
           : `${durchgaenge} Durchgänge gehört.`;
         hoerKnopf.textContent = durchgaenge === 1 ? "▶ Noch mal hören (2. Durchgang)" : "▶ Noch mal hören (Übung)";
         if (durchgaenge >= 2) { gln.hidden = false; warten.hidden = true; if (!geloest) loesungKnopf.hidden = false; }
+        if (!geloest) sperre_.bereit();
       });
     }
 
     async function loesen() {
+      if (geloest || !sperre_.bereit()) return;
+      sperre_.ende();
       geloest = true;
       loesungKnopf.hidden = true;
       app.querySelectorAll(".hv-liste .wahl button").forEach((b) => { b.disabled = true; });
@@ -1030,6 +1064,7 @@
           if (tf ? w === a.loesung : w === a.mittel || w === a.gefuehl) b.classList.add("richtig");
         });
       });
+      if (richtig < u.aufgaben.length) lage.hilfe = true; // +5 „ohne Hilfe“ nur, wenn alles richtig ist (30.10.)
       ergebnis.hidden = false;
       ergebnis.className = "rueckmeldung " + (richtig === u.aufgaben.length ? "gut" : "hilfe");
       ergebnis.textContent = richtig === u.aufgaben.length ? `${ruf("voll") || lob()} Alles richtig!`
@@ -1055,7 +1090,7 @@
         el("p", { class: "ansage", lang: "en" }, u.instruction || (tf ? "Listen and tick: true or false?" : "Listen and match.")),
         el("p", { class: "hinweis-kasten" }, "📖 " + (u.anleitung || "Lies dir zuerst alle Aufgaben durch, damit du weißt, worauf du beim Hören achten musst.")),
         el("ol", { class: "hv-liste" }, zeilen)),
-      el("section", { class: "satzkarte" }, gln, el("div", { class: "knopfreihe" }, loesungKnopf), ergebnis,
+      el("section", { class: "satzkarte" }, gln, sperre_.uhr, el("div", { class: "knopfreihe" }, loesungKnopf), ergebnis,
         warten),
       mitlesen,
       el("div", { class: "hv-spieler" }, el("div", { class: "knopfreihe" }, hoerKnopf, stoppKnopf), zaehler));
@@ -1104,10 +1139,15 @@
     const box = rueckmeldung();
     const reihe = el("ol", { class: "reihe", "aria-label": "Deine Reihenfolge" },
       woerter.map(() => el("li", { class: "platz" }, "…")));
-    const weiter = knopf("Weiter ➜", naechstes, "haupt");
-    sperrt(weiter);
+    const weiter = knopf("Weiter ➜", () => { if (sperre_.bereit()) naechstes(); }, "haupt");
+    // Denkzeit-Sperre (30.10.2026, Mr. Alex): Durchprobieren kostet nichts – darum „Weiter“ erst nach 2,5 s je Wort ab Start des Teils
+    // und erst, wenn alle Wörter liegen. Jeder Fehlversuch kostet den „Ohne Hilfe“-Bonus (lage.hilfe).
+    const sperre_ = arbeitsSperre(weiter, { sek: woerter.length * QUIZ_MIN * eile(), start: lage.start,
+      zeitText: (z) => `🤔 Überleg in Ruhe: Was kommt zuerst? „Weiter“ geht in ${z}.`,
+      offen: () => (naechster < woerter.length ? `✏️ Tipp alle Wörter der Reihe nach an (noch ${woerter.length - naechster}).` : "") });
     const alle = () => spiele(woerter.map((w) => w.audio.en));
     const knoepfe = mischen(woerter).map((w) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
+      if (naechster >= woerter.length) return;
       if (w === woerter[naechster]) {
         const platz = reihe.children[naechster];
         platz.textContent = ""; platz.append(el("span", { class: "punkte", "aria-hidden": "true" }, w.symbol || ""), " " + w.en);
@@ -1117,17 +1157,18 @@
         spiele([w.audio.en]);
         if (++naechster === woerter.length) {
           melde(box, "gut", lob());
-          entsperrt(weiter); lage.weiter = naechstes; lage.abspielen = alle;
+          sperre_.bereit(); lage.weiter = () => { if (sperre_.bereit()) naechstes(); }; lage.abspielen = alle;
           setTimeout(alle, 900);
         }
       } else {
+        lage.hilfe = true; // Fehlversuch: kein +5 „ohne Hilfe“ (30.10.)
         melde(box, "hilfe", `Ich helfe dir: ${teil.hilfe} Probier's nochmal!`);
       }
     } }, w.en));
     lage.abspielen = null;
     zeige(kopf(st),
       el("p", { class: "ansage" }, "Bring die Wörter in die richtige Reihenfolge: von „nie“ bis „immer“. Tipp sie nacheinander an!"),
-      karte(teil, null, reihe, el("div", { class: "wahl" }, knoepfe), box, el("div", { class: "knopfreihe" }, weiter)));
+      karte(teil, null, reihe, el("div", { class: "wahl" }, knoepfe), box, sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
   }
 
   /* ---------- Lesen: Text und alle Aussagen auf einer Seite (true / false / not in the text) ---------- */
@@ -1142,6 +1183,7 @@
           if (geloest) return;
           antworten[i] = o;
           knoepfe.forEach((k) => k.setAttribute("aria-pressed", String(k.dataset.wert === o)));
+          bereit();
         } }, o));
       return el("li", { class: "hv-zeile" },
         el("p", { class: "hv-aussage", lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), D.saetze[a.satz].en),
@@ -1149,10 +1191,31 @@
         el("p", { class: "rueckmeldung", hidden: true }));
     });
     const ergebnis = el("div", { class: "rueckmeldung", hidden: true, role: "status" });
-    const loesungKnopf = knopf("Lösung zeigen", loesen, "haupt");
+    const loesungKnopf = sperrt(knopf("Lösung zeigen", loesen, "haupt"));
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
     weiter.hidden = true;
+    // Lesezeit-Sperre (30.10.2026, Mr. Alex): „Lösung zeigen“ erst nach einer realistischen Lesezeit (80 Wörter pro Minute für den Text
+    // + 3 s je Aussage) und erst, wenn jede Aussage eine Antwort hat. Die Sperre sitzt im Programm (GESPERRT + Prüfung in loesen).
+    const woerterImText = text.en.split(/\s+/).filter(Boolean).length;
+    const leseSek = Math.ceil((woerterImText / LESE_WPM * 60 + teil.aufgaben.length * LESE_JE_AUSSAGE) * eile());
+    const leseStart = Date.now();
+    const uhr = el("p", { class: "klein lese-uhr", role: "status" });
+    const restSek = () => Math.max(0, Math.ceil(leseSek - (Date.now() - leseStart) / 1000));
+    function bereit() {
+      if (geloest) return false;
+      const rest = restSek(), offen = antworten.filter((a) => a === null).length;
+      if (rest > 0) uhr.textContent = `📖 Lies erst den Text genau. „Lösung zeigen“ geht in ${Math.floor(rest / 60)}:${String(rest % 60).padStart(2, "0")}.`;
+      else if (offen) uhr.textContent = `✏️ Kreuze bei jeder Aussage etwas an (noch ${offen}).`;
+      else uhr.textContent = "";
+      const ok = rest === 0 && offen === 0;
+      if (ok) entsperrt(loesungKnopf); else sperrt(loesungKnopf);
+      return ok;
+    }
+    const leseUhr = setInterval(() => { if (!uhr.isConnected && Date.now() - leseStart > 2000) return clearInterval(leseUhr); bereit(); }, 500);
+    bereit();
     async function loesen() {
+      if (geloest || !bereit()) return;
+      clearInterval(leseUhr); uhr.textContent = "";
       geloest = true; loesungKnopf.hidden = true; weiter.hidden = false; lage.weiter = naechstes;
       app.querySelectorAll(".hv-liste .wahl button").forEach((b) => { b.disabled = true; });
       let richtig = 0;
@@ -1164,6 +1227,7 @@
         box.textContent = ok ? "✓ Richtig!" : `Ich helfe dir: ${antworten[i] === null ? "Du hast nichts markiert. " : ""}Richtig ist: ${a.loesung}. ${a.hinweis || ""}`.trim();
         zeilen[i].querySelectorAll(".wahl button").forEach((b) => { if (b.dataset.wert === a.loesung) b.classList.add("richtig"); });
       });
+      if (richtig < teil.aufgaben.length) lage.hilfe = true; // +5 „ohne Hilfe“ nur, wenn alles richtig ist (30.10.)
       ergebnis.hidden = false;
       ergebnis.className = "rueckmeldung " + (richtig === teil.aufgaben.length ? "gut" : "hilfe");
       ergebnis.textContent = richtig === teil.aufgaben.length ? `${ruf("voll") || lob()} Alles richtig!`
@@ -1184,7 +1248,7 @@
         el("div", { class: "lesetext", lang: "en" }, el("p", {}, text.en)),
         el("div", { class: "knopfreihe" }, knopf("🔊 Text vorlesen", () => spiele([text.audio.en])))),
       el("section", { class: "satzkarte" }, el("ol", { class: "hv-liste" }, zeilen)),
-      el("section", { class: "satzkarte" }, el("div", { class: "knopfreihe" }, loesungKnopf, weiter), ergebnis));
+      el("section", { class: "satzkarte" }, uhr, el("div", { class: "knopfreihe" }, loesungKnopf, weiter), ergebnis));
   }
 
   /* ---------- Hörwahl: Wort hören, richtiges Bild wählen ---------- */

@@ -11,6 +11,8 @@
    Welt 2 Route 66: Autos/Trucks (drüberspringen, Berührung = Leben weg), Ölflecken (0,6 s rutschen ohne Sprung), Reifenstapel, Kojote/Roadrunner/Gürteltier (rollt weg), Boss Big Rig Bob (Hupe), Mautstation mit Schlagbaum.
    Welt 3 Grand Canyon (30.10.): fallende Steine (Staub/Schatten als Warnung, dann Sturz; liegen 1,4 s), Hängebrücken (wackeln; > 1,5 s Bodenzeit auf der Brücke → Brett bricht, Sturz in die Schlucht), Kakteen, Felsbrocken,
    Klapperschlange/Geier/Skorpion, Boss Sheriff Rattlesnake (richtet sich aus dem Felsspalt auf, Rassel), Holztor einer Westernstadt.
+   Welt 4 Mount Rushmore (30.10.): rollende Baumstämme (rollen los, sobald die Figur ≈ 520 davor ist; drüberspringen), Bäche (Lücke mit Wasser + Trittsteine), Windböen (0,5 s Blätter als Warnung, dann 0,8 s Schub
+   zurück/vorwärts, währenddessen halber Sprung), Bärenhöhlen (Bär schaut 0,6 s heraus, dann Pranke davor), Büffel (nicht plattdrückbar – jede Berührung = Leben weg)/Biber/Adler, Boss Grizzly Grandpa (gähnt aus der Höhle, Brummen), Ranger-Station-Tor.
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …). */
 (function () {
@@ -223,6 +225,16 @@
     knarren() { ton(240, 0.35, "sawtooth", 0.03, 0, 170); ton(260, 0.3, "sawtooth", 0.025, 0.3, 180); },
     bruch() { rauschen(0.12, 0.07, 0, { typ: "bandpass", freq: 900 }); ton(300, 0.15, "square", 0.05, 0.02, 90); rauschen(0.3, 0.04, 0.12, { typ: "lowpass", freq: 400 }); },
     rassel() { for (let i = 0; i < 16; i++) rauschen(0.04, 0.05, i * 0.055, { typ: "bandpass", freq: 3000 }); ton(70, 1.0, "sawtooth", 0.07, 0.2); ton(55, 0.9, "sawtooth", 0.05, 0.5); },
+    // Welt 4 Mount Rushmore: Büffel trampelt, Biber nagt (Klicks), Adler schreit, Baumstamm rumpelt beim Rollen, Blätter rascheln (Wind-Warnung), Böe rauscht, Bär knurrt (Vorwarnung) + Pranke zischt, Grizzly Grandpa brummt und gähnt
+    bueffel() { for (let i = 0; i < 4; i++) { ton(70, 0.12, "sine", 0.09, i * 0.13, 40); rauschen(0.08, 0.04, i * 0.13, { typ: "lowpass", freq: 250 }); } },
+    biber() { for (let i = 0; i < 5; i++) ton(1800 + (i % 2) * 300, 0.025, "square", 0.03, i * 0.06); },
+    adler() { ton(2200, 0.45, "sawtooth", 0.03, 0, 900); ton(2400, 0.3, "sine", 0.025, 0.05, 1100); },
+    stamm() { rauschen(0.7, 0.04, 0, { typ: "lowpass", freq: 320 }); for (let i = 0; i < 4; i++) ton(90, 0.08, "sine", 0.05, i * 0.16, 60); },
+    blaetter() { for (let i = 0; i < 4; i++) rauschen(0.05, 0.03, i * 0.1, { typ: "highpass", freq: 2500 }); },
+    wind() { rauschen(1.3, 0.05, 0, { typ: "bandpass", freq: 900 }); ton(500, 1.2, "sine", 0.02, 0.1, 900); },
+    baer() { ton(95, 0.4, "sawtooth", 0.04, 0, 130); ton(120, 0.3, "sawtooth", 0.035, 0.3, 80); },
+    pranke() { rauschen(0.18, 0.06, 0, { typ: "bandpass", freq: 1500 }); ton(600, 0.15, "sine", 0.04, 0, 200); },
+    brummen() { ton(60, 1.4, "sawtooth", 0.09, 0, 45); ton(90, 1.2, "square", 0.04, 0.1, 70); rauschen(1.2, 0.03, 0, { typ: "lowpass", freq: 200 }); ton(220, 0.9, "sine", 0.06, 1.0, 330); ton(330, 0.7, "sine", 0.05, 1.7, 180); },   // Grollen, dann Gähnen (auf und ab)
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -609,7 +621,7 @@
   }
 
   /* ---------- Level (aus Abschnitts-Mustern je Welt; ≈ 28.000 Einheiten, ≥ 2 Minuten) ---------- */
-  const KISTE = 40;
+  const KISTE = 40, TRITT_W = 56;   // Kiste/Block 40 × 40; Trittstein im Bach (Welt 4) 56 breit
   // Welt-Muster: jeder Abschnitt ist (h) => { … h.vor(breite) } mit h = { plat, kiste, dia, geg, luecke, tor, cp, auto, oel, vor }
   const MUSTER_NY = [
       (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                             // 1 Aufwärmen
@@ -704,14 +716,46 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('klapperschlange', 850, 1150); h.vor(1300); }, // 27
     (h) => { h.bruecke(200, 360); h.stein(850); h.kiste(1150); h.vor(1400); },                          // 28 Schluss: Brücke + Stein
   ];
+  // Welt 4 Mount Rushmore: rollende Baumstämme (h.stamm: rollen von rechts den Hang herunter, sobald die Figur ≈ 520 davor ist → drüberspringen), Bäche (h.bach: Lücke mit Wasser + 1–2 Trittsteine),
+  // Windböen (h.wind(dx, richtung): 0,5 s Blätter als Warnung, dann 0,8 s Schub zurück (-1) oder vorwärts (+1), währenddessen halber Sprung), Bärenhöhlen (h.hoehle: Bär schaut 0,6 s heraus, dann Pranke davor), Holzstapel statt Kisten
+  const MUSTER_SD = [
+    (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                                   // 1 Aufwärmen
+    (h) => { h.stamm(700); h.dia(300, 250); h.vor(1000); },                                             // 2 erster Baumstamm
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('biber', 450, 750); h.vor(950); },           // 3 Plattform + Biber
+    (h) => { h.kiste(200); h.kiste(240, 2); h.dia(260, 215); h.vor(750); },                             // 4 Holzstufe
+    (h) => { h.bach(250, 200); h.vor(850); },                                                           // 5 erster Bach (ein Trittstein)
+    (h) => { h.wind(150, -1); h.geg('adler', 500, 800); h.vor(1000); },                                 // 6 Gegenwind + Adler
+    (h) => { h.hoehle(450); h.plat(700, 230, 160); h.dia(780, 190); h.vor(1050); },                     // 7 erste Bärenhöhle + Plattform
+    (h) => { h.geg('bueffel', 150, 900); h.vor(1000); },                                                // 8 erster Büffel (nur überspringen!)
+    (h) => { h.stamm(750); h.kiste(900); h.kiste(940, 2); h.dia(960, 220); h.vor(1150); },              // 9 Baumstamm, dann Holzstufe
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('biber', 450, 800); h.vor(1000); },                                       // 12 CHECKPOINT 1
+    (h) => { h.bach(200, 300); h.dia(350, 240); h.vor(900); },                                          // 13 breiter Bach (zwei Trittsteine)
+    (h) => { h.wind(150, 1); h.kiste(650); h.vor(1000); },                                              // 14 Rückenwind, dann Holzstapel
+    (h) => { h.kiste(200, 2); h.kiste(240, 2); h.geg('adler', 500, 850); h.vor(1000); },                // 15 Holzmauer + Adler
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 16 Dreier-Plattform
+    (h) => { h.hoehle(400); h.geg('bueffel', 750, 1300); h.vor(1400); },                                // 17 Höhle, dann Büffel
+    (h) => { h.plat(200, 235, 200); h.dia(300, 195); h.stamm(850); h.vor(1150); },                      // 18 Plattform + Baumstamm
+    (h) => { h.wind(150, -1); h.geg('biber', 550, 900); h.vor(1050); },                                 // 19 Gegenwind + Biber
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 20
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 21 TOR 2
+    (h) => { h.cp(150); h.kiste(500); h.kiste(540, 2); h.vor(850); },                                   // 22 CHECKPOINT 2
+    (h) => { h.bach(250, 260); h.geg('adler', 700, 1000); h.vor(1150); },                               // 23 Bach + Adler
+    (h) => { h.stamm(800); h.hoehle(1250); h.vor(1500); },                                              // 24 Baumstamm, dann Höhle
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.vor(750); }, // 25 Holzpyramide
+    (h) => { h.wind(150, 1); h.geg('bueffel', 900, 1500); h.vor(1600); },                               // 26 Rückenwind, dann Büffel
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('biber', 850, 1150); h.vor(1300); }, // 27
+    (h) => { h.bach(150, 200); h.stamm(950); h.kiste(1250); h.vor(1500); },                             // 28 Schluss: Bach + Baumstamm
+  ];
   function levelBauen(muster) {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[] };
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[] };
     let x = 0, bodenAb = 0, wort = 0;
     const h = {
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
       kiste: (dx, n = 1) => { for (let i = 0; i < n; i++) L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE * (i + 1) }); },
       dia: (dx, y = 298) => L.diamanten.push({ x:x + dx, y, wort:wort++ }),
-      geg: (art, von, bis) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1 }),
+      geg: (art, von, bis) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' || art === 'adler' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1 }),
       luecke: (dx, w) => { L.boden.push([bodenAb, x + dx]); bodenAb = x + dx + w; },
       tor: (dx, wort, falsch) => L.tore.push({ x:x + dx, wort, falsch }),
       cp: (dx) => L.checkpoints.push({ x:x + dx }),
@@ -721,6 +765,11 @@
       stein: (dx) => L.steine.push({ x:x + dx }),
       bruecke: (dx, w) => { h.luecke(dx, w); L.bruecken.push({ x:x + dx, w }); },
       kaktus: (dx) => L.kakteen.push({ x:x + dx }),
+      // Welt 4: Baumstamm (Startpunkt oben am Hang), Bach = Lücke + Trittsteine (bis 260 breit einer, sonst zwei; als Plattformen mit art 'stein' auf Bodenhöhe), Windböe (richtung -1 = zurück, +1 = vorwärts), Bärenhöhle
+      stamm: (dx) => L.staemme.push({ x:x + dx }),
+      bach: (dx, w) => { h.luecke(dx, w); L.baeche.push({ x:x + dx, w }); const n = w > 260 ? 2 : 1; for (let i = 1; i <= n; i++) L.plattformen.push({ x:x + dx + (w * i) / (n + 1) - TRITT_W / 2, y:BODEN_Y, w:TRITT_W, art:'stein' }); },
+      wind: (dx, richtung = -1) => L.winde.push({ x:x + dx, richtung }),
+      hoehle: (dx) => L.hoehlen.push({ x:x + dx }),
       vor: (dx) => { x += dx; },
     };
     for (const a of muster) a(h);
@@ -746,6 +795,10 @@
   let steine = [], bruecken = [], kakteen = [], rasseln = 0;
   const STEIN_VORLAUF = 300, STEIN_WARNUNG = 0.6, STEIN_LIEGT = 1.4, BRUECKE_MAX = 1.5, KAKTUS_W = 22, KAKTUS_H = 50;
   const RUTSCH_DAUER = 0.6, AUTO_KLANG_ABSTAND = 1.2;
+  // Welt 4: rollende Baumstämme (ruhe → rollt → weg), Windböen (eine aktive Böe: warnung 0,5 s → schub 0,8 s), Bärenhöhlen (ruhe → schaut → pranke → zurueck → weg), Brumm-Zähler (Tests)
+  let staemme = [], winde = [], hoehlen = [], wind = null, brummt = 0;
+  const STAMM_VORLAUF = 520, STAMM_TEMPO = 260, STAMM_R = 20, WIND_WARNUNG = 0.5, WIND_SCHUB = 0.8, WIND_KRAFT = 150, WIND_SPRUNG = 0.72;
+  const HOEHLE_VORLAUF = 340, HOEHLE_SCHAUT = 0.6, HOEHLE_PRANKE = 0.9, HOEHLE_W = 70, PRANKE_H = 44;
   let autoKlangZeit = -9;
   let sequenz = null, zoom = 1, banner = null, bossSpruch = null;
   let halten = false, haltZeit = 0, sprungGedrueckt = false;
@@ -756,8 +809,8 @@
   const BLASE_DAUER = 1.6, ECHO_MIN = 6, ECHO_MAX = 8, ECHO_ABSTAND = 2.5, ECHO_DAUER = 1.4, CHIP_MAX = 8, CHIP_ZEICHEN = 12;
   let erstauntZeit = 0, zungeZeit = 0;   // Gesichtsausdruck: erstaunt 0,8 s nach Treffer, Zunge raus 1 s bei „5× Combo!“ und solange On fire
   const ausdruckAktuell = () => (erstauntZeit > 0 ? "erstaunt" : (onfire || zungeZeit > 0) ? "zunge" : "grinsend");
-  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9 };   // letzter Klang je Art (Spielzeit)
-  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150 };
+  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9, bueffel: -9, biber: -9, adler: -9 };   // letzter Klang je Art (Spielzeit)
+  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150, bueffel: 170, biber: 65, adler: 90 };
   let gegnerKlaenge = 0;   // Zähler für Tests
   const GEGNER_KLANG_ABSTAND = 1.5, GEGNER_NAEHE = 260, COMBO_TEXT_DAUER = 1.3;
   const ruhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
@@ -784,6 +837,7 @@
     checkpoint = 120; boss = { maul:0, weg:0, sichtbar:0, deckel:0 }; tuer = { offen:0 }; bossFrage = null;
     autos = level.autos.map(a => ({ ...a, x:a.start, rad:0 })); oel = level.oel.map(o => ({ ...o, aktiv:false })); rutscht = 0; hupen = 0; autoKlangZeit = -9;
     steine = level.steine.map(s => ({ ...s, phase:'ruhe', t:0, y:-60, vy:0 })); bruecken = level.bruecken.map(b => ({ ...b, zeit:0, gebrochen:false, knarrte:false, bruch:0, bruchX:0 })); kakteen = level.kakteen.map(k => ({ ...k })); rasseln = 0;
+    staemme = level.staemme.map(s => ({ ...s, phase:'ruhe', rx:s.x, rot:0 })); winde = level.winde.map(w => ({ ...w, aktiv:false })); hoehlen = level.hoehlen.map(h => ({ ...h, phase:'ruhe', t:0 })); wind = null; brummt = 0;
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
@@ -824,6 +878,7 @@
     }
   }
   function gegnerPlatt(g) {
+    if (g.art === 'bueffel') return;   // Büffel ist nicht plattzudrücken (Welt 4)
     spieler.vy = -320; spieler.amBoden = false;
     if (g.art === 'guerteltier') { g.rollt = true; g.richtung = 1; g.harmlos = true; gegnerKlang("plopp"); gegnerKlang("rollt"); }   // Gürteltier: rollt als Kugel weg (= platt)
     else { g.tot = 0.01; gegnerKlang("plopp"); }
@@ -905,7 +960,7 @@
     if (zustand !== 'spiel') return;          // in der Sequenz und beim Boss ist die Eingabe gesperrt
     if (rutscht > 0) return;                  // auf dem Ölfleck: kein Sprung möglich
     if (spieler.amBoden && tot <= 0) {
-      spieler.vy = SPRUNG_V; spieler.amBoden = false; halten = true; haltZeit = 0; klang.sprung();
+      spieler.vy = SPRUNG_V * (wind && wind.phase === 'schub' ? WIND_SPRUNG : 1); spieler.amBoden = false; halten = true; haltZeit = 0; klang.sprung();   // in der Windböe: halber Sprung
     }
   }
   function sprungEnde() { halten = false; }
@@ -936,16 +991,20 @@
 
   function schaden(grund) {
     if (spieler.unverwundbar > 0 || tot > 0) return;
-    leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0;
+    leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0; wind = null;
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
   }
-  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵' };
+  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬' };
   function wiederbeleben() {
     spieler.x = checkpoint; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.6;
     halten = false;
     for (const b of bruecken) { b.gebrochen = false; b.zeit = 0; b.knarrte = false; b.bruch = 0; }   // Brücken heil, Steine zurück
     for (const s of steine) if (s.x > checkpoint) { s.phase = 'ruhe'; s.t = 0; }
+    for (const s of staemme) if (s.x > checkpoint) { s.phase = 'ruhe'; s.rx = s.x; }   // Welt 4: Baumstämme zurück oben am Hang, Höhlen ruhig, Böen wieder scharf
+    for (const h of hoehlen) if (h.x > checkpoint) { h.phase = 'ruhe'; h.t = 0; }
+    for (const w of winde) if (w.x > checkpoint) w.aktiv = false;
+    wind = null;
   }
   // Welt 3: Steine fallen, sobald die Figur ≈ 300 davor ist (Staub + Schatten 0,6 s, dann Sturz; liegen 1,4 s gefährlich, dann zerbröseln); Brücken-Bruchstücke fallen nach
   function hindernisseBewegen(dt) {
@@ -957,6 +1016,23 @@
       else if (s.phase === 'weg') { if (spieler.x < s.x - STEIN_VORLAUF - 50) s.phase = 'ruhe'; }
     }
     for (const b of bruecken) if (b.gebrochen) b.bruch = Math.min(1.5, b.bruch + dt);
+    // Welt 4: Baumstamm rollt los, sobald die Figur ≈ 520 davor ist; rollt nach links, bis er 250 hinter der Figur (oder 1400 weit) ist
+    for (const s of staemme) {
+      if (s.phase === 'ruhe') { if (zustand === 'spiel' && tot <= 0 && spieler.x > s.x - STAMM_VORLAUF && spieler.x < s.x) { s.phase = 'rollt'; s.rx = s.x; klang.stamm(); } }
+      else if (s.phase === 'rollt') { s.rx -= STAMM_TEMPO * dt; s.rot -= STAMM_TEMPO * dt / STAMM_R; if (s.rx < spieler.x - 250 || s.rx < s.x - 1400) s.phase = 'weg'; }
+      else if (s.phase === 'weg') { if (spieler.x < s.x - STAMM_VORLAUF - 50) { s.phase = 'ruhe'; s.rx = s.x; } }
+    }
+    // Bärenhöhle: Figur ≈ 340 davor → Bär schaut 0,6 s heraus (Knurren = Vorwarnung) → Pranke 0,9 s vor der Höhle (Treffer) → zieht sich 0,8 s zurück
+    for (const h of hoehlen) {
+      if (h.phase === 'ruhe') { if (zustand === 'spiel' && tot <= 0 && spieler.x > h.x - HOEHLE_VORLAUF && spieler.x < h.x) { h.phase = 'schaut'; h.t = 0; klang.baer(); } continue; }
+      h.t += dt;
+      if (h.phase === 'schaut' && h.t >= HOEHLE_SCHAUT) { h.phase = 'pranke'; h.t = 0; klang.pranke(); }
+      else if (h.phase === 'pranke' && h.t >= HOEHLE_PRANKE) { h.phase = 'zurueck'; h.t = 0; }
+      else if (h.phase === 'zurueck' && h.t >= 0.8) { h.phase = 'weg'; h.t = 0; }
+      else if (h.phase === 'weg' && spieler.x < h.x - HOEHLE_VORLAUF - 50) { h.phase = 'ruhe'; h.t = 0; }
+    }
+    // Windböe: Warnung (Blätter) 0,5 s, dann Schub 0,8 s
+    if (wind) { wind.t += dt; if (wind.phase === 'warnung' && wind.t >= WIND_WARNUNG) { wind.phase = 'schub'; wind.t = 0; klang.wind(); } else if (wind.phase === 'schub' && wind.t >= WIND_SCHUB) wind = null; }
   }
   const steinBox = (s) => ({ x: s.x - 20, y: s.y - 40, w: 40, h: 40 });
   const kaktusBox = (k) => ({ x: k.x - KAKTUS_W / 2, y: BODEN_Y - KAKTUS_H, w: KAKTUS_W, h: KAKTUS_H });
@@ -967,6 +1043,7 @@
       if (g.rollt) { g.x += 420 * dt; g.roll = (g.roll || 0) + dt * 14; if (g.x > g.bis + 900) g.tot = 1; continue; }   // weggerollte Kugel: schnell nach rechts, dann weg
       g.x += g.richtung * GEGNER_TEMPO[g.art] * dt;
       if (g.art === 'roadrunner') { if (g.x < g.von) g.x = g.bis; continue; }   // Roadrunner läuft immer entgegen (nach links) und erscheint rechts wieder
+      if (g.art === 'bueffel') { if (g.x < g.von) { if (spieler.x < g.bis - 450) g.x = g.bis; else g.tot = 1; } continue; }   // Büffel rennt durch; kommt nur wieder, wenn die Figur noch weit genug vor dem Ende seiner Strecke ist
       if (g.x < g.von) g.richtung = 1; if (g.x > g.bis) g.richtung = -1;
     }
     for (const a of autos) {   // Verkehr: nach links, am linken Ende wieder rechts
@@ -983,6 +1060,9 @@
     if (g.art === 'klapperschlange') return { x: g.x - 24, y: g.y - 18, w: 48, h: 18 };
     if (g.art === 'geier') return { x: g.x - 22, y: g.y - 14 + Math.sin(g.flug * 2.5) * 10, w: 44, h: 26 };
     if (g.art === 'skorpion') return { x: g.x - 14, y: g.y - 16, w: 28, h: 16 };
+    if (g.art === 'bueffel') return { x: g.x - 36, y: g.y - 46, w: 72, h: 46 };
+    if (g.art === 'biber') return { x: g.x - 16, y: g.y - 20, w: 32, h: 20 };
+    if (g.art === 'adler') return { x: g.x - 26, y: g.y - 14 + Math.sin(g.flug * 2.5) * 10, w: 52, h: 26 };
     return { x: g.x - 20, y: g.y - 26, w: 40, h: 26 };
   }
   const autoBox = (a) => ({ x: a.x, y: BODEN_Y - a.h, w: a.w, h: a.h });
@@ -1001,8 +1081,11 @@
       if (spieler.unverwundbar > 0) spieler.unverwundbar -= dt;
       if (rutscht > 0) { rutscht = Math.max(0, rutscht - dt); if (rutscht === 0) halten = false; }
 
+      // Welt 4: Windböe auslösen (Figur passiert die Marke), schiebt in der Phase schub mit 150/s zurück oder vorwärts
+      for (const w of winde) if (!w.aktiv && spieler.x >= w.x && spieler.x < w.x + 120) { w.aktiv = true; if (!wind) { wind = { phase:'warnung', t:0, richtung:w.richtung }; klang.blaetter(); } }
+      const schub = wind && wind.phase === 'schub' ? wind.richtung * WIND_KRAFT : 0;
       // Horizontal (auf dem Ölfleck gleitet die Figur etwas schneller)
-      let nx = spieler.x + SPEED * (rutscht > 0 ? 1.15 : 1) * dt;
+      let nx = spieler.x + (SPEED * (rutscht > 0 ? 1.15 : 1) + schub) * dt;
       const oben = spieler.y - PH;
       for (const s of SOLIDE) {
         if (!s.voll) continue;
@@ -1094,7 +1177,8 @@
         if (g.tot > 0 || g.harmlos) continue;
         const gb = gegnerBox(g);
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, gb.x, gb.y, gb.w, gb.h)) {
-          if (spieler.vy > 0 && altY <= gb.y + 14) gegnerPlatt(g);
+          if (g.art === 'bueffel') schaden('bueffel');   // Büffel: auch von oben = Leben weg (nur überspringen)
+          else if (spieler.vy > 0 && altY <= gb.y + 14) gegnerPlatt(g);
           else schaden('gegner');
         }
       }
@@ -1113,6 +1197,15 @@
       for (const k of kakteen) {
         const kb = kaktusBox(k);
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, kb.x, kb.y + 2, kb.w, kb.h - 2)) { schaden('kaktus'); break; }
+      }
+      // Welt 4: rollende Baumstämme (drüberspringen) und die Bären-Pranke vor der Höhle – Berührung = Leben weg
+      for (const s of staemme) {
+        if (s.phase !== 'rollt') continue;
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, s.rx - STAMM_R + 3, BODEN_Y - STAMM_R * 2 + 4, STAMM_R * 2 - 6, STAMM_R * 2 - 4)) { schaden('stamm'); break; }
+      }
+      for (const h of hoehlen) {
+        if (h.phase !== 'pranke') continue;
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, h.x - HOEHLE_W / 2, BODEN_Y - PRANKE_H, HOEHLE_W, PRANKE_H)) { schaden('baer'); break; }
       }
       gegnerKlaengeNaehe();
       // Boss-Sequenz beginnt
@@ -1838,6 +1931,300 @@
     c.restore();
   }
 
+  /* ---------- Welt 4 Mount Rushmore: Kulisse (Nadelwald, Berge, Präsidentenköpfe, Büffelherde), Waldboden, Bäche mit Trittsteinen, Holzstapel, Baumstämme, Windböen, Bärenhöhlen, Gegner, Boss Grizzly Grandpa, Ranger-Station ---------- */
+  function schildRushmore(c, x, y, s, mitText) {   // Holzschild „MOUNT RUSHMORE“ (grüne Nationalpark-Tafel auf zwei Pfosten)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#5a3a22'; c.fillRect(-34, -20, 6, 40); c.fillRect(28, -20, 6, 40);
+    c.fillStyle = '#2e6b3f'; c.strokeStyle = '#f0e0c0'; c.lineWidth = 2; c.beginPath(); c.roundRect(-46, -52, 92, 38, 4); c.fill(); c.stroke();
+    if (mitText !== false) {
+      c.fillStyle = '#fff6e0'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.font = 'bold 11px system-ui, sans-serif'; c.fillText('MOUNT', 0, -41); c.fillText('RUSHMORE', 0, -29);
+      c.font = 'bold 6px system-ui, sans-serif'; c.fillText('NATIONAL MEMORIAL', 0, -18);
+    }
+    c.restore();
+  }
+  function tanne(c, x, y, h, farbe, stamm) {   // Nadelbaum: Stamm + drei Stufen; (x, y) = Fußpunkt, h = Höhe
+    c.fillStyle = stamm || 'rgba(0,0,0,.25)'; c.fillRect(x - h * 0.04, y - h * 0.25, h * 0.08, h * 0.25);
+    c.fillStyle = farbe;
+    for (let k = 0; k < 3; k++) { const b = h * (0.42 - k * 0.1), top = y - h * (0.45 + k * 0.27), unten = y - h * (0.18 + k * 0.27); c.beginPath(); c.moveTo(x - b, unten); c.lineTo(x, top); c.lineTo(x + b, unten); c.closePath(); c.fill(); }
+  }
+  function bueffelSilhouette(c, x, y, s, farbe) {   // grasender Büffel von der Seite (Silhouette): Buckel, tiefer Kopf, Horn, vier Beine
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe;
+    c.beginPath(); c.ellipse(0, -16, 22, 12, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.ellipse(6, -24, 12, 9, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.ellipse(-22, -12, 9, 8, 0, 0, Math.PI * 2); c.fill();
+    for (const bx of [-14, -6, 8, 16]) c.fillRect(bx - 2, -8, 4, 8);
+    c.beginPath(); c.moveTo(-26, -18); c.quadraticCurveTo(-30, -26, -24, -26); c.lineTo(-24, -22); c.closePath(); c.fill();
+    c.restore();
+  }
+  function koepfeRushmore(c, x, y, s) {   // die vier Präsidentenköpfe als Cartoon-Profile (nach rechts) im Granit; (x, y) = Fußpunkt des Felsens, s = Größe (wächst Richtung Ziel)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#8b8f96'; c.beginPath(); c.moveTo(-150, 0); c.lineTo(-130, -70); c.lineTo(-100, -92); c.lineTo(120, -92); c.lineTo(150, -60); c.lineTo(170, 0); c.closePath(); c.fill();   // Felsmassiv
+    c.fillStyle = '#6f737a'; c.beginPath(); c.moveTo(-150, 0); c.lineTo(-120, -40); c.lineTo(-80, -30); c.lineTo(-40, -60); c.lineTo(-40, 0); c.closePath(); c.fill();   // Schatten links
+    const kopf = (kx, ky, h, extra) => {   // Hinterkopf → Scheitel → Stirn → Nase → Lippen → Kinn; Roosevelt mit Brille/Schnauzer, Lincoln mit Bart
+      c.fillStyle = '#b9bcc2'; c.beginPath();
+      c.moveTo(kx - 26, ky); c.lineTo(kx - 26, ky - h * 0.75); c.quadraticCurveTo(kx - 22, ky - h, kx - 4, ky - h);
+      c.quadraticCurveTo(kx + 10, ky - h, kx + 12, ky - h * 0.72);
+      c.lineTo(kx + 11, ky - h * 0.58); c.lineTo(kx + 20, ky - h * 0.42); c.lineTo(kx + 10, ky - h * 0.38);
+      c.lineTo(kx + 13, ky - h * 0.3); c.lineTo(kx + 9, ky - h * 0.26); c.lineTo(kx + 14, ky - h * 0.12);
+      c.quadraticCurveTo(kx + 8, ky, kx - 2, ky); c.closePath(); c.fill();
+      c.fillStyle = '#7d8188'; c.beginPath(); c.ellipse(kx + 4, ky - h * 0.56, 2.5, 1.6, 0, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#7d8188'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(kx - 1, ky - h * 0.62); c.lineTo(kx + 9, ky - h * 0.63); c.stroke();
+      if (extra === 'brille') { c.lineWidth = 1.4; c.beginPath(); c.arc(kx + 4, ky - h * 0.55, 4.5, 0, Math.PI * 2); c.stroke(); c.fillStyle = '#7d8188'; c.fillRect(kx + 8, ky - h * 0.32, 8, 2.5); }
+      if (extra === 'bart') { c.fillStyle = '#9fa3aa'; c.beginPath(); c.moveTo(kx + 14, ky - h * 0.2); c.quadraticCurveTo(kx + 14, ky + 6, kx - 4, ky + 4); c.lineTo(kx - 4, ky); c.closePath(); c.fill(); }
+    };
+    kopf(-96, -36, 56, null); kopf(-44, -40, 54, null); kopf(14, -30, 50, 'brille'); kopf(72, -34, 56, 'bart');
+    c.fillStyle = 'rgba(255,255,255,.12)'; c.fillRect(-100, -92, 220, 4);
+    c.restore();
+  }
+  function hintergrundRushmore(c) {
+    const naehe = Math.min(1, kamera / level.ende);
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6fb2e8'); g.addColorStop(0.6, '#c9e4f6'); g.addColorStop(1, '#e9f3ea');   // kühler Himmel
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    c.fillStyle = 'rgba(255,255,255,.92)';   // Wolken (Parallaxe 0,08)
+    for (let i = 0; i < 6; i++) {
+      const n = viewW + 340, wx = ((i * 360 + 60 - kamera * 0.08) % n + n) % n - 170, wy = 36 + (i % 3) * 26;
+      c.beginPath(); c.arc(wx, wy, 16, 0, Math.PI * 2); c.arc(wx + 20, wy - 9, 22, 0, Math.PI * 2); c.arc(wx + 46, wy, 15, 0, Math.PI * 2); c.arc(wx + 24, wy + 6, 18, 0, Math.PI * 2); c.fill();
+    }
+    for (let i = 0; i < 8; i++) {   // ferne Berge (Parallaxe 0,04), bläulich mit Schneekappen
+      const n = viewW + 600, bx = ((i * 330 - kamera * 0.04) % n + n) % n - 300, bh = 60 + ((i * 53) % 50);
+      c.fillStyle = '#8fa6c4'; c.beginPath(); c.moveTo(bx, 236); c.lineTo(bx + 120, 236 - bh); c.lineTo(bx + 240, 236); c.closePath(); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.8)'; c.beginPath(); c.moveTo(bx + 104, 236 - bh + 14); c.lineTo(bx + 120, 236 - bh); c.lineTo(bx + 136, 236 - bh + 14); c.lineTo(bx + 128, 236 - bh + 11); c.lineTo(bx + 120, 236 - bh + 17); c.lineTo(bx + 112, 236 - bh + 11); c.closePath(); c.fill();
+    }
+    // Mount Rushmore: die vier Köpfe wandern von rechts in die Mitte und wachsen bis zum Boss
+    koepfeRushmore(c, viewW * (0.8 - 0.42 * naehe) - kamera * 0.01, 238, 0.45 + naehe * 1.0);
+    for (let i = 0; i < 26; i++) { const n = viewW + 200, bx = ((i * 46 - kamera * 0.1) % n + n) % n - 100; tanne(c, bx, 242, 28 + ((i * 29) % 22), '#3d6b5e', 'rgba(0,0,0,.2)'); }   // ferner Nadelwald (0,1)
+    for (let i = 0; i < 18; i++) { const n = viewW + 260, bx = ((i * 70 + 20 - kamera * 0.22) % n + n) % n - 130; tanne(c, bx, 256, 46 + ((i * 37) % 34), '#2e7d4f', '#4a2e18'); }   // mittlerer Nadelwald (0,22)
+    c.fillStyle = mischFarbe('#86bf5e', '#6fae55', naehe); c.fillRect(-viewW, 254, viewW * 3, H * 2);   // Wiese
+    c.fillStyle = 'rgba(40,80,30,.18)'; c.fillRect(-viewW, 254, viewW * 3, 4);
+    for (let i = 0; i < 9; i++) {   // Büffelherde als Silhouette auf der Wiese (Parallaxe 0,32)
+      const n = viewW + 700, bx = ((i * 520 + 140 - kamera * 0.32) % n + n) % n - 350, grp = i % 3;
+      bueffelSilhouette(c, bx, 292, 0.7, '#3a2a22'); if (grp !== 1) bueffelSilhouette(c, bx + 44, 296, 0.6, '#3a2a22'); if (grp === 2) bueffelSilhouette(c, bx + 80, 290, 0.5, '#3a2a22');
+    }
+    schildRushmore(c, viewW * (0.86 - 0.5 * naehe), 304 - naehe * 10, 0.6 + naehe * 1.0, true);   // Zielschild kommt näher
+    for (let i = 0; i < 8; i++) { const n = viewW + 300, bx = ((i * 230 + 60 - kamera * 0.5) % n + n) % n - 150; tanne(c, bx, 330, 70 + ((i * 41) % 40), '#1f5f3a', '#4a2e18'); }   // nahe Tannen am Wegrand (0,5)
+  }
+  function waldboden(c, x0, w, a, b, links, rechts) {   // Waldweg: brauner Boden, Grasnarbe oben, Grashalme, Kiesel
+    c.fillStyle = '#6b4a2e'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#5fa84a'; c.fillRect(x0, BODEN_Y, w, 9);
+    c.fillStyle = '#3f8a3e'; c.fillRect(x0, BODEN_Y + 9, w, 2);
+    c.fillStyle = 'rgba(0,0,0,.14)'; for (let yy = BODEN_Y + 30; yy < H; yy += 26) c.fillRect(x0, yy, w, 3);
+    c.strokeStyle = '#4f9a40'; c.lineWidth = 2;
+    for (let x = Math.max(Math.ceil(a / 34) * 34, Math.floor(links / 34) * 34); x < Math.min(b, rechts); x += 34) { const sx = x - kamera; c.beginPath(); c.moveTo(sx, BODEN_Y + 1); c.lineTo(sx - 3, BODEN_Y - 6); c.moveTo(sx + 4, BODEN_Y + 1); c.lineTo(sx + 7, BODEN_Y - 5); c.stroke(); }
+    c.fillStyle = 'rgba(255,230,200,.25)';
+    for (let x = Math.max(Math.ceil(a / 90) * 90, Math.floor(links / 90) * 90); x < Math.min(b, rechts); x += 90) { c.beginPath(); c.ellipse(x - kamera + 30, BODEN_Y + 20, 5, 2.5, 0, 0, Math.PI * 2); c.fill(); }
+  }
+  function bachZeichnen(c, a, b) {   // Lücke = Bach: Wasser mit Wellen, Uferkanten und Ufersteine
+    const x0 = a - kamera, w = b - a;
+    const g = c.createLinearGradient(0, BODEN_Y, 0, H); g.addColorStop(0, '#5fb6e6'); g.addColorStop(1, '#1f5f9e');
+    c.fillStyle = g; c.fillRect(x0, BODEN_Y + 6, w, H);
+    c.fillStyle = '#6b4a2e'; c.fillRect(x0 - 2, BODEN_Y, 8, H - BODEN_Y); c.fillRect(x0 + w - 6, BODEN_Y, 8, H - BODEN_Y);
+    c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 2;
+    for (let i = 0; i < Math.ceil(w / 40); i++) { const wx = x0 + 8 + ((i * 40 + zeit * 60) % Math.max(1, w - 24)), wy = BODEN_Y + 16 + (i % 3) * 14; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 7, wy - 4, wx + 14, wy); c.stroke(); }
+    c.fillStyle = '#9a9a9a'; c.beginPath(); c.ellipse(x0 + 6, BODEN_Y + 10, 9, 5, 0, 0, Math.PI * 2); c.ellipse(x0 + w - 6, BODEN_Y + 12, 10, 5, 0, 0, Math.PI * 2); c.fill();
+  }
+  function trittstein(c, x, y, w) {   // Trittstein im Bach: flacher grauer Stein mit Moos, Gischt rundherum
+    c.fillStyle = 'rgba(255,255,255,.5)'; c.beginPath(); c.ellipse(x + w / 2, y + 12, w / 2 + 8 + Math.sin(zeit * 5 + x) * 2, 7, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#7f8388'; c.beginPath(); c.roundRect(x, y - 2, w, 20, 9); c.fill();
+    c.fillStyle = '#a9adb3'; c.beginPath(); c.ellipse(x + w / 2, y + 3, w / 2 - 4, 4, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#5fa84a'; c.beginPath(); c.ellipse(x + 10, y + 1, 5, 2, 0, 0, Math.PI * 2); c.fill();
+  }
+  function holzstapel(c, x, y) {   // Holzstapel statt Kiste (40 × 40): Stammenden mit Jahresringen zwischen zwei Pfählen
+    c.fillStyle = '#5a3a22'; c.fillRect(x, y, 4, KISTE); c.fillRect(x + KISTE - 4, y, 4, KISTE);
+    const r = 6.2;
+    for (const [cx, cy] of [[10, 33], [20, 33], [30, 33], [15, 22.5], [25, 22.5], [10, 12], [20, 12], [30, 12]]) {
+      c.fillStyle = '#8b5a2b'; c.beginPath(); c.arc(x + cx, y + cy, r, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#d9b27a'; c.beginPath(); c.arc(x + cx, y + cy, r - 1.8, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = 'rgba(90,50,20,.5)'; c.lineWidth = 1; c.beginPath(); c.arc(x + cx, y + cy, r - 4, 0, Math.PI * 2); c.stroke();
+    }
+  }
+  function stammZeichnen(c, s) {   // Baumstamm: liegt oben am Hang (ruhe) bzw. rollt nach links (rollt): Rinde, Stirnseite mit Jahresringen, Staubwolke dahinter
+    const x = (s.phase === 'rollt' ? s.rx : s.x) - kamera;
+    c.save(); c.translate(x, BODEN_Y - STAMM_R);
+    if (s.phase === 'rollt') { c.fillStyle = 'rgba(120,90,60,.35)'; for (let k = 0; k < 3; k++) { const t = (zeit * 2.5 + k * 0.33) % 1; c.beginPath(); c.arc(STAMM_R + 6 + t * 24, STAMM_R - 4 - t * 10, 4 + t * 6, 0, Math.PI * 2); c.fill(); } }
+    else { c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(0, STAMM_R + 1, STAMM_R + 4, 4, 0, 0, Math.PI * 2); c.fill(); }
+    c.rotate(s.rot);
+    c.fillStyle = '#6b4a2e'; c.beginPath(); c.arc(0, 0, STAMM_R, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#4a2e18'; c.lineWidth = 3; for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + 0.4; c.beginPath(); c.moveTo(Math.cos(a) * 13, Math.sin(a) * 13); c.lineTo(Math.cos(a) * STAMM_R, Math.sin(a) * STAMM_R); c.stroke(); }
+    c.fillStyle = '#d9b27a'; c.beginPath(); c.arc(0, 0, STAMM_R - 6, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(120,80,40,.6)'; c.lineWidth = 1.2; for (const r of [4, 8, 11]) { c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.stroke(); }
+    c.fillStyle = '#8b5a2b'; c.beginPath(); c.arc(-3, 2, 1.8, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function windZeichnen(c) {   // Windböe (Bildschirmkoordinaten): Blätter ziehen quer übers Bild – Warnung: wenige, Schub: dicht + weiße Windlinien; Richtung = Schubrichtung
+    const warn = wind.phase === 'warnung', r = wind.richtung, v = (warn ? 260 : 620) * r;
+    c.save();
+    for (let i = 0; i < (warn ? 10 : 22); i++) {
+      const span = viewW + 80, lx = (((i * 131 + 40) + zeit * v) % span + span) % span - 40, ly = 90 + ((i * 67) % 230) + Math.sin(zeit * 6 + i) * 8;
+      c.fillStyle = ['#7fbf4a', '#e0a400', '#c8643a', '#4f9a40'][i % 4]; c.globalAlpha = warn ? 0.55 : 0.9;
+      c.save(); c.translate(lx, ly); c.rotate(zeit * 9 + i); c.beginPath(); c.ellipse(0, 0, 6, 3.2, 0, 0, Math.PI * 2); c.fill(); c.restore();
+    }
+    if (!warn) {
+      c.globalAlpha = 1; c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 2; c.lineCap = 'round';
+      for (let i = 0; i < 9; i++) { const span = viewW + 140, lx = (((i * 97) + zeit * 900 * r) % span + span) % span - 70, ly = 70 + ((i * 53) % 250); c.beginPath(); c.moveTo(lx, ly); c.lineTo(lx - 50 * r, ly + 2); c.stroke(); }
+    }
+    c.restore();
+  }
+  function hoehleZeichnen(c, h) {   // Bärenhöhle: Felshügel mit dunkler Öffnung (glühende Augen); der Bär schaut heraus (schaut), dann fegt die Pranke davor (pranke) und zieht sich zurück
+    const x = h.x - kamera, y = BODEN_Y;
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#7d7368'; c.beginPath(); c.moveTo(-80, 0); c.quadraticCurveTo(-70, -78, 0, -84); c.quadraticCurveTo(70, -78, 80, 0); c.closePath(); c.fill();
+    c.fillStyle = '#5fa84a'; c.beginPath(); c.ellipse(-30, -70, 18, 7, -0.3, 0, Math.PI * 2); c.ellipse(28, -72, 16, 6, 0.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#1a1412'; c.beginPath(); c.moveTo(-38, 0); c.quadraticCurveTo(-40, -62, 0, -64); c.quadraticCurveTo(40, -62, 38, 0); c.closePath(); c.fill();
+    const ph = h.phase, t = h.t;
+    if ((ph === 'ruhe' || ph === 'weg') && Math.floor(zeit * 1.5) % 2 === 0) { c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(-9, -30, 2.2, 0, Math.PI * 2); c.arc(9, -30, 2.2, 0, Math.PI * 2); c.fill(); }
+    if (ph === 'schaut' || ph === 'pranke' || ph === 'zurueck') {
+      const raus = Math.max(0.02, ph === 'schaut' ? Math.min(1, t / 0.25) : ph === 'zurueck' ? Math.max(0, 1 - t / 0.5) : 1);
+      c.save(); c.translate(0, -22 - raus * 10); c.scale(raus, raus);   // Kopf kommt aus dem Dunkeln
+      c.fillStyle = '#5a3a22'; c.beginPath(); c.arc(0, 0, 22, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(-16, -14, 7, 0, Math.PI * 2); c.arc(16, -14, 7, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#c9a070'; c.beginPath(); c.ellipse(0, 7, 11, 8, 0, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#18213a'; c.beginPath(); c.arc(0, 4, 3.5, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#fff'; c.beginPath(); c.arc(-8, -4, 3.2, 0, Math.PI * 2); c.arc(8, -4, 3.2, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#18213a'; c.beginPath(); c.arc(-7, -4, 1.6, 0, Math.PI * 2); c.arc(9, -4, 1.6, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#3a2214'; c.lineWidth = 2; c.beginPath(); c.moveTo(-12, -10); c.lineTo(-4, -8); c.moveTo(12, -10); c.lineTo(4, -8); c.stroke();
+      c.restore();
+    }
+    if (ph === 'pranke' || ph === 'zurueck') {   // Pranke fegt vor der Höhle (Trefferzone ± 35 um die Mitte, 44 hoch): Arm aus der Öffnung, Tatze mit Krallen, Schwunglinien
+      const f = Math.max(0.02, ph === 'pranke' ? Math.min(1, t / 0.15) : Math.max(0, 1 - t / 0.3));
+      c.save(); c.translate(0, -PRANKE_H + 4); c.scale(f, f);
+      c.strokeStyle = '#5a3a22'; c.lineCap = 'round'; c.lineWidth = 22; c.beginPath(); c.moveTo(10, -14); c.quadraticCurveTo(-10, -4, -24, 22); c.stroke();
+      c.fillStyle = '#5a3a22'; c.beginPath(); c.ellipse(-26, 26, 18, 13, -0.4, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#e9e2d0'; for (let k = 0; k < 4; k++) { const a = -2.6 + k * 0.5; c.beginPath(); c.moveTo(-26 + Math.cos(a) * 15, 26 + Math.sin(a) * 11); c.lineTo(-26 + Math.cos(a) * 28, 26 + Math.sin(a) * 22); c.lineTo(-26 + Math.cos(a + 0.28) * 15, 26 + Math.sin(a + 0.28) * 11); c.closePath(); c.fill(); }
+      c.restore();
+      if (ph === 'pranke') { c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2; for (let k = 0; k < 3; k++) { c.beginPath(); c.arc(-4, -26, 30 + k * 9 + Math.sin(zeit * 30) * 2, Math.PI * 0.55, Math.PI * 1.3); c.stroke(); } }
+    }
+    c.restore();
+  }
+  function bueffel(c, g) {   // Büffel: groß und schwer, rennt nach links durch (nicht plattzudrücken, nur überspringen) – Buckel, zottiger Kopf, Horn, Bart, galoppierende Beine, Staub
+    const b = gegnerBox(g); const cx = b.x + 36, cy = b.y + 46;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    const p = g.flug * 16, hop = Math.abs(Math.sin(p)) * 3;
+    c.fillStyle = 'rgba(120,90,60,.3)'; for (let k = 0; k < 3; k++) { const t = (g.flug * 2 + k * 0.33) % 1; c.beginPath(); c.arc(30 + t * 26, -4 - t * 8, 4 + t * 6, 0, Math.PI * 2); c.fill(); }
+    c.translate(0, -hop);
+    c.lineCap = 'round'; c.lineWidth = 7; c.strokeStyle = '#4a3324';
+    for (const [bx, ph] of [[18, 0], [26, Math.PI], [-14, Math.PI], [-22, 0]]) { c.beginPath(); c.moveTo(bx, -18); c.lineTo(bx + Math.sin(p + ph) * 9, -2); c.stroke(); }
+    c.fillStyle = '#5a3f2e'; c.beginPath(); c.ellipse(4, -26, 30, 16, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#4a3324'; c.beginPath(); c.ellipse(10, -36, 18, 12, 0, 0, Math.PI * 2); c.fill();
+    for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(-4 + k * 5, -44 + (k % 2) * 2, 4, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#4a3324'; c.lineWidth = 3; c.beginPath(); c.moveTo(32, -30); c.quadraticCurveTo(42, -22 + Math.sin(p) * 3, 38, -12); c.stroke();
+    c.fillStyle = '#3f2a1e'; c.beginPath(); c.ellipse(-26, -22, 14, 12, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#4a3324'; for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(-34 + k * 5, -32, 4, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#3f2a1e'; c.beginPath(); c.moveTo(-26, -12); c.lineTo(-22, -2); c.lineTo(-16, -12); c.closePath(); c.fill();
+    c.fillStyle = '#e9e2d0'; c.beginPath(); c.moveTo(-28, -30); c.quadraticCurveTo(-36, -42, -26, -42); c.lineTo(-24, -34); c.closePath(); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-32, -24, 2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#2a1a12'; c.beginPath(); c.ellipse(-38, -17, 4, 3, 0, 0, Math.PI * 2); c.fill();
+    if (Math.floor(g.flug * 3) % 2 === 0) { c.fillStyle = 'rgba(255,255,255,.7)'; c.beginPath(); c.arc(-44, -16, 3, 0, Math.PI * 2); c.arc(-48, -14, 2, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function biber(c, g) {   // Biber: rundlicher brauner Körper, flacher Kellenschwanz, zwei Nagezähne, kleine Ohren; plattgedrückt flach
+    const b = gegnerBox(g); const cx = b.x + 16, cy = b.y + 20;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+    const w = Math.sin(g.flug * 10) * 2;
+    c.fillStyle = '#4a3324'; c.beginPath(); c.ellipse(16, -3, 10, 4.5, 0.15 + w * 0.05, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(0,0,0,.3)'; c.lineWidth = 1; for (let k = 0; k < 3; k++) { c.beginPath(); c.moveTo(10 + k * 4, -6); c.lineTo(12 + k * 4, 0); c.stroke(); }
+    c.fillStyle = '#7a5230'; c.beginPath(); c.ellipse(0, -9, 13, 9, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#8f6a45'; c.beginPath(); c.ellipse(-2, -6, 7, 5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#7a5230'; c.beginPath(); c.arc(-11, -13, 7, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.arc(-14, -19, 2.5, 0, Math.PI * 2); c.arc(-7, -19, 2.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-14, -14, 1.4, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.arc(-18, -11, 1.6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#fff6c0'; c.fillRect(-18, -9, 2.2, 4); c.fillRect(-15.4, -9, 2.2, 4);
+    c.fillStyle = '#4a3324'; c.beginPath(); c.roundRect(-9 + w, -2, 5, 3, 1.5); c.roundRect(2 - w, -2, 6, 3, 1.5); c.fill();
+    c.restore();
+  }
+  function adler(c, g) {   // Weißkopfseeadler: fliegt auf Kopfhöhe wie die Taube – dunkelbrauner Körper, weißer Kopf und Schwanz, gelber Hakenschnabel, großer Flügelschlag
+    const b = gegnerBox(g); const cx = b.x + 26, cy = b.y + 14;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.2, 1 - g.tot * 2));
+    const fl = Math.sin(g.flug * 8);
+    c.fillStyle = '#4a3324'; c.beginPath(); c.moveTo(-2, -2); c.quadraticCurveTo(14, -18 - fl * 14, 30, -8 - fl * 18); c.quadraticCurveTo(16, 0, 4, 3); c.closePath(); c.fill();
+    c.fillStyle = '#5a3f2e'; c.beginPath(); c.ellipse(0, 3, 15, 8, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#f4f4f4'; for (let i = -1; i <= 1; i++) { c.beginPath(); c.moveTo(11, 2); c.lineTo(24, i * 4); c.lineTo(24, 4 + i * 4); c.closePath(); c.fill(); }
+    c.beginPath(); c.arc(-14, -4, 6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#ffd93d'; c.beginPath(); c.moveTo(-19, -5); c.lineTo(-27, -3); c.lineTo(-21, 0); c.lineTo(-19, -2); c.closePath(); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-16, -6, 1.3, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#3a2a22'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-19, -9); c.lineTo(-12, -8); c.stroke();
+    c.strokeStyle = '#ffd93d'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-4, 9); c.lineTo(-6, 13); c.moveTo(0, 9); c.lineTo(-1, 13); c.stroke();
+    c.fillStyle = '#3a2a22'; c.beginPath(); c.moveTo(-3, 0); c.quadraticCurveTo(12, -16 + fl * 14, 28, -4 + fl * 18); c.quadraticCurveTo(14, 2, 2, 5); c.closePath(); c.fill();
+    c.restore();
+  }
+  function baerenhoehleBoss(c, x, y) {   // große Höhle im Fels am Boss-Platz: Grizzly Grandpa schläft darin (Zzz), Staub, wenn er herauskommt
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#7d7368'; c.beginPath(); c.moveTo(-120, 0); c.quadraticCurveTo(-110, -150, 0, -160); c.quadraticCurveTo(110, -150, 120, 0); c.closePath(); c.fill();
+    c.fillStyle = '#6a6158'; c.beginPath(); c.moveTo(-120, 0); c.quadraticCurveTo(-100, -90, -60, -120); c.lineTo(-70, 0); c.closePath(); c.fill();
+    c.fillStyle = '#5fa84a'; c.beginPath(); c.ellipse(-50, -138, 26, 9, -0.25, 0, Math.PI * 2); c.ellipse(40, -146, 24, 8, 0.2, 0, Math.PI * 2); c.fill();
+    tanne(c, 70, -120, 56, '#2e7d4f', '#4a2e18'); tanne(c, -80, -100, 44, '#1f5f3a', '#4a2e18');
+    c.fillStyle = '#1a1412'; c.beginPath(); c.moveTo(-62, 0); c.quadraticCurveTo(-66, -118, 0, -122); c.quadraticCurveTo(66, -118, 62, 0); c.closePath(); c.fill();
+    c.fillStyle = '#fff6e0'; c.fillRect(-28, -152, 56, 16); c.fillStyle = '#5a3a22'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('KEEP OUT', 0, -144);
+    if (boss.sichtbar <= 0 && zustand !== 'finale' && zustand !== 'fertig') { const t = zeit % 2; c.globalAlpha = 1 - t / 2; c.fillStyle = 'rgba(255,255,255,.9)'; c.font = 'bold 16px system-ui, sans-serif'; c.fillText('Z', -4 + t * 14, -90 - t * 30); c.font = 'bold 11px system-ui, sans-serif'; c.fillText('z', 12 + t * 14, -108 - t * 30); c.globalAlpha = 1; }
+    if (boss.sichtbar > 0 && boss.sichtbar < 1) { c.fillStyle = 'rgba(200,190,170,.5)'; for (let k = 0; k < 5; k++) { const t = (zeit * 1.6 + k * 0.2) % 1; c.beginPath(); c.arc(-40 + k * 20, -t * 30, 3 + t * 5, 0, Math.PI * 2); c.fill(); } }
+    c.restore();
+  }
+  function grizzlyGrandpa(c, x, y) {   // Boss Welt 4: großer alter Grizzly, aufrecht, mit runder Brille, grauem Bart, buschigen Brauen, Schlafmütze und Wanderstock – kommt gähnend aus dem Dunkel der Höhle, geht im Finale zurück
+    if (boss.sichtbar <= 0) return;
+    const auf = boss.sichtbar * (1 - boss.weg);
+    c.save();
+    c.translate(x - 10, y); c.globalAlpha = Math.min(1, auf * 1.4); c.scale(0.55 + 0.45 * auf, 0.55 + 0.45 * auf);
+    const gaehn = zustand === 'sequenz' ? Math.sin(Math.min(1, boss.sichtbar) * Math.PI) : 0, m = Math.max(boss.maul, gaehn), wank = Math.sin(zeit * 1.6) * (zustand === 'boss' ? 2 : 1);
+    const fell = '#7a5c45', fellD = '#5a3f2e', grau = '#c9c9c9';
+    c.translate(wank, 0);
+    c.strokeStyle = '#8b5a2b'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(52, -96); c.lineTo(58, -4); c.stroke(); c.fillStyle = '#5a3a22'; c.beginPath(); c.arc(52, -100, 7, 0, Math.PI * 2); c.fill();   // Wanderstock
+    c.fillStyle = fellD; c.beginPath(); c.roundRect(-30, -50, 24, 50, 8); c.roundRect(8, -50, 24, 50, 8); c.fill();   // Beine
+    c.fillStyle = fell; c.beginPath(); c.ellipse(-16, -4, 18, 8, 0, 0, Math.PI * 2); c.ellipse(22, -4, 18, 8, 0, 0, Math.PI * 2); c.fill();   // Füße
+    c.fillStyle = fell; c.beginPath(); c.ellipse(0, -92, 50, 56, 0, 0, Math.PI * 2); c.fill();   // dicker Körper
+    c.fillStyle = '#a88563'; c.beginPath(); c.ellipse(4, -84, 30, 36, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = fell; c.lineWidth = 20; c.beginPath(); c.moveTo(34, -120); c.quadraticCurveTo(58, -110, 54, -92); c.stroke();   // Arm am Stock
+    c.beginPath(); c.moveTo(-34, -122); c.quadraticCurveTo(-70 + gaehn * 40, -110 - gaehn * 30, -40 + gaehn * 20, -96 - gaehn * 70); c.stroke();   // Arm (hebt sich beim Gähnen vor den Mund)
+    c.fillStyle = fellD; c.beginPath(); c.arc(-40 + gaehn * 20, -96 - gaehn * 70, 12, 0, Math.PI * 2); c.arc(54, -92, 11, 0, Math.PI * 2); c.fill();   // Tatzen
+    c.save(); c.translate(-4, -160 + m * 2);   // Kopf
+    c.fillStyle = fell; c.beginPath(); c.arc(-22, -22, 13, 0, Math.PI * 2); c.arc(22, -22, 13, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#a88563'; c.beginPath(); c.arc(-22, -22, 6, 0, Math.PI * 2); c.arc(22, -22, 6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = fell; c.beginPath(); c.ellipse(0, 0, 36, 32, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = grau; c.beginPath(); c.moveTo(-26, 10); c.quadraticCurveTo(-24, 44, 0, 48); c.quadraticCurveTo(24, 44, 26, 10); c.quadraticCurveTo(0, 22, -26, 10); c.closePath(); c.fill();   // grauer Bart
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 1.5; for (let k = -2; k <= 2; k++) { c.beginPath(); c.moveTo(k * 7, 22); c.quadraticCurveTo(k * 7 + 1, 32, k * 6, 42); c.stroke(); }
+    c.fillStyle = '#a88563'; c.beginPath(); c.ellipse(0, 12, 18, 13, 0, 0, Math.PI * 2); c.fill();   // Schnauze
+    c.fillStyle = '#3a2214'; c.beginPath(); c.ellipse(0, 7, 7, 5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#5a1e1e'; c.beginPath(); c.ellipse(0, 20, 9 * (0.4 + m * 0.6), 3 + m * 10, 0, 0, Math.PI * 2); c.fill();   // Maul (gähnt / spricht)
+    if (m > 0.3) { c.fillStyle = '#fff'; c.fillRect(-6, 15 + m * 2, 3, 4); c.fillRect(3, 15 + m * 2, 3, 4); }
+    c.fillStyle = grau; c.beginPath(); c.ellipse(-16, -13, 9, 3, -0.2, 0, Math.PI * 2); c.ellipse(16, -13, 9, 3, 0.2, 0, Math.PI * 2); c.fill();   // buschige Brauen
+    for (const ex of [-13, 13]) {   // müde Augen (Lid senkt sich beim Gähnen) + runde Brille
+      c.fillStyle = '#fff'; c.beginPath(); c.arc(ex, -4, 5.5, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#18213a'; c.beginPath(); c.arc(ex + 1, -3, 2.4, 0, Math.PI * 2); c.fill();
+      c.fillStyle = fell; c.fillRect(ex - 6, -10, 12, 3 + gaehn * 6);
+      c.strokeStyle = '#e0a400'; c.lineWidth = 2.2; c.beginPath(); c.arc(ex, -4, 8.5, 0, Math.PI * 2); c.stroke();
+      c.fillStyle = 'rgba(180,220,255,.25)'; c.beginPath(); c.arc(ex, -4, 8.5, 0, Math.PI * 2); c.fill();
+    }
+    c.strokeStyle = '#e0a400'; c.lineWidth = 2.2; c.beginPath(); c.moveTo(-4.5, -4); c.lineTo(4.5, -4); c.moveTo(-21.5, -5); c.lineTo(-30, -9); c.moveTo(21.5, -5); c.lineTo(30, -9); c.stroke();
+    c.fillStyle = '#2a6cff'; c.beginPath(); c.moveTo(-30, -22); c.quadraticCurveTo(-6, -58, 44, -60); c.quadraticCurveTo(14, -50, 30, -24); c.closePath(); c.fill();   // Schlafmütze
+    c.fillStyle = '#fff'; c.beginPath(); c.roundRect(-33, -28, 64, 9, 4); c.fill(); c.beginPath(); c.arc(46, -60, 6, 0, Math.PI * 2); c.fill();
+    c.restore();
+    if (gaehn > 0.5 && zustand === 'sequenz') { c.fillStyle = 'rgba(255,255,255,.9)'; c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Aaah…', 44, -222 - gaehn * 10); }
+    c.restore();
+  }
+  function rangerTor(c, x, y) {   // Tür der Welt 4: Tor der Ranger-Station – Blockhaus-Wand, Stamm-Pfosten, Balken mit Schild „RANGER STATION“ und Tannen-Logo, zwei Lattenflügel schwingen auf, Laterne
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#8b5a2b'; c.fillRect(-70, -150, 240, 150); c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 2; for (let k = 1; k < 8; k++) { c.beginPath(); c.moveTo(-70, -150 + k * 19); c.lineTo(170, -150 + k * 19); c.stroke(); }
+    c.fillStyle = '#2e6b3f'; c.fillRect(-70, -158, 240, 10);
+    c.fillStyle = '#6b4a2e'; c.beginPath(); c.roundRect(-56, -176, 18, 176, 8); c.roundRect(38, -176, 18, 176, 8); c.fill();
+    c.fillStyle = '#5a3a22'; c.fillRect(-62, -190, 124, 16);
+    c.fillStyle = '#2e6b3f'; c.strokeStyle = '#f0e0c0'; c.lineWidth = 2; c.beginPath(); c.roundRect(-66, -214, 132, 26, 5); c.fill(); c.stroke();
+    c.fillStyle = '#fff6e0'; c.font = 'bold 12px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('RANGER STATION', 0, -201);
+    tanne(c, 0, -216, 22, '#5fa84a', '#4a2e18');
+    const offen = tuer.offen;
+    if (offen > 0) { c.fillStyle = `rgba(255,240,180,${0.7 * offen})`; c.fillRect(-38, -150, 76, 150); }
+    for (const seite of [-1, 1]) {
+      c.save(); c.translate(seite * -38, 0); c.scale(Math.max(0.04, 1 - offen * 0.96), 1);
+      c.fillStyle = '#c99a6a'; c.fillRect(seite > 0 ? -38 : 0, -140, 38, 140);
+      c.strokeStyle = '#7a4a24'; c.lineWidth = 2; for (let k = 0; k < 3; k++) { const bx = (seite > 0 ? -38 : 0) + 5 + k * 12; c.beginPath(); c.moveTo(bx, -136); c.lineTo(bx, -4); c.stroke(); }
+      c.beginPath(); c.moveTo(seite > 0 ? -36 : 2, -40); c.lineTo(seite > 0 ? -2 : 36, -130); c.stroke();
+      c.restore();
+    }
+    c.fillStyle = '#3a3a3a'; c.fillRect(-64, -134, 4, 10); c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(-62, -118, 6, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+
   function hintergrund(c) { W.kulisse(c); }
   function hintergrundNY(c) {
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
@@ -1877,6 +2264,7 @@
     }
     for (const p of level.plattformen) {
       const x = p.x - kamera; if (x > viewW + 100 || x + p.w < -100) continue;
+      if (p.art === 'stein' && W.stein) { W.stein(c, x, p.y, p.w); continue; }   // Trittstein im Bach (Welt 4)
       c.fillStyle = W.farben.plattform; c.beginPath(); c.roundRect(x, p.y, p.w, 14, 4); c.fill();
       c.fillStyle = W.farben.plattformOben; c.beginPath(); c.roundRect(x - 2, p.y - 3, p.w + 4, 7, 3); c.fill();
     }
@@ -1887,6 +2275,8 @@
     for (const o of oel) { const x = o.x - kamera; if (x > viewW + 100 || x + o.w < -100) continue; oelZeichnen(c, o); }
     for (const b of bruecken) { const x = b.x - kamera; if (x > viewW + 100 || x + b.w < -100) continue; brueckeZeichnen(c, b); }
     for (const k of kakteen) { const x = k.x - kamera; if (x > viewW + 60 || x < -60) continue; kaktusZeichnen(c, k); }
+    for (const h of hoehlen) { const x = h.x - kamera; if (x > viewW + 120 || x < -120) continue; hoehleZeichnen(c, h); }
+    for (const s of staemme) { if (s.phase === 'weg') continue; const x = (s.phase === 'rollt' ? s.rx : s.x) - kamera; if (x > viewW + 80 || x < -80) continue; stammZeichnen(c, s); }
     for (const cp of checkpoints) { const x = cp.x - kamera; if (x > -60 && x < viewW + 60) fahne(c, x, BODEN_Y, cp.erreicht); }
     for (const d of diamanten) {
       if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue;
@@ -1925,6 +2315,7 @@
       c.globalAlpha = 1;
     }
     effekteZeichnen(c);
+    if (wind) windZeichnen(c);
     if (blase && tot <= 0) wortBlase(c);
   }
   // Comic-Sprechblase rechts oben neben dem Kopf (folgt der Figur, auch im Sprung); am rechten Rand nach links gekippt; Pop-in (reduced-motion: ohne)
@@ -2123,7 +2514,7 @@
   }
 
   /* ---------- Welten: je Welt Kulisse, Boden, Kisten, Gegnerarten, Boss (Zeichner + Klang), Tür, Banner, Level-Muster ---------- */
-  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion };
+  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler };
   function bodenNY(c, x0, w, a, b, links, rechts) {
     c.fillStyle = '#b9ad9a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
     c.fillStyle = '#d9cfbb'; c.fillRect(x0, BODEN_Y, w, 10);
@@ -2149,6 +2540,10 @@
       gegnerarten: ['klapperschlange', 'geier', 'skorpion'], farben: { plattform: '#8a3b1e', plattformOben: '#d9774a', hud: '#b4452a' }, muster: MUSTER_AZ, sprechblaseHoehe: 230,
       kulisse: hintergrundCanyon, boden: felsboden, grube: schlucht, kiste: felsbrocken, hudSymbol: (c, x, y) => schildCanyon(c, x, y + 14, 0.34, false),
       boss: (c, x, y) => { felsspalt(c, x, y); sheriffRattlesnake(c, x, y); }, tuer: westernTor, bossKlang: () => { rasseln++; klang.rassel(); } },
+    sd: { id: 'sd', name: 'Mount Rushmore', staat: 'South Dakota', ziel: 'Mount Rushmore', bossName: 'Grizzly Grandpa', bossSymbol: '🐻', banner: 'Oh no – Grizzly Grandpa is awake!', sturz: 'Splash! 🏞️',
+      gegnerarten: ['bueffel', 'biber', 'adler'], farben: { plattform: '#6b4a2e', plattformOben: '#5fa84a', hud: '#2e7d4f' }, muster: MUSTER_SD, sprechblaseHoehe: 200,
+      kulisse: hintergrundRushmore, boden: waldboden, grube: bachZeichnen, kiste: holzstapel, stein: trittstein, hudSymbol: (c, x, y) => schildRushmore(c, x, y + 14, 0.34, false),
+      boss: (c, x, y) => { baerenhoehleBoss(c, x, y); grizzlyGrandpa(c, x, y); }, tuer: rangerTor, bossKlang: () => { brummt++; klang.brummen(); } },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner }));
 
@@ -2220,16 +2615,19 @@
         autos: autos.map((a) => ({ art: a.art, x: Math.round(a.x), w: a.w, h: a.h })), oel: oel.map((o) => ({ x: o.x, w: o.w, aktiv: o.aktiv })),
         rasseln, steine: steine.map((s) => ({ x: s.x, phase: s.phase, y: Math.round(s.y) })), bruecken: bruecken.map((b) => ({ x: b.x, w: b.w, zeit: Math.round(b.zeit * 100) / 100, gebrochen: b.gebrochen })),
         kakteen: kakteen.map((k) => k.x), meldung: meldung ? meldung.text : null,
+        staemme: staemme.map((s) => ({ x: s.x, phase: s.phase, rx: Math.round(s.rx) })), hoehlen: hoehlen.map((h) => ({ x: h.x, phase: h.phase })), winde: winde.map((w) => ({ x: w.x, richtung: w.richtung, aktiv: w.aktiv })),
+        wind: wind ? { phase: wind.phase, richtung: wind.richtung, t: Math.round(wind.t * 100) / 100 } : null, sprungFaktor: wind && wind.phase === 'schub' ? WIND_SPRUNG : 1, brummt, baeche: level.baeche.map((b) => ({ x: b.x, w: b.w })),
       };
     },
     sammle(i) { const d = diamanten[i]; if (d && !d.weg && zustand === "spiel") diamantSammeln(d); },   // Diamant i direkt einsammeln (Test)
     stampfe(i) { const g = gegner[i]; if (g && g.tot <= 0 && zustand === "spiel") gegnerPlatt(g); },                             // Gegner i plattdrücken (Test)
     gegnerKlang,
-    teleport(x) { tot = 0; spieler.unverwundbar = 0; spieler.x = x; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; kamera = Math.max(0, Math.min(x - viewW * 0.33, level.ende - viewW)); },
+    teleport(x, y) { tot = 0; spieler.unverwundbar = 0; spieler.x = x; spieler.y = y == null ? BODEN_Y : y; spieler.vy = 0; spieler.amBoden = y == null; kamera = Math.max(0, Math.min(x - viewW * 0.33, level.ende - viewW)); },   // y optional (Test: in der Luft absetzen)
     teleportBoss() { this.teleport(level.sequenzX - 250); },
     antwort(n) { antwortGeben(n); },
     schaden() { schaden("gegner"); },
     steinLoesen(i) { const s = steine[i]; if (s) { s.phase = 'warnung'; s.t = 0; } },   // Test: Stein i sofort ankündigen (fällt nach 0,6 s)
+    windLoesen(richtung = -1) { if (zustand === 'spiel') wind = { phase: 'warnung', t: 0, richtung }; },   // Test: Windböe sofort ankündigen (Schub nach 0,5 s)
     setLeben(n) { leben = Math.max(1, Math.min(3, Number(n) || 3)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
     setSkin(o) { Object.assign(skin, o); },
     sprechListe, get level() { return level; }, SEQUENZ, BANNER_TEXT, get welt() { return W.id; },

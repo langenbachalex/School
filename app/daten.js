@@ -6298,12 +6298,11 @@ window.DATEN = {
   "shop": [
    {
     "id": "runner",
-    "symbol": "🎮",
-    "name": "Runner-Ticket",
-    "unter": "Eintritt für das Jump'n'Run",
+    "symbol": "🇬🇧",
+    "name": "London-Run-Ticket",
+    "unter": "Eintritt für den London Run – ein Ticket, ein Durchgang",
     "preis": 150,
-    "bald": true,
-    "hinweis": "Das Spiel kommt bald. Spar schon mal!"
+    "runner": true
    },
    {
     "id": "rahmen_rot",
@@ -6328,6 +6327,523 @@ window.DATEN = {
     "unter": "Grün",
     "preis": 75,
     "rahmen": "gruen"
+   },
+   {
+    "id": "skin_haar_zopf",
+    "symbol": "🎨",
+    "name": "Frisur: Zopf",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haar",
+     "zopf"
+    ]
+   },
+   {
+    "id": "skin_haar_locken",
+    "symbol": "🎨",
+    "name": "Frisur: Locken",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haar",
+     "locken"
+    ]
+   },
+   {
+    "id": "skin_haar_afro",
+    "symbol": "🎨",
+    "name": "Frisur: Afro",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haar",
+     "afro"
+    ]
+   },
+   {
+    "id": "skin_haar_irokese",
+    "symbol": "🎨",
+    "name": "Frisur: Irokese",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haar",
+     "irokese"
+    ]
+   },
+   {
+    "id": "skin_haar_tolle",
+    "symbol": "🎨",
+    "name": "Frisur: Elvis-Tolle",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haar",
+     "tolle"
+    ]
+   },
+   {
+    "id": "skin_haar_zoepfe",
+    "symbol": "🎨",
+    "name": "Frisur: Zöpfe mit Schleifen",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haar",
+     "zoepfe"
+    ]
+   },
+   {
+    "id": "skin_haar_dutt",
+    "symbol": "🎨",
+    "name": "Frisur: Dutt",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haar",
+     "dutt"
+    ]
+   },
+   {
+    "id": "skin_haar_flattop",
+    "symbol": "🎨",
+    "name": "Frisur: Flat-Top",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haar",
+     "flattop"
+    ]
+   },
+   {
+    "id": "skin_haar_dreihaare",
+    "symbol": "🎨",
+    "name": "Frisur: Glatze mit drei Haaren",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haar",
+     "dreihaare"
+    ]
+   },
+   {
+    "id": "skin_haar_riesenafro",
+    "symbol": "🎨",
+    "name": "Frisur: Riesen-Afro",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "haar",
+     "riesenafro"
+    ]
+   },
+   {
+    "id": "skin_haar_mohawk",
+    "symbol": "🎨",
+    "name": "Frisur: Regenbogen-Mohawk",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "haar",
+     "mohawk"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_schwarz",
+    "symbol": "🎨",
+    "name": "Haarfarbe: schwarz",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haarfarbe",
+     "schwarz"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_rot",
+    "symbol": "🎨",
+    "name": "Haarfarbe: rot",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haarfarbe",
+     "rot"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_türkis",
+    "symbol": "🎨",
+    "name": "Haarfarbe: türkis",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haarfarbe",
+     "türkis"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_lila",
+    "symbol": "🎨",
+    "name": "Haarfarbe: lila",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haarfarbe",
+     "lila"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_neongrün",
+    "symbol": "🎨",
+    "name": "Haarfarbe: neongrün",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haarfarbe",
+     "neongrün"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_feuerrot",
+    "symbol": "🎨",
+    "name": "Haarfarbe: feuerrot",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haarfarbe",
+     "feuerrot"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_blau",
+    "symbol": "🎨",
+    "name": "Haarfarbe: blau",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haarfarbe",
+     "blau"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_silber",
+    "symbol": "🎨",
+    "name": "Haarfarbe: silber",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haarfarbe",
+     "silber"
+    ]
+   },
+   {
+    "id": "skin_haarfarbe_regenbogen",
+    "symbol": "🎨",
+    "name": "Haarfarbe: Regenbogen",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "haarfarbe",
+     "regenbogen"
+    ]
+   },
+   {
+    "id": "skin_haarschmuck_haarband",
+    "symbol": "🎨",
+    "name": "Haarband",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "haarschmuck",
+     "haarband"
+    ]
+   },
+   {
+    "id": "skin_hut_cowboy",
+    "symbol": "🎨",
+    "name": "Cowboyhut",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "hut",
+     "cowboy"
+    ]
+   },
+   {
+    "id": "skin_hut_zylinder",
+    "symbol": "🎨",
+    "name": "Zylinder",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "hut",
+     "zylinder"
+    ]
+   },
+   {
+    "id": "skin_nase_knubbel",
+    "symbol": "🎨",
+    "name": "Knubbelnase",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "nase",
+     "knubbel"
+    ]
+   },
+   {
+    "id": "skin_bart_zwirbel",
+    "symbol": "🎨",
+    "name": "Bart: Zwirbelbart",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "bart",
+     "zwirbel"
+    ]
+   },
+   {
+    "id": "skin_bart_walross",
+    "symbol": "🎨",
+    "name": "Bart: Walross",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "bart",
+     "walross"
+    ]
+   },
+   {
+    "id": "skin_bart_kinnbart",
+    "symbol": "🎨",
+    "name": "Bart: Kinnbart",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "bart",
+     "kinnbart"
+    ]
+   },
+   {
+    "id": "skin_bart_monobraue",
+    "symbol": "🎨",
+    "name": "Bart: Monobraue + Schnauzer",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "bart",
+     "monobraue"
+    ]
+   },
+   {
+    "id": "skin_bart_fumanchu",
+    "symbol": "🎨",
+    "name": "Bart: Fu-Manchu",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "bart",
+     "fumanchu"
+    ]
+   },
+   {
+    "id": "skin_schmuck_kette",
+    "symbol": "🎨",
+    "name": "Kette",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "schmuck",
+     "kette"
+    ]
+   },
+   {
+    "id": "skin_schmuck_beides",
+    "symbol": "🎨",
+    "name": "Ohrring + Kette",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "schmuck",
+     "beides"
+    ]
+   },
+   {
+    "id": "skin_topfarbe_gelb",
+    "symbol": "🎨",
+    "name": "Oberteil: gelb",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "topfarbe",
+     "gelb"
+    ]
+   },
+   {
+    "id": "skin_topfarbe_grün",
+    "symbol": "🎨",
+    "name": "Oberteil: grün",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "topfarbe",
+     "grün"
+    ]
+   },
+   {
+    "id": "skin_schuhe_schwarz",
+    "symbol": "🎨",
+    "name": "Schuhe: schwarz",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "schuhe",
+     "schwarz"
+    ]
+   },
+   {
+    "id": "skin_hals_giraffe",
+    "symbol": "🎨",
+    "name": "Körper: Giraffenhals",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "hals",
+     "giraffe"
+    ]
+   },
+   {
+    "id": "skin_bauch_kräftig",
+    "symbol": "🎨",
+    "name": "Körper: kräftiger Bauch",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "bauch",
+     "kräftig"
+    ]
+   },
+   {
+    "id": "skin_bauch_kugel",
+    "symbol": "🎨",
+    "name": "Körper: Kugelbauch",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "bauch",
+     "kugel"
+    ]
+   },
+   {
+    "id": "skin_brust_kräftig",
+    "symbol": "🎨",
+    "name": "Körper: breite Schultern",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "brust",
+     "kräftig"
+    ]
+   },
+   {
+    "id": "skin_muskeln_hulk",
+    "symbol": "🎨",
+    "name": "Körper: Hulk-Muskeln",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "muskeln",
+     "hulk"
+    ]
+   },
+   {
+    "id": "skin_fuesse_riesen",
+    "symbol": "🎨",
+    "name": "Körper: Riesenfüße",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "fuesse",
+     "riesen"
+    ]
+   },
+   {
+    "id": "skin_schuhe_rollschuhe",
+    "symbol": "🎨",
+    "name": "Schuhe: Rollschuhe",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "schuhe",
+     "rollschuhe"
+    ]
+   },
+   {
+    "id": "skin_rucksack_blau",
+    "symbol": "🎨",
+    "name": "Rucksack: blau",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "rucksack",
+     "blau"
+    ]
+   },
+   {
+    "id": "skin_rucksack_rot",
+    "symbol": "🎨",
+    "name": "Rucksack: rot",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "rucksack",
+     "rot"
+    ]
+   },
+   {
+    "id": "skin_rucksack_regenbogen",
+    "symbol": "🎨",
+    "name": "Rucksack: Regenbogen",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "rucksack",
+     "regenbogen"
+    ]
+   },
+   {
+    "id": "skin_handschuhe_weiß",
+    "symbol": "🎨",
+    "name": "Handschuhe: weiß",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "handschuhe",
+     "weiß"
+    ]
+   },
+   {
+    "id": "skin_handschuhe_schwarz",
+    "symbol": "🎨",
+    "name": "Handschuhe: schwarz",
+    "unter": "Figur im London Run",
+    "preis": 45,
+    "skin": [
+     "handschuhe",
+     "schwarz"
+    ]
+   },
+   {
+    "id": "skin_handschuhe_boxhandschuhe",
+    "symbol": "🎨",
+    "name": "Boxhandschuhe",
+    "unter": "Figur im London Run",
+    "preis": 90,
+    "skin": [
+     "handschuhe",
+     "boxhandschuhe"
+    ]
    }
   ]
  },

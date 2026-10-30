@@ -15,6 +15,10 @@
    zurück/vorwärts, währenddessen halber Sprung), Bärenhöhlen (Bär schaut 0,6 s heraus, dann Pranke davor), Büffel (nicht plattdrückbar – jede Berührung = Leben weg)/Biber/Adler, Boss Grizzly Grandpa (gähnt aus der Höhle, Brummen), Ranger-Station-Tor.
    Welt 5 California · Golden Gate Bridge (30.10.): Nebelabschnitte (Schleier über dem Spielfeld, Diamanten glühen durch), Seilbahn-Plattformen (Gondel pendelt am Seil über dem Pazifik, trägt die Figur mit), Surfbrett-Rutsche (Tempo × 1,6, springen erlaubt),
    Pazifik-Lücken, Möwe (klaut bei Berührung einen Diamanten statt ein Leben – plattdrücken oder mit gehaltenem Sprung drüber)/Seelöwe/Skater, Boss Captain Fog (Nebelgeist mit Kapitänsmütze, Nebelhorn), Brückentor (Golden-Gate-Pfeiler mit Gitter).
+   Welt „westminster“ (31.10., nur Klasse 6 „London Run“): Themse mit Booten, Big Ben + Parlament wachsen im Hintergrund, London Eye, Nieselwolken, am Ende Regenbogen; Doppeldecker/Black Cabs (wie Autos),
+   Pfützen (rutschen wie Öl), Telefonzellen/Postkästen als Stufen, Themse-Lücken, Taube/Stadtfuchs/graues Eichhörnchen, Boss Sergeant Bearskin (Royal Guard, nur die Augen bewegen sich; Trommelwirbel + Signal), Tor der Horse Guards.
+   Cameos (31.10., Option cameos: [{ id, name, bild, kraft }]): 2–3 Gastauftritte der geheimen Superhelden je Lauf (rundes Kartenbild, Umhang, Sprechblase ≈ 2,5 s) mit kleinem Effekt (CAMEO);
+   ohne die Option (Klasse 9) gibt es keine Cameos. stimme.cameo(text, id) spricht den Satz (optional).
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …). */
 (function () {
@@ -130,7 +134,7 @@
     for (let i = 0; i <= 5; i++) l.push(`Power level ${i}`);
     return l;
   }
-  const kurzDe = (de) => String(de || "").split(/[,;]/)[0].replace(/\(.*?\)/g, "").trim();
+  const kurzDe = (de) => String(de || "").replace(/\(.*?\)/g, "").split(/[,;]/)[0].replace(/\s+/g, " ").trim();   // erst Klammern weg (auch mit Komma darin: „die (Wand-, Turm)uhr“), dann die erste Bedeutung
 
   // Texte, die die App (G/E) überschreiben kann
   const TEXTE = {
@@ -255,6 +259,14 @@
     welle() { rauschen(0.55, 0.05, 0, { typ: "bandpass", freq: 700 }); ton(280, 0.45, "sine", 0.03, 0, 620); },
     gondel() { ton(230, 0.3, "sawtooth", 0.025, 0, 180); },
     nebelhorn() { ton(110, 1.5, "sawtooth", 0.09); ton(138, 1.5, "sawtooth", 0.05); ton(55, 1.6, "sine", 0.07); rauschen(2.6, 0.025, 0, { typ: "lowpass", freq: 400 }); ton(110, 0.9, "sawtooth", 0.08, 1.8); ton(138, 0.9, "sawtooth", 0.045, 1.8); ton(55, 1.0, "sine", 0.06, 1.8); },
+    // Welt Westminster (Klasse 6): Stadtfuchs kläfft, Pfütze platscht, Bus brummt + Klingel, Sergeant Bearskin = Trommelwirbel + kurzes Marsch-Signal; Cameo = Wusch + Glitzern, Schild = heller Gong
+    fuchs() { ton(900, 0.08, "square", 0.03, 0, 600); ton(950, 0.08, "square", 0.028, 0.14, 620); },
+    platsch() { rauschen(0.25, 0.05, 0, { typ: "bandpass", freq: 1200 }); ton(600, 0.15, "sine", 0.04, 0, 250); },
+    bus() { rauschen(0.5, 0.035, 0, { typ: "lowpass", freq: 500 }); ton(70, 0.45, "sawtooth", 0.03, 0, 55); ton(1320, 0.08, "triangle", 0.035, 0.1); ton(1320, 0.08, "triangle", 0.035, 0.22); },
+    trommel() { for (let i = 0; i < 18; i++) rauschen(0.04, 0.02 + i * 0.003, i * 0.045, { typ: "bandpass", freq: 2600 }); rauschen(0.12, 0.09, 0.84, { typ: "bandpass", freq: 1800 }); ton(90, 0.2, "sine", 0.08, 0.84, 60); },
+    signal() { [392, 523, 659, 784, 659, 784].forEach((f, i) => ton(f, i === 5 ? 0.5 : 0.16, "triangle", 0.08, 1.05 + i * 0.17)); },
+    cameo() { rauschen(0.35, 0.04, 0, { typ: "highpass", freq: 1800 }); [1047, 1319, 1568, 2093].forEach((f, i) => ton(f, 0.12, "triangle", 0.07, 0.12 + i * 0.07)); },
+    schild() { ton(880, 0.4, "sine", 0.08); ton(1320, 0.35, "sine", 0.05, 0.05); },
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -863,6 +875,39 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('moewe', 850, 1150); h.vor(1300); }, // 27
     (h) => { h.luecke(200, 180); h.nebel(500, 600); h.kiste(1000); h.vor(1300); },                      // 28 Schluss: Lücke, Nebel, Kiste
   ];
+  // Welt Westminster (Klasse 6 „London Run“, 31.10.): Black Cabs und Doppeldecker statt Autos/Trucks, Pfützen statt Öl, Telefonzellen (2 hoch) und Postkästen als Stufen, Themse-Lücken
+  const MUSTER_WESTMINSTER = [
+    (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                                   // 1 Aufwärmen (Teekiste)
+    (h) => { h.auto('cab', 150, 950); h.dia(500, 250); h.vor(1000); },                                  // 2 erstes Black Cab
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(950); },           // 3 Plattform + Taube vom Trafalgar Square
+    (h) => { h.post(200); h.zelle(240); h.dia(260, 215); h.vor(750); },                                 // 4 Postkasten → Telefonzelle (Stufe)
+    (h) => { h.pfuetze(300); h.geg('fuchs', 500, 900); h.vor(1000); },                                  // 5 Pfütze + Stadtfuchs
+    (h) => { h.luecke(250, 170); h.vor(950); },                                                         // 6 erste Themse-Lücke
+    (h) => { h.auto('bus', 100, 1000); h.plat(600, 230, 160); h.dia(680, 190); h.vor(1100); },          // 7 Doppeldecker + Plattform
+    (h) => { h.geg('eichhoernchen', 150, 500); h.post(650); h.zelle(690); h.dia(710, 190); h.vor(900); }, // 8 Eichhörnchen (St James's Park) + Stufe
+    (h) => { h.auto('cab', 100, 900); h.pfuetze(550); h.vor(1000); },                                   // 9 Cab + Pfütze
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('fuchs', 450, 750); h.vor(1000); },                                       // 12 CHECKPOINT 1
+    (h) => { h.auto('cab', 100, 1000); h.dia(500, 250); h.auto('bus', 1000, 1900); h.vor(2000); },      // 13 Rushhour
+    (h) => { h.zelle(200); h.zelle(240); h.geg('taube', 450, 850); h.vor(1000); },                      // 14 zwei Telefonzellen + Taube
+    (h) => { h.luecke(250, 160); h.pfuetze(600); h.vor(1000); },                                        // 15 Themse + Pfütze
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 16 Dreier-Plattform
+    (h) => { h.geg('eichhoernchen', 150, 450); h.auto('bus', 500, 1300); h.vor(1400); },                // 17 Eichhörnchen + Bus
+    (h) => { h.plat(200, 235, 200); h.dia(300, 195); h.post(650); h.vor(950); },                        // 18
+    (h) => { h.pfuetze(200); h.geg('fuchs', 450, 800); h.vor(1000); },                                  // 19 Pfütze + Fuchs
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 20
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 21 TOR 2
+    (h) => { h.cp(150); h.post(500); h.zelle(540); h.vor(850); },                                       // 22 CHECKPOINT 2
+    (h) => { h.auto('bus', 100, 1000); h.geg('taube', 1000, 1400); h.vor(1500); },                      // 23 Bus + Taube
+    (h) => { h.luecke(200, 190); h.plat(150, 230, 320); h.geg('fuchs', 650, 950); h.vor(1150); },       // 24 Plattform über der Themse
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.vor(750); }, // 25 Teekisten-Pyramide
+    (h) => { h.pfuetze(150); h.auto('cab', 300, 1100); h.geg('eichhoernchen', 1150, 1400); h.vor(1500); }, // 26 Pfütze + Cab + Eichhörnchen
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('fuchs', 850, 1250); h.vor(1300); }, // 27
+    (h) => { h.luecke(200, 170); h.auto('bus', 500, 1300); h.post(1350); h.vor(1500); },                // 28 Schluss: Themse + Bus
+  ];
+  // Fahrzeuge: Breite/Höhe, Tempo, Startabstand vor dem rechten Ende (auto/truck wie seit Welt 2; bus/cab Welt Westminster)
+  const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
   function levelBauen(muster) {
     const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[] };
     let x = 0, bodenAb = 0, wort = 0;
@@ -875,8 +920,12 @@
       tor: (dx, wort, falsch) => L.tore.push({ x:x + dx, wort, falsch }),
       cp: (dx) => L.checkpoints.push({ x:x + dx }),
       // Auto/Truck pendelt auf der Strecke von..bis (fährt nach links, erscheint rechts wieder) – so trifft man es sicher einmal
-      auto: (art, von, bis) => L.autos.push({ art, von:x + von, bis:x + bis, start:x + bis - (art === 'truck' ? 260 : 180), tempo: art === 'truck' ? 230 : 270, w: art === 'truck' ? 130 : 80, h: art === 'truck' ? 48 : 34 }),
+      auto: (art, von, bis) => { const m = AUTO_MASSE[art] || AUTO_MASSE.auto; L.autos.push({ art, von:x + von, bis:x + bis, start:x + bis - m.start, tempo:m.tempo, w:m.w, h:m.h }); },
       oel: (dx, w = 90) => L.oel.push({ x:x + dx, w }),
+      // Welt Westminster: Pfütze (rutscht wie Öl), Telefonzelle = zwei Blöcke übereinander (teil 0 unten, 1 oben), Postkasten = ein Block
+      pfuetze: (dx, w = 90) => L.oel.push({ x:x + dx, w, art:'pfuetze' }),
+      zelle: (dx) => { L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE, art:'zelle', teil:0 }, { x:x + dx, y:BODEN_Y - KISTE * 2, art:'zelle', teil:1 }); },
+      post: (dx) => L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE, art:'post' }),
       stein: (dx) => L.steine.push({ x:x + dx }),
       bruecke: (dx, w) => { h.luecke(dx, w); L.bruecken.push({ x:x + dx, w }); },
       kaktus: (dx) => L.kakteen.push({ x:x + dx }),
@@ -921,6 +970,12 @@
   // Welt 5: Nebeldichte an der Figur (0..1), Gondeln (gx = aktuelle linke Kante, vx = Tempo), Index der Gondel unter der Figur, Surf-Timer (Tempo × 1,6), Zähler geklaute Diamanten / Nebelhorn (Tests)
   let nebelDichte = 0, gondeln = [], aufGondel = null, surfs = [], surft = 0, geklaut = 0, tutet = 0;
   const NEBEL_RAND = 160, NEBEL_MAX = 0.78, GONDEL_W = 130, GONDEL_Y = BODEN_Y - 30, GONDEL_T = 7, SURF_NACH = 0.3, SURF_TEMPO = 1.6;
+  // Welt Westminster: Trommelwirbel-Zähler (Tests)
+  let trommelt = 0;
+  // Cameos (Klasse 6): Liste der Helden (opt.cameos), geladene Kartenbilder, Auftrittsplan (x-Marken), laufender Auftritt, Effekte (Restzeit in s)
+  let cameoListe = [], cameoBilder = {}, cameoPlan = [], cameo = null, cameosGezeigt = 0, cameoEffekt = null;
+  let schild = 0, sprungBonus = 0, durchlaessig = 0, eisZeit = 0, traegt = 0, traegtAktiv = false, eule = null;
+  const CAMEO_DAUER = 2.5, CAMEO_EIN = 0.5, CAMEO_AUS = 0.45, CAMEO_R = 24;
   let autoKlangZeit = -9;
   let sequenz = null, zoom = 1, banner = null, bossSpruch = null;
   let halten = false, haltZeit = 0, sprungGedrueckt = false;
@@ -931,8 +986,8 @@
   const BLASE_DAUER = 1.6, ECHO_MIN = 6, ECHO_MAX = 8, ECHO_ABSTAND = 2.5, ECHO_DAUER = 1.4, CHIP_MAX = 8, CHIP_ZEICHEN = 12;
   let erstauntZeit = 0, zungeZeit = 0;   // Gesichtsausdruck: erstaunt 0,8 s nach Treffer, Zunge raus 1 s bei „5× Combo!“ und solange On fire
   const ausdruckAktuell = () => (erstauntZeit > 0 ? "erstaunt" : (onfire || zungeZeit > 0) ? "zunge" : "grinsend");
-  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9, bueffel: -9, biber: -9, adler: -9, moewe: -9, seeloewe: -9, skater: -9 };   // letzter Klang je Art (Spielzeit)
-  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150, bueffel: 170, biber: 65, adler: 90, moewe: 80, seeloewe: 50, skater: 140 };
+  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9, bueffel: -9, biber: -9, adler: -9, moewe: -9, seeloewe: -9, skater: -9, fuchs: -9 };   // letzter Klang je Art (Spielzeit)
+  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150, bueffel: 170, biber: 65, adler: 90, moewe: 80, seeloewe: 50, skater: 140, fuchs: 75 };
   let gegnerKlaenge = 0;   // Zähler für Tests
   const GEGNER_KLANG_ABSTAND = 1.5, GEGNER_NAEHE = 260, COMBO_TEXT_DAUER = 1.3;
   const ruhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
@@ -964,6 +1019,8 @@
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
+    trommelt = 0; cameo = null; cameosGezeigt = 0; cameoEffekt = null; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
+    cameoPlan = cameoPlanBauen();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
   }
 
@@ -1014,6 +1071,75 @@
     if (g.beute) { gesammelt--; geklaut++; hudPuls = 1; }
     meldung = { text: g.beute ? 'My diamond! 🐦' : 'Nothing to steal! 🐦', zeit: 1.2 };
     const b = gegnerBox(g); funken(b.x + b.w / 2, b.y + b.h / 2, 12, ["#39c6f0", "#bfefff", "#ffffff"], 170, 0.5);
+  }
+  /* ---------- Cameos: geheime Superhelden (Klasse 6) – Satz (Englisch, kurz), Umhangfarbe, Effekt-Symbol ----------
+     Effekte (fair, nie mehr Diamanten als möglich): leo Funken-Spur + Combo +1 · kenji nächster Sprung höher (5 s) · tessa Schild gegen den nächsten Treffer (5 s, nicht beim Sturz)
+     felix trägt über die nächste Lücke (5 s, einmal) · olivia zeigt die Frage des nächsten Tors sofort · ellie Echo des letzten Worts sofort · zara Gegner 3 s durchlässig
+     penny Gegner 3 s eingefroren · max holt den zuletzt verpassten Diamanten zurück (sonst Combo +1) · camilla +1 Herz (bei 3 Herzen Combo +1); unbekannte Helden: Combo +1 */
+  const CAMEO = {
+    leo: { satz: "Leo here! Go, go, go!", farbe: "#e0a400", symbol: "⚡" },
+    kenji: { satz: "Kenji here! Jump high!", farbe: "#ff7a1a", symbol: "🦘" },
+    tessa: { satz: "Tessa here! I've got your back!", farbe: "#2e9e5b", symbol: "🛡️" },
+    felix: { satz: "Felix here! I can carry you!", farbe: "#8a5a2b", symbol: "🦅" },
+    olivia: { satz: "Olivia here! I can see the next gate!", farbe: "#8a3ffc", symbol: "🦉" },
+    ellie: { satz: "Ellie here! Listen again!", farbe: "#7f8c9d", symbol: "🔁" },
+    zara: { satz: "Zara here! Now they can't see you!", farbe: "#18213a", symbol: "👻" },
+    penny: { satz: "Penny here! Freeze!", farbe: "#39c6f0", symbol: "❄️" },
+    max: { satz: "Max here! I've got a gadget!", farbe: "#c8283a", symbol: "🔧" },
+    camilla: { satz: "Camilla here! Have an extra heart!", farbe: "#d9a35a", symbol: "❤️" },
+  };
+  const cameoInfo = (held) => CAMEO[held && held.id] || { satz: `${(held && held.name) || "A hero"} is here!`, farbe: "#1d3f8f", symbol: "⭐" };
+  // 2–3 Auftritte je Lauf (höchstens so viele wie Helden übergeben): x-Marken bei 22/50/78 % der Strecke, nie direkt an einem Tor (dann 400 dahinter)
+  function cameoPlanBauen() {
+    if (!cameoListe.length) return [];
+    const n = Math.min(cameoListe.length, 2 + (Math.random() < 0.5 ? 1 : 0));
+    const anteile = n === 1 ? [0.45] : n === 2 ? [0.3, 0.65] : [0.22, 0.5, 0.78];
+    return anteile.map((f, i) => {
+      let x = Math.round(level.sequenzX * f);
+      for (const t of level.tore) if (x > t.x - 600 && x < t.x + 600) x = t.x + 650;   // nicht mit Tor-Hinweis/Tor-Ergebnis zusammen
+      return { x, held: cameoListe[i], erledigt: false };
+    });
+  }
+  function comboPlus() {
+    combo++; if (combo > maxCombo) maxCombo = combo; hudPuls = 1;
+    funken(spieler.x, spieler.y - 50, 12, ["#ffd93d", "#fff6c0"], 200, 0.6);
+  }
+  function cameoStart(held) {
+    const info = cameoInfo(held);
+    cameo = { held, t: 0, satz: (held && held.satz) || info.satz, info };
+    cameosGezeigt++; klang.cameo();
+    try { if (stimme.cameo) stimme.cameo(cameo.satz, held && held.id); } catch (e) { /* stumm */ }
+    const id = held && held.id;
+    if (id === 'leo') { if (!ruhig()) spur = Math.max(spur, 3); comboPlus(); cameoEffekt = 'combo'; }
+    else if (id === 'kenji') { sprungBonus = 5; cameoEffekt = 'sprung'; }
+    else if (id === 'tessa') { schild = 5; cameoEffekt = 'schild'; }
+    else if (id === 'felix') { traegt = 5; cameoEffekt = 'traegt'; }
+    else if (id === 'olivia' && tore.some((t) => !t.erledigt && t.x > spieler.x)) { eule = tore.find((t) => !t.erledigt && t.x > spieler.x); cameoEffekt = 'eule'; }
+    else if (id === 'ellie' && wortbank.length) {
+      const b = wortbank[wortbank.length - 1], w = woerter[b.wort];
+      echo = { text: `🔁 ${w.en} – ${kurzDe(w.de) || w.de}`, zeit: ECHO_DAUER }; echoLetzte = zeit; echos++;
+      stimmeAufrufe++; stimme.wort(b.wort, { leise: true }); cameoEffekt = 'echo';
+    }
+    else if (id === 'zara') { durchlaessig = 3; cameoEffekt = 'unsichtbar'; }
+    else if (id === 'penny') { eisZeit = 3; cameoEffekt = 'eis'; }
+    else if (id === 'max' && diamanten.some((d) => d.verpasst && !d.weg)) {
+      const d = diamanten.filter((d) => d.verpasst && !d.weg).pop();
+      let zx = spieler.x + 170;   // freie Bodenstelle vor der Figur (kein Loch, keine Kiste)
+      for (let k = 0; k < 10; k++) { const x = spieler.x + 150 + k * 60; if (level.boden.some(([a, b]) => x - 30 > a && x + 30 < b) && !level.kisten.some((q) => q.x > x - 70 && q.x < x + 30)) { zx = x; break; } }
+      d.x = zx; d.y = 290; d.verpasst = false; funken(d.x, d.y, 14, ["#39c6f0", "#bfefff", "#ffffff"], 180, 0.6); cameoEffekt = 'diamant';
+    }
+    else if (id === 'camilla' && leben < 3) { leben++; hudPuls = 1; cameoEffekt = 'herz'; }
+    else { comboPlus(); cameoEffekt = 'combo'; }
+  }
+  function cameoBewegen(dt) {
+    if (cameo) { cameo.t += dt; if (cameo.t >= CAMEO_DAUER) cameo = null; }
+    if (schild > 0) schild = Math.max(0, schild - dt);
+    if (sprungBonus > 0) sprungBonus = Math.max(0, sprungBonus - dt);
+    if (durchlaessig > 0) durchlaessig = Math.max(0, durchlaessig - dt);
+    if (eisZeit > 0) eisZeit = Math.max(0, eisZeit - dt);
+    if (traegt > 0) traegt = Math.max(0, traegt - dt);
+    if (eule && (eule.erledigt || spieler.x > eule.x + 40)) eule = null;
+    if (!cameo && tot <= 0 && !popup) { const pl = cameoPlan.find((p) => !p.erledigt && spieler.x >= p.x); if (pl) { pl.erledigt = true; cameoStart(pl.held); } }
   }
   // Gegner-Klang: nur im laufenden Spiel (nie in Sequenz/Boss), je Art höchstens alle 1,5 s; "plopp" ist ein Ereignis ohne Sperre
   function gegnerKlang(art) {
@@ -1092,6 +1218,7 @@
     if (rutscht > 0) return;                  // auf dem Ölfleck: kein Sprung möglich
     if (spieler.amBoden && tot <= 0) {
       spieler.vy = SPRUNG_V * (wind && wind.phase === 'schub' ? WIND_SPRUNG : 1); spieler.amBoden = false; halten = true; haltZeit = 0; klang.sprung();   // in der Windböe: halber Sprung
+      if (sprungBonus > 0) { spieler.vy *= 1.3; sprungBonus = 0; meldung = { text: 'Boing! 🦘', zeit: 0.7 }; }   // Cameo Kenji: einmal höher
     }
   }
   function sprungEnde() { halten = false; }
@@ -1123,11 +1250,12 @@
 
   function schaden(grund) {
     if (spieler.unverwundbar > 0 || tot > 0) return;
+    if (schild > 0 && grund !== 'wasser') { schild = 0; spieler.unverwundbar = 1.2; klang.schild(); meldung = { text: 'Shield! 🛡️', zeit: 1 }; return; }   // Cameo Tessa
     leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0; wind = null; surft = 0; aufGondel = null;
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
   }
-  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬' };
+  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕' };
   function wiederbeleben() {
     spieler.x = checkpoint; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.6;
     halten = false;
@@ -1184,6 +1312,7 @@
   const kaktusBox = (k) => ({ x: k.x - KAKTUS_W / 2, y: BODEN_Y - KAKTUS_H, w: KAKTUS_W, h: KAKTUS_H });
   function gegnerBewegen(dt) {
     for (const g of gegner) {
+      if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut) continue;   // Cameo Penny: Gegner stehen eingefroren still
       g.flug += dt;
       if (g.tot > 0) { g.tot += dt; continue; }
       if (g.rollt) { g.x += 420 * dt; g.roll = (g.roll || 0) + dt * 14; if (g.x > g.bis + 900) g.tot = 1; continue; }   // weggerollte Kugel: schnell nach rechts, dann weg
@@ -1203,7 +1332,7 @@
     if (g.art === 'eichhoernchen') { const hop = Math.abs(Math.sin(g.flug * 6)) * 14; return { x: g.x - 15, y: g.y - 24 - hop, w: 30, h: 24 }; }
     if (g.art === 'roadrunner') return { x: g.x - 16, y: g.y - 22, w: 32, h: 22 };
     if (g.art === 'guerteltier') return { x: g.x - 15, y: g.y - 24, w: 30, h: 24 };
-    if (g.art === 'kojote') return { x: g.x - 22, y: g.y - 30, w: 44, h: 30 };
+    if (g.art === 'kojote' || g.art === 'fuchs') return { x: g.x - 22, y: g.y - 30, w: 44, h: 30 };
     if (g.art === 'klapperschlange') return { x: g.x - 24, y: g.y - 18, w: 48, h: 18 };
     if (g.art === 'geier') return { x: g.x - 22, y: g.y - 14 + Math.sin(g.flug * 2.5) * 10, w: 44, h: 26 };
     if (g.art === 'skorpion') return { x: g.x - 14, y: g.y - 16, w: 28, h: 16 };
@@ -1229,6 +1358,7 @@
     if (zustand === 'spiel') {
       if (tot > 0) { tot -= dt; if (tot <= 0) wiederbeleben(); return; }
       if (spieler.unverwundbar > 0) spieler.unverwundbar -= dt;
+      cameoBewegen(dt);
       if (rutscht > 0) { rutscht = Math.max(0, rutscht - dt); if (rutscht === 0) halten = false; }
 
       // Welt 4: Windböe auslösen (Figur passiert die Marke), schiebt in der Phase schub mit 150/s zurück oder vorwärts
@@ -1294,11 +1424,17 @@
         if (b.zeit >= 1.0 && !b.knarrte) { b.knarrte = true; klang.knarren(); }
         if (b.zeit >= BRUECKE_MAX) { b.gebrochen = true; b.bruchX = spieler.x; b.bruch = 0; spieler.amBoden = false; klang.bruch(); meldung = { text: 'Crack! 🪵', zeit: 0.8 }; }
       }
+      // Cameo Felix: über einer Lücke fängt der Falke die fallende Figur ab und trägt sie knapp über dem Boden-Niveau hinüber (einmal; wirkt, solange traegt > 0 oder er schon trägt)
+      if (traegt > 0 || traegtAktiv) {
+        const ueberLuecke = !level.boden.some(([a, b]) => spieler.x >= a && spieler.x <= b) && !SOLIDE.some((s) => !s.voll && s.bruecke == null && s.gondel == null && spieler.x >= s.x && spieler.x <= s.x + s.w && s.y < BODEN_Y + 1 && s.y > spieler.y - 1);
+        if (ueberLuecke && !spieler.amBoden && spieler.vy > 0 && spieler.y > BODEN_Y - 30) { if (!traegtAktiv) meldung = { text: 'Whee! 🦅', zeit: 0.8 }; spieler.y = BODEN_Y - 30; spieler.vy = 0; traegtAktiv = true; }
+        else if (!ueberLuecke && traegtAktiv) { traegtAktiv = false; traegt = 0; }
+      }
       if (spieler.y > H + 20) { schaden('wasser'); return; }
       // Ölflecken: beim Betreten (am Boden) 0,6 s rutschen ohne Sprung; wirkt je Fleck einmal pro Überquerung
       for (const o of oel) {
         const drauf = spieler.amBoden && spieler.x + PW / 2 > o.x && spieler.x - PW / 2 < o.x + o.w;
-        if (drauf && !o.aktiv && tot <= 0) { o.aktiv = true; rutscht = RUTSCH_DAUER; halten = false; klang.rutsch(); meldung = { text: 'Whoa! 🛢️', zeit: 0.7 }; }
+        if (drauf && !o.aktiv && tot <= 0) { o.aktiv = true; rutscht = RUTSCH_DAUER; halten = false; klang.rutsch(); if (o.art === 'pfuetze') klang.platsch(); meldung = { text: o.art === 'pfuetze' ? 'Splish! 💦' : 'Whoa! 🛢️', zeit: 0.7 }; }
         else if (!drauf && o.aktiv && spieler.x - PW / 2 > o.x + o.w) o.aktiv = false;
       }
 
@@ -1333,7 +1469,7 @@
       });
       // Gegner
       for (const g of gegner) {
-        if (g.tot > 0 || g.harmlos) continue;
+        if (g.tot > 0 || g.harmlos || durchlaessig > 0) continue;   // Cameo Zara: Gegner 3 s durchlässig
         const gb = gegnerBox(g);
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, gb.x, gb.y, gb.w, gb.h)) {
           if (g.art === 'bueffel') schaden('bueffel');   // Büffel: auch von oben = Leben weg (nur überspringen)
@@ -1345,8 +1481,8 @@
       // Verkehr: Berührung = Leben weg, nicht plattzudrücken (drüberspringen!)
       for (const a of autos) {
         const ab = autoBox(a);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, ab.x + 4, ab.y + 2, ab.w - 8, ab.h - 2)) { schaden('auto'); break; }
-        if (zeit - autoKlangZeit > AUTO_KLANG_ABSTAND && ab.x - spieler.x > 0 && ab.x - spieler.x < 320) { autoKlangZeit = zeit; klang.auto(); }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, ab.x + 4, ab.y + 2, ab.w - 8, ab.h - 2)) { schaden(a.art === 'bus' || a.art === 'cab' ? a.art : 'auto'); break; }
+        if (zeit - autoKlangZeit > AUTO_KLANG_ABSTAND && ab.x - spieler.x > 0 && ab.x - spieler.x < 320) { autoKlangZeit = zeit; if (a.art === 'bus') klang.bus(); else klang.auto(); }
       }
       // Welt 3: fallende/liegende Steine und Kakteen – Berührung = Leben weg (drüberspringen!)
       for (const s of steine) {
@@ -1370,7 +1506,7 @@
       gegnerKlaengeNaehe();
       // Boss-Sequenz beginnt
       if (spieler.x >= level.sequenzX && spieler.amBoden) {
-        zustand = 'sequenz'; sequenz = { phase:'zoom', t:0 }; halten = false; spieler.unverwundbar = 0;
+        zustand = 'sequenz'; sequenz = { phase:'zoom', t:0 }; halten = false; spieler.unverwundbar = 0; cameo = null; eule = null; traegtAktiv = false; schild = sprungBonus = durchlaessig = eisZeit = traegt = 0;   // Cameo-Effekte enden vor dem Boss
         klang.dramatik();
       }
     } else if (zustand === 'sequenz') {
@@ -1543,21 +1679,23 @@
     c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
     if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
     const w = Math.sin(g.flug * 12) * 2;
+    const grau = !!W && W.id === 'westminster';   // St James's Park: graues Eichhörnchen
+    const fell = grau ? '#8f8f8f' : '#b5562a', hell = grau ? '#cfcfcf' : '#e08a55', bauch = grau ? '#f0ece4' : '#f3d9b8', pfote = grau ? '#666666' : '#8a3f1c';
     // Schwanz
-    c.lineCap = 'round'; c.lineWidth = 9; c.strokeStyle = '#b5562a'; c.beginPath(); c.moveTo(10, -8); c.quadraticCurveTo(22, -14 + w, 16, -30 + w); c.quadraticCurveTo(12, -36, 6, -30); c.stroke();
-    c.lineWidth = 4; c.strokeStyle = '#e08a55'; c.beginPath(); c.moveTo(11, -10); c.quadraticCurveTo(20, -15 + w, 15, -28 + w); c.stroke();
+    c.lineCap = 'round'; c.lineWidth = 9; c.strokeStyle = fell; c.beginPath(); c.moveTo(10, -8); c.quadraticCurveTo(22, -14 + w, 16, -30 + w); c.quadraticCurveTo(12, -36, 6, -30); c.stroke();
+    c.lineWidth = 4; c.strokeStyle = hell; c.beginPath(); c.moveTo(11, -10); c.quadraticCurveTo(20, -15 + w, 15, -28 + w); c.stroke();
     // Körper
-    c.fillStyle = '#b5562a'; c.beginPath(); c.ellipse(0, -9, 12, 8, -0.2, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#f3d9b8'; c.beginPath(); c.ellipse(-3, -6, 6, 4.5, -0.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = fell; c.beginPath(); c.ellipse(0, -9, 12, 8, -0.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = bauch; c.beginPath(); c.ellipse(-3, -6, 6, 4.5, -0.2, 0, Math.PI * 2); c.fill();
     // Kopf + Ohren mit Pinseln
-    c.fillStyle = '#b5562a'; c.beginPath(); c.arc(-11, -16, 6.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = fell; c.beginPath(); c.arc(-11, -16, 6.5, 0, Math.PI * 2); c.fill();
     c.beginPath(); c.moveTo(-15, -20); c.lineTo(-15, -29); c.lineTo(-11, -22); c.closePath(); c.fill();
     c.beginPath(); c.moveTo(-9, -22); c.lineTo(-7, -30); c.lineTo(-5, -21); c.closePath(); c.fill();
-    c.fillStyle = '#f3d9b8'; c.beginPath(); c.arc(-14, -13, 2.6, 0, Math.PI * 2); c.fill();   // Wange
+    c.fillStyle = bauch; c.beginPath(); c.arc(-14, -13, 2.6, 0, Math.PI * 2); c.fill();   // Wange
     c.fillStyle = '#18213a'; c.beginPath(); c.arc(-13, -17.5, 1.5, 0, Math.PI * 2); c.fill();  // Auge
     c.beginPath(); c.arc(-17.5, -13.5, 1.3, 0, Math.PI * 2); c.fill();                           // Nase
     // Pfoten
-    c.fillStyle = '#8a3f1c'; c.beginPath(); c.roundRect(-9 + w, -3, 5, 4, 2); c.roundRect(3 - w, -3, 6, 4, 2); c.fill();
+    c.fillStyle = pfote; c.beginPath(); c.roundRect(-9 + w, -3, 5, 4, 2); c.roundRect(3 - w, -3, 6, 4, 2); c.fill();
     c.restore();
   }
   function kanaldeckel(c, x, y) {
@@ -1736,6 +1874,7 @@
     c.strokeStyle = '#444'; c.lineWidth = 1.5; for (let k = 0; k < 4; k++) { c.beginPath(); c.moveTo(x + 6 + k * 9, y + 18); c.lineTo(x + 4 + k * 9, y + KISTE - 4); c.stroke(); }
   }
   function autoZeichnen(c, a) {   // Verkehr fährt nach links: Front links, Scheinwerfer an, Räder drehen sich
+    if (a.art === 'bus' || a.art === 'cab') return londonFahrzeug(c, a);   // Welt Westminster
     const x = a.x - kamera, y = BODEN_Y;
     c.save(); c.translate(x, y);
     const karosse = a.art === 'truck' ? '#2a6cff' : ['#e63946', '#2e9e5b', '#ff9f1c', '#8a3ffc'][Math.abs(Math.round(a.von / 7)) % 4];
@@ -1764,6 +1903,7 @@
     c.restore();
   }
   function oelZeichnen(c, o) {   // Ölfleck: dunkle Pfütze mit Regenbogen-Glanz; warnt durch Glitzern, solange die Figur noch davor ist
+    if (o.art === 'pfuetze') return pfuetzeZeichnen(c, o);   // Welt Westminster: Regenpfütze
     const x = o.x - kamera; const w = o.w;
     c.save(); c.translate(x + w / 2, BODEN_Y + 4);
     c.fillStyle = '#141a22'; c.beginPath(); c.ellipse(0, 0, w / 2, 7, 0, 0, Math.PI * 2); c.ellipse(-w / 4, 3, w / 5, 4, 0, 0, Math.PI * 2); c.fill();
@@ -2637,6 +2777,353 @@
     c.restore();
   }
 
+  /* ---------- Welt Westminster · Big Ben (Klasse 6 „London Run“, 31.10.) ---------- */
+  const UK_ROT = '#c8102e', UK_BLAU = '#012169';
+  function bigBen(c, x, y, s, farbe) {   // Elizabeth Tower: Schaft, Uhrgeschoss mit Zifferblatt (Zeiger laufen), Glockenstube, Turmspitze; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe;
+    c.fillRect(-14, -150, 28, 150);
+    c.fillRect(-17, -188, 34, 40);
+    c.fillRect(-15, -210, 30, 22);
+    c.beginPath(); c.moveTo(-17, -210); c.lineTo(0, -262); c.lineTo(17, -210); c.closePath(); c.fill();
+    c.fillRect(-1.5, -276, 3, 16);
+    for (const px of [-17, 13]) { c.beginPath(); c.moveTo(px, -188); c.lineTo(px + 2, -200); c.lineTo(px + 4, -188); c.closePath(); c.fill(); }
+    c.fillStyle = 'rgba(0,0,0,.12)'; for (let k = 0; k < 6; k++) c.fillRect(-10, -140 + k * 22, 20, 2);
+    for (let k = 0; k < 3; k++) c.fillRect(-11 + k * 8, -206, 5, 14);
+    c.fillStyle = '#f3ead2'; c.beginPath(); c.arc(0, -168, 12, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#2a2a2a'; c.lineWidth = 1.6; c.stroke();
+    const a = zeit * 0.5;
+    c.lineCap = 'round'; c.beginPath(); c.moveTo(0, -168); c.lineTo(Math.cos(a) * 9, -168 + Math.sin(a) * 9); c.moveTo(0, -168); c.lineTo(Math.cos(a / 12 - 1) * 6, -168 + Math.sin(a / 12 - 1) * 6); c.stroke();
+    c.restore();
+  }
+  function parlament(c, x, y, s, farbe) {   // Houses of Parliament links vom Big Ben: lange gotische Front mit Türmchen, Victoria Tower am linken Ende; (x, y) = rechter Fußpunkt
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe;
+    c.fillRect(-290, -58, 290, 58);
+    for (let k = 0; k < 15; k++) { const px = -284 + k * 19; c.fillRect(px, -70, 6, 14); c.beginPath(); c.moveTo(px - 1, -70); c.lineTo(px + 3, -80); c.lineTo(px + 7, -70); c.closePath(); c.fill(); }
+    c.fillRect(-150, -96, 18, 40); c.beginPath(); c.moveTo(-152, -96); c.lineTo(-141, -122); c.lineTo(-130, -96); c.closePath(); c.fill();   // Mittelturm
+    c.fillRect(-318, -150, 40, 150); for (const px of [-318, -284]) c.fillRect(px, -162, 6, 14);   // Victoria Tower
+    c.fillStyle = 'rgba(0,0,0,.13)';
+    for (let r = 0; r < 2; r++) for (let k = 0; k < 24; k++) c.fillRect(-282 + k * 11.5, -48 + r * 22, 4, 12);
+    for (let k = 0; k < 5; k++) c.fillRect(-312 + k * 7, -130, 3, 16);
+    c.restore();
+  }
+  function londonEye(c, x, y, r) {   // Riesenrad in der Ferne: A-Stütze, Felge, Speichen und Gondeln drehen sich langsam
+    c.save(); c.translate(x, y);
+    c.strokeStyle = 'rgba(150,165,180,.9)'; c.lineWidth = 3;
+    c.beginPath(); c.moveTo(-r * 0.55, 0); c.lineTo(0, -r - 6); c.lineTo(r * 0.2, 0); c.stroke();
+    c.lineWidth = 2.5; c.beginPath(); c.arc(0, -r - 6, r, 0, Math.PI * 2); c.stroke();
+    c.lineWidth = 0.8; const d = zeit * 0.04;
+    for (let k = 0; k < 16; k++) { const a = d + k * Math.PI / 8; c.beginPath(); c.moveTo(0, -r - 6); c.lineTo(Math.cos(a) * r, -r - 6 + Math.sin(a) * r); c.stroke(); }
+    c.fillStyle = 'rgba(230,238,245,.95)';
+    for (let k = 0; k < 16; k++) { const a = d + k * Math.PI / 8 + Math.PI / 16; c.beginPath(); c.ellipse(Math.cos(a) * r, -r - 6 + Math.sin(a) * r, 3.4, 2.4, 0, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function unionJack(c, x, y, w, h) {   // kleine Flagge (x, y) = links oben
+    c.save(); c.beginPath(); c.rect(x, y, w, h); c.clip();
+    c.fillStyle = UK_BLAU; c.fillRect(x, y, w, h);
+    c.strokeStyle = '#fff'; c.lineWidth = h * 0.3; c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y + h); c.moveTo(x + w, y); c.lineTo(x, y + h); c.stroke();
+    c.strokeStyle = UK_ROT; c.lineWidth = h * 0.1; c.stroke();
+    c.fillStyle = '#fff'; c.fillRect(x + w / 2 - h * 0.18, y, h * 0.36, h); c.fillRect(x, y + h * 0.32, w, h * 0.36);
+    c.fillStyle = UK_ROT; c.fillRect(x + w / 2 - h * 0.1, y, h * 0.2, h); c.fillRect(x, y + h * 0.4, w, h * 0.2);
+    c.restore();
+  }
+  function wimpelKette(c, x1, x2, y) {   // Union-Jack-Wimpel an einer durchhängenden Schnur zwischen zwei Laternen
+    c.strokeStyle = 'rgba(40,40,40,.55)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x1, y); c.quadraticCurveTo((x1 + x2) / 2, y + 14, x2, y); c.stroke();
+    const n = Math.max(3, Math.floor((x2 - x1) / 14));
+    for (let k = 1; k < n; k++) {
+      const t = k / n, px = x1 + (x2 - x1) * t, py = y + 14 * 2 * t * (1 - t) * 1, wehen = Math.sin(zeit * 3 + k) * 1.2;
+      c.fillStyle = [UK_ROT, '#ffffff', UK_BLAU][k % 3]; c.beginPath(); c.moveTo(px - 4, py); c.lineTo(px + 4, py); c.lineTo(px + wehen, py + 9); c.closePath(); c.fill();
+    }
+  }
+  function telefonzelleKlein(c, x, y, s) {   // Telefonzelle in der Kulisse (am anderen Ufer); (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = UK_ROT; c.fillRect(-9, -46, 18, 46); c.beginPath(); c.roundRect(-10, -50, 20, 6, 3); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.75)'; for (let r = 0; r < 4; r++) for (let k = 0; k < 2; k++) c.fillRect(-6 + k * 6.5, -38 + r * 8, 5, 6);
+    c.restore();
+  }
+  function laterne(c, x, y, s) {   // viktorianische Laterne; (x, y) = Fußpunkt
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#26303a'; c.fillRect(-1.5, -60, 3, 60); c.fillRect(-5, -4, 10, 4);
+    c.beginPath(); c.moveTo(-5, -60); c.lineTo(5, -60); c.lineTo(3, -70); c.lineTo(-3, -70); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,230,150,.85)'; c.fillRect(-3, -68, 6, 7);
+    c.restore();
+  }
+  function bootZeichnen(c, x, y, s) {   // Ausflugsboot auf der Themse: weißer Rumpf mit blauem Band, Kajüte mit Fenstern, Wimpel
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#f4f4f4'; c.beginPath(); c.moveTo(-40, -8); c.lineTo(42, -8); c.lineTo(34, 2); c.lineTo(-36, 2); c.closePath(); c.fill();
+    c.fillStyle = UK_BLAU; c.fillRect(-38, -5, 78, 3);
+    c.fillStyle = '#e9e9e9'; c.fillRect(-28, -20, 50, 12);
+    c.fillStyle = '#7fb2d6'; for (let k = 0; k < 6; k++) c.fillRect(-25 + k * 8, -17, 5, 6);
+    c.fillStyle = '#555'; c.fillRect(14, -30, 2, 10); c.fillStyle = UK_ROT; c.beginPath(); c.moveTo(16, -30); c.lineTo(24, -27); c.lineTo(16, -24); c.closePath(); c.fill();
+    c.restore();
+  }
+  function hintergrundLondon(c) {
+    const naehe = Math.min(1, kamera / level.ende);
+    const endeF = Math.max(0, Math.min(1, (kamera - (level.ende - 5200)) / 2600));   // auf den letzten Metern: Niesel hört auf, Regenbogen erscheint
+    const g = c.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, mischFarbe('#8fa1b3', '#74b9e8', endeF)); g.addColorStop(0.62, mischFarbe('#d3dbe2', '#d6eefa', endeF)); g.addColorStop(1, '#eceae2');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    if (endeF > 0) {   // Regenbogen hinter der Stadt
+      c.save(); c.globalAlpha = endeF * 0.7; c.lineWidth = 7;
+      REGENBOGEN.forEach((f, i) => { c.strokeStyle = f; c.beginPath(); c.arc(viewW * 0.42, 290, 250 - i * 7, Math.PI, 0); c.stroke(); });
+      c.restore();
+      c.fillStyle = `rgba(255,240,190,${0.9 * endeF})`; c.beginPath(); c.arc(viewW * 0.12, 62, 24, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = `rgba(178,189,200,${0.95 - 0.55 * endeF})`;   // Nieselwolken (Parallaxe 0,06)
+    for (let i = 0; i < 6; i++) {
+      const n = viewW + 420, wx = ((i * 340 + 60 - kamera * 0.06) % n + n) % n - 210, wy = 38 + (i % 3) * 22;
+      c.beginPath(); c.arc(wx, wy, 22, 0, Math.PI * 2); c.arc(wx + 26, wy - 10, 28, 0, Math.PI * 2); c.arc(wx + 56, wy, 22, 0, Math.PI * 2); c.arc(wx + 30, wy + 6, 20, 0, Math.PI * 2); c.fill();
+    }
+    londonEye(c, viewW * (0.3 - 0.22 * naehe) - kamera * 0.005, 250, 66);   // London Eye in der Ferne
+    c.fillStyle = '#b3bcc6';   // ferne Stadt (Parallaxe 0,08), ab und zu eine Kuppel (St Paul's)
+    for (let i = 0; i < 36; i++) {
+      const n = viewW + 200, bx = ((i * 74 - kamera * 0.08) % n + n) % n - 100, bh = 22 + ((i * 41) % 46);
+      c.fillRect(bx, 250 - bh, 44, bh);
+      if (i % 9 === 4) { c.beginPath(); c.arc(bx + 22, 250 - bh, 16, Math.PI, 0); c.fill(); c.fillRect(bx + 20, 250 - bh - 26, 4, 12); }
+    }
+    const bx = viewW * (0.84 - 0.36 * naehe) - kamera * 0.01, gr = 0.5 + naehe * 0.75;   // Big Ben + Parlament wandern heran und wachsen bis zum Boss
+    parlament(c, bx - 22 * gr, 252, gr, '#c3ad84'); bigBen(c, bx, 252, gr, '#c9b48a');
+    c.fillStyle = '#5f8299'; c.fillRect(-viewW, 250, viewW * 3, H * 2);   // Themse
+    c.fillStyle = '#9b958a'; c.fillRect(-viewW, 247, viewW * 3, 5);         // Ufermauer gegenüber
+    for (let i = 0; i < 8; i++) {   // am anderen Ufer: Laternen mit Union-Jack-Wimpeln, rote Telefonzellen (Parallaxe 0,25)
+      const n = viewW + 480, lx = ((i * 240 + 40 - kamera * 0.25) % n + n) % n - 240;
+      laterne(c, lx, 248, 0.7); if (i % 2 === 0) wimpelKette(c, lx, lx + 120, 202);
+      if (i % 3 === 1) telefonzelleKlein(c, lx + 60, 248, 0.6);
+    }
+    for (let i = 0; i < 3; i++) {   // Ausflugsboote (Parallaxe 0,2, fahren langsam)
+      const n = viewW + 520, x = ((i * 610 + 260 + zeit * 12 - kamera * 0.2) % n + n) % n - 260, y = 270 + i * 12 + Math.sin(zeit * 1.4 + i) * 1.5;
+      bootZeichnen(c, x, y, 0.6 + i * 0.08);
+    }
+    c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2;   // Wellen (Parallaxe 0,3)
+    for (let i = 0; i < 14; i++) { const n = viewW + 120, wx = ((i * 110 - kamera * 0.3 + Math.sin(zeit + i) * 6) % n + n) % n - 60, wy = 262 + (i % 4) * 16; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 10, wy - 4, wx + 20, wy); c.stroke(); }
+    if (endeF < 1 && !ruhig()) {   // Nieselregen (Bildschirm, fällt schräg)
+      c.strokeStyle = `rgba(235,242,250,${0.45 * (1 - endeF)})`; c.lineWidth = 1; c.beginPath();
+      for (let i = 0; i < 46; i++) { const n = viewW + 40, x = ((i * 53 + zeit * 50) % n + n) % n - 20, y = (i * 97 + zeit * 280) % (H + 20) - 10; c.moveTo(x, y); c.lineTo(x - 3, y + 9); }
+      c.stroke();
+    }
+  }
+  function bodenLondon(c, x0, w, a, b, links, rechts) {   // Boden: Uferpromenade (Victoria Embankment) – Steinplatten, Bordstein, nasse Glanzflecken
+    c.fillStyle = '#a5a49f'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#d2d0ca'; c.fillRect(x0, BODEN_Y, w, 9);
+    c.fillStyle = '#6f6e6a'; c.fillRect(x0, BODEN_Y + 9, w, 2);
+    c.strokeStyle = 'rgba(0,0,0,.14)'; c.lineWidth = 1;
+    for (let x = Math.max(Math.ceil(a / 50) * 50, Math.floor(links / 50) * 50); x < Math.min(b, rechts); x += 50) { c.beginPath(); c.moveTo(x - kamera, BODEN_Y + 11); c.lineTo(x - kamera, H); c.stroke(); }
+    c.beginPath(); c.moveTo(x0, BODEN_Y + 40); c.lineTo(x0 + w, BODEN_Y + 40); c.stroke();
+    c.fillStyle = 'rgba(200,215,230,.35)';
+    for (let x = Math.max(Math.ceil(a / 170) * 170, Math.floor(links / 170) * 170); x < Math.min(b, rechts); x += 170) { c.beginPath(); c.ellipse(x - kamera + 30, BODEN_Y + 24, 14, 3, 0, 0, Math.PI * 2); c.fill(); }
+  }
+  function themse(c, a, b) {   // Lücke = Themse: Wasser mit Wellen, Ufermauern aus Stein an beiden Rändern, ein Rettungsring
+    const x0 = a - kamera, w = b - a;
+    const g = c.createLinearGradient(0, BODEN_Y, 0, H); g.addColorStop(0, '#5f8299'); g.addColorStop(1, '#2c4a5e');
+    c.fillStyle = g; c.fillRect(x0, BODEN_Y + 10, w, H);
+    c.fillStyle = '#8d8a84'; c.fillRect(x0 - 2, BODEN_Y, 7, H - BODEN_Y); c.fillRect(x0 + w - 5, BODEN_Y, 7, H - BODEN_Y);
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 2;
+    for (let i = 0; i < Math.ceil(w / 44); i++) { const wx = x0 + 8 + ((i * 44 + zeit * 40) % Math.max(1, w - 26)), wy = BODEN_Y + 22 + (i % 3) * 14; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 8, wy - 4, wx + 16, wy); c.stroke(); }
+    if (w > 165) { const rx = x0 + w / 2, ry = BODEN_Y + 34 + Math.sin(zeit * 2) * 2; c.strokeStyle = '#ff6a1a'; c.lineWidth = 5; c.beginPath(); c.arc(rx, ry, 9, 0, Math.PI * 2); c.stroke();
+      c.strokeStyle = '#fff'; c.lineWidth = 5; for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(rx, ry, 9, k * Math.PI / 2, k * Math.PI / 2 + 0.4); c.stroke(); } }
+  }
+  function kisteLondon(c, x, y, k) {   // Blöcke (40 × 40): Telefonzelle (zwei Teile), Postkasten (Pillar Box) oder Teekiste
+    const art = k && k.art;
+    if (art === 'zelle') {
+      c.fillStyle = UK_ROT; c.fillRect(x + 2, y, KISTE - 4, KISTE);
+      c.fillStyle = '#9e0c24'; c.fillRect(x + 2, y, 4, KISTE); c.fillRect(x + KISTE - 6, y, 4, KISTE);
+      c.fillStyle = 'rgba(225,238,245,.9)';
+      const oben = k.teil === 1, start = oben ? y + 13 : y + 2;
+      for (let r = 0; r < (oben ? 3 : 4); r++) for (let s = 0; s < 3; s++) c.fillRect(x + 9 + s * 8, start + r * 8.5, 6, 6.5);
+      if (oben) {
+        c.fillStyle = '#9e0c24'; c.beginPath(); c.roundRect(x, y - 2, KISTE, 6, 3); c.fill();
+        c.fillStyle = '#f4f4f4'; c.fillRect(x + 5, y + 5, KISTE - 10, 6);
+        c.fillStyle = '#18213a'; c.font = 'bold 5px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TELEPHONE', x + KISTE / 2, y + 8.2);
+      } else { c.fillStyle = '#e0a400'; c.fillRect(x + KISTE - 10, y + 18, 2, 6); c.fillStyle = '#5c0716'; c.fillRect(x, y + KISTE - 3, KISTE, 3); }
+      return;
+    }
+    if (art === 'post') {
+      c.fillStyle = '#1a1a1a'; c.fillRect(x + 4, y + KISTE - 5, KISTE - 8, 5);
+      c.fillStyle = UK_ROT; c.fillRect(x + 4, y + 7, KISTE - 8, KISTE - 12);
+      c.beginPath(); c.ellipse(x + KISTE / 2, y + 7, KISTE / 2 - 2, 7, 0, Math.PI, 0); c.fill();
+      c.fillStyle = '#9e0c24'; c.fillRect(x + 2, y + 6, KISTE - 4, 3);
+      c.fillStyle = '#1a1a1a'; c.fillRect(x + 12, y + 14, 16, 3);
+      c.fillStyle = '#e0a400'; c.font = 'bold 7px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GR', x + KISTE / 2, y + 25);
+      return;
+    }
+    c.fillStyle = '#b07a3c'; c.fillRect(x, y, KISTE, KISTE);
+    c.strokeStyle = '#6e4519'; c.lineWidth = 3; c.strokeRect(x + 1.5, y + 1.5, KISTE - 3, KISTE - 3);
+    c.fillStyle = '#6e4519'; c.fillRect(x, y + 18, KISTE, 3);
+    c.fillStyle = 'rgba(24,33,58,.75)'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TEA', x + KISTE / 2, y + 11);
+  }
+  function londonFahrzeug(c, a) {   // roter Doppeldecker oder Black Cab (fahren nach links, Front links)
+    const x = a.x - kamera, y = BODEN_Y;
+    c.save(); c.translate(x, y);
+    if (a.art === 'bus') {
+      c.fillStyle = UK_ROT; c.beginPath(); c.roundRect(0, -a.h, a.w, a.h - 6, [10, 6, 3, 3]); c.fill();
+      c.fillStyle = '#f2f2f2'; c.fillRect(0, -a.h + 23, a.w, 3);
+      c.fillStyle = '#1e2a36'; c.fillRect(6, -a.h + 5, a.w - 12, 13); c.fillRect(16, -a.h + 30, a.w - 22, 12);
+      c.fillStyle = '#9fd3ee'; for (let k = 0; k < 6; k++) c.fillRect(9 + k * 18, -a.h + 7, 14, 9); for (let k = 0; k < 5; k++) c.fillRect(19 + k * 19, -a.h + 32, 15, 8);
+      c.fillStyle = '#1a1a1a'; c.fillRect(2, -a.h + 30, 10, 18);   // Fahrertür/Front
+      c.fillStyle = '#ffd93d'; c.fillRect(-1, -14, 5, 5);
+      c.fillStyle = '#18213a'; c.fillRect(8, -a.h + 1, 34, 4); c.fillStyle = '#ffd36b'; c.font = 'bold 4px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText('12 WESTMINSTER', 9, -a.h + 3);
+    } else {
+      c.fillStyle = '#141414'; c.beginPath(); c.roundRect(0, -a.h + 14, a.w, a.h - 20, 8); c.fill();
+      c.beginPath(); c.moveTo(14, -a.h + 15); c.quadraticCurveTo(16, -a.h + 1, 30, -a.h + 1); c.lineTo(60, -a.h + 1); c.quadraticCurveTo(70, -a.h + 2, 70, -a.h + 15); c.closePath(); c.fill();
+      c.fillStyle = '#8fb6cc'; c.beginPath(); c.moveTo(19, -a.h + 14); c.quadraticCurveTo(21, -a.h + 5, 30, -a.h + 5); c.lineTo(42, -a.h + 5); c.lineTo(42, -a.h + 14); c.closePath(); c.fill(); c.fillRect(45, -a.h + 5, 20, 9);
+      c.fillStyle = '#ffd93d'; c.beginPath(); c.roundRect(36, -a.h - 4, 14, 5, 2); c.fill();
+      c.fillStyle = '#18213a'; c.font = 'bold 4px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TAXI', 43, -a.h - 1.5);
+      c.fillStyle = '#c9c9c9'; c.fillRect(-2, -a.h + 20, 5, 8);
+      c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(4, -a.h + 19, 3, 0, Math.PI * 2); c.fill();
+    }
+    for (const rx of a.art === 'bus' ? [20, a.w - 22] : [15, a.w - 16]) {
+      c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(rx, -7, 9, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#aaa'; c.beginPath(); c.arc(rx, -7, 4, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#1a1a1a'; c.lineWidth = 2; c.beginPath(); c.moveTo(rx + Math.cos(a.rad) * 4, -7 + Math.sin(a.rad) * 4); c.lineTo(rx - Math.cos(a.rad) * 4, -7 - Math.sin(a.rad) * 4); c.stroke();
+    }
+    c.fillStyle = 'rgba(255,240,170,.28)'; c.beginPath(); c.moveTo(0, -18); c.lineTo(-44, -30); c.lineTo(-44, -2); c.closePath(); c.fill();
+    c.restore();
+  }
+  function pfuetzeZeichnen(c, o) {   // Regenpfütze: blaugraue Fläche mit Spiegelung und Regentropfen-Ringen
+    const x = o.x - kamera, w = o.w;
+    c.save(); c.translate(x + w / 2, BODEN_Y + 4);
+    c.fillStyle = '#6d8ca3'; c.beginPath(); c.ellipse(0, 0, w / 2, 6.5, 0, 0, Math.PI * 2); c.ellipse(w / 5, 3, w / 5, 4, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.ellipse(-w / 6, -1.5, w / 5, 1.6, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 1;
+    for (let k = 0; k < 3; k++) { const t = (zeit * 0.9 + k * 0.33) % 1, rx = (k - 1) * w / 4; c.globalAlpha = 1 - t; c.beginPath(); c.ellipse(rx, 0, 2 + t * 10, 0.8 + t * 2.5, 0, 0, Math.PI * 2); c.stroke(); }
+    c.restore();
+  }
+  function fuchs(c, g) {   // Stadtfuchs: orange, weiße Brust und Schwanzspitze, schwarze Pfoten und Ohrspitzen; läuft hin und her, plattdrückbar
+    const b = gegnerBox(g); const cx = b.x + 22, cy = b.y + 30;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+    const w = Math.sin(g.flug * 10) * 3;
+    c.lineCap = 'round'; c.lineWidth = 9; c.strokeStyle = '#d9692a'; c.beginPath(); c.moveTo(16, -16); c.quadraticCurveTo(32, -18 + w, 33, -32 + w); c.stroke();
+    c.lineWidth = 6; c.strokeStyle = '#f6f2ea'; c.beginPath(); c.moveTo(32, -27 + w); c.lineTo(33, -33 + w); c.stroke();
+    c.fillStyle = '#d9692a'; c.beginPath(); c.ellipse(0, -14, 19, 9.5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#f6f2ea'; c.beginPath(); c.ellipse(-8, -10, 9, 5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#d9692a'; c.beginPath(); c.ellipse(-18, -20, 9.5, 8, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(-26, -22); c.lineTo(-35, -19); c.lineTo(-25, -15); c.closePath(); c.fill();   // Schnauze
+    c.fillStyle = '#f6f2ea'; c.beginPath(); c.moveTo(-25, -17); c.lineTo(-34, -18.5); c.lineTo(-24, -14); c.closePath(); c.fill();
+    c.fillStyle = '#d9692a'; c.beginPath(); c.moveTo(-23, -26); c.lineTo(-22, -37); c.lineTo(-16, -27); c.closePath(); c.moveTo(-14, -27); c.lineTo(-10, -37); c.lineTo(-8, -25); c.closePath(); c.fill();   // Ohren
+    c.fillStyle = '#1a1a1a'; c.beginPath(); c.moveTo(-22.5, -33); c.lineTo(-22, -37); c.lineTo(-19.5, -33); c.closePath(); c.moveTo(-11, -33); c.lineTo(-10, -37); c.lineTo(-8.5, -32); c.closePath(); c.fill();
+    c.beginPath(); c.arc(-20, -22, 1.8, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(-34.5, -19.5, 1.6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#2a2420'; c.beginPath(); c.roundRect(-12 + w, -6, 6, 6, 2); c.roundRect(6 - w, -6, 6, 6, 2); c.fill();
+    c.restore();
+  }
+  function schilderhaus(c, x, y) {   // Schilderhaus (Wachhäuschen) hinter dem Sergeant: Holzkasten mit Spitzdach, dunkle Nische
+    c.save(); c.translate(x + 46, y);
+    c.fillStyle = '#e8e2d2'; c.fillRect(-28, -150, 56, 150);
+    c.fillStyle = '#1f2a33'; c.beginPath(); c.moveTo(-20, 0); c.lineTo(-20, -126); c.arc(0, -126, 20, Math.PI, 0); c.lineTo(20, 0); c.closePath(); c.fill();
+    c.fillStyle = '#d4ccb8'; c.beginPath(); c.moveTo(-34, -150); c.lineTo(0, -178); c.lineTo(34, -150); c.closePath(); c.fill();
+    c.fillStyle = UK_ROT; c.beginPath(); c.arc(0, -160, 6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#b9b09a'; c.fillRect(-28, -6, 56, 6);
+    c.restore();
+  }
+  function sergeantBearskin(c, x, y) {   // Boss Welt Westminster: Royal Guard mit hoher Bärenfellmütze, roter Uniform; steht stocksteif, nur die Augen wandern (beim Boss: zur Figur)
+    const auf = boss.sichtbar, weg = boss.weg;
+    const gx = x + (1 - auf) * 46 + weg * 240;   // tritt aus dem Schilderhaus (sichtbar) und marschiert im Finale zur Seite (weg)
+    const marsch = weg > 0 && !ruhig() ? Math.sin(zeit * 9) : 0;
+    c.save(); c.translate(gx, y); c.globalAlpha = 1 - weg * 0.85;
+    for (const [bx, w] of [[-7, marsch], [7, -marsch]]) {   // Beine (navy mit rotem Streifen), Stiefel
+      c.save(); c.translate(bx, -52); c.rotate(w * 0.3);
+      c.fillStyle = '#16213d'; c.fillRect(-5, 0, 10, 50); c.fillStyle = UK_ROT; c.fillRect(-1, 0, 2, 48);
+      c.fillStyle = '#0d0d0d'; c.beginPath(); c.roundRect(-6, 44, 13, 8, 3); c.fill();
+      c.restore();
+    }
+    c.fillStyle = UK_ROT; c.beginPath(); c.roundRect(-19, -112, 38, 64, 6); c.fill();   // Rock
+    c.fillStyle = '#16213d'; c.fillRect(-15, -114, 30, 7);                              // Kragen
+    c.fillStyle = '#f4f4f4'; c.fillRect(-19, -74, 38, 6);                               // Gürtel
+    c.fillStyle = '#e0a400'; c.fillRect(-4, -75, 8, 8);
+    for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(0, -102 + k * 8, 1.8, 0, Math.PI * 2); c.fill(); }
+    c.beginPath(); c.arc(0, -62, 1.8, 0, Math.PI * 2); c.fill();
+    c.fillStyle = UK_ROT; c.fillRect(-27, -110, 9, 50); c.fillRect(18, -110, 9, 50);   // Arme stocksteif
+    c.fillStyle = '#16213d'; c.fillRect(-27, -66, 9, 5); c.fillRect(18, -66, 9, 5);
+    c.fillStyle = '#e0a400'; c.fillRect(-28, -112, 11, 4); c.fillRect(17, -112, 11, 4);   // Schulterstücke
+    c.fillStyle = '#f4f4f4'; c.beginPath(); c.arc(-22.5, -57, 5, 0, Math.PI * 2); c.arc(22.5, -57, 5, 0, Math.PI * 2); c.fill();   // weiße Handschuhe
+    c.fillStyle = '#f1c9a5'; c.beginPath(); c.arc(0, -124, 11, 0, Math.PI * 2); c.fill();   // Kopf
+    const blick = (zustand === 'boss' || zustand === 'sequenz') ? -2 : (Math.sin(zeit * 0.8) > 0.35 ? 2 : Math.sin(zeit * 0.8) < -0.35 ? -2 : 0);   // nur die Augen bewegen sich
+    c.fillStyle = '#fff'; c.beginPath(); c.ellipse(-4.6, -125, 3.7, 2.9, 0, 0, Math.PI * 2); c.ellipse(4.6, -125, 3.7, 2.9, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-4.6 + blick, -125, 1.7, 0, Math.PI * 2); c.arc(4.6 + blick, -125, 1.7, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#e3a98a'; c.beginPath(); c.ellipse(0, -122, 2, 2.6, 0, 0, Math.PI * 2); c.fill();   // Nase
+    c.fillStyle = '#5a3a22'; c.beginPath(); c.moveTo(0, -119); c.quadraticCurveTo(-6, -121, -10, -116); c.quadraticCurveTo(-5, -117, 0, -117); c.quadraticCurveTo(5, -117, 10, -116); c.quadraticCurveTo(6, -121, 0, -119); c.fill();   // Schnurrbart
+    c.fillStyle = '#0d0d0d'; c.beginPath(); c.moveTo(-15, -130); c.quadraticCurveTo(-21, -188, 0, -196); c.quadraticCurveTo(21, -188, 15, -130); c.closePath(); c.fill();   // Bärenfellmütze (lässt die Augen frei)
+    c.strokeStyle = '#2b2b2b'; c.lineWidth = 2;
+    for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(-9 + (k % 3) * 9, -176 + Math.floor(k / 3) * 22, 5, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
+    c.strokeStyle = '#e0a400'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(-11, -129); c.quadraticCurveTo(-9, -112, 0, -111); c.quadraticCurveTo(9, -112, 11, -129); c.stroke();   // Kinnriemen
+    c.restore();
+  }
+  function horseGuardsTor(c, x, y) {   // Tür der Welt Westminster: Tor der Horse Guards – helle Steinfassade mit Uhrtürmchen, Rundbogen, schwarzes Gittertor mit Goldspitzen, das aufschwingt
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#e6dcc6'; c.fillRect(-90, -160, 280, 160);
+    c.fillStyle = '#d6cab0'; c.fillRect(-90, -166, 280, 8);
+    c.fillStyle = 'rgba(0,0,0,.16)'; for (let r = 0; r < 2; r++) for (let k = 0; k < 9; k++) { const wx = -80 + k * 30; if (wx > -46 && wx < 40) continue; c.fillRect(wx, -140 + r * 50, 14, 26); }
+    c.fillStyle = '#e6dcc6'; c.fillRect(-28, -212, 56, 50);   // Uhrtürmchen
+    c.beginPath(); c.moveTo(-32, -212); c.lineTo(0, -238); c.lineTo(32, -212); c.closePath(); c.fill();
+    c.fillStyle = '#5a6a6a'; c.fillRect(-2, -252, 4, 16);
+    c.fillStyle = '#f3ead2'; c.beginPath(); c.arc(0, -188, 13, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#2a2a2a'; c.lineWidth = 1.5; c.stroke();
+    c.beginPath(); c.moveTo(0, -188); c.lineTo(0, -198); c.moveTo(0, -188); c.lineTo(7, -188); c.stroke();
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(-46, -152, 92, 16, 3); c.fill();
+    c.fillStyle = '#ffd36b'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('HORSE GUARDS', 0, -144);
+    c.fillStyle = '#2c2a26'; c.beginPath(); c.moveTo(-36, 0); c.lineTo(-36, -96); c.arc(0, -96, 36, Math.PI, 0); c.lineTo(36, 0); c.closePath(); c.fill();   // Bogen
+    const offen = tuer.offen;
+    if (offen > 0) { c.fillStyle = `rgba(255,240,180,${0.9 * offen})`; c.beginPath(); c.moveTo(-34, 0); c.lineTo(-34, -96); c.arc(0, -96, 34, Math.PI, 0); c.lineTo(34, 0); c.closePath(); c.fill(); }
+    for (const seite of [-1, 1]) {   // zwei Gitterflügel schwingen auf (werden schmaler)
+      c.save(); c.translate(seite * 34, 0); c.scale(Math.max(0.05, 1 - offen * 0.95), 1);
+      const x0 = seite > 0 ? -34 : 0;
+      c.strokeStyle = '#121212'; c.lineWidth = 2.5;
+      for (let k = 0; k <= 5; k++) { const sx = x0 + k * 6.8; c.beginPath(); c.moveTo(sx, -2); c.lineTo(sx, -104); c.stroke(); c.fillStyle = '#e0a400'; c.beginPath(); c.moveTo(sx - 2.5, -104); c.lineTo(sx, -112); c.lineTo(sx + 2.5, -104); c.closePath(); c.fill(); }
+      c.beginPath(); c.moveTo(x0, -20); c.lineTo(x0 + 34, -20); c.moveTo(x0, -70); c.lineTo(x0 + 34, -70); c.stroke();
+      c.fillStyle = '#e0a400'; c.beginPath(); c.arc(x0 + 17, -45, 5, 0, Math.PI * 2); c.fill();
+      c.restore();
+    }
+    unionJack(c, 60, -228, 30, 18); c.fillStyle = '#555'; c.fillRect(58, -228, 2, 66);
+    c.restore();
+  }
+  function falkeZeichnen(c, x, y) {   // Cameo Felix: Falke über der Figur, Flügel schlagen, Krallen halten die Figur
+    c.save(); c.translate(x, y);
+    const fl = Math.sin(zeit * 16) * 10;
+    c.strokeStyle = '#4a3420'; c.lineWidth = 2; c.beginPath(); c.moveTo(-5, 6); c.lineTo(-6, 22); c.moveTo(5, 6); c.lineTo(6, 22); c.stroke();
+    c.fillStyle = '#8a5a2b'; c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(-22, -10 - fl, -44, -4 - fl); c.quadraticCurveTo(-22, 4, 0, 6); c.quadraticCurveTo(22, 4, 44, -4 - fl); c.quadraticCurveTo(22, -10 - fl, 0, 0); c.fill();
+    c.fillStyle = '#a8784a'; c.beginPath(); c.ellipse(0, 2, 8, 6, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#e8d8c0'; c.beginPath(); c.arc(-6, -2, 4.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#e0a400'; c.beginPath(); c.moveTo(-10, -2); c.lineTo(-14, 0); c.lineTo(-10, 1); c.closePath(); c.fill();
+    c.restore();
+  }
+  // Cameo: fliegt von oben rechts heran (0,5 s), schwebt neben der Figur (Sprechblase), fliegt wieder davon (0,45 s); runder Ausschnitt des Kartenbilds mit Umhang
+  function cameoZeichnen(c) {
+    const t = cameo.t, info = cameo.info, R = CAMEO_R;
+    const zx = Math.min(viewW - 60, Math.max(60, spieler.x - kamera + 150)), zy = Math.max(118, spieler.y - 195);   // rechts über der Figur, über ihrer Wort-Sprechblase
+    let px, py;
+    if (t < CAMEO_EIN) { const f = 1 - Math.pow(1 - t / CAMEO_EIN, 3); px = viewW + 50 + (zx - viewW - 50) * f; py = -40 + (zy + 40) * f; }
+    else if (t > CAMEO_DAUER - CAMEO_AUS) { const f = (t - (CAMEO_DAUER - CAMEO_AUS)) / CAMEO_AUS; px = zx + (viewW + 90 - zx) * f * f; py = zy - (zy + 90) * f * f; }
+    else { px = zx; py = zy + (ruhig() ? 0 : Math.sin(t * 5) * 5); }
+    c.save(); c.translate(px, py);
+    const wehen = ruhig() ? 0 : Math.sin(zeit * 9) * 6;
+    c.fillStyle = info.farbe; c.beginPath(); c.moveTo(-16, 12); c.quadraticCurveTo(-30, 34, -24 + wehen * 0.5, 56); c.quadraticCurveTo(8, 50 + wehen, 40 + wehen, 50); c.quadraticCurveTo(24, 30, 16, 12); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.moveTo(2, 14); c.quadraticCurveTo(14, 34, 40 + wehen, 50); c.quadraticCurveTo(24, 30, 16, 12); c.closePath(); c.fill();
+    const img = cameoBilder[cameo.held && cameo.held.id];
+    c.save(); c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.closePath(); c.clip();
+    if (img && img.complete && img.naturalWidth > 0) {
+      const s = Math.min(img.naturalWidth, img.naturalHeight), sx = (img.naturalWidth - s) / 2, sy = (img.naturalHeight - s) * 0.2;
+      c.drawImage(img, sx, sy, s, s, -R, -R, R * 2, R * 2);
+    } else {
+      c.fillStyle = info.farbe; c.fillRect(-R, -R, R * 2, R * 2);
+      c.fillStyle = '#fff'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String((cameo.held && cameo.held.name) || '?').charAt(0), 0, 1);
+    }
+    c.restore();
+    c.strokeStyle = '#fff'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.stroke();
+    c.strokeStyle = info.farbe; c.lineWidth = 2; c.beginPath(); c.arc(0, 0, R + 2.5, 0, Math.PI * 2); c.stroke();
+    c.restore();
+    if (t > CAMEO_EIN * 0.6 && t < CAMEO_DAUER - CAMEO_AUS * 0.4) {   // Sprechblase rechts vom Helden (reicht der Platz nicht: links)
+      const text = `${info.symbol} ${cameo.satz}`;
+      c.save(); c.font = 'bold 15px system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'center';
+      const w = c.measureText(text).width + 22, h = 30;
+      let bx = px + R + 12, links = false;
+      if (bx + w > viewW - 6) { bx = Math.max(6, px - R - 12 - w); links = true; }
+      const by = py - h / 2;
+      c.fillStyle = '#fff'; c.strokeStyle = info.farbe; c.lineWidth = 2;
+      c.beginPath(); c.roundRect(bx, by, w, h, 10); c.fill(); c.stroke();
+      const sx = links ? bx + w : bx; c.beginPath(); c.moveTo(sx, py - 6); c.lineTo(sx + (links ? 9 : -9), py); c.lineTo(sx, py + 6); c.closePath(); c.fill();
+      c.fillStyle = '#18213a'; c.fillText(text, bx + w / 2, py + 1);
+      c.restore();
+    }
+  }
+
   function hintergrund(c) { W.kulisse(c); }
   function hintergrundNY(c) {
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
@@ -2682,7 +3169,7 @@
     }
     for (const k of level.kisten) {
       const x = k.x - kamera; if (x > viewW + 100 || x + KISTE < -100) continue;
-      W.kiste(c, x, k.y);
+      W.kiste(c, x, k.y, k);
     }
     for (const o of oel) { const x = o.x - kamera; if (x > viewW + 100 || x + o.w < -100) continue; oelZeichnen(c, o); }
     for (const b of bruecken) { const x = b.x - kamera; if (x > viewW + 100 || x + b.w < -100) continue; brueckeZeichnen(c, b); }
@@ -2712,6 +3199,11 @@
       c.save(); c.translate(-kamera, 0);
       (GEGNER_ZEICHNER[g.art] || waschbaer)(c, g);
       c.restore();
+      if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut) {   // Cameo Penny: Eisblock um den Gegner
+        const b = gegnerBox(g);
+        c.fillStyle = 'rgba(160,225,255,.45)'; c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 2;
+        c.beginPath(); c.roundRect(b.x - kamera - 4, b.y - 4, b.w + 8, b.h + 8, 5); c.fill(); c.stroke();
+      }
     }
     for (const a of autos) { const x = a.x - kamera; if (x > viewW + 100 || x + a.w < -100) continue; autoZeichnen(c, a); }
     for (const s of steine) { const x = s.x - kamera; if (x > viewW + 80 || x < -80) continue; steinZeichnen(c, s); }
@@ -2731,7 +3223,9 @@
     }
     if (tot <= 0) {
       const blink = spieler.unverwundbar > 0 && Math.floor(zeit * 12) % 2 === 0;
-      c.globalAlpha = blink ? 0.35 : 1;
+      c.globalAlpha = blink ? 0.35 : durchlaessig > 0 ? 0.45 : 1;   // Cameo Zara: Figur halb unsichtbar
+      if (schild > 0) { c.save(); c.globalAlpha = 0.35 + 0.1 * Math.sin(zeit * 6); c.strokeStyle = '#2e9e5b'; c.lineWidth = 4; c.beginPath(); c.ellipse(spieler.x - kamera, spieler.y - 44, 34, 52, 0, 0, Math.PI * 2); c.stroke(); c.restore(); }   // Cameo Tessa: Schutzschild
+      if (traegtAktiv) falkeZeichnen(c, spieler.x - kamera, spieler.y - 96);   // Cameo Felix: Falke hält die Figur
       const surfend = surft > 0 && spieler.amBoden && rutscht <= 0;
       if (surfend) surfbrett(c, spieler.x - kamera, spieler.y);   // Welt 5: Surfbrett unter der Figur, Figur lehnt sich nach vorn
       if (rutscht > 0 || surfend) { c.save(); c.translate(spieler.x - kamera, spieler.y); c.rotate(surfend ? 0.16 : -0.22 - 0.06 * Math.sin(zeit * 30)); c.translate(-(spieler.x - kamera), -spieler.y); }   // rutscht: Figur kippt leicht nach hinten
@@ -2742,6 +3236,7 @@
     effekteZeichnen(c);
     if (wind) windZeichnen(c);
     if (blase && tot <= 0) wortBlase(c);
+    if (cameo) cameoZeichnen(c);
   }
   // Comic-Sprechblase rechts oben neben dem Kopf (folgt der Figur, auch im Sprung); am rechten Rand nach links gekippt; Pop-in (reduced-motion: ohne)
   function wortBlase(c) {
@@ -2833,6 +3328,7 @@
     for (const t of level.tore) { c.fillStyle = '#e0a400'; c.fillRect(bx + bwid * t.x / ende - 1.5, 13, 3, 14); }
     for (const cp of level.checkpoints) { c.fillStyle = '#2e9e5b'; c.fillRect(bx + bwid * cp.x / ende - 1.5, 13, 3, 14); }
     W.hudSymbol(c, viewW / 2 + 92, 34);
+    effektChips(c);
     wortbankZeichnen(c);
     if (echo) {   // Echo-Untertitel unten mittig
       const a = Math.min(1, echo.zeit / 0.3, (ECHO_DAUER - echo.zeit) / 0.15);
@@ -2844,10 +3340,10 @@
     }
     // Tor-Hinweis
     if (zustand === 'spiel') {
-      const tor = tore.find(t => !t.erledigt && spieler.x > t.x - 520 && spieler.x < t.x + 40);
+      const tor = torHinweis();
       if (tor) {
         c.font = 'bold 20px system-ui, sans-serif'; c.textAlign = 'center';
-        const txt = texte.tor(tor.de);
+        const txt = (tor === eule ? '🦉 ' : '') + texte.tor(tor.de);
         const w = c.measureText(txt).width + 28;
         c.fillStyle = 'rgba(224,164,0,.92)'; c.beginPath(); c.roundRect(viewW / 2 - w / 2, 72, w, 34, 10); c.fill();   // unter der Wortbank-Leiste
         c.fillStyle = '#18213a'; c.fillText(txt, viewW / 2, 89);
@@ -2900,6 +3396,27 @@
       c.strokeText(t, viewW / 2, 100); c.fillText(t, viewW / 2, 100);
     }
   }
+  // Tor-Hinweis: ab 520 vor dem Tor; mit Cameo Olivia (eule) schon sofort für das nächste Tor
+  function torHinweis() {
+    const tor = tore.find(t => !t.erledigt && spieler.x > t.x - 520 && spieler.x < t.x + 40);
+    return tor || (eule && !eule.erledigt && spieler.x < eule.x + 40 ? eule : null);
+  }
+  // Cameo-Effekte als kleine Chips unter den Herzen (Symbol + Restzeit als Balken)
+  function effektChips(c) {
+    const liste = [];
+    if (schild > 0) liste.push(['🛡️', schild / 5]);
+    if (sprungBonus > 0) liste.push(['🦘', sprungBonus / 5]);
+    if (traegt > 0 || traegtAktiv) liste.push(['🦅', traegtAktiv ? 1 : traegt / 5]);
+    if (durchlaessig > 0) liste.push(['👻', durchlaessig / 3]);
+    if (eisZeit > 0) liste.push(['❄️', eisZeit / 3]);
+    if (eule) liste.push(['🦉', 1]);
+    liste.forEach(([sym, f], i) => {
+      const x = 14 + i * 40, y = 114;   // unter Wortbank (y 54) und Tor-Hinweis (72–106)
+      c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.roundRect(x, y, 34, 30, 9); c.fill();
+      c.font = '17px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText(sym, x + 17, y + 14);
+      c.fillStyle = '#2e9e5b'; c.fillRect(x + 4, y + 25, 26 * Math.max(0, Math.min(1, f)), 3);
+    });
+  }
   function herz(c, x, y, r) {
     c.beginPath(); c.moveTo(x, y + r);
     c.bezierCurveTo(x - r * 1.4, y - r * 0.2, x - r * 0.6, y - r * 1.2, x, y - r * 0.4);
@@ -2939,7 +3456,7 @@
   }
 
   /* ---------- Welten: je Welt Kulisse, Boden, Kisten, Gegnerarten, Boss (Zeichner + Klang), Tür, Banner, Level-Muster ---------- */
-  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler, moewe, seeloewe, skater };
+  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler, moewe, seeloewe, skater, fuchs };
   function bodenNY(c, x0, w, a, b, links, rechts) {
     c.fillStyle = '#b9ad9a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
     c.fillStyle = '#d9cfbb'; c.fillRect(x0, BODEN_Y, w, 10);
@@ -2973,6 +3490,11 @@
       gegnerarten: ['moewe', 'seeloewe', 'skater'], farben: { plattform: '#8e3220', plattformOben: '#e8714a', hud: '#c0462b' }, muster: MUSTER_CA, sprechblaseHoehe: 240,
       kulisse: hintergrundGoldenGate, boden: promenade, grube: pazifik, kiste: hafenkiste, hudSymbol: (c, x, y) => goldenGateFern(c, x, y + 12, 0.11),
       boss: (c, x, y) => { nebelbank(c, x, y); captainFog(c, x, y); }, tuer: brueckenTor, bossKlang: () => { tutet++; klang.nebelhorn(); } },
+    // Klasse 6 „London Run“ (31.10.): Welt 1 Westminster · Big Ben
+    westminster: { id: 'westminster', name: 'Westminster', staat: 'London', ziel: 'Big Ben', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is on duty!', sturz: 'Splash! 🌊',
+      gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WESTMINSTER, sprechblaseHoehe: 220,
+      kulisse: hintergrundLondon, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => bigBen(c, x, y, 0.075, '#1d3f8f'),
+      boss: (c, x, y) => { schilderhaus(c, x, y); sergeantBearskin(c, x, y); }, tuer: horseGuardsTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner }));
 
@@ -2993,7 +3515,10 @@
     level = W.id === 'ny' ? LEVEL_NY : levelBauen(W.muster);
     SOLIDE = solideOben();
     texte = Object.assign({}, TEXTE, { bossTitel: `${W.bossName} fragt …` }, opt.texte || {});
-    canvas = el("canvas", "runner-canvas"); canvas.setAttribute("aria-label", "Road Trip Run");
+    // Cameos (nur wenn die App Helden übergibt): Kartenbilder vorab laden; Ladefehler → Kreis mit Initiale
+    cameoListe = (Array.isArray(opt.cameos) ? opt.cameos : []).filter((h) => h && h.id).slice(0, 3);
+    for (const h of cameoListe) if (h.bild && !cameoBilder[h.id]) { const img = new Image(); img.decoding = "async"; img.src = h.bild; cameoBilder[h.id] = img; }
+    canvas = el("canvas", "runner-canvas"); canvas.setAttribute("aria-label", opt.titel || "Road Trip Run");
     ctx = canvas.getContext("2d");
     wrapper.append(canvas, frageBauen());
     groesseAnpassen();
@@ -3041,13 +3566,19 @@
         echoWarteschlange: echoWarteschlange.map((e) => ({ wort: woerter[e.wort].en, in: Math.round((e.faellig - zeit) * 100) / 100 })), echo: echo ? echo.text : null, echos, stimmeAufrufe,
         gegnerKlaenge, gegnerNah: gegner.filter((g) => g.tot <= 0 && !g.harmlos && g.x - spieler.x > -40 && g.x - spieler.x < GEGNER_NAEHE).map((g) => g.art),
         welt: W.id, rutscht: rutscht > 0, hupen, gegner: gegner.map((g) => ({ art: g.art, x: Math.round(g.x), tot: g.tot > 0, rollt: !!g.rollt, harmlos: !!g.harmlos })),
-        autos: autos.map((a) => ({ art: a.art, x: Math.round(a.x), w: a.w, h: a.h })), oel: oel.map((o) => ({ x: o.x, w: o.w, aktiv: o.aktiv })),
+        autos: autos.map((a) => ({ art: a.art, x: Math.round(a.x), w: a.w, h: a.h })), oel: oel.map((o) => ({ x: o.x, w: o.w, aktiv: o.aktiv, art: o.art || 'oel' })),
         rasseln, steine: steine.map((s) => ({ x: s.x, phase: s.phase, y: Math.round(s.y) })), bruecken: bruecken.map((b) => ({ x: b.x, w: b.w, zeit: Math.round(b.zeit * 100) / 100, gebrochen: b.gebrochen })),
         kakteen: kakteen.map((k) => k.x), meldung: meldung ? meldung.text : null,
         staemme: staemme.map((s) => ({ x: s.x, phase: s.phase, rx: Math.round(s.rx) })), hoehlen: hoehlen.map((h) => ({ x: h.x, phase: h.phase })), winde: winde.map((w) => ({ x: w.x, richtung: w.richtung, aktiv: w.aktiv })),
         wind: wind ? { phase: wind.phase, richtung: wind.richtung, t: Math.round(wind.t * 100) / 100 } : null, sprungFaktor: wind && wind.phase === 'schub' ? WIND_SPRUNG : 1, brummt, baeche: level.baeche.map((b) => ({ x: b.x, w: b.w })),
         nebel: level.nebel.map((n) => ({ x: n.x, w: n.w })), nebelDichte: Math.round(nebelDichte * 100) / 100, gondeln: gondeln.map((g) => ({ x: g.x, w: g.w, gx: Math.round(g.gx), vx: Math.round(g.vx), y: GONDEL_Y })), aufGondel,
         surfs: surfs.map((s) => ({ x: s.x, w: s.w, aktiv: s.aktiv })), surft: surft > 0, geklaut, tutet,
+        trommelt, kisten: level.kisten.filter((k) => k.art).map((k) => ({ x: k.x, y: k.y, art: k.art })), luecken: level.boden.length - 1,
+        cameo: cameo ? { id: cameo.held && cameo.held.id, t: Math.round(cameo.t * 100) / 100, satz: cameo.satz } : null, cameosGezeigt, cameoEffekt,
+        cameoPlan: cameoPlan.map((p) => ({ x: p.x, id: p.held && p.held.id, erledigt: p.erledigt })), cameoBilder: Object.values(cameoBilder).filter((i) => i.complete && i.naturalWidth > 0).length,
+        effekte: { schild: Math.round(schild * 100) / 100, sprungBonus: Math.round(sprungBonus * 100) / 100, durchlaessig: Math.round(durchlaessig * 100) / 100, eis: Math.round(eisZeit * 100) / 100, traegt: Math.round(traegt * 100) / 100, traegtAktiv, eule: eule ? eule.x : null },
+        tore: tore.map((t) => ({ x: t.x, wort: woerter[t.wort].en, erledigt: t.erledigt, steine: t.steine.map((x) => ({ y: x.y, richtig: x.richtig })) })),
+        torHinweis: zustand === 'spiel' && torHinweis() ? torHinweis().de : null, vy: Math.round(spieler.vy), diamantenX: diamanten.map((d) => ({ x: Math.round(d.x), weg: d.weg, verpasst: !!d.verpasst })),
       };
     },
     sammle(i) { const d = diamanten[i]; if (d && !d.weg && zustand === "spiel") diamantSammeln(d); },   // Diamant i direkt einsammeln (Test)
@@ -3061,6 +3592,7 @@
     windLoesen(richtung = -1) { if (zustand === 'spiel') wind = { phase: 'warnung', t: 0, richtung }; },   // Test: Windböe sofort ankündigen (Schub nach 0,5 s)
     setLeben(n) { leben = Math.max(1, Math.min(3, Number(n) || 3)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
     setSkin(o) { Object.assign(skin, o); },
+    cameo(id) { if (zustand !== 'spiel') return false; const h = cameoListe.find((x) => x.id === id) || (id ? { id, name: id } : cameoListe[0]); if (!h) return false; cameo = null; cameoStart(h); return true; },   // Test: Cameo sofort auslösen
     sprechListe, get level() { return level; }, SEQUENZ, BANNER_TEXT, get welt() { return W.id; },
   };
 

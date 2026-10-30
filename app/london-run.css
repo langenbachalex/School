@@ -1,0 +1,86 @@
+/* London Run (Klasse 6, Station 5 „Spiele“) – Startseite, Figur-Seite, Spielbühne. Engine: runner.js (Kopie von app/klasse9/runner.js).
+   Gestaltung wie Road Trip Run in app/klasse9/klasse9.css, mit den Farben der Klasse-6-App. */
+:root { --lr-rot: #c8102e; --leiste-h: 0px; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lr-rot: #ff6b7a; } }
+:root[data-theme="dark"] { --lr-rot: #ff6b7a; }
+.runner-kachel { border-color: #c8102e; }
+.reiter { display: flex; gap: 8px; flex-wrap: wrap; }
+.reiter-knopf { font: 600 1rem var(--body); min-height: 44px; padding: 0 18px; border-radius: 999px; cursor: pointer; border: 2px solid var(--linie); background: var(--karte); color: var(--text); }
+.reiter-knopf[aria-selected="true"] { background: var(--blau); border-color: var(--blau); color: var(--blau-text); }
+.reiter-knopf:focus-visible { outline: 3px solid var(--blau); outline-offset: 2px; }
+.runner-welten { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding: 2px 0 6px; -webkit-overflow-scrolling: touch; }
+.runner-welten .reiter-knopf { flex: 0 0 auto; min-height: 40px; padding: 0 12px; font-size: .95rem; white-space: nowrap; }
+.runner-welten .reiter-knopf[aria-selected="true"] { font-weight: 700; box-shadow: 0 0 0 3px var(--gelb); }
+.runner-welten .reiter-knopf.gesperrt { border-style: dashed; color: var(--leise); opacity: .85; }
+.runner-welt-hinweis { margin: 0; color: var(--lr-rot); font-weight: 600; }
+.runner-welt-hinweis:empty { display: none; }
+.runner-start, .runner-skins { display: grid; gap: 14px; }
+.runner-start .runner-welt { display: flex; gap: 14px; align-items: flex-start; }
+.runner-welt-sym { font-size: 3rem; line-height: 1; }
+.runner-welt h2 { margin: 0 0 4px; }
+.runner-ziel { font: 600 1.2rem var(--display); margin: 0 0 6px; }
+.runner-figur { display: flex; gap: 14px; align-items: center; }
+.runner-figur-text { display: grid; gap: 8px; }
+.runner-vorschau { border-radius: 18px; display: block; max-width: 100%; }
+.runner-stand { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; font-weight: 600; }
+.runner-gruppen .reiter-knopf { min-height: 40px; padding: 0 14px; font-size: .95rem; }
+.runner-woerter { margin: 8px 0 0; }
+.runner-hinweis { font-weight: 700; color: var(--lr-rot); margin: 0; text-align: center; }
+.runner-kasse { display: grid; gap: 10px; }
+.runner-kasse .knopfreihe { justify-content: center; }
+.runner-spielen { font-size: 1.15rem; min-height: 52px; }
+.runner-ende .runner-pokal { font-size: 3.4rem; line-height: 1; }
+.runner-woerterliste { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }
+.runner-woerterliste li { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.runner-woerterliste .knopf { min-height: 40px; padding: 0 8px; }
+.runner-trophaeen small { color: var(--leise); font-weight: 400; }
+.runner-neu-offen { font-weight: 700; color: var(--blau); }
+/* Figur-Seite: Kopf (Figur + Text) klebt oben, Reiter-Zeile scrollt waagerecht, Optionen als Chips, unten feste Knopfzeile */
+.runner-skin-kopf { position: sticky; top: var(--leiste-h); z-index: 2; display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center;
+  margin: -20px -20px 0; padding: 14px 20px 10px; background: var(--karte); border-radius: 18px 18px 0 0; border-bottom: 2px solid var(--linie); }
+.runner-skin-text { display: grid; gap: 6px; min-width: 0; }
+.runner-skin-text p { margin: 0; font-size: .95rem; line-height: 1.35; }
+.runner-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; padding: 2px 0 6px; -webkit-overflow-scrolling: touch; }
+.runner-tabs .reiter-knopf { flex: 0 0 auto; min-height: 40px; padding: 0 12px; font-size: .95rem; white-space: nowrap; }
+.runner-tabs .reiter-knopf[aria-selected="true"] { font-weight: 700; box-shadow: 0 0 0 3px var(--gelb); }
+.runner-skin-optionen { display: grid; gap: 14px; min-height: 50vh; align-content: start; }
+.runner-option { display: grid; gap: 6px; }
+.runner-option h3 { margin: 0; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--leise); }
+.runner-option .klein { margin: 0; }
+.runner-werte { display: flex; flex-wrap: wrap; gap: 8px; }
+.runner-wert { min-height: 42px; padding: 0 12px; font-size: .95rem; gap: 6px; }
+.runner-wert .haken:empty { display: none; }
+.runner-wert .sym { font-size: 1.1rem; line-height: 1; }
+.runner-wert .sym:empty { display: none; }
+.runner-wert .farbpunkt { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--linie); flex: none; display: inline-block; }
+.runner-wert.aktiv .farbpunkt { border-color: var(--blau-text); }
+.runner-wert.gesperrt { border-style: dashed; color: var(--leise); }
+.runner-wert.gesperrt .preis { font-weight: 400; }
+.runner-skin-fuss { position: sticky; bottom: 0; z-index: 2; margin: 0 -20px -20px; padding: 10px 20px 14px; background: var(--karte); border-top: 2px solid var(--linie); border-radius: 0 0 18px 18px; }
+.runner-skin-fuss .knopf { padding: 0 12px; font-size: 1rem; white-space: nowrap; }
+.runner-skin-fuss .knopf.haupt { flex: 1 1 10rem; }
+@media (max-width: 480px) {
+  .runner-skin-kopf { grid-template-columns: 40% 1fr; gap: 10px; }
+  .runner-skin-text p { font-size: .85rem; }
+}
+@media (max-height: 600px) { .runner-skin-kopf, .runner-skin-fuss { position: static; } }
+.shop-artikel.hervor { border-color: var(--gelb); box-shadow: 0 0 0 4px rgba(255, 210, 63, .45); }
+.shop-gruppe { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 1.2rem; margin: 6px 0 0; }
+.ticket-reihe { width: 100%; align-items: center; }
+.ticket-reihe .knopf { width: auto; flex: 1 1 8rem; margin-top: 0; }
+/* Spielbühne: Vollbild ohne Kopfzeile, ✕ oben rechts, Boss-Frage als Overlay im Canvas-Bereich */
+body.runner-aktiv { overflow: hidden; }
+body.runner-aktiv .tempo-leiste { visibility: hidden; }
+.runner-buehne { position: fixed; inset: 0; z-index: 10; background: #18213a; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+.runner-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; touch-action: none; }
+.runner-x { position: fixed; top: 10px; right: 10px; z-index: 12; min-width: 44px; min-height: 44px; padding: 0 12px; border-radius: 50%;
+  background: rgba(255, 255, 255, .88); color: #18213a; border-color: transparent; font-size: 1.2rem; }
+.runner-frage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 12px; background: rgba(24, 33, 58, .55); z-index: 11; }
+.runner-frage[hidden] { display: none; }
+.runner-frage-box { background: #fff; color: #18213a; border-radius: 18px; padding: 16px 18px; max-width: 440px; width: 100%; max-height: 96%; overflow: auto; box-shadow: 0 10px 40px rgba(0, 0, 0, .35); }
+.runner-frage-box h2 { margin: 0 0 4px; font-size: 1.3rem; color: #1d3f8f; }
+.runner-frage-box .klein { color: #555; margin: 0 0 6px; font-size: .9rem; }
+.runner-frage-box .spruch { min-height: 1.3em; font-weight: 700; color: #c8283a; margin: 0 0 4px; }
+.runner-frage-box .frage-text { font-size: 1.2rem; font-weight: 700; margin: 4px 0 8px; }
+.runner-frage-box .antwort { display: block; width: 100%; margin: 6px 0; text-align: left; font-size: 1.1rem; background: #e9edf7; color: #18213a; border-color: transparent; }
+@media (max-height: 420px) { .runner-frage-box { padding: 10px 14px; } .runner-frage-box h2 { font-size: 1.1rem; } .runner-frage-box .klein { display: none; } .runner-frage-box .antwort { min-height: 40px; margin: 4px 0; } }

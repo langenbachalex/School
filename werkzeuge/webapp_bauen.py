@@ -1,4 +1,5 @@
 """Macht aus app/ eine installierbare Web-App: Icons, Manifest und Offline-Speicher (sw.js).
+Kopiert vorher die Runner-Engine app/klasse9/runner.js nach app/runner.js (London Run, Klasse 6).
 Wird von daten_bauen.py automatisch mit aufgerufen.
 """
 import hashlib, json, os
@@ -22,7 +23,20 @@ def icon(groesse, ziel):
     img.save(ziel)
 
 
+RUNNER_KOPF = ("/* AUTOMATISCH KOPIERT aus app/klasse9/runner.js von werkzeuge/webapp_bauen.py – hier NICHT ändern, sondern dort (eine Engine, zwei Apps:\n"
+               "   Klasse 9 „Road Trip Run“, Klasse 6 „London Run“). */\n")
+
+
+def runner_kopieren():
+    """Eine Engine, zwei Apps: die Quelle bleibt app/klasse9/runner.js, Klasse 6 lädt die Kopie app/runner.js (mit Hinweis oben)."""
+    with open(os.path.join(APP, "klasse9", "runner.js"), encoding="utf-8") as f:
+        quelle = f.read()
+    with open(os.path.join(APP, "runner.js"), "w", encoding="utf-8") as f:
+        f.write(RUNNER_KOPF + quelle)
+
+
 def main():
+    runner_kopieren()
     os.makedirs(os.path.join(APP, "icons"), exist_ok=True)
     for g in (180, 192, 512):
         icon(g, os.path.join(APP, "icons", f"icon-{g}.png"))

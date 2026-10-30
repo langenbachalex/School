@@ -186,12 +186,16 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
 
 # Shop (Coins = gespiegelte Punkte, nicht rückwirkend; docs/gamification/konzept.md „Coins und Shop“). Erweiterbar: neue Artikel hier eintragen.
 # bald: wird gezeigt, ist aber noch nicht kaufbar · rahmen: CSS-Klasse rahmen-<farbe> für Titel-Schild und Startkarte
+# runner: London-Run-Ticket (31.10.), mehrfach kaufbar, ein Ticket = ein Durchgang (app.js runnerSpiel löst es beim Start ein)
+# skin: Figur-Teile für den London Run – dieselben Artikel und Preise wie Klasse 9 (werkzeuge/runner_skins.py, passend zu SKIN_GRUPPEN in app/klasse9/runner.js)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from runner_skins import skin_artikel
 SHOP = [
-    {"id": "runner", "symbol": "🎮", "name": "Runner-Ticket", "unter": "Eintritt für das Jump'n'Run", "preis": 150, "bald": True, "hinweis": "Das Spiel kommt bald. Spar schon mal!"},
+    {"id": "runner", "symbol": "🇬🇧", "name": "London-Run-Ticket", "unter": "Eintritt für den London Run – ein Ticket, ein Durchgang", "preis": 150, "runner": True},
     {"id": "rahmen_rot", "symbol": "🎨", "name": "Rahmen für dein Titel-Schild", "unter": "Rot", "preis": 75, "rahmen": "rot"},
     {"id": "rahmen_blau", "symbol": "🎨", "name": "Rahmen für dein Titel-Schild", "unter": "Blau", "preis": 75, "rahmen": "blau"},
     {"id": "rahmen_gruen", "symbol": "🎨", "name": "Rahmen für dein Titel-Schild", "unter": "Grün", "preis": 75, "rahmen": "gruen"},
-]
+] + skin_artikel(lambda g, e: g, "Figur im London Run")
 
 
 def spieldaten():

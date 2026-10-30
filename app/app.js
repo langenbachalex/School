@@ -196,6 +196,7 @@
       const a = new Audio(datei);
       aktuell = a;
       a.playbackRate = tempo(); a.preservesPitch = true; // langsamer, ohne dass die Stimme tiefer klingt
+      if (opt.laut) a.volume = opt.laut; // spiele(…, { laut: 0.6 }): leiser (Echo im London Run)
       a.onended = () => { gesamt += (a.duration || 0) / (a.playbackRate || 1); setTimeout(fertig, 350); }; // Sprechzeit passt sich an
       a.onerror = fertig;
       a.play().catch(fertig);
@@ -215,7 +216,7 @@
     for (const k of kinder.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
     return e;
   }
-  function zeige(...inhalt) { stopp(); imSpiel = false; app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); hwLeiste(); }
+  function zeige(...inhalt) { stopp(); runnerAus(); imSpiel = false; app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); hwLeiste(); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -1252,7 +1253,10 @@
         kachel("🎯", "Catch the Word", "Wort hören und fangen, bevor es unten ist", () => spielWahl("Catch the Word", spielCatch)),
         kachel("🐝", "Spelling Bee", "Wort hören und richtig schreiben", () => spielWahl("Spelling Bee", spielBee)),
         kachel("🔎", "-s-Detektiv", "Fehlt ein -s? Finde es und repariere den Satz", spielDetektiv),
-        el("button", { class: "kachel shop-kachel", onclick: shop, "aria-label": "Shop" },
+        el("button", { class: "kachel runner-kachel", onclick: () => runnerStart(), "aria-label": "London Run" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🇬🇧"), el("span", { class: "titel", lang: "en" }, "London Run"),
+          el("span", { class: "unter" }, `Jump'n'Run · 🎟️ Ticket ${RUNNER.preis} 🪙`)),
+        el("button", { class: "kachel shop-kachel", onclick: () => shop(), "aria-label": "Shop" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🛍️"), el("span", { class: "titel", lang: "en" }, "Shop"),
           el("span", { class: "unter" }, `🪙 ${spielstand().coins} Coins – Rahmen und mehr`))));
     imSpiel = true;
@@ -2013,6 +2017,7 @@
         el("p", { class: "klein" }, `🔥 ${serie()} Schultage am Stück · ⭐ ${sp.wochen.length} perfekte Wochen. Übst du an jedem Schultag, bekommst du einen neuen Superhelden! Ferien und Feiertage zählen nicht – deine Serie bleibt.`)),
       el("section", { class: "satzkarte" },
         el("h2", {}, `🦸 Superhelden (${sp.helden.length} von ${SP.helden.length})`), helden),
+      runnerSammlung(),
       aktenBereich(),
       el("section", { class: "satzkarte" },
         el("h2", {}, "Abzeichen"),
@@ -2031,41 +2036,331 @@
   async function kaufe(a) {
     const sp = spielstand();
     if (a.bald) { toast(a.hinweis); return false; }
-    if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } return false; }
+    if (a.runner) { // London-Run-Ticket: mehrfach kaufbar, ein Ticket = ein Durchgang (wird beim Start eingelöst)
+      if (sp.coins < a.preis) { toast(`Noch ${a.preis - sp.coins} Coins`); return false; }
+      if (!(await frage(`Ein Ticket für ${a.preis} Coins kaufen?`, "🎟️ Kaufen"))) return false;
+      sp.coins -= a.preis; sp.ausgegeben += a.preis; runnerStand().tickets = (runnerStand().tickets || 0) + 1; speichern();
+      ereignisse.push({ art: "toast", text: `🎟️ +1 · 🪙 −${a.preis}` });
+      setTimeout(zeigeEreignisse, 50); konfettiFrei();
+      return true;
+    }
+    if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } if (a.skin) skinSetzen(a.skin[0], a.skin[1]); return false; }
     if (sp.coins < a.preis) { toast(`Noch ${a.preis - sp.coins} Coins`); return false; }
     if (!(await frage(`Für ${a.preis} Coins kaufen?`, "Kaufen"))) return false;
     sp.coins -= a.preis; sp.ausgegeben += a.preis; sp.gekauft.push(a.id);
     if (a.rahmen) sp.rahmen = a.rahmen;
+    if (a.skin) skinSetzen(a.skin[0], a.skin[1]);
     speichern();
     ereignisse.push({ art: "toast", text: `🪙 −${a.preis}` });
     setTimeout(zeigeEreignisse, 50); konfettiFrei();
     return true;
   }
-  function shop() {
+  // opt (optional): { zurueck: fn, artikel: id } – Rücksprung z. B. zur Figur-Seite des London Run, ein Artikel wird hervorgehoben
+  function shop(opt) {
+    opt = opt && typeof opt.zurueck === "function" ? opt : {};
     lage = null;
     const sp = spielstand();
-    const artikel = (SP.shop || []).map((a) => {
-      const hat = sp.gekauft.includes(a.id), fehlt = a.preis - sp.coins, aktiv = a.rahmen && sp.rahmen === a.rahmen && hat;
+    const artikel = (a) => {
+      const hat = sp.gekauft.includes(a.id), fehlt = a.preis - sp.coins;
+      const aktiv = hat && ((a.rahmen && sp.rahmen === a.rahmen) || (a.skin && skinWirksam()[a.skin[0]] === a.skin[1]));
       let k;
       if (a.bald) k = el("span", { class: "shop-hinweis" }, a.hinweis);
-      else if (hat && a.rahmen) k = aktiv ? el("span", { class: "shop-hinweis ok" }, "✓ Angelegt") : knopf("Anlegen", () => { kaufe(a).then(() => shop()); });
+      else if (a.runner) k = el("div", { class: "knopfreihe ticket-reihe" },
+        el("span", { class: "shop-hinweis" }, `🎟️ ${runnerStand().tickets || 0} Tickets`),
+        fehlt > 0 ? sperrt(knopf(`Noch ${fehlt} Coins`, () => { kaufe(a); shop(opt); })) : knopf("Ticket kaufen", () => { kaufe(a).then((ok) => { if (ok) shop(opt); }); }, "haupt"),
+        (runnerStand().tickets || 0) > 0 && knopf("▶ Zum Spiel", () => runnerStart()));
+      else if (hat && (a.rahmen || a.skin)) k = aktiv ? el("span", { class: "shop-hinweis ok" }, "✓ Angelegt") : knopf("Anlegen", () => { kaufe(a).then(() => shop(opt)); });
       else if (hat) k = el("span", { class: "shop-hinweis ok" }, "✓ Gekauft");
-      else if (fehlt > 0) k = sperrt(knopf(`Noch ${fehlt} Coins`, () => { kaufe(a); shop(); }));
-      else k = knopf("Kaufen", () => { kaufe(a).then((ok) => { if (ok) shop(); }); }, "haupt");
-      return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.bald ? " bald" : "") + (a.rahmen ? " rahmen-" + a.rahmen : ""), "data-artikel": a.id },
+      else if (fehlt > 0) k = sperrt(knopf(`Noch ${fehlt} Coins`, () => { kaufe(a); shop(opt); }));
+      else k = knopf("Kaufen", () => { kaufe(a).then((ok) => { if (ok) shop(opt); }); }, "haupt");
+      return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.bald ? " bald" : "") + (a.rahmen ? " rahmen-" + a.rahmen : "") + (a.id === opt.artikel ? " hervor" : ""), "data-artikel": a.id },
         el("span", { class: "sym", "aria-hidden": "true" }, a.symbol),
         el("strong", {}, a.name), a.unter && el("span", { class: "unter" }, a.unter),
         el("span", { class: "preis" }, `🪙 ${a.preis}`),
         a.bald && el("span", { class: "bald-schild" }, "kommt bald"),
         k);
-    });
+    };
+    const alle = SP.shop || [], skins = alle.filter((a) => a.skin);
     zeige(
-      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🛍️ Shop")),
+      el("header", { class: "kopf" }, knopf(opt.zurueck ? "← Zurück" : "← Start", opt.zurueck || startseite, "leise"), el("h1", {}, "🛍️ Shop")),
       el("section", { class: "satzkarte shop-stand" },
         el("p", { class: "shop-coins" }, `🪙 ${sp.coins} Coins`),
         el("p", { class: "klein" }, "Für 2 Punkte gibt es 1 Coin. Punkte bleiben – Coins kannst du hier ausgeben.")),
-      el("div", { class: "shop-raster" }, artikel),
+      el("div", { class: "shop-raster" }, alle.filter((a) => !a.skin).map(artikel)),
+      skins.length > 0 && el("h2", { class: "shop-gruppe" }, "🎨 Figur für den London Run", " ", knopf("Figur ansehen", () => runnerSkins(), "leise")),
+      skins.length > 0 && el("div", { class: "shop-raster" }, skins.map(artikel)),
       el("div", { class: "knopfreihe" }, knopf("🏆 Meine Sammlung", sammlung)));
+    const h = opt.artikel && app.querySelector(".shop-artikel.hervor");
+    if (h) h.scrollIntoView({ block: "center" });
+  }
+
+  /* ---------- Spiele: 🇬🇧 London Run – Jump'n'Run (Engine runner.js = Kopie von app/klasse9/runner.js; Konzept docs/runner/konzept-entwurf.md „London Run Klasse 6 – Welt 1“) ----------
+     Wie Road Trip Run in Klasse 9: Ticket 150 Coins je Durchgang (im Shop kaufen, beim Start eingelöst; Sperre im Programm in runnerSpiel), keine Punkte, keine Coins zurück.
+     Belohnung: Trophäe je Welt (Gold = alle Diamanten + beide Tore richtig, sonst Silber) und Runner-Titel nach geschafften Leveln (1 · 3 · 6 · 10 · 15).
+     Stand in stand.spiel.runner = { level: { westminster: "gold"|"silber" }, gespielt, geschafft, titel, tickets }, Figur in stand.spiel.skin – beides im Siegel.
+     Wörter: 12 aus dem gewählten Abschnitt von Station 7 (eigene zuerst, aufgefüllt aus den anderen Abschnitten), gesprochen mit den Vokabel-Aufnahmen.
+     Cameos: 2–3 geheime Superhelden je Lauf, bevorzugt die schon gesammelten (sp.helden). Boss-Banner, Boss-Sprüche und Cameo-Sätze bis zur Vertonung mit der Geräte-Stimme.
+     Welt 1 Westminster · Big Ben (31.10.); London Eye, Tower Bridge, The Tube, Wembley kommen später (🔒 bald). */
+  const RUNNER = { preis: 150, skinPreis: 45, skinPreisTeuer: 90, woerter: 12, titel: ["Rookie Runner", "Tube Jumper", "Bus Hopper", "London Hero", "Superhero of London"], ab: [1, 3, 6, 10, 15],
+    welten: [{ id: "westminster", name: "Westminster", staat: "London", ziel: "Big Ben", trophaee: "Big Ben Finder", symbol: "🔔", boss: "Sergeant Bearskin" },
+      { id: "eye", name: "London Eye", staat: "London", ziel: "London Eye", trophaee: "London Eye", symbol: "🎡", bald: true },
+      { id: "bridge", name: "Tower Bridge", staat: "London", ziel: "Tower Bridge", trophaee: "Tower Bridge", symbol: "🌉", bald: true },
+      { id: "tube", name: "The Tube", staat: "London", ziel: "The Tube", trophaee: "The Tube", symbol: "🚇", bald: true },
+      { id: "wembley", name: "Wembley", staat: "London", ziel: "Wembley", trophaee: "Wembley", symbol: "🏟️", bald: true }] };
+  const HELD_STIMME = { leo: "m", kenji: "m", felix: "m", max: "m", camilla: "f", ellie: "f", olivia: "f", zara: "f", penny: "f", tessa: "f" }; // Geräte-Stimme bis zur Vertonung (Jugendstimmen)
+  const runnerWeltOffen = (w) => { const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
+  const runnerWeltVon = (id) => RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0];
+  const R = () => window.Runner || null;
+  function runnerStand() {
+    const sp = spielstand();
+    if (!sp.runner || typeof sp.runner !== "object") sp.runner = { level: {}, gespielt: 0, geschafft: 0, titel: 0 };
+    if (!sp.runner.level) sp.runner.level = {};
+    if (!sp.skin || typeof sp.skin !== "object") sp.skin = {};
+    return sp.runner;
+  }
+  const runnerTitelIndex = (n) => RUNNER.ab.filter((a) => n >= a).length; // 0 = noch keiner, 1 = Rookie Runner … 5 = Superhero of London
+  const runnerTitelName = (i) => (i > 0 ? RUNNER.titel[i - 1] : null);
+  const skinWirksam = () => (runnerStand(), R() ? R().powerAnwenden(spielstand().skin, spielstand().titel) : spielstand().skin); // Power-Körper nach Punkte-Titel-Stufe
+  const skinFrei = (key, wert) => !R() || R().skinFrei(key, wert) || spielstand().gekauft.includes(R().skinArtikel(key, wert));
+  function skinSetzen(key, wert) {
+    const s = (runnerStand(), spielstand().skin);
+    if (key === "muskeln" && (s.power || "an") === "an") s.muskelnManuell = wert; // Power-Körper an: Muskeln von Hand überschreiben
+    else { s[key] = wert; if (key === "power" && wert === "an") delete s.muskelnManuell; }
+    speichern();
+  }
+  const de2 = (p) => (Array.isArray(p) ? p[0] : String(p)); // Skin-Namen der Engine: [Deutsch, Englisch] → Deutsch
+  // Vorschau-Figur (Canvas), läuft nur solange sie in der Seite ist; bei prefers-reduced-motion ein Standbild
+  function figurVorschau(breite, hoehe) {
+    const cv = el("canvas", { class: "runner-vorschau", width: breite * 2, height: hoehe * 2, style: `width:${breite}px;height:${hoehe}px`, "aria-hidden": "true" });
+    const c = cv.getContext("2d");
+    const male = (pose, t) => {
+      c.setTransform(2, 0, 0, 2, 0, 0); c.clearRect(0, 0, breite, hoehe);
+      c.fillStyle = "#e9f4ff"; c.beginPath(); c.roundRect(0, 0, breite, hoehe, 18); c.fill();
+      if (R()) { const s = skinWirksam(); R().zeichneFigur(c, breite / 2, hoehe * 0.95, Math.min(hoehe * 0.72, hoehe * 0.9 * 80 / R().figurHoehe(s)), s, pose, t); }
+    };
+    const lauf = () => { if (!cv.isConnected) return; male("lauf", performance.now() / 1000); requestAnimationFrame(lauf); };
+    requestAnimationFrame(() => (ruhig() ? male("steh", 0) : lauf()));
+    cv.neuMalen = () => male(ruhig() ? "steh" : "lauf", performance.now() / 1000);
+    return cv;
+  }
+  // 12 Wörter: zuerst der gewählte Abschnitt (gemischt), dann Wörter der übrigen Abschnitte von Station 7
+  function runnerWoerter(i) {
+    const gruppen = station(7).gruppen, g = gruppen[i];
+    if (!g) return [];
+    const ok = (v) => catchOk(v) && v.de;
+    const eigene = mischen(g.vokabeln.map(vokabel).filter(ok));
+    const rest = mischen(gruppen.filter((x) => x !== g).flatMap((x) => x.vokabeln).map(vokabel).filter((v) => ok(v) && !eigene.includes(v)));
+    return eigene.concat(rest).slice(0, RUNNER.woerter);
+  }
+  // Cameos: bis zu 3 Helden, zuerst die schon gesammelten (gemischt), dann die übrigen
+  function runnerCameos() {
+    const sp = spielstand(), frei = mischen(SP.helden.filter((h) => sp.helden.includes(h.id))), rest = mischen(SP.helden.filter((h) => !sp.helden.includes(h.id)));
+    return frei.concat(rest).slice(0, 3).map((h) => ({ id: h.id, name: h.name, bild: h.bild, kraft: h.kraft }));
+  }
+  let runnerWahl = null, runnerLauf = null, skinTab = "haare";
+  function runnerAus() {
+    if (runnerLauf) { try { runnerLauf.stopp(); } catch (e) { /* egal */ } runnerLauf = null; }
+    document.body.classList.remove("runner-aktiv");
+  }
+  const runnerFehlt = () => Math.max(0, RUNNER.preis - spielstand().coins);
+  const trophaeenText = (st) => (st === "gold" ? "🥇 Gold" : st === "silber" ? "🥈 Silber" : "–");
+  const zumRunnerShop = () => shop({ zurueck: () => runnerStart(), artikel: "runner" });
+  // Startseite: Welt, Figur, Wörter (Abschnitt aus Station 7), Tickets und Coins, Spielen
+  function runnerStart() {
+    lage = null;
+    const sp = spielstand(), r = runnerStand(), gruppen = station(7).gruppen;
+    if (!runnerWahl || !gruppen[runnerWahl.i]) runnerWahl = { i: 0, welt: runnerWahl && runnerWahl.welt };
+    let W = runnerWeltVon(runnerWahl.welt);
+    if (!runnerWeltOffen(W)) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
+    const tickets = r.tickets || 0, fehlt = runnerFehlt(), ws = runnerWoerter(runnerWahl.i), titel = runnerTitelName(r.titel);
+    // Ohne Ticket führt der Hauptknopf in den Shop (Ticket hervorgehoben), damit klar ist, wo man hin muss
+    const spielen = tickets > 0
+      ? knopf("▶ Spielen (🎟️ 1)", () => runnerSpiel(runnerWahl.i, W.id), "haupt runner-spielen")
+      : knopf(`🎟️ Erst Ticket kaufen – ${RUNNER.preis} 🪙`, zumRunnerShop, "haupt runner-spielen");
+    if (tickets > 0 && (ws.length < 4 || !R())) sperrt(spielen);
+    const weltHinweis = el("p", { class: "klein runner-welt-hinweis", role: "status" });
+    const weltReiter = el("div", { class: "reiter runner-welten", role: "listbox", "aria-label": "Welt" }, RUNNER.welten.map((w, i) => {
+      const offen = runnerWeltOffen(w), vor = RUNNER.welten[i - 1];
+      return el("button", { class: "reiter-knopf" + (offen ? "" : " gesperrt"), role: "option", "aria-selected": String(w.id === W.id), "aria-disabled": String(!offen), "data-welt": w.id,
+        onclick: () => {
+          if (!offen) { weltHinweis.textContent = w.bald ? `${w.name} kommt bald.` : `🔒 Silber in ${vor.name} nötig – schaff erst Level ${i}!`; toast(weltHinweis.textContent); return; }
+          runnerWahl = { i: runnerWahl.i, welt: w.id }; runnerStart();
+        } }, `${offen ? w.symbol : "🔒"} ${i + 1} · ${w.name}`);
+    }));
+    zeige(spielKopf("London Run", zeigeSpiele),
+      el("section", { class: "satzkarte runner-start" },
+        weltReiter, weltHinweis,
+        el("div", { class: "runner-welt" },
+          el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, W.symbol),
+          el("div", {},
+            el("h2", { lang: "en" }, `Level ${RUNNER.welten.indexOf(W) + 1} · ${W.name}`),
+            el("p", { class: "runner-ziel", lang: "en" }, `Find ${W.ziel}!`),
+            el("p", { class: "klein" }, `Tippen oder Leertaste = springen, länger halten = höher (über Doppeldecker!). Black Cabs und rote Busse kommen dir entgegen – drüberspringen! In Pfützen rutschst du kurz. Telefonzellen und Postkästen sind Stufen, in die Themse fällst du hinein. Tauben, Füchse und Eichhörnchen kannst du plattdrücken. Manchmal helfen dir die geheimen Superhelden. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Tor der Horse Guards – gut 2 Minuten. Am besten das Handy quer halten.`))),
+        el("div", { class: "runner-figur" }, figurVorschau(110, 140),
+          el("div", { class: "runner-figur-text" },
+            el("p", { class: "klein" }, "Deine Figur"),
+            knopf("🎨 Figur", () => runnerSkins()))),
+        el("p", { class: "runner-stand" },
+          el("span", {}, `🏃 ${titel || "noch kein Titel"}`),
+          el("span", {}, `🏆 ${W.trophaee}: ${trophaeenText(r.level[W.id])}`),
+          el("span", {}, `🎮 ${r.gespielt} Spiele · ${r.geschafft} Level geschafft`))),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, "Welche Wörter?"),
+        el("div", { class: "reiter runner-gruppen", role: "listbox", "aria-label": "Abschnitt" }, gruppen.map((g, i) =>
+          el("button", { class: "reiter-knopf", role: "option", "aria-selected": String(i === runnerWahl.i), onclick: () => { runnerWahl = { i, welt: W.id }; runnerStart(); } }, g.name))),
+        ws.length > 0 && el("p", { class: "klein runner-woerter", lang: "en" }, ws.map(spielWort).join(" · "))),
+      el("section", { class: "satzkarte runner-kasse" },
+        el("p", { class: "shop-coins" }, `🎟️ ${tickets} Tickets · 🪙 ${sp.coins} Coins`),
+        tickets === 0 ? el("p", { class: "runner-hinweis", role: "status" }, fehlt > 0
+            ? `Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Dir fehlen noch ${fehlt} Coins – übe weiter!`
+            : `Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Kauf erst ein Ticket, dann geht's los!`)
+          : el("p", { class: "klein" }, "Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Punkte und keine Coins zurück, dafür Trophäe und Runner-Titel."),
+        el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumRunnerShop))));
+  }
+  // Spiel: Ticket einlösen, Vollbild-Bühne ohne Kopfzeile, ✕ mit Rückfrage
+  function runnerSpiel(i, welt) {
+    const r = runnerStand(), ws = runnerWoerter(i), W = runnerWeltVon(welt);
+    if (!runnerWeltOffen(W)) return runnerStart();
+    if (!R()) { toast("Das Spiel ist noch nicht geladen."); return; }
+    if (ws.length < 4) return runnerStart();
+    if (!(r.tickets > 0)) { toast("Kauf erst ein Ticket im Shop."); return zumRunnerShop(); }
+    r.tickets--; r.gespielt++; speichern();
+    toast("🎟️ Ticket eingelöst");
+    lage = null;
+    const buehne = el("div", { class: "runner-buehne" });
+    const abbruch = knopf("✕", () => { frage("Abbrechen? Das Ticket ist weg.", "Abbrechen", "Weiterspielen").then((ok) => { if (ok) runnerStart(); }); }, "runner-x");
+    abbruch.setAttribute("aria-label", "Spiel abbrechen");
+    zeige(buehne, abbruch);
+    document.body.classList.add("runner-aktiv");
+    runnerLauf = R().start({
+      wrapper: buehne, skin: skinWirksam(), welt: W.id, titel: "London Run", cameos: runnerCameos(),
+      woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
+      texte: { bossTitel: `${W.boss} fragt …`, bossHinweis: "Richtig = das Tor der Horse Guards geht auf. Falsch = ein Leben weg." },
+      // wort(j, { leise: true }) = Echo im Spiel: leiser und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
+      stimme: { wort: (j, o) => spiele([ws[j % ws.length].audio.en], o && o.leise ? { laut: 0.6, warten: true } : {}),
+        boss: (text) => spiele([{ tts: text, lang: "en-GB", stimme: "m" }]),
+        cameo: (text, id) => spiele([{ tts: text, lang: "en-GB", stimme: HELD_STIMME[id] || "f" }], { warten: true }) },
+      onEnde: (e) => runnerEnde(i, e, ws, W.id),
+    });
+  }
+  // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (neues Ticket) oder Startseite
+  function runnerEnde(i, e, ws, welt) {
+    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
+    let stufe = null, neuOffen = false;
+    if (e.geschafft) {
+      r.geschafft++;
+      stufe = e.diamanten >= e.max && e.toreRichtig >= 2 ? "gold" : "silber";
+      neuOffen = !r.level[W.id] && !!naechsteWelt && !naechsteWelt.bald;
+      if (stufe === "gold" || !r.level[W.id]) r.level[W.id] = stufe;
+      const t = runnerTitelIndex(r.geschafft);
+      if (t > (r.titel || 0)) {
+        r.titel = t;
+        const name = runnerTitelName(t);
+        ereignisse.push({ art: "feier", symbol: t === RUNNER.titel.length ? "🦸" : "🏃", titel: `London Run: ${name}`, text: `Neuer Runner-Titel: ${name}!`, ton: waehleRuf("stark") });
+      }
+    }
+    speichern();
+    const r_ = waehleRuf(e.geschafft ? "stark" : "fehler");
+    const minuten = `${Math.floor(e.dauer / 60)}:${String(e.dauer % 60).padStart(2, "0")}`;
+    const zeichne = () => {
+      zeige(spielKopf("London Run", runnerStart),
+        el("section", { class: (e.geschafft ? "geschafft" : "satzkarte") + " runner-ende" },
+          el("div", { class: "runner-pokal", "aria-hidden": "true" }, e.geschafft ? (stufe === "gold" ? "🥇" : "🥈") : "💤"),
+          el("h2", { lang: "en" }, e.geschafft ? "Level complete!" : "Game over"),
+          r_ && el("p", { class: "gym-lob" }, el("strong", { lang: "en" }, r_.text), r_.de && el("span", { lang: "de" }, " – " + r_.de)),
+          e.geschafft ? el("p", { lang: "en" }, `You found ${W.ziel}!`)
+            : el("p", {}, "Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!"),
+          el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
+          e.maxCombo > 0 && el("p", { class: "klein runner-serie" }, `🔥 Beste Serie: ×${e.maxCombo}`),
+          e.geschafft && el("p", {}, el("strong", {}, `🏆 ${W.trophaee} – ${stufe === "gold" ? "Gold" : "Silber"}`), stufe !== "gold" ? " (Gold: alle Diamanten und beide Tore richtig)" : ""),
+          neuOffen && el("p", { class: "runner-neu-offen" }, `🔓 Neue Welt frei: ${naechsteWelt.symbol} ${naechsteWelt.name}!`),
+          el("p", { class: "klein" }, `🏃 Runner-Titel: ${runnerTitelName(r.titel) || "–"} · ${r.geschafft} Level geschafft`)),
+        el("section", { class: "satzkarte" },
+          el("h2", {}, "Die Wörter"),
+          el("ul", { class: "wortliste runner-woerterliste" }, ws.map((v) => el("li", {},
+            knopf("🔊", () => spiele([v.audio.en]), "leise"), " ", el("strong", { lang: "en" }, spielWort(v)), " – ", el("span", { lang: "de" }, v.de))))),
+        el("div", { class: "knopfreihe" },
+          (r.tickets || 0) > 0 ? knopf("↻ Noch mal (🎟️ 1)", () => runnerSpiel(i, W.id), "haupt") : knopf(`🎟️ Erst Ticket kaufen – ${RUNNER.preis} 🪙`, zumRunnerShop, "haupt"),
+          knopf("Zur Startseite", startseite, "leise")));
+    };
+    lage = null; zeichne();
+    setTimeout(zeigeEreignisse, 50);
+    if (r_ && r_.audio && !ereignisse.some(grossEreignis)) spiele([r_.audio]);
+  }
+  // Hall of Fame: Abschnitt in der Sammlung (eine Trophäe je Welt; noch nicht gebaute Welten 🔒 bald)
+  function runnerSammlung() {
+    const r = runnerStand(), naechste = RUNNER.ab[r.titel || 0];
+    return el("section", { class: "satzkarte runner-sammlung" },
+      el("h2", {}, "🇬🇧 London Run – Hall of Fame"),
+      el("p", {}, "Runner-Titel: ", el("strong", { lang: "en" }, runnerTitelName(r.titel) || "noch keiner"), ` · ${r.geschafft} Level geschafft · ${r.gespielt} Spiele`),
+      naechste && el("p", { class: "klein" }, `Noch ${naechste - r.geschafft} ${naechste - r.geschafft === 1 ? "geschafftes Level" : "geschaffte Level"} bis „${RUNNER.titel[r.titel || 0]}“`),
+      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.map((w) => {
+        const st = r.level[w.id];
+        return el("li", { class: st ? "ok" : "", "data-welt": w.id },
+          el("span", { "aria-hidden": "true" }, st === "gold" ? "🥇" : st === "silber" ? "🥈" : w.bald ? "🔒" : "🏆"),
+          el("span", { lang: "en" }, w.trophaee, el("small", {}, w.bald ? " · bald" : ` · ${w.staat}`)),
+          el("span", { class: "unsichtbar" }, st ? "geschafft" : "noch nicht"));
+      })),
+      el("div", { class: "knopfreihe" }, knopf("🇬🇧 London Run", () => runnerStart(), "leise")));
+  }
+  // Figur-Seite (wie Klasse 9): Figur + Erklärtext oben (sticky), Reiter-Zeile, darunter die Optionen der Gruppe als Chips, unten feste Knopfzeile.
+  // Auswahl und Reiterwechsel zeichnen NICHT die Seite neu (kein Scrollsprung): nur Vorschau + Chips bzw. der Options-Bereich werden aktualisiert.
+  const SKIN_SYMBOL = { haar: "💇", haarfarbe: "🎨", haarschmuck: "🎀", hut: { keiner: "🚫", cap: "🧢", cowboy: "🤠", zylinder: "🎩" }, brille: "🕶️", bart: "🥸", nase: "👃",
+    top: { shirt: "👕", hoodie: "🧥" }, topfarbe: "🎨", schuhe: { rollschuhe: "🛼" }, schmuck: { keiner: "🚫", ohrring: "💎", kette: "📿", beides: "💍" }, hals: "🦒", bauch: "🫃", brust: "🧍", muskeln: "💪", fuesse: "🦶", power: "⚡", aura: "✨",
+    rucksack: { keiner: "🚫", blau: "🎒", rot: "🎒", regenbogen: "🌈" }, handschuhe: { keine: "🚫", "weiß": "🧤", schwarz: "🧤", boxhandschuhe: "🥊" } };
+  const SKIN_FARBOPTION = { haarfarbe: 1, topfarbe: 1, schuhe: 1 };
+  const skinFarbe = (M, key, w) => { const f = key === "haarfarbe" ? M.HAARFARBEN[w] : M.FARBEN[w]; return f === "regenbogen" ? "linear-gradient(180deg,#ff2d2d,#ff9f1a,#ffe21a,#2ecc71,#2a8cff,#9b4dff)" : f; };
+  function runnerSkins() {
+    lage = null;
+    const sp = spielstand(), M = R();
+    runnerStand();
+    if (!M) { zeige(spielKopf("Figur", runnerStart), el("p", {}, "Das Spiel ist noch nicht geladen.")); return; }
+    let gruppe = M.SKIN_GRUPPEN.find((g) => g.id === skinTab) || M.SKIN_GRUPPEN[0];
+    const breit = Math.max(96, Math.min(150, Math.floor((app.clientWidth - 40) * 0.4))), vorschau = figurVorschau(breit, Math.round(breit * 1.27));
+    const bereich = el("div", { class: "runner-skin-optionen" });
+    const zumShop = (artikel) => shop({ zurueck: () => runnerSkins(), artikel });
+    const symbol = (o, w) => { const sy = SKIN_SYMBOL[o.key]; return typeof sy === "object" ? sy[w] || "" : sy || ""; };
+    const markiere = () => {
+      const w = skinWirksam();
+      for (const b of bereich.querySelectorAll(".runner-wert")) {
+        const aktiv = w[b.dataset.key] === b.dataset.wert;
+        b.classList.toggle("aktiv", aktiv); b.classList.toggle("haupt", aktiv); b.setAttribute("aria-pressed", String(aktiv));
+        b.querySelector(".haken").textContent = aktiv ? "✓ " : "";
+      }
+    };
+    const waehle = (o, w) => { skinSetzen(o.key, w); markiere(); vorschau.neuMalen(); spiele([{ tts: M.sprechText(skinWirksam(), o.key, w), lang: "en-GB", stimme: "m" }]); };
+    const chip = (o, w) => {
+      const frei = skinFrei(o.key, w), farbe = SKIN_FARBOPTION[o.key] && skinFarbe(M, o.key, w), preis = M.skinPreis(o.key, w);
+      return el("button", { class: "knopf runner-wert" + (frei ? "" : " gesperrt"), "aria-pressed": "false", "data-skin": `${o.key}_${w}`, "data-key": o.key, "data-wert": w,
+        onclick: () => (frei ? waehle(o, w) : zumShop(M.skinArtikel(o.key, w))) },
+        el("span", { class: "haken", "aria-hidden": "true" }),
+        !frei && el("span", { "aria-hidden": "true" }, "🔒 "),
+        farbe ? el("span", { class: "farbpunkt", style: `background:${farbe}`, "aria-hidden": "true" }) : el("span", { class: "sym", "aria-hidden": "true" }, symbol(o, w)),
+        de2(o.namen[w]), !frei && el("span", { class: "preis" }, ` · ${preis} 🪙`));
+    };
+    const zeichneGruppe = () => {
+      bereich.replaceChildren(...gruppe.optionen.map((o) => el("div", { class: "runner-option", "data-option": o.key },
+        el("h3", {}, de2(o.label)),
+        el("div", { class: "runner-werte" }, o.werte.map((w) => chip(o, w))),
+        o.key === "power" && el("p", { class: "klein" }, `Mit deinem Punkte-Titel (Stufe ${sp.titel} von 5) werden die Muskeln von selbst stärker, ab Stufe 4 mit kleiner Aura. Die Muskeln kannst du trotzdem von Hand umstellen.`))));
+      markiere();
+    };
+    const tabs = el("div", { class: "reiter runner-tabs", role: "tablist" }, M.SKIN_GRUPPEN.map((g) =>
+      el("button", { class: "reiter-knopf", role: "tab", "aria-selected": String(g.id === gruppe.id), "data-gruppe": g.id, onclick: (e) => {
+        skinTab = g.id; gruppe = g;
+        for (const t of tabs.children) t.setAttribute("aria-selected", String(t === e.currentTarget));
+        e.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" });
+        zeichneGruppe();
+      } }, `${g.symbol} ${de2(g.titel)}`)));
+    zeichneGruppe();
+    const kopf = el("div", { class: "runner-skin-kopf" }, vorschau,
+      el("div", { class: "runner-skin-text" },
+        el("p", {}, "Die Grundausstattung ist frei."),
+        el("p", {}, `Weitere Teile (🔒) gibt es im Shop für ${RUNNER.skinPreis} 🪙, Ausgefallenes für ${RUNNER.skinPreisTeuer} 🪙.`),
+        el("p", {}, `⚡ Power-Körper: Muskeln wachsen mit deinem Punkte-Titel (Stufe ${sp.titel} von 5).`)));
+    zeige(spielKopf("Figur", runnerStart),
+      el("section", { class: "satzkarte runner-skins" }, kopf, tabs, bereich,
+        el("div", { class: "knopfreihe runner-skin-fuss" }, knopf("✓ Fertig – zum Spiel", runnerStart, "haupt"), knopf("🛍️ Shop", () => zumShop()))));
   }
 
   /* ---------- Mini-Reward beim Vokabellernen (Word Gym, Vokabel-Abfrage, Bild, Lücke): ab 3 richtigen in Folge ----------
@@ -2506,7 +2801,7 @@
   // Kommt eine neue Version während einer Übung, erscheint der Hinweis erst danach (nichts geht verloren); sonst sofort ein Pop-up „Jetzt aktualisieren“,
   // das man nicht wegdrücken kann. War die App länger als 1 Stunde offen, lädt sie beim Zurückkommen neu (wenn gerade keine Übung läuft).
   const GELADEN = Date.now(), STUNDE = 3600 * 1000;
-  const beschaeftigt = () => !!lage;
+  const beschaeftigt = () => !!lage || !!runnerLauf; // auch im London Run kein Update-Pop-up mitten im Lauf
   let neueVersion = false, updateGezeigt = false;
   const updateDialog = el("dialog", { class: "feier frage update" });
   updateDialog.addEventListener("cancel", (e) => e.preventDefault());

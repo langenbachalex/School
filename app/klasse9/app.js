@@ -1552,8 +1552,8 @@
   function einheitBonus() { punkteDazu(PUNKTE.einheit); }
   function punkteDazu(plus) {
     const sp = spielstand();
-    sp.punkte += plus; sp.coins += plus; // jeder Punkt bringt auch einen Coin (Coins sinken nur im Shop)
-    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐ · +${plus} 🪙` });
+    const muenzen = Math.ceil(plus / 2); sp.punkte += plus; sp.coins += muenzen; // seit 30.10.: halb so viele Coins wie Punkte, aufgerundet (Coins sinken nur im Shop)
+    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐ · +${muenzen} 🪙` });
     const t = titelIndex(sp.punkte);
     if (t > sp.titel) {
       sp.titel = t;
@@ -1813,8 +1813,8 @@
       el("header", { class: "kopf" }, knopf(opt.zurueck ? T("← Zurück", "← Back") : "← Start", opt.zurueck || startseite, "leise"), el("h1", {}, "🛍️ Shop")),
       el("section", { class: "satzkarte shop-stand" },
         el("p", { class: "shop-coins" }, `🪙 ${sp.coins} Coins`),
-        el("p", { class: "klein" }, T("Jeder Punkt bringt dir auch einen Coin. Punkte bleiben – Coins kannst du hier ausgeben.",
-          "Every point also gives you a coin. Points stay – coins are yours to spend here."))),
+        el("p", { class: "klein" }, T("Für 2 Punkte gibt es 1 Coin. Punkte bleiben – Coins kannst du hier ausgeben.",
+          "Two points give you one coin. Points stay – coins are yours to spend here."))),
       el("div", { class: "shop-raster" }, alle.filter((a) => !a.skin).map(artikel)),
       skins.length > 0 && el("h2", { class: "shop-gruppe" }, T("🎨 Figur für Road Trip Run", "🎨 Road Trip Run character"), " ", knopf(T("Figur ansehen", "View character"), () => runnerSkins(), "leise")),
       skins.length > 0 && el("div", { class: "shop-raster" }, skins.map(artikel)),
@@ -2537,14 +2537,14 @@
   }
 
   /* ---------- Games: Road Trip Run – Jump'n'Run (Modul app/klasse9/runner.js; Konzept docs/runner/konzept-entwurf.md „Einbau Klasse 9“) ----------
-     Eintritt 100 Coins je Durchgang, Sperre im Programm (runnerSpiel), keine Punkte, keine Coins zurück. Belohnung: Trophäe je Welt
+     Eintritt 150 Coins je Durchgang (seit 30.10., vorher 100), Sperre im Programm (runnerSpiel), keine Punkte, keine Coins zurück. Belohnung: Trophäe je Welt
      (Gold = alle Diamanten + beide Tore richtig, sonst Silber) und Runner-Titel nach geschafften Leveln (1 · 3 · 6 · 10 · 15).
      Stand in stand.spiel.runner = { level: { ny: "gold"|"silber" }, gespielt, geschafft, titel }, Figur in stand.spiel.skin – beides im Siegel.
      Wörter: 12 aus dem gewählten Abschnitt (wie Catch the Word), aufgefüllt aus der Unit; gesprochen mit den Wortaufnahmen (tonWort).
      Boss-Banner/-Sprüche und Skin-Namen: bis zur Vertonung (Mr. Alex, 13.11.) Geräte-Stimme wie bei fehlenden Aufnahmen (spiele([{ text, stimme }])). */
   // Welten (docs/runner/welten-2-5-plan.md): Reihenfolge = Landmark-Route; Welt n+1 öffnet sich mit Silber in Welt n; alle fünf Welten gebaut (Welt 5 Golden Gate 30.10.).
   // unit = vorbelegte Unit beim Wählen der Welt (der Schüler darf umschalten); boss = Name für Texte/Frage-Titel.
-  const RUNNER = { preis: 100, skinPreis: 30, skinPreisTeuer: 60, woerter: 12, titel: ["Noob", "Rookie", "Pro", "Elite", "Legend"], ab: [1, 3, 6, 10, 15],
+  const RUNNER = { preis: 150, skinPreis: 45, skinPreisTeuer: 90, woerter: 12, titel: ["Noob", "Rookie", "Pro", "Elite", "Legend"], ab: [1, 3, 6, 10, 15],
     welten: [{ id: "ny", name: "New York", staat: "New York", ziel: "Statue of Liberty", trophaee: "Liberty Finder", symbol: "🗽", boss: "Mr. Alligator" },
       { id: "route66", name: "Route 66", staat: "Illinois", ziel: "Route 66 sign", trophaee: "Route 66 Rider", symbol: "🛣️", boss: "Big Rig Bob", unit: "1" },
       { id: "az", name: "Grand Canyon", staat: "Arizona", ziel: "Grand Canyon", trophaee: "Canyon Climber", symbol: "🏜️", boss: "Sheriff Rattlesnake", unit: "2" },

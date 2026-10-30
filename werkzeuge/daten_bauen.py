@@ -187,10 +187,10 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
 # Shop (Coins = gespiegelte Punkte, nicht rückwirkend; docs/gamification/konzept.md „Coins und Shop“). Erweiterbar: neue Artikel hier eintragen.
 # bald: wird gezeigt, ist aber noch nicht kaufbar · rahmen: CSS-Klasse rahmen-<farbe> für Titel-Schild und Startkarte
 SHOP = [
-    {"id": "runner", "symbol": "🎮", "name": "Runner-Ticket", "unter": "Eintritt für das Jump'n'Run", "preis": 100, "bald": True, "hinweis": "Das Spiel kommt bald. Spar schon mal!"},
-    {"id": "rahmen_rot", "symbol": "🎨", "name": "Rahmen für dein Titel-Schild", "unter": "Rot", "preis": 50, "rahmen": "rot"},
-    {"id": "rahmen_blau", "symbol": "🎨", "name": "Rahmen für dein Titel-Schild", "unter": "Blau", "preis": 50, "rahmen": "blau"},
-    {"id": "rahmen_gruen", "symbol": "🎨", "name": "Rahmen für dein Titel-Schild", "unter": "Grün", "preis": 50, "rahmen": "gruen"},
+    {"id": "runner", "symbol": "🎮", "name": "Runner-Ticket", "unter": "Eintritt für das Jump'n'Run", "preis": 150, "bald": True, "hinweis": "Das Spiel kommt bald. Spar schon mal!"},
+    {"id": "rahmen_rot", "symbol": "🎨", "name": "Rahmen für dein Titel-Schild", "unter": "Rot", "preis": 75, "rahmen": "rot"},
+    {"id": "rahmen_blau", "symbol": "🎨", "name": "Rahmen für dein Titel-Schild", "unter": "Blau", "preis": 75, "rahmen": "blau"},
+    {"id": "rahmen_gruen", "symbol": "🎨", "name": "Rahmen für dein Titel-Schild", "unter": "Grün", "preis": 75, "rahmen": "gruen"},
 ]
 
 

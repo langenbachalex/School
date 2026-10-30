@@ -1786,8 +1786,8 @@
   function einheitBonus() { punkteDazu(PUNKTE.einheit); }
   function punkteDazu(plus) {
     const sp = spielstand();
-    sp.punkte += plus; sp.coins += plus; // jeder Punkt bringt auch einen Coin (Coins sinken nur im Shop)
-    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐ · +${plus} 🪙` });
+    const muenzen = Math.ceil(plus / 2); sp.punkte += plus; sp.coins += muenzen; // seit 30.10.: halb so viele Coins wie Punkte, aufgerundet (Coins sinken nur im Shop)
+    ereignisse.unshift({ art: "toast", text: `+${plus} ⭐ · +${muenzen} 🪙` });
     const t = titelIndex(sp.punkte);
     if (t > sp.titel) {
       sp.titel = t;
@@ -2013,7 +2013,7 @@
       el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🛍️ Shop")),
       el("section", { class: "satzkarte shop-stand" },
         el("p", { class: "shop-coins" }, `🪙 ${sp.coins} Coins`),
-        el("p", { class: "klein" }, "Jeder Punkt bringt dir auch einen Coin. Punkte bleiben – Coins kannst du hier ausgeben.")),
+        el("p", { class: "klein" }, "Für 2 Punkte gibt es 1 Coin. Punkte bleiben – Coins kannst du hier ausgeben.")),
       el("div", { class: "shop-raster" }, artikel),
       el("div", { class: "knopfreihe" }, knopf("🏆 Meine Sammlung", sammlung)));
   }

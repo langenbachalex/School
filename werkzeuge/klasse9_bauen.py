@@ -426,8 +426,8 @@ GYM = {"pensum": {"neu": 4, "wdh": 8}, "grenzen": {"neu": [1, 6], "wdh": [4, 12]
 # runner: Ticket wird nicht im Shop gekauft, sondern beim Start des Spiels abgebucht (app.js runnerSpiel); der Artikel führt zur Startseite des Runners.
 # skin: Figur-Teil für den Runner (app/klasse9/runner.js SKIN_GRUPPEN; frei sind die ersten Werte je Option, s. dort `frei`), id = skin_<option>_<wert>.
 # Preis 30, Ausgefallenes 60 (5. Feld; muss zu `preis` in SKIN_GRUPPEN passen). Figur v2 (29.10.): neue Frisuren, Bärte, Haarfarben, Körper-Übertreibungen.
-SKIN_PREIS = 30
-SKIN_PREIS_TEUER = 60
+SKIN_PREIS = 45
+SKIN_PREIS_TEUER = 90
 SKIN_ARTIKEL = [  # (option, wert, Name G, Name E[, Preis])
     ("haar", "zopf", "Frisur: Zopf", "Hair: ponytail"), ("haar", "locken", "Frisur: Locken", "Hair: curly"), ("haar", "afro", "Frisur: Afro", "Hair: afro"),
     ("haar", "irokese", "Frisur: Irokese", "Hair: mohawk"), ("haar", "tolle", "Frisur: Elvis-Tolle", "Hair: quiff"), ("haar", "zoepfe", "Frisur: Zöpfe mit Schleifen", "Hair: pigtails with bows"),
@@ -456,10 +456,10 @@ SKIN_ARTIKEL = [  # (option, wert, Name G, Name E[, Preis])
     ("handschuhe", "weiß", "Handschuhe: weiß", "Gloves: white"), ("handschuhe", "schwarz", "Handschuhe: schwarz", "Gloves: black"), ("handschuhe", "boxhandschuhe", "Boxhandschuhe", "Boxing gloves", SKIN_PREIS_TEUER),
 ]
 SHOP = [
-    {"id": "runner", "symbol": "🏃", "name": {"G": "Runner-Ticket", "E": "Runner ticket"}, "unter": {"G": "Eintritt für Road Trip Run – wird beim Start abgebucht", "E": "Entry to Road Trip Run – paid when you start"}, "preis": 100, "runner": True},
-    {"id": "rahmen_rot", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Rot", "E": "Red"}, "preis": 50, "rahmen": "rot"},
-    {"id": "rahmen_blau", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Blau", "E": "Blue"}, "preis": 50, "rahmen": "blau"},
-    {"id": "rahmen_gruen", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Grün", "E": "Green"}, "preis": 50, "rahmen": "gruen"},
+    {"id": "runner", "symbol": "🏃", "name": {"G": "Runner-Ticket", "E": "Runner ticket"}, "unter": {"G": "Eintritt für Road Trip Run – wird beim Start abgebucht", "E": "Entry to Road Trip Run – paid when you start"}, "preis": 150, "runner": True},
+    {"id": "rahmen_rot", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Rot", "E": "Red"}, "preis": 75, "rahmen": "rot"},
+    {"id": "rahmen_blau", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Blau", "E": "Blue"}, "preis": 75, "rahmen": "blau"},
+    {"id": "rahmen_gruen", "symbol": "🎨", "name": {"G": "Rahmen für dein Titel-Schild", "E": "Frame for your title card"}, "unter": {"G": "Grün", "E": "Green"}, "preis": 75, "rahmen": "gruen"},
 ] + [
     {"id": f"skin_{a[0]}_{a[1]}", "symbol": "🎨", "name": {"G": a[2], "E": a[3]}, "unter": {"G": "Figur im Road Trip Run", "E": "Your Road Trip Run character"}, "preis": a[4] if len(a) > 4 else SKIN_PREIS, "skin": [a[0], a[1]]}
     for a in SKIN_ARTIKEL

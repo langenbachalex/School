@@ -15,7 +15,7 @@ Grundsatz: kein gegenseitiger Wettbewerb, keine Bestenliste. Jeder sammelt für 
 Erledigte Teile bleiben nicht für immer grün: nach **30 / 60 / 120 Tagen** (Stufe 0 / 1 / 2, ab Stufe 3 nie mehr) wird ein Teil **fällig** – Kachel, Abschnitt und Teil zeigen dann ein gelbes Schild „⚡ Power Up“ statt ✓, die Startseite eine Zeile „⚡ 3 Teile fast leer – aufladen!“ mit Sprung zur ersten fälligen Kachel. Erneut durchmachen: **5 Punkte** (Wiederholung), Toast „⚡ Aufgeladen!“, Stufe +1, zählt als Übungstag. Wer ein Teil schon kennt, bekommt kürzere Sprech-, Denk- und Mindestzeiten (50 % / 35 % / 25 % je Stufe). 14 Tage vor einem GLN-Termin (`TERMIN` mit `powerup`) ist alles fällig, was nicht in diesem Fenster gemacht wurde. Punkte, Titel und Abzeichen gehen nie verloren; nur „All stations“ / „All categories“ gilt, solange nichts fällig ist. Details: `docs/nachhaltigkeit-entwurf.md`.
 
 ### 🪙 Coins und 🛍️ Shop (29.10.2026, beide Apps)
-- **Coins** sind eine gespiegelte Währung: Jeder Punkt, der über `punkteDazu` kommt (Teile, Word Gym, Serien, Boni), bringt zugleich **einen Coin**. Punkte bleiben stehen und tragen Titel und Serien; Coins sinken nur durch Einkäufe im Shop.
+- **Coins** sind eine gespiegelte Währung: Jeder Punkt, der über `punkteDazu` kommt (Teile, Word Gym, Serien, Boni), brachte bis 30.10. zugleich **einen Coin**; seit 30.10. gibt es **für 2 Punkte 1 Coin** (`Math.ceil(plus/2)`), Preise seitdem +50 %, Guthaben nicht rückwirkend geändert. Punkte bleiben stehen und tragen Titel und Serien; Coins sinken nur durch Einkäufe im Shop.
 - **Nicht rückwirkend:** Die Zählung beginnt mit dem Update. Ein älterer Spielstand ohne `coins` startet bei 0 – alte Punkte bringen keine Coins (Beschluss 29.10.).
 - **Anzeige:** Startkarte neben den Punkten („🪙 0“), Sammlung im Titel-Schild („🪙 Coins: 0 · ausgegeben: 0“ mit Shop-Knopf), Toast bei jedem Punktgewinn („+10 ⭐ · +10 🪙“).
 - **Speicher:** `stand.spiel.coins`, `stand.spiel.gekauft` (Liste der Artikel-IDs), `stand.spiel.ausgegeben`, `stand.spiel.rahmen` (angelegter Rahmen). Alles liegt in `spiel` und damit im Siegel (v2) – Handänderungen am Coins-Stand werden wie Punktänderungen behandelt.
@@ -24,9 +24,9 @@ Erledigte Teile bleiben nicht für immer grün: nach **30 / 60 / 120 Tagen** (St
 
 | Artikel | Preis | Stand |
 |---|---|---|
-| 🏃 Runner-Ticket (Klasse 9) | 100 Coins | kein Kauf im Shop – der Knopf „▶ Zum Spiel“ führt zur Startseite von **Road Trip Run**; der Eintritt wird dort beim Start abgebucht (Klasse 6: weiter „kommt bald“) |
-| 🎨 Figur für Road Trip Run (Klasse 9) – 16 Teile (Frisuren, Haarfarben, Haarband, Hüte, Nase, Schmuck, Oberteil-Farben, Schuhe, Körperform) | je 30 Coins | kaufbar; wird sofort angelegt, `skin_<option>_<wert>`; Grundausstattung (je Option zwei Werte) ist frei |
-| 🎨 Rahmen für dein Titel-Schild – Rot / Blau / Grün | je 50 Coins | kaufbar; wirkt sofort als farbiger Rahmen auf Titel-Schild (Sammlung) und Startkarte; gekaufte Rahmen lassen sich gratis wechseln („Anlegen“) |
+| 🏃 Runner-Ticket (Klasse 9) | 150 Coins (bis 30.10.: 100) | kein Kauf im Shop – der Knopf „▶ Zum Spiel“ führt zur Startseite von **Road Trip Run**; der Eintritt wird dort beim Start abgebucht (Klasse 6: weiter „kommt bald“) |
+| 🎨 Figur für Road Trip Run (Klasse 9) – 16 Teile (Frisuren, Haarfarben, Haarband, Hüte, Nase, Schmuck, Oberteil-Farben, Schuhe, Körperform) | je 45 (bis 30.10.: 30) Coins | kaufbar; wird sofort angelegt, `skin_<option>_<wert>`; Grundausstattung (je Option zwei Werte) ist frei |
+| 🎨 Rahmen für dein Titel-Schild – Rot / Blau / Grün | je 75 Coins (bis 30.10.: 50) | kaufbar; wirkt sofort als farbiger Rahmen auf Titel-Schild (Sammlung) und Startkarte; gekaufte Rahmen lassen sich gratis wechseln („Anlegen“) |
 | 🔊 Extra-Stimme beim Lob | – | **nicht** gebaut (kein Audio bis zu den neuen Credits) |
 
 - **Offen:** Wertigkeit der Coins und Preise nach Schüler-Feedback (Ideenspeicher „Coins: Wertigkeit und Zeitkopplung“); Name des Shops.

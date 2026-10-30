@@ -23,10 +23,10 @@
   /* ---------- Skins: Gruppen (Reiter in der App), Werte, Namen (G/E) und was ohne Kauf frei ist (frei = erste n Werte) ---------- */
   const SKIN_GRUPPEN = [
     { id: "haare", symbol: "💇", titel: ["Haare", "Hair"], optionen: [
-      { key: "haar", label: ["Frisur", "Hairstyle"], werte: ["kurz", "lang", "wuschel", "zopf", "locken", "afro", "irokese", "tolle", "zoepfe", "dutt", "flattop", "dreihaare", "riesenafro", "mohawk"], frei: 3, preis: { riesenafro: 60, mohawk: 60 },
+      { key: "haar", label: ["Frisur", "Hairstyle"], werte: ["kurz", "lang", "wuschel", "zopf", "locken", "afro", "irokese", "tolle", "zoepfe", "dutt", "flattop", "dreihaare", "riesenafro", "mohawk"], frei: 3, preis: { riesenafro: 90, mohawk: 90 },
         namen: { kurz: ["kurz", "short"], lang: ["lang", "long"], wuschel: ["Wuschelkopf", "messy"], zopf: ["Zopf", "ponytail"], locken: ["Locken", "curly"], afro: ["Afro", "afro"], irokese: ["Irokese", "mohawk"], tolle: ["Elvis-Tolle", "quiff"],
           zoepfe: ["Zöpfe", "pigtails"], dutt: ["Dutt", "bun"], flattop: ["Flat-Top", "flat top"], dreihaare: ["drei Haare", "three hairs"], riesenafro: ["Riesen-Afro", "giant afro"], mohawk: ["Regenbogen-Mohawk", "rainbow mohawk"] } },
-      { key: "haarfarbe", label: ["Haarfarbe", "Hair colour"], werte: ["braun", "blond", "pink", "schwarz", "rot", "türkis", "lila", "neongrün", "feuerrot", "blau", "silber", "regenbogen"], frei: 3, preis: { regenbogen: 60 },
+      { key: "haarfarbe", label: ["Haarfarbe", "Hair colour"], werte: ["braun", "blond", "pink", "schwarz", "rot", "türkis", "lila", "neongrün", "feuerrot", "blau", "silber", "regenbogen"], frei: 3, preis: { regenbogen: 90 },
         namen: { braun: ["braun", "brown"], blond: ["blond", "blond"], pink: ["pink", "pink"], schwarz: ["schwarz", "black"], rot: ["rot", "red"], "türkis": ["türkis", "turquoise"], lila: ["lila", "purple"], "neongrün": ["neongrün", "neon green"],
           feuerrot: ["feuerrot", "fire red"], blau: ["blau", "blue"], silber: ["silber", "silver"], regenbogen: ["Regenbogen", "rainbow"] } },
       { key: "haarschmuck", label: ["Haarschmuck", "Hair accessory"], werte: ["keiner", "schleife", "haarband"], namen: { keiner: ["keiner", "none"], schleife: ["Schleife", "bow"], haarband: ["Haarband", "headband"] } },
@@ -37,7 +37,7 @@
     { id: "gesicht", symbol: "😎", titel: ["Gesicht", "Face"], optionen: [
       { key: "brille", label: ["Sonnenbrille (cool)", "Sunglasses (cool)"], werte: ["aus", "an"], namen: { aus: ["aus", "off"], an: ["an", "on"] } },
       { key: "nase", label: ["Nase", "Nose"], werte: ["rund", "spitz", "knubbel"], namen: { rund: ["rund", "round"], spitz: ["spitz", "pointy"], knubbel: ["Knubbel", "button"] } },
-      { key: "bart", label: ["Bart", "Beard"], werte: ["aus", "schnauzer", "zwirbel", "walross", "kinnbart", "monobraue", "fumanchu"], preis: { fumanchu: 60 },
+      { key: "bart", label: ["Bart", "Beard"], werte: ["aus", "schnauzer", "zwirbel", "walross", "kinnbart", "monobraue", "fumanchu"], preis: { fumanchu: 90 },
         namen: { aus: ["keiner", "none"], schnauzer: ["Schnauzer", "moustache"], zwirbel: ["Zwirbelbart", "handlebar"], walross: ["Walross", "walrus"], kinnbart: ["Kinnbart", "goatee"], monobraue: ["Monobraue + Schnauzer", "unibrow + moustache"], fumanchu: ["Fu-Manchu", "Fu Manchu"] } },
     ] },
     { id: "oberteil", symbol: "👕", titel: ["Oberteil", "Top"], optionen: [
@@ -45,17 +45,17 @@
       { key: "topfarbe", label: ["Farbe", "Colour"], werte: ["rot", "blau", "gelb", "grün"], namen: { rot: ["rot", "red"], blau: ["blau", "blue"], gelb: ["gelb", "yellow"], "grün": ["grün", "green"] } },
     ] },
     { id: "schuhe", symbol: "👟", titel: ["Schuhe", "Shoes"], optionen: [
-      { key: "schuhe", label: ["Schuhe", "Shoes"], werte: ["weiß", "rot", "schwarz", "rollschuhe"], preis: { rollschuhe: 60 }, namen: { "weiß": ["weiß", "white"], rot: ["rot", "red"], schwarz: ["schwarz", "black"], rollschuhe: ["Rollschuhe", "roller skates"] } },
+      { key: "schuhe", label: ["Schuhe", "Shoes"], werte: ["weiß", "rot", "schwarz", "rollschuhe"], preis: { rollschuhe: 90 }, namen: { "weiß": ["weiß", "white"], rot: ["rot", "red"], schwarz: ["schwarz", "black"], rollschuhe: ["Rollschuhe", "roller skates"] } },
     ] },
     { id: "schmuck", symbol: "💍", titel: ["Schmuck", "Jewelry"], optionen: [
       { key: "schmuck", label: ["Schmuck", "Jewelry"], werte: ["keiner", "ohrring", "kette", "beides"], namen: { keiner: ["keiner", "none"], ohrring: ["Ohrring", "earring"], kette: ["Kette", "necklace"], beides: ["beides", "both"] } },
     ] },
     { id: "koerper", symbol: "💪", titel: ["Körper", "Body"], optionen: [
-      { key: "hals", label: ["Hals", "Neck"], werte: ["normal", "giraffe"], frei: 1, preis: { giraffe: 60 }, namen: { normal: ["normal", "normal"], giraffe: ["Giraffenhals", "giraffe neck"] } },
-      { key: "bauch", label: ["Bauch", "Belly"], werte: ["schmal", "normal", "kräftig", "kugel"], preis: { kugel: 60 }, namen: { schmal: ["schmal", "slim"], normal: ["normal", "normal"], "kräftig": ["kräftig", "big"], kugel: ["Kugelbauch", "ball belly"] } },
+      { key: "hals", label: ["Hals", "Neck"], werte: ["normal", "giraffe"], frei: 1, preis: { giraffe: 90 }, namen: { normal: ["normal", "normal"], giraffe: ["Giraffenhals", "giraffe neck"] } },
+      { key: "bauch", label: ["Bauch", "Belly"], werte: ["schmal", "normal", "kräftig", "kugel"], preis: { kugel: 90 }, namen: { schmal: ["schmal", "slim"], normal: ["normal", "normal"], "kräftig": ["kräftig", "big"], kugel: ["Kugelbauch", "ball belly"] } },
       { key: "brust", label: ["Brust/Schultern", "Chest/shoulders"], werte: ["schmal", "normal", "kräftig"], namen: { schmal: ["schmal", "narrow"], normal: ["normal", "normal"], "kräftig": ["breit", "broad"] } },
-      { key: "muskeln", label: ["Muskeln", "Muscles"], werte: ["schmal", "normal", "kräftig", "hulk"], frei: 3, preis: { hulk: 60 }, namen: { schmal: ["dünn", "thin"], normal: ["normal", "normal"], "kräftig": ["stark", "strong"], hulk: ["Hulk", "Hulk"] } },
-      { key: "fuesse", label: ["Füße", "Feet"], werte: ["normal", "riesen"], frei: 1, preis: { riesen: 60 }, namen: { normal: ["normal", "normal"], riesen: ["Riesenfüße", "giant feet"] } },
+      { key: "muskeln", label: ["Muskeln", "Muscles"], werte: ["schmal", "normal", "kräftig", "hulk"], frei: 3, preis: { hulk: 90 }, namen: { schmal: ["dünn", "thin"], normal: ["normal", "normal"], "kräftig": ["stark", "strong"], hulk: ["Hulk", "Hulk"] } },
+      { key: "fuesse", label: ["Füße", "Feet"], werte: ["normal", "riesen"], frei: 1, preis: { riesen: 90 }, namen: { normal: ["normal", "normal"], riesen: ["Riesenfüße", "giant feet"] } },
       { key: "power", label: ["Power-Körper nach Punkten", "Power body by points"], werte: ["aus", "an"], namen: { aus: ["aus", "off"], an: ["an", "on"] } },
     ] },
     { id: "aura", symbol: "✨", titel: ["Aura", "Aura"], optionen: [
@@ -63,9 +63,9 @@
     ] },
     // Extras (Entwurf 30.10., noch nicht freigegeben): Rucksack und Handschuhe; Rollschuhe sind ein Wert der Option schuhe
     { id: "extras", symbol: "🎒", titel: ["Extras", "Extras"], optionen: [
-      { key: "rucksack", label: ["Rucksack", "Backpack"], werte: ["keiner", "blau", "rot", "regenbogen"], frei: 1, preis: { regenbogen: 60 },
+      { key: "rucksack", label: ["Rucksack", "Backpack"], werte: ["keiner", "blau", "rot", "regenbogen"], frei: 1, preis: { regenbogen: 90 },
         namen: { keiner: ["keiner", "none"], blau: ["blau", "blue"], rot: ["rot", "red"], regenbogen: ["Regenbogen", "rainbow"] } },
-      { key: "handschuhe", label: ["Handschuhe", "Gloves"], werte: ["keine", "weiß", "schwarz", "boxhandschuhe"], frei: 1, preis: { boxhandschuhe: 60 },
+      { key: "handschuhe", label: ["Handschuhe", "Gloves"], werte: ["keine", "weiß", "schwarz", "boxhandschuhe"], frei: 1, preis: { boxhandschuhe: 90 },
         namen: { keine: ["keine", "none"], "weiß": ["weiß", "white"], schwarz: ["schwarz", "black"], boxhandschuhe: ["Boxhandschuhe", "boxing gloves"] } },
     ] },
   ];
@@ -80,8 +80,8 @@
   // Haarfarben: eigene Tabelle (Oberteil/Schuhe behalten FARBEN); regenbogen = senkrechter Verlauf, Regenbogen-Mohawk ist immer bunt
   const HAARFARBEN = Object.assign({}, FARBEN, { pink: "#ff3fa4", "türkis": "#19d3c5", lila: "#8a3ffc", "neongrün": "#7CFC00", feuerrot: "#ff3b1f", blau: "#2a6cff", silber: "#c9ced6", regenbogen: "regenbogen" });
   const REGENBOGEN = ["#ff2d2d", "#ff9f1a", "#ffe21a", "#2ecc71", "#2a8cff", "#9b4dff"];
-  // frei ohne Kauf: die ersten n Werte einer Option (Standard 2); alles andere ist ein Shop-Artikel skin_<key>_<wert> (30 Coins, Ausgefallenes 60: o.preis[wert])
-  const SKIN_PREIS = 30;
+  // frei ohne Kauf: die ersten n Werte einer Option (Standard 2); alles andere ist ein Shop-Artikel skin_<key>_<wert> (45 Coins, Ausgefallenes 90: o.preis[wert])
+  const SKIN_PREIS = 45;
   const skinFrei = (key, wert) => { const o = SKIN_OPTIONEN.find((x) => x.key === key); return !o || o.werte.indexOf(wert) < (o.frei || 2); };
   const skinArtikel = (key, wert) => `skin_${key}_${wert}`;
   const skinPreis = (key, wert) => { const o = SKIN_OPTIONEN.find((x) => x.key === key); return (o && o.preis && o.preis[wert]) || SKIN_PREIS; };

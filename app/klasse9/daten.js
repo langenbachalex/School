@@ -9165,7 +9165,7 @@ window.DATEN = {
      "G": "Eintritt für Road Trip Run – wird beim Start abgebucht",
      "E": "Entry to Road Trip Run – paid when you start"
     },
-    "preis": 100,
+    "preis": 150,
     "runner": true
    },
    {
@@ -9179,7 +9179,7 @@ window.DATEN = {
      "G": "Rot",
      "E": "Red"
     },
-    "preis": 50,
+    "preis": 75,
     "rahmen": "rot"
    },
    {
@@ -9193,7 +9193,7 @@ window.DATEN = {
      "G": "Blau",
      "E": "Blue"
     },
-    "preis": 50,
+    "preis": 75,
     "rahmen": "blau"
    },
    {
@@ -9207,7 +9207,7 @@ window.DATEN = {
      "G": "Grün",
      "E": "Green"
     },
-    "preis": 50,
+    "preis": 75,
     "rahmen": "gruen"
    },
    {
@@ -9221,7 +9221,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haar",
      "zopf"
@@ -9238,7 +9238,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haar",
      "locken"
@@ -9255,7 +9255,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haar",
      "afro"
@@ -9272,7 +9272,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haar",
      "irokese"
@@ -9289,7 +9289,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haar",
      "tolle"
@@ -9306,7 +9306,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haar",
      "zoepfe"
@@ -9323,7 +9323,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haar",
      "dutt"
@@ -9340,7 +9340,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haar",
      "flattop"
@@ -9357,7 +9357,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haar",
      "dreihaare"
@@ -9374,7 +9374,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "haar",
      "riesenafro"
@@ -9391,7 +9391,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "haar",
      "mohawk"
@@ -9408,7 +9408,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haarfarbe",
      "schwarz"
@@ -9425,7 +9425,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haarfarbe",
      "rot"
@@ -9442,7 +9442,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haarfarbe",
      "türkis"
@@ -9459,7 +9459,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haarfarbe",
      "lila"
@@ -9476,7 +9476,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haarfarbe",
      "neongrün"
@@ -9493,7 +9493,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haarfarbe",
      "feuerrot"
@@ -9510,7 +9510,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haarfarbe",
      "blau"
@@ -9527,7 +9527,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haarfarbe",
      "silber"
@@ -9544,7 +9544,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "haarfarbe",
      "regenbogen"
@@ -9561,7 +9561,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "haarschmuck",
      "haarband"
@@ -9578,7 +9578,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "hut",
      "cowboy"
@@ -9595,7 +9595,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "hut",
      "zylinder"
@@ -9612,7 +9612,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "nase",
      "knubbel"
@@ -9629,7 +9629,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "bart",
      "zwirbel"
@@ -9646,7 +9646,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "bart",
      "walross"
@@ -9663,7 +9663,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "bart",
      "kinnbart"
@@ -9680,7 +9680,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "bart",
      "monobraue"
@@ -9697,7 +9697,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "bart",
      "fumanchu"
@@ -9714,7 +9714,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "schmuck",
      "kette"
@@ -9731,7 +9731,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "schmuck",
      "beides"
@@ -9748,7 +9748,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "topfarbe",
      "gelb"
@@ -9765,7 +9765,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "topfarbe",
      "grün"
@@ -9782,7 +9782,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "schuhe",
      "schwarz"
@@ -9799,7 +9799,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "hals",
      "giraffe"
@@ -9816,7 +9816,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "bauch",
      "kräftig"
@@ -9833,7 +9833,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "bauch",
      "kugel"
@@ -9850,7 +9850,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "brust",
      "kräftig"
@@ -9867,7 +9867,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "muskeln",
      "hulk"
@@ -9884,7 +9884,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "fuesse",
      "riesen"
@@ -9901,7 +9901,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "schuhe",
      "rollschuhe"
@@ -9918,7 +9918,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "rucksack",
      "blau"
@@ -9935,7 +9935,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "rucksack",
      "rot"
@@ -9952,7 +9952,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "rucksack",
      "regenbogen"
@@ -9969,7 +9969,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "handschuhe",
      "weiß"
@@ -9986,7 +9986,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 30,
+    "preis": 45,
     "skin": [
      "handschuhe",
      "schwarz"
@@ -10003,7 +10003,7 @@ window.DATEN = {
      "G": "Figur im Road Trip Run",
      "E": "Your Road Trip Run character"
     },
-    "preis": 60,
+    "preis": 90,
     "skin": [
      "handschuhe",
      "boxhandschuhe"

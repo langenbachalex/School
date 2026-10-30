@@ -6301,7 +6301,7 @@ window.DATEN = {
     "symbol": "🎮",
     "name": "Runner-Ticket",
     "unter": "Eintritt für das Jump'n'Run",
-    "preis": 100,
+    "preis": 150,
     "bald": true,
     "hinweis": "Das Spiel kommt bald. Spar schon mal!"
    },
@@ -6310,7 +6310,7 @@ window.DATEN = {
     "symbol": "🎨",
     "name": "Rahmen für dein Titel-Schild",
     "unter": "Rot",
-    "preis": 50,
+    "preis": 75,
     "rahmen": "rot"
    },
    {
@@ -6318,7 +6318,7 @@ window.DATEN = {
     "symbol": "🎨",
     "name": "Rahmen für dein Titel-Schild",
     "unter": "Blau",
-    "preis": 50,
+    "preis": 75,
     "rahmen": "blau"
    },
    {
@@ -6326,7 +6326,7 @@ window.DATEN = {
     "symbol": "🎨",
     "name": "Rahmen für dein Titel-Schild",
     "unter": "Grün",
-    "preis": 50,
+    "preis": 75,
     "rahmen": "gruen"
    }
   ]

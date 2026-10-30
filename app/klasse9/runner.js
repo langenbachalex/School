@@ -9,6 +9,8 @@
    Gegner-Klänge (Web Audio): Taube flattert, Waschbär knurrt, Eichhörnchen zirpt (je Art höchstens alle 1,5 s, nie in Sequenz/Boss), Plattdrücken = Plopp + Sternchen.
    Welten (29.10., Plan docs/runner/welten-2-5-plan.md): Runner.start({ …, welt: "ny" | "route66" }); je Welt ein Objekt in WELTEN (Kulisse, Boden, Kisten, Gegnerarten, Boss + Tür, Banner, Level-Muster).
    Welt 2 Route 66: Autos/Trucks (drüberspringen, Berührung = Leben weg), Ölflecken (0,6 s rutschen ohne Sprung), Reifenstapel, Kojote/Roadrunner/Gürteltier (rollt weg), Boss Big Rig Bob (Hupe), Mautstation mit Schlagbaum.
+   Welt 3 Grand Canyon (30.10.): fallende Steine (Staub/Schatten als Warnung, dann Sturz; liegen 1,4 s), Hängebrücken (wackeln; > 1,5 s Bodenzeit auf der Brücke → Brett bricht, Sturz in die Schlucht), Kakteen, Felsbrocken,
+   Klapperschlange/Geier/Skorpion, Boss Sheriff Rattlesnake (richtet sich aus dem Felsspalt auf, Rassel), Holztor einer Westernstadt.
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …). */
 (function () {
@@ -212,6 +214,15 @@
     auto() { rauschen(0.45, 0.035, 0, { typ: "lowpass", freq: 700 }); ton(90, 0.4, "sawtooth", 0.025, 0, 60); },
     hupe() { ton(185, 0.75, "sawtooth", 0.07); ton(233, 0.75, "sawtooth", 0.06); ton(185, 0.5, "sawtooth", 0.06, 0.95); ton(233, 0.5, "sawtooth", 0.05, 0.95); },
     diesel() { ton(60, 1.2, "sawtooth", 0.07, 0, 48); ton(45, 1.3, "square", 0.04, 0.1); rauschen(1.0, 0.03, 0, { typ: "lowpass", freq: 300 }); },
+    // Welt 3 Grand Canyon: Klapperschlange rasselt, Geier krächzt, Skorpion klickt, Stein rumpelt (Warnung) und schlägt auf, Brücke knarrt und bricht, Sheriff Rattlesnake rasselt lang + Grollen
+    klapperschlange() { for (let i = 0; i < 7; i++) rauschen(0.035, 0.04, i * 0.05, { typ: "bandpass", freq: 3200 }); },
+    geier() { ton(760, 0.22, "sawtooth", 0.03, 0, 420); ton(720, 0.2, "sawtooth", 0.028, 0.26, 400); },
+    skorpion() { for (let i = 0; i < 3; i++) ton(2100, 0.03, "square", 0.03, i * 0.08, 1500); },
+    rumpeln() { rauschen(0.5, 0.035, 0, { typ: "lowpass", freq: 220 }); ton(48, 0.5, "sawtooth", 0.03, 0, 40); },
+    stein() { ton(120, 0.2, "sine", 0.1, 0, 45); rauschen(0.18, 0.06, 0, { typ: "lowpass", freq: 500 }); },
+    knarren() { ton(240, 0.35, "sawtooth", 0.03, 0, 170); ton(260, 0.3, "sawtooth", 0.025, 0.3, 180); },
+    bruch() { rauschen(0.12, 0.07, 0, { typ: "bandpass", freq: 900 }); ton(300, 0.15, "square", 0.05, 0.02, 90); rauschen(0.3, 0.04, 0.12, { typ: "lowpass", freq: 400 }); },
+    rassel() { for (let i = 0; i < 16; i++) rauschen(0.04, 0.05, i * 0.055, { typ: "bandpass", freq: 3000 }); ton(70, 1.0, "sawtooth", 0.07, 0.2); ton(55, 0.9, "sawtooth", 0.05, 0.5); },
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -661,20 +672,55 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('roadrunner', 850, 1250); h.vor(1300); }, // 27
     (h) => { h.luecke(200, 170); h.auto('truck', 500, 1300); h.kiste(1350); h.vor(1500); },             // 28 Schluss-Verkehr
   ];
+  // Welt 3 Grand Canyon: fallende Steine (h.stein: Warnung, wenn die Figur ≈ 300 davor ist → landet kurz vor ihr → drüberspringen), Hängebrücken (h.bruecke: Lücke + Brücke,
+  // > 1,5 s Bodenzeit → Brett bricht → Sturz; eine Brücke ≥ 420 schafft man nur mit Sprung), Kakteen (h.kaktus: Berührung = Leben weg), Felsbrocken statt Kisten
+  const MUSTER_AZ = [
+    (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                                   // 1 Aufwärmen
+    (h) => { h.kaktus(300); h.dia(520, 250); h.geg('klapperschlange', 650, 950); h.vor(1050); },        // 2 Kaktus + Klapperschlange
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.stein(700); h.vor(1000); },                      // 3 Plattform + erster Stein
+    (h) => { h.kiste(200); h.kiste(240, 2); h.dia(260, 215); h.vor(750); },                             // 4 Felsstufe
+    (h) => { h.bruecke(250, 300); h.vor(850); },                                                        // 5 erste (kurze) Hängebrücke
+    (h) => { h.geg('geier', 250, 550); h.kaktus(700); h.vor(950); },                                    // 6 Geier + Kaktus
+    (h) => { h.stein(450); h.plat(650, 230, 160); h.dia(730, 190); h.vor(1050); },                      // 7 Stein + Plattform
+    (h) => { h.geg('skorpion', 150, 550); h.kiste(650); h.kiste(690, 2); h.dia(710, 220); h.vor(900); },// 8 Skorpion + Felsen
+    (h) => { h.kaktus(200); h.kaktus(360); h.vor(900); },                                               // 9 Kaktus-Paar
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('klapperschlange', 450, 800); h.vor(1000); },                             // 12 CHECKPOINT 1
+    (h) => { h.bruecke(200, 420); h.dia(410, 240); h.vor(1000); },                                      // 13 lange Brücke (Sprung nötig)
+    (h) => { h.stein(350); h.kaktus(600); h.vor(1000); },                                               // 14 Stein, dann Kaktus
+    (h) => { h.kiste(200, 2); h.kiste(240, 2); h.geg('skorpion', 450, 850); h.vor(1000); },             // 15 Felsmauer + Skorpion
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 16 Dreier-Plattform
+    (h) => { h.geg('geier', 150, 450); h.stein(750); h.vor(1100); },                                    // 17 Geier + Stein
+    (h) => { h.plat(200, 235, 200); h.dia(300, 195); h.kaktus(650); h.vor(950); },                      // 18 Plattform + Kaktus
+    (h) => { h.bruecke(250, 340); h.geg('klapperschlange', 700, 1000); h.vor(1150); },                  // 19 Brücke, dahinter Schlange
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 20
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 21 TOR 2
+    (h) => { h.cp(150); h.kiste(500); h.kiste(540, 2); h.vor(850); },                                   // 22 CHECKPOINT 2
+    (h) => { h.stein(400); h.geg('skorpion', 550, 900); h.vor(1050); },                                 // 23 Stein + Skorpion
+    (h) => { h.bruecke(200, 480); h.vor(1050); },                                                       // 24 längste Brücke (nur mit Sprung)
+    (h) => { h.kaktus(150); h.kiste(350); h.kiste(390, 2); h.kiste(430, 3); h.kiste(470, 2); h.kiste(510); h.vor(900); }, // 25 Kaktus + Felspyramide
+    (h) => { h.geg('geier', 150, 400); h.stein(600); h.kaktus(900); h.vor(1200); },                     // 26 Geier, Stein, Kaktus
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('klapperschlange', 850, 1150); h.vor(1300); }, // 27
+    (h) => { h.bruecke(200, 360); h.stein(850); h.kiste(1150); h.vor(1400); },                          // 28 Schluss: Brücke + Stein
+  ];
   function levelBauen(muster) {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[] };
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[] };
     let x = 0, bodenAb = 0, wort = 0;
     const h = {
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
       kiste: (dx, n = 1) => { for (let i = 0; i < n; i++) L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE * (i + 1) }); },
       dia: (dx, y = 298) => L.diamanten.push({ x:x + dx, y, wort:wort++ }),
-      geg: (art, von, bis) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1 }),
+      geg: (art, von, bis) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1 }),
       luecke: (dx, w) => { L.boden.push([bodenAb, x + dx]); bodenAb = x + dx + w; },
       tor: (dx, wort, falsch) => L.tore.push({ x:x + dx, wort, falsch }),
       cp: (dx) => L.checkpoints.push({ x:x + dx }),
       // Auto/Truck pendelt auf der Strecke von..bis (fährt nach links, erscheint rechts wieder) – so trifft man es sicher einmal
       auto: (art, von, bis) => L.autos.push({ art, von:x + von, bis:x + bis, start:x + bis - (art === 'truck' ? 260 : 180), tempo: art === 'truck' ? 230 : 270, w: art === 'truck' ? 130 : 80, h: art === 'truck' ? 48 : 34 }),
       oel: (dx, w = 90) => L.oel.push({ x:x + dx, w }),
+      stein: (dx) => L.steine.push({ x:x + dx }),
+      bruecke: (dx, w) => { h.luecke(dx, w); L.bruecken.push({ x:x + dx, w }); },
+      kaktus: (dx) => L.kakteen.push({ x:x + dx }),
       vor: (dx) => { x += dx; },
     };
     for (const a of muster) a(h);
@@ -696,6 +742,9 @@
   let spieler, diamanten, gegner, tore, checkpoints, leben, gesammelt, kamera, zeit, popup, meldung, checkpoint, boss, tuer, tot, bossFrage, torErgebnisse;
   // Welt 2: Autos/Trucks (rollende Hindernisse), Ölflecken (rutschen 0,6 s ohne Sprung), Hupen-Zähler (Tests)
   let autos = [], oel = [], rutscht = 0, hupen = 0;
+  // Welt 3: fallende Steine (Phasen ruhe → warnung → faellt → liegt → weg), Hängebrücken (Bodenzeit, gebrochen), Kakteen, Rassel-Zähler (Tests)
+  let steine = [], bruecken = [], kakteen = [], rasseln = 0;
+  const STEIN_VORLAUF = 300, STEIN_WARNUNG = 0.6, STEIN_LIEGT = 1.4, BRUECKE_MAX = 1.5, KAKTUS_W = 22, KAKTUS_H = 50;
   const RUTSCH_DAUER = 0.6, AUTO_KLANG_ABSTAND = 1.2;
   let autoKlangZeit = -9;
   let sequenz = null, zoom = 1, banner = null, bossSpruch = null;
@@ -707,8 +756,8 @@
   const BLASE_DAUER = 1.6, ECHO_MIN = 6, ECHO_MAX = 8, ECHO_ABSTAND = 2.5, ECHO_DAUER = 1.4, CHIP_MAX = 8, CHIP_ZEICHEN = 12;
   let erstauntZeit = 0, zungeZeit = 0;   // Gesichtsausdruck: erstaunt 0,8 s nach Treffer, Zunge raus 1 s bei „5× Combo!“ und solange On fire
   const ausdruckAktuell = () => (erstauntZeit > 0 ? "erstaunt" : (onfire || zungeZeit > 0) ? "zunge" : "grinsend");
-  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9 };   // letzter Klang je Art (Spielzeit)
-  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60 };
+  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9 };   // letzter Klang je Art (Spielzeit)
+  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150 };
   let gegnerKlaenge = 0;   // Zähler für Tests
   const GEGNER_KLANG_ABSTAND = 1.5, GEGNER_NAEHE = 260, COMBO_TEXT_DAUER = 1.3;
   const ruhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
@@ -734,6 +783,7 @@
     leben = 3; gesammelt = 0; kamera = 0; zeit = 0; popup = null; meldung = null; tot = 0;
     checkpoint = 120; boss = { maul:0, weg:0, sichtbar:0, deckel:0 }; tuer = { offen:0 }; bossFrage = null;
     autos = level.autos.map(a => ({ ...a, x:a.start, rad:0 })); oel = level.oel.map(o => ({ ...o, aktiv:false })); rutscht = 0; hupen = 0; autoKlangZeit = -9;
+    steine = level.steine.map(s => ({ ...s, phase:'ruhe', t:0, y:-60, vy:0 })); bruecken = level.bruecken.map(b => ({ ...b, zeit:0, gebrochen:false, knarrte:false, bruch:0, bruchX:0 })); kakteen = level.kakteen.map(k => ({ ...k })); rasseln = 0;
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
@@ -879,6 +929,7 @@
     for (const [a, b] of level.boden) liste.push({ x:a, y:BODEN_Y, w:b - a, h:H - BODEN_Y, voll:false });
     for (const p of level.plattformen) liste.push({ x:p.x, y:p.y, w:p.w, h:14, voll:false });
     for (const k of level.kisten) liste.push({ x:k.x, y:k.y, w:KISTE, h:KISTE, voll:true });
+    level.bruecken.forEach((b, i) => liste.push({ x:b.x, y:BODEN_Y, w:b.w, h:14, voll:false, bruecke:i }));   // Hängebrücke: trägt, bis ein Brett bricht
     return liste;
   }
 
@@ -887,12 +938,28 @@
     if (spieler.unverwundbar > 0 || tot > 0) return;
     leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0;
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
-    tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : grund === 'auto' ? 'Crash! 🚗' : 'Ouch!', zeit: 1.2 };
+    tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
   }
+  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵' };
   function wiederbeleben() {
     spieler.x = checkpoint; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.6;
     halten = false;
+    for (const b of bruecken) { b.gebrochen = false; b.zeit = 0; b.knarrte = false; b.bruch = 0; }   // Brücken heil, Steine zurück
+    for (const s of steine) if (s.x > checkpoint) { s.phase = 'ruhe'; s.t = 0; }
   }
+  // Welt 3: Steine fallen, sobald die Figur ≈ 300 davor ist (Staub + Schatten 0,6 s, dann Sturz; liegen 1,4 s gefährlich, dann zerbröseln); Brücken-Bruchstücke fallen nach
+  function hindernisseBewegen(dt) {
+    for (const s of steine) {
+      if (s.phase === 'ruhe') { if (zustand === 'spiel' && tot <= 0 && spieler.x > s.x - STEIN_VORLAUF && spieler.x < s.x) { s.phase = 'warnung'; s.t = 0; klang.rumpeln(); } }
+      else if (s.phase === 'warnung') { s.t += dt; if (s.t >= STEIN_WARNUNG) { s.phase = 'faellt'; s.y = -60; s.vy = 200; } }
+      else if (s.phase === 'faellt') { s.vy += 2200 * dt; s.y += s.vy * dt; if (s.y >= BODEN_Y) { s.y = BODEN_Y; s.phase = 'liegt'; s.t = 0; klang.stein(); funken(s.x, BODEN_Y - 6, 14, ['#d9a37a', '#b4745a', '#f0c9a8'], 180, 0.6); } }
+      else if (s.phase === 'liegt') { s.t += dt; if (s.t >= STEIN_LIEGT) { s.phase = 'weg'; funken(s.x, BODEN_Y - 16, 8, ['#8d5a46', '#b4745a'], 120, 0.5); } }
+      else if (s.phase === 'weg') { if (spieler.x < s.x - STEIN_VORLAUF - 50) s.phase = 'ruhe'; }
+    }
+    for (const b of bruecken) if (b.gebrochen) b.bruch = Math.min(1.5, b.bruch + dt);
+  }
+  const steinBox = (s) => ({ x: s.x - 20, y: s.y - 40, w: 40, h: 40 });
+  const kaktusBox = (k) => ({ x: k.x - KAKTUS_W / 2, y: BODEN_Y - KAKTUS_H, w: KAKTUS_W, h: KAKTUS_H });
   function gegnerBewegen(dt) {
     for (const g of gegner) {
       g.flug += dt;
@@ -913,6 +980,9 @@
     if (g.art === 'roadrunner') return { x: g.x - 16, y: g.y - 22, w: 32, h: 22 };
     if (g.art === 'guerteltier') return { x: g.x - 15, y: g.y - 24, w: 30, h: 24 };
     if (g.art === 'kojote') return { x: g.x - 22, y: g.y - 30, w: 44, h: 30 };
+    if (g.art === 'klapperschlange') return { x: g.x - 24, y: g.y - 18, w: 48, h: 18 };
+    if (g.art === 'geier') return { x: g.x - 22, y: g.y - 14 + Math.sin(g.flug * 2.5) * 10, w: 44, h: 26 };
+    if (g.art === 'skorpion') return { x: g.x - 14, y: g.y - 16, w: 28, h: 16 };
     return { x: g.x - 20, y: g.y - 26, w: 40, h: 26 };
   }
   const autoBox = (a) => ({ x: a.x, y: BODEN_Y - a.h, w: a.w, h: a.h });
@@ -924,7 +994,7 @@
     if (popup) { popup.zeit -= dt; if (popup.zeit <= 0) popup = null; }
     if (meldung) { meldung.zeit -= dt; if (meldung.zeit <= 0) meldung = null; }
     if (bossSpruch) { bossSpruch.zeit -= dt; if (bossSpruch.zeit <= 0) bossSpruch = null; }
-    if (!eingefroren) { gegnerBewegen(dt); for (const d of diamanten) d.funkel += dt; effekteBewegen(dt); }
+    if (!eingefroren) { gegnerBewegen(dt); hindernisseBewegen(dt); for (const d of diamanten) d.funkel += dt; effekteBewegen(dt); }
 
     if (zustand === 'spiel') {
       if (tot > 0) { tot -= dt; if (tot <= 0) wiederbeleben(); return; }
@@ -953,6 +1023,7 @@
       let gelandet = false;
       if (spieler.vy >= 0) {
         for (const s of SOLIDE) {
+          if (s.bruecke != null && bruecken[s.bruecke].gebrochen) continue;
           if (spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w && altY <= s.y + 0.01 && spieler.y >= s.y) {
             spieler.y = s.y; spieler.vy = 0; gelandet = true;
           }
@@ -968,10 +1039,19 @@
       spieler.amBoden = gelandet;
       if (spieler.amBoden && spieler.vy === 0) {
         let hatBoden = false;
-        for (const s of SOLIDE) if (spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w && Math.abs(spieler.y - s.y) < 0.5) hatBoden = true;
+        for (const s of SOLIDE) if (!(s.bruecke != null && bruecken[s.bruecke].gebrochen) && spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w && Math.abs(spieler.y - s.y) < 0.5) hatBoden = true;
         if (!hatBoden) spieler.amBoden = false;
       }
       spieler.pose = rutscht > 0 && spieler.amBoden ? 'steh' : spieler.amBoden ? 'lauf' : 'sprung';
+      // Hängebrücken: Bodenzeit auf der Brücke zählt (Sprung zählt nicht); ab 1,0 s knarrt es, ab 1,5 s bricht das Brett unter der Figur → Sturz in die Schlucht
+      for (const b of bruecken) {
+        const drueber = spieler.x + PW / 2 > b.x && spieler.x - PW / 2 < b.x + b.w;
+        if (!drueber) { if (!b.gebrochen) b.zeit = 0; continue; }
+        if (b.gebrochen || !spieler.amBoden || spieler.y !== BODEN_Y) continue;
+        b.zeit += dt;
+        if (b.zeit >= 1.0 && !b.knarrte) { b.knarrte = true; klang.knarren(); }
+        if (b.zeit >= BRUECKE_MAX) { b.gebrochen = true; b.bruchX = spieler.x; b.bruch = 0; spieler.amBoden = false; klang.bruch(); meldung = { text: 'Crack! 🪵', zeit: 0.8 }; }
+      }
       if (spieler.y > H + 20) { schaden('wasser'); return; }
       // Ölflecken: beim Betreten (am Boden) 0,6 s rutschen ohne Sprung; wirkt je Fleck einmal pro Überquerung
       for (const o of oel) {
@@ -1023,6 +1103,16 @@
         const ab = autoBox(a);
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, ab.x + 4, ab.y + 2, ab.w - 8, ab.h - 2)) { schaden('auto'); break; }
         if (zeit - autoKlangZeit > AUTO_KLANG_ABSTAND && ab.x - spieler.x > 0 && ab.x - spieler.x < 320) { autoKlangZeit = zeit; klang.auto(); }
+      }
+      // Welt 3: fallende/liegende Steine und Kakteen – Berührung = Leben weg (drüberspringen!)
+      for (const s of steine) {
+        if (s.phase !== 'faellt' && s.phase !== 'liegt') continue;
+        const sb = steinBox(s);
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, sb.x + 4, sb.y + 4, sb.w - 8, sb.h - 4)) { schaden('stein'); break; }
+      }
+      for (const k of kakteen) {
+        const kb = kaktusBox(k);
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, kb.x, kb.y + 2, kb.w, kb.h - 2)) { schaden('kaktus'); break; }
       }
       gegnerKlaengeNaehe();
       // Boss-Sequenz beginnt
@@ -1508,6 +1598,246 @@
     c.restore();
   }
 
+  /* ---------- Welt 3 Grand Canyon: Kulisse, Felsboden, Schlucht, Felsbrocken, Steine, Hängebrücken, Kakteen, Gegner, Boss Sheriff Rattlesnake, Westerntor ---------- */
+  function schildCanyon(c, x, y, s, mitText) {   // Aussichtspunkt-Schild „GRAND CANYON“ (braune Tafel auf zwei Pfosten)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#5a3a22'; c.fillRect(-34, -20, 6, 40); c.fillRect(28, -20, 6, 40);
+    c.fillStyle = '#7a4a24'; c.strokeStyle = '#f0e0c0'; c.lineWidth = 2; c.beginPath(); c.roundRect(-44, -52, 88, 38, 4); c.fill(); c.stroke();
+    if (mitText !== false) {
+      c.fillStyle = '#fff6e0'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.font = 'bold 11px system-ui, sans-serif'; c.fillText('GRAND', 0, -41); c.fillText('CANYON', 0, -29);
+      c.font = 'bold 6px system-ui, sans-serif'; c.fillText('NATIONAL PARK', 0, -18);
+    }
+    c.restore();
+  }
+  function geierSilhouette(c, x, y, s, fl) {   // kreisender Geier am Himmel (V-Flügel)
+    c.save(); c.translate(x, y); c.scale(s, s); c.strokeStyle = 'rgba(40,25,20,.75)'; c.lineWidth = 2; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(-14, 2 + fl * 3); c.quadraticCurveTo(-6, -4, 0, 0); c.quadraticCurveTo(6, -4, 14, 2 + fl * 3); c.stroke(); c.restore();
+  }
+  function hintergrundCanyon(c) {
+    const naehe = Math.min(1, kamera / level.ende);   // Himmel: oben Blau, am Horizont Orange; Richtung Ziel wird alles abendlicher
+    const g = c.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, mischFarbe('#3f8fdc', '#d96a3a', naehe * 0.55)); g.addColorStop(0.5, mischFarbe('#8fc3ee', '#f5a356', 0.3 + naehe * 0.7)); g.addColorStop(1, mischFarbe('#f7c98a', '#ffb070', naehe));
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    const sx = viewW * 0.22 + naehe * viewW * 0.3 - kamera * 0.005, sy = 70 + naehe * 90, sr = 22 + naehe * 10;   // Sonne wandert nach rechts unten
+    const sg = c.createRadialGradient(sx, sy, sr * 0.5, sx, sy, sr * 3.2); sg.addColorStop(0, 'rgba(255,235,170,.6)'); sg.addColorStop(1, 'rgba(255,200,120,0)');
+    c.fillStyle = sg; c.beginPath(); c.arc(sx, sy, sr * 3.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = mischFarbe('#fff1b0', '#ff8c4a', naehe); c.beginPath(); c.arc(sx, sy, sr, 0, Math.PI * 2); c.fill();
+    // Geier kreisen am Himmel (Parallaxe 0,1)
+    for (let i = 0; i < 4; i++) {
+      const n = viewW + 500, cx = ((i * 430 + 120 - kamera * 0.1) % n + n) % n - 250, cy = 60 + (i % 3) * 26, a = zeit * (0.5 + i * 0.1) + i * 1.7;
+      geierSilhouette(c, cx + Math.cos(a) * 46, cy + Math.sin(a) * 12, 0.9 + (i % 2) * 0.3, Math.sin(zeit * 3 + i));
+    }
+    // ferne Felsschichten (drei Ebenen Parallaxe, Rot wird nach vorn kräftiger), mit Schichtlinien
+    const ebenen = [[0.05, 232, '#c98a6a', 70, 300], [0.12, 244, '#b8664a', 56, 240], [0.22, 252, '#9e4a34', 42, 190]];
+    for (const [par, basis, farbe, hmax, abst] of ebenen) {
+      const n = viewW + 420;
+      for (let i = 0; i < 11; i++) {
+        const bx = ((i * abst - kamera * par) % n + n) % n - 210, bh = hmax * (0.55 + ((i * 37) % 45) / 100), bw = abst * 0.9;
+        c.fillStyle = farbe; c.beginPath(); c.moveTo(bx, basis); c.lineTo(bx + 14, basis - bh); c.lineTo(bx + bw - 18, basis - bh); c.lineTo(bx + bw + 6, basis); c.closePath(); c.fill();
+        c.strokeStyle = 'rgba(80,30,20,.18)'; c.lineWidth = 1.5; for (let k = 1; k < 4; k++) { const yy = basis - bh * k / 4; c.beginPath(); c.moveTo(bx + 8, yy); c.lineTo(bx + bw - 10, yy); c.stroke(); }
+      }
+    }
+    // Aussichtspunkt-Schild „GRAND CANYON“ kommt näher: wandert von rechts in die Mitte und wächst bis zum Boss
+    schildCanyon(c, viewW * (0.82 - 0.5 * naehe), 252 - naehe * 6, 0.7 + naehe * 1.1, true);
+    // Hochplateau hinter dem Boden (rot), darunter Schluchtschatten
+    c.fillStyle = mischFarbe('#c2603f', '#a8482e', naehe); c.fillRect(-viewW, 252, viewW * 3, H * 2);
+    c.fillStyle = 'rgba(60,20,15,.25)'; c.fillRect(-viewW, 252, viewW * 3, 5);
+    // Mittelgrund (Parallaxe 0,35): Felsnadeln, Kakteen, Totenkopf-Steine, Büsche
+    const n = viewW + 500;
+    for (let i = 0; i < 10; i++) {
+      const bx = ((i * 470 + 90 - kamera * 0.35) % n + n) % n - 250, art = i % 4;
+      if (art === 0) {   // Felsnadel
+        c.fillStyle = '#8e3d2c'; c.beginPath(); c.moveTo(bx, 252); c.lineTo(bx + 10, 196); c.lineTo(bx + 22, 188); c.lineTo(bx + 34, 200); c.lineTo(bx + 46, 252); c.closePath(); c.fill();
+        c.fillStyle = 'rgba(255,200,150,.25)'; c.fillRect(bx + 12, 208, 18, 3); c.fillRect(bx + 8, 228, 28, 3);
+      } else if (art === 1) {   // Saguaro-Kaktus im Hintergrund
+        c.fillStyle = '#3f7a3a'; c.beginPath(); c.roundRect(bx, 198, 12, 54, 6); c.roundRect(bx - 12, 212, 8, 22, 4); c.roundRect(bx + 16, 206, 8, 26, 4); c.fill();
+        c.fillRect(bx - 12, 216, 14, 7); c.fillRect(bx + 10, 210, 14, 7);
+      } else if (art === 2) {   // Felsbrocken-Gruppe
+        c.fillStyle = '#9a5540'; c.beginPath(); c.ellipse(bx + 10, 246, 18, 10, 0, 0, Math.PI * 2); c.ellipse(bx + 36, 244, 12, 9, 0, 0, Math.PI * 2); c.fill();
+        c.fillStyle = 'rgba(255,220,190,.3)'; c.beginPath(); c.ellipse(bx + 6, 240, 7, 3, 0, 0, Math.PI * 2); c.fill();
+      } else {   // trockener Busch
+        c.strokeStyle = '#7a5a3a'; c.lineWidth = 2; for (let k = 0; k < 6; k++) { c.beginPath(); c.moveTo(bx + 10, 252); c.quadraticCurveTo(bx + 10 + (k - 3) * 6, 236, bx + 10 + (k - 3) * 9, 226); c.stroke(); }
+      }
+    }
+  }
+  function felsboden(c, x0, w, a, b, links, rechts) {   // roter Fels: Schichtlinien, heller Rand oben, Kiesel
+    c.fillStyle = '#b4452a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#d9774a'; c.fillRect(x0, BODEN_Y, w, 8);
+    c.fillStyle = 'rgba(60,20,10,.22)'; for (let yy = BODEN_Y + 24; yy < H; yy += 22) c.fillRect(x0, yy, w, 3);
+    c.fillStyle = 'rgba(255,220,190,.3)';
+    for (let x = Math.max(Math.ceil(a / 70) * 70, Math.floor(links / 70) * 70); x < Math.min(b, rechts); x += 70) c.beginPath(), c.ellipse(x - kamera + 20, BODEN_Y + 15, 5, 2.5, 0, 0, Math.PI * 2), c.fill();
+  }
+  function schlucht(c, a, b) {   // Lücke im Fels: tiefe Schlucht mit Schichten, unten der Colorado als blauer Faden
+    const x0 = a - kamera, w = b - a;
+    const g = c.createLinearGradient(0, BODEN_Y, 0, H); g.addColorStop(0, '#7a3324'); g.addColorStop(1, '#2b1410');
+    c.fillStyle = g; c.fillRect(x0, BODEN_Y, w, H);
+    c.fillStyle = 'rgba(255,160,120,.14)'; for (let yy = BODEN_Y + 18; yy < H; yy += 20) c.fillRect(x0 + 4, yy, w - 8, 3);
+    c.fillStyle = '#3f8fdc'; c.fillRect(x0 + 6, H - 10, w - 12, 4);
+  }
+  function felsbrocken(c, x, y) {   // Felsbrocken statt Kiste (40 × 40, rund mit Lichtkante)
+    c.fillStyle = '#8d5a46'; c.beginPath(); c.roundRect(x + 1, y + 2, KISTE - 2, KISTE - 2, 13); c.fill();
+    c.fillStyle = '#a86e56'; c.beginPath(); c.ellipse(x + 15, y + 13, 9, 5, -0.4, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(40,15,10,.35)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x + 8, y + 26); c.lineTo(x + 18, y + 31); c.moveTo(x + 24, y + 20); c.lineTo(x + 32, y + 27); c.stroke();
+  }
+  function kaktusZeichnen(c, k) {   // Saguaro am Weg (Berührung = Leben weg): Stamm, zwei Arme, Stacheln, Blüte
+    const x = k.x - kamera, y = BODEN_Y;
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#3f8a3e'; c.beginPath(); c.roundRect(-8, -KAKTUS_H, 16, KAKTUS_H, 8); c.fill();
+    c.beginPath(); c.roundRect(-22, -34, 8, 20, 4); c.roundRect(14, -40, 8, 22, 4); c.fill(); c.fillRect(-22, -20, 16, 7); c.fillRect(6, -24, 16, 7);
+    c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 1; for (let i = 0; i < 6; i++) { const yy = -KAKTUS_H + 8 + i * 7; c.beginPath(); c.moveTo(-9, yy); c.lineTo(-12, yy - 2); c.moveTo(9, yy); c.lineTo(12, yy - 2); c.stroke(); }
+    c.fillStyle = '#2f6b2e'; c.fillRect(-2, -KAKTUS_H + 6, 2, KAKTUS_H - 10);
+    c.fillStyle = '#ff5d8a'; c.beginPath(); c.arc(0, -KAKTUS_H - 1, 4, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function steinZeichnen(c, s) {   // fallender Stein: Warnung = Schatten + Staub am Boden, dann Felsbrocken im Fall, liegt kurz (wackelt), zerbröselt
+    const x = s.x - kamera;
+    if (s.phase === 'warnung') {
+      const f = s.t / STEIN_WARNUNG;
+      c.fillStyle = `rgba(40,15,10,${0.15 + 0.3 * f})`; c.beginPath(); c.ellipse(x, BODEN_Y + 2, 10 + 14 * f, 4 + 3 * f, 0, 0, Math.PI * 2); c.fill();
+      c.fillStyle = 'rgba(230,190,150,.6)'; for (let k = 0; k < 4; k++) { const t = (zeit * 2 + k * 0.25) % 1; c.beginPath(); c.arc(x - 14 + k * 9 + Math.sin(zeit * 9 + k) * 3, BODEN_Y - 4 - t * 22, 3 + t * 4, 0, Math.PI * 2); c.fill(); }
+      c.fillStyle = 'rgba(0,0,0,.35)'; for (let k = 0; k < 3; k++) c.fillRect(x - 10 + k * 8 + Math.sin(zeit * 20 + k) * 2, -4, 5, 3 + ((k * 7) % 5));   // Geröll oben
+      return;
+    }
+    if (s.phase !== 'faellt' && s.phase !== 'liegt') return;
+    c.save(); c.translate(x, s.y);
+    if (s.phase === 'faellt') { c.fillStyle = 'rgba(40,15,10,.3)'; c.beginPath(); c.ellipse(0, BODEN_Y - s.y + 2, 22, 6, 0, 0, Math.PI * 2); c.fill(); c.rotate(zeit * 6); }
+    else if (s.t < 0.3) c.translate(0, Math.sin(s.t * 40) * 2);
+    const f = s.phase === 'liegt' && s.t > STEIN_LIEGT - 0.4 ? Math.max(0.3, (STEIN_LIEGT - s.t) / 0.4) : 1;
+    c.globalAlpha = f;
+    if (s.phase === 'faellt') c.translate(0, 20);
+    c.fillStyle = '#7a4a36'; c.beginPath(); c.moveTo(-20, -8); c.lineTo(-14, -30); c.lineTo(2, -40); c.lineTo(18, -30); c.lineTo(20, -10); c.lineTo(10, 0); c.lineTo(-12, 0); c.closePath(); c.fill();
+    c.fillStyle = '#9a6650'; c.beginPath(); c.moveTo(-12, -26); c.lineTo(0, -34); c.lineTo(10, -28); c.lineTo(-2, -20); c.closePath(); c.fill();
+    c.restore();
+  }
+  function brueckeZeichnen(c, b) {   // Hängebrücke: zwei Seile, Bretter, schwingt (stärker mit Figur drauf); kurz vor dem Bruch zittern die Bretter rot; gebrochen fallen Bretter bei bruchX
+    const x0 = b.x - kamera, w = b.w, n = Math.max(4, Math.round(w / 24));
+    const drauf = spieler.x + PW / 2 > b.x && spieler.x - PW / 2 < b.x + b.w && tot <= 0;
+    const schwing = Math.sin(zeit * 3.2 + b.x) * (drauf ? 7 : 3), warn = Math.min(1, Math.max(0, (b.zeit - 0.8) / (BRUECKE_MAX - 0.8)));
+    const sag = (f) => Math.sin(f * Math.PI) * (10 + schwing);
+    c.save();
+    for (const dy of [-34, -2]) {   // Seile
+      c.strokeStyle = '#6b4a2a'; c.lineWidth = 3; c.beginPath(); c.moveTo(x0, BODEN_Y + dy);
+      for (let i = 1; i <= 12; i++) { const f = i / 12; c.lineTo(x0 + w * f, BODEN_Y + dy + sag(f)); } c.stroke();
+    }
+    c.fillStyle = '#5a3a22'; c.fillRect(x0 - 6, BODEN_Y - 44, 6, 44); c.fillRect(x0 + w, BODEN_Y - 44, 6, 44);   // Pfosten
+    for (let i = 0; i < n; i++) {
+      const f = (i + 0.5) / n, px = x0 + (w / n) * i, py = BODEN_Y + sag(f), bx = b.x + (w / n) * i;
+      let fallen = 0; if (b.gebrochen && Math.abs(bx + w / n / 2 - b.bruchX) < 50) fallen = b.bruch;
+      const zitter = warn > 0 && !b.gebrochen ? Math.sin(zeit * 40 + i) * 2 * warn : 0;
+      c.save(); c.translate(px + w / n / 2, py + zitter + fallen * fallen * 320); if (fallen) c.rotate(fallen * 1.2); c.globalAlpha = fallen ? Math.max(0, 1 - fallen / 1.2) : 1;
+      c.fillStyle = warn > 0 && !fallen ? mischFarbe('#c98a4a', '#e6553a', warn) : '#c98a4a'; c.fillRect(-w / n / 2 + 1, -4, w / n - 2, 9);
+      c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(-w / n / 2 + 1, 2, w / n - 2, 3);
+      c.restore();
+      c.strokeStyle = '#6b4a2a'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(px + w / n / 2, py - 32 + sag(f) * 0); c.lineTo(px + w / n / 2, py - 2); c.stroke();   // Halteseile
+    }
+    c.restore();
+  }
+  function klapperschlange(c, g) {   // Klapperschlange: kriecht in Wellen, Rassel am Schwanz, Kopf mit Zunge; plattgedrückt flach
+    const b = gegnerBox(g); const cx = b.x + 24, cy = b.y + 18;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+    c.lineCap = 'round'; c.lineWidth = 9; c.strokeStyle = '#a0783c'; c.beginPath(); c.moveTo(22, -5);
+    for (let i = 0; i <= 8; i++) { const x = 22 - i * 5, y = -5 - Math.sin(g.flug * 10 + i * 0.9) * 3 - (i > 6 ? (i - 6) * 3 : 0); c.lineTo(x, y); } c.stroke();
+    c.strokeStyle = '#6b4a1e'; c.lineWidth = 3; for (let i = 1; i < 8; i += 2) { const x = 22 - i * 5, y = -5 - Math.sin(g.flug * 10 + i * 0.9) * 3; c.beginPath(); c.moveTo(x - 1.5, y - 4); c.lineTo(x + 1.5, y + 4); c.stroke(); }   // Rautenmuster
+    c.fillStyle = '#c9a862'; c.save(); c.translate(26 + Math.sin(g.flug * 30) * 1.5, -8); for (let k = 0; k < 4; k++) c.fillRect(k * 3, -3 + (k % 2), 2.5, 6); c.restore();   // Rassel
+    c.fillStyle = '#a0783c'; c.beginPath(); c.ellipse(-20, -12, 8, 5.5, 0, 0, Math.PI * 2); c.fill();   // Kopf
+    c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(-22, -14, 1.6, 0, Math.PI * 2); c.fill(); c.fillStyle = '#18213a'; c.beginPath(); c.arc(-22, -14, 0.8, 0, Math.PI * 2); c.fill();
+    if (Math.floor(g.flug * 4) % 3 === 0) { c.strokeStyle = '#e63946'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-28, -11); c.lineTo(-34, -10); c.moveTo(-34, -10); c.lineTo(-36, -12); c.moveTo(-34, -10); c.lineTo(-36, -8); c.stroke(); }   // Zunge
+    c.restore();
+  }
+  function geier(c, g) {   // Geier: fliegt auf Kopfhöhe wie die Taube – dunkler Körper, nackter roter Kopf, großer Flügelschlag, Halskrause
+    const b = gegnerBox(g); const cx = b.x + 22, cy = b.y + 14;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.2, 1 - g.tot * 2));
+    const fl = Math.sin(g.flug * 9);
+    c.fillStyle = '#3a2f2a'; c.beginPath(); c.moveTo(-2, -2); c.quadraticCurveTo(12, -16 - fl * 12, 26, -8 - fl * 16); c.quadraticCurveTo(14, -1, 4, 3); c.closePath(); c.fill();   // hinterer Flügel
+    c.fillStyle = '#4a3b34'; c.beginPath(); c.ellipse(0, 3, 14, 8, 0, 0, Math.PI * 2); c.fill();   // Körper
+    for (let i = -1; i <= 1; i++) { c.beginPath(); c.moveTo(10, 2); c.lineTo(22, i * 4); c.lineTo(22, 4 + i * 4); c.closePath(); c.fill(); }   // Schwanz
+    c.fillStyle = '#e9e2d0'; c.beginPath(); c.ellipse(-10, -1, 5, 5, 0, 0, Math.PI * 2); c.fill();   // Halskrause
+    c.fillStyle = '#d9533f'; c.beginPath(); c.arc(-15, -5, 4.2, 0, Math.PI * 2); c.fill();   // nackter Kopf
+    c.fillStyle = '#f0e0b0'; c.beginPath(); c.moveTo(-18, -5); c.lineTo(-25, -3); c.lineTo(-18, -2); c.closePath(); c.fill();   // Hakenschnabel
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-16, -6, 1, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#2a211d'; c.beginPath(); c.moveTo(-3, 0); c.quadraticCurveTo(10, -14 + fl * 12, 24, -4 + fl * 16); c.quadraticCurveTo(12, 2, 2, 5); c.closePath(); c.fill();   // vorderer Flügel
+    c.restore();
+  }
+  function skorpion(c, g) {   // Skorpion: klein und schnell, Scheren vorn, Schwanz mit Stachel über dem Rücken, 8 Beine zappeln
+    const b = gegnerBox(g); const cx = b.x + 14, cy = b.y + 16;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+    const w = Math.sin(g.flug * 22) * 2;
+    c.strokeStyle = '#6b3a1e'; c.lineWidth = 1.5; for (let k = 0; k < 4; k++) { c.beginPath(); c.moveTo(-6 + k * 4, -4); c.lineTo(-10 + k * 4 + (k % 2 ? w : -w), 0); c.stroke(); }
+    c.fillStyle = '#8a4a26'; c.beginPath(); c.ellipse(0, -6, 9, 4.5, 0, 0, Math.PI * 2); c.fill();   // Körper
+    c.strokeStyle = '#8a4a26'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); c.moveTo(8, -7); c.quadraticCurveTo(14, -12, 12, -20); c.quadraticCurveTo(10, -24, 6, -22); c.stroke();   // Schwanz
+    c.fillStyle = '#e63946'; c.beginPath(); c.moveTo(6, -22); c.lineTo(2, -24); c.lineTo(5, -19); c.closePath(); c.fill();   // Stachel
+    c.strokeStyle = '#8a4a26'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(-8, -6); c.lineTo(-14, -9 + w); c.moveTo(-8, -5); c.lineTo(-14, -2 - w); c.stroke();   // Scherenarme
+    c.fillStyle = '#8a4a26'; c.beginPath(); c.ellipse(-16, -9 + w, 3.5, 2.2, 0, 0, Math.PI * 2); c.ellipse(-16, -2 - w, 3.5, 2.2, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-7, -8, 0.9, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function westernTor(c, x, y) {   // Tür der Welt 3: Holztor einer Westernstadt – Pfosten, Querbalken mit Schild, zwei Torflügel schwingen auf
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#c99a6a'; c.fillRect(-70, -150, 240, 150); c.fillStyle = 'rgba(0,0,0,.08)'; for (let k = 0; k < 6; k++) c.fillRect(-70 + k * 40, -150, 2, 150);   // Bretterwand dahinter
+    c.fillStyle = '#5a3a22'; c.fillRect(-52, -170, 14, 170); c.fillRect(38, -170, 14, 170);   // Pfosten
+    c.fillStyle = '#7a4a24'; c.fillRect(-60, -182, 120, 20); c.strokeStyle = '#f0e0c0'; c.lineWidth = 2; c.strokeRect(-58, -180, 116, 16);
+    c.fillStyle = '#fff6e0'; c.font = 'bold 12px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('CANYON TOWN', 0, -172);
+    const offen = tuer.offen;
+    if (offen > 0) { c.fillStyle = `rgba(255,240,180,${0.7 * offen})`; c.fillRect(-38, -150, 76, 150); }
+    for (const seite of [-1, 1]) {   // Torflügel: schwingen nach hinten auf (in x gestaucht)
+      c.save(); c.translate(seite * -38, 0); c.scale(Math.max(0.04, 1 - offen * 0.96), 1);
+      c.fillStyle = '#8b5a2b'; c.fillRect(seite > 0 ? -38 : 0, -140, 38, 140);
+      c.strokeStyle = '#5a3a22'; c.lineWidth = 2; for (let k = 0; k < 3; k++) { const bx = (seite > 0 ? -38 : 0) + 4 + k * 12; c.beginPath(); c.moveTo(bx, -136); c.lineTo(bx, -4); c.stroke(); }
+      c.beginPath(); c.moveTo(seite > 0 ? -36 : 2, -40); c.lineTo(seite > 0 ? -2 : 36, -130); c.stroke();
+      c.restore();
+    }
+    c.fillStyle = '#e0a400'; c.beginPath(); for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * Math.PI * 0.4, r = 9; c.lineTo(Math.cos(a) * r, -195 + Math.sin(a) * r); c.lineTo(Math.cos(a + Math.PI * 0.2) * 4, -195 + Math.sin(a + Math.PI * 0.2) * 4); } c.closePath(); c.fill();   // Sheriff-Stern auf dem Balken
+    c.restore();
+  }
+  function felsspalt(c, x, y) {   // Riss im Fels, aus dem der Sheriff kommt
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#2b1410'; c.beginPath(); c.moveTo(-50, 0); c.lineTo(-22, 3); c.lineTo(0, 1); c.lineTo(30, 4); c.lineTo(56, 0); c.lineTo(40, 8); c.lineTo(10, 10); c.lineTo(-24, 9); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(40,10,5,.5)'; c.lineWidth = 2; c.beginPath(); c.moveTo(-50, 0); c.lineTo(-70, -6); c.moveTo(56, 0); c.lineTo(76, -5); c.stroke();
+    if (boss.sichtbar > 0 && boss.sichtbar < 1) { c.fillStyle = 'rgba(230,190,150,.55)'; for (let k = 0; k < 5; k++) { const t = (zeit * 1.6 + k * 0.2) % 1; c.beginPath(); c.arc(-30 + k * 15, -t * 30, 3 + t * 5, 0, Math.PI * 2); c.fill(); } }
+    c.restore();
+  }
+  function sheriffRattlesnake(c, x, y) {   // Boss Welt 3: Riesenklapperschlange mit Cowboyhut und Sternabzeichen – richtet sich aus dem Felsspalt auf, rasselt, verschwindet im Finale wieder
+    if (boss.sichtbar <= 0) return;
+    c.save();
+    c.beginPath(); c.rect(x - 220, -40, 480, y + 44); c.clip();   // unterhalb des Bodens unsichtbar (kommt aus dem Spalt)
+    const auf = boss.sichtbar * (1 - boss.weg);
+    c.translate(x - 24, y + (1 - auf) * 190); c.scale(0.85, 0.85); c.globalAlpha = 1 - boss.weg * 0.5;   // etwas kleiner, damit der Hut im Zoom der Sequenz sichtbar bleibt
+    const m = boss.maul, wiege = Math.sin(zeit * 2.2) * (zustand === 'boss' ? 6 : 3);
+    // Körper: dicke Schlangenlinie von unten (Spalt) nach oben (Kopf), geschuppt
+    c.lineCap = 'round'; c.lineWidth = 34; c.strokeStyle = '#a0783c';
+    c.beginPath(); c.moveTo(20, 10); c.quadraticCurveTo(70, -40, 30, -80); c.quadraticCurveTo(-10, -120, 10 + wiege, -160); c.stroke();
+    c.lineWidth = 16; c.strokeStyle = '#d9c07a'; c.beginPath(); c.moveTo(22, 6); c.quadraticCurveTo(66, -40, 30, -78); c.quadraticCurveTo(-4, -118, 10 + wiege, -156); c.stroke();   // heller Bauch
+    const kurve = (t) => t < 0.5 ? [(1 - 2 * t) ** 2 * 20 + 2 * (1 - 2 * t) * 2 * t * 70 + (2 * t) ** 2 * 30, (1 - 2 * t) ** 2 * 10 + 2 * (1 - 2 * t) * 2 * t * -40 + (2 * t) ** 2 * -80]
+      : [(2 - 2 * t) ** 2 * 30 + 2 * (2 - 2 * t) * (2 * t - 1) * -10 + (2 * t - 1) ** 2 * (10 + wiege), (2 - 2 * t) ** 2 * -80 + 2 * (2 - 2 * t) * (2 * t - 1) * -120 + (2 * t - 1) ** 2 * -160];   // Punkt auf der Körperkurve
+    c.fillStyle = '#6b4a1e'; for (let i = 1; i < 8; i++) { const [px, py] = kurve(i / 8.5); c.beginPath(); c.moveTo(px - 7, py); c.lineTo(px, py - 8); c.lineTo(px + 7, py); c.lineTo(px, py + 8); c.closePath(); c.fill(); }   // Rauten
+    // Rassel (rechts unten aus dem Spalt), zittert in der Sequenz und beim Reden
+    const rz = Math.sin(zeit * 32) * (zustand === 'boss' || zustand === 'sequenz' ? 3 : 1);
+    c.fillStyle = '#c9a862'; c.save(); c.translate(72, -8 + rz); for (let k = 0; k < 5; k++) { c.beginPath(); c.roundRect(k * 9, -8 + (k % 2) * 2, 8, 16 - k, 3); c.fill(); } c.restore();
+    // Sternabzeichen auf der Brust
+    c.save(); c.translate(26 + wiege * 0.4, -96); c.fillStyle = '#e0a400'; c.beginPath(); for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * Math.PI * 0.4; c.lineTo(Math.cos(a) * 11, Math.sin(a) * 11); c.lineTo(Math.cos(a + Math.PI * 0.2) * 5, Math.sin(a + Math.PI * 0.2) * 5); } c.closePath(); c.fill();
+    c.fillStyle = '#7a4a16'; c.font = 'bold 7px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('SHERIFF', 0, 1); c.restore();
+    // Kopf mit Maul (Oberkiefer klappt auf), Giftzähne, Zunge, Augen mit strengen Brauen
+    c.save(); c.translate(10 + wiege, -168);
+    c.fillStyle = '#a0783c'; c.beginPath(); c.roundRect(-8, -6, 56, 26, 10); c.fill();   // Unterkiefer
+    c.fillStyle = '#e07a7a'; c.fillRect(4, -4, 36, 6 + m * 10);   // Rachen
+    c.save(); c.translate(-4, -2); c.rotate(-0.6 * m);
+    c.fillStyle = '#8f6a30'; c.beginPath(); c.roundRect(-6, -26, 60, 26, 12); c.fill();   // Oberkiefer
+    c.fillStyle = '#fff'; c.beginPath(); c.moveTo(38, -2); c.lineTo(42, 8); c.lineTo(46, -2); c.moveTo(24, -2); c.lineTo(27, 6); c.lineTo(30, -2); c.fill();   // Giftzähne
+    for (const ex of [16, 34]) { c.fillStyle = '#ffd93d'; c.beginPath(); c.ellipse(ex, -16, 6, 5, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#18213a'; c.beginPath(); c.ellipse(ex + 1, -16, 1.8, 4, 0, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#5a3a1e'; c.lineWidth = 3; c.beginPath(); c.moveTo(8, -24); c.lineTo(22, -21); c.moveTo(42, -24); c.lineTo(28, -21); c.stroke();   // strenge Brauen
+    // Cowboyhut (sitzt auf dem Oberkiefer = Kopf)
+    c.fillStyle = '#5a3a22'; c.beginPath(); c.ellipse(24, -28, 40, 7, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.roundRect(2, -52, 44, 26, 8); c.fill(); c.fillStyle = '#e0a400'; c.fillRect(2, -34, 44, 4);
+    c.restore();
+    if (m > 0.3 || zustand === 'sequenz') { c.strokeStyle = '#e63946'; c.lineWidth = 2; c.beginPath(); c.moveTo(48, 6); c.lineTo(62, 4 + Math.sin(zeit * 20) * 3); c.lineTo(66, 0); c.moveTo(62, 4 + Math.sin(zeit * 20) * 3); c.lineTo(66, 8); c.stroke(); }   // Zunge
+    c.restore();
+    c.restore();
+  }
+
   function hintergrund(c) { W.kulisse(c); }
   function hintergrundNY(c) {
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
@@ -1555,6 +1885,8 @@
       W.kiste(c, x, k.y);
     }
     for (const o of oel) { const x = o.x - kamera; if (x > viewW + 100 || x + o.w < -100) continue; oelZeichnen(c, o); }
+    for (const b of bruecken) { const x = b.x - kamera; if (x > viewW + 100 || x + b.w < -100) continue; brueckeZeichnen(c, b); }
+    for (const k of kakteen) { const x = k.x - kamera; if (x > viewW + 60 || x < -60) continue; kaktusZeichnen(c, k); }
     for (const cp of checkpoints) { const x = cp.x - kamera; if (x > -60 && x < viewW + 60) fahne(c, x, BODEN_Y, cp.erreicht); }
     for (const d of diamanten) {
       if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue;
@@ -1578,6 +1910,7 @@
       c.restore();
     }
     for (const a of autos) { const x = a.x - kamera; if (x > viewW + 100 || x + a.w < -100) continue; autoZeichnen(c, a); }
+    for (const s of steine) { const x = s.x - kamera; if (x > viewW + 80 || x < -80) continue; steinZeichnen(c, s); }
     if (level.tuerX - kamera < viewW + 400) {
       W.tuer(c, level.tuerX - kamera, BODEN_Y);
       W.boss(c, level.bossX - kamera, BODEN_Y);
@@ -1790,7 +2123,7 @@
   }
 
   /* ---------- Welten: je Welt Kulisse, Boden, Kisten, Gegnerarten, Boss (Zeichner + Klang), Tür, Banner, Level-Muster ---------- */
-  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier };
+  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion };
   function bodenNY(c, x0, w, a, b, links, rechts) {
     c.fillStyle = '#b9ad9a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
     c.fillStyle = '#d9cfbb'; c.fillRect(x0, BODEN_Y, w, 10);
@@ -1812,6 +2145,10 @@
       gegnerarten: ['kojote', 'roadrunner', 'guerteltier'], farben: { plattform: '#7a4a16', plattformOben: '#c99a6a', hud: '#c8283a' }, muster: MUSTER_ROUTE66, sprechblaseHoehe: 150,
       kulisse: hintergrundRoute66, boden: strasseZeichnen, grube: baugrube, kiste: reifen, hudSymbol: (c, x, y) => schild66(c, x, y + 4, 0.28, '#c8283a', false),
       boss: bigRigBob, tuer: mautstation, bossKlang: () => { hupen++; klang.hupe(); klang.diesel(); } },
+    az: { id: 'az', name: 'Grand Canyon', staat: 'Arizona', ziel: 'Grand Canyon', bossName: 'Sheriff Rattlesnake', bossSymbol: '🐍', banner: 'Watch out – Sheriff Rattlesnake!', sturz: 'Down the canyon! 🏜️',
+      gegnerarten: ['klapperschlange', 'geier', 'skorpion'], farben: { plattform: '#8a3b1e', plattformOben: '#d9774a', hud: '#b4452a' }, muster: MUSTER_AZ, sprechblaseHoehe: 230,
+      kulisse: hintergrundCanyon, boden: felsboden, grube: schlucht, kiste: felsbrocken, hudSymbol: (c, x, y) => schildCanyon(c, x, y + 14, 0.34, false),
+      boss: (c, x, y) => { felsspalt(c, x, y); sheriffRattlesnake(c, x, y); }, tuer: westernTor, bossKlang: () => { rasseln++; klang.rassel(); } },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner }));
 
@@ -1881,6 +2218,8 @@
         gegnerKlaenge, gegnerNah: gegner.filter((g) => g.tot <= 0 && !g.harmlos && g.x - spieler.x > -40 && g.x - spieler.x < GEGNER_NAEHE).map((g) => g.art),
         welt: W.id, rutscht: rutscht > 0, hupen, gegner: gegner.map((g) => ({ art: g.art, x: Math.round(g.x), tot: g.tot > 0, rollt: !!g.rollt })),
         autos: autos.map((a) => ({ art: a.art, x: Math.round(a.x), w: a.w, h: a.h })), oel: oel.map((o) => ({ x: o.x, w: o.w, aktiv: o.aktiv })),
+        rasseln, steine: steine.map((s) => ({ x: s.x, phase: s.phase, y: Math.round(s.y) })), bruecken: bruecken.map((b) => ({ x: b.x, w: b.w, zeit: Math.round(b.zeit * 100) / 100, gebrochen: b.gebrochen })),
+        kakteen: kakteen.map((k) => k.x), meldung: meldung ? meldung.text : null,
       };
     },
     sammle(i) { const d = diamanten[i]; if (d && !d.weg && zustand === "spiel") diamantSammeln(d); },   // Diamant i direkt einsammeln (Test)
@@ -1890,6 +2229,7 @@
     teleportBoss() { this.teleport(level.sequenzX - 250); },
     antwort(n) { antwortGeben(n); },
     schaden() { schaden("gegner"); },
+    steinLoesen(i) { const s = steine[i]; if (s) { s.phase = 'warnung'; s.t = 0; } },   // Test: Stein i sofort ankündigen (fällt nach 0,6 s)
     setLeben(n) { leben = Math.max(1, Math.min(3, Number(n) || 3)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
     setSkin(o) { Object.assign(skin, o); },
     sprechListe, get level() { return level; }, SEQUENZ, BANNER_TEXT, get welt() { return W.id; },

@@ -2542,12 +2542,12 @@
      Stand in stand.spiel.runner = { level: { ny: "gold"|"silber" }, gespielt, geschafft, titel }, Figur in stand.spiel.skin – beides im Siegel.
      Wörter: 12 aus dem gewählten Abschnitt (wie Catch the Word), aufgefüllt aus der Unit; gesprochen mit den Wortaufnahmen (tonWort).
      Boss-Banner/-Sprüche und Skin-Namen: bis zur Vertonung (Mr. Alex, 13.11.) Geräte-Stimme wie bei fehlenden Aufnahmen (spiele([{ text, stimme }])). */
-  // Welten (docs/runner/welten-2-5-plan.md): Reihenfolge = Landmark-Route; Welt n+1 öffnet sich mit Silber in Welt n; 3–5 noch „bald“ (nur Daten-Platzhalter).
+  // Welten (docs/runner/welten-2-5-plan.md): Reihenfolge = Landmark-Route; Welt n+1 öffnet sich mit Silber in Welt n; 4–5 noch „bald“ (nur Daten-Platzhalter).
   // unit = vorbelegte Unit beim Wählen der Welt (der Schüler darf umschalten); boss = Name für Texte/Frage-Titel.
   const RUNNER = { preis: 100, skinPreis: 30, skinPreisTeuer: 60, woerter: 12, titel: ["Noob", "Rookie", "Pro", "Elite", "Legend"], ab: [1, 3, 6, 10, 15],
     welten: [{ id: "ny", name: "New York", staat: "New York", ziel: "Statue of Liberty", trophaee: "Liberty Finder", symbol: "🗽", boss: "Mr. Alligator" },
       { id: "route66", name: "Route 66", staat: "Illinois", ziel: "Route 66 sign", trophaee: "Route 66 Rider", symbol: "🛣️", boss: "Big Rig Bob", unit: "1" },
-      { id: "az", name: "Grand Canyon", staat: "Arizona", ziel: "Grand Canyon", trophaee: "Canyon Climber", symbol: "🏜️", boss: "Sheriff Rattlesnake", bald: true },
+      { id: "az", name: "Grand Canyon", staat: "Arizona", ziel: "Grand Canyon", trophaee: "Canyon Climber", symbol: "🏜️", boss: "Sheriff Rattlesnake", unit: "2" },
       { id: "sd", name: "Mount Rushmore", staat: "South Dakota", ziel: "Mount Rushmore", trophaee: "Rushmore Ranger", symbol: "🗿", boss: "Grizzly Grandpa", bald: true },
       { id: "ca", name: "Golden Gate", staat: "California", ziel: "Golden Gate Bridge", trophaee: "Golden Gate Legend", symbol: "🌉", boss: "Captain Fog", bald: true }] };
   // Welt n ist offen, wenn sie gebaut ist (nicht bald) und die Vorwelt mindestens Silber hat
@@ -2619,7 +2619,7 @@
       ? knopf(`▶ ${T("Spielen", "Play")} (🎟️ 1)`, () => runnerSpiel(k, unit, runnerWahl.i, W.id), "haupt runner-spielen")
       : knopf(T(`🎟️ Erst Ticket kaufen – ${RUNNER.preis} 🪙`, `🎟️ Buy a ticket first – ${RUNNER.preis} 🪙`), zumShop, "haupt runner-spielen");
     if (tickets > 0 && (ws.length < 4 || !R())) sperrt(spielen);
-    // Welt-Reiter: offen = wählbar (Welt 2 belegt Unit 1 vor, umschaltbar), gesperrt = 🔒 mit Hinweis auf Silber in der Vorwelt, bald = 🔒 ohne Spiel
+    // Welt-Reiter: offen = wählbar (Welt 2 belegt Unit 1 vor, Welt 3 Unit 2; umschaltbar), gesperrt = 🔒 mit Hinweis auf Silber in der Vorwelt, bald = 🔒 ohne Spiel
     const weltHinweis = el("p", { class: "klein runner-welt-hinweis", role: "status" });
     const weltReiter = el("div", { class: "reiter runner-welten", role: "listbox", "aria-label": T("Welt", "World") }, RUNNER.welten.map((w, i) => {
       const offen = runnerWeltOffen(w), vor = RUNNER.welten[i - 1];
@@ -2639,7 +2639,10 @@
           el("div", {},
             el("h2", { lang: "en" }, `Level ${RUNNER.welten.indexOf(W) + 1} · ${W.name}`),
             el("p", { class: "runner-ziel", lang: "en" }, `Find the ${W.ziel}!`),
-            el("p", { class: "klein" }, W.id === "route66"
+            el("p", { class: "klein" }, W.id === "az"
+              ? T(`Tippen oder Leertaste = springen, länger halten = höher. Steine kündigen sich mit Staub an – spring, bevor sie landen! Auf den Hängebrücken nicht trödeln (springen!), Kakteen nicht berühren. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Holztor – gut 2 Minuten. Am besten das Handy quer halten.`,
+                `Tap or space = jump, hold longer = jump higher. Falling rocks warn you with dust – jump before they land! Don't dawdle on the rope bridges (jump!), don't touch the cacti. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the wooden gate – about 2 minutes. Best in landscape mode.`)
+              : W.id === "route66"
               ? T(`Tippen oder Leertaste = springen, länger halten = höher (über Trucks!). Autos kommen von rechts – drüberspringen, Ölflecken lassen dich kurz rutschen. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} an der Mautstation – gut 2 Minuten. Am besten das Handy quer halten.`,
                 `Tap or space = jump, hold longer = jump higher (over trucks!). Cars come from the right – jump over them, oil slicks make you slide. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the toll booth – about 2 minutes. Best in landscape mode.`)
               : T(`Tippen oder Leertaste = springen, länger halten = höher. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} – gut 2 Minuten. Am besten das Handy quer halten.`,
@@ -2690,7 +2693,7 @@
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
         tor: (de) => T(`Welcher Diamant heißt „${de}“?`, `Which diamond means “${de}”?`), richtigWaere: T(" – richtig wäre: ", " – correct: "),
         sequenz: T("Zwischensequenz …", "Cutscene …"), boss: T("Boss! Beantworte die Frage.", "Boss! Answer the question."),
-        bossTitel: T(`${W.boss} fragt …`, `${W.boss} asks …`), bossHinweis: W.id === "route66" ? T("Richtig = der Schlagbaum geht hoch. Falsch = ein Leben weg.", "Right = the barrier lifts. Wrong = you lose a life.") : T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
+        bossTitel: T(`${W.boss} fragt …`, `${W.boss} asks …`), bossHinweis: W.id === "route66" ? T("Richtig = der Schlagbaum geht hoch. Falsch = ein Leben weg.", "Right = the barrier lifts. Wrong = you lose a life.") : W.id === "az" ? T("Richtig = das Holztor geht auf. Falsch = ein Leben weg.", "Right = the wooden gate opens. Wrong = you lose a life.") : T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
         frage: (de) => T(`„Was heißt ‚${de}‘ auf Englisch?“`, `“What's ‘${de}’ in English?”`),
       },
       // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden

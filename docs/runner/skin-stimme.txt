@@ -52,6 +52,7 @@ Earring and necklace
 White shoes
 Red shoes
 Black shoes
+Roller skates
 Aura off
 Super aura on
 Normal neck
@@ -71,6 +72,14 @@ Normal feet
 Giant feet
 Power body off
 Power body on
+No backpack
+Blue backpack
+Red backpack
+Rainbow backpack
+No gloves
+White gloves
+Black gloves
+Boxing gloves
 Red T-shirt
 Red hoodie
 Blue T-shirt

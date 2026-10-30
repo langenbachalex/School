@@ -45,7 +45,7 @@
       { key: "topfarbe", label: ["Farbe", "Colour"], werte: ["rot", "blau", "gelb", "grün"], namen: { rot: ["rot", "red"], blau: ["blau", "blue"], gelb: ["gelb", "yellow"], "grün": ["grün", "green"] } },
     ] },
     { id: "schuhe", symbol: "👟", titel: ["Schuhe", "Shoes"], optionen: [
-      { key: "schuhe", label: ["Schuhe", "Shoes"], werte: ["weiß", "rot", "schwarz"], namen: { "weiß": ["weiß", "white"], rot: ["rot", "red"], schwarz: ["schwarz", "black"] } },
+      { key: "schuhe", label: ["Schuhe", "Shoes"], werte: ["weiß", "rot", "schwarz", "rollschuhe"], preis: { rollschuhe: 60 }, namen: { "weiß": ["weiß", "white"], rot: ["rot", "red"], schwarz: ["schwarz", "black"], rollschuhe: ["Rollschuhe", "roller skates"] } },
     ] },
     { id: "schmuck", symbol: "💍", titel: ["Schmuck", "Jewelry"], optionen: [
       { key: "schmuck", label: ["Schmuck", "Jewelry"], werte: ["keiner", "ohrring", "kette", "beides"], namen: { keiner: ["keiner", "none"], ohrring: ["Ohrring", "earring"], kette: ["Kette", "necklace"], beides: ["beides", "both"] } },
@@ -61,11 +61,19 @@
     { id: "aura", symbol: "✨", titel: ["Aura", "Aura"], optionen: [
       { key: "aura", label: ["Superkraft-Aura", "Super aura"], werte: ["aus", "an"], namen: { aus: ["aus", "off"], an: ["an", "on"] } },
     ] },
+    // Extras (Entwurf 30.10., noch nicht freigegeben): Rucksack und Handschuhe; Rollschuhe sind ein Wert der Option schuhe
+    { id: "extras", symbol: "🎒", titel: ["Extras", "Extras"], optionen: [
+      { key: "rucksack", label: ["Rucksack", "Backpack"], werte: ["keiner", "blau", "rot", "regenbogen"], frei: 1, preis: { regenbogen: 60 },
+        namen: { keiner: ["keiner", "none"], blau: ["blau", "blue"], rot: ["rot", "red"], regenbogen: ["Regenbogen", "rainbow"] } },
+      { key: "handschuhe", label: ["Handschuhe", "Gloves"], werte: ["keine", "weiß", "schwarz", "boxhandschuhe"], frei: 1, preis: { boxhandschuhe: 60 },
+        namen: { keine: ["keine", "none"], "weiß": ["weiß", "white"], schwarz: ["schwarz", "black"], boxhandschuhe: ["Boxhandschuhe", "boxing gloves"] } },
+    ] },
   ];
   const SKIN_OPTIONEN = SKIN_GRUPPEN.flatMap((g) => g.optionen);
   const SKIN_STANDARD = {
     haar: "kurz", haarfarbe: "braun", haarschmuck: "keiner", hut: "cap", brille: "aus", nase: "rund", bart: "aus", schmuck: "keiner",
     top: "shirt", topfarbe: "rot", schuhe: "weiß", aura: "aus", hals: "normal", bauch: "normal", brust: "normal", muskeln: "normal", fuesse: "normal", power: "an",
+    rucksack: "keiner", handschuhe: "keine",
   };
   const STUFE = { schmal: 0, normal: 1, "kräftig": 2, kugel: 3, hulk: 3 };   // Stufe 3 nur bei Bauch (Kugelbauch) und Muskeln (Hulk)
   const FARBEN = { braun: "#6b3e1e", blond: "#e7c35a", schwarz: "#1a1a1a", rot: "#c8283a", blau: "#1d3f8f", gelb: "#e0a400", "grün": "#2e9e5b", "weiß": "#f4f4f4" };
@@ -97,7 +105,7 @@
     nase: { rund: "Round nose", spitz: "Pointy nose", knubbel: "Button nose" },
     bart: { aus: "No beard", schnauzer: "Moustache", zwirbel: "Handlebar moustache", walross: "Walrus moustache", kinnbart: "Goatee", monobraue: "Unibrow and moustache", fumanchu: "Fu Manchu" },
     schmuck: { keiner: "No jewelry", ohrring: "Earring", kette: "Necklace", beides: "Earring and necklace" },
-    schuhe: { "weiß": "White shoes", rot: "Red shoes", schwarz: "Black shoes" },
+    schuhe: { "weiß": "White shoes", rot: "Red shoes", schwarz: "Black shoes", rollschuhe: "Roller skates" },
     aura: { aus: "Aura off", an: "Super aura on" },
     hals: { normal: "Normal neck", giraffe: "Giraffe neck" },
     bauch: { schmal: "Slim belly", normal: "Normal belly", "kräftig": "Big belly", kugel: "Ball belly" },
@@ -105,6 +113,8 @@
     muskeln: { schmal: "Thin arms", normal: "Normal arms", "kräftig": "Strong arms", hulk: "Hulk arms" },
     fuesse: { normal: "Normal feet", riesen: "Giant feet" },
     power: { aus: "Power body off", an: "Power body on" },
+    rucksack: { keiner: "No backpack", blau: "Blue backpack", rot: "Red backpack", regenbogen: "Rainbow backpack" },
+    handschuhe: { keine: "No gloves", "weiß": "White gloves", schwarz: "Black gloves", boxhandschuhe: "Boxing gloves" },
   };
   const FARBE_EN = { rot: "Red", blau: "Blue", gelb: "Yellow", "grün": "Green" };
   const TOP_EN = { shirt: "T-shirt", hoodie: "hoodie" };
@@ -250,7 +260,9 @@
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
   // (x, y) = Fußpunkt Mitte, h = Körperhöhe in 80 Einheiten (die Figur selbst ist ≈ 88 hoch, Kopf ≈ 1/3), pose = 'lauf' | 'sprung' | 'steh', t = Zeit.
   // ausdruck = 'grinsend' (Standard) | 'erstaunt' (Treffer) | 'zunge' (On fire / 5× Combo) – Spielreaktion, keine Skin-Option; Sonnenbrille (s.brille) = „cool“.
-  // Ebenen: Aura → Beine → Shorts → hinterer Arm → Hals → Torso → vorderer Arm → Haare hinten → Kopf → Gesicht → Bart → Haare vorn → Haarschmuck → Hut.
+  // Ebenen: Aura → Beine → Shorts → hinterer Arm → Rucksack → Hals → Torso (+ Rucksack-Träger) → vorderer Arm → Haare hinten → Kopf → Gesicht → Bart → Haare vorn → Haarschmuck → Hut.
+  // Extras (Entwurf 30.10.): Rucksack (s.rucksack, wippt beim Laufen), Handschuhe an beiden Händen (s.handschuhe; Boxhandschuhe groß und rot),
+  // Rollschuhe (s.schuhe = rollschuhe): Stiefel + Schiene + 2 Rollen (3 bei Riesenfüßen), Rollen drehen sich beim Laufen, Beine in Gleit-Haltung (weniger ausladend); Sprung normal.
   // Hut sitzt immer direkt auf dem Kopf (nie Luft dazwischen): große Frisuren werden darunter gestaucht oder ragen hinten/oben heraus.
   function zeichneFigur(c, x, y, h, s, pose, t, ausdruck) {
     s = Object.assign({}, SKIN_STANDARD, s);
@@ -264,6 +276,8 @@
     const st = (v, max) => Math.max(0, Math.min(max, typeof v === 'number' ? v : (STUFE[v] ?? 1)));
     const bauch = st(s.bauch, 3), brust = st(s.brust, 2), musk = st(s.muskeln, 3);   // Stufe 3 = Kugelbauch bzw. Hulk
     const giraffe = s.hals === 'giraffe', riesenfuss = s.fuesse === 'riesen', mitHut = !!s.hut && s.hut !== 'keiner';
+    const rollschuhe = s.schuhe === 'rollschuhe', rucksack = s.rucksack && s.rucksack !== 'keiner' ? s.rucksack : null;
+    const handschuhe = s.handschuhe && s.handschuhe !== 'keine' ? s.handschuhe : null, boxen = handschuhe === 'boxhandschuhe';
     const hulk = musk === 3;
     const sw = [11, 13, 16][brust] + (hulk ? 3 : 0);     // Schulter-Halbbreite (immer breiter als der Hals, 4)
     const hw = [10, 12, 14, 17][bauch];                   // Hüft-Halbbreite
@@ -316,7 +330,11 @@
 
     // ---- Beine (Riesenfüße: lange Schuhe nach vorn)
     let beinHinten, beinVorn;
-    if (pose === 'lauf') {
+    if (pose === 'lauf' && rollschuhe) {   // Gleiten: halbes Tempo, kurze Schritte, Rollen bleiben fast am Boden
+      const q = p * 0.5;
+      beinHinten = { fx: -3 + 7 * Math.sin(q), fy: -Math.max(0, -Math.cos(q)) * 3 };
+      beinVorn   = { fx: 4 + 7 * Math.sin(q + Math.PI), fy: -Math.max(0, Math.cos(q)) * 3 };
+    } else if (pose === 'lauf') {
       beinHinten = { fx: 12 * Math.sin(p), fy: -Math.max(0, -Math.cos(p)) * 9 };
       beinVorn   = { fx: 12 * Math.sin(p + Math.PI), fy: -Math.max(0, Math.cos(p)) * 9 };
     } else if (pose === 'sprung') {
@@ -330,7 +348,24 @@
       c.quadraticCurveTo(b.fx * 0.5 + 6, -18 + b.fy * 0.5, b.fx, b.fy - 3); c.stroke();
       if (musk >= 2) { c.lineWidth = beinB + (hulk ? 5 : 3); c.beginPath(); c.moveTo(0, -30); c.quadraticCurveTo(b.fx * 0.25 + 3, -24 + b.fy * 0.25, b.fx * 0.4 + 4, -19 + b.fy * 0.4); c.stroke(); }
       c.fillStyle = schuh; c.strokeStyle = '#333'; c.lineWidth = 1.2;
-      if (riesenfuss) {
+      if (rollschuhe) {   // Stiefel (weiß, hoher Schaft) auf Schiene, Rollen orange mit Speichen; Riesenfüße: langer Stiefel, 3 Rollen
+        const lang = riesenfuss ? 15 : 8.5, mx = b.fx + (riesenfuss ? 9 : 3), oben = b.fy - 6;
+        c.fillStyle = '#f4f4f4';
+        c.beginPath(); c.roundRect(b.fx - 3.5, oben - 8, 8, 9, 2.5); c.fill(); c.stroke();                 // Schaft
+        c.beginPath(); c.ellipse(mx, oben, lang, 4.2, 0, 0, Math.PI * 2); c.fill(); c.stroke();          // Stiefel
+        c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(b.fx - 1, oben - 6); c.lineTo(b.fx + 3, oben - 6); c.moveTo(b.fx - 1, oben - 3); c.lineTo(b.fx + 3.5, oben - 3); c.stroke(); // Schnürung
+        c.fillStyle = '#555'; c.beginPath(); c.roundRect(mx - lang + 2, oben + 2.2, lang * 2 - 4, 2.6, 1); c.fill();   // Schiene
+        const rollen = riesenfuss ? [mx - lang + 5, mx, mx + lang - 5] : [mx - lang + 4.5, mx + lang - 4.5];
+        const dreh = pose === 'lauf' ? t * 14 : 0, r = 2.9, ry = b.fy + 0.2;
+        for (const rx of rollen) {
+          c.fillStyle = '#ff7a1a'; c.beginPath(); c.arc(rx, ry, r, 0, Math.PI * 2); c.fill();
+          c.strokeStyle = '#333'; c.lineWidth = 0.9; c.stroke();
+          c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 1;
+          c.beginPath(); c.moveTo(rx + Math.cos(dreh) * r, ry + Math.sin(dreh) * r); c.lineTo(rx - Math.cos(dreh) * r, ry - Math.sin(dreh) * r);
+          c.moveTo(rx - Math.sin(dreh) * r, ry + Math.cos(dreh) * r); c.lineTo(rx + Math.sin(dreh) * r, ry - Math.cos(dreh) * r); c.stroke();   // Speichen drehen mit t
+          c.fillStyle = '#fff'; c.beginPath(); c.arc(rx, ry, 0.8, 0, Math.PI * 2); c.fill();
+        }
+      } else if (riesenfuss) {
         c.beginPath(); c.ellipse(b.fx + 9, b.fy - 1.8, 15, 4.8, 0, 0, Math.PI * 2); c.fill(); c.stroke();
         c.fillStyle = 'rgba(0,0,0,.14)'; c.beginPath(); c.ellipse(b.fx + 17, b.fy - 1.8, 5, 3.2, 0, 0, Math.PI * 2); c.fill();   // Schuhspitze
         c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(b.fx + 2, b.fy - 4); c.lineTo(b.fx + 10, b.fy - 4.5); c.stroke(); // Schnürung
@@ -346,13 +381,46 @@
     const arm = (w, farbe) => {
       c.lineCap = 'round'; c.lineWidth = armB; c.strokeStyle = farbe;
       const ex = AX + Math.sin(w) * 10, ey = AY + Math.cos(w) * 11;
-      c.beginPath(); c.moveTo(AX, AY); c.lineTo(ex, ey);
-      c.lineTo(ex + Math.cos(w) * 10, ey - Math.sin(w) * 10 + 6); c.stroke();
+      const hx = ex + Math.cos(w) * 10, hy = ey - Math.sin(w) * 10 + 6;   // Hand
+      c.beginPath(); c.moveTo(AX, AY); c.lineTo(ex, ey); c.lineTo(hx, hy); c.stroke();
       if (musk >= 2) { c.lineWidth = armB + (hulk ? 6 : 3); c.beginPath(); c.moveTo(AX, AY); c.lineTo(AX + (ex - AX) * 0.6, AY + (ey - AY) * 0.6); c.stroke(); }
+      if (handschuhe) {   // Handschuh an der Hand: weiß/schwarz als Faust mit Bündchen; Boxhandschuhe groß, rot, mit Daumen
+        const hinten = farbe === hautD;
+        if (boxen) {
+          c.fillStyle = hinten ? '#b31f2e' : '#e0232f'; c.beginPath(); c.ellipse(hx + 1, hy + 1, 7.5, 6.5, w * 0.3, 0, Math.PI * 2); c.fill();
+          c.beginPath(); c.arc(hx - 3, hy - 3.5, 3.2, 0, Math.PI * 2); c.fill();                      // Daumen
+          c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1; c.beginPath(); c.ellipse(hx + 1, hy + 1, 7.5, 6.5, w * 0.3, 0, Math.PI * 2); c.stroke();
+          c.fillStyle = 'rgba(255,255,255,.3)'; c.beginPath(); c.ellipse(hx + 2.5, hy - 1.5, 3, 1.8, -0.4, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#f4f4f4'; c.beginPath(); c.arc(hx - 4, hy - 0.5, 2.6, 0, Math.PI * 2); c.fill();   // Bündchen (weiß)
+        } else {
+          const gf = handschuhe === 'schwarz' ? (hinten ? '#2a2a2a' : '#1a1a1a') : (hinten ? '#d8d8d8' : '#f4f4f4');
+          c.fillStyle = gf; c.beginPath(); c.arc(hx, hy, armB * 0.5 + 2.2, 0, Math.PI * 2); c.fill();
+          c.strokeStyle = 'rgba(0,0,0,.4)'; c.lineWidth = 0.9; c.stroke();
+          c.strokeStyle = handschuhe === 'schwarz' ? '#777' : '#c8283a'; c.lineWidth = 1.6;
+          c.beginPath(); c.arc(hx, hy, armB * 0.5 + 2.2, w + Math.PI * 0.6, w + Math.PI * 1.4); c.stroke();   // Bündchen zur Armseite
+        }
+      }
       if (hulk) { c.fillStyle = farbe; c.beginPath(); c.arc(AX + (ex - AX) * 0.45, AY + (ey - AY) * 0.45, 8.5, 0, Math.PI * 2); c.fill();     // Bizeps
         c.fillStyle = 'rgba(255,255,255,.22)'; c.beginPath(); c.arc(AX + (ex - AX) * 0.4 - 2, AY + (ey - AY) * 0.4 - 2.5, 2.6, 0, Math.PI * 2); c.fill(); }
     };
     arm(-armWinkel, hautD);
+
+    // ---- Rucksack (hinter dem Torso am Rücken, wippt beim Laufen; Träger kommen nach dem Torso vorn über die Schultern)
+    const ruckF = rucksack === 'rot' ? '#d7263d' : rucksack === 'blau' ? '#1f6fe0' : '#ffb000';
+    const ruckWipp = pose === 'lauf' ? Math.sin(t * 13 + 1) * 1.5 : 0;
+    const rbx = -Math.max(sw, hw) - 1;   // Rückenkante
+    if (rucksack) {
+      const rx0 = rbx - 9, ry0 = SCH + 3 + ruckWipp, rw = 13, rh = 23;   // liegt 3–4 Einheiten unter der Rückenkante (Torso deckt den Rand)
+      if (rucksack === 'regenbogen') {   // waagerechte Streifen
+        c.save(); c.beginPath(); c.roundRect(rx0, ry0, rw, rh, 4); c.clip();
+        REGENBOGEN.forEach((col, i) => { c.fillStyle = col; c.fillRect(rx0, ry0 + i * rh / REGENBOGEN.length, rw, rh / REGENBOGEN.length + 0.5); });
+        c.restore();
+      } else { c.fillStyle = ruckF; c.beginPath(); c.roundRect(rx0, ry0, rw, rh, 4); c.fill(); }
+      c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1; c.beginPath(); c.roundRect(rx0, ry0, rw, rh, 4); c.stroke();
+      c.fillStyle = 'rgba(0,0,0,.22)'; c.beginPath(); c.roundRect(rx0 + 2, ry0 + 11, rw - 4, 8, 2.5); c.fill();   // Vortasche
+      c.fillStyle = 'rgba(255,255,255,.45)'; c.beginPath(); c.roundRect(rx0 + 2, ry0 + 3, rw - 4, 2, 1); c.fill();   // Reißverschluss
+      c.strokeStyle = '#333'; c.lineWidth = 1.6; c.lineCap = 'round'; c.beginPath(); c.moveTo(rx0 + 3, ry0 - 1); c.quadraticCurveTo(rx0 + rw / 2, ry0 - 5, rx0 + rw - 3, ry0 - 1); c.stroke();   // Griff
+    }
 
     // ---- Hals (sichtbar, schmaler als die Schultern; Giraffenhals: lang mit Flecken)
     c.fillStyle = haut; c.beginPath(); c.roundRect(-4, HY + 10, 8.5, SCH + 1 - (HY + 10), 2); c.fill();
@@ -389,6 +457,11 @@
       c.strokeStyle = '#e0a400'; c.lineWidth = 2.6; c.lineCap = 'round'; c.beginPath(); c.moveTo(-7, SCH + 1); c.quadraticCurveTo(0, -43, 8, SCH + 1); c.stroke();
       c.fillStyle = '#e0a400'; c.beginPath(); c.arc(1, -46.5, 4.2, 0, Math.PI * 2); c.fill();
       c.fillStyle = '#fff6c0'; c.beginPath(); c.arc(0, -47.5, 1.5, 0, Math.PI * 2); c.fill();
+    }
+    if (rucksack) {   // Träger vorn über beide Schultern (dunkler Ton des Rucksacks, Regenbogen: dunkelgrau)
+      c.strokeStyle = rucksack === 'regenbogen' ? '#444' : rucksack === 'rot' ? '#8f1526' : '#123f8a'; c.lineWidth = 3; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(sw - 5, SCH + 1); c.quadraticCurveTo(sw - 6, -40, sw - 7, -31); c.moveTo(-2, SCH + 1); c.quadraticCurveTo(-3, -40, -4, -31); c.stroke();
+      c.fillStyle = '#ddd'; c.beginPath(); c.roundRect(sw - 8, -41, 4, 3, 1); c.fill(); c.beginPath(); c.roundRect(-5, -41, 4, 3, 1); c.fill();   // Schnallen
     }
     c.fillStyle = topF; c.beginPath(); c.arc(AX, AY, schulterR, 0, Math.PI * 2); c.fill();   // Ärmel/Schulterkappe
     arm(armWinkel, haut);

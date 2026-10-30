@@ -12,6 +12,7 @@ Hier nur **Vorschläge als Grafik** – `app/klasse9/runner.js` ist unverändert
 - `03-farben-gesichter.png` – 8 Haarfarben (an Wuschelkopf und „lang“) + 4 Gesichtsausdrücke (+ 3 Kombinationen), je groß und in 80 px.
 - `04-umgesetzt.png` – **Stand nach Umsetzung** (29.10.): sechs lustige Kombis, Körper-Übertreibungen und die drei Spiel-Gesichter, gezeichnet mit `Runner.zeichneFigur` aus `app/klasse9/runner.js`, groß und in 80 px.
 - `05-afro-klein.png` – **Riesen-Afro neu** (29.10., Entscheidung Mr. Alex): kompakte Glocke ≈ 1,7× Kopf, Hütchen (Faktor 0,5) oben auf der Kante, mit Cap/Cowboy/Zylinder/ohne Hut, daneben der normale Afro; aus der echten `runner.js`-Funktion.
+- `06-extras.png` – **Extras (Entwurf 30.10., noch nicht freigegeben)**: Rucksack (3 Farben), Handschuhe (3), Rollschuhe stehend / 3 Gleitphasen / Sprung, Rollschuhe + Riesenfüße, eine Kombi mit allem; aus der echten `runner.js`-Funktion, groß (300) und in 80 px. Abschnitt „06 – Extras“ unten.
 
 Gerendert mit Playwright/Chromium (Skript im Scratchpad, nicht im Repo).
 
@@ -63,3 +64,18 @@ Gesamt geschätzt **4–5 h**. Nicht geprüft: Verhalten mit `power`/`muskeln: k
 - Hut + große Frisur (Riesen-Afro, Mohawk, Tolle): Hut darüber (so gezeichnet, wirkt teils albern) oder Hut sperrt die Frisur?
 - Preise: alles 30 🪙 oder Staffel (30 / 60 für Showstücke)?
 - Namen G/E für die neuen Werte sind noch nicht festgelegt (Vorschlag: Irokese/mohawk, Riesen-Afro/giant afro, Tolle/quiff, Zöpfe/pigtails, Dutt/bun, Wuschel/messy, drei Haare/three hairs, Flat-Top/flat top; Zwirbel/handlebar, Walross/walrus, Fu-Manchu/Fu Manchu, Kinnbart/goatee, Monobraue/unibrow).
+
+## 06 – Extras (Entwurf 30.10.)
+**Status: freigegeben 30.10.** – Ideen aus `docs/ideenspeicher.md` („Runner-Figur: Feintuning“: Rucksack, Rollschuhe, Handschuhe). Umgesetzt in der Arbeitskopie (`app/klasse9/runner.js`, `app/klasse9/app.js`, `werkzeuge/klasse9_bauen.py` → `daten.js`/`sw.js`, `docs/runner/skin-stimme.txt`), Blatt `06-extras.png`. Mr. Alex entscheidet vor dem Commit; bis dahin alles rückgängig machbar.
+
+| Teil | Wo | Werte | Preis |
+|---|---|---|---|
+| Rucksack | neue Gruppe **Extras** 🎒, Option `rucksack` | keiner (frei) · blau · rot · Regenbogen (waagerechte Streifen) | 30 🪙, Regenbogen 60 🪙 |
+| Handschuhe | Gruppe Extras, Option `handschuhe` | keine (frei) · weiß · schwarz · Boxhandschuhe (rot, groß, mit Daumen und weißem Bündchen) | 30 🪙, Boxhandschuhe 60 🪙 |
+| Rollschuhe | Gruppe Schuhe, Wert `rollschuhe` der Option `schuhe` (weiß/rot frei, schwarz 30 bleiben) | weißer Stiefel mit Schaft und Schnürung, graue Schiene, 2 orange Rollen (Riesenfüße: 3) | 60 🪙 |
+
+Zeichnung (`zeichneFigur`): Rucksack liegt am Rücken **hinter dem Torso** (Ebene nach dem hinteren Arm, vor dem Hals), Vortasche, Reißverschluss, Griff; die **Träger** werden nach dem Torso vorn über beide Schultern gezeichnet (Schnallen), beim Laufen wippt der Rucksack mit `sin(t·13 + 1)·1,5`. Handschuhe sitzen am Handpunkt beider Arme (hinterer Arm im Schatten-Ton). Rollschuhe: die **Speichen der Rollen drehen sich** mit `t·14` nur in der Laufpose; die Beine gehen in eine **Gleit-Haltung** (halbes Schritttempo, Ausschlag 7 statt 12, Fuß hebt höchstens 3 statt 9 Einheiten); Sprung- und Stehpose bleiben wie bisher. Trefferbox (`PH`) und `figurHoehe` sind unverändert.
+
+Skin-Seite: Reiter Extras erscheint automatisch (die Seite läuft generisch über `SKIN_GRUPPEN`), in `app.js` nur Symbole ergänzt (🎒/🌈, 🧤/🥊, Rollschuhe 🛼 statt Farbpunkt). Shop-Artikel: `skin_schuhe_rollschuhe` (60), `skin_rucksack_blau/rot` (30), `skin_rucksack_regenbogen` (60), `skin_handschuhe_weiß/schwarz` (30), `skin_handschuhe_boxhandschuhe` (60). Skin-Stimme (en): Roller skates, No/Blue/Red/Rainbow backpack, No/White/Black/Boxing gloves.
+
+Offen für Mr. Alex: Extras als eigener Reiter (so gebaut, 9 Reiter) oder Handschuhe zu „Schmuck“/Rucksack zu „Oberteil“? Rollschuhe mit Gleit-Haltung (so) oder normaler Laufschritt? Preise 30/60 wie Regel.

@@ -450,6 +450,10 @@ SKIN_ARTIKEL = [  # (option, wert, Name G, Name E[, Preis])
     ("brust", "kräftig", "Körper: breite Schultern", "Body: broad shoulders"),
     ("muskeln", "hulk", "Körper: Hulk-Muskeln", "Body: Hulk muscles", SKIN_PREIS_TEUER),
     ("fuesse", "riesen", "Körper: Riesenfüße", "Body: giant feet", SKIN_PREIS_TEUER),
+    # Extras (Entwurf 30.10., noch nicht freigegeben): Rollschuhe, Rucksack, Handschuhe
+    ("schuhe", "rollschuhe", "Schuhe: Rollschuhe", "Shoes: roller skates", SKIN_PREIS_TEUER),
+    ("rucksack", "blau", "Rucksack: blau", "Backpack: blue"), ("rucksack", "rot", "Rucksack: rot", "Backpack: red"), ("rucksack", "regenbogen", "Rucksack: Regenbogen", "Backpack: rainbow", SKIN_PREIS_TEUER),
+    ("handschuhe", "weiß", "Handschuhe: weiß", "Gloves: white"), ("handschuhe", "schwarz", "Handschuhe: schwarz", "Gloves: black"), ("handschuhe", "boxhandschuhe", "Boxhandschuhe", "Boxing gloves", SKIN_PREIS_TEUER),
 ]
 SHOP = [
     {"id": "runner", "symbol": "🏃", "name": {"G": "Runner-Ticket", "E": "Runner ticket"}, "unter": {"G": "Eintritt für Road Trip Run – wird beim Start abgebucht", "E": "Entry to Road Trip Run – paid when you start"}, "preis": 100, "runner": True},

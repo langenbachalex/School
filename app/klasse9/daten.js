@@ -9889,6 +9889,125 @@ window.DATEN = {
      "fuesse",
      "riesen"
     ]
+   },
+   {
+    "id": "skin_schuhe_rollschuhe",
+    "symbol": "🎨",
+    "name": {
+     "G": "Schuhe: Rollschuhe",
+     "E": "Shoes: roller skates"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "schuhe",
+     "rollschuhe"
+    ]
+   },
+   {
+    "id": "skin_rucksack_blau",
+    "symbol": "🎨",
+    "name": {
+     "G": "Rucksack: blau",
+     "E": "Backpack: blue"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "rucksack",
+     "blau"
+    ]
+   },
+   {
+    "id": "skin_rucksack_rot",
+    "symbol": "🎨",
+    "name": {
+     "G": "Rucksack: rot",
+     "E": "Backpack: red"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "rucksack",
+     "rot"
+    ]
+   },
+   {
+    "id": "skin_rucksack_regenbogen",
+    "symbol": "🎨",
+    "name": {
+     "G": "Rucksack: Regenbogen",
+     "E": "Backpack: rainbow"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "rucksack",
+     "regenbogen"
+    ]
+   },
+   {
+    "id": "skin_handschuhe_weiß",
+    "symbol": "🎨",
+    "name": {
+     "G": "Handschuhe: weiß",
+     "E": "Gloves: white"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "handschuhe",
+     "weiß"
+    ]
+   },
+   {
+    "id": "skin_handschuhe_schwarz",
+    "symbol": "🎨",
+    "name": {
+     "G": "Handschuhe: schwarz",
+     "E": "Gloves: black"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 30,
+    "skin": [
+     "handschuhe",
+     "schwarz"
+    ]
+   },
+   {
+    "id": "skin_handschuhe_boxhandschuhe",
+    "symbol": "🎨",
+    "name": {
+     "G": "Boxhandschuhe",
+     "E": "Boxing gloves"
+    },
+    "unter": {
+     "G": "Figur im Road Trip Run",
+     "E": "Your Road Trip Run character"
+    },
+    "preis": 60,
+    "skin": [
+     "handschuhe",
+     "boxhandschuhe"
+    ]
    }
   ]
  },

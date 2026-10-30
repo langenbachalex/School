@@ -2774,7 +2774,8 @@
   // Figur-Seite (Fassung 29.10.): Figur + Erklärtext oben (sticky), Reiter-Zeile, darunter die Optionen der Gruppe als Chips, unten feste Knopfzeile.
   // Auswahl und Reiterwechsel zeichnen NICHT die Seite neu (kein Scrollsprung): nur Vorschau + Chips bzw. der Options-Bereich werden aktualisiert.
   const SKIN_SYMBOL = { haar: "💇", haarfarbe: "🎨", haarschmuck: "🎀", hut: { keiner: "🚫", cap: "🧢", cowboy: "🤠", zylinder: "🎩" }, brille: "🕶️", bart: "🥸", nase: "👃",
-    top: { shirt: "👕", hoodie: "🧥" }, topfarbe: "🎨", schuhe: "👟", schmuck: { keiner: "🚫", ohrring: "💎", kette: "📿", beides: "💍" }, hals: "🦒", bauch: "🫃", brust: "🧍", muskeln: "💪", fuesse: "🦶", power: "⚡", aura: "✨" };
+    top: { shirt: "👕", hoodie: "🧥" }, topfarbe: "🎨", schuhe: { rollschuhe: "🛼" }, schmuck: { keiner: "🚫", ohrring: "💎", kette: "📿", beides: "💍" }, hals: "🦒", bauch: "🫃", brust: "🧍", muskeln: "💪", fuesse: "🦶", power: "⚡", aura: "✨",
+    rucksack: { keiner: "🚫", blau: "🎒", rot: "🎒", regenbogen: "🌈" }, handschuhe: { keine: "🚫", "weiß": "🧤", schwarz: "🧤", boxhandschuhe: "🥊" } }; // Extras (Entwurf 30.10.); Schuhfarben bleiben Farbpunkte, Rollschuhe als Symbol
   const SKIN_FARBOPTION = { haarfarbe: 1, topfarbe: 1, schuhe: 1 }; // Farben als runde Farbpunkte (Haarfarben aus HAARFARBEN, Regenbogen als Verlauf)
   const skinFarbe = (M, key, w) => { const f = key === "haarfarbe" ? M.HAARFARBEN[w] : M.FARBEN[w]; return f === "regenbogen" ? "linear-gradient(180deg,#ff2d2d,#ff9f1a,#ffe21a,#2ecc71,#2a8cff,#9b4dff)" : f; };
   function runnerSkins(k) {

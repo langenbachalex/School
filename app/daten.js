@@ -6333,7 +6333,7 @@ window.DATEN = {
  },
  "hausaufgaben": [
   {
-   "von": "2026-11-02",
+   "von": "2026-10-30",
    "bis": "2026-11-08",
    "ziel": "6/3; 8",
    "text": "Hörübung 3 + Neu: How often, Sports and hobbies, School clubs",

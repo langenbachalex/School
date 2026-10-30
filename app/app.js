@@ -620,7 +620,14 @@
     teilFertig(lage.teil, aufladen);
     if (aufladen) ereignisse.push({ art: "toast", text: "⚡ Aufgeladen!" });
     if (aufladen && SP.texte.powerup && SP.texte.powerup.audio) setTimeout(() => spiele([SP.texte.powerup.audio], { warten: true }), 600); // Stimme nach dem Lob, nicht darüber
-    belohne(erstesMal, !lage.hilfe);
+    // Punkte-Regeln gegen schnelles Abholen (30.10., Mr. Alex):
+    // · Erklärteile (nur lesen, dann „Weiter“) geben nie Punkte – sie zählen aber als erledigt.
+    // · Wiederholung eines schon erledigten Teils: +5 nur bei Teilen mit Mindestzeit (Sprechen, Quiz – SPRECH_MIN);
+    //   alles, was sich schnell noch einmal durchklicken lässt (Lesen, Reihenfolge, Hören, Dialog, Schreiben …), gibt beim Wiederholen keine Punkte.
+    //   Power Up (fälliger Teil wird aufgeladen) gibt weiter Punkte – das geht je Teil nur alle 30/60/120 Tage.
+    const ohnePunkte = teil.art === "erklaerung" || (!erstesMal && !aufladen && !SPRECH_MIN[teil.art]);
+    if (!ohnePunkte) belohne(erstesMal, !lage.hilfe);
+    else { hwBonus(0); speichern(); setTimeout(zeigeEreignisse, 50); } // ohne Punkte zählt der Teil trotzdem für die Hausaufgabe (inkl. Feier „Homework done!“)
     if (alleTeileFertig()) return stationGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
     fastGeschafft();
@@ -2376,16 +2383,115 @@
   })();
   startseite();
 
+  // Lehrer-Reset (30.10.2026, Mr. Alex): 3 Sekunden auf den App-Titel drücken → Lehrer-PIN → Punkte und Coins dieses Geräts neu setzen (gesiegelt).
+  // Im Code steht nur ein langsamer Prüfwert (PBKDF2-SHA-256, 150 000 Runden), nicht die PIN. Nach 3 falschen Versuchen 10 Minuten Pause.
+  // Erledigte Teile, Power Up, Hausaufgaben, Käufe und Einstellungen bleiben unverändert.
+  const LEHRER = { salz: "f36909248b9e55ac30d93112e0bbb706", pruef: "c7a35a7644e9ddf6422f57ace070e9275cd34740d2e886691f6d245ee670156e", runden: 150000, ziel: "header.gruss h1" };
+  async function lehrerPinOk(pin) {
+    try {
+      const bytes = new Uint8Array(LEHRER.salz.match(/../g).map((b) => parseInt(b, 16)));
+      const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(pin), "PBKDF2", false, ["deriveBits"]);
+      const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: bytes, iterations: LEHRER.runden }, k, 256);
+      return Array.from(new Uint8Array(bits), (b) => b.toString(16).padStart(2, "0")).join("") === LEHRER.pruef;
+    } catch (e) { return false; }
+  }
+  const lehrerDialog = el("dialog", { class: "feier frage lehrer" });
+  document.body.append(lehrerDialog);
+  const lehrerZu = () => lehrerDialog.close();
+  const lehrerFenster = (...inhalt) => { lehrerDialog.replaceChildren(...inhalt); if (!lehrerDialog.open) lehrerDialog.showModal(); };
+  const lehrerLies = () => { try { return JSON.parse(localStorage.getItem(SPEICHER + "-l") || "{}") || {}; } catch (e) { return {}; } };
+  const lehrerSchreib = (o) => { try { localStorage.setItem(SPEICHER + "-l", JSON.stringify(o)); } catch (e) { /* egal */ } };
+  function lehrerStart() {
+    const sperre = lehrerLies();
+    if (sperre.bis && Date.now() < sperre.bis) {
+      lehrerFenster(el("h2", {}, "👩‍🏫 Lehrer-Bereich"), el("p", {}, `🔒 Zu viele falsche Versuche. Bitte in ${Math.ceil((sperre.bis - Date.now()) / 60000)} Minuten noch einmal.`),
+        el("div", { class: "knopfreihe" }, knopf("OK", lehrerZu, "haupt")));
+      return;
+    }
+    const feld = el("input", { type: "password", inputmode: "numeric", autocomplete: "off", maxlength: "6", class: "lehrer-pin", "aria-label": "Lehrer-PIN" });
+    const info = el("p", { class: "klein lehrer-info" }, "");
+    let laeuft = false;
+    const pruefen = async () => {
+      if (laeuft) return;
+      laeuft = true; info.textContent = "Prüfe …";
+      const ok = await lehrerPinOk(feld.value.trim());
+      laeuft = false;
+      if (ok) { lehrerSchreib({}); lehrerReset(); return; }
+      const s = lehrerLies(), n = (s.n || 0) + 1;
+      lehrerSchreib(n >= 3 ? { n: 0, bis: Date.now() + 10 * 60000 } : { n });
+      if (n >= 3) { lehrerStart(); return; }
+      info.textContent = `Falsche PIN (${n} von 3).`; feld.value = ""; feld.focus();
+    };
+    feld.addEventListener("keydown", (e) => { if (e.key === "Enter") pruefen(); });
+    lehrerFenster(el("h2", {}, "👩‍🏫 Lehrer-Bereich"), el("p", {}, "Lehrer-PIN eingeben:"), feld, info,
+      el("div", { class: "knopfreihe" }, knopf("Weiter", pruefen, "haupt"), knopf("Abbrechen", lehrerZu, "leise")));
+    feld.focus();
+  }
+  function lehrerReset() {
+    const sp = spielstand();
+    const zahl = (wert, name) => el("input", { type: "number", min: "0", step: "1", inputmode: "numeric", value: String(wert), "aria-label": name, class: "lehrer-zahl" });
+    const p = zahl(sp.punkte, "Punkte"), c = zahl(sp.coins, "Coins");
+    const zeile = (text, feld) => el("label", { class: "lehrer-zeile" }, el("span", {}, text), feld);
+    const sichern = () => {
+      const np = Math.max(0, Math.floor(Number(p.value) || 0)), nc = Math.max(0, Math.floor(Number(c.value) || 0));
+      sp.punkte = np; sp.coins = nc; sp.titel = titelIndex(np);
+      speichern(); lehrerZu();
+      toast(`👩‍🏫 Gespeichert: ⭐ ${np} · 🪙 ${nc}`);
+      if (!beschaeftigt()) startseite();
+    };
+    lehrerFenster(el("h2", {}, "👩‍🏫 Spielstand ändern"),
+      el("p", { class: "klein" }, "Gilt nur für dieses Gerät. Erledigte Teile, Hausaufgaben, Käufe und Einstellungen bleiben."),
+      zeile("⭐ Punkte", p), zeile("🪙 Coins", c),
+      el("div", { class: "knopfreihe" }, knopf("Coins auf 0", () => { c.value = "0"; }, "leise"), knopf("Punkte auf 0", () => { p.value = "0"; }, "leise")),
+      el("div", { class: "knopfreihe" }, knopf("Speichern", sichern, "haupt"), knopf("Abbrechen", lehrerZu, "leise")));
+  }
+  let lehrerUhr = null;
+  document.addEventListener("pointerdown", (e) => {
+    if (!(e.target && e.target.closest && e.target.closest(LEHRER.ziel))) return;
+    clearTimeout(lehrerUhr); lehrerUhr = setTimeout(lehrerStart, 3000);
+  });
+  for (const art of ["pointerup", "pointercancel", "scroll"]) document.addEventListener(art, () => clearTimeout(lehrerUhr), true);
+  document.addEventListener("contextmenu", (e) => { if (e.target && e.target.closest && e.target.closest(LEHRER.ziel)) e.preventDefault(); });
+
+  // Updates (30.10.2026, Mr. Alex): Die App sucht beim Start, beim Zurückkommen aus dem Hintergrund und alle 15 Minuten nach einer neuen Version.
+  // Kommt eine neue Version während einer Übung, erscheint der Hinweis erst danach (nichts geht verloren); sonst sofort ein Pop-up „Jetzt aktualisieren“,
+  // das man nicht wegdrücken kann. War die App länger als 1 Stunde offen, lädt sie beim Zurückkommen neu (wenn gerade keine Übung läuft).
+  const GELADEN = Date.now(), STUNDE = 3600 * 1000;
+  const beschaeftigt = () => !!lage;
+  let neueVersion = false, updateGezeigt = false;
+  const updateDialog = el("dialog", { class: "feier frage update" });
+  updateDialog.addEventListener("cancel", (e) => e.preventDefault());
+  document.body.append(updateDialog);
+  function updateHinweis() {
+    if (!neueVersion || updateGezeigt || beschaeftigt()) return;
+    updateGezeigt = true;
+    updateDialog.replaceChildren(el("div", { class: "feier-symbol", "aria-hidden": "true" }, "🔄"), el("h2", {}, "Neue Version"),
+      el("p", {}, "Es gibt eine neue Version der App. Dein Fortschritt ist gespeichert. Tippe auf „Jetzt aktualisieren“."),
+      el("div", { class: "knopfreihe" }, knopf("🔄 Jetzt aktualisieren", () => location.reload(), "haupt")));
+    if (lehrerDialog.open) lehrerDialog.close();
+    updateDialog.showModal();
+  }
+  setInterval(updateHinweis, 3000);
+  window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da
+
   // Offline-Speicher (nur wenn die App über eine Webadresse läuft, nicht per Doppelklick)
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-    // Neue Version veröffentlicht? Dann sofort holen und einmal neu laden (nur wenn schon eine alte Version lief).
-    const hatteAlteVersion = !!navigator.serviceWorker.controller;
-    let neuGeladen = false;
+    // Neue Version veröffentlicht? Direkt nach dem Start einfach neu laden (wie bisher), später erst das Pop-up (siehe updateHinweis).
+    let hatteVersion = !!navigator.serviceWorker.controller, swReg = null, neuGeladen = false;
     navigator.serviceWorker.addEventListener("controllerchange", () => {
-      if (hatteAlteVersion && !neuGeladen) { neuGeladen = true; location.reload(); }
+      if (!hatteVersion) { hatteVersion = true; return; } // allererste Installation: nichts zu tun
+      if (Date.now() - GELADEN < 8000 && !beschaeftigt()) { if (!neuGeladen) { neuGeladen = true; location.reload(); } return; }
+      neueVersion = true; updateHinweis();
     });
     navigator.serviceWorker.register("sw.js", { updateViaCache: "none" })
-      .then((r) => r.update())
+      .then((r) => { swReg = r; return r.update(); })
       .catch(() => { /* ohne Offline-Speicher geht es trotzdem */ });
+    const suchen = () => { if (swReg && navigator.onLine !== false) swReg.update().catch(() => { /* offline: später */ }); };
+    setInterval(() => { if (document.visibilityState === "visible") suchen(); }, 15 * 60 * 1000);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState !== "visible") return;
+      if (Date.now() - GELADEN > STUNDE && !beschaeftigt()) { location.reload(); return; }
+      suchen();
+    });
   }
 })();

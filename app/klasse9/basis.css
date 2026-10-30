@@ -529,3 +529,11 @@ dialog.feier.hw-liste { max-height: 88vh; overflow-y: auto; text-align: left; }
 /* Bestätigungsdialog (statt confirm) */
 dialog.feier.frage { max-width: 360px; text-align: center; }
 dialog.feier.frage .frage-text { font-size: 1.1rem; margin: 6px 0 16px; }
+
+/* Lehrer-Reset und Update-Hinweis (30.10.2026) */
+header.gruss h1, .niveau-name { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+dialog.feier.lehrer input.lehrer-pin { font-size: 1.6rem; letter-spacing: .4em; text-align: center; width: 8.5em; padding: 8px; border-radius: 12px; border: 2px solid #c9d3e0; margin: 4px auto; display: block; }
+dialog.feier.lehrer .lehrer-info { min-height: 1.3em; color: #b3261e; }
+dialog.feier.lehrer .lehrer-zeile { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0; font-weight: 700; }
+dialog.feier.lehrer input.lehrer-zahl { font-size: 1.2rem; width: 7em; padding: 6px 8px; border-radius: 10px; border: 2px solid #c9d3e0; text-align: right; }
+dialog.feier.lehrer .knopfreihe { flex-wrap: wrap; }

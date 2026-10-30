@@ -12,7 +12,7 @@ Hier nur **Vorschläge als Grafik** – `app/klasse9/runner.js` ist unverändert
 - `03-farben-gesichter.png` – 8 Haarfarben (an Wuschelkopf und „lang“) + 4 Gesichtsausdrücke (+ 3 Kombinationen), je groß und in 80 px.
 - `04-umgesetzt.png` – **Stand nach Umsetzung** (29.10.): sechs lustige Kombis, Körper-Übertreibungen und die drei Spiel-Gesichter, gezeichnet mit `Runner.zeichneFigur` aus `app/klasse9/runner.js`, groß und in 80 px.
 - `05-afro-klein.png` – **Riesen-Afro neu** (29.10., Entscheidung Mr. Alex): kompakte Glocke ≈ 1,7× Kopf, Hütchen (Faktor 0,5) oben auf der Kante, mit Cap/Cowboy/Zylinder/ohne Hut, daneben der normale Afro; aus der echten `runner.js`-Funktion.
-- `06-extras.png` – **Extras (Entwurf 30.10., noch nicht freigegeben)**: Rucksack (3 Farben), Handschuhe (3), Rollschuhe stehend / 3 Gleitphasen / Sprung, Rollschuhe + Riesenfüße, eine Kombi mit allem; aus der echten `runner.js`-Funktion, groß (300) und in 80 px. Abschnitt „06 – Extras“ unten.
+- `06-extras.png` – **Extras (30.10., freigegeben)**: Rucksack (3 Farben), Handschuhe (3), Rollschuhe stehend / 3 Gleitphasen / Sprung, Rollschuhe + Riesenfüße, eine Kombi mit allem; aus der echten `runner.js`-Funktion, groß (300) und in 80 px. Abschnitt „06 – Extras“ unten.
 
 Gerendert mit Playwright/Chromium (Skript im Scratchpad, nicht im Repo).
 
@@ -65,8 +65,8 @@ Gesamt geschätzt **4–5 h**. Nicht geprüft: Verhalten mit `power`/`muskeln: k
 - Preise: alles 30 🪙 oder Staffel (30 / 60 für Showstücke)?
 - Namen G/E für die neuen Werte sind noch nicht festgelegt (Vorschlag: Irokese/mohawk, Riesen-Afro/giant afro, Tolle/quiff, Zöpfe/pigtails, Dutt/bun, Wuschel/messy, drei Haare/three hairs, Flat-Top/flat top; Zwirbel/handlebar, Walross/walrus, Fu-Manchu/Fu Manchu, Kinnbart/goatee, Monobraue/unibrow).
 
-## 06 – Extras (Entwurf 30.10.)
-**Status: freigegeben 30.10.** – Ideen aus `docs/ideenspeicher.md` („Runner-Figur: Feintuning“: Rucksack, Rollschuhe, Handschuhe). Umgesetzt in der Arbeitskopie (`app/klasse9/runner.js`, `app/klasse9/app.js`, `werkzeuge/klasse9_bauen.py` → `daten.js`/`sw.js`, `docs/runner/skin-stimme.txt`), Blatt `06-extras.png`. Mr. Alex entscheidet vor dem Commit; bis dahin alles rückgängig machbar.
+## 06 – Extras (30.10., freigegeben)
+**Status: freigegeben 30.10.** – Ideen aus `docs/ideenspeicher.md` („Runner-Figur: Feintuning“: Rucksack, Rollschuhe, Handschuhe). Umgesetzt in der Arbeitskopie (`app/klasse9/runner.js`, `app/klasse9/app.js`, `werkzeuge/klasse9_bauen.py` → `daten.js`/`sw.js`, `docs/runner/skin-stimme.txt`), Blatt `06-extras.png`. Freigegeben und gepusht am 30.10.
 
 | Teil | Wo | Werte | Preis |
 |---|---|---|---|

@@ -2392,8 +2392,9 @@
     const stand = el("p", { class: "patrol-stand", "aria-live": "polite" });
     const box = rueckmeldung();
     const zeigeStand = () => { stand.replaceChildren(el("span", {}, "❤️".repeat(leben) + "🖤".repeat(PATROL.leben - leben)), el("span", {}, `✓ ${richtig} / ${reihe.length}`)); };
-    // Antippen spielt den ganzen Satz (vorhandene Aufnahmen: britisch Mr. Alex, amerikanisch Jeremy/Jessica); solange er läuft, bleibt alles stehen
-    const tonFuer = (w) => { const satz = D.saetze[w.p.id]; return w.seite === "be" ? (satz.be.audio || { text: satz.be.en, stimme: "m" }) : tonSatz(satz); };
+    // Antippen spielt das Wort (Einzelwort-Aufnahme), ersatzweise den ganzen Satz (britisch Mr. Alex, amerikanisch Jeremy/Jessica); solange er läuft, bleibt alles stehen
+    // Seit 31.10. mit den Einzelwort-Aufnahmen (britisch Mr. Alex, amerikanisch Jeremy); fehlt eine, wie vorher der ganze Satz
+    const tonFuer = (w) => { const datei = w.seite === "be" ? w.p.audio_be : w.p.audio_ae; if (datei) return datei; const satz = D.saetze[w.p.id]; return w.seite === "be" ? (satz.be.audio || { text: satz.be.en, stimme: "m" }) : tonSatz(satz); };
     let pause = false;
     const wort = (w) => (w.seite === "be" ? w.p.be : w.p.ae);
     const flagge = (seite) => flaggeSvg(seite);
@@ -2841,10 +2842,17 @@
         frage: (de) => T(`„Was heißt ‚${de}‘ auf Englisch?“`, `“What's ‘${de}’ in English?”`),
       },
       // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
-      stimme: { wort: (j, o) => spiele([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : {}), boss: (text) => spiele([{ text, stimme: "m" }]) },
+      // Aufnahmen der Welt (Boss-Banner/-Sprüche Mr. Alex, Levelstart Jeremy); fehlt eine Datei, spricht die Geräte-Stimme
+      audio: runnerAudio(W.id),
+      stimme: { wort: (j, o) => spiele([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : {}),
+        boss: (text, o) => spiele([(o && o.audio) || { text, stimme: "m" }]),
+        ansage: (text, o) => spiele([(o && o.audio) || { text, stimme: "m" }], { warten: true }) },
       onEnde: (e) => runnerEnde(k, unit, i, e, ws, W.id),
     });
   }
+  // Aufnahmen je Welt aus dem Bau (D.spiel.runner_audio) und Levelende-Text der Engine („You made it to …!“)
+  const runnerAudio = (id) => (SP.runner_audio && SP.runner_audio[id]) || null;
+  const runnerEndeText = (W) => { const rw = ((R() && R().WELTEN) || []).find((x) => x.id === W.id); return (rw && rw.ende) || `You made it to the ${W.ziel}!`; };
   // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (wieder 100) oder Startseite
   function runnerEnde(k, unit, i, e, ws, welt) {
     const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
@@ -2871,7 +2879,7 @@
           el("div", { class: "runner-pokal", "aria-hidden": "true" }, e.geschafft ? (stufe === "gold" ? "🥇" : "🥈") : "💤"),
           el("h2", { lang: "en" }, e.geschafft ? "Level complete!" : "Game over"),
           ruf && el("p", { class: "gym-lob" }, el("strong", { lang: "en" }, ruf.text), !E() && ruf.de && el("span", { lang: "de" }, " – " + ruf.de)),
-          e.geschafft ? el("p", { lang: "en" }, `You found the ${W.ziel}!`)
+          e.geschafft ? el("p", { lang: "en" }, runnerEndeText(W))
             : el("p", {}, T("Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!", "No lives left. You still saw the words – next time you'll make it!")),
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
           e.maxCombo > 0 && el("p", { class: "klein runner-serie" }, T(`🔥 Beste Serie: ×${e.maxCombo}`, `🔥 Best streak: ×${e.maxCombo}`)),
@@ -2890,7 +2898,9 @@
     };
     ansicht = zeichne; lage = null; zeichne();
     setTimeout(zeigeEreignisse, 50);
-    if (ruf && ruf.audio && !ereignisse.some(grossEreignis)) spiele([ruf.audio]);
+    // Levelende-Ansage (Jessica) vor dem Lob; bei einer Feier (neuer Titel) spricht die Feier
+    const endeTon = e.geschafft ? ((runnerAudio(W.id) || {}).ende || { text: runnerEndeText(W), stimme: "f" }) : null;
+    if (!ereignisse.some(grossEreignis) && (endeTon || (ruf && ruf.audio))) spiele([endeTon, ruf && ruf.audio]);
   }
   // Hall of Fame: Abschnitt in der Sammlung
   function runnerSammlung() {

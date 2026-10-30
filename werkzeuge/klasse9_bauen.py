@@ -436,7 +436,7 @@ SHOP = [
 
 
 def spieldaten():
-    import frei_saarland, usa_karte
+    import frei_saarland, usa_karte, runner_audio
     a = lambda pfad: audio(pfad)
     quellen = {q["datei"]: q for q in json.load(open(os.path.join(BASIS, "docs", "gamification", "landmarks", "quellen.json"), encoding="utf-8"))}
     return {
@@ -452,6 +452,8 @@ def spieldaten():
                     "audio_be": a(f"audio/beae/w_{z['id']}_be.mp3"), "audio_ae": a(f"audio/beae/w_{z['id']}_ae.mp3")} for z in tsv("beae.tsv")],
         "frei": frei_saarland.als_daten(),
         "shop": SHOP,
+        # Road Trip Run: Aufnahmen je Welt (Boss-Banner/-Sprüche, Levelstart/-ende; werkzeuge/runner_audio.py), fehlende = Geräte-Stimme
+        "runner_audio": runner_audio.daten(9),
     }
 
 

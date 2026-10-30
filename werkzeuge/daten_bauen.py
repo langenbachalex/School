@@ -201,7 +201,7 @@ SHOP = [
 def spieldaten():
     a = lambda pfad: pfad if os.path.exists(os.path.join(BASIS, "app", pfad)) else None
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    import frei_saarland
+    import frei_saarland, runner_audio
     return {
         "titel": [{"ab": ab, "name": n, "symbol": sym, "audio": a(f"audio/spiel/titel_{n.lower().replace(' ', '_')}.mp3")} for ab, n, sym in TITEL],
         "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
@@ -210,6 +210,8 @@ def spieldaten():
         "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in lesen("geheimakten.tsv")],
         "frei": frei_saarland.als_daten(),
         "shop": SHOP,
+        # London Run: Aufnahmen je Welt (Boss-Banner/-Sprüche, Levelstart/-ende, Cameo-Sätze; werkzeuge/runner_audio.py), fehlende = Geräte-Stimme
+        "runner_audio": runner_audio.daten(6),
     }
 
 

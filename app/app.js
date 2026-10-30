@@ -2164,7 +2164,7 @@
      Belohnung: Trophäe je Welt (Gold = alle Diamanten + beide Tore richtig, sonst Silber) und Runner-Titel nach geschafften Leveln (1 · 3 · 6 · 10 · 15).
      Stand in stand.spiel.runner = { level: { westminster: "gold"|"silber" }, gespielt, geschafft, titel, tickets }, Figur in stand.spiel.skin – beides im Siegel.
      Wörter: 12 aus dem gewählten Abschnitt von Station 7 (eigene zuerst, aufgefüllt aus den anderen Abschnitten), gesprochen mit den Vokabel-Aufnahmen.
-     Cameos: 2–3 geheime Superhelden je Lauf, bevorzugt die schon gesammelten (sp.helden). Boss-Banner, Boss-Sprüche und Cameo-Sätze bis zur Vertonung mit der Geräte-Stimme.
+     Cameos: 2–3 geheime Superhelden je Lauf, bevorzugt die schon gesammelten (sp.helden). Boss-Banner, Boss-Sprüche, Levelstart/-ende und Cameo-Sätze als Aufnahmen (31.10., D.spiel.runner_audio), fehlende mit der Geräte-Stimme.
      Welt 1 Westminster · Big Ben (31.10.); London Eye, Tower Bridge, The Tube, Wembley kommen später (🔒 bald). */
   const RUNNER = { preis: 150, skinPreis: 45, skinPreisTeuer: 90, woerter: 12, titel: ["Rookie Runner", "Tube Jumper", "Bus Hopper", "London Hero", "Superhero of London"], ab: [1, 3, 6, 10, 15],
     welten: [{ id: "westminster", name: "Westminster", staat: "London", ziel: "Big Ben", trophaee: "Big Ben Finder", symbol: "🔔", boss: "Sergeant Bearskin" },
@@ -2204,7 +2204,9 @@
     const liste = dateien.length && dateien.every(Boolean) ? dateien : [{ tts: text, lang: "en-GB", stimme: "m" }];
     return spiele(liste, o && o.sofort ? {} : { warten: true });
   };
-  const HELD_STIMME = { leo: "m", kenji: "m", felix: "m", max: "m", camilla: "f", ellie: "f", olivia: "f", zara: "f", penny: "f", tessa: "f" }; // Geräte-Stimme bis zur Vertonung (Jugendstimmen)
+  const runnerAudio = (id) => (SP.runner_audio && SP.runner_audio[id]) || null;
+  const runnerEndeText = (W) => { const rw = ((R() && R().WELTEN) || []).find((x) => x.id === W.id); return (rw && rw.ende) || `You found ${W.ziel}!`; };
+  const HELD_STIMME = { leo: "m", kenji: "m", felix: "m", max: "m", camilla: "f", ellie: "f", olivia: "f", zara: "f", penny: "f", tessa: "f" }; // Geräte-Stimme, falls eine Cameo-Aufnahme fehlt
   const runnerWeltOffen = (w) => { const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
   const runnerWeltVon = (id) => RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0];
   const R = () => window.Runner || null;
@@ -2334,13 +2336,15 @@
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
       wrapper: buehne, skin: skinWirksam(), welt: W.id, titel: "London Run", cameos: runnerCameos(), story: STORY[W.id] || null,
+      audio: runnerAudio(W.id),   // Aufnahmen: Boss Mr. Alex, Levelstart Elrond, Cameos Jugendstimmen (fehlende = Geräte-Stimme)
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: { bossTitel: `${W.boss} fragt …`, bossHinweis: "Richtig = das Tor der Horse Guards geht auf. Falsch = ein Leben weg." },
       // wort(j, { leise: true }) = Echo im Spiel: leiser und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
       stimme: { wort: (j, o) => spiele([ws[j % ws.length].audio.en], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
         erzaehler: erzaehlerStimme, still: () => stopp(),
-        boss: (text) => spiele([{ tts: text, lang: "en-GB", stimme: "m" }]),
-        cameo: (text, id) => spiele([{ tts: text, lang: "en-GB", stimme: HELD_STIMME[id] || "f" }], { warten: true }) },
+        boss: (text, o) => spiele([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }]),
+        ansage: (text, o) => spiele([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }], { warten: true }),
+        cameo: (text, id, o) => spiele([(o && o.audio) || { tts: text, lang: "en-GB", stimme: HELD_STIMME[id] || "f" }], { warten: true }) },
       onEnde: (e) => runnerEnde(i, e, ws, W.id),
     });
   }
@@ -2382,7 +2386,7 @@
           el("div", { class: "runner-pokal", "aria-hidden": "true" }, e.geschafft ? (stufe === "gold" ? "🥇" : "🥈") : "💤"),
           el("h2", { lang: "en" }, e.geschafft ? "Level complete!" : "Game over"),
           r_ && el("p", { class: "gym-lob" }, el("strong", { lang: "en" }, r_.text), r_.de && el("span", { lang: "de" }, " – " + r_.de)),
-          e.geschafft ? el("p", { lang: "en" }, `You found ${W.ziel}!`)
+          e.geschafft ? el("p", { lang: "en" }, runnerEndeText(W))
             : el("p", {}, "Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!"),
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
           e.story && el("p", { class: "runner-story-ende" }, `♪ ${e.story.anzahl}/12 Geschichte`,
@@ -2405,7 +2409,9 @@
     };
     lage = null; zeichne();
     setTimeout(zeigeEreignisse, 50);
-    if (r_ && r_.audio && !ereignisse.some(grossEreignis)) spiele([r_.audio]);
+    // Levelende-Ansage (Emmaline) vor dem Lob; bei einer Feier (neuer Titel, Held) spricht die Feier
+    const endeTon = e.geschafft ? ((runnerAudio(W.id) || {}).ende || { tts: runnerEndeText(W), lang: "en-GB", stimme: "f" }) : null;
+    if (!ereignisse.some(grossEreignis) && (endeTon || (r_ && r_.audio))) spiele([endeTon, r_ && r_.audio]);
   }
   // Hall of Fame: Abschnitt in der Sammlung (eine Trophäe je Welt; noch nicht gebaute Welten 🔒 bald)
   function runnerSammlung() {

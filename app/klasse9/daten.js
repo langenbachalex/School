@@ -9157,136 +9157,136 @@ window.DATEN = {
     "be": "canteen",
     "ae": "cafeteria",
     "de": "die Kantine",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_01_be.mp3",
+    "audio_ae": "audio/beae/w_ba_01_ae.mp3"
    },
    {
     "id": "ba_02",
     "be": "sweets",
     "ae": "candy",
     "de": "Süßigkeiten",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_02_be.mp3",
+    "audio_ae": "audio/beae/w_ba_02_ae.mp3"
    },
    {
     "id": "ba_03",
     "be": "mobile",
     "ae": "cell phone",
     "de": "das Handy",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_03_be.mp3",
+    "audio_ae": "audio/beae/w_ba_03_ae.mp3"
    },
    {
     "id": "ba_04",
     "be": "rubber",
     "ae": "eraser",
     "de": "der Radiergummi",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_04_be.mp3",
+    "audio_ae": "audio/beae/w_ba_04_ae.mp3"
    },
    {
     "id": "ba_05",
     "be": "autumn",
     "ae": "fall",
     "de": "der Herbst",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_05_be.mp3",
+    "audio_ae": "audio/beae/w_ba_05_ae.mp3"
    },
    {
     "id": "ba_06",
     "be": "torch",
     "ae": "flashlight",
     "de": "die Taschenlampe",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_06_be.mp3",
+    "audio_ae": "audio/beae/w_ba_06_ae.mp3"
    },
    {
     "id": "ba_07",
     "be": "rubbish",
     "ae": "garbage",
     "de": "der Müll",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_07_be.mp3",
+    "audio_ae": "audio/beae/w_ba_07_ae.mp3"
    },
    {
     "id": "ba_08",
     "be": "holiday",
     "ae": "vacation",
     "de": "die Ferien",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_08_be.mp3",
+    "audio_ae": "audio/beae/w_ba_08_ae.mp3"
    },
    {
     "id": "ba_09",
     "be": "underground",
     "ae": "subway",
     "de": "die U-Bahn",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_09_be.mp3",
+    "audio_ae": "audio/beae/w_ba_09_ae.mp3"
    },
    {
     "id": "ba_10",
     "be": "trainers",
     "ae": "sneakers",
     "de": "die Turnschuhe",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_10_be.mp3",
+    "audio_ae": "audio/beae/w_ba_10_ae.mp3"
    },
    {
     "id": "ba_11",
     "be": "toilet",
     "ae": "restroom",
     "de": "die Toilette",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_11_be.mp3",
+    "audio_ae": "audio/beae/w_ba_11_ae.mp3"
    },
    {
     "id": "ba_12",
     "be": "crisps",
     "ae": "chips",
     "de": "die Chips",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_12_be.mp3",
+    "audio_ae": "audio/beae/w_ba_12_ae.mp3"
    },
    {
     "id": "ba_13",
     "be": "chips",
     "ae": "French fries",
     "de": "die Pommes",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_13_be.mp3",
+    "audio_ae": "audio/beae/w_ba_13_ae.mp3"
    },
    {
     "id": "ba_14",
     "be": "Maths",
     "ae": "Math",
     "de": "Mathe",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_14_be.mp3",
+    "audio_ae": "audio/beae/w_ba_14_ae.mp3"
    },
    {
     "id": "ba_15",
     "be": "flat",
     "ae": "apartment",
     "de": "die Wohnung",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_15_be.mp3",
+    "audio_ae": "audio/beae/w_ba_15_ae.mp3"
    },
    {
     "id": "ba_16",
     "be": "mum",
     "ae": "mom",
     "de": "Mama",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_16_be.mp3",
+    "audio_ae": "audio/beae/w_ba_16_ae.mp3"
    },
    {
     "id": "ba_17",
     "be": "trousers",
     "ae": "pants",
     "de": "die Hose",
-    "audio_be": null,
-    "audio_ae": null
+    "audio_be": "audio/beae/w_ba_17_be.mp3",
+    "audio_ae": "audio/beae/w_ba_17_ae.mp3"
    }
   ],
   "frei": [
@@ -10202,7 +10202,54 @@ window.DATEN = {
      "boxhandschuhe"
     ]
    }
-  ]
+  ],
+  "runner_audio": {
+   "ny": {
+    "boss": {
+     "banner": "audio/runner/ny_banner.mp3",
+     "richtig": "audio/runner/ny_richtig.mp3",
+     "falsch": "audio/runner/ny_falsch.mp3"
+    },
+    "start": "audio/runner/ny_start.mp3",
+    "ende": "audio/runner/ny_ende.mp3"
+   },
+   "route66": {
+    "boss": {
+     "banner": "audio/runner/route66_banner.mp3",
+     "richtig": "audio/runner/route66_richtig.mp3",
+     "falsch": "audio/runner/route66_falsch.mp3"
+    },
+    "start": "audio/runner/route66_start.mp3",
+    "ende": "audio/runner/route66_ende.mp3"
+   },
+   "az": {
+    "boss": {
+     "banner": "audio/runner/az_banner.mp3",
+     "richtig": "audio/runner/az_richtig.mp3",
+     "falsch": "audio/runner/az_falsch.mp3"
+    },
+    "start": "audio/runner/az_start.mp3",
+    "ende": "audio/runner/az_ende.mp3"
+   },
+   "sd": {
+    "boss": {
+     "banner": "audio/runner/sd_banner.mp3",
+     "richtig": "audio/runner/sd_richtig.mp3",
+     "falsch": "audio/runner/sd_falsch.mp3"
+    },
+    "start": "audio/runner/sd_start.mp3",
+    "ende": "audio/runner/sd_ende.mp3"
+   },
+   "ca": {
+    "boss": {
+     "banner": "audio/runner/ca_banner.mp3",
+     "richtig": "audio/runner/ca_richtig.mp3",
+     "falsch": "audio/runner/ca_falsch.mp3"
+    },
+    "start": "audio/runner/ca_start.mp3",
+    "ende": "audio/runner/ca_ende.mp3"
+   }
+  }
  },
  "gym": {
   "pensum": {

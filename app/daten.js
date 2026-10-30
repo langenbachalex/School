@@ -7014,7 +7014,30 @@ window.DATEN = {
      "boxhandschuhe"
     ]
    }
-  ]
+  ],
+  "runner_audio": {
+   "westminster": {
+    "boss": {
+     "banner": "audio/runner/westminster_banner.mp3",
+     "richtig": "audio/runner/westminster_richtig.mp3",
+     "falsch": "audio/runner/westminster_falsch.mp3"
+    },
+    "start": "audio/runner/westminster_start.mp3",
+    "ende": "audio/runner/westminster_ende.mp3",
+    "cameo": {
+     "leo": "audio/runner/cameo_leo.mp3",
+     "kenji": "audio/runner/cameo_kenji.mp3",
+     "felix": "audio/runner/cameo_felix.mp3",
+     "max": "audio/runner/cameo_max.mp3",
+     "camilla": "audio/runner/cameo_camilla.mp3",
+     "ellie": "audio/runner/cameo_ellie.mp3",
+     "olivia": "audio/runner/cameo_olivia.mp3",
+     "zara": "audio/runner/cameo_zara.mp3",
+     "penny": "audio/runner/cameo_penny.mp3",
+     "tessa": "audio/runner/cameo_tessa.mp3"
+    }
+   }
+  }
  },
  "hausaufgaben": [
   {

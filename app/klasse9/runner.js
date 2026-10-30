@@ -18,7 +18,10 @@
    Welt „westminster“ (31.10., nur Klasse 6 „London Run“): Themse mit Booten, Big Ben + Parlament wachsen im Hintergrund, London Eye, Nieselwolken, am Ende Regenbogen; Doppeldecker/Black Cabs (wie Autos),
    Pfützen (rutschen wie Öl), Telefonzellen/Postkästen als Stufen, Themse-Lücken, Taube/Stadtfuchs/graues Eichhörnchen, Boss Sergeant Bearskin (Royal Guard, nur die Augen bewegen sich; Trommelwirbel + Signal), Tor der Horse Guards.
    Cameos (31.10., Option cameos: [{ id, name, bild, kraft }]): 2–3 Gastauftritte der geheimen Superhelden je Lauf (rundes Kartenbild, Umhang, Sprechblase ≈ 2,5 s) mit kleinem Effekt (CAMEO);
-   ohne die Option (Klasse 9) gibt es keine Cameos. stimme.cameo(text, id) spricht den Satz (optional).
+   ohne die Option (Klasse 9) gibt es keine Cameos. stimme.cameo(text, id, { audio }) spricht den Satz (optional).
+   Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
+   stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
+   Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Story-Modus (31.10., nur mit Option story – Klasse 6 London Run Welt 1, docs/runner/story-london-01.md; Klasse 9 übergibt keine, dort ändert sich nichts): eigene Strecke MUSTER_WESTMINSTER_STORY
    mit 12 Story-Kristallen ♪ (violett, Goldkante, Notensymbol, Glühen; Erzähler über stimme.erzaehler(text, { key, audio, sofort }), Text oben mittig als Schreibmaschine, Warteschlange ohne Überlagerung),
@@ -1162,7 +1165,7 @@
     const info = cameoInfo(held);
     cameo = { held, t: 0, satz: (held && held.satz) || info.satz, info };
     cameosGezeigt++; klang.cameo();
-    try { if (stimme.cameo) stimme.cameo(cameo.satz, held && held.id); } catch (e) { /* stumm */ }
+    try { if (stimme.cameo) stimme.cameo(cameo.satz, held && held.id, { audio: (held && held.satz) ? null : audioDatei('cameo', held && held.id) }); } catch (e) { /* stumm */ }
     const id = held && held.id;
     if (id === 'leo') { if (!ruhig()) spur = Math.max(spur, 3); comboPlus(); cameoEffekt = 'combo'; }
     else if (id === 'kenji') { sprungBonus = 5; cameoEffekt = 'sprung'; }
@@ -1693,7 +1696,7 @@
         else spieler.pose = 'steh';
         if (spieler.x >= level.stopX && sequenz.t >= SEQUENZ.zoom) { sequenz = { phase:'stand', t:0 }; spieler.pose = 'steh'; }
       } else if (ph === 'stand') {
-        if (sequenz.t >= SEQUENZ.stand) { sequenz = { phase:'banner', t:0 }; banner = { text:W.banner, zeit:SEQUENZ.banner }; stimme.boss(W.banner); }
+        if (sequenz.t >= SEQUENZ.stand) { sequenz = { phase:'banner', t:0 }; banner = { text:W.banner, zeit:SEQUENZ.banner }; try { stimme.boss(W.banner, { art: 'banner', audio: audioDatei('boss', 'banner') }); } catch (e) { /* stumm */ } }
       } else if (ph === 'banner') {
         banner.zeit -= dt;
         if (sequenz.t >= SEQUENZ.banner) { sequenz = { phase:'boss', t:0 }; banner = null; W.bossKlang(); }
@@ -1750,9 +1753,15 @@
     }));
     frageBox.hidden = false;
   }
-  function bossSagt(text, dauer = 2.5) {
+  function bossSagt(text, dauer = 2.5, art = null) {
     bossSpruch = { text, zeit: dauer }; spruchEl.textContent = W.bossSymbol + " " + text;
-    try { stimme.boss(text); } catch (e) { /* stumm */ }
+    try { stimme.boss(text, { art, audio: audioDatei('boss', art) }); } catch (e) { /* stumm */ }
+  }
+  // Aufnahmen der App (Option audio je Welt: { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } }); fehlt eine, spricht die App mit der Geräte-Stimme
+  function audioDatei(gruppe, key) {
+    const a = opt && opt.audio; if (!a) return null;
+    const g = key == null ? a[gruppe] : a[gruppe] && a[gruppe][key];
+    return typeof g === 'string' && g ? g : null;
   }
   function antwortGeben(n) {
     if (!bossFrage || zustand !== "boss") return;
@@ -1762,12 +1771,12 @@
       klang.richtig(); klang.tuer();
       frageBox.hidden = true; bossFrage = null; zustand = "finale";
       popup = { en: woerter[i].en + " ✓", de: woerter[i].de, zeit: 2.5, art: "richtig" };
-      bossSagt(BOSS_RICHTIG, 3);
+      bossSagt(W.richtig || BOSS_RICHTIG, 3, 'richtig');
     } else {
       klang.falsch(); leben--; comboReset(); erstauntZeit = 0.8;
       popup = { en: woerter[i].en + " ✗", de: woerter[i].de, zeit: 2, art: "falsch" };
       if (leben <= 0) { frageBox.hidden = true; bossFrage = null; zustand = "gameover"; zeigeEnde(false); }
-      else { bossFragen(); bossSagt(BOSS_FALSCH); }
+      else { bossFragen(); bossSagt(W.falsch || BOSS_FALSCH, 2.5, 'falsch'); }
     }
   }
 
@@ -3943,33 +3952,39 @@
     c.beginPath(); c.moveTo(x + 4, y + 4); c.lineTo(x + KISTE - 4, y + KISTE - 4); c.moveTo(x + KISTE - 4, y + 4); c.lineTo(x + 4, y + KISTE - 4); c.stroke();
   }
   const WELTEN = {
-    ny: { id: 'ny', name: 'New York', staat: 'New York', ziel: 'Statue of Liberty', bossName: 'Mr. Alligator', bossSymbol: '🐊', banner: BANNER_TEXT, sturz: 'Splash! 💦',
+    ny: { id: 'ny', name: 'New York', staat: 'New York', ziel: 'Statue of Liberty', bossName: 'Mr. Alligator', bossSymbol: '🐊', banner: BANNER_TEXT, richtig: "Correct – the door opens!", falsch: "Not this time!", start: "Let's find the Statue of Liberty!", ende: "You made it to the Statue of Liberty!",
+      sturz: 'Splash! 💦',
       gegnerarten: ['taube', 'waschbaer', 'eichhoernchen'], farben: { plattform: '#8b5a2b', plattformOben: '#4fae5f', hud: '#1d3f8f' }, muster: MUSTER_NY, sprechblaseHoehe: 70,
       kulisse: hintergrundNY, boden: bodenNY, grube: null, kiste: kisteNY, hudSymbol: (c, x, y) => freiheitsstatue(c, x, y, 0.14, '#1d3f8f'),
       boss: (c, x, y) => { kanaldeckel(c, x, y); alligator(c, x, y); }, tuer: tuerZeichnen, bossKlang: () => klang.grollen() },
-    route66: { id: 'route66', name: 'Route 66', staat: 'Illinois', ziel: 'Route 66 sign', bossName: 'Big Rig Bob', bossSymbol: '🚚', banner: 'Here comes Big Rig Bob!', sturz: 'Crash! 🕳️',
+    route66: { id: 'route66', name: 'Route 66', staat: 'Illinois', ziel: 'Route 66 sign', bossName: 'Big Rig Bob', bossSymbol: '🚚', banner: 'Here comes Big Rig Bob!', richtig: "Correct – the barrier goes up!", falsch: "Not this time, kid!", start: "Let's find Route 66!", ende: "You made it to Route 66!",
+      sturz: 'Crash! 🕳️',
       gegnerarten: ['kojote', 'roadrunner', 'guerteltier'], farben: { plattform: '#7a4a16', plattformOben: '#c99a6a', hud: '#c8283a' }, muster: MUSTER_ROUTE66, sprechblaseHoehe: 150,
       kulisse: hintergrundRoute66, boden: strasseZeichnen, grube: baugrube, kiste: reifen, hudSymbol: (c, x, y) => schild66(c, x, y + 4, 0.28, '#c8283a', false),
       boss: bigRigBob, tuer: mautstation, bossKlang: () => { hupen++; klang.hupe(); klang.diesel(); } },
-    az: { id: 'az', name: 'Grand Canyon', staat: 'Arizona', ziel: 'Grand Canyon', bossName: 'Sheriff Rattlesnake', bossSymbol: '🐍', banner: 'Watch out – Sheriff Rattlesnake!', sturz: 'Down the canyon! 🏜️',
+    az: { id: 'az', name: 'Grand Canyon', staat: 'Arizona', ziel: 'Grand Canyon', bossName: 'Sheriff Rattlesnake', bossSymbol: '🐍', banner: 'Watch out – Sheriff Rattlesnake!', richtig: "Correct – the gate swings open, partner!", falsch: "Not this time, greenhorn!", start: "Let's find the Grand Canyon!", ende: "You made it to the Grand Canyon!",
+      sturz: 'Down the canyon! 🏜️',
       gegnerarten: ['klapperschlange', 'geier', 'skorpion'], farben: { plattform: '#8a3b1e', plattformOben: '#d9774a', hud: '#b4452a' }, muster: MUSTER_AZ, sprechblaseHoehe: 230,
       kulisse: hintergrundCanyon, boden: felsboden, grube: schlucht, kiste: felsbrocken, hudSymbol: (c, x, y) => schildCanyon(c, x, y + 14, 0.34, false),
       boss: (c, x, y) => { felsspalt(c, x, y); sheriffRattlesnake(c, x, y); }, tuer: westernTor, bossKlang: () => { rasseln++; klang.rassel(); } },
-    sd: { id: 'sd', name: 'Mount Rushmore', staat: 'South Dakota', ziel: 'Mount Rushmore', bossName: 'Grizzly Grandpa', bossSymbol: '🐻', banner: 'Oh no – Grizzly Grandpa is awake!', sturz: 'Splash! 🏞️',
+    sd: { id: 'sd', name: 'Mount Rushmore', staat: 'South Dakota', ziel: 'Mount Rushmore', bossName: 'Grizzly Grandpa', bossSymbol: '🐻', banner: 'Oh no – Grizzly Grandpa is awake!', richtig: "Correct – the ranger gate opens. Now let me sleep!", falsch: "Not this time, young ranger!", start: "Let's find Mount Rushmore!", ende: "You made it to Mount Rushmore!",
+      sturz: 'Splash! 🏞️',
       gegnerarten: ['bueffel', 'biber', 'adler'], farben: { plattform: '#6b4a2e', plattformOben: '#5fa84a', hud: '#2e7d4f' }, muster: MUSTER_SD, sprechblaseHoehe: 200,
       kulisse: hintergrundRushmore, boden: waldboden, grube: bachZeichnen, kiste: holzstapel, stein: trittstein, hudSymbol: (c, x, y) => schildRushmore(c, x, y + 14, 0.34, false),
       boss: (c, x, y) => { baerenhoehleBoss(c, x, y); grizzlyGrandpa(c, x, y); }, tuer: rangerTor, bossKlang: () => { brummt++; klang.brummen(); } },
-    ca: { id: 'ca', name: 'Golden Gate', staat: 'California', ziel: 'Golden Gate Bridge', bossName: 'Captain Fog', bossSymbol: '👻', banner: 'Captain Fog is blocking the bridge!', sturz: 'Splash! 🌊',
+    ca: { id: 'ca', name: 'Golden Gate', staat: 'California', ziel: 'Golden Gate Bridge', bossName: 'Captain Fog', bossSymbol: '👻', banner: 'Captain Fog is blocking the bridge!', richtig: "Correct – the bridge is yours, sailor!", falsch: "Not this time – lost in the fog!", start: "Let's find the Golden Gate Bridge!", ende: "You made it to the Golden Gate Bridge!",
+      sturz: 'Splash! 🌊',
       gegnerarten: ['moewe', 'seeloewe', 'skater'], farben: { plattform: '#8e3220', plattformOben: '#e8714a', hud: '#c0462b' }, muster: MUSTER_CA, sprechblaseHoehe: 240,
       kulisse: hintergrundGoldenGate, boden: promenade, grube: pazifik, kiste: hafenkiste, hudSymbol: (c, x, y) => goldenGateFern(c, x, y + 12, 0.11),
       boss: (c, x, y) => { nebelbank(c, x, y); captainFog(c, x, y); }, tuer: brueckenTor, bossKlang: () => { tutet++; klang.nebelhorn(); } },
     // Klasse 6 „London Run“ (31.10.): Welt 1 Westminster · Big Ben
-    westminster: { id: 'westminster', name: 'Westminster', staat: 'London', ziel: 'Big Ben', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is on duty!', sturz: 'Splash! 🌊',
+    westminster: { id: 'westminster', name: 'Westminster', staat: 'London', ziel: 'Big Ben', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is on duty!', richtig: "Correct – the gate is open. Carry on!", falsch: "Not this time, soldier!", start: "Let's find Big Ben!", ende: "You found Big Ben!",
+      sturz: 'Splash! 🌊',
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WESTMINSTER, musterStory: MUSTER_WESTMINSTER_STORY, sprechblaseHoehe: 220,
       kulisse: hintergrundLondon, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => bigBen(c, x, y, 0.075, '#1d3f8f'),
       boss: (c, x, y) => { schilderhaus(c, x, y); sergeantBearskin(c, x, y); }, tuer: horseGuardsTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
   };
-  const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner }));
+  const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner, richtig: w.richtig, falsch: w.falsch, start: w.start, ende: w.ende }));
 
   /* ---------- Start / Stopp ---------- */
   function start(o) {
@@ -4006,6 +4021,8 @@
     window.addEventListener("keyup", aufKeyUp);
     window.addEventListener("resize", aufResize);
     rafId = requestAnimationFrame(schleife);
+    // Levelstart-Ansage beim Loslaufen (es gibt keinen Countdown); Wörter, Erzähler und Boss kommen erst später auf der Strecke
+    try { if (stimme.ansage && W.start) stimme.ansage(W.start, { art: 'start', audio: audioDatei('start') }); } catch (e) { /* stumm */ }
     if (location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__runner = haken; // Test-Haken nur lokal, nie auf der Live-Seite (30.10.)
     return { stopp };
   }

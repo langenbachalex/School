@@ -10043,7 +10043,7 @@ window.DATEN = {
  },
  "hausaufgaben": [
   {
-   "von": "2026-11-02",
+   "von": "2026-10-30",
    "bis": "2026-11-08",
    "ziel": "4; 2/u1",
    "text": "Listening + Vocabulary Unit 1 (alle Abschnitte)",

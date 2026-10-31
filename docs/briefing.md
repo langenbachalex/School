@@ -56,3 +56,9 @@ GLN 1 war am 30.09.2026 (Lead-in und Topic 1, S. 80 bis 85). Nach den Herbstferi
 - **Ton und Nachsprechen thematisieren:** Mr. Alex spricht mit der Klasse darüber, dass die App gehört werden muss (Ton an) und vor allem, dass beim „Jetzt du!“-Balken wirklich laut nachgesprochen wird. In Klasse 6 trauen sich die schwächeren Schüler im Klassenraum noch nicht so. Ein technischer Ton-Check wird bewusst nicht gebaut.
 - **Folie für die nächste Stunde:** daran erinnern, immer „Listen and Repeat“ zu machen – „das ist noch mal 50 % extra Power“.
 - Stand der App (für Folien/Planung): Power Up (erledigte Teile werden nach 30 Tagen und 14 Tage vor dem GLN wieder fällig), Coins und Shop, Combo-Flamme beim Vokabellernen, Geheimakte „Leo the Lion and the Missing Hour“, Hörübung 3 „Talking about free time“ (GLN-2-Format, true/false, 10 Aussagen, mit 💡-Hilfen) im Bau. GLN 2 Klasse 6: Mittwoch 25.11.2026.
+
+
+## Regeln von Mr. Alex (31.10.2026) – für alle Chats
+- **Sprache der Runner-Geschichten wächst mit dem Unterricht:** neue Sprache aus der App/dem Buch (Kl. 6 aktuell: Häufigkeitsadverbien, Sports and hobbies, School clubs; Adjektive) in jedes neue Kapitel einweben, alte wiederholen. Regel und Stand: `docs/runner/story-sprache.md`.
+- **Archiv:** Alle Dokumente, die Mr. Alex in den Chat gibt, kommen nach `docs/archiv/` (siehe LIESMICH dort) und bleiben erhalten.
+- Hinweis: Die Skill-Dateien von Mr. Alex (claude.ai, z. B. „app-inhalte-lesen“) liegen nicht im Repo; wer sie pflegt, ergänzt dort einen Satz mit Verweis auf `docs/runner/story-sprache.md` und `docs/archiv/`.

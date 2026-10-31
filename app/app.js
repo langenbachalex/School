@@ -2361,6 +2361,7 @@
         const ws_ = storyStand(W.id), en = e.story.ende;
         if (!ws_.enden.includes(en)) { ws_.enden.push(en); storyNeuFrei = true; }
         ws_.beste[en] = Math.max(ws_.beste[en] || 0, e.story.anzahl);
+        if (e.geschafft) ws_.wahl = Object.assign({}, ws_.wahl, e.story.wahl || {}); // Dein Weg (31.10., Mr. Alex): die Wahl zählt in den nächsten Kapiteln weiter
         const dia = Math.max(0, e.punkteDiamanten || 0) * STORY_PUNKTE.diamant;
         const ganz = e.story.vollstaendig && !ws_.voll.includes(en) ? STORY_PUNKTE.ganz : 0;
         if (e.story.vollstaendig && !ws_.voll.includes(en)) ws_.voll.push(en);
@@ -2391,6 +2392,7 @@
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
           e.story && el("p", { class: "runner-story-ende" }, `♪ ${e.story.anzahl}/12 Geschichte`,
             sEnde ? ` · 📖 Ending ${e.story.ende} – ${sEnde.symbol} ${sEnde.name}` : "", e.story.vollstaendig ? " · ✓ ganze Geschichte" : ""),
+          e.story && e.geschafft && sEnde && el("p", { class: "klein runner-story-wege" }, `🧭 Dein Weg: ${sEnde.symbol} ${sEnde.name} – die Geschichte merkt sich das für das nächste Kapitel.`),
           e.story && el("p", { class: "runner-story-punkte" }, e.geschafft
             ? `⭐ Punkte in diesem Lauf: ${storyPunkte}` + (storyPunkte >= STORY_PUNKTE.max ? " (höchstens 30)" : "")
             : "⭐ Punkte gibt es nur, wenn du das Level schaffst."),
@@ -2436,6 +2438,7 @@
     return el("div", { class: "story-library" },
       el("h3", {}, "📖 Story Library"),
       el("p", { class: "klein", lang: "en" }, `Level 1 · ${S.titel}`),
+      st.wahl && st.wahl.g1 && el("p", { class: "klein story-pfad" }, `🧭 Dein Weg bisher: ${STORY_ENDEN[st.wahl.g1].symbol} ${STORY_ENDEN[st.wahl.g1].name} – spiel das Level noch mal, um den anderen Weg zu gehen.`),
       el("div", { class: "story-karten" }, ["A", "B"].map((en) => {
         const frei = st.enden.includes(en), E = STORY_ENDEN[en];
         if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"));

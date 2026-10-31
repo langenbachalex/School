@@ -43,7 +43,12 @@
    als durchsichtige Plattform oben, Wasserfall mit Felsvorsprung = verstecktes Tor ✦ auf dem A-Weg), Gabelung 2 „give it to Lucas“ / „give it to Maya“ (Felsvorsprung), Film X/Y am Westerntor (filmZeichnenAZ),
    Realm Kapitel 3 = Drachenhöhle (REALM_WELT_3 'hoehle', MUSTER_REALM_3: schlafender Drache auf dem Goldberg, Schnarchen, Landungen/Plattdrücken = Lärm, der dritte Sprung in Folge weckt ihn kurz → Flammenstoß am Boden, offene Steintür,
    wartender Ritter, Skorpione, Golden Scale ✨). Test-Haken: story().realm { laerm, feuer, schnarcher, geweckt }, drache() weckt ihn sofort.
-   Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …; Story: story, gabelung, kristall, stationWeiter, filmStart, filmSkip; Realm: realmBetreten, realmEnde, drache). */
+   Kapitel 4 Mount Rushmore „The Traitor“ (31.10., docs/runner/story-usa-04.md): STRUKTUR_SD (Variante aus Kapitel 3: story.varianten['az.g2']), MUSTER_SD_STORY (Gabelung 1: A oben über die Präsidentenköpfe auf
+   Granit-Plattformen (h.granit, Kulisse 'koepfe' mit der Tagebuchseite in Lincolns Bart) / B unten durch den alten Tunnel (h.tunnel: dunkel wie der Maschinenraum, Grubenlampen, Kompass-Zeichnung 'kompass' an der Wand);
+   verstecktes Tor ✦ im Tunnel hinter einer Felsspalte ('spalte', B-Weg, nur vom Granit-Absatz mit Sprung), Gabelung 2 „forgive him“ / „send him away“, Film X/Y am Ranger-Tor (filmZeichnenSD),
+   Realm Kapitel 4 = Eishalle mit fünf Türen (REALM_WELT_4 'eishalle', MUSTER_REALM_4: Spiegelboden (rutschig, spiegelt Figur und Eiszapfen), Eiszapfen h.zapfen – zittern 0,6 s, wenn die Figur ≈ 300 davor ist,
+   fallen, stecken 1,2 s im Boden (drüberspringen), Treffer „Icicle! 🧊“; fünf Türen 'fuenftueren' bei ✦R1, wartender Ritter hinter ✦R2, Silver Key 🗝️ hoch oben, Rückkehr-Tor „✦ Mount Rushmore“).
+   Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …; Story: story, gabelung, kristall, stationWeiter, filmStart, filmSkip; Realm: realmBetreten, realmEnde, drache, zapfenLoesen). */
 (function () {
   "use strict";
 
@@ -309,6 +314,8 @@
     splitter() { [2093, 2637, 3136, 2637, 3520].forEach((f, i) => ton(f, 0.25, "sine", 0.05, i * 0.07)); },
     // Drachenhöhle (Kapitel 3): Schnarchen = tiefes Anschwellen + Rauschen, kurzer Pfeifton beim Ausatmen; Flammenstoß = Rauschen (Zischen) mit tiefem Grollen
     schnarchen() { ton(70, 0.9, "sawtooth", 0.035, 0, 95); rauschen(0.8, 0.02, 0.05, { typ: "lowpass", freq: 260 }); ton(640, 0.5, "sine", 0.012, 1.05, 520); },
+    zapfen() { for (let i = 0; i < 3; i++) ton(2400 + i * 300, 0.04, "square", 0.03, i * 0.12, 1800); rauschen(0.3, 0.025, 0, { typ: "highpass", freq: 3000 }); },   // Eiszapfen knackt (Warnung)
+    splittern() { rauschen(0.22, 0.06, 0, { typ: "highpass", freq: 2600 }); [3136, 2637, 3520].forEach((f, i) => ton(f, 0.12, "triangle", 0.05, i * 0.05)); },   // Eiszapfen zersplittert am Boden
     feuer() { rauschen(1.1, 0.06, 0, { typ: "bandpass", freq: 900 }); rauschen(0.5, 0.045, 0, { typ: "highpass", freq: 3000 }); ton(110, 0.8, "sawtooth", 0.03, 0, 70); },
   };
 
@@ -1285,7 +1292,77 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.vor(1100); },                                           // 9
     (h) => { h.vor(900); },                                                                                          // 10 Rückkehr-Tor
   ];
-  const REALM_MUSTER = { ny: MUSTER_REALM, route66: MUSTER_REALM_2, az: MUSTER_REALM_3 };
+  // Mount Rushmore „The Lost Map – The Traitor“ (Klasse 9, Kapitel 4, docs/runner/story-usa-04.md): Anfang 1–5, ♪1/♪2 als Variante von Kapitel 3 (quelle 'az.g2': X = Lucas hat das Tagebuch → 1X/2X,
+  // Y oder keine Wahl → 1Y/2Y) · Station 1 · Gabelung 1 (A6–A10 oben = über die Präsidentenköpfe auf Granit-Absätzen / B6–B10 unten = durch den alten Tunnel; ohne Wahl: A) · Station 2 · gemeinsam 11–14 ·
+  // Gabelung 2 (X15–X16 „🤝 forgive him“ unten / Y15–Y16 „🚗 send him away“ oben auf einem Granit-Absatz; ohne Wahl: X) · Boss Grizzly Grandpa · Ende X17–X20 / Y17–Y20 = 20 ♪.
+  // Realm R1–R3 extra; realmMuster 'sd' = MUSTER_REALM_4 (Eishalle mit fünf Türen), Sammelstück Silver Key 🗝️ (gegenstand). story.sd.wahl.g2 wirkt in Kapitel 5 „The Last Gate“.
+  const STRUKTUR_SD = { anzahl: 20, abschnitte: [
+    { anfang: true, varianten: { X: ['1X', '2X'], Y: ['1Y', '2Y'] }, quelle: 'az.g2', standard: 'Y', platz: ['1', '2'], keys: ['3', '4', '5'] },
+    { gabel: 'g1', standard: 'A', wege: { A: ['A6', 'A7', 'A8', 'A9', 'A10'], B: ['B6', 'B7', 'B8', 'B9', 'B10'] }, symbole: { A: '🗿', B: '🕳️' }, labels: { A: 'over the heads', B: 'old tunnel' } },
+    { keys: ['11', '12', '13', '14'] },
+    { gabel: 'g2', standard: 'X', wege: { X: ['X15', 'X16'], Y: ['Y15', 'Y16'] }, symbole: { X: '🤝', Y: '🚗' }, labels: { X: 'forgive him', Y: 'send him away' } },
+    { ende: 'g2', wege: { X: ['X17', 'X18', 'X19', 'X20'], Y: ['Y17', 'Y18', 'Y19', 'Y20'] } },
+  ], stationen: [1, 2], film: { X: [['X17'], ['X18'], ['X19'], ['X20'], null], Y: [['Y17'], ['Y18'], ['Y19'], ['Y20'], null] }, realm: ['R1', 'R2', 'R3'],
+    realmMuster: 'sd', gegenstand: { name: 'Silver Key', symbol: '🗝️', art: 'silberschluessel' } };
+  // Story-Strecke Mount Rushmore (Klasse 9, 34 Abschnitte, ≈ 37.000 Einheiten ≈ 2:40 min Laufzeit + Stationen + Boss ≈ 3 min): 5 Baumstämme, 4 Bäche mit Trittsteinen, 4 Böen, 3 Bärenhöhlen, Büffel/Biber/Adler wie Welt 4;
+  // Abstand der ♪ je Weg ≥ Erzählzeit des vorigen Stücks, nie in den 520 vor einem Tor; 20 Punkte-Diamanten. Gabelung 1: ♪A6 oben auf einem Granit-Absatz (h.granit, graue Felsplattform) vor den großen Präsidentenköpfen
+  // (Kulisse 'koepfe': die vier Köpfe nah an der Wand, die Tagebuchseite steckt in Lincolns Bart), ♪B6 unten am Eingang des alten Tunnels (h.tunnel: 8.700 lang – am Boden dunkel wie der Maschinenraum, Grubenlampen alle 420;
+  // oben auf den Absätzen bleibt es hell). Weg A auf Granit-Absätzen (Nase, Brille, Bart), Weg B am Boden im Tunnel. Gabelung 2: ♪X15 unten („🤝 forgive him“), ♪Y15 oben auf einem Granit-Absatz („🚗 send him away“).
+  // Verstecktes Tor ✦ (Abschnitt 18, auf dem B-Weg im Tunnel, zwischen ♪B9 „a compass. And an arrow.“ und ♪B10 – der Pfeil der Zeichnung zeigt nach vorn): eine Felsspalte in der Tunnelwand (Kulisse 'spalte', wird vor dem
+  // Tor gezeichnet: zwei Felspfeiler, dazwischen ein schmaler Spalt mit Schimmer); das Tor hängt bei y 60 im Spalt. Vom Boden mit Sprung nicht zu erreichen (Box-Oberkante höchstens y 118), nur mit Sprung vom Granit-Absatz
+  // (y 230) davor; der 💎 auf dem Absatz lockt hinauf. Kein A-Absatz in der Nähe des Spalts, damit niemand von oben hineinfällt. Vom A-Weg aus nur durch Absteigen in den Tunnel erreichbar – ein B-Weg-Geheimnis.
+  const MUSTER_SD_STORY = [
+    (h) => { h.dia(350); h.kristall(600, 290, '1'); h.kiste(900); h.vor(1100); },                                      // 1 Aufwärmen · ♪1 (Variante 1X/1Y)
+    (h) => { h.stamm(750); h.dia(300, 250); h.vor(1000); },                                                           // 2 erster Baumstamm
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.kristall(500, 290, '2'); h.geg('biber', 650, 950); h.vor(1050); }, // 3 Plattform · ♪2 (Variante 2X/2Y) · Biber
+    (h) => { h.kiste(200); h.kiste(240, 2); h.dia(260, 215); h.vor(750); },                                             // 4 Holzstufe
+    (h) => { h.kristall(350, 290, '3'); h.bach(550, 200); h.vor(1050); },                                               // 5 · ♪3 · erster Bach (ein Trittstein)
+    (h) => { h.wind(150, -1); h.geg('adler', 500, 800); h.dia(850, 250); h.vor(1050); },                                // 6 Gegenwind + Adler
+    (h) => { h.kristall(100, 290, '4'); h.hoehle(520); h.plat(780, 230, 160); h.dia(860, 190); h.vor(1150); },          // 7 · ♪4 · Bärenhöhle + Plattform
+    (h) => { h.geg('bueffel', 150, 900); h.vor(1000); },                                                                // 8 erster Büffel (nur überspringen!)
+    (h) => { h.kristall(150, 290, '5'); h.kiste(450); h.kiste(490, 2); h.dia(510, 220); h.vor(950); },                  // 9 · ♪5 · Holzstufe
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(900); },                              // 10 Doppelplattform
+    (h) => { h.tor(700, 4, [5, 1]); h.vor(1200); },                                                                  // 11 TOR 1
+    (h) => { h.cp(150); h.geg('biber', 700, 950); h.vor(1050); },                                                    // 12 CHECKPOINT 1 · Station 1
+    (h) => { h.tunnel(180, 8700); h.kristall(260, 290, 'B6'); h.kiste(420); h.deko('koepfe', 700, 1200); h.granit(560, 170, 220); h.kristall(640, 130, 'A6'); h.vor(1250); }, // 13 GABELUNG 1: ♪B6 unten am Tunnel-Eingang, ♪A6 oben auf dem Granit-Absatz vor den Köpfen
+    (h) => { h.dia(300, 250); h.geg('biber', 450, 800); h.kiste(900); h.granit(1030, 170, 220); h.kristall(1130, 130, 'A7'); h.kristall(1550, 290, 'B7'); h.vor(1750); }, // 14 · ♪A7 oben (Washingtons Nase) / ♪B7 unten
+    (h) => { h.hoehle(300); h.kiste(650); h.kiste(690, 2); h.granit(810, 190, 200); h.granit(1070, 140, 260); h.kristall(1200, 100, 'A8'); h.dia(1290, 100); h.kristall(1500, 290, 'B8'); h.vor(1700); }, // 15 Bärenhöhle im Tunnel · ♪A8 ganz oben (Lincolns Bart) / ♪B8 unten
+    (h) => { h.wind(150, -1); h.kiste(850); h.kiste(890, 2); h.dia(910, 220); h.vor(1150); },                           // 16 Zugluft (Gegenwind) im Tunnel + Holzstufe
+    (h) => { h.granit(100, 170, 220); h.kristall(200, 130, 'A9'); h.deko('kompass', 360); h.kristall(420, 290, 'B9'); h.geg('biber', 800, 1150); h.vor(1300); }, // 17 · ♪A9 oben / ♪B9 unten an der Kompass-Zeichnung
+    (h) => { h.dia(300, 250); h.granit(600, 230, 100); h.dia(650, 190); h.deko('spalte', 790); h.realmTor(790, 60); h.vor(1300); }, // 18 Granit-Absatz · Felsspalte · verstecktes Tor ✦ im Spalt (B-Weg)
+    (h) => { h.kristall(150, 290, 'B10'); h.kiste(300); h.granit(420, 170, 220); h.kristall(500, 130, 'A10'); h.geg('adler', 700, 1000); h.vor(1150); }, // 19 · ♪B10 / ♪A10 (Tunnel-Ende)
+    (h) => { h.geg('bueffel', 100, 800); h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.dia(475, 140); h.vor(950); }, // 20 Büffel unter der Dreier-Plattform
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                                  // 21 TOR 2
+    (h) => { h.cp(150); h.kiste(600); h.kiste(640, 2); h.vor(900); },                                                // 22 CHECKPOINT 2 · Station 2
+    (h) => { h.kristall(150, 290, '11'); h.stamm(800); h.vor(1150); },                                                 // 23 · ♪11 · Baumstamm
+    (h) => { h.geg('adler', 100, 400); h.bach(500, 300); h.dia(650, 240); h.kristall(950, 290, '12'); h.vor(1100); },    // 24 breiter Bach (zwei Trittsteine) · ♪12
+    (h) => { h.wind(150, 1); h.kiste(700); h.dia(850, 250); h.vor(1100); },                                             // 25 Rückenwind, dann Holzstapel
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.dia(250, 180); h.kristall(600, 290, '13'); h.vor(950); }, // 26 Holzpyramide (💎 oben) · ♪13
+    (h) => { h.stamm(400); h.hoehle(850); h.vor(1100); },                                                              // 27 Baumstamm, dann Höhle
+    (h) => { h.kristall(250, 290, '14'); h.plat(650, 240, 150); h.dia(725, 200); h.stamm(1000); h.vor(1150); },        // 28 · ♪14 · Baumstamm
+    (h) => { h.bach(150, 260); h.geg('bueffel', 600, 1000); h.vor(1150); },                                            // 29 Bach + Büffel
+    (h) => { h.kristall(300, 290, 'X15'); h.kiste(400); h.kiste(440, 2); h.granit(560, 190, 200); h.kristall(640, 150, 'Y15'); h.vor(1200); }, // 30 GABELUNG 2: ♪X15 unten (🤝), ♪Y15 oben auf dem Granit-Absatz (🚗)
+    (h) => { h.wind(150, -1); h.kiste(650); h.kiste(690, 2); h.dia(710, 215); h.vor(950); },                            // 31 Gegenwind + Holzstufe
+    (h) => { h.kristall(150, 290, 'X16'); h.plat(130, 235, 200); h.kristall(230, 195, 'Y16'); h.geg('adler', 600, 900); h.vor(1200); }, // 32 · ♪X16 unten / ♪Y16 auf der Plattform
+    (h) => { h.bach(200, 200); h.dia(300, 240); h.stamm(850); h.vor(1150); },                                          // 33 Bach (💎 darüber) + Baumstamm
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.dia(475, 140); h.geg('biber', 850, 1150); h.vor(1250); }, // 34 Schluss
+  ];
+  // Seitenlevel „The Realm Beyond“ Kapitel 4 (≈ 11.300 Einheiten ≈ 47 s): Eishalle mit fünf Türen (REALM_WELT_4) – die fünf Türen (Kulisse 'fuenftueren': vier zu, eine offen und leuchtend) bei ✦R1, Wölfe, Eiszapfen (h.zapfen),
+  // der Ritter wartet hinter ✦R2, Sammelstück Silver Key 🗝️ hoch oben, Gletscherspalten, Eisblöcke; am Ende das Rückkehr-Tor („✦ Mount Rushmore“).
+  const MUSTER_REALM_4 = [
+    (h) => { h.vor(600); },                                                                                          // 0 Ankunft
+    (h) => { h.deko('fuenftueren', 60); h.kristall(300, 290, 'R1'); h.kiste(650); h.vor(950); },                       // 1 fünf Türen · ✦R1
+    (h) => { h.zapfen(250); h.geg('wolf', 450, 800); h.vor(1000); },                                                 // 2 erster Eiszapfen + Wolf
+    (h) => { h.luecke(250, 170); h.plat(500, 235, 160); h.zapfen(850); h.vor(1100); },                                // 3 Gletscherspalte, Eiszapfen
+    (h) => { h.kristall(300, 290, 'R2'); h.geg('ritter', 460, 460, { wartet: true }); h.vor(1200); },                 // 4 · ✦R2 („The knight was waiting“) · wartender Ritter
+    (h) => { h.zapfen(200); h.geg('wolf', 450, 800); h.kiste(900); h.kiste(940, 2); h.vor(1150); },                   // 5 Eiszapfen, Wolf, Eisblöcke
+    (h) => { h.kiste(100, 2); h.plat(220, 190, 120); h.plat(420, 130, 110); h.gegenstand(475, 95); h.zapfen(750); h.vor(1100); }, // 6 Silver Key 🗝️ ganz oben · Eiszapfen
+    (h) => { h.geg('ritter', 200, 500); h.luecke(700, 160); h.vor(1100); },                                          // 7 Ritter + Spalte
+    (h) => { h.kristall(300, 290, 'R3'); h.zapfen(650); h.geg('wolf', 800, 1000); h.vor(1100); },                     // 8 · ✦R3 · Eiszapfen
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.vor(1100); },                                           // 9
+    (h) => { h.vor(900); },                                                                                          // 10 Rückkehr-Tor
+  ];
+  const REALM_MUSTER = { ny: MUSTER_REALM, route66: MUSTER_REALM_2, az: MUSTER_REALM_3, sd: MUSTER_REALM_4 };
   const REALM_GEGENSTAND = { name: 'Frost Shard', symbol: '❄', art: 'splitter' };   // Kapitel 1 (Standard); Kapitel 2: struktur.gegenstand
   const KABINE_W = 80;   // Kabinen-Plattform des London Eye (Welt 2 Klasse 6)
   const PARKBUS_W = 118, PARKBUS_H = 54;   // geparkter Doppeldecker an der Gabelung (fest, begehbar)
@@ -1293,7 +1370,7 @@
   const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
   // endeN = Zahl der Ende-Kristalle hinter dem Boss (Story: aus der Struktur, London 2, New York 4); sie liegen gleichmäßig zwischen stopX + 95 und tuerX − 25
   function levelBauen(muster, endeN = 2) {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], klappen:[], boote:[], treibgut:[] };
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], klappen:[], boote:[], treibgut:[], zapfen:[] };
     let x = 0, bodenAb = 0, wort = 0;
     const h = {
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
@@ -1329,6 +1406,10 @@
       // Story New York (Klasse 9): Feuertreppe (zwei Gitter-Podeste vor einer Ziegelwand), U-Bahn-Eingang (Kulisse), verstecktes Tor ✦ (schwebt, nur mit langem Sprung vom Bus)
       feuertreppe: (dx) => { L.plattformen.push({ x:x + dx, y:250, w:100, art:'gitter' }, { x:x + dx + 120, y:178, w:110, art:'gitter' }); L.deko.push({ art:'feuertreppe', x:x + dx }); },
       deko: (art, dx, w) => L.deko.push({ art, x:x + dx, w }),
+      // Story Mount Rushmore (Kapitel 4): Granit-Absatz (graue Felsplattform auf den Präsidentenköpfen), alter Tunnel (am Boden dunkel, Grubenlampen), Realm Kapitel 4: Eiszapfen an der Hallendecke
+      granit: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'granit' }),
+      tunnel: (dx, w) => L.deko.push({ art:'tunnel', x:x + dx, w }),
+      zapfen: (dx) => L.zapfen.push({ x:x + dx }),
       // Story Grand Canyon (Kapitel 3): Glasbrücke = durchsichtige Plattform (Skywalk)
       glas: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'glas' }),
       // London Eye (Klasse 6, Welt 2): schwebende Kabine als Plattform (Gondel des Riesenrads), Maschinenraum (dunkler Abschnitt mit Lampen, Treppe hinunter/hinauf), roter Knopf DO NOT PRESS (Kulisse)
@@ -1644,11 +1725,12 @@
   const REALM_BLITZ = 0.7, REALM_TOR_W = 44, REALM_TOR_H = 48, REALM_RUTSCH = 0.35;
   let realm = null, realmLevels = {};
   const realmGegenstand = () => (struktur && struktur.gegenstand) || REALM_GEGENSTAND;   // Sammelstück des Kapitels: Frost Shard ❄ (1) / Dragon Scale 🐉 (2) / Golden Scale ✨ (3)
-  const realmWelt = () => (struktur && struktur.realmMuster === 'az' ? REALM_WELT_3 : REALM_WELT);   // Kulisse des Realm: Eiswelt (Kapitel 1–2) oder Drachenhöhle (Kapitel 3)
+  const realmWelt = () => (struktur && struktur.realmMuster === 'az' ? REALM_WELT_3 : struktur && struktur.realmMuster === 'sd' ? REALM_WELT_4 : REALM_WELT);   // Kulisse des Realm: Eiswelt (Kapitel 1–2), Drachenhöhle (3), Eishalle (4)
+  const imEishalle = () => imRealm() && W.id === 'eishalle';
   const drachenNeu = () => ({ t: 0, naechste: 5, aktiv: false, laerm: 0, feuer: null, feuerX: 0, schnarch: 0, schnarcher: 0, geweckt: 0 });
   function realmNeu() {
     realm = storyOpt && level.realmTore && level.realmTore.length ? { tore: level.realmTore.map((t) => ({ ...t, benutzt: false })), aktiv: false, gefunden: false, gesammelt: [], gegenstand: false, dinge: [],
-      blitz: 0, t: 0, zurueck: null, drache: drachenNeu(), rutsch: 0, besuche: 0, tipp: false } : null;
+      blitz: 0, t: 0, zurueck: null, drache: drachenNeu(), rutsch: 0, besuche: 0, tipp: false, zapfen: [], zapfenTreffer: 0 } : null;
   }
   const realmErgebnis = () => (realm ? { gefunden: realm.gefunden, kristalle: realm.gesammelt.length, stuecke: realm.gesammelt.slice(), gegenstand: realm.gegenstand } : null);
   const imRealm = () => !!(realm && realm.aktiv);
@@ -1664,23 +1746,25 @@
   }
   function realmBetreten(t) {
     const L = realmLevelBauen();
-    realm.zurueck = { level, W, SOLIDE, gegner, diamanten, tore, checkpoints, autos, oel, steine, bruecken, kakteen, kristalle, checkpoint, x: t.x + 40 };
+    realm.zurueck = { level, W, SOLIDE, gegner, diamanten, tore, checkpoints, autos, oel, steine, bruecken, kakteen, staemme, winde, hoehlen, kristalle, checkpoint, x: t.x + 40 };
     level = L; W = realmWelt(); SOLIDE = solideOben();
     gegner = L.gegner.map((g) => ({ ...g, tot: 0, flug: Math.random() * 6 }));
     diamanten = []; tore = []; checkpoints = []; autos = []; oel = L.oel.map((o) => ({ ...o, aktiv: false })); steine = []; bruecken = []; kakteen = [];   // Welt-3-Hindernisse (Kapitel 3) bleiben draußen
+    staemme = []; winde = []; hoehlen = []; wind = null; dunkel = 0;   // Welt-4-Hindernisse (Kapitel 4: Baumstämme, Böen, Bärenhöhlen, Tunnel-Dunkelheit) bleiben draußen
+    realm.zapfen = L.zapfen.map((z) => ({ ...z, phase: 'ruhe', t: 0, y: ZAPFEN_DECKE, vy: 0 })); realm.zapfenTreffer = 0;
     kristalle = L.kristalle.map(kristallBauen); for (const k of kristalle) k.weg = realm.gesammelt.includes(k.key);
     realm.dinge = L.gegenstaende.map((g) => ({ ...g, weg: realm.gegenstand, funkel: 0 }));
     checkpoint = 150; spieler.x = 150; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.2; halten = false; rutscht = 0; tot = 0;
     kamera = 0; blase = null; partikel = []; spurPunkte = [];
     realm.aktiv = true; realm.gefunden = true; realm.besuche++; realm.blitz = REALM_BLITZ; realm.t = 0; realm.rutsch = 0; realm.drache = drachenNeu(); realm.tipp = false;
-    klang.portal(); if (W.id === 'hoehle') klang.schnarchen(); else klang.heulen();
+    klang.portal(); if (W.id === 'hoehle') klang.schnarchen(); else if (W.id === 'eishalle') klang.eiskristall(); else klang.heulen();
     meldung = { text: '✦ The Realm Beyond', zeit: 2.2 };
   }
   // zurück nach New York: weiter = direkt hinter dem versteckten Tor weiterlaufen (sonst nur den Zustand zurücksetzen, z. B. Game over im Realm)
   function realmZurueck(weiter) {
     const z = realm && realm.zurueck; if (!z) return;
-    ({ level, W, SOLIDE, gegner, diamanten, tore, checkpoints, autos, oel, steine, bruecken, kakteen, kristalle, checkpoint } = z);
-    realm.aktiv = false; realm.zurueck = null; realm.rutsch = 0;
+    ({ level, W, SOLIDE, gegner, diamanten, tore, checkpoints, autos, oel, steine, bruecken, kakteen, staemme, winde, hoehlen, kristalle, checkpoint } = z);
+    realm.aktiv = false; realm.zurueck = null; realm.rutsch = 0; realm.zapfen = [];
     if (!weiter) return;
     spieler.x = z.x; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.5; halten = false; rutscht = 0; tot = 0;
     kamera = Math.max(0, Math.min(spieler.x - viewW * (viewW < 450 ? 0.28 : 0.33), level.ende - viewW)); partikel = []; spurPunkte = [];
@@ -1701,9 +1785,10 @@
       return false;
     }
     realm.t += dt; if (realm.rutsch > 0) realm.rutsch = Math.max(0, realm.rutsch - dt);
-    for (const d of realm.dinge) { d.funkel += dt; if (!d.weg && ueberlappt(box.x, box.y, box.w, box.h, d.x - 14, d.y - 18, 28, 36)) { const gs = realmGegenstand(); d.weg = true; realm.gegenstand = true; klang.splitter(); meldung = { text: `${gs.name}! ${gs.symbol}`, zeit: 1.6 }; funken(d.x, d.y, 30, gs.art === 'schuppe' ? ['#ffd36b', '#ff8a3d', '#b3332a'] : gs.art === 'goldschuppe' ? ['#ffe27a', '#ffd36b', '#fff6c0', '#ffffff'] : ['#bff0ff', '#ffffff', '#5cc8ff'], 260, 0.9); } }
+    for (const d of realm.dinge) { d.funkel += dt; if (!d.weg && ueberlappt(box.x, box.y, box.w, box.h, d.x - 14, d.y - 18, 28, 36)) { const gs = realmGegenstand(); d.weg = true; realm.gegenstand = true; klang.splitter(); meldung = { text: `${gs.name}! ${gs.symbol}`, zeit: 1.6 }; funken(d.x, d.y, 30, gs.art === 'schuppe' ? ['#ffd36b', '#ff8a3d', '#b3332a'] : gs.art === 'goldschuppe' ? ['#ffe27a', '#ffd36b', '#fff6c0', '#ffffff'] : gs.art === 'silberschluessel' ? ['#e8eef5', '#ffffff', '#b8c4d4', '#9fe3ff'] : ['#bff0ff', '#ffffff', '#5cc8ff'], 260, 0.9); } }
     const dr = realm.drache; dr.t += dt;
     if (W.id === 'hoehle') { if (hoehleBewegen(dt, box, dr)) return true; }
+    else if (W.id === 'eishalle') { if (eishalleBewegen(dt, box)) return true; }
     else {
       if (!dr.aktiv && dr.t >= dr.naechste) { dr.aktiv = true; dr.start = dr.t; dr.hoehe = 40 + Math.random() * 50; if (!ruhig()) klang.drache(); }
       if (dr.aktiv && dr.t - dr.start > 5) { dr.aktiv = false; dr.naechste = dr.t + 9 + Math.random() * 4; }
@@ -1731,6 +1816,22 @@
   }
   function drachenWecken(dr) { dr.aktiv = true; dr.start = dr.t; dr.feuer = null; dr.gefeuert = false; dr.feuerX = spieler.x + 260; dr.geweckt++; if (!ruhig()) klang.drache(); meldung = { text: 'The dragon is awake! 🐉', zeit: 1.4 }; }
   const laerm = (n) => { if (imRealm() && W.id === 'hoehle') realm.drache.laerm += n; };   // Lärm in der Drachenhöhle (Landung, Plattdrücken)
+  // Eishalle (Realm Kapitel 4): Eiszapfen hängen an Eisansätzen des Gewölbes (Ansatz y 160, Spitze y 210 – unterhalb der Erzähl-Box, also immer sichtbar). Figur ≈ 300 davor → der Zapfen zittert 0,6 s (Knacken, Tropfen = Vorwarnung), dann fällt er (Beschleunigung 2.600) und steckt 1,2 s
+  // im Spiegelboden (Treffer = „Icicle! 🧊“ = Leben weg – drüberspringen), dann zersplittert er. Wie die Steine der Welt 3: wer gleichmäßig läuft, hat ihn vor sich stecken und springt; nach dem Respawn hängen sie wieder.
+  // Der Spiegelboden ist rutschig (nach jeder Landung 0,35 s schneller wie im Schnee) und spiegelt Figur und Zapfen. Hinweis nach 2,2 s „🧊 Mind the icicles!“.
+  const ZAPFEN_VORLAUF = 300, ZAPFEN_WARNUNG = 0.6, ZAPFEN_STECKT = 1.2, ZAPFEN_DECKE = 160, ZAPFEN_H = 50, ZAPFEN_W = 20;   // Ansatz bei y 160 (unter der Erzähl-Box, immer sichtbar), Spitze bei 210
+  function eishalleBewegen(dt, box) {
+    if (realm.t > 2.2 && !realm.tipp) { realm.tipp = true; meldung = { text: '🧊 Mind the icicles!', zeit: 2.2 }; }
+    for (const z of realm.zapfen) {
+      if (z.phase === 'ruhe') { if (zustand === 'spiel' && tot <= 0 && spieler.x > z.x - ZAPFEN_VORLAUF && spieler.x < z.x) { z.phase = 'warnung'; z.t = 0; if (!ruhig()) klang.zapfen(); } }
+      else if (z.phase === 'warnung') { z.t += dt; if (z.t >= ZAPFEN_WARNUNG) { z.phase = 'faellt'; z.vy = 0; } }
+      else if (z.phase === 'faellt') { z.vy += 2600 * dt; z.y += z.vy * dt; if (z.y + ZAPFEN_H >= BODEN_Y) { z.y = BODEN_Y - ZAPFEN_H; z.phase = 'steckt'; z.t = 0; if (!ruhig()) klang.stein(); funken(z.x, BODEN_Y - 6, 10, ['#e8f8ff', '#bfefff', '#ffffff'], 160, 0.5); } }
+      else if (z.phase === 'steckt') { z.t += dt; if (z.t >= ZAPFEN_STECKT) { z.phase = 'weg'; if (!ruhig()) klang.splittern(); funken(z.x, BODEN_Y - 20, 14, ['#bfefff', '#ffffff', '#9fe3ff'], 200, 0.6); } }
+      else if (z.phase === 'weg') { if (spieler.x < z.x - ZAPFEN_VORLAUF - 50) { z.phase = 'ruhe'; z.y = ZAPFEN_DECKE; } }
+      if ((z.phase === 'faellt' || z.phase === 'steckt') && ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, z.x - ZAPFEN_W / 2 + 3, z.y + 4, ZAPFEN_W - 6, ZAPFEN_H - 6)) { realm.zapfenTreffer++; schaden('zapfen'); }
+    }
+    return false;
+  }
   // Warteschlange: ein Stück nach dem anderen – Schreibmaschine (24 Zeichen/s), 3,5 s stehen, 0,6 s ausblenden, 0,3 s Pause
   function storyBewegen(dt) {
     for (const k of kristalle) { k.funkel += dt; if (k.puff > 0) k.puff = Math.max(0, k.puff - dt); }
@@ -1930,7 +2031,7 @@
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
   }
-  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵' };
+  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵', zapfen: 'Icicle! 🧊' };
   function wiederbeleben() {
     spieler.x = checkpoint; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.6;
     halten = false;
@@ -1940,6 +2041,7 @@
     for (const h of hoehlen) if (h.x > checkpoint) { h.phase = 'ruhe'; h.t = 0; }
     for (const w of winde) if (w.x > checkpoint) w.aktiv = false;
     wind = null;
+    if (realm && realm.zapfen) for (const z of realm.zapfen) if (z.x > checkpoint) { z.phase = 'ruhe'; z.t = 0; z.y = ZAPFEN_DECKE; }   // Eishalle: Eiszapfen hängen wieder
     for (const s of surfs) s.aktiv = false; surft = 0; aufGondel = null;   // Welt 5
     for (const k of klappen) if (k.x > checkpoint) { k.phase = 'ruhe'; k.t = 0; k.winkel = 0; }   // Tower Bridge: Klappen vor der Figur wieder unten
   }
@@ -1978,6 +2080,7 @@
     for (const s of SOLIDE) if (s.gondel != null) s.x = gondeln[s.gondel].gx;
     nebelDichte = nebelDichteBei(spieler.x);
     if (W.id === 'londoneye') londonEyeBewegen(dt); else if (begleiter) begleiterBewegen(dt);
+    if (W.id === 'sd' && story) dunkel = spieler.y > BODEN_Y - 70 ? dunkelBei(spieler.x) : Math.max(0, dunkel - dt * 6);   // Story Kapitel 4: der alte Tunnel ist dunkel wie der Maschinenraum (nur unten)
     if (W.id === 'towerbridge') towerBridgeBewegen(dt);
   }
   // Tower Bridge: Klappen – Figur ≈ 520 davor → Horn + rotes Licht (0,6 s), beide Klappen heben sich 1,6 s auf 50°, bleiben 1,5 s oben, senken sich 1,6 s; danach ruhig, bis die Figur wieder weit davor ist (nach dem Checkpoint).
@@ -2022,7 +2125,7 @@
   }
   function dunkelBei(x) {
     let d = 0;
-    for (const m of level.deko) { if (m.art !== 'maschinenraum') continue; const a = m.x - DUNKEL_RAND, b = m.x + m.w + DUNKEL_RAND; if (x <= a || x >= b) continue; d = Math.max(d, Math.min(1, (x - a) / DUNKEL_RAND, (b - x) / DUNKEL_RAND)); }
+    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel') continue; const a = m.x - DUNKEL_RAND, b = m.x + m.w + DUNKEL_RAND; if (x <= a || x >= b) continue; d = Math.max(d, Math.min(1, (x - a) / DUNKEL_RAND, (b - x) / DUNKEL_RAND)); }
     return d;
   }
   // Nebeldichte an einer Stelle: 1 im Abschnitt, weiche Ränder 160 davor/dahinter
@@ -4033,7 +4136,7 @@
   function dunkelZeichnen(c, d) {   // Maschinenraum: alles dunkel, nur warme Lichtkegel unter den Lampen und ein Schein um die Figur
     c.fillStyle = `rgba(6,8,22,${DUNKEL_MAX * d})`; c.fillRect(0, 0, viewW, H);
     c.save(); c.globalAlpha = d;
-    for (const m of level.deko) { if (m.art !== 'maschinenraum') continue; for (let lx = m.x + 140; lx < m.x + m.w; lx += 420) { const sx = lx - kamera; if (sx < -160 || sx > viewW + 160) continue; const gl = c.createRadialGradient(sx, 180, 10, sx, 240, 170); gl.addColorStop(0, 'rgba(255,215,130,.42)'); gl.addColorStop(1, 'rgba(255,215,130,0)'); c.fillStyle = gl; c.beginPath(); c.arc(sx, 240, 170, 0, Math.PI * 2); c.fill(); } }
+    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel') continue; for (let lx = m.x + 140; lx < m.x + m.w; lx += 420) { const sx = lx - kamera; if (sx < -160 || sx > viewW + 160) continue; const gl = c.createRadialGradient(sx, 180, 10, sx, 240, 170); gl.addColorStop(0, 'rgba(255,215,130,.42)'); gl.addColorStop(1, 'rgba(255,215,130,0)'); c.fillStyle = gl; c.beginPath(); c.arc(sx, 240, 170, 0, Math.PI * 2); c.fill(); } }
     const fx = spieler.x - kamera, fy = spieler.y - 44, gl = c.createRadialGradient(fx, fy, 10, fx, fy, 110); gl.addColorStop(0, 'rgba(255,235,190,.3)'); gl.addColorStop(1, 'rgba(255,235,190,0)');
     c.fillStyle = gl; c.beginPath(); c.arc(fx, fy, 110, 0, Math.PI * 2); c.fill();
     c.restore();
@@ -4725,6 +4828,7 @@
     if (film.welt === 'ny') return filmZeichnenNY(c);   // Story New York (Klasse 9, Kapitel 1)
     if (film.welt === 'route66') return filmZeichnenR66(c);   // Story Route 66 (Klasse 9, Kapitel 2)
     if (film.welt === 'az') return filmZeichnenAZ(c);   // Story Grand Canyon (Klasse 9, Kapitel 3)
+    if (film.welt === 'sd') return filmZeichnenSD(c);   // Story Mount Rushmore (Klasse 9, Kapitel 4)
     if (film.welt === 'londoneye') return filmZeichnenEye(c);   // Story London Eye (Klasse 6, Kapitel 2)
     if (film.welt === 'towerbridge') return filmZeichnenBridge(c);   // Story Tower Bridge (Klasse 6, Kapitel 3)
     const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
@@ -4804,6 +4908,11 @@
       if (f.ende === 'X') { zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, 'grinsend'); tagebuch(c, viewW / 2 + 62, 258, 1.1); }
       else { zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, 'erstaunt'); c.save(); c.translate(viewW / 2 + 150, 0); c.scale(-0.8, 0.8); zeichneFigur(c, 0, 375, 70, NY_FIGUREN.maya, 'steh', zeit, 'grinsend'); c.restore(); tagebuch(c, viewW / 2 + 128, 262, 0.8); }
       c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'X' ? '📓 Lucas keeps the journal → 🗿 Mount Rushmore' : '👜 Maya keeps the journal → 🗿 Mount Rushmore', viewW / 2, 340);
+    } else if (f.welt === 'sd') {   // Mount Rushmore: du und Jayden (Ende X: er bleibt, Handschlag; Ende Y: du und Lucas, fern Jayden auf dem Weg zum schwarzen Auto)
+      zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, f.ende === 'X' ? 'grinsend' : 'erstaunt');
+      if (f.ende === 'X') { zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.jayden, 'steh', zeit, 'grinsend'); c.font = 'bold 22px system-ui, sans-serif'; c.fillStyle = '#ffd36b'; c.fillText('🤝', viewW / 2, 250); }
+      else { zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, 'erstaunt'); schwarzesAuto(c, viewW / 2 + 190, 300, 0.55); c.save(); c.translate(viewW / 2 + 140, 0); c.scale(-0.6, 0.6); zeichneFigur(c, 0, 500, 70, NY_FIGUREN.jayden, 'lauf', zeit, 'grinsend'); c.restore(); }
+      c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'X' ? '🤝 Jayden stays → 🌉 Golden Gate' : '🚗 Jayden leaves → 🌉 Golden Gate', viewW / 2, 340);
     } else if (f.welt === 'towerbridge') {   // Tower Bridge: du, der Sergeant (A: Igel-Haare · B: nasser Hut), dein Begleiter
       zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, f.ende === 'A' ? 'grinsend' : 'erstaunt');
       c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, f.ende === 'A' ? { hut: 'igel', laecheln: 0.6, blick: -2 } : { hut: 'nass', tropft: 1, blick: -2 }); c.restore();
@@ -4863,16 +4972,153 @@
   function dekoZeichnen(c) {   // zwei Durchgänge: erst die Hauswände (Feuertreppe, Diner, Eistür), dann alles davor (U-Bahn-Eingang); das Motel-Schild kommt in dekoVorneZeichnen (über dem Tor ✦)
     for (let pass = 0; pass < 2; pass++) for (const d of level.deko) {
       if (d.art === 'motel') continue;
-      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor' || d.art === 'tower') !== (pass === 0)) continue;
+      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor' || d.art === 'tower' || d.art === 'tunnel' || d.art === 'koepfe' || d.art === 'fuenftueren') !== (pass === 0)) continue;
       const x = d.x - kamera; if (x < -320 - (d.w || 0) || x > viewW + 160) continue;
       if (d.art === 'feuertreppe') feuertreppeDeko(c, x); else if (d.art === 'subway') subwayDeko(c, x); else if (d.art === 'diner') dinerDeko(c, x); else if (d.art === 'eistuer') eistuerDeko(c, x);
       else if (d.art === 'maschinenraum') maschinenraumDeko(c, x, d.w); else if (d.art === 'knopf') knopfDeko(c, x);
       else if (d.art === 'tower') towerDeko(c, x, d.w); else if (d.art === 'geist') geistDeko(c, x); else if (d.art === 'steg') stegDeko(c, x);   // Tower Bridge (Klasse 6)
       else if (d.art === 'maultier') maultierDeko(c, x); else if (d.art === 'skywalk') skywalkDeko(c, x); else if (d.art === 'wasserfall') wasserfallDeko(c, x, false); else if (d.art === 'drachentor') drachentorDeko(c, x);
+      else if (d.art === 'tunnel') tunnelDeko(c, x, d.w); else if (d.art === 'koepfe') koepfeDeko(c, x); else if (d.art === 'kompass') kompassDeko(c, x); else if (d.art === 'fuenftueren') fuenfTuerenDeko(c, x);   // Mount Rushmore (Kapitel 4) + Eishalle
     }
   }
   // vor dem Tor ✦ gezeichnet: Motel-Schild (Route 66), Wasserschleier des Wasserfalls (Grand Canyon)
-  function dekoVorneZeichnen(c) { for (const d of level.deko) { if (d.art !== 'motel' && d.art !== 'wasserfall') continue; const x = d.x - kamera; if (x < -160 || x > viewW + 160) continue; if (d.art === 'motel') motelSchild(c, x); else wasserfallDeko(c, x, true); } }
+  function dekoVorneZeichnen(c) { for (const d of level.deko) { if (d.art !== 'motel' && d.art !== 'wasserfall' && d.art !== 'spalte') continue; const x = d.x - kamera; if (x < -160 || x > viewW + 160) continue; if (d.art === 'motel') motelSchild(c, x); else if (d.art === 'spalte') spalteDeko(c, x); else wasserfallDeko(c, x, true); } }
+  /* ---------- Story Mount Rushmore (Klasse 9, Kapitel 4): Granit-Absätze, die Präsidentenköpfe nah (mit der Tagebuchseite in Lincolns Bart), der alte Tunnel (dunkel, Grubenlampen), Kompass-Zeichnung, Felsspalte (verdeckt das Tor ✦) ---------- */
+  function granitPlattform(c, x, y, w) {   // Granit-Absatz: grauer Fels mit heller Oberkante und Rissen
+    c.fillStyle = '#7d8188'; c.beginPath(); c.roundRect(x, y, w, 16, 5); c.fill();
+    c.fillStyle = '#b9bcc2'; c.beginPath(); c.roundRect(x - 2, y - 3, w + 4, 7, 3); c.fill();
+    c.strokeStyle = 'rgba(40,40,48,.4)'; c.lineWidth = 1; c.beginPath(); for (let k = 18; k < w - 10; k += 46) { c.moveTo(x + k, y + 4); c.lineTo(x + k + 6, y + 10); c.lineTo(x + k + 3, y + 15); } c.stroke();
+  }
+  function koepfeDeko(c, x) {   // die vier Präsidentenköpfe ganz nah (hinter den Granit-Absätzen des A-Wegs): großes Granitmassiv mit den Cartoon-Profilen, in Lincolns Bart steckt eine Seite aus dem Tagebuch (♪A8)
+    c.save(); c.translate(x, 0);
+    c.fillStyle = '#6f737a'; c.fillRect(-320, 0, 1500, 205);   // Felswand hinter den Köpfen (der Tunnel liegt darunter, Decke bei 205)
+    koepfeRushmore(c, 420, 205, 2.0);
+    const px = 420 + 72 * 2.0 + 8, py = 205 - 34 * 2.0 + 8;   // Lincolns Bart (vierter Kopf)
+    c.save(); c.translate(px, py); c.rotate(0.3 + (ruhig() ? 0 : Math.sin(zeit * 2) * 0.05)); c.fillStyle = '#f2e6c8'; c.fillRect(-9, -12, 18, 24); c.strokeStyle = '#8a6a34'; c.lineWidth = 1; for (let k = -7; k < 10; k += 5) { c.beginPath(); c.moveTo(-6, k); c.lineTo(6, k); c.stroke(); } c.restore();
+    c.restore();
+  }
+  function tunnelDeko(c, x, w) {   // der alte Tunnel hinter den Köpfen: dunkler Gang am Boden (Decke bei 205 mit Felszacken), Eingang und Ausgang als Bogen, Stützbalken alle 420, Grubenlampen (Lichtkegel kommen von dunkelZeichnen)
+    const a = Math.max(-100, x), b = Math.min(viewW + 100, x + w); if (b <= a) return;
+    const g = c.createLinearGradient(0, 205, 0, BODEN_Y); g.addColorStop(0, '#15120f'); g.addColorStop(1, '#2a2420');
+    c.fillStyle = g; c.fillRect(a, 205, b - a, BODEN_Y - 205);
+    c.fillStyle = '#4a443d'; c.beginPath(); for (let k = Math.floor(a / 60) * 60; k < b; k += 60) { c.moveTo(k, 205); c.lineTo(k + 14, 222 + ((k / 60) % 3) * 6); c.lineTo(k + 30, 205); } c.fill();   // Felszacken an der Decke
+    c.fillStyle = '#5a3a22'; for (let k = x + 60; k < x + w; k += 420) { if (k < -40 || k > viewW + 40) continue; c.fillRect(k - 6, 205, 12, BODEN_Y - 205); c.fillRect(k - 40, 199, 80, 8); }   // Stützbalken
+    for (let lx = x + 140; lx < x + w; lx += 420) { if (lx < -40 || lx > viewW + 40) continue; c.fillStyle = '#3a3a3a'; c.fillRect(lx - 2, 207, 4, 14); c.fillStyle = `rgba(255,215,130,${0.8 + 0.2 * Math.sin(zeit * 4 + lx)})`; c.beginPath(); c.arc(lx, 226, 5, 0, Math.PI * 2); c.fill(); }   // Grubenlampen
+    for (const ex of [x, x + w]) { if (ex < -120 || ex > viewW + 120) continue; c.fillStyle = '#5a5f66'; c.beginPath(); c.moveTo(ex - 70, BODEN_Y); c.lineTo(ex - 70, 236); c.arc(ex, 236, 70, Math.PI, 0); c.lineTo(ex + 70, BODEN_Y); c.closePath(); c.fill(); c.fillStyle = '#15120f'; c.beginPath(); c.moveTo(ex - 50, BODEN_Y); c.lineTo(ex - 50, 246); c.arc(ex, 246, 50, Math.PI, 0); c.lineTo(ex + 50, BODEN_Y); c.closePath(); c.fill(); }   // Eingang/Ausgang
+  }
+  function kompassDeko(c, x) {   // frische Kreide-Zeichnung an der Tunnelwand (♪B9): Kompassrose mit N und ein Pfeil, der nach vorn zeigt
+    c.save(); c.strokeStyle = 'rgba(255,255,255,.85)'; c.fillStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 2.5; c.lineCap = 'round';
+    c.beginPath(); c.arc(x, 262, 22, 0, Math.PI * 2); c.stroke(); c.beginPath(); c.arc(x, 262, 3, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(x, 244); c.lineTo(x - 6, 262); c.lineTo(x, 280); c.lineTo(x + 6, 262); c.closePath(); c.fill();
+    c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('N', x, 232);
+    c.lineWidth = 3; c.beginPath(); c.moveTo(x + 34, 262); c.lineTo(x + 80, 262); c.moveTo(x + 70, 252); c.lineTo(x + 82, 262); c.lineTo(x + 70, 272); c.stroke();   // Pfeil
+    c.restore();
+  }
+  function spalteDeko(c, x) {   // Felsspalte in der Tunnelwand (vor dem Tor ✦ gezeichnet): zwei Felspfeiler, dazwischen ein schmaler Spalt – man sieht nur den Schimmer dahinter
+    c.fillStyle = '#4a4540'; c.beginPath(); c.moveTo(x - 70, BODEN_Y); c.lineTo(x - 66, -30); c.lineTo(x - 24, -30); c.lineTo(x - 12, 100); c.lineTo(x - 10, BODEN_Y); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(x + 10, BODEN_Y); c.lineTo(x + 12, 100); c.lineTo(x + 24, -30); c.lineTo(x + 68, -30); c.lineTo(x + 72, BODEN_Y); c.closePath(); c.fill();
+    c.fillStyle = '#5a5550'; c.beginPath(); c.moveTo(x - 66, 10); c.lineTo(x - 26, 0); c.lineTo(x - 30, 40); c.closePath(); c.moveTo(x + 26, 0); c.lineTo(x + 68, 14); c.lineTo(x + 40, 44); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 2; c.beginPath(); c.moveTo(x - 50, 120); c.lineTo(x - 44, 200); c.lineTo(x - 52, 280); c.moveTo(x + 44, 130); c.lineTo(x + 38, 210); c.lineTo(x + 48, 290); c.stroke();
+  }
+
+  /* ---------- The Realm Beyond, Kapitel 4: Eishalle mit fünf Türen – Halle aus Eis (Säulen, Gewölbe, Frostglitzer), Spiegelboden, fünf Türen (vier zu, eine offen und leuchtend), Eiszapfen, Silver Key ---------- */
+  function hintergrundEishalle(c) {
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1b2440'); g.addColorStop(0.55, '#5f7fa8'); g.addColorStop(1, '#b7d2ea');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    // Eisgewölbe oben: Bögen (Parallaxe 0,05)
+    c.strokeStyle = 'rgba(200,235,255,.5)'; c.lineWidth = 3; c.beginPath();
+    for (let i = -1, nB = Math.ceil(viewW / 260) + 2; i < nB; i++) { const bx = ((i * 260 - kamera * 0.05) % (viewW + 260) + viewW + 260) % (viewW + 260) - 130; c.moveTo(bx - 130, 110); c.quadraticCurveTo(bx, -40, bx + 130, 110); } c.stroke();
+    // hintere Eiswand mit Schichten und Rissen (Parallaxe 0,04)
+    const m = c.createLinearGradient(0, 100, 0, 300); m.addColorStop(0, 'rgba(120,180,230,.55)'); m.addColorStop(1, '#8fbfe0'); c.fillStyle = m; c.fillRect(0, 100, viewW, 200);
+    c.fillStyle = 'rgba(255,255,255,.16)'; for (let yy = 120; yy < 300; yy += 34) c.fillRect(0, yy, viewW, 3);
+    c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 1.5; c.beginPath();
+    for (let i = 0; i < 14; i++) { const bx = ((i * 110 - kamera * 0.04) % (viewW + 120) + viewW + 120) % (viewW + 120) - 60; c.moveTo(bx, 104 + (i % 3) * 20); c.lineTo(bx + 6, 190); c.lineTo(bx - 3, 296); } c.stroke();
+    // ferne Eissäulen (Parallaxe 0,08)
+    for (let i = 0; i < 8; i++) { const sx = ((i * 320 + 90 - kamera * 0.08) % (viewW + 320) + viewW + 320) % (viewW + 320) - 160; eissaeule(c, sx, 300, 0.7, 0.5); }
+    c.fillStyle = '#a9cbe6'; c.fillRect(-viewW, 296, viewW * 3, 60);
+  }
+  function eissaeule(c, x, y, s, alpha) {   // Eissäule: hell mit blauem Kern, Kapitell oben, Glanzkante
+    c.save(); c.translate(x, y); c.scale(s, s); c.globalAlpha = alpha;
+    const g = c.createLinearGradient(-22, 0, 22, 0); g.addColorStop(0, '#dff3ff'); g.addColorStop(0.45, '#8fc5ea'); g.addColorStop(1, '#5b93c4');
+    c.fillStyle = g; c.fillRect(-22, -300, 44, 300); c.fillStyle = '#e8f8ff'; c.fillRect(-30, -310, 60, 14); c.fillRect(-28, -8, 56, 10);
+    c.fillStyle = 'rgba(255,255,255,.6)'; c.fillRect(-16, -296, 5, 290);
+    c.restore();
+  }
+  function eishalleSaeulenZeichnen(c) {   // nahe Eissäulen alle 700 hinter der Figur (Weltkoordinaten) + ihre Spiegelung im Boden
+    const a = Math.floor((kamera - 100) / 700), b = Math.ceil((kamera + viewW + 100) / 700);
+    for (let i = Math.max(0, a); i <= b; i++) { const x = i * 700 + 330 - kamera; eissaeule(c, x, BODEN_Y, 0.78, 1); spiegelbild(c, () => eissaeule(c, x, BODEN_Y, 0.78, 1)); }   // 0,78: Kapitell bleibt unter dem HUD
+  }
+  function spiegelbild(c, zeichne) {   // Spiegelboden: zeichnet etwas gespiegelt unter der Bodenlinie (blass, nur bis 60 tief)
+    c.save(); c.beginPath(); c.rect(-10, BODEN_Y + 2, viewW + 20, 60); c.clip(); c.globalAlpha = 0.28; c.translate(0, 2 * BODEN_Y + 4); c.scale(1, -1); zeichne(); c.restore();
+  }
+  function bodenSpiegel(c, x0, w, a, b, links, rechts) {   // Spiegelboden: blankes Eis, dunkler nach unten, helle Kante, Lichtstreifen
+    const g = c.createLinearGradient(0, BODEN_Y, 0, BODEN_Y + 70); g.addColorStop(0, '#c8e6f8'); g.addColorStop(1, '#4e7fae');
+    c.fillStyle = g; c.fillRect(x0, BODEN_Y, w, 70); c.fillStyle = '#3c6a98'; c.fillRect(x0, BODEN_Y + 70, w, H - BODEN_Y + 200);
+    c.fillStyle = '#ffffff'; c.fillRect(x0, BODEN_Y, w, 4);
+    c.fillStyle = 'rgba(255,255,255,.35)'; for (let x = Math.max(Math.ceil(a / 160) * 160, Math.floor(links / 160) * 160); x < Math.min(b, rechts); x += 160) { const sx = x - kamera + 40; c.beginPath(); c.moveTo(sx, BODEN_Y + 6); c.lineTo(sx + 60, BODEN_Y + 6); c.lineTo(sx + 48, BODEN_Y + 40); c.lineTo(sx - 12, BODEN_Y + 40); c.closePath(); c.fill(); }
+  }
+  function fuenfTuerenDeko(c, x) {   // fünf Türen in der Eiswand (R1): vier geschlossen (dunkle Eisbögen mit Riegel), die mittlere offen und leuchtend – zwischen den Türen Eissäulen
+    for (let k = 0; k < 5; k++) {
+      const tx = x + k * 120, offen = k === 2;
+      c.fillStyle = '#9fd0ee'; c.beginPath(); c.moveTo(tx - 40, BODEN_Y); c.lineTo(tx - 40, 190); c.arc(tx, 190, 40, Math.PI, 0); c.lineTo(tx + 40, BODEN_Y); c.closePath(); c.fill();
+      if (offen) { const p = ruhig() ? 0.85 : 0.75 + 0.25 * Math.sin(zeit * 3), g = c.createLinearGradient(0, 160, 0, BODEN_Y); g.addColorStop(0, `rgba(255,255,255,${p})`); g.addColorStop(1, `rgba(160,225,255,${0.8 * p})`); c.fillStyle = g; const gl = c.createRadialGradient(tx, 240, 10, tx, 240, 110); gl.addColorStop(0, `rgba(255,255,255,${0.5 * p})`); gl.addColorStop(1, 'rgba(160,225,255,0)'); c.save(); c.fillStyle = gl; c.beginPath(); c.arc(tx, 240, 110, 0, Math.PI * 2); c.fill(); c.restore(); c.fillStyle = g; }
+      else { const g = c.createLinearGradient(0, 160, 0, BODEN_Y); g.addColorStop(0, '#0a1a33'); g.addColorStop(1, '#1b3c66'); c.fillStyle = g; }
+      c.beginPath(); c.moveTo(tx - 28, BODEN_Y); c.lineTo(tx - 28, 198); c.arc(tx, 198, 28, Math.PI, 0); c.lineTo(tx + 28, BODEN_Y); c.closePath(); c.fill();
+      if (!offen) { c.fillStyle = '#5b6b84'; c.fillRect(tx - 22, 262, 44, 6); c.fillStyle = '#c9c9d6'; c.beginPath(); c.arc(tx + 16, 265, 4, 0, Math.PI * 2); c.fill(); }   // Riegel + Schloss
+      c.fillStyle = 'rgba(255,255,255,.75)'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('✦', tx, 164);
+      if (k < 4) eissaeule(c, tx + 60, BODEN_Y, 0.55, 0.9);
+    }
+  }
+  function zapfenZeichnen(c, z) {   // Eiszapfen: hängt an der Decke (ruhe), zittert mit Tropfen (warnung), fällt (faellt), steckt im Boden (steckt) – dazu die Spiegelung im Boden
+    if (z.phase === 'weg') return;
+    const x = z.x - kamera, zitter = z.phase === 'warnung' && !ruhig() ? Math.sin(zeit * 40) * 2 : 0;
+    const zeichne = (sx, sy, nachUnten) => {
+      c.save(); c.translate(sx, sy); if (!nachUnten) { c.translate(0, ZAPFEN_H); c.scale(1, -1); }
+      const g = c.createLinearGradient(-ZAPFEN_W / 2, 0, ZAPFEN_W / 2, 0); g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, '#bfefff'); g.addColorStop(1, '#6fb2e8');
+      c.fillStyle = g; c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-ZAPFEN_W / 2, 0); c.lineTo(ZAPFEN_W / 2, 0); c.lineTo(3, ZAPFEN_H * 0.8); c.lineTo(0, ZAPFEN_H); c.lineTo(-3, ZAPFEN_H * 0.8); c.closePath(); c.fill(); c.stroke();
+      c.restore();
+    };
+    if (z.phase === 'ruhe' || z.phase === 'warnung') {
+      c.fillStyle = '#dff3ff'; c.fillRect(x - 18, ZAPFEN_DECKE - 12, 36, 12);   // Eisansatz an der Decke
+      zeichne(x + zitter, ZAPFEN_DECKE, true);
+      if (z.phase === 'warnung') { c.fillStyle = 'rgba(200,240,255,.9)'; for (let k = 0; k < 2; k++) { const q = (zeit * 1.6 + k * 0.5) % 1; c.beginPath(); c.arc(x + (k ? 4 : -3), ZAPFEN_DECKE + ZAPFEN_H + q * (BODEN_Y - ZAPFEN_DECKE - ZAPFEN_H), 2, 0, Math.PI * 2); c.fill(); } c.fillStyle = 'rgba(40,60,90,.25)'; c.beginPath(); c.ellipse(x, BODEN_Y + 2, 12 + 10 * (z.t / ZAPFEN_WARNUNG), 4, 0, 0, Math.PI * 2); c.fill(); }   // Tropfen + Schatten am Boden
+      return;
+    }
+    if (z.phase === 'faellt') { c.fillStyle = 'rgba(40,60,90,.3)'; c.beginPath(); c.ellipse(x, BODEN_Y + 2, 16, 5, 0, 0, Math.PI * 2); c.fill(); zeichne(x, z.y, true); return; }
+    const f = z.t > ZAPFEN_STECKT - 0.3 ? Math.max(0.3, (ZAPFEN_STECKT - z.t) / 0.3) : 1;
+    c.save(); c.globalAlpha = f; zeichne(x, z.y, true); c.restore();
+    spiegelbild(c, () => zeichne(x, z.y, true));
+  }
+  function frostglitzer(c) {   // Eishalle (Bildschirmkoordinaten): feiner Frost, der langsam sinkt und funkelt – eine Füllung je Frame
+    c.save(); c.fillStyle = 'rgba(225,245,255,.8)'; c.beginPath();
+    const t = ruhig() ? 0 : zeit;
+    for (let i = 0; i < 36; i++) {
+      const v = 10 + (i % 5) * 5, r = 0.7 + (i % 3) * 0.5, f = ruhig() ? 1 : 0.5 + 0.5 * Math.sin(t * 2.5 + i);
+      if (f < 0.4) continue;
+      const x = (((i * 97.3 + Math.sin(t * 0.5 + i) * 10 - kamera * 0.15) % (viewW + 40)) + viewW + 40) % (viewW + 40) - 20;
+      const y = (((i * 53.7 + t * v) % (H + 20)) + H + 20) % (H + 20) - 10;
+      c.moveTo(x + r, y); c.arc(x, y, r, 0, Math.PI * 2);
+    }
+    c.fill(); c.restore();
+  }
+  function silberschluessel(c, x, y, t) {   // Silver Key 🗝️ (Kapitel 4): alter silberner Schlüssel mit Kleeblatt-Reide und zwei Bärten, kühles Leuchten, Funkel-Sterne
+    c.save(); c.translate(x, y + (ruhig() ? 0 : Math.sin(t * 2.4) * 4)); c.rotate(-0.6);
+    const g = c.createRadialGradient(0, 0, 2, 0, 0, 32); g.addColorStop(0, 'rgba(230,240,255,.8)'); g.addColorStop(1, 'rgba(160,200,255,0)');
+    c.fillStyle = g; c.beginPath(); c.arc(0, 0, 32, 0, Math.PI * 2); c.fill();
+    const lg = c.createLinearGradient(-14, -14, 14, 14); lg.addColorStop(0, '#ffffff'); lg.addColorStop(0.5, '#c0c8d4'); lg.addColorStop(1, '#6b7684');
+    c.fillStyle = lg; c.strokeStyle = '#3a4250'; c.lineWidth = 1.2;
+    for (const [cx, cy] of [[-13, -6], [-6, -14], [-19, -14]]) { c.beginPath(); c.arc(cx, cy, 5.5, 0, Math.PI * 2); c.fill(); c.stroke(); }   // Kleeblatt-Reide
+    c.fillStyle = '#2b3240'; c.beginPath(); c.arc(-13, -11, 2.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = lg; c.beginPath(); c.roundRect(-9, -2, 30, 5, 2); c.fill(); c.stroke();   // Schaft
+    c.beginPath(); c.rect(12, 3, 4, 7); c.rect(18, 3, 3, 5); c.fill(); c.stroke();   // Bart
+    c.rotate(0.6); c.fillStyle = '#fff'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    for (let k = 0; k < 3; k++) { const a = (ruhig() ? 0 : t * 1.8) + k * Math.PI * 2 / 3; c.fillText('✦', Math.cos(a) * 24, Math.sin(a) * 24); }
+    c.font = '10px system-ui, sans-serif'; c.fillText('🗝️', 0, -32);
+    c.restore();
+  }
+  const REALM_WELT_4 = { id: 'eishalle', name: 'The Realm Beyond', sturz: 'Crevasse! ❄️', gegnerarten: ['wolf', 'ritter'], farben: { plattform: '#5b6b84', plattformOben: '#ffffff', hud: '#3a7bd5' },
+    kulisse: hintergrundEishalle, boden: bodenSpiegel, grube: gletscherspalte, kiste: eisblock, tuer: rueckTor, boss: () => {}, sprechblaseHoehe: 70,
+    hudSymbol: (c, x, y) => { c.font = '18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#3a7bd5'; c.fillText(realmGegenstand().symbol, x, y - 6); } };
   /* ---------- Story Grand Canyon (Klasse 9, Kapitel 3): Maultierpfad-Schild, Skywalk-Schild, Glasbrücke, Wasserfall (verdeckt das versteckte Tor ✦) ---------- */
   function maultierDeko(c, x) {   // Schild „MULE TRAIL ↓“ mit einem Maultier davor; der Pfad ist als helle Serpentine an der Canyonwand hinter dem Boden angedeutet
     c.strokeStyle = 'rgba(255,230,200,.45)'; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(x + 60, BODEN_Y - 2); c.quadraticCurveTo(x + 140, BODEN_Y - 30, x + 90, BODEN_Y - 58); c.quadraticCurveTo(x + 40, BODEN_Y - 80, x + 120, BODEN_Y - 104); c.stroke();
@@ -5153,7 +5399,7 @@
     c.font = '10px system-ui, sans-serif'; c.fillText('✨', 0, -32);
     c.restore();
   }
-  function realmDingeZeichnen(c) { const gs = realmGegenstand(); for (const d of realm.dinge) { if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue; if (gs.art === 'schuppe') dragonScale(c, x, d.y, d.funkel); else if (gs.art === 'goldschuppe') goldenScale(c, x, d.y, d.funkel); else frostShard(c, x, d.y, d.funkel); } }
+  function realmDingeZeichnen(c) { const gs = realmGegenstand(); for (const d of realm.dinge) { if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue; if (gs.art === 'schuppe') dragonScale(c, x, d.y, d.funkel); else if (gs.art === 'goldschuppe') goldenScale(c, x, d.y, d.funkel); else if (gs.art === 'silberschluessel') silberschluessel(c, x, d.y, d.funkel); else frostShard(c, x, d.y, d.funkel); } }
   function realmFackelnZeichnen(c) {   // Fackeln alle 700, Banner alle 1.400 (Weltkoordinaten, hinter der Figur)
     const a = Math.floor((kamera - 100) / 700), b = Math.ceil((kamera + viewW + 100) / 700);
     for (let i = Math.max(0, a); i <= b; i++) { const x = i * 700 + 330 - kamera; if (i % 2) bannerPfahl(c, x, BODEN_Y); else fackel(c, x, BODEN_Y); }
@@ -5606,6 +5852,74 @@
     c.restore();
     filmUntertitel(c, f);
   }
+  /* ---------- Film Mount Rushmore (Kapitel 4, Ende X / Y): Bühne am Ranger-Tor vor den Präsidentenköpfen (kühler Himmel, Nadelwald, Wiese), Maya, Jayden, Lucas, die Frau, die eigene Figur.
+     Ende X: Tor auf, vier gehen gemeinsam hindurch (17) · Jayden „Thanks“ leise (18) · Maya verdreht die Augen 🙄 (19) · hinten beobachtet die Frau mit dem Kompass, Blicklinie (20).
+     Ende Y: Tor auf, drei gehen hindurch, Jayden geht links davon (17) · Lucas blickt zurück (18) · Maya schweigt (19) · weit weg geht Jayden zu einem schwarzen Auto, die Frau wartet daran (20) · Titelkarte. ---------- */
+  const SDF = { tor: 760, ich: 520, maya: 450, jayden: 380, lucas: 310, frau: 160, auto: -200 };
+  function filmKameraSD(sz, f, ende) {   // [x, y, zoom] der Bildmitte
+    const K = {
+      X: [[[500, 230, 1.0], [640, 225, 1.15]], [[600, 225, 1.25], [560, 225, 1.5]], [[600, 230, 1.4], [600, 232, 1.8]], [[520, 225, 1.1], [330, 222, 0.85]]],
+      Y: [[[480, 230, 1.0], [600, 225, 1.1]], [[560, 225, 1.3], [520, 225, 1.55]], [[600, 230, 1.4], [600, 232, 1.8]], [[300, 225, 1.0], [-20, 225, 0.8]]],
+    }[ende][Math.min(3, sz)];
+    const g = sanft(f);
+    return [lerp(K[0][0], K[1][0], g), lerp(K[0][1], K[1][1], g), lerp(K[0][2], K[1][2], g)];
+  }
+  function schwarzesAuto(c, x, y, s) {   // das Auto der Frau: schwarze Limousine, getönte Scheiben, Chrom, ein ✦ als Kennzeichen
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#15171c'; c.beginPath(); c.roundRect(-70, -34, 140, 28, [6, 6, 4, 4]); c.fill(); c.beginPath(); c.roundRect(-44, -58, 88, 28, [14, 14, 2, 2]); c.fill();
+    c.fillStyle = '#2f3a4a'; c.fillRect(-38, -54, 32, 20); c.fillRect(2, -54, 34, 20);
+    c.fillStyle = '#c9ced6'; c.fillRect(-70, -16, 140, 3); c.fillStyle = '#ffd36b'; c.fillRect(-70, -28, 6, 6); c.fillStyle = '#c0322e'; c.fillRect(64, -28, 6, 6);
+    c.fillStyle = '#1b1b1f'; for (const rx of [-42, 42]) { c.beginPath(); c.arc(rx, -6, 11, 0, Math.PI * 2); c.fill(); } c.fillStyle = '#9aa3ad'; for (const rx of [-42, 42]) { c.beginPath(); c.arc(rx, -6, 5, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#eee'; c.fillRect(-10, -14, 20, 7); c.fillStyle = '#111'; c.font = 'bold 6px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('✦ 5', 0, -10.5);
+    c.restore();
+  }
+  function filmKulisseSD(c, torAuf) {   // kühler Himmel, ferne Berge, die vier Köpfe im Granit, Nadelwald, Wiese, Waldweg; rechts das Ranger-Tor (Öffnung aus der Szene)
+    const g = c.createLinearGradient(0, -400, 0, 252); g.addColorStop(0, '#6fb2e8'); g.addColorStop(0.6, '#c9e4f6'); g.addColorStop(1, '#e9f3ea');
+    c.fillStyle = g; c.fillRect(-900, -500, 2600, 760);
+    c.fillStyle = 'rgba(255,255,255,.92)'; for (const [wx, wy] of [[-200, 40], [300, 60], [900, 34]]) { c.beginPath(); c.arc(wx, wy, 16, 0, Math.PI * 2); c.arc(wx + 20, wy - 9, 22, 0, Math.PI * 2); c.arc(wx + 46, wy, 15, 0, Math.PI * 2); c.fill(); }
+    for (let i = -3; i < 8; i++) { const bx = i * 330 - 60, bh = 60 + ((i * 53 + 300) % 50); c.fillStyle = '#8fa6c4'; c.beginPath(); c.moveTo(bx, 236); c.lineTo(bx + 120, 236 - bh); c.lineTo(bx + 240, 236); c.closePath(); c.fill(); }
+    koepfeRushmore(c, 420, 238, 1.3);
+    for (let i = -6; i < 30; i++) tanne(c, i * 70 - 60, 256, 46 + ((i * 37 + 200) % 34), '#2e7d4f', '#4a2e18');
+    c.fillStyle = '#86bf5e'; c.fillRect(-900, 254, 2600, 300); c.fillStyle = 'rgba(40,80,30,.18)'; c.fillRect(-900, 254, 2600, 4);
+    c.fillStyle = '#6b4a2e'; c.fillRect(-900, BODEN_Y, 2600, 300); c.fillStyle = '#5fa84a'; c.fillRect(-900, BODEN_Y, 2600, 9); c.fillStyle = '#3f8a3e'; c.fillRect(-900, BODEN_Y + 9, 2600, 2);
+    for (const kx of [-440, 1000]) tanne(c, kx, BODEN_Y, 110, '#1f5f3a', '#4a2e18');
+    const alt = tuer; tuer = { offen: Math.max(0, Math.min(1, torAuf)) }; rangerTor(c, SDF.tor, BODEN_Y); tuer = alt;
+    if (torAuf > 0.3) { const lg = c.createRadialGradient(SDF.tor, 250, 4, SDF.tor, 250, 90); lg.addColorStop(0, `rgba(255,255,255,${0.7 * torAuf})`); lg.addColorStop(0.5, `rgba(150,225,255,${0.4 * torAuf})`); lg.addColorStop(1, 'rgba(150,120,255,0)'); c.fillStyle = lg; c.beginPath(); c.arc(SDF.tor, 250, 90, 0, Math.PI * 2); c.fill(); realmTorZeichnen(c, SDF.tor, 250, zeit, 1.4 * torAuf); }   // das Tor dahinter leuchtet
+  }
+  function filmZeichnenSD(c) {
+    const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
+    if (!filmSzenen(ende)[sz]) return filmTitel(c, f);
+    const [kx, ky, kz] = filmKameraSD(sz, p, ende);
+    c.save(); c.translate(viewW / 2, H / 2); c.scale(kz, kz); c.translate(-kx, -ky);
+    const torAuf = sz === 0 ? sanft((tt - 0.8) / 1.4) : 1;
+    filmKulisseSD(c, torAuf);
+    // Szene 1: alle gehen gemeinsam (X: vier, Y: drei) nach dem Öffnen Richtung Tor (Weg 170), danach stehen sie davor
+    const gehen = sz === 0 ? sanft((tt - 2.2) / 2.2) : 1, weg = gehen * 170, laufen = sz === 0 && tt > 2.2 && gehen < 1;
+    const pose = laufen ? 'lauf' : 'steh';
+    const mitJayden = ende === 'X';
+    const falsch = ende === 'Y' ? (sz === 0 ? sanft((tt - 1.0) / 2.0) * 0.35 : 0.35) : 0;   // „It felt wrong“: kühler Grauschleier über der Szene
+    // Jayden: X mit der Gruppe; Y geht links davon (Szene 1), Szene 4 weit weg zum Auto der Frau
+    if (mitJayden) filmPerson(c, NY_FIGUREN.jayden, SDF.jayden + weg, pose, sz === 1 ? 'erstaunt' : 'grinsend', false, 0);
+    else if (sz === 0) { const jx = SDF.jayden - 60 - sanft(tt / 5.5) * 420; c.save(); c.globalAlpha = Math.max(0.15, 1 - sanft((tt - 3.5) / 2.5)); filmPerson(c, NY_FIGUREN.jayden, jx, 'lauf', 'erstaunt', true, 0); c.restore(); }
+    else if (sz === 3) { const jx = SDF.auto + 500 - sanft(tt / 4.5) * 360; schwarzesAuto(c, SDF.auto, BODEN_Y, 0.9); filmPerson(c, NY_FIGUREN.frau, SDF.auto + 95, 'steh', 'grinsend', false, 0); kompass(c, SDF.auto + 95 + 16, BODEN_Y - 40, zeit); filmPerson(c, NY_FIGUREN.jayden, jx, sanft(tt / 4.5) < 1 ? 'lauf' : 'steh', 'erstaunt', true, 0); }
+    // Maya: Szene 3 verdreht die Augen (X) bzw. schweigt (Y)
+    const mayaAusdruck = sz === 2 ? 'erstaunt' : 'grinsend';
+    filmPerson(c, NY_FIGUREN.maya, SDF.maya + weg, pose, mayaAusdruck, false, 0);
+    // Lucas: Y Szene 2 blickt zurück (nach links)
+    const lucasZurueck = ende === 'Y' && sz === 1;
+    filmPerson(c, NY_FIGUREN.lucas, SDF.lucas + weg, pose, lucasZurueck ? 'erstaunt' : 'grinsend', lucasZurueck, 0);
+    filmPerson(c, filmSkin(), SDF.ich + weg, pose, ende === 'Y' && sz >= 1 ? 'erstaunt' : 'grinsend', false, 0);
+    // Ende X Szene 4: hinten (links) steht die Frau und beobachtet – Blicklinie zur Gruppe
+    if (ende === 'X' && sz === 3) { const a = sanft(tt / 1.4); c.save(); c.globalAlpha = 0.5 + 0.5 * a; filmPerson(c, NY_FIGUREN.frau, SDF.frau, 'steh', 'grinsend', false, 0); kompass(c, SDF.frau + 16, BODEN_Y - 40, zeit); c.restore(); if (tt > 1.2) blickLinie(c, SDF.frau + 10, BODEN_Y - 72, SDF.jayden + weg - 8, BODEN_Y - 70, sanft((tt - 1.2) / 1.0)); }
+    if (falsch > 0) { c.fillStyle = `rgba(60,80,110,${falsch})`; c.fillRect(-900, -500, 2600, 1000); }
+    if (ende === 'X' && sz === 1 && tt > 0.8) { c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = '#ffd36b'; c.fillText('…', SDF.jayden + weg - 26, BODEN_Y - 118); }   // Jayden spricht leise
+    if (ende === 'X' && sz === 2 && tt > 0.6) { c.save(); c.globalAlpha = Math.min(1, (tt - 0.6) / 0.6); c.font = 'bold 22px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('🙄', SDF.maya + weg + 2, BODEN_Y - 116 - (ruhig() ? 0 : Math.abs(Math.sin(tt * 3)) * 3)); c.restore(); }   // Maya verdreht die Augen
+    if (ende === 'Y' && sz === 1 && tt > 1.0) { c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = '#ffd36b'; c.fillText('…', SDF.lucas + weg - 30, BODEN_Y - 118); }   // Lucas spricht
+    if (ende === 'Y' && sz === 2 && tt > 1.6) { c.font = 'bold 22px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(255,255,255,.7)'; c.fillText('…', SDF.maya + weg + 4, BODEN_Y - 116); }   // Maya sagt nichts
+    if (sz === 0) for (const [n, x] of [['Lucas', SDF.lucas + weg], ['Maya', SDF.maya + weg], ['You', SDF.ich + weg]].concat(mitJayden ? [['Jayden', SDF.jayden + weg]] : [])) namensSchild(c, x, n);
+    c.restore();
+    filmUntertitel(c, f);
+  }
   function hintergrund(c) { W.kulisse(c); }
   function hintergrundNY(c) {
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
@@ -5644,7 +5958,7 @@
       W.boden(c, a - kamera, b - a, a, b, links, rechts);
     }
     if (level.deko && level.deko.length) dekoZeichnen(c);   // Story New York: Feuertreppe, U-Bahn-Eingang
-    if (imRealm()) { if (W.id === 'hoehle') hoehleGoldZeichnen(c); else { drachenSchatten(c); realmFackelnZeichnen(c); } }
+    if (imRealm()) { if (W.id === 'hoehle') hoehleGoldZeichnen(c); else if (W.id === 'eishalle') eishalleSaeulenZeichnen(c); else { drachenSchatten(c); realmFackelnZeichnen(c); } }
     for (const p of level.plattformen) {
       const x = p.x - kamera; if (x > viewW + 100 || x + p.w < -100) continue;
       if (p.art === 'stein' && W.stein) { W.stein(c, x, p.y, p.w); continue; }   // Trittstein im Bach (Welt 4)
@@ -5652,6 +5966,7 @@
       if (p.art === 'kabine') { kabinePlattform(c, x, p.y, p.w); continue; }       // schwebende Kabine des London Eye (Welt 2 Klasse 6)
       if (p.art === 'glas') { glasPlattform(c, x, p.y, p.w); continue; }           // Glasbrücke des Skywalk (Story Grand Canyon)
       if (p.art === 'mauer') { mauerPlattform(c, x, p.y, p.w); continue; }         // Wehrgang der Tower-Mauer (Welt 3 Klasse 6)
+      if (p.art === 'granit') { granitPlattform(c, x, p.y, p.w); continue; }       // Granit-Absatz auf den Präsidentenköpfen (Story Mount Rushmore)
       c.fillStyle = W.farben.plattform; c.beginPath(); c.roundRect(x, p.y, p.w, 14, 4); c.fill();
       c.fillStyle = W.farben.plattformOben; c.beginPath(); c.roundRect(x - 2, p.y - 3, p.w + 4, 7, 3); c.fill();
     }
@@ -5700,6 +6015,7 @@
     for (const a of autos) { const x = a.x - kamera; if (x > viewW + 100 || x + a.w < -100) continue; autoZeichnen(c, a); }
     for (const s of steine) { const x = s.x - kamera; if (x > viewW + 80 || x < -80) continue; steinZeichnen(c, s); }
     if (imRealm() && W.id === 'hoehle' && realm.drache.aktiv) feuerZeichnen(c, realm.drache);   // Drachenhöhle: Warnglut, dann Flammenstoß
+    if (imEishalle()) { for (const z of realm.zapfen) { const x = z.x - kamera; if (x > viewW + 60 || x < -60) continue; zapfenZeichnen(c, z); } }   // Eishalle: Eiszapfen (hängen, zittern, fallen, stecken)
     if (level.tuerX - kamera < viewW + 400) {
       W.tuer(c, level.tuerX - kamera, BODEN_Y);
       W.boss(c, level.bossX - kamera, BODEN_Y);
@@ -5724,6 +6040,7 @@
       if (traegtAktiv) falkeZeichnen(c, spieler.x - kamera, spieler.y - 96);   // Cameo Felix: Falke hält die Figur
       const surfend = surft > 0 && spieler.amBoden && rutscht <= 0;
       if (surfend) surfbrett(c, spieler.x - kamera, spieler.y);   // Welt 5: Surfbrett unter der Figur, Figur lehnt sich nach vorn
+      if (imEishalle() && spieler.y <= BODEN_Y + 1) spiegelbild(c, () => zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, ausdruckAktuell()));   // Spiegelboden: die Figur spiegelt sich
       if (rutscht > 0 || surfend) { c.save(); c.translate(spieler.x - kamera, spieler.y); c.rotate(surfend ? 0.16 : -0.22 - 0.06 * Math.sin(zeit * 30)); c.translate(-(spieler.x - kamera), -spieler.y); }   // rutscht: Figur kippt leicht nach hinten
       zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, rutscht > 0 ? 'erstaunt' : surfend ? 'zunge' : ausdruckAktuell());
       if (rutscht > 0 || surfend) c.restore();
@@ -5939,8 +6256,9 @@
     }
     hintergrund(ctx);
     welt(ctx);
-    if (imRealm() && W.id !== 'hoehle') schneesturm(ctx);   // The Realm Beyond (Eiswelt): Schneesturm über allem (außer HUD); in der Drachenhöhle Goldstaub (goldstaub)
+    if (imRealm() && W.id === 'realm') schneesturm(ctx);   // The Realm Beyond (Eiswelt): Schneesturm über allem (außer HUD); in der Drachenhöhle Goldstaub (goldstaub), in der Eishalle Frostglitzer
     if (imRealm() && W.id === 'hoehle') goldstaub(ctx);
+    if (imRealm() && W.id === 'eishalle') frostglitzer(ctx);
     ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, viewW, H); ctx.clip(); hud(ctx); ctx.restore();
   }
@@ -5990,7 +6308,7 @@
       boss: (c, x, y) => { felsspalt(c, x, y); sheriffRattlesnake(c, x, y); }, tuer: westernTor, bossKlang: () => { rasseln++; klang.rassel(); } },
     sd: { id: 'sd', name: 'Mount Rushmore', staat: 'South Dakota', ziel: 'Mount Rushmore', bossName: 'Grizzly Grandpa', bossSymbol: '🐻', banner: 'Oh no – Grizzly Grandpa is awake!', richtig: "Correct – the ranger gate opens. Now let me sleep!", falsch: "Not this time, young ranger!", start: "Let's find Mount Rushmore!", ende: "You made it to Mount Rushmore!",
       sturz: 'Splash! 🏞️',
-      gegnerarten: ['bueffel', 'biber', 'adler'], farben: { plattform: '#6b4a2e', plattformOben: '#5fa84a', hud: '#2e7d4f' }, muster: MUSTER_SD, sprechblaseHoehe: 200,
+      gegnerarten: ['bueffel', 'biber', 'adler'], farben: { plattform: '#6b4a2e', plattformOben: '#5fa84a', hud: '#2e7d4f' }, muster: MUSTER_SD, musterStory: MUSTER_SD_STORY, storyStruktur: STRUKTUR_SD, realmZurueck: 'Back at Mount Rushmore! 🗿', sprechblaseHoehe: 200,
       kulisse: hintergrundRushmore, boden: waldboden, grube: bachZeichnen, kiste: holzstapel, stein: trittstein, hudSymbol: (c, x, y) => schildRushmore(c, x, y + 14, 0.34, false),
       boss: (c, x, y) => { baerenhoehleBoss(c, x, y); grizzlyGrandpa(c, x, y); }, tuer: rangerTor, bossKlang: () => { brummt++; klang.brummen(); } },
     ca: { id: 'ca', name: 'Golden Gate', staat: 'California', ziel: 'Golden Gate Bridge', bossName: 'Captain Fog', bossSymbol: '👻', banner: 'Captain Fog is blocking the bridge!', richtig: "Correct – the bridge is yours, sailor!", falsch: "Not this time – lost in the fog!", start: "Let's find the Golden Gate Bridge!", ende: "You made it to the Golden Gate Bridge!",
@@ -6167,14 +6485,16 @@
         begleiter: begleiter ? { art: begleiter.art, x: Math.round(begleiter.x), y: Math.round(begleiter.y) } : null, dunkel: Math.round(dunkel * 100) / 100, radWinkel: Math.round(radWinkel * 1000) / 1000, kameraHoch: Math.round(kameraHoch * 100) / 100,   // London Eye   // Kapitel 2: gewählte Variante je Quelle (z. B. { 'ny.g2': 'X' }), Sammelstück des Realm
         realm: realm ? { aktiv: realm.aktiv, gefunden: realm.gefunden, gesammelt: realm.gesammelt.slice(), gegenstand: realm.gegenstand, besuche: realm.besuche, t: Math.round(realm.t * 100) / 100,
           tore: realm.tore.map((t) => ({ x: t.x, y: t.y, benutzt: t.benutzt })), rueckX: imRealm() ? level.rueckX : null, welt: W.id, dinge: realm.dinge.map((d) => ({ x: d.x, y: d.y, weg: d.weg })),
-          drache: realm.drache.aktiv, gegner: imRealm() ? gegner.map((g) => g.art) : [], hoehle: imRealm() && W.id === 'hoehle',
+          drache: realm.drache.aktiv, gegner: imRealm() ? gegner.map((g) => g.art) : [], hoehle: imRealm() && W.id === 'hoehle', eishalle: imEishalle(),
+          zapfen: realm.zapfen.map((z) => ({ x: z.x, phase: z.phase, y: Math.round(z.y) })), zapfenTreffer: realm.zapfenTreffer, rutsch: realm.rutsch > 0,
           laerm: Math.round((realm.drache.laerm || 0) * 100) / 100, feuer: realm.drache.feuer ? { x: Math.round(realm.drache.feuer.x), t: Math.round(realm.drache.feuer.t * 100) / 100 } : null, schnarcher: realm.drache.schnarcher || 0, geweckt: realm.drache.geweckt || 0 } : null,
       };
     },
     // Realm (Tests): direkt hinein (wie durch das Tor), bis kurz vor das Rückkehr-Tor, Drache sofort
     realmBetreten() { if (realm && !realm.aktiv && zustand === 'spiel') { const t = realm.tore.find((x) => !x.benutzt); if (t) { t.benutzt = true; realmBetreten(t); return true; } } return false; },
     realmEnde(dx = 120) { if (imRealm()) this.teleport(level.rueckX - dx); },
-    drache() { if (imRealm()) { if (W.id === 'hoehle') drachenWecken(realm.drache); else realm.drache.naechste = realm.drache.t; } },   // Eiswelt: Drache fliegt sofort; Drachenhöhle: wacht sofort auf
+    drache() { if (imRealm()) { if (W.id === 'hoehle') drachenWecken(realm.drache); else realm.drache.naechste = realm.drache.t; } },
+    zapfenLoesen(i) { const z = realm && realm.zapfen[i]; if (z) { z.phase = 'warnung'; z.t = 0; } },   // Test: Eiszapfen i sofort ankündigen (fällt nach 0,6 s)   // Eiswelt: Drache fliegt sofort; Drachenhöhle: wacht sofort auf
     gabelung(dx = 300, gabel) { const g = kristalle.filter((k) => istWahlKristall(k, gabel || (gabeln[0] && gabeln[0].gabel))); if (g.length) this.teleport(Math.min(...g.map((k) => k.x)) - dx); },
     kristall(i) { const k = kristalle[i]; if (story && k && kristallSichtbar(k) && zustand === 'spiel') { kristallSammeln(k, false); return true; } return false; },
     stationWeiter() { if (story && story.station) { story.station.t = Math.max(story.station.t, STATION_SPERRE); stationEnde(true); } },

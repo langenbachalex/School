@@ -1,12 +1,14 @@
-"""Vertont die Story „The Lost Map“ (Road Trip Run, Klasse 9) mit verteilten Stimmen (ElevenLabs) – Kapitel 1 New York (STORY.ny, Präfix ny_), Kapitel 2 Route 66 (STORY.route66, Präfix route66_)
-und Kapitel 3 Grand Canyon (STORY.az, Präfix az_).
+"""Vertont die Story „The Lost Map“ (Road Trip Run, Klasse 9) mit verteilten Stimmen (ElevenLabs) – Kapitel 1 New York (STORY.ny, Präfix ny_), Kapitel 2 Route 66 (STORY.route66, Präfix route66_),
+Kapitel 3 Grand Canyon (STORY.az, Präfix az_) und Kapitel 4 Mount Rushmore (STORY.sd, Präfix sd_; Welt-Id sd = South Dakota).
 
-Erzähler = Mr. Alex (alex). Wörtliche Rede: Maya und die Frau mit dem Kompass = Jessica (f), Jayden, Lucas, der Ritter und Sheriff Rattlesnake = Jeremy (m); Sätze des Spielers („No, thanks.“,
-„We have to go“, „Tell us the truth. Now.“, „Later. First we get past that truck.“, „Stay close to me“, „It's yours. Keep it safe.“, „You've got the plan. Keep it.“) und die Stimme aus dem Licht liest der Erzähler.
-Verschachtelte Zitate (Tagebuchtext in einfachen Anführungszeichen innerhalb von Lucas' Rede, Kapitel 3 Stück 5 und A8) spricht Lucas (m) mit.
+Erzähler = Mr. Alex (alex). Wörtliche Rede: Maya und die Frau mit dem Kompass = Jessica (f), Jayden, Lucas, der Ritter, Sheriff Rattlesnake und Grizzly Grandpa = Jeremy (m); Sätze des Spielers („No, thanks.“,
+„We have to go“, „Tell us the truth. Now.“, „Later. First we get past that truck.“, „Stay close to me“, „It's yours. Keep it safe.“, „You've got the plan. Keep it.“, „Everybody makes mistakes … Give it back. Now.“,
+„Go … We can't trust you anymore.“) und die Stimme aus dem Licht liest der Erzähler.
+Verschachtelte Zitate (Tagebuchtext in einfachen Anführungszeichen innerhalb von Lucas' Rede, Kapitel 3 Stück 5 und A8) spricht Lucas (m) mit; das Tagebuch-Zitat in Kapitel 4 A9 („'I need a torch,'“, einfache
+Anführungszeichen außerhalb einer Rede) ist eine eigene Passage (EINZEL) und bekommt Jeremy (m).
 Ein Stück mit nur einer Stimme → app/klasse9/audio/story/<praefix>_<key>.mp3; mit Wechsel → <praefix>_<key>_1.mp3, _2.mp3 … (die App spielt sie hintereinander).
 Quelle der Texte: STORY.<welt>.teile in app/klasse9/app.js. Vorhandene Dateien werden nicht überschrieben.
-Aufruf: python3 werkzeuge/story_audio9.py [--zaehlen] [--welt ny|route66|az]
+Aufruf: python3 werkzeuge/story_audio9.py [--zaehlen] [--welt ny|route66|az|sd]
 """
 import json, os, re, sys, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -14,7 +16,7 @@ import klasse9_audio as ka
 import klasse9_bauen as k9
 
 ZIEL = os.path.join(k9.APP, "audio", "story")
-WELTEN = ["ny", "route66", "az"]   # Kapitel in Reihenfolge; Dateipräfix = Welt-Id
+WELTEN = ["ny", "route66", "az", "sd"]   # Kapitel in Reihenfolge; Dateipräfix = Welt-Id
 # Wer spricht die wörtliche Rede je Stück (Reihenfolge der Anführungszeichen-Passagen)? Fehlt ein Eintrag: alles Erzähler.
 SPRECHER = {
     # Kapitel 1 New York (vertont 31.10.): Y15 („No, thanks.“ = der Spieler) und Y19 (Stimme aus dem Licht) spricht der Erzähler.
@@ -27,7 +29,13 @@ SPRECHER = {
     # 5 und A8: Lucas liest aus dem Tagebuch (inneres Zitat in einfachen Anführungszeichen bleibt im Text) = m.
     "az": {"2Y": ["m", "m"], "4": ["m"], "5": ["m", "m"], "A7": ["f"], "A8": ["m"], "A9": ["m"], "B8": ["m"], "12": ["m"], "14": ["f", "f"],
            "X18": ["f", "f"], "X19": ["m"], "X20": ["m"], "Y18": ["f", "f"], "Y20": ["m"], "R2": ["m"], "R3": ["m", "m"]},
+    # Kapitel 4 Mount Rushmore (Sprecherplan, Vertonung nach dem 13.11.): Maya + Frau = f (Jessica); Jayden, Lucas, Ritter, Grizzly Grandpa = m (Jeremy); X15, Y15 = Spieler → Erzähler (kein Eintrag);
+    # A9: Tagebuch-Zitat 'I need a torch,' (einfache Anführungszeichen, siehe EINZEL) = m, dann Jayden zweimal = m.
+    "sd": {"4": ["m", "m"], "5": ["f"], "A7": ["m"], "A9": ["m", "m", "m"], "A10": ["f", "f"], "B7": ["m", "m"], "B8": ["f", "f"], "12": ["m"], "14": ["m", "m"],
+           "X18": ["m", "m"], "X19": ["f"], "Y18": ["m"], "R2": ["m"], "R3": ["m", "m"]},
 }
+# Stücke, in denen auch eine Passage in einfachen Anführungszeichen (… ,' / .') als Figurenrede zählt (Tagebuch-Zitat außerhalb einer wörtlichen Rede)
+EINZEL = {"sd": {"A9"}}
 
 
 def stuecke(welt):
@@ -47,11 +55,12 @@ def segmente(welt, key, text):
     if not rollen:
         return [("alex", text)]
     teile, i = [], 0
-    for m in re.finditer(r'"[^"]+"', text):
+    muster = r'"[^"]+"|(?<!\w)\'[^\']+[,.!?]\'' if key in EINZEL.get(welt, set()) else r'"[^"]+"'
+    for m in re.finditer(muster, text):
         davor = text[i:m.start()].strip(" ")
         if davor: teile.append(("alex", davor))
         n = sum(1 for t in teile if t[0] != "alex")   # wievielte wörtliche Rede
-        teile.append((rollen[min(n, len(rollen) - 1)], m.group(0).strip('"')))
+        teile.append((rollen[min(n, len(rollen) - 1)], m.group(0).strip('"\'')))
         i = m.end()
     danach = text[i:].strip(" ")
     if danach: teile.append(("alex", danach))

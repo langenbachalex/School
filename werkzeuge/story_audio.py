@@ -2,7 +2,7 @@
 
 Quelle: alle Welten in STORY in app/app.js (Text wörtlich wie in docs/runner/story-london-0n.md). Ziel: app/audio/story/<welt>_<key>.mp3 (Präfix = Welt-Id),
 dazu je Welt <welt>_sofar.mp3 („The story so far.“). Vorhandene Dateien werden nicht überschrieben.
-Aufruf: python3 werkzeuge/story_audio.py [--zaehlen] [--welt westminster|londoneye]
+Aufruf: python3 werkzeuge/story_audio.py [--zaehlen] [--welt westminster|londoneye|towerbridge]
 """
 import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

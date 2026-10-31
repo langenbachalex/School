@@ -19,6 +19,10 @@
    Pazifik-Lücken, Möwe (klaut bei Berührung einen Diamanten statt ein Leben – plattdrücken oder mit gehaltenem Sprung drüber)/Seelöwe/Skater, Boss Captain Fog (Nebelgeist mit Kapitänsmütze, Nebelhorn), Brückentor (Golden-Gate-Pfeiler mit Gitter).
    Welt „westminster“ (31.10., nur Klasse 6 „London Run“): Themse mit Booten, Big Ben + Parlament wachsen im Hintergrund, London Eye, Nieselwolken, am Ende Regenbogen; Doppeldecker/Black Cabs (wie Autos),
    Pfützen (rutschen wie Öl), Telefonzellen/Postkästen als Stufen, Themse-Lücken, Taube/Stadtfuchs/graues Eichhörnchen, Boss Sergeant Bearskin (Royal Guard, nur die Augen bewegen sich; Trommelwirbel + Signal), Tor der Horse Guards.
+   Welt „towerbridge“ (31.10., Klasse 6, Welt 3, docs/runner/story-london-03.md): Themse mit Tower Bridge (wächst heran, Klappen oben), Tower of London, HMS Belfast, Raben; Brückenklappen (h.klappe: Horn + rotes Licht,
+   dann heben sich beide Klappen als Rampen – hinauf, an der Spitze über die Lücke springen, drüben hinunter; wer die Spitze verpasst, fällt in die Themse), Raben (fliegen wie Tauben, plattdrückbar), Möwen, Busse/Cabs;
+   Weg A durch den Tower (Mauer-Plattformen h.mauer mit Zinnen, Tower-Kulisse h.tower, Geist h.geist), Weg B im Ruderboot (h.boot = Themse-Abschnitt mit Boot unter der Figur, Treibgut h.treibgut = drüberspringen,
+   Steg h.steg mit dem Jungen vom Key Club), Boss Sergeant Bearskin ohne Mütze (Igel-Haare) vor der hochgeklappten Brücke, Tür = Brückentor (Schranke, Klappe senkt sich), Film A/B (filmZeichnenBridge).
    Cameos (31.10., Option cameos: [{ id, name, bild, kraft }]): 2–3 Gastauftritte der geheimen Superhelden je Lauf (rundes Kartenbild, Umhang, Sprechblase ≈ 2,5 s) mit kleinem Effekt (CAMEO);
    ohne die Option (Klasse 9) gibt es keine Cameos. stimme.cameo(text, id, { audio }) spricht den Satz (optional).
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
@@ -287,6 +291,10 @@
     signal() { [392, 523, 659, 784, 659, 784].forEach((f, i) => ton(f, i === 5 ? 0.5 : 0.16, "triangle", 0.08, 1.05 + i * 0.17)); },
     cameo() { rauschen(0.35, 0.04, 0, { typ: "highpass", freq: 1800 }); [1047, 1319, 1568, 2093].forEach((f, i) => ton(f, 0.12, "triangle", 0.07, 0.12 + i * 0.07)); },
     schild() { ton(880, 0.4, "sine", 0.08); ton(1320, 0.35, "sine", 0.05, 0.05); },
+    // Welt Tower Bridge (Klasse 6): Brückenhorn (zwei tiefe Stöße), Rabe krächzt, Ruderschlag (Platschen), Treibgut rumst
+    horn() { ton(196, 0.7, "sawtooth", 0.07, 0, 190); ton(247, 0.7, "sawtooth", 0.04, 0, 240); rauschen(0.9, 0.02, 0, { typ: "lowpass", freq: 500 }); ton(196, 0.5, "sawtooth", 0.06, 0.85, 190); ton(247, 0.5, "sawtooth", 0.035, 0.85, 240); },
+    rabe() { ton(520, 0.12, "sawtooth", 0.035, 0, 380); ton(480, 0.12, "sawtooth", 0.03, 0.16, 340); },
+    ruder() { rauschen(0.2, 0.035, 0, { typ: "bandpass", freq: 900 }); ton(420, 0.12, "sine", 0.03, 0, 200); },
     // Story-Modus: Kristall = Harfen-Arpeggio (anders als der Diamant-/Wort-Jingle), Puff = verschwindendes ♪ an der Gabelung, Station = zwei weiche Glocken
     kristall() { [784, 988, 1175, 1568].forEach((f, i) => ton(f, 0.32, "sine", 0.07, i * 0.06)); ton(392, 0.5, "triangle", 0.04); },
     puff() { rauschen(0.22, 0.04, 0, { typ: "lowpass", freq: 1200 }); ton(700, 0.18, "sine", 0.03, 0, 300); },
@@ -1029,6 +1037,49 @@
     (h) => { h.kabine(150, 240); h.kabine(400, 180); h.kabine(650, 240); h.dia(440, 140); h.geg('moewe', 850, 1250); h.vor(1300); }, // 29 Kabinen-Treppe (💎 oben) + Möwe
     (h) => { h.luecke(200, 170); h.dia(285, 250); h.auto('bus', 500, 1300); h.post(1350); h.vor(1500); },             // 30 Schluss: Themse (💎 darüber) + Bus
   ];
+  // London Welt 3 „Tower Bridge“ – Kapitel 3 „Up Goes the Bridge“ (Klasse 6, 31.10., docs/runner/story-london-03.md; Strecke immer mit Story, die App übergibt STORY.towerbridge):
+  // Anfang 1–4, wobei ♪1/♪2 als Variante von Welt 2 abhängen (quelle 'londoneye.g1': A = roter Knopf → 1A/2A, B = aufs Rad geklettert → 1B/2B; keine Wahl → A) · Station 1 · Gabelung g1: ♪A5 oben auf der Tower-Mauer
+  // („🐦‍⬛ the ravens“, Weg A über Mauer-Plattformen durch den Tower mit Raben und Geist) / ♪B5 unten auf dem Steg („🎩 the hat“, Weg B im Ruderboot auf der Themse mit Treibgut) · Station 2 · gemeinsam 9–10 ·
+  // Boss Sergeant Bearskin vor der hochgeklappten Brücke · Ende A11–A12 / B11–B12 hinter dem Boss (im Film) = 12 ♪. Abstand der ♪ je Weg ≥ 1.390, nie in den 520 vor einem Tor; 18 Punkte-Diamanten;
+  // neu: Brückenklappen (h.klappe, 300 breit: Horn, Rampe hoch, Sprung an der Spitze), Rabe (Gegner), Boot-Abschnitte (h.boot), Treibgut, Mauer-Plattformen (h.mauer), Tower-Kulisse, Geist, Steg.
+  const STRUKTUR_TOWERBRIDGE = { anzahl: 12, abschnitte: [
+    { anfang: true, varianten: { A: ['1A', '2A'], B: ['1B', '2B'] }, quelle: 'londoneye.g1', standard: 'A', platz: ['1', '2'], keys: ['3', '4'] },
+    { gabel: 'g1', standard: 'A', wege: { A: ['A5', 'A6', 'A7', 'A8'], B: ['B5', 'B6', 'B7', 'B8'] }, symbole: { A: '🐦', B: '🎩' }, labels: { A: 'the ravens', B: 'the hat' } },
+    { keys: ['9', '10'] },
+    { ende: 'g1', wege: { A: ['A11', 'A12'], B: ['B11', 'B12'] } },
+  ], stationen: [1, 2], film: { A: [['9', '10'], ['A11'], ['A12'], null], B: [['9', '10'], ['B11'], ['B12'], null] } };
+  const MUSTER_TOWERBRIDGE_STORY = [
+    (h) => { h.dia(350); h.kristall(500, 290, '1'); h.kiste(650); h.vor(900); },                                      // 1 Aufwärmen · ♪1 (Variante 1A/1B)
+    (h) => { h.auto('cab', 150, 950); h.dia(500, 250); h.vor(1000); },                                                 // 2 erstes Black Cab
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(950); },                          // 3 Plattform + Taube
+    (h) => { h.post(200); h.zelle(240); h.dia(260, 215); h.kristall(600, 290, '2'); h.vor(900); },                     // 4 Postkasten → Telefonzelle · ♪2 (Variante 2A/2B)
+    (h) => { h.pfuetze(300); h.geg('rabe', 500, 900); h.vor(1000); },                                                  // 5 Pfütze + erster Rabe (neu)
+    (h) => { h.luecke(250, 170); h.dia(335, 250); h.plat(600, 230, 160); h.dia(680, 190); h.vor(1000); },              // 6 Themse-Lücke (💎 darüber) + Plattform (💎 oben)
+    (h) => { h.geg('moewe', 300, 700); h.kristall(850, 290, '3'); h.vor(1100); },                                      // 7 Möwe · ♪3
+    (h) => { h.auto('bus', 100, 1000); h.plat(600, 230, 160); h.dia(680, 190); h.vor(1100); },                        // 8 Doppeldecker + Plattform
+    (h) => { h.geg('eichhoernchen', 150, 500); h.post(650); h.kristall(670, 262, '4'); h.zelle(690); h.dia(710, 190); h.vor(900); }, // 9 Eichhörnchen + Stufe · ♪4 „A loud horn! Up goes the bridge.“
+    (h) => { h.klappe(300); h.dia(450, 200); h.vor(1000); },                                                           // 10 erste BRÜCKENKLAPPE (Horn, Rampe hoch, Sprung an der Spitze; 💎 über der Lücke)
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },                            // 11 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                                    // 12 TOR 1
+    (h) => { h.cp(150); h.geg('fuchs', 700, 950); h.vor(1000); },                                                     // 13 CHECKPOINT 1 · Station 1
+    (h) => { h.tower(300, 4700); h.steg(140); h.kristall(200, 290, 'B5'); h.mauer(300, 250, 160); h.kristall(370, 214, 'A5'); h.boot(520, 700); h.treibgut(900); h.vor(1300); }, // 14 GABELUNG: ♪B5 unten am Steg (🎩 the hat → Boot), ♪A5 oben auf der Tower-Mauer (🐦 the ravens); Tower-Kulisse beginnt
+    (h) => { h.boot(100, 900); h.treibgut(350); h.treibgut(700); h.kristall(500, 290, 'B6'); h.mauer(200, 250, 140); h.mauer(450, 190, 140); h.kristall(520, 154, 'A6'); h.geg('rabe', 600, 900); h.geist(1040); h.vor(1200); }, // 15 Boot mit Treibgut · ♪B6 im Boot / ♪A6 auf der hohen Mauer; Rabe; Geist zeigt auf den Baum
+    (h) => { h.zelle(200); h.zelle(240); h.dia(260, 222); h.geg('taube', 450, 850); h.vor(1000); },                   // 16 zwei Telefonzellen (💎 oben) + Taube
+    (h) => { h.boot(150, 800); h.treibgut(400); h.treibgut(650); h.kristall(550, 290, 'B7'); h.mauer(300, 240, 150); h.mauer(560, 180, 150); h.kristall(630, 144, 'A7'); h.geg('rabe', 700, 950); h.vor(1100); }, // 17 Boot · ♪B7 / ♪A7 oben; Rabe
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.geist(300); h.vor(1050); }, // 18 Dreier-Plattform (💎 oben) + Geist
+    (h) => { h.geg('eichhoernchen', 150, 450); h.auto('bus', 500, 1300); h.dia(850, 240); h.vor(1400); },             // 19 Eichhörnchen + Bus (💎 über der Busspur)
+    (h) => { h.boot(100, 900); h.treibgut(400); h.treibgut(700); h.kristall(250, 290, 'B8'); h.mauer(200, 250, 140); h.mauer(450, 196, 140); h.dia(490, 156); h.mauer(700, 190, 140); h.kristall(760, 154, 'A8'); h.geg('rabe', 500, 850); h.vor(1150); }, // 20 ♪B8 im Boot (der Hut) / ♪A8 oben (die Raben kommen); Mauer-Treppe (💎)
+    (h) => { h.pfuetze(200); h.geg('fuchs', 450, 800); h.vor(1000); },                                                // 21 Pfütze + Fuchs
+    (h) => { h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); },                           // 22
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                                   // 23 TOR 2
+    (h) => { h.cp(150); h.kristall(350, 290, '9'); h.post(500); h.zelle(540); h.vor(850); },                          // 24 CHECKPOINT 2 · Station 2 · ♪9
+    (h) => { h.auto('bus', 100, 1000); h.geg('moewe', 1000, 1400); h.vor(1500); },                                    // 25 Bus + Möwe
+    (h) => { h.klappe(200); h.kristall(650, 290, '10'); h.geg('rabe', 800, 1100); h.vor(1200); },                     // 26 zweite BRÜCKENKLAPPE · ♪10 dahinter + Rabe
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.dia(250, 180); h.vor(750); }, // 27 Teekisten-Pyramide (💎 oben)
+    (h) => { h.pfuetze(150); h.auto('cab', 300, 1100); h.geg('eichhoernchen', 1150, 1400); h.vor(1500); },            // 28 Pfütze + Cab + Eichhörnchen
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.dia(440, 140); h.geg('moewe', 850, 1250); h.vor(1300); }, // 29 Dreier-Plattform (💎 oben) + Möwe
+    (h) => { h.luecke(200, 170); h.dia(285, 250); h.auto('bus', 500, 1300); h.post(1350); h.vor(1500); },             // 30 Schluss: Themse (💎 darüber) + Bus
+  ];
   // New York „The Lost Map – Under the City“ (Klasse 9, docs/runner/story-usa-01.md): Anfang 1–5 · Station 1 · Gabelung 1 (A6–A10 unten = U-Bahn / B6–B10 oben = Feuertreppe/Dach) · Station 2 ·
   // gemeinsam 11–14 · Gabelung 2 (X15–X16 „give the map“ unten / Y15–Y16 „keep the map“ oben auf dem Bus; ohne Wahl: Y = Karte behalten) · Boss · Ende X17–X20 bzw. Y17–Y20 = 20 ♪; Realm R1–R3 extra.
   const STRUKTUR_NY = { anzahl: 20, abschnitte: [
@@ -1242,14 +1293,14 @@
   const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
   // endeN = Zahl der Ende-Kristalle hinter dem Boss (Story: aus der Struktur, London 2, New York 4); sie liegen gleichmäßig zwischen stopX + 95 und tuerX − 25
   function levelBauen(muster, endeN = 2) {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[] };
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], klappen:[], boote:[], treibgut:[] };
     let x = 0, bodenAb = 0, wort = 0;
     const h = {
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
       kiste: (dx, n = 1) => { for (let i = 0; i < n; i++) L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE * (i + 1) }); },
       dia: (dx, y = 298) => L.diamanten.push({ x:x + dx, y, wort:wort++ }),
       // o.wartet (Realm Kapitel 2): der Gegner steht still (wartender Ritter)
-      geg: (art, von, bis, o) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' || art === 'adler' || art === 'moewe' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1, wartet: !!(o && o.wartet) }),
+      geg: (art, von, bis, o) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' || art === 'adler' || art === 'moewe' || art === 'rabe' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1, wartet: !!(o && o.wartet) }),
       luecke: (dx, w) => { L.boden.push([bodenAb, x + dx]); bodenAb = x + dx + w; },
       tor: (dx, wort, falsch) => L.tore.push({ x:x + dx, wort, falsch }),
       cp: (dx) => L.checkpoints.push({ x:x + dx }),
@@ -1284,6 +1335,15 @@
       kabine: (dx, y, w = KABINE_W) => L.plattformen.push({ x:x + dx, y, w, art:'kabine' }),
       maschinenraum: (dx, w) => L.deko.push({ art:'maschinenraum', x:x + dx, w }),
       knopf: (dx) => L.deko.push({ art:'knopf', x:x + dx }),
+      // Tower Bridge (Klasse 6, Welt 3): Brückenklappe = Themse-Lücke 300 breit mit zwei Klappen (Scharniere links/rechts), Boot = Themse-Abschnitt, in dem die Figur im Ruderboot fährt (Boden auf Bodenhöhe),
+      // Treibgut (drüberspringen), Mauer-Plattform (Wehrgang mit Zinnen), Tower-Kulisse, Geist (Ghost Club), Steg mit dem Jungen vom Key Club
+      klappe: (dx) => { h.luecke(dx, KLAPPE_W * 2); L.klappen.push({ x:x + dx }); },
+      boot: (dx, w) => { h.luecke(dx, w); L.boote.push({ x:x + dx, w }); },
+      treibgut: (dx) => L.treibgut.push({ x:x + dx }),
+      mauer: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'mauer' }),
+      tower: (dx, w) => L.deko.push({ art:'tower', x:x + dx, w }),
+      geist: (dx) => L.deko.push({ art:'geist', x:x + dx }),
+      steg: (dx) => L.deko.push({ art:'steg', x:x + dx }),
       realmTor: (dx, y) => L.realmTore.push({ x:x + dx, y }),
       // The Realm Beyond: Sammelstück (Frost Shard ❄), Eisfleck (rutscht wie Öl)
       gegenstand: (dx, y) => L.gegenstaende.push({ x:x + dx, y }),
@@ -1326,7 +1386,10 @@
   // Welt London Eye (Klasse 6, Welt 2): Dunkelheit im Maschinenraum an der Figur (0..1, nur unten am Boden), Drehwinkel des großen Rads (steht; dreht sich falsch herum nach ♪A8, wieder richtig im Finale),
   // Begleiter aus Welt 1 (Fuchs oder Taube, nur Deko: läuft/fliegt neben der Figur), Kamera-Hub zur obersten Kabine in der Boss-Sequenz (0..1)
   let dunkel = 0, radWinkel = 0, radRueck = 0, begleiter = null, kameraHoch = 0;
-  const DUNKEL_RAND = 160, DUNKEL_MAX = 0.72, EYE_R = 270, EYE_KABINE_Y = 190;   // Boss-Kabine: 190 über dem Boden (Mitte des Rads liegt 80 unter dem Boden, Radius 270)
+  const DUNKEL_RAND = 160, DUNKEL_MAX = 0.72, EYE_R = 270, EYE_KABINE_Y = 190;
+  // Welt Tower Bridge (Klasse 6, Welt 3): Brückenklappen (Phasen ruhe → warnung → hebt → oben → senkt → weg; winkel 0..KLAPPE_MAX), Boot-Abschnitte (imBoot = Abschnitt unter der Figur), Treibgut, Horn-Zähler (Tests)
+  let klappen = [], boote = [], treibgut = [], hornt = 0, imBoot = null, ruderZeit = -9;
+  const KLAPPE_W = 150, KLAPPE_MAX = Math.PI * 50 / 180, KLAPPE_VORLAUF = 520, KLAPPE_WARN = 0.6, KLAPPE_HEBT = 1.6, KLAPPE_OBEN = 1.5, KLAPPE_SENKT = 1.6, TREIBGUT_W = 44, TREIBGUT_H = 24;   // Boss-Kabine: 190 über dem Boden (Mitte des Rads liegt 80 unter dem Boden, Radius 270)
   // Story-Modus (Option story: Klasse 6 Westminster, Klasse 9 New York; sonst story = null): Kristalle ♪, Erzähl-Warteschlange (nie zwei Stücke gleichzeitig), Stationen, Film am Ende
   let storyOpt = null, story = null, kristalle = [], diaGesammelt = 0, film = null, nurFilm = false;
   const TIPP_TEMPO = 24, STORY_STEHT = 3.5, STORY_AUS = 0.6, STORY_LUECKE = 0.3, STATION_MIN = 3, STATION_MAX = 40, STATION_SPERRE = 0.4;
@@ -1344,8 +1407,8 @@
   const BLASE_DAUER = 1.6, ECHO_MIN = 6, ECHO_MAX = 8, ECHO_ABSTAND = 2.5, ECHO_DAUER = 1.4, CHIP_MAX = 8, CHIP_ZEICHEN = 12;
   let erstauntZeit = 0, zungeZeit = 0;   // Gesichtsausdruck: erstaunt 0,8 s nach Treffer, Zunge raus 1 s bei „5× Combo!“ und solange On fire
   const ausdruckAktuell = () => (erstauntZeit > 0 ? "erstaunt" : (onfire || zungeZeit > 0) ? "zunge" : "grinsend");
-  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9, bueffel: -9, biber: -9, adler: -9, moewe: -9, seeloewe: -9, skater: -9, fuchs: -9, wolf: -9, ritter: -9 };   // letzter Klang je Art (Spielzeit)
-  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150, bueffel: 170, biber: 65, adler: 90, moewe: 80, seeloewe: 50, skater: 140, fuchs: 75, wolf: 105, ritter: 42 };
+  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9, bueffel: -9, biber: -9, adler: -9, moewe: -9, seeloewe: -9, skater: -9, fuchs: -9, wolf: -9, ritter: -9, rabe: -9 };   // letzter Klang je Art (Spielzeit)
+  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150, bueffel: 170, biber: 65, adler: 90, moewe: 80, seeloewe: 50, skater: 140, fuchs: 75, wolf: 105, ritter: 42, rabe: 85 };
   let gegnerKlaenge = 0;   // Zähler für Tests
   const GEGNER_KLANG_ABSTAND = 1.5, GEGNER_NAEHE = 260, COMBO_TEXT_DAUER = 1.3;
   const ruhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
@@ -1378,6 +1441,7 @@
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
     trommelt = 0; dunkel = 0; radWinkel = 0; radRueck = 0; kameraHoch = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 60, y: BODEN_Y, flug: 0 } : null;
+    klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
     cameo = null; cameosGezeigt = 0; cameoEffekt = null; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoPlan = cameoPlanBauen();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
@@ -1854,6 +1918,7 @@
     level.bruecken.forEach((b, i) => liste.push({ x:b.x, y:BODEN_Y, w:b.w, h:14, voll:false, bruecke:i }));   // Hängebrücke: trägt, bis ein Brett bricht
     level.seilbahnen.forEach((g, i) => liste.push({ x:g.x + 30, y:GONDEL_Y, w:GONDEL_W, h:14, voll:false, gondel:i }));   // Welt 5: Gondel (x wird jeden Frame nachgeführt)
     for (const b of level.parkbusse) liste.push({ x:b.x, y:BODEN_Y - PARKBUS_H, w:PARKBUS_W, h:PARKBUS_H, voll:true });   // Story: geparkter Doppeldecker an der Gabelung
+    for (const b of level.boote || []) liste.push({ x:b.x, y:BODEN_Y, w:b.w, h:14, voll:false, boot:true });   // Tower Bridge: im Boot-Abschnitt trägt das Ruderboot die Figur auf Bodenhöhe
     return liste;
   }
 
@@ -1865,7 +1930,7 @@
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
   }
-  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥' };
+  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵' };
   function wiederbeleben() {
     spieler.x = checkpoint; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.6;
     halten = false;
@@ -1876,6 +1941,7 @@
     for (const w of winde) if (w.x > checkpoint) w.aktiv = false;
     wind = null;
     for (const s of surfs) s.aktiv = false; surft = 0; aufGondel = null;   // Welt 5
+    for (const k of klappen) if (k.x > checkpoint) { k.phase = 'ruhe'; k.t = 0; k.winkel = 0; }   // Tower Bridge: Klappen vor der Figur wieder unten
   }
   // Welt 3: Steine fallen, sobald die Figur ≈ 300 davor ist (Staub + Schatten 0,6 s, dann Sturz; liegen 1,4 s gefährlich, dann zerbröseln); Brücken-Bruchstücke fallen nach
   function hindernisseBewegen(dt) {
@@ -1911,7 +1977,38 @@
     }
     for (const s of SOLIDE) if (s.gondel != null) s.x = gondeln[s.gondel].gx;
     nebelDichte = nebelDichteBei(spieler.x);
-    if (W.id === 'londoneye') londonEyeBewegen(dt);
+    if (W.id === 'londoneye') londonEyeBewegen(dt); else if (begleiter) begleiterBewegen(dt);
+    if (W.id === 'towerbridge') towerBridgeBewegen(dt);
+  }
+  // Tower Bridge: Klappen – Figur ≈ 520 davor → Horn + rotes Licht (0,6 s), beide Klappen heben sich 1,6 s auf 50°, bleiben 1,5 s oben, senken sich 1,6 s; danach ruhig, bis die Figur wieder weit davor ist (nach dem Checkpoint).
+  // Boot: Abschnitt unter der Figur merken (Zeichnung + Ruderklang alle 1,1 s am Boden)
+  function towerBridgeBewegen(dt) {
+    for (const k of klappen) {
+      if (k.phase === 'ruhe') { if (zustand === 'spiel' && tot <= 0 && spieler.x > k.x - KLAPPE_VORLAUF && spieler.x < k.x) { k.phase = 'warnung'; k.t = 0; hornt++; klang.horn(); meldung = { text: 'Up goes the bridge! 🌉', zeit: 1.4 }; } }
+      else if (k.phase === 'warnung') { k.t += dt; if (k.t >= KLAPPE_WARN) { k.phase = 'hebt'; k.t = 0; } }
+      else if (k.phase === 'hebt') { k.t += dt; k.winkel = KLAPPE_MAX * sanft(k.t / KLAPPE_HEBT); if (k.t >= KLAPPE_HEBT) { k.phase = 'oben'; k.t = 0; k.winkel = KLAPPE_MAX; } }
+      else if (k.phase === 'oben') { k.t += dt; if (k.t >= KLAPPE_OBEN) { k.phase = 'senkt'; k.t = 0; } }
+      else if (k.phase === 'senkt') { k.t += dt; k.winkel = KLAPPE_MAX * (1 - sanft(k.t / KLAPPE_SENKT)); if (k.t >= KLAPPE_SENKT) { k.phase = 'weg'; k.winkel = 0; } }
+      else if (k.phase === 'weg') { if (spieler.x < k.x - KLAPPE_VORLAUF - 50) { k.phase = 'ruhe'; k.t = 0; } }
+    }
+    imBoot = boote.find((b) => spieler.x > b.x - 12 && spieler.x < b.x + b.w + 12) || null;
+    if (imBoot && zustand === 'spiel' && tot <= 0 && spieler.amBoden && zeit - ruderZeit > 1.1) { ruderZeit = zeit; klang.ruder(); }
+  }
+  // Oberfläche der Brückenklappen an x (null = keine Klappe dort): linke Klappe vom Scharnier k.x nach rechts oben, rechte vom Scharnier k.x + 300 nach links oben (bei winkel 0 = Fahrbahn)
+  function rampeY(x) {
+    for (const k of klappen) {
+      const cos = Math.cos(k.winkel), tan = Math.tan(k.winkel), r = k.x + KLAPPE_W * 2;
+      if (x >= k.x && x <= k.x + KLAPPE_W * cos) return BODEN_Y - (x - k.x) * tan;
+      if (x >= r - KLAPPE_W * cos && x <= r) return BODEN_Y - (r - x) * tan;
+    }
+    return null;
+  }
+  const treibgutBox = (t) => ({ x: t.x - TREIBGUT_W / 2, y: BODEN_Y - TREIBGUT_H, w: TREIBGUT_W, h: TREIBGUT_H });
+  // Begleiter aus Welt 1 folgt der Figur (Fuchs läuft 56 dahinter auf ihrer Höhe, Taube fliegt 40 dahinter über dem Kopf) – Welt 2 und 3
+  function begleiterBewegen(dt) {
+    begleiter.flug += dt;
+    const zx = spieler.x - (begleiter.art === 'taube' ? 40 : 56), zy = begleiter.art === 'taube' ? spieler.y - 112 + Math.sin(begleiter.flug * 2.2) * 6 : spieler.y;
+    begleiter.x += (zx - begleiter.x) * Math.min(1, dt * 8); begleiter.y += (zy - begleiter.y) * Math.min(1, dt * (begleiter.art === 'taube' ? 5 : 12));
   }
   // London Eye: Dunkelheit im Maschinenraum (nur, wenn die Figur unten läuft – oben auf den Kabinen bleibt es hell), das große Rad (nach ♪A8 dreht es sich 3 s falsch herum, im Finale wieder richtig),
   // Begleiter folgt der Figur (Fuchs läuft 56 dahinter auf ihrer Höhe, Taube fliegt 40 dahinter über dem Kopf), Kamera-Hub in der Boss-Sequenz (Banner/Boss hoch, zurück wieder herunter)
@@ -1921,11 +2018,7 @@
     if (zustand === 'finale' || zustand === 'film') radWinkel += dt * 0.25;
     const hoch = zustand === 'sequenz' && sequenz && (sequenz.phase === 'banner' || sequenz.phase === 'boss') || zustand === 'boss';
     kameraHoch = Math.max(0, Math.min(1, kameraHoch + (hoch ? dt * 1.6 : -dt * 1.6)));
-    if (begleiter) {
-      begleiter.flug += dt;
-      const zx = spieler.x - (begleiter.art === 'taube' ? 40 : 56), zy = begleiter.art === 'taube' ? spieler.y - 112 + Math.sin(begleiter.flug * 2.2) * 6 : spieler.y;
-      begleiter.x += (zx - begleiter.x) * Math.min(1, dt * 8); begleiter.y += (zy - begleiter.y) * Math.min(1, dt * (begleiter.art === 'taube' ? 5 : 12));
-    }
+    if (begleiter) begleiterBewegen(dt);
   }
   function dunkelBei(x) {
     let d = 0;
@@ -1973,6 +2066,7 @@
     if (g.art === 'biber') return { x: g.x - 16, y: g.y - 20, w: 32, h: 20 };
     if (g.art === 'adler') return { x: g.x - 26, y: g.y - 14 + Math.sin(g.flug * 2.5) * 10, w: 52, h: 26 };
     if (g.art === 'moewe') return { x: g.x - 18, y: g.y - 12 + (g.klaut ? 0 : Math.sin(g.flug * 2.8) * 8), w: 36, h: 24 };
+    if (g.art === 'rabe') return { x: g.x - 19, y: g.y - 13 + Math.sin(g.flug * 2.6) * 8, w: 38, h: 26 };   // Rabe (Tower Bridge): fliegt wie die Taube
     if (g.art === 'seeloewe') return { x: g.x - 25, y: g.y - 28, w: 50, h: 28 };
     if (g.art === 'skater') return { x: g.x - 15, y: g.y - 44, w: 30, h: 44 };
     return { x: g.x - 20, y: g.y - 26, w: 40, h: 26 };
@@ -2036,6 +2130,10 @@
           }
         }
       }
+      if (klappen.length) {   // Tower Bridge: Brückenklappe als Rampe – die Figur folgt der Oberfläche (hinauf, an der Spitze über die Lücke springen, drüben hinunter; auch wenn die Klappe sich unter ihr bewegt)
+        const ys = rampeY(spieler.x);
+        if (ys != null && spieler.vy >= 0 && spieler.y >= ys - 0.5 && altY <= ys + 16) { spieler.y = ys; spieler.vy = 0; gelandet = true; }
+      }
       if (gelandet && !spieler.amBoden && imRealm()) {   // Realm: Schnee – nach der Landung kurz rutschen; Drachenhöhle: die Landung macht Lärm (Goldstaub)
         if (W.id === 'hoehle') { if (spieler.sprang) { laerm(1.5); funken(spieler.x, spieler.y - 4, 6, ['#ffd36b', '#b08030'], 90, 0.35); } }   // nur nach einem Sprung (von einer Kante fallen ist leise)
         else { realm.rutsch = REALM_RUTSCH; funken(spieler.x, spieler.y - 4, 8, ['#ffffff', '#e8f4ff'], 110, 0.4); }
@@ -2046,6 +2144,7 @@
       if (spieler.amBoden && spieler.vy === 0) {
         let hatBoden = false;
         for (const s of SOLIDE) if (!(s.bruecke != null && bruecken[s.bruecke].gebrochen) && spieler.x + PW / 2 > s.x && spieler.x - PW / 2 < s.x + s.w && Math.abs(spieler.y - s.y) < 0.5) { hatBoden = true; if (s.gondel != null) aufGondel = s.gondel; }
+        if (!hatBoden && klappen.length) { const ys = rampeY(spieler.x); if (ys != null && Math.abs(spieler.y - ys) < 16) { hatBoden = true; spieler.y = ys; } }   // Tower Bridge: auf der Rampe (hinunter)
         if (!hatBoden) spieler.amBoden = false;
       }
       if (aufGondel != null && zeit - gondeln[aufGondel].knarrte > 1.2) { gondeln[aufGondel].knarrte = zeit; klang.gondel(); }   // Welt 5: Gondel knarrt unter der Figur
@@ -2141,6 +2240,10 @@
       for (const k of kakteen) {
         const kb = kaktusBox(k);
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, kb.x, kb.y + 2, kb.w, kb.h - 2)) { schaden('kaktus'); break; }
+      }
+      for (const t of treibgut) {   // Tower Bridge: Treibgut auf der Themse (im Boot drüberspringen) – Berührung = Leben weg
+        const tb = treibgutBox(t);
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 4, tb.y + 4, tb.w - 8, tb.h - 4)) { schaden('treibgut'); break; }
       }
       // Welt 4: rollende Baumstämme (drüberspringen) und die Bären-Pranke vor der Höhle – Berührung = Leben weg
       for (const s of staemme) {
@@ -3720,7 +3823,19 @@
       c.strokeStyle = '#7a2a1a'; c.lineWidth = 1.5; c.lineCap = 'round'; c.beginPath(); c.arc(0, -119.5, 5, Math.PI * (0.5 - 0.32 * laecheln), Math.PI * (0.5 + 0.32 * laecheln)); c.stroke();
     }
     c.fillStyle = '#5a3a22'; c.beginPath(); c.moveTo(0, -119); c.quadraticCurveTo(-6, -121, -10, -116); c.quadraticCurveTo(-5, -117, 0, -117); c.quadraticCurveTo(5, -117, 10, -116); c.quadraticCurveTo(6, -121, 0, -119); c.fill();   // Schnurrbart
-    if (hut === 'fell') {
+    if (hut === 'igel') {   // Tower Bridge: ohne Mütze – die Haare stehen wie ein Igel (o.igelGross 0..1 = Stacheln wachsen)
+      const gr = o.igelGross == null ? 1 : o.igelGross;
+      c.fillStyle = '#8a4b22'; c.beginPath(); c.arc(0, -126, 11.4, Math.PI * 1.05, Math.PI * 1.95); c.closePath(); c.fill();
+      for (let k = 0; k < 9; k++) { const a = Math.PI * (1.08 + k * 0.105), l = (12 + (k % 3) * 5) * gr; c.beginPath(); c.moveTo(Math.cos(a - 0.08) * 11, -126 + Math.sin(a - 0.08) * 11); c.lineTo(Math.cos(a) * (11 + l), -126 + Math.sin(a) * (11 + l)); c.lineTo(Math.cos(a + 0.08) * 11, -126 + Math.sin(a + 0.08) * 11); c.closePath(); c.fill(); }
+    } else if (hut === 'nass') {   // Tower Bridge Ende B: die nasse Bärenfellmütze – dunkel, glänzt, hängt etwas; o.tropft: Tropfen fallen, Pfütze
+      c.fillStyle = '#0d0d0d'; c.beginPath(); c.moveTo(-17, -128); c.quadraticCurveTo(-22, -176, -2, -186); c.quadraticCurveTo(20, -180, 16, -128); c.closePath(); c.fill();
+      c.fillStyle = 'rgba(120,170,220,.35)'; c.beginPath(); c.moveTo(-17, -128); c.quadraticCurveTo(-22, -176, -2, -186); c.quadraticCurveTo(20, -180, 16, -128); c.closePath(); c.fill();
+      c.strokeStyle = '#2b2b2b'; c.lineWidth = 2; for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(-9 + (k % 3) * 9, -170 + Math.floor(k / 3) * 22, 5, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
+      if (o.tropft) {
+        c.fillStyle = '#7fb2d6'; for (let k = 0; k < 3; k++) { const t = ruhig() ? 0.5 : (zeit * 0.9 + k * 0.33) % 1, dx = -12 + k * 12; c.beginPath(); c.ellipse(dx, -128 + t * 120, 2, 3.5, 0, 0, Math.PI * 2); c.fill(); }
+        c.fillStyle = 'rgba(127,178,214,.5)'; c.beginPath(); c.ellipse(0, 0, 30, 4, 0, 0, Math.PI * 2); c.fill();
+      }
+    } else if (hut === 'fell') {
       c.fillStyle = '#0d0d0d'; c.beginPath(); c.moveTo(-15, -130); c.quadraticCurveTo(-21, -188, 0, -196); c.quadraticCurveTo(21, -188, 15, -130); c.closePath(); c.fill();   // Bärenfellmütze (lässt die Augen frei)
       c.strokeStyle = '#2b2b2b'; c.lineWidth = 2;
       for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(-9 + (k % 3) * 9, -176 + Math.floor(k / 3) * 22, 5, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
@@ -4040,6 +4155,321 @@
     c.restore();
     filmUntertitel(c, f);
   }
+  /* ---------- Welt Tower Bridge (Klasse 6, Welt 3, 31.10.): Themse mit der Tower Bridge (wächst heran), Tower of London, HMS Belfast, Raben am Himmel; Brückenklappen als Rampen (Horn → heben sich),
+     Weg A durch den Tower (Mauer-Plattformen mit Zinnen, Raben, ein Geist vom Ghost Club), Weg B im Ruderboot auf der Themse (Steg mit dem Jungen vom Key Club, Treibgut), Boss Sergeant Bearskin
+     ohne Mütze (Igel-Haare) auf der hochgeklappten Brücke, Tür = Brückentor (Schranke im Turmbogen, die Klappe senkt sich), Film (A: Raben kehren zurück, Geist lacht · B: nasser Hut tropft, nur fünf Raben) ---------- */
+  const TB_STEIN = '#d8cdb4', TB_STEIN_D = '#b9ab8c', TB_BLAU = '#4a7ab5', TB_TURM_H = 210;
+  function brueckenTurmLondon(c, x, y, s) {   // ein Turm der Tower Bridge: heller Stein, zwei Spitztürmchen, Bogen unten, Fensterreihen; (x, y) = Fußpunkt Mitte, s = Maßstab (1 ≈ 68 breit, 210 hoch)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = TB_STEIN; c.fillRect(-34, -TB_TURM_H, 68, TB_TURM_H);
+    c.fillStyle = TB_STEIN_D; c.fillRect(-38, -TB_TURM_H - 4, 76, 6); c.fillRect(-38, -120, 76, 5); c.fillRect(-30, -TB_TURM_H, 4, TB_TURM_H); c.fillRect(26, -TB_TURM_H, 4, TB_TURM_H);
+    for (const tx of [-24, 24]) {   // Spitztürmchen mit Wimpel
+      c.fillStyle = TB_STEIN; c.fillRect(tx - 9, -TB_TURM_H - 30, 18, 30);
+      c.fillStyle = '#6f8a9c'; c.beginPath(); c.moveTo(tx - 11, -TB_TURM_H - 30); c.lineTo(tx, -TB_TURM_H - 58); c.lineTo(tx + 11, -TB_TURM_H - 30); c.closePath(); c.fill();
+      c.fillStyle = '#e0a400'; c.fillRect(tx - 1, -TB_TURM_H - 66, 2, 9);
+    }
+    c.fillStyle = '#6f8a9c'; c.beginPath(); c.moveTo(-14, -TB_TURM_H - 4); c.lineTo(0, -TB_TURM_H - 26); c.lineTo(14, -TB_TURM_H - 4); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(40,50,70,.35)'; for (let r = 0; r < 3; r++) for (const wx of [-18, 0, 18]) c.fillRect(wx - 4, -196 + r * 26, 8, 14);   // Fenster
+    c.fillStyle = '#2c3a48'; c.beginPath(); c.moveTo(-18, 0); c.lineTo(-18, -70); c.arc(0, -70, 18, Math.PI, 0); c.lineTo(18, 0); c.closePath(); c.fill();   // Bogen
+    c.restore();
+  }
+  function brueckenKlappe(c, hx, y, winkel, spiegel, laenge = KLAPPE_W) {   // eine Brückenklappe: Fahrbahn (Oberkante = Standfläche am Scharnier (hx, y)), weiße Striche, blaues Geländer, rote Spitze; hebt sich um das Scharnier; spiegel = rechte Klappe (zeigt nach links)
+    c.save(); c.translate(hx, y); if (spiegel) c.scale(-1, 1); c.rotate(-winkel);
+    c.fillStyle = '#4a4f58'; c.fillRect(0, 0, laenge, 12);
+    c.fillStyle = '#6d7380'; c.fillRect(0, 0, laenge, 3);
+    c.fillStyle = '#f4f4f4'; for (let k = 12; k < laenge - 12; k += 28) c.fillRect(k, 5, 14, 2);
+    c.strokeStyle = TB_BLAU; c.lineWidth = 2.5; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -22); c.moveTo(0, -20); c.lineTo(laenge, -20); for (let k = 24; k < laenge; k += 24) { c.moveTo(k, 0); c.lineTo(k, -20); } c.stroke();
+    c.fillStyle = UK_ROT; c.fillRect(laenge - 6, -2, 6, 14); c.fillStyle = '#f4f4f4'; c.fillRect(laenge - 6, 3, 6, 3);
+    c.restore();
+  }
+  function towerBridgeKlein(c, x, y, s, winkel) {   // die ganze Brücke klein (Kulisse/HUD): zwei Türme, Hochbahnsteg, Klappen; (x, y) = Mitte Fußpunkt
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = TB_BLAU; c.fillRect(-150, -205, 300, 6);
+    c.strokeStyle = TB_BLAU; c.lineWidth = 3; c.beginPath(); c.moveTo(-320, -60); c.quadraticCurveTo(-240, -120, -150, -150); c.moveTo(320, -60); c.quadraticCurveTo(240, -120, 150, -150); c.stroke();   // Hängeseile zu den Ufern
+    c.fillStyle = '#4a4f58'; c.fillRect(-330, -4, 190, 10); c.fillRect(140, -4, 190, 10);
+    brueckenTurmLondon(c, -150, 0, 1); brueckenTurmLondon(c, 150, 0, 1);
+    brueckenKlappe(c, -116, 0, winkel, false, 116); brueckenKlappe(c, 116, 0, winkel, true, 116);
+    c.restore();
+  }
+  function towerOfLondon(c, x, y, s) {   // Tower of London: der White Tower (vier Ecktürme, einer rund), Ringmauer davor, Flagge; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#e8e0cc'; c.fillRect(-60, -120, 120, 120);
+    c.fillStyle = '#d9cfb6'; for (const tx of [-60, 40]) c.fillRect(tx, -140, 20, 140); c.beginPath(); c.arc(50, -140, 10, Math.PI, 0); c.fill();
+    for (const tx of [-50, 50]) { c.fillStyle = '#6f8a9c'; c.beginPath(); c.moveTo(tx - 12, -140); c.lineTo(tx, -158); c.lineTo(tx + 12, -140); c.closePath(); c.fill(); }
+    c.fillStyle = 'rgba(40,50,70,.3)'; for (let r = 0; r < 3; r++) for (let k = 0; k < 4; k++) c.fillRect(-42 + k * 24, -106 + r * 32, 8, 16);
+    c.fillStyle = '#c9bf9f'; c.fillRect(-100, -46, 200, 46); c.fillStyle = '#b9ab8c'; for (let k = 0; k < 10; k++) c.fillRect(-100 + k * 20, -54, 12, 8);   // Ringmauer mit Zinnen
+    c.fillStyle = '#555'; c.fillRect(-2, -190, 2, 50); unionJack(c, 0, -190, 22, 13);
+    c.restore();
+  }
+  function hmsBelfast(c, x, y, s) {   // HMS Belfast: graues Kriegsschiff mit Aufbauten, Geschütztürmen und Mast
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#7d8790'; c.beginPath(); c.moveTo(-90, -10); c.lineTo(96, -10); c.lineTo(86, 4); c.lineTo(-80, 4); c.closePath(); c.fill();
+    c.fillStyle = '#95a0a8'; c.fillRect(-40, -34, 70, 24); c.fillRect(-20, -48, 30, 14); c.fillRect(-60, -20, 14, 10); c.fillRect(50, -20, 16, 10);
+    c.fillStyle = '#555'; c.fillRect(-6, -78, 3, 30); c.fillRect(-14, -62, 19, 2);
+    c.fillStyle = '#4a4f58'; c.fillRect(-70, -16, 16, 3); c.fillRect(46, -16, 16, 3);
+    c.restore();
+  }
+  function rabeFlug(c, x, y, t, s = 1) {   // fliegender Rabe (Kulisse/Film): schwarz, breite Flügel, grauer Schnabel; (x, y) = Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const fl = Math.sin(t * 12) * 9;
+    c.fillStyle = '#17181c'; c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(-16, -8 - fl, -32, -4 - fl); c.quadraticCurveTo(-16, 2, 0, 5); c.quadraticCurveTo(16, 2, 32, -4 - fl); c.quadraticCurveTo(16, -8 - fl, 0, 0); c.fill();
+    c.beginPath(); c.ellipse(0, 2, 9, 5, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(-9, -1, 3.6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#6a6f78'; c.beginPath(); c.moveTo(-12, -1); c.lineTo(-18, 0); c.lineTo(-12, 1.5); c.closePath(); c.fill();
+    c.restore();
+  }
+  function rabe(c, g) {   // Rabe (Gegner, fliegt wie die Taube): schwarz-blau schillernd, kräftiger grauer Schnabel, Flügelschlag; plattdrückbar
+    const b = gegnerBox(g); const cx = b.x + 19, cy = b.y + 13;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.2, 1 - g.tot * 2));
+    const fl = Math.sin(g.flug * 13);
+    c.fillStyle = '#2a2d36'; c.beginPath(); c.moveTo(-2, -2); c.quadraticCurveTo(8, -13 - fl * 10, 18, -6 - fl * 13); c.quadraticCurveTo(10, -1, 4, 2); c.closePath(); c.fill();   // hinterer Flügel
+    c.fillStyle = '#17181c'; for (let i = -1; i <= 1; i++) { c.beginPath(); c.moveTo(9, 1); c.lineTo(21, -1 + i * 4); c.lineTo(21, 3 + i * 4); c.closePath(); c.fill(); }   // Schwanz
+    c.beginPath(); c.ellipse(0, 2, 13, 7.5, 0, 0, Math.PI * 2); c.fill();   // Körper
+    c.fillStyle = 'rgba(80,110,200,.35)'; c.beginPath(); c.ellipse(-3, -1, 7, 3, -0.3, 0, Math.PI * 2); c.fill();   // blauer Schimmer
+    c.fillStyle = '#17181c'; c.beginPath(); c.arc(-13, -6, 5.2, 0, Math.PI * 2); c.fill();   // Kopf
+    c.fillStyle = '#6a6f78'; c.beginPath(); c.moveTo(-17, -8); c.lineTo(-25, -5.5); c.lineTo(-17, -3.5); c.closePath(); c.fill();   // Schnabel
+    c.fillStyle = '#f4f4f4'; c.beginPath(); c.arc(-14, -7.5, 1.7, 0, Math.PI * 2); c.fill(); c.fillStyle = '#17181c'; c.beginPath(); c.arc(-14.3, -7.5, 0.9, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#1f2128'; c.beginPath(); c.moveTo(-3, 0); c.quadraticCurveTo(6, -11 + fl * 10, 16, -4 + fl * 13); c.quadraticCurveTo(8, 1, 2, 4); c.closePath(); c.fill();   // vorderer Flügel
+    c.restore();
+  }
+  function rabeSitzt(c, x, y, t) {   // sitzender Rabe (Kulisse auf Mauern): hüpft ab und zu, dreht den Kopf
+    c.save(); c.translate(x, y - (ruhig() ? 0 : Math.max(0, Math.sin(t * 2.3)) > 0.95 ? 3 : 0));
+    c.fillStyle = '#17181c'; c.beginPath(); c.ellipse(0, -7, 9, 5.5, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(-8, -13, 4, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(7, -7); c.lineTo(16, -5); c.lineTo(15, -9); c.closePath(); c.fill();
+    c.fillStyle = '#6a6f78'; c.beginPath(); c.moveTo(-11, -14); c.lineTo(-17, -12.5); c.lineTo(-11, -11); c.closePath(); c.fill();
+    c.fillStyle = '#f4f4f4'; c.beginPath(); c.arc(-9, -14, 1.2, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#6a6f78'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-3, -2); c.lineTo(-3, 0); c.moveTo(3, -2); c.lineTo(3, 0); c.stroke();
+    c.restore();
+  }
+  function geistZeichnen(c, x, y, t, o = {}) {   // Geist vom Ghost Club: halbdurchsichtiges Laken, schwebt; o.zeigt = Arm zeigt nach rechts, o.lacht 0..1 (zittert, Mund offen, „hihi“), o.abzeichen = Schild GHOST CLUB
+    c.save(); c.translate(x, y + (ruhig() ? 0 : Math.sin(t * 2) * 6)); c.globalAlpha = o.alpha == null ? 0.82 : o.alpha;
+    if (o.lacht > 0 && !ruhig()) c.translate(Math.sin(t * 30) * 1.5 * o.lacht, 0);
+    c.fillStyle = '#f2f4ff'; c.beginPath(); c.moveTo(-22, 0); c.lineTo(-22, -40); c.arc(0, -40, 22, Math.PI, 0); c.lineTo(22, 0);
+    for (let k = 0; k < 4; k++) c.quadraticCurveTo(22 - k * 11 - 5.5, k % 2 ? -2 : 8, 22 - (k + 1) * 11, 0); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(120,130,170,.5)'; c.lineWidth = 1.5; c.stroke();
+    c.fillStyle = '#2a2d4a'; c.beginPath(); c.ellipse(-7, -42, 3.5, 4.5, 0, 0, Math.PI * 2); c.ellipse(7, -42, 3.5, 4.5, 0, 0, Math.PI * 2); c.fill();
+    if (o.lacht > 0) { c.beginPath(); c.ellipse(0, -30, 5, 4 * o.lacht, 0, 0, Math.PI * 2); c.fill(); if (o.lacht > 0.5) { c.font = 'italic 600 10px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#2a2d4a'; c.fillText('hihi', 18, -58); } }
+    else { c.beginPath(); c.ellipse(0, -30, 3, 4, 0, 0, Math.PI * 2); c.fill(); }
+    if (o.zeigt) { c.strokeStyle = '#f2f4ff'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(18, -24); c.lineTo(40, -32); c.stroke(); }
+    if (o.abzeichen) { c.fillStyle = '#2a2d4a'; c.beginPath(); c.roundRect(-24, -14, 48, 11, 3); c.fill(); c.fillStyle = '#ffd36b'; c.font = 'bold 7px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GHOST CLUB', 0, -8.5); }
+    c.restore();
+  }
+  function baumZeichnen(c, x, y, s) {   // kahler Baum im Tower-Hof (der Geist zeigt darauf)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.strokeStyle = '#4a3a2a'; c.lineCap = 'round'; c.lineWidth = 7; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -60); c.stroke();
+    c.lineWidth = 4; c.beginPath(); c.moveTo(0, -40); c.lineTo(-24, -70); c.moveTo(0, -55); c.lineTo(22, -84); c.moveTo(-14, -58); c.lineTo(-30, -92); c.moveTo(0, -60); c.lineTo(6, -96); c.stroke();
+    c.fillStyle = '#5f8a3f'; for (const [bx, by] of [[-28, -92], [6, -98], [24, -86], [-10, -78]]) { c.beginPath(); c.arc(bx, by, 11, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function hintergrundTowerBridge(c) {
+    const naehe = Math.min(1, kamera / level.ende);
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#86aacb'); g.addColorStop(0.6, '#dbe7f0'); g.addColorStop(1, '#eceae2');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    c.fillStyle = 'rgba(255,255,255,.85)';   // Wolken (Parallaxe 0,06)
+    for (let i = 0; i < 5; i++) {
+      const n = viewW + 420, wx = ((i * 370 + 120 - kamera * 0.06) % n + n) % n - 210, wy = 36 + (i % 3) * 20;
+      c.beginPath(); c.arc(wx, wy, 20, 0, Math.PI * 2); c.arc(wx + 24, wy - 9, 26, 0, Math.PI * 2); c.arc(wx + 52, wy, 20, 0, Math.PI * 2); c.arc(wx + 28, wy + 6, 18, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = '#b3bcc6';   // ferne City (Parallaxe 0,08): Hochhäuser, The Shard (Spitze), die Gurke
+    for (let i = 0; i < 34; i++) { const n = viewW + 200, bx = ((i * 78 - kamera * 0.08) % n + n) % n - 100, bh = 20 + ((i * 37) % 44); c.fillRect(bx, 250 - bh, 46, bh);
+      if (i % 11 === 3) { c.beginPath(); c.moveTo(bx + 4, 250); c.lineTo(bx + 23, 250 - bh - 120); c.lineTo(bx + 42, 250); c.closePath(); c.fill(); }
+      if (i % 11 === 8) { c.beginPath(); c.ellipse(bx + 23, 250 - bh - 20, 14, 46, 0, 0, Math.PI * 2); c.fill(); } }
+    for (let i = 0; i < 5; i++) {   // Raben am Himmel (Kulisse, Parallaxe 0,12)
+      const n = viewW + 300, rx = ((i * 290 + 100 - kamera * 0.12 - zeit * 18) % n + n) % n - 150, ry = 70 + (i % 3) * 26 + Math.sin(zeit * 1.3 + i) * 5;
+      rabeFlug(c, rx, ry, zeit + i, 0.45 + (i % 2) * 0.1);
+    }
+    const bx = viewW * (0.72 - 0.3 * naehe) - kamera * 0.012, gr = 0.42 + naehe * 0.5;   // die Tower Bridge wandert heran und wächst bis zum Boss (Klappen oben)
+    towerBridgeKlein(c, bx, 250, gr, KLAPPE_MAX);
+    towerOfLondon(c, viewW * (0.14 + 0.1 * naehe) - kamera * 0.02, 250, 0.55 + 0.3 * naehe);   // Tower of London am Nordufer
+    c.fillStyle = '#5f8299'; c.fillRect(-viewW, 250, viewW * 3, H * 2);   // Themse
+    c.fillStyle = '#9b958a'; c.fillRect(-viewW, 247, viewW * 3, 5);
+    hmsBelfast(c, ((viewW * 0.5 - kamera * 0.16) % (viewW + 700) + viewW + 700) % (viewW + 700) - 350, 274, 0.75);
+    for (let i = 0; i < 3; i++) { const n = viewW + 520, x = ((i * 610 + 260 + zeit * 12 - kamera * 0.2) % n + n) % n - 260, y = 272 + i * 12 + Math.sin(zeit * 1.4 + i) * 1.5; bootZeichnen(c, x, y, 0.6 + i * 0.08); }
+    c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2;
+    for (let i = 0; i < 14; i++) { const n = viewW + 120, wx = ((i * 110 - kamera * 0.3 + Math.sin(zeit + i) * 6) % n + n) % n - 60, wy = 262 + (i % 4) * 16; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 10, wy - 4, wx + 20, wy); c.stroke(); }
+    for (let i = 0; i < 7; i++) {   // Uferpromenade dahinter: Laternen mit Wimpeln, Poller (Parallaxe 0,55)
+      const n = viewW + 560, lx = ((i * 280 + 70 - kamera * 0.55) % n + n) % n - 280;
+      laterne(c, lx, BODEN_Y, 0.9); if (i % 2 === 0) wimpelKette(c, lx, lx + 140, BODEN_Y - 56);
+      c.fillStyle = '#26303a'; c.fillRect(lx + 100, BODEN_Y - 16, 8, 16); c.fillRect(lx + 98, BODEN_Y - 20, 12, 5);
+    }
+  }
+  function mauerPlattform(c, x, y, w) {   // Weg A: Wehrgang auf der Tower-Mauer – Steinmauer hängt darunter, Zinnen hinter der Standfläche, ab und zu ein sitzender Rabe
+    c.fillStyle = '#c9bf9f'; c.fillRect(x, y, w, 70); c.fillStyle = 'rgba(0,0,0,.1)'; for (let r = 0; r < 4; r++) for (let k = (r % 2) * 14; k < w; k += 28) c.fillRect(x + k, y + 6 + r * 16, 26, 1.5);
+    c.fillStyle = '#b9ab8c'; for (let k = 4; k < w - 8; k += 22) c.fillRect(x + k, y - 12, 12, 12);   // Zinnen (hinten)
+    c.fillStyle = '#ddd3b8'; c.beginPath(); c.roundRect(x - 2, y - 3, w + 4, 7, 3); c.fill();   // Wehrgang (Standfläche)
+    if (Math.round(x + kamera) % 3 === 0) rabeSitzt(c, x + w - 26, y - 12, zeit + x);
+  }
+  function towerDeko(c, x, w) {   // Weg A: der Tower of London hinter der Strecke – White Tower in der Mitte, Ringmauer mit Zinnen über die ganze Länge, Schild RAVEN CLUB, Brotkrumen, sitzende Raben
+    c.fillStyle = '#c9bf9f'; c.fillRect(x - 40, BODEN_Y - 150, w + 80, 150);
+    c.fillStyle = 'rgba(0,0,0,.08)'; for (let r = 0; r < 9; r++) for (let k = (r % 2) * 20; k < w + 80; k += 40) c.fillRect(x - 40 + k, BODEN_Y - 144 + r * 16, 36, 1.5);
+    c.fillStyle = '#b9ab8c'; for (let k = 0; k < w + 80; k += 30) c.fillRect(x - 40 + k, BODEN_Y - 162, 18, 12);
+    towerOfLondon(c, x + w / 2, BODEN_Y - 150, 1.1);
+    for (let gx = x + 260; gx < x + w - 100; gx += 900) {   // Tore in der Mauer
+      c.fillStyle = '#2c3a48'; c.beginPath(); c.moveTo(gx - 26, BODEN_Y); c.lineTo(gx - 26, BODEN_Y - 60); c.arc(gx, BODEN_Y - 60, 26, Math.PI, 0); c.lineTo(gx + 26, BODEN_Y); c.closePath(); c.fill();
+      c.strokeStyle = '#6f6f6f'; c.lineWidth = 2; c.beginPath(); for (let k = -20; k <= 20; k += 10) { c.moveTo(gx + k, BODEN_Y - 84); c.lineTo(gx + k, BODEN_Y); } c.stroke();
+    }
+    for (let rx = x + 120; rx < x + w; rx += 640) rabeSitzt(c, rx, BODEN_Y - 162, zeit + rx);
+    c.fillStyle = '#2a2d4a'; c.beginPath(); c.roundRect(x + 40, BODEN_Y - 110, 150, 34, 4); c.fill(); c.strokeStyle = '#ffd36b'; c.lineWidth = 2; c.stroke();
+    c.fillStyle = '#ffd36b'; c.font = 'bold 12px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('RAVEN CLUB', x + 115, BODEN_Y - 100); c.font = '600 8px system-ui, sans-serif'; c.fillStyle = '#fff'; c.fillText('Rule 1: Never lose a raven', x + 115, BODEN_Y - 86);
+    c.fillStyle = '#c9a35a'; for (let k = 0; k < 9; k++) { c.beginPath(); c.arc(x + 230 + ((k * 137) % (w - 300)), BODEN_Y - 3 - (k % 2), 2.2, 0, Math.PI * 2); c.fill(); }   // Brotkrumen
+  }
+  function geistDeko(c, x) { geistZeichnen(c, x, BODEN_Y - 90, zeit + x, { zeigt: true, abzeichen: true }); baumZeichnen(c, x + 90, BODEN_Y, 1); }
+  const KEY_JUNGE = Object.assign({}, SKIN_STANDARD, { haar: 'wuschel', haarfarbe: 'rot', hut: 'keiner', top: 'hoodie', topfarbe: 'gelb', schuhe: 'schwarz', brust: 'schmal', power: 'aus' });
+  function schluesselBund(c, x, y, s, t) {   // großer Schlüsselring mit vielen Schlüsseln (Key Club: „one hundred keys“)
+    c.save(); c.translate(x, y); c.scale(s, s); c.rotate(ruhig() ? 0 : Math.sin(t * 3) * 0.12);
+    c.strokeStyle = '#e0a400'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, 9, 0, Math.PI * 2); c.stroke();
+    for (let k = 0; k < 7; k++) { const a = Math.PI * 0.2 + k * 0.28; c.save(); c.rotate(a); c.translate(0, 9); c.fillStyle = k % 2 ? '#e0a400' : '#c9c9c9'; c.fillRect(-1.5, 0, 3, 16); c.fillRect(-1.5, 12, 6, 2); c.fillRect(-1.5, 15, 4, 2); c.restore(); }
+    c.restore();
+  }
+  function stegDeko(c, x) {   // Weg B: Holzsteg am Ufer mit dem Jungen vom Key Club („Take it!“), Schild KEY CLUB, Poller mit Tau, das Ruderboot liegt am Steg
+    c.fillStyle = '#7a5a3a'; c.fillRect(x - 10, BODEN_Y - 6, 150, 6); c.fillStyle = '#5a3a22'; for (let k = 0; k < 150; k += 16) c.fillRect(x - 10 + k, BODEN_Y - 6, 2, 6);
+    for (const px of [x, x + 120]) { c.fillStyle = '#5a3a22'; c.fillRect(px - 4, BODEN_Y - 30, 8, 24); c.strokeStyle = '#c9a35a'; c.lineWidth = 2; c.beginPath(); c.arc(px, BODEN_Y - 24, 6, 0, Math.PI * 2); c.stroke(); }
+    c.fillStyle = '#2a2d4a'; c.beginPath(); c.roundRect(x + 20, BODEN_Y - 104, 84, 22, 4); c.fill(); c.strokeStyle = '#ffd36b'; c.lineWidth = 2; c.stroke();
+    c.fillStyle = '#ffd36b'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('KEY CLUB 🔑', x + 62, BODEN_Y - 93);
+    c.fillStyle = '#555'; c.fillRect(x + 60, BODEN_Y - 82, 3, 76);
+    c.save(); c.translate(x + 96, BODEN_Y - 6); c.scale(0.72, 0.72); zeichneFigur(c, 0, 0, 80, KEY_JUNGE, 'steh', zeit, 'grinsend'); c.restore();
+    schluesselBund(c, x + 76, BODEN_Y - 44, 1, zeit);
+    sprechblase(c, x + 92, BODEN_Y - 100, 'Take it!');
+  }
+  function ruderboot(c, x, y, t, o = {}) {   // Ruderboot unter der Figur (Weg B): brauner Holzrumpf mit Planken, zwei Ruder schlagen, Gischt; (x, y) = Fußpunkt der Figur
+    const bob = ruhig() ? 0 : Math.sin(t * 2.4) * 2, r = ruhig() ? 0 : Math.sin(t * 4.5);
+    c.save(); c.translate(x - 16, y + 8 + bob);
+    for (const s of [-1, 1]) { c.save(); c.translate(s * 34, -14); c.rotate(-0.5 + r * 0.35); c.strokeStyle = '#8a5a2b'; c.lineWidth = 3.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, 38); c.stroke(); c.fillStyle = '#a06a35'; c.beginPath(); c.ellipse(0, 42, 4, 9, 0, 0, Math.PI * 2); c.fill(); c.restore(); }   // Ruder
+    c.fillStyle = '#8a5a2b'; c.beginPath(); c.moveTo(-70, -12); c.lineTo(72, -12); c.quadraticCurveTo(62, 14, 40, 16); c.lineTo(-44, 16); c.quadraticCurveTo(-66, 14, -70, -12); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(0,0,0,.18)'; c.lineWidth = 1.5; for (let k = -4; k <= 10; k += 7) { c.beginPath(); c.moveTo(-64 + Math.abs(k), k); c.lineTo(66 - Math.abs(k), k); c.stroke(); }
+    c.fillStyle = '#a06a35'; c.fillRect(-72, -16, 146, 5); c.fillRect(-20, -12, 8, 10); c.fillRect(30, -12, 8, 10);   // Bordkante, Sitzbänke
+    if (o.name) { c.fillStyle = '#f4f4f4'; c.font = 'bold 7px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(o.name, 10, 6); }
+    c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2; c.beginPath(); c.moveTo(-78, 12); c.quadraticCurveTo(-70, 6, -62, 12); c.moveTo(70, 12); c.quadraticCurveTo(80, 6, 90, 12); c.stroke();   // Gischt
+    c.restore();
+  }
+  function treibgutZeichnen(c, t) {   // Treibgut auf der Themse: Baumstamm oder altes Fass, schaukelt; auf jedem dritten sitzt eine Badeente
+    const x = t.x - kamera, y = BODEN_Y - 8 + (ruhig() ? 0 : Math.sin(zeit * 2 + t.bob) * 2), fass = Math.round(t.x / 100) % 2 === 0;
+    c.save(); c.translate(x, y); c.rotate(ruhig() ? 0 : Math.sin(zeit * 1.7 + t.bob) * 0.06);
+    if (fass) { c.fillStyle = '#7a5a3a'; c.beginPath(); c.roundRect(-20, -18, 40, 20, 6); c.fill(); c.fillStyle = '#4a4f58'; c.fillRect(-20, -14, 40, 3); c.fillRect(-20, -6, 40, 3); }
+    else { c.fillStyle = '#6e4519'; c.beginPath(); c.roundRect(-24, -16, 48, 16, 8); c.fill(); c.fillStyle = '#b07a3c'; c.beginPath(); c.ellipse(22, -8, 4, 7, 0, 0, Math.PI * 2); c.fill(); c.strokeStyle = 'rgba(0,0,0,.2)'; c.lineWidth = 1; c.beginPath(); c.moveTo(-16, -11); c.lineTo(14, -10); c.moveTo(-14, -5); c.lineTo(12, -5); c.stroke(); }
+    if (Math.round(t.x / 100) % 3 === 0) { c.fillStyle = '#ffd93d'; c.beginPath(); c.ellipse(0, -22, 8, 5, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(-6, -28, 4.5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#ff7a1a'; c.beginPath(); c.moveTo(-10, -28); c.lineTo(-15, -27); c.lineTo(-10, -26); c.closePath(); c.fill(); c.fillStyle = '#18213a'; c.beginPath(); c.arc(-7.5, -29, 0.9, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+    c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 2; c.beginPath(); c.moveTo(x - 30, BODEN_Y + 4); c.quadraticCurveTo(x - 24, BODEN_Y, x - 18, BODEN_Y + 4); c.moveTo(x + 18, BODEN_Y + 4); c.quadraticCurveTo(x + 24, BODEN_Y, x + 30, BODEN_Y + 4); c.stroke();
+  }
+  function klappeZeichnen(c, k) {   // Brückenklappen-Abschnitt: zwei Türme der Tower Bridge an den Scharnieren, Hochbahnsteg, die beiden Klappen (heben sich mit dem Horn), Warnlicht rot/grün, Schild „BRIDGE OPENING“, ein Segelschiff fährt hindurch
+    const x = k.x - kamera, w = KLAPPE_W * 2, warn = k.phase === 'warnung' || k.phase === 'hebt' || k.phase === 'oben' || k.phase === 'senkt';
+    brueckenTurmLondon(c, x - 22, BODEN_Y, 1); brueckenTurmLondon(c, x + w + 22, BODEN_Y, 1);
+    c.fillStyle = TB_BLAU; c.fillRect(x - 22, BODEN_Y - 202, w + 44, 6);
+    c.strokeStyle = TB_BLAU; c.lineWidth = 1.5; c.beginPath(); for (let k2 = 0; k2 <= w + 44; k2 += 20) { c.moveTo(x - 22 + k2, BODEN_Y - 202); c.lineTo(x - 22 + k2, BODEN_Y - 214); } c.moveTo(x - 22, BODEN_Y - 214); c.lineTo(x + w + 22, BODEN_Y - 214); c.stroke();
+    if (k.phase === 'oben' || k.phase === 'senkt') {   // Segelschiff mit hohem Mast fährt durch die offene Brücke
+      const sx = x + w / 2 + (k.phase === 'oben' ? (k.t / KLAPPE_OBEN - 0.5) * 60 : 30 + k.t * 20);
+      c.fillStyle = '#f4f4f4'; c.beginPath(); c.moveTo(sx, BODEN_Y - 170); c.lineTo(sx + 44, BODEN_Y - 60); c.lineTo(sx, BODEN_Y - 60); c.closePath(); c.fill();
+      c.fillStyle = '#5a3a22'; c.fillRect(sx - 2, BODEN_Y - 180, 4, 150); c.beginPath(); c.moveTo(sx - 50, BODEN_Y - 30); c.lineTo(sx + 56, BODEN_Y - 30); c.lineTo(sx + 44, BODEN_Y - 6); c.lineTo(sx - 40, BODEN_Y - 6); c.closePath(); c.fill();
+      c.fillStyle = UK_ROT; c.beginPath(); c.moveTo(sx + 2, BODEN_Y - 180); c.lineTo(sx + 14, BODEN_Y - 176); c.lineTo(sx + 2, BODEN_Y - 172); c.closePath(); c.fill();
+    }
+    brueckenKlappe(c, x, BODEN_Y, k.winkel, false); brueckenKlappe(c, x + w, BODEN_Y, k.winkel, true);
+    c.fillStyle = '#3a3a3a'; c.fillRect(x - 25, BODEN_Y - 118, 6, 14);
+    c.fillStyle = warn ? (Math.floor(zeit * 6) % 2 ? '#e63946' : '#7a1f1f') : '#2ecc71'; c.beginPath(); c.arc(x - 22, BODEN_Y - 122, 6, 0, Math.PI * 2); c.fill();
+    if (k.phase === 'warnung' || k.phase === 'hebt') { c.fillStyle = 'rgba(230,57,70,.92)'; c.beginPath(); c.roundRect(x + w / 2 - 66, BODEN_Y - 168, 132, 20, 4); c.fill(); c.fillStyle = '#fff'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('BRIDGE OPENING ▲', x + w / 2, BODEN_Y - 158); }
+  }
+  // Boss-Platz: Sergeant Bearskin ohne Mütze (Igel-Haare) steht vor der hochgeklappten Brücke; wird in der Sequenz sichtbar, marschiert im Finale zur Seite (wie Welt 1)
+  function bridgeBoss(c, x, y) {
+    const auf = boss.sichtbar, weg = boss.weg;
+    const gx = x + weg * 240, marsch = weg > 0 && !ruhig() ? Math.sin(zeit * 9) : 0;
+    const blick = (zustand === 'boss' || zustand === 'sequenz') ? -2 : (Math.sin(zeit * 0.8) > 0.35 ? 2 : Math.sin(zeit * 0.8) < -0.35 ? -2 : 0);
+    gardist(c, gx, y, { alpha: auf * (1 - weg * 0.85), marsch, blick, hut: 'igel' });
+    if (auf > 0.9 && zustand === 'sequenz') { c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('!', gx + 26, y - 206 - (ruhig() ? 0 : Math.abs(Math.sin(zeit * 6)) * 5)); }
+  }
+  function brueckenTorLondon(c, x, y) {   // Tür der Welt Tower Bridge: der Nordturm mit Schranke im Bogen (rot-weiß, hebt sich), Ampel rot → grün, Schild TOWER BRIDGE; dahinter senkt sich die hochgeklappte Klappe (tuer.offen)
+    const offen = tuer.offen;
+    brueckenKlappe(c, x - 50, y, KLAPPE_MAX * 1.25 * (1 - offen), true, 160);   // Klappe hinter dem Boss: hoch, senkt sich beim Öffnen
+    c.fillStyle = TB_BLAU; c.fillRect(x - 40, y - 202, 420, 6);
+    brueckenTurmLondon(c, x, y, 1.1);
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(x - 44, y - 150, 88, 16, 3); c.fill();
+    c.fillStyle = '#ffd36b'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TOWER BRIDGE', x, y - 142);
+    if (offen > 0) { c.fillStyle = `rgba(255,240,180,${0.8 * offen})`; c.beginPath(); c.moveTo(x - 18, 0 + y); c.lineTo(x - 18, y - 76); c.arc(x, y - 76, 18, Math.PI, 0); c.lineTo(x + 18, y); c.closePath(); c.fill(); }
+    c.save(); c.translate(x - 20, y - 30); c.rotate(-offen * Math.PI * 0.45);   // Schranke
+    c.fillStyle = '#f4f4f4'; c.fillRect(0, -4, 44, 8); c.fillStyle = UK_ROT; for (let k = 4; k < 44; k += 12) c.fillRect(k, -4, 6, 8);
+    c.restore();
+    c.fillStyle = '#3a3a3a'; c.fillRect(x - 26, y - 70, 12, 26); c.fillStyle = offen > 0.3 ? '#2ecc71' : '#e63946'; c.beginPath(); c.arc(x - 20, y - 62, 4, 0, Math.PI * 2); c.fill();
+    unionJack(c, x + 44, y - 236, 26, 15); c.fillStyle = '#555'; c.fillRect(x + 42, y - 236, 2, 52);
+  }
+  function filmFellmuetze(c, x, y, s, nass) {   // Bärenfellmütze als Gegenstand – nass: dunkler, glänzt, tropft nicht (Tropfen kommen vom gardist)
+    fellmuetze(c, x, y, s);
+    if (nass) { c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = 'rgba(120,170,220,.35)'; c.beginPath(); c.moveTo(-15, 0); c.quadraticCurveTo(-21, -58, 0, -66); c.quadraticCurveTo(21, -58, 15, 0); c.closePath(); c.fill(); c.restore(); }
+  }
+  /* Film Tower Bridge: Bühne an der Themse – Nordturm (Scharnier 450) und Südturm (Scharnier 740), Klappen oben, Tower of London rechts (1060), Kai links; Kamera je Szene */
+  const TBF = { t1: 430, t2: 760, ich: 300, serg: 400, tower: 1060, kw: 145 };
+  function filmKameraBridge(sz, f, ende) {
+    const K = {
+      A: [[[560, 170, 1.1], [470, 215, 1.35]], [[620, 160, 1.0], [800, 150, 1.1]], [[440, 235, 1.6], [430, 235, 1.8]]],
+      B: [[[560, 170, 1.1], [470, 215, 1.35]], [[400, 235, 1.5], [410, 235, 1.8]], [[700, 160, 1.0], [880, 150, 1.15]]],
+    }[ende][sz];
+    const g = sanft(f);
+    return [lerp(K[0][0], K[1][0], g), lerp(K[0][1], K[1][1], g), lerp(K[0][2], K[1][2], g)];
+  }
+  function filmKulisseBridge(c, winkel) {
+    const g = c.createLinearGradient(0, -400, 0, BODEN_Y); g.addColorStop(0, '#5f9bd6'); g.addColorStop(0.7, '#d6e8f5'); g.addColorStop(1, '#eef6fb');
+    c.fillStyle = g; c.fillRect(-500, -600, 2200, BODEN_Y + 600);
+    c.fillStyle = 'rgba(255,255,255,.9)'; for (const [wx, wy] of [[60, 20], [980, -30], [1300, 60], [600, -60]]) { c.beginPath(); c.arc(wx, wy, 18, 0, Math.PI * 2); c.arc(wx + 22, wy - 8, 22, 0, Math.PI * 2); c.arc(wx + 46, wy, 16, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#b3bcc6'; for (let i = 0; i < 22; i++) { const bx = -400 + i * 96, bh = 30 + ((i * 37) % 50); c.fillRect(bx, 250 - bh, 50, bh); if (i === 4) { c.beginPath(); c.moveTo(bx, 250); c.lineTo(bx + 25, 250 - bh - 150); c.lineTo(bx + 50, 250); c.closePath(); c.fill(); } }
+    c.fillStyle = '#5f8299'; c.fillRect(-500, 250, 2200, 120); c.fillStyle = '#9b958a'; c.fillRect(-500, 247, 2200, 5);
+    towerOfLondon(c, TBF.tower, BODEN_Y, 1.15);
+    c.fillStyle = '#d2d0ca'; c.fillRect(-500, BODEN_Y, TBF.t1 + 500, 10); c.fillRect(TBF.t2, BODEN_Y, 1200, 10); c.fillStyle = '#a5a49f'; c.fillRect(-500, BODEN_Y + 10, TBF.t1 + 500, 300); c.fillRect(TBF.t2, BODEN_Y + 10, 1200, 300);   // Kai links und rechts, dazwischen die Themse
+    const gw = c.createLinearGradient(0, BODEN_Y, 0, H + 200); gw.addColorStop(0, '#5f8299'); gw.addColorStop(1, '#2c4a5e'); c.fillStyle = gw; c.fillRect(TBF.t1, BODEN_Y + 10, TBF.t2 - TBF.t1, 300);
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 2; for (let i = 0; i < 7; i++) { const wx = TBF.t1 + 20 + ((i * 44 + zeit * 40) % (TBF.t2 - TBF.t1 - 40)), wy = BODEN_Y + 24 + (i % 3) * 14; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 8, wy - 4, wx + 16, wy); c.stroke(); }
+    laterne(c, 120, BODEN_Y, 1); laterne(c, 960, BODEN_Y, 1);
+    brueckenTurmLondon(c, TBF.t1 - 20, BODEN_Y, 1.05); brueckenTurmLondon(c, TBF.t2 + 20, BODEN_Y, 1.05);
+    c.fillStyle = TB_BLAU; c.fillRect(TBF.t1 - 20, BODEN_Y - 212, TBF.t2 - TBF.t1 + 40, 6);
+    brueckenKlappe(c, TBF.t1 + 20, BODEN_Y, winkel, false, TBF.kw); brueckenKlappe(c, TBF.t2 - 20, BODEN_Y, winkel, true, TBF.kw);
+  }
+  function filmSergeantBridge(c, x, o) { c.save(); c.translate(x, BODEN_Y); c.scale(0.8, 0.8); gardist(c, 0, 0, o); c.restore(); }
+  function filmRabenFlug(c, n, tt, start) {   // n Raben fliegen einer nach dem anderen („one by one“) von links zurück zum Tower (rechts oben)
+    for (let i = 0; i < n; i++) {
+      const f = sanft((tt - start - i * 0.45) / 2.2); if (f <= 0) continue;
+      const x = lerp(-40 + i * 30, TBF.tower - 70 + (i % 3) * 26, f), y = lerp(150 + (i % 2) * 40, BODEN_Y - 300 + (i % 3) * 14, f) - Math.sin(f * Math.PI) * 60;
+      if (f >= 1) rabeSitzt(c, x, y + 10, zeit + i); else rabeFlug(c, x, y, zeit + i, 0.7);
+    }
+  }
+  function filmZeichnenBridge(c) {
+    const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
+    if (sz >= 3) return filmTitel(c, f);
+    const [kx, ky, kz] = filmKameraBridge(sz, p, ende);
+    c.save(); c.translate(viewW / 2, H / 2); c.scale(kz, kz); c.translate(-kx, -ky);
+    const beg = begleiter ? begleiter.art : 'fuchs';
+    const begleiterDa = (fx) => begleiterZeichnen(c, fx - 48, beg === 'taube' ? BODEN_Y - 108 + Math.sin(zeit * 2.2) * 6 : BODEN_Y, beg, zeit);
+    if (sz === 0) {   // zurück auf der Brücke: die Klappen stehen hoch, der Sergeant (ohne Mütze) wartet und tippt mit dem Fuß, „!“; du und dein Begleiter daneben
+      filmKulisseBridge(c, KLAPPE_MAX);
+      const sx = TBF.t1 - 150 + (tt > 2 ? 60 : 0);
+      c.fillStyle = '#f4f4f4'; c.beginPath(); c.moveTo(sx, BODEN_Y - 190); c.lineTo(sx + 50, BODEN_Y - 60); c.lineTo(sx, BODEN_Y - 60); c.closePath(); c.fill();   // Schiff wartet vor der Brücke … und fährt hindurch
+      c.fillStyle = '#5a3a22'; c.fillRect(sx - 2, BODEN_Y - 200, 4, 170); c.beginPath(); c.moveTo(sx - 56, BODEN_Y - 30); c.lineTo(sx + 62, BODEN_Y - 30); c.lineTo(sx + 50, BODEN_Y - 4); c.lineTo(sx - 46, BODEN_Y - 4); c.closePath(); c.fill();
+      filmSergeantBridge(c, TBF.serg, { hut: 'igel', blick: Math.sin(tt * 3) > 0 ? -2 : 2, marsch: ruhig() ? 0 : Math.max(0, Math.sin(tt * 8)) * 0.25 });
+      if (tt > 1.2) { c.font = 'bold 22px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('!', TBF.serg + 22, BODEN_Y - 176 - (ruhig() ? 0 : Math.abs(Math.sin(tt * 6)) * 4)); }
+      filmFigur(c, TBF.ich, 'steh', 'erstaunt'); begleiterDa(TBF.ich);
+    } else if (ende === 'A' && sz === 1) {   // die Raben fliegen zurück zum Tower – alle sechs, einer nach dem anderen
+      filmKulisseBridge(c, KLAPPE_MAX);
+      filmSergeantBridge(c, TBF.serg, { hut: 'igel', blick: 2, laecheln: tt > 3 ? 0.6 : 0 });
+      filmFigur(c, TBF.ich, 'steh', 'grinsend'); begleiterDa(TBF.ich);
+      filmRabenFlug(c, 6, tt, 0.4);
+    } else if (ende === 'A' && sz === 2) {   // nah: keine Mütze – die Haare stehen wie ein Igel; der Geist vom Ghost Club lacht. Leise.
+      filmKulisseBridge(c, KLAPPE_MAX);
+      const lacht = tt > 1.6 ? Math.min(1, (tt - 1.6) / 0.4) : 0;
+      filmSergeantBridge(c, TBF.serg, { hut: 'igel', blick: lacht > 0 ? 2 : -2, igelGross: Math.min(1, tt / 1.2) });
+      geistZeichnen(c, TBF.serg + 70, BODEN_Y - 60, zeit, { lacht, abzeichen: true, alpha: 0.75 + 0.1 * Math.sin(zeit * 3) });
+      filmFigur(c, TBF.ich, 'steh', lacht > 0 ? 'zunge' : 'erstaunt'); begleiterDa(TBF.ich);
+      if (tt > 0.4) { c.font = '600 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText('🦔', TBF.serg + 30, BODEN_Y - 168); }
+    } else if (ende === 'B' && sz === 1) {   // der Sergeant setzt den nassen Hut auf – drip, drip, drip
+      filmKulisseBridge(c, KLAPPE_MAX);
+      const auf = sanft((tt - 0.4) / 1.6), tropft = tt > 2.0 ? 1 : 0;
+      filmSergeantBridge(c, TBF.serg, auf >= 1 ? { hut: 'nass', blick: -2, tropft: 1, erstaunt: 1 } : { hut: 'igel', blick: -2 });
+      if (auf < 1) filmFellmuetze(c, lerp(TBF.ich + 36, TBF.serg, auf), lerp(BODEN_Y - 70, BODEN_Y - 104, auf) - Math.sin(auf * Math.PI) * 40, 0.8, true);
+      filmFigur(c, TBF.ich, 'steh', 'grinsend'); begleiterDa(TBF.ich);
+      if (tropft) { c.font = 'italic 600 12px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#1d3f8f'; for (let k = 0; k < 3; k++) if (tt > 2.2 + k * 0.5) c.fillText('drip', TBF.serg + 28 + k * 6, BODEN_Y - 150 + k * 18); }
+    } else {   // Ende B Szene 3: nur fünf Raben kommen zurück – einer fehlt … ?
+      filmKulisseBridge(c, KLAPPE_MAX);
+      filmSergeantBridge(c, TBF.serg, { hut: 'nass', blick: 2, tropft: 1 });
+      filmFigur(c, TBF.ich, 'steh', 'erstaunt'); begleiterDa(TBF.ich);
+      filmRabenFlug(c, 5, tt, 0.3);
+      if (tt > 2.8 && (ruhig() || Math.floor(tt * 2) % 2 === 0)) { c.font = 'bold 34px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = UK_ROT; c.fillText('?', TBF.tower + 70, BODEN_Y - 290); }
+    }
+    c.restore();
+    filmUntertitel(c, f);
+  }
   function falkeZeichnen(c, x, y) {   // Cameo Felix: Falke über der Figur, Flügel schlagen, Krallen halten die Figur
     c.save(); c.translate(x, y);
     const fl = Math.sin(zeit * 16) * 10;
@@ -4296,6 +4726,7 @@
     if (film.welt === 'route66') return filmZeichnenR66(c);   // Story Route 66 (Klasse 9, Kapitel 2)
     if (film.welt === 'az') return filmZeichnenAZ(c);   // Story Grand Canyon (Klasse 9, Kapitel 3)
     if (film.welt === 'londoneye') return filmZeichnenEye(c);   // Story London Eye (Klasse 6, Kapitel 2)
+    if (film.welt === 'towerbridge') return filmZeichnenBridge(c);   // Story Tower Bridge (Klasse 6, Kapitel 3)
     const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
     if (sz >= 3) return filmTitel(c, f);
     const [kx, ky, kz] = filmKamera(sz, p, ende);
@@ -4373,6 +4804,12 @@
       if (f.ende === 'X') { zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, 'grinsend'); tagebuch(c, viewW / 2 + 62, 258, 1.1); }
       else { zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, 'erstaunt'); c.save(); c.translate(viewW / 2 + 150, 0); c.scale(-0.8, 0.8); zeichneFigur(c, 0, 375, 70, NY_FIGUREN.maya, 'steh', zeit, 'grinsend'); c.restore(); tagebuch(c, viewW / 2 + 128, 262, 0.8); }
       c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'X' ? '📓 Lucas keeps the journal → 🗿 Mount Rushmore' : '👜 Maya keeps the journal → 🗿 Mount Rushmore', viewW / 2, 340);
+    } else if (f.welt === 'towerbridge') {   // Tower Bridge: du, der Sergeant (A: Igel-Haare · B: nasser Hut), dein Begleiter
+      zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, f.ende === 'A' ? 'grinsend' : 'erstaunt');
+      c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, f.ende === 'A' ? { hut: 'igel', laecheln: 0.6, blick: -2 } : { hut: 'nass', tropft: 1, blick: -2 }); c.restore();
+      if (begleiter) begleiterZeichnen(c, viewW / 2 - 118, begleiter.art === 'taube' ? 230 : 300, begleiter.art, zeit);
+      if (f.ende === 'A') geistZeichnen(c, viewW / 2 + 130, 290, zeit, { lacht: 0.7, alpha: 0.8 }); else rabeSitzt(c, viewW / 2 + 130, 300, zeit);
+      c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'A' ? '🐦 🦔 👻' : '🎩 💧 … ?', viewW / 2, 340);
     } else if (f.welt === 'londoneye') {   // London Eye: du, der Sergeant in Socken, dein Begleiter (Ende A: Knopf · Ende B: Rad)
       zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, 'grinsend');
       c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, { socken: true, laecheln: f.ende === 'B' ? 1 : 0, lachen: f.ende === 'A' ? 0.6 : 0, blick: -2 }); c.restore();
@@ -4426,10 +4863,11 @@
   function dekoZeichnen(c) {   // zwei Durchgänge: erst die Hauswände (Feuertreppe, Diner, Eistür), dann alles davor (U-Bahn-Eingang); das Motel-Schild kommt in dekoVorneZeichnen (über dem Tor ✦)
     for (let pass = 0; pass < 2; pass++) for (const d of level.deko) {
       if (d.art === 'motel') continue;
-      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor') !== (pass === 0)) continue;
+      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor' || d.art === 'tower') !== (pass === 0)) continue;
       const x = d.x - kamera; if (x < -320 - (d.w || 0) || x > viewW + 160) continue;
       if (d.art === 'feuertreppe') feuertreppeDeko(c, x); else if (d.art === 'subway') subwayDeko(c, x); else if (d.art === 'diner') dinerDeko(c, x); else if (d.art === 'eistuer') eistuerDeko(c, x);
       else if (d.art === 'maschinenraum') maschinenraumDeko(c, x, d.w); else if (d.art === 'knopf') knopfDeko(c, x);
+      else if (d.art === 'tower') towerDeko(c, x, d.w); else if (d.art === 'geist') geistDeko(c, x); else if (d.art === 'steg') stegDeko(c, x);   // Tower Bridge (Klasse 6)
       else if (d.art === 'maultier') maultierDeko(c, x); else if (d.art === 'skywalk') skywalkDeko(c, x); else if (d.art === 'wasserfall') wasserfallDeko(c, x, false); else if (d.art === 'drachentor') drachentorDeko(c, x);
     }
   }
@@ -5213,6 +5651,7 @@
       if (p.art === 'gitter') { gitterPlattform(c, x, p.y, p.w); continue; }       // Podest der Feuertreppe (Story New York)
       if (p.art === 'kabine') { kabinePlattform(c, x, p.y, p.w); continue; }       // schwebende Kabine des London Eye (Welt 2 Klasse 6)
       if (p.art === 'glas') { glasPlattform(c, x, p.y, p.w); continue; }           // Glasbrücke des Skywalk (Story Grand Canyon)
+      if (p.art === 'mauer') { mauerPlattform(c, x, p.y, p.w); continue; }         // Wehrgang der Tower-Mauer (Welt 3 Klasse 6)
       c.fillStyle = W.farben.plattform; c.beginPath(); c.roundRect(x, p.y, p.w, 14, 4); c.fill();
       c.fillStyle = W.farben.plattformOben; c.beginPath(); c.roundRect(x - 2, p.y - 3, p.w + 4, 7, 3); c.fill();
     }
@@ -5227,6 +5666,8 @@
     for (const s of staemme) { if (s.phase === 'weg') continue; const x = (s.phase === 'rollt' ? s.rx : s.x) - kamera; if (x > viewW + 80 || x < -80) continue; stammZeichnen(c, s); }
     for (const g of gondeln) { const x = g.x - kamera; if (x > viewW + 100 || x + g.w < -100) continue; seilbahnZeichnen(c, g); }   // Welt 5
     for (const s of surfs) { const x = s.x - kamera; if (x > viewW + 100 || x + s.w < -100) continue; surfZeichnen(c, s); }
+    for (const k of klappen) { const x = k.x - kamera; if (x > viewW + 200 || x + KLAPPE_W * 2 < -200) continue; klappeZeichnen(c, k); }   // Tower Bridge
+    for (const t of treibgut) { const x = t.x - kamera; if (x > viewW + 60 || x < -60) continue; treibgutZeichnen(c, t); }
     for (const cp of checkpoints) { const x = cp.x - kamera; if (x > -60 && x < viewW + 60) fahne(c, x, BODEN_Y, cp.erreicht); }
     if (story) { parkbusZeichnen(c); kristalleZeichnen(c); if (realm) { if (realm.aktiv) realmDingeZeichnen(c); else realmToreZeichnen(c); } }
     if (level.deko && level.deko.length) dekoVorneZeichnen(c);   // Story Route 66: Motel-Schild vor dem versteckten Tor ✦
@@ -5265,6 +5706,7 @@
       if (bossSpruch) sprechblase(c, level.bossX - kamera - 20, BODEN_Y - W.sprechblaseHoehe, bossSpruch.text);
     }
     if (dunkel > 0) dunkelZeichnen(c, dunkel);   // London Eye: Maschinenraum – dunkel, nur die Lampen leuchten
+    if (imBoot && tot <= 0) ruderboot(c, spieler.x - kamera, BODEN_Y, zeit);   // Tower Bridge: das Ruderboot unter Figur und Begleiter
     if (begleiter && tot <= 0) begleiterZeichnen(c, begleiter.x - kamera, begleiter.y, begleiter.art, begleiter.flug);   // Begleiter aus Welt 1 (Deko)
     if (nebelDichte > 0) {   // Welt 5: Nebelschleier über allem bisher Gezeichneten; die Diamanten glühen durch den Nebel, die Figur bleibt sichtbar
       nebelZeichnen(c, nebelDichte);
@@ -5517,7 +5959,7 @@
   }
 
   /* ---------- Welten: je Welt Kulisse, Boden, Kisten, Gegnerarten, Boss (Zeichner + Klang), Tür, Banner, Level-Muster ---------- */
-  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler, moewe, seeloewe, skater, fuchs, wolf, ritter };
+  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler, moewe, seeloewe, skater, fuchs, wolf, ritter, rabe };
   function bodenNY(c, x0, w, a, b, links, rechts) {
     c.fillStyle = '#b9ad9a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
     c.fillStyle = '#d9cfbb'; c.fillRect(x0, BODEN_Y, w, 10);
@@ -5568,6 +6010,12 @@
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen', 'moewe'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_LONDONEYE_STORY, musterStory: MUSTER_LONDONEYE_STORY, storyStruktur: STRUKTUR_LONDONEYE, sprechblaseHoehe: 245, bossOben: BODEN_Y - 130,
       kulisse: hintergrundLondonEye, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => riesenrad(c, x, y - 2, 11, 0, { bodenY: y + 12, farbe: '#1d3f8f', speichenAlpha: 0.8, kabinen: false }),
       boss: eyeBoss, tuer: kabinenTuer, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
+    // Klasse 6 „London Run“ Welt 3 Tower Bridge (31.10.): Kapitel 3 „Up Goes the Bridge“ – Brückenklappen, Raben, Boot-Abschnitte; Boss Sergeant Bearskin ohne Mütze vor der hochgeklappten Brücke, Tür = Brückentor
+    towerbridge: { id: 'towerbridge', name: 'Tower Bridge', staat: 'London', ziel: 'Tower Bridge', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin has lost his hat!', richtig: "Correct – the bridge is closing. Carry on!", falsch: "Not this time, soldier!", start: "Let's find Tower Bridge!", ende: "You found Tower Bridge!",
+      sturz: 'Splash! 🌊',
+      gegnerarten: ['taube', 'fuchs', 'eichhoernchen', 'moewe', 'rabe'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_TOWERBRIDGE_STORY, musterStory: MUSTER_TOWERBRIDGE_STORY, storyStruktur: STRUKTUR_TOWERBRIDGE, sprechblaseHoehe: 225,
+      kulisse: hintergrundTowerBridge, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => { c.save(); c.translate(x, y + 12); c.scale(0.062, 0.062); c.fillStyle = '#1d3f8f'; c.fillRect(-150, -205, 300, 8); c.fillRect(-184, -200, 68, 200); c.fillRect(116, -200, 68, 200); c.fillRect(-116, -8, 232, 16); c.restore(); },
+      boss: bridgeBoss, tuer: brueckenTorLondon, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner, richtig: w.richtig, falsch: w.falsch, start: w.start, ende: w.ende }));
 
@@ -5678,6 +6126,8 @@
         wind: wind ? { phase: wind.phase, richtung: wind.richtung, t: Math.round(wind.t * 100) / 100 } : null, sprungFaktor: wind && wind.phase === 'schub' ? WIND_SPRUNG : 1, brummt, baeche: level.baeche.map((b) => ({ x: b.x, w: b.w })),
         nebel: level.nebel.map((n) => ({ x: n.x, w: n.w })), nebelDichte: Math.round(nebelDichte * 100) / 100, gondeln: gondeln.map((g) => ({ x: g.x, w: g.w, gx: Math.round(g.gx), vx: Math.round(g.vx), y: GONDEL_Y })), aufGondel,
         surfs: surfs.map((s) => ({ x: s.x, w: s.w, aktiv: s.aktiv })), surft: surft > 0, geklaut, tutet,
+        hornt, klappen: klappen.map((k) => ({ x: k.x, phase: k.phase, winkel: Math.round(k.winkel * 1000) / 1000 })), boote: boote.map((b) => ({ x: b.x, w: b.w })), treibgut: treibgut.map((t) => t.x), imBoot: !!imBoot,   // Tower Bridge
+        mauern: level.plattformen.filter((p) => p.art === 'mauer').map((p) => ({ x: p.x, y: p.y, w: p.w })), rampeY: klappen.length ? rampeY(spieler.x) : null,
         trommelt, dunkel: Math.round(dunkel * 100) / 100, kabinen: level.plattformen.filter((p) => p.art === 'kabine').map((p) => ({ x: p.x, y: p.y, w: p.w })), maschinenraum: (level.deko || []).filter((d) => d.art === 'maschinenraum').map((d) => ({ x: d.x, w: d.w })),
         kisten: level.kisten.filter((k) => k.art).map((k) => ({ x: k.x, y: k.y, art: k.art })), luecken: level.boden.length - 1,
         cameo: cameo ? { id: cameo.held && cameo.held.id, t: Math.round(cameo.t * 100) / 100, satz: cameo.satz } : null, cameosGezeigt, cameoEffekt,
@@ -5696,6 +6146,7 @@
     schaden() { schaden("gegner"); },
     steinLoesen(i) { const s = steine[i]; if (s) { s.phase = 'warnung'; s.t = 0; } },   // Test: Stein i sofort ankündigen (fällt nach 0,6 s)
     windLoesen(richtung = -1) { if (zustand === 'spiel') wind = { phase: 'warnung', t: 0, richtung }; },   // Test: Windböe sofort ankündigen (Schub nach 0,5 s)
+    klappeLoesen(i, phase = 'warnung') { const k = klappen[i]; if (k) { k.phase = phase; k.t = 0; k.winkel = phase === 'oben' ? KLAPPE_MAX : 0; } },   // Test: Brückenklappe i sofort ankündigen (oder gleich oben)
     setLeben(n) { leben = Math.max(1, Math.min(3, Number(n) || 3)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
     setSkin(o) { Object.assign(skin, o); },
     cameo(id) { if (zustand !== 'spiel') return false; const h = cameoListe.find((x) => x.id === id) || (id ? { id, name: id } : cameoListe[0]); if (!h) return false; cameo = null; cameoStart(h); return true; },   // Test: Cameo sofort auslösen

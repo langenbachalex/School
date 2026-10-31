@@ -7057,6 +7057,27 @@ window.DATEN = {
      "penny": "audio/runner/cameo_penny.mp3",
      "tessa": "audio/runner/cameo_tessa.mp3"
     }
+   },
+   "towerbridge": {
+    "boss": {
+     "banner": "audio/runner/towerbridge_banner.mp3",
+     "richtig": "audio/runner/towerbridge_richtig.mp3",
+     "falsch": "audio/runner/towerbridge_falsch.mp3"
+    },
+    "start": "audio/runner/towerbridge_start.mp3",
+    "ende": "audio/runner/towerbridge_ende.mp3",
+    "cameo": {
+     "leo": "audio/runner/cameo_leo.mp3",
+     "kenji": "audio/runner/cameo_kenji.mp3",
+     "felix": "audio/runner/cameo_felix.mp3",
+     "max": "audio/runner/cameo_max.mp3",
+     "camilla": "audio/runner/cameo_camilla.mp3",
+     "ellie": "audio/runner/cameo_ellie.mp3",
+     "olivia": "audio/runner/cameo_olivia.mp3",
+     "zara": "audio/runner/cameo_zara.mp3",
+     "penny": "audio/runner/cameo_penny.mp3",
+     "tessa": "audio/runner/cameo_tessa.mp3"
+    }
    }
   },
   "story_audio": [
@@ -7081,6 +7102,27 @@ window.DATEN = {
    "audio/story/londoneye_B7.mp3",
    "audio/story/londoneye_B8.mp3",
    "audio/story/londoneye_sofar.mp3",
+   "audio/story/towerbridge_10.mp3",
+   "audio/story/towerbridge_1A.mp3",
+   "audio/story/towerbridge_1B.mp3",
+   "audio/story/towerbridge_2A.mp3",
+   "audio/story/towerbridge_2B.mp3",
+   "audio/story/towerbridge_3.mp3",
+   "audio/story/towerbridge_4.mp3",
+   "audio/story/towerbridge_9.mp3",
+   "audio/story/towerbridge_A11.mp3",
+   "audio/story/towerbridge_A12.mp3",
+   "audio/story/towerbridge_A5.mp3",
+   "audio/story/towerbridge_A6.mp3",
+   "audio/story/towerbridge_A7.mp3",
+   "audio/story/towerbridge_A8.mp3",
+   "audio/story/towerbridge_B11.mp3",
+   "audio/story/towerbridge_B12.mp3",
+   "audio/story/towerbridge_B5.mp3",
+   "audio/story/towerbridge_B6.mp3",
+   "audio/story/towerbridge_B7.mp3",
+   "audio/story/towerbridge_B8.mp3",
+   "audio/story/towerbridge_sofar.mp3",
    "audio/story/westminster_1.mp3",
    "audio/story/westminster_10.mp3",
    "audio/story/westminster_2.mp3",

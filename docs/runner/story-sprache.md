@@ -1,6 +1,8 @@
 # Sprache in den Runner-Geschichten – Regel und Stand (31.10.2026, Mr. Alex)
 
 ## Regel
+**Kernsprache anbinden, plus** (Mr. Alex, 31.10.): Die Kernsprache aus App und Buch wird angebunden und *angewendet*, nicht erzwungen; organische Erweiterung ist ausdrücklich erlaubt (z. B. Clubs mit Fantasie, Harry-Potter-Flair). Englische Folklore (Rhymes, bekannte Chants) ist kulturell willkommen, aber die Story geht vor. Abschrift: `docs/archiv/2026-10-31_regeln-story-sprache-mr-alex.md`.
+
 Die Sprache der Geschichten **wächst mit dem Unterricht**. Jedes neue Kapitel benutzt bewusst die Sprache, die in der App gerade neu ist (Station „Neu“ bzw. die aktuelle Unit) und wiederholt die alte – so, wie es im Schulbuch weitergeht.
 - Vor jedem neuen Kapitel: **App-Inhalte und Buchkapitel ansehen** (`inhalte/`, `app/daten.js` → Station 8 „Neu“ (Kl. 6) bzw. aktuelle Unit (Kl. 9), `docs/briefing.md` „Aktueller Unterrichtsstand“, Archiv `docs/archiv/`).
 - **Neue Sprache einweben** (Grammatik, Wortfelder, Redemittel), alte Sprache weiter benutzen. Pro Stück bleibt die Satzlänge der Klasse angemessen (Kl. 6 ≤ ca. 10 Wörter, Kl. 9 ≤ ca. 12).
@@ -14,8 +16,8 @@ Die Sprache der Geschichten **wächst mit dem Unterricht**. Jedes neue Kapitel b
 | Station 3 | Uhrzeiten, a.m./p.m. | „At five o'clock, the King's horses come.“ | London 1 |
 | Station 8 „Neu“ (seit 29.10.) | **Häufigkeit: never · rarely · sometimes · often · always** | „He always follows you.“ „I rarely follow rules.“ „I never say that.“ | London 2 (gebaut 31.10.) |
 | Station 8 „Neu“ | **Sports and hobbies, I like … but I don't like …** | „I like marching, but I don't like heights!“ | London 2 (gebaut 31.10.) |
-| Station 8 „Neu“ | **School clubs** (drama club, art club …) | geplant für London 3 (Raben-Club?) | London 3 |
-| Unit 3 Topic 1–2 | Tagesablauf, Wege zur Schule (by bus, bike), journey, short/long way | geplant | London 3–4 |
+| Station 8 „Neu“ | **School clubs** (drama club, art club …) – organisch: Ghost Club, Key Club, Raven Club | „Club time at the Tower: Ghost Club, Key Club, Raven Club.“ „The Raven Club has one rule: Never lose a raven.“ | London 3 (gebaut + vertont 31.10.) |
+| Unit 3 Topic 1–2 | Tagesablauf mit Uhrzeit; Wege zur Schule (by bus, bike), journey, short/long way | „Thursday, half past three.“ (London 3); Wege zur Schule geplant | London 3–4 |
 | überall | Adjektive (big, red, dark, noisy, cold, strong, worried, top) | „It's dark and noisy.“ „The wind is cold and strong.“ | London 1–2 (gebaut), laufend |
 
 ## Stand Klasse 9 (Road Trip USA)

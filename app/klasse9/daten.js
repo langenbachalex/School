@@ -10249,7 +10249,8 @@ window.DATEN = {
     "start": "audio/runner/ca_start.mp3",
     "ende": "audio/runner/ca_ende.mp3"
    }
-  }
+  },
+  "story_audio": []
  },
  "gym": {
   "pensum": {

@@ -454,6 +454,8 @@ def spieldaten():
         "shop": SHOP,
         # Road Trip Run: Aufnahmen je Welt (Boss-Banner/-Sprüche, Levelstart/-ende; werkzeuge/runner_audio.py), fehlende = Geräte-Stimme
         "runner_audio": runner_audio.daten(9),
+        # Story-Modus New York (Kapitel 1): vorhandene Erzähler-Aufnahmen audio/story/ny_<key>.mp3 (noch keine – Vertonung braucht ein eigenes OK), fehlende = Geräte-Stimme
+        "story_audio": sorted(f"audio/story/{f}" for f in os.listdir(os.path.join(APP, "audio", "story")) if f.endswith(".mp3")) if os.path.isdir(os.path.join(APP, "audio", "story")) else [],
     }
 
 

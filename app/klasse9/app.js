@@ -2790,6 +2790,9 @@
               : W.id === "route66"
               ? T(`Tippen oder Leertaste = springen, länger halten = höher (über Trucks!). Autos kommen von rechts – drüberspringen, Ölflecken lassen dich kurz rutschen. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} an der Mautstation – gut 2 Minuten. Am besten das Handy quer halten.`,
                 `Tap or space = jump, hold longer = jump higher (over trucks!). Cars come from the right – jump over them, oil slicks make you slide. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the toll booth – about 2 minutes. Best in landscape mode.`)
+              : STORY[W.id]
+              ? T(`Tippen oder Leertaste = springen, länger halten = höher. Story „${STORY[W.id].titel}“ (Kapitel 1): Die violetten ♪-Kristalle erzählen die Geschichte. Zweimal entscheidest du über deinen Weg – unten oder oben? Am Ende: Gibst du die Karte her oder behältst du sie? Deine Wahl zählt auch in den nächsten Kapiteln. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐ (nur wenn du das Level schaffst). Nimm die richtigen Tore und beantworte die Frage von ${W.boss} – etwa 3 Minuten. Irgendwo ist ein verstecktes Tor … Am besten das Handy quer halten.`,
+                `Tap or space = jump, hold longer = jump higher. Story “${STORY[W.id].titel}” (chapter 1): the purple ♪ crystals tell the story. Twice you choose your path – down or up? At the end: do you give the map away or keep it? Your choice counts in the next chapters, too. The 💎 diamonds show you words and give 1 ⭐ each (only if you finish the level). Take the right gates and answer ${W.boss}'s question – about 3 minutes. Somewhere there is a hidden gate … Best in landscape mode.`)
               : T(`Tippen oder Leertaste = springen, länger halten = höher. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} – gut 2 Minuten. Am besten das Handy quer halten.`,
                 `Tap or space = jump, hold longer = jump higher. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question – about 2 minutes. Best in landscape mode.`)))),
         el("div", { class: "runner-figur" }, figurVorschau(110, 140),
@@ -2812,10 +2815,70 @@
         tickets === 0 ? el("p", { class: "runner-hinweis", role: "status" }, fehlt > 0
             ? T(`Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Dir fehlen noch ${fehlt} Coins – übe weiter!`, `You need a ticket from the shop (${RUNNER.preis} coins). ${fehlt} more coins – keep practising!`)
             : T(`Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Kauf erst ein Ticket, dann geht's los!`, `You need a ticket from the shop (${RUNNER.preis} coins). Buy a ticket first, then off you go!`))
-          : el("p", { class: "klein" }, T("Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Punkte und keine Coins zurück, dafür Trophäe und Runner-Titel.",
+          : el("p", { class: "klein" }, STORY[W.id]
+            ? T("Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Story: 1 ⭐ je Diamant, +10 für jede ganze Geschichte, höchstens 30 ⭐ je Lauf – nur wenn du das Level schaffst. Dazu Trophäe und Runner-Titel.",
+              "One ticket is one run – even if you fail. Story: 1 ⭐ per diamond, +10 for each whole story, max. 30 ⭐ per run – only if you finish the level. Plus a trophy and a runner title.")
+            : T("Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Punkte und keine Coins zurück, dafür Trophäe und Runner-Titel.",
             "One ticket is one run – even if you fail. No points and no coins back, but a trophy and a runner title.")),
         el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumShop))));
   }
+  // Story-Modus New York „The Lost Map – Kapitel 1: Under the City“ (freigegeben 30.10., Text wörtlich aus docs/runner/story-usa-01.md; Erzähler Mr. Alex – bis zur Vertonung Geräte-Stimme).
+  // Struktur (Abschnitte, Gabelungen, Stationen, Enden) liefert die Engine je Welt (WELTEN.ny.storyStruktur, passt zur Story-Strecke); story.struktur könnte sie hier überschreiben.
+  // Punkte wie im London Run (Klasse 6): 1 ⭐ je Punkte-Diamant, +10 ⭐ einmalig je vollständiger Geschichte eines Endes (alle 20 ♪), höchstens 30 ⭐ je Lauf, nur bei geschafftem Level;
+  // zuerst mrAlexWacht (Zeitlog), dann punkteDazu (Coins halb). Stand (im Siegel): stand.spiel.runner.story.ny = { enden, voll, beste, wahl: { g1: "A"|"B", g2: "X"|"Y" } } (letzte Wahl, für Kapitel 2),
+  // verstecktes Tor ✦: stand.spiel.runner.realm.ny = { gefunden, kristalle, stuecke: ["R1" …], gegenstand }.
+  // Aufnahmen: audio/story/ny_<key>.mp3 je Stück (+ ny_sofar) – nur Dateien, die der Bau findet (SP.story_audio); sonst Geräte-Stimme.
+  const STORY_KEYS_NY = ["1", "2", "3", "4", "5", "A6", "A7", "A8", "A9", "A10", "B6", "B7", "B8", "B9", "B10", "11", "12", "13", "14", "X15", "X16", "Y15", "Y16",
+    "X17", "X18", "X19", "X20", "Y17", "Y18", "Y19", "Y20", "R1", "R2", "R3", "sofar"];
+  const STORY = {
+    ny: { id: "ny", titel: "The Lost Map – Under the City", kapitel: 1, teile: {
+      1: "Our class trip started in Brooklyn on a rainy Monday.", 2: "Maya had a plan. Jayden had snacks. Lucas had secrets.", 3: "In a tiny bookshop, you found an old, folded map.",
+      4: "Five places were marked on it – and five glowing gates.", 5: "The first gate was right here, in New York.",
+      A6: "A woman with a brass compass smiled at you.", A7: "\"The map chooses its keeper,\" she whispered.", A8: "Then she disappeared into the subway.",
+      A9: "You ran after her. Lucas didn't. Why not?", A10: "Deep under the street, the old walls were glowing.",
+      B6: "You climbed a fire escape to see better.", B7: "Up on the roof, the map started to glow.", B8: "A golden line pointed down into the city.",
+      B9: "Lucas stared at the line. \"I've seen this before.\"", B10: "Before you could ask him, Maya shouted: \"Run!\"",
+      11: "A woman with a brass compass stepped out of the shadows.", 12: "\"Give me the map,\" she said. \"Mr. Alligator is coming.\"",
+      13: "Jayden laughed. \"There are no alligators in New York!\"", 14: "Something splashed in the dark. Jayden stopped laughing.",
+      X15: "You trusted her and gave her the map.", X16: "She smiled. \"Good. Now I can open the gate.\"",
+      Y15: "You put the map in your pocket. \"No, thanks.\"", Y16: "Her eyes went cold. \"Then you're on your own.\"",
+      X17: "Behind the door, the old gate was shining.", X18: "The woman held up the map, and the gate opened.", X19: "When you turned around, she was gone. With the map.",
+      X20: "Lucas whispered: \"I know where she's going. Route 66.\"",
+      Y17: "Behind the door, the old gate was shining.", Y18: "You held up the map, and the gate opened for you.", Y19: "A voice came out of the light: \"Keeper, four gates are left.\"",
+      Y20: "Lucas went pale. \"She'll be back. And she won't be alone.\"",
+      R1: "Snow. Banners. A wall of ice as high as the sky.", R2: "A knight in black armour looked down at you. \"Another keeper?\"", R3: "\"The gates are opening again,\" he said. \"That is never good.\"" },
+      audio: Object.fromEntries(STORY_KEYS_NY.map((k) => [k, `audio/story/ny_${k}.mp3`]).filter(([, f]) => (SP.story_audio || []).includes(f))) },
+  };
+  const STORY_PUNKTE = { diamant: 1, ganz: 10, max: 30 };
+  const STORY_ENDEN = { X: { symbol: "🤝", name: "Gone with the map" }, Y: { symbol: "🗺️", name: "The keeper" } };
+  const STORY_WEGE = { A: "🚇 subway", B: "🏙️ roof", X: "🤝 give the map", Y: "🗺️ keep the map" };
+  const REALM_KEYS = ["R1", "R2", "R3"];
+  function storyStand(welt) {
+    const r = runnerStand();
+    if (!r.story || typeof r.story !== "object") r.story = {};
+    const w = r.story[welt] && typeof r.story[welt] === "object" ? r.story[welt] : (r.story[welt] = {});
+    if (!Array.isArray(w.enden)) w.enden = [];
+    if (!Array.isArray(w.voll)) w.voll = [];
+    if (!w.beste || typeof w.beste !== "object") w.beste = {};
+    if (!w.wahl || typeof w.wahl !== "object") w.wahl = {};
+    return w;
+  }
+  function realmStand(welt) {
+    const r = runnerStand();
+    if (!r.realm || typeof r.realm !== "object") r.realm = {};
+    const w = r.realm[welt] && typeof r.realm[welt] === "object" ? r.realm[welt] : (r.realm[welt] = {});
+    if (!Array.isArray(w.stuecke)) w.stuecke = [];
+    w.gefunden = !!w.gefunden; w.gegenstand = !!w.gegenstand; w.kristalle = w.stuecke.length;
+    return w;
+  }
+  // Erzähler: Aufnahme(n), falls vorhanden, sonst Geräte-Stimme (männlich); im Lauf hinter einer laufenden Wiedergabe, an Station/Film sofort
+  const erzaehlerStimme = (text, o) => {
+    const dateien = o && o.audio ? [].concat(o.audio) : [];
+    const liste = dateien.length && dateien.every(Boolean) ? dateien : [{ text: text.replace(/[–—]/g, ","), stimme: "m" }];
+    return spiele(liste, o && o.sofort ? {} : { warten: true });
+  };
+  const storyTexte = () => ({ stationWeiter: T("Weiter ▶", "Next ▶"), stationHinweis: T("🎙 Mr. Alex liest vor · Tippen = weiter", "🎙 Mr. Alex is reading · tap = next"),
+    filmSkip: T("🎬 Tippen = überspringen", "🎬 Tap = skip"), filmWeiter: T("Tippen = weiter", "Tap = continue") });
   // Spiel: Eintritt abbuchen, Vollbild-Bühne ohne Kopfzeile, ✕ mit Rückfrage
   function runnerSpiel(k, unit, i, welt) {
     const sp = spielstand(), r = runnerStand(), ws = runnerWoerter(unit, i), W = runnerWeltVon(welt);
@@ -2827,24 +2890,28 @@
     toast(T("🎟️ Ticket eingelöst", "🎟️ Ticket used"));
     ansicht = null; lage = null;
     const buehne = el("div", { class: "runner-buehne" });
-    const abbruch = knopf("✕", () => { frage(T("Abbrechen? Das Ticket ist weg.", "Quit? Your ticket is gone."), T("Abbrechen", "Quit"), T("Weiterspielen", "Keep playing")).then((ok) => { if (ok) runnerStart(k); }); }, "runner-x");
+    const abbruch = knopf("✕", () => {
+      if (R().ueberspringen && R().ueberspringen()) return; // Story: im Film am Ende überspringt ✕ nur den Film (das Ergebnis bleibt)
+      frage(T("Abbrechen? Das Ticket ist weg.", "Quit? Your ticket is gone."), T("Abbrechen", "Quit"), T("Weiterspielen", "Keep playing")).then((ok) => { if (ok) runnerStart(k); });
+    }, "runner-x");
     abbruch.setAttribute("aria-label", T("Spiel abbrechen", "Quit game"));
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
-      wrapper: buehne, skin: skinWirksam(), welt: W.id,
+      wrapper: buehne, skin: skinWirksam(), welt: W.id, story: STORY[W.id] || null, // Story-Modus nur in New York (Kapitel 1); andere Welten wie bisher
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
-      texte: {
+      texte: Object.assign(storyTexte(), {
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
         tor: (de) => T(`Welcher Diamant heißt „${de}“?`, `Which diamond means “${de}”?`), richtigWaere: T(" – richtig wäre: ", " – correct: "),
         sequenz: T("Zwischensequenz …", "Cutscene …"), boss: T("Boss! Beantworte die Frage.", "Boss! Answer the question."),
         bossTitel: T(`${W.boss} fragt …`, `${W.boss} asks …`), bossHinweis: W.id === "route66" ? T("Richtig = der Schlagbaum geht hoch. Falsch = ein Leben weg.", "Right = the barrier lifts. Wrong = you lose a life.") : W.id === "ca" ? T("Richtig = das Brückentor geht auf. Falsch = ein Leben weg.", "Right = the bridge gate opens. Wrong = you lose a life.") : W.id === "sd" ? T("Richtig = das Ranger-Tor geht auf. Falsch = ein Leben weg.", "Right = the ranger gate opens. Wrong = you lose a life.") : W.id === "az" ? T("Richtig = das Holztor geht auf. Falsch = ein Leben weg.", "Right = the wooden gate opens. Wrong = you lose a life.") : T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
         frage: (de) => T(`„Was heißt ‚${de}‘ auf Englisch?“`, `“What's ‘${de}’ in English?”`),
-      },
+      }),
       // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
       // Aufnahmen der Welt (Boss-Banner/-Sprüche Mr. Alex, Levelstart Jeremy); fehlt eine Datei, spricht die Geräte-Stimme
       audio: runnerAudio(W.id),
-      stimme: { wort: (j, o) => spiele([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : {}),
+      stimme: { wort: (j, o) => spiele([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
+        erzaehler: erzaehlerStimme, still: () => stopp(),
         boss: (text, o) => spiele([(o && o.audio) || { text, stimme: "m" }]),
         ansage: (text, o) => spiele([(o && o.audio) || { text, stimme: "m" }], { warten: true }) },
       onEnde: (e) => runnerEnde(k, unit, i, e, ws, W.id),
@@ -2856,12 +2923,30 @@
   // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (wieder 100) oder Startseite
   function runnerEnde(k, unit, i, e, ws, welt) {
     const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
-    let stufe = null, neuOffen = false;
+    let stufe = null, neuOffen = false, storyPunkte = 0, storyNeuFrei = false, realmNeu = false;
+    const rm = e.story && e.story.realm;
+    if (rm && rm.gefunden) { // verstecktes Tor ✦: Fund, R-Stücke und Frost Shard bleiben (auch bei Game over – keine Punkte)
+      const rs = realmStand(W.id); realmNeu = !rs.gefunden;
+      rs.gefunden = true; rs.stuecke = REALM_KEYS.filter((k) => rs.stuecke.includes(k) || (rm.stuecke || []).includes(k)); rs.kristalle = rs.stuecke.length;
+      if (rm.gegenstand) rs.gegenstand = true;
+    }
     if (e.geschafft) {
       r.geschafft++;
       stufe = e.diamanten >= e.max && e.toreRichtig >= 2 ? "gold" : "silber";
       neuOffen = !r.level[W.id] && !!naechsteWelt && !naechsteWelt.bald;
       if (stufe === "gold" || !r.level[W.id]) r.level[W.id] = stufe;
+      if (e.story && e.story.ende) { // Story: Ende freigespielt, beste ♪-Zahl je Ende, letzte Wahl (für Kapitel 2), Punkte (nur bei geschafftem Level)
+        const st = storyStand(W.id), en = e.story.ende;
+        if (!st.enden.includes(en)) { st.enden.push(en); storyNeuFrei = true; }
+        st.beste[en] = Math.max(st.beste[en] || 0, e.story.anzahl);
+        st.wahl = Object.assign({}, st.wahl, e.story.wahl || {});
+        const dia = Math.max(0, e.punkteDiamanten || 0) * STORY_PUNKTE.diamant;
+        const ganz = e.story.vollstaendig && !st.voll.includes(en) ? STORY_PUNKTE.ganz : 0;
+        if (e.story.vollstaendig && !st.voll.includes(en)) st.voll.push(en);
+        storyPunkte = Math.min(STORY_PUNKTE.max, dia + ganz);
+        if (dia > 0) ereignisse.push({ art: "toast", text: T(`+${dia} ⭐ Diamanten`, `+${dia} ⭐ diamonds`) });
+        if (ganz > 0) ereignisse.push({ art: "toast", text: T(`📖 Ganze Geschichte +${ganz}`, `📖 Whole story +${ganz}`) });
+      }
       const t = runnerTitelIndex(r.geschafft);
       if (t > (r.titel || 0)) {
         r.titel = t;
@@ -2870,8 +2955,10 @@
           text: T(`Neuer Runner-Titel: ${name}!`, `New runner title: ${name}!`), ton: waehleRuf("stark") });
       }
     }
+    if (storyPunkte > 0) { mrAlexWacht(spielstand(), storyPunkte); punkteDazu(storyPunkte); } // Zeitlog zuerst, damit Farmen im Road Trip Run auffällt
     speichern();
     const ruf = waehleRuf(e.geschafft ? "stark" : "fehler");
+    const sEnde = e.story && e.story.ende ? STORY_ENDEN[e.story.ende] : null, wahl = (e.story && e.story.wahl) || {};
     const minuten = `${Math.floor(e.dauer / 60)}:${String(e.dauer % 60).padStart(2, "0")}`;
     const zeichne = () => {
       zeige(spielKopf(k, "Road Trip Run", () => runnerStart(k)),
@@ -2882,6 +2969,16 @@
           e.geschafft ? el("p", { lang: "en" }, runnerEndeText(W))
             : el("p", {}, T("Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!", "No lives left. You still saw the words – next time you'll make it!")),
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
+          e.story && el("p", { class: "runner-story-ende" }, `♪ ${e.story.anzahl}/${e.story.max || 20} `, T("Geschichte", "story"),
+            sEnde ? ` · 📖 Ending ${e.story.ende} – ${sEnde.symbol} ${sEnde.name}` : "", e.story.vollstaendig ? T(" · ✓ ganze Geschichte", " · ✓ whole story") : ""),
+          e.story && (wahl.g1 || wahl.g2) && el("p", { class: "klein runner-story-wege", lang: "en" }, T("Deine Wege: ", "Your paths: "),
+            [wahl.g1 && `${wahl.g1} ${STORY_WEGE[wahl.g1]}`, wahl.g2 && `${wahl.g2} ${STORY_WEGE[wahl.g2]}`].filter(Boolean).join(" · ")),
+          rm && rm.gefunden && el("p", { class: "runner-realm-ende" }, `✦ The Realm Beyond – ${T("gefunden", "found")}! ✦ ${rm.kristalle}/3`, rm.gegenstand ? " · ❄ Frost Shard" : ""),
+          e.story && el("p", { class: "runner-story-punkte" }, e.geschafft
+            ? T(`⭐ Punkte in diesem Lauf: ${storyPunkte}`, `⭐ Points in this run: ${storyPunkte}`) + (storyPunkte >= STORY_PUNKTE.max ? T(" (höchstens 30)", " (max. 30)") : "")
+            : T("⭐ Punkte gibt es nur, wenn du das Level schaffst.", "⭐ You only get points if you finish the level.")),
+          storyNeuFrei && el("p", { class: "runner-neu-offen" }, T(`📖 Neu in der Story Library: Ending ${e.story.ende}!`, `📖 New in the Story Library: Ending ${e.story.ende}!`)),
+          realmNeu && el("p", { class: "runner-neu-offen" }, T("✦ Neu in der Story Library: The Realm Beyond!", "✦ New in the Story Library: The Realm Beyond!")),
           e.maxCombo > 0 && el("p", { class: "klein runner-serie" }, T(`🔥 Beste Serie: ×${e.maxCombo}`, `🔥 Best streak: ×${e.maxCombo}`)),
           e.geschafft && el("p", {}, el("strong", {}, `🏆 ${W.trophaee} – ${stufe === "gold" ? "Gold" : T("Silber", "Silver")}`),
             stufe !== "gold" ? T(" (Gold: alle Diamanten und beide Tore richtig)", " (gold: all diamonds and both gates right)") : ""),
@@ -2917,7 +3014,42 @@
           el("span", { lang: "en" }, w.trophaee, el("small", {}, ` · ${w.staat}${w.bald ? T(" (bald)", " (soon)") : ""}`)),
           el("span", { class: "unsichtbar" }, st ? "✓" : "–"));
       })),
+      storyLibrary(),
       el("div", { class: "knopfreihe" }, knopf("🏃 Road Trip Run", () => runnerStart(), "leise")));
+  }
+  // 📖 Story Library: freigespielte Enden als Filme (Tap = Film mit der eigenen Figur), nicht freigespielte 🔒; dazu die Karte „✦ The Realm Beyond“ (gefundene R-Stücke, Frost Shard)
+  function storyLibrary() {
+    const welt = "ny", st = storyStand(welt), S = STORY[welt], rs = realmStand(welt);
+    const realmKarte = rs.gefunden
+      ? el("div", { class: "story-karte realm-karte", "data-realm": welt },
+        el("span", { class: "story-sym", "aria-hidden": "true" }, "✦"),
+        el("strong", { lang: "en" }, "✦ The Realm Beyond"),
+        el("small", {}, `✦ ${rs.stuecke.length}/3 · ${rs.gegenstand ? "❄ Frost Shard" : T("❄ Frost Shard noch nicht gefunden", "❄ Frost Shard not found yet")}`),
+        el("ul", { class: "realm-stuecke", lang: "en" }, REALM_KEYS.map((k) => el("li", { class: rs.stuecke.includes(k) ? "ok" : "" }, rs.stuecke.includes(k) ? S.teile[k] : "…"))))
+      : el("div", { class: "story-karte gesperrt realm-karte", "data-realm": welt }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"),
+        el("strong", { lang: "en" }, "✦ ??? – a hidden gate somewhere …"));
+    return el("div", { class: "story-library" },
+      el("h3", {}, "📖 Story Library"),
+      el("p", { class: "klein", lang: "en" }, `Chapter 1 · New York · ${S.titel}`),
+      el("div", { class: "story-karten" }, ["X", "Y"].map((en) => {
+        const frei = st.enden.includes(en), E_ = STORY_ENDEN[en];
+        if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"));
+        return el("button", { class: "story-karte", type: "button", "data-ende": en, onclick: () => storyFilm(welt, en) },
+          el("span", { class: "story-sym", "aria-hidden": "true" }, E_.symbol),
+          el("strong", { lang: "en" }, `Ending ${en} – ${E_.name}`),
+          el("small", {}, `♪ ${st.beste[en] || 0}/20${st.voll.includes(en) ? T(" · ✓ ganze Geschichte", " · ✓ whole story") : ""} · ▶ ${T("Film", "film")}`));
+      }).concat([realmKarte])));
+  }
+  function storyFilm(welt, ende) {
+    if (!R() || !R().film) { toast(T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet.")); return; }
+    lage = null; ansicht = null;
+    const buehne = el("div", { class: "runner-buehne" });
+    const zu = knopf("✕", () => sammlung(), "runner-x");
+    zu.setAttribute("aria-label", T("Film schließen", "Close film"));
+    zeige(buehne, zu);
+    document.body.classList.add("runner-aktiv");
+    runnerLauf = R().film({ wrapper: buehne, welt, skin: skinWirksam(), ende, story: STORY[welt], titel: "Story Library", texte: storyTexte(),
+      stimme: { erzaehler: erzaehlerStimme, still: () => stopp() }, onEnde: () => sammlung() });
   }
   // Figur-Seite (Fassung 29.10.): Figur + Erklärtext oben (sticky), Reiter-Zeile, darunter die Optionen der Gruppe als Chips, unten feste Knopfzeile.
   // Auswahl und Reiterwechsel zeichnen NICHT die Seite neu (kein Scrollsprung): nur Vorschau + Chips bzw. der Options-Bereich werden aktualisiert.

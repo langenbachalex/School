@@ -1,5 +1,7 @@
 # Story-Modus Road Trip Run (Klasse 9) – „The Lost Map“ · Text Kapitel 1 freigegeben 30.10.2026 (Mr. Alex)
 
+**Status: Kapitel 1 gebaut (31.10.2026).** Engine `app/klasse9/runner.js` (Story-Struktur als Daten `STRUKTUR_NY`, Strecke `MUSTER_NY_STORY`, Seitenlevel `MUSTER_REALM`, Film New York; Kopie `app/runner.js`), App `app/klasse9/app.js` (`STORY.ny` mit diesem Text wörtlich, Punkte, Story Library mit Realm-Karte), `app/klasse9/klasse9.css`, Bau `werkzeuge/klasse9_bauen.py` (`story_audio`). Details `docs/runner/konzept-entwurf.md` Abschnitt 16. Audio: bis zur Vertonung Geräte-Stimme; Zuordnung `audio/story/ny_<key>.mp3` ist vorbereitet (Dateien gibt es noch nicht, Vertonung braucht ein eigenes OK).
+
 ## Bogen über fünf Kapitel (eine Welt = ein Kapitel)
 - **Figuren:** eine Highschool-Clique aus Brooklyn auf Klassenfahrt – **Maya** (hat immer einen Plan, spitze Zunge), **Jayden** (Witzbold, hat Angst vor Ratten), **Lucas** (still, hat ein Geheimnis) und **du**. Gegenspielerin: **die Frau mit dem Messing-Kompass** (Name erst in Kapitel 3: Elena Cruz).
 - **Die Karte:** In einem Antiquariat findet „du“ eine alte Karte mit fünf markierten Orten und fünf leuchtenden Toren. Wer die Karte hat, ist „Keeper“.

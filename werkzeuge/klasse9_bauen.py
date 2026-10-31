@@ -299,6 +299,8 @@ def audio(rel):
 
 def main():
     os.makedirs(APP, exist_ok=True)
+    import webapp_bauen  # Build-Flag TESTBUILD (Schalter --test: Test-Haken an, nur für eigene Tests)
+    webapp_bauen.testbuild_setzen([os.path.join(APP, "app.js"), os.path.join(APP, "runner.js")], "--test" in sys.argv)
     saetze, stimme = {}, 0
     # Abwechselnd Mann/Frau: Reihenfolge der Sätze bestimmt die Stimme (gleich wie im Audio-Skript)
     for z in tsv("saetze.tsv"):

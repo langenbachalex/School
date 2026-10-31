@@ -539,3 +539,8 @@ dialog.feier.lehrer input.lehrer-zahl { font-size: 1.2rem; width: 7em; padding: 
 dialog.feier.lehrer .knopfreihe { flex-wrap: wrap; }
 dialog.feier.sperre .sperre-gross { font: 600 1.25rem var(--display, inherit); margin: 4px 0 10px; }
 dialog.feier.lehrer .lehrer-sperre { background: #fbebeb; border-radius: 10px; padding: 8px 10px; font-size: .95rem; }
+dialog.feier.lehrer .lehrer-stichprobe { text-align: left; background: #f3f6fb; border-radius: 10px; padding: 8px 10px; margin: 8px 0; }
+dialog.feier.lehrer .lehrer-stichprobe p { margin: 2px 0; }
+dialog.feier.lehrer .lehrer-marker.auffaellig { color: #b3261e; font-weight: 700; }
+dialog.feier.lehrer ul.lehrer-liste { list-style: none; margin: 6px 0 0; padding: 0; font-size: .85rem; max-height: 9.5em; overflow: auto; }
+dialog.feier.lehrer ul.lehrer-liste li { padding: 1px 0; border-top: 1px solid #e1e7f0; }

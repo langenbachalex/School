@@ -2,7 +2,7 @@
 Kopiert vorher die Runner-Engine app/klasse9/runner.js nach app/runner.js (London Run, Klasse 6).
 Wird von daten_bauen.py automatisch mit aufgerufen.
 """
-import hashlib, json, os
+import hashlib, json, os, re, sys
 from PIL import Image, ImageDraw, ImageFont
 
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,6 +27,24 @@ RUNNER_KOPF = ("/* AUTOMATISCH KOPIERT aus app/klasse9/runner.js von werkzeuge/w
                "   Klasse 9 „Road Trip Run“, Klasse 6 „London Run“). */\n")
 
 
+TESTBUILD_ZEILE = re.compile(r"^(\s*)const TESTBUILD = (?:true|false);", re.M)
+
+
+def testbuild_setzen(dateien, an=False):
+    """Build-Flag TESTBUILD in app.js/runner.js: Standard false (Live-Build, keine Test-Haken); mit --test true (nur für eigene Tests, nicht veröffentlichen)."""
+    for pfad in dateien:
+        with open(pfad, encoding="utf-8") as f:
+            quelle = f.read()
+        neu, n = TESTBUILD_ZEILE.subn(lambda m: f"{m.group(1)}const TESTBUILD = {'true' if an else 'false'};", quelle)
+        if n != 1:
+            raise SystemExit(f"{pfad}: Zeile 'const TESTBUILD = …;' {n}x gefunden (erwartet 1)")
+        if neu != quelle:
+            with open(pfad, "w", encoding="utf-8") as f:
+                f.write(neu)
+    if an:
+        print("ACHTUNG: Test-Build (TESTBUILD = true) – nicht veröffentlichen; ohne --test neu bauen.")
+
+
 def runner_kopieren():
     """Eine Engine, zwei Apps: die Quelle bleibt app/klasse9/runner.js, Klasse 6 lädt die Kopie app/runner.js (mit Hinweis oben)."""
     with open(os.path.join(APP, "klasse9", "runner.js"), encoding="utf-8") as f:
@@ -35,7 +53,10 @@ def runner_kopieren():
         f.write(RUNNER_KOPF + quelle)
 
 
-def main():
+def main(test=None):
+    if test is None:
+        test = "--test" in sys.argv
+    testbuild_setzen([os.path.join(APP, "app.js"), os.path.join(APP, "klasse9", "runner.js")], test)
     runner_kopieren()
     os.makedirs(os.path.join(APP, "icons"), exist_ok=True)
     for g in (180, 192, 512):

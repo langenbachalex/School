@@ -9,9 +9,12 @@
   const D = window.DATEN;
   const app = document.getElementById("app");
   const SPEICHER = "america9-v1";
-  // Test-Haken (window.__heute, __catchTempo, __patrolTempo, __updateTest) wirken nur beim Testen auf dem eigenen Rechner,
-  // nie auf der Live-Seite (30.10.2026: sonst ließen sich z. B. über ein anderes Datum Tagesboni beliebig oft abholen).
-  const LOKAL = location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  // Test-Haken (window.__heute, __catchTempo, __patrolTempo, __updateTest) gibt es nur im Test-Build: TESTBUILD setzt das Build-Skript
+  // (werkzeuge/daten_bauen.py bzw. klasse9_bauen.py, Schalter --test); der veröffentlichte Build hat immer TESTBUILD = false (31.10.2026, Schutz-Paket 3).
+  const TESTBUILD = false;
+  const LOKAL = TESTBUILD;
+  // Monotone Uhr für Mindestzeiten und Sperren (Sprech-, Denk-, Lese- und Arbeitszeit); das Kalenderdatum kommt weiter von heute().
+  const monoton = () => performance.now();
 
   /* ---------- Speicher (nur lokal) ---------- */
   // Manipulationsschutz (Spielstand nur auf dem Gerät): Punkte, Spiel, Word Gym und erledigte Teile tragen ein Siegel.
@@ -21,10 +24,14 @@
   const SIEGEL_BIS = Date.parse("2026-12-01"); // bis dahin werden ältere, noch ungesiegelte Spielstände einmalig übernommen
   // Siegel-Version 2 (Power Up): auch die erledigten Teile (stand.teile) stecken im Siegel; ein Stand ohne _v wird noch mit dem alten Siegel geprüft und beim Laden neu gesiegelt.
   // Siegel-Version 3 (Homework): auch die Hausaufgaben-Boni (stand.hw) stecken im Siegel; ältere Stände werden mit ihrer Version geprüft und beim nächsten Speichern als v3 gesiegelt.
-  const siegel = (o, v = 3) => {
+  // Siegel-Version 4 (31.10.2026, Schutz-Paket 3): auch das Ereignisprotokoll (stand.protokoll) steckt im Siegel; v3-Stände werden ohne Hinweis übernommen,
+  // als Altbestand markiert und beim nächsten Speichern als v4 gesiegelt.
+  const SIEGEL_V = 4;
+  const siegel = (o, v = SIEGEL_V) => {
     const inhalt = [o.spiel || null, o.gym || null, o.erledigt || null];
     if (v >= 2) inhalt.push(o.teile || null);
     if (v >= 3) inhalt.push(o.hw || null);
+    if (v >= 4) inhalt.push(o.protokoll || null);
     const t = SIEGEL_SALZ + JSON.stringify(inhalt);
     let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
     for (let i = 0; i < t.length; i++) { const c = t.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
@@ -32,30 +39,63 @@
     h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
     return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
   };
-  let manipuliert = false, letzterGueltig = null;
+  let manipuliert = false, letzterGueltig = null, altstandRoh = null, speicherLeer = false;
   const lies = (key) => { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; } };
   const echt = (o) => o && typeof o === "object" && o._s === siegel(o, o._v >= 2 ? o._v : 1);
   const grund = () => ({ erledigt: [], fragen: [], niveau: "G" });
   function laden() {
     const haupt = lies(SPEICHER), sicherung = lies(SPEICHER + "-b");
     if (echt(haupt)) { letzterGueltig = JSON.stringify(haupt); return Object.assign(grund(), haupt); }
+    if (!haupt) speicherLeer = true; // kein Spielstand vorhanden (neues Gerät oder Speicher geleert)
     if (!haupt || typeof haupt !== "object") return grund();
     if (echt(sicherung)) { manipuliert = true; letzterGueltig = JSON.stringify(sicherung); try { localStorage.setItem(SPEICHER, letzterGueltig); } catch (e) { /* egal */ } return Object.assign(grund(), sicherung); }
     if (!haupt._s && Date.now() < SIEGEL_BIS) return Object.assign(grund(), haupt); // älterer Spielstand: einmal übernehmen, ab jetzt gesiegelt
+    if (!haupt._s) altstandRoh = haupt; // nach der Übergangszeit: ein ungesiegelter Stand wird nur noch im Lehrer-Bereich übernommen (altstandUebernehmen)
     manipuliert = true; // verändert, oder ungesiegelt nach der Übergangszeit: Punkte und Fortschritt zurück, Einstellungen bleiben
     const rest = Object.assign(grund(), haupt); delete rest.spiel; delete rest.gym; delete rest._s; rest.erledigt = [];
     return rest;
   }
   function speichern() {
     try {
-      stand._v = 3; stand._s = siegel(stand);
+      stand._v = SIEGEL_V; stand._s = siegel(stand);
       const neu = JSON.stringify(stand);
       localStorage.setItem(SPEICHER + "-b", neu); // Zweitkopie: Wer nur den Hauptspeicher ändert, bekommt den letzten echten Stand zurück
       localStorage.setItem(SPEICHER, neu);
       letzterGueltig = neu;
+      if (!localStorage.getItem(SPEICHER + "-p")) localStorage.setItem(SPEICHER + "-p", String(Math.floor(Date.now() / 60000))); // ab jetzt gibt es auf diesem Gerät ein Protokoll
     } catch (e) { /* ohne Speicher geht es trotzdem */ }
   }
   const stand = laden();
+
+  /* ---------- Ereignisprotokoll (31.10.2026, Schutz-Paket 3) ----------
+     stand.protokoll: die letzten 500 Ereignisse als [t (Minuten seit 1970), art, p], im Siegel. Arten: t Teil · g Word Gym · s Runner-Story ·
+     e Einheit/Station · m Spiel des Tages · h Homework-Bonus · bw/bf/bs/bq/bm Boni (Wochenende, Ferien, Serie, Woche, Monat) · k Kauf (Coins, negativ) ·
+     w Warnung des Zeitlogs · r Startwert (Lehrer-Bereich, gekürztes Protokoll) · a Altbestand (Stand von vor dem Protokoll).
+     Geschrieben wird nur in punkteDazu, im Shop und im Lehrer-Bereich. plausibilitaet() prüft beim Laden und markiert für den Lehrer-Bereich –
+     nie sperren, nie Punkte ändern. */
+  const PROTOKOLL_MAX = 500;
+  const minuten = () => Math.floor(Date.now() / 60000);
+  // Obergrenze aus dem Protokoll: Startwert (r/a) plus alle positiven Punkte-Einträge
+  const protokollSumme = (pl) => pl.reduce((s, e) => (e[1] === "r" || e[1] === "a" ? e[2] : e[1] === "k" || e[1] === "w" ? s : s + Math.max(0, e[2])), 0);
+  function protokolliere(art, p) {
+    const pl = (stand.protokoll = Array.isArray(stand.protokoll) ? stand.protokoll : []);
+    pl.push([minuten(), art, Math.round(p)]);
+    if (pl.length > PROTOKOLL_MAX) { // gekürzt: ein Startwert fasst die ältesten Einträge zusammen
+      const weg = pl.splice(0, pl.length - PROTOKOLL_MAX + 1);
+      pl.unshift([weg[weg.length - 1][0], "r", protokollSumme(weg)]);
+    }
+  }
+  if (!Array.isArray(stand.protokoll)) { // Altbestand: beginnt mit dem vorhandenen Punktestand; -p (gesetzt in speichern) sagt, ob hier schon ein Protokoll gespeichert wurde
+    let schonMal = false;
+    try { schonMal = !!localStorage.getItem(SPEICHER + "-p"); } catch (e) { /* egal */ }
+    stand.protokoll = stand.spiel ? [[minuten(), "a", (stand.spiel && stand.spiel.punkte) || 0, schonMal ? 1 : 0]] : [];
+  }
+  // Zweiter Warnzähler (nur steigend, unabhängig vom Spielstand): n Warnungen, g Sperren, t zuletzt
+  const warnZaehlerLies = () => { try { return JSON.parse(localStorage.getItem(SPEICHER + "-w") || "null") || { n: 0, g: 0, t: 0 }; } catch (e) { return { n: 0, g: 0, t: 0 }; } };
+  function warnZaehlerHoch(sperre) {
+    const w = warnZaehlerLies();
+    try { localStorage.setItem(SPEICHER + "-w", JSON.stringify({ n: (w.n || 0) + 1, g: (w.g || 0) + (sperre ? 1 : 0), t: Date.now() })); } catch (e) { /* egal */ }
+  }
 
   // Umbau 29.10.2026: „BE vs AE“ (nr 7) sind jetzt Gruppen in Vocabulary (nr 2), „New“ (nr 8, Wörter Unit 2 Start/Theme 1)
   // ist in Vocabulary/Unit 2 aufgegangen, nr 8 heißt jetzt „Games“. Alter Fortschritt wandert einmalig mit (vor dem Siegeln),
@@ -210,9 +250,9 @@
       u.lang = "en-US"; u.rate = 0.9 * tempo();
       const v = geraeteStimme(stimme);
       if (v) u.voice = v;
-      const start = Date.now();
+      const start = monoton();
       let erledigt = false;
-      const ende = () => { if (erledigt) return; erledigt = true; clearTimeout(notbremse); setTimeout(() => fertig((Date.now() - start) / 1000), 350); };
+      const ende = () => { if (erledigt) return; erledigt = true; clearTimeout(notbremse); setTimeout(() => fertig((monoton() - start) / 1000), 350); };
       const notbremse = setTimeout(ende, 2500 + text.split(/\s+/).length * 700);
       u.onend = ende; u.onerror = ende;
       speechSynthesis.speak(u);
@@ -302,10 +342,10 @@
      und 2. offen() nichts mehr meldet (Text = Hinweis, true = gesperrt ohne Hinweis, ""/0/null = alles bearbeitet).
      uhr zeigt den Countdown (zeitText(„0:30“)) bzw. was noch fehlt. bereit() prüft neu und gibt true zurück, wenn frei. */
   const LESE_WPM = 80; // Lesezeit: Wörter pro Minute
-  function arbeitsSperre(k, { sek = 0, start = Date.now(), zeitText, offen, offenZuerst }) {
-    const gebaut = Date.now();
+  function arbeitsSperre(k, { sek = 0, start = monoton(), zeitText, offen, offenZuerst }) {
+    const gebaut = monoton();
     const uhr = el("p", { class: "klein lese-uhr", role: "status" });
-    const rest = () => Math.max(0, Math.ceil(sek - (Date.now() - start) / 1000));
+    const rest = () => Math.max(0, Math.ceil(sek - (monoton() - start) / 1000));
     let aus = false;
     function bereit() {
       if (aus) return false;
@@ -316,7 +356,7 @@
       if (ok) entsperrt(k); else sperrt(k);
       return ok;
     }
-    const takt = setInterval(() => { if (!uhr.isConnected && Date.now() - gebaut > 2000) return clearInterval(takt); bereit(); }, 500);
+    const takt = setInterval(() => { if (!uhr.isConnected && monoton() - gebaut > 2000) return clearInterval(takt); bereit(); }, 500);
     bereit();
     return { uhr, bereit, ende: () => { aus = true; clearInterval(takt); uhr.textContent = ""; } };
   }
@@ -347,7 +387,7 @@
   function zuSchnell(teil) {
     const proEintrag = SPRECH_MIN[teil.art];
     if (!proEintrag || !lage.start) return false;
-    return (Date.now() - lage.start) / 1000 < laenge(teil) * proEintrag * eile();
+    return (monoton() - lage.start) / 1000 < laenge(teil) * proEintrag * eile();
   }
   const QUIZ_MIN = 2.5; // Quizteile: blindes Durchklicken (alle Antworten probieren) bringt keine Punkte
   const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, beae_quiz: QUIZ_MIN, vok_def: QUIZ_MIN, vok_abfrage: QUIZ_MIN };
@@ -723,7 +763,7 @@
   function zeigeTeil() {
     ansicht = zeigeTeil;
     lage.abspielen = null; lage.weiter = null;
-    if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = Date.now(); lage.tempoFaktor = tempoFaktor(lage.teil); }
+    if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = monoton(); lage.tempoFaktor = tempoFaktor(lage.teil); }
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, auswahl: zeigeAuswahl, bilder: zeigeBilder,
        vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition,
@@ -1582,7 +1622,7 @@
       const einheiten = stand.erledigt.length + Object.values(stand.gruppen || {}).reduce((a, l) => a + l.length, 0);
       stand.spiel = { punkte: neueTeile() * PUNKTE.teil + einheiten * PUNKTE.einheit, tage: {}, wochen: [], feuer: [], wochenende: [], karten: [], abzeichen: [], titel: 0 };
       stand.spiel.titel = titelIndex(stand.spiel.punkte);
-      speichern();
+      protokolliere("r", stand.spiel.punkte); speichern();
     }
     const sp = stand.spiel; // Coins (29.10.2026): gespiegelte Währung, nicht rückwirkend – ein älterer Stand startet bei 0
     if (!(sp.coins >= 0)) sp.coins = 0;
@@ -1616,17 +1656,53 @@
   // kann er sie bei Bedarf korrigieren. Gezählt werden nur Punkte für Teile und Word Gym (ohne Boni wie Hausaufgabe, Serie, Woche, Station).
   // Log, Sperre und Warnungen stecken in stand.spiel (Siegel) – Neuladen hebt die Sperre nicht auf. Jede Warnung bleibt mit Zeitpunkt gespeichert.
   const WACHE = { fenster: 10 * 60000, grenze: 200 };
+  // Seit 31.10. (Schutz-Paket 3) ruft nur punkteDazu den Wächter auf – für Übungspunkte (Teil, Word Gym, Runner-Story), nie für Boni.
   function mrAlexWacht(sp, basis) {
     const jetzt = Date.now();
     sp.log = (Array.isArray(sp.log) ? sp.log : []).filter((e) => Array.isArray(e) && e[0] <= jetzt && jetzt - e[0] < WACHE.fenster);
     sp.log.push([jetzt, basis]);
-    if (sp.log.reduce((a, e) => a + e[1], 0) > WACHE.grenze) {
+    const summe = sp.log.reduce((a, e) => a + e[1], 0);
+    if (summe > WACHE.grenze) {
       sp.gesperrt = jetzt; sp.log = [];
       (sp.warnungen = Array.isArray(sp.warnungen) ? sp.warnungen : []).push(new Date(jetzt).toISOString());
+      warnZaehlerHoch(true); protokolliere("w", summe);
       setTimeout(sperreZeigen, 900); // nach Lob und Toasts
     }
     return true;
   }
+  /* Plausibilitätsprüfung (31.10.2026): nur Markierungen für den Lehrer-Bereich, nie eine Sperre, nie geänderte Punkte.
+     (1) Punkte höchstens Startwert + Summe der Protokoll-Einträge · (2) jeder Tagesbonus je Datum nur einmal ·
+     (3) Übungspunkte je 10-Minuten-Fenster über der Grenze nur mit Warnung · (4) Zeit läuft nur vorwärts (kein Rücksprung über einen Tag, nichts in der Zukunft) ·
+     Warnzähler (-w) nicht kleiner als die gespeicherten Warnungen · Altbestand nur einmal je Gerät (-p).
+     Ergebnis: pruefung = { altbestand, marker: ["summe","datum","dichte","zeit","protokoll","altbestand"], seit, hinweis } */
+  let pruefung = { altbestand: false, marker: [], seit: null, hinweis: "" };
+  function plausibilitaet() {
+    const sp = stand.spiel || {}, pl = Array.isArray(stand.protokoll) ? stand.protokoll : [], marker = [], w = warnZaehlerLies();
+    let seit = null;
+    const merke = (m, t) => { if (!marker.includes(m)) marker.push(m); if (t != null && (seit == null || t < seit)) seit = t; };
+    if ((sp.punkte || 0) > protokollSumme(pl)) merke("summe", pl.length ? pl[pl.length - 1][0] : null);
+    const tage = new Set();
+    for (const e of pl) if (typeof e[1] === "string" && e[1][0] === "b") { const k = e[1] + "|" + iso(new Date(e[0] * 60000)); if (tage.has(k)) merke("datum", e[0]); tage.add(k); }
+    const ue = pl.filter((e) => e[1] === "t" || e[1] === "g" || e[1] === "s"), warn = pl.filter((e) => e[1] === "w").map((e) => e[0]);
+    const fensterMin = WACHE.fenster / 60000 - 1; // Minutenraster: ein Fenster, das sicher innerhalb der 10 Minuten liegt
+    for (let i = 0; i < ue.length; i++) {
+      let s = 0;
+      for (let j = i; j < ue.length && ue[j][0] - ue[i][0] <= fensterMin; j++) {
+        s += ue[j][2];
+        if (s > WACHE.grenze && !warn.some((t) => t >= ue[i][0] && t <= ue[j][0] + 1)) { merke("dichte", ue[i][0]); break; }
+      }
+    }
+    for (let i = 1; i < pl.length; i++) if (pl[i][0] < pl[i - 1][0] - 1440) merke("zeit", pl[i][0]);
+    for (const e of pl) if (e[1] === "a" && e[3]) merke("altbestand", e[0]); // Altbestand übernommen, obwohl hier schon ein Protokoll lief
+    if (pl.length && pl[pl.length - 1][0] > minuten() + 1440) merke("zeit", pl[pl.length - 1][0]);
+    let hinweis = "";
+    if ((w.n || 0) > (Array.isArray(sp.warnungen) ? sp.warnungen : []).length) {
+      if (speicherLeer) hinweis = "Speicher geleert"; else { merke("protokoll", w.t ? Math.floor(w.t / 60000) : null); hinweis = "protokoll"; }
+    }
+    pruefung = { altbestand: pl.some((e) => e[1] === "a"), marker, seit, hinweis };
+    return pruefung;
+  }
+  setTimeout(plausibilitaet, 0);
   const sperreDialog = el("dialog", { class: "feier frage sperre" });
   sperreDialog.addEventListener("cancel", (e) => e.preventDefault());
   document.body.append(sperreDialog);
@@ -1644,30 +1720,27 @@
     const sp = spielstand(), d = heute(), tag = iso(d);
     const vorher = staatenBei(teileZaehler() - (erstesMal ? 1 : 0));
     let plus = istGym ? PUNKTE.seance : erstesMal ? PUNKTE.teil : (wdh != null ? wdh : PUNKTE.wiederholung);
-    if (!mrAlexWacht(sp, plus + (erstesMal && ohneHilfe && !istGym ? PUNKTE.ohneHilfe : 0))) { // Zeitlog: zu viele Punkte in zu kurzer Zeit
-      if (!istGym) hwBonus(0); // zählt trotzdem für die Hausaufgabe
-      speichern(); setTimeout(zeigeEreignisse, 50); return;
-    }
+    const boni = []; // [art, punkte] – in plus enthalten, zählen aber nicht zum Zeitlog (punkteDazu)
     if (erstesMal && ohneHilfe && !istGym) { plus += PUNKTE.ohneHilfe; ereignisse.push({ art: "toast", text: T(`💪 Ohne Hilfe +${PUNKTE.ohneHilfe}`, `💪 No hints +${PUNKTE.ohneHilfe}`) }); }
     const bonus = istGym ? 0 : hwBonus(plus); // 📝 Homework: +50 % auf die Teil-Punkte (aufgerundet), je Teil einmal pro Hausaufgabe
-    if (bonus) { plus += bonus; ereignisse.push({ art: "toast", text: `📝 Homework +${bonus}` }); }
+    if (bonus) { plus += bonus; boni.push(["h", bonus]); ereignisse.push({ art: "toast", text: `📝 Homework +${bonus}` }); }
     const ersterDesTages = !sp.tage[tag];
     sp.tage[tag] = (sp.tage[tag] || 0) + 1;
     if (staatenFrei() > vorher) ereignisse.push({ art: "staat", staat: SP.staaten[staatenFrei() - 1] });
     if (ersterDesTages) {
       if (!istSchultag(d)) {
-        if (d.getDay() === 0 || d.getDay() === 6) { sp.wochenende.push(tag); plus += PUNKTE.wochenende; ereignisse.push({ art: "toast", text: `🏖️ Weekend bonus +${PUNKTE.wochenende}` }); }
-        else { (sp.ferien = sp.ferien || []).push(tag); plus += PUNKTE.ferien; ereignisse.push({ art: "toast", text: `🌴 Holiday bonus +${PUNKTE.ferien}` }); }
+        if (d.getDay() === 0 || d.getDay() === 6) { sp.wochenende.push(tag); plus += PUNKTE.wochenende; boni.push(["bw", PUNKTE.wochenende]); ereignisse.push({ art: "toast", text: `🏖️ Weekend bonus +${PUNKTE.wochenende}` }); }
+        else { (sp.ferien = sp.ferien || []).push(tag); plus += PUNKTE.ferien; boni.push(["bf", PUNKTE.ferien]); ereignisse.push({ art: "toast", text: `🌴 Holiday bonus +${PUNKTE.ferien}` }); }
       } else {
         const n = serie();
         if (n >= 3 && n % 3 === 0 && !sp.feuer.includes(tag)) {
-          sp.feuer.push(tag); plus += PUNKTE.feuer;
+          sp.feuer.push(tag); plus += PUNKTE.feuer; boni.push(["bs", PUNKTE.feuer]);
           ereignisse.push({ art: "feier", symbol: "🔥", titel: `On fire! ${n} days in a row`,
             text: T(`${n} Schultage am Stück – +${PUNKTE.feuer} Punkte!`, `${n} school days in a row – +${PUNKTE.feuer} points!`), ton: SP.texte.feuer });
         }
         const mo = montag(d);
         if (schultageDerWoche(mo).every((x) => sp.tage[iso(x)]) && !sp.wochen.includes(iso(mo))) {
-          sp.wochen.push(iso(mo)); plus += PUNKTE.woche;
+          sp.wochen.push(iso(mo)); plus += PUNKTE.woche; boni.push(["bq", PUNKTE.woche]);
           const karte = SP.landmarks.find((l) => !sp.karten.includes(l.id));
           if (karte) { sp.karten.push(karte.id); ereignisse.push({ art: "karte", karte }); }
           if (sp.karten.length === SP.landmarks.length && !sp.abzeichen.includes("roadtrip")) {
@@ -1677,7 +1750,7 @@
           }
           const ws = wochenSerie(mo);
           if (ws >= 4 && ws % 4 === 0) {
-            plus += PUNKTE.monat; if (!sp.abzeichen.includes("monat")) sp.abzeichen.push("monat");
+            plus += PUNKTE.monat; boni.push(["bm", PUNKTE.monat]); if (!sp.abzeichen.includes("monat")) sp.abzeichen.push("monat");
             ereignisse.push({ art: "feier", symbol: "👑", titel: "Perfect month!",
               text: T(`${ws} perfekte Wochen hintereinander – +${PUNKTE.monat} Punkte und ein goldener Rahmen!`,
                 `${ws} perfect weeks in a row – +${PUNKTE.monat} points and a golden frame!`), ton: SP.texte.monat });
@@ -1685,12 +1758,17 @@
         }
       }
     }
-    punkteDazu(plus);
+    punkteDazu(plus, { art: istGym ? "g" : "t", boni });
   }
-  function einheitBonus() { punkteDazu(PUNKTE.einheit); }
-  function punkteDazu(plus) {
-    const sp = spielstand();
+  function einheitBonus() { punkteDazu(PUNKTE.einheit, { art: "e", bonus: true }); }
+  // Alle Punkte und Coins laufen nur hier durch (31.10.): Zeitlog (mrAlexWacht) für Übungspunkte ohne Boni, Ereignisprotokoll für alles.
+  // opt: { art: "t"|"g"|"s"|"e"|"m", boni: [[art, punkte], …] (in plus enthalten, ohne Zeitlog), bonus: true (ganz ohne Zeitlog) }
+  function punkteDazu(plus, opt = {}) {
+    const sp = spielstand(), art = opt.art || "t", boni = Array.isArray(opt.boni) ? opt.boni : [];
+    const basis = opt.bonus ? 0 : plus - boni.reduce((a, b) => a + b[1], 0);
+    if (basis > 0 && (art === "t" || art === "g" || art === "s")) mrAlexWacht(sp, basis);
     const muenzen = Math.ceil(plus / 2); sp.punkte += plus; sp.coins += muenzen; // seit 30.10.: halb so viele Coins wie Punkte, aufgerundet (Coins sinken nur im Shop)
+    if (opt.bonus) protokolliere(art, plus); else { if (basis > 0) protokolliere(art, basis); for (const b of boni) if (b[1] > 0) protokolliere(b[0], b[1]); }
     ereignisse.unshift({ art: "toast", text: `+${plus} ⭐ · +${muenzen} 🪙` });
     const t = titelIndex(sp.punkte);
     if (t > sp.titel) {
@@ -1905,7 +1983,7 @@
     if (a.runner) { // Ticket: mehrfach kaufbar, ein Ticket = ein Durchgang (wird beim Start eingelöst)
       if (sp.coins < a.preis) { toast(T(`Noch ${a.preis - sp.coins} Coins`, `${a.preis - sp.coins} more coins`)); return false; }
       if (!(await frage(T(`Ein Ticket für ${a.preis} Coins kaufen?`, `Buy a ticket for ${a.preis} coins?`), T("🎟️ Kaufen", "🎟️ Buy")))) return false;
-      sp.coins -= a.preis; sp.ausgegeben += a.preis; runnerStand().tickets = (runnerStand().tickets || 0) + 1; speichern();
+      sp.coins -= a.preis; sp.ausgegeben += a.preis; runnerStand().tickets = (runnerStand().tickets || 0) + 1; protokolliere("k", -a.preis); speichern();
       ereignisse.push({ art: "toast", text: `🎟️ +1 · 🪙 −${a.preis}` });
       setTimeout(zeigeEreignisse, 50); konfettiFrei();
       return true;
@@ -1913,7 +1991,7 @@
     if (sp.gekauft.includes(a.id)) { if (a.rahmen) { sp.rahmen = a.rahmen; speichern(); } if (a.skin) { skinSetzen(a.skin[0], a.skin[1]); } return false; }
     if (sp.coins < a.preis) { toast(T(`Noch ${a.preis - sp.coins} Coins`, `${a.preis - sp.coins} more coins`)); return false; }
     if (!(await frage(T(`Für ${a.preis} Coins kaufen?`, `Buy for ${a.preis} coins?`), T("Kaufen", "Buy")))) return false;
-    sp.coins -= a.preis; sp.ausgegeben += a.preis; sp.gekauft.push(a.id);
+    sp.coins -= a.preis; sp.ausgegeben += a.preis; sp.gekauft.push(a.id); protokolliere("k", -a.preis);
     if (a.rahmen) sp.rahmen = a.rahmen;
     if (a.skin) skinSetzen(a.skin[0], a.skin[1]);
     speichern();
@@ -2275,7 +2353,7 @@
           if (++gefunden === ws.length) {
             const tag = iso(heute());
             const punkte = g.memoryTag !== tag; // Punkte nur beim ersten gewonnenen Memory des Tages
-            if (punkte) { g.memoryTag = tag; punkteDazu(PUNKTE.spiel); }
+            if (punkte) { g.memoryTag = tag; punkteDazu(PUNKTE.spiel, { art: "m", bonus: true }); }
             melde(box, "gut", `${lob(true)} ${T(`Alle ${ws.length} Paare in ${zuege} Zügen!`, `All ${ws.length} pairs in ${zuege} moves!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)")}`);
           }
         } else {
@@ -2462,7 +2540,7 @@
       laeuft = false;
       const geschafft = leben > 0 && richtig >= PATROL.ziel;
       const tag = iso(heute()), punkte = geschafft && g.patrolTag !== tag;
-      if (punkte) { g.patrolTag = tag; punkteDazu(PUNKTE.spiel); } else speichern();
+      if (punkte) { g.patrolTag = tag; punkteDazu(PUNKTE.spiel, { art: "m", bonus: true }); } else speichern();
       const text = geschafft ? `${lob(true)} ${T(`${richtig} von ${reihe.length} Wörtern richtig einsortiert!`, `${richtig} of ${reihe.length} words sorted correctly!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : (g.patrolTag === tag ? T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)") : "")}`
         : leben <= 0 ? T(`Die Grenze ist dicht! ${richtig} richtig. Du schaffst es – versuch es noch mal.`, `The border is closed! ${richtig} correct. You can do it – try again.`)
         : T(`${richtig} von ${reihe.length} richtig. Für Punkte brauchst du ${PATROL.ziel}. Noch mal?`, `${richtig} of ${reihe.length} correct. You need ${PATROL.ziel} for points. Again?`);
@@ -2594,7 +2672,7 @@
       offen.forEach((w) => { if (!w.fertig) { w.fertig = true; w.el.classList.add("weg"); } });
       const geschafft = leben > 0 && treffer >= CATCH.ziel;
       const tag = iso(heute()), punkte = geschafft && g.catchTag !== tag;
-      if (punkte) { g.catchTag = tag; punkteDazu(PUNKTE.spiel); } else speichern();
+      if (punkte) { g.catchTag = tag; punkteDazu(PUNKTE.spiel, { art: "m", bonus: true }); } else speichern();
       const text = geschafft ? `${lob(true)} ${T(`${treffer} von ${CATCH.runden} Wörtern gefangen!`, `${treffer} of ${CATCH.runden} words caught!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : (g.catchTag === tag ? T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)") : "")}`
         : leben <= 0 ? T(`Alle Leben weg! ${treffer} gefangen. Hör genau hin und versuch es noch mal.`, `No lives left! ${treffer} caught. Listen closely and try again.`)
         : T(`${treffer} von ${CATCH.runden} gefangen. Für Punkte brauchst du ${CATCH.ziel}. Noch mal?`, `${treffer} of ${CATCH.runden} caught. You need ${CATCH.ziel} for points. Again?`);
@@ -2661,7 +2739,7 @@
       hoerKnopf.disabled = true; bereich.replaceChildren(); frage.replaceChildren();
       const geschafft = richtig >= ziel;
       const tag = iso(heute()), punkte = geschafft && g.beeTag !== tag;
-      if (punkte) { g.beeTag = tag; punkteDazu(PUNKTE.spiel); } else speichern();
+      if (punkte) { g.beeTag = tag; punkteDazu(PUNKTE.spiel, { art: "m", bonus: true }); } else speichern();
       const text = geschafft ? `${lob(true)} ${T(`${richtig} von ${ws.length} Wörtern richtig geschrieben!`, `${richtig} of ${ws.length} words spelled correctly!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : (g.beeTag === tag ? T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)") : "")}`
         : T(`${richtig} von ${ws.length} richtig. Für Punkte brauchst du ${ziel}. Noch mal?`, `${richtig} of ${ws.length} correct. You need ${ziel} for points. Again?`);
       melde(box, geschafft ? "gut" : "neutral", text);
@@ -2834,7 +2912,7 @@
   // Story-Modus New York „The Lost Map – Kapitel 1: Under the City“ (freigegeben 30.10., Text wörtlich aus docs/runner/story-usa-01.md; Erzähler Mr. Alex – bis zur Vertonung Geräte-Stimme).
   // Struktur (Abschnitte, Gabelungen, Stationen, Enden) liefert die Engine je Welt (WELTEN.ny.storyStruktur, passt zur Story-Strecke); story.struktur könnte sie hier überschreiben.
   // Punkte wie im London Run (Klasse 6): 1 ⭐ je Punkte-Diamant, +10 ⭐ einmalig je vollständiger Geschichte eines Endes (alle 20 ♪), höchstens 30 ⭐ je Lauf, nur bei geschafftem Level;
-  // zuerst mrAlexWacht (Zeitlog), dann punkteDazu (Coins halb). Stand (im Siegel): stand.spiel.runner.story.ny = { enden, voll, beste, wahl: { g1: "A"|"B", g2: "X"|"Y" } } (letzte Wahl, für Kapitel 2),
+  // über punkteDazu (Zeitlog mrAlexWacht, Coins halb). Stand (im Siegel): stand.spiel.runner.story.ny = { enden, voll, beste, wahl: { g1: "A"|"B", g2: "X"|"Y" } } (letzte Wahl, für Kapitel 2),
   // verstecktes Tor ✦: stand.spiel.runner.realm.ny = { gefunden, kristalle, stuecke: ["R1" …], gegenstand }.
   // Aufnahmen: audio/story/ny_<key>.mp3 je Stück (+ ny_sofar) – nur Dateien, die der Bau findet (SP.story_audio); sonst Geräte-Stimme.
   // Kapitel 2 Route 66 „The Chase“ (31.10., Text wörtlich aus docs/runner/story-usa-02.md): Stücke 1–2 als Variante nach der Wahl aus Kapitel 1 (story.ny.wahl.g2: X = Karte gegeben → 1X/2X, sonst 1Y/2Y);
@@ -3058,7 +3136,7 @@
           text: T(`Neuer Runner-Titel: ${name}!`, `New runner title: ${name}!`), ton: waehleRuf("stark") });
       }
     }
-    if (storyPunkte > 0) { mrAlexWacht(spielstand(), storyPunkte); punkteDazu(storyPunkte); } // Zeitlog zuerst, damit Farmen im Road Trip Run auffällt
+    if (storyPunkte > 0) punkteDazu(storyPunkte, { art: "s" }); // Zeitlog (mrAlexWacht) läuft in punkteDazu, damit Farmen im Road Trip Run auffällt
     speichern();
     const ruf = waehleRuf(e.geschafft ? "stark" : "fehler");
     const S = STORY[welt] || {}, sEnde = e.story && e.story.ende && S.enden ? S.enden[e.story.ende] : null, wahl = (e.story && e.story.wahl) || {}, wege = S.wege || {}, gs = S.gegenstand || { name: "Frost Shard", symbol: "❄" };
@@ -3289,13 +3367,17 @@
   // Lehrer-Reset (30.10.2026, Mr. Alex): 3 Sekunden auf den App-Titel drücken → Lehrer-PIN → Punkte und Coins dieses Geräts neu setzen (gesiegelt).
   // Im Code steht nur ein langsamer Prüfwert (PBKDF2-SHA-256, 150 000 Runden), nicht die PIN. Nach 3 falschen Versuchen 10 Minuten Pause.
   // Erledigte Teile, Power Up, Hausaufgaben, Käufe und Einstellungen bleiben unverändert.
-  const LEHRER = { salz: "f36909248b9e55ac30d93112e0bbb706", pruef: "c7a35a7644e9ddf6422f57ace070e9275cd34740d2e886691f6d245ee670156e", runden: 150000, ziel: "header.gruss h1, .niveau-name" };
+  // Salz und Prüfwert je Klasse getrennt (31.10., vorbereitet): diese App prüft gegen LEHRER.pin[LEHRER.klasse]; PIN 6–10 Stellen.
+  const LEHRER = { klasse: "9", runden: 150000, ziel: "header.gruss h1, .niveau-name",
+    pin: { 6: { salz: "f36909248b9e55ac30d93112e0bbb706", pruef: "c7a35a7644e9ddf6422f57ace070e9275cd34740d2e886691f6d245ee670156e" },
+      9: { salz: "f36909248b9e55ac30d93112e0bbb706", pruef: "c7a35a7644e9ddf6422f57ace070e9275cd34740d2e886691f6d245ee670156e" } } };
   async function lehrerPinOk(pin) {
     try {
-      const bytes = new Uint8Array(LEHRER.salz.match(/../g).map((b) => parseInt(b, 16)));
+      const L = LEHRER.pin[LEHRER.klasse];
+      const bytes = new Uint8Array(L.salz.match(/../g).map((b) => parseInt(b, 16)));
       const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(pin), "PBKDF2", false, ["deriveBits"]);
       const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: bytes, iterations: LEHRER.runden }, k, 256);
-      return Array.from(new Uint8Array(bits), (b) => b.toString(16).padStart(2, "0")).join("") === LEHRER.pruef;
+      return Array.from(new Uint8Array(bits), (b) => b.toString(16).padStart(2, "0")).join("") === L.pruef;
     } catch (e) { return false; }
   }
   const lehrerDialog = el("dialog", { class: "feier frage lehrer" });
@@ -3311,13 +3393,15 @@
         el("div", { class: "knopfreihe" }, knopf("OK", lehrerZu, "haupt")));
       return;
     }
-    const feld = el("input", { type: "password", inputmode: "numeric", autocomplete: "off", maxlength: "6", class: "lehrer-pin", "aria-label": "Lehrer-PIN" });
+    const feld = el("input", { type: "password", inputmode: "numeric", autocomplete: "off", maxlength: "10", minlength: "6", class: "lehrer-pin", "aria-label": "Lehrer-PIN" });
     const info = el("p", { class: "klein lehrer-info" }, "");
     let laeuft = false;
     const pruefen = async () => {
       if (laeuft) return;
+      const pin = feld.value.trim();
+      if (!/^\d{6,10}$/.test(pin)) { info.textContent = "Die PIN hat 6 bis 10 Stellen."; feld.focus(); return; }
       laeuft = true; info.textContent = "Prüfe …";
-      const ok = await lehrerPinOk(feld.value.trim());
+      const ok = await lehrerPinOk(pin);
       laeuft = false;
       if (ok) { lehrerSchreib({}); lehrerReset(); return; }
       const s = lehrerLies(), n = (s.n || 0) + 1;
@@ -3338,11 +3422,21 @@
     const zwei = (n) => String(n).padStart(2, "0");
     const warnungen = (Array.isArray(sp.warnungen) ? sp.warnungen : []).slice(-8).reverse().map((t) => { const d = new Date(t); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; });
     const gesperrt = !!sp.gesperrt;
+    // Stichprobe (31.10., Schutz-Paket 3): Protokoll-Summe, Warnzähler, Plausibilitätsmarker und die letzten 10 Ereignisse – nur lesen
+    const pr = plausibilitaet(), w = warnZaehlerLies(), pl = Array.isArray(stand.protokoll) ? stand.protokoll : [];
+    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand" };
+    const zeit = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; };
+    const letzte = pl.slice(-10).reverse().map((e) => el("li", {}, `${zeit(e[0])} · ${ARTEN[e[1]] || e[1]} · ${e[2] > 0 && e[1] !== "r" && e[1] !== "a" ? "+" : ""}${e[2]}${e[1] === "k" ? " 🪙" : ""}`));
+    const stichprobe = el("div", { class: "lehrer-stichprobe" },
+      el("p", { class: "klein" }, `🔎 Stichprobe: ⭐ ${sp.punkte} · 🪙 ${sp.coins} · Protokoll-Summe ${protokollSumme(pl)} (${pl.length} Einträge) · Warnungen ${(Array.isArray(sp.warnungen) ? sp.warnungen : []).length} (Zähler ${w.n || 0})`),
+      el("p", { class: "klein lehrer-marker" + (pr.marker.length ? " auffaellig" : "") }, (pr.altbestand ? "Altbestand (Stand von vor dem Protokoll). " : "")
+        + (pr.marker.length ? `Marker: ${pr.marker.join(", ")}` + (pr.seit ? ` (seit ${zeit(pr.seit)})` : "") : "Keine Auffälligkeiten.") + (pr.hinweis ? ` · Hinweis: ${pr.hinweis}` : "")),
+      letzte.length ? el("ul", { class: "lehrer-liste" }, letzte) : null);
     const sichern = () => {
       const np = Math.max(0, Math.floor(Number(p.value) || 0)), nc = Math.max(0, Math.floor(Number(c.value) || 0));
       sp.punkte = np; sp.coins = nc; sp.titel = titelIndex(np);
       delete sp.gesperrt; delete sp.pauseBis; sp.log = []; // Speichern im Lehrer-Bereich schaltet die App wieder frei
-      speichern(); lehrerZu();
+      protokolliere("r", np); speichern(); lehrerZu();
       toast(`👩‍🏫 Gespeichert: ⭐ ${np} · 🪙 ${nc}`);
       if (!beschaeftigt()) startseite();
     };
@@ -3351,8 +3445,17 @@
       zeile("⭐ Punkte", p), zeile("🪙 Coins", c),
       el("p", { class: "klein lehrer-wache" }, warnungen.length ? `👀 Warnungen „Mr. Alex is watching you“ (${(sp.warnungen || []).length}): ${warnungen.join(" · ")}` : "👀 Keine Warnungen „Mr. Alex is watching you“."),
       gesperrt && el("p", { class: "lehrer-sperre" }, "🔒 Die App ist gesperrt (zu viele Punkte in zu kurzer Zeit). „Speichern“ schaltet sie wieder frei – die Punkte oben kannst du vorher anpassen."),
-      el("div", { class: "knopfreihe" }, knopf("Coins auf 0", () => { c.value = "0"; }, "leise"), knopf("Punkte auf 0", () => { p.value = "0"; }, "leise")),
+      stichprobe,
+      el("div", { class: "knopfreihe" }, knopf("Coins auf 0", () => { c.value = "0"; }, "leise"), knopf("Punkte auf 0", () => { p.value = "0"; }, "leise"),
+        altstandRoh && knopf("Alten Stand übernehmen", altstandUebernehmen, "leise")),
       el("div", { class: "knopfreihe" }, knopf("Speichern", sichern, "haupt"), knopf("Abbrechen", lehrerZu, "leise")));
+  }
+  // Vorbereitet (31.10.): Nach Ablauf von SIEGEL_BIS wird ein älterer, noch ungesiegelter Stand nur hier (nach PIN) übernommen und gesiegelt.
+  function altstandUebernehmen() {
+    if (!altstandRoh || typeof altstandRoh !== "object") return;
+    Object.assign(stand, altstandRoh); delete stand._s; delete stand._v;
+    stand.protokoll = [[minuten(), "a", (stand.spiel && stand.spiel.punkte) || 0]];
+    altstandRoh = null; speichern(); lehrerZu(); location.reload();
   }
   let lehrerUhr = null;
   document.addEventListener("pointerdown", (e) => {

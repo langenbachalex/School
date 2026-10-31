@@ -53,6 +53,8 @@
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …; Story: story, gabelung, kristall, stationWeiter, filmStart, filmSkip; Realm: realmBetreten, realmEnde, drache, zapfenLoesen). */
 (function () {
   "use strict";
+  // Test-Haken window.__runner gibt es nur im Test-Build: TESTBUILD setzt das Build-Skript (Schalter --test); veröffentlicht immer false (31.10.2026).
+  const TESTBUILD = false;
 
   /* ---------- Skins: Gruppen (Reiter in der App), Werte, Namen (G/E) und was ohne Kauf frei ist (frei = erste n Werte) ---------- */
   const SKIN_GRUPPEN = [
@@ -6826,7 +6828,7 @@
     rafId = requestAnimationFrame(schleife);
     // Levelstart-Ansage beim Loslaufen (es gibt keinen Countdown); Wörter, Erzähler und Boss kommen erst später auf der Strecke
     try { if (stimme.ansage && W.start) stimme.ansage(W.start, { art: 'start', audio: audioDatei('start') }); } catch (e) { /* stumm */ }
-    if (location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__runner = haken; // Test-Haken nur lokal, nie auf der Live-Seite (30.10.)
+    if (TESTBUILD) window.__runner = haken; // Test-Haken nur im Test-Build, nie auf der Live-Seite
     return { stopp };
   }
   // Story Library: nur den Film eines Endes abspielen (eigene Figur), Runner.film({ wrapper, skin, ende: 'A'|'B', story, stimme: { erzaehler, still }, onEnde({ film, ende, uebersprungen }) })
@@ -6851,7 +6853,7 @@
     canvas.addEventListener("pointerdown", aufPointerDown); canvas.addEventListener("pointerup", aufPointerUp); canvas.addEventListener("pointercancel", aufPointerUp);
     window.addEventListener("keydown", aufKeyDown); window.addEventListener("keyup", aufKeyUp); window.addEventListener("resize", aufResize);
     rafId = requestAnimationFrame(schleife);
-    if (location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) window.__runner = haken;
+    if (TESTBUILD) window.__runner = haken;
     return { stopp };
   }
   // ✕ der App während des Films: Film überspringen statt Lauf abbrechen (das Ergebnis geht sonst verloren)

@@ -979,6 +979,49 @@
     { keys: ['9', '10'] },
     { ende: 'g1', wege: { A: ['A11', 'A12'], B: ['B11', 'B12'] } },
   ], stationen: [1, 2], film: { A: [['9', '10'], ['A11'], ['A12'], null], B: [['9', '10'], ['B11'], ['B12'], null] } };
+  // London Welt 2 „London Eye“ – Kapitel 2 „The Wheel That Stopped“ (Klasse 6, 31.10., docs/runner/story-london-02.md; Strecke immer mit Story, die App übergibt STORY.londoneye):
+  // Anfang 1–4, wobei ♪1/♪2 als Variante von Welt 1 abhängen (quelle 'westminster.g1': A = Fuchs → 1A/2A, B = Taube → 1B/2B; keine Wahl → A; Platzhalter '1'/'2' in der Strecke) · Station 1 (Checkpoint 1) ·
+  // Gabelung g1: ♪A5 unten an der Treppe zum Maschinenraum („🔘 machine room“, Weg A am Boden durch den dunklen Maschinenraum mit Lampen und dem roten Knopf) / ♪B5 oben auf einer Kabine („🎡 climb up“,
+  // Weg B über schwebende Kabinen-Plattformen) · Station 2 · gemeinsam 9–10 · Boss Sergeant Bearskin in der obersten Kabine · Ende A11–A12 / B11–B12 hinter dem Boss (im Film) = 12 ♪.
+  // Abstand der ♪ je Weg ≥ 1.390, nie in den 520 vor einem Tor; 18 Punkte-Diamanten; neu: Möwe (klaut einen Diamanten statt ein Leben zu nehmen), Kabinen (h.kabine), Maschinenraum (h.maschinenraum, h.knopf).
+  const STRUKTUR_LONDONEYE = { anzahl: 12, abschnitte: [
+    { anfang: true, varianten: { A: ['1A', '2A'], B: ['1B', '2B'] }, quelle: 'westminster.g1', standard: 'A', platz: ['1', '2'], keys: ['3', '4'] },
+    { gabel: 'g1', standard: 'A', wege: { A: ['A5', 'A6', 'A7', 'A8'], B: ['B5', 'B6', 'B7', 'B8'] }, symbole: { A: '🔘', B: '🎡' }, labels: { A: 'machine room', B: 'climb up' } },
+    { keys: ['9', '10'] },
+    { ende: 'g1', wege: { A: ['A11', 'A12'], B: ['B11', 'B12'] } },
+  ], stationen: [1, 2], film: { A: [['9', '10'], ['A11'], ['A12'], null], B: [['9', '10'], ['B11'], ['B12'], null] } };
+  const MUSTER_LONDONEYE_STORY = [
+    (h) => { h.dia(350); h.kristall(500, 290, '1'); h.kiste(650); h.vor(900); },                                      // 1 Aufwärmen · ♪1 (Variante 1A/1B)
+    (h) => { h.auto('cab', 150, 950); h.dia(500, 250); h.vor(1000); },                                                 // 2 erstes Black Cab
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(950); },                          // 3 Plattform + Taube
+    (h) => { h.post(200); h.zelle(240); h.dia(260, 215); h.kristall(600, 290, '2'); h.vor(900); },                     // 4 Postkasten → Telefonzelle · ♪2 (Variante 2A/2B)
+    (h) => { h.pfuetze(300); h.geg('fuchs', 500, 900); h.vor(1000); },                                                 // 5 Pfütze + Stadtfuchs
+    (h) => { h.luecke(250, 170); h.dia(335, 250); h.kabine(600, 230); h.dia(640, 190); h.vor(1000); },                 // 6 Themse-Lücke (💎 darüber) + erste Kabine als Stufe (💎 oben)
+    (h) => { h.geg('moewe', 300, 700); h.kristall(850, 290, '3'); h.vor(1100); },                                      // 7 Möwe (neu) · ♪3
+    (h) => { h.auto('bus', 100, 1000); h.plat(600, 230, 160); h.dia(680, 190); h.vor(1100); },                        // 8 Doppeldecker + Plattform
+    (h) => { h.geg('eichhoernchen', 150, 500); h.post(650); h.kristall(670, 262, '4'); h.zelle(690); h.dia(710, 190); h.vor(900); }, // 9 Eichhörnchen + Stufe · ♪4 über dem Postkasten
+    (h) => { h.auto('cab', 100, 900); h.pfuetze(550); h.vor(1000); },                                                 // 10 Cab + Pfütze
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },                            // 11 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                                    // 12 TOR 1
+    (h) => { h.cp(150); h.geg('fuchs', 700, 950); h.vor(1000); },                                                     // 13 CHECKPOINT 1 · Station 1
+    (h) => { h.kristall(200, 290, 'A5'); h.kabine(330, 250); h.kristall(370, 214, 'B5'); h.maschinenraum(520, 4660); h.vor(1100); }, // 14 GABELUNG: ♪A5 unten vor der Treppe (🔘 machine room), ♪B5 oben auf einer Kabine (🎡 climb up); Treppe hinunter
+    (h) => { h.auto('cab', 100, 1000); h.dia(300, 250); h.kabine(480, 252); h.kabine(700, 200); h.kristall(740, 164, 'B6'); h.kristall(1500, 290, 'A6'); h.knopf(1580); h.auto('bus', 1000, 1900); h.vor(2000); }, // 15 Rushhour · ♪B6 auf der zweiten Kabine / ♪A6 unten am roten Knopf (DO NOT PRESS)
+    (h) => { h.zelle(200); h.zelle(240); h.dia(260, 222); h.geg('taube', 450, 850); h.vor(1000); },                   // 16 zwei Telefonzellen (💎 oben) + Taube
+    (h) => { h.kabine(120, 262); h.luecke(250, 160); h.kabine(300, 210); h.kristall(340, 174, 'B7'); h.pfuetze(600); h.kristall(800, 290, 'A7'); h.vor(1000); }, // 17 Kabinen über der Themse (♪B7) + Pfütze · ♪A7
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); },    // 18 Dreier-Plattform (Treppe aus dem Maschinenraum bei 80)
+    (h) => { h.geg('eichhoernchen', 150, 450); h.auto('bus', 500, 1300); h.dia(850, 240); h.vor(1400); },             // 19 Eichhörnchen + Bus (💎 über der Busspur)
+    (h) => { h.kristall(100, 290, 'A8'); h.kabine(200, 250); h.kabine(420, 196); h.dia(460, 156); h.kabine(700, 190); h.kristall(740, 154, 'B8'); h.vor(1000); }, // 20 ♪A8 unten (das Rad dreht sich falsch herum) / ♪B8 oben auf der höchsten Kabine
+    (h) => { h.pfuetze(200); h.geg('fuchs', 450, 800); h.vor(1000); },                                                // 21 Pfütze + Fuchs
+    (h) => { h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); },                           // 22
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                                   // 23 TOR 2
+    (h) => { h.cp(150); h.kristall(350, 290, '9'); h.post(500); h.zelle(540); h.vor(850); },                          // 24 CHECKPOINT 2 · Station 2 · ♪9
+    (h) => { h.auto('bus', 100, 1000); h.geg('moewe', 1000, 1400); h.vor(1500); },                                    // 25 Bus + Möwe
+    (h) => { h.luecke(200, 190); h.plat(150, 230, 320); h.kristall(310, 200, '10'); h.geg('fuchs', 650, 950); h.vor(1150); }, // 26 Plattform über der Themse · ♪10
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.dia(250, 180); h.vor(750); }, // 27 Teekisten-Pyramide (💎 oben)
+    (h) => { h.pfuetze(150); h.auto('cab', 300, 1100); h.geg('eichhoernchen', 1150, 1400); h.vor(1500); },            // 28 Pfütze + Cab + Eichhörnchen
+    (h) => { h.kabine(150, 240); h.kabine(400, 180); h.kabine(650, 240); h.dia(440, 140); h.geg('moewe', 850, 1250); h.vor(1300); }, // 29 Kabinen-Treppe (💎 oben) + Möwe
+    (h) => { h.luecke(200, 170); h.dia(285, 250); h.auto('bus', 500, 1300); h.post(1350); h.vor(1500); },             // 30 Schluss: Themse (💎 darüber) + Bus
+  ];
   // New York „The Lost Map – Under the City“ (Klasse 9, docs/runner/story-usa-01.md): Anfang 1–5 · Station 1 · Gabelung 1 (A6–A10 unten = U-Bahn / B6–B10 oben = Feuertreppe/Dach) · Station 2 ·
   // gemeinsam 11–14 · Gabelung 2 (X15–X16 „give the map“ unten / Y15–Y16 „keep the map“ oben auf dem Bus; ohne Wahl: Y = Karte behalten) · Boss · Ende X17–X20 bzw. Y17–Y20 = 20 ♪; Realm R1–R3 extra.
   const STRUKTUR_NY = { anzahl: 20, abschnitte: [
@@ -1115,6 +1158,7 @@
   ];
   const REALM_MUSTER = { ny: MUSTER_REALM, route66: MUSTER_REALM_2 };
   const REALM_GEGENSTAND = { name: 'Frost Shard', symbol: '❄', art: 'splitter' };   // Kapitel 1 (Standard); Kapitel 2: struktur.gegenstand
+  const KABINE_W = 80;   // Kabinen-Plattform des London Eye (Welt 2 Klasse 6)
   const PARKBUS_W = 118, PARKBUS_H = 54;   // geparkter Doppeldecker an der Gabelung (fest, begehbar)
   // Fahrzeuge: Breite/Höhe, Tempo, Startabstand vor dem rechten Ende (auto/truck wie seit Welt 2; bus/cab Welt Westminster)
   const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
@@ -1156,6 +1200,10 @@
       // Story New York (Klasse 9): Feuertreppe (zwei Gitter-Podeste vor einer Ziegelwand), U-Bahn-Eingang (Kulisse), verstecktes Tor ✦ (schwebt, nur mit langem Sprung vom Bus)
       feuertreppe: (dx) => { L.plattformen.push({ x:x + dx, y:250, w:100, art:'gitter' }, { x:x + dx + 120, y:178, w:110, art:'gitter' }); L.deko.push({ art:'feuertreppe', x:x + dx }); },
       deko: (art, dx) => L.deko.push({ art, x:x + dx }),
+      // London Eye (Klasse 6, Welt 2): schwebende Kabine als Plattform (Gondel des Riesenrads), Maschinenraum (dunkler Abschnitt mit Lampen, Treppe hinunter/hinauf), roter Knopf DO NOT PRESS (Kulisse)
+      kabine: (dx, y, w = KABINE_W) => L.plattformen.push({ x:x + dx, y, w, art:'kabine' }),
+      maschinenraum: (dx, w) => L.deko.push({ art:'maschinenraum', x:x + dx, w }),
+      knopf: (dx) => L.deko.push({ art:'knopf', x:x + dx }),
       realmTor: (dx, y) => L.realmTore.push({ x:x + dx, y }),
       // The Realm Beyond: Sammelstück (Frost Shard ❄), Eisfleck (rutscht wie Öl)
       gegenstand: (dx, y) => L.gegenstaende.push({ x:x + dx, y }),
@@ -1195,6 +1243,10 @@
   const NEBEL_RAND = 160, NEBEL_MAX = 0.78, GONDEL_W = 130, GONDEL_Y = BODEN_Y - 30, GONDEL_T = 7, SURF_NACH = 0.3, SURF_TEMPO = 1.6;
   // Welt Westminster: Trommelwirbel-Zähler (Tests)
   let trommelt = 0;
+  // Welt London Eye (Klasse 6, Welt 2): Dunkelheit im Maschinenraum an der Figur (0..1, nur unten am Boden), Drehwinkel des großen Rads (steht; dreht sich falsch herum nach ♪A8, wieder richtig im Finale),
+  // Begleiter aus Welt 1 (Fuchs oder Taube, nur Deko: läuft/fliegt neben der Figur), Kamera-Hub zur obersten Kabine in der Boss-Sequenz (0..1)
+  let dunkel = 0, radWinkel = 0, radRueck = 0, begleiter = null, kameraHoch = 0;
+  const DUNKEL_RAND = 160, DUNKEL_MAX = 0.72, EYE_R = 270, EYE_KABINE_Y = 190;   // Boss-Kabine: 190 über dem Boden (Mitte des Rads liegt 80 unter dem Boden, Radius 270)
   // Story-Modus (Option story: Klasse 6 Westminster, Klasse 9 New York; sonst story = null): Kristalle ♪, Erzähl-Warteschlange (nie zwei Stücke gleichzeitig), Stationen, Film am Ende
   let storyOpt = null, story = null, kristalle = [], diaGesammelt = 0, film = null, nurFilm = false;
   const TIPP_TEMPO = 24, STORY_STEHT = 3.5, STORY_AUS = 0.6, STORY_LUECKE = 0.3, STATION_MIN = 3, STATION_MAX = 40, STATION_SPERRE = 0.4;
@@ -1245,7 +1297,8 @@
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
-    trommelt = 0; cameo = null; cameosGezeigt = 0; cameoEffekt = null; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
+    trommelt = 0; dunkel = 0; radWinkel = 0; radRueck = 0; kameraHoch = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 60, y: BODEN_Y, flug: 0 } : null;
+    cameo = null; cameosGezeigt = 0; cameoEffekt = null; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoPlan = cameoPlanBauen();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
     diaGesammelt = 0; film = null; storyNeu(); realmNeu();
@@ -1295,7 +1348,7 @@
   function moeweKlaut(g) {
     g.harmlos = true; g.klaut = 0.01; g.richtung = 1; g.beute = gesammelt > 0;
     comboReset(); erstauntZeit = 0.8; klang.klau();
-    if (g.beute) { gesammelt--; geklaut++; hudPuls = 1; }
+    if (g.beute) { gesammelt--; geklaut++; hudPuls = 1; if (story && diaGesammelt > 0) diaGesammelt--; }   // Story (London Eye): auch ein Punkte-Diamant weniger
     meldung = { text: g.beute ? 'My diamond! 🐦' : 'Nothing to steal! 🐦', zeit: 1.2 };
     const b = gegnerBox(g); funken(b.x + b.w / 2, b.y + b.h / 2, 12, ["#39c6f0", "#bfefff", "#ffffff"], 170, 0.5);
   }
@@ -1752,6 +1805,26 @@
     }
     for (const s of SOLIDE) if (s.gondel != null) s.x = gondeln[s.gondel].gx;
     nebelDichte = nebelDichteBei(spieler.x);
+    if (W.id === 'londoneye') londonEyeBewegen(dt);
+  }
+  // London Eye: Dunkelheit im Maschinenraum (nur, wenn die Figur unten läuft – oben auf den Kabinen bleibt es hell), das große Rad (nach ♪A8 dreht es sich 3 s falsch herum, im Finale wieder richtig),
+  // Begleiter folgt der Figur (Fuchs läuft 56 dahinter auf ihrer Höhe, Taube fliegt 40 dahinter über dem Kopf), Kamera-Hub in der Boss-Sequenz (Banner/Boss hoch, zurück wieder herunter)
+  function londonEyeBewegen(dt) {
+    dunkel = spieler.y > BODEN_Y - 70 ? dunkelBei(spieler.x) : Math.max(0, dunkel - dt * 6);
+    if (story && story.gesammelt.includes('A8') && radRueck < 3) { radRueck += dt; radWinkel -= dt * 0.1; }
+    if (zustand === 'finale' || zustand === 'film') radWinkel += dt * 0.25;
+    const hoch = zustand === 'sequenz' && sequenz && (sequenz.phase === 'banner' || sequenz.phase === 'boss') || zustand === 'boss';
+    kameraHoch = Math.max(0, Math.min(1, kameraHoch + (hoch ? dt * 1.6 : -dt * 1.6)));
+    if (begleiter) {
+      begleiter.flug += dt;
+      const zx = spieler.x - (begleiter.art === 'taube' ? 40 : 56), zy = begleiter.art === 'taube' ? spieler.y - 112 + Math.sin(begleiter.flug * 2.2) * 6 : spieler.y;
+      begleiter.x += (zx - begleiter.x) * Math.min(1, dt * 8); begleiter.y += (zy - begleiter.y) * Math.min(1, dt * (begleiter.art === 'taube' ? 5 : 12));
+    }
+  }
+  function dunkelBei(x) {
+    let d = 0;
+    for (const m of level.deko) { if (m.art !== 'maschinenraum') continue; const a = m.x - DUNKEL_RAND, b = m.x + m.w + DUNKEL_RAND; if (x <= a || x >= b) continue; d = Math.max(d, Math.min(1, (x - a) / DUNKEL_RAND, (b - x) / DUNKEL_RAND)); }
+    return d;
   }
   // Nebeldichte an einer Stelle: 1 im Abschnitt, weiche Ränder 160 davor/dahinter
   function nebelDichteBei(x) {
@@ -3503,11 +3576,13 @@
   function gardist(c, gx, y, o) {
     const marsch = o.marsch || 0, blick = o.blick || 0, hut = o.hut || 'fell', lachen = o.lachen || 0, laecheln = o.laecheln || 0;
     c.save(); c.translate(gx, y); c.globalAlpha = o.alpha == null ? 1 : o.alpha;
+    if (o.neigung) c.rotate(o.neigung);   // London Eye: wird aus den Stiefeln gezogen (kippt)
     if (lachen > 0) c.translate(0, -Math.abs(Math.sin(zeit * 16)) * 2 * lachen);   // lacht: hüpft leicht
     for (const [bx, w] of [[-7, marsch], [7, -marsch]]) {   // Beine (navy mit rotem Streifen), Stiefel
       c.save(); c.translate(bx, -52); c.rotate(w * 0.3);
       c.fillStyle = '#16213d'; c.fillRect(-5, 0, 10, 50); c.fillStyle = UK_ROT; c.fillRect(-1, 0, 2, 48);
-      c.fillStyle = '#0d0d0d'; c.beginPath(); c.roundRect(-6, 44, 13, 8, 3); c.fill();
+      if (o.socken) { c.fillStyle = '#f4f4f4'; c.beginPath(); c.roundRect(-5, 42, 11, 8, 3); c.fill(); c.fillStyle = UK_ROT; c.fillRect(-5, 44, 11, 2); }   // in Socken (die Stiefel kleben am Boden)
+      else { c.fillStyle = '#0d0d0d'; c.beginPath(); c.roundRect(-6, 44, 13, 8, 3); c.fill(); }
       c.restore();
     }
     c.fillStyle = UK_ROT; c.beginPath(); c.roundRect(-19, -112, 38, 64, 6); c.fill();   // Rock
@@ -3586,6 +3661,274 @@
     }
     unionJack(c, 60, -228, 30, 18); c.fillStyle = '#555'; c.fillRect(58, -228, 2, 66);
     c.restore();
+  }
+  /* ---------- Welt London Eye (Klasse 6, Welt 2, 31.10.): South Bank mit dem großen Rad, County Hall, Souvenirstände und Straßenkünstler; Kabinen-Plattformen, Maschinenraum (dunkel, Lampen),
+     Boss Sergeant Bearskin in der obersten Kabine (Kamera fährt hoch), Tür = Kabinentür an der Einstiegsplattform, Begleiter aus Welt 1 (Fuchs/Taube), Film (A: Rad dreht wieder, Socken · B: Ziehen, Flüstern) ---------- */
+  const EYE_FARBE = 'rgba(205,214,222,.96)';
+  function kabineZeichnen(c, x, y, w, h, o = {}) {   // Gondel des London Eye: ovales Glas mit Rahmen, Boden, Türspalt; o.offen 0..1 = Tür offen (Boss-Tür), o.glas = Innenleben zeichnen (Callback), o.licht
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#5f6b78'; c.fillRect(-2, -h / 2 - 10, 4, 10);   // Aufhängung
+    const g = c.createLinearGradient(0, -h / 2, 0, h / 2); g.addColorStop(0, 'rgba(230,245,255,.92)'); g.addColorStop(0.55, 'rgba(160,205,235,.78)'); g.addColorStop(1, 'rgba(90,140,180,.85)');
+    c.fillStyle = g; c.beginPath(); c.ellipse(0, 0, w / 2, h / 2, 0, 0, Math.PI * 2); c.fill();
+    if (o.innen) { c.save(); c.beginPath(); c.ellipse(0, 0, w / 2 - 2, h / 2 - 2, 0, 0, Math.PI * 2); c.clip(); o.innen(c); c.restore(); }
+    c.strokeStyle = '#4a5663'; c.lineWidth = Math.max(1.5, w * 0.03); c.beginPath(); c.ellipse(0, 0, w / 2, h / 2, 0, 0, Math.PI * 2); c.stroke();
+    c.lineWidth = 1; c.beginPath(); c.moveTo(-w / 2 + 4, 0); c.lineTo(w / 2 - 4, 0); c.stroke();   // Mittelstreifen
+    c.fillStyle = 'rgba(255,255,255,.55)'; c.beginPath(); c.ellipse(-w * 0.22, -h * 0.25, w * 0.14, h * 0.12, -0.5, 0, Math.PI * 2); c.fill();   // Glanz
+    c.fillStyle = '#3b4652'; c.fillRect(-w / 2 + 6, h / 2 - 5, w - 12, 4);   // Boden
+    if (o.tuer) {   // Türspalt vorn: zwei Schiebetüren, die sich öffnen
+      const offen = o.offen || 0;
+      c.fillStyle = 'rgba(40,52,64,.85)'; c.fillRect(-w * 0.2 - w * 0.2 * offen, -h * 0.36, w * 0.2 * (1 - offen * 0.95), h * 0.72); c.fillRect(w * 0.2 * offen, -h * 0.36, w * 0.2 * (1 - offen * 0.95), h * 0.72);
+      if (offen > 0) { c.fillStyle = `rgba(255,240,180,${0.85 * offen})`; c.fillRect(-w * 0.2 * offen, -h * 0.36, w * 0.4 * offen, h * 0.72); }
+    }
+    c.restore();
+  }
+  // großes Rad: Mitte (cx, cy), Radius r, Drehwinkel; o.bodenY = Fußpunkt der A-Stütze, o.gross = Index der großen Kabine (Boss), o.ohne = Kabine nicht zeichnen, o.kabinen = false ohne Kabinen
+  function riesenrad(c, cx, cy, r, winkel, o = {}) {
+    c.save(); c.translate(cx, cy);
+    c.strokeStyle = o.farbe || EYE_FARBE; c.lineCap = 'round';
+    if (o.bodenY != null) { c.lineWidth = Math.max(3, r * 0.03); c.beginPath(); c.moveTo(-r * 0.55, o.bodenY - cy); c.lineTo(0, 0); c.lineTo(r * 0.22, o.bodenY - cy); c.stroke(); c.fillStyle = o.farbe || EYE_FARBE; c.beginPath(); c.arc(0, 0, Math.max(4, r * 0.05), 0, Math.PI * 2); c.fill(); }
+    c.lineWidth = Math.max(2, r * 0.018); c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.stroke();
+    c.lineWidth = Math.max(1, r * 0.007); c.beginPath(); c.arc(0, 0, r * 0.95, 0, Math.PI * 2); c.stroke();
+    c.save(); c.globalAlpha = o.speichenAlpha == null ? 0.65 : o.speichenAlpha; c.lineWidth = Math.max(0.8, r * 0.006);
+    for (let k = 0; k < 24; k++) { const a = winkel + k * Math.PI / 12; c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(a) * r, Math.sin(a) * r); c.stroke(); }
+    c.restore();
+    if (o.kabinen !== false) for (let k = 0; k < 16; k++) {
+      if (o.ohne === k) continue;
+      const a = winkel + k * Math.PI / 8, gross = o.gross === k;
+      kabineZeichnen(c, Math.cos(a) * r, Math.sin(a) * r, gross ? EYE_KABINE_W : r * 0.12, gross ? EYE_KABINE_H : r * 0.072, gross ? { innen: o.innen } : {});
+    }
+    c.restore();
+  }
+  const EYE_KABINE_W = 112, EYE_KABINE_H = 70;   // die oberste Kabine am Boss-Rad (groß genug für den Sergeant)
+  const eyeWinkel = (k) => radWinkel + k * Math.PI / 8;
+  function countyHall(c, x, y, s) {   // County Hall: langes helles Steingebäude mit Säulenreihe, Mittelbogen und flachem Dach; (x, y) = linker Fußpunkt
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#d9cfb6'; c.fillRect(0, -70, 300, 70);
+    c.fillStyle = '#c4b793'; c.fillRect(-6, -78, 312, 8); c.fillRect(110, -108, 80, 32);
+    c.beginPath(); c.moveTo(150, -108); c.arc(150, -108, 40, Math.PI, 0); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.14)'; for (let k = 0; k < 13; k++) { if (k > 4 && k < 8) continue; c.fillRect(10 + k * 22, -60, 5, 50); }
+    for (let k = 0; k < 14; k++) c.fillRect(6 + k * 21, -30, 8, 14);
+    c.fillStyle = '#6a7a86'; c.beginPath(); c.moveTo(130, -70); c.lineTo(130, -98); c.arc(150, -98, 20, Math.PI, 0); c.lineTo(170, -70); c.closePath(); c.fill();
+    c.restore();
+  }
+  function souvenirStand(c, x, y, s, i) {   // Souvenirstand: gestreiftes Dach, Tisch mit Union Jacks, Postkarten, kleinen roten Bussen
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#5a4a3a'; c.fillRect(-26, -52, 3, 52); c.fillRect(23, -52, 3, 52);
+    c.fillStyle = '#e8e0cc'; c.fillRect(-28, -22, 56, 22);
+    for (let k = 0; k < 6; k++) { c.fillStyle = k % 2 ? '#fff' : (i % 2 ? UK_ROT : UK_BLAU); c.beginPath(); c.moveTo(-32 + k * 10.7, -52); c.lineTo(-32 + (k + 1) * 10.7, -52); c.lineTo(-32 + (k + 1) * 10.7, -44); c.lineTo(-32 + k * 10.7 + 5, -40); c.lineTo(-32 + k * 10.7, -44); c.closePath(); c.fill(); }
+    unionJack(c, -22, -36, 14, 8); unionJack(c, 6, -34, 14, 8);
+    c.fillStyle = UK_ROT; c.fillRect(-10, -30, 12, 7); c.fillStyle = '#ffd36b'; c.fillRect(-24, -26, 8, 4); c.fillRect(14, -27, 8, 4);
+    c.restore();
+  }
+  function strassenkuenstler(c, x, y, t, i) {   // Straßenkünstler: Silhouette, jongliert drei Bälle (bzw. steht als „lebende Statue“ auf einer Kiste)
+    c.save(); c.translate(x, y);
+    const statue = i % 3 === 1;
+    if (statue) { c.fillStyle = '#7a7a7a'; c.fillRect(-12, -14, 24, 14); c.translate(0, -14); }
+    c.fillStyle = statue ? '#b8b8b8' : '#3a3f4a';
+    c.fillRect(-7, -40, 14, 26); c.beginPath(); c.arc(0, -47, 7, 0, Math.PI * 2); c.fill();
+    c.fillRect(-6, -14, 5, 14); c.fillRect(1, -14, 5, 14);
+    if (statue) { c.fillRect(-18, -38, 12, 4); c.fillRect(6, -38, 12, 4); }
+    else {
+      c.lineWidth = 4; c.strokeStyle = '#3a3f4a'; c.lineCap = 'round'; c.beginPath(); c.moveTo(-7, -36); c.lineTo(-16, -48); c.moveTo(7, -36); c.lineTo(16, -48); c.stroke();
+      for (let k = 0; k < 3; k++) { const ph = t * 4 + k * Math.PI * 2 / 3, bx = Math.cos(ph) * 14, by = -60 - Math.abs(Math.sin(ph)) * 22; c.fillStyle = ['#e63946', '#ffd93d', '#2a8cff'][k]; c.beginPath(); c.arc(bx, by, 3.5, 0, Math.PI * 2); c.fill(); }
+    }
+    c.restore();
+  }
+  function hintergrundLondonEye(c) {
+    const naehe = Math.min(1, kamera / level.ende);
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#79b4e4'); g.addColorStop(0.6, '#d6eaf7'); g.addColorStop(1, '#eceae2');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    c.fillStyle = 'rgba(255,255,255,.88)';   // Wolken (Parallaxe 0,06)
+    for (let i = 0; i < 5; i++) {
+      const n = viewW + 420, wx = ((i * 380 + 90 - kamera * 0.06) % n + n) % n - 210, wy = 34 + (i % 3) * 20;
+      c.beginPath(); c.arc(wx, wy, 20, 0, Math.PI * 2); c.arc(wx + 24, wy - 9, 26, 0, Math.PI * 2); c.arc(wx + 52, wy, 20, 0, Math.PI * 2); c.arc(wx + 28, wy + 6, 18, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = '#b8c0ca';   // ferne Stadt am anderen Ufer (Parallaxe 0,08)
+    for (let i = 0; i < 36; i++) { const n = viewW + 200, bx = ((i * 74 - kamera * 0.08) % n + n) % n - 100, bh = 18 + ((i * 41) % 40); c.fillRect(bx, 250 - bh, 44, bh); }
+    const px = viewW * (0.04 + 0.08 * naehe) - kamera * 0.015;   // Westminster gegenüber (wir sind am Südufer, links neben dem Rad): Parlament + Big Ben
+    parlament(c, px + 150, 252, 0.5, '#c3ad84'); bigBen(c, px + 160, 252, 0.5, '#c9b48a');
+    // das London Eye: groß, steht still (Kapitel-Thema) – dreht sich erst wieder, wenn die Geschichte es sagt (radWinkel)
+    const ex = viewW * (0.62 - 0.18 * naehe) - kamera * 0.03, er = 150 + 50 * naehe;
+    countyHall(c, ex - er * 1.65, 250, 0.55 + 0.25 * naehe);
+    riesenrad(c, ex, 250 - er - 8, er, radWinkel, { bodenY: 250, speichenAlpha: 0.5 });
+    c.fillStyle = '#5f8299'; c.fillRect(-viewW, 250, viewW * 3, H * 2);   // Themse
+    c.fillStyle = '#9b958a'; c.fillRect(-viewW, 247, viewW * 3, 5);
+    c.fillStyle = `rgba(205,214,222,.35)`; c.beginPath(); c.ellipse(ex, 262, er * 0.9, 6, 0, 0, Math.PI * 2); c.fill();   // Spiegelung des Rads
+    for (let i = 0; i < 3; i++) { const n = viewW + 520, x = ((i * 610 + 260 + zeit * 12 - kamera * 0.2) % n + n) % n - 260, y = 270 + i * 12 + Math.sin(zeit * 1.4 + i) * 1.5; bootZeichnen(c, x, y, 0.6 + i * 0.08); }
+    c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2;
+    for (let i = 0; i < 14; i++) { const n = viewW + 120, wx = ((i * 110 - kamera * 0.3 + Math.sin(zeit + i) * 6) % n + n) % n - 60, wy = 262 + (i % 4) * 16; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 10, wy - 4, wx + 20, wy); c.stroke(); }
+    for (let i = 0; i < 7; i++) {   // South Bank hinter der Promenade: Laternen mit Wimpeln, Souvenirstände, Straßenkünstler (Parallaxe 0,55)
+      const n = viewW + 560, lx = ((i * 280 + 70 - kamera * 0.55) % n + n) % n - 280;
+      laterne(c, lx, BODEN_Y, 0.9); if (i % 2 === 0) wimpelKette(c, lx, lx + 140, BODEN_Y - 56);
+      if (i % 3 === 1) souvenirStand(c, lx + 90, BODEN_Y, 0.85, i); else if (i % 3 === 2) strassenkuenstler(c, lx + 110, BODEN_Y, zeit + i, i);
+    }
+  }
+  function kabinePlattform(c, x, y, w) {   // schwebende Kabine als Stufe: die Figur steht auf dem Dach (Plattform y), die Gondel hängt darunter, oben ein kurzes Seil mit Ring
+    c.strokeStyle = '#5f6b78'; c.lineWidth = 2; c.beginPath(); c.moveTo(x + w / 2, y - 30); c.lineTo(x + w / 2, y); c.stroke();
+    c.beginPath(); c.arc(x + w / 2, y - 34, 5, 0, Math.PI * 2); c.stroke();
+    kabineZeichnen(c, x + w / 2, y + 23, w + 6, 44, {});
+    c.fillStyle = '#3b4652'; c.beginPath(); c.roundRect(x - 2, y - 3, w + 4, 7, 3); c.fill();   // Dachkante (Standfläche)
+    c.fillStyle = UK_ROT; c.fillRect(x + 6, y - 1, w - 12, 2);
+  }
+  function maschinenraumDeko(c, x, w) {   // Maschinenraum unter dem Rad: dunkle Halle hinter der Promenade (Beton, Rohre, Zahnräder), Lampen alle 420, Treppe hinunter (links) und hinauf (rechts), Schild
+    const y0 = 96;
+    c.fillStyle = '#262a33'; c.fillRect(x - 60, -H, w + 120, BODEN_Y + H);   // Halle bis über den oberen Bildrand
+    c.fillStyle = '#1b1e25'; c.fillRect(x - 64, y0 - 10, w + 128, 12);
+    c.strokeStyle = '#3b414d'; c.lineWidth = 6; c.beginPath(); c.moveTo(x - 60, y0 + 40); c.lineTo(x + w + 60, y0 + 40); c.moveTo(x - 60, y0 + 62); c.lineTo(x + w + 60, y0 + 62); c.stroke();   // Rohre
+    c.strokeStyle = '#4a5160'; c.lineWidth = 2;
+    for (let gx = x + 200; gx < x + w - 100; gx += 640) {   // Zahnräder (stehen still – das Rad ist stehengeblieben)
+      for (const [dx, r] of [[0, 46], [78, 30]]) { c.beginPath(); c.arc(gx + dx, BODEN_Y - 110, r, 0, Math.PI * 2); c.stroke(); for (let k = 0; k < 10; k++) { const a = k * Math.PI / 5 + radWinkel * 4; c.beginPath(); c.moveTo(gx + dx + Math.cos(a) * r, BODEN_Y - 110 + Math.sin(a) * r); c.lineTo(gx + dx + Math.cos(a) * (r + 7), BODEN_Y - 110 + Math.sin(a) * (r + 7)); c.stroke(); } }
+    }
+    for (let lx = x + 140; lx < x + w; lx += 420) {   // Lampen: Kabel, Schirm, Glühen
+      c.strokeStyle = '#111'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(lx, y0); c.lineTo(lx, y0 + 60); c.stroke();
+      c.fillStyle = '#2f3540'; c.beginPath(); c.moveTo(lx - 14, y0 + 72); c.lineTo(lx + 14, y0 + 72); c.lineTo(lx + 6, y0 + 58); c.lineTo(lx - 6, y0 + 58); c.closePath(); c.fill();
+      const fl = 0.8 + 0.2 * Math.sin(zeit * 7 + lx);
+      c.fillStyle = `rgba(255,225,150,${fl})`; c.beginPath(); c.arc(lx, y0 + 74, 5, 0, Math.PI * 2); c.fill();
+      const gl = c.createRadialGradient(lx, y0 + 76, 4, lx, y0 + 76, 150); gl.addColorStop(0, `rgba(255,220,140,${0.28 * fl})`); gl.addColorStop(1, 'rgba(255,220,140,0)');
+      c.fillStyle = gl; c.beginPath(); c.moveTo(lx, y0 + 74); c.lineTo(lx - 110, BODEN_Y); c.lineTo(lx + 110, BODEN_Y); c.closePath(); c.fill();
+    }
+    for (const [tx, runter] of [[x - 60, true], [x + w + 60, false]]) {   // Treppen: Abgang in den Boden (links hinunter, rechts hinauf), Geländer
+      c.fillStyle = '#15171d'; c.fillRect(tx - 50, BODEN_Y + 2, 100, H - BODEN_Y);
+      c.fillStyle = '#3a3f4a'; for (let k = 0; k < 6; k++) { const sx = runter ? tx - 50 + k * 16 : tx + 50 - 16 - k * 16; c.fillRect(sx, BODEN_Y + 8 + k * 11, 16, 3); }
+      c.strokeStyle = '#5f6b78'; c.lineWidth = 3; c.beginPath(); c.moveTo(tx - 50, BODEN_Y - 28); c.lineTo(tx + 50, BODEN_Y - 28); c.moveTo(tx - 50, BODEN_Y - 28); c.lineTo(tx - 50, BODEN_Y); c.moveTo(tx + 50, BODEN_Y - 28); c.lineTo(tx + 50, BODEN_Y); c.stroke();
+    }
+    c.fillStyle = '#ffd36b'; c.beginPath(); c.roundRect(x - 104, BODEN_Y - 78, 88, 18, 4); c.fill();
+    c.fillStyle = '#18213a'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MACHINE ROOM ↓', x - 60, BODEN_Y - 69);
+  }
+  function knopfDeko(c, x) {   // der große rote Knopf auf einem Sockel, Schild „DO NOT PRESS“; gedrückt, sobald die Geschichte es erzählt hat (♪A8)
+    const gedrueckt = story && story.gesammelt.includes('A8');
+    c.fillStyle = '#4a5160'; c.fillRect(x - 16, BODEN_Y - 44, 32, 44); c.fillStyle = '#2f3540'; c.fillRect(x - 18, BODEN_Y - 46, 36, 5);
+    c.fillStyle = '#9e0c24'; c.beginPath(); c.ellipse(x, BODEN_Y - 46, 13, 5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = gedrueckt ? '#c81e3a' : '#e63946'; c.beginPath(); c.ellipse(x, BODEN_Y - 46 - (gedrueckt ? 3 : 10), 13, 5, 0, 0, Math.PI * 2); c.fill(); if (!gedrueckt) c.fillRect(x - 13, BODEN_Y - 56, 26, 10);
+    c.fillStyle = 'rgba(255,255,255,.4)'; c.beginPath(); c.ellipse(x - 4, BODEN_Y - 48 - (gedrueckt ? 3 : 10), 5, 1.6, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#f4f4f4'; c.beginPath(); c.roundRect(x - 36, BODEN_Y - 92, 72, 20, 3); c.fill(); c.strokeStyle = UK_ROT; c.lineWidth = 2; c.stroke();
+    c.fillStyle = UK_ROT; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('DO NOT PRESS', x, BODEN_Y - 82);
+    c.strokeStyle = '#4a5160'; c.lineWidth = 2; c.beginPath(); c.moveTo(x, BODEN_Y - 72); c.lineTo(x, BODEN_Y - 46); c.stroke();
+  }
+  function dunkelZeichnen(c, d) {   // Maschinenraum: alles dunkel, nur warme Lichtkegel unter den Lampen und ein Schein um die Figur
+    c.fillStyle = `rgba(6,8,22,${DUNKEL_MAX * d})`; c.fillRect(0, 0, viewW, H);
+    c.save(); c.globalAlpha = d;
+    for (const m of level.deko) { if (m.art !== 'maschinenraum') continue; for (let lx = m.x + 140; lx < m.x + m.w; lx += 420) { const sx = lx - kamera; if (sx < -160 || sx > viewW + 160) continue; const gl = c.createRadialGradient(sx, 180, 10, sx, 240, 170); gl.addColorStop(0, 'rgba(255,215,130,.42)'); gl.addColorStop(1, 'rgba(255,215,130,0)'); c.fillStyle = gl; c.beginPath(); c.arc(sx, 240, 170, 0, Math.PI * 2); c.fill(); } }
+    const fx = spieler.x - kamera, fy = spieler.y - 44, gl = c.createRadialGradient(fx, fy, 10, fx, fy, 110); gl.addColorStop(0, 'rgba(255,235,190,.3)'); gl.addColorStop(1, 'rgba(255,235,190,0)');
+    c.fillStyle = gl; c.beginPath(); c.arc(fx, fy, 110, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  // Boss-Platz: das große Rad ragt aus der Promenade (Mitte 80 unter dem Boden, Radius 270), die oberste Kabine (Index 12 = 270°) ist groß, darin steht Sergeant Bearskin stocksteif (Stiefel kleben);
+  // in der Sequenz wird er sichtbar (boss.sichtbar), im Finale dreht sich das Rad wieder (radWinkel) und er verblasst (boss.weg)
+  function eyeBoss(c, x, y) {
+    c.save(); c.beginPath(); c.rect(x - 700, -600, 1400, 600 + y); c.clip();
+    const cx = x + 40, cy = y + 80;
+    riesenrad(c, cx, cy, EYE_R, radWinkel, { gross: 12, ohne: 8, speichenAlpha: 0.4, innen: (k) => sergeantInKabine(k) });
+    c.restore();
+  }
+  function sergeantInKabine(c) {   // Innenleben der obersten Kabine (Koordinaten relativ zur Kabinenmitte): Klebstoff-Fleck, Sergeant (0,46), stocksteif, nur die Augen wandern
+    const auf = boss.sichtbar, weg = boss.weg;
+    c.save(); c.translate(-6, EYE_KABINE_H / 2 - 6); c.scale(0.46, 0.46);
+    c.fillStyle = `rgba(255,225,90,${0.75 * auf})`; c.beginPath(); c.ellipse(0, 0, 30, 5, 0, 0, Math.PI * 2); c.fill();   // Klebstoff
+    const blick = (zustand === 'boss' || zustand === 'sequenz') ? -2 : (Math.sin(zeit * 0.8) > 0.35 ? 2 : Math.sin(zeit * 0.8) < -0.35 ? -2 : 0);
+    gardist(c, 0, 0, { alpha: auf * (1 - weg * 0.85), blick });
+    if (auf > 0.9 && zustand === 'sequenz') { c.font = 'bold 44px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('!', 40, -200 - (ruhig() ? 0 : Math.abs(Math.sin(zeit * 6)) * 6)); }
+    c.restore();
+  }
+  function kabinenTuer(c, x, y) {   // Tür der Welt London Eye: Einstiegskabine auf der Plattform – Schiebetüren der Gondel gehen auf (tuer.offen), Schild „BOARDING“
+    c.fillStyle = '#5f6b78'; c.fillRect(x - 70, y - 8, 140, 8); c.fillStyle = '#3b4652'; c.fillRect(x - 74, y - 10, 148, 3);
+    c.strokeStyle = '#5f6b78'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 66, y - 10); c.lineTo(x - 66, y - 44); c.lineTo(x - 30, y - 44); c.moveTo(x + 66, y - 10); c.lineTo(x + 66, y - 44); c.lineTo(x + 30, y - 44); c.stroke();
+    kabineZeichnen(c, x, y - 48, 104, 72, { tuer: true, offen: tuer.offen });
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(x - 40, y - 118, 80, 18, 4); c.fill();
+    c.fillStyle = '#ffd36b'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(tuer.offen > 0.5 ? 'ALL ABOARD!' : 'BOARDING', x, y - 109);
+    unionJack(c, x + 48, y - 134, 24, 14); c.fillStyle = '#555'; c.fillRect(x + 46, y - 134, 2, 48);
+  }
+  // Begleiter aus Welt 1 (nur Deko): Fuchs läuft neben der Figur, Taube fliegt über ihr; (x, y) = Fußpunkt (Fuchs) bzw. Mitte (Taube) in Bildkoordinaten
+  function begleiterZeichnen(c, x, y, art, t) {
+    c.save(); c.translate(x, y);
+    if (art === 'taube') { c.scale(0.85, 0.85); taube(c, { art: 'taube', x: 0, y: 0, richtung: 1, flug: t, tot: 0 }); }
+    else { c.scale(0.62, 0.62); fuchs(c, { art: 'fuchs', x: 0, y: 0, richtung: 1, flug: t, tot: 0 }); }
+    c.restore();
+  }
+  /* Film London Eye: Bühne am Südufer – das große Rad (Mitte 700, Radius 270), Einstiegsplattform links unten (≈ 450), Westminster gegenüber; Kamera je Szene */
+  const EYEF = { cx: 700, r: 270, ich: 330, platz: 446 };
+  const eyeKabinePos = (a) => [EYEF.cx + Math.cos(a) * EYEF.r, BODEN_Y + 80 + Math.sin(a) * EYEF.r];
+  function filmKameraEye(sz, f, ende) {
+    const K = {
+      A: [[[700, 120, 1.5], [540, 200, 1.05]], [[700, 150, 1.3], [460, 250, 1.35]], [[430, 250, 1.55], [440, 245, 1.5]]],
+      B: [[[700, 120, 1.5], [540, 200, 1.05]], [[700, 135, 1.7], [700, 125, 1.85]], [[700, 130, 1.8], [700, 128, 1.9]]],
+    }[ende][sz];
+    const g = sanft(f);
+    return [lerp(K[0][0], K[1][0], g), lerp(K[0][1], K[1][1], g), lerp(K[0][2], K[1][2], g)];
+  }
+  function filmKulisseEye(c, winkel, kabinenInnen, ohneOben) {
+    const g = c.createLinearGradient(0, -400, 0, BODEN_Y); g.addColorStop(0, '#4f9fdc'); g.addColorStop(0.7, '#cfe8f8'); g.addColorStop(1, '#eef6fb');
+    c.fillStyle = g; c.fillRect(-500, -600, 2200, BODEN_Y + 600);
+    c.fillStyle = 'rgba(255,255,255,.9)'; for (const [wx, wy] of [[40, 30], [1000, -20], [1300, 70]]) { c.beginPath(); c.arc(wx, wy, 18, 0, Math.PI * 2); c.arc(wx + 22, wy - 8, 22, 0, Math.PI * 2); c.arc(wx + 46, wy, 16, 0, Math.PI * 2); c.fill(); }
+    parlament(c, 40, 252, 0.6, '#c3ad84'); bigBen(c, 60, 252, 0.62, '#c9b48a');
+    c.fillStyle = '#5f8299'; c.fillRect(-500, 250, 2200, 80); c.fillStyle = '#9b958a'; c.fillRect(-500, 247, 2200, 5);
+    c.fillStyle = '#d2d0ca'; c.fillRect(-500, BODEN_Y, 2200, 10); c.fillStyle = '#a5a49f'; c.fillRect(-500, BODEN_Y + 10, 2200, 300);
+    c.strokeStyle = 'rgba(0,0,0,.14)'; c.lineWidth = 1; for (let k = -10; k < 44; k++) { c.beginPath(); c.moveTo(k * 50, BODEN_Y + 10); c.lineTo(k * 50, BODEN_Y + 300); c.stroke(); }
+    laterne(c, 180, BODEN_Y, 1); laterne(c, 1000, BODEN_Y, 1);
+    c.save(); c.beginPath(); c.rect(-500, -600, 2200, 600 + BODEN_Y); c.clip();
+    riesenrad(c, EYEF.cx, BODEN_Y + 80, EYEF.r, winkel, { gross: 12, ohne: ohneOben ? 12 : 8, speichenAlpha: 0.4, innen: kabinenInnen });
+    c.restore();
+    c.fillStyle = '#5f6b78'; c.fillRect(EYEF.platz - 70, BODEN_Y - 8, 140, 8);   // Einstiegsplattform
+  }
+  function stiefelPaar(c, x, y, s) {   // die festgeklebten Stiefel (bleiben stehen)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = `rgba(255,225,90,.75)`; c.beginPath(); c.ellipse(0, 0, 26, 5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#0d0d0d'; for (const bx of [-7, 7]) { c.beginPath(); c.roundRect(bx - 6, -8, 13, 8, 3); c.fill(); c.fillRect(bx - 5, -22, 10, 15); }
+    c.restore();
+  }
+  function filmZeichnenEye(c) {
+    const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
+    if (sz >= 3) return filmTitel(c, f);
+    const [kx, ky, kz] = filmKameraEye(sz, p, ende);
+    c.save(); c.translate(viewW / 2, H / 2); c.scale(kz, kz); c.translate(-kx, -ky);
+    const oben = Math.PI * 1.5, beg = begleiter ? begleiter.art : 'fuchs';
+    const begleiterUnten = (fx) => begleiterZeichnen(c, fx - 48, beg === 'taube' ? BODEN_Y - 108 + Math.sin(zeit * 2.2) * 6 : BODEN_Y, beg, zeit);
+    if (sz === 0) {   // oberste Kabine: der Sergeant steht stocksteif, Klebstoff an den Stiefeln, „!“; unten warten du und dein Begleiter
+      filmKulisseEye(c, 0, (k) => { k.save(); k.translate(-6, EYE_KABINE_H / 2 - 6); k.scale(0.46, 0.46); k.fillStyle = 'rgba(255,225,90,.75)'; k.beginPath(); k.ellipse(0, 0, 30, 5, 0, 0, Math.PI * 2); k.fill(); gardist(k, 0, 0, { blick: Math.sin(tt * 3) > 0 ? -2 : 2 }); k.restore(); }, false);
+      const [px, py] = eyeKabinePos(oben);
+      if (tt > 1.2) { c.font = 'bold 22px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('!', px + 26, py - 46 - (ruhig() ? 0 : Math.abs(Math.sin(tt * 6)) * 4)); }
+      filmFigur(c, EYEF.ich, 'steh', 'erstaunt'); begleiterUnten(EYEF.ich);
+    } else if (ende === 'A' && sz === 1) {   // das Rad dreht sich wieder: die Kabine mit dem Sergeant fährt langsam herunter bis zur Plattform
+      const a = lerp(oben, Math.PI * 1.14, sanft(tt / (f.dauer - 0.6)));
+      filmKulisseEye(c, a - oben, (k) => { k.save(); k.translate(-6, EYE_KABINE_H / 2 - 6); k.scale(0.46, 0.46); k.fillStyle = 'rgba(255,225,90,.75)'; k.beginPath(); k.ellipse(0, 0, 30, 5, 0, 0, Math.PI * 2); k.fill(); gardist(k, 0, 0, { blick: -2 }); k.restore(); }, false);
+      filmFigur(c, EYEF.ich, 'steh', 'grinsend'); begleiterUnten(EYEF.ich);
+    } else if (ende === 'A' && sz === 2) {   // Kabine unten, Tür auf: er steigt aus den Stiefeln – in Socken! – alle lachen
+      const a = Math.PI * 1.14, [px, py] = eyeKabinePos(a), raus = sanft((tt - 0.8) / 1.6), lacht = tt > 2.6 ? Math.min(1, (tt - 2.6) / 0.3) : 0;
+      filmKulisseEye(c, a - oben, (k) => { k.save(); k.translate(-6, EYE_KABINE_H / 2 - 6); k.scale(0.46, 0.46); stiefelPaar(k, 0, 0, 1); k.restore(); }, false);
+      c.save(); c.translate(px, py); kabineZeichnen(c, 0, 0, EYE_KABINE_W, EYE_KABINE_H, { tuer: true, offen: Math.min(1, tt / 0.8), innen: (k) => { k.save(); k.translate(-6, EYE_KABINE_H / 2 - 6); k.scale(0.46, 0.46); stiefelPaar(k, 0, 0, 1); k.restore(); } }); c.restore();
+      const sx = lerp(px - 10, EYEF.ich + 70, raus);
+      c.save(); c.translate(sx, raus < 1 ? lerp(py + EYE_KABINE_H / 2 - 6, BODEN_Y, raus) : BODEN_Y); c.scale(lerp(0.5, 0.78, raus), lerp(0.5, 0.78, raus)); gardist(c, 0, 0, { socken: true, blick: -2, marsch: raus > 0 && raus < 1 && !ruhig() ? Math.sin(zeit * 9) : 0, lachen: lacht }); c.restore();
+      filmFigur(c, EYEF.ich, 'steh', lacht > 0 ? 'zunge' : 'erstaunt'); begleiterUnten(EYEF.ich);
+      if (lacht > 0) { c.font = 'bold 15px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; for (let k = 0; k < 3; k++) { const q = ruhig() ? 0.5 : ((tt * 0.7 + k * 0.33) % 1); c.globalAlpha = 1 - q; c.fillText('HA!', sx + 20 + k * 10, BODEN_Y - 150 - q * 40); } c.globalAlpha = 1; zuschauer(c, EYEF.ich + 160, BODEN_Y + 34, zeit, lacht); }
+    } else if (ende === 'B' && sz === 1) {   // oben in der Kabine: du ziehst, die Taube zieht, die Stiefel bleiben – der Sergeant nicht!
+      const zieht = Math.min(1, tt / 2.6), frei = tt > 2.8 ? sanft((tt - 2.8) / 0.5) : 0;
+      filmKulisseEye(c, 0, null, true);
+      const [px, py] = eyeKabinePos(oben);
+      c.save(); c.translate(px, py);
+      kabineZeichnen(c, 0, 0, EYE_KABINE_W, EYE_KABINE_H, { innen: (k) => {
+        k.save(); k.translate(-6, EYE_KABINE_H / 2 - 6); k.scale(0.46, 0.46);
+        stiefelPaar(k, 0, 0, 1);
+        k.save(); k.translate(frei > 0 ? -40 * frei : 0, frei > 0 ? -34 * Math.sin(frei * Math.PI) : 0); gardist(k, 0, 0, { socken: frei > 0, blick: -2, neigung: frei > 0 ? -0.35 * (1 - frei) : -0.22 * zieht * (ruhig() ? 1 : 1 + 0.15 * Math.sin(zeit * 12)), alpha: 1 }); k.restore();
+        k.save(); k.translate(-62 - (frei > 0 ? 6 : 10 * zieht * (ruhig() ? 1 : 1 + 0.2 * Math.sin(zeit * 12))), 0); k.rotate(frei > 0 ? 0 : -0.25 * zieht); zeichneFigur(k, 0, 0, 80, skin, 'steh', zeit, frei > 0 ? 'zunge' : 'erstaunt'); k.restore();
+        begleiterZeichnen(k, -30, -62 + Math.sin(zeit * 3) * 5, 'taube', zeit);
+        k.restore(); } });
+      c.restore();
+    } else {   // Ende B Szene 3: „Thank you“, flüstert er – in Socken, mit einem kleinen Lächeln; „Don't tell anyone“
+      filmKulisseEye(c, 0, null, true);
+      const [px, py] = eyeKabinePos(oben), fl = tt > 1.0;
+      c.save(); c.translate(px, py);
+      kabineZeichnen(c, 0, 0, EYE_KABINE_W, EYE_KABINE_H, { innen: (k) => {
+        k.save(); k.translate(-6, EYE_KABINE_H / 2 - 6); k.scale(0.46, 0.46);
+        stiefelPaar(k, 30, 0, 1);
+        k.save(); k.translate(-28, 0); gardist(k, 0, 0, { socken: true, blick: fl && Math.sin(tt * 2) > 0 ? 2 : -2, laecheln: fl ? Math.min(1, (tt - 1) / 0.4) : 0 }); k.restore();
+        k.save(); k.translate(-84, 0); k.scale(-1, 1); zeichneFigur(k, 0, 0, 80, skin, 'steh', zeit, 'grinsend'); k.restore();
+        begleiterZeichnen(k, -84, -62 + Math.sin(zeit * 3) * 5, 'taube', zeit);
+        if (fl) { k.font = 'bold 26px system-ui, sans-serif'; k.textAlign = 'center'; k.textBaseline = 'middle'; k.fillStyle = '#18213a'; k.fillText('🤫', -56, -48); }
+        k.restore(); } });
+      c.restore();
+    }
+    c.restore();
+    filmUntertitel(c, f);
   }
   function falkeZeichnen(c, x, y) {   // Cameo Felix: Falke über der Figur, Flügel schlagen, Krallen halten die Figur
     c.save(); c.translate(x, y);
@@ -3841,6 +4184,7 @@
   function filmZeichnen(c) {
     if (film.welt === 'ny') return filmZeichnenNY(c);   // Story New York (Klasse 9, Kapitel 1)
     if (film.welt === 'route66') return filmZeichnenR66(c);   // Story Route 66 (Klasse 9, Kapitel 2)
+    if (film.welt === 'londoneye') return filmZeichnenEye(c);   // Story London Eye (Klasse 6, Kapitel 2)
     const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
     if (sz >= 3) return filmTitel(c, f);
     const [kx, ky, kz] = filmKamera(sz, p, ende);
@@ -3913,6 +4257,11 @@
       if (f.ende === 'X') { c.save(); c.translate(viewW / 2 + 150, 0); c.scale(-0.8, 0.8); zeichneFigur(c, 0, 375, 70, NY_FIGUREN.frau, 'steh', zeit, 'grinsend'); c.restore(); kompass(c, viewW / 2 + 136, 268, zeit); }
       else altesAuto(c, viewW / 2 + 110, 300, 0.6, zeit * 300, null);
       c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'X' ? '🗣️ → 🏜️ Grand Canyon · Bring the boy' : '⏳ → 🏜️ Grand Canyon', viewW / 2, 340);
+    } else if (f.welt === 'londoneye') {   // London Eye: du, der Sergeant in Socken, dein Begleiter (Ende A: Knopf · Ende B: Rad)
+      zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, 'grinsend');
+      c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, { socken: true, laecheln: f.ende === 'B' ? 1 : 0, lachen: f.ende === 'A' ? 0.6 : 0, blick: -2 }); c.restore();
+      if (begleiter) begleiterZeichnen(c, viewW / 2 - 118, begleiter.art === 'taube' ? 230 : 300, begleiter.art, zeit);
+      c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'A' ? '🔘 🧦' : '🎡 🤫', viewW / 2, 340);
     } else {
       zeichneFigur(c, viewW / 2 - 50, 300, 70, f.ende === 'B' && skin.hut === 'cap' ? Object.assign({}, skin, { hut: 'keiner' }) : skin, 'steh', zeit, 'grinsend');
       c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, { hut: f.ende === 'B' ? 'cap' : 'fell', laecheln: f.ende === 'A' ? 1 : 0, lachen: f.ende === 'B' ? 0.6 : 0, blick: -2 }); c.restore();
@@ -3961,9 +4310,10 @@
   function dekoZeichnen(c) {   // zwei Durchgänge: erst die Hauswände (Feuertreppe, Diner, Eistür), dann alles davor (U-Bahn-Eingang); das Motel-Schild kommt in dekoVorneZeichnen (über dem Tor ✦)
     for (let pass = 0; pass < 2; pass++) for (const d of level.deko) {
       if (d.art === 'motel') continue;
-      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer') !== (pass === 0)) continue;
-      const x = d.x - kamera; if (x < -320 || x > viewW + 60) continue;
+      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum') !== (pass === 0)) continue;
+      const x = d.x - kamera; if (x < -320 - (d.w || 0) || x > viewW + 60) continue;
       if (d.art === 'feuertreppe') feuertreppeDeko(c, x); else if (d.art === 'subway') subwayDeko(c, x); else if (d.art === 'diner') dinerDeko(c, x); else if (d.art === 'eistuer') eistuerDeko(c, x);
+      else if (d.art === 'maschinenraum') maschinenraumDeko(c, x, d.w); else if (d.art === 'knopf') knopfDeko(c, x);
     }
   }
   function dekoVorneZeichnen(c) { for (const d of level.deko) { if (d.art !== 'motel') continue; const x = d.x - kamera; if (x < -120 || x > viewW + 120) continue; motelSchild(c, x); } }
@@ -4476,6 +4826,7 @@
       const x = p.x - kamera; if (x > viewW + 100 || x + p.w < -100) continue;
       if (p.art === 'stein' && W.stein) { W.stein(c, x, p.y, p.w); continue; }   // Trittstein im Bach (Welt 4)
       if (p.art === 'gitter') { gitterPlattform(c, x, p.y, p.w); continue; }       // Podest der Feuertreppe (Story New York)
+      if (p.art === 'kabine') { kabinePlattform(c, x, p.y, p.w); continue; }       // schwebende Kabine des London Eye (Welt 2 Klasse 6)
       c.fillStyle = W.farben.plattform; c.beginPath(); c.roundRect(x, p.y, p.w, 14, 4); c.fill();
       c.fillStyle = W.farben.plattformOben; c.beginPath(); c.roundRect(x - 2, p.y - 3, p.w + 4, 7, 3); c.fill();
     }
@@ -4526,6 +4877,8 @@
       W.boss(c, level.bossX - kamera, BODEN_Y);
       if (bossSpruch) sprechblase(c, level.bossX - kamera - 20, BODEN_Y - W.sprechblaseHoehe, bossSpruch.text);
     }
+    if (dunkel > 0) dunkelZeichnen(c, dunkel);   // London Eye: Maschinenraum – dunkel, nur die Lampen leuchten
+    if (begleiter && tot <= 0) begleiterZeichnen(c, begleiter.x - kamera, begleiter.y, begleiter.art, begleiter.flug);   // Begleiter aus Welt 1 (Deko)
     if (nebelDichte > 0) {   // Welt 5: Nebelschleier über allem bisher Gezeichneten; die Diamanten glühen durch den Nebel, die Figur bleibt sichtbar
       nebelZeichnen(c, nebelDichte);
       for (const d of diamanten) {
@@ -4752,7 +5105,7 @@
     if (film) { filmZeichnen(ctx); ctx.restore(); return; }   // Story: Film am Ende / Story Library
     if (nurFilm) { ctx.fillStyle = '#18213a'; ctx.fillRect(0, 0, viewW, H); ctx.restore(); return; }
     if (zoom !== 1) {   // Kamera fährt heran und herunter: Zoom um die Figur
-      const fx = Math.min(viewW * 0.6, spieler.x - kamera), fy = spieler.y - 30;
+      const fx = Math.min(viewW * 0.6, spieler.x - kamera), fy = spieler.y - 30 - (W.bossOben ? sanft(kameraHoch) * (spieler.y - 30 - W.bossOben) : 0);   // London Eye: die Kamera fährt hoch zur obersten Kabine
       ctx.translate(fx, fy); ctx.scale(zoom, zoom); ctx.translate(-fx, -fy);
     }
     hintergrund(ctx);
@@ -4821,6 +5174,12 @@
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WESTMINSTER, musterStory: MUSTER_WESTMINSTER_STORY, storyStruktur: STRUKTUR_LONDON, sprechblaseHoehe: 220,
       kulisse: hintergrundLondon, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => bigBen(c, x, y, 0.075, '#1d3f8f'),
       boss: (c, x, y) => { schilderhaus(c, x, y); sergeantBearskin(c, x, y); }, tuer: horseGuardsTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
+    // Klasse 6 „London Run“ Welt 2 London Eye (31.10.): Kapitel 2 „The Wheel That Stopped“ – Boss Sergeant Bearskin in der obersten Kabine (Kamera fährt hoch: bossOben), Tür = Kabinentür; Möwe neu
+    londoneye: { id: 'londoneye', name: 'London Eye', staat: 'London', ziel: 'London Eye', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is stuck!', richtig: "Correct – now get me out of here!", falsch: "Not this time, soldier!", start: "Let's find the London Eye!", ende: "You found the London Eye!",
+      sturz: 'Splash! 🌊',
+      gegnerarten: ['taube', 'fuchs', 'eichhoernchen', 'moewe'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_LONDONEYE_STORY, musterStory: MUSTER_LONDONEYE_STORY, storyStruktur: STRUKTUR_LONDONEYE, sprechblaseHoehe: 245, bossOben: BODEN_Y - 130,
+      kulisse: hintergrundLondonEye, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => riesenrad(c, x, y - 2, 11, 0, { bodenY: y + 12, farbe: '#1d3f8f', speichenAlpha: 0.8, kabinen: false }),
+      boss: eyeBoss, tuer: kabinenTuer, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner, richtig: w.richtig, falsch: w.falsch, start: w.start, ende: w.ende }));
 
@@ -4876,6 +5235,7 @@
     strukturSetzen(storyOpt && (storyOpt.struktur || W.storyStruktur));
     const enden = Object.keys(struktur.film || {}), ende = enden.includes(opt.ende) ? opt.ende : enden[0];
     story = { strang: ende, auto: false, wahl: endeAbschnitt ? { [endeAbschnitt.ende]: ende } : {}, autoWahl: {}, gesammelt: [], schlange: [], aktiv: null, pause: 0, gesprochen: 0, station: null, stationen: 0, filmFertig: null };
+    realm = null; radWinkel = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 0, y: 0, flug: 0 } : null;   // London Eye: Begleiter auch im Film der Library
     realm = null;
     canvas = el("canvas", "runner-canvas"); canvas.setAttribute("aria-label", opt.titel || "Story Library");
     ctx = canvas.getContext("2d"); wrapper.append(canvas);
@@ -4930,7 +5290,8 @@
         wind: wind ? { phase: wind.phase, richtung: wind.richtung, t: Math.round(wind.t * 100) / 100 } : null, sprungFaktor: wind && wind.phase === 'schub' ? WIND_SPRUNG : 1, brummt, baeche: level.baeche.map((b) => ({ x: b.x, w: b.w })),
         nebel: level.nebel.map((n) => ({ x: n.x, w: n.w })), nebelDichte: Math.round(nebelDichte * 100) / 100, gondeln: gondeln.map((g) => ({ x: g.x, w: g.w, gx: Math.round(g.gx), vx: Math.round(g.vx), y: GONDEL_Y })), aufGondel,
         surfs: surfs.map((s) => ({ x: s.x, w: s.w, aktiv: s.aktiv })), surft: surft > 0, geklaut, tutet,
-        trommelt, kisten: level.kisten.filter((k) => k.art).map((k) => ({ x: k.x, y: k.y, art: k.art })), luecken: level.boden.length - 1,
+        trommelt, dunkel: Math.round(dunkel * 100) / 100, kabinen: level.plattformen.filter((p) => p.art === 'kabine').map((p) => ({ x: p.x, y: p.y, w: p.w })), maschinenraum: (level.deko || []).filter((d) => d.art === 'maschinenraum').map((d) => ({ x: d.x, w: d.w })),
+        kisten: level.kisten.filter((k) => k.art).map((k) => ({ x: k.x, y: k.y, art: k.art })), luecken: level.boden.length - 1,
         cameo: cameo ? { id: cameo.held && cameo.held.id, t: Math.round(cameo.t * 100) / 100, satz: cameo.satz } : null, cameosGezeigt, cameoEffekt,
         cameoPlan: cameoPlan.map((p) => ({ x: p.x, id: p.held && p.held.id, erledigt: p.erledigt })), cameoBilder: Object.values(cameoBilder).filter((i) => i.complete && i.naturalWidth > 0).length,
         effekte: { schild: Math.round(schild * 100) / 100, sprungBonus: Math.round(sprungBonus * 100) / 100, durchlaessig: Math.round(durchlaessig * 100) / 100, eis: Math.round(eisZeit * 100) / 100, traegt: Math.round(traegt * 100) / 100, traegtAktiv, eule: eule ? eule.x : null },
@@ -4963,7 +5324,8 @@
         kristalle: kristalle.map((k) => ({ nr: k.nr, strang: k.strang, key: kristallKey(k), x: k.x, y: k.y, weg: k.weg, sichtbar: kristallSichtbar(k) })),
         diamanten: diaGesammelt, diamantenMax: diaMax(), parkbusse: level.parkbusse.map((b) => b.x),
         wahl: Object.assign({}, story.wahl), autoWahl: Object.assign({}, story.autoWahl), max: struktur.anzahl, deko: (level.deko || []).map((d) => d.art),
-        varianten: Object.assign({}, variantenWahl), gegenstandName: realmGegenstand().name,   // Kapitel 2: gewählte Variante je Quelle (z. B. { 'ny.g2': 'X' }), Sammelstück des Realm
+        varianten: Object.assign({}, variantenWahl), gegenstandName: realmGegenstand().name,
+        begleiter: begleiter ? { art: begleiter.art, x: Math.round(begleiter.x), y: Math.round(begleiter.y) } : null, dunkel: Math.round(dunkel * 100) / 100, radWinkel: Math.round(radWinkel * 1000) / 1000, kameraHoch: Math.round(kameraHoch * 100) / 100,   // London Eye   // Kapitel 2: gewählte Variante je Quelle (z. B. { 'ny.g2': 'X' }), Sammelstück des Realm
         realm: realm ? { aktiv: realm.aktiv, gefunden: realm.gefunden, gesammelt: realm.gesammelt.slice(), gegenstand: realm.gegenstand, besuche: realm.besuche, t: Math.round(realm.t * 100) / 100,
           tore: realm.tore.map((t) => ({ x: t.x, y: t.y, benutzt: t.benutzt })), rueckX: imRealm() ? level.rueckX : null, welt: W.id, dinge: realm.dinge.map((d) => ({ x: d.x, y: d.y, weg: d.weg })),
           drache: realm.drache.aktiv, gegner: imRealm() ? gegner.map((g) => g.art) : [] } : null,

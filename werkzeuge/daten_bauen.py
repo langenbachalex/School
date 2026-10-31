@@ -212,6 +212,8 @@ def spieldaten():
         "shop": SHOP,
         # London Run: Aufnahmen je Welt (Boss-Banner/-Sprüche, Levelstart/-ende, Cameo-Sätze; werkzeuge/runner_audio.py), fehlende = Geräte-Stimme
         "runner_audio": runner_audio.daten(6),
+        # Story-Aufnahmen (Erzähler Mr. Alex): alle Dateien in app/audio/story/ – die App ordnet sie je Kapitel zu (STORY.<welt>.audio, Präfix = Welt-Id)
+        "story_audio": sorted(f"audio/story/{f}" for f in os.listdir(os.path.join(BASIS, "app", "audio", "story")) if f.endswith(".mp3")) if os.path.isdir(os.path.join(BASIS, "app", "audio", "story")) else [],
     }
 
 

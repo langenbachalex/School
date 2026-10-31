@@ -12,11 +12,11 @@ Die Sprache der Geschichten **wächst mit dem Unterricht**. Jedes neue Kapitel b
 |---|---|---|---|
 | Station 2, Unit 3 | he/she/it + s, simple present | „He never moves. He never smiles.“ | London 1 |
 | Station 3 | Uhrzeiten, a.m./p.m. | „At five o'clock, the King's horses come.“ | London 1 |
-| Station 8 „Neu“ (seit 29.10.) | **Häufigkeit: never · rarely · sometimes · often · always** | „He always follows you.“ „I rarely follow rules.“ | London 2 |
-| Station 8 „Neu“ | **Sports and hobbies, I like … but I don't like …** | „I like marching, but I don't like heights!“ | London 2 |
+| Station 8 „Neu“ (seit 29.10.) | **Häufigkeit: never · rarely · sometimes · often · always** | „He always follows you.“ „I rarely follow rules.“ „I never say that.“ | London 2 (gebaut 31.10.) |
+| Station 8 „Neu“ | **Sports and hobbies, I like … but I don't like …** | „I like marching, but I don't like heights!“ | London 2 (gebaut 31.10.) |
 | Station 8 „Neu“ | **School clubs** (drama club, art club …) | geplant für London 3 (Raben-Club?) | London 3 |
 | Unit 3 Topic 1–2 | Tagesablauf, Wege zur Schule (by bus, bike), journey, short/long way | geplant | London 3–4 |
-| überall | Adjektive (big, red, dark, noisy, cold, strong, worried …) | London 2 | laufend |
+| überall | Adjektive (big, red, dark, noisy, cold, strong, worried, top) | „It's dark and noisy.“ „The wind is cold and strong.“ | London 1–2 (gebaut), laufend |
 
 ## Stand Klasse 9 (Road Trip USA)
 | Woher | Sprache | Beispiele | Kapitel |

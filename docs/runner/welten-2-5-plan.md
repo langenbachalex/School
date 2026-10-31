@@ -32,3 +32,16 @@ Je Welt ≈ ½–1 Tag (Kulisse, 3 Gegner, Boss mit Animation, Level-Muster mit 
 2. Bosse und Namen (Big Rig Bob, Sheriff Rattlesnake, Grizzly Grandpa, Captain Fog) – passt der Humor?
 3. Freischaltung über Silber in der Vorwelt, oder alle Welten sofort offen?
 4. Besonderheiten zu hart für Klasse 9 (Nebel, Möwe klaut Diamant)?
+
+## London Run (Klasse 6) – Welten 1 bis 5 (Stand 31.10.2026)
+Gleiche Engine, gleiche Regeln (Freischaltung über Silber in der Vorwelt, Ticket 150, Trophäe je Welt, Titel Rookie Runner → Superhero of London). Dazu der fortlaufende Story-Modus mit Sergeant Bearskin (`story-london-0n.md`, `story-sprache.md`): jede Welt hat eine Entscheidung, die gespeichert wird und weiterwirkt.
+
+| Welt | Landmark | Kulisse | Hindernisse / Besonderheit | Gegner | Boss | Story-Kapitel | Trophäe |
+|---|---|---|---|---|---|---|---|
+| 1 ✓ | Westminster · Big Ben | Themse, Big Ben + Parlament, Niesel → Regenbogen | Doppeldecker/Black Cabs, Pfützen, Telefonzellen/Postkästen, Themse-Lücken | Taube, Stadtfuchs, Eichhörnchen | Sergeant Bearskin am Tor der Horse Guards | „The Guard Who Never Moved“ (Fuchs/Taube → `wahl.g1`) | Big Ben Finder 🔔 |
+| 2 ✓ | London Eye (South Bank) | das große Rad steht still, County Hall, Souvenirstände, Straßenkünstler | wie 1 + **Kabinen-Plattformen**, **Maschinenraum** (dunkel, Lampen, roter Knopf) | + **Möwe** (klaut einen Diamanten) | Sergeant Bearskin in der obersten Kabine (Kamera fährt hoch), Tür = Kabinentür | „The Wheel That Stopped“ (Begleiter aus Welt 1; Maschinenraum/aufs Rad → `wahl.g1`) | Eye Spy 👁️ |
+| 3 | Tower Bridge | Brücke, die sich öffnet | Brückenklappen (Timing) | geplant | Sergeant Bearskin (Raben?) | „Up Goes the Bridge“ (Raben oder Hut retten; liest `story.londoneye.wahl.g1`) | geplant |
+| 4 | The Tube | U-Bahn | Züge, Rolltreppen | geplant | geplant | „Mind the Gap“ (zurückgehen oder weiterfahren) | geplant |
+| 5 | Wembley | Stadion | geplant | geplant | geplant | „The Big Match“ (drei Enden je nach Summe der Entscheidungen) | geplant |
+
+**Gebaut:** Welt 1 (31.10., `konzept-entwurf.md` Abschnitt 14/15), Welt 2 (31.10., Abschnitt 18, Test `runner6_welt2.js`). Schwierigkeit: Welt 2 etwas schwerer als Welt 1 (Möwe, Kabinen-Sprünge, Dunkelheit). Audio: Vormerkliste in `docs/ideenspeicher.md`.

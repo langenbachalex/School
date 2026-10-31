@@ -1,5 +1,7 @@
 # London Run – Kapitel 2 „London Eye“ · „The Wheel That Stopped“ · Text freigegeben 31.10.2026 (Mr. Alex), Bau + Vertonung freigegeben
 
+**Status: gebaut (31.10.2026).** Welt `londoneye` in der Engine `app/klasse9/runner.js` (`MUSTER_LONDONEYE_STORY`, `STRUKTUR_LONDONEYE` mit Variante `westminster.g1`, Kabinen, Maschinenraum, Möwe, Boss in der obersten Kabine, Kabinentür, Begleiter, Film; Kopie `app/runner.js`), App `app/app.js` (`STORY.londoneye` mit diesem Text, `storyOption`, Story Library nach Kapiteln mit Pfad-Kette, Trophäe „Eye Spy“ 👁️). Details `docs/runner/konzept-entwurf.md` Abschnitt 18. Audio: bis zur Vertonung Geräte-Stimme (`werkzeuge/story_audio.py --zaehlen` → 21 Stücke, 1.115 Zeichen; Boss-Dateien `werkzeuge/runner_audio.py` → 5 Dateien, 140 Zeichen). Test `runner6_welt2.js` (Scratchpad).
+
 **Sprache in diesem Kapitel (Regel `story-sprache.md`):** NEU aus Station 8 „Neu“: Häufigkeit never · rarely · often · always („He always follows you“, „I rarely follow rules“, „I never say that“), „I like … but I don't like …“ („I like marching, but I don't like heights!“), Adjektive (big, red, dark, noisy, cold, strong, worried, top). WIEDERHOLT: he/she/it + s, simple present, kurze Sätze.
 
 ## Fortlaufende Geschichte Klasse 6 (Entscheidung Mr. Alex, 31.10.)
@@ -51,4 +53,4 @@ Story Library zeigt den eigenen Weg als Kette.
 - B11. You pull. The pigeon pulls. The boots stay. The Sergeant doesn't!
 - B12. "Thank you," he whispers. "I never say that. Don't tell anyone."
 
-**Stimme:** Erzähler Mr. Alex (auch Fuchs, Taube, Sergeant). Vertonung ≈ 1.050 Zeichen.
+**Stimme:** Erzähler Mr. Alex (auch Fuchs, Taube, Sergeant). **Vertonung 31.10.:** 21 Dateien `app/audio/story/londoneye_*.mp3` + Boss/Start/Ende `app/audio/runner/londoneye_*.mp3`.

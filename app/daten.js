@@ -7036,8 +7036,71 @@ window.DATEN = {
      "penny": "audio/runner/cameo_penny.mp3",
      "tessa": "audio/runner/cameo_tessa.mp3"
     }
+   },
+   "londoneye": {
+    "boss": {
+     "banner": "audio/runner/londoneye_banner.mp3",
+     "richtig": "audio/runner/londoneye_richtig.mp3",
+     "falsch": "audio/runner/londoneye_falsch.mp3"
+    },
+    "start": "audio/runner/londoneye_start.mp3",
+    "ende": "audio/runner/londoneye_ende.mp3",
+    "cameo": {
+     "leo": "audio/runner/cameo_leo.mp3",
+     "kenji": "audio/runner/cameo_kenji.mp3",
+     "felix": "audio/runner/cameo_felix.mp3",
+     "max": "audio/runner/cameo_max.mp3",
+     "camilla": "audio/runner/cameo_camilla.mp3",
+     "ellie": "audio/runner/cameo_ellie.mp3",
+     "olivia": "audio/runner/cameo_olivia.mp3",
+     "zara": "audio/runner/cameo_zara.mp3",
+     "penny": "audio/runner/cameo_penny.mp3",
+     "tessa": "audio/runner/cameo_tessa.mp3"
+    }
    }
-  }
+  },
+  "story_audio": [
+   "audio/story/londoneye_10.mp3",
+   "audio/story/londoneye_1A.mp3",
+   "audio/story/londoneye_1B.mp3",
+   "audio/story/londoneye_2A.mp3",
+   "audio/story/londoneye_2B.mp3",
+   "audio/story/londoneye_3.mp3",
+   "audio/story/londoneye_4.mp3",
+   "audio/story/londoneye_9.mp3",
+   "audio/story/londoneye_A11.mp3",
+   "audio/story/londoneye_A12.mp3",
+   "audio/story/londoneye_A5.mp3",
+   "audio/story/londoneye_A6.mp3",
+   "audio/story/londoneye_A7.mp3",
+   "audio/story/londoneye_A8.mp3",
+   "audio/story/londoneye_B11.mp3",
+   "audio/story/londoneye_B12.mp3",
+   "audio/story/londoneye_B5.mp3",
+   "audio/story/londoneye_B6.mp3",
+   "audio/story/londoneye_B7.mp3",
+   "audio/story/londoneye_B8.mp3",
+   "audio/story/londoneye_sofar.mp3",
+   "audio/story/westminster_1.mp3",
+   "audio/story/westminster_10.mp3",
+   "audio/story/westminster_2.mp3",
+   "audio/story/westminster_3.mp3",
+   "audio/story/westminster_4.mp3",
+   "audio/story/westminster_9.mp3",
+   "audio/story/westminster_A11.mp3",
+   "audio/story/westminster_A12.mp3",
+   "audio/story/westminster_A5.mp3",
+   "audio/story/westminster_A6.mp3",
+   "audio/story/westminster_A7.mp3",
+   "audio/story/westminster_A8.mp3",
+   "audio/story/westminster_B11.mp3",
+   "audio/story/westminster_B12.mp3",
+   "audio/story/westminster_B5.mp3",
+   "audio/story/westminster_B6.mp3",
+   "audio/story/westminster_B7.mp3",
+   "audio/story/westminster_B8.mp3",
+   "audio/story/westminster_sofar.mp3"
+  ]
  },
  "hausaufgaben": [
   {

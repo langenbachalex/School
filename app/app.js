@@ -2165,10 +2165,10 @@
      Stand in stand.spiel.runner = { level: { westminster: "gold"|"silber" }, gespielt, geschafft, titel, tickets }, Figur in stand.spiel.skin – beides im Siegel.
      Wörter: 12 aus dem gewählten Abschnitt von Station 7 (eigene zuerst, aufgefüllt aus den anderen Abschnitten), gesprochen mit den Vokabel-Aufnahmen.
      Cameos: 2–3 geheime Superhelden je Lauf, bevorzugt die schon gesammelten (sp.helden). Boss-Banner, Boss-Sprüche, Levelstart/-ende und Cameo-Sätze als Aufnahmen (31.10., D.spiel.runner_audio), fehlende mit der Geräte-Stimme.
-     Welt 1 Westminster · Big Ben (31.10.); London Eye, Tower Bridge, The Tube, Wembley kommen später (🔒 bald). */
+     Welt 1 Westminster · Big Ben (31.10.), Welt 2 London Eye (31.10., Kapitel 2 „The Wheel That Stopped“, offen ab Silber in Welt 1); Tower Bridge, The Tube, Wembley kommen später (🔒 bald). */
   const RUNNER = { preis: 150, skinPreis: 45, skinPreisTeuer: 90, woerter: 12, titel: ["Rookie Runner", "Tube Jumper", "Bus Hopper", "London Hero", "Superhero of London"], ab: [1, 3, 6, 10, 15],
-    welten: [{ id: "westminster", name: "Westminster", staat: "London", ziel: "Big Ben", trophaee: "Big Ben Finder", symbol: "🔔", boss: "Sergeant Bearskin" },
-      { id: "eye", name: "London Eye", staat: "London", ziel: "London Eye", trophaee: "London Eye", symbol: "🎡", bald: true },
+    welten: [{ id: "westminster", name: "Westminster", staat: "London", ziel: "Big Ben", trophaee: "Big Ben Finder", symbol: "🔔", boss: "Sergeant Bearskin", ort: "am Tor der Horse Guards", tuer: "das Tor der Horse Guards" },
+      { id: "londoneye", name: "London Eye", staat: "London", ziel: "the London Eye", trophaee: "Eye Spy", symbol: "🎡", boss: "Sergeant Bearskin", ort: "in der obersten Kabine des London Eye", tuer: "die Kabinentür" },
       { id: "bridge", name: "Tower Bridge", staat: "London", ziel: "Tower Bridge", trophaee: "Tower Bridge", symbol: "🌉", bald: true },
       { id: "tube", name: "The Tube", staat: "London", ziel: "The Tube", trophaee: "The Tube", symbol: "🚇", bald: true },
       { id: "wembley", name: "Wembley", staat: "London", ziel: "Wembley", trophaee: "Wembley", symbol: "🏟️", bald: true }] };
@@ -2186,7 +2186,47 @@
       B11: "The babies need the hat. You give him your cap.", B12: "Sergeant Bearskin laughs! Everybody sees it!" },
       // Erzähler Mr. Alex (vertont 31.10., werkzeuge/story_audio.py): je Stück audio/story/westminster_<key>.mp3, dazu „The story so far.“
       audio: Object.fromEntries(["1", "2", "3", "4", "A5", "A6", "A7", "A8", "B5", "B6", "B7", "B8", "9", "10", "A11", "A12", "B11", "B12", "sofar"].map((k) => [k, `audio/story/westminster_${k}.mp3`])) },
+    // Kapitel 2 London Eye „The Wheel That Stopped“ (freigegeben 31.10., Text wörtlich aus docs/runner/story-london-02.md): Stücke 1–2 als Variante nach der Wahl aus Welt 1 (story.westminster.wahl.g1: A = Fuchs → 1A/2A,
+    // B = Taube → 1B/2B, keine Wahl → A; die App übergibt der Engine story.varianten = { "westminster.g1": "A" | "B" } und story.begleiter = "fuchs" | "taube", s. storyOption). Gabelung dieses Kapitels:
+    // A unten (Maschinenraum) / B oben (Kabinen) → story.londoneye.wahl.g1 (für Welt 3). Aufnahmen audio/story/londoneye_<key>.mp3 (+ _sofar; werkzeuge/story_audio.py) – nur Dateien, die der Bau findet (SP.story_audio), sonst Geräte-Stimme.
+    londoneye: { id: "londoneye", titel: "The Wheel That Stopped", kapitel: 2, welt: "London Eye", enden: { A: { symbol: "🔘", name: "The machine room" }, B: { symbol: "🎡", name: "Up the wheel" } }, teile: {
+      "1A": "The fox is your friend now. He always follows you.", "2A": "Today he sniffs the air. \"Something smells wrong,\" he says.",
+      "1B": "The pigeon is your friend now. She often sits on your cap.", "2B": "Today she looks worried. \"Something is wrong,\" she says.",
+      3: "The big wheel at the London Eye never stops. But today it doesn't turn.", 4: "Sergeant Bearskin is up there, in the top cabin. Alone.",
+      A5: "You run down to the machine room. It's dark and noisy.", A6: "A big red button says: DO NOT PRESS.", A7: "The fox grins. \"I rarely follow rules. Press it!\"", A8: "You press it. The wheel moves. Slowly. The wrong way!",
+      B5: "You climb up the wheel. Don't look down!", B6: "Cabin after cabin. The wind is cold and strong.", B7: "The pigeon flies ahead. \"This way! Hurry!\"", B8: "In the top cabin, the Sergeant stands still. As always.",
+      9: "\"I like marching,\" the Sergeant says. \"But I don't like heights!\"", 10: "His boots are stuck. Somebody put glue on the floor. Who does that?",
+      A11: "The wheel turns again. The Sergeant comes down slowly.", A12: "He steps out of his boots. In his socks! Everybody laughs.",
+      B11: "You pull. The pigeon pulls. The boots stay. The Sergeant doesn't!", B12: "\"Thank you,\" he whispers. \"I never say that. Don't tell anyone.\"" },
+      audio: null },   // wird unten aus SP.story_audio gefüllt (storyAudioDateien)
   };
+  const STORY_KEYS_EYE = ["1A", "2A", "1B", "2B", "3", "4", "A5", "A6", "A7", "A8", "B5", "B6", "B7", "B8", "9", "10", "A11", "A12", "B11", "B12", "sofar"];
+  // Aufnahmen je Kapitel: ein Stück = eine Datei (<praefix>_<key>.mp3) oder mehrere Teile (<praefix>_<key>_1.mp3, _2 …); nur Dateien, die der Bau findet (SP.story_audio)
+  const storyAudioDateien = (praefix, keys) => Object.fromEntries(keys.map((k) => {
+    const alle = SP.story_audio || [], eins = `audio/story/${praefix}_${k}.mp3`;
+    if (alle.includes(eins)) return [k, eins];
+    const teile = []; for (let i = 1; alle.includes(`audio/story/${praefix}_${k}_${i}.mp3`); i++) teile.push(`audio/story/${praefix}_${k}_${i}.mp3`);
+    return teile.length ? [k, teile] : null;
+  }).filter(Boolean));
+  STORY.londoneye.audio = storyAudioDateien("londoneye", STORY_KEYS_EYE);
+  const STORY_KAPITEL = ["westminster", "londoneye"];   // gebaute Kapitel in Reihenfolge (Story Library, Dein Weg)
+  const storyEnden = (welt) => (STORY[welt] && STORY[welt].enden) || STORY_ENDEN;   // Enden je Kapitel (Welt 1: Fuchs/Taube)
+  // Story-Option für die Engine: Text + Variante und Begleiter aus Welt 1 (Kapitel 2 liest story.westminster.wahl.g1: B = Taube, sonst Fuchs – auch wenn Welt 1 nie geschafft wurde)
+  function storyOption(welt) {
+    const S = STORY[welt]; if (!S) return null;
+    const w1 = storyStand("westminster").wahl.g1 === "B" ? "B" : "A";
+    return Object.assign({}, S, { varianten: { "westminster.g1": w1 }, begleiter: w1 === "B" ? "taube" : "fuchs" });
+  }
+  // 🧭 Dein Weg: Kette der gespeicherten Entscheidungen bis zu einem Kapitel („🦊 The fox → 🔘 machine room“); aktuell = Wahl des laufenden Laufs für das letzte Kapitel
+  function storyPfad(bisWelt, aktuell) {
+    const teile = [];
+    for (const welt of STORY_KAPITEL) {
+      const g1 = welt === bisWelt && aktuell ? aktuell.g1 : storyStand(welt).wahl.g1, E = g1 && storyEnden(welt)[g1];
+      if (E) teile.push(`${E.symbol} ${E.name}`);
+      if (welt === bisWelt) break;
+    }
+    return teile.join(" → ");
+  }
   const STORY_PUNKTE = { diamant: 1, ganz: 10, max: 30 };
   const STORY_ENDEN = { A: { symbol: "🦊", name: "The fox" }, B: { symbol: "🕊️", name: "The pigeon" } };
   function storyStand(welt) {
@@ -2196,6 +2236,7 @@
     if (!Array.isArray(w.enden)) w.enden = [];
     if (!Array.isArray(w.voll)) w.voll = [];
     if (!w.beste || typeof w.beste !== "object") w.beste = {};
+    if (!w.wahl || typeof w.wahl !== "object") w.wahl = {};
     return w;
   }
   // Erzähler: Aufnahme(n), falls vorhanden, sonst Geräte-Stimme (britisch, männlich); im Lauf hinter einer laufenden Wiedergabe, an Station/Film sofort
@@ -2294,7 +2335,7 @@
           el("div", {},
             el("h2", { lang: "en" }, `Level ${RUNNER.welten.indexOf(W) + 1} · ${W.name}`),
             el("p", { class: "runner-ziel", lang: "en" }, `Find ${W.ziel}!`),
-            el("p", { class: "klein" }, `Tippen oder Leertaste = springen, länger halten = höher (über Doppeldecker!). Black Cabs und rote Busse kommen dir entgegen – drüberspringen! In Pfützen rutschst du kurz. Telefonzellen und Postkästen sind Stufen, in die Themse fällst du hinein. Tauben, Füchse und Eichhörnchen kannst du plattdrücken. Manchmal helfen dir die geheimen Superhelden. ${STORY[W.id] ? `Die violetten ♪-Kristalle erzählen die Geschichte „${STORY[W.id].titel}“ – oben auf dem Bus oder unten auf der Straße? Du entscheidest, wie sie ausgeht. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐.` : "Sammle die 12 Wort-Diamanten,"} Nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Tor der Horse Guards – gut 2 Minuten. Am besten das Handy quer halten.`))),
+            el("p", { class: "klein" }, runnerStartText(W)))),
         el("div", { class: "runner-figur" }, figurVorschau(110, 140),
           el("div", { class: "runner-figur-text" },
             el("p", { class: "klein" }, "Deine Figur"),
@@ -2316,6 +2357,14 @@
           : el("p", { class: "klein" }, "Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Coins zurück, dafür Trophäe und Runner-Titel. Punkte nur, wenn du das Level schaffst: 1 ⭐ je 💎, +10 ⭐ einmal je ganzer Geschichte (höchstens 30 ⭐ je Lauf)."),
         el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumRunnerShop))));
   }
+  // Erklärtext der Startseite je Welt (deutsche Bedienung, englische Spielsätze)
+  function runnerStartText(W) {
+    if (W.id === "londoneye") {
+      const w1 = storyStand("westminster").wahl.g1 === "B" ? "🕊️ die Taube" : "🦊 der Fuchs";
+      return `Tippen oder Leertaste = springen, länger halten = höher. Black Cabs und rote Busse kommen dir entgegen, in Pfützen rutschst du, in die Themse fällst du hinein. Neu am South Bank: schwebende Kabinen des London Eye sind Stufen, unten führt eine Treppe in den dunklen Maschinenraum, und Möwen klauen dir einen Diamanten – drüberspringen oder plattdrücken! ${w1} aus Welt 1 begleitet dich. Die violetten ♪-Kristalle erzählen „${STORY.londoneye.titel}“ – hinunter in den Maschinenraum oder hinauf aufs Rad? Du entscheidest, wie sie ausgeht. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐. Nimm die richtigen Tore und beantworte die Frage von ${W.boss} ${W.ort} – gut 2 Minuten. Am besten das Handy quer halten.`;
+    }
+    return `Tippen oder Leertaste = springen, länger halten = höher (über Doppeldecker!). Black Cabs und rote Busse kommen dir entgegen – drüberspringen! In Pfützen rutschst du kurz. Telefonzellen und Postkästen sind Stufen, in die Themse fällst du hinein. Tauben, Füchse und Eichhörnchen kannst du plattdrücken. Manchmal helfen dir die geheimen Superhelden. ${STORY[W.id] ? `Die violetten ♪-Kristalle erzählen die Geschichte „${STORY[W.id].titel}“ – oben auf dem Bus oder unten auf der Straße? Du entscheidest, wie sie ausgeht. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐.` : "Sammle die 12 Wort-Diamanten,"} Nimm die richtigen Tore und beantworte die Frage von ${W.boss} ${W.ort || "am Tor der Horse Guards"} – gut 2 Minuten. Am besten das Handy quer halten.`;
+  }
   // Spiel: Ticket einlösen, Vollbild-Bühne ohne Kopfzeile, ✕ mit Rückfrage
   function runnerSpiel(i, welt) {
     const r = runnerStand(), ws = runnerWoerter(i), W = runnerWeltVon(welt);
@@ -2335,10 +2384,10 @@
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
-      wrapper: buehne, skin: skinWirksam(), welt: W.id, titel: "London Run", cameos: runnerCameos(), story: STORY[W.id] || null,
+      wrapper: buehne, skin: skinWirksam(), welt: W.id, titel: "London Run", cameos: runnerCameos(), story: storyOption(W.id),   // Story (Welt 1 + 2; Welt 2 mit Variante/Begleiter aus Welt 1)
       audio: runnerAudio(W.id),   // Aufnahmen: Boss Mr. Alex, Levelstart Elrond, Cameos Jugendstimmen (fehlende = Geräte-Stimme)
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
-      texte: { bossTitel: `${W.boss} fragt …`, bossHinweis: "Richtig = das Tor der Horse Guards geht auf. Falsch = ein Leben weg." },
+      texte: { bossTitel: `${W.boss} fragt …`, bossHinweis: `Richtig = ${W.tuer || "das Tor der Horse Guards"} geht auf. Falsch = ein Leben weg.` },
       // wort(j, { leise: true }) = Echo im Spiel: leiser und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
       stimme: { wort: (j, o) => spiele([ws[j % ws.length].audio.en], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
         erzaehler: erzaehlerStimme, still: () => stopp(),
@@ -2379,7 +2428,7 @@
     if (storyPunkte > 0) { mrAlexWacht(spielstand(), storyPunkte); punkteDazu(storyPunkte); } // Zeitlog zuerst, damit Farmen im London Run auffällt
     speichern();
     const r_ = waehleRuf(e.geschafft ? "stark" : "fehler");
-    const sEnde = e.story && e.story.ende ? STORY_ENDEN[e.story.ende] : null;
+    const sEnde = e.story && e.story.ende ? storyEnden(W.id)[e.story.ende] : null, pfad = e.story && e.geschafft && sEnde ? storyPfad(W.id, e.story.wahl) : "";
     const minuten = `${Math.floor(e.dauer / 60)}:${String(e.dauer % 60).padStart(2, "0")}`;
     const zeichne = () => {
       zeige(spielKopf("London Run", runnerStart),
@@ -2392,7 +2441,7 @@
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
           e.story && el("p", { class: "runner-story-ende" }, `♪ ${e.story.anzahl}/12 Geschichte`,
             sEnde ? ` · 📖 Ending ${e.story.ende} – ${sEnde.symbol} ${sEnde.name}` : "", e.story.vollstaendig ? " · ✓ ganze Geschichte" : ""),
-          e.story && e.geschafft && sEnde && el("p", { class: "klein runner-story-wege" }, `🧭 Dein Weg: ${sEnde.symbol} ${sEnde.name} – die Geschichte merkt sich das für das nächste Kapitel.`),
+          e.story && e.geschafft && sEnde && el("p", { class: "klein runner-story-wege" }, `🧭 Dein Weg: ${pfad} – die Geschichte merkt sich das für das nächste Kapitel.`),
           e.story && el("p", { class: "runner-story-punkte" }, e.geschafft
             ? `⭐ Punkte in diesem Lauf: ${storyPunkte}` + (storyPunkte >= STORY_PUNKTE.max ? " (höchstens 30)" : "")
             : "⭐ Punkte gibt es nur, wenn du das Level schaffst."),
@@ -2433,20 +2482,26 @@
       el("div", { class: "knopfreihe" }, knopf("🇬🇧 London Run", () => runnerStart(), "leise")));
   }
   // 📖 Story Library: freigespielte Enden als Karten (Tap = Film mit der eigenen Figur), nicht freigespielte 🔒
+  // Übersicht nach Kapiteln (STORY_KAPITEL): Level 1 Westminster, Level 2 London Eye; Pfad-Zeile = Kette der gespeicherten Entscheidungen („🦊 The fox → 🔘 machine room“); nicht freigespielte Enden 🔒
   function storyLibrary() {
-    const welt = "westminster", st = storyStand(welt), S = STORY[welt];
+    const pfad = storyPfad(STORY_KAPITEL[STORY_KAPITEL.length - 1]);
+    const kapitel = STORY_KAPITEL.map((welt, i) => {
+      const st = storyStand(welt), S = STORY[welt], E = storyEnden(welt), offen = runnerWeltOffen(runnerWeltVon(welt));
+      return el("div", { class: "story-kapitel", "data-welt": welt },
+        el("p", { class: "klein", lang: "en" }, `Level ${i + 1} · ${S.titel}`, !offen ? el("span", { lang: "de" }, ` · 🔒 Silber in ${runnerWeltVon(STORY_KAPITEL[i - 1]).name} nötig`) : ""),
+        el("div", { class: "story-karten" }, Object.keys(E).map((en) => {
+          const frei = st.enden.includes(en);
+          if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en, "data-welt": welt }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"));
+          return el("button", { class: "story-karte", type: "button", "data-ende": en, "data-welt": welt, onclick: () => storyFilm(welt, en) },
+            el("span", { class: "story-sym", "aria-hidden": "true" }, E[en].symbol),
+            el("strong", { lang: "en" }, `Ending ${en} – ${E[en].name}`),
+            el("small", {}, `♪ ${st.beste[en] || 0}/12${st.voll.includes(en) ? " · ✓ ganze Geschichte" : ""} · ▶ Film`));
+        })));
+    });
     return el("div", { class: "story-library" },
       el("h3", {}, "📖 Story Library"),
-      el("p", { class: "klein", lang: "en" }, `Level 1 · ${S.titel}`),
-      st.wahl && st.wahl.g1 && el("p", { class: "klein story-pfad" }, `🧭 Dein Weg bisher: ${STORY_ENDEN[st.wahl.g1].symbol} ${STORY_ENDEN[st.wahl.g1].name} – spiel das Level noch mal, um den anderen Weg zu gehen.`),
-      el("div", { class: "story-karten" }, ["A", "B"].map((en) => {
-        const frei = st.enden.includes(en), E = STORY_ENDEN[en];
-        if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"));
-        return el("button", { class: "story-karte", type: "button", "data-ende": en, onclick: () => storyFilm(welt, en) },
-          el("span", { class: "story-sym", "aria-hidden": "true" }, E.symbol),
-          el("strong", { lang: "en" }, `Ending ${en} – ${E.name}`),
-          el("small", {}, `♪ ${st.beste[en] || 0}/12${st.voll.includes(en) ? " · ✓ ganze Geschichte" : ""} · ▶ Film`));
-      })));
+      pfad && el("p", { class: "klein story-pfad" }, `🧭 Dein Weg: ${pfad} – spiel ein Level noch mal, um einen anderen Weg zu gehen.`),
+      kapitel);
   }
   function storyFilm(welt, ende) {
     if (!R() || !R().film) { toast("Das Spiel ist noch nicht geladen."); return; }
@@ -2456,7 +2511,7 @@
     zu.setAttribute("aria-label", "Film schließen");
     zeige(buehne, zu);
     document.body.classList.add("runner-aktiv");
-    runnerLauf = R().film({ wrapper: buehne, skin: skinWirksam(), ende, story: STORY[welt], titel: "Story Library",
+    runnerLauf = R().film({ wrapper: buehne, welt, skin: skinWirksam(), ende, story: storyOption(welt), titel: "Story Library",
       stimme: { erzaehler: erzaehlerStimme, still: () => stopp() }, onEnde: () => sammlung() });
   }
   // Figur-Seite (wie Klasse 9): Figur + Erklärtext oben (sticky), Reiter-Zeile, darunter die Optionen der Gruppe als Chips, unten feste Knopfzeile.

@@ -1449,8 +1449,8 @@
     const st = { nr, t: 0, keys, trenner: stationTrenner(nr), gelesen: false, lesezeit: 2 + gelesen.join(' ').split(/\s+/).filter(Boolean).length * 0.45 };
     story.station = st; story.stationen++;
     klang.station();
-    const dateien = [storyAudio('sofar')].concat(keys.filter((k) => story.gesammelt.includes(k)).map(storyAudio)); // Aufnahmen (31.10.): „The story so far.“ + gesammelte Stücke
-    const r = erzaehle(['The story so far.'].concat(gelesen).join(' '), { key: 'station' + nr, audio: dateien.every(Boolean) ? dateien : null, sofort: true });
+    const dateien = [storyAudio('sofar')].concat(keys.filter((k) => story.gesammelt.includes(k)).map(storyAudio)).flat(); // Aufnahmen (31.10.): „The story so far.“ + gesammelte Stücke (ein Stück kann mehrere Dateien haben: Erzähler + Figurenstimmen)
+    const r = erzaehle(['The story so far.'].concat(gelesen).join(' '), { key: 'station' + nr, audio: dateien.length && dateien.every(Boolean) ? dateien : null, sofort: true });
     if (r && typeof r.then === 'function') { st.lesezeit = STATION_MAX; r.then(() => { st.gelesen = true; }, () => { st.gelesen = true; }); }
   }
   function stationBewegen(dt) {
@@ -1485,7 +1485,7 @@
     if (!keys) { film.text = ''; film.dauer = 3.5; film.gelesen = true; klang.fanfare(); return; }
     film.text = keys.map(storyText).join(' ');
     film.dauer = Math.max(4.8, film.text.split(/\s+/).length * 0.42 + 1.6);
-    const r = story ? erzaehle(film.text, { key: 'film' + film.ende + (i + 1), audio: keys.map(storyAudio), sofort: true }) : null;
+    const r = story ? erzaehle(film.text, { key: 'film' + film.ende + (i + 1), audio: keys.map(storyAudio).flat(), sofort: true }) : null;
     if (r && typeof r.then === 'function') r.then(() => { if (film && film.szene === i) film.gelesen = true; }, () => { if (film && film.szene === i) film.gelesen = true; });
     else film.gelesen = true;
   }

@@ -2847,7 +2847,14 @@
       Y17: "Behind the door, the old gate was shining.", Y18: "You held up the map, and the gate opened for you.", Y19: "A voice came out of the light: \"Keeper, four gates are left.\"",
       Y20: "Lucas went pale. \"She'll be back. And she won't be alone.\"",
       R1: "Snow. Banners. A wall of ice as high as the sky.", R2: "A knight in black armour looked down at you. \"Another keeper?\"", R3: "\"The gates are opening again,\" he said. \"That is never good.\"" },
-      audio: Object.fromEntries(STORY_KEYS_NY.map((k) => [k, `audio/story/ny_${k}.mp3`]).filter(([, f]) => (SP.story_audio || []).includes(f))) },
+      // Aufnahmen (31.10., werkzeuge/story_audio9.py): Erzähler Mr. Alex; wörtliche Rede Maya + Frau mit Kompass = Jessica, Jayden/Lucas/Ritter = Jeremy.
+      // Ein Stück = eine Datei (ny_<key>.mp3) oder mehrere Teile (ny_<key>_1.mp3, _2 …) hintereinander; nur Dateien, die der Bau findet.
+      audio: Object.fromEntries(STORY_KEYS_NY.concat(["sofar"]).map((k) => {
+        const alle = SP.story_audio || [], eins = `audio/story/ny_${k}.mp3`;
+        if (alle.includes(eins)) return [k, eins];
+        const teile = []; for (let i = 1; alle.includes(`audio/story/ny_${k}_${i}.mp3`); i++) teile.push(`audio/story/ny_${k}_${i}.mp3`);
+        return teile.length ? [k, teile] : null;
+      }).filter(Boolean)) },
   };
   const STORY_PUNKTE = { diamant: 1, ganz: 10, max: 30 };
   const STORY_ENDEN = { X: { symbol: "🤝", name: "Gone with the map" }, Y: { symbol: "🗺️", name: "The keeper" } };

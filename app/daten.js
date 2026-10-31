@@ -7078,6 +7078,27 @@ window.DATEN = {
      "penny": "audio/runner/cameo_penny.mp3",
      "tessa": "audio/runner/cameo_tessa.mp3"
     }
+   },
+   "tube": {
+    "boss": {
+     "banner": null,
+     "richtig": null,
+     "falsch": null
+    },
+    "start": null,
+    "ende": null,
+    "cameo": {
+     "leo": "audio/runner/cameo_leo.mp3",
+     "kenji": "audio/runner/cameo_kenji.mp3",
+     "felix": "audio/runner/cameo_felix.mp3",
+     "max": "audio/runner/cameo_max.mp3",
+     "camilla": "audio/runner/cameo_camilla.mp3",
+     "ellie": "audio/runner/cameo_ellie.mp3",
+     "olivia": "audio/runner/cameo_olivia.mp3",
+     "zara": "audio/runner/cameo_zara.mp3",
+     "penny": "audio/runner/cameo_penny.mp3",
+     "tessa": "audio/runner/cameo_tessa.mp3"
+    }
    }
   },
   "story_audio": [

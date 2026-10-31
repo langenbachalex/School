@@ -23,6 +23,10 @@
    dann heben sich beide Klappen als Rampen – hinauf, an der Spitze über die Lücke springen, drüben hinunter; wer die Spitze verpasst, fällt in die Themse), Raben (fliegen wie Tauben, plattdrückbar), Möwen, Busse/Cabs;
    Weg A durch den Tower (Mauer-Plattformen h.mauer mit Zinnen, Tower-Kulisse h.tower, Geist h.geist), Weg B im Ruderboot (h.boot = Themse-Abschnitt mit Boot unter der Figur, Treibgut h.treibgut = drüberspringen,
    Steg h.steg mit dem Jungen vom Key Club), Boss Sergeant Bearskin ohne Mütze (Igel-Haare) vor der hochgeklappten Brücke, Tür = Brückentor (Schranke, Klappe senkt sich), Film A/B (filmZeichnenBridge).
+   Welt „tube“ (31.10., Klasse 6, Welt 4, docs/runner/story-london-04.md): U-Bahn-Station (Fliesen, Stationsschilder, Uhr, Rolltreppen als Stufen h.rolltreppe) und Zug von innen (h.zug: Fenster mit Tunnel, Haltegriffe,
+   Sitze, Fahrgäste mit Handys); Spalt am Bahnsteig (h.spalt: Durchsage + Schild „MIND THE GAP“, Lücke, Sturz = Leben), Zugtüren (h.tuer: Warnton + blinkende Kanten, schließen sich – durch oder drüber), Maus (Gegner),
+   Koffer (Block); Weg A dunkler Bahnsteig (h.dunkelbahnsteig, Geist auf der Bank, Züge in beide Richtungen), Weg B im Zug (Wagen-Plattformen h.wagen, der Rabe fährt mit); Boss Sergeant Bearskin (Kissenabdruck)
+   am Stadiontor von Wembley, Tür = Stadiontor, Film A/B (filmZeichnenTube).
    Cameos (31.10., Option cameos: [{ id, name, bild, kraft }]): 2–3 Gastauftritte der geheimen Superhelden je Lauf (rundes Kartenbild, Umhang, Sprechblase ≈ 2,5 s) mit kleinem Effekt (CAMEO);
    ohne die Option (Klasse 9) gibt es keine Cameos. stimme.cameo(text, id, { audio }) spricht den Satz (optional).
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
@@ -300,6 +304,11 @@
     horn() { ton(196, 0.7, "sawtooth", 0.07, 0, 190); ton(247, 0.7, "sawtooth", 0.04, 0, 240); rauschen(0.9, 0.02, 0, { typ: "lowpass", freq: 500 }); ton(196, 0.5, "sawtooth", 0.06, 0.85, 190); ton(247, 0.5, "sawtooth", 0.035, 0.85, 240); },
     rabe() { ton(520, 0.12, "sawtooth", 0.035, 0, 380); ton(480, 0.12, "sawtooth", 0.03, 0.16, 340); },
     ruder() { rauschen(0.2, 0.035, 0, { typ: "bandpass", freq: 900 }); ton(420, 0.12, "sine", 0.03, 0, 200); },
+    // Welt The Tube (Klasse 6): Durchsage-Gong (Ding-Dong vor „Mind the gap!“), Türwarnton (drei schnelle Piepser), Maus quiekt, Zug rauscht vorbei
+    durchsage() { ton(880, 0.35, "sine", 0.07); ton(660, 0.5, "sine", 0.06, 0.3); rauschen(0.25, 0.015, 0.8, { typ: "bandpass", freq: 1800 }); },
+    tuerwarn() { for (let i = 0; i < 3; i++) ton(1760, 0.08, "square", 0.04, i * 0.14); },
+    maus() { ton(3200, 0.05, "sine", 0.03, 0, 4200); ton(3600, 0.05, "sine", 0.025, 0.08, 4600); },
+    zug() { rauschen(0.9, 0.04, 0, { typ: "lowpass", freq: 420 }); ton(80, 0.8, "sawtooth", 0.025, 0, 60); },
     // Story-Modus: Kristall = Harfen-Arpeggio (anders als der Diamant-/Wort-Jingle), Puff = verschwindendes ♪ an der Gabelung, Station = zwei weiche Glocken
     kristall() { [784, 988, 1175, 1568].forEach((f, i) => ton(f, 0.32, "sine", 0.07, i * 0.06)); ton(392, 0.5, "triangle", 0.04); },
     puff() { rauschen(0.22, 0.04, 0, { typ: "lowpass", freq: 1200 }); ton(700, 0.18, "sine", 0.03, 0, 300); },
@@ -1087,6 +1096,51 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.dia(440, 140); h.geg('moewe', 850, 1250); h.vor(1300); }, // 29 Dreier-Plattform (💎 oben) + Möwe
     (h) => { h.luecke(200, 170); h.dia(285, 250); h.auto('bus', 500, 1300); h.post(1350); h.vor(1500); },             // 30 Schluss: Themse (💎 darüber) + Bus
   ];
+  // London Welt 4 „The Tube“ – Kapitel 4 „Mind the Gap“ (Klasse 6, 31.10., docs/runner/story-london-04.md; Strecke immer mit Story, die App übergibt STORY.tube):
+  // Anfang 1–4, wobei ♪1/♪2 als Variante von Welt 3 abhängen (quelle 'towerbridge.g1': A = Raben gerettet → 1A/2A, B = Hut gerettet, ein Rabe fehlt → 1B/2B; keine Wahl → A) · Station 1 · Gabelung g1:
+  // ♪A5 unten auf dem dunklen Bahnsteig („👻 back to the Sergeant“, Weg A: aussteigen, dunkler Bahnsteig mit Lampen, Geist vom Ghost Club auf einer Bank, Züge in beide Richtungen, Mäuse) /
+  // ♪B5 oben im Zug („🚇 ride on“, Weg B: Wagen-Plattformen h.wagen auf 250 mit Lücken zwischen den Wagen, Zugtüren h.tuer, der Rabe setzt sich ab ♪B6 neben die Figur und fährt mit) ·
+  // Station 2 · gemeinsam 9–10 · Boss Sergeant Bearskin am Stadiontor von Wembley · Ende A11–A12 / B11–B12 hinter dem Boss (im Film) = 12 ♪. Abstand der ♪ je Weg ≥ 1.390, nie in den 520 vor einem Tor;
+  // 18 Punkte-Diamanten; neu: der Spalt am Bahnsteig (h.spalt: Lücke 100 breit zwischen Bahnsteigkante und Zugtür, Durchsage „Mind the gap!“ + Schild davor, Sturz = ein Leben), sich schließende Zugtüren
+  // (h.tuer: Warnton + blinkende Türkanten, rechtzeitig durch oder drüber springen), Maus (Gegner, plattdrückbar), Koffer (Block), Rolltreppen als Stufen (h.rolltreppe), Kulissen Bahnsteig/Zug/dunkler Bahnsteig.
+  const STRUKTUR_TUBE = { anzahl: 12, abschnitte: [
+    { anfang: true, varianten: { A: ['1A', '2A'], B: ['1B', '2B'] }, quelle: 'towerbridge.g1', standard: 'A', platz: ['1', '2'], keys: ['3', '4'] },
+    { gabel: 'g1', standard: 'A', wege: { A: ['A5', 'A6', 'A7', 'A8'], B: ['B5', 'B6', 'B7', 'B8'] }, symbole: { A: '👻', B: '🚇' }, labels: { A: 'back to the Sergeant', B: 'ride on' } },
+    { keys: ['9', '10'] },
+    { ende: 'g1', wege: { A: ['A11', 'A12'], B: ['B11', 'B12'] } },
+  ], stationen: [1, 2], film: { A: [['9', '10'], ['A11'], ['A12'], null], B: [['9', '10'], ['B11'], ['B12'], null] } };
+  const MUSTER_TUBE_STORY = [
+    (h) => { h.bahnsteig(-100, 4000); h.dia(350); h.kristall(500, 290, '1'); h.koffer(650); h.vor(900); },                 // 1 Bahnsteig · ♪1 (Variante 1A/1B) · erster Koffer
+    (h) => { h.rolltreppe(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(1000); },                      // 2 Rolltreppe (Stufe, 💎 oben) + Taube
+    (h) => { h.pfuetze(300); h.geg('maus', 500, 900); h.vor(950); },                                                      // 3 nasser Boden + erste Maus (neu)
+    (h) => { h.koffer(200); h.koffer(240, 2); h.dia(260, 215); h.kristall(600, 290, '2'); h.vor(900); },                  // 4 Kofferstapel · ♪2 (Variante 2A/2B)
+    (h) => { h.zug(100, 4900); h.tuer(420); h.dia(520, 250); h.geg('taube', 700, 950); h.vor(1000); },                   // 5 im Zug: erste ZUGTÜR (Warnton, schließt) + Taube
+    (h) => { h.tuer(300); h.koffer(650); h.koffer(690, 2); h.dia(710, 215); h.vor(1000); },                              // 6 Zugtür + Kofferstapel (💎 oben)
+    (h) => { h.geg('maus', 300, 700); h.kristall(850, 290, '3'); h.vor(1100); },                                          // 7 Maus · ♪3 „The journey is long: twelve stops.“
+    (h) => { h.tuer(250); h.dia(350, 250); h.geg('taube', 600, 1000); h.vor(1100); },                                     // 8 Zugtür (💎 dahinter) + Taube
+    (h) => { h.geg('maus', 150, 500); h.koffer(650); h.kristall(670, 262, '4'); h.koffer(690, 2); h.dia(710, 190); h.vor(900); }, // 9 Maus + Kofferstufe · ♪4 „Mind the gap! The doors close. You're on the wrong train!“
+    (h) => { h.bahnsteig(0, 2800); h.spalt(300); h.dia(350, 250); h.vor(1000); },                                         // 10 Bahnsteig: erster SPALT (Durchsage, Schild, Lücke – 💎 darüber)
+    (h) => { h.rolltreppe(100, 245, 140); h.rolltreppe(380, 185, 140); h.dia(450, 145); h.vor(950); },                   // 11 zwei Rolltreppen (💎 oben)
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                                        // 12 TOR 1
+    (h) => { h.cp(150); h.geg('maus', 700, 950); h.vor(1000); },                                                          // 13 CHECKPOINT 1 · Station 1
+    (h) => { h.dunkelbahnsteig(300, 6900); h.zug(300, 6900, 250); h.kristall(200, 290, 'A5'); h.wagen(300, 250, 940); h.kristall(370, 214, 'B5'); h.tuer(700, 250); h.geg('maus', 600, 1000); h.vor(1300); }, // 14 GABELUNG: ♪A5 unten auf dem dunklen Bahnsteig (👻 back to the Sergeant), ♪B5 oben im Zug (🚇 ride on); Wagen 1 mit Zugtür
+    (h) => { h.wagen(0, 250, 1140); h.tuer(380, 250); h.kristall(620, 214, 'B6'); h.kristall(560, 290, 'A6'); h.geg('maus', 650, 950); h.geist(1040, true); h.vor(1200); }, // 15 Wagen 2 · ♪B6 (der Rabe setzt sich dazu) / ♪A6 unten (der Geist auf der Bank); Maus
+    (h) => { h.wagen(0, 250, 940); h.tuer(500, 250); h.dia(700, 210); h.koffer(200); h.geg('taube', 450, 850, { y: 290 }); h.vor(1000); }, // 16 Wagen 3 mit Tür (💎 dahinter) · unten Koffer + Taube (fliegt tief, unter dem Zugboden)
+    (h) => { h.wagen(0, 250, 1040); h.kristall(630, 214, 'B7'); h.kristall(550, 290, 'A7'); h.geg('maus', 700, 950); h.vor(1100); }, // 17 Wagen 4 · ♪B7 / ♪A7 unten; Maus
+    (h) => { h.wagen(0, 250, 990); h.tuer(480, 250); h.geist(300, true); h.dia(480, 298); h.vor(1050); },                // 18 Wagen 5 mit Tür · unten zweiter Geist (Bank), 💎
+    (h) => { h.wagen(0, 250, 1340); h.tuer(700, 250); h.dia(400, 210); h.geg('taube', 500, 900, { y: 290 }); h.geg('maus', 1000, 1300); h.vor(1400); }, // 19 Wagen 6 mit Tür (💎 davor) · unten Taube (tief) + Maus
+    (h) => { h.wagen(0, 250, 1090); h.kristall(250, 214, 'B8'); h.koffer(450); h.kristall(760, 290, 'A8'); h.geg('maus', 500, 850); h.vor(1150); }, // 20 Wagen 7 · ♪B8 oben („Wembley Park. The raven gets off with you.“) / ♪A8 unten („finally your way“)
+    (h) => { h.bahnsteig(-100, 12000); h.dia(100, 298); h.pfuetze(200); h.geg('taube', 450, 800); h.vor(1000); },        // 21 wieder Bahnsteig (von Weg B springt man herunter, 💎) + nasser Boden + Taube
+    (h) => { h.rolltreppe(450, 240, 140); h.rolltreppe(700, 175, 140); h.dia(770, 135); h.vor(1050); },                   // 22 Rolltreppen (💎 oben)
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                                       // 23 TOR 2
+    (h) => { h.cp(150); h.kristall(350, 290, '9'); h.koffer(500); h.koffer(540, 2); h.vor(850); },                        // 24 CHECKPOINT 2 · Station 2 · ♪9 „Wembley Stadium, 11 a.m.“
+    (h) => { h.pfuetze(500); h.geg('taube', 1000, 1400); h.koffer(1200); h.vor(1500); },                                  // 25 nasser Boden + Taube + Koffer
+    (h) => { h.spalt(200); h.kristall(650, 290, '10'); h.geg('maus', 800, 1100); h.vor(1200); },                          // 26 zweiter SPALT · ♪10 dahinter + Maus
+    (h) => { h.koffer(150); h.koffer(190, 2); h.koffer(230, 3); h.koffer(270, 2); h.koffer(310); h.dia(250, 180); h.vor(750); }, // 27 Koffer-Pyramide (💎 oben)
+    (h) => { h.pfuetze(150); h.rolltreppe(500, 230, 160); h.dia(580, 190); h.geg('maus', 1150, 1400); h.vor(1500); },     // 28 nasser Boden + Rolltreppe (💎 oben) + Maus
+    (h) => { h.rolltreppe(150, 240, 150); h.rolltreppe(400, 180, 150); h.rolltreppe(650, 240, 150); h.dia(440, 140); h.geg('taube', 850, 1250); h.vor(1300); }, // 29 Rolltreppen-Treppe (💎 oben) + Taube
+    (h) => { h.spalt(200); h.dia(250, 250); h.geg('maus', 500, 800); h.koffer(1350); h.vor(1500); },                      // 30 Schluss: dritter Spalt (💎 darüber) + Maus + Koffer
+  ];
   // New York „The Lost Map – Under the City“ (Klasse 9, docs/runner/story-usa-01.md): Anfang 1–5 · Station 1 · Gabelung 1 (A6–A10 unten = U-Bahn / B6–B10 oben = Feuertreppe/Dach) · Station 2 ·
   // gemeinsam 11–14 · Gabelung 2 (X15–X16 „give the map“ unten / Y15–Y16 „keep the map“ oben auf dem Bus; ohne Wahl: Y = Karte behalten) · Boss · Ende X17–X20 bzw. Y17–Y20 = 20 ♪; Realm R1–R3 extra.
   const STRUKTUR_NY = { anzahl: 20, abschnitte: [
@@ -1370,14 +1424,14 @@
   const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
   // endeN = Zahl der Ende-Kristalle hinter dem Boss (Story: aus der Struktur, London 2, New York 4); sie liegen gleichmäßig zwischen stopX + 95 und tuerX − 25
   function levelBauen(muster, endeN = 2) {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], klappen:[], boote:[], treibgut:[], zapfen:[] };
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], klappen:[], boote:[], treibgut:[], zapfen:[], spalten:[], tueren:[] };
     let x = 0, bodenAb = 0, wort = 0;
     const h = {
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
       kiste: (dx, n = 1) => { for (let i = 0; i < n; i++) L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE * (i + 1) }); },
       dia: (dx, y = 298) => L.diamanten.push({ x:x + dx, y, wort:wort++ }),
-      // o.wartet (Realm Kapitel 2): der Gegner steht still (wartender Ritter)
-      geg: (art, von, bis, o) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' || art === 'adler' || art === 'moewe' || art === 'rabe' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1, wartet: !!(o && o.wartet) }),
+      // o.wartet (Realm Kapitel 2): der Gegner steht still (wartender Ritter); o.y (The Tube): Flughöhe eines Vogels (Taube unter dem Zugboden fliegt tief)
+      geg: (art, von, bis, o) => L.gegner.push({ art, x:x + (von + bis) / 2, y: o && o.y != null ? o.y : art === 'taube' || art === 'geier' || art === 'adler' || art === 'moewe' || art === 'rabe' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1, wartet: !!(o && o.wartet) }),
       luecke: (dx, w) => { L.boden.push([bodenAb, x + dx]); bodenAb = x + dx + w; },
       tor: (dx, wort, falsch) => L.tore.push({ x:x + dx, wort, falsch }),
       cp: (dx) => L.checkpoints.push({ x:x + dx }),
@@ -1423,8 +1477,18 @@
       treibgut: (dx) => L.treibgut.push({ x:x + dx }),
       mauer: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'mauer' }),
       tower: (dx, w) => L.deko.push({ art:'tower', x:x + dx, w }),
-      geist: (dx) => L.deko.push({ art:'geist', x:x + dx }),
+      geist: (dx, sitzt) => L.deko.push({ art:'geist', x:x + dx, sitzt: !!sitzt }),   // The Tube: sitzt = auf einer Bank (Weg A)
       steg: (dx) => L.deko.push({ art:'steg', x:x + dx }),
+      // The Tube (Klasse 6, Welt 4): Spalt = Lücke 100 breit zwischen Bahnsteigkante und Zugtür (Durchsage + Schild davor), Zugtür (schließt sich, y = Boden der Tür: Bahnsteig oder Wagen),
+      // Wagen = Plattform (Zugboden auf 250, Weg B), Rolltreppe = Plattform (Stufe), Koffer = Block, Kulissen Bahnsteig / Zug (y = Boden des Zugs) / dunkler Bahnsteig (dunkel wie der Maschinenraum)
+      spalt: (dx) => { h.luecke(dx, SPALT_W); L.spalten.push({ x:x + dx }); },
+      tuer: (dx, y = BODEN_Y) => L.tueren.push({ x:x + dx, y }),
+      wagen: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'wagen' }),
+      rolltreppe: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'rolltreppe' }),
+      koffer: (dx, n = 1) => { for (let i = 0; i < n; i++) L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE * (i + 1), art:'koffer' }); },
+      bahnsteig: (dx, w) => L.deko.push({ art:'bahnsteig', x:x + dx, w }),
+      zug: (dx, w, y = BODEN_Y) => L.deko.push({ art:'zug', x:x + dx, w, y }),
+      dunkelbahnsteig: (dx, w) => L.deko.push({ art:'dunkelbahnsteig', x:x + dx, w }),
       realmTor: (dx, y) => L.realmTore.push({ x:x + dx, y }),
       // The Realm Beyond: Sammelstück (Frost Shard ❄), Eisfleck (rutscht wie Öl)
       gegenstand: (dx, y) => L.gegenstaende.push({ x:x + dx, y }),
@@ -1470,6 +1534,9 @@
   const DUNKEL_RAND = 160, DUNKEL_MAX = 0.72, EYE_R = 270, EYE_KABINE_Y = 190;
   // Welt Tower Bridge (Klasse 6, Welt 3): Brückenklappen (Phasen ruhe → warnung → hebt → oben → senkt → weg; winkel 0..KLAPPE_MAX), Boot-Abschnitte (imBoot = Abschnitt unter der Figur), Treibgut, Horn-Zähler (Tests)
   let klappen = [], boote = [], treibgut = [], hornt = 0, imBoot = null, ruderZeit = -9;
+  // Welt The Tube (Klasse 6, Welt 4): Spalte (gewarnt = Durchsage lief), Zugtüren (Phasen offen → warnung → schliesst → zu → oeffnet → weg; schluss 0..1), Zähler Durchsagen/Piepser (Tests), Rabe im Zug (Weg B, ab ♪B6)
+  let spalten = [], tueren = [], durchsagen = 0, piept = 0, rabeMit = null;
+  const SPALT_W = 100, SPALT_VORLAUF = 380, TUER_VORLAUF = 300, TUER_WARN = 0.6, TUER_SCHLIESST = 0.5, TUER_ZU = 1.8, TUER_OEFFNET = 0.5, TUER_W = 28, TUER_H = 60;
   const KLAPPE_W = 150, KLAPPE_MAX = Math.PI * 50 / 180, KLAPPE_VORLAUF = 520, KLAPPE_WARN = 0.6, KLAPPE_HEBT = 1.6, KLAPPE_OBEN = 1.5, KLAPPE_SENKT = 1.6, TREIBGUT_W = 44, TREIBGUT_H = 24;   // Boss-Kabine: 190 über dem Boden (Mitte des Rads liegt 80 unter dem Boden, Radius 270)
   // Story-Modus (Option story: Klasse 6 Westminster, Klasse 9 New York; sonst story = null): Kristalle ♪, Erzähl-Warteschlange (nie zwei Stücke gleichzeitig), Stationen, Film am Ende
   let storyOpt = null, story = null, kristalle = [], diaGesammelt = 0, film = null, nurFilm = false;
@@ -1488,8 +1555,8 @@
   const BLASE_DAUER = 1.6, ECHO_MIN = 6, ECHO_MAX = 8, ECHO_ABSTAND = 2.5, ECHO_DAUER = 1.4, CHIP_MAX = 8, CHIP_ZEICHEN = 12;
   let erstauntZeit = 0, zungeZeit = 0;   // Gesichtsausdruck: erstaunt 0,8 s nach Treffer, Zunge raus 1 s bei „5× Combo!“ und solange On fire
   const ausdruckAktuell = () => (erstauntZeit > 0 ? "erstaunt" : (onfire || zungeZeit > 0) ? "zunge" : "grinsend");
-  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9, bueffel: -9, biber: -9, adler: -9, moewe: -9, seeloewe: -9, skater: -9, fuchs: -9, wolf: -9, ritter: -9, rabe: -9 };   // letzter Klang je Art (Spielzeit)
-  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150, bueffel: 170, biber: 65, adler: 90, moewe: 80, seeloewe: 50, skater: 140, fuchs: 75, wolf: 105, ritter: 42, rabe: 85 };
+  const gegnerKlangZeit = { taube: -9, waschbaer: -9, eichhoernchen: -9, kojote: -9, roadrunner: -9, guerteltier: -9, klapperschlange: -9, geier: -9, skorpion: -9, bueffel: -9, biber: -9, adler: -9, moewe: -9, seeloewe: -9, skater: -9, fuchs: -9, wolf: -9, ritter: -9, rabe: -9, maus: -9 };   // letzter Klang je Art (Spielzeit)
+  const GEGNER_TEMPO = { taube: 70, waschbaer: 55, eichhoernchen: 95, kojote: 70, roadrunner: 210, guerteltier: 60, klapperschlange: 60, geier: 85, skorpion: 150, bueffel: 170, biber: 65, adler: 90, moewe: 80, seeloewe: 50, skater: 140, fuchs: 75, wolf: 105, ritter: 42, rabe: 85, maus: 100 };
   let gegnerKlaenge = 0;   // Zähler für Tests
   const GEGNER_KLANG_ABSTAND = 1.5, GEGNER_NAEHE = 260, COMBO_TEXT_DAUER = 1.3;
   const ruhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
@@ -1523,6 +1590,7 @@
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
     trommelt = 0; dunkel = 0; radWinkel = 0; radRueck = 0; kameraHoch = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 60, y: BODEN_Y, flug: 0 } : null;
     klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
+    spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null;   // The Tube
     cameo = null; cameosGezeigt = 0; cameoEffekt = null; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoPlan = cameoPlanBauen();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
@@ -2031,7 +2099,7 @@
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
   }
-  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵', zapfen: 'Icicle! 🧊' };
+  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵', zapfen: 'Icicle! 🧊', tuer: 'Mind the doors! 🚪' };
   function wiederbeleben() {
     spieler.x = checkpoint; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.6;
     halten = false;
@@ -2044,6 +2112,8 @@
     if (realm && realm.zapfen) for (const z of realm.zapfen) if (z.x > checkpoint) { z.phase = 'ruhe'; z.t = 0; z.y = ZAPFEN_DECKE; }   // Eishalle: Eiszapfen hängen wieder
     for (const s of surfs) s.aktiv = false; surft = 0; aufGondel = null;   // Welt 5
     for (const k of klappen) if (k.x > checkpoint) { k.phase = 'ruhe'; k.t = 0; k.winkel = 0; }   // Tower Bridge: Klappen vor der Figur wieder unten
+    for (const t of tueren) if (t.x > checkpoint) { t.phase = 'offen'; t.t = 0; t.schluss = 0; }   // The Tube: Zugtüren vor der Figur wieder offen, Durchsagen kommen noch einmal
+    for (const s of spalten) if (s.x > checkpoint) s.gewarnt = false;
   }
   // Welt 3: Steine fallen, sobald die Figur ≈ 300 davor ist (Staub + Schatten 0,6 s, dann Sturz; liegen 1,4 s gefährlich, dann zerbröseln); Brücken-Bruchstücke fallen nach
   function hindernisseBewegen(dt) {
@@ -2082,7 +2152,35 @@
     if (W.id === 'londoneye') londonEyeBewegen(dt); else if (begleiter) begleiterBewegen(dt);
     if (W.id === 'sd' && story) dunkel = spieler.y > BODEN_Y - 70 ? dunkelBei(spieler.x) : Math.max(0, dunkel - dt * 6);   // Story Kapitel 4: der alte Tunnel ist dunkel wie der Maschinenraum (nur unten)
     if (W.id === 'towerbridge') towerBridgeBewegen(dt);
+    if (W.id === 'tube') tubeBewegen(dt);
   }
+  // The Tube: Spalt – Figur ≈ 380 davor → Gong + Durchsage-Schild blinkt + Meldung „Mind the gap!“ (einmal je Anlauf; nach dem Checkpoint wieder). Zugtür – Figur ≈ 300 davor → Warnton + blinkende Kanten (0,6 s),
+  // dann schließt sie sich 0,5 s, bleibt 1,8 s zu (Berührung = Leben weg, drüberspringen oder vorher durch), öffnet 0,5 s; ruhig, bis die Figur wieder weit davor ist. Dunkel am Boden des dunklen Bahnsteigs (Weg A).
+  // Rabe (Weg B, ab ♪B6): sitzt neben der Figur und fährt mit – hüpft hinterher, flattert, wenn die Figur springt.
+  function tubeBewegen(dt) {
+    for (const s of spalten) {
+      if (!s.gewarnt) { if (zustand === 'spiel' && tot <= 0 && spieler.x > s.x - SPALT_VORLAUF && spieler.x < s.x) { s.gewarnt = true; durchsagen++; klang.durchsage(); meldung = { text: 'Mind the gap! 🚇', zeit: 1.4 }; } }
+      else if (spieler.x < s.x - SPALT_VORLAUF - 60) s.gewarnt = false;
+    }
+    for (const t of tueren) {
+      if (t.phase === 'offen') { if (zustand === 'spiel' && tot <= 0 && spieler.x > t.x - TUER_VORLAUF && spieler.x < t.x - 10) { t.phase = 'warnung'; t.t = 0; piept++; klang.tuerwarn(); } }
+      else if (t.phase === 'warnung') { t.t += dt; if (t.t >= TUER_WARN) { t.phase = 'schliesst'; t.t = 0; } }
+      else if (t.phase === 'schliesst') { t.t += dt; t.schluss = Math.min(1, t.t / TUER_SCHLIESST); if (t.t >= TUER_SCHLIESST) { t.phase = 'zu'; t.t = 0; t.schluss = 1; } }
+      else if (t.phase === 'zu') { t.t += dt; if (t.t >= TUER_ZU) { t.phase = 'oeffnet'; t.t = 0; } }
+      else if (t.phase === 'oeffnet') { t.t += dt; t.schluss = Math.max(0, 1 - t.t / TUER_OEFFNET); if (t.t >= TUER_OEFFNET) { t.phase = 'weg'; t.schluss = 0; } }
+      else if (t.phase === 'weg') { if (spieler.x < t.x - TUER_VORLAUF - 50) { t.phase = 'offen'; t.t = 0; } }
+    }
+    dunkel = spieler.y > BODEN_Y - 70 ? dunkelBei(spieler.x) : Math.max(0, dunkel - dt * 6);
+    if (!rabeMit && story && story.wahl.g1 === 'B' && story.gesammelt.includes('B6')) rabeMit = { x: spieler.x - 44, y: spieler.y, flug: 0, fliegt: 0 };
+    if (rabeMit) {
+      rabeMit.flug += dt;
+      const zx = spieler.x - 44, zy = spieler.y;
+      rabeMit.fliegt = !spieler.amBoden || Math.abs(zy - rabeMit.y) > 12 ? 1 : Math.max(0, rabeMit.fliegt - dt * 3);
+      rabeMit.x += (zx - rabeMit.x) * Math.min(1, dt * 7); rabeMit.y += (zy - rabeMit.y) * Math.min(1, dt * (rabeMit.fliegt ? 6 : 12));
+    }
+  }
+  const tuerZu = (t) => t.phase === 'zu' || (t.phase === 'schliesst' && t.schluss >= 0.55) || (t.phase === 'oeffnet' && t.schluss >= 0.55);   // Tür sperrt (Trefferbox aktiv)
+  const tuerBox = (t) => ({ x: t.x - TUER_W / 2, y: t.y - TUER_H, w: TUER_W, h: TUER_H });
   // Tower Bridge: Klappen – Figur ≈ 520 davor → Horn + rotes Licht (0,6 s), beide Klappen heben sich 1,6 s auf 50°, bleiben 1,5 s oben, senken sich 1,6 s; danach ruhig, bis die Figur wieder weit davor ist (nach dem Checkpoint).
   // Boot: Abschnitt unter der Figur merken (Zeichnung + Ruderklang alle 1,1 s am Boden)
   function towerBridgeBewegen(dt) {
@@ -2125,7 +2223,7 @@
   }
   function dunkelBei(x) {
     let d = 0;
-    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel') continue; const a = m.x - DUNKEL_RAND, b = m.x + m.w + DUNKEL_RAND; if (x <= a || x >= b) continue; d = Math.max(d, Math.min(1, (x - a) / DUNKEL_RAND, (b - x) / DUNKEL_RAND)); }
+    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel' && m.art !== 'dunkelbahnsteig') continue; const a = m.x - DUNKEL_RAND, b = m.x + m.w + DUNKEL_RAND; if (x <= a || x >= b) continue; d = Math.max(d, Math.min(1, (x - a) / DUNKEL_RAND, (b - x) / DUNKEL_RAND)); }
     return d;
   }
   // Nebeldichte an einer Stelle: 1 im Abschnitt, weiche Ränder 160 davor/dahinter
@@ -2170,6 +2268,7 @@
     if (g.art === 'adler') return { x: g.x - 26, y: g.y - 14 + Math.sin(g.flug * 2.5) * 10, w: 52, h: 26 };
     if (g.art === 'moewe') return { x: g.x - 18, y: g.y - 12 + (g.klaut ? 0 : Math.sin(g.flug * 2.8) * 8), w: 36, h: 24 };
     if (g.art === 'rabe') return { x: g.x - 19, y: g.y - 13 + Math.sin(g.flug * 2.6) * 8, w: 38, h: 26 };   // Rabe (Tower Bridge): fliegt wie die Taube
+    if (g.art === 'maus') return { x: g.x - 13, y: g.y - 16, w: 26, h: 16 };   // Maus (The Tube): klein, flink
     if (g.art === 'seeloewe') return { x: g.x - 25, y: g.y - 28, w: 50, h: 28 };
     if (g.art === 'skater') return { x: g.x - 15, y: g.y - 44, w: 30, h: 44 };
     return { x: g.x - 20, y: g.y - 26, w: 40, h: 26 };
@@ -2347,6 +2446,11 @@
       for (const t of treibgut) {   // Tower Bridge: Treibgut auf der Themse (im Boot drüberspringen) – Berührung = Leben weg
         const tb = treibgutBox(t);
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 4, tb.y + 4, tb.w - 8, tb.h - 4)) { schaden('treibgut'); break; }
+      }
+      for (const t of tueren) {   // The Tube: geschlossene Zugtür – Berührung = Leben weg (rechtzeitig durch oder drüberspringen)
+        if (!tuerZu(t)) continue;
+        const tb = tuerBox(t);
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 2, tb.y + 2, tb.w - 4, tb.h - 2)) { schaden('tuer'); break; }
       }
       // Welt 4: rollende Baumstämme (drüberspringen) und die Bären-Pranke vor der Höhle – Berührung = Leben weg
       for (const s of staemme) {
@@ -3919,6 +4023,7 @@
       c.fillStyle = '#18213a'; c.beginPath(); c.arc(-4.6 + blick, -125, 1.7, 0, Math.PI * 2); c.arc(4.6 + blick, -125, 1.7, 0, Math.PI * 2); c.fill();
     }
     c.fillStyle = '#e3a98a'; c.beginPath(); c.ellipse(0, -122, 2, 2.6, 0, 0, Math.PI * 2); c.fill();   // Nase
+    if (o.kissen) { c.strokeStyle = 'rgba(200,80,80,.6)'; c.lineWidth = 1.2; c.lineCap = 'round'; c.beginPath(); for (let k = 0; k < 3; k++) { c.moveTo(-10, -121 + k * 2.6); c.lineTo(-5.5, -123.5 + k * 2.6); } c.stroke(); }   // The Tube: Kissenabdruck auf der Wange („I never sleep on the tube“)
     if (lachen > 0) {   // offener Mund unter dem Schnurrbart
       c.fillStyle = '#7a1f1f'; c.beginPath(); c.ellipse(0, -114.5, 4.2, 3.6 * lachen, 0, 0, Math.PI * 2); c.fill();
       c.fillStyle = '#fff'; c.fillRect(-2.6, -117.5, 5.2, 1.4);
@@ -3938,10 +4043,12 @@
         c.fillStyle = '#7fb2d6'; for (let k = 0; k < 3; k++) { const t = ruhig() ? 0.5 : (zeit * 0.9 + k * 0.33) % 1, dx = -12 + k * 12; c.beginPath(); c.ellipse(dx, -128 + t * 120, 2, 3.5, 0, 0, Math.PI * 2); c.fill(); }
         c.fillStyle = 'rgba(127,178,214,.5)'; c.beginPath(); c.ellipse(0, 0, 30, 4, 0, 0, Math.PI * 2); c.fill();
       }
-    } else if (hut === 'fell') {
+    } else if (hut === 'fell' || hut === 'gross') {
+      c.save(); if (hut === 'gross') { c.translate(0, -130); c.scale(1.32, 1.15); c.translate(0, 130); }   // The Tube (Variante A): der neue Hut ist zu groß
       c.fillStyle = '#0d0d0d'; c.beginPath(); c.moveTo(-15, -130); c.quadraticCurveTo(-21, -188, 0, -196); c.quadraticCurveTo(21, -188, 15, -130); c.closePath(); c.fill();   // Bärenfellmütze (lässt die Augen frei)
       c.strokeStyle = '#2b2b2b'; c.lineWidth = 2;
       for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(-9 + (k % 3) * 9, -176 + Math.floor(k / 3) * 22, 5, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
+      c.restore();
       c.strokeStyle = '#e0a400'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(-11, -129); c.quadraticCurveTo(-9, -112, 0, -111); c.quadraticCurveTo(9, -112, 11, -129); c.stroke();   // Kinnriemen
     } else {
       c.fillStyle = '#8a4b22'; c.beginPath(); c.arc(0, -126, 11.4, Math.PI * 1.05, Math.PI * 1.95); c.closePath(); c.fill();   // ohne Mütze: kurze rotbraune Haare
@@ -4136,7 +4243,7 @@
   function dunkelZeichnen(c, d) {   // Maschinenraum: alles dunkel, nur warme Lichtkegel unter den Lampen und ein Schein um die Figur
     c.fillStyle = `rgba(6,8,22,${DUNKEL_MAX * d})`; c.fillRect(0, 0, viewW, H);
     c.save(); c.globalAlpha = d;
-    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel') continue; for (let lx = m.x + 140; lx < m.x + m.w; lx += 420) { const sx = lx - kamera; if (sx < -160 || sx > viewW + 160) continue; const gl = c.createRadialGradient(sx, 180, 10, sx, 240, 170); gl.addColorStop(0, 'rgba(255,215,130,.42)'); gl.addColorStop(1, 'rgba(255,215,130,0)'); c.fillStyle = gl; c.beginPath(); c.arc(sx, 240, 170, 0, Math.PI * 2); c.fill(); } }
+    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel' && m.art !== 'dunkelbahnsteig') continue; for (let lx = m.x + 140; lx < m.x + m.w; lx += 420) { const sx = lx - kamera; if (sx < -160 || sx > viewW + 160) continue; const gl = c.createRadialGradient(sx, 180, 10, sx, 240, 170); gl.addColorStop(0, 'rgba(255,215,130,.42)'); gl.addColorStop(1, 'rgba(255,215,130,0)'); c.fillStyle = gl; c.beginPath(); c.arc(sx, 240, 170, 0, Math.PI * 2); c.fill(); } }
     const fx = spieler.x - kamera, fy = spieler.y - 44, gl = c.createRadialGradient(fx, fy, 10, fx, fy, 110); gl.addColorStop(0, 'rgba(255,235,190,.3)'); gl.addColorStop(1, 'rgba(255,235,190,0)');
     c.fillStyle = gl; c.beginPath(); c.arc(fx, fy, 110, 0, Math.PI * 2); c.fill();
     c.restore();
@@ -4354,6 +4461,7 @@
     if (o.lacht > 0) { c.beginPath(); c.ellipse(0, -30, 5, 4 * o.lacht, 0, 0, Math.PI * 2); c.fill(); if (o.lacht > 0.5) { c.font = 'italic 600 10px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#2a2d4a'; c.fillText('hihi', 18, -58); } }
     else { c.beginPath(); c.ellipse(0, -30, 3, 4, 0, 0, Math.PI * 2); c.fill(); }
     if (o.zeigt) { c.strokeStyle = '#f2f4ff'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(18, -24); c.lineTo(40, -32); c.stroke(); }
+    if (o.winkt) { const wk = ruhig() ? 0 : Math.sin(t * 9) * 0.5; c.strokeStyle = '#f2f4ff'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(18, -26); c.lineTo(18 + Math.cos(-1.2 + wk) * 26, -26 + Math.sin(-1.2 + wk) * 26); c.stroke(); }   // The Tube (Film A): winkt aus dem Zug
     if (o.abzeichen) { c.fillStyle = '#2a2d4a'; c.beginPath(); c.roundRect(-24, -14, 48, 11, 3); c.fill(); c.fillStyle = '#ffd36b'; c.font = 'bold 7px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GHOST CLUB', 0, -8.5); }
     c.restore();
   }
@@ -4569,6 +4677,332 @@
       filmFigur(c, TBF.ich, 'steh', 'erstaunt'); begleiterDa(TBF.ich);
       filmRabenFlug(c, 5, tt, 0.3);
       if (tt > 2.8 && (ruhig() || Math.floor(tt * 2) % 2 === 0)) { c.font = 'bold 34px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = UK_ROT; c.fillText('?', TBF.tower + 70, BODEN_Y - 290); }
+    }
+    c.restore();
+    filmUntertitel(c, f);
+  }
+  /* ---------- Welt The Tube (Klasse 6, Welt 4, 31.10.): U-Bahn-Station (Fliesen, Rundschilder ohne Markenlogo, Uhr, Rolltreppen als Stufen) und Zug von innen (Fenster mit vorbeiziehendem Tunnel,
+     Haltegriffe, Sitze, Fahrgäste mit Handys); Spalt am Bahnsteig (Durchsage „Mind the gap!“), sich schließende Zugtüren, Maus (Gegner), Koffer (Block); Weg A dunkler Bahnsteig mit Lampen, Bänken,
+     dem Geist vom Ghost Club und Zügen in beide Richtungen, Weg B im Zug (Wagen-Plattformen, der Rabe fährt mit); Boss Sergeant Bearskin mit Kissenabdruck am Stadiontor von Wembley, Tür = Stadiontor,
+     Film (A: der Geist winkt aus dem letzten Zug · B: der Rabe landet auf dem Hut des Sergeant) ---------- */
+  const TUBE_FLIESE = '#e9e3d3', TUBE_FUGE = 'rgba(90,80,70,.18)', TUBE_BLAU = '#1d3f8f', TUBE_GELB = '#f2c230', TUBE_WAND = '#3b4454';
+  const TUBE_STATIONEN = ['BAKER STREET', 'KING’S CROSS', 'FINCHLEY ROAD', 'NEASDEN', 'WEMBLEY PARK'];
+  function rundschild(c, x, y, s, text) {   // Stationsschild: roter Ring mit blauem Balken und Stationsname (kein Markenlogo); (x, y) = Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.strokeStyle = UK_ROT; c.lineWidth = 9; c.beginPath(); c.arc(0, 0, 24, 0, Math.PI * 2); c.stroke();
+    c.fillStyle = TUBE_BLAU; c.beginPath(); c.roundRect(-46, -7, 92, 14, 2); c.fill();
+    c.fillStyle = '#fff'; c.font = 'bold 8px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, 0, 0.5);
+    c.restore();
+  }
+  function bahnhofsuhr(c, x, y, s) {   // runde Bahnhofsuhr: zeigt (fast) 11 Uhr – „Wembley Stadium, 11 a.m.“
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#2b2f3a'; c.beginPath(); c.arc(0, 0, 17, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#f7f3e8'; c.beginPath(); c.arc(0, 0, 14, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#2b2f3a'; c.lineWidth = 1.2; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; c.beginPath(); c.moveTo(Math.cos(a) * 11, Math.sin(a) * 11); c.lineTo(Math.cos(a) * 13, Math.sin(a) * 13); c.stroke(); }
+    c.lineWidth = 2; c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(-Math.PI / 2 - Math.PI / 6) * 7, Math.sin(-Math.PI / 2 - Math.PI / 6) * 7); c.stroke();   // Stundenzeiger: kurz vor 11
+    c.lineWidth = 1.4; c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(-Math.PI / 2 + Math.PI * 1.6) * 11, Math.sin(-Math.PI / 2 + Math.PI * 1.6) * 11); c.stroke();
+    c.restore();
+  }
+  function wembleyBogen(c, x, y, w, hh, alpha) {   // der große weiße Bogen des Wembley-Stadions (Kulisse am Ende der Strecke, Boss-Platz, Film); (x, y) = Fußpunkt Mitte, w = Spannweite
+    c.save(); c.globalAlpha = alpha;
+    c.strokeStyle = '#f4f6fa'; c.lineWidth = Math.max(4, w * 0.02); c.lineCap = 'round'; c.beginPath(); c.moveTo(x - w / 2, y); c.quadraticCurveTo(x, y - hh * 2, x + w / 2, y); c.stroke();
+    c.strokeStyle = 'rgba(200,210,225,.7)'; c.lineWidth = 1.5; c.beginPath(); for (let k = 1; k < 10; k++) { const t = k / 10, px = x - w / 2 + w * t, py = y - hh * 2 * t * (1 - t) * 2; c.moveTo(px, py); c.lineTo(px, y - 8); } c.stroke();   // Zugseile
+    c.fillStyle = '#c9cfd8'; c.beginPath(); c.roundRect(x - w * 0.42, y - hh * 0.32, w * 0.84, hh * 0.32, 6); c.fill();   // Stadionrund
+    c.fillStyle = 'rgba(40,50,70,.35)'; for (let k = 0; k < 16; k++) c.fillRect(x - w * 0.4 + k * w * 0.05, y - hh * 0.26, w * 0.028, hh * 0.18);
+    c.restore();
+  }
+  function hintergrundTube(c) {
+    const naehe = Math.min(1, kamera / level.ende);
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#171c28'); g.addColorStop(0.18, '#2a3242'); g.addColorStop(0.19, TUBE_FLIESE); g.addColorStop(1, '#cfc8b6');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    c.strokeStyle = 'rgba(255,255,255,.08)'; c.lineWidth = 3;   // Deckenrippen (Röhre), Parallaxe 0,1
+    for (let i = 0; i < 9; i++) { const n = viewW + 300, rx = ((i * 190 - kamera * 0.1) % n + n) % n - 150; c.beginPath(); c.moveTo(rx - 90, 76); c.quadraticCurveTo(rx, -40, rx + 90, 76); c.stroke(); }
+    c.fillStyle = 'rgba(255,245,210,.9)'; for (let i = 0; i < 7; i++) { const n = viewW + 300, lx = ((i * 250 + 60 - kamera * 0.1) % n + n) % n - 150; c.fillRect(lx, 62, 60, 4); }   // Leuchtstoffröhren
+    c.strokeStyle = TUBE_FUGE; c.lineWidth = 1;   // Fliesen (Parallaxe 0,25)
+    for (let yy = 92; yy < 250; yy += 18) { c.beginPath(); c.moveTo(0, yy); c.lineTo(viewW, yy); c.stroke(); }
+    for (let i = -1; i < viewW / 36 + 2; i++) { const fx = ((i * 36 - kamera * 0.25) % (viewW + 72) + viewW + 72) % (viewW + 72) - 36; for (let r = 0; r < 9; r++) { c.beginPath(); c.moveTo(fx + (r % 2) * 18, 92 + r * 18); c.lineTo(fx + (r % 2) * 18, 110 + r * 18); c.stroke(); } }
+    c.fillStyle = UK_ROT; c.fillRect(0, 136, viewW, 10); c.fillStyle = TUBE_BLAU; c.fillRect(0, 146, viewW, 4);   // farbige Fliesenbänder
+    c.fillStyle = '#b9b0a0'; c.fillRect(0, 76, viewW, 16); c.fillStyle = '#8f877a'; c.fillRect(0, 248, viewW, 4);
+    for (let i = 0; i < 4; i++) {   // Stationsschilder, Uhren, Plakate an der Rückwand (Parallaxe 0,25)
+      const n = viewW + 900, sx = ((i * 740 + 200 - kamera * 0.25) % n + n) % n - 450;
+      if (i % 2 === 0) rundschild(c, sx, 195, 0.9, TUBE_STATIONEN[Math.min(4, Math.floor(naehe * 5 + i / 4))]);
+      else { c.fillStyle = '#f7efd8'; c.fillRect(sx - 34, 165, 68, 58); c.fillStyle = ['#d9692a', '#3a7bd5', '#5fa84a'][i % 3]; c.fillRect(sx - 28, 171, 56, 30); c.fillStyle = '#18213a'; for (let k = 0; k < 3; k++) c.fillRect(sx - 26, 206 + k * 5, 40 - k * 8, 2); }
+      if (i === 1) bahnhofsuhr(c, sx + 120, 182, 1);
+    }
+    if (naehe > 0.55) {   // Wembley: gegen Ende öffnet sich die Station nach draußen – Tageslicht und der große Bogen wachsen heran
+      const f = Math.min(1, (naehe - 0.55) / 0.4);
+      c.fillStyle = `rgba(170,205,235,${0.85 * f})`; c.fillRect(viewW * (1 - 0.55 * f), 0, viewW, 250);
+      wembleyBogen(c, viewW * (1.08 - 0.5 * f) - kamera * 0.02, 248, 300 + 340 * f, 90 + 70 * f, f);
+    }
+    c.fillStyle = '#a7a196'; c.fillRect(-viewW, 252, viewW * 3, H * 2);   // hintere Bahnsteigkante / Gleisbett dahinter
+    c.fillStyle = '#4a4f58'; c.fillRect(-viewW, 262, viewW * 3, H * 2);
+    c.strokeStyle = '#8d9096'; c.lineWidth = 2; c.beginPath(); c.moveTo(0, 284); c.lineTo(viewW, 284); c.moveTo(0, 304); c.lineTo(viewW, 304); c.stroke();   // Schienen des Gegengleises
+    c.fillStyle = '#3a3d44'; for (let i = -1; i < viewW / 34 + 2; i++) { const sx = ((i * 34 - kamera * 0.6) % (viewW + 68) + viewW + 68) % (viewW + 68) - 34; c.fillRect(sx, 278, 10, 32); }
+  }
+  function bodenTube(c, x0, w, a, b, links, rechts) {   // Bahnsteig: graue Platten, gelbe Sicherheitslinie an der Kante, Noppen
+    c.fillStyle = '#9b968c'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#c9c4b8'; c.fillRect(x0, BODEN_Y, w, 9);
+    c.fillStyle = TUBE_GELB; c.fillRect(x0, BODEN_Y + 9, w, 4);
+    c.fillStyle = '#6e6a62'; c.fillRect(x0, BODEN_Y + 13, w, 2);
+    c.strokeStyle = 'rgba(0,0,0,.14)'; c.lineWidth = 1;
+    for (let x = Math.max(Math.ceil(a / 60) * 60, Math.floor(links / 60) * 60); x < Math.min(b, rechts); x += 60) { c.beginPath(); c.moveTo(x - kamera, BODEN_Y + 15); c.lineTo(x - kamera, H); c.stroke(); }
+    c.fillStyle = 'rgba(0,0,0,.12)'; for (let x = Math.max(Math.ceil(a / 20) * 20, Math.floor(links / 20) * 20); x < Math.min(b, rechts); x += 20) { c.beginPath(); c.arc(x - kamera + 10, BODEN_Y + 24, 2, 0, Math.PI * 2); c.fill(); }
+  }
+  function gleisgrube(c, a, b) {   // Lücke = der Spalt: Gleisbett mit Schienen und Schwellen, Bahnsteigkante links (gelb), Zugtür-Schwelle rechts
+    const x0 = a - kamera, w = b - a;
+    c.fillStyle = '#23262d'; c.fillRect(x0, BODEN_Y + 6, w, H);
+    c.fillStyle = '#3a3d44'; for (let k = 6; k < w - 6; k += 22) c.fillRect(x0 + k, BODEN_Y + 34, 12, 40);
+    c.fillStyle = '#9ea3ab'; c.fillRect(x0 + 4, BODEN_Y + 40, w - 8, 4); c.fillRect(x0 + 4, BODEN_Y + 62, w - 8, 4);
+    c.fillStyle = TUBE_GELB; c.fillRect(x0 - 3, BODEN_Y, 6, 14); c.fillStyle = '#c9c4b8'; c.fillRect(x0 + w - 4, BODEN_Y, 8, 10);
+    for (let k = 0; k < Math.floor(w / 30); k++) { const mx = x0 + 10 + k * 30; c.fillStyle = '#8d8f95'; c.beginPath(); c.ellipse(mx + Math.sin(zeit * 3 + k) * 4, BODEN_Y + 52, 5, 2.5, 0, 0, Math.PI * 2); c.fill(); }   // Mäuse im Gleisbett (nur Kulisse)
+  }
+  function kisteTube(c, x, y, k) {   // Blöcke (40 × 40): Koffer (brauner Reisekoffer mit Griff, Ecken, Aufkleber), sonst wie London
+    if (!k || k.art !== 'koffer') return kisteLondon(c, x, y, k);
+    const farbe = ['#7a4a2a', '#2f5a8a', '#8a2a3a'][Math.round(x + kamera + y) % 3];
+    c.fillStyle = farbe; c.beginPath(); c.roundRect(x + 1, y + 6, KISTE - 2, KISTE - 6, 4); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(x + 1, y + 22, KISTE - 2, 2);
+    c.fillStyle = '#c9a35a'; for (const [cx, cy] of [[x + 2, y + 7], [x + 32, y + 7], [x + 2, y + 32], [x + 32, y + 32]]) c.fillRect(cx, cy, 6, 6);
+    c.strokeStyle = '#2a2420'; c.lineWidth = 3; c.beginPath(); c.moveTo(x + 14, y + 6); c.lineTo(x + 14, y + 1); c.lineTo(x + 26, y + 1); c.lineTo(x + 26, y + 6); c.stroke();
+    c.fillStyle = '#f4f4f4'; c.beginPath(); c.roundRect(x + 10, y + 12, 20, 9, 2); c.fill(); c.fillStyle = UK_ROT; c.fillRect(x + 12, y + 14, 16, 2); c.fillStyle = TUBE_BLAU; c.fillRect(x + 12, y + 17, 10, 2);
+  }
+  function bankZeichnen(c, x, y, dunkel_) {   // Bahnsteigbank: Holzlatten auf Gusseisen
+    c.fillStyle = dunkel_ ? '#3a3027' : '#7a5a3a'; c.fillRect(x - 36, y - 30, 72, 7); c.fillRect(x - 36, y - 21, 72, 5); c.fillRect(x - 36, y - 46, 72, 5);
+    c.fillStyle = '#2b2b2b'; c.fillRect(x - 30, y - 30, 4, 30); c.fillRect(x + 26, y - 30, 4, 30); c.fillRect(x - 32, y - 52, 3, 24); c.fillRect(x + 29, y - 52, 3, 24);
+  }
+  function bahnsteigDeko(c, x, w) {   // heller Bahnsteig: Bänke, Schilderpfosten, Ticketautomat, „WAY OUT“-Schilder, am Anfang eine Rolltreppe nach oben (Kulisse)
+    const a = Math.max(-200, x), b = Math.min(viewW + 200, x + w); if (b <= a) return;
+    for (let k = Math.max(0, Math.floor((a - x - 120) / 900)); x + 120 + k * 900 < b && k * 900 < w; k++) {
+      const bx = x + 120 + k * 900; if (bx < a) continue;
+      bankZeichnen(c, bx, BODEN_Y, false);
+      c.fillStyle = '#2b2f3a'; c.fillRect(bx + 236, BODEN_Y - 118, 4, 118); rundschild(c, bx + 238, BODEN_Y - 126, 0.75, TUBE_STATIONEN[Math.min(4, k % 5)]);
+      if (k % 2 === 1) { c.fillStyle = TUBE_GELB; c.beginPath(); c.roundRect(bx + 420, BODEN_Y - 96, 76, 20, 3); c.fill(); c.fillStyle = '#18213a'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('WAY OUT →', bx + 458, BODEN_Y - 86); }
+      else { c.fillStyle = '#4a5160'; c.fillRect(bx + 420, BODEN_Y - 96, 44, 96); c.fillStyle = '#9fd3ff'; c.fillRect(bx + 426, BODEN_Y - 88, 32, 22); c.fillStyle = '#ffd36b'; c.fillRect(bx + 430, BODEN_Y - 58, 24, 5); c.fillStyle = '#18213a'; c.font = 'bold 6px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TICKETS', bx + 442, BODEN_Y - 48); }
+    }
+    if (x > a - 200 && x < b) {   // Rolltreppe nach oben am Anfang des Bahnsteigs (Kulisse hinter der Strecke)
+      c.fillStyle = '#5f6b78'; c.beginPath(); c.moveTo(x - 40, BODEN_Y); c.lineTo(x + 120, BODEN_Y - 150); c.lineTo(x + 160, BODEN_Y - 150); c.lineTo(x, BODEN_Y); c.closePath(); c.fill();
+      c.fillStyle = '#8d9096'; for (let k = 0; k < 10; k++) c.fillRect(x - 36 + k * 16, BODEN_Y - 4 - k * 15, 20, 4);
+      c.strokeStyle = '#2b2f3a'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 40, BODEN_Y - 40); c.lineTo(x + 120, BODEN_Y - 190); c.stroke();
+    }
+  }
+  function zugFenster(c, fx, fy, fw, fh, t) {   // ein Zugfenster: dunkler Tunnel zieht vorbei (Kabel, Lichter)
+    c.fillStyle = '#0d1018'; c.fillRect(fx, fy, fw, fh);
+    c.save(); c.beginPath(); c.rect(fx, fy, fw, fh); c.clip();
+    c.strokeStyle = 'rgba(120,130,150,.5)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(fx, fy + fh * 0.35); c.lineTo(fx + fw, fy + fh * 0.35); c.moveTo(fx, fy + fh * 0.55); c.lineTo(fx + fw, fy + fh * 0.55); c.stroke();
+    for (let k = 0; k < 3; k++) { const lx = fx + ((k * 97 - t * 520) % (fw + 60) + fw + 60) % (fw + 60) - 30; c.fillStyle = 'rgba(255,200,120,.85)'; c.beginPath(); c.arc(lx, fy + fh * 0.4, 3, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(255,200,120,.25)'; c.beginPath(); c.arc(lx, fy + fh * 0.4, 9, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+    c.strokeStyle = '#8d9096'; c.lineWidth = 2; c.strokeRect(fx, fy, fw, fh);
+  }
+  function fahrgast(c, x, y, k) {   // sitzender Fahrgast mit Handy (Kulisse): Kopf, Körper, leuchtendes Handy
+    const farbe = ['#3a7bd5', '#8a2a3a', '#5fa84a', '#e0a400', '#6a4a8a'][k % 5], haut = ['#f1c9a5', '#8d5a3b', '#d9a070'][k % 3];
+    c.fillStyle = farbe; c.beginPath(); c.roundRect(x - 11, y - 36, 22, 30, 5); c.fill();
+    c.fillStyle = haut; c.beginPath(); c.arc(x, y - 44, 8, 0, Math.PI * 2); c.fill();
+    c.fillStyle = ['#2a1a0a', '#e8c070', '#5a3a22'][k % 3]; c.beginPath(); c.arc(x, y - 47, 8, Math.PI, 0); c.fill();
+    c.fillStyle = '#18213a'; c.fillRect(x - 3, y - 22, 9, 12); c.fillStyle = `rgba(160,220,255,${0.7 + 0.3 * Math.sin(zeit * 2 + k)})`; c.fillRect(x - 2, y - 21, 7, 10);
+  }
+  function zugDeko(c, x, w, y) {   // Zug von innen (y = Boden des Zugs): Wände, Decke mit Lampen, Fensterband mit Tunnel, Haltestangen und Griffe, Sitzbänke mit Fahrgästen, Linienplan, „Mind the gap“-Aufkleber
+    const a = Math.max(-100, x), b = Math.min(viewW + 100, x + w); if (b <= a) return;
+    const oben = y - 215, fy = y - 190, fh = 80;
+    c.fillStyle = TUBE_WAND; c.fillRect(a, oben, b - a, y - oben);
+    c.fillStyle = '#2b323f'; c.fillRect(a, oben, b - a, 14); c.fillStyle = '#4a5467'; c.fillRect(a, y - 100, b - a, 4);
+    c.fillStyle = 'rgba(255,245,215,.95)'; for (let lx = Math.floor((a - x) / 120) * 120 + x; lx < b; lx += 120) if (lx >= x && lx < x + w) c.fillRect(lx + 20, oben + 4, 80, 4);   // Deckenlampen
+    for (let fx = Math.floor((a - x) / 90) * 90 + x; fx < b; fx += 90) { if (fx < x || fx + 72 > x + w) continue; zugFenster(c, fx + 6, fy, 72, fh, zeit); }
+    c.fillStyle = '#5a6475'; c.fillRect(a, y - 102, b - a, 2);
+    c.fillStyle = '#e8e2d2'; c.fillRect(a, y - 96, b - a, 9);   // Linienplan: heller Streifen mit Haltepunkten
+    for (let px = Math.floor((a - x) / 60) * 60 + x; px < b; px += 60) if (px >= x && px < x + w) { c.fillStyle = TUBE_BLAU; c.fillRect(px, y - 93, 60, 3); c.fillStyle = '#fff'; c.beginPath(); c.arc(px + 30, y - 91.5, 3, 0, Math.PI * 2); c.fill(); c.strokeStyle = TUBE_BLAU; c.lineWidth = 1; c.stroke(); }
+    for (let sx = Math.floor((a - x - 150) / 300) * 300 + x + 150; sx < b; sx += 300) {   // Sitzbank (drei Plätze) mit Fahrgästen
+      if (sx < x + 40 || sx + 150 > x + w - 40) continue;
+      c.fillStyle = '#2a4a8a'; c.beginPath(); c.roundRect(sx, y - 60, 150, 20, 4); c.fill(); c.fillStyle = '#3a5ea0'; for (let k = 0; k < 150; k += 10) c.fillRect(sx + k + 3, y - 56, 4, 12);
+      c.fillStyle = '#2a4a8a'; c.fillRect(sx, y - 84, 150, 26); c.fillStyle = '#3a5ea0'; for (let k = 0; k < 150; k += 10) c.fillRect(sx + k + 3, y - 80, 4, 18);
+      c.fillStyle = '#4a5467'; c.fillRect(sx, y - 40, 150, 40);
+      for (let k = 0; k < 3; k++) fahrgast(c, sx + 28 + k * 48, y - 36, Math.round(sx / 300) + k);
+    }
+    c.strokeStyle = TUBE_GELB; c.lineWidth = 3;   // Haltestangen + hängende Griffe
+    for (let px = Math.floor((a - x) / 260) * 260 + x + 80; px < b; px += 260) if (px >= x && px < x + w) { c.beginPath(); c.moveTo(px, oben + 14); c.lineTo(px, y - 30); c.stroke(); }
+    c.lineWidth = 2; for (let gx = Math.floor((a - x) / 70) * 70 + x + 35; gx < b; gx += 70) if (gx >= x && gx < x + w) { const sw = ruhig() ? 0 : Math.sin(zeit * 2 + gx * 0.01) * 3; c.beginPath(); c.moveTo(gx, oben + 14); c.lineTo(gx + sw, oben + 44); c.stroke(); c.beginPath(); c.arc(gx + sw, oben + 50, 6, 0, Math.PI * 2); c.stroke(); }
+    c.fillStyle = TUBE_GELB; c.fillRect(a, y - 6, b - a, 6); c.fillStyle = '#18213a'; c.font = 'bold 7px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    for (let tx = Math.floor((a - x) / 400) * 400 + x + 200; tx < b; tx += 400) if (tx >= x && tx < x + w) c.fillText('MIND THE GAP', tx, y - 3);
+  }
+  function zugAussen(c, x, y, w, t, dunkel_) {   // vorbeifahrender Zug (Kulisse, von außen): Wagenkasten mit leuchtenden Fenstern, rote Stirn; (x, y) = links unten
+    c.fillStyle = dunkel_ ? '#5a6475' : '#8d9096'; c.beginPath(); c.roundRect(x, y - 52, w, 52, [10, 10, 2, 2]); c.fill();
+    c.fillStyle = UK_ROT; c.fillRect(x, y - 30, w, 6);
+    c.fillStyle = `rgba(255,236,170,${dunkel_ ? 0.95 : 0.75})`; for (let k = 8; k < w - 30; k += 36) c.fillRect(x + k, y - 46, 26, 14);
+    c.fillStyle = '#2b2f3a'; for (let k = 20; k < w; k += 90) c.fillRect(x + k, y - 10, 10, 10);
+  }
+  function dunkelbahnsteigDeko(c, x, w) {   // Weg A: dunkler Bahnsteig – Lampen alle 420 (Lichtkegel kommen von dunkelZeichnen), Bänke, Anzeigetafel „NEXT TRAIN: 1899“, Züge in beide Richtungen auf dem Gegengleis
+    const a = Math.max(-100, x), b = Math.min(viewW + 100, x + w); if (b <= a) return;
+    c.fillStyle = '#1b1e27'; c.fillRect(a, -H, b - a, BODEN_Y + H);
+    c.fillStyle = '#23262f'; c.fillRect(a, 90, b - a, 160); c.strokeStyle = 'rgba(255,255,255,.05)'; c.lineWidth = 1; for (let yy = 92; yy < 250; yy += 18) { c.beginPath(); c.moveTo(a, yy); c.lineTo(b, yy); c.stroke(); }
+    c.fillStyle = '#2a2d36'; c.fillRect(a, 252, b - a, 10); c.fillStyle = '#15171d'; c.fillRect(a, 262, b - a, BODEN_Y - 262);
+    c.strokeStyle = '#4a4f58'; c.lineWidth = 2; c.beginPath(); c.moveTo(a, 300); c.lineTo(b, 300); c.moveTo(a, 318); c.lineTo(b, 318); c.stroke();
+    const n = w + 600;   // zwei Züge: einer nach rechts, einer nach links (wechseln sich ab), im Dunkeln leuchten die Fenster
+    const z1 = x - 300 + ((zeit * 210) % n), z2 = x + w + 300 - ((zeit * 180 + 1400) % n);
+    if (z1 + 420 > a && z1 < b) zugAussen(c, z1 - kamera + kamera, 322, 420, zeit, true);
+    if (z2 + 360 > a && z2 < b) zugAussen(c, z2, 322, 360, zeit, true);
+    for (let lx = x + 140; lx < x + w; lx += 420) {   // Lampen (gleiche Stellen wie die Lichtkegel)
+      if (lx < a - 30 || lx > b + 30) continue;
+      c.strokeStyle = '#111'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(lx, 76); c.lineTo(lx, 150); c.stroke();
+      c.fillStyle = '#2f3540'; c.beginPath(); c.moveTo(lx - 14, 162); c.lineTo(lx + 14, 162); c.lineTo(lx + 6, 148); c.lineTo(lx - 6, 148); c.closePath(); c.fill();
+      c.fillStyle = `rgba(255,225,150,${0.8 + 0.2 * Math.sin(zeit * 7 + lx)})`; c.beginPath(); c.arc(lx, 164, 5, 0, Math.PI * 2); c.fill();
+    }
+    for (let bx = x + 420; bx < x + w - 200; bx += 1300) if (bx > a - 60 && bx < b + 60) bankZeichnen(c, bx, BODEN_Y, true);
+    for (let tx = x + 900; tx < x + w - 200; tx += 2600) {   // Anzeigetafel
+      if (tx < a - 100 || tx > b + 100) continue;
+      c.fillStyle = '#111318'; c.beginPath(); c.roundRect(tx - 70, BODEN_Y - 150, 140, 30, 3); c.fill(); c.strokeStyle = '#3b414d'; c.lineWidth = 2; c.stroke();
+      c.fillStyle = Math.floor(zeit * 2) % 2 ? '#ff9a3c' : '#ffb86a'; c.font = 'bold 10px monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('NEXT TRAIN: 1899', tx, BODEN_Y - 140); c.font = '600 7px monospace'; c.fillText('ALWAYS LATE', tx, BODEN_Y - 128);
+    }
+  }
+  function geistBankDeko(c, x) { bankZeichnen(c, x, BODEN_Y, true); geistZeichnen(c, x - 4, BODEN_Y - 26, zeit + x, { abzeichen: true, alpha: 0.78 }); }   // Weg A: der Geist vom Ghost Club sitzt auf einer Bank („Hello again.“)
+  function rolltreppePlattform(c, x, y, w) {   // Rolltreppe als Stufe: metallene Treppe von links unten zur Plattform, Stufenkanten wandern (laufende Rolltreppe), Handlauf, oben die Standfläche
+    const hoch = Math.min(120, BODEN_Y - y - 4), breite = Math.min(w - 10, hoch * 1.1);
+    c.fillStyle = '#5f6b78'; c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y); c.lineTo(x + w, y + 14); c.lineTo(x + breite, y + 14); c.lineTo(x, y + hoch + 4); c.closePath(); c.fill();
+    c.fillStyle = '#8d9096'; const n = Math.max(3, Math.floor(hoch / 14)), lauf = ruhig() ? 0 : (zeit * 30) % 14;
+    for (let k = 0; k < n; k++) { const sy = y + hoch - k * (hoch / n) - lauf * (hoch / n) / 14, sx = x + (hoch - (sy - y)) * (breite / hoch); if (sy < y + 4 || sy > y + hoch) continue; c.fillRect(sx, sy, 18, 3); }
+    c.strokeStyle = '#2b2f3a'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 6, y + hoch - 30); c.lineTo(x + breite, y - 34); c.lineTo(x + w, y - 34); c.stroke();
+    c.fillStyle = '#c9c4b8'; c.beginPath(); c.roundRect(x - 2, y - 3, w + 4, 7, 3); c.fill(); c.fillStyle = TUBE_GELB; c.fillRect(x, y + 3, w, 2);
+  }
+  function wagenPlattform(c, x, y, w) {   // Weg B: Boden eines Wagens – Zugboden mit Riffelblech, darunter Wagenkasten-Unterkante und Drehgestell; die Wagenenden (Lücke) zeigen Gummiwülste
+    c.fillStyle = '#4a5467'; c.beginPath(); c.roundRect(x, y, w, 16, 3); c.fill();
+    c.fillStyle = '#5a6475'; c.beginPath(); c.roundRect(x - 2, y - 3, w + 4, 7, 3); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.18)'; for (let k = 6; k < w - 6; k += 12) c.fillRect(x + k, y + 7, 6, 2);
+    c.fillStyle = '#2b2f3a'; c.fillRect(x + 20, y + 16, w - 40, 6); for (const rx of [x + 60, x + w - 60]) if (w > 160) { c.fillStyle = '#1b1b1f'; c.beginPath(); c.arc(rx, y + 26, 7, 0, Math.PI * 2); c.arc(rx + 22, y + 26, 7, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#23262d'; c.fillRect(x - 4, y - 12, 6, 28); c.fillRect(x + w - 2, y - 12, 6, 28);   // Gummiwülste am Wagenende
+  }
+  function spaltZeichnen(c, s) {   // Spalt: Schild „MIND THE GAP“ auf einem Pfosten vor der Lücke (blinkt nach der Durchsage), Schriftzug an der Kante, rechts die offene Zugtür eines wartenden Zugs
+    const x = s.x - kamera, blink = s.gewarnt && (ruhig() || Math.floor(zeit * 5) % 2 === 0);
+    c.fillStyle = '#2b2f3a'; c.fillRect(x - 66, BODEN_Y - 110, 4, 110);
+    c.fillStyle = blink ? TUBE_GELB : '#f7efd8'; c.beginPath(); c.roundRect(x - 112, BODEN_Y - 140, 96, 32, 4); c.fill(); c.strokeStyle = blink ? UK_ROT : '#2b2f3a'; c.lineWidth = 2; c.stroke();
+    c.fillStyle = '#18213a'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MIND THE GAP', x - 64, BODEN_Y - 124);
+    c.fillStyle = '#18213a'; c.font = 'bold 8px system-ui, sans-serif'; c.fillText('MIND THE GAP', x - 64, BODEN_Y + 6);
+    const tx = x + SPALT_W;   // wartender Zug rechts: Wagenkasten mit offener Tür an der Lücke
+    c.fillStyle = '#8d9096'; c.beginPath(); c.roundRect(tx - 8, BODEN_Y - 200, 230, 200, [12, 12, 0, 0]); c.fill();
+    c.fillStyle = UK_ROT; c.fillRect(tx - 8, BODEN_Y - 120, 230, 8);
+    c.fillStyle = '#2b323f'; c.fillRect(tx - 8, BODEN_Y - 186, 60, 186); c.fillStyle = 'rgba(255,245,215,.5)'; c.fillRect(tx - 2, BODEN_Y - 176, 48, 60);   // offene Tür (man sieht hinein)
+    c.fillStyle = TUBE_GELB; c.fillRect(tx - 8, BODEN_Y - 186, 4, 186); c.fillRect(tx + 48, BODEN_Y - 186, 4, 186);
+    for (let k = 70; k < 210; k += 70) zugFenster(c, tx + k, BODEN_Y - 180, 52, 56, 0);
+    c.fillStyle = '#2b2f3a'; c.fillRect(tx + 150, BODEN_Y - 110, 60, 110); c.fillStyle = TUBE_GELB; c.fillRect(tx + 150, BODEN_Y - 110, 3, 110); c.fillRect(tx + 207, BODEN_Y - 110, 3, 110);
+  }
+  function tuerZeichnen(c, t) {   // Zugtür: Rahmen mit Schild „DOORS CLOSING“, zwei Türflügel schieben sich von den Seiten zu (schluss 0..1), gelbe Kanten blinken bei Warnung
+    const x = t.x - kamera, y = t.y, warn = t.phase === 'warnung' || t.phase === 'schliesst', blink = warn && (ruhig() || Math.floor(zeit * 8) % 2 === 0);
+    c.fillStyle = '#2b323f'; c.fillRect(x - 46, y - 118, 92, 8); c.fillRect(x - 46, y - 118, 6, 118); c.fillRect(x + 40, y - 118, 6, 118);
+    if (warn || t.phase === 'zu') { c.fillStyle = t.phase === 'zu' ? '#4a5160' : (blink ? UK_ROT : '#7a1f1f'); c.beginPath(); c.roundRect(x - 44, y - 140, 88, 18, 3); c.fill(); c.fillStyle = '#fff'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(t.phase === 'zu' ? 'DOORS CLOSED' : 'DOORS CLOSING', x, y - 131); }
+    const offenW = 40 - 28 * t.schluss;   // jeder Flügel: von außen (x ± 40) bis zur Mitte (x ± 12)
+    for (const seite of [-1, 1]) {
+      const fx = seite < 0 ? x - offenW - 26 : x + offenW;
+      c.fillStyle = '#8d9096'; c.beginPath(); c.roundRect(fx, y - TUER_H - 46, 26, TUER_H + 46, 3); c.fill();
+      c.fillStyle = '#0d1018'; c.fillRect(fx + 5, y - TUER_H - 38, 16, 30);
+      c.fillStyle = blink ? TUBE_GELB : warn ? '#8a6a10' : '#c9a030'; c.fillRect(seite < 0 ? fx + 22 : fx, y - TUER_H - 46, 4, TUER_H + 46);
+    }
+    if (blink) { c.fillStyle = 'rgba(255,200,60,.25)'; c.fillRect(x - 40, y - TUER_H - 46, 80, TUER_H + 46); }
+  }
+  function maus(c, g) {   // Maus (The Tube): graue Hausmaus, rosa Ohren und Schwanz, flitzt; plattdrückbar
+    const b = gegnerBox(g); const cx = b.x + 13, cy = b.y + 16;
+    c.save(); c.translate(cx, cy); if (g.richtung > 0) c.scale(-1, 1);
+    if (g.tot > 0) c.scale(1, Math.max(0.15, 1 - g.tot * 2));
+    const w = Math.sin(g.flug * 16) * 2;
+    c.strokeStyle = '#e8a0a8'; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath(); c.moveTo(9, -5); c.quadraticCurveTo(20, -4 + w, 24, -12 + w); c.stroke();   // Schwanz
+    c.fillStyle = '#8d8f95'; c.beginPath(); c.ellipse(0, -7, 12, 7, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(-8, -10); c.quadraticCurveTo(-18, -9, -19, -4); c.quadraticCurveTo(-12, -1, -6, -2); c.closePath(); c.fill();   // spitze Schnauze
+    c.fillStyle = '#e8a0a8'; c.beginPath(); c.arc(-7, -14, 4, 0, Math.PI * 2); c.arc(-1, -15, 4, 0, Math.PI * 2); c.fill();   // Ohren
+    c.fillStyle = '#8d8f95'; c.beginPath(); c.arc(-7, -14, 2.2, 0, Math.PI * 2); c.arc(-1, -15, 2.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-11, -8, 1.5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#e8a0a8'; c.beginPath(); c.arc(-19, -4, 1.4, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(40,40,40,.5)'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(-16, -5); c.lineTo(-24, -7); c.moveTo(-16, -3); c.lineTo(-24, -2); c.stroke();   // Schnurrhaare
+    c.fillStyle = '#6a6c72'; c.beginPath(); c.roundRect(-8 + w, -2, 5, 3, 1); c.roundRect(3 - w, -2, 5, 3, 1); c.fill();
+    c.restore();
+  }
+  // Boss-Platz: Sergeant Bearskin steht schon am Stadiontor – mit Kissenabdruck im Gesicht („I never sleep on the tube“); Variante A (neuer Hut) trägt er die zu große Mütze; wird in der Sequenz sichtbar, marschiert im Finale zur Seite
+  const tubeHut = () => (variantenWahl['towerbridge.g1'] === 'A' ? 'gross' : 'fell');
+  function tubeBoss(c, x, y) {
+    const auf = boss.sichtbar, weg = boss.weg;
+    const gx = x + weg * 240, marsch = weg > 0 && !ruhig() ? Math.sin(zeit * 9) : 0;
+    const blick = (zustand === 'boss' || zustand === 'sequenz') ? -2 : (Math.sin(zeit * 0.8) > 0.35 ? 2 : Math.sin(zeit * 0.8) < -0.35 ? -2 : 0);
+    gardist(c, gx, y, { alpha: auf * (1 - weg * 0.85), marsch, blick, hut: tubeHut(), kissen: true });
+    if (auf > 0.9 && zustand === 'sequenz') { c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('!', gx + 26, y - 226 - (ruhig() ? 0 : Math.abs(Math.sin(zeit * 6)) * 5)); }
+  }
+  function stadionTor(c, x, y) {   // Tür der Welt The Tube: das Stadiontor von Wembley – zwei Betonpfeiler, der große Bogen dahinter, Schild WEMBLEY STADIUM · GATE A, ein Gitter, das sich hebt (tuer.offen), Drehkreuz
+    const offen = tuer.offen;
+    wembleyBogen(c, x + 90, y - 150, 560, 150, 1);
+    c.fillStyle = '#c9cfd8'; c.fillRect(x - 60, y - 150, 300, 150); c.fillStyle = 'rgba(40,50,70,.25)'; for (let k = 0; k < 7; k++) c.fillRect(x - 50 + k * 42, y - 134, 22, 50);
+    c.fillStyle = '#9ea3ab'; c.fillRect(x - 44, y - 160, 18, 160); c.fillRect(x + 26, y - 160, 18, 160);
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(x - 56, y - 184, 112, 20, 4); c.fill();
+    c.fillStyle = '#ffd36b'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('WEMBLEY STADIUM · GATE A', x, y - 174);
+    c.fillStyle = offen > 0 ? `rgba(255,240,180,${0.8 * offen})` : '#2c2a26'; c.fillRect(x - 26, y - 150, 52, 150);
+    c.save(); c.beginPath(); c.rect(x - 26, y - 150, 52, 150); c.clip(); c.translate(0, -offen * 150);   // Gitter hebt sich
+    c.strokeStyle = '#121212'; c.lineWidth = 2.5; c.beginPath(); for (let k = -20; k <= 20; k += 8) { c.moveTo(x + k, y - 150); c.lineTo(x + k, y); } for (let k = 0; k < 150; k += 24) { c.moveTo(x - 26, y - k); c.lineTo(x + 26, y - k); } c.stroke();
+    c.restore();
+    c.fillStyle = '#5f6b78'; c.fillRect(x - 10, y - 46, 4, 46); c.strokeStyle = '#8d9096'; c.lineWidth = 3; c.beginPath(); for (let k = 0; k < 3; k++) { const a = k * Math.PI * 2 / 3 + offen * 2; c.moveTo(x - 8, y - 40); c.lineTo(x - 8 + Math.cos(a) * 16, y - 40 + Math.sin(a) * 6); } c.stroke();   // Drehkreuz
+    c.fillStyle = '#3a3a3a'; c.fillRect(x - 60, y - 70, 10, 24); c.fillStyle = offen > 0.3 ? '#2ecc71' : '#e63946'; c.beginPath(); c.arc(x - 55, y - 62, 4, 0, Math.PI * 2); c.fill();
+    unionJack(c, x + 50, y - 200, 26, 15); c.fillStyle = '#555'; c.fillRect(x + 48, y - 200, 2, 52);
+  }
+  /* Film The Tube: Bühne am Bahnhof Wembley Park (über Tage) – Bahnsteig, der letzte Zug rechts (ab 700), Stadion mit Bogen im Hintergrund, Ticketschranke (A, Szene 3); Kamera je Szene */
+  const TUF = { ich: 300, serg: 430, zug: 700, schranke: 560 };
+  function filmKameraTube(sz, f, ende) {
+    const K = {
+      A: [[[560, 215, 1.1], [470, 235, 1.3]], [[560, 238, 1.0], [590, 240, 1.0]], [[470, 245, 1.5], [480, 250, 1.6]]],
+      B: [[[560, 215, 1.1], [470, 235, 1.3]], [[400, 232, 1.4], [420, 228, 1.6]], [[440, 238, 1.7], [440, 242, 1.9]]],
+    }[ende][sz];
+    const g = sanft(f);
+    return [lerp(K[0][0], K[1][0], g), lerp(K[0][1], K[1][1], g), lerp(K[0][2], K[1][2], g)];
+  }
+  function filmKulisseTube(c, zugDx) {
+    const g = c.createLinearGradient(0, -400, 0, BODEN_Y); g.addColorStop(0, '#6fa8dc'); g.addColorStop(0.7, '#d6e8f5'); g.addColorStop(1, '#eef6fb');
+    c.fillStyle = g; c.fillRect(-500, -600, 2200, BODEN_Y + 600);
+    c.fillStyle = 'rgba(255,255,255,.9)'; for (const [wx, wy] of [[60, 20], [980, -30], [1300, 60], [600, -60]]) { c.beginPath(); c.arc(wx, wy, 18, 0, Math.PI * 2); c.arc(wx + 22, wy - 8, 22, 0, Math.PI * 2); c.arc(wx + 46, wy, 16, 0, Math.PI * 2); c.fill(); }
+    wembleyBogen(c, 760, 240, 680, 120, 1);
+    c.fillStyle = '#b3bcc6'; for (let i = 0; i < 18; i++) { const bx = -400 + i * 110, bh = 20 + ((i * 37) % 30); if (bx > 400 && bx < 1120) continue; c.fillRect(bx, 250 - bh, 60, bh); }
+    c.fillStyle = '#4a4f58'; c.fillRect(-500, 252, 2200, 120); c.strokeStyle = '#8d9096'; c.lineWidth = 2; c.beginPath(); c.moveTo(-500, 290); c.lineTo(1700, 290); c.moveTo(-500, 310); c.lineTo(1700, 310); c.stroke();
+    c.fillStyle = '#9b968c'; c.fillRect(-500, BODEN_Y, 2200, 300); c.fillStyle = '#c9c4b8'; c.fillRect(-500, BODEN_Y, 2200, 9); c.fillStyle = TUBE_GELB; c.fillRect(-500, BODEN_Y + 9, 2200, 4);
+    c.fillStyle = '#2b2f3a'; c.fillRect(190, BODEN_Y - 118, 4, 118); rundschild(c, 192, BODEN_Y - 126, 0.85, 'WEMBLEY PARK'); bahnhofsuhr(c, 120, BODEN_Y - 150, 1.2); c.fillStyle = '#2b2f3a'; c.fillRect(118, BODEN_Y - 132, 4, 132);
+    bankZeichnen(c, 980, BODEN_Y, false);
+    zugAussen(c, TUF.zug + zugDx, BODEN_Y + 2, 620, zeit, false);   // der letzte Zug (hält rechts; Ende A: fährt ab)
+  }
+  function filmSergeantTube(c, x, o) { c.save(); c.translate(x, BODEN_Y); c.scale(0.8, 0.8); gardist(c, 0, 0, Object.assign({ hut: tubeHut(), kissen: true }, o)); c.restore(); }
+  const tubeHutOben = () => BODEN_Y - (tubeHut() === 'gross' ? 196 * 1.15 : 196) * 0.8;   // Oberkante der Mütze im Film (Maßstab 0,8)
+  function filmZeichnenTube(c) {
+    const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
+    if (sz >= 3) return filmTitel(c, f);
+    const [kx, ky, kz] = filmKameraTube(sz, p, ende);
+    c.save(); c.translate(viewW / 2, H / 2); c.scale(kz, kz); c.translate(-kx, -ky);
+    const beg = begleiter ? begleiter.art : 'fuchs';
+    const begleiterDa = (fx) => begleiterZeichnen(c, fx - 48, beg === 'taube' ? BODEN_Y - 108 + Math.sin(zeit * 2.2) * 6 : BODEN_Y, beg, zeit);
+    if (sz === 0) {   // Wembley Stadium, 11 a.m.: der Sergeant ist schon da (Kissenabdruck), du kommst angelaufen – „How?“
+      filmKulisseTube(c, 0);
+      const fx = lerp(100, TUF.ich, sanft(tt / 2.4)), laeuft_ = tt < 2.4;
+      filmSergeantTube(c, TUF.serg, { blick: -2, laecheln: tt > 4.5 ? 0.4 : 0 });
+      filmFigur(c, fx, laeuft_ ? 'lauf' : 'steh', laeuft_ ? 'grinsend' : 'erstaunt'); begleiterDa(fx);
+      if (ende === 'B') { if (laeuft_) rabeFlug(c, fx - 70, BODEN_Y - 120, zeit, 0.8); else rabeSitzt(c, fx - 60, BODEN_Y, zeit); }
+      if (tt > 2.8) { c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('?', fx + 24, BODEN_Y - 176 - (ruhig() ? 0 : Math.abs(Math.sin(tt * 6)) * 4)); }
+      if (tt > 3.6) { c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText('😴', TUF.serg - 30, BODEN_Y - 150); }
+    } else if (ende === 'A' && sz === 1) {   // der Geist winkt aus dem letzten Zug – „See you at the match!“ – der Zug fährt ab
+      const dx = tt > 2.2 ? sanft((tt - 2.2) / 3) * 420 : 0;
+      filmKulisseTube(c, dx);
+      geistZeichnen(c, TUF.zug + 120 + dx, BODEN_Y - 12, zeit, { abzeichen: true, winkt: true, alpha: 0.8 });
+      if (tt > 0.6 && tt < 4) sprechblase(c, TUF.zug + 40 + dx, BODEN_Y - 96, 'See you at the match!');
+      filmSergeantTube(c, TUF.serg, { blick: 2 });
+      filmFigur(c, TUF.ich, 'steh', 'grinsend'); begleiterDa(TUF.ich);
+    } else if (ende === 'A' && sz === 2) {   // nah: Ghosts don't need tickets – der Geist schwebt durch die Ticketschranke, du hältst dein Ticket. Lucky them.
+      filmKulisseTube(c, 420);
+      c.fillStyle = '#5f6b78'; for (const sx of [TUF.schranke, TUF.schranke + 70]) { c.fillRect(sx, BODEN_Y - 60, 18, 60); c.fillStyle = TUBE_GELB; c.fillRect(sx + 4, BODEN_Y - 54, 10, 6); c.fillStyle = '#5f6b78'; }   // Ticketschranke
+      c.fillStyle = '#9ea3ab'; c.fillRect(TUF.schranke + 18, BODEN_Y - 40, 52, 8);
+      const g = sanft((tt - 0.8) / 2.2);
+      geistZeichnen(c, lerp(TUF.schranke - 60, TUF.schranke + 150, g), BODEN_Y - 40 - Math.sin(g * Math.PI) * 20, zeit, { abzeichen: true, alpha: 0.82 });
+      filmSergeantTube(c, TUF.serg, { blick: 2, laecheln: tt > 2.8 ? 0.5 : 0 });
+      filmFigur(c, TUF.ich, 'steh', tt > 2.8 ? 'zunge' : 'erstaunt'); begleiterDa(TUF.ich);
+      c.save(); c.translate(TUF.ich + 30, BODEN_Y - 96); c.rotate(-0.3); c.fillStyle = '#ffd36b'; c.fillRect(-12, -8, 24, 14); c.fillStyle = TUBE_BLAU; c.fillRect(-9, -4, 18, 2); c.fillRect(-9, 1, 12, 2); c.restore();   // dein Ticket
+      if (tt > 3.2) { c.font = 'bold 12px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText('🎟️', TUF.ich + 46, BODEN_Y - 118); }
+    } else if (ende === 'B' && sz === 1) {   // der Rabe fliegt von deiner Seite auf die Mütze des Sergeant – It likes it there
+      filmKulisseTube(c, 0);
+      const g = sanft((tt - 0.6) / 1.8), ry = tubeHutOben();
+      filmSergeantTube(c, TUF.serg, { blick: g > 0.7 ? 0 : -2, erstaunt: 1 });
+      filmFigur(c, TUF.ich, 'steh', 'grinsend'); begleiterDa(TUF.ich);
+      if (g >= 1) rabeSitzt(c, TUF.serg + 2, ry + 2, zeit); else rabeFlug(c, lerp(TUF.ich - 60, TUF.serg + 2, g), lerp(BODEN_Y - 14, ry - 6, g) - Math.sin(g * Math.PI) * 90, zeit, 0.8);
+      if (g < 1 && tt > 0.6) { c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('!', TUF.serg + 22, BODEN_Y - 196); }
+    } else {   // Ende B Szene 3: nah – Is it the Tower raven? Der Sergeant lächelt. „It is now.“
+      filmKulisseTube(c, 0);
+      const lae = tt > 1.8 ? Math.min(1, (tt - 1.8) / 0.5) : 0;
+      filmSergeantTube(c, TUF.serg, { blick: lae > 0 ? -2 : 0, laecheln: lae * 0.9 });
+      rabeSitzt(c, TUF.serg + 2, tubeHutOben() + 2, zeit);
+      filmFigur(c, TUF.ich, 'steh', lae > 0 ? 'grinsend' : 'erstaunt'); begleiterDa(TUF.ich);
+      if (tt > 0.5 && lae === 0) { c.font = 'bold 20px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = UK_ROT; c.fillText('?', TUF.ich + 26, BODEN_Y - 176); }
     }
     c.restore();
     filmUntertitel(c, f);
@@ -4831,6 +5265,7 @@
     if (film.welt === 'sd') return filmZeichnenSD(c);   // Story Mount Rushmore (Klasse 9, Kapitel 4)
     if (film.welt === 'londoneye') return filmZeichnenEye(c);   // Story London Eye (Klasse 6, Kapitel 2)
     if (film.welt === 'towerbridge') return filmZeichnenBridge(c);   // Story Tower Bridge (Klasse 6, Kapitel 3)
+    if (film.welt === 'tube') return filmZeichnenTube(c);   // Story The Tube (Klasse 6, Kapitel 4)
     const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
     if (sz >= 3) return filmTitel(c, f);
     const [kx, ky, kz] = filmKamera(sz, p, ende);
@@ -4919,6 +5354,12 @@
       if (begleiter) begleiterZeichnen(c, viewW / 2 - 118, begleiter.art === 'taube' ? 230 : 300, begleiter.art, zeit);
       if (f.ende === 'A') geistZeichnen(c, viewW / 2 + 130, 290, zeit, { lacht: 0.7, alpha: 0.8 }); else rabeSitzt(c, viewW / 2 + 130, 300, zeit);
       c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'A' ? '🐦 🦔 👻' : '🎩 💧 … ?', viewW / 2, 340);
+    } else if (f.welt === 'tube') {   // The Tube: du, der Sergeant (Kissenabdruck; A: der Geist winkt · B: der Rabe auf der Mütze), dein Begleiter
+      zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, 'grinsend');
+      c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, { hut: tubeHut(), kissen: true, laecheln: 0.7, blick: -2 }); c.restore();
+      if (begleiter) begleiterZeichnen(c, viewW / 2 - 118, begleiter.art === 'taube' ? 230 : 300, begleiter.art, zeit);
+      if (f.ende === 'A') geistZeichnen(c, viewW / 2 + 130, 290, zeit, { winkt: true, abzeichen: true, alpha: 0.8 }); else rabeSitzt(c, viewW / 2 + 52, 300 - (tubeHut() === 'gross' ? 196 * 1.15 : 196) * 0.8 + 2, zeit);
+      c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'A' ? '👻 🎟️ Lucky them' : '🐦 🎩 It is now', viewW / 2, 340);
     } else if (f.welt === 'londoneye') {   // London Eye: du, der Sergeant in Socken, dein Begleiter (Ende A: Knopf · Ende B: Rad)
       zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, 'grinsend');
       c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, { socken: true, laecheln: f.ende === 'B' ? 1 : 0, lachen: f.ende === 'A' ? 0.6 : 0, blick: -2 }); c.restore();
@@ -4972,11 +5413,12 @@
   function dekoZeichnen(c) {   // zwei Durchgänge: erst die Hauswände (Feuertreppe, Diner, Eistür), dann alles davor (U-Bahn-Eingang); das Motel-Schild kommt in dekoVorneZeichnen (über dem Tor ✦)
     for (let pass = 0; pass < 2; pass++) for (const d of level.deko) {
       if (d.art === 'motel') continue;
-      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor' || d.art === 'tower' || d.art === 'tunnel' || d.art === 'koepfe' || d.art === 'fuenftueren') !== (pass === 0)) continue;
+      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor' || d.art === 'tower' || d.art === 'tunnel' || d.art === 'koepfe' || d.art === 'fuenftueren' || d.art === 'bahnsteig' || d.art === 'dunkelbahnsteig' || d.art === 'zug') !== (pass === 0)) continue;
       const x = d.x - kamera; if (x < -320 - (d.w || 0) || x > viewW + 160) continue;
       if (d.art === 'feuertreppe') feuertreppeDeko(c, x); else if (d.art === 'subway') subwayDeko(c, x); else if (d.art === 'diner') dinerDeko(c, x); else if (d.art === 'eistuer') eistuerDeko(c, x);
       else if (d.art === 'maschinenraum') maschinenraumDeko(c, x, d.w); else if (d.art === 'knopf') knopfDeko(c, x);
-      else if (d.art === 'tower') towerDeko(c, x, d.w); else if (d.art === 'geist') geistDeko(c, x); else if (d.art === 'steg') stegDeko(c, x);   // Tower Bridge (Klasse 6)
+      else if (d.art === 'tower') towerDeko(c, x, d.w); else if (d.art === 'geist') { if (d.sitzt) geistBankDeko(c, x); else geistDeko(c, x); } else if (d.art === 'steg') stegDeko(c, x);   // Tower Bridge (Klasse 6)
+      else if (d.art === 'bahnsteig') bahnsteigDeko(c, x, d.w); else if (d.art === 'dunkelbahnsteig') dunkelbahnsteigDeko(c, x, d.w); else if (d.art === 'zug') zugDeko(c, x, d.w, d.y);   // The Tube (Klasse 6)
       else if (d.art === 'maultier') maultierDeko(c, x); else if (d.art === 'skywalk') skywalkDeko(c, x); else if (d.art === 'wasserfall') wasserfallDeko(c, x, false); else if (d.art === 'drachentor') drachentorDeko(c, x);
       else if (d.art === 'tunnel') tunnelDeko(c, x, d.w); else if (d.art === 'koepfe') koepfeDeko(c, x); else if (d.art === 'kompass') kompassDeko(c, x); else if (d.art === 'fuenftueren') fuenfTuerenDeko(c, x);   // Mount Rushmore (Kapitel 4) + Eishalle
     }
@@ -5967,6 +6409,8 @@
       if (p.art === 'glas') { glasPlattform(c, x, p.y, p.w); continue; }           // Glasbrücke des Skywalk (Story Grand Canyon)
       if (p.art === 'mauer') { mauerPlattform(c, x, p.y, p.w); continue; }         // Wehrgang der Tower-Mauer (Welt 3 Klasse 6)
       if (p.art === 'granit') { granitPlattform(c, x, p.y, p.w); continue; }       // Granit-Absatz auf den Präsidentenköpfen (Story Mount Rushmore)
+      if (p.art === 'rolltreppe') { rolltreppePlattform(c, x, p.y, p.w); continue; }   // Rolltreppe als Stufe (Welt 4 Klasse 6)
+      if (p.art === 'wagen') { wagenPlattform(c, x, p.y, p.w); continue; }         // Zugboden eines Wagens (Weg B, Welt 4 Klasse 6)
       c.fillStyle = W.farben.plattform; c.beginPath(); c.roundRect(x, p.y, p.w, 14, 4); c.fill();
       c.fillStyle = W.farben.plattformOben; c.beginPath(); c.roundRect(x - 2, p.y - 3, p.w + 4, 7, 3); c.fill();
     }
@@ -5983,6 +6427,8 @@
     for (const s of surfs) { const x = s.x - kamera; if (x > viewW + 100 || x + s.w < -100) continue; surfZeichnen(c, s); }
     for (const k of klappen) { const x = k.x - kamera; if (x > viewW + 200 || x + KLAPPE_W * 2 < -200) continue; klappeZeichnen(c, k); }   // Tower Bridge
     for (const t of treibgut) { const x = t.x - kamera; if (x > viewW + 60 || x < -60) continue; treibgutZeichnen(c, t); }
+    for (const sp of spalten) { const x = sp.x - kamera; if (x > viewW + 160 || x < -400) continue; spaltZeichnen(c, sp); }   // The Tube: Spalt (Schild + wartender Zug)
+    for (const t of tueren) { const x = t.x - kamera; if (x > viewW + 80 || x < -80) continue; tuerZeichnen(c, t); }   // The Tube: Zugtüren
     for (const cp of checkpoints) { const x = cp.x - kamera; if (x > -60 && x < viewW + 60) fahne(c, x, BODEN_Y, cp.erreicht); }
     if (story) { parkbusZeichnen(c); kristalleZeichnen(c); if (realm) { if (realm.aktiv) realmDingeZeichnen(c); else realmToreZeichnen(c); } }
     if (level.deko && level.deko.length) dekoVorneZeichnen(c);   // Story Route 66: Motel-Schild vor dem versteckten Tor ✦
@@ -6024,6 +6470,7 @@
     if (dunkel > 0) dunkelZeichnen(c, dunkel);   // London Eye: Maschinenraum – dunkel, nur die Lampen leuchten
     if (imBoot && tot <= 0) ruderboot(c, spieler.x - kamera, BODEN_Y, zeit);   // Tower Bridge: das Ruderboot unter Figur und Begleiter
     if (begleiter && tot <= 0) begleiterZeichnen(c, begleiter.x - kamera, begleiter.y, begleiter.art, begleiter.flug);   // Begleiter aus Welt 1 (Deko)
+    if (rabeMit && tot <= 0) { if (rabeMit.fliegt) rabeFlug(c, rabeMit.x - kamera, rabeMit.y - 18, rabeMit.flug, 0.8); else rabeSitzt(c, rabeMit.x - kamera, rabeMit.y, rabeMit.flug); }   // The Tube (Weg B): der Rabe fährt mit
     if (nebelDichte > 0) {   // Welt 5: Nebelschleier über allem bisher Gezeichneten; die Diamanten glühen durch den Nebel, die Figur bleibt sichtbar
       nebelZeichnen(c, nebelDichte);
       for (const d of diamanten) {
@@ -6277,7 +6724,7 @@
   }
 
   /* ---------- Welten: je Welt Kulisse, Boden, Kisten, Gegnerarten, Boss (Zeichner + Klang), Tür, Banner, Level-Muster ---------- */
-  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler, moewe, seeloewe, skater, fuchs, wolf, ritter, rabe };
+  const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler, moewe, seeloewe, skater, fuchs, wolf, ritter, rabe, maus };
   function bodenNY(c, x0, w, a, b, links, rechts) {
     c.fillStyle = '#b9ad9a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
     c.fillStyle = '#d9cfbb'; c.fillRect(x0, BODEN_Y, w, 10);
@@ -6334,6 +6781,12 @@
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen', 'moewe', 'rabe'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_TOWERBRIDGE_STORY, musterStory: MUSTER_TOWERBRIDGE_STORY, storyStruktur: STRUKTUR_TOWERBRIDGE, sprechblaseHoehe: 225,
       kulisse: hintergrundTowerBridge, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => { c.save(); c.translate(x, y + 12); c.scale(0.062, 0.062); c.fillStyle = '#1d3f8f'; c.fillRect(-150, -205, 300, 8); c.fillRect(-184, -200, 68, 200); c.fillRect(116, -200, 68, 200); c.fillRect(-116, -8, 232, 16); c.restore(); },
       boss: bridgeBoss, tuer: brueckenTorLondon, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
+    // Klasse 6 „London Run“ Welt 4 The Tube (31.10.): Kapitel 4 „Mind the Gap“ – Spalt am Bahnsteig, Zugtüren, Mäuse, Koffer, Rolltreppen; Boss Sergeant Bearskin (Kissenabdruck) am Stadiontor von Wembley, Tür = Stadiontor
+    tube: { id: 'tube', name: 'The Tube', staat: 'London', ziel: 'Wembley Park', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is already here!', richtig: "Correct – the stadium gate opens. Carry on!", falsch: "Not this time, soldier!", start: "Let's find Wembley Park!", ende: "You found Wembley Park!",
+      sturz: 'Ouch – the gap! 🚇',
+      gegnerarten: ['taube', 'maus'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_TUBE_STORY, musterStory: MUSTER_TUBE_STORY, storyStruktur: STRUKTUR_TUBE, sprechblaseHoehe: 240,
+      kulisse: hintergrundTube, boden: bodenTube, grube: gleisgrube, kiste: kisteTube, hudSymbol: (c, x, y) => { c.save(); c.strokeStyle = '#1d3f8f'; c.lineWidth = 3.5; c.beginPath(); c.arc(x, y + 1, 8, 0, Math.PI * 2); c.stroke(); c.fillStyle = '#1d3f8f'; c.fillRect(x - 14, y - 1.5, 28, 5); c.restore(); },
+      boss: tubeBoss, tuer: stadionTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner, richtig: w.richtig, falsch: w.falsch, start: w.start, ende: w.ende }));
 
@@ -6446,6 +6899,9 @@
         surfs: surfs.map((s) => ({ x: s.x, w: s.w, aktiv: s.aktiv })), surft: surft > 0, geklaut, tutet,
         hornt, klappen: klappen.map((k) => ({ x: k.x, phase: k.phase, winkel: Math.round(k.winkel * 1000) / 1000 })), boote: boote.map((b) => ({ x: b.x, w: b.w })), treibgut: treibgut.map((t) => t.x), imBoot: !!imBoot,   // Tower Bridge
         mauern: level.plattformen.filter((p) => p.art === 'mauer').map((p) => ({ x: p.x, y: p.y, w: p.w })), rampeY: klappen.length ? rampeY(spieler.x) : null,
+        spalten: spalten.map((sp) => ({ x: sp.x, gewarnt: sp.gewarnt })), durchsagen, tueren: tueren.map((t) => ({ x: t.x, y: t.y, phase: t.phase, schluss: Math.round(t.schluss * 100) / 100, zu: tuerZu(t) })), piept,   // The Tube
+        wagen: level.plattformen.filter((p) => p.art === 'wagen').map((p) => ({ x: p.x, y: p.y, w: p.w })), rolltreppen: level.plattformen.filter((p) => p.art === 'rolltreppe').map((p) => ({ x: p.x, y: p.y, w: p.w })),
+        dunkelbahnsteig: (level.deko || []).filter((d) => d.art === 'dunkelbahnsteig').map((d) => ({ x: d.x, w: d.w })), rabe: rabeMit ? { x: Math.round(rabeMit.x), y: Math.round(rabeMit.y), fliegt: !!rabeMit.fliegt } : null,
         trommelt, dunkel: Math.round(dunkel * 100) / 100, kabinen: level.plattformen.filter((p) => p.art === 'kabine').map((p) => ({ x: p.x, y: p.y, w: p.w })), maschinenraum: (level.deko || []).filter((d) => d.art === 'maschinenraum').map((d) => ({ x: d.x, w: d.w })),
         kisten: level.kisten.filter((k) => k.art).map((k) => ({ x: k.x, y: k.y, art: k.art })), luecken: level.boden.length - 1,
         cameo: cameo ? { id: cameo.held && cameo.held.id, t: Math.round(cameo.t * 100) / 100, satz: cameo.satz } : null, cameosGezeigt, cameoEffekt,
@@ -6465,6 +6921,7 @@
     steinLoesen(i) { const s = steine[i]; if (s) { s.phase = 'warnung'; s.t = 0; } },   // Test: Stein i sofort ankündigen (fällt nach 0,6 s)
     windLoesen(richtung = -1) { if (zustand === 'spiel') wind = { phase: 'warnung', t: 0, richtung }; },   // Test: Windböe sofort ankündigen (Schub nach 0,5 s)
     klappeLoesen(i, phase = 'warnung') { const k = klappen[i]; if (k) { k.phase = phase; k.t = 0; k.winkel = phase === 'oben' ? KLAPPE_MAX : 0; } },   // Test: Brückenklappe i sofort ankündigen (oder gleich oben)
+    tuerLoesen(i, phase = 'warnung') { const t = tueren[i]; if (t) { t.phase = phase; t.t = 0; t.schluss = phase === 'zu' ? 1 : 0; } },   // Test: Zugtür i sofort ankündigen (oder gleich zu)
     setLeben(n) { leben = Math.max(1, Math.min(3, Number(n) || 3)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
     setSkin(o) { Object.assign(skin, o); },
     cameo(id) { if (zustand !== 'spiel') return false; const h = cameoListe.find((x) => x.id === id) || (id ? { id, name: id } : cameoListe[0]); if (!h) return false; cameo = null; cameoStart(h); return true; },   // Test: Cameo sofort auslösen

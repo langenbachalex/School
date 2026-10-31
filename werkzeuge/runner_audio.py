@@ -1,6 +1,6 @@
 """Vertont die kleinen Runner-Posten der Audio-Vormerkliste (freigegeben 31.10.) und liefert die Dateipfade für die Bauskripte.
 
-Posten: Boss-Banner + Boss-Sprüche richtig/falsch aller acht Welten (Mr. Alex; Klasse 6: Westminster + London Eye + Tower Bridge), Levelstart/-ende je Welt
+Posten: Boss-Banner + Boss-Sprüche richtig/falsch aller neun Welten (Mr. Alex; Klasse 6: Westminster + London Eye + Tower Bridge + The Tube), Levelstart/-ende je Welt
 (Klasse 9: Start Jeremy, Ende Jessica; Klasse 6: Start Elrond, Ende Emmaline), Cameo-Sätze der zehn Superhelden (Klasse 6,
 Jungen abwechselnd Elrond/John Shaw, Mädchen abwechselnd Emmaline/Alice) und die 34 Border-Patrol-Einzelwörter
 (Klasse 9, Einträge aus klasse9_audio.py: britisch Mr. Alex, amerikanisch Jeremy).
@@ -18,7 +18,7 @@ BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 APP6, APP9 = os.path.join(BASIS, "app"), os.path.join(BASIS, "app", "klasse9")
 ENGINE = os.path.join(APP9, "runner.js")
 GRENZE = 2500
-WELTEN9, WELTEN6 = ("ny", "route66", "az", "sd", "ca"), ("westminster", "londoneye", "towerbridge")   # Klasse 6: Welt 2 London Eye + Welt 3 Tower Bridge (31.10.) kennt das Skript, Dateien noch nicht da
+WELTEN9, WELTEN6 = ("ny", "route66", "az", "sd", "ca"), ("westminster", "londoneye", "towerbridge", "tube")   # Klasse 6: Welt 4 The Tube (31.10.) kennt das Skript, Dateien erst nach dem 13.11.
 ARTEN = ("banner", "richtig", "falsch", "start", "ende")
 JUNGEN, MAEDCHEN = ("leo", "kenji", "felix", "max"), ("camilla", "ellie", "olivia", "zara", "penny", "tessa")
 CAMEO_STIMME = {h: ("m1", "m2")[i % 2] for i, h in enumerate(JUNGEN)} | {h: ("f1", "f2")[i % 2] for i, h in enumerate(MAEDCHEN)}

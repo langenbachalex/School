@@ -2165,13 +2165,13 @@
      Stand in stand.spiel.runner = { level: { westminster: "gold"|"silber" }, gespielt, geschafft, titel, tickets }, Figur in stand.spiel.skin – beides im Siegel.
      Wörter: 12 aus dem gewählten Abschnitt von Station 7 (eigene zuerst, aufgefüllt aus den anderen Abschnitten), gesprochen mit den Vokabel-Aufnahmen.
      Cameos: 2–3 geheime Superhelden je Lauf, bevorzugt die schon gesammelten (sp.helden). Boss-Banner, Boss-Sprüche, Levelstart/-ende und Cameo-Sätze als Aufnahmen (31.10., D.spiel.runner_audio), fehlende mit der Geräte-Stimme.
-     Welt 1 Westminster · Big Ben (31.10.), Welt 2 London Eye (31.10., Kapitel 2 „The Wheel That Stopped“, offen ab Silber in Welt 1), Welt 3 Tower Bridge (31.10., Kapitel 3 „Up Goes the Bridge“, offen ab Silber in Welt 2);
-     The Tube, Wembley kommen später (🔒 bald). */
+     Welt 1 Westminster · Big Ben (31.10.), Welt 2 London Eye (31.10., Kapitel 2 „The Wheel That Stopped“, offen ab Silber in Welt 1), Welt 3 Tower Bridge (31.10., Kapitel 3 „Up Goes the Bridge“, offen ab Silber in Welt 2),
+     Welt 4 The Tube (31.10., Kapitel 4 „Mind the Gap“, offen ab Silber in Welt 3); Wembley kommt später (🔒 bald). */
   const RUNNER = { preis: 150, skinPreis: 45, skinPreisTeuer: 90, woerter: 12, titel: ["Rookie Runner", "Tube Jumper", "Bus Hopper", "London Hero", "Superhero of London"], ab: [1, 3, 6, 10, 15],
     welten: [{ id: "westminster", name: "Westminster", staat: "London", ziel: "Big Ben", trophaee: "Big Ben Finder", symbol: "🔔", boss: "Sergeant Bearskin", ort: "am Tor der Horse Guards", tuer: "das Tor der Horse Guards" },
       { id: "londoneye", name: "London Eye", staat: "London", ziel: "the London Eye", trophaee: "Eye Spy", symbol: "🎡", boss: "Sergeant Bearskin", ort: "in der obersten Kabine des London Eye", tuer: "die Kabinentür" },
       { id: "towerbridge", name: "Tower Bridge", staat: "London", ziel: "Tower Bridge", trophaee: "Bridge Keeper", symbol: "🌉", boss: "Sergeant Bearskin", ort: "auf der hochgeklappten Tower Bridge", tuer: "das Brückentor" },
-      { id: "tube", name: "The Tube", staat: "London", ziel: "The Tube", trophaee: "The Tube", symbol: "🚇", bald: true },
+      { id: "tube", name: "The Tube", staat: "London", ziel: "Wembley Park", trophaee: "Mind the Gap", symbol: "🚇", boss: "Sergeant Bearskin", ort: "am Stadiontor von Wembley", tuer: "das Stadiontor" },
       { id: "wembley", name: "Wembley", staat: "London", ziel: "Wembley", trophaee: "Wembley", symbol: "🏟️", bald: true }] };
   // Story-Modus Welt 1 „The Guard Who Never Moved“ (freigegeben 30.10., Text wörtlich aus docs/runner/story-london-01.md; Erzähler Mr. Alex – bis zur Vertonung Geräte-Stimme,
   // audio: { key: "audio/…mp3" } kann später je Stück ergänzt werden). Punkte (gegen Farmen): 1 ⭐ je Punkte-Diamant, +10 ⭐ einmalig je vollständiger Geschichte (alle 12 ♪ eines Endes),
@@ -2213,6 +2213,19 @@
       A11: "The ravens fly back to the Tower. All six. Phew!", A12: "The Sergeant has no hat. His hair looks like a hedgehog. The Ghost Club laughs. Quietly.",
       B11: "The Sergeant puts on his wet hat. Drip, drip, drip.", B12: "But the ravens? Only five come back. One is missing …" },
       audio: null },   // wird unten aus SP.story_audio gefüllt (storyAudioDateien)
+    // Kapitel 4 The Tube „Mind the Gap“ (freigegeben 31.10., Text wörtlich aus docs/runner/story-london-04.md): Stücke 1–2 als Variante nach der Wahl aus Welt 3 (story.towerbridge.wahl.g1: A = Raben gerettet → 1A/2A,
+    // B = Hut gerettet, ein Rabe fehlt → 1B/2B, keine Wahl → A; die App übergibt story.varianten = { "towerbridge.g1": … }); der Begleiter aus Welt 1 läuft weiter mit. Gabelung dieses Kapitels:
+    // A zurück zum Sergeant (dunkler Bahnsteig, Geist) / B weiterfahren (im Zug, der Rabe) → story.tube.wahl.g1 (A = gute Entscheidung für Wembley, B löst den Raben-Cliffhanger auf). Aufnahmen audio/story/tube_<key>.mp3 (+ _sofar) nach dem 13.11., bis dahin Geräte-Stimme.
+    tube: { id: "tube", titel: "Mind the Gap", kapitel: 4, welt: "The Tube", enden: { A: { symbol: "👻", name: "Back to the Sergeant" }, B: { symbol: "🚇", name: "Ride on" } }, teile: {
+      "1A": "The ravens are safe. The Sergeant has a new hat. It's too big.", "2A": "Today he goes to Wembley by tube. The big match is on Saturday!",
+      "1B": "One raven is still missing. The Sergeant rarely sleeps now.", "2B": "\"Maybe it's on the tube,\" he says. \"Ravens like trains.\" Do they?",
+      3: "The journey is long: twelve stops. The Sergeant falls asleep at stop two.", 4: "\"Mind the gap!\" says a voice. The doors close. You're on the wrong train!",
+      A5: "You jump off at the next stop. Quick! Back to the Sergeant!", A6: "The platform is dark. A ghost sits on a bench. \"Hello again.\"", A7: "\"Trains here are always late,\" he says. \"I've waited since 1899.\"", A8: "Train after train. The wrong way, the right way, finally your way.",
+      B5: "You stay on the train. The map says: Wembley in six stops.", B6: "A pigeon? No, a raven! It sits on the seat next to you.", B7: "The train is fast and full. Everybody looks at their phones.", B8: "\"Mind the gap!\" Wembley Park. The raven gets off with you.",
+      9: "Wembley Stadium, 11 a.m. The Sergeant is already there. How?", 10: "\"I never sleep on the tube,\" he says. He has a pillow mark on his face.",
+      A11: "The ghost waves from the last train. \"See you at the match!\"", A12: "Ghosts don't need tickets. Lucky them.",
+      B11: "The raven lands on the Sergeant's hat. It likes it there.", B12: "Is it the Tower raven? The Sergeant smiles. \"It is now.\"" },
+      audio: null },   // wird unten aus SP.story_audio gefüllt (storyAudioDateien); Dateien gibt es noch nicht → Geräte-Stimme
   };
   const STORY_KEYS_EYE = ["1A", "2A", "1B", "2B", "3", "4", "A5", "A6", "A7", "A8", "B5", "B6", "B7", "B8", "9", "10", "A11", "A12", "B11", "B12", "sofar"];
   // Aufnahmen je Kapitel: ein Stück = eine Datei (<praefix>_<key>.mp3) oder mehrere Teile (<praefix>_<key>_1.mp3, _2 …); nur Dateien, die der Bau findet (SP.story_audio)
@@ -2225,14 +2238,17 @@
   STORY.londoneye.audio = storyAudioDateien("londoneye", STORY_KEYS_EYE);
   const STORY_KEYS_BRIDGE = STORY_KEYS_EYE;   // Kapitel 3 hat dieselben Schlüssel (1A/2A, 1B/2B, 3–4, A5–A8, B5–B8, 9–10, A11–A12, B11–B12, sofar)
   STORY.towerbridge.audio = storyAudioDateien("towerbridge", STORY_KEYS_BRIDGE);
-  const STORY_KAPITEL = ["westminster", "londoneye", "towerbridge"];   // gebaute Kapitel in Reihenfolge (Story Library, Dein Weg)
+  const STORY_KEYS_TUBE = STORY_KEYS_EYE;   // Kapitel 4 hat dieselben Schlüssel
+  STORY.tube.audio = storyAudioDateien("tube", STORY_KEYS_TUBE);   // noch keine Dateien (Vertonung nach dem 13.11.) → leer → Geräte-Stimme
+  const STORY_KAPITEL = ["westminster", "londoneye", "towerbridge", "tube"];   // gebaute Kapitel in Reihenfolge (Story Library, Dein Weg)
   const storyEnden = (welt) => (STORY[welt] && STORY[welt].enden) || STORY_ENDEN;   // Enden je Kapitel (Welt 1: Fuchs/Taube)
   // Story-Option für die Engine: Text + Varianten und Begleiter aus den vorigen Kapiteln (Kapitel 2 liest story.westminster.wahl.g1: B = Taube, sonst Fuchs; Kapitel 3 liest story.londoneye.wahl.g1:
-  // B = aufs Rad geklettert, sonst A = roter Knopf – auch wenn die Welt nie geschafft wurde; der Begleiter aus Welt 1 läuft in Welt 2 und 3 mit)
+  // B = aufs Rad geklettert, sonst A = roter Knopf; Kapitel 4 liest story.towerbridge.wahl.g1: B = Hut gerettet (ein Rabe fehlt), sonst A = Raben gerettet – auch wenn die Welt nie geschafft wurde;
+  // der Begleiter aus Welt 1 läuft in Welt 2–4 mit)
   function storyOption(welt) {
     const S = STORY[welt]; if (!S) return null;
-    const w1 = storyStand("westminster").wahl.g1 === "B" ? "B" : "A", w2 = storyStand("londoneye").wahl.g1 === "B" ? "B" : "A";
-    return Object.assign({}, S, { varianten: { "westminster.g1": w1, "londoneye.g1": w2 }, begleiter: w1 === "B" ? "taube" : "fuchs" });
+    const w1 = storyStand("westminster").wahl.g1 === "B" ? "B" : "A", w2 = storyStand("londoneye").wahl.g1 === "B" ? "B" : "A", w3 = storyStand("towerbridge").wahl.g1 === "B" ? "B" : "A";
+    return Object.assign({}, S, { varianten: { "westminster.g1": w1, "londoneye.g1": w2, "towerbridge.g1": w3 }, begleiter: w1 === "B" ? "taube" : "fuchs" });
   }
   // 🧭 Dein Weg: Kette der gespeicherten Entscheidungen bis zu einem Kapitel („🦊 The fox → 🔘 machine room“); aktuell = Wahl des laufenden Laufs für das letzte Kapitel
   function storyPfad(bisWelt, aktuell) {
@@ -2376,6 +2392,10 @@
   }
   // Erklärtext der Startseite je Welt (deutsche Bedienung, englische Spielsätze)
   function runnerStartText(W) {
+    if (W.id === "tube") {
+      const w1 = storyStand("westminster").wahl.g1 === "B" ? "🕊️ die Taube" : "🦊 der Fuchs", w3 = storyStand("towerbridge").wahl.g1 === "B" ? "seinen nassen Hut gerettet hast – ein Rabe fehlt noch" : "seine Raben gerettet hast";
+      return `Tippen oder Leertaste = springen, länger halten = höher. Unter der Erde: Rolltreppen und Koffer sind Stufen, auf nassem Boden rutschst du, Tauben und Mäuse kannst du plattdrücken. Neu in der Tube: „Mind the gap!“ – vor der Lücke zwischen Bahnsteig und Zug kommt eine Durchsage, dann musst du springen, sonst fällst du hinein. Im Zug schließen sich die Türen: Warnton, blinkende Kanten – schnell durch oder drüberspringen! ${w1} aus Welt 1 begleitet dich, und der Sergeant weiß noch, dass du in Welt 3 ${w3}. Die violetten ♪-Kristalle erzählen „${STORY.tube.titel}“ – aussteigen und zurück zum Sergeant (dunkler Bahnsteig, ein alter Bekannter auf der Bank) oder sitzen bleiben und weiterfahren (oben im Zug, mit einem Raben neben dir)? Du entscheidest, wie sie ausgeht. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐. Nimm die richtigen Tore und beantworte die Frage von ${W.boss} ${W.ort} – gut 2 Minuten. Am besten das Handy quer halten.`;
+    }
     if (W.id === "towerbridge") {
       const w1 = storyStand("westminster").wahl.g1 === "B" ? "🕊️ die Taube" : "🦊 der Fuchs", w2 = storyStand("londoneye").wahl.g1 === "B" ? "aufs Rad geklettert bist" : "den roten Knopf gedrückt hast";
       return `Tippen oder Leertaste = springen, länger halten = höher. Black Cabs und rote Busse kommen dir entgegen, in Pfützen rutschst du, in die Themse fällst du hinein. Neu an der Tower Bridge: ein Horn, rotes Licht – und die Brückenklappen heben sich! Lauf die Rampe hinauf und spring an der Spitze über die Lücke, sonst landest du im Fluss. Raben fliegen wie Tauben (plattdrücken oder drüber), Möwen klauen einen Diamanten. ${w1} aus Welt 1 begleitet dich, und der Sergeant weiß noch, dass du in Welt 2 ${w2}. Die violetten ♪-Kristalle erzählen „${STORY.towerbridge.titel}“ – oben durch den Tower zu den Raben oder unten im Ruderboot dem Hut hinterher (über Treibgut springen)? Du entscheidest, wie sie ausgeht. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐. Nimm die richtigen Tore und beantworte die Frage von ${W.boss} ${W.ort} – gut 2 Minuten. Am besten das Handy quer halten.`;
@@ -2405,7 +2425,7 @@
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
-      wrapper: buehne, skin: skinWirksam(), welt: W.id, titel: "London Run", cameos: runnerCameos(), story: storyOption(W.id),   // Story (Welt 1–3; Welt 2/3 mit Varianten aus den vorigen Welten, Begleiter aus Welt 1)
+      wrapper: buehne, skin: skinWirksam(), welt: W.id, titel: "London Run", cameos: runnerCameos(), story: storyOption(W.id),   // Story (Welt 1–4; Welt 2–4 mit Varianten aus den vorigen Welten, Begleiter aus Welt 1)
       audio: runnerAudio(W.id),   // Aufnahmen: Boss Mr. Alex, Levelstart Elrond, Cameos Jugendstimmen (fehlende = Geräte-Stimme)
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: { bossTitel: `${W.boss} fragt …`, bossHinweis: `Richtig = ${W.tuer || "das Tor der Horse Guards"} geht auf. Falsch = ein Leben weg.` },
@@ -2503,7 +2523,7 @@
       el("div", { class: "knopfreihe" }, knopf("🇬🇧 London Run", () => runnerStart(), "leise")));
   }
   // 📖 Story Library: freigespielte Enden als Karten (Tap = Film mit der eigenen Figur), nicht freigespielte 🔒
-  // Übersicht nach Kapiteln (STORY_KAPITEL): Level 1 Westminster, Level 2 London Eye, Level 3 Tower Bridge; Pfad-Zeile = Kette der gespeicherten Entscheidungen („🦊 The fox → 🔘 machine room“); nicht freigespielte Enden 🔒
+  // Übersicht nach Kapiteln (STORY_KAPITEL): Level 1 Westminster, Level 2 London Eye, Level 3 Tower Bridge, Level 4 The Tube; Pfad-Zeile = Kette der gespeicherten Entscheidungen („🦊 The fox → 🔘 machine room“); nicht freigespielte Enden 🔒
   function storyLibrary() {
     const pfad = storyPfad(STORY_KAPITEL[STORY_KAPITEL.length - 1]);
     const kapitel = STORY_KAPITEL.map((welt, i) => {

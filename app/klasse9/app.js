@@ -2787,6 +2787,9 @@
               : W.id === "az"
               ? T(`Tippen oder Leertaste = springen, länger halten = höher. Steine kündigen sich mit Staub an – spring, bevor sie landen! Auf den Hängebrücken nicht trödeln (springen!), Kakteen nicht berühren. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Holztor – gut 2 Minuten. Am besten das Handy quer halten.`,
                 `Tap or space = jump, hold longer = jump higher. Falling rocks warn you with dust – jump before they land! Don't dawdle on the rope bridges (jump!), don't touch the cacti. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the wooden gate – about 2 minutes. Best in landscape mode.`)
+              : W.id === "route66" && STORY[W.id]
+              ? T(`Tippen oder Leertaste = springen, länger halten = höher (über Trucks!). Autos kommen von rechts – drüberspringen, Ölflecken lassen dich kurz rutschen. Story „${STORY[W.id].titel}“ (Kapitel 2): Die violetten ♪-Kristalle erzählen weiter – der Anfang hängt davon ab, was du in New York mit der Karte gemacht hast${storyStand("ny").wahl.g2 ? "" : " (noch nicht gespielt? Dann hat die Frau sie nicht bekommen)"}. Zweimal entscheidest du: am Diner anhalten oder weiterfahren? Und am Ende: Lucas die Wahrheit jetzt abverlangen – oder später? Deine Wahl zählt in Kapitel 3. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐ (nur wenn du das Level schaffst). Nimm die richtigen Tore und beantworte die Frage von ${W.boss} an der Mautstation – etwa 3 Minuten. Irgendwo ist wieder ein verstecktes Tor … Am besten das Handy quer halten.`,
+                `Tap or space = jump, hold longer = jump higher (over trucks!). Cars come from the right – jump over them, oil slicks make you slide. Story “${STORY[W.id].titel}” (chapter 2): the purple ♪ crystals carry on – the beginning depends on what you did with the map in New York${storyStand("ny").wahl.g2 ? "" : " (not played yet? Then the woman didn't get it)"}. Twice you choose: stop at the diner or keep driving? And at the end: make Lucas tell the truth now – or later? Your choice counts in chapter 3. The 💎 diamonds show you words and give 1 ⭐ each (only if you finish the level). Take the right gates and answer ${W.boss}'s question at the toll booth – about 3 minutes. Somewhere there is a hidden gate again … Best in landscape mode.`)
               : W.id === "route66"
               ? T(`Tippen oder Leertaste = springen, länger halten = höher (über Trucks!). Autos kommen von rechts – drüberspringen, Ölflecken lassen dich kurz rutschen. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} an der Mautstation – gut 2 Minuten. Am besten das Handy quer halten.`,
                 `Tap or space = jump, hold longer = jump higher (over trucks!). Cars come from the right – jump over them, oil slicks make you slide. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the toll booth – about 2 minutes. Best in landscape mode.`)
@@ -2828,10 +2831,24 @@
   // zuerst mrAlexWacht (Zeitlog), dann punkteDazu (Coins halb). Stand (im Siegel): stand.spiel.runner.story.ny = { enden, voll, beste, wahl: { g1: "A"|"B", g2: "X"|"Y" } } (letzte Wahl, für Kapitel 2),
   // verstecktes Tor ✦: stand.spiel.runner.realm.ny = { gefunden, kristalle, stuecke: ["R1" …], gegenstand }.
   // Aufnahmen: audio/story/ny_<key>.mp3 je Stück (+ ny_sofar) – nur Dateien, die der Bau findet (SP.story_audio); sonst Geräte-Stimme.
+  // Kapitel 2 Route 66 „The Chase“ (31.10., Text wörtlich aus docs/runner/story-usa-02.md): Stücke 1–2 als Variante nach der Wahl aus Kapitel 1 (story.ny.wahl.g2: X = Karte gegeben → 1X/2X, sonst 1Y/2Y);
+  // die App übergibt der Engine story.varianten = { "ny.g2": "X" | "Y" } (storyOption). Gabelung 2 (X = die Wahrheit jetzt / Y = später) landet in story.route66.wahl.g2 (für Kapitel 3).
+  // Realm Kapitel 2: Sammelstück Dragon Scale 🐉 (STORY.route66.gegenstand) → stand.spiel.runner.realm.route66. Aufnahmen audio/story/route66_<key>.mp3 (noch keine; Zuordnung vorbereitet).
   const STORY_KEYS_NY = ["1", "2", "3", "4", "5", "A6", "A7", "A8", "A9", "A10", "B6", "B7", "B8", "B9", "B10", "11", "12", "13", "14", "X15", "X16", "Y15", "Y16",
     "X17", "X18", "X19", "X20", "Y17", "Y18", "Y19", "Y20", "R1", "R2", "R3", "sofar"];
+  const STORY_KEYS_R66 = ["1X", "2X", "1Y", "2Y", "3", "4", "5", "A6", "A7", "A8", "A9", "A10", "B6", "B7", "B8", "B9", "B10", "11", "12", "13", "14", "X15", "X16", "Y15", "Y16",
+    "X17", "X18", "X19", "X20", "Y17", "Y18", "Y19", "Y20", "R1", "R2", "R3", "sofar"];
+  // Aufnahmen je Kapitel: ein Stück = eine Datei (<praefix>_<key>.mp3) oder mehrere Teile (<praefix>_<key>_1.mp3, _2 …) hintereinander; nur Dateien, die der Bau findet (SP.story_audio)
+  const storyAudioDateien = (praefix, keys) => Object.fromEntries(keys.map((k) => {
+    const alle = SP.story_audio || [], eins = `audio/story/${praefix}_${k}.mp3`;
+    if (alle.includes(eins)) return [k, eins];
+    const teile = []; for (let i = 1; alle.includes(`audio/story/${praefix}_${k}_${i}.mp3`); i++) teile.push(`audio/story/${praefix}_${k}_${i}.mp3`);
+    return teile.length ? [k, teile] : null;
+  }).filter(Boolean));
   const STORY = {
-    ny: { id: "ny", titel: "The Lost Map – Under the City", kapitel: 1, teile: {
+    ny: { id: "ny", titel: "The Lost Map – Under the City", kapitel: 1, welt: "New York",
+      enden: { X: { symbol: "🤝", name: "Gone with the map" }, Y: { symbol: "🗺️", name: "The keeper" } }, wege: { A: "🚇 subway", B: "🏙️ roof", X: "🤝 give the map", Y: "🗺️ keep the map" },
+      gegenstand: { name: "Frost Shard", symbol: "❄" }, teile: {
       1: "Our class trip started in Brooklyn on a rainy Monday.", 2: "Maya had a plan. Jayden had snacks. Lucas had secrets.", 3: "In a tiny bookshop, you found an old, folded map.",
       4: "Five places were marked on it – and five glowing gates.", 5: "The first gate was right here, in New York.",
       A6: "A woman with a brass compass smiled at you.", A7: "\"The map chooses its keeper,\" she whispered.", A8: "Then she disappeared into the subway.",
@@ -2848,18 +2865,38 @@
       Y20: "Lucas went pale. \"She'll be back. And she won't be alone.\"",
       R1: "Snow. Banners. A wall of ice as high as the sky.", R2: "A knight in black armour looked down at you. \"Another keeper?\"", R3: "\"The gates are opening again,\" he said. \"That is never good.\"" },
       // Aufnahmen (31.10., werkzeuge/story_audio9.py): Erzähler Mr. Alex; wörtliche Rede Maya + Frau mit Kompass = Jessica, Jayden/Lucas/Ritter = Jeremy.
-      // Ein Stück = eine Datei (ny_<key>.mp3) oder mehrere Teile (ny_<key>_1.mp3, _2 …) hintereinander; nur Dateien, die der Bau findet.
-      audio: Object.fromEntries(STORY_KEYS_NY.concat(["sofar"]).map((k) => {
-        const alle = SP.story_audio || [], eins = `audio/story/ny_${k}.mp3`;
-        if (alle.includes(eins)) return [k, eins];
-        const teile = []; for (let i = 1; alle.includes(`audio/story/ny_${k}_${i}.mp3`); i++) teile.push(`audio/story/ny_${k}_${i}.mp3`);
-        return teile.length ? [k, teile] : null;
-      }).filter(Boolean)) },
+      audio: storyAudioDateien("ny", STORY_KEYS_NY) },
+    route66: { id: "route66", titel: "The Lost Map – The Chase", kapitel: 2, welt: "Route 66",
+      enden: { X: { symbol: "🗣️", name: "Bring the boy" }, Y: { symbol: "⏳", name: "A hundred miles of silence" } }, wege: { A: "🍟 diner", B: "🚗 keep driving", X: "🗣️ the truth – now", Y: "⏳ later" },
+      gegenstand: { name: "Dragon Scale", symbol: "🐉" }, teile: {
+      "1X": "The woman had the map now – and a head start.", "2X": "\"This is your fault,\" Maya said. You didn't answer.",
+      "1Y": "The woman wanted the map back – and she was fast.", "2Y": "\"They'll follow us everywhere,\" Maya said. \"Great plan.\"",
+      3: "Jayden rented a car. Orange, old and very loud.", 4: "Route 66. Two thousand miles of desert, diners and dust.", 5: "Then Lucas said something strange: \"My grandpa drove this road.\"",
+      A6: "At a diner, Maya exploded: \"Lucas, what are you hiding?\"", A7: "Lucas looked at his plate. \"Nothing. Eat your fries.\"", A8: "Jayden tried a joke. Nobody laughed.",
+      A9: "Through the window, you saw a black car. Waiting.", A10: "\"We have to go,\" you said. \"Now.\"",
+      B6: "Lucas didn't want to stop. \"Keep driving. Please.\"", B7: "Maya turned around. \"Why? Who's following us?\"", B8: "A black car appeared in the mirror. Then another.",
+      B9: "Jayden drove faster. The old car started to shake.", B10: "\"Hold on!\" he shouted. \"This is going to be fun!\"",
+      11: "At a gas station, a huge truck blocked the road.", 12: "Big Rig Bob. Everybody on Route 66 knew that truck.",
+      13: "The woman with the compass stepped out of it. \"Hello again.\"", 14: "Maya grabbed your arm. \"Whatever happens – we stay together.\"",
+      X15: "You looked at Lucas. \"Tell us the truth. Now.\"", X16: "He took a deep breath. \"My grandpa was a keeper. Like you.\"",
+      Y15: "You shook your head. \"Later. First we get past that truck.\"", Y16: "Lucas looked relieved. Maya looked angry.",
+      X17: "The barrier went up. The woman didn't move.", X18: "\"A keeper's grandson,\" she said. \"How interesting.\"", X19: "Lucas went white. He had never told anyone.",
+      X20: "\"Next stop,\" she smiled, \"the Grand Canyon. Bring the boy.\"",
+      Y17: "The barrier went up, and Jayden hit the gas.", Y18: "In the mirror, the woman waved. She wasn't angry. She was waiting.", Y19: "Nobody spoke for a hundred miles.",
+      Y20: "Finally Lucas whispered: \"At the Grand Canyon, I'll tell you everything.\"",
+      R1: "The ice wall again – but now there was a door in it.", R2: "The knight was waiting. \"You came back. Keepers always do.\"", R3: "\"Beyond this door,\" he said, \"the dragon sleeps. Do not wake it.\"" },
+      // Aufnahmen (vorbereitet, Dateien noch nicht da): Sprecherplan in werkzeuge/story_audio9.py (Maya + Frau = Jessica, Jayden/Lucas/Ritter = Jeremy, Spieler-Sätze = Erzähler)
+      audio: storyAudioDateien("route66", STORY_KEYS_R66) },
   };
   const STORY_PUNKTE = { diamant: 1, ganz: 10, max: 30 };
-  const STORY_ENDEN = { X: { symbol: "🤝", name: "Gone with the map" }, Y: { symbol: "🗺️", name: "The keeper" } };
-  const STORY_WEGE = { A: "🚇 subway", B: "🏙️ roof", X: "🤝 give the map", Y: "🗺️ keep the map" };
+  const STORY_KAPITEL = ["ny", "route66"];   // gebaute Kapitel in Reihenfolge (Story Library)
   const REALM_KEYS = ["R1", "R2", "R3"];
+  // Story-Option für die Engine: Text + Varianten aus früheren Kapiteln (Kapitel 2 liest die Wahl aus Kapitel 1: X = Karte gegeben, Y = behalten oder Kapitel 1 nicht gespielt)
+  function storyOption(welt) {
+    const S = STORY[welt]; if (!S) return null;
+    const ny = storyStand("ny");
+    return Object.assign({}, S, { varianten: { "ny.g2": ny.wahl.g2 === "X" ? "X" : "Y" } });
+  }
   function storyStand(welt) {
     const r = runnerStand();
     if (!r.story || typeof r.story !== "object") r.story = {};
@@ -2905,7 +2942,7 @@
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
-      wrapper: buehne, skin: skinWirksam(), welt: W.id, story: STORY[W.id] || null, // Story-Modus nur in New York (Kapitel 1); andere Welten wie bisher
+      wrapper: buehne, skin: skinWirksam(), welt: W.id, story: storyOption(W.id), // Story-Modus in New York (Kapitel 1) und Route 66 (Kapitel 2, mit Variante aus Kapitel 1); andere Welten wie bisher
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: Object.assign(storyTexte(), {
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
@@ -2965,7 +3002,7 @@
     if (storyPunkte > 0) { mrAlexWacht(spielstand(), storyPunkte); punkteDazu(storyPunkte); } // Zeitlog zuerst, damit Farmen im Road Trip Run auffällt
     speichern();
     const ruf = waehleRuf(e.geschafft ? "stark" : "fehler");
-    const sEnde = e.story && e.story.ende ? STORY_ENDEN[e.story.ende] : null, wahl = (e.story && e.story.wahl) || {};
+    const S = STORY[welt] || {}, sEnde = e.story && e.story.ende && S.enden ? S.enden[e.story.ende] : null, wahl = (e.story && e.story.wahl) || {}, wege = S.wege || {}, gs = S.gegenstand || { name: "Frost Shard", symbol: "❄" };
     const minuten = `${Math.floor(e.dauer / 60)}:${String(e.dauer % 60).padStart(2, "0")}`;
     const zeichne = () => {
       zeige(spielKopf(k, "Road Trip Run", () => runnerStart(k)),
@@ -2979,8 +3016,8 @@
           e.story && el("p", { class: "runner-story-ende" }, `♪ ${e.story.anzahl}/${e.story.max || 20} `, T("Geschichte", "story"),
             sEnde ? ` · 📖 Ending ${e.story.ende} – ${sEnde.symbol} ${sEnde.name}` : "", e.story.vollstaendig ? T(" · ✓ ganze Geschichte", " · ✓ whole story") : ""),
           e.story && (wahl.g1 || wahl.g2) && el("p", { class: "klein runner-story-wege", lang: "en" }, T("Deine Wege: ", "Your paths: "),
-            [wahl.g1 && `${wahl.g1} ${STORY_WEGE[wahl.g1]}`, wahl.g2 && `${wahl.g2} ${STORY_WEGE[wahl.g2]}`].filter(Boolean).join(" · ")),
-          rm && rm.gefunden && el("p", { class: "runner-realm-ende" }, `✦ The Realm Beyond – ${T("gefunden", "found")}! ✦ ${rm.kristalle}/3`, rm.gegenstand ? " · ❄ Frost Shard" : ""),
+            [wahl.g1 && `${wahl.g1} ${wege[wahl.g1] || ""}`, wahl.g2 && `${wahl.g2} ${wege[wahl.g2] || ""}`].filter(Boolean).join(" · ")),
+          rm && rm.gefunden && el("p", { class: "runner-realm-ende" }, `✦ The Realm Beyond – ${T("gefunden", "found")}! ✦ ${rm.kristalle}/3`, rm.gegenstand ? ` · ${gs.symbol} ${gs.name}` : ""),
           e.story && el("p", { class: "runner-story-punkte" }, e.geschafft
             ? T(`⭐ Punkte in diesem Lauf: ${storyPunkte}`, `⭐ Points in this run: ${storyPunkte}`) + (storyPunkte >= STORY_PUNKTE.max ? T(" (höchstens 30)", " (max. 30)") : "")
             : T("⭐ Punkte gibt es nur, wenn du das Level schaffst.", "⭐ You only get points if you finish the level.")),
@@ -3024,28 +3061,31 @@
       storyLibrary(),
       el("div", { class: "knopfreihe" }, knopf("🏃 Road Trip Run", () => runnerStart(), "leise")));
   }
-  // 📖 Story Library: freigespielte Enden als Filme (Tap = Film mit der eigenen Figur), nicht freigespielte 🔒; dazu die Karte „✦ The Realm Beyond“ (gefundene R-Stücke, Frost Shard)
+  // 📖 Story Library, Übersicht nach Kapiteln (STORY_KAPITEL): je Kapitel die freigespielten Enden als Filme (Tap = Film mit der eigenen Figur), nicht freigespielte 🔒;
+  // dazu die Karte „✦ The Realm Beyond“ des Kapitels (gefundene R-Stücke, Sammelstück: Frost Shard ❄ / Dragon Scale 🐉)
   function storyLibrary() {
-    const welt = "ny", st = storyStand(welt), S = STORY[welt], rs = realmStand(welt);
-    const realmKarte = rs.gefunden
-      ? el("div", { class: "story-karte realm-karte", "data-realm": welt },
-        el("span", { class: "story-sym", "aria-hidden": "true" }, "✦"),
-        el("strong", { lang: "en" }, "✦ The Realm Beyond"),
-        el("small", {}, `✦ ${rs.stuecke.length}/3 · ${rs.gegenstand ? "❄ Frost Shard" : T("❄ Frost Shard noch nicht gefunden", "❄ Frost Shard not found yet")}`),
-        el("ul", { class: "realm-stuecke", lang: "en" }, REALM_KEYS.map((k) => el("li", { class: rs.stuecke.includes(k) ? "ok" : "" }, rs.stuecke.includes(k) ? S.teile[k] : "…"))))
-      : el("div", { class: "story-karte gesperrt realm-karte", "data-realm": welt }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"),
-        el("strong", { lang: "en" }, "✦ ??? – a hidden gate somewhere …"));
-    return el("div", { class: "story-library" },
-      el("h3", {}, "📖 Story Library"),
-      el("p", { class: "klein", lang: "en" }, `Chapter 1 · New York · ${S.titel}`),
-      el("div", { class: "story-karten" }, ["X", "Y"].map((en) => {
-        const frei = st.enden.includes(en), E_ = STORY_ENDEN[en];
-        if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"));
-        return el("button", { class: "story-karte", type: "button", "data-ende": en, onclick: () => storyFilm(welt, en) },
-          el("span", { class: "story-sym", "aria-hidden": "true" }, E_.symbol),
-          el("strong", { lang: "en" }, `Ending ${en} – ${E_.name}`),
-          el("small", {}, `♪ ${st.beste[en] || 0}/20${st.voll.includes(en) ? T(" · ✓ ganze Geschichte", " · ✓ whole story") : ""} · ▶ ${T("Film", "film")}`));
-      }).concat([realmKarte])));
+    const kapitel = STORY_KAPITEL.map((welt) => {
+      const st = storyStand(welt), S = STORY[welt], rs = realmStand(welt), gs = S.gegenstand;
+      const realmKarte = rs.gefunden
+        ? el("div", { class: "story-karte realm-karte", "data-realm": welt, "data-welt": welt },
+          el("span", { class: "story-sym", "aria-hidden": "true" }, "✦"),
+          el("strong", { lang: "en" }, "✦ The Realm Beyond"),
+          el("small", {}, `✦ ${rs.stuecke.length}/3 · ${rs.gegenstand ? `${gs.symbol} ${gs.name}` : T(`${gs.symbol} ${gs.name} noch nicht gefunden`, `${gs.symbol} ${gs.name} not found yet`)}`),
+          el("ul", { class: "realm-stuecke", lang: "en" }, REALM_KEYS.map((k) => el("li", { class: rs.stuecke.includes(k) ? "ok" : "" }, rs.stuecke.includes(k) ? S.teile[k] : "…"))))
+        : el("div", { class: "story-karte gesperrt realm-karte", "data-realm": welt, "data-welt": welt }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"),
+          el("strong", { lang: "en" }, "✦ ??? – a hidden gate somewhere …"));
+      return el("div", { class: "story-kapitel", "data-welt": welt },
+        el("p", { class: "klein", lang: "en" }, `Chapter ${S.kapitel} · ${S.welt} · ${S.titel}`),
+        el("div", { class: "story-karten" }, ["X", "Y"].map((en) => {
+          const frei = st.enden.includes(en), E_ = S.enden[en];
+          if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en, "data-welt": welt }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"));
+          return el("button", { class: "story-karte", type: "button", "data-ende": en, "data-welt": welt, onclick: () => storyFilm(welt, en) },
+            el("span", { class: "story-sym", "aria-hidden": "true" }, E_.symbol),
+            el("strong", { lang: "en" }, `Ending ${en} – ${E_.name}`),
+            el("small", {}, `♪ ${st.beste[en] || 0}/20${st.voll.includes(en) ? T(" · ✓ ganze Geschichte", " · ✓ whole story") : ""} · ▶ ${T("Film", "film")}`));
+        }).concat([realmKarte])));
+    });
+    return el("div", { class: "story-library" }, el("h3", {}, "📖 Story Library"), kapitel);
   }
   function storyFilm(welt, ende) {
     if (!R() || !R().film) { toast(T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet.")); return; }

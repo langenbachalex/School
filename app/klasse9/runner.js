@@ -30,6 +30,9 @@
    Story-Struktur als Daten (31.10.): story.struktur der Option oder W.storyStruktur (STRUKTUR_LONDON 12 ♪ / STRUKTUR_NY 20 ♪): Abschnitte, bis zu zwei Gabelungen, Stationen, Ende je Gabelung, Film-Szenen.
    Klasse 9 „The Lost Map“ Kapitel 1 New York (docs/runner/story-usa-01.md): MUSTER_NY_STORY (Feuertreppe, U-Bahn-Eingang, geparkte Stadtbusse), Gabelung 2 „give the map“ / „keep the map“, Film X/Y in der alten U-Bahn-Halle,
    verstecktes Tor ✦ → Seitenlevel „The Realm Beyond“ (MUSTER_REALM: Schneesturm, Eismauer, Burg, Drache, Wolf, Ritter, R1–R3, Frost Shard ❄) → zurück hinter das Tor. Ergebnis.story zusätzlich { wahl, max, realm }.
+   Kapitel 2 Route 66 „The Chase“ (31.10., docs/runner/story-usa-02.md): STRUKTUR_ROUTE66 mit Variante am Anfang (Stücke 1–2 je nach Kapitel 1: story.varianten['ny.g2'] = 'X' | 'Y', Platzhalter-♪ '1'/'2' → '1X'/'2X' bzw. '1Y'/'2Y'),
+   MUSTER_ROUTE66_STORY (Diner, geparkte Truck-Anhänger als Stufe, Motel-Schild über einer Reifenpyramide = verstecktes Tor ✦), Gabelung 2 „the truth – now“ / „later“, Film X/Y an der Mautstation bzw. im alten Auto,
+   Realm Kapitel 2 (MUSTER_REALM_2: Tür in der Eismauer, wartender Ritter, Dragon Scale 🐉 statt Frost Shard; struktur.gegenstand).
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …; Story: story, gabelung, kristall, stationWeiter, filmStart, filmSkip; Realm: realmBetreten, realmEnde, drache). */
 (function () {
   "use strict";
@@ -1038,6 +1041,78 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.eis(700, 100); h.vor(1100); },                          // 9
     (h) => { h.vor(900); },                                                                                          // 10 Rückkehr-Tor
   ];
+  // Route 66 „The Lost Map – The Chase“ (Klasse 9, Kapitel 2, docs/runner/story-usa-02.md): Anfang 1–5, wobei ♪1/♪2 als Variante von Kapitel 1 abhängen (quelle 'ny.g2': X = Karte gegeben → 1X/2X,
+  // Y oder keine Wahl → 1Y/2Y; die Strecke setzt Platzhalter '1'/'2', platz ordnet sie den Varianten-Schlüsseln zu) · Station 1 · Gabelung 1 (A6–A10 unten = am Diner anhalten / B6–B10 oben = weiterfahren,
+  // auf dem Truck-Anhänger) · Station 2 · gemeinsam 11–14 · Gabelung 2 (X15–X16 „the truth – now“ unten / Y15–Y16 „later“ oben auf dem geparkten Truck; ohne Wahl: Y) · Boss Big Rig Bob · Ende X17–X20 / Y17–Y20 = 20 ♪.
+  // Realm R1–R3 extra; realmMuster 'route66' = MUSTER_REALM_2 (Tür in der Eismauer, wartender Ritter), Sammelstück Dragon Scale 🐉 (gegenstand).
+  const STRUKTUR_ROUTE66 = { anzahl: 20, abschnitte: [
+    { anfang: true, varianten: { X: ['1X', '2X'], Y: ['1Y', '2Y'] }, quelle: 'ny.g2', standard: 'Y', platz: ['1', '2'], keys: ['3', '4', '5'] },
+    { gabel: 'g1', standard: 'A', wege: { A: ['A6', 'A7', 'A8', 'A9', 'A10'], B: ['B6', 'B7', 'B8', 'B9', 'B10'] }, symbole: { A: '🍟', B: '🚗' }, labels: { A: 'stop at the diner', B: 'keep driving' } },
+    { keys: ['11', '12', '13', '14'] },
+    { gabel: 'g2', standard: 'Y', wege: { X: ['X15', 'X16'], Y: ['Y15', 'Y16'] }, symbole: { X: '🗣️', Y: '⏳' }, labels: { X: 'the truth – now', Y: 'later' } },
+    { ende: 'g2', wege: { X: ['X17', 'X18', 'X19', 'X20'], Y: ['Y17', 'Y18', 'Y19', 'Y20'] } },
+  ], stationen: [1, 2], film: { X: [['X17'], ['X18'], ['X19'], ['X20'], null], Y: [['Y17'], ['Y18'], ['Y19'], ['Y20'], null] }, realm: ['R1', 'R2', 'R3'],
+    realmMuster: 'route66', gegenstand: { name: 'Dragon Scale', symbol: '🐉', art: 'schuppe' } };
+  // Story-Strecke Route 66 (Klasse 9, 36 Abschnitte, ≈ 37.000 Einheiten ≈ 2:40 min Laufzeit + Stationen + Boss ≈ 3 min): Verkehr (10 Fahrzeuge), 6 Ölflecken, Kojote/Roadrunner/Gürteltier wie Welt 2;
+  // Abstand der ♪ je Weg ≥ Erzählzeit des vorigen Stücks, nie in den 520 vor einem Tor; 21 Punkte-Diamanten. Gabelung 1: ♪A6 unten vor dem Diner (Kulisse 'diner'), ♪B6 oben auf einem geparkten Truck-Anhänger (parkbus);
+  // Weg B auf Plattformen, Weg A am Boden. Gabelung 2: ♪X15 unten („🗣️ the truth – now“), ♪Y15 oben auf einem geparkten Truck („⏳ later“).
+  // Verstecktes Tor ✦ (Abschnitt 7, früh – anders als in New York): schwebt bei y 60 hinter dem Schild eines Motels, das direkt neben einer vierstöckigen Reifenpyramide steht; nur mit langem Sprung
+  // vom obersten Reifen (y 170) erreichbar, vom Boden nicht; das Schild verdeckt die Mitte des Lichtrings – wer den 💎 oben auf der Pyramide holt, sieht den Schimmer dahinter. ♪3 ist fertig erzählt, bevor das Schild ins Bild kommt.
+  const MUSTER_ROUTE66_STORY = [
+    (h) => { h.dia(350); h.kristall(600, 290, '1'); h.kiste(900); h.vor(1100); },                                      // 1 Aufwärmen · ♪1 (Variante 1X/1Y)
+    (h) => { h.auto('auto', 150, 950); h.dia(500, 250); h.vor(900); },                                                 // 2 erstes Auto
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.kristall(500, 290, '2'); h.geg('kojote', 650, 950); h.vor(1050); }, // 3 Plattform · ♪2 (Variante 2X/2Y) · Kojote
+    (h) => { h.kiste(200); h.kiste(240, 2); h.dia(260, 215); h.vor(750); },                                             // 4 Reifenstufe
+    (h) => { h.kristall(300, 290, '3'); h.oel(500); h.geg('roadrunner', 750, 1150); h.vor(1250); },                     // 5 · ♪3 · Ölfleck + Roadrunner
+    (h) => { h.luecke(250, 170); h.dia(335, 250); h.vor(1100); },                                                     // 6 Baugrube (💎 darüber)
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 4); h.kiste(310, 3); h.kiste(350, 2); h.kiste(390); h.dia(290, 130); h.deko('motel', 430); h.realmTor(420, 60); h.vor(900); }, // 7 Reifenpyramide (💎 oben) · Motel-Schild · verstecktes Tor ✦ dahinter
+    (h) => { h.kristall(150, 290, '4'); h.auto('truck', 100, 1000); h.plat(600, 230, 160); h.dia(680, 190); h.vor(1100); }, // 8 · ♪4 · Truck + Plattform
+    (h) => { h.geg('guerteltier', 150, 500); h.kiste(650); h.kiste(690, 2); h.dia(710, 220); h.vor(900); },             // 9 Gürteltier + Stufe
+    (h) => { h.kristall(100, 290, '5'); h.auto('auto', 150, 900); h.oel(550); h.vor(1000); },                           // 10 · ♪5 · Auto + Öl
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(850); },                              // 11 Doppelplattform
+    (h) => { h.tor(700, 4, [5, 1]); h.vor(1200); },                                                                  // 12 TOR 1
+    (h) => { h.cp(150); h.geg('kojote', 700, 950); h.vor(1050); },                                                   // 13 CHECKPOINT 1 · Station 1
+    (h) => { h.deko('diner', 100); h.kristall(260, 290, 'A6'); h.parkbus(380); h.kristall(440, 246, 'B6'); h.vor(1200); }, // 14 GABELUNG 1: ♪A6 vor dem Diner, ♪B6 oben auf dem Truck-Anhänger
+    (h) => { h.auto('auto', 100, 1000); h.dia(500, 250); h.plat(700, 200, 200); h.kristall(800, 160, 'B7'); h.kristall(1500, 290, 'A7'); h.auto('truck', 1000, 1900); h.vor(2000); }, // 15 Verkehr · ♪B7 auf der Plattform / ♪A7 unten
+    (h) => { h.kiste(200, 2); h.kiste(240, 2); h.geg('roadrunner', 450, 850); h.vor(900); },                            // 16 Reifenmauer + Roadrunner
+    (h) => { h.luecke(250, 160); h.kristall(330, 200, 'B8'); h.oel(600); h.kristall(800, 290, 'A8'); h.vor(1000); },    // 17 Baugrube (♪B8 darüber) + Öl · ♪A8
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(950); },       // 18 Dreier-Plattform
+    (h) => { h.geg('guerteltier', 150, 450); h.plat(300, 200, 180); h.kristall(390, 160, 'B9'); h.auto('auto', 500, 1300); h.kristall(700, 290, 'A9'); h.vor(1400); }, // 19 · ♪B9 oben / ♪A9 unten · Auto
+    (h) => { h.plat(200, 235, 200); h.dia(300, 195); h.kiste(650); h.vor(850); },                                      // 20
+    (h) => { h.kristall(100, 290, 'A10'); h.plat(200, 235, 200); h.kristall(300, 195, 'B10'); h.oel(600); h.geg('kojote', 750, 1000); h.vor(1100); }, // 21 · ♪A10 / ♪B10 · Öl + Kojote
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(950); },                  // 22
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                                  // 23 TOR 2
+    (h) => { h.cp(150); h.kiste(600); h.kiste(640, 2); h.vor(900); },                                                // 24 CHECKPOINT 2 · Station 2
+    (h) => { h.kristall(150, 290, '11'); h.auto('truck', 700, 1500); h.vor(1600); },                                   // 25 · ♪11 (Tankstelle, der Truck) · Truck
+    (h) => { h.geg('roadrunner', 100, 500); h.luecke(600, 170); h.dia(685, 250); h.kristall(900, 290, '12'); h.vor(1000); }, // 26 Baugrube (💎 darüber) · ♪12
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.dia(250, 180); h.vor(750); }, // 27 Reifenpyramide (💎 oben)
+    (h) => { h.geg('guerteltier', 150, 450); h.oel(600); h.kristall(850, 290, '13'); h.vor(1050); },                    // 28 · ♪13
+    (h) => { h.auto('auto', 100, 900); h.plat(650, 240, 150); h.dia(725, 200); h.vor(900); },                           // 29 Auto + Plattform
+    (h) => { h.kristall(500, 290, '14'); h.geg('kojote', 700, 1000); h.vor(1100); },                                   // 30 · ♪14
+    (h) => { h.luecke(200, 170); h.dia(285, 250); h.kiste(600); h.vor(900); },                                         // 31 Baugrube (💎 darüber)
+    (h) => { h.kristall(200, 290, 'X15'); h.parkbus(300); h.kristall(360, 246, 'Y15'); h.vor(1200); },                 // 32 GABELUNG 2: ♪X15 unten (🗣️ the truth – now), ♪Y15 oben auf dem geparkten Truck (⏳ later)
+    (h) => { h.kiste(700); h.kiste(740, 2); h.dia(760, 215); h.vor(900); },                                            // 33 Reifenstufe
+    (h) => { h.plat(100, 235, 180); h.kristall(150, 290, 'X16'); h.kristall(190, 195, 'Y16'); h.auto('auto', 500, 1300); h.vor(1400); }, // 34 · ♪X16 unten / ♪Y16 auf der Plattform · Auto
+    (h) => { h.oel(200); h.auto('truck', 400, 1200); h.dia(900, 250); h.vor(1200); },                                   // 35 Öl + Truck (💎 darüber)
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.dia(475, 140); h.geg('roadrunner', 700, 1000); h.vor(1150); }, // 36 Schluss
+  ];
+  // Seitenlevel „The Realm Beyond“ Kapitel 2 (≈ 11.100 Einheiten ≈ 46 s): dieselbe Kulisse, aber eine Tür in der Eismauer (Kulisse 'eistuer') direkt bei ✦R1, der Ritter wartet (steht still, nicht plattdrückbar – drüberspringen)
+  // hinter ✦R2, Sammelstück Dragon Scale 🐉 hoch oben; am Ende das Rückkehr-Tor („✦ Route 66“).
+  const MUSTER_REALM_2 = [
+    (h) => { h.vor(600); },                                                                                          // 0 Ankunft
+    (h) => { h.deko('eistuer', 120); h.kristall(260, 290, 'R1'); h.kiste(600); h.vor(900); },                         // 1 Tür in der Eismauer · ✦R1
+    (h) => { h.geg('wolf', 200, 600); h.eis(800, 110); h.vor(1100); },                                               // 2 Wolf + Eisfleck
+    (h) => { h.luecke(250, 170); h.plat(500, 235, 160); h.vor(1000); },                                              // 3 Gletscherspalte
+    (h) => { h.kristall(300, 290, 'R2'); h.geg('ritter', 460, 460, { wartet: true }); h.vor(1200); },                 // 4 · ✦R2 („The knight was waiting“) · wartender Ritter
+    (h) => { h.geg('wolf', 150, 500); h.kiste(700); h.kiste(740, 2); h.vor(1000); },                                 // 5 Wolf + Eisblöcke
+    (h) => { h.kiste(100, 2); h.plat(220, 190, 120); h.plat(420, 130, 110); h.gegenstand(475, 95); h.eis(700, 100); h.vor(1100); }, // 6 Dragon Scale 🐉 ganz oben
+    (h) => { h.geg('ritter', 200, 500); h.luecke(700, 160); h.vor(1100); },                                          // 7 Ritter + Spalte
+    (h) => { h.kristall(300, 290, 'R3'); h.geg('wolf', 600, 900); h.vor(1100); },                                    // 8 · ✦R3
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.eis(700, 100); h.vor(1100); },                          // 9
+    (h) => { h.vor(900); },                                                                                          // 10 Rückkehr-Tor
+  ];
+  const REALM_MUSTER = { ny: MUSTER_REALM, route66: MUSTER_REALM_2 };
+  const REALM_GEGENSTAND = { name: 'Frost Shard', symbol: '❄', art: 'splitter' };   // Kapitel 1 (Standard); Kapitel 2: struktur.gegenstand
   const PARKBUS_W = 118, PARKBUS_H = 54;   // geparkter Doppeldecker an der Gabelung (fest, begehbar)
   // Fahrzeuge: Breite/Höhe, Tempo, Startabstand vor dem rechten Ende (auto/truck wie seit Welt 2; bus/cab Welt Westminster)
   const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
@@ -1049,7 +1124,8 @@
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
       kiste: (dx, n = 1) => { for (let i = 0; i < n; i++) L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE * (i + 1) }); },
       dia: (dx, y = 298) => L.diamanten.push({ x:x + dx, y, wort:wort++ }),
-      geg: (art, von, bis) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' || art === 'adler' || art === 'moewe' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1 }),
+      // o.wartet (Realm Kapitel 2): der Gegner steht still (wartender Ritter)
+      geg: (art, von, bis, o) => L.gegner.push({ art, x:x + (von + bis) / 2, y: art === 'taube' || art === 'geier' || art === 'adler' || art === 'moewe' ? 262 : BODEN_Y, von:x + von, bis:x + bis, richtung:-1, wartet: !!(o && o.wartet) }),
       luecke: (dx, w) => { L.boden.push([bodenAb, x + dx]); bodenAb = x + dx + w; },
       tor: (dx, wort, falsch) => L.tore.push({ x:x + dx, wort, falsch }),
       cp: (dx) => L.checkpoints.push({ x:x + dx }),
@@ -1296,19 +1372,25 @@
      stimme.erzaehler(text, { key, audio, sofort }) spricht ein Stück (Geräte-Stimme, bis die Aufnahmen da sind) und darf ein Promise liefern (Ende der Lesung);
      stimme.still() bricht eine Lesung ab (Station/Film übersprungen). Wörter, die während eines Stücks gesammelt werden, warten hinter dem Erzähler (stimme.wort(i, { warten: true })). */
   // Struktur (story.struktur der Option, sonst die der Welt, sonst London): Schlüssel → { gabel, weg, i }, Gabel-Ids in Reihenfolge, Ende-Abschnitt
-  let struktur = STRUKTUR_LONDON, keyInfo = {}, gabeln = [], endeAbschnitt = null;
+  // Varianten (Kapitel 2): ein Abschnitt mit varianten { X: [keys], Y: [keys] } + quelle (z. B. 'ny.g2') + standard; die App übergibt story.varianten = { 'ny.g2': 'X' } (Wahl aus Kapitel 1).
+  // Die Strecke setzt Platzhalter-♪ (platz: ['1', '2']); varKeys bildet sie auf die Schlüssel der gewählten Variante ab ('1' → '1X'). Fehlt die Angabe: standard.
+  let struktur = STRUKTUR_LONDON, keyInfo = {}, gabeln = [], endeAbschnitt = null, varKeys = {}, variantenWahl = {};
+  const varianteVon = (a) => { const v = storyOpt && storyOpt.varianten && storyOpt.varianten[a.quelle]; return v && a.varianten[v] ? v : (a.standard && a.varianten[a.standard] ? a.standard : Object.keys(a.varianten)[0]); };
   function strukturSetzen(st) {
-    struktur = st && Array.isArray(st.abschnitte) ? st : STRUKTUR_LONDON; keyInfo = {}; gabeln = []; endeAbschnitt = null;
+    struktur = st && Array.isArray(st.abschnitte) ? st : STRUKTUR_LONDON; keyInfo = {}; gabeln = []; endeAbschnitt = null; varKeys = {}; variantenWahl = {};
     for (const a of struktur.abschnitte) {
       if (a.gabel) { gabeln.push(a); for (const w in a.wege) a.wege[w].forEach((k, i) => { keyInfo[k] = { gabel: a.gabel, weg: w, i }; }); }
       else if (a.ende) endeAbschnitt = a;
+      if (a.varianten) { const v = varianteVon(a); variantenWahl[a.quelle || 'variante'] = v; (a.platz || []).forEach((p, i) => { varKeys[p] = a.varianten[v][i] || p; }); }
     }
   }
+  // Schlüssel eines Abschnitts (gemeinsam; Variante + feste Schlüssel; Gabelung: gewählter Weg, sonst Standard)
+  const abschnittKeys = (a) => a.varianten ? (a.varianten[varianteVon(a)] || []).concat(a.keys || []) : (a.keys || (a.wege && a.wege[story.wahl[a.gabel] || gabelStandard(a.gabel)]) || []);
   const gabelVon = (id) => gabeln.find((g) => g.gabel === id) || null;
   const gabelStandard = (id) => { const g = gabelVon(id); return g ? (g.standard || Object.keys(g.wege)[0]) : null; };
   const endeAnzahl = () => (endeAbschnitt ? Math.max(...Object.values(endeAbschnitt.wege).map((l) => l.length)) : 0);
   const endeWahl = () => (endeAbschnitt ? story.wahl[endeAbschnitt.ende] || null : null);
-  const kristallKey = (k) => (k.ende != null ? ((endeAbschnitt && endeAbschnitt.wege[endeWahl() || gabelStandard(endeAbschnitt.ende)]) || [])[k.ende] || '' : k.key);
+  const kristallKey = (k) => (k.ende != null ? ((endeAbschnitt && endeAbschnitt.wege[endeWahl() || gabelStandard(endeAbschnitt.ende)]) || [])[k.ende] || '' : varKeys[k.key] || k.key);
   const storyText = (key) => (storyOpt && storyOpt.teile && storyOpt.teile[key]) || '';
   const storyAudio = (key) => (storyOpt && storyOpt.audio && storyOpt.audio[key]) || null;
   const istWahlKristall = (k, gabel) => !!k.info && k.info.i === 0 && (!gabel || k.info.gabel === gabel);
@@ -1360,7 +1442,8 @@
      Beim Betreten wird der New-York-Zustand (Level, Welt, Gegner, Diamanten, Tore, Checkpoints, Kristalle, Checkpoint) beiseitegelegt und das Realm-Level eingesetzt; beim Verlassen kommt er zurück
      (Diamanten, Combo, ♪ und Leben bleiben). Je Lauf einmal. Wer das Tor nicht findet, merkt nichts davon. */
   const REALM_BLITZ = 0.7, REALM_TOR_W = 44, REALM_TOR_H = 48, REALM_RUTSCH = 0.35;
-  let realm = null, realmLevel = null;
+  let realm = null, realmLevels = {};
+  const realmGegenstand = () => (struktur && struktur.gegenstand) || REALM_GEGENSTAND;   // Sammelstück des Kapitels: Frost Shard ❄ (1) / Dragon Scale 🐉 (2)
   function realmNeu() {
     realm = storyOpt && level.realmTore && level.realmTore.length ? { tore: level.realmTore.map((t) => ({ ...t, benutzt: false })), aktiv: false, gefunden: false, gesammelt: [], gegenstand: false, dinge: [],
       blitz: 0, t: 0, zurueck: null, drache: { t: 0, naechste: 6, aktiv: false }, rutsch: 0, besuche: 0 } : null;
@@ -1369,12 +1452,13 @@
   const imRealm = () => !!(realm && realm.aktiv);
   const diaMax = () => (imRealm() && realm.zurueck ? realm.zurueck.diamanten.length : diamanten ? diamanten.length : 0);   // Punkte-Diamanten des Kapitels (auch im Realm)
   const realmTorBox = (t) => ({ x: t.x - REALM_TOR_W / 2, y: t.y - REALM_TOR_H / 2, w: REALM_TOR_W, h: REALM_TOR_H });
-  function realmLevelBauen() {
-    if (realmLevel) return realmLevel;
-    const L = levelBauen(MUSTER_REALM, 0);
+  function realmLevelBauen() {   // Realm-Strecke je Kapitel (struktur.realmMuster: 'ny' = Kapitel 1, 'route66' = Kapitel 2), einmal gebaut
+    const id = (struktur && struktur.realmMuster) || 'ny';
+    if (realmLevels[id]) return realmLevels[id];
+    const L = levelBauen(REALM_MUSTER[id] || MUSTER_REALM, 0);
     L.rueckX = L.sequenzX - 250 - 300;   // Rückkehr-Tor 300 vor dem Ende der Strecke (W.tuer zeichnet es an tuerX)
     L.tuerX = L.rueckX; L.sequenzX = Infinity; L.stopX = Infinity; L.bossX = Infinity;
-    return (realmLevel = L);
+    return (realmLevels[id] = L);
   }
   function realmBetreten(t) {
     const L = realmLevelBauen();
@@ -1399,7 +1483,7 @@
     spieler.x = z.x; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.5; halten = false; rutscht = 0; tot = 0;
     kamera = Math.max(0, Math.min(spieler.x - viewW * (viewW < 450 ? 0.28 : 0.33), level.ende - viewW)); partikel = []; spurPunkte = [];
     realm.blitz = REALM_BLITZ; klang.portal();
-    meldung = { text: 'Back in New York! 🗽', zeit: 1.6 };
+    meldung = { text: W.realmZurueck || `Back in ${W.name}!`, zeit: 1.6 };
   }
   function realmKristall(k, key) {
     if (!realm.gesammelt.includes(key)) realm.gesammelt.push(key);
@@ -1415,7 +1499,7 @@
       return false;
     }
     realm.t += dt; if (realm.rutsch > 0) realm.rutsch = Math.max(0, realm.rutsch - dt);
-    for (const d of realm.dinge) { d.funkel += dt; if (!d.weg && ueberlappt(box.x, box.y, box.w, box.h, d.x - 14, d.y - 18, 28, 36)) { d.weg = true; realm.gegenstand = true; klang.splitter(); meldung = { text: 'Frost Shard! ❄', zeit: 1.6 }; funken(d.x, d.y, 30, ['#bff0ff', '#ffffff', '#5cc8ff'], 260, 0.9); } }
+    for (const d of realm.dinge) { d.funkel += dt; if (!d.weg && ueberlappt(box.x, box.y, box.w, box.h, d.x - 14, d.y - 18, 28, 36)) { const gs = realmGegenstand(); d.weg = true; realm.gegenstand = true; klang.splitter(); meldung = { text: `${gs.name}! ${gs.symbol}`, zeit: 1.6 }; funken(d.x, d.y, 30, gs.art === 'schuppe' ? ['#ffd36b', '#ff8a3d', '#b3332a'] : ['#bff0ff', '#ffffff', '#5cc8ff'], 260, 0.9); } }
     const dr = realm.drache; dr.t += dt;
     if (!dr.aktiv && dr.t >= dr.naechste) { dr.aktiv = true; dr.start = dr.t; dr.hoehe = 40 + Math.random() * 50; if (!ruhig()) klang.drache(); }
     if (dr.aktiv && dr.t - dr.start > 5) { dr.aktiv = false; dr.naechste = dr.t + 9 + Math.random() * 4; }
@@ -1438,7 +1522,7 @@
   // Station n: alle Stücke der ersten stationen[n − 1] Abschnitte (Gabelung: gewählter Weg, sonst Standard); trenner = letzte Zeile je Abschnitt (Trennlinie)
   function stationAbschnitte(nr) {
     const n = (struktur.stationen && struktur.stationen[nr - 1]) || struktur.abschnitte.length;
-    return struktur.abschnitte.slice(0, n).filter((a) => !a.ende).map((a) => a.keys || a.wege[story.wahl[a.gabel] || gabelStandard(a.gabel)] || []);
+    return struktur.abschnitte.slice(0, n).filter((a) => !a.ende).map(abschnittKeys);
   }
   function stationKeys(nr) { return [].concat(...stationAbschnitte(nr)); }
   function stationTrenner(nr) { const t = []; let i = -1; for (const l of stationAbschnitte(nr)) { i += l.length; t.push(i); } t.pop(); return t; }
@@ -1682,6 +1766,7 @@
       if (g.tot > 0) { g.tot += dt; continue; }
       if (g.rollt) { g.x += 420 * dt; g.roll = (g.roll || 0) + dt * 14; if (g.x > g.bis + 900) g.tot = 1; continue; }   // weggerollte Kugel: schnell nach rechts, dann weg
       if (g.klaut) { g.klaut += dt; g.x += 170 * dt; g.y -= 130 * dt; if (g.klaut > 1.6) g.tot = 1; continue; }   // Möwe mit Beute: fliegt nach oben rechts davon
+      if (g.wartet) continue;   // wartender Ritter (Realm Kapitel 2): steht still, schaut nach links
       g.x += g.richtung * GEGNER_TEMPO[g.art] * dt;
       if (g.art === 'roadrunner' || g.art === 'skater') { if (g.x < g.von) g.x = g.bis; continue; }   // Roadrunner/Skater laufen immer entgegen (nach links) und erscheinen rechts wieder
       if (g.art === 'bueffel') { if (g.x < g.von) { if (spieler.x < g.bis - 450) g.x = g.bis; else g.tot = 1; } continue; }   // Büffel rennt durch; kommt nur wieder, wenn die Figur noch weit genug vor dem Ende seiner Strecke ist
@@ -3596,7 +3681,7 @@
   function parkbusZeichnen(c) {   // geparkter Doppeldecker (Gabelung): wie der fahrende, ohne Scheinwerferkegel, mit Warnblinker
     for (const b of level.parkbusse) {
       const x = b.x - kamera; if (x > viewW + 140 || x + PARKBUS_W < -140) continue;
-      if (W.id === 'ny') stadtbus(c, x, BODEN_Y); else londonFahrzeug(c, { art: 'bus', x: b.x, w: PARKBUS_W, h: PARKBUS_H, rad: 0 });
+      if (W.id === 'ny') stadtbus(c, x, BODEN_Y); else if (W.id === 'route66') parkTruck(c, x, BODEN_Y); else londonFahrzeug(c, { art: 'bus', x: b.x, w: PARKBUS_W, h: PARKBUS_H, rad: 0 });
       if (Math.floor(zeit * 2) % 2 === 0) { c.fillStyle = '#ffb000'; c.fillRect(x - 1, BODEN_Y - 15, 5, 5); c.fillRect(x + PARKBUS_W - 4, BODEN_Y - 15, 5, 5); }
     }
   }
@@ -3639,8 +3724,8 @@
     c.fillStyle = 'rgba(74,26,158,.9)'; c.strokeStyle = '#ffd36b'; c.lineWidth = 1.5; c.beginPath(); c.roundRect(-w / 2, -13, w, 26, 13); c.fill(); c.stroke();
     c.fillStyle = '#fff'; c.fillText(txt, 0, 1);
     c.restore();
-    if (imRealm()) {   // Realm: ✦ x / 3 (und ❄, sobald der Frost Shard gefunden ist)
-      const t2 = `✦ ${realm.gesammelt.length} / ${(struktur.realm || []).length || 3}${realm.gegenstand ? ' · ❄' : ''}`;
+    if (imRealm()) {   // Realm: ✦ x / 3 (und ❄ bzw. 🐉, sobald das Sammelstück gefunden ist)
+      const t2 = `✦ ${realm.gesammelt.length} / ${(struktur.realm || []).length || 3}${realm.gegenstand ? ' · ' + realmGegenstand().symbol : ''}`;
       c.save(); c.font = 'bold 16px system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'center';
       const w2 = c.measureText(t2).width + 18, x2 = 96 + w + 8 + w2 / 2;
       c.fillStyle = 'rgba(14,52,96,.9)'; c.strokeStyle = '#bfefff'; c.lineWidth = 1.5; c.beginPath(); c.roundRect(x2 - w2 / 2, 11, w2, 26, 13); c.fill(); c.stroke();
@@ -3752,7 +3837,8 @@
   }
   const filmSkin = () => skin;
   function filmZeichnen(c) {
-    if (film.welt === 'ny') return filmZeichnenNY(c);   // Story New York (Klasse 9)
+    if (film.welt === 'ny') return filmZeichnenNY(c);   // Story New York (Klasse 9, Kapitel 1)
+    if (film.welt === 'route66') return filmZeichnenR66(c);   // Story Route 66 (Klasse 9, Kapitel 2)
     const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
     if (sz >= 3) return filmTitel(c, f);
     const [kx, ky, kz] = filmKamera(sz, p, ende);
@@ -3819,6 +3905,12 @@
       zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, f.ende === 'Y' ? 'erstaunt' : 'grinsend');
       if (f.ende === 'Y') karteZeichnen(c, viewW / 2 - 44, 244, 1); else realmTorZeichnen(c, viewW / 2 + 140, 260, zeit, 0.8);
       c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'X' ? '🤝 → 🛣️ Route 66' : '🗺️ ✦ ✦ ✦ ✦', viewW / 2, 340);
+    } else if (f.welt === 'route66') {   // Route 66: du und Lucas (Ende X: die Frau bleibt – „Bring the boy“; Ende Y: das alte Auto, weiter nach Westen)
+      zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, 'grinsend');
+      zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, 'erstaunt');
+      if (f.ende === 'X') { c.save(); c.translate(viewW / 2 + 150, 0); c.scale(-0.8, 0.8); zeichneFigur(c, 0, 375, 70, NY_FIGUREN.frau, 'steh', zeit, 'grinsend'); c.restore(); kompass(c, viewW / 2 + 136, 268, zeit); }
+      else altesAuto(c, viewW / 2 + 110, 300, 0.6, zeit * 300, null);
+      c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'X' ? '🗣️ → 🏜️ Grand Canyon · Bring the boy' : '⏳ → 🏜️ Grand Canyon', viewW / 2, 340);
     } else {
       zeichneFigur(c, viewW / 2 - 50, 300, 70, f.ende === 'B' && skin.hut === 'cap' ? Object.assign({}, skin, { hut: 'keiner' }) : skin, 'steh', zeit, 'grinsend');
       c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, { hut: f.ende === 'B' ? 'cap' : 'fell', laecheln: f.ende === 'A' ? 1 : 0, lachen: f.ende === 'B' ? 0.6 : 0, blick: -2 }); c.restore();
@@ -3864,12 +3956,54 @@
     for (const lx of [x - 10, x + 80]) { c.fillStyle = '#1f5130'; c.fillRect(lx - 2, BODEN_Y - 60, 4, 34); const gl = 0.75 + 0.25 * Math.sin(zeit * 3 + lx); c.fillStyle = `rgba(120,230,140,${gl})`; c.beginPath(); c.arc(lx, BODEN_Y - 64, 7, 0, Math.PI * 2); c.fill(); }
     c.fillStyle = '#111'; c.fillRect(x + 4, BODEN_Y - 52, 62, 16); c.fillStyle = '#fff'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('SUBWAY', x + 35, BODEN_Y - 43.5);
   }
-  function dekoZeichnen(c) {   // zwei Durchgänge: erst die Hauswände (Feuertreppe), dann alles davor (U-Bahn-Eingang)
+  function dekoZeichnen(c) {   // zwei Durchgänge: erst die Hauswände (Feuertreppe, Diner, Eistür), dann alles davor (U-Bahn-Eingang); das Motel-Schild kommt in dekoVorneZeichnen (über dem Tor ✦)
     for (let pass = 0; pass < 2; pass++) for (const d of level.deko) {
-      if ((d.art === 'feuertreppe') !== (pass === 0)) continue;
+      if (d.art === 'motel') continue;
+      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer') !== (pass === 0)) continue;
       const x = d.x - kamera; if (x < -320 || x > viewW + 60) continue;
-      if (d.art === 'feuertreppe') feuertreppeDeko(c, x); else if (d.art === 'subway') subwayDeko(c, x);
+      if (d.art === 'feuertreppe') feuertreppeDeko(c, x); else if (d.art === 'subway') subwayDeko(c, x); else if (d.art === 'diner') dinerDeko(c, x); else if (d.art === 'eistuer') eistuerDeko(c, x);
     }
+  }
+  function dekoVorneZeichnen(c) { for (const d of level.deko) { if (d.art !== 'motel') continue; const x = d.x - kamera; if (x < -120 || x > viewW + 120) continue; motelSchild(c, x); } }
+  /* ---------- Story Route 66 (Klasse 9, Kapitel 2): geparkter Truck-Anhänger, Diner, Motel-Schild (verdeckt das versteckte Tor ✦), Eistür im Realm ---------- */
+  function parkTruck(c, x, y) {   // geparkter Truck-Anhänger (118 × 54, Front links): weißer Kasten mit rotem Streifen „ROUTE 66 FREIGHT“, blaues Fahrerhaus, drei Räder
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#e9e9e9'; c.beginPath(); c.roundRect(30, -PARKBUS_H, PARKBUS_W - 30, PARKBUS_H - 12, 4); c.fill();   // Anhänger
+    c.fillStyle = '#c8283a'; c.fillRect(36, -PARKBUS_H + 12, PARKBUS_W - 42, 6);
+    c.fillStyle = '#18213a'; c.font = 'bold 7px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('ROUTE 66 FREIGHT', 30 + (PARKBUS_W - 30) / 2, -PARKBUS_H + 30);
+    c.fillStyle = '#2a6cff'; c.beginPath(); c.roundRect(0, -PARKBUS_H + 14, 34, PARKBUS_H - 26, 6); c.fill();   // Fahrerhaus
+    c.fillStyle = '#bfe3fa'; c.fillRect(4, -PARKBUS_H + 18, 13, 12);
+    c.fillStyle = '#555'; c.fillRect(-2, -12, PARKBUS_W + 2, 4);
+    for (const rx of [16, PARKBUS_W - 44, PARKBUS_W - 18]) { c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(rx, -8, 9, 0, Math.PI * 2); c.fill(); c.fillStyle = '#aaa'; c.beginPath(); c.arc(rx, -8, 4, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function dinerDeko(c, x) {   // Diner am Straßenrand: silberner Wagen mit rotem Dach, große Fenster (erleuchtet), Tür, Schild „DINER“ auf dem Dach, Neon „OPEN 24h“
+    const w = 250, y0 = BODEN_Y - 120;
+    c.fillStyle = '#c9ced6'; c.beginPath(); c.roundRect(x, y0, w, 120, [10, 10, 0, 0]); c.fill();
+    c.fillStyle = '#c8283a'; c.fillRect(x - 6, y0 - 8, w + 12, 12);
+    c.strokeStyle = 'rgba(0,0,0,.12)'; c.lineWidth = 1; c.beginPath(); for (let yy = y0 + 14; yy < BODEN_Y; yy += 12) { c.moveTo(x, yy); c.lineTo(x + w, yy); } c.stroke();
+    for (let k = 0; k < 4; k++) { const fx = x + 18 + k * 58; c.fillStyle = '#ffe9a8'; c.fillRect(fx, y0 + 22, 44, 44); c.fillStyle = '#8a3a2a'; c.fillRect(fx, y0 + 50, 44, 4); c.fillStyle = '#f4f4f4'; c.fillRect(fx + 2, y0 + 24, 40, 8); }   // Fenster mit Vorhang
+    c.fillStyle = '#18213a'; c.fillRect(x + w - 44, y0 + 60, 30, 60); c.fillStyle = '#bfe3fa'; c.fillRect(x + w - 40, y0 + 66, 22, 24);   // Tür
+    c.fillStyle = '#18213a'; c.fillRect(x + 90, y0 - 44, 80, 32); c.fillStyle = '#ffd93d'; c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('DINER', x + 130, y0 - 28);   // Dachschild
+    c.fillStyle = Math.floor(zeit * 2) % 2 ? '#ff5d5d' : '#ffb3b3'; c.font = 'bold 9px system-ui, sans-serif'; c.fillText('OPEN 24h', x + 60, y0 + 10);
+    c.fillStyle = '#9aa3b0'; c.fillRect(x - 10, BODEN_Y - 6, w + 20, 6);   // Vortreppe
+  }
+  function motelSchild(c, x) {   // hohes Motel-Schild neben der Reifenpyramide: Mast vom Boden bis y 100, Tafel 86 × 30 um (x, 60) – verdeckt die Mitte des Tors ✦ dahinter
+    c.fillStyle = '#555'; c.fillRect(x - 3, 100, 6, BODEN_Y - 100);
+    c.fillStyle = '#1d3f8f'; c.beginPath(); c.roundRect(x - 43, 45, 86, 30, 6); c.fill();
+    c.fillStyle = '#ffd93d'; c.font = 'bold 15px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MOTEL', x, 60);
+    c.fillStyle = '#e63946'; c.beginPath(); c.moveTo(x + 44, 56); c.lineTo(x + 56, 56); c.lineTo(x + 56, 50); c.lineTo(x + 66, 60); c.lineTo(x + 56, 70); c.lineTo(x + 56, 64); c.lineTo(x + 44, 64); c.closePath(); c.fill();
+    c.fillStyle = Math.floor(zeit * 2) % 2 ? '#ff5d5d' : '#ffb3b3'; c.font = 'bold 8px system-ui, sans-serif'; c.fillText('VACANCY', x, 86);
+  }
+  function eistuerDeko(c, x) {   // Tür in der Eismauer (Realm Kapitel 2): Eisbogen mit dunklem Spalt, Runen-Rahmen, zwei Fackeln, Schnee auf dem Sturz
+    c.fillStyle = '#9fd0ee'; c.beginPath(); c.moveTo(x - 70, BODEN_Y); c.lineTo(x - 70, 160); c.arc(x, 160, 70, Math.PI, 0); c.lineTo(x + 70, BODEN_Y); c.closePath(); c.fill();
+    c.strokeStyle = '#ffffff'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 60, BODEN_Y); c.lineTo(x - 60, 160); c.arc(x, 160, 60, Math.PI, 0); c.lineTo(x + 60, BODEN_Y); c.stroke();
+    const g = c.createLinearGradient(0, 110, 0, BODEN_Y); g.addColorStop(0, '#0a1a33'); g.addColorStop(1, '#1b3c66');
+    c.fillStyle = g; c.beginPath(); c.moveTo(x - 36, BODEN_Y); c.lineTo(x - 36, 170); c.arc(x, 170, 36, Math.PI, 0); c.lineTo(x + 36, BODEN_Y); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(120,200,255,.6)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x, 134); c.lineTo(x, BODEN_Y); c.stroke();   // Spalt zwischen den Flügeln
+    c.fillStyle = 'rgba(255,255,255,.7)'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; for (let k = 0; k < 5; k++) c.fillText('✦', x - 48 + k * 24, 116 + Math.abs(k - 2) * 6);
+    fackel(c, x - 84, BODEN_Y); fackel(c, x + 84, BODEN_Y);
+    c.fillStyle = '#ffffff'; c.beginPath(); c.ellipse(x, 92, 50, 7, 0, Math.PI, 0); c.fill();
   }
   // verstecktes Tor ✦: schwebender Lichtring (Leuchten pulsiert, Funken kreisen), Mitte ✦
   function realmTorZeichnen(c, x, y, t, s = 1) {
@@ -3995,7 +4129,8 @@
     const p = ruhig() ? 0.8 : 0.7 + 0.3 * Math.sin(zeit * 3);
     const g = c.createLinearGradient(0, y - 180, 0, y); g.addColorStop(0, `rgba(255,255,255,${p})`); g.addColorStop(1, `rgba(120,210,255,${0.7 * p})`);
     c.fillStyle = g; c.beginPath(); c.moveTo(x - 32, y); c.lineTo(x - 32, y - 150); c.arc(x, y - 150, 32, Math.PI, 0); c.lineTo(x + 32, y); c.closePath(); c.fill();
-    c.fillStyle = '#18213a'; c.fillRect(x - 40, y - 214, 80, 18); c.fillStyle = '#fff'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('✦ New York', x, y - 205);
+    const heim = realm && realm.zurueck && realm.zurueck.W ? realm.zurueck.W.name : 'New York';   // Schild: zurück in die Welt des Kapitels
+    c.fillStyle = '#18213a'; c.fillRect(x - 40, y - 214, 80, 18); c.fillStyle = '#fff'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(`✦ ${heim}`, x, y - 205);
   }
   function wolf(c, g) {   // Wolf: grau, dunkler Rücken, buschiger Schwanz, gelbe Augen, Schnauze nach vorn; plattdrückbar
     const b = gegnerBox(g); const cx = b.x + 23, cy = b.y + 30;
@@ -4040,14 +4175,25 @@
     c.font = '10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText('❄', 0, -30);
     c.restore();
   }
-  function realmDingeZeichnen(c) { for (const d of realm.dinge) { if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue; frostShard(c, x, d.y, d.funkel); } }
+  function dragonScale(c, x, y, t) {   // Dragon Scale 🐉 (Kapitel 2): große dunkelrote Schuppe mit goldenem Rand und Glanz, warmes Leuchten
+    c.save(); c.translate(x, y + (ruhig() ? 0 : Math.sin(t * 2.4) * 4));
+    const g = c.createRadialGradient(0, 0, 2, 0, 0, 30); g.addColorStop(0, 'rgba(255,200,120,.7)'); g.addColorStop(1, 'rgba(255,120,60,0)');
+    c.fillStyle = g; c.beginPath(); c.arc(0, 0, 30, 0, Math.PI * 2); c.fill();
+    const lg = c.createLinearGradient(-12, -18, 12, 18); lg.addColorStop(0, '#c0392b'); lg.addColorStop(0.5, '#7a1f2b'); lg.addColorStop(1, '#3a0d14');
+    c.fillStyle = lg; c.strokeStyle = '#ffd36b'; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(0, -20); c.quadraticCurveTo(16, -14, 14, 4); c.quadraticCurveTo(10, 16, 0, 20); c.quadraticCurveTo(-10, 16, -14, 4); c.quadraticCurveTo(-16, -14, 0, -20); c.closePath(); c.fill(); c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-6, -12); c.quadraticCurveTo(-9, -2, -5, 8); c.stroke();
+    c.font = '10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText('🐉', 0, -30);
+    c.restore();
+  }
+  function realmDingeZeichnen(c) { const gs = realmGegenstand(); for (const d of realm.dinge) { if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue; if (gs.art === 'schuppe') dragonScale(c, x, d.y, d.funkel); else frostShard(c, x, d.y, d.funkel); } }
   function realmFackelnZeichnen(c) {   // Fackeln alle 700, Banner alle 1.400 (Weltkoordinaten, hinter der Figur)
     const a = Math.floor((kamera - 100) / 700), b = Math.ceil((kamera + viewW + 100) / 700);
     for (let i = Math.max(0, a); i <= b; i++) { const x = i * 700 + 330 - kamera; if (i % 2) bannerPfahl(c, x, BODEN_Y); else fackel(c, x, BODEN_Y); }
   }
   const REALM_WELT = { id: 'realm', name: 'The Realm Beyond', sturz: 'Crevasse! ❄️', gegnerarten: ['wolf', 'ritter'], farben: { plattform: '#5b6b84', plattformOben: '#ffffff', hud: '#3a7bd5' },
     kulisse: hintergrundRealm, boden: bodenRealm, grube: gletscherspalte, kiste: eisblock, tuer: rueckTor, boss: () => {}, sprechblaseHoehe: 70,
-    hudSymbol: (c, x, y) => { c.font = '18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#3a7bd5'; c.fillText('❄', x, y - 6); } };
+    hudSymbol: (c, x, y) => { c.font = '18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#3a7bd5'; c.fillText(realmGegenstand().symbol, x, y - 6); } };
 
   /* ---------- Film New York (Ende X / Y): alte U-Bahn-Halle unter der Stadt, Tür mit dem leuchtenden Tor, Maya, Jayden, Lucas, die Frau mit dem Messing-Kompass, die eigene Figur ---------- */
   const NY_FIGUREN = {   // feste Skins (einfach, aber erkennbar), Namen als Schild in Szene 1
@@ -4153,6 +4299,138 @@
     c.restore();
     filmUntertitel(c, f);
   }
+  /* ---------- Film Route 66 (Kapitel 2, Ende X / Y): Tankstelle an der Mautstation, Big Rig Bobs Truck, das alte orange Auto, Maya, Jayden, Lucas, die Frau mit dem Kompass, die eigene Figur.
+     Ende X: Schranke hoch, die Frau bleibt stehen (17) · „A keeper's grandson“ (18) · Lucas wird weiß, alle sehen ihn an (19) · sie lächelt, zeigt nach Westen: „Next stop … the Grand Canyon“ (20).
+     Ende Y: Schranke hoch, alle steigen ein, Jayden gibt Gas (17) · Rückspiegel: die Frau winkt (18) · Nacht, hundert Meilen Stille (19) · im Auto flüstert Lucas (20) · Titelkarte. ---------- */
+  const R66F = { schranke: 760, frau: 690, ich: 530, maya: 460, jayden: 390, lucas: 320, auto: 130, truck: 900 };
+  function filmKameraR66(sz, f, ende) {   // [x, y, zoom] der Bildmitte (Weltkoordinaten der Bühne; Ende Y ab Szene 2 in Bildschirmkoordinaten)
+    const K = {
+      X: [[[500, 230, 1.0], [640, 225, 1.15]], [[640, 225, 1.2], [600, 220, 1.5]], [[420, 235, 1.3], [330, 240, 1.9]], [[640, 220, 1.3], [700, 215, 1.2]]],
+      Y: [[[500, 230, 1.0], [560, 230, 1.05]], [[640, 200, 1.0], [640, 200, 1.0]], [[640, 200, 1.0], [640, 200, 1.0]], [[640, 200, 1.0], [640, 200, 1.0]]],
+    }[ende][Math.min(3, sz)];
+    const g = sanft(f);
+    return [lerp(K[0][0], K[1][0], g), lerp(K[0][1], K[1][1], g), lerp(K[0][2], K[1][2], g)];
+  }
+  function filmKulisseR66(c, schrankeAuf) {   // Abendhimmel, Tafelberge, Wüste, Highway; links die Tankstelle, rechts die Mautstation (Schlagbaum) und dahinter Big Rig Bobs Truck
+    const g = c.createLinearGradient(0, -400, 0, BODEN_Y); g.addColorStop(0, '#f08a4b'); g.addColorStop(0.6, '#ffb36b'); g.addColorStop(1, '#ffcf8a');
+    c.fillStyle = g; c.fillRect(-500, -500, 2200, BODEN_Y + 500);
+    c.fillStyle = '#ff7a3d'; c.beginPath(); c.arc(1050, 140, 40, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c0552f'; for (let i = 0; i < 8; i++) { const bx = -300 + i * 300, bh = 40 + (i * 53) % 50, bw = 140 + (i * 37) % 90; c.beginPath(); c.moveTo(bx, 250); c.lineTo(bx + 22, 250 - bh); c.lineTo(bx + bw - 22, 250 - bh); c.lineTo(bx + bw, 250); c.closePath(); c.fill(); }
+    c.fillStyle = '#d98a4e'; c.fillRect(-500, 250, 2200, 200); c.fillStyle = '#c2703a'; c.fillRect(-500, 250, 2200, 6);
+    for (const kx of [-120, 1180]) { c.fillStyle = '#3f8a3e'; c.beginPath(); c.roundRect(kx, 196, 12, 54, 6); c.roundRect(kx - 12, 210, 8, 22, 4); c.roundRect(kx + 16, 204, 8, 26, 4); c.fill(); }
+    // Tankstelle links: Dach auf Stützen, zwei Zapfsäulen, Schild GAS
+    const bx = -40; c.fillStyle = '#e63946'; c.fillRect(bx, 190, 190, 14); c.fillStyle = '#f4f4f4'; c.fillRect(bx + 10, 204, 7, BODEN_Y - 204); c.fillRect(bx + 173, 204, 7, BODEN_Y - 204);
+    c.fillStyle = '#d9d9d9'; c.fillRect(bx + 110, 214, 80, BODEN_Y - 214); c.fillStyle = '#2a6cff'; c.fillRect(bx + 120, 224, 22, 24); c.fillStyle = '#bfe3fa'; c.fillRect(bx + 150, 224, 30, 40);
+    c.fillStyle = '#f4f4f4'; c.fillRect(bx + 36, 262, 18, BODEN_Y - 262); c.fillRect(bx + 66, 262, 18, BODEN_Y - 262); c.fillStyle = '#e63946'; c.fillRect(bx + 39, 268, 12, 12); c.fillRect(bx + 69, 268, 12, 12);
+    c.fillStyle = '#555'; c.fillRect(bx + 200, 150, 6, BODEN_Y - 150); c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(bx + 203, 142, 24, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GAS', bx + 203, 142);
+    // Big Rig Bobs Truck hinter der Schranke (steht, Motor aus, Qualm schwach)
+    c.save(); c.translate(R66F.truck, BODEN_Y);
+    c.fillStyle = '#e9e9e9'; c.beginPath(); c.roundRect(70, -118, 190, 90, 6); c.fill(); c.fillStyle = '#c8283a'; c.fillRect(80, -100, 170, 8);
+    c.fillStyle = '#18213a'; c.font = 'bold 16px system-ui, sans-serif'; c.fillText('BIG RIG BOB', 165, -72);
+    c.fillStyle = '#c8283a'; c.beginPath(); c.roundRect(-70, -112, 140, 86, 10); c.fill(); c.fillStyle = '#8a1c2a'; c.fillRect(-70, -40, 140, 14); c.fillStyle = '#bfe3fa'; c.fillRect(-60, -104, 110, 30);
+    for (const ex of [-46, 46]) { c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(ex, -62, 12, 0, Math.PI * 2); c.fill(); c.fillStyle = '#18213a'; c.beginPath(); c.arc(ex - 4, -62, 5, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#3a3a3a'; c.beginPath(); c.roundRect(-40, -48, 80, 10, 5); c.fill(); c.fillStyle = '#9aa3b0'; c.beginPath(); c.roundRect(-78, -30, 156, 10, 4); c.fill();
+    for (const rx of [-40, 40, 110, 150, 230]) { c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(rx, -14, 14, 0, Math.PI * 2); c.fill(); c.fillStyle = '#aaa'; c.beginPath(); c.arc(rx, -14, 6, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+    // Highway
+    c.fillStyle = '#4a4a50'; c.fillRect(-500, BODEN_Y, 2200, 300); c.fillStyle = '#6a6a72'; c.fillRect(-500, BODEN_Y, 2200, 8); c.fillStyle = '#f4f4f4'; c.fillRect(-500, BODEN_Y + 12, 2200, 3);
+    c.fillStyle = '#ffd93d'; for (let x = -500; x < 1700; x += 60) c.fillRect(x, BODEN_Y + 44, 34, 5);
+    // Mautstation mit Schlagbaum (Öffnung aus der Szene, nicht aus dem Spiel)
+    const alt = tuer; tuer = { offen: Math.max(0, Math.min(1, schrankeAuf)) }; mautstation(c, R66F.schranke, BODEN_Y); tuer = alt;
+  }
+  function altesAuto(c, x, y, s, fahrt, insassen) {   // Jaydens Mietwagen: orange, alt, laut – Kasten mit rundem Dach, rostige Stellen, drei Insassen hinter den Scheiben, Räder drehen sich (fahrt = Weg)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const w = 160, h = 58;
+    if (insassen) for (const [sk, dx] of insassen) { c.save(); c.translate(dx, -12); zeichneFigur(c, 0, 0, 42, sk, 'steh', zeit, 'grinsend'); c.restore(); }   // Insassen (Köpfe in den Fenstern, Füße unter der Karosserie)
+    c.fillStyle = '#ff7a1c'; c.beginPath(); c.roundRect(0, -h + 20, w, h - 26, 7); c.fill();   // Unterbau (deckt die Körper ab)
+    c.beginPath(); c.moveTo(28, -h + 20); c.quadraticCurveTo(36, -h, 56, -h); c.lineTo(118, -h); c.quadraticCurveTo(136, -h, 140, -h + 20); c.closePath();   // Dach: Scheiben durchsichtig, orangener Rahmen + Dachkante
+    c.fillStyle = 'rgba(191,227,250,.3)'; c.fill(); c.strokeStyle = '#ff7a1c'; c.lineWidth = 4; c.stroke();
+    c.fillStyle = '#ff7a1c'; c.fillRect(54, -h - 1, 66, 6);
+    c.fillStyle = 'rgba(60,30,10,.35)'; c.beginPath(); c.ellipse(24, -14, 10, 6, 0, 0, Math.PI * 2); c.ellipse(132, -24, 8, 5, 0, 0, Math.PI * 2); c.fill();   // Rost
+    c.strokeStyle = '#2a1a0a'; c.lineWidth = 2; c.beginPath(); c.moveTo(34, -h + 18); c.lineTo(34, -h + 4); c.moveTo(84, -h + 18); c.lineTo(84, -h + 2); c.moveTo(134, -h + 18); c.lineTo(134, -h + 4); c.stroke();   // Fensterholme
+    c.fillStyle = '#ffd93d'; c.fillRect(-1, -h + 26, 7, 7); c.fillStyle = '#e63946'; c.fillRect(w - 6, -h + 26, 6, 7);
+    c.fillStyle = '#555'; c.fillRect(-4, -12, 10, 5); c.fillRect(w - 6, -12, 10, 5);
+    for (const rx of [30, w - 32]) { c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(rx, -8, 11, 0, Math.PI * 2); c.fill(); c.fillStyle = '#aaa'; c.beginPath(); c.arc(rx, -8, 5, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#1a1a1a'; c.lineWidth = 2; c.beginPath(); c.moveTo(rx + Math.cos(fahrt / 11) * 5, -8 + Math.sin(fahrt / 11) * 5); c.lineTo(rx - Math.cos(fahrt / 11) * 5, -8 - Math.sin(fahrt / 11) * 5); c.stroke(); }
+    c.fillStyle = '#9aa3b0'; c.fillRect(-8, -16, 14, 6);   // Stoßstange
+    c.restore();
+  }
+  function autoInsassen(skinIch) { return [[NY_FIGUREN.jayden, 112], [skinIch, 86], [NY_FIGUREN.maya, 60], [NY_FIGUREN.lucas, 40]]; }   // Jayden vorn am Steuer (das Auto fährt nach rechts), dann du, Maya, Lucas
+  function filmZeichnenR66(c) {
+    const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
+    if (!filmSzenen(ende)[sz]) return filmTitel(c, f);
+    if (ende === 'Y' && sz >= 1) { filmFahrtR66(c, sz, tt, p); filmUntertitel(c, f); return; }   // Ende Y ab Szene 2: im Auto (Bildschirmkoordinaten)
+    const [kx, ky, kz] = filmKameraR66(sz, p, ende);
+    c.save(); c.translate(viewW / 2, H / 2); c.scale(kz, kz); c.translate(-kx, -ky);
+    const schranke = sz === 0 ? sanft((tt - 1.0) / 1.4) : 1;
+    filmKulisseR66(c, schranke);
+    const einsteigen = ende === 'Y' ? sanft((tt - 2.2) / 0.7) : 0;   // Ende Y Szene 1: alle steigen ein, dann fährt Jayden los
+    const fahrt = ende === 'Y' ? sanft((tt - 3.0) / 2.4) : 0, autoX = R66F.auto + fahrt * 1100;
+    altesAuto(c, autoX, BODEN_Y, 1, fahrt * 1100, einsteigen > 0.5 ? autoInsassen(filmSkin()) : null);
+    if (fahrt > 0 && fahrt < 1 && !ruhig()) { c.fillStyle = 'rgba(220,180,120,.45)'; for (let k = 0; k < 5; k++) { const q = (tt * 1.3 + k * 0.2) % 1; c.beginPath(); c.arc(autoX - 10 - q * 60, BODEN_Y - 8 - q * 22, 6 + q * 14, 0, Math.PI * 2); c.fill(); } }   // Staub
+    const lucasBlass = ende === 'X' && sz === 2 ? sanft((tt - 0.6) / 1.4) : ende === 'X' && sz === 3 ? 1 : 0;
+    const schauen = ende === 'X' && sz === 2;   // alle sehen Lucas an
+    c.save(); c.globalAlpha = 1 - einsteigen;
+    filmPerson(c, NY_FIGUREN.lucas, R66F.lucas, 'steh', lucasBlass > 0.4 ? 'erstaunt' : sz === 1 && ende === 'X' ? 'erstaunt' : 'grinsend', false, lucasBlass);
+    filmPerson(c, NY_FIGUREN.jayden, R66F.jayden, 'steh', ende === 'X' && sz >= 2 ? 'erstaunt' : 'grinsend', schauen, 0);
+    filmPerson(c, NY_FIGUREN.maya, R66F.maya, 'steh', ende === 'X' && sz >= 1 ? 'erstaunt' : 'grinsend', schauen, 0);
+    filmPerson(c, filmSkin(), R66F.ich, 'steh', ende === 'X' && sz >= 2 ? 'erstaunt' : 'grinsend', schauen, 0);
+    c.restore();
+    // die Frau mit dem Kompass: bleibt stehen (X) / sieht dem Auto nach und winkt (Y)
+    const frauX = ende === 'X' && sz === 3 ? R66F.frau + sanft((tt - 1.0) / 2.0) * 70 : R66F.frau;
+    filmPerson(c, NY_FIGUREN.frau, frauX, 'steh', ende === 'X' && (sz === 1 || sz === 3) ? 'grinsend' : 'grinsend', ende !== 'X' || sz !== 3, 0);
+    kompass(c, frauX - 16, BODEN_Y - 40, zeit);
+    if (ende === 'Y' && fahrt > 0.3) { const wk = Math.sin(zeit * 6) * 10; c.strokeStyle = '#f1c27d'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(frauX + 12, BODEN_Y - 62); c.lineTo(frauX + 26 + wk * 0.3, BODEN_Y - 96 + wk); c.stroke(); }   // winkt
+    if (ende === 'X' && sz === 1 && tt > 1.2) { c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = '#ffd36b'; c.fillText('…', frauX - 30, BODEN_Y - 118); }
+    if (ende === 'X' && sz === 3) {   // sie zeigt nach Westen: Schild „GRAND CANYON“ leuchtet am Horizont auf
+      c.save(); c.globalAlpha = sanft((tt - 1.4) / 1.2); c.fillStyle = '#7a4a24'; c.beginPath(); c.roundRect(880, 150, 150, 44, 6); c.fill(); c.strokeStyle = '#f0e0c0'; c.lineWidth = 2; c.stroke();
+      c.fillStyle = '#fff6e0'; c.font = 'bold 15px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GRAND CANYON →', 955, 172);
+      c.fillStyle = '#fff'; c.font = 'bold 18px system-ui, sans-serif'; c.fillText('✦', 955, 132 + Math.sin(zeit * 2) * 4); c.restore();
+      c.strokeStyle = '#f1c27d'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(frauX + 12, BODEN_Y - 62); c.lineTo(frauX + 44, BODEN_Y - 84); c.stroke();   // ausgestreckter Arm
+    }
+    if (ende === 'X' && sz === 2 && tt > 1.4) { c.fillStyle = '#9fe3ff'; c.beginPath(); c.ellipse(R66F.lucas + 13, BODEN_Y - 72, 2, 3.2, 0, 0, Math.PI * 2); c.fill(); }   // Lucas: Schweißperle
+    if (sz === 0) for (const [n, x] of [['Lucas', R66F.lucas], ['Jayden', R66F.jayden], ['Maya', R66F.maya], ['You', R66F.ich], ['?', R66F.frau]]) namensSchild(c, x, n);
+    c.restore();
+    filmUntertitel(c, f);
+  }
+  function filmFahrtR66(c, sz, tt, p) {   // Ende Y Szenen 2–4: Rückspiegel (die Frau winkt), Nacht und hundert Meilen Stille, Lucas flüstert im Auto
+    const nacht = sz === 1 ? sanft((tt - 2.0) / 2.5) * 0.6 : 1;
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, mischFarbe('#f08a4b', '#0b1026', nacht)); g.addColorStop(0.6, mischFarbe('#ffb36b', '#1a2342', nacht)); g.addColorStop(1, mischFarbe('#ffcf8a', '#2a2f4a', nacht));
+    c.fillStyle = g; c.fillRect(0, 0, viewW, H);
+    if (nacht > 0.3) { c.fillStyle = `rgba(255,255,255,${(nacht - 0.3) * 1.2})`; for (let i = 0; i < 60; i++) { const sx = (i * 157.3) % viewW, sy = (i * 61.7) % 200; c.beginPath(); c.arc(sx, sy, i % 3 ? 1 : 1.6, 0, Math.PI * 2); c.fill(); } }
+    c.fillStyle = mischFarbe('#c0552f', '#151a2e', nacht); for (let i = 0; i < 9; i++) { const bx = ((i * 300 - tt * 40) % (viewW + 400) + viewW + 400) % (viewW + 400) - 200, bh = 40 + (i * 53) % 50; c.beginPath(); c.moveTo(bx, 250); c.lineTo(bx + 22, 250 - bh); c.lineTo(bx + 130, 250 - bh); c.lineTo(bx + 150, 250); c.closePath(); c.fill(); }
+    c.fillStyle = mischFarbe('#d98a4e', '#1c1a2a', nacht); c.fillRect(0, 250, viewW, 200);
+    c.fillStyle = mischFarbe('#4a4a50', '#23232c', nacht); c.fillRect(0, BODEN_Y, viewW, H - BODEN_Y);
+    c.fillStyle = '#ffd93d'; const vers = ruhig() ? 0 : (tt * 420) % 60; for (let x = -60; x < viewW + 60; x += 60) c.fillRect(x - vers, BODEN_Y + 44, 34, 5);
+    const autoX = viewW / 2 - 80;
+    if (sz !== 3) altesAuto(c, autoX, BODEN_Y, 1, tt * 420, autoInsassen(filmSkin()));
+    if (nacht > 0.4 && sz !== 3) { c.fillStyle = `rgba(255,240,170,${0.3 * nacht})`; c.beginPath(); c.moveTo(autoX + 160, BODEN_Y - 32); c.lineTo(autoX + 330, BODEN_Y - 60); c.lineTo(autoX + 330, BODEN_Y + 4); c.closePath(); c.fill(); }   // Scheinwerfer
+    if (sz === 1) {   // Rückspiegel groß im Bild: die Frau klein an der Mautstation, winkt – nicht wütend, sie wartet
+      const mx = viewW / 2, my = 70, mw = Math.min(300, viewW - 60), mh = 96;
+      c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(mx - mw / 2 - 6, my - mh / 2 - 6, mw + 12, mh + 12, 14); c.fill();
+      c.save(); c.beginPath(); c.roundRect(mx - mw / 2, my - mh / 2, mw, mh, 10); c.clip();
+      c.fillStyle = '#ffb36b'; c.fillRect(mx - mw / 2, my - mh / 2, mw, mh); c.fillStyle = '#d98a4e'; c.fillRect(mx - mw / 2, my + 14, mw, mh); c.fillStyle = '#4a4a50'; c.fillRect(mx - mw / 2, my + 26, mw, mh);
+      c.save(); c.translate(mx, my + 26); const s = 0.42 - sanft(tt / 4) * 0.12; c.scale(s, s); c.translate(0, -BODEN_Y);
+      const alt = tuer; tuer = { offen: 1 }; mautstation(c, 60, BODEN_Y); tuer = alt;
+      zeichneFigur(c, 0, BODEN_Y, 80, NY_FIGUREN.frau, 'steh', zeit, 'grinsend'); kompass(c, 16, BODEN_Y - 40, zeit);
+      const wk = Math.sin(zeit * 6) * 10; c.strokeStyle = '#f1c27d'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(-12, BODEN_Y - 62); c.lineTo(-26 - wk * 0.3, BODEN_Y - 96 + wk); c.stroke();
+      c.restore(); c.restore();
+      c.font = '600 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = 'rgba(255,255,255,.8)'; c.fillText('rear-view mirror', mx, my + mh / 2 + 16);
+    }
+    if (sz === 2) {   // hundert Meilen Stille: Meilenzähler zählt hoch, kein Wort
+      const mi = Math.round(sanft(tt / Math.max(1, film.dauer - 1)) * 100);
+      c.fillStyle = 'rgba(12,8,28,.7)'; c.beginPath(); c.roundRect(viewW / 2 - 70, 40, 140, 44, 10); c.fill();
+      c.fillStyle = '#ffd93d'; c.font = 'bold 22px ui-monospace, monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(`${String(mi).padStart(3, '0')} mi`, viewW / 2, 62);
+      if (tt > 1 && !ruhig()) { c.fillStyle = 'rgba(255,255,255,.6)'; c.font = 'bold 18px system-ui, sans-serif'; c.fillText('…', autoX + 80, BODEN_Y - 76 + Math.sin(tt * 2) * 3); }
+    }
+    if (sz === 3) {   // Lucas flüstert: Lupe auf das Auto, Flüstertext
+      c.save(); c.translate(viewW / 2, H / 2); c.scale(1.6, 1.6); c.translate(-(autoX + 80), -(BODEN_Y - 40));
+      c.fillStyle = 'rgba(255,240,170,.3)'; c.beginPath(); c.moveTo(autoX + 160, BODEN_Y - 32); c.lineTo(autoX + 330, BODEN_Y - 60); c.lineTo(autoX + 330, BODEN_Y + 4); c.closePath(); c.fill();
+      altesAuto(c, autoX, BODEN_Y, 1, tt * 420, autoInsassen(filmSkin()));
+      c.restore();
+      c.font = 'italic 600 14px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = '#ffffff'; c.globalAlpha = Math.min(1, tt / 0.8); c.fillText('… at the Grand Canyon 🏜️', viewW / 2 - 60, 120); c.globalAlpha = 1;
+    }
+  }
   function hintergrund(c) { W.kulisse(c); }
   function hintergrundNY(c) {
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
@@ -4212,6 +4490,7 @@
     for (const s of surfs) { const x = s.x - kamera; if (x > viewW + 100 || x + s.w < -100) continue; surfZeichnen(c, s); }
     for (const cp of checkpoints) { const x = cp.x - kamera; if (x > -60 && x < viewW + 60) fahne(c, x, BODEN_Y, cp.erreicht); }
     if (story) { parkbusZeichnen(c); kristalleZeichnen(c); if (realm) { if (realm.aktiv) realmDingeZeichnen(c); else realmToreZeichnen(c); } }
+    if (level.deko && level.deko.length) dekoVorneZeichnen(c);   // Story Route 66: Motel-Schild vor dem versteckten Tor ✦
     for (const d of diamanten) {
       if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue;
       const schweb = Math.sin(d.funkel * 3) * 4;
@@ -4511,12 +4790,12 @@
   const WELTEN = {
     ny: { id: 'ny', name: 'New York', staat: 'New York', ziel: 'Statue of Liberty', bossName: 'Mr. Alligator', bossSymbol: '🐊', banner: BANNER_TEXT, richtig: "Correct – the door opens!", falsch: "Not this time!", start: "Let's find the Statue of Liberty!", ende: "You made it to the Statue of Liberty!",
       sturz: 'Splash! 💦',
-      gegnerarten: ['taube', 'waschbaer', 'eichhoernchen'], farben: { plattform: '#8b5a2b', plattformOben: '#4fae5f', hud: '#1d3f8f' }, muster: MUSTER_NY, musterStory: MUSTER_NY_STORY, storyStruktur: STRUKTUR_NY, sprechblaseHoehe: 70,
+      gegnerarten: ['taube', 'waschbaer', 'eichhoernchen'], farben: { plattform: '#8b5a2b', plattformOben: '#4fae5f', hud: '#1d3f8f' }, muster: MUSTER_NY, musterStory: MUSTER_NY_STORY, storyStruktur: STRUKTUR_NY, realmZurueck: 'Back in New York! 🗽', sprechblaseHoehe: 70,
       kulisse: hintergrundNY, boden: bodenNY, grube: null, kiste: kisteNY, hudSymbol: (c, x, y) => freiheitsstatue(c, x, y, 0.14, '#1d3f8f'),
       boss: (c, x, y) => { kanaldeckel(c, x, y); alligator(c, x, y); }, tuer: tuerZeichnen, bossKlang: () => klang.grollen() },
     route66: { id: 'route66', name: 'Route 66', staat: 'Illinois', ziel: 'Route 66 sign', bossName: 'Big Rig Bob', bossSymbol: '🚚', banner: 'Here comes Big Rig Bob!', richtig: "Correct – the barrier goes up!", falsch: "Not this time, kid!", start: "Let's find Route 66!", ende: "You made it to Route 66!",
       sturz: 'Crash! 🕳️',
-      gegnerarten: ['kojote', 'roadrunner', 'guerteltier'], farben: { plattform: '#7a4a16', plattformOben: '#c99a6a', hud: '#c8283a' }, muster: MUSTER_ROUTE66, sprechblaseHoehe: 150,
+      gegnerarten: ['kojote', 'roadrunner', 'guerteltier'], farben: { plattform: '#7a4a16', plattformOben: '#c99a6a', hud: '#c8283a' }, muster: MUSTER_ROUTE66, musterStory: MUSTER_ROUTE66_STORY, storyStruktur: STRUKTUR_ROUTE66, realmZurueck: 'Back on Route 66! 🛣️', sprechblaseHoehe: 150,
       kulisse: hintergrundRoute66, boden: strasseZeichnen, grube: baugrube, kiste: reifen, hudSymbol: (c, x, y) => schild66(c, x, y + 4, 0.28, '#c8283a', false),
       boss: bigRigBob, tuer: mautstation, bossKlang: () => { hupen++; klang.hupe(); klang.diesel(); } },
     az: { id: 'az', name: 'Grand Canyon', staat: 'Arizona', ziel: 'Grand Canyon', bossName: 'Sheriff Rattlesnake', bossSymbol: '🐍', banner: 'Watch out – Sheriff Rattlesnake!', richtig: "Correct – the gate swings open, partner!", falsch: "Not this time, greenhorn!", start: "Let's find the Grand Canyon!", ende: "You made it to the Grand Canyon!",
@@ -4682,6 +4961,7 @@
         kristalle: kristalle.map((k) => ({ nr: k.nr, strang: k.strang, key: kristallKey(k), x: k.x, y: k.y, weg: k.weg, sichtbar: kristallSichtbar(k) })),
         diamanten: diaGesammelt, diamantenMax: diaMax(), parkbusse: level.parkbusse.map((b) => b.x),
         wahl: Object.assign({}, story.wahl), autoWahl: Object.assign({}, story.autoWahl), max: struktur.anzahl, deko: (level.deko || []).map((d) => d.art),
+        varianten: Object.assign({}, variantenWahl), gegenstandName: realmGegenstand().name,   // Kapitel 2: gewählte Variante je Quelle (z. B. { 'ny.g2': 'X' }), Sammelstück des Realm
         realm: realm ? { aktiv: realm.aktiv, gefunden: realm.gefunden, gesammelt: realm.gesammelt.slice(), gegenstand: realm.gegenstand, besuche: realm.besuche, t: Math.round(realm.t * 100) / 100,
           tore: realm.tore.map((t) => ({ x: t.x, y: t.y, benutzt: t.benutzt })), rueckX: imRealm() ? level.rueckX : null, welt: W.id, dinge: realm.dinge.map((d) => ({ x: d.x, y: d.y, weg: d.weg })),
           drache: realm.drache.aktiv, gegner: imRealm() ? gegner.map((g) => g.art) : [] } : null,

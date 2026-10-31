@@ -333,6 +333,7 @@ body.runner-aktiv .niveau-leiste { display: none; }
 /* Story-Modus New York (Road Trip Run, Kapitel 1 „The Lost Map“): Story Library in der Hall of Fame (Enden X/Y als Filme, Karte „✦ The Realm Beyond“), Ende-Seite */
 .story-library { margin-top: 14px; padding-top: 10px; border-top: 2px dashed rgba(122, 63, 240, .3); }
 .story-library h3 { margin: 0 0 2px; color: #4b1fa0; }
+.story-kapitel + .story-kapitel { margin-top: 12px; padding-top: 8px; border-top: 1px dashed rgba(122, 63, 240, .2); }   /* Übersicht nach Kapiteln (Kapitel 2 Route 66, 31.10.) */
 .story-karten { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 10px; margin-top: 8px; }
 .story-karte { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 12px 14px; border-radius: 14px; text-align: left; font: inherit; cursor: pointer;
   background: linear-gradient(135deg, #4a1a9e, #7a3ff0); color: #fff; border: 2px solid #ffd36b; min-height: 44px; }

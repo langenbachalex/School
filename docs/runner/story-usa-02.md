@@ -1,5 +1,9 @@
 # „The Lost Map“ – Kapitel 2 · Route 66 „The Chase“ · Text freigegeben 31.10.2026 (Mr. Alex), Bau + Vertonung freigegeben
 
+**Status: Kapitel 2 gebaut (31.10.2026).** Engine `app/klasse9/runner.js` (`STRUKTUR_ROUTE66` mit Variante am Anfang, Strecke `MUSTER_ROUTE66_STORY`, Realm Kapitel 2 `MUSTER_REALM_2`, Film Route 66; Kopie `app/runner.js`), App `app/klasse9/app.js` (`STORY.route66` mit diesem Text wörtlich, `storyOption` übergibt die Variante aus Kapitel 1, Story Library nach Kapiteln). Details `docs/runner/konzept-entwurf.md` Abschnitt 17. Audio: bis zur Vertonung Geräte-Stimme; Zuordnung `audio/story/route66_<key>.mp3` (bzw. `_1`, `_2` … je Teil) ist vorbereitet, Sprecherplan in `werkzeuge/story_audio9.py` (58 Dateien, 1.806 Zeichen; `--zaehlen` zeigt den Plan).
+
+**Vertonung 31.10.:** 58 Dateien `app/klasse9/audio/story/route66_*.mp3` (Erzähler Mr. Alex, Maya + Frau = Jessica, Jayden/Lucas/Ritter = Jeremy; Spieler-Sätze liest der Erzähler), Skript `werkzeuge/story_audio9.py`.
+
 Welt Route 66 (Boss Big Rig Bob, Mautstation). 20 Kristalle je Lauf: Anfang 5 · Gabelung 1 (A unten / B oben) 5 · gemeinsam 4 · Gabelung 2 (X / Y) 2 · Boss · Ende 4. Dazu 3 Realm-Stücke am versteckten Tor ✦.
 **Neu gegenüber Kapitel 1:** Die Stücke 1 und 2 richten sich nach der Entscheidung aus Kapitel 1 (`wahl.g2`: X = Karte gegeben, Y = Karte behalten). Gabelung 2 dieses Kapitels (Wahrheit jetzt / später) wirkt in Kapitel 3 „Lucas' Secret“.
 

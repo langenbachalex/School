@@ -1,9 +1,10 @@
-"""Vertont die Story „The Lost Map“ (Road Trip Run, Klasse 9) mit verteilten Stimmen (ElevenLabs).
+"""Vertont die Story „The Lost Map“ (Road Trip Run, Klasse 9) mit verteilten Stimmen (ElevenLabs) – Kapitel 1 New York (STORY.ny, Präfix ny_) und Kapitel 2 Route 66 (STORY.route66, Präfix route66_).
 
-Erzähler = Mr. Alex (alex). Wörtliche Rede: Maya und die Frau mit dem Kompass = Jessica (f), Jayden, Lucas und der Ritter = Jeremy (m).
-Ein Stück mit nur einer Stimme → app/klasse9/audio/story/ny_<key>.mp3; mit Wechsel → ny_<key>_1.mp3, _2.mp3 … (die App spielt sie hintereinander).
-Quelle der Texte: STORY.ny in app/klasse9/app.js. Vorhandene Dateien werden nicht überschrieben.
-Aufruf: python3 werkzeuge/story_audio9.py [--zaehlen]
+Erzähler = Mr. Alex (alex). Wörtliche Rede: Maya und die Frau mit dem Kompass = Jessica (f), Jayden, Lucas und der Ritter = Jeremy (m); Sätze des Spielers („No, thanks.“,
+„We have to go“, „Tell us the truth. Now.“, „Later. First we get past that truck.“) und die Stimme aus dem Licht liest der Erzähler.
+Ein Stück mit nur einer Stimme → app/klasse9/audio/story/<praefix>_<key>.mp3; mit Wechsel → <praefix>_<key>_1.mp3, _2.mp3 … (die App spielt sie hintereinander).
+Quelle der Texte: STORY.<welt>.teile in app/klasse9/app.js. Vorhandene Dateien werden nicht überschrieben.
+Aufruf: python3 werkzeuge/story_audio9.py [--zaehlen] [--welt ny|route66]
 """
 import json, os, re, sys, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -11,31 +12,40 @@ import klasse9_audio as ka
 import klasse9_bauen as k9
 
 ZIEL = os.path.join(k9.APP, "audio", "story")
+WELTEN = ["ny", "route66"]   # Kapitel in Reihenfolge; Dateipräfix = Welt-Id
 # Wer spricht die wörtliche Rede je Stück (Reihenfolge der Anführungszeichen-Passagen)? Fehlt ein Eintrag: alles Erzähler.
-SPRECHER = {"A7": ["f"], "B9": ["m"], "B10": ["f"], "12": ["f", "f"], "13": ["m"], "X16": ["f"], "Y16": ["f"],
-            "X20": ["m"], "Y20": ["m"], "R2": ["m"], "R3": ["m", "m"]}
-# Y15 („No, thanks.“ = der Spieler) und Y19 (Stimme aus dem Licht) spricht der Erzähler.
+SPRECHER = {
+    # Kapitel 1 New York (vertont 31.10.): Y15 („No, thanks.“ = der Spieler) und Y19 (Stimme aus dem Licht) spricht der Erzähler.
+    "ny": {"A7": ["f"], "B9": ["m"], "B10": ["f"], "12": ["f", "f"], "13": ["m"], "X16": ["f"], "Y16": ["f"],
+           "X20": ["m"], "Y20": ["m"], "R2": ["m"], "R3": ["m", "m"]},
+    # Kapitel 2 Route 66 (Sprecherplan): Maya + Frau = f (Jessica), Jayden/Lucas/Ritter = m (Jeremy); A10, X15, Y15 = Spieler → Erzähler (kein Eintrag).
+    "route66": {"2X": ["f"], "2Y": ["f", "f"], "5": ["m"], "A6": ["f"], "A7": ["m"], "B6": ["m"], "B7": ["f"], "B10": ["m", "m"],
+                "13": ["f"], "14": ["f"], "X16": ["m"], "X18": ["f", "f"], "X20": ["f", "f"], "Y20": ["m"], "R2": ["m"], "R3": ["m", "m"]},
+}
 
 
-def stuecke():
+def stuecke(welt):
     js = open(os.path.join(k9.APP, "app.js"), encoding="utf-8").read()
     block = js[js.index("const STORY = {"):js.index("const STORY_PUNKTE")]
-    teil = block[block.index("teile: {"):block.index("audio:")]
-    for key, text in re.findall(r"(\w+): \"((?:[^\"\\]|\\.)*)\"", teil):
+    start = block.index(f'{welt}: {{ id: "{welt}"')
+    rest = block[start:]
+    teil = rest[rest.index("teile: {"):rest.index("audio:")]
+    for key, text in re.findall(r"\"?(\w+)\"?: \"((?:[^\"\\]|\\.)*)\"", teil):
         yield key, text.replace('\\"', '"')
     yield "sofar", "The story so far."
 
 
-def segmente(key, text):
+def segmente(welt, key, text):
     """Teilt in (stimme, text) – wörtliche Rede an die Figur, der Rest an den Erzähler."""
-    rollen = SPRECHER.get(key)
+    rollen = SPRECHER.get(welt, {}).get(key)
     if not rollen:
         return [("alex", text)]
-    teile, i, rest = [], 0, text
+    teile, i = [], 0
     for m in re.finditer(r'"[^"]+"', text):
         davor = text[i:m.start()].strip(" ")
         if davor: teile.append(("alex", davor))
-        teile.append((rollen[min(len(teile) and sum(1 for t in teile if t[0] != "alex") or 0, len(rollen) - 1)], m.group(0).strip('"')))
+        n = sum(1 for t in teile if t[0] != "alex")   # wievielte wörtliche Rede
+        teile.append((rollen[min(n, len(rollen) - 1)], m.group(0).strip('"')))
         i = m.end()
     danach = text[i:].strip(" ")
     if danach: teile.append(("alex", danach))
@@ -43,18 +53,28 @@ def segmente(key, text):
     return teile
 
 
-def main():
-    plan = []
-    for key, text in stuecke():
-        seg = segmente(key, text)
+def plan(welt):
+    liste = []
+    for key, text in stuecke(welt):
+        seg = segmente(welt, key, text)
         if len(seg) == 1:
-            plan.append((f"ny_{key}.mp3", seg[0][0], seg[0][1]))
+            liste.append((f"{welt}_{key}.mp3", seg[0][0], seg[0][1]))
         else:
             for n, (st, t) in enumerate(seg, 1):
-                plan.append((f"ny_{key}_{n}.mp3", st, t))
-    offen = [p for p in plan if not os.path.exists(os.path.join(ZIEL, p[0]))]
+                liste.append((f"{welt}_{key}_{n}.mp3", st, t))
+    return liste
+
+
+def main():
+    welten = [sys.argv[sys.argv.index("--welt") + 1]] if "--welt" in sys.argv else WELTEN
+    offen = []
+    for welt in welten:
+        p = plan(welt)
+        fehlt = [x for x in p if not os.path.exists(os.path.join(ZIEL, x[0]))]
+        print(f"{welt}: {len(p)} Dateien geplant, {len(fehlt)} offen, {sum(len(t) for _, _, t in fehlt)} Zeichen offen")
+        for datei, st, t in fehlt: print(f"  {st:4} {datei:20} {t}")
+        offen += fehlt
     print(f"{len(offen)} Dateien offen, {sum(len(t) for _, _, t in offen)} Zeichen")
-    for datei, st, t in offen: print(f"  {st:4} {datei:14} {t}")
     if "--zaehlen" in sys.argv:
         return
     os.makedirs(ZIEL, exist_ok=True)

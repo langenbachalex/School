@@ -1,10 +1,12 @@
-"""Vertont die Story „The Lost Map“ (Road Trip Run, Klasse 9) mit verteilten Stimmen (ElevenLabs) – Kapitel 1 New York (STORY.ny, Präfix ny_) und Kapitel 2 Route 66 (STORY.route66, Präfix route66_).
+"""Vertont die Story „The Lost Map“ (Road Trip Run, Klasse 9) mit verteilten Stimmen (ElevenLabs) – Kapitel 1 New York (STORY.ny, Präfix ny_), Kapitel 2 Route 66 (STORY.route66, Präfix route66_)
+und Kapitel 3 Grand Canyon (STORY.az, Präfix az_).
 
-Erzähler = Mr. Alex (alex). Wörtliche Rede: Maya und die Frau mit dem Kompass = Jessica (f), Jayden, Lucas und der Ritter = Jeremy (m); Sätze des Spielers („No, thanks.“,
-„We have to go“, „Tell us the truth. Now.“, „Later. First we get past that truck.“) und die Stimme aus dem Licht liest der Erzähler.
+Erzähler = Mr. Alex (alex). Wörtliche Rede: Maya und die Frau mit dem Kompass = Jessica (f), Jayden, Lucas, der Ritter und Sheriff Rattlesnake = Jeremy (m); Sätze des Spielers („No, thanks.“,
+„We have to go“, „Tell us the truth. Now.“, „Later. First we get past that truck.“, „Stay close to me“, „It's yours. Keep it safe.“, „You've got the plan. Keep it.“) und die Stimme aus dem Licht liest der Erzähler.
+Verschachtelte Zitate (Tagebuchtext in einfachen Anführungszeichen innerhalb von Lucas' Rede, Kapitel 3 Stück 5 und A8) spricht Lucas (m) mit.
 Ein Stück mit nur einer Stimme → app/klasse9/audio/story/<praefix>_<key>.mp3; mit Wechsel → <praefix>_<key>_1.mp3, _2.mp3 … (die App spielt sie hintereinander).
 Quelle der Texte: STORY.<welt>.teile in app/klasse9/app.js. Vorhandene Dateien werden nicht überschrieben.
-Aufruf: python3 werkzeuge/story_audio9.py [--zaehlen] [--welt ny|route66]
+Aufruf: python3 werkzeuge/story_audio9.py [--zaehlen] [--welt ny|route66|az]
 """
 import json, os, re, sys, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -12,7 +14,7 @@ import klasse9_audio as ka
 import klasse9_bauen as k9
 
 ZIEL = os.path.join(k9.APP, "audio", "story")
-WELTEN = ["ny", "route66"]   # Kapitel in Reihenfolge; Dateipräfix = Welt-Id
+WELTEN = ["ny", "route66", "az"]   # Kapitel in Reihenfolge; Dateipräfix = Welt-Id
 # Wer spricht die wörtliche Rede je Stück (Reihenfolge der Anführungszeichen-Passagen)? Fehlt ein Eintrag: alles Erzähler.
 SPRECHER = {
     # Kapitel 1 New York (vertont 31.10.): Y15 („No, thanks.“ = der Spieler) und Y19 (Stimme aus dem Licht) spricht der Erzähler.
@@ -21,6 +23,10 @@ SPRECHER = {
     # Kapitel 2 Route 66 (Sprecherplan): Maya + Frau = f (Jessica), Jayden/Lucas/Ritter = m (Jeremy); A10, X15, Y15 = Spieler → Erzähler (kein Eintrag).
     "route66": {"2X": ["f"], "2Y": ["f", "f"], "5": ["m"], "A6": ["f"], "A7": ["m"], "B6": ["m"], "B7": ["f"], "B10": ["m", "m"],
                 "13": ["f"], "14": ["f"], "X16": ["m"], "X18": ["f", "f"], "X20": ["f", "f"], "Y20": ["m"], "R2": ["m"], "R3": ["m", "m"]},
+    # Kapitel 3 Grand Canyon (Sprecherplan, noch nicht vertont): Maya + Frau = f (Jessica); Jayden, Lucas, Ritter, Sheriff = m (Jeremy); 2X, X15, Y15 = Spieler → Erzähler (kein Eintrag);
+    # 5 und A8: Lucas liest aus dem Tagebuch (inneres Zitat in einfachen Anführungszeichen bleibt im Text) = m.
+    "az": {"2Y": ["m", "m"], "4": ["m"], "5": ["m", "m"], "A7": ["f"], "A8": ["m"], "A9": ["m"], "B8": ["m"], "12": ["m"], "14": ["f", "f"],
+           "X18": ["f", "f"], "X19": ["m"], "X20": ["m"], "Y18": ["f", "f"], "Y20": ["m"], "R2": ["m"], "R3": ["m", "m"]},
 }
 
 

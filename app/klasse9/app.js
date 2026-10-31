@@ -2784,6 +2784,9 @@
               : W.id === "sd"
               ? T(`Tippen oder Leertaste = springen, länger halten = höher. Baumstämme rollen den Hang herunter – drüberspringen! Über Bäche hüpfst du auf den Steinen. Wenn Blätter fliegen, kommt eine Windböe: Sie schiebt dich kurz, und du springst nur halb so hoch. Vor Bärenhöhlen nicht trödeln (Pranke!). Büffel kannst du nicht plattdrücken – nur überspringen. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} an der Ranger-Station – gut 2 Minuten. Am besten das Handy quer halten.`,
                 `Tap or space = jump, hold longer = jump higher. Logs roll down the hill – jump over them! Cross the streams on the stepping stones. Flying leaves mean a gust of wind: it pushes you for a moment and you only jump half as high. Don't dawdle in front of bear caves (paw!). You can't squash buffalos – only jump over them. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the ranger station – about 2 minutes. Best in landscape mode.`)
+              : W.id === "az" && STORY[W.id]
+              ? T(`Tippen oder Leertaste = springen, länger halten = höher. Steine kündigen sich mit Staub an – spring, bevor sie landen! Auf den Hängebrücken nicht trödeln (springen!), Kakteen nicht berühren. Story „${STORY[W.id].titel}“ (Kapitel 3): Die violetten ♪-Kristalle erzählen weiter – der Anfang hängt davon ab, ob du Lucas auf der Route 66 die Wahrheit sofort abverlangt hast${storyStand("route66").wahl.g2 ? "" : " (noch nicht gespielt? Dann hat er sie dir erst hier erzählt)"}. Zweimal entscheidest du: den Maultierpfad hinab in den Canyon oder oben am Rand über die Glasbrücke? Und am Ende: Wem gibst du Grandpas Tagebuch – Lucas oder Maya? Deine Wahl zählt in Kapitel 4. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐ (nur wenn du das Level schaffst). Nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Holztor – etwa 3 Minuten. Irgendwo ist wieder ein verstecktes Tor … Lucas' Tagebuch weiß, wo. Am besten das Handy quer halten.`,
+                `Tap or space = jump, hold longer = jump higher. Falling rocks warn you with dust – jump before they land! Don't dawdle on the rope bridges (jump!), don't touch the cacti. Story “${STORY[W.id].titel}” (chapter 3): the purple ♪ crystals carry on – the beginning depends on whether you made Lucas tell the truth right away on Route 66${storyStand("route66").wahl.g2 ? "" : " (not played yet? Then he only tells you here)"}. Twice you choose: down the mule trail into the canyon or along the rim and over the glass bridge? And at the end: who gets Grandpa's journal – Lucas or Maya? Your choice counts in chapter 4. The 💎 diamonds show you words and give 1 ⭐ each (only if you finish the level). Take the right gates and answer ${W.boss}'s question at the wooden gate – about 3 minutes. Somewhere there is a hidden gate again … Lucas's journal knows where. Best in landscape mode.`)
               : W.id === "az"
               ? T(`Tippen oder Leertaste = springen, länger halten = höher. Steine kündigen sich mit Staub an – spring, bevor sie landen! Auf den Hängebrücken nicht trödeln (springen!), Kakteen nicht berühren. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Holztor – gut 2 Minuten. Am besten das Handy quer halten.`,
                 `Tap or space = jump, hold longer = jump higher. Falling rocks warn you with dust – jump before they land! Don't dawdle on the rope bridges (jump!), don't touch the cacti. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the wooden gate – about 2 minutes. Best in landscape mode.`)
@@ -2833,11 +2836,15 @@
   // Aufnahmen: audio/story/ny_<key>.mp3 je Stück (+ ny_sofar) – nur Dateien, die der Bau findet (SP.story_audio); sonst Geräte-Stimme.
   // Kapitel 2 Route 66 „The Chase“ (31.10., Text wörtlich aus docs/runner/story-usa-02.md): Stücke 1–2 als Variante nach der Wahl aus Kapitel 1 (story.ny.wahl.g2: X = Karte gegeben → 1X/2X, sonst 1Y/2Y);
   // die App übergibt der Engine story.varianten = { "ny.g2": "X" | "Y" } (storyOption). Gabelung 2 (X = die Wahrheit jetzt / Y = später) landet in story.route66.wahl.g2 (für Kapitel 3).
-  // Realm Kapitel 2: Sammelstück Dragon Scale 🐉 (STORY.route66.gegenstand) → stand.spiel.runner.realm.route66. Aufnahmen audio/story/route66_<key>.mp3 (noch keine; Zuordnung vorbereitet).
+  // Realm Kapitel 2: Sammelstück Dragon Scale 🐉 (STORY.route66.gegenstand) → stand.spiel.runner.realm.route66. Aufnahmen audio/story/route66_<key>.mp3 (vertont 31.10.).
+  // Kapitel 3 Grand Canyon „Lucas' Secret“ (31.10., Text wörtlich aus docs/runner/story-usa-03.md): Stücke 1–2 als Variante nach der Wahl aus Kapitel 2 (story.route66.wahl.g2: X = Wahrheit jetzt → 1X/2X, sonst 1Y/2Y);
+  // die App übergibt story.varianten["route66.g2"]. Gabelung 2 (X = Tagebuch an Lucas / Y = an Maya) landet in story.az.wahl.g2 (für Kapitel 4 „The Traitor“).
+  // Realm Kapitel 3 (Drachenhöhle): Sammelstück Golden Scale ✨ → stand.spiel.runner.realm.az. Aufnahmen audio/story/az_<key>.mp3 (Sprecherplan werkzeuge/story_audio9.py, noch nicht vertont).
   const STORY_KEYS_NY = ["1", "2", "3", "4", "5", "A6", "A7", "A8", "A9", "A10", "B6", "B7", "B8", "B9", "B10", "11", "12", "13", "14", "X15", "X16", "Y15", "Y16",
     "X17", "X18", "X19", "X20", "Y17", "Y18", "Y19", "Y20", "R1", "R2", "R3", "sofar"];
   const STORY_KEYS_R66 = ["1X", "2X", "1Y", "2Y", "3", "4", "5", "A6", "A7", "A8", "A9", "A10", "B6", "B7", "B8", "B9", "B10", "11", "12", "13", "14", "X15", "X16", "Y15", "Y16",
     "X17", "X18", "X19", "X20", "Y17", "Y18", "Y19", "Y20", "R1", "R2", "R3", "sofar"];
+  const STORY_KEYS_AZ = STORY_KEYS_R66;   // Kapitel 3 hat dieselben Schlüssel (1X/2X/1Y/2Y, 3–5, A/B, 11–14, X/Y, Enden, R1–R3, sofar)
   // Aufnahmen je Kapitel: ein Stück = eine Datei (<praefix>_<key>.mp3) oder mehrere Teile (<praefix>_<key>_1.mp3, _2 …) hintereinander; nur Dateien, die der Bau findet (SP.story_audio)
   const storyAudioDateien = (praefix, keys) => Object.fromEntries(keys.map((k) => {
     const alle = SP.story_audio || [], eins = `audio/story/${praefix}_${k}.mp3`;
@@ -2887,15 +2894,38 @@
       R1: "The ice wall again – but now there was a door in it.", R2: "The knight was waiting. \"You came back. Keepers always do.\"", R3: "\"Beyond this door,\" he said, \"the dragon sleeps. Do not wake it.\"" },
       // Aufnahmen (vorbereitet, Dateien noch nicht da): Sprecherplan in werkzeuge/story_audio9.py (Maya + Frau = Jessica, Jayden/Lucas/Ritter = Jeremy, Spieler-Sätze = Erzähler)
       audio: storyAudioDateien("route66", STORY_KEYS_R66) },
+    az: { id: "az", titel: "The Lost Map – Lucas' Secret", kapitel: 3, welt: "Grand Canyon",
+      enden: { X: { symbol: "📓", name: "Lucas keeps the journal" }, Y: { symbol: "👜", name: "Maya keeps the journal" } }, wege: { A: "🐴 mule trail", B: "🌉 skywalk", X: "📓 give it to Lucas", Y: "👜 give it to Maya" },
+      gegenstand: { name: "Golden Scale", symbol: "✨" }, teile: {
+      "1X": "The woman knew Lucas's secret now. And she wanted him.", "2X": "\"Stay close to me,\" you told Lucas. He didn't like being watched.",
+      "1Y": "Lucas kept his promise. At the Grand Canyon, he started talking.", "2Y": "\"My grandpa was a keeper,\" he said. \"And he lost the map here.\"",
+      3: "The Grand Canyon was huge, red and silent. Jayden stopped joking.", 4: "Lucas pulled out an old journal. \"Grandpa's. He wrote everything down.\"",
+      5: "\"Page one,\" he read. \"'Don't trust the woman with the compass.'\"",
+      A6: "You followed the old mule trail down into the canyon.", A7: "Maya hated walking. \"My feet are killing me,\" she groaned.", A8: "Lucas kept on reading. \"'The gate is behind the waterfall.'\"",
+      A9: "A rattling sound. Jayden froze. \"Was that a snake?\"", A10: "It was. A big one. With a sheriff's star.",
+      B6: "You walked along the rim. Don't look down – really, don't!", B7: "Jayden was good at climbing. Maya was better at complaining.", B8: "On the glass bridge, Lucas stopped. \"Grandpa stood here. 1974.\"",
+      B9: "Far below, something moved between the rocks.", B10: "Something with a star on its chest.",
+      11: "Sheriff Rattlesnake blocked the way to the gate.", 12: "\"Nobody passes without my permission,\" he hissed.",
+      13: "Behind him stood the woman. She was smiling again.", 14: "\"Give me the boy's journal,\" she said, \"and I'll let you through.\"",
+      X15: "You gave the journal to Lucas. \"It's yours. Keep it safe.\"", X16: "Maya was not happy about trusting him. Not at all.",
+      Y15: "You gave the journal to Maya. \"You've got the plan. Keep it.\"", Y16: "Lucas looked at the ground. He didn't say a word.",
+      X17: "The gate opened. The woman looked at Lucas, not at you.", X18: "\"Your grandpa trusted me once,\" she said. \"He was wrong.\"", X19: "Lucas held the journal tight. \"I'm not my grandpa.\"",
+      X20: "Jayden grinned. \"Next stop: Mount Rushmore. Four big heads!\"",
+      Y17: "The gate opened. The woman looked at Maya for a long time.", Y18: "\"Smart girl,\" she said. \"Smart people make good deals.\"", Y19: "Maya put the journal in her bag. She didn't answer.",
+      Y20: "Lucas whispered to you: \"Why didn't you trust me?\"",
+      R1: "The door was open. Inside, a dragon slept on a mountain of gold.", R2: "The knight whispered: \"Stop breathing so loudly.\"", R3: "\"The dragon dreams of the five gates,\" he said. \"Don't wake it. Not yet.\"" },
+      // Aufnahmen (vorbereitet, Dateien noch nicht da): Sprecherplan in werkzeuge/story_audio9.py (Maya + Frau = Jessica, Jayden/Lucas/Ritter/Sheriff = Jeremy, Spieler-Sätze und Erzähler = Mr. Alex)
+      audio: storyAudioDateien("az", STORY_KEYS_AZ) },
   };
   const STORY_PUNKTE = { diamant: 1, ganz: 10, max: 30 };
-  const STORY_KAPITEL = ["ny", "route66"];   // gebaute Kapitel in Reihenfolge (Story Library)
+  const STORY_KAPITEL = ["ny", "route66", "az"];   // gebaute Kapitel in Reihenfolge (Story Library)
   const REALM_KEYS = ["R1", "R2", "R3"];
-  // Story-Option für die Engine: Text + Varianten aus früheren Kapiteln (Kapitel 2 liest die Wahl aus Kapitel 1: X = Karte gegeben, Y = behalten oder Kapitel 1 nicht gespielt)
+  // Story-Option für die Engine: Text + Varianten aus früheren Kapiteln (Kapitel 2 liest die Wahl aus Kapitel 1: X = Karte gegeben, Y = behalten oder Kapitel 1 nicht gespielt;
+  // Kapitel 3 liest die Wahl aus Kapitel 2: X = die Wahrheit jetzt, Y = später oder Kapitel 2 nicht gespielt)
   function storyOption(welt) {
     const S = STORY[welt]; if (!S) return null;
-    const ny = storyStand("ny");
-    return Object.assign({}, S, { varianten: { "ny.g2": ny.wahl.g2 === "X" ? "X" : "Y" } });
+    const ny = storyStand("ny"), r66 = storyStand("route66");
+    return Object.assign({}, S, { varianten: { "ny.g2": ny.wahl.g2 === "X" ? "X" : "Y", "route66.g2": r66.wahl.g2 === "X" ? "X" : "Y" } });
   }
   function storyStand(welt) {
     const r = runnerStand();
@@ -2942,7 +2972,7 @@
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
-      wrapper: buehne, skin: skinWirksam(), welt: W.id, story: storyOption(W.id), // Story-Modus in New York (Kapitel 1) und Route 66 (Kapitel 2, mit Variante aus Kapitel 1); andere Welten wie bisher
+      wrapper: buehne, skin: skinWirksam(), welt: W.id, story: storyOption(W.id), // Story-Modus in New York (Kapitel 1), Route 66 (Kapitel 2) und Grand Canyon (Kapitel 3, je mit Variante aus dem Vorkapitel); andere Welten wie bisher
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: Object.assign(storyTexte(), {
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
@@ -3062,7 +3092,7 @@
       el("div", { class: "knopfreihe" }, knopf("🏃 Road Trip Run", () => runnerStart(), "leise")));
   }
   // 📖 Story Library, Übersicht nach Kapiteln (STORY_KAPITEL): je Kapitel die freigespielten Enden als Filme (Tap = Film mit der eigenen Figur), nicht freigespielte 🔒;
-  // dazu die Karte „✦ The Realm Beyond“ des Kapitels (gefundene R-Stücke, Sammelstück: Frost Shard ❄ / Dragon Scale 🐉)
+  // dazu die Karte „✦ The Realm Beyond“ des Kapitels (gefundene R-Stücke, Sammelstück: Frost Shard ❄ / Dragon Scale 🐉 / Golden Scale ✨)
   function storyLibrary() {
     const kapitel = STORY_KAPITEL.map((welt) => {
       const st = storyStand(welt), S = STORY[welt], rs = realmStand(welt), gs = S.gegenstand;

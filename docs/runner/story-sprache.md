@@ -23,5 +23,5 @@ Die Sprache der Geschichten **wächst mit dem Unterricht**. Jedes neue Kapitel b
 |---|---|---|---|
 | Unit 1 | past simple, Erzählzeit, direkte Rede | „Our class trip started in Brooklyn …“ | USA 1 |
 | Unit 1–2 | past progressive, present perfect | „the old walls were glowing“, „He had never told anyone.“ | USA 1–2 |
-| Unit 2 Focus on language | -ing or not (gerund), prepositions, „strong words“ | geplant: USA 3 („Lucas' Secret“: like/hate doing, afraid of …) | USA 3 |
+| Unit 2 Focus on language | -ing or not (gerund), prepositions, „strong words“ | „didn't like being watched“, „hated walking“, „kept on reading“, „good at climbing“, „not happy about trusting him“, „down into the canyon“, „huge, red and silent“, „froze“, „hissed“ | USA 3 „Lucas' Secret“ (gebaut 31.10.) |
 | Vocabulary BE vs AE (Border Patrol) | britisch/amerikanisch | geplant: USA 4 (Maya korrigiert Jayden) | USA 4 |

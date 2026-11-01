@@ -26,7 +26,7 @@ def lade_listen():
 
 def app_woerter(klasse):
     woerter = set()
-    dateien = ["inhalte/vokabeln.tsv", "inhalte/kernsaetze.tsv", "inhalte/gym_saetze6.tsv", "inhalte/lob.tsv", "inhalte/london.tsv"] if klasse == 6 else \
+    dateien = ["inhalte/vokabeln.tsv", "inhalte/kernsaetze.tsv", "inhalte/gym_saetze6.tsv", "inhalte/lob.tsv", "inhalte/london.tsv", "docs/archiv/vokabeln-klasse6-buch.tsv"] if klasse == 6 else \
               ["inhalte/klasse9/vokabeln.tsv", "inhalte/klasse9/saetze.tsv", "inhalte/klasse9/saetze2.tsv", "inhalte/klasse9/beae.tsv", "inhalte/klasse9/landmarks.tsv", "inhalte/klasse9/staaten.tsv",
                "werkzeuge/wortlisten/buch9_vorrat.tsv"]  # Stichwörter der kommenden Units 3–5 (zählen als Buchwortschatz)
     for d in dateien:

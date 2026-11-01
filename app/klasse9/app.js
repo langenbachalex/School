@@ -70,13 +70,14 @@
   /* ---------- Ereignisprotokoll (31.10.2026, Schutz-Paket 3) ----------
      stand.protokoll: die letzten 500 Ereignisse als [t (Minuten seit 1970), art, p], im Siegel. Arten: t Teil · g Word Gym · s Runner-Story ·
      e Einheit/Station · m Spiel des Tages · h Homework-Bonus · bw/bf/bs/bq/bm Boni (Wochenende, Ferien, Serie, Woche, Monat) · k Kauf (Coins, negativ) ·
-     w Warnung des Zeitlogs · r Startwert (Lehrer-Bereich, gekürztes Protokoll) · a Altbestand (Stand von vor dem Protokoll).
+     w Warnung des Zeitlogs · r Startwert (Lehrer-Bereich, gekürztes Protokoll) · a Altbestand (Stand von vor dem Protokoll) ·
+     x Stichproben-Abfrage (Lehrer-Bereich, +1 👍 / −1 👎, keine Punkte – zählt nicht zur Protokoll-Summe).
      Geschrieben wird nur in punkteDazu, im Shop und im Lehrer-Bereich. plausibilitaet() prüft beim Laden und markiert für den Lehrer-Bereich –
      nie sperren, nie Punkte ändern. */
   const PROTOKOLL_MAX = 500;
   const minuten = () => Math.floor(Date.now() / 60000);
   // Obergrenze aus dem Protokoll: Startwert (r/a) plus alle positiven Punkte-Einträge
-  const protokollSumme = (pl) => pl.reduce((s, e) => (e[1] === "r" || e[1] === "a" ? e[2] : e[1] === "k" || e[1] === "w" ? s : s + Math.max(0, e[2])), 0);
+  const protokollSumme = (pl) => pl.reduce((s, e) => (e[1] === "r" || e[1] === "a" ? e[2] : e[1] === "k" || e[1] === "w" || e[1] === "x" ? s : s + Math.max(0, e[2])), 0);
   function protokolliere(art, p) {
     const pl = (stand.protokoll = Array.isArray(stand.protokoll) ? stand.protokoll : []);
     pl.push([minuten(), art, Math.round(p)]);
@@ -3424,13 +3425,19 @@
     const gesperrt = !!sp.gesperrt;
     // Stichprobe (31.10., Schutz-Paket 3): Protokoll-Summe, Warnzähler, Plausibilitätsmarker und die letzten 10 Ereignisse – nur lesen
     const pr = plausibilitaet(), w = warnZaehlerLies(), pl = Array.isArray(stand.protokoll) ? stand.protokoll : [];
-    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand" };
+    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage" };
     const zeit = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; };
-    const letzte = pl.slice(-10).reverse().map((e) => el("li", {}, `${zeit(e[0])} · ${ARTEN[e[1]] || e[1]} · ${e[2] > 0 && e[1] !== "r" && e[1] !== "a" ? "+" : ""}${e[2]}${e[1] === "k" ? " 🪙" : ""}`));
+    const letzte = pl.slice(-10).reverse().map((e) => el("li", {}, e[1] === "x" ? `${zeit(e[0])} · Abfrage · ${e[2] > 0 ? "👍" : "👎"}`
+      : `${zeit(e[0])} · ${ARTEN[e[1]] || e[1]} · ${e[2] > 0 && e[1] !== "r" && e[1] !== "a" ? "+" : ""}${e[2]}${e[1] === "k" ? " 🪙" : ""}`));
+    // Stichproben-Abfragen (1.11.): Bilanz aus den x-Einträgen; die Zeile dient auch als Hinweis, wenn es nichts abzufragen gibt
+    const abfragen = pl.filter((e) => e[1] === "x"), hoch = abfragen.filter((e) => e[2] > 0).length;
+    const datum = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}.`; };
+    const abfrageZeile = el("p", { class: "klein lehrer-abfragen" }, abfragen.length ? `🎲 Abfragen: ${hoch} 👍 / ${abfragen.length - hoch} 👎 (letzte ${datum(abfragen[abfragen.length - 1][0])})` : "🎲 Abfragen: noch keine Stichprobe.");
     const stichprobe = el("div", { class: "lehrer-stichprobe" },
       el("p", { class: "klein" }, `🔎 Stichprobe: ⭐ ${sp.punkte} · 🪙 ${sp.coins} · Protokoll-Summe ${protokollSumme(pl)} (${pl.length} Einträge) · Warnungen ${(Array.isArray(sp.warnungen) ? sp.warnungen : []).length} (Zähler ${w.n || 0})`),
       el("p", { class: "klein lehrer-marker" + (pr.marker.length ? " auffaellig" : "") }, (pr.altbestand ? "Altbestand (Stand von vor dem Protokoll). " : "")
         + (pr.marker.length ? `Marker: ${pr.marker.join(", ")}` + (pr.seit ? ` (seit ${zeit(pr.seit)})` : "") : "Keine Auffälligkeiten.") + (pr.hinweis ? ` · Hinweis: ${pr.hinweis}` : "")),
+      abfrageZeile,
       letzte.length ? el("ul", { class: "lehrer-liste" }, letzte) : null);
     const sichern = () => {
       const np = Math.max(0, Math.floor(Number(p.value) || 0)), nc = Math.max(0, Math.floor(Number(c.value) || 0));
@@ -3446,10 +3453,126 @@
       el("p", { class: "klein lehrer-wache" }, warnungen.length ? `👀 Warnungen „Mr. Alex is watching you“ (${(sp.warnungen || []).length}): ${warnungen.join(" · ")}` : "👀 Keine Warnungen „Mr. Alex is watching you“."),
       gesperrt && el("p", { class: "lehrer-sperre" }, "🔒 Die App ist gesperrt (zu viele Punkte in zu kurzer Zeit). „Speichern“ schaltet sie wieder frei – die Punkte oben kannst du vorher anpassen."),
       stichprobe,
-      el("div", { class: "knopfreihe" }, knopf("Coins auf 0", () => { c.value = "0"; }, "leise"), knopf("Punkte auf 0", () => { p.value = "0"; }, "leise"),
+      el("div", { class: "knopfreihe" }, knopf("🎲 Stichprobe", () => stichprobeStart(abfrageZeile), "leise"), knopf("Coins auf 0", () => { c.value = "0"; }, "leise"), knopf("Punkte auf 0", () => { p.value = "0"; }, "leise"),
         altstandRoh && knopf("Alten Stand übernehmen", altstandUebernehmen, "leise")),
       el("div", { class: "knopfreihe" }, knopf("Speichern", sichern, "haupt"), knopf("Abbrechen", lehrerZu, "leise")));
   }
+
+  /* ---------- 🎲 Stichproben-Abfrage (1.11.2026, Idee Mr. Alex 31.10., docs/ideenspeicher.md „Prüfungsformate“ (1)) ----------
+     Nach PIN zieht die App aus den erledigten Teilen (stand.teile) 3–5 Prüfaufgaben, bevorzugt aus verschiedenen Teilen:
+     Vokabel (deutsch → englisch), Satz (deutsch → englisch), Lesen (Aussage → Lösung), Hören (Audio → Satz in Schrift).
+     Der Lehrer deckt die Lösung auf und bewertet 👍/👎; je Aufgabe ein Protokoll-Eintrag „x“ mit +1/−1 – keine Punkte, keine Coins,
+     keine Haken. Der Dialog umgeht nichts: Sperren (Wächter, Lehrer-PIN) bleiben, wie sie sind. */
+  const stichprobeDialog = el("dialog", { class: "feier frage stichprobe" });
+  stichprobeDialog.addEventListener("cancel", (e) => e.preventDefault()); // Abbrechen nur über ✕
+  document.body.append(stichprobeDialog);
+  const zufall = (liste) => liste[Math.floor(Math.random() * liste.length)];
+  // 3–5 Aufgaben aus verschiedenen Teilen (erst je Teil-Gruppe eine, dann der Rest), bei weniger erledigten Teilen weniger
+  function stichprobeZiehen() {
+    const quellen = mischen(Object.keys(stand.teile || {}).map(stichprobeTeil).filter(Boolean));
+    const anzahl = Math.min(5, quellen.length < 3 ? quellen.length : 3 + Math.floor(Math.random() * 3));
+    const gesehen = new Set(), erste = [], rest = [];
+    for (const q of quellen) { if (gesehen.has(q.gruppe)) rest.push(q); else { gesehen.add(q.gruppe); erste.push(q); } }
+    const aufgaben = [];
+    for (const q of [...erste, ...rest]) { if (aufgaben.length >= anzahl) break; const a = stichprobeAufgabe(q); if (a) aufgaben.push(a); }
+    return aufgaben;
+  }
+
+  // Teile und Vokabeln hinter einem Schlüssel „Kategorie|Gruppe|Index“ (wie starteGruppe/starteUnitGruppe; Gruppe = Name oder „u2:Start“)
+  function stichprobeTeil(schluessel) {
+    const p1 = schluessel.indexOf("|"), p2 = schluessel.lastIndexOf("|");
+    if (p1 < 0 || p2 <= p1) return null;
+    const k = kategorie(Number(schluessel.slice(0, p1))), gr = schluessel.slice(p1 + 1, p2), i = Number(schluessel.slice(p2 + 1));
+    if (!k || k.spiele || k.bald) return null;
+    let teile, vok = null, ort = k.titel;
+    const unit = gr.match(/^u(\d+):(.*)$/);
+    if (unit && D.units[unit[1]]) {
+      const g = D.units[unit[1]].find((x) => x.name === unit[2]);
+      if (!g) return null;
+      vok = g.vokabeln.map(vokabel).filter(Boolean); teile = teileVon(vokSchritte(vok)); ort += ` · Unit ${unit[1]} · ${g.name}`;
+    } else {
+      const g = (k.gruppen || []).find((x) => x.name === gr);
+      if (!g) return null;
+      ort += " · " + g.name;
+      vok = g.vokabeln ? g.vokabeln.map(vokabel).filter(Boolean) : null;
+      teile = teileVon(vok ? vokSchritte(vok) : g.schritte);
+    }
+    const teil = teile[i];
+    if (!teil) return null;
+    return { teil, vok, ort, gruppe: `${k.nr}|${gr}|${teil.art === "lr" ? "lr:" + teil.basis : vok ? "vok" : i}` };
+  }
+  // Eine Prüfaufgabe: { typ, ort, frage (für den Schüler), symbol, text (z. B. Lesetext), loesung, zusatz, hinweis, audio }
+  function stichprobeAufgabe(q) {
+    const { teil, vok } = q;
+    const satz = (id) => { const s = D.saetze[id]; return s && s.en && s.de ? { typ: "Satz", frage: s.de, loesung: s.en, audio: tonSatz(s) } : null; };
+    let a = null;
+    if (teil.art === "lr") a = satz(zufall(teil.saetze));
+    else if (teil.art.startsWith("vok_") && vok && vok.length) { const v = zufall(vok); a = { typ: "Vokabel", frage: v.de, loesung: v.en, audio: tonWort(v) }; }
+    else if (teil.art === "verbform" || teil.art === "auswahl") { const auf = zufall(teil.aufgaben); a = auf.satz ? satz(auf.satz) : null; }
+    else if (teil.art === "mustertext") a = satz(zufall(teil.abschnitte.flatMap((ab) => ab.saetze)));
+    else if (teil.art === "dialog") a = satz(zufall(teil.zeilen)[0]);
+    else if (teil.art === "beae_quiz") { const s = D.saetze[zufall(teil.paare)]; if (s && s.de) a = { typ: "Satz", frage: s.de, loesung: s.en, zusatz: s.be ? "BE: " + s.be.en : "", audio: tonSatz(s) }; }
+    else if (teil.art === "bilder") {
+      const b = zufall(teil.bilder), beleg = b.beleg && D.saetze[b.beleg];
+      a = { typ: "Lesen", frage: `${b.E || b.G} – in the text?`, symbol: b.symbol || "", text: (teil.text || []).map((id) => (D.saetze[id] || {}).en || "").join(" "),
+        loesung: b.beleg ? "Yes – in the text" : "No – not in the text", zusatz: beleg ? beleg.en : "" };
+    } else if (teil.art === "hoeren" && D.hoeren[teil.uebung]) {
+      const u = D.hoeren[teil.uebung], t = zufall(u.teile.filter((x) => x.audio)), auf = t && (u.aufgaben || []).find((x) => x.teil === t.id);
+      const antwort = (f) => { const fr = (u.fragen || []).find((x) => x.key === f), o = fr && auf && fr.optionen.find((x) => x.key === auf[f]); return o ? o.en : ""; };
+      if (t) a = { typ: "Hören", audio: t.audio, loesung: `${t.sprecher}: ${[antwort("was"), antwort("gut")].filter(Boolean).join(" · ") || t.text.split(/(?<=[.!?])\s/)[0]}`, zusatz: t.text };
+    }
+    if (!a || !a.loesung || (a.typ !== "Hören" && !a.frage)) return null;
+    a.ort = q.ort + " · " + a.typ;
+    return a;
+  }
+
+  let stichprobeLauf = null; // { aufgaben, i, hoch, runter }
+  function stichprobeStart(hinweis) {
+    const aufgaben = stichprobeZiehen();
+    if (!aufgaben.length) { if (hinweis) hinweis.textContent = "🎲 Noch nichts erledigt – es gibt nichts abzufragen."; return; }
+    stichprobeLauf = { aufgaben, i: 0, hoch: 0, runter: 0 };
+    lehrerDialog.close();
+    stichprobeZeigen();
+  }
+  const stichprobeEnde = () => { stopp(); stichprobeDialog.close(); stichprobeLauf = null; lehrerReset(); }; // zurück in den Lehrer-Dialog (ohne neue PIN)
+  const STICHPROBE_ANWEISUNG = { Vokabel: "Wie heißt das auf Englisch?", Satz: "Sag den Satz auf Englisch:", Aufgabe: "Wie sagst du das auf Englisch?",
+    Lesen: "Richtig, falsch oder nicht im Text?", Hören: "Hör zu – was hast du gehört?" };
+  function stichprobeZeigen() {
+    const L = stichprobeLauf, a = L.aufgaben[L.i], n = L.aufgaben.length;
+    const zu = el("button", { class: "knopf leise stichprobe-zu", "aria-label": "Stichprobe abbrechen", onclick: stichprobeEnde }, "✕");
+    if (!a) { // Zusammenfassung
+      stichprobeDialog.replaceChildren(el("header", { class: "stichprobe-kopf" }, el("span", { class: "klein" }, `Stichprobe · ${n} Aufgaben`), zu),
+        el("div", { class: "feier-symbol", "aria-hidden": "true" }, "🎲"), el("h2", {}, "Stichprobe fertig"),
+        el("p", { class: "stichprobe-gross stichprobe-bilanz" }, `${L.hoch} 👍 · ${L.runter} 👎`),
+        el("p", { class: "klein" }, "Im Protokoll notiert (ohne Punkte)."),
+        el("div", { class: "knopfreihe" }, Object.assign(knopf("Fertig", stichprobeEnde, "haupt"), { autofocus: true }),
+          knopf("🎲 Noch einmal", () => { const neu = stichprobeZiehen(); if (neu.length) { stichprobeLauf = { aufgaben: neu, i: 0, hoch: 0, runter: 0 }; stichprobeZeigen(); } }, "leise")));
+      if (!stichprobeDialog.open) stichprobeDialog.showModal();
+      return;
+    }
+    const hoeren = a.typ === "Hören";
+    const anhoeren = a.audio ? knopf("🔊 Anhören", () => spiele([a.audio]), hoeren ? "haupt" : "leise") : null;
+    const loesung = el("div", { class: "stichprobe-loesung", hidden: true }, el("p", { class: "klein" }, "Lösung"),
+      el("p", { class: "stichprobe-gross", lang: "en" }, a.loesung),
+      a.zusatz && el("p", { class: "klein stichprobe-zusatz", lang: "en" }, a.zusatz), a.hinweis && el("p", { class: "klein stichprobe-zusatz" }, a.hinweis),
+      !hoeren && anhoeren && el("div", { class: "knopfreihe" }, anhoeren));
+    const werten = (gut) => { protokolliere("x", gut ? 1 : -1); speichern(); if (gut) L.hoch++; else L.runter++; L.i++; stopp(); stichprobeZeigen(); }; // keine Punkte, keine Coins
+    const daumen = el("div", { class: "knopfreihe stichprobe-daumen", hidden: true }, knopf("👍 Kann es", () => werten(true), "haupt"), knopf("👎 Kann es nicht", () => werten(false), "leise"));
+    const zeigen = knopf("Lösung zeigen", () => { loesung.hidden = false; daumen.hidden = false; zeigen.hidden = true; }, "haupt");
+    zeigen.setAttribute("autofocus", ""); // Fokus auf den Hauptknopf, nicht auf ✕
+    stichprobeDialog.replaceChildren(
+      el("header", { class: "stichprobe-kopf" }, el("span", { class: "klein" }, `Stichprobe ${L.i + 1} von ${n} · ${a.ort}`), zu),
+      el("div", { class: "stichprobe-aufgabe" }, el("p", { class: "klein stichprobe-anweisung" }, STICHPROBE_ANWEISUNG[a.typ] || ""),
+        a.text && el("p", { class: "stichprobe-text", lang: "en" }, a.text),
+        hoeren ? el("p", { class: "stichprobe-gross", "aria-hidden": "true" }, a.symbol || "🎧")
+          : el("p", { class: "stichprobe-gross", lang: a.typ === "Lesen" ? "en" : "de" }, (a.symbol ? a.symbol + " " : "") + a.frage),
+        hoeren && anhoeren && el("div", { class: "knopfreihe" }, anhoeren)),
+      loesung,
+      el("div", { class: "knopfreihe" }, zeigen), daumen);
+    if (!stichprobeDialog.open) stichprobeDialog.showModal();
+    if (hoeren && a.audio) setTimeout(() => spiele([a.audio]), 300);
+  }
+
   // Vorbereitet (31.10.): Nach Ablauf von SIEGEL_BIS wird ein älterer, noch ungesiegelter Stand nur hier (nach PIN) übernommen und gesiegelt.
   function altstandUebernehmen() {
     if (!altstandRoh || typeof altstandRoh !== "object") return;
@@ -3469,7 +3592,7 @@
   // Kommt eine neue Version während einer Übung, erscheint der Hinweis erst danach (nichts geht verloren); sonst sofort ein Pop-up „Jetzt aktualisieren“,
   // das man nicht wegdrücken kann. War die App länger als 1 Stunde offen, lädt sie beim Zurückkommen neu (wenn gerade keine Übung läuft).
   const GELADEN = Date.now(), STUNDE = 3600 * 1000;
-  const beschaeftigt = () => !!lage || !!runnerLauf;
+  const beschaeftigt = () => !!lage || !!runnerLauf || stichprobeDialog.open;
   let neueVersion = false, updateGezeigt = false;
   const updateDialog = el("dialog", { class: "feier frage update" });
   updateDialog.addEventListener("cancel", (e) => e.preventDefault());

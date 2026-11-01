@@ -544,3 +544,18 @@ dialog.feier.lehrer .lehrer-stichprobe p { margin: 2px 0; }
 dialog.feier.lehrer .lehrer-marker.auffaellig { color: #b3261e; font-weight: 700; }
 dialog.feier.lehrer ul.lehrer-liste { list-style: none; margin: 6px 0 0; padding: 0; font-size: .85rem; max-height: 9.5em; overflow: auto; }
 dialog.feier.lehrer ul.lehrer-liste li { padding: 1px 0; border-top: 1px solid #e1e7f0; }
+/* 🎲 Stichproben-Abfrage (1.11.2026): Vollbild-Dialog für den Lehrer, Aufgabe groß für den Schüler, Lösung erst nach Tipp */
+dialog.feier.stichprobe { max-width: none; width: min(96vw, 760px); max-height: 94vh; overflow-y: auto; padding: 14px 18px 18px; }
+dialog.feier.stichprobe .stichprobe-kopf { display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; }
+dialog.feier.stichprobe .stichprobe-kopf .klein { margin: 0; }
+dialog.feier.stichprobe .stichprobe-zu { padding: 4px 12px; min-width: 0; flex: 0 0 auto; }
+dialog.feier.stichprobe .stichprobe-aufgabe { margin: 10px 0 6px; }
+dialog.feier.stichprobe .stichprobe-anweisung { margin: 0 0 4px; }
+dialog.feier.stichprobe .stichprobe-gross { font: 700 clamp(1.5rem, 4.6vw, 2.4rem)/1.25 var(--display, inherit); margin: 8px 0; overflow-wrap: anywhere; }
+dialog.feier.stichprobe .stichprobe-text { font-size: 1.05rem; line-height: 1.4; text-align: left; background: #f3f6fb; border-radius: 10px; padding: 8px 10px; margin: 6px 0 10px; }
+dialog.feier.stichprobe .stichprobe-loesung { border-top: 2px dashed #c9d3e0; margin-top: 10px; padding-top: 6px; }
+dialog.feier.stichprobe .stichprobe-loesung .stichprobe-gross { color: var(--blau); }
+dialog.feier.stichprobe .stichprobe-zusatz { margin: 2px 0; }
+dialog.feier.stichprobe .stichprobe-bilanz { font-size: 2.2rem; }
+dialog.feier.stichprobe .knopfreihe { flex-wrap: wrap; }
+dialog.feier.lehrer .lehrer-abfragen { font-weight: 700; }

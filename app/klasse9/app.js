@@ -21,7 +21,7 @@
   // Wer den Speicher von Hand ändert, passt nicht mehr zum Siegel: Die App nimmt dann die letzte gültige Sicherung
   // oder setzt Punkte und Fortschritt zurück. Kein Server nötig – ein Hindernis, keine Festung.
   const SIEGEL_SALZ = "mrAlex·2026·nine·p7Qx";
-  const SIEGEL_BIS = Date.parse("2026-12-01"); // bis dahin werden ältere, noch ungesiegelte Spielstände einmalig übernommen
+  const SIEGEL_BIS = Date.parse("2026-11-07"); // bis dahin werden ältere, noch ungesiegelte Spielstände einmalig übernommen; danach nur im Lehrer-Bereich
   // Siegel-Version 2 (Power Up): auch die erledigten Teile (stand.teile) stecken im Siegel; ein Stand ohne _v wird noch mit dem alten Siegel geprüft und beim Laden neu gesiegelt.
   // Siegel-Version 3 (Homework): auch die Hausaufgaben-Boni (stand.hw) stecken im Siegel; ältere Stände werden mit ihrer Version geprüft und beim nächsten Speichern als v3 gesiegelt.
   // Siegel-Version 4 (31.10.2026, Schutz-Paket 3): auch das Ereignisprotokoll (stand.protokoll) steckt im Siegel; v3-Stände werden ohne Hinweis übernommen,
@@ -3369,8 +3369,8 @@
   // Erledigte Teile, Power Up, Hausaufgaben, Käufe und Einstellungen bleiben unverändert.
   // Salz und Prüfwert je Klasse getrennt (31.10., vorbereitet): diese App prüft gegen LEHRER.pin[LEHRER.klasse]; PIN 6–10 Stellen.
   const LEHRER = { klasse: "9", runden: 150000, ziel: "header.gruss h1, .niveau-name",
-    pin: { 6: { salz: "f36909248b9e55ac30d93112e0bbb706", pruef: "c7a35a7644e9ddf6422f57ace070e9275cd34740d2e886691f6d245ee670156e" },
-      9: { salz: "f36909248b9e55ac30d93112e0bbb706", pruef: "c7a35a7644e9ddf6422f57ace070e9275cd34740d2e886691f6d245ee670156e" } } };
+    pin: { 6: { salz: "196404a92f6b78cd4a4b22eba8c631f9", pruef: "3911b26ed4164fe1166e1f0dac313c943903e6d606ce04603e1a871702c8d619" },
+      9: { salz: "2da1f090afb42ffd361232144df226b8", pruef: "1cad582370030bb8a94891b9573ea63a32b188b6d04c9eabae6cb250a72e1b4f" } } };
   async function lehrerPinOk(pin) {
     try {
       const L = LEHRER.pin[LEHRER.klasse];

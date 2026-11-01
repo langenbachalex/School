@@ -95,4 +95,5 @@ body.runner-aktiv .tempo-leiste { visibility: hidden; }
 .story-karte small { color: #ffe9b0; }
 .story-karte .story-sym { font-size: 1.6rem; }
 .story-karte.gesperrt { background: #eee9f6; color: #7a6a99; border: 2px dashed #c9c0d9; cursor: default; }
+.story-karte.gesperrt small { color: #7a6a99; }   /* Wembley: Hinweis „Andere Entscheidungen in Welt 2–4“ */
 .runner-story-ende { font-weight: 700; color: #4b1fa0; }

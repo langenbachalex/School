@@ -2247,13 +2247,13 @@
      Wörter: 12 aus dem gewählten Abschnitt von Station 7 (eigene zuerst, aufgefüllt aus den anderen Abschnitten), gesprochen mit den Vokabel-Aufnahmen.
      Cameos: 2–3 geheime Superhelden je Lauf, bevorzugt die schon gesammelten (sp.helden). Boss-Banner, Boss-Sprüche, Levelstart/-ende und Cameo-Sätze als Aufnahmen (31.10., D.spiel.runner_audio), fehlende mit der Geräte-Stimme.
      Welt 1 Westminster · Big Ben (31.10.), Welt 2 London Eye (31.10., Kapitel 2 „The Wheel That Stopped“, offen ab Silber in Welt 1), Welt 3 Tower Bridge (31.10., Kapitel 3 „Up Goes the Bridge“, offen ab Silber in Welt 2),
-     Welt 4 The Tube (31.10., Kapitel 4 „Mind the Gap“, offen ab Silber in Welt 3); Wembley kommt später (🔒 bald). */
+     Welt 4 The Tube (31.10., Kapitel 4 „Mind the Gap“, offen ab Silber in Welt 3), Welt 5 Wembley (1.11., Kapitel 5 „The Big Match“ mit drei Enden nach Zählung der Entscheidungen aus Welt 2–4, offen ab Silber in Welt 4). */
   const RUNNER = { preis: 150, skinPreis: 45, skinPreisTeuer: 90, woerter: 12, titel: ["Rookie Runner", "Tube Jumper", "Bus Hopper", "London Hero", "Superhero of London"], ab: [1, 3, 6, 10, 15],
     welten: [{ id: "westminster", name: "Westminster", staat: "London", ziel: "Big Ben", trophaee: "Big Ben Finder", symbol: "🔔", boss: "Sergeant Bearskin", ort: "am Tor der Horse Guards", tuer: "das Tor der Horse Guards" },
       { id: "londoneye", name: "London Eye", staat: "London", ziel: "the London Eye", trophaee: "Eye Spy", symbol: "🎡", boss: "Sergeant Bearskin", ort: "in der obersten Kabine des London Eye", tuer: "die Kabinentür" },
       { id: "towerbridge", name: "Tower Bridge", staat: "London", ziel: "Tower Bridge", trophaee: "Bridge Keeper", symbol: "🌉", boss: "Sergeant Bearskin", ort: "auf der hochgeklappten Tower Bridge", tuer: "das Brückentor" },
       { id: "tube", name: "The Tube", staat: "London", ziel: "Wembley Park", trophaee: "Mind the Gap", symbol: "🚇", boss: "Sergeant Bearskin", ort: "am Stadiontor von Wembley", tuer: "das Stadiontor" },
-      { id: "wembley", name: "Wembley", staat: "London", ziel: "Wembley", trophaee: "Wembley", symbol: "🏟️", bald: true }] };
+      { id: "wembley", name: "Wembley", staat: "London", ziel: "Wembley Stadium", trophaee: "Match Winner", symbol: "🏟️", boss: "Sergeant Bearskin", ort: "am Spielfeldtor von Wembley", tuer: "das Spielfeldtor" }] };
   // Story-Modus Welt 1 „The Guard Who Never Moved“ (freigegeben 30.10., Text wörtlich aus docs/runner/story-london-01.md; Erzähler Mr. Alex – bis zur Vertonung Geräte-Stimme,
   // audio: { key: "audio/…mp3" } kann später je Stück ergänzt werden). Punkte (gegen Farmen): 1 ⭐ je Punkte-Diamant, +10 ⭐ einmalig je vollständiger Geschichte (alle 12 ♪ eines Endes),
   // höchstens 30 ⭐ je Lauf, nur wenn das Level geschafft ist (Game over/Abbruch: keine); läuft über punkteDazu (Zeitlog mrAlexWacht, Coins halb).
@@ -2307,6 +2307,22 @@
       A11: "The ghost waves from the last train. \"See you at the match!\"", A12: "Ghosts don't need tickets. Lucky them.",
       B11: "The raven lands on the Sergeant's hat. It likes it there.", B12: "Is it the Tower raven? The Sergeant smiles. \"It is now.\"" },
       audio: null },   // wird unten aus SP.story_audio gefüllt (storyAudioDateien); Dateien gibt es noch nicht → Geräte-Stimme
+    // Kapitel 5 Wembley „The Big Match“ (freigegeben 1.11., Text wörtlich aus docs/runner/story-london-05.md): Stücke 1–2 als Variante nach der Wahl aus Welt 4 (story.tube.wahl.g1: A = zurückgegangen → 1A/2A (der Geist),
+    // B = weitergefahren → 1B/2B (der Rabe auf der Mütze), keine Wahl → A; die App übergibt story.varianten = { "tube.g1": … }). Gabelung dieses Kapitels: A hinauf über die Tribünen / B hinunter durch den Spielertunnel
+    // → story.wembley.wahl.g1 (zählt nicht). DREI ENDEN nach Zählung der guten Entscheidungen (londoneye B + towerbridge A + tube A; fehlende Welten zählen nicht): 3 → E1, 1–2 → E2, 0 → E3 (story.gute → Engine).
+    // Aufnahmen audio/story/wembley_<key>.mp3 (+ _sofar) nach dem 13.11., bis dahin Geräte-Stimme.
+    wembley: { id: "wembley", titel: "The Big Match", kapitel: 5, welt: "Wembley", wege: { A: { symbol: "🪜", name: "The stands" }, B: { symbol: "🌱", name: "The tunnel" } },
+      enden: { E1: { symbol: "🏆", name: "The Sergeant scores" }, E2: { symbol: "👻", name: "The ghost scores" }, E3: { symbol: "🎩", name: "Bounce" } }, teile: {
+      "1A": "Saturday, 3 p.m. Match day! The ghost is here too. He never pays.", "2A": "\"Are you free after the match?\" the Sergeant asks. \"Let's have tea.\"",
+      "1B": "Saturday, 3 p.m. Match day! The raven sits on the Sergeant's hat.", "2B": "\"Are you free after the match?\" the Sergeant asks. \"I'd love to,\" you say.",
+      3: "Ninety thousand people. I can hear them. I can smell the chips.", 4: "Then the big screen says: KICK-OFF IN 10 MINUTES. NO REFEREE!",
+      A5: "You run up the stands. Row after row. Does anybody know the referee?", A6: "\"No, I don't,\" says a man. \"No, I don't,\" says a woman. \"Yes, I do!\" A boy.", A7: "The referee is stuck in the toilet! Door locked. He feels angry and sad.", A8: "The Sergeant kicks the door. Boom. He feels surprised. The door too.",
+      B5: "You run down the tunnel. It's dark and it smells of grass.", B6: "\"Does the Sergeant play football?\" the ghost asks. \"No, he doesn't.\"", B7: "The referee is here. But his whistle is gone. Who takes a whistle?", B8: "A bird! Black feathers on the floor. Ravens always take shiny things.",
+      9: "Kick-off! The Sergeant stands at the pitch gate. Still. Like always.", 10: "\"Does he ever move?\" asks the ghost. Wait and see.",
+      E1_11: "The ball flies to the gate. The Sergeant moves! One step. He kicks. GOAL!", E1_12: "He never moved. Today he did. He feels happy. Don't tell anyone.",
+      E2_11: "The ball flies to the gate. The Sergeant doesn't move. The ghost does!", E2_12: "Ghosts can't kick. But they can scare. The goalkeeper runs away. GOAL!",
+      E3_11: "The ball flies to the gate. It hits the Sergeant's hat. Bounce. GOAL?", E3_12: "\"Not this time, soldier,\" the referee says. No goal. But what a day!" },
+      audio: null },   // wird unten aus SP.story_audio gefüllt (storyAudioDateien); Dateien gibt es noch nicht → Geräte-Stimme
   };
   const STORY_KEYS_EYE = ["1A", "2A", "1B", "2B", "3", "4", "A5", "A6", "A7", "A8", "B5", "B6", "B7", "B8", "9", "10", "A11", "A12", "B11", "B12", "sofar"];
   // Aufnahmen je Kapitel: ein Stück = eine Datei (<praefix>_<key>.mp3) oder mehrere Teile (<praefix>_<key>_1.mp3, _2 …); nur Dateien, die der Bau findet (SP.story_audio)
@@ -2321,22 +2337,33 @@
   STORY.towerbridge.audio = storyAudioDateien("towerbridge", STORY_KEYS_BRIDGE);
   const STORY_KEYS_TUBE = STORY_KEYS_EYE;   // Kapitel 4 hat dieselben Schlüssel
   STORY.tube.audio = storyAudioDateien("tube", STORY_KEYS_TUBE);   // noch keine Dateien (Vertonung nach dem 13.11.) → leer → Geräte-Stimme
-  const STORY_KAPITEL = ["westminster", "londoneye", "towerbridge", "tube"];   // gebaute Kapitel in Reihenfolge (Story Library, Dein Weg)
+  const STORY_KEYS_WEMBLEY = ["1A", "2A", "1B", "2B", "3", "4", "A5", "A6", "A7", "A8", "B5", "B6", "B7", "B8", "9", "10", "E1_11", "E1_12", "E2_11", "E2_12", "E3_11", "E3_12", "sofar"];   // Kapitel 5: drei Enden E1/E2/E3
+  STORY.wembley.audio = storyAudioDateien("wembley", STORY_KEYS_WEMBLEY);   // noch keine Dateien (Vertonung nach dem 13.11.) → leer → Geräte-Stimme
+  const STORY_KAPITEL = ["westminster", "londoneye", "towerbridge", "tube", "wembley"];   // gebaute Kapitel in Reihenfolge (Story Library, Dein Weg)
+  // Zählung für Welt 5 (Mr. Alex, 1.11.): gute Entscheidungen = aufs Rad geklettert (Welt 2 B) + Raben gerettet (Welt 3 A) + zurückgegangen (Welt 4 A); eine nie gespielte Welt zählt nicht als gut
+  const STORY_GUT = { londoneye: "B", towerbridge: "A", tube: "A" };
+  const storyGute = () => Object.keys(STORY_GUT).filter((w) => storyStand(w).wahl.g1 === STORY_GUT[w]).length;
+  const storyEndeLabel = (welt, en) => `Ending ${welt === "wembley" ? en.replace(/^E/, "") : en}`;   // Wembley: E1 → „Ending 1“
   const storyEnden = (welt) => (STORY[welt] && STORY[welt].enden) || STORY_ENDEN;   // Enden je Kapitel (Welt 1: Fuchs/Taube)
   // Story-Option für die Engine: Text + Varianten und Begleiter aus den vorigen Kapiteln (Kapitel 2 liest story.westminster.wahl.g1: B = Taube, sonst Fuchs; Kapitel 3 liest story.londoneye.wahl.g1:
   // B = aufs Rad geklettert, sonst A = roter Knopf; Kapitel 4 liest story.towerbridge.wahl.g1: B = Hut gerettet (ein Rabe fehlt), sonst A = Raben gerettet – auch wenn die Welt nie geschafft wurde;
-  // der Begleiter aus Welt 1 läuft in Welt 2–4 mit)
+  // der Begleiter aus Welt 1 läuft in Welt 2–5 mit; Kapitel 5 liest story.tube.wahl.g1 (B = weitergefahren, sonst A) und bekommt die Zählung der guten Entscheidungen als gute (0–3) für das Ende E1/E2/E3)
   function storyOption(welt) {
     const S = STORY[welt]; if (!S) return null;
-    const w1 = storyStand("westminster").wahl.g1 === "B" ? "B" : "A", w2 = storyStand("londoneye").wahl.g1 === "B" ? "B" : "A", w3 = storyStand("towerbridge").wahl.g1 === "B" ? "B" : "A";
-    return Object.assign({}, S, { varianten: { "westminster.g1": w1, "londoneye.g1": w2, "towerbridge.g1": w3 }, begleiter: w1 === "B" ? "taube" : "fuchs" });
+    const w1 = storyStand("westminster").wahl.g1 === "B" ? "B" : "A", w2 = storyStand("londoneye").wahl.g1 === "B" ? "B" : "A", w3 = storyStand("towerbridge").wahl.g1 === "B" ? "B" : "A", w4 = storyStand("tube").wahl.g1 === "B" ? "B" : "A";
+    return Object.assign({}, S, { varianten: { "westminster.g1": w1, "londoneye.g1": w2, "towerbridge.g1": w3, "tube.g1": w4 }, begleiter: w1 === "B" ? "taube" : "fuchs", gute: storyGute() });
   }
-  // 🧭 Dein Weg: Kette der gespeicherten Entscheidungen bis zu einem Kapitel („🦊 The fox → 🔘 machine room“); aktuell = Wahl des laufenden Laufs für das letzte Kapitel
+  // 🧭 Dein Weg: Kette der gespeicherten Entscheidungen bis zu einem Kapitel („🦊 The fox → 🔘 machine room“); aktuell = { g1, ende } des laufenden Laufs für das letzte Kapitel.
+  // Wembley: der Weg (🪜 The stands / 🌱 The tunnel) zählt nicht – dahinter steht das erreichte Ende (aus dem Lauf, sonst das zuletzt freigespielte)
   function storyPfad(bisWelt, aktuell) {
     const teile = [];
     for (const welt of STORY_KAPITEL) {
-      const g1 = welt === bisWelt && aktuell ? aktuell.g1 : storyStand(welt).wahl.g1, E = g1 && storyEnden(welt)[g1];
-      if (E) teile.push(`${E.symbol} ${E.name}`);
+      const st = storyStand(welt), g1 = welt === bisWelt && aktuell ? aktuell.g1 : st.wahl.g1, S = STORY[welt];
+      if (S && S.wege) {
+        const Wg = g1 && S.wege[g1]; if (Wg) teile.push(`${Wg.symbol} ${Wg.name}`);
+        const en = welt === bisWelt && aktuell && aktuell.ende ? aktuell.ende : st.enden[st.enden.length - 1], E = en && S.enden[en];
+        if (E) teile.push(`${E.symbol} ${E.name}`);
+      } else { const E = g1 && storyEnden(welt)[g1]; if (E) teile.push(`${E.symbol} ${E.name}`); }
       if (welt === bisWelt) break;
     }
     return teile.join(" → ");
@@ -2473,6 +2500,10 @@
   }
   // Erklärtext der Startseite je Welt (deutsche Bedienung, englische Spielsätze)
   function runnerStartText(W) {
+    if (W.id === "wembley") {
+      const w1 = storyStand("westminster").wahl.g1 === "B" ? "🕊️ die Taube" : "🦊 der Fuchs", w4 = storyStand("tube").wahl.g1 === "B" ? "du weitergefahren bist – der Rabe sitzt jetzt auf seiner Mütze" : "du zu ihm zurückgegangen bist – der Geist ist natürlich auch da";
+      return `Tippen oder Leertaste = springen, länger halten = höher. Vor dem Stadion: Stand-Dächer und Ballkisten sind Stufen, in Pfützen rutschst du, in die Baugrube fällst du hinein, Tauben, Füchse und Eichhörnchen kannst du plattdrücken. Neu in Wembley: Bälle rollen dir entgegen – drüberspringen oder im Sprung köpfen (platt!), sonst ist ein Leben weg. ${w1} aus Welt 1 begleitet dich, und der Sergeant weiß noch, dass ${w4}. Die violetten ♪-Kristalle erzählen „${STORY.wembley.titel}“ – hinauf über die Tribünen (Sitzreihen als Stufen, eine verschlossene Toilettentür) oder hinunter durch den dunklen Spielertunnel (es riecht nach Rasen)? Beides führt auf den Rasen. Die Geschichte hat drei Enden: Welches Ende du bekommst, hängt von deinen Entscheidungen in Welt 2 bis 4 ab – nicht von diesem Weg. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐. Nimm die richtigen Tore und beantworte die Frage von ${W.boss} ${W.ort} – gut 2 Minuten. Am besten das Handy quer halten.`;
+    }
     if (W.id === "tube") {
       const w1 = storyStand("westminster").wahl.g1 === "B" ? "🕊️ die Taube" : "🦊 der Fuchs", w3 = storyStand("towerbridge").wahl.g1 === "B" ? "seinen nassen Hut gerettet hast – ein Rabe fehlt noch" : "seine Raben gerettet hast";
       return `Tippen oder Leertaste = springen, länger halten = höher. Unter der Erde: Rolltreppen und Koffer sind Stufen, auf nassem Boden rutschst du, Tauben und Mäuse kannst du plattdrücken. Neu in der Tube: „Mind the gap!“ – vor der Lücke zwischen Bahnsteig und Zug kommt eine Durchsage, dann musst du springen, sonst fällst du hinein. Im Zug schließen sich die Türen: Warnton, blinkende Kanten – schnell durch oder drüberspringen! ${w1} aus Welt 1 begleitet dich, und der Sergeant weiß noch, dass du in Welt 3 ${w3}. Die violetten ♪-Kristalle erzählen „${STORY.tube.titel}“ – aussteigen und zurück zum Sergeant (dunkler Bahnsteig, ein alter Bekannter auf der Bank) oder sitzen bleiben und weiterfahren (oben im Zug, mit einem Raben neben dir)? Du entscheidest, wie sie ausgeht. Die 💎-Diamanten zeigen dir Wörter und geben je 1 ⭐. Nimm die richtigen Tore und beantworte die Frage von ${W.boss} ${W.ort} – gut 2 Minuten. Am besten das Handy quer halten.`;
@@ -2550,7 +2581,7 @@
     if (storyPunkte > 0) punkteDazu(storyPunkte, { art: "s" }); // Zeitlog (mrAlexWacht) läuft in punkteDazu, damit Farmen im London Run auffällt
     speichern();
     const r_ = waehleRuf(e.geschafft ? "stark" : "fehler");
-    const sEnde = e.story && e.story.ende ? storyEnden(W.id)[e.story.ende] : null, pfad = e.story && e.geschafft && sEnde ? storyPfad(W.id, e.story.wahl) : "";
+    const sEnde = e.story && e.story.ende ? storyEnden(W.id)[e.story.ende] : null, pfad = e.story && e.geschafft && sEnde ? storyPfad(W.id, Object.assign({}, e.story.wahl, { ende: e.story.ende })) : "";
     const minuten = `${Math.floor(e.dauer / 60)}:${String(e.dauer % 60).padStart(2, "0")}`;
     const zeichne = () => {
       zeige(spielKopf("London Run", runnerStart),
@@ -2562,12 +2593,14 @@
             : el("p", {}, "Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!"),
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
           e.story && el("p", { class: "runner-story-ende" }, `♪ ${e.story.anzahl}/12 Geschichte`,
-            sEnde ? ` · 📖 Ending ${e.story.ende} – ${sEnde.symbol} ${sEnde.name}` : "", e.story.vollstaendig ? " · ✓ ganze Geschichte" : ""),
-          e.story && e.geschafft && sEnde && el("p", { class: "klein runner-story-wege" }, `🧭 Dein Weg: ${pfad} – die Geschichte merkt sich das für das nächste Kapitel.`),
+            sEnde ? ` · 📖 ${storyEndeLabel(W.id, e.story.ende)} – ${sEnde.symbol} ${sEnde.name}` : "", e.story.vollstaendig ? " · ✓ ganze Geschichte" : ""),
+          e.story && e.geschafft && sEnde && el("p", { class: "klein runner-story-wege" }, W.id === "wembley"
+            ? `🧭 Dein Weg: ${pfad} – dieses Ende kam durch deine Entscheidungen in Welt 2 bis 4 (${storyGute()} von 3 „guten“). Andere Enden: dort anders entscheiden und Wembley noch mal spielen.`
+            : `🧭 Dein Weg: ${pfad} – die Geschichte merkt sich das für das nächste Kapitel.`),
           e.story && el("p", { class: "runner-story-punkte" }, e.geschafft
             ? `⭐ Punkte in diesem Lauf: ${storyPunkte}` + (storyPunkte >= STORY_PUNKTE.max ? " (höchstens 30)" : "")
             : "⭐ Punkte gibt es nur, wenn du das Level schaffst."),
-          storyNeuFrei && el("p", { class: "runner-neu-offen" }, `📖 Neu in der Story Library: Ending ${e.story.ende}!`),
+          storyNeuFrei && el("p", { class: "runner-neu-offen" }, `📖 Neu in der Story Library: ${storyEndeLabel(W.id, e.story.ende)}!`),
           e.maxCombo > 0 && el("p", { class: "klein runner-serie" }, `🔥 Beste Serie: ×${e.maxCombo}`),
           e.geschafft && el("p", {}, el("strong", {}, `🏆 ${W.trophaee} – ${stufe === "gold" ? "Gold" : "Silber"}`), stufe !== "gold" ? " (Gold: alle Diamanten und beide Tore richtig)" : ""),
           neuOffen && el("p", { class: "runner-neu-offen" }, `🔓 Neue Welt frei: ${naechsteWelt.symbol} ${naechsteWelt.name}!`),
@@ -2586,7 +2619,7 @@
     const endeTon = e.geschafft ? ((runnerAudio(W.id) || {}).ende || { tts: runnerEndeText(W), lang: "en-GB", stimme: "f" }) : null;
     if (!ereignisse.some(grossEreignis) && (endeTon || (r_ && r_.audio))) spiele([endeTon, r_ && r_.audio]);
   }
-  // Hall of Fame: Abschnitt in der Sammlung (eine Trophäe je Welt; noch nicht gebaute Welten 🔒 bald)
+  // Hall of Fame: Abschnitt in der Sammlung (eine Trophäe je Welt; seit Welt 5 Wembley (1.11.) gibt es keine „bald“-Welt mehr)
   function runnerSammlung() {
     const r = runnerStand(), naechste = RUNNER.ab[r.titel || 0];
     return el("section", { class: "satzkarte runner-sammlung" },
@@ -2604,7 +2637,8 @@
       el("div", { class: "knopfreihe" }, knopf("🇬🇧 London Run", () => runnerStart(), "leise")));
   }
   // 📖 Story Library: freigespielte Enden als Karten (Tap = Film mit der eigenen Figur), nicht freigespielte 🔒
-  // Übersicht nach Kapiteln (STORY_KAPITEL): Level 1 Westminster, Level 2 London Eye, Level 3 Tower Bridge, Level 4 The Tube; Pfad-Zeile = Kette der gespeicherten Entscheidungen („🦊 The fox → 🔘 machine room“); nicht freigespielte Enden 🔒
+  // Übersicht nach Kapiteln (STORY_KAPITEL): Level 1 Westminster, Level 2 London Eye, Level 3 Tower Bridge, Level 4 The Tube, Level 5 Wembley (drei Enden; andere Enden nur über andere Entscheidungen in Welt 2–4);
+  // Pfad-Zeile = Kette der gespeicherten Entscheidungen über fünf Welten („🦊 The fox → 🔘 machine room → … → 🏆 The Sergeant scores“); nicht freigespielte Enden 🔒
   function storyLibrary() {
     const pfad = storyPfad(STORY_KAPITEL[STORY_KAPITEL.length - 1]);
     const kapitel = STORY_KAPITEL.map((welt, i) => {
@@ -2613,10 +2647,11 @@
         el("p", { class: "klein", lang: "en" }, `Level ${i + 1} · ${S.titel}`, !offen ? el("span", { lang: "de" }, ` · 🔒 Silber in ${runnerWeltVon(STORY_KAPITEL[i - 1]).name} nötig`) : ""),
         el("div", { class: "story-karten" }, Object.keys(E).map((en) => {
           const frei = st.enden.includes(en);
-          if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en, "data-welt": welt }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"));
+          if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en, "data-welt": welt }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"),
+            welt === "wembley" ? el("small", { lang: "de" }, "Andere Entscheidungen in Welt 2–4") : "");
           return el("button", { class: "story-karte", type: "button", "data-ende": en, "data-welt": welt, onclick: () => storyFilm(welt, en) },
             el("span", { class: "story-sym", "aria-hidden": "true" }, E[en].symbol),
-            el("strong", { lang: "en" }, `Ending ${en} – ${E[en].name}`),
+            el("strong", { lang: "en" }, `${storyEndeLabel(welt, en)} – ${E[en].name}`),
             el("small", {}, `♪ ${st.beste[en] || 0}/12${st.voll.includes(en) ? " · ✓ ganze Geschichte" : ""} · ▶ Film`));
         })));
     });

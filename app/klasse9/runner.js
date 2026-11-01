@@ -25,6 +25,11 @@
    Sitze, Fahrgäste mit Handys); Spalt am Bahnsteig (h.spalt: Durchsage + Schild „MIND THE GAP“, Lücke, Sturz = Leben), Zugtüren (h.tuer: Warnton + blinkende Kanten, schließen sich – durch oder drüber), Maus (Gegner),
    Koffer (Block); Weg A dunkler Bahnsteig (h.dunkelbahnsteig, Geist auf der Bank, Züge in beide Richtungen), Weg B im Zug (Wagen-Plattformen h.wagen, der Rabe fährt mit); Boss Sergeant Bearskin (Kissenabdruck)
    am Stadiontor von Wembley, Tür = Stadiontor, Film A/B (filmZeichnenTube).
+   Welt „wembley“ (1.11., Klasse 6, Welt 5, docs/runner/story-london-05.md): Stadion außen (h.vorplatz: Fans, Fahnen, Würstchen-/Chips-Stände, Anzeigetafel „KICK-OFF IN 10 MINUTES“), Weg A oben über die
+   Tribünen (Sitzreihen als Stufen h.tribuene, der Toilettenblock h.toilette – nach ♪A8 tritt der Sergeant die Tür ein), Weg B unten durch den dunklen Spielertunnel (h.spielertunnel: Rasengeruch-Schild,
+   schwarze Federn h.federn bei ♪B8), danach der Rasen (h.rasen: Tribünen mit Fans, Maskottchen) mit rollenden Bällen (h.ball: rollt der Figur entgegen – drüberspringen oder im Sprung köpfen = platt;
+   Treffer = ein Leben), Geist auf allen Wegen (schwebend oder auf einer Bank), der Rabe nur in Variante B (tube.g1 = B, rabeMit); Boss Sergeant Bearskin am Spielfeldtor (Rabe auf der Mütze bei B),
+   Tür = Spielfeldtor; drei Enden nach Zählung der guten Entscheidungen aus Welt 2–4 (Struktur ende 'zaehlung': E1 Sergeant schießt · E2 der Geist erschreckt den Torwart · E3 Ball prallt vom Hut), Film filmZeichnenWembley.
    Cameos (31.10., Option cameos: [{ id, name, bild, kraft }]): 2–3 Gastauftritte der geheimen Superhelden je Lauf (rundes Kartenbild, Umhang, Sprechblase ≈ 2,5 s) mit kleinem Effekt (CAMEO);
    ohne die Option (Klasse 9) gibt es keine Cameos. stimme.cameo(text, id, { audio }) spricht den Satz (optional).
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
@@ -309,6 +314,13 @@
     tuerwarn() { for (let i = 0; i < 3; i++) ton(1760, 0.08, "square", 0.04, i * 0.14); },
     maus() { ton(3200, 0.05, "sine", 0.03, 0, 4200); ton(3600, 0.05, "sine", 0.025, 0.08, 4600); },
     zug() { rauschen(0.9, 0.04, 0, { typ: "lowpass", freq: 420 }); ton(80, 0.8, "sawtooth", 0.025, 0, 60); },
+    // Welt Wembley (Klasse 6): Ball rollt (dumpfes Poltern), Kopfball = Plopp + Pfiff, Tritt gegen die Tür (Boom), Schiedsrichterpfeife, Stadion singt (Chor-Akkord), Fans jubeln (Rauschen + Töne)
+    ball() { rauschen(0.5, 0.03, 0, { typ: "lowpass", freq: 380 }); for (let i = 0; i < 3; i++) ton(120, 0.08, "sine", 0.05, i * 0.15, 80); },
+    koepfer() { ton(420, 0.1, "sine", 0.1, 0, 160); rauschen(0.06, 0.05, 0, { typ: "bandpass", freq: 1200 }); ton(1500, 0.08, "triangle", 0.05, 0.1, 2200); },
+    tritt() { ton(90, 0.3, "sine", 0.14, 0, 40); rauschen(0.25, 0.09, 0, { typ: "lowpass", freq: 700 }); ton(260, 0.12, "square", 0.05, 0.02, 120); },
+    pfeife() { ton(2300, 0.35, "square", 0.05); ton(2350, 0.35, "square", 0.03, 0.02); rauschen(0.3, 0.015, 0, { typ: "highpass", freq: 3000 }); },
+    gesang() { [262, 330, 392, 523].forEach((f) => ton(f, 1.6, "triangle", 0.045)); [262, 330, 392, 523].forEach((f) => ton(f * 1.125, 1.2, "triangle", 0.04, 1.7)); rauschen(2.8, 0.02, 0, { typ: "bandpass", freq: 900 }); },
+    jubel() { rauschen(1.4, 0.06, 0, { typ: "bandpass", freq: 1100 }); [523, 659, 784].forEach((f, i) => ton(f, 0.3, "triangle", 0.06, 0.1 + i * 0.12)); ton(1047, 0.6, "triangle", 0.07, 0.5); },
     // Story-Modus: Kristall = Harfen-Arpeggio (anders als der Diamant-/Wort-Jingle), Puff = verschwindendes ♪ an der Gabelung, Station = zwei weiche Glocken
     kristall() { [784, 988, 1175, 1568].forEach((f, i) => ton(f, 0.32, "sine", 0.07, i * 0.06)); ton(392, 0.5, "triangle", 0.04); },
     puff() { rauschen(0.22, 0.04, 0, { typ: "lowpass", freq: 1200 }); ton(700, 0.18, "sine", 0.03, 0, 300); },
@@ -1141,6 +1153,52 @@
     (h) => { h.rolltreppe(150, 240, 150); h.rolltreppe(400, 180, 150); h.rolltreppe(650, 240, 150); h.dia(440, 140); h.geg('taube', 850, 1250); h.vor(1300); }, // 29 Rolltreppen-Treppe (💎 oben) + Taube
     (h) => { h.spalt(200); h.dia(250, 250); h.geg('maus', 500, 800); h.koffer(1350); h.vor(1500); },                      // 30 Schluss: dritter Spalt (💎 darüber) + Maus + Koffer
   ];
+  // London Welt 5 „Wembley“ – Kapitel 5 „The Big Match“ (Klasse 6, 1.11., docs/runner/story-london-05.md; Strecke immer mit Story, die App übergibt STORY.wembley):
+  // Anfang 1–4, wobei ♪1/♪2 als Variante von Welt 4 abhängen (quelle 'tube.g1': A = zurückgegangen → 1A/2A (der Geist ist da), B = weitergefahren → 1B/2B (der Rabe sitzt auf der Mütze); keine Wahl → A) ·
+  // Station 1 · Gabelung g1: ♪A5 oben auf den Tribünen („🪜 the stands“, Weg A: Sitzreihen als Stufen h.tribuene, der Toilettenblock h.toilette – nach ♪A8 tritt der Sergeant die Tür ein) /
+  // ♪B5 unten im Spielertunnel („🌱 the tunnel“, Weg B: dunkel wie der Bahnsteig, Rasengeruch-Schild, der Geist auf einer Bank, schwarze Federn bei ♪B8) · Station 2 · gemeinsam 9–10 auf dem Rasen ·
+  // Boss Sergeant Bearskin am Spielfeldtor · Ende nach ZÄHLUNG (ende 'zaehlung', zählt nicht als Gabelung): gute Entscheidungen = londoneye.g1 B + towerbridge.g1 A + tube.g1 A → 3 = E1 (der Sergeant schießt),
+  // 1–2 = E2 (der Geist erschreckt den Torwart), 0 = E3 (Ball prallt vom Hut); die App kann die Zahl als story.gute übergeben (fehlende Welten zählen als nicht gut). E?_11/E?_12 hinter dem Boss (im Film) = 12 ♪.
+  // Abstand der ♪ je Weg ≥ 1.390, nie in den 520 vor einem Tor; 18 Punkte-Diamanten; neu: rollende Bälle (h.ball: rollt los, wenn die Figur ≈ 520 davor ist, rollt ihr entgegen – drüberspringen oder im Sprung köpfen = platt),
+  // Tribünen-Plattformen (h.tribuene), Kulissen Vorplatz (Fans, Fahnen, Stände, Anzeigetafel „KICK-OFF IN 10 MINUTES“) / Spielertunnel / Rasen (Tribünen mit Fans, Maskottchen), Ballkisten (Block), der Rabe nur bei Variante B (rabeMit).
+  const STRUKTUR_WEMBLEY = { anzahl: 12, abschnitte: [
+    { anfang: true, varianten: { A: ['1A', '2A'], B: ['1B', '2B'] }, quelle: 'tube.g1', standard: 'A', platz: ['1', '2'], keys: ['3', '4'] },
+    { gabel: 'g1', standard: 'A', wege: { A: ['A5', 'A6', 'A7', 'A8'], B: ['B5', 'B6', 'B7', 'B8'] }, symbole: { A: '🪜', B: '🌱' }, labels: { A: 'the stands', B: 'the tunnel' } },
+    { keys: ['9', '10'] },
+    { ende: 'zaehlung', wege: { E1: ['E1_11', 'E1_12'], E2: ['E2_11', 'E2_12'], E3: ['E3_11', 'E3_12'] }, zaehlung: { gut: { 'londoneye.g1': 'B', 'towerbridge.g1': 'A', 'tube.g1': 'A' }, enden: ['E3', 'E2', 'E2', 'E1'] } },
+  ], stationen: [1, 2], film: { E1: [['9', '10'], ['E1_11'], ['E1_12'], null], E2: [['9', '10'], ['E2_11'], ['E2_12'], null], E3: [['9', '10'], ['E3_11'], ['E3_12'], null] } };
+  const MUSTER_WEMBLEY_STORY = [
+    (h) => { h.vorplatz(-100, 12800); h.dia(350); h.kristall(500, 290, '1'); h.kiste(650); h.vor(900); },                    // 1 Wembley Way (Vorplatz mit Fans) · ♪1 (Variante 1A/1B) · erste Ballkiste
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(1000); },                             // 2 Stand-Dach (Stufe, 💎 oben) + Taube
+    (h) => { h.pfuetze(300); h.geg('fuchs', 500, 900); h.vor(950); },                                                      // 3 Pfütze (verschüttete Limo) + Fuchs
+    (h) => { h.kiste(200); h.kiste(240, 2); h.dia(260, 215); h.kristall(600, 290, '2'); h.vor(900); },                     // 4 Ballkisten-Stapel · ♪2 (Variante 2A/2B)
+    (h) => { h.geist(260, false, 170); h.dia(520, 250); h.geg('taube', 700, 950); h.vor(1000); },                          // 5 der Geist schwebt über den Fans („He never pays“) + Taube
+    (h) => { h.ball(750); h.dia(400, 250); h.vor(1000); },                                                                 // 6 erster BALL (Kinder kicken auf dem Vorplatz: rollt der Figur entgegen – drüber oder köpfen)
+    (h) => { h.geg('eichhoernchen', 300, 700); h.kristall(850, 290, '3'); h.vor(1100); },                                  // 7 Eichhörnchen · ♪3 „Ninety thousand people. I can hear them. I can smell the chips.“
+    (h) => { h.luecke(250, 170); h.dia(335, 250); h.plat(600, 230, 160); h.vor(1000); },                                     // 8 Baugrube (💎 darüber) + Stand-Dach
+    (h) => { h.anzeige(380); h.geg('fuchs', 150, 500); h.kiste(650); h.kristall(670, 262, '4'); h.kiste(690, 2); h.dia(710, 190); h.vor(900); }, // 9 Anzeigetafel KICK-OFF IN 10 MINUTES · Fuchs + Kistenstufe · ♪4 „NO REFEREE!“
+    (h) => { h.ball(600); h.dia(300, 250); h.vor(1000); },                                                                 // 10 zweiter Ball
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },                                 // 11 zwei Stand-Dächer (💎 oben)
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                                         // 12 TOR 1
+    (h) => { h.cp(150); h.geg('taube', 700, 950); h.vor(1000); },                                                          // 13 CHECKPOINT 1 · Station 1
+    (h) => { h.spielertunnel(300, 6900); h.tribuenen(300, 6900); h.kristall(200, 290, 'B5'); h.tribuene(300, 250, 940); h.kristall(370, 214, 'A5'); h.geg('fuchs', 600, 1000); h.vor(1300); }, // 14 GABELUNG: ♪B5 unten im Spielertunnel (🌱 the tunnel), ♪A5 oben auf der Tribüne (🪜 the stands); Tribüne 1
+    (h) => { h.tribuene(0, 250, 1140); h.kristall(620, 214, 'A6'); h.kristall(560, 290, 'B6'); h.geg('fuchs', 650, 950); h.geist(1040, true); h.vor(1200); }, // 15 Tribüne 2 · ♪A6 („Does anybody know the referee?“) / ♪B6 unten (der Geist auf der Bank fragt); Fuchs
+    (h) => { h.tribuene(0, 250, 940); h.dia(700, 210); h.kiste(200); h.geg('taube', 450, 850, { y: 290 }); h.vor(1000); }, // 16 Tribüne 3 (💎) · unten Ballkiste + Taube (fliegt tief)
+    (h) => { h.tribuene(0, 250, 1040); h.kristall(630, 214, 'A7'); h.kristall(550, 290, 'B7'); h.geg('fuchs', 700, 950); h.vor(1100); }, // 17 Tribüne 4 · ♪A7 (stuck in the toilet) / ♪B7 unten (whistle is gone); Fuchs
+    (h) => { h.tribuene(0, 250, 990); h.geist(300, false, 150); h.dia(480, 298); h.vor(1050); },                            // 18 Tribüne 5 · der Geist schwebt über den Sitzreihen · unten 💎
+    (h) => { h.tribuene(0, 250, 1340); h.dia(400, 210); h.geg('taube', 500, 900, { y: 290 }); h.geg('fuchs', 1000, 1300); h.vor(1400); }, // 19 Tribüne 6 (💎) · unten Taube (tief) + Fuchs
+    (h) => { h.tribuene(0, 250, 1090); h.kristall(250, 214, 'A8'); h.toilette(420); h.kiste(450); h.federn(700); h.kristall(760, 290, 'B8'); h.geg('fuchs', 500, 850); h.vor(1150); }, // 20 Tribüne 7 · ♪A8 oben, dahinter der Toilettenblock (die Tür fliegt auf) / ♪B8 unten bei den schwarzen Federn
+    (h) => { h.rasen(-100, 12000); h.dia(100, 298); h.pfuetze(200); h.geg('taube', 450, 800); h.vor(1000); },              // 21 der RASEN beginnt (von Weg A springt man herunter, 💎) + Pfütze + Taube
+    (h) => { h.ball(650); h.dia(300, 250); h.vor(1050); },                                                                 // 22 Ball auf dem Rasen
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                                        // 23 TOR 2
+    (h) => { h.cp(150); h.kristall(350, 290, '9'); h.kiste(500); h.kiste(540, 2); h.vor(850); },                           // 24 CHECKPOINT 2 · Station 2 · ♪9 „Kick-off!“
+    (h) => { h.pfuetze(500); h.geg('taube', 1000, 1400); h.ball(1300); h.vor(1500); },                                     // 25 Pfütze + Taube + Ball
+    (h) => { h.ball(350); h.kristall(650, 290, '10'); h.geg('eichhoernchen', 800, 1100); h.vor(1200); },                   // 26 Ball · ♪10 „Does he ever move?“ + Eichhörnchen
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.dia(250, 180); h.vor(750); }, // 27 Ballkisten-Pyramide (💎 oben)
+    (h) => { h.pfuetze(150); h.plat(500, 230, 160); h.dia(580, 190); h.ball(1200); h.geist(1380, false, 170); h.vor(1500); }, // 28 Pfütze + Stand-Dach (💎) + Ball · der Geist schwebt am Spielfeldrand
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.dia(440, 140); h.geg('taube', 850, 1250); h.vor(1300); }, // 29 Dächer-Treppe (💎 oben) + Taube
+    (h) => { h.ball(400); h.dia(250, 250); h.geg('fuchs', 500, 800); h.kiste(1350); h.vor(1500); },                        // 30 Schluss: Ball (💎 darüber) + Fuchs + Ballkiste
+  ];
   // New York „The Lost Map – Under the City“ (Klasse 9, docs/runner/story-usa-01.md): Anfang 1–5 · Station 1 · Gabelung 1 (A6–A10 unten = U-Bahn / B6–B10 oben = Feuertreppe/Dach) · Station 2 ·
   // gemeinsam 11–14 · Gabelung 2 (X15–X16 „give the map“ unten / Y15–Y16 „keep the map“ oben auf dem Bus; ohne Wahl: Y = Karte behalten) · Boss · Ende X17–X20 bzw. Y17–Y20 = 20 ♪; Realm R1–R3 extra.
   const STRUKTUR_NY = { anzahl: 20, abschnitte: [
@@ -1424,7 +1482,7 @@
   const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
   // endeN = Zahl der Ende-Kristalle hinter dem Boss (Story: aus der Struktur, London 2, New York 4); sie liegen gleichmäßig zwischen stopX + 95 und tuerX − 25
   function levelBauen(muster, endeN = 2) {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], klappen:[], boote:[], treibgut:[], zapfen:[], spalten:[], tueren:[] };
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], klappen:[], boote:[], treibgut:[], zapfen:[], spalten:[], tueren:[], baelle:[] };
     let x = 0, bodenAb = 0, wort = 0;
     const h = {
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
@@ -1477,7 +1535,7 @@
       treibgut: (dx) => L.treibgut.push({ x:x + dx }),
       mauer: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'mauer' }),
       tower: (dx, w) => L.deko.push({ art:'tower', x:x + dx, w }),
-      geist: (dx, sitzt) => L.deko.push({ art:'geist', x:x + dx, sitzt: !!sitzt }),   // The Tube: sitzt = auf einer Bank (Weg A)
+      geist: (dx, sitzt, y) => L.deko.push({ art:'geist', x:x + dx, sitzt: !!sitzt, y: y == null ? null : y }),   // The Tube: sitzt = auf einer Bank (Weg A); Wembley: y = schwebt in dieser Höhe (sonst zeigt er auf den Baum)
       steg: (dx) => L.deko.push({ art:'steg', x:x + dx }),
       // The Tube (Klasse 6, Welt 4): Spalt = Lücke 100 breit zwischen Bahnsteigkante und Zugtür (Durchsage + Schild davor), Zugtür (schließt sich, y = Boden der Tür: Bahnsteig oder Wagen),
       // Wagen = Plattform (Zugboden auf 250, Weg B), Rolltreppe = Plattform (Stufe), Koffer = Block, Kulissen Bahnsteig / Zug (y = Boden des Zugs) / dunkler Bahnsteig (dunkel wie der Maschinenraum)
@@ -1489,6 +1547,17 @@
       bahnsteig: (dx, w) => L.deko.push({ art:'bahnsteig', x:x + dx, w }),
       zug: (dx, w, y = BODEN_Y) => L.deko.push({ art:'zug', x:x + dx, w, y }),
       dunkelbahnsteig: (dx, w) => L.deko.push({ art:'dunkelbahnsteig', x:x + dx, w }),
+      // Wembley (Klasse 6, Welt 5): rollender Ball (Startpunkt, rollt der Figur entgegen), Tribüne = Plattform (Sitzreihen als Stufen, Weg A), Kulissen Vorplatz (Fans, Fahnen, Stände) / Tribünen hinter der Gabelung /
+      // Spielertunnel (dunkel wie der Bahnsteig, Weg B) / Rasen (Tribünen mit Fans, Maskottchen), Anzeigetafel „KICK-OFF IN 10 MINUTES“, Toilettenblock mit verschlossener Tür (Weg A), schwarze Federn (Weg B)
+      ball: (dx) => L.baelle.push({ x:x + dx }),
+      tribuene: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'tribuene' }),
+      vorplatz: (dx, w) => L.deko.push({ art:'vorplatz', x:x + dx, w }),
+      tribuenen: (dx, w) => L.deko.push({ art:'tribuenen', x:x + dx, w }),
+      spielertunnel: (dx, w) => L.deko.push({ art:'spielertunnel', x:x + dx, w }),
+      rasen: (dx, w) => L.deko.push({ art:'rasen', x:x + dx, w }),
+      anzeige: (dx) => L.deko.push({ art:'anzeige', x:x + dx }),
+      toilette: (dx) => L.deko.push({ art:'toilette', x:x + dx }),
+      federn: (dx) => L.deko.push({ art:'federn', x:x + dx }),
       realmTor: (dx, y) => L.realmTore.push({ x:x + dx, y }),
       // The Realm Beyond: Sammelstück (Frost Shard ❄), Eisfleck (rutscht wie Öl)
       gegenstand: (dx, y) => L.gegenstaende.push({ x:x + dx, y }),
@@ -1536,6 +1605,9 @@
   let klappen = [], boote = [], treibgut = [], hornt = 0, imBoot = null, ruderZeit = -9;
   // Welt The Tube (Klasse 6, Welt 4): Spalte (gewarnt = Durchsage lief), Zugtüren (Phasen offen → warnung → schliesst → zu → oeffnet → weg; schluss 0..1), Zähler Durchsagen/Piepser (Tests), Rabe im Zug (Weg B, ab ♪B6)
   let spalten = [], tueren = [], durchsagen = 0, piept = 0, rabeMit = null;
+  // Welt Wembley (Klasse 6, Welt 5): rollende Bälle (Phasen ruhe → rollt → platt → weg; rx = aktuelle Mitte), Zähler Kopfbälle/Treffer (Tests), Zeitpunkt des Türtritts (♪A8, Toilettenblock; −1 = noch nicht)
+  let baelle = [], koepfer = 0, ballTreffer = 0, tuerTritt = -1;
+  const BALL_R = 16, BALL_VORLAUF = 520, BALL_TEMPO = 240, BALL_PLATT = 0.6;
   const SPALT_W = 100, SPALT_VORLAUF = 380, TUER_VORLAUF = 300, TUER_WARN = 0.6, TUER_SCHLIESST = 0.5, TUER_ZU = 1.8, TUER_OEFFNET = 0.5, TUER_W = 28, TUER_H = 60;
   const KLAPPE_W = 150, KLAPPE_MAX = Math.PI * 50 / 180, KLAPPE_VORLAUF = 520, KLAPPE_WARN = 0.6, KLAPPE_HEBT = 1.6, KLAPPE_OBEN = 1.5, KLAPPE_SENKT = 1.6, TREIBGUT_W = 44, TREIBGUT_H = 24;   // Boss-Kabine: 190 über dem Boden (Mitte des Rads liegt 80 unter dem Boden, Radius 270)
   // Story-Modus (Option story: Klasse 6 Westminster, Klasse 9 New York; sonst story = null): Kristalle ♪, Erzähl-Warteschlange (nie zwei Stücke gleichzeitig), Stationen, Film am Ende
@@ -1591,6 +1663,7 @@
     trommelt = 0; dunkel = 0; radWinkel = 0; radRueck = 0; kameraHoch = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 60, y: BODEN_Y, flug: 0 } : null;
     klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
     spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null;   // The Tube
+    baelle = (level.baelle || []).map((b) => ({ ...b, phase: 'ruhe', rx: b.x, rot: 0, t: 0 })); koepfer = 0; ballTreffer = 0; tuerTritt = -1;   // Wembley
     cameo = null; cameosGezeigt = 0; cameoEffekt = null; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoPlan = cameoPlanBauen();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
@@ -1738,7 +1811,14 @@
   const gabelVon = (id) => gabeln.find((g) => g.gabel === id) || null;
   const gabelStandard = (id) => { const g = gabelVon(id); return g ? (g.standard || Object.keys(g.wege)[0]) : null; };
   const endeAnzahl = () => (endeAbschnitt ? Math.max(...Object.values(endeAbschnitt.wege).map((l) => l.length)) : 0);
-  const endeWahl = () => (endeAbschnitt ? story.wahl[endeAbschnitt.ende] || null : null);
+  // Ende nach Zählung (Wembley, Kapitel 5): endeAbschnitt.zaehlung = { gut: { quelle: Wert }, enden: [bei 0 guten, 1, 2, 3 …] }; die App übergibt story.gute (Zahl) oder die Varianten (fehlende zählen nicht)
+  const zaehlungEnde = () => {
+    const z = endeAbschnitt && endeAbschnitt.zaehlung; if (!z) return null;
+    const v = (storyOpt && storyOpt.varianten) || {};
+    const n = storyOpt && typeof storyOpt.gute === 'number' ? storyOpt.gute : Object.keys(z.gut).filter((q) => v[q] === z.gut[q]).length;
+    return z.enden[Math.max(0, Math.min(z.enden.length - 1, n))];
+  };
+  const endeWahl = () => (endeAbschnitt ? story.wahl[endeAbschnitt.ende] || zaehlungEnde() || null : null);
   const kristallKey = (k) => (k.ende != null ? ((endeAbschnitt && endeAbschnitt.wege[endeWahl() || gabelStandard(endeAbschnitt.ende)]) || [])[k.ende] || '' : varKeys[k.key] || k.key);
   const storyText = (key) => (storyOpt && storyOpt.teile && storyOpt.teile[key]) || '';
   const storyAudio = (key) => (storyOpt && storyOpt.audio && storyOpt.audio[key]) || null;
@@ -2099,7 +2179,7 @@
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
   }
-  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵', zapfen: 'Icicle! 🧊', tuer: 'Mind the doors! 🚪' };
+  const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵', zapfen: 'Icicle! 🧊', tuer: 'Mind the doors! 🚪', ball: 'Ball! ⚽' };
   function wiederbeleben() {
     spieler.x = checkpoint; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.6;
     halten = false;
@@ -2114,6 +2194,7 @@
     for (const k of klappen) if (k.x > checkpoint) { k.phase = 'ruhe'; k.t = 0; k.winkel = 0; }   // Tower Bridge: Klappen vor der Figur wieder unten
     for (const t of tueren) if (t.x > checkpoint) { t.phase = 'offen'; t.t = 0; t.schluss = 0; }   // The Tube: Zugtüren vor der Figur wieder offen, Durchsagen kommen noch einmal
     for (const s of spalten) if (s.x > checkpoint) s.gewarnt = false;
+    for (const b of baelle) if (b.x > checkpoint) { b.phase = 'ruhe'; b.rx = b.x; b.t = 0; }   // Wembley: Bälle vor der Figur liegen wieder
   }
   // Welt 3: Steine fallen, sobald die Figur ≈ 300 davor ist (Staub + Schatten 0,6 s, dann Sturz; liegen 1,4 s gefährlich, dann zerbröseln); Brücken-Bruchstücke fallen nach
   function hindernisseBewegen(dt) {
@@ -2153,6 +2234,7 @@
     if (W.id === 'sd' && story) dunkel = spieler.y > BODEN_Y - 70 ? dunkelBei(spieler.x) : Math.max(0, dunkel - dt * 6);   // Story Kapitel 4: der alte Tunnel ist dunkel wie der Maschinenraum (nur unten)
     if (W.id === 'towerbridge') towerBridgeBewegen(dt);
     if (W.id === 'tube') tubeBewegen(dt);
+    if (W.id === 'wembley') wembleyBewegen(dt);
   }
   // The Tube: Spalt – Figur ≈ 380 davor → Gong + Durchsage-Schild blinkt + Meldung „Mind the gap!“ (einmal je Anlauf; nach dem Checkpoint wieder). Zugtür – Figur ≈ 300 davor → Warnton + blinkende Kanten (0,6 s),
   // dann schließt sie sich 0,5 s, bleibt 1,8 s zu (Berührung = Leben weg, drüberspringen oder vorher durch), öffnet 0,5 s; ruhig, bis die Figur wieder weit davor ist. Dunkel am Boden des dunklen Bahnsteigs (Weg A).
@@ -2172,12 +2254,32 @@
     }
     dunkel = spieler.y > BODEN_Y - 70 ? dunkelBei(spieler.x) : Math.max(0, dunkel - dt * 6);
     if (!rabeMit && story && story.wahl.g1 === 'B' && story.gesammelt.includes('B6')) rabeMit = { x: spieler.x - 44, y: spieler.y, flug: 0, fliegt: 0 };
-    if (rabeMit) {
-      rabeMit.flug += dt;
-      const zx = spieler.x - 44, zy = spieler.y;
-      rabeMit.fliegt = !spieler.amBoden || Math.abs(zy - rabeMit.y) > 12 ? 1 : Math.max(0, rabeMit.fliegt - dt * 3);
-      rabeMit.x += (zx - rabeMit.x) * Math.min(1, dt * 7); rabeMit.y += (zy - rabeMit.y) * Math.min(1, dt * (rabeMit.fliegt ? 6 : 12));
+    if (rabeMit) rabeFolgen(dt);
+  }
+  // Wembley: Ball – liegt, bis die Figur ≈ 520 davor ist, dann rollt er ihr entgegen (240/s, dreht sich); rollt er 250 hinter die Figur (oder 1.400 weit), ist er weg; ruhig, bis die Figur wieder weit davor ist.
+  // Kopfball (gegnerPlatt-Logik in update): der Ball wird platt (0,6 s, Sternchen), Treffer am Boden = ein Leben. Dunkel am Boden des Spielertunnels (Weg B). Der Rabe (Variante B: tube.g1 = B) sitzt von Anfang an neben der Figur.
+  function wembleyBewegen(dt) {
+    for (const b of baelle) {
+      if (b.phase === 'ruhe') { if (zustand === 'spiel' && tot <= 0 && spieler.x > b.x - BALL_VORLAUF && spieler.x < b.x) { b.phase = 'rollt'; b.rx = b.x; if (!ruhig()) klang.ball(); } }
+      else if (b.phase === 'rollt') { b.rx -= BALL_TEMPO * dt; b.rot -= BALL_TEMPO * dt / BALL_R; if (b.rx < spieler.x - 250 || b.rx < b.x - 1400) b.phase = 'weg'; }
+      else if (b.phase === 'platt') { b.t += dt; if (b.t >= BALL_PLATT) b.phase = 'weg'; }
+      else if (b.phase === 'weg') { if (spieler.x < b.x - BALL_VORLAUF - 50) { b.phase = 'ruhe'; b.rx = b.x; b.t = 0; } }
     }
+    dunkel = spieler.y > BODEN_Y - 70 ? dunkelBei(spieler.x) : Math.max(0, dunkel - dt * 6);
+    if (!rabeMit && variantenWahl['tube.g1'] === 'B') rabeMit = { x: spieler.x - 44, y: spieler.y, flug: 0, fliegt: 0 };
+    if (rabeMit) rabeFolgen(dt);
+    if (tuerTritt < 0 && story && story.gesammelt.includes('A8')) { tuerTritt = zeit; if (!ruhig()) klang.tritt(); meldung = { text: 'Boom! 🚪', zeit: 1.2 }; }   // ♪A8: der Sergeant tritt die Toilettentür ein
+  }
+  function rabeFolgen(dt) {   // der Rabe hüpft hinter der Figur her (44 dahinter), flattert, wenn sie springt (The Tube Weg B, Wembley Variante B)
+    rabeMit.flug += dt;
+    const zx = spieler.x - 44, zy = spieler.y;
+    rabeMit.fliegt = !spieler.amBoden || Math.abs(zy - rabeMit.y) > 12 ? 1 : Math.max(0, rabeMit.fliegt - dt * 3);
+    rabeMit.x += (zx - rabeMit.x) * Math.min(1, dt * 7); rabeMit.y += (zy - rabeMit.y) * Math.min(1, dt * (rabeMit.fliegt ? 6 : 12));
+  }
+  const ballBox = (b) => ({ x: b.rx - BALL_R, y: BODEN_Y - BALL_R * 2, w: BALL_R * 2, h: BALL_R * 2 });
+  function ballKoepfen(b) {   // Kopfball: der Ball wird platt, die Figur prallt leicht ab (wie beim Plattdrücken), Sternchen + Klang
+    b.phase = 'platt'; b.t = 0; koepfer++; spieler.vy = -320; spieler.amBoden = false; if (!ruhig()) klang.koepfer();
+    funken(b.rx, BODEN_Y - BALL_R, 12, ['#fff6c0', '#ffd93d', '#ffffff'], 170, 0.5, 'stern'); meldung = { text: 'Header! ⚽', zeit: 0.9 };
   }
   const tuerZu = (t) => t.phase === 'zu' || (t.phase === 'schliesst' && t.schluss >= 0.55) || (t.phase === 'oeffnet' && t.schluss >= 0.55);   // Tür sperrt (Trefferbox aktiv)
   const tuerBox = (t) => ({ x: t.x - TUER_W / 2, y: t.y - TUER_H, w: TUER_W, h: TUER_H });
@@ -2223,7 +2325,7 @@
   }
   function dunkelBei(x) {
     let d = 0;
-    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel' && m.art !== 'dunkelbahnsteig') continue; const a = m.x - DUNKEL_RAND, b = m.x + m.w + DUNKEL_RAND; if (x <= a || x >= b) continue; d = Math.max(d, Math.min(1, (x - a) / DUNKEL_RAND, (b - x) / DUNKEL_RAND)); }
+    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel' && m.art !== 'dunkelbahnsteig' && m.art !== 'spielertunnel') continue; const a = m.x - DUNKEL_RAND, b = m.x + m.w + DUNKEL_RAND; if (x <= a || x >= b) continue; d = Math.max(d, Math.min(1, (x - a) / DUNKEL_RAND, (b - x) / DUNKEL_RAND)); }
     return d;
   }
   // Nebeldichte an einer Stelle: 1 im Abschnitt, weiche Ränder 160 davor/dahinter
@@ -2456,6 +2558,11 @@
       for (const s of staemme) {
         if (s.phase !== 'rollt') continue;
         if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, s.rx - STAMM_R + 3, BODEN_Y - STAMM_R * 2 + 4, STAMM_R * 2 - 6, STAMM_R * 2 - 4)) { schaden('stamm'); break; }
+      }
+      for (const b of baelle) {   // Wembley: rollender Ball – im Sprung von oben = Kopfball (platt), sonst Berührung = Leben weg (drüberspringen!)
+        if (b.phase !== 'rollt') continue;
+        const bb = ballBox(b);
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, bb.x + 3, bb.y + 3, bb.w - 6, bb.h - 3)) { if (spieler.vy > 0 && altY <= bb.y + 16) ballKoepfen(b); else { ballTreffer++; schaden('ball'); } break; }
       }
       for (const h of hoehlen) {
         if (h.phase !== 'pranke') continue;
@@ -3998,8 +4105,9 @@
     c.save(); c.translate(gx, y); c.globalAlpha = o.alpha == null ? 1 : o.alpha;
     if (o.neigung) c.rotate(o.neigung);   // London Eye: wird aus den Stiefeln gezogen (kippt)
     if (lachen > 0) c.translate(0, -Math.abs(Math.sin(zeit * 16)) * 2 * lachen);   // lacht: hüpft leicht
+    const tritt = o.tritt || 0;   // Wembley: tritt (0..1) – das vordere Bein schwingt nach vorn (Tür eintreten, Torschuss)
     for (const [bx, w] of [[-7, marsch], [7, -marsch]]) {   // Beine (navy mit rotem Streifen), Stiefel
-      c.save(); c.translate(bx, -52); c.rotate(w * 0.3);
+      c.save(); c.translate(bx, -52); c.rotate(w * 0.3 - (bx > 0 ? tritt * 1.1 : -tritt * 0.15));
       c.fillStyle = '#16213d'; c.fillRect(-5, 0, 10, 50); c.fillStyle = UK_ROT; c.fillRect(-1, 0, 2, 48);
       if (o.socken) { c.fillStyle = '#f4f4f4'; c.beginPath(); c.roundRect(-5, 42, 11, 8, 3); c.fill(); c.fillStyle = UK_ROT; c.fillRect(-5, 44, 11, 2); }   // in Socken (die Stiefel kleben am Boden)
       else { c.fillStyle = '#0d0d0d'; c.beginPath(); c.roundRect(-6, 44, 13, 8, 3); c.fill(); }
@@ -4011,10 +4119,14 @@
     c.fillStyle = '#e0a400'; c.fillRect(-4, -75, 8, 8);
     for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(0, -102 + k * 8, 1.8, 0, Math.PI * 2); c.fill(); }
     c.beginPath(); c.arc(0, -62, 1.8, 0, Math.PI * 2); c.fill();
-    c.fillStyle = UK_ROT; c.fillRect(-27, -110, 9, 50); c.fillRect(18, -110, 9, 50);   // Arme stocksteif
-    c.fillStyle = '#16213d'; c.fillRect(-27, -66, 9, 5); c.fillRect(18, -66, 9, 5);
+    const hoch = o.armeHoch || 0;   // Wembley (Film E1): Arme hoch – Jubel (0..1)
+    for (const seite of [-1, 1]) {   // Arme stocksteif (oder hoch gerissen), Manschette, Schulterstück, weißer Handschuh
+      c.save(); c.translate(seite * 22.5, -108); c.rotate(seite * hoch * 2.6);
+      c.fillStyle = UK_ROT; c.fillRect(-4.5, -2, 9, 50); c.fillStyle = '#16213d'; c.fillRect(-4.5, 42, 9, 5);
+      c.fillStyle = '#f4f4f4'; c.beginPath(); c.arc(0, 51, 5, 0, Math.PI * 2); c.fill();
+      c.restore();
+    }
     c.fillStyle = '#e0a400'; c.fillRect(-28, -112, 11, 4); c.fillRect(17, -112, 11, 4);   // Schulterstücke
-    c.fillStyle = '#f4f4f4'; c.beginPath(); c.arc(-22.5, -57, 5, 0, Math.PI * 2); c.arc(22.5, -57, 5, 0, Math.PI * 2); c.fill();   // weiße Handschuhe
     c.fillStyle = '#f1c9a5'; c.beginPath(); c.arc(0, -124, 11, 0, Math.PI * 2); c.fill();   // Kopf
     if (lachen > 0.5) {   // lacht: Augen zu (Bögen)
       c.strokeStyle = '#18213a'; c.lineWidth = 1.6; for (const ax of [-4.6, 4.6]) { c.beginPath(); c.arc(ax, -123, 3, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
@@ -4243,7 +4355,7 @@
   function dunkelZeichnen(c, d) {   // Maschinenraum: alles dunkel, nur warme Lichtkegel unter den Lampen und ein Schein um die Figur
     c.fillStyle = `rgba(6,8,22,${DUNKEL_MAX * d})`; c.fillRect(0, 0, viewW, H);
     c.save(); c.globalAlpha = d;
-    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel' && m.art !== 'dunkelbahnsteig') continue; for (let lx = m.x + 140; lx < m.x + m.w; lx += 420) { const sx = lx - kamera; if (sx < -160 || sx > viewW + 160) continue; const gl = c.createRadialGradient(sx, 180, 10, sx, 240, 170); gl.addColorStop(0, 'rgba(255,215,130,.42)'); gl.addColorStop(1, 'rgba(255,215,130,0)'); c.fillStyle = gl; c.beginPath(); c.arc(sx, 240, 170, 0, Math.PI * 2); c.fill(); } }
+    for (const m of level.deko) { if (m.art !== 'maschinenraum' && m.art !== 'tunnel' && m.art !== 'dunkelbahnsteig' && m.art !== 'spielertunnel') continue; for (let lx = m.x + 140; lx < m.x + m.w; lx += 420) { const sx = lx - kamera; if (sx < -160 || sx > viewW + 160) continue; const gl = c.createRadialGradient(sx, 180, 10, sx, 240, 170); gl.addColorStop(0, 'rgba(255,215,130,.42)'); gl.addColorStop(1, 'rgba(255,215,130,0)'); c.fillStyle = gl; c.beginPath(); c.arc(sx, 240, 170, 0, Math.PI * 2); c.fill(); } }
     const fx = spieler.x - kamera, fy = spieler.y - 44, gl = c.createRadialGradient(fx, fy, 10, fx, fy, 110); gl.addColorStop(0, 'rgba(255,235,190,.3)'); gl.addColorStop(1, 'rgba(255,235,190,0)');
     c.fillStyle = gl; c.beginPath(); c.arc(fx, fy, 110, 0, Math.PI * 2); c.fill();
     c.restore();
@@ -5007,6 +5119,329 @@
     c.restore();
     filmUntertitel(c, f);
   }
+  /* ---------- Welt Wembley (Klasse 6, Welt 5, 1.11.): Stadion außen (Wembley Way mit Fans, Fahnen, Würstchen-/Chips-Ständen, Anzeigetafel), Weg A oben über die Tribünen (Sitzreihen als Stufen, Toilettenblock –
+     der Sergeant tritt die Tür ein), Weg B unten durch den dunklen Spielertunnel (Rasengeruch-Schild, Bank mit dem Geist, schwarze Federn), danach der Rasen (Tribünen mit Fans, Maskottchen) mit rollenden Bällen;
+     Boss Sergeant Bearskin am Spielfeldtor (Variante B: der Rabe auf der Mütze), Tür = Spielfeldtor; Film mit drei Enden (E1 der Sergeant schießt · E2 der Geist erschreckt den Torwart · E3 Bounce vom Hut) ---------- */
+  const WEM_BETON = '#c9c4ba', WEM_RASEN = '#3f9a44', WEM_RASEN2 = '#48a84d', WEM_SITZ = '#d0312d', WEM_SITZ2 = '#f1f1f1', WEM_DUNKEL = '#1c1f27';
+  const FAN_FARBEN = ['#d0312d', '#f4f4f4', '#1d3f8f', '#e0a400', '#2e9e5b', '#8a2a3a'];
+  const wembleyRabe = () => variantenWahl['tube.g1'] === 'B';   // Variante B (Welt 4 weitergefahren): der Rabe sitzt auf der Mütze des Sergeant und fährt mit
+  function fanFigur(c, x, y, k, s, hoch) {   // kleiner Fan (Kulisse): Körper in Vereinsfarbe, Kopf, Schal, Arme hoch beim Jubeln (hoch 0..1); (x, y) = Fußpunkt
+    const farbe = FAN_FARBEN[k % FAN_FARBEN.length], haut = ['#f1c9a5', '#8d5a3b', '#d9a070', '#f7d7c0'][k % 4];
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#2b2f3a'; c.fillRect(-6, -22, 5, 22); c.fillRect(1, -22, 5, 22);
+    c.fillStyle = farbe; c.beginPath(); c.roundRect(-9, -48, 18, 28, 4); c.fill();
+    c.strokeStyle = farbe; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath();
+    if (hoch > 0) { c.moveTo(-9, -44); c.lineTo(-16, -44 - 22 * hoch); c.moveTo(9, -44); c.lineTo(16, -44 - 22 * hoch); } else { c.moveTo(-9, -44); c.lineTo(-13, -26); c.moveTo(9, -44); c.lineTo(13, -26); }
+    c.stroke();
+    c.fillStyle = haut; c.beginPath(); c.arc(0, -56, 8, 0, Math.PI * 2); c.fill();
+    c.fillStyle = ['#2a1a0a', '#e8c070', '#5a3a22', '#1a1a1a'][k % 4]; c.beginPath(); c.arc(0, -59, 8, Math.PI, 0); c.fill();
+    c.fillStyle = k % 2 ? WEM_SITZ2 : WEM_SITZ; c.fillRect(-9, -50, 18, 4);   // Schal
+    c.restore();
+  }
+  function fanFahne(c, x, y, k, t) {   // Fahne an einer Stange (Kulisse), weht
+    const farbe = FAN_FARBEN[k % FAN_FARBEN.length], w = ruhig() ? 0 : Math.sin(t * 3 + k) * 4;
+    c.fillStyle = '#5f5a52'; c.fillRect(x - 1.5, y - 70, 3, 70);
+    c.fillStyle = farbe; c.beginPath(); c.moveTo(x, y - 70); c.quadraticCurveTo(x + 18, y - 72 + w, x + 34, y - 64 + w); c.lineTo(x + 30, y - 48 + w); c.quadraticCurveTo(x + 14, y - 46, x, y - 50); c.closePath(); c.fill();
+    if (k % 3 === 0) { c.fillStyle = 'rgba(255,255,255,.8)'; c.fillRect(x + 6, y - 64 + w / 2, 18, 4); c.fillRect(x + 13, y - 70 + w / 2, 4, 18); }
+  }
+  function imbissStand(c, x, y, k) {   // Imbissstand (Kulisse): Bude mit gestreifter Markise und Schild CHIPS / HOT DOGS / TEA; (x, y) = links unten
+    const text = ['CHIPS', 'HOT DOGS', 'TEA & CAKE'][k % 3], farbe = ['#d0312d', '#1d3f8f', '#2e9e5b'][k % 3];
+    c.fillStyle = '#efe6d2'; c.fillRect(x, y - 70, 110, 70); c.fillStyle = '#4a3a2a'; c.fillRect(x + 8, y - 44, 94, 4);
+    c.fillStyle = '#2b2f3a'; c.fillRect(x + 12, y - 40, 86, 24); c.fillStyle = 'rgba(255,220,140,.75)'; c.fillRect(x + 16, y - 36, 78, 16);
+    for (let i = 0; i < 8; i++) { c.fillStyle = i % 2 ? '#fff' : farbe; c.beginPath(); c.moveTo(x - 6 + i * 15.5, y - 78); c.lineTo(x - 6 + (i + 1) * 15.5, y - 78); c.lineTo(x - 6 + (i + 1) * 15.5, y - 66); c.lineTo(x - 6 + i * 15.5 + 7.75, y - 60); c.lineTo(x - 6 + i * 15.5, y - 66); c.closePath(); c.fill(); }
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(x + 20, y - 96, 70, 16, 3); c.fill(); c.fillStyle = '#ffd36b'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, x + 55, y - 88);
+    if (k % 3 === 0) { c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 2; for (let i = 0; i < 2; i++) { const d = ruhig() ? 0.5 : (zeit * 0.5 + i * 0.5) % 1; c.beginPath(); c.moveTo(x + 50 + i * 14, y - 100 - d * 20); c.quadraticCurveTo(x + 56 + i * 14, y - 108 - d * 20, x + 50 + i * 14, y - 116 - d * 20); c.stroke(); } }   // Dampf
+  }
+  function maskottchen(c, x, y, t) {   // Maskottchen (Kulisse am Spielfeldrand): großer gelber Löwe mit riesigem Kopf, winkt
+    const w = ruhig() ? 0 : Math.sin(t * 4) * 0.5;
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#e0a400'; c.fillRect(-10, -40, 8, 40); c.fillRect(2, -40, 8, 40);
+    c.fillStyle = '#d0312d'; c.beginPath(); c.roundRect(-18, -84, 36, 46, 8); c.fill(); c.fillStyle = '#fff'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('10', 0, -62);
+    c.strokeStyle = '#e0a400'; c.lineWidth = 8; c.lineCap = 'round'; c.beginPath(); c.moveTo(-18, -78); c.lineTo(-30, -60); c.moveTo(18, -78); c.lineTo(18 + Math.cos(-1.3 + w) * 28, -78 + Math.sin(-1.3 + w) * 28); c.stroke();
+    c.fillStyle = '#b8761a'; for (let k = 0; k < 10; k++) { const a = k * Math.PI / 5; c.beginPath(); c.arc(Math.cos(a) * 30, -110 + Math.sin(a) * 30, 9, 0, Math.PI * 2); c.fill(); }   // Mähne
+    c.fillStyle = '#e0a400'; c.beginPath(); c.arc(0, -110, 26, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#fff'; c.beginPath(); c.ellipse(-9, -114, 6, 7, 0, 0, Math.PI * 2); c.ellipse(9, -114, 6, 7, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.beginPath(); c.arc(-8, -113, 2.6, 0, Math.PI * 2); c.arc(10, -113, 2.6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#5a3a22'; c.beginPath(); c.ellipse(0, -102, 5, 3.5, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#5a3a22'; c.lineWidth = 2; c.beginPath(); c.arc(0, -98, 9, 0.2, Math.PI - 0.2); c.stroke();
+    c.restore();
+  }
+  function hintergrundWembley(c) {   // Himmel über dem Stadion (Nachmittag, Schönwetterwolken), das Stadion mit dem großen Bogen wächst heran, dahinter Fan-Gewimmel als Silhouetten
+    const naehe = Math.min(1, kamera / level.ende);
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#5d9fe0'); g.addColorStop(0.55, '#bfe0f7'); g.addColorStop(1, '#e8eef2');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    c.fillStyle = 'rgba(255,255,255,.9)';   // Wolken (Parallaxe 0,06)
+    for (let i = 0; i < 5; i++) { const n = viewW + 460, wx = ((i * 380 + 90 - kamera * 0.06) % n + n) % n - 230, wy = 42 + (i % 3) * 20; c.beginPath(); c.arc(wx, wy, 18, 0, Math.PI * 2); c.arc(wx + 24, wy - 9, 24, 0, Math.PI * 2); c.arc(wx + 50, wy, 17, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = 'rgba(255,240,190,.95)'; c.beginPath(); c.arc(viewW * 0.86, 54, 22, 0, Math.PI * 2); c.fill();
+    wembleyBogen(c, viewW * 0.58 - kamera * 0.04, 252, 720 + 260 * naehe, 150 + 60 * naehe, 1);   // das Stadion (Parallaxe 0,04, wächst)
+    c.fillStyle = '#b3bcc6'; for (let i = 0; i < 16; i++) { const n = viewW + 900, bx = ((i * 230 - kamera * 0.08) % n + n) % n - 450, bh = 18 + ((i * 37) % 26); c.fillRect(bx, 252 - bh, 50, bh); }   // ferne Häuser
+    c.fillStyle = '#9ea7b2'; c.fillRect(-viewW, 250, viewW * 3, 4);
+    c.fillStyle = WEM_BETON; c.fillRect(-viewW, 254, viewW * 3, H * 2);   // Wembley Way hinter der Strecke
+    c.fillStyle = 'rgba(0,0,0,.08)'; for (let i = -1; i < viewW / 60 + 2; i++) { const px = ((i * 60 - kamera * 0.6) % (viewW + 120) + viewW + 120) % (viewW + 120) - 60; c.fillRect(px, 254, 1.5, BODEN_Y - 254); }
+  }
+  function bodenWembley(c, x0, w, a, b, links, rechts) {   // Boden: Betonplatten (Wembley Way) mit rotem Band; im Rasen-Abschnitt (Kulisse 'rasen') grüner Rasen mit Streifen und weißen Linien
+    c.fillStyle = '#b5b0a6'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#d8d3c8'; c.fillRect(x0, BODEN_Y, w, 9); c.fillStyle = UK_ROT; c.fillRect(x0, BODEN_Y + 9, w, 3); c.fillStyle = '#7a756c'; c.fillRect(x0, BODEN_Y + 12, w, 2);
+    c.strokeStyle = 'rgba(0,0,0,.14)'; c.lineWidth = 1;
+    for (let x = Math.max(Math.ceil(a / 60) * 60, Math.floor(links / 60) * 60); x < Math.min(b, rechts); x += 60) { c.beginPath(); c.moveTo(x - kamera, BODEN_Y + 14); c.lineTo(x - kamera, H); c.stroke(); }
+    for (const r of level.deko) {   // Rasen
+      if (r.art !== 'rasen') continue; const ra = Math.max(a, r.x, links), rb = Math.min(b, r.x + r.w, rechts); if (rb <= ra) continue;
+      const rx = ra - kamera, rw = rb - ra;
+      c.fillStyle = WEM_RASEN; c.fillRect(rx, BODEN_Y, rw, H - BODEN_Y + 200);
+      c.fillStyle = WEM_RASEN2; for (let x = Math.floor(ra / 160) * 160; x < rb; x += 160) { const sa = Math.max(ra, x), sb = Math.min(rb, x + 80); if (sb > sa) c.fillRect(sa - kamera, BODEN_Y, sb - sa, H - BODEN_Y + 200); }   // gemähte Streifen
+      c.fillStyle = 'rgba(255,255,255,.85)'; c.fillRect(rx, BODEN_Y + 26, rw, 3);   // Seitenlinie
+      for (let x = Math.ceil(ra / 640) * 640; x < rb; x += 640) c.fillRect(x - kamera - 2, BODEN_Y + 2, 4, 60);   // Querlinien
+      c.fillStyle = '#5fb864'; c.fillRect(rx, BODEN_Y, rw, 5);
+    }
+  }
+  function wembleyGrube(c, a, b) {   // Lücke = Baugrube neben dem Stadion: Erdloch, rot-weiße Absperrung an beiden Rändern, Schild
+    const x0 = a - kamera, w = b - a;
+    c.fillStyle = '#4a3a2a'; c.fillRect(x0, BODEN_Y + 8, w, H); c.fillStyle = '#6b5340'; for (let k = 10; k < w - 10; k += 26) c.fillRect(x0 + k, BODEN_Y + 30 + (k % 3) * 9, 14, 8);
+    for (const px of [x0 - 6, x0 + w + 2]) { c.fillStyle = '#f4f4f4'; c.fillRect(px, BODEN_Y - 40, 5, 40); for (let k = 0; k < 4; k += 2) { c.fillStyle = UK_ROT; c.fillRect(px, BODEN_Y - 40 + k * 10, 5, 10); } }
+    c.strokeStyle = '#f4f4f4'; c.lineWidth = 3; c.beginPath(); c.moveTo(x0 - 4, BODEN_Y - 36); c.lineTo(x0 + w + 4, BODEN_Y - 36); c.stroke(); c.strokeStyle = UK_ROT; c.setLineDash([10, 10]); c.beginPath(); c.moveTo(x0 - 4, BODEN_Y - 36); c.lineTo(x0 + w + 4, BODEN_Y - 36); c.stroke(); c.setLineDash([]);
+    c.fillStyle = '#ffd36b'; c.beginPath(); c.moveTo(x0 + w / 2, BODEN_Y - 26); c.lineTo(x0 + w / 2 - 12, BODEN_Y - 6); c.lineTo(x0 + w / 2 + 12, BODEN_Y - 6); c.closePath(); c.fill(); c.fillStyle = '#18213a'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('!', x0 + w / 2, BODEN_Y - 13);
+  }
+  function fussball(c, x, y, r, rot, platt) {   // Fußball: weiß mit dunklen Flecken (Fünfecke angedeutet), dreht sich; platt = gestaucht (gerade geköpft)
+    c.save(); c.translate(x, y); if (platt > 0) { c.translate(0, r * platt * 0.7); c.scale(1 + platt * 0.5, 1 - platt * 0.7); } c.rotate(rot);
+    c.fillStyle = '#f7f7f4'; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#1b1b1f'; for (let k = 0; k < 5; k++) { const a = k * Math.PI * 2 / 5; c.beginPath(); c.arc(Math.cos(a) * r * 0.58, Math.sin(a) * r * 0.58, r * 0.26, 0, Math.PI * 2); c.fill(); } c.beginPath(); c.arc(0, 0, r * 0.22, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 1.5; c.beginPath(); c.arc(0, 0, r - 0.8, 0, Math.PI * 2); c.stroke();
+    c.fillStyle = 'rgba(255,255,255,.7)'; c.beginPath(); c.arc(-r * 0.35, -r * 0.4, r * 0.18, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function ballZeichnen(c, b) {   // rollender Ball (Hindernis): Schatten, Ball; liegt (ruhe), rollt (rx) oder ist platt
+    const x = (b.phase === 'ruhe' ? b.x : b.rx) - kamera, platt = b.phase === 'platt' ? Math.min(1, b.t / 0.12) * (1 - Math.max(0, (b.t - 0.3) / BALL_PLATT)) : 0;
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(x, BODEN_Y - 2, BALL_R * 1.1, 4, 0, 0, Math.PI * 2); c.fill();
+    fussball(c, x, BODEN_Y - BALL_R, BALL_R, b.rot, platt);
+    if (b.phase === 'rollt') { c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 2; c.beginPath(); for (let k = 1; k <= 3; k++) { c.moveTo(x + BALL_R + k * 9, BODEN_Y - BALL_R - 6 + k * 4); c.lineTo(x + BALL_R + k * 9 + 10, BODEN_Y - BALL_R - 6 + k * 4); } c.stroke(); }
+  }
+  function kisteWembley(c, x, y, k) {   // Blöcke (40 × 40): Ballkiste – Holzkiste mit Bällen obenauf, Aufdruck „BALLS“
+    c.fillStyle = '#9a6a3a'; c.fillRect(x + 1, y + 10, KISTE - 2, KISTE - 10); c.fillStyle = '#7a4e26'; c.fillRect(x + 1, y + 10, KISTE - 2, 4); c.fillRect(x + 1, y + 24, KISTE - 2, 3);
+    c.fillStyle = '#5a3a1a'; c.fillRect(x + 1, y + 10, 3, KISTE - 10); c.fillRect(x + KISTE - 4, y + 10, 3, KISTE - 10);
+    fussball(c, x + 12, y + 8, 8, 0.4, 0); fussball(c, x + 28, y + 9, 7, -0.6, 0);
+    c.fillStyle = '#f4f4f4'; c.font = 'bold 7px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('BALLS', x + KISTE / 2, y + 32);
+  }
+  function tribuenePlattform(c, x, y, w) {   // Weg A: Tribünenblock – oben der Gang (Beton, gelbe Kante), darunter zwei Sitzreihen (rot/weiß im Wechsel), Stufen an den Blockenden
+    c.fillStyle = '#8d8a84'; c.beginPath(); c.roundRect(x, y, w, 16, 3); c.fill();
+    c.fillStyle = WEM_BETON; c.beginPath(); c.roundRect(x - 2, y - 3, w + 4, 7, 3); c.fill(); c.fillStyle = TUBE_GELB; c.fillRect(x, y + 3, w, 2);
+    for (let r = 0; r < 2; r++) { const sy = y + 20 + r * 18; c.fillStyle = '#6f6c66'; c.fillRect(x + 6, sy + 10, w - 12, 6); for (let k = 10; k < w - 20; k += 22) { c.fillStyle = (Math.floor((x + kamera + k) / 22) + r) % 4 === 0 ? WEM_SITZ2 : WEM_SITZ; c.beginPath(); c.roundRect(x + k, sy, 16, 12, 3); c.fill(); } }
+    c.fillStyle = '#5f5c56'; c.fillRect(x - 4, y + 16, 6, 42); c.fillRect(x + w - 2, y + 16, 6, 42);   // Treppen am Blockende
+  }
+  function vorplatzDeko(c, x, w) {   // Wembley Way: Fans hinter einem Geländer (jubeln ab und zu), Fahnen, Imbissstände alle 900, Mülleimer
+    const a = Math.max(-200, x), b = Math.min(viewW + 200, x + w); if (b <= a) return;
+    for (let k = Math.max(0, Math.floor((a - x - 120) / 900)); x + 120 + k * 900 < b && k * 900 < w; k++) { const bx = x + 120 + k * 900; if (bx + 110 < a) continue; imbissStand(c, bx, BODEN_Y - 12, k); if (k % 2) { c.fillStyle = '#2e9e5b'; c.beginPath(); c.roundRect(bx + 500, BODEN_Y - 46, 22, 34, 4); c.fill(); c.fillStyle = '#1f6f3f'; c.fillRect(bx + 498, BODEN_Y - 50, 26, 5); } }
+    for (let fx = Math.floor((a - x) / 150) * 150 + x + 40; fx < b; fx += 150) {   // Fans in Grüppchen
+      if (fx < x || fx > x + w) continue; const k = Math.round(fx / 150), hoch = Math.max(0, Math.sin(zeit * 1.6 + k * 1.3)) > 0.6 ? 1 : 0;
+      fanFigur(c, fx, BODEN_Y - 12, k, 0.72, hoch); if (k % 2 === 0) fanFigur(c, fx + 26, BODEN_Y - 12, k + 3, 0.68, 1 - hoch); if (k % 3 === 0) fanFigur(c, fx - 24, BODEN_Y - 12, k + 5, 0.66, 0);
+    }
+    for (let px = Math.floor((a - x) / 380) * 380 + x + 230; px < b; px += 380) if (px >= x && px < x + w) fanFahne(c, px, BODEN_Y - 60, Math.round(px / 380), zeit);
+    c.fillStyle = '#5f5a52'; c.fillRect(a, BODEN_Y - 42, b - a, 4); c.fillRect(a, BODEN_Y - 24, b - a, 3);   // Geländer
+    for (let gx = Math.floor((a - x) / 90) * 90 + x; gx < b; gx += 90) if (gx >= x && gx < x + w) c.fillRect(gx, BODEN_Y - 42, 4, 42);
+  }
+  function anzeigeDeko(c, x) {   // Anzeigetafel auf zwei Masten: „KICK-OFF IN 10 MINUTES“, darunter blinkt „NO REFEREE!“ (♪4)
+    c.fillStyle = '#5f6b78'; c.fillRect(x - 70, BODEN_Y - 150, 8, 150); c.fillRect(x + 62, BODEN_Y - 150, 8, 150);
+    c.fillStyle = '#111318'; c.beginPath(); c.roundRect(x - 100, BODEN_Y - 214, 200, 70, 4); c.fill(); c.strokeStyle = '#3b414d'; c.lineWidth = 3; c.stroke();
+    c.fillStyle = '#ffb000'; c.font = 'bold 13px monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('KICK-OFF IN 10 MINUTES', x, BODEN_Y - 194);
+    c.fillStyle = Math.floor(zeit * 2) % 2 ? '#ff3b3b' : '#ff8a8a'; c.font = 'bold 15px monospace'; c.fillText('NO REFEREE!', x, BODEN_Y - 164);
+  }
+  function tribuenenDeko(c, x, w) {   // hinter der Gabelung: die Tribünenwand mit Sitzreihen voller Fans (oben), Fahnen auf der Brüstung, Blockschilder
+    const a = Math.max(-100, x), b = Math.min(viewW + 100, x + w); if (b <= a) return;
+    c.fillStyle = '#9ea7b2'; c.fillRect(a, 60, b - a, 196);
+    for (let r = 0; r < 6; r++) { const sy = 92 + r * 26; c.fillStyle = r % 2 ? '#8d959f' : '#99a1ab'; c.fillRect(a, sy + 14, b - a, 12); for (let k = Math.floor((a - x) / 20) * 20 + x; k < b; k += 20) { if (k < x || k > x + w) continue; const n = Math.round(k / 20) + r * 7; c.fillStyle = n % 5 === 0 ? WEM_SITZ2 : (n % 7 === 0 ? FAN_FARBEN[n % 6] : WEM_SITZ); c.beginPath(); c.roundRect(k + 2, sy, 14, 14, 3); c.fill(); if (n % 3 !== 0) { c.fillStyle = ['#f1c9a5', '#8d5a3b', '#d9a070'][n % 3]; c.beginPath(); c.arc(k + 9, sy + 2, 4, 0, Math.PI * 2); c.fill(); } } }
+    c.fillStyle = '#6f6c66'; c.fillRect(a, 60, b - a, 8);
+    for (let px = Math.floor((a - x) / 420) * 420 + x + 200; px < b; px += 420) if (px >= x && px < x + w) fanFahne(c, px, 130, Math.round(px / 420) + 1, zeit);
+    for (let tx = Math.floor((a - x) / 1300) * 1300 + x + 600; tx < b; tx += 1300) if (tx >= x && tx < x + w) { c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(tx - 40, 236, 80, 16, 3); c.fill(); c.fillStyle = '#ffd36b'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(`BLOCK ${100 + Math.round(tx / 1300) % 9}`, tx, 244); }
+  }
+  function spielertunnelDeko(c, x, w) {   // Weg B: der Spielertunnel – dunkler Beton, Lampen alle 420 (Lichtkegel kommen von dunkelZeichnen), Schild „PLAYERS ONLY“, Rasengeruch-Schild, Bänke, am Ende Tageslicht
+    const a = Math.max(-100, x), b = Math.min(viewW + 100, x + w); if (b <= a) return;
+    c.fillStyle = WEM_DUNKEL; c.fillRect(a, -H, b - a, BODEN_Y + H);
+    c.fillStyle = '#262a34'; c.fillRect(a, 262, b - a, BODEN_Y - 262); c.strokeStyle = 'rgba(255,255,255,.05)'; c.lineWidth = 1; for (let yy = 266; yy < BODEN_Y; yy += 16) { c.beginPath(); c.moveTo(a, yy); c.lineTo(b, yy); c.stroke(); }
+    c.fillStyle = '#2f3540'; c.fillRect(a, 252, b - a, 10);
+    const ende = x + w - kamera; if (ende > a - 300 && ende < b + 300) { const gl = c.createLinearGradient(ende - 260, 0, ende, 0); gl.addColorStop(0, 'rgba(200,235,200,0)'); gl.addColorStop(1, 'rgba(200,235,200,.5)'); c.fillStyle = gl; c.fillRect(ende - 260, 252, 260, BODEN_Y - 252); }   // Tageslicht am Tunnelende
+    for (let lx = x + 140; lx < x + w; lx += 420) {   // Lampen (gleiche Stellen wie die Lichtkegel)
+      if (lx < a - 30 || lx > b + 30) continue;
+      c.fillStyle = '#3a4150'; c.fillRect(lx - 16, 254, 32, 6); c.fillStyle = `rgba(255,225,150,${0.8 + 0.2 * Math.sin(zeit * 7 + lx)})`; c.fillRect(lx - 12, 260, 24, 4);
+    }
+    for (let bx = x + 420; bx < x + w - 200; bx += 1300) if (bx > a - 60 && bx < b + 60) bankZeichnen(c, bx, BODEN_Y, true);
+    for (let tx = x + 700; tx < x + w - 200; tx += 2600) {   // Schilder: PLAYERS ONLY · Rasengeruch
+      if (tx < a - 100 || tx > b + 100) continue;
+      c.fillStyle = '#111318'; c.beginPath(); c.roundRect(tx - 60, BODEN_Y - 150, 120, 26, 3); c.fill(); c.strokeStyle = '#3b414d'; c.lineWidth = 2; c.stroke();
+      c.fillStyle = '#ffd36b'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('PLAYERS ONLY →', tx, BODEN_Y - 137);
+      c.fillStyle = '#2e9e5b'; c.beginPath(); c.roundRect(tx + 240, BODEN_Y - 128, 110, 30, 4); c.fill(); c.fillStyle = '#fff'; c.font = 'bold 9px system-ui, sans-serif'; c.fillText('SMELL THAT?', tx + 295, BODEN_Y - 118); c.fillText('FRESH GRASS 🌱', tx + 295, BODEN_Y - 106);
+    }
+  }
+  function federnDeko(c, x) {   // Weg B (♪B8): schwarze Federn auf dem Tunnelboden – „A bird! Black feathers on the floor.“
+    c.save(); c.translate(x, BODEN_Y);
+    for (let k = 0; k < 5; k++) { c.save(); c.translate(-50 + k * 26, -3 - (k % 2) * 2); c.rotate(-0.6 + k * 0.35); c.fillStyle = '#1b1b24'; c.beginPath(); c.ellipse(0, 0, 13, 4, 0, 0, Math.PI * 2); c.fill(); c.strokeStyle = 'rgba(120,140,200,.6)'; c.lineWidth = 1; c.beginPath(); c.moveTo(-12, 0); c.lineTo(12, 0); c.stroke(); c.restore(); }
+    c.restore();
+  }
+  function toiletteDeko(c, x) {   // Weg A: Toilettenblock auf der Tribüne (steht auf 250) – Schild TOILETS, Tür mit Schloss „LOCKED“; nach ♪A8 (tuerTritt): der Sergeant tritt, die Tür fliegt auf, der Schiedsrichter schaut heraus
+    const y = 250, seit = tuerTritt >= 0 ? zeit - tuerTritt : -1;
+    c.fillStyle = '#9ea7b2'; c.fillRect(x - 60, y - 96, 120, 96); c.fillStyle = '#7f8792'; c.fillRect(x - 64, y - 102, 128, 8);
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(x - 34, y - 92, 68, 14, 3); c.fill(); c.fillStyle = '#fff'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TOILETS 🚻', x, y - 85);
+    c.fillStyle = '#2b2f3a'; c.fillRect(x + 6, y - 72, 40, 72);   // Türrahmen (dunkel = innen)
+    if (seit >= 0.6) { c.save(); c.translate(x + 26, y - 36); c.scale(0.42, 0.42); zeichneFigur(c, 0, 86, 80, WEM_FIGUREN.referee, 'steh', zeit, seit < 2.5 ? 'erstaunt' : 'grinsend'); c.restore(); }   // der Schiedsrichter erscheint in der Tür
+    const auf = seit < 0 ? 0 : sanft((seit - 0.1) / 0.5);
+    c.save(); c.translate(x + 6, y - 72); c.rotate(auf * 1.5); c.fillStyle = '#7a4e26'; c.fillRect(0, 0, 40, 72); c.fillStyle = '#e0a400'; c.beginPath(); c.arc(34, 40, 3, 0, Math.PI * 2); c.fill();   // Tür (schwingt auf)
+    if (seit < 0) { c.fillStyle = UK_ROT; c.beginPath(); c.roundRect(4, 14, 32, 12, 2); c.fill(); c.fillStyle = '#fff'; c.font = 'bold 7px system-ui, sans-serif'; c.fillText('LOCKED', 20, 20.5); }
+    c.restore();
+    if (seit >= 0) {   // der Sergeant vor der Tür: tritt (0,2–0,9 s), dann steht er stocksteif und schaut erstaunt; „BOOM“
+      const tritt = seit < 0.2 ? seit / 0.2 : seit < 0.9 ? 1 - (seit - 0.2) / 0.7 : 0;
+      c.save(); c.translate(x - 30, y); c.scale(0.5, 0.5); gardist(c, 0, 0, { tritt, blick: 2, hut: 'fell' }); c.restore();
+      if (seit > 0.15 && seit < 1.6) { c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = UK_ROT; c.strokeStyle = '#fff'; c.lineWidth = 4; c.strokeText('BOOM', x + 30, y - 100); c.fillText('BOOM', x + 30, y - 100); }
+    }
+  }
+  function rasenDeko(c, x, w) {   // der Rasen: hinter dem Spielfeld die Tribünen voller Fans (Reihen, Fahnen, La-Ola-Welle), Werbebanden ohne Marken, das Maskottchen, Großbildschirm
+    const a = Math.max(-100, x), b = Math.min(viewW + 100, x + w); if (b <= a) return;
+    c.fillStyle = '#8d959f'; c.fillRect(a, 70, b - a, 182);
+    for (let r = 0; r < 6; r++) { const sy = 96 + r * 24; for (let k = Math.floor((a - x) / 18) * 18 + x; k < b; k += 18) { if (k < x || k > x + w) continue; const n = Math.round(k / 18) + r * 11, welle = ruhig() ? 0 : Math.max(0, Math.sin(zeit * 2.2 - k * 0.012 + r * 0.3)) > 0.85 ? 1 : 0; c.fillStyle = FAN_FARBEN[n % 6]; c.beginPath(); c.roundRect(k + 2, sy - welle * 5, 12, 14, 3); c.fill(); c.fillStyle = ['#f1c9a5', '#8d5a3b', '#d9a070'][n % 3]; c.beginPath(); c.arc(k + 8, sy - 2 - welle * 5, 4, 0, Math.PI * 2); c.fill(); } }
+    for (let px = Math.floor((a - x) / 500) * 500 + x + 250; px < b; px += 500) if (px >= x && px < x + w) fanFahne(c, px, 150, Math.round(px / 500) + 2, zeit);
+    for (let bx = Math.floor((a - x) / 260) * 260 + x; bx < b; bx += 260) if (bx >= x && bx < x + w) { const k = Math.round(bx / 260); c.fillStyle = ['#1d3f8f', '#d0312d', '#2e9e5b', '#e0a400'][k % 4]; c.fillRect(bx, 236, 256, 16); c.fillStyle = '#fff'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(['THE BIG MATCH', 'WEMBLEY', 'COME ON!', 'KICK-OFF 3 P.M.'][k % 4], bx + 128, 244); }   // Werbebanden
+    for (let mx = x + 600; mx < x + w; mx += 3000) if (mx > a - 80 && mx < b + 80) maskottchen(c, mx, BODEN_Y - 10, zeit + mx);
+    for (let sx = x + 1800; sx < x + w; sx += 5000) if (sx > a - 200 && sx < b + 200) { c.fillStyle = '#111318'; c.beginPath(); c.roundRect(sx - 90, 76, 180, 50, 4); c.fill(); c.fillStyle = '#ffb000'; c.font = 'bold 12px monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('KICK-OFF!', sx, 92); c.fillStyle = '#fff'; c.font = 'bold 10px monospace'; c.fillText('0 : 0', sx, 112); }   // Großbildschirm
+  }
+  function geistSchwebtDeko(c, x, y) { geistZeichnen(c, x, y, zeit + x, { abzeichen: true, alpha: 0.8 }); }   // Wembley: der Geist schwebt über den Fans / Sitzreihen („He never pays.“)
+  // Figuren des Kapitels: Schiedsrichter (schwarz), Torwart (grün, Handschuhe)
+  const WEM_FIGUREN = {
+    referee: Object.assign({}, SKIN_STANDARD, { haar: 'kurz', haarfarbe: 'schwarz', hut: 'keiner', top: 'shirt', topfarbe: 'schwarz', schuhe: 'schwarz', brust: 'schmal', power: 'aus' }),
+    torwart: Object.assign({}, SKIN_STANDARD, { haar: 'wuschel', haarfarbe: 'blond', hut: 'keiner', top: 'hoodie', topfarbe: 'grün', schuhe: 'schwarz', handschuhe: 'weiß', brust: 'normal', power: 'aus' }),
+  };
+  // Boss-Platz: Sergeant Bearskin steht am Spielfeldtor – still, wie immer („Still. Like always.“); Variante B: der Rabe sitzt auf seiner Mütze; wird in der Sequenz sichtbar, marschiert im Finale zur Seite
+  function wembleyBoss(c, x, y) {
+    const auf = boss.sichtbar, weg = boss.weg;
+    const gx = x + weg * 240, marsch = weg > 0 && !ruhig() ? Math.sin(zeit * 9) : 0;
+    const blick = (zustand === 'boss' || zustand === 'sequenz') ? -2 : (Math.sin(zeit * 0.8) > 0.35 ? 2 : Math.sin(zeit * 0.8) < -0.35 ? -2 : 0);
+    gardist(c, gx, y, { alpha: auf * (1 - weg * 0.85), marsch, blick, hut: 'fell' });
+    if (wembleyRabe() && auf > 0) { c.save(); c.globalAlpha = auf * (1 - weg * 0.85); rabeSitzt(c, gx + 2, y - 194, zeit); c.restore(); }
+    if (auf > 0.9 && zustand === 'sequenz') { c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('!', gx + 26, y - 226 - (ruhig() ? 0 : Math.abs(Math.sin(zeit * 6)) * 5)); }
+  }
+  function spielfeldTor(c, x, y) {   // Tür der Welt Wembley: das Spielfeldtor – zwei Pfosten mit Maschendraht-Flügel (schwingt auf: tuer.offen), Schild PITCH · PLAYERS ONLY, dahinter das Tor mit Netz, Ampel rot → grün
+    const offen = tuer.offen;
+    c.save(); c.globalAlpha = 0.9; c.strokeStyle = '#f4f4f4'; c.lineWidth = 5; c.beginPath(); c.moveTo(x + 150, y - 10); c.lineTo(x + 150, y - 110); c.lineTo(x + 330, y - 110); c.lineTo(x + 330, y - 10); c.stroke();   // das Tor (Pfosten, Latte)
+    c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 1; c.beginPath(); for (let k = 0; k <= 180; k += 15) { c.moveTo(x + 150 + k, y - 110); c.lineTo(x + 150 + k, y - 10); } for (let k = 0; k <= 100; k += 15) { c.moveTo(x + 150, y - 110 + k); c.lineTo(x + 330, y - 110 + k); } c.stroke(); c.restore();   // Netz
+    c.fillStyle = '#9ea3ab'; c.fillRect(x - 44, y - 150, 16, 150); c.fillRect(x + 28, y - 150, 16, 150);
+    c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(x - 60, y - 176, 120, 20, 4); c.fill(); c.fillStyle = '#ffd36b'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('PITCH · PLAYERS ONLY', x, y - 166);
+    c.save(); c.translate(x - 28, y - 150); c.scale(1 - offen * 0.9, 1);   // Torflügel (Maschendraht) schwingt auf
+    c.fillStyle = 'rgba(200,210,220,.25)'; c.fillRect(0, 0, 56, 150); c.strokeStyle = '#7f8792'; c.lineWidth = 1.5; c.beginPath(); for (let k = 0; k <= 56; k += 8) { c.moveTo(k, 0); c.lineTo(k, 150); } for (let k = 0; k <= 150; k += 8) { c.moveTo(0, k); c.lineTo(56, k); } c.stroke(); c.strokeStyle = '#5f6b78'; c.lineWidth = 3; c.strokeRect(0, 0, 56, 150); c.restore();
+    c.fillStyle = '#3a3a3a'; c.fillRect(x - 60, y - 70, 10, 24); c.fillStyle = offen > 0.3 ? '#2ecc71' : '#e63946'; c.beginPath(); c.arc(x - 55, y - 62, 4, 0, Math.PI * 2); c.fill();
+    fanFahne(c, x + 56, y - 150, 0, zeit); fanFahne(c, x - 70, y - 150, 2, zeit);
+  }
+  /* Film Wembley: Bühne am Spielfeldtor – Rasen, Tribünen mit Fans (singen in E1, lachen in E3), Großbildschirm, rechts das Tor mit dem Torwart, der Schiedsrichter, der Sergeant am Tor (still), der Geist schwebt, du + Begleiter (+ Rabe bei Variante B) */
+  const WEF = { ich: 290, serg: 420, geist: 490, ref: 560, tor: 760, keeper: 850, ball: 600 };
+  function filmKameraWembley(sz, f, ende) {
+    const K = {
+      E1: [[[560, 215, 1.1], [520, 232, 1.25]], [[600, 232, 1.0], [640, 236, 1.05]], [[450, 240, 1.5], [440, 244, 1.7]]],
+      E2: [[[560, 215, 1.1], [520, 232, 1.25]], [[620, 232, 1.0], [720, 236, 1.1]], [[800, 238, 1.3], [790, 240, 1.4]]],
+      E3: [[[560, 215, 1.1], [520, 232, 1.25]], [[560, 230, 1.1], [620, 236, 1.0]], [[520, 238, 1.2], [520, 242, 1.3]]],
+    }[ende][sz];
+    const g = sanft(f);
+    return [lerp(K[0][0], K[1][0], g), lerp(K[0][1], K[1][1], g), lerp(K[0][2], K[1][2], g)];
+  }
+  function filmKulisseWembley(c, o) {   // o.jubel 0..1 (Fans mit Armen hoch, Noten), o.lachen 0..1 (Fans wackeln), o.tafel = Text des Großbildschirms
+    const g = c.createLinearGradient(0, -400, 0, 70); g.addColorStop(0, '#5d9fe0'); g.addColorStop(1, '#bfe0f7'); c.fillStyle = g; c.fillRect(-500, -600, 2400, 700);
+    wembleyBogen(c, 650, 80, 1500, 110, 0.9);
+    c.fillStyle = '#8d959f'; c.fillRect(-500, 70, 2400, 182);
+    for (let r = 0; r < 6; r++) { const sy = 96 + r * 24; for (let k = -480; k < 1900; k += 18) { const n = Math.round(k / 18) + r * 11, hoch = o.jubel > 0 ? (Math.sin(zeit * 6 + k * 0.05) > 0 ? o.jubel : 0) : 0, wackel = o.lachen > 0 && !ruhig() ? Math.sin(zeit * 14 + k) * 2 * o.lachen : 0; c.fillStyle = FAN_FARBEN[n % 6]; c.beginPath(); c.roundRect(k + 2 + wackel, sy - hoch * 6, 12, 14, 3); c.fill(); c.fillStyle = ['#f1c9a5', '#8d5a3b', '#d9a070'][n % 3]; c.beginPath(); c.arc(k + 8 + wackel, sy - 2 - hoch * 6, 4, 0, Math.PI * 2); c.fill(); if (hoch > 0) { c.strokeStyle = FAN_FARBEN[n % 6]; c.lineWidth = 2; c.beginPath(); c.moveTo(k + 3, sy + 2 - hoch * 6); c.lineTo(k - 1, sy - 10 - hoch * 6); c.moveTo(k + 13, sy + 2 - hoch * 6); c.lineTo(k + 17, sy - 10 - hoch * 6); c.stroke(); } } }
+    for (let bx = -480; bx < 1900; bx += 260) { const k = Math.round((bx + 480) / 260); c.fillStyle = ['#1d3f8f', '#d0312d', '#2e9e5b', '#e0a400'][k % 4]; c.fillRect(bx, 236, 256, 16); c.fillStyle = '#fff'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(['THE BIG MATCH', 'WEMBLEY', 'COME ON!', 'KICK-OFF 3 P.M.'][k % 4], bx + 128, 244); }
+    c.fillStyle = '#111318'; c.beginPath(); c.roundRect(560, 10, 220, 56, 4); c.fill(); c.fillStyle = '#ffb000'; c.font = 'bold 15px monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(o.tafel || 'KICK-OFF!', 670, 30); c.fillStyle = '#fff'; c.font = 'bold 11px monospace'; c.fillText(o.stand || '0 : 0', 670, 52);   // Großbildschirm
+    for (const fx of [40, 1180]) fanFahne(c, fx, 150, fx > 500 ? 3 : 1, zeit);
+    c.fillStyle = WEM_RASEN; c.fillRect(-500, 252, 2400, 300); c.fillStyle = WEM_RASEN2; for (let x = -480; x < 1900; x += 160) c.fillRect(x, 252, 80, 300);
+    c.fillStyle = 'rgba(255,255,255,.85)'; c.fillRect(-500, BODEN_Y + 2, 2400, 3); c.fillRect(WEF.tor - 100, 256, 3, 80);   // Linien
+    c.strokeStyle = '#f4f4f4'; c.lineWidth = 6; c.beginPath(); c.moveTo(WEF.tor, BODEN_Y); c.lineTo(WEF.tor, BODEN_Y - 120); c.lineTo(WEF.tor + 200, BODEN_Y - 120); c.lineTo(WEF.tor + 200, BODEN_Y); c.stroke();   // das Tor
+    c.save(); c.globalAlpha = 0.55; c.strokeStyle = '#fff'; c.lineWidth = 1; c.beginPath(); for (let k = 0; k <= 200; k += 14) { c.moveTo(WEF.tor + k, BODEN_Y - 120); c.lineTo(WEF.tor + k, BODEN_Y); } for (let k = 0; k <= 120; k += 14) { c.moveTo(WEF.tor, BODEN_Y - 120 + k); c.lineTo(WEF.tor + 200, BODEN_Y - 120 + k); } c.stroke(); c.restore();
+    c.fillStyle = '#9ea3ab'; c.fillRect(WEF.serg - 60, BODEN_Y - 150, 14, 150); c.fillStyle = '#18213a'; c.beginPath(); c.roundRect(WEF.serg - 110, BODEN_Y - 176, 110, 20, 4); c.fill(); c.fillStyle = '#ffd36b'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('PITCH · PLAYERS ONLY', WEF.serg - 55, BODEN_Y - 166);   // der Pfosten des Spielfeldtors
+  }
+  function filmSergeantWembley(c, x, o) { c.save(); c.translate(x, BODEN_Y); c.scale(0.8, 0.8); gardist(c, 0, 0, Object.assign({ hut: 'fell' }, o)); c.restore(); if (wembleyRabe() && !o.ohneRabe) rabeSitzt(c, x + 2, BODEN_Y - 196 * 0.8 + 2, zeit); }
+  function filmTorwart(c, x, pose, ausdruck, neigung) { c.save(); c.translate(x, BODEN_Y); if (neigung) c.rotate(neigung); c.scale(-0.85, 0.85); zeichneFigur(c, 0, 0, 80, WEM_FIGUREN.torwart, pose, zeit, ausdruck); c.restore(); }
+  function filmReferee(c, x, o) {   // Schiedsrichter: schwarz, Pfeife; o.kopf = schüttelt den Kopf (0..1), o.lachen
+    c.save(); c.translate(x, BODEN_Y); c.scale(0.85, 0.85); if (o.kopf > 0 && !ruhig()) c.translate(Math.sin(zeit * 10) * 3 * o.kopf, 0); zeichneFigur(c, 0, 0, 80, WEM_FIGUREN.referee, o.lachen ? 'steh' : 'steh', zeit, o.lachen ? 'zunge' : o.kopf > 0 ? 'erstaunt' : 'grinsend'); c.restore();
+    c.fillStyle = '#c9ced6'; c.beginPath(); c.roundRect(x + 8, BODEN_Y - 84, 12, 7, 3); c.fill(); c.strokeStyle = '#18213a'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x + 14, BODEN_Y - 84); c.lineTo(x + 2, BODEN_Y - 96); c.stroke();   // Pfeife am Band
+  }
+  const flugbahn = (a, b, f, hoehe) => [lerp(a[0], b[0], f), lerp(a[1], b[1], f) - Math.sin(f * Math.PI) * hoehe];   // Flugbahn (Ball): von a nach b mit Bogenhöhe
+  function filmZeichnenWembley(c) {
+    const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
+    if (sz >= 3) return filmTitel(c, f);
+    if (f.klangSz !== sz) { f.klangSz = sz; if (!ruhig()) { if (sz === 2 && ende === 'E1') klang.gesang(); else if (sz === 2 && ende === 'E2') klang.jubel(); else if (sz === 2 && ende === 'E3') klang.pfeife(); else if (sz === 1) klang.ball(); } }   // Klang je Szene (einmal)
+    const [kx, ky, kz] = filmKameraWembley(sz, p, ende);
+    c.save(); c.translate(viewW / 2, H / 2); c.scale(kz, kz); c.translate(-kx, -ky);
+    const beg = begleiter ? begleiter.art : 'fuchs';
+    const begleiterDa = (fx) => begleiterZeichnen(c, fx - 48, beg === 'taube' ? BODEN_Y - 108 + Math.sin(zeit * 2.2) * 6 : BODEN_Y, beg, zeit);
+    const geist = (gx, gy, o) => geistZeichnen(c, gx, gy, zeit, Object.assign({ abzeichen: true, alpha: 0.82 }, o || {}));
+    const goal = (gx, text) => { c.font = 'bold 44px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#ffd36b'; c.strokeStyle = '#7a1f1f'; c.lineWidth = 6; c.strokeText(text, gx, 190); c.fillText(text, gx, 190); };
+    if (sz === 0) {   // Kick-off! Der Sergeant steht am Spielfeldtor. Still. – „Does he ever move?“ fragt der Geist
+      filmKulisseWembley(c, { tafel: 'KICK-OFF!' });
+      const fx = lerp(100, WEF.ich, sanft(tt / 2.4)), laeuft_ = tt < 2.4;
+      filmReferee(c, WEF.ref, {}); filmTorwart(c, WEF.keeper, 'steh', 'grinsend');
+      fussball(c, WEF.ball, BODEN_Y - 12, 12, 0.3, 0);
+      filmSergeantWembley(c, WEF.serg, { blick: -2 });
+      filmFigur(c, fx, laeuft_ ? 'lauf' : 'steh', 'grinsend'); begleiterDa(fx);
+      geist(WEF.geist, BODEN_Y - 110, {});
+      if (tt > 2.8 && tt < 6.5) sprechblase(c, WEF.geist + 10, BODEN_Y - 160, 'Does he ever move?');
+    } else if (ende === 'E1' && sz === 1) {   // The ball flies to the gate. The Sergeant moves! One step. He kicks. GOAL!
+      filmKulisseWembley(c, { tafel: tt > 3.6 ? 'GOAL!!!' : 'KICK-OFF!', stand: tt > 3.6 ? '1 : 0' : '0 : 0' });
+      const flug = sanft(tt / 1.6), schritt = sanft((tt - 1.8) / 0.5) * 34, tritt = tt < 2.3 ? 0 : tt < 2.55 ? (tt - 2.3) / 0.25 : tt < 3.1 ? 1 - (tt - 2.55) / 0.55 : 0, schuss = sanft((tt - 2.5) / 1.0);
+      const ballPos = tt < 2.5 ? flugbahn([950, BODEN_Y - 160], [WEF.serg + 46, BODEN_Y - 14], flug, 70) : flugbahn([WEF.serg + 46, BODEN_Y - 14], [WEF.tor + 150, BODEN_Y - 60], schuss, 90);
+      filmReferee(c, WEF.ref, {}); filmTorwart(c, WEF.keeper, tt > 2.9 ? 'sprung' : 'steh', tt > 2.9 ? 'erstaunt' : 'grinsend', tt > 2.9 ? -0.9 * Math.min(1, (tt - 2.9) / 0.4) : 0);
+      filmSergeantWembley(c, WEF.serg + schritt, { blick: 2, tritt, marsch: 0 });
+      fussball(c, ballPos[0], ballPos[1], 12, tt * 8, 0);
+      filmFigur(c, WEF.ich, 'steh', tt > 1.8 ? 'erstaunt' : 'grinsend'); begleiterDa(WEF.ich);
+      geist(WEF.geist, BODEN_Y - 110, { lacht: tt > 3.6 ? 0.6 : 0 });
+      if (tt > 1.8 && tt < 3.0) { c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = UK_ROT; c.fillText('!', WEF.serg + schritt + 24, BODEN_Y - 186); }
+      if (tt > 3.6) goal(WEF.tor + 60, 'GOAL!');
+    } else if (ende === 'E1' && sz === 2) {   // nah: He never moved. Today he did. He feels happy. Don't tell anyone. – das Stadion singt
+      filmKulisseWembley(c, { jubel: 1, tafel: 'GOAL!!!', stand: '1 : 0' });
+      filmSergeantWembley(c, WEF.serg, { blick: -2, laecheln: Math.min(1, tt / 1.2), armeHoch: tt < 2.2 ? sanft(tt / 0.8) : 1 - sanft((tt - 2.2) / 0.8) });
+      filmFigur(c, WEF.ich, 'steh', 'zunge'); begleiterDa(WEF.ich);
+      geist(WEF.geist, BODEN_Y - 120, { lacht: 0.5 });
+      if (!ruhig()) for (let k = 0; k < 6; k++) { const d = (zeit * 0.6 + k * 0.17) % 1; c.font = `bold ${14 + k % 3 * 4}px system-ui, sans-serif`; c.textAlign = 'center'; c.fillStyle = `rgba(255,211,107,${1 - d})`; c.fillText('♪', 200 + k * 120 + Math.sin(zeit * 2 + k) * 12, 230 - d * 150); }   // Gesang
+      if (tt > 3.2) { c.font = 'bold 22px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText('🤫', WEF.serg - 46, BODEN_Y - 150); }
+    } else if (ende === 'E2' && sz === 1) {   // The ball flies to the gate. The Sergeant doesn't move. The ghost does!
+      filmKulisseWembley(c, { tafel: 'KICK-OFF!' });
+      const flug = sanft(tt / 1.6), ballPos = tt < 1.6 ? flugbahn([950, BODEN_Y - 160], [WEF.serg + 60, BODEN_Y - 12], flug, 70) : [WEF.serg + 60 + Math.min(40, (tt - 1.6) * 60), BODEN_Y - 12];
+      const g = sanft((tt - 2.0) / 1.4);
+      filmReferee(c, WEF.ref, {}); filmTorwart(c, WEF.keeper, 'steh', g > 0.6 ? 'erstaunt' : 'grinsend');
+      filmSergeantWembley(c, WEF.serg, { blick: 2 });
+      fussball(c, ballPos[0], ballPos[1], 12, tt * 8, 0);
+      filmFigur(c, WEF.ich, 'steh', tt > 2 ? 'erstaunt' : 'grinsend'); begleiterDa(WEF.ich);
+      geist(lerp(WEF.geist, WEF.keeper - 70, g), BODEN_Y - 110 + Math.sin(g * Math.PI) * -40, { zeigt: g > 0.3 });
+      if (tt > 1.0 && tt < 2.2) { c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText('…', WEF.serg - 20, BODEN_Y - 200); }
+    } else if (ende === 'E2' && sz === 2) {   // Ghosts can't kick. But they can scare. The goalkeeper runs away. GOAL!
+      const weg = sanft((tt - 1.0) / 1.4), roll = sanft((tt - 1.6) / 1.6);
+      filmKulisseWembley(c, { tafel: tt > 3.3 ? 'GOAL!!!' : 'BOO!', stand: tt > 3.3 ? '1 : 0' : '0 : 0', jubel: tt > 3.3 ? 1 : 0 });
+      filmReferee(c, WEF.ref, {}); filmSergeantWembley(c, WEF.serg, { blick: 2 });
+      c.save(); c.translate(WEF.keeper + weg * 420, BODEN_Y); c.scale(-0.85, 0.85); zeichneFigur(c, 0, 0, 80, WEM_FIGUREN.torwart, weg > 0 && weg < 1 ? 'lauf' : 'steh', zeit, 'erstaunt'); c.restore();
+      if (weg > 0 && weg < 1) { c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = '#18213a'; c.fillText('!!!', WEF.keeper + weg * 420 + 10, BODEN_Y - 110); }
+      fussball(c, lerp(WEF.serg + 100, WEF.tor + 120, roll), BODEN_Y - 12, 12, roll * 20, 0);
+      geist(WEF.keeper - 70, BODEN_Y - 100, { lacht: tt > 0.3 ? 0.9 : 0 });
+      if (tt > 0.3 && tt < 2.4) sprechblase(c, WEF.keeper - 60, BODEN_Y - 150, 'BOO!');
+      filmFigur(c, WEF.ich, 'steh', tt > 3.3 ? 'zunge' : 'erstaunt'); begleiterDa(WEF.ich);
+      if (tt > 3.3) goal(WEF.tor + 60, 'GOAL!');
+    } else if (ende === 'E3' && sz === 1) {   // The ball flies to the gate. It hits the Sergeant's hat. Bounce. GOAL?
+      const flug = sanft(tt / 1.5), bounce = sanft((tt - 1.5) / 1.3), hopser = sanft((tt - 2.8) / 1.0);
+      filmKulisseWembley(c, { tafel: tt > 3.4 ? 'GOAL?' : 'KICK-OFF!' });
+      const ballPos = tt < 1.5 ? flugbahn([950, BODEN_Y - 200], [WEF.serg + 2, BODEN_Y - 200 * 0.8 + 6], flug, 40) : tt < 2.8 ? flugbahn([WEF.serg + 2, BODEN_Y - 200 * 0.8 + 6], [WEF.serg + 190, BODEN_Y - 12], bounce, 120) : flugbahn([WEF.serg + 190, BODEN_Y - 12], [WEF.tor + 20, BODEN_Y - 12], hopser, 50);
+      filmReferee(c, WEF.ref, { kopf: tt > 3.4 ? 1 : 0 }); filmTorwart(c, WEF.keeper, 'steh', tt > 2.8 ? 'erstaunt' : 'grinsend');
+      filmSergeantWembley(c, WEF.serg, { blick: tt > 1.4 ? 0 : 2, neigung: tt > 1.4 && tt < 2.2 ? Math.sin((tt - 1.4) / 0.8 * Math.PI) * 0.12 : 0 });
+      fussball(c, ballPos[0], ballPos[1], 12, tt * 8, 0);
+      filmFigur(c, WEF.ich, 'steh', tt > 1.4 ? 'erstaunt' : 'grinsend'); begleiterDa(WEF.ich);
+      geist(WEF.geist, BODEN_Y - 110, {});
+      if (tt > 1.5 && tt < 2.6) { c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = UK_ROT; c.strokeStyle = '#fff'; c.lineWidth = 4; c.strokeText('BOING', WEF.serg + 40, BODEN_Y - 220); c.fillText('BOING', WEF.serg + 40, BODEN_Y - 220); }
+      if (tt > 3.4) goal(WEF.tor + 60, 'GOAL?');
+    } else {   // Ende 3 Szene 3: „Not this time, soldier,“ the referee says. No goal. But what a day! – alle lachen
+      const lach = Math.min(1, Math.max(0, (tt - 2.2) / 0.8));
+      filmKulisseWembley(c, { tafel: 'NO GOAL', stand: '0 : 0', lachen: lach });
+      filmReferee(c, WEF.ref, { kopf: tt < 2.2 ? 1 : 0, lachen: lach > 0 });
+      filmTorwart(c, WEF.keeper, 'steh', lach > 0 ? 'zunge' : 'grinsend');
+      filmSergeantWembley(c, WEF.serg, { blick: -2, lachen: lach * 0.7 });
+      fussball(c, WEF.tor + 20, BODEN_Y - 12, 12, 0, 0);
+      filmFigur(c, WEF.ich, 'steh', lach > 0 ? 'zunge' : 'erstaunt'); begleiterDa(WEF.ich);
+      geist(WEF.geist, BODEN_Y - 110, { lacht: lach });
+      if (tt > 0.5 && tt < 3.2) sprechblase(c, WEF.ref - 10, BODEN_Y - 150, 'Not this time, soldier!');
+      if (lach > 0) { c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; for (const [hx, hy] of [[WEF.ich + 30, BODEN_Y - 120], [WEF.keeper - 30, BODEN_Y - 120], [WEF.serg - 40, BODEN_Y - 210]]) c.fillText('haha', hx, hy - (ruhig() ? 0 : Math.abs(Math.sin(zeit * 5)) * 6)); }
+    }
+    c.restore();
+    filmUntertitel(c, f);
+  }
   function falkeZeichnen(c, x, y) {   // Cameo Felix: Falke über der Figur, Flügel schlagen, Krallen halten die Figur
     c.save(); c.translate(x, y);
     const fl = Math.sin(zeit * 16) * 10;
@@ -5266,6 +5701,7 @@
     if (film.welt === 'londoneye') return filmZeichnenEye(c);   // Story London Eye (Klasse 6, Kapitel 2)
     if (film.welt === 'towerbridge') return filmZeichnenBridge(c);   // Story Tower Bridge (Klasse 6, Kapitel 3)
     if (film.welt === 'tube') return filmZeichnenTube(c);   // Story The Tube (Klasse 6, Kapitel 4)
+    if (film.welt === 'wembley') return filmZeichnenWembley(c);   // Story Wembley (Klasse 6, Kapitel 5, drei Enden)
     const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
     if (sz >= 3) return filmTitel(c, f);
     const [kx, ky, kz] = filmKamera(sz, p, ende);
@@ -5326,7 +5762,8 @@
     const a = ruhig() ? 1 : Math.min(1, f.t / 0.6);
     c.save(); c.globalAlpha = a; c.textAlign = 'center'; c.textBaseline = 'middle';
     c.font = 'italic 600 16px system-ui, sans-serif'; c.fillStyle = '#c9b8ff'; c.fillText((storyOpt && storyOpt.titel) || '', viewW / 2, 64);
-    c.font = `bold ${viewW < 700 ? 30 : 40}px system-ui, sans-serif`; c.fillStyle = '#ffd36b'; c.fillText(`The End – Ending ${f.ende} (1 of 2)`, viewW / 2, 108);
+    const endeName = /^E\d$/.test(f.ende) ? f.ende.slice(1) : f.ende, endeZahl = Object.keys(struktur.film || {}).length || 2;   // Wembley: E1/E2/E3 → „Ending 1 (1 of 3)“
+    c.font = `bold ${viewW < 700 ? 30 : 40}px system-ui, sans-serif`; c.fillStyle = '#ffd36b'; c.fillText(`The End – Ending ${endeName} (1 of ${endeZahl})`, viewW / 2, 108);
     if (f.welt === 'ny') {   // New York: du und Lucas (Ende X: die Frau verschwindet mit der Karte; Ende Y: du hältst die Karte)
       zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, 'grinsend');
       zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, f.ende === 'Y' ? 'erstaunt' : 'grinsend');
@@ -5360,6 +5797,14 @@
       if (begleiter) begleiterZeichnen(c, viewW / 2 - 118, begleiter.art === 'taube' ? 230 : 300, begleiter.art, zeit);
       if (f.ende === 'A') geistZeichnen(c, viewW / 2 + 130, 290, zeit, { winkt: true, abzeichen: true, alpha: 0.8 }); else rabeSitzt(c, viewW / 2 + 52, 300 - (tubeHut() === 'gross' ? 196 * 1.15 : 196) * 0.8 + 2, zeit);
       c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'A' ? '👻 🎟️ Lucky them' : '🐦 🎩 It is now', viewW / 2, 340);
+    } else if (f.welt === 'wembley') {   // Wembley: du, der Sergeant (E1: jubelt mit Ball · E2: der Geist lacht, der Torwart rennt · E3: der Ball liegt daneben, alle lachen), Begleiter, der Rabe bei Variante B
+      zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, f.ende === 'E3' ? 'zunge' : 'grinsend');
+      c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, f.ende === 'E1' ? { laecheln: 0.9, blick: -2, armeHoch: 1 } : f.ende === 'E3' ? { lachen: 0.6, blick: -2 } : { blick: -2 }); c.restore();
+      if (wembleyRabe()) rabeSitzt(c, viewW / 2 + 52, 300 - 196 * 0.8 + 2, zeit);
+      if (begleiter) begleiterZeichnen(c, viewW / 2 - 118, begleiter.art === 'taube' ? 230 : 300, begleiter.art, zeit);
+      if (f.ende === 'E2') geistZeichnen(c, viewW / 2 + 130, 290, zeit, { lacht: 0.8, abzeichen: true, alpha: 0.8 }); else fussball(c, viewW / 2 + 130, 288, 12, zeit, 0);
+      if (f.ende === 'E3') geistZeichnen(c, viewW / 2 - 170, 290, zeit, { lacht: 0.6, abzeichen: true, alpha: 0.8 });
+      c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'E1' ? '⚽ 🥅 GOAL! 🤫' : f.ende === 'E2' ? '👻 BOO! 🧤 GOAL!' : '🎩 ⚽ BOING … no goal', viewW / 2, 340);
     } else if (f.welt === 'londoneye') {   // London Eye: du, der Sergeant in Socken, dein Begleiter (Ende A: Knopf · Ende B: Rad)
       zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, 'grinsend');
       c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, { socken: true, laecheln: f.ende === 'B' ? 1 : 0, lachen: f.ende === 'A' ? 0.6 : 0, blick: -2 }); c.restore();
@@ -5413,12 +5858,14 @@
   function dekoZeichnen(c) {   // zwei Durchgänge: erst die Hauswände (Feuertreppe, Diner, Eistür), dann alles davor (U-Bahn-Eingang); das Motel-Schild kommt in dekoVorneZeichnen (über dem Tor ✦)
     for (let pass = 0; pass < 2; pass++) for (const d of level.deko) {
       if (d.art === 'motel') continue;
-      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor' || d.art === 'tower' || d.art === 'tunnel' || d.art === 'koepfe' || d.art === 'fuenftueren' || d.art === 'bahnsteig' || d.art === 'dunkelbahnsteig' || d.art === 'zug') !== (pass === 0)) continue;
+      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor' || d.art === 'tower' || d.art === 'tunnel' || d.art === 'koepfe' || d.art === 'fuenftueren' || d.art === 'bahnsteig' || d.art === 'dunkelbahnsteig' || d.art === 'zug' || d.art === 'vorplatz' || d.art === 'tribuenen' || d.art === 'spielertunnel' || d.art === 'rasen') !== (pass === 0)) continue;
       const x = d.x - kamera; if (x < -320 - (d.w || 0) || x > viewW + 160) continue;
       if (d.art === 'feuertreppe') feuertreppeDeko(c, x); else if (d.art === 'subway') subwayDeko(c, x); else if (d.art === 'diner') dinerDeko(c, x); else if (d.art === 'eistuer') eistuerDeko(c, x);
       else if (d.art === 'maschinenraum') maschinenraumDeko(c, x, d.w); else if (d.art === 'knopf') knopfDeko(c, x);
-      else if (d.art === 'tower') towerDeko(c, x, d.w); else if (d.art === 'geist') { if (d.sitzt) geistBankDeko(c, x); else geistDeko(c, x); } else if (d.art === 'steg') stegDeko(c, x);   // Tower Bridge (Klasse 6)
+      else if (d.art === 'tower') towerDeko(c, x, d.w); else if (d.art === 'geist') { if (d.sitzt) geistBankDeko(c, x); else if (d.y != null) geistSchwebtDeko(c, x, d.y); else geistDeko(c, x); } else if (d.art === 'steg') stegDeko(c, x);   // Tower Bridge (Klasse 6)
       else if (d.art === 'bahnsteig') bahnsteigDeko(c, x, d.w); else if (d.art === 'dunkelbahnsteig') dunkelbahnsteigDeko(c, x, d.w); else if (d.art === 'zug') zugDeko(c, x, d.w, d.y);   // The Tube (Klasse 6)
+      else if (d.art === 'vorplatz') vorplatzDeko(c, x, d.w); else if (d.art === 'tribuenen') tribuenenDeko(c, x, d.w); else if (d.art === 'spielertunnel') spielertunnelDeko(c, x, d.w); else if (d.art === 'rasen') rasenDeko(c, x, d.w);   // Wembley (Klasse 6)
+      else if (d.art === 'anzeige') anzeigeDeko(c, x); else if (d.art === 'toilette') toiletteDeko(c, x); else if (d.art === 'federn') federnDeko(c, x);
       else if (d.art === 'maultier') maultierDeko(c, x); else if (d.art === 'skywalk') skywalkDeko(c, x); else if (d.art === 'wasserfall') wasserfallDeko(c, x, false); else if (d.art === 'drachentor') drachentorDeko(c, x);
       else if (d.art === 'tunnel') tunnelDeko(c, x, d.w); else if (d.art === 'koepfe') koepfeDeko(c, x); else if (d.art === 'kompass') kompassDeko(c, x); else if (d.art === 'fuenftueren') fuenfTuerenDeko(c, x);   // Mount Rushmore (Kapitel 4) + Eishalle
     }
@@ -6411,6 +6858,7 @@
       if (p.art === 'granit') { granitPlattform(c, x, p.y, p.w); continue; }       // Granit-Absatz auf den Präsidentenköpfen (Story Mount Rushmore)
       if (p.art === 'rolltreppe') { rolltreppePlattform(c, x, p.y, p.w); continue; }   // Rolltreppe als Stufe (Welt 4 Klasse 6)
       if (p.art === 'wagen') { wagenPlattform(c, x, p.y, p.w); continue; }         // Zugboden eines Wagens (Weg B, Welt 4 Klasse 6)
+      if (p.art === 'tribuene') { tribuenePlattform(c, x, p.y, p.w); continue; }   // Tribünenblock (Weg A, Welt 5 Klasse 6)
       c.fillStyle = W.farben.plattform; c.beginPath(); c.roundRect(x, p.y, p.w, 14, 4); c.fill();
       c.fillStyle = W.farben.plattformOben; c.beginPath(); c.roundRect(x - 2, p.y - 3, p.w + 4, 7, 3); c.fill();
     }
@@ -6429,6 +6877,7 @@
     for (const t of treibgut) { const x = t.x - kamera; if (x > viewW + 60 || x < -60) continue; treibgutZeichnen(c, t); }
     for (const sp of spalten) { const x = sp.x - kamera; if (x > viewW + 160 || x < -400) continue; spaltZeichnen(c, sp); }   // The Tube: Spalt (Schild + wartender Zug)
     for (const t of tueren) { const x = t.x - kamera; if (x > viewW + 80 || x < -80) continue; tuerZeichnen(c, t); }   // The Tube: Zugtüren
+    for (const b of baelle) { if (b.phase === 'weg') continue; const x = (b.phase === 'ruhe' ? b.x : b.rx) - kamera; if (x > viewW + 60 || x < -60) continue; ballZeichnen(c, b); }   // Wembley: rollende Bälle
     for (const cp of checkpoints) { const x = cp.x - kamera; if (x > -60 && x < viewW + 60) fahne(c, x, BODEN_Y, cp.erreicht); }
     if (story) { parkbusZeichnen(c); kristalleZeichnen(c); if (realm) { if (realm.aktiv) realmDingeZeichnen(c); else realmToreZeichnen(c); } }
     if (level.deko && level.deko.length) dekoVorneZeichnen(c);   // Story Route 66: Motel-Schild vor dem versteckten Tor ✦
@@ -6787,6 +7236,12 @@
       gegnerarten: ['taube', 'maus'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_TUBE_STORY, musterStory: MUSTER_TUBE_STORY, storyStruktur: STRUKTUR_TUBE, sprechblaseHoehe: 240,
       kulisse: hintergrundTube, boden: bodenTube, grube: gleisgrube, kiste: kisteTube, hudSymbol: (c, x, y) => { c.save(); c.strokeStyle = '#1d3f8f'; c.lineWidth = 3.5; c.beginPath(); c.arc(x, y + 1, 8, 0, Math.PI * 2); c.stroke(); c.fillStyle = '#1d3f8f'; c.fillRect(x - 14, y - 1.5, 28, 5); c.restore(); },
       boss: tubeBoss, tuer: stadionTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
+    // Klasse 6 „London Run“ Welt 5 Wembley (1.11.): Kapitel 5 „The Big Match“ – Fans und Stände, Tribünen (Weg A) oder Spielertunnel (Weg B), rollende Bälle auf dem Rasen; Boss Sergeant Bearskin am Spielfeldtor, Tür = Spielfeldtor, drei Enden nach Zählung
+    wembley: { id: 'wembley', name: 'Wembley', staat: 'London', ziel: 'Wembley Stadium', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin guards the pitch!', richtig: "Correct – the pitch gate opens. Kick-off!", falsch: "Not this time, soldier!", start: "Let's find Wembley Stadium!", ende: "You found Wembley Stadium!",
+      sturz: 'Ouch – the pit! 🚧',
+      gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WEMBLEY_STORY, musterStory: MUSTER_WEMBLEY_STORY, storyStruktur: STRUKTUR_WEMBLEY, sprechblaseHoehe: 240,
+      kulisse: hintergrundWembley, boden: bodenWembley, grube: wembleyGrube, kiste: kisteWembley, hudSymbol: (c, x, y) => { c.save(); c.strokeStyle = '#1d3f8f'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 13, y + 10); c.quadraticCurveTo(x, y - 16, x + 13, y + 10); c.stroke(); c.fillStyle = '#1d3f8f'; c.fillRect(x - 12, y + 6, 24, 5); c.restore(); },
+      boss: wembleyBoss, tuer: spielfeldTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner, richtig: w.richtig, falsch: w.falsch, start: w.start, ende: w.ende }));
 
@@ -6902,6 +7357,8 @@
         spalten: spalten.map((sp) => ({ x: sp.x, gewarnt: sp.gewarnt })), durchsagen, tueren: tueren.map((t) => ({ x: t.x, y: t.y, phase: t.phase, schluss: Math.round(t.schluss * 100) / 100, zu: tuerZu(t) })), piept,   // The Tube
         wagen: level.plattformen.filter((p) => p.art === 'wagen').map((p) => ({ x: p.x, y: p.y, w: p.w })), rolltreppen: level.plattformen.filter((p) => p.art === 'rolltreppe').map((p) => ({ x: p.x, y: p.y, w: p.w })),
         dunkelbahnsteig: (level.deko || []).filter((d) => d.art === 'dunkelbahnsteig').map((d) => ({ x: d.x, w: d.w })), rabe: rabeMit ? { x: Math.round(rabeMit.x), y: Math.round(rabeMit.y), fliegt: !!rabeMit.fliegt } : null,
+        baelle: baelle.map((b) => ({ x: b.x, phase: b.phase, rx: Math.round(b.rx) })), koepfer, ballTreffer, tuerTritt: tuerTritt >= 0, tribuenen: level.plattformen.filter((p) => p.art === 'tribuene').map((p) => ({ x: p.x, y: p.y, w: p.w })),   // Wembley
+        spielertunnel: (level.deko || []).filter((d) => d.art === 'spielertunnel').map((d) => ({ x: d.x, w: d.w })), toilette: (level.deko || []).filter((d) => d.art === 'toilette').map((d) => d.x), federn: (level.deko || []).filter((d) => d.art === 'federn').map((d) => d.x),
         trommelt, dunkel: Math.round(dunkel * 100) / 100, kabinen: level.plattformen.filter((p) => p.art === 'kabine').map((p) => ({ x: p.x, y: p.y, w: p.w })), maschinenraum: (level.deko || []).filter((d) => d.art === 'maschinenraum').map((d) => ({ x: d.x, w: d.w })),
         kisten: level.kisten.filter((k) => k.art).map((k) => ({ x: k.x, y: k.y, art: k.art })), luecken: level.boden.length - 1,
         cameo: cameo ? { id: cameo.held && cameo.held.id, t: Math.round(cameo.t * 100) / 100, satz: cameo.satz } : null, cameosGezeigt, cameoEffekt,
@@ -6922,6 +7379,7 @@
     windLoesen(richtung = -1) { if (zustand === 'spiel') wind = { phase: 'warnung', t: 0, richtung }; },   // Test: Windböe sofort ankündigen (Schub nach 0,5 s)
     klappeLoesen(i, phase = 'warnung') { const k = klappen[i]; if (k) { k.phase = phase; k.t = 0; k.winkel = phase === 'oben' ? KLAPPE_MAX : 0; } },   // Test: Brückenklappe i sofort ankündigen (oder gleich oben)
     tuerLoesen(i, phase = 'warnung') { const t = tueren[i]; if (t) { t.phase = phase; t.t = 0; t.schluss = phase === 'zu' ? 1 : 0; } },   // Test: Zugtür i sofort ankündigen (oder gleich zu)
+    ballLoesen(i) { const b = baelle[i]; if (b) { b.phase = 'rollt'; b.rx = b.x; b.t = 0; } },   // Test: Ball i rollt sofort los
     setLeben(n) { leben = Math.max(1, Math.min(3, Number(n) || 3)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
     setSkin(o) { Object.assign(skin, o); },
     cameo(id) { if (zustand !== 'spiel') return false; const h = cameoListe.find((x) => x.id === id) || (id ? { id, name: id } : cameoListe[0]); if (!h) return false; cameo = null; cameoStart(h); return true; },   // Test: Cameo sofort auslösen
@@ -6938,7 +7396,7 @@
         kristalle: kristalle.map((k) => ({ nr: k.nr, strang: k.strang, key: kristallKey(k), x: k.x, y: k.y, weg: k.weg, sichtbar: kristallSichtbar(k) })),
         diamanten: diaGesammelt, diamantenMax: diaMax(), parkbusse: level.parkbusse.map((b) => b.x),
         wahl: Object.assign({}, story.wahl), autoWahl: Object.assign({}, story.autoWahl), max: struktur.anzahl, deko: (level.deko || []).map((d) => d.art),
-        varianten: Object.assign({}, variantenWahl), gegenstandName: realmGegenstand().name,
+        varianten: Object.assign({}, variantenWahl), gegenstandName: realmGegenstand().name, ende: endeWahl(), gute: storyOpt && typeof storyOpt.gute === 'number' ? storyOpt.gute : null,   // Wembley: Ende nach Zählung
         begleiter: begleiter ? { art: begleiter.art, x: Math.round(begleiter.x), y: Math.round(begleiter.y) } : null, dunkel: Math.round(dunkel * 100) / 100, radWinkel: Math.round(radWinkel * 1000) / 1000, kameraHoch: Math.round(kameraHoch * 100) / 100,   // London Eye   // Kapitel 2: gewählte Variante je Quelle (z. B. { 'ny.g2': 'X' }), Sammelstück des Realm
         realm: realm ? { aktiv: realm.aktiv, gefunden: realm.gefunden, gesammelt: realm.gesammelt.slice(), gegenstand: realm.gegenstand, besuche: realm.besuche, t: Math.round(realm.t * 100) / 100,
           tore: realm.tore.map((t) => ({ x: t.x, y: t.y, benutzt: t.benutzt })), rueckX: imRealm() ? level.rueckX : null, welt: W.id, dinge: realm.dinge.map((d) => ({ x: d.x, y: d.y, weg: d.weg })),

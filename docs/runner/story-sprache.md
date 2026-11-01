@@ -5,6 +5,8 @@
 
 Vorausplanung für die kommenden Kapitel (gesichert vs. antizipiert): `docs/runner/sprach-vorschau.md`.
 
+**Etwas darüber hinaus ist erlaubt** (Mr. Alex, 1.11.): Die Geschichten dürfen hier und da ein Stück über den Unterrichtsstand hinausgehen, weil die Schüler es aus dem Zusammenhang verstehen. Klasse 6: simple past in den späteren Kapiteln ok (steht nicht in Lighthouse 1). Klasse 9: conditional type 3, indirect speech o. Ä. in späteren Kapiteln oder als Bonus ok. Kern bleibt die Buchsprache, die Erweiterung bleibt sparsam und wird in der Sprachzeile als „darüber hinaus“ markiert.
+
 Die Sprache der Geschichten **wächst mit dem Unterricht**. Jedes neue Kapitel benutzt bewusst die Sprache, die in der App gerade neu ist (Station „Neu“ bzw. die aktuelle Unit) und wiederholt die alte – so, wie es im Schulbuch weitergeht.
 - Vor jedem neuen Kapitel: **App-Inhalte und Buchkapitel ansehen** (`inhalte/`, `app/daten.js` → Station 8 „Neu“ (Kl. 6) bzw. aktuelle Unit (Kl. 9), `docs/briefing.md` „Aktueller Unterrichtsstand“, Archiv `docs/archiv/`).
 - **Neue Sprache einweben** (Grammatik, Wortfelder, Redemittel), alte Sprache weiter benutzen. Pro Stück bleibt die Satzlänge der Klasse angemessen (Kl. 6 ≤ ca. 10 Wörter, Kl. 9 ≤ ca. 12).

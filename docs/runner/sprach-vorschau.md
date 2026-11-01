@@ -1,6 +1,6 @@
 # Sprach-Vorausplanung für die kommenden Story-Kapitel (31.10.2026)
 
-Auftrag Mr. Alex (31.10.): „Look at future chapters in the book … or anticipate what comes after the relevant grammatical chapters.“ Regel: `story-sprache.md` („Kernsprache anbinden, plus“).
+Auftrag Mr. Alex (31.10.): „Look at future chapters in the book … or anticipate what comes after the relevant grammatical chapters.“ Regel: `story-sprache.md` („Kernsprache anbinden, plus“; seit 1.11. ausdrücklich: ein Stück über den Stand hinaus ist ok, z. B. simple past in Klasse 6, conditional type 3 als Bonus in Klasse 9).
 
 **Quellenlage:** Für Klasse 6 liegt seit 1.11. das Inhaltsverzeichnis Lighthouse 1 Unit 3–5 als Abschrift im Archiv (Spalten „gesichert“). Für Klasse 9 liegt seit 1.11. ebenfalls das Inhaltsverzeichnis (Unit 1–5) als Abschrift vor. Noch offen: die Grammatik-Doppelseiten beider Bücher (für Beispielsätze). Vorhanden sind nur die App-Inhalte (`inhalte/`, `app/daten.js`), Mr. Alex' eigene Folien/Blätter (If-Clauses, Focus on Language, Week-9-Decks) und ein Verlagsdokument zu Lighthouse 4 (Klassenarbeiten, nicht das Klasse-9-Buch). Die Spalten „gesichert“ stammen aus der App; die Spalten „erwartet“ sind **Antizipation** nach dem üblichen Aufbau von Cornelsen *Lighthouse 1* (Klasse 5/6) und *Lighthouse 5* (Klasse 9) – bitte bei Gelegenheit mit dem Inhaltsverzeichnis/den Grammatik-Seiten des Buchs abgleichen (ein Foto der Seiten reicht; es wird dann nach `docs/archiv/` übernommen).
 

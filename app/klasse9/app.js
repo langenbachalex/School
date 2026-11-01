@@ -231,10 +231,13 @@
   }
   /* ---------- Audio ---------- */
   let lauf = 0, aktuell = null;
+  let hauptNr = 0, hauptLaeuft = false, wortWartet = null; // Runner-Stimmen-Vorrang (hauptText/runnerWort, unten bei spiele)
   function stopp() {
     lauf++;
     if (aktuell) { aktuell.pause(); aktuell = null; }
     if (window.speechSynthesis) speechSynthesis.cancel();
+    audioEnde = Promise.resolve(); // die abgebrochene Wiedergabe meldet kein Ende mehr: spätere spiele(…, { warten }) dürfen nicht ewig dahinter hängen
+    hauptLaeuft = false; wortWartet = null; // Runner: Seitenwechsel, Runner-Ende, Station übersprungen → wartende Vokabel verwerfen
   }
   // Notlösung: Sprachausgabe des Geräts (amerikanisch), solange eine Audiodatei fehlt
   const FRAU = /samantha|zira|aria|jenny|ava|allison|susan|female|joanna|salli|kendra|kimberly|ivy|emma|michelle/i;
@@ -284,6 +287,29 @@
     })), Promise.resolve()));
     audioEnde = lauf_.catch(() => {});
     return lauf_.then(() => (meinLauf === lauf ? gesamt : null));
+  }
+  /* Runner – Haupttext hat Vorrang (1.11., Mr. Alex): Ansage, Erzähler, Boss-Sprüche und Cameo-Sätze laufen über hauptText() und werden nie von einer
+     Vokabel unterbrochen. runnerWort(): läuft ein Haupttext (oder wartet einer), kommt die Vokabel in EINEN Warteplatz und wird danach gesprochen;
+     eine neuere Vokabel ersetzt die wartende (keine Schlange; ein Echo verdrängt kein frisch gesammeltes Wort). Ohne Haupttext spielt sie sofort wie bisher
+     (und darf eine laufende Vokabel abschneiden). Gilt für Audiodateien und Geräte-Stimme gleich; stopp() verwirft das wartende Wort. */
+  function hauptText(dateien, opt = {}, wortBehalten = false) {
+    const wartend = wortWartet;
+    const p = spiele(dateien, opt);
+    if (wortBehalten) wortWartet = wartend; // Boss-Spruch (ohne warten) schneidet z. B. die Ansage ab – die wartende Vokabel bleibt; Station/Film (sofort) verwirft sie
+    const nr = ++hauptNr;
+    hauptLaeuft = true;
+    p.then((d) => {
+      if (nr !== hauptNr || !hauptLaeuft) return; // ein späterer Haupttext ist dran, oder stopp() hat alles beendet
+      hauptLaeuft = false;
+      const w = wortWartet; wortWartet = null;
+      if (w && d !== null) spiele(w.dateien, Object.assign({}, w.opt, { warten: true }));
+    });
+    return p;
+  }
+  function runnerWort(dateien, opt = {}) {
+    if (!hauptLaeuft) return spiele(dateien, opt);
+    if (!(opt.laut && wortWartet && !wortWartet.opt.laut)) wortWartet = { dateien, opt };
+    return Promise.resolve(null);
   }
   const tonSatz = (s) => s.audio || { text: s.en.replace(/[–—]/g, ","), stimme: s.stimme };
   const tonWort = (v) => v.audio || { text: v.en.replace(/\((AE|BE|infml|pl)\)/g, "").replace(/\bsth\./g, "something").replace(/\bsb\./g, "somebody"), stimme: v.stimme };
@@ -3057,7 +3083,7 @@
   const erzaehlerStimme = (text, o) => {
     const dateien = o && o.audio ? [].concat(o.audio) : [];
     const liste = dateien.length && dateien.every(Boolean) ? dateien : [{ text: text.replace(/[–—]/g, ","), stimme: "m" }];
-    return spiele(liste, o && o.sofort ? {} : { warten: true });
+    return hauptText(liste, o && o.sofort ? {} : { warten: true });
   };
   const storyTexte = () => ({ stationWeiter: T("Weiter ▶", "Next ▶"), stationHinweis: T("🎙 Mr. Alex liest vor · Tippen = weiter", "🎙 Mr. Alex is reading · tap = next"),
     filmSkip: T("🎬 Tippen = überspringen", "🎬 Tap = skip"), filmWeiter: T("Tippen = weiter", "Tap = continue") });
@@ -3092,10 +3118,10 @@
       // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
       // Aufnahmen der Welt (Boss-Banner/-Sprüche Mr. Alex, Levelstart Jeremy); fehlt eine Datei, spricht die Geräte-Stimme
       audio: runnerAudio(W.id),
-      stimme: { wort: (j, o) => spiele([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
+      stimme: { wort: (j, o) => runnerWort([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
         erzaehler: erzaehlerStimme, still: () => stopp(),
-        boss: (text, o) => spiele([(o && o.audio) || { text, stimme: "m" }]),
-        ansage: (text, o) => spiele([(o && o.audio) || { text, stimme: "m" }], { warten: true }) },
+        boss: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], {}, true),
+        ansage: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }) },
       onEnde: (e) => runnerEnde(k, unit, i, e, ws, W.id),
     });
   }

@@ -6,6 +6,7 @@
    → zeichnet ein Canvas (plus Boss-Frage als Overlay) in wrapper; ergebnis = { geschafft, diamanten, max, toreRichtig, leben, dauer, maxCombo }.
    Figur v2 (29.10.): zeichneFigur mit Hals/Proportionen, 14 Frisuren, 7 Bärte, 12 Haarfarben, Körper-Übertreibungen (Giraffenhals, Kugelbauch, Hulk, Riesenfüße) und Gesichtsausdruck als Spielreaktion (Parameter ausdruck).
    Mittel-Pop-up nur noch für Tor-Ergebnis und Boss-Antwort; Combo-Texte und Boss-Banner bleiben mittig.
+   Leben (1.11., Mr. Alex): vier Leben je Lauf in allen Welten (LEBEN_MAX; Herzen im HUD, Camilla-Cameo höchstens bis 4).
    Combo (29.10.): Wort-Diamanten in Serie → 3 Funken + Jingle, 5 goldene Spur, 8+ „On fire!“ mit Flammen; Reset bei Lebensverlust oder verpasstem Diamant.
    Wortanzeige (29.10., Mr. Alex): Sprechblase an der Figur (1,6 s, folgt auch im Sprung, kippt am rechten Rand), Wortbank als Chip-Leiste im HUD, Echo 6–8 s später (stimme.wort(i, {leise:true}) + Untertitel unten).
    Gegner-Klänge (Web Audio): Taube flattert, Waschbär knurrt, Eichhörnchen zirpt (je Art höchstens alle 1,5 s, nie in Sequenz/Boss), Plattdrücken = Plopp + Sternchen.
@@ -38,6 +39,8 @@
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
+   Stimmen-Vorrang (1.11., Mr. Alex): Haupttexte (ansage, erzaehler, boss, cameo) unterbricht keine Vokabel – stimme.wort wartet in der App dahinter
+   (nur die zuletzt gesammelte; Umsetzung im App-Kleber hauptText()/runnerWort(), docs/runner/konzept-entwurf.md Abschnitt 24).
    Story-Modus (31.10., nur mit Option story – Klasse 6 London Run Welt 1, docs/runner/story-london-01.md; Klasse 9 nur Welt New York, s. u.): eigene Strecke MUSTER_WESTMINSTER_STORY
    mit 12 Story-Kristallen ♪ (violett, Goldkante, Notensymbol, Glühen; Erzähler über stimme.erzaehler(text, { key, audio, sofort }), Text oben mittig als Schreibmaschine, Warteschlange ohne Überlagerung),
    Gabelung nach Stück 4 (♪A5 Straße / ♪B5 auf einem geparkten Doppeldecker: das zuerst genommene legt den Strang fest), 18 Punkte-Diamanten 💎 (Wort wie bisher), Stationen „The story so far“ an den Checkpoints
@@ -1583,6 +1586,8 @@
   let opt = null, woerter = [], skin = Object.assign({}, SKIN_STANDARD), stimme = { wort() {}, boss() {} }, texte = TEXTE;
   let laeuft = false, rafId = 0, startZeit = 0, endeGemeldet = false;
   let zustand = "aus";   // aus | spiel | sequenz | boss | finale | fertig | gameover
+  const LEBEN_MAX = 4;   // vier Leben je Lauf in allen Welten (1.11., Mr. Alex; vorher 3)
+  const HUD_RECHTS_DER_HERZEN = 24 + (LEBEN_MAX - 1) * 26 + 20;   // ♪-Zähler der Story beginnt rechts neben dem letzten Herz (bei 3 Leben war es 96)
   let spieler, diamanten, gegner, tore, checkpoints, leben, gesammelt, kamera, zeit, popup, meldung, checkpoint, boss, tuer, tot, bossFrage, torErgebnisse;
   // Welt 2: Autos/Trucks (rollende Hindernisse), Ölflecken (rutschen 0,6 s ohne Sprung), Hupen-Zähler (Tests)
   let autos = [], oel = [], rutscht = 0, hupen = 0;
@@ -1653,7 +1658,7 @@
     tore = level.tore.map(torBauen);
     checkpoints = level.checkpoints.map(c => ({ ...c, erreicht:false }));
     torErgebnisse = tore.map(() => null);
-    leben = 3; gesammelt = 0; kamera = 0; zeit = 0; popup = null; meldung = null; tot = 0;
+    leben = LEBEN_MAX; gesammelt = 0; kamera = 0; zeit = 0; popup = null; meldung = null; tot = 0;
     checkpoint = 120; boss = { maul:0, weg:0, sichtbar:0, deckel:0 }; tuer = { offen:0 }; bossFrage = null;
     autos = level.autos.map(a => ({ ...a, x:a.start, rad:0 })); oel = level.oel.map(o => ({ ...o, aktiv:false })); rutscht = 0; hupen = 0; autoKlangZeit = -9;
     steine = level.steine.map(s => ({ ...s, phase:'ruhe', t:0, y:-60, vy:0 })); bruecken = level.bruecken.map(b => ({ ...b, zeit:0, gebrochen:false, knarrte:false, bruch:0, bruchX:0 })); kakteen = level.kakteen.map(k => ({ ...k })); rasseln = 0;
@@ -1724,7 +1729,7 @@
   /* ---------- Cameos: geheime Superhelden (Klasse 6) – Satz (Englisch, kurz), Umhangfarbe, Effekt-Symbol ----------
      Effekte (fair, nie mehr Diamanten als möglich): leo Funken-Spur + Combo +1 · kenji nächster Sprung höher (5 s) · tessa Schild gegen den nächsten Treffer (5 s, nicht beim Sturz)
      felix trägt über die nächste Lücke (5 s, einmal) · olivia zeigt die Frage des nächsten Tors sofort · ellie Echo des letzten Worts sofort · zara Gegner 3 s durchlässig
-     penny Gegner 3 s eingefroren · max holt den zuletzt verpassten Diamanten zurück (sonst Combo +1) · camilla +1 Herz (bei 3 Herzen Combo +1); unbekannte Helden: Combo +1 */
+     penny Gegner 3 s eingefroren · max holt den zuletzt verpassten Diamanten zurück (sonst Combo +1) · camilla +1 Herz (bei 4 Herzen Combo +1); unbekannte Helden: Combo +1 */
   const CAMEO = {
     leo: { satz: "Leo here! Go, go, go!", farbe: "#e0a400", symbol: "⚡" },
     kenji: { satz: "Kenji here! Jump high!", farbe: "#ff7a1a", symbol: "🦘" },
@@ -1778,7 +1783,7 @@
       for (let k = 0; k < 10; k++) { const x = spieler.x + 150 + k * 60; if (level.boden.some(([a, b]) => x - 30 > a && x + 30 < b) && !level.kisten.some((q) => q.x > x - 70 && q.x < x + 30)) { zx = x; break; } }
       d.x = zx; d.y = 290; d.verpasst = false; funken(d.x, d.y, 14, ["#39c6f0", "#bfefff", "#ffffff"], 180, 0.6); cameoEffekt = 'diamant';
     }
-    else if (id === 'camilla' && leben < 3) { leben++; hudPuls = 1; cameoEffekt = 'herz'; }
+    else if (id === 'camilla' && leben < LEBEN_MAX) { leben++; hudPuls = 1; cameoEffekt = 'herz'; }
     else { comboPlus(); cameoEffekt = 'combo'; }
   }
   function cameoBewegen(dt) {
@@ -5647,14 +5652,14 @@
     const txt = `♪ ${story.gesammelt.length} / ${struktur.anzahl}`;
     c.save(); c.font = 'bold 16px system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'center';
     const w = c.measureText(txt).width + 18, puls = ruhig() ? 1 : 1 + 0.12 * Math.sin(Math.min(1, hudPuls) * Math.PI);
-    c.translate(96 + w / 2, 24); c.scale(puls, puls);
+    c.translate(HUD_RECHTS_DER_HERZEN + w / 2, 24); c.scale(puls, puls);
     c.fillStyle = 'rgba(74,26,158,.9)'; c.strokeStyle = '#ffd36b'; c.lineWidth = 1.5; c.beginPath(); c.roundRect(-w / 2, -13, w, 26, 13); c.fill(); c.stroke();
     c.fillStyle = '#fff'; c.fillText(txt, 0, 1);
     c.restore();
     if (imRealm()) {   // Realm: ✦ x / 3 (und ❄ bzw. 🐉, sobald das Sammelstück gefunden ist)
       const t2 = `✦ ${realm.gesammelt.length} / ${(struktur.realm || []).length || 3}${realm.gegenstand ? ' · ' + realmGegenstand().symbol : ''}`;
       c.save(); c.font = 'bold 16px system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'center';
-      const w2 = c.measureText(t2).width + 18, x2 = 96 + w + 8 + w2 / 2;
+      const w2 = c.measureText(t2).width + 18, x2 = HUD_RECHTS_DER_HERZEN + w + 8 + w2 / 2;
       c.fillStyle = 'rgba(14,52,96,.9)'; c.strokeStyle = '#bfefff'; c.lineWidth = 1.5; c.beginPath(); c.roundRect(x2 - w2 / 2, 11, w2, 26, 13); c.fill(); c.stroke();
       c.fillStyle = '#fff'; c.fillText(t2, x2, 25); c.restore();
     }
@@ -7082,7 +7087,7 @@
     c.restore();
   }
   function hud(c) {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < LEBEN_MAX; i++) {
       c.fillStyle = i < leben ? '#e63946' : 'rgba(0,0,0,.2)';
       herz(c, 24 + i * 26, 24, 9);
     }
@@ -7403,7 +7408,7 @@
     stand() {
       if (nurFilm) return { zustand, laeuft, nurFilm: true, fps, viewW };
       return {
-        zustand, laeuft, x: spieler.x, y: spieler.y, amBoden: spieler.amBoden, leben, diamanten: gesammelt, kamera, fps,
+        zustand, laeuft, x: spieler.x, y: spieler.y, amBoden: spieler.amBoden, leben, lebenMax: LEBEN_MAX, diamanten: gesammelt, kamera, fps,
         popup: popup ? popup.en : null, torErgebnisse: [...torErgebnisse], checkpoint, checkpoints: checkpoints.map((c) => c.erreicht),
         frageOffen: !!frageBox && !frageBox.hidden, bossFrage: bossFrage ? bossFrage.opt.map((i) => woerter[i].en) : null, richtig: bossFrage ? woerter[bossFrage.richtig].en : null,
         zoom, sequenz: sequenz ? sequenz.phase : null, eingabeGesperrt: zustand !== "spiel", banner: banner ? banner.text : null,
@@ -7438,6 +7443,7 @@
         torHinweis: zustand === 'spiel' && torHinweis() ? torHinweis().de : null, vy: Math.round(spieler.vy), diamantenX: diamanten.map((d) => ({ x: Math.round(d.x), weg: d.weg, verpasst: !!d.verpasst })),
       };
     },
+    wort(i, o) { stimmeAufrufe++; stimme.wort(i, o); },   // Test: Vokabel-Stimme direkt auslösen (z. B. während eines Boss-Spruchs)
     sammle(i) { const d = diamanten[i]; if (d && !d.weg && zustand === "spiel") diamantSammeln(d); },   // Diamant i direkt einsammeln (Test)
     stampfe(i) { const g = gegner[i]; if (g && g.tot <= 0 && zustand === "spiel") gegnerPlatt(g); },                             // Gegner i plattdrücken (Test)
     gegnerKlang,
@@ -7450,7 +7456,7 @@
     klappeLoesen(i, phase = 'warnung') { const k = klappen[i]; if (k) { k.phase = phase; k.t = 0; k.winkel = phase === 'oben' ? KLAPPE_MAX : 0; } },   // Test: Brückenklappe i sofort ankündigen (oder gleich oben)
     tuerLoesen(i, phase = 'warnung') { const t = tueren[i]; if (t) { t.phase = phase; t.t = 0; t.schluss = phase === 'zu' ? 1 : 0; } },   // Test: Zugtür i sofort ankündigen (oder gleich zu)
     ballLoesen(i) { const b = baelle[i]; if (b) { b.phase = 'rollt'; b.rx = b.x; b.t = 0; } },   // Test: Ball i rollt sofort los
-    setLeben(n) { leben = Math.max(1, Math.min(3, Number(n) || 3)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
+    setLeben(n) { leben = Math.max(1, Math.min(LEBEN_MAX, Number(n) || LEBEN_MAX)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
     setSkin(o) { Object.assign(skin, o); },
     cameo(id) { if (zustand !== 'spiel') return false; const h = cameoListe.find((x) => x.id === id) || (id ? { id, name: id } : cameoListe[0]); if (!h) return false; cameo = null; cameoStart(h); return true; },   // Test: Cameo sofort auslösen
     sprechListe, get level() { return level; }, SEQUENZ, BANNER_TEXT, get welt() { return W.id; },

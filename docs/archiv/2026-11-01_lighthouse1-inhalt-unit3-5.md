@@ -2,6 +2,9 @@
 
 Abschrift der Struktur (Originalfotos nicht im öffentlichen Repo). Schauplatz Brighton, „Varndean Teen Zine“. Kürzel: L Listening · R Reading · S Speaking · W Writing · M Mediation · V Viewing · IC Intercultural competence · MK Medienkompetenz · LS Life skills · Voc Vocabulary · G Grammar.
 
+## Hello! Nice to meet you (S. 10), Unit 1 „My new school“ (S. 18), Unit 2 „My family and home“ (S. 48)
+Nachtrag 1.11. (weiteres Foto): Sprachliche Mittel siehe `sprachthemen-beide-buecher.md`. Unit 1: Lead-in, Topic 1 Time for school, Topic 2 My timetable, Topic 3 It's a big school!, Story After school, Viewing The Brighton dares: At school, Study skills Learning vocabulary, Unit task Make a poster about your school; Text file Our school. Unit 2: Lead-in, Topic 1 My pets, Topic 2 Different homes, Topic 3 In my room, Story At home with Sunita, Viewing The Brighton dares: Family, Study skills Spelling, Unit task Present your dream room; Text file Pets, homes and families; Teen Zine special Festivals (Christmas, Chinese New Year).
+
 ## Unit 3 „My day“ (S. 80) – aktuell im Unterricht
 | Teil | I can … | Sprachliche Mittel |
 |---|---|---|

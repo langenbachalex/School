@@ -2313,15 +2313,15 @@
     // Aufnahmen audio/story/wembley_<key>.mp3 (+ _sofar) nach dem 13.11., bis dahin Geräte-Stimme.
     wembley: { id: "wembley", titel: "The Big Match", kapitel: 5, welt: "Wembley", wege: { A: { symbol: "🪜", name: "The stands" }, B: { symbol: "🌱", name: "The tunnel" } },
       enden: { E1: { symbol: "🏆", name: "The Sergeant scores" }, E2: { symbol: "👻", name: "The ghost scores" }, E3: { symbol: "🎩", name: "Bounce" } }, teile: {
-      "1A": "Saturday, 3 p.m. Match day! The ghost is here too. He never pays.", "2A": "\"Are you free after the match?\" the Sergeant asks. \"Let's have tea.\"",
-      "1B": "Saturday, 3 p.m. Match day! The raven sits on the Sergeant's hat.", "2B": "\"Are you free after the match?\" the Sergeant asks. \"I'd love to,\" you say.",
-      3: "Ninety thousand people. I can hear them. I can smell the chips.", 4: "Then the big screen says: KICK-OFF IN 10 MINUTES. NO REFEREE!",
-      A5: "You run up the stands. Row after row. Does anybody know the referee?", A6: "\"No, I don't,\" says a man. \"No, I don't,\" says a woman. \"Yes, I do!\" A boy.", A7: "The referee is stuck in the toilet! Door locked. He feels angry and sad.", A8: "The Sergeant kicks the door. Boom. He feels surprised. The door too.",
-      B5: "You run down the tunnel. It's dark and it smells of grass.", B6: "\"Does the Sergeant play football?\" the ghost asks. \"No, he doesn't.\"", B7: "The referee is here. But his whistle is gone. Who takes a whistle?", B8: "A bird! Black feathers on the floor. Ravens always take shiny things.",
-      9: "Kick-off! The Sergeant stands at the pitch gate. Still. Like always.", 10: "\"Does he ever move?\" asks the ghost. Wait and see.",
-      E1_11: "The ball flies to the gate. The Sergeant moves! One step. He kicks. GOAL!", E1_12: "He never moved. Today he did. He feels happy. Don't tell anyone.",
-      E2_11: "The ball flies to the gate. The Sergeant doesn't move. The ghost does!", E2_12: "Ghosts can't kick. But they can scare. The goalkeeper runs away. GOAL!",
-      E3_11: "The ball flies to the gate. It hits the Sergeant's hat. Bounce. GOAL?", E3_12: "\"Not this time, soldier,\" the referee says. No goal. But what a day!" },
+      "1A": "Saturday, 3 p.m. England v Scotland at Wembley! The ghost is here too. He never pays.", "2A": "\"Are you free after the match?\" the Sergeant asks. \"Let's have tea.\"",
+      "1B": "Saturday, 3 p.m. England v Scotland at Wembley! The raven sits on the Sergeant's hat.", "2B": "\"Are you free after the match?\" the Sergeant asks. \"I'd love to,\" you say.",
+      3: "Ninety thousand people. I can hear them: \"Come on, England!\" I can smell the chips.", 4: "Then the big screen says: KICK-OFF IN 10 MINUTES. NO REFEREE!",
+      A5: "You run up the stands. Row after row. Does anybody know the referee?", A6: "\"No, I don't,\" says a man. \"No, I don't,\" says Bukayo Saka. \"Yes, I do!\" A boy.", A7: "The referee is stuck in the toilet! Door locked. He feels angry and sad.", A8: "The Sergeant kicks the door. Boom. He feels surprised. The door too.",
+      B5: "You run down the tunnel. It's dark and it smells of grass.", B6: "\"Does Harry Kane play today?\" the ghost asks. \"Yes, he does. And Phil Foden too.\"", B7: "The referee is here. But his whistle is gone. Who takes a whistle?", B8: "A bird! Black feathers on the floor. Ravens always take shiny things.",
+      9: "Kick-off! Kane, Bellingham, Saka and Foden run. \"It's coming home!\" sings the crowd.", 10: "The Sergeant stands at the pitch gate. Still. \"Does he ever move?\" asks Declan Rice.",
+      E1_11: "Bellingham passes. The Sergeant moves! One step. He shoots, he scores! Top corner!", E1_12: "He never moved. Today he did. \"What a strike, Sergeant!\" Harry Kane laughs.",
+      E2_11: "Kane shoots. The ball flies to the gate. The Sergeant doesn't move. The ghost does!", E2_12: "Ghosts can't kick. But they can scare. The Scottish goalkeeper runs away. The ball is in the back of the net!",
+      E3_11: "Saka shoots. It hits the Sergeant's hat. Bounce. Over the bar! GOAL?", E3_12: "\"Not this time, soldier,\" the referee says. Offside! Jordan Pickford laughs. What a day!" },
       audio: null },   // wird unten aus SP.story_audio gefüllt (storyAudioDateien); Dateien gibt es noch nicht → Geräte-Stimme
   };
   const STORY_KEYS_EYE = ["1A", "2A", "1B", "2B", "3", "4", "A5", "A6", "A7", "A8", "B5", "B6", "B7", "B8", "9", "10", "A11", "A12", "B11", "B12", "sofar"];

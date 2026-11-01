@@ -21,6 +21,9 @@ Die Sprache der Geschichten **wächst mit dem Unterricht**. Jedes neue Kapitel b
 | Station 8 „Neu“ | **School clubs** (drama club, art club …) – organisch: Ghost Club, Key Club, Raven Club | „Club time at the Tower: Ghost Club, Key Club, Raven Club.“ „The Raven Club has one rule: Never lose a raven.“ | London 3 (gebaut + vertont 31.10.) |
 | Unit 3 Topic 1–2 | Tagesablauf mit Uhrzeit; Wege und Fahrten (by tube, journey, long, stops, late), Häufigkeit (always · never · rarely) | „Thursday, half past three.“ (London 3); „Today he goes to Wembley by tube.“ „The journey is long: twelve stops.“ „Trains here are always late.“ „I never sleep on the tube.“ „Wembley Stadium, 11 a.m.“ | London 3–4 (London 4 gebaut 31.10.) |
 | Folklore (echte Tube-Ansage) | **„Mind the gap!“** als Durchsage – kulturell, trägt die Story (Spalt als Hindernis, Türen schließen) | „»Mind the gap!« says a voice. The doors close.“ „»Mind the gap!« Wembley Park.“ – dazu organisch: „Lucky them“, „pillow mark“, der Geist aus dem Ghost Club kommt wieder („Hello again.“, „I've waited since 1899.“) | London 4 (gebaut 31.10.) |
+| Unit 3 Topic 3 / Story | planning to meet (Are you free on …? Let's … I'd love to. Sorry, I can't.), feelings (angry, happy, sorry, sad, surprised, tired) | geplant für London 5 Wembley | London 5 |
+| Unit 4 (gesichert, Buch) | simple present verneint, Fragen mit do/does + Kurzantworten, I can see/hear/smell, Gegensatz-Adjektive, Orte, Wetter, wh-questions | sparsam in London 5, voll ab London 6 | London 5–6 |
+| Unit 5 (gesichert, Buch) | present progressive, Monate/Daten/Ordinalzahlen, Vorschläge (Let's / Why don't we / What about), much/many/a lot of, Essen, Rezepte | geplant | London 6+ |
 | überall | Adjektive (big, red, dark, noisy, cold, strong, worried, top) | „It's dark and noisy.“ „The wind is cold and strong.“ | London 1–2 (gebaut), laufend |
 
 ## Stand Klasse 9 (Road Trip USA)

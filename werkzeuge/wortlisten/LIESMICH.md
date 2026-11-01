@@ -4,3 +4,4 @@
 - `haeufigkeit.tsv` – Häufigkeitsrang der 10.000 häufigsten englischen Wörter aus Untertiteln (hermitdave/FrequencyWords, Stand 2018, OpenSubtitles-Basis). Lizenz: Creative Commons Attribution-ShareAlike 4.0.
 
 Zweck (Regel Mr. Alex 1.11.): Story-Texte gegen App-Vokabeln + Stufe prüfen; Wörter „darüber hinaus“ mit Stufe und Rang anzeigen. Keine Schulbuch-Inhalte.
+- `buch9_vorrat.tsv` – Stichwörter (nur englische Kopfwörter) der Units 3–5 des Klasse-9-Buchs, aus den Fotos von Mr. Alex vom 1.11.2026 (S. 206–219). Der Wortcheck zählt sie als Buchwortschatz; in die App-Vokabeln kommen sie erst, wenn die Klasse die Unit erreicht. Ergänzt um S. 206–209 (Anfang Unit 3); damit ist der Vokabelteil des Buchs vollständig erfasst.

@@ -60,6 +60,10 @@
    verstecktes Tor ✦ im Tunnel hinter einer Felsspalte ('spalte', B-Weg, nur vom Granit-Absatz mit Sprung), Gabelung 2 „forgive him“ / „send him away“, Film X/Y am Ranger-Tor (filmZeichnenSD),
    Realm Kapitel 4 = Eishalle mit fünf Türen (REALM_WELT_4 'eishalle', MUSTER_REALM_4: Spiegelboden (rutschig, spiegelt Figur und Eiszapfen), Eiszapfen h.zapfen – zittern 0,6 s, wenn die Figur ≈ 300 davor ist,
    fallen, stecken 1,2 s im Boden (drüberspringen), Treffer „Icicle! 🧊“; fünf Türen 'fuenftueren' bei ✦R1, wartender Ritter hinter ✦R2, Silver Key 🗝️ hoch oben, Rückkehr-Tor „✦ Mount Rushmore“).
+   Kapitel 5 Golden Gate „The Last Gate“ (2.11., docs/runner/story-usa-05.md): STRUKTUR_CA (Variante aus Kapitel 4: story.varianten['sd.g2']), MUSTER_CA_STORY (Gabelung 1: A unten an der Küste – Seelöwen-Felsen,
+   Wellen, Nebelhorn, Bank mit Zeitung, Alcatraz im Dunst / B oben über die Brücke auf roten Stahlstreben h.stahl – Cable Car, Böe am Geländer, gemalte Tür; Warnschild bei ♪4), verstecktes Tor ✦ halb oben am Brückenturm ('turm',
+   A-Weg, nur von der Stahl-Stufe), Gabelung 2 NACH dem Boss als Auswahl im Frage-Fenster (nachBoss; Test-Haken wahl('X'|'Y')), Ende nach Zählung (Kapitel 1–4 als story.gute + eigene g2 X) E1/E2/E3, Film an der Brückentür
+   (filmZeichnenCA, Szene 1 = '@g2'), Realm Kapitel 5 = Eisbrücke mit schwarzem Banner und Böen (REALM_WELT_5 'eisbruecke', MUSTER_REALM_5), Black Banner 🏴.
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …; Story: story, gabelung, kristall, stationWeiter, filmStart, filmSkip; Realm: realmBetreten, realmEnde, drache, zapfenLoesen). */
 (function () {
   "use strict";
@@ -1479,7 +1483,76 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.vor(1100); },                                           // 9
     (h) => { h.vor(900); },                                                                                          // 10 Rückkehr-Tor
   ];
-  const REALM_MUSTER = { ny: MUSTER_REALM, route66: MUSTER_REALM_2, az: MUSTER_REALM_3, sd: MUSTER_REALM_4 };
+  // Golden Gate „The Lost Map – The Last Gate“ (Klasse 9, Kapitel 5, docs/runner/story-usa-05.md): Anfang 1–5, ♪1/♪2 als Variante von Kapitel 4 (quelle 'sd.g2': X = Jayden blieb → 1X/2X, Y = Jayden ging → 1Y/2Y;
+  // ohne Wahl X) · Station 1 · Gabelung 1 (A6–A10 unten an der Küste / B6–B10 oben über die Brücke auf roten Stahlstreben; ohne Wahl: A) · Station 2 · gemeinsam 11–14 · Boss Captain Fog ·
+  // Gabelung 2 NACH dem Boss (nachBoss: Auswahl im Frage-Fenster statt ♪ auf der Strecke – X15–X16 „🤝 No. Together.“ / Y15–Y16 „🗺️ give her the map“; die zwei Stücke zählen zu den 20 ♪, erzählt im Film, Szene 1) ·
+  // Ende nach ZÄHLUNG (ende 'zaehlung'): gute Entscheidungen der Kapitel 1–4 (ny.g2 Y, route66.g2 X, az.g2 X, sd.g2 X; die App übergibt sie als story.gute) + die eigene Gabelung 2 (eigene: g2 X) →
+  // 4–5 = E1 „All together“, 2–3 = E2 „Torn in two“, 0–1 = E3 „She got through“ (führt zu Kapitel 6). E?_17–E?_20 hinter dem Boss (im Film) = 20 ♪.
+  // Realm R1–R3 extra; realmMuster 'ca' = MUSTER_REALM_5 (Eisbrücke mit schwarzem Banner, Böen), Sammelstück Black Banner 🏴 (gegenstand).
+  const STRUKTUR_CA = { anzahl: 20, abschnitte: [
+    { anfang: true, varianten: { X: ['1X', '2X'], Y: ['1Y', '2Y'] }, quelle: 'sd.g2', standard: 'X', platz: ['1', '2'], keys: ['3', '4', '5'] },
+    { gabel: 'g1', standard: 'A', wege: { A: ['A6', 'A7', 'A8', 'A9', 'A10'], B: ['B6', 'B7', 'B8', 'B9', 'B10'] }, symbole: { A: '🌊', B: '🌉' }, labels: { A: 'along the coast', B: 'over the bridge' } },
+    { keys: ['11', '12', '13', '14'] },
+    { gabel: 'g2', nachBoss: true, standard: 'X', wege: { X: ['X15', 'X16'], Y: ['Y15', 'Y16'] }, symbole: { X: '🤝', Y: '🗺️' }, labels: { X: '"No. We came together."', Y: '"If I give it to you …?"' } },
+    { ende: 'zaehlung', wege: { E1: ['E1_17', 'E1_18', 'E1_19', 'E1_20'], E2: ['E2_17', 'E2_18', 'E2_19', 'E2_20'], E3: ['E3_17', 'E3_18', 'E3_19', 'E3_20'] },
+      zaehlung: { gut: { 'ny.g2': 'Y', 'route66.g2': 'X', 'az.g2': 'X', 'sd.g2': 'X' }, eigene: { g2: 'X' }, enden: ['E3', 'E3', 'E2', 'E2', 'E1', 'E1'] } },
+  ], stationen: [1, 2], film: { E1: [['@g2'], ['E1_17', 'E1_18'], ['E1_19', 'E1_20'], null], E2: [['@g2'], ['E2_17', 'E2_18'], ['E2_19', 'E2_20'], null], E3: [['@g2'], ['E3_17', 'E3_18'], ['E3_19', 'E3_20'], null] },
+    realm: ['R1', 'R2', 'R3'], realmMuster: 'ca', gegenstand: { name: 'Black Banner', symbol: '🏴', art: 'schwarzesbanner' },
+    wahl: { titel: '🗺️ Elena Cruz', spruch: '"Give me the map, and your friends can go home."', frage: 'What do you say?' } };
+  // Story-Strecke Golden Gate (Klasse 9, 30 Abschnitte, ≈ 34.600 Einheiten ≈ 2:30 min + Stationen + Boss): Möwen, Seelöwen, Skater, Pazifik-Lücken, Nebel, Seilbahn, Surfbrett wie Welt 5; 20 Punkte-Diamanten;
+  // Abstand der ♪ je Weg ≥ Erzählzeit des vorigen Stücks, nie in den 520 vor einem Tor. Gabelung 1: ♪A6 unten an der Küste (Kulisse 'kueste': Bucht, Felsen mit Seelöwen, Wellen; Nebelhorn h.horn bei ♪A6),
+  // ♪B6 oben auf einer roten Stahlstrebe (h.stahl, rostiges Geländer, Hänger nach oben) hinter dem Cable Car (Kulisse 'cablecar'). Weg A: Bank mit Zeitung „MAP STOLEN – KEEPER MISSING, 1974“ ('zeitung', ♪A7), Alcatraz im Dunst ('alcatraz', ♪A9);
+  // Weg B: Böe vor ♪B8 (Geländer), Schiffshorn + Nebel bei ♪B9, gemalte leuchtende Tür ('brueckentuer') bei ♪B10. Warnschild „WARNING! STRONG WINDS. DO NOT CLIMB.“ ('warnschild') bei ♪4.
+  // Verstecktes Tor ✦ (Abschnitt 19, A-Weg hinter ♪A10 „Halfway up the tower.“): halb oben am Brückenturm (Kulisse 'turm'), Tor bei y 60 – vom Boden nicht erreichbar, nur mit Sprung von der Stahl-Stufe (y 230) am Turmfuß;
+  // die letzte hohe Strebe des B-Wegs endet ≥ 1.300 davor (niemand fällt von oben hinein).
+  const MUSTER_CA_STORY = [
+    (h) => { h.dia(350); h.kristall(600, 290, '1'); h.kiste(1000); h.vor(1200); },                                     // 1 Aufwärmen · ♪1 (Variante 1X/1Y)
+    (h) => { h.geg('seeloewe', 250, 600); h.dia(800, 250); h.vor(1000); },                                             // 2 erster Seelöwe
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.kristall(500, 290, '2'); h.geg('moewe', 700, 1000); h.vor(1100); }, // 3 Plattform · ♪2 (Variante 2X/2Y) · Möwe
+    (h) => { h.kiste(200); h.kiste(240, 2); h.dia(260, 215); h.vor(800); },                                            // 4 Kistenstufe
+    (h) => { h.dia(300, 250); h.kristall(550, 290, '3'); h.luecke(800, 180); h.vor(1150); },                           // 5 · ♪3 · erste Pazifik-Lücke
+    (h) => { h.geg('skater', 200, 600); h.dia(850, 250); h.vor(1050); },                                               // 6 Skater
+    (h) => { h.kristall(100, 290, '4'); h.deko('warnschild', 260); h.surf(500, 240); h.plat(850, 230, 160); h.dia(930, 190); h.vor(1150); }, // 7 · ♪4 am Warnschild · Surf + Plattform
+    (h) => { h.geg('seeloewe', 150, 900); h.vor(1000); },                                                              // 8 Seelöwe
+    (h) => { h.kristall(150, 290, '5'); h.kiste(450); h.kiste(490, 2); h.dia(510, 220); h.vor(950); },                 // 9 · ♪5 · Kistenstufe
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(900); },                             // 10 Doppelplattform
+    (h) => { h.tor(700, 4, [5, 1]); h.vor(1200); },                                                                    // 11 TOR 1
+    (h) => { h.cp(150); h.geg('moewe', 700, 950); h.vor(1050); },                                                      // 12 CHECKPOINT 1 · Station 1
+    (h) => { h.deko('kueste', 180, 10100); h.kristall(260, 290, 'A6'); h.horn(300); h.deko('cablecar', 380); h.kiste(470); h.stahl(560, 170, 260); h.kristall(660, 130, 'B6'); h.vor(1250); }, // 13 GABELUNG 1: ♪A6 unten (Küste, Nebelhorn), ♪B6 oben auf der Strebe hinter dem Cable Car
+    (h) => { h.dia(300, 250); h.geg('seeloewe', 450, 800); h.kiste(1000); h.stahl(1180, 170, 260); h.kristall(1280, 130, 'B7'); h.deko('zeitung', 1650); h.kristall(1720, 290, 'A7'); h.vor(1900); }, // 14 · ♪B7 oben / ♪A7 unten an der Bank mit der Zeitung
+    (h) => { h.geg('skater', 150, 450); h.kiste(650); h.kiste(690, 2); h.stahl(810, 190, 200); h.wind(1000, -1); h.stahl(1070, 140, 280); h.kristall(1200, 100, 'B8'); h.dia(1300, 100); h.kristall(1560, 290, 'A8'); h.vor(1750); }, // 15 Böe am Geländer · ♪B8 ganz oben / ♪A8 unten
+    (h) => { h.wind(150, -1); h.kiste(850); h.kiste(890, 2); h.dia(910, 220); h.vor(1150); },                           // 16 Gegenwind + Kistenstufe
+    (h) => { h.stahl(100, 170, 260); h.kristall(200, 130, 'B9'); h.horn(200); h.nebel(400, 800); h.kristall(450, 290, 'A9'); h.deko('alcatraz', 550); h.geg('seeloewe', 900, 1250); h.vor(1350); }, // 17 · ♪B9 (Schiffshorn) oben / ♪A9 unten (Alcatraz im Dunst) · Nebel
+    (h) => { h.stahl(100, 170, 260); h.dia(250, 250); h.stahl(420, 170, 300); h.deko('brueckentuer', 600); h.kristall(600, 130, 'B10'); h.kristall(1050, 290, 'A10'); h.vor(1450); }, // 18 · ♪B10 an der gemalten Tür / ♪A10 unten
+    (h) => { h.stahl(450, 230, 100); h.dia(500, 190); h.deko('turm', 650); h.realmTor(650, 60); h.vor(1300); },        // 19 Stahl-Stufe am Turmfuß · verstecktes Tor ✦ halb oben am Brückenturm (A-Weg)
+    (h) => { h.geg('skater', 100, 800); h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.dia(475, 140); h.vor(950); }, // 20 Skater unter der Dreier-Plattform
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                                    // 21 TOR 2
+    (h) => { h.cp(150); h.kiste(600); h.kiste(640, 2); h.vor(900); },                                                  // 22 CHECKPOINT 2 · Station 2
+    (h) => { h.kristall(150, 290, '11'); h.nebel(400, 900); h.vor(1150); },                                            // 23 · ♪11 · Nebel
+    (h) => { h.geg('moewe', 100, 400); h.luecke(500, 200); h.dia(600, 240); h.kristall(1050, 290, '12'); h.vor(1200); }, // 24 Möwe, Lücke · ♪12
+    (h) => { h.seilbahn(150, 360); h.dia(330, 250); h.vor(1100); },                                                    // 25 Seilbahn-Gondel
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.dia(250, 180); h.kristall(600, 290, '13'); h.vor(950); }, // 26 Kistenpyramide · ♪13
+    (h) => { h.surf(150, 240); h.geg('skater', 600, 1000); h.vor(1100); },                                             // 27 Surf + Skater
+    (h) => { h.kristall(250, 290, '14'); h.plat(650, 240, 150); h.dia(725, 200); h.geg('seeloewe', 950, 1200); h.vor(1250); }, // 28 · ♪14
+    (h) => { h.nebel(100, 800); h.geg('moewe', 400, 700); h.kiste(1000); h.vor(1200); },                               // 29 Nebel + Möwe
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.dia(475, 140); h.geg('seeloewe', 850, 1150); h.vor(1250); }, // 30 Schluss
+  ];
+  // Seitenlevel „The Realm Beyond“ Kapitel 5 (≈ 11.300 Einheiten ≈ 47 s): Eisbrücke (REALM_WELT_5 'eisbruecke' = Eiswelt mit Eisbrücke als Kulisse 'eisbruecke') – das schwarze Banner hängt bei ✦R1 über der Brücke ('banner'),
+  // Böen auf der Brücke (Mechanik wie Welt 4: Blätter = Schneeflocken-Warnung, Schub, halber Sprung), Wölfe, der Ritter wartet hinter ✦R2, Black Banner 🏴 hoch oben, Spalten, Eisblöcke; Rückkehr-Tor „✦ Golden Gate“.
+  const MUSTER_REALM_5 = [
+    (h) => { h.deko('eisbruecke', -600, 12400); h.vor(600); },                                                        // 0 Ankunft auf der Eisbrücke
+    (h) => { h.deko('banner', 120); h.kristall(300, 290, 'R1'); h.kiste(650); h.vor(950); },                           // 1 schwarzes Banner · ✦R1
+    (h) => { h.wind(150, -1); h.geg('wolf', 500, 850); h.vor(1000); },                                                 // 2 erste Böe + Wolf
+    (h) => { h.luecke(250, 170); h.plat(500, 235, 160); h.vor(1100); },                                               // 3 Spalte in der Brücke
+    (h) => { h.kristall(300, 290, 'R2'); h.geg('ritter', 460, 460, { wartet: true }); h.vor(1200); },                 // 4 · ✦R2 · wartender Ritter
+    (h) => { h.wind(100, 1); h.geg('wolf', 450, 800); h.kiste(900); h.kiste(940, 2); h.vor(1150); },                   // 5 Rückenwind, Wolf, Eisblöcke
+    (h) => { h.kiste(100, 2); h.plat(220, 190, 120); h.plat(420, 130, 110); h.gegenstand(475, 95); h.vor(1100); },     // 6 Black Banner 🏴 ganz oben
+    (h) => { h.geg('ritter', 200, 500); h.luecke(700, 160); h.vor(1100); },                                          // 7 Ritter + Spalte
+    (h) => { h.kristall(300, 290, 'R3'); h.wind(650, -1); h.geg('wolf', 850, 1000); h.vor(1100); },                    // 8 · ✦R3 · Böe
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.vor(1100); },                                           // 9
+    (h) => { h.vor(900); },                                                                                          // 10 Rückkehr-Tor
+  ];
+  const REALM_MUSTER = { ny: MUSTER_REALM, route66: MUSTER_REALM_2, az: MUSTER_REALM_3, sd: MUSTER_REALM_4, ca: MUSTER_REALM_5 };
   const REALM_GEGENSTAND = { name: 'Frost Shard', symbol: '❄', art: 'splitter' };   // Kapitel 1 (Standard); Kapitel 2: struktur.gegenstand
   const KABINE_W = 80;   // Kabinen-Plattform des London Eye (Welt 2 Klasse 6)
   const PARKBUS_W = 118, PARKBUS_H = 54;   // geparkter Doppeldecker an der Gabelung (fest, begehbar)
@@ -1526,6 +1599,9 @@
       // Story Mount Rushmore (Kapitel 4): Granit-Absatz (graue Felsplattform auf den Präsidentenköpfen), alter Tunnel (am Boden dunkel, Grubenlampen), Realm Kapitel 4: Eiszapfen an der Hallendecke
       granit: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'granit' }),
       tunnel: (dx, w) => L.deko.push({ art:'tunnel', x:x + dx, w }),
+      // Story Golden Gate (Kapitel 5): rote Stahlstrebe der Brücke (Plattform mit rostigem Geländer, B-Weg oben), Nebelhorn-Punkt (klingt einmal, wenn die Figur vorbeiläuft)
+      stahl: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'stahl' }),
+      horn: (dx) => L.deko.push({ art:'horn', x:x + dx }),
       zapfen: (dx) => L.zapfen.push({ x:x + dx }),
       // Story Grand Canyon (Kapitel 3): Glasbrücke = durchsichtige Plattform (Skywalk)
       glas: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w, art:'glas' }),
@@ -1659,7 +1735,7 @@
     checkpoints = level.checkpoints.map(c => ({ ...c, erreicht:false }));
     torErgebnisse = tore.map(() => null);
     leben = LEBEN_MAX; gesammelt = 0; kamera = 0; zeit = 0; popup = null; meldung = null; tot = 0;
-    checkpoint = 120; boss = { maul:0, weg:0, sichtbar:0, deckel:0 }; tuer = { offen:0 }; bossFrage = null;
+    checkpoint = 120; boss = { maul:0, weg:0, sichtbar:0, deckel:0 }; tuer = { offen:0 }; bossFrage = null; wahlGabel = null;
     autos = level.autos.map(a => ({ ...a, x:a.start, rad:0 })); oel = level.oel.map(o => ({ ...o, aktiv:false })); rutscht = 0; hupen = 0; autoKlangZeit = -9;
     steine = level.steine.map(s => ({ ...s, phase:'ruhe', t:0, y:-60, vy:0 })); bruecken = level.bruecken.map(b => ({ ...b, zeit:0, gebrochen:false, knarrte:false, bruch:0, bruchX:0 })); kakteen = level.kakteen.map(k => ({ ...k })); rasseln = 0;
     staemme = level.staemme.map(s => ({ ...s, phase:'ruhe', rx:s.x, rot:0 })); winde = level.winde.map(w => ({ ...w, aktiv:false })); hoehlen = level.hoehlen.map(h => ({ ...h, phase:'ruhe', t:0 })); wind = null; brummt = 0;
@@ -1822,7 +1898,8 @@
   const zaehlungEnde = () => {
     const z = endeAbschnitt && endeAbschnitt.zaehlung; if (!z) return null;
     const v = (storyOpt && storyOpt.varianten) || {};
-    const n = storyOpt && typeof storyOpt.gute === 'number' ? storyOpt.gute : Object.keys(z.gut).filter((q) => v[q] === z.gut[q]).length;
+    let n = storyOpt && typeof storyOpt.gute === 'number' ? storyOpt.gute : Object.keys(z.gut).filter((q) => v[q] === z.gut[q]).length;
+    if (z.eigene && story) n += Object.keys(z.eigene).filter((g) => story.wahl[g] === z.eigene[g]).length;   // Golden Gate: die eigene Gabelung 2 (nach dem Boss) zählt mit
     return z.enden[Math.max(0, Math.min(z.enden.length - 1, n))];
   };
   const endeWahl = () => (endeAbschnitt ? story.wahl[endeAbschnitt.ende] || zaehlungEnde() || null : null);
@@ -1880,7 +1957,7 @@
   const REALM_BLITZ = 0.7, REALM_TOR_W = 44, REALM_TOR_H = 48, REALM_RUTSCH = 0.35;
   let realm = null, realmLevels = {};
   const realmGegenstand = () => (struktur && struktur.gegenstand) || REALM_GEGENSTAND;   // Sammelstück des Kapitels: Frost Shard ❄ (1) / Dragon Scale 🐉 (2) / Golden Scale ✨ (3)
-  const realmWelt = () => (struktur && struktur.realmMuster === 'az' ? REALM_WELT_3 : struktur && struktur.realmMuster === 'sd' ? REALM_WELT_4 : REALM_WELT);   // Kulisse des Realm: Eiswelt (Kapitel 1–2), Drachenhöhle (3), Eishalle (4)
+  const realmWelt = () => (struktur && struktur.realmMuster === 'az' ? REALM_WELT_3 : struktur && struktur.realmMuster === 'sd' ? REALM_WELT_4 : struktur && struktur.realmMuster === 'ca' ? REALM_WELT_5 : REALM_WELT);   // Kulisse des Realm: Eiswelt (Kapitel 1–2), Drachenhöhle (3), Eishalle (4)
   const imEishalle = () => imRealm() && W.id === 'eishalle';
   const drachenNeu = () => ({ t: 0, naechste: 5, aktiv: false, laerm: 0, feuer: null, feuerX: 0, schnarch: 0, schnarcher: 0, geweckt: 0 });
   function realmNeu() {
@@ -1905,7 +1982,7 @@
     level = L; W = realmWelt(); SOLIDE = solideOben();
     gegner = L.gegner.map((g) => ({ ...g, tot: 0, flug: Math.random() * 6 }));
     diamanten = []; tore = []; checkpoints = []; autos = []; oel = L.oel.map((o) => ({ ...o, aktiv: false })); steine = []; bruecken = []; kakteen = [];   // Welt-3-Hindernisse (Kapitel 3) bleiben draußen
-    staemme = []; winde = []; hoehlen = []; wind = null; dunkel = 0;   // Welt-4-Hindernisse (Kapitel 4: Baumstämme, Böen, Bärenhöhlen, Tunnel-Dunkelheit) bleiben draußen
+    staemme = []; winde = W.id === 'eisbruecke' ? L.winde.map((w) => ({ ...w, aktiv: false })) : []; hoehlen = []; wind = null; dunkel = 0;   // Eisbrücke (Kapitel 5): eigene Böen   // Welt-4-Hindernisse (Kapitel 4: Baumstämme, Böen, Bärenhöhlen, Tunnel-Dunkelheit) bleiben draußen
     realm.zapfen = L.zapfen.map((z) => ({ ...z, phase: 'ruhe', t: 0, y: ZAPFEN_DECKE, vy: 0 })); realm.zapfenTreffer = 0;
     kristalle = L.kristalle.map(kristallBauen); for (const k of kristalle) k.weg = realm.gesammelt.includes(k.key);
     realm.dinge = L.gegenstaende.map((g) => ({ ...g, weg: realm.gegenstand, funkel: 0 }));
@@ -1919,7 +1996,7 @@
   function realmZurueck(weiter) {
     const z = realm && realm.zurueck; if (!z) return;
     ({ level, W, SOLIDE, gegner, diamanten, tore, checkpoints, autos, oel, steine, bruecken, kakteen, staemme, winde, hoehlen, kristalle, checkpoint } = z);
-    realm.aktiv = false; realm.zurueck = null; realm.rutsch = 0; realm.zapfen = [];
+    realm.aktiv = false; realm.zurueck = null; realm.rutsch = 0; realm.zapfen = []; wind = null;
     if (!weiter) return;
     spieler.x = z.x; spieler.y = BODEN_Y; spieler.vy = 0; spieler.amBoden = true; spieler.unverwundbar = 1.5; halten = false; rutscht = 0; tot = 0;
     kamera = Math.max(0, Math.min(spieler.x - viewW * (viewW < 450 ? 0.28 : 0.33), level.ende - viewW)); partikel = []; spurPunkte = [];
@@ -2046,7 +2123,9 @@
   }
   function filmSzene(i) {
     film.szene = i; film.t = 0; film.gelesen = false;
-    const keys = filmSzenen(film.ende)[i];
+    const roh = filmSzenen(film.ende)[i];
+    // '@g2' = die Stücke des gewählten Wegs der Gabelung (Golden Gate: Gabelung 2 nach dem Boss, im Film Szene 1)
+    const keys = roh && roh.flatMap((k) => { if (k[0] !== '@') return [k]; const g = gabelVon(k.slice(1)); return g ? g.wege[(story && story.wahl[g.gabel]) || gabelStandard(g.gabel)] || [] : []; });
     if (!keys) { film.text = ''; film.dauer = 3.5; film.gelesen = true; klang.fanfare(); return; }
     film.text = keys.map(storyText).join(' ');
     film.dauer = Math.max(4.8, film.text.split(/\s+/).length * 0.42 + 1.6);
@@ -2158,6 +2237,7 @@
     if (e.target && e.target.closest && e.target.closest("textarea, input, dialog[open]")) return;
     if (e.code === "Space" || e.code === "ArrowUp" || e.code === "KeyW") { e.preventDefault(); if (!sprungGedrueckt) { sprungGedrueckt = true; sprungStart(); } }
     if (zustand === "boss" && bossFrage && ["Digit1", "Digit2", "Digit3"].includes(e.code)) antwortGeben(Number(e.code.slice(-1)) - 1);
+    if (zustand === "wahl" && wahlGabel && ["Digit1", "Digit2"].includes(e.code)) wahlGeben(Object.keys(wahlGabel.wege)[Number(e.code.slice(-1)) - 1]);
   };
   const aufKeyUp = (e) => { if (e.code === "Space" || e.code === "ArrowUp" || e.code === "KeyW") { sprungGedrueckt = false; sprungEnde(); } };
   const aufResize = () => groesseAnpassen();
@@ -2404,6 +2484,7 @@
       if (rutscht > 0) { rutscht = Math.max(0, rutscht - dt); if (rutscht === 0) halten = false; }
 
       // Welt 4: Windböe auslösen (Figur passiert die Marke), schiebt in der Phase schub mit 150/s zurück oder vorwärts
+      if (story && level.deko) for (const d of level.deko) if (d.art === 'horn' && !d.getutet && spieler.x >= d.x) { d.getutet = true; tutet++; klang.nebelhorn(); }   // Golden Gate (Kapitel 5): Nebelhorn / Schiffshorn an ♪A6 und ♪B9
       for (const w of winde) if (!w.aktiv && spieler.x >= w.x && spieler.x < w.x + 120) { w.aktiv = true; if (!wind) { wind = { phase:'warnung', t:0, richtung:w.richtung }; klang.blaetter(); } }
       const schub = wind && wind.phase === 'schub' ? wind.richtung * WIND_KRAFT : 0;
       if (surft > 0) surft = Math.max(0, surft - dt);
@@ -2607,6 +2688,8 @@
       }
     } else if (zustand === 'boss') {
       boss.maul = 0.5 + 0.5 * Math.sin(zeit * 4);
+    } else if (zustand === 'wahl') {   // Golden Gate: Gabelung 2 nach dem Boss – der Captain löst sich auf, Elena steht am Tor, das Tor bleibt zu, bis du gewählt hast
+      boss.weg = Math.min(1, boss.weg + dt * 0.8); boss.maul = 0;
     } else if (zustand === 'finale') {
       tuer.offen = Math.min(1, tuer.offen + dt * 1.2);
       boss.weg = Math.min(1, boss.weg + dt * 0.8);
@@ -2623,12 +2706,13 @@
   }
 
   /* ---------- Boss-Frage (Overlay im Wrapper; Antworten antippen oder Tasten 1–3) ---------- */
-  let frageBox = null, frageText = null, antworten = null, spruchEl = null, frageZaehler = 0;
+  let frageBox = null, frageText = null, antworten = null, spruchEl = null, frageTitel = null, frageZaehler = 0, wahlGabel = null;
   const el = (tag, klasse, text) => { const e = document.createElement(tag); if (klasse) e.className = klasse; if (text != null) e.textContent = text; return e; };
   function frageBauen() {
     frageBox = el("div", "runner-frage"); frageBox.hidden = true;
     const box = el("div", "runner-frage-box");
-    box.append(el("h2", null, W.bossSymbol + " " + texte.bossTitel), el("p", "klein", texte.bossHinweis));
+    frageTitel = el("h2", null, W.bossSymbol + " " + texte.bossTitel);
+    box.append(frageTitel, el("p", "klein", texte.bossHinweis));
     spruchEl = el("p", "spruch"); frageText = el("p", "frage-text"); antworten = el("div", "antworten");
     box.append(spruchEl, frageText, antworten); frageBox.append(box);
     return frageBox;
@@ -2665,6 +2749,8 @@
     if (i === bossFrage.richtig) {
       klang.richtig(); klang.tuer();
       frageBox.hidden = true; bossFrage = null; zustand = "finale";
+      const wg = story ? gabeln.find((g) => g.nachBoss && !story.wahl[g.gabel]) : null;
+      if (wg) { zustand = "wahl"; wahlZeigen(wg); }   // Golden Gate: erst entscheiden (Gabelung 2), dann geht das Tor auf
       popup = { en: woerter[i].en + " ✓", de: woerter[i].de, zeit: 2.5, art: "richtig" };
       bossSagt(W.richtig || BOSS_RICHTIG, 3, 'richtig');
       if (W.id === 'wembley') meldung = { text: 'Kick-off! ⚽', zeit: 1.8 };   // Wembley: Fußballspruch zum Anpfiff (Mr. Alex 1.11.)
@@ -2674,6 +2760,26 @@
       if (leben <= 0) { frageBox.hidden = true; bossFrage = null; zustand = "gameover"; zeigeEnde(false); }
       else { bossFragen(); bossSagt(W.falsch || BOSS_FALSCH, 2.5, 'falsch'); }
     }
+  }
+
+  // Gabelung nach dem Boss (Golden Gate, Kapitel 5): Auswahl im Frage-Fenster (Titel/Spruch/Frage aus struktur.wahl, Knöpfe = Symbol + Label je Weg, Tasten 1–2). Die Stücke des Wegs zählen als gesammelt
+  // (erzählt im Film, Szene 1 '@g2'); danach Finale wie sonst (Tor auf, Ende nach Zählung).
+  function wahlZeigen(g) {
+    wahlGabel = g; const t = struktur.wahl || {};
+    frageTitel.textContent = t.titel || W.bossSymbol; spruchEl.textContent = t.spruch || ''; frageText.textContent = t.frage || '';
+    antworten.replaceChildren(...Object.keys(g.wege).map((w, n) => {
+      const b = el("button", "knopf antwort", `${n + 1}. ${(g.symbole && g.symbole[w]) || ''} ${(g.labels && g.labels[w]) || w}`); b.type = "button"; b.lang = "en"; b.dataset.weg = w;
+      b.addEventListener("click", () => wahlGeben(w));
+      return b;
+    }));
+    frageBox.hidden = false;
+  }
+  function wahlGeben(w) {
+    const g = wahlGabel; if (zustand !== "wahl" || !g || !g.wege[w]) return;
+    gabelLoesen(g.gabel, w, false);
+    for (const k of g.wege[w]) if (!story.gesammelt.includes(k)) story.gesammelt.push(k);
+    klang.kristall(); hudPuls = 1; funken(spieler.x + 40, BODEN_Y - 60, 24, ['#b07cff', '#ffd36b', '#fff6c0', '#ffffff'], 240, 0.8);
+    frageBox.hidden = true; wahlGabel = null; zustand = "finale"; klang.tuer();
   }
 
   /* ---------- Ende: Ergebnis an die App ---------- */
@@ -5773,6 +5879,7 @@
     if (film.welt === 'route66') return filmZeichnenR66(c);   // Story Route 66 (Klasse 9, Kapitel 2)
     if (film.welt === 'az') return filmZeichnenAZ(c);   // Story Grand Canyon (Klasse 9, Kapitel 3)
     if (film.welt === 'sd') return filmZeichnenSD(c);   // Story Mount Rushmore (Klasse 9, Kapitel 4)
+    if (film.welt === 'ca') return filmZeichnenCA(c);   // Story Golden Gate (Klasse 9, Kapitel 5, drei Enden)
     if (film.welt === 'londoneye') return filmZeichnenEye(c);   // Story London Eye (Klasse 6, Kapitel 2)
     if (film.welt === 'towerbridge') return filmZeichnenBridge(c);   // Story Tower Bridge (Klasse 6, Kapitel 3)
     if (film.welt === 'tube') return filmZeichnenTube(c);   // Story The Tube (Klasse 6, Kapitel 4)
@@ -5860,6 +5967,13 @@
       if (f.ende === 'X') { zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.jayden, 'steh', zeit, 'grinsend'); c.font = 'bold 22px system-ui, sans-serif'; c.fillStyle = '#ffd36b'; c.fillText('🤝', viewW / 2, 250); }
       else { zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, 'erstaunt'); schwarzesAuto(c, viewW / 2 + 190, 300, 0.55); c.save(); c.translate(viewW / 2 + 140, 0); c.scale(-0.6, 0.6); zeichneFigur(c, 0, 500, 70, NY_FIGUREN.jayden, 'lauf', zeit, 'grinsend'); c.restore(); }
       c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'X' ? '🤝 Jayden stays → 🌉 Golden Gate' : '🚗 Jayden leaves → 🌉 Golden Gate', viewW / 2, 340);
+    } else if (f.welt === 'ca') {   // Golden Gate: du, Maya, Lucas (E1: die ganze Karte · E2: eine Hälfte · E3: die Seite CHAPTER 6)
+      zeichneFigur(c, viewW / 2 - 90, 300, 70, skin, 'steh', zeit, f.ende === 'E3' ? 'erstaunt' : 'grinsend');
+      zeichneFigur(c, viewW / 2, 300, 70, NY_FIGUREN.maya, 'steh', zeit, f.ende === 'E1' ? 'grinsend' : 'erstaunt');
+      zeichneFigur(c, viewW / 2 + 90, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, f.ende === 'E1' ? 'zunge' : 'erstaunt');
+      if (f.ende === 'E1') karteZeichnen(c, viewW / 2, 200, 1.6); else if (f.ende === 'E2') karteHaelfte(c, viewW / 2 + 104, 252, 1.3, true);
+      else { c.fillStyle = '#efe2bd'; c.fillRect(viewW / 2 + 150, 220, 60, 40); c.fillStyle = '#3a2a1a'; c.font = 'bold 10px Georgia, serif'; c.fillText('CHAPTER 6', viewW / 2 + 180, 240); }
+      c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'E1' ? '🌉 All together – five gates closed' : f.ende === 'E2' ? '📜 Torn in two – this isn\'t over' : '🚪 She got through → ✦ Chapter 6', viewW / 2, 340);
     } else if (f.welt === 'towerbridge') {   // Tower Bridge: du, der Sergeant (A: Igel-Haare · B: nasser Hut), dein Begleiter
       zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, f.ende === 'A' ? 'grinsend' : 'erstaunt');
       c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, f.ende === 'A' ? { hut: 'igel', laecheln: 0.6, blick: -2 } : { hut: 'nass', tropft: 1, blick: -2 }); c.restore();
@@ -5933,7 +6047,7 @@
   function dekoZeichnen(c) {   // zwei Durchgänge: erst die Hauswände (Feuertreppe, Diner, Eistür), dann alles davor (U-Bahn-Eingang); das Motel-Schild kommt in dekoVorneZeichnen (über dem Tor ✦)
     for (let pass = 0; pass < 2; pass++) for (const d of level.deko) {
       if (d.art === 'motel') continue;
-      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor' || d.art === 'tower' || d.art === 'tunnel' || d.art === 'koepfe' || d.art === 'fuenftueren' || d.art === 'bahnsteig' || d.art === 'dunkelbahnsteig' || d.art === 'zug' || d.art === 'vorplatz' || d.art === 'tribuenen' || d.art === 'spielertunnel' || d.art === 'rasen') !== (pass === 0)) continue;
+      if ((d.art === 'feuertreppe' || d.art === 'diner' || d.art === 'eistuer' || d.art === 'maschinenraum' || d.art === 'maultier' || d.art === 'skywalk' || d.art === 'wasserfall' || d.art === 'drachentor' || d.art === 'tower' || d.art === 'tunnel' || d.art === 'koepfe' || d.art === 'fuenftueren' || d.art === 'bahnsteig' || d.art === 'dunkelbahnsteig' || d.art === 'zug' || d.art === 'vorplatz' || d.art === 'tribuenen' || d.art === 'spielertunnel' || d.art === 'rasen' || DEKO_CA_HINTEN.has(d.art)) !== (pass === 0)) continue;
       const x = d.x - kamera; if (x < -320 - (d.w || 0) || x > viewW + 160) continue;
       if (d.art === 'feuertreppe') feuertreppeDeko(c, x); else if (d.art === 'subway') subwayDeko(c, x); else if (d.art === 'diner') dinerDeko(c, x); else if (d.art === 'eistuer') eistuerDeko(c, x);
       else if (d.art === 'maschinenraum') maschinenraumDeko(c, x, d.w); else if (d.art === 'knopf') knopfDeko(c, x);
@@ -5943,6 +6057,8 @@
       else if (d.art === 'anzeige') anzeigeDeko(c, x); else if (d.art === 'toilette') toiletteDeko(c, x); else if (d.art === 'federn') federnDeko(c, x);
       else if (d.art === 'maultier') maultierDeko(c, x); else if (d.art === 'skywalk') skywalkDeko(c, x); else if (d.art === 'wasserfall') wasserfallDeko(c, x, false); else if (d.art === 'drachentor') drachentorDeko(c, x);
       else if (d.art === 'tunnel') tunnelDeko(c, x, d.w); else if (d.art === 'koepfe') koepfeDeko(c, x); else if (d.art === 'kompass') kompassDeko(c, x); else if (d.art === 'fuenftueren') fuenfTuerenDeko(c, x);   // Mount Rushmore (Kapitel 4) + Eishalle
+      else if (d.art === 'kueste') kuesteDeko(c, x, d.w); else if (d.art === 'cablecar') cablecarDeko(c, x); else if (d.art === 'warnschild') warnschildDeko(c, x); else if (d.art === 'zeitung') zeitungDeko(c, x);   // Golden Gate (Kapitel 5)
+      else if (d.art === 'alcatraz') alcatrazDeko(c, x); else if (d.art === 'brueckentuer') brueckentuerDeko(c, x); else if (d.art === 'turm') turmDeko(c, x); else if (d.art === 'eisbruecke') eisbrueckeDeko(c, x, d.w); else if (d.art === 'banner') bannerDeko(c, x);   // + Realm Kapitel 5
     }
   }
   // vor dem Tor ✦ gezeichnet: Motel-Schild (Route 66), Wasserschleier des Wasserfalls (Grand Canyon)
@@ -5983,6 +6099,106 @@
     c.beginPath(); c.moveTo(x + 10, BODEN_Y); c.lineTo(x + 12, 100); c.lineTo(x + 24, -30); c.lineTo(x + 68, -30); c.lineTo(x + 72, BODEN_Y); c.closePath(); c.fill();
     c.fillStyle = '#5a5550'; c.beginPath(); c.moveTo(x - 66, 10); c.lineTo(x - 26, 0); c.lineTo(x - 30, 40); c.closePath(); c.moveTo(x + 26, 0); c.lineTo(x + 68, 14); c.lineTo(x + 40, 44); c.closePath(); c.fill();
     c.strokeStyle = 'rgba(0,0,0,.35)'; c.lineWidth = 2; c.beginPath(); c.moveTo(x - 50, 120); c.lineTo(x - 44, 200); c.lineTo(x - 52, 280); c.moveTo(x + 44, 130); c.lineTo(x + 38, 210); c.lineTo(x + 48, 290); c.stroke();
+  }
+
+  /* ---------- Story Golden Gate (Klasse 9, Kapitel 5): Küste (Bucht, Felsen mit Seelöwen, Wellen), rote Stahlstreben, Cable Car, Warnschild, Bank mit Zeitung, Alcatraz im Dunst, gemalte Tür, Brückenturm ---------- */
+  const DEKO_CA_HINTEN = new Set(['kueste', 'alcatraz', 'turm', 'eisbruecke']);   // werden im ersten Durchgang (hinter allem) gezeichnet
+  function stahlPlattform(c, x, y, w) {   // rote Stahlstrebe der Golden Gate: Träger mit Nieten, darüber ein rostiges Geländer, Hänger nach oben (das Hauptkabel liegt über dem Bild)
+    c.strokeStyle = 'rgba(160,52,30,.75)'; c.lineWidth = 2; c.beginPath(); for (let k = 16; k < w; k += 48) { c.moveTo(x + k, y - 20); c.lineTo(x + k, -40); } c.stroke();
+    c.fillStyle = GG_ROT; c.fillRect(x, y, w, 16); c.fillStyle = '#e8714a'; c.fillRect(x - 2, y - 3, w + 4, 6);
+    c.strokeStyle = 'rgba(80,20,10,.45)'; c.lineWidth = 1.5; c.beginPath(); for (let k = 0; k < w - 10; k += 22) { c.moveTo(x + k, y + 15); c.lineTo(x + k + 11, y + 3); c.lineTo(x + k + 22, y + 15); } c.stroke();
+    c.fillStyle = 'rgba(255,220,200,.6)'; for (let k = 6; k < w; k += 22) { c.beginPath(); c.arc(x + k, y + 3, 1.2, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#8a4a2a'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(x, y - 18); c.lineTo(x + w, y - 18); c.stroke();   // rostiges Geländer
+    c.lineWidth = 2; c.beginPath(); for (let k = 0; k <= w; k += 30) { c.moveTo(x + k, y - 18); c.lineTo(x + k, y - 3); } c.stroke();
+    c.fillStyle = 'rgba(150,80,40,.55)'; for (let k = 13; k < w; k += 57) c.fillRect(x + k, y - 19, 7, 3);   // Rostflecken
+  }
+  function kuesteDeko(c, x, w) {   // Bucht hinter der Promenade (A-Weg unten): Wasser, Wellen, Felsen alle 900 mit bellenden Seelöwen
+    const a = Math.max(-100, x), b = Math.min(viewW + 100, x + w); if (b <= a) return;
+    const g = c.createLinearGradient(0, 248, 0, BODEN_Y); g.addColorStop(0, '#5d8fb0'); g.addColorStop(1, '#2f5f80'); c.fillStyle = g; c.fillRect(a, 248, b - a, BODEN_Y - 248);
+    c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 2; const ph = ruhig() ? 0 : zeit * 40;
+    for (let r = 0; r < 3; r++) { c.beginPath(); for (let k = Math.floor((a - x) / 40) * 40; x + k < b; k += 40) { const wx = x + k + ((ph + r * 13) % 40), wy = 260 + r * 22; c.moveTo(wx, wy); c.quadraticCurveTo(wx + 10, wy - 6, wx + 20, wy); } c.stroke(); }
+    for (let k = 300; k < w; k += 900) {
+      const fx = x + k; if (fx < -160 || fx > viewW + 160) continue;
+      c.fillStyle = '#5b5148'; c.beginPath(); c.moveTo(fx - 90, BODEN_Y); c.lineTo(fx - 70, 286); c.lineTo(fx - 20, 272); c.lineTo(fx + 40, 280); c.lineTo(fx + 90, BODEN_Y); c.closePath(); c.fill();
+      c.fillStyle = '#6f645a'; c.beginPath(); c.moveTo(fx - 60, 288); c.lineTo(fx - 20, 276); c.lineTo(fx + 10, 284); c.closePath(); c.fill();
+      if (!ruhig()) { const sp = (zeit * 1.3 + k) % 3; if (sp < 0.8) { c.fillStyle = `rgba(255,255,255,${0.8 - sp})`; c.beginPath(); c.arc(fx + 70, 286 - sp * 30, 8 + sp * 14, 0, Math.PI * 2); c.fill(); } }   // Welle bricht am Fels
+      for (const [sx, s] of [[-40, 1], [10, -1]]) {   // zwei Seelöwen auf dem Fels
+        const kopf = Math.sin(zeit * 3 + k + sx) > 0.6 ? -4 : 0;
+        c.fillStyle = '#6b4a32'; c.beginPath(); c.ellipse(fx + sx, 270, 18, 7, 0, 0, Math.PI * 2); c.fill();
+        c.beginPath(); c.ellipse(fx + sx - 14 * s, 262 + kopf, 6, 5, 0, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#18130f'; c.beginPath(); c.arc(fx + sx - 17 * s, 261 + kopf, 1.2, 0, Math.PI * 2); c.fill();
+        if (kopf) { c.fillStyle = '#fff'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('ARF!', fx + sx - 20 * s, 248); }
+      }
+    }
+  }
+  function cablecarDeko(c, x) {   // Cable Car am Anfang des B-Wegs (fährt den steilen Hügel hinauf): Wagen auf Schienen, Schild
+    c.strokeStyle = '#555'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 120, BODEN_Y - 2); c.lineTo(x + 140, BODEN_Y - 2); c.stroke();
+    tramZeichnen(c, x, BODEN_Y - 2, 1.25);
+    c.fillStyle = '#1d3f8f'; c.fillRect(x - 3, BODEN_Y - 120, 5, 50); c.beginPath(); c.roundRect(x - 50, BODEN_Y - 140, 100, 22, 4); c.fill();
+    c.fillStyle = '#fff'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('CABLE CAR ↗ BRIDGE', x, BODEN_Y - 129);
+  }
+  function warnschildDeko(c, x) {   // ♪4: gelbes Warnschild am Mast
+    c.fillStyle = '#555'; c.fillRect(x - 3, BODEN_Y - 110, 6, 110);
+    c.fillStyle = '#f2c230'; c.strokeStyle = '#222'; c.lineWidth = 2; c.beginPath(); c.roundRect(x - 62, BODEN_Y - 150, 124, 52, 5); c.fill(); c.stroke();
+    c.fillStyle = '#111'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = 'bold 12px system-ui, sans-serif'; c.fillText('⚠ WARNING!', x, BODEN_Y - 138);
+    c.font = 'bold 9px system-ui, sans-serif'; c.fillText('STRONG WINDS.', x, BODEN_Y - 123); c.fillText('DO NOT CLIMB.', x, BODEN_Y - 111);
+  }
+  function zeitungDeko(c, x) {   // ♪A7: Bank an der Promenade, eine alte Zeitung klebt daran
+    c.fillStyle = '#6b4a2e'; c.fillRect(x - 50, BODEN_Y - 30, 100, 6); c.fillRect(x - 50, BODEN_Y - 52, 100, 6); c.fillStyle = '#333'; c.fillRect(x - 44, BODEN_Y - 24, 4, 24); c.fillRect(x + 40, BODEN_Y - 24, 4, 24);
+    c.save(); c.translate(x + 4, BODEN_Y - 62); c.rotate(-0.08 + (ruhig() ? 0 : Math.sin(zeit * 2) * 0.03));
+    c.fillStyle = '#efe7d2'; c.fillRect(-40, -22, 80, 40); c.strokeStyle = '#9a8f78'; c.lineWidth = 1; c.strokeRect(-40, -22, 80, 40);
+    c.fillStyle = '#111'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = 'bold 8px Georgia, serif'; c.fillText('MAP STOLEN –', 0, -13); c.fillText('KEEPER MISSING', 0, -4);
+    c.font = '7px Georgia, serif'; c.fillText('1974', 0, 5); c.fillStyle = 'rgba(0,0,0,.25)'; for (let k = 0; k < 3; k++) c.fillRect(-34, 10 + k * 3, 68, 1);
+    c.restore();
+  }
+  function alcatrazDeko(c, x) {   // ♪A9: Alcatraz im Dunst (Insel mit Leuchtturm, blass)
+    c.save(); c.globalAlpha = 0.45;
+    c.fillStyle = '#7d8792'; c.beginPath(); c.moveTo(x - 120, 252); c.quadraticCurveTo(x - 60, 222, x + 20, 226); c.quadraticCurveTo(x + 90, 230, x + 120, 252); c.closePath(); c.fill();
+    c.fillRect(x - 50, 206, 70, 22); c.fillRect(x + 30, 186, 8, 40); c.fillStyle = '#fff6c0'; c.beginPath(); c.arc(x + 34, 184, 4, 0, Math.PI * 2); c.fill();
+    c.restore();
+    c.fillStyle = 'rgba(235,240,245,.55)'; for (let k = 0; k < 4; k++) { const nx = x - 140 + ((k * 90 + zeit * 10) % 300); c.beginPath(); c.ellipse(nx, 236 + (k % 2) * 8, 60, 10, 0, 0, Math.PI * 2); c.fill(); }
+  }
+  function brueckentuerDeko(c, x) {   // ♪B10: eine Tür, auf den roten Stahl gemalt (über der Strebe), sie leuchtet
+    const p = ruhig() ? 0.8 : 0.65 + 0.35 * Math.sin(zeit * 2.6);
+    const g = c.createRadialGradient(x, 100, 4, x, 100, 70); g.addColorStop(0, `rgba(255,240,180,${0.55 * p})`); g.addColorStop(1, 'rgba(255,200,120,0)'); c.fillStyle = g; c.beginPath(); c.arc(x, 100, 70, 0, Math.PI * 2); c.fill();
+    c.fillStyle = GG_ROT; c.fillRect(x - 40, 40, 80, 112);
+    c.strokeStyle = `rgba(255,236,160,${0.6 + 0.4 * p})`; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 24, 150); c.lineTo(x - 24, 74); c.arc(x, 74, 24, Math.PI, 0); c.lineTo(x + 24, 150); c.stroke();
+    c.fillStyle = `rgba(255,236,160,${p})`; c.beginPath(); c.arc(x + 14, 116, 3, 0, Math.PI * 2); c.fill(); c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('✦', x, 80);
+  }
+  function turmDeko(c, x) {   // Brückenturm am Ufer (A-Weg): zwei rote Stiele mit Querriegeln; halb oben schimmert es im Nebel (dort hängt das Tor ✦)
+    brueckenTurm(c, x, BODEN_Y, 420, 64, GG_ROT);
+    c.fillStyle = '#7a6a5a'; c.fillRect(x - 70, BODEN_Y - 24, 140, 24);   // Sockel im Wasser
+    const p = ruhig() ? 0.6 : 0.4 + 0.3 * Math.sin(zeit * 2.2);
+    const g = c.createRadialGradient(x, 60, 2, x, 60, 60); g.addColorStop(0, `rgba(190,230,255,${p})`); g.addColorStop(1, 'rgba(190,230,255,0)'); c.fillStyle = g; c.beginPath(); c.arc(x, 60, 60, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(240,244,248,.7)'; for (let k = 0; k < 3; k++) { const nx = x - 90 + ((k * 70 + zeit * 12) % 180); c.beginPath(); c.ellipse(nx, 120 + k * 14, 50, 9, 0, 0, Math.PI * 2); c.fill(); }
+  }
+  function elenaAmTor(c) {   // Golden Gate nach dem Boss: Elena Cruz tritt aus dem Nebel, steht vor dem Brückentor und sieht nach links (zu dir)
+    if (!(story && W.id === 'ca' && (zustand === 'wahl' || zustand === 'finale'))) return;
+    const x = level.bossX - kamera + 20, a = zustand === 'wahl' ? Math.min(1, boss.weg * 1.5) : Math.max(0, 1 - tuer.offen * 1.4);
+    if (a <= 0) return;
+    c.save(); c.globalAlpha = a; c.translate(x, 0); c.scale(-1, 1); zeichneFigur(c, 0, BODEN_Y, 80, NY_FIGUREN.frau, 'steh', zeit, 'grinsend'); c.restore();
+  }
+  /* ---------- The Realm Beyond, Kapitel 5: Eisbrücke über einem Abgrund (Kulisse hinter dem Schneeboden), schwarzes Banner, Black Banner 🏴 ---------- */
+  function eisbrueckeDeko(c, x, w) {   // Bögen und Pfeiler aus Eis unter der Fahrbahn, Geländer aus Eiszapfen, Tiefe darunter
+    const a = Math.max(-100, x), b = Math.min(viewW + 100, x + w); if (b <= a) return;
+    c.fillStyle = 'rgba(20,30,60,.35)'; c.fillRect(a, 230, b - a, BODEN_Y - 230);
+    c.fillStyle = 'rgba(200,235,255,.55)'; for (let k = Math.floor((a - x) / 320) * 320; x + k < b; k += 320) { const px = x + k; c.beginPath(); c.moveTo(px - 30, BODEN_Y); c.quadraticCurveTo(px + 130, BODEN_Y - 70, px + 290, BODEN_Y); c.lineTo(px + 290, BODEN_Y - 8); c.quadraticCurveTo(px + 130, BODEN_Y - 82, px - 30, BODEN_Y - 8); c.closePath(); c.fill(); }
+    c.strokeStyle = 'rgba(230,248,255,.9)'; c.lineWidth = 3; c.beginPath(); c.moveTo(a, BODEN_Y - 40); c.lineTo(b, BODEN_Y - 40); c.stroke();
+    c.lineWidth = 2; c.beginPath(); for (let k = Math.floor((a - x) / 60) * 60; x + k < b; k += 60) { c.moveTo(x + k, BODEN_Y - 40); c.lineTo(x + k, BODEN_Y - 4); } c.stroke();
+  }
+  function bannerDeko(c, x) {   // ✦R1: ein schwarzes Banner hängt an zwei Ketten über der Eisbrücke, flattert im Wind, ein ✦ in Silber
+    const f = ruhig() ? 0 : Math.sin(zeit * 2.4) * 6;
+    c.strokeStyle = '#9aa8b8'; c.lineWidth = 2; c.beginPath(); c.moveTo(x - 50, -20); c.lineTo(x - 46, 150); c.moveTo(x + 50, -20); c.lineTo(x + 46, 150); c.stroke();
+    c.fillStyle = '#5a5f6a'; c.fillRect(x - 56, 148, 112, 6);
+    c.fillStyle = '#111318'; c.beginPath(); c.moveTo(x - 50, 154); c.lineTo(x + 50, 154); c.lineTo(x + 50 + f, 280); c.lineTo(x + f * 0.5, 262); c.lineTo(x - 50 + f, 280); c.closePath(); c.fill();
+    c.fillStyle = '#c9d2dc'; c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('✦', x + f * 0.4, 205);
+  }
+  function schwarzesbanner(c, x, y, t) {   // Black Banner 🏴 (Kapitel 5): kleines schwarzes Banner an einer Stange, Silber-✦, kühles Leuchten
+    const g = c.createRadialGradient(x, y, 2, x, y, 30); g.addColorStop(0, 'rgba(200,220,255,.55)'); g.addColorStop(1, 'rgba(200,220,255,0)'); c.fillStyle = g; c.beginPath(); c.arc(x, y, 30, 0, Math.PI * 2); c.fill();
+    const f = ruhig() ? 0 : Math.sin(t * 4) * 3;
+    c.fillStyle = '#c9a24a'; c.fillRect(x - 12, y - 20, 3, 40);
+    c.fillStyle = '#111318'; c.beginPath(); c.moveTo(x - 9, y - 18); c.lineTo(x + 14, y - 16 + f); c.lineTo(x + 12, y + 2 + f); c.lineTo(x - 9, y); c.closePath(); c.fill();
+    c.fillStyle = '#e0e6ee'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('✦', x + 2, y - 8 + f * 0.5);
   }
 
   /* ---------- The Realm Beyond, Kapitel 4: Eishalle mit fünf Türen – Halle aus Eis (Säulen, Gewölbe, Frostglitzer), Spiegelboden, fünf Türen (vier zu, eine offen und leuchtend), Eiszapfen, Silver Key ---------- */
@@ -6363,7 +6579,7 @@
     c.font = '10px system-ui, sans-serif'; c.fillText('✨', 0, -32);
     c.restore();
   }
-  function realmDingeZeichnen(c) { const gs = realmGegenstand(); for (const d of realm.dinge) { if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue; if (gs.art === 'schuppe') dragonScale(c, x, d.y, d.funkel); else if (gs.art === 'goldschuppe') goldenScale(c, x, d.y, d.funkel); else if (gs.art === 'silberschluessel') silberschluessel(c, x, d.y, d.funkel); else frostShard(c, x, d.y, d.funkel); } }
+  function realmDingeZeichnen(c) { const gs = realmGegenstand(); for (const d of realm.dinge) { if (d.weg) continue; const x = d.x - kamera; if (x < -40 || x > viewW + 40) continue; if (gs.art === 'schuppe') dragonScale(c, x, d.y, d.funkel); else if (gs.art === 'goldschuppe') goldenScale(c, x, d.y, d.funkel); else if (gs.art === 'silberschluessel') silberschluessel(c, x, d.y, d.funkel); else if (gs.art === 'schwarzesbanner') schwarzesbanner(c, x, d.y, d.funkel); else frostShard(c, x, d.y, d.funkel); } }
   function realmFackelnZeichnen(c) {   // Fackeln alle 700, Banner alle 1.400 (Weltkoordinaten, hinter der Figur)
     const a = Math.floor((kamera - 100) / 700), b = Math.ceil((kamera + viewW + 100) / 700);
     for (let i = Math.max(0, a); i <= b; i++) { const x = i * 700 + 330 - kamera; if (i % 2) bannerPfahl(c, x, BODEN_Y); else fackel(c, x, BODEN_Y); }
@@ -6371,6 +6587,7 @@
   const REALM_WELT = { id: 'realm', name: 'The Realm Beyond', sturz: 'Crevasse! ❄️', gegnerarten: ['wolf', 'ritter'], farben: { plattform: '#5b6b84', plattformOben: '#ffffff', hud: '#3a7bd5' },
     kulisse: hintergrundRealm, boden: bodenRealm, grube: gletscherspalte, kiste: eisblock, tuer: rueckTor, boss: () => {}, sprechblaseHoehe: 70,
     hudSymbol: (c, x, y) => { c.font = '18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#3a7bd5'; c.fillText(realmGegenstand().symbol, x, y - 6); } };
+  const REALM_WELT_5 = Object.assign({}, REALM_WELT, { id: 'eisbruecke' });   // Kapitel 5: Eiswelt (Schneesturm, Drache fliegt vorbei) mit Eisbrücke und schwarzem Banner als Kulisse, Böen auf der Brücke
 
   /* ---------- The Realm Beyond, Kapitel 3: Drachenhöhle – dunkle Höhle mit Tropfsteinen, Goldberg mit schlafendem Drachen (atmet, Rauchkringel; wach: Augen glühen), Gold-Glitzer, Höhlenboden mit Münzen,
      Lavaspalten, Schatzkisten, offene Steintür, Goldhaufen, Flammenstoß ---------- */
@@ -6884,6 +7101,91 @@
     c.restore();
     filmUntertitel(c, f);
   }
+  /* ---------- Film Golden Gate (Kapitel 5, drei Enden nach Zählung): Bühne an der gemalten Tür in der Brückenmitte (rote Stahlwand, Nebel), Lucas, Maya (Jayden nur bei Variante 1X/2X), du, Elena Cruz an der Tür.
+     Szene 1 (X15–X16 / Y15–Y16): X – du schüttelst den Kopf ✋, Maya und Lucas nehmen deine Hände · Y – du hältst ihr die Karte hin, sie lächelt.
+     E1: alle Hände auf der Karte an der Tür, das Tor schließt mit einem Knall (17), Elena schreit und verschwindet im Nebel, der Nebel ist weg (18) · Lucas lacht und weint (19), Schlagzeile (20).
+     E2: das Tor schließt, die Karte reißt (17), Elena hält die andere Hälfte und ist weg (18) · Maya leise (19), Lucas dreht seine Hälfte um – hinten steht etwas (20).
+     E3: das Tor geht auf, Elena geht mit der Karte hindurch (17), es schließt hinter ihr (18) · kalter Nebel (19), die letzte Seite „CHAPTER 6“ flattert herunter (20) · Titelkarte. ---------- */
+  const CAF = { tuer: 780, elena: 680, ich: 520, maya: 450, lucas: 380, jayden: 310 };
+  function filmKameraCA(sz, f) {   // [x, y, zoom] der Bildmitte: Szene 1 Gruppe + Elena, Szene 2 näher an die Tür, Szene 3 zurück auf die Gruppe
+    const K = [[[520, 220, 1.0], [590, 222, 1.12]], [[640, 215, 1.15], [700, 205, 1.3]], [[520, 220, 1.2], [500, 215, 1.05]]][Math.min(2, sz)];
+    const g = sanft(f);
+    return [lerp(K[0][0], K[1][0], g), lerp(K[0][1], K[1][1], g), lerp(K[0][2], K[1][2], g)];
+  }
+  function filmKulisseCA(c, licht, nebel) {   // Brückenmitte: Himmel im Dunst, Hauptkabel, rote Stahlwand mit Nieten, rostiges Geländer, Fahrbahn; die gemalte Tür (licht 0..1 = leuchtet / steht offen)
+    const g = c.createLinearGradient(0, -400, 0, 260); g.addColorStop(0, '#8fb3cf'); g.addColorStop(1, '#dfe7ee'); c.fillStyle = g; c.fillRect(-900, -500, 2600, 800);
+    c.strokeStyle = GG_ROT; c.lineWidth = 9; c.beginPath(); c.moveTo(-600, -60); c.quadraticCurveTo(400, 260, 1500, -60); c.stroke();
+    c.lineWidth = 2; c.beginPath(); for (let k = -560; k < 1480; k += 60) { const t = (k + 600) / 2100, yk = -60 + 4 * t * (1 - t) * 160; c.moveTo(k, yk); c.lineTo(k, 220); } c.stroke();
+    c.fillStyle = GG_ROT; c.fillRect(CAF.tuer - 120, 60, 240, BODEN_Y - 60);   // Stahlwand mit der Tür
+    c.fillStyle = 'rgba(255,220,200,.5)'; for (let y = 72; y < BODEN_Y; y += 22) for (let x = CAF.tuer - 110; x < CAF.tuer + 120; x += 22) { c.beginPath(); c.arc(x, y, 1.3, 0, Math.PI * 2); c.fill(); }
+    const l = Math.max(0, Math.min(1, licht));
+    const lg = c.createRadialGradient(CAF.tuer, 220, 4, CAF.tuer, 220, 60 + l * 120); lg.addColorStop(0, `rgba(255,250,220,${0.4 + 0.5 * l})`); lg.addColorStop(1, 'rgba(255,220,150,0)'); c.fillStyle = lg; c.beginPath(); c.arc(CAF.tuer, 220, 60 + l * 120, 0, Math.PI * 2); c.fill();
+    if (l > 0.5) { c.fillStyle = `rgba(255,255,255,${(l - 0.5) * 1.8})`; c.beginPath(); c.moveTo(CAF.tuer - 34, BODEN_Y); c.lineTo(CAF.tuer - 34, 160); c.arc(CAF.tuer, 160, 34, Math.PI, 0); c.lineTo(CAF.tuer + 34, BODEN_Y); c.closePath(); c.fill(); realmTorZeichnen(c, CAF.tuer, 230, zeit, 1.2 * l); }
+    c.strokeStyle = '#ffe9a0'; c.lineWidth = 4; c.beginPath(); c.moveTo(CAF.tuer - 34, BODEN_Y); c.lineTo(CAF.tuer - 34, 160); c.arc(CAF.tuer, 160, 34, Math.PI, 0); c.lineTo(CAF.tuer + 34, BODEN_Y); c.stroke();
+    c.fillStyle = '#ffe9a0'; c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('✦', CAF.tuer, 166);
+    c.strokeStyle = '#8a4a2a'; c.lineWidth = 3; c.beginPath(); c.moveTo(-900, BODEN_Y - 40); c.lineTo(CAF.tuer - 120, BODEN_Y - 40); c.stroke();   // rostiges Geländer
+    c.lineWidth = 2; c.beginPath(); for (let x = -880; x < CAF.tuer - 120; x += 34) { c.moveTo(x, BODEN_Y - 40); c.lineTo(x, BODEN_Y); } c.stroke();
+    c.fillStyle = '#6a6a70'; c.fillRect(-900, BODEN_Y, 2600, 300); c.fillStyle = GG_ROT; c.fillRect(-900, BODEN_Y, 2600, 6);
+    const n = Math.max(0, Math.min(1, nebel));   // Nebelschwaden über allem (E1 Szene 2: verschwindet)
+    if (n > 0) { c.fillStyle = `rgba(240,244,248,${0.55 * n})`; for (let k = 0; k < 9; k++) { const nx = -300 + ((k * 210 + zeit * 16) % 1700); c.beginPath(); c.ellipse(nx, 120 + (k % 3) * 70, 150, 24, 0, 0, Math.PI * 2); c.fill(); } }
+  }
+  function karteHaelfte(c, x, y, s, links) {   // eine Hälfte der Karte (gerissene Kante)
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#e8d5a3'; c.beginPath();
+    if (links) { c.moveTo(-16, -11); c.lineTo(0, -11); c.lineTo(-3, -5); c.lineTo(2, 0); c.lineTo(-2, 6); c.lineTo(1, 11); c.lineTo(-16, 11); }
+    else { c.moveTo(16, -11); c.lineTo(0, -11); c.lineTo(-3, -5); c.lineTo(2, 0); c.lineTo(-2, 6); c.lineTo(1, 11); c.lineTo(16, 11); }
+    c.closePath(); c.fill(); c.strokeStyle = '#8a6a34'; c.lineWidth = 1; c.stroke();
+    c.strokeStyle = '#b3332a'; c.lineWidth = 1.4; c.beginPath(); if (links) { c.moveTo(-13, 6); c.lineTo(-6, -2); c.lineTo(-1, 3); } else { c.moveTo(2, 4); c.lineTo(8, -5); c.lineTo(13, -1); } c.stroke();
+    c.restore();
+  }
+  function filmZeichnenCA(c) {
+    const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
+    if (!filmSzenen(ende)[sz]) return filmTitel(c, f);
+    const [kx, ky, kz] = filmKameraCA(sz, p);
+    c.save(); c.translate(viewW / 2, H / 2); c.scale(kz, kz); c.translate(-kx, -ky);
+    const nein = story && story.wahl.g2 === 'Y' ? false : true;   // Szene 1: X = „No“, Y = Karte hinhalten
+    const zu = sz === 1 ? sanft((tt - 1.6) / 0.6) : sz > 1 ? 1 : 0;   // Szene 2: das Tor geht zu (E1/E2) bzw. erst auf, dann zu (E3)
+    const licht = ende === 'E3' ? (sz === 1 ? Math.max(0, sanft(tt / 1.0) - sanft((tt - 3.2) / 0.8)) : sz === 0 ? 0.3 : 0) : sz === 0 ? 0.4 : sz === 1 ? 0.6 * (1 - zu) : 0;
+    const nebel = ende === 'E1' ? (sz === 0 ? 1 : sz === 1 ? 1 - sanft((tt - 2.4) / 1.6) : 0) : ende === 'E3' && sz === 2 ? 1.4 : 1;
+    filmKulisseCA(c, licht, nebel);
+    if (sz === 1 && ende !== 'E3' && tt > 1.6 && tt < 2.1 && !ruhig()) { c.fillStyle = `rgba(255,255,255,${0.8 - (tt - 1.6) * 1.6})`; c.fillRect(-900, -500, 2600, 1000); }   // Knall
+    const mitJayden = variantenWahl['sd.g2'] !== 'Y';
+    // Gruppe: Szene 2 (E1) gehen alle zur Tür und legen die Hände auf die Karte
+    const vor = ende === 'E1' && sz === 1 ? sanft(tt / 1.4) * 90 : ende === 'E1' && sz === 2 ? 90 : 0, lauf = ende === 'E1' && sz === 1 && tt < 1.4 ? 'lauf' : 'steh';
+    if (mitJayden) filmPerson(c, NY_FIGUREN.jayden, CAF.jayden + vor, lauf, 'erstaunt', false, 0);
+    const lucasAusdruck = ende === 'E1' && sz === 2 ? 'zunge' : ende === 'E3' && sz === 2 ? 'erstaunt' : 'grinsend';
+    filmPerson(c, NY_FIGUREN.lucas, CAF.lucas + vor, lauf, lucasAusdruck, false, 0);
+    filmPerson(c, NY_FIGUREN.maya, CAF.maya + vor, lauf, ende === 'E2' && sz === 2 ? 'erstaunt' : 'grinsend', false, 0);
+    filmPerson(c, filmSkin(), CAF.ich + vor, lauf, sz === 0 && nein ? 'erstaunt' : ende === 'E3' && sz >= 1 ? 'erstaunt' : 'grinsend', false, 0);
+    if (sz === 0 && nein && tt > 1.6) { c.strokeStyle = '#f0c8a0'; c.lineWidth = 5; c.lineCap = 'round'; c.beginPath(); c.moveTo(CAF.maya + 12, BODEN_Y - 50); c.lineTo(CAF.ich - 12, BODEN_Y - 50); c.moveTo(CAF.lucas + 12, BODEN_Y - 50); c.lineTo(CAF.maya - 12, BODEN_Y - 50); c.stroke(); }   // Hände halten
+    if (sz === 0 && nein && tt < 2.4) { c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('✋', CAF.ich + 30, BODEN_Y - 110); }
+    // Elena: Szene 1 an der Tür; E1 Szene 2 schreit und löst sich im Nebel auf; E2 Szene 2 geht mit der Hälfte und ist weg; E3 Szene 2 geht durch die Tür
+    let ex = CAF.elena, ea = 1;
+    if (sz === 1) { if (ende === 'E1') { ea = 1 - sanft((tt - 1.8) / 1.4); ex = CAF.elena + 50; } else if (ende === 'E2') { ea = 1 - sanft((tt - 2.6) / 1.2); ex = CAF.elena + sanft((tt - 2.2) / 1.6) * 60; } else { ex = CAF.elena + sanft((tt - 0.8) / 1.8) * 100; ea = 1 - sanft((tt - 2.4) / 0.8); } }
+    else if (sz > 1) ea = 0;
+    if (ea > 0) { c.save(); c.globalAlpha = ea; filmPerson(c, NY_FIGUREN.frau, ex, sz === 1 && ende === 'E3' && tt > 0.8 && tt < 2.6 ? 'lauf' : 'steh', ende === 'E1' && sz === 1 ? 'erstaunt' : 'grinsend', !(ende === 'E3' && sz === 1 && tt > 0.8), 0); c.restore(); }
+    if (ende === 'E1' && sz === 1 && tt > 1.8 && tt < 3.2) { c.font = 'bold 20px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = '#c0322e'; c.fillText('AAAH!', ex - 10, BODEN_Y - 118); }
+    // die Karte
+    if (sz === 0) { if (nein) karteZeichnen(c, CAF.ich + 6, BODEN_Y - 46, 1.1); else { const h = sanft((tt - 0.8) / 1.4); karteZeichnen(c, lerp(CAF.ich + 14, CAF.ich + 70, h), BODEN_Y - 50 - h * 6, 1.1); } }
+    else if (ende === 'E1') karteZeichnen(c, CAF.tuer - 2, sz === 1 ? lerp(BODEN_Y - 50, 190, sanft(tt / 1.4)) : 190, 1.6);   // an der Tür, alle Hände darauf
+    else if (ende === 'E2') { if (sz === 1) { const r = sanft((tt - 1.6) / 0.6); karteHaelfte(c, CAF.ich + 30 - r * 10, BODEN_Y - 50, 1.2, true); if (ea > 0) { c.save(); c.globalAlpha = ea; karteHaelfte(c, ex - 30 + (1 - r) * 30, BODEN_Y - 50, 1.2, false); c.restore(); } } else { const d = sanft((tt - 2.0) / 1.0); karteHaelfte(c, CAF.lucas + 16, BODEN_Y - 54 - d * 10, 1.4 + d * 0.4, true); if (d > 0.5) { c.fillStyle = '#3a2a1a'; c.font = 'italic 7px Georgia, serif'; c.textAlign = 'center'; c.fillText('✦ ? …', CAF.lucas + 14, BODEN_Y - 62); } } }
+    else if (sz === 1 && ea > 0) { c.save(); c.globalAlpha = ea; karteZeichnen(c, ex - 14, BODEN_Y - 46, 1.1); c.restore(); }
+    if (ende === 'E1' && sz === 1 && tt > 1.2) { c.fillStyle = '#f0c8a0'; c.strokeStyle = 'rgba(90,50,30,.5)'; c.lineWidth = 1; for (const [hx, hy] of [[-22, -8], [20, -10], [-16, 12], [18, 12]].slice(0, mitJayden ? 4 : 3)) { c.beginPath(); c.ellipse(CAF.tuer - 2 + hx, 190 + hy, 7, 9, 0, 0, Math.PI * 2); c.fill(); c.stroke(); } }   // alle Hände auf der Karte
+    if (ende === 'E1' && sz === 2) {   // Lucas lacht und weint · die Schlagzeile
+      if (!ruhig()) { c.fillStyle = '#9fe3ff'; for (let k = 0; k < 2; k++) { const d = (tt * 1.4 + k * 0.5) % 1; c.beginPath(); c.ellipse(CAF.lucas + vor + 14, BODEN_Y - 72 + d * 18, 2, 3, 0, 0, Math.PI * 2); c.fill(); } }
+      const z = sanft((tt - 2.2) / 1.0);
+      if (z > 0) { c.save(); c.translate(560, 110); c.rotate(-0.04); c.scale(0.6 + 0.4 * z, 0.6 + 0.4 * z); c.globalAlpha = z; c.fillStyle = '#f1ead6'; c.fillRect(-150, -42, 300, 84); c.strokeStyle = '#8a8070'; c.lineWidth = 1; c.strokeRect(-150, -42, 300, 84);
+        c.fillStyle = '#111'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = 'bold 9px Georgia, serif'; c.fillText('THE SAN FRANCISCO NEWS', 0, -30); c.font = 'bold 18px Georgia, serif'; c.fillText('FIVE GATES CLOSED –', 0, -8); c.fillText('NOBODY KNOWS HOW', 0, 14); c.restore(); }
+    }
+    if (ende === 'E2' && sz === 2 && tt < 3) { c.font = 'bold 22px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(255,255,255,.8)'; c.fillText('…', CAF.maya + 4, BODEN_Y - 116); }
+    if (ende === 'E3' && sz === 2) {   // die letzte Seite flattert herunter: CHAPTER 6
+      const d = Math.min(1, tt / 3.2), sx = CAF.ich + 40 + Math.sin(tt * 3) * 40 * (1 - d), sy = lerp(-40, BODEN_Y - 12, sanft(d));
+      c.save(); c.translate(sx, sy); c.rotate(ruhig() ? 0 : Math.sin(tt * 4) * 0.5 * (1 - d)); c.fillStyle = '#efe2bd'; c.fillRect(-26, -18, 52, 36); c.strokeStyle = '#8a6a34'; c.lineWidth = 1; c.strokeRect(-26, -18, 52, 36);
+      c.fillStyle = '#3a2a1a'; c.font = 'bold 9px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('CHAPTER 6', 0, -2); c.font = '8px system-ui, sans-serif'; c.fillText('✦', 0, 10); c.restore();
+    }
+    if (sz === 0 && tt < 3) for (const [n, x] of [['Lucas', CAF.lucas], ['Maya', CAF.maya], ['You', CAF.ich], ['Elena', CAF.elena]].concat(mitJayden ? [['Jayden', CAF.jayden]] : [])) namensSchild(c, x, n);
+    c.restore();
+    filmUntertitel(c, f);
+  }
   function hintergrund(c) { W.kulisse(c); }
   function hintergrundNY(c) {
     const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#6ec3f2'); g.addColorStop(0.65, '#cfeeff'); g.addColorStop(1, '#f7f1dc');
@@ -6930,7 +7232,8 @@
       if (p.art === 'kabine') { kabinePlattform(c, x, p.y, p.w); continue; }       // schwebende Kabine des London Eye (Welt 2 Klasse 6)
       if (p.art === 'glas') { glasPlattform(c, x, p.y, p.w); continue; }           // Glasbrücke des Skywalk (Story Grand Canyon)
       if (p.art === 'mauer') { mauerPlattform(c, x, p.y, p.w); continue; }         // Wehrgang der Tower-Mauer (Welt 3 Klasse 6)
-      if (p.art === 'granit') { granitPlattform(c, x, p.y, p.w); continue; }       // Granit-Absatz auf den Präsidentenköpfen (Story Mount Rushmore)
+      if (p.art === 'granit') { granitPlattform(c, x, p.y, p.w); continue; }
+      if (p.art === 'stahl') { stahlPlattform(c, x, p.y, p.w); continue; }         // rote Stahlstrebe der Golden Gate (Story Kapitel 5, B-Weg)       // Granit-Absatz auf den Präsidentenköpfen (Story Mount Rushmore)
       if (p.art === 'rolltreppe') { rolltreppePlattform(c, x, p.y, p.w); continue; }   // Rolltreppe als Stufe (Welt 4 Klasse 6)
       if (p.art === 'wagen') { wagenPlattform(c, x, p.y, p.w); continue; }         // Zugboden eines Wagens (Weg B, Welt 4 Klasse 6)
       if (p.art === 'tribuene') { tribuenePlattform(c, x, p.y, p.w); continue; }   // Tribünenblock (Weg A, Welt 5 Klasse 6)
@@ -6989,6 +7292,7 @@
     if (level.tuerX - kamera < viewW + 400) {
       W.tuer(c, level.tuerX - kamera, BODEN_Y);
       W.boss(c, level.bossX - kamera, BODEN_Y);
+      elenaAmTor(c);
       if (bossSpruch) sprechblase(c, level.bossX - kamera - 20, BODEN_Y - W.sprechblaseHoehe, bossSpruch.text);
     }
     if (dunkel > 0) dunkelZeichnen(c, dunkel);   // London Eye: Maschinenraum – dunkel, nur die Lampen leuchten
@@ -7284,7 +7588,7 @@
       boss: (c, x, y) => { baerenhoehleBoss(c, x, y); grizzlyGrandpa(c, x, y); }, tuer: rangerTor, bossKlang: () => { brummt++; klang.brummen(); } },
     ca: { id: 'ca', name: 'Golden Gate', staat: 'California', ziel: 'Golden Gate Bridge', bossName: 'Captain Fog', bossSymbol: '👻', banner: 'Captain Fog is blocking the bridge!', richtig: "Correct – the bridge is yours, sailor!", falsch: "Not this time – lost in the fog!", start: "Let's find the Golden Gate Bridge!", ende: "You made it to the Golden Gate Bridge!",
       sturz: 'Splash! 🌊',
-      gegnerarten: ['moewe', 'seeloewe', 'skater'], farben: { plattform: '#8e3220', plattformOben: '#e8714a', hud: '#c0462b' }, muster: MUSTER_CA, sprechblaseHoehe: 240,
+      gegnerarten: ['moewe', 'seeloewe', 'skater'], farben: { plattform: '#8e3220', plattformOben: '#e8714a', hud: '#c0462b' }, muster: MUSTER_CA, musterStory: MUSTER_CA_STORY, storyStruktur: STRUKTUR_CA, realmZurueck: 'Back at the Golden Gate! 🌉', sprechblaseHoehe: 240,
       kulisse: hintergrundGoldenGate, boden: promenade, grube: pazifik, kiste: hafenkiste, hudSymbol: (c, x, y) => goldenGateFern(c, x, y + 12, 0.11),
       boss: (c, x, y) => { nebelbank(c, x, y); captainFog(c, x, y); }, tuer: brueckenTor, bossKlang: () => { tutet++; klang.nebelhorn(); } },
     // Klasse 6 „London Run“ (31.10.): Welt 1 Westminster · Big Ben
@@ -7371,7 +7675,7 @@
     W = WELTEN[opt.welt] || WELTEN.westminster; storyOpt = opt.story || null; texte = Object.assign({}, TEXTE, opt.texte || {});
     strukturSetzen(storyOpt && (storyOpt.struktur || W.storyStruktur));
     const enden = Object.keys(struktur.film || {}), ende = enden.includes(opt.ende) ? opt.ende : enden[0];
-    story = { strang: ende, auto: false, wahl: endeAbschnitt ? { [endeAbschnitt.ende]: ende } : {}, autoWahl: {}, gesammelt: [], schlange: [], aktiv: null, pause: 0, gesprochen: 0, station: null, stationen: 0, filmFertig: null };
+    story = { strang: ende, auto: false, wahl: Object.assign({}, storyOpt && storyOpt.wahlFilm, endeAbschnitt ? { [endeAbschnitt.ende]: ende } : {}), autoWahl: {}, gesammelt: [], schlange: [], aktiv: null, pause: 0, gesprochen: 0, station: null, stationen: 0, filmFertig: null };
     realm = null; radWinkel = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 0, y: 0, flug: 0 } : null;   // London Eye: Begleiter auch im Film der Library
     realm = null;
     canvas = el("canvas", "runner-canvas"); canvas.setAttribute("aria-label", opt.titel || "Story Library");
@@ -7491,6 +7795,8 @@
     stationWeiter() { if (story && story.station) { story.station.t = Math.max(story.station.t, STATION_SPERRE); stationEnde(true); } },
     filmStart(ende) { if (story) filmStart(ende || endeWahl() || gabelStandard(endeAbschnitt && endeAbschnitt.ende)); },
     filmSkip() { return ueberspringen(); },
+    wahl(w) { if (zustand === 'wahl' && wahlGabel) { wahlGeben(w); return true; } return false; },   // Golden Gate: Gabelung 2 nach dem Boss wählen (Test)
+    get wahlOffen() { return zustand === 'wahl' && !!wahlGabel && !frageBox.hidden; },
   };
 
   window.Runner = { start, stopp, film: filmAlleinStart, ueberspringen, zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };

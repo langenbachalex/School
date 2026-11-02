@@ -2891,7 +2891,10 @@
           el("div", {},
             el("h2", { lang: "en" }, `Level ${RUNNER.welten.indexOf(W) + 1} · ${W.name}`),
             el("p", { class: "runner-ziel", lang: "en" }, `Find the ${W.ziel}!`),
-            el("p", { class: "klein" }, W.id === "ca"
+            el("p", { class: "klein" }, W.id === "ca" && STORY[W.id]
+              ? T(`Tippen oder Leertaste = springen, länger halten = höher. Im Nebel siehst du wenig – die Diamanten leuchten durch. Über den Pazifik bringen dich Seilbahn-Gondeln, auf der Surfbrett-Rutsche bist du kurz richtig schnell. Vorsicht Möwe: Sie klaut einen Diamanten. Story „${STORY[W.id].titel}“ (Kapitel 5, das letzte Tor): Die violetten ♪-Kristalle erzählen weiter – der Anfang hängt davon ab, ob Jayden am Mount Rushmore bleiben durfte${storyStand("sd").wahl.g2 ? "" : " (noch nicht gespielt? Dann ist er dabei)"}. Unten an der Küste oder oben über die Brücke? Nach ${W.boss} stellt dich Elena Cruz vor die letzte Entscheidung. Welches der drei Enden du erlebst, hängt von deinen Entscheidungen in Kapitel 1 bis 5 ab (bisher ${storyGute()} von 4 „guten“). Die 💎 Diamanten zeigen dir Wörter und geben je 1 ⭐ (nur wenn du das Level schaffst), die ganze Geschichte +10 – gut 3 Minuten. Am besten das Handy quer halten.`,
+                `Tap or space = jump, hold longer = jump higher. In the fog you can't see much – the diamonds glow through. Cable-car gondolas carry you across the Pacific, on the surfboard slide you're really fast for a moment. Beware of the seagull: it steals a diamond. Story “${STORY[W.id].titel}” (chapter 5, the last gate): the purple ♪ crystals carry on – the beginning depends on whether Jayden could stay at Mount Rushmore${storyStand("sd").wahl.g2 ? "" : " (not played yet? Then he's with you)"}. Down along the coast or up over the bridge? After ${W.boss}, Elena Cruz makes you take the last decision. Which of the three endings you get depends on your choices in chapters 1 to 5 (so far ${storyGute()} of 4 “good” ones). The 💎 diamonds show you words and give 1 ⭐ each (only if you finish the level), the whole story +10 – about 3 minutes. Best in landscape mode.`)
+              : W.id === "ca"
               ? T(`Tippen oder Leertaste = springen, länger halten = höher. Im Nebel siehst du wenig – die Diamanten leuchten durch, auf Geräusche achten! Über den Pazifik bringen dich Seilbahn-Gondeln: Spring drauf, wenn sie nah ist, und rechtzeitig wieder ab. Auf der Surfbrett-Rutsche bist du kurz richtig schnell. Vorsicht Möwe: Berührt sie dich, klaut sie einen Diamanten (kein Leben) – drauf springen oder mit langem Sprung drüber. Seelöwen und Skater kannst du plattdrücken. Sammle die 12 Wort-Diamanten, nimm die richtigen Tore und beantworte die Frage von ${W.boss} am Brückentor – gut 2 Minuten. Am besten das Handy quer halten.`,
                 `Tap or space = jump, hold longer = jump higher. In the fog you can't see much – the diamonds glow through, listen for sounds! Cable-car gondolas carry you across the Pacific: jump on when one is close, and jump off in time. On the surfboard slide you're really fast for a moment. Beware of the seagull: if it touches you, it steals a diamond (not a life) – stomp it or clear it with a long jump. Sea lions and skaters can be squashed. Collect the 12 word diamonds, take the right gates and answer ${W.boss}'s question at the bridge gate – about 2 minutes. Best in landscape mode.`)
               : W.id === "sd" && STORY[W.id]
@@ -2959,12 +2962,17 @@
   // Kapitel 4 Mount Rushmore „The Traitor“ (31.10., Text wörtlich aus docs/runner/story-usa-04.md): Stücke 1–2 als Variante nach der Wahl aus Kapitel 3 (story.az.wahl.g2: X = Lucas hat das Tagebuch → 1X/2X, sonst 1Y/2Y);
   // die App übergibt story.varianten["az.g2"]. Gabelung 2 (X = Jayden verzeihen / Y = wegschicken) landet in story.sd.wahl.g2 (für Kapitel 5 „The Last Gate“).
   // Realm Kapitel 4 (Eishalle mit fünf Türen): Sammelstück Silver Key 🗝️ → stand.spiel.runner.realm.sd. Aufnahmen audio/story/sd_<key>.mp3 (Sprecherplan werkzeuge/story_audio9.py, Vertonung nach dem 13.11.).
+  // Kapitel 5 Golden Gate „The Last Gate“ (2.11., Text wörtlich aus docs/runner/story-usa-05.md): Stücke 1–2 nach story.sd.wahl.g2 (X = Jayden blieb → 1X/2X, Y = ging → 1Y/2Y; nicht gespielt → X); die App übergibt
+  // story.varianten["sd.g2"] und die Zählung gute = storyGute() (Kapitel 1–4); Gabelung 2 kommt nach dem Boss (Auswahl im Frage-Fenster) und zählt in der Engine mit → drei Enden E1/E2/E3, gespeichert in story.ca.
+  // Realm Kapitel 5 (Eisbrücke mit schwarzem Banner): Black Banner 🏴 → realm.ca; alle fünf Gegenstände → Hinweis „✦ Chapter 6 – coming soon“ in der Library. Aufnahmen audio/story/ca_<key>.mp3 (noch keine → Geräte-Stimme).
   const STORY_KEYS_NY = ["1", "2", "3", "4", "5", "A6", "A7", "A8", "A9", "A10", "B6", "B7", "B8", "B9", "B10", "11", "12", "13", "14", "X15", "X16", "Y15", "Y16",
     "X17", "X18", "X19", "X20", "Y17", "Y18", "Y19", "Y20", "R1", "R2", "R3", "sofar"];
   const STORY_KEYS_R66 = ["1X", "2X", "1Y", "2Y", "3", "4", "5", "A6", "A7", "A8", "A9", "A10", "B6", "B7", "B8", "B9", "B10", "11", "12", "13", "14", "X15", "X16", "Y15", "Y16",
     "X17", "X18", "X19", "X20", "Y17", "Y18", "Y19", "Y20", "R1", "R2", "R3", "sofar"];
   const STORY_KEYS_AZ = STORY_KEYS_R66;   // Kapitel 3 hat dieselben Schlüssel (1X/2X/1Y/2Y, 3–5, A/B, 11–14, X/Y, Enden, R1–R3, sofar)
   const STORY_KEYS_SD = STORY_KEYS_R66;   // Kapitel 4 ebenso
+  const STORY_KEYS_CA = ["1X", "2X", "1Y", "2Y", "3", "4", "5", "A6", "A7", "A8", "A9", "A10", "B6", "B7", "B8", "B9", "B10", "11", "12", "13", "14", "X15", "X16", "Y15", "Y16",
+    "E1_17", "E1_18", "E1_19", "E1_20", "E2_17", "E2_18", "E2_19", "E2_20", "E3_17", "E3_18", "E3_19", "E3_20", "R1", "R2", "R3", "sofar"];   // Kapitel 5: drei Enden E1–E3
   // Aufnahmen je Kapitel: ein Stück = eine Datei (<praefix>_<key>.mp3) oder mehrere Teile (<praefix>_<key>_1.mp3, _2 …) hintereinander; nur Dateien, die der Bau findet (SP.story_audio)
   const storyAudioDateien = (praefix, keys) => Object.fromEntries(keys.map((k) => {
     const alle = SP.story_audio || [], eins = `audio/story/${praefix}_${k}.mp3`;
@@ -3058,16 +3066,62 @@
       R1: "Behind the door: a hall of ice with five doors. Four were closed.", R2: "The knight was waiting. \"One of your friends has made a deal,\" he said.", R3: "\"Deals can be broken,\" he said. \"Find the silver key before she does.\"" },
       // Aufnahmen (vorbereitet, Dateien noch nicht da – Vertonung nach dem 13.11.): Sprecherplan in werkzeuge/story_audio9.py (Maya + Frau = Jessica; Jayden, Lucas, Ritter, Grizzly Grandpa = Jeremy; Spieler-Sätze und Erzähler = Mr. Alex; Tagebuch-Zitat A9 = Jeremy)
       audio: storyAudioDateien("sd", STORY_KEYS_SD) },
+    ca: { id: "ca", titel: "The Lost Map – The Last Gate", kapitel: 5, welt: "Golden Gate",
+      enden: { E1: { symbol: "🌉", name: "All together" }, E2: { symbol: "📜", name: "Torn in two" }, E3: { symbol: "🚪", name: "She got through" } },
+      wege: { A: "🌊 along the coast", B: "🌉 over the bridge", X: "🤝 we finish this together", Y: "🗺️ give her the map" },
+      gegenstand: { name: "Black Banner", symbol: "🏴" }, teile: {
+      "1X": "San Francisco. Four of you walked up the hill. Jayden was still laughing at his own jokes.", "2X": "\"If I had a car,\" he said, \"I would drive us over the bridge.\" Nobody answered.",
+      "1Y": "San Francisco. Three of you walked up the hill. Nobody was making jokes.", "2Y": "Your phone buzzed. A text from Jayden: \"I'm sorry. She's going to the bridge.\"",
+      3: "The Golden Gate Bridge was red, enormous and wrapped in fog.", 4: "A sign said: WARNING! STRONG WINDS. DO NOT CLIMB.",
+      5: "Maya looked up. \"The last gate is on the bridge. Of course it is.\"", A6: "You followed the coast along the bay. Sea lions were barking on the rocks, and a foghorn moaned.",
+      A7: "An old newspaper was stuck to a bench. MAP STOLEN – KEEPER MISSING, 1974.", A8: "\"My grandpa's map was stolen here,\" Lucas said. \"Fifty years ago.\"",
+      A9: "Under the bridge, huge waves were crashing against the cliffs. Alcatraz was hidden in the mist.", A10: "And something was glowing in the fog. Halfway up the tower.",
+      B6: "A cable car took you up the steep hill. Then you walked onto the bridge, into the fog.", B7: "Maya checked the map. \"If we were faster, we would be there already.\"",
+      B8: "The wind was so strong that you had to grab the rusty railing.", B9: "A ship's horn sounded far below. The fog was getting thicker.",
+      B10: "In the middle of the bridge, a door was painted on the red steel. It was glowing.", 11: "Captain Fog rose out of the grey. A ghost in an old sailor's coat.",
+      12: "\"This bridge was built in 1937,\" he whispered. \"The gate is much older.\"", 13: "Then she stepped out of the fog. \"My name is Elena Cruz,\" she said.",
+      14: "\"Give me the map,\" she said, \"and your friends can go home.\"", X15: "\"No,\" you said. \"We came together. We'll finish this together.\"",
+      X16: "Maya took your hand. Lucas took the other one.", Y15: "\"If I give it to you, will you leave us alone?\" you asked.", Y16: "Elena smiled. \"Of course,\" she said. It didn't sound true.",
+      E1_17: "You put the map on the door. All your hands on it. The gate closed with a bang.", E1_18: "Elena screamed. The fog swallowed her – and then it vanished.",
+      E1_19: "Lucas was laughing and crying at the same time. \"Grandpa would be proud.\"", E1_20: "Next morning, the headline said: FIVE GATES CLOSED – NOBODY KNOWS HOW.",
+      E2_17: "The gate closed. But the map was torn in two.", E2_18: "Elena held the other half. \"This isn't over,\" she said. Then she was gone.",
+      E2_19: "\"If we had trusted each other more,\" Maya said quietly, \"we would have won.\"", E2_20: "Lucas looked at his half of the map. Something was written on the back.",
+      E3_17: "The gate opened. Elena walked through it with the map.", E3_18: "\"Thank you, keeper,\" she said. Then the gate closed behind her.",
+      E3_19: "Nobody spoke. The fog felt cold and clammy on your skin.", E3_20: "Then the last page of the map fluttered down. It said: CHAPTER 6.",
+      R1: "Behind the door, a black banner was hanging over a bridge of ice.", R2: "The knight bowed. \"Keeper, you have found five gates. Almost.\"",
+      R3: "\"Take the Black Banner,\" he said. \"When all five are yours, the sixth story begins.\"" },
+      // Aufnahmen (vorbereitet, Dateien noch nicht da – Vertonung nach dem 13.11.): Sprecherplan in werkzeuge/story_audio9.py (Maya + Elena = Jessica; Jayden, Lucas, Ritter, Captain Fog = Jeremy; Spieler-Sätze und Erzähler = Mr. Alex)
+      audio: storyAudioDateien("ca", STORY_KEYS_CA) },
   };
   const STORY_PUNKTE = { diamant: 1, ganz: 10, max: 30 };
-  const STORY_KAPITEL = ["ny", "route66", "az", "sd"];   // gebaute Kapitel in Reihenfolge (Story Library)
+  const STORY_KAPITEL = ["ny", "route66", "az", "sd", "ca"];   // gebaute Kapitel in Reihenfolge (Story Library, Dein Weg)
+  // Zählung für Kapitel 5 (Mr. Alex, 2.11., docs/runner/story-usa-05.md): gute Entscheidungen = Karte behalten (ny Y) + Wahrheit jetzt (route66 X) + Tagebuch an Lucas (az X) + Jayden verzeihen (sd X);
+  // ein nie gespieltes Kapitel zählt nicht als gut. Die Engine zählt die eigene Gabelung 2 (ca X = Karte nicht geben) dazu: 4–5 → E1, 2–3 → E2, 0–1 → E3.
+  const STORY_GUT = { ny: "Y", route66: "X", az: "X", sd: "X" };
+  const storyGute = () => Object.keys(STORY_GUT).filter((w) => storyStand(w).wahl.g2 === STORY_GUT[w]).length;
+  const storyEndeLabel = (en) => `Ending ${/^E\d$/.test(en) ? en.slice(1) : en}`;   // Kapitel 5: E1 → „Ending 1“
+  // 🧭 Dein Weg: die Entscheidungen der Gabelung 2 je Kapitel (bis bisWelt; aktuell = Wahl/Ende des laufenden Laufs), dazu das Ende von Kapitel 5
+  function storyPfad(bisWelt, aktuell) {
+    const teile = [];
+    for (const welt of STORY_KAPITEL) {
+      const st = storyStand(welt), S = STORY[welt], g2 = welt === bisWelt && aktuell ? aktuell.g2 : st.wahl.g2;
+      if (S && S.wege && g2 && S.wege[g2]) teile.push(`${S.kapitel} ${S.wege[g2]}`);
+      if (welt === "ca") { const en = welt === bisWelt && aktuell && aktuell.ende ? aktuell.ende : st.enden[st.enden.length - 1]; if (en && S.enden[en]) teile.push(`${S.enden[en].symbol} ${S.enden[en].name}`); }
+      if (welt === bisWelt) break;
+    }
+    return teile.join(" → ");
+  }
+  // ✦ alle fünf Realm-Gegenstände gefunden (Frost Shard, Dragon Scale, Golden Scale, Silver Key, Black Banner) → Hinweis auf Kapitel 6
+  const realmAlle = () => STORY_KAPITEL.every((w) => realmStand(w).gegenstand);
   const REALM_KEYS = ["R1", "R2", "R3"];
   // Story-Option für die Engine: Text + Varianten aus früheren Kapiteln (Kapitel 2 liest die Wahl aus Kapitel 1: X = Karte gegeben, Y = behalten oder Kapitel 1 nicht gespielt;
   // Kapitel 3 liest die Wahl aus Kapitel 2: X = die Wahrheit jetzt, Y = später oder Kapitel 2 nicht gespielt; Kapitel 4 liest die Wahl aus Kapitel 3: X = Lucas hat das Tagebuch, Y = Maya oder Kapitel 3 nicht gespielt)
   function storyOption(welt) {
     const S = STORY[welt]; if (!S) return null;
-    const ny = storyStand("ny"), r66 = storyStand("route66"), az = storyStand("az");
-    return Object.assign({}, S, { varianten: { "ny.g2": ny.wahl.g2 === "X" ? "X" : "Y", "route66.g2": r66.wahl.g2 === "X" ? "X" : "Y", "az.g2": az.wahl.g2 === "X" ? "X" : "Y" } });
+    const ny = storyStand("ny"), r66 = storyStand("route66"), az = storyStand("az"), sd = storyStand("sd");
+    // Kapitel 5 liest die Wahl aus Kapitel 4 (X = Jayden blieb, Y = Jayden ging; Kapitel 4 nicht gespielt → X wie dort der Standard) und bekommt die Zählung der Kapitel 1–4 als gute (0–4)
+    return Object.assign({}, S, { varianten: { "ny.g2": ny.wahl.g2 === "X" ? "X" : "Y", "route66.g2": r66.wahl.g2 === "X" ? "X" : "Y", "az.g2": az.wahl.g2 === "X" ? "X" : "Y", "sd.g2": sd.wahl.g2 === "Y" ? "Y" : "X" } },
+      welt === "ca" ? { gute: storyGute() } : {});
   }
   function storyStand(welt) {
     const r = runnerStand();
@@ -3114,7 +3168,7 @@
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
-      wrapper: buehne, skin: skinWirksam(), welt: W.id, story: storyOption(W.id), // Story-Modus in New York (Kapitel 1), Route 66 (Kapitel 2), Grand Canyon (Kapitel 3) und Mount Rushmore (Kapitel 4, je mit Variante aus dem Vorkapitel); Golden Gate wie bisher
+      wrapper: buehne, skin: skinWirksam(), welt: W.id, story: storyOption(W.id), // Story-Modus in New York (Kapitel 1), Route 66 (Kapitel 2), Grand Canyon (Kapitel 3), Mount Rushmore (Kapitel 4) und Golden Gate (Kapitel 5, drei Enden nach Zählung), je mit Variante aus dem Vorkapitel
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: Object.assign(storyTexte(), {
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
@@ -3186,14 +3240,16 @@
             : el("p", {}, T("Keine Leben mehr. Die Wörter hast du trotzdem gesehen – beim nächsten Mal klappt es!", "No lives left. You still saw the words – next time you'll make it!")),
           el("p", {}, `💎 ${e.diamanten} / ${e.max} · ❤️ ${e.leben} · ⏱ ${minuten}`),
           e.story && el("p", { class: "runner-story-ende" }, `♪ ${e.story.anzahl}/${e.story.max || 20} `, T("Geschichte", "story"),
-            sEnde ? ` · 📖 Ending ${e.story.ende} – ${sEnde.symbol} ${sEnde.name}` : "", e.story.vollstaendig ? T(" · ✓ ganze Geschichte", " · ✓ whole story") : ""),
+            sEnde ? ` · 📖 ${storyEndeLabel(e.story.ende)} – ${sEnde.symbol} ${sEnde.name}` : "", e.story.vollstaendig ? T(" · ✓ ganze Geschichte", " · ✓ whole story") : ""),
+          e.story && e.geschafft && sEnde && W.id === "ca" && el("p", { class: "klein runner-story-pfad" }, T(`🧭 Dein Weg: ${storyPfad("ca", { g2: wahl.g2, ende: e.story.ende })} – dieses Ende kam durch deine Entscheidungen in Kapitel 1 bis 5 (${storyGute() + (wahl.g2 === "X" ? 1 : 0)} von 5 „guten“). Andere Enden: dort anders entscheiden und Golden Gate noch mal spielen.`,
+            `🧭 Your path: ${storyPfad("ca", { g2: wahl.g2, ende: e.story.ende })} – this ending came from your choices in chapters 1 to 5 (${storyGute() + (wahl.g2 === "X" ? 1 : 0)} of 5 “good” ones). Other endings: choose differently there and play Golden Gate again.`)),
           e.story && (wahl.g1 || wahl.g2) && el("p", { class: "klein runner-story-wege", lang: "en" }, T("Deine Wege: ", "Your paths: "),
             [wahl.g1 && `${wahl.g1} ${wege[wahl.g1] || ""}`, wahl.g2 && `${wahl.g2} ${wege[wahl.g2] || ""}`].filter(Boolean).join(" · ")),
           rm && rm.gefunden && el("p", { class: "runner-realm-ende" }, `✦ The Realm Beyond – ${T("gefunden", "found")}! ✦ ${rm.kristalle}/3`, rm.gegenstand ? ` · ${gs.symbol} ${gs.name}` : ""),
           e.story && el("p", { class: "runner-story-punkte" }, e.geschafft
             ? T(`⭐ Punkte in diesem Lauf: ${storyPunkte}`, `⭐ Points in this run: ${storyPunkte}`) + (storyPunkte >= STORY_PUNKTE.max ? T(" (höchstens 30)", " (max. 30)") : "")
             : T("⭐ Punkte gibt es nur, wenn du das Level schaffst.", "⭐ You only get points if you finish the level.")),
-          storyNeuFrei && el("p", { class: "runner-neu-offen" }, T(`📖 Neu in der Story Library: Ending ${e.story.ende}!`, `📖 New in the Story Library: Ending ${e.story.ende}!`)),
+          storyNeuFrei && el("p", { class: "runner-neu-offen" }, T(`📖 Neu in der Story Library: ${storyEndeLabel(e.story.ende)}!`, `📖 New in the Story Library: ${storyEndeLabel(e.story.ende)}!`)),
           realmNeu && el("p", { class: "runner-neu-offen" }, T("✦ Neu in der Story Library: The Realm Beyond!", "✦ New in the Story Library: The Realm Beyond!")),
           e.maxCombo > 0 && el("p", { class: "klein runner-serie" }, T(`🔥 Beste Serie: ×${e.maxCombo}`, `🔥 Best streak: ×${e.maxCombo}`)),
           e.geschafft && el("p", {}, el("strong", {}, `🏆 ${W.trophaee} – ${stufe === "gold" ? "Gold" : T("Silber", "Silver")}`),
@@ -3248,16 +3304,21 @@
           el("strong", { lang: "en" }, "✦ ??? – a hidden gate somewhere …"));
       return el("div", { class: "story-kapitel", "data-welt": welt },
         el("p", { class: "klein", lang: "en" }, `Chapter ${S.kapitel} · ${S.welt} · ${S.titel}`),
-        el("div", { class: "story-karten" }, ["X", "Y"].map((en) => {
+        el("div", { class: "story-karten" }, Object.keys(S.enden).map((en) => {
           const frei = st.enden.includes(en), E_ = S.enden[en];
-          if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en, "data-welt": welt }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"));
+          if (!frei) return el("div", { class: "story-karte gesperrt", "data-ende": en, "data-welt": welt }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "Ending ? – find another way!"),
+            welt === "ca" ? el("small", {}, T("Andere Entscheidungen in Kapitel 1–5", "Other choices in chapters 1–5")) : "");
           return el("button", { class: "story-karte", type: "button", "data-ende": en, "data-welt": welt, onclick: () => storyFilm(welt, en) },
             el("span", { class: "story-sym", "aria-hidden": "true" }, E_.symbol),
-            el("strong", { lang: "en" }, `Ending ${en} – ${E_.name}`),
+            el("strong", { lang: "en" }, `${storyEndeLabel(en)} – ${E_.name}`),
             el("small", {}, `♪ ${st.beste[en] || 0}/20${st.voll.includes(en) ? T(" · ✓ ganze Geschichte", " · ✓ whole story") : ""} · ▶ ${T("Film", "film")}`));
         }).concat([realmKarte])));
     });
-    return el("div", { class: "story-library" }, el("h3", {}, "📖 Story Library"), kapitel);
+    const pfad = storyPfad("ca");
+    return el("div", { class: "story-library" }, el("h3", {}, "📖 Story Library"),
+      pfad && el("p", { class: "klein story-pfad", lang: "en" }, T(`🧭 Dein Weg: ${pfad} – spiel ein Kapitel noch mal, um einen anderen Weg zu gehen.`, `🧭 Your path: ${pfad} – play a chapter again to take another path.`)),
+      kapitel,
+      realmAlle() && el("p", { class: "story-kapitel6 runner-neu-offen", lang: "en" }, "✦ Chapter 6 – coming soon"));
   }
   function storyFilm(welt, ende) {
     if (!R() || !R().film) { toast(T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet.")); return; }
@@ -3267,7 +3328,7 @@
     zu.setAttribute("aria-label", T("Film schließen", "Close film"));
     zeige(buehne, zu);
     document.body.classList.add("runner-aktiv");
-    runnerLauf = R().film({ wrapper: buehne, welt, skin: skinWirksam(), ende, story: STORY[welt], titel: "Story Library", texte: storyTexte(),
+    runnerLauf = R().film({ wrapper: buehne, welt, skin: skinWirksam(), ende, story: Object.assign({}, storyOption(welt), { wahlFilm: storyStand(welt).wahl }), titel: "Story Library", texte: storyTexte(),
       stimme: { erzaehler: erzaehlerStimme, still: () => stopp() }, onEnde: () => sammlung() });
   }
   // Figur-Seite (Fassung 29.10.): Figur + Erklärtext oben (sticky), Reiter-Zeile, darunter die Optionen der Gruppe als Chips, unten feste Knopfzeile.

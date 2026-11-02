@@ -1,6 +1,7 @@
 """Vertont die Story „The Lost Map“ (Road Trip Run, Klasse 9) mit verteilten Stimmen (ElevenLabs) – Kapitel 1 New York (STORY.ny, Präfix ny_), Kapitel 2 Route 66 (STORY.route66, Präfix route66_),
 Kapitel 3 Grand Canyon (STORY.az, Präfix az_), Kapitel 4 Mount Rushmore (STORY.sd, Präfix sd_; Welt-Id sd = South Dakota)
-und Kapitel 5 Golden Gate (STORY.ca, Präfix ca_; drei Enden E1_17 … E3_20; nur geplant, Vertonung nach dem 13.11.).
+und Kapitel 5 Golden Gate (STORY.ca, Präfix ca_; drei Enden E1_17 … E3_20; nur geplant, Vertonung nach dem 13.11.)
+sowie das geheime Kapitel 6 „The Keeper's Journal“ (STORY.realm6, Präfix realm6_; Stück 1 als 1E1/1E2/1E3; nur geplant, Vertonung nach dem 13.11.).
 
 Erzähler = Mr. Alex (alex). Wörtliche Rede: Maya und die Frau mit dem Kompass = Jessica (f), Jayden, Lucas, der Ritter, Sheriff Rattlesnake und Grizzly Grandpa = Jeremy (m); Sätze des Spielers („No, thanks.“,
 „We have to go“, „Tell us the truth. Now.“, „Later. First we get past that truck.“, „Stay close to me“, „It's yours. Keep it safe.“, „You've got the plan. Keep it.“, „Everybody makes mistakes … Give it back. Now.“,
@@ -9,7 +10,7 @@ Verschachtelte Zitate (Tagebuchtext in einfachen Anführungszeichen innerhalb vo
 Anführungszeichen außerhalb einer Rede) ist eine eigene Passage (EINZEL) und bekommt Jeremy (m).
 Ein Stück mit nur einer Stimme → app/klasse9/audio/story/<praefix>_<key>.mp3; mit Wechsel → <praefix>_<key>_1.mp3, _2.mp3 … (die App spielt sie hintereinander).
 Quelle der Texte: STORY.<welt>.teile in app/klasse9/app.js. Vorhandene Dateien werden nicht überschrieben.
-Aufruf: python3 werkzeuge/story_audio9.py [--zaehlen] [--welt ny|route66|az|sd|ca]
+Aufruf: python3 werkzeuge/story_audio9.py [--zaehlen] [--welt ny|route66|az|sd|ca|realm6]
 """
 import json, os, re, sys, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -17,7 +18,7 @@ import klasse9_audio as ka
 import klasse9_bauen as k9
 
 ZIEL = os.path.join(k9.APP, "audio", "story")
-WELTEN = ["ny", "route66", "az", "sd", "ca"]   # Kapitel in Reihenfolge; Dateipräfix = Welt-Id
+WELTEN = ["ny", "route66", "az", "sd", "ca", "realm6"]   # Kapitel in Reihenfolge; Dateipräfix = Welt-Id
 # Wer spricht die wörtliche Rede je Stück (Reihenfolge der Anführungszeichen-Passagen)? Fehlt ein Eintrag: alles Erzähler.
 SPRECHER = {
     # Kapitel 1 New York (vertont 31.10.): Y15 („No, thanks.“ = der Spieler) und Y19 (Stimme aus dem Licht) spricht der Erzähler.
@@ -37,9 +38,14 @@ SPRECHER = {
     # Kapitel 5 Golden Gate (Sprecherplan, Vertonung nach dem 13.11.): Maya + Elena = f (Jessica); Jayden (auch seine SMS 2Y), Lucas, Ritter, Captain Fog = m (Jeremy); X15, Y15 = Spieler → Erzähler (kein Eintrag).
     "ca": {"2X": ["m", "m"], "2Y": ["m"], "5": ["f"], "A8": ["m", "m"], "B7": ["f"], "12": ["m", "m"], "13": ["f"], "14": ["f", "f"], "Y16": ["f"],
            "E1_19": ["m"], "E2_18": ["f"], "E2_19": ["f", "f"], "E3_18": ["f"], "R2": ["m"], "R3": ["m", "m"]},
+    # Kapitel 6 The Keeper's Journal (Sprecherplan, Vertonung nach dem 13.11.): Erzähler alex; Großvater (Tagebuchsätze 5–10) und Ritter = m (Jeremy); Elena = f (Jessica).
+    # 5: 'Dear Lucas,' it said. 'If you …' (EINZEL: einfache Anführungszeichen = Großvater); 6–10 ganz Tagebuch (GANZ).
+    "realm6": {"3": ["m", "m"], "5": ["m", "m"], "11": ["f"]},
 }
+# Stücke, die ganz eine Figur spricht (Tagebuchtext; einfache Anführungszeichen außen werden entfernt)
+GANZ = {"realm6": {"6": "m", "7": "m", "8": "m", "9": "m", "10": "m"}}
 # Stücke, in denen auch eine Passage in einfachen Anführungszeichen (… ,' / .') als Figurenrede zählt (Tagebuch-Zitat außerhalb einer wörtlichen Rede)
-EINZEL = {"sd": {"A9"}}
+EINZEL = {"sd": {"A9"}, "realm6": {"5"}}
 
 
 def stuecke(welt):
@@ -55,6 +61,9 @@ def stuecke(welt):
 
 def segmente(welt, key, text):
     """Teilt in (stimme, text) – wörtliche Rede an die Figur, der Rest an den Erzähler."""
+    ganz = GANZ.get(welt, {}).get(key)
+    if ganz:
+        return [(ganz, text.strip("'"))]
     rollen = SPRECHER.get(welt, {}).get(key)
     if not rollen:
         return [("alex", text)]

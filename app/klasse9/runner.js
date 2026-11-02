@@ -62,6 +62,8 @@
    Wellen, Nebelhorn, Bank mit Zeitung, Alcatraz im Dunst / B oben über die Brücke auf roten Stahlstreben h.stahl – Cable Car, Böe am Geländer, gemalte Tür; Warnschild bei ♪4), verstecktes Tor ✦ halb oben am Brückenturm ('turm',
    A-Weg, nur von der Stahl-Stufe), Gabelung 2 NACH dem Boss als Auswahl im Frage-Fenster (nachBoss; Test-Haken wahl('X'|'Y')), Ende nach Zählung (Kapitel 1–4 als story.gute + eigene g2 X) E1/E2/E3, Film an der Brückentür
    (filmZeichnenCA, Szene 1 = '@g2'), Realm Kapitel 5 = Eisbrücke mit schwarzem Banner und Böen (REALM_WELT_5 'eisbruecke', MUSTER_REALM_5), Black Banner 🏴.
+   Kapitel 6 (geheim) „The Keeper's Journal“ (2.11., docs/runner/story-usa-06.md): Welt realm6 im Realm (STRUKTUR_REALM6 12 ♪, Stück 1 nach story.varianten['ca.ende']), MUSTER_REALM6_STORY aus den Bausteinen Eiswand → Drachenhöhle →
+   Eishalle → Eisbrücke (h.sektion, realmArt()), Boss Elena Cruz an der sechsten Tür (elenaBoss, sechsteTuer), Film filmZeichnenRealm6 + Titelkarte „The End – The Keeper's Journal“.
    Test-Haken wie im Prototyp: window.__runner (stand, springe, teleport, teleportBoss, antwort …; Story: story, gabelung, kristall, stationWeiter, filmStart, filmSkip; Realm: realmBetreten, realmEnde, drache, zapfenLoesen). */
 (function () {
   "use strict";
@@ -1550,6 +1552,50 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.vor(1100); },                                           // 9
     (h) => { h.vor(900); },                                                                                          // 10 Rückkehr-Tor
   ];
+  // Kapitel 6 (geheim) „The Keeper's Journal“ (2.11., docs/runner/story-usa-06.md, mittlere Variante): eigene Story-Welt realm6 im Realm, frei erst mit allen fünf Realm-Gegenständen (die App prüft).
+  // Stück 1 als Variante nach dem Golden-Gate-Ende (quelle 'ca.ende': E1/E2/E3; ohne Ende E3; Platzhalter '1') · 2–4 · Station 1 · 5–8 · Station 2 · 9–10 · Boss Elena Cruz an der sechsten Tür · 11–12 im Film (Titelkarte) = 12 ♪.
+  // Ein Ende (Zählung ohne Quellen → immer 'E'), keine Gabelung, kein verstecktes Tor.
+  const STRUKTUR_REALM6 = { anzahl: 12, abschnitte: [
+    { anfang: true, varianten: { E1: ['1E1'], E2: ['1E2'], E3: ['1E3'] }, quelle: 'ca.ende', standard: 'E3', platz: ['1'], keys: ['2', '3', '4'] },
+    { keys: ['5', '6', '7', '8'] },
+    { keys: ['9', '10'] },
+    { ende: 'e', wege: { E: ['11', '12'] }, zaehlung: { gut: {}, enden: ['E'] } },
+  ], stationen: [1, 2], film: { E: [['11'], ['12'], null] } };
+  // Strecke Kapitel 6 (≈ 33.000 Einheiten ≈ 2:25 min + Stationen + Boss) aus den vier Realm-Bausteinen in dieser Reihenfolge (h.sektion: ab hier gilt die Kulisse + Mechanik des Bausteins, Lichtblitz am Portal):
+  // Eiswand (Kapitel 1: Schnee rutschig, Eisflecken, Burg, Drache am Himmel) ♪1–4, Tor 1, Station 1 → Drachenhöhle (Kapitel 3: leise sein, sonst Flammenstoß) ♪5–6 → Eishalle (Kapitel 4: Spiegelboden, Eiszapfen) ♪7–8, Tor 2, Station 2
+  // → Eisbrücke (Kapitel 5: Böen, Banner) ♪9–10 → Boss. Abstand der ♪ ≥ Erzählzeit, kein ♪ in den 520 vor einem Tor; 💎 wie in den Realm-Abschnitten (kein Muss).
+  const MUSTER_REALM6_STORY = [
+    (h) => { h.sektion(0, 'realm'); h.deko('eistuer', 250); h.vor(600); },                                             // 0 Ankunft an der Eismauer
+    (h) => { h.dia(300); h.kristall(500, 290, '1'); h.kiste(900); h.vor(1200); },                                     // 1 · ♪1 (Variante 1E1/1E2/1E3)
+    (h) => { h.geg('wolf', 250, 650); h.dia(800, 250); h.eis(950, 100); h.vor(1150); },                                // 2 Wolf + Eisfleck
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.kristall(700, 290, '2'); h.vor(1100); },                        // 3 Plattform · ♪2
+    (h) => { h.luecke(300, 170); h.dia(385, 240); h.kiste(800); h.vor(1050); },                                        // 4 Gletscherspalte
+    (h) => { h.kristall(250, 290, '3'); h.geg('ritter', 450, 450, { wartet: true }); h.vor(1100); },                   // 5 · ♪3 · der Ritter wartet
+    (h) => { h.geg('wolf', 150, 500); h.kiste(700); h.kiste(740, 2); h.dia(760, 215); h.vor(1000); },                  // 6 Wolf + Eisblöcke
+    (h) => { h.kristall(350, 290, '4'); h.plat(700, 240, 150); h.dia(775, 200); h.vor(1100); },                        // 7 · ♪4 (das Tagebuch)
+    (h) => { h.geg('ritter', 200, 500); h.luecke(750, 160); h.vor(1150); },                                           // 8 Ritter + Spalte
+    (h) => { h.tor(600, 4, [5, 1]); h.vor(1100); },                                                                    // 9 TOR 1
+    (h) => { h.cp(150); h.dia(500); h.vor(900); },                                                                     // 10 CHECKPOINT 1 · Station 1
+    (h) => { h.sektion(400, 'hoehle'); h.deko('portal6', 400); h.deko('drachentor', 750); h.vor(1100); },               // 11 Portal → Drachenhöhle (offene Steintür)
+    (h) => { h.kristall(300, 290, '5'); h.geg('skorpion', 600, 1000); h.vor(1150); },                                  // 12 · ♪5 (Dear Lucas …)
+    (h) => { h.kiste(200); h.dia(220, 250); h.luecke(500, 170); h.plat(750, 235, 160); h.dia(830, 195); h.vor(1150); }, // 13 Schatzkiste, Lavaspalte
+    (h) => { h.kristall(250, 290, '6'); h.geg('ritter', 600, 600, { wartet: true }); h.vor(1100); },                   // 14 · ♪6 · wartender Ritter
+    (h) => { h.geg('skorpion', 200, 550); h.kiste(750); h.kiste(790, 2); h.dia(810, 215); h.vor(1100); },              // 15 Skorpion + Schatzkisten
+    (h) => { h.dia(300); h.plat(500, 240, 150); h.vor(900); },                                                         // 16
+    (h) => { h.sektion(200, 'eishalle'); h.deko('portal6', 200); h.deko('fuenftueren', 450); h.vor(900); },            // 17 Portal → Eishalle mit fünf Türen
+    (h) => { h.kristall(200, 290, '7'); h.zapfen(650); h.geg('wolf', 800, 1100); h.vor(1200); },                       // 18 · ♪7 · erster Eiszapfen
+    (h) => { h.luecke(250, 170); h.plat(500, 235, 160); h.dia(580, 195); h.zapfen(950); h.vor(1150); },                // 19 Spalte, Eiszapfen
+    (h) => { h.kristall(250, 290, '8'); h.dia(550); h.zapfen(850); h.vor(1100); },                                     // 20 · ♪8 · Eiszapfen
+    (h) => { h.geg('ritter', 200, 500); h.kiste(800); h.kiste(840, 2); h.dia(860, 215); h.vor(1150); },                // 21 Ritter + Eisblöcke
+    (h) => { h.tor(500, 10, [7, 9]); h.vor(900); },                                                                    // 22 TOR 2
+    (h) => { h.cp(150); h.zapfen(700); h.vor(1000); },                                                                 // 23 CHECKPOINT 2 · Station 2
+    (h) => { h.sektion(200, 'eisbruecke'); h.deko('portal6', 200); h.deko('eisbruecke', 200, 7400); h.deko('banner', 650); h.vor(1000); }, // 24 Portal → Eisbrücke mit schwarzem Banner
+    (h) => { h.kristall(150, 290, '9'); h.wind(450, -1); h.geg('wolf', 750, 1050); h.vor(1200); },                     // 25 · ♪9 · erste Böe
+    (h) => { h.luecke(250, 170); h.plat(500, 235, 160); h.dia(580, 195); h.kiste(1000); h.vor(1200); },               // 26 Spalte in der Brücke
+    (h) => { h.kristall(300, 290, '10'); h.wind(700, 1); h.dia(950, 250); h.vor(1100); },                              // 27 · ♪10 (PS …) · Rückenwind
+    (h) => { h.geg('ritter', 200, 500); h.dia(700, 250); h.luecke(850, 160); h.vor(1200); },                           // 28 Ritter + Spalte
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.dia(475, 140); h.geg('wolf', 700, 1000); h.vor(1150); },  // 29 Schluss vor der sechsten Tür
+  ];
   const REALM_MUSTER = { ny: MUSTER_REALM, route66: MUSTER_REALM_2, az: MUSTER_REALM_3, sd: MUSTER_REALM_4, ca: MUSTER_REALM_5 };
   const REALM_GEGENSTAND = { name: 'Frost Shard', symbol: '❄', art: 'splitter' };   // Kapitel 1 (Standard); Kapitel 2: struktur.gegenstand
   const KABINE_W = 80;   // Kabinen-Plattform des London Eye (Welt 2 Klasse 6)
@@ -1558,7 +1604,7 @@
   const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
   // endeN = Zahl der Ende-Kristalle hinter dem Boss (Story: aus der Struktur, London 2, New York 4); sie liegen gleichmäßig zwischen stopX + 95 und tuerX − 25
   function levelBauen(muster, endeN = 2) {
-    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], klappen:[], boote:[], treibgut:[], zapfen:[], spalten:[], tueren:[], baelle:[] };
+    const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], sektionen:[], klappen:[], boote:[], treibgut:[], zapfen:[], spalten:[], tueren:[], baelle:[] };
     let x = 0, bodenAb = 0, wort = 0;
     const h = {
       plat: (dx, y, w) => L.plattformen.push({ x:x + dx, y, w }),
@@ -1638,6 +1684,7 @@
       toilette: (dx) => L.deko.push({ art:'toilette', x:x + dx }),
       federn: (dx) => L.deko.push({ art:'federn', x:x + dx }),
       realmTor: (dx, y) => L.realmTore.push({ x:x + dx, y }),
+      sektion: (dx, id) => L.sektionen.push({ x:x + dx, id }),   // Kapitel 6: ab hier Kulisse + Mechanik eines Realm-Bausteins ('realm' | 'hoehle' | 'eishalle' | 'eisbruecke')
       // The Realm Beyond: Sammelstück (Frost Shard ❄), Eisfleck (rutscht wie Öl)
       gegenstand: (dx, y) => L.gegenstaende.push({ x:x + dx, y }),
       eis: (dx, w = 100) => L.oel.push({ x:x + dx, w, art:'eis' }),
@@ -1956,11 +2003,23 @@
   let realm = null, realmLevels = {};
   const realmGegenstand = () => (struktur && struktur.gegenstand) || REALM_GEGENSTAND;   // Sammelstück des Kapitels: Frost Shard ❄ (1) / Dragon Scale 🐉 (2) / Golden Scale ✨ (3)
   const realmWelt = () => (struktur && struktur.realmMuster === 'az' ? REALM_WELT_3 : struktur && struktur.realmMuster === 'sd' ? REALM_WELT_4 : struktur && struktur.realmMuster === 'ca' ? REALM_WELT_5 : REALM_WELT);   // Kulisse des Realm: Eiswelt (Kapitel 1–2), Drachenhöhle (3), Eishalle (4)
-  const imEishalle = () => imRealm() && W.id === 'eishalle';
+  // Kapitel 6: Welt realm6 = Realm ohne Rückkehr; der Baustein unter der Figur (realm.sektion, aus level.sektionen) bestimmt Kulisse und Mechanik. realmArt() = Baustein-Id im Realm (Seitenlevel oder Kapitel 6), sonst null.
+  const istRealm6 = () => !!(W && W.id === 'realm6');
+  const sektionBei = (x) => { let id = 'realm'; for (const s of (level && level.sektionen) || []) if (x >= s.x) id = s.id; return id; };
+  const realmArt = () => (imRealm() ? W.id : istRealm6() && realm ? realm.sektion : null);
+  const imEishalle = () => realmArt() === 'eishalle';
   const drachenNeu = () => ({ t: 0, naechste: 5, aktiv: false, laerm: 0, feuer: null, feuerX: 0, schnarch: 0, schnarcher: 0, geweckt: 0 });
   function realmNeu() {
-    realm = storyOpt && level.realmTore && level.realmTore.length ? { tore: level.realmTore.map((t) => ({ ...t, benutzt: false })), aktiv: false, gefunden: false, gesammelt: [], gegenstand: false, dinge: [],
+    realm = storyOpt && ((level.realmTore && level.realmTore.length) || istRealm6()) ? { tore: level.realmTore.map((t) => ({ ...t, benutzt: false })), aktiv: false, gefunden: false, gesammelt: [], gegenstand: false, dinge: [],
       blitz: 0, t: 0, zurueck: null, drache: drachenNeu(), rutsch: 0, besuche: 0, tipp: false, zapfen: [], zapfenTreffer: 0 } : null;
+    if (realm && istRealm6()) { realm.sektion = sektionBei(0); realm.zapfen = level.zapfen.map((z) => ({ ...z, phase: 'ruhe', t: 0, y: ZAPFEN_DECKE, vy: 0 })); }   // Kapitel 6: Eiszapfen der Eishalle gleich im Level
+  }
+  const REALM6_NAMEN = { realm: '✦ The Wall of Ice', hoehle: '✦ The Dragon\'s Cave 🤫', eishalle: '✦ The Hall of Five Doors', eisbruecke: '✦ The Bridge of Ice' };
+  function realm6Sektion() {   // Kapitel 6: Baustein unter der Figur; beim Wechsel Lichtblitz, Klang, Name, Tipp und Drache neu
+    const s = sektionBei(spieler.x); if (s === realm.sektion) return;
+    realm.sektion = s; realm.t = 0; realm.tipp = false; realm.drache = drachenNeu(); realm.blitz = REALM_BLITZ;
+    klang.portal(); if (s === 'hoehle') klang.schnarchen(); else if (s === 'eishalle') klang.eiskristall(); else klang.heulen();
+    meldung = { text: REALM6_NAMEN[s] || '✦', zeit: 2 };
   }
   const realmErgebnis = () => (realm ? { gefunden: realm.gefunden, kristalle: realm.gesammelt.length, stuecke: realm.gesammelt.slice(), gegenstand: realm.gegenstand } : null);
   const imRealm = () => !!(realm && realm.aktiv);
@@ -2010,20 +2069,21 @@
   // jeden Frame im Spiel: Tor in New York prüfen bzw. im Realm Frost Shard, Rückkehr-Tor, Drache, Schnee-Rutschen
   function realmBewegen(dt, box) {
     if (realm.blitz > 0) realm.blitz = Math.max(0, realm.blitz - dt);
-    if (!realm.aktiv) {
+    if (!realm.aktiv && !istRealm6()) {
       for (const t of realm.tore) { if (t.benutzt) continue; const b = realmTorBox(t); if (ueberlappt(box.x, box.y, box.w, box.h, b.x, b.y, b.w, b.h)) { t.benutzt = true; realmBetreten(t); return true; } }
       return false;
     }
     realm.t += dt; if (realm.rutsch > 0) realm.rutsch = Math.max(0, realm.rutsch - dt);
     for (const d of realm.dinge) { d.funkel += dt; if (!d.weg && ueberlappt(box.x, box.y, box.w, box.h, d.x - 14, d.y - 18, 28, 36)) { const gs = realmGegenstand(); d.weg = true; realm.gegenstand = true; klang.splitter(); meldung = { text: `${gs.name}! ${gs.symbol}`, zeit: 1.6 }; funken(d.x, d.y, 30, gs.art === 'schuppe' ? ['#ffd36b', '#ff8a3d', '#b3332a'] : gs.art === 'goldschuppe' ? ['#ffe27a', '#ffd36b', '#fff6c0', '#ffffff'] : gs.art === 'silberschluessel' ? ['#e8eef5', '#ffffff', '#b8c4d4', '#9fe3ff'] : ['#bff0ff', '#ffffff', '#5cc8ff'], 260, 0.9); } }
-    const dr = realm.drache; dr.t += dt;
-    if (W.id === 'hoehle') { if (hoehleBewegen(dt, box, dr)) return true; }
-    else if (W.id === 'eishalle') { if (eishalleBewegen(dt, box)) return true; }
+    if (istRealm6()) realm6Sektion();
+    const dr = realm.drache, art = realmArt(); dr.t += dt;
+    if (art === 'hoehle') { if (hoehleBewegen(dt, box, dr)) return true; }
+    else if (art === 'eishalle') { if (eishalleBewegen(dt, box)) return true; }
     else {
       if (!dr.aktiv && dr.t >= dr.naechste) { dr.aktiv = true; dr.start = dr.t; dr.hoehe = 40 + Math.random() * 50; if (!ruhig()) klang.drache(); }
       if (dr.aktiv && dr.t - dr.start > 5) { dr.aktiv = false; dr.naechste = dr.t + 9 + Math.random() * 4; }
     }
-    if (spieler.x >= level.rueckX) { realmZurueck(true); return true; }
+    if (level.rueckX != null && spieler.x >= level.rueckX) { realmZurueck(true); return true; }
     return false;
   }
   // Drachenhöhle (Realm Kapitel 3): der Drache schläft auf dem Goldberg und schnarcht alle ≈ 3,4 s. Lärm (Landung nach einem Sprung + 1,5 – von einer Kante fallen ist leise –, Plattdrücken + 1,2) klingt mit 0,7/s ab; zwei Sprünge
@@ -2045,7 +2105,7 @@
     return false;
   }
   function drachenWecken(dr) { dr.aktiv = true; dr.start = dr.t; dr.feuer = null; dr.gefeuert = false; dr.feuerX = spieler.x + 260; dr.geweckt++; if (!ruhig()) klang.drache(); meldung = { text: 'The dragon is awake! 🐉', zeit: 1.4 }; }
-  const laerm = (n) => { if (imRealm() && W.id === 'hoehle') realm.drache.laerm += n; };   // Lärm in der Drachenhöhle (Landung, Plattdrücken)
+  const laerm = (n) => { if (realmArt() === 'hoehle') realm.drache.laerm += n; };   // Lärm in der Drachenhöhle (Landung, Plattdrücken)
   // Eishalle (Realm Kapitel 4): Eiszapfen hängen an Eisansätzen des Gewölbes (Ansatz y 160, Spitze y 210 – unterhalb der Erzähl-Box, also immer sichtbar). Figur ≈ 300 davor → der Zapfen zittert 0,6 s (Knacken, Tropfen = Vorwarnung), dann fällt er (Beschleunigung 2.600) und steckt 1,2 s
   // im Spiegelboden (Treffer = „Icicle! 🧊“ = Leben weg – drüberspringen), dann zersplittert er. Wie die Steine der Welt 3: wer gleichmäßig läuft, hat ihn vor sich stecken und springt; nach dem Respawn hängen sie wieder.
   // Der Spiegelboden ist rutschig (nach jeder Landung 0,35 s schneller wie im Schnee) und spiegelt Figur und Zapfen. Hinweis nach 2,2 s „🧊 Mind the icicles!“.
@@ -2525,8 +2585,8 @@
         const ys = rampeY(spieler.x);
         if (ys != null && spieler.vy >= 0 && spieler.y >= ys - 0.5 && altY <= ys + 16) { spieler.y = ys; spieler.vy = 0; gelandet = true; }
       }
-      if (gelandet && !spieler.amBoden && imRealm()) {   // Realm: Schnee – nach der Landung kurz rutschen; Drachenhöhle: die Landung macht Lärm (Goldstaub)
-        if (W.id === 'hoehle') { if (spieler.sprang) { laerm(1.5); funken(spieler.x, spieler.y - 4, 6, ['#ffd36b', '#b08030'], 90, 0.35); } }   // nur nach einem Sprung (von einer Kante fallen ist leise)
+      if (gelandet && !spieler.amBoden && realmArt()) {   // Realm: Schnee – nach der Landung kurz rutschen; Drachenhöhle: die Landung macht Lärm (Goldstaub)
+        if (realmArt() === 'hoehle') { if (spieler.sprang) { laerm(1.5); funken(spieler.x, spieler.y - 4, 6, ['#ffd36b', '#b08030'], 90, 0.35); } }   // nur nach einem Sprung (von einer Kante fallen ist leise)
         else { realm.rutsch = REALM_RUTSCH; funken(spieler.x, spieler.y - 4, 8, ['#ffffff', '#e8f4ff'], 110, 0.4); }
       }
       if (gelandet) spieler.sprang = false;
@@ -5882,6 +5942,7 @@
     if (film.welt === 'towerbridge') return filmZeichnenBridge(c);   // Story Tower Bridge (Klasse 6, Kapitel 3)
     if (film.welt === 'tube') return filmZeichnenTube(c);   // Story The Tube (Klasse 6, Kapitel 4)
     if (film.welt === 'wembley') return filmZeichnenWembley(c);   // Story Wembley (Klasse 6, Kapitel 5, drei Enden)
+    if (film.welt === 'realm6') return filmZeichnenRealm6(c);   // Kapitel 6 (geheim): einfache Szenen an der sechsten Tür + Titelkarte
     const f = film, ende = f.ende, sz = f.szene, p = Math.min(1, f.t / f.dauer), tt = f.t;
     if (sz >= 3) return filmTitel(c, f);
     const [kx, ky, kz] = filmKamera(sz, p, ende);
@@ -5943,7 +6004,7 @@
     c.save(); c.globalAlpha = a; c.textAlign = 'center'; c.textBaseline = 'middle';
     c.font = 'italic 600 16px system-ui, sans-serif'; c.fillStyle = '#c9b8ff'; c.fillText((storyOpt && storyOpt.titel) || '', viewW / 2, 64);
     const endeName = /^E\d$/.test(f.ende) ? f.ende.slice(1) : f.ende, endeZahl = Object.keys(struktur.film || {}).length || 2;   // Wembley: E1/E2/E3 → „Ending 1 (1 of 3)“
-    c.font = `bold ${viewW < 700 ? 30 : 40}px system-ui, sans-serif`; c.fillStyle = '#ffd36b'; c.fillText(`The End – Ending ${endeName} (1 of ${endeZahl})`, viewW / 2, 108);
+    c.font = `bold ${viewW < 700 ? 30 : 40}px system-ui, sans-serif`; c.fillStyle = '#ffd36b'; c.fillText(f.welt === 'realm6' ? 'The End – The Keeper\'s Journal' : `The End – Ending ${endeName} (1 of ${endeZahl})`, viewW / 2, 108);   // Kapitel 6: ein Ende
     if (f.welt === 'ny') {   // New York: du und Lucas (Ende X: die Frau verschwindet mit der Karte; Ende Y: du hältst die Karte)
       zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, 'grinsend');
       zeichneFigur(c, viewW / 2 + 50, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, f.ende === 'Y' ? 'erstaunt' : 'grinsend');
@@ -5972,6 +6033,11 @@
       if (f.ende === 'E1') karteZeichnen(c, viewW / 2, 200, 1.6); else if (f.ende === 'E2') karteHaelfte(c, viewW / 2 + 104, 252, 1.3, true);
       else { c.fillStyle = '#efe2bd'; c.fillRect(viewW / 2 + 150, 220, 60, 40); c.fillStyle = '#3a2a1a'; c.font = 'bold 10px Georgia, serif'; c.fillText('CHAPTER 6', viewW / 2 + 180, 240); }
       c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(f.ende === 'E1' ? '🌉 All together – five gates closed' : f.ende === 'E2' ? '📜 Torn in two – this isn\'t over' : '🚪 She got through → ✦ Chapter 6', viewW / 2, 340);
+    } else if (f.welt === 'realm6') {   // Kapitel 6: du, Lucas mit dem Tagebuch, Elena mit dem Kompass; die sechste Tür ist für immer zu
+      zeichneFigur(c, viewW / 2 - 90, 300, 70, skin, 'steh', zeit, 'grinsend');
+      zeichneFigur(c, viewW / 2, 300, 70, NY_FIGUREN.lucas, 'steh', zeit, 'grinsend'); tagebuch(c, viewW / 2 + 12, 258, 1.1);
+      c.save(); c.translate(viewW / 2 + 90, 0); c.scale(-1, 1); zeichneFigur(c, 0, 300, 70, NY_FIGUREN.frau, 'steh', zeit, 'grinsend'); c.restore(); kompass(c, viewW / 2 + 72, 262, zeit);
+      c.font = '600 14px system-ui, sans-serif'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText('📖 ✦ The sixth gate is closed forever', viewW / 2, 340);
     } else if (f.welt === 'towerbridge') {   // Tower Bridge: du, der Sergeant (A: Igel-Haare · B: nasser Hut), dein Begleiter
       zeichneFigur(c, viewW / 2 - 50, 300, 70, skin, 'steh', zeit, f.ende === 'A' ? 'grinsend' : 'erstaunt');
       c.save(); c.translate(viewW / 2 + 50, 300); c.scale(0.8, 0.8); gardist(c, 0, 0, f.ende === 'A' ? { hut: 'igel', laecheln: 0.6, blick: -2 } : { hut: 'nass', tropft: 1, blick: -2 }); c.restore();
@@ -6057,6 +6123,7 @@
       else if (d.art === 'tunnel') tunnelDeko(c, x, d.w); else if (d.art === 'koepfe') koepfeDeko(c, x); else if (d.art === 'kompass') kompassDeko(c, x); else if (d.art === 'fuenftueren') fuenfTuerenDeko(c, x);   // Mount Rushmore (Kapitel 4) + Eishalle
       else if (d.art === 'kueste') kuesteDeko(c, x, d.w); else if (d.art === 'cablecar') cablecarDeko(c, x); else if (d.art === 'warnschild') warnschildDeko(c, x); else if (d.art === 'zeitung') zeitungDeko(c, x);   // Golden Gate (Kapitel 5)
       else if (d.art === 'alcatraz') alcatrazDeko(c, x); else if (d.art === 'brueckentuer') brueckentuerDeko(c, x); else if (d.art === 'turm') turmDeko(c, x); else if (d.art === 'eisbruecke') eisbrueckeDeko(c, x, d.w); else if (d.art === 'banner') bannerDeko(c, x);   // + Realm Kapitel 5
+      else if (d.art === 'portal6') realmTorZeichnen(c, x, BODEN_Y - 70, zeit, 1.4);   // Kapitel 6: Portal zwischen zwei Realm-Bausteinen
     }
   }
   // vor dem Tor ✦ gezeichnet: Motel-Schild (Route 66), Wasserschleier des Wasserfalls (Grand Canyon)
@@ -6175,6 +6242,35 @@
     const x = level.bossX - kamera + 20, a = zustand === 'wahl' ? Math.min(1, boss.weg * 1.5) : Math.max(0, 1 - tuer.offen * 1.4);
     if (a <= 0) return;
     c.save(); c.globalAlpha = a; c.translate(x, 0); c.scale(-1, 1); zeichneFigur(c, 0, BODEN_Y, 80, NY_FIGUREN.frau, 'steh', zeit, 'grinsend'); c.restore();
+  }
+  /* ---------- Kapitel 6 (geheim) „The Keeper's Journal“: Elena Cruz an der sechsten Tür (Boss), die sechste Tür, einfache Film-Szenen ---------- */
+  function sechsteTuer(c, x, y, licht = 1) {   // Steinbogen wie das Rückkehr-Tor, Durchgang leuchtet violett (licht 0..1), Schild „✦ VI“
+    c.fillStyle = '#4a5262'; c.fillRect(x - 56, y - 160, 22, 160); c.fillRect(x + 34, y - 160, 22, 160);
+    c.beginPath(); c.moveTo(x - 56, y - 160); c.arc(x, y - 160, 56, Math.PI, 0); c.lineTo(x + 34, y - 160); c.arc(x, y - 160, 34, 0, Math.PI, true); c.closePath(); c.fill();
+    const p = (ruhig() ? 0.85 : 0.75 + 0.25 * Math.sin(zeit * 2.4)) * Math.max(0, Math.min(1, licht));
+    c.fillStyle = '#141826'; c.beginPath(); c.moveTo(x - 34, y); c.lineTo(x - 34, y - 160); c.arc(x, y - 160, 34, Math.PI, 0); c.lineTo(x + 34, y); c.closePath(); c.fill();
+    if (p > 0) { const g = c.createLinearGradient(0, y - 190, 0, y); g.addColorStop(0, `rgba(255,240,200,${p})`); g.addColorStop(1, `rgba(176,124,255,${0.8 * p})`); c.fillStyle = g; c.beginPath(); c.moveTo(x - 34, y); c.lineTo(x - 34, y - 160); c.arc(x, y - 160, 34, Math.PI, 0); c.lineTo(x + 34, y); c.closePath(); c.fill(); }
+    c.fillStyle = '#18213a'; c.fillRect(x - 30, y - 232, 60, 20); c.fillStyle = '#ffd36b'; c.font = 'bold 12px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('✦ VI', x, y - 222);
+  }
+  function elenaBoss(c, x, y) {   // Boss Kapitel 6: Elena Cruz (die Frau mit dem Messing-Kompass, Figur aus Kapitel 1) vor der sechsten Tür, sieht nach links (zu dir)
+    if (boss.sichtbar <= 0) return;
+    const a = Math.min(1, boss.sichtbar) * (1 - boss.weg); if (a <= 0) return;
+    c.save(); c.globalAlpha = a; c.translate(x, 0); c.scale(-1, 1); zeichneFigur(c, 0, y, 80, NY_FIGUREN.frau, 'steh', zeit, boss.maul > 0.4 ? 'erstaunt' : 'grinsend'); c.restore();
+    c.save(); c.globalAlpha = a; kompass(c, x - 20, y - 42, zeit); c.restore();
+  }
+  function filmZeichnenRealm6(c) {   // Szene 1 (♪11): Elena an der leuchtenden sechsten Tür · Szene 2 (♪12): Lucas gibt ihr Grandpas letzte Seite, die Tür erlischt · dann Titelkarte
+    const f = film, sz = f.szene, tt = f.t;
+    if (!filmSzenen(f.ende)[sz]) return filmTitel(c, f);
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1b2440'); g.addColorStop(0.6, '#5f7fa8'); g.addColorStop(1, '#b7d2ea');
+    c.fillStyle = g; c.fillRect(0, 0, viewW, H); c.fillStyle = '#dfe9f3'; c.fillRect(0, BODEN_Y, viewW, H - BODEN_Y);
+    const mx = viewW / 2, licht = sz === 0 ? 1 : 1 - sanft((tt - 2.4) / 1.4), seite = sz === 1 ? sanft((tt - 0.4) / 1.6) : 0;
+    sechsteTuer(c, mx + 190, BODEN_Y, licht);
+    zeichneFigur(c, mx - 190, BODEN_Y, 80, skin, 'steh', zeit, 'erstaunt');
+    zeichneFigur(c, mx - 90 + seite * 40, BODEN_Y, 80, NY_FIGUREN.lucas, 'steh', zeit, sz === 1 ? 'grinsend' : 'erstaunt');
+    c.save(); c.translate(mx + 80, 0); c.scale(-1, 1); zeichneFigur(c, 0, BODEN_Y, 80, NY_FIGUREN.frau, 'steh', zeit, sz === 1 && tt > 2 ? 'grinsend' : 'erstaunt'); c.restore();
+    kompass(c, mx + 60, BODEN_Y - 42, zeit);
+    if (sz === 1) { const px = mx - 70 + seite * 120, py = BODEN_Y - 70 - Math.sin(seite * Math.PI) * 20; c.fillStyle = '#efe2bd'; c.fillRect(px - 14, py - 18, 28, 36); c.fillStyle = '#7a6a4a'; for (let i = 0; i < 4; i++) c.fillRect(px - 9, py - 11 + i * 7, 18, 2); }
+    if (!ruhig()) schneesturm(c);
   }
   /* ---------- The Realm Beyond, Kapitel 5: Eisbrücke über einem Abgrund (Kulisse hinter dem Schneeboden), schwarzes Banner, Black Banner 🏴 ---------- */
   function eisbrueckeDeko(c, x, w) {   // Bögen und Pfeiler aus Eis unter der Fahrbahn, Geländer aus Eiszapfen, Tiefe darunter
@@ -7222,7 +7318,7 @@
       W.boden(c, a - kamera, b - a, a, b, links, rechts);
     }
     if (level.deko && level.deko.length) dekoZeichnen(c);   // Story New York: Feuertreppe, U-Bahn-Eingang
-    if (imRealm()) { if (W.id === 'hoehle') hoehleGoldZeichnen(c); else if (W.id === 'eishalle') eishalleSaeulenZeichnen(c); else { drachenSchatten(c); realmFackelnZeichnen(c); } }
+    if (realmArt()) { if (realmArt() === 'hoehle') hoehleGoldZeichnen(c); else if (realmArt() === 'eishalle') eishalleSaeulenZeichnen(c); else { drachenSchatten(c); realmFackelnZeichnen(c); } }
     for (const p of level.plattformen) {
       const x = p.x - kamera; if (x > viewW + 100 || x + p.w < -100) continue;
       if (p.art === 'stein' && W.stein) { W.stein(c, x, p.y, p.w); continue; }   // Trittstein im Bach (Welt 4)
@@ -7285,7 +7381,7 @@
     }
     for (const a of autos) { const x = a.x - kamera; if (x > viewW + 100 || x + a.w < -100) continue; autoZeichnen(c, a); }
     for (const s of steine) { const x = s.x - kamera; if (x > viewW + 80 || x < -80) continue; steinZeichnen(c, s); }
-    if (imRealm() && W.id === 'hoehle' && realm.drache.aktiv) feuerZeichnen(c, realm.drache);   // Drachenhöhle: Warnglut, dann Flammenstoß
+    if (realmArt() === 'hoehle' && realm.drache.aktiv) feuerZeichnen(c, realm.drache);   // Drachenhöhle: Warnglut, dann Flammenstoß
     if (imEishalle()) { for (const z of realm.zapfen) { const x = z.x - kamera; if (x > viewW + 60 || x < -60) continue; zapfenZeichnen(c, z); } }   // Eishalle: Eiszapfen (hängen, zittern, fallen, stecken)
     if (level.tuerX - kamera < viewW + 400) {
       W.tuer(c, level.tuerX - kamera, BODEN_Y);
@@ -7529,9 +7625,9 @@
     }
     hintergrund(ctx);
     welt(ctx);
-    if (imRealm() && W.id === 'realm') schneesturm(ctx);   // The Realm Beyond (Eiswelt): Schneesturm über allem (außer HUD); in der Drachenhöhle Goldstaub (goldstaub), in der Eishalle Frostglitzer
-    if (imRealm() && W.id === 'hoehle') goldstaub(ctx);
-    if (imRealm() && W.id === 'eishalle') frostglitzer(ctx);
+    if (realmArt() === 'realm') schneesturm(ctx);   // The Realm Beyond (Eiswelt): Schneesturm über allem (außer HUD); in der Drachenhöhle Goldstaub (goldstaub), in der Eishalle Frostglitzer
+    if (realmArt() === 'hoehle') goldstaub(ctx);
+    if (realmArt() === 'eishalle') frostglitzer(ctx);
     ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, viewW, H); ctx.clip(); hud(ctx); ctx.restore();
   }
@@ -7563,6 +7659,9 @@
     c.strokeStyle = '#7a4a16'; c.lineWidth = 3; c.strokeRect(x + 1.5, y + 1.5, KISTE - 3, KISTE - 3);
     c.beginPath(); c.moveTo(x + 4, y + 4); c.lineTo(x + KISTE - 4, y + KISTE - 4); c.moveTo(x + KISTE - 4, y + 4); c.lineTo(x + 4, y + KISTE - 4); c.stroke();
   }
+  // Kapitel 6: Kulisse/Boden/Grube/Kiste und Farben kommen vom Realm-Baustein unter der Figur (realm.sektion)
+  const REALM6_TEILE = { realm: REALM_WELT, hoehle: REALM_WELT_3, eishalle: REALM_WELT_4, eisbruecke: REALM_WELT_5 };
+  const realm6Teil = () => REALM6_TEILE[(realm && realm.sektion) || 'eisbruecke'] || REALM_WELT;
   const WELTEN = {
     ny: { id: 'ny', name: 'New York', staat: 'New York', ziel: 'Statue of Liberty', bossName: 'Mr. Alligator', bossSymbol: '🐊', banner: BANNER_TEXT, richtig: "Correct – the door opens!", falsch: "Not this time!", start: "Let's find the Statue of Liberty!", ende: "You made it to the Statue of Liberty!",
       sturz: 'Splash! 💦',
@@ -7589,6 +7688,13 @@
       gegnerarten: ['moewe', 'seeloewe', 'skater'], farben: { plattform: '#8e3220', plattformOben: '#e8714a', hud: '#c0462b' }, muster: MUSTER_CA, musterStory: MUSTER_CA_STORY, storyStruktur: STRUKTUR_CA, realmZurueck: 'Back at the Golden Gate! 🌉', sprechblaseHoehe: 240,
       kulisse: hintergrundGoldenGate, boden: promenade, grube: pazifik, kiste: hafenkiste, hudSymbol: (c, x, y) => goldenGateFern(c, x, y + 12, 0.11),
       boss: (c, x, y) => { nebelbank(c, x, y); captainFog(c, x, y); }, tuer: brueckenTor, bossKlang: () => { tutet++; klang.nebelhorn(); } },
+    // Klasse 9 Kapitel 6 (geheim, 2.11.): „The Keeper's Journal“ – im Realm, kein Landmark; Strecke aus Eiswand → Drachenhöhle → Eishalle → Eisbrücke, Boss Elena Cruz an der sechsten Tür (nur Story)
+    realm6: { id: 'realm6', name: "The Keeper's Journal", staat: 'The Realm', ziel: 'sixth gate', bossName: 'Elena Cruz', bossSymbol: '🧭', banner: 'Elena Cruz is waiting at the sixth gate.', richtig: 'Correct – the gate is yours.', falsch: 'Not this time, keeper.', start: "Let's read Grandpa's journal!", ende: 'The sixth gate is closed forever.',
+      get sturz() { return realm6Teil().sturz; }, get farben() { return realm6Teil().farben; },
+      gegnerarten: ['wolf', 'ritter', 'skorpion'], muster: MUSTER_REALM6_STORY, musterStory: MUSTER_REALM6_STORY, storyStruktur: STRUKTUR_REALM6, sprechblaseHoehe: 70,
+      kulisse: (c) => realm6Teil().kulisse(c), boden: (...a) => realm6Teil().boden(...a), grube: (...a) => { const g = realm6Teil().grube; if (g) g(...a); }, kiste: (...a) => realm6Teil().kiste(...a),
+      hudSymbol: (c, x, y) => { c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#b07cff'; c.fillText('✦', x, y - 6); },
+      boss: elenaBoss, tuer: (c, x, y) => sechsteTuer(c, x, y, 0.35 + 0.65 * Math.min(1, (tuer && tuer.offen) || 0)), bossKlang: () => klang.portal() },
     // Klasse 6 „London Run“ (31.10.): Welt 1 Westminster · Big Ben
     westminster: { id: 'westminster', name: 'Westminster', staat: 'London', ziel: 'Big Ben', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is on duty!', richtig: "Correct – the gate is open. Carry on!", falsch: "Not this time, soldier!", start: "Let's find Big Ben!", ende: "You found Big Ben!",
       sturz: 'Splash! 🌊',
@@ -7778,7 +7884,7 @@
         begleiter: begleiter ? { art: begleiter.art, x: Math.round(begleiter.x), y: Math.round(begleiter.y) } : null, dunkel: Math.round(dunkel * 100) / 100, radWinkel: Math.round(radWinkel * 1000) / 1000, kameraHoch: Math.round(kameraHoch * 100) / 100,   // London Eye   // Kapitel 2: gewählte Variante je Quelle (z. B. { 'ny.g2': 'X' }), Sammelstück des Realm
         realm: realm ? { aktiv: realm.aktiv, gefunden: realm.gefunden, gesammelt: realm.gesammelt.slice(), gegenstand: realm.gegenstand, besuche: realm.besuche, t: Math.round(realm.t * 100) / 100,
           tore: realm.tore.map((t) => ({ x: t.x, y: t.y, benutzt: t.benutzt })), rueckX: imRealm() ? level.rueckX : null, welt: W.id, dinge: realm.dinge.map((d) => ({ x: d.x, y: d.y, weg: d.weg })),
-          drache: realm.drache.aktiv, gegner: imRealm() ? gegner.map((g) => g.art) : [], hoehle: imRealm() && W.id === 'hoehle', eishalle: imEishalle(),
+          drache: realm.drache.aktiv, gegner: imRealm() ? gegner.map((g) => g.art) : [], hoehle: realmArt() === 'hoehle', eishalle: imEishalle(), sektion: istRealm6() ? realm.sektion : null,
           zapfen: realm.zapfen.map((z) => ({ x: z.x, phase: z.phase, y: Math.round(z.y) })), zapfenTreffer: realm.zapfenTreffer, rutsch: realm.rutsch > 0,
           laerm: Math.round((realm.drache.laerm || 0) * 100) / 100, feuer: realm.drache.feuer ? { x: Math.round(realm.drache.feuer.x), t: Math.round(realm.drache.feuer.t * 100) / 100 } : null, schnarcher: realm.drache.schnarcher || 0, geweckt: realm.drache.geweckt || 0 } : null,
       };
@@ -7786,7 +7892,7 @@
     // Realm (Tests): direkt hinein (wie durch das Tor), bis kurz vor das Rückkehr-Tor, Drache sofort
     realmBetreten() { if (realm && !realm.aktiv && zustand === 'spiel') { const t = realm.tore.find((x) => !x.benutzt); if (t) { t.benutzt = true; realmBetreten(t); return true; } } return false; },
     realmEnde(dx = 120) { if (imRealm()) this.teleport(level.rueckX - dx); },
-    drache() { if (imRealm()) { if (W.id === 'hoehle') drachenWecken(realm.drache); else realm.drache.naechste = realm.drache.t; } },
+    drache() { if (realmArt()) { if (realmArt() === 'hoehle') drachenWecken(realm.drache); else realm.drache.naechste = realm.drache.t; } },
     zapfenLoesen(i) { const z = realm && realm.zapfen[i]; if (z) { z.phase = 'warnung'; z.t = 0; } },   // Test: Eiszapfen i sofort ankündigen (fällt nach 0,6 s)   // Eiswelt: Drache fliegt sofort; Drachenhöhle: wacht sofort auf
     gabelung(dx = 300, gabel) { const g = kristalle.filter((k) => istWahlKristall(k, gabel || (gabeln[0] && gabeln[0].gabel))); if (g.length) this.teleport(Math.min(...g.map((k) => k.x)) - dx); },
     kristall(i) { const k = kristalle[i]; if (story && k && kristallSichtbar(k) && zustand === 'spiel') { kristallSammeln(k, false); return true; } return false; },

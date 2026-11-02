@@ -2803,8 +2803,10 @@
       { id: "sd", name: "Mount Rushmore", staat: "South Dakota", ziel: "Mount Rushmore", trophaee: "Rushmore Ranger", symbol: "🗿", boss: "Grizzly Grandpa", unit: "2" },
       { id: "ca", name: "Golden Gate", staat: "California", ziel: "Golden Gate Bridge", trophaee: "Golden Gate Legend", symbol: "🌉", boss: "Captain Fog", unit: "2" }] };
   // Welt n ist offen, wenn sie gebaut ist (nicht bald) und die Vorwelt mindestens Silber hat
-  const runnerWeltOffen = (w) => { const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
-  const runnerWeltVon = (id) => RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0];
+  // Kapitel 6 (geheim, 2.11., docs/runner/story-usa-06.md): eigene Story-Welt im Realm, nicht in der Welt-Reihe; frei mit allen fünf Realm-Gegenständen, ohne Ticket
+  const RUNNER_REALM6 = { id: "realm6", name: "The Keeper's Journal", staat: "The Realm", ziel: "sixth gate", trophaee: "✦ Keeper", symbol: "✦", boss: "Elena Cruz", geheim: true };
+  const runnerWeltOffen = (w) => { if (w && w.geheim) return realmAlle(); const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
+  const runnerWeltVon = (id) => (id === RUNNER_REALM6.id ? RUNNER_REALM6 : RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0]);
   const R = () => window.Runner || null;
   const spieleKategorie = () => D.kategorien.find((k) => k.spiele);
   function runnerStand() {
@@ -2886,6 +2888,7 @@
     zeige(spielKopf(k, "Road Trip Run", () => zeigeSpiele(k)),
       el("section", { class: "satzkarte runner-start" },
         weltReiter, weltHinweis,
+        realmAlle() && el("p", { class: "runner-kapitel6" }, knopf("✦ Chapter 6 · The Keeper's Journal", () => runnerSpiel(k, unit, runnerWahl.i, RUNNER_REALM6.id), "leise"), " ", el("small", {}, T("geheimes Kapitel, ohne Ticket", "secret chapter, no ticket"))),
         el("div", { class: "runner-welt" },
           el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, W.symbol),
           el("div", {},
@@ -2971,6 +2974,7 @@
     "X17", "X18", "X19", "X20", "Y17", "Y18", "Y19", "Y20", "R1", "R2", "R3", "sofar"];
   const STORY_KEYS_AZ = STORY_KEYS_R66;   // Kapitel 3 hat dieselben Schlüssel (1X/2X/1Y/2Y, 3–5, A/B, 11–14, X/Y, Enden, R1–R3, sofar)
   const STORY_KEYS_SD = STORY_KEYS_R66;   // Kapitel 4 ebenso
+  const STORY_KEYS_REALM6 = ["1E1", "1E2", "1E3", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "sofar"];   // Kapitel 6: Stück 1 nach dem Golden-Gate-Ende
   const STORY_KEYS_CA = ["1X", "2X", "1Y", "2Y", "3", "4", "5", "A6", "A7", "A8", "A9", "A10", "B6", "B7", "B8", "B9", "B10", "11", "12", "13", "14", "X15", "X16", "Y15", "Y16",
     "E1_17", "E1_18", "E1_19", "E1_20", "E2_17", "E2_18", "E2_19", "E2_20", "E3_17", "E3_18", "E3_19", "E3_20", "R1", "R2", "R3", "sofar"];   // Kapitel 5: drei Enden E1–E3
   // Aufnahmen je Kapitel: ein Stück = eine Datei (<praefix>_<key>.mp3) oder mehrere Teile (<praefix>_<key>_1.mp3, _2 …) hintereinander; nur Dateien, die der Bau findet (SP.story_audio)
@@ -3092,6 +3096,18 @@
       R3: "\"Take the Black Banner,\" he said. \"When all five are yours, the sixth story begins.\"" },
       // Aufnahmen (vorbereitet, Dateien noch nicht da – Vertonung nach dem 13.11.): Sprecherplan in werkzeuge/story_audio9.py (Maya + Elena = Jessica; Jayden, Lucas, Ritter, Captain Fog = Jeremy; Spieler-Sätze und Erzähler = Mr. Alex)
       audio: storyAudioDateien("ca", STORY_KEYS_CA) },
+    // Kapitel 6 (geheim) „The Keeper's Journal“ (2.11., Text wörtlich aus docs/runner/story-usa-06.md): frei mit allen fünf Realm-Gegenständen; Stück 1 nach dem letzten Golden-Gate-Ende (story.ca.enden, ohne Ende E3);
+    // ein Ende E, Boss Elena Cruz an der sechsten Tür; gespeichert in story.realm6. Aufnahmen audio/story/realm6_<key>.mp3 (Sprecherplan werkzeuge/story_audio9.py, Vertonung nach dem 13.11.).
+    realm6: { id: "realm6", titel: "The Lost Map – The Keeper's Journal", kapitel: 6, welt: "The Realm",
+      enden: { E: { symbol: "✦", name: "The Keeper's Journal" } }, wege: {}, teile: {
+      "1E1": "The gates were closed. But one night, Grandpa's journal began to glow.", "1E2": "Lucas still had half of the map. On the back, someone had written: TURN THE PAGE.",
+      "1E3": "When Lucas touched the page CHAPTER 6, the fog came back – and took you all.", 2: "You woke up in the Realm. Snow, black banners and a wall of ice.",
+      3: "The knight was waiting. \"You have found all five gates,\" he said. \"Now read.\"", 4: "Lucas opened the journal. The first page was dated June 1974.",
+      5: "'Dear Lucas,' it said. 'If you are reading this, I have failed.'", 6: "'Elena and I had been keepers for ten years. We used to ride the old trails together.'",
+      7: "'Then she had found a sixth gate. A gate that should never be opened.'", 8: "'Behind it, she believed, everything she had lost would come back.'",
+      9: "'I had hidden the map before she could take it. Then I had to run.'", 10: "'PS: Don't hate her. She only wanted her little brother back.'",
+      11: "Elena stood at the sixth gate. Her eyes were wet. \"He was only twelve,\" she whispered.", 12: "Lucas gave her Grandpa's last page. She read it, smiled – and closed the gate forever." },
+      audio: storyAudioDateien("realm6", STORY_KEYS_REALM6) },
   };
   const STORY_PUNKTE = { diamant: 1, ganz: 10, max: 30 };
   const STORY_KAPITEL = ["ny", "route66", "az", "sd", "ca"];   // gebaute Kapitel in Reihenfolge (Story Library, Dein Weg)
@@ -3099,7 +3115,7 @@
   // ein nie gespieltes Kapitel zählt nicht als gut. Die Engine zählt die eigene Gabelung 2 (ca X = Karte nicht geben) dazu: 4–5 → E1, 2–3 → E2, 0–1 → E3.
   const STORY_GUT = { ny: "Y", route66: "X", az: "X", sd: "X" };
   const storyGute = () => Object.keys(STORY_GUT).filter((w) => storyStand(w).wahl.g2 === STORY_GUT[w]).length;
-  const storyEndeLabel = (en) => `Ending ${/^E\d$/.test(en) ? en.slice(1) : en}`;   // Kapitel 5: E1 → „Ending 1“
+  const storyEndeLabel = (en) => (en === "E" ? "The End" : `Ending ${/^E\d$/.test(en) ? en.slice(1) : en}`);   // Kapitel 5: E1 → „Ending 1“; Kapitel 6: ein Ende E → „The End“
   // 🧭 Dein Weg: die Entscheidungen der Gabelung 2 je Kapitel (bis bisWelt; aktuell = Wahl/Ende des laufenden Laufs), dazu das Ende von Kapitel 5
   function storyPfad(bisWelt, aktuell) {
     const teile = [];
@@ -3121,7 +3137,8 @@
     const ny = storyStand("ny"), r66 = storyStand("route66"), az = storyStand("az"), sd = storyStand("sd");
     // Kapitel 5 liest die Wahl aus Kapitel 4 (X = Jayden blieb, Y = Jayden ging; Kapitel 4 nicht gespielt → X wie dort der Standard) und bekommt die Zählung der Kapitel 1–4 als gute (0–4)
     return Object.assign({}, S, { varianten: { "ny.g2": ny.wahl.g2 === "X" ? "X" : "Y", "route66.g2": r66.wahl.g2 === "X" ? "X" : "Y", "az.g2": az.wahl.g2 === "X" ? "X" : "Y", "sd.g2": sd.wahl.g2 === "Y" ? "Y" : "X" } },
-      welt === "ca" ? { gute: storyGute() } : {});
+      welt === "ca" ? { gute: storyGute() } : {},
+      welt === "realm6" ? { varianten: { "ca.ende": storyStand("ca").enden[storyStand("ca").enden.length - 1] || "E3" } } : {});   // Kapitel 6: Stück 1 nach dem letzten Golden-Gate-Ende (keins → E3)
   }
   function storyStand(welt) {
     const r = runnerStand();
@@ -3155,14 +3172,15 @@
     if (!runnerWeltOffen(W)) return runnerStart(k);
     if (!R()) { toast(T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet.")); return; }
     if (ws.length < 4) return runnerStart(k);
-    if (!(r.tickets > 0)) { toast(T("Kauf erst ein Ticket im Shop.", "Buy a ticket in the shop first.")); return shop({ zurueck: () => runnerStart(k), artikel: "runner" }); }
-    r.tickets--; r.gespielt++; speichern();
-    toast(T("🎟️ Ticket eingelöst", "🎟️ Ticket used"));
+    const ohneTicket = !!W.geheim;   // Kapitel 6: kein Ticket nötig
+    if (!ohneTicket && !(r.tickets > 0)) { toast(T("Kauf erst ein Ticket im Shop.", "Buy a ticket in the shop first.")); return shop({ zurueck: () => runnerStart(k), artikel: "runner" }); }
+    if (!ohneTicket) r.tickets--; r.gespielt++; speichern();
+    if (!ohneTicket) toast(T("🎟️ Ticket eingelöst", "🎟️ Ticket used"));
     ansicht = null; lage = null;
     const buehne = el("div", { class: "runner-buehne" });
     const abbruch = knopf("✕", () => {
       if (R().ueberspringen && R().ueberspringen()) return; // Story: im Film am Ende überspringt ✕ nur den Film (das Ergebnis bleibt)
-      frage(T("Abbrechen? Das Ticket ist weg.", "Quit? Your ticket is gone."), T("Abbrechen", "Quit"), T("Weiterspielen", "Keep playing")).then((ok) => { if (ok) runnerStart(k); });
+      frage(ohneTicket ? T("Abbrechen?", "Quit?") : T("Abbrechen? Das Ticket ist weg.", "Quit? Your ticket is gone."), T("Abbrechen", "Quit"), T("Weiterspielen", "Keep playing")).then((ok) => { if (ok) runnerStart(k); });
     }, "runner-x");
     abbruch.setAttribute("aria-label", T("Spiel abbrechen", "Quit game"));
     zeige(buehne, abbruch);
@@ -3174,7 +3192,7 @@
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
         tor: (de) => T(`Welcher Diamant heißt „${de}“?`, `Which diamond means “${de}”?`), richtigWaere: T(" – richtig wäre: ", " – correct: "),
         sequenz: T("Zwischensequenz …", "Cutscene …"), boss: T("Boss! Beantworte die Frage.", "Boss! Answer the question."),
-        bossTitel: T(`${W.boss} fragt …`, `${W.boss} asks …`), bossHinweis: W.id === "route66" ? T("Richtig = der Schlagbaum geht hoch. Falsch = ein Leben weg.", "Right = the barrier lifts. Wrong = you lose a life.") : W.id === "ca" ? T("Richtig = das Brückentor geht auf. Falsch = ein Leben weg.", "Right = the bridge gate opens. Wrong = you lose a life.") : W.id === "sd" ? T("Richtig = das Ranger-Tor geht auf. Falsch = ein Leben weg.", "Right = the ranger gate opens. Wrong = you lose a life.") : W.id === "az" ? T("Richtig = das Holztor geht auf. Falsch = ein Leben weg.", "Right = the wooden gate opens. Wrong = you lose a life.") : T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
+        bossTitel: T(`${W.boss} fragt …`, `${W.boss} asks …`), bossHinweis: W.id === "realm6" ? T("Richtig = die sechste Tür gehört dir. Falsch = ein Leben weg.", "Right = the sixth gate is yours. Wrong = you lose a life.") : W.id === "route66" ? T("Richtig = der Schlagbaum geht hoch. Falsch = ein Leben weg.", "Right = the barrier lifts. Wrong = you lose a life.") : W.id === "ca" ? T("Richtig = das Brückentor geht auf. Falsch = ein Leben weg.", "Right = the bridge gate opens. Wrong = you lose a life.") : W.id === "sd" ? T("Richtig = das Ranger-Tor geht auf. Falsch = ein Leben weg.", "Right = the ranger gate opens. Wrong = you lose a life.") : W.id === "az" ? T("Richtig = das Holztor geht auf. Falsch = ein Leben weg.", "Right = the wooden gate opens. Wrong = you lose a life.") : T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
         frage: (de) => T(`„Was heißt ‚${de}‘ auf Englisch?“`, `“What's ‘${de}’ in English?”`),
       }),
       // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
@@ -3192,7 +3210,7 @@
   const runnerEndeText = (W) => { const rw = ((R() && R().WELTEN) || []).find((x) => x.id === W.id); return (rw && rw.ende) || `You made it to the ${W.ziel}!`; };
   // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (wieder 100) oder Startseite
   function runnerEnde(k, unit, i, e, ws, welt) {
-    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
+    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = W.geheim ? null : RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
     let stufe = null, neuOffen = false, storyPunkte = 0, storyNeuFrei = false, realmNeu = false;
     const rm = e.story && e.story.realm;
     if (rm && rm.gefunden) { // verstecktes Tor ✦: Fund, R-Stücke und Frost Shard bleiben (auch bei Game over – keine Punkte)
@@ -3216,6 +3234,7 @@
         storyPunkte = Math.min(STORY_PUNKTE.max, dia + ganz);
         if (dia > 0) ereignisse.push({ art: "toast", text: T(`+${dia} ⭐ Diamanten`, `+${dia} ⭐ diamonds`) });
         if (ganz > 0) ereignisse.push({ art: "toast", text: T(`📖 Ganze Geschichte +${ganz}`, `📖 Whole story +${ganz}`) });
+        if (W.geheim && storyNeuFrei) ereignisse.push({ art: "feier", symbol: "✦", titel: "✦ Keeper", text: T("Grandpas Tagebuch ist zu Ende gelesen – die sechste Tür ist für immer zu. Abzeichen ✦ Keeper!", "Grandpa's journal is finished – the sixth gate is closed forever. Badge ✦ Keeper!"), ton: waehleRuf("stark") });   // Kapitel 6: Abzeichen einmalig
       }
       const t = runnerTitelIndex(r.geschafft);
       if (t > (r.titel || 0)) {
@@ -3261,7 +3280,8 @@
           el("ul", { class: "wortliste runner-woerterliste" }, ws.map((v) => el("li", {},
             knopf("🔊", () => spiele([tonWort(v)]), "leise"), " ", el("strong", { lang: "en" }, spielWort(v)), " – ", el("span", { lang: "de" }, v.de))))),
         el("div", { class: "knopfreihe" },
-          (r.tickets || 0) > 0 ? knopf(`↻ ${T("Noch mal", "Again")} (🎟️ 1)`, () => runnerSpiel(k, unit, i, W.id), "haupt")
+          W.geheim ? knopf(`↻ ${T("Noch mal", "Again")}`, () => runnerSpiel(k, unit, i, W.id), "haupt")
+            : (r.tickets || 0) > 0 ? knopf(`↻ ${T("Noch mal", "Again")} (🎟️ 1)`, () => runnerSpiel(k, unit, i, W.id), "haupt")
             : knopf(T(`🎟️ Erst Ticket kaufen – ${RUNNER.preis} 🪙`, `🎟️ Buy a ticket first – ${RUNNER.preis} 🪙`), () => shop({ zurueck: () => runnerStart(k), artikel: "runner" }), "haupt"),
           knopf(T("Zur Startseite", "Home"), startseite, "leise")));
     };
@@ -3318,7 +3338,21 @@
     return el("div", { class: "story-library" }, el("h3", {}, "📖 Story Library"),
       pfad && el("p", { class: "klein story-pfad", lang: "en" }, T(`🧭 Dein Weg: ${pfad} – spiel ein Kapitel noch mal, um einen anderen Weg zu gehen.`, `🧭 Your path: ${pfad} – play a chapter again to take another path.`)),
       kapitel,
-      realmAlle() && el("p", { class: "story-kapitel6 runner-neu-offen", lang: "en" }, "✦ Chapter 6 – coming soon"));
+      storyKapitel6());
+  }
+  // ✦ Kapitel 6 (geheim): mit allen fünf Realm-Gegenständen startbar (ohne Ticket), nach dem Ende auch als Film; sonst 🔒 mit Hinweis
+  function storyKapitel6() {
+    const S = STORY.realm6, st = storyStand("realm6"), frei = realmAlle(), fertig = st.enden.includes("E");
+    if (!frei) return el("div", { class: "story-kapitel6" }, el("div", { class: "story-karten" },
+      el("div", { class: "story-karte gesperrt", "data-welt": "realm6" }, el("span", { class: "story-sym", "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, "✦ ??? – Find all five realm treasures"))));
+    return el("div", { class: "story-kapitel6", "data-welt": "realm6" },
+      el("p", { class: "klein", lang: "en" }, `Chapter 6 · ${S.welt} · ${S.titel}`),
+      el("div", { class: "story-karten" },
+        el("button", { class: "story-karte kapitel6-start", type: "button", "data-welt": "realm6", onclick: () => runnerSpiel(spieleKategorie(), aktuelleUnit(), 0, RUNNER_REALM6.id) },
+          el("span", { class: "story-sym", "aria-hidden": "true" }, "✦"), el("strong", { lang: "en" }, "✦ Chapter 6 – The Keeper's Journal"),
+          el("small", {}, `♪ ${st.beste.E || 0}/12${st.voll.includes("E") ? T(" · ✓ ganze Geschichte", " · ✓ whole story") : ""} · ▶ ${T("Spielen (ohne Ticket)", "Play (no ticket)")}`)),
+        fertig && el("button", { class: "story-karte", type: "button", "data-ende": "E", "data-welt": "realm6", onclick: () => storyFilm("realm6", "E") },
+          el("span", { class: "story-sym", "aria-hidden": "true" }, "✦"), el("strong", { lang: "en" }, "The End – ✦ Keeper"), el("small", {}, `▶ ${T("Film", "film")}`))));
   }
   function storyFilm(welt, ende) {
     if (!R() || !R().film) { toast(T("Das Spiel ist noch nicht geladen.", "The game is not loaded yet.")); return; }

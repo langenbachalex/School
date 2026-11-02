@@ -18,8 +18,10 @@ BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 APP6, APP9 = os.path.join(BASIS, "app"), os.path.join(BASIS, "app", "klasse9")
 ENGINE = os.path.join(APP9, "runner.js")
 GRENZE = 2500
-WELTEN9, WELTEN6 = ("ny", "route66", "az", "sd", "ca"), ("westminster", "londoneye", "towerbridge", "tube", "wembley")   # Klasse 6: Welt 4 The Tube (31.10.) und Welt 5 Wembley (1.11.) kennt das Skript, Dateien erst nach dem 13.11.
+WELTEN9, WELTEN6 = ("ny", "route66", "az", "sd", "ca", "realm6"), ("westminster", "londoneye", "towerbridge", "tube", "wembley")   # Klasse 6: Welt 4 The Tube (31.10.) und Welt 5 Wembley (1.11.) kennt das Skript, Dateien erst nach dem 13.11.
 ARTEN = ("banner", "richtig", "falsch", "start", "ende")
+# Klasse 9 Kapitel 6 (geheim, 2.11., nur geplant – Vertonung nach dem 13.11.): Boss Elena Cruz spricht ihre Sprüche selbst (Jessica = f), das Banner bleibt beim Erzähler (Mr. Alex)
+STIMME9 = {"realm6": {"richtig": "f", "falsch": "f"}}
 JUNGEN, MAEDCHEN = ("leo", "kenji", "felix", "max"), ("camilla", "ellie", "olivia", "zara", "penny", "tessa")
 CAMEO_STIMME = {h: ("m1", "m2")[i % 2] for i, h in enumerate(JUNGEN)} | {h: ("f1", "f2")[i % 2] for i, h in enumerate(MAEDCHEN)}
 
@@ -47,7 +49,7 @@ def auftraege():
     liste = []
     for w in WELTEN9:
         for art in ARTEN:
-            liste.append((9, APP9, f"audio/runner/{w}_{art}.mp3", {"start": "m", "ende": "f"}.get(art, "alex"), welten[w][art]))
+            liste.append((9, APP9, f"audio/runner/{w}_{art}.mp3", STIMME9.get(w, {}).get(art) or {"start": "m", "ende": "f"}.get(art, "alex"), welten[w][art]))
     for w in WELTEN6:
         for art in ARTEN:
             liste.append((6, APP6, f"audio/runner/{w}_{art}.mp3", {"start": "m1", "ende": "f1"}.get(art, "en"), welten[w][art]))

@@ -10248,6 +10248,15 @@ window.DATEN = {
     },
     "start": "audio/runner/ca_start.mp3",
     "ende": "audio/runner/ca_ende.mp3"
+   },
+   "realm6": {
+    "boss": {
+     "banner": null,
+     "richtig": null,
+     "falsch": null
+    },
+    "start": null,
+    "ende": null
    }
   },
   "story_audio": [

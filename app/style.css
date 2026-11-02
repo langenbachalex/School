@@ -559,3 +559,29 @@ dialog.feier.stichprobe .stichprobe-zusatz { margin: 2px 0; }
 dialog.feier.stichprobe .stichprobe-bilanz { font-size: 2.2rem; }
 dialog.feier.stichprobe .knopfreihe { flex-wrap: wrap; }
 dialog.feier.lehrer .lehrer-abfragen { font-weight: 700; }
+/* 🎯 Test yourself (2.11.2026): Einstieg auf der Stations-/Unit-Seite, Zeitbalken, Ergebnis, Zertifikate */
+.test-einstieg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; flex: 1 1 100%; min-width: 0; }
+.test-einstieg .test-knopf { background: var(--gelb); border-color: var(--gelb-text); color: var(--gelb-text); font-weight: 700; min-height: 44px; }
+.test-einstieg.zu .test-knopf { background: transparent; }
+.test-einstieg .test-info { color: var(--leise); }
+.test-leiste { display: flex; align-items: center; gap: 10px; margin: 4px 0 10px; }
+.test-fortschritt { font: 700 1.15rem var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.test-zeit { flex: 1 1 auto; height: 12px; border-radius: 999px; background: var(--bg); border: 1px solid var(--linie); overflow: hidden; }
+.test-zeit span { display: block; height: 100%; width: 100%; background: var(--blau); transition: width .25s linear; }
+.test-zeit.knapp span { background: var(--hw, #d6283c); }
+.test-uhr { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.test-aufgabe .wahl { margin: 10px 0; }
+.test-aussage { font-size: 1.35rem; }
+.test-ergebnis { text-align: center; }
+.test-ergebnis .test-prozent { font: 700 clamp(2.6rem, 10vw, 4rem)/1.1 var(--display); margin: 4px 0; color: var(--blau); }
+.test-ergebnis.bestanden { border: 3px solid var(--gruen); background: var(--gruen-hell); }
+.test-ergebnis.bestanden .test-prozent { color: var(--gruen); }
+.test-ergebnis .test-punkte { font-weight: 700; }
+.test-falsch { margin: 0; padding-left: 1.4rem; display: grid; gap: 10px; }
+.test-falsch li p { margin: 2px 0; overflow-wrap: anywhere; }
+.test-falsch .test-frage { font-weight: 700; }
+.test-falsch .test-loesung { color: var(--gruen); font-weight: 700; }
+.test-falsch .test-ort { color: var(--leise); }
+.zertifikate-titel { margin: 14px 0 6px; font-size: 1.05rem; }
+.abzeichen.zertifikate li span:last-child { display: flex; flex-direction: column; }
+.abzeichen.zertifikate small { color: var(--leise); font-size: .8rem; }

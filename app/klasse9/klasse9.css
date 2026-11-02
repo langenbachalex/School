@@ -346,3 +346,6 @@ body.runner-aktiv .niveau-leiste { display: none; }
 .realm-stuecke li { opacity: .6; } .realm-stuecke li.ok { opacity: 1; }
 .runner-story-ende { font-weight: 700; color: #4b1fa0; }
 .runner-realm-ende { font-weight: 700; color: #1a5c9e; }
+/* 🎯 Test yourself (2.11.2026): Bild der Lesen-Aufgabe (ohne Bildunterschrift – die wäre eine Hilfe) */
+.test-bild { max-width: 280px; margin: 12px auto; text-align: center; }
+.test-bild .bild-sym { font-size: 4.5rem; }

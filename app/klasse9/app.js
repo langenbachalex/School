@@ -71,7 +71,8 @@
      stand.protokoll: die letzten 500 Ereignisse als [t (Minuten seit 1970), art, p], im Siegel. Arten: t Teil · g Word Gym · s Runner-Story ·
      e Einheit/Station · m Spiel des Tages · h Homework-Bonus · bw/bf/bs/bq/bm Boni (Wochenende, Ferien, Serie, Woche, Monat) · k Kauf (Coins, negativ) ·
      w Warnung des Zeitlogs · r Startwert (Lehrer-Bereich, gekürztes Protokoll) · a Altbestand (Stand von vor dem Protokoll) ·
-     x Stichproben-Abfrage (Lehrer-Bereich, +1 👍 / −1 👎, keine Punkte – zählt nicht zur Protokoll-Summe).
+     x Stichproben-Abfrage (Lehrer-Bereich, +1 👍 / −1 👎, keine Punkte – zählt nicht zur Protokoll-Summe) ·
+     p Prüfung „Test yourself“ (2.11.: +30 beim ersten Bestehen einer Unit/Kategorie, sonst 0 – zählt zur Protokoll-Summe, nicht zum Wächter).
      Geschrieben wird nur in punkteDazu, im Shop und im Lehrer-Bereich. plausibilitaet() prüft beim Laden und markiert für den Lehrer-Bereich –
      nie sperren, nie Punkte ändern. */
   const PROTOKOLL_MAX = 500;
@@ -757,6 +758,7 @@
     return el("header", { class: "kopf" },
       knopf(zurueckZu ? T("← Themen", "← Topics") : T("← Start", "← Start"), zurueckZu || startseite, "leise"),
       el("h1", { lang: "en" }, `${k.titel}` + (lage ? ` · ${lage.titel}` : "")),
+      !lage && testKnopf(k), // 🎯 Test yourself: auf der Kategorie-/Unit-Seite (nicht innerhalb eines Themas)
       lage && lage.teile && !lage.ende && hwTrifft(teilSchluessel(lage.teil)) && hwSchild(),
       lage && lage.teile && !lage.ende && teilFaellig(lage.teil) && powerupSchild(),
       lage && sprungleiste());
@@ -1955,6 +1957,9 @@
       ["🗺️", "All 50 states", staatenFrei() === SP.staaten.length], ["🇺🇸", "Road trip complete", sp.abzeichen.includes("roadtrip")],
       ["🏆", "All categories", D.kategorien.filter((k) => !k.bald && !k.spiele).every((k) => stand.erledigt.includes(k.nr) && !faellige(k.nr + "|"))],
     ];
+    // 🎯 Zertifikate (Test yourself, 2.11.): je bestandener Unit/Kategorie ein Abzeichen mit bestem Ergebnis und Datum
+    const zertifikate = Object.entries(sp.tests && typeof sp.tests === "object" ? sp.tests : {}).filter(([, x]) => x && x.bestanden)
+      .sort((x, y) => String(x[0]).localeCompare(String(y[0]), "de", { numeric: true }));
     const fakt = el("div", { class: "fakt", hidden: true, "aria-live": "polite" });
     const frei = staatenFrei();
     const karte = usaKarte(frei, (s) => {
@@ -1991,7 +1996,10 @@
       el("section", { class: "satzkarte" },
         el("h2", {}, T("Abzeichen", "Badges")),
         el("ul", { class: "abzeichen" }, abz.map(([sym, name, ok]) => el("li", { class: ok ? "ok" : "" },
-          el("span", { "aria-hidden": "true" }, sym), el("span", { lang: "en" }, name), el("span", { class: "unsichtbar" }, ok ? "✓" : "–"))))),
+          el("span", { "aria-hidden": "true" }, sym), el("span", { lang: "en" }, name), el("span", { class: "unsichtbar" }, ok ? "✓" : "–")))),
+        zertifikate.length ? el("h3", { class: "zertifikate-titel", lang: "en" }, "🎯 Certificates (Test yourself)") : null,
+        zertifikate.length ? el("ul", { class: "abzeichen zertifikate" }, zertifikate.map(([key, x]) => el("li", { class: "ok zertifikat" },
+          el("span", { "aria-hidden": "true" }, "🎯"), el("span", { lang: "en" }, `${testName(key)} passed`, el("small", {}, `${x.best} % · ${testDatum(x.am)}`))))) : null),
       el("p", { class: "klein bildnachweis" }, T("Fotos: Carol M. Highsmith, Library of Congress (frei nutzbar). Karte: US Census Bureau / us-atlas.",
         "Photos: Carol M. Highsmith, Library of Congress (no known restrictions). Map: US Census Bureau / us-atlas.")));
   }
@@ -3376,6 +3384,326 @@
     stand.fragen.push(t); speichern(); feld.value = ""; fragenZeigen();
   });
 
+  /* ---------- 🎯 Test yourself (2.11.2026, Mr. Alex; docs/ideenspeicher.md „Prüfungsformate“ (2) und (3)) – wie Klasse 6 (app/app.js) ----------
+     Je Kategorie (Reading, Language, Listening …) bzw. je Unit in Vocabulary, sobald mindestens die Hälfte ihrer Teile erledigt ist: 10 Aufgaben
+     aus dem Stoff, gemischt und möglichst jede Art: Vokabel (Deutsch gezeigt, Englisch eintippen – Groß/Klein und Satzzeichen egal, ab 6 Buchstaben
+     1 Tippfehler erlaubt), Lücke im Satz (Auswahl aus 3; auch Task words), Lesen (Format des Teils: Bild – passiert das im Text? yes / no),
+     Hören (Format des Teils: Person hören, Frage beantworten – oder Satz hören, Wort in der Lücke wählen; erst nach einmal ganz Abspielen).
+     Keine 💡-Hilfen, jede Aufgabe nur einmal beantwortbar, kein Zurück, Gesamtzeit 8 Minuten (danach zählt alles Offene als falsch).
+     Mindestzeit je Aufgabe über arbeitsSperre (monotone Uhr): Quizzeit, beim Lesen die Lesezeit wie in zeigeBilder.
+     Ab 80 %: einmalig je Unit/Kategorie +30 Punkte über punkteDazu (Art „p“, zählt nicht zum Wächter) und Zertifikat („🎯 Unit n passed“ bzw.
+     „🎯 Reading passed“). Gespeichert in stand.spiel.tests[key] = { best, am, bestanden } (key „u2“ = Vocabulary Unit 2, „k1“ = Kategorie 1) –
+     in spiel und damit im Siegel v4. Jeder fertige Test schreibt einen Protokoll-Eintrag „p“ (30 beim ersten Bestehen, sonst 0). Quelle: stichprobeTeil. */
+  const TEST = { anzahl: 10, sek: 8 * 60, punkte: 30, grenze: 80 };
+  let testLauf = null; // { ts, key, aufgaben, i, start, limit, antworten, gehoert, gelesen, takt }
+  let testTempo = 1; // Faktor für die Mindestzeiten – nur der Test-Build ändert ihn (window.__testYourself)
+  // Testbereich einer Kategorie: Vocabulary je Unit (aktueller Reiter), sonst die ganze Kategorie
+  const testBereich = (k) => (k.vokabeln ? { k, unit: aktuelleUnit(), key: "u" + aktuelleUnit() } : { k, unit: null, key: "k" + k.nr });
+  const testName = (key) => { const m = String(key).match(/^([uk])(\d+)$/); if (!m) return String(key); if (m[1] === "u") return "Unit " + m[2]; const k = kategorie(Number(m[2])); return k ? k.titel : String(key); };
+  const testErgebnis = (key) => (stand.spiel && stand.spiel.tests && stand.spiel.tests[key]) || null;
+  const testDatum = (t) => { const d = new Date(t + "T12:00:00"); return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`; };
+  function testTeilSchluessel(ts) {
+    const k = ts.k;
+    if (!k || k.spiele || k.bald) return [];
+    if (ts.unit) return (D.units[ts.unit] || []).flatMap((g) => teileVon(vokSchritte(g.vokabeln.map(vokabel).filter(Boolean))).map((_, i) => `${k.nr}|u${ts.unit}:${g.name}|${i}`));
+    return (k.gruppen || []).flatMap((g) => { const vok = g.vokabeln ? g.vokabeln.map(vokabel).filter(Boolean) : null;
+      return teileVon(vok ? vokSchritte(vok) : g.schritte).map((_, i) => `${k.nr}|${g.name}|${i}`); });
+  }
+  function testFortschritt(ts) {
+    const alle = testTeilSchluessel(ts);
+    return { gesamt: alle.length, fertig: alle.filter((s) => stand.teile && stand.teile[s]).length };
+  }
+  const testFrei = (f) => f.gesamt > 0 && f.fertig * 2 >= f.gesamt;
+  // Einstieg auf der Kategorie-/Unit-Seite: frei ab der Hälfte der Teile, vorher ausgegraut mit Hinweis (Sperre im Programm, nicht nur am Knopf)
+  function testKnopf(k) {
+    if (!k || k.spiele || k.bald) return null;
+    const ts = testBereich(k), f = testFortschritt(ts);
+    if (!f.gesamt) return null;
+    const frei = testFrei(f), erg = testErgebnis(ts.key);
+    const b = knopf("🎯 Test yourself", () => testStart(k), "test-knopf");
+    if (!frei) sperrt(b);
+    return el("div", { class: "test-einstieg" + (frei ? "" : " zu") }, b,
+      el("span", { class: "klein test-info", lang: "en" }, !frei ? `Finish half of the parts first (${f.fertig} of ${f.gesamt}).`
+        : erg && erg.bestanden ? `✓ Passed · best result ${erg.best} %`
+        : erg ? `Best result ${erg.best} % – you pass with ${TEST.grenze} %`
+        : `${testName(ts.key)}: 10 tasks, no help · 8 minutes · ${TEST.grenze} % = +${TEST.punkte} points`));
+  }
+
+  let testWortVorrat = null;
+  const testWoerter = () => testWortVorrat || (testWortVorrat = [...new Set([...Object.values(D.saetze).map((s) => s && s.luecke).filter(Boolean),
+    ...D.vokabeln.map((v) => v.en)].filter((w) => w && w.length <= 24 && !/[()/]/.test(w)))]);
+  const wortZahl = (t) => String(t).trim().split(/\s+/).length;
+  function testAblenker(richtig, eigene, bereich) {
+    const raus = new Set([normT(richtig)]), aus = [];
+    const gross = /^[A-Z]/.test(richtig);
+    const nimm = (liste) => { for (const w of mischen(liste)) { if (aus.length >= 2) return; if (!w || raus.has(normT(w))) continue; raus.add(normT(w)); aus.push(gross && /^[a-z]/.test(w) ? w[0].toUpperCase() + w.slice(1) : w); } };
+    nimm(eigene || []);
+    nimm((bereich || []).filter((w) => wortZahl(w) === wortZahl(richtig)));
+    nimm(testWoerter().filter((w) => wortZahl(w) === wortZahl(richtig)));
+    nimm(testWoerter());
+    return aus;
+  }
+  // Englische Lösungen einer Vokabel, die beim Eintippen zählen: „sth.“ = something, Klammern optional, Teile mit / oder , einzeln
+  function testVarianten(v) {
+    const s = new Set(), dazu = (x) => { x = String(x || "").replace(/\s+/g, " ").trim(); if (x) { s.add(x); s.add(x.replace(/\bsth\.?/g, "something").replace(/\bsb\.?/g, "somebody")); } };
+    const en = v.en.replace(/\(=[^)]*\)/g, "");
+    dazu(en); dazu(en.replace(/\(.*?\)/g, "")); dazu(en.replace(/[()]/g, ""));
+    for (const t of en.split(/\s*[/;,]\s*/)) { dazu(t); dazu(t.replace(/\(.*?\)/g, "")); dazu(t.replace(/[()]/g, "")); }
+    return [...s].filter((x) => !/^pl\b/.test(x));
+  }
+  const testTippOk = (v) => v && v.de && v.en && v.en.length <= 30 && !/[…]/.test(v.en);
+  function testTippRichtig(eingabe, ziele) {
+    const e = normT(eingabe);
+    if (!e) return false;
+    return ziele.some((z) => { const zz = normT(z); return e === zz || (zz.replace(/\s/g, "").length >= 6 && abstand(e, zz) <= 1); });
+  }
+
+  function testZiehen(ts) {
+    const toepfe = { vokabel: [], luecke: [], lesen: [], hoeren: [] }, worte = [];
+    const satzVok = {};
+    for (const v of D.vokabeln) if (v.satz) (satzVok[v.satz] = satzVok[v.satz] || []).push(v);
+    const dazu = (typ, c) => toepfe[typ].push(c);
+    const vokabelDazu = (v, q) => { if (testTippOk(v)) dazu("vokabel", { typ: "vokabel", key: "v:" + v.id, v, q }); };
+    const satzDazu = (id, q, extra) => {
+      const s = D.saetze[id];
+      if (!s || !s.en) return;
+      const w = (extra && extra.luecke) || (s.luecke && s.en.includes(s.luecke) ? s.luecke : null);
+      if (w && s.en.includes(w)) {
+        const richtig = (extra && extra.richtig) || w;
+        worte.push(richtig);
+        dazu("luecke", { typ: "luecke", key: "s:" + id, s, w, richtig, falsch: extra && extra.falsch, q });
+        if (!extra || extra.richtig === w) dazu("hoeren", { typ: "hoeren", form: "luecke", key: "s:" + id, s, w, richtig, q });
+      }
+      for (const v of satzVok[id] || []) vokabelDazu(v, q);
+    };
+    for (const schluessel of testTeilSchluessel(ts)) {
+      const q = stichprobeTeil(schluessel);
+      if (!q) continue;
+      q.schluessel = schluessel;
+      const { teil, vok } = q;
+      if (teil.art === "lr") teil.saetze.forEach((id) => satzDazu(id, q));
+      else if (teil.art === "verbform") teil.aufgaben.forEach((a) => { const s = D.saetze[a.satz]; if (s) satzDazu(a.satz, q, { luecke: a.luecke || s.luecke, richtig: a.richtig, falsch: a.falsch }); });
+      else if (teil.art === "auswahl") teil.aufgaben.forEach((a) => { if (D.saetze[a.satz] && a.optionen && a.optionen.length >= 2) dazu("luecke", { typ: "luecke", form: "wahl", key: "s:" + a.satz, a, q }); });
+      else if (teil.art === "mustertext") teil.abschnitte.forEach((ab) => ab.saetze.forEach((id) => satzDazu(id, q)));
+      else if (teil.art === "dialog") teil.zeilen.forEach((z) => satzDazu(z[0], q));
+      else if (teil.art === "bilder") teil.bilder.forEach((b, i) => { if (!b.nur || b.nur === stand.niveau) dazu("lesen", { typ: "lesen", key: `b:${teil.titel}:${i}`, b, teil, q }); });
+      else if (teil.art === "hoeren" && D.hoeren[teil.uebung]) {
+        const u = D.hoeren[teil.uebung];
+        u.aufgaben.forEach((a) => { const t = u.teile.find((x) => x.id === a.teil);
+          if (t) u.fragen.filter((f) => !f.nur && f.optionen && a[f.key]).forEach((f) => dazu("hoeren", { typ: "hoeren", form: "frage", key: `h:${a.teil}:${f.key}`, a, t, f, u, q })); });
+      } else if (teil.art.startsWith("vok_") && vok) vok.forEach((v) => { vokabelDazu(v, q); if (v.satz) satzDazu(v.satz, q); });
+    }
+    const arten = mischen(Object.keys(toepfe)).filter((a) => toepfe[a].length);
+    arten.forEach((a) => { toepfe[a] = mischen(toepfe[a]); });
+    const benutzt = new Set(), gewaehlt = [];
+    while (gewaehlt.length < TEST.anzahl && arten.some((a) => toepfe[a].length)) {
+      for (const a of arten) {
+        if (gewaehlt.length >= TEST.anzahl) break;
+        while (toepfe[a].length) { const c = toepfe[a].pop(); if (benutzt.has(c.key)) continue; benutzt.add(c.key); gewaehlt.push(c); break; }
+      }
+    }
+    return mischen(gewaehlt).map((c) => testAufgabe(c, worte)).filter(Boolean);
+  }
+  function testAufgabe(c, worte) {
+    const ort = c.q.ort + (c.q.teil && c.q.teil.name ? " · " + c.q.teil.name : ""), schluessel = c.q.schluessel;
+    const wahl = (richtig, falsche) => mischen([richtig, ...falsche]).map((w) => ({ wert: w, inhalt: w }));
+    if (c.typ === "vokabel") return { typ: "vokabel", anweisung: ["What's this in English? Type it.", "Wie heißt das auf Englisch? Tipp es ein!"], frage: c.v.de,
+      ziele: testVarianten(c.v), loesung: c.v.en, ort, schluessel };
+    if (c.typ === "luecke" && c.form === "wahl") {
+      const s = D.saetze[c.a.satz], opt = c.a.optionen.map((o, i) => ({ wert: String(i), inhalt: tx(o) }));
+      const optionen = mischen([opt[0], ...mischen(opt.slice(1)).slice(0, 2)]);
+      return { typ: "luecke", form: "wahl", anweisung: ["What do you have to do? Tap the right answer.", "Was musst du tun? Tipp auf die richtige Antwort."],
+        frage: "„" + s.en + "“", optionen, richtig: "0", loesung: opt[0].inhalt, audio: [tonSatz(s)], ort, schluessel };
+    }
+    if (c.typ === "luecke" || (c.typ === "hoeren" && c.form === "luecke")) {
+      const falsche = testAblenker(c.richtig, c.falsch, worte);
+      const i = c.s.en.indexOf(c.w), satz = [c.s.en.slice(0, i), c.s.en.slice(i + c.w.length)];
+      const basis = { satz, wort: c.w, optionen: wahl(c.richtig, falsche), richtig: c.richtig, loesung: c.s.en, ort, schluessel };
+      if (c.typ === "luecke") return Object.assign(basis, { typ: "luecke", anweisung: ["Which word fits the gap?", "Welches Wort passt in die Lücke?"], frage: c.s.de || "" });
+      return Object.assign(basis, { typ: "hoeren", form: "luecke", anweisung: ["Listen! Which word do you hear in the gap?", "Hör zu! Welches Wort hörst du in der Lücke?"],
+        audio: [tonSatz(c.s)], hoerKey: "s:" + c.s.en });
+    }
+    if (c.typ === "lesen") {
+      const text = c.teil.text.map((id) => (D.saetze[id] || {}).en || "").join(" ");
+      return { typ: "lesen", form: "bild", anweisung: ["Read the text. Does this happen in the text?", "Lies den Text. Passiert das im Text?"], titel: c.teil.titel, text, textKey: "t:" + c.teil.titel,
+        bild: c.b, frage: `🖼️ ${c.b.E || c.b.G}`, optionen: [{ wert: "yes", inhalt: "✓ Yes, it happens" }, { wert: "no", inhalt: "✗ No, it doesn't" }],
+        richtig: c.b.beleg ? "yes" : "no", loesung: c.b.beleg ? `Yes – ${(D.saetze[c.b.beleg] || {}).en || c.b.E}` : `No – not in the text (${c.b.E || c.b.G})`, ort, schluessel };
+    }
+    if (c.form === "frage") {
+      const richtig = c.f.optionen.find((o) => o.key === c.a[c.f.key]);
+      if (!richtig) return null;
+      const optionen = mischen([richtig, ...mischen(c.f.optionen.filter((o) => o !== richtig)).slice(0, 2)]);
+      const frage = (c.f.E || tx(c.f)).replace("{name}", c.t.sprecher);
+      const inhalt = (o) => `${o.symbol ? o.symbol + " " : ""}${o.en}`;
+      return { typ: "hoeren", form: "frage", anweisung: ["Listen! Then choose the right answer.", "Hör zu! Dann wähl die richtige Antwort."], titel: c.u.titel, frage,
+        optionen: optionen.map((o) => ({ wert: o.key, inhalt: inhalt(o) })), richtig: richtig.key, loesung: inhalt(richtig),
+        audio: [c.t.audio || { text: c.t.text, stimme: c.t.stimme }], hoerKey: "t:" + c.t.id, ort, schluessel };
+    }
+    return null;
+  }
+
+  function testStart(k) {
+    const ts = testBereich(k);
+    if (!testFrei(testFortschritt(ts))) return; // gilt im Programm, nicht nur am ausgegrauten Knopf
+    const aufgaben = testZiehen(ts);
+    if (!aufgaben.length) return toast("No test tasks here yet.");
+    lage = null; ansicht = null; // G/E-Wechsel zeichnet den Test nicht neu (Antwort und Mindestzeit bleiben)
+    testLauf = { ts, key: ts.key, aufgaben, i: 0, start: monoton(), limit: TEST.sek, antworten: [], gehoert: new Set(), gelesen: new Set(), takt: null };
+    const L = testLauf;
+    L.takt = setInterval(() => {
+      if (testLauf !== L) return clearInterval(L.takt);
+      const bar = app.querySelector(".test-zeit");
+      if (!bar) { clearInterval(L.takt); testLauf = null; return; } // Seite verlassen: Test abgebrochen, nichts gespeichert
+      testUhr(L, bar);
+      if (testRest(L) <= 0) testEnde(true);
+    }, 250);
+    testZeigen();
+  }
+  const testRest = (L) => Math.max(0, L.limit - (monoton() - L.start) / 1000);
+  function testUhr(L, bar) {
+    const r = testRest(L), s = Math.ceil(r);
+    bar.querySelector("span").style.width = `${Math.max(0, Math.min(100, (100 * r) / TEST.sek))}%`;
+    bar.classList.toggle("knapp", r < 60);
+    const text = app.querySelector(".test-uhr");
+    if (text) text.textContent = `⏱️ ${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  }
+  const testZurueck = (ts) => (ts.unit ? zeigeUnits(ts.k) : zeigeGruppen(ts.k));
+  function testAbbrechen() {
+    const L = testLauf;
+    frage(T("Test abbrechen? Dein Ergebnis wird nicht gespeichert.", "Stop the test? Your result will not be saved."), T("Abbrechen", "Stop"), T("Weiter testen", "Go on")).then((ja) => {
+      if (!ja || testLauf !== L) return;
+      clearInterval(L.takt); testLauf = null; testZurueck(L.ts);
+    });
+  }
+  function testKopf(ts, laeuft) {
+    return el("header", { class: "kopf test-kopf" },
+      laeuft ? knopf("✕ Stop", testAbbrechen, "leise") : knopf("← " + (ts.unit ? "Units" : "Topics"), () => testZurueck(ts), "leise"),
+      el("h1", { lang: "en" }, `🎯 Test yourself · ${ts.k.titel}${ts.unit ? " · Unit " + ts.unit : ""}`));
+  }
+  function testZeigen() {
+    const L = testLauf, a = L.aufgaben[L.i], n = L.aufgaben.length;
+    if (!a) return testEnde(false);
+    let antwort = null;
+    const weiter = knopf(L.i + 1 < n ? "Next ➜" : "Done ➜", () => abgeben(), "haupt weiter test-weiter");
+    const lesen = a.typ === "lesen", hoeren = a.typ === "hoeren";
+    const sek = (lesen && !L.gelesen.has(a.textKey) ? woerterIn([a.text]) / LESE_WPM * 60 + QUIZ_MIN : QUIZ_MIN) * testTempo;
+    let feld = null;
+    const sperre_ = arbeitsSperre(weiter, { sek,
+      zeitText: (z) => (lesen ? `📖 Read the text carefully first. “Next” opens in ${z}.` : `🤔 Take your time. “Next” opens in ${z}.`),
+      offen: () => (hoeren && !L.gehoert.has(a.hoerKey) ? "🔊 Listen once to the end first."
+        : a.typ === "vokabel" ? (feld && feld.value.trim() ? "" : "✏️ Type the English word.")
+        : antwort === null ? "✏️ Choose an answer." : "") });
+    function abgeben() {
+      if (testLauf !== L || L.aufgaben[L.i] !== a || !sperre_.bereit()) return; // jede Aufgabe nur einmal
+      sperre_.ende();
+      const gegeben = a.typ === "vokabel" ? feld.value.trim() : antwort;
+      const ok = a.typ === "vokabel" ? testTippRichtig(gegeben, a.ziele) : gegeben === a.richtig;
+      const inhalt = a.optionen && (a.optionen.find((o) => o.wert === gegeben) || {}).inhalt;
+      L.antworten.push({ richtig: ok, antwort: inhalt || gegeben });
+      if (lesen) L.gelesen.add(a.textKey);
+      L.i++; stopp();
+      testZeigen();
+    }
+    let knoepfe = [];
+    const wahl = a.optionen && el("div", { class: "wahl" + (a.form === "wahl" ? " senkrecht" : ""), role: "group", "aria-label": "Choose an answer" }, knoepfe = a.optionen.map((o) =>
+      el("button", { class: "knopf wahl-knopf", lang: a.form === "wahl" && !E() ? "de" : "en", "aria-pressed": "false", "data-wert": o.wert, onclick: () => {
+        if (testLauf !== L || L.aufgaben[L.i] !== a) return;
+        antwort = o.wert;
+        knoepfe.forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.wert === o.wert)));
+        sperre_.bereit();
+      } }, o.inhalt)));
+    if (a.typ === "vokabel") {
+      feld = el("input", { type: "text", class: "eingabe", lang: "en", inputmode: "text", autocomplete: "off", autocapitalize: "off", autocorrect: "off", spellcheck: "false",
+        "aria-label": "Your answer", enterkeyhint: "done", oninput: () => sperre_.bereit(),
+        onkeydown: (e) => { if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); abgeben(); } } });
+    }
+    let anhoeren = null;
+    const abspielen = () => {
+      if (!a.audio || !a.audio.length || !anhoeren) return;
+      anhoeren.disabled = true;
+      spiele(a.audio).then((d) => {
+        if (testLauf !== L || L.aufgaben[L.i] !== a) return;
+        anhoeren.disabled = false;
+        if (d !== null) { L.gehoert.add(a.hoerKey); sperre_.bereit(); }
+      });
+    };
+    if (hoeren) anhoeren = knopf(a.form === "frage" ? "🔊 Play the recording" : "🔊 Listen", abspielen, "haupt");
+    const lueckeSatz = a.satz && el("p", { class: "satz", lang: "en" }, a.satz[0], el("span", { class: "luecke", "aria-label": "gap" }, a.wort.replace(/\S/g, "_")), a.satz[1]);
+    const b = a.bild;
+    const zeit = el("div", { class: "test-zeit", role: "progressbar", "aria-label": "Time" }, el("span", {}));
+    zeige(testKopf(L.ts, true),
+      el("div", { class: "test-leiste" }, el("span", { class: "test-fortschritt" }, `${L.i + 1} / ${n}`), zeit, el("span", { class: "test-uhr klein" }, "")),
+      el("section", { class: "satzkarte test-aufgabe" },
+        ansage(...a.anweisung),
+        (lesen || a.form === "frage") && el("h2", { lang: "en" }, a.titel),
+        lesen && el("div", { class: "lesetext", lang: "en" }, el("p", {}, a.text)),
+        lesen && b && el("div", { class: "test-bild" }, b.bild ? el("img", { class: "bild-foto", src: b.bild, alt: "" }) : el("span", { class: "bild-sym", "aria-hidden": "true" }, b.symbol)),
+        hoeren && el("div", { class: "knopfreihe" }, anhoeren),
+        a.typ === "vokabel" && el("p", { class: "satz de", lang: "de" }, a.frage),
+        a.typ === "luecke" && a.form !== "wahl" && !E() && a.frage && el("p", { class: "satz de", lang: "de" }, a.frage),
+        a.typ === "luecke" && a.form === "wahl" && el("p", { class: "satz aufgabe", lang: "en" }, a.frage),
+        lueckeSatz,
+        a.form === "frage" && el("p", { class: "satz test-aussage", lang: "en" }, a.frage),
+        wahl, feld && el("div", { class: "eingabe-bereich" }, el("div", { class: "knopfreihe" }, feld)),
+        sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
+    testUhr(L, zeit);
+    if (feld) feld.focus();
+    if (hoeren && !L.gehoert.has(a.hoerKey)) setTimeout(() => { if (testLauf === L && L.aufgaben[L.i] === a && !anhoeren.disabled) abspielen(); }, 300);
+  }
+  function testEnde(abgelaufen) {
+    const L = testLauf;
+    if (!L) return;
+    clearInterval(L.takt); testLauf = null; stopp();
+    while (L.antworten.length < L.aufgaben.length) L.antworten.push({ richtig: false, antwort: null, offen: true });
+    const n = L.aufgaben.length, r = L.antworten.filter((x) => x.richtig).length, pct = Math.round((100 * r) / n);
+    const sp = spielstand();
+    if (!sp.tests || typeof sp.tests !== "object") sp.tests = {};
+    const alt = sp.tests[L.key] || null, bestanden = pct >= TEST.grenze, erstes = bestanden && !(alt && alt.bestanden);
+    sp.tests[L.key] = { best: Math.max(pct, (alt && alt.best) || 0), am: !alt || pct >= (alt.best || 0) ? iso(heute()) : alt.am, bestanden: !!(alt && alt.bestanden) || bestanden };
+    const name = testName(L.key);
+    if (erstes) {
+      ereignisse.push({ art: "feier", symbol: "🎯", titel: `${name} passed`, text: `Certificate: ${pct} % in Test yourself – +${TEST.punkte} points!` });
+      punkteDazu(TEST.punkte, { art: "p" }); // Prüfung: Protokoll „p“ +30, zählt nicht zum Wächter
+    } else { protokolliere("p", 0); speichern(); }
+    const t = sp.tests[L.key], ts = L.ts;
+    const falsch = L.aufgaben.map((a, i) => [a, L.antworten[i]]).filter(([, x]) => !x.richtig);
+    const frageText = (a) => (a.satz ? `${a.satz[0]}___${a.satz[1]}` : a.form === "bild" ? `${a.frage} – in the text?` : a.frage);
+    const ueben = [...new Map(falsch.map(([a]) => [a.schluessel, a])).values()];
+    zeige(testKopf(ts, false),
+      el("section", { class: "satzkarte test-ergebnis" + (bestanden ? " bestanden" : "") },
+        el("p", { class: "klein" }, `🎯 Test yourself · ${ts.k.titel}${ts.unit ? " · Unit " + ts.unit : ""}`),
+        el("p", { class: "test-prozent" }, `${pct} %`),
+        el("p", { lang: "en" }, `${r} of ${n} correct` + (abgelaufen ? " · ⏱️ Time is up – open tasks count as wrong." : "")),
+        el("h2", { lang: "en" }, bestanden ? "Great, you passed!" : "Not quite yet – practise the marked parts and try again."),
+        el("p", { class: "test-punkte", lang: "en" }, erstes ? `+${TEST.punkte} points and your certificate 🎯 ${name} passed!`
+          : bestanden ? `Passed! You got the ${TEST.punkte} points the first time. Best result: ${t.best} %`
+          : t.bestanden ? `You already have your certificate (best result: ${t.best} %).` : `You pass with ${TEST.grenze} % or more. Best result: ${t.best} %`)),
+      falsch.length ? el("section", { class: "satzkarte" },
+        el("h2", { lang: "en" }, `Wrong or open (${falsch.length})`),
+        el("ol", { class: "test-falsch" }, falsch.map(([a, x]) => el("li", {},
+          el("p", { class: "test-frage", lang: a.typ === "vokabel" ? "de" : "en" }, frageText(a)),
+          el("p", { class: "klein", lang: "en" }, x.offen ? "No answer." : `Your answer: ${x.antwort || "–"}`),
+          el("p", { class: "test-loesung", lang: "en" }, `Correct: ${a.loesung}`),
+          el("p", { class: "klein test-ort", lang: "en" }, "📍 " + a.ort))))) : null,
+      ueben.length ? el("section", { class: "satzkarte" }, el("h2", { lang: "en" }, "Practise"),
+        el("div", { class: "knopfreihe" }, ueben.map((a) => knopf("📍 " + a.ort.replace(/^[^·]+ · /, ""), () => testZuTeil(a.schluessel))))) : null,
+      el("div", { class: "knopfreihe" }, knopf("🎯 Test again", () => testStart(ts.k), "haupt"), knopf(ts.unit ? "← Units" : "← Topics", () => testZurueck(ts)), knopf(T("Zur Startseite", "Back to start"), startseite)));
+  }
+  // „Practise“: direkt in den Teil springen (wie starteGruppe/starteUnitGruppe)
+  function testZuTeil(schluessel) {
+    const p1 = schluessel.indexOf("|"), p2 = schluessel.lastIndexOf("|");
+    const k = kategorie(Number(schluessel.slice(0, p1))), gr = schluessel.slice(p1 + 1, p2), i = Number(schluessel.slice(p2 + 1));
+    const unit = gr.match(/^u(\d+):(.*)$/);
+    if (unit) { const gi = (D.units[unit[1]] || []).findIndex((g) => g.name === unit[2]); if (gi < 0) return; stand.unit = unit[1]; starteUnitGruppe(k, unit[1], gi); }
+    else { const gi = (k.gruppen || []).findIndex((g) => g.name === gr); if (gi < 0) return; starteGruppe(k, gi); }
+    if (i > 0 && i < lage.teile.length) springe(i);
+  }
+  if (LOKAL) window.__testYourself = { // nur Test-Build: Lösung der aktuellen Aufgabe, Restzeit setzen, Mindestzeiten verkürzen
+    loesung: () => { const L = testLauf, a = L && L.aufgaben[L.i]; return a ? { typ: a.typ, form: a.form || "", richtig: a.richtig, ziele: a.ziele || null, i: L.i, n: L.aufgaben.length } : null; },
+    zeit: (sek) => { if (testLauf) testLauf.limit = (monoton() - testLauf.start) / 1000 + sek; },
+    tempo: (f) => { testTempo = f; },
+  };
+
   /* ---------- Tasten: Leertaste = Abspielen, Pfeile = Weiter / Zurück ---------- */
   document.addEventListener("keydown", (e) => {
     if (dlg.open || feier.open || e.target.closest("textarea, input")) return;
@@ -3451,7 +3779,7 @@
     const gesperrt = !!sp.gesperrt;
     // Stichprobe (31.10., Schutz-Paket 3): Protokoll-Summe, Warnzähler, Plausibilitätsmarker und die letzten 10 Ereignisse – nur lesen
     const pr = plausibilitaet(), w = warnZaehlerLies(), pl = Array.isArray(stand.protokoll) ? stand.protokoll : [];
-    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage" };
+    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage", p: "Test" };
     const zeit = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; };
     const letzte = pl.slice(-10).reverse().map((e) => el("li", {}, e[1] === "x" ? `${zeit(e[0])} · Abfrage · ${e[2] > 0 ? "👍" : "👎"}`
       : `${zeit(e[0])} · ${ARTEN[e[1]] || e[1]} · ${e[2] > 0 && e[1] !== "r" && e[1] !== "a" ? "+" : ""}${e[2]}${e[1] === "k" ? " 🪙" : ""}`));
@@ -3459,11 +3787,18 @@
     const abfragen = pl.filter((e) => e[1] === "x"), hoch = abfragen.filter((e) => e[2] > 0).length;
     const datum = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}.`; };
     const abfrageZeile = el("p", { class: "klein lehrer-abfragen" }, abfragen.length ? `🎲 Abfragen: ${hoch} 👍 / ${abfragen.length - hoch} 👎 (letzte ${datum(abfragen[abfragen.length - 1][0])})` : "🎲 Abfragen: noch keine Stichprobe.");
+    // 🎯 Test yourself (2.11.): bestandene Units/Kategorien mit bestem Ergebnis, dahinter die noch nicht bestandenen
+    const tests = Object.entries(sp.tests && typeof sp.tests === "object" ? sp.tests : {}).sort((x, y) => String(x[0]).localeCompare(String(y[0]), "de", { numeric: true }));
+    const testsOk = tests.filter(([, x]) => x && x.bestanden), testsOffen = tests.filter(([, x]) => x && !x.bestanden);
+    const testZeile = el("p", { class: "klein lehrer-tests" }, tests.length
+      ? `🎯 Tests: ${testsOk.length} bestanden` + (testsOk.length ? ` (${testsOk.map(([k, x]) => `${testName(k)} ${x.best} %`).join(", ")})` : "")
+        + (testsOffen.length ? ` · nicht bestanden: ${testsOffen.map(([k, x]) => `${testName(k)} ${x.best} %`).join(", ")}` : "")
+      : "🎯 Tests: noch keiner.");
     const stichprobe = el("div", { class: "lehrer-stichprobe" },
       el("p", { class: "klein" }, `🔎 Stichprobe: ⭐ ${sp.punkte} · 🪙 ${sp.coins} · Protokoll-Summe ${protokollSumme(pl)} (${pl.length} Einträge) · Warnungen ${(Array.isArray(sp.warnungen) ? sp.warnungen : []).length} (Zähler ${w.n || 0})`),
       el("p", { class: "klein lehrer-marker" + (pr.marker.length ? " auffaellig" : "") }, (pr.altbestand ? "Altbestand (Stand von vor dem Protokoll). " : "")
         + (pr.marker.length ? `Marker: ${pr.marker.join(", ")}` + (pr.seit ? ` (seit ${zeit(pr.seit)})` : "") : "Keine Auffälligkeiten.") + (pr.hinweis ? ` · Hinweis: ${pr.hinweis}` : "")),
-      abfrageZeile,
+      abfrageZeile, testZeile,
       letzte.length ? el("ul", { class: "lehrer-liste" }, letzte) : null);
     const sichern = () => {
       const np = Math.max(0, Math.floor(Number(p.value) || 0)), nc = Math.max(0, Math.floor(Number(c.value) || 0));
@@ -3618,7 +3953,7 @@
   // Kommt eine neue Version während einer Übung, erscheint der Hinweis erst danach (nichts geht verloren); sonst sofort ein Pop-up „Jetzt aktualisieren“,
   // das man nicht wegdrücken kann. War die App länger als 1 Stunde offen, lädt sie beim Zurückkommen neu (wenn gerade keine Übung läuft).
   const GELADEN = Date.now(), STUNDE = 3600 * 1000;
-  const beschaeftigt = () => !!lage || !!runnerLauf || stichprobeDialog.open;
+  const beschaeftigt = () => !!lage || !!runnerLauf || stichprobeDialog.open || !!testLauf;
   let neueVersion = false, updateGezeigt = false;
   const updateDialog = el("dialog", { class: "feier frage update" });
   updateDialog.addEventListener("cancel", (e) => e.preventDefault());

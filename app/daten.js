@@ -6572,7 +6572,9 @@ window.DATEN = {
     "kraft": "Super speed",
     "bild": "bilder/helden/01-leo-lion.jpg",
     "steckbrief": "Leo is the fastest hero in the world. He can run faster than a car. Every morning he runs around London before breakfast.",
-    "audio": "audio/helden/leo.mp3"
+    "intro": "Hi, I'm Leo the Lion! My superpower is super speed. I can run faster than a car!",
+    "audio": "audio/helden/leo.mp3",
+    "intro_audio": "audio/helden/intro_leo.mp3"
    },
    {
     "id": "camilla",
@@ -6580,7 +6582,9 @@ window.DATEN = {
     "kraft": "Super strength",
     "bild": "bilder/helden/02-camilla-camel.jpg",
     "steckbrief": "Camilla is super strong. She can carry a car on her back. She never gets thirsty, even in the desert.",
-    "audio": "audio/helden/camilla.mp3"
+    "intro": "Hi, I'm Camilla the Camel! I'm super strong. Look, I can carry a car on my back!",
+    "audio": "audio/helden/camilla.mp3",
+    "intro_audio": "audio/helden/intro_camilla.mp3"
    },
    {
     "id": "ellie",
@@ -6588,7 +6592,9 @@ window.DATEN = {
     "kraft": "Super memory",
     "bild": "bilder/helden/03-ellie-elephant.jpg",
     "steckbrief": "Ellie never forgets a word. She can remember every page of every book. She helps her friends with their homework.",
-    "audio": "audio/helden/ellie.mp3"
+    "intro": "Hi, I'm Ellie the Elephant! I never forget a word. I can remember every page of every book!",
+    "audio": "audio/helden/ellie.mp3",
+    "intro_audio": "audio/helden/intro_ellie.mp3"
    },
    {
     "id": "olivia",
@@ -6596,7 +6602,9 @@ window.DATEN = {
     "kraft": "Night vision",
     "bild": "bilder/helden/04-olivia-owl.jpg",
     "steckbrief": "Olivia can see in the dark. She watches the city at night and finds lost things. She sleeps during the day.",
-    "audio": "audio/helden/olivia.mp3"
+    "intro": "Hi, I'm Olivia the Owl! I can see in the dark. At night, I watch London and find lost things.",
+    "audio": "audio/helden/olivia.mp3",
+    "intro_audio": "audio/helden/intro_olivia.mp3"
    },
    {
     "id": "kenji",
@@ -6604,7 +6612,9 @@ window.DATEN = {
     "kraft": "Super jump",
     "bild": "bilder/helden/05-kenji-kangaroo.jpg",
     "steckbrief": "Kenji can jump over houses. He often jumps from roof to roof. He goes to school in one big jump.",
-    "audio": "audio/helden/kenji.mp3"
+    "intro": "Hi, I'm Kenji the Kangaroo! My superpower is super jump. I can jump over houses!",
+    "audio": "audio/helden/kenji.mp3",
+    "intro_audio": "audio/helden/intro_kenji.mp3"
    },
    {
     "id": "zara",
@@ -6612,7 +6622,9 @@ window.DATEN = {
     "kraft": "Invisibility",
     "bild": "bilder/helden/06-zara-zebra.jpg",
     "steckbrief": "Zara can become invisible. Nobody sees her when she wants to hide. She loves surprises.",
-    "audio": "audio/helden/zara.mp3"
+    "intro": "Hi, I'm Zara the Zebra! I can become invisible. Now you see me, now you don't!",
+    "audio": "audio/helden/zara.mp3",
+    "intro_audio": "audio/helden/intro_zara.mp3"
    },
    {
     "id": "penny",
@@ -6620,7 +6632,9 @@ window.DATEN = {
     "kraft": "Ice powers",
     "bild": "bilder/helden/07-penny-penguin.jpg",
     "steckbrief": "Penny has ice powers. She can freeze water in one second. On hot days, she makes ice cream for everybody.",
-    "audio": "audio/helden/penny.mp3"
+    "intro": "Hi, I'm Penny the Penguin! I have ice powers. I can freeze water in one second!",
+    "audio": "audio/helden/penny.mp3",
+    "intro_audio": "audio/helden/intro_penny.mp3"
    },
    {
     "id": "felix",
@@ -6628,7 +6642,9 @@ window.DATEN = {
     "kraft": "Super flight",
     "bild": "bilder/helden/08-felix-falcon.jpg",
     "steckbrief": "Felix can fly around the world in one day. He sees everything from the sky. He often visits his friends in different countries.",
-    "audio": "audio/helden/felix.mp3"
+    "intro": "Hi, I'm Felix the Falcon! I can fly around the world in one day. I see everything from the sky!",
+    "audio": "audio/helden/felix.mp3",
+    "intro_audio": "audio/helden/intro_felix.mp3"
    },
    {
     "id": "tessa",
@@ -6636,7 +6652,9 @@ window.DATEN = {
     "kraft": "Unbreakable",
     "bild": "bilder/helden/09-tessa-turtle.jpg",
     "steckbrief": "Tessa is unbreakable. Nothing can hurt her shell. She is slow, but she always finishes what she starts.",
-    "audio": "audio/helden/tessa.mp3"
+    "intro": "Hi, I'm Tessa the Turtle! I'm unbreakable. Nothing can hurt my shell!",
+    "audio": "audio/helden/tessa.mp3",
+    "intro_audio": "audio/helden/intro_tessa.mp3"
    },
    {
     "id": "max",
@@ -6644,7 +6662,9 @@ window.DATEN = {
     "kraft": "Genius inventor",
     "bild": "bilder/helden/10-max-monkey.jpg",
     "steckbrief": "Max is a genius inventor. He builds a new gadget every day. His best invention is a robot that does homework.",
-    "audio": "audio/helden/max.mp3"
+    "intro": "Hi, I'm Max the Monkey! I'm a genius inventor. I build a new gadget every day!",
+    "audio": "audio/helden/max.mp3",
+    "intro_audio": "audio/helden/intro_max.mp3"
    }
   ],
   "akten": [

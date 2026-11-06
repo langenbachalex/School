@@ -37,6 +37,7 @@
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
    Orts-Szenen (6.11.): window.Runner.szene(ziel, ortId, { text, titel, foto, quelle, onEnde }) spielt eine kurze Szene eines Orts mit den Zeichnungen der Welten (Runner.hatSzene(id), Runner.SZENEN_ORTE).
+   Heldenfilme (6.11., Klasse 6): Runner.szene(ziel, 'held_<id>', { text: intro, heldBild, foto: Kartenbild, … }) – der Superheld wie im Cameo (heldFigur) zeigt seine Kraft in London.
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Stimmen-Vorrang (1.11., Mr. Alex): Haupttexte (ansage, erzaehler, boss, cameo) unterbricht keine Vokabel – stimme.wort wartet in der App dahinter
    (nur die zuletzt gesammelte; Umsetzung im App-Kleber hauptText()/runnerWort(), docs/runner/konzept-entwurf.md Abschnitt 24).
@@ -5791,6 +5792,27 @@
     c.fillStyle = '#e0a400'; c.beginPath(); c.moveTo(-10, -2); c.lineTo(-14, 0); c.lineTo(-10, 1); c.closePath(); c.fill();
     c.restore();
   }
+  // Superheld wie im Cameo (auch in den Heldenfilmen, Runner.szene 'held_<id>'): Umhang in seiner Farbe, rundes Kartenbild (cameoBilder) mit weißem Rand; (0, 0) = Bildmitte, Radius CAMEO_R
+  // wehen = Umhang-Ausschlag; spiegel = Umhang weht nach links (Held fliegt/läuft nach rechts) – das Bild bleibt ungespiegelt
+  function heldFigur(c, id, name, farbe, wehen, spiegel) {
+    const R = CAMEO_R;
+    c.save(); if (spiegel) c.scale(-1, 1);
+    c.fillStyle = farbe; c.beginPath(); c.moveTo(-16, 12); c.quadraticCurveTo(-30, 34, -24 + wehen * 0.5, 56); c.quadraticCurveTo(8, 50 + wehen, 40 + wehen, 50); c.quadraticCurveTo(24, 30, 16, 12); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.moveTo(2, 14); c.quadraticCurveTo(14, 34, 40 + wehen, 50); c.quadraticCurveTo(24, 30, 16, 12); c.closePath(); c.fill();
+    c.restore();
+    const img = cameoBilder[id];
+    c.save(); c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.closePath(); c.clip();
+    if (img && img.complete && img.naturalWidth > 0) {
+      const s = Math.min(img.naturalWidth, img.naturalHeight), sx = (img.naturalWidth - s) / 2, sy = (img.naturalHeight - s) * 0.2;
+      c.drawImage(img, sx, sy, s, s, -R, -R, R * 2, R * 2);
+    } else {
+      c.fillStyle = farbe; c.fillRect(-R, -R, R * 2, R * 2);
+      c.fillStyle = '#fff'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(name || id || '?').charAt(0).toUpperCase(), 0, 1);
+    }
+    c.restore();
+    c.strokeStyle = '#fff'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.stroke();
+    c.strokeStyle = farbe; c.lineWidth = 2; c.beginPath(); c.arc(0, 0, R + 2.5, 0, Math.PI * 2); c.stroke();
+  }
   // Cameo: fliegt von oben rechts heran (0,5 s), schwebt neben der Figur (Sprechblase), fliegt wieder davon (0,45 s); runder Ausschnitt des Kartenbilds mit Umhang
   function cameoZeichnen(c) {
     const t = cameo.t, info = cameo.info, R = CAMEO_R;
@@ -5800,21 +5822,7 @@
     else if (t > CAMEO_DAUER - CAMEO_AUS) { const f = (t - (CAMEO_DAUER - CAMEO_AUS)) / CAMEO_AUS; px = zx + (viewW + 90 - zx) * f * f; py = zy - (zy + 90) * f * f; }
     else { px = zx; py = zy + (ruhig() ? 0 : Math.sin(t * 5) * 5); }
     c.save(); c.translate(px, py);
-    const wehen = ruhig() ? 0 : Math.sin(zeit * 9) * 6;
-    c.fillStyle = info.farbe; c.beginPath(); c.moveTo(-16, 12); c.quadraticCurveTo(-30, 34, -24 + wehen * 0.5, 56); c.quadraticCurveTo(8, 50 + wehen, 40 + wehen, 50); c.quadraticCurveTo(24, 30, 16, 12); c.closePath(); c.fill();
-    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.moveTo(2, 14); c.quadraticCurveTo(14, 34, 40 + wehen, 50); c.quadraticCurveTo(24, 30, 16, 12); c.closePath(); c.fill();
-    const img = cameoBilder[cameo.held && cameo.held.id];
-    c.save(); c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.closePath(); c.clip();
-    if (img && img.complete && img.naturalWidth > 0) {
-      const s = Math.min(img.naturalWidth, img.naturalHeight), sx = (img.naturalWidth - s) / 2, sy = (img.naturalHeight - s) * 0.2;
-      c.drawImage(img, sx, sy, s, s, -R, -R, R * 2, R * 2);
-    } else {
-      c.fillStyle = info.farbe; c.fillRect(-R, -R, R * 2, R * 2);
-      c.fillStyle = '#fff'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String((cameo.held && cameo.held.name) || '?').charAt(0), 0, 1);
-    }
-    c.restore();
-    c.strokeStyle = '#fff'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.stroke();
-    c.strokeStyle = info.farbe; c.lineWidth = 2; c.beginPath(); c.arc(0, 0, R + 2.5, 0, Math.PI * 2); c.stroke();
+    heldFigur(c, cameo.held && cameo.held.id, cameo.held && cameo.held.name, info.farbe, ruhig() ? 0 : Math.sin(zeit * 9) * 6);
     c.restore();
     if (t > CAMEO_EIN * 0.6 && t < CAMEO_DAUER - CAMEO_AUS * 0.4) {   // Sprechblase rechts vom Helden (reicht der Platz nicht: links)
       const text = `${info.symbol} ${cameo.satz}`;
@@ -9335,6 +9343,90 @@
     c.fillStyle = 'rgba(255,255,255,.85)'; for (let x = v * 2; x < SZ_W; x += 96) c.fillRect(x, 350, 48, 4);   // Mittellinie
     c.fillStyle = '#e0a400'; c.fillRect(0, 327, SZ_W, 2); c.fillRect(0, 331, SZ_W, 2);   // doppelte gelbe Linie am Rand
   }
+  // Heldenfilme (Klasse 6, 6.11.2026, Mr. Alex): je Superheld ein kurzer Film (11 s, Runner.szene(ziel, 'held_<id>', { heldBild, … })) – der Held genau wie sein Cameo im London Run
+  // (heldFigur: Umhang + rundes Kartenbild), er zeigt seine Superkraft in einer London-Kulisse des Runners; Stimme = Selbstvorstellung (inhalte/helden.tsv, Spalte intro), am Ende die Heldenkarte groß
+  const szHeld = (c, id, x, y, s, t, o = {}) => {
+    const info = CAMEO[id] || { farbe: '#1d3f8f' };
+    c.save(); c.translate(x, y); c.scale(s, s); if (o.alpha != null) c.globalAlpha = o.alpha;
+    heldFigur(c, id, id, info.farbe, (ruhig() ? 0 : Math.sin(t * 9) * 6) + (o.wehen || 0), o.spiegel); c.restore();
+  };
+  const szHeldKraft = (c, t, ab, id, kraft) => {   // Chip oben in der Mitte: Symbol + Superkraft (ab „ab“ eingeblendet)
+    const f = sanft((t - ab) / 0.5); if (f <= 0) return; const info = CAMEO[id] || {};
+    c.save(); c.globalAlpha = f; c.font = 'bold 20px system-ui, sans-serif'; const text = `${info.symbol || '⭐'} ${kraft}`, w = c.measureText(text).width + 34;
+    c.fillStyle = 'rgba(24,33,58,.82)'; c.beginPath(); c.roundRect(SZ_W / 2 - w / 2, 54, w, 38, 19); c.fill(); c.strokeStyle = info.farbe || '#fff'; c.lineWidth = 3; c.stroke();
+    c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, SZ_W / 2, 74); c.restore();
+  };
+  const szLondonStrasse = (c, t, dauer) => { const kam = szWeltKulisse(c, t, 'westminster', 40000, 15000, 15300, dauer); szStrasse(c, kam); return kam; };   // wie die Bus-Szene: Westminster, Ufermauer, Straße
+  const szFahrzeug = (c, art, x, unten, t, s = 1.25, rot = 0) => {   // Doppeldecker/Black Cab des Runners: linke Kante x, Unterkante „unten“ (Bildschirm), Maßstab s, Drehung um die linke untere Ecke
+    c.save(); c.translate(x, unten); if (rot) c.rotate(rot); c.scale(s, s); c.translate(0, -BODEN_Y);
+    szWelt({ zeit: t, kamera: 0 }, () => londonFahrzeug(c, { art, x: 0, w: AUTO_MASSE[art].w, h: AUTO_MASSE[art].h, von: 0, rad: t * 9 })); c.restore();
+  };
+  const szBlase = (c, x, y, text, farbe, f = 1) => {   // Sprechblase/Wort-Chip mit Rand in der Heldenfarbe, Mitte (x, y)
+    if (f <= 0) return;
+    c.save(); c.globalAlpha = Math.min(1, f); c.translate(x, y); c.scale(0.6 + 0.4 * Math.min(1, f), 0.6 + 0.4 * Math.min(1, f));
+    c.font = 'bold 17px system-ui, sans-serif'; const w = c.measureText(text).width + 24;
+    c.fillStyle = '#fff'; c.strokeStyle = farbe; c.lineWidth = 3; c.beginPath(); c.roundRect(-w / 2, -16, w, 32, 12); c.fill(); c.stroke();
+    c.fillStyle = '#18213a'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, 0, 1); c.restore();
+  };
+  const szFunkeln = (c, x, y, r, t, farbe = '#fff') => {   // kleiner vierzackiger Glitzerstern (pulsiert)
+    const k = r * (0.7 + 0.3 * Math.sin(t * 10)); c.save(); c.fillStyle = farbe; c.beginPath();
+    c.moveTo(x, y - k); c.quadraticCurveTo(x, y, x + k, y); c.quadraticCurveTo(x, y, x, y + k); c.quadraticCurveTo(x, y, x - k, y); c.quadraticCurveTo(x, y, x, y - k); c.fill(); c.restore();
+  };
+  const szKonfetti = (c, t, n, ab = 0) => { const konf = ['#e63946', '#ffd93d', '#2a8cff', '#2e9e5b', '#e8467c', '#8a3ffc']; const d = t - ab; if (d < 0) return;
+    for (let k = 0; k < n; k++) { const fx = (k * 97) % 680 - 20, fy = ((k * 53 + d * 70) % 360) - 20 + (d < 1 ? (1 - d) * -200 : 0); c.fillStyle = konf[k % 6]; c.save(); c.translate(fx + Math.sin(d * 2 + k) * 8, fy); c.rotate(d * 3 + k); c.fillRect(-3, -1.5, 6, 3); c.restore(); } };
+  const szTempo = (c, x, y, dir, n = 5, laenge = 70) => {   // Speed-Linien hinter einer bewegten Figur (dir = Laufrichtung ±1)
+    c.save(); c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 3; c.lineCap = 'round';
+    for (let k = 0; k < n; k++) { const yy = y - 30 + k * 15, a = x - dir * (44 + (k % 2) * 14); c.beginPath(); c.moveTo(a, yy); c.lineTo(a - dir * (laenge - (k % 3) * 14), yy); c.stroke(); }
+    c.restore();
+  };
+  const szStaub = (c, x, y, dir, staerke = 1) => {   // Staubwolke am Boden hinter der Figur
+    for (let k = 0; k < 8; k++) { c.fillStyle = `rgba(222,208,180,${0.55 * (1 - k / 8) * staerke})`; c.beginPath(); c.arc(x - dir * (26 + k * 26), y - Math.sin(k) * 4, 10 + k * 3, 0, Math.PI * 2); c.fill(); }
+  };
+  function szBuch(c, x, y, s, rot, farbe) {   // fliegendes Buch (Ellie): Einband in Farbe, weiße Seitenkante
+    c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s);
+    c.fillStyle = farbe; c.beginPath(); c.roundRect(-14, -18, 28, 36, 3); c.fill(); c.fillStyle = '#fbf7ec'; c.fillRect(10, -16, 4, 32); c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(-14, -18, 4, 36);
+    c.fillStyle = '#ffd93d'; c.fillRect(-6, -8, 12, 3); c.restore();
+  }
+  function szTeddy(c, x, y, s) {   // verlorener Teddy (Olivia findet ihn)
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#a86a3a';
+    for (const [ox, oy, r] of [[-9, -30, 6], [9, -30, 6], [0, -22, 11], [0, -2, 13], [-13, -6, 5], [13, -6, 5], [-8, 10, 6], [8, 10, 6]]) { c.beginPath(); c.arc(ox, oy, r, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#e8c49a'; c.beginPath(); c.arc(0, -19, 5, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(0, 0, 7, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#18213a'; c.fillRect(-5, -25, 2.5, 2.5); c.fillRect(3, -25, 2.5, 2.5); c.fillRect(-1.5, -21, 3, 2); c.restore();
+  }
+  function szEis(c, x, y, s, kugel) {   // Eistüte (Penny): Waffel + Kugel
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#d99a4e'; c.beginPath(); c.moveTo(-11, -22); c.lineTo(11, -22); c.lineTo(0, 0); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(120,70,20,.5)'; c.lineWidth = 1; c.beginPath(); c.moveTo(-6, -22); c.lineTo(4, -6); c.moveTo(6, -22); c.lineTo(-4, -6); c.stroke();
+    c.fillStyle = kugel; c.beginPath(); c.arc(0, -28, 12, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(255,255,255,.55)'; c.beginPath(); c.arc(-4, -32, 4, 0, Math.PI * 2); c.fill(); c.restore();
+  }
+  function szStein(c, x, y, s, rot) {   // Felsbrocken (fällt auf Tessa)
+    c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s);
+    c.fillStyle = '#8a8580'; c.beginPath(); c.moveTo(-18, 4); c.lineTo(-14, -12); c.lineTo(0, -18); c.lineTo(15, -10); c.lineTo(18, 6); c.lineTo(6, 16); c.lineTo(-10, 14); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.2)'; c.beginPath(); c.moveTo(18, 6); c.lineTo(6, 16); c.lineTo(-10, 14); c.lineTo(0, 4); c.closePath(); c.fill(); c.restore();
+  }
+  function roboter(c, x, y, s, o = {}) {   // Max' Hausaufgaben-Roboter: Teile erscheinen nacheinander (o.teile 0..5: Beine, Körper, Arme, Kopf, Antenne), o.augen 0..1, o.arm = Schreibarm-Winkel; (x, y) = Fußpunkt
+    const n = o.teile == null ? 5 : o.teile;
+    c.save(); c.translate(x, y); c.scale(s, s);
+    if (n >= 1) { c.fillStyle = '#7d8a99'; c.fillRect(-22, -30, 12, 30); c.fillRect(10, -30, 12, 30); c.fillStyle = '#4a5562'; c.fillRect(-26, -6, 20, 6); c.fillRect(6, -6, 20, 6); }
+    if (n >= 2) { c.fillStyle = '#b8c4d0'; c.beginPath(); c.roundRect(-34, -96, 68, 68, 8); c.fill(); c.fillStyle = '#2a8cff'; c.fillRect(-20, -80, 40, 22); c.fillStyle = '#ffd93d'; for (let k = 0; k < 3; k++) c.fillRect(-16 + k * 13, -50, 7, 7); }
+    if (n >= 3) { c.strokeStyle = '#7d8a99'; c.lineWidth = 8; c.lineCap = 'round'; c.beginPath(); c.moveTo(-34, -84); c.lineTo(-52, -54); c.stroke();
+      const a = o.arm || 0; c.beginPath(); c.moveTo(34, -84); c.lineTo(34 + Math.cos(-0.5 + a) * 34, -84 + Math.sin(-0.5 + a) * 34 + 30); c.stroke();
+      if (o.stift) { const hx = 34 + Math.cos(-0.5 + a) * 34, hy = -84 + Math.sin(-0.5 + a) * 34 + 30; c.strokeStyle = '#ffb000'; c.lineWidth = 4; c.beginPath(); c.moveTo(hx, hy); c.lineTo(hx + 10, hy + 12); c.stroke(); } }
+    if (n >= 4) { c.fillStyle = '#c9d2dc'; c.beginPath(); c.roundRect(-26, -140, 52, 40, 8); c.fill(); c.fillStyle = '#18213a'; c.fillRect(-18, -132, 36, 20);
+      const e = o.augen || 0; c.fillStyle = e > 0 ? `rgba(255,217,61,${0.4 + 0.6 * e})` : '#3a4a5a'; c.beginPath(); c.arc(-8, -122, 5, 0, Math.PI * 2); c.arc(8, -122, 5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#e8467c'; c.fillRect(-8, -110, 16, 3); }
+    if (n >= 5) { c.strokeStyle = '#4a5562'; c.lineWidth = 3; c.beginPath(); c.moveTo(0, -140); c.lineTo(0, -156); c.stroke(); c.fillStyle = (o.augen || 0) > 0 ? '#e63946' : '#8a5a5a'; c.beginPath(); c.arc(0, -159, 5, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function erdkugel(c, x, y, r, t) {   // Erde (Felix fliegt um die Welt): Ozean mit wandernden Kontinent-Flecken, Glanz
+    c.save(); c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.clip();
+    c.fillStyle = '#2a7fd4'; c.fillRect(x - r, y - r, r * 2, r * 2);
+    c.fillStyle = '#4caf50'; const v = (t * 40) % (r * 4);
+    for (const [ox, oy, rx, ry] of [[-0.5, -0.3, 0.35, 0.25], [0.1, 0.25, 0.25, 0.35], [0.7, -0.2, 0.3, 0.2], [1.3, 0.3, 0.3, 0.25], [1.8, -0.35, 0.25, 0.18]]) for (const w of [0, -r * 4]) {
+      const cx = x - r * 2 + ((ox + 1) * r * 1.6 + v) % (r * 4) + w; c.beginPath(); c.ellipse(cx, y + oy * r, rx * r, ry * r, 0.3, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.ellipse(x, y - r * 0.92, r * 0.5, r * 0.12, 0, 0, Math.PI * 2); c.fill();
+    const g = c.createRadialGradient(x - r * 0.4, y - r * 0.4, r * 0.1, x, y, r); g.addColorStop(0, 'rgba(255,255,255,.25)'); g.addColorStop(1, 'rgba(0,0,40,.35)'); c.fillStyle = g; c.fillRect(x - r, y - r, r * 2, r * 2);
+    c.restore();
+  }
   const SZENEN = {
     // Klasse 6 – London
     big_ben: { variante: () => KLANG_DATEI.chimes ? BIGBEN_CHIMES : null, dauer: 9.6, klaenge: [[0.4, 'klick'], [0.8, 'klick'], [1.2, 'klick'], [1.6, 'klick'], [1.9, 'viertel'], [4.6, 'glocke'], [6.0, 'glocke'], [7.4, 'glocke']],
@@ -10695,6 +10787,195 @@
           szZaehler(c, 'Most US lobsters: Maine', '#ffd93d', 12, 300); c.globalAlpha = 1;
         }
       } },
+    // Klasse 6 – Heldenfilme (6.11.2026): Schlüssel held_<id>; held = Kartenbild-Schlüssel (cameoBilder), geladen aus o.heldBild
+    held_leo: { held: 'leo', dauer: 11, klaenge: [[0.3, 'bus'], [1.1, 'wind'], [3.5, 'wind'], [5.9, 'wind'], [8.3, 'combo'], [9.0, 'cameo']],
+      zeichne(c, t) {   // Westminster: Leo rast dreimal über die Straße (Staub, Speed-Linien), überholt Doppeldecker und Black Cab und bremst mitten im Bild
+        szLondonStrasse(c, t, 11);
+        szFahrzeug(c, 'cab', lerp(760, -140, Math.max(0, (t - 4.4) / 5.5)), 362, t, 1.05);
+        szFahrzeug(c, 'bus', lerp(660, -200, t / 11), 392, t);
+        const y = 316;
+        for (const [t0, dir] of [[1.1, -1], [3.5, 1], [5.9, -1]]) {
+          const f = (t - t0) / 0.9; if (f < 0 || f > 1) continue;
+          const x = dir < 0 ? lerp(720, -90, f) : lerp(-90, 720, f);
+          szStaub(c, x, 378, dir); szTempo(c, x, y, dir, 5, 90); szHeld(c, 'leo', x, y, 1.5, t, { spiegel: dir > 0, wehen: 10 });
+        }
+        if (t >= 8.3) {
+          const f = Math.min(1, (t - 8.3) / 0.9), x = lerp(720, 320, 1 - Math.pow(1 - f, 3));
+          szStaub(c, x, 378, -1, 1 - sanft((t - 9.2) / 1.5)); if (f < 1) szTempo(c, x, y, -1, 5, 90 * (1 - f));
+          szHeld(c, 'leo', x, y - (f >= 1 ? Math.sin((t - 9.2) * 4) * 3 : 0), 1.5, t);
+          if (f >= 1) for (let k = 0; k < 4; k++) szFunkeln(c, 320 + Math.cos(k * 1.6 + t) * 62, y - 10 + Math.sin(k * 1.6 + t) * 40, 7, t + k, '#ffd93d');
+        }
+        szHeldKraft(c, t, 9.0, 'leo', 'Super speed');
+      } },
+    held_camilla: { held: 'camilla', dauer: 11, klaenge: [[0.3, 'cameo'], [2.2, 'rumpeln'], [3.6, 'jubel'], [7.6, 'rumpeln'], [8.6, 'applaus']],
+      zeichne(c, t) {   // Westminster: Camilla taucht unter ein Black Cab, hebt es auf ihren Rücken, trägt es ein Stück und setzt es ab; danach fliegen Herzen
+        szLondonStrasse(c, t, 11);
+        let x = 349, y = 424;
+        if (t < 1.4) { const f = sanft(t / 1.4); x = lerp(700, 349, f); y = lerp(-60, 200, f); }
+        else if (t < 2.2) y = lerp(200, 424, sanft((t - 1.4) / 0.8));
+        else if (t < 3.6) y = lerp(424, 262, sanft((t - 2.2) / 1.4));
+        else if (t < 6.6) y = 262 + Math.sin(t * 3) * 3;
+        else if (t < 7.6) { x = lerp(349, 190, sanft((t - 6.6) / 1)); y = 262; }
+        else if (t < 8.4) { x = 190; y = lerp(262, 424, sanft((t - 7.6) / 0.8)); }
+        else { const f = sanft((t - 8.4) / 0.8); x = lerp(190, 450, f); y = lerp(424, 236, f) + (f >= 1 ? Math.sin(t * 4) * 3 : 0); }
+        const unten = t < 2.2 ? 388 : Math.min(388, y - 34), cx = t < 6.6 ? 300 : t < 7.6 ? x - 49 : 141;
+        szHeld(c, 'camilla', x, y, 1.6, t);
+        const traegt = t > 2.6 && t < 8.0;
+        szFahrzeug(c, 'cab', cx, unten, t, 1.25, traegt ? Math.sin(t * 3) * 0.03 : 0);
+        if (traegt) { c.save(); c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 3; for (const s of [-1, 1]) for (let k = 0; k < 3; k++) { c.beginPath(); c.moveTo(x + s * (52 + k * 4), y - 20 + k * 14); c.lineTo(x + s * (64 + k * 4), y - 24 + k * 14); c.stroke(); } c.restore(); }
+        if (t > 8.8) for (let k = 0; k < 5; k++) { const d = ((t - 8.8 + k * 0.4) % 2) / 2; c.save(); c.globalAlpha = 1 - d; c.fillStyle = '#e63946'; c.font = '22px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('❤', 450 + Math.sin(k * 2 + t) * 50, 200 - d * 120); c.restore(); }
+        szHeldKraft(c, t, 9.0, 'camilla', 'Super strength');
+      } },
+    held_ellie: { held: 'ellie', dauer: 11, klaenge: [[0.3, 'cameo'], [1.6, 'plopp'], [2.1, 'plopp'], [2.6, 'plopp'], [3.1, 'plopp'], [3.6, 'plopp'], [5.2, 'kristall'], [6.9, 'richtig'], [7.5, 'richtig'], [8.1, 'richtig']],
+      zeichne(c, t) {   // British Museum: Bücher fliegen zu Ellie und verschwinden in ihrem Gedächtnis (Seitenzähler), dann erscheinen die gemerkten Wörter
+        szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[30, 40], [460, 60]]); szBoden(c, '#d8cfbc', 330); britishMuseum(c, 320, 330, 1); });
+        const hx = 320, hy = t < 1.2 ? lerp(-60, 262, sanft(t / 1.2)) : 262 + Math.sin(t * 2.4) * 4;
+        szHeld(c, 'ellie', hx, hy, 1.7, t);
+        const farben = ['#e63946', '#2a8cff', '#2e9e5b', '#8a3ffc', '#ff7a1a', '#e0a400'];
+        let gelesen = 0;
+        for (let i = 0; i < 12; i++) {
+          const t0 = 1.4 + i * 0.3, f = (t - t0) / 0.9; if (f >= 1) { gelesen++; continue; } if (f < 0) continue;
+          const sx = i % 2 ? 690 : -50, sy = 120 + (i % 3) * 70;
+          szBuch(c, lerp(sx, hx, sanft(f)), lerp(sy, hy - 10, sanft(f)) - Math.sin(f * Math.PI) * 40, lerp(1.3, 0.25, f), t * 5 + i, farben[i % 6]);
+          if (f > 0.85) szFunkeln(c, hx, hy - 20, 14, t, '#ffd93d');
+        }
+        if (t > 1.4 && t < 6.6) { const n = Math.round(lerp(0, 1000, Math.min(1, gelesen / 12))); c.save(); c.globalAlpha = Math.min(1, (6.6 - t) * 2); szZaehler(c, `📖 ${n.toLocaleString('en-GB')}${gelesen >= 12 ? '+' : ''} pages`, '#ffd93d', 104, 230); c.restore(); }
+        [['Big Ben ✓', 130, 170, 6.9], ['page 357 ✓', 510, 170, 7.5], ['every word ✓', 320, 140, 8.1]].forEach(([w, x, y, ab]) => szBlase(c, x, y, w, CAMEO.ellie.farbe, (t - ab) / 0.35));
+        szHeldKraft(c, t, 9.0, 'ellie', 'Super memory');
+      } },
+    held_olivia: { held: 'olivia', dauer: 11, klaenge: [[0.3, 'wind'], [1.2, 'cameo'], [3.0, 'klick'], [6.2, 'kristall'], [7.2, 'puff'], [8.6, 'richtig']],
+      zeichne(c, t) {   // Westminster bei Nacht: alles dunkel, nur Olivias Nachtsicht-Kegel leuchtet grün; sie sucht die Straße ab und findet einen verlorenen Teddy
+        szLondonStrasse(c, t, 11);
+        const tx = 160, ty = 316;   // der verlorene Teddy auf dem Gehweg
+        const geholt = sanft((t - 7.2) / 0.8);
+        const ox = t < 1.2 ? lerp(700, 470, sanft(t / 1.2)) : 470, oy = t < 1.2 ? lerp(-40, 150, sanft(t / 1.2)) : 150 + Math.sin(t * 2) * 4;
+        if (geholt <= 0) szTeddy(c, tx, ty, 1);
+        // Nacht: dunkle Decke mit einem Loch, wo Olivia hinsieht
+        const such = sanft((t - 2.2) / 3.8), vx = t < 6.2 ? lerp(560, tx, such) + Math.sin(t * 3) * 20 * (1 - such) : tx, vy = t < 6.2 ? 336 - Math.sin(such * Math.PI) * 20 : ty - 14, r = t < 2.2 ? 70 * sanft((t - 1.6) / 0.6) : 70;
+        c.save(); c.fillStyle = 'rgba(6,10,34,.84)'; c.beginPath(); c.rect(0, 0, SZ_W, H); if (r > 1) c.arc(vx, vy, r, 0, Math.PI * 2); c.fill('evenodd'); c.restore();
+        if (r > 1) { c.save(); c.fillStyle = 'rgba(120,255,150,.18)'; c.beginPath(); c.arc(vx, vy, r, 0, Math.PI * 2); c.fill();
+          c.fillStyle = 'rgba(120,255,150,.12)'; c.beginPath(); c.moveTo(ox - 10, oy); c.lineTo(vx - r * 0.9, vy - r * 0.3); c.lineTo(vx + r * 0.9, vy + r * 0.3); c.lineTo(ox + 10, oy); c.closePath(); c.fill();
+          c.strokeStyle = 'rgba(120,255,150,.7)'; c.lineWidth = 3; c.beginPath(); c.arc(vx, vy, r, 0, Math.PI * 2); c.stroke(); c.restore(); }
+        c.fillStyle = '#fff'; for (let k = 0; k < 26; k++) { if ((k * 7) % 5 === 0 && Math.sin(t * 3 + k) < -0.6) continue; c.fillRect((k * 89) % SZ_W, 60 + (k * 37) % 150, 2, 2); }
+        c.fillStyle = '#fff6c8'; c.beginPath(); c.arc(570, 110, 24, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(6,10,34,.84)'; c.beginPath(); c.arc(582, 102, 21, 0, Math.PI * 2); c.fill();
+        if (t > 6.2 && geholt <= 0) for (let k = 0; k < 4; k++) szFunkeln(c, tx + Math.cos(k * 1.57 + t * 2) * 34, ty - 14 + Math.sin(k * 1.57 + t * 2) * 30, 8, t + k, '#ffd93d');
+        if (geholt > 0) szTeddy(c, lerp(tx, ox + 46, geholt), lerp(ty, oy + 40, geholt) - Math.sin(geholt * Math.PI) * 60, lerp(1, 0.9, geholt));
+        szHeld(c, 'olivia', ox, oy, 1.6, t);
+        if (t > 8.6) szBlase(c, 320, 250, 'Found it!', CAMEO.olivia.farbe, (t - 8.6) / 0.35);
+        szHeldKraft(c, t, 9.0, 'olivia', 'Night vision');
+      } },
+    held_kenji: { held: 'kenji', dauer: 11, klaenge: [[1.0, 'sprung'], [2.5, 'sprung'], [4.0, 'sprung'], [5.5, 'sprung'], [7.2, 'sprung'], [8.9, 'plopp'], [9.1, 'jubel']],
+      zeichne(c, t) {   // Notting Hill: Kenji springt von Dach zu Dach über die bunten Häuser, zum Schluss ein riesiger Sprung bis vor die Häuser
+        szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[40, 50], [420, 30]]); szBoden(c, '#9a948a', 330); nottingHillHaeuser(c, 320, 330, 1); c.fillStyle = '#4a4d52'; c.fillRect(0, 352, SZ_W, 60); });
+        const dach = 118, punkte = [60, 200, 340, 480, 600];
+        const pos = (tt) => {
+          for (let k = 0; k < 4; k++) { const t0 = 1.0 + k * 1.5; if (tt < t0) return [punkte[k], dach, 0]; const f = (tt - t0) / 0.9; if (f <= 1) return [lerp(punkte[k], punkte[k + 1], f), dach - 90 * 4 * f * (1 - f), 1]; }
+          if (tt < 7.2) return [punkte[4], dach, 0];
+          const f = Math.min(1, (tt - 7.2) / 1.7); return [lerp(600, 320, f), lerp(dach, 300, f) - 190 * 4 * f * (1 - f), f < 1 ? 1 : 0];
+        };
+        for (let k = 6; k >= 1; k--) { const [px, py, fl] = pos(t - k * 0.06); if (!fl) continue; c.fillStyle = `rgba(255,255,255,${0.5 - k * 0.07})`; c.beginPath(); c.arc(px, py, 18 - k * 2, 0, Math.PI * 2); c.fill(); }
+        const [x, y, fliegt] = pos(t);
+        const lande = t > 8.9 && t < 9.2 ? 1 - (t - 8.9) / 0.3 : 0;
+        c.save(); c.translate(x, y + 30); c.scale(1 + lande * 0.12, 1 - lande * 0.15); c.translate(-x, -y - 30); szHeld(c, 'kenji', x, y, 1.4, t, { wehen: fliegt ? 10 : 0 }); c.restore();
+        if (t > 8.9) szRinge(c, 320, 330, 8.9, t, 'rgba(255,255,255,1)');
+        if (t > 8.9 && t < 10.4) szBlase(c, 320, 210, 'Boing!', CAMEO.kenji.farbe, (t - 8.9) / 0.3);
+        szHeldKraft(c, t, 9.2, 'kenji', 'Super jump');
+      } },
+    held_zara: { held: 'zara', dauer: 11, klaenge: [[0.3, 'cameo'], [2.6, 'puff'], [3.8, 'taube'], [4.9, 'taube'], [6.8, 'puff'], [7.0, 'jubel'], [7.3, 'taube']],
+      zeichne(c, t) {   // Trafalgar Square: Zara wird unsichtbar (nur ein Flimmern), die Tauben suchen sie, dann taucht sie woanders auf – Surprise!
+        szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[60, 40], [470, 70]]); szBoden(c, '#c9c0ae', 330); trafalgarPlatz(c, 320, 336, 1, { t }); });
+        const fliegen = sanft((t - 7.0) / 2.4);
+        for (let i = 0; i < 6; i++) { const bx = 90 + i * 92, by = 372 - (i % 2) * 8, r = t > 3.4 && t < 6.8 ? (Math.sin(t * 2.5 + i) > 0 ? 1 : -1) : (i % 2 ? 1 : -1);
+          if (fliegen <= 0) taubeBei(c, bx, by, 0, r); else taubeBei(c, bx + fliegen * (i % 2 ? 300 : -300), by - fliegen * 320, t * 1.6 + i, i % 2 ? 1 : -1);
+          if (t > 3.6 && t < 6.8) { c.fillStyle = '#18213a'; c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('?', bx, by - 34 - Math.abs(Math.sin(t * 3 + i)) * 6); } }
+        const zx = t < 1.4 ? lerp(700, 200, sanft(t / 1.4)) : t < 3.2 ? 200 : t < 6.6 ? lerp(200, 450, sanft((t - 3.2) / 3.4)) : 450;
+        const zy = t < 1.4 ? lerp(-60, 240, sanft(t / 1.4)) : 240 + Math.sin(t * 2.2) * 4;
+        const sicht = t < 2.6 ? 1 : t < 3.2 ? 1 - sanft((t - 2.6) / 0.6) : t < 6.8 ? 0 : sanft((t - 6.8) / 0.3);
+        if (sicht > 0) szHeld(c, 'zara', zx, zy, 1.6, t, { alpha: sicht });
+        if (sicht < 1 && t > 2.6) { c.save(); c.setLineDash([6, 8]); c.lineDashOffset = -t * 30; c.strokeStyle = `rgba(255,255,255,${0.55 * (1 - sicht)})`; c.lineWidth = 2; c.beginPath(); c.arc(zx + Math.sin(t * 7) * 2, zy, 40, 0, Math.PI * 2); c.stroke(); c.restore();
+          for (let k = 0; k < 3; k++) szFunkeln(c, zx + Math.cos(t * 2 + k * 2.1) * 46, zy + Math.sin(t * 2 + k * 2.1) * 46, 5, t + k, 'rgba(255,255,255,.7)'); }
+        szRinge(c, 200, 240, 2.6, t, 'rgba(255,255,255,1)'); szRinge(c, 450, 240, 6.8, t, 'rgba(255,255,255,1)');
+        if (t > 7.0) szBlase(c, 450, 160, 'Surprise!', CAMEO.zara.farbe, (t - 7.0) / 0.35);
+        szHeldKraft(c, t, 9.0, 'zara', 'Invisibility');
+      } },
+    held_penny: { held: 'penny', dauer: 11, klaenge: [[0.3, 'cameo'], [1.8, 'eiskristall'], [2.6, 'eiskristall'], [3.4, 'eiskristall'], [6.4, 'plopp'], [6.8, 'plopp'], [7.2, 'plopp'], [8.0, 'jubel']],
+      zeichne(c, t) {   // die Themse: Penny friert das Wasser in einer Sekunde ein – das Ausflugsboot steckt fest –, dann zaubert sie Eistüten aufs Eis
+        const kam = lerp(30000, 30200, t / 11), px = 470, py = t < 1.4 ? lerp(-60, 240, sanft(t / 1.4)) : 240 + Math.sin(t * 2.4) * 4;
+        const eis = sanft((t - 1.8) / 1.2), links = px - eis * 560, rechts = px + eis * 260;
+        szWelt({ zeit: t, kamera: kam, level: { ende: 40000 } }, () => {
+          WELTEN.westminster.kulisse(c); themse(c, kam - 50, kam + SZ_W + 50);
+          if (eis > 0) { c.fillStyle = 'rgba(226,247,255,.92)'; c.fillRect(links, BODEN_Y + 4, rechts - links, H - BODEN_Y); c.strokeStyle = 'rgba(120,180,220,.8)'; c.lineWidth = 1.5;
+            for (let k = 0; k < 9; k++) { const x0 = 40 + k * 68; if (x0 < links || x0 > rechts) continue; c.beginPath(); c.moveTo(x0, BODEN_Y + 12); c.lineTo(x0 + 18, BODEN_Y + 34); c.lineTo(x0 + 6, BODEN_Y + 58); c.stroke(); }
+            c.fillStyle = 'rgba(255,255,255,.9)'; for (let k = 0; k < 10; k++) { const x0 = (k * 71) % SZ_W; if (x0 > links && x0 < rechts) c.fillRect(x0, BODEN_Y + 20 + (k % 4) * 14, 14, 2); } }
+          bootZeichnen(c, lerp(-60, 700, Math.min(t, 3.0) / 8), BODEN_Y + 32 + (t < 3 ? Math.sin(t * 2) * 2 : 0), 1.4);
+        });
+        if (t > 1.6 && t < 3.8) for (let k = 0; k < 14; k++) { const d = ((t - 1.6) * 1.4 + k / 14) % 1, a = -2.6 + k * 0.18; szFunkeln(c, px + Math.cos(a) * d * 300, py + 30 + Math.sin(-a) * d * 30 + d * 90, 6, t + k, '#ffffff'); }
+        [['#f7a8c8', 130, 6.4], ['#fff6e0', 310, 6.8], ['#8a5a3a', 580, 7.2]].forEach(([kg, x, ab]) => { const f = sanft((t - ab) / 0.35); if (f > 0) szEis(c, x, 384, 1.5 * f, kg); });
+        szHeld(c, 'penny', px, py, 1.6, t);
+        if (t > 8.0) szBlase(c, 300, 200, 'Ice cream for everybody!', CAMEO.penny.farbe, (t - 8.0) / 0.35);
+        szHeldKraft(c, t, 9.2, 'penny', 'Ice powers');
+      } },
+    held_felix: { held: 'felix', dauer: 11, klaenge: [[0.3, 'wind'], [1.2, 'cameo'], [3.0, 'adler'], [5.2, 'wind'], [7.4, 'wind'], [9.2, 'fanfare']],
+      zeichne(c, t) {   // Felix fliegt über London (Big Ben, Parlament und London Eye ziehen unten vorbei), dann von weit oben einmal um die ganze Erde
+        if (t < 7.4) {
+          szWeltKulisse(c, t, 'westminster', 40000, 4000, 34000, 7.4);
+          c.fillStyle = 'rgba(255,255,255,.85)'; for (let k = 0; k < 4; k++) { const x = SZ_W + 80 - ((t * 420 + k * 230) % (SZ_W + 200)), y = 70 + (k * 53) % 150; c.beginPath(); c.arc(x, y, 18, 0, Math.PI * 2); c.arc(x + 22, y - 8, 22, 0, Math.PI * 2); c.arc(x + 46, y, 16, 0, Math.PI * 2); c.fill(); }
+          const fx = t < 1.2 ? lerp(-80, 290, sanft(t / 1.2)) : 290 + Math.sin(t * 1.3) * 30, fy = 160 + Math.sin(t * 2) * 14;
+          szTempo(c, fx, fy, 1, 5, 80); szHeld(c, 'felix', fx, fy, 1.6, t, { spiegel: true, wehen: 12 });
+        }
+        const b = sanft((t - 6.8) / 0.6);
+        if (b > 0) {
+          c.save(); c.globalAlpha = b; const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0b1230'); g.addColorStop(1, '#1d2a5a'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, H);
+          c.fillStyle = '#fff'; for (let k = 0; k < 40; k++) c.fillRect((k * 83) % SZ_W, (k * 47) % H, 2, 2);
+          const a = (t - 7.2) * 2.0, ex = 320, ey = 236, hx = ex + Math.cos(a) * 170, hy = ey + Math.sin(a) * 62 - 10;
+          c.strokeStyle = 'rgba(255,255,255,.45)'; c.setLineDash([5, 7]); c.lineWidth = 2; c.beginPath(); c.ellipse(ex, ey - 10, 170, 62, 0, 0, Math.PI * 2); c.stroke(); c.setLineDash([]);
+          if (Math.sin(a) < 0) szHeld(c, 'felix', hx, hy, 0.9, t, { spiegel: Math.cos(a) < 0 });
+          erdkugel(c, ex, ey, 110, t);
+          if (Math.sin(a) >= 0) szHeld(c, 'felix', hx, hy, 1.1, t, { spiegel: Math.cos(a) < 0 });
+          c.restore();
+          if (t > 8.0) szBlase(c, 320, 112, '🌍 one day!', CAMEO.felix.farbe, (t - 8.0) / 0.35);
+        }
+        szHeldKraft(c, t, 9.2, 'felix', 'Super flight');
+      } },
+    held_tessa: { held: 'tessa', dauer: 11, klaenge: [[0.3, 'cameo'], [2.4, 'schild'], [2.45, 'stein'], [4.4, 'schild'], [4.45, 'stein'], [6.4, 'schild'], [6.45, 'bruch'], [8.6, 'rabe']],
+      zeichne(c, t) {   // Tower of London: drei Felsbrocken fallen auf Tessa – BONK! – sie prallen ab, der letzte zerbröselt; ihr passiert nichts, zum Schluss setzt sich ein Rabe auf sie
+        c.save(); szKam(c, 960, 200, 1.0); szWelt({ zeit: t, kamera: 0 }, () => filmKulisseBridge(c, 0)); c.restore();
+        const hx = 320, hy = t < 1.4 ? lerp(-60, 272, sanft(t / 1.4)) : 272;
+        let treffer = -9;
+        for (let k = 0; k < 3; k++) {
+          const t0 = 1.6 + k * 2, f = (t - t0) / 0.8, sx = 300 + k * 20; if (f < 0) continue;
+          if (f <= 1) { szStein(c, sx, lerp(-40, hy - 52, f * f), 1.5, t * 3 + k); continue; }
+          treffer = Math.max(treffer, t0 + 0.8); const d = (t - t0 - 0.8), dir = k % 2 ? 1 : -1;
+          if (k < 2) szStein(c, sx + dir * 220 * d, hy - 52 - 140 * d + 420 * d * d, 1.5, t * 6 + k);
+          else for (let j = 0; j < 7; j++) { const a = -Math.PI * (0.1 + j * 0.13); szStein(c, sx + Math.cos(a) * 150 * d, hy - 52 + Math.sin(a) * 150 * d + 400 * d * d, 0.45, t * 8 + j); }
+        }
+        szHeld(c, 'tessa', hx, hy, 1.7, t);
+        const blitz = t - treffer;
+        if (blitz >= 0 && blitz < 0.9) { c.save(); c.globalAlpha = 1 - blitz / 0.9; c.strokeStyle = '#2e9e5b'; c.lineWidth = 6; c.beginPath(); c.ellipse(hx, hy + 20, 70 + blitz * 20, 84 + blitz * 20, 0, 0, Math.PI * 2); c.stroke(); c.restore();
+          szBlase(c, hx + 120, hy - 70, 'BONK!', CAMEO.tessa.farbe, (0.9 - blitz) * 3); }
+        if (t > 8.0) { const f = sanft((t - 8.0) / 0.9); if (f < 1) rabeFlug(c, lerp(700, hx, f), lerp(110, hy - 52, f) - Math.sin(f * Math.PI) * 50, t, 0.8); else szWelt({ zeit: t, kamera: 0 }, () => rabeSitzt(c, hx, hy - 38, t)); }
+        szHeldKraft(c, t, 9.2, 'tessa', 'Unbreakable');
+      } },
+    held_max: { held: 'max', dauer: 11, klaenge: [[0.3, 'cameo'], [1.8, 'hammer'], [2.5, 'hammer'], [3.2, 'hammer'], [3.9, 'hammer'], [4.6, 'klick'], [5.4, 'lichtAn'], [8.6, 'fanfare']],
+      zeichne(c, t) {   // Covent Garden: Max baut in Sekunden einen Roboter (Teile fliegen heran, Funken), der Roboter schreibt die Hausaufgaben – Homework ✓
+        szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[30, 40], [450, 60]]); szBoden(c, '#b9ae9c', 330); coventGarden(c, 320, 330, 1); });
+        const mx = t < 1.4 ? lerp(-60, 160, sanft(t / 1.4)) : 160, my = t < 1.4 ? lerp(-40, 230, sanft(t / 1.4)) : 230 + Math.sin(t * 2.4) * 4;
+        const rx = 400, ry = 372, teile = t < 1.8 ? 0 : t < 2.5 ? 1 : t < 3.2 ? 2 : t < 3.9 ? 3 : t < 4.6 ? 4 : 5;
+        if (t > 1.6 && t < 4.8) { c.save(); c.strokeStyle = 'rgba(255,217,61,.75)'; c.setLineDash([4, 6]); c.lineDashOffset = -t * 40; c.lineWidth = 3; c.beginPath(); c.moveTo(mx + 40, my); c.quadraticCurveTo(300, 150, rx, ry - 80); c.stroke(); c.restore(); }
+        // Tisch mit Heft rechts
+        c.fillStyle = '#8a5a2b'; c.fillRect(470, 300, 130, 10); c.fillRect(480, 310, 8, 62); c.fillRect(582, 310, 8, 62);
+        c.fillStyle = '#fff'; c.fillRect(488, 262, 96, 40); c.strokeStyle = '#c8d4e0'; c.lineWidth = 1; c.strokeRect(488, 262, 96, 40);
+        c.fillStyle = '#18213a'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText('Homework', 494, 270);
+        const schreib = Math.max(0, Math.min(1, (t - 6.0) / 2.4));
+        c.fillStyle = '#2a4a8a'; for (let z = 0; z < 3; z++) { const w = Math.max(0, Math.min(1, schreib * 3 - z)) * 76; if (w > 0) c.fillRect(494, 280 + z * 7, w, 2); }
+        roboter(c, rx, ry, 1.1, { teile, augen: sanft((t - 5.4) / 0.4), arm: schreib > 0 && schreib < 1 ? Math.sin(t * 14) * 0.25 + 0.3 : 0.3, stift: t > 5.8 });
+        const funken = [1.8, 2.5, 3.2, 3.9, 4.6].find((x) => t >= x && t < x + 0.4);
+        if (funken) for (let k = 0; k < 6; k++) szFunkeln(c, rx + Math.cos(k * 1.05) * (20 + (t - funken) * 120), ry - 70 - (teile - 1) * 18 + Math.sin(k * 1.05) * (20 + (t - funken) * 80), 8, t + k, '#ffd93d');
+        if (t > 8.6) { c.save(); c.globalAlpha = sanft((t - 8.6) / 0.3); c.strokeStyle = '#2e9e5b'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(560, 282); c.lineTo(570, 294); c.lineTo(592, 258); c.stroke(); c.restore();
+          szBlase(c, 520, 220, 'Homework ✓', CAMEO.max.farbe, (t - 8.6) / 0.35); }
+        szHeld(c, 'max', mx, my, 1.6, t);
+        szHeldKraft(c, t, 9.2, 'max', 'Genius inventor');
+      } },
   };
   // Big Ben mit echter Aufnahme: 15,5 s; bis 14 s laufen die Westminster Chimes (Bild wie beim Nachbau bis kurz vor dem Schlag, langsamer), dann EIN Stundenschlag (Nachbau)
   const BIGBEN_CHIMES = { dauer: 15.5, klaenge: [[0.1, 'chimes'], [14.0, 'glocke']],
@@ -10727,6 +11008,7 @@
     const S = SZENEN[ortId] && ((SZENEN[ortId].variante && SZENEN[ortId].variante()) || SZENEN[ortId]);
     if (!S || laeuft) return null;
     szeneStopp();
+    if (S.held && o.heldBild && !(cameoBilder[S.held] && cameoBilder[S.held].naturalWidth > 0)) { const img = new Image(); img.decoding = 'async'; img.src = o.heldBild; cameoBilder[S.held] = img; }   // Heldenfilm: Kartenbild für heldFigur
     const eigene = !ziel;
     const ebene = eigene ? document.createElement('div') : null;
     if (ebene) { ebene.className = 'ortszene-ebene'; ebene.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:rgba(10,14,28,.82);display:flex;align-items:center;justify-content:center;padding:12px;'; document.body.append(ebene); }

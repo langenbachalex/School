@@ -7,7 +7,8 @@ Jungen abwechselnd Elrond/John Shaw, Mädchen abwechselnd Emmaline/Alice) und di
 Texte: WELTEN und CAMEO in app/klasse9/runner.js (einzige Quelle). Ziele: app/klasse9/audio/runner/<welt>_<art>.mp3,
 app/audio/runner/westminster_<art>.mp3, app/audio/runner/cameo_<held>.mp3, app/klasse9/audio/beae/w_<id>_<be|ae>.mp3.
 Vorhandene Dateien werden nie überschrieben. Obergrenze je Lauf: GRENZE Zeichen (sonst wird nichts vertont).
-Aufruf: python3 werkzeuge/runner_audio.py --zaehlen   (nur zählen)
+Heldenfilme (6.11.2026): app/audio/helden/intro_<held>.mp3 (Text: Spalte intro in inhalte/helden.tsv, Stimme wie das Cameo).
+Aufruf: python3 werkzeuge/runner_audio.py --zaehlen   (nur zählen; --nur=<pfad-anfang> beschränkt auf diese Posten)
         python3 werkzeuge/runner_audio.py             (erzeugen, danach daten_bauen.py und klasse9_bauen.py)
 """
 import json, os, re, sys, urllib.request
@@ -55,6 +56,11 @@ def auftraege():
             liste.append((6, APP6, f"audio/runner/{w}_{art}.mp3", {"start": "m1", "ende": "f1"}.get(art, "en"), welten[w][art]))
     for h in JUNGEN + MAEDCHEN:
         liste.append((6, APP6, f"audio/runner/cameo_{h}.mp3", CAMEO_STIMME[h], cameo[h]))
+    # Heldenfilme (6.11.2026): Selbstvorstellung je Held (Spalte intro in inhalte/helden.tsv), dieselbe Stimme wie sein Cameo
+    import daten_bauen
+    for z in daten_bauen.lesen("helden.tsv"):
+        if z.get("intro"):
+            liste.append((6, APP6, f"audio/helden/intro_{z['id']}.mp3", CAMEO_STIMME[z["id"]], z["intro"]))
     import klasse9_audio
     for pfad, stimme, text in klasse9_audio.auftraege():
         if pfad.startswith("audio/beae/w_"):
@@ -89,7 +95,8 @@ def sprechen9(stimme, text, ziel):
 
 
 def main():
-    offen = [x for x in auftraege() if not os.path.exists(os.path.join(x[1], x[2]))]
+    nur = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--nur=")), None)   # z. B. --nur=audio/helden/intro_ (nur diese Posten)
+    offen = [x for x in auftraege() if not os.path.exists(os.path.join(x[1], x[2])) and (not nur or x[2].startswith(nur))]
     summe = sum(len(x[4]) for x in offen)
     print(f"{len(offen)} Dateien offen, {summe} Zeichen (Grenze {GRENZE})")
     for kl, _, pfad, stimme, text in offen:

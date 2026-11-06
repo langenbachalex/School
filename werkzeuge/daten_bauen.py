@@ -239,7 +239,7 @@ def spieldaten():
         "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
         # Orts-Szenen (6.11.): kleines Foto am Ende der Szene (app/bilder/orte/<id>.jpg, Quellen inhalte/orte_fotos.tsv → app/bilder/orte/QUELLEN.md)
         "orte": [dict(z, x=int(z["x"]), y=int(z["y"]), audio=a(f"audio/london/{z['id']}.mp3"), **orts_foto(z["id"])) for z in lesen("london.tsv")],
-        "helden": [dict(z, bild=f"bilder/helden/{z['bild']}.jpg", audio=a(f"audio/helden/{z['id']}.mp3")) for z in lesen("helden.tsv")],
+        "helden": [dict(z, bild=f"bilder/helden/{z['bild']}.jpg", audio=a(f"audio/helden/{z['id']}.mp3"), intro_audio=a(f"audio/helden/intro_{z['id']}.mp3")) for z in lesen("helden.tsv")],
         "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in lesen("geheimakten.tsv")],
         "frei": frei_saarland.als_daten(),
         "shop": SHOP,

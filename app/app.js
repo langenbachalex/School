@@ -2124,7 +2124,15 @@
     for (let i = 0; i < ereignisse.length;) { if (ereignisse[i].art === "toast") toast(ereignisse.splice(i, 1)[0].text); else i++; }
     if (feier.open || stempelLaeuft) return;
     const gi = ereignisse.findIndex(grossEreignis);
-    if (gi >= 0) return zeigeFeier(ereignisse.splice(gi, 1)[0]);
+    if (gi >= 0) {
+      const e = ereignisse[gi];
+      // Heldenfilm (6.11.2026): neuer Superheld → erst sein Film (Runner.szene 'held_<id>'), danach die Karte wie bisher (ohne erneutes Vorlesen)
+      if (e.art === "held" && !e.filmGezeigt) {
+        e.filmGezeigt = true;
+        if (heldFilm(e.held, () => { stempelLaeuft = false; zeigeEreignisse(); })) { stempelLaeuft = true; return; }
+      }
+      return zeigeFeier(ereignisse.splice(gi, 1)[0]);
+    }
     const si = ereignisse.findIndex((e) => e.art === "ort");
     if (si < 0) return;
     const e = ereignisse.splice(si, 1)[0];
@@ -2150,6 +2158,15 @@
       stimme: (text, lang) => hauptText([{ tts: text, lang: lang || "en-GB", stimme: "m" }], { warten: true }) });   // Durchsagen der Szene (Tube) mit der Geräte-Stimme
     return !!sz;
   }
+  // Heldenfilme (6.11.2026, Mr. Alex): kurzer Film je Superheld (Runner.szene 'held_<id>', der Held wie sein Cameo im London Run zeigt seine Kraft in London),
+  // Stimme = Selbstvorstellung (inhalte/helden.tsv, Spalte intro; Aufnahme audio/helden/intro_<id>.mp3), Untertitel Satz für Satz, am Ende die Heldenkarte groß
+  const heldHatFilm = (h) => !!(h && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene("held_" + h.id));
+  function heldFilm(h, fertig) {
+    if (!heldHatFilm(h)) return false;
+    const sz = window.Runner.szene(null, "held_" + h.id, { text: h.intro, titel: `🦸 ${h.name}`, heldBild: h.bild, foto: h.bild, quelle: `${h.name} · ${h.kraft}`, onEnde: () => { if (fertig) fertig(); },
+      voice: h.intro_audio ? () => hauptText([h.intro_audio], { warten: true }) : null, voiceStopp: () => stopp(), voiceAudio: () => stimmeAudio(h.intro_audio) });
+    return !!sz;
+  }
   // Eigener Bestätigungsdialog statt confirm(): funktioniert auch in eingebetteten Rahmen (Vorschau) und sieht aus wie die App
   const frageDialog = el("dialog", { class: "feier frage" });
   document.body.append(frageDialog);
@@ -2163,7 +2180,7 @@
     });
   }
   function zeigeFeier(e) {
-    const ton = e.art === "held" ? e.held : e.ton;
+    const ton = e.art === "held" ? e.held : e.ton, nachFilm = e.art === "held" && e.filmGezeigt && heldHatFilm(e.held);
     const inhalt = e.art === "held"
       ? [el("p", { class: "feier-klein" }, "⭐ Perfect week! Neuer Superheld:"), heldenKarte(e.held, true),
          el("p", { class: "steckbrief", lang: "en" }, e.held.steckbrief)]
@@ -2175,7 +2192,7 @@
         ton && ton.audio && knopf("🔊 Anhören", () => spiele([ton.audio])),
         knopf("Weiter ➜", () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
     feier.showModal();
-    if (ton && ton.audio) spiele([ton.audio], { warten: true }); // wartet, falls noch ein Lob läuft
+    if (ton && ton.audio && !nachFilm) spiele([ton.audio], { warten: true }); // wartet, falls noch ein Lob läuft; nach dem Heldenfilm nur auf Knopfdruck
   }
   /* Mega-Lob (6.11.2026, Mr. Alex): erster Abschluss einer ganzen Station mit laufender Serie → Lichtblitz, Konfetti und ein Satz von Mr. Alex
      (zufällig einer von drei je Stufe). Power ab 3, Superpower ab 5, Mega ab 10 Schultagen am Stück oder mit dem Abzeichen Perfect month.
@@ -2255,7 +2272,7 @@
       faktZeigen(o, true);
     });
     const helden = el("div", { class: "heldenraster" }, SP.helden.map((h) => sp.helden.includes(h.id)
-      ? el("button", { class: "held-knopf", onclick: () => heldZeigen(h) }, heldenKarte(h))
+      ? el("button", { class: "held-knopf", onclick: () => { if (!heldFilm(h, () => heldZeigen(h, false))) heldZeigen(h); } }, heldenKarte(h))   // mit Film: erst der Film, danach die Karte
       : el("div", { class: "held-zu", "aria-label": "Noch nicht gesammelt" }, el("span", {}, "?"), el("small", {}, "Perfect week"))));
     zeige(
       el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Meine Sammlung")),
@@ -2928,12 +2945,13 @@
       el("p", { class: "klein" }, "Eine Akte öffnet sich, wenn du den Superhelden hast und seinen Ort in London freigeschaltet hast."), el("div", { class: "akten" }, kacheln));
   }
 
-  function heldZeigen(h) {
+  function heldZeigen(h, mitTon = true) {
     feier.replaceChildren(heldenKarte(h, true), el("p", { class: "steckbrief", lang: "en" }, h.steckbrief),
       el("div", { class: "knopfreihe" }, h.audio && knopf("🔊 Anhören", () => spiele([h.audio])),
+        heldHatFilm(h) && knopf("▶ Film", () => { feier.close(); stopp(); heldFilm(h, () => heldZeigen(h, false)); }, "leise"),
         knopf("Schließen", () => { feier.close(); stopp(); }, "haupt")));
     feier.showModal();
-    if (h.audio) spiele([h.audio]);
+    if (h.audio && mitTon) spiele([h.audio]);
   }
 
   function londonKarte(frei, waehle) {
@@ -3782,6 +3800,7 @@
   setInterval(updateHinweis, 3000);
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "ort", ort: SP.orte.find((o) => o.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalt-Anzeige eines Orts (Orts-Szene/Stempel) auslösen
+  if (LOKAL) window.__heldEreignis = (id) => { ereignisse.push({ art: "held", held: SP.helden.find((h) => h.id === id) }); zeigeEreignisse(); }; // nur Test-Build: neuer Superheld (Heldenfilm, danach Karte)
   if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
   if (LOKAL) window.__station = (nr) => { lage = { nr, gruppe: null, teil: 0 }; stationGeschafft(); }; // nur Test-Build: Station abschließen (Mega-Lob)
   if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da

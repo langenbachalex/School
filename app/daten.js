@@ -7189,7 +7189,7 @@ window.DATEN = {
  "hausaufgaben": [
   {
    "von": "2026-10-30",
-   "bis": "2026-11-08",
+   "bis": "2026-11-06",
    "ziel": "6/3; 8",
    "text": "Hörübung 3 + Neu: How often, Sports and hobbies, School clubs",
    "ziele": [
@@ -7231,6 +7231,114 @@ window.DATEN = {
       "8|2|0",
       "8|2|1",
       "8|2|2"
+     ]
+    }
+   ]
+  },
+  {
+   "von": "2026-11-07",
+   "bis": "2026-11-11",
+   "ziel": "7/1; 7/2; 7/3; 7/4; 7/5; 7/6; 8/How often? (never … always)",
+   "text": "Vokabeltest Mi 11.11.: Unit 3 bis Topic 2 (bis „sea“) + How often? (never … always)",
+   "ziele": [
+    {
+     "ziel": "7/1",
+     "nr": 7,
+     "gruppe": 0,
+     "teil": null,
+     "name": "Station 7: Vokabeln · Unit 3: My day",
+     "schluessel": [
+      "7|0|0",
+      "7|0|1",
+      "7|0|2",
+      "7|0|3",
+      "7|0|4"
+     ]
+    },
+    {
+     "ziel": "7/2",
+     "nr": 7,
+     "gruppe": 1,
+     "teil": null,
+     "name": "Station 7: Vokabeln · Topic 1 · Teil 1",
+     "schluessel": [
+      "7|1|0",
+      "7|1|1",
+      "7|1|2",
+      "7|1|3",
+      "7|1|4"
+     ]
+    },
+    {
+     "ziel": "7/3",
+     "nr": 7,
+     "gruppe": 2,
+     "teil": null,
+     "name": "Station 7: Vokabeln · Topic 1 · Teil 2",
+     "schluessel": [
+      "7|2|0",
+      "7|2|1",
+      "7|2|2",
+      "7|2|3",
+      "7|2|4"
+     ]
+    },
+    {
+     "ziel": "7/4",
+     "nr": 7,
+     "gruppe": 3,
+     "teil": null,
+     "name": "Station 7: Vokabeln · Topic 1 · Teil 3",
+     "schluessel": [
+      "7|3|0",
+      "7|3|1",
+      "7|3|2",
+      "7|3|3",
+      "7|3|4"
+     ]
+    },
+    {
+     "ziel": "7/5",
+     "nr": 7,
+     "gruppe": 4,
+     "teil": null,
+     "name": "Station 7: Vokabeln · Topic 2 · Teil 1",
+     "schluessel": [
+      "7|4|0",
+      "7|4|1",
+      "7|4|2",
+      "7|4|3",
+      "7|4|4"
+     ]
+    },
+    {
+     "ziel": "7/6",
+     "nr": 7,
+     "gruppe": 5,
+     "teil": null,
+     "name": "Station 7: Vokabeln · Topic 2 · Teil 2",
+     "schluessel": [
+      "7|5|0",
+      "7|5|1",
+      "7|5|2",
+      "7|5|3"
+     ]
+    },
+    {
+     "ziel": "8/How often? (never … always)",
+     "nr": 8,
+     "gruppe": 0,
+     "teil": null,
+     "name": "Station 8: Neu · How often? (never … always)",
+     "schluessel": [
+      "8|0|0",
+      "8|0|1",
+      "8|0|2",
+      "8|0|3",
+      "8|0|4",
+      "8|0|5",
+      "8|0|6",
+      "8|0|7"
      ]
     }
    ]

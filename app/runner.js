@@ -251,6 +251,19 @@
     if (filter && actx.createBiquadFilter) { const f = actx.createBiquadFilter(); f.type = filter.typ; f.frequency.value = filter.freq; q.connect(f); kopf = f; }
     kopf.connect(g); g.connect(actx.destination); q.start(t0); q.stop(t0 + dauer + 0.02);
   }
+  function glockenTon(f, start, laut, dauer) {   // Glocke: Hum (½), Prime, kleine Terz (1,2), Quinte (1,5), Nominal (2), Anschlag
+    if (!actx) return;
+    rauschen(0.04, 0.04 * laut, start, { typ: "bandpass", freq: f * 12 });
+    [[0.5, 1.0, 0.06], [1, 0.9, 0.11], [1.2, 0.6, 0.05], [1.5, 0.45, 0.03], [2, 0.5, 0.05], [2.5, 0.25, 0.015]].forEach(([r, d, l]) => ton(f * r, dauer * d, "sine", l * laut, start));
+  }
+  // Echte Aufnahmen für einzelne Klänge (Orts-Szenen): die App setzt sie mit Runner.klangDatei(name, url); gespielt nur bei eingeschaltetem Ton (actx), sonst/bei Fehler WebAudio
+  const KLANG_DATEI = {};
+  function klangDatei(name, url) { if (url) KLANG_DATEI[name] = url; else delete KLANG_DATEI[name]; }
+  let klangDateiGespielt = 0;
+  function klangDateiSpielen(name, laut, ersatz) {
+    const url = KLANG_DATEI[name]; if (!url || !actx || typeof Audio === "undefined") return false;
+    try { const a = new Audio(url); a.volume = Math.min(1, laut * EFFEKT_LAUT * 1.5); const p = a.play(); klangDateiGespielt++; if (p && p.catch) p.catch(() => { if (ersatz) ersatz(); }); return true; } catch (e) { return false; }
+  }
   const klang = {
     sprung() { ton(300, 0.12, "square", 0.05); ton(520, 0.1, "square", 0.04, 0.05); },
     diamant() { ton(880, 0.1, "triangle", 0.1); ton(1320, 0.14, "triangle", 0.1, 0.08); ton(1760, 0.2, "triangle", 0.08, 0.16); },
@@ -349,8 +362,20 @@
     schnarchen() { ton(70, 0.9, "sawtooth", 0.035, 0, 95); rauschen(0.8, 0.02, 0.05, { typ: "lowpass", freq: 260 }); ton(640, 0.5, "sine", 0.012, 1.05, 520); },
     zapfen() { for (let i = 0; i < 3; i++) ton(2400 + i * 300, 0.04, "square", 0.03, i * 0.12, 1800); rauschen(0.3, 0.025, 0, { typ: "highpass", freq: 3000 }); },   // Eiszapfen knackt (Warnung)
     splittern() { rauschen(0.22, 0.06, 0, { typ: "highpass", freq: 2600 }); [3136, 2637, 3520].forEach((f, i) => ton(f, 0.12, "triangle", 0.05, i * 0.05)); },   // Eiszapfen zersplittert am Boden
-    // Orts-Szene Big Ben (6.11.): Glockenschlag – tiefer Grundton E mit Obertönen, kurzer Anschlag
-    glocke() { rauschen(0.05, 0.05, 0, { typ: "bandpass", freq: 2400 }); [[165, 2.8, 0.12], [330, 2.0, 0.05], [412, 1.6, 0.04], [495, 1.3, 0.03], [660, 0.9, 0.02]].forEach(([f, d, l]) => ton(f, d, "sine", l)); ton(82, 2.4, "sine", 0.06); },
+    // Orts-Szene Big Ben (6.11.): Glockenschlag – echte Aufnahme, wenn die App eine Datei gesetzt hat (Runner.klangDatei('glocke', …)), sonst WebAudio-Nachbau:
+    // Stundenglocke E (≈ 165 Hz) mit Glocken-Teiltönen (Hum, Prime, kleine Terz, Quinte, Nominal); davor im Szenen-Ablauf die Westminster-Viertelmelodie (viertel)
+    glocke() { const web = () => glockenTon(165, 0, 1, 3.2); if (!klangDateiSpielen('glocke', 0.55, web)) web(); },
+    viertel() { [415.3, 370, 329.6, 246.9].forEach((f, i) => glockenTon(f, i * 0.62, 0.45, i === 3 ? 1.8 : 1.1)); },   // Quarter-Glocken G#4–F#4–E4–B3, ein Durchgang
+    // Orts-Szenen (6.11., Etappe 2): Tower Bridge öffnet (tiefes Brummen + Knarren), Schiff tuckert (pulsierender Motor), Fährhorn (NY), Filmklappe, Adler mit Echo, Motor (Route 66), Meißeln (Rushmore), U-Bahn-Türen
+    klappeAuf() { ton(48, 1.9, "sawtooth", 0.05, 0, 58); ton(72, 1.7, "square", 0.02, 0.1, 80); rauschen(1.8, 0.025, 0, { typ: "lowpass", freq: 220 }); ton(210, 0.4, "sawtooth", 0.02, 0.5, 150); ton(240, 0.35, "sawtooth", 0.018, 1.2, 170); },
+    schiff() { for (let i = 0; i < 14; i++) { ton(58, 0.09, "square", 0.03, i * 0.17, 50); rauschen(0.07, 0.015, i * 0.17, { typ: "lowpass", freq: 300 }); } },
+    faehre() { ton(146.8, 1.4, "sawtooth", 0.05); ton(220, 1.4, "sawtooth", 0.03); ton(73.4, 1.5, "sine", 0.05); rauschen(1.4, 0.015, 0, { typ: "lowpass", freq: 400 }); },
+    klappe() { rauschen(0.04, 0.12, 0, { typ: "highpass", freq: 1500 }); ton(1200, 0.04, "square", 0.05, 0, 600); },
+    adlerEcho() { [1, 0.45, 0.2].forEach((l, k) => { ton(2200, 0.45, "sawtooth", 0.03 * l, k * 0.55, 900); ton(2400, 0.3, "sine", 0.025 * l, k * 0.55 + 0.05, 1100); }); },
+    motor() { ton(70, 1.6, "sawtooth", 0.04, 0, 120); ton(140, 1.4, "square", 0.015, 0.1, 220); rauschen(1.5, 0.02, 0, { typ: "lowpass", freq: 500 }); },
+    meissel() { for (let i = 0; i < 4; i++) { ton(2600 + (i % 2) * 400, 0.03, "square", 0.018, i * 0.32); rauschen(0.04, 0.02, i * 0.32, { typ: "highpass", freq: 3000 }); } },
+    tuerZu() { ton(784, 0.4, "sine", 0.06); ton(523, 0.6, "sine", 0.06, 0.38); },   // „Doors closing“: fallende Quinte (G5 → C5)
+    dingDong() { ton(659, 0.4, "sine", 0.06); ton(880, 0.4, "sine", 0.06, 0.32); ton(659, 0.6, "sine", 0.05, 0.64); },   // NYC Subway: steigend-fallender Zweiklang
     feuer() { rauschen(1.1, 0.06, 0, { typ: "bandpass", freq: 900 }); rauschen(0.5, 0.045, 0, { typ: "highpass", freq: 3000 }); ton(110, 0.8, "sawtooth", 0.03, 0, 70); },
   };
 
@@ -1737,7 +1762,7 @@
   // Welt Tower Bridge (Klasse 6, Welt 3): Brückenklappen (Phasen ruhe → warnung → hebt → oben → senkt → weg; winkel 0..KLAPPE_MAX), Boot-Abschnitte (imBoot = Abschnitt unter der Figur), Treibgut, Horn-Zähler (Tests)
   let klappen = [], boote = [], treibgut = [], hornt = 0, imBoot = null, ruderZeit = -9;
   // Welt The Tube (Klasse 6, Welt 4): Spalte (gewarnt = Durchsage lief), Zugtüren (Phasen offen → warnung → schliesst → zu → oeffnet → weg; schluss 0..1), Zähler Durchsagen/Piepser (Tests), Rabe im Zug (Weg B, ab ♪B6)
-  let spalten = [], tueren = [], durchsagen = 0, piept = 0, rabeMit = null;
+  let spalten = [], tueren = [], durchsagen = 0, piept = 0, rabeMit = null, tuerAnsagen = 0, nyDurchsage = false;
   // Welt Wembley (Klasse 6, Welt 5): rollende Bälle (Phasen ruhe → rollt → platt → weg; rx = aktuelle Mitte), Zähler Kopfbälle/Treffer (Tests), Zeitpunkt des Türtritts (♪A8, Toilettenblock; −1 = noch nicht)
   let baelle = [], koepfer = 0, ballTreffer = 0, tuerTritt = -1, rasenBetreten = false;
   const BALL_R = 16, BALL_VORLAUF = 520, BALL_TEMPO = 240, BALL_PLATT = 0.6;
@@ -1795,7 +1820,7 @@
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
     trommelt = 0; dunkel = 0; radWinkel = 0; radRueck = 0; kameraHoch = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 60, y: BODEN_Y, flug: 0 } : null;
     klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
-    spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null;   // The Tube
+    spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null; tuerAnsagen = 0; nyDurchsage = false; durchsagenGesprochen = [];   // The Tube, New York (U-Bahn-Durchsage)
     baelle = (level.baelle || []).map((b) => ({ ...b, phase: 'ruhe', rx: b.x, rot: 0, t: 0 })); koepfer = 0; ballTreffer = 0; tuerTritt = -1; rasenBetreten = false;   // Wembley
     cameo = null; cameosGezeigt = 0; cameoEffekt = null; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoPlan = cameoPlanBauen();
@@ -2384,6 +2409,9 @@
     if (W.id === 'sd' && story) dunkel = spieler.y > BODEN_Y - 70 ? dunkelBei(spieler.x) : Math.max(0, dunkel - dt * 6);   // Story Kapitel 4: der alte Tunnel ist dunkel wie der Maschinenraum (nur unten)
     if (W.id === 'towerbridge') towerBridgeBewegen(dt);
     if (W.id === 'tube') tubeBewegen(dt);
+    if (W.id === 'ny' && !nyDurchsage && zustand === 'spiel' && tot <= 0) {   // New York: „Stand clear of the closing doors, please“ mit Ding-Dong – einmal je Lauf, am U-Bahn-Eingang (Story) bzw. kurz nach dem Start
+      if (spieler.x > nyDurchsageBei()) { nyDurchsage = true; klang.dingDong(); durchsageSprechen('Stand clear of the closing doors, please.', 'en-US'); }
+    }
     if (W.id === 'wembley') wembleyBewegen(dt);
   }
   // The Tube: Spalt – Figur ≈ 380 davor → Gong + Durchsage-Schild blinkt + Meldung „Mind the gap!“ (einmal je Anlauf; nach dem Checkpoint wieder). Zugtür – Figur ≈ 300 davor → Warnton + blinkende Kanten (0,6 s),
@@ -2395,7 +2423,7 @@
       else if (spieler.x < s.x - SPALT_VORLAUF - 60) s.gewarnt = false;
     }
     for (const t of tueren) {
-      if (t.phase === 'offen') { if (zustand === 'spiel' && tot <= 0 && spieler.x > t.x - TUER_VORLAUF && spieler.x < t.x - 10) { t.phase = 'warnung'; t.t = 0; piept++; klang.tuerwarn(); } }
+      if (t.phase === 'offen') { if (zustand === 'spiel' && tot <= 0 && spieler.x > t.x - TUER_VORLAUF && spieler.x < t.x - 10) { t.phase = 'warnung'; t.t = 0; piept++; klang.tuerwarn(); if (!t.gesagt) { t.gesagt = true; tuerAnsagen++; klang.tuerZu(); meldung = { text: 'Doors closing! 🚪', zeit: 1.4 }; durchsageSprechen('Please mind the doors.', 'en-GB'); } } }   // „Doors closing“ (fallende Quinte + Stimme) nur einmal je Tür
       else if (t.phase === 'warnung') { t.t += dt; if (t.t >= TUER_WARN) { t.phase = 'schliesst'; t.t = 0; } }
       else if (t.phase === 'schliesst') { t.t += dt; t.schluss = Math.min(1, t.t / TUER_SCHLIESST); if (t.t >= TUER_SCHLIESST) { t.phase = 'zu'; t.t = 0; t.schluss = 1; } }
       else if (t.phase === 'zu') { t.t += dt; if (t.t >= TUER_ZU) { t.phase = 'oeffnet'; t.t = 0; } }
@@ -2439,7 +2467,7 @@
   function towerBridgeBewegen(dt) {
     for (const k of klappen) {
       if (k.phase === 'ruhe') { if (zustand === 'spiel' && tot <= 0 && spieler.x > k.x - KLAPPE_VORLAUF && spieler.x < k.x) { k.phase = 'warnung'; k.t = 0; hornt++; klang.horn(); meldung = { text: 'Up goes the bridge! 🌉', zeit: 1.4 }; } }
-      else if (k.phase === 'warnung') { k.t += dt; if (k.t >= KLAPPE_WARN) { k.phase = 'hebt'; k.t = 0; } }
+      else if (k.phase === 'warnung') { k.t += dt; if (k.t >= KLAPPE_WARN) { k.phase = 'hebt'; k.t = 0; klang.klappeAuf(); } }   // beim Öffnen tiefes Brummen + Knarren (wie in der Orts-Szene)
       else if (k.phase === 'hebt') { k.t += dt; k.winkel = KLAPPE_MAX * sanft(k.t / KLAPPE_HEBT); if (k.t >= KLAPPE_HEBT) { k.phase = 'oben'; k.t = 0; k.winkel = KLAPPE_MAX; } }
       else if (k.phase === 'oben') { k.t += dt; if (k.t >= KLAPPE_OBEN) { k.phase = 'senkt'; k.t = 0; } }
       else if (k.phase === 'senkt') { k.t += dt; k.winkel = KLAPPE_MAX * (1 - sanft(k.t / KLAPPE_SENKT)); if (k.t >= KLAPPE_SENKT) { k.phase = 'weg'; k.winkel = 0; } }
@@ -2799,6 +2827,10 @@
     bossSpruch = { text, zeit: dauer }; spruchEl.textContent = W.bossSymbol + " " + text;
     try { stimme.boss(text, { art, audio: audioDatei('boss', art) }); } catch (e) { /* stumm */ }
   }
+  // Durchsagen im Runner (U-Bahn): über stimme.durchsage der App (Haupttext-Vorrang, nicht störend); ohne sie stumm
+  const nyDurchsageBei = () => { const sub = (level.deko || []).find((d) => d.art === 'subway'); return sub ? sub.x - 260 : 700; };
+  function durchsageSprechen(text, lang) { durchsagenGesprochen.push(text); try { if (stimme.durchsage) stimme.durchsage(text, { lang }); } catch (e) { /* stumm */ } }
+  let durchsagenGesprochen = [];
   // Aufnahmen der App (Option audio je Welt: { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } }); fehlt eine, spricht die App mit der Geräte-Stimme
   function audioDatei(gruppe, key) {
     const a = opt && opt.audio; if (!a) return null;
@@ -3557,7 +3589,8 @@
       const n = viewW + 700, bx = ((i * 520 + 140 - kamera * 0.32) % n + n) % n - 350, grp = i % 3;
       bueffelSilhouette(c, bx, 292, 0.7, '#3a2a22'); if (grp !== 1) bueffelSilhouette(c, bx + 44, 296, 0.6, '#3a2a22'); if (grp === 2) bueffelSilhouette(c, bx + 80, 290, 0.5, '#3a2a22');
     }
-    schildRushmore(c, viewW * (0.86 - 0.5 * naehe), 304 - naehe * 10, 0.6 + naehe * 1.0, true);   // Zielschild kommt näher
+    const schildA = level.schild == null ? 1 : level.schild;   // Orts-Szene: Schild erst am Ende (level.schild 0…1, poppt auf)
+    if (schildA > 0) { c.save(); c.globalAlpha = schildA; schildRushmore(c, viewW * (0.86 - 0.5 * naehe), 304 - naehe * 10, (0.6 + naehe * 1.0) * (0.7 + 0.3 * schildA), true); c.restore(); }   // Zielschild kommt näher
     for (let i = 0; i < 8; i++) { const n = viewW + 300, bx = ((i * 230 + 60 - kamera * 0.5) % n + n) % n - 150; tanne(c, bx, 330, 70 + ((i * 41) % 40), '#1f5f3a', '#4a2e18'); }   // nahe Tannen am Wegrand (0,5)
   }
   function waldboden(c, x0, w, a, b, links, rechts) {   // Waldweg: brauner Boden, Grasnarbe oben, Grashalme, Kiesel
@@ -7868,21 +7901,33 @@
     const d = t - t0; if (d < 0 || d > 1.6) return;
     c.save(); c.strokeStyle = farbe; for (let k = 0; k < 3; k++) { const f = d / 1.6 - k * 0.15; if (f <= 0) continue; c.globalAlpha = Math.max(0, 1 - f) * 0.8; c.lineWidth = 2; c.beginPath(); c.arc(x, y, 8 + f * 60, 0, Math.PI * 2); c.stroke(); } c.restore();
   };
+  function szStrasse(c, kam) {   // Orts-Szene Bus: Ufermauer (Steinquader) mit schwarzem Geländer, Gehweg, Bordstein, Straße mit Mittellinie – der Fluss liegt dahinter
+    const v = -((kam % 64) + 64) % 64;
+    c.fillStyle = '#8d8a84'; c.fillRect(0, 286, SZ_W, 18); c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(0, 286, SZ_W, 2);
+    c.strokeStyle = 'rgba(60,55,50,.45)'; c.lineWidth = 1; for (let x = v; x < SZ_W; x += 32) { c.beginPath(); c.moveTo(x, 286); c.lineTo(x, 295); c.moveTo(x + 16, 295); c.lineTo(x + 16, 304); c.stroke(); } c.beginPath(); c.moveTo(0, 295); c.lineTo(SZ_W, 295); c.stroke();
+    c.fillStyle = '#1d1d1d'; c.fillRect(0, 266, SZ_W, 3); c.fillRect(0, 276, SZ_W, 2); for (let x = v; x < SZ_W; x += 16) c.fillRect(x, 266, 2, 20);   // Geländer
+    for (let x = v; x < SZ_W + 64; x += 128) { c.beginPath(); c.arc(x + 1, 265, 3, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#c9c4ba'; c.fillRect(0, 304, SZ_W, 14);   // Gehweg
+    c.fillStyle = '#e8e4dc'; c.fillRect(0, 318, SZ_W, 4); c.fillStyle = '#6f6b64'; c.fillRect(0, 322, SZ_W, 2);   // Bordstein
+    c.fillStyle = '#4a4d52'; c.fillRect(0, 324, SZ_W, H - 324);   // Straße
+    c.fillStyle = 'rgba(255,255,255,.85)'; for (let x = v * 2; x < SZ_W; x += 96) c.fillRect(x, 350, 48, 4);   // Mittellinie
+    c.fillStyle = '#e0a400'; c.fillRect(0, 327, SZ_W, 2); c.fillRect(0, 331, SZ_W, 2);   // doppelte gelbe Linie am Rand
+  }
   const SZENEN = {
     // Klasse 6 – London
-    big_ben: { dauer: 8.6, klaenge: [[0.6, 'klick'], [1.2, 'klick'], [1.8, 'klick'], [2.4, 'klick'], [3.4, 'glocke'], [4.8, 'glocke'], [6.2, 'glocke']],
-      zeichne(c, t) {   // ganzer Elizabeth Tower mit Parlament, Themse; der Minutenzeiger springt auf 12, dann zoomt die Kamera in die Glockenstube: Big Ben schlägt dreimal (3 Uhr)
-        const [kx, ky, kz] = szWeg(t, [[0, 240, 205, 1], [2.5, 300, 200, 1.05], [3.3, 376, 128, 3.4], [7.0, 376, 130, 3.6], [8.2, 280, 200, 1]]);
+    big_ben: { dauer: 9.6, klaenge: [[0.4, 'klick'], [0.8, 'klick'], [1.2, 'klick'], [1.6, 'klick'], [1.9, 'viertel'], [4.6, 'glocke'], [6.0, 'glocke'], [7.4, 'glocke']],
+      zeichne(c, t) {   // ganzer Elizabeth Tower mit Parlament, Themse; der Minutenzeiger springt auf 12, die Viertelmelodie spielt, die Kamera zoomt in die Glockenstube: Big Ben schlägt dreimal (3 Uhr)
+        const [kx, ky, kz] = szWeg(t, [[0, 240, 205, 1], [2.2, 300, 200, 1.05], [4.2, 376, 128, 3.4], [8.2, 376, 130, 3.6], [9.3, 280, 200, 1]]);
         c.save(); szKam(c, kx, ky, kz);
         szHimmel(c, '#5f9bd6', '#e6f0f8'); szWolken(c, t, [[-120, 40], [430, 10], [700, 70]]);
         szWelt({ zeit: t, kamera: 0 }, () => themse(c, -400, 1200));
         c.fillStyle = '#9b958a'; c.fillRect(-400, BODEN_Y - 4, 1600, 14);
         parlament(c, 362, BODEN_Y - 4, 1.0, '#cdb88d');
-        const schritt = Math.min(4, Math.floor(t / 0.6)), minute = -Math.PI / 2 - (4 - schritt) * 0.105;   // springt in 4 Schritten auf die volle Stunde
-        const schlag = [3.4, 4.8, 6.2].reduce((m, s) => (t >= s ? s : m), -9), schwung = t < 3.2 ? 0 : Math.sin((t - 3.2) * Math.PI / 1.4) * 0.5 * (ruhig() ? 0.3 : 1);
+        const schritt = Math.min(4, Math.floor(t / 0.4)), minute = -Math.PI / 2 - (4 - schritt) * 0.105;   // springt in 4 Schritten auf die volle Stunde
+        const schlag = [4.6, 6.0, 7.4].reduce((m, s) => (t >= s ? s : m), -9), schwung = t < 4.4 ? 0 : Math.sin((t - 4.4) * Math.PI / 1.4) * 0.5 * (ruhig() ? 0.3 : 1);
         bigBen(c, 380, BODEN_Y - 4, 1.06, '#d8c497', { detail: true, minute, stunde: 0, glocke: schwung });
         if (schlag > 0) { szRinge(c, 380 - 20, BODEN_Y - 4 - 199 * 1.06, schlag, t, 'rgba(255,235,170,1)'); szRinge(c, 380 + 20, BODEN_Y - 4 - 199 * 1.06, schlag, t, 'rgba(255,235,170,1)'); }
-        if (t > 3.3 && t < 7.2) { c.fillStyle = '#fff'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('BONG!', 380 + 26, BODEN_Y - 4 - 214 * 1.06 - (t - schlag) * 4); }
+        if (t > 4.5 && t < 8.6) { c.fillStyle = '#fff'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('BONG!', 380 + 26, BODEN_Y - 4 - 214 * 1.06 - (t - schlag) * 4); }
         c.restore();
       } },
     london_eye: { dauer: 8, klaenge: [[0.4, 'gondel'], [2.6, 'gondel'], [5.2, 'station']],
@@ -7892,7 +7937,7 @@
         szWeltKulisse(c, t, 'londoneye', 4000, 1200, 1320, 8, t * 0.16);
         c.restore();
       } },
-    tower_bridge: { dauer: 8.6, klaenge: [[0.3, 'horn'], [3.4, 'welle'], [6.6, 'horn']],
+    tower_bridge: { dauer: 8.6, klaenge: [[0.3, 'horn'], [1.2, 'klappeAuf'], [2.8, 'schiff'], [3.4, 'welle'], [6.6, 'horn']],
       zeichne(c, t) {   // Horn, die Klappen heben sich, ein Boot fährt zwischen den Türmen hindurch, dann senken sich die Klappen
         const winkel = t < 1.2 ? 0 : t < 3.2 ? sanft((t - 1.2) / 2) * 1.15 : t < 6.4 ? 1.15 : (1 - sanft((t - 6.4) / 1.8)) * 1.15;
         const [kx, ky, kz] = szWeg(t, [[0, 640, 200, 0.82], [8.6, 600, 210, 0.92]]);
@@ -7932,7 +7977,7 @@
         });
         c.restore();
       } },
-    tube: { dauer: 8, klaenge: [[0.3, 'durchsage'], [1.1, 'zug'], [5.4, 'tuerwarn']],
+    tube: { dauer: 8, klaenge: [[0.3, 'durchsage'], [1.1, 'zug'], [5.4, 'tuerwarn']], saetze: [[3.8, 'Mind the gap between the train and the platform.', 'en-GB']],
       zeichne(c, t) {   // Bahnsteig mit Stationsschild; der Zug fährt ein und hält, das Schild „MIND THE GAP“ blinkt
         const dx = t < 3.6 ? (1 - sanft(t / 3.6)) * 1100 : 0;
         const [kx, ky, kz] = szWeg(t, [[0, 600, 210, 0.8], [8, 660, 220, 0.88]]);
@@ -7943,7 +7988,8 @@
     bus: { dauer: 7.5, klaenge: [[0.6, 'bus'], [3.4, 'bus']],
       zeichne(c, t) {   // Westminster im Nieselwetter; ein roter Doppeldecker fährt durchs Bild
         const kam = szWeltKulisse(c, t, 'westminster', 40000, 15000, 15300, 7.5);
-        c.save(); c.translate(0, BODEN_Y + 52); c.scale(1.5, 1.5); c.translate(0, -BODEN_Y);   // vorn auf der Promenade, etwas größer
+        szStrasse(c, kam);   // Ufermauer mit Geländer vor der Themse, davor Gehweg, Bordstein und breite Straße
+        c.save(); c.translate(0, 388); c.scale(1.25, 1.25); c.translate(0, -BODEN_Y);   // der Bus fährt auf der Straße (vordere Spur)
         szWelt({ zeit: t, kamera: kam }, () => londonFahrzeug(c, { art: 'bus', x: kam + lerp(480, -140, t / 7.5), w: AUTO_MASSE.bus.w, h: AUTO_MASSE.bus.h, von: 0, rad: t * 9 }));
         c.restore();
       } },
@@ -7956,7 +8002,7 @@
         });
       } },
     // Klasse 9 – USA
-    liberty: { dauer: 8, klaenge: [[0.8, 'moewe'], [3.6, 'fanfare']],
+    liberty: { dauer: 8, klaenge: [[0.6, 'moewe'], [1.4, 'faehre'], [3.2, 'moewe'], [4.4, 'moewe']],
       zeichne(c, t) {   // New York Harbor: die Freiheitsstatue, die Kamera fährt hinauf zur Fackel, die Flamme leuchtet
         const z = lerp(1, 1.7, sanft((t - 1) / 4)), fx = SZ_W * 0.72 - 30 + 16 * 1.4, fy = 250 - 176 * 1.4;
         c.save(); c.translate(fx, fy); c.scale(z, z); c.translate(-fx, -fy + (z - 1) * 90);
@@ -7971,7 +8017,7 @@
         const d = t < 1 ? 0 : t < 3.4 ? sanft((t - 1) / 2.4) * 0.85 : t < 5.8 ? 0.85 : (1 - sanft((t - 5.8) / 2.4)) * 0.85;
         szWelt({ zeit: t, kamera: kam }, () => nebelZeichnen(c, d));
       } },
-    hollywood: { dauer: 7.5, klaenge: [[1.2, 'fanfare']],
+    hollywood: { dauer: 7.5, klaenge: [[0.5, 'klappe'], [1.2, 'fanfare']],
       zeichne(c, t) {   // Abendhimmel über Los Angeles, Scheinwerfer kreisen über dem Hollywood Sign
         const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2b3f7a'); g.addColorStop(0.6, '#e98a5a'); g.addColorStop(1, '#ffd08a'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, H);
         c.save(); c.globalAlpha = 0.25; c.fillStyle = '#fff8d0';
@@ -7981,25 +8027,25 @@
         c.save(); c.translate(SZ_W / 2, 330); c.scale(z, z); szWelt({ zeit: t, kamera: 0 }, () => hollywoodSign(c, 0, 0)); c.restore();
         c.fillStyle = '#5f8a44'; c.fillRect(0, 328, SZ_W, H);
       } },
-    grand_canyon: { dauer: 8, klaenge: [[1.0, 'geier'], [3.2, 'wind'], [5.6, 'geier']],
+    grand_canyon: { dauer: 8, klaenge: [[0.4, 'wind'], [1.6, 'adlerEcho'], [4.2, 'wind'], [5.8, 'geier']],
       zeichne(c, t) {   // Felsschichten, kreisende Geier, vorn die Schlucht mit dem Colorado River
         c.save(); c.translate(0, -52);   // Blick etwas nach unten: die Schlucht mit dem Fluss ist zu sehen
         const kam = szWeltKulisse(c, t, 'az', 30000, 25000, 25500, 8);
         szWelt({ zeit: t, kamera: kam }, () => schlucht(c, kam + 140, kam + 500));
         c.restore();
       } },
-    route66: { dauer: 7.5, klaenge: [[1.6, 'auto'], [3.0, 'hupe']],
+    route66: { dauer: 7.5, klaenge: [[0.8, 'motor'], [3.0, 'hupe']],
       zeichne(c, t) {   // Wüste, das große Route-66-Schild, ein Auto fährt auf dem Highway vorbei und hupt
         const kam = szWeltKulisse(c, t, 'route66', 30000, 29400, 29800, 7.5), naehe = Math.min(1, kam / 30000);
         const f = Math.min(1, t / 6);
         schild66(c, SZ_W * (0.8 - 0.5 * naehe), 212 - naehe * 12, 0.6 + naehe * 1.0, '#f4f4f4', true);   // das Zielschild der Kulisse noch einmal vorn (Mittelgrund verdeckt es sonst)
         szWelt({ zeit: t, kamera: kam }, () => autoZeichnen(c, { art: 'auto', x: kam + lerp(SZ_W + 120, -160, f), w: AUTO_MASSE.auto.w, h: AUTO_MASSE.auto.h, von: 7, rad: t * 12 }));
       } },
-    rushmore: { dauer: 8.5, klaenge: [[0.8, 'adler'], [4.0, 'wind']],
-      zeichne(c, t) {   // die Kamera schwenkt über die vier Köpfe: Washington, Jefferson, Roosevelt, Lincoln
+    rushmore: { dauer: 9.8, klaenge: [[0.4, 'wind'], [1.6, 'meissel'], [3.6, 'meissel'], [5.2, 'wind'], [6.6, 'adler']],
+      zeichne(c, t) {   // die Kamera schwenkt über die vier Köpfe: Washington, Jefferson, Roosevelt, Lincoln; das Schild „MOUNT RUSHMORE“ erscheint erst am Ende
         const kopfX = 243 - 96 * 1.45 + 10, [fx, fy, z] = szWeg(t, [[0, SZ_W / 2, H / 2, 1], [1.4, kopfX, 150, 2.5], [6.6, kopfX + 168 * 1.45, 150, 2.5], [8.2, SZ_W / 2, H / 2, 1]]);
         c.save(); c.translate(SZ_W / 2, H / 2); c.scale(z, z); c.translate(-fx, -fy);
-        szWeltKulisse(c, t, 'sd', 1000, 1000, 1000, 8.5);
+        szWelt({ zeit: t, kamera: 1000, level: { ende: 1000, schild: t < 8.1 ? 0 : sanft((t - 8.1) / 0.7) } }, () => { WELTEN.sd.kulisse(c); WELTEN.sd.boden(c, 0, SZ_W, 1000, 1000 + SZ_W, 1000, 1000 + SZ_W); });
         c.restore();
       } },
   };
@@ -8017,17 +8063,18 @@
     if (!eigene) box.style.width = '100%';
     const cv = el('canvas', 'ortszene-canvas'); cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
     const titel = o.titel ? el('div', 'ortszene-titel', o.titel) : null;
-    if (titel) titel.style.cssText = 'position:absolute;left:10px;top:10px;padding:4px 10px;border-radius:999px;background:rgba(24,33,58,.78);color:#fff;font:700 13px system-ui,sans-serif;letter-spacing:.02em;';
+    if (titel) titel.style.cssText = 'position:absolute;left:10px;top:10px;padding:4px 10px;border-radius:999px;background:rgba(24,33,58,.78);color:#fff;font:700 13px system-ui,sans-serif;letter-spacing:.02em;z-index:2;';
     const zu = el('button', 'ortszene-zu', '✕'); zu.type = 'button'; zu.setAttribute('aria-label', 'Schließen');
-    zu.style.cssText = 'position:absolute;right:8px;top:8px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(24,33,58,.78);color:#fff;font:700 18px system-ui,sans-serif;cursor:pointer;';
+    zu.style.cssText = 'position:absolute;z-index:2;right:8px;top:8px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(24,33,58,.78);color:#fff;font:700 18px system-ui,sans-serif;cursor:pointer;';
     const unter = el('div', 'ortszene-text', o.text || ''); unter.lang = 'en';
     unter.style.cssText = 'position:absolute;left:50%;bottom:10px;transform:translateX(-50%);max-width:92%;padding:6px 12px;border-radius:10px;background:rgba(0,0,0,.62);color:#fff;font:600 clamp(13px,2.6vw,17px)/1.3 system-ui,sans-serif;text-align:center;';
     if (!o.text) unter.hidden = true;
     const foto = el('figure', 'ortszene-foto'); foto.hidden = true;
-    foto.style.cssText = 'position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) rotate(-2deg);margin:0;width:min(52%,360px);padding:6px 6px 4px;background:#fff;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.45);transition:opacity .5s, transform .5s;';
+    // Foto am Ende (Etappe 2): poppt groß auf und füllt die ganze Szene (Seitenverhältnis bleibt, Rand dunkel), Quellenzeile als Leiste unten auf dem Bild
+    foto.style.cssText = 'position:absolute;inset:0;margin:0;background:#0d1222;transform:scale(.55);transition:opacity .45s, transform .45s cubic-bezier(.2,1.4,.4,1);';
     if (o.foto) {
-      const img = el('img'); img.src = o.foto; img.alt = o.titel || ortId; img.style.cssText = 'display:block;width:100%;height:auto;border-radius:3px;';
-      const cap = el('figcaption', 'ortszene-quelle', o.quelle || ''); cap.style.cssText = 'font:500 10px/1.25 system-ui,sans-serif;color:#555;margin-top:4px;text-align:left;';
+      const img = el('img'); img.src = o.foto; img.alt = o.titel || ortId; img.style.cssText = 'display:block;width:100%;height:100%;object-fit:contain;';
+      const cap = el('figcaption', 'ortszene-quelle', o.quelle || ''); cap.style.cssText = 'position:absolute;left:0;right:0;bottom:0;padding:4px 10px;background:rgba(0,0,0,.62);color:#fff;font:500 11px/1.3 system-ui,sans-serif;text-align:left;';
       foto.append(img, cap);
     }
     const hinweis = el('div', 'ortszene-weiter', 'Tippen zum Schließen ➜'); hinweis.hidden = true;
@@ -8035,7 +8082,9 @@
     box.append(cv, ...(titel ? [titel] : []), zu, foto, hinweis, unter);
     (ebene || ziel).append(box);
     const c2 = cv.getContext('2d');
-    const A = { id: ortId, t: 0, phase: 'szene', uebersprungen: false, raf: 0, letzte: performance.now(), klaenge: S.klaenge.map((k) => ({ t: k[0], k: k[1], fertig: false })), ebene, box, o };
+    const A = { id: ortId, t: 0, phase: 'szene', uebersprungen: false, raf: 0, letzte: performance.now(), klaenge: S.klaenge.map((k) => ({ t: k[0], k: k[1], fertig: false })), saetze: (S.saetze || []).map((k) => ({ t: k[0], text: k[1], lang: k[2], fertig: false })), gesprochen: [], ebene, box, o };
+    // Sätze der Szene (Durchsagen) mit der Sprechfunktion der App (o.stimme(text, lang), Haupttext-Vorrang); ohne sie die Geräte-Stimme direkt
+    const sprich = (z) => { A.gesprochen.push(z.text); try { if (typeof o.stimme === 'function') return o.stimme(z.text, z.lang); if (window.speechSynthesis && typeof SpeechSynthesisUtterance !== 'undefined') { const u = new SpeechSynthesisUtterance(z.text); u.lang = z.lang; u.rate = 0.9; speechSynthesis.speak(u); A.eigeneStimme = true; } } catch (e) { /* stumm */ } };
     szAktiv = A;
     audioAn();
     const groesse = () => { const r = box.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2); cv.width = Math.max(2, Math.round(r.width * d)); cv.height = Math.max(2, Math.round(r.height * d)); return d * r.width / SZ_W; };
@@ -8051,7 +8100,8 @@
       if (A.phase !== 'szene') return;
       A.phase = 'foto'; A.t = Math.max(A.t, S.dauer);
       if (!o.foto) return schliessen();
-      foto.hidden = false; foto.style.opacity = '0'; requestAnimationFrame(() => { foto.style.opacity = '1'; foto.style.transform = 'translate(-50%,-50%) rotate(-2deg) scale(1)'; });
+      foto.hidden = false; foto.style.opacity = '0'; requestAnimationFrame(() => { foto.style.opacity = '1'; foto.style.transform = 'scale(1)'; });
+      hinweis.style.bottom = 'auto'; hinweis.style.top = '52px'; unter.style.bottom = '30px';   // Hinweis unter das ✕, Untertitel über die Quellenzeile
       hinweis.hidden = false; klang.schild(); bild();
     };
     const schliessen = () => {
@@ -8059,6 +8109,7 @@
       A.phase = 'zu'; cancelAnimationFrame(A.raf); window.removeEventListener('resize', aufGroesse); window.removeEventListener('keydown', aufTaste);
       box.remove(); if (ebene) ebene.remove(); if (szAktiv === A) szAktiv = null;
       if (!laeuft) audioAus();
+      if (A.eigeneStimme && window.speechSynthesis) try { speechSynthesis.cancel(); } catch (e) { /* egal */ }
       if (typeof o.onEnde === 'function') setTimeout(() => o.onEnde({ ort: ortId, uebersprungen: A.uebersprungen }), 0);
     };
     A.zumFoto = zumFoto; A.schliessen = schliessen;
@@ -8074,12 +8125,14 @@
       if (A.phase === 'szene') {
         A.t += dt;
         for (const k of A.klaenge) if (!k.fertig && A.t >= k.t) { k.fertig = true; try { klang[k.k](); } catch (e) { /* ohne Klang */ } }
+        for (const z of A.saetze) if (!z.fertig && A.t >= z.t) { z.fertig = true; sprich(z); }
         if (A.t >= S.dauer) zumFoto();
       }
       if (A.phase !== 'zu') { bild(); A.raf = requestAnimationFrame(schritt); }
     };
     bild(); A.raf = requestAnimationFrame(schritt);
-    if (TESTBUILD) window.__szene = { stand: () => ({ ort: A.id, t: Math.round(A.t * 100) / 100, phase: A.phase, dauer: S.dauer, foto: !foto.hidden, quelle: o.quelle || null, text: o.text || null, fehler: A.fehler || null, klaenge: A.klaenge.filter((k) => k.fertig).map((k) => k.k) }), ueberspringen: () => zumFoto(), zu: () => schliessen(), springe: (t) => { A.t = t; for (const k of A.klaenge) if (k.t < t) k.fertig = true; } };
+    if (TESTBUILD) window.__szene = { stand: () => ({ ort: A.id, t: Math.round(A.t * 100) / 100, phase: A.phase, dauer: S.dauer, foto: !foto.hidden, quelle: o.quelle || null, text: o.text || null, fehler: A.fehler || null, klaenge: A.klaenge.filter((k) => k.fertig).map((k) => k.k), gesprochen: A.gesprochen.slice(), klangDateien: Object.assign({}, KLANG_DATEI), dateiGespielt: klangDateiGespielt,
+      fotoMass: (() => { const r = box.getBoundingClientRect(), f = foto.getBoundingClientRect(); return { box: [Math.round(r.width), Math.round(r.height)], foto: [Math.round(f.width), Math.round(f.height)] }; })() }), ueberspringen: () => zumFoto(), zu: () => schliessen(), springe: (t) => { A.t = t; for (const k of A.klaenge) if (k.t < t) k.fertig = true; for (const z of A.saetze) if (z.t < t) z.fertig = true; } };
     return { stopp: schliessen, ueberspringen: zumFoto };
   }
   function szeneStopp() { if (szAktiv && szAktiv.schliessen) szAktiv.schliessen(); }
@@ -8111,7 +8164,7 @@
         surfs: surfs.map((s) => ({ x: s.x, w: s.w, aktiv: s.aktiv })), surft: surft > 0, geklaut, tutet,
         hornt, klappen: klappen.map((k) => ({ x: k.x, phase: k.phase, winkel: Math.round(k.winkel * 1000) / 1000 })), boote: boote.map((b) => ({ x: b.x, w: b.w })), treibgut: treibgut.map((t) => t.x), imBoot: !!imBoot,   // Tower Bridge
         mauern: level.plattformen.filter((p) => p.art === 'mauer').map((p) => ({ x: p.x, y: p.y, w: p.w })), rampeY: klappen.length ? rampeY(spieler.x) : null,
-        spalten: spalten.map((sp) => ({ x: sp.x, gewarnt: sp.gewarnt })), durchsagen, tueren: tueren.map((t) => ({ x: t.x, y: t.y, phase: t.phase, schluss: Math.round(t.schluss * 100) / 100, zu: tuerZu(t) })), piept,   // The Tube
+        spalten: spalten.map((sp) => ({ x: sp.x, gewarnt: sp.gewarnt })), durchsagen, tuerAnsagen, nyDurchsage, nyDurchsageBei: W && W.id === 'ny' ? nyDurchsageBei() : null, durchsagenGesprochen: durchsagenGesprochen.slice(), tueren: tueren.map((t) => ({ x: t.x, y: t.y, phase: t.phase, schluss: Math.round(t.schluss * 100) / 100, zu: tuerZu(t) })), piept,   // The Tube
         wagen: level.plattformen.filter((p) => p.art === 'wagen').map((p) => ({ x: p.x, y: p.y, w: p.w })), rolltreppen: level.plattformen.filter((p) => p.art === 'rolltreppe').map((p) => ({ x: p.x, y: p.y, w: p.w })),
         dunkelbahnsteig: (level.deko || []).filter((d) => d.art === 'dunkelbahnsteig').map((d) => ({ x: d.x, w: d.w })), rabe: rabeMit ? { x: Math.round(rabeMit.x), y: Math.round(rabeMit.y), fliegt: !!rabeMit.fliegt } : null,
         baelle: baelle.map((b) => ({ x: b.x, phase: b.phase, rx: Math.round(b.rx) })), koepfer, ballTreffer, tuerTritt: tuerTritt >= 0, rasenBetreten, spieler: wembleySpielerListe().map((sp) => ({ x: sp.x, name: sp.name || null, nr: sp.nr == null ? null : sp.nr, farbe: sp.farbe, torwart: !!sp.torwart })), fanSchilder: wembleySchilderListe(), tribuenen: level.plattformen.filter((p) => p.art === 'tribuene').map((p) => ({ x: p.x, y: p.y, w: p.w })),   // Wembley
@@ -8177,5 +8230,5 @@
     get wahlOffen() { return zustand === 'wahl' && !!wahlGabel && !frageBox.hidden; },
   };
 
-  window.Runner = { start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  window.Runner = { start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
 })();

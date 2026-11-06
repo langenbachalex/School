@@ -2129,7 +2129,10 @@
   const hatSzene = (o) => !!(o && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(o.id));
   function ortSzene(o, fertig) {
     if (!hatSzene(o)) return false;
-    const sz = window.Runner.szene(null, o.id, { text: o.fakt, titel: `${o.symbol} ${o.name} · London ✓`, foto: o.foto, quelle: o.foto_quelle, onEnde: () => { if (fertig) fertig(); } });
+    // Big Ben: bis eine echte Aufnahme da ist (Kandidat Commons „Big Ben 1 2013-07-02.ogv“, CC BY-SA 3.0), spielt der WebAudio-Nachbau; dann hier
+    // window.Runner.klangDatei("glocke", "audio/orte/big_ben.mp3") setzen (Datei + app/audio/orte/QUELLEN.md)
+    const sz = window.Runner.szene(null, o.id, { text: o.fakt, titel: `${o.symbol} ${o.name} · London ✓`, foto: o.foto, quelle: o.foto_quelle, onEnde: () => { if (fertig) fertig(); },
+      stimme: (text, lang) => hauptText([{ tts: text, lang: lang || "en-GB", stimme: "m" }], { warten: true }) });   // Durchsagen der Szene (Tube) mit der Geräte-Stimme
     return !!sz;
   }
   // Eigener Bestätigungsdialog statt confirm(): funktioniert auch in eingebetteten Rahmen (Vorschau) und sieht aus wie die App
@@ -2617,7 +2620,9 @@
         erzaehler: erzaehlerStimme, still: () => stopp(),
         boss: (text, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }], {}, true),
         ansage: (text, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }], { warten: true }),
-        cameo: (text, id, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: HELD_STIMME[id] || "f" }], { warten: true }) },
+        cameo: (text, id, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: HELD_STIMME[id] || "f" }], { warten: true }),
+        // U-Bahn-Durchsage („Please mind the doors.“): nur wenn gerade kein Haupttext läuft – nie störend
+        durchsage: (text, o) => { if (!hauptLaeuft) hauptText([{ tts: text, lang: (o && o.lang) || "en-GB", stimme: "m" }], { warten: true }); } },
       onEnde: (e) => runnerEnde(i, e, ws, W.id),
     });
   }

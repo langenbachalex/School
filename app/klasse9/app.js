@@ -1935,7 +1935,8 @@
   const hatSzene = (l) => !!(l && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(l.id));
   function ortSzene(l, fertig) {
     if (!hatSzene(l)) return false;
-    const sz = window.Runner.szene(null, l.id, { text: l.steckbrief, titel: `🏞️ ${l.name}`, foto: l.bild, quelle: l.foto_quelle, onEnde: () => { if (fertig) fertig(); } });
+    const sz = window.Runner.szene(null, l.id, { text: l.steckbrief, titel: `🏞️ ${l.name}`, foto: l.bild, quelle: l.foto_quelle, onEnde: () => { if (fertig) fertig(); },
+      stimme: (text) => hauptText([{ text, stimme: "m" }], { warten: true }) });   // Durchsagen der Szene mit der Geräte-Stimme
     return !!sz;
   }
   function zeigeFeier(e) {
@@ -3242,7 +3243,9 @@
       stimme: { wort: (j, o) => runnerWort([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
         erzaehler: erzaehlerStimme, still: () => stopp(),
         boss: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], {}, true),
-        ansage: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }) },
+        ansage: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }),
+        // U-Bahn-Durchsage New York („Stand clear of the closing doors, please.“): nur wenn gerade kein Haupttext läuft – nie störend
+        durchsage: (text) => { if (!hauptLaeuft) hauptText([{ text, stimme: "m" }], { warten: true }); } },
       onEnde: (e) => runnerEnde(k, unit, i, e, ws, W.id),
     });
   }

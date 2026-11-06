@@ -411,6 +411,7 @@
     hammer() { for (let i = 0; i < 4; i++) { ton(1800, 0.12, "triangle", 0.04, i * 0.4, 1500); ton(3400, 0.06, "sine", 0.02, i * 0.4); rauschen(0.04, 0.04, i * 0.4, { typ: "bandpass", freq: 3000 }); } },
     regen() { rauschen(2.6, 0.035, 0, { typ: "highpass", freq: 1800 }); for (let i = 0; i < 20; i++) rauschen(0.02, 0.02, Math.random() * 2.4, { typ: "bandpass", freq: 3000 + Math.random() * 2000 }); },
     brandung() { rauschen(1.6, 0.055, 0, { typ: "lowpass", freq: 900 }); rauschen(1.0, 0.03, 0.5, { typ: "highpass", freq: 2000 }); ton(90, 1.4, "sine", 0.03, 0, 60); },
+    muh() { ton(120, 0.3, "sawtooth", 0.035, 0, 150); ton(150, 0.8, "sawtooth", 0.04, 0.28, 105); ton(75, 1.0, "sine", 0.05, 0.1, 55); },   // Kuh (Montana): tiefes, langes „Muuh“, erst steigend, dann fallend
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -3117,7 +3118,7 @@
       c.fillStyle = '#18213a'; c.textAlign = 'center'; c.textBaseline = 'middle';
       c.font = 'bold 11px system-ui, sans-serif'; c.fillText('ROUTE', 0, -26);
       c.font = 'bold 30px system-ui, sans-serif'; c.fillText('66', 0, 2);
-      c.font = 'bold 8px system-ui, sans-serif'; c.fillText('ILLINOIS', 0, 22);
+      c.font = 'bold 8px system-ui, sans-serif'; c.fillText(typeof text === 'string' ? text : 'ILLINOIS', 0, 22);   // text = Staatsname (z. B. 'OKLAHOMA'), sonst Illinois
     }
     c.restore();
   }
@@ -3138,7 +3139,7 @@
       c.beginPath(); c.moveTo(bx, 250); c.lineTo(bx + 22, 250 - bh); c.lineTo(bx + bw - 22, 250 - bh); c.lineTo(bx + bw, 250); c.closePath(); c.fill();
     }
     // Route-66-Schild als Zielmarke: kommt über das Level näher (Parallaxe + Größe)
-    schild66(c, viewW * (0.8 - 0.5 * naehe), 212 - naehe * 12, 0.6 + naehe * 1.0, '#f4f4f4', true);   // wandert langsam von rechts in die Mitte und wächst bis zum Boss
+    schild66(c, viewW * (0.8 - 0.5 * naehe), 212 - naehe * 12, 0.6 + naehe * 1.0, '#f4f4f4', level.staat66 || true);   // wandert langsam von rechts in die Mitte und wächst bis zum Boss
     // Wüstenboden hinter der Straße (Sand → Rot), Lücken in der Straße zeigen ihn als Baugrube
     c.fillStyle = mischFarbe('#e8cf93', '#d98a4e', naehe); c.fillRect(-viewW, 250, viewW * 3, H * 2);
     c.fillStyle = mischFarbe('#d9b97a', '#c2703a', naehe); c.fillRect(-viewW, 250, viewW * 3, 6);
@@ -8618,6 +8619,169 @@
     c.fillStyle = '#a8784a'; c.beginPath(); c.ellipse(48, -31 + k, 6, 5, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#111'; c.beginPath(); c.arc(52, -32 + k, 2, 0, Math.PI * 2); c.arc(41, -38 + k, 1.6, 0, Math.PI * 2); c.fill();
     c.restore();
   }
+  // Staaten 11–20 (6.11.2026): Zeichnungen für die Staaten-Szenen (wiederverwendbar im Runner)
+  function szZaehler(c, text, farbe, y, w) {   // Zähler-Kasten oben in der Mitte (wie FL/CA): dunkler Kasten, große Zahl
+    c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(SZ_W / 2 - w / 2, y, w, 40, 10); c.fill();
+    c.fillStyle = farbe; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, SZ_W / 2, y + 20);
+  }
+  function canyonQuerschnitt(c, t) {   // Grand Canyon im Schnitt: Felsstufen mit den bunten Gesteinsschichten (oben hell, unten dunkler Schiefer), unten der Colorado River (y 70 = Rand, y 350 = Fluss)
+    const L = [[0, 70], [150, 70], [160, 112], [200, 120], [214, 172], [250, 182], [262, 252], [284, 260], [296, 350]];
+    c.save(); c.beginPath(); c.moveTo(0, H); for (const [x, y] of L) c.lineTo(x, y); for (let i = L.length - 1; i >= 0; i--) c.lineTo(SZ_W - L[i][0], L[i][1]); c.lineTo(SZ_W, H); c.closePath(); c.clip();
+    const SCH = ['#ecd6a4', '#d9a066', '#c8643c', '#e08a52', '#a8452a', '#c86a3e', '#8a3a24', '#5a3a3a', '#3e2c30'];
+    for (let i = 0; i < SCH.length; i++) { c.fillStyle = SCH[i]; c.fillRect(0, 70 + i * 34, SZ_W, 36); }
+    c.fillStyle = 'rgba(0,0,0,.12)'; for (let y = 84; y < H; y += 17) c.fillRect(0, y, SZ_W, 2);
+    c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(SZ_W / 2, 0, SZ_W / 2, H);   // rechte Wand im Schatten
+    c.restore();
+    c.fillStyle = '#3f8fdc'; c.fillRect(296, 344, 48, 12); c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 1.5; for (let k = 0; k < 3; k++) { const wx = 298 + ((t * 14 + k * 16) % 44); c.beginPath(); c.moveTo(wx, 349); c.lineTo(wx + 5, 349); c.stroke(); }
+    c.fillStyle = '#f0c040'; c.beginPath(); c.ellipse(304 + ((t * 5) % 30), 345, 5, 2, 0, 0, Math.PI * 2); c.fill();   // kleines Floß auf dem Fluss
+  }
+  function joshuaBaum(c, x, y, s) {   // Joshua Tree (Mojave-Wüste): krummer Stamm, Äste mit Blätterbüscheln
+    c.save(); c.translate(x, y); c.scale(s, s); c.strokeStyle = '#5a4630'; c.lineCap = 'round';
+    c.lineWidth = 7; c.beginPath(); c.moveTo(0, 0); c.lineTo(2, -40); c.stroke();
+    c.lineWidth = 4; const AE = [[2, -40, -20, -62], [2, -40, 22, -66], [-20, -62, -30, -78], [22, -66, 30, -84], [2, -40, 4, -74]];
+    c.beginPath(); for (const [a, b, d, e] of AE) { c.moveTo(a, b); c.lineTo(d, e); } c.stroke();
+    c.fillStyle = '#5f7f3a'; for (const [x2, y2] of [[-30, -78], [30, -84], [4, -74], [-20, -64], [22, -68]]) { c.beginPath(); for (let k = 0; k < 8; k++) { const w = k / 8 * Math.PI * 2; c.moveTo(x2, y2); c.lineTo(x2 + Math.cos(w) * 9, y2 + Math.sin(w) * 9); } c.strokeStyle = '#5f7f3a'; c.lineWidth = 2.5; c.stroke(); }
+    c.restore();
+  }
+  function vegasSkyline(c, x, y, s, an, t) {   // Las Vegas Strip (x, y = Fußpunkt Mitte): Stratosphere-Turm, Hotel-Türme, Eiffelturm-Nachbau, schwarze Pyramide mit Lichtstrahl; an = 0..1 Lichter gehen nach und nach an
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const licht = (i) => an > ((i * 37) % 100) / 100;
+    const HOTEL = [[-250, 70, 150, '#3b3550'], [-170, 54, 210, '#463e5e'], [-20, 80, 190, '#3a3a58'], [70, 46, 240, '#4a4060'], [-110, 60, 120, '#3e3654'], [180, 60, 160, '#3b3550']];
+    for (const [hx, hw, hh, f] of HOTEL) {
+      c.fillStyle = f; c.fillRect(hx, -hh, hw, hh);
+      for (let yy = -hh + 10, i = 0; yy < -8; yy += 12) for (let xx = hx + 6; xx < hx + hw - 6; xx += 10, i++) { c.fillStyle = licht(i + hx) ? '#ffd970' : 'rgba(0,0,0,.25)'; c.fillRect(xx, yy, 5, 6); }
+      c.fillStyle = licht(hh) ? ['#ff3fa4', '#39c6f0', '#ffd93d', '#7CFC00'][Math.abs(hx) % 4] : '#555'; c.fillRect(hx + 4, -hh - 6, hw - 8, 6);
+    }
+    // Stratosphere (links): schlanker Turm, Kapsel oben, Nadel
+    c.fillStyle = '#d8d4e4'; c.beginPath(); c.moveTo(-300, 0); c.lineTo(-288, -300); c.lineTo(-280, -300); c.lineTo(-268, 0); c.fill();
+    c.fillStyle = '#e8e4f0'; c.beginPath(); c.moveTo(-308, -300); c.lineTo(-260, -300); c.lineTo(-266, -330); c.lineTo(-302, -330); c.closePath(); c.fill();
+    c.fillStyle = licht(3) ? '#ff3fa4' : '#888'; c.fillRect(-306, -318, 44, 5); c.strokeStyle = '#e8e4f0'; c.lineWidth = 3; c.beginPath(); c.moveTo(-284, -330); c.lineTo(-284, -372); c.stroke();
+    // Eiffelturm-Nachbau
+    c.strokeStyle = licht(9) ? '#ffb347' : '#8a7a6a'; c.lineWidth = 3; c.beginPath(); c.moveTo(120, 0); c.quadraticCurveTo(142, -70, 150, -190); c.moveTo(180, 0); c.quadraticCurveTo(158, -70, 150, -190); c.moveTo(130, -40); c.lineTo(170, -40); c.moveTo(138, -100); c.lineTo(162, -100); c.moveTo(150, -190); c.lineTo(150, -214); c.stroke();
+    c.beginPath(); c.arc(150, 0, 22, Math.PI, 0); c.stroke();
+    // Pyramide mit Lichtstrahl
+    c.fillStyle = '#1a1a26'; c.beginPath(); c.moveTo(220, 0); c.lineTo(290, -110); c.lineTo(360, 0); c.fill(); c.strokeStyle = 'rgba(255,255,255,.18)'; c.lineWidth = 1; c.beginPath(); c.moveTo(290, -110); c.lineTo(310, 0); c.stroke();
+    if (an > 0.6) { c.globalAlpha = Math.min(1, (an - 0.6) / 0.3) * 0.55; const g = c.createLinearGradient(0, -110, 0, -700); g.addColorStop(0, '#fff'); g.addColorStop(1, 'rgba(200,220,255,0)'); c.fillStyle = g; c.beginPath(); c.moveTo(286, -110); c.lineTo(294, -110); c.lineTo(300, -700); c.lineTo(280, -700); c.fill(); c.globalAlpha = 1; }
+    c.restore();
+  }
+  function vegasSchild(c, x, y, s, an, t) {   // „Welcome to Fabulous Las Vegas“-Schild: zwei Pfosten, weiße Raute mit roten Kreisen „WELCOME“, „LAS VEGAS“ in Rot, Glühbirnen-Rand blinkt, Stern oben
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#d8d8d8'; c.fillRect(-40, -70, 8, 70); c.fillRect(32, -70, 8, 70);
+    c.fillStyle = '#f7f3e6'; c.strokeStyle = '#c9a33a'; c.lineWidth = 3; c.beginPath(); c.moveTo(-82, -110); c.lineTo(0, -160); c.lineTo(82, -110); c.lineTo(0, -62); c.closePath(); c.fill(); c.stroke();
+    for (let i = 0; i < 7; i++) { c.fillStyle = '#d23a3a'; c.beginPath(); c.arc(-36 + i * 12, -132, 5.5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#fff'; c.font = 'bold 7px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('WELCOME'[i], -36 + i * 12, -131.5); }
+    c.fillStyle = '#2a6cd8'; c.font = 'italic bold 8px Georgia, serif'; c.fillText('to fabulous', 0, -120);
+    c.fillStyle = '#d23a3a'; c.font = 'bold 17px Georgia, serif'; c.fillText('LAS VEGAS', 0, -104);
+    c.fillStyle = '#2a6cd8'; c.font = 'bold 7px system-ui, sans-serif'; c.fillText('NEVADA', 0, -88);
+    for (let k = 0; k < 20; k++) { const f = k / 20, p = f < 0.25 ? [-82 + f * 4 * 82, -110 - f * 4 * 50] : f < 0.5 ? [(f - 0.25) * 4 * 82, -160 + (f - 0.25) * 4 * 50] : f < 0.75 ? [82 - (f - 0.5) * 4 * 82, -110 + (f - 0.5) * 4 * 48] : [-(f - 0.75) * 4 * 82, -62 - (f - 0.75) * 4 * 48];
+      c.fillStyle = an > 0.2 && (ruhig() || Math.floor(t * 6 + k) % 2) ? '#ffe680' : '#b8a060'; c.beginPath(); c.arc(p[0], p[1], 2.2, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = an > 0.2 ? '#ff4a4a' : '#a04040'; c.beginPath(); for (let k = 0; k < 10; k++) { const w = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 6 : 14; c.lineTo(Math.cos(w) * r, -178 + Math.sin(w) * r); } c.closePath(); c.fill();
+    c.restore();
+  }
+  function delicateArch(c, x, y, s) {   // Delicate Arch (Utah): freistehender roter Felsbogen, linkes Bein dicker, auf hellem Sockel (x, y = Fußpunkt Mitte)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#d9a46a'; c.beginPath(); c.ellipse(-8, 0, 92, 12, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c8602f'; c.beginPath();
+    c.moveTo(-74, 0); c.lineTo(-66, -110); c.bezierCurveTo(-64, -176, -14, -196, 4, -186); c.bezierCurveTo(46, -176, 54, -130, 50, -100); c.lineTo(56, 0); c.closePath();
+    c.moveTo(-40, 0); c.lineTo(-38, -100); c.bezierCurveTo(-36, -150, 24, -154, 26, -96); c.lineTo(30, 0); c.closePath();
+    c.fill('evenodd');
+    c.fillStyle = 'rgba(90,30,10,.22)'; c.beginPath(); c.moveTo(-74, 0); c.lineTo(-66, -110); c.lineTo(-56, -110); c.lineTo(-62, 0); c.fill(); c.beginPath(); c.moveTo(40, 0); c.lineTo(42, -100); c.lineTo(50, -100); c.lineTo(56, 0); c.fill();
+    c.strokeStyle = 'rgba(255,220,180,.35)'; c.lineWidth = 2; for (const yy of [-30, -60, -90]) { c.beginPath(); c.moveTo(-70, yy); c.lineTo(-42, yy + 2); c.moveTo(30, yy); c.lineTo(52, yy - 2); c.stroke(); }
+    c.restore();
+  }
+  function hoodoo(c, x, y, h, f) {   // Felsnadel wie im Bryce Canyon: schmale orange Säule mit Einschnürungen und dunklerer Kappe
+    c.fillStyle = f || '#e08a4a'; c.beginPath(); c.moveTo(x - 10, y); for (let k = 0; k <= 4; k++) c.lineTo(x - (k % 2 ? 6 : 10), y - h * k / 4); c.lineTo(x + 10, y - h); for (let k = 4; k >= 0; k--) c.lineTo(x + (k % 2 ? 6 : 10), y - h * k / 4); c.fill();
+    c.fillStyle = '#b8603a'; c.beginPath(); c.ellipse(x, y - h, 13, 6, 0, 0, Math.PI * 2); c.fill();
+  }
+  function parkPlakette(c, x, y, text, f) {   // braunes Nationalpark-Schild (Holz, weiße Schrift), f = 0..1 Aufploppen
+    if (f <= 0) return; c.save(); c.translate(x, y); c.scale(f, f);
+    c.fillStyle = '#5a3a22'; c.strokeStyle = '#f2e6c8'; c.lineWidth = 2; c.beginPath(); c.roundRect(-50, -13, 100, 26, 6); c.fill(); c.stroke();
+    c.fillStyle = '#f2e6c8'; c.font = 'bold 12px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, 0, 1); c.restore();
+  }
+  function berg(c, x, y, b, h, farbe, schnee) {   // Berggipfel (Dreieck, x = Gipfel, y = Fuß, b = halbe Breite, h = Höhe) mit gezackter Schneekappe
+    c.fillStyle = farbe; c.beginPath(); c.moveTo(x - b, y); c.lineTo(x - b * 0.3, y - h * 0.7); c.lineTo(x, y - h); c.lineTo(x + b * 0.4, y - h * 0.62); c.lineTo(x + b, y); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.14)'; c.beginPath(); c.moveTo(x, y - h); c.lineTo(x + b * 0.4, y - h * 0.62); c.lineTo(x + b, y); c.lineTo(x + b * 0.1, y); c.fill();
+    if (schnee) { const k = h * schnee; c.fillStyle = '#f4f7fb'; c.beginPath(); c.moveTo(x, y - h); c.lineTo(x - b * k / h, y - h + k); c.lineTo(x - b * k / h * 0.5, y - h + k * 0.8); c.lineTo(x, y - h + k); c.lineTo(x + b * k / h * 0.5, y - h + k * 0.75); c.lineTo(x + b * k / h, y - h + k); c.closePath(); c.fill(); }
+  }
+  function geysir(c, x, y, s, st, t) {   // Old Faithful: weißer Sinterhügel; st = 0..1 Ausbruch (Wassersäule bis 240 hoch, Tropfen, Dampfwolken), sonst nur Dampf
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#e4ddd0'; c.beginPath(); c.ellipse(0, 0, 90, 16, 0, Math.PI, 0); c.fill(); c.fillStyle = '#cfc4b0'; c.beginPath(); c.ellipse(0, -4, 30, 6, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#d9a35a'; c.beginPath(); c.ellipse(-60, -2, 18, 3, 0, 0, Math.PI * 2); c.fill();
+    const h = 240 * st, wack = ruhig() ? 0 : Math.sin(t * 9) * 4;
+    if (h > 2) {
+      const g = c.createLinearGradient(0, 0, 0, -h); g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(1, 'rgba(230,240,248,.75)'); c.fillStyle = g;
+      c.beginPath(); c.moveTo(-10, -4); c.quadraticCurveTo(-14 + wack, -h * 0.5, -22, -h); c.quadraticCurveTo(0, -h - 20, 22, -h); c.quadraticCurveTo(14 - wack, -h * 0.5, 10, -4); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.9)'; for (let k = 0; k < 18; k++) { const p = ((t * 0.9 + k * 0.137) % 1), sx = (k % 2 ? 1 : -1) * (14 + p * 50 + (k % 5) * 6); c.beginPath(); c.arc(sx, -h * (1 - p * p) + p * 20, 3, 0, Math.PI * 2); c.fill(); }
+    }
+    c.fillStyle = 'rgba(255,255,255,.55)'; for (let k = 0; k < 6; k++) { const p = (t * 0.25 + k / 6) % 1; c.beginPath(); c.arc(Math.sin(k * 2.3) * 16 + p * 40, -h - 10 - p * (60 + st * 40), 14 + p * 26 + st * 14, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function kuh(c, x, y, s, t, art, richtung = 1) {   // Rind auf der Weide (Fußpunkt Mitte): art 0 = schwarzes Angus, 1 = rotbraunes Hereford mit weißem Gesicht; Beine laufen, Schwanz pendelt
+    c.save(); c.translate(x, y); c.scale(s * richtung, s);
+    const f = art ? '#8a3a1e' : '#1e1a18', sch = ruhig() ? 0 : Math.sin(t * 7 + x * 0.1);
+    c.strokeStyle = f; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath();
+    for (const [lx, p] of [[-20, 1], [-12, -1], [14, -1], [22, 1]]) { c.moveTo(lx, -20); c.lineTo(lx + sch * p * 4, 0); } c.stroke();
+    c.fillStyle = f; c.beginPath(); c.roundRect(-30, -42, 60, 26, 12); c.fill();
+    c.lineWidth = 2; c.beginPath(); c.moveTo(-30, -36); c.quadraticCurveTo(-38, -26 + sch * 3, -36, -16); c.stroke();
+    c.beginPath(); c.ellipse(36, -40, 12, 9, 0.4, 0, Math.PI * 2); c.fill();
+    if (art) { c.fillStyle = '#f4efe6'; c.beginPath(); c.ellipse(40, -39, 8, 7, 0.4, 0, Math.PI * 2); c.fill(); c.fillRect(-6, -18, 14, 4); }
+    c.fillStyle = art ? '#e0b8a0' : '#3a3230'; c.beginPath(); c.ellipse(44, -34, 6, 4.5, 0.3, 0, Math.PI * 2); c.fill();
+    c.fillStyle = f; c.beginPath(); c.ellipse(28, -48, 5, 2.5, -0.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#111'; c.beginPath(); c.arc(38, -43, 1.6, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function kartoffel(c, x, y, s, dreh) {   // Kartoffel: braune Knolle mit dunklen Augen
+    c.save(); c.translate(x, y); c.rotate(dreh || 0); c.scale(s, s);
+    c.fillStyle = '#c8955a'; c.beginPath(); c.ellipse(0, 0, 14, 9, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(255,230,180,.35)'; c.beginPath(); c.ellipse(-4, -3, 6, 3, -0.3, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#7a5530'; for (const [a, b] of [[-7, 2], [4, -4], [8, 3], [-1, 5]]) { c.beginPath(); c.arc(a, b, 1.3, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function kartoffelPflanze(c, x, y, s, t) {   // Kartoffelstaude auf dem Damm: grüne Blätter, weiße Blüten mit gelber Mitte
+    c.save(); c.translate(x, y); c.scale(s, s); const w = ruhig() ? 0 : Math.sin(t * 2 + x) * 2;
+    c.fillStyle = '#3f8a3a'; for (const [a, b, r] of [[-10, -10, 9], [8, -12, 10], [0, -20, 9], [-4, -6, 8]]) { c.beginPath(); c.arc(a + w, b, r, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#fff'; for (const [a, b] of [[-6, -26], [6, -24]]) { c.beginPath(); c.arc(a + w, b, 3, 0, Math.PI * 2); c.fill(); } c.fillStyle = '#ffd93d'; for (const [a, b] of [[-6, -26], [6, -24]]) c.fillRect(a + w - 1, b - 1, 2, 2);
+    c.restore();
+  }
+  function kraterSee(c, x, y, s, t) {   // Crater Lake von oben schräg: Ring aus Kraterwänden (Schnee-Flecken), tiefblauer See, Wizard Island (Kegel mit Bäumen), Phantom Ship (kleiner Fels)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#7a6a5e'; c.beginPath(); c.ellipse(0, 0, 300, 92, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#9a8a7a'; c.beginPath(); c.ellipse(0, -8, 290, 80, 0, Math.PI, 0); c.fill();
+    c.fillStyle = '#f4f7fb'; for (const [a, b, r] of [[-200, -58, 26], [-60, -76, 30], [110, -72, 24], [230, -50, 22]]) { c.beginPath(); c.ellipse(a, b, r, 6, 0, 0, Math.PI * 2); c.fill(); }
+    const g = c.createRadialGradient(0, 10, 20, 0, 10, 260); g.addColorStop(0, '#0d2a7a'); g.addColorStop(1, '#1a4fb8'); c.fillStyle = g; c.beginPath(); c.ellipse(0, 12, 256, 62, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.28)'; c.lineWidth = 1.5; for (let k = 0; k < 7; k++) { const wx = -200 + ((k * 67 + t * 10) % 400), wy = -10 + (k % 4) * 12; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 16, wy); c.stroke(); }
+    c.fillStyle = '#6a5a4a'; c.beginPath(); c.moveTo(-170, 22); c.lineTo(-130, -12); c.lineTo(-118, -12); c.lineTo(-78, 22); c.fill(); c.fillStyle = '#3a2a22'; c.beginPath(); c.ellipse(-124, -12, 7, 2.5, 0, 0, Math.PI * 2); c.fill();
+    for (const [a, b] of [[-150, 18], [-100, 18], [-140, 10], [-108, 8]]) tanne(c, a, b, 12, '#2f5a3a');
+    c.fillStyle = '#5a4a40'; c.beginPath(); c.moveTo(150, 26); c.lineTo(156, 12); c.lineTo(162, 18); c.lineTo(168, 8); c.lineTo(176, 26); c.fill();
+    c.restore();
+  }
+  function kraterSchnitt(c, tief) {   // Crater Lake im Schnitt: Vulkanwände, Wasser bis zum Grund (tief = 0..1 sichtbare Lotleine), Insel-Kegel
+    c.fillStyle = '#6a5a4e'; c.beginPath(); c.moveTo(0, H); c.lineTo(0, 120); c.lineTo(70, 96); c.lineTo(110, 130); c.quadraticCurveTo(170, 360, 320, 362); c.quadraticCurveTo(470, 360, 530, 130); c.lineTo(570, 96); c.lineTo(SZ_W, 120); c.lineTo(SZ_W, H); c.fill();
+    c.save(); c.beginPath(); c.moveTo(110, 130); c.quadraticCurveTo(170, 360, 320, 362); c.quadraticCurveTo(470, 360, 530, 130); c.closePath(); c.clip();
+    const g = c.createLinearGradient(0, 150, 0, 362); g.addColorStop(0, '#1a5fd0'); g.addColorStop(1, '#061a52'); c.fillStyle = g; c.fillRect(0, 150, SZ_W, 260);
+    c.fillStyle = '#5a4a40'; c.beginPath(); c.moveTo(150, 362); c.lineTo(205, 132); c.lineTo(225, 132); c.lineTo(280, 362); c.fill();
+    c.restore();
+    c.fillStyle = '#f4f7fb'; for (const [a, b] of [[40, 108], [600, 108]]) { c.beginPath(); c.ellipse(a, b, 22, 5, 0, 0, Math.PI * 2); c.fill(); }
+    for (const a of [20, 52, 88, 556, 590, 624]) tanne(c, a, 118 - (a > 300 ? (a - 556) * 0.2 : 0), 30, '#2f5a3a');
+  }
+  function heissluftballon(c, x, y, s, farben, flamme) {   // Heißluftballon (x, y = Mitte der Hülle): Bahnen in zwei Farben, Korb an Seilen, flamme = 0..1 Brenner
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.beginPath(); c.moveTo(-12, 46); c.bezierCurveTo(-46, 20, -46, -44, 0, -46); c.bezierCurveTo(46, -44, 46, 20, 12, 46); c.closePath(); c.save(); c.clip();
+    for (let k = 0; k < 6; k++) { c.fillStyle = farben[k % farben.length]; c.fillRect(-46 + k * 16, -50, 16, 100); }
+    c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(-46, -50, 30, 100); c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(20, -50, 30, 100); c.restore();
+    c.strokeStyle = '#5a4030'; c.lineWidth = 1; c.beginPath(); c.moveTo(-12, 46); c.lineTo(-7, 58); c.moveTo(12, 46); c.lineTo(7, 58); c.stroke();
+    c.fillStyle = '#8a5a2b'; c.fillRect(-8, 58, 16, 12);
+    if (flamme > 0) { c.fillStyle = `rgba(255,170,40,${flamme})`; c.beginPath(); c.moveTo(-4, 56); c.quadraticCurveTo(0, 36 - flamme * 8, 4, 56); c.fill(); }
+    c.restore();
+  }
+  function blauwal(c, x, y, s) {   // Blue Whale of Catoosa (Route 66, Oklahoma): blauer lächelnder Wal am Teich, Hut auf dem Kopf, Rutsche als Schwanz
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#4f8f5a'; c.beginPath(); c.ellipse(0, 4, 110, 14, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#2f78b8'; c.beginPath(); c.ellipse(0, 4, 96, 10, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#3a7fd0'; c.beginPath(); c.moveTo(-70, 0); c.quadraticCurveTo(-74, -58, -20, -60); c.quadraticCurveTo(40, -60, 56, -30); c.quadraticCurveTo(70, -20, 90, -50); c.lineTo(96, -44); c.quadraticCurveTo(84, -14, 60, 0); c.closePath(); c.fill();
+    c.fillStyle = '#f4f4f4'; c.beginPath(); c.moveTo(-70, -12); c.quadraticCurveTo(-40, -2, -6, -14); c.lineTo(-6, -8); c.quadraticCurveTo(-40, 4, -70, -4); c.fill();
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(-46, -36, 6, 0, Math.PI * 2); c.fill(); c.fillStyle = '#111'; c.beginPath(); c.arc(-47, -36, 2.6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c8a050'; c.fillRect(-40, -72, 30, 10); c.fillRect(-46, -63, 42, 4);
+    c.restore();
+  }
   function moeweFlug(c, x, y, t, s = 1) {   // kleine Möwe im Flug (Kulisse): weiß mit grauen Flügelspitzen
     const fl = (ruhig() ? 0 : Math.sin(t * 9)) * 6;
     c.save(); c.translate(x, y); c.scale(s, s); c.strokeStyle = '#fff'; c.lineWidth = 3; c.lineCap = 'round';
@@ -9175,6 +9339,187 @@
           if (t > 6.2) baerKlein(c, lerp(-80, 110, sanft((t - 6.2) / 1.6)), 382, 0.9, t);
         }
         { const d = Math.abs(t - 4.8); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }
+      } },
+    // Klasse 9 – Staaten 11–20 (6.11.2026): AZ bis OK, je passend zum Fakt-Satz
+    AZ: { dauer: 9.0, klaenge: [[0.4, 'wind'], [1.6, 'adlerEcho'], [3.6, 'wind'], [4.4, 'stein'], [5.2, 'stein'], [7.4, 'geier']],
+      zeichne(c, t) {   // erst der Blick über den Canyon (wie die Landmark-Szene), dann der Schnitt: eine Messleine fällt vom Rand bis zum Colorado River, der Zähler läuft bis 1.8 km
+        if (t < 3.4) { SZENEN.grand_canyon.zeichne(c, t); }
+        else {
+          const [fx, fy, z] = szWeg(t, [[3.4, 320, 130, 1.5], [5.6, 320, 200, 1]]);
+          c.save(); szKam(c, fx, fy, z);
+          szHimmel(c, '#f2a65a', '#fde3b0'); canyonQuerschnitt(c, t);
+          for (let i = 0; i < 3; i++) personKlein(c, 70 + i * 26, 70, 0.4, i + 1, { arme: t > 7.2 ? 1 : 0 });
+          geierSilhouette(c, 380 + Math.sin(t * 0.8) * 60, 130 + Math.cos(t * 0.8) * 20, 1.4, ruhig() ? 0 : Math.sin(t * 5));
+          const f = sanft((t - 4.0) / 3.0), yE = lerp(70, 344, f);
+          c.strokeStyle = '#fff'; c.lineWidth = 3; c.setLineDash([8, 6]); c.beginPath(); c.moveTo(320, 70); c.lineTo(320, yE); c.stroke(); c.setLineDash([]);
+          c.fillStyle = '#fff'; c.beginPath(); c.moveTo(312, yE - 10); c.lineTo(328, yE - 10); c.lineTo(320, yE); c.fill();
+          c.restore();
+          if (t > 4.0) szZaehler(c, (1.8 * f).toFixed(1) + ' km', '#ffd93d', 40, 160);
+        }
+        { const d = Math.abs(t - 3.4); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }
+      } },
+    NV: { dauer: 8.6, klaenge: [[0.3, 'wind'], [2.0, 'lichtAn'], [3.2, 'lichtAn'], [4.4, 'lichtAn'], [5.4, 'motor'], [6.6, 'staunen']],
+      zeichne(c, t) {   // Abend in der Wüste: Berge, Joshua Trees; Las Vegas am Horizont – die Lichter gehen an (Stratosphere, Hotels, Eiffelturm, Pyramide mit Strahl), vorn das Welcome-Schild, ein Auto fährt in die Stadt
+        const an = sanft((t - 1.6) / 4), nacht = sanft((t - 0.5) / 4);
+        const g = c.createLinearGradient(0, 0, 0, 280); g.addColorStop(0, nacht > 0.5 ? '#1a1440' : '#f08a5a'); g.addColorStop(1, '#f2a65a'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, 280);
+        c.fillStyle = `rgba(20,16,60,${nacht * 0.85})`; c.fillRect(0, 0, SZ_W, 280);
+        if (nacht > 0.6) { c.fillStyle = '#fff'; for (let i = 0; i < 30; i++) c.fillRect((i * 97) % SZ_W, (i * 41) % 140, 1.5, 1.5); }
+        c.fillStyle = '#4a3a5e'; c.beginPath(); c.moveTo(0, 262); c.lineTo(90, 200); c.lineTo(170, 236); c.lineTo(260, 190); c.lineTo(380, 240); c.lineTo(500, 196); c.lineTo(SZ_W, 230); c.lineTo(SZ_W, 270); c.lineTo(0, 270); c.fill();
+        vegasSkyline(c, 360, 270, 0.62, an, t);
+        c.fillStyle = '#c99a62'; c.fillRect(0, 268, SZ_W, H); c.fillStyle = `rgba(30,20,50,${nacht * 0.55})`; c.fillRect(0, 268, SZ_W, H);
+        c.fillStyle = '#3a3a44'; c.beginPath(); c.moveTo(300, 270); c.lineTo(340, 270); c.lineTo(500, H); c.lineTo(160, H); c.fill();
+        c.fillStyle = '#ffd93d'; for (let k = 0; k < 6; k++) { const f = ((k / 6 + t * 0.15) % 1), yy = lerp(272, H, f * f); c.fillRect(320 + (yy - 270) * 0.02 - 1.5, yy, 3, 4 + f * 10); }
+        for (const [jx, js] of [[60, 0.9], [560, 1.1], [610, 0.7], [110, 0.6]]) joshuaBaum(c, jx, 330 + js * 20, js);
+        vegasSchild(c, 200, 352, 1.0, an, t);
+        const f = sanft((t - 5.2) / 3), ax = lerp(470, 335, f), as = lerp(1.2, 0.25, f);
+        if (t > 5.2) { c.fillStyle = '#c8283a'; c.beginPath(); c.roundRect(ax - 22 * as, lerp(380, 276, f) - 18 * as, 44 * as, 18 * as, 4 * as); c.fill(); c.fillStyle = '#ff4040'; c.fillRect(ax - 20 * as, lerp(380, 276, f) - 10 * as, 6 * as, 4 * as); c.fillRect(ax + 14 * as, lerp(380, 276, f) - 10 * as, 6 * as, 4 * as); }
+      } },
+    UT: { dauer: 8.8, klaenge: [[0.3, 'wind'], [1.8, 'plopp'], [2.6, 'plopp'], [3.4, 'plopp'], [4.2, 'plopp'], [5.0, 'plopp'], [6.4, 'adlerEcho']],
+      zeichne(c, t) {   // Abendsonne über dem Delicate Arch (Arches), hinten die verschneiten La-Sal-Berge, rechts Felsnadeln wie im Bryce Canyon; oben ploppen die fünf Nationalparks auf
+        const z = lerp(1, 1.12, sanft(t / 8.8)); c.save(); c.translate(SZ_W / 2, 320); c.scale(z, z); c.translate(-SZ_W / 2, -320);
+        szHimmel(c, '#f08a4a', '#fde0a8'); c.fillStyle = '#ffe9a0'; c.beginPath(); c.arc(520, 190, 26, 0, Math.PI * 2); c.fill();
+        berg(c, 470, 250, 120, 80, '#7a86a8', 0.3); berg(c, 580, 250, 90, 64, '#8a94b4', 0.3); berg(c, 380, 250, 80, 48, '#8a94b4', 0.25);
+        c.fillStyle = '#d07a42'; c.beginPath(); c.moveTo(0, 250); c.lineTo(80, 236); c.lineTo(140, 250); c.lineTo(SZ_W, 250); c.lineTo(SZ_W, 280); c.lineTo(0, 280); c.fill();
+        c.fillStyle = '#e09a5a'; c.beginPath(); c.moveTo(0, 270); c.quadraticCurveTo(320, 236, SZ_W, 270); c.lineTo(SZ_W, H); c.lineTo(0, H); c.fill();
+        for (const [hx, hh] of [[520, 70], [548, 96], [574, 60], [600, 84], [626, 52]]) hoodoo(c, hx, 300, hh);
+        delicateArch(c, 270, 300, 1.05);
+        personKlein(c, lerp(80, 200, sanft(t / 6)), 336, 0.6, 2, { schritt: t < 6 ? Math.sin(t * 7) : 0, arme: t > 6.4 ? 1 : 0 });
+        c.restore();
+        const PARKS = ['Arches', 'Canyonlands', 'Bryce Canyon', 'Zion', 'Capitol Reef'];
+        PARKS.forEach((n, i) => parkPlakette(c, 108 + i * 106, 64, n, Math.min(1, sanft((t - 1.8 - i * 0.8) / 0.35) * 1.08)));
+      } },
+    CO: { dauer: 8.6, klaenge: [[0.3, 'wind'], [1.6, 'klick'], [2.4, 'klick'], [3.2, 'klick'], [4.0, 'klick'], [4.8, 'klick'], [6.0, 'adlerEcho']],
+      zeichne(c, t) {   // Rocky Mountains: viele verschneite Gipfel, eine gestrichelte Linie „4,000 m“; jeder Gipfel darüber bekommt ein Fähnchen, der Zähler läuft bis 50+, vorn Espen und ein Wanderer
+        szHimmel(c, '#4f9ee0', '#dceefa'); szWolken(c, t, [[-40, 40], [420, 70]]);
+        const G = [[40, 150], [110, 112], [170, 140], [230, 96], [292, 130], [350, 88], [412, 124], [470, 100], [530, 136], [590, 108], [640, 140]];
+        G.forEach(([gx, gy], i) => berg(c, gx, 300, 80, 300 - gy, i % 2 ? '#6a7690' : '#7a86a0', 0.32));
+        const LY = 158, f = sanft((t - 1.4) / 4.4);
+        c.strokeStyle = '#ffd93d'; c.lineWidth = 2; c.setLineDash([10, 6]); c.beginPath(); c.moveTo(0, LY); c.lineTo(SZ_W, LY); c.stroke(); c.setLineDash([]);
+        c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(SZ_W - 92, LY - 28, 84, 22, 6); c.fill(); c.fillStyle = '#ffd93d'; c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('4,000 m', SZ_W - 50, LY - 17);
+        const ueber = G.filter(([, gy]) => gy < LY);
+        ueber.forEach(([gx, gy], i) => { if (f * ueber.length > i) { c.strokeStyle = '#3a2a1a'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(gx, gy); c.lineTo(gx, gy - 18); c.stroke(); c.fillStyle = '#e8463a'; c.beginPath(); c.moveTo(gx, gy - 18); c.lineTo(gx + 12, gy - 14); c.lineTo(gx, gy - 10); c.fill(); } });
+        c.fillStyle = '#5f9a4a'; c.beginPath(); c.moveTo(0, 290); c.quadraticCurveTo(320, 260, SZ_W, 292); c.lineTo(SZ_W, H); c.lineTo(0, H); c.fill();
+        for (let i = 0; i < 10; i++) tanne(c, 10 + i * 68, 300 + (i % 3) * 8, 60 + (i % 4) * 10, '#2f5a3a');
+        for (const [ax, as] of [[150, 0.8], [470, 0.9], [560, 0.75]]) { c.fillStyle = '#e8eef0'; c.fillRect(ax - 2, 340 - 40 * as, 4, 40 * as); c.fillStyle = '#f2c230'; c.beginPath(); c.arc(ax, 340 - 46 * as, 18 * as, 0, Math.PI * 2); c.fill(); }
+        hutPerson(c, lerp(260, 380, sanft(t / 7)), 360, 0.8, 4, { schritt: t < 7 ? Math.sin(t * 7) : 0, arme: t > 7 ? 0.9 : 0 });
+        if (t > 1.4) szZaehler(c, Math.round(50 * f) + (t > 5.8 ? '+' : '') + ' peaks', '#ffd93d', 40, 180);
+      } },
+    WY: { dauer: 9.0, klaenge: [[0.4, 'wind'], [1.6, 'rumpeln'], [2.6, 'feuer'], [3.2, 'welle'], [4.4, 'feuer'], [5.6, 'applaus'], [7.2, 'bueffel']],
+      zeichne(c, t) {   // Yellowstone: Old Faithful dampft, grollt und bricht aus; Zuschauer am Holzsteg jubeln, ein Bison grast, links das Parkschild „1872“
+        szHimmel(c, '#6eb4ea', '#e6f2fa'); szWolken(c, t, [[0, 50], [360, 34]]);
+        c.fillStyle = '#6a8a5a'; c.beginPath(); c.moveTo(0, 230); c.quadraticCurveTo(200, 196, 380, 222); c.quadraticCurveTo(520, 236, SZ_W, 210); c.lineTo(SZ_W, 260); c.lineTo(0, 260); c.fill();
+        for (let i = 0; i < 18; i++) tanne(c, i * 37, 258 - (i % 3) * 4, 46 + (i % 4) * 8, '#2f5a3a');
+        c.fillStyle = '#e8e2d4'; c.fillRect(0, 256, SZ_W, H);
+        c.fillStyle = '#6ad0e0'; c.beginPath(); c.ellipse(520, 286, 44, 8, 0, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#e8a040'; c.lineWidth = 3; c.stroke();
+        const st = t < 2.6 ? 0 : t < 3.6 ? sanft((t - 2.6) / 1) : t < 6.6 ? 1 - Math.sin((t - 3.6) * 3) * 0.05 : 1 - sanft((t - 6.6) / 1.8);
+        geysir(c, 320, 292, 1.0, st, t);
+        bueffelSilhouette(c, 560, 318, 1.6, '#4a3020');
+        c.fillStyle = '#5a3a22'; c.fillRect(70, 260, 6, 52); c.fillRect(150, 260, 6, 52); c.beginPath(); c.roundRect(42, 218, 142, 50, 6); c.fill();
+        c.fillStyle = '#f2e6c8'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = 'bold 14px system-ui, sans-serif'; c.fillText('YELLOWSTONE', 113, 234); c.font = 'bold 11px system-ui, sans-serif'; c.fillText('NATIONAL PARK · 1872', 113, 254);
+        c.fillStyle = '#a07850'; c.fillRect(0, 352, SZ_W, 10); c.fillStyle = '#7a5a3a'; for (let x = 10; x < SZ_W; x += 60) c.fillRect(x, 330, 5, 24); c.fillRect(0, 332, SZ_W, 4);
+        for (let i = 0; i < 9; i++) personKlein(c, 40 + i * 68, 352, 0.62, i, { arme: st > 0.8 ? Math.abs(Math.sin(t * 3 + i)) : 0 });
+      } },
+    MT: { dauer: 8.8, klaenge: [[0.6, 'muh'], [1.8, 'hufe'], [3.0, 'muh'], [4.4, 'hufe'], [5.4, 'muh'], [7.0, 'muh']],
+      zeichne(c, t) {   // „Big Sky Country“: Prärie vor den Bergen, eine Rinderherde zieht herein, drei Cowboys stehen am Zaun; oben wächst der Balken „cows“ über den Balken „people“
+        szHimmel(c, '#3f8ee0', '#d8ecfa'); szWolken(c, t, [[-30, 60], [260, 40], [520, 80]]);
+        berg(c, 120, 250, 110, 80, '#7a86a0', 0.3); berg(c, 260, 250, 90, 60, '#8a94b0', 0.3); berg(c, 470, 250, 130, 96, '#7a86a0', 0.3);
+        c.fillStyle = '#d8b860'; c.fillRect(0, 248, SZ_W, H); c.fillStyle = '#c8a850'; for (let y = 262; y < H; y += 18) c.fillRect(0, y, SZ_W, 3);
+        c.fillStyle = '#8a3a2a'; c.fillRect(470, 214, 70, 46); c.beginPath(); c.moveTo(464, 216); c.lineTo(505, 186); c.lineTo(546, 216); c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 2; c.strokeRect(492, 230, 26, 30);
+        const HERDE = []; for (let i = 0; i < 16; i++) HERDE.push([(i * 53) % 300, 280 + (i % 4) * 22, i % 3 === 0 ? 1 : 0]);
+        const vor = lerp(-340, 140, sanft((t - 0.3) / 5));
+        HERDE.slice().sort((a, b) => a[1] - b[1]).forEach(([hx, hy, art], i) => kuh(c, vor + hx, hy, 0.62 + (hy - 280) * 0.005, t < 5.3 ? t : 0, art));
+        c.strokeStyle = '#6a4a2a'; c.lineWidth = 3; c.beginPath(); for (let x = 470; x < SZ_W; x += 34) { c.moveTo(x, 300); c.lineTo(x, 340); } c.moveTo(460, 310); c.lineTo(SZ_W, 310); c.moveTo(460, 326); c.lineTo(SZ_W, 326); c.stroke();
+        for (let i = 0; i < 3; i++) hutPerson(c, 500 + i * 44, 360, 0.75, i + 3, { hut: 'cowboy' });
+        if (t > 1.2) {
+          const kf = sanft((t - 1.6) / 4.4);
+          c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(SZ_W / 2 - 160, 36, 320, 64, 10); c.fill();
+          c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillStyle = '#fff'; c.fillText('people', SZ_W / 2 - 86, 54); c.fillText('cows', SZ_W / 2 - 86, 82);
+          c.fillStyle = '#7fb0ff'; c.fillRect(SZ_W / 2 - 76, 47, 110, 14);
+          c.fillStyle = '#ffd93d'; c.fillRect(SZ_W / 2 - 76, 75, 220 * kf, 14);
+          if (t > 6.2) { c.textAlign = 'center'; c.fillStyle = '#ffd93d'; c.font = 'bold 16px system-ui, sans-serif'; c.fillText('× 2', SZ_W / 2 + 116, 54); }
+        }
+      } },
+    ID: { dauer: 8.8, klaenge: [[0.6, 'plopp'], [1.2, 'plopp'], [1.8, 'plopp'], [2.4, 'plopp'], [3.0, 'plopp'], [5.0, 'klick'], [6.4, 'staunen']],
+      zeichne(c, t) {   // Kartoffelfeld vor den zackigen Sawtooth-Bergen: Kartoffeln springen aus den Dämmen in die Kiste „IDAHO“; dann zeigt ein Kreis aus Kartoffeln: ein Drittel kommt aus Idaho
+        szHimmel(c, '#5aa8e8', '#e2f0fa');
+        c.fillStyle = '#6a7690'; c.beginPath(); c.moveTo(0, 230); for (let x = 0; x <= SZ_W; x += 40) c.lineTo(x + 20, 150 + ((x * 7) % 50)), c.lineTo(x + 40, 210); c.lineTo(SZ_W, 240); c.lineTo(0, 240); c.fill();
+        c.fillStyle = '#f4f7fb'; for (let x = 0; x <= SZ_W; x += 40) { const gy = 150 + ((x * 7) % 50); c.beginPath(); c.moveTo(x + 20, gy); c.lineTo(x + 14, gy + 14); c.lineTo(x + 26, gy + 14); c.fill(); }
+        c.fillStyle = '#7a5a3a'; c.fillRect(0, 236, SZ_W, H);
+        for (let r = 0; r < 7; r++) { const y = 246 + r * r * 3.2 + r * 6, w = 4 + r * 3; c.fillStyle = '#5e4128'; c.fillRect(0, y, SZ_W, w * 0.5); for (let x = (r % 2) * 30; x < SZ_W; x += 60 - r * 3) kartoffelPflanze(c, x, y + 2, 0.5 + r * 0.12, t); }
+        const KISTE = [470, 380];
+        c.fillStyle = '#b8864a'; c.fillRect(KISTE[0] - 60, KISTE[1] - 56, 120, 56); c.strokeStyle = '#7a5530'; c.lineWidth = 3; for (let k = 0; k < 3; k++) c.strokeRect(KISTE[0] - 60, KISTE[1] - 56 + k * 18, 120, 18);
+        const flug = [0.6, 1.2, 1.8, 2.4, 3.0, 3.6, 4.2];
+        const drin = flug.filter((f) => t > f + 0.7).length;
+        for (let i = 0; i < Math.min(drin, 7); i++) kartoffel(c, KISTE[0] - 44 + (i % 4) * 28, KISTE[1] - 60 - Math.floor(i / 4) * 12, 1.1, i);
+        flug.forEach((f0, i) => { const p = (t - f0) / 0.7; if (p < 0 || p > 1) return; const sx = 120 + i * 40, sy = 330; kartoffel(c, lerp(sx, KISTE[0] - 30 + (i % 4) * 20, p), lerp(sy, KISTE[1] - 66, p) - Math.sin(p * Math.PI) * 120, 1.2, p * 6); });
+        c.fillStyle = '#fff'; c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('IDAHO', KISTE[0], KISTE[1] - 20);
+        hutPerson(c, 110, 372, 0.85, 5, { hut: 'cowboy', arme: Math.abs(Math.sin(t * 3)) * (t < 4.4 ? 0.8 : 0) });
+        const pf = sanft((t - 4.8) / 1.2);
+        if (pf > 0) { const px = 120, py = 110, r = 56 * pf;
+          c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(px - 70, py - 70, 230, 140, 12); c.fill();
+          c.fillStyle = '#d9c09a'; c.beginPath(); c.arc(px, py, r, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#e8963a'; c.beginPath(); c.moveTo(px, py); c.arc(px, py, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 / 3 * sanft((t - 5.2) / 1)); c.closePath(); c.fill();
+          c.strokeStyle = '#fff'; c.lineWidth = 2; c.beginPath(); c.arc(px, py, r, 0, Math.PI * 2); c.stroke();
+          if (t > 6.2) { c.fillStyle = '#ffd93d'; c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'left'; c.fillText('1/3', px + 70, py - 12); c.font = 'bold 14px system-ui, sans-serif'; c.fillStyle = '#fff'; c.fillText('Idaho', px + 70, py + 16); }
+        }
+      } },
+    OR: { dauer: 9.2, klaenge: [[0.4, 'wind'], [1.8, 'adlerEcho'], [4.0, 'wind'], [5.0, 'platsch'], [7.6, 'klick']],
+      zeichne(c, t) {   // Crater Lake vom Kraterrand: tiefblauer See im Vulkankrater, Wizard Island, Phantom Ship, Tannen; dann der Schnitt: ein Boot lässt das Lot bis zum Grund, Zähler 594 m
+        if (t < 4.8) {
+          const z = lerp(1, 1.15, sanft(t / 4.8)); c.save(); c.translate(SZ_W / 2, 240); c.scale(z, z); c.translate(-SZ_W / 2, -240);
+          szHimmel(c, '#5aa8ea', '#eaf4fb'); szWolken(c, t, [[20, 46], [420, 30]]);
+          berg(c, 560, 170, 70, 50, '#8a94b0', 0.4);
+          kraterSee(c, SZ_W / 2, 230, 1.0, t);
+          c.fillStyle = '#8a7a6a'; c.beginPath(); c.moveTo(0, H); c.lineTo(0, 320); c.quadraticCurveTo(200, 300, 320, 330); c.quadraticCurveTo(460, 350, SZ_W, 310); c.lineTo(SZ_W, H); c.fill();
+          for (const [tx, th] of [[30, 110], [80, 80], [580, 120], [620, 90]]) tanne(c, tx, 340, th, '#2a4a32');
+          for (let i = 0; i < 3; i++) personKlein(c, 250 + i * 30, 352, 0.7, i + 3);
+          c.restore();
+        } else {
+          szHimmel(c, '#5aa8ea', '#eaf4fb'); kraterSchnitt(c);
+          const bx = 400, f = sanft((t - 5.2) / 2.4), yE = lerp(152, 356, f);
+          c.fillStyle = '#c8603a'; c.beginPath(); c.moveTo(bx - 20, 144); c.lineTo(bx + 20, 144); c.lineTo(bx + 14, 152); c.lineTo(bx - 14, 152); c.fill(); personKlein(c, bx, 146, 0.35, 2);
+          c.strokeStyle = '#fff'; c.lineWidth = 2; c.beginPath(); c.moveTo(bx + 12, 148); c.lineTo(bx + 12, yE); c.stroke(); c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(bx + 12, yE, 4, 0, Math.PI * 2); c.fill();
+          szZaehler(c, Math.round(594 * f) + ' m', '#ffd93d', 40, 160);
+        }
+        { const d = Math.abs(t - 4.8); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }
+      } },
+    NM: { dauer: 8.8, klaenge: [[0.3, 'feuer'], [1.4, 'feuer'], [2.8, 'staunen'], [3.6, 'feuer'], [5.2, 'applaus'], [6.6, 'feuer']],
+      zeichne(c, t) {   // Morgen in Albuquerque: vor den rosa Sandia-Bergen steigen viele bunte Heißluftballons auf, die Brenner fauchen, die Menge winkt
+        const g = c.createLinearGradient(0, 0, 0, 300); g.addColorStop(0, '#5a7ad0'); g.addColorStop(0.6, '#f4b0a0'); g.addColorStop(1, '#ffd8a0'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, 300);
+        c.fillStyle = '#c86a7a'; c.beginPath(); c.moveTo(0, 270); c.lineTo(60, 230); c.lineTo(180, 196); c.lineTo(300, 178); c.lineTo(380, 190); c.lineTo(480, 214); c.lineTo(SZ_W, 240); c.lineTo(SZ_W, 280); c.lineTo(0, 280); c.fill();
+        c.fillStyle = 'rgba(80,40,60,.25)'; c.beginPath(); c.moveTo(180, 196); c.lineTo(300, 178); c.lineTo(260, 260); c.fill();
+        c.fillStyle = '#9ab060'; c.fillRect(0, 276, SZ_W, H);
+        const FARB = [['#e8463a', '#ffd93d'], ['#2a6cff', '#fff'], ['#8a3ffc', '#39c6f0'], ['#2e9e5b', '#ffd93d'], ['#ff7a1a', '#e8467c'], ['#c8283a', '#2a6cff'], ['#ffd93d', '#e8463a'], ['#39c6f0', '#8a3ffc'], ['#e8467c', '#fff'], ['#2e9e5b', '#ff7a1a'], ['#2a6cff', '#ffd93d'], ['#ff7a1a', '#2a6cff']];
+        const B = FARB.map((f, i) => ({ f, x: 30 + ((i * 211) % 590), start: 0.2 + (i % 6) * 0.7 + Math.floor(i / 6) * 0.35, s: 0.55 + ((i * 7) % 5) * 0.12 }));
+        B.sort((a, b) => a.s - b.s).forEach((b, i) => { const p = Math.max(0, t - b.start), y = 300 - b.s * 60 - Math.min(p * 34 * b.s, 230 * b.s);
+          const aufgeblasen = Math.min(1, 0.4 + p * 0.6); c.save(); c.translate(b.x, y + 46 * b.s); c.scale(1, aufgeblasen); c.translate(-b.x, -(y + 46 * b.s));
+          heissluftballon(c, b.x + (ruhig() ? 0 : Math.sin(t * 0.7 + i) * 6), y, b.s, b.f, (Math.floor(t * 3 + i) % 4 === 0) ? 1 : 0); c.restore(); });
+        for (let i = 0; i < 16; i++) personKlein(c, 20 + i * 40, 392 - (i % 2) * 10, 0.55, i, { arme: t > 5 ? Math.abs(Math.sin(t * 3 + i)) : 0.2 });
+      } },
+    OK: { dauer: 9.0, klaenge: [[0.6, 'motor'], [2.6, 'hupe'], [4.8, 'klick'], [6.0, 'motor'], [7.6, 'hupe']],
+      zeichne(c, t) {   // Route 66 in Oklahoma: Highway, Schild „66 OKLAHOMA“, der Blue Whale of Catoosa am Teich, ein Auto hupt; dann die Karte Chicago → Los Angeles: Oklahomas langes Stück leuchtet
+        if (t < 4.6) {
+          const kam = lerp(29200, 29500, t / 4.6), w = WELTEN.route66;   // weit vom Welt-Ende: Tageslicht, das Schild der Kulisse steht rechts (mit „OKLAHOMA“)
+          szWelt({ zeit: t, kamera: kam, level: { ende: 300000, staat66: 'OKLAHOMA' } }, () => { w.kulisse(c); w.boden(c, 0, SZ_W, kam, kam + SZ_W, kam, kam + SZ_W); });
+          blauwal(c, 150, 322, 0.9);
+          schild66(c, 512, 240, 1.4, '#f4f4f4', 'OKLAHOMA');
+          szWelt({ zeit: t, kamera: kam }, () => autoZeichnen(c, { art: 'auto', x: kam + lerp(SZ_W + 120, -160, Math.min(1, t / 4)), w: AUTO_MASSE.auto.w, h: AUTO_MASSE.auto.h, von: 7, rad: t * 12 }));
+        } else {
+          c.fillStyle = '#1d4f8a'; c.fillRect(0, 0, SZ_W, H);
+          const SEG = [['IL', 301], ['MO', 317], ['KS', 13], ['OK', 432], ['TX', 178], ['NM', 380], ['AZ', 401], ['CA', 314]], ges = SEG.reduce((a, s) => a + s[1], 0);
+          const px = (m) => 590 - m / ges * 520, py = (m) => 190 + Math.sin(m / ges * Math.PI * 1.4) * 34 + m / ges * 30;
+          let m0 = 0; const zeig = sanft((t - 4.8) / 2.4) * ges;
+          for (const [id, l] of SEG) {
+            const ok = id === 'OK'; c.strokeStyle = ok ? '#ff9a2a' : 'rgba(255,255,255,.7)'; c.lineWidth = ok ? 9 : 4; c.lineCap = 'round';
+            c.beginPath(); for (let m = m0; m <= m0 + l; m += 4) c[m === m0 ? 'moveTo' : 'lineTo'](px(m), py(m)); c.stroke();
+            c.fillStyle = ok ? '#ff9a2a' : '#cfe0f4'; c.font = `bold ${ok ? 18 : 13}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(id, px(m0 + l / 2), py(m0 + l / 2) + (ok ? 30 : 22));
+            m0 += l;
+          }
+          c.fillStyle = '#fff'; c.font = 'bold 13px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('Chicago', px(0), py(0) - 40); c.fillText('Los Angeles', px(ges), py(ges) - 40);
+          schild66(c, px(zeig), py(zeig) - 6, 0.5, '#f4f4f4', false);
+          if (t > 6.2) szZaehler(c, 'Oklahoma: 400+ miles', '#ff9a2a', 70, 280);
+        }
+        { const d = Math.abs(t - 4.6); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }
       } },
   };
   // Big Ben mit echter Aufnahme: 15,5 s; bis 14 s laufen die Westminster Chimes (Bild wie beim Nachbau bis kurz vor dem Schlag, langsamer), dann EIN Stundenschlag (Nachbau)

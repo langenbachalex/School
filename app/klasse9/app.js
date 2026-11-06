@@ -814,15 +814,15 @@
     //   alles, was sich schnell noch einmal durchklicken lässt (Lesen, Reihenfolge, Hören, Dialog, Schreiben …), gibt beim Wiederholen keine Punkte.
     //   Power Up (fälliger Teil wird aufgeladen) gibt weiter Punkte – das geht je Teil nur alle 30/60/120 Tage.
     // · Wiederholungen mit Mindestzeit (30.10.): jede weitere Wiederholung halbiert – 5, 2, 1, dann 0; ein Power Up setzt den Zähler (stand.teile[k].w) zurück.
-    let wdh = null;
-    if (!erstesMal && !aufladen && SPRECH_MIN[teil.art]) {
-      const e = stand.teile && stand.teile[teilSchluessel(lage.teil)], w = (e && e.w) || 0;
-      wdh = Math.floor(PUNKTE.wiederholung / 2 ** w);
-      if (e) e.w = w + 1;
-    }
-    const ohnePunkte = teil.art === "erklaerung" || (!erstesMal && !aufladen && !SPRECH_MIN[teil.art]) || wdh === 0;
-    if (!ohnePunkte) belohne(erstesMal, !lage.hilfe, false, wdh);
+    // Wiederholen (6.11., Mr. Alex): Ein einzeln wiederholter Teil gibt keine Punkte mehr. Nur wer in EINEM Besuch alle Teile
+    // der Station bzw. des Abschnitts noch einmal schafft, bekommt einen Wiederholungsbonus (je Station kleiner: 25, 12, 6, 3, 1, 0).
+    // Power Up (fälliger Teil) gibt weiter volle Punkte; ein wiederholter Teil zählt weiter für die Hausaufgabe.
+    if (!erstesMal) (lage.wdhLauf = lage.wdhLauf || new Set()).add(lage.teil);
+    const wiederholt = !erstesMal && !aufladen;
+    const ohnePunkte = teil.art === "erklaerung" || wiederholt;
+    if (!ohnePunkte) belohne(erstesMal, !lage.hilfe, false, null);
     else { hwBonus(0); speichern(); setTimeout(zeigeEreignisse, 50); } // ohne Punkte zählt der Teil trotzdem für die Hausaufgabe (inkl. Feier „Homework done!“)
+    if (!erstesMal && alleTeileFertig() && lage.wdhLauf.size < lage.teile.length) return teilWiederholt();
     if (alleTeileFertig()) return gruppeGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
     fastGeschafft();
@@ -894,6 +894,7 @@
     stand.gruppen = stand.gruppen || {};
     const liste = (stand.gruppen[k.nr] = stand.gruppen[k.nr] || []);
     if (!liste.includes(lage.gruppe)) { liste.push(lage.gruppe); einheitBonus(); }
+    else if (wdhKomplett()) wdhStationBonus(`${k.nr}|${lage.gruppe}`);
     const alle = kategorieGruppen(k).every((x) => liste.includes(x));
     if (alle && !stand.erledigt.includes(k.nr)) stand.erledigt.push(k.nr);
     speichern();
@@ -1789,6 +1790,28 @@
     }
     punkteDazu(plus, { art: istGym ? "g" : "t", boni });
   }
+  // Wiederholungsbonus für eine komplett wiederholte Station / einen komplett wiederholten Abschnitt (6.11.)
+  const WDH_BONUS = 25;
+  function wdhKomplett() { return !!(lage && lage.wdhLauf && lage.wdhLauf.size >= lage.teile.length); }
+  function wdhStationBonus(schluessel) {
+    const sp = spielstand(); sp.stwdh = sp.stwdh || {};
+    const n = sp.stwdh[schluessel] || 0; sp.stwdh[schluessel] = n + 1;
+    const p = Math.floor(WDH_BONUS / 2 ** n);
+    ereignisse.push({ art: "toast", text: T("🔁 Ganz wiederholt!", "🔁 Fully repeated!") });
+    if (p > 0) punkteDazu(p, { art: "e", bonus: true }); else { speichern(); setTimeout(zeigeEreignisse, 50); }
+  }
+  // Nur ein Teil (oder ein paar Teile) noch einmal gemacht: neutrale Seite, keine Feier, kein Bonus
+  function teilWiederholt() {
+    const ort = kategorie(lage.nr), rest = lage.teile.map((_, i) => i).filter((i) => !lage.wdhLauf.has(i));
+    const weiter = () => springe(rest[0]);
+    lage.weiter = weiter;
+    zeige(kopf(ort), el("section", { class: "geschafft" },
+      el("h2", {}, T("Teil wiederholt ✓", "Part repeated ✓")),
+      el("p", { class: "ansage" }, T(`Punkte gibt es, wenn du alle ${lage.teile.length} Teile am Stück wiederholst. Noch ${rest.length} Teile.`,
+        `You get points when you repeat all ${lage.teile.length} parts in one go. ${rest.length} parts to go.`)),
+      el("div", { class: "knopfreihe" }, knopf(T("Nächster Teil", "Next part"), weiter, "haupt"), knopf(T("Zur Startseite", "Back to start"), startseite))));
+  }
+
   function einheitBonus() { punkteDazu(PUNKTE.einheit, { art: "e", bonus: true }); }
   // Alle Punkte und Coins laufen nur hier durch (31.10.): Zeitlog (mrAlexWacht) für Übungspunkte ohne Boni, Ereignisprotokoll für alles.
   // opt: { art: "t"|"g"|"s"|"e"|"m", boni: [[art, punkte], …] (in plus enthalten, ohne Zeitlog), bonus: true (ganz ohne Zeitlog) }

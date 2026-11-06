@@ -198,6 +198,15 @@ SHOP = [
 ] + skin_artikel(lambda g, e: g, "Figur im London Run")
 
 
+def orts_foto(oid):
+    """Foto + kurze Quellenangabe für die Orts-Szene (nur wenn Datei und Quelle da sind)."""
+    pfad = os.path.join("app", "bilder", "orte", f"{oid}.jpg")
+    q = {z["id"]: z for z in lesen("orte_fotos.tsv")}.get(oid) if os.path.exists(os.path.join(INHALTE, "orte_fotos.tsv")) else None
+    if not q or not os.path.exists(os.path.join(BASIS, pfad)):
+        return {}
+    return {"foto": f"bilder/orte/{oid}.jpg", "foto_quelle": f"Foto: {q['urheber']}, {q['lizenz']}, Wikimedia Commons"}
+
+
 def spieldaten():
     a = lambda pfad: pfad if os.path.exists(os.path.join(BASIS, "app", pfad)) else None
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -205,7 +214,8 @@ def spieldaten():
     return {
         "titel": [{"ab": ab, "name": n, "symbol": sym, "audio": a(f"audio/spiel/titel_{n.lower().replace(' ', '_')}.mp3")} for ab, n, sym in TITEL],
         "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
-        "orte": [dict(z, x=int(z["x"]), y=int(z["y"]), audio=a(f"audio/london/{z['id']}.mp3")) for z in lesen("london.tsv")],
+        # Orts-Szenen (6.11.): kleines Foto am Ende der Szene (app/bilder/orte/<id>.jpg, Quellen inhalte/orte_fotos.tsv → app/bilder/orte/QUELLEN.md)
+        "orte": [dict(z, x=int(z["x"]), y=int(z["y"]), audio=a(f"audio/london/{z['id']}.mp3"), **orts_foto(z["id"])) for z in lesen("london.tsv")],
         "helden": [dict(z, bild=f"bilder/helden/{z['bild']}.jpg", audio=a(f"audio/helden/{z['id']}.mp3")) for z in lesen("helden.tsv")],
         "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in lesen("geheimakten.tsv")],
         "frei": frei_saarland.als_daten(),

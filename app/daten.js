@@ -6076,7 +6076,9 @@ window.DATEN = {
     "x": 200,
     "y": 143,
     "fakt": "Big Ben is the name of the bell, not the tower!",
-    "audio": "audio/london/big_ben.mp3"
+    "audio": "audio/london/big_ben.mp3",
+    "foto": "bilder/orte/big_ben.jpg",
+    "foto_quelle": "Foto: Juri Kowski, CC BY-SA 3.0, Wikimedia Commons"
    },
    {
     "id": "london_eye",
@@ -6085,7 +6087,9 @@ window.DATEN = {
     "x": 214,
     "y": 128,
     "fakt": "The London Eye is 135 metres tall. One ride takes 30 minutes.",
-    "audio": "audio/london/london_eye.mp3"
+    "audio": "audio/london/london_eye.mp3",
+    "foto": "bilder/orte/london_eye.jpg",
+    "foto_quelle": "Foto: Diliff, CC BY 2.5, Wikimedia Commons"
    },
    {
     "id": "tower_bridge",
@@ -6094,7 +6098,9 @@ window.DATEN = {
     "x": 302,
     "y": 128,
     "fakt": "Tower Bridge can open in the middle to let big ships through.",
-    "audio": "audio/london/tower_bridge.mp3"
+    "audio": "audio/london/tower_bridge.mp3",
+    "foto": "bilder/orte/tower_bridge.jpg",
+    "foto_quelle": "Foto: Dietmar Rabich, CC BY-SA 4.0, Wikimedia Commons"
    },
    {
     "id": "buckingham",
@@ -6112,7 +6118,9 @@ window.DATEN = {
     "x": 290,
     "y": 112,
     "fakt": "Ravens live at the Tower of London. People say the kingdom will fall if they ever leave.",
-    "audio": "audio/london/tower.mp3"
+    "audio": "audio/london/tower.mp3",
+    "foto": "bilder/orte/tower.jpg",
+    "foto_quelle": "Foto: Bob Collowan, CC BY-SA 3.0, Wikimedia Commons"
    },
    {
     "id": "hyde_park",
@@ -6202,7 +6210,9 @@ window.DATEN = {
     "x": 62,
     "y": 30,
     "fakt": "Wembley Stadium has 90,000 seats. Its big arch is 133 metres tall.",
-    "audio": "audio/london/wembley.mp3"
+    "audio": "audio/london/wembley.mp3",
+    "foto": "bilder/orte/wembley.jpg",
+    "foto_quelle": "Foto: Richard Webb, CC BY-SA 2.0, Wikimedia Commons"
    },
    {
     "id": "tube",
@@ -6211,7 +6221,9 @@ window.DATEN = {
     "x": 228,
     "y": 62,
     "fakt": "The London Underground is the oldest underground railway in the world. It opened in 1863.",
-    "audio": "audio/london/tube.mp3"
+    "audio": "audio/london/tube.mp3",
+    "foto": "bilder/orte/tube.jpg",
+    "foto_quelle": "Foto: Nevit Dilmen, CC BY-SA 3.0, Wikimedia Commons"
    },
    {
     "id": "bus",
@@ -6220,7 +6232,9 @@ window.DATEN = {
     "x": 150,
     "y": 180,
     "fakt": "London's red buses have two floors. Sit upstairs at the front for the best view!",
-    "audio": "audio/london/bus.mp3"
+    "audio": "audio/london/bus.mp3",
+    "foto": "bilder/orte/bus.jpg",
+    "foto_quelle": "Foto: 0x010C, CC BY-SA 4.0, Wikimedia Commons"
    },
    {
     "id": "covent_garden",
@@ -6256,7 +6270,9 @@ window.DATEN = {
     "x": 330,
     "y": 132,
     "fakt": "The River Thames is 346 kilometres long. It flows right through London.",
-    "audio": "audio/london/thames.mp3"
+    "audio": "audio/london/thames.mp3",
+    "foto": "bilder/orte/thames.jpg",
+    "foto_quelle": "Foto: Diliff, CC BY-SA 2.5, Wikimedia Commons"
    },
    {
     "id": "kew",

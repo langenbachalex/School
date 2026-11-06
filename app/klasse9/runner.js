@@ -36,6 +36,7 @@
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
+   Orts-Szenen (6.11.): window.Runner.szene(ziel, ortId, { text, titel, foto, quelle, onEnde }) spielt eine kurze Szene eines Orts mit den Zeichnungen der Welten (Runner.hatSzene(id), Runner.SZENEN_ORTE).
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Stimmen-Vorrang (1.11., Mr. Alex): Haupttexte (ansage, erzaehler, boss, cameo) unterbricht keine Vokabel – stimme.wort wartet in der App dahinter
    (nur die zuletzt gesammelte; Umsetzung im App-Kleber hauptText()/runnerWort(), docs/runner/konzept-entwurf.md Abschnitt 24).
@@ -346,6 +347,8 @@
     schnarchen() { ton(70, 0.9, "sawtooth", 0.035, 0, 95); rauschen(0.8, 0.02, 0.05, { typ: "lowpass", freq: 260 }); ton(640, 0.5, "sine", 0.012, 1.05, 520); },
     zapfen() { for (let i = 0; i < 3; i++) ton(2400 + i * 300, 0.04, "square", 0.03, i * 0.12, 1800); rauschen(0.3, 0.025, 0, { typ: "highpass", freq: 3000 }); },   // Eiszapfen knackt (Warnung)
     splittern() { rauschen(0.22, 0.06, 0, { typ: "highpass", freq: 2600 }); [3136, 2637, 3520].forEach((f, i) => ton(f, 0.12, "triangle", 0.05, i * 0.05)); },   // Eiszapfen zersplittert am Boden
+    // Orts-Szene Big Ben (6.11.): Glockenschlag – tiefer Grundton E mit Obertönen, kurzer Anschlag
+    glocke() { rauschen(0.05, 0.05, 0, { typ: "bandpass", freq: 2400 }); [[165, 2.8, 0.12], [330, 2.0, 0.05], [412, 1.6, 0.04], [495, 1.3, 0.03], [660, 0.9, 0.02]].forEach(([f, d, l]) => ton(f, d, "sine", l)); ton(82, 2.4, "sine", 0.06); },
     feuer() { rauschen(1.1, 0.06, 0, { typ: "bandpass", freq: 900 }); rauschen(0.5, 0.045, 0, { typ: "highpass", freq: 3000 }); ton(110, 0.8, "sawtooth", 0.03, 0, 70); },
   };
 
@@ -4030,7 +4033,10 @@
 
   /* ---------- Welt Westminster · Big Ben (Klasse 6 „London Run“, 31.10.) ---------- */
   const UK_ROT = '#c8102e', UK_BLAU = '#012169';
-  function bigBen(c, x, y, s, farbe) {   // Elizabeth Tower: Schaft, Uhrgeschoss mit Zifferblatt (Zeiger laufen), Glockenstube, Turmspitze; (x, y) = Fußpunkt Mitte
+  // o (optional, Orts-Szene 6.11.): { detail: true = Steinfelder, Goldrand am Zifferblatt, Spitze golden · minute / stunde = Zeigerwinkel (Bogenmaß, 0 = 3 Uhr) statt laufender Zeit ·
+  //   glocke = Pendelwinkel der Glocke: die Glockenstube ist offen und zeigt die schwingende Glocke (Big Ben) mit Klöppel }
+  function bigBen(c, x, y, s, farbe, o) {   // Elizabeth Tower: Schaft, Uhrgeschoss mit Zifferblatt (Zeiger laufen), Glockenstube, Turmspitze; (x, y) = Fußpunkt Mitte
+    o = o || {};
     c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe;
     c.fillRect(-14, -150, 28, 150);
     c.fillRect(-17, -188, 34, 40);
@@ -4039,11 +4045,29 @@
     c.fillRect(-1.5, -276, 3, 16);
     for (const px of [-17, 13]) { c.beginPath(); c.moveTo(px, -188); c.lineTo(px + 2, -200); c.lineTo(px + 4, -188); c.closePath(); c.fill(); }
     c.fillStyle = 'rgba(0,0,0,.12)'; for (let k = 0; k < 6; k++) c.fillRect(-10, -140 + k * 22, 20, 2);
-    for (let k = 0; k < 3; k++) c.fillRect(-11 + k * 8, -206, 5, 14);
+    if (o.glocke == null) for (let k = 0; k < 3; k++) c.fillRect(-11 + k * 8, -206, 5, 14);
+    if (o.detail) {   // Steinfelder (gotische Paneele), Gesimse, kleine Fenster, goldene Spitze
+      c.fillStyle = 'rgba(255,245,215,.22)'; for (let k = 0; k < 6; k++) { c.fillRect(-11, -146 + k * 22, 3, 18); c.fillRect(8, -146 + k * 22, 3, 18); }
+      c.fillStyle = 'rgba(0,0,0,.16)'; c.fillRect(-15, -150, 30, 3); c.fillRect(-18, -190, 36, 3); c.fillRect(-16, -212, 32, 3);
+      c.fillStyle = 'rgba(40,50,70,.45)'; for (let k = 0; k < 5; k++) c.fillRect(-3, -138 + k * 26, 6, 9);
+      c.fillStyle = '#d9b23a'; c.fillRect(-1.5, -276, 3, 16); c.beginPath(); c.arc(0, -277, 2.6, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = 'rgba(217,178,58,.8)'; c.lineWidth = 1; c.beginPath(); c.moveTo(-17, -210); c.lineTo(0, -262); c.lineTo(17, -210); c.stroke();
+    }
+    if (o.glocke != null) {   // offene Glockenstube: dunkle Öffnung, Joch, die Glocke pendelt um das Joch, Klöppel hängt nach
+      c.fillStyle = '#1c2230'; c.beginPath(); c.moveTo(-12, -190); c.lineTo(-12, -203); c.arc(0, -203, 12, Math.PI, 0); c.lineTo(12, -190); c.closePath(); c.fill();
+      c.fillStyle = '#5a4a30'; c.fillRect(-11, -209, 22, 2);
+      c.save(); c.translate(0, -207); c.rotate(o.glocke);
+      c.fillStyle = '#b8913f'; c.beginPath(); c.moveTo(-3, 1); c.quadraticCurveTo(-4, 6, -6.5, 11); c.lineTo(-7.5, 13); c.lineTo(7.5, 13); c.lineTo(6.5, 11); c.quadraticCurveTo(4, 6, 3, 1); c.closePath(); c.fill();
+      c.fillStyle = 'rgba(255,240,190,.45)'; c.fillRect(-3.5, 4, 1.5, 7);
+      c.save(); c.translate(0, 2); c.rotate(-o.glocke * 0.6); c.fillStyle = '#3a3020'; c.fillRect(-0.6, 0, 1.2, 10); c.beginPath(); c.arc(0, 11, 1.6, 0, Math.PI * 2); c.fill(); c.restore();
+      c.restore();
+    }
     c.fillStyle = '#f3ead2'; c.beginPath(); c.arc(0, -168, 12, 0, Math.PI * 2); c.fill();
-    c.strokeStyle = '#2a2a2a'; c.lineWidth = 1.6; c.stroke();
-    const a = zeit * 0.5;
-    c.lineCap = 'round'; c.beginPath(); c.moveTo(0, -168); c.lineTo(Math.cos(a) * 9, -168 + Math.sin(a) * 9); c.moveTo(0, -168); c.lineTo(Math.cos(a / 12 - 1) * 6, -168 + Math.sin(a / 12 - 1) * 6); c.stroke();
+    c.strokeStyle = o.detail ? '#c9a23a' : '#2a2a2a'; c.lineWidth = 1.6; c.stroke();
+    if (o.detail) { c.fillStyle = '#2a2a2a'; for (let k = 0; k < 12; k++) { const w = k * Math.PI / 6; c.fillRect(Math.cos(w) * 9.6 - 0.6, -168 + Math.sin(w) * 9.6 - 0.6, 1.2, 1.2); } }
+    c.strokeStyle = '#2a2a2a';
+    const a = o.minute != null ? o.minute : zeit * 0.5, st = o.stunde != null ? o.stunde : a / 12 - 1;
+    c.lineCap = 'round'; c.beginPath(); c.moveTo(0, -168); c.lineTo(Math.cos(a) * 9, -168 + Math.sin(a) * 9); c.moveTo(0, -168); c.lineTo(Math.cos(st) * 6, -168 + Math.sin(st) * 6); c.stroke();
     c.restore();
   }
   function parlament(c, x, y, s, farbe) {   // Houses of Parliament links vom Big Ben: lange gotische Front mit Türmchen, Victoria Tower am linken Ende; (x, y) = rechter Fußpunkt
@@ -5152,12 +5176,15 @@
     c.fillStyle = '#2b2f3a'; c.fillRect(x + 20, y + 16, w - 40, 6); for (const rx of [x + 60, x + w - 60]) if (w > 160) { c.fillStyle = '#1b1b1f'; c.beginPath(); c.arc(rx, y + 26, 7, 0, Math.PI * 2); c.arc(rx + 22, y + 26, 7, 0, Math.PI * 2); c.fill(); }
     c.fillStyle = '#23262d'; c.fillRect(x - 4, y - 12, 6, 28); c.fillRect(x + w - 2, y - 12, 6, 28);   // Gummiwülste am Wagenende
   }
+  function mindTheGapSchild(c, mx, blink) {   // Schild „MIND THE GAP“ auf einem Pfosten (mx = Mitte; blinkt gelb/rot) + Schriftzug an der Bahnsteigkante – Spalt im Runner und Orts-Szene The Tube
+    c.fillStyle = '#2b2f3a'; c.fillRect(mx - 2, BODEN_Y - 110, 4, 110);
+    c.fillStyle = blink ? TUBE_GELB : '#f7efd8'; c.beginPath(); c.roundRect(mx - 48, BODEN_Y - 140, 96, 32, 4); c.fill(); c.strokeStyle = blink ? UK_ROT : '#2b2f3a'; c.lineWidth = 2; c.stroke();
+    c.fillStyle = '#18213a'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MIND THE GAP', mx, BODEN_Y - 124);
+    c.fillStyle = '#18213a'; c.font = 'bold 8px system-ui, sans-serif'; c.fillText('MIND THE GAP', mx, BODEN_Y + 6);
+  }
   function spaltZeichnen(c, s) {   // Spalt: Schild „MIND THE GAP“ auf einem Pfosten vor der Lücke (blinkt nach der Durchsage), Schriftzug an der Kante, rechts die offene Zugtür eines wartenden Zugs
     const x = s.x - kamera, blink = s.gewarnt && (ruhig() || Math.floor(zeit * 5) % 2 === 0);
-    c.fillStyle = '#2b2f3a'; c.fillRect(x - 66, BODEN_Y - 110, 4, 110);
-    c.fillStyle = blink ? TUBE_GELB : '#f7efd8'; c.beginPath(); c.roundRect(x - 112, BODEN_Y - 140, 96, 32, 4); c.fill(); c.strokeStyle = blink ? UK_ROT : '#2b2f3a'; c.lineWidth = 2; c.stroke();
-    c.fillStyle = '#18213a'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MIND THE GAP', x - 64, BODEN_Y - 124);
-    c.fillStyle = '#18213a'; c.font = 'bold 8px system-ui, sans-serif'; c.fillText('MIND THE GAP', x - 64, BODEN_Y + 6);
+    mindTheGapSchild(c, x - 64, blink);
     const tx = x + SPALT_W;   // wartender Zug rechts: Wagenkasten mit offener Tür an der Lücke
     c.fillStyle = '#8d9096'; c.beginPath(); c.roundRect(tx - 8, BODEN_Y - 200, 230, 200, [12, 12, 0, 0]); c.fill();
     c.fillStyle = UK_ROT; c.fillRect(tx - 8, BODEN_Y - 120, 230, 8);
@@ -7810,6 +7837,251 @@
     if (window.__runner === haken) delete window.__runner;
   }
 
+  /* ---------- Orts-Szenen (6.11.2026, Etappe 1; docs/runner/konzept-entwurf.md „Gemeinsame Zeichnungen Runner/Szenen“) ----------
+     Runner.szene(ziel, ortId, { text, titel, foto, quelle, onEnde }) spielt eine kurze Szene (6–10 s) mit GENAU den Zeichenfunktionen der Welten
+     (bigBen, parlament, filmKulisseEye/Bridge/Tube/Wembley, hintergrundLondon/NY/Route66/Canyon/Rushmore/GoldenGate, goldenGateFern, koepfeRushmore …)
+     und den Klängen des Spiels (klang.*). Untertitel = text, am Ende ein kleines Foto mit Quellenzeile. Tippen überspringt zum Foto, ✕ / Tippen am Ende schließt.
+     ziel = Element (die Szene füllt es, 16:10) oder null (eigene Ebene über der Seite). Läuft der Runner gerade, gibt es keine Szene (Rückgabe null).
+     Weltkulissen zeichnen in Bildschirmkoordinaten mit kamera/level/viewW/zeit – szWelt setzt sie für einen Frame und stellt sie danach zurück. */
+  const SZ_W = 640;   // logische Szenenbreite (Höhe H = 400, 16:10)
+  function szWelt(werte, fn) {
+    const alt = { zeit, kamera, level, viewW, radWinkel };
+    zeit = werte.zeit; kamera = werte.kamera || 0; level = werte.level || level; viewW = SZ_W; radWinkel = werte.rad || 0;
+    try { fn(); } finally { ({ zeit, kamera, level, viewW, radWinkel } = alt); }
+  }
+  const szKam = (c, kx, ky, kz) => { c.translate(SZ_W / 2, H / 2); c.scale(kz, kz); c.translate(-kx, -ky); };
+  const szWeg = (t, punkte) => {   // Kamerafahrt: punkte = [[zeit, kx, ky, kz], …] (sanft zwischen den Stützpunkten)
+    if (t <= punkte[0][0]) return punkte[0].slice(1);
+    for (let i = 1; i < punkte.length; i++) if (t <= punkte[i][0]) { const a = punkte[i - 1], b = punkte[i], f = sanft((t - a[0]) / (b[0] - a[0])); return [lerp(a[1], b[1], f), lerp(a[2], b[2], f), lerp(a[3], b[3], f)]; }
+    return punkte[punkte.length - 1].slice(1);
+  };
+  const szWeltKulisse = (c, t, welt, ende, von, bis, dauer, rad) => {   // Kulisse + Boden einer Runner-Welt; kamera fährt von → bis (Parallaxe), naehe = kamera / ende
+    const w = WELTEN[welt], kam = lerp(von, bis, Math.min(1, t / dauer));
+    szWelt({ zeit: t, kamera: kam, level: { ende }, rad }, () => { w.kulisse(c); w.boden(c, 0, SZ_W, kam, kam + SZ_W, kam, kam + SZ_W); });
+    return kam;
+  };
+  const szHimmel = (c, oben, unten) => { const g = c.createLinearGradient(0, -200, 0, BODEN_Y); g.addColorStop(0, oben); g.addColorStop(1, unten); c.fillStyle = g; c.fillRect(-600, -600, 2400, BODEN_Y + 600); };
+  const szWolken = (c, t, liste) => { c.fillStyle = 'rgba(255,255,255,.9)'; for (const [wx, wy] of liste) { const x = wx + t * 6; c.beginPath(); c.arc(x, wy, 18, 0, Math.PI * 2); c.arc(x + 22, wy - 8, 22, 0, Math.PI * 2); c.arc(x + 46, wy, 16, 0, Math.PI * 2); c.fill(); } };
+  const szRinge = (c, x, y, t0, t, farbe) => {   // Klangwellen (Glockenschlag, Horn): drei Ringe laufen nach außen
+    const d = t - t0; if (d < 0 || d > 1.6) return;
+    c.save(); c.strokeStyle = farbe; for (let k = 0; k < 3; k++) { const f = d / 1.6 - k * 0.15; if (f <= 0) continue; c.globalAlpha = Math.max(0, 1 - f) * 0.8; c.lineWidth = 2; c.beginPath(); c.arc(x, y, 8 + f * 60, 0, Math.PI * 2); c.stroke(); } c.restore();
+  };
+  const SZENEN = {
+    // Klasse 6 – London
+    big_ben: { dauer: 8.6, klaenge: [[0.6, 'klick'], [1.2, 'klick'], [1.8, 'klick'], [2.4, 'klick'], [3.4, 'glocke'], [4.8, 'glocke'], [6.2, 'glocke']],
+      zeichne(c, t) {   // ganzer Elizabeth Tower mit Parlament, Themse; der Minutenzeiger springt auf 12, dann zoomt die Kamera in die Glockenstube: Big Ben schlägt dreimal (3 Uhr)
+        const [kx, ky, kz] = szWeg(t, [[0, 240, 205, 1], [2.5, 300, 200, 1.05], [3.3, 376, 128, 3.4], [7.0, 376, 130, 3.6], [8.2, 280, 200, 1]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#5f9bd6', '#e6f0f8'); szWolken(c, t, [[-120, 40], [430, 10], [700, 70]]);
+        szWelt({ zeit: t, kamera: 0 }, () => themse(c, -400, 1200));
+        c.fillStyle = '#9b958a'; c.fillRect(-400, BODEN_Y - 4, 1600, 14);
+        parlament(c, 362, BODEN_Y - 4, 1.0, '#cdb88d');
+        const schritt = Math.min(4, Math.floor(t / 0.6)), minute = -Math.PI / 2 - (4 - schritt) * 0.105;   // springt in 4 Schritten auf die volle Stunde
+        const schlag = [3.4, 4.8, 6.2].reduce((m, s) => (t >= s ? s : m), -9), schwung = t < 3.2 ? 0 : Math.sin((t - 3.2) * Math.PI / 1.4) * 0.5 * (ruhig() ? 0.3 : 1);
+        bigBen(c, 380, BODEN_Y - 4, 1.06, '#d8c497', { detail: true, minute, stunde: 0, glocke: schwung });
+        if (schlag > 0) { szRinge(c, 380 - 20, BODEN_Y - 4 - 199 * 1.06, schlag, t, 'rgba(255,235,170,1)'); szRinge(c, 380 + 20, BODEN_Y - 4 - 199 * 1.06, schlag, t, 'rgba(255,235,170,1)'); }
+        if (t > 3.3 && t < 7.2) { c.fillStyle = '#fff'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('BONG!', 380 + 26, BODEN_Y - 4 - 214 * 1.06 - (t - schlag) * 4); }
+        c.restore();
+      } },
+    london_eye: { dauer: 8, klaenge: [[0.4, 'gondel'], [2.6, 'gondel'], [5.2, 'station']],
+      zeichne(c, t) {   // das Rad dreht sich, Kabinen ziehen vorbei, gegenüber Big Ben und Parlament
+        const z = lerp(0.7, 0.78, t / 8);   // etwas weiter gefasst, damit das ganze Rad ins Bild passt
+        c.save(); c.translate(SZ_W / 2, BODEN_Y); c.scale(z, z); c.translate(-SZ_W / 2, -BODEN_Y);
+        szWeltKulisse(c, t, 'londoneye', 4000, 1200, 1320, 8, t * 0.16);
+        c.restore();
+      } },
+    tower_bridge: { dauer: 8.6, klaenge: [[0.3, 'horn'], [3.4, 'welle'], [6.6, 'horn']],
+      zeichne(c, t) {   // Horn, die Klappen heben sich, ein Boot fährt zwischen den Türmen hindurch, dann senken sich die Klappen
+        const winkel = t < 1.2 ? 0 : t < 3.2 ? sanft((t - 1.2) / 2) * 1.15 : t < 6.4 ? 1.15 : (1 - sanft((t - 6.4) / 1.8)) * 1.15;
+        const [kx, ky, kz] = szWeg(t, [[0, 640, 200, 0.82], [8.6, 600, 210, 0.92]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szWelt({ zeit: t, kamera: 0 }, () => {
+          filmKulisseBridge(c, winkel);
+          if (t > 0.2 && t < 3.2 && Math.floor(t * 3) % 2 === 0) { c.fillStyle = UK_ROT; for (const x of [TBF.t1 - 20, TBF.t2 + 20]) { c.beginPath(); c.arc(x, BODEN_Y - 128, 4, 0, Math.PI * 2); c.fill(); } }   // rotes Licht an den Türmen
+          const f = Math.max(0, Math.min(1, (t - 3) / 3.6));
+          if (f > 0 && f < 1) { c.save(); c.globalAlpha = Math.min(1, (1 - f) * 4); bootZeichnen(c, (TBF.t1 + TBF.t2) / 2, lerp(BODEN_Y + 70, BODEN_Y + 16, f), lerp(1.8, 0.55, f)); c.restore(); }
+        });
+        szRinge(c, TBF.t1 - 20, BODEN_Y - 150, 0.3, t, 'rgba(255,255,255,1)');
+        c.restore();
+      } },
+    tower: { dauer: 8, klaenge: [[0.8, 'rabe'], [2.4, 'rabe'], [4.4, 'rabe']],
+      zeichne(c, t) {   // der Tower of London an der Themse; die Raben fliegen einer nach dem anderen heran und setzen sich
+        const [kx, ky, kz] = szWeg(t, [[0, 900, 200, 0.95], [8, 1000, 190, 1.15]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szWelt({ zeit: t, kamera: 0 }, () => {
+          filmKulisseBridge(c, 0);
+          for (let i = 0; i < 5; i++) {   // die Raben fliegen einer nach dem anderen heran und setzen sich auf die Ringmauer
+            const f = sanft((t - 0.4 - i * 0.8) / 2.4), zx = TBF.tower - 90 + i * 42, zy = BODEN_Y - 54 * 1.15;
+            if (f <= 0) continue;
+            if (f >= 1) rabeSitzt(c, zx, zy, t + i); else rabeFlug(c, lerp(700 + i * 30, zx, f), lerp(120 + (i % 2) * 40, zy - 12, f) - Math.sin(f * Math.PI) * 50, t + i, 0.8);
+          }
+        });
+        c.restore();
+      } },
+    wembley: { dauer: 8.4, klaenge: [[0.3, 'pfeife'], [2.0, 'koepfer'], [3.3, 'jubel'], [4.6, 'gesang']],
+      zeichne(c, t) {   // Stadion mit dem großen Bogen; der Ball fliegt ins Tor, die Fans jubeln
+        const [kx, ky, kz] = szWeg(t, [[0, 640, 170, 0.62], [2.0, 700, 200, 0.85], [8.4, 760, 190, 0.8]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szWelt({ zeit: t, kamera: 0 }, () => {
+          const jubel = t < 3.2 ? 0 : Math.min(1, (t - 3.2) * 2);
+          filmKulisseWembley(c, { jubel, tafel: t < 3.2 ? 'KICK-OFF!' : 'GOAL!', stand: t < 3.2 ? '0 : 0' : '1 : 0' });
+          const f = Math.max(0, Math.min(1, (t - 2) / 1.2)), [bx, by] = flugbahn([520, BODEN_Y - 10], [WEF.tor + 120, BODEN_Y - 60], f, 90);
+          fussball(c, f < 1 ? bx : WEF.tor + 120, f < 1 ? by : BODEN_Y - 10, 10, t * 8, 0);
+        });
+        c.restore();
+      } },
+    tube: { dauer: 8, klaenge: [[0.3, 'durchsage'], [1.1, 'zug'], [5.4, 'tuerwarn']],
+      zeichne(c, t) {   // Bahnsteig mit Stationsschild; der Zug fährt ein und hält, das Schild „MIND THE GAP“ blinkt
+        const dx = t < 3.6 ? (1 - sanft(t / 3.6)) * 1100 : 0;
+        const [kx, ky, kz] = szWeg(t, [[0, 600, 210, 0.8], [8, 660, 220, 0.88]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szWelt({ zeit: t, kamera: 0 }, () => { filmKulisseTube(c, dx); mindTheGapSchild(c, 560, t > 3.6 && (ruhig() || Math.floor(t * 4) % 2 === 0)); });
+        c.restore();
+      } },
+    bus: { dauer: 7.5, klaenge: [[0.6, 'bus'], [3.4, 'bus']],
+      zeichne(c, t) {   // Westminster im Nieselwetter; ein roter Doppeldecker fährt durchs Bild
+        const kam = szWeltKulisse(c, t, 'westminster', 40000, 15000, 15300, 7.5);
+        c.save(); c.translate(0, BODEN_Y + 52); c.scale(1.5, 1.5); c.translate(0, -BODEN_Y);   // vorn auf der Promenade, etwas größer
+        szWelt({ zeit: t, kamera: kam }, () => londonFahrzeug(c, { art: 'bus', x: kam + lerp(480, -140, t / 7.5), w: AUTO_MASSE.bus.w, h: AUTO_MASSE.bus.h, von: 0, rad: t * 9 }));
+        c.restore();
+      } },
+    thames: { dauer: 8, klaenge: [[0.4, 'welle'], [2.2, 'moewe'], [4.6, 'welle']],
+      zeichne(c, t) {   // die Themse vor Big Ben und dem London Eye; ein Ausflugsboot fährt vorbei
+        const kam = lerp(30000, 30400, t / 8);
+        szWelt({ zeit: t, kamera: kam, level: { ende: 40000 } }, () => {
+          WELTEN.westminster.kulisse(c); themse(c, kam - 50, kam + SZ_W + 50);
+          bootZeichnen(c, lerp(-60, SZ_W + 60, t / 8), BODEN_Y + 32 + Math.sin(t * 2) * 2, 1.4);
+        });
+      } },
+    // Klasse 9 – USA
+    liberty: { dauer: 8, klaenge: [[0.8, 'moewe'], [3.6, 'fanfare']],
+      zeichne(c, t) {   // New York Harbor: die Freiheitsstatue, die Kamera fährt hinauf zur Fackel, die Flamme leuchtet
+        const z = lerp(1, 1.7, sanft((t - 1) / 4)), fx = SZ_W * 0.72 - 30 + 16 * 1.4, fy = 250 - 176 * 1.4;
+        c.save(); c.translate(fx, fy); c.scale(z, z); c.translate(-fx, -fy + (z - 1) * 90);
+        szWeltKulisse(c, t, 'ny', 1000, 960, 1000, 8);
+        const glanz = t > 3.4 ? Math.min(1, (t - 3.4) * 1.5) : 0;
+        if (glanz > 0) { const g = c.createRadialGradient(fx, fy, 2, fx, fy, 40); g.addColorStop(0, `rgba(255,220,120,${0.8 * glanz})`); g.addColorStop(1, 'rgba(255,200,80,0)'); c.fillStyle = g; c.beginPath(); c.arc(fx, fy, 40, 0, Math.PI * 2); c.fill(); }
+        c.restore();
+      } },
+    golden_gate: { dauer: 8.6, klaenge: [[2.2, 'nebelhorn'], [0.6, 'moewe']],
+      zeichne(c, t) {   // Pazifikküste mit der Golden Gate Bridge; Nebel zieht herein und wieder ab, das Nebelhorn tutet
+        const kam = szWeltKulisse(c, t, 'ca', 12000, 5900, 6300, 8.6);   // naehe ≈ 0,5: die Brücke steht mittig (ohne Hollywood-Bonus im Hintergrund)
+        const d = t < 1 ? 0 : t < 3.4 ? sanft((t - 1) / 2.4) * 0.85 : t < 5.8 ? 0.85 : (1 - sanft((t - 5.8) / 2.4)) * 0.85;
+        szWelt({ zeit: t, kamera: kam }, () => nebelZeichnen(c, d));
+      } },
+    hollywood: { dauer: 7.5, klaenge: [[1.2, 'fanfare']],
+      zeichne(c, t) {   // Abendhimmel über Los Angeles, Scheinwerfer kreisen über dem Hollywood Sign
+        const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#2b3f7a'); g.addColorStop(0.6, '#e98a5a'); g.addColorStop(1, '#ffd08a'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, H);
+        c.save(); c.globalAlpha = 0.25; c.fillStyle = '#fff8d0';
+        for (const [x, ph] of [[150, 0], [500, 1.7]]) { const a = -Math.PI / 2 + Math.sin(t * 0.9 + ph) * 0.5; c.beginPath(); c.moveTo(x, H); c.lineTo(x + Math.cos(a - 0.06) * 520, H + Math.sin(a - 0.06) * 520); c.lineTo(x + Math.cos(a + 0.06) * 520, H + Math.sin(a + 0.06) * 520); c.closePath(); c.fill(); }
+        c.restore();
+        const z = lerp(1.5, 1.9, t / 7.5);
+        c.save(); c.translate(SZ_W / 2, 330); c.scale(z, z); szWelt({ zeit: t, kamera: 0 }, () => hollywoodSign(c, 0, 0)); c.restore();
+        c.fillStyle = '#5f8a44'; c.fillRect(0, 328, SZ_W, H);
+      } },
+    grand_canyon: { dauer: 8, klaenge: [[1.0, 'geier'], [3.2, 'wind'], [5.6, 'geier']],
+      zeichne(c, t) {   // Felsschichten, kreisende Geier, vorn die Schlucht mit dem Colorado River
+        c.save(); c.translate(0, -52);   // Blick etwas nach unten: die Schlucht mit dem Fluss ist zu sehen
+        const kam = szWeltKulisse(c, t, 'az', 30000, 25000, 25500, 8);
+        szWelt({ zeit: t, kamera: kam }, () => schlucht(c, kam + 140, kam + 500));
+        c.restore();
+      } },
+    route66: { dauer: 7.5, klaenge: [[1.6, 'auto'], [3.0, 'hupe']],
+      zeichne(c, t) {   // Wüste, das große Route-66-Schild, ein Auto fährt auf dem Highway vorbei und hupt
+        const kam = szWeltKulisse(c, t, 'route66', 30000, 29400, 29800, 7.5), naehe = Math.min(1, kam / 30000);
+        const f = Math.min(1, t / 6);
+        schild66(c, SZ_W * (0.8 - 0.5 * naehe), 212 - naehe * 12, 0.6 + naehe * 1.0, '#f4f4f4', true);   // das Zielschild der Kulisse noch einmal vorn (Mittelgrund verdeckt es sonst)
+        szWelt({ zeit: t, kamera: kam }, () => autoZeichnen(c, { art: 'auto', x: kam + lerp(SZ_W + 120, -160, f), w: AUTO_MASSE.auto.w, h: AUTO_MASSE.auto.h, von: 7, rad: t * 12 }));
+      } },
+    rushmore: { dauer: 8.5, klaenge: [[0.8, 'adler'], [4.0, 'wind']],
+      zeichne(c, t) {   // die Kamera schwenkt über die vier Köpfe: Washington, Jefferson, Roosevelt, Lincoln
+        const kopfX = 243 - 96 * 1.45 + 10, [fx, fy, z] = szWeg(t, [[0, SZ_W / 2, H / 2, 1], [1.4, kopfX, 150, 2.5], [6.6, kopfX + 168 * 1.45, 150, 2.5], [8.2, SZ_W / 2, H / 2, 1]]);
+        c.save(); c.translate(SZ_W / 2, H / 2); c.scale(z, z); c.translate(-fx, -fy);
+        szWeltKulisse(c, t, 'sd', 1000, 1000, 1000, 8.5);
+        c.restore();
+      } },
+  };
+  let szAktiv = null;
+  function hatSzene(id) { return !!SZENEN[id]; }
+  function szene(ziel, ortId, o = {}) {
+    const S = SZENEN[ortId];
+    if (!S || laeuft) return null;
+    szeneStopp();
+    const eigene = !ziel;
+    const ebene = eigene ? document.createElement('div') : null;
+    if (ebene) { ebene.className = 'ortszene-ebene'; ebene.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:rgba(10,14,28,.82);display:flex;align-items:center;justify-content:center;padding:12px;'; document.body.append(ebene); }
+    const box = el('div', 'ortszene'); box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', o.titel || ortId);
+    box.style.cssText = 'position:relative;width:min(100%,760px);aspect-ratio:16/10;background:#18213a;border-radius:14px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.45);cursor:pointer;user-select:none;-webkit-user-select:none;';
+    if (!eigene) box.style.width = '100%';
+    const cv = el('canvas', 'ortszene-canvas'); cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+    const titel = o.titel ? el('div', 'ortszene-titel', o.titel) : null;
+    if (titel) titel.style.cssText = 'position:absolute;left:10px;top:10px;padding:4px 10px;border-radius:999px;background:rgba(24,33,58,.78);color:#fff;font:700 13px system-ui,sans-serif;letter-spacing:.02em;';
+    const zu = el('button', 'ortszene-zu', '✕'); zu.type = 'button'; zu.setAttribute('aria-label', 'Schließen');
+    zu.style.cssText = 'position:absolute;right:8px;top:8px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(24,33,58,.78);color:#fff;font:700 18px system-ui,sans-serif;cursor:pointer;';
+    const unter = el('div', 'ortszene-text', o.text || ''); unter.lang = 'en';
+    unter.style.cssText = 'position:absolute;left:50%;bottom:10px;transform:translateX(-50%);max-width:92%;padding:6px 12px;border-radius:10px;background:rgba(0,0,0,.62);color:#fff;font:600 clamp(13px,2.6vw,17px)/1.3 system-ui,sans-serif;text-align:center;';
+    if (!o.text) unter.hidden = true;
+    const foto = el('figure', 'ortszene-foto'); foto.hidden = true;
+    foto.style.cssText = 'position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) rotate(-2deg);margin:0;width:min(52%,360px);padding:6px 6px 4px;background:#fff;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.45);transition:opacity .5s, transform .5s;';
+    if (o.foto) {
+      const img = el('img'); img.src = o.foto; img.alt = o.titel || ortId; img.style.cssText = 'display:block;width:100%;height:auto;border-radius:3px;';
+      const cap = el('figcaption', 'ortszene-quelle', o.quelle || ''); cap.style.cssText = 'font:500 10px/1.25 system-ui,sans-serif;color:#555;margin-top:4px;text-align:left;';
+      foto.append(img, cap);
+    }
+    const hinweis = el('div', 'ortszene-weiter', 'Tippen zum Schließen ➜'); hinweis.hidden = true;
+    hinweis.style.cssText = 'position:absolute;right:12px;bottom:56px;color:#fff;font:600 12px system-ui,sans-serif;opacity:.85;';
+    box.append(cv, ...(titel ? [titel] : []), zu, foto, hinweis, unter);
+    (ebene || ziel).append(box);
+    const c2 = cv.getContext('2d');
+    const A = { id: ortId, t: 0, phase: 'szene', uebersprungen: false, raf: 0, letzte: performance.now(), klaenge: S.klaenge.map((k) => ({ t: k[0], k: k[1], fertig: false })), ebene, box, o };
+    szAktiv = A;
+    audioAn();
+    const groesse = () => { const r = box.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2); cv.width = Math.max(2, Math.round(r.width * d)); cv.height = Math.max(2, Math.round(r.height * d)); return d * r.width / SZ_W; };
+    let massstab = groesse();
+    const bild = () => {
+      c2.setTransform(1, 0, 0, 1, 0, 0); c2.fillStyle = '#18213a'; c2.fillRect(0, 0, cv.width, cv.height);
+      c2.setTransform(massstab, 0, 0, massstab, 0, 0); c2.save(); c2.beginPath(); c2.rect(0, 0, SZ_W, H); c2.clip();
+      try { S.zeichne(c2, Math.min(A.t, S.dauer)); } catch (e) { A.fehler = String(e && e.message || e); }
+      c2.restore();
+      if (A.phase === 'foto') { c2.setTransform(1, 0, 0, 1, 0, 0); c2.fillStyle = 'rgba(10,14,28,.35)'; c2.fillRect(0, 0, cv.width, cv.height); }
+    };
+    const zumFoto = () => {
+      if (A.phase !== 'szene') return;
+      A.phase = 'foto'; A.t = Math.max(A.t, S.dauer);
+      if (!o.foto) return schliessen();
+      foto.hidden = false; foto.style.opacity = '0'; requestAnimationFrame(() => { foto.style.opacity = '1'; foto.style.transform = 'translate(-50%,-50%) rotate(-2deg) scale(1)'; });
+      hinweis.hidden = false; klang.schild(); bild();
+    };
+    const schliessen = () => {
+      if (A.phase === 'zu') return;
+      A.phase = 'zu'; cancelAnimationFrame(A.raf); window.removeEventListener('resize', aufGroesse); window.removeEventListener('keydown', aufTaste);
+      box.remove(); if (ebene) ebene.remove(); if (szAktiv === A) szAktiv = null;
+      if (!laeuft) audioAus();
+      if (typeof o.onEnde === 'function') setTimeout(() => o.onEnde({ ort: ortId, uebersprungen: A.uebersprungen }), 0);
+    };
+    A.zumFoto = zumFoto; A.schliessen = schliessen;
+    const aufGroesse = () => { massstab = groesse(); bild(); };
+    const aufTaste = (e) => { if (e.key === 'Escape') schliessen(); else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (A.phase === 'szene') { A.uebersprungen = true; zumFoto(); } else schliessen(); } };
+    window.addEventListener('resize', aufGroesse); window.addEventListener('keydown', aufTaste);
+    zu.addEventListener('click', (e) => { e.stopPropagation(); A.uebersprungen = A.phase === 'szene'; schliessen(); });
+    box.addEventListener('click', () => { if (A.phase === 'szene') { A.uebersprungen = true; zumFoto(); } else schliessen(); });
+    if (ebene) ebene.addEventListener('click', (e) => { if (e.target === ebene) schliessen(); });
+    const schritt = (now) => {
+      if (A.phase === 'zu') return;
+      let dt = (now - A.letzte) / 1000; A.letzte = now; if (dt > 0.05) dt = 0.05; if (dt < 0) dt = 0;
+      if (A.phase === 'szene') {
+        A.t += dt;
+        for (const k of A.klaenge) if (!k.fertig && A.t >= k.t) { k.fertig = true; try { klang[k.k](); } catch (e) { /* ohne Klang */ } }
+        if (A.t >= S.dauer) zumFoto();
+      }
+      if (A.phase !== 'zu') { bild(); A.raf = requestAnimationFrame(schritt); }
+    };
+    bild(); A.raf = requestAnimationFrame(schritt);
+    if (TESTBUILD) window.__szene = { stand: () => ({ ort: A.id, t: Math.round(A.t * 100) / 100, phase: A.phase, dauer: S.dauer, foto: !foto.hidden, quelle: o.quelle || null, text: o.text || null, fehler: A.fehler || null, klaenge: A.klaenge.filter((k) => k.fertig).map((k) => k.k) }), ueberspringen: () => zumFoto(), zu: () => schliessen(), springe: (t) => { A.t = t; for (const k of A.klaenge) if (k.t < t) k.fertig = true; } };
+    return { stopp: schliessen, ueberspringen: zumFoto };
+  }
+  function szeneStopp() { if (szAktiv && szAktiv.schliessen) szAktiv.schliessen(); }
+
   /* ---------- Test-Haken (Playwright) ---------- */
   const haken = {
     springe(haltenMs = 250) { sprungStart(); setTimeout(sprungEnde, haltenMs); },
@@ -7903,5 +8175,5 @@
     get wahlOffen() { return zustand === 'wahl' && !!wahlGabel && !frageBox.hidden; },
   };
 
-  window.Runner = { start, stopp, film: filmAlleinStart, ueberspringen, zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  window.Runner = { start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
 })();

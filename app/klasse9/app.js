@@ -1930,7 +1930,20 @@
       frageDialog.showModal();
     });
   }
+  // Orts-Szenen (6.11.2026, Etappe 1): kurze Runner-Szene (Runner.szene, gleiche Zeichnungen wie im Road Trip Run) mit dem Steckbrief als Untertitel
+  // und dem Kartenfoto am Ende; nur für Landmarks, die der Runner zeichnet (Runner.hatSzene) – sonst bleibt alles wie bisher (Foto-Karte)
+  const hatSzene = (l) => !!(l && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(l.id));
+  function ortSzene(l, fertig) {
+    if (!hatSzene(l)) return false;
+    const sz = window.Runner.szene(null, l.id, { text: l.steckbrief, titel: `🏞️ ${l.name}`, foto: l.bild, quelle: l.foto_quelle, onEnde: () => { if (fertig) fertig(); } });
+    return !!sz;
+  }
   function zeigeFeier(e) {
+    if (e.art === "karte" && !e.szeneFertig && hatSzene(e.karte)) { // neue Landmark-Karte: erst die Szene, danach die Karte wie bisher
+      stempelLaeuft = true;
+      if (ortSzene(e.karte, () => { e.szeneFertig = true; stempelLaeuft = false; zeigeFeier(e); })) return;
+      stempelLaeuft = false;
+    }
     const ton = e.art === "karte" ? e.karte : e.ton;
     const inhalt = e.art === "karte"
       ? [el("p", { class: "feier-klein" }, T("⭐ Perfect week! Neue Landmark-Karte:", "⭐ Perfect week! New landmark card:")), landmarkKarte(e.karte, true),
@@ -2174,12 +2187,17 @@
       el("p", { class: "klein" }, T("Eine Akte öffnet sich, wenn du die Landmark-Karte hast und den Staat freigeschaltet hast.", "A file opens when you have the landmark card and have unlocked the state.")), el("div", { class: "akten" }, kacheln));
   }
 
-  function karteZeigen(l) {
+  function karteZeigen(l) { // Karte mit Szene: erst die Szene, danach die Karte (ohne automatisches Vorlesen)
+    if (ortSzene(l, () => karteAnzeigen(l, false))) return;
+    karteAnzeigen(l, true);
+  }
+  function karteAnzeigen(l, mitTon) {
     feier.replaceChildren(landmarkKarte(l, true), el("p", { class: "steckbrief", lang: "en" }, l.steckbrief),
       el("div", { class: "knopfreihe" }, l.audio && knopf(T("🔊 Anhören", "🔊 Listen"), () => spiele([l.audio])),
+        hatSzene(l) && knopf(T("▶ Szene", "▶ Scene"), () => { feier.close(); stopp(); ortSzene(l, () => karteAnzeigen(l, false)); }, "leise"),
         knopf(T("Schließen", "Close"), () => { feier.close(); stopp(); }, "haupt")));
     feier.showModal();
-    if (l.audio) spiele([l.audio]);
+    if (mitTon && l.audio) spiele([l.audio]);
   }
 
   function usaKarte(frei, waehle) {
@@ -4087,6 +4105,7 @@
   }
   setInterval(updateHinweis, 3000);
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
+  if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "karte", karte: SP.landmarks.find((l) => l.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Anzeige einer neuen Landmark-Karte (Orts-Szene/Karte) auslösen
   if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da
 
   // Offline-Speicher (nur über eine Webadresse)

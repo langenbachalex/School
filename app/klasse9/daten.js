@@ -8994,7 +8994,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/01-liberty.jpg",
     "steckbrief": "The Statue of Liberty was a present from France in 1886. With its base, it is 93 meters tall.",
     "audio": "audio/landmarks/liberty.mp3",
-    "quelle": "http://www.loc.gov/item/2011632115/"
+    "quelle": "http://www.loc.gov/item/2011632115/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    },
    {
     "id": "times_square",
@@ -9002,7 +9003,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/02-times_square.jpg",
     "steckbrief": "Times Square is never dark. Every New Year's Eve, a big ball drops here at midnight.",
     "audio": "audio/landmarks/times_square.mp3",
-    "quelle": "http://www.loc.gov/item/2011632416/"
+    "quelle": "http://www.loc.gov/item/2011632416/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    },
    {
     "id": "golden_gate",
@@ -9010,7 +9012,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/03-golden_gate.jpg",
     "steckbrief": "The Golden Gate Bridge in San Francisco is 2.7 kilometers long. Its color is called International Orange.",
     "audio": "audio/landmarks/golden_gate.mp3",
-    "quelle": "http://www.loc.gov/item/2013630019/"
+    "quelle": "http://www.loc.gov/item/2013630019/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    },
    {
     "id": "hollywood",
@@ -9018,7 +9021,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/04-hollywood.jpg",
     "steckbrief": "The letters of the Hollywood Sign are 14 meters tall. Many famous movies are made in Hollywood.",
     "audio": "audio/landmarks/hollywood.mp3",
-    "quelle": "http://www.loc.gov/item/2013633245/"
+    "quelle": "http://www.loc.gov/item/2013633245/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    },
    {
     "id": "grand_canyon",
@@ -9026,7 +9030,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/05-grand_canyon.jpg",
     "steckbrief": "The Colorado River made the Grand Canyon over millions of years. It is 446 kilometers long.",
     "audio": "audio/landmarks/grand_canyon.mp3",
-    "quelle": "http://www.loc.gov/item/2011630128/"
+    "quelle": "http://www.loc.gov/item/2011630128/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    },
    {
     "id": "route66",
@@ -9034,7 +9039,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/06-route66.jpg",
     "steckbrief": "Route 66 goes from Chicago to Los Angeles. It is almost 4,000 kilometers long.",
     "audio": "audio/landmarks/route66.mp3",
-    "quelle": "http://www.loc.gov/item/2010630172/"
+    "quelle": "http://www.loc.gov/item/2010630172/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    },
    {
     "id": "rushmore",
@@ -9042,7 +9048,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/07-rushmore.jpg",
     "steckbrief": "Mount Rushmore shows four presidents: Washington, Jefferson, Roosevelt and Lincoln. It took 14 years to make.",
     "audio": "audio/landmarks/rushmore.mp3",
-    "quelle": "http://www.loc.gov/item/2011632454/"
+    "quelle": "http://www.loc.gov/item/2011632454/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    },
    {
     "id": "niagara",
@@ -9050,7 +9057,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/08-niagara.jpg",
     "steckbrief": "Niagara Falls is on the border between the USA and Canada. Every second, millions of liters of water fall down.",
     "audio": "audio/landmarks/niagara.mp3",
-    "quelle": "http://www.loc.gov/item/2010630806/"
+    "quelle": "http://www.loc.gov/item/2010630806/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    },
    {
     "id": "yellowstone",
@@ -9058,7 +9066,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/09-yellowstone.jpg",
     "steckbrief": "Old Faithful is a geyser in Yellowstone. It shoots hot water into the air about every 90 minutes.",
     "audio": "audio/landmarks/yellowstone.mp3",
-    "quelle": "http://www.loc.gov/item/2010630935/"
+    "quelle": "http://www.loc.gov/item/2010630935/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    },
    {
     "id": "white_house",
@@ -9066,7 +9075,8 @@ window.DATEN = {
     "bild": "bilder/landmarks/10-white_house.jpg",
     "steckbrief": "The President of the United States lives and works in the White House. It has 132 rooms.",
     "audio": "audio/landmarks/white_house.mp3",
-    "quelle": "http://www.loc.gov/item/2011632870/"
+    "quelle": "http://www.loc.gov/item/2011632870/",
+    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
    }
   ],
   "karte": {

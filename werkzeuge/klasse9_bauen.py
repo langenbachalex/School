@@ -446,7 +446,9 @@ def spieldaten():
         "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
         "staaten": [dict(z, audio=a(f"audio/staaten/{z['id']}.mp3")) for z in tsv("staaten.tsv")],
         "landmarks": [dict(z, bild=f"bilder/landmarks/{z['bild']}.jpg", audio=a(f"audio/landmarks/{z['id']}.mp3"),
-                           quelle=quellen[z["bild"] + ".jpg"]["link"]) for z in tsv("landmarks.tsv")],
+                           quelle=quellen[z["bild"] + ".jpg"]["link"],
+                           # Orts-Szene (6.11.): Quellenzeile unter dem Foto am Ende der Szene (Fotos: Carol M. Highsmith, Library of Congress, gemeinfrei)
+                           foto_quelle=f"Foto: {quellen[z['bild'] + '.jpg']['fotografin']}, Library of Congress (public domain)") for z in tsv("landmarks.tsv")],
         "karte": usa_karte.pfade(os.path.join(INHALTE, "karte", "states-albers-10m.json")),
         "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in tsv("geheimakten.tsv")],
         # Border Patrol (Games): Wortpaare britisch/amerikanisch; Einzelwort-Audios kommen nach Freigabe (sonst Geräte-Stimme)
@@ -488,7 +490,7 @@ def webapp():
         for n in sorted(namen):
             pfad = os.path.join(wurzel, n)
             rel = os.path.relpath(pfad, APP).replace(os.sep, "/")
-            if rel in ("sw.js",):
+            if rel in ("sw.js",) or n == "QUELLEN.md":  # Quellenliste der Fotos braucht die App offline nicht
                 continue
             dateien.append(rel)
             with open(pfad, "rb") as f:

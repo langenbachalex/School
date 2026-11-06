@@ -2118,9 +2118,19 @@
     const e = ereignisse.splice(si, 1)[0];
     stempelLaeuft = true;
     audioEnde.then(() => setTimeout(() => {
+      const weiter = () => { stempelLaeuft = false; zeigeEreignisse(); };
+      if (ortSzene(e.ort, weiter)) return; // Orts-Szene statt Stempel, wenn der Runner den Ort zeichnet
       stempel(el("div", { class: "stempel-bild symbol-bild", "aria-hidden": "true" }, e.ort.symbol), e.ort.name, "London ✓");
-      setTimeout(() => { stempelLaeuft = false; zeigeEreignisse(); }, 2700);
+      setTimeout(weiter, 2700);
     }, 250));
+  }
+  // Orts-Szenen (6.11.2026, Etappe 1): kurze Runner-Szene (Runner.szene, gleiche Zeichnungen wie im London Run) mit dem Fakt als Untertitel und
+  // einem kleinen Foto am Ende; nur für Orte, die der Runner zeichnet (Runner.hatSzene) – sonst bleibt alles wie bisher (Stempel bzw. Fakt-Text)
+  const hatSzene = (o) => !!(o && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(o.id));
+  function ortSzene(o, fertig) {
+    if (!hatSzene(o)) return false;
+    const sz = window.Runner.szene(null, o.id, { text: o.fakt, titel: `${o.symbol} ${o.name} · London ✓`, foto: o.foto, quelle: o.foto_quelle, onEnde: () => { if (fertig) fertig(); } });
+    return !!sz;
   }
   // Eigener Bestätigungsdialog statt confirm(): funktioniert auch in eingebetteten Rahmen (Vorschau) und sieht aus wie die App
   const frageDialog = el("dialog", { class: "feier frage" });
@@ -2188,11 +2198,15 @@
       .sort((x, y) => String(x[0]).localeCompare(String(y[0]), "de", { numeric: true }));
     const fakt = el("div", { class: "fakt", hidden: true, "aria-live": "polite" });
     const frei = orteFrei();
-    const karte = londonKarte(frei, (o) => {
+    const faktZeigen = (o, mitTon) => {
       fakt.hidden = false;
       fakt.replaceChildren(el("h3", { lang: "en" }, `${o.symbol} ${o.name}`), el("p", { lang: "en" }, o.fakt),
-        o.audio && knopf("🔊 Anhören", () => spiele([o.audio])));
-      if (o.audio) spiele([o.audio]);
+        el("div", { class: "knopfreihe" }, o.audio && knopf("🔊 Anhören", () => spiele([o.audio])), hatSzene(o) && knopf("▶ Szene", () => ortSzene(o), "leise")));
+      if (mitTon && o.audio) spiele([o.audio]);
+    };
+    const karte = londonKarte(frei, (o) => { // Ort mit Szene: erst die Szene, danach der Fakt (ohne automatisches Vorlesen)
+      if (ortSzene(o, () => faktZeigen(o, false))) { fakt.hidden = true; return; }
+      faktZeigen(o, true);
     });
     const helden = el("div", { class: "heldenraster" }, SP.helden.map((h) => sp.helden.includes(h.id)
       ? el("button", { class: "held-knopf", onclick: () => heldZeigen(h) }, heldenKarte(h))
@@ -3718,6 +3732,7 @@
   }
   setInterval(updateHinweis, 3000);
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
+  if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "ort", ort: SP.orte.find((o) => o.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalt-Anzeige eines Orts (Orts-Szene/Stempel) auslösen
   if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da
 
   // Offline-Speicher (nur wenn die App über eine Webadresse läuft, nicht per Doppelklick)

@@ -8,6 +8,9 @@ Die Nutzung (Tokens/Credits) ist knapp. Bei jeder neuen Eingabe zuerst prüfen, 
 - Antworten kurz halten; Wiederholungen von Agenten-Berichten und Stop-Hook-Meldungen mit einem Satz beantworten.
 - Dateien nur in den Teilen lesen, die gebraucht werden.
 
+## Orts-Szenen
+Jeder Ort hat drei Ebenen: Bild (Szene mit Runner-Zeichnungen), Ton (Geräusch oder Sprache), kleines Foto. Einzelheiten: `.claude/skills/orts-szenen/SKILL.md`.
+
 ## Weitere feste Regeln
 - Vor dem Implementieren das Ok von Mr. Alex abholen; pushen und Vorschauen veröffentlichen nur nach ausdrücklichem Ok.
 - Details und alle weiteren Regeln: `docs/briefing.md`, Ideen: `docs/ideenspeicher.md`, Sprache der Geschichten: `docs/runner/story-sprache.md`, Archiv: `docs/archiv/`.

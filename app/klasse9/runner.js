@@ -8713,16 +8713,17 @@
     c.fillStyle = 'rgba(255,255,255,.55)'; for (let k = 0; k < 6; k++) { const p = (t * 0.25 + k / 6) % 1; c.beginPath(); c.arc(Math.sin(k * 2.3) * 16 + p * 40, -h - 10 - p * (60 + st * 40), 14 + p * 26 + st * 14, 0, Math.PI * 2); c.fill(); }
     c.restore();
   }
-  function kuh(c, x, y, s, t, art, richtung = 1) {   // Rind auf der Weide (Fußpunkt Mitte): art 0 = schwarzes Angus, 1 = rotbraunes Hereford mit weißem Gesicht; Beine laufen, Schwanz pendelt
+  function kuh(c, x, y, s, t, art, richtung = 1) {   // Rind auf der Weide (Fußpunkt Mitte): art 0 = schwarzes Angus, 1 = rotbraunes Hereford mit weißem Gesicht, 2 = schwarz-weiße Holstein-Milchkuh; Beine laufen, Schwanz pendelt
     c.save(); c.translate(x, y); c.scale(s * richtung, s);
-    const f = art ? '#8a3a1e' : '#1e1a18', sch = ruhig() ? 0 : Math.sin(t * 7 + x * 0.1);
+    const f = art === 1 ? '#8a3a1e' : '#1e1a18', sch = ruhig() ? 0 : Math.sin(t * 7 + x * 0.1);
     c.strokeStyle = f; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath();
     for (const [lx, p] of [[-20, 1], [-12, -1], [14, -1], [22, 1]]) { c.moveTo(lx, -20); c.lineTo(lx + sch * p * 4, 0); } c.stroke();
     c.fillStyle = f; c.beginPath(); c.roundRect(-30, -42, 60, 26, 12); c.fill();
     c.lineWidth = 2; c.beginPath(); c.moveTo(-30, -36); c.quadraticCurveTo(-38, -26 + sch * 3, -36, -16); c.stroke();
     c.beginPath(); c.ellipse(36, -40, 12, 9, 0.4, 0, Math.PI * 2); c.fill();
-    if (art) { c.fillStyle = '#f4efe6'; c.beginPath(); c.ellipse(40, -39, 8, 7, 0.4, 0, Math.PI * 2); c.fill(); c.fillRect(-6, -18, 14, 4); }
-    c.fillStyle = art ? '#e0b8a0' : '#3a3230'; c.beginPath(); c.ellipse(44, -34, 6, 4.5, 0.3, 0, Math.PI * 2); c.fill();
+    if (art === 1) { c.fillStyle = '#f4efe6'; c.beginPath(); c.ellipse(40, -39, 8, 7, 0.4, 0, Math.PI * 2); c.fill(); c.fillRect(-6, -18, 14, 4); }
+    if (art === 2) { c.fillStyle = '#f7f4ee'; for (const [fx, fy, fr] of [[-16, -32, 8], [4, -36, 6], [18, -26, 7], [-2, -24, 5]]) { c.beginPath(); c.ellipse(fx, fy, fr, fr * 0.7, 0.3, 0, Math.PI * 2); c.fill(); } c.beginPath(); c.ellipse(41, -38, 6, 5, 0.4, 0, Math.PI * 2); c.fill(); c.fillStyle = '#f0a8b0'; c.beginPath(); c.ellipse(6, -16, 7, 4, 0, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = art === 1 ? '#e0b8a0' : art === 2 ? '#e8b0b0' : '#3a3230'; c.beginPath(); c.ellipse(44, -34, 6, 4.5, 0.3, 0, Math.PI * 2); c.fill();
     c.fillStyle = f; c.beginPath(); c.ellipse(28, -48, 5, 2.5, -0.5, 0, Math.PI * 2); c.fill();
     c.fillStyle = '#111'; c.beginPath(); c.arc(38, -43, 1.6, 0, Math.PI * 2); c.fill();
     c.restore();
@@ -8778,6 +8779,193 @@
     c.fillStyle = '#f4f4f4'; c.beginPath(); c.moveTo(-70, -12); c.quadraticCurveTo(-40, -2, -6, -14); c.lineTo(-6, -8); c.quadraticCurveTo(-40, 4, -70, -4); c.fill();
     c.fillStyle = '#fff'; c.beginPath(); c.arc(-46, -36, 6, 0, Math.PI * 2); c.fill(); c.fillStyle = '#111'; c.beginPath(); c.arc(-47, -36, 2.6, 0, Math.PI * 2); c.fill();
     c.fillStyle = '#c8a050'; c.fillRect(-40, -72, 30, 10); c.fillRect(-46, -63, 42, 4);
+    c.restore();
+  }
+  // Staaten 21–30 (6.11.2026): Zeichnungen für KS … OH (wiederverwendbar wie die übrigen)
+  function aehre(c, x, y, s, w) {   // Weizenhalm mit Ähre (x, y = Fuß), w = Neigung im Wind
+    c.save(); c.translate(x, y); c.scale(s, s); c.rotate(w);
+    c.strokeStyle = '#c89a3a'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -34); c.stroke();
+    c.fillStyle = '#e8b84a'; for (let k = 0; k < 5; k++) { c.beginPath(); c.ellipse(-2.2, -36 - k * 4, 2.2, 3, -0.4, 0, Math.PI * 2); c.ellipse(2.2, -36 - k * 4, 2.2, 3, 0.4, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#d8a840'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(0, -54); c.lineTo(-2, -62); c.moveTo(0, -54); c.lineTo(2, -62); c.stroke();
+    c.restore();
+  }
+  function weizenFeld(c, y0, t, bis, r0 = 0, r1 = 6) {   // goldenes Weizenfeld ab y0, Reihen r0..r1-1 (nach vorn größer, wogt im Wind); rechts von bis schon gemäht (Stoppeln)
+    if (r0 === 0) { c.fillStyle = '#d9a83e'; c.fillRect(0, y0, SZ_W, H - y0); }
+    for (let r = r0; r < r1; r++) {
+      const y = y0 + 8 + r * r * 4 + r * 8, s = 0.45 + r * 0.17;
+      for (let x = (r % 2) * 9; x < SZ_W + 10; x += 9 + r * 3) {
+        if (bis != null && x > bis) { c.fillStyle = '#b8903e'; c.fillRect(x, y - 5 * s, 2, 5 * s); continue; }
+        aehre(c, x, y, s, ruhig() ? 0 : Math.sin(t * 2 + x * 0.03 - r) * 0.12);
+      }
+    }
+  }
+  function maehdrescher(c, x, y, s, t) {   // Mähdrescher (fährt nach links): grüner Körper, Kabine, Korntank, gelbes Schneidwerk mit drehender Haspel, Abtankrohr; (x, y) = Fußpunkt vorn
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.strokeStyle = '#257232'; c.lineWidth = 7; c.lineCap = 'round'; c.beginPath(); c.moveTo(150, -104); c.lineTo(198, -124); c.lineTo(210, -112); c.stroke();
+    c.fillStyle = '#2e8a3e'; c.beginPath(); c.roundRect(40, -86, 130, 62, 6); c.fill();
+    c.fillStyle = '#257232'; c.fillRect(108, -112, 58, 28);
+    c.fillStyle = '#2e8a3e'; c.beginPath(); c.roundRect(50, -126, 48, 42, 4); c.fill(); c.fillStyle = '#bfe3fa'; c.fillRect(54, -122, 40, 26);
+    c.fillStyle = '#f1c9a5'; c.beginPath(); c.arc(72, -106, 6, 0, Math.PI * 2); c.fill(); c.fillStyle = '#c8283a'; c.beginPath(); c.arc(72, -109, 6, Math.PI, 0); c.fill();
+    c.fillStyle = '#c8a020'; c.fillRect(-4, -36, 56, 22); c.fillStyle = '#9a7a18'; for (let k = 0; k < 7; k++) c.fillRect(-2 + k * 8, -16, 4, 4);
+    const w = ruhig() ? 0 : t * 4; c.strokeStyle = '#e8c020'; c.lineWidth = 2.5;
+    c.beginPath(); for (let k = 0; k < 5; k++) { const a = w + k * Math.PI * 2 / 5; c.moveTo(22, -40); c.lineTo(22 + Math.cos(a) * 20, -40 + Math.sin(a) * 20); } c.stroke();
+    c.beginPath(); c.arc(22, -40, 20, 0, Math.PI * 2); c.stroke();
+    c.fillStyle = '#222'; c.beginPath(); c.arc(80, -22, 22, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(150, -14, 14, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#e8c020'; c.beginPath(); c.arc(80, -22, 9, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(150, -14, 6, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function getreideSilo(c, x, y, s, text) {   // Getreidesilo der Prärie (grain elevator): vier weiße Betonzylinder, Aufbau oben, Schrift; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#e6e2d8'; for (let k = 0; k < 4; k++) { c.beginPath(); c.roundRect(-80 + k * 40, -150, 40, 150, [18, 18, 0, 0]); c.fill(); }
+    c.fillStyle = 'rgba(0,0,0,.08)'; for (let k = 0; k < 4; k++) c.fillRect(-52 + k * 40, -146, 12, 146);
+    c.fillStyle = '#d8d2c4'; c.fillRect(-30, -186, 60, 40); c.fillStyle = '#9a9488'; c.fillRect(-32, -190, 64, 6);
+    if (text) { c.fillStyle = '#c8283a'; c.font = 'bold 20px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, 0, -110); }
+    c.restore();
+  }
+  function sonnenblume(c, x, y, s, t) {   // Sonnenblume (Kansas: „Sunflower State“): Stängel, Blatt, gelbe Blütenblätter um braune Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.strokeStyle = '#3f8a3e'; c.lineWidth = 3; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -50); c.stroke();
+    c.fillStyle = '#3f8a3e'; c.beginPath(); c.ellipse(-8, -24, 9, 3.5, -0.5, 0, Math.PI * 2); c.fill();
+    c.translate(0, -56); c.rotate(ruhig() ? 0 : Math.sin(t * 1.5 + x) * 0.08);
+    c.fillStyle = '#f4c020'; for (let k = 0; k < 12; k++) { c.save(); c.rotate(k * Math.PI / 6); c.beginPath(); c.ellipse(0, -12, 4, 8, 0, 0, Math.PI * 2); c.fill(); c.restore(); }
+    c.fillStyle = '#5a3a1a'; c.beginPath(); c.arc(0, 0, 7, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function chimneyRock(c, x, y, s) {   // Chimney Rock (Nebraska, Wegmarke des Oregon Trail): kegelförmiger Sockel mit schmaler Felsnadel; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#b89a78'; c.beginPath(); c.moveTo(-70, 0); c.quadraticCurveTo(-30, -30, -10, -50); c.lineTo(10, -50); c.quadraticCurveTo(30, -30, 70, 0); c.fill();
+    c.fillStyle = '#c8aa86'; c.beginPath(); c.moveTo(-8, -48); c.lineTo(-6, -112); c.lineTo(-2, -118); c.lineTo(4, -116); c.lineTo(7, -48); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(-5, -100, 3, 50);
+    c.restore();
+  }
+  function graeber(c, x, y, s, t, k) {   // Person mit Spaten, sticht im Takt in die Erde
+    const p = ruhig() ? 0.5 : (Math.sin(t * 4) + 1) / 2;
+    personKlein(c, x, y, s, k, { arme: 0.15 });
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.strokeStyle = '#8a5a2b'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); c.moveTo(12, -40 + p * 8); c.lineTo(24, -6 + p * 8); c.stroke();
+    c.fillStyle = '#9aa0a8'; c.beginPath(); c.moveTo(19, -8 + p * 8); c.lineTo(30, -8 + p * 8); c.lineTo(28, 2 + p * 6); c.lineTo(22, 2 + p * 6); c.closePath(); c.fill();
+    c.restore();
+  }
+  function steppenlaeufer(c, x, y, r, dreh) {   // Steppenläufer (tumbleweed): Knäuel aus dürren Ästen, rollt; (x, y) = Fußpunkt
+    c.save(); c.translate(x, y - r); c.rotate(dreh); c.strokeStyle = '#a07a4a'; c.lineWidth = 1.5; c.beginPath();
+    for (let k = 0; k < 14; k++) { const a = k * 2.4; c.moveTo(Math.cos(a) * r, Math.sin(a) * r); c.quadraticCurveTo(0, 0, Math.cos(a + 2) * r, Math.sin(a + 2) * r); }
+    c.stroke(); c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.stroke(); c.restore();
+  }
+  function oelpumpe(c, x, y, s, t) {   // Ölpumpe („Pferdekopf“): Bock, nickender Balken mit Kopf, Gegengewicht; (x, y) = Fußpunkt Mitte
+    const w = ruhig() ? 0 : Math.sin(t * 2) * 0.22;
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#3a3f4a'; c.fillRect(-46, -4, 96, 4);
+    c.strokeStyle = '#3a3f4a'; c.lineWidth = 4; c.beginPath(); c.moveTo(-14, 0); c.lineTo(0, -44); c.lineTo(14, 0); c.stroke();
+    c.strokeStyle = '#222'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(42, -46 + Math.sin(w) * 42 + 12); c.lineTo(42, 0); c.stroke();
+    c.save(); c.translate(0, -46); c.rotate(w);
+    c.fillStyle = '#e8a020'; c.fillRect(-46, -4, 82, 8);
+    c.beginPath(); c.moveTo(34, -10); c.quadraticCurveTo(50, -6, 46, 14); c.lineTo(34, 8); c.closePath(); c.fill();
+    c.fillStyle = '#3a3f4a'; c.fillRect(-52, -2, 12, 18);
+    c.restore(); c.restore();
+  }
+  function kanu(c, x, y, s, t) {   // Kanu auf dem See (x, y = Wasserlinie Mitte): rotes Boot, Paddler mit Stechpaddel
+    const p = ruhig() ? 0 : Math.sin(t * 3);
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#2a6cff'; c.beginPath(); c.roundRect(-6, -30, 14, 22, 4); c.fill();
+    c.fillStyle = '#f1c9a5'; c.beginPath(); c.arc(1, -37, 7, 0, Math.PI * 2); c.fill(); c.fillStyle = '#e0a400'; c.beginPath(); c.arc(1, -40, 7, Math.PI, 0); c.fill();
+    c.strokeStyle = '#8a5a2b'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); c.moveTo(-2 + p * 8, -34); c.lineTo(-14 - p * 12, 6); c.stroke();
+    c.fillStyle = '#8a5a2b'; c.beginPath(); c.ellipse(-15 - p * 12, 8, 3, 7, 0.3, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c8402a'; c.beginPath(); c.moveTo(-50, -12); c.quadraticCurveTo(0, -4, 50, -12); c.quadraticCurveTo(46, 2, 30, 4); c.lineTo(-30, 4); c.quadraticCurveTo(-46, 2, -50, -12); c.fill();
+    c.strokeStyle = '#7a2a1a'; c.lineWidth = 2; c.beginPath(); c.moveTo(-50, -12); c.quadraticCurveTo(0, -4, 50, -12); c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(52, 2); c.lineTo(80, 4); c.moveTo(50, 6); c.lineTo(72, 9); c.stroke();
+    c.restore();
+  }
+  function seetaucher(c, x, y, s) {   // Eistaucher (common loon, Staatsvogel von Minnesota): schwarz mit weißem Schachbrett, roter Punkt-Auge, spitzer Schnabel
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#1a1d22'; c.beginPath(); c.ellipse(0, -6, 22, 8, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(12, -8); c.quadraticCurveTo(16, -24, 24, -26); c.lineTo(28, -18); c.quadraticCurveTo(22, -16, 20, -6); c.fill();
+    c.beginPath(); c.ellipse(25, -24, 6, 5, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.moveTo(30, -25); c.lineTo(40, -22); c.lineTo(30, -21); c.fill();
+    c.fillStyle = '#fff'; for (let k = 0; k < 6; k++) { c.fillRect(-14 + k * 5, -11, 2, 2); c.fillRect(-12 + k * 5, -7, 2, 2); } c.fillRect(18, -17, 6, 2);
+    c.fillStyle = '#d02020'; c.beginPath(); c.arc(26, -25, 1.6, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function maisPflanze(c, x, y, s, t, kolben = true) {   // Maispflanze: hoher Stängel, lange Blätter, Fahne oben, gelber Kolben mit grünen Hüllblättern
+    const w = ruhig() ? 0 : Math.sin(t * 1.6 + x * 0.05) * 3;
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.strokeStyle = '#4f8a3a'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(w * 0.5, -40, w, -80); c.stroke();
+    c.strokeStyle = '#5fa04a'; c.beginPath();
+    for (const [h, d] of [[-18, -1], [-32, 1], [-48, -1], [-62, 1]]) { const sx = w * -h / 80; c.moveTo(sx, h); c.quadraticCurveTo(sx + d * 16, h - 14, sx + d * 26, h + 2); }
+    c.stroke();
+    c.strokeStyle = '#d8b860'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(w, -80); c.lineTo(w - 5, -94); c.moveTo(w, -80); c.lineTo(w + 1, -96); c.moveTo(w, -80); c.lineTo(w + 6, -92); c.stroke();
+    if (kolben) { const kx = 5 + w * 0.5; c.fillStyle = '#f2c63a'; c.beginPath(); c.ellipse(kx, -42, 4, 10, 0.25, 0, Math.PI * 2); c.fill(); c.fillStyle = '#6aa84a'; c.beginPath(); c.moveTo(kx - 3, -32); c.quadraticCurveTo(kx - 7, -44, kx - 2, -54); c.lineTo(kx, -40); c.closePath(); c.fill(); }
+    c.restore();
+  }
+  function maiskolben(c, x, y, s, dreh) {   // einzelner Maiskolben (fliegt): gelb mit Körnerreihen, grünes Hüllblatt
+    c.save(); c.translate(x, y); c.rotate(dreh); c.scale(s, s);
+    c.fillStyle = '#f2c63a'; c.beginPath(); c.ellipse(0, 0, 5, 13, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(180,130,20,.5)'; for (let k = -2; k <= 2; k++) c.fillRect(-4, k * 5 - 0.6, 8, 1.2);
+    c.fillStyle = '#6aa84a'; c.beginPath(); c.moveTo(-5, 8); c.quadraticCurveTo(-9, -4, -2, -13); c.lineTo(0, 6); c.closePath(); c.fill();
+    c.restore();
+  }
+  function traktor(c, x, y, s, t) {   // Traktor (fährt nach rechts): großes Hinterrad, kleines Vorderrad, offene Kabine, Auspuff; (x, y) = Fußpunkt Mitte
+    const r = ruhig() ? 0 : t * 4;
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#2e8a3e'; c.beginPath(); c.roundRect(-10, -46, 62, 24, 4); c.fill(); c.fillRect(-28, -42, 30, 20);
+    c.fillRect(-32, -86, 4, 44); c.fillRect(-4, -86, 4, 44); c.fillRect(-34, -90, 40, 6);
+    c.fillStyle = 'rgba(190,227,250,.55)'; c.fillRect(-28, -84, 24, 38);
+    c.fillStyle = '#3a3f4a'; c.fillRect(36, -64, 4, 18);
+    const rad = (rx, ry, rr) => { c.fillStyle = '#222'; c.beginPath(); c.arc(rx, ry, rr, 0, Math.PI * 2); c.fill(); c.fillStyle = '#f2c63a'; c.beginPath(); c.arc(rx, ry, rr * 0.45, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#222'; c.lineWidth = 2; c.beginPath(); c.moveTo(rx + Math.cos(r) * rr * 0.45, ry + Math.sin(r) * rr * 0.45); c.lineTo(rx - Math.cos(r) * rr * 0.45, ry - Math.sin(r) * rr * 0.45); c.stroke(); };
+    rad(-16, -26, 26); rad(42, -12, 12);
+    c.restore();
+  }
+  function gatewayArch(c, x, y, h, f = 1) {   // Gateway Arch (St. Louis): Edelstahl-Bogen als Kettenlinie, so breit wie hoch; (x, y) = Fußpunkt Mitte, f = 0..1 wächst von unten
+    const pfad = (b, hh) => { const k = 2.2, pts = []; for (let i = 0; i <= 40; i++) { const u = -1 + i / 20; pts.push([x + u * b, y - hh * (1 - (Math.cosh(k * u) - 1) / (Math.cosh(k) - 1))]); } return pts; };
+    const aussen = pfad(h / 2, h), innen = pfad(h / 2 - h * 0.07, h - h * 0.05);
+    c.save();
+    if (f < 1) { c.beginPath(); c.rect(x - h, y - h * f - 2, h * 2, h * f + 4); c.clip(); }
+    const g = c.createLinearGradient(x - h / 2, 0, x + h / 2, 0); g.addColorStop(0, '#9aa3ad'); g.addColorStop(0.45, '#f4f6f8'); g.addColorStop(1, '#7d8792');
+    c.fillStyle = g; c.beginPath(); aussen.forEach(([px, py], i) => (i ? c.lineTo(px, py) : c.moveTo(px, py))); for (let i = innen.length - 1; i >= 0; i--) c.lineTo(innen[i][0], innen[i][1]); c.closePath(); c.fill();
+    c.restore();
+  }
+  function raddampfer(c, x, y, s, t) {   // Raddampfer auf dem Mississippi (fährt nach links): weißer Rumpf, zwei Decks, zwei schwarze Schornsteine, rotes Schaufelrad hinten; (x, y) = Wasserlinie Mitte
+    const r = ruhig() ? 0 : t * 2;
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#f4f4f4'; c.beginPath(); c.moveTo(-72, -14); c.lineTo(60, -14); c.lineTo(60, 0); c.lineTo(-60, 0); c.closePath(); c.fill();
+    c.fillStyle = '#c8283a'; c.fillRect(-72, -16, 132, 3);
+    c.fillStyle = '#f4f4f4'; c.fillRect(-50, -30, 100, 14); c.fillRect(-34, -42, 60, 12);
+    c.fillStyle = '#2a3a5a'; for (let k = 0; k < 8; k++) c.fillRect(-46 + k * 12, -27, 6, 7);
+    c.fillStyle = '#1a1a1a'; c.fillRect(-24, -72, 6, 30); c.fillRect(-10, -72, 6, 30); c.fillRect(-26, -76, 10, 4); c.fillRect(-12, -76, 10, 4);
+    c.fillStyle = 'rgba(200,200,210,.5)'; for (let k = 0; k < 3; k++) { const d = ((t * 0.8 + k * 0.33) % 1); c.beginPath(); c.arc(-14 + d * 30, -80 - d * 30, 4 + d * 8, 0, Math.PI * 2); c.fill(); }
+    c.save(); c.translate(70, -12); c.fillStyle = '#c8283a'; c.beginPath(); c.arc(0, 0, 16, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#7a1a22'; c.lineWidth = 2; c.beginPath(); for (let k = 0; k < 6; k++) { const a = r + k * Math.PI / 3; c.moveTo(0, 0); c.lineTo(Math.cos(a) * 16, Math.sin(a) * 16); } c.stroke(); c.restore();
+    c.restore();
+  }
+  function kaeseKeil(c, x, y, s) {   // Käse-Ecke (gelber Keil mit Löchern) – auch der „Cheesehead“-Hut; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#f2c230'; c.beginPath(); c.moveTo(-18, 0); c.lineTo(18, 0); c.lineTo(18, -14); c.lineTo(-18, -4); c.closePath(); c.fill();
+    c.fillStyle = '#f8d860'; c.beginPath(); c.moveTo(-18, -4); c.lineTo(18, -14); c.lineTo(10, -18); c.closePath(); c.fill();
+    c.fillStyle = '#d8a018'; for (const [hx, hy, hr] of [[-8, -3, 2.2], [4, -5, 2.4], [12, -3, 1.6], [-1, -2, 1.3]]) { c.beginPath(); c.arc(hx, hy, hr, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function kaeseRad(c, x, y, r, dreh) {   // Käselaib (rollt): orange Rinde, gelbes Inneres mit Löchern; (x, y) = Fußpunkt
+    c.save(); c.translate(x, y - r); c.rotate(dreh);
+    c.fillStyle = '#e8a020'; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#f6cf48'; c.beginPath(); c.arc(0, 0, r * 0.84, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#e0b030'; for (const [a, d, hr] of [[0.3, 0.5, 0.14], [2.2, 0.4, 0.1], [4.0, 0.55, 0.12], [5.2, 0.2, 0.08]]) { c.beginPath(); c.arc(Math.cos(a) * d * r, Math.sin(a) * d * r, hr * r, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function stern(c, x, y, r, farbe = '#ffd93d') {   // fünfzackiger Stern mit weißem Rand
+    if (r <= 0) return;
+    c.beginPath(); for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? r * 0.45 : r; c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } c.closePath();
+    c.fillStyle = farbe; c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 2; c.stroke();
+  }
+  function weissesHaus(c, x, y, s) {   // das Weiße Haus (Südseite): breiter Bau, zwei Fensterreihen, runder Säulen-Portikus in der Mitte, Fahne auf dem Dach; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#f4f2ec'; c.fillRect(-150, -58, 300, 58); c.fillRect(-96, -84, 192, 84);
+    c.fillStyle = '#dcd8ce'; c.fillRect(-152, -62, 304, 5); c.fillRect(-98, -88, 196, 6);
+    c.fillStyle = '#7a8aa0'; for (const fx of [-140, -124, -108, 104, 120, 136]) c.fillRect(fx - 3, -46, 7, 14);
+    for (const fx of [-84, -70, 58, 72, 86]) { c.fillRect(fx - 3, -72, 7, 14); c.fillRect(fx - 3, -40, 7, 16); }
+    c.fillStyle = '#ffffff'; c.beginPath(); c.ellipse(0, -84, 46, 9, 0, Math.PI, 0); c.fill(); c.fillRect(-46, -86, 92, 8);
+    c.fillStyle = '#e4e0d6'; for (let k = 0; k < 6; k++) c.fillRect(-39 + k * 15, -78, 6, 72);
+    c.fillStyle = '#f8f6f0'; c.fillRect(-50, -8, 100, 8);
+    c.fillStyle = '#555'; c.fillRect(-1, -124, 2, 38);
+    c.fillStyle = '#c8283a'; c.fillRect(1, -124, 24, 15); c.fillStyle = '#fff'; for (let k = 0; k < 3; k++) c.fillRect(1, -122 + k * 4.5, 24, 2); c.fillStyle = '#1d3f8f'; c.fillRect(1, -124, 10, 8);
     c.restore();
   }
   function moeweFlug(c, x, y, t, s = 1) {   // kleine Möwe im Flug (Kulisse): weiß mit grauen Flügelspitzen
@@ -9497,11 +9685,11 @@
     OK: { dauer: 9.0, klaenge: [[0.6, 'motor'], [2.6, 'hupe'], [4.8, 'klick'], [6.0, 'motor'], [7.6, 'hupe']],
       zeichne(c, t) {   // Route 66 in Oklahoma: Highway, Schild „66 OKLAHOMA“, der Blue Whale of Catoosa am Teich, ein Auto hupt; dann die Karte Chicago → Los Angeles: Oklahomas langes Stück leuchtet
         if (t < 4.6) {
-          const kam = lerp(29200, 29500, t / 4.6), w = WELTEN.route66;   // weit vom Welt-Ende: Tageslicht, das Schild der Kulisse steht rechts (mit „OKLAHOMA“)
-          szWelt({ zeit: t, kamera: kam, level: { ende: 300000, staat66: 'OKLAHOMA' } }, () => { w.kulisse(c); w.boden(c, 0, SZ_W, kam, kam + SZ_W, kam, kam + SZ_W); });
+          const kam = lerp(29200, 29500, t / 4.6), w = WELTEN.route66;   // Welt-Ende sehr weit weg: Tageslicht, das kleine Schild der Kulisse steht genau hinter dem großen (x 512); das Auto hält rechts vom Wal und hupt
+          szWelt({ zeit: t, kamera: kam, level: { ende: 1e9, staat66: 'OKLAHOMA' } }, () => { w.kulisse(c); w.boden(c, 0, SZ_W, kam, kam + SZ_W, kam, kam + SZ_W); });
           blauwal(c, 150, 322, 0.9);
           schild66(c, 512, 240, 1.4, '#f4f4f4', 'OKLAHOMA');
-          szWelt({ zeit: t, kamera: kam }, () => autoZeichnen(c, { art: 'auto', x: kam + lerp(SZ_W + 120, -160, Math.min(1, t / 4)), w: AUTO_MASSE.auto.w, h: AUTO_MASSE.auto.h, von: 7, rad: t * 12 }));
+          szWelt({ zeit: t, kamera: kam }, () => autoZeichnen(c, { art: 'auto', x: kam + lerp(SZ_W + 120, 290, sanft(Math.min(1, t / 3))), w: AUTO_MASSE.auto.w, h: AUTO_MASSE.auto.h, von: 7, rad: t * 12 }));
         } else {
           c.fillStyle = '#1d4f8a'; c.fillRect(0, 0, SZ_W, H);
           const SEG = [['IL', 301], ['MO', 317], ['KS', 13], ['OK', 432], ['TX', 178], ['NM', 380], ['AZ', 401], ['CA', 314]], ges = SEG.reduce((a, s) => a + s[1], 0);
@@ -9518,6 +9706,199 @@
           if (t > 6.2) szZaehler(c, 'Oklahoma: 400+ miles', '#ff9a2a', 70, 280);
         }
         { const d = Math.abs(t - 4.6); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }
+      } },
+    // Klasse 9 – Staaten 21–30 (6.11.2026)
+    KS: { dauer: 9.0, klaenge: [[0.3, 'wind'], [1.0, 'diesel'], [2.6, 'blaetter'], [4.2, 'diesel'], [6.2, 'klick'], [7.2, 'vogel']],
+      zeichne(c, t) {   // Sommer in Kansas: goldenes Weizenfeld bis zum Horizont, hinten ein Getreidesilo „KANSAS“; ein Mähdrescher erntet von rechts nach links (dahinter Stoppeln und Staub), vorn Sonnenblumen; am Ende „The Wheat State“
+        szHimmel(c, '#4f9ee0', '#e2f0fa'); szWolken(c, t, [[-20, 50], [300, 30], [520, 70]]);
+        c.fillStyle = '#ffe9a0'; c.beginPath(); c.arc(110, 96, 26, 0, Math.PI * 2); c.fill();
+        getreideSilo(c, 545, 254, 0.75, 'KANSAS');
+        const mx = lerp(SZ_W + 30, 140, sanft((t - 0.6) / 6.4));
+        weizenFeld(c, 250, t, mx + 10, 0, 3);
+        for (let k = 0; k < 8; k++) { const d = (t * 1.5 + k * 0.4) % 3, a = 0.35 * (1 - d / 3); c.fillStyle = `rgba(200,160,90,${a})`; c.beginPath(); c.arc(mx + 190 + d * 30, 236 - d * 24 - (k % 3) * 8, 10 + d * 10, 0, Math.PI * 2); c.fill(); }
+        maehdrescher(c, mx, 306, 0.95, t);
+        weizenFeld(c, 250, t, mx + 10, 3, 6);
+        sonnenblume(c, 26, 398, 1.1, t); sonnenblume(c, 64, 392, 0.9, t); sonnenblume(c, 610, 398, 1.05, t);
+        if (t > 6.2) { c.globalAlpha = sanft((t - 6.2) / 0.5); szZaehler(c, 'Kansas = The Wheat State', '#ffd93d', 30, 340); c.globalAlpha = 1; }
+      } },
+    NE: { dauer: 8.8, klaenge: [[0.3, 'vogel'], [1.0, 'klick'], [1.6, 'klick'], [2.2, 'klick'], [3.0, 'blaetter'], [4.5, 'plopp'], [5.0, 'plopp'], [5.5, 'plopp'], [6.0, 'plopp'], [6.5, 'plopp'], [7.6, 'vogel']],
+      zeichne(c, t) {   // Prärie in Nebraska, am Horizont Chimney Rock: eine Familie gräbt ein Loch und pflanzt einen Baum, er wächst; dann sprießen überall neue Bäume – Holzschild „ARBOR DAY · 1872“
+        szHimmel(c, '#5aa8e8', '#e6f2fa'); szWolken(c, t, [[0, 40], [380, 60]]);
+        c.fillStyle = '#b8c87a'; c.beginPath(); c.moveTo(0, 262); c.quadraticCurveTo(200, 236, 380, 256); c.quadraticCurveTo(520, 270, SZ_W, 250); c.lineTo(SZ_W, H); c.lineTo(0, H); c.fill();
+        chimneyRock(c, 520, 262, 0.8);
+        c.fillStyle = '#8fb05a'; c.fillRect(0, 296, SZ_W, H);
+        [[60, 284, 0.45], [160, 276, 0.38], [250, 280, 0.42], [420, 286, 0.48], [600, 282, 0.42], [600, 318, 0.62], [40, 330, 0.7]].forEach(([bx, by, bs], i) => {
+          const g = sanft((t - 4.3 - i * 0.5) / 0.5); if (g > 0) laubbaum(c, bx, by, bs * g, t); });
+        c.fillStyle = '#5a3a22'; c.fillRect(150, 300, 6, 52); c.fillRect(230, 300, 6, 52); c.beginPath(); c.roundRect(122, 262, 142, 50, 6); c.fill();
+        c.fillStyle = '#f2e6c8'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = 'bold 16px system-ui, sans-serif'; c.fillText('ARBOR DAY', 193, 278); c.font = 'bold 13px system-ui, sans-serif'; c.fillText('NEBRASKA · 1872', 193, 298);
+        c.fillStyle = '#6a4a2a'; c.beginPath(); c.ellipse(350, 356, 26, 6, 0, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#7a5a3a'; c.beginPath(); c.ellipse(308, 354, 18, 9, 0, Math.PI, 0); c.fill();
+        if (t > 2.6) laubbaum(c, 350, 358, lerp(0.18, 1.15, sanft((t - 2.6) / 1.8)), t);
+        if (t < 2.8) graeber(c, 392, 360, 0.95, t, 4); else personKlein(c, 392, 360, 0.95, 4, { arme: t > 4.4 ? Math.abs(Math.sin(t * 3)) : 0 });
+        personKlein(c, 430, 362, 0.7, 1, { arme: t > 4.4 ? Math.abs(Math.sin(t * 3 + 1)) : 0 });
+      } },
+    SD: { dauer: 9.4, klaenge: [[0.3, 'wind'], [1.4, 'adler'], [3.0, 'meissel'], [4.6, 'klick'], [5.4, 'klick'], [6.2, 'klick'], [7.4, 'staunen']],
+      zeichne(c, t) {   // Mount Rushmore (dieselben Köpfe wie in der Welt South Dakota): die Kamera fährt an Washingtons Kopf heran, eine Messleine läuft vom Kinn bis zum Scheitel – 18 m; ein winziger Kletterer am Seil zeigt, wie groß das ist
+        const [fx, fy, z] = szWeg(t, [[0, SZ_W / 2, H / 2, 1], [2.4, SZ_W / 2, H / 2, 1], [4.2, 132, 192, 2.2]]);
+        c.save(); szKam(c, fx, fy, z);
+        szHimmel(c, '#5aa8ea', '#e6f2fa'); szWolken(c, t, [[-30, 50], [420, 36]]);
+        koepfeRushmore(c, 320, 300, 1.8);
+        c.fillStyle = '#3a6a44'; c.fillRect(-300, 330, SZ_W + 600, 300);
+        for (let x = -20; x < SZ_W + 20; x += 34) tanne(c, x, 336 + (x % 3) * 4, 46 + ((x * 7) % 24), x % 68 ? '#2a4a32' : '#33603e');
+        const m = sanft((t - 4.4) / 2.2), xL = 90, yU = 235, yO = 134, yM = lerp(yU, yO, m);
+        if (t > 4.3) { c.strokeStyle = '#ffd93d'; c.lineWidth = 2; c.beginPath(); c.moveTo(xL - 6, yU); c.lineTo(xL + 6, yU); c.moveTo(xL, yU); c.lineTo(xL, yM); c.moveTo(xL - 6, yM); c.lineTo(xL + 6, yM); c.stroke(); }
+        const kY = lerp(yO, 196, sanft((t - 1.0) / 6.0));   // Kletterer am Seil
+        c.strokeStyle = '#e8463a'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(126, yO - 2); c.lineTo(126, kY - 10); c.stroke();
+        personKlein(c, 126, kY, 0.16, 5, { arme: 0.9 });
+        c.restore();
+        if (t > 4.3) szZaehler(c, Math.round(18 * m) + ' m', '#ffd93d', 30, 140);
+        if (t > 6.8) { c.globalAlpha = sanft((t - 6.8) / 0.5); c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(390, 300, 210, 34, 8); c.fill(); c.fillStyle = '#fff'; c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('the climber: about 1.8 m', 495, 317); c.globalAlpha = 1; }
+      } },
+    ND: { dauer: 8.8, klaenge: [[0.3, 'wind'], [1.8, 'bueffel'], [3.0, 'wind'], [4.8, 'klick'], [5.8, 'klick'], [7.0, 'vogel']],
+      zeichne(c, t) {   // Weite Prärie in North Dakota: großer Himmel, ein einzelner Hof, eine Ölpumpe nickt, Bisons grasen, ein Steppenläufer rollt vorbei, nur eine Person winkt; dann der Vergleich: California 39 Millionen, North Dakota unter 800,000
+        szHimmel(c, '#3f8ee0', '#e0eefa'); szWolken(c, t, [[-60, 150], [220, 170], [470, 140]]);
+        c.fillStyle = '#c8b870'; c.fillRect(0, 260, SZ_W, H); c.fillStyle = '#b8a860'; for (let y = 274; y < H; y += 16) c.fillRect(0, y, SZ_W, 2);
+        c.fillStyle = '#8a3a2a'; c.fillRect(90, 240, 34, 22); c.beginPath(); c.moveTo(86, 242); c.lineTo(107, 226); c.lineTo(128, 242); c.fill();
+        c.fillStyle = '#e6e2d8'; c.fillRect(130, 222, 10, 40); c.beginPath(); c.arc(135, 222, 5, Math.PI, 0); c.fill();
+        laubbaum(c, 66, 262, 0.35, t);
+        oelpumpe(c, 530, 274, 0.9, t);
+        bueffelSilhouette(c, 300, 304, 1.2, '#4a3020'); bueffelSilhouette(c, 384, 298, 1.0, '#5a3a24');
+        steppenlaeufer(c, lerp(-40, SZ_W + 40, t / 8.8), 372 - Math.abs(Math.sin(t * 3)) * 10, 16, t * 4);
+        personKlein(c, 200, 354, 0.9, 2, { arme: Math.abs(Math.sin(t * 3)) * 0.9 });
+        if (t > 4.6) {
+          const f = sanft((t - 4.8) / 1.4), g = sanft((t - 5.8) / 0.8);
+          c.fillStyle = 'rgba(24,33,58,.8)'; c.beginPath(); c.roundRect(90, 30, 460, 92, 10); c.fill();
+          c.font = 'bold 14px system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'left'; c.fillStyle = '#fff';
+          c.fillText('California', 104, 56); c.fillText('North Dakota', 104, 96);
+          c.fillStyle = '#7fb0ff'; c.fillRect(210, 48, 220 * f, 16);
+          c.fillStyle = '#ffd93d'; c.fillRect(210, 88, 5 * g, 16);
+          c.fillStyle = '#fff'; if (f > 0.95) c.fillText('39 million', 440, 56);
+          c.fillStyle = '#ffd93d'; if (g > 0.95) c.fillText('under 800,000', 226, 96);
+        }
+      } },
+    MN: { dauer: 9.0, klaenge: [[0.3, 'welle'], [1.0, 'ruder'], [2.2, 'ruder'], [3.2, 'welle'], [4.8, 'plopp'], [5.2, 'plopp'], [5.6, 'plopp'], [6.0, 'plopp'], [6.4, 'plopp'], [7.4, 'staunen']],
+      zeichne(c, t) {   // erst am See: Tannenufer, ein Kanu gleitet vorbei, ein Eistaucher schwimmt; dann Minnesota von oben: überall ploppen Seen auf, der Zähler läuft bis 11,000+
+        if (t < 4.4) {
+          szHimmel(c, '#5aa8ea', '#eaf4fb'); szWolken(c, t, [[40, 50], [400, 34]]);
+          c.fillStyle = '#2a4a32'; c.fillRect(0, 212, SZ_W, 24); for (let x = -10; x < SZ_W + 20; x += 22) tanne(c, x, 234, 40 + ((x * 13) % 30), x % 44 ? '#2a4a32' : '#33603e');
+          const g = c.createLinearGradient(0, 232, 0, H); g.addColorStop(0, '#3a8ad0'); g.addColorStop(1, '#1d5fa0'); c.fillStyle = g; c.fillRect(0, 232, SZ_W, H);
+          c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2; for (let k = 0; k < 14; k++) { const wx = (k * 97 + t * 14) % (SZ_W + 60) - 30, wy = 252 + (k % 5) * 28; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 24, wy); c.stroke(); }
+          kanu(c, lerp(560, 280, t / 4.4), 326, 1.3, t);
+          seetaucher(c, 120 + t * 5, 282, 0.9);
+        } else {
+          c.fillStyle = '#6aa84a'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#5f9a42'; for (let k = 0; k < 40; k++) c.fillRect((k * 173) % SZ_W, (k * 97) % H, 30, 14);
+          for (let i = 0; i < 90; i++) {
+            const p = sanft((t - 4.6 - i * 0.024) / 0.25); if (p <= 0) continue;
+            const lx = 34 + (i * 137) % 572, ly = 90 + (i * 89) % 280, rx = (6 + (i * 7) % 14) * p, ry = (4 + (i * 5) % 7) * p;
+            c.fillStyle = '#2f7fd0'; c.beginPath(); c.ellipse(lx, ly, rx, ry, (i % 5) * 0.6, 0, Math.PI * 2); c.fill();
+            c.fillStyle = 'rgba(255,255,255,.3)'; c.beginPath(); c.ellipse(lx - rx * 0.3, ly - ry * 0.3, rx * 0.3, ry * 0.25, 0, 0, Math.PI * 2); c.fill();
+          }
+          const f = sanft((t - 4.6) / 2.4), n = Math.floor(11000 * f / 100) * 100;
+          szZaehler(c, t > 7.1 ? '11,000+ lakes' : String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' lakes', '#ffd93d', 24, 230);
+        }
+        { const d = Math.abs(t - 4.4); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }
+      } },
+    IA: { dauer: 8.8, klaenge: [[0.3, 'blaetter'], [1.2, 'plopp'], [1.8, 'plopp'], [2.4, 'plopp'], [3.0, 'plopp'], [3.6, 'plopp'], [5.0, 'diesel'], [6.8, 'blaetter']],
+      zeichne(c, t) {   // Maisfeld in Iowa: hohe Maispflanzen in langen Reihen, hinten rote Scheune und Silo; Kolben springen in den Anhänger „IOWA CORN“, dann zieht der Traktor ihn weg
+        szHimmel(c, '#4f9ee0', '#e0eefa'); szWolken(c, t, [[0, 40], [330, 70]]);
+        c.fillStyle = '#7aa850'; c.beginPath(); c.moveTo(0, 240); c.quadraticCurveTo(320, 222, SZ_W, 244); c.lineTo(SZ_W, H); c.lineTo(0, H); c.fill();
+        c.fillStyle = '#b8322a'; c.fillRect(470, 196, 80, 50); c.beginPath(); c.moveTo(462, 198); c.lineTo(478, 172); c.lineTo(542, 172); c.lineTo(558, 198); c.fill();
+        c.strokeStyle = '#fff'; c.lineWidth = 2; c.strokeRect(496, 214, 28, 32); c.beginPath(); c.moveTo(496, 214); c.lineTo(524, 246); c.moveTo(524, 214); c.lineTo(496, 246); c.stroke();
+        c.fillStyle = '#c8ccd2'; c.fillRect(556, 150, 26, 96); c.beginPath(); c.arc(569, 150, 13, Math.PI, 0); c.fill();
+        for (let r = 0; r < 3; r++) { const y = 250 + r * r * 6 + r * 12, s = 0.4 + r * 0.18; for (let x = (r % 2) * 14; x < SZ_W + 20; x += 20 + r * 6) maisPflanze(c, x, y, s, t, r >= 2); }
+        c.fillStyle = '#a08050'; c.fillRect(0, 318, SZ_W, 14);
+        const weg = lerp(0, 420, sanft((t - 5.0) / 3.0)), AX = 420 + weg, AY = 372;
+        c.fillStyle = '#c8402a'; c.fillRect(AX - 70, AY - 54, 140, 40); c.fillStyle = '#9a2a1a'; c.fillRect(AX - 70, AY - 18, 140, 4);
+        const flug = [1.0, 1.6, 2.2, 2.8, 3.4], drin = flug.filter((f) => t > f + 0.7).length;
+        for (let i = 0; i < drin * 3; i++) maiskolben(c, AX - 56 + (i % 8) * 16, AY - 58 - Math.floor(i / 8) * 8, 1.0, 1.4 + (i % 3) * 0.3);
+        c.fillStyle = '#fff'; c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('IOWA CORN', AX, AY - 34);
+        c.fillStyle = '#222'; c.beginPath(); c.arc(AX - 40, AY - 10, 10, 0, Math.PI * 2); c.arc(AX + 40, AY - 10, 10, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = '#3a3f4a'; c.lineWidth = 3; c.beginPath(); c.moveTo(AX + 70, AY - 22); c.lineTo(AX + 96, AY - 22); c.stroke();
+        traktor(c, AX + 130, AY, 0.85, t > 5 ? t : 0);
+        for (let r = 3; r < 5; r++) { const y = 250 + r * r * 6 + r * 12, s = 0.4 + r * 0.18; for (let x = (r % 2) * 14; x < SZ_W + 20; x += 20 + r * 8) if (x < 300) maisPflanze(c, x, y + 16, s, t, true); }
+        flug.forEach((f0, i) => { const p = (t - f0) / 0.7; if (p < 0 || p > 1) return; const sx = 90 + i * 44, sy = 330; maiskolben(c, lerp(sx, AX - 50 + i * 20, p), lerp(sy, AY - 60, p) - Math.sin(p * Math.PI) * 120, 1.3, p * 8); });
+      } },
+    MO: { dauer: 9.2, klaenge: [[0.3, 'welle'], [1.0, 'schiff'], [3.0, 'klick'], [3.8, 'klick'], [4.6, 'klick'], [5.4, 'klick'], [6.6, 'staunen'], [7.8, 'schiff']],
+      zeichne(c, t) {   // St. Louis am Mississippi: der Gateway Arch glänzt über der Stadt, ein Raddampfer fährt vorbei; die Messlatte läuft bis 192 m, daneben zum Vergleich die Freiheitsstatue (93 m)
+        szHimmel(c, '#5aa8ea', '#eaf4fb'); szWolken(c, t, [[0, 120], [430, 90]]);
+        c.fillStyle = '#8a9ab0'; for (const [bx, bw, bh] of [[20, 40, 90], [64, 30, 130], [98, 44, 70], [146, 26, 110], [462, 34, 100], [596, 40, 120]]) c.fillRect(bx, 300 - bh, bw, bh);
+        c.fillStyle = '#c8d4e2'; for (const [bx, bw, bh] of [[20, 40, 90], [64, 30, 130], [146, 26, 110], [596, 40, 120]]) for (let y = 300 - bh + 8; y < 292; y += 12) for (let x = bx + 5; x < bx + bw - 6; x += 9) c.fillRect(x, y, 4, 5);
+        gatewayArch(c, 300, 300, 240);
+        c.fillStyle = '#5f9a4a'; c.fillRect(0, 298, SZ_W, 16);
+        c.fillStyle = '#5a7a8a'; c.fillRect(0, 314, SZ_W, H); c.strokeStyle = 'rgba(255,255,255,.25)'; c.lineWidth = 2; for (let k = 0; k < 12; k++) { const wx = (k * 113 + t * 10) % (SZ_W + 60) - 30, wy = 330 + (k % 4) * 18; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 26, wy); c.stroke(); }
+        raddampfer(c, lerp(SZ_W + 100, -120, t / 9.2), 362, 1.0, t);
+        const m = sanft((t - 2.8) / 3.0), yM = lerp(300, 60, m);
+        if (t > 2.8) { c.strokeStyle = '#ffd93d'; c.lineWidth = 3; c.beginPath(); c.moveTo(440, 300); c.lineTo(440, yM); c.moveTo(432, yM); c.lineTo(448, yM); c.moveTo(432, 300); c.lineTo(448, 300); c.stroke(); szZaehler(c, Math.round(192 * m) + ' m', '#ffd93d', 12, 140); }
+        if (t > 6.2) { const f = sanft((t - 6.2) / 0.6); c.globalAlpha = f; freiheitsstatue(c, 535, 300, 0.632, '#5fb59a'); c.fillStyle = '#fff'; c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 3; c.strokeText('93 m', 535, 168); c.fillText('93 m', 535, 168); c.globalAlpha = 1; }
+      } },
+    WI: { dauer: 9.0, klaenge: [[0.3, 'muh'], [1.2, 'plopp'], [1.8, 'plopp'], [2.4, 'plopp'], [3.0, 'muh'], [4.8, 'jubel'], [5.8, 'gesang'], [7.4, 'jubel']],
+      zeichne(c, t) {   // erst die Milchfarm: Holstein-Kühe, rote Scheune, Käselaibe rollen herein, Schild „WISCONSIN CHEESE“; dann das Stadion: Fans in Grün und Gelb mit Käse-Hüten machen die Welle – „Cheeseheads!“
+        if (t < 4.4) {
+          szHimmel(c, '#5aa8e8', '#e6f2fa'); szWolken(c, t, [[20, 50], [400, 40]]);
+          c.fillStyle = '#7ab85a'; c.beginPath(); c.moveTo(0, 250); c.quadraticCurveTo(160, 210, 330, 244); c.quadraticCurveTo(500, 270, SZ_W, 230); c.lineTo(SZ_W, H); c.lineTo(0, H); c.fill();
+          c.fillStyle = '#b8322a'; c.fillRect(470, 196, 90, 54); c.beginPath(); c.moveTo(462, 198); c.lineTo(480, 170); c.lineTo(550, 170); c.lineTo(568, 198); c.fill();
+          c.strokeStyle = '#fff'; c.lineWidth = 2; c.strokeRect(500, 216, 30, 34); c.fillStyle = '#c8ccd2'; c.fillRect(566, 146, 26, 104); c.beginPath(); c.arc(579, 146, 13, Math.PI, 0); c.fill();
+          c.fillStyle = '#6aa84a'; c.fillRect(0, 300, SZ_W, H);
+          c.fillStyle = '#5a3a22'; c.fillRect(270, 262, 6, 46); c.fillRect(380, 262, 6, 46); c.beginPath(); c.roundRect(244, 222, 168, 50, 6); c.fill();
+          c.fillStyle = '#ffd93d'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = 'bold 16px system-ui, sans-serif'; c.fillText('WISCONSIN', 328, 238); c.fillText('CHEESE', 328, 258);
+          kuh(c, 110, 336, 0.95, t, 2); kuh(c, 200, 318, 0.75, t, 2, -1);
+          for (let i = 0; i < 5; i++) { const t0 = 0.9 + i * 0.6, p = sanft((t - t0) / 0.8); if (p <= 0) continue; const zx = 330 + i * 54, x = lerp(-40, zx, p); kaeseRad(c, x, 376, 24, (x + 40) / 24); }
+          kaeseKeil(c, 600, 380, 1.6);
+        } else {
+          const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#1d2a50'); g.addColorStop(1, '#3a4a78'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, H);
+          c.fillStyle = '#fff8d0'; for (const lx of [80, 560]) { c.fillRect(lx - 30, 20, 60, 16); c.fillRect(lx - 2, 36, 4, 40); }
+          c.fillStyle = '#5a5f6a'; for (let r = 0; r < 5; r++) c.fillRect(0, 140 + r * 46, SZ_W, 6);
+          for (let r = 0; r < 5; r++) for (let x = 24 + (r % 2) * 20; x < SZ_W; x += 40) {
+            const y = 140 + r * 46 + 4, s = 0.6, welle = Math.max(0, Math.sin((t - 4.4) * 3 - x * 0.015)), dy = ruhig() ? 0 : welle * 8;
+            personKlein(c, x, y - dy, s, (x / 20 + r) % 2 ? 2 : 1, { arme: welle });
+            kaeseKeil(c, x, y - dy - 62 * s, 0.6);
+          }
+          c.fillStyle = '#3f9a44'; c.fillRect(0, 368, SZ_W, 40); c.fillStyle = '#fff'; for (let x = 40; x < SZ_W; x += 80) c.fillRect(x, 372, 3, 30);
+          if (t > 6.0) { c.globalAlpha = sanft((t - 6.0) / 0.5); szZaehler(c, 'Cheeseheads!', '#ffd93d', 40, 220); c.globalAlpha = 1; }
+        }
+        { const d = Math.abs(t - 4.4); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }
+      } },
+    MI: { dauer: 8.8, klaenge: [[0.3, 'welle'], [1.6, 'klick'], [2.6, 'klick'], [3.6, 'klick'], [4.6, 'klick'], [5.6, 'plopp'], [6.6, 'staunen']],
+      zeichne(c, t) {   // Karte der Großen Seen: Michigan (Hand-förmige Halbinsel und Upper Peninsula) leuchtet orange; Superior, Michigan, Huron und Erie leuchten nacheinander auf (✓), Ontario bleibt grau – „4 of 5“
+        const P = ([lon, lat]) => [30 + (lon + 92.3) * 34, 10 + (49.2 - lat) * 44];
+        const flaeche = (pts, farbe) => { c.beginPath(); pts.forEach((q, i) => { const [x, y] = P(q); if (i) c.lineTo(x, y); else c.moveTo(x, y); }); c.closePath(); c.fillStyle = farbe; c.fill(); };
+        c.fillStyle = '#d8e4bc'; c.fillRect(0, 0, SZ_W, H);
+        c.strokeStyle = 'rgba(90,110,70,.25)'; c.lineWidth = 1; for (let x = 0; x < SZ_W; x += 40) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); }
+        const MI_O = '#ff9a2a';
+        flaeche([[-90.4, 46.6], [-89.0, 46.85], [-88.3, 47.45], [-87.4, 46.55], [-86.6, 46.45], [-85.9, 46.7], [-84.95, 46.77], [-84.5, 46.5], [-84.1, 46.2], [-84.75, 45.85], [-85.6, 46.05], [-86.6, 45.9], [-87.3, 45.6], [-87.6, 45.1], [-88.1, 45.8], [-89.2, 46.1], [-90.2, 46.4]], MI_O);
+        flaeche([[-86.8, 41.76], [-84.8, 41.7], [-83.45, 41.73], [-83.1, 42.1], [-82.6, 42.55], [-82.4, 43.0], [-82.5, 43.6], [-82.9, 44.05], [-83.6, 43.85], [-83.3, 44.5], [-83.4, 45.05], [-84.1, 45.5], [-84.75, 45.78], [-85.5, 45.2], [-86.1, 44.7], [-86.5, 44.0], [-86.2, 43.0], [-86.3, 42.4]], MI_O);
+        const SEEN = [
+          ['Lake Superior', 1.6, [-87.6, 48.2], [[-92.1, 46.75], [-90.4, 46.6], [-89.0, 46.85], [-88.3, 47.45], [-87.4, 46.55], [-86.6, 46.45], [-85.9, 46.7], [-84.95, 46.77], [-84.5, 46.5], [-84.6, 46.95], [-84.8, 47.5], [-85.5, 47.9], [-86.5, 48.7], [-88.3, 48.8], [-89.3, 48.0], [-90.5, 47.7]]],
+          ['Lake Michigan', 2.6, [-90.2, 44.3], [[-87.8, 42.2], [-87.5, 41.65], [-86.8, 41.76], [-86.3, 42.4], [-86.2, 43.0], [-86.5, 44.0], [-86.1, 44.7], [-85.5, 45.2], [-84.75, 45.8], [-85.6, 46.05], [-86.6, 45.9], [-87.3, 45.6], [-87.6, 45.1], [-87.6, 44.6], [-87.9, 43.4]]],
+          ['Lake Huron', 3.6, [-80.0, 46.6], [[-84.75, 45.85], [-84.1, 46.2], [-83.5, 46.1], [-82.0, 46.1], [-81.3, 45.95], [-80.5, 45.6], [-80.0, 45.0], [-80.1, 44.5], [-80.8, 44.6], [-81.3, 45.2], [-81.6, 44.6], [-81.7, 43.9], [-82.1, 43.3], [-82.4, 43.0], [-82.5, 43.6], [-82.9, 44.05], [-83.6, 43.85], [-83.3, 44.5], [-83.4, 45.05], [-84.1, 45.5], [-84.75, 45.78]]],
+          ['Lake Erie', 4.6, [-80.0, 41.6], [[-83.45, 41.73], [-82.7, 41.45], [-81.7, 41.5], [-80.5, 41.95], [-79.1, 42.5], [-78.9, 42.85], [-79.6, 42.85], [-80.4, 42.6], [-81.4, 42.65], [-82.5, 42.0], [-83.1, 42.05]]],
+          ['Lake Ontario', 5.6, [-77.6, 44.6], [[-79.8, 43.3], [-79.0, 43.25], [-77.6, 43.25], [-76.3, 43.45], [-76.2, 44.05], [-76.9, 44.0], [-78.5, 43.9], [-79.4, 43.65]]]];
+        SEEN.forEach(([name, t0, lp, pts], i) => {
+          const an = t > t0, ont = i === 4;
+          flaeche(pts, an ? (ont ? '#9aa8b8' : '#2f86e0') : '#7fb4e0');
+          if (an && !ont) { const d = t - t0; if (d < 0.6) { c.save(); c.globalAlpha = 1 - d / 0.6; c.lineWidth = 6; c.strokeStyle = '#fff'; c.stroke(); c.restore(); } }
+          if (an) { const [x, y] = P(lp); c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; const s = name + (ont ? ' ✗' : ' ✓'); c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 3; c.strokeText(s, x, y); c.fillStyle = ont ? '#e8eef4' : '#fff'; c.fillText(s, x, y); }
+        });
+        { const [x, y] = P([-84.7, 43.2]); c.font = 'bold 15px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#7a3a00'; c.fillText('MICHIGAN', x, y); }
+        if (t > 6.2) { c.globalAlpha = sanft((t - 6.2) / 0.5); c.fillStyle = 'rgba(24,33,58,.8)'; c.beginPath(); c.roundRect(450, 46, 160, 44, 10); c.fill(); c.fillStyle = '#ffd93d'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('4 of 5', 530, 68); c.globalAlpha = 1; }
+      } },
+    OH: { dauer: 8.8, klaenge: [[0.3, 'fanfare'], [1.4, 'plopp'], [2.0, 'plopp'], [2.6, 'plopp'], [3.2, 'plopp'], [3.8, 'plopp'], [4.4, 'plopp'], [5.0, 'plopp'], [6.2, 'applaus']],
+      zeichne(c, t) {   // das Weiße Haus, davor Zuschauer; über dem Dach erscheinen nacheinander sieben Sterne mit den Namen der Präsidenten aus Ohio (keine Bildnisse), der Zähler läuft bis 7
+        szHimmel(c, '#4f8fe0', '#e6f0fa'); szWolken(c, t, [[-40, 260], [500, 250]]);
+        c.fillStyle = '#7aa850'; c.fillRect(0, 300, SZ_W, H);
+        laubbaum(c, 22, 304, 0.8, t); laubbaum(c, 618, 304, 0.8, t);
+        weissesHaus(c, 320, 302, 1.0);
+        c.fillStyle = '#d8d0b8'; c.beginPath(); c.moveTo(290, 302); c.lineTo(350, 302); c.lineTo(420, H); c.lineTo(220, H); c.fill();
+        const N = ['Grant', 'Hayes', 'Garfield', 'B. Harrison', 'McKinley', 'Taft', 'Harding'];
+        let n = 0;
+        N.forEach((name, i) => {
+          const f = sanft((t - 1.3 - i * 0.6) / 0.4); if (f <= 0) return; n++;
+          const a = Math.PI * (0.92 - i * 0.14), x = 320 + Math.cos(a) * 250, y = 236 - Math.sin(a) * 150;
+          stern(c, x, y, 16 * f);
+          c.globalAlpha = f; c.font = 'bold 13px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.strokeStyle = 'rgba(0,0,0,.45)'; c.lineWidth = 3; c.strokeText(name, x, y + 26); c.fillStyle = '#fff'; c.fillText(name, x, y + 26); c.globalAlpha = 1;
+        });
+        if (n) szZaehler(c, n + (n === 1 ? ' president' : ' presidents'), '#ffd93d', 14, 220);
+        for (let i = 0; i < 12; i++) personKlein(c, 30 + i * 53, 392 - (i % 2) * 8, 0.6, i, { arme: t > 6 ? Math.abs(Math.sin(t * 3 + i)) : 0 });
       } },
   };
   // Big Ben mit echter Aufnahme: 15,5 s; bis 14 s laufen die Westminster Chimes (Bild wie beim Nachbau bis kurz vor dem Schlag, langsamer), dann EIN Stundenschlag (Nachbau)

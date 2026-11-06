@@ -2011,7 +2011,7 @@
       el("span", {}, `⭐ ${sp.punkte} ${T("Punkte", "points")}`),
       el("span", { class: "status-coins", title: "Coins" }, `🪙 ${sp.coins}`),
       el("span", { title: T("Schultage am Stück", "School days in a row") }, `🔥 ${serie()}`),
-      knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung, "haupt"));
+      knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung, "haupt"), knopf("🛍️ Shop", shop));
   }
 
   function landmarkKarte(l, gross) {

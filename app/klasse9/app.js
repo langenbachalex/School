@@ -1926,10 +1926,8 @@
     if (si < 0) return;
     const e = ereignisse.splice(si, 1)[0];
     stempelLaeuft = true;
-    audioEnde.then(() => setTimeout(() => {
-      staatStempel(e.staat);
-      setTimeout(() => { stempelLaeuft = false; zeigeEreignisse(); }, 2700);
-    }, 250));
+    const stempelDanach = () => { staatStempel(e.staat); setTimeout(() => { stempelLaeuft = false; zeigeEreignisse(); }, 2700); };
+    audioEnde.then(() => setTimeout(() => { if (!staatSzene(e.staat, () => setTimeout(stempelDanach, 200))) stempelDanach(); }, 250));   // mit Szene: erst die Szene, dann der Stempel
   }
   // Eigener Bestätigungsdialog statt confirm(): funktioniert auch in eingebetteten Rahmen (Vorschau) und sieht aus wie die App
   const frageDialog = el("dialog", { class: "feier frage" });
@@ -1952,6 +1950,14 @@
       // Voice-over (6.11.): Aufnahme des Steckbriefs (l.audio) bzw. Geräte-Stimme en-US läuft mit der Szene (Haupttext-Vorrang); ✕/Schließen stoppt sie
       voice: () => hauptText([l.audio || { text: l.steckbrief, stimme: "m" }], { warten: true }), voiceStopp: () => stopp(), voiceAudio: () => stimmeAudio(l.audio),   // Untertitel im Takt der Aufnahme
       stimme: (text) => hauptText([{ text, stimme: "m" }], { warten: true }) });   // Durchsagen der Szene mit der Geräte-Stimme
+    return !!sz;
+  }
+  // Staaten-Szenen (6.11.2026, Staaten 1–10): gleiche Szene wie bei den Landmarks, Fakt als Untertitel, Voice-over audio/staaten/<id>.mp3, Foto (falls vorhanden) am Ende
+  const staatHatSzene = (s) => !!(s && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(s.id));
+  function staatSzene(s, fertig) {
+    if (!staatHatSzene(s)) return false;
+    const sz = window.Runner.szene(null, s.id, { text: s.fakt, titel: `🗺️ ${s.name}`, foto: s.foto, quelle: s.foto_quelle, onEnde: () => { if (fertig) fertig(); },
+      voice: () => hauptText([s.audio || { text: `${s.name}. ${s.fakt}`, stimme: "m" }], { warten: true }), voiceStopp: () => stopp(), voiceAudio: () => stimmeAudio(s.audio) });
     return !!sz;
   }
   function zeigeFeier(e) {
@@ -2044,9 +2050,11 @@
     const frei = staatenFrei();
     const karte = usaKarte(frei, (s) => {
       fakt.hidden = false;
+      const szene = () => { stopp(); staatSzene(s); };
       fakt.replaceChildren(el("h3", { lang: "en" }, s.name), el("p", { lang: "en" }, s.fakt),
+        staatHatSzene(s) && knopf(T("▶ Szene", "▶ Scene"), szene, "leise"),
         s.audio && knopf(T("🔊 Anhören", "🔊 Listen"), () => spiele([s.audio])));
-      if (s.audio) spiele([s.audio]);
+      if (staatHatSzene(s)) szene(); else if (s.audio) spiele([s.audio]);   // Staat mit Szene: Szene mit Voice-over, sonst nur die Aufnahme
     });
     const karten = el("div", { class: "heldenraster" }, SP.landmarks.map((l) => sp.karten.includes(l.id)
       ? el("button", { class: "held-knopf", onclick: () => karteZeigen(l) }, landmarkKarte(l))
@@ -4152,6 +4160,7 @@
   }
   setInterval(updateHinweis, 3000);
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
+  if (LOKAL) window.__staatEreignis = (id) => { ereignisse.push({ art: "staat", staat: SP.staaten.find((s) => s.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalten eines Staats (Szene, dann Stempel)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "karte", karte: SP.landmarks.find((l) => l.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Anzeige einer neuen Landmark-Karte (Orts-Szene/Karte) auslösen
   if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
   if (LOKAL) window.__thema = (nr, gruppe) => { lage = { nr, gruppe, teil: 0, titel: gruppe, zurueckZu: startseite }; gruppeGeschafft(); }; // nur Test-Build: Thema abschließen (Mega-Lob)

@@ -460,6 +460,14 @@ SHOP = [
 ] + skin_artikel(lambda g, e: {"G": g, "E": e}, {"G": "Figur im Road Trip Run", "E": "Your Road Trip Run character"})
 
 
+def staat_foto(sid):
+    """Staaten-Szene (6.11.): Foto + Quellenzeile am Ende der Szene (app/klasse9/bilder/staaten/<id>.jpg, Quellen inhalte/klasse9/staaten_fotos.tsv)."""
+    if not os.path.exists(os.path.join(INHALTE, "staaten_fotos.tsv")) or not os.path.exists(os.path.join(APP, "bilder", "staaten", f"{sid}.jpg")):
+        return {}
+    q = {z["id"]: z for z in tsv("staaten_fotos.tsv")}.get(sid)
+    return {"foto": f"bilder/staaten/{sid}.jpg", "foto_quelle": f"Foto: {q['urheber']}, {q['lizenz']}, Wikimedia Commons"} if q else {}
+
+
 def spieldaten():
     import frei_saarland, usa_karte, runner_audio
     a = lambda pfad: audio(pfad)
@@ -469,7 +477,7 @@ def spieldaten():
                   for i, t in enumerate(TIERS) for ab, n, sym in t["stufen"]],
         "tiers": [{"name": t["name"], "farbe": t["farbe"], "text": t["satz"], "audio": a(f"audio/spiel/tier_{t['id']}.mp3") if t["satz"] else None} for t in TIERS],
         "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
-        "staaten": [dict(z, audio=a(f"audio/staaten/{z['id']}.mp3")) for z in tsv("staaten.tsv")],
+        "staaten": [dict(z, audio=a(f"audio/staaten/{z['id']}.mp3"), **staat_foto(z["id"])) for z in tsv("staaten.tsv")],
         "landmarks": [dict(z, bild=f"bilder/landmarks/{z['bild']}.jpg", audio=a(f"audio/landmarks/{z['id']}.mp3"),
                            quelle=quellen[z["bild"] + ".jpg"]["link"],
                            # Orts-Szene (6.11.): Quellenzeile unter dem Foto am Ende der Szene (Fotos: Carol M. Highsmith, Library of Congress, gemeinfrei)

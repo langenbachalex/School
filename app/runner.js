@@ -400,6 +400,17 @@
     schritte() { for (let i = 0; i < 4; i++) { ton(180, 0.06, "sine", 0.05, i * 0.42, 120); ton(180, 0.06, "sine", 0.015, i * 0.42 + 0.18, 120); } },
     staunen() { [262, 330, 392].forEach((f) => ton(f, 1.2, "sine", 0.03, 0, f * 1.06)); },
     lichtAn() { for (let i = 0; i < 6; i++) ton(660 * Math.pow(1.122, i), 0.12, "triangle", 0.03, i * 0.18); },
+    // Staaten-Szenen (6.11., Staaten 1–10): Stadtverkehr (Rauschen + Motoren), Collegeglocke (hell, A), Feder kratzt, gesprungene Glocke (verstimmt, scheppernd),
+    // Frösche quaken, Hufe galoppieren (Dreier-Takt), Hammer auf Stahl, Regen prasselt, Brandung (lange Welle)
+    verkehr() { rauschen(2.2, 0.03, 0, { typ: "lowpass", freq: 700 }); ton(80, 2.0, "sawtooth", 0.02, 0, 95); ton(110, 1.2, "sawtooth", 0.015, 0.6, 70); },
+    glockeHell() { glockenTon(440, 0, 0.6, 2.4); },
+    feder() { for (let i = 0; i < 10; i++) rauschen(0.07, 0.025, i * 0.11 + (i % 3) * 0.02, { typ: "highpass", freq: 4200 }); },
+    glockeRiss() { glockenTon(220, 0, 0.8, 1.6); ton(233, 0.6, "sawtooth", 0.02, 0.01); rauschen(0.5, 0.03, 0.02, { typ: "bandpass", freq: 1900 }); },
+    froesche() { for (let i = 0; i < 6; i++) { const s = i * 0.38 + (i % 2) * 0.1; ton(i % 2 ? 140 : 190, 0.14, "square", 0.025, s, i % 2 ? 110 : 150); ton(i % 2 ? 140 : 190, 0.1, "square", 0.02, s + 0.16, i % 2 ? 110 : 150); } },
+    hufe() { for (let i = 0; i < 9; i++) { const s = Math.floor(i / 3) * 0.5 + (i % 3) * 0.1; ton(240, 0.05, "sine", 0.05, s, 120); rauschen(0.03, 0.03, s, { typ: "bandpass", freq: 1500 }); } },
+    hammer() { for (let i = 0; i < 4; i++) { ton(1800, 0.12, "triangle", 0.04, i * 0.4, 1500); ton(3400, 0.06, "sine", 0.02, i * 0.4); rauschen(0.04, 0.04, i * 0.4, { typ: "bandpass", freq: 3000 }); } },
+    regen() { rauschen(2.6, 0.035, 0, { typ: "highpass", freq: 1800 }); for (let i = 0; i < 20; i++) rauschen(0.02, 0.02, Math.random() * 2.4, { typ: "bandpass", freq: 3000 + Math.random() * 2000 }); },
+    brandung() { rauschen(1.6, 0.055, 0, { typ: "lowpass", freq: 900 }); rauschen(1.0, 0.03, 0.5, { typ: "highpass", freq: 2000 }); ton(90, 1.4, "sine", 0.03, 0, 60); },
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -8348,6 +8359,249 @@
     c.save(); c.translate(280, 0); c.fillStyle = '#8a6a4a'; c.fillRect(-14, -16, 28, 16); personKlein(c, 0, -16, 0.9, 6, { arme: o.redner || 0 }); c.restore();
     c.restore();
   }
+  /* ---------- Staaten-Szenen (6.11.2026, Staaten 1–10): Zeichnungen im Runner-Stil, auch für spätere Welten nutzbar (keine Marken/Logos) ---------- */
+  function skylineStadt(c, x, y, s, art, licht) {   // Hochhaus-Silhouette (x, y = Fußpunkt Mitte, Breite ≈ 600·s); art 'ny' mit Art-déco-Turm mit Spitze, 'chi' mit dunklem Turm mit zwei Antennen; licht 0..1 = Fenster an
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const tuerme = art === 'chi' ? [[-300, 50, 120], [-245, 44, 170], [-195, 56, 140], [-130, 40, 210], [-82, 58, 300, 'chi'], [-14, 46, 190], [40, 50, 240], [98, 42, 160], [146, 60, 200], [212, 44, 130], [262, 50, 175]]
+      : [[-300, 46, 130], [-250, 52, 190], [-192, 40, 160], [-148, 56, 230], [-86, 44, 280, 'ny'], [-30, 50, 200], [26, 42, 250], [74, 58, 170], [138, 46, 220], [190, 50, 150], [246, 54, 185]];
+    tuerme.forEach(([bx, bw, bh, typ], i) => {
+      c.fillStyle = ['#5b6f8c', '#4c5f7d', '#66799a', '#52668a'][i % 4];
+      if (typ === 'ny') {   // Art-déco-Turm: gestufte Krone, Spitze
+        c.fillRect(bx, -bh, bw, bh); c.fillRect(bx + 6, -bh - 24, bw - 12, 24); c.fillRect(bx + 13, -bh - 44, bw - 26, 20); c.fillRect(bx + 18, -bh - 56, bw - 36, 12);
+        c.fillRect(bx + bw / 2 - 2, -bh - 86, 4, 30);
+      } else if (typ === 'chi') { c.fillStyle = '#2f3644'; c.fillRect(bx, -bh, bw, bh); c.fillRect(bx + 8, -bh - 30, bw - 16, 30); c.fillRect(bx + 14, -bh - 66, 3, 36); c.fillRect(bx + bw - 17, -bh - 66, 3, 36); }
+      else { c.fillRect(bx, -bh, bw, bh); if (i % 3 === 0) c.fillRect(bx + bw / 2 - 6, -bh - 14, 12, 14); }
+      c.fillStyle = licht ? `rgba(255,226,140,${0.35 + 0.5 * licht})` : 'rgba(220,235,255,.45)';
+      for (let fy = -bh + 10; fy < -8; fy += 14) for (let fx = bx + 6; fx < bx + bw - 6; fx += 10) if ((fx * 7 + fy * 3 + i) % 5) c.fillRect(fx, fy, 5, 7);
+    });
+    c.restore();
+  }
+  function nyTaxi(c, x, y, s, rad, hupt, rechts) {   // gelbes Taxi (Front links, rechts = fährt nach rechts; ohne Firmenzeichen): Dachschild „TAXI“, Karo-Streifen; hupt = kleine Schallbögen
+    c.save(); c.translate(x, y); c.scale(s, s); if (rechts) { c.translate(84, 0); c.scale(-1, 1); }
+    c.fillStyle = '#f5c518'; c.beginPath(); c.roundRect(0, -26, 84, 18, 6); c.fill();
+    c.beginPath(); c.moveTo(16, -26); c.quadraticCurveTo(22, -40, 34, -40); c.lineTo(60, -40); c.quadraticCurveTo(68, -40, 72, -26); c.closePath(); c.fill();
+    c.fillStyle = '#bfe3fa'; c.beginPath(); c.moveTo(22, -27); c.quadraticCurveTo(26, -37, 35, -37); c.lineTo(46, -37); c.lineTo(46, -27); c.closePath(); c.fill(); c.fillRect(49, -37, 16, 10);
+    c.fillStyle = '#fff8dc'; c.fillRect(36, -47, 20, 7); c.save(); c.translate(46, -43.5); if (rechts) c.scale(-1, 1); c.fillStyle = '#18213a'; c.font = 'bold 6px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TAXI', 0, 0); c.restore();
+    for (let k = 0; k < 10; k++) { c.fillStyle = k % 2 ? '#18213a' : '#fff'; c.fillRect(6 + k * 7.2, -19, 7.2, 3); }
+    c.fillStyle = '#ffd93d'; c.fillRect(-1, -22, 5, 5); c.fillStyle = '#e63946'; c.fillRect(80, -22, 4, 5);
+    for (const rx of [18, 66]) { c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(rx, -7, 8, 0, Math.PI * 2); c.fill(); c.fillStyle = '#aaa'; c.beginPath(); c.arc(rx, -7, 3.5, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#1a1a1a'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(rx + Math.cos(rad || 0) * 3.5, -7 + Math.sin(rad || 0) * 3.5); c.lineTo(rx - Math.cos(rad || 0) * 3.5, -7 - Math.sin(rad || 0) * 3.5); c.stroke(); }
+    if (hupt) { c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 2; for (let k = 1; k <= 3; k++) { c.beginPath(); c.arc(-4, -18, k * 6, Math.PI * 0.75, Math.PI * 1.25); c.stroke(); } }
+    c.restore();
+  }
+  function hutPerson(c, x, y, s, k, o = {}) {   // Passant mit Hut: o.hut = 'doktor' (Studentenhut, o.wurf hebt ihn ab) | 'cowboy'; sonst wie personKlein
+    personKlein(c, x, y, s, k, o);
+    if (!o.hut) return;
+    c.save(); c.translate(x, y - 66 * s - (o.wurf || 0)); c.scale(s, s); c.rotate(o.dreh || 0);
+    if (o.hut === 'doktor') { c.fillStyle = '#1a1d26'; c.fillRect(-7, -2, 14, 6); c.beginPath(); c.moveTo(-14, -2); c.lineTo(0, -7); c.lineTo(14, -2); c.lineTo(0, 3); c.closePath(); c.fill(); c.strokeStyle = '#e0a400'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(0, -2); c.lineTo(10, 4); c.lineTo(10, 10); c.stroke(); }
+    else { c.fillStyle = '#8a5a2b'; c.beginPath(); c.ellipse(0, 3, 15, 3.5, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.roundRect(-8, -8, 16, 11, [5, 5, 1, 1]); c.fill(); c.fillStyle = '#5a3a1a'; c.fillRect(-8, 0, 16, 2); }
+    c.restore();
+  }
+  function backsteinHalle(c, x, y, s, o = {}) {   // altes College-Gebäude aus rotem Backstein: weiße Fenster, Dreiecksgiebel, Uhrturm mit Kuppel (o.minute dreht den Zeiger), o.jahr = Schild über der Tür
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#a8432f'; c.fillRect(-150, -110, 300, 110);
+    c.strokeStyle = 'rgba(70,20,10,.25)'; c.lineWidth = 1; c.beginPath(); for (let by = -104; by < 0; by += 6) { c.moveTo(-150, by); c.lineTo(150, by); } c.stroke();
+    c.fillStyle = '#7d2f22'; c.beginPath(); c.moveTo(-160, -110); c.lineTo(160, -110); c.lineTo(150, -122); c.lineTo(-150, -122); c.closePath(); c.fill();
+    c.fillStyle = '#f2ede2'; for (const fy of [-96, -60]) for (let fx = -136; fx < 140; fx += 34) if (Math.abs(fx + 17) > 30 || fy < -80) { c.fillRect(fx, fy, 16, 24); c.fillStyle = '#3a4a62'; c.fillRect(fx + 2, fy + 2, 5, 9); c.fillRect(fx + 9, fy + 2, 5, 9); c.fillRect(fx + 2, fy + 13, 5, 9); c.fillRect(fx + 9, fy + 13, 5, 9); c.fillStyle = '#f2ede2'; }
+    c.fillStyle = '#f2ede2'; c.beginPath(); c.moveTo(-40, -122); c.lineTo(0, -150); c.lineTo(40, -122); c.closePath(); c.fill();
+    c.fillStyle = '#a8432f'; c.fillRect(-18, -200, 36, 52); c.fillStyle = '#f2ede2'; c.fillRect(-22, -204, 44, 6); c.fillRect(-14, -232, 28, 28);
+    c.fillStyle = '#f2ede2'; c.beginPath(); c.arc(0, -232, 14, Math.PI, 0); c.fill(); c.fillRect(-1.5, -262, 3, 18);
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(0, -176, 12, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#1a1d26'; c.lineWidth = 2; c.stroke();
+    const m = o.minute == null ? -Math.PI / 2 : o.minute; c.beginPath(); c.moveTo(0, -176); c.lineTo(Math.cos(m) * 9, -176 + Math.sin(m) * 9); c.moveTo(0, -176); c.lineTo(Math.cos(-Math.PI / 2 + 0.5) * 6, -176 + Math.sin(-Math.PI / 2 + 0.5) * 6); c.stroke();
+    c.fillStyle = '#3a2a1e'; c.beginPath(); c.roundRect(-12, -34, 24, 34, [12, 12, 0, 0]); c.fill();
+    if (o.jahr) { c.fillStyle = '#f2ede2'; c.fillRect(-26, -54, 52, 16); c.fillStyle = '#7d2f22'; c.font = 'bold 12px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(o.jahr, 0, -45.5); }
+    c.restore();
+  }
+  function independenceHall(c, x, y, s) {   // Backsteinhaus mit weißem Glockenturm, Turmuhr und Spitze; davor Rasen
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#9d4532'; c.fillRect(-170, -90, 340, 90); c.fillRect(-60, -126, 120, 36);
+    c.fillStyle = '#4b2f28'; c.beginPath(); c.moveTo(-176, -90); c.lineTo(176, -90); c.lineTo(160, -104); c.lineTo(-160, -104); c.closePath(); c.fill();
+    c.fillStyle = '#f2ede2'; for (const fy of [-80, -42]) for (let fx = -156; fx < 160; fx += 30) if (Math.abs(fx + 7) > 24 || fy < -60) c.fillRect(fx, fy, 14, 24);
+    c.fillStyle = '#f2ede2'; c.fillRect(-24, -200, 48, 74); c.fillRect(-18, -238, 36, 38); c.fillRect(-12, -262, 24, 24);
+    c.beginPath(); c.moveTo(-12, -262); c.lineTo(0, -300); c.lineTo(12, -262); c.closePath(); c.fill(); c.fillRect(-1, -312, 2, 14);
+    c.fillStyle = '#3a4a62'; for (const bx of [-14, 2]) c.fillRect(bx, -232, 12, 20);
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(0, -168, 13, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#1a1d26'; c.lineWidth = 2; c.stroke(); c.beginPath(); c.moveTo(0, -168); c.lineTo(0, -178); c.moveTo(0, -168); c.lineTo(7, -165); c.stroke();
+    c.fillStyle = '#3a2a1e'; c.beginPath(); c.roundRect(-12, -36, 24, 36, [12, 12, 0, 0]); c.fill();
+    c.restore();
+  }
+  function freiheitsglocke(c, x, y, s, schwung) {   // große Glocke am Joch (x, y = Aufhängung): dunkle Bronze mit langem Riss; schwung = Winkel
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#5a3a22'; c.fillRect(-46, -14, 92, 14); c.fillRect(-6, 0, 12, 10);
+    c.rotate(schwung || 0);
+    const g = c.createLinearGradient(-40, 0, 40, 0); g.addColorStop(0, '#5e4a2e'); g.addColorStop(0.45, '#a8874e'); g.addColorStop(1, '#4a3a24'); c.fillStyle = g;
+    c.beginPath(); c.moveTo(-18, 10); c.quadraticCurveTo(-22, 50, -42, 86); c.lineTo(42, 86); c.quadraticCurveTo(22, 50, 18, 10); c.quadraticCurveTo(0, 2, -18, 10); c.fill();
+    c.fillStyle = '#4a3a24'; c.beginPath(); c.ellipse(0, 86, 44, 6, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(255,240,200,.35)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-24, 34); c.lineTo(24, 34); c.stroke();
+    c.strokeStyle = '#1e140c'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(4, 30); c.lineTo(0, 44); c.lineTo(6, 56); c.lineTo(1, 68); c.lineTo(5, 84); c.stroke();   // der Riss
+    c.fillStyle = '#3a2a18'; c.beginPath(); c.arc(0, 80, 6, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function pergamentFeder(c, x, y, s, f) {   // Pergament mit Schrift; die Feder schreibt eine Unterschrift (f = 0..1 Fortschritt); x, y = Mitte des Blatts
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#efe0b8'; c.beginPath(); c.roundRect(-110, -70, 220, 140, 6); c.fill(); c.fillStyle = '#d9c48f'; c.fillRect(-110, -70, 220, 8); c.fillRect(-110, 62, 220, 8);
+    c.fillStyle = '#5a4630'; c.font = 'italic bold 13px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('IN CONGRESS, July 4, 1776', 0, -46);
+    c.fillStyle = 'rgba(90,70,48,.55)'; for (let k = 0; k < 5; k++) c.fillRect(-92, -26 + k * 10, 184 - (k % 2) * 30, 3);
+    c.strokeStyle = '#2a1a10'; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath();
+    const n = Math.floor(f * 60); let px = -60, py = 44;
+    for (let i = 0; i <= n; i++) { const u = i / 60; px = -60 + u * 120; py = 44 + Math.sin(u * 26) * 6 - Math.sin(u * 4) * 3; if (i === 0) c.moveTo(px, py); else c.lineTo(px, py); }
+    c.stroke();
+    c.save(); c.translate(px, py); c.rotate(-0.7 + Math.sin(f * 40) * 0.08);   // Feder: weißer Kiel mit Fahne
+    c.fillStyle = '#fbfbf6'; c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(-10, -40, -4, -84); c.quadraticCurveTo(10, -50, 2, 0); c.closePath(); c.fill();
+    c.strokeStyle = '#b9b4a8'; c.lineWidth = 1; c.beginPath(); c.moveTo(0, 0); c.lineTo(-3, -80); c.stroke(); c.restore();
+    c.restore();
+  }
+  function sumpf(c, y, t) {   // Sumpfwasser (y = Wasserlinie) mit Seerosen, Schilf und Lichtreflexen
+    const g = c.createLinearGradient(0, y, 0, H); g.addColorStop(0, '#3f6b4a'); g.addColorStop(1, '#22402e'); c.fillStyle = g; c.fillRect(-100, y, SZ_W + 200, H - y + 100);
+    c.strokeStyle = 'rgba(220,240,200,.25)'; c.lineWidth = 2; for (let k = 0; k < 12; k++) { const wx = (k * 83 + t * 8) % (SZ_W + 80) - 40, wy = y + 12 + (k % 4) * 16; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 22, wy); c.stroke(); }
+    c.fillStyle = '#5f9a4a'; for (const [lx, ly] of [[60, 28], [210, 52], [470, 34], [590, 60]]) { c.beginPath(); c.arc(lx, y + ly, 9, 0.3, Math.PI * 2); c.lineTo(lx, y + ly); c.fill(); }
+    c.strokeStyle = '#5a7a3a'; c.lineWidth = 2; for (let k = 0; k < 18; k++) { const sx = k * 37 + (k % 3) * 5; c.beginPath(); c.moveTo(sx, y + 4); c.quadraticCurveTo(sx + 3, y - 14, sx + (ruhig() ? 0 : Math.sin(t * 1.4 + k) * 3) + 2, y - 26 - (k % 4) * 5); c.stroke(); }
+  }
+  function alligatorKopf(c, x, y, s, auf, maul) {   // Alligator taucht auf (auf 0..1: Augen → Schnauze → Rücken), maul 0..1 öffnet; y = Wasserlinie; Ringe im Wasser
+    if (auf <= 0) return;
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.save(); c.beginPath(); c.rect(-80, -60, 160, 60); c.clip(); c.translate(0, (1 - auf) * 22);
+    c.fillStyle = '#3d6b34'; c.beginPath(); c.ellipse(18, 2, 44, 10, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#2f5528'; for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(6 + i * 10, -6); c.lineTo(10 + i * 10, -12); c.lineTo(14 + i * 10, -6); c.closePath(); c.fill(); }
+    c.save(); c.translate(-20, -2); c.rotate(-0.45 * (maul || 0)); c.fillStyle = '#467a3c'; c.beginPath(); c.roundRect(-40, -8, 44, 9, 4); c.fill();
+    c.fillStyle = '#fff'; for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(-36 + i * 7, 1); c.lineTo(-33 + i * 7, 5); c.lineTo(-30 + i * 7, 1); c.closePath(); c.fill(); } c.restore();
+    c.fillStyle = '#467a3c'; c.beginPath(); c.roundRect(-60, -2, 44, 7, 3); c.fill();
+    c.fillStyle = '#3d6b34'; c.beginPath(); c.arc(-16, -9, 6, 0, Math.PI * 2); c.fill(); c.fillStyle = '#e9e07a'; c.beginPath(); c.arc(-16, -10, 3.4, 0, Math.PI * 2); c.fill(); c.fillStyle = '#111'; c.fillRect(-16.6, -13, 1.4, 6);
+    c.restore();
+    c.strokeStyle = 'rgba(220,240,220,.5)'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(-10, 1, 40 + auf * 14, 5, 0, 0, Math.PI * 2); c.stroke();
+    c.restore();
+  }
+  // Umrisse (vereinfacht, gleicher Maßstab: 1 Einheit ≈ 100 km; Alaska mit Faktor UMRISS_AK_F, damit die Fläche ≈ 2,5 × Texas ist)
+  const UMRISS_TX = [[3, 0], [5.4, 0], [5.4, 2.7], [7, 3.1], [8.5, 3.4], [10.4, 3.3], [10.4, 6.2], [10.7, 7.3], [9.5, 8.2], [8, 9], [7.1, 10.3], [6.9, 12.9], [5.6, 12], [4.8, 10.6], [4.2, 9.2], [3, 8.3], [2.2, 8], [1.4, 7.2], [0, 5.4], [0, 3.6], [3, 3.6]];
+  const UMRISS_AK = [[2.5, 0.6], [6, 0], [11.5, 1.2], [11.5, 7.5], [12.5, 8], [15, 10.5], [14.5, 11], [12, 8.8], [10.5, 8.3], [9, 8.5], [7.5, 8.2], [6.5, 9.5], [5.5, 9.8], [4, 10.5], [1, 11.8], [0.5, 11.7], [3.5, 9.8], [3.2, 8.8], [1, 8.2], [0.5, 6.5], [1.5, 5.8], [0, 4.2], [1.5, 3]];
+  const UMRISS_AK_F = 1.34;
+  function staatUmriss(c, punkte, x, y, s, farbe, name, f) {   // Umriss füllen (x, y = links oben, s = Pixel je Einheit), f = 0..1 Einblenden (Aufbau von unten), name darunter
+    if (f <= 0) return;
+    c.save(); c.translate(x, y); c.globalAlpha = Math.min(1, f * 1.5);
+    c.beginPath(); punkte.forEach(([px, py], i) => (i ? c.lineTo(px * s, py * s) : c.moveTo(px * s, py * s))); c.closePath();
+    c.fillStyle = farbe; c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 3; c.stroke();
+    if (name) { const b = punkte.reduce((m, [px, py]) => [Math.max(m[0], px), Math.max(m[1], py)], [0, 0]); c.fillStyle = '#fff'; c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top'; c.strokeStyle = 'rgba(0,0,0,.4)'; c.lineWidth = 4; c.strokeText(name, b[0] * s / 2, b[1] * s + 8); c.fillText(name, b[0] * s / 2, b[1] * s + 8); }
+    c.restore();
+  }
+  function cowboyLasso(c, x, y, s, t, k) {   // Cowboy auf braunem Pferd (läuft nach rechts) mit Hut, schwingt das Lasso über dem Kopf
+    const b = ruhig() ? 0 : Math.sin(t * 10);
+    c.save(); c.translate(x, y - Math.abs(b) * 2 * s); c.scale(s, s);
+    c.strokeStyle = '#6b4226'; c.lineWidth = 6; c.lineCap = 'round';
+    for (const [lx, ph] of [[-22, 0], [-14, 1.6], [16, 0.8], [24, 2.4]]) { const w = ruhig() ? 0 : Math.sin(t * 10 + ph) * 0.45; c.beginPath(); c.moveTo(lx, -38); c.lineTo(lx + Math.sin(w) * 16, -4); c.stroke(); }
+    c.fillStyle = '#7a4a2a'; c.beginPath(); c.ellipse(0, -46, 34, 15, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(24, -54); c.lineTo(40, -84); c.lineTo(52, -80); c.lineTo(36, -46); c.closePath(); c.fill(); c.beginPath(); c.ellipse(50, -82, 12, 7, 0.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#3a2414'; c.beginPath(); c.moveTo(-32, -50); c.quadraticCurveTo(-48, -40, -44, -18); c.lineTo(-38, -40); c.closePath(); c.fill(); c.fillRect(30, -86, 10, 4);
+    c.fillStyle = '#5a3a1a'; c.fillRect(-10, -62, 20, 6);
+    c.fillStyle = ['#2a6cff', '#c8283a', '#2e9e5b'][(k || 0) % 3]; c.beginPath(); c.roundRect(-7, -92, 16, 30, 4); c.fill();
+    c.fillStyle = '#f1c9a5'; c.beginPath(); c.arc(1, -98, 7, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#8a5a2b'; c.beginPath(); c.ellipse(1, -104, 13, 3, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.roundRect(-6, -114, 14, 10, [5, 5, 1, 1]); c.fill();
+    const a = t * 7, hx = 8 + Math.cos(a) * 4, hy = -128;   // Arm hoch, Schlinge kreist
+    c.strokeStyle = '#f1c9a5'; c.lineWidth = 3; c.beginPath(); c.moveTo(6, -88); c.lineTo(hx, hy + 8); c.stroke();
+    c.strokeStyle = '#d8b878'; c.lineWidth = 2; c.beginPath(); c.ellipse(hx + Math.cos(a) * 10, hy - 6, 26, 8, Math.sin(a) * 0.2, 0, Math.PI * 2); c.stroke();
+    c.restore();
+  }
+  function hochhausBau(c, x, y, s, stock, t) {   // frühes Hochhaus im Bau (x, y = Fußpunkt Mitte): stock = fertige Stockwerke (Bruchteil = das wachsende), Stahlgerüst, Kran mit Träger; 10 Stockwerke · 1885
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const SH = 22, B = 90, n = Math.floor(stock), rest = stock - n;
+    for (let i = 0; i < n; i++) { c.fillStyle = i % 2 ? '#a86a4a' : '#b5775a'; c.fillRect(-B / 2, -(i + 1) * SH, B, SH); c.fillStyle = '#e8eef6'; for (let fx = -B / 2 + 8; fx < B / 2 - 6; fx += 16) c.fillRect(fx, -(i + 1) * SH + 6, 9, 11); }
+    if (rest > 0) { c.strokeStyle = '#4a4f58'; c.lineWidth = 3; const yo = -(n + rest) * SH; c.strokeRect(-B / 2, yo, B, rest * SH); for (let fx = -B / 2; fx <= B / 2; fx += 30) { c.beginPath(); c.moveTo(fx, -n * SH); c.lineTo(fx, yo); c.stroke(); } }
+    const top = -(n + rest) * SH;
+    c.strokeStyle = '#e0a400'; c.lineWidth = 4; c.beginPath(); c.moveTo(B / 2 + 26, 0); c.lineTo(B / 2 + 26, top - 60); c.lineTo(-B / 2 - 30, top - 60); c.stroke();   // Kran
+    c.lineWidth = 1.5; c.beginPath(); for (let ky = -10; ky > top - 60; ky -= 14) { c.moveTo(B / 2 + 22, ky); c.lineTo(B / 2 + 30, ky - 7); } c.stroke();
+    const sw = ruhig() ? 0 : Math.sin(t * 2) * 6, hy = top - 22 - (1 - rest) * 30;
+    c.strokeStyle = '#333'; c.lineWidth = 1; c.beginPath(); c.moveTo(-10 + sw, top - 60); c.lineTo(-10 + sw, hy); c.stroke(); c.fillStyle = '#4a4f58'; c.fillRect(-36 + sw, hy, 52, 5);
+    c.restore();
+  }
+  function hammerArbeiter(c, x, y, s, t, k) {   // Bauarbeiter mit Helm, schlägt mit dem Hammer (t treibt den Schlag)
+    personKlein(c, x, y, s, k || 5, { arme: 0.3 });
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#ffcc00'; c.beginPath(); c.arc(0, -61, 9, Math.PI, 0); c.fill(); c.fillRect(-11, -62, 22, 3);
+    const w = -0.4 + Math.abs(Math.sin(t * 5)) * 1.4; c.translate(10, -42); c.rotate(-w); c.fillStyle = '#7a5a3a'; c.fillRect(0, -2, 20, 3); c.fillStyle = '#555'; c.fillRect(18, -6, 6, 11);
+    c.restore();
+  }
+  function apfelbaum(c, x, y, s, t, aepfel) {   // Apfelbaum mit roten Äpfeln; aepfel = Liste [ax, ay, fall 0..∞] (fall > 0: der Apfel fällt, in Einheiten px)
+    const w = ruhig() ? 0 : Math.sin((t || 0) * 1.2 + x) * 2;
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#6a4a30'; c.beginPath(); c.moveTo(-8, 0); c.lineTo(-5, -60); c.lineTo(5, -60); c.lineTo(8, 0); c.closePath(); c.fill();
+    c.fillStyle = '#3f7d34'; for (const [bx, by, r] of [[-34, -78, 30], [30, -80, 30], [0, -104, 34], [-10, -70, 26], [16, -66, 24]]) { c.beginPath(); c.arc(bx + w, by, r, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = 'rgba(255,255,255,.1)'; c.beginPath(); c.arc(-8 + w, -118, 14, 0, Math.PI * 2); c.fill();
+    for (const [ax, ay, fall] of aepfel || []) { c.fillStyle = '#d7263d'; c.beginPath(); c.arc(ax + (fall ? 0 : w), ay + (fall || 0), 6, 0, Math.PI * 2); c.fill(); c.fillStyle = '#4a2a10'; c.fillRect(ax + (fall ? 0 : w) - 0.5, ay + (fall || 0) - 9, 1.5, 4); }
+    c.restore();
+  }
+  function apfelKiste(c, x, y, s, n) {   // Holzkiste (x, y = Boden Mitte) mit n Äpfeln obenauf
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#b8864e'; c.fillRect(-30, -26, 60, 26); c.fillStyle = '#8a5f30'; c.fillRect(-30, -26, 60, 3); c.fillRect(-30, -13, 60, 2); c.fillRect(-30, -26, 3, 26); c.fillRect(27, -26, 3, 26);
+    for (let i = 0; i < n; i++) { c.fillStyle = i % 3 === 2 ? '#e8b923' : '#d7263d'; c.beginPath(); c.arc(-22 + (i % 5) * 11, -28 - Math.floor(i / 5) * 8, 5.5, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function spaceNeedle(c, x, y, s, farbe) {   // Aussichtsturm von Seattle (Silhouette): drei schlanke Beine mit Taille, „fliegende Untertasse“ oben, Spitze
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe || '#d9dde3'; c.strokeStyle = farbe || '#d9dde3'; c.lineWidth = 4;
+    c.beginPath(); c.moveTo(-22, 0); c.quadraticCurveTo(-2, -90, -10, -170); c.moveTo(22, 0); c.quadraticCurveTo(2, -90, 10, -170); c.moveTo(0, 0); c.lineTo(0, -170); c.stroke();
+    c.beginPath(); c.ellipse(0, -178, 34, 8, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.moveTo(-22, -186); c.lineTo(22, -186); c.lineTo(12, -200); c.lineTo(-12, -200); c.closePath(); c.fill();
+    c.fillRect(-1.5, -232, 3, 34); c.fillRect(-36, -98, 72, 3);
+    c.restore();
+  }
+  function regenZeichnen(c, t, dichte) {   // Regen: schräge Striche über die ganze Szene (dichte 0..1)
+    if (dichte <= 0) return;
+    c.save(); c.strokeStyle = `rgba(200,220,245,${0.55 * dichte})`; c.lineWidth = 1.5; c.beginPath();
+    const n = Math.round(90 * dichte); for (let i = 0; i < n; i++) { const rx = (i * 53.7) % (SZ_W + 80) - 40, ry = ((i * 97.3 + t * 520) % (H + 40)) - 20; c.moveTo(rx, ry); c.lineTo(rx - 5, ry + 14); }
+    c.stroke(); c.restore();
+  }
+  function vulkan(c, x, y, s, t, ausbruch) {   // Vulkaninsel (x, y = Fuß Mitte): grüne Hänge, dunkler Kegel; ausbruch 0..1: Rauch, Lavafontäne, Lavaströme
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#3f8a4a'; c.beginPath(); c.moveTo(-200, 0); c.quadraticCurveTo(-120, -40, -60, -110); c.lineTo(60, -110); c.quadraticCurveTo(120, -40, 200, 0); c.closePath(); c.fill();
+    c.fillStyle = '#4a3f3a'; c.beginPath(); c.moveTo(-80, -86); c.lineTo(-30, -150); c.lineTo(30, -150); c.lineTo(80, -86); c.closePath(); c.fill();
+    if (ausbruch > 0) {
+      c.fillStyle = `rgba(90,90,95,${0.6 * ausbruch})`; for (let k = 0; k < 6; k++) { const r = 18 + k * 9, ry = -170 - k * 26 - (t * 20 % 26); c.beginPath(); c.arc(Math.sin(k + t) * 12 + k * 6, ry, r * ausbruch, 0, Math.PI * 2); c.fill(); }
+      c.fillStyle = '#ff6a1a'; for (let k = 0; k < 12; k++) { const ph = (t * 1.4 + k / 12) % 1, a = -Math.PI / 2 + (k - 5.5) * 0.12; c.beginPath(); c.arc(Math.cos(a) * ph * 90 * ausbruch, -150 + Math.sin(a) * ph * 90 * ausbruch + ph * ph * 60, 4 + (k % 3), 0, Math.PI * 2); c.fill(); }
+      c.strokeStyle = '#ff8c1a'; c.lineWidth = 6; c.lineCap = 'round'; const l = Math.min(1, ausbruch * 1.2);
+      c.beginPath(); c.moveTo(-14, -150); c.quadraticCurveTo(-40, -110, -60 - 40 * l, -110 + 100 * l); c.moveTo(16, -150); c.quadraticCurveTo(46, -100, 70 + 30 * l, -100 + 90 * l); c.stroke();
+      const g = c.createRadialGradient(0, -150, 4, 0, -150, 70); g.addColorStop(0, `rgba(255,190,80,${0.8 * ausbruch})`); g.addColorStop(1, 'rgba(255,120,40,0)'); c.fillStyle = g; c.beginPath(); c.arc(0, -150, 70, 0, Math.PI * 2); c.fill();
+    }
+    c.restore();
+  }
+  function insel(c, x, y, w, h, farbe) { c.fillStyle = farbe || '#4f9a52'; c.beginPath(); c.ellipse(x, y, w, h, 0, Math.PI, 0); c.fill(); c.fillStyle = '#e9d9a6'; c.fillRect(x - w, y - 2, w * 2, 3); }   // kleine Insel (Halbellipse mit Strand)
+  function surferBei(c, x, y, s, t, k) {   // Surfer auf dem Brett, leicht geneigt, die Welle hinter ihm (x, y = Wasserlinie)
+    c.save(); c.translate(x, y); c.scale(s, s); c.rotate(ruhig() ? 0 : Math.sin(t * 2) * 0.08);
+    c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.moveTo(-70, 4); c.quadraticCurveTo(-60, -40, -20, -46); c.quadraticCurveTo(-46, -24, -36, 4); c.closePath(); c.fill();
+    c.fillStyle = '#ff7a1a'; c.beginPath(); c.ellipse(0, 0, 34, 5, -0.05, 0, Math.PI * 2); c.fill(); c.fillStyle = '#fff'; c.fillRect(-30, -1, 60, 2);
+    personKlein(c, 0, -3, 0.8, k || 2, { arme: 0.5, schritt: 0.8 });
+    c.restore();
+  }
+  function nordlicht(c, t, a) {   // Nordlicht: grün-violette Bänder wehen über den Nachthimmel (a = Sichtbarkeit 0..1)
+    if (a <= 0) return;
+    c.save(); c.globalCompositeOperation = 'lighter';
+    for (let b = 0; b < 3; b++) {
+      const g = c.createLinearGradient(0, 30 + b * 30, 0, 170 + b * 20); g.addColorStop(0, `rgba(140,90,255,${0.2 * a})`); g.addColorStop(0.4, `rgba(80,255,170,${0.45 * a})`); g.addColorStop(1, 'rgba(80,255,170,0)'); c.fillStyle = g;
+      c.beginPath(); c.moveTo(-20, 150 + b * 20);
+      for (let x = -20; x <= SZ_W + 20; x += 20) c.lineTo(x, 60 + b * 28 + Math.sin(x * 0.012 + t * (0.6 + b * 0.2) + b) * 24);
+      for (let x = SZ_W + 20; x >= -20; x -= 20) c.lineTo(x, 170 + b * 20 + Math.sin(x * 0.01 + t * 0.5 + b * 2) * 18);
+      c.closePath(); c.fill();
+    }
+    c.restore();
+  }
+  function elch(c, x, y, s, t) {   // Elch (Silhouette, schaut nach links): großes Schaufelgeweih, lange Beine, Bart
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#3b2a1e'; c.strokeStyle = '#3b2a1e'; c.lineWidth = 6; c.lineCap = 'round';
+    for (const lx of [-26, -16, 18, 28]) { c.beginPath(); c.moveTo(lx, -50); c.lineTo(lx + (ruhig() ? 0 : Math.sin(t * 3 + lx) * 2), -2); c.stroke(); }
+    c.beginPath(); c.ellipse(0, -62, 38, 18, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.ellipse(-8, -74, 20, 12, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(-30, -70); c.lineTo(-46, -84); c.lineTo(-62, -74); c.lineTo(-64, -62); c.lineTo(-50, -58); c.closePath(); c.fill(); c.beginPath(); c.moveTo(-48, -60); c.lineTo(-46, -46); c.lineTo(-42, -60); c.fill();
+    c.fillStyle = '#8a6a48'; for (const sp of [-1, 1]) { c.beginPath(); c.ellipse(-46 + sp * 14, -96, 16, 7, sp * 0.5, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function baerKlein(c, x, y, s, t) {   // Braunbär auf allen vieren (schaut nach rechts), wiegt den Kopf
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#6b4226';
+    for (const lx of [-24, -12, 14, 26]) c.fillRect(lx - 5, -22, 11, 22);
+    c.beginPath(); c.ellipse(0, -32, 36, 20, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(-8, -46, 14, 0, Math.PI * 2); c.fill();
+    const k = ruhig() ? 0 : Math.sin(t * 1.6) * 3; c.beginPath(); c.arc(38, -34 + k, 13, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(32, -46 + k, 4.5, 0, Math.PI * 2); c.arc(44, -46 + k, 4.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#a8784a'; c.beginPath(); c.ellipse(48, -31 + k, 6, 5, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#111'; c.beginPath(); c.arc(52, -32 + k, 2, 0, Math.PI * 2); c.arc(41, -38 + k, 1.6, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function moeweFlug(c, x, y, t, s = 1) {   // kleine Möwe im Flug (Kulisse): weiß mit grauen Flügelspitzen
+    const fl = (ruhig() ? 0 : Math.sin(t * 9)) * 6;
+    c.save(); c.translate(x, y); c.scale(s, s); c.strokeStyle = '#fff'; c.lineWidth = 3; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(-14, -fl); c.quadraticCurveTo(-6, -6, 0, 0); c.quadraticCurveTo(6, -6, 14, -fl); c.stroke();
+    c.strokeStyle = '#6a6f78'; c.lineWidth = 2; c.beginPath(); c.moveTo(-14, -fl); c.lineTo(-11, -fl + 1); c.moveTo(14, -fl); c.lineTo(11, -fl + 1); c.stroke();
+    c.restore();
+  }
   function szBoden(c, farbe, y0) { c.fillStyle = farbe; c.fillRect(-600, y0, 2400, 800); }
   function taubeBei(c, x, y, flug, richtung) { taube(c, { art: 'taube', x, y, flug, richtung: richtung || -1, tot: 0 }); }   // Gegner-Taube als Kulisse (flug = Flügelschlag-Phase)
   function eichhoernchenBei(c, x, y, flug, richtung) { eichhoernchen(c, { art: 'eichhoernchen', x, y, flug, richtung: richtung || -1, tot: 0 }); }
@@ -8735,6 +8989,169 @@
         c.save(); c.translate(SZ_W / 2, H / 2); c.scale(z, z); c.translate(-fx, -fy);
         szWelt({ zeit: t, kamera: 1000, level: { ende: 1000, schild: t < 8.1 ? 0 : sanft((t - 8.1) / 0.7) } }, () => { WELTEN.sd.kulisse(c); WELTEN.sd.boden(c, 0, SZ_W, 1000, 1000 + SZ_W, 1000, 1000 + SZ_W); });
         c.restore();
+      } },
+    // Klasse 9 – Staaten 1–10 (6.11.2026): je eine Szene passend zum Fakt-Satz (inhalte/klasse9/staaten.tsv); Schlüssel = Staaten-Kürzel
+    NY: { dauer: 8.4, klaenge: [[0.2, 'verkehr'], [1.4, 'taxi'], [2.8, 'verkehr'], [3.6, 'taxi'], [5.2, 'hupe']],
+      zeichne(c, t) {   // Skyline von Manhattan, unten eine volle Straße: Menschenmengen auf dem Gehweg, gelbe Taxis in beide Richtungen; der Zähler läuft bis 8,000,000+
+        const z = lerp(1, 1.12, sanft(t / 8.4));
+        c.save(); c.translate(SZ_W / 2, 300); c.scale(z, z); c.translate(-SZ_W / 2, -300);
+        szHimmel(c, '#6ec3f2', '#e8f4fb'); szWolken(c, t, [[-60, 40], [300, 24], [560, 60]]);
+        szWelt({ zeit: t, kamera: t * 20, level: { ende: 4000 } }, () => skylineStadt(c, SZ_W / 2, 262, 0.72, 'ny', 0));
+        c.fillStyle = '#c9c4ba'; c.fillRect(-40, 262, SZ_W + 80, 34); c.fillStyle = '#4a4d52'; c.fillRect(-40, 296, SZ_W + 80, 160);
+        c.fillStyle = 'rgba(255,255,255,.85)'; for (let x = -40; x < SZ_W + 40; x += 70) c.fillRect(x + ((t * 30) % 70), 334, 36, 3);
+        for (let i = 0; i < 26; i++) { const r = i % 2, sp = (r ? -1 : 1) * (16 + (i % 5) * 4), px = ((i * 47 + sp * t) % (SZ_W + 60) + SZ_W + 60) % (SZ_W + 60) - 30; personKlein(c, px, 286 + r * 8, 0.42 + r * 0.04, i, { schritt: ruhig() ? 0 : Math.sin(t * 8 + i) }); }
+        for (let i = 0; i < 4; i++) { const rechts = i % 2, f = ((t * 0.22 + i * 0.27) % 1.3) - 0.15, tx = rechts ? lerp(-120, SZ_W + 40, f) : lerp(SZ_W + 40, -120, f);
+          nyTaxi(c, tx, rechts ? 352 : 326, 0.9, t * 10, t > 5.2 && t < 6.2 && i === 0, rechts); }
+        c.restore();
+        const n = Math.round(8000000 * sanft((t - 0.6) / 5.4)); if (t > 0.6) { c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(SZ_W / 2 - 110, 52, 220, 40, 10); c.fill(); c.fillStyle = '#ffd93d'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(n.toLocaleString('en-US') + (t > 6 ? '+' : ''), SZ_W / 2, 72); }
+      } },
+    MA: { dauer: 8.4, klaenge: [[0.8, 'glockeHell'], [2.2, 'glockeHell'], [3.6, 'glockeHell'], [5.6, 'applaus']],
+      zeichne(c, t) {   // Harvard: rote Backsteinhalle mit Uhrturm, Schild 1636; der Uhrturm schlägt, Studenten mit Hüten kommen, am Ende fliegen die Hüte
+        const z = lerp(1.05, 1, sanft(t / 3));
+        c.save(); c.translate(SZ_W / 2, 330); c.scale(z, z); c.translate(-SZ_W / 2, -330);
+        szHimmel(c, '#7fb6e6', '#eef5fb'); szWolken(c, t, [[-40, 50], [380, 30]]);
+        c.fillStyle = '#6faa52'; c.fillRect(-40, 300, SZ_W + 80, 140); c.fillStyle = '#d8cdb0'; c.beginPath(); c.moveTo(300, 300); c.lineTo(340, 300); c.lineTo(420, H); c.lineTo(220, H); c.closePath(); c.fill();
+        for (const [bx, bs] of [[60, 1.2], [140, 0.9], [520, 1.1], [600, 1.25]]) laubbaum(c, bx, 304, bs, t);
+        backsteinHalle(c, SZ_W / 2, 302, 1.05, { jahr: '1636', minute: -Math.PI / 2 + Math.max(0, 0.8 - t) * 2 });
+        for (const s0 of [0.8, 2.2, 3.6]) szRinge(c, SZ_W / 2, 302 - 176 * 1.05, s0, t, 'rgba(255,240,200,1)');
+        for (let i = 0; i < 8; i++) { const x = lerp(i % 2 ? SZ_W + 40 : -40, 170 + i * 42, sanft((t - 1 - i * 0.2) / 2.4)); const wurf = t > 5.4 ? Math.max(0, Math.sin(Math.min(Math.PI, (t - 5.4 - i * 0.05) * 1.6))) * 70 : 0;
+          hutPerson(c, x, 372 - (i % 2) * 14, 0.8, i, { hut: 'doktor', wurf, dreh: wurf ? t * 6 : 0, arme: t > 5.4 ? 0.9 : 0, schritt: t < 3.6 + i * 0.2 ? Math.sin(t * 8 + i) : 0 }); }
+        c.restore();
+      } },
+    PA: { dauer: 9.4, klaenge: [[0.4, 'schritte'], [3.4, 'feder'], [4.6, 'feder'], [6.6, 'glockeRiss'], [8.0, 'glockeRiss']],
+      zeichne(c, t) {   // Philadelphia 1776: Independence Hall → die Feder unterschreibt die Erklärung → die Freiheitsglocke mit dem Riss schwingt
+        if (t < 3.2) {
+          const z = lerp(1, 1.35, sanft(t / 3.2)); c.save(); c.translate(SZ_W / 2, 200); c.scale(z, z); c.translate(-SZ_W / 2, -200);
+          szHimmel(c, '#8cbde8', '#f2f6fa'); szWolken(c, t, [[0, 40], [420, 24]]);
+          c.fillStyle = '#7fb85a'; c.fillRect(-40, 320, SZ_W + 80, 120); c.fillStyle = '#c9b89a'; c.fillRect(-40, 340, SZ_W + 80, 14);
+          for (const bx of [60, 120, 520, 580]) laubbaum(c, bx, 324, 1, t);
+          independenceHall(c, SZ_W / 2, 322, 0.95);
+          for (let i = 0; i < 5; i++) personKlein(c, 180 + i * 64 + Math.sin(t + i) * 6, 368, 0.7, i + 2, { schritt: Math.sin(t * 6 + i) });
+          c.restore();
+        } else if (t < 6.2) {
+          c.fillStyle = '#6a4a30'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = 'rgba(0,0,0,.18)'; for (let y = 0; y < H; y += 26) c.fillRect(0, y, SZ_W, 2);
+          const g = c.createRadialGradient(SZ_W / 2, 170, 20, SZ_W / 2, 170, 360); g.addColorStop(0, 'rgba(255,220,150,.35)'); g.addColorStop(1, 'rgba(0,0,0,.35)'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, H);
+          pergamentFeder(c, SZ_W / 2, 200, 1.6, sanft((t - 3.4) / 2.4));
+        } else {
+          szHimmel(c, '#d9c8a8', '#f4ecdc'); c.fillStyle = '#b8a07a'; c.fillRect(0, 310, SZ_W, 90);
+          c.fillStyle = '#5a3a22'; c.fillRect(SZ_W / 2 - 90, 70, 12, 250); c.fillRect(SZ_W / 2 + 78, 70, 12, 250);
+          const sw = (ruhig() ? 0.3 : 1) * Math.sin((t - 6.4) * Math.PI / 1.4) * 0.35 * (t > 6.4 ? 1 : 0);
+          freiheitsglocke(c, SZ_W / 2, 92, 1.85, sw);
+          for (const s0 of [6.6, 8.0]) szRinge(c, SZ_W / 2, 200, s0, t, 'rgba(120,80,40,1)');
+          c.fillStyle = '#5a3a22'; c.font = 'bold 30px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.globalAlpha = sanft((t - 7) / 0.8); c.fillText('1776', SZ_W / 2 + 190, 200); c.globalAlpha = 1;
+        }
+        for (const tb of [3.2, 6.2]) { const d = Math.abs(t - tb); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }   // Blende
+      } },
+    FL: { dauer: 8.4, klaenge: [[0.2, 'froesche'], [1.6, 'platsch'], [3.0, 'froesche'], [4.2, 'platsch'], [5.8, 'froesche']],
+      zeichne(c, t) {   // Sumpf mit Palmen; überall tauchen Alligatoren auf (zuerst die Augen), einer reißt das Maul auf; Zähler 1,000,000+
+        szHimmel(c, '#f0b46a', '#fbe7b4');
+        c.fillStyle = '#6a8a4a'; c.beginPath(); c.moveTo(0, 230); c.quadraticCurveTo(200, 200, 400, 222); c.quadraticCurveTo(540, 236, SZ_W, 214); c.lineTo(SZ_W, 250); c.lineTo(0, 250); c.closePath(); c.fill();
+        for (const [px, ps] of [[40, 1.2], [110, 0.9], [470, 1.1], [560, 1.3], [610, 0.95]]) palme(c, px, 238, ps, t);
+        sumpf(c, 244, t);
+        const ALLI = [[320, 300, 1.8, 0.6], [140, 284, 1.3, 1.5], [500, 290, 1.45, 2.2], [230, 345, 1.9, 2.9], [440, 350, 1.8, 3.4], [80, 334, 1.5, 3.9], [590, 336, 1.6, 4.3], [380, 264, 0.9, 4.7], [200, 260, 0.85, 5.0], [560, 264, 0.9, 5.3]];
+        for (const [ax, ay, as, at] of ALLI.slice().sort((a, b) => a[1] - b[1])) alligatorKopf(c, ax, ay, as, sanft((t - at) / 0.9), ax === 320 && t > 3 ? Math.max(0, Math.sin((t - 3) * 1.6)) : 0);
+        const n = Math.round(1000000 * sanft((t - 0.8) / 5)); if (t > 0.8) { c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(SZ_W / 2 - 100, 40, 200, 40, 10); c.fill(); c.fillStyle = '#9be07a'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(n.toLocaleString('en-US') + (t > 5.8 ? '+' : ''), SZ_W / 2, 60); }
+      } },
+    TX: { dauer: 9.4, klaenge: [[0.6, 'plopp'], [1.6, 'plopp'], [3.2, 'klick'], [5.4, 'hufe'], [7.0, 'hufe']],
+      zeichne(c, t) {   // Größenvergleich: Alaska (groß) und Texas, Texas schiebt sich in Alaska hinein – es passt hinein; dann Prärie: ein Cowboy reitet mit dem Lasso
+        if (t < 5) {
+          c.fillStyle = '#1d4f8a'; c.fillRect(0, 0, SZ_W, H); c.strokeStyle = 'rgba(255,255,255,.07)'; c.lineWidth = 1; c.beginPath(); for (let x = 0; x < SZ_W; x += 40) { c.moveTo(x, 0); c.lineTo(x, H); } for (let y = 0; y < H; y += 40) { c.moveTo(0, y); c.lineTo(SZ_W, y); } c.stroke();
+          const s = 14, rein = sanft((t - 2.6) / 1.6);
+          staatUmriss(c, UMRISS_AK, 40, 70, s * UMRISS_AK_F, '#7fb0d8', 'ALASKA', sanft((t - 0.5) / 0.8));
+          staatUmriss(c, UMRISS_TX, lerp(450, 106, rein), lerp(80, 90, rein), s, 'rgba(232,93,58,.92)', rein > 0.9 ? '' : 'TEXAS', sanft((t - 1.5) / 0.8));
+          if (t > 4) { c.fillStyle = '#ffd93d'; c.font = 'bold 22px system-ui, sans-serif'; c.textAlign = 'center'; c.globalAlpha = sanft((t - 4) / 0.5); c.fillText('Texas = No. 2', SZ_W / 2 + 150, 330); c.globalAlpha = 1; }
+        } else {
+          szHimmel(c, '#f2a65a', '#fde3b0'); c.fillStyle = '#e8b04a'; c.beginPath(); c.arc(520, 120, 34, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#b5683a'; c.beginPath(); c.moveTo(0, 270); c.lineTo(80, 210); c.lineTo(180, 210); c.lineTo(230, 270); c.moveTo(380, 270); c.lineTo(440, 222); c.lineTo(560, 222); c.lineTo(620, 270); c.fill();
+          c.fillStyle = '#d9a35a'; c.fillRect(0, 268, SZ_W, 140);
+          c.fillStyle = '#3f8a4a'; for (const kx of [90, 300, 560]) { c.fillRect(kx - 5, 250, 10, 50); c.fillRect(kx - 18, 262, 6, 18); c.fillRect(kx - 18, 274, 14, 6); c.fillRect(kx + 12, 256, 6, 18); c.fillRect(kx + 4, 268, 14, 6); }
+          cowboyLasso(c, lerp(-80, SZ_W + 80, (t - 5) / 4.4), 350, 1.15, t, 1);
+          c.fillStyle = 'rgba(160,110,60,.4)'; for (let k = 0; k < 6; k++) { const dx = lerp(-80, SZ_W + 80, (t - 5) / 4.4) - 50 - k * 18; c.beginPath(); c.arc(dx, 346 - (k % 2) * 6, 8 + k * 2, 0, Math.PI * 2); c.fill(); }
+        }
+        { const d = Math.abs(t - 5); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }
+      } },
+    CA: { dauer: 8.6, klaenge: [[0.3, 'brandung'], [0.8, 'moewe'], [2.2, 'moewe'], [3.0, 'brandung'], [5.6, 'applaus']],
+      zeichne(c, t) {   // Golden Gate im Nebel, Möwen; Schwenk nach Los Angeles zum Hollywood-Zeichen; unten wächst die Menschenmenge (40,000,000)
+        const kx = lerp(0, SZ_W, sanft((t - 2.6) / 2.6));
+        c.save(); c.translate(-kx, 0);
+        const g = c.createLinearGradient(0, 0, SZ_W * 2, 0); g.addColorStop(0, '#8cc4ec'); g.addColorStop(0.55, '#f2c08a'); g.addColorStop(1, '#ffd08a'); c.fillStyle = g; c.fillRect(-20, 0, SZ_W * 2 + 40, H);
+        c.fillStyle = '#3d7fb8'; c.fillRect(-20, 250, SZ_W + 40, H);
+        c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 2; for (let k = 0; k < 10; k++) { const wx = (k * 73 + t * 20) % (SZ_W + 40) - 20; c.beginPath(); c.moveTo(wx, 270 + (k % 4) * 22); c.quadraticCurveTo(wx + 10, 265 + (k % 4) * 22, wx + 20, 270 + (k % 4) * 22); c.stroke(); }
+        c.fillStyle = '#6f8a4a'; c.beginPath(); c.moveTo(-20, 260); c.quadraticCurveTo(40, 200, 100, 252); c.lineTo(100, 262); c.closePath(); c.fill(); c.beginPath(); c.moveTo(540, 252); c.quadraticCurveTo(600, 200, 680, 230); c.lineTo(680, 262); c.lineTo(540, 262); c.closePath(); c.fill();
+        szWelt({ zeit: t, kamera: 0 }, () => goldenGateFern(c, 320, 252, 0.95));
+        for (let i = 0; i < 4; i++) moeweFlug(c, 120 + i * 110 + Math.sin(t + i) * 30 + t * 12, 90 + (i % 2) * 40 + Math.sin(t * 1.3 + i) * 10, t + i, 0.9);
+        c.fillStyle = '#c9a06a'; c.fillRect(SZ_W, 300, SZ_W + 20, H);
+        c.save(); c.translate(SZ_W * 1.5, 310); c.scale(1.9, 1.9); szWelt({ zeit: t, kamera: 0 }, () => hollywoodSign(c, 0, 0)); c.restore();
+        c.restore();
+        const n = Math.min(60, Math.floor(Math.max(0, t - 3.4) * 14));
+        for (let i = 0; i < n; i++) personKlein(c, (i * 37) % (SZ_W + 20) - 10, 392 - Math.floor(i / 18) * 12, 0.62, i, { arme: t > 5.6 ? Math.abs(Math.sin(t * 4 + i)) : 0 });
+        if (t > 4.2) { const z = Math.round(40000000 * sanft((t - 4.2) / 2.8)); c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(SZ_W / 2 - 115, 40, 230, 40, 10); c.fill(); c.fillStyle = '#ffd93d'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(z.toLocaleString('en-US'), SZ_W / 2, 60); }
+      } },
+    IL: { dauer: 8.8, klaenge: [[0.4, 'hammer'], [2.0, 'hammer'], [3.6, 'hammer'], [5.2, 'hammer'], [6.6, 'staunen']],
+      zeichne(c, t) {   // Chicago 1885: ein Hochhaus wächst Stockwerk für Stockwerk (10), oben hämmert ein Arbeiter; dann erscheint die Skyline von heute dahinter
+        szHimmel(c, '#88b8e0', '#eef4f8'); szWolken(c, t, [[20, 50], [400, 30]]);
+        const heute = sanft((t - 6.2) / 1.6);
+        if (heute > 0) { c.save(); c.globalAlpha = heute; skylineStadt(c, SZ_W / 2, 320, 1.0, 'chi', 0); c.restore(); }
+        c.fillStyle = '#3d7fb8'; c.fillRect(0, 320, 120, 80);   // Lake Michigan links
+        c.fillStyle = '#8d8a84'; c.fillRect(120, 320, SZ_W, 80); c.fillStyle = '#6a675f'; c.fillRect(120, 346, SZ_W, 54);
+        const stock = Math.min(10, t < 0.3 ? 1 : 1 + (t - 0.3) * 1.6), sx = SZ_W / 2;
+        hochhausBau(c, sx, 322, 1.0, stock, t);
+        if (stock < 10) hammerArbeiter(c, sx - 20, 322 - Math.floor(stock) * 22, 0.55, t, 5);
+        for (let i = 0; i < 3; i++) personKlein(c, 170 + i * 40, 372, 0.7, i + 1, { schritt: Math.sin(t * 6 + i) });
+        c.fillStyle = 'rgba(24,33,58,.78)'; c.beginPath(); c.roundRect(28, 30, 116, 40, 10); c.fill(); c.fillStyle = '#fff'; c.font = 'bold 24px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(heute > 0.5 ? 'today' : '1885', 86, 51);
+        c.font = 'bold 14px system-ui, sans-serif'; c.fillStyle = '#18213a'; c.fillText(Math.floor(stock) + ' floors', sx + 110, 140);
+      } },
+    WA: { dauer: 8.6, klaenge: [[0.2, 'regen'], [1.8, 'plopp'], [2.8, 'regen'], [3.4, 'plopp'], [5.4, 'regen'], [5.0, 'plopp']],
+      zeichne(c, t) {   // Regen über dem Apfelgarten, hinten die Space Needle und Tannen; Äpfel fallen in die Kisten, die Kisten werden voll
+        szHimmel(c, '#8a96a6', '#d8dde3');
+        c.fillStyle = '#7d8a9a'; c.beginPath(); c.moveTo(380, 250); c.lineTo(470, 150); c.lineTo(560, 250); c.fill(); c.fillStyle = '#eef2f6'; c.beginPath(); c.moveTo(447, 176); c.lineTo(470, 150); c.lineTo(493, 176); c.fill();
+        for (let i = 0; i < 9; i++) tanne(c, 330 + i * 38, 262, 60 + (i % 3) * 14, '#3f6a4a');
+        spaceNeedle(c, 540, 262, 1.0, '#6f7a88');
+        c.fillStyle = '#5f9a4a'; c.fillRect(0, 258, SZ_W, H);
+        const AE = [[-40, -70], [20, -96], [36, -60], [-20, -110], [-46, -96], [8, -74]], FALL = [1.2, 1.8, 2.6, 3.4, 4.2, 5.0];
+        const liste = AE.map(([ax, ay], i) => [ax, ay, t > FALL[i] ? Math.min(-ay - 10, ((t - FALL[i]) ** 2) * 260) : 0]);
+        apfelbaum(c, 190, 330, 1.25, t, liste);
+        apfelbaum(c, 80, 300, 0.8, t + 1, [[-20, -80, 0], [16, -96, 0], [24, -64, 0]]);
+        const voll = FALL.filter((f) => t > f + 0.5).length;
+        apfelKiste(c, 170, 350, 1.1, 6 + voll); apfelKiste(c, 260, 352, 1.1, 8 + Math.floor(voll / 2)); apfelKiste(c, 360, 356, 1.1, 10);
+        hutPerson(c, 450, 370, 0.85, 2, { arme: 0.4 });
+        regenZeichnen(c, t, 0.9);
+      } },
+    HI: { dauer: 9.2, klaenge: [[0.3, 'brandung'], [2.4, 'brandung'], [3.4, 'grollen'], [4.6, 'grollen'], [6.4, 'welle']],
+      zeichne(c, t) {   // Inselkette im Pazifik (von oben weit), Zoom auf die große Insel: der Vulkan bricht aus; vorn reitet ein Surfer die Welle
+        const z = lerp(0.55, 0.9, sanft((t - 0.6) / 2.8)), fx = lerp(SZ_W / 2, 400, sanft((t - 0.6) / 2.8));
+        c.save(); c.translate(SZ_W / 2, 280); c.scale(z, z); c.translate(-fx, -280);
+        szHimmel(c, '#58b7ea', '#d7f1fb');
+        c.fillStyle = '#1e86c8'; c.fillRect(-700, 280, SZ_W + 1400, 400);
+        for (const [ix, iw, ih] of [[-260, 30, 18], [-150, 46, 26], [-40, 40, 22], [70, 60, 34], [190, 54, 30]]) insel(c, ix, 282, iw, ih);
+        vulkan(c, 470, 282, 0.9, t, sanft((t - 3.4) / 1.4));
+        for (const px of [340, 372, 590]) palme(c, px, 282, 0.7, t);
+        c.restore();
+        c.fillStyle = '#1478b8'; c.fillRect(0, 330, SZ_W, 70); c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2; for (let k = 0; k < 8; k++) { const wx = (k * 90 + t * 40) % (SZ_W + 60) - 30; c.beginPath(); c.moveTo(wx, 350 + (k % 3) * 14); c.quadraticCurveTo(wx + 12, 344 + (k % 3) * 14, wx + 24, 350 + (k % 3) * 14); c.stroke(); }
+        if (t > 4.6) surferBei(c, lerp(-60, 420, sanft((t - 4.6) / 3.6)), 352, 1.0, t, 3);
+      } },
+    AK: { dauer: 9.6, klaenge: [[0.4, 'wind'], [1.6, 'plopp'], [2.6, 'plopp'], [5.0, 'wind'], [6.6, 'baer'], [8.0, 'wind']],
+      zeichne(c, t) {   // Größenvergleich: Alaska und daneben zweimal Texas – Alaska ist größer; dann Nacht: Nordlicht über den Bergen, ein Elch zieht vorbei, ein Bär
+        if (t < 4.8) {
+          c.fillStyle = '#1d4f8a'; c.fillRect(0, 0, SZ_W, H); c.strokeStyle = 'rgba(255,255,255,.07)'; c.lineWidth = 1; c.beginPath(); for (let x = 0; x < SZ_W; x += 40) { c.moveTo(x, 0); c.lineTo(x, H); } for (let y = 0; y < H; y += 40) { c.moveTo(0, y); c.lineTo(SZ_W, y); } c.stroke();
+          const s = 12;   // gleicher Maßstab für Alaska und Texas
+          staatUmriss(c, UMRISS_AK, 16, 70, s * UMRISS_AK_F, '#7fb0d8', 'ALASKA', sanft((t - 0.3) / 0.8));
+          staatUmriss(c, UMRISS_TX, 300, 40, s, 'rgba(232,93,58,.92)', 'TEXAS', sanft((t - 1.4) / 0.6));
+          staatUmriss(c, UMRISS_TX, 448, 40, s, 'rgba(232,93,58,.92)', 'TEXAS', sanft((t - 2.4) / 0.6));
+          if (t > 1.4) { c.fillStyle = '#fff'; c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(t > 2.4 ? '× 2' : '× 1', 445, 252); }
+          if (t > 3.4) { c.fillStyle = '#ffd93d'; c.font = 'bold 22px system-ui, sans-serif'; c.globalAlpha = sanft((t - 3.4) / 0.5); c.fillText('Alaska > 2 × Texas', 445, 300); c.globalAlpha = 1; }
+        } else {
+          const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0a1230'); g.addColorStop(1, '#22305a'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, H);
+          c.fillStyle = '#fff'; for (let i = 0; i < 40; i++) c.fillRect((i * 97) % SZ_W, (i * 53) % 200, 1.5, 1.5);
+          nordlicht(c, t, sanft((t - 5) / 1.4));
+          c.fillStyle = '#3a4a6a'; c.beginPath(); c.moveTo(0, 270); c.lineTo(120, 150); c.lineTo(230, 260); c.lineTo(340, 120); c.lineTo(470, 250); c.lineTo(560, 170); c.lineTo(SZ_W, 240); c.lineTo(SZ_W, 300); c.lineTo(0, 300); c.fill();
+          c.fillStyle = '#e8eef8'; for (const [mx, my] of [[120, 150], [340, 120], [560, 170]]) { c.beginPath(); c.moveTo(mx - 30, my + 30); c.lineTo(mx, my); c.lineTo(mx + 30, my + 30); c.fill(); }
+          for (let i = 0; i < 12; i++) tanne(c, 10 + i * 56, 300, 50 + (i % 3) * 16, '#13243a');
+          c.fillStyle = '#d8e2ef'; c.fillRect(0, 298, SZ_W, H);
+          elch(c, lerp(SZ_W + 80, 260, sanft((t - 5) / 3.4)), 370, 1.05, t);
+          if (t > 6.2) baerKlein(c, lerp(-80, 110, sanft((t - 6.2) / 1.6)), 382, 0.9, t);
+        }
+        { const d = Math.abs(t - 4.8); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }
       } },
   };
   // Big Ben mit echter Aufnahme: 15,5 s; bis 14 s laufen die Westminster Chimes (Bild wie beim Nachbau bis kurz vor dem Schlag, langsamer), dann EIN Stundenschlag (Nachbau)

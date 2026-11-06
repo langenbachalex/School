@@ -412,6 +412,11 @@
     regen() { rauschen(2.6, 0.035, 0, { typ: "highpass", freq: 1800 }); for (let i = 0; i < 20; i++) rauschen(0.02, 0.02, Math.random() * 2.4, { typ: "bandpass", freq: 3000 + Math.random() * 2000 }); },
     brandung() { rauschen(1.6, 0.055, 0, { typ: "lowpass", freq: 900 }); rauschen(1.0, 0.03, 0.5, { typ: "highpass", freq: 2000 }); ton(90, 1.4, "sine", 0.03, 0, 60); },
     muh() { ton(120, 0.3, "sawtooth", 0.035, 0, 150); ton(150, 0.8, "sawtooth", 0.04, 0.28, 105); ton(75, 1.0, "sine", 0.05, 0.1, 55); },   // Kuh (Montana): tiefes, langes „Muuh“, erst steigend, dann fallend
+    rennwagen() { ton(300, 0.55, "sawtooth", 0.035, 0, 460); ton(600, 0.55, "square", 0.01, 0, 920); ton(430, 0.6, "sawtooth", 0.035, 0.55, 210); ton(860, 0.6, "square", 0.008, 0.55, 420); rauschen(1.1, 0.025, 0, { typ: "bandpass", freq: 1400 }); },   // IndyCar rast vorbei: heller Motor mit Doppler (steigt, dann fällt)
+    gitarre() { [196, 247, 294, 392, 494, 587].forEach((f, i) => { ton(f, 1.3, "triangle", 0.035, i * 0.03); ton(f * 2, 0.4, "sine", 0.012, i * 0.03); }); [220, 262, 330, 440, 523].forEach((f, i) => ton(f, 1.1, "triangle", 0.03, 0.7 + i * 0.03)); },   // Gitarre: zwei angeschlagene Akkorde (G, Am)
+    kanone() { rauschen(0.6, 0.08, 0, { typ: "lowpass", freq: 400 }); ton(60, 0.7, "sine", 0.1, 0, 35); ton(120, 0.15, "square", 0.04); },   // Kanonenschuss
+    trompete() { [[392, 0], [466, 0.2], [523, 0.4], [587, 0.6], [523, 0.95], [466, 1.15], [392, 1.4]].forEach(([f, s]) => { ton(f, 0.22, "sawtooth", 0.035, s); ton(f * 2, 0.22, "square", 0.008, s); }); },   // Jazz-Trompete: kleiner Lauf
+    telefon() { for (let i = 0; i < 16; i++) { ton(1200, 0.04, "square", 0.025, i * 0.06); ton(1500, 0.04, "square", 0.02, i * 0.06 + 0.03); } },   // alte Wandklingel (1878): zwei Glöckchen schnarren
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -8460,10 +8465,10 @@
     c.fillStyle = '#3a2a18'; c.beginPath(); c.arc(0, 80, 6, 0, Math.PI * 2); c.fill();
     c.restore();
   }
-  function pergamentFeder(c, x, y, s, f) {   // Pergament mit Schrift; die Feder schreibt eine Unterschrift (f = 0..1 Fortschritt); x, y = Mitte des Blatts
+  function pergamentFeder(c, x, y, s, f, titel = 'IN CONGRESS, July 4, 1776') {   // Pergament mit Schrift (titel = Kopfzeile); die Feder schreibt eine Unterschrift (f = 0..1 Fortschritt); x, y = Mitte des Blatts
     c.save(); c.translate(x, y); c.scale(s, s);
     c.fillStyle = '#efe0b8'; c.beginPath(); c.roundRect(-110, -70, 220, 140, 6); c.fill(); c.fillStyle = '#d9c48f'; c.fillRect(-110, -70, 220, 8); c.fillRect(-110, 62, 220, 8);
-    c.fillStyle = '#5a4630'; c.font = 'italic bold 13px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('IN CONGRESS, July 4, 1776', 0, -46);
+    c.fillStyle = '#5a4630'; c.font = 'italic bold 13px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(titel, 0, -46);
     c.fillStyle = 'rgba(90,70,48,.55)'; for (let k = 0; k < 5; k++) c.fillRect(-92, -26 + k * 10, 184 - (k % 2) * 30, 3);
     c.strokeStyle = '#2a1a10'; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath();
     const n = Math.floor(f * 60); let px = -60, py = 44;
@@ -8975,6 +8980,316 @@
     c.save(); c.translate(x, y); c.scale(s, s); c.strokeStyle = '#fff'; c.lineWidth = 3; c.lineCap = 'round';
     c.beginPath(); c.moveTo(-14, -fl); c.quadraticCurveTo(-6, -6, 0, 0); c.quadraticCurveTo(6, -6, 14, -fl); c.stroke();
     c.strokeStyle = '#6a6f78'; c.lineWidth = 2; c.beginPath(); c.moveTo(-14, -fl); c.lineTo(-11, -fl + 1); c.moveTo(14, -fl); c.lineTo(11, -fl + 1); c.stroke();
+    c.restore();
+  }
+  /* ---------- Zeichnungen für die Staaten-Szenen 31–50 (IN bis ME, 6.11.2026) ---------- */
+  function szText(c, text, x, y, px, farbe, ausr) {   // Beschriftung mit dunklem Rand (Szenen): px = Schriftgröße
+    c.font = `bold ${px || 14}px system-ui, sans-serif`; c.textAlign = ausr || 'center'; c.textBaseline = 'middle'; c.lineJoin = 'round';
+    c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 3; c.strokeText(text, x, y); c.fillStyle = farbe || '#fff'; c.fillText(text, x, y);
+  }
+  function szUeberblende(c, t, t0) { const d = Math.abs(t - t0); if (d < 0.3) { c.fillStyle = `rgba(0,0,0,${1 - d / 0.3})`; c.fillRect(0, 0, SZ_W, H); } }   // Schwarzblende um t0 (Szenenwechsel wie WI)
+  function zielflagge(c, x, y, w, h, t) {   // karierte Zielflagge an der Stange (x, y = Stangenspitze), weht
+    const T = ruhig() ? 0 : t, n = 8, m = 5;
+    c.fillStyle = '#5a5f6a'; c.fillRect(x - 2, y, 3, h * 2.4);
+    for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) {
+      const x0 = x + i * w / n, dy = Math.sin(T * 6 - i * 0.7) * h * 0.08 * (i + 1) / n;
+      c.fillStyle = (i + j) % 2 ? '#111' : '#fff'; c.fillRect(x0, y + j * h / m + dy, w / n + 0.6, h / m + 0.6);
+    }
+  }
+  function indyAuto(c, x, y, s, farbe, nr, t) {   // IndyCar (fährt nach rechts): flache Nase mit Frontflügel, offene Räder, Fahrer mit Helm und Halo-Bügel, hoher Heckflügel, Startnummer; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = 'rgba(0,0,0,.25)'; c.beginPath(); c.ellipse(0, 0, 66, 5, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#1a1d26'; c.fillRect(56, -8, 16, 4); c.fillRect(68, -15, 4, 11); c.fillRect(-60, -40, 4, 30);
+    c.fillStyle = farbe; c.beginPath(); c.moveTo(-54, -12); c.lineTo(-44, -26); c.lineTo(-6, -28); c.lineTo(12, -21); c.lineTo(62, -13); c.lineTo(64, -8); c.lineTo(-54, -7); c.closePath(); c.fill();
+    c.fillRect(-66, -46, 24, 7); c.fillStyle = '#1a1d26'; c.fillRect(-66, -40, 24, 3);
+    c.fillStyle = 'rgba(255,255,255,.35)'; c.fillRect(-30, -24, 70, 3);
+    c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(-8, -32, 7, 0, Math.PI * 2); c.fill(); c.fillStyle = '#1a1d26'; c.fillRect(-5, -35, 9, 4);
+    c.strokeStyle = '#1a1d26'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(-20, -27); c.quadraticCurveTo(-8, -46, 8, -26); c.stroke();
+    const dreh = ruhig() ? 0 : t * 30;
+    for (const rx of [-40, 40]) { c.fillStyle = '#16181d'; c.beginPath(); c.arc(rx, -11, 11, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#9aa0a8'; c.lineWidth = 2; c.beginPath(); c.arc(rx, -11, 5, dreh, dreh + Math.PI * 1.4); c.stroke(); }
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(18, -18, 6.5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#1a1d26'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(nr), 18, -17.5);
+    c.restore();
+  }
+  function rennpferd(c, x, y, s, t, k) {   // Rennpferd im Galopp (nach rechts) mit gebücktem Jockey: bunte Seide und Kappe, Satteldecke mit Nummer; (x, y) = Fußpunkt
+    const T = ruhig() ? 0 : t * 14 + k, b = Math.sin(T);
+    c.save(); c.translate(x, y - Math.abs(b) * 3 * s); c.scale(s, s);
+    const fell = ['#6b3a1e', '#3a2414', '#8a5a32', '#1e1a18'][k % 4], seide = ['#e63946', '#ffd93d', '#2a6cff', '#2e9e5b', '#e8467c', '#8a3ffc'][k % 6];
+    c.strokeStyle = fell; c.lineWidth = 6; c.lineCap = 'round';
+    for (const [lx, ph] of [[-24, 0], [-16, 2.2], [18, 1.1], [26, 3.0]]) { const w = Math.sin(T + ph) * 0.7; c.beginPath(); c.moveTo(lx, -38); c.lineTo(lx + Math.sin(w) * 20, -4 - Math.abs(Math.sin(w)) * 4); c.stroke(); }
+    c.fillStyle = fell; c.beginPath(); c.ellipse(0, -46, 36, 14, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.moveTo(24, -54); c.lineTo(46, -76); c.lineTo(56, -70); c.lineTo(36, -44); c.closePath(); c.fill();
+    c.beginPath(); c.ellipse(58, -70, 13, 6.5, 0.35, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#1a1210'; c.beginPath(); c.moveTo(-34, -50); c.quadraticCurveTo(-56, -50 + b * 4, -58, -36); c.lineTo(-36, -42); c.closePath(); c.fill(); c.fillRect(38, -80, 12, 4);
+    c.fillStyle = '#fff'; c.fillRect(-12, -58, 22, 14); c.fillStyle = '#1a1d26'; c.font = 'bold 10px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(k + 1), -1, -51);
+    c.strokeStyle = '#f4f1ea'; c.lineWidth = 4; c.beginPath(); c.moveTo(-2, -66); c.lineTo(6, -56); c.stroke();
+    c.fillStyle = seide; c.beginPath(); c.ellipse(4, -71, 14, 8, -0.3, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = seide; c.lineWidth = 4; c.beginPath(); c.moveTo(10, -71); c.lineTo(32, -66); c.stroke();
+    c.fillStyle = '#f1c9a5'; c.beginPath(); c.arc(18, -81, 6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = seide; c.beginPath(); c.arc(18, -83, 6.5, Math.PI, 0); c.fill(); c.fillRect(18, -84, 10, 2.5);
+    c.restore();
+  }
+  function note(c, x, y, px, farbe, a) { c.save(); c.globalAlpha *= a == null ? 1 : a; szText(c, '♪', x, y, px, farbe); c.restore(); }   // Musiknote (Szenen)
+  function gitarre(c, x, y, s, w, farbe) {   // Akustikgitarre (x, y = Mitte des Korpus, w = Drehung): Korpus als Acht, Schallloch, Steg, Hals mit Bünden, Kopf, Saiten
+    c.save(); c.translate(x, y); c.rotate(w || 0); c.scale(s, s);
+    c.fillStyle = farbe || '#d08a3a'; c.beginPath(); c.ellipse(0, 10, 22, 20, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.ellipse(0, -16, 17, 15, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#2a1a0a'; c.beginPath(); c.arc(0, -4, 7, 0, Math.PI * 2); c.fill(); c.fillRect(-8, 16, 16, 4);
+    c.fillStyle = '#5a3a1a'; c.fillRect(-3, -80, 6, 66); c.fillRect(-5, -96, 10, 18);
+    c.strokeStyle = '#d8d0b8'; c.lineWidth = 1; for (let k = 0; k < 7; k++) { c.beginPath(); c.moveTo(-3, -76 + k * 9); c.lineTo(3, -76 + k * 9); c.stroke(); }
+    c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 0.8; for (const dx of [-1.6, 0, 1.6]) { c.beginPath(); c.moveTo(dx, -80); c.lineTo(dx, 18); c.stroke(); }
+    c.restore();
+  }
+  function graceland(c, x, y, s) {   // Graceland (Memphis): zweistöckiges helles Steinhaus, Portikus mit vier weißen Säulen und Giebel, Fensterläden, zwei Löwen an der Treppe; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#e8dcc4'; c.fillRect(-120, -96, 240, 96); c.fillStyle = '#d6c8ac'; c.fillRect(-124, -100, 248, 6);
+    c.fillStyle = '#4a4f58'; c.beginPath(); c.moveTo(-128, -100); c.lineTo(-100, -122); c.lineTo(100, -122); c.lineTo(128, -100); c.fill();
+    for (const fx of [-100, -76, 64, 88]) for (const fy of [-84, -40]) { c.fillStyle = '#3a4a5a'; c.fillRect(fx, fy, 14, 22); c.fillStyle = '#2f5a3a'; c.fillRect(fx - 5, fy, 4, 22); c.fillRect(fx + 15, fy, 4, 22); }
+    c.fillStyle = '#f4f1ea'; c.beginPath(); c.moveTo(-54, -104); c.lineTo(0, -134); c.lineTo(54, -104); c.closePath(); c.fill(); c.fillRect(-54, -106, 108, 8);
+    c.fillStyle = '#f9f7f2'; for (let k = 0; k < 4; k++) c.fillRect(-46 + k * 28, -98, 9, 92);
+    c.fillStyle = '#5a3a22'; c.fillRect(-9, -36, 18, 30); c.fillStyle = '#3a4a5a'; c.fillRect(-26, -84, 14, 22); c.fillRect(12, -84, 14, 22);
+    c.fillStyle = '#cfc6b4'; c.fillRect(-60, -6, 120, 6); c.fillRect(-70, -2, 140, 4);
+    c.fillStyle = '#d8d0c0'; for (const lx of [-74, 74]) { c.fillRect(lx - 8, -14, 16, 14); c.beginPath(); c.ellipse(lx, -18, 9, 6, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.arc(lx + (lx < 0 ? 6 : -6), -26, 5, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function pfirsich(c, x, y, r, w) {   // Pfirsich: rund, gelb-orange mit roter Wange, Furche, Stiel mit Blatt
+    c.save(); c.translate(x, y); c.rotate(w || 0);
+    const g = c.createRadialGradient(-r * 0.3, -r * 0.3, r * 0.2, 0, 0, r); g.addColorStop(0, '#ffd08a'); g.addColorStop(0.6, '#ff9a5a'); g.addColorStop(1, '#e0503a');
+    c.fillStyle = g; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = 'rgba(160,50,30,.5)'; c.lineWidth = Math.max(1, r * 0.08); c.beginPath(); c.moveTo(0, -r); c.quadraticCurveTo(r * 0.35, 0, 0, r * 0.9); c.stroke();
+    c.fillStyle = '#4f8a3a'; c.beginPath(); c.ellipse(r * 0.35, -r * 1.05, r * 0.45, r * 0.18, -0.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#5a3a1a'; c.fillRect(-r * 0.05, -r * 1.15, r * 0.12, r * 0.25);
+    c.restore();
+  }
+  function pfirsichbaum(c, x, y, s, t, n) {   // Pfirsichbaum: kurzer Stamm, breite runde Krone mit n Früchten
+    const w = ruhig() ? 0 : Math.sin(t * 1.3 + x) * 1.5;
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#6a4630'; c.fillRect(-5, -36, 10, 36); c.beginPath(); c.moveTo(-4, -30); c.lineTo(-20, -52); c.lineTo(-14, -54); c.lineTo(2, -34); c.fill();
+    c.fillStyle = '#4f9a3a'; for (const [bx, by, r] of [[-26, -58, 22], [24, -60, 22], [0, -76, 26], [-6, -52, 20], [10, -50, 18]]) { c.beginPath(); c.arc(bx + w, by, r, 0, Math.PI * 2); c.fill(); }
+    for (let k = 0; k < (n == null ? 9 : n); k++) pfirsich(c, -36 + (k * 23) % 72 + w, -82 + (k * 17) % 44, 6.5);
+    c.restore();
+  }
+  function trompeter(c, x, y, s, k, t, inst) {   // Musiker einer Jazz-Brassband (läuft mit): inst = 'trompete' | 'posaune' | 'tuba' | 'trommel'
+    const sch = ruhig() ? 0 : Math.sin(t * 6 + k) * 0.6;
+    personKlein(c, x, y, s, k, { schritt: sch, arme: 0.25 });
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#1a1d26'; c.fillRect(-9, -67, 18, 4); c.fillRect(-6, -74, 12, 8);   // Kapelle-Mütze
+    c.fillStyle = '#f2c94c'; c.strokeStyle = '#f2c94c'; c.lineWidth = 3;
+    if (inst === 'tuba') { c.lineWidth = 5; c.beginPath(); c.arc(0, -40, 14, 0, Math.PI * 2); c.stroke(); c.beginPath(); c.moveTo(-6, -54); c.lineTo(-14, -76); c.lineTo(-24, -84); c.lineTo(-2, -80); c.closePath(); c.fill(); }
+    else if (inst === 'trommel') { c.fillStyle = '#f4f1ea'; c.fillRect(-12, -40, 24, 16); c.strokeStyle = '#c8283a'; c.lineWidth = 2; c.strokeRect(-12, -40, 24, 16); c.beginPath(); c.moveTo(-12, -40); c.lineTo(0, -24); c.lineTo(12, -40); c.stroke(); }
+    else { const L = inst === 'posaune' ? 34 : 20; c.beginPath(); c.moveTo(6, -56); c.lineTo(6 + L, -56 - L * 0.2); c.stroke(); c.beginPath(); c.moveTo(6 + L, -56 - L * 0.2); c.lineTo(14 + L, -63 - L * 0.2); c.lineTo(14 + L, -49 - L * 0.2); c.closePath(); c.fill(); if (inst === 'posaune') c.strokeRect(14, -54, 18, 6); }
+    c.restore();
+  }
+  function balkonHaus(c, x, y, w, h, farbe) {   // Haus im French Quarter (New Orleans): pastellfarbene Fassade, zwei Etagen mit schmiedeeisernem Balkon, hohe Fenster mit Läden; (x, y) = links unten
+    c.fillStyle = farbe; c.fillRect(x, y - h, w, h); c.fillStyle = 'rgba(0,0,0,.15)'; c.fillRect(x, y - h, w, 6);
+    for (let i = 0; i < 3; i++) for (const fy of [y - h + 18, y - h / 2 + 8]) { const fx = x + 12 + i * (w - 24) / 3; c.fillStyle = '#2a3a4a'; c.fillRect(fx, fy, 14, 30); c.fillStyle = '#2f6a4a'; c.fillRect(fx - 5, fy, 4, 30); c.fillRect(fx + 15, fy, 4, 30); }
+    c.strokeStyle = '#1a1d26'; c.lineWidth = 1.5; const by = y - h / 2 - 2;
+    c.fillStyle = '#1a1d26'; c.fillRect(x - 4, by, w + 8, 4);
+    c.beginPath(); for (let bx = x - 2; bx <= x + w + 2; bx += 6) { c.moveTo(bx, by); c.lineTo(bx, by - 16); } c.moveTo(x - 4, by - 16); c.lineTo(x + w + 4, by - 16); c.stroke();
+    c.beginPath(); for (let bx = x + 2; bx < x + w; bx += 12) { c.moveTo(bx + 6, by - 8); c.arc(bx + 3, by - 8, 3, 0, Math.PI * 2); } c.stroke();
+  }
+  function perlenkette(c, x, y, r, farbe) { c.strokeStyle = farbe; c.lineWidth = 3; c.setLineDash([3, 2]); c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.stroke(); c.setLineDash([]); }   // Mardi-Gras-Perlenkette
+  function saturnV(c, x, y, h) {   // Saturn V (Mondrakete): weiß mit schwarzen Feldern, drei Stufen, Apollo-Kapsel, Rettungsturm, Schrift „USA“, fünf Triebwerke; (x, y) = Fußpunkt Mitte, h = Höhe
+    const s = h / 300; c.save(); c.translate(x, y); c.scale(s, s);
+    const w = 14;
+    c.fillStyle = '#2a2d34'; for (const ex of [-10, -4, 4, 10]) { c.beginPath(); c.moveTo(ex - 3, -8); c.lineTo(ex + 3, -8); c.lineTo(ex + 5, 0); c.lineTo(ex - 5, 0); c.fill(); }
+    c.fillStyle = '#f4f4f2'; c.fillRect(-w, -112, w * 2, 104);
+    c.fillStyle = '#1a1d26'; c.beginPath(); c.moveTo(-w, -30); c.lineTo(-w - 6, -8); c.lineTo(-w, -8); c.fill(); c.beginPath(); c.moveTo(w, -30); c.lineTo(w + 6, -8); c.lineTo(w, -8); c.fill();
+    c.fillRect(-w, -112, w, 14); c.fillRect(0, -40, w, 28); c.fillRect(-w, -40, 7, 28);
+    c.fillStyle = '#c8283a'; c.font = 'bold 9px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; for (const [k, ch] of [[0, 'U'], [1, 'S'], [2, 'A']]) c.fillText(ch, 6, -88 + k * 11);
+    c.fillStyle = '#d8d8d4'; c.fillRect(-w, -120, w * 2, 8);
+    c.fillStyle = '#f4f4f2'; c.fillRect(-w, -190, w * 2, 70); c.fillStyle = '#1a1d26'; c.fillRect(-w, -190, w * 2, 3); c.fillRect(-w, -124, w * 2, 3);
+    c.fillStyle = '#f4f4f2'; c.beginPath(); c.moveTo(-w, -190); c.lineTo(-10, -202); c.lineTo(10, -202); c.lineTo(w, -190); c.fill();
+    c.fillRect(-10, -246, 20, 44); c.fillStyle = '#1a1d26'; c.fillRect(-10, -246, 10, 10); c.fillRect(0, -212, 10, 10);
+    c.fillStyle = '#e4e4e0'; c.fillRect(-10, -252, 20, 6);
+    c.fillStyle = '#f4f4f2'; c.beginPath(); c.moveTo(-10, -252); c.lineTo(-4, -272); c.lineTo(4, -272); c.lineTo(10, -252); c.fill();
+    c.strokeStyle = '#c8283a'; c.lineWidth = 2; c.beginPath(); c.moveTo(-3, -272); c.lineTo(0, -300); c.lineTo(3, -272); c.stroke(); c.fillStyle = '#c8283a'; c.fillRect(-2, -282, 4, 6);
+    c.restore();
+  }
+  function startturm(c, x, y, h) {   // Startturm (Gitterturm) neben der Rakete; (x, y) = Fußpunkt Mitte
+    c.fillStyle = '#7a7f88'; c.fillRect(x - 70, y - 10, 140, 10);
+    c.strokeStyle = '#c8283a'; c.lineWidth = 2; c.strokeRect(x - 9, y - h, 18, h - 10);
+    c.beginPath(); for (let yy = y - 10; yy > y - h; yy -= 16) { c.moveTo(x - 9, yy); c.lineTo(x + 9, yy - 16); c.moveTo(x + 9, yy); c.lineTo(x - 9, yy - 16); } c.stroke();
+    c.fillStyle = '#c8283a'; c.fillRect(x - 12, y - h - 6, 24, 6);
+  }
+  function rauchWolke(c, x, y, r, a, farbe) { c.fillStyle = farbe || `rgba(235,232,226,${a})`; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.arc(x + r * 0.8, y + r * 0.2, r * 0.75, 0, Math.PI * 2); c.arc(x - r * 0.8, y + r * 0.25, r * 0.7, 0, Math.PI * 2); c.fill(); }
+  function kanone(c, x, y, s, schuss, spiegel) {   // alte Kanone auf Holzlafette mit zwei Rädern, Rohr schräg nach rechts oben; schuss 0..1 = Mündungsfeuer + Rauch
+    c.save(); c.translate(x, y); c.scale(spiegel ? -s : s, s);
+    c.fillStyle = '#6a4630'; c.beginPath(); c.moveTo(-26, -4); c.lineTo(10, -16); c.lineTo(14, -10); c.lineTo(-24, 0); c.fill();
+    c.save(); c.translate(4, -18); c.rotate(-0.35 - (schuss > 0 && schuss < 0.3 ? 0.05 : 0)); c.fillStyle = '#2a2d34'; c.beginPath(); c.roundRect(-20, -6, 50, 12, 5); c.fill(); c.fillRect(28, -7, 5, 14);
+    if (schuss > 0 && schuss < 1) { const f = 1 - schuss; c.fillStyle = `rgba(255,200,60,${f})`; c.beginPath(); c.arc(40, 0, 10 + 14 * schuss, 0, Math.PI * 2); c.fill(); for (let k = 0; k < 3; k++) rauchWolke(c, 46 + schuss * 40 + k * 14, -schuss * 20 - k * 6, 8 + schuss * 14, 0.7 * f); }
+    c.restore();
+    c.fillStyle = '#5a3a22'; for (const rx of [-8]) { c.beginPath(); c.arc(rx, -8, 10, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#3a2414'; c.lineWidth = 2; c.stroke(); c.beginPath(); for (let k = 0; k < 4; k++) { const a = k * Math.PI / 4; c.moveTo(rx + Math.cos(a) * 9, -8 + Math.sin(a) * 9); c.lineTo(rx - Math.cos(a) * 9, -8 - Math.sin(a) * 9); } c.stroke(); }
+    c.restore();
+  }
+  function fortSumter(c, x, y, s) {   // Fort Sumter auf seiner Insel im Hafen von Charleston: fünfeckige Backsteinmauern mit Schießscharten, Fahne; (x, y) = Wasserlinie Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#c8b88a'; c.beginPath(); c.ellipse(0, 0, 110, 10, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#9a4a32'; c.beginPath(); c.moveTo(-92, 0); c.lineTo(-80, -46); c.lineTo(-20, -52); c.lineTo(40, -50); c.lineTo(86, -42); c.lineTo(94, 0); c.fill();
+    c.fillStyle = '#b85a3c'; c.beginPath(); c.moveTo(-80, -46); c.lineTo(-20, -52); c.lineTo(-20, 0); c.lineTo(-92, 0); c.fill();
+    c.fillStyle = '#5a2a1a'; for (let k = 0; k < 9; k++) { c.fillRect(-82 + k * 18, -32, 7, 6); c.fillRect(-82 + k * 18, -16, 7, 6); }
+    c.fillStyle = '#3a3d44'; c.fillRect(-1, -96, 2, 46);
+    c.fillStyle = '#c8283a'; c.fillRect(1, -96, 26, 16); c.fillStyle = '#fff'; for (let k = 0; k < 3; k++) c.fillRect(1, -93 + k * 5, 26, 2); c.fillStyle = '#1d3f8f'; c.fillRect(1, -96, 11, 9);
+    c.restore();
+  }
+  function wrightFlyer(c, x, y, s, t, prop) {   // Wright Flyer (1903, Seitenansicht nach rechts): zwei lange Tragflächen mit Streben, Höhenruder vorn, Doppelruder hinten, Pilot liegt auf der unteren Fläche, zwei Druckpropeller; (x, y) = Mitte der unteren Fläche
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const kufe = '#8a6a44';
+    c.strokeStyle = kufe; c.lineWidth = 2; c.beginPath(); c.moveTo(-40, 8); c.lineTo(70, 8); c.quadraticCurveTo(84, 6, 84, -6); c.moveTo(-20, 0); c.lineTo(-20, 8); c.moveTo(30, 0); c.lineTo(30, 8); c.stroke();
+    c.strokeStyle = '#6a5a44'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(40, -4); c.lineTo(84, -10); c.moveTo(40, -26); c.lineTo(84, -12); c.moveTo(-60, -4); c.lineTo(-96, -12); c.moveTo(-60, -26); c.lineTo(-96, -18); c.stroke();
+    c.fillStyle = '#f2ead4'; c.fillRect(-60, -3, 100, 5); c.fillRect(-60, -31, 100, 5);
+    c.strokeStyle = '#b0a080'; c.lineWidth = 1; for (let k = 0; k < 6; k++) { const sx = -56 + k * 19; c.beginPath(); c.moveTo(sx, -26); c.lineTo(sx, -3); c.stroke(); }
+    c.beginPath(); for (let k = 0; k < 5; k++) { const sx = -56 + k * 19; c.moveTo(sx, -26); c.lineTo(sx + 19, -3); } c.stroke();
+    c.fillStyle = '#f2ead4'; c.save(); c.translate(84, -12); c.rotate(-0.08); c.fillRect(-2, -3, 22, 4); c.fillRect(-2, 5, 22, 4); c.restore();
+    c.fillRect(-100, -24, 6, 18); c.fillRect(-92, -24, 6, 18);
+    c.fillStyle = '#2b2f3a'; c.beginPath(); c.ellipse(0, -7, 16, 4, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#f1c9a5'; c.beginPath(); c.arc(18, -9, 4.5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#3a3d44'; c.fillRect(14, -14, 9, 3);
+    c.fillStyle = '#5a5f6a'; c.fillRect(-14, -16, 10, 9);
+    const p = ruhig() ? 0.5 : Math.abs(Math.sin((prop || 0) * 40));
+    c.fillStyle = 'rgba(110,80,50,.55)'; for (const py of [-22, -9]) { c.beginPath(); c.ellipse(-66, py, 3, 4 + p * 8, 0, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function mountVernon(c, x, y, s) {   // Mount Vernon (Haus von George Washington, Virginia): langes weißes Holzhaus, rotes Dach mit Gauben, Kuppeltürmchen, Säulen-Veranda über die ganze Länge; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#f6f3ea'; c.fillRect(-150, -76, 300, 76); c.fillRect(-196, -40, 46, 40); c.fillRect(150, -40, 46, 40);
+    c.fillStyle = '#b8443a'; c.beginPath(); c.moveTo(-158, -76); c.lineTo(-136, -104); c.lineTo(136, -104); c.lineTo(158, -76); c.fill(); c.fillRect(-200, -46, 52, 6); c.fillRect(148, -46, 52, 6);
+    c.fillStyle = '#f6f3ea'; for (const gx of [-60, 0, 60]) { c.fillRect(gx - 8, -100, 16, 12); c.beginPath(); c.moveTo(gx - 10, -100); c.lineTo(gx, -108); c.lineTo(gx + 10, -100); c.fill(); }
+    c.fillRect(-12, -128, 24, 24); c.fillStyle = '#4a7a5a'; c.beginPath(); c.ellipse(0, -128, 14, 10, 0, Math.PI, 0); c.fill(); c.fillStyle = '#3a3d44'; c.fillRect(-1, -150, 2, 14);
+    c.fillStyle = '#3a4a5a'; for (let k = 0; k < 9; k++) { c.fillRect(-138 + k * 32, -66, 12, 16); c.fillRect(-138 + k * 32, -38, 12, 18); }
+    c.fillStyle = '#e8e4d8'; c.fillRect(-150, -6, 300, 6); c.fillStyle = '#ffffff'; for (let k = 0; k < 9; k++) c.fillRect(-146 + k * 36, -76, 5, 70);
+    c.restore();
+  }
+  function appalachen(c, t, schichten) {   // sanfte, bewaldete Bergketten hintereinander (Dunst nach hinten), schichten = [[y, farbe, amplitude], …]
+    for (const [y0, farbe, amp, ph] of schichten) {
+      c.fillStyle = farbe; c.beginPath(); c.moveTo(0, H);
+      for (let x = 0; x <= SZ_W; x += 10) c.lineTo(x, y0 - amp * (0.6 * Math.sin(x * 0.012 + ph) + 0.4 * Math.sin(x * 0.031 + ph * 2) ));
+      c.lineTo(SZ_W, H); c.closePath(); c.fill();
+    }
+  }
+  function bogenbruecke(c, x0, x1, yDeck, ySpann, yFuss) {   // Stahl-Bogenbrücke über eine Schlucht (New River Gorge): rostbrauner Bogen, Stützen zum Fahrbahnträger, Fachwerk-Deck
+    const m = (x0 + x1) / 2, hw = (x1 - x0) / 2, bogY = (x) => yFuss - (yFuss - ySpann) * (1 - Math.pow((x - m) / hw, 2));
+    c.strokeStyle = '#9a5a32'; c.lineWidth = 7; c.beginPath(); for (let x = x0; x <= x1; x += 6) { const y = bogY(x); if (x === x0) c.moveTo(x, y); else c.lineTo(x, y); } c.stroke();
+    c.lineWidth = 3; c.beginPath(); for (let x = x0; x <= x1; x += 6) { const y = bogY(x) + 10; if (x === x0) c.moveTo(x, y); else c.lineTo(x, y); } c.stroke();
+    c.lineWidth = 3; c.beginPath(); for (let x = x0 + 16; x < x1; x += 24) { c.moveTo(x, yDeck); c.lineTo(x, bogY(x)); } c.stroke();
+    c.fillStyle = '#7a4a2a'; c.fillRect(x0 - 60, yDeck - 4, x1 - x0 + 120, 12);
+    c.strokeStyle = '#9a5a32'; c.lineWidth = 1.5; c.beginPath(); for (let x = x0 - 60; x < x1 + 60; x += 12) { c.moveTo(x, yDeck + 8); c.lineTo(x + 6, yDeck - 4); c.lineTo(x + 12, yDeck + 8); } c.stroke();
+    c.fillStyle = '#5a5f6a'; c.fillRect(x0 - 60, yDeck - 7, x1 - x0 + 120, 3);
+  }
+  function sternenbanner(c, x, y, w, h, t, n = 15) {   // US-Flagge mit n Streifen (1814: 15 Sterne, 15 Streifen), weht rechts an der Stangenspitze (x, y)
+    const T = ruhig() ? 0 : t, k = 8, welle = (i) => Math.sin(T * 4 - i * 0.8) * h * 0.12 * i / k;
+    c.save(); c.translate(x, y); c.beginPath(); c.moveTo(0, 0);
+    for (let i = 1; i <= k; i++) c.lineTo(i * w / k, welle(i));
+    for (let i = k; i >= 0; i--) c.lineTo(i * w / k, h + welle(i));
+    c.closePath(); c.clip();
+    for (let i = 0; i < n; i++) { c.fillStyle = i % 2 ? '#f4f1ea' : '#c8283a'; c.fillRect(-1, -h * 0.2 + i * h * 1.4 / n, w + 2, h * 1.4 / n + 0.5); }
+    c.fillStyle = '#1d3f8f'; c.fillRect(-1, -h * 0.2, w * 0.42, h * 0.2 + h * 8 / n);
+    c.fillStyle = '#fff'; for (let i = 0; i < 15; i++) { c.beginPath(); c.arc(w * 0.05 + (i % 5) * w * 0.08, h * 0.08 + Math.floor(i / 5) * h * 0.14, Math.max(1, h * 0.025), 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function fortMcHenry(c, x, y, s) {   // Fort McHenry (Baltimore): flacher Stern aus Backsteinwällen mit grünen Böschungen, Fahnenmast in der Mitte; (x, y) = Wasserlinie Mitte, gibt die Mastspitze zurück
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#6a9a4a'; c.beginPath(); c.ellipse(0, 0, 150, 14, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#a04a32'; c.beginPath(); c.moveTo(-130, -2); c.lineTo(-96, -22); c.lineTo(-60, -14); c.lineTo(-30, -34); c.lineTo(30, -34); c.lineTo(60, -14); c.lineTo(96, -22); c.lineTo(130, -2); c.fill();
+    c.fillStyle = '#7aa85a'; c.fillRect(-120, -6, 240, 6);
+    c.fillStyle = '#c8b88a'; c.fillRect(-26, -40, 52, 6);
+    c.fillStyle = '#3a3d44'; c.fillRect(-1.5, -150, 3, 112);
+    c.restore();
+    return [x, y - 150 * s];
+  }
+  function gluehbirne(c, x, y, s, an, t) {   // Glühbirne auf einem Holzsockel (Edison): Glaskolben, Glühfaden; an 0..1 = Leuchten mit Strahlen
+    c.save(); c.translate(x, y); c.scale(s, s);
+    if (an > 0) { const g = c.createRadialGradient(0, -46, 4, 0, -46, 110); g.addColorStop(0, `rgba(255,230,140,${0.85 * an})`); g.addColorStop(1, 'rgba(255,230,140,0)'); c.fillStyle = g; c.beginPath(); c.arc(0, -46, 110, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = `rgba(255,220,100,${an})`; c.lineWidth = 3; for (let k = 0; k < 10; k++) { const a = k * Math.PI / 5 + (ruhig() ? 0 : t * 0.4); c.beginPath(); c.moveTo(Math.cos(a) * 40, -46 + Math.sin(a) * 40); c.lineTo(Math.cos(a) * 56, -46 + Math.sin(a) * 56); c.stroke(); } }
+    c.fillStyle = '#6a4630'; c.fillRect(-26, -6, 52, 6); c.fillStyle = '#9aa0a8'; c.fillRect(-9, -22, 18, 16); c.fillStyle = '#7a7f88'; for (let k = 0; k < 3; k++) c.fillRect(-9, -20 + k * 5, 18, 2);
+    c.fillStyle = an > 0 ? `rgba(255,245,200,${0.5 + 0.5 * an})` : 'rgba(220,235,245,.55)'; c.beginPath(); c.moveTo(-8, -22); c.bezierCurveTo(-10, -32, -26, -40, -26, -56); c.arc(0, -56, 26, Math.PI, 0); c.bezierCurveTo(26, -40, 10, -32, 8, -22); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 1.5; c.stroke();
+    c.strokeStyle = an > 0 ? '#ff9a1a' : '#5a4a3a'; c.lineWidth = 2; c.beginPath(); c.moveTo(-4, -24); c.lineTo(-6, -52); c.quadraticCurveTo(0, -62, 6, -52); c.lineTo(4, -24); c.stroke();
+    c.restore();
+  }
+  function wandtelefon(c, x, y, s, klingel) {   // altes Wandtelefon (1878): Holzkasten, zwei Glocken oben (wackeln, wenn klingel), Kurbel, Hörer am Haken, Sprechtrichter; (x, y) = Mitte des Kastens
+    const z = klingel ? (ruhig() ? 0 : Math.sin(klingel * 60) * 3) : 0;
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#7a4a2a'; c.beginPath(); c.roundRect(-34, -60, 68, 120, 6); c.fill(); c.fillStyle = '#9a6a3a'; c.beginPath(); c.roundRect(-28, -54, 56, 108, 4); c.fill();
+    c.fillStyle = '#c8a040'; for (const bx of [-14, 14]) { c.beginPath(); c.arc(bx + z, -40, 11, Math.PI, 0); c.fill(); c.fillRect(bx - 11 + z, -40, 22, 4); }
+    c.strokeStyle = '#2a2d34'; c.lineWidth = 3; c.beginPath(); c.moveTo(34, 0); c.lineTo(46, 0); c.lineTo(46, 14); c.stroke(); c.fillStyle = '#2a2d34'; c.beginPath(); c.arc(46, 16, 4, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#1a1d26'; c.beginPath(); c.moveTo(-8, 4); c.lineTo(8, 4); c.lineTo(14, 22); c.lineTo(-14, 22); c.closePath(); c.fill();
+    c.fillRect(-48, -20, 10, 26); c.beginPath(); c.arc(-43, -22, 8, Math.PI, 0); c.fill(); c.strokeStyle = '#1a1d26'; c.lineWidth = 2; c.beginPath(); c.moveTo(-43, 6); c.quadraticCurveTo(-46, 40, -28, 44); c.stroke();
+    if (klingel) { c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 2; for (let k = 1; k <= 3; k++) { c.beginPath(); c.arc(0, -44, 24 + k * 9, Math.PI * 1.15, Math.PI * 1.85); c.stroke(); } }
+    c.restore();
+  }
+  function pkw(c, x, y, s, farbe, t) {   // kleines Auto (fährt nach rechts): Karosserie, Fenster, drehende Räder, Scheinwerfer; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = farbe; c.beginPath(); c.roundRect(-42, -26, 84, 18, 6); c.fill(); c.beginPath(); c.moveTo(-26, -26); c.quadraticCurveTo(-20, -42, -6, -42); c.lineTo(14, -42); c.quadraticCurveTo(24, -42, 30, -26); c.closePath(); c.fill();
+    c.fillStyle = '#bfe3fa'; c.beginPath(); c.moveTo(-20, -27); c.quadraticCurveTo(-16, -39, -6, -39); c.lineTo(2, -39); c.lineTo(2, -27); c.closePath(); c.fill(); c.beginPath(); c.moveTo(6, -39); c.lineTo(14, -39); c.quadraticCurveTo(21, -39, 25, -27); c.lineTo(6, -27); c.closePath(); c.fill();
+    c.fillStyle = '#ffe9a0'; c.fillRect(38, -22, 5, 5); c.fillStyle = '#e63946'; c.fillRect(-43, -22, 4, 5);
+    const r = ruhig() ? 0 : t * 12; for (const rx of [-24, 24]) { c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(rx, -7, 8, 0, Math.PI * 2); c.fill(); c.fillStyle = '#aaa'; c.beginPath(); c.arc(rx, -7, 3.5, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#1a1a1a'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(rx + Math.cos(r) * 3.5, -7 + Math.sin(r) * 3.5); c.lineTo(rx - Math.cos(r) * 3.5, -7 - Math.sin(r) * 3.5); c.stroke(); }
+    c.restore();
+  }
+  function ahorn(c, x, y, s) {   // kahler Zuckerahorn im Spätwinter (Saftzeit): dicker grauer Stamm, verzweigte Äste; (x, y) = Fußpunkt
+    c.save(); c.translate(x, y); c.scale(s, s); c.strokeStyle = '#6a625a'; c.lineCap = 'round';
+    c.fillStyle = '#6a625a'; c.beginPath(); c.moveTo(-12, 0); c.lineTo(-8, -150); c.lineTo(8, -150); c.lineTo(12, 0); c.fill();
+    const ast = (x0, y0, a, l, d) => { if (d > 3) return; const x1 = x0 + Math.cos(a) * l, y1 = y0 + Math.sin(a) * l; c.lineWidth = 7 - d * 1.6; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); ast(x1, y1, a - 0.45, l * 0.72, d + 1); ast(x1, y1, a + 0.4, l * 0.7, d + 1); };
+    ast(0, -150, -Math.PI / 2 - 0.5, 46, 0); ast(0, -150, -Math.PI / 2 + 0.5, 46, 0); ast(0, -110, -Math.PI / 2 - 1.0, 40, 1); ast(0, -100, -Math.PI / 2 + 1.0, 40, 1);
+    c.restore();
+  }
+  function saftEimer(c, x, y, s, f, t, tropfen = true) {   // Ahornsaft-Eimer am Zapfhahn (Metall mit Spitzdach-Deckel), f = 0..1 Füllung, Tropfen fallen; (x, y) = Zapfstelle am Stamm
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#9aa0a8'; c.fillRect(0, -2, 10, 4);
+    c.fillStyle = '#c8ccd2'; c.beginPath(); c.moveTo(-4, 2); c.lineTo(26, 2); c.lineTo(23, 32); c.lineTo(-1, 32); c.closePath(); c.fill();
+    c.fillStyle = '#9aa0a8'; c.beginPath(); c.moveTo(-8, 1); c.lineTo(11, -10); c.lineTo(30, 1); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.5)'; c.fillRect(2, 6, 3, 22);
+    if (tropfen && !ruhig()) { const d = (t * 1.6) % 1; c.fillStyle = '#d8eefa'; c.beginPath(); c.arc(9, 2 + d * 8, 1.8, 0, Math.PI * 2); c.fill(); }
+    if (f > 0) { c.fillStyle = 'rgba(200,225,240,.7)'; c.fillRect(-1, 32 - 28 * f, 24, 3); }
+    c.restore();
+  }
+  function sirupFlasche(c, x, y, s, f) {   // Glasflasche mit bernsteinfarbenem Ahornsirup (f = 0..1 Füllung), Ahornblatt-Etikett; (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = 'rgba(230,240,245,.55)'; c.beginPath(); c.moveTo(-22, 0); c.lineTo(-22, -60); c.quadraticCurveTo(-22, -74, -8, -80); c.lineTo(-8, -96); c.lineTo(8, -96); c.lineTo(8, -80); c.quadraticCurveTo(22, -74, 22, -60); c.lineTo(22, 0); c.closePath(); c.fill();
+    c.save(); c.clip(); const g = c.createLinearGradient(0, -96, 0, 0); g.addColorStop(0, '#d8862a'); g.addColorStop(1, '#8a4a10'); c.fillStyle = g; c.fillRect(-24, -96 * f, 48, 96 * f); c.restore();
+    c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 2; c.stroke();
+    c.fillStyle = '#c8283a'; c.fillRect(-9, -104, 18, 9);
+    c.fillStyle = '#f4ead4'; c.fillRect(-18, -50, 36, 26); c.fillStyle = '#c8283a'; c.beginPath(); for (let k = 0; k < 5; k++) { const a = -Math.PI / 2 + (k - 2) * 0.6, r = k % 2 ? 7 : 10; c.lineTo(Math.cos(a) * r, -36 + Math.sin(a) * r); } c.lineTo(3, -32); c.lineTo(-3, -32); c.closePath(); c.fill(); c.fillRect(-1, -32, 2, 6);
+    c.restore();
+  }
+  function hummer(c, x, y, s, t, w) {   // Hummer (Maine, von oben, Kopf nach rechts): roter Panzer, Schwanz aus Segmenten mit Fächer, zwei große Scheren (öffnen/schließen), lange Fühler, Beine; w = Drehung
+    const z = ruhig() ? 0.2 : (Math.sin(t * 3) + 1) / 2 * 0.4;
+    c.save(); c.translate(x, y); c.rotate(w || 0); c.scale(s, s);
+    c.strokeStyle = '#a82a1a'; c.lineWidth = 2.5; c.lineCap = 'round';
+    c.beginPath(); for (const sgn of [-1, 1]) for (let k = 0; k < 4; k++) { c.moveTo(-4 + k * 8, sgn * 10); c.lineTo(-8 + k * 8, sgn * (22 + k)); } c.stroke();
+    c.lineWidth = 1.5; c.beginPath(); for (const sgn of [-1, 1]) { c.moveTo(34, sgn * 4); c.quadraticCurveTo(70, sgn * 30, 40, sgn * 60); } c.stroke();
+    c.fillStyle = '#d0402a';
+    for (let k = 0; k < 5; k++) { c.beginPath(); c.ellipse(-16 - k * 11, 0, 8, 12 - k, 0, 0, Math.PI * 2); c.fill(); }
+    c.beginPath(); c.moveTo(-68, 0); c.lineTo(-84, -14); c.lineTo(-88, 0); c.lineTo(-84, 14); c.closePath(); c.fill();
+    c.beginPath(); c.ellipse(10, 0, 26, 14, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#1a1d26'; c.beginPath(); c.arc(32, -5, 2, 0, Math.PI * 2); c.arc(32, 5, 2, 0, Math.PI * 2); c.fill();
+    for (const sgn of [-1, 1]) {
+      c.strokeStyle = '#d0402a'; c.lineWidth = 6; c.beginPath(); c.moveTo(24, sgn * 10); c.lineTo(36, sgn * 26); c.lineTo(52, sgn * 30); c.stroke();
+      c.save(); c.translate(54, sgn * 32); c.fillStyle = '#c03822';
+      c.beginPath(); c.ellipse(10, 0, 16, 10, sgn * 0.1, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.moveTo(18, sgn * -3); c.lineTo(42, sgn * (-6 - z * 14)); c.lineTo(22, sgn * 4); c.closePath(); c.fill();
+      c.beginPath(); c.moveTo(18, sgn * 4); c.lineTo(40, sgn * (8 + z * 6)); c.lineTo(20, sgn * 9); c.closePath(); c.fill();
+      c.restore();
+    }
+    c.fillStyle = 'rgba(255,255,255,.2)'; c.beginPath(); c.ellipse(6, -5, 14, 4, 0, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function leuchtturm(c, x, y, h, t, licht) {   // Leuchtturm an der Küste von Maine: weißer, schlanker Turm, schwarze Laterne mit Galerie, Wärterhaus mit rotem Dach; licht 0..1 = Lichtstrahl dreht; (x, y) = Fußpunkt Mitte
+    const s = h / 200; c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#f4f2ea'; c.fillRect(20, -40, 70, 40); c.fillStyle = '#b8322a'; c.beginPath(); c.moveTo(14, -40); c.lineTo(55, -64); c.lineTo(96, -40); c.fill(); c.fillStyle = '#3a4a5a'; c.fillRect(34, -28, 10, 14); c.fillRect(64, -28, 10, 14);
+    c.fillStyle = '#f8f6f0'; c.beginPath(); c.moveTo(-22, 0); c.lineTo(-13, -160); c.lineTo(13, -160); c.lineTo(22, 0); c.fill(); c.fillStyle = 'rgba(0,0,0,.08)'; c.beginPath(); c.moveTo(6, 0); c.lineTo(5, -160); c.lineTo(13, -160); c.lineTo(22, 0); c.fill();
+    c.fillStyle = '#1a1d26'; c.fillRect(-20, -166, 40, 6); c.fillRect(-12, -192, 24, 4); c.beginPath(); c.moveTo(-14, -192); c.lineTo(0, -204); c.lineTo(14, -192); c.fill(); c.fillRect(-1, -210, 2, 8);
+    c.fillStyle = licht > 0 ? '#ffe9a0' : '#9ab0c0'; c.fillRect(-10, -188, 20, 22); c.strokeStyle = '#1a1d26'; c.lineWidth = 1.5; c.strokeRect(-10, -188, 20, 22);
+    c.restore();
+    if (licht > 0) { const a = (ruhig() ? 0.3 : t * 1.6) % (Math.PI * 2), ly = y - 177 * s, len = 520; c.save(); c.globalAlpha = 0.35 * licht; c.fillStyle = '#fff3c0'; c.beginPath(); c.moveTo(x, ly); c.lineTo(x + Math.cos(a) * len, ly + Math.sin(a) * len * 0.25 - 30); c.lineTo(x + Math.cos(a) * len, ly + Math.sin(a) * len * 0.25 + 30); c.closePath(); c.fill(); c.restore(); }
+  }
+  function hummerKorb(c, x, y, s) {   // Hummerfalle (Drahtkorb mit Netz), (x, y) = Fußpunkt Mitte
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = 'rgba(40,90,60,.85)'; c.beginPath(); c.roundRect(-30, -30, 60, 30, [10, 10, 2, 2]); c.fill();
+    c.strokeStyle = '#d8d0a8'; c.lineWidth = 1; c.beginPath(); for (let k = -24; k < 30; k += 8) { c.moveTo(k, -30); c.lineTo(k, 0); } for (let k = -24; k < 0; k += 8) { c.moveTo(-30, k); c.lineTo(30, k); } c.stroke();
+    c.restore();
+  }
+  function boje(c, x, y, s, farben, t) {   // Hummerboje (bunt gestreift), schaukelt; (x, y) = Wasserlinie
+    const w = ruhig() ? 0 : Math.sin(t * 2 + x) * 0.2;
+    c.save(); c.translate(x, y); c.rotate(w); c.scale(s, s);
+    farben.forEach((f, i) => { c.fillStyle = f; c.beginPath(); c.roundRect(-6, -30 + i * 10, 12, 10, i === 0 ? [6, 6, 0, 0] : i === farben.length - 1 ? [0, 0, 6, 6] : 0); c.fill(); });
+    c.fillStyle = '#5a3a22'; c.fillRect(-1, -40, 2, 10);
     c.restore();
   }
   function szBoden(c, farbe, y0) { c.fillStyle = farbe; c.fillRect(-600, y0, 2400, 800); }
@@ -9901,6 +10216,486 @@
         });
         if (n) szZaehler(c, n + (n === 1 ? ' president' : ' presidents'), '#ffd93d', 14, 220);
         for (let i = 0; i < 12; i++) personKlein(c, 30 + i * 53, 392 - (i % 2) * 8, 0.6, i, { arme: t > 6 ? Math.abs(Math.sin(t * 3 + i)) : 0 });
+      } },
+    IN: { dauer: 12, klaenge: [[0.2, 'jubel'], [0.9, 'rennwagen'], [2.2, 'rennwagen'], [3.5, 'rennwagen'], [4.8, 'rennwagen'], [6.1, 'rennwagen'], [7.4, 'rennwagen'], [8.7, 'rennwagen'], [10.1, 'jubel'], [10.3, 'fanfare']],
+      zeichne(c, t) {   // Indianapolis 500: volle Tribüne, IndyCars rasen an der Mauer vorbei; Zähler: Runde bis 200, Kilometer bis 800 (= 500 miles), am Ende die Zielflagge
+        szHimmel(c, '#4f8fe0', '#e6f0fa'); szWolken(c, t, [[30, 70], [430, 80]]);
+        c.fillStyle = '#5a5f6a'; c.fillRect(0, 100, SZ_W, 10); c.fillStyle = '#8a8f9a'; c.fillRect(0, 110, SZ_W, 122);
+        c.fillStyle = '#1d2a50'; c.beginPath(); c.roundRect(200, 82, 240, 26, 6); c.fill(); c.fillStyle = '#ffd93d'; c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('INDIANAPOLIS 500', 320, 96);
+        const naehe = (x) => { let d = 1e9; for (let i = 0; i < 3; i++) { const cx = ((t * 900 + i * 400) % 1200) - 250; d = Math.min(d, Math.abs(cx - x)); } return d; };
+        for (let r = 0; r < 7; r++) for (let x = 6 + (r % 2) * 6; x < SZ_W; x += 13) {
+          const y = 124 + r * 15, hop = !ruhig() && t > 0.6 && naehe(x) < 90 ? -3 : 0;
+          c.fillStyle = ['#e63946', '#2a6cff', '#ffd93d', '#2e9e5b', '#f4f1ea', '#ff7a1a'][(x * 7 + r * 3) % 6]; c.fillRect(x - 4, y + 4 + hop, 8, 8);
+          c.fillStyle = ['#f1c9a5', '#8d5a3b', '#d9a070', '#f7d7c0'][(x + r) % 4]; c.beginPath(); c.arc(x, y + hop, 4, 0, Math.PI * 2); c.fill();
+        }
+        c.fillStyle = '#f4f4f2'; c.fillRect(0, 232, SZ_W, 18); c.fillStyle = '#c8283a'; c.fillRect(0, 244, SZ_W, 4);
+        c.fillStyle = '#4a4d55'; c.fillRect(0, 250, SZ_W, 100); c.fillStyle = '#5a9a4a'; c.fillRect(0, 350, SZ_W, H);
+        c.fillStyle = 'rgba(255,255,255,.5)'; for (let x = (-t * 300) % 80; x < SZ_W; x += 80) c.fillRect(x, 300, 40, 3);
+        if (t > 0.6) for (let i = 0; i < 3; i++) {
+          const x = ((t * 900 + i * 400) % 1200) - 250, y = i === 1 ? 292 : 336;
+          c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 2; for (let k = 0; k < 3; k++) { c.beginPath(); c.moveTo(x - 80 - k * 10, y - 12 - k * 9); c.lineTo(x - 170 - k * 20, y - 12 - k * 9); c.stroke(); }
+          indyAuto(c, x, y, i === 1 ? 0.9 : 1.05, ['#e63946', '#2a6cff', '#ffd93d'][i], [3, 14, 27][i], t);
+        }
+        const f = Math.min(1, Math.max(0, (t - 0.8) / 9.2)), runde = Math.round(200 * f);
+        szZaehler(c, `Lap ${runde} / 200`, '#ffd93d', 12, 220); if (t <= 9.9) szText(c, `${Math.round(800 * f)} km`, 320, 68, 18);
+        if (t > 9.9) { zielflagge(c, 520, 150, 70, 44, t); personKlein(c, 518, 232, 0.9, 6, { arme: 1 }); szText(c, '500 miles ≈ 800 km', 320, 68, 18, '#ffd93d'); }
+      } },
+    KY: { dauer: 12, klaenge: [[0.3, 'jubel'], [0.6, 'hufe'], [1.8, 'hufe'], [3.0, 'hufe'], [4.2, 'jubel'], [6.2, 'wind'], [7.0, 'schritte'], [9.0, 'schritte'], [10.6, 'staunen']],
+      zeichne(c, t) {   // erst das Kentucky Derby: Tribüne mit den zwei weißen Spitztürmen, Zuschauer mit bunten Derby-Hüten, Rennpferde galoppieren; dann Mammoth Cave im Schnitt: ein Lichtweg läuft durch die Gänge, Zähler bis 680 km
+        if (t < 5.6) {
+          szHimmel(c, '#5aa0ea', '#eaf4fb'); szWolken(c, t, [[40, 60], [460, 40]]);
+          c.fillStyle = '#f4f1ea'; c.fillRect(40, 150, 560, 96); c.fillStyle = '#2f5a3a'; c.fillRect(40, 146, 560, 8);
+          for (const sx of [280, 360]) { c.fillStyle = '#f8f6f0'; c.fillRect(sx - 14, 104, 28, 46); c.beginPath(); c.moveTo(sx - 16, 106); c.lineTo(sx, 40); c.lineTo(sx + 16, 106); c.fill(); c.fillStyle = '#2f5a3a'; c.fillRect(sx - 14, 118, 28, 4); c.fillStyle = '#3a4a5a'; c.fillRect(sx - 4, 126, 8, 14); }
+          for (let r = 0; r < 5; r++) for (let x = 54 + (r % 2) * 8; x < 590; x += 17) {
+            const y = 168 + r * 16; c.fillStyle = ['#f1c9a5', '#8d5a3b', '#d9a070', '#f7d7c0'][(x + r) % 4]; c.beginPath(); c.arc(x, y, 4, 0, Math.PI * 2); c.fill();
+            c.fillStyle = ['#e8467c', '#ffd93d', '#8a3ffc', '#2a6cff', '#ff7a1a', '#f4f4f2'][(x * 3 + r) % 6]; c.beginPath(); c.ellipse(x, y - 4, 8, 2.5, 0, 0, Math.PI * 2); c.fill(); c.fillRect(x - 3, y - 8, 6, 4);
+          }
+          c.fillStyle = '#6aa84a'; c.fillRect(0, 246, SZ_W, 18); c.fillStyle = '#b07a4a'; c.fillRect(0, 264, SZ_W, 90); c.fillStyle = '#6aa84a'; c.fillRect(0, 354, SZ_W, H);
+          c.fillStyle = 'rgba(90,50,20,.25)'; for (let k = 0; k < 30; k++) c.fillRect((k * 97) % SZ_W, 272 + (k * 31) % 76, 10, 2);
+          c.fillStyle = '#fff'; c.fillRect(0, 258, SZ_W, 4); for (let x = 10; x < SZ_W; x += 40) c.fillRect(x, 258, 3, 12);
+          for (let i = 3; i >= 0; i--) { const x = lerp(-120, 720, (t - 0.2 - i * 0.18) / 5.0) + (i % 2) * 30, y = 296 + i * 16; rennpferd(c, x, y, 0.95, t, i); }
+          c.fillStyle = '#fff'; c.fillRect(0, 352, SZ_W, 4); for (let x = 30; x < SZ_W; x += 40) c.fillRect(x, 352, 3, 14);
+          if (t > 0.5) szZaehler(c, 'Kentucky Derby', '#ffd93d', 12, 220);
+        } else {
+          const g = c.createLinearGradient(0, 60, 0, H); g.addColorStop(0, '#3a2c20'); g.addColorStop(1, '#140e0a'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, H);
+          szHimmel(c, '#5aa0ea', '#cfe6f6'); c.save(); c.beginPath(); c.rect(0, 60, SZ_W, H); c.clip(); c.fillStyle = g; c.fillRect(0, 60, SZ_W, H); c.restore();
+          c.fillStyle = '#5f9a4a'; c.fillRect(0, 56, SZ_W, 8); for (const tx of [30, 200, 250, 420, 560, 610]) laubbaum(c, tx, 60, 0.6, t);
+          c.fillStyle = '#140e0a'; c.beginPath(); c.ellipse(80, 64, 18, 8, 0, 0, Math.PI * 2); c.fill();
+          const WEG = [[80, 64], [92, 110], [160, 132], [240, 120], [300, 160], [380, 148], [450, 188], [530, 176], [586, 220], [540, 268], [460, 256], [380, 290], [300, 268], [220, 300], [140, 284], [80, 318]];
+          const AESTE = [[[160, 132], [150, 190], [210, 220]], [[380, 148], [420, 100], [500, 96]], [[460, 256], [470, 320]], [[300, 268], [280, 220], [220, 220]]];
+          c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = '#5a4634'; c.lineWidth = 20;
+          for (const pfad of [WEG, ...AESTE]) { c.beginPath(); pfad.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.stroke(); }
+          c.fillStyle = '#c8b8a0'; for (let k = 0; k < WEG.length - 1; k++) { const [x, y] = WEG[k]; c.beginPath(); c.moveTo(x - 4, y - 9); c.lineTo(x, y - 1); c.lineTo(x + 4, y - 9); c.fill(); }
+          const L = []; let ges = 0; for (let k = 1; k < WEG.length; k++) { const d = Math.hypot(WEG[k][0] - WEG[k - 1][0], WEG[k][1] - WEG[k - 1][1]); L.push(d); ges += d; }
+          const f = sanft((t - 6.0) / 4.8); let rest = ges * f, px = WEG[0][0], py = WEG[0][1];
+          c.strokeStyle = '#ffd93d'; c.lineWidth = 4; c.beginPath(); c.moveTo(px, py);
+          for (let k = 1; k < WEG.length && rest > 0; k++) { const u = Math.min(1, rest / L[k - 1]); px = lerp(WEG[k - 1][0], WEG[k][0], u); py = lerp(WEG[k - 1][1], WEG[k][1], u); c.lineTo(px, py); rest -= L[k - 1]; }
+          c.stroke();
+          const lg = c.createRadialGradient(px, py, 2, px, py, 46); lg.addColorStop(0, 'rgba(255,220,120,.7)'); lg.addColorStop(1, 'rgba(255,220,120,0)'); c.fillStyle = lg; c.beginPath(); c.arc(px, py, 46, 0, Math.PI * 2); c.fill();
+          personKlein(c, px, py + 8, 0.42, 5, { schritt: ruhig() ? 0 : Math.sin(t * 8) * 0.6 });
+          c.fillStyle = '#ffe9a0'; c.beginPath(); c.arc(px + 7, py - 8, 3, 0, Math.PI * 2); c.fill();
+          szZaehler(c, `${Math.round(680 * f)} km`, '#ffd93d', 8, 160); szText(c, 'Mammoth Cave', 320, 66, 16);
+          if (t > 10.6) { c.globalAlpha = sanft((t - 10.6) / 0.5); szText(c, 'the longest cave in the world', 320, 236, 18, '#ffd93d'); c.globalAlpha = 1; }
+        }
+        szUeberblende(c, t, 5.6);
+      } },
+    TN: { dauer: 10.6, klaenge: [[0.3, 'gitarre'], [1.8, 'gitarre'], [3.3, 'applaus'], [5.6, 'vogel'], [6.6, 'gitarre'], [8.6, 'staunen']],
+      zeichne(c, t) {   // erst Nashville bei Nacht: Neonschilder „MUSIC CITY“, ein Sänger mit Cowboyhut spielt Gitarre, Noten steigen auf; dann Graceland in Memphis mit Säulen-Portikus, Musik-Tor und Besuchern („MUSEUM“)
+        if (t < 5.0) {
+          const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#141a3a'); g.addColorStop(1, '#3a2a5a'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, H);
+          c.fillStyle = '#fff'; for (let k = 0; k < 18; k++) c.fillRect((k * 131) % SZ_W, (k * 47) % 80, 2, 2);
+          for (const [bx, bw, bh, f] of [[0, 150, 250, '#7a3a2a'], [150, 120, 280, '#5a4a6a'], [270, 110, 230, '#8a4a32'], [380, 140, 270, '#4a5a6a'], [520, 120, 240, '#7a3a2a']]) { c.fillStyle = f; c.fillRect(bx, 330 - bh, bw, bh); c.fillStyle = 'rgba(255,220,140,.55)'; for (let y = 330 - bh + 16; y < 250; y += 30) for (let x = bx + 12; x < bx + bw - 16; x += 26) c.fillRect(x, y, 12, 14); }
+          const neon = (text, x, y, px, farbe, ph) => { const an = ruhig() || Math.sin(t * 9 + ph) > -0.85; c.save(); c.shadowColor = farbe; c.shadowBlur = an ? 16 : 0; szText(c, text, x, y, px, an ? farbe : '#6a6070'); c.restore(); };
+          neon('MUSIC CITY', 320, 74, 40, '#ff6ac8', 0); neon('LIVE MUSIC', 90, 150, 20, '#6ae8ff', 1); neon('HONKY TONK', 560, 140, 20, '#ffd93d', 2.4);
+          c.fillStyle = '#3a2414'; c.fillRect(150, 330, 340, 16); c.fillStyle = 'rgba(255,240,180,.18)'; c.beginPath(); c.moveTo(300, 100); c.lineTo(340, 100); c.lineTo(420, 330); c.lineTo(220, 330); c.fill();
+          hutPerson(c, 320, 330, 1.5, 7, { hut: 'cowboy', arme: 0.1 });
+          gitarre(c, 318, 286, 0.55, 1.15 + (ruhig() ? 0 : Math.sin(t * 6) * 0.04));
+          for (let k = 0; k < 6; k++) { const d = ((t * 0.5 + k / 6) % 1); note(c, 350 + Math.sin(k * 2 + d * 6) * 30 + d * 60, 260 - d * 150, 22, ['#ffd93d', '#ff6ac8', '#6ae8ff'][k % 3], 1 - d); }
+          for (let i = 0; i < 12; i++) personKlein(c, 20 + i * 56, 396 - (i % 2) * 6, 0.7, i, { arme: t > 3.2 ? Math.abs(Math.sin(t * 3 + i)) : 0.1 });
+        } else {
+          szHimmel(c, '#5aa0ea', '#eaf4fb'); szWolken(c, t, [[0, 50], [430, 70]]);
+          c.fillStyle = '#6aa84a'; c.fillRect(0, 290, SZ_W, H);
+          for (const tx of [40, 110, 540, 610]) laubbaum(c, tx, 294, 1.1, t);
+          graceland(c, 320, 292, 1.15);
+          c.fillStyle = '#d8d0b8'; c.beginPath(); c.moveTo(300, 292); c.lineTo(340, 292); c.lineTo(400, H); c.lineTo(240, H); c.fill();
+          c.fillStyle = '#c8bca4'; c.fillRect(436, 270, 16, 62); c.fillRect(604, 270, 16, 62);
+          c.strokeStyle = '#1a1d26'; c.lineWidth = 2; c.beginPath(); for (let x = 456; x < 602; x += 10) { c.moveTo(x, 278); c.lineTo(x, 330); } c.moveTo(452, 280); c.lineTo(604, 280); c.moveTo(452, 326); c.lineTo(604, 326); c.stroke();
+          c.save(); c.fillStyle = '#1a1d26'; c.font = 'bold 22px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('♪', 476, 300); c.fillText('♫', 582, 302); c.restore();
+          gitarre(c, 528, 306, 0.32, 0.5, '#1a1d26');
+          c.fillStyle = '#5a3a22'; c.fillRect(40, 300, 5, 34); c.fillRect(150, 300, 5, 34); c.beginPath(); c.roundRect(24, 268, 148, 40, 6); c.fill();
+          c.fillStyle = '#ffd93d'; c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('GRACELAND', 98, 282); c.font = 'bold 11px system-ui, sans-serif'; c.fillStyle = '#f2e6c8'; c.fillText('MUSEUM · MEMPHIS', 98, 299);
+          for (let i = 0; i < 4; i++) { const x = lerp(250 + i * 30, 300 + i * 6, sanft((t - 5.2 - i * 0.4) / 4)), y = lerp(392, 322, sanft((t - 5.2 - i * 0.4) / 4)); personKlein(c, x, y, lerp(0.9, 0.55, (392 - y) / 70), i + 2, { schritt: ruhig() ? 0 : Math.sin(t * 7 + i) * 0.5 }); }
+          if (t > 5.6) { c.globalAlpha = sanft((t - 5.6) / 0.5); szZaehler(c, 'Elvis Presley ♪', '#ffd93d', 12, 220); c.globalAlpha = 1; }
+        }
+        szUeberblende(c, t, 5.0);
+      } },
+    GA: { dauer: 10.6, klaenge: [[0.3, 'vogel'], [1.2, 'plopp'], [1.8, 'plopp'], [2.4, 'plopp'], [3.0, 'plopp'], [3.4, 'kristall'], [5.8, 'platsch'], [6.6, 'regen'], [8.4, 'staunen']],
+      zeichne(c, t) {   // erst die Pfirsichplantage: Reihen von Pfirsichbäumen, Pfirsiche fallen in den Korb, ein großer Pfirsich „Peach State“; dann eine Apotheke in Atlanta 1886: am Tresen wird ein neues braunes Sprudelgetränk eingeschenkt (Cola, ohne Markenzeichen)
+        if (t < 5.4) {
+          szHimmel(c, '#5aa0ea', '#fbefd8'); szWolken(c, t, [[20, 70], [470, 50]]);
+          c.fillStyle = '#8ac05a'; c.fillRect(0, 200, SZ_W, H); c.fillStyle = '#b8864a'; for (let r = 0; r < 4; r++) c.fillRect(0, 214 + r * 36, SZ_W, 6);
+          for (let r = 0; r < 3; r++) for (let k = 0; k < 6; k++) pfirsichbaum(c, 40 + k * 112 + (r % 2) * 56, 214 + r * 46, 0.55 + r * 0.25, t);
+          c.fillStyle = '#8a5a2b'; c.beginPath(); c.moveTo(270, 300); c.lineTo(370, 300); c.lineTo(360, 340); c.lineTo(280, 340); c.closePath(); c.fill();
+          c.strokeStyle = '#6a4220'; c.lineWidth = 2; for (let k = 0; k < 4; k++) { c.beginPath(); c.moveTo(272 + k, 308 + k * 9); c.lineTo(368 - k, 308 + k * 9); c.stroke(); }
+          for (let i = 0; i < 7; i++) { const t0 = 1.0 + i * 0.5, f = Math.min(1, Math.max(0, (t - t0) / 0.5)); if (f <= 0) continue; const zx = 286 + (i % 4) * 22 + (i > 3 ? 11 : 0), zy = i > 3 ? 284 : 296; pfirsich(c, zx, lerp(160, zy, f * f), 11); }
+          if (t > 3.3) { const f = sanft((t - 3.3) / 0.5); pfirsich(c, 320, 112, 46 * f, 0.1); c.globalAlpha = f; szZaehler(c, 'The Peach State', '#ffd93d', 12, 240); c.globalAlpha = 1; }
+        } else {
+          c.fillStyle = '#5a3a22'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#6a4630'; for (let x = 0; x < SZ_W; x += 40) c.fillRect(x, 0, 36, 230);
+          c.fillStyle = '#3a2414'; for (const y of [70, 140, 210]) c.fillRect(0, y, SZ_W, 8);
+          for (const y of [70, 140, 210]) for (let x = 20; x < SZ_W; x += 34) { c.fillStyle = ['#c8283a', '#2e9e5b', '#2a6cff', '#e0a400', '#8a3ffc'][(x / 34 + y) % 5 | 0]; c.globalAlpha = 0.85; c.beginPath(); c.roundRect(x, y - 34, 20, 34, [6, 6, 2, 2]); c.fill(); c.globalAlpha = 1; c.fillStyle = '#efe0b8'; c.fillRect(x + 3, y - 22, 14, 10); }
+          c.fillStyle = '#1d2a50'; c.beginPath(); c.roundRect(200, 82, 240, 40, 8); c.fill(); c.fillStyle = '#ffd93d'; c.font = 'bold 22px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('ATLANTA · 1886', 320, 102);
+          c.fillStyle = '#e8e4d8'; c.fillRect(0, 290, SZ_W, 14); c.fillStyle = '#7a4a2a'; c.fillRect(0, 304, SZ_W, H);
+          personKlein(c, 160, 292, 1.5, 0, { arme: 0.3 }); c.fillStyle = '#f4f4f2'; c.fillRect(148, 236, 24, 40); c.fillStyle = '#2a1a0a'; c.fillRect(154, 199, 12, 3);
+          c.fillStyle = '#c8a040'; c.fillRect(392, 200, 12, 60); c.fillRect(380, 200, 40, 10); c.fillRect(404, 230, 26, 8);
+          const f = sanft((t - 6.0) / 2.0), gx = 430, gy = 290;
+          if (t > 5.9 && t < 8.1) { c.fillStyle = '#4a1e0a'; c.fillRect(gx - 2, 238, 4, gy - 238 - 50 * f); }
+          c.save(); c.beginPath(); c.moveTo(gx - 20, gy - 64); c.lineTo(gx + 20, gy - 64); c.lineTo(gx + 14, gy); c.lineTo(gx - 14, gy); c.closePath();
+          c.fillStyle = 'rgba(220,235,245,.4)'; c.fill(); c.clip(); c.fillStyle = '#4a1e0a'; c.fillRect(gx - 22, gy - 60 * f, 44, 60 * f);
+          c.fillStyle = 'rgba(255,240,200,.7)'; for (let k = 0; k < 12; k++) { const d = ((t * 0.7 + k / 12) % 1); if (gy - d * 60 > gy - 60 * f) { c.beginPath(); c.arc(gx - 12 + (k * 7) % 24, gy - d * 60, 1.6, 0, Math.PI * 2); c.fill(); } }
+          c.fillStyle = 'rgba(240,230,210,.9)'; if (f > 0.95) c.fillRect(gx - 20, gy - 64, 40, 6);
+          c.restore(); c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 2; c.beginPath(); c.moveTo(gx - 20, gy - 64); c.lineTo(gx - 14, gy); c.lineTo(gx + 14, gy); c.lineTo(gx + 20, gy - 64); c.stroke();
+          if (t > 8.2) { c.globalAlpha = sanft((t - 8.2) / 0.5); szText(c, 'a new drink: cola!', 530, 256, 18, '#ffd93d'); c.globalAlpha = 1; }
+        }
+        szUeberblende(c, t, 5.4);
+      } },
+    LA: { dauer: 12, klaenge: [[0.3, 'trompete'], [1.0, 'trommel'], [2.2, 'trompete'], [4.2, 'trompete'], [5.0, 'karneval'], [6.0, 'jubel'], [7.4, 'karneval'], [8.6, 'jubel'], [9.8, 'trompete'], [10.4, 'karneval']],
+      zeichne(c, t) {   // New Orleans, French Quarter: bunte Häuser mit schmiedeeisernen Balkonen, eine Jazz-Brassband zieht durch die Straße, dann kommt der Mardi-Gras-Wagen mit großer Maske, Perlenketten fliegen, Konfetti
+        szHimmel(c, '#4f8fe0', '#f4e8f4');
+        ['#e8a0b8', '#f2d27a', '#9ad0c0', '#c8a8e8', '#f0b080', '#a8c8f0'].forEach((f, i) => balkonHaus(c, i * 110 - 10, 322, 104, 190 + (i % 2) * 24, f));
+        { const an = ruhig() || Math.sin(t * 7) > -0.8; c.save(); c.shadowColor = '#ffd93d'; c.shadowBlur = an ? 12 : 0; c.fillStyle = '#1a1d26'; c.fillRect(126, 160, 64, 26); szText(c, 'JAZZ', 158, 173, 18, an ? '#ffd93d' : '#8a7a40'); c.restore(); }
+        c.fillStyle = '#7a7f88'; c.fillRect(0, 322, SZ_W, H); c.fillStyle = '#9aa0a8'; c.fillRect(0, 318, SZ_W, 6);
+        const bx = lerp(660, 60, Math.min(1, t / 9));
+        ['trompete', 'posaune', 'tuba', 'trommel'].forEach((inst, i) => trompeter(c, bx + i * 46, 338 - (i % 2) * 4, 1.15, i + 1, t, inst));
+        for (let k = 0; k < 5; k++) { const d = ((t * 0.6 + k / 5) % 1); note(c, bx + 40 + Math.sin(k * 3 + d * 5) * 16, 250 - d * 120, 20, ['#ffd93d', '#8a3ffc', '#2e9e5b'][k % 3], 1 - d); }
+        if (t > 4.4) {
+          const fx = lerp(760, 380, sanft((t - 4.4) / 5.4));
+          c.save(); c.translate(fx, 330);
+          c.fillStyle = '#2e9e5b'; c.fillRect(-120, -40, 240, 36); c.fillStyle = '#ffd93d'; for (let x = -116; x < 120; x += 16) { c.beginPath(); c.arc(x, -40, 6, 0, Math.PI); c.fill(); }
+          c.fillStyle = '#6a2a9a'; c.fillRect(-110, -70, 220, 30);
+          c.fillStyle = '#1a1a1a'; for (const rx of [-80, 80]) { c.beginPath(); c.arc(rx, -2, 10, 0, Math.PI * 2); c.fill(); }
+          c.fillStyle = '#8a3ffc'; c.beginPath(); c.moveTo(-90, -150); c.quadraticCurveTo(-40, -190, 0, -152); c.quadraticCurveTo(40, -190, 90, -150); c.quadraticCurveTo(50, -100, 0, -126); c.quadraticCurveTo(-50, -100, -90, -150); c.fill();
+          c.fillStyle = '#ffd93d'; c.beginPath(); c.ellipse(-36, -150, 18, 10, -0.2, 0, Math.PI * 2); c.ellipse(36, -150, 18, 10, 0.2, 0, Math.PI * 2); c.fill(); c.fillStyle = '#1a1d26'; c.beginPath(); c.ellipse(-36, -150, 10, 5, -0.2, 0, Math.PI * 2); c.ellipse(36, -150, 10, 5, 0.2, 0, Math.PI * 2); c.fill();
+          for (const [px, f] of [[-60, '#2e9e5b'], [-10, '#ffd93d'], [40, '#2e9e5b']]) { c.fillStyle = f; c.beginPath(); c.ellipse(px, -196, 8, 30, (px / 60) * 0.4, 0, Math.PI * 2); c.fill(); }
+          c.fillStyle = '#6a2a9a'; c.fillRect(-14, -126, 28, 56);
+          for (let i = 0; i < 3; i++) personKlein(c, -80 + i * 70, -70, 0.7, i + 4, { arme: ruhig() ? 0.6 : Math.abs(Math.sin(t * 4 + i)) });
+          c.restore();
+          for (let k = 0; k < 6; k++) { const d = ((t - 4.8) * 0.7 + k / 6) % 1; if (t < 4.8) break; const x0 = fx - 80 + (k % 3) * 70, y0 = 250, x1 = x0 - 120 - (k % 2) * 80; perlenkette(c, lerp(x0, x1, d), y0 - 90 * Math.sin(d * Math.PI) + d * 40, 7, ['#8a3ffc', '#2e9e5b', '#ffd93d'][k % 3]); }
+          if (!ruhig()) for (let k = 0; k < 40; k++) { const x = (k * 97 + t * 30) % SZ_W, y = ((k * 53 + (t - 4.4) * 70) % 330); c.fillStyle = ['#8a3ffc', '#2e9e5b', '#ffd93d'][k % 3]; c.fillRect(x, y, 5, 3); }
+          c.globalAlpha = sanft((t - 5.0) / 0.5); szZaehler(c, 'MARDI GRAS', '#ffd93d', 12, 220); c.globalAlpha = 1;
+        } else szZaehler(c, 'New Orleans', '#fff', 12, 220);
+      } },
+    MS: { dauer: 12, klaenge: [[0.3, 'welle'], [0.8, 'schiff'], [2.8, 'schiff'], [5.0, 'klick'], [6.0, 'klick'], [7.0, 'klick'], [8.0, 'klick'], [9.0, 'klick'], [10.4, 'welle'], [10.6, 'staunen']],
+      zeichne(c, t) {   // erst der breite Mississippi mit einem Raddampfer; dann die Karte: der Fluss wächst vom Lake Itasca in Minnesota bis in den Golf von Mexiko, die Staaten am Ufer erscheinen, Zähler bis 3,700 km
+        if (t < 4.4) {
+          szHimmel(c, '#f0a860', '#fbe8c8'); c.fillStyle = 'rgba(255,240,180,.9)'; c.beginPath(); c.arc(480, 150, 40, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#4f7a3a'; c.fillRect(0, 196, SZ_W, 20); for (let x = 10; x < SZ_W; x += 34) laubbaum(c, x, 210, 0.6, t);
+          c.fillStyle = '#6a7a7a'; c.fillRect(0, 214, SZ_W, H); c.strokeStyle = 'rgba(255,230,170,.35)'; c.lineWidth = 2; for (let k = 0; k < 16; k++) { const wx = (k * 113 + t * 12) % (SZ_W + 60) - 30, wy = 232 + (k % 6) * 20; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 28, wy); c.stroke(); }
+          raddampfer(c, lerp(520, 300, t / 4.4), 300, 1.9, t);
+          szZaehler(c, 'Mississippi River', '#ffd93d', 12, 240);
+        } else {
+          const P = ([lon, lat]) => [320 + (lon + 91.5) * 42, 18 + (47.5 - lat) * 16.4];
+          c.fillStyle = '#e4d8a8'; c.fillRect(0, 0, SZ_W, H);
+          c.strokeStyle = 'rgba(120,100,60,.18)'; c.lineWidth = 1; for (let x = 0; x < SZ_W; x += 40) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); }
+          c.fillStyle = '#7fb4e0'; c.beginPath(); c.moveTo(0, 326); for (let x = 0; x <= SZ_W; x += 20) c.lineTo(x, 326 - Math.sin(x * 0.03) * 4 - (Math.abs(x - 340) < 30 ? 6 : 0)); c.lineTo(SZ_W, H); c.lineTo(0, H); c.fill();
+          szText(c, 'Gulf of Mexico', 520, 340, 13, '#e8f4ff');
+          const FL = [[-95.2, 47.25], [-94.6, 47.4], [-93.9, 46.9], [-94.3, 46.1], [-93.3, 45.0], [-92.3, 44.5], [-91.3, 43.9], [-91.1, 43.0], [-90.6, 42.4], [-90.4, 41.6], [-91.0, 41.0], [-91.3, 40.3], [-91.4, 39.6], [-90.6, 38.9], [-90.2, 38.6], [-89.6, 37.7], [-89.2, 37.0], [-89.6, 36.4], [-90.0, 35.6], [-90.1, 35.1], [-90.6, 34.4], [-91.1, 33.6], [-91.0, 32.9], [-90.9, 32.3], [-91.5, 31.4], [-91.3, 30.6], [-90.9, 30.1], [-90.1, 29.95], [-89.6, 29.5], [-89.3, 29.1]].map(P);
+          const L = []; let ges = 0; for (let k = 1; k < FL.length; k++) { const d = Math.hypot(FL[k][0] - FL[k - 1][0], FL[k][1] - FL[k - 1][1]); L.push(d); ges += d; }
+          const f = sanft((t - 4.8) / 5.6); let rest = ges * f, px = FL[0][0], py = FL[0][1];
+          c.strokeStyle = '#2f86e0'; c.lineWidth = 5; c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath(); c.moveTo(px, py);
+          for (let k = 1; k < FL.length && rest > 0; k++) { const u = Math.min(1, rest / L[k - 1]); px = lerp(FL[k - 1][0], FL[k][0], u); py = lerp(FL[k - 1][1], FL[k][1], u); c.lineTo(px, py); rest -= L[k - 1]; }
+          c.stroke();
+          for (const [name, lon, lat] of [['MINNESOTA', -95.6, 45.6], ['WISCONSIN', -88.6, 44.6], ['IOWA', -93.8, 42.0], ['ILLINOIS', -88.6, 40.2], ['MISSOURI', -93.0, 38.4], ['TENNESSEE', -87.4, 35.9], ['ARKANSAS', -93.0, 34.8], ['MISSISSIPPI', -88.6, 32.8], ['LOUISIANA', -93.2, 31.0]]) {
+            const [lx, ly] = P([lon, lat]); if (py < ly - 6) continue; c.globalAlpha = Math.min(1, (py - ly + 6) / 30); c.fillStyle = name === 'MISSISSIPPI' ? '#c8283a' : '#6a5a3a'; c.font = 'bold 13px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(name, lx, ly); c.globalAlpha = 1;
+          }
+          { const [ix, iy] = FL[0]; c.fillStyle = '#2f86e0'; c.beginPath(); c.arc(ix, iy, 5, 0, Math.PI * 2); c.fill(); szText(c, 'Lake Itasca', ix - 8, iy - 2, 12, '#fff', 'right'); }
+          if (f > 0.98) { const [nx, ny] = P([-90.1, 29.95]); c.fillStyle = '#c8283a'; c.beginPath(); c.arc(nx, ny, 4, 0, Math.PI * 2); c.fill(); szText(c, 'New Orleans', nx - 10, ny - 6, 12, '#fff', 'right'); }
+          raddampfer(c, px, py + 2, 0.28, t);
+          szZaehler(c, `${Math.round(3700 * f).toLocaleString('en-US')} km`, '#ffd93d', 12, 170);
+        }
+        szUeberblende(c, t, 4.4);
+      } },
+    AL: { dauer: 11.6, klaenge: [[0.3, 'wind'], [1.2, 'klick'], [2.0, 'klick'], [2.8, 'klick'], [3.6, 'klick'], [4.4, 'staunen'], [6.4, 'rumpeln'], [6.9, 'feuer'], [7.6, 'rumpeln'], [8.2, 'feuer'], [9.0, 'rumpeln'], [10.2, 'jubel']],
+      zeichne(c, t) {   // Saturn V am Startturm, daneben eine winzige Person zum Vergleich; die Messlatte läuft bis 110 m; dann zündet die Rakete, Rauch quillt, die Kamera folgt ihr nach oben zum Mond
+        const tt = Math.max(0, t - 7.0), R = Math.min(300, 12 * tt * tt), cam = R * 0.8;
+        szHimmel(c, '#3a78c8', '#cfe6f6'); c.fillStyle = `rgba(14,26,58,${Math.min(0.85, cam / 260)})`; c.fillRect(0, 0, SZ_W, H);
+        if (cam > 40) { c.globalAlpha = Math.min(1, (cam - 40) / 120); c.fillStyle = '#f4f1e0'; c.beginPath(); c.arc(520, 70, 26, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(160,160,150,.5)'; c.beginPath(); c.arc(512, 64, 5, 0, Math.PI * 2); c.arc(528, 78, 4, 0, Math.PI * 2); c.fill(); c.fillStyle = '#fff'; for (let k = 0; k < 14; k++) c.fillRect((k * 137) % SZ_W, (k * 59) % 160, 2, 2); c.globalAlpha = 1; }
+        c.save(); c.translate(0, cam);
+        c.fillStyle = '#c8c4b8'; c.fillRect(-10, 330, SZ_W + 20, 400); c.fillStyle = '#7aa850'; c.fillRect(-10, 346, SZ_W + 20, 400);
+        startturm(c, 262, 330, 250);
+        c.strokeStyle = '#c8283a'; c.lineWidth = 2; for (const y of [150, 210, 260]) { c.beginPath(); c.moveTo(270, y); c.lineTo(306, y); c.stroke(); }
+        personKlein(c, 380, 330, 0.12, 0);
+        if (t < 6.6) {
+          const m = sanft((t - 1.0) / 3.6), y1 = lerp(330, 60, m), a = t < 6.0 ? 1 : 1 - (t - 6.0) / 0.6; c.globalAlpha = a;
+          c.strokeStyle = '#ffd93d'; c.lineWidth = 3; c.beginPath(); c.moveTo(420, 330); c.lineTo(420, y1); c.moveTo(412, y1); c.lineTo(428, y1); c.moveTo(412, 330); c.lineTo(428, 330); c.stroke();
+          szText(c, 'person: 1.7 m', 400, 314, 11, '#fff', 'left');
+          c.restore(); szZaehler(c, `${Math.round(110 * m)} m`, '#ffd93d', 12, 140); szText(c, 'Saturn V', 320, 68, 16); c.save(); c.translate(0, cam); c.globalAlpha = 1;
+        }
+        if (t > 6.4) for (let k = 0; k < 10; k++) { const d = Math.min(1, (t - 6.4 - k * 0.08) / 2.5); if (d <= 0) continue; const sx = 320 + (k % 2 ? 1 : -1) * (20 + d * (60 + k * 16)); rauchWolke(c, sx, 326 - d * 10 - (k % 3) * 8, 14 + d * 22, 0.9); }
+        c.restore();
+        const ry = 330 - R + cam;
+        if (t > 6.6) { const fl = ruhig() ? 1 : 0.85 + Math.random() * 0.3; c.fillStyle = 'rgba(255,170,40,.9)'; c.beginPath(); c.moveTo(304, ry); c.lineTo(336, ry); c.lineTo(320, ry + 60 * fl * Math.min(1, (t - 6.6) * 2)); c.fill(); c.fillStyle = 'rgba(255,240,160,.95)'; c.beginPath(); c.moveTo(310, ry); c.lineTo(330, ry); c.lineTo(320, ry + 30 * fl); c.fill(); }
+        saturnV(c, 320, ry, 260);
+        if (t > 9.8) { c.globalAlpha = sanft((t - 9.8) / 0.5); szZaehler(c, 'Huntsville, Alabama', '#ffd93d', 12, 250); c.globalAlpha = 1; }
+      } },
+    AR: { dauer: 10.4, klaenge: [[0.3, 'vogel'], [0.8, 'plopp'], [1.6, 'plopp'], [2.4, 'plopp'], [3.8, 'kristall'], [4.8, 'jubel'], [6.4, 'kristall'], [7.4, 'applaus']],
+      zeichne(c, t) {   // Crater of Diamonds State Park: gepflügtes Feld, Leute graben und sieben; im Sieb des Mädchens blitzt es, sie hält einen Diamanten hoch – „Finders, keepers!“
+        szHimmel(c, '#5aa0ea', '#eaf4fb'); szWolken(c, t, [[30, 60], [430, 40]]);
+        c.fillStyle = '#4f7a3a'; for (let x = 0; x < SZ_W; x += 26) { c.beginPath(); c.arc(x, 196, 18 + (x % 3) * 4, 0, Math.PI * 2); c.fill(); }
+        c.fillStyle = '#8a6a4a'; c.fillRect(0, 200, SZ_W, H); c.fillStyle = '#7a5a3a'; for (let r = 0; r < 8; r++) c.fillRect(0, 212 + r * 24 + r * r, SZ_W, 5);
+        c.fillStyle = '#5a3a22'; c.fillRect(56, 160, 6, 60); c.fillRect(210, 160, 6, 60); c.beginPath(); c.roundRect(36, 116, 200, 52, 8); c.fill();
+        c.fillStyle = '#f2e6c8'; c.font = 'bold 17px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('CRATER OF DIAMONDS', 136, 134); c.font = 'bold 12px system-ui, sans-serif'; c.fillText('STATE PARK · ARKANSAS', 136, 154);
+        graeber(c, 110, 300, 1.0, t, 2); graeber(c, 520, 262, 0.8, t + 1, 3); graeber(c, 600, 320, 1.1, t + 2, 5);
+        const gef = t > 4.6, sx = 330, sy = 318;
+        if (!gef) {
+          personKlein(c, sx, sy, 1.1, 4, { arme: 0.2 });
+          const w = ruhig() ? 0 : Math.sin(t * 12) * 4; c.fillStyle = '#7a7f88'; c.beginPath(); c.ellipse(sx + 22 + w, sy - 34, 18, 6, 0, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#c8ccd2'; c.lineWidth = 1; c.stroke();
+          if (t > 3.6) { const f = (t - 3.6) / 1.0; c.strokeStyle = `rgba(255,255,255,${1 - Math.abs(f - 0.5) * 2})`; c.lineWidth = 2; c.beginPath(); for (let k = 0; k < 4; k++) { const a = k * Math.PI / 4; c.moveTo(sx + 22 + Math.cos(a) * 14, sy - 38 + Math.sin(a) * 14); c.lineTo(sx + 22 - Math.cos(a) * 14, sy - 38 - Math.sin(a) * 14); } c.stroke(); }
+        } else {
+          const f = sanft((t - 4.6) / 0.6); personKlein(c, sx, sy, 1.1, 4, { arme: f });
+          const dy = sy - 70 - 50 * f; c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 2; c.beginPath(); for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4 + (ruhig() ? 0 : t); c.moveTo(sx + Math.cos(a) * 18, dy + Math.sin(a) * 18); c.lineTo(sx + Math.cos(a) * 30, dy + Math.sin(a) * 30); } c.stroke();
+          diamant(c, sx, dy, 13, '#e8f6ff');
+          if (t > 6.2) { c.globalAlpha = sanft((t - 6.2) / 0.5); szZaehler(c, 'You can keep it!', '#ffd93d', 12, 240); c.globalAlpha = 1; }
+        }
+      } },
+    SC: { dauer: 10.4, klaenge: [[0.3, 'welle'], [1.2, 'kanone'], [2.8, 'kanone'], [4.4, 'kanone'], [6.0, 'kanone'], [7.6, 'kanone'], [9.0, 'welle']],
+      zeichne(c, t) {   // Morgengrauen über dem Hafen von Charleston 1861: am Ufer feuern zwei Kanonen, die Kugeln fliegen in hohem Bogen zu Fort Sumter auf seiner Insel, Rauch steigt auf; Zähler „1861“
+        const g = c.createLinearGradient(0, 0, 0, 240); g.addColorStop(0, '#3a3a6a'); g.addColorStop(0.6, '#e88a6a'); g.addColorStop(1, '#f8c890'); c.fillStyle = g; c.fillRect(0, 0, SZ_W, 240);
+        c.fillStyle = '#4a4a62'; for (const [bx, bw, bh] of [[20, 26, 22], [50, 20, 30], [74, 30, 18], [110, 22, 26], [140, 28, 20]]) c.fillRect(bx, 236 - bh, bw, bh);
+        for (const [sx, sh] of [[60, 56], [124, 46]]) { c.beginPath(); c.moveTo(sx - 6, 236 - sh + 22); c.lineTo(sx, 236 - sh); c.lineTo(sx + 6, 236 - sh + 22); c.fill(); c.fillRect(sx - 5, 236 - sh + 20, 10, sh - 20); }
+        szText(c, 'Charleston', 92, 196, 12, '#fff');
+        c.fillStyle = '#3a5a7a'; c.fillRect(0, 236, SZ_W, H); c.strokeStyle = 'rgba(255,200,160,.35)'; c.lineWidth = 2; for (let k = 0; k < 14; k++) { const wx = (k * 97 + t * 10) % (SZ_W + 60) - 30, wy = 250 + (k % 5) * 16; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 22, wy); c.stroke(); }
+        fortSumter(c, 450, 248, 0.9);
+        c.fillStyle = '#c8b080'; c.beginPath(); c.moveTo(0, 290); c.quadraticCurveTo(160, 280, 280, 330); c.lineTo(280, H); c.lineTo(0, H); c.fill();
+        const SCH = [1.2, 2.8, 4.4, 6.0, 7.6];
+        [[110, 316], [200, 330]].forEach(([kx, ky], j) => {
+          let sch = 0; for (let i = j; i < SCH.length; i += 2) { const d = t - SCH[i]; if (d > 0 && d < 1) sch = d; } kanone(c, kx, ky, 1.1, sch);
+        });
+        SCH.forEach((t0, i) => {
+          const d = (t - t0) / 1.3, [kx, ky] = i % 2 ? [200, 330] : [110, 316], x0 = kx + 46, y0 = ky - 46, x1 = 410 + (i * 23) % 80, y1 = 222;
+          if (d > 0 && d < 1) { const x = lerp(x0, x1, d), y = lerp(y0, y1, d) - Math.sin(d * Math.PI) * 120; c.fillStyle = '#1a1a1a'; c.beginPath(); c.arc(x, y, 4, 0, Math.PI * 2); c.fill(); }
+          if (d >= 1 && d < 2.5) { const e = (d - 1) / 1.5; c.fillStyle = `rgba(255,190,80,${Math.max(0, 1 - e * 3)})`; c.beginPath(); c.arc(x1, y1, 10 + e * 10, 0, Math.PI * 2); c.fill(); rauchWolke(c, x1, y1 - 10 - e * 40, 10 + e * 16, 0.6 * (1 - e)); }
+        });
+        szZaehler(c, '1861', '#ffd93d', 12, 120);
+        if (t > 1.6) { c.globalAlpha = sanft((t - 1.6) / 0.5); szText(c, 'Fort Sumter', 450, 120, 18, '#fff'); c.strokeStyle = '#fff'; c.lineWidth = 2; c.beginPath(); c.moveTo(450, 132); c.lineTo(450, 150); c.stroke(); c.globalAlpha = 1; }
+        if (t > 8.2) { c.globalAlpha = sanft((t - 8.2) / 0.5); szText(c, 'the Civil War begins', 320, 72, 18, '#ffd93d'); c.globalAlpha = 1; }
+      } },
+    NC: { dauer: 11.4, klaenge: [[0.3, 'wind'], [0.6, 'motor'], [2.2, 'motor'], [3.8, 'motor'], [5.4, 'motor'], [7.0, 'motor'], [8.6, 'motor'], [9.8, 'jubel']],
+      zeichne(c, t) {   // Kitty Hawk 1903: Dünen am Meer, der Wright Flyer fährt auf der Holzschiene an, hebt ab und fliegt dicht über dem Sand, ein Bruder rennt mit; Zähler Sekunden bis 12 und Meter bis 37
+        szHimmel(c, '#7ab0e0', '#eef4f8'); szWolken(c, t, [[0, 60], [380, 40]]);
+        c.fillStyle = '#4a7aa8'; c.fillRect(0, 196, SZ_W, 36); c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2; for (let k = 0; k < 10; k++) { const wx = (k * 83 - t * 14) % (SZ_W + 40) + 20, wy = 204 + (k % 3) * 9; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 18, wy); c.stroke(); }
+        c.fillStyle = '#e8d4a0'; c.beginPath(); c.moveTo(0, 240); c.quadraticCurveTo(120, 214, 260, 236); c.quadraticCurveTo(420, 250, 520, 200); c.quadraticCurveTo(580, 180, SZ_W, 200); c.lineTo(SZ_W, H); c.lineTo(0, H); c.fill();
+        c.fillStyle = '#d8c08a'; c.fillRect(0, 300, SZ_W, H);
+        c.fillStyle = '#6a8a4a'; for (const gx of [30, 180, 420, 600]) for (let k = 0; k < 4; k++) c.fillRect(gx + k * 4, 296 - k * 2, 2, 8 + k * 2);
+        c.fillStyle = '#7a5a3a'; c.fillRect(60, 326, 190, 5);
+        c.fillStyle = '#5a3a22'; c.fillRect(26, 262, 4, 40); c.beginPath(); c.roundRect(4, 240, 140, 30, 5); c.fill(); c.fillStyle = '#f2e6c8'; c.font = 'bold 12px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('KITTY HAWK · 1903', 74, 255);
+        const T0 = 2.6, T1 = 9.6;
+        let x, y;
+        if (t < 1.6) { x = 150; y = 312; } else if (t < T0) { const u = (t - 1.6) / (T0 - 1.6); x = lerp(150, 230, u * u); y = 312; }
+        else if (t < T1) { const u = (t - T0) / (T1 - T0); x = lerp(230, 440, u); y = 312 - Math.sin(Math.min(1, u * 1.15) * Math.PI) * 70 - (ruhig() ? 0 : Math.sin(t * 3) * 4) * Math.sin(u * Math.PI); }
+        else { x = 440 + Math.min(1, (t - T1) / 0.6) * 12; y = 316; }
+        if (t > T0) { const x0 = 230; c.strokeStyle = '#ffd93d'; c.lineWidth = 3; c.setLineDash([8, 6]); c.beginPath(); c.moveTo(x0, 340); c.lineTo(x, 340); c.stroke(); c.setLineDash([]); c.fillStyle = '#ffd93d'; c.fillRect(x0 - 1, 332, 3, 16); }
+        if (t > T1 && t < T1 + 1.2) { const d = (t - T1) / 1.2; rauchWolke(c, 452, 326, 8 + d * 14, 0.6 * (1 - d), `rgba(232,212,160,${0.8 * (1 - d)})`); }
+        { const u = sanft((t - 1.6) / 1.8), wx = lerp(110, 300, u), stop = t > 3.4; personKlein(c, wx, 330, 0.9, 6, { schritt: stop || ruhig() ? 0 : Math.sin(t * 12) * 0.8, arme: t > T1 ? Math.abs(Math.sin(t * 4)) : stop ? 0.4 : 0.2 }); }
+        wrightFlyer(c, x, y, 1.45, t, t);
+        const fl = Math.min(1, Math.max(0, (t - T0) / (T1 - T0)));
+        szZaehler(c, `${Math.floor(12 * fl)} s · ${Math.round(37 * fl)} m`, '#ffd93d', 12, 200);
+        if (t < T0) szText(c, 'the first airplane', 320, 68, 16);
+        if (t > T1 + 0.4) { c.globalAlpha = sanft((t - T1 - 0.4) / 0.5); szText(c, 'It flew!', 320, 70, 20, '#ffd93d'); c.globalAlpha = 1; }
+      } },
+    VA: { dauer: 11, klaenge: [[0.3, 'fanfare'], [1.4, 'plopp'], [2.0, 'plopp'], [2.6, 'plopp'], [3.2, 'plopp'], [3.8, 'plopp'], [4.4, 'plopp'], [5.0, 'plopp'], [5.6, 'plopp'], [7.0, 'klick'], [7.5, 'klick'], [8.0, 'klick'], [8.5, 'klick'], [9.0, 'klick'], [9.6, 'applaus']],
+      zeichne(c, t) {   // Mount Vernon (Haus von George Washington); über dem Dach erscheinen acht Sterne mit den Namen der Präsidenten aus Virginia (keine Bildnisse), dann die ersten fünf Präsidenten als Nummern: vier davon (1, 3, 4, 5) leuchten gold – „VA“
+        szHimmel(c, '#4f8fe0', '#e6f0fa'); szWolken(c, t, [[-40, 250], [520, 240]]);
+        c.fillStyle = '#7aa850'; c.fillRect(0, 300, SZ_W, H);
+        laubbaum(c, 30, 304, 0.9, t); laubbaum(c, 612, 304, 0.9, t);
+        mountVernon(c, 320, 302, 1.0);
+        const N = ['Washington', 'Jefferson', 'Madison', 'Monroe', 'W. H. Harrison', 'Tyler', 'Taylor', 'Wilson'];
+        const zweite = t > 6.6, ab = zweite ? Math.max(0.2, 1 - (t - 6.6) / 0.5) : 1;
+        let n = 0;
+        N.forEach((name, i) => {
+          const f = sanft((t - 1.3 - i * 0.6) / 0.4); if (f <= 0) return; n++;
+          const a = Math.PI * (0.94 - i * 0.125), x = 320 + Math.cos(a) * 262, y = 236 - Math.sin(a) * 156;
+          c.globalAlpha = ab; stern(c, x, y, 15 * f); c.globalAlpha = f * ab; szText(c, name, x, y + 25, 13); c.globalAlpha = 1;
+        });
+        if (!zweite) { if (n) szZaehler(c, n + (n === 1 ? ' president' : ' presidents'), '#ffd93d', 12, 220); }
+        else {
+          const g = sanft((t - 6.6) / 0.5); c.globalAlpha = g; c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(110, 70, 420, 110, 12); c.fill();
+          [['Washington', 1], ['Adams', 0], ['Jefferson', 1], ['Madison', 1], ['Monroe', 1]].forEach(([name, va], i) => {
+            const x = 160 + i * 80, an = va && t > 7.0 + i * 0.5; c.fillStyle = an ? '#ffd93d' : '#8a90a0'; c.beginPath(); c.arc(x, 112, 22, 0, Math.PI * 2); c.fill();
+            c.fillStyle = '#1d2a50'; c.font = 'bold 20px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(i + 1), x, 113);
+            szText(c, name, x, 148, 12); szText(c, va ? (an ? 'VA' : '') : 'MA', x, 166, 12, va ? '#ffd93d' : '#c8ccd2');
+          });
+          szZaehler(c, '4 of the first 5', '#ffd93d', 12, 230); c.globalAlpha = 1;
+        }
+      } },
+    WV: { dauer: 12, klaenge: [[0.3, 'wind'], [1.6, 'vogel'], [3.2, 'wind'], [6.0, 'welle'], [6.8, 'klick'], [7.6, 'klick'], [8.4, 'klick'], [9.2, 'klick'], [10.2, 'staunen']],
+      zeichne(c, t) {   // erst Bergkette hinter Bergkette im Dunst, „Mountain State“; dann die New River Gorge Bridge: rostbrauner Stahlbogen über der tiefen Schlucht, Autos fahren oben, unten ein Schlauchboot; Messlatte bis 267 m
+        if (t < 5.4) {
+          szHimmel(c, '#7ab0e0', '#f0f4f4'); szWolken(c, t, [[20, 50], [400, 70]]);
+          appalachen(c, t, [[150, '#a8c0cc', 26, 0.4], [188, '#86a6b4', 32, 1.3], [228, '#5f8a6a', 38, 2.1], [272, '#467a4a', 42, 3.0], [318, '#33683a', 36, 4.2]]);
+          c.fillStyle = 'rgba(255,255,255,.35)'; for (let k = 0; k < 4; k++) { const x = (k * 190 + t * 12) % (SZ_W + 200) - 100; c.beginPath(); c.ellipse(x, 200 + k * 30, 90, 8, 0, 0, Math.PI * 2); c.fill(); }
+          for (let k = 0; k < 22; k++) { const x = (k * 61) % SZ_W, y = 300 + (k * 13) % 30; c.fillStyle = ['#d8642a', '#e8a030', '#b83a2a', '#3f7a3a'][k % 4]; c.beginPath(); c.arc(x, y, 8, 0, Math.PI * 2); c.fill(); }
+          if (t > 0.8) { c.globalAlpha = sanft((t - 0.8) / 0.5); szZaehler(c, 'The Mountain State', '#ffd93d', 12, 260); c.globalAlpha = 1; }
+        } else {
+          szHimmel(c, '#6aa8e8', '#eaf4fb'); szWolken(c, t, [[300, 40]]);
+          const wand = (sgn) => { c.beginPath(); const X = (x) => sgn > 0 ? x : SZ_W - x; c.moveTo(X(0), 96); c.lineTo(X(60), 100); c.lineTo(X(200), 300); c.lineTo(X(262), 340); c.lineTo(X(262), H); c.lineTo(X(0), H); c.closePath(); };
+          c.fillStyle = '#4f7a3a'; wand(1); c.fill(); wand(-1); c.fill();
+          for (let k = 0; k < 30; k++) { const u = (k * 37 % 100) / 100, sgn = k % 2 ? 1 : -1, x0 = 30 + u * 190, y = 100 + u * 210 + (k % 3) * 8; c.fillStyle = ['#d8642a', '#e8a030', '#3f7a3a', '#2f5a2a'][k % 4]; c.beginPath(); c.arc(sgn > 0 ? x0 - 20 : SZ_W - x0 + 20, y + 10, 7, 0, Math.PI * 2); c.fill(); }
+          c.fillStyle = '#4a7a9a'; c.fillRect(200, 336, 240, H); c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2; for (let k = 0; k < 6; k++) { const wx = 210 + ((k * 47 + t * 40) % 220); c.beginPath(); c.moveTo(wx, 344 + (k % 3) * 6); c.lineTo(wx + 12, 344 + (k % 3) * 6); c.stroke(); }
+          bogenbruecke(c, 160, 480, 92, 118, 243);
+          for (let i = 0; i < 3; i++) { const x = ((t * 70 + i * 260) % 900) - 130; pkw(c, x, 88, 0.32, ['#e63946', '#2a6cff', '#ffd93d'][i], t); }
+          { const bx = lerp(250, 400, (t - 5.4) / 6.6); c.fillStyle = '#ff7a1a'; c.beginPath(); c.ellipse(bx, 338, 16, 5, 0, 0, Math.PI * 2); c.fill(); for (let k = 0; k < 3; k++) personKlein(c, bx - 9 + k * 9, 336, 0.22, k); }
+          const m = sanft((t - 6.4) / 3.6), y1 = lerp(338, 92, m);
+          c.strokeStyle = '#ffd93d'; c.lineWidth = 3; c.beginPath(); c.moveTo(530, 338); c.lineTo(530, y1); c.moveTo(522, y1); c.lineTo(538, y1); c.moveTo(522, 338); c.lineTo(538, 338); c.stroke();
+          c.setLineDash([4, 4]); c.lineWidth = 1.5; c.beginPath(); c.moveTo(440, 338); c.lineTo(530, 338); if (m > 0.98) { c.moveTo(500, 92); c.lineTo(530, 92); } c.stroke(); c.setLineDash([]);
+          szZaehler(c, `${Math.round(267 * m)} m`, '#ffd93d', 12, 140); szText(c, 'New River Gorge Bridge', 320, 66, 15);
+        }
+        szUeberblende(c, t, 5.4);
+      } },
+    MD: { dauer: 10.4, klaenge: [[0.4, 'kanone'], [1.2, 'feuer'], [2.0, 'kanone'], [2.8, 'feuer'], [3.6, 'kanone'], [4.4, 'feuer'], [5.6, 'vogel'], [6.4, 'feder'], [7.4, 'feder'], [8.2, 'fanfare']],
+      zeichne(c, t) {   // Baltimore 1814: nachts beschießen Segelschiffe Fort McHenry (rote Raketen, Explosionen am Himmel); im Morgengrauen weht die große Fahne mit 15 Sternen über dem Fort, Francis Scott Key schreibt das Lied
+        const tag = sanft((t - 5.0) / 1.6);
+        szHimmel(c, '#141a3a', '#3a3060'); c.save(); c.globalAlpha = tag; szHimmel(c, '#6aa0e0', '#f8d8b0'); c.restore();
+        if (tag < 1) { c.fillStyle = `rgba(255,255,255,${1 - tag})`; for (let k = 0; k < 20; k++) c.fillRect((k * 131) % SZ_W, (k * 47) % 150, 2, 2); }
+        c.fillStyle = tag > 0.5 ? '#3a6a9a' : '#1a2a4a'; c.fillRect(0, 240, SZ_W, H);
+        c.strokeStyle = 'rgba(255,255,255,.25)'; c.lineWidth = 2; for (let k = 0; k < 12; k++) { const wx = (k * 97 + t * 10) % (SZ_W + 60) - 30, wy = 256 + (k % 5) * 18; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 22, wy); c.stroke(); }
+        const [mx, my] = fortMcHenry(c, 470, 252, 0.8);
+        const segler = (x, y, s) => { c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#2a1a10'; c.beginPath(); c.moveTo(-50, -14); c.lineTo(50, -14); c.lineTo(40, 0); c.lineTo(-42, 0); c.fill(); c.fillRect(-26, -80, 3, 66); c.fillRect(4, -90, 3, 76); c.fillStyle = tag > 0.5 ? '#e8e0cc' : '#8a8a9a'; for (const [sx, sh] of [[-24, 56], [6, 66]]) { c.fillRect(sx - 16, -14 - sh, 32, sh * 0.45); c.fillRect(sx - 13, -14 - sh * 0.5, 26, sh * 0.4); } c.restore(); };
+        segler(80, 262, 0.75); segler(200, 254, 0.6);
+        if (t < 5.4) {
+          for (let i = 0; i < 6; i++) { const t0 = 0.3 + i * 0.8, d = (t - t0) / 1.2; if (d < 0 || d > 2.2) continue; const x0 = i % 2 ? 200 : 80, y0 = 200, x1 = 380 + (i * 37) % 160, y1 = 120 + (i * 23) % 60;
+            if (d < 1) { const x = lerp(x0, x1, d), y = lerp(y0, y1, d) - Math.sin(d * Math.PI) * 60; c.strokeStyle = 'rgba(255,80,40,.9)'; c.lineWidth = 3; c.beginPath(); c.moveTo(x, y); c.lineTo(lerp(x0, x1, d - 0.12), lerp(y0, y1, d - 0.12) - Math.sin(Math.max(0, d - 0.12) * Math.PI) * 60); c.stroke(); c.fillStyle = '#ffd060'; c.beginPath(); c.arc(x, y, 3, 0, Math.PI * 2); c.fill(); }
+            else { const e = (d - 1) / 1.2; c.strokeStyle = `rgba(255,${180 - e * 80},60,${1 - e})`; c.lineWidth = 2; c.beginPath(); for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; c.moveTo(x1 + Math.cos(a) * 6 * (1 + e * 3), y1 + Math.sin(a) * 6 * (1 + e * 3)); c.lineTo(x1 + Math.cos(a) * 14 * (1 + e * 2.5), y1 + Math.sin(a) * 14 * (1 + e * 2.5)); } c.stroke(); } }
+          szZaehler(c, 'Fort McHenry · 1814', '#ffd93d', 12, 250);
+        } else {
+          for (let k = 0; k < 4; k++) rauchWolke(c, 360 + k * 60 + t * 6, 160 - k * 10, 20, 0.5 * (1 - tag));
+          const auf = sanft((t - 5.6) / 1.4); sternenbanner(c, mx + 1.5, my + (1 - auf) * 60, 120, 72, t);
+          pergamentFeder(c, 130, 292, 0.65, sanft((t - 6.2) / 2.8), 'O say, can you see …');
+          szZaehler(c, 'the national anthem', '#ffd93d', 12, 260);
+        }
+        c.fillStyle = '#6a4630'; c.beginPath(); c.moveTo(250, 316); c.lineTo(330, 316); c.lineTo(320, 328); c.lineTo(258, 328); c.closePath(); c.fill();
+        personKlein(c, 290, 318, 0.75, 6, { arme: t > 5.4 ? 0.35 : 0.1 });
+      } },
+    DE: { dauer: 10, klaenge: [[0.3, 'feder'], [1.4, 'feder'], [2.6, 'fanfare'], [3.2, 'plopp'], [5.6, 'plopp'], [6.2, 'plopp'], [6.8, 'plopp'], [7.4, 'plopp'], [8.2, 'staunen']],
+      zeichne(c, t) {   // erst die Verfassung von 1787: Delaware unterschreibt als Erster, ein goldener Stern „1st“; dann Flächen im Vergleich: Rhode Island, Delaware, Connecticut, New Jersey als Quadrate – Delaware ist der zweitkleinste, Texas ragt riesig ins Bild
+        if (t < 5.0) {
+          c.fillStyle = '#e8dcc0'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#d8c8a4'; for (let x = 0; x < SZ_W; x += 32) c.fillRect(x, 0, 2, H);
+          pergamentFeder(c, 260, 220, 1.35, sanft((t - 0.3) / 2.2), 'WE THE PEOPLE · 1787');
+          if (t > 2.4) { const f = sanft((t - 2.4) / 0.5); stern(c, 510, 170, 70 * f); c.globalAlpha = f; c.fillStyle = '#7a3a00'; c.font = 'bold 34px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('1st', 510, 176); szText(c, 'Delaware', 510, 268, 22, '#1d2a50'); c.globalAlpha = 1; }
+          szZaehler(c, 'December 7, 1787', '#ffd93d', 12, 240);
+        } else {
+          szHimmel(c, '#cfe6f6', '#eef6fb'); c.fillStyle = '#e8eef2'; c.fillRect(0, 300, SZ_W, H);
+          c.fillStyle = '#ff9a2a'; c.fillRect(560, 0, 80, 300); c.save(); c.translate(600, 160); c.rotate(-Math.PI / 2); szText(c, 'TEXAS (much bigger!) →', 0, 0, 16); c.restore();
+          const Q = [['Rhode Island', 4001, '1.'], ['Delaware', 6446, '2.'], ['Connecticut', 14357, '3.'], ['New Jersey', 22591, '4.']];
+          let x = 40;
+          Q.forEach(([name, fl, rang], i) => {
+            const f = sanft((t - 5.4 - i * 0.6) / 0.5); const a = Math.sqrt(fl) * 1.0 * f, de = name === 'Delaware';
+            if (f > 0) { c.fillStyle = de ? '#ff9a2a' : '#8ab0d0'; c.fillRect(x, 300 - a, a, a); if (de) { c.strokeStyle = '#ffd93d'; c.lineWidth = 4; c.strokeRect(x, 300 - a, a, a); } c.globalAlpha = f; szText(c, rang, x + a / 2, 300 - a - 14, 16, de ? '#ffd93d' : '#fff'); szText(c, name, x + a / 2, 318, 13); c.globalAlpha = 1; }
+            x += Math.sqrt(fl) + 30;
+          });
+          if (t > 7.8) { c.globalAlpha = sanft((t - 7.8) / 0.5); szText(c, '2nd smallest!', 150, 120, 24, '#ffd93d'); c.globalAlpha = 1; }
+          szZaehler(c, 'small states', '#ffd93d', 12, 200);
+        }
+        szUeberblende(c, t, 5.0);
+      } },
+    NJ: { dauer: 11.8, klaenge: [[0.3, 'markt'], [1.2, 'plopp'], [2.0, 'plopp'], [2.8, 'plopp'], [3.6, 'plopp'], [4.4, 'staunen'], [6.4, 'schritte'], [7.4, 'klick'], [7.8, 'klick'], [8.2, 'lichtAn'], [9.2, 'staunen']],
+      zeichne(c, t) {   // erst zwei Quadrate von 1 km²: New Jersey füllt sich mit rund 490 Menschen, in Alaska steht nur ein Elch; dann Edisons Labor in Menlo Park: die Glühbirne flackert und leuchtet
+        if (t < 5.8) {
+          szHimmel(c, '#cfe6f6', '#eef6fb'); c.fillStyle = '#dfe8ee'; c.fillRect(0, 330, SZ_W, H);
+          szZaehler(c, 'people in 1 km²', '#ffd93d', 12, 220);
+          c.fillStyle = '#f4f1ea'; c.fillRect(60, 80, 220, 220); c.fillRect(360, 80, 220, 220); c.strokeStyle = '#1d2a50'; c.lineWidth = 3; c.strokeRect(60, 80, 220, 220); c.strokeRect(360, 80, 220, 220);
+          const n = Math.round(484 * sanft((t - 0.8) / 3.4));
+          for (let i = 0; i < n; i++) { const gx = 66 + (i % 22) * 9.6, gy = 86 + Math.floor(i / 22) * 9.6; c.fillStyle = ['#2a6cff', '#e0a400', '#2e9e5b', '#e8467c', '#8a3ffc', '#ff7a1a'][i % 6]; c.fillRect(gx + 1, gy + 3, 5, 5); c.fillStyle = '#d9a070'; c.fillRect(gx + 2, gy, 3, 3); }
+          elch(c, 470, 270, 0.55, t);
+          szText(c, 'New Jersey', 170, 318, 18); szText(c, 'Alaska', 470, 318, 18);
+          szText(c, `≈ ${Math.round(n * 490 / 484)}`, 170, 60, 18, '#1d2a50'); if (t > 4.2) szText(c, '< 1', 470, 60, 18, '#1d2a50');
+        } else {
+          c.fillStyle = '#7a5a3a'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#8a6a44'; for (let x = 0; x < SZ_W; x += 48) c.fillRect(x, 0, 44, 270);
+          c.fillStyle = '#4a3220'; for (const y of [100, 170]) c.fillRect(0, y, SZ_W, 7);
+          for (const y of [100, 170]) for (let x = 24; x < SZ_W; x += 30) { if (x > 220 && x < 420) continue; c.fillStyle = ['rgba(120,200,160,.75)', 'rgba(200,220,240,.75)', 'rgba(220,160,90,.75)'][(x / 30 | 0) % 3]; c.beginPath(); c.roundRect(x, y - 30, 14, 30, [5, 5, 2, 2]); c.fill(); }
+          c.fillStyle = '#1d2a50'; c.beginPath(); c.roundRect(200, 116, 240, 34, 8); c.fill(); c.fillStyle = '#ffd93d'; c.font = 'bold 15px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MENLO PARK, N.J. · 1879', 320, 133);
+          c.fillStyle = '#5a3a22'; c.fillRect(120, 300, 400, 14); c.fillRect(140, 314, 10, 60); c.fillRect(490, 314, 10, 60);
+          let an = 0; if (t > 7.4 && t < 8.2) an = ruhig() ? 0.5 : (Math.sin(t * 40) > 0 ? 0.6 : 0.1); else if (t >= 8.2) an = Math.min(1, (t - 8.2) * 2 + 0.6);
+          gluehbirne(c, 320, 300, 1.4, an, t);
+          personKlein(c, 190, 300, 1.3, 6, { arme: t > 8.4 ? 1 : 0.2 }); c.fillStyle = '#f4f4f2'; c.fillRect(181, 242, 18, 34);
+          c.strokeStyle = '#2a2d34'; c.lineWidth = 2; c.beginPath(); c.moveTo(338, 296); c.quadraticCurveTo(420, 280, 450, 300); c.stroke(); c.fillStyle = '#3a3d44'; c.fillRect(440, 284, 40, 16);
+          szZaehler(c, 'Thomas Edison', '#ffd93d', 12, 220);
+          if (t > 8.6) { c.globalAlpha = sanft((t - 8.6) / 0.5); szText(c, 'It really works!', 470, 230, 20, '#ffd93d'); c.globalAlpha = 1; }
+        }
+        szUeberblende(c, t, 5.8);
+      } },
+    CT: { dauer: 10, klaenge: [[0.3, 'telefon'], [1.4, 'feder'], [2.6, 'feder'], [3.8, 'telefon'], [4.8, 'feder'], [6.0, 'feder'], [7.4, 'telefon'], [8.4, 'staunen']],
+      zeichne(c, t) {   // New Haven 1878: ein altes Wandtelefon klingelt; daneben das erste Telefonbuch der Welt – ein einziges Blatt, die Namen füllen sich bis 50
+        c.fillStyle = '#e8d8b8'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = 'rgba(160,120,80,.15)'; for (let x = 0; x < SZ_W; x += 28) for (let y = 14; y < 330; y += 28) { c.beginPath(); c.arc(x + (y % 56 ? 14 : 0), y, 3, 0, Math.PI * 2); c.fill(); }
+        c.fillStyle = '#6a4630'; c.fillRect(0, 330, SZ_W, H);
+        let kl = 0; for (const t0 of [0.3, 3.8, 7.4]) if (t > t0 && t < t0 + 1.0) kl = t;
+        wandtelefon(c, 140, 200, 1.5, kl);
+        c.fillStyle = 'rgba(0,0,0,.2)'; c.fillRect(336, 76, 270, 262); c.fillStyle = '#f6efdc'; c.fillRect(330, 70, 270, 262);
+        c.fillStyle = '#3a2a1a'; c.font = 'bold 14px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('NEW HAVEN · 1878', 465, 88); c.font = 'italic 11px Georgia, serif'; c.fillText('List of Subscribers', 465, 104);
+        c.fillStyle = '#3a2a1a'; c.fillRect(350, 112, 230, 1.5);
+        const n = Math.round(50 * sanft((t - 1.0) / 6.2));
+        for (let i = 0; i < n; i++) { const col = i < 25 ? 0 : 1, row = i % 25, x = 346 + col * 128, y = 122 + row * 8.2; c.fillStyle = 'rgba(58,42,26,.75)'; c.fillRect(x, y, 70 + (i * 17) % 34, 2.4); c.fillRect(x + 108, y, 8, 2.4); }
+        szZaehler(c, `${n} names`, '#ffd93d', 12, 170);
+        if (t > 7.6) { c.globalAlpha = sanft((t - 7.6) / 0.5); szText(c, 'the first phone book in the world', 200, 312, 15, '#ffd93d'); c.globalAlpha = 1; }
+      } },
+    RI: { dauer: 10.2, klaenge: [[0.3, 'motor'], [1.8, 'moewe'], [2.4, 'motor'], [4.4, 'motor'], [5.6, 'moewe'], [6.4, 'motor'], [8.4, 'motor'], [9.4, 'hupe']],
+      zeichne(c, t) {   // eine Fahrt quer durch Rhode Island: Willkommensschild „smallest state“, die Bucht mit Segelbooten, Häuser und Bäume ziehen vorbei; Zähler km bis 77 und Minuten bis 60, am Ende das Schild „LEAVING RHODE ISLAND“
+        szHimmel(c, '#6aa8e8', '#eaf4fb'); szWolken(c, t * 0.4, [[30, 70], [380, 90], [620, 60]]);
+        const v = 120, w = t * v;
+        c.fillStyle = '#6a9a5a'; c.fillRect(0, 196, SZ_W, 10);
+        c.fillStyle = '#3a78a8'; c.fillRect(0, 206, SZ_W, 70); c.strokeStyle = 'rgba(255,255,255,.4)'; c.lineWidth = 2; for (let k = 0; k < 10; k++) { const wx = ((k * 83 - w * 0.3) % (SZ_W + 40) + SZ_W + 40) % (SZ_W + 40) - 20; c.beginPath(); c.moveTo(wx, 220 + (k % 4) * 12); c.lineTo(wx + 18, 220 + (k % 4) * 12); c.stroke(); }
+        for (let k = 0; k < 4; k++) { const bx = ((k * 230 - w * 0.3) % 920 + 920) % 920 - 140, by = 232 + (k % 2) * 18; c.fillStyle = '#f4f4f2'; c.beginPath(); c.moveTo(bx - 16, by); c.lineTo(bx + 16, by); c.lineTo(bx + 10, by + 6); c.lineTo(bx - 10, by + 6); c.fill(); c.beginPath(); c.moveTo(bx, by - 2); c.lineTo(bx, by - 34); c.lineTo(bx + 16, by - 4); c.fill(); c.fillStyle = ['#e63946', '#2a6cff'][k % 2]; c.beginPath(); c.moveTo(bx - 2, by - 4); c.lineTo(bx - 2, by - 26); c.lineTo(bx - 14, by - 4); c.fill(); }
+        c.fillStyle = '#7ab85a'; c.fillRect(0, 276, SZ_W, 30);
+        for (let k = 0; k < 9; k++) { const hx = ((k * 150 - w) % 1350 + 1350) % 1350 - 120; if (k % 3 === 1) laubbaum(c, hx, 296, 0.8, t); else { c.fillStyle = ['#f4f1ea', '#c8d8e8', '#f2d27a'][k % 3]; c.fillRect(hx - 24, 262, 48, 34); c.fillStyle = '#5a4a5a'; c.beginPath(); c.moveTo(hx - 28, 262); c.lineTo(hx, 242); c.lineTo(hx + 28, 262); c.fill(); c.fillStyle = '#3a4a5a'; c.fillRect(hx - 14, 272, 9, 10); c.fillRect(hx + 6, 272, 9, 10); } }
+        c.fillStyle = '#4a4d55'; c.fillRect(0, 306, SZ_W, 50); c.fillStyle = '#ffd93d'; for (let x = (-w % 60 + 60) % 60 - 60; x < SZ_W; x += 60) c.fillRect(x, 330, 30, 3); c.fillStyle = '#6aa84a'; c.fillRect(0, 356, SZ_W, H);
+        const schild = (wx, z1, z2, farbe) => { const x = wx - w; if (x < -150 || x > SZ_W + 150) return; c.fillStyle = '#5a5f6a'; c.fillRect(x - 40, 250, 4, 56); c.fillRect(x + 36, 250, 4, 56); c.fillStyle = farbe; c.beginPath(); c.roundRect(x - 66, 206, 132, 50, 6); c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 2; c.stroke(); c.fillStyle = '#fff'; c.font = 'bold 13px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(z1, x, 223); c.font = 'bold 11px system-ui, sans-serif'; c.fillText(z2, x, 242); };
+        schild(470, 'WELCOME TO', 'RHODE ISLAND', '#1d3f8f'); schild(250 + 9.6 * v, 'LEAVING', 'RHODE ISLAND', '#2e7a4a');
+        pkw(c, 300, 326, 1.1, '#e63946', t);
+        if (t < 3.4) { c.globalAlpha = t < 2.8 ? 1 : 1 - (t - 2.8) / 0.6; szText(c, 'the smallest state', 470 - w, 186, 15, '#ffd93d'); c.globalAlpha = 1; }
+        const f = Math.min(1, Math.max(0, (t - 0.5) / 9.0));
+        szZaehler(c, `${Math.round(77 * f)} km · ${Math.round(60 * f)} min`, '#ffd93d', 12, 240);
+        c.fillStyle = 'rgba(24,33,58,.6)'; c.beginPath(); c.roundRect(200, 60, 240, 10, 5); c.fill(); c.fillStyle = '#ffd93d'; c.beginPath(); c.roundRect(200, 60, 240 * f, 10, 5); c.fill();
+      } },
+    VT: { dauer: 10, klaenge: [[0.3, 'vogel'], [1.0, 'platsch'], [2.0, 'platsch'], [3.0, 'platsch'], [5.6, 'platsch'], [6.4, 'platsch'], [7.2, 'platsch'], [8.0, 'platsch'], [8.8, 'staunen']],
+      zeichne(c, t) {   // erst der Zuckerahorn-Wald im Spätwinter: Eimer an den Bäumen, Saft tropft, das Sudhaus dampft; dann 40 Eimer Saft rinnen nacheinander in EINE Flasche Ahornsirup (40 L → 1 L)
+        if (t < 5.0) {
+          szHimmel(c, '#8ab8e0', '#f0f4f8'); szWolken(c, t, [[40, 60], [420, 40]]);
+          c.fillStyle = '#f4f6fa'; c.fillRect(0, 250, SZ_W, H); c.fillStyle = '#dfe6ee'; for (let k = 0; k < 8; k++) { c.beginPath(); c.ellipse((k * 97) % SZ_W, 270 + (k * 23) % 50, 50, 6, 0, 0, Math.PI * 2); c.fill(); }
+          c.fillStyle = '#8a5a3a'; c.fillRect(440, 196, 140, 80); c.fillStyle = '#6a3a2a'; c.beginPath(); c.moveTo(430, 198); c.lineTo(510, 150); c.lineTo(590, 198); c.fill(); c.fillStyle = '#f4f6fa'; c.beginPath(); c.moveTo(440, 192); c.lineTo(510, 152); c.lineTo(580, 192); c.lineTo(510, 166); c.fill(); c.fillStyle = '#6a3a2a'; c.fillRect(496, 132, 28, 22);
+          for (let k = 0; k < 4; k++) { const d = ((t * 0.5 + k / 4) % 1); rauchWolke(c, 510 + d * 30, 128 - d * 90, 10 + d * 16, 0.8 * (1 - d)); }
+          c.fillStyle = '#3a2a1a'; c.fillRect(488, 236, 22, 40); c.fillStyle = '#5a3a22'; c.beginPath(); c.roundRect(450, 206, 120, 22, 4); c.fill(); c.fillStyle = '#f2e6c8'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('SUGAR HOUSE', 510, 218);
+          for (const [x, s] of [[70, 1.15], [210, 0.95], [330, 1.2], [620, 0.9]]) { ahorn(c, x, 300, s); saftEimer(c, x + 8 * s, 300 - 70 * s, s, 0.5, t + x); }
+          if (t > 0.6) { c.globalAlpha = sanft((t - 0.6) / 0.5); szZaehler(c, 'No. 1 for maple syrup', '#ffd93d', 12, 280); c.globalAlpha = 1; }
+        } else {
+          c.fillStyle = '#f2ead8'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#8a5a3a'; c.fillRect(0, 312, SZ_W, H);
+          const f = sanft((t - 5.6) / 3.4), weg = Math.floor(f * 40);
+          for (let i = 0; i < 40; i++) { const x = 34 + (i % 8) * 36, y = 92 + Math.floor(i / 8) * 44; c.globalAlpha = i < weg ? 0.18 : 1; saftEimer(c, x, y, 0.85, i < weg ? 0 : 0.9, t, false); c.globalAlpha = 1; }
+          c.fillStyle = '#c8283a'; c.beginPath(); c.moveTo(340, 200); c.lineTo(392, 200); c.lineTo(392, 186); c.lineTo(420, 210); c.lineTo(392, 234); c.lineTo(392, 220); c.lineTo(340, 220); c.closePath(); c.fill();
+          sirupFlasche(c, 510, 312, 2.1, f);
+          szText(c, `${40 - weg} L sap`, 170, 66, 20, '#fff'); szText(c, `${f > 0.99 ? '1' : f.toFixed(1)} L syrup`, 510, 66, 20, '#ffd93d');
+          szZaehler(c, '40 → 1', '#ffd93d', 12, 130);
+        }
+        szUeberblende(c, t, 5.0);
+      } },
+    NH: { dauer: 11.8, klaenge: [[0.2, 'wind'], [1.4, 'wind'], [2.6, 'wind'], [3.8, 'wind'], [5.0, 'wind'], [6.2, 'wind'], [7.4, 'wind'], [8.6, 'wind'], [9.6, 'staunen']],
+      zeichne(c, t) {   // Mount Washington: grauer Felsgipfel mit Wetterstation, Wolken jagen vorbei, Windstriche werden immer dichter, ein Wanderer hält sich am Geländer fest, sein Hut fliegt davon; Zähler bis 372 km/h (1934)
+        const st = sanft((t - 0.5) / 7.5);
+        szHimmel(c, '#5a7a9a', '#c8d4e0');
+        c.fillStyle = '#5a7a5a'; c.beginPath(); c.moveTo(0, H); c.lineTo(0, 300); c.lineTo(120, 240); c.lineTo(240, 150); c.lineTo(310, 118); c.lineTo(360, 120); c.lineTo(440, 170); c.lineTo(560, 236); c.lineTo(SZ_W, 280); c.lineTo(SZ_W, H); c.fill();
+        c.fillStyle = '#8a8f96'; c.beginPath(); c.moveTo(190, 186); c.lineTo(240, 150); c.lineTo(310, 118); c.lineTo(360, 120); c.lineTo(440, 170); c.lineTo(470, 190); c.lineTo(400, 180); c.lineTo(340, 160); c.lineTo(260, 170); c.closePath(); c.fill();
+        c.fillStyle = '#eef2f6'; for (const [x, y] of [[262, 152], [300, 128], [390, 140], [420, 162]]) { c.beginPath(); c.moveTo(x, y); c.lineTo(x + 18, y + 4); c.lineTo(x + 4, y + 8); c.fill(); }
+        c.fillStyle = '#7a7f88'; c.fillRect(300, 92, 64, 28); c.fillStyle = '#5a5f68'; c.fillRect(312, 70, 18, 26); c.fillStyle = '#3a4a5a'; for (let k = 0; k < 4; k++) c.fillRect(306 + k * 14, 100, 8, 8);
+        c.strokeStyle = '#2a2d34'; c.lineWidth = 2; c.beginPath(); c.moveTo(321, 70); c.lineTo(321, 46); c.stroke();
+        { const a = ruhig() ? 0 : t * (4 + st * 30); c.fillStyle = '#2a2d34'; for (let k = 0; k < 3; k++) { const b = a + k * 2.1; c.beginPath(); c.arc(321 + Math.cos(b) * 10, 46 + Math.sin(b) * 3, 3, 0, Math.PI * 2); c.fill(); } }
+        szText(c, 'Mount Washington', 330, 210, 15);
+        c.strokeStyle = '#3a3d44'; c.lineWidth = 2; c.beginPath(); c.moveTo(230, 156); c.lineTo(230, 136); c.lineTo(290, 112); c.moveTo(260, 144); c.lineTo(260, 124); c.stroke();
+        const wurf = t > 2.8 ? (t - 2.8) * 70 : 0;
+        hutPerson(c, 246, 150, 0.7, 2, { hut: wurf > 0 ? null : 'cowboy', arme: 0.4 });
+        if (wurf > 0 && wurf < 600) { c.save(); c.translate(246 + wurf * 2, 104 - wurf * 0.35 + Math.sin(wurf * 0.08) * 10); c.rotate(wurf * 0.06); c.fillStyle = '#8a5a2b'; c.beginPath(); c.ellipse(0, 3, 11, 2.5, 0, 0, Math.PI * 2); c.fill(); c.beginPath(); c.roundRect(-6, -6, 12, 9, [4, 4, 1, 1]); c.fill(); c.restore(); }
+        if (!ruhig()) { c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2; const n = Math.round(6 + st * 30); for (let k = 0; k < n; k++) { const y = 20 + (k * 53) % 300, len = 30 + st * 90, x = ((k * 197 + t * (300 + st * 900)) % (SZ_W + len + 40)) - len; c.beginPath(); c.moveTo(x, y); c.lineTo(x + len, y); c.stroke(); } }
+        c.fillStyle = 'rgba(255,255,255,.75)'; for (let k = 0; k < 3; k++) { const x = ((k * 260 + t * (80 + st * 300)) % (SZ_W + 200)) - 100; c.beginPath(); c.ellipse(x, 60 + k * 26, 60, 14, 0, 0, Math.PI * 2); c.fill(); }
+        szZaehler(c, `${Math.round(372 * st)} km/h`, '#ffd93d', 12, 180);
+        if (t > 8.2) { c.globalAlpha = sanft((t - 8.2) / 0.5); szText(c, 'April 1934', 320, 68, 18, '#ffd93d'); c.globalAlpha = 1; }
+      } },
+    ME: { dauer: 10, klaenge: [[0.3, 'brandung'], [1.0, 'moewe'], [2.4, 'welle'], [3.4, 'platsch'], [4.6, 'moewe'], [5.6, 'plopp'], [6.0, 'plopp'], [6.4, 'plopp'], [6.8, 'plopp'], [7.2, 'plopp'], [7.6, 'plopp'], [8.0, 'plopp'], [8.4, 'plopp'], [8.8, 'nebelhorn']],
+      zeichne(c, t) {   // die Felsküste von Maine mit Leuchtturm, ein Hummerboot holt die Falle hoch, bunte Bojen, vorn ein großer roter Hummer; dann zehn Hummer: acht davon kommen aus Maine
+        szHimmel(c, '#5a98d8', '#eaf2f8'); szWolken(c, t, [[0, 50], [300, 30]]);
+        c.fillStyle = '#2f6a9a'; c.fillRect(0, 210, SZ_W, H); c.strokeStyle = 'rgba(255,255,255,.4)'; c.lineWidth = 2; for (let k = 0; k < 14; k++) { const wx = (k * 97 + t * 10) % (SZ_W + 60) - 30, wy = 226 + (k % 5) * 16; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 22, wy); c.stroke(); }
+        c.fillStyle = '#6a6460'; c.beginPath(); c.moveTo(420, 236); c.lineTo(450, 206); c.lineTo(520, 200); c.lineTo(600, 196); c.lineTo(SZ_W, 210); c.lineTo(SZ_W, 250); c.lineTo(440, 250); c.fill(); c.fillStyle = '#4f7a3a'; c.fillRect(470, 196, 170, 6);
+        leuchtturm(c, 560, 200, 150, t, 0);
+        for (const [x, f] of [[120, ['#e63946', '#ffd93d', '#e63946']], [230, ['#2a6cff', '#fff', '#2a6cff']], [360, ['#2e9e5b', '#ffd93d', '#2e9e5b']]]) boje(c, x, 254, 0.7, f, t);
+        { const bx = 280, by = 232, hoch = sanft((t - 1.6) / 1.6); c.fillStyle = '#f4f4f2'; c.beginPath(); c.moveTo(bx - 60, by - 14); c.lineTo(bx + 60, by - 18); c.lineTo(bx + 48, by); c.lineTo(bx - 54, by); c.closePath(); c.fill(); c.fillStyle = '#c8283a'; c.fillRect(bx - 56, by - 6, 106, 3);
+          c.fillStyle = '#f4f4f2'; c.fillRect(bx + 10, by - 40, 34, 24); c.fillStyle = '#3a4a5a'; c.fillRect(bx + 16, by - 34, 9, 8); c.fillRect(bx + 29, by - 34, 9, 8);
+          c.strokeStyle = '#3a3d44'; c.lineWidth = 2; c.beginPath(); c.moveTo(bx - 30, by - 14); c.lineTo(bx - 30, by - 50); c.lineTo(bx - 66, by - 40); c.lineTo(bx - 66, lerp(by + 10, by - 26, hoch)); c.stroke();
+          hummerKorb(c, bx - 66, lerp(by + 30, by - 4, hoch), 0.55); personKlein(c, bx - 14, by - 14, 0.55, 5, { arme: hoch * 0.6 }); }
+        c.fillStyle = '#8a6a44'; c.fillRect(0, 300, 330, 14); c.fillStyle = '#6a4a2a'; for (let x = 10; x < 330; x += 40) c.fillRect(x, 314, 8, 60);
+        hummer(c, 170, 274, 0.95, t, -0.15);
+        moeweFlug(c, (t * 40) % 760 - 60, 90, t, 1.2); moeweFlug(c, (t * 30 + 300) % 760 - 60, 120, t + 1, 1);
+        if (t < 5.0) szZaehler(c, 'Maine lobster', '#ffd93d', 12, 200);
+        else {
+          const g = sanft((t - 5.0) / 0.5); c.globalAlpha = g; c.fillStyle = 'rgba(24,33,58,.78)'; c.beginPath(); c.roundRect(40, 60, 560, 110, 12); c.fill();
+          for (let i = 0; i < 10; i++) { const x = 80 + i * 53, me = i < 8, an = t > 5.6 + i * 0.4; if (!an) continue; c.save(); if (!me) c.globalAlpha *= 0.35; hummer(c, x, 104, 0.3, t, -Math.PI / 2); c.restore(); szText(c, me ? 'ME' : 'other', x, 154, 12, me ? '#ffd93d' : '#c8ccd2'); }
+          szZaehler(c, 'Most US lobsters: Maine', '#ffd93d', 12, 300); c.globalAlpha = 1;
+        }
       } },
   };
   // Big Ben mit echter Aufnahme: 15,5 s; bis 14 s laufen die Westminster Chimes (Bild wie beim Nachbau bis kurz vor dem Schlag, langsamer), dann EIN Stundenschlag (Nachbau)

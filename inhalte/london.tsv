@@ -1,24 +1,24 @@
 id	name	symbol	x	y	fakt
-big_ben	Big Ben	🔔	200	143	Big Ben is the name of the bell, not the tower!
-london_eye	London Eye	🎡	214	128	The London Eye is 135 metres tall. One ride takes 30 minutes.
-tower_bridge	Tower Bridge	🌉	302	128	Tower Bridge can open in the middle to let big ships through.
-buckingham	Buckingham Palace	👑	163	136	Buckingham Palace has 775 rooms – and 78 bathrooms!
-tower	Tower of London	🏰	290	112	Ravens live at the Tower of London. People say the kingdom will fall if they ever leave.
-hyde_park	Hyde Park	🌳	128	112	Hyde Park is bigger than 200 football pitches.
-trafalgar	Trafalgar Square	🦁	192	114	Four big metal lions sit in Trafalgar Square.
+big_ben	Big Ben	🔔	200	143	Big Ben is the name of the bell, not the tower! The tower is called the Elizabeth Tower. It is part of the Palace of Westminster, where Parliament meets.
+london_eye	London Eye	🎡	214	128	The London Eye is 135 metres tall. One ride takes 30 minutes. On a clear day, you can see about 40 kilometres.
+tower_bridge	Tower Bridge	🌉	302	128	Tower Bridge can open in the middle to let big ships through. It opens about 800 times a year.
+buckingham	Buckingham Palace	👑	163	136	Buckingham Palace has 775 rooms – and 78 bathrooms! The King lives and works here. Every day, soldiers change the guard in front of the palace.
+tower	Tower of London	🏰	290	112	Ravens live at the Tower of London. People say the kingdom will fall if they ever leave. Today you can see the Crown Jewels there.
+hyde_park	Hyde Park	🌳	128	112	Hyde Park is bigger than 200 football pitches. You can ride a bike, feed the ducks or take a boat on the lake.
+trafalgar	Trafalgar Square	🦁	192	114	Four big metal lions sit in Trafalgar Square. In the middle, Nelson's Column is 52 metres tall.
 piccadilly	Piccadilly Circus	📺	172	104	Piccadilly Circus has huge, bright screens. They are on day and night.
-st_pauls	St Paul's Cathedral	⛪	246	100	In St Paul's Cathedral, you can whisper on one side of a gallery, and people on the other side can hear you.
-westminster	Westminster Abbey	✨	186	152	Kings and queens get their crowns in Westminster Abbey.
-camden	Camden Market	🛍️	180	42	Camden Market has more than one thousand shops and food stalls.
+st_pauls	St Paul's Cathedral	⛪	246	100	In St Paul's Cathedral, you can whisper on one side of a gallery, and people on the other side can hear you. Its big dome is one of the biggest in the world.
+westminster	Westminster Abbey	✨	186	152	Kings and queens get their crowns in Westminster Abbey. It is a church right next to the Palace of Westminster and Big Ben.
+camden	Camden Market	🛍️	180	42	Camden Market has more than one thousand shops and food stalls. You can buy clothes, music and food from all over the world.
 british_museum	British Museum	🏛️	203	80	The British Museum has about eight million objects – and it's free!
-natural_history	Natural History Museum	🐋	112	142	In the Natural History Museum, you can see the skeleton of a giant blue whale.
-shard	The Shard	🔺	276	146	The Shard is the tallest building in the UK. It is 310 metres tall.
-wembley	Wembley Stadium	⚽	62	30	Wembley Stadium has 90,000 seats. Its big arch is 133 metres tall.
-tube	The Tube	🚇	228	62	The London Underground is the oldest underground railway in the world. It opened in 1863.
+natural_history	Natural History Museum	🐋	112	142	In the Natural History Museum, you can see the skeleton of a giant blue whale. Her name is Hope.
+shard	The Shard	🔺	276	146	The Shard is the tallest building in the UK. It is 310 metres tall. It looks like a giant piece of broken glass.
+wembley	Wembley Stadium	⚽	62	30	Wembley Stadium has 90,000 seats. Its big arch is 133 metres tall. England's football team plays its home games here.
+tube	The Tube	🚇	228	62	The London Underground is the oldest underground railway in the world. It opened in 1863. Londoners call it the Tube.
 bus	Double-decker bus	🚌	150	180	London's red buses have two floors. Sit upstairs at the front for the best view!
 covent_garden	Covent Garden	🎭	208	102	In Covent Garden, street artists perform for people every day.
 notting_hill	Notting Hill	🎨	90	92	Notting Hill has colourful houses and a big street carnival every August.
-greenwich	Greenwich	🧭	362	160	In Greenwich, you can stand with one foot in the east and one foot in the west.
+greenwich	Greenwich	🧭	362	160	In Greenwich, you can stand with one foot in the east and one foot in the west. The line is called the Prime Meridian.
 thames	River Thames	🌊	330	132	The River Thames is 346 kilometres long. It flows right through London.
 kew	Kew Gardens	🌺	22	172	Kew Gardens has about fifty thousand different plants.
 borough	Borough Market	🧀	262	140	Borough Market is one of the oldest food markets in London – about one thousand years old.

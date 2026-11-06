@@ -6075,7 +6075,7 @@ window.DATEN = {
     "symbol": "🔔",
     "x": 200,
     "y": 143,
-    "fakt": "Big Ben is the name of the bell, not the tower!",
+    "fakt": "Big Ben is the name of the bell, not the tower! The tower is called the Elizabeth Tower. It is part of the Palace of Westminster, where Parliament meets.",
     "audio": "audio/london/big_ben.mp3",
     "foto": "bilder/orte/big_ben.jpg",
     "foto_quelle": "Foto: Juri Kowski, CC BY-SA 3.0, Wikimedia Commons"
@@ -6086,7 +6086,7 @@ window.DATEN = {
     "symbol": "🎡",
     "x": 214,
     "y": 128,
-    "fakt": "The London Eye is 135 metres tall. One ride takes 30 minutes.",
+    "fakt": "The London Eye is 135 metres tall. One ride takes 30 minutes. On a clear day, you can see about 40 kilometres.",
     "audio": "audio/london/london_eye.mp3",
     "foto": "bilder/orte/london_eye.jpg",
     "foto_quelle": "Foto: Diliff, CC BY 2.5, Wikimedia Commons"
@@ -6097,7 +6097,7 @@ window.DATEN = {
     "symbol": "🌉",
     "x": 302,
     "y": 128,
-    "fakt": "Tower Bridge can open in the middle to let big ships through.",
+    "fakt": "Tower Bridge can open in the middle to let big ships through. It opens about 800 times a year.",
     "audio": "audio/london/tower_bridge.mp3",
     "foto": "bilder/orte/tower_bridge.jpg",
     "foto_quelle": "Foto: Dietmar Rabich, CC BY-SA 4.0, Wikimedia Commons"
@@ -6108,8 +6108,10 @@ window.DATEN = {
     "symbol": "👑",
     "x": 163,
     "y": 136,
-    "fakt": "Buckingham Palace has 775 rooms – and 78 bathrooms!",
-    "audio": "audio/london/buckingham.mp3"
+    "fakt": "Buckingham Palace has 775 rooms – and 78 bathrooms! The King lives and works here. Every day, soldiers change the guard in front of the palace.",
+    "audio": "audio/london/buckingham.mp3",
+    "foto": "bilder/orte/buckingham.jpg",
+    "foto_quelle": "Foto: Diliff, CC BY-SA 3.0, Wikimedia Commons"
    },
    {
     "id": "tower",
@@ -6117,7 +6119,7 @@ window.DATEN = {
     "symbol": "🏰",
     "x": 290,
     "y": 112,
-    "fakt": "Ravens live at the Tower of London. People say the kingdom will fall if they ever leave.",
+    "fakt": "Ravens live at the Tower of London. People say the kingdom will fall if they ever leave. Today you can see the Crown Jewels there.",
     "audio": "audio/london/tower.mp3",
     "foto": "bilder/orte/tower.jpg",
     "foto_quelle": "Foto: Bob Collowan, CC BY-SA 3.0, Wikimedia Commons"
@@ -6128,8 +6130,10 @@ window.DATEN = {
     "symbol": "🌳",
     "x": 128,
     "y": 112,
-    "fakt": "Hyde Park is bigger than 200 football pitches.",
-    "audio": "audio/london/hyde_park.mp3"
+    "fakt": "Hyde Park is bigger than 200 football pitches. You can ride a bike, feed the ducks or take a boat on the lake.",
+    "audio": "audio/london/hyde_park.mp3",
+    "foto": "bilder/orte/hyde_park.jpg",
+    "foto_quelle": "Foto: Ermell, CC BY-SA 4.0, Wikimedia Commons"
    },
    {
     "id": "trafalgar",
@@ -6137,8 +6141,10 @@ window.DATEN = {
     "symbol": "🦁",
     "x": 192,
     "y": 114,
-    "fakt": "Four big metal lions sit in Trafalgar Square.",
-    "audio": "audio/london/trafalgar.mp3"
+    "fakt": "Four big metal lions sit in Trafalgar Square. In the middle, Nelson's Column is 52 metres tall.",
+    "audio": "audio/london/trafalgar.mp3",
+    "foto": "bilder/orte/trafalgar.jpg",
+    "foto_quelle": "Foto: John Copleston, CC BY-SA 2.0, Wikimedia Commons"
    },
    {
     "id": "piccadilly",
@@ -6147,7 +6153,9 @@ window.DATEN = {
     "x": 172,
     "y": 104,
     "fakt": "Piccadilly Circus has huge, bright screens. They are on day and night.",
-    "audio": "audio/london/piccadilly.mp3"
+    "audio": "audio/london/piccadilly.mp3",
+    "foto": "bilder/orte/piccadilly.jpg",
+    "foto_quelle": "Foto: Chris Whippet, CC BY-SA 2.0, Wikimedia Commons"
    },
    {
     "id": "st_pauls",
@@ -6155,8 +6163,10 @@ window.DATEN = {
     "symbol": "⛪",
     "x": 246,
     "y": 100,
-    "fakt": "In St Paul's Cathedral, you can whisper on one side of a gallery, and people on the other side can hear you.",
-    "audio": "audio/london/st_pauls.mp3"
+    "fakt": "In St Paul's Cathedral, you can whisper on one side of a gallery, and people on the other side can hear you. Its big dome is one of the biggest in the world.",
+    "audio": "audio/london/st_pauls.mp3",
+    "foto": "bilder/orte/st_pauls.jpg",
+    "foto_quelle": "Foto: Colin, CC BY-SA 4.0, Wikimedia Commons"
    },
    {
     "id": "westminster",
@@ -6164,7 +6174,7 @@ window.DATEN = {
     "symbol": "✨",
     "x": 186,
     "y": 152,
-    "fakt": "Kings and queens get their crowns in Westminster Abbey.",
+    "fakt": "Kings and queens get their crowns in Westminster Abbey. It is a church right next to the Palace of Westminster and Big Ben.",
     "audio": "audio/london/westminster.mp3"
    },
    {
@@ -6173,8 +6183,10 @@ window.DATEN = {
     "symbol": "🛍️",
     "x": 180,
     "y": 42,
-    "fakt": "Camden Market has more than one thousand shops and food stalls.",
-    "audio": "audio/london/camden.mp3"
+    "fakt": "Camden Market has more than one thousand shops and food stalls. You can buy clothes, music and food from all over the world.",
+    "audio": "audio/london/camden.mp3",
+    "foto": "bilder/orte/camden.jpg",
+    "foto_quelle": "Foto: ell brown, CC BY-SA 2.0, Wikimedia Commons"
    },
    {
     "id": "british_museum",
@@ -6183,7 +6195,9 @@ window.DATEN = {
     "x": 203,
     "y": 80,
     "fakt": "The British Museum has about eight million objects – and it's free!",
-    "audio": "audio/london/british_museum.mp3"
+    "audio": "audio/london/british_museum.mp3",
+    "foto": "bilder/orte/british_museum.jpg",
+    "foto_quelle": "Foto: Elliott Brown, CC BY-SA 2.0, Wikimedia Commons"
    },
    {
     "id": "natural_history",
@@ -6191,8 +6205,10 @@ window.DATEN = {
     "symbol": "🐋",
     "x": 112,
     "y": 142,
-    "fakt": "In the Natural History Museum, you can see the skeleton of a giant blue whale.",
-    "audio": "audio/london/natural_history.mp3"
+    "fakt": "In the Natural History Museum, you can see the skeleton of a giant blue whale. Her name is Hope.",
+    "audio": "audio/london/natural_history.mp3",
+    "foto": "bilder/orte/natural_history.jpg",
+    "foto_quelle": "Foto: Julian Herzog, CC BY 4.0, Wikimedia Commons"
    },
    {
     "id": "shard",
@@ -6200,7 +6216,7 @@ window.DATEN = {
     "symbol": "🔺",
     "x": 276,
     "y": 146,
-    "fakt": "The Shard is the tallest building in the UK. It is 310 metres tall.",
+    "fakt": "The Shard is the tallest building in the UK. It is 310 metres tall. It looks like a giant piece of broken glass.",
     "audio": "audio/london/shard.mp3"
    },
    {
@@ -6209,7 +6225,7 @@ window.DATEN = {
     "symbol": "⚽",
     "x": 62,
     "y": 30,
-    "fakt": "Wembley Stadium has 90,000 seats. Its big arch is 133 metres tall.",
+    "fakt": "Wembley Stadium has 90,000 seats. Its big arch is 133 metres tall. England's football team plays its home games here.",
     "audio": "audio/london/wembley.mp3",
     "foto": "bilder/orte/wembley.jpg",
     "foto_quelle": "Foto: Richard Webb, CC BY-SA 2.0, Wikimedia Commons"
@@ -6220,7 +6236,7 @@ window.DATEN = {
     "symbol": "🚇",
     "x": 228,
     "y": 62,
-    "fakt": "The London Underground is the oldest underground railway in the world. It opened in 1863.",
+    "fakt": "The London Underground is the oldest underground railway in the world. It opened in 1863. Londoners call it the Tube.",
     "audio": "audio/london/tube.mp3",
     "foto": "bilder/orte/tube.jpg",
     "foto_quelle": "Foto: Nevit Dilmen, CC BY-SA 3.0, Wikimedia Commons"
@@ -6243,7 +6259,9 @@ window.DATEN = {
     "x": 208,
     "y": 102,
     "fakt": "In Covent Garden, street artists perform for people every day.",
-    "audio": "audio/london/covent_garden.mp3"
+    "audio": "audio/london/covent_garden.mp3",
+    "foto": "bilder/orte/covent_garden.jpg",
+    "foto_quelle": "Foto: Dietmar Rabich, CC BY-SA 4.0, Wikimedia Commons"
    },
    {
     "id": "notting_hill",
@@ -6252,7 +6270,9 @@ window.DATEN = {
     "x": 90,
     "y": 92,
     "fakt": "Notting Hill has colourful houses and a big street carnival every August.",
-    "audio": "audio/london/notting_hill.mp3"
+    "audio": "audio/london/notting_hill.mp3",
+    "foto": "bilder/orte/notting_hill.jpg",
+    "foto_quelle": "Foto: Christopher Hilton, CC BY-SA 2.0, Wikimedia Commons"
    },
    {
     "id": "greenwich",
@@ -6260,8 +6280,10 @@ window.DATEN = {
     "symbol": "🧭",
     "x": 362,
     "y": 160,
-    "fakt": "In Greenwich, you can stand with one foot in the east and one foot in the west.",
-    "audio": "audio/london/greenwich.mp3"
+    "fakt": "In Greenwich, you can stand with one foot in the east and one foot in the west. The line is called the Prime Meridian.",
+    "audio": "audio/london/greenwich.mp3",
+    "foto": "bilder/orte/greenwich.jpg",
+    "foto_quelle": "Foto: Jakub Hałun, CC BY 4.0, Wikimedia Commons"
    },
    {
     "id": "thames",
@@ -6281,7 +6303,9 @@ window.DATEN = {
     "x": 22,
     "y": 172,
     "fakt": "Kew Gardens has about fifty thousand different plants.",
-    "audio": "audio/london/kew.mp3"
+    "audio": "audio/london/kew.mp3",
+    "foto": "bilder/orte/kew.jpg",
+    "foto_quelle": "Foto: Diliff, CC BY-SA 3.0, Wikimedia Commons"
    },
    {
     "id": "borough",
@@ -6290,7 +6314,9 @@ window.DATEN = {
     "x": 262,
     "y": 140,
     "fakt": "Borough Market is one of the oldest food markets in London – about one thousand years old.",
-    "audio": "audio/london/borough.mp3"
+    "audio": "audio/london/borough.mp3",
+    "foto": "bilder/orte/borough.jpg",
+    "foto_quelle": "Foto: Edward (Hochlader; Urheber siehe Dateiseite), CC BY 2.0, Wikimedia Commons"
    },
    {
     "id": "zoo",
@@ -6299,7 +6325,9 @@ window.DATEN = {
     "x": 156,
     "y": 52,
     "fakt": "London Zoo is the oldest scientific zoo in the world. It opened in 1828.",
-    "audio": "audio/london/zoo.mp3"
+    "audio": "audio/london/zoo.mp3",
+    "foto": "bilder/orte/zoo.jpg",
+    "foto_quelle": "Foto: Chris Sampson, CC BY 2.0, Wikimedia Commons"
    },
    {
     "id": "globe",
@@ -6308,7 +6336,9 @@ window.DATEN = {
     "x": 246,
     "y": 134,
     "fakt": "Shakespeare's Globe is a copy of his theatre from 1599. Many people stand to watch the plays.",
-    "audio": "audio/london/globe.mp3"
+    "audio": "audio/london/globe.mp3",
+    "foto": "bilder/orte/globe.jpg",
+    "foto_quelle": "Foto: Diego Delso, CC BY-SA 4.0, Wikimedia Commons"
    }
   ],
   "helden": [
@@ -7097,12 +7127,12 @@ window.DATEN = {
    },
    "tube": {
     "boss": {
-     "banner": null,
-     "richtig": null,
-     "falsch": null
+     "banner": "audio/runner/tube_banner.mp3",
+     "richtig": "audio/runner/tube_richtig.mp3",
+     "falsch": "audio/runner/tube_falsch.mp3"
     },
-    "start": null,
-    "ende": null,
+    "start": "audio/runner/tube_start.mp3",
+    "ende": "audio/runner/tube_ende.mp3",
     "cameo": {
      "leo": "audio/runner/cameo_leo.mp3",
      "kenji": "audio/runner/cameo_kenji.mp3",
@@ -7118,12 +7148,12 @@ window.DATEN = {
    },
    "wembley": {
     "boss": {
-     "banner": null,
-     "richtig": null,
-     "falsch": null
+     "banner": "audio/runner/wembley_banner.mp3",
+     "richtig": "audio/runner/wembley_richtig.mp3",
+     "falsch": "audio/runner/wembley_falsch.mp3"
     },
-    "start": null,
-    "ende": null,
+    "start": "audio/runner/wembley_start.mp3",
+    "ende": "audio/runner/wembley_ende.mp3",
     "cameo": {
      "leo": "audio/runner/cameo_leo.mp3",
      "kenji": "audio/runner/cameo_kenji.mp3",
@@ -7181,6 +7211,50 @@ window.DATEN = {
    "audio/story/towerbridge_B7.mp3",
    "audio/story/towerbridge_B8.mp3",
    "audio/story/towerbridge_sofar.mp3",
+   "audio/story/tube_10.mp3",
+   "audio/story/tube_1A.mp3",
+   "audio/story/tube_1B.mp3",
+   "audio/story/tube_2A.mp3",
+   "audio/story/tube_2B.mp3",
+   "audio/story/tube_3.mp3",
+   "audio/story/tube_4.mp3",
+   "audio/story/tube_9.mp3",
+   "audio/story/tube_A11.mp3",
+   "audio/story/tube_A12.mp3",
+   "audio/story/tube_A5.mp3",
+   "audio/story/tube_A6.mp3",
+   "audio/story/tube_A7.mp3",
+   "audio/story/tube_A8.mp3",
+   "audio/story/tube_B11.mp3",
+   "audio/story/tube_B12.mp3",
+   "audio/story/tube_B5.mp3",
+   "audio/story/tube_B6.mp3",
+   "audio/story/tube_B7.mp3",
+   "audio/story/tube_B8.mp3",
+   "audio/story/tube_sofar.mp3",
+   "audio/story/wembley_10.mp3",
+   "audio/story/wembley_1A.mp3",
+   "audio/story/wembley_1B.mp3",
+   "audio/story/wembley_2A.mp3",
+   "audio/story/wembley_2B.mp3",
+   "audio/story/wembley_3.mp3",
+   "audio/story/wembley_4.mp3",
+   "audio/story/wembley_9.mp3",
+   "audio/story/wembley_A5.mp3",
+   "audio/story/wembley_A6.mp3",
+   "audio/story/wembley_A7.mp3",
+   "audio/story/wembley_A8.mp3",
+   "audio/story/wembley_B5.mp3",
+   "audio/story/wembley_B6.mp3",
+   "audio/story/wembley_B7.mp3",
+   "audio/story/wembley_B8.mp3",
+   "audio/story/wembley_E1_11.mp3",
+   "audio/story/wembley_E1_12.mp3",
+   "audio/story/wembley_E2_11.mp3",
+   "audio/story/wembley_E2_12.mp3",
+   "audio/story/wembley_E3_11.mp3",
+   "audio/story/wembley_E3_12.mp3",
+   "audio/story/wembley_sofar.mp3",
    "audio/story/westminster_1.mp3",
    "audio/story/westminster_10.mp3",
    "audio/story/westminster_2.mp3",

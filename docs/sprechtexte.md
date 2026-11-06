@@ -425,26 +425,50 @@ Stimmen: Alex Langenbach – Mr. Alex' eigene Stimme; Alice – britische Frauen
 | `lob/fehler_nearly.mp3` | Alex Langenbach | Nearly there! |
 | `lob/fehler_goodtry.mp3` | Alex Langenbach | Good try – look again! |
 | `lob/fehler_hmm.mp3` | Alex Langenbach | Hmm, not quite! |
-| `london/big_ben.mp3` | Alex Langenbach | Big Ben. Big Ben is the name of the bell, not the tower! |
-| `london/london_eye.mp3` | Alex Langenbach | London Eye. The London Eye is 135 metres tall. One ride takes 30 minutes. |
-| `london/tower_bridge.mp3` | Alex Langenbach | Tower Bridge. Tower Bridge can open in the middle to let big ships through. |
-| `london/buckingham.mp3` | Alex Langenbach | Buckingham Palace. Buckingham Palace has 775 rooms – and 78 bathrooms! |
-| `london/tower.mp3` | Alex Langenbach | Tower of London. Ravens live at the Tower of London. People say the kingdom will fall if they ever leave. |
-| `london/hyde_park.mp3` | Alex Langenbach | Hyde Park. Hyde Park is bigger than 200 football pitches. |
-| `london/trafalgar.mp3` | Alex Langenbach | Trafalgar Square. Four big metal lions sit in Trafalgar Square. |
+| `lob/lob_fab.mp3` | Alex Langenbach | Fab! |
+| `lob/lob_nicelydone.mp3` | Alex Langenbach | Nicely done! |
+| `lob/lob_superb.mp3` | Alex Langenbach | Superb! |
+| `lob/lob_ace.mp3` | Alex Langenbach | Ace! |
+| `lob/lob_genius.mp3` | Alex Langenbach | Genius! |
+| `lob/lob_bullseye.mp3` | Alex Langenbach | Bullseye! |
+| `lob/lob_youreright.mp3` | Alex Langenbach | You're right! |
+| `lob/lob_greatstuff.mp3` | Alex Langenbach | Great stuff! |
+| `lob/lob_wellspotted.mp3` | Alex Langenbach | Well spotted! |
+| `lob/lob_goodthinking.mp3` | Alex Langenbach | Good thinking! |
+| `lob/lob_keepgoing.mp3` | Alex Langenbach | Keep going! |
+| `lob/lob_wicked.mp3` | Alex Langenbach | Wicked! |
+| `lob/lob_legend.mp3` | Alex Langenbach | Legend! |
+| `lob/lob_unstoppable.mp3` | Alex Langenbach | You're unstoppable! |
+| `lob/lob_englishpro.mp3` | Alex Langenbach | You're a real English pro! |
+| `lob/lob_smile.mp3` | Alex Langenbach | That makes me smile! |
+| `lob/lob_rockstar.mp3` | Alex Langenbach | You're a rock star! |
+| `lob/lob_blownaway.mp3` | Alex Langenbach | Wow – I'm blown away! |
+| `lob/lob_classproud.mp3` | Alex Langenbach | The whole class can be proud of you! |
+| `lob/fehler_nextone.mp3` | Alex Langenbach | Don't worry – the next one is yours! |
+| `lob/fehler_onemore.mp3` | Alex Langenbach | Almost there – one more try! |
+| `lob/fehler_learn.mp3` | Alex Langenbach | Mistakes help us learn! |
+| `lob/fehler_thinkagain.mp3` | Alex Langenbach | Think again – you know this! |
+| `lob/fehler_lookagain.mp3` | Alex Langenbach | Take it easy – look again! |
+| `london/big_ben.mp3` | Alex Langenbach | Big Ben. Big Ben is the name of the bell, not the tower! The tower is called the Elizabeth Tower. It is part of the Palace of Westminster, where Parliament meets. |
+| `london/london_eye.mp3` | Alex Langenbach | London Eye. The London Eye is 135 metres tall. One ride takes 30 minutes. On a clear day, you can see about 40 kilometres. |
+| `london/tower_bridge.mp3` | Alex Langenbach | Tower Bridge. Tower Bridge can open in the middle to let big ships through. It opens about 800 times a year. |
+| `london/buckingham.mp3` | Alex Langenbach | Buckingham Palace. Buckingham Palace has 775 rooms – and 78 bathrooms! The King lives and works here. Every day, soldiers change the guard in front of the palace. |
+| `london/tower.mp3` | Alex Langenbach | Tower of London. Ravens live at the Tower of London. People say the kingdom will fall if they ever leave. Today you can see the Crown Jewels there. |
+| `london/hyde_park.mp3` | Alex Langenbach | Hyde Park. Hyde Park is bigger than 200 football pitches. You can ride a bike, feed the ducks or take a boat on the lake. |
+| `london/trafalgar.mp3` | Alex Langenbach | Trafalgar Square. Four big metal lions sit in Trafalgar Square. In the middle, Nelson's Column is 52 metres tall. |
 | `london/piccadilly.mp3` | Alex Langenbach | Piccadilly Circus. Piccadilly Circus has huge, bright screens. They are on day and night. |
-| `london/st_pauls.mp3` | Alex Langenbach | St Paul's Cathedral. In St Paul's Cathedral, you can whisper on one side of a gallery, and people on the other side can hear you. |
-| `london/westminster.mp3` | Alex Langenbach | Westminster Abbey. Kings and queens get their crowns in Westminster Abbey. |
-| `london/camden.mp3` | Alex Langenbach | Camden Market. Camden Market has more than one thousand shops and food stalls. |
+| `london/st_pauls.mp3` | Alex Langenbach | St Paul's Cathedral. In St Paul's Cathedral, you can whisper on one side of a gallery, and people on the other side can hear you. Its big dome is one of the biggest in the world. |
+| `london/westminster.mp3` | Alex Langenbach | Westminster Abbey. Kings and queens get their crowns in Westminster Abbey. It is a church right next to the Palace of Westminster and Big Ben. |
+| `london/camden.mp3` | Alex Langenbach | Camden Market. Camden Market has more than one thousand shops and food stalls. You can buy clothes, music and food from all over the world. |
 | `london/british_museum.mp3` | Alex Langenbach | British Museum. The British Museum has about eight million objects – and it's free! |
-| `london/natural_history.mp3` | Alex Langenbach | Natural History Museum. In the Natural History Museum, you can see the skeleton of a giant blue whale. |
-| `london/shard.mp3` | Alex Langenbach | The Shard. The Shard is the tallest building in the UK. It is 310 metres tall. |
-| `london/wembley.mp3` | Alex Langenbach | Wembley Stadium. Wembley Stadium has 90,000 seats. Its big arch is 133 metres tall. |
-| `london/tube.mp3` | Alex Langenbach | The Tube. The London Underground is the oldest underground railway in the world. It opened in 1863. |
+| `london/natural_history.mp3` | Alex Langenbach | Natural History Museum. In the Natural History Museum, you can see the skeleton of a giant blue whale. Her name is Hope. |
+| `london/shard.mp3` | Alex Langenbach | The Shard. The Shard is the tallest building in the UK. It is 310 metres tall. It looks like a giant piece of broken glass. |
+| `london/wembley.mp3` | Alex Langenbach | Wembley Stadium. Wembley Stadium has 90,000 seats. Its big arch is 133 metres tall. England's football team plays its home games here. |
+| `london/tube.mp3` | Alex Langenbach | The Tube. The London Underground is the oldest underground railway in the world. It opened in 1863. Londoners call it the Tube. |
 | `london/bus.mp3` | Alex Langenbach | Double-decker bus. London's red buses have two floors. Sit upstairs at the front for the best view! |
 | `london/covent_garden.mp3` | Alex Langenbach | Covent Garden. In Covent Garden, street artists perform for people every day. |
 | `london/notting_hill.mp3` | Alex Langenbach | Notting Hill. Notting Hill has colourful houses and a big street carnival every August. |
-| `london/greenwich.mp3` | Alex Langenbach | Greenwich. In Greenwich, you can stand with one foot in the east and one foot in the west. |
+| `london/greenwich.mp3` | Alex Langenbach | Greenwich. In Greenwich, you can stand with one foot in the east and one foot in the west. The line is called the Prime Meridian. |
 | `london/thames.mp3` | Alex Langenbach | River Thames. The River Thames is 346 kilometres long. It flows right through London. |
 | `london/kew.mp3` | Alex Langenbach | Kew Gardens. Kew Gardens has about fifty thousand different plants. |
 | `london/borough.mp3` | Alex Langenbach | Borough Market. Borough Market is one of the oldest food markets in London – about one thousand years old. |

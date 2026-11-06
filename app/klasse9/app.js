@@ -1936,6 +1936,8 @@
   function ortSzene(l, fertig) {
     if (!hatSzene(l)) return false;
     const sz = window.Runner.szene(null, l.id, { text: l.steckbrief, titel: `🏞️ ${l.name}`, foto: l.bild, quelle: l.foto_quelle, onEnde: () => { if (fertig) fertig(); },
+      // Voice-over (6.11.): Aufnahme des Steckbriefs (l.audio) bzw. Geräte-Stimme en-US läuft mit der Szene (Haupttext-Vorrang); ✕/Schließen stoppt sie
+      voice: () => hauptText([l.audio || { text: l.steckbrief, stimme: "m" }], { warten: true }), voiceStopp: () => stopp(),
       stimme: (text) => hauptText([{ text, stimme: "m" }], { warten: true }) });   // Durchsagen der Szene mit der Geräte-Stimme
     return !!sz;
   }
@@ -1955,7 +1957,7 @@
         ton && ton.audio && knopf(T("🔊 Anhören", "🔊 Listen"), () => spiele([ton.audio])),
         knopf(T("Weiter ➜", "Next ➜"), () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
     feier.showModal();
-    if (ton && ton.audio) spiele([ton.audio], { warten: true }); // wartet, falls noch ein Lob läuft
+    if (ton && ton.audio && !e.szeneFertig) spiele([ton.audio], { warten: true }); // wartet, falls noch ein Lob läuft; nach der Szene nicht doppelt (Voice-over lief schon)
   }
   function konfetti() {
     const farben = ["#c8283a", "#1d3f8f", "#ffffff", "#ffd23f", "#8fb0ff"];

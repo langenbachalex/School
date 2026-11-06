@@ -2129,9 +2129,12 @@
   const hatSzene = (o) => !!(o && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(o.id));
   function ortSzene(o, fertig) {
     if (!hatSzene(o)) return false;
-    // Big Ben: bis eine echte Aufnahme da ist (Kandidat Commons „Big Ben 1 2013-07-02.ogv“, CC BY-SA 3.0), spielt der WebAudio-Nachbau; dann hier
-    // window.Runner.klangDatei("glocke", "audio/orte/big_ben.mp3") setzen (Datei + app/audio/orte/QUELLEN.md)
+    // Big Ben (6.11., Mr. Alex): echte Aufnahme Westminster Chimes + Stundenschlag (app/audio/orte/westminster_chimes.mp3, Quelle app/audio/orte/QUELLEN.md) –
+    // nur in der Szene (klang.chimes, ersetzt Viertelmelodie + Schlag des Nachbaus); im London Run bleibt der kurze WebAudio-Nachbau (klang.glocke)
+    if (window.Runner.klangDatei) window.Runner.klangDatei("chimes", "audio/orte/westminster_chimes.mp3");
     const sz = window.Runner.szene(null, o.id, { text: o.fakt, titel: `${o.symbol} ${o.name} · London ✓`, foto: o.foto, quelle: o.foto_quelle, onEnde: () => { if (fertig) fertig(); },
+      // Voice-over (6.11.): die eingesprochene Aufnahme des Fakts läuft mit der Szene (Haupttext-Vorrang, wartet auf ein laufendes Lob); ✕/Schließen stoppt sie
+      voice: o.audio ? () => hauptText([o.audio], { warten: true }) : null, voiceStopp: () => stopp(),
       stimme: (text, lang) => hauptText([{ tts: text, lang: lang || "en-GB", stimme: "m" }], { warten: true }) });   // Durchsagen der Szene (Tube) mit der Geräte-Stimme
     return !!sz;
   }

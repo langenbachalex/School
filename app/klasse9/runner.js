@@ -9986,6 +9986,8 @@
     const bild = () => {
       c2.setTransform(1, 0, 0, 1, 0, 0); c2.fillStyle = '#18213a'; c2.fillRect(0, 0, cv.width, cv.height);
       c2.setTransform(massstab, 0, 0, massstab, 0, 0); c2.save(); c2.beginPath(); c2.rect(0, 0, SZ_W, H); c2.clip();
+      const nachZoom = A.t > S.dauer ? Math.min(1.15, 1 + 0.02 * (A.t - S.dauer)) : 1;   // 6.11.: spricht die Stimme länger als die Szene, zoomt das letzte Bild langsam heran (statt stillzustehen)
+      if (nachZoom > 1) { c2.translate(SZ_W / 2, H / 2); c2.scale(nachZoom, nachZoom); c2.translate(-SZ_W / 2, -H / 2); }
       try { S.zeichne(c2, Math.min(A.t, S.dauer)); } catch (e) { A.fehler = String(e && e.message || e); }
       c2.restore();
       if (A.phase === 'foto') { c2.setTransform(1, 0, 0, 1, 0, 0); c2.fillStyle = 'rgba(10,14,28,.35)'; c2.fillRect(0, 0, cv.width, cv.height); }

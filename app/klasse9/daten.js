@@ -8919,301 +8919,301 @@ window.DATEN = {
    {
     "id": "NY",
     "name": "New York",
-    "fakt": "New York City has more than eight million people – more than any other city in the USA.",
+    "fakt": "New York City has more than eight million people – more than any other city in the USA. The Statue of Liberty stands in New York Harbor. It was a present from France in 1886.",
     "audio": "audio/staaten/NY.mp3"
    },
    {
     "id": "MA",
     "name": "Massachusetts",
-    "fakt": "Harvard, the oldest university in the USA, is in Massachusetts. It opened in 1636.",
+    "fakt": "Harvard, the oldest university in the USA, is in Massachusetts. It opened in 1636. In 1621, the Pilgrims had a famous harvest meal in Massachusetts. Today, Americans remember it on Thanksgiving.",
     "audio": "audio/staaten/MA.mp3"
    },
    {
     "id": "PA",
     "name": "Pennsylvania",
-    "fakt": "The Declaration of Independence was signed in Philadelphia, Pennsylvania, in 1776.",
+    "fakt": "The Declaration of Independence was signed in Philadelphia, Pennsylvania, in 1776. The Liberty Bell is in Philadelphia, too. It has a big crack.",
     "audio": "audio/staaten/PA.mp3"
    },
    {
     "id": "FL",
     "name": "Florida",
-    "fakt": "Florida has more than one million alligators.",
+    "fakt": "Florida has more than one million alligators. Florida is also home to the Kennedy Space Center. Rockets fly into space from there.",
     "audio": "audio/staaten/FL.mp3"
    },
    {
     "id": "TX",
     "name": "Texas",
-    "fakt": "Texas is the second biggest state. Only Alaska is bigger.",
+    "fakt": "Texas is the second biggest state. Only Alaska is bigger. Texas has more cows than any other state – about 12 million.",
     "audio": "audio/staaten/TX.mp3"
    },
    {
     "id": "CA",
     "name": "California",
-    "fakt": "California has more people than any other state – almost 40 million.",
+    "fakt": "California has more people than any other state – almost 40 million. Many famous films are made in Hollywood, Los Angeles. The Golden Gate Bridge in San Francisco is 2.7 kilometers long.",
     "audio": "audio/staaten/CA.mp3"
    },
    {
     "id": "IL",
     "name": "Illinois",
-    "fakt": "Chicago, Illinois, built the world's first skyscraper in 1885.",
+    "fakt": "Chicago, Illinois, built the world's first skyscraper in 1885. It had only ten floors. Today, the Willis Tower in Chicago is 442 meters tall.",
     "audio": "audio/staaten/IL.mp3"
    },
    {
     "id": "WA",
     "name": "Washington",
-    "fakt": "Washington State grows more apples than any other state.",
+    "fakt": "Washington State grows more apples than any other state. More than half of all apples in the USA come from there. Seattle's Space Needle is 184 meters tall.",
     "audio": "audio/staaten/WA.mp3"
    },
    {
     "id": "HI",
     "name": "Hawaii",
-    "fakt": "Hawaii is a group of islands in the Pacific Ocean. It has active volcanoes.",
+    "fakt": "Hawaii is a group of islands in the Pacific Ocean. It has active volcanoes. Kilauea is one of the most active volcanoes in the world. People in Hawaii were surfing hundreds of years ago.",
     "audio": "audio/staaten/HI.mp3"
    },
    {
     "id": "AK",
     "name": "Alaska",
-    "fakt": "Alaska is the biggest state. It is more than twice as big as Texas.",
+    "fakt": "Alaska is the biggest state. It is more than twice as big as Texas. Denali in Alaska is the highest mountain in North America. It is 6,190 meters high.",
     "audio": "audio/staaten/AK.mp3"
    },
    {
     "id": "AZ",
     "name": "Arizona",
-    "fakt": "The Grand Canyon in Arizona is about 1.8 kilometers deep.",
+    "fakt": "The Grand Canyon in Arizona is about 1.8 kilometers deep. It is about 446 kilometers long. The Colorado River made it over millions of years.",
     "audio": "audio/staaten/AZ.mp3"
    },
    {
     "id": "NV",
     "name": "Nevada",
-    "fakt": "Las Vegas, Nevada, is a big city in the middle of a desert.",
+    "fakt": "Las Vegas, Nevada, is a big city in the middle of a desert. It has about 150,000 hotel rooms. The Hoover Dam near Las Vegas is 221 meters high.",
     "audio": "audio/staaten/NV.mp3"
    },
    {
     "id": "UT",
     "name": "Utah",
-    "fakt": "Utah has five national parks with amazing red rocks.",
+    "fakt": "Utah has five national parks with amazing red rocks. Utah also has the Great Salt Lake. The water is so salty that you can float on it easily.",
     "audio": "audio/staaten/UT.mp3"
    },
    {
     "id": "CO",
     "name": "Colorado",
-    "fakt": "Colorado has more than 50 mountains that are higher than 4,000 meters.",
+    "fakt": "Colorado has more than 50 mountains that are higher than 4,000 meters. Its capital, Denver, is called the Mile High City. It is about 1,600 meters above the sea.",
     "audio": "audio/staaten/CO.mp3"
    },
    {
     "id": "WY",
     "name": "Wyoming",
-    "fakt": "Yellowstone, the first national park in the world, is mostly in Wyoming.",
+    "fakt": "Yellowstone, the first national park in the world, is mostly in Wyoming. It opened in 1872. Wyoming has the fewest people of all 50 states.",
     "audio": "audio/staaten/WY.mp3"
    },
    {
     "id": "MT",
     "name": "Montana",
-    "fakt": "In Montana, there are more cows than people.",
+    "fakt": "In Montana, there are more cows than people. About 1.1 million people live there – and more than 2 million cows.",
     "audio": "audio/staaten/MT.mp3"
    },
    {
     "id": "ID",
     "name": "Idaho",
-    "fakt": "Idaho grows about one third of all the potatoes in the USA.",
+    "fakt": "Idaho grows about one third of all the potatoes in the USA. Idaho is also famous for beautiful stones. That is why it is called the Gem State.",
     "audio": "audio/staaten/ID.mp3"
    },
    {
     "id": "OR",
     "name": "Oregon",
-    "fakt": "Crater Lake in Oregon is the deepest lake in the USA.",
+    "fakt": "Crater Lake in Oregon is the deepest lake in the USA. It is 594 meters deep. The lake is inside an old volcano.",
     "audio": "audio/staaten/OR.mp3"
    },
    {
     "id": "NM",
     "name": "New Mexico",
-    "fakt": "Albuquerque, New Mexico, has one of the biggest hot-air balloon festivals in the world.",
+    "fakt": "Albuquerque, New Mexico, has one of the biggest hot-air balloon festivals in the world. Every October, more than 500 balloons fly over the city. Santa Fe, the capital, is more than 400 years old.",
     "audio": "audio/staaten/NM.mp3"
    },
    {
     "id": "OK",
     "name": "Oklahoma",
-    "fakt": "Oklahoma has one of the longest parts of the famous Route 66.",
+    "fakt": "Oklahoma has one of the longest parts of the famous Route 66. Route 66 goes from Chicago to Los Angeles. That is almost 4,000 kilometers.",
     "audio": "audio/staaten/OK.mp3"
    },
    {
     "id": "KS",
     "name": "Kansas",
-    "fakt": "Kansas grows so much wheat that people call it the Wheat State.",
+    "fakt": "Kansas grows so much wheat that people call it the Wheat State. The center of the 48 mainland states is in Kansas, near the small town of Lebanon.",
     "audio": "audio/staaten/KS.mp3"
    },
    {
     "id": "NE",
     "name": "Nebraska",
-    "fakt": "Arbor Day, a day for planting trees, started in Nebraska in 1872.",
+    "fakt": "Arbor Day, a day for planting trees, started in Nebraska in 1872. On the first Arbor Day, people planted about one million trees.",
     "audio": "audio/staaten/NE.mp3"
    },
    {
     "id": "SD",
     "name": "South Dakota",
-    "fakt": "Mount Rushmore in South Dakota shows four presidents. Each face is 18 meters tall.",
+    "fakt": "Mount Rushmore in South Dakota shows four presidents. Each face is 18 meters tall. About 400 workers made it between 1927 and 1941.",
     "audio": "audio/staaten/SD.mp3"
    },
    {
     "id": "ND",
     "name": "North Dakota",
-    "fakt": "North Dakota is one of the states with the fewest people.",
+    "fakt": "North Dakota is one of the states with the fewest people. Only about 800,000 people live there. North Dakota grows more sunflowers than any other state.",
     "audio": "audio/staaten/ND.mp3"
    },
    {
     "id": "MN",
     "name": "Minnesota",
-    "fakt": "Minnesota is called the Land of 10,000 Lakes – but it really has more than 11,000.",
+    "fakt": "Minnesota is called the Land of 10,000 Lakes – but it really has more than 11,000. The Mall of America in Minnesota is the biggest shopping mall in the USA. It even has a theme park inside.",
     "audio": "audio/staaten/MN.mp3"
    },
    {
     "id": "IA",
     "name": "Iowa",
-    "fakt": "Iowa grows more corn than almost any other state.",
+    "fakt": "Iowa grows more corn than almost any other state. Iowa also has more pigs than any other state – about 24 million.",
     "audio": "audio/staaten/IA.mp3"
    },
    {
     "id": "MO",
     "name": "Missouri",
-    "fakt": "The Gateway Arch in St. Louis, Missouri, is 192 meters tall.",
+    "fakt": "The Gateway Arch in St. Louis, Missouri, is 192 meters tall. It is also 192 meters wide. A small tram takes visitors up to the top.",
     "audio": "audio/staaten/MO.mp3"
    },
    {
     "id": "WI",
     "name": "Wisconsin",
-    "fakt": "Wisconsin is famous for cheese. Fans of its football team are called Cheeseheads.",
+    "fakt": "Wisconsin is famous for cheese. Fans of its football team are called Cheeseheads. Wisconsin makes more cheese than any other state.",
     "audio": "audio/staaten/WI.mp3"
    },
    {
     "id": "MI",
     "name": "Michigan",
-    "fakt": "Michigan touches four of the five Great Lakes.",
+    "fakt": "Michigan touches four of the five Great Lakes. Detroit, Michigan, is called Motor City. Many American cars come from there.",
     "audio": "audio/staaten/MI.mp3"
    },
    {
     "id": "OH",
     "name": "Ohio",
-    "fakt": "Seven US presidents were born in Ohio.",
+    "fakt": "Seven US presidents were born in Ohio. Neil Armstrong, the first man on the moon, was from Ohio, too.",
     "audio": "audio/staaten/OH.mp3"
    },
    {
     "id": "IN",
     "name": "Indiana",
-    "fakt": "The Indianapolis 500 in Indiana is one of the biggest car races in the world.",
+    "fakt": "The Indianapolis 500 in Indiana is one of the biggest car races in the world. The cars drive 500 miles – about 800 kilometers. That is 200 laps.",
     "audio": "audio/staaten/IN.mp3"
    },
    {
     "id": "KY",
     "name": "Kentucky",
-    "fakt": "Kentucky is famous for horses and the Kentucky Derby race.",
+    "fakt": "Kentucky is famous for horses and the Kentucky Derby race. Mammoth Cave in Kentucky is the longest cave in the world. People know more than 680 kilometers of it.",
     "audio": "audio/staaten/KY.mp3"
    },
    {
     "id": "TN",
     "name": "Tennessee",
-    "fakt": "Nashville, Tennessee, is called Music City.",
+    "fakt": "Nashville, Tennessee, is called Music City. Elvis Presley lived in Memphis, Tennessee. His house, Graceland, is now a museum.",
     "audio": "audio/staaten/TN.mp3"
    },
    {
     "id": "GA",
     "name": "Georgia",
-    "fakt": "Georgia grows lots of peaches. It is called the Peach State.",
+    "fakt": "Georgia grows lots of peaches. It is called the Peach State. Coca-Cola was invented in Atlanta, Georgia, in 1886.",
     "audio": "audio/staaten/GA.mp3"
    },
    {
     "id": "LA",
     "name": "Louisiana",
-    "fakt": "New Orleans, Louisiana, is the home of jazz music.",
+    "fakt": "New Orleans, Louisiana, is the home of jazz music. Every year, the city has a huge street party with music and colorful parades. It is called Mardi Gras.",
     "audio": "audio/staaten/LA.mp3"
    },
    {
     "id": "MS",
     "name": "Mississippi",
-    "fakt": "The Mississippi River is one of the longest rivers in North America.",
+    "fakt": "The Mississippi River is one of the longest rivers in North America. It is about 3,700 kilometers long. It flows from Minnesota all the way to the sea in Louisiana.",
     "audio": "audio/staaten/MS.mp3"
    },
    {
     "id": "AL",
     "name": "Alabama",
-    "fakt": "The rocket that took people to the moon was developed in Huntsville, Alabama.",
+    "fakt": "The rocket that took people to the moon was developed in Huntsville, Alabama. The Saturn V rocket was 110 meters tall. You can see a real one in Huntsville today.",
     "audio": "audio/staaten/AL.mp3"
    },
    {
     "id": "AR",
     "name": "Arkansas",
-    "fakt": "In Arkansas, there is a park where you can look for real diamonds.",
+    "fakt": "In Arkansas, there is a park where you can look for real diamonds. It is called Crater of Diamonds. If you find a diamond, you can keep it.",
     "audio": "audio/staaten/AR.mp3"
    },
    {
     "id": "SC",
     "name": "South Carolina",
-    "fakt": "The first battle of the American Civil War was in South Carolina in 1861.",
+    "fakt": "The first battle of the American Civil War was in South Carolina in 1861. It started at Fort Sumter, near the city of Charleston.",
     "audio": "audio/staaten/SC.mp3"
    },
    {
     "id": "NC",
     "name": "North Carolina",
-    "fakt": "The Wright brothers flew the first airplane in North Carolina in 1903.",
+    "fakt": "The Wright brothers flew the first airplane in North Carolina in 1903. The first flight lasted only 12 seconds. The plane flew 37 meters.",
     "audio": "audio/staaten/NC.mp3"
    },
    {
     "id": "VA",
     "name": "Virginia",
-    "fakt": "Eight US presidents were born in Virginia – more than in any other state.",
+    "fakt": "Eight US presidents were born in Virginia – more than in any other state. Four of the first five presidents came from Virginia, for example George Washington.",
     "audio": "audio/staaten/VA.mp3"
    },
    {
     "id": "WV",
     "name": "West Virginia",
-    "fakt": "West Virginia is almost completely covered by mountains.",
+    "fakt": "West Virginia is almost completely covered by mountains. It is called the Mountain State. Its New River Gorge Bridge is 267 meters above the river.",
     "audio": "audio/staaten/WV.mp3"
    },
    {
     "id": "MD",
     "name": "Maryland",
-    "fakt": "The US national anthem was written in Baltimore, Maryland, in 1814.",
+    "fakt": "The US national anthem was written in Baltimore, Maryland, in 1814. Francis Scott Key wrote it after he watched a battle at Fort McHenry.",
     "audio": "audio/staaten/MD.mp3"
    },
    {
     "id": "DE",
     "name": "Delaware",
-    "fakt": "Delaware was the first state of the USA. It joined in 1787.",
+    "fakt": "Delaware was the first state of the USA. It joined in 1787. It is also the second smallest state.",
     "audio": "audio/staaten/DE.mp3"
    },
    {
     "id": "NJ",
     "name": "New Jersey",
-    "fakt": "New Jersey has more people per square kilometer than any other state.",
+    "fakt": "New Jersey has more people per square kilometer than any other state. Thomas Edison had his famous lab in New Jersey. There, he made a light bulb that really worked.",
     "audio": "audio/staaten/NJ.mp3"
    },
    {
     "id": "CT",
     "name": "Connecticut",
-    "fakt": "The first telephone book in the world was printed in Connecticut in 1878.",
+    "fakt": "The first telephone book in the world was printed in Connecticut in 1878. It had only 50 names.",
     "audio": "audio/staaten/CT.mp3"
    },
    {
     "id": "RI",
     "name": "Rhode Island",
-    "fakt": "Rhode Island is the smallest state in the USA.",
+    "fakt": "Rhode Island is the smallest state in the USA. It is only about 77 kilometers long. You can drive across it in about one hour.",
     "audio": "audio/staaten/RI.mp3"
    },
    {
     "id": "VT",
     "name": "Vermont",
-    "fakt": "Vermont makes more maple syrup than any other state.",
+    "fakt": "Vermont makes more maple syrup than any other state. You need about 40 liters of tree sap for one liter of syrup.",
     "audio": "audio/staaten/VT.mp3"
    },
    {
     "id": "NH",
     "name": "New Hampshire",
-    "fakt": "Mount Washington in New Hampshire has some of the strongest winds in the world.",
+    "fakt": "Mount Washington in New Hampshire has some of the strongest winds in the world. In 1934, the wind there reached 372 kilometers per hour.",
     "audio": "audio/staaten/NH.mp3"
    },
    {
     "id": "ME",
     "name": "Maine",
-    "fakt": "Maine is famous for lobsters.",
+    "fakt": "Maine is famous for lobsters. Most of the lobsters in the USA come from Maine.",
     "audio": "audio/staaten/ME.mp3"
    }
   ],

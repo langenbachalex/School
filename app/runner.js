@@ -9429,6 +9429,42 @@
     const g = c.createRadialGradient(x - r * 0.4, y - r * 0.4, r * 0.1, x, y, r); g.addColorStop(0, 'rgba(255,255,255,.25)'); g.addColorStop(1, 'rgba(0,0,40,.35)'); c.fillStyle = g; c.fillRect(x - r, y - r, r * 2, r * 2);
     c.restore();
   }
+  // Landmarks Etappe 3 (Klasse 9, 6.11.2026): neue Zeichnungen für Times Square (Leuchtwände) und Niagara Falls (Horseshoe Falls); Old Faithful = geysir, White House = weissesHaus
+  function timesSquareWaende(c, t) {   // Times Square: links und rechts Häuserblöcke voller Leuchtwände (blinken, ohne Marken), in der Mitte der schmale Turm One Times Square mit großer Wand
+    const an = (k) => ruhig() ? 1 : (Math.sin(t * 3.4 + k * 1.7) > -0.4 ? 1 : 0.35);
+    const farben = ['#ff3d7f', '#1f6bff', '#ffc43d', '#22c46f', '#ff7a1a', '#7a3dff', '#00b8c8', '#e63946'];
+    const texte = ['SHOW', 'NYC', 'BROADWAY', 'MUSIC', 'NEWS', 'PIZZA', 'DANCE', '24/7'];
+    const block = (x0, w, tafeln) => {
+      c.fillStyle = '#2a2f3e'; c.fillRect(x0, 40, w, 252); c.fillStyle = '#1e2230'; for (let x = x0 + 8; x < x0 + w - 8; x += 24) c.fillRect(x, 40, 3, 252);
+      tafeln.forEach(([tx, ty, tw, th], i) => { const k = i + (x0 > 300 ? 4 : 0), f = farben[k % 8];
+        c.globalAlpha = an(k); c.fillStyle = '#111'; c.fillRect(x0 + tx - 3, ty - 3, tw + 6, th + 6); c.fillStyle = f; c.fillRect(x0 + tx, ty, tw, th);
+        c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(x0 + tx, ty, tw, th * 0.35);
+        c.fillStyle = '#fff'; c.font = `bold ${Math.min(22, th * 0.42, (tw - 10) / (texte[k % 8].length * 0.68))}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(texte[k % 8], x0 + tx + tw / 2, ty + th / 2 + 1);
+        c.globalAlpha = 1; });
+    };
+    block(0, 236, [[14, 58, 120, 62], [146, 70, 80, 50], [14, 136, 90, 54], [114, 132, 112, 70], [24, 214, 196, 50]]);
+    block(404, 236, [[12, 66, 110, 56], [132, 54, 92, 76], [12, 138, 130, 60], [152, 146, 72, 52], [20, 214, 196, 50]]);
+    c.fillStyle = '#3a4054'; c.fillRect(292, 136, 56, 156); c.fillStyle = '#2a2f3e'; c.fillRect(296, 120, 48, 16);
+    c.globalAlpha = an(9); c.fillStyle = '#111'; c.fillRect(294, 160, 52, 74); c.fillStyle = REGENBOGEN[Math.floor(t * 2) % 6]; c.fillRect(297, 163, 46, 68);
+    c.fillStyle = '#fff'; c.font = 'bold 13px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('NEW', 320, 186); c.fillText('YEAR', 320, 204); c.globalAlpha = 1;
+    c.fillStyle = 'rgba(255,230,160,.6)'; for (let y = 244; y < 286; y += 12) for (let x = 300; x < 344; x += 10) c.fillRect(x, y, 5, 6);
+  }
+  function niagaraFaelle(c, t) {   // Horseshoe Falls von vorn: oben Ufer mit Bäumen und der Fluss, gebogene Kante, fallendes Wasser (Strähnen laufen nach unten), unten Becken mit Gischt; links die US-Seite (Felsen, Wiese)
+    const kante = (x) => 158 - 44 * Math.sin(Math.PI * Math.max(0, Math.min(1, (x - 160) / 460)));
+    c.fillStyle = '#5f8a44'; c.fillRect(-60, 84, SZ_W + 120, 40);
+    for (let i = 0; i < 20; i++) tanne(c, -20 + i * 36, 104 - (i % 3) * 3, 26 + (i % 4) * 5, '#2f5a3a');
+    c.fillStyle = '#3d8fc4'; c.beginPath(); c.moveTo(150, 108); c.lineTo(SZ_W + 60, 108); c.lineTo(SZ_W + 60, kante(620)); for (let x = 620; x >= 160; x -= 10) c.lineTo(x, kante(x)); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 2; for (let k = 0; k < 8; k++) { const x = 200 + ((k * 57 + t * 40) % 420); c.beginPath(); c.moveTo(x, 112 + (k % 3) * 5); c.lineTo(x + 18, 112 + (k % 3) * 5); c.stroke(); }
+    const g = c.createLinearGradient(0, 110, 0, 300); g.addColorStop(0, '#e8f6ff'); g.addColorStop(0.5, '#b8dcf0'); g.addColorStop(1, '#f4fbff');
+    c.fillStyle = g; c.beginPath(); for (let x = 160; x <= 620; x += 10) c.lineTo(x, kante(x)); c.lineTo(SZ_W + 60, kante(620)); c.lineTo(SZ_W + 60, 300); c.lineTo(160, 300); c.closePath(); c.fill();
+    c.save(); c.setLineDash([22, 14]); c.lineDashOffset = -t * 160; c.strokeStyle = 'rgba(120,180,215,.6)'; c.lineWidth = 3;
+    for (let x = 166; x < SZ_W + 40; x += 11) { c.beginPath(); c.moveTo(x, kante(Math.min(620, x)) + 2); c.lineTo(x + Math.sin(x) * 3, 300); c.stroke(); } c.restore();
+    c.fillStyle = '#7a6a5a'; c.beginPath(); c.moveTo(-60, 124); c.lineTo(160, 124); c.lineTo(166, 158); c.lineTo(170, 300); c.lineTo(-60, 300); c.closePath(); c.fill();
+    c.fillStyle = '#5f8a44'; c.fillRect(-60, 118, 222, 10); c.fillStyle = 'rgba(0,0,0,.15)'; for (let y = 150; y < 300; y += 26) c.fillRect(-60, y, 226, 3);
+    c.fillStyle = '#2f6a7a'; c.fillRect(-60, 296, SZ_W + 120, 140);
+    c.fillStyle = 'rgba(255,255,255,.35)'; for (let k = 0; k < 9; k++) { c.beginPath(); c.ellipse((k * 83 + t * 20) % 700 - 30, 330 + (k % 3) * 18, 34, 5, 0, 0, Math.PI * 2); c.fill(); }
+    for (let k = 0; k < 14; k++) { const x = 170 + k * 34, p = Math.sin(t * 1.6 + k) * 0.5 + 0.5; c.fillStyle = `rgba(255,255,255,${0.55 + 0.3 * p})`; c.beginPath(); c.arc(x, 292 - p * 14, 26 + p * 10, 0, Math.PI * 2); c.fill(); }
+  }
   const SZENEN = {
     // Klasse 6 – London
     big_ben: { variante: () => KLANG_DATEI.chimes ? BIGBEN_CHIMES : null, dauer: 9.6, klaenge: [[0.4, 'klick'], [0.8, 'klick'], [1.2, 'klick'], [1.6, 'klick'], [1.9, 'viertel'], [4.6, 'glocke'], [6.0, 'glocke'], [7.4, 'glocke']],
@@ -10788,6 +10824,76 @@
           for (let i = 0; i < 10; i++) { const x = 80 + i * 53, me = i < 8, an = t > 5.6 + i * 0.4; if (!an) continue; c.save(); if (!me) c.globalAlpha *= 0.35; hummer(c, x, 104, 0.3, t, -Math.PI / 2); c.restore(); szText(c, me ? 'ME' : 'other', x, 154, 12, me ? '#ffd93d' : '#c8ccd2'); }
           szZaehler(c, 'Most US lobsters: Maine', '#ffd93d', 12, 300); c.globalAlpha = 1;
         }
+      } },
+    // Klasse 9 – Landmarks, Etappe 3 (6.11.2026): Times Square, Niagara Falls, Old Faithful, White House (Schlüssel = Landmark-id, inhalte/klasse9/landmarks.tsv)
+    times_square: { dauer: 9, klaenge: [[0.2, 'verkehr'], [1.0, 'taxi'], [2.2, 'hupe'], [3.0, 'verkehr'], [3.6, 'klick'], [4.3, 'klick'], [5.0, 'klick'], [5.7, 'jubel'], [6.0, 'applaus'], [7.4, 'hupe']],
+      zeichne(c, t) {   // Times Square bei Nacht – nie dunkel: Leuchtwände blinken, gelbe Taxis, eine Menschenmenge; der Ball fällt am Mast herab (3, 2, 1), Mitternacht: HAPPY NEW YEAR! und Konfetti
+        const z = lerp(1, 1.08, sanft(t / 9));
+        c.save(); c.translate(SZ_W / 2, 300); c.scale(z, z); c.translate(-SZ_W / 2, -300);
+        szHimmel(c, '#0d1430', '#3a2a5a');
+        skylineStadt(c, SZ_W / 2, 292, 1.07, 'ny', 1);
+        timesSquareWaende(c, t);
+        const ball = sanft((t - 3.4) / 2.2), by = lerp(84, 128, ball);
+        c.fillStyle = '#5a6478'; c.fillRect(318, 70, 4, 66);
+        const g = c.createRadialGradient(320, by, 2, 320, by, 30); g.addColorStop(0, 'rgba(255,255,255,.9)'); g.addColorStop(1, 'rgba(120,180,255,0)'); c.fillStyle = g; c.beginPath(); c.arc(320, by, 30, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#dff1ff'; c.beginPath(); c.arc(320, by, 12, 0, Math.PI * 2); c.fill(); c.fillStyle = REGENBOGEN[Math.floor(t * 4) % 6]; for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(320 + Math.cos(k + t * 3) * 7, by + Math.sin(k + t * 3) * 7, 2.5, 0, Math.PI * 2); c.fill(); }
+        c.fillStyle = '#c9c4ba'; c.fillRect(-40, 292, SZ_W + 80, 14); c.fillStyle = '#3a3d44'; c.fillRect(-40, 306, SZ_W + 80, 160);
+        c.fillStyle = 'rgba(255,255,255,.8)'; for (let x = -40; x < SZ_W + 40; x += 70) c.fillRect(x + ((t * 30) % 70), 338, 36, 3);
+        for (let i = 0; i < 4; i++) { const rechts = i % 2, f = ((t * 0.2 + i * 0.29) % 1.3) - 0.15, tx = rechts ? lerp(-120, SZ_W + 40, f) : lerp(SZ_W + 40, -120, f); nyTaxi(c, tx, rechts ? 362 : 332, 0.9, t * 10, (t > 2.2 && t < 3.0 && i === 0) || (t > 7.4 && t < 8.2 && i === 1), rechts); }
+        const jubel = t > 5.7;
+        for (let i = 0; i < 24; i++) { const px = 12 + i * 27 + Math.sin(i * 3) * 6; personKlein(c, px, 300 + (i % 2) * 6, 0.44, i, { arme: jubel ? 0.6 + 0.4 * Math.abs(Math.sin(t * 4 + i)) : 0 }); }
+        c.restore();
+        if (t > 3.4 && t < 5.7) { const n = 3 - Math.floor((t - 3.4) / 0.77); szZaehler(c, String(Math.max(1, n)), '#ffd93d', 12, 80); }
+        if (jubel) { szKonfetti(c, t, 50, 5.7); c.save(); c.globalAlpha = sanft((t - 5.7) / 0.3); szZaehler(c, '🎉 HAPPY NEW YEAR!', '#ffd93d', 12, 300); c.restore(); }
+      } },
+    niagara: { dauer: 9, klaenge: [[0.2, 'brandung'], [1.4, 'brandung'], [2.6, 'brandung'], [3.4, 'faehre'], [3.8, 'brandung'], [5.0, 'brandung'], [6.2, 'brandung'], [7.4, 'brandung']],
+      zeichne(c, t) {   // Horseshoe Falls: Wasser stürzt über die gebogene Kante (Strähnen laufen), unten Gischt und ein Regenbogen, ein Ausflugsboot fährt heran; links USA, rechts Canada; der Zähler läuft bis 1,000,000+ Liter pro Sekunde
+        const z = lerp(1.06, 1, sanft(t / 4));
+        c.save(); c.translate(SZ_W / 2, 260); c.scale(z, z); c.translate(-SZ_W / 2, -260);
+        szHimmel(c, '#6eb4ea', '#e6f2fa'); szWolken(c, t, [[-20, 60], [400, 40]]);
+        niagaraFaelle(c, t);
+        c.restore();
+        c.save(); c.globalAlpha = 0.45 * sanft((t - 1.4) / 1.6); c.lineWidth = 6; REGENBOGEN.forEach((f, i) => { c.strokeStyle = f; c.beginPath(); c.arc(330, 380, 230 - i * 6, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }); c.restore();
+        const f = Math.max(0, Math.min(1, (t - 1.6) / 6));
+        szWelt({ zeit: t, kamera: 0 }, () => bootZeichnen(c, lerp(SZ_W + 60, 380, sanft(f)), 352 + Math.sin(t * 2.4) * 3, 0.9));
+        c.save(); c.setLineDash([6, 6]); c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 2; c.beginPath(); c.moveTo(150, 120); c.lineTo(150, 236); c.stroke(); c.restore();
+        for (const [x, text] of [[76, 'USA'], [226, 'CANADA']]) { c.font = 'bold 15px system-ui, sans-serif'; const w = c.measureText(text).width + 18; c.fillStyle = 'rgba(24,33,58,.75)'; c.beginPath(); c.roundRect(x - w / 2, 100, w, 26, 8); c.fill(); c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, x, 113); }
+        if (t > 4.0) { const n = Math.round(1000000 * sanft((t - 4.0) / 3)); szZaehler(c, `💧 ${n.toLocaleString('en-US')}${t > 7 ? '+' : ''} liters / second`, '#ffd93d', 12, 380); }
+      } },
+    yellowstone: { dauer: 9, klaenge: [[0.3, 'wind'], [0.8, 'klick'], [1.4, 'klick'], [2.0, 'rumpeln'], [2.6, 'rumpeln'], [3.0, 'feuer'], [4.2, 'feuer'], [5.4, 'feuer'], [6.0, 'applaus']],
+      zeichne(c, t) {   // Old Faithful: die Uhr springt von 90 auf 0 Minuten, der Boden grollt, dann schießt die Wassersäule zischend in die Luft; Zuschauer am Holzsteg jubeln
+        szHimmel(c, '#6eb4ea', '#e6f2fa'); szWolken(c, t, [[20, 60], [440, 40]]);
+        c.fillStyle = '#6a8a5a'; c.beginPath(); c.moveTo(0, 236); c.quadraticCurveTo(220, 200, 400, 228); c.quadraticCurveTo(540, 240, SZ_W, 214); c.lineTo(SZ_W, 264); c.lineTo(0, 264); c.fill();
+        for (let i = 0; i < 18; i++) tanne(c, i * 37 + 10, 262 - (i % 3) * 4, 42 + (i % 4) * 8, '#2f5a3a');
+        c.fillStyle = '#e8e2d4'; c.fillRect(0, 260, SZ_W, H);
+        c.fillStyle = '#6ad0e0'; c.beginPath(); c.ellipse(140, 300, 40, 7, 0, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#e8a040'; c.lineWidth = 3; c.stroke();
+        const zittern = t > 2.0 && t < 3.0 && !ruhig() ? Math.sin(t * 60) * 1.5 : 0;
+        const st = t < 2.9 ? 0 : t < 3.8 ? sanft((t - 2.9) / 0.9) : t < 6.8 ? 1 - Math.sin((t - 3.8) * 3) * 0.05 : 1 - sanft((t - 6.8) / 1.8);
+        c.save(); c.translate(zittern, 0); geysir(c, 330, 300, 1.08, st, t); c.restore();
+        c.fillStyle = '#a07850'; c.fillRect(0, 352, SZ_W, 10); c.fillStyle = '#7a5a3a'; for (let x = 10; x < SZ_W; x += 60) c.fillRect(x, 330, 5, 24); c.fillRect(0, 332, SZ_W, 4);
+        for (let i = 0; i < 9; i++) personKlein(c, 40 + i * 68, 352, 0.62, i, { arme: st > 0.8 ? Math.abs(Math.sin(t * 3 + i)) : 0 });
+        const min = t < 0.6 ? 90 : t < 2.0 ? Math.round(90 * (1 - sanft((t - 0.6) / 1.4))) : 0;
+        szZaehler(c, t > 3.2 ? '⏱ every 90 minutes' : `⏱ ${min} min`, '#ffd93d', 12, t > 3.2 ? 280 : 160);
+      } },
+    white_house: { dauer: 9, klaenge: [[0.3, 'fanfare'], [2.0, 'trommel'], [3.0, 'lichtAn'], [5.6, 'fanfare'], [6.6, 'applaus']],
+      zeichne(c, t) {   // das Weiße Haus mit Rasen, Brunnen und Zaun; die Kamera fährt heran, die Fenster gehen nacheinander an, der Zähler läuft bis 132 rooms
+        const z = lerp(1, 1.12, sanft(t / 9));
+        c.save(); c.translate(SZ_W / 2, 300); c.scale(z, z); c.translate(-SZ_W / 2, -300);
+        szHimmel(c, '#4f8fe0', '#e6f0fa'); szWolken(c, t, [[-40, 60], [460, 40]]);
+        c.fillStyle = '#7aa850'; c.fillRect(-60, 290, SZ_W + 120, H);
+        laubbaum(c, 40, 296, 0.9, t); laubbaum(c, 600, 296, 0.9, t); laubbaum(c, 96, 300, 0.7, t); laubbaum(c, 546, 300, 0.7, t);
+        weissesHaus(c, 320, 292, 1.7);
+        const hell = sanft((t - 2.8) / 4);   // Fenster gehen an (Reihenfolge links → rechts)
+        const fenster = [];
+        for (const fx of [-140, -124, -108, 104, 120, 136]) fenster.push([fx, -46, 14]);
+        for (const fx of [-84, -70, 58, 72, 86]) { fenster.push([fx, -72, 14]); fenster.push([fx, -40, 16]); }
+        fenster.sort((a, b) => a[0] - b[0]).forEach(([fx, fy, fh], i) => { if (i / fenster.length >= hell) return; c.fillStyle = 'rgba(255,214,110,.95)'; c.fillRect(320 + (fx - 3) * 1.7, 292 + fy * 1.7, 7 * 1.7, fh * 1.7); });
+        c.fillStyle = '#d8d0b8'; c.beginPath(); c.moveTo(290, 292); c.lineTo(350, 292); c.lineTo(420, H); c.lineTo(220, H); c.fill();
+        c.fillStyle = '#9fd6f0'; c.beginPath(); c.ellipse(320, 344, 46, 10, 0, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#f4f2ec'; c.lineWidth = 4; c.stroke();
+        c.fillStyle = 'rgba(255,255,255,.85)'; for (let k = 0; k < 5; k++) { const d = ((t * 1.4 + k / 5) % 1); c.beginPath(); c.arc(320 + (k - 2) * 6, 340 - Math.sin(d * Math.PI) * 26, 2.5, 0, Math.PI * 2); c.fill(); }
+        c.fillStyle = '#1d1d1d'; c.fillRect(-60, 372, SZ_W + 120, 3); c.fillRect(-60, 392, SZ_W + 120, 3); for (let x = -60; x < SZ_W + 60; x += 12) c.fillRect(x, 364, 2.5, 36);
+        c.restore();
+        if (t > 2.8) { const n = Math.round(132 * hell); szZaehler(c, `${n} rooms`, '#ffd93d', 12, 170); }
       } },
     // Klasse 6 – Heldenfilme (6.11.2026): Schlüssel held_<id>; held = Kartenbild-Schlüssel (cameoBilder), geladen aus o.heldBild
     held_leo: { held: 'leo', dauer: 11, klaenge: [[0.3, 'bus'], [1.1, 'wind'], [3.5, 'wind'], [5.9, 'wind'], [8.3, 'combo'], [9.0, 'cameo']],

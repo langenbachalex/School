@@ -8376,6 +8376,29 @@
     });
     c.restore();
   }
+  function skylineNYIkonen(c, x, y, s) {   // Manhattan mit Wahrzeichen (x, y = Fußpunkt Mitte, Breite ≈ 600·s): Empire State Building (gestuft, Antenne), Chrysler Building (Bogenkrone mit Dreiecksfenstern), One World Trade Center (spitz zulaufendes Glas), Flatiron (Keil)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const fuell = [[-300, 44, 120], [-262, 40, 165], [-214, 46, 140], [-60, 40, 150], [-20, 44, 185], [40, 38, 130], [180, 40, 160], [226, 46, 125], [262, 40, 150]];
+    const fenster = (bx, bw, bh, i) => { c.fillStyle = 'rgba(220,235,255,.45)'; for (let fy = -bh + 10; fy < -8; fy += 14) for (let fx = bx + 6; fx < bx + bw - 6; fx += 10) if ((fx * 7 + fy * 3 + i) % 5) c.fillRect(fx, fy, 5, 7); };
+    fuell.forEach(([bx, bw, bh], i) => { c.fillStyle = ['#66799a', '#5b6f8c', '#71839f'][i % 3]; c.fillRect(bx, -bh, bw, bh); fenster(bx, bw, bh, i); });
+    // One World Trade Center (links): Quader, der sich zur Spitze verjüngt, Glas mit Kantenlicht, lange Antenne
+    c.fillStyle = '#7d9cc0'; c.beginPath(); c.moveTo(-170, 0); c.lineTo(-170, -60); c.lineTo(-150, -300); c.lineTo(-130, -300); c.lineTo(-110, -60); c.lineTo(-110, 0); c.closePath(); c.fill();
+    c.fillStyle = '#a9c4e0'; c.beginPath(); c.moveTo(-140, -60); c.lineTo(-140, -300); c.lineTo(-130, -300); c.lineTo(-110, -60); c.closePath(); c.fill();
+    c.fillStyle = '#4c5f7d'; c.fillRect(-141.5, -360, 3, 60);
+    // Flatiron (unten Mitte-rechts): schmaler Keil mit hellen Fensterreihen
+    c.fillStyle = '#c7b59a'; c.beginPath(); c.moveTo(130, 0); c.lineTo(130, -110); c.lineTo(176, -104); c.lineTo(176, 0); c.closePath(); c.fill();
+    c.fillStyle = 'rgba(90,70,50,.35)'; for (let fy = -100; fy < -6; fy += 10) c.fillRect(134, fy, 38, 2);
+    // Empire State Building (Mitte): breiter Sockel, gestufte Absätze, Turm, Mast mit Antenne
+    c.fillStyle = '#4c5f7d'; c.fillRect(-40, -200, 104, 200); c.fillRect(-28, -250, 80, 50); c.fillRect(-16, -300, 56, 50); c.fillRect(-6, -322, 36, 22); c.fillRect(2, -342, 20, 20);
+    c.beginPath(); c.moveTo(4, -342); c.lineTo(12, -372); c.lineTo(20, -342); c.closePath(); c.fill(); c.fillRect(10.5, -410, 3, 40);
+    c.fillStyle = 'rgba(220,235,255,.35)'; for (let fx = -12; fx < 40; fx += 8) c.fillRect(fx, -296, 3, 290);
+    // Chrysler Building (rechts): Schaft, silberne Bogenkrone mit dreieckigen Fenstern, Nadel
+    c.fillStyle = '#52668a'; c.fillRect(84, -230, 46, 230); fenster(84, 46, 230, 7);
+    c.fillStyle = '#c9d2dc'; for (let k = 0; k < 4; k++) { const b = 21 - k * 5, h = -230 - k * 18; c.beginPath(); c.moveTo(107 - b, h); c.arc(107, h, b, Math.PI, 0); c.closePath(); c.fill(); }
+    c.fillStyle = '#18213a'; for (let k = 0; k < 4; k++) { const h = -236 - k * 18; for (const dx of [-8, 0, 8].slice(0, 3 - (k > 1 ? 1 : 0))) { c.beginPath(); c.moveTo(107 + dx - 2.5, h); c.lineTo(107 + dx, h - 7); c.lineTo(107 + dx + 2.5, h); c.closePath(); c.fill(); } }
+    c.fillStyle = '#c9d2dc'; c.beginPath(); c.moveTo(104, -298); c.lineTo(107, -345); c.lineTo(110, -298); c.closePath(); c.fill();
+    c.restore();
+  }
   function nyTaxi(c, x, y, s, rad, hupt, rechts) {   // gelbes Taxi (Front links, rechts = fährt nach rechts; ohne Firmenzeichen): Dachschild „TAXI“, Karo-Streifen; hupt = kleine Schallbögen
     c.save(); c.translate(x, y); c.scale(s, s); if (rechts) { c.translate(84, 0); c.scale(-1, 1); }
     c.fillStyle = '#f5c518'; c.beginPath(); c.roundRect(0, -26, 84, 18, 6); c.fill();
@@ -8992,18 +9015,18 @@
       } },
     // Klasse 9 – Staaten 1–10 (6.11.2026): je eine Szene passend zum Fakt-Satz (inhalte/klasse9/staaten.tsv); Schlüssel = Staaten-Kürzel
     NY: { dauer: 8.4, klaenge: [[0.2, 'verkehr'], [1.4, 'taxi'], [2.8, 'verkehr'], [3.6, 'taxi'], [5.2, 'hupe']],
-      zeichne(c, t) {   // Skyline von Manhattan, unten eine volle Straße: Menschenmengen auf dem Gehweg, gelbe Taxis in beide Richtungen; der Zähler läuft bis 8,000,000+
+      zeichne(c, t) {   // Skyline von Manhattan mit Empire State, Chrysler, One WTC und Flatiron, unten eine volle Straße: Menschenmengen auf dem Gehweg, gelbe Taxis in beide Richtungen; der Zähler läuft bis 8,000,000+
         const z = lerp(1, 1.12, sanft(t / 8.4));
         c.save(); c.translate(SZ_W / 2, 300); c.scale(z, z); c.translate(-SZ_W / 2, -300);
         szHimmel(c, '#6ec3f2', '#e8f4fb'); szWolken(c, t, [[-60, 40], [300, 24], [560, 60]]);
-        szWelt({ zeit: t, kamera: t * 20, level: { ende: 4000 } }, () => skylineStadt(c, SZ_W / 2, 262, 0.72, 'ny', 0));
+        szWelt({ zeit: t, kamera: t * 20, level: { ende: 4000 } }, () => skylineNYIkonen(c, SZ_W / 2, 262, 0.5));
         c.fillStyle = '#c9c4ba'; c.fillRect(-40, 262, SZ_W + 80, 34); c.fillStyle = '#4a4d52'; c.fillRect(-40, 296, SZ_W + 80, 160);
         c.fillStyle = 'rgba(255,255,255,.85)'; for (let x = -40; x < SZ_W + 40; x += 70) c.fillRect(x + ((t * 30) % 70), 334, 36, 3);
         for (let i = 0; i < 26; i++) { const r = i % 2, sp = (r ? -1 : 1) * (16 + (i % 5) * 4), px = ((i * 47 + sp * t) % (SZ_W + 60) + SZ_W + 60) % (SZ_W + 60) - 30; personKlein(c, px, 286 + r * 8, 0.42 + r * 0.04, i, { schritt: ruhig() ? 0 : Math.sin(t * 8 + i) }); }
         for (let i = 0; i < 4; i++) { const rechts = i % 2, f = ((t * 0.22 + i * 0.27) % 1.3) - 0.15, tx = rechts ? lerp(-120, SZ_W + 40, f) : lerp(SZ_W + 40, -120, f);
           nyTaxi(c, tx, rechts ? 352 : 326, 0.9, t * 10, t > 5.2 && t < 6.2 && i === 0, rechts); }
         c.restore();
-        const n = Math.round(8000000 * sanft((t - 0.6) / 5.4)); if (t > 0.6) { c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(SZ_W / 2 - 110, 52, 220, 40, 10); c.fill(); c.fillStyle = '#ffd93d'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(n.toLocaleString('en-US') + (t > 6 ? '+' : ''), SZ_W / 2, 72); }
+        const n = Math.round(8000000 * sanft((t - 0.6) / 5.4)); if (t > 0.6) { c.fillStyle = 'rgba(24,33,58,.72)'; c.beginPath(); c.roundRect(SZ_W / 2 - 110, 352, 220, 40, 10); c.fill(); c.fillStyle = '#ffd93d'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(n.toLocaleString('en-US') + (t > 6 ? '+' : ''), SZ_W / 2, 372); }
       } },
     MA: { dauer: 8.4, klaenge: [[0.8, 'glockeHell'], [2.2, 'glockeHell'], [3.6, 'glockeHell'], [5.6, 'applaus']],
       zeichne(c, t) {   // Harvard: rote Backsteinhalle mit Uhrturm, Schild 1636; der Uhrturm schlägt, Studenten mit Hüten kommen, am Ende fliegen die Hüte

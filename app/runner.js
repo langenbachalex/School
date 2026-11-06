@@ -8740,6 +8740,28 @@
   // Big Ben mit echter Aufnahme: 15,5 s; bis 14 s laufen die Westminster Chimes (Bild wie beim Nachbau bis kurz vor dem Schlag, langsamer), dann EIN Stundenschlag (Nachbau)
   const BIGBEN_CHIMES = { dauer: 15.5, klaenge: [[0.1, 'chimes'], [14.0, 'glocke']],
     zeichne(c, t) { SZENEN.big_ben.zeichne(c, t < 14 ? t * 4.5 / 14 : Math.min(5.9, 4.6 + (t - 14))); } };
+  // Untertitel: Text in Sätze teilen (an . ! ?, nicht nach Abkürzungen wie „St.“/„Mr.“ und nicht in Zahlen wie „1.6“), lange Sätze (> 90 Zeichen) an Komma/Leerzeichen teilen (2 Zeilen)
+  const UT_ABK = /(?:^|[\s(])(?:St|Mr|Mrs|Ms|Dr|Mt|Ft|Jr|Sr|No|vs|etc|ca|approx|e\.g|i\.e|U\.S|U\.K|D\.C|a\.m|p\.m)\.$/i;
+  function untertitelTeile(text) {
+    const s = String(text || '').replace(/\s+/g, ' ').trim(); if (!s) return [];
+    const saetze = []; let anf = 0;
+    const re = /[.!?]+["'”’)]*(?=\s)/g; let m;
+    while ((m = re.exec(s))) { const ende = m.index + m[0].length, stueck = s.slice(anf, ende); if (m[0][0] === '.' && UT_ABK.test(s.slice(anf, m.index + 1))) continue; saetze.push(stueck.trim()); anf = ende; }
+    if (anf < s.length) saetze.push(s.slice(anf).trim());
+    const aus = [];
+    for (let x of saetze.filter(Boolean)) {
+      while (x.length > 90) {
+        const kopf = x.slice(0, 90); let i = Math.max(kopf.lastIndexOf(', '), kopf.lastIndexOf('; '), kopf.lastIndexOf(' – '));
+        if (i < 30) i = kopf.lastIndexOf(' '); else i += 1;
+        if (i < 20) break;
+        aus.push(x.slice(0, i).trim()); x = x.slice(i).trim();
+      }
+      aus.push(x);
+    }
+    return aus;
+  }
+  function untertitelAn() { try { return localStorage.getItem('ortszene-untertitel') !== 'aus'; } catch (e) { return true; } }
+  function untertitelMerken(an) { try { localStorage.setItem('ortszene-untertitel', an ? 'an' : 'aus'); } catch (e) { /* egal */ } }
   let szAktiv = null;
   function hatSzene(id) { return !!SZENEN[id]; }
   function szene(ziel, ortId, o = {}) {
@@ -8757,9 +8779,17 @@
     if (titel) titel.style.cssText = 'position:absolute;left:10px;top:10px;padding:4px 10px;border-radius:999px;background:rgba(24,33,58,.78);color:#fff;font:700 13px system-ui,sans-serif;letter-spacing:.02em;z-index:2;';
     const zu = el('button', 'ortszene-zu', '✕'); zu.type = 'button'; zu.setAttribute('aria-label', 'Schließen');
     zu.style.cssText = 'position:absolute;z-index:2;right:8px;top:8px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(24,33,58,.78);color:#fff;font:700 18px system-ui,sans-serif;cursor:pointer;';
-    const unter = el('div', 'ortszene-text', o.text || ''); unter.lang = 'en';
-    unter.style.cssText = 'position:absolute;left:50%;bottom:10px;transform:translateX(-50%);max-width:92%;padding:6px 12px;border-radius:10px;background:rgba(0,0,0,.62);color:#fff;font:600 clamp(13px,2.6vw,17px)/1.3 system-ui,sans-serif;text-align:center;';
-    if (!o.text) unter.hidden = true;
+    // Untertitel wie im Kino (6.11., Mr. Alex): schmaler halbdurchsichtiger Streifen unten, höchstens 2 Zeilen, Satz für Satz passend zur Stimme;
+    // „CC“ oben rechts schaltet sie an/aus (je Gerät gemerkt, Standard an)
+    const teile = untertitelTeile(o.text || '');
+    const unter = el('div', 'ortszene-text', teile[0] || ''); unter.lang = 'en'; unter.setAttribute('aria-live', 'polite');
+    unter.style.cssText = 'position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:max-content;max-width:90%;box-sizing:border-box;padding:3px 10px;border-radius:6px;background:rgba(0,0,0,.55);color:#fff;font:600 clamp(13px,2.4vw,17px)/1.3 system-ui,sans-serif;text-align:center;text-shadow:0 1px 2px #000;pointer-events:none;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;z-index:1;';
+    let ccAn = untertitelAn();
+    const cc = el('button', 'ortszene-cc', 'CC'); cc.type = 'button';
+    cc.style.cssText = 'position:absolute;z-index:2;right:52px;top:12px;height:28px;padding:0 8px;border:2px solid #fff;border-radius:6px;background:rgba(24,33,58,.78);color:#fff;font:800 12px system-ui,sans-serif;letter-spacing:.04em;cursor:pointer;';
+    const ccZeigen = () => { cc.setAttribute('aria-pressed', String(ccAn)); cc.setAttribute('aria-label', ccAn ? 'Untertitel aus' : 'Untertitel an'); cc.style.opacity = ccAn ? '1' : '.55'; cc.style.textDecoration = ccAn ? 'none' : 'line-through'; };
+    ccZeigen();
+    if (!o.text) { unter.hidden = true; cc.hidden = true; }
     const foto = el('figure', 'ortszene-foto'); foto.hidden = true;
     // Foto am Ende (Etappe 2): poppt groß auf und füllt die ganze Szene (Seitenverhältnis bleibt, Rand dunkel), Quellenzeile als Leiste unten auf dem Bild
     foto.style.cssText = 'position:absolute;inset:0;margin:0;background:#0d1222;transform:scale(.55);transition:opacity .45s, transform .45s cubic-bezier(.2,1.4,.4,1);';
@@ -8770,7 +8800,7 @@
     }
     const hinweis = el('div', 'ortszene-weiter', 'Tippen zum Schließen ➜'); hinweis.hidden = true;
     hinweis.style.cssText = 'position:absolute;right:12px;bottom:56px;color:#fff;font:600 12px system-ui,sans-serif;opacity:.85;';
-    box.append(cv, ...(titel ? [titel] : []), zu, foto, hinweis, unter);
+    box.append(cv, ...(titel ? [titel] : []), zu, cc, foto, hinweis, unter);
     (ebene || ziel).append(box);
     const c2 = cv.getContext('2d');
     const A = { id: ortId, t: 0, phase: 'szene', uebersprungen: false, raf: 0, letzte: performance.now(), klaenge: S.klaenge.map((k) => ({ t: k[0], k: k[1], fertig: false })), saetze: (S.saetze || []).map((k) => ({ t: k[0], text: k[1], lang: k[2], fertig: false })), gesprochen: [], ebene, box, o };
@@ -8783,7 +8813,7 @@
     // Beim Schließen/✕ stoppt o.voiceStopp() die Stimme.
     A.stimme = false;
     if (typeof o.voice === 'function') {
-      A.stimme = true; effektDaempf = 0.35;
+      A.stimme = true; A.mitStimme = true; effektDaempf = 0.35;
       let p = null; try { p = o.voice(); } catch (e) { /* ohne Stimme */ }
       Promise.resolve(p).catch(() => null).then(() => { A.stimme = false; if (szAktiv === A) effektDaempf = 1; });
     }
@@ -8801,7 +8831,7 @@
       A.phase = 'foto'; A.t = Math.max(A.t, S.dauer);
       if (!o.foto) return schliessen();
       foto.hidden = false; foto.style.opacity = '0'; requestAnimationFrame(() => { foto.style.opacity = '1'; foto.style.transform = 'scale(1)'; });
-      hinweis.style.bottom = 'auto'; hinweis.style.top = '52px'; unter.style.bottom = '30px';   // Hinweis unter das ✕, Untertitel über die Quellenzeile
+      hinweis.style.bottom = 'auto'; hinweis.style.top = '52px'; unter.style.bottom = '30px';   // Hinweis unter das ✕, Untertitel (solange die Stimme noch spricht) über die Quellenzeile
       hinweis.hidden = false; klang.schild(); bild();
     };
     const schliessen = () => {
@@ -8815,6 +8845,22 @@
       if (typeof o.onEnde === 'function') setTimeout(() => o.onEnde({ ort: ortId, uebersprungen: A.uebersprungen }), 0);
     };
     A.zumFoto = zumFoto; A.schliessen = schliessen;
+    // Welcher Satz gerade dran ist: Anteil nach Zeichenzahl über die Dauer der Stimme – mit Audio-Element (o.voiceAudio()) aus currentTime/duration,
+    // sonst geschätzt ~14 Zeichen/s ab Szenenbeginn (Geräte-Stimme). Nach der Stimme bleibt der letzte Satz bis zum Foto; im Foto nur, solange sie noch spricht.
+    const gesamtZ = teile.reduce((n, x) => n + x.length, 0) || 1;
+    A.utNr = 0;
+    const untertitel = () => {
+      if (!teile.length) return;
+      let anteil = null;
+      if (A.mitStimme && A.stimme && typeof o.voiceAudio === 'function') { let a = null; try { a = o.voiceAudio(); } catch (e) { /* egal */ } if (a && a.duration > 0 && isFinite(a.duration)) anteil = a.ended ? 1 : a.currentTime / a.duration; }
+      if (anteil === null) anteil = A.mitStimme && !A.stimme ? 1 : A.t / (gesamtZ / 14);
+      let nr = 0, z = 0; for (; nr < teile.length - 1; nr++) { z += teile[nr].length; if (anteil * gesamtZ < z) break; }
+      A.utNr = Math.max(A.utNr, nr);
+      if (unter.textContent !== teile[A.utNr]) unter.textContent = teile[A.utNr];
+      unter.hidden = !ccAn || (A.phase === 'foto' && !A.stimme);
+    };
+    cc.addEventListener('click', (e) => { e.stopPropagation(); ccAn = !ccAn; untertitelMerken(ccAn); ccZeigen(); untertitel(); });
+    untertitel();
     const aufGroesse = () => { massstab = groesse(); bild(); };
     const aufTaste = (e) => { if (e.key === 'Escape') schliessen(); else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (A.phase === 'szene') { A.uebersprungen = true; zumFoto(); } else schliessen(); } };
     window.addEventListener('resize', aufGroesse); window.addEventListener('keydown', aufTaste);
@@ -8830,10 +8876,10 @@
         for (const z of A.saetze) if (!z.fertig && A.t >= z.t) { z.fertig = true; sprich(z); }
         if (A.t >= S.dauer && (!A.stimme || A.t >= 25)) zumFoto();   // mit Voice-over: erst nach dem Ende der Stimme
       }
-      if (A.phase !== 'zu') { bild(); A.raf = requestAnimationFrame(schritt); }
+      if (A.phase !== 'zu') { untertitel(); bild(); A.raf = requestAnimationFrame(schritt); }
     };
     bild(); A.raf = requestAnimationFrame(schritt);
-    if (TESTBUILD) window.__szene = { stand: () => ({ ort: A.id, t: Math.round(A.t * 100) / 100, phase: A.phase, dauer: S.dauer, foto: !foto.hidden, quelle: o.quelle || null, text: o.text || null, fehler: A.fehler || null, klaenge: A.klaenge.filter((k) => k.fertig).map((k) => k.k), gesprochen: A.gesprochen.slice(), stimme: A.stimme, daempf: effektDaempf, klangDateien: Object.assign({}, KLANG_DATEI), dateiGespielt: klangDateiGespielt,
+    if (TESTBUILD) window.__szene = { stand: () => ({ ort: A.id, t: Math.round(A.t * 100) / 100, phase: A.phase, dauer: S.dauer, foto: !foto.hidden, quelle: o.quelle || null, text: o.text || null, untertitel: { an: ccAn, sichtbar: !unter.hidden, text: unter.textContent, nr: A.utNr, teile: teile.slice() }, fehler: A.fehler || null, klaenge: A.klaenge.filter((k) => k.fertig).map((k) => k.k), gesprochen: A.gesprochen.slice(), stimme: A.stimme, daempf: effektDaempf, klangDateien: Object.assign({}, KLANG_DATEI), dateiGespielt: klangDateiGespielt,
       fotoMass: (() => { const r = box.getBoundingClientRect(), f = foto.getBoundingClientRect(); return { box: [Math.round(r.width), Math.round(r.height)], foto: [Math.round(f.width), Math.round(f.height)] }; })() }), ueberspringen: () => zumFoto(), zu: () => schliessen(), springe: (t) => { A.t = t; for (const k of A.klaenge) if (k.t < t) k.fertig = true; for (const z of A.saetze) if (z.t < t) z.fertig = true; } };
     return { stopp: schliessen, ueberspringen: zumFoto };
   }

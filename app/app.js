@@ -253,6 +253,8 @@
      Vokabel unterbrochen. runnerWort(): läuft ein Haupttext (oder wartet einer), kommt die Vokabel in EINEN Warteplatz und wird danach gesprochen;
      eine neuere Vokabel ersetzt die wartende (keine Schlange; ein Echo verdrängt kein frisch gesammeltes Wort). Ohne Haupttext spielt sie sofort wie bisher
      (und darf eine laufende Vokabel abschneiden). Gilt für Audiodateien und Geräte-Stimme gleich; stopp() verwirft das wartende Wort. */
+  // Orts-Szene (6.11.): das laufende Audio-Element der Voice-over-Datei (für Untertitel im Takt), sonst null
+  const stimmeAudio = (datei) => (aktuell && typeof datei === "string" && decodeURI(aktuell.src).endsWith(datei) ? aktuell : null);
   function hauptText(dateien, opt = {}, wortBehalten = false) {
     const wartend = wortWartet;
     const p = spiele(dateien, opt);
@@ -2144,7 +2146,7 @@
     if (window.Runner.klangDatei) window.Runner.klangDatei("chimes", "audio/orte/westminster_chimes.mp3");
     const sz = window.Runner.szene(null, o.id, { text: o.fakt, titel: `${o.symbol} ${o.name} · London ✓`, foto: o.foto, quelle: o.foto_quelle, onEnde: () => { if (fertig) fertig(); },
       // Voice-over (6.11.): die eingesprochene Aufnahme des Fakts läuft mit der Szene (Haupttext-Vorrang, wartet auf ein laufendes Lob); ✕/Schließen stoppt sie
-      voice: o.audio ? () => hauptText([o.audio], { warten: true }) : null, voiceStopp: () => stopp(),
+      voice: o.audio ? () => hauptText([o.audio], { warten: true }) : null, voiceStopp: () => stopp(), voiceAudio: () => stimmeAudio(o.audio),   // Untertitel im Takt der Aufnahme
       stimme: (text, lang) => hauptText([{ tts: text, lang: lang || "en-GB", stimme: "m" }], { warten: true }) });   // Durchsagen der Szene (Tube) mit der Geräte-Stimme
     return !!sz;
   }

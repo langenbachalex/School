@@ -893,7 +893,8 @@
     const k = kategorie(lage.nr);
     stand.gruppen = stand.gruppen || {};
     const liste = (stand.gruppen[k.nr] = stand.gruppen[k.nr] || []);
-    if (!liste.includes(lage.gruppe)) { liste.push(lage.gruppe); einheitBonus(); }
+    const themaNeu = !liste.includes(lage.gruppe), megaSchluessel = `${k.nr}|${lage.gruppe}`;
+    if (themaNeu) { liste.push(lage.gruppe); einheitBonus(); }
     else if (wdhKomplett()) wdhStationBonus(`${k.nr}|${lage.gruppe}`);
     const alle = kategorieGruppen(k).every((x) => liste.includes(x));
     if (alle && !stand.erledigt.includes(k.nr)) stand.erledigt.push(k.nr);
@@ -910,6 +911,7 @@
         knopf(T("Weitere Themen", "More topics"), zurueckZu, hwWeiterKnopf(hwTeil) ? "" : "haupt"), knopf(T("Zur Startseite", "Back to start"), startseite))));
     ansicht = zeichne;
     zeichne();
+    if (themaNeu) megaLob(megaSchluessel);
   }
 
   /* ---------- Bausteine ---------- */
@@ -1658,8 +1660,14 @@
     if (!(sp.coins >= 0)) sp.coins = 0;
     if (!Array.isArray(sp.gekauft)) sp.gekauft = [];
     if (!(sp.ausgegeben >= 0)) sp.ausgegeben = 0;
+    if (sp.tiers !== 1) { sp.titel = Math.max(sp.titel || 0, titelIndex(sp.punkte)); sp.tiers = 1; } // Titel-Tiers (6.11.): Altstand still auf den passenden Titel, ohne Feier
     return sp;
   }
+  // Titel-Tiers (6.11.2026, Mr. Alex): SP.titel läuft über alle Tiers (t.tier, t.symbol), SP.tiers[i] = { name, farbe, text, audio } (werkzeuge/klasse9_bauen.py TIERS).
+  // Ab Tier 2 trägt das Titel-Schild (Startseite, Sammlung) die Rahmenfarbe des Tiers (CSS --tier-farbe), der Eintritt bekommt eine eigene Feier.
+  const tierVon = (i) => ((SP.tiers || [])[(SP.titel[i] || {}).tier || 0]) || {};
+  const tierAttr = (i) => (tierVon(i).farbe ? { klasse: " tier-rahmen", stil: `--tier-farbe:${tierVon(i).farbe}` } : { klasse: "", stil: null });
+  const titelSymbol = (i) => (SP.titel[i].symbol || "🎓") + " ";
   function serie() {
     const sp = spielstand();
     let d = heute(), n = 0;
@@ -1824,9 +1832,12 @@
     ereignisse.unshift({ art: "toast", text: `+${plus} ⭐ · +${muenzen} 🪙` });
     const t = titelIndex(sp.punkte);
     if (t > sp.titel) {
+      const altTier = (SP.titel[sp.titel] || {}).tier || 0;
       sp.titel = t;
-      const ti = SP.titel[t];
-      ereignisse.push({ art: "feier", symbol: t === SP.titel.length - 1 ? "👑" : "🎓", titel: ti.name, text: T(`Neuer Titel: ${ti.name}!`, `New title: ${ti.name}!`), ton: ti });
+      const ti = SP.titel[t], tr = tierVon(t);
+      if ((ti.tier || 0) > altTier && tr.text) // neues Tier: zuerst „Welcome to …“ in der Rahmenfarbe, danach der Titel
+        ereignisse.push({ art: "feier", symbol: ti.symbol, titel: `Welcome to ${tr.name}!`, text: tr.text.replace(/^Welcome to [^!]*! */, ""), ton: tr, farbe: tr.farbe });
+      ereignisse.push({ art: "feier", symbol: ti.symbol || "🎓", titel: ti.name, text: T(`Neuer Titel: ${ti.name}!`, `New title: ${ti.name}!`), ton: ti, farbe: tr.farbe || null });
     }
     speichern();
     setTimeout(zeigeEreignisse, 50);
@@ -1952,12 +1963,40 @@
       ? [el("p", { class: "feier-klein" }, T("⭐ Perfect week! Neue Landmark-Karte:", "⭐ Perfect week! New landmark card:")), landmarkKarte(e.karte, true),
          el("p", { class: "steckbrief", lang: "en" }, e.karte.steckbrief)]
       : [el("div", { class: "feier-symbol", "aria-hidden": "true" }, e.symbol), el("h2", { id: "feier-titel", lang: "en" }, e.titel), el("p", {}, e.text)];
+    feier.classList.toggle("tier-feier", !!e.farbe); // Titel-Tiers: Feier in der Rahmenfarbe des Tiers
+    if (e.farbe) feier.style.setProperty("--tier-farbe", e.farbe);
     feier.replaceChildren(konfetti(), ...inhalt,
       el("div", { class: "knopfreihe" },
         ton && ton.audio && knopf(T("🔊 Anhören", "🔊 Listen"), () => spiele([ton.audio])),
         knopf(T("Weiter ➜", "Next ➜"), () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
     feier.showModal();
     if (ton && ton.audio && !e.szeneFertig) spiele([ton.audio], { warten: true }); // wartet, falls noch ein Lob läuft; nach der Szene nicht doppelt (Voice-over lief schon)
+  }
+  /* Mega-Lob (6.11.2026, Mr. Alex): erster Abschluss eines Themas/Abschnitts mit laufender Serie → Lichtblitz, Konfetti und ein Satz von Mr. Alex
+     (zufällig einer von drei je Stufe). Power ab 3, Superpower ab 5, Mega ab 10 Schultagen am Stück oder mit dem Abzeichen Perfect month.
+     Nur Lob, keine Punkte; je Thema höchstens einmal (stand.spiel.megalob["<Kategorie>|<Thema>"] = Stufe, im Siegel). Nicht blockierend;
+     wartet, bis ein Feier-Fenster oder eine Szene fertig ist, und die Stimme reiht sich hinter ein laufendes Lob (spiele … warten). */
+  const MEGA = { power: "⚡ POWER!", super: "🦸 SUPERPOWER!", mega: "🌟 MEGA!" };
+  function megaStufe() {
+    const sp = spielstand(), n = serie();
+    return n >= 10 || sp.abzeichen.includes("monat") ? "mega" : n >= 5 ? "super" : n >= 3 ? "power" : null;
+  }
+  function megaLob(schluessel) {
+    const sp = spielstand(), stufe = megaStufe();
+    if (!sp.megalob || typeof sp.megalob !== "object") sp.megalob = {};
+    if (!stufe || sp.megalob[schluessel]) return null;
+    sp.megalob[schluessel] = stufe; speichern();
+    const ton = SP.texte[`mega_${stufe}_${1 + Math.floor(Math.random() * 3)}`] || {};
+    const zeigen = () => {
+      if (feier.open || stempelLaeuft) return setTimeout(zeigen, 400);
+      const box = el("div", { class: "megalob megalob-" + stufe, role: "status" }, el("div", { class: "blitz" }), konfetti(),
+        el("div", { class: "mega-text" }, el("strong", {}, MEGA[stufe]), el("span", { lang: "en" }, ton.text || "")));
+      document.body.append(box);
+      setTimeout(() => box.remove(), 3400);
+      if (ton.audio) spiele([ton.audio], { warten: true });
+    };
+    setTimeout(zeigen, 150);
+    return stufe;
   }
   function konfetti() {
     const farben = ["#c8283a", "#1d3f8f", "#ffffff", "#ffd23f", "#8fb0ff"];
@@ -1966,9 +2005,9 @@
   }
 
   function statusleiste() {
-    const sp = spielstand(), t = SP.titel[sp.titel];
-    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() },
-      el("span", { class: "status-titel", lang: "en" }, (sp.titel === SP.titel.length - 1 ? "👑 " : "🎓 ") + t.name),
+    const sp = spielstand(), t = SP.titel[sp.titel], ta = tierAttr(sp.titel);
+    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() + ta.klasse, style: ta.stil },
+      el("span", { class: "status-titel", lang: "en" }, titelSymbol(sp.titel) + t.name),
       el("span", {}, `⭐ ${sp.punkte} ${T("Punkte", "points")}`),
       el("span", { class: "status-coins", title: "Coins" }, `🪙 ${sp.coins}`),
       el("span", { title: T("Schultage am Stück", "School days in a row") }, `🔥 ${serie()}`),
@@ -2012,9 +2051,10 @@
       : el("div", { class: "held-zu", "aria-label": T("Noch nicht gesammelt", "Not collected yet") }, el("span", {}, "?"), el("small", {}, "Perfect week"))));
     zeige(
       el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, T("🏆 Meine Sammlung", "🏆 My collection"))),
-      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() },
+      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() + tierAttr(t).klasse, style: tierAttr(t).stil },
         el("p", { class: "klein" }, T("Dein Titel", "Your title")),
-        el("h2", { lang: "en" }, (t === SP.titel.length - 1 ? "👑 " : "🎓 ") + SP.titel[t].name),
+        tierAttr(t).stil && el("p", { class: "tier-name", lang: "en" }, tierVon(t).name),
+        el("h2", { lang: "en" }, titelSymbol(t) + SP.titel[t].name),
         el("p", {}, `⭐ ${sp.punkte} ${T("Punkte", "points")}`),
         el("p", { class: "coins-zeile" }, `🪙 Coins: ${sp.coins} · ${T("ausgegeben", "spent")}: ${sp.ausgegeben}`, " ", knopf("🛍️ Shop", shop, "leise")),
         naechster && el("div", { class: "fortschritt" }, el("span", { style: `width:${Math.round(100 * (sp.punkte - SP.titel[t].ab) / (naechster.ab - SP.titel[t].ab))}%` })),
@@ -4111,6 +4151,8 @@
   setInterval(updateHinweis, 3000);
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "karte", karte: SP.landmarks.find((l) => l.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Anzeige einer neuen Landmark-Karte (Orts-Szene/Karte) auslösen
+  if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
+  if (LOKAL) window.__thema = (nr, gruppe) => { lage = { nr, gruppe, teil: 0, titel: gruppe, zurueckZu: startseite }; gruppeGeschafft(); }; // nur Test-Build: Thema abschließen (Mega-Lob)
   if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da
 
   // Offline-Speicher (nur über eine Webadresse)

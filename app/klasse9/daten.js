@@ -8607,32 +8607,162 @@ window.DATEN = {
    {
     "ab": 0,
     "name": "Freshman",
+    "symbol": "🎓",
+    "tier": 0,
     "audio": null
    },
    {
     "ab": 300,
     "name": "Sophomore",
+    "symbol": "🎓",
+    "tier": 0,
     "audio": "audio/spiel/titel_sophomore.mp3"
    },
    {
     "ab": 900,
     "name": "Junior",
+    "symbol": "🎓",
+    "tier": 0,
     "audio": "audio/spiel/titel_junior.mp3"
    },
    {
     "ab": 1800,
     "name": "Senior",
+    "symbol": "🎓",
+    "tier": 0,
     "audio": "audio/spiel/titel_senior.mp3"
    },
    {
     "ab": 3000,
     "name": "Graduate",
+    "symbol": "🎓",
+    "tier": 0,
     "audio": "audio/spiel/titel_graduate.mp3"
    },
    {
     "ab": 4500,
     "name": "All-American Legend",
+    "symbol": "👑",
+    "tier": 0,
     "audio": "audio/spiel/titel_all_american_legend.mp3"
+   },
+   {
+    "ab": 6000,
+    "name": "Extra",
+    "symbol": "🎬",
+    "tier": 1,
+    "audio": "audio/spiel/titel_extra.mp3"
+   },
+   {
+    "ab": 7500,
+    "name": "Stunt Double",
+    "symbol": "🤸",
+    "tier": 1,
+    "audio": "audio/spiel/titel_stunt_double.mp3"
+   },
+   {
+    "ab": 9500,
+    "name": "Supporting Star",
+    "symbol": "⭐",
+    "tier": 1,
+    "audio": "audio/spiel/titel_supporting_star.mp3"
+   },
+   {
+    "ab": 12000,
+    "name": "Leading Star",
+    "symbol": "🌟",
+    "tier": 1,
+    "audio": "audio/spiel/titel_leading_star.mp3"
+   },
+   {
+    "ab": 15000,
+    "name": "Director",
+    "symbol": "🎥",
+    "tier": 1,
+    "audio": "audio/spiel/titel_director.mp3"
+   },
+   {
+    "ab": 19000,
+    "name": "Oscar Winner",
+    "symbol": "🏆",
+    "tier": 1,
+    "audio": "audio/spiel/titel_oscar_winner.mp3"
+   },
+   {
+    "ab": 24000,
+    "name": "Hollywood Legend",
+    "symbol": "🌠",
+    "tier": 1,
+    "audio": "audio/spiel/titel_hollywood_legend.mp3"
+   },
+   {
+    "ab": 30000,
+    "name": "Space Cadet",
+    "symbol": "🚀",
+    "tier": 2,
+    "audio": "audio/spiel/titel_space_cadet.mp3"
+   },
+   {
+    "ab": 37000,
+    "name": "Test Pilot",
+    "symbol": "✈️",
+    "tier": 2,
+    "audio": "audio/spiel/titel_test_pilot.mp3"
+   },
+   {
+    "ab": 45000,
+    "name": "Astronaut",
+    "symbol": "👩‍🚀",
+    "tier": 2,
+    "audio": "audio/spiel/titel_astronaut.mp3"
+   },
+   {
+    "ab": 54000,
+    "name": "Moonwalker",
+    "symbol": "🌕",
+    "tier": 2,
+    "audio": "audio/spiel/titel_moonwalker.mp3"
+   },
+   {
+    "ab": 64000,
+    "name": "Mission Commander",
+    "symbol": "🛰️",
+    "tier": 2,
+    "audio": "audio/spiel/titel_mission_commander.mp3"
+   },
+   {
+    "ab": 75000,
+    "name": "Mars Pioneer",
+    "symbol": "🔴",
+    "tier": 2,
+    "audio": "audio/spiel/titel_mars_pioneer.mp3"
+   },
+   {
+    "ab": 88000,
+    "name": "Star Voyager",
+    "symbol": "🌌",
+    "tier": 2,
+    "audio": "audio/spiel/titel_star_voyager.mp3"
+   }
+  ],
+  "tiers": [
+   {
+    "name": "High School",
+    "farbe": null,
+    "text": null,
+    "audio": null
+   },
+   {
+    "name": "Hollywood",
+    "farbe": "#d4a017",
+    "text": "Welcome to Hollywood! The red carpet is rolled out just for you!",
+    "audio": "audio/spiel/tier_hollywood.mp3"
+   },
+   {
+    "name": "Mission to Mars",
+    "farbe": "#c1440e",
+    "text": "Welcome to Mission to Mars! Get ready for lift-off to the red planet!",
+    "audio": "audio/spiel/tier_mission_to_mars.mp3"
    }
   ],
   "texte": {
@@ -8683,6 +8813,106 @@ window.DATEN = {
    "powerup": {
     "text": "Powered up! Your English is fully charged again.",
     "audio": "audio/spiel/powerup.mp3"
+   },
+   "titel_extra": {
+    "text": "Congratulations! You are an Extra now!",
+    "audio": "audio/spiel/titel_extra.mp3"
+   },
+   "titel_stunt_double": {
+    "text": "Congratulations! You are a Stunt Double now!",
+    "audio": "audio/spiel/titel_stunt_double.mp3"
+   },
+   "titel_supporting_star": {
+    "text": "Congratulations! You are a Supporting Star now!",
+    "audio": "audio/spiel/titel_supporting_star.mp3"
+   },
+   "titel_leading_star": {
+    "text": "Congratulations! You are a Leading Star now!",
+    "audio": "audio/spiel/titel_leading_star.mp3"
+   },
+   "titel_director": {
+    "text": "Congratulations! You are a Director now!",
+    "audio": "audio/spiel/titel_director.mp3"
+   },
+   "titel_oscar_winner": {
+    "text": "Congratulations! You are an Oscar Winner now!",
+    "audio": "audio/spiel/titel_oscar_winner.mp3"
+   },
+   "titel_hollywood_legend": {
+    "text": "Congratulations! You are a Hollywood Legend now!",
+    "audio": "audio/spiel/titel_hollywood_legend.mp3"
+   },
+   "titel_space_cadet": {
+    "text": "Congratulations! You are a Space Cadet now!",
+    "audio": "audio/spiel/titel_space_cadet.mp3"
+   },
+   "titel_test_pilot": {
+    "text": "Congratulations! You are a Test Pilot now!",
+    "audio": "audio/spiel/titel_test_pilot.mp3"
+   },
+   "titel_astronaut": {
+    "text": "Congratulations! You are an Astronaut now!",
+    "audio": "audio/spiel/titel_astronaut.mp3"
+   },
+   "titel_moonwalker": {
+    "text": "Congratulations! You are a Moonwalker now!",
+    "audio": "audio/spiel/titel_moonwalker.mp3"
+   },
+   "titel_mission_commander": {
+    "text": "Congratulations! You are a Mission Commander now!",
+    "audio": "audio/spiel/titel_mission_commander.mp3"
+   },
+   "titel_mars_pioneer": {
+    "text": "Congratulations! You are a Mars Pioneer now!",
+    "audio": "audio/spiel/titel_mars_pioneer.mp3"
+   },
+   "titel_star_voyager": {
+    "text": "Congratulations! You are a Star Voyager now!",
+    "audio": "audio/spiel/titel_star_voyager.mp3"
+   },
+   "tier_hollywood": {
+    "text": "Welcome to Hollywood! The red carpet is rolled out just for you!",
+    "audio": "audio/spiel/tier_hollywood.mp3"
+   },
+   "tier_mission_to_mars": {
+    "text": "Welcome to Mission to Mars! Get ready for lift-off to the red planet!",
+    "audio": "audio/spiel/tier_mission_to_mars.mp3"
+   },
+   "mega_power_1": {
+    "text": "That's real power – well done!",
+    "audio": "audio/spiel/mega_power_1.mp3"
+   },
+   "mega_power_2": {
+    "text": "Power! You keep going and going!",
+    "audio": "audio/spiel/mega_power_2.mp3"
+   },
+   "mega_power_3": {
+    "text": "Look at you – a whole station and still on fire!",
+    "audio": "audio/spiel/mega_power_3.mp3"
+   },
+   "mega_super_1": {
+    "text": "Superpower unlocked! I'm so proud of you!",
+    "audio": "audio/spiel/mega_super_1.mp3"
+   },
+   "mega_super_2": {
+    "text": "Five days in a row and a whole station – wow!",
+    "audio": "audio/spiel/mega_super_2.mp3"
+   },
+   "mega_super_3": {
+    "text": "You've got superpowers now!",
+    "audio": "audio/spiel/mega_super_3.mp3"
+   },
+   "mega_mega_1": {
+    "text": "This is beyond anything I've ever seen!",
+    "audio": "audio/spiel/mega_mega_1.mp3"
+   },
+   "mega_mega_2": {
+    "text": "Mega! You are unstoppable!",
+    "audio": "audio/spiel/mega_mega_2.mp3"
+   },
+   "mega_mega_3": {
+    "text": "Legendary! The whole class should see this!",
+    "audio": "audio/spiel/mega_mega_3.mp3"
    }
   },
   "staaten": [

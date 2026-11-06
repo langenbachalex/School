@@ -440,6 +440,24 @@ dialog.feier.akte { max-height: 88vh; overflow-y: auto; text-align: left; }
 .rahmen-blau { border-color: #1f5fd1 !important; box-shadow: 0 0 0 3px #b3c9f5; }
 .rahmen-gruen { border-color: #1d8a4e !important; box-shadow: 0 0 0 3px #b0e3c5; }
 .konfetti-frei { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
+/* Titel-Tiers (6.11.2026): Rahmenfarbe des Tiers am Titel-Schild (außen, damit ein gekaufter Rahmen sichtbar bleibt) und an der Tier-Feier */
+.tier-rahmen { border-color: var(--tier-farbe) !important; outline: 4px solid var(--tier-farbe); outline-offset: 3px; }
+.tier-name { display: inline-block; margin: 0 0 .3rem; padding: .1rem .7rem; border-radius: 999px; background: var(--tier-farbe); color: #fff; font-weight: 700; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+.feier.tier-feier { border: 6px solid var(--tier-farbe); box-shadow: 0 0 0 6px color-mix(in srgb, var(--tier-farbe) 35%, transparent), 0 20px 60px rgba(0,0,0,.35); }
+.feier.tier-feier h2 { color: var(--tier-farbe); }
+/* Mega-Lob (6.11.2026): Lichtblitz + Konfetti + Schriftzug, kurz und nicht blockierend */
+.megalob { position: fixed; inset: 0; z-index: 40; pointer-events: none; display: grid; place-items: center; padding: 16px; }
+.megalob .konfetti { position: fixed !important; }
+.megalob .blitz { position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, #fff 0%, rgba(255,235,140,.85) 25%, rgba(255,210,63,.35) 50%, transparent 75%); animation: megablitz 1s ease-out forwards; }
+.megalob .mega-text { position: relative; display: grid; gap: .3rem; max-width: 30rem; text-align: center; padding: .8rem 1.4rem; border-radius: 1rem; color: #fff;
+  background: linear-gradient(135deg, #ff8a00, #e2384d); box-shadow: 0 10px 40px rgba(0,0,0,.35); animation: megapop 3.3s ease forwards; }
+.megalob-super .mega-text { background: linear-gradient(135deg, #1f5fd1, #8a3ffc); }
+.megalob-mega .mega-text { background: linear-gradient(135deg, #f2b705, #e2384d 45%, #8a3ffc); }
+.megalob .mega-text strong { font-family: var(--display); font-size: clamp(1.8rem, 8vw, 3.2rem); letter-spacing: .03em; text-shadow: 0 3px 0 rgba(0,0,0,.25); }
+.megalob .mega-text span { font-size: 1.1rem; font-weight: 600; }
+@keyframes megablitz { 0% { opacity: 0; } 12% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes megapop { 0% { transform: scale(.3); opacity: 0; } 12% { transform: scale(1.12); opacity: 1; } 20% { transform: scale(1); } 85% { opacity: 1; } 100% { transform: scale(1.04); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .megalob .blitz { display: none; } .megalob .mega-text { animation: none; } }
 .konfetti-frei .konfetti { position: fixed !important; }
 
 /* Station 5 „Spiele“: Lernspiele wie die Games-Kachel in Klasse 9 */

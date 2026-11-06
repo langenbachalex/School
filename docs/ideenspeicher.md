@@ -91,6 +91,8 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | **Nachhaltigkeit „alles grün“ → ⚡ Power Up** | gebaut (29.10.) | Erledigtes wird nach 30 / 60 / 120 Tagen wieder fällig (gelbes Schild ⚡ Power Up), erneut durchmachen gibt 5 Punkte und Stufe +1; GLN-Kopplung an; kürzere Timer bei Wiederholung. Audio „Powered up!“ folgt mit den Credits. Details: `docs/nachhaltigkeit-entwurf.md`. |
 | **Runner-Belohnung** (Titel statt Coins) | gebaut (29.10.) | Trophäe je Welt (Gold/Silber) + Runner-Titel Noob 1 · Rookie 3 · Pro 6 · Elite 10 · Legend 15, keine Coins zurück. |
 | **Dialog-Duell in Speaking** | offen | brainstormen, vorhandene Dialoge nutzen |
+| **Titel-Tiers** | gebaut (6.11.) | Titel in ausbaubaren Tiers (`TIERS` in `werkzeuge/daten_bauen.py` bzw. `klasse9_bauen.py`: je Tier Name, Rahmenfarbe, Satz, Stufen; neues Tier = eine Zeile). Kl. 6: Tier 2 „The Crown“ (3000 Royal Guard … 21000 Legend of London), Tier 3 „Word Wizards“ (27000 … 85000 Master of English). Kl. 9: Tier 1 endet bei 4500 (All-American Legend), darum Tier 2 „Hollywood“ 6000 … 24000 und Tier 3 „Mission to Mars“ 30000 … 88000 (je +3000). Eintritt: Feier „Welcome to …“ in Tierfarbe, danach Titel; Titel-Schild mit Tier-Rahmen und Tier-Name. Altstände springen still auf den passenden Titel. Stimme Mr. Alex. |
+| **Mega-Lob** | gebaut (6.11.) | Erster Abschluss einer Station (Kl. 6) bzw. eines Themas (Kl. 9) mit Serie: ⚡ Power ab 3, 🦸 Superpower ab 5, 🌟 Mega ab 10 Schultagen (oder Perfect month). Lichtblitz + Konfetti, einer von 3 Sätzen je Stufe (Mr. Alex), keine Punkte, je Station/Thema einmal (`stand.spiel.megalob`, im Siegel). |
 
 ## Beschlossen (29.10.2026), noch nicht gebaut
 - Klasse 9: **BE vs AE** wird Gruppe in **Vocabulary**.

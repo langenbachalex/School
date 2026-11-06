@@ -165,6 +165,18 @@ def lesen(name):
 # Belohnungen (Stufe A, docs/gamification/konzept.md): Titel nach Punkten, London-Orte, Superhelden
 TITEL = [(0, "Butterfingers", "🧈"), (100, "Sidekick", "🎒"), (300, "Hero in Training", "🦸"), (700, "Hero", "⚡"),
          (1200, "Superhero", "🌟"), (2000, "Mega Hero", "👑")]
+# Titel-Tiers (6.11.2026, Mr. Alex): je Tier ein Block (Name, Rahmenfarbe am Titel-Schild, Satz zum Eintritt, Stufen). Tier 1 = TITEL oben.
+# Neues Tier = eine Zeile anhängen; die App feiert den Eintritt („Welcome to …“, audio/spiel/tier_<id>.mp3) und zeigt die Rahmenfarbe.
+TIERS = [
+    {"id": "heroes", "name": "Heroes", "farbe": None, "satz": None, "stufen": TITEL},
+    {"id": "the_crown", "name": "The Crown", "farbe": "#b8860b", "satz": "Welcome to The Crown! London's kings and queens are waiting for you!",
+     "stufen": [(3000, "Royal Guard", "💂"), (4500, "Knight of the Realm", "⚔️"), (6500, "Keeper of the Crown Jewels", "💎"), (9000, "Lord Mayor of London", "🎩"),
+                (12000, "Royal Highness", "👑"), (16000, "Ruler of the Tower", "🏰"), (21000, "Legend of London", "🦁")]},
+    {"id": "word_wizards", "name": "Word Wizards", "farbe": "#6a3fb5", "satz": "Welcome to Word Wizards! Now your words become real magic!",
+     "stufen": [(27000, "Word Apprentice", "📜"), (34000, "Spell Caster", "✨"), (42000, "Grammar Guardian", "🛡️"), (51000, "Friend of Shakespeare", "🎭"),
+                (61000, "Dictionary Dragon", "🐉"), (72000, "Wordsmith Wizard", "🧙"), (85000, "Master of English", "🏆")]},
+]
+titel_id = lambda n: re.sub(r"[^a-z0-9]+", "_", n.lower()).strip("_")
 # Nächster Termin für den Countdown auf der Startseite (in Wochen); nach dem Termin verschwindet er
 TERMIN = {"name": "GLN 2", "datum": "2026-11-25", "powerup": True}  # powerup: 14 Tage vorher werden alle erledigten Teile fällig (⚡ Power Up)
 # Word Gym (docs/word-gym/konzept.md): Standard-Pensum und Boxen-Intervalle in Tagen
@@ -182,6 +194,15 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
     "gym_fini": "That's it for today. See you tomorrow!",
     "gym_pause": "Break! Come back later and finish your Word Gym.",
     "powerup": "Powered up! Your English is fully charged again.",
+    **{f"titel_{titel_id(n)}": f"Congratulations! You are a {n} now!" for t in TIERS[1:] for _, n, _ in t["stufen"]},
+    **{f"tier_{t['id']}": t["satz"] for t in TIERS[1:]},
+    # Mega-Lob (6.11.): erste fertige Station mit laufender Serie – Power ab 3, Superpower ab 5, Mega ab 10 Schultagen (oder Perfect month)
+    "mega_power_1": "That's real power – well done!", "mega_power_2": "Power! You keep going and going!",
+    "mega_power_3": "Look at you – a whole station and still on fire!",
+    "mega_super_1": "Superpower unlocked! I'm so proud of you!", "mega_super_2": "Five days in a row and a whole station – wow!",
+    "mega_super_3": "You've got superpowers now!",
+    "mega_mega_1": "This is beyond anything I've ever seen!", "mega_mega_2": "Mega! You are unstoppable!",
+    "mega_mega_3": "Legendary! The whole class should see this!",
 }
 
 # Shop (Coins = gespiegelte Punkte, nicht rückwirkend; docs/gamification/konzept.md „Coins und Shop“). Erweiterbar: neue Artikel hier eintragen.
@@ -212,7 +233,9 @@ def spieldaten():
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import frei_saarland, runner_audio
     return {
-        "titel": [{"ab": ab, "name": n, "symbol": sym, "audio": a(f"audio/spiel/titel_{n.lower().replace(' ', '_')}.mp3")} for ab, n, sym in TITEL],
+        "titel": [{"ab": ab, "name": n, "symbol": sym, "tier": i, "audio": a(f"audio/spiel/titel_{titel_id(n)}.mp3")}
+                  for i, t in enumerate(TIERS) for ab, n, sym in t["stufen"]],
+        "tiers": [{"name": t["name"], "farbe": t["farbe"], "text": t["satz"], "audio": a(f"audio/spiel/tier_{t['id']}.mp3") if t["satz"] else None} for t in TIERS],
         "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
         # Orts-Szenen (6.11.): kleines Foto am Ende der Szene (app/bilder/orte/<id>.jpg, Quellen inhalte/orte_fotos.tsv → app/bilder/orte/QUELLEN.md)
         "orte": [dict(z, x=int(z["x"]), y=int(z["y"]), audio=a(f"audio/london/{z['id']}.mp3"), **orts_foto(z["id"])) for z in lesen("london.tsv")],

@@ -5985,37 +5985,161 @@ window.DATEN = {
     "ab": 0,
     "name": "Butterfingers",
     "symbol": "🧈",
+    "tier": 0,
     "audio": null
    },
    {
     "ab": 100,
     "name": "Sidekick",
     "symbol": "🎒",
+    "tier": 0,
     "audio": "audio/spiel/titel_sidekick.mp3"
    },
    {
     "ab": 300,
     "name": "Hero in Training",
     "symbol": "🦸",
+    "tier": 0,
     "audio": "audio/spiel/titel_hero_in_training.mp3"
    },
    {
     "ab": 700,
     "name": "Hero",
     "symbol": "⚡",
+    "tier": 0,
     "audio": "audio/spiel/titel_hero.mp3"
    },
    {
     "ab": 1200,
     "name": "Superhero",
     "symbol": "🌟",
+    "tier": 0,
     "audio": "audio/spiel/titel_superhero.mp3"
    },
    {
     "ab": 2000,
     "name": "Mega Hero",
     "symbol": "👑",
+    "tier": 0,
     "audio": "audio/spiel/titel_mega_hero.mp3"
+   },
+   {
+    "ab": 3000,
+    "name": "Royal Guard",
+    "symbol": "💂",
+    "tier": 1,
+    "audio": "audio/spiel/titel_royal_guard.mp3"
+   },
+   {
+    "ab": 4500,
+    "name": "Knight of the Realm",
+    "symbol": "⚔️",
+    "tier": 1,
+    "audio": "audio/spiel/titel_knight_of_the_realm.mp3"
+   },
+   {
+    "ab": 6500,
+    "name": "Keeper of the Crown Jewels",
+    "symbol": "💎",
+    "tier": 1,
+    "audio": "audio/spiel/titel_keeper_of_the_crown_jewels.mp3"
+   },
+   {
+    "ab": 9000,
+    "name": "Lord Mayor of London",
+    "symbol": "🎩",
+    "tier": 1,
+    "audio": "audio/spiel/titel_lord_mayor_of_london.mp3"
+   },
+   {
+    "ab": 12000,
+    "name": "Royal Highness",
+    "symbol": "👑",
+    "tier": 1,
+    "audio": "audio/spiel/titel_royal_highness.mp3"
+   },
+   {
+    "ab": 16000,
+    "name": "Ruler of the Tower",
+    "symbol": "🏰",
+    "tier": 1,
+    "audio": "audio/spiel/titel_ruler_of_the_tower.mp3"
+   },
+   {
+    "ab": 21000,
+    "name": "Legend of London",
+    "symbol": "🦁",
+    "tier": 1,
+    "audio": "audio/spiel/titel_legend_of_london.mp3"
+   },
+   {
+    "ab": 27000,
+    "name": "Word Apprentice",
+    "symbol": "📜",
+    "tier": 2,
+    "audio": "audio/spiel/titel_word_apprentice.mp3"
+   },
+   {
+    "ab": 34000,
+    "name": "Spell Caster",
+    "symbol": "✨",
+    "tier": 2,
+    "audio": "audio/spiel/titel_spell_caster.mp3"
+   },
+   {
+    "ab": 42000,
+    "name": "Grammar Guardian",
+    "symbol": "🛡️",
+    "tier": 2,
+    "audio": "audio/spiel/titel_grammar_guardian.mp3"
+   },
+   {
+    "ab": 51000,
+    "name": "Friend of Shakespeare",
+    "symbol": "🎭",
+    "tier": 2,
+    "audio": "audio/spiel/titel_friend_of_shakespeare.mp3"
+   },
+   {
+    "ab": 61000,
+    "name": "Dictionary Dragon",
+    "symbol": "🐉",
+    "tier": 2,
+    "audio": "audio/spiel/titel_dictionary_dragon.mp3"
+   },
+   {
+    "ab": 72000,
+    "name": "Wordsmith Wizard",
+    "symbol": "🧙",
+    "tier": 2,
+    "audio": "audio/spiel/titel_wordsmith_wizard.mp3"
+   },
+   {
+    "ab": 85000,
+    "name": "Master of English",
+    "symbol": "🏆",
+    "tier": 2,
+    "audio": "audio/spiel/titel_master_of_english.mp3"
+   }
+  ],
+  "tiers": [
+   {
+    "name": "Heroes",
+    "farbe": null,
+    "text": null,
+    "audio": null
+   },
+   {
+    "name": "The Crown",
+    "farbe": "#b8860b",
+    "text": "Welcome to The Crown! London's kings and queens are waiting for you!",
+    "audio": "audio/spiel/tier_the_crown.mp3"
+   },
+   {
+    "name": "Word Wizards",
+    "farbe": "#6a3fb5",
+    "text": "Welcome to Word Wizards! Now your words become real magic!",
+    "audio": "audio/spiel/tier_word_wizards.mp3"
    }
   ],
   "texte": {
@@ -6066,6 +6190,106 @@ window.DATEN = {
    "powerup": {
     "text": "Powered up! Your English is fully charged again.",
     "audio": "audio/spiel/powerup.mp3"
+   },
+   "titel_royal_guard": {
+    "text": "Congratulations! You are a Royal Guard now!",
+    "audio": "audio/spiel/titel_royal_guard.mp3"
+   },
+   "titel_knight_of_the_realm": {
+    "text": "Congratulations! You are a Knight of the Realm now!",
+    "audio": "audio/spiel/titel_knight_of_the_realm.mp3"
+   },
+   "titel_keeper_of_the_crown_jewels": {
+    "text": "Congratulations! You are a Keeper of the Crown Jewels now!",
+    "audio": "audio/spiel/titel_keeper_of_the_crown_jewels.mp3"
+   },
+   "titel_lord_mayor_of_london": {
+    "text": "Congratulations! You are a Lord Mayor of London now!",
+    "audio": "audio/spiel/titel_lord_mayor_of_london.mp3"
+   },
+   "titel_royal_highness": {
+    "text": "Congratulations! You are a Royal Highness now!",
+    "audio": "audio/spiel/titel_royal_highness.mp3"
+   },
+   "titel_ruler_of_the_tower": {
+    "text": "Congratulations! You are a Ruler of the Tower now!",
+    "audio": "audio/spiel/titel_ruler_of_the_tower.mp3"
+   },
+   "titel_legend_of_london": {
+    "text": "Congratulations! You are a Legend of London now!",
+    "audio": "audio/spiel/titel_legend_of_london.mp3"
+   },
+   "titel_word_apprentice": {
+    "text": "Congratulations! You are a Word Apprentice now!",
+    "audio": "audio/spiel/titel_word_apprentice.mp3"
+   },
+   "titel_spell_caster": {
+    "text": "Congratulations! You are a Spell Caster now!",
+    "audio": "audio/spiel/titel_spell_caster.mp3"
+   },
+   "titel_grammar_guardian": {
+    "text": "Congratulations! You are a Grammar Guardian now!",
+    "audio": "audio/spiel/titel_grammar_guardian.mp3"
+   },
+   "titel_friend_of_shakespeare": {
+    "text": "Congratulations! You are a Friend of Shakespeare now!",
+    "audio": "audio/spiel/titel_friend_of_shakespeare.mp3"
+   },
+   "titel_dictionary_dragon": {
+    "text": "Congratulations! You are a Dictionary Dragon now!",
+    "audio": "audio/spiel/titel_dictionary_dragon.mp3"
+   },
+   "titel_wordsmith_wizard": {
+    "text": "Congratulations! You are a Wordsmith Wizard now!",
+    "audio": "audio/spiel/titel_wordsmith_wizard.mp3"
+   },
+   "titel_master_of_english": {
+    "text": "Congratulations! You are a Master of English now!",
+    "audio": "audio/spiel/titel_master_of_english.mp3"
+   },
+   "tier_the_crown": {
+    "text": "Welcome to The Crown! London's kings and queens are waiting for you!",
+    "audio": "audio/spiel/tier_the_crown.mp3"
+   },
+   "tier_word_wizards": {
+    "text": "Welcome to Word Wizards! Now your words become real magic!",
+    "audio": "audio/spiel/tier_word_wizards.mp3"
+   },
+   "mega_power_1": {
+    "text": "That's real power – well done!",
+    "audio": "audio/spiel/mega_power_1.mp3"
+   },
+   "mega_power_2": {
+    "text": "Power! You keep going and going!",
+    "audio": "audio/spiel/mega_power_2.mp3"
+   },
+   "mega_power_3": {
+    "text": "Look at you – a whole station and still on fire!",
+    "audio": "audio/spiel/mega_power_3.mp3"
+   },
+   "mega_super_1": {
+    "text": "Superpower unlocked! I'm so proud of you!",
+    "audio": "audio/spiel/mega_super_1.mp3"
+   },
+   "mega_super_2": {
+    "text": "Five days in a row and a whole station – wow!",
+    "audio": "audio/spiel/mega_super_2.mp3"
+   },
+   "mega_super_3": {
+    "text": "You've got superpowers now!",
+    "audio": "audio/spiel/mega_super_3.mp3"
+   },
+   "mega_mega_1": {
+    "text": "This is beyond anything I've ever seen!",
+    "audio": "audio/spiel/mega_mega_1.mp3"
+   },
+   "mega_mega_2": {
+    "text": "Mega! You are unstoppable!",
+    "audio": "audio/spiel/mega_mega_2.mp3"
+   },
+   "mega_mega_3": {
+    "text": "Legendary! The whole class should see this!",
+    "audio": "audio/spiel/mega_mega_3.mp3"
    }
   },
   "orte": [

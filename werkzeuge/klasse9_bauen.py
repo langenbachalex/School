@@ -1,7 +1,7 @@
 """Baut die App Klasse 9 (America) in app/klasse9/: daten.js, basis.css, Lob-Audios, Icons, Manifest, sw.js.
 Inhalte: inhalte/klasse9/*.tsv. Aufruf: python3 werkzeuge/klasse9_bauen.py
 """
-import csv, hashlib, json, os, shutil, sys
+import csv, hashlib, json, os, re, shutil, sys
 from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -404,6 +404,20 @@ def main():
 
 # Belohnungen (docs/gamification/konzept.md): High-School-Titel, USA-Karte (50 Staaten), Landmark-Karten
 TITEL = [(0, "Freshman"), (300, "Sophomore"), (900, "Junior"), (1800, "Senior"), (3000, "Graduate"), (4500, "All-American Legend")]
+# Titel-Tiers (6.11.2026, Mr. Alex): je Tier ein Block (Name, Rahmenfarbe am Titel-Schild, Satz zum Eintritt, Stufen mit Symbol). Tier 1 = TITEL oben
+# (Symbole wie bisher: 🎓, der höchste 👑). Neues Tier = eine Zeile anhängen. Schwellen: Tier 1 endet bei 4500, darum Tier 2 und 3 je +3000
+# gegenüber dem Vorschlag (3000 … 85000 → 6000 … 88000).
+TIERS = [
+    {"id": "high_school", "name": "High School", "farbe": None, "satz": None,
+     "stufen": [(ab, n, "👑" if i == len(TITEL) - 1 else "🎓") for i, (ab, n) in enumerate(TITEL)]},
+    {"id": "hollywood", "name": "Hollywood", "farbe": "#d4a017", "satz": "Welcome to Hollywood! The red carpet is rolled out just for you!",
+     "stufen": [(6000, "Extra", "🎬"), (7500, "Stunt Double", "🤸"), (9500, "Supporting Star", "⭐"), (12000, "Leading Star", "🌟"),
+                (15000, "Director", "🎥"), (19000, "Oscar Winner", "🏆"), (24000, "Hollywood Legend", "🌠")]},
+    {"id": "mission_to_mars", "name": "Mission to Mars", "farbe": "#c1440e", "satz": "Welcome to Mission to Mars! Get ready for lift-off to the red planet!",
+     "stufen": [(30000, "Space Cadet", "🚀"), (37000, "Test Pilot", "✈️"), (45000, "Astronaut", "👩‍🚀"), (54000, "Moonwalker", "🌕"),
+                (64000, "Mission Commander", "🛰️"), (75000, "Mars Pioneer", "🔴"), (88000, "Star Voyager", "🌌")]},
+]
+titel_id = lambda n: re.sub(r"[^a-z0-9]+", "_", n.lower()).strip("_")
 SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
     "titel_sophomore": "Congratulations! You are a Sophomore now!",
     "titel_junior": "Congratulations! You are a Junior now!",
@@ -417,6 +431,15 @@ SPIEL_TEXTE = {  # gesprochen von Mr. Alex (audio/spiel/<id>.mp3)
     "gym_fini": "That's it for today. See you tomorrow!",
     "gym_pause": "Break! Come back later and finish your Word Gym.",
     "powerup": "Powered up! Your English is fully charged again.",
+    **{f"titel_{titel_id(n)}": f"Congratulations! You are {'an' if n[0] in 'AEIOU' else 'a'} {n} now!" for t in TIERS[1:] for _, n, _ in t["stufen"]},
+    **{f"tier_{t['id']}": t["satz"] for t in TIERS[1:]},
+    # Mega-Lob (6.11.): erster Abschluss eines Themas mit laufender Serie – Power ab 3, Superpower ab 5, Mega ab 10 Schultagen (oder Perfect month)
+    "mega_power_1": "That's real power – well done!", "mega_power_2": "Power! You keep going and going!",
+    "mega_power_3": "Look at you – a whole station and still on fire!",
+    "mega_super_1": "Superpower unlocked! I'm so proud of you!", "mega_super_2": "Five days in a row and a whole station – wow!",
+    "mega_super_3": "You've got superpowers now!",
+    "mega_mega_1": "This is beyond anything I've ever seen!", "mega_mega_2": "Mega! You are unstoppable!",
+    "mega_mega_3": "Legendary! The whole class should see this!",
 }
 # Word Gym (docs/word-gym/konzept.md): Standard-Pensum und Boxen-Intervalle in Tagen
 # Nächster Termin für den Countdown auf der Startseite (in Wochen); nach dem Termin verschwindet er
@@ -442,7 +465,9 @@ def spieldaten():
     a = lambda pfad: audio(pfad)
     quellen = {q["datei"]: q for q in json.load(open(os.path.join(BASIS, "docs", "gamification", "landmarks", "quellen.json"), encoding="utf-8"))}
     return {
-        "titel": [{"ab": ab, "name": n, "audio": a(f"audio/spiel/titel_{n.lower().replace(' ', '_').replace('-', '_')}.mp3")} for ab, n in TITEL],
+        "titel": [{"ab": ab, "name": n, "symbol": sym, "tier": i, "audio": a(f"audio/spiel/titel_{titel_id(n)}.mp3")}
+                  for i, t in enumerate(TIERS) for ab, n, sym in t["stufen"]],
+        "tiers": [{"name": t["name"], "farbe": t["farbe"], "text": t["satz"], "audio": a(f"audio/spiel/tier_{t['id']}.mp3") if t["satz"] else None} for t in TIERS],
         "texte": {k: {"text": t, "audio": a(f"audio/spiel/{k}.mp3")} for k, t in SPIEL_TEXTE.items()},
         "staaten": [dict(z, audio=a(f"audio/staaten/{z['id']}.mp3")) for z in tsv("staaten.tsv")],
         "landmarks": [dict(z, bild=f"bilder/landmarks/{z['bild']}.jpg", audio=a(f"audio/landmarks/{z['id']}.mp3"),

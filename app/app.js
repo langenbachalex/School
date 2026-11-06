@@ -820,8 +820,8 @@
     const liste = (stand.gruppen[st.nr] = stand.gruppen[st.nr] || []);
     if (!liste.includes(g.name)) { liste.push(g.name); einheitBonus(); }
     else if (wdhKomplett()) wdhStationBonus(`${st.nr}|${g.name}`);
-    const alle = st.gruppen.every((x) => liste.includes(x.name));
-    if (alle && !stand.erledigt.includes(st.nr)) stand.erledigt.push(st.nr);
+    const alle = st.gruppen.every((x) => liste.includes(x.name)), stationNeu = alle && !stand.erledigt.includes(st.nr);
+    if (stationNeu) stand.erledigt.push(st.nr);
     speichern();
     lage = null;
     zeige(kopf(st), el("section", { class: "geschafft" },
@@ -830,12 +830,13 @@
       el("p", { class: "ansage", lang: "en" }, alle ? ruf("geschafft") : lob(true)),
       el("div", { class: "knopfreihe" },
         hwWeiter, knopf("Weitere Abschnitte", () => zeigeGruppen(st), hwWeiter ? "" : "haupt"), knopf("Zur Startseite", startseite))));
+    if (stationNeu) megaLob(String(st.nr));
   }
 
   function stationGeschafft() {
     if (lage.gruppe != null) return gruppeGeschafft();
-    const st = station(lage.nr), hwWeiter = hwWeiterKnopf(teilSchluessel(lage.teil));
-    if (!stand.erledigt.includes(st.nr)) { stand.erledigt.push(st.nr); speichern(); einheitBonus(); }
+    const st = station(lage.nr), hwWeiter = hwWeiterKnopf(teilSchluessel(lage.teil)), stationNeu = !stand.erledigt.includes(st.nr);
+    if (stationNeu) { stand.erledigt.push(st.nr); speichern(); einheitBonus(); }
     else if (wdhKomplett()) wdhStationBonus(String(st.nr));
     lage = null;
     zeige(kopf(st), el("section", { class: "geschafft" },
@@ -843,6 +844,7 @@
       el("p", { class: "ansage" }, `Du bist ein Superstar ${st.lob}!`),
       el("p", { class: "ansage", lang: "en" }, ruf("geschafft")),
       el("div", { class: "knopfreihe" }, hwWeiter, knopf("Zur Startseite", startseite, hwWeiter ? "" : "haupt"))));
+    if (stationNeu) megaLob(String(st.nr));
   }
 
   // Gemeinsamer Rahmen für eine Aufgabe/Karte
@@ -1870,9 +1872,14 @@
     if (!(sp.coins >= 0)) sp.coins = 0;
     if (!Array.isArray(sp.gekauft)) sp.gekauft = [];
     if (!(sp.ausgegeben >= 0)) sp.ausgegeben = 0;
+    if (sp.tiers !== 1) { sp.titel = Math.max(sp.titel || 0, titelIndex(sp.punkte)); sp.tiers = 1; } // Titel-Tiers (6.11.): Altstand still auf den passenden Titel, ohne Feier
     return sp;
   }
   const titelIndex = (p) => SP.titel.reduce((i, t, k) => (p >= t.ab ? k : i), 0);
+  // Titel-Tiers (6.11.2026, Mr. Alex): SP.titel läuft über alle Tiers (t.tier), SP.tiers[i] = { name, farbe, text, audio } (werkzeuge/daten_bauen.py TIERS).
+  // Ab Tier 2 trägt das Titel-Schild (Startseite, Sammlung) die Rahmenfarbe des Tiers (CSS --tier-farbe), der Eintritt bekommt eine eigene Feier.
+  const tierVon = (i) => ((SP.tiers || [])[(SP.titel[i] || {}).tier || 0]) || {};
+  const tierAttr = (i) => (tierVon(i).farbe ? { klasse: " tier-rahmen", stil: `--tier-farbe:${tierVon(i).farbe}` } : { klasse: "", stil: null });
   const neueTeile = () => Object.keys(stand.teile || {}).length;
   const orteBei = (n) => (n ? Math.min(SP.orte.length, Math.floor((n - 1) / 4) + 1) : 0);
   const teileZaehler = () => neueTeile() + ((stand.gym && stand.gym.seances) || 0); // Teile + fertige Word Gyms
@@ -2040,9 +2047,12 @@
     ereignisse.unshift({ art: "toast", text: `+${plus} ⭐ · +${muenzen} 🪙` });
     const t = titelIndex(sp.punkte);
     if (t > sp.titel) {
+      const altTier = (SP.titel[sp.titel] || {}).tier || 0;
       sp.titel = t;
-      const ti = SP.titel[t];
-      ereignisse.push({ art: "feier", symbol: ti.symbol, titel: ti.name, text: `Neuer Titel: ${ti.name}!`, ton: ti });
+      const ti = SP.titel[t], tr = tierVon(t);
+      if ((ti.tier || 0) > altTier && tr.text) // neues Tier: zuerst „Welcome to …“ in der Rahmenfarbe, danach der Titel
+        ereignisse.push({ art: "feier", symbol: ti.symbol, titel: `Welcome to ${tr.name}!`, text: tr.text.replace(/^Welcome to [^!]*! */, ""), ton: tr, farbe: tr.farbe });
+      ereignisse.push({ art: "feier", symbol: ti.symbol, titel: ti.name, text: `Neuer Titel: ${ti.name}!`, ton: ti, farbe: tr.farbe || null });
     }
     speichern();
     setTimeout(zeigeEreignisse, 50);
@@ -2156,12 +2166,40 @@
       ? [el("p", { class: "feier-klein" }, "⭐ Perfect week! Neuer Superheld:"), heldenKarte(e.held, true),
          el("p", { class: "steckbrief", lang: "en" }, e.held.steckbrief)]
       : [el("div", { class: "feier-symbol", "aria-hidden": "true" }, e.symbol), el("h2", { id: "feier-titel", lang: "en" }, e.titel), el("p", {}, e.text)];
+    feier.classList.toggle("tier-feier", !!e.farbe); // Titel-Tiers: Feier in der Rahmenfarbe des Tiers
+    if (e.farbe) feier.style.setProperty("--tier-farbe", e.farbe);
     feier.replaceChildren(konfetti(), ...inhalt,
       el("div", { class: "knopfreihe" },
         ton && ton.audio && knopf("🔊 Anhören", () => spiele([ton.audio])),
         knopf("Weiter ➜", () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
     feier.showModal();
     if (ton && ton.audio) spiele([ton.audio], { warten: true }); // wartet, falls noch ein Lob läuft
+  }
+  /* Mega-Lob (6.11.2026, Mr. Alex): erster Abschluss einer ganzen Station mit laufender Serie → Lichtblitz, Konfetti und ein Satz von Mr. Alex
+     (zufällig einer von drei je Stufe). Power ab 3, Superpower ab 5, Mega ab 10 Schultagen am Stück oder mit dem Abzeichen Perfect month.
+     Nur Lob, keine Punkte; je Station höchstens einmal (stand.spiel.megalob[station] = Stufe, im Siegel). Nicht blockierend (pointer-events: none);
+     wartet, bis ein Feier-Fenster oder eine Orts-Szene fertig ist, und die Stimme reiht sich hinter ein laufendes Lob (spiele … warten). */
+  const MEGA = { power: "⚡ POWER!", super: "🦸 SUPERPOWER!", mega: "🌟 MEGA!" };
+  function megaStufe() {
+    const sp = spielstand(), n = serie();
+    return n >= 10 || sp.abzeichen.includes("monat") ? "mega" : n >= 5 ? "super" : n >= 3 ? "power" : null;
+  }
+  function megaLob(schluessel) {
+    const sp = spielstand(), stufe = megaStufe();
+    if (!sp.megalob || typeof sp.megalob !== "object") sp.megalob = {};
+    if (!stufe || sp.megalob[schluessel]) return null;
+    sp.megalob[schluessel] = stufe; speichern();
+    const ton = SP.texte[`mega_${stufe}_${1 + Math.floor(Math.random() * 3)}`] || {};
+    const zeigen = () => {
+      if (feier.open || stempelLaeuft) return setTimeout(zeigen, 400);
+      const box = el("div", { class: "megalob megalob-" + stufe, role: "status" }, el("div", { class: "blitz" }), konfetti(),
+        el("div", { class: "mega-text" }, el("strong", {}, MEGA[stufe]), el("span", { lang: "en" }, ton.text || "")));
+      document.body.append(box);
+      setTimeout(() => box.remove(), 3400);
+      if (ton.audio) spiele([ton.audio], { warten: true });
+    };
+    setTimeout(zeigen, 150);
+    return stufe;
   }
   function konfetti() {
     const farben = ["#ffd23f", "#1f5fd1", "#e2384d", "#1d8a4e", "#b48cff"];
@@ -2170,8 +2208,8 @@
   }
 
   function statusleiste() {
-    const sp = spielstand(), t = SP.titel[sp.titel], n = serie();
-    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() },
+    const sp = spielstand(), t = SP.titel[sp.titel], n = serie(), ta = tierAttr(sp.titel);
+    return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() + ta.klasse, style: ta.stil },
       el("span", { class: "status-titel" }, t.symbol + " " + t.name),
       el("span", {}, `⭐ ${sp.punkte} Punkte`),
       el("span", { class: "status-coins", title: "Coins" }, `🪙 ${sp.coins}`),
@@ -2219,8 +2257,9 @@
       : el("div", { class: "held-zu", "aria-label": "Noch nicht gesammelt" }, el("span", {}, "?"), el("small", {}, "Perfect week"))));
     zeige(
       el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Meine Sammlung")),
-      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() },
+      el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() + tierAttr(t).klasse, style: tierAttr(t).stil },
         el("p", { class: "klein" }, "Dein Titel"),
+        tierAttr(t).stil && el("p", { class: "tier-name", lang: "en" }, tierVon(t).name),
         el("h2", { lang: "en" }, SP.titel[t].symbol + " " + SP.titel[t].name),
         el("p", {}, `⭐ ${sp.punkte} Punkte`),
         el("p", { class: "coins-zeile" }, `🪙 Coins: ${sp.coins} · ausgegeben: ${sp.ausgegeben}`, " ", knopf("🛍️ Shop", shop, "leise")),
@@ -3741,6 +3780,8 @@
   setInterval(updateHinweis, 3000);
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "ort", ort: SP.orte.find((o) => o.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalt-Anzeige eines Orts (Orts-Szene/Stempel) auslösen
+  if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
+  if (LOKAL) window.__station = (nr) => { lage = { nr, gruppe: null, teil: 0 }; stationGeschafft(); }; // nur Test-Build: Station abschließen (Mega-Lob)
   if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da
 
   // Offline-Speicher (nur wenn die App über eine Webadresse läuft, nicht per Doppelklick)

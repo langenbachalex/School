@@ -5843,6 +5843,326 @@
     }
   }
 
+  // ===== HELDEN-ZEICHNUNGEN (Anfang) =====
+  // Superhelden als Spielgrafik (7.11.2026, Mr. Alex, Phase 1): die 10 Helden aus inhalte/helden.tsv im flachen Vektor-Stil von zeichneFigur.
+  // HELDEN_ZEICHNUNG[id](c, t, pose, o): (0,0) = Fußpunkt, Höhe 80, Blick nach rechts; Posen 'steh', 'lauf' (Bein-/Flügelzyklus), 'jubel' (Arme schräg nach
+  // oben außen – immer NACH dem Kopf gezeichnet, nie dahinter), 'kraft' (Kraftpose mit Effekt), Kenji zusätzlich 'sprung' (o.phase 0..1 = Sprungzyklus).
+  // Gliedmaßen sind zusammenhängende Linienzüge (Oberarm, Unterarm, Hand/Pfote in einem Zug, keine schwebenden Fäuste).
+  // heldZeichnen(c, id, x, y, h, t, pose, { gluehen, kraft, blitz, phase, alpha, spiegel }): Hülle mit Glühen (weicher Schein in Heldenfarbe + ✦-Funken, Standard
+  // für alle Helden) und Leuchtrand (blitz 0..1, nur kurz, wenn eine Kraft auslöst). Farbe je Held: HELD_FARBE.
+  const HELD_FARBE = { leo: '#d62828', camilla: '#c8553d', ellie: '#3a86ff', olivia: '#7b2cbf', kenji: '#f77f00', zara: '#ff2d95', penny: '#48cae4', felix: '#0096c7', tessa: '#2e9e5b', max: '#f4b400' };
+  const hzEll = (c, x, y, rx, ry, f, rot = 0) => { c.fillStyle = f; c.beginPath(); c.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); c.fill(); };
+  const hzRR = (c, x, y, w, h, r, f) => { c.fillStyle = f; c.beginPath(); c.roundRect(x, y, w, h, r); c.fill(); };
+  const hzText = (c, txt, x, y, px, f = '#fff', fett = true) => { c.fillStyle = f; c.font = `${fett ? 'bold ' : ''}${px}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, x, y); };
+  const hzMaske = (c, x, y, w, f) => hzRR(c, x - w, y - 5, w * 2, 10, 5, f);
+  // Augen: Abstand d, Radius r, Blick (Pupille verschoben), zu = Freudenbögen
+  const hzAugen = (c, x, y, d, r = 3, blick = 1, zu = false) => {
+    for (const s of [-1, 1]) {
+      hzEll(c, x + s * d, y, r + 1.6, r + 1.8, '#fff');
+      if (zu) { c.strokeStyle = '#1a1d26'; c.lineWidth = 1.6; c.lineCap = 'round'; c.beginPath(); c.arc(x + s * d, y + 1, r, Math.PI + 0.3, Math.PI * 2 - 0.3); c.stroke(); }
+      else { hzEll(c, x + s * d + blick, y + 0.5, r, r, '#1a1d26'); hzEll(c, x + s * d + blick + 1, y - 0.8, 1, 1, '#fff'); }
+    }
+  };
+  const hzLaecheln = (c, x, y, r, f = '#3a2210', offen = false) => {
+    if (offen) { hzEll(c, x, y + 1, r, r * 0.8, '#7a1f1f'); return; }
+    c.strokeStyle = f; c.lineWidth = 1.4; c.lineCap = 'round'; c.beginPath(); c.arc(x, y, r, 0.2, Math.PI - 0.2); c.stroke();
+  };
+  // Umhang hinter der Figur (am Rücken, Schulterlinie y0); lauf = weht stark, hoch = steigt (Sprung/Flug)
+  const hzUmhang = (c, f, t, lauf, hoch, y0 = -56) => {
+    const wind = lauf ? Math.sin(t * 9) * 6 : Math.sin(t * 2) * 2;
+    c.fillStyle = f; c.beginPath();
+    if (hoch) { c.moveTo(-9, y0 - 2); c.quadraticCurveTo(-34, y0 - 14, -48 - wind, y0 + 6); c.lineTo(-30, y0 + 16); c.quadraticCurveTo(-18, y0 + 6, 9, y0); }
+    else { c.moveTo(-9, y0 - 2); c.quadraticCurveTo(-30, y0 + 20, -40 - wind, y0 + 44); c.lineTo(-18 - wind / 2, y0 + 40); c.quadraticCurveTo(-12, y0 + 20, 9, y0); }
+    c.closePath(); c.fill();
+    c.fillStyle = 'rgba(0,0,0,.15)'; c.beginPath(); c.moveTo(-9, y0 - 2); c.quadraticCurveTo(-14, y0 + 16, -18 - wind / 2, y0 + (hoch ? 16 : 40)); c.lineTo(-12, y0 + (hoch ? 10 : 28)); c.quadraticCurveTo(-8, y0 + 10, 9, y0); c.closePath(); c.fill();
+  };
+  const hzWappen = (c, x, y, f, zeichen) => { hzEll(c, x, y, 7, 7, '#fff'); hzEll(c, x, y, 5.6, 5.6, f); hzText(c, zeichen, x, y + 0.5, 8); };
+  // Arm/Pfote als ein Linienzug: Schulter (sx,sy) → Ellbogen → Hand (Kreis). Winkel a1/a2 ab „senkrecht nach unten“, positiv = zur Seite s (s = +1 rechts).
+  // Rückgabe: Handposition [hx, hy]
+  const hzArm = (c, sx, sy, s, a1, L1, a2, L2, b, f, hr, hf, bizeps) => {
+    const ex = sx + s * Math.sin(a1) * L1, ey = sy + Math.cos(a1) * L1, hx = ex + s * Math.sin(a2) * L2, hy = ey + Math.cos(a2) * L2;
+    c.lineCap = 'round'; c.lineJoin = 'round'; c.strokeStyle = f; c.lineWidth = b;
+    c.beginPath(); c.moveTo(sx, sy); c.lineTo(ex, ey); c.lineTo(hx, hy); c.stroke();
+    if (bizeps) { c.lineWidth = b + bizeps; c.beginPath(); c.moveTo(sx + (ex - sx) * 0.25, sy + (ey - sy) * 0.25); c.lineTo(sx + (ex - sx) * 0.65, sy + (ey - sy) * 0.65); c.stroke(); }
+    hzEll(c, hx, hy, hr, hr, hf || f);
+    return [hx, hy];
+  };
+  // Bein: Hüfte (hx,hy) → Fuß (fx,fy) mit Kniebogen, Fuß als Ellipse (Breite fw) in Fußfarbe
+  const hzBein = (c, hx, hy, fx, fy, b, f, fussF, fw = 8, fh = 4) => {
+    c.lineCap = 'round'; c.strokeStyle = f; c.lineWidth = b;
+    c.beginPath(); c.moveTo(hx, hy); c.quadraticCurveTo((hx + fx) / 2 + 5, (hy + fy) / 2, fx, fy - 3); c.stroke();
+    hzEll(c, fx + fw * 0.35, fy - fh * 0.4, fw, fh, fussF);
+  };
+  // Standard-Beinpaar (zwei Beine, Laufzyklus wie zeichneFigur): Hüftbreite hw, Hüfthöhe hy
+  const hzBeine = (c, pose, t, hw, hy, b, fHinten, fVorn, fussF, fw, fh, o = {}) => {
+    const p = t * 13; let bh, bv;
+    if (pose === 'lauf') { bh = { fx: -hw + 12 * Math.sin(p), fy: -Math.max(0, -Math.cos(p)) * 9 }; bv = { fx: hw + 12 * Math.sin(p + Math.PI), fy: -Math.max(0, Math.cos(p)) * 9 }; }
+    else if (pose === 'jubel') { const h = Math.max(0, Math.sin(t * 7)) * 3; bh = { fx: -hw - 2, fy: -h }; bv = { fx: hw + 2, fy: -h }; }
+    else { bh = { fx: -hw - (o.breit || 0), fy: 0 }; bv = { fx: hw + 1 + (o.breit || 0), fy: 0 }; }
+    hzBein(c, -hw * 0.6, hy, bh.fx, bh.fy, b, fHinten, fussF, fw, fh); hzBein(c, hw * 0.6, hy, bv.fx, bv.fy, b, fVorn, fussF, fw, fh);
+  };
+  // Standard-Armpaar für die Posen: steh (locker), lauf (pumpen), jubel (schräg nach oben außen – nach dem Kopf zeichnen!), sonst wie steh.
+  // sx = Schulter-Abstand (bei großen Köpfen weiter außen, damit die Hände neben dem Kopf sichtbar bleiben), sy = Schulterhöhe
+  const hzArme = (c, pose, t, sx, sy, L1, L2, b, f, hr, hf, winkel, bizeps) => {
+    const p = t * 13, haende = [];
+    for (const s of [-1, 1]) {
+      let a1, a2;
+      if (winkel && winkel[s > 0 ? 1 : 0]) [a1, a2] = winkel[s > 0 ? 1 : 0];
+      else if (pose === 'jubel') { a1 = 2.15 + 0.08 * Math.sin(t * 7 + s); a2 = 2.75; }
+      else if (pose === 'lauf') { a1 = 0.55; a2 = -1.1 + 0.55 * Math.sin(p + (s > 0 ? 0 : Math.PI)); }
+      else { a1 = 0.32; a2 = 0.1; }
+      haende.push(hzArm(c, s * sx, sy, s, a1, L1, a2, L2, b, f, hr, hf, bizeps));
+    }
+    return haende;
+  };
+  const hzBlitz = (c, x, y, t, s) => hzText(c, '⚡', x, y + Math.sin(t * 8 + s) * 2, 14, '#ffd60a');   // Blitz an der Faust
+  const hzFunke = (c, x, y, r, f = '#fff') => { c.fillStyle = f; c.beginPath(); c.moveTo(x, y - r); c.quadraticCurveTo(x, y, x + r, y); c.quadraticCurveTo(x, y, x, y + r); c.quadraticCurveTo(x, y, x - r, y); c.quadraticCurveTo(x, y, x, y - r); c.fill(); };
+  // Glühen: weicher Schein in Heldenfarbe hinter der Figur + kleine ✦-Funken (Standard für alle Helden, Mr. Alex 7.11.)
+  function hzGluehen(c, x, y, h, f, t, stark = 1) {
+    const u = h / 80; c.save(); c.translate(x, y - 40 * u);
+    const g = c.createRadialGradient(0, 0, 10 * u, 0, 0, 62 * u); g.addColorStop(0, f + 'aa'); g.addColorStop(0.6, f + '44'); g.addColorStop(1, f + '00');
+    c.fillStyle = g; c.globalAlpha = stark; c.beginPath(); c.ellipse(0, 0, 62 * u, 66 * u, 0, 0, Math.PI * 2); c.fill();
+    for (let k = 0; k < 8; k++) { const w = t * 1.2 + k * 0.785, r = (44 + Math.sin(t * 3 + k) * 6) * u; hzText(c, '✦', Math.cos(w) * r, Math.sin(w) * r * 1.1 + 3, 8 * u, '#fff', false); }
+    c.restore();
+  }
+
+  const HELDEN_ZEICHNUNG = {
+    // Leo the Lion – Super speed: Mähne, roter Umhang, ⚡; Kraft = Beinwirbel, Tempolinien, Blitze an den Fäusten
+    leo(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', fell = '#e0a64a', dunkel = '#c9883a', bauch = '#f5d79a';
+      hzUmhang(c, HELD_FARBE.leo, t, pose === 'lauf' || k, false);
+      c.save(); if (k) { c.translate(4, 0); c.rotate(0.18); }
+      c.strokeStyle = '#d99a3c'; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); c.moveTo(-10, -26); c.quadraticCurveTo(-26, -30 + Math.sin(t * 3) * 2, -24, -44); c.stroke(); hzEll(c, -24, -46, 4, 4, '#8a4b14');   // Schwanz
+      if (k) {   // Beinwirbel: 6 halbdurchsichtige Beine im Kreis + Bewegungsbögen
+        c.save(); c.translate(0, -12);
+        for (let i = 0; i < 6; i++) { c.save(); c.rotate(t * 30 + i * Math.PI / 3); c.globalAlpha = 0.45; hzRR(c, -4, 0, 8, 16, 4, fell); hzEll(c, 0, 16, 5.5, 3.2, dunkel); c.restore(); }
+        c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 2.5; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(0, 2, 15 + i * 4, 0.6 + i * 0.4, 2.6 + i * 0.4); c.stroke(); }
+        c.restore();
+        c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 2.2; for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(-30 - i * 3, -46 + i * 9); c.lineTo(-58 + (i % 2) * 8 + Math.sin(t * 20 + i) * 3, -46 + i * 9); c.stroke(); }   // Tempolinien
+      } else hzBeine(c, pose, t, 5, -22, 8, dunkel, fell, dunkel, 7, 3.5);
+      hzRR(c, -12, -54, 24, 38, 11, fell); hzEll(c, 0, -34, 8, 11, bauch); hzRR(c, -14, -54, 28, 10, 5, '#1d3557'); hzWappen(c, 0, -40, HELD_FARBE.leo, '⚡');
+      for (let i = 0; i < 12; i++) { const w = i / 12 * Math.PI * 2 + (k ? t * 0.5 : 0); hzEll(c, Math.cos(w) * 13, -68 + Math.sin(w) * 13, 7, 7, i % 2 ? '#8a4b14' : '#a85d1c'); }   // Mähne
+      hzEll(c, 0, -68, 12, 12, '#e8b25a'); hzEll(c, 0, -63, 6, 4.5, bauch); hzEll(c, 0, -65.5, 2.4, 1.7, '#3a2210'); hzLaecheln(c, 0, -61, 3, '#3a2210', j);
+      hzMaske(c, 0, -71, 10, HELD_FARBE.leo); hzAugen(c, 0, -71, 4.6, 2.5, k ? 1.2 : 0.6, j); hzEll(c, -8, -80, 3.5, 3.5, '#e8b25a'); hzEll(c, 8, -80, 3.5, 3.5, '#e8b25a');
+      // Arme zuletzt (über der Mähne): Jubel schräg hoch außen (Schulter bei 18, Fäuste neben der Mähne); Kraft = Laufhaltung, Blitze an den Fäusten
+      const haende = hzArme(c, pose, t, j ? 18 : 13, -50, 13, 11, 7, fell, 5.5, dunkel, k ? [[-1.0, -2.0], [1.3, 2.2]] : null);
+      if (j || k) haende.forEach(([hx, hy], i) => hzBlitz(c, hx + (i ? 7 : -7), hy - 8, t, i));
+      c.restore();
+    },
+    // Camilla the Camel – Super strength: Höcker, Terrakotta-Maske; Kraft = stemmt einen Felsbrocken über den Kopf, Bizeps, Bodenrisse
+    camilla(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', fell = '#dcb46e', dunkel = '#bd934c', hell = '#f3e2bb', F = HELD_FARBE.camilla;
+      hzUmhang(c, F, t, pose === 'lauf', false, -54);
+      hzEll(c, -8, -58, 11, 10, dunkel); hzEll(c, -7, -57, 8, 7, fell);   // Höcker über dem Rücken
+      if (k) { c.strokeStyle = 'rgba(70,50,30,.6)'; c.lineWidth = 1.6; c.lineCap = 'round';   // Bodenrisse unter den Füßen
+        for (const [x0, y0, x1, y1, x2, y2] of [[-8, 0, -22, 4, -34, 3], [10, 1, 24, 5, 38, 2], [-4, 1, -10, 7, -18, 12], [6, 1, 14, 8, 16, 14]]) { c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.lineTo(x2, y2); c.stroke(); } }
+      hzBeine(c, pose, t, 6, -22, 9, dunkel, fell, '#8a6a3a', 7, 3.5, { breit: k ? 4 : 0 });
+      hzRR(c, -13, -52, 26, 36, 11, fell); hzEll(c, 0, -32, 8, 10, hell); hzRR(c, -15, -52, 30, 10, 5, '#2b4a6f'); hzWappen(c, 0, -39, F, 'C');
+      c.strokeStyle = fell; c.lineWidth = 9; c.lineCap = 'round'; c.beginPath(); c.moveTo(0, -50); c.lineTo(3, -62); c.stroke();   // Hals
+      hzEll(c, 2, -70, 12, 10, fell); hzEll(c, 11, -67, 8, 6, hell); hzEll(c, 15, -66, 1.6, 1.3, '#5a3a1a');   // Kopf, Schnauze, Nüstern
+      c.strokeStyle = '#5a3a1a'; c.lineWidth = 1.4; c.beginPath(); c.arc(11, -64.5, 3.2, 0.1, Math.PI - 0.1); c.stroke();   // Schmunzeln
+      hzEll(c, -8, -78, 3, 4, fell, -0.4); hzEll(c, 4, -79, 3, 4, fell, 0.3); hzEll(c, 0, -78, 7, 4, dunkel);   // Ohren, Haarschopf
+      hzMaske(c, 1, -72, 10, F); hzAugen(c, 1, -72, 4.4, 2.3, 1, j);
+      c.strokeStyle = '#3a2210'; c.lineWidth = 1; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(1 + s * 4.4 + s * 2, -76); c.lineTo(1 + s * 4.4 + s * 3.5, -78); c.stroke(); }   // Wimpern
+      const haende = hzArme(c, pose, t, j ? 17 : 13, -48, k ? 17 : 13, k ? 15 : 11, 7.5, fell, 5.5, dunkel, k ? [[2.5, 3.0], [2.5, 3.0]] : null, k ? 4 : 0);
+      if (k) {   // Felsbrocken (grau mit Rissen) auf den Händen, leicht wippend
+        const fy = (haende[0][1] + haende[1][1]) / 2 - 10 + Math.sin(t * 4) * 1.5;
+        hzEll(c, 0, fy, 26, 10, '#7d8793'); hzEll(c, -6, fy - 2, 16, 7, '#9aa5b1'); c.strokeStyle = '#5a636e'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-14, fy - 6); c.lineTo(-8, fy); c.lineTo(-12, fy + 6); c.moveTo(10, fy - 7); c.lineTo(14, fy - 1); c.stroke();
+        for (let i = 0; i < 3; i++) hzFunke(c, -30 + i * 30, fy - 14 + Math.sin(t * 6 + i) * 3, 2.5, '#fff');
+      }
+    },
+    // Ellie the Elephant – Super memory: große Ohren, Rüssel, blaue Maske; Kraft = Bücher und Buchstaben kreisen um den Kopf
+    ellie(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', grau = '#9aa7b8', dunkel = '#7f8c9d', hell = '#c3ccd8', F = HELD_FARBE.ellie;
+      hzUmhang(c, F, t, pose === 'lauf', false, -52);
+      const kreis = (vorn) => { if (!k) return; const farben = ['#e63946', '#2a9d8f', '#ffb703', '#8338ec'];   // Umlaufbahn um den Kopf (hinten vor dem Kopf, vorn danach)
+        for (let i = 0; i < 6; i++) { const w = t * 2 + i * Math.PI / 3, sn = Math.sin(w); if ((sn > 0) !== vorn) continue; const x = Math.cos(w) * 30, y = -70 + sn * 11;
+          c.save(); c.translate(x, y); c.globalAlpha = vorn ? 1 : 0.8;
+          if (i % 2) { c.rotate(Math.sin(t * 3 + i) * 0.3); hzRR(c, -5, -3.5, 10, 7, 1.5, farben[i % 4]); hzRR(c, -4, -2.5, 8, 5, 1, '#fff'); c.fillStyle = farben[i % 4]; c.fillRect(-1.2, -3.5, 1, 7); }
+          else hzText(c, 'ABC'[(i / 2) | 0], 0, 0, 10, F);
+          c.restore(); } };
+      hzBeine(c, pose, t, 7, -22, 10, dunkel, grau, dunkel, 7.5, 4);
+      hzRR(c, -14, -52, 28, 36, 12, grau); hzEll(c, 0, -32, 9, 10, hell); hzRR(c, -16, -52, 32, 10, 5, '#1d3557'); hzWappen(c, 0, -39, F, 'E');
+      kreis(false);
+      hzEll(c, -19, -66, 10, 13, dunkel); hzEll(c, 19, -66, 10, 13, dunkel); hzEll(c, -19, -66, 6.5, 9, '#e6bfc7'); hzEll(c, 19, -66, 6.5, 9, '#e6bfc7');   // Ohren
+      hzEll(c, 0, -66, 16, 15, grau);
+      c.strokeStyle = grau; c.lineWidth = 7; c.lineCap = 'round'; c.beginPath(); c.moveTo(3, -62); c.quadraticCurveTo(8, -50, 4 + (j ? 10 : 0), -44 - (j ? 6 : 0)); c.stroke();   // Rüssel (Jubel: hochgeschwungen)
+      c.strokeStyle = dunkel; c.lineWidth = 1; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(3 + i * 1.3, -57 + i * 4); c.lineTo(7 + i * 1.5, -57 + i * 4); c.stroke(); }
+      hzEll(c, -4, -73, 2, 2.6, '#e0dcd8', -0.3); hzEll(c, -6, -56, 3.5, 2, '#fff', 0.3);   // Stoßzahn-Spitze
+      hzMaske(c, 0, -70, 12, F); hzAugen(c, 0, -70, 5.2, 2.5, 1, j);
+      kreis(true);
+      hzArme(c, pose, t, j ? 24 : 14, -48, 12, 11, 8, grau, 5.5, dunkel, k ? [[1.1, 2.3], [1.1, 2.3]] : null);   // Kraft: Hände an die Schläfen (nachdenken)
+      if (k) hzText(c, '?', 24 + Math.sin(t * 5) * 2, -90, 12, F);
+    },
+    // Olivia the Owl – Night vision: Federohren, Flügel, lila Maske; Kraft = grün leuchtende Augen mit Laserstrahlen, Flügel gespreizt
+    olivia(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', l = pose === 'lauf', braun = '#8a6a4a', dunkel = '#6e5236', F = HELD_FARBE.olivia;
+      hzUmhang(c, F, t, l, k, -54);
+      const wip = l ? Math.sin(t * 13) * 0.7 : 0;
+      hzBeine(c, pose, t, 5, -14, 5, '#d98a4a', '#f4a261', '#f4a261', 6, 3);
+      hzEll(c, 0, -36, 18, 26, braun); hzEll(c, 0, -30, 11, 17, '#e9d8b8');
+      c.strokeStyle = '#b89870'; c.lineWidth = 1.2; for (let i = 0; i < 3; i++) for (let s = 0; s < 2; s++) { c.beginPath(); c.arc(-4 + s * 8, -36 + i * 7, 3, 0.2, Math.PI - 0.2); c.stroke(); }
+      hzWappen(c, 0, -46, F, '👁');
+      hzEll(c, 0, -66, 15, 13, braun); c.fillStyle = braun; c.beginPath(); c.moveTo(-14, -72); c.lineTo(-12, -86); c.lineTo(-5, -76); c.fill(); c.beginPath(); c.moveTo(14, -72); c.lineTo(12, -86); c.lineTo(5, -76); c.fill();
+      if (k) { c.save(); c.globalAlpha = 0.85; for (const s of [-1, 1]) { const g = c.createLinearGradient(s * 6.5, -67, s * 6.5 + 90, -47); g.addColorStop(0, '#9dff9d'); g.addColorStop(1, 'rgba(60,255,60,0)'); c.fillStyle = g; c.beginPath(); c.moveTo(s * 6.5, -70); c.lineTo(s * 6.5 + 95, -62); c.lineTo(s * 6.5 + 95, -50); c.lineTo(s * 6.5, -64); c.fill(); } c.restore(); }
+      for (const s of [-1, 1]) { hzEll(c, s * 6.5, -67, 7.5, 7.5, '#2dc653');
+        if (k) { hzEll(c, s * 6.5, -67, 6, 6, '#c8ffc8'); c.save(); c.shadowColor = '#2dff2d'; c.shadowBlur = 14; hzEll(c, s * 6.5, -67, 3.6, 3.6, '#2dff2d'); c.restore(); }
+        else if (j) { c.strokeStyle = '#1a1d26'; c.lineWidth = 1.8; c.beginPath(); c.arc(s * 6.5, -66, 4, Math.PI + 0.3, Math.PI * 2 - 0.3); c.stroke(); }
+        else { hzEll(c, s * 6.5, -67, 6, 6, '#fff'); hzEll(c, s * 6.5 + 1, -66.5, 3.4, 3.4, '#1a1d26'); hzEll(c, s * 6.5 + 2, -68, 1.1, 1.1, '#fff'); } }
+      hzRR(c, -1.5, -68, 3, 2, 1, '#2dc653'); c.fillStyle = '#f4a261'; c.beginPath(); c.moveTo(-2.5, -61); c.lineTo(2.5, -61); c.lineTo(0, -56); c.fill();
+      // Flügel als Arme (nach dem Kopf): steh anliegend, lauf wippen, jubel schräg hoch außen, kraft weit gespreizt
+      for (const s of [-1, 1]) { const w = -s * (j ? 2.3 : k ? 1.25 : 0.3 + wip); c.save(); c.translate(s * 15, -50); c.rotate(w);
+        hzEll(c, 0, 10, 6, 15, dunkel); hzEll(c, 0, 24, 5, 5, dunkel); hzEll(c, 0, 22, 2.6, 2.6, '#8a6a4a'); c.restore(); }
+    },
+    // Kenji the Kangaroo – Super jump: echter Sprungzyklus (o.phase 0..1): Hocke auf langen Hinterbeinen, Schwanz als Gegengewicht, Absprung, Flug mit
+    // angezogenen und dann nach vorn gestreckten Beinen, Landung. 'lauf' und 'kraft' = Zyklus über die Zeit, 'sprung' = o.phase, 'steh'/'jubel' = Stand.
+    kenji(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', fell = '#c98446', dunkel = '#b5703a', hell = '#ecc9a0', F = HELD_FARBE.kenji;
+      const ph = pose === 'sprung' || (k && o.phase != null) ? ((o.phase || 0) % 1 + 1) % 1 : (pose === 'lauf' || k) ? (t * 1.4) % 1 : 0;
+      // Keyframes (Phase, dy, Neigung, Knie, Knöchel, Zehe relativ zur Hüfte, Schwanzspitze relativ zur Hüfte, Arme a1/a2): Stand, Hocke, Absprung, Flug hoch, Scheitel, Sinken, Landung, Stand
+      const KF = [[0, 0, 0, 8, 12, -1, 28, 17, 33, -30, 30, 0.3, 0.6], [0.15, 10, 0.35, 12, 8, -2, 18, 18, 23, -30, 22, -0.5, -0.2], [0.3, -4, 0.3, 2, 14, -2, 30, 12, 38, -28, 26, 0.9, 1.4],
+        [0.45, -30, 0.15, 14, 2, 4, 12, 18, 14, -30, 10, 1.8, 2.3], [0.6, -36, 0, 12, 8, 16, 20, 28, 20, -32, 4, 1.6, 2.6], [0.75, -22, -0.1, 12, 10, 14, 24, 26, 26, -30, 8, 1.2, 1.9],
+        [0.9, 6, 0.2, 12, 10, 0, 20, 18, 24, -30, 24, 0.4, 0.9], [1, 0, 0, 8, 12, -1, 28, 17, 33, -30, 30, 0.3, 0.6]];
+      let a = KF[0], b = KF[1]; for (let i = 0; i < KF.length - 1; i++) if (ph >= KF[i][0] && ph <= KF[i + 1][0]) { a = KF[i]; b = KF[i + 1]; }
+      const f = (ph - a[0]) / (b[0] - a[0] || 1), g = f * f * (3 - 2 * f), v = a.map((x, i) => x + (b[i] - x) * g);
+      const [, dy, neig, kx, ky, ax, ay, zx, zy, sx, sy, a1, a2] = v, flug = ph > 0.32 && ph < 0.85;
+      c.save(); c.translate(0, dy);
+      hzUmhang(c, F, t, pose === 'lauf' || k, flug || j, -58);
+      const HX = -2, HY = -34;
+      // Schwanz (Gegengewicht): dick am Ansatz, zur Spitze dünner
+      c.lineCap = 'round'; c.strokeStyle = dunkel; c.lineWidth = 9; c.beginPath(); c.moveTo(HX - 2, HY + 4); c.quadraticCurveTo(HX - 18, HY + 8 + (sy - 20) * 0.4, HX + sx, HY + sy); c.stroke();
+      c.lineWidth = 5; c.beginPath(); c.moveTo(HX - 12, HY + 6 + (sy - 20) * 0.3); c.quadraticCurveTo(HX - 20, HY + 10 + (sy - 20) * 0.45, HX + sx - 4, HY + sy + 1); c.stroke();
+      // Hinterbeine (hinten dunkler, vorn heller): Hüfte → Knie → Knöchel → Zehe als ein Linienzug, großer Fuß
+      for (const [dx, farbe, fussF] of [[-5, dunkel, '#9c5e2c'], [3, fell, dunkel]]) {
+        c.strokeStyle = farbe; c.lineWidth = 9; c.lineJoin = 'round'; c.beginPath(); c.moveTo(HX + dx, HY); c.lineTo(HX + dx + kx, HY + ky); c.lineTo(HX + dx + ax, HY + ay); c.stroke();
+        hzEll(c, HX + dx + kx, HY + ky, 7, 6, farbe, 0.3);   // Oberschenkel-Muskel
+        const fx = zx - ax, fy = zy - ay, L = Math.hypot(fx, fy); c.save(); c.translate(HX + dx + ax, HY + ay); c.rotate(Math.atan2(fy, fx));
+        hzRR(c, -4, -4, L + 6, 8, 4, fussF); hzEll(c, L + 1, 0, 3, 3.5, '#5a3a1a'); c.restore();   // großer Fuß
+      }
+      c.save(); c.translate(0, HY); c.rotate(neig); c.translate(0, -HY);
+      hzEll(c, 0, -34, 15, 22, fell); hzEll(c, 3, -30, 9, 15, hell); hzWappen(c, 2, -38, F, 'K');
+      hzEll(c, -1, -14, 11, 6, dunkel);   // Beutel-Kante
+      hzEll(c, 2, -64, 12, 13, fell); hzEll(c, 10, -60, 8, 6, hell);
+      hzEll(c, -5, -82, 4, 10, fell, -0.25 - (flug ? 0.3 : 0)); hzEll(c, 5, -83, 4, 10, fell, 0.2 - (flug ? 0.2 : 0)); hzEll(c, -5, -81, 2, 6, '#e8b58a', -0.25 - (flug ? 0.3 : 0)); hzEll(c, 5, -82, 2, 6, '#e8b58a', 0.2 - (flug ? 0.2 : 0));
+      hzMaske(c, 3, -66, 11, F); hzAugen(c, 3, -66, 5, 2.6, 1, j || (ph > 0.4 && ph < 0.7)); hzEll(c, 16, -60, 2.2, 1.8, '#3a2210'); hzLaecheln(c, 10, -57, 4, '#3a2210', j);
+      // Arme (nach dem Kopf): beide zur Vorderseite (Blick nach rechts), hinterer dunkler; Jubel = schräg hoch außen
+      if (j) hzArme(c, pose, t, 16, -50, 11, 10, 6.5, fell, 5, '#e63946');
+      else for (const [dx, farbe] of [[-9, dunkel], [9, fell]]) { const hinten = dx < 0 && a1 > 1 ? 0.6 : 0; hzArm(c, dx, -50 + hinten * 6, 1, a1 - hinten, 11, a2 - hinten, 10, 6.5, farbe, 5, '#e63946'); }   // hintere Pfote im Flug tiefer (vor der Brust, nicht vor dem Gesicht)
+      c.restore();
+      c.restore();
+      if (k || pose === 'sprung' || pose === 'lauf') {   // Effekte: Staubwolke bei Absprung/Landung, Bewegungsbögen im Flug
+        const staub = (ph > 0.22 && ph < 0.42) ? 1 - Math.abs(ph - 0.32) / 0.1 : (ph > 0.84 && ph < 1) ? 1 - Math.abs(ph - 0.92) / 0.08 : 0;
+        if (staub > 0) { c.save(); c.globalAlpha = staub * 0.8; for (let i = 0; i < 4; i++) hzEll(c, -14 + i * 10, -2 - i % 2 * 3, 7 + staub * 4, 4, '#e6dccb'); c.restore(); }
+        if (flug && k && dy < -16) { c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 2.5; c.lineCap = 'round'; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(0, dy - 8, 14 + i * 5, 0.5, 2.6); c.stroke(); } }
+      }
+    },
+    // Zara the Zebra – Invisibility: weiß mit schwarzen Streifen, Mähne, pinke Maske; Kraft = halbdurchsichtig mit Schimmer-Rand und Funken
+    zara(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', weiss = '#f6f6f6', schwarz = '#2b2b2b', F = HELD_FARBE.zara;
+      const figur = () => {
+        hzUmhang(c, F, t, pose === 'lauf', false, -54);
+        c.strokeStyle = schwarz; c.lineWidth = 2.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(-10, -26); c.quadraticCurveTo(-22, -22, -20, -8 + Math.sin(t * 3) * 2); c.stroke(); hzEll(c, -20, -6, 3.5, 5, schwarz);   // Schwanz mit Quaste
+        hzBeine(c, pose, t, 5, -22, 8, '#d8d8d8', weiss, schwarz, 6, 3.5);
+        c.save(); c.beginPath(); c.roundRect(-12, -54, 24, 38, 11); c.clip(); c.fillStyle = weiss; c.fillRect(-12, -54, 24, 38);
+        c.strokeStyle = schwarz; c.lineWidth = 3; for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(-14, -50 + i * 8); c.quadraticCurveTo(0, -46 + i * 8, 14, -54 + i * 8); c.stroke(); } c.restore();   // Streifen
+        hzEll(c, 0, -32, 7, 9, weiss); hzRR(c, -14, -54, 28, 10, 5, '#1d3557'); hzWappen(c, 0, -40, F, 'Z');
+        for (let i = 0; i < 6; i++) hzEll(c, -6 + i * 2.2, -80 + Math.abs(i - 2.5) * 0.8, 2.4, 5, schwarz, (i - 2.5) * 0.12);   // Mähne (Bürste)
+        hzEll(c, -8, -78, 3, 4.5, weiss, -0.3); hzEll(c, 6, -79, 3, 4.5, weiss, 0.25); hzEll(c, -8, -78, 1.5, 2.6, '#f0b0c0', -0.3); hzEll(c, 6, -79, 1.5, 2.6, '#f0b0c0', 0.25);
+        hzEll(c, 1, -68, 12, 11, weiss); hzEll(c, 10, -64, 7, 5, '#3a3a3a'); hzEll(c, 14, -65, 1.5, 1.2, '#111');   // Kopf, dunkle Schnauze
+        c.strokeStyle = schwarz; c.lineWidth = 2.2; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(-9 + i * 4, -76 + i * 1.5); c.quadraticCurveTo(-4 + i * 4, -70, -6 + i * 5, -60); c.stroke(); }   // Kopfstreifen
+        hzMaske(c, 1, -71, 10, F); hzAugen(c, 1, -71, 4.5, 2.4, 1, j); if (j) hzLaecheln(c, 10, -62, 2.5, '#fff', true);
+        hzArme(c, pose, t, j ? 17 : 13, -50, 13, 11, 7, weiss, 5, schwarz, k ? [[1.0, 2.2], [1.0, 2.2]] : null);   // Kraft: Hände vor dem Gesicht (jetzt siehst du mich nicht!)
+      };
+      if (!k) { figur(); return; }
+      const st = o.kraft == null ? 1 : Math.max(0, Math.min(1, o.kraft));
+      c.save(); c.globalAlpha *= 1 - 0.6 * st; c.shadowColor = '#ffffff'; c.shadowBlur = 10 * st; figur(); c.restore();   // halbdurchsichtig + Schimmer
+      for (let i = 0; i < 7; i++) { const w = t * 2.5 + i * 0.9, r = 24 + Math.sin(t * 4 + i) * 5; hzFunke(c, Math.cos(w) * r, -42 + Math.sin(w) * r * 1.4, 1.8 + (i % 3), i % 2 ? '#fff' : F); }
+    },
+    // Penny the Penguin – Ice powers: Frack, Flossen, eisblaue Maske; Kraft = Eisstrahl aus der Flosse mit Eiskristallen
+    penny(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', l = pose === 'lauf', schwarz = '#1f2433', F = HELD_FARBE.penny;
+      hzUmhang(c, F, t, l, false, -56);
+      c.save(); if (l) { c.translate(0, -Math.abs(Math.sin(t * 13)) * 2); c.rotate(Math.sin(t * 13) * 0.1); }
+      const p = t * 13, fl = l ? Math.sin(p) : 0;
+      hzEll(c, -6 + (l ? fl * 3 : 0), -2, 7, 3.5, '#f4a261'); hzEll(c, 7 - (l ? fl * 3 : 0), -2, 7, 3.5, '#f4a261');   // Watschelfüße
+      hzEll(c, 0, -34, 17, 30, schwarz); hzEll(c, 2, -30, 11, 22, '#f8f9fb'); hzWappen(c, 2, -38, F, '❄');
+      hzEll(c, 0, -62, 12, 11, schwarz); hzEll(c, 2, -59, 8, 7, '#f8f9fb'); hzEll(c, 9, -60, 5, 2.4, '#f4a261');
+      hzMaske(c, 1, -64, 10, F); hzAugen(c, 1, -64, 4.4, 2.3, 1, j);
+      // Flossen (nach dem Kopf): steh anliegend, lauf wippen, jubel schräg hoch außen, kraft = rechte Flosse vorgestreckt
+      for (const s of [-1, 1]) { const w = -(j ? s * 2.2 : k && s > 0 ? 1.55 : s * (0.35 + (l ? Math.sin(p + (s > 0 ? 0 : Math.PI)) * 0.5 : 0))); c.save(); c.translate(s * 15, -48); c.rotate(w); hzEll(c, 0, 9, 5, 13, schwarz); c.restore(); }
+      c.restore();
+      if (k) { const g = c.createLinearGradient(34, -40, 90, -40); g.addColorStop(0, 'rgba(180,240,255,.95)'); g.addColorStop(1, 'rgba(180,240,255,0)'); c.fillStyle = g; c.beginPath(); c.moveTo(32, -50); c.lineTo(92, -62); c.lineTo(92, -30); c.lineTo(32, -42); c.fill();
+        for (let i = 0; i < 6; i++) hzText(c, '❄', 44 + i * 9 + Math.sin(t * 4 + i) * 2, -46 + Math.cos(t * 3 + i * 1.3) * 10, 7 + (i % 3) * 3, '#fff', false); }
+    },
+    // Felix the Falcon – Super flight: Schiefergrau-blau, weiße Brust mit Sprenkeln, gelber Hakenschnabel; Kraft = Flügel weit gespreizt im Flug, Wolkenstreifen
+    felix(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', l = pose === 'lauf', grau = '#4a5d7a', dunkel = '#34435a', F = HELD_FARBE.felix;
+      if (k) { c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 3; c.lineCap = 'round'; for (let i = 0; i < 5; i++) { const y = -70 + i * 11, L = 20 + (i * 7) % 15; c.beginPath(); c.moveTo(-26 - i * 2, y); c.lineTo(-26 - i * 2 - L - Math.sin(t * 10 + i) * 4, y); c.stroke(); } }   // Wolkenstreifen
+      hzUmhang(c, F, t, l || k, k, -54);
+      c.save(); if (k) { c.translate(6, -14); c.rotate(0.35); }
+      const fluegel = (s, w) => { c.save(); c.translate(s * 14, -48); c.rotate(w);   // Flügel: lange Ellipse mit drei Federspitzen
+        hzEll(c, 0, 12, 6, 16, dunkel); c.fillStyle = grau; c.beginPath(); for (let i = 0; i < 3; i++) { c.moveTo(-5 + i * 5, 20); c.lineTo(-4 + i * 5, 30 + i * 2); c.lineTo(0 + i * 5, 22); } c.fill(); c.restore(); };
+      hzBeine(c, pose, t, 5, -16, 5, '#d9a400', '#f4c20d', '#f4c20d', 6, 3);
+      hzEll(c, 0, -36, 15, 24, grau); hzEll(c, 1, -30, 10, 17, '#f3f3f3'); c.fillStyle = '#6e7f99'; for (let i = 0; i < 8; i++) hzEll(c, -5 + (i % 3) * 5, -40 + ((i / 3) | 0) * 7 + (i % 2) * 2, 1.4, 2, '#8e9db3');
+      hzWappen(c, 0, -46, F, 'F');
+      hzEll(c, 0, -64, 12, 12, grau); hzEll(c, 2, -60, 8, 6, '#f3f3f3'); hzEll(c, -5, -60, 2.5, 5, dunkel, 0.2); hzEll(c, 7, -60, 2.5, 5, dunkel, -0.2);   // Kopf, helle Wange, Bartstreifen
+      c.fillStyle = '#f4c20d'; c.beginPath(); c.moveTo(-3, -62); c.lineTo(5, -62); c.lineTo(2, -55); c.closePath(); c.fill(); hzEll(c, 3, -56, 1.5, 1.5, '#2a2a2a');   // Hakenschnabel
+      hzMaske(c, 0, -67, 10, F); hzAugen(c, 0, -67, 4.4, 2.4, k ? 1.4 : 1, j);
+      fluegel(-1, j ? 2.3 : k ? 1.55 : l ? 0.4 + Math.sin(t * 13) * 0.7 : 0.25); fluegel(1, j ? -2.3 : k ? -1.55 : l ? -0.4 - Math.sin(t * 13) * 0.7 : -0.25);   // Flügel nach dem Kopf
+      c.restore();
+    },
+    // Tessa the Turtle – Unbreakable shell: grün, brauner Panzer mit Wabenmuster, grüne Maske; Kraft = Schild-Blitz um den Panzer
+    tessa(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', gruen = '#5faa5a', dunkel = '#3f8a3f', F = HELD_FARBE.tessa;
+      hzUmhang(c, F, t, pose === 'lauf', false, -52);
+      if (k) { const st = o.kraft == null ? 1 : o.kraft, puls = 1 + Math.sin(t * 10) * 0.08; c.save(); c.globalAlpha = st;   // Schild-Blitz: Lichtring hinter dem Panzer + Sechseck + Funken
+        const g = c.createRadialGradient(-6, -40, 14, -6, -40, 40 * puls); g.addColorStop(0, 'rgba(255,255,255,.9)'); g.addColorStop(0.5, 'rgba(120,255,160,.55)'); g.addColorStop(1, 'rgba(120,255,160,0)'); c.fillStyle = g; c.beginPath(); c.arc(-6, -40, 40 * puls, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 2.5; c.beginPath(); for (let i = 0; i < 6; i++) { const w = i * Math.PI / 3 + t * 0.6, r = 33 * puls; c[i ? 'lineTo' : 'moveTo'](-6 + Math.cos(w) * r, -40 + Math.sin(w) * r); } c.closePath(); c.stroke();
+        for (let i = 0; i < 6; i++) hzFunke(c, -6 + Math.cos(t * 2 + i) * 36, -40 + Math.sin(t * 2 + i) * 36, 2.5, '#fff'); c.restore(); }
+      hzEll(c, -7, -40, 19, 23, '#7a4b22'); hzEll(c, -7, -40, 16, 20, '#a86f3a');   // Panzer hinter dem Körper
+      c.strokeStyle = '#7a4b22'; c.lineWidth = 1.5; for (const [x, y] of [[-7, -40], [-16, -48], [2, -48], [-16, -32], [2, -32], [-7, -56], [-7, -24]]) { c.beginPath(); for (let i = 0; i < 6; i++) { const w = i * Math.PI / 3 + Math.PI / 6; c[i ? 'lineTo' : 'moveTo'](x + Math.cos(w) * 6, y + Math.sin(w) * 6); } c.closePath(); c.stroke(); }
+      hzBeine(c, pose, t, 7, -20, 9, dunkel, gruen, dunkel, 7, 4);
+      hzRR(c, -11, -52, 22, 36, 10, gruen); hzEll(c, 1, -33, 7, 11, '#e8d9a0'); c.strokeStyle = '#c9b67a'; c.lineWidth = 1; c.beginPath(); c.moveTo(1, -42); c.lineTo(1, -24); c.moveTo(-5, -36); c.lineTo(7, -36); c.stroke();   // Bauchpanzer
+      hzRR(c, -13, -52, 26, 9, 5, '#1d3557'); hzWappen(c, 0, -46, F, 'T');
+      hzEll(c, 2, -66, 11, 11, gruen); hzEll(c, 9, -62, 5, 3.5, '#8fd48a'); hzLaecheln(c, 7, -61, 3, '#2a5a2a', j);
+      hzMaske(c, 2, -69, 9, F); hzAugen(c, 2, -69, 4, 2.3, 1, j);
+      hzArme(c, pose, t, j ? 16 : 12, -48, 11, 10, 7.5, gruen, 5, dunkel, k ? [[0.9, -0.6], [0.9, -0.6]] : null);   // Kraft: Arme angewinkelt vor der Brust (Deckung)
+    },
+    // Max the Monkey – Genius inventor: braun, helles Gesicht, Schutzbrille auf dem Kopf, Schraubenschlüssel; Kraft = Zahnräder und Schlüssel kreisen, Funken, Glühbirne
+    max(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', fell = '#8d5a3b', dunkel = '#6e4228', haut = '#f1c9a0', F = HELD_FARBE.max;
+      hzUmhang(c, F, t, pose === 'lauf', false, -54);
+      c.strokeStyle = fell; c.lineWidth = 3.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(-10, -24); c.quadraticCurveTo(-28, -26, -26, -44 + Math.sin(t * 3) * 2); c.quadraticCurveTo(-24, -54, -16, -50); c.stroke();   // Ringelschwanz
+      const zahnrad = (x, y, r, w, f) => { c.save(); c.translate(x, y); c.rotate(w); c.fillStyle = f; for (let i = 0; i < 8; i++) { c.rotate(Math.PI / 4); c.fillRect(-1.6, -r - 2.5, 3.2, 5); } c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill(); hzEll(c, 0, 0, r * 0.4, r * 0.4, '#2b2b2b'); c.restore(); };
+      const schluessel = (x, y, w) => { c.save(); c.translate(x, y); c.rotate(w); hzRR(c, -2, -9, 4, 18, 2, '#9aa5b1'); hzEll(c, 0, -10, 4.5, 4.5, '#9aa5b1'); hzEll(c, 0, -12, 2, 2.8, '#1f2433'); c.restore(); };
+      const kreis = (vorn) => { if (!k) return; for (let i = 0; i < 5; i++) { const w = t * 2.2 + i * Math.PI * 0.4, sn = Math.sin(w); if ((sn > 0) !== vorn) continue; const x = Math.cos(w) * 31, y = -66 + sn * 12;
+        if (i === 0) schluessel(x, y, t * 4); else zahnrad(x, y, 4 + (i % 2) * 2, t * (i % 2 ? 3 : -4), ['#9aa5b1', F, '#6c757d', F][i - 1]); } };
+      hzBeine(c, pose, t, 5, -22, 7.5, dunkel, fell, dunkel, 7, 3.5);
+      hzRR(c, -12, -54, 24, 38, 11, fell); hzEll(c, 0, -34, 8, 11, haut); hzRR(c, -14, -54, 28, 10, 5, '#1d3557'); hzWappen(c, 0, -40, F, 'M');
+      kreis(false);
+      hzEll(c, -13, -66, 5, 5.5, fell); hzEll(c, 13, -66, 5, 5.5, fell); hzEll(c, -13, -66, 3, 3.5, haut); hzEll(c, 13, -66, 3, 3.5, haut);   // Ohren
+      hzEll(c, 0, -68, 12, 12, fell); hzEll(c, 1, -64, 8.5, 7.5, haut); hzEll(c, 1, -62, 2, 1.4, '#5a3a1a'); hzLaecheln(c, 1, -60, 3, '#3a2210', j);
+      c.strokeStyle = '#2b2b2b'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-10, -79); c.lineTo(10, -79); c.stroke(); for (const s of [-1, 1]) { hzEll(c, s * 5, -80, 4.5, 3.5, '#2b2b2b'); hzEll(c, s * 5, -80, 3.3, 2.5, '#9ad7f0'); }   // Schutzbrille auf dem Kopf
+      hzMaske(c, 0, -71, 10, F); hzAugen(c, 0, -71, 4.5, 2.4, 1, j);
+      kreis(true);
+      const haende = hzArme(c, pose, t, j ? 17 : 13, -50, 12, 11, 7, fell, 5, haut, k ? [[1.7, 2.5], [1.7, 2.5]] : null);
+      if (!k && !j) schluessel(haende[1][0] + 2, haende[1][1] - 6, 0.5 + (pose === 'lauf' ? Math.sin(t * 13) * 0.2 : 0));   // Schraubenschlüssel in der rechten Hand
+      if (k) { hzEll(c, 0, -98 + Math.sin(t * 3), 6, 7, '#ffe066'); hzRR(c, -3, -92 + Math.sin(t * 3), 6, 4, 1, '#9aa5b1'); hzFunke(c, 0, -98 + Math.sin(t * 3), 3, '#fff');   // Glühbirne (Geistesblitz)
+        for (let i = 0; i < 6; i++) { const w = t * 7 + i * 1.05, r = 12 + (t * 40 + i * 9) % 14; hzEll(c, Math.cos(w) * r, -96 + Math.sin(w) * r * 0.8, 1.3, 1.3, i % 2 ? '#ffd60a' : '#fff'); } }   // Funken
+    },
+  };
+  // Hülle: Held id bei (x,y) = Fußpunkt, Höhe h, Pose; o.gluehen (true/0..1) = Glühen, o.blitz 0..1 = Leuchtrand (kurz bei Kraft-Auslösung),
+  // o.kraft 0..1 = Stärke des Kraft-Effekts, o.phase = Sprungphase (Kenji), o.alpha, o.spiegel (Blick nach links)
+  function heldZeichnen(c, id, x, y, h, t, pose, o = {}) {
+    const z = HELDEN_ZEICHNUNG[id]; if (!z) return;
+    const f = HELD_FARBE[id] || '#1d3f8f', u = h / 80;
+    if (o.gluehen) hzGluehen(c, x, y, h, f, t, typeof o.gluehen === 'number' ? o.gluehen : 1);
+    const zf = () => { c.save(); c.translate(x, y); c.scale(o.spiegel ? -u : u, u); if (o.alpha != null) c.globalAlpha *= o.alpha; z(c, t, pose || 'steh', o); c.restore(); };
+    if (o.blitz > 0) { c.save(); c.shadowColor = f; c.shadowBlur = 18 * u * Math.min(1, o.blitz); zf(); zf(); c.restore(); }
+    zf();
+  }
+  // ===== HELDEN-ZEICHNUNGEN (Ende) =====
+
   /* ---------- Story-Modus: Zeichnen (Kristall ♪, Erzähltext oben, Station, Film) ---------- */
   // Story-Kristall: hohes violettes Prisma mit Goldkante und weißem ♪, sanftes Glühen (pulsiert) – klar anders als der türkise Punkte-Diamant
   // eis = Realm-Kristall (R1–R3): eisblau mit weißer Kante und ✦
@@ -11333,5 +11653,5 @@
     get wahlOffen() { return zustand === 'wahl' && !!wahlGabel && !frageBox.hidden; },
   };
 
-  window.Runner = { start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  window.Runner = { heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
 })();

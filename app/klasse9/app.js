@@ -3240,6 +3240,7 @@
     zeige(spielKopf(k, "Road Trip Run", () => zeigeSpiele(k)),
       el("section", { class: "satzkarte runner-start" },
         weltReiter, weltHinweis,
+        spassKnopf(k),   // Spaß-Level (7.11.)
         realmAlle() && el("p", { class: "runner-kapitel6" }, knopf("✦ Chapter 6 · The Keeper's Journal", () => runnerSpiel(k, unit, runnerWahl.i, RUNNER_REALM6.id), "leise"), " ", el("small", {}, T("geheimes Kapitel, ohne Ticket", "secret chapter, no ticket"))),
         el("div", { class: "runner-welt" },
           el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, W.symbol),
@@ -3655,6 +3656,55 @@
     const endeTon = e.geschafft ? ((runnerAudio(W.id) || {}).ende || { text: runnerEndeText(W), stimme: "f" }) : null;
     const alexTon = e.alex ? (e.alex.audio || { text: e.alex.text, stimme: "m" }) : null;   // Mr. Alex' Schlusswort (7.11.) nach der Ansage
     if (!ereignisse.some(grossEreignis) && (endeTon || alexTon || (ruf && ruf.audio))) spiele([endeTon, alexTon, ruf && ruf.audio]);
+  }
+  // Spaß-Level „The Silly Run“ (7.11., Idee Mr. Alex): albernes Bonus-Level mit den Wörtern des gewählten Abschnitts (Engine Runner.spass).
+  // Einmal am Tag gratis mit Punkten (1 ⭐ je richtige Blase, höchstens 10 – wie ein Spiel), danach nur mit Ticket und ohne Punkte (keine Farm-Lücke).
+  const spassGratis = () => { const sl = runnerStand().spass; return !sl || sl.am !== iso(heute()); };
+  function spassKnopf(k) {
+    if (!R() || !R().spass) return null;
+    const gratis = spassGratis(), tickets = runnerStand().tickets || 0;
+    return el("p", { class: "runner-spass" }, knopf(`🤪 The Silly Run · ${gratis ? T("heute gratis", "free today") : "🎟️ 1"}`, () => spassSpiel(k), "leise"), " ",
+      el("small", {}, gratis ? T("Bonus-Level, total albern – einmal am Tag bis 10 ⭐", "bonus level, totally silly – once a day up to 10 ⭐")
+        : tickets > 0 ? T("noch mal mit Ticket, ohne Punkte", "again with a ticket, no points") : T("morgen wieder gratis", "free again tomorrow")));
+  }
+  function spassSpiel(k) {
+    const r = runnerStand(), unit = aktuelleUnit(), i = runnerWahl && runnerWahl.unit === unit ? runnerWahl.i : 0, ws = runnerWoerter(unit, i);
+    if (!R() || !R().spass || ws.length < 4) return runnerStart(k);
+    const gratis = spassGratis();
+    if (!gratis && !(r.tickets > 0)) { toast(T("Heute schon gespielt – morgen wieder gratis oder mit Ticket.", "Already played today – free again tomorrow, or use a ticket.")); return; }
+    if (gratis) r.spass = { am: iso(heute()), n: ((r.spass && r.spass.n) || 0) + 1 };
+    else { r.tickets--; r.spass.n = (r.spass.n || 0) + 1; toast(T("🎟️ Ticket eingelöst", "🎟️ Ticket used")); }
+    speichern();
+    ansicht = null; lage = null;
+    const buehne = el("div", { class: "runner-buehne" });
+    const abbruch = knopf("✕", () => frage(T("Abbrechen?", "Quit?"), T("Abbrechen", "Quit"), T("Weiterspielen", "Keep playing")).then((ok) => { if (ok) runnerStart(k); }), "runner-x");
+    abbruch.setAttribute("aria-label", T("Spiel abbrechen", "Quit game"));
+    zeige(buehne, abbruch);
+    document.body.classList.add("runner-aktiv");
+    runnerLauf = R().spass({ wrapper: buehne, skin: skinWirksam(), klasse: 9, titel: "The Silly Run",
+      woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
+      texte: { tor: (de) => T(`Welche Blase heißt „${de}“?`, `Which bubble means “${de}”?`), hinweis: T("Tippen = springen · 2× tippen = Doppelsprung", "Tap = jump · tap twice = double jump") },
+      stimme: { wort: (j) => runnerWort([tonWort(ws[j % ws.length])], {}) },
+      onEnde: (e) => spassEnde(k, e, ws, gratis) });
+  }
+  function spassEnde(k, e, ws, gratis) {
+    const punkte = gratis ? Math.min(10, e.richtig || 0) : 0;
+    if (punkte > 0) punkteDazu(punkte, { art: "s" }); else speichern();   // Protokoll + Siegel wie beim Runner (punkteDazu speichert, mrAlexWacht)
+    const v = (en) => ws.find((x) => spielWort(x) === en);
+    const zeichne = () => zeige(spielKopf(k, "The Silly Run", () => runnerStart(k)),
+      el("section", { class: "geschafft runner-ende" },
+        el("div", { class: "runner-pokal", "aria-hidden": "true" }, "🤪"),
+        el("h2", { lang: "en" }, "Silly level complete!"),
+        el("p", {}, `✔ ${e.richtig} / ${e.fragen} · 🐔 ${e.platt} · ⏱ ${e.dauer} s`),
+        el("p", { class: "runner-story-punkte" }, gratis ? T(`⭐ Punkte: ${punkte} (1 je richtige Blase, höchstens 10, einmal am Tag)`, `⭐ Points: ${punkte} (1 per right bubble, max. 10, once a day)`)
+          : T("Mit Ticket gespielt: keine Punkte – nur Spaß.", "Played with a ticket: no points – just fun."))),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, T("Die Wörter", "The words")),
+        el("ul", { class: "wortliste runner-woerterliste" }, (e.woerter || []).map((w) => el("li", {},
+          v(w.en) && knopf("🔊", () => spiele([tonWort(v(w.en))]), "leise"), w.richtig ? " ✅ " : " ❌ ", el("strong", { lang: "en" }, w.en), " – ", el("span", { lang: "de" }, w.de))))),
+      el("div", { class: "knopfreihe" }, knopf(T("Zum Road Trip Run", "To Road Trip Run"), () => runnerStart(k), "haupt"), knopf(T("Zur Startseite", "Home"), startseite, "leise")));
+    ansicht = zeichne; lage = null; zeichne();
+    setTimeout(zeigeEreignisse, 50);
   }
   // Hall of Fame: Abschnitt in der Sammlung
   function runnerSammlung() {

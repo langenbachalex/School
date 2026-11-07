@@ -2691,6 +2691,7 @@
     zeige(spielKopf("London Run", zeigeSpiele),
       el("section", { class: "satzkarte runner-start" },
         weltReiter, weltHinweis,
+        spassKnopf(),   // Spaß-Level (7.11.)
         el("div", { class: "runner-welt" },
           el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, W.symbol),
           el("div", {},
@@ -2845,6 +2846,53 @@
     const endeTon = e.geschafft ? ((runnerAudio(W.id) || {}).ende || { tts: runnerEndeText(W), lang: "en-GB", stimme: "f" }) : null;
     const alexTon = e.alex ? (e.alex.audio || { tts: e.alex.text, lang: "en-GB", stimme: "m" }) : null;   // Mr. Alex' Schlusswort (7.11.) nach der Ansage
     if (!ereignisse.some(grossEreignis) && (endeTon || alexTon || (r_ && r_.audio))) spiele([endeTon, alexTon, r_ && r_.audio]);
+  }
+  // Spaß-Level „The Silly Run“ (7.11., Idee Mr. Alex): albernes Bonus-Level mit den Wörtern des gewählten Abschnitts (Engine Runner.spass).
+  // Einmal am Tag gratis mit Punkten (1 ⭐ je richtige Blase, höchstens 10 – wie ein Spiel), danach nur mit Ticket und ohne Punkte (keine Farm-Lücke).
+  const spassGratis = () => { const sl = runnerStand().spass; return !sl || sl.am !== iso(heute()); };
+  function spassKnopf() {
+    if (!R() || !R().spass) return null;
+    const gratis = spassGratis(), tickets = runnerStand().tickets || 0;
+    return el("p", { class: "runner-spass" }, knopf(`🤪 The Silly Run · ${gratis ? "heute gratis" : "🎟️ 1"}`, spassSpiel, "leise"), " ",
+      el("small", {}, gratis ? "Bonus-Level, total albern – einmal am Tag bis 10 ⭐" : tickets > 0 ? "noch mal mit Ticket, ohne Punkte" : "morgen wieder gratis"));
+  }
+  function spassSpiel() {
+    const r = runnerStand(), i = runnerWahl ? runnerWahl.i : 0, ws = runnerWoerter(i);
+    if (!R() || !R().spass || ws.length < 4) return runnerStart();
+    const gratis = spassGratis();
+    if (!gratis && !(r.tickets > 0)) { toast("Heute schon gespielt – morgen wieder gratis oder mit Ticket."); return; }
+    if (gratis) r.spass = { am: iso(heute()), n: ((r.spass && r.spass.n) || 0) + 1 };
+    else { r.tickets--; r.spass.n = (r.spass.n || 0) + 1; toast("🎟️ Ticket eingelöst"); }
+    speichern();
+    lage = null;
+    const buehne = el("div", { class: "runner-buehne" });
+    const abbruch = knopf("✕", () => frage("Abbrechen?", "Abbrechen", "Weiterspielen").then((ok) => { if (ok) runnerStart(); }), "runner-x");
+    abbruch.setAttribute("aria-label", "Spiel abbrechen");
+    zeige(buehne, abbruch);
+    document.body.classList.add("runner-aktiv");
+    runnerLauf = R().spass({ wrapper: buehne, skin: skinWirksam(), klasse: 6, titel: "The Silly Run",
+      woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
+      texte: { tor: (de) => `Welche Blase heißt „${de}“?`, hinweis: "Tippen = springen · 2× tippen = Doppelsprung" },
+      stimme: { wort: (j) => runnerWort([ws[j % ws.length].audio.en], {}) },
+      onEnde: (e) => spassEnde(e, ws, gratis) });
+  }
+  function spassEnde(e, ws, gratis) {
+    const punkte = gratis ? Math.min(10, e.richtig || 0) : 0;
+    if (punkte > 0) punkteDazu(punkte, { art: "s" }); else speichern();   // Protokoll + Siegel wie beim Runner (punkteDazu speichert)
+    const v = (en) => ws.find((x) => spielWort(x) === en);
+    lage = null;
+    zeige(spielKopf("The Silly Run", runnerStart),
+      el("section", { class: "geschafft runner-ende" },
+        el("div", { class: "runner-pokal", "aria-hidden": "true" }, "🤪"),
+        el("h2", { lang: "en" }, "Silly level complete!"),
+        el("p", {}, `✔ ${e.richtig} / ${e.fragen} richtig · 🐔 ${e.platt} platt · ⏱ ${e.dauer} s`),
+        el("p", { class: "runner-story-punkte" }, gratis ? `⭐ Punkte: ${punkte} (1 je richtige Blase, höchstens 10, einmal am Tag)` : "Mit Ticket gespielt: keine Punkte – nur Spaß.")),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, "Die Wörter"),
+        el("ul", { class: "wortliste runner-woerterliste" }, (e.woerter || []).map((w) => el("li", {},
+          v(w.en) && knopf("🔊", () => spiele([v(w.en).audio.en]), "leise"), w.richtig ? " ✅ " : " ❌ ", el("strong", { lang: "en" }, w.en), " – ", el("span", { lang: "de" }, w.de))))),
+      el("div", { class: "knopfreihe" }, knopf("🇬🇧 Zum London Run", runnerStart, "haupt"), knopf("Zur Startseite", startseite, "leise")));
+    setTimeout(zeigeEreignisse, 50);
   }
   // Hall of Fame: Abschnitt in der Sammlung (eine Trophäe je Welt; seit Welt 5 Wembley (1.11.) gibt es keine „bald“-Welt mehr)
   function runnerSammlung() {

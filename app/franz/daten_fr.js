@@ -3489,7 +3489,7 @@ window.DATEN_FR = {
    "stichwort": "empereur",
    "de": "Kaiser (Karl der Große)",
    "bild": "wm:Charlemagne",
-   "foto": null,
+   "foto": "bilder/namen/charlemagne.jpg",
    "ipa": [
     [
      "ʃaʁ",
@@ -3505,7 +3505,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/charlemagne.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3514,7 +3514,7 @@ window.DATEN_FR = {
    "stichwort": "chef gaulois",
    "de": "Anführer der Gallier",
    "bild": "wm:Vercingétorix",
-   "foto": null,
+   "foto": "bilder/namen/vercingetorix.jpg",
    "ipa": [
     [
      "vɛʁ",
@@ -3534,7 +3534,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/vercingetorix.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3543,7 +3543,7 @@ window.DATEN_FR = {
    "stichwort": "héroïne",
    "de": "Heldin",
    "bild": "wm:Jeanne_d'Arc",
-   "foto": null,
+   "foto": "bilder/namen/jeanne.jpg",
    "ipa": [
     [
      "ʒan",
@@ -3557,7 +3557,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/jeanne.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3566,7 +3566,7 @@ window.DATEN_FR = {
    "stichwort": "le Roi-Soleil",
    "de": "der Sonnenkönig",
    "bild": "wm:Louis_XIV",
-   "foto": null,
+   "foto": "bilder/namen/louis14.jpg",
    "ipa": [
     [
      "lwi"
@@ -3586,7 +3586,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/louis14.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3595,7 +3595,7 @@ window.DATEN_FR = {
    "stichwort": "scientifique",
    "de": "Wissenschaftlerin",
    "bild": "wm:Marie_Curie",
-   "foto": null,
+   "foto": "bilder/namen/curie.jpg",
    "ipa": [
     [
      "ma",
@@ -3617,7 +3617,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/curie.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3713,7 +3713,7 @@ window.DATEN_FR = {
    "stichwort": "ingénieur",
    "de": "Ingenieur",
    "bild": "wm:Gustave_Eiffel",
-   "foto": null,
+   "foto": "bilder/namen/eiffel.jpg",
    "ipa": [
     [
      "gys",
@@ -3735,7 +3735,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/eiffel.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3744,7 +3744,7 @@ window.DATEN_FR = {
    "stichwort": "écrivain",
    "de": "Schriftsteller",
    "bild": "wm:Jules_Verne",
-   "foto": null,
+   "foto": "bilder/namen/verne.jpg",
    "ipa": [
     [
      "ʒyl"
@@ -3762,7 +3762,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/verne.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3771,7 +3771,7 @@ window.DATEN_FR = {
    "stichwort": "écrivain",
    "de": "Schriftsteller",
    "bild": "wm:Victor_Hugo",
-   "foto": null,
+   "foto": "bilder/namen/hugo.jpg",
    "ipa": [
     [
      "vik",
@@ -3793,7 +3793,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/hugo.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3802,7 +3802,7 @@ window.DATEN_FR = {
    "stichwort": "écrivain",
    "de": "Schriftsteller",
    "bild": "wm:Alexandre_Dumas",
-   "foto": null,
+   "foto": "bilder/namen/dumas.jpg",
    "ipa": [
     [
      "a",
@@ -3826,7 +3826,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/dumas.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3835,7 +3835,7 @@ window.DATEN_FR = {
    "stichwort": "auteur de théâtre",
    "de": "Theaterautor",
    "bild": "wm:Molière",
-   "foto": null,
+   "foto": "bilder/namen/moliere.jpg",
    "ipa": [
     [
      "mɔ",
@@ -3849,7 +3849,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/moliere.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -3897,7 +3897,7 @@ window.DATEN_FR = {
    "stichwort": "peintre",
    "de": "Maler",
    "bild": "wm:Claude_Monet",
-   "foto": null,
+   "foto": "bilder/namen/monet.jpg",
    "ipa": [
     [
      "klod"
@@ -3917,7 +3917,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/monet.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",
@@ -4017,7 +4017,7 @@ window.DATEN_FR = {
    "stichwort": "père des Jeux olympiques",
    "de": "Vater der Olympischen Spiele",
    "bild": "wm:Pierre_de_Coubertin",
-   "foto": null,
+   "foto": "bilder/namen/coubertin.jpg",
    "ipa": [
     [
      "pjɛʁ"
@@ -4041,7 +4041,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/coubertin.mp3",
-   "quelle": null
+   "quelle": "Foto: Library of Congress · gemeinfrei"
   },
   {
    "gruppe": "histoire",

@@ -910,7 +910,7 @@
         : el("button", { type: "button", class: "namen-knopf gesperrt", disabled: true }, el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?")))));
   }
 
-  /* Frankreich-Karte (Niveau 2, 7.11.): 13 Régions als vereinfachte Umrisse (regions.tsv, selbst gezeichnet), Moselle-Orte in einer Lupe rechts.
+  /* Frankreich-Karte (Niveau 2, 7.11.): 13 Régions mit echten Grenzen (regions.tsv: IGN Admin Express über france-geojson, Licence Ouverte, vereinfacht), Moselle-Orte in einer Lupe rechts.
      Régions mit offenem Ort werden farbig; Paris ist als Ausgangspunkt markiert. Tipp auf einen Ort: Text fr/de, Écoute (Aufnahme oder Gerätestimme). */
   function franceKarte(frei, waehle) {
     const NS = "http://www.w3.org/2000/svg";
@@ -920,6 +920,7 @@
     const svg = s("svg", { viewBox: "0 0 470 380", class: "london france", role: "img", "aria-label": "Karte von Frankreich mit 13 Régions" });
     svg.append(s("rect", { x: 0, y: 0, width: 470, height: 380, rx: 12, class: "f-meer" }));
     D.regions.forEach((r) => r.pfad && svg.append(s("path", { d: r.pfad, class: "f-region" + (offenR.has(r.id) ? " offen" : "") }, s("title", {}, r.name))));
+    svg.append(s("text", { x: 10, y: 374, class: "f-name", "font-size": 6 }, "Carte : IGN Admin Express, Licence Ouverte"));
     D.regions.forEach((r) => r.pfad && svg.append(s("text", { x: r.lx, y: r.ly, class: "f-name", "text-anchor": "middle" },
       ...r.kurz.split("|").map((t, i) => s("tspan", { x: r.lx, dy: i ? 8 : 0 }, t)))));
     svg.append(s("rect", { x: 282, y: 79, width: 34, height: 20, rx: 3, class: "f-lupe-rand" }),   // Moselle auf der Karte → Lupe

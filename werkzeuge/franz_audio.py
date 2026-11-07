@@ -14,6 +14,8 @@ STIMMEN = {"A": "8qnuneLiGjGrT4A62CCe",   # Jules – conversational
            "B": "yatuMX0k4Dh41R64sbGj",   # Cécile
            "alex": "AK2WYGe96RmMwFKM5KEz"}  # Mr. Alex
 EINSTELLUNG = {"stability": 0.5, "similarity_boost": 0.75}
+# Aussprache-Hilfen (7.11., Mr. Alex): stummes H bei „Hugo“ – sonst spricht die Stimme ein H
+SPRECH = {"hugo": "Victor Ugo", "ekitike": "Ugo Ekitiké", "t_hernandez": "Théo Ernandez", "l_hernandez": "Lucas Ernandez"}
 TAGS = [(re.compile(r"^Ha ha"), "[laughs] Ha ha"), (re.compile(r"« La la la laaaa"), "[sings] « La la la laaaa"), (re.compile(r"^Chut"), "[whispers] Chut")]
 
 
@@ -37,7 +39,7 @@ def auftraege():
             text = muster.sub(ersatz, text, count=1)
         yield z["wer"], text, fb.audio_name(z["wer"], z["fr"])
     for z in fb.tsv("namen.tsv"):
-        yield "alex", "[French] " + z["name"] + ".", f"audio/namen/{z['id']}.mp3"  # 7.11. (Mr. Alex): Tag [French] erzwingt französische Aussprache (sonst z. B. „Kylian“ englisch)
+        yield "alex", "[French] " + SPRECH.get(z["id"], z["name"]) + ".", f"audio/namen/{z['id']}.mp3"  # 7.11. (Mr. Alex): Tag [French] erzwingt französische Aussprache (sonst z. B. „Kylian“ englisch)
     for z in fb.tsv("paris.tsv"):  # Paris-Karte: Text des Orts, Mr. Alex' Stimme (römische Zahl ausgeschrieben)
         yield "alex", "[French] " + z["fr"].replace("Louis XIV", "Louis quatorze"), f"audio/paris/{z['id']}.mp3"
     for z in fb.tsv("helden.tsv"):  # Superhelden: Selbstvorstellung mit Tag passend zum Charakter

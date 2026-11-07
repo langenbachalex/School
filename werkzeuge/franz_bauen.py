@@ -168,17 +168,17 @@ def main():
                 disco[gruppe] = rel
             else:
                 disco[gruppe][key] = rel
-    # Frankreich-Karte Niveau 2 (7.11.): regions.tsv = 13 Régions mit vereinfachtem Umriss (lon,lat, selbst gezeichnet) und Namens-Platz;
+    # Frankreich-Karte Niveau 2 (7.11.): regions.tsv = 13 Régions mit Umriss (lon,lat; seit 7.11. echte Grenzen aus IGN Admin Express über france-geojson, Licence Ouverte, vereinfacht) und Namens-Platz;
     # hier in SVG-Koordinaten (viewBox 0 0 470 380) umgerechnet. france.tsv = Stationen (x/y wie paris.tsv, Moselle-Orte in der Lupe), Text fr/de,
     # Stimme audio/france/<id>.mp3 falls vorhanden, sonst Gerätestimme fr-FR. Freischaltung nach den Paris-Orten (app.js franceFrei).
     def proj(lon, lat):
         return round((lon + 5.0) * 36 * 0.688 + 10, 1), round((51.3 - lat) * 36 + 10, 1)
     regions = []
     for z in (tsv("regions.tsv") if os.path.exists(os.path.join(INHALT, "regions.tsv")) else []):
-        pkt = [proj(*map(float, p.split(","))) for p in z.get("umriss", "").split()]
+        teile = [[proj(*map(float, p.split(","))) for p in t.split()] for t in z.get("umriss", "").split("|") if t.strip()]  # „|“ trennt Inseln (Belle-Île, Oléron, Ré)
         lx, ly = proj(*map(float, z["label"].split(","))) if z.get("label") else (0, 0)
         regions.append({"id": z["id"], "name": z["name"], "chef_lieu": z["chef_lieu"], "symbol": z["symbol"], "kurz": z.get("kurz") or z["name"],
-                        "lx": lx, "ly": ly, "pfad": ("M" + " L".join(f"{x},{y}" for x, y in pkt) + " Z") if pkt else ""})
+                        "lx": lx, "ly": ly, "pfad": " ".join("M" + " L".join(f"{x},{y}" for x, y in pkt) + " Z" for pkt in teile)})
     france = []
     for z in (tsv("france.tsv") if os.path.exists(os.path.join(INHALT, "france.tsv")) else []):
         a = f"audio/france/{z['id']}.mp3"

@@ -2,7 +2,7 @@
 
 Posten: Boss-Banner + Boss-Sprüche richtig/falsch aller zehn Welten (Mr. Alex; Klasse 6: Westminster + London Eye + Tower Bridge + The Tube + Wembley), Levelstart/-ende je Welt
 (Klasse 9: Start Jeremy, Ende Jessica; Klasse 6: Start Elrond, Ende Emmaline), Cameo-Sätze der zehn Superhelden (Klasse 6,
-Jungen abwechselnd Elrond/John Shaw, Mädchen abwechselnd Emmaline/Alice) und die 34 Border-Patrol-Einzelwörter
+je Held eine eigene Stimme, siehe audio_erzeugen.STIMMEN h_<id>) und die 34 Border-Patrol-Einzelwörter
 (Klasse 9, Einträge aus klasse9_audio.py: britisch Mr. Alex, amerikanisch Jeremy).
 Texte: WELTEN und CAMEO in app/klasse9/runner.js (einzige Quelle). Ziele: app/klasse9/audio/runner/<welt>_<art>.mp3,
 app/audio/runner/westminster_<art>.mp3, app/audio/runner/cameo_<held>.mp3, app/klasse9/audio/beae/w_<id>_<be|ae>.mp3.
@@ -24,7 +24,7 @@ ARTEN = ("banner", "richtig", "falsch", "start", "ende")
 # Klasse 9 Kapitel 6 (geheim, 2.11., nur geplant – Vertonung nach dem 13.11.): Boss Elena Cruz spricht ihre Sprüche selbst (Jessica = f), das Banner bleibt beim Erzähler (Mr. Alex)
 STIMME9 = {"realm6": {"richtig": "f", "falsch": "f"}}
 JUNGEN, MAEDCHEN = ("leo", "kenji", "felix", "max"), ("camilla", "ellie", "olivia", "zara", "penny", "tessa")
-CAMEO_STIMME = {h: ("m1", "m2")[i % 2] for i, h in enumerate(JUNGEN)} | {h: ("f1", "f2")[i % 2] for i, h in enumerate(MAEDCHEN)}
+CAMEO_STIMME = {h: f"h_{h}" for h in JUNGEN + MAEDCHEN}   # 7.11.: jeder Held eine eigene Stimme (audio_erzeugen.STIMMEN h_<id>)
 
 
 HELD_RUFE = {   # Ausrufe in den Heldenfilmen (Sprechblase im Film = dieser Text)

@@ -27,6 +27,17 @@ STIMMEN = {
     "m2":   ("qxjGnozOAtD4eqNuXms4", "en", "John Shaw – britisch, jung (2. Junge)"),
     "f1":   ("nDJIICjR9zfJExIFeSCN", "en", "Emmaline – britisches Mädchen (1. Mädchen)"),
     "f2":   ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britisch (2. Mädchen)"),
+    # Superhelden (7.11.2026, Mr. Alex: jeder Held eine eigene Stimme) – Cameo, Film-Intro und Ausruf
+    "h_leo":     ("SOYHLrjzK2X1ezoPC6cr", "en", "Harry – Fierce Warrior (Leo the Lion)"),
+    "h_camilla": ("pFZP5JQG7iQjIQuC4Bku", "en", "Lily – Velvety Actress, britisch (Camilla the Camel)"),
+    "h_ellie":   ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – Clear Educator, britisch (Ellie the Elephant)"),
+    "h_olivia":  ("XrExE9yKIg1WjnnlVkGX", "en", "Matilda – Knowledgable (Olivia the Owl)"),
+    "h_kenji":   ("IKne3meq5aSn9XLyUdCD", "en", "Charlie – Energetic, australisch (Kenji the Kangaroo)"),
+    "h_zara":    ("FGY2WhTYpPnrIDTdsKH5", "en", "Laura – Quirky (Zara the Zebra)"),
+    "h_penny":   ("nDJIICjR9zfJExIFeSCN", "en", "Emmaline – young British girl (Penny the Penguin)"),
+    "h_felix":   ("TX3LPaxmHKxFdv7VOQHJ", "en", "Liam – Energetic (Felix the Falcon)"),
+    "h_tessa":   ("EXAVITQu4vr4xnSDxMaL", "en", "Sarah – Mature, Reassuring (Tessa the Turtle)"),
+    "h_max":     ("N2lVS1w4EtoT3dr4eOWO", "en", "Callum – Husky Trickster (Max the Monkey)"),
 }
 # Modell und Einstellungen je Stimme (Alex: wie auf der ElevenLabs-Webseite eingestellt)
 MODELLE = {
@@ -36,6 +47,7 @@ MODELLE = {
     "m2":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
     "f1":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
     "f2":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
+    **{f"h_{h}": ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}) for h in ("leo", "camilla", "ellie", "olivia", "kenji", "zara", "penny", "felix", "tessa", "max")},
 }
 ERSATZ = ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme (Ersatz)")
 MODELL = "eleven_multilingual_v2"

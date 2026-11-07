@@ -13,4 +13,5 @@ Jeder Ort hat drei Ebenen: Bild (Szene mit Runner-Zeichnungen), Ton (Geräusch o
 
 ## Weitere feste Regeln
 - Vor dem Implementieren das Ok von Mr. Alex abholen; pushen und Vorschauen veröffentlichen nur nach ausdrücklichem Ok.
+- Superhelden (Spielgrafik, Posen, Gesichter, Stimmen mit Tags, Fotos): Regeln von Mr. Alex vom 7.11. in `docs/briefing.md`, gelten auch für Klasse 9.
 - Details und alle weiteren Regeln: `docs/briefing.md`, Ideen: `docs/ideenspeicher.md`, Sprache der Geschichten: `docs/runner/story-sprache.md`, Archiv: `docs/archiv/`.

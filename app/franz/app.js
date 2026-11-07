@@ -40,7 +40,7 @@
     return e;
   }
   const knopf = (text, fn, art) => el("button", { type: "button", class: "knopf" + (art ? " " + art : ""), onclick: fn }, text);
-  function zeige(...inhalt) { stopp(); app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); }
+  function zeige(...inhalt) { stopp(); app.replaceChildren(...inhalt.flat(Infinity).filter(Boolean)); window.scrollTo(0, 0); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }

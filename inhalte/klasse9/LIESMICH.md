@@ -43,3 +43,7 @@ Beispielzeile:
 2026-11-02	2026-11-08	4; 2/u1	Listening + Vocabulary Unit 1 (alle Abschnitte)
 ```
 Schema und Anzeige: `docs/gamification/konzept.md`, Abschnitt „📝 Homework“.
+
+## helden.tsv – Superhelden (Cameos, noch nicht eingebunden)
+
+Spalten wie `inhalte/helden.tsv` (Klasse 6): `id	name	kraft	bild	steckbrief	intro` (Steckbrief + Ich-Vorstellung auf Englisch). Die Spielgrafik je `id` steht in `app/klasse9/runner.js` (`HELDEN_ZEICHNUNG`, Farbe `HELD_FARBE`). Penny the Puma hat die id `pennypuma` (`penny` ist der Pinguin aus Klasse 6). Stand 7.11.2026: nur Zeichnungen + Daten; `werkzeuge/klasse9_bauen.py` liest die Datei noch nicht.

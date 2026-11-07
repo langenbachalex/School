@@ -2693,7 +2693,8 @@
         // Mr. Alex' Zurufe (7.11.): hinter Held/Erzähler/Boss und hinter einer laufenden Vokabel (warten), nie dazwischen
         alex: (text, key, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }], { warten: true }),
         // U-Bahn-Durchsage („Please mind the doors.“): nur wenn gerade kein Haupttext läuft – nie störend
-        durchsage: (text, o) => { if (!hauptLaeuft) hauptText([{ tts: text, lang: (o && o.lang) || "en-GB", stimme: "m" }], { warten: true }); } },
+        durchsage: (text, o) => { if (!hauptLaeuft) hauptText([{ tts: text, lang: (o && o.lang) || "en-GB", stimme: "m" }], { warten: true }); },
+        beschaeftigt: () => hauptLaeuft },   // Runner 7.11.: läuft gerade ein Haupttext? (der Cameo-Auftritt wartet dahinter, höchstens ≈ 6 s)
       onEnde: (e) => runnerEnde(i, e, ws, W.id),
     });
   }

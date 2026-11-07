@@ -27,11 +27,16 @@ ARTEN = ("banner", "richtig", "falsch", "start", "ende")
 STIMME9 = {"realm6": {"richtig": "f", "falsch": "f"}}
 JUNGEN, MAEDCHEN = ("leo", "kenji", "felix", "max"), ("camilla", "ellie", "olivia", "zara", "penny", "tessa")
 CAMEO_STIMME = {h: f"h_{h}" for h in JUNGEN + MAEDCHEN}   # 7.11.: jeder Held eine eigene Stimme (audio_erzeugen.STIMMEN h_<id>)
+# Klasse 9 (7.11.2026, Etappe 2): 13 US-Helden (inhalte/klasse9/helden.tsv), je eine eigene amerikanische Stimme (audio_erzeugen.STIMMEN h_<id>), Ziel app/klasse9/audio/runner/cameo_<id>.mp3
+HELDEN9 = ("eddie", "bonnie", "gus", "cody", "ally", "rosie", "benny", "pennypuma", "archie", "molly", "holly", "maya", "sunny")
 
 
 # Audio-Tags (7.11.2026, Mr. Alex: „lots of emotions", v4, Stabilität 0,3): nur im gesprochenen Text, nicht im Untertitel (helden.tsv / runner.js bleiben ohne Tags)
 HELD_TAGS = {"leo": "[energetic]", "camilla": "[proud]", "ellie": "[thoughtful]", "olivia": "[calm]", "kenji": "[excited]", "zara": "[playful]",
-             "penny": "[cheerful]", "felix": "[confident]", "tessa": "[warm]", "max": "[mischievous]"}
+             "penny": "[cheerful]", "felix": "[confident]", "tessa": "[warm]", "max": "[mischievous]",
+             # Klasse 9 (7.11.): Pilot, Rockerin, Bodyguard, Cowboy, Surferin, Ninja, Baumeister, Parkour, Texas-Cowboy, Punk-Drummerin, Heilerin, Gala-Lady, Popstar
+             "eddie": "[confident]", "bonnie": "[excited]", "gus": "[calm]", "cody": "[energetic]", "ally": "[cheerful]", "rosie": "[whispers]",
+             "benny": "[cheerful]", "pennypuma": "[excited]", "archie": "[laid-back]", "molly": "[shouting]", "holly": "[warm]", "maya": "[elegant]", "sunny": "[excited]"}
 HELD_INTRO_TAGS = {   # Film-Vorstellung mit Tags an passenden Stellen (Text wie Spalte intro in helden.tsv)
     "leo": "[energetic] Hi, I'm Leo the Lion! My superpower is super speed. [fast] I can run faster than a car! [laughs]",
     "camilla": "[proud] Hi, I'm Camilla the Camel! I'm super strong. [grunts] Look, I can carry a car on my back! [laughs]",
@@ -44,15 +49,39 @@ HELD_INTRO_TAGS = {   # Film-Vorstellung mit Tags an passenden Stellen (Text wie
     "tessa": "[warm] Hi, I'm Tessa the Turtle! I'm unbreakable. [chuckles] Nothing can hurt my shell!",
     "max": "[mischievous] Hi, I'm Max the Monkey! I'm a genius inventor. [excited] I build a new gadget every day!",
 }
+# Klasse 9 – Heldenfilme (7.11.2026, Etappe 3): Vorstellung je US-Held (Spalte intro in inhalte/klasse9/helden.tsv), dieselbe Stimme wie sein Cameo (h_<id>),
+# immer [American accent]; Tags an passenden Stellen, ohne Tags muss der Text genau der Spalte intro entsprechen (Prüfung in auftraege)
+HELD_INTRO_TAGS9 = {
+    "eddie": "[confident] [American accent] Hi, I'm Eddie the Eagle! I've been flying over Alaska since I was a little chick. [serious] Nothing escapes my eyes – and if I need to, I can fire laser beams with them!",
+    "bonnie": "[excited] [American accent] Hey, I'm Bonnie the Bison! I grew up on the wide prairies of Yellowstone. [laughs] If something blocks your way, just call me – I'll push it out of the way!",
+    "gus": "[calm] [American accent] Hi there, I'm Gus the Grizzly from Montana! [chuckles] I'm big, but I'm a gentle giant. [serious] When danger comes, I build a force field, and nothing can get through it.",
+    "cody": "[energetic] [American accent] Yo, I'm Cody the Coyote! I live in the Arizona desert near the Grand Canyon. [fast] I'm the fastest runner in the West – if you blink, you'll miss me!",
+    "ally": "[cheerful] [American accent] Hi, I'm Ally the Alligator! I come from the Everglades in Florida. [playful] Watch out, villains – one splash from me and you're gone!",
+    "rosie": "[whispers] [American accent] Psst, it's me, Rosie the Raccoon! I grew up in Central Park in New York. [mischievously] Now you see me – and now you don't!",
+    "benny": "[cheerful] [American accent] Hey, I'm Benny the Beaver from Minnesota, the land of ten thousand lakes! [curious] Is there a river in your way? [confident] No problem – I'll build you a bridge in no time.",
+    "pennypuma": "[excited] [American accent] Hi, I'm Penny the Puma! I live high up in the Rocky Mountains of Colorado. [playful] One big jump and I'm over any wall – want to see?",
+    "archie": "[laid-back] [American accent] Howdy, I'm Archie the Armadillo from Texas! [proud] My shell is tougher than steel. [excited] Watch me roll up into a ball and smash through everything!",
+    "molly": "[playful] [American accent] Hi, I'm Molly the Moose from Maine! I'm tall and I'm strong. [shouting] When I stomp my hooves, the whole ground shakes like thunder!",
+    "holly": "[warm] [American accent] Hi, I'm Holly the Hummingbird! I zoom around the flower gardens of California. [gently] I'm small, but I can heal you in a heartbeat!",
+    "maya": "[elegant] [American accent] Hello, I'm Maya the Monarch! Every autumn I fly all the way across the USA to Mexico. [softly] Hold on tight – I'll let you float with me!",
+    "sunny": "[excited] [American accent] Hey everyone, I'm Sunny the Songbird from Nashville! I'm a pop star and a superhero. [laughs] When I sing, the bad guys just can't stop dancing!",
+}
 HELD_RUFE = {   # Ausrufe in den Heldenfilmen (Sprechblase im Film = dieser Text)
     "ellie": "Every word!", "olivia": "Found it!", "kenji": "Boing!", "zara": "Surprise!",
     "penny": "Ice cream for everybody!", "felix": "Around the world in one day!", "tessa": "Bonk!", "max": "Homework done!",
     "leo": "Too fast for you!", "camilla": "Easy peasy!",
 }
 
+HELD_RUFE9 = {   # Ausrufe in den Kl.-9-Heldenfilmen (gleicher Text wie HELD9_RUF in app/klasse9/runner.js)
+    "eddie": "Target locked!", "bonnie": "Rock on!", "gus": "Not on my watch!", "cody": "Yee-haw!", "ally": "Cowabunga!", "rosie": "Now you don't!", "benny": "Bridge is open!", "pennypuma": "Sky high!", "archie": "Rollin', y'all!", "molly": "Drum roll!", "holly": "All better now!", "maya": "Simply divine!", "sunny": "Encore!",
+}
+
 # Regel Mr. Alex (7.11.2026): kurze Zurufe (bis ~4 Wörter), besonders mit R am Wortende („fire“), bekommen zusätzlich den Tag [British accent],
 # sonst spricht die Stimme das End-R amerikanisch. Gilt für alle kurzen englischen Zeilen (v4 kennt keinen language_code en-GB).
-def britisch(text):
+# Klasse 9 (Mr. Alex, 7.11.): US-Helden sprechen IMMER mit [American accent] (auch kurze Zeilen), nie britisch – britisch(text, klasse=9).
+def britisch(text, klasse=6):
+    if klasse == 9:
+        return " [American accent]"
     kurz = len(re.findall(r"[A-Za-z']+", text)) <= 4
     end_r = bool(re.search(r"[aeiou]r\b", text, re.I))
     return " [British accent]" if kurz or end_r else ""
@@ -107,14 +136,24 @@ def auftraege():
             liste.append((6, APP6, f"audio/runner/{w}_{art}.mp3", {"start": "m1", "ende": "f1"}.get(art, "en"), welten[w][art]))
     for h in JUNGEN + MAEDCHEN:
         liste.append((6, APP6, f"audio/runner/cameo_{h}.mp3", CAMEO_STIMME[h], f"{HELD_TAGS[h]} {cameo[h]}"))
+    for h in HELDEN9:   # Klasse 9: US-Stimme, [American accent] (britisch(…, 9))
+        liste.append((9, APP9, f"audio/runner/cameo_{h}.mp3", f"h_{h}", f"{HELD_TAGS[h]}{britisch(cameo[h], 9)} {cameo[h]}"))
     # Heldenfilme (6.11.2026): Selbstvorstellung je Held (Spalte intro in inhalte/helden.tsv), dieselbe Stimme wie sein Cameo
     import daten_bauen
     for z in daten_bauen.lesen("helden.tsv"):
         if z.get("intro"):
             liste.append((6, APP6, f"audio/helden/intro_{z['id']}.mp3", CAMEO_STIMME[z["id"]], HELD_INTRO_TAGS.get(z["id"], z["intro"])))
+    # Klasse 9 – Heldenfilme (7.11.2026, Etappe 3): app/klasse9/audio/helden/intro_<id>.mp3
+    import re
+    for z in daten_bauen.lesen(os.path.join("klasse9", "helden.tsv")):
+        text = HELD_INTRO_TAGS9.get(z["id"]) or f"{HELD_TAGS[z['id']]}{britisch(z['intro'], 9)} {z['intro']}"
+        assert re.sub(r"\[[^\]]+\] ?", "", text).strip() == z["intro"], f"Tags-Text weicht von intro ab: {z['id']}"
+        liste.append((9, APP9, f"audio/helden/intro_{z['id']}.mp3", f"h_{z['id']}", text))
     # Ausrufe in den Heldenfilmen (7.11.2026, Mr. Alex: auch sprechen) – dieselbe Stimme; Zeitpunkt steht in runner.js (Klang 'ruf')
     for h, text in HELD_RUFE.items():
         liste.append((6, APP6, f"audio/helden/ruf_{h}.mp3", CAMEO_STIMME[h], f"{HELD_TAGS[h]} {text}"))
+    for h, text in HELD_RUFE9.items():   # Klasse 9: immer [American accent]
+        liste.append((9, APP9, f"audio/helden/ruf_{h}.mp3", f"h_{h}", f"{HELD_TAGS[h]}{britisch(text, 9)} {text}"))
     # Mr. Alex' Zurufe im Lauf (7.11.2026): einmal vertonen (Klasse 6), Kopie für Klasse 9 (alex_kopieren)
     for key, text in alex_zurufe():
         liste.append((6, APP6, f"audio/alex/{key}.mp3", "en_alex", f"{ALEX_TAGS[key.rsplit('_', 1)[0]]}{britisch(text)} {text}"))
@@ -133,8 +172,7 @@ def daten(klasse):
     for w in welten:
         d = {"boss": {art: a(f"audio/runner/{w}_{art}.mp3") for art in ("banner", "richtig", "falsch")},
              "start": a(f"audio/runner/{w}_start.mp3"), "ende": a(f"audio/runner/{w}_ende.mp3")}
-        if klasse == 6:
-            d["cameo"] = {h: a(f"audio/runner/cameo_{h}.mp3") for h in JUNGEN + MAEDCHEN}
+        d["cameo"] = {h: a(f"audio/runner/cameo_{h}.mp3") for h in (JUNGEN + MAEDCHEN if klasse == 6 else HELDEN9)}
         aus[w] = d
     aus["alex"] = {key: a(f"audio/alex/{key}.mp3") for key, _ in alex_zurufe()}   # Mr. Alex' Zurufe (7.11.), beide Klassen dieselben Dateien
     return aus
@@ -170,7 +208,7 @@ def main():
         if os.path.exists(ziel):
             continue
         os.makedirs(os.path.dirname(ziel), exist_ok=True)
-        if kl == 9:
+        if kl == 9 and not stimme.startswith("h_"):   # Klasse-9-Helden (h_<id>) über audio_erzeugen
             sprechen9(stimme, text, ziel)
         else:
             audio_erzeugen.sprechen(stimme, "en", text, ziel)

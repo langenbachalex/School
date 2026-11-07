@@ -34,7 +34,10 @@
    Treffer = ein Leben), Geist auf allen Wegen (schwebend oder auf einer Bank), der Rabe nur in Variante B (tube.g1 = B, rabeMit); Boss Sergeant Bearskin am Spielfeldtor (Rabe auf der Mütze bei B),
    Tür = Spielfeldtor; drei Enden nach Zählung der guten Entscheidungen aus Welt 2–4 (Struktur ende 'zaehlung': E1 Sergeant schießt · E2 der Geist erschreckt den Torwart · E3 Ball prallt vom Hut), Film filmZeichnenWembley. Nationalspieler (nur Namen + Rückennummern, Kulisse auf dem Rasen + Film), Fan-Schilder, Fußballsprüche (1.11.).
    Cameos (31.10., Option cameos: [{ id, name, bild, kraft }]): 2–3 Gastauftritte der geheimen Superhelden je Lauf (rundes Kartenbild, Umhang, Sprechblase ≈ 2,5 s) mit kleinem Effekt (CAMEO);
-   ohne die Option (Klasse 9) gibt es keine Cameos. stimme.cameo(text, id, { audio }) spricht den Satz (optional).
+   ohne die Option gibt es keine Cameos. stimme.cameo(text, id, { audio }) spricht den Satz (optional). Option cameoAnzahl (7.11., Klasse 9: 1) = feste Zahl Auftritte je Lauf (sonst 2–3, Klasse 6);
+   Klasse 9 (Road Trip Run) übergibt die 13 US-Helden (inhalte/klasse9/helden.tsv) mit cameoAnzahl 1 – seltener als Klasse 6.
+   Cameo-Feinschliff (7.11., Mr. Alex): Laser/Ramme/Rolle lassen das Hindernis in Splitter zerplatzen (aus der Liste, klang.krach); Maya hält im Schweben über Lücken die Höhe;
+   der Auftritt wartet auf eine laufende Ansage (stimme.beschaeftigt() der App, höchstens CAMEO_WARTEN_MAX = 6 s); die Sprechblase weicht den Effekt-Chips aus.
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
@@ -370,6 +373,7 @@
     // Drachenhöhle (Kapitel 3): Schnarchen = tiefes Anschwellen + Rauschen, kurzer Pfeifton beim Ausatmen; Flammenstoß = Rauschen (Zischen) mit tiefem Grollen
     schnarchen() { ton(70, 0.9, "sawtooth", 0.035, 0, 95); rauschen(0.8, 0.02, 0.05, { typ: "lowpass", freq: 260 }); ton(640, 0.5, "sine", 0.012, 1.05, 520); },
     zapfen() { for (let i = 0; i < 3; i++) ton(2400 + i * 300, 0.04, "square", 0.03, i * 0.12, 1800); rauschen(0.3, 0.025, 0, { typ: "highpass", freq: 3000 }); },   // Eiszapfen knackt (Warnung)
+    krach() { rauschen(0.18, 0.09, 0, { typ: "bandpass", freq: 700 }); ton(180, 0.22, "square", 0.06, 0, 55); rauschen(0.35, 0.05, 0.08, { typ: "lowpass", freq: 500 }); [1568, 1175, 1760].forEach((f, i) => ton(f, 0.07, "triangle", 0.035, 0.1 + i * 0.05)); },   // Kl. 9 Brecher: Hindernis zerplatzt (Krach + Splitter-Klirren)
     splittern() { rauschen(0.22, 0.06, 0, { typ: "highpass", freq: 2600 }); [3136, 2637, 3520].forEach((f, i) => ton(f, 0.12, "triangle", 0.05, i * 0.05)); },   // Eiszapfen zersplittert am Boden
     // Orts-Szene Big Ben (6.11.): Glockenschlag – echte Aufnahme, wenn die App eine Datei gesetzt hat (Runner.klangDatei('glocke', …)), sonst WebAudio-Nachbau:
     // Stundenglocke E (≈ 165 Hz) mit Glocken-Teiltönen (Hum, Prime, kleine Terz, Quinte, Nominal); davor im Szenen-Ablauf die Westminster-Viertelmelodie (viertel)
@@ -1821,8 +1825,11 @@
   // Cameos (Klasse 6): Liste der Helden (opt.cameos), geladene Kartenbilder, Auftrittsplan (x-Marken), laufender Auftritt, Effekte (Restzeit in s)
   let cameoListe = [], cameoPlan = [], cameo = null, cameosGezeigt = 0, cameoEffekt = null;
   let schild = 0, sprungBonus = 0, durchlaessig = 0, eisZeit = 0, traegt = 0, traegtAktiv = false, eule = null;
+  // Klasse 9 (7.11.): brecher = Restzeit, in der das nächste Hindernis zerbricht (brecherArt 'laser' Eddie / 'ramme' Bonnie, Benny ohne Lücke: einmal; 'rolle' Archie: alle bis Ablauf),
+  // schweben = Maya (Fallen gebremst), heldBruecke = Bennys Brücke {x, w} über die nächste Lücke, wegZiel = { art, zeit, alle } Ally/Molly/Sunny nehmen Gegner aus dem Spiel, sprungArt 'kenji'|'puma'
+  let cameoAnzahl = 0, brecher = 0, brecherArt = null, schweben = 0, heldBruecke = null, wegZiel = null, sprungArt = 'kenji', laserBlitz = 0, mayaGleitet = false;
   let kenjiMit = 0, kenjiSprung = -1;   // Cameo Kenji (7.11., Mr. Alex): Kenji hüpft neben der Figur mit (kenjiMit = Restzeit) und springt beim Bonus-Sprung mit ihr hoch (kenjiSprung = Zeit seit dem Absprung, −1 = am Boden)
-  const CAMEO_DAUER = 2.5, CAMEO_EIN = 0.5, CAMEO_AUS = 0.45, CAMEO_R = 24;
+  const CAMEO_DAUER = 2.5, CAMEO_EIN = 0.5, CAMEO_AUS = 0.45, CAMEO_R = 24, CAMEO_WARTEN_MAX = 6;
   let autoKlangZeit = -9;
   let sequenz = null, zoom = 1, banner = null, bossSpruch = null;
   let halten = false, haltZeit = 0, sprungGedrueckt = false;
@@ -1872,6 +1879,7 @@
     spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null; tuerAnsagen = 0; nyDurchsage = false; durchsagenGesprochen = [];   // The Tube, New York (U-Bahn-Durchsage)
     baelle = (level.baelle || []).map((b) => ({ ...b, phase: 'ruhe', rx: b.x, rot: 0, t: 0 })); koepfer = 0; ballTreffer = 0; tuerTritt = -1; rasenBetreten = false;   // Wembley
     cameo = null; cameosGezeigt = 0; cameoEffekt = null; kenjiMit = 0; kenjiSprung = -1; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
+    cameoK9Aus();
     cameoPlan = cameoPlanBauen();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
     diaGesammelt = 0; film = null; storyNeu(); realmNeu();
@@ -1933,6 +1941,9 @@
      penny Gegner 3 s eingefroren · max holt den zuletzt verpassten Diamanten zurück (sonst Combo +1) · camilla +1 Herz (bei 4 Herzen Combo +1); unbekannte Helden: Combo +1 */
   // Heldenfarbe (7.11., Spielgrafik-Helden; auch Rahmen der Sammelkarte, Glühen, Sprechblasen-Rand)
   const HELD_FARBE = { leo: '#d62828', camilla: '#c8553d', ellie: '#3a86ff', olivia: '#7b2cbf', kenji: '#f77f00', zara: '#ff2d95', penny: '#48cae4', felix: '#0096c7', tessa: '#2e9e5b', max: '#f4b400' };
+  // Klasse 9 (Road Trip USA, 7.11.2026, Etappe 1): 13 US-Helden (inhalte/klasse9/helden.tsv), Heldinnen mit eigener Lieblingsfarbe
+  Object.assign(HELD_FARBE, { eddie: '#1d4e89', bonnie: '#c9184a', gus: '#2d6a4f', cody: '#f77f00', ally: '#00a6a6', rosie: '#f72585', benny: '#0077b6', pennypuma: '#06d6a0',
+    archie: '#e76f51', molly: '#4361ee', holly: '#ff85a1', maya: '#9d4edd', sunny: '#ffd23f' });
   // Mr. Alex' eigene Stimme im Lauf (7.11.2026, Mr. Alex): kurze Zurufe an Schlüsselmomenten, je 2–3 Varianten (Zufall, nie zweimal dieselbe nacheinander),
   // höchstens einer je ALEX_ABSTAND s und nie zwei nacheinander aus demselben Moment; Levelende/Game over immer (die App spricht sie nach der Levelende-Ansage).
   // Die App spricht über stimme.alex(text, key, { audio }) als Haupttext mit warten (hinter Held, Erzähler, Boss; eine laufende Vokabel wird nicht abgeschnitten).
@@ -1976,12 +1987,26 @@
     penny: { satz: "Penny here! Freeze!", farbe: HELD_FARBE.penny, symbol: "❄️" },
     max: { satz: "Max here! I've got a gadget!", farbe: HELD_FARBE.max, symbol: "🔧" },
     camilla: { satz: "Camilla here! Have an extra heart!", farbe: HELD_FARBE.camilla, symbol: "❤️" },
+    // Klasse 9 (Road Trip USA, „The Lost Map“, 7.11.): je Held ein kurzer Satz (Untertitel ohne Tags; Aufnahmen audio/runner/cameo_<id>.mp3, US-Stimmen)
+    eddie: { satz: "Eddie here. Eyes on the road – I've got this one!", farbe: HELD_FARBE.eddie, symbol: "💥" },
+    bonnie: { satz: "Bonnie here! Let me rock that out of your way!", farbe: HELD_FARBE.bonnie, symbol: "🦬" },
+    gus: { satz: "Gus here. Nobody touches you – or the map!", farbe: HELD_FARBE.gus, symbol: "🛡️" },
+    cody: { satz: "Cody here! Hold on to your hat – let's ride!", farbe: HELD_FARBE.cody, symbol: "⚡" },
+    ally: { satz: "Ally here! Surf's up – I'll wash them away!", farbe: HELD_FARBE.ally, symbol: "🌊" },
+    rosie: { satz: "Rosie here. Shh – they won't even see us.", farbe: HELD_FARBE.rosie, symbol: "🥷" },
+    benny: { satz: "Benny here! Don't worry, I'll fix the road!", farbe: HELD_FARBE.benny, symbol: "🌉" },
+    pennypuma: { satz: "Penny here! Ready? Jump higher than ever!", farbe: HELD_FARBE.pennypuma, symbol: "🐾" },
+    archie: { satz: "Archie here, all the way from Texas. Let's roll!", farbe: HELD_FARBE.archie, symbol: "🌀" },
+    molly: { satz: "Molly here! One, two, three, four – stomp!", farbe: HELD_FARBE.molly, symbol: "🥁" },
+    holly: { satz: "Holly here. Take this – our road trip isn't over!", farbe: HELD_FARBE.holly, symbol: "❤️" },
+    maya: { satz: "Maya here, darling. Let's float above it all.", farbe: HELD_FARBE.maya, symbol: "🦋" },
+    sunny: { satz: "Sunny here! Everybody dance – off you go!", farbe: HELD_FARBE.sunny, symbol: "🎵" },
   };
   const cameoInfo = (held) => CAMEO[held && held.id] || { satz: `${(held && held.name) || "A hero"} is here!`, farbe: "#1d3f8f", symbol: "⭐" };
   // 2–3 Auftritte je Lauf (höchstens so viele wie Helden übergeben): x-Marken bei 22/50/78 % der Strecke, nie direkt an einem Tor (dann 400 dahinter)
   function cameoPlanBauen() {
     if (!cameoListe.length) return [];
-    const n = Math.min(cameoListe.length, 2 + (Math.random() < 0.5 ? 1 : 0));
+    const n = Math.min(cameoListe.length, cameoAnzahl || 2 + (Math.random() < 0.5 ? 1 : 0));   // Klasse 9: cameoAnzahl 1
     const anteile = n === 1 ? [0.45] : n === 2 ? [0.3, 0.65] : [0.22, 0.5, 0.78];
     return anteile.map((f, i) => {
       let x = Math.round(level.sequenzX * f);
@@ -2020,8 +2045,50 @@
       d.x = zx; d.y = 290; d.verpasst = false; funken(d.x, d.y, 14, ["#39c6f0", "#bfefff", "#ffffff"], 180, 0.6); cameoEffekt = 'diamant';
     }
     else if (id === 'camilla' && leben < LEBEN_MAX) { leben++; hudPuls = 1; cameoEffekt = 'herz'; }
+    // Klasse 9 (7.11.): vorhandene Effekte wiederverwendet (Schild, Spur + Combo, durchlässig, Sprung, Herz), neu: Hindernis-Brecher, Gegner weg, Brücke, Schweben
+    else if (id === 'eddie') { brecher = 6; brecherArt = 'laser'; cameoEffekt = 'laser'; }
+    else if (id === 'bonnie') { brecher = 6; brecherArt = 'ramme'; cameoEffekt = 'ramme'; }
+    else if (id === 'gus') { schild = 5; cameoEffekt = 'schild'; }
+    else if (id === 'cody') { if (!ruhig()) spur = Math.max(spur, 3); comboPlus(); cameoEffekt = 'combo'; }
+    else if (id === 'ally') { wegZiel = { art: 'welle', zeit: 6, alle: false }; cameoEffekt = 'welle'; }
+    else if (id === 'rosie') { durchlaessig = 3; cameoEffekt = 'unsichtbar'; }
+    else if (id === 'benny') { if (brueckeBauen()) cameoEffekt = 'bruecke'; else { brecher = 6; brecherArt = 'ramme'; cameoEffekt = 'ramme'; } }
+    else if (id === 'pennypuma') { sprungBonus = 5; sprungArt = 'puma'; cameoEffekt = 'sprung'; }
+    else if (id === 'archie') { brecher = 4; brecherArt = 'rolle'; cameoEffekt = 'rolle'; }
+    else if (id === 'molly') { wegZiel = { art: 'stampf', zeit: 5, alle: true }; cameoEffekt = 'stampf'; }
+    else if ((id === 'holly') && leben < LEBEN_MAX) { leben++; hudPuls = 1; cameoEffekt = 'herz'; }
+    else if (id === 'maya') { schweben = 4; cameoEffekt = 'schweben'; }
+    else if (id === 'sunny') { wegZiel = { art: 'tanz', zeit: 5, alle: true }; cameoEffekt = 'tanz'; }
     else { comboPlus(); cameoEffekt = 'combo'; }
+    if (id === 'kenji') sprungArt = 'kenji';
   }
+  /* Klasse 9: Hilfen der neuen Cameo-Effekte */
+  function cameoK9Aus() {   // beim Neustart und vor dem Boss
+    brecher = 0; brecherArt = null; schweben = 0; wegZiel = null; sprungArt = 'kenji'; laserBlitz = 0; mayaGleitet = false;
+    if (heldBruecke) { SOLIDE = SOLIDE.filter((q) => !q.heldBruecke); heldBruecke = null; }
+  }
+  // Benny: Brücke über die nächste Lücke vor der Figur (höchstens 1600 weiter, höchstens 520 breit); false = keine Lücke in Reichweite
+  function brueckeBauen() {
+    const seg = level.boden.slice().sort((a, b) => a[0] - b[0]);
+    for (let i = 0; i < seg.length - 1; i++) {
+      const a = seg[i][1], b = seg[i + 1][0];
+      if (a < spieler.x + 30 || a > spieler.x + 1600 || a > level.sequenzX) continue;
+      if (b - a <= 0 || b - a > 520) continue;
+      heldBruecke = { x: a - 12, w: b - a + 24 };
+      SOLIDE.push({ x: heldBruecke.x, y: BODEN_Y, w: heldBruecke.w, h: 14, voll: false, heldBruecke: true });
+      funken(a + (b - a) / 2, BODEN_Y - 10, 16, ['#8d5a2b', '#c58b4a', '#ffffff'], 180, 0.6);
+      return true;
+    }
+    return false;
+  }
+  const WEG_FARBEN = { welle: ['#00a6a6', '#7fe6ff', '#ffffff'], stampf: ['#4361ee', '#a3b1ff', '#ffd93d'], tanz: ['#ffd23f', '#ff85a1', '#9d4edd'] };
+  function gegnerWeg(g, art) {   // Gegner fliegt weg (Welle: nach rechts gespült, Stampfer: hochgeschleudert, Tanz: tanzt davon) und ist harmlos
+    const b = gegnerBox(g);
+    g.weg = { art, t: 0, vx: art === 'welle' ? 520 : art === 'stampf' ? 120 : 260, vy: art === 'welle' ? -120 : art === 'stampf' ? -520 : -70 }; g.harmlos = true;
+    funken(b.x + b.w / 2, b.y + b.h / 2, 14, WEG_FARBEN[art], 200, 0.7, 'stern'); gegnerKlang('plopp');
+  }
+  const BRECHER_TEXT = { laser: 'Laser! 💥', ramme: 'Smash! 🦬', rolle: 'Roll! 🌀' }, BRECHER_FARBEN = { laser: ['#ff2d2d', '#ffb3b3', '#ffffff'], ramme: ['#8d5a2b', '#c9184a', '#ffd93d'], rolle: ['#e76f51', '#f4a261', '#ffffff'] };
+  const HINDERNIS_GRUND = ['auto', 'bus', 'cab', 'stein', 'kaktus', 'stamm', 'treibgut', 'tuer', 'ball', 'baer', 'feuer', 'zapfen'];
   function cameoBewegen(dt) {
     if (cameo) { cameo.t += dt; if (cameo.t >= CAMEO_DAUER) cameo = null; }
     if (schild > 0) schild = Math.max(0, schild - dt);
@@ -2032,8 +2099,28 @@
     if (durchlaessig > 0) durchlaessig = Math.max(0, durchlaessig - dt);
     if (eisZeit > 0) eisZeit = Math.max(0, eisZeit - dt);
     if (traegt > 0) traegt = Math.max(0, traegt - dt);
+    if (brecher > 0) { brecher = Math.max(0, brecher - dt); if (brecher <= 0) brecherArt = null; }
+    if (schweben > 0) schweben = Math.max(0, schweben - dt);
+    if (laserBlitz > 0) laserBlitz = Math.max(0, laserBlitz - dt);
+    if (heldBruecke && spieler.x > heldBruecke.x + heldBruecke.w + 500) { SOLIDE = SOLIDE.filter((q) => !q.heldBruecke); heldBruecke = null; }
+    if (wegZiel) {   // Ally: der nächste Gegner vor der Figur · Molly/Sunny: alle auf dem Bildschirm (sonst der nächste, der auftaucht)
+      wegZiel.zeit -= dt;
+      const bis = wegZiel.alle ? kamera + viewW + 20 : spieler.x + 480;
+      const ziele = gegner.filter((g) => g.tot <= 0 && !g.harmlos && !g.weg && !g.rollt && !g.klaut && (() => { const b = gegnerBox(g); return b.x + b.w > spieler.x - 40 && b.x < bis; })());
+      if (ziele.length) { (wegZiel.alle ? ziele : [ziele.sort((p, q) => p.x - q.x)[0]]).forEach((g) => gegnerWeg(g, wegZiel.art)); wegZiel = null; }
+      else if (wegZiel.zeit <= 0) wegZiel = null;
+    }
     if (eule && (eule.erledigt || spieler.x > eule.x + 40)) eule = null;
-    if (!cameo && tot <= 0 && !popup) { const pl = cameoPlan.find((p) => !p.erledigt && spieler.x >= p.x); if (pl) { pl.erledigt = true; cameoStart(pl.held); } }
+    // Stimme rechtzeitig (7.11., Mr. Alex): läuft gerade eine Ansage (Levelstart, Zuruf, Erzähler, Boss; stimme.beschaeftigt() der App), wartet der Auftritt, bis sie fertig ist –
+    // dann Sprechblase und Stimme gleichzeitig; Notbremse: nach CAMEO_WARTEN_MAX s trotzdem
+    if (!cameo && tot <= 0 && !popup) {
+      const pl = cameoPlan.find((p) => !p.erledigt && spieler.x >= p.x);
+      if (pl) {
+        let still = true; try { still = !(stimme.beschaeftigt && stimme.beschaeftigt()); } catch (e) { /* frei */ }
+        pl.warte = (pl.warte || 0) + dt;
+        if (still || pl.warte >= CAMEO_WARTEN_MAX) { pl.erledigt = true; cameoStart(pl.held); }
+      }
+    }
   }
   /* ---------- Story-Modus (Klasse 6, docs/runner/story-london-01.md): Kristalle ♪, Gabelung, Erzähl-Warteschlange, Stationen ----------
      Option story = { id, titel, teile: { "1"…"4", "A5"…"A8", "B5"…"B8", "9", "10", "A11", "A12", "B11", "B12": Text }, audio: { key: Datei } (optional, später) }.
@@ -2236,7 +2323,7 @@
       else if (z.phase === 'faellt') { z.vy += 2600 * dt; z.y += z.vy * dt; if (z.y + ZAPFEN_H >= BODEN_Y) { z.y = BODEN_Y - ZAPFEN_H; z.phase = 'steckt'; z.t = 0; if (!ruhig()) klang.stein(); funken(z.x, BODEN_Y - 6, 10, ['#e8f8ff', '#bfefff', '#ffffff'], 160, 0.5); } }
       else if (z.phase === 'steckt') { z.t += dt; if (z.t >= ZAPFEN_STECKT) { z.phase = 'weg'; if (!ruhig()) klang.splittern(); funken(z.x, BODEN_Y - 20, 14, ['#bfefff', '#ffffff', '#9fe3ff'], 200, 0.6); } }
       else if (z.phase === 'weg') { if (spieler.x < z.x - ZAPFEN_VORLAUF - 50) { z.phase = 'ruhe'; z.y = ZAPFEN_DECKE; } }
-      if ((z.phase === 'faellt' || z.phase === 'steckt') && ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, z.x - ZAPFEN_W / 2 + 3, z.y + 4, ZAPFEN_W - 6, ZAPFEN_H - 6)) { realm.zapfenTreffer++; schaden('zapfen'); }
+      if ((z.phase === 'faellt' || z.phase === 'steckt') && ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, z.x - ZAPFEN_W / 2 + 3, z.y + 4, ZAPFEN_W - 6, ZAPFEN_H - 6)) { if (brecher <= 0) realm.zapfenTreffer++; schaden('zapfen', z, { x: z.x - ZAPFEN_W / 2, y: z.y, w: ZAPFEN_W, h: ZAPFEN_H }); }
     }
     return false;
   }
@@ -2388,6 +2475,8 @@
       if (q.art === "stern") {
         c.beginPath(); for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2; c.moveTo(x, q.y); c.lineTo(x + Math.cos(a) * r * 2, q.y + Math.sin(a) * r * 2); }
         c.strokeStyle = q.farbe; c.lineWidth = 1.5; c.stroke();
+      } else if (q.art === "splitter") {   // Kl. 9 Brecher: eckiger Splitter, dreht sich im Flug
+        c.save(); c.translate(x, q.y); c.rotate(q.x * 0.08); c.fillRect(-r * 1.4, -r * 0.8, r * 2.8, r * 1.6); c.restore();
       } else { c.beginPath(); c.arc(x, q.y, Math.max(0.3, r), 0, Math.PI * 2); c.fill(); }
     }
     c.globalAlpha = 1;
@@ -2402,7 +2491,8 @@
     if (rutscht > 0) return;                  // auf dem Ölfleck: kein Sprung möglich
     if (spieler.amBoden && tot <= 0) {
       spieler.vy = SPRUNG_V * (wind && wind.phase === 'schub' ? WIND_SPRUNG : 1); spieler.amBoden = false; halten = true; haltZeit = 0; spieler.sprang = true; klang.sprung();   // in der Windböe: halber Sprung; sprang = Landung macht in der Drachenhöhle Lärm
-      if (sprungBonus > 0) { spieler.vy *= 1.3; sprungBonus = 0; kenjiSprung = 0; meldung = { text: 'Boing! 🦘', zeit: 0.7 }; }   // Cameo Kenji: einmal höher – Kenji springt mit
+      if (sprungBonus > 0 && sprungArt === 'puma') { spieler.vy *= 1.42; sprungBonus = 0; sprungArt = 'kenji'; meldung = { text: 'Mega jump! 🐾', zeit: 0.8 }; funken(spieler.x, spieler.y, 12, ['#06d6a0', '#b7f7e4', '#ffffff'], 180, 0.5); }   // Cameo Penny the Puma (Kl. 9): Mega-Sprung
+      else if (sprungBonus > 0) { spieler.vy *= 1.3; sprungBonus = 0; kenjiSprung = 0; meldung = { text: 'Boing! 🦘', zeit: 0.7 }; }   // Cameo Kenji: einmal höher – Kenji springt mit
     }
   }
   function sprungEnde() { halten = false; }
@@ -2435,13 +2525,30 @@
   }
 
 
-  function schaden(grund) {
+  function schaden(grund, ding, dbox) {   // ding/dbox (Kl. 9 Brecher, 7.11.): getroffenes Hindernis und seine Box – es zerplatzt und verschwindet
     if (spieler.unverwundbar > 0 || tot > 0) return;
+    if (brecher > 0 && HINDERNIS_GRUND.includes(grund)) {   // Kl. 9 Eddie/Bonnie/Archie (Benny ohne Lücke): das Hindernis zerplatzt in Splitter und verschwindet, die Figur läuft hindurch
+      const art = brecherArt || 'ramme';
+      funken(spieler.x + 30, spieler.y - 30, 12, BRECHER_FARBEN[art], 230, 0.7, 'stern'); hindernisZerplatzt(grund, ding, dbox); meldung = { text: BRECHER_TEXT[art], zeit: 0.9 };
+      if (art === 'laser') laserBlitz = 0.35;
+      spieler.unverwundbar = art === 'rolle' ? 0.7 : 1.1; if (art !== 'rolle') { brecher = 0; brecherArt = null; }
+      return;
+    }
     if (schild > 0 && grund !== 'wasser') { schild = 0; spieler.unverwundbar = 1.2; klang.schild(); meldung = { text: 'Shield! 🛡️', zeit: 1 }; return; }   // Cameo Tessa
     leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0; wind = null; surft = 0; aufGondel = null;
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     alexSagen(leben === 1 ? 'letztes' : 'leben');
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
+  }
+  const SPLITTER_FARBEN = { auto: ['#e63946', '#9aa5b1', '#2b2d42'], bus: ['#d62828', '#f1faee', '#2b2d42'], cab: ['#ffd60a', '#2b2d42', '#ffffff'], stein: ['#8d8d8d', '#5c5c5c', '#c2b8a3'], kaktus: ['#2d9b4e', '#1b6b34', '#8fd694'],
+    stamm: ['#8d5a2b', '#5e3a1a', '#c58b4a'], treibgut: ['#8d5a2b', '#a47148', '#5e3a1a'], tuer: ['#c9184a', '#d9d9d9', '#495057'], ball: ['#ffffff', '#222222', '#dddddd'], baer: ['#6b4226', '#3e2614', '#a0785a'], feuer: ['#ff7b00', '#ffd23f', '#e63946'], zapfen: ['#bfefff', '#ffffff', '#9fe3ff'] };
+  function hindernisZerplatzt(grund, ding, dbox) {   // Kl. 9 Brecher: Splitter in Hindernisfarbe, Krach, Hindernis aus seiner Liste (wie weggefegte Gegner)
+    const b = dbox || { x: spieler.x + 10, y: spieler.y - 50, w: 40, h: 50 };
+    funken(b.x + b.w / 2, b.y + b.h / 2, 26, SPLITTER_FARBEN[grund] || ['#8d8d8d', '#5c5c5c', '#ffffff'], 260, 0.9, 'splitter');
+    klang.krach();
+    if (!ding) return;
+    if (grund === 'zapfen' || grund === 'baer') { ding.phase = 'weg'; ding.t = 0; return; }   // Eiszapfen/Bärenpranke: Phase „weg“ (Respawn-Logik bleibt)
+    for (const l of [autos, steine, kakteen, treibgut, tueren, staemme, baelle]) { const i = l.indexOf(ding); if (i >= 0) { l.splice(i, 1); return; } }
   }
   const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵', zapfen: 'Icicle! 🧊', tuer: 'Mind the doors! 🚪', ball: 'Ball! ⚽' };
   function wiederbeleben() {
@@ -2606,9 +2713,10 @@
   const kaktusBox = (k) => ({ x: k.x - KAKTUS_W / 2, y: BODEN_Y - KAKTUS_H, w: KAKTUS_W, h: KAKTUS_H });
   function gegnerBewegen(dt) {
     for (const g of gegner) {
-      if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut) continue;   // Cameo Penny: Gegner stehen eingefroren still
+      if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut && !g.weg) continue;   // Cameo Penny: Gegner stehen eingefroren still
       g.flug += dt;
       if (g.tot > 0) { g.tot += dt; continue; }
+      if (g.weg) { g.weg.t += dt; g.x += g.weg.vx * dt; g.y += g.weg.vy * dt; if (g.weg.art === 'stampf') g.weg.vy += 900 * dt; if (g.weg.t > 1.2) g.tot = 1; continue; }   // Kl. 9 Ally/Molly/Sunny: Gegner fliegt/tanzt davon
       if (g.rollt) { g.x += 420 * dt; g.roll = (g.roll || 0) + dt * 14; if (g.x > g.bis + 900) g.tot = 1; continue; }   // weggerollte Kugel: schnell nach rechts, dann weg
       if (g.klaut) { g.klaut += dt; g.x += 170 * dt; g.y -= 130 * dt; if (g.klaut > 1.6) g.tot = 1; continue; }   // Möwe mit Beute: fliegt nach oben rechts davon
       if (g.wartet) continue;   // wartender Ritter (Realm Kapitel 2): steht still, schaut nach links
@@ -2684,6 +2792,7 @@
         const g = (halten && spieler.vy < 0 && haltZeit < HALT_MAX) ? GRAV_HALT : GRAV;
         if (halten) haltZeit += dt;
         spieler.vy += g * dt;
+        if (schweben > 0 && spieler.vy > 110) spieler.vy = 110;   // Cameo Maya (Kl. 9): langsam herabschweben
       }
       const altY = spieler.y;
       spieler.y += spieler.vy * dt;
@@ -2743,6 +2852,14 @@
         if (ueberLuecke && !spieler.amBoden && spieler.vy > 0 && spieler.y > BODEN_Y - 30) { if (!traegtAktiv) meldung = { text: 'Whee! 🦅', zeit: 0.8 }; spieler.y = BODEN_Y - 30; spieler.vy = 0; traegtAktiv = true; }
         else if (!ueberLuecke && traegtAktiv) { traegtAktiv = false; traegt = 0; }
       }
+      // Cameo Maya (Kl. 9, 7.11.): solange sie schwebt, hält die Figur über einer Lücke die Höhe (knapp über dem Boden-Niveau) und gleitet hinüber; der Effekt endet nicht mitten über der Lücke
+      if (schweben > 0 && !traegtAktiv) {
+        const ueberLuecke = !level.boden.some(([a, b]) => spieler.x >= a && spieler.x <= b) && !SOLIDE.some((s) => !s.voll && s.bruecke == null && s.gondel == null && spieler.x >= s.x && spieler.x <= s.x + s.w && s.y < BODEN_Y + 1 && s.y > spieler.y - 1);
+        if (ueberLuecke && !spieler.amBoden && spieler.vy > 0 && spieler.y > BODEN_Y - 12) {
+          if (!mayaGleitet) meldung = { text: 'Float! 🦋', zeit: 0.8 };
+          spieler.y = BODEN_Y - 12; spieler.vy = 0; mayaGleitet = true; schweben = Math.max(schweben, 0.05);
+        } else if (!ueberLuecke) mayaGleitet = false;
+      } else mayaGleitet = false;
       if (spieler.y > H + 20) { schaden('wasser'); return; }
       // Ölflecken: beim Betreten (am Boden) 0,6 s rutschen ohne Sprung; wirkt je Fleck einmal pro Überquerung
       for (const o of oel) {
@@ -2801,46 +2918,46 @@
       // Verkehr: Berührung = Leben weg, nicht plattzudrücken (drüberspringen!)
       for (const a of autos) {
         const ab = autoBox(a);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, ab.x + 4, ab.y + 2, ab.w - 8, ab.h - 2)) { schaden(a.art === 'bus' || a.art === 'cab' ? a.art : 'auto'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, ab.x + 4, ab.y + 2, ab.w - 8, ab.h - 2)) { schaden(a.art === 'bus' || a.art === 'cab' ? a.art : 'auto', a, ab); break; }
         if (zeit - autoKlangZeit > AUTO_KLANG_ABSTAND && ab.x - spieler.x > 0 && ab.x - spieler.x < 320) { autoKlangZeit = zeit; if (a.art === 'bus') klang.bus(); else klang.auto(); }
       }
       // Welt 3: fallende/liegende Steine und Kakteen – Berührung = Leben weg (drüberspringen!)
       for (const s of steine) {
         if (s.phase !== 'faellt' && s.phase !== 'liegt') continue;
         const sb = steinBox(s);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, sb.x + 4, sb.y + 4, sb.w - 8, sb.h - 4)) { schaden('stein'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, sb.x + 4, sb.y + 4, sb.w - 8, sb.h - 4)) { schaden('stein', s, sb); break; }
       }
       for (const k of kakteen) {
         const kb = kaktusBox(k);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, kb.x, kb.y + 2, kb.w, kb.h - 2)) { schaden('kaktus'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, kb.x, kb.y + 2, kb.w, kb.h - 2)) { schaden('kaktus', k, kb); break; }
       }
       for (const t of treibgut) {   // Tower Bridge: Treibgut auf der Themse (im Boot drüberspringen) – Berührung = Leben weg
         const tb = treibgutBox(t);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 4, tb.y + 4, tb.w - 8, tb.h - 4)) { schaden('treibgut'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 4, tb.y + 4, tb.w - 8, tb.h - 4)) { schaden('treibgut', t, tb); break; }
       }
       for (const t of tueren) {   // The Tube: geschlossene Zugtür – Berührung = Leben weg (rechtzeitig durch oder drüberspringen)
         if (!tuerZu(t)) continue;
         const tb = tuerBox(t);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 2, tb.y + 2, tb.w - 4, tb.h - 2)) { schaden('tuer'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 2, tb.y + 2, tb.w - 4, tb.h - 2)) { schaden('tuer', t, tb); break; }
       }
       // Welt 4: rollende Baumstämme (drüberspringen) und die Bären-Pranke vor der Höhle – Berührung = Leben weg
       for (const s of staemme) {
         if (s.phase !== 'rollt') continue;
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, s.rx - STAMM_R + 3, BODEN_Y - STAMM_R * 2 + 4, STAMM_R * 2 - 6, STAMM_R * 2 - 4)) { schaden('stamm'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, s.rx - STAMM_R + 3, BODEN_Y - STAMM_R * 2 + 4, STAMM_R * 2 - 6, STAMM_R * 2 - 4)) { schaden('stamm', s, { x: s.rx - STAMM_R, y: BODEN_Y - STAMM_R * 2, w: STAMM_R * 2, h: STAMM_R * 2 }); break; }
       }
       for (const b of baelle) {   // Wembley: rollender Ball – im Sprung von oben = Kopfball (platt), sonst Berührung = Leben weg (drüberspringen!)
         if (b.phase !== 'rollt') continue;
         const bb = ballBox(b);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, bb.x + 3, bb.y + 3, bb.w - 6, bb.h - 3)) { if (spieler.vy > 0 && altY <= bb.y + 16) ballKoepfen(b); else { ballTreffer++; schaden('ball'); } break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, bb.x + 3, bb.y + 3, bb.w - 6, bb.h - 3)) { if (spieler.vy > 0 && altY <= bb.y + 16) ballKoepfen(b); else { if (brecher <= 0) ballTreffer++; schaden('ball', b, bb); } break; }
       }
       for (const h of hoehlen) {
         if (h.phase !== 'pranke') continue;
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, h.x - HOEHLE_W / 2, BODEN_Y - PRANKE_H, HOEHLE_W, PRANKE_H)) { schaden('baer'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, h.x - HOEHLE_W / 2, BODEN_Y - PRANKE_H, HOEHLE_W, PRANKE_H)) { schaden('baer', h, { x: h.x - HOEHLE_W / 2, y: BODEN_Y - PRANKE_H, w: HOEHLE_W, h: PRANKE_H }); break; }
       }
       gegnerKlaengeNaehe();
       // Boss-Sequenz beginnt
       if (spieler.x >= level.sequenzX && spieler.amBoden) {
-        zustand = 'sequenz'; sequenz = { phase:'zoom', t:0 }; halten = false; spieler.unverwundbar = 0; cameo = null; eule = null; traegtAktiv = false; schild = sprungBonus = durchlaessig = eisZeit = traegt = 0;   // Cameo-Effekte enden vor dem Boss
+        zustand = 'sequenz'; sequenz = { phase:'zoom', t:0 }; halten = false; spieler.unverwundbar = 0; cameo = null; eule = null; traegtAktiv = false; schild = sprungBonus = durchlaessig = eisZeit = traegt = 0; cameoK9Aus();   // Cameo-Effekte enden vor dem Boss
         klang.dramatik();
       }
     } else if (zustand === 'sequenz') {
@@ -5843,8 +5960,8 @@
   // Cameo: fliegt von oben rechts heran (0,5 s), schwebt neben der Figur (Sprechblase), fliegt wieder davon (0,45 s); Held als Spielgrafik (heldZeichnen, 7.11.):
   // Anflug Laufpose, Schweben Kraftpose mit Glühen + kurzem Leuchtrand-Blitz (sein Effekt wirkt in diesem Moment), Abflug Jubel; Blick zur Figur (gespiegelt)
   function cameoZeichnen(c) {
-    const t = cameo.t, info = cameo.info, R = CAMEO_R;
-    const zx = Math.min(viewW - 60, Math.max(60, spieler.x - kamera + 150)), zy = Math.max(132, spieler.y - 195);   // rechts über der Figur, über ihrer Wort-Sprechblase (Held 100 hoch + Glühen/Schild über dem Kopf)
+    const t = cameo.t, info = cameo.info, R = CAMEO_R, chipN = effektListe().length;
+    const zx = Math.min(viewW - 60, Math.max(chipN ? 14 + chipN * 40 + 34 : 60, spieler.x - kamera + 150)), zy = Math.max(132, spieler.y - 195);   // rechts über der Figur, über ihrer Wort-Sprechblase (Held 100 hoch + Glühen/Schild über dem Kopf)
     let px, py;
     if (t < CAMEO_EIN) { const f = 1 - Math.pow(1 - t / CAMEO_EIN, 3); px = viewW + 50 + (zx - viewW - 50) * f; py = -40 + (zy + 40) * f; }
     else if (t > CAMEO_DAUER - CAMEO_AUS) { const f = (t - (CAMEO_DAUER - CAMEO_AUS)) / CAMEO_AUS; px = zx + (viewW + 90 - zx) * f * f; py = zy - (zy + 90) * f * f; }
@@ -5861,11 +5978,14 @@
       const w = c.measureText(text).width + 22, h = 30;
       let bx = px + 40, links = false;
       if (bx + w > viewW - 6) { bx = Math.max(6, px - 40 - w); links = true; }
-      const by = py - h / 2;
+      let by = py - h / 2;
+      const chipEnde = chipN ? 14 + chipN * 40 : 0;   // 7.11.: Blase überdeckt die Effekt-Chips unter den Herzen nicht – sonst unter die Chip-Zeile rücken
+      if (chipN && bx < chipEnde + 4 && by < CHIP_Y + CHIP_H + 4 && by + h > CHIP_Y - 4) by = CHIP_Y + CHIP_H + 6;
+      const my = by + h / 2;
       c.fillStyle = '#fff'; c.strokeStyle = info.farbe; c.lineWidth = 2;
       c.beginPath(); c.roundRect(bx, by, w, h, 10); c.fill(); c.stroke();
-      const sx = links ? bx + w : bx; c.beginPath(); c.moveTo(sx, py - 6); c.lineTo(sx + (links ? 9 : -9), py); c.lineTo(sx, py + 6); c.closePath(); c.fill();
-      c.fillStyle = '#18213a'; c.fillText(text, bx + w / 2, py + 1);
+      const sx = links ? bx + w : bx; c.beginPath(); c.moveTo(sx, my - 6); c.lineTo(sx + (links ? 9 : -9), my); c.lineTo(sx, my + 6); c.closePath(); c.fill();
+      c.fillStyle = '#18213a'; c.fillText(text, bx + w / 2, my + 1);
       c.restore();
     }
   }
@@ -5951,6 +6071,169 @@
     for (let k = 0; k < 8; k++) { const w = t * 1.2 + k * 0.785, r = (44 + Math.sin(t * 3 + k) * 6) * u; hzText(c, '✦', Math.cos(w) * r, Math.sin(w) * r * 1.1 + 3, 8 * u, '#fff', false); }
     c.restore();
   }
+
+  // Klasse 9 (7.11.2026, Etappe 1 Superhelden-Cameos): zusätzliche Helfer für die 13 US-Helden
+  // Wimpern am äußeren Augenwinkel (Heldinnen, wie Camilla), Augen bei (x, y) mit Abstand d
+  const hzWimpern = (c, x, y, d) => { c.strokeStyle = '#1a1d26'; c.lineWidth = 0.9; c.lineCap = 'round'; for (const s of [-1, 1]) for (let i = 0; i < 2; i++) { c.beginPath(); c.moveTo(x + s * (d + 3.9), y - 1.5 + i * 1.6); c.lineTo(x + s * (d + 6), y - 2.6 + i * 1.8); c.stroke(); } };
+  // Glitzer (Heldinnen, dezent): kleine funkelnde ✦ an festen Punkten
+  const hzGlitzer = (c, t, pts, f = '#fff') => pts.forEach(([x, y], i) => hzFunke(c, x, y, 1.2 + Math.max(0, Math.sin(t * 4 + i * 1.7)) * 1.3, i % 2 ? f : '#fff'));
+  // Umhang mit Glitzer (Heldinnen)
+  const hzUmhangG = (c, f, t, lauf, hoch, y0 = -56) => { hzUmhang(c, f, t, lauf, hoch, y0); const w = lauf ? Math.sin(t * 9) * 6 : Math.sin(t * 2) * 2;
+    hzGlitzer(c, t, hoch ? [[-24, y0 + 1], [-36 - w / 2, y0 + 5], [-28, y0 + 9]] : [[-21, y0 + 18], [-29 - w / 2, y0 + 32], [-19 - w / 3, y0 + 35]]); };
+  // Beide Arme nach vorn (Blick rechts, wie Kenji): hinterer Arm dunkler; Rückgabe [Hand hinten, Hand vorn]
+  const hzArmeVorn = (c, sy, a1, a2, L1, L2, b, fHinten, fVorn, hr, hf) => [hzArm(c, -6, sy, 1, a1 + 0.12, L1, a2 + 0.08, L2, b, fHinten, hr, hf), hzArm(c, 8, sy, 1, a1, L1, a2, L2, b, fVorn, hr, hf)];
+  // Herz (Heilkraft), Spitze unten
+  const hzHerz = (c, x, y, r, f) => { c.fillStyle = f; c.beginPath(); c.moveTo(x, y + r * 0.9); c.bezierCurveTo(x - r * 1.6, y - r * 0.2, x - r * 0.7, y - r * 1.3, x, y - r * 0.45); c.bezierCurveTo(x + r * 0.7, y - r * 1.3, x + r * 1.6, y - r * 0.2, x, y + r * 0.9); c.fill(); };
+  // Blüte (5 Blätter + Mitte)
+  const hzBlume = (c, x, y, r, f, w = 0) => { for (let i = 0; i < 5; i++) { const a = w + i * Math.PI * 0.4; hzEll(c, x + Math.cos(a) * r, y + Math.sin(a) * r, r * 0.75, r * 0.75, f); } hzEll(c, x, y, r * 0.6, r * 0.6, '#ffd166'); };
+  // Reifer Stil Klasse 9 (Probe 7.11.2026, Mr. Alex: K9-Helden zu kindlich): Kopf ≈ 1/4 der Höhe, lange Beine, kantige Polygone, dicke dunkle Kontur,
+  // Cel-Shading (harte Schattenkante, eine dunklere Hälfte je Form), dunkle Grundtöne + ein Neon-Akzent, Kleidung statt Umhang, Sonnenbrille, schiefes Grinsen.
+  const HZ_KONTUR = '#0b0d14';
+  const hzPfad = (c, p) => { c.beginPath(); c.moveTo(p[0][0], p[0][1]); for (let i = 1; i < p.length; i++) c.lineTo(p[i][0], p[i][1]); c.closePath(); };
+  // Polygon p in Farbe f, Schattenfläche sch (auf die Form beschnitten) in dunkel, dann Kontur
+  const hzCel = (c, p, f, dunkel, sch, lw = 1.7) => {
+    hzPfad(c, p); c.fillStyle = f; c.fill();
+    if (sch) { c.save(); hzPfad(c, p); c.clip(); hzPfad(c, sch); c.fillStyle = dunkel; c.fill(); c.restore(); }
+    hzPfad(c, p); c.strokeStyle = HZ_KONTUR; c.lineWidth = lw; c.lineJoin = 'round'; c.stroke();
+  };
+  // Glied (Arm, Bein) als ein Linienzug durch pts: Kontur, Schattenfarbe, darauf versetzt die Lichtseite (oben rechts) mit harter Kante
+  const hzGlied = (c, pts, b, f, dunkel) => {
+    const zug = (d) => { c.beginPath(); c.moveTo(pts[0][0] + d, pts[0][1] - d); for (let i = 1; i < pts.length; i++) c.lineTo(pts[i][0] + d, pts[i][1] - d); c.stroke(); };
+    c.lineCap = 'round'; c.lineJoin = 'round';
+    c.strokeStyle = HZ_KONTUR; c.lineWidth = b + 3.2; zug(0);
+    c.strokeStyle = dunkel; c.lineWidth = b; zug(0);
+    c.strokeStyle = f; c.lineWidth = b * 0.5; zug(b * 0.15);
+  };
+  // Zwei-Gelenk-Kette Schulter/Hüfte (sx,sy) → Ziel (hx,hy), Längen L1/L2, s = Knick-Richtung (±1); Rückgabe [Schulter, Ellbogen/Knie, Hand/Knöchel]
+  const hzIK = (sx, sy, hx, hy, L1, L2, s) => {
+    let dx = hx - sx, dy = hy - sy, d = Math.hypot(dx, dy) || 0.01; const m = Math.min(d, L1 + L2 - 0.05);
+    if (d > m) { hx = sx + dx / d * m; hy = sy + dy / d * m; d = m; }
+    const w = Math.atan2(dy, dx) + s * Math.acos(Math.max(-1, Math.min(1, (L1 * L1 + d * d - L2 * L2) / (2 * L1 * d))));
+    return [[sx, sy], [sx + Math.cos(w) * L1, sy + Math.sin(w) * L1], [hx, hy]];
+  };
+  // Sneaker am Knöchel (x, y = Boden), Spitze nach rechts: Obermaterial, Sohle, Neon-Streifen; hoch = Plateau
+  const hzSneaker = (c, x, y, f, dunkel, sohle, neon, hoch = 0) => {
+    const h = 2 + hoch;
+    hzCel(c, [[x - 4, y - h - 3.5], [x + 1, y - h - 4.2], [x + 5, y - h - 1.8], [x + 8.5, y - h - 0.6], [x + 8.5, y - h], [x - 4.5, y - h]], f, dunkel, [[x - 6, y - h - 2], [x + 10, y - h - 1.2], [x + 10, y], [x - 6, y]], 1.4);
+    hzCel(c, [[x - 4.5, y - h], [x + 8.8, y - h], [x + 8.3, y], [x - 4.5, y]], sohle, sohle, null, 1.4);
+    c.strokeStyle = neon; c.lineWidth = 1; c.lineCap = 'round'; c.beginPath(); c.moveTo(x - 2.5, y - h - 1.2); c.lineTo(x + 3.5, y - h - 2.4); c.stroke();
+  };
+  // Faust (kantig, Cel) bei (x, y)
+  const hzFaust = (c, x, y, r, f, dunkel) => hzCel(c, [[x - r, y - r * 0.6], [x - r * 0.4, y - r], [x + r * 0.7, y - r * 0.8], [x + r, y], [x + r * 0.6, y + r * 0.9], [x - r * 0.6, y + r * 0.9], [x - r, y + r * 0.2]], f, dunkel, [[x - r * 2, y], [x + r * 2, y + r * 0.1], [x + r * 2, y + r * 2], [x - r * 2, y + r * 2]], 1.3);
+  // Aufnäher (Wappen = Anfangsbuchstabe): kantiges Schild mit Neon-Rand
+  const hzPatch = (c, x, y, r, f, neon, ch) => {
+    hzPfad(c, [[x - r, y - r], [x + r, y - r], [x + r, y + r * 0.4], [x, y + r * 1.15], [x - r, y + r * 0.4]]); c.fillStyle = f; c.fill(); c.strokeStyle = neon; c.lineWidth = 1.1; c.stroke();
+    c.font = `900 ${r * 1.5}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = neon; c.fillText(ch, x, y + 0.2);
+  };
+  // Sonnenbrillen-Glas (Polygon p) mit Metallic-Verlauf, Glanzstreifen und Rahmen
+  const hzGlas = (c, p, oben, unten, rahmen, glanz = 1) => {
+    const ys = p.map((q) => q[1]), xs = p.map((q) => q[0]), y0 = Math.min(...ys), y1 = Math.max(...ys), x0 = Math.min(...xs), x1 = Math.max(...xs);
+    const g = c.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, oben); g.addColorStop(1, unten);
+    hzPfad(c, p); c.fillStyle = g; c.fill();
+    if (glanz) { c.save(); hzPfad(c, p); c.clip(); c.fillStyle = 'rgba(255,255,255,.55)'; c.beginPath(); c.moveTo(x0 + (x1 - x0) * 0.45, y0 - 1); c.lineTo(x0 + (x1 - x0) * 0.62, y0 - 1); c.lineTo(x0 + (x1 - x0) * 0.32, y1 + 1); c.lineTo(x0 + (x1 - x0) * 0.2, y1 + 1); c.closePath(); c.fill(); c.restore(); }
+    hzPfad(c, p); c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.9; c.lineJoin = 'round'; c.stroke(); c.strokeStyle = rahmen; c.lineWidth = 0.8; c.stroke();
+  };
+  // Mandelauge, halb geschlossen (Lid als dicke Linie oben), Iris f; (x, y) = Mitte, w = halbe Breite
+  const hzMandel = (c, x, y, w, f) => {
+    hzPfad(c, [[x - w, y + 0.2], [x - w * 0.3, y - 1.1], [x + w, y - 0.9], [x + w * 0.6, y + 1], [x - w * 0.3, y + 1.1]]); c.fillStyle = '#fbf6e8'; c.fill();
+    c.save(); c.clip(); hzEll(c, x + w * 0.25, y + 0.3, 1.5, 1.5, f); hzEll(c, x + w * 0.3, y + 0.3, 0.75, 0.75, '#0b0d14'); c.restore();
+    c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.4; c.lineCap = 'round'; c.beginPath(); c.moveTo(x - w - 0.3, y + 0.1); c.lineTo(x - w * 0.3, y - 1.2); c.lineTo(x + w + 0.3, y - 1); c.stroke();
+  };
+  // Reifer Stil, alle 13 K9-Helden (7.11.2026): gemeinsame Bausteine für Bewegung, Kopf, Augen, Brillen, Schuhe
+  // Kleine Darstellung (Cameo, Karte klein): Pixelmaß < 1,3 → Details ruhiger (kein Glanz auf hochgeschobenen Brillen)
+  const hzKlein = (c) => { const m = c.getTransform(); return Math.hypot(m.a, m.b) < 1.3; };
+  // Bewegung: bob (Wippen), Füße fh/fv, Armziele zh/zv (Schulter bei ±10, y −55); br = Breite (Jungs breiter)
+  const hzRig = (pose, t, br = 1) => {
+    const l = pose === 'lauf', j = pose === 'jubel', k = pose === 'kraft', p = t * 13;
+    const bob = l ? -Math.abs(Math.sin(p)) * 1.6 : j ? -Math.max(0, Math.sin(t * 7)) * 2.5 : 0;
+    let fh, fv, zh, zv;
+    if (l) { fh = [-2 + 13 * Math.sin(p), -Math.max(0, -Math.cos(p)) * 8]; fv = [2 + 13 * Math.sin(p + Math.PI), -Math.max(0, Math.cos(p)) * 8];
+      zh = [-11 * br + 10 * Math.sin(p), -41 - 5 * Math.abs(Math.cos(p))]; zv = [11 * br + 10 * Math.sin(p + Math.PI), -41 - 5 * Math.abs(Math.cos(p))]; }
+    else if (j) { fh = [-6 * br, bob * 0.6]; fv = [6 * br, bob * 0.6]; zh = [-27 * br, -80]; zv = [32 * br, -72]; }
+    else { fh = [-6 * br, 0]; fv = [5 * br, 0]; zh = [-13 * br, -34]; zv = [13 * br, -35]; }
+    return { l, j, k, p, bob, fh, fv, zh, zv };
+  };
+  // Arm: Schulter (sx, sy) → Ziel, Knick s; Ärmel f/fD (Breite b), Faust in Fellfarbe (hand = null: keine); Rückgabe Kette [Schulter, Ellbogen, Hand]
+  const hzArmK = (c, sx, sy, ziel, s, f, fD, b, hand, handD, L1 = 13, L2 = 12.5) => {
+    const g = hzIK(sx, sy, ziel[0], ziel[1], L1, L2, s); hzGlied(c, g, b, f, fD); if (hand) hzFaust(c, g[2][0], g[2][1], 2.9, hand, handD); return g;
+  };
+  // Stück eines Glieds (Unterarm-Bündchen, Bandage, Stiefelschaft …) von Anteil a0 bis a1 des zweiten Abschnitts der Kette g
+  const hzStueck = (c, g, a0, a1, b, f, cap = 'butt') => { const [, [ex, ey], [hx, hy]] = g; c.lineCap = cap; c.strokeStyle = f; c.lineWidth = b;
+    c.beginPath(); c.moveTo(ex + (hx - ex) * a0, ey + (hy - ey) * a0); c.lineTo(ex + (hx - ex) * a1, ey + (hy - ey) * a1); c.stroke(); };
+  // Bein: Hüfte (hx, hy) → Knöchel über dem Fuß f (Bodenpunkt), Hose f/fD
+  const hzBeinK = (c, hx, hy, f, hose, hoseD, b = 6, lift = 4, L1 = 17, L2 = 16.5) => { const g = hzIK(hx, hy, f[0], f[1] - lift, L1, L2, -1); hzGlied(c, g, b, hose, hoseD); return g; };
+  // Stiefel am Knöchel (x, y = Boden), Spitze nach rechts: 'cowboy' (spitz, Absatz, Ziernaht; sporn), 'kampf' (klobig, Schnürung), 'arbeit' (Stahlkappe),
+  // 'tabi' (Ninja-Schuh mit geteilter Spitze), 'wasser' (flacher Wasserschuh, Neon-Sohle); ak = Akzent
+  const hzStiefel = (c, x, y, f, fD, typ, ak, sporn) => {
+    if (typ === 'cowboy') {
+      hzCel(c, [[x - 3.6, y - 11], [x + 3, y - 11], [x + 3.4, y - 4.6], [x + 7.5, y - 3.4], [x + 10.6, y - 1.6], [x + 10.2, y - 0.8], [x - 4.6, y - 0.8], [x - 4.6, y - 5]], f, fD,
+        [[x - 6, y - 12], [x - 0.5, y - 12], [x + 1, y - 2.6], [x + 12, y - 2.2], [x + 12, y + 1], [x - 6, y + 1]], 1.4);
+      hzCel(c, [[x - 4.8, y - 1.2], [x - 1.4, y - 1.2], [x - 1.8, y], [x - 4.6, y]], fD, fD, null, 1.1);
+      c.strokeStyle = ak; c.lineWidth = 0.8; c.lineCap = 'round'; c.beginPath(); c.moveTo(x - 2.4, y - 9.8); c.quadraticCurveTo(x + 0.4, y - 7, x - 0.6, y - 4.6); c.stroke();
+      if (sporn) { c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.6; c.beginPath(); c.moveTo(x - 4.6, y - 2.6); c.lineTo(x - 7.4, y - 2.8); c.stroke(); hzFunke(c, x - 8.2, y - 2.8, 2.2, '#d5dae3'); }
+    } else if (typ === 'kampf' || typ === 'arbeit') {
+      hzCel(c, [[x - 4.2, y - 11], [x + 3.4, y - 11], [x + 4, y - 5.5], [x + 8.6, y - 4.6], [x + 10.2, y - 2.4], [x + 10, y - 1.6], [x - 4.8, y - 1.6]], f, fD,
+        [[x - 7, y - 12], [x - 0.5, y - 12], [x + 0.5, y - 3.4], [x + 12, y - 3], [x + 12, y + 1], [x - 7, y + 1]], 1.4);
+      if (typ === 'arbeit') hzCel(c, [[x + 4.5, y - 5.2], [x + 8.6, y - 4.6], [x + 10.2, y - 2.4], [x + 10, y - 1.6], [x + 4.5, y - 1.6]], '#c9a26a', '#9c7640', null, 1.1);   // helle Kappe
+      hzCel(c, [[x - 5, y - 2.4], [x + 10.6, y - 2.4], [x + 10.4, y], [x - 5, y]], '#15161b', '#15161b', null, 1.2);   // dicke Sohle
+      c.strokeStyle = ak; c.lineWidth = 0.8; c.lineCap = 'round'; c.beginPath(); for (let i = 0; i < 3; i++) { c.moveTo(x - 0.6, y - 9.5 + i * 2.2); c.lineTo(x + 3, y - 8.7 + i * 2.2); } c.stroke();   // Schnürung
+    } else if (typ === 'tabi') {
+      hzCel(c, [[x - 3.4, y - 8], [x + 3, y - 8], [x + 3.6, y - 4], [x + 8.4, y - 2.6], [x + 9, y], [x - 4.4, y], [x - 4.4, y - 3]], f, fD, [[x - 6, y - 9], [x - 0.5, y - 9], [x + 1, y - 1.6], [x + 11, y - 1.4], [x + 11, y + 1], [x - 6, y + 1]], 1.4);
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 0.9; c.beginPath(); c.moveTo(x + 6.4, y - 2.3); c.lineTo(x + 6.6, y); c.stroke();   // geteilte Zehe
+      c.strokeStyle = ak; c.lineWidth = 0.8; c.beginPath(); c.moveTo(x - 3.4, y - 5.6); c.lineTo(x + 3.2, y - 6); c.stroke();
+    } else {   // wasser
+      hzCel(c, [[x - 3.6, y - 5], [x + 2.6, y - 5.4], [x + 7.6, y - 2.8], [x + 9, y - 1.4], [x - 4.4, y - 1.4]], f, fD, [[x - 6, y - 6], [x - 0.5, y - 6], [x + 1, y - 2.2], [x + 11, y - 2], [x + 11, y + 1], [x - 6, y + 1]], 1.3);
+      hzCel(c, [[x - 4.6, y - 1.6], [x + 9.2, y - 1.6], [x + 8.8, y], [x - 4.6, y]], ak, ak, null, 1.1);
+      c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 0.6; c.beginPath(); for (let i = 0; i < 3; i++) { c.moveTo(x - 1 + i * 2.4, y - 4.6 + i * 0.6); c.lineTo(x + 0.6 + i * 2.4, y - 2); } c.stroke();
+    }
+  };
+  // Grundform des Kopfs (Dreiviertel, Blick rechts), Schatten hinten
+  const HZ_SCHAEDEL = [[-1, -60], [-6.5, -61], [-9.5, -64.5], [-10.5, -70.5], [-8.5, -76.5], [-3.5, -80.5], [3, -81.3], [8, -78.8], [10.8, -73.5], [11, -66.8], [8, -62], [3, -60]];
+  const HZ_SCHAEDEL_SCH = [[-16, -86], [-5, -86], [-4.5, -68], [3, -60], [3, -56], [-16, -56]];
+  const hzSchaedel = (c, f, fD, p = HZ_SCHAEDEL) => hzCel(c, p, f, fD, HZ_SCHAEDEL_SCH);
+  // Brillen (Gläser nah/fern, Blick rechts) und Bügel; typ: std, pilot, rund, kasten, cat, sport (ein Visier)
+  const HZ_BRILLEN = {
+    std: [[[-5.6, -75.6], [2.4, -75.2], [2.2, -72.2], [-1, -70.8], [-4.8, -72.2]], [[4.6, -75.4], [11.2, -76.2], [10.8, -72.8], [8, -71.2], [4.9, -72.4]]],
+    pilot: [[[-5.8, -75.8], [2.4, -75.6], [2.4, -73], [0.6, -70.2], [-3.4, -70.2], [-5.6, -72.6]], [[4.6, -76], [10.6, -76.4], [10.8, -73.6], [9.4, -70.8], [6, -70.8], [4.4, -73]]],
+    rund: [[[-5.4, -74.6], [-4, -76.6], [-1.4, -77.2], [1.4, -76.4], [2.6, -74], [1.6, -71.2], [-1.2, -70.4], [-4, -71.4]], [[4.6, -74.4], [5.6, -76.4], [8, -77], [10.4, -76], [11, -73.6], [10, -71.2], [7.6, -70.6], [5.4, -71.8]]],
+    kasten: [[[-6, -76.2], [2.6, -75.8], [2.6, -71.6], [-5.6, -72]], [[4.6, -75.8], [11.4, -76.4], [11.2, -72], [4.6, -71.6]]],
+    cat: [[[-5.6, -76.6], [-2, -75], [2.4, -75.4], [2.4, -72.4], [0.8, -70.4], [-2.4, -70.6], [-4.4, -72.6]], [[4.6, -75.4], [9.4, -75.4], [12.4, -77.8], [11.6, -72.8], [9.6, -70.6], [6.2, -70.6], [4.6, -72.4]]],
+    sport: [[[-6, -75.6], [4, -76.4], [11.8, -76.8], [11.4, -72.6], [8, -71], [5.4, -72.6], [3.4, -72.4], [0.6, -70.6], [-3.4, -70.8], [-5.8, -72.4]]],
+  };
+  const hzBrille = (c, typ, oben, unten, rahmen, ruhig) => {
+    if (!ruhig) { c.strokeStyle = rahmen; c.lineWidth = 1; c.lineCap = 'round'; c.beginPath(); c.moveTo(-5.6, -74.6); c.lineTo(-10.6, -72.8);
+      if (typ !== 'sport') { c.moveTo(2.4, -74.4); c.quadraticCurveTo(3.5, -75.4, 4.6, -74.6); } c.stroke(); }
+    for (const q of HZ_BRILLEN[typ]) hzGlas(c, q, ruhig ? '#15161c' : oben, ruhig ? '#33353f' : unten, rahmen, ruhig ? 0 : 1);
+  };
+  // Augen (zwei Mandelaugen), kantige Brauen, Brille: steh → hochgeschoben über den Augen (klein: ruhig), sonst auf der Nase.
+  // o: iris, braue, brille: [typ, oben, unten, rahmen] oder null, immer (Brille bleibt auch im Stehen auf), lid (Lidstrich-Spitze), dy (Höhe)
+  const hzBlick = (c, pose, o) => {
+    const dy = o.dy || 0, bf = o.braue || '#2b2420';
+    const brauen = (d) => { d += dy; hzCel(c, [[-5.6, -76.2 + d], [-1.4, -77.8 + d], [2.4, -76.8 + d], [2.2, -75.9 + d], [-1.4, -76.7 + d], [-5.2, -75.3 + d]], bf, bf, null, 0.8);
+      hzCel(c, [[4.6, -77 + d], [7.8, -78.4 + d], [10.8, -77.6 + d], [10.6, -76.7 + d], [7.8, -77.4 + d], [4.8, -76.2 + d]], bf, bf, null, 0.8); };
+    const augen = () => { hzMandel(c, -1.6, -72.8 + dy, 3, o.iris); hzMandel(c, 7.6, -73.2 + dy, 2.1, o.iris);
+      if (o.lid) { c.strokeStyle = HZ_KONTUR; c.lineWidth = 1; c.lineCap = 'round'; c.beginPath(); c.moveTo(-4.4, -72.8 + dy); c.lineTo(-6.2, -74.2 + dy); c.moveTo(9.6, -74.2 + dy); c.lineTo(11.2, -75.4 + dy); c.stroke(); } };
+    if (!o.brille) { augen(); brauen(pose === 'kraft' ? -0.8 : 0); return; }
+    const [typ, ob, un, ra] = o.brille;
+    if (pose === 'steh' && !o.immer) { augen(); brauen(0); c.save(); c.translate(0, -7.4 + dy); c.rotate(-0.04); hzBrille(c, typ, ob, un, ra, hzKlein(c)); c.restore(); }
+    else { brauen(-1.2); c.save(); c.translate(0, dy); hzBrille(c, typ, ob, un, ra, false); c.restore(); }
+  };
+  // Jubel: Kopf leicht in den Nacken (Kinn hoch), damit der vordere Arm unter Schnauze/Schnabel frei nach außen geht
+  const hzKopfHoch = (c, j, w = -0.2) => { if (j) { c.translate(2, -60); c.rotate(w); c.translate(-2, 60); } };
+  // Schiefes Grinsen als Linie von (x0, y0) nach (x1, y1), Mundwinkel hinten hoch
+  const hzGrinsen = (c, x0, y0, x1, y1) => { c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, y0); c.quadraticCurveTo((x0 + x1) / 2 + 1, y0 + 0.4, x1, y1); c.stroke(); };
+  // Ohrring: Creole (r) oder Stecker
+  const hzOhrring = (c, x, y, r, f) => { c.strokeStyle = HZ_KONTUR; c.lineWidth = 2; c.beginPath(); c.arc(x, y + r, r, 0, Math.PI * 2); c.stroke(); c.strokeStyle = f; c.lineWidth = 0.9; c.stroke(); };
+  // Karomuster (Hemd) auf Fläche p
+  const hzKaro = (c, p, f, dunkel, linie, w = 3.2) => { hzPfad(c, p); c.fillStyle = f; c.fill(); c.save(); hzPfad(c, p); c.clip(); c.fillStyle = dunkel;
+    for (let i = -10; i < 10; i++) { c.fillRect(-30 + i * w * 2, -100, w, 100); c.fillRect(-30, -100 + i * w * 2 + 50, 60, w * 0.8); } c.strokeStyle = linie; c.lineWidth = 0.5; for (let i = -10; i < 10; i++) { c.beginPath(); c.moveTo(-30 + i * w * 2 + w * 1.5, -100); c.lineTo(-30 + i * w * 2 + w * 1.5, 0); c.stroke(); } c.restore(); };
+  // Schatten (Cel) über eine schon gefüllte, gemusterte Fläche p legen und Kontur ziehen
+  const hzSchatten = (c, p, sch, a = 0.32, lw = 1.6) => { c.save(); hzPfad(c, p); c.clip(); hzPfad(c, sch); c.fillStyle = `rgba(8,10,18,${a})`; c.fill(); c.restore();
+    hzPfad(c, p); c.strokeStyle = HZ_KONTUR; c.lineWidth = lw; c.lineJoin = 'round'; c.stroke(); };
+  // Wehender Saum (Mantel, Kleid): Punkte von x0 nach x1 auf Höhe y, Zacken + Welle je nach Wind
+  const hzSaum = (t, x0, x1, y, n, ph, wind, zack = 3) => { const q = []; for (let i = 0; i <= n; i++) { const f = i / n; q.push([x0 + (x1 - x0) * f, y + (i % 2 ? -zack : 0) + Math.sin(t * 14 + f * 6 + ph) * 1.5 * wind]); } return q; };
+  // Neue Stil-Helden: Sammelkarte schreibt den Namen mit dunkler Kontur (lesbar auch auf heller Kartenfarbe, z. B. Sunny Gold)
+  const HZ_NEUSTIL = new Set(['eddie', 'sunny', 'cody', 'bonnie', 'gus', 'ally', 'rosie', 'benny', 'pennypuma', 'archie', 'molly', 'holly', 'maya']);
 
   const HELDEN_ZEICHNUNG = {
     // Leo the Lion – Super speed: Mähne, roter Umhang, ⚡; Kraft = Beinwirbel, Tempolinien, Blitze an den Fäusten
@@ -6188,6 +6471,811 @@
       if (k) { hzEll(c, 0, -98 + Math.sin(t * 3), 6, 7, '#ffe066'); hzRR(c, -3, -92 + Math.sin(t * 3), 6, 4, 1, '#9aa5b1'); hzFunke(c, 0, -98 + Math.sin(t * 3), 3, '#fff');   // Glühbirne (Geistesblitz)
         for (let i = 0; i < 6; i++) { const w = t * 7 + i * 1.05, r = 12 + (t * 40 + i * 9) % 14; hzEll(c, Math.cos(w) * r, -96 + Math.sin(w) * r * 0.8, 1.3, 1.3, i % 2 ? '#ffd60a' : '#fff'); } }   // Funken
     },
+    // ----- Klasse 9 (Road Trip USA, 7.11.2026, Etappe 1): 13 US-Helden, Daten in inhalte/klasse9/helden.tsv (Penny the Puma = id pennypuma, penny ist Kl.-6-Pinguin) -----
+    // Eddie the Eagle – Eagle eye (reifer Stil, Probe 2 7.11.): Weißkopfseeadler, Kopf in Dreiviertel-Ansicht (beide Augen, Hakenschnabel nach rechts),
+    // schwarze Biker-Lederjacke (schräger Reißverschluss, breite Revers, Gürtel, Metallic-Glanz), dunkle Jeans, Sneaker; Pilotenbrille mit zwei Gläsern
+    // (steh: auf den Kopf geschoben, halb geschlossene Augen + schiefes Grinsen); Neon-Akzent Rot; Kraft = rote Laserstrahlen aus beiden Brillengläsern
+    eddie(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', l = pose === 'lauf', N = '#ff2a3d', p = t * 13;
+      const leder = '#24252c', lederD = '#0e0f13', glanz = '#9aa3b8', silber = '#d5dae3', jeans = '#2d3038', jeansD = '#1b1d23', weiss = '#f3f1ea', weissD = '#bfbbb0', gelb = '#f2b705', gelbD = '#c07f00';
+      const bob = l ? -Math.abs(Math.sin(p)) * 1.6 : j ? -Math.max(0, Math.sin(t * 7)) * 2.5 : 0, hy = -35 + bob;
+      let fh, fv;
+      if (l) { fh = [-2 + 13 * Math.sin(p), -Math.max(0, -Math.cos(p)) * 8]; fv = [2 + 13 * Math.sin(p + Math.PI), -Math.max(0, Math.cos(p)) * 8]; }
+      else if (k) { fh = [-10, 0]; fv = [10, 0]; }
+      else if (j) { fh = [-6, bob * 0.6]; fv = [6, bob * 0.6]; }
+      else { fh = [-6, 0]; fv = [5, 0]; }
+      const bein = (hx, f) => { const g = hzIK(hx, hy, f[0], f[1] - 4, 17, 16.5, -1); hzGlied(c, g, 6.2, jeans, jeansD); hzSneaker(c, f[0], f[1], '#e9ecf1', '#b3bac6', '#1b1d23', N); };
+      // Ärmel aus Leder (Glanzlinie am Oberarm, Reißverschluss am Bündchen), kantige Faust
+      const arm = (sx, ziel, s, faust = true) => { const g = hzIK(sx, -55 + bob, ziel[0], ziel[1] + bob, 13.5, 13, s); hzGlied(c, g, 6.6, leder, lederD);
+        const [[ax, ay], [ex, ey], [hx2, hy2]] = g; c.lineCap = 'round'; c.strokeStyle = glanz; c.lineWidth = 1.1;
+        c.beginPath(); c.moveTo(ax + (ex - ax) * 0.2 + 1.2, ay + (ey - ay) * 0.2 - 1.2); c.lineTo(ax + (ex - ax) * 0.75 + 1.2, ay + (ey - ay) * 0.75 - 1.2); c.stroke();
+        c.strokeStyle = silber; c.lineWidth = 0.9; c.beginPath(); c.moveTo(ex + (hx2 - ex) * 0.62, ey + (hy2 - ey) * 0.62); c.lineTo(ex + (hx2 - ex) * 0.82 + 1.5, ey + (hy2 - ey) * 0.82 - 1.5); c.stroke();
+        if (faust) hzFaust(c, hx2, hy2, 3.1, '#5b3a29', '#3a2419'); return g[2]; };
+      let zh, zv, sh = 1, sv = 1;
+      if (l) { zh = [-11 + 10 * Math.sin(p), -41 - 5 * Math.abs(Math.cos(p))]; zv = [11 + 10 * Math.sin(p + Math.PI), -41 - 5 * Math.abs(Math.cos(p))]; }
+      else if (j) { zh = [-28, -79]; zv = [31, -76]; sh = 1; sv = 1; }   // Jubel: vordere Faust weit außen, Ellbogen tief → Arm bleibt frei vom Schnabel
+      else if (k) { zh = [-17, -38]; zv = [19, -50]; }
+      else { zh = [-14, -33]; zv = [10, -38]; sv = -1; }
+      if (!j) arm(-11, zh, sh);
+      bein(-3, fh); bein(3, fv);
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-9, -40], [-17, -31], [-14, -29], [-11, -31], [-9, -27], [-5, -37]], weiss, weissD, [[-20, -33], [-4, -38], [-4, -25], [-20, -25]]);   // weiße Schwanzfedern
+      const rumpf = [[-12, -59], [12, -59], [15, -55], [11.5, -44], [10.5, -37], [-10.5, -37], [-12, -44], [-16, -55]];
+      hzCel(c, rumpf, leder, lederD, [[-20, -62], [-3, -62], [-5, -33], [-20, -33]]);   // Lederjacke
+      c.save(); hzPfad(c, rumpf); c.clip(); c.fillStyle = 'rgba(154,163,184,.5)'; hzPfad(c, [[6, -57], [9.5, -57], [7.5, -40], [4.5, -40]]); c.fill(); c.restore();   // Metallic-Glanz
+      hzCel(c, [[-2, -59], [5, -59], [3, -50]], N, '#9e1020', null, 1.1);   // rotes Shirt im Ausschnitt
+      hzCel(c, [[-11, -59], [-2, -59], [0.5, -52], [-3, -49.5], [-8, -54]], leder, lederD, [[-14, -62], [-6, -62], [-4, -46], [-14, -46]], 1.3);   // Revers links
+      hzCel(c, [[4, -59], [12.5, -58.5], [10, -51], [6, -49]], leder, lederD, null, 1.3);   // Revers rechts
+      c.strokeStyle = glanz; c.lineWidth = 0.9; c.beginPath(); c.moveTo(5.5, -57.6); c.lineTo(10.5, -57.4); c.stroke();
+      hzEll(c, -3.4, -50.8, 0.8, 0.8, silber); hzEll(c, 7.2, -50.6, 0.8, 0.8, silber);   // Druckknöpfe
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.9; c.beginPath(); c.moveTo(6, -49.5); c.lineTo(1.5, -37.5); c.stroke(); c.strokeStyle = silber; c.lineWidth = 0.9; c.stroke();   // Reißverschluss schräg
+      hzCel(c, [[-10.5, -40], [10.5, -40], [10.5, -37], [-10.5, -37]], lederD, lederD, null, 1.2);   // Gürtel
+      hzCel(c, [[-7.5, -40.3], [-4, -40.3], [-4, -36.7], [-7.5, -36.7]], silber, '#8c939e', null, 1);   // Schnalle
+      hzPatch(c, -5.5, -45.5, 2.9, '#101522', N, 'E');
+      c.restore();
+      if (!j) arm(10, zv, sv, !(pose === 'steh'));   // steh: Hand in der Jackentasche
+      // Kopf in Dreiviertel-Ansicht: weiß, Federspitzen hinten, beide Augen, Hakenschnabel fest aus dem Gesicht nach rechts
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-1, -59.5], [-7, -60.5], [-10, -63], [-14.5, -65], [-11, -67.5], [-15, -71], [-11, -73.5], [-9, -78.5], [-3, -82], [4, -82], [9, -79], [11.5, -74], [11.5, -67], [8.5, -62], [4, -60]], weiss, weissD,
+        [[-18, -85], [-6, -85], [-5, -67], [3, -60], [3, -56], [-18, -56]]);
+      if (j) {   // Schnabel offen
+        hzCel(c, [[3.5, -66], [15.5, -64.5], [13, -61], [5, -61.3]], gelb, gelbD, [[2, -63.5], [18, -63.5], [18, -58], [2, -58]], 1.3);
+        hzPfad(c, [[4, -67], [16.5, -66.5], [4.5, -63.5]]); c.fillStyle = '#5a1018'; c.fill();
+      }
+      hzCel(c, [[2.5, -71], [7, -72.6], [12.5, -72.3], [16.8, -70], [18.8, -66.8], [18.2, -63.6], [16.4, -65.4], [14, -65], [6, -64.4], [2, -66.2]], gelb, gelbD, [[0, -67.5], [21, -68.5], [21, -60], [0, -60]], 1.5);
+      hzEll(c, 11.5, -69.8, 0.9, 0.6, '#5c3d00');   // Nasenloch
+      if (!j) { c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(16, -65.6); c.quadraticCurveTo(9, -65.4, 4, -67.6); c.stroke(); }   // schiefes Grinsen (Mundwinkel hinten hoch)
+      const gN = [[-6.6, -76], [2, -76.2], [2.4, -73.2], [0.6, -70.6], [-3.6, -70.6], [-6.2, -72.8]], gF = [[4.6, -76.4], [10, -76.6], [10.4, -73.8], [9.2, -71.2], [5.8, -71.2], [4.4, -73.2]];
+      const braue = (dy) => { hzCel(c, [[-6.8, -76.6 + dy], [-1.5, -78.2 + dy], [2.2, -77.2 + dy], [2, -76.2 + dy], [-1.6, -77 + dy], [-6.4, -75.6 + dy]], '#3b3631', '#3b3631', null, 0.8);
+        hzCel(c, [[4.6, -77.4 + dy], [7.6, -78.6 + dy], [10.6, -77.8 + dy], [10.4, -76.9 + dy], [7.6, -77.6 + dy], [4.8, -76.6 + dy]], '#3b3631', '#3b3631', null, 0.8); };
+      const brille = (rot, beam) => { c.strokeStyle = '#b9922f'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(-6.4, -75); c.lineTo(-11.5, -73.4); c.moveTo(2, -75.6); c.quadraticCurveTo(3.3, -76.6, 4.6, -75.8); c.stroke();
+        const q = !rot && !beam && pose === 'steh' && hzKlein(c); hzGlas(c, gN, q ? '#15161c' : rot ? '#5a0610' : '#1b2638', q ? '#33353f' : rot ? '#ff5a5a' : '#7c96b8', '#e0bd63', !beam && !q); hzGlas(c, gF, q ? '#15161c' : rot ? '#5a0610' : '#1b2638', q ? '#33353f' : rot ? '#ff5a5a' : '#7c96b8', '#e0bd63', !beam && !q); };
+      if (pose === 'steh') {   // Brille auf den Kopf geschoben: beide Augen halb geschlossen, kantige Brauen
+        hzMandel(c, -2, -73, 3.1, '#d9a21b'); hzMandel(c, 7.3, -73.4, 2.2, '#d9a21b'); braue(0);
+        c.save(); c.translate(0.5, -6); c.rotate(-0.05); brille(false, false); c.restore();
+      } else { braue(-0.6); brille(k, k); }
+      if (k && (o.kraft == null || o.kraft > 0)) {   // Laserstrahlen aus beiden Gläsern
+        c.save(); c.globalCompositeOperation = 'lighter'; c.shadowColor = N; c.shadowBlur = 10;
+        for (const [x0, y0, b] of [[-2, -73.4, 1], [7.4, -73.8, 0.8]]) {
+          const g = c.createLinearGradient(x0, 0, 62, 0); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.12, 'rgba(255,50,60,.9)'); g.addColorStop(1, 'rgba(255,40,50,0)');
+          c.fillStyle = g; c.beginPath(); c.moveTo(x0, y0 - 1.2 * b); c.lineTo(62, y0 + 0.3); c.lineTo(62, y0 + 5.5 * b); c.lineTo(x0, y0 + 1.3 * b); c.closePath(); c.fill();
+        }
+        c.fillStyle = 'rgba(255,255,255,.9)'; c.beginPath(); c.moveTo(7.4, -74.3); c.lineTo(54, -71.6); c.lineTo(7.4, -73.3); c.closePath(); c.fill();
+        c.restore(); hzFunke(c, -2, -73.4, 2.6 + Math.sin(t * 14) * 0.7, '#fff'); hzFunke(c, 7.4, -73.8, 2.2 + Math.cos(t * 14) * 0.6, '#fff');
+      }
+      c.restore();
+      if (j) { arm(-11, zh, sh); arm(10, zv, sv); }   // Jubel: Arme nach dem Kopf
+    },
+    // Bonnie the Bison – Super strength (reifer Stil 7.11.): Rockerin vom Land – Jeansweste mit bunten Aufnähern über rotem Karohemd, Bandana als Stirnband
+    // (Knoten hinten), lange dunkle Mähne, helle Hörner, breite Schnauze fest am Kopf, Bart, verspiegelte Pilotenbrille, Creole, Jeans, Cowboystiefel;
+    // Kraft = lehnt sich vor und rammt mit beiden Fäusten eine Kiste weg (Aufprallstern, kompakt)
+    bonnie(c, t, pose, o = {}) {
+      const N = '#ff2e6e', R = hzRig(pose, t, 1.05), { l, j, k, bob } = R, hy = -36 + bob, sy = -55 + bob;
+      const fell = '#5a3825', fellD = '#3a2215', wolle = '#3b2418', wolleD = '#24150c', horn = '#ece3cc', hornD = '#b9ab8c', hemd = '#c22740', hemdD = '#7a1426';
+      const weste = '#4f73a6', westeD = '#2e4a75', jeans = '#2b3446', jeansD = '#181e2a', boot = '#7a4523', bootD = '#4a2810';
+      let { fh, fv, zh, zv } = R, sh = 1, sv = 1;
+      if (k) { fh = [-13, 0]; fv = [9, 0]; zh = [19, -55]; zv = [24, -53]; }
+      else if (!l && !j) { zv = [8, -38]; sv = -1; }   // steh: Daumen im Gürtel
+      const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + bob], s, hemd, hemdD, 5.6, fell, fellD); hzStueck(c, g, 0.6, 0.8, 4.8, hemdD); return g; };
+      const bein = (hx, f) => { hzBeinK(c, hx, hy, [f[0], f[1]], jeans, jeansD, 6, 8, 15.5, 14); hzStiefel(c, f[0], f[1], boot, bootD, 'cowboy', N); };
+      c.save(); if (k) c.rotate(0.2);
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-6, -78], [-12, -75], [-15, -67], [-13.5, -60], [-16.5, -53], [-12.5, -48], [-10.5, -53], [-8, -58], [-7, -64]], wolle, wolleD, [[-20, -80], [-11, -80], [-11, -44], [-20, -44]]);   // lange Mähne hinten
+      c.strokeStyle = fellD; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath(); c.moveTo(-9, -40); c.quadraticCurveTo(-15, -36, -15, -27 + Math.sin(t * 3) * 1.5); c.stroke();
+      hzCel(c, [[-17, -28], [-13, -28], [-13.5, -22], [-15, -20], [-17, -23]], wolle, wolleD, null, 1.2);   // Schwanz mit Quaste
+      c.restore();
+      if (!j) arm(-10, zh, sh);
+      bein(-3, fh); bein(3, fv);
+      c.save(); c.translate(0, bob);
+      const hemdP = [[-11, -59], [11, -59], [13, -55], [9, -46], [8.5, -42], [10, -37], [-10, -37], [-8.5, -42], [-9, -46], [-13, -55]];
+      hzKaro(c, hemdP, hemd, hemdD, '#f2d36b'); hzSchatten(c, hemdP, [[-20, -62], [-3, -62], [-4, -34], [-20, -34]]);   // Karohemd
+      hzCel(c, [[-2.5, -59.5], [0.8, -55], [3.5, -59.5]], '#f2e6e9', '#cdbfc3', null, 1);   // Kragenecke
+      const wl = [[-11.5, -59.5], [-2.5, -59.5], [-1.5, -50], [-2.5, -40.5], [-9.5, -40.5], [-9, -46], [-13.5, -55]], wr = [[4, -59.5], [11.5, -59.5], [13.5, -55], [9.5, -46], [9, -40.5], [4.8, -40.5], [3.2, -50]];
+      hzCel(c, wl, weste, westeD, [[-20, -62], [-7, -62], [-7, -38], [-20, -38]]); hzCel(c, wr, weste, westeD, null);   // Jeansweste
+      c.strokeStyle = '#c9a24a'; c.lineWidth = 0.6; c.setLineDash([1.2, 1]); c.beginPath(); c.moveTo(-2.9, -58); c.lineTo(-2, -50); c.lineTo(-3, -42); c.moveTo(4.4, -58); c.lineTo(3.8, -50); c.lineTo(5.3, -42); c.stroke(); c.setLineDash([]);   // Ziernaht
+      hzPatch(c, -7, -52, 2.9, '#101522', N, 'B');
+      hzFunke(c, 8.6, -53.5, 2.4, '#ffd23f'); hzHerz(c, 7.2, -45.5, 1.9, '#ff7ab6'); hzEll(c, -6.4, -44.2, 1.6, 1.6, '#5ad16b'); hzEll(c, -6.4, -44.2, 0.7, 0.7, '#101522');   // bunte Aufnäher
+      hzCel(c, [[-10, -40.5], [10, -40.5], [10, -37.5], [-10, -37.5]], '#3a2213', '#3a2213', null, 1.1); hzCel(c, [[-0.5, -41.4], [5, -41.4], [5, -36.6], [-0.5, -36.6]], '#e3c36a', '#a8862e', null, 1);   // Gürtel + Schnalle
+      c.restore();
+      if (!j) arm(10, zv, sv);
+      // Kopf: Mähne, Hörner, Wolle, Bandana, Schnauze, Bart
+      c.save(); c.translate(0, bob); hzKopfHoch(c, j);
+      hzCel(c, [[-8, -77], [-13, -79], [-16.5, -83.5], [-15.5, -90], [-13.6, -85.6], [-10.5, -82.8], [-6.5, -81]], horn, hornD, [[-20, -84], [-12, -84], [-12, -76], [-20, -76]], 1.4);   // Horn hinten
+      hzCel(c, [[7, -80], [11.6, -82], [14.4, -86.4], [13.4, -91.5], [11.6, -87.4], [9, -84.8], [6.4, -83.4]], horn, hornD, [[12, -92], [18, -92], [18, -80], [12, -80]], 1.4);   // Horn vorn
+      hzSchaedel(c, fell, fellD);
+      hzCel(c, [[-9, -67], [-15, -66.5], [-16.5, -64], [-9.5, -63.5]], fell, fellD, null, 1.3); hzOhrring(c, -13.5, -63.8, 1.8, '#ffd23f');   // Ohr + Creole
+      hzCel(c, [[-10.6, -69], [-12.2, -73.5], [-10, -77], [-11.5, -80.5], [-6.5, -82], [-3.5, -86.5], [1.5, -84], [6, -86.5], [8.5, -82.5], [12, -80.5], [11.5, -77.5], [3, -79], [-6, -77.5], [-9, -73]], wolle, wolleD, [[-16, -88], [-4, -88], [-4, -66], [-16, -66]]);   // Stirnwolle
+      const band = [[-10.4, -76.6], [-7.6, -80.2], [3, -81.6], [10.6, -79.8], [11.4, -77], [3, -78.6], [-7, -77]];
+      hzCel(c, band, '#d62839', '#8e1222', [[-14, -84], [-3, -84], [-3, -74], [-14, -74]], 1.3); for (const [x, y] of [[-5, -78.8], [0, -80], [5.5, -79.6], [9, -78.6]]) hzEll(c, x, y, 0.55, 0.55, '#fff');   // Bandana
+      const wehe = Math.sin(t * (l ? 12 : 4)) * (l ? 2 : 0.8);
+      hzCel(c, [[-10, -78.6], [-16.5, -76 + wehe], [-15, -73.5 + wehe], [-10.2, -76.6]], '#d62839', '#8e1222', null, 1.1); hzCel(c, [[-10, -79], [-17, -81.5 - wehe], [-16.4, -78.6 - wehe]], '#b81e30', '#8e1222', null, 1.1);   // Knoten-Enden
+      hzCel(c, [[-1.5, -61.5], [6, -60.6], [9.5, -60.6], [7.5, -56], [4, -54.2], [1, -57]], wolle, wolleD, null, 1.3);   // Bart
+      if (j) { hzCel(c, [[4, -63.5], [16, -62.8], [13.5, -59], [5.5, -59.6]], fell, fellD, null, 1.3); hzPfad(c, [[4.5, -64.6], [16.5, -64.4], [5, -61.4]]); c.fillStyle = '#5a1018'; c.fill(); }
+      hzCel(c, [[3, -71], [9, -72], [15, -70.8], [18.4, -68.2], [18.8, -64], [16.8, -62], [9, -61.4], [3.5, -63]], fell, fellD, [[0, -66], [22, -65.5], [22, -58], [0, -58]], 1.5);   // breite Schnauze
+      hzCel(c, [[14, -71], [18.4, -68.2], [18.8, -64.2], [15.6, -65]], '#3a2a24', '#3a2a24', null, 1.1); hzEll(c, 17, -68, 0.9, 1.2, HZ_KONTUR, 0.3); hzEll(c, 17.4, -65.6, 0.8, 1, HZ_KONTUR, 0.3);   // Nasenspiegel + Nüstern
+      if (!j) hzGrinsen(c, 16.8, -62.6, 6, -64.6);
+      hzBlick(c, pose, { iris: '#b5651d', braue: '#1f130b', brille: ['pilot', '#f2f8ff', '#5a7fb6', '#d5dae3'], immer: true });
+      c.save(); c.globalAlpha *= 0.7; c.strokeStyle = N; c.lineWidth = 0.7; c.beginPath(); c.moveTo(-4.6, -71.6); c.lineTo(1.6, -71.6); c.moveTo(5.2, -71.8); c.lineTo(10, -72); c.stroke(); c.restore();   // Spiegel-Reflex (Neon)
+      c.restore();
+      if (j) { arm(-10, zh, sh); arm(10, zv, sv); }   // Jubel: Arme nach dem Kopf
+      c.restore();
+      if (k && (o.kraft == null || o.kraft > 0)) { const f = (t * 1.2) % 1, cx = 38 + f * 18, cy = -36 - Math.sin(f * Math.PI) * 14;   // Aufprallstern + Kiste (bleibt bei x ≤ 56)
+        c.save(); c.globalAlpha = 1 - f * 0.6; c.fillStyle = '#ffd60a'; c.beginPath(); for (let i = 0; i < 16; i++) { const w = i * Math.PI / 8, r = i % 2 ? 5 : 11 + f * 3; c[i ? 'lineTo' : 'moveTo'](32 + Math.cos(w) * r, -46 + Math.sin(w) * r); } c.closePath(); c.fill();
+        c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.2; c.stroke(); hzEll(c, 32, -46, 3.5, 3.5, '#fff'); c.restore();
+        c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 1.8; c.lineCap = 'round'; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(cx - 10 - i * 1.5, cy - 5 + i * 5); c.lineTo(cx - 18 - i * 3, cy - 4 + i * 5); c.stroke(); }
+        c.save(); c.translate(cx, cy); c.rotate(f * 3); hzCel(c, [[-8, -8], [8, -8], [8, 8], [-8, 8]], '#b07d48', '#7a5028', [[-10, 1], [10, 1], [10, 10], [-10, 10]], 1.5);
+        c.strokeStyle = '#5e3a18'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-6, -6); c.lineTo(6, 6); c.moveTo(-8, -4); c.lineTo(8, -4); c.stroke(); c.restore();
+        c.save(); c.globalAlpha = 0.65; for (let i = 0; i < 3; i++) hzEll(c, -18 - i * 7, -2 - (i % 2) * 2, 5 + Math.sin(t * 8 + i), 2.8, '#e6dccb'); c.restore(); }   // Staub hinter den Stiefeln
+    },
+    // Gus the Grizzly – Force field (reifer Stil 7.11.): Bodyguard – knöchellanger schwarzer Ledermantel (weht, Futter in Neon-Grün), weißes Hemd mit
+    // schwarzer Krawatte, kantige Bodyguard-Sonnenbrille (bleibt immer auf), Knopf im Ohr mit Spiralkabel, Kampfstiefel; breit gebaut, runde Ohren,
+    // helle Schnauze; Kraft = Pfoten vorn, schmale hohe Schutzkuppel mit Wabenmuster (kompakt)
+    gus(c, t, pose, o = {}) {
+      const N = '#3dff8f', R = hzRig(pose, t, 1.2), { l, j, k, bob } = R, hy = -36 + bob, sy = -56 + bob;
+      const fell = '#7b4a2a', fellD = '#52301a', hell = '#c9a06e', hellD = '#9c7748', leder = '#1e1f25', lederD = '#0c0d10', glanz = '#8f98ab', hose = '#22242c', hoseD = '#121318';
+      let { fh, fv, zh, zv } = R, sh = 1, sv = 1;
+      if (k) { fh = [-9, 0]; fv = [9, 0]; zh = [20, -66]; zv = [25, -62]; }
+      else if (!l && !j) { zh = [-6, -38]; zv = [6, -38]; sh = -1; sv = -1; }   // steh: Hände vor dem Körper gefaltet (Bodyguard)
+      const wind = k ? 1 : l ? 0.6 : 0.08, w = wind * (18 + Math.sin(t * (k ? 20 : 11)) * 4);
+      const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + bob], s, leder, lederD, 7.4, fell, fellD, 14, 13); const [[ax, ay], [ex, ey]] = g;
+        c.strokeStyle = glanz; c.lineWidth = 1.1; c.lineCap = 'round'; c.beginPath(); c.moveTo(ax + (ex - ax) * 0.2 + 1.3, ay + (ey - ay) * 0.2 - 1.3); c.lineTo(ax + (ex - ax) * 0.75 + 1.3, ay + (ey - ay) * 0.75 - 1.3); c.stroke();
+        hzStueck(c, g, 0.7, 0.84, 3, '#f1f1f1'); return g; };
+      const bein = (hx, f) => { hzBeinK(c, hx, hy, f, hose, hoseD, 7, 8, 16, 14); hzStiefel(c, f[0], f[1], '#2a2b31', '#141519', 'kampf', '#6b7080'); };
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-13, -59], [8, -59], [10, -40], ...hzSaum(t, 10 - w * 0.4, -18 - w, -5 + w * 0.45, 7, 0, wind), [-16, -40]], '#14402b', '#0b2a1b', [[-34 - w, -62], [-6, -62], [-6, 0], [-34 - w, 0]], 1.6);   // Mantel-Rückenteil (Futter grün)
+      c.restore();
+      if (!j) arm(-12, zh, sh);
+      bein(-4, fh); bein(4, fv);
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-12, -60], [12, -60], [13, -48], [11, -38], [-11, -38], [-13, -48]], '#eef0f3', '#b9bec8', [[-18, -62], [-4, -62], [-4, -34], [-18, -34]]);   // weißes Hemd
+      hzCel(c, [[0.5, -59], [3, -59], [3.6, -55], [2.8, -45], [1.4, -43.6], [0, -45], [-0.6, -55]], '#15161b', '#15161b', null, 1);   // Krawatte
+      const vl = [[-14, -60.5], [-3, -60.5], [-1.4, -50], [-3, -38], ...hzSaum(t, -3 - w * 0.6, -16 - w * 0.9, -5 + w * 0.35, 3, 1, wind), [-16, -38], [-16.5, -52]];
+      const vr = [[5.5, -60.5], [13, -60], [15, -52], [14, -38], ...hzSaum(t, 15 - w * 0.3, 8 - w * 1.1, -4.5 + w * 0.5, 2, 2, wind), [6, -38], [4.5, -50]];
+      hzCel(c, vl, leder, lederD, [[-34 - w, -62], [-8, -62], [-9, 0], [-34 - w, 0]]); hzCel(c, vr, leder, lederD, [[11, -62], [16, -62], [16, 0], [11, 0]]);   // Mantel vorn (offen)
+      c.save(); hzPfad(c, vl); c.clip(); c.fillStyle = 'rgba(143,152,171,.45)'; hzPfad(c, [[-6, -58], [-4, -58], [-5.5, -40], [-7.5, -40]]); c.fill(); c.restore();   // Metallic-Glanz
+      hzCel(c, [[-3, -60.5], [0.4, -60], [-1.6, -51], [-4.4, -54]], lederD, lederD, null, 1.1); hzCel(c, [[5.5, -60.5], [9, -60], [7.6, -51.5], [5.4, -50.5]], lederD, lederD, null, 1.1);   // Revers
+      hzCel(c, [[-16, -42], [-3, -42], [-3, -39.5], [-16, -39.5]], lederD, lederD, null, 1); hzPatch(c, -9, -52, 3, '#0b0d14', N, 'G');
+      c.restore();
+      if (!j) arm(12, zv, sv);
+      // Kopf: großer runder Grizzly-Kopf, runde Ohren, helle Schnauze, Knopf im Ohr
+      c.save(); c.translate(0, bob); hzKopfHoch(c, j);
+      for (const [x, y] of [[-8, -80.5], [8.5, -81.5]]) { hzCel(c, [[x - 4.4, y + 1], [x - 3.6, y - 3], [x, y - 4.6], [x + 3.6, y - 3], [x + 4.4, y + 1]], fell, fellD, null, 1.4); hzEll(c, x, y - 0.6, 2, 2, hellD); }   // runde Ohren
+      hzSchaedel(c, fell, fellD, [[-1, -59], [-8, -60], [-12, -64], [-13, -71], [-10.5, -78], [-4, -82.5], [4, -83], [9.5, -80], [12.5, -74], [12.5, -66], [9, -61], [3, -59]]);
+      if (j) { hzCel(c, [[4, -63.5], [17, -62.6], [14.5, -58.6], [5.5, -59.6]], hell, hellD, null, 1.3); hzPfad(c, [[4.5, -64.6], [17.5, -64.4], [5, -61.4]]); c.fillStyle = '#5a1018'; c.fill(); }
+      hzCel(c, [[3, -70.5], [10, -71.6], [16, -70], [19.6, -67], [19.2, -63.4], [15, -61.6], [8, -61], [3, -62.8]], hell, hellD, [[0, -66], [22, -65.5], [22, -58], [0, -58]], 1.5);   // breite Schnauze
+      hzCel(c, [[15.8, -70.4], [19.6, -68.8], [20.2, -66], [16.8, -66.4]], '#141016', '#141016', null, 1.1);   // Nase
+      if (!j) hzGrinsen(c, 18.6, -63.6, 7, -64.4);
+      hzBlick(c, pose, { iris: '#6b3b1a', braue: '#2b1a10', brille: ['kasten', '#0e1016', '#3a4152', '#2b2e36'], immer: true });
+      hzCel(c, [[-11.6, -69.6], [-9.2, -69.6], [-9.2, -67], [-11.6, -67]], '#26272e', '#26272e', null, 1); hzEll(c, -10.4, -68.3, 0.7, 0.7, N);   // Knopf im Ohr
+      c.strokeStyle = 'rgba(220,226,235,.85)'; c.lineWidth = 0.7; c.beginPath(); for (let i = 0; i <= 10; i++) { const y = -66.8 + i * 0.75; c.lineTo(-10.6 + Math.sin(i * 2.2) * 0.9, y); } c.stroke();   // Spiralkabel zum Kragen
+      c.restore();
+      if (j) { arm(-12, zh, sh); arm(12, zv, sv); }   // Jubel: Arme nach dem Kopf
+      if (k) { const st = o.kraft == null ? 1 : o.kraft, rx = 36 * (1 + Math.sin(t * 6) * 0.03), ry = 92; c.save(); c.globalAlpha *= st;   // Schutzkuppel (schmal, hoch)
+        const kup = () => { c.beginPath(); c.ellipse(4, 0, rx, ry, 0, Math.PI, 0); c.closePath(); };
+        kup(); const g = c.createRadialGradient(4, -40, 8, 4, -30, ry); g.addColorStop(0, 'rgba(255,255,255,0.03)'); g.addColorStop(0.7, '#2d6a4f2a'); g.addColorStop(1, 'rgba(200,255,225,.45)'); c.fillStyle = g; c.fill();
+        c.save(); kup(); c.clip(); c.strokeStyle = 'rgba(160,255,200,.2)'; c.lineWidth = 0.9;
+        for (let r = 0; r < 8; r++) for (let q = -3; q <= 3; q++) { const x = 4 + q * 13 + (r % 2) * 6.5, y = -6 - r * 11.3; c.beginPath(); for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3 + Math.PI / 6; c[i ? 'lineTo' : 'moveTo'](x + Math.cos(a) * 7.5, y + Math.sin(a) * 7.5); } c.closePath(); c.stroke(); }
+        c.restore();
+        c.strokeStyle = '#fff'; c.lineWidth = 2.4; c.beginPath(); c.ellipse(4, 0, rx, ry, 0, Math.PI, 0); c.stroke(); c.strokeStyle = N; c.lineWidth = 1.2; c.beginPath(); c.ellipse(4, 0, rx - 3, ry - 3, 0, Math.PI, 0); c.stroke();
+        for (let i = 0; i < 5; i++) { const a = Math.PI + 0.35 + i * 0.6 + Math.sin(t * 2 + i) * 0.08; hzFunke(c, 4 + Math.cos(a) * rx, Math.sin(a) * ry, 2.4, '#fff'); }
+        c.restore(); }
+    },
+    // Cody the Coyote – Super speed (reifer Stil, Probe 2 7.11.): Kojote aus Arizona, Kopf in Dreiviertel-Ansicht (beide Augen, lange Schnauze nach rechts,
+    // hohe spitze Ohren), langer Staubmantel (Duster, flattert beim Laufen nach hinten), dunkles Shirt mit Aufnäher C, Halstuch in Neon-Orange, Jeans,
+    // Cowboystiefel (spitze Kappe, Absatz, Ziernaht); Sport-Sonnenbrille mit zwei Gläsern (steh: auf der Stirn); Kraft = Beinwirbel + Speed-Linien, Mantel weht
+    cody(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', l = pose === 'lauf', N = '#ff7a1a', ND = '#c2500a', p = t * (k ? 26 : 13);
+      const fell = '#c99a68', fellD = '#94693f', hell = '#f0dfc4', mantel = '#6e4c31', mantelD = '#42291a', shirt = '#22252e', jeans = '#2b3446', jeansD = '#181e2a', stiefel = '#7b4a25', stiefelD = '#4d2c14';
+      const bob = l || k ? -Math.abs(Math.sin(p)) * 1.6 : j ? -Math.max(0, Math.sin(t * 7)) * 2.5 : 0, hy = -36 + bob;
+      const wind = k ? 1 : l ? 0.55 : 0.08, w = wind * (20 + Math.sin(t * (k ? 22 : 11)) * 4);   // wie weit der Mantel nach hinten weht
+      // Cowboystiefel am Knöchel (x, y = Boden), Spitze nach rechts
+      const boot = (x, y) => {
+        hzCel(c, [[x - 3.6, y - 11], [x + 3, y - 11], [x + 3.4, y - 4.6], [x + 7.5, y - 3.4], [x + 10.6, y - 1.6], [x + 10.2, y - 0.8], [x - 1.2, y - 0.8], [x - 4.6, y - 0.8], [x - 4.6, y - 5]], stiefel, stiefelD,
+          [[x - 6, y - 12], [x - 0.5, y - 12], [x + 1, y - 2.6], [x + 12, y - 2.2], [x + 12, y + 1], [x - 6, y + 1]], 1.4);
+        hzCel(c, [[x - 4.8, y - 1.2], [x - 1.4, y - 1.2], [x - 1.8, y], [x - 4.6, y]], stiefelD, stiefelD, null, 1.1);   // Absatz
+        c.strokeStyle = N; c.lineWidth = 0.8; c.lineCap = 'round'; c.beginPath(); c.moveTo(x - 2.4, y - 9.8); c.quadraticCurveTo(x + 0.4, y - 7, x - 0.6, y - 4.6); c.stroke();   // Ziernaht
+      };
+      let fh, fv;
+      if (l) { fh = [-2 + 13 * Math.sin(p), -Math.max(0, -Math.cos(p)) * 8]; fv = [2 + 13 * Math.sin(p + Math.PI), -Math.max(0, Math.cos(p)) * 8]; }
+      else if (j) { fh = [-6, bob * 0.6]; fv = [6, bob * 0.6]; }
+      else { fh = [-5, 0]; fv = [6, 0]; }
+      const bein = (hx, f) => { const g = hzIK(hx, hy, f[0], f[1] - 8, 15.5, 14, -1); hzGlied(c, g, 5.6, jeans, jeansD); boot(f[0], f[1]); };
+      const arm = (sx, ziel, s) => { const g = hzIK(sx, -55 + bob, ziel[0], ziel[1] + bob, 13, 12.5, s); hzGlied(c, g, 6, mantel, mantelD); hzFaust(c, g[2][0], g[2][1], 2.8, fell, fellD); return g[2]; };
+      // Duster: Rückenteil hinter den Beinen, Saum weht nach hinten (Wellen)
+      const saum = (x0, x1, y, n, ph) => { const q = []; for (let i = 0; i <= n; i++) { const f = i / n; q.push([x0 + (x1 - x0) * f, y + (i % 2 ? -3 : 0) + Math.sin(t * 14 + f * 6 + ph) * 1.5 * wind]); } return q; };
+      let zh, zv, sh = 1, sv = 1;
+      if (l || k) { const a = k ? 13 : 10; zh = [-11 + a * Math.sin(p), -42 - 5 * Math.abs(Math.cos(p))]; zv = [11 + a * Math.sin(p + Math.PI), -42 - 5 * Math.abs(Math.cos(p))]; }
+      else if (j) { zh = [-27, -80]; zv = [29, -79]; sh = 1; sv = 1; }
+      else { zh = [-12, -35]; zv = [6, -39]; sv = -1; }   // steh: Daumen im Gürtel
+      c.save();
+      if (k) c.rotate(0.14);   // Kraft: nach vorn gelehnt
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-11, -58], [7, -58], [8, -40], ...saum(9 - w * 0.5, -16 - w, -17 + w * 0.35, 6, 0), [-13, -40]], mantel, mantelD, [[-30 - w, -62], [8, -62], [8, -10], [-30 - w, -10]], 1.6);   // Rückenteil (Innenseite dunkel)
+      c.save(); c.translate(-9, -30); c.rotate(0.9 + Math.sin(t * 3) * 0.1 + wind * 0.4);   // buschiger Schwanz unter dem Mantel hervor
+      hzCel(c, [[-2.5, 0], [2.5, 0], [4.5, 9], [3, 16], [0, 19], [-3, 16], [-4.5, 9]], fell, fellD, [[-6, 4], [0, 4], [0, 22], [-6, 22]], 1.4); hzCel(c, [[-3, 15.5], [3, 15.5], [0, 19]], '#3a2a1c', '#3a2a1c', null, 1.2); c.restore();
+      c.restore();
+      if (!j) arm(-10, zh, sh);
+      if (!k) { bein(-3, fh); bein(3, fv); }
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-9, -58], [9, -58], [9.5, -37.5], [-9.5, -37.5]], shirt, '#121419', [[-14, -62], [-2, -62], [-3, -34], [-14, -34]], 1.4);   // Shirt
+      hzCel(c, [[-9.5, -40], [9.5, -40], [9.5, -37], [-9.5, -37]], '#3a2616', '#3a2616', null, 1.1); hzCel(c, [[0.5, -40.6], [4.5, -40.6], [4.5, -36.4], [0.5, -36.4]], '#d5dae3', '#8c939e', null, 1);   // Gürtel + Schnalle
+      hzPatch(c, 1.5, -48, 3, '#101219', N, 'C');
+      // Mantel-Vorderteile (offen), Saum weht nach hinten; Revers
+      hzCel(c, [[-12, -58.5], [-4, -58.5], [-3, -40], ...saum(-3 - w * 0.6, -15 - w * 0.9, -17 + w * 0.3, 3, 1), [-14, -40]], mantel, mantelD, [[-30 - w, -62], [-6, -62], [-7, -10], [-30 - w, -10]], 1.6);
+      hzCel(c, [[5.5, -58.5], [11, -58], [12, -40], ...saum(12 - w * 0.4, 7 - w * 1.1, -16.5 + w * 0.45, 2, 2), [7, -40]], mantel, mantelD, [[9, -62], [14, -62], [14, -10], [9, -10]], 1.6);
+      hzCel(c, [[-4, -58.5], [-0.5, -58], [-3, -49], [-5.5, -52]], mantelD, mantelD, null, 1.1); hzCel(c, [[5.5, -58.5], [9, -58], [8, -50], [6, -49]], mantelD, mantelD, null, 1.1);   // Revers
+      c.strokeStyle = '#9a7454'; c.lineWidth = 1; c.beginPath(); c.moveTo(-12.6, -50); c.lineTo(-4, -50.6); c.stroke();   // Schulterpasse (Cape-Kante des Dusters)
+      hzCel(c, [[-7, -60.5], [7, -60.5], [6.5, -57.5], [2.5, -52], [-1, -57.5], [-7, -57.5]], N, ND, [[-10, -58.5], [10, -58.5], [10, -50], [-10, -50]], 1.3);   // Halstuch (Neon-Orange)
+      c.restore();
+      if (k) {   // Beinwirbel (nach dem Mantel, der Saum verdeckt ihn nicht): Beine als Kreis aus Stiefeln + Wirbelbögen, Speed-Linien hinten
+        c.save(); c.translate(0, -15);
+        for (let i = 0; i < 6; i++) { c.save(); c.rotate(t * 30 + i * Math.PI / 3); c.globalAlpha = 0.5; hzGlied(c, [[0, 0], [0, 12]], 5, jeans, jeansD); c.translate(-1, 15.5); c.scale(0.7, 0.7); boot(0, 0); c.restore(); }
+        c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 2.4; c.lineCap = 'round'; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(0, 0, 13 + i * 4, 0.6 + i * 0.4 + t * 9, 2.6 + i * 0.4 + t * 9); c.stroke(); }
+        c.strokeStyle = N; c.lineWidth = 1.3; c.beginPath(); c.arc(0, 0, 21, 3.4 + t * 9, 4.6 + t * 9); c.stroke();
+        c.restore();
+      }
+      if (!j) arm(9, zv, sv);
+      // Kopf in Dreiviertel-Ansicht: Ohren, Fell mit Wangenbüscheln, helle Gesichtspartie, lange Schnauze fest am Kopf
+      c.save(); c.translate(0, bob);
+      const ohrw = Math.sin(t * 3) * 0.6 - (k ? 2 : l ? 1 : 0);
+      hzCel(c, [[2.5, -77], [9 + ohrw, -91.5], [11.2, -72.5]], fell, fellD, [[8, -95], [14, -95], [14, -70], [8, -70]], 1.5); hzPfad(c, [[4.8, -77.5], [8.8 + ohrw, -87.5], [9.6, -75]]); c.fillStyle = '#e3b79a'; c.fill();   // hinteres Ohr
+      hzCel(c, [[-1, -59.5], [-6.5, -60.5], [-9, -62.5], [-12.5, -63.5], [-10, -66], [-12.5, -68.5], [-10.5, -71], [-9.5, -76], [-4, -80], [3, -80.5], [8, -78], [10.5, -73], [10.5, -66.5], [7.5, -61.5], [3, -59.5]], fell, fellD,
+        [[-16, -84], [-5, -84], [-4.5, -68], [3, -60], [3, -56], [-16, -56]]);
+      hzCel(c, [[-10, -72], [-9.5 + ohrw, -92], [-1.5, -79.5]], fell, fellD, [[-13, -95], [-6.5, -95], [-6.5, -70], [-13, -70]], 1.5); hzPfad(c, [[-8.3, -75.5], [-8.6 + ohrw, -87.8], [-3.6, -79.4]]); c.fillStyle = '#e3b79a'; c.fill();   // vorderes Ohr
+      hzPfad(c, [[-3, -66.5], [4, -69], [10, -67], [8.5, -61.5], [3, -60], [-2, -62.5]]); c.fillStyle = hell; c.fill();   // helle Gesichtspartie
+      if (j) {   // lacht: Maul offen
+        hzCel(c, [[3.5, -64.5], [18.5, -63.6], [15.5, -60], [5, -60.2]], hell, '#d4bd98', [[2, -62], [20, -62], [20, -57], [2, -57]], 1.3);
+        hzPfad(c, [[4, -65.5], [19.5, -65.3], [4.5, -62]]); c.fillStyle = '#5a1018'; c.fill(); hzEll(c, 13, -62.8, 2.6, 1.1, '#d5525e');
+      }
+      hzCel(c, [[2.5, -70.8], [8, -71.4], [14.5, -69.8], [20.5, -67.8], [21.2, -65.2], [19.5, -63.8], [12, -63.2], [4.5, -63.4], [1.8, -66.2]], fell, fellD, [[0, -66.6], [24, -66.2], [24, -60], [0, -60]], 1.5);   // lange Schnauze
+      hzPfad(c, [[4, -66.2], [19.5, -65.9], [19.2, -64.1], [12, -63.5], [4.5, -63.7]]); c.fillStyle = hell; c.fill();   // helle Unterseite
+      hzCel(c, [[18.6, -68.6], [21.8, -67.6], [22, -65.2], [19.4, -65.4]], '#1b1310', '#1b1310', null, 1);   // Nase an der Spitze
+      if (!j) { c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(19.6, -64.2); c.quadraticCurveTo(11, -63.8, 5.2, -66.4); c.stroke(); }   // schiefes Grinsen
+      const gN = [[-5.6, -75.6], [2.4, -75.2], [2.2, -72.2], [-1, -70.8], [-4.8, -72.2]], gF = [[4.6, -75.4], [11.2, -76.2], [10.8, -72.8], [8, -71.2], [4.9, -72.4]];
+      const brauen = (dy) => { hzCel(c, [[-5.6, -76.2 + dy], [-1.4, -77.8 + dy], [2.4, -76.8 + dy], [2.2, -75.9 + dy], [-1.4, -76.7 + dy], [-5.2, -75.3 + dy]], '#5a3e26', '#5a3e26', null, 0.8);
+        hzCel(c, [[4.6, -77 + dy], [7.8, -78.4 + dy], [10.8, -77.6 + dy], [10.6, -76.7 + dy], [7.8, -77.4 + dy], [4.8, -76.2 + dy]], '#5a3e26', '#5a3e26', null, 0.8); };
+      const brille = () => { c.strokeStyle = '#2b2d35'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-5.4, -74.4); c.lineTo(-10.5, -72.6); c.moveTo(2.4, -74.4); c.lineTo(4.6, -74.6); c.stroke();
+        const q = pose === 'steh' && hzKlein(c); hzGlas(c, gN, '#3a1300', '#ff9a3c', '#2b2d35', !q); hzGlas(c, gF, '#3a1300', '#ff9a3c', '#2b2d35', !q); };
+      if (pose === 'steh') {   // Brille auf der Stirn, beide Augen halb geschlossen
+        hzMandel(c, -1.6, -72.8, 3, '#e0a020'); hzMandel(c, 7.6, -73.2, 2.1, '#e0a020'); brauen(0);
+        c.save(); c.translate(0, -7.2); c.rotate(-0.04); brille(); c.restore();
+      } else { brauen(-1.2); brille(); }
+      c.restore();
+      if (j) { arm(-10, zh, sh); arm(9, zv, sv); }   // Jubel: Arme nach dem Kopf
+      c.restore();
+      if (k && (o.kraft == null || o.kraft > 0)) {   // Speed-Linien hinter ihm
+        c.lineCap = 'round'; for (let i = 0; i < 6; i++) { const y = -68 + i * 10, x0 = -18 - (i % 2) * 5 + Math.sin(t * 20 + i) * 2; c.strokeStyle = i % 3 === 1 ? N : 'rgba(255,255,255,.85)'; c.lineWidth = i % 3 === 1 ? 1.6 : 2.2;
+          c.beginPath(); c.moveTo(x0 - w * 0.3, y); c.lineTo(x0 - w * 0.3 - 14 - (i % 3) * 5, y); c.stroke(); }
+        for (let i = 0; i < 4; i++) { const f = (t * 2.2 + i * 0.25) % 1; c.globalAlpha = 1 - f; hzEll(c, -14 - f * 30, -3 - f * 6 - (i % 2) * 3, 3 + f * 4, 2 + f * 2, '#e8d2b0'); } c.globalAlpha = 1;   // Wüstenstaub
+      }
+    },
+    // Ally the Alligator – Water blast (reifer Stil 7.11.): Florida-Surferin – Neoprenanzug (schwarz/Türkis) bis zur Brust offen, darunter türkises
+    // Sporttop, Haifischzahn-Kette, Surfbrille oben auf dem Kopf (Augen frei), lange gewellte Haare mit Sonnensträhnen, Muschel-Ohrstecker, Wasserschuhe;
+    // lange flache Schnauze mit Zähnen fest am Kopf, Augenhöcker, dicker Schwanz; Kraft = Wasserstrahl aus beiden Händen spült einen Gegner weg (kompakt)
+    ally(c, t, pose, o = {}) {
+      const N = '#19f0e0', R = hzRig(pose, t), { l, j, k, bob } = R, hy = -36 + bob, sy = -55 + bob;
+      const gruen = '#5b9a45', gruenD = '#33632a', bauch = '#e6dba0', neo = '#1c1f27', neoD = '#0c0d12', haar = '#5a3b22', haarD = '#382312', blond = '#e9c46a';
+      let { fh, fv, zh, zv } = R, sh = 1, sv = 1;
+      if (k) { fh = [-9, 0]; fv = [9, 0]; zh = [18, -52]; zv = [23, -50]; }
+      else if (!l && !j) { zv = [7, -39]; sv = -1; }   // steh: Hand in der Hüfte
+      const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + bob], s, neo, neoD, 5, gruen, gruenD); hzStueck(c, g, 0.66, 0.82, 4.2, N); return g; };
+      const bein = (hx, f) => { const g = hzBeinK(c, hx, hy, f, neo, neoD, 5.6, 4); c.strokeStyle = '#00a6a6'; c.lineWidth = 1.1; c.lineCap = 'round'; c.beginPath(); c.moveTo(g[0][0] + 1.6, g[0][1] + 3); c.lineTo(g[1][0] + 1.6, g[1][1]); c.lineTo(g[2][0] + 1.2, g[2][1] - 1); c.stroke();
+        hzStiefel(c, f[0], f[1], '#2a2f3a', '#15181f', 'wasser', N); };
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-7, -40], [-16, -36], [-25, -28], [-30 + Math.sin(t * 3) * 2, -18], [-24, -22], [-14, -29], [-6, -33]], gruen, gruenD, [[-34, -30], [-6, -36], [-6, -14], [-34, -14]], 1.5);   // dicker Schwanz
+      for (let i = 0; i < 3; i++) { const x = -13 - i * 5.5, y = -35.5 + i * 3.2; hzCel(c, [[x - 2.2, y + 1], [x, y - 2.6], [x + 2.2, y + 0.6]], gruenD, gruenD, null, 1); }
+      const wehe = Math.sin(t * (l ? 12 : 3)) * (l ? 2 : 0.8);
+      hzCel(c, [[-5, -80], [-11, -78], [-15, -72], [-16 + wehe, -63], [-19 + wehe, -55], [-14, -57], [-11, -63], [-8, -70]], haar, haarD, [[-22, -80], [-12, -80], [-12, -50], [-22, -50]]);   // lange Haare hinten
+      c.strokeStyle = blond; c.lineWidth = 1; c.lineCap = 'round'; c.beginPath(); c.moveTo(-12.5, -72); c.quadraticCurveTo(-15, -64, -17 + wehe, -57); c.stroke();
+      c.restore();
+      if (!j) arm(-9, zh, sh);
+      bein(-2.5, fh); bein(2.5, fv);
+      c.save(); c.translate(0, bob);
+      const anzug = [[-10, -59], [10, -59], [12, -55], [8, -46], [7.5, -42], [9.5, -36], [-9.5, -36], [-7.5, -42], [-8, -46], [-12, -55]];
+      hzCel(c, anzug, neo, neoD, [[-20, -62], [-3, -62], [-4, -32], [-20, -32]]);   // Neoprenanzug
+      hzCel(c, [[-4.5, -59.5], [6, -59.5], [1.6, -46], [0.6, -46]], gruen, gruenD, null, 1.2); hzCel(c, [[-3, -55], [4.8, -55], [2.6, -49.4], [-0.6, -49.4]], '#00b7b7', '#007f80', null, 1.1);   // offener Reißverschluss, Sporttop
+      c.save(); hzPfad(c, anzug); c.clip(); hzPfad(c, [[10, -59], [13, -55], [9, -46], [8.5, -36], [5.5, -36], [6, -46], [9, -55], [7, -59]]); c.fillStyle = '#00a6a6'; c.fill(); c.restore();   // türkiser Seitenstreifen
+      c.strokeStyle = '#d5dae3'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(1.1, -46); c.lineTo(1.1, -37); c.stroke();
+      c.strokeStyle = '#2a1a10'; c.lineWidth = 0.7; c.beginPath(); c.moveTo(-3.6, -59.2); c.quadraticCurveTo(0.6, -54, 5.4, -59.2); c.stroke(); hzCel(c, [[-0.2, -56.2], [2.2, -56.2], [1, -52.6]], '#f7f3e6', '#cfc8b4', null, 0.9);   // Haifischzahn-Kette
+      hzPatch(c, -6, -50.5, 2.7, '#0b0d14', N, 'A');
+      c.restore();
+      if (!j && !k) arm(9, zv, sv);
+      // Kopf: Augenhöcker, lange flache Schnauze mit Zähnen, Surfbrille im Haar
+      c.save(); c.translate(0, bob); hzKopfHoch(c, j);
+      hzSchaedel(c, gruen, gruenD, [[-1, -60], [-6.5, -61], [-9.5, -64.5], [-10.5, -70.5], [-8.5, -76], [-3.5, -79], [3, -79.5], [8, -77.8], [10.8, -73.5], [11, -66.8], [8, -62], [3, -60]]);
+      hzCel(c, [[-8.5, -76], [-6, -82], [0, -84], [6, -82.4], [9.5, -78.4], [3, -79.6], [-3.5, -79]], haar, haarD, [[-12, -86], [-2, -86], [-2, -74], [-12, -74]], 1.4);   // Haaransatz oben
+      for (const [x, y] of [[-1.8, -76.4], [7.4, -76.6]]) hzCel(c, [[x - 3, y + 0.8], [x - 1, y - 1.8], [x + 2, y - 1.6], [x + 3, y + 0.8]], gruen, gruenD, null, 1.2);   // Augenhöcker
+      const auf = j ? 3.5 : k ? 1.6 : 0;
+      hzCel(c, [[4, -64.6], [23.5, -64.6 + auf * 0.4], [23, -62 + auf], [14, -60.6 + auf], [5, -61.4]], gruenD, gruenD, null, 1.3);   // Unterkiefer
+      if (auf) { hzPfad(c, [[5, -64.6], [22.8, -64.4], [22.6, -63 + auf * 0.6], [5.5, -62.6]]); c.fillStyle = '#7a1f2a'; c.fill(); }
+      c.fillStyle = '#fbf7ea'; for (let i = 0; i < 5; i++) { const x = 9 + i * 3.1; c.beginPath(); c.moveTo(x, -64.4); c.lineTo(x + 1.2, -62.4); c.lineTo(x + 2.4, -64.4); c.fill(); }   // Zähne
+      hzCel(c, [[2.5, -71], [10, -71.4], [18, -70.4], [24, -69.6], [26.6, -67.6], [25.8, -65.2], [18, -65], [8, -64.6], [3, -65.6]], gruen, gruenD, [[0, -67], [28, -66.6], [28, -60], [0, -60]], 1.5);   // flache Oberschnauze
+      hzCel(c, [[22.6, -70.4], [24.6, -71.6], [26, -70], [24.6, -69.3]], gruen, gruenD, null, 1); hzEll(c, 24.5, -70.4, 0.6, 0.5, HZ_KONTUR);   // Nasenhöcker an der Spitze
+      if (!auf) hzGrinsen(c, 9, -64.8, 3.6, -67);
+      hzBlick(c, pose, { iris: '#d8a31c', braue: '#2a1a10', lid: true });
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 2.6; c.beginPath(); c.moveTo(-10.5, -76.5); c.quadraticCurveTo(-4, -81.5, 4, -82.2); c.stroke(); c.strokeStyle = '#00a6a6'; c.lineWidth = 1.4; c.stroke();   // Brillenband
+      hzGlas(c, [[1.5, -84.6], [9.5, -84.8], [11.2, -81.6], [9, -79.4], [2, -79.6], [0.6, -82]], '#0a3c56', '#3be8ff', N, hzKlein(c) ? 0 : 1);   // Surfbrille oben auf dem Kopf
+      hzCel(c, [[-9.6, -64.4], [-8, -65.4], [-7.4, -63.6], [-9, -62.8]], '#ffd6c9', '#e6a796', null, 0.9);   // Muschel-Ohrstecker
+      c.restore();
+      if (j) { arm(-9, zh, sh); arm(9, zv, sv); }
+      if (k) { const g = arm(9, zv, sv), [hx, hy] = g[2];
+        if (o.kraft == null || o.kraft > 0) {   // Wasserstrahl, kompakt (bis x ≈ 56)
+          const x0 = hx + 3, L = 40, gr = c.createLinearGradient(x0, 0, x0 + L, 0); gr.addColorStop(0, '#e6fbff'); gr.addColorStop(0.35, '#48cae4'); gr.addColorStop(1, 'rgba(72,202,228,0.15)');
+          c.fillStyle = gr; c.beginPath(); for (let x = 0; x <= L; x += 5) c.lineTo(x0 + x, hy - 2.5 - x * 0.09 + Math.sin(x * 0.35 - t * 20) * 1.3); for (let x = L; x >= 0; x -= 5) c.lineTo(x0 + x, hy + 2.5 + x * 0.09 + Math.sin(x * 0.35 - t * 20 + 1) * 1.3); c.closePath(); c.fill();
+          c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 0.9; c.stroke();
+          for (let i = 0; i < 5; i++) { const x = x0 + 6 + (t * 50 + i * 9) % 36; hzEll(c, x, hy + Math.sin(i * 2.1) * 6, 1.3, 1.8, '#bff1ff'); }
+          const gx = x0 + L + 2 + (t * 10) % 6; c.save(); c.translate(gx, hy - 2); c.rotate(t * 6); c.scale(0.7, 0.7); hzEll(c, 0, 0, 8, 7, '#8d99ae'); hzText(c, '×', -3, -1, 6, '#1a1d26'); hzText(c, '×', 3, -1, 6, '#1a1d26'); c.restore();   // weggespülter Gegner
+          for (let i = 0; i < 3; i++) hzFunke(c, gx - 6 + i * 5, hy - 9 + Math.sin(t * 9 + i) * 2, 1.6, '#fff'); } }
+    },
+    // Rosie the Raccoon – Invisibility (reifer Stil 7.11.): NINJA – schwarzer Kampfanzug mit Magenta-Gürtel, Stirnband mit langen wehenden Enden, bandagierte
+    // Unterarme und Hände, Tabi-Schuhe, natürliche Waschbär-Maske um die Augen (keine Brille), hoher Zopf, Ringelschwanz;
+    // Kraft = schleicht geduckt auf Zehenspitzen, halb durchsichtig (Kontur bleibt sichtbar), Schimmer + leise Spuren
+    rosie(c, t, pose, o = {}) {
+      const N = '#ff2fa0', R = hzRig(pose, t), { l, j, k, bob } = R, sy0 = -55, grau = '#8f909e', grauD = '#5e5f6c', hell = '#eeedf3', schwarz = '#25252d', anz = '#1b1c24', anzD = '#0b0b10', band = '#e9e4da', bandD = '#b5ad9e';
+      const figur = () => {
+        let { fh, fv, zh, zv } = R, sh = 1, sv = 1, hy = -36 + bob, dy = bob;
+        if (k) { fh = [-13, -1]; fv = [11, 0]; hy = -31; dy = 4; zh = [8, -50]; zv = [19, -56]; sh = 1; sv = 1; }   // geduckt, Hände vorn
+        else if (!l && !j) { zh = [-12, -36]; zv = [14, -37]; }
+        const sy = sy0 + dy;
+        const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + dy], s, anz, anzD, 5, band, bandD); hzStueck(c, g, 0.25, 0.95, 4.4, band); c.strokeStyle = bandD; c.lineWidth = 0.6;
+          for (const a of [0.4, 0.58, 0.76]) { const [, [ex, ey], [hx2, hy2]] = g, x = ex + (hx2 - ex) * a, y = ey + (hy2 - ey) * a; c.beginPath(); c.moveTo(x - 1.6, y - 1.2); c.lineTo(x + 1.6, y + 1.2); c.stroke(); } return g; };
+        const bein = (hx, f) => { hzBeinK(c, hx, hy, f, anz, anzD, 5.4, 6, 15.5, 15); hzStiefel(c, f[0], f[1], '#24252d', '#111116', 'tabi', N); };
+        c.save(); c.translate(0, dy);
+        c.save(); c.translate(-8, -37); c.rotate(-0.95 + Math.sin(t * 3) * 0.08);   // buschiger Ringelschwanz
+        const sp = [[-3, 1], [3, 1], [5.4, -7], [5, -15], [2.4, -21], [-2.4, -21], [-5, -15], [-5.4, -7]]; hzPfad(c, sp); c.fillStyle = grau; c.fill();
+        c.save(); hzPfad(c, sp); c.clip(); c.fillStyle = schwarz; for (const y of [-5.5, -12, -18.5]) c.fillRect(-7, y - 2.4, 14, 3.4); c.fillStyle = 'rgba(8,10,18,.25)'; c.fillRect(-7, -22, 6, 24); c.restore();
+        hzPfad(c, sp); c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.4; c.lineJoin = 'round'; c.stroke(); c.restore();
+        const wehe = Math.sin(t * (l || k ? 12 : 3.5));
+        hzCel(c, [[-9, -78], [-17 - wehe, -76.5 + wehe * 2], [-26, -71 + wehe * 3], [-17, -73], [-24, -66 + wehe * 3], [-9.5, -75]], N, '#a3125f', [[-30, -72], [-9, -72], [-9, -60], [-30, -60]], 1.3);   // Stirnband-Enden wehen
+        c.restore();
+        if (!j) arm(-9, zh, sh);
+        bein(-2.5, fh); bein(2.5, fv);
+        c.save(); c.translate(0, dy);
+        const rumpf = [[-10, -59], [10, -59], [12, -55], [8, -46], [7.5, -42], [9.5, -36], [-9.5, -36], [-7.5, -42], [-8, -46], [-12, -55]];
+        hzCel(c, rumpf, anz, anzD, [[-20, -62], [-3, -62], [-4, -32], [-20, -32]]);
+        hzCel(c, [[-10.5, -59.5], [-2, -59.5], [6, -48], [4, -46.5], [-4.5, -56]], '#2c2d38', '#2c2d38', null, 1.1); hzCel(c, [[3.5, -59.5], [10.5, -59.5], [6.5, -53]], '#2c2d38', '#2c2d38', null, 1.1);   // Wickel-Kragen
+        hzCel(c, [[-8.8, -43.5], [8.8, -43.5], [9.4, -39.5], [-9.4, -39.5]], N, '#a3125f', null, 1.2); hzCel(c, [[2, -42.5], [6, -42.5], [8, -34], [6.2, -34], [4, -39.5]], N, '#a3125f', null, 1.1);   // Gürtel + Knoten-Ende
+        hzPatch(c, -5.4, -51, 2.7, '#0b0d14', N, 'R');
+        c.restore();
+        if (!j) arm(9, zv, sv);
+        // Kopf: Ohren mit hellem Rand, Waschbär-Maske, helle Schnauze, Zopf, Stirnband
+        c.save(); c.translate(0, dy); hzKopfHoch(c, j);
+        hzCel(c, [[-4, -79], [-4.5, -87], [-9, -91], [-12, -86], [-10, -80]], grau, grauD, [[-16, -92], [-6, -92], [-6, -78], [-16, -78]], 1.4);   // hoher Zopf
+        for (const [x, y, s] of [[-7.5, -77, -1], [6.5, -79, 1]]) { hzCel(c, [[x - 4, y + 1.5], [x + s * 1 - 1, y - 7], [x + 4, y + 1]], grau, grauD, null, 1.4); hzPfad(c, [[x - 2, y], [x + s * 1 - 0.6, y - 4.4], [x + 2.2, y]]); c.fillStyle = hell; c.fill(); }   // Ohren
+        hzSchaedel(c, grau, grauD);
+        hzCel(c, [[-10, -67.5], [-9.6, -71.8], [-6, -75.6], [-1.6, -74], [3, -75], [8.6, -76.4], [11, -73], [10.8, -70], [7.6, -69.4], [3.4, -70.2], [-0.8, -69], [-5.6, -68.4]], schwarz, schwarz, null, 1);   // Waschbär-Maske
+        hzPfad(c, [[-4, -79.4], [2.6, -80.4], [8.4, -78.6], [8, -76.8], [3, -75.8], [-1.6, -75.6], [-5.6, -76.6]]); c.fillStyle = hell; c.fill();   // helle Stirn über der Maske
+        hzPfad(c, [[-1, -67.6], [4, -69.4], [10.6, -68.4], [9, -62.4], [3, -60.4], [-2, -63]]); c.fillStyle = hell; c.fill();   // helle Wangen
+        hzCel(c, [[-10.4, -77.4], [-7, -81], [3, -82.4], [10.4, -80.4], [11, -78.2], [3, -79.8], [-7, -78.6]], N, '#a3125f', [[-14, -84], [-3, -84], [-3, -74], [-14, -74]], 1.3);   // Stirnband
+        if (j) { hzCel(c, [[4, -64.4], [16, -63.6], [13.5, -60], [5.5, -60.6]], hell, '#c9c7d2', null, 1.3); hzPfad(c, [[4.5, -65.4], [16.6, -65.2], [5, -62.4]]); c.fillStyle = '#5a1018'; c.fill(); }
+        hzCel(c, [[3, -70], [9, -70.6], [14.4, -69], [18, -66.8], [17.4, -64], [12, -63.2], [4.5, -63.6], [2.4, -66]], hell, '#c9c7d2', [[0, -66], [20, -65.6], [20, -60], [0, -60]], 1.5);   // spitze Schnauze
+        hzCel(c, [[16, -68.6], [18.6, -67.2], [18.4, -64.8], [16, -65.6]], schwarz, schwarz, null, 1);   // Nase
+        if (!j) hzGrinsen(c, 17, -64, 6, -66.2);
+        hzBlick(c, pose, { iris: '#ff6fb8', braue: '#f4f3f7', lid: true });
+        hzOhrring(c, -9.4, -63.6, 1.4, N);
+        c.restore();
+        if (j) { arm(-9, zh, sh); arm(9, zv, sv); }
+      };
+      if (!k) { figur(); return; }
+      const st = o.kraft == null ? 1 : Math.max(0, Math.min(1, o.kraft));
+      for (let i = 0; i < 3; i++) hzEll(c, -24 - i * 11, -1, 3.6, 1.4, `rgba(255,255,255,${0.5 - i * 0.14})`);   // leise Spuren
+      c.save(); c.globalAlpha *= 1 - 0.4 * st; figur(); c.restore();   // halb durchsichtig, Kontur bleibt
+      for (let i = 0; i < 6; i++) { const w = t * 2.5 + i * 1.05, r = 22 + Math.sin(t * 4 + i) * 4; hzFunke(c, 2 + Math.cos(w) * r, -42 + Math.sin(w) * r * 1.35, 1.6 + (i % 3) * 0.8, i % 2 ? '#fff' : N); }
+    },
+    // Benny the Beaver – Bridge builder (reifer Stil 7.11.): Baumeister – blau kariertes Holzfällerhemd (Ärmel hochgekrempelt), Latzhose (Canvas),
+    // gelber Bauhelm mit Stickern, Werkzeuggürtel mit Hammer, Arbeitsstiefel mit Kappe, Schutz-Sonnenbrille (steh: auf dem Helmrand); breit gebaut,
+    // große Nagezähne, Kellenschwanz; Kraft = trägt eine Planke, vor ihm entsteht eine kleine Holzbrücke (kompakt)
+    benny(c, t, pose, o = {}) {
+      const N = '#2ec5ff', R = hzRig(pose, t, 1.2), { l, j, k, bob } = R, hy = -36 + bob, sy = -56 + bob;
+      const fell = '#8b5a2b', fellD = '#5a3615', hell = '#dcb68e', hellD = '#b08a5e', hemd = '#2a78c2', hemdD = '#0d2f57', latz = '#b5864a', latzD = '#7d5728', holz = '#c08a4a', holzD = '#86592a';
+      let { fh, fv, zh, zv } = R, sh = 1, sv = 1;
+      if (k) { fh = [-8, 0]; fv = [9, 0]; zh = [14, -52]; zv = [22, -51]; }
+      const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + bob], s, hemd, hemdD, 6.6, fell, fellD, 13.5, 13); hzStueck(c, g, 0.0, 0.35, 7.2, '#3d8fd8'); hzStueck(c, g, 0.35, 0.9, 5.4, fell);
+        hzStueck(c, g, 0.45, 0.85, 2.2, '#a87443'); return g; };   // hochgekrempelt: Unterarm mit Fell
+      const bein = (hx, f) => { hzBeinK(c, hx, hy, f, latz, latzD, 7, 8, 16, 14); hzStiefel(c, f[0], f[1], '#8a5a2c', '#56361a', 'arbeit', '#e9d8b0'); };
+      if (k && (o.kraft == null || o.kraft > 0)) {   // Brücke über einen Bach (kompakt, x 20 … 60)
+        hzEll(c, 40, 2, 22, 3.5, 'rgba(40,110,180,.6)');
+        for (const x of [20, 57]) hzCel(c, [[x, -18], [x + 4, -18], [x + 4, 2], [x, 2]], '#7a4e26', '#4e2f12', null, 1.3);
+        const neu = (t * 1.5) % 1;
+        for (let i = 0; i < 4; i++) { const last = i === 3; c.save(); if (last) { c.globalAlpha *= neu; c.translate(0, -(1 - neu) * 9); } hzCel(c, [[24 + i * 8.4, -10], [31.4 + i * 8.4, -10], [31.4 + i * 8.4, -6], [24 + i * 8.4, -6]], holz, holzD, null, 1.2); c.restore(); }
+        c.strokeStyle = '#d9c08a'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(22, -17); c.quadraticCurveTo(40, -11, 59, -17); c.stroke();
+        for (let i = 0; i < 3; i++) hzEll(c, 46 + i * 5, -20 - ((t * 30 + i * 7) % 12), 1.4, 0.9, '#e0b070', i); }
+      c.save(); c.translate(-9, -10 + bob); c.rotate(-0.3 + Math.sin(t * 3) * 0.05);   // Kellenschwanz
+      hzCel(c, [[0, -4], [-20, -6], [-25, -1], [-20, 4], [0, 3]], '#4a3b35', '#2e241f', [[-30, 0], [2, 0], [2, 8], [-30, 8]], 1.4); c.strokeStyle = '#6a5a52'; c.lineWidth = 0.7;
+      for (let i = 1; i < 5; i++) { c.beginPath(); c.moveTo(-4 - i * 4, -5); c.lineTo(-4 - i * 4, 4); c.stroke(); } c.restore();
+      if (!j) arm(-12, zh, sh);
+      bein(-4, fh); bein(4, fv);
+      c.save(); c.translate(0, bob);
+      const hemdP = [[-13, -60], [13, -60], [14, -48], [12, -37], [-12, -37], [-14, -48]];
+      hzKaro(c, hemdP, hemd, hemdD, '#9fd2ff', 3.4); hzSchatten(c, hemdP, [[-20, -62], [-4, -62], [-4, -34], [-20, -34]]);   // Holzfällerhemd
+      hzCel(c, [[-3.5, -60.5], [0.6, -56], [4.4, -60.5]], '#3d8fd8', '#0d2f57', null, 1);   // Kragen
+      const lp = [[-8.5, -51], [8.5, -51], [9, -40], [13, -37], [13, -33], [-13, -33], [-13, -37], [-9, -40]];
+      hzCel(c, lp, latz, latzD, [[-20, -54], [-4, -54], [-4, -30], [-20, -30]]);   // Latz
+      for (const x of [-7, 6.5]) { c.strokeStyle = HZ_KONTUR; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 2, -60); c.lineTo(x, -51); c.stroke(); c.strokeStyle = latz; c.lineWidth = 1.6; c.stroke(); hzEll(c, x, -50.6, 1.1, 1.1, '#d5dae3'); }   // Träger + Knöpfe
+      hzCel(c, [[-4, -49], [4, -49], [4, -43.5], [-4, -43.5]], latzD, latzD, null, 1); hzPatch(c, 0, -47, 2.5, '#0b0d14', N, 'B');   // Brusttasche mit Aufnäher
+      hzCel(c, [[-13.5, -38], [13.5, -38], [13.5, -34.5], [-13.5, -34.5]], '#6b4423', '#6b4423', null, 1.1);   // Werkzeuggürtel
+      hzCel(c, [[-12.5, -36], [-6.5, -36], [-7, -29], [-12, -29]], '#7d5530', '#4e3218', null, 1.1); hzCel(c, [[7, -36], [12.5, -36], [12, -30], [7.5, -30]], '#7d5530', '#4e3218', null, 1.1);   // Taschen
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 2.6; c.beginPath(); c.moveTo(-9.8, -40); c.lineTo(-10.6, -30); c.stroke(); c.strokeStyle = '#c99a5b'; c.lineWidth = 1.3; c.stroke(); hzCel(c, [[-13, -41.6], [-7.4, -41.2], [-7.6, -39.4], [-13, -39.6]], '#9aa3b1', '#6b7280', null, 1);   // Hammer
+      hzCel(c, [[8.4, -33], [11.6, -33], [11.6, -30], [8.4, -30]], '#f2c230', '#b88a00', null, 0.9);   // Maßband
+      c.restore();
+      if (!j) arm(12, zv, sv);
+      if (k) { c.save(); c.translate(0, bob); hzCel(c, [[-4, -56], [40, -56], [40, -50.5], [-4, -50.5]], holz, holzD, [[-6, -53], [42, -53], [42, -48], [-6, -48]], 1.4); c.restore(); }   // Planke in den Händen
+      // Kopf: runde Ohren, Bauhelm, Schnauze mit Nagezähnen
+      c.save(); c.translate(0, bob); hzKopfHoch(c, j);
+      hzSchaedel(c, fell, fellD, [[-1, -59], [-8, -60], [-12, -64], [-12.5, -71], [-10, -77], [-4, -80.5], [4, -81], [9.5, -78.5], [12.5, -73], [12.5, -66], [9, -61], [3, -59]]);
+      hzCel(c, [[-12.4, -68], [-15, -69.5], [-15, -65.5], [-12, -64.6]], fell, fellD, null, 1.3);   // Ohr
+      if (j) { hzPfad(c, [[5, -63.4], [16, -63], [6, -60.6]]); c.fillStyle = '#5a1018'; c.fill(); }
+      hzCel(c, [[3, -70.4], [10, -71.4], [15.6, -69.6], [18.2, -66.6], [17.4, -63.2], [12, -62.2], [5, -62.6], [2.6, -65.6]], hell, hellD, [[0, -66], [21, -65.6], [21, -58], [0, -58]], 1.5);   // Schnauze
+      hzCel(c, [[14.6, -70.4], [18.2, -68.6], [18.6, -66], [15.4, -66.6]], '#2a1a10', '#2a1a10', null, 1);   // Nase
+      hzCel(c, [[10, -62.6], [15.2, -62.8], [15, -57.4], [10.4, -57.6]], '#fff6dc', '#e2d2a4', null, 1.2); c.strokeStyle = '#a58a5a'; c.lineWidth = 0.7; c.beginPath(); c.moveTo(12.6, -62.6); c.lineTo(12.7, -57.6); c.stroke();   // Nagezähne
+      if (!j) hzGrinsen(c, 9.6, -62.8, 4, -65.2);
+      hzBlick(c, pose, { iris: '#7a4a1a', braue: '#3b2412', brille: ['sport', '#3a1a00', '#ffb347', '#1d2230'] });
+      hzCel(c, [[-12.4, -76], [-11, -82], [-6, -87], [2, -88.6], [9, -86.4], [13, -81], [13.4, -77.6]], '#f2c230', '#b88a00', [[-16, -90], [-3, -90], [-3, -74], [-16, -74]], 1.6);   // Bauhelm
+      hzCel(c, [[-13.6, -78.4], [13, -78.8], [19, -77.4], [19.2, -76], [13, -76.4], [-13.6, -76.4]], '#f2c230', '#b88a00', [[-16, -77.6], [21, -77.6], [21, -74], [-16, -74]], 1.4);   // Krempe vorn
+      c.strokeStyle = '#d9a400'; c.lineWidth = 1; c.beginPath(); c.moveTo(-2, -88); c.quadraticCurveTo(1, -83, 0.6, -78.6); c.stroke();   // Mittelrippe
+      hzFunke(c, -6.4, -82.4, 1.8, '#e63946'); hzEll(c, 6.4, -83.6, 1.4, 1.4, N); hzCel(c, [[3.6, -81.2], [8.6, -81.2], [8.6, -79.4], [3.6, -79.4]], '#2a9d8f', '#2a9d8f', null, 0.6);   // Sticker
+      c.restore();
+      if (j) { arm(-12, zh, sh); arm(12, zv, sv); }
+    },
+    // Penny the Puma (id pennypuma) – Mega jump (reifer Stil 7.11.): Parkour-Läuferin – Retro-Trainingsjacke (Mint mit weißen Streifen, dunkle Schulterpasse),
+    // Jogger mit Bündchen, High-Top-Sneaker, Frottee-Stirnband, Sport-Sonnenbrille (ein Visier, steh: hochgeschoben), hoher Zopf, Ohrstecker;
+    // Puma-Gesicht mit Tränenlinien, rosa Nase auf der Schnauze; Kraft = großer Sprung (Knie angezogen, Arm nach vorn-oben), Staub + Sprunglinien
+    pennypuma(c, t, pose, o = {}) {
+      const N = '#2bffc6', R = hzRig(pose, t), { l, j, k, bob } = R, sy = -55 + bob;
+      const fell = '#c99a5b', fellD = '#94693f', hell = '#f2e0c0', hellD = '#cdb48e', jacke = '#06b58a', jackeD = '#04654d', pass = '#1d2b3a', hose = '#2a2d3a', hoseD = '#15171f', haar = '#a5783f', haarD = '#6e4c22';
+      const hub = k && !o.ohneHub ? 26 + Math.sin(t * 3) * 3 : 0;
+      let { fh, fv, zh, zv } = R, sh = 1, sv = 1, hy = -36 + bob;
+      if (k) { fh = [-18, -8]; fv = [8, -14]; zh = [-24, -46]; zv = [31, -68]; sh = -1; sv = 1; }   // Flug: hinteres Bein gestreckt, vorderes angezogen; Arm vorn-oben
+      else if (!l && !j) { zv = [7, -39]; sv = -1; }   // steh: Hand in der Hüfte
+      const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + bob], s, jacke, jackeD, 5, fell, fellD); const [[ax, ay], [ex, ey]] = g;
+        c.strokeStyle = '#ffffff'; c.lineWidth = 0.9; c.lineCap = 'round'; c.beginPath(); c.moveTo(ax + 1.4, ay - 0.4); c.lineTo(ex + 1.4, ey - 0.4); c.lineTo(g[2][0] * 0.3 + ex * 0.7 + 1.2, g[2][1] * 0.3 + ey * 0.7); c.stroke();   // Streifen
+        hzStueck(c, g, 0.72, 0.86, 4.6, pass); return g; };
+      const schuh = (x, y) => { hzCel(c, [[x - 3.8, y - 9], [x + 2.6, y - 9], [x + 2.6, y - 4]], '#f2f3f6', '#b9bdc8', null, 1.3); hzSneaker(c, x, y, '#f2f3f6', '#b9bdc8', '#1d2b3a', N, 0.6); hzEll(c, x - 1.6, y - 6.6, 1.1, 1.1, N); };   // High-Top
+      const bein = (hx, f) => { const g = hzBeinK(c, hx, hy, f, hose, hoseD, 5, 6, 16.5, 16); hzStueck(c, g, 0.82, 1, 5.6, pass); schuh(f[0], f[1]); };
+      if (k) { c.save(); c.globalAlpha *= 0.7; for (let i = 0; i < 4; i++) hzEll(c, -14 + i * 9, -2 - (i % 2) * 2, 6, 3, '#e6dccb'); c.restore();
+        c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 2; c.lineCap = 'round'; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(-8 + i * 9, -6); c.lineTo(-8 + i * 9, -15 - (i % 2) * 4); c.stroke(); } }
+      c.save(); c.translate(0, -hub);
+      c.save(); c.translate(0, bob);
+      const sw = Math.sin(t * 3) * 2; c.lineCap = 'round'; c.strokeStyle = HZ_KONTUR; c.lineWidth = 6.4; c.beginPath(); c.moveTo(-9, -38); c.quadraticCurveTo(-28, -36, -25, -12 + sw); c.stroke(); c.strokeStyle = fell; c.lineWidth = 3.4; c.stroke();
+      hzEll(c, -25, -11 + sw, 2.6, 3, '#3a2a1a');   // langer Schwanz mit dunkler Spitze
+      const wehe = Math.sin(t * (l || k ? 12 : 3)) * (l || k ? 2 : 0.7);
+      hzCel(c, [[-5, -82], [-11, -84], [-17, -80 + wehe], [-21, -73 + wehe], [-16, -75], [-12, -77]], haar, haarD, null, 1.3);   // hoher Zopf
+      c.restore();
+      if (!j) arm(-9, zh, sh);
+      bein(-2.5, fh); bein(2.5, fv);
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-7.5, -41], [7.5, -41], [8.5, -35], [-8.5, -35]], hose, hoseD, null, 1.3);
+      const jp = [[-10, -59.5], [10, -59.5], [12, -55], [8.5, -46], [9, -40], [-9, -40], [-8.5, -46], [-12, -55]];
+      hzCel(c, jp, jacke, jackeD, [[-20, -62], [-3, -62], [-4, -36], [-20, -36]]);   // Trainingsjacke
+      c.save(); hzPfad(c, jp); c.clip(); hzPfad(c, [[-12, -60], [12, -60], [12, -54], [-12, -52]]); c.fillStyle = pass; c.fill(); c.restore(); hzPfad(c, jp); c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.6; c.stroke();   // dunkle Schulterpasse
+      hzCel(c, [[-9.2, -42.4], [8.6, -42.4], [9, -40], [-9, -40]], pass, pass, null, 1); hzCel(c, [[-3, -61], [3.6, -61], [3.2, -58.4], [-3.4, -58.4]], pass, pass, null, 1);   // Bündchen, Stehkragen
+      c.strokeStyle = '#d5dae3'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(1, -58.4); c.lineTo(0.6, -42.4); c.stroke();   // Reißverschluss
+      c.strokeStyle = '#fff'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(-10.6, -54.6); c.lineTo(-8, -41); c.stroke();
+      hzPatch(c, 5, -49.5, 2.6, '#0b0d14', N, 'P');
+      c.restore();
+      if (!j) arm(9, zv, sv);
+      // Kopf: kleine runde Ohren, helle Schnauze, Tränenlinien, Stirnband
+      c.save(); c.translate(0, bob); hzKopfHoch(c, j);
+      for (const [x, y] of [[-6.5, -79.4], [7.5, -80]]) { hzCel(c, [[x - 3.6, y + 1.5], [x - 2.4, y - 3.4], [x + 1.6, y - 4], [x + 3.6, y + 1]], fell, fellD, null, 1.3); hzEll(c, x, y - 0.6, 1.4, 1.7, '#3a2a1a'); }
+      hzSchaedel(c, fell, fellD);
+      hzPfad(c, [[-2, -66.8], [3.6, -69], [10.4, -67.6], [9.2, -61.6], [3, -60.2], [-2.2, -62.6]]); c.fillStyle = hell; c.fill();
+      if (j) { hzCel(c, [[4, -63.6], [15, -63], [12.6, -59.6], [5.4, -60]], hell, hellD, null, 1.2); hzPfad(c, [[4.5, -64.6], [15.4, -64.4], [5, -61.6]]); c.fillStyle = '#5a1018'; c.fill(); }
+      hzCel(c, [[3, -70.4], [9, -71], [14, -69.4], [17, -67], [16.6, -64.2], [11, -63.4], [4.4, -63.8], [2.4, -66.4]], hell, hellD, [[0, -66.4], [19, -66], [19, -60], [0, -60]], 1.5);   // Schnauze
+      hzCel(c, [[14, -69.4], [17, -67.4], [16.6, -65.6], [14.6, -66.4]], '#d4747c', '#a54d55', null, 1);   // rosa Nase
+      c.strokeStyle = '#5a3a1a'; c.lineWidth = 1; c.beginPath(); c.moveTo(-3.8, -70); c.lineTo(-1.6, -66); c.moveTo(4.6, -70.6); c.lineTo(5.2, -66.6); c.stroke();   // Tränenlinien
+      if (!j) hzGrinsen(c, 16, -64.4, 6, -66.4);
+      hzBlick(c, pose, { iris: '#3fbf7f', braue: '#4e3218', lid: true, brille: ['sport', '#14003a', '#c86bff', '#e9ecf1'] });
+      hzCel(c, [[-10.6, -76.6], [-7.6, -80.4], [3, -81.8], [10.8, -80], [11.2, -77.6], [3, -79], [-7.4, -77.6]], '#f4f6f8', '#c3c8d2', [[-14, -84], [-3, -84], [-3, -74], [-14, -74]], 1.3);   // Stirnband
+      c.strokeStyle = N; c.lineWidth = 0.8; c.beginPath(); c.moveTo(-7.4, -78.6); c.lineTo(3, -80.3); c.lineTo(10.8, -78.8); c.stroke();
+      hzEll(c, -9.4, -64, 0.9, 0.9, N);   // Ohrstecker
+      c.restore();
+      if (j || k) { arm(-9, zh, sh); arm(9, zv, sv); }   // Jubel/Sprung: Arme nach dem Kopf
+      c.restore();
+    },
+    // Archie the Armadillo – Armour ball (reifer Stil 7.11.): Texas-Cowboy – großer Cowboyhut, Fransen-Lederweste über Jeanshemd, riesige Gürtelschnalle,
+    // Jeans, Cowboystiefel mit Sporen, Pilotenbrille (bleibt auf); kräftiger, breiter Bandpanzer am Rücken, große Ohren unter der Hutkrempe, lange spitze
+    // Schnauze; Kraft = rollt als breite Panzerkugel, Hut bleibt oben (Tempolinien, Staub)
+    archie(c, t, pose, o = {}) {
+      const N = '#ff7a3d', R = hzRig(pose, t, 1.2), { l, j, k, bob } = R, hy = -36 + bob, sy = -56 + bob;
+      const haut = '#c9b394', hautD = '#94805f', panzer = '#8f7d68', panzerD = '#5a4c3b', weste = '#9a6534', westeD = '#5e3a18', hemd = '#4a6a9a', hemdD = '#2b4268', jeans = '#2b3446', jeansD = '#181e2a', hut = '#b98b52', hutD = '#7b5a2e';
+      const hutZ = (dx, dy, r) => { c.save(); c.translate(dx, dy); c.rotate(r);
+        hzCel(c, [[-7, -84], [-5, -92], [0, -94.5], [3.5, -92.4], [7, -94.6], [10.6, -92], [11.6, -84]], hut, hutD, [[-12, -96], [0, -96], [0, -82], [-12, -82]], 1.6);   // Krone mit Delle
+        hzCel(c, [[-7.2, -86.6], [11.6, -86.6], [11.6, -84], [-7.2, -84]], N, '#b8461a', null, 1.1);   // Hutband
+        hzCel(c, [[-19, -83], [-14, -81], [-6, -82.6], [6, -82.8], [15, -82], [22, -84.8], [20.6, -81.2], [14, -78.8], [2, -78.6], [-10, -79], [-16.6, -80.6]], hut, hutD, [[-22, -82], [24, -82], [24, -76], [-22, -76]], 1.6);   // breite Krempe
+        c.restore(); };
+      if (k) {
+        c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 2; c.lineCap = 'round'; for (let i = 0; i < 4; i++) { c.beginPath(); c.moveTo(-28 - i * 2, -42 + i * 10); c.lineTo(-44 + (i % 2) * 5 + Math.sin(t * 20 + i) * 2, -42 + i * 10); c.stroke(); }
+        c.save(); c.globalAlpha *= 0.7; for (let i = 0; i < 3; i++) hzEll(c, -22 - i * 8, -3, 5 + Math.sin(t * 9 + i) * 1.2, 3, '#e6dccb'); c.restore();
+        c.save(); c.translate(0, -26); c.rotate(t * 7);
+        c.beginPath(); c.arc(0, 0, 26, 0, Math.PI * 2); c.fillStyle = panzer; c.fill();
+        c.save(); c.clip(); hzPfad(c, [[-30, 0], [30, 8], [30, 30], [-30, 30]]); c.fillStyle = panzerD; c.fill();
+        c.strokeStyle = HZ_KONTUR; c.lineWidth = 2; for (let i = -3; i <= 3; i++) { c.beginPath(); c.moveTo(i * 7, -28); c.quadraticCurveTo(i * 9, 0, i * 7, 28); c.stroke(); }
+        c.fillStyle = '#b3a189'; for (let i = -3; i <= 3; i++) for (let q = -3; q <= 3; q++) hzEll(c, i * 7.5 + 3.5, q * 7, 1, 1.6, '#b3a189');
+        hzPfad(c, [[-28, -3], [28, -3], [28, 3], [-28, 3]]); c.fillStyle = N; c.fill(); c.restore();   // Heldenband
+        c.beginPath(); c.arc(0, 0, 26, 0, Math.PI * 2); c.strokeStyle = HZ_KONTUR; c.lineWidth = 2.2; c.stroke();
+        hzPatch(c, 0, -0.5, 3.4, '#0b0d14', N, 'A'); c.restore();
+        hutZ(-2, 30 + Math.sin(t * 14) * 1.5, -0.12);   // Hut bleibt oben auf der Kugel
+        hzFunke(c, -12, -44, 2.6, '#fff');
+        return;
+      }
+      let { fh, fv, zh, zv } = R, sh = 1, sv = 1;
+      if (!l && !j) { zh = [-9, -38]; zv = [7, -39]; sh = -1; sv = -1; }   // steh: Daumen im Gürtel
+      const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + bob], s, hemd, hemdD, 6.4, haut, hautD, 13.5, 13); hzStueck(c, g, 0.7, 0.86, 5.4, hemdD); return g; };
+      const bein = (hx, f) => { hzBeinK(c, hx, hy, f, jeans, jeansD, 6.6, 8, 16, 14); hzStiefel(c, f[0], f[1], '#7b4a25', '#4d2c14', 'cowboy', N, true); };
+      c.save(); c.translate(0, bob);
+      c.lineCap = 'round'; c.strokeStyle = HZ_KONTUR; c.lineWidth = 7; c.beginPath(); c.moveTo(-10, -32); c.quadraticCurveTo(-20, -26, -24, -14); c.stroke(); c.strokeStyle = panzer; c.lineWidth = 4.2; c.stroke();   // Schwanz
+      const pz = [[-6, -66], [-16, -64], [-24, -55], [-26, -44], [-23, -32], [-14, -26], [-4, -28], [6, -34], [10, -48], [6, -60]];
+      hzCel(c, pz, panzer, panzerD, [[-30, -46], [12, -40], [12, -20], [-30, -20]], 2);   // breiter Bandpanzer
+      c.save(); hzPfad(c, pz); c.clip(); c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.5; for (let i = 0; i < 6; i++) { c.beginPath(); c.moveTo(-28 + i * 5.4, -70); c.quadraticCurveTo(-24 + i * 5.4, -46, -28 + i * 5.4, -22); c.stroke(); }
+      for (let i = 0; i < 6; i++) for (let q = 0; q < 5; q++) hzEll(c, -25.4 + i * 5.4, -60 + q * 8, 0.9, 1.6, '#b3a189'); c.restore();
+      c.restore();
+      if (!j) arm(-12, zh, sh);
+      bein(-4, fh); bein(4, fv);
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-12, -60], [12, -60], [13.5, -48], [12, -37], [-12, -37], [-13.5, -48]], hemd, hemdD, [[-20, -62], [-4, -62], [-4, -34], [-20, -34]]);   // Jeanshemd
+      const wl = [[-12.5, -60.5], [-3, -60.5], [-1.4, -48], [-3, -40], [-13, -40], [-14, -48]], wr = [[4, -60.5], [12.5, -60.5], [14, -48], [13, -40], [5, -40], [3, -48]];
+      hzCel(c, wl, weste, westeD, [[-20, -62], [-8, -62], [-8, -38], [-20, -38]]); hzCel(c, wr, weste, westeD, null);   // Lederweste
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 1; c.lineCap = 'round'; for (const [x0, x1] of [[-13, -3], [5, 13]]) for (let x = x0; x <= x1; x += 1.6) { c.beginPath(); c.moveTo(x, -40); c.lineTo(x - 0.4, -35.6 + Math.sin(t * 6 + x) * 0.6); c.stroke(); }   // Fransen
+      c.strokeStyle = '#c9965a'; for (const [x0, x1] of [[-13, -3], [5, 13]]) for (let x = x0 + 0.6; x <= x1; x += 1.6) { c.lineWidth = 0.7; c.beginPath(); c.moveTo(x, -40); c.lineTo(x - 0.4, -36.4); c.stroke(); }
+      hzPatch(c, 8.4, -53, 2.8, '#0b0d14', N, 'A');
+      hzCel(c, [[-12, -38.4], [12, -38.4], [12, -35.6], [-12, -35.6]], '#3a2213', '#3a2213', null, 1.1);
+      hzCel(c, [[-4.5, -40.6], [6.5, -40.6], [7.6, -37], [6.5, -33.2], [-4.5, -33.2], [-5.6, -37]], '#f0c75a', '#a8862e', [[-6, -37], [8, -37], [8, -32], [-6, -32]], 1.3); hzFunke(c, 1, -37, 2.2, N); hzFunke(c, -1.6, -39, 0.9, '#fff');   // riesige Gürtelschnalle
+      hzCel(c, [[-3.5, -61], [0.6, -56.4], [4.4, -61]], '#5d7fb6', hemdD, null, 1);   // Kragen
+      c.restore();
+      if (!j) arm(12, zv, sv);
+      // Kopf: große Ohren, lange spitze Schnauze, Hut
+      c.save(); c.translate(0, bob); hzKopfHoch(c, j);
+      hzCel(c, [[-7, -76], [-15, -78], [-17.6, -74], [-10, -71]], haut, hautD, null, 1.4); hzPfad(c, [[-8.6, -75.2], [-14.6, -76.4], [-15.4, -74.6], [-10.4, -72.6]]); c.fillStyle = '#e6b8a8'; c.fill();   // Ohr hinten
+      hzSchaedel(c, haut, hautD);
+      hzCel(c, [[-6, -78], [-3, -81], [5, -81.4], [10, -78], [4, -77.6], [-2, -77.8]], panzer, panzerD, null, 1.2);   // Kopfschild
+      if (j) { hzCel(c, [[4, -64], [19, -62.2], [16, -59.6], [5.4, -60.4]], haut, hautD, null, 1.2); hzPfad(c, [[4.5, -65], [19.6, -63.6], [5, -62]]); c.fillStyle = '#5a1018'; c.fill(); }
+      hzCel(c, [[3, -71], [10, -71], [17, -68.6], [22.6, -65.6], [23, -63.6], [17, -63.2], [9, -63.4], [2.6, -65.6]], haut, hautD, [[0, -66.4], [25, -65.4], [25, -60], [0, -60]], 1.5);   // lange spitze Schnauze
+      hzCel(c, [[20.6, -66.8], [23.4, -65.4], [23.2, -63.6], [20.8, -64.2]], '#3a2a1a', '#3a2a1a', null, 1);   // Nase
+      if (!j) hzGrinsen(c, 20.6, -63.6, 6, -65.8);
+      hzBlick(c, pose, { iris: '#6b4a1a', braue: '#4a3622', brille: ['pilot', '#2a1405', '#c98a3a', '#e0bd63'], immer: true });
+      hzCel(c, [[6, -77], [11.4, -82.6], [14.6, -80.4], [11, -75.4]], haut, hautD, null, 1.4);   // Ohr vorn (unter der Krempe hervor)
+      hutZ(0, 0, -0.06);
+      c.restore();
+      if (j) { arm(-12, zh, sh); arm(12, zv, sv); }
+    },
+    // Molly the Moose – Thunder stomp (reifer Stil 7.11.): Punk-Drummerin – schwarze Nietenweste über grauem Band-Shirt, zerrissene Jeans, Kampfstiefel,
+    // zwei Drumsticks am Gürtel, Irokesen-Strähne in Neon-Indigo zwischen dem Schaufelgeweih, Nietenarmband, Ohrringe, Kasten-Sonnenbrille (steh: hochgeschoben);
+    // lange Elchnase fest am Kopf; Kraft = stampft mit hoch erhobenem Stiefel (auch im Standbild deutlich), Drumsticks hoch, Schockwellen + Blitze (kompakt)
+    molly(c, t, pose, o = {}) {
+      const N = '#5b7cff', R = hzRig(pose, t, 1.05), { l, j, k, bob } = R, hy = -37 + bob, sy = -56 + bob;
+      const fell = '#6b4226', fellD = '#3f2614', nase = '#7d5536', nasD = '#53351f', geweih = '#dcbf8a', geweihD = '#a88a56', weste = '#1b1c22', westeD = '#0b0b0f', jeans = '#7d9cc4', jeansD = '#4e6d96';
+      const hebt = k ? 9 + Math.max(0, Math.sin(t * 5)) * 6 : 0;
+      let { fh, fv, zh, zv } = R, sh = 1, sv = 1;
+      if (k) { fh = [-9, 0]; fv = [12, -hebt]; zh = [-24, -82]; zv = [29, -82]; }
+      else if (j) zv = [35, -63];   // Jubel: vorderer Arm unter der langen Nase nach außen
+      const stick = (x, y, a, L = 13) => { c.save(); c.translate(x, y); c.rotate(a); hzCel(c, [[-0.9, 0], [0.9, 0], [0.6, -L], [-0.6, -L]], '#e8c99a', '#b3925e', null, 1.1); hzEll(c, 0, -L - 0.6, 1, 1.2, '#f4e2c2'); c.restore(); };
+      const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + bob], s, fell, fellD, 5.6, fell, fellD, 13.5, 12.5); hzStueck(c, g, 0.62, 0.8, 5.2, '#16171c');
+        for (const a of [0.66, 0.76]) { const [, [ex, ey], [hx2, hy2]] = g; hzEll(c, ex + (hx2 - ex) * a, ey + (hy2 - ey) * a, 0.7, 0.7, '#d5dae3'); } return g; };   // Nietenarmband
+      const bein = (hx, f) => { const g = hzBeinK(c, hx, hy, f, jeans, jeansD, 6, 8, 16, 15); c.strokeStyle = '#eaf0f8'; c.lineWidth = 0.9; c.lineCap = 'round';
+        for (const a of [0.45, 0.62]) { const x = g[1][0] + (g[2][0] - g[1][0]) * (a - 0.4) - 0.6, y = g[0][1] + (g[2][1] - g[0][1]) * a; c.beginPath(); c.moveTo(x - 1.6, y); c.lineTo(x + 1.6, y - 0.6); c.stroke(); }   // Risse
+        hzStiefel(c, f[0], f[1], '#1f2026', '#0d0e12', 'kampf', N); };
+      if (k && (o.kraft == null || o.kraft > 0)) { const w = (t * 1.5) % 1;   // Schockwellen (kompakt)
+        for (let i = 0; i < 3; i++) { const r = (w + i / 3) % 1; c.strokeStyle = i % 2 ? '#ffffff' : N; c.globalAlpha = 1 - r; c.lineWidth = 2.2; c.beginPath(); c.ellipse(10, 0, 10 + r * 34, 2.5 + r * 6, 0, 0, Math.PI * 2); c.stroke(); }
+        c.globalAlpha = 1; for (let i = 0; i < 3; i++) hzEll(c, -10 + i * 16, -3 - ((t * 40 + i * 9) % 10), 1.8, 1.4, '#9aa5b1'); }
+      if (!j && !k) arm(-10, zh, sh);
+      bein(-3, fh);
+      if (k) { c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 1.6; c.lineCap = 'round'; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(7 + i * 4, -hebt - 13 - i); c.lineTo(7 + i * 4, -hebt - 19 - i); c.stroke(); } }   // Stampf-Linien über dem Stiefel
+      bein(3, fv);
+      c.save(); c.translate(0, bob);
+      const shirt = [[-10.5, -60], [10.5, -60], [12.5, -56], [8.5, -47], [8, -42], [9.5, -37], [-9.5, -37], [-8, -42], [-8.5, -47], [-12.5, -56]];
+      hzCel(c, shirt, '#5a5d68', '#3a3c45', [[-20, -62], [-3, -62], [-4, -34], [-20, -34]]);   // Band-Shirt
+      hzText(c, '⚡', 1, -50, 6, N);
+      const wl = [[-11, -60.5], [-3, -60.5], [-2, -46], [-3, -40], [-9, -40], [-8.6, -47], [-13, -56]], wr = [[4.5, -60.5], [11, -60.5], [13, -56], [9, -47], [8.6, -40], [5, -40], [3.6, -46]];
+      hzCel(c, wl, weste, westeD, [[-20, -62], [-7, -62], [-7, -38], [-20, -38]]); hzCel(c, wr, weste, westeD, null);   // Nietenweste
+      for (const [x, y] of [[-9.6, -57], [-7.4, -57.8], [-5.2, -58.4], [7, -58.4], [9.2, -57.8], [11, -56.6], [-4, -50], [-4.2, -46], [5.6, -50], [5.8, -46]]) hzEll(c, x, y, 0.75, 0.75, '#d5dae3');   // Nieten
+      hzPatch(c, -7.4, -51, 2.6, '#0b0d14', N, 'M');
+      hzCel(c, [[-9.5, -40], [9.5, -40], [9.5, -37], [-9.5, -37]], '#111216', '#111216', null, 1.1); for (let x = -8; x <= 8; x += 2.6) hzEll(c, x, -38.5, 0.55, 0.55, '#d5dae3');   // Nietengürtel
+      stick(-8.6, -34, -0.25); stick(-7, -34, -0.05);   // Drumsticks am Gürtel
+      c.restore();
+      if (!j && !k) arm(10, zv, sv);
+      // Kopf: Schaufelgeweih, Irokese, Ohren, lange Nase
+      c.save(); c.translate(0, bob); hzKopfHoch(c, j);
+      const schaufel = (x, y, s) => { c.save(); c.translate(x, y); c.scale(s, 1); hzCel(c, [[0, 0], [5, -3], [9, -9], [9, -13], [7.4, -10.6], [6.4, -14.4], [4.6, -11], [3, -14.6], [1.8, -10], [0.4, -12.4], [-0.6, -6]], geweih, geweihD, [[-2, -4], [12, -4], [12, 2], [-2, 2]], 1.3); c.restore(); };
+      schaufel(-7, -77.5, -1.1); schaufel(7, -79.5, 1);
+      hzCel(c, [[-8, -70], [-15, -73], [-16.6, -70], [-9.4, -66.6]], fell, fellD, null, 1.3); hzOhrring(c, -13, -68.4, 1.4, '#d5dae3'); hzEll(c, -15, -71.2, 0.6, 0.6, N);   // Ohr mit Ohrringen
+      hzSchaedel(c, fell, fellD);
+      hzCel(c, [[-7, -79], [-6, -86], [-3.4, -82.6], [-1.4, -89], [0.8, -83.4], [3.4, -89.4], [4.6, -83], [7.6, -87], [7.4, -79.6], [0, -80.6]], N, '#2a3fb0', [[-10, -90], [-1, -90], [-1, -78], [-10, -78]], 1.4);   // Irokese
+      if (j) { hzCel(c, [[4, -63.4], [17, -61.6], [15, -58], [5.4, -59.6]], nase, nasD, null, 1.2); hzPfad(c, [[4.5, -64.4], [17.6, -63], [5, -61.4]]); c.fillStyle = '#5a1018'; c.fill(); }
+      hzCel(c, [[2.6, -71], [10, -71.6], [16, -69.6], [20, -66], [20.6, -61.6], [18.6, -59.4], [13, -60.2], [6, -61.6], [2.4, -64.6]], nase, nasD, [[0, -64.6], [23, -64], [23, -56], [0, -56]], 1.5);   // lange hängende Elchnase
+      hzEll(c, 18.8, -63.4, 0.9, 1.2, HZ_KONTUR, 0.3); hzEll(c, 16.4, -63.6, 0.8, 1, HZ_KONTUR, 0.3);   // Nüstern
+      if (!j) hzGrinsen(c, 18.6, -60.4, 7, -62.2);
+      hzBlick(c, pose, { iris: '#c8781c', braue: '#1d120a', lid: true, brille: ['kasten', '#0b0c12', '#3d3f52', '#c7ccd6'] });
+      c.restore();
+      if (j) { arm(-10, zh, sh); arm(10, zv, sv); }
+      if (k) { const gh = arm(-10, zh, sh), gv = arm(10, zv, sv); stick(gh[2][0], gh[2][1], -0.5, 12); stick(gv[2][0], gv[2][1], 0.5, 12);   // Drumsticks hoch
+        if (o.kraft == null || o.kraft > 0) { hzText(c, '⚡', gh[2][0] - 9, gh[2][1] - 9 + Math.sin(t * 8) * 1.5, 11, '#ffd60a'); hzText(c, '⚡', gv[2][0] + 9, gv[2][1] - 9 + Math.sin(t * 8 + 2) * 1.5, 11, '#ffd60a'); } }
+    },
+    // Holly the Hummingbird – Healing (reifer Stil 7.11.): Satin-Bomberjacke (Rosé, Glanz, Blumenstickerei, dunkle Rippbündchen), schwarze Hose,
+    // Plateau-Sneaker, runde getönte Brille (steh: im Haar), Federschopf-Pixie mit schillernden Spitzen, rubinrote Kehle, langer dünner Schnabel fest am Kopf,
+    // kleine schwirrende Flügel; Kraft = schwebt, leuchtendes Herz + Blütenregen (kompakt)
+    holly(c, t, pose, o = {}) {
+      const N = '#ff5fa2', R = hzRig(pose, t), { l, j, k, bob } = R, sy = -55 + bob;
+      const gruen = '#2a9d64', gruenD = '#17603c', kehle = '#e0315b', kehleD = '#8e1430', satin = '#ff9fbd', satinD = '#c25a7f', rippe = '#2b2d42', hose = '#22232c', hoseD = '#111218';
+      const schwebe = k && !o.ohneHub ? 10 + Math.sin(t * 4) * 2 : 0;
+      let { fh, fv, zh, zv } = R, sh = 1, sv = 1, hy = -36 + bob;
+      if (k) { fh = [-5, -2]; fv = [5, -4]; zh = [-20, -50]; zv = [27, -56]; sh = -1; sv = 1; }   // schwebt: vordere Hand schickt Heilkraft nach vorn-oben
+      else if (!l && !j) { zh = [-7, -40]; sh = -1; }   // steh: hintere Hand in der Hüfte
+      const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + bob], s, satin, satinD, 5.6, gruen, gruenD); hzStueck(c, g, 0.7, 0.86, 5, rippe);
+        const [[ax, ay], [ex, ey]] = g; c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 1; c.lineCap = 'round'; c.beginPath(); c.moveTo(ax + 1.2, ay - 1); c.lineTo(ex + 1.2, ey - 1); c.stroke(); return g; };   // Satin-Glanz
+      const bein = (hx, f) => { hzBeinK(c, hx, hy, f, hose, hoseD, 4.8, 7, 16, 15.5); hzSneaker(c, f[0], f[1], '#f7f2f6', '#c9bfc8', '#f2f2f2', N, 3); };
+      c.save(); c.translate(0, -schwebe);
+      c.save(); c.translate(0, bob);
+      const flg = (x, w, a) => { c.save(); c.globalAlpha *= a; c.translate(x, -54); c.rotate(w); hzCel(c, [[0, 0], [-4, -4], [-15, -9], [-20, -8], [-14, -3], [-4, 2]], '#3cc489', gruenD, [[-22, -4], [2, -4], [2, 4], [-22, 4]], 1.2); c.restore(); };
+      if (l || k) for (const q of [-0.35, 0, 0.35]) flg(-6, -0.2 + q + Math.sin(t * 40) * 0.12, 0.45); else flg(-6, j ? 0.5 : 0.1, 1);   // kleine Flügel am Rücken
+      hzCel(c, [[-5, -40], [-15, -30], [-11, -29], [-13, -24], [-8, -27], [-3, -36]], gruen, gruenD, null, 1.3);   // Schwanzfedern
+      c.restore();
+      if (!j && !k) arm(-9, zh, sh);
+      bein(-2.5, fh); bein(2.5, fv);
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-7, -42], [7, -42], [8, -36], [-8, -36]], hose, hoseD, null, 1.3);
+      const jp = [[-11, -59.5], [11, -59.5], [13, -55], [11, -45], [10, -41], [-10, -41], [-11, -45], [-13, -55]];
+      hzCel(c, jp, satin, satinD, [[-20, -62], [-3, -62], [-4, -36], [-20, -36]]);   // Satin-Bomberjacke
+      c.save(); hzPfad(c, jp); c.clip(); c.fillStyle = 'rgba(255,255,255,.45)'; hzPfad(c, [[5, -58], [8, -58], [6.6, -43], [3.6, -43]]); c.fill(); c.restore();   // Satin-Glanz
+      hzCel(c, [[-2.5, -60], [4, -60], [2.6, -47], [-0.6, -47]], kehle, kehleD, null, 1.1);   // rubinrote Kehle im Ausschnitt
+      hzCel(c, [[-10.4, -44], [10.4, -44], [10, -40.6], [-10, -40.6]], rippe, rippe, null, 1.1); c.strokeStyle = N; c.lineWidth = 0.7; c.beginPath(); c.moveTo(-10, -42.4); c.lineTo(10, -42.4); c.stroke();   // Rippbündchen
+      hzBlume(c, -6.8, -50, 1.6, '#fff4a3', 0.3); hzBlume(c, 8, -53.5, 1.3, '#ffffff', 1); hzBlume(c, 7.2, -47.6, 1.1, '#9be7c4', 2);   // Blumenstickerei
+      hzPatch(c, -6.8, -55.4, 2.3, '#2b0d1c', N, 'H');
+      c.restore();
+      if (!j && !k) arm(9, zv, sv);
+      // Kopf: Federschopf, langer Schnabel
+      c.save(); c.translate(0, bob); hzKopfHoch(c, j);
+      hzSchaedel(c, gruen, gruenD);
+      hzCel(c, [[-10, -68], [-12.5, -74], [-10, -80], [-4, -84], [4, -84.6], [10, -82], [12.6, -77], [6, -79.4], [0, -79.8], [-4, -78], [-7.6, -73]], '#1f7d52', '#125235', [[-16, -88], [-2, -88], [-2, -66], [-16, -66]], 1.4);   // Pixie-Schopf
+      c.strokeStyle = '#7dffd0'; c.lineWidth = 0.9; c.lineCap = 'round'; c.beginPath(); c.moveTo(-6, -82); c.lineTo(-2, -83.4); c.moveTo(4, -84); c.lineTo(9, -82); c.stroke();   // schillernde Spitzen
+      hzPfad(c, [[-2, -64], [4, -66], [10.6, -65], [8, -60.6], [2, -60], [-2.6, -61.6]]); c.fillStyle = kehle; c.fill();   // rote Kehle
+      if (j) { hzCel(c, [[3.5, -65.6], [22, -64.6], [3.5, -63.2]], '#2b2b30', '#2b2b30', null, 1.1); hzPfad(c, [[4, -67], [18, -66.6], [4, -65.4]]); c.fillStyle = '#5a1018'; c.fill(); }
+      hzCel(c, [[2.6, -69.4], [10, -68.8], [30, -66.6], [30.4, -65.8], [10, -65.4], [2.6, -65.6]], '#2b2b30', '#16161a', [[0, -66.6], [32, -66], [32, -62], [0, -62]], 1.3);   // langer dünner Schnabel
+      if (!j) hzGrinsen(c, 9, -65.4, 3, -66.8);
+      hzBlick(c, pose, { iris: '#3a1d0e', braue: '#0e3a24', lid: true, brille: ['rund', '#5a1a52', '#ff8cc6', '#f2c84b'] });
+      hzOhrring(c, -8.2, -63, 1.6, '#f2c84b');
+      c.restore();
+      if (j || k) { arm(-9, zh, sh); arm(9, zv, sv); }
+      c.restore();
+      if (k && (o.kraft == null || o.kraft > 0)) { const p = 1 + Math.sin(t * 6) * 0.08;   // Heilkraft: Herz + Blütenregen (kompakt)
+        c.save(); c.shadowColor = '#ff6b8b'; c.shadowBlur = 10; hzHerz(c, 30, -86 - schwebe, 7.5 * p, '#ff4d6d'); c.restore(); hzEll(c, 27.6, -88.4 - schwebe, 1.6, 1.2, '#ffd6de'); hzText(c, '+', 30, -86 - schwebe, 7);
+        for (let i = 0; i < 6; i++) { const y = -92 + ((t * 40 + i * 23) % 88), x = -16 + i * 9 + Math.sin(t * 2 + i) * 3; c.save(); c.globalAlpha = Math.min(1, (4 - y) / 30); hzBlume(c, x, y, 2.3, ['#ff85a1', '#fff', '#ffb3c6'][i % 3], t * 2 + i); c.restore(); } }
+    },
+    // Maya the Monarch – Float (reifer Stil 7.11.): GALA-LADY – bodenlanges Abendkleid (Schwarz-Violett mit Satinglanz), Cape mit Monarchflügel-Muster
+    // (Orange/Schwarz, weiße Randpunkte; weht beim Laufen, öffnet sich beim Schweben wie Flügel), lange Handschuhe, Statement-Ohrringe, elegante Cat-Eye-
+    // Sonnenbrille (bleibt auf), Hochsteckfrisur mit Fühlern; Kraft = schwebt mit offenem Flügel-Cape über einer Glitzerwolke (kompakt)
+    maya(c, t, pose, o = {}) {
+      const N = '#c77dff', R = hzRig(pose, t), { l, j, k, bob } = R, sy = -55 + bob;
+      const haut = '#3a3542', hautD = '#221f28', kleid = '#2a1840', kleidD = '#140b22', orange = '#f28c28', orangeD = '#b85d10', schwarz = '#16151a', gold = '#f2c84b';
+      const schwebe = k && !o.ohneHub ? 14 + Math.sin(t * 2.5) * 3 : 0, wind = k ? 0.4 : l ? 0.7 : 0.1;
+      let { fh, fv, zh, zv } = R, sh = 1, sv = 1;
+      if (k) { zh = [-28, -52]; zv = [30, -52]; }   // Arme elegant ausgebreitet
+      else if (!l && !j) { zv = [7, -40]; sv = -1; }   // steh: Hand in der Hüfte
+      const arm = (sx, ziel, s) => { const g = hzArmK(c, sx, sy, [ziel[0], ziel[1] + bob], s, haut, hautD, 4.4, schwarz, schwarz, 12.5, 12); hzStueck(c, g, 0, 1, 4.6, schwarz, 'round');   // langer Handschuh
+        hzStueck(c, g, 0.02, 0.14, 5.2, N); return g; };
+      if (k) { for (const [x, y, rx] of [[-10, -3, 18], [8, -2, 14], [-24, -6, 9]]) hzEll(c, x, y, rx, 5, '#9d4edd40');   // Glitzerwolke
+        for (let i = 0; i < 12; i++) hzFunke(c, -30 + (i * 37) % 52 + Math.sin(t * 2 + i) * 2, -3 - (i * 13) % 16 + Math.sin(t * 3 + i) * 2, 1.1 + (i % 3) * 0.8, [N, '#fff', '#ffd166'][i % 3]); }
+      // Cape mit Monarchflügel-Muster: hinten hängend (weht) oder offen wie Flügel (Kraft)
+      const fluegel = (p, adern, punkte) => { hzPfad(c, p); c.fillStyle = orange; c.fill(); c.save(); hzPfad(c, p); c.clip();
+        c.strokeStyle = schwarz; c.lineCap = 'round'; c.lineWidth = 1.6; c.beginPath(); for (const q of adern) { c.moveTo(q[0], q[1]); c.lineTo(q[2], q[3]); } c.stroke();
+        hzPfad(c, p); c.lineWidth = 6; c.stroke(); c.restore(); for (const [x, y] of punkte) hzEll(c, x, y, 0.8, 0.8, '#fff'); hzPfad(c, p); c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.6; c.lineJoin = 'round'; c.stroke(); };
+      c.save(); c.translate(0, -schwebe + bob);
+      if (k) { const fl = 1 + Math.sin(t * 5) * 0.05;
+        for (const s of [-1, 1]) { c.save(); c.translate(s * 4, -56); c.scale(s * fl, 1);
+          fluegel([[0, 0], [10, -14], [24, -22], [34, -16], [33, -4], [24, 2], [30, 12], [24, 26], [12, 28], [2, 10]], [[2, 2, 30, -14], [2, 2, 22, -18], [2, 2, 30, -2], [2, 4, 24, 20], [2, 4, 14, 24]], [[30, -17], [33, -9], [27, 4], [28, 14], [20, 25]]); c.restore(); } }
+      else { const w = wind * (16 + Math.sin(t * 9) * 4);
+        fluegel([[-9, -59], [7, -58], [4, -40], [0, -20], ...hzSaum(t, -2 - w * 0.3, -23 - w, -3 + w * 0.3, 5, 0, wind, 2), [-22, -22], [-19, -42], [-14, -54]], [[-3, -56, -21 - w, -6], [-3, -56, -10 - w * 0.6, -5], [-3, -56, -21 - w, -28], [-3, -56, 2, -10], [-3, -56, -17, -46]], [[-21 - w, -5], [-14 - w * 0.6, -3], [-6, -4], [-20, -30], [-17, -44]]); }
+      c.restore();
+      c.save(); c.translate(0, -schwebe);
+      if (!j && !k) arm(-8, zh, sh);
+      // Füße (Pumps) schauen unter dem Kleid hervor
+      const pumps = (x, y) => { hzCel(c, [[x - 3, y - 3.6], [x + 2, y - 3.8], [x + 7, y - 1.2], [x + 7, y], [x - 1, y], [x - 3, y - 1.6]], schwarz, schwarz, null, 1.2); c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.4; c.beginPath(); c.moveTo(x - 2.6, y - 1.4); c.lineTo(x - 2.8, y + 0.2); c.stroke(); hzEll(c, x + 2, y - 3.2, 0.7, 0.7, gold); };
+      if (k) { pumps(-4, -1); pumps(2, 1); } else { pumps(fh[0], fh[1]); pumps(fv[0], fv[1]); }
+      c.save(); c.translate(0, bob);
+      const sw = l ? Math.sin(R.p) * 3 : k ? Math.sin(t * 3) * 2 : 0, w = wind * (8 + Math.sin(t * 9) * 2);
+      const kl = [[-8.5, -59], [8.5, -59], [9.5, -55], [6.5, -46], [6, -41], [8, -30], [12 + sw, -12], [14 + sw, -2], ...hzSaum(t, 14 + sw, -15 - w + sw, -2 + (k ? -1 : 0), 6, 0, wind + 0.2, 1.4).slice(1), [-12 - w * 0.5, -14], [-8, -30], [-6, -41], [-6.5, -46], [-9.5, -55]];
+      hzCel(c, kl, kleid, kleidD, [[-24, -62], [-2, -62], [-1, 2], [-24, 2]]);   // bodenlanges Abendkleid
+      c.save(); hzPfad(c, kl); c.clip(); c.fillStyle = 'rgba(199,125,255,.35)'; hzPfad(c, [[3, -56], [5.4, -56], [10 + sw, -4], [6 + sw, -4], [2.6, -40]]); c.fill(); c.restore();   // Satinglanz
+      hzCel(c, [[-6, -42.6], [6, -42.6], [6.3, -40.4], [-6.3, -40.4]], N, '#7a2fb3', null, 1); hzFunke(c, 0, -41.5, 1.6, gold);   // Taillenband + Brosche
+      hzCel(c, [[-8.6, -59.6], [8.6, -59.6], [5, -55], [0, -53.6], [-5, -55]], haut, hautD, null, 1.1);   // Dekolleté-Ausschnitt (Haut dunkel)
+      for (const [x, y] of [[-3.6, -57.4], [3.4, -57.2], [0, -55.6]]) hzEll(c, x, y, 0.7, 0.7, '#fff');   // Monarch-Punkte
+      hzPatch(c, -4, -48.6, 2.3, '#140b22', gold, 'M');
+      c.restore();
+      if (!j && !k) arm(8, zv, sv);
+      // Kopf: Hochsteckfrisur mit Fühlern, kleine Nase, Ohrringe
+      c.save(); c.translate(0, bob); hzKopfHoch(c, j);
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.6; c.lineCap = 'round'; c.beginPath(); c.moveTo(-1, -82); c.quadraticCurveTo(-4, -92, -10, -96); c.moveTo(4, -82); c.quadraticCurveTo(7, -93, 13, -96.5); c.stroke();   // Fühler
+      hzEll(c, -10.4, -96.2, 1.8, 1.8, orange); hzEll(c, 13.2, -96.6, 1.8, 1.8, orange);
+      hzCel(c, [[-7, -79], [-12, -82], [-15, -79], [-14.6, -74], [-10, -72]], schwarz, schwarz, null, 1.2); hzEll(c, -12, -78, 1, 1, gold);   // Dutt
+      hzSchaedel(c, haut, hautD);
+      hzCel(c, [[-10, -68], [-10.6, -74], [-7, -80], [0, -83], [7, -82], [11.4, -77.4], [6, -78.8], [-1, -78.4], [-6, -75.6], [-8, -70]], schwarz, schwarz, null, 1.3);   // Hochsteckfrisur, Haar seitlich gescheitelt
+      c.strokeStyle = '#4a4458'; c.lineWidth = 0.6; c.beginPath(); c.moveTo(-6, -79); c.quadraticCurveTo(1, -81.6, 8, -79.6); c.stroke();
+      for (const [x, y] of [[-6.4, -64.6], [-4.8, -62.6], [-7.4, -62]]) hzEll(c, x, y, 0.7, 0.7, '#fff');   // Monarch-Punkte im Gesicht
+      hzCel(c, [[3, -70], [10.6, -69.6], [14, -66.8], [11.8, -64.6], [4, -63.8]], haut, hautD, [[0, -66], [16, -66], [16, -62], [0, -62]], 1.4);   // kleine spitze Nase
+      if (j) { hzPfad(c, [[5, -63.2], [11, -63], [8.5, -60.6], [5.6, -61]]); c.fillStyle = '#5a1018'; c.fill(); } else { c.strokeStyle = '#b04ad8'; c.lineWidth = 1.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(10.4, -63.4); c.quadraticCurveTo(7, -62.4, 4.6, -63.6); c.stroke(); }   // Lippen (Violett)
+      hzBlick(c, pose, { iris: '#9d4edd', braue: '#0b0a0e', lid: true, brille: ['cat', '#1a0830', '#b06ae6', gold], immer: true });
+      for (const s of [0, 1]) { const x = -8 + s * 0.1, y = -64; c.strokeStyle = gold; c.lineWidth = 0.8; c.beginPath(); c.moveTo(x, y); c.lineTo(x, y + 2.2); c.stroke(); hzCel(c, [[x, y + 2], [x + 1.8, y + 4.4], [x, y + 7], [x - 1.8, y + 4.4]], N, '#7a2fb3', null, 1); if (s) hzFunke(c, x, y + 4.4, 1, '#fff'); }   // Statement-Ohrring
+      c.restore();
+      if (j || k) { arm(-8, zh, sh); arm(8, zv, sv); }
+      c.restore();
+    },
+    // Sunny the Songbird – Sound wave (reifer Stil, Probe 2 7.11.): Rotkardinal, Popstar, athletisch-schlank; Kopf in Dreiviertel-Ansicht (beide Augen, Schnabel
+    // nach rechts), Federschopf als hoher Pferdeschwanz mit Sidecut, schwarze Gesichtsmaske, Cat-Eye-Sonnenbrille mit zwei Gläsern, kurze Jacke (Anthrazit) mit
+    // rotem Kragen und roten Bündchen (mehr Kardinalrot, auch in Cameo-Größe), Creolen, Headset-Mikro; Neon-Akzent Cyan; steh = Hand in der Hüfte, Brille im Schopf;
+    // Kraft = singt ins Headset: Schallwellen + Noten, ein kleiner Gegner tanzt davon (kompakt, ragt im Cameo nicht aus dem Bild)
+    sunny(c, t, pose, o = {}) {
+      const j = pose === 'jubel', k = pose === 'kraft', l = pose === 'lauf', N = '#25e8f5', p = t * 13;
+      const rot = '#e3243e', rotD = '#9e1329', jacke = '#2a2c38', jackeD = '#17181f', hose = '#2f3140', hoseD = '#1a1b24', gold = '#f2c84b', schnabel = '#f58a3a', schnabelD = '#c25a1c';
+      const bob = l ? -Math.abs(Math.sin(p)) * 1.6 : j ? -Math.max(0, Math.sin(t * 7)) * 2.5 : 0, hy = -36 + bob;
+      let fh, fv;
+      if (l) { fh = [-2 + 13 * Math.sin(p), -Math.max(0, -Math.cos(p)) * 8]; fv = [2 + 13 * Math.sin(p + Math.PI), -Math.max(0, Math.cos(p)) * 8]; }
+      else if (k) { fh = [-8, 0]; fv = [8, 0]; }
+      else if (j) { fh = [-5, bob * 0.6]; fv = [5, bob * 0.6]; }
+      else { fh = [-1, 0]; fv = [5, 0]; }   // steh: Füße fast gekreuzt, Gewicht auf einem Bein
+      const bein = (hx, f) => { const g = hzIK(hx, hy, f[0], f[1] - 5, 17, 16.5, -1); hzGlied(c, g, 4.8, hose, hoseD); hzSneaker(c, f[0], f[1], '#f2f3f6', '#b9bdc8', N, rot, 1.2); };
+      const arm = (sx, ziel, s, hand = true) => { const g = hzIK(sx, -55 + bob, ziel[0], ziel[1] + bob, 12.5, 12, s); hzGlied(c, g, 4.6, jacke, jackeD);
+        const [, [ex, ey], [hx2, hy2]] = g; c.lineCap = 'butt'; c.strokeStyle = rot; c.lineWidth = 4.2; c.beginPath(); c.moveTo(ex + (hx2 - ex) * 0.62, ey + (hy2 - ey) * 0.62); c.lineTo(ex + (hx2 - ex) * 0.86, ey + (hy2 - ey) * 0.86); c.stroke();   // rotes Bündchen
+        if (hand) hzFaust(c, hx2, hy2, 2.4, rot, rotD); return g[2]; };
+      let zh, zv, sh = 1, sv = -1;
+      if (l) { zh = [-9 + 9 * Math.sin(p), -41 - 5 * Math.abs(Math.cos(p))]; zv = [9 + 9 * Math.sin(p + Math.PI), -41 - 5 * Math.abs(Math.cos(p))]; sv = 1; }
+      else if (j) { zh = [-24, -79]; zv = [27, -77]; sh = 1; sv = 1; }
+      else if (k) { zh = [-6.5, -41]; zv = [21, -62]; sh = -1; sv = 1; }   // hintere Hand in der Hüfte, vordere Hand zum Publikum
+      else { zh = [-10, -35]; zv = [6.5, -40]; sh = 1; sv = -1; }   // steh: vordere Hand in der Hüfte (Ellbogen nach außen)
+      if (!j) arm(-8, zh, sh, !(k));
+      hzCel(c, [[-6, -40], [-17, -29], [-13, -28], [-15, -24], [-10, -27], [-4, -36]], rot, rotD, [[-20, -30], [-4, -35], [-4, -20], [-20, -20]], 1.4);   // Schwanzfedern
+      bein(-2.5, fh); bein(2.5, fv);
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-7, -42.5], [7, -42.5], [8, -36], [-8, -36]], hose, hoseD, [[-12, -44], [-1, -44], [-1, -34], [-12, -34]], 1.4);   // High-Waist-Hose
+      c.strokeStyle = gold; c.lineWidth = 1.1; c.beginPath(); c.moveTo(-6.6, -41.6); c.lineTo(6.6, -41.6); c.stroke();   // Gürtel (Metall)
+      hzCel(c, [[-7, -59], [7, -59], [6, -47], [6.8, -42.5], [-6.8, -42.5], [-6, -47]], rot, rotD, [[-10, -62], [-3, -62], [-3, -40], [-10, -40]], 1.5);   // Federkörper (schlank, Taille)
+      hzCel(c, [[-9, -59.5], [8, -59.5], [10, -56], [8.5, -49], [3.5, -48.5], [2.5, -56], [-1, -56], [-2, -48.5], [-7.5, -49], [-11, -56]], jacke, jackeD, [[-14, -62], [-3, -62], [-3, -46], [-14, -46]]);   // kurze Jacke, offen
+      hzCel(c, [[-9.5, -59.8], [-1, -59.8], [-1.6, -56.6], [-4.5, -57.4], [-10.6, -56.4]], rot, rotD, null, 1.1); hzCel(c, [[2.5, -59.8], [8.5, -59.8], [9.6, -56.6], [3, -56.8]], rot, rotD, null, 1.1);   // roter Kragen
+      c.strokeStyle = N; c.lineWidth = 1; c.beginPath(); c.moveTo(-7.3, -49.6); c.lineTo(-2.2, -49.2); c.moveTo(3.7, -49.2); c.lineTo(8.3, -49.6); c.stroke();   // Neon-Saum
+      hzPatch(c, -5, -53.2, 2.6, '#101219', N, 'S');
+      c.restore();
+      if (!j && !k) arm(7, zv, sv);
+      // Kopf in Dreiviertel-Ansicht
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-3, -79], [1, -84.5], [-4, -86.5], [-12, -85.5], [-18.5, -81], [-21.5, -74], [-20, -66.5], [-17, -70.5], [-15.5, -76], [-8, -78]], rot, rotD, [[-24, -78], [-6, -86], [-6, -64], [-24, -64]]);   // Federschopf als hoher Pferdeschwanz
+      hzCel(c, [[0, -60], [-6, -61], [-9.5, -65], [-9.5, -73], [-5.5, -79.5], [2, -81.5], [7.5, -78.5], [10.8, -73], [10.8, -66], [7.5, -62]], rot, rotD, [[-13, -84], [-5, -84], [-4.5, -66], [12, -64.5], [12, -56], [-13, -56]]);
+      for (let i = 0; i < 3; i++) { c.strokeStyle = 'rgba(0,0,0,.45)'; c.lineWidth = 0.7; c.beginPath(); c.moveTo(-8.6 + i * 1.5, -74); c.lineTo(-7.8 + i * 1.5, -69.5); c.stroke(); }   // Sidecut (rasierte Linien)
+      hzCel(c, [[-3.6, -74.6], [3, -75.2], [10.6, -75], [11.4, -68], [9.8, -62.8], [4, -61.8], [-1, -64.6], [-3.6, -69]], '#17171a', '#17171a', null, 1);   // schwarze Gesichtsmaske um beide Augen
+      if (j || k) {   // singt / lacht: Schnabel offen
+        hzCel(c, [[3, -66.6], [15, -66], [12.5, -63], [4, -63]], schnabel, schnabelD, [[1, -64.8], [17, -64.8], [17, -60], [1, -60]], 1.3);
+        hzPfad(c, [[3.4, -68], [16.2, -68], [3.6, -64.4]]); c.fillStyle = '#4a0c14'; c.fill();
+        hzCel(c, [[2.5, -71], [8, -71.8], [13.5, -70.6], [17.6, -68.2], [3, -67.6]], schnabel, schnabelD, [[1, -69.2], [19, -69.2], [19, -66], [1, -66]], 1.4);
+      } else {
+        hzCel(c, [[2.5, -70.2], [8, -71.2], [13.5, -69.6], [17.6, -66.8], [13.5, -64.6], [7, -63.8], [2.5, -65.5]], schnabel, schnabelD, [[0, -67.2], [19, -67.2], [19, -61], [0, -61]], 1.4);
+        c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.1; c.lineCap = 'round'; c.beginPath(); c.moveTo(15.8, -66.8); c.quadraticCurveTo(9, -66.6, 3.6, -68.6); c.stroke();   // schiefes Grinsen
+      }
+      // Creole (Gold, metallisch) + Headset mit Mikro-Bügel (hinten am Kopf)
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 2.1; c.beginPath(); c.arc(-6.6, -62.4, 2.5, 0, Math.PI * 2); c.stroke(); c.strokeStyle = gold; c.lineWidth = 1; c.stroke();
+      hzCel(c, [[-8.4, -70.5], [-5, -70.5], [-5, -66.4], [-8.4, -66.4]], '#26272e', '#26272e', null, 1); hzEll(c, -6.7, -68.5, 0.8, 0.8, N);
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.9; c.beginPath(); c.moveTo(-5.2, -67); c.quadraticCurveTo(-1, -60.8, 6.5, -61.4); c.stroke(); c.strokeStyle = '#9aa1ad'; c.lineWidth = 0.8; c.stroke();
+      hzEll(c, 7, -61.4, 1.5, 1.2, '#26272e'); hzEll(c, 7.3, -61.6, 0.5, 0.5, N);
+      const gN = [[-5, -76.8], [-2, -74.8], [2.4, -75], [2.6, -72.4], [1.2, -70.2], [-2, -70.2], [-3.9, -72.2]], gF = [[5, -75.2], [9.6, -75.4], [11.8, -77.4], [11.3, -72.6], [9.6, -70.4], [6, -70.4], [4.8, -72.4]];
+      const brauen = (dy) => { hzCel(c, [[-3.4, -76 + dy], [0, -77.3 + dy], [2.6, -76.6 + dy], [2.4, -75.7 + dy], [0, -76.4 + dy], [-3.2, -75.2 + dy]], '#17171a', '#17171a', null, 0.7);
+        hzCel(c, [[5, -76.7 + dy], [7.6, -77.7 + dy], [10.2, -77 + dy], [10, -76.2 + dy], [7.6, -76.8 + dy], [5.2, -75.9 + dy]], '#17171a', '#17171a', null, 0.7); };
+      const brille = () => { c.strokeStyle = gold; c.lineWidth = 0.9; c.beginPath(); c.moveTo(-4.5, -74.6); c.lineTo(-9.2, -72.4); c.moveTo(2.6, -74.2); c.quadraticCurveTo(3.7, -75.2, 4.9, -74.4); c.stroke();
+        const q = pose === 'steh' && hzKlein(c); hzGlas(c, gN, '#2a0b2c', '#c2427a', gold, !q); hzGlas(c, gF, '#2a0b2c', '#c2427a', gold, !q); };
+      if (pose === 'steh') {   // Brille im Schopf, beide Augen halb geschlossen mit Lidstrich-Spitze, kantige Brauen
+        hzMandel(c, -0.4, -72.4, 2.8, '#5a2a16'); hzMandel(c, 7.6, -72.7, 2, '#5a2a16');
+        c.strokeStyle = HZ_KONTUR; c.lineWidth = 1; c.beginPath(); c.moveTo(-3.1, -72.4); c.lineTo(-4.8, -73.8); c.moveTo(9.5, -73.6); c.lineTo(11, -74.8); c.stroke();
+        brauen(0);
+        c.save(); c.translate(-3.5, -8.6); c.rotate(-0.1); brille(); c.restore();
+      } else { brille(); brauen(-1.4); }
+      c.restore();
+      if (k) { arm(7, zv, sv); }
+      if (j) { arm(-8, zh, sh); arm(7, zv, sv); }   // Jubel: Arme nach dem Kopf
+      if (k && (o.kraft == null || o.kraft > 0)) {   // Schallwellen (Neon), Noten, kleiner Gegner tanzt davon – alles innerhalb x ≤ 56
+        c.lineCap = 'round';
+        for (let i = 0; i < 3; i++) { const r = 5 + (t * 24 + i * 7) % 21; c.strokeStyle = N; c.globalAlpha = Math.max(0, 1 - r / 26); c.lineWidth = 1.8; c.beginPath(); c.arc(15, -67, r, -0.55, 0.55); c.stroke(); }
+        c.globalAlpha = 1;
+        for (let i = 0; i < 3; i++) { const x = 22 + (t * 20 + i * 9) % 26; hzText(c, i % 2 ? '♫' : '♪', x, -76 - Math.sin(x * 0.2 + i) * 4 - i * 2, 9, i % 2 ? N : '#fff'); }
+        c.save(); c.translate(46 + Math.sin(t * 3) * 2.5, 0); c.scale(0.72, 0.72); c.rotate(Math.sin(t * 8) * 0.25); const sw = Math.sin(t * 8) * 4;
+        c.strokeStyle = '#5c677d'; c.lineWidth = 2.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(-3, -8); c.lineTo(-5 - sw, 0); c.moveTo(3, -8); c.lineTo(5 - sw, 0); c.moveTo(-6, -16); c.lineTo(-12, -24 - sw); c.moveTo(6, -16); c.lineTo(12, -24 + sw); c.stroke();
+        hzEll(c, 0, -14, 8, 9, '#8d99ae'); c.strokeStyle = '#1a1d26'; c.lineWidth = 1.2; for (const s of [-1, 1]) { c.beginPath(); c.arc(s * 3, -16, 1.6, Math.PI + 0.3, Math.PI * 2 - 0.3); c.stroke(); } hzLaecheln(c, 0, -12, 2.2, '#1a1d26');
+        c.restore(); }
+    },
   };
   // Hülle: Held id bei (x,y) = Fußpunkt, Höhe h, Pose; o.gluehen (true/0..1) = Glühen, o.blitz 0..1 = Leuchtrand (kurz bei Kraft-Auslösung),
   // o.kraft 0..1 = Stärke des Kraft-Effekts, o.phase = Sprungphase (Kenji), o.alpha, o.spiegel (Blick nach links)
@@ -6209,7 +7297,7 @@
     c.fillStyle = g; c.beginPath(); c.roundRect(10, 10, 220, 232, 14); c.fill();
     for (let k = 0; k < 14; k++) hzEll(c, 18 + (k * 61) % 204, 18 + (k * 37) % 212, 1.3, 1.3, zu ? '#8a93a3' : '#fff');
     c.save(); c.beginPath(); c.roundRect(10, 10, 220, 232, 14); c.clip();
-    const hx = 120 - (id === 'penny' || id === 'olivia' ? 26 : 0), hy = id === 'kenji' ? 250 : 226;
+    const hx = 120 - (['penny', 'olivia', 'eddie', 'ally', 'bonnie', 'benny', 'sunny'].includes(id) ? 26 : 0), hy = ['kenji', 'pennypuma', 'maya'].includes(id) ? 250 : 226;   // Kraft-Effekt nach rechts → Held weiter links; Sprung/Schweben → tiefer
     if (zu) {   // Silhouette: Held auf eine Zwischenfläche zeichnen und grau füllen (source-atop), dann großes „?“
       const tmp = document.createElement('canvas'); tmp.width = 480; tmp.height = 640; const tc = tmp.getContext('2d'); tc.scale(2, 2);
       if (HELDEN_ZEICHNUNG[id]) heldZeichnen(tc, id, 120, 226, 150, t, 'steh', {});
@@ -6218,6 +7306,11 @@
       hzText(c, '?', 120, 118, 84, '#fff'); if (o.hinweis) hzText(c, o.hinweis, 120, 220, 15, '#d8dde6', false);
     } else if (HELDEN_ZEICHNUNG[id]) heldZeichnen(c, id, hx, hy, 150, t, 'kraft', { gluehen: true, blitz: o.blitz || 0, kraft: 1, phase: 0.5 });
     c.restore();
+    if (!zu && HZ_NEUSTIL.has(id)) {   // reifer K9-Stil: Schrift mit dunkler Kontur (lesbar auch auf Gold)
+      c.save(); c.lineJoin = 'round'; c.strokeStyle = 'rgba(11,13,20,.85)';
+      c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineWidth = 4; c.strokeText(held.name || id, 120, 272);
+      c.font = '15px system-ui, sans-serif'; c.lineWidth = 3.2; c.strokeText('⚡ ' + (held.kraft || ''), 120, 298); c.restore();
+    }
     hzText(c, zu ? '???' : held.name || id, 120, 272, 18, '#fff'); hzText(c, zu ? '⚡ ?' : '⚡ ' + (held.kraft || ''), 120, 298, 15, '#fff', false);
     c.restore();
   }
@@ -7868,6 +8961,7 @@
     for (const g of gegner) {
       if (g.tot > 0.6) continue; const x = g.x - kamera; if (x < -60 || x > viewW + 60) continue;
       c.save(); c.translate(-kamera, 0);
+      if (g.weg) { const b = gegnerBox(g), mx = b.x + b.w / 2, my = b.y + b.h / 2; c.translate(mx, my); c.rotate(g.weg.art === 'tanz' ? Math.sin(g.weg.t * 14) * 0.45 : g.weg.t * 9); c.translate(-mx, -my); c.globalAlpha = Math.max(0, 1 - g.weg.t / 1.2); }   // Kl. 9: wegfliegen / tanzen
       (GEGNER_ZEICHNER[g.art] || waschbaer)(c, g);
       c.restore();
       if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut) {   // Cameo Penny: Eisblock um den Gegner
@@ -7899,9 +8993,23 @@
         c.save(); c.globalAlpha = nebelDichte; c.shadowColor = '#7fe6ff'; c.shadowBlur = 18; diamant(c, x, d.y + schweb, 14, '#39c6f0'); c.restore();
       }
     }
+    if (heldBruecke) {   // Cameo Benny (Kl. 9): Holzbrücke über die Lücke (Bretter + Geländerseil)
+      const bx = heldBruecke.x - kamera, bw = heldBruecke.w;
+      if (bx < viewW + 20 && bx + bw > -20) {
+        c.save(); c.fillStyle = '#8d5a2b'; c.fillRect(bx, BODEN_Y, bw, 12); c.fillStyle = '#c58b4a';
+        for (let px = bx + 2; px < bx + bw - 4; px += 18) c.fillRect(px, BODEN_Y + 1, 14, 9);
+        c.strokeStyle = '#5c3a1a'; c.lineWidth = 3; c.beginPath(); c.moveTo(bx, BODEN_Y - 26); c.quadraticCurveTo(bx + bw / 2, BODEN_Y - 12, bx + bw, BODEN_Y - 26); c.stroke();
+        c.fillStyle = '#5c3a1a'; c.fillRect(bx - 3, BODEN_Y - 30, 6, 32); c.fillRect(bx + bw - 3, BODEN_Y - 30, 6, 32); c.restore();
+      }
+    }
+    if (laserBlitz > 0 && tot <= 0) {   // Cameo Eddie (Kl. 9): roter Laserstrahl von oben auf das Hindernis vor der Figur
+      c.save(); c.globalAlpha = Math.min(1, laserBlitz / 0.2); c.strokeStyle = '#ff2d2d'; c.lineWidth = 5; c.shadowColor = '#ff2d2d'; c.shadowBlur = 14;
+      c.beginPath(); c.moveTo(spieler.x - kamera + 220, 40); c.lineTo(spieler.x - kamera + 40, spieler.y - 30); c.stroke(); c.restore();
+    }
     if (tot <= 0) {
       const blink = spieler.unverwundbar > 0 && Math.floor(zeit * 12) % 2 === 0;
       c.globalAlpha = blink ? 0.35 : durchlaessig > 0 ? 0.45 : 1;   // Cameo Zara: Figur halb unsichtbar
+      if (brecher > 0 || schweben > 0) { const fa = brecherArt === 'laser' ? '#ff2d2d' : brecherArt === 'rolle' ? HELD_FARBE.archie : brecherArt ? HELD_FARBE.bonnie : HELD_FARBE.maya; c.save(); c.globalAlpha = 0.3 + 0.12 * Math.sin(zeit * 7); c.strokeStyle = fa; c.lineWidth = 4; c.setLineDash(brecherArt === 'rolle' ? [10, 6] : []); c.beginPath(); c.ellipse(spieler.x - kamera, spieler.y - 44, 36, 54, brecherArt === 'rolle' ? zeit * 6 : 0, 0, Math.PI * 2); c.stroke(); c.restore(); }   // Kl. 9: Kraft-Ring (Laser/Ramme/Rolle/Schweben)
       if (schild > 0) { c.save(); c.globalAlpha = 0.35 + 0.1 * Math.sin(zeit * 6); c.strokeStyle = '#2e9e5b'; c.lineWidth = 4; c.beginPath(); c.ellipse(spieler.x - kamera, spieler.y - 44, 34, 52, 0, 0, Math.PI * 2); c.stroke(); c.restore(); }   // Cameo Tessa: Schutzschild
       if (traegtAktiv) falkeZeichnen(c, spieler.x - kamera, spieler.y - 96);   // Cameo Felix: Falke hält die Figur
       if ((kenjiMit > 0 || kenjiSprung >= 0) && !(cameo && cameo.held && cameo.held.id === 'kenji') && HELDEN_ZEICHNUNG.kenji) {   // Cameo Kenji: hüpft links neben der Figur mit, springt beim Bonus-Sprung mit ihr hoch
@@ -8091,20 +9199,28 @@
     return tor || (eule && !eule.erledigt && spieler.x < eule.x + 40 ? eule : null);
   }
   // Cameo-Effekte als kleine Chips unter den Herzen (Symbol + Restzeit als Balken)
+  const CHIP_Y = 114, CHIP_H = 30;   // Chip-Zeile (7.11.: die Cameo-Sprechblase weicht ihr aus, s. cameoZeichnen)
   function effektChips(c) {
+    effektListe().forEach(([sym, f], i) => {
+      const x = 14 + i * 40, y = CHIP_Y;   // unter Wortbank (y 54) und Tor-Hinweis (72–106)
+      c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.roundRect(x, y, 34, CHIP_H, 9); c.fill();
+      c.font = '17px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText(sym, x + 17, y + 14);
+      c.fillStyle = '#2e9e5b'; c.fillRect(x + 4, y + 25, 26 * Math.max(0, Math.min(1, f)), 3);
+    });
+  }
+  function effektListe() {
     const liste = [];
     if (schild > 0) liste.push(['🛡️', schild / 5]);
-    if (sprungBonus > 0) liste.push(['🦘', sprungBonus / 5]);
+    if (sprungBonus > 0) liste.push([sprungArt === 'puma' ? '🐾' : '🦘', sprungBonus / 5]);
+    if (brecher > 0) liste.push([brecherArt === 'laser' ? '💥' : brecherArt === 'rolle' ? '🌀' : '🦬', brecher / (brecherArt === 'rolle' ? 4 : 6)]);
+    if (schweben > 0) liste.push(['🦋', schweben / 4]);
+    if (heldBruecke) liste.push(['🌉', 1]);
+    if (wegZiel) liste.push([wegZiel.art === 'welle' ? '🌊' : wegZiel.art === 'stampf' ? '🥁' : '🎵', wegZiel.zeit / (wegZiel.art === 'welle' ? 6 : 5)]);
     if (traegt > 0 || traegtAktiv) liste.push(['🦅', traegtAktiv ? 1 : traegt / 5]);
     if (durchlaessig > 0) liste.push(['👻', durchlaessig / 3]);
     if (eisZeit > 0) liste.push(['❄️', eisZeit / 3]);
     if (eule) liste.push(['🦉', 1]);
-    liste.forEach(([sym, f], i) => {
-      const x = 14 + i * 40, y = 114;   // unter Wortbank (y 54) und Tor-Hinweis (72–106)
-      c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.roundRect(x, y, 34, 30, 9); c.fill();
-      c.font = '17px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText(sym, x + 17, y + 14);
-      c.fillStyle = '#2e9e5b'; c.fillRect(x + 4, y + 25, 26 * Math.max(0, Math.min(1, f)), 3);
-    });
+    return liste;
   }
   function herz(c, x, y, r) {
     c.beginPath(); c.moveTo(x, y + r);
@@ -8253,6 +9369,7 @@
     texte = Object.assign({}, TEXTE, { bossTitel: `${W.bossName} fragt …` }, opt.texte || {});
     // Cameos (nur wenn die App Helden übergibt): Kartenbilder vorab laden; Ladefehler → Kreis mit Initiale
     cameoListe = (Array.isArray(opt.cameos) ? opt.cameos : []).filter((h) => h && h.id).slice(0, 3);
+    cameoAnzahl = Math.max(0, Math.floor(Number(opt.cameoAnzahl) || 0));   // Klasse 9: 1 Auftritt je Lauf (ohne Option 2–3 wie Klasse 6)
     canvas = el("canvas", "runner-canvas"); canvas.setAttribute("aria-label", opt.titel || "Road Trip Run");
     ctx = canvas.getContext("2d");
     wrapper.append(canvas, frageBauen());
@@ -9831,7 +10948,8 @@
     const texte = ['SHOW', 'NYC', 'BROADWAY', 'MUSIC', 'NEWS', 'PIZZA', 'DANCE', '24/7'];
     const block = (x0, w, tafeln) => {
       c.fillStyle = '#2a2f3e'; c.fillRect(x0, 40, w, 252); c.fillStyle = '#1e2230'; for (let x = x0 + 8; x < x0 + w - 8; x += 24) c.fillRect(x, 40, 3, 252);
-      tafeln.forEach(([tx, ty, tw, th], i) => { const k = i + (x0 > 300 ? 4 : 0), f = farben[k % 8];
+      const innen = x0 > 300 ? x0 : x0 + w;   // 7.11.: Tafeln zur Mitte hin gestaucht (x 0,82), damit sie beim Zoom ganz im Bild bleiben
+      tafeln.forEach(([tx0, ty, tw0, th], i) => { const k = i + (x0 > 300 ? 4 : 0), f = farben[k % 8], tw = tw0 * 0.82, tx = innen + (x0 + tx0 - innen) * 0.82 - x0;
         c.globalAlpha = an(k); c.fillStyle = '#111'; c.fillRect(x0 + tx - 3, ty - 3, tw + 6, th + 6); c.fillStyle = f; c.fillRect(x0 + tx, ty, tw, th);
         c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(x0 + tx, ty, tw, th * 0.35);
         c.fillStyle = '#fff'; c.font = `bold ${Math.min(22, th * 0.42, (tw - 10) / (texte[k % 8].length * 0.68))}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(texte[k % 8], x0 + tx + tw / 2, ty + th / 2 + 1);
@@ -9859,6 +10977,128 @@
     c.fillStyle = '#2f6a7a'; c.fillRect(-60, 296, SZ_W + 120, 140);
     c.fillStyle = 'rgba(255,255,255,.35)'; for (let k = 0; k < 9; k++) { c.beginPath(); c.ellipse((k * 83 + t * 20) % 700 - 30, 330 + (k % 3) * 18, 34, 5, 0, 0, Math.PI * 2); c.fill(); }
     for (let k = 0; k < 14; k++) { const x = 170 + k * 34, p = Math.sin(t * 1.6 + k) * 0.5 + 0.5; c.fillStyle = `rgba(255,255,255,${0.55 + 0.3 * p})`; c.beginPath(); c.arc(x, 292 - p * 14, 26 + p * 10, 0, Math.PI * 2); c.fill(); }
+  }
+  // ===== Klasse 9 – Heldenfilme (7.11.2026, Mr. Alex, Etappe 3) =====
+  // 13 US-Helden im reifen Comic-Stil (heldZeichnen, HZ_NEUSTIL) in der Kulisse einer Road-Trip-Welt; je Film drei Phasen mit eigener Pose:
+  // Auftritt (lauf, Flieger schweben ein) → Kraft (Pose 'kraft', Leuchtrand-Blitz, großer Effekt in der Szene) → Jubel + Kraft-Chip; danach die Sammelkarte groß (foto).
+  // Sprechblase nur für den Ausruf (HELD9_RUF, ab 7,7 s, gesprochen audio/helden/ruf_<id>.mp3); sonst spricht der Held seine Vorstellung (audio/helden/intro_<id>.mp3, Untertitel satzweise).
+  const H9_Y = 273, H9_S = 1.5;   // Mitte der Figur: Fuß auf BODEN_Y (330) = H9_Y + 38 · H9_S
+  const sz9Fels = (c, x, y, r, rot = 0, farbe = '#8a6f55') => {   // Felsbrocken (Unterkante y)
+    c.save(); c.translate(x, y - r * 0.55); c.rotate(rot); c.fillStyle = farbe; c.strokeStyle = 'rgba(20,14,10,.55)'; c.lineWidth = 2.5;
+    c.beginPath(); c.moveTo(-r, r * 0.5); c.quadraticCurveTo(-r * 1.05, -r * 0.5, -r * 0.2, -r * 0.62); c.quadraticCurveTo(r * 0.85, -r * 0.6, r, r * 0.5); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = 'rgba(255,255,255,.2)'; c.beginPath(); c.ellipse(-r * 0.35, -r * 0.25, r * 0.32, r * 0.13, -0.4, 0, Math.PI * 2); c.fill(); c.restore();
+  };
+  const sz9Kiste = (c, x, y, s = 1, rot = 0) => {   // Holzkiste (Mitte unten x, y)
+    c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s);
+    c.fillStyle = '#b7793d'; c.strokeStyle = '#5a3414'; c.lineWidth = 3; c.beginPath(); c.rect(-26, -52, 52, 52); c.fill(); c.stroke();
+    c.beginPath(); c.moveTo(-26, -52); c.lineTo(26, 0); c.moveTo(26, -52); c.lineTo(-26, 0); c.stroke(); c.restore();
+  };
+  const sz9Splitter = (c, x, y, d, farben, n = 10) => {   // Bruchstücke fliegen auseinander (d = Zeit seit dem Bruch)
+    if (d < 0 || d > 1.4) return;
+    c.save(); c.globalAlpha = Math.max(0, 1 - d / 1.4);
+    for (let k = 0; k < n; k++) { const a = -Math.PI * (0.1 + 0.8 * k / (n - 1)), v = 170 + (k % 3) * 60; c.fillStyle = farben[k % farben.length];
+      c.save(); c.translate(x + Math.cos(a) * v * d, y + Math.sin(a) * v * d + 260 * d * d); c.rotate(d * 8 + k); c.fillRect(-6, -4, 12, 8); c.restore(); }
+    c.restore();
+  };
+  const sz9Herz = (c, x, y, r, farbe) => { c.save(); c.fillStyle = farbe; c.beginPath(); c.moveTo(x, y + r * 0.9); c.bezierCurveTo(x - r * 1.6, y - r * 0.2, x - r * 0.6, y - r * 1.3, x, y - r * 0.4); c.bezierCurveTo(x + r * 0.6, y - r * 1.3, x + r * 1.6, y - r * 0.2, x, y + r * 0.9); c.fill(); c.restore(); };
+  const sz9Note = (c, x, y, s, farbe) => { c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe; c.strokeStyle = farbe; c.lineWidth = 3; c.beginPath(); c.ellipse(-6, 8, 7, 5, -0.4, 0, Math.PI * 2); c.fill(); c.beginPath(); c.moveTo(0, 7); c.lineTo(0, -18); c.quadraticCurveTo(8, -12, 12, -4); c.stroke(); c.restore(); };
+  const sz9Falter = (c, x, y, s, t, farbe) => { const f = 0.35 + 0.65 * Math.abs(Math.sin(t * 9)); c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe; c.strokeStyle = '#1a1214'; c.lineWidth = 1.5;
+    for (const d of [-1, 1]) { c.beginPath(); c.ellipse(d * 7 * f, -3, 7 * f, 6, d * 0.4, 0, Math.PI * 2); c.fill(); c.stroke(); c.beginPath(); c.ellipse(d * 5 * f, 5, 5 * f, 4, -d * 0.4, 0, Math.PI * 2); c.fill(); c.stroke(); }
+    c.fillStyle = '#1a1214'; c.fillRect(-1, -7, 2, 14); c.restore(); };
+  const sz9Blume = (c, x, y, heil, farbe) => {   // welke (heil 0) bzw. blühende (heil 1) Blume, Fuß bei (x, y)
+    const neig = (1 - heil) * 1.1, kx = x + Math.sin(neig) * 34, ky = y - Math.cos(neig) * 34;
+    c.save(); c.strokeStyle = heil > 0.5 ? '#2e9e5b' : '#8a7a46'; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x, y - 20, kx, ky); c.stroke();
+    const r = 6 + heil * 6; c.fillStyle = heil > 0.5 ? farbe : '#a08c62'; for (let k = 0; k < 5; k++) { const a = k * 1.2566; c.beginPath(); c.ellipse(kx + Math.cos(a) * r, ky + Math.sin(a) * r, r * 0.75, r * 0.5, a, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(kx, ky, r * 0.55, 0, Math.PI * 2); c.fill(); c.restore();
+  };
+  const sz9Lauf = (t, bis = 2.2, x = 220) => (t < bis ? { x: lerp(-90, x, sanft(t / bis)), pose: 'lauf' } : null);   // Auftritt von links
+  // je Held: welt (Kulisse), kam (Kameraposition), kraft (Chip-Text wie helden.tsv), ab (Kraft-Einsatz), klaenge, optional pos(t), hinten/vorn(c, t, p), flug (schwebt ein)
+  const HELD9_RUF = {   // Ausrufe in den Kl.-9-Heldenfilmen (7.11.2026): Sprechblase ab 7,7 s + gesprochen (audio/helden/ruf_<id>.mp3, werkzeuge/runner_audio.py HELD_RUFE9)
+    eddie: "Target locked!", bonnie: "Rock on!", gus: "Not on my watch!", cody: "Yee-haw!", ally: "Cowabunga!", rosie: "Now you don't!", benny: "Bridge is open!", pennypuma: "Sky high!", archie: "Rollin', y'all!", molly: "Drum roll!", holly: "All better now!", maya: "Simply divine!", sunny: "Encore!",
+  };
+  const HELD9_FILM = {
+    eddie: { welt: 'sd', kam: 9000, kraft: 'Eagle eye', flug: true, klaenge: [[0.3, 'cameo'], [0.9, 'adler'], [3.0, 'kristall'], [4.6, 'bruch'], [8.0, 'jubel']],
+      vorn(c, t, p) {   // Laserstrahlen aus den Gläsern bis zum Felsen, der bei 4,6 s zerspringt
+        const kaputt = t >= 4.6; if (!kaputt) sz9Fels(c, 470, 332, 58, 0, t > 3.6 ? '#b0634a' : '#8a6f55');
+        if (t >= 3 && t < 4.7) { const f = sanft((t - 3) / 0.4), ey = p.y - 30, ex = p.x + 30; c.save(); c.lineCap = 'round';
+          for (const [b, fa] of [[10, 'rgba(255,42,61,.45)'], [4, '#ffd0d4']]) { c.strokeStyle = fa; c.lineWidth = b; c.beginPath(); c.moveTo(ex, ey); c.lineTo(lerp(ex, 450, f), lerp(ey, 300, f)); c.stroke(); } c.restore();
+          if (f >= 1) for (let k = 0; k < 4; k++) szFunkeln(c, 450 + Math.cos(t * 9 + k) * 18, 300 + Math.sin(t * 7 + k) * 14, 7, t + k, '#ffd93d'); }
+        sz9Splitter(c, 470, 300, t - 4.6, ['#8a6f55', '#6e5642', '#ff6a3d'], 14);
+      } },
+    bonnie: { welt: 'sd', kam: 15000, kraft: 'Super strength', klaenge: [[0.3, 'cameo'], [0.8, 'bueffel'], [3.0, 'rumpeln'], [4.1, 'krach'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t) || (t < 3 ? { x: 220, pose: 'steh' } : t < 4.1 ? { x: lerp(220, 360, sanft((t - 3) / 1.1)), pose: 'kraft' } : { x: 360, pose: t < 7.6 ? 'kraft' : 'jubel' }),
+      vorn(c, t) { const d = Math.max(0, t - 4.1); sz9Fels(c, 470 + d * 150, 332 - Math.abs(Math.sin(d * 5)) * 40 * Math.max(0, 1 - d / 2), 56, d * 4); if (t >= 4.1) szStaub(c, 420, 326, 1, Math.max(0, 1 - d)); } },
+    gus: { welt: 'az', kam: 12000, kraft: 'Force field', klaenge: [[0.3, 'cameo'], [0.9, 'baer'], [3.0, 'schild'], [3.9, 'stein'], [4.7, 'stein'], [5.5, 'stein'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 300) || { x: 300, pose: t < 3 ? 'steh' : t < 7.6 ? 'kraft' : 'jubel' },
+      vorn(c, t) { for (const [t0, dx] of [[3.0, -8], [3.8, 10], [4.6, -4]]) { const d = t - t0; if (d < 0) continue; const fall = Math.min(1, d / 0.9);
+        if (fall < 1) sz9Fels(c, 300 + dx, lerp(-30, 150, fall * fall), 18, d * 3, '#9a5a3a');
+        else { const e = d - 0.9; sz9Fels(c, 300 + dx + (dx >= 0 ? 1 : -1) * (40 + e * 260), 150 + e * 260 + e * e * 300, 18, d * 3, '#9a5a3a'); if (e < 0.3) szFunkeln(c, 300 + dx, 146, 14, t, '#bfe8ff'); } } } },
+    cody: { welt: 'az', kam: 20000, kraft: 'Super speed', klaenge: [[0.3, 'kojote'], [1.1, 'wind'], [3.5, 'wind'], [5.9, 'wind'], [8.3, 'combo'], [8.6, 'jubel']],
+      pos(t) { for (const [t0, dir] of [[1.1, -1], [3.5, 1], [5.9, -1]]) { const f = (t - t0) / 0.9; if (f >= 0 && f <= 1) return { x: dir < 0 ? lerp(720, -90, f) : lerp(-90, 720, f), pose: 'kraft', links: dir < 0, dir, blitz: t0 }; }
+        if (t >= 8.3) { const f = Math.min(1, (t - 8.3) / 0.9); return { x: lerp(720, 320, 1 - Math.pow(1 - f, 3)), pose: f < 1 ? 'kraft' : 'jubel', links: f < 1, dir: f < 1 ? -1 : 0, blitz: 8.3 }; }
+        return { x: -200, pose: 'steh' }; },
+      hinten(c, t, p) { if (p.dir) { szStaub(c, p.x, 326, p.dir); szTempo(c, p.x, p.y, p.dir, 5, 90); } } },
+    ally: { welt: 'ca', kam: 3000, kraft: 'Water blast', klaenge: [[0.3, 'cameo'], [3.0, 'platsch'], [3.4, 'welle'], [4.4, 'rutsch'], [8.0, 'jubel']],
+      vorn(c, t, p) { const d = Math.max(0, t - 4.4); sz9Kiste(c, 460 + d * 300, 330, 1.1, d * 2);
+        if (t >= 3 && t < 7.4) { const f = sanft((t - 3) / 0.5), sx = p.x + 40, sy = p.y - 6, zx = lerp(sx, 640, f); c.save(); c.globalAlpha = t > 7 ? (7.4 - t) / 0.4 : 1;
+          const g = c.createLinearGradient(sx, 0, zx, 0); g.addColorStop(0, '#bff3ff'); g.addColorStop(1, '#2a9df4'); c.fillStyle = g; c.beginPath(); c.moveTo(sx, sy - 8); c.quadraticCurveTo((sx + zx) / 2, sy - 26 - Math.sin(t * 14) * 4, zx, sy - 30); c.lineTo(zx, sy + 34); c.quadraticCurveTo((sx + zx) / 2, sy + 22, sx, sy + 8); c.fill();
+          c.fillStyle = 'rgba(255,255,255,.85)'; for (let k = 0; k < 10; k++) { const q = (t * 2 + k / 10) % 1; c.beginPath(); c.arc(lerp(sx, zx, q), sy - 20 + Math.sin(k * 3 + t * 9) * 26, 3, 0, Math.PI * 2); c.fill(); } c.restore(); } } },
+    rosie: { welt: 'ny', kam: 6000, kraft: 'Invisibility', ab: 3, klaenge: [[0.3, 'waschbaer'], [3.0, 'puff'], [3.6, 'schritte'], [7.6, 'puff'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 180) || (t < 3 ? { x: 180, pose: 'steh' } : t < 7.6 ? { x: lerp(180, 440, sanft((t - 3) / 4.6)), pose: 'kraft', alpha: 0.28 + 0.08 * Math.sin(t * 6) } : { x: 440, pose: 'jubel' }),
+      hinten(c, t) { const lx = 300 + Math.sin(t * 1.3) * 230; c.save(); c.fillStyle = 'rgba(255,240,170,.22)'; c.beginPath(); c.moveTo(lx - 10, -10); c.lineTo(lx + 10, -10); c.lineTo(lx + 70, 336); c.lineTo(lx - 70, 336); c.fill(); c.restore(); },
+      vorn(c, t, p) { for (const t0 of [3.0, 7.6]) { const d = t - t0; if (d >= 0 && d < 0.6) { c.save(); c.globalAlpha = 1 - d / 0.6; c.fillStyle = '#e8e4f4'; for (let k = 0; k < 7; k++) { c.beginPath(); c.arc(p.x + Math.cos(k) * (20 + d * 70), p.y + Math.sin(k) * (20 + d * 60), 14 - d * 10, 0, Math.PI * 2); c.fill(); } c.restore(); } }
+        if (t > 3 && t < 7.6) for (let k = 0; k < 3; k++) szFunkeln(c, p.x + Math.cos(t * 3 + k * 2) * 40, p.y - 30 + Math.sin(t * 4 + k * 2) * 40, 6, t + k, '#d6c8ff'); } },
+    benny: { welt: 'sd', kam: 3000, kraft: 'Bridge builder', klaenge: [[0.3, 'biber'], [3.4, 'hammer'], [4.0, 'hammer'], [4.6, 'hammer'], [5.2, 'hammer'], [5.8, 'hammer'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 250) || (t < 3 ? { x: 250, pose: 'steh' } : t < 6.4 ? { x: 250, pose: 'kraft' } : t < 7.6 ? { x: lerp(250, 470, sanft((t - 6.4) / 1.2)), pose: 'lauf' } : { x: 470, pose: 'jubel' }),
+      hinten(c, t) { c.fillStyle = '#2f7fb0'; c.fillRect(320, 330, 120, 70); c.fillStyle = 'rgba(255,255,255,.45)'; for (let k = 0; k < 4; k++) c.fillRect(326 + ((k * 31 + t * 40) % 100), 350 + (k % 2) * 18, 16, 3);
+        c.fillStyle = '#6b4a2b'; c.fillRect(314, 330, 8, 70); c.fillRect(438, 330, 8, 70);
+        const n = Math.max(0, Math.min(5, Math.floor((t - 3.4) / 0.6) + 1));
+        for (let k = 0; k < n; k++) { c.fillStyle = k % 2 ? '#a8733f' : '#b98348'; c.strokeStyle = '#5a3414'; c.lineWidth = 2; c.beginPath(); c.rect(318 + k * 25, 324, 25, 10); c.fill(); c.stroke(); } } },
+    pennypuma: { welt: 'sd', kam: 27000, kraft: 'Mega jump', klaenge: [[0.3, 'cameo'], [3.2, 'sprung'], [5.0, 'plopp'], [8.0, 'jubel']],
+      pos(t) { const l = sz9Lauf(t, 2.2, 190); if (l) return l; if (t < 3.2) return { x: 190, pose: 'steh' };
+        if (t < 5) { const f = (t - 3.2) / 1.8; return { x: lerp(190, 520, f), y: H9_Y - Math.sin(f * Math.PI) * 150, pose: 'kraft' }; } return { x: 520, pose: t < 7.6 ? 'steh' : 'jubel' }; },
+      hinten(c) { c.fillStyle = '#7b6a5c'; c.strokeStyle = '#3e342b'; c.lineWidth = 3; c.beginPath(); c.rect(330, 160, 70, 172); c.fill(); c.stroke(); c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 2;
+        for (let y = 184; y < 330; y += 24) { c.beginPath(); c.moveTo(330, y); c.lineTo(400, y); c.stroke(); } },
+      vorn(c, t) { if (t >= 3.2 && t < 4) szStaub(c, 190, 326, -1, 1 - (t - 3.2) / 0.8); if (t >= 5 && t < 5.8) { szStaub(c, 520, 326, 1, 1 - (t - 5) / 0.8); szStaub(c, 520, 326, -1, 1 - (t - 5) / 0.8); } } },
+    archie: { welt: 'route66', kam: 12000, kraft: 'Armour ball', klaenge: [[0.3, 'guerteltier'], [3.0, 'rollt'], [3.9, 'krach'], [5.0, 'krach'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 130) || (t < 3 ? { x: 130, pose: 'steh' } : t < 6 ? { x: lerp(130, 540, (t - 3) / 3), pose: 'kraft', dir: 1 } : { x: 540, pose: t < 7.6 ? 'steh' : 'jubel' }),
+      hinten(c, t, p) { if (p.dir) szStaub(c, p.x, 326, 1); },
+      vorn(c, t) { for (const [x, tb] of [[310, 3.9], [420, 5.0]]) { if (t < tb) sz9Kiste(c, x, 330, 1); sz9Splitter(c, x, 300, t - tb, ['#b7793d', '#8a5a2a', '#e0b070'], 12); } } },
+    molly: { welt: 'sd', kam: 4000, kraft: 'Thunder stomp', klaenge: [[0.3, 'cameo'], [3.2, 'trommel'], [3.4, 'grollen'], [4.6, 'trommel'], [5.8, 'trommel'], [8.0, 'jubel']],
+      wackeln: (t) => { for (const t0 of [3.4, 4.6, 5.8]) { const d = t - t0; if (d >= 0 && d < 0.35) return Math.sin(d * 90) * 6 * (1 - d / 0.35); } return 0; },
+      vorn(c, t, p) { for (const t0 of [3.4, 4.6, 5.8]) { const d = t - t0; if (d < 0 || d > 1.2) continue; c.save(); c.globalAlpha = 1 - d / 1.2; c.strokeStyle = '#4361ee'; c.lineWidth = 4;
+          for (let k = 0; k < 2; k++) { c.beginPath(); c.ellipse(p.x, 332, 30 + (d - k * 0.15) * 300, 6 + (d - k * 0.15) * 26, 0, 0, Math.PI * 2); c.stroke(); } c.restore();
+          for (const [x, r] of [[420, 14], [500, 18], [575, 12]]) sz9Fels(c, x, 332 - Math.sin(Math.min(1, d / 0.7) * Math.PI) * 50, r, d * 2, '#7f7468'); }
+        if (t < 3.4) for (const [x, r] of [[420, 14], [500, 18], [575, 12]]) sz9Fels(c, x, 332, r, 0, '#7f7468'); } },
+    holly: { welt: 'ca', kam: 8000, kraft: 'Healing', flug: true, klaenge: [[0.3, 'vogel'], [3.6, 'kristall'], [4.8, 'kristall'], [6.0, 'kristall'], [8.0, 'jubel']],
+      vorn(c, t, p) { [[400, 3.6, '#ff5fa2'], [470, 4.8, '#ffb703'], [540, 6.0, '#9d4edd']].forEach(([x, th, fa]) => {
+          sz9Blume(c, x, 332, sanft((t - th) / 0.6), fa); const d = t - (th - 0.8); if (d >= 0 && d < 0.8) sz9Herz(c, lerp(p.x + 30, x, d / 0.8), lerp(p.y - 20, 290, d / 0.8) - Math.sin(d / 0.8 * Math.PI) * 50, 9, '#ff5fa2');
+          if (t >= th && t < th + 0.8) for (let k = 0; k < 4; k++) szFunkeln(c, x + Math.cos(k * 1.6 + t * 4) * 22, 296 + Math.sin(k * 1.6 + t * 4) * 18, 6, t + k, '#fff0a8'); }); } },
+    maya: { welt: 'ca', kam: 10000, kraft: 'Floating', klaenge: [[0.3, 'cameo'], [3.0, 'feder'], [4.2, 'wind'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 200) || (t < 3 ? { x: 200, pose: 'steh' } : t < 7.6 ? { x: lerp(200, 430, sanft((t - 3) / 4.6)), y: H9_Y - sanft((t - 3) / 1.2) * 90 + Math.sin(t * 2.4) * 8, pose: 'kraft' }
+        : { x: 430, y: H9_Y - 90 * (1 - sanft((t - 7.6) / 0.8)), pose: 'jubel' }),
+      vorn(c, t, p) { if (t < 3) return; for (let k = 0; k < 5; k++) { const a = t * 1.4 + k * 1.26; sz9Falter(c, p.x + Math.cos(a) * 70, p.y - 10 + Math.sin(a * 1.3) * 50, 1.1, t + k, k % 2 ? '#f28c28' : '#ffb347'); } } },
+    sunny: { welt: 'ny', kam: 14000, kraft: 'Sound wave', klaenge: [[0.3, 'cameo'], [3.0, 'gesang'], [4.0, 'gitarre'], [7.8, 'applaus']],
+      hinten(c, t) { if (t < 3) return; c.save(); c.globalAlpha = 0.22 * Math.min(1, (t - 3) / 0.5); for (const [x, fa, ph] of [[120, '#ff5fa2', 0], [320, '#25e8f5', 1.7], [520, '#ffd23f', 3.1]]) {
+          const a = Math.sin(t * 1.8 + ph) * 0.35; c.fillStyle = fa; c.beginPath(); c.moveTo(x, -10); c.lineTo(x + Math.sin(a) * 400 - 60, 340); c.lineTo(x + Math.sin(a) * 400 + 60, 340); c.fill(); } c.restore(); },
+      vorn(c, t, p) { if (t < 3 || t > 7.8) return; c.save(); c.strokeStyle = '#25e8f5'; c.lineWidth = 3; for (let k = 0; k < 3; k++) { const f = ((t - 3) * 0.9 + k / 3) % 1; c.globalAlpha = 1 - f; c.beginPath(); c.arc(p.x + 40, p.y - 20, 20 + f * 220, -0.6, 0.6); c.stroke(); } c.restore();
+        for (let k = 0; k < 6; k++) { const f = ((t - 3) * 0.5 + k / 6) % 1; sz9Note(c, p.x + 60 + f * 380, p.y - 40 - Math.sin(f * 6 + k) * 40 - f * 60, 1.2, ['#ffd23f', '#25e8f5', '#ff5fa2'][k % 3]); } } },
+  };
+  function szHeld9(id, f) {
+    return { held: id, dauer: 11, klaenge: HELD9_RUF[id] ? [...f.klaenge, [7.7, 'ruf']] : f.klaenge, zeichne(c, t) {
+      const w = f.wackeln ? f.wackeln(t) : 0; c.save(); if (w && !ruhig()) c.translate(w, Math.abs(w) * 0.4);
+      szWeltKulisse(c, t, f.welt, 30000, f.kam, f.kam + 300, 11);
+      const ab = f.ab == null ? 3 : f.ab;
+      const p = Object.assign({ y: H9_Y }, (f.pos && f.pos(t)) || (t < 2.2 ? { x: lerp(-90, 220, sanft(t / 2.2)), y: f.flug ? H9_Y - 70 * (1 - sanft(t / 2.2)) : H9_Y, pose: 'lauf' } : { x: 220, pose: t < ab ? 'steh' : t < 7.6 ? 'kraft' : 'jubel' }));
+      if (p.pose === 'jubel') p.y -= Math.abs(Math.sin((t - 7.6) * 4)) * 4;
+      if (f.hinten) f.hinten(c, t, p);
+      szHeld(c, id, p.x, p.y, H9_S, t, { pose: p.pose, links: !!p.links, alpha: p.alpha, blitz: szBlitz(t, p.blitz != null ? p.blitz : ab) });
+      if (f.vorn) f.vorn(c, t, p);
+      if (t >= 7.6) for (let k = 0; k < 4; k++) szFunkeln(c, p.x + Math.cos(k * 1.6 + t) * 66, p.y - 14 + Math.sin(k * 1.6 + t) * 46, 7, t + k, HELD_FARBE[id] || '#ffd93d');
+      c.restore();
+      if (HELD9_RUF[id] && t > 7.7 && t < 9.6) szBlase(c, Math.max(150, Math.min(490, p.x)), Math.max(70, p.y - 150), HELD9_RUF[id], HELD_FARBE[id] || '#ffd93d', (t - 7.7) / 0.3);
+      szHeldKraft(c, t, 8.2, id, f.kraft);
+    } };
   }
   const SZENEN = {
     // Klasse 6 – London
@@ -10982,7 +12222,7 @@
         if (t > 1.6) { c.globalAlpha = sanft((t - 1.6) / 0.5); szText(c, 'Fort Sumter', 450, 120, 18, '#fff'); c.strokeStyle = '#fff'; c.lineWidth = 2; c.beginPath(); c.moveTo(450, 132); c.lineTo(450, 150); c.stroke(); c.globalAlpha = 1; }
         if (t > 8.2) { c.globalAlpha = sanft((t - 8.2) / 0.5); szText(c, 'the Civil War begins', 320, 72, 18, '#ffd93d'); c.globalAlpha = 1; }
       } },
-    NC: { dauer: 11.4, klaenge: [[0.3, 'wind'], [0.6, 'motor'], [2.2, 'motor'], [3.8, 'motor'], [5.4, 'motor'], [7.0, 'motor'], [8.6, 'motor'], [9.8, 'jubel']],
+    NC: { dauer: 15.4, klaenge: [[0.3, 'wind'], [0.6, 'motor'], [2.2, 'motor'], [3.8, 'motor'], [5.4, 'motor'], [7.0, 'motor'], [8.6, 'motor'], [10.2, 'motor'], [11.8, 'motor'], [13.4, 'motor'], [14.0, 'jubel']],
       zeichne(c, t) {   // Kitty Hawk 1903: Dünen am Meer, der Wright Flyer fährt auf der Holzschiene an, hebt ab und fliegt dicht über dem Sand, ein Bruder rennt mit; Zähler Sekunden bis 12 und Meter bis 37
         szHimmel(c, '#7ab0e0', '#eef4f8'); szWolken(c, t, [[0, 60], [380, 40]]);
         c.fillStyle = '#4a7aa8'; c.fillRect(0, 196, SZ_W, 36); c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2; for (let k = 0; k < 10; k++) { const wx = (k * 83 - t * 14) % (SZ_W + 40) + 20, wy = 204 + (k % 3) * 9; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 18, wy); c.stroke(); }
@@ -10991,18 +12231,18 @@
         c.fillStyle = '#6a8a4a'; for (const gx of [30, 180, 420, 600]) for (let k = 0; k < 4; k++) c.fillRect(gx + k * 4, 296 - k * 2, 2, 8 + k * 2);
         c.fillStyle = '#7a5a3a'; c.fillRect(60, 326, 190, 5);
         c.fillStyle = '#5a3a22'; c.fillRect(26, 262, 4, 40); c.beginPath(); c.roundRect(4, 240, 140, 30, 5); c.fill(); c.fillStyle = '#f2e6c8'; c.font = 'bold 12px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('KITTY HAWK · 1903', 74, 255);
-        const T0 = 2.6, T1 = 9.6;
+        const T0 = 1.8, T1 = 13.8;   // 7.11.: Flug dauert echte 12 s (Zähler = Echtzeit)
         let x, y;
-        if (t < 1.6) { x = 150; y = 312; } else if (t < T0) { const u = (t - 1.6) / (T0 - 1.6); x = lerp(150, 230, u * u); y = 312; }
+        if (t < 0.8) { x = 150; y = 312; } else if (t < T0) { const u = (t - 0.8) / (T0 - 0.8); x = lerp(150, 230, u * u); y = 312; }
         else if (t < T1) { const u = (t - T0) / (T1 - T0); x = lerp(230, 440, u); y = 312 - Math.sin(Math.min(1, u * 1.15) * Math.PI) * 70 - (ruhig() ? 0 : Math.sin(t * 3) * 4) * Math.sin(u * Math.PI); }
         else { x = 440 + Math.min(1, (t - T1) / 0.6) * 12; y = 316; }
         if (t > T0) { const x0 = 230; c.strokeStyle = '#ffd93d'; c.lineWidth = 3; c.setLineDash([8, 6]); c.beginPath(); c.moveTo(x0, 340); c.lineTo(x, 340); c.stroke(); c.setLineDash([]); c.fillStyle = '#ffd93d'; c.fillRect(x0 - 1, 332, 3, 16); }
         if (t > T1 && t < T1 + 1.2) { const d = (t - T1) / 1.2; rauchWolke(c, 452, 326, 8 + d * 14, 0.6 * (1 - d), `rgba(232,212,160,${0.8 * (1 - d)})`); }
-        { const u = sanft((t - 1.6) / 1.8), wx = lerp(110, 300, u), stop = t > 3.4; personKlein(c, wx, 330, 0.9, 6, { schritt: stop || ruhig() ? 0 : Math.sin(t * 12) * 0.8, arme: t > T1 ? Math.abs(Math.sin(t * 4)) : stop ? 0.4 : 0.2 }); }
+        { const u = sanft((t - 0.8) / 2.2), wx = lerp(110, 300, u), stop = t > 3.0; personKlein(c, wx, 330, 0.9, 6, { schritt: stop || ruhig() ? 0 : Math.sin(t * 12) * 0.8, arme: t > T1 ? Math.abs(Math.sin(t * 4)) : stop ? 0.4 : 0.2 }); }
         wrightFlyer(c, x, y, 1.45, t, t);
         const fl = Math.min(1, Math.max(0, (t - T0) / (T1 - T0)));
-        szZaehler(c, `${Math.floor(12 * fl)} s · ${Math.round(37 * fl)} m`, '#ffd93d', 12, 200);
-        if (t < T0) szText(c, 'the first airplane', 320, 68, 16);
+        szZaehler(c, `${Math.min(12, Math.floor(t - T0 < 0 ? 0 : t - T0))} s · ${Math.round(37 * fl)} m`, '#ffd93d', 12, 200);
+        if (t < T0 + 1.2) szText(c, 'the first airplane', 320, 68, 16);
         if (t > T1 + 0.4) { c.globalAlpha = sanft((t - T1 - 0.4) / 0.5); szText(c, 'It flew!', 320, 70, 20, '#ffd93d'); c.globalAlpha = 1; }
       } },
     VA: { dauer: 11, klaenge: [[0.3, 'fanfare'], [1.4, 'plopp'], [2.0, 'plopp'], [2.6, 'plopp'], [3.2, 'plopp'], [3.8, 'plopp'], [4.4, 'plopp'], [5.0, 'plopp'], [5.6, 'plopp'], [7.0, 'klick'], [7.5, 'klick'], [8.0, 'klick'], [8.5, 'klick'], [9.0, 'klick'], [9.6, 'applaus']],
@@ -11101,7 +12341,7 @@
         szUeberblende(c, t, 5.0);
       } },
     NJ: { dauer: 11.8, klaenge: [[0.3, 'markt'], [1.2, 'plopp'], [2.0, 'plopp'], [2.8, 'plopp'], [3.6, 'plopp'], [4.4, 'staunen'], [6.4, 'schritte'], [7.4, 'klick'], [7.8, 'klick'], [8.2, 'lichtAn'], [9.2, 'staunen']],
-      zeichne(c, t) {   // erst zwei Quadrate von 1 km²: New Jersey füllt sich mit rund 490 Menschen, in Alaska steht nur ein Elch; dann Edisons Labor in Menlo Park: die Glühbirne flackert und leuchtet
+      zeichne(c, t) {   // erst zwei Quadrate von 1 km²: New Jersey füllt sich mit Menschen (die meisten pro km²), in Alaska steht nur ein Elch; dann Edisons Labor in Menlo Park: die Glühbirne flackert und leuchtet
         if (t < 5.8) {
           szHimmel(c, '#cfe6f6', '#eef6fb'); c.fillStyle = '#dfe8ee'; c.fillRect(0, 330, SZ_W, H);
           szZaehler(c, 'people in 1 km²', '#ffd93d', 12, 220);
@@ -11110,7 +12350,7 @@
           for (let i = 0; i < n; i++) { const gx = 66 + (i % 22) * 9.6, gy = 86 + Math.floor(i / 22) * 9.6; c.fillStyle = ['#2a6cff', '#e0a400', '#2e9e5b', '#e8467c', '#8a3ffc', '#ff7a1a'][i % 6]; c.fillRect(gx + 1, gy + 3, 5, 5); c.fillStyle = '#d9a070'; c.fillRect(gx + 2, gy, 3, 3); }
           elch(c, 470, 270, 0.55, t);
           szText(c, 'New Jersey', 170, 318, 18); szText(c, 'Alaska', 470, 318, 18);
-          szText(c, `≈ ${Math.round(n * 490 / 484)}`, 170, 60, 18, '#1d2a50'); if (t > 4.2) szText(c, '< 1', 470, 60, 18, '#1d2a50');
+          if (t > 4.2) { szText(c, 'the most people', 170, 68, 15, '#1d2a50'); szText(c, 'very few', 470, 68, 15, '#1d2a50'); }   // 7.11.: Wörter statt Zahlen (wie im gesprochenen Text)
         } else {
           c.fillStyle = '#7a5a3a'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#8a6a44'; for (let x = 0; x < SZ_W; x += 48) c.fillRect(x, 0, 44, 270);
           c.fillStyle = '#4a3220'; for (const y of [100, 170]) c.fillRect(0, y, SZ_W, 7);
@@ -11215,13 +12455,13 @@
         moeweFlug(c, (t * 40) % 760 - 60, 90, t, 1.2); moeweFlug(c, (t * 30 + 300) % 760 - 60, 120, t + 1, 1);
         if (t < 5.0) szZaehler(c, 'Maine lobster', '#ffd93d', 12, 200);
         else {
-          const g = sanft((t - 5.0) / 0.5); c.globalAlpha = g; c.fillStyle = 'rgba(24,33,58,.78)'; c.beginPath(); c.roundRect(40, 60, 560, 110, 12); c.fill();
-          for (let i = 0; i < 10; i++) { const x = 80 + i * 53, me = i < 8, an = t > 5.6 + i * 0.4; if (!an) continue; c.save(); if (!me) c.globalAlpha *= 0.35; hummer(c, x, 104, 0.3, t, -Math.PI / 2); c.restore(); szText(c, me ? 'ME' : 'other', x, 154, 12, me ? '#ffd93d' : '#c8ccd2'); }
+          const g = sanft((t - 5.0) / 0.5); c.globalAlpha = g; c.fillStyle = 'rgba(24,33,58,.78)'; c.beginPath(); c.roundRect(16, 60, 500, 110, 12); c.fill();   // 7.11.: Tafel links, der Leuchtturm (x 560) bleibt frei
+          for (let i = 0; i < 10; i++) { const x = 46 + i * 49, me = i < 8, an = t > 5.6 + i * 0.4; if (!an) continue; c.save(); if (!me) c.globalAlpha *= 0.35; hummer(c, x, 104, 0.3, t, -Math.PI / 2); c.restore(); szText(c, me ? 'ME' : 'other', x, 154, 12, me ? '#ffd93d' : '#c8ccd2'); }
           szZaehler(c, 'Most US lobsters: Maine', '#ffd93d', 12, 300); c.globalAlpha = 1;
         }
       } },
     // Klasse 9 – Landmarks, Etappe 3 (6.11.2026): Times Square, Niagara Falls, Old Faithful, White House (Schlüssel = Landmark-id, inhalte/klasse9/landmarks.tsv)
-    times_square: { dauer: 9, klaenge: [[0.2, 'verkehr'], [1.0, 'taxi'], [2.2, 'hupe'], [3.0, 'verkehr'], [3.6, 'klick'], [4.3, 'klick'], [5.0, 'klick'], [5.7, 'jubel'], [6.0, 'applaus'], [7.4, 'hupe']],
+    times_square: { dauer: 9, nachZoomMax: 1.04, klaenge: [[0.2, 'verkehr'], [1.0, 'taxi'], [2.2, 'hupe'], [3.0, 'verkehr'], [3.6, 'klick'], [4.3, 'klick'], [5.0, 'klick'], [5.7, 'jubel'], [6.0, 'applaus'], [7.4, 'hupe']],
       zeichne(c, t) {   // Times Square bei Nacht – nie dunkel: Leuchtwände blinken, gelbe Taxis, eine Menschenmenge; der Ball fällt am Mast herab (3, 2, 1), Mitternacht: HAPPY NEW YEAR! und Konfetti
         const z = lerp(1, 1.08, sanft(t / 9));
         c.save(); c.translate(SZ_W / 2, 300); c.scale(z, z); c.translate(-SZ_W / 2, -300);
@@ -11322,7 +12562,7 @@
         else if (t < 7.6) { x = lerp(349, 190, sanft((t - 6.6) / 1)); y = 262; }
         else if (t < 8.4) { x = 190; y = lerp(262, 424, sanft((t - 7.6) / 0.8)); }
         else { const f = sanft((t - 8.4) / 0.8); x = lerp(190, 450, f); y = lerp(424, 236, f) + (f >= 1 ? Math.sin(t * 4) * 3 : 0); }
-        const unten = t < 2.2 ? 388 : Math.min(388, y - 34), cx = t < 6.6 ? 300 : t < 7.6 ? x - 49 : 141;
+        const unten = t < 2.2 ? 388 : Math.min(388, y - 50), cx = t < 6.6 ? 300 : t < 7.6 ? x - 49 : 141;
         szHeld(c, 'camilla', x, y, 1.6, t, { pose: t < 2.2 ? 'steh' : t < 8.4 ? 'kraft' : 'jubel', kraft: 0, blitz: szBlitz(t, 2.2) });   // kraft: 0 = Arme hoch ohne Felsbrocken (sie hebt das Taxi)
         const traegt = t > 2.6 && t < 8.0;
         szFahrzeug(c, 'cab', cx, unten, t, 1.25, traegt ? Math.sin(t * 3) * 0.03 : 0);
@@ -11483,6 +12723,8 @@
         szHeld(c, 'max', mx, my, 1.6, t, { pose: t < 1.6 ? 'steh' : t < 4.8 ? 'kraft' : t < 8.6 ? 'steh' : 'jubel', blitz: szBlitz(t, 1.6) });
         szHeldKraft(c, t, 9.2, 'max', 'Genius inventor');
       } },
+    // Klasse 9 – Heldenfilme (7.11.2026, Etappe 3): held_<id> für die 13 US-Helden (HELD9_FILM, szHeld9)
+    ...Object.fromEntries(Object.keys(HELD9_FILM).map((id) => ['held_' + id, szHeld9(id, HELD9_FILM[id])])),
   };
   // Big Ben mit echter Aufnahme: 15,5 s; bis 14 s laufen die Westminster Chimes (Bild wie beim Nachbau bis kurz vor dem Schlag, langsamer), dann EIN Stundenschlag (Nachbau)
   const BIGBEN_CHIMES = { dauer: 15.5, klaenge: [[0.1, 'chimes'], [14.0, 'glocke']],
@@ -11569,7 +12811,7 @@
     const bild = () => {
       c2.setTransform(1, 0, 0, 1, 0, 0); c2.fillStyle = '#18213a'; c2.fillRect(0, 0, cv.width, cv.height);
       c2.setTransform(massstab, 0, 0, massstab, 0, 0); c2.save(); c2.beginPath(); c2.rect(0, 0, SZ_W, H); c2.clip();
-      const nachZoom = A.t > S.dauer ? Math.min(1.15, 1 + 0.02 * (A.t - S.dauer)) : 1;   // 6.11.: spricht die Stimme länger als die Szene, zoomt das letzte Bild langsam heran (statt stillzustehen)
+      const nachZoom = A.t > S.dauer ? Math.min(S.nachZoomMax || 1.15, 1 + 0.02 * (A.t - S.dauer)) : 1;   // 6.11.: spricht die Stimme länger als die Szene, zoomt das letzte Bild langsam heran (statt stillzustehen)
       if (nachZoom > 1) { c2.translate(SZ_W / 2, H / 2); c2.scale(nachZoom, nachZoom); c2.translate(-SZ_W / 2, -H / 2); }
       try { S.zeichne(c2, Math.min(A.t, S.dauer)); } catch (e) { A.fehler = String(e && e.message || e); }
       c2.restore();

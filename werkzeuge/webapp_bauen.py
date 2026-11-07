@@ -76,7 +76,7 @@ def main(test=None):
         for n in sorted(namen):
             pfad = os.path.join(wurzel, n)
             rel = os.path.relpath(pfad, APP).replace(os.sep, "/")
-            if rel in ("sw.js", "LIESMICH.md") or n == "QUELLEN.md" or rel.startswith(("klasse9/", "franzoesisch/")):  # eigene Apps mit eigenem Offline-Speicher
+            if rel in ("sw.js", "LIESMICH.md") or n == "QUELLEN.md" or rel.startswith(("klasse9/", "franzoesisch/", "franz/")):  # eigene Apps mit eigenem Offline-Speicher
                 continue
             dateien.append(rel)
             with open(pfad, "rb") as f:

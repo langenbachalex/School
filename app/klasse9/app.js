@@ -2059,7 +2059,7 @@
       el("span", {}, `⭐ ${sp.punkte} ${T("Punkte", "points")}`),
       el("span", { class: "status-coins", title: "Coins" }, `🪙 ${sp.coins}`),
       el("span", { title: T("Schultage am Stück", "School days in a row") }, `🔥 ${serie()}`),
-      knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung, "haupt"), knopf("🛍️ Shop", shop));
+      knopf("🏆 Hall of Fame", sammlung, "haupt"), knopf("🛍️ Shop", shop));
   }
 
   function landmarkKarte(l, gross) {
@@ -2100,7 +2100,7 @@
       ? el("button", { class: "held-knopf", onclick: () => karteZeigen(l) }, landmarkKarte(l))
       : el("div", { class: "held-zu", "aria-label": T("Noch nicht gesammelt", "Not collected yet") }, el("span", {}, "?"), el("small", {}, "Perfect week"))));
     zeige(
-      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, T("🏆 Meine Sammlung", "🏆 My collection"))),
+      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Hall of Fame")),
       el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() + tierAttr(t).klasse, style: tierAttr(t).stil },
         el("p", { class: "klein" }, T("Dein Titel", "Your title")),
         tierAttr(t).stil && el("p", { class: "tier-name", lang: "en" }, tierVon(t).name),
@@ -2199,7 +2199,7 @@
       el("div", { class: "shop-raster" }, alle.filter((a) => !a.skin).map(artikel)),
       skins.length > 0 && el("h2", { class: "shop-gruppe" }, T("🎨 Figur für Road Trip Run", "🎨 Road Trip Run character"), " ", knopf(T("Figur ansehen", "View character"), () => runnerSkins(), "leise")),
       skins.length > 0 && el("div", { class: "shop-raster" }, skins.map(artikel)),
-      el("div", { class: "knopfreihe" }, knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung)));
+      el("div", { class: "knopfreihe" }, knopf("🏆 Hall of Fame", sammlung)));
     const h = opt.artikel && app.querySelector(".shop-artikel.hervor");
     if (h && !leise) h.scrollIntoView({ block: "center" });
   }
@@ -3592,7 +3592,7 @@
           "All of today's words are done. Tomorrow brings new ones, and today's come back when they are due.")
           : T("Erledigtes bleibt gespeichert. Komm später wieder und mach den Rest fertig.", "What you did is saved. Come back later and finish the rest.")),
         el("div", { class: "knopfreihe" }, knopf(T("Zur Startseite", "Home"), startseite, "haupt"),
-          alles && knopf(T("🎲 Memory spielen", "🎲 Play Memory"), gymMemory), knopf(T("🏆 Meine Sammlung", "🏆 My collection"), sammlung))));
+          alles && knopf(T("🎲 Memory spielen", "🎲 Play Memory"), gymMemory), knopf("🏆 Hall of Fame", sammlung))));
       if (icon.heben) setTimeout(icon.heben, 400);
     };
     ansicht = zeichne; gym = null; lage = null;

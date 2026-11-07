@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Français Classe 5/6</title>
+<meta name="theme-color" content="#0055a4">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Français">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="franz.css">
+</head>
+<body>
+<div class="tempo-leiste">
+  <a class="tempo-knopf flagge" href="../" aria-label="Zur Englisch-App" title="Zur Englisch-App">🇬🇧</a>
+  <button type="button" id="lesehilfe" class="tempo-knopf" aria-label="Lesehilfe">Aa einfach</button>
+  <button type="button" id="tempo" class="tempo-knopf" aria-label="Sprechtempo">🔊 1,0×</button>
+</div>
+<main id="app" aria-live="polite"></main>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script src="daten_fr.js"></script>
+<script src="../runner.js"></script>
+<script src="app.js"></script>
+<script>if ("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js");</script>
+</body>
+</html>

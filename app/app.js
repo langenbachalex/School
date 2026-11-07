@@ -2233,7 +2233,7 @@
       el("span", {}, `⭐ ${sp.punkte} Punkte`),
       el("span", { class: "status-coins", title: "Coins" }, `🪙 ${sp.coins}`),
       el("span", { title: "Schultage am Stück" }, `🔥 ${n}`),
-      knopf("🏆 Meine Sammlung", sammlung, "haupt"), knopf("🛍️ Shop", shop));
+      knopf("🏆 Hall of Fame", sammlung, "haupt"), knopf("🛍️ Shop", shop));
   }
 
   // Heldenkarten (7.11.2026, Mr. Alex): Sammelkarte als Canvas-Zeichnung des Runners (Runner.heldKarteZeichnen: Sternenhimmel, Held in Kraftpose mit Glühen, Name + Kraft);
@@ -2283,7 +2283,7 @@
       ? el("button", { class: "held-knopf", onclick: () => { if (!heldFilm(h, () => heldZeigen(h, false))) heldZeigen(h); } }, heldenKarte(h))   // mit Film: erst der Film, danach die Karte
       : el("div", { class: "held-zu" }, heldKarteCanvas(h, { gesperrt: true, hinweis: "Perfect week" }))));
     zeige(
-      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Meine Sammlung")),
+      el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Hall of Fame")),
       el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() + tierAttr(t).klasse, style: tierAttr(t).stil },
         el("p", { class: "klein" }, "Dein Titel"),
         tierAttr(t).stil && el("p", { class: "tier-name", lang: "en" }, tierVon(t).name),
@@ -2377,7 +2377,7 @@
       el("div", { class: "shop-raster" }, alle.filter((a) => !a.skin).map(artikel)),
       skins.length > 0 && el("h2", { class: "shop-gruppe" }, "🎨 Figur für den London Run", " ", knopf("Figur ansehen", () => runnerSkins(), "leise")),
       skins.length > 0 && el("div", { class: "shop-raster" }, skins.map(artikel)),
-      el("div", { class: "knopfreihe" }, knopf("🏆 Meine Sammlung", sammlung)));
+      el("div", { class: "knopfreihe" }, knopf("🏆 Hall of Fame", sammlung)));
     const h = opt.artikel && app.querySelector(".shop-artikel.hervor");
     if (h) h.scrollIntoView({ block: "center" });
   }
@@ -3191,7 +3191,7 @@
         r && el("p", { class: "gym-lob" }, el("strong", { lang: "en" }, r.text), r.de && el("span", { lang: "de" }, " – " + r.de)),
         el("p", {}, alles ? "Alle Wörter von heute sind geübt. Morgen gibt es neue und die fälligen von heute kommen wieder."
           : "Erledigtes bleibt gespeichert. Komm später wieder und mach den Rest fertig."),
-        el("div", { class: "knopfreihe" }, knopf("Zur Startseite", startseite, "haupt"), knopf("🏆 Meine Sammlung", sammlung))));
+        el("div", { class: "knopfreihe" }, knopf("Zur Startseite", startseite, "haupt"), knopf("🏆 Hall of Fame", sammlung))));
       if (icon.heben) setTimeout(icon.heben, 400);
     };
     gym = null; lage = null;

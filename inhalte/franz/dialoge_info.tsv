@@ -1,0 +1,6 @@
+id	titel_fr	titel_de	woche	neu	parle
+d09	Il y a deux Mbappé !	Es gibt zwei Mbappés!	7–9	il y a|deux|incroyable|Toi aussi	Je m'appelle {name}.|J'ai {zahl} ans.|Mon ami s'appelle {name}. Il a {zahl} ans.
+d11	J'adore les devoirs !	Ich liebe Hausaufgaben!	9	les devoirs|c'est vrai|Qu'est-ce que tu aimes	Je déteste {hobby}.|J'adore {hobby} !|Les devoirs ? C'est {adj} !
+d12	Je chante comme Angèle !	Ich singe wie Angèle!	9	chanter|chantes|chante|Écoute|très mal|comme	J'aime {hobby}.|Je chante {chant}.|Tu chantes {chant} !
+d13	Chut ! Voilà Monsieur Alex !	Pst! Da ist Monsieur Alex!	10	Chut|Voilà|Euh	Tu aimes {hobby} ?|Non, je déteste {hobby} !|Mon amie s'appelle {name}. Elle adore {hobby}.
+d14	Moi aussi !	Ich auch!	12	Tu copies|Moi aussi	Moi, j'adore {hobby} ! Et toi ?|Moi aussi, j'adore {hobby} !|Et je déteste {hobby} !|Mon ami adore {hobby}. Il déteste {hobby}.

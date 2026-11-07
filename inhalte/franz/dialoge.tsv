@@ -1,0 +1,53 @@
+id	nr	wer	fr	de	ipa
+d09	1	A	Bonjour ! Ça va ?	Guten Tag! Wie geht's?	bɔ̃.ʒuʁ | sa.va
+d09	2	B	Oui, ça va, merci. Et toi ?	Ja, gut, danke. Und dir?	wi | sa.va | mɛʁ.si | e.twa
+d09	3	A	Ça va bien. Comment tu t'appelles ?	Mir geht's gut. Wie heißt du?	sa.va.bjɛ̃ | kɔ.mɑ̃.ty.ta.pɛl
+d09	4	B	Je m'appelle... Mbappé !	Ich heiße ... Mbappé!	ʒə.ma.pɛl | ɛm.ba.pe
+d09	5	A	Mais non ! Moi aussi, je m'appelle Mbappé !	Aber nein! Ich heiße auch Mbappé!	mɛ.nɔ̃ | mwa.o.si | ʒə.ma.pɛl.ɛm.ba.pe
+d09	6	B	Toi aussi ? Alors... il y a deux Mbappé !	Du auch? Also ... es gibt zwei Mbappés!	twa.o.si | a.lɔʁ | i.li.ja.dø.ɛm.ba.pe
+d09	7	A	Ha ha, incroyable !	Haha, unglaublich!	a.a | ɛ̃.kʁwa.jabl
+d09	8	B	Très drôle, non ?	Sehr witzig, oder?	tʁɛ.dʁol | nɔ̃
+d09	9	A	D'accord, d'accord... à bientôt, Mbappé !	Okay, okay ... bis bald, Mbappé!	da.kɔʁ | da.kɔʁ | a.bjɛ̃.to | ɛm.ba.pe
+d09	10	B	À bientôt, Mbappé !	Bis bald, Mbappé!	a.bjɛ̃.to | ɛm.ba.pe
+d09	11	A	Au revoir !	Tschüss!	o.ʁə.vwaʁ
+d09	12	B	Au revoir !	Tschüss!	o.ʁə.vwaʁ
+d11	1	A	Salut ! Ça va ?	Hallo! Wie geht's?	sa.ly | sa.va
+d11	2	B	Oui, ça va, merci. Et toi ?	Ja, gut, danke. Und dir?	wi | sa.va | mɛʁ.si | e.twa
+d11	3	A	Ça va bien. Tu aimes jouer à la console ?	Mir geht's gut. Spielst du gern Konsole?	sa.va.bjɛ̃ | ty.ɛm | ʒu.e.a.la.kɔ̃.sɔl
+d11	4	B	Non, je déteste la console.	Nein, ich hasse die Konsole.	nɔ̃ | ʒə.de.tɛst.la.kɔ̃.sɔl
+d11	5	A	Mais non ! Qu'est-ce que tu aimes, alors ?	Aber nein! Was magst du denn dann?	mɛ.nɔ̃ | kɛs.kə.ty.ɛm | a.lɔʁ
+d11	6	B	J'adore... les devoirs !	Ich liebe ... die Hausaufgaben!	ʒa.dɔʁ | le.də.vwaʁ
+d11	7	A	Ha ha, très drôle !	Haha, sehr witzig!	a.a | tʁɛ.dʁol
+d11	8	B	Mais non, c'est vrai ! J'adore les devoirs de Monsieur Alex !	Aber nein, das stimmt! Ich liebe die Hausaufgaben von Monsieur Alex!	mɛ.nɔ̃ | sɛ.vʁɛ | ʒa.dɔʁ.le.də.vwaʁ | də.mə.sjø.a.lɛks
+d11	9	A	D'accord, d'accord... alors moi aussi ! À bientôt !	Okay, okay ... dann ich auch! Bis bald!	da.kɔʁ | da.kɔʁ | a.lɔʁ.mwa.o.si | a.bjɛ̃.to
+d11	10	B	Au revoir !	Tschüss!	o.ʁə.vwaʁ
+d12	1	A	Salut ! Ça va ?	Hallo! Wie geht's?	sa.ly | sa.va
+d12	2	B	Oui, ça va, merci. Et toi ?	Ja, gut, danke. Und dir?	wi | sa.va | mɛʁ.si | e.twa
+d12	3	A	Ça va bien. Tu aimes la musique ?	Mir geht's gut. Magst du Musik?	sa.va.bjɛ̃ | ty.ɛm.la.my.zik
+d12	4	B	Oui, j'adore la musique ! Et j'adore chanter !	Ja, ich liebe Musik! Und ich liebe Singen!	wi | ʒa.dɔʁ.la.my.zik | e.ʒa.dɔʁ.ʃɑ̃.te
+d12	5	A	Ah bon ? Tu chantes bien ?	Ach ja? Singst du gut?	a.bɔ̃ | ty.ʃɑ̃t.bjɛ̃
+d12	6	B	Oui ! Écoute : « La la la laaaa... »	Ja! Hör zu: „La la la laaaa ...“	wi | e.kut | la.la.la.la
+d12	7	A	Ha ha, très drôle ! Tu chantes très mal !	Haha, sehr witzig! Du singst sehr schlecht!	a.a | tʁɛ.dʁol | ty.ʃɑ̃t.tʁɛ.mal
+d12	8	B	Mais non ! Je chante comme Angèle !	Aber nein! Ich singe wie Angèle!	mɛ.nɔ̃ | ʒə.ʃɑ̃t.kɔ.mɑ̃.ʒɛl
+d12	9	A	D'accord, d'accord... à bientôt, Angèle !	Okay, okay ... bis bald, Angèle!	da.kɔʁ | da.kɔʁ | a.bjɛ̃.to | ɑ̃.ʒɛl
+d12	10	B	Au revoir !	Tschüss!	o.ʁə.vwaʁ
+d13	1	A	Salut ! Ça va ?	Hallo! Wie geht's?	sa.ly | sa.va
+d13	2	B	Oui, ça va, merci. Et toi ?	Ja, gut, danke. Und dir?	wi | sa.va | mɛʁ.si | e.twa
+d13	3	A	Ça va bien. Tu aimes les devoirs ?	Mir geht's gut. Magst du Hausaufgaben?	sa.va.bjɛ̃ | ty.ɛm.le.də.vwaʁ
+d13	4	B	Les devoirs ? Non, je déteste les devoirs !	Hausaufgaben? Nein, ich hasse Hausaufgaben!	le.də.vwaʁ | nɔ̃ | ʒə.de.tɛst.le.də.vwaʁ
+d13	5	A	Mais non ! Qu'est-ce que tu aimes, alors ?	Aber nein! Was magst du denn dann?	mɛ.nɔ̃ | kɛs.kə.ty.ɛm | a.lɔʁ
+d13	6	B	J'adore jouer à la console !	Ich liebe es, Konsole zu spielen!	ʒa.dɔʁ.ʒu.e.a.la.kɔ̃.sɔl
+d13	7	A	Chut ! Voilà Monsieur Alex !	Pst! Da ist Monsieur Alex!	ʃyt | vwa.la.mə.sjø.a.lɛks
+d13	8	B	Euh... j'adore les devoirs de Monsieur Alex !	Äh ... ich liebe die Hausaufgaben von Monsieur Alex!	ø | ʒa.dɔʁ.le.də.vwaʁ | də.mə.sjø.a.lɛks
+d13	9	A	Ha ha, très drôle ! D'accord, d'accord... à bientôt !	Haha, sehr witzig! Okay, okay ... bis bald!	a.a | tʁɛ.dʁol | da.kɔʁ | da.kɔʁ | a.bjɛ̃.to
+d13	10	B	Au revoir, Monsieur Alex !	Tschüss, Monsieur Alex!	o.ʁə.vwaʁ | mə.sjø.a.lɛks
+d14	1	A	Salut ! Ça va ?	Hallo! Wie geht's?	sa.ly | sa.va
+d14	2	B	Oui, ça va, merci. Et toi ?	Ja, gut, danke. Und dir?	wi | sa.va | mɛʁ.si | e.twa
+d14	3	A	Ça va bien. Moi, j'adore [le foot] ! Et toi ?	Mir geht's gut. Ich liebe [Fußball]! Und du?	sa.va.bjɛ̃ | mwa | ʒa.dɔʁ.lə.fut | e.twa
+d14	4	B	Moi aussi, j'adore [le foot] !	Ich auch, ich liebe [Fußball]!	mwa.o.si | ʒa.dɔʁ.lə.fut
+d14	5	A	Ah bon ? Et je déteste [danser] !	Ach ja? Und ich hasse [Tanzen]!	a.bɔ̃ | e.ʒə.de.tɛst.dɑ̃.se
+d14	6	B	Moi aussi, je déteste [danser] !	Ich auch, ich hasse [Tanzen]!	mwa.o.si | ʒə.de.tɛst.dɑ̃.se
+d14	7	A	Mais non ! Tu copies !	Aber nein! Du machst mich nach!	mɛ.nɔ̃ | ty.kɔ.pi
+d14	8	B	Moi aussi !	Ich auch!	mwa.o.si
+d14	9	A	Ha ha, très drôle ! D'accord, d'accord... au revoir !	Haha, sehr witzig! Okay, okay ... tschüss!	a.a | tʁɛ.dʁol | da.kɔʁ | da.kɔʁ | o.ʁə.vwaʁ
+d14	10	B	Moi aussi ! Au revoir !	Ich auch! Tschüss!	mwa.o.si | o.ʁə.vwaʁ

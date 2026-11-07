@@ -170,7 +170,16 @@ def main():
                 disco[gruppe][key] = rel
     # Régions (7.11.): Frankreich-Karte als Niveau 2 im Panthéon, vorbereitet (regions.tsv: 13 Régions mit Chef-lieu und Symbol)
     regions = tsv("regions.tsv") if os.path.exists(os.path.join(INHALT, "regions.tsv")) else []
-    daten = {"runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    # Punkte, Coins, Titel (7.11., wie Englisch 6): Titel-Stufen (ab Punkten, Name fr, Hilfe de) und Boutique (Paris-Run-Ticket + Rahmen)
+    titel = [{"ab": ab, "name": n, "de": de, "symbol": sym} for ab, n, de, sym in [
+        (0, "Débutant", "Anfänger", "🐣"), (100, "Copain", "Kumpel", "🤝"), (300, "Apprenti héros", "Helden-Lehrling", "🦸"),
+        (700, "Héros", "Held", "⚡"), (1200, "Super-héros", "Superheld", "🌟"), (2000, "Méga-héros", "Mega-Held", "👑")]]
+    boutique = [
+        {"id": "ticket", "symbol": "🎟️", "name": "Ticket Paris Run", "unter": "Ein Ticket = ein Lauf", "preis": 150, "ticket": True},
+        {"id": "rahmen_rot", "symbol": "🎨", "name": "Cadre rouge", "unter": "Roter Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "rot"},
+        {"id": "rahmen_blau", "symbol": "🎨", "name": "Cadre bleu", "unter": "Blauer Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "blau"},
+        {"id": "rahmen_gruen", "symbol": "🎨", "name": "Cadre vert", "unter": "Grüner Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "gruen"}]
+    daten = {"titel": titel, "boutique": boutique, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:

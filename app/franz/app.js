@@ -25,6 +25,13 @@
     return Object.assign({ punkte: 0, dialoge: {}, namen: {}, spiele: {}, paris: 1, helden: 0, lese: "einfach", tempo: 1 }, s);
   }
   const stand = laden();
+  /* Punkte, Coins, Titel (7.11., wie Englisch 6): 1 🪙 je 2 ⭐ (aufgerundet), Coins sinken nur in der Boutique; Titel-Stufen aus D.titel.
+     Ältere Stände: Coins einmalig rückwirkend aus den Punkten (der Paris Run war vorher frei), Titel still auf die passende Stufe. */
+  function titelIndex(p) { return (D.titel || []).reduce((i, t, k) => (p >= t.ab ? k : i), 0); }
+  if (!(stand.coins >= 0)) { stand.coins = Math.ceil(stand.punkte / 2); stand.ausgegeben = 0; }
+  if (!(stand.titel >= 0)) stand.titel = titelIndex(stand.punkte);
+  if (!Array.isArray(stand.gekauft)) stand.gekauft = [];
+  speichern();
   function speichern() { try { localStorage.setItem(SPEICHER, JSON.stringify(stand)); } catch (e) { /* privater Modus: nur für diese Sitzung */ } }
   const heute = () => new Date().toISOString().slice(0, 10);
 
@@ -55,13 +62,26 @@
     setTimeout(() => t.remove(), 2800);
   }
   function punkte(plus, grund) {
-    stand.punkte += plus; speichern();
-    toast(`+${plus} ⭐ ${grund || zufall(LOB)}`);
+    const vorN = namenFrei(), muenzen = Math.ceil(plus / 2);
+    stand.punkte += plus; stand.coins += muenzen;
+    const t = titelIndex(stand.punkte), neuerTitel = t > stand.titel;
+    if (neuerTitel) stand.titel = t;
+    speichern();
+    toast(`+${plus} ⭐ +${muenzen} 🪙 ${grund || zufall(LOB)}`);
+    if (neuerTitel) { const ti = D.titel[t]; setTimeout(() => { toast(`${ti.symbol} Nouveau titre : ${ti.name} ! – Neuer Titel: ${ti.de}`); klang(true); }, 600); }
+    for (let i = vorN; i < namenFrei(); i++) { const n = NAMEN_REIHE[i]; setTimeout(() => toast(`${D.gruppen[n.gruppe].split(" ")[0]} Nouvelle carte au Panthéon : ${n.name} !`), 1800 + 400 * (i - vorN)); }
     const neu = parisFrei();
     if (neu > stand.paris) setTimeout(() => toast(`🗼 Nouveau lieu à Paris : ${D.paris[neu - 1].name} !`), 1200);
     const h = heldenFrei();
     if (h > stand.helden) setTimeout(() => toast(`🦸 Nouveau super-héros : ${D.helden[h - 1].name} !`), 2400);
   }
+  /* Panthéon-Karten (7.11.): Fußballer + Persönlichkeiten in Folien-Reihenfolge (namen.tsv), alle NAMEN_PUNKTE ⭐ eine Karte.
+     Offen ist eine Karte auch, wenn der Name in Prononciation schon geschafft ist (ältere Stände). Gold bleibt „ohne Vorbild“ = Niveau 2 in Prononciation. */
+  const NAMEN_PUNKTE = 25;
+  const NAMEN_REIHE = D.namen.filter((n) => n.gruppe === "foot" || n.gruppe === "histoire");
+  const namenFrei = () => Math.min(NAMEN_REIHE.length, Math.floor(stand.punkte / NAMEN_PUNKTE));
+  const namenOffen = (n) => { const i = NAMEN_REIHE.indexOf(n); return (stand.namen[n.id] || 0) >= 1 || i < 0 || i < namenFrei(); };
+  const rahmenKlasse = () => (stand.rahmen && stand.gekauft.includes("rahmen_" + stand.rahmen) ? " rahmen-" + stand.rahmen : "");
   /* Superhelden (Stufe 3): alle HELD_PUNKTE Punkte ein neuer Held; stand.helden = Zahl der Helden, deren Film schon lief */
   const HELD_PUNKTE = 30;
   const heldenFrei = () => Math.min((D.helden || []).length, Math.floor(stand.punkte / HELD_PUNKTE));
@@ -158,7 +178,8 @@
       el("header", { class: "gruss" },
         el("h1", { lang: "fr" }, "Français 🇫🇷"),
         el("p", { class: "klein" }, "Salut ! Wähl eine Kachel. Paris, Super-héros und Stars sammelst du im Panthéon."),
-        el("div", { class: "statusleiste" }, el("span", {}, `⭐ ${stand.punkte} Punkte`), el("span", {}, `🗣️ ${namenFertig}/${D.namen.length} Namen`),
+        el("div", { class: "statusleiste" + rahmenKlasse() }, el("span", { class: "status-titel", lang: "fr", title: D.titel[stand.titel].de }, `${D.titel[stand.titel].symbol} ${D.titel[stand.titel].name}`),
+          el("span", {}, `⭐ ${stand.punkte} Punkte`), el("span", { class: "status-coins", title: "Coins" }, `🪙 ${stand.coins}`), el("span", {}, `🗣️ ${namenFertig}/${D.namen.length} Namen`),
           knopf("🏛️ Panthéon", pantheon, "haupt"))),
       el("nav", { class: "kacheln", "aria-label": "Kacheln" },
         kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe),
@@ -424,7 +445,7 @@
 
   /* ---------- 🏃 Paris Run (Stufe 4, 7.11.2026) ----------
      Runner-Engine (../runner.js, Welt „paris“) mit französischen Wörtern: Diamanten zeigen das Wort, Tore/Boss fragen „Welcher Diamant heißt …?“ (Deutsch → Französisch).
-     Kein Ticket, keine Coins (die Französisch-App hat nur Punkte): geschafft = einmal am Tag +10 ⭐ wie die anderen Spiele. Die Figur kommt aus der Englisch-App (nur gelesen), sonst Standard.
+     Start nur mit Ticket aus der Boutique (7.11., 1 Ticket = 1 Lauf, auch Disco Run); geschafft = einmal am Tag +10 ⭐ wie die anderen Spiele. Die Figur kommt aus der Englisch-App (nur gelesen), sonst Standard.
      Gesammelte Paris-Helden springen als Cameos ein. Stimmen: Aufnahmen aus D.runner (Mr. Alex, Helden), fehlende spricht das Gerät (fr-FR). */
   const RUN_GRUPPEN = [
     { id: "hobby", name: "⚽ Hobbys", woerter: () => D.woerter.hobby || [] },
@@ -446,12 +467,13 @@
     zeige(kopf("🏃 Paris Run", startseite, "Lauf zur Tour Eiffel! Sammle die Wörter, beantworte Monsieur Gaston."),
       el("section", { class: "satzkarte" },
         el("p", {}, "Tippen oder Leertaste = springen, länger halten = höher. Über Autos und Radfahrer springen, Kisten und Litfaßsäulen sind Stufen, in die Seine fällst du hinein. Mr. Alex ruft dir zu: « Saute ! » = Spring!, « Attention ! » = Achtung!, « Plus vite ! » = Schneller!, « À gauche ! » = Nach links (da kommt was von links)!"),
-        el("p", { class: "klein" }, `🎮 ${r.gespielt} Spiele · ${r.geschafft} geschafft · 🦸 ${heldenFrei()} Helden helfen mit`)),
+        el("p", { class: "klein" }, `🎮 ${r.gespielt} Spiele · ${r.geschafft} geschafft · 🦸 ${heldenFrei()} Helden helfen mit`),
+        el("p", { class: "ticket-zeile" }, `🎟️ ${r.tickets || 0} Tickets · 🪙 ${stand.coins} Coins · ein Ticket = ein Lauf (${ticketPreis()} 🪙)`, " ", knopf("🛍️ Boutique", () => boutique(parisRun), "leise"))),
       el("section", { class: "satzkarte" },
         el("h2", {}, "Welche Wörter?"),
         el("div", { class: "reiter" }, RUN_GRUPPEN.map((x, i) => el("button", { type: "button", class: "reiter-knopf", "aria-selected": String(i === runWahl), onclick: () => { runWahl = i; parisRun(); } }, x.name))),
         el("p", { class: "klein", lang: "fr" }, ws.map((w) => w.fr).join(" · ")),
-        el("div", { class: "knopfreihe" }, knopf("▶ Los geht's !", () => parisRunSpiel(ws), "haupt"),
+        el("div", { class: "knopfreihe" }, (r.tickets || 0) > 0 ? knopf("▶ Los geht's ! (🎟️ −1)", () => parisRunSpiel(ws), "haupt") : knopf(`🎟️ Ticket kaufen (${ticketPreis()} 🪙)`, () => boutique(parisRun), "haupt"),
           discoOffen() && knopf("🪩 Bonus : Disco Run", () => parisRunSpiel(ws, "disco_fr"), "leise"))));
   }
   /* 🪩 Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): gleiche Engine, Welt „disco_fr“ (Tanzfläche, DJ Funky Flamingo, Beat) mit denselben Wörtern.
@@ -462,7 +484,9 @@
     const disco = welt === "disco_fr";
     if (!window.Runner || !window.Runner.start) { toast("Das Spiel ist noch nicht geladen."); return; }
     if (ws.length < 4) { toast("Zu wenige Wörter."); return; }
-    const r = runStand(); r.gespielt++; speichern();
+    const r = runStand();
+    if (!(r.tickets > 0)) { toast("🎟️ Il te faut un ticket ! – Du brauchst ein Ticket aus der Boutique."); boutique(parisRun); return; }
+    r.tickets--; r.gespielt++; speichern();
     const liste = mischen(ws).slice(0, 12), helden = mischen(D.helden.slice(0, heldenFrei())).slice(0, 3);
     const buehne = el("div", { class: "runner-buehne" });
     const abbruch = el("button", { type: "button", class: "runner-x", "aria-label": "Spiel abbrechen", onclick: () => {
@@ -528,7 +552,50 @@
         kachel("🃏", "Memory", "Wendung und Bedeutung finden", memory),
         kachel("👂", "Qui est-ce ?", "Hör den Namen, tipp das Bild an", quiEstCe),
         kachel("🔢", "Dans l'ordre", "Bring den Dialog in die richtige Reihenfolge", () => ordre()),
-        kachel("🏃", "Paris Run", "Lauf zur Tour Eiffel – mit deinen Wörtern", parisRun)));
+        kachel("🏃", "Paris Run", `Lauf zur Tour Eiffel · 🎟️ Ticket ${ticketPreis()} 🪙 (du hast ${runStand().tickets || 0})`, parisRun),
+        kachel("🛍️", "Boutique", `🪙 ${stand.coins} Coins – Ticket und Rahmen`, () => boutique(jeux), " shop-kachel")));
+  }
+
+  /* ---------- 🛍️ Boutique (7.11., wie der Shop in Englisch 6): Artikel aus D.boutique; Ticket mehrfach kaufbar (1 Ticket = 1 Lauf), Rahmen einmal kaufen, dann anlegen.
+     Die Sperre bei zu wenig Coins gilt in kaufe(), nicht nur am Knopf. */
+  const ticketPreis = () => ((D.boutique || []).find((a) => a.ticket) || { preis: 150 }).preis;
+  function kaufe(a, zurueck) {
+    if (stand.coins < a.preis) { toast(`Il te manque ${a.preis - stand.coins} 🪙 – dir fehlen noch ${a.preis - stand.coins} Coins.`); return false; }
+    stand.coins -= a.preis; stand.ausgegeben = (stand.ausgegeben || 0) + a.preis;
+    if (a.ticket) runStand().tickets = (runStand().tickets || 0) + 1;
+    else { if (!stand.gekauft.includes(a.id)) stand.gekauft.push(a.id); if (a.rahmen) stand.rahmen = a.rahmen; }
+    speichern(); toast(`${a.symbol} Merci ! −${a.preis} 🪙`); klang(true);
+    boutique(zurueck);
+    return true;
+  }
+  function boutique(zurueck) {
+    zurueck = typeof zurueck === "function" ? zurueck : startseite;
+    const tickets = runStand().tickets || 0;
+    const artikel = (a) => {
+      const hat = stand.gekauft.includes(a.id), fehlt = a.preis - stand.coins;
+      const kauf = () => knopf(fehlt > 0 ? `Noch ${fehlt} 🪙` : "Acheter · Kaufen", () => kaufe(a, zurueck), fehlt > 0 ? "leise" : "haupt");
+      let k;
+      if (a.ticket) k = el("div", { class: "knopfreihe ticket-reihe" }, el("span", { class: "shop-hinweis" }, `🎟️ ${tickets} Tickets`), kauf(), tickets > 0 && knopf("▶ Paris Run", parisRun));
+      else if (hat) k = stand.rahmen === a.rahmen ? el("span", { class: "shop-hinweis ok" }, "✓ Angelegt") : knopf("Anlegen", () => { stand.rahmen = a.rahmen; speichern(); boutique(zurueck); });
+      else k = kauf();
+      return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.rahmen ? " rahmen-" + a.rahmen : ""), "data-artikel": a.id },
+        el("span", { class: "sym", "aria-hidden": "true" }, a.symbol), el("strong", { lang: "fr" }, a.name), a.unter && el("span", { class: "unter" }, a.unter),
+        el("span", { class: "preis" }, `🪙 ${a.preis}`), k);
+    };
+    zeige(kopf("🛍️ Boutique", zurueck, "Für 2 ⭐ gibt es 1 🪙. Deine Punkte bleiben – Coins gibst du hier aus."),
+      el("section", { class: "satzkarte shop-stand" }, el("p", { class: "shop-coins" }, `🪙 ${stand.coins} Coins`)),
+      el("div", { class: "shop-raster" }, (D.boutique || []).map(artikel)),
+      el("div", { class: "knopfreihe" }, knopf("🏛️ Panthéon", pantheon)));
+  }
+  function titelKarte() {   // Titel-Schild im Panthéon: Titel (fr + de), Punkte, Coins, Fortschritt zum nächsten Titel
+    const t = stand.titel, ti = D.titel[t], naechster = D.titel[t + 1];
+    return el("section", { class: "satzkarte titel-karte" + rahmenKlasse() },
+      el("p", { class: "klein" }, "Ton titre · Dein Titel"),
+      el("h2", { lang: "fr" }, `${ti.symbol} ${ti.name}`), el("p", { class: "klein" }, ti.de),
+      el("p", {}, `⭐ ${stand.punkte} Punkte`),
+      el("p", { class: "coins-zeile" }, `🪙 Coins: ${stand.coins} · ausgegeben: ${stand.ausgegeben || 0}`, " ", knopf("🛍️ Boutique", () => boutique(pantheon), "leise")),
+      naechster && el("div", { class: "fortschritt" }, el("span", { style: `width:${Math.round(100 * (stand.punkte - ti.ab) / (naechster.ab - ti.ab))}%` })),
+      naechster && el("p", { class: "klein" }, `Noch ${naechster.ab - stand.punkte} ⭐ bis „${naechster.name}“ (${naechster.de})`));
   }
   function memory() {
     const paare = mischen(D.wendungen.filter((w, i, a) => a.findIndex((x) => x.de.toLowerCase() === w.de.toLowerCase()) === i)).slice(0, 6);
@@ -847,7 +914,9 @@
       fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
     const ort = (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); };
+    const restN = NAMEN_PUNKTE - (stand.punkte % NAMEN_PUNKTE);
     zeige(kopf("🏛️ Panthéon", startseite, "Deine Hall of Fame: Paris, Super-héros, Stars und Dialogues."),
+      titelKarte(),
       el("h2", {}, "🗼 Paris"),
       el("p", { class: "klein" }, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort · tipp auf einen Ort: kleiner Film, danach der Text.` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
       parisKarte(frei, ort),
@@ -859,10 +928,13 @@
       el("p", { class: "klein" }, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${restH} ⭐ bis zum nächsten Helden · tipp auf eine Karte: Vorstellung, Défi, Aufstieg.` : "Alle Helden gesammelt – bravo !"),
       kartenZaehler(), heldenRaster(),
       Object.entries(D.gruppen).map(([g, titel]) => [el("h2", {}, titel),
+        g === "foot" && el("p", { class: "klein" }, (namenFrei() < NAMEN_REIHE.length ? `${namenFrei()}/${NAMEN_REIHE.length} Karten · noch ${restN} ⭐ bis zur nächsten Karte` : "Alle Karten gesammelt – bravo !") + " · 🥇 Gold: Name in Prononciation auf Niveau 2 (sans modèle) sagen."),
         el("div", { class: "namen-raster" }, D.namen.filter((n) => n.gruppe === g).map((n) => {
-          const s = namenStufe(n);
-          return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : s ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
-            bild(n, 64), el("span", { lang: "fr" }, s ? n.name : "?"));
+          const s = namenStufe(n), reihe = NAMEN_REIHE.includes(n), offen = namenOffen(n);
+          if (reihe && !offen) return el("button", { type: "button", class: "namen-knopf gesperrt", "aria-label": "Gesperrte Karte", onclick: () => toast(`🔒 Noch ${restN} ⭐ bis zur nächsten Karte`) },
+            el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?"));
+          return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : (reihe ? offen : s) ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
+            bild(n, 64), el("span", { lang: "fr" }, (reihe ? offen : s) ? n.name : "?"));
         }))]),
       el("h2", {}, "🏅 Dialogues"),
       el("div", { class: "namen-raster" }, D.dialoge.map((d) => {

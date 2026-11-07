@@ -1,5 +1,77 @@
 // AUTOMATISCH ERZEUGT von werkzeuge/franz_bauen.py aus inhalte/franz/ – hier nicht ändern.
 window.DATEN_FR = {
+ "titel": [
+  {
+   "ab": 0,
+   "name": "Débutant",
+   "de": "Anfänger",
+   "symbol": "🐣"
+  },
+  {
+   "ab": 100,
+   "name": "Copain",
+   "de": "Kumpel",
+   "symbol": "🤝"
+  },
+  {
+   "ab": 300,
+   "name": "Apprenti héros",
+   "de": "Helden-Lehrling",
+   "symbol": "🦸"
+  },
+  {
+   "ab": 700,
+   "name": "Héros",
+   "de": "Held",
+   "symbol": "⚡"
+  },
+  {
+   "ab": 1200,
+   "name": "Super-héros",
+   "de": "Superheld",
+   "symbol": "🌟"
+  },
+  {
+   "ab": 2000,
+   "name": "Méga-héros",
+   "de": "Mega-Held",
+   "symbol": "👑"
+  }
+ ],
+ "boutique": [
+  {
+   "id": "ticket",
+   "symbol": "🎟️",
+   "name": "Ticket Paris Run",
+   "unter": "Ein Ticket = ein Lauf",
+   "preis": 150,
+   "ticket": true
+  },
+  {
+   "id": "rahmen_rot",
+   "symbol": "🎨",
+   "name": "Cadre rouge",
+   "unter": "Roter Rahmen für dein Titel-Schild",
+   "preis": 75,
+   "rahmen": "rot"
+  },
+  {
+   "id": "rahmen_blau",
+   "symbol": "🎨",
+   "name": "Cadre bleu",
+   "unter": "Blauer Rahmen für dein Titel-Schild",
+   "preis": 75,
+   "rahmen": "blau"
+  },
+  {
+   "id": "rahmen_gruen",
+   "symbol": "🎨",
+   "name": "Cadre vert",
+   "unter": "Grüner Rahmen für dein Titel-Schild",
+   "preis": 75,
+   "rahmen": "gruen"
+  }
+ ],
  "runner": {
   "alex": {
    "fr_start_1": "audio/runner/fr_start_1.mp3",

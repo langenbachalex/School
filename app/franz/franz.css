@@ -84,3 +84,8 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 .niveau2 { margin: 10px 0 18px; }
 .region-liste { display: flex; flex-wrap: wrap; gap: 6px; }
 .region-liste .chip { font-size: .85rem; padding: 4px 8px; border: 1px solid var(--linie); border-radius: 999px; opacity: .6; }
+
+/* Boutique / Paris-Run-Ticket (7.11.) */
+.ticket-zeile { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-weight: 700; }
+.ticket-zeile .knopf { min-height: 40px; padding: 4px 12px; }
+.titel-karte h2 { margin-bottom: 0; }

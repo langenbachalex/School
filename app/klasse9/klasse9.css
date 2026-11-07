@@ -349,3 +349,8 @@ body.runner-aktiv .niveau-leiste { display: none; }
 /* 🎯 Test yourself (2.11.2026): Bild der Lesen-Aufgabe (ohne Bildunterschrift – die wäre eine Hilfe) */
 .test-bild { max-width: 280px; margin: 12px auto; text-align: center; }
 .test-bild .bild-sym { font-size: 4.5rem; }
+
+/* Bild → Wort (7.11.2026): SVG-Symbole und Emoji-Gruppen (inhalte/klasse9/symbole.tsv) */
+.vok-bild.svg svg { width: 82%; height: 82%; display: block; }
+.vok-bild.mehr { font-size: 2.2rem; letter-spacing: -2px; }
+.vok-bild.gross.mehr { font-size: 3.4rem; }

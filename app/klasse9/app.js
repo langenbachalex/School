@@ -420,7 +420,7 @@
     return (monoton() - lage.start) / 1000 < laenge(teil) * proEintrag * eile();
   }
   const QUIZ_MIN = 2.5; // Quizteile: blindes Durchklicken (alle Antworten probieren) bringt keine Punkte
-  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, beae_quiz: QUIZ_MIN, vok_def: QUIZ_MIN, vok_abfrage: QUIZ_MIN };
+  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, beae_quiz: QUIZ_MIN, vok_def: QUIZ_MIN, vok_abfrage: QUIZ_MIN, vok_bild: QUIZ_MIN };
   const istQuiz = (teil) => (SPRECH_MIN[teil.art] || 0) === QUIZ_MIN; // Sekunden pro Satz/Wort mindestens; Dialoge: „Weiter“ erst nach dem ganzen Dialog
   // Ansage: im G-Kurs Englisch + Deutsch, im E-Kurs nur Englisch
   const ansage = (en, de) => el("div", { class: "ansage" }, el("p", { lang: "en" }, en), !E() && de && el("p", { class: "ansage-de", lang: "de" }, de));
@@ -551,7 +551,7 @@
   let lage = null; // { nr, gruppe (Schlüssel), titel, teile, teil, pos, vok, reihe, vq, ende, abspielen, weiter, zurueckZu }
 
   function neueLage(werte) { lage = Object.assign({ teil: 0, pos: 0 }, werte); return lage; }
-  function teilZuruecksetzen() { lage.reihe = lage.vq = null; lage.hilfe = false; }
+  function teilZuruecksetzen() { lage.reihe = lage.vq = null; lage.hilfe = lage.ohneTippen = false; }
 
   // Vokabel-Abschnitt: Wörter, Sätze in 3 Stufen, Find the word, Abfrage in beide Richtungen
   function vokSchritte(vok) {
@@ -559,6 +559,7 @@
       { art: "lr", name: "Sentences", saetze: vok.map((v) => v.satz) }];
     if (vok.some((v) => v.def)) schritte.push({ art: "vok_def", name: "Find the word" });
     schritte.push({ art: "vok_abfrage", name: "EN → DE", richtung: "en_de" }, { art: "vok_abfrage", name: "DE → EN", richtung: "de_en" });
+    if (vok.filter(hatBild).length >= 2) schritte.push({ art: "vok_bild", name: "Picture → Word" }); // hinten, damit ältere Teil-Nummern bleiben
     return schritte;
   }
   function starteGruppe(k, i) {
@@ -797,7 +798,7 @@
     if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = monoton(); lage.tempoFaktor = tempoFaktor(lage.teil); }
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, auswahl: zeigeAuswahl, bilder: zeigeBilder,
-       vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition,
+       vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition, vok_bild: zeigeBildWort,
        beae_quiz: zeigeBeaeQuiz, hoeren: zeigeHoeren, dialog: zeigeDialog,
        mustertext: zeigeMustertext, schreiben: zeigeSchreiben })[teil.art](teil);
     navErgaenzen();
@@ -836,6 +837,7 @@
     if (teil.art === "beae_quiz") return teil.paare.length;
     if (teil.art === "vok_def") return lage.vok.filter((v) => v.def).length;
     if (teil.art === "vok_abfrage") return lage.vq ? lage.vq.length : lage.vok.length;
+    if (teil.art === "vok_bild") return lage.vok.filter(hatBild).length;
     return 1;
   }
 
@@ -1543,7 +1545,7 @@
     lage.abspielen = abspielen; lage.weiter = wennFrei(weiter, naechstes);
     zeige(kopf(k), ansage("Let's learn the words! Listen and repeat.", "Lernen wir die Wörter! Hör zu und sprich nach."),
       karte(T(`Wort ${lage.pos + 1} von ${lage.vok.length}`, `Word ${lage.pos + 1} of ${lage.vok.length}`),
-        el("div", { class: "vok" }, el("div", {}, el("p", { class: "vok-en", lang: "en" }, v.en), el("p", { class: "vok-de", lang: "de" }, v.de))),
+        el("div", { class: "vok" }, hatBild(v) && bildEl(v), el("div", {}, el("p", { class: "vok-en", lang: "en" }, v.en), el("p", { class: "vok-de", lang: "de" }, v.de))),
         balken,
         el("div", { class: "knopfreihe" }, knopf(T("🔊 Nochmal", "🔊 Again"), abspielen), weiter)));
     abspielen();
@@ -1606,6 +1608,7 @@
     if (!lage.vq) lage.vq = mischen(lage.vok.map((v) => v.id));
     const v = vokabel(lage.vq[lage.pos]);
     const enDe = teil.richtung === "en_de";
+    if (!enDe && mitTippen()) return zeigeAbfrageTippen(k, v);
     const frage = el("p", { class: "vok-en", lang: enDe ? "en" : "de" }, enDe ? v.en : v.de);
     const antwort = el("p", { class: "vok-de", lang: enDe ? "de" : "en", hidden: true }, enDe ? v.de : v.en);
     const satzZeile = el("p", { class: "klein", lang: "en", hidden: true }, D.saetze[v.satz].en);
@@ -1626,8 +1629,99 @@
       karte(T(`Wort ${lage.pos + 1} von ${lage.vq.length}`, `Word ${lage.pos + 1} of ${lage.vq.length}`),
         el("div", { class: "vok" }, el("div", {}, frage, antwort, satzZeile)),
         el("div", { class: "knopfreihe" }, knopf(T("🔊 Nochmal", "🔊 Again"), () => lage.abspielen()), loesung),
-        bewerten));
+        bewerten, !enDe && tippSchalter()));
     fragen();
+  }
+
+  /* ---------- Eintippen + Bild → Wort (7.11.2026, Mr. Alex; docs/ideenspeicher.md) ----------
+     E-Kurs: DE → EN und Bild → Wort werden eingetippt (wie Klasse 6: Groß/Klein und Satzzeichen egal, ab 6 Buchstaben 1 Tippfehler erlaubt).
+     💡 „Easier“ schaltet für den Rest des Teils auf Auswahl bzw. Selbstkontrolle zurück. G-Kurs: Auswahl/Selbstkontrolle bleibt,
+     Eintippen ist mit „⌨ Eintippen“ zuschaltbar (stand.tippen, gilt für das Gerät). Symbole: inhalte/klasse9/symbole.tsv (v.symbol Emoji, v.svg eingebettet). */
+  function hatBild(v) { return !!(v && (v.symbol || v.svg)); }
+  function bildEl(v, gross) {
+    const b = el("span", { class: "vok-bild" + (gross ? " gross" : "") + (v.svg ? " svg" : [...(v.symbol || "")].filter((c) => /\p{Extended_Pictographic}/u.test(c)).length > 1 ? " mehr" : ""), "aria-hidden": "true" });
+    if (v.svg) b.innerHTML = v.svg; else b.textContent = v.symbol; // SVG stammt aus dem Bauskript, nicht von Nutzern
+    return b;
+  }
+  function mitTippen() { return E() ? !(lage && lage.ohneTippen) : !!stand.tippen; }
+  function tippStufe(eingabe, v) { // 0 genau · 1 ein Tippfehler (Wort ab 6 Buchstaben) · 2 falsch
+    const e = normT(eingabe), ziele = [...testVarianten(v), grundform(v.en)].map(normT).filter(Boolean);
+    if (ziele.includes(e)) return 0;
+    return ziele.some((z) => z.replace(/\s/g, "").length >= 6 && abstand(e, z) <= 1) ? 1 : 2;
+  }
+  function tippMeldung(box, stufe, richtig) {
+    box.hidden = false;
+    if (stufe === 2) { comboBruch(); box.className = "rueckmeldung hilfe"; box.textContent = T(`Nicht ganz. So schreibt man es: ${richtig}`, `Not quite. This is how you spell it: ${richtig}`); return; }
+    comboTreffer(); box.className = "rueckmeldung gut";
+    box.textContent = lob() + (stufe === 1 ? T(` So schreibt man es genau: ${richtig}`, ` The exact spelling: ${richtig}`) : "");
+  }
+  // G-Kurs: Eintippen an/aus (kein Hilfe-Abzug); im E-Kurs nicht nötig
+  function tippSchalter() {
+    return !E() && el("div", { class: "knopfreihe" }, knopf(stand.tippen ? "☰ Lieber auswählen" : "⌨ Eintippen",
+      () => { stand.tippen = !stand.tippen; speichern(); zeigeTeil(); }, "leise"));
+  }
+  function einfacher(text, fn) { return E() && tipp(text, () => { lage.ohneTippen = true; fn(); }); }
+
+  function zeigeAbfrageTippen(k, v) {
+    const box = rueckmeldung(), weiter = weiterKnopf(); sperrt(weiter);
+    const antwort = el("p", { class: "vok-de", lang: "en", hidden: true }, v.en);
+    const satzZeile = el("p", { class: "klein", lang: "en", hidden: true }, D.saetze[v.satz].en);
+    let geloest = false;
+    const feld = tippFeld((text, ui) => {
+      if (geloest) return; geloest = true; ui.feld.disabled = ui.knopf.disabled = true;
+      const stufe = tippStufe(text, v);
+      tippMeldung(box, stufe, v.en);
+      if (stufe === 2) lage.vq.push(v.id); // kommt am Ende noch einmal
+      antwort.hidden = satzZeile.hidden = false;
+      entsperrt(weiter); lage.weiter = naechstes; lage.abspielen = () => spiele([tonWort(v)]); lage.abspielen();
+    });
+    lage.abspielen = null;
+    zeige(kopf(k), ansage("What's that in English? Type it.", "Was heißt das auf Englisch? Tipp es ein."),
+      karte(T(`Wort ${lage.pos + 1} von ${lage.vq.length}`, `Word ${lage.pos + 1} of ${lage.vq.length}`),
+        el("div", { class: "vok" }, hatBild(v) && bildEl(v), el("div", {}, el("p", { class: "vok-en", lang: "de" }, v.de), antwort, satzZeile)),
+        feld, box, el("div", { class: "knopfreihe" }, weiter),
+        einfacher("Easier: say it and check yourself", () => zeigeTeil()), tippSchalter()));
+    const f = feld.querySelector("input"); if (f) f.focus();
+  }
+
+  // Bild → Wort: Symbol sehen, englisches Wort wählen (G) oder eintippen (E bzw. G mit ⌨)
+  function zeigeBildWort(teil) {
+    const k = kategorie(lage.nr);
+    if (!lage.reihe) lage.reihe = mischen(lage.vok.filter(hatBild));
+    const v = lage.reihe[lage.pos];
+    let geloest = false;
+    const box = rueckmeldung(), weiter = weiterKnopf(); sperrt(weiter);
+    const wortZeile = el("p", { class: "vok-en ziel-satz", lang: "en", hidden: true }, v.en);
+    const geschafft = () => {
+      geloest = true; wortZeile.hidden = false;
+      entsperrt(weiter); lage.weiter = naechstes; lage.abspielen = () => spiele([tonWort(v)]); lage.abspielen();
+    };
+    const wahl = () => {
+      const gleich = (x) => x.id !== v.id && normT(x.en) !== normT(v.en) && hatBild(x);
+      let andere = mischen(D.vokabeln.filter((x) => gleich(x) && x.unit === v.unit)).slice(0, 3);
+      if (andere.length < 3) andere = andere.concat(mischen(D.vokabeln.filter((x) => gleich(x) && x.unit !== v.unit)).slice(0, 3 - andere.length));
+      return el("div", { class: "wahl", role: "group" }, mischen([v, ...andere]).map((x) => el("button", { class: "knopf wahl-knopf", lang: "en",
+        onclick: (e) => {
+          if (geloest) return;
+          if (x === v) { e.currentTarget.classList.add("richtig"); melde(box, "gut", lob()); comboTreffer(); geschafft(); }
+          else { e.currentTarget.disabled = true; melde(box, "hilfe", T(`Schau dir das Bild noch mal an. ${NOCHMAL()}`, `Look at the picture again. ${NOCHMAL()}`)); }
+        } }, x.en)));
+    };
+    const tippen = mitTippen();
+    let bereich;
+    if (!tippen) bereich = wahl();
+    else bereich = el("div", {}, tippFeld((text, ui) => {
+      if (geloest) return; ui.feld.disabled = ui.knopf.disabled = true;
+      tippMeldung(box, tippStufe(text, v), v.en); geschafft();
+    }), einfacher("Easier: show the word box", () => { if (!geloest) bereich.replaceWith(wahl()); }));
+    lage.abspielen = () => { if (geloest) spiele([tonWort(v)]); };
+    zeige(kopf(k),
+      tippen ? ansage("What's this? Type the English word.", "Was ist das? Tipp das englische Wort ein.")
+        : ansage("What's this? Choose the English word.", "Was ist das? Wähl das englische Wort."),
+      karte(T(`Bild ${lage.pos + 1} von ${lage.reihe.length}`, `Picture ${lage.pos + 1} of ${lage.reihe.length}`),
+        el("div", { class: "vok" }, bildEl(v, true)),
+        bereich, wortZeile, box, el("div", { class: "knopfreihe" }, weiter), tippSchalter()));
+    if (tippen) { const f = bereich.querySelector("input"); if (f) f.focus(); }
   }
 
   /* ---------- Belohnungen (docs/gamification/konzept.md) ----------
@@ -2207,7 +2301,7 @@
   /* ---------- Mini-Reward beim Vokabellernen (Word Gym, Vocabulary-Abfrage): ab 3 richtigen in Folge ----------
      Nur Show, keine Punkte. Im Wechsel: Flamme wächst · Münzen fliegen ins 🪙 · ein Auto flitzt vorbei. Bei prefers-reduced-motion nur Text. */
   const COMBO_AB = 3, COMBO_FAHRZEUG = "🚗";
-  const comboErlaubt = () => !!lage && (!!lage.gym || (lage.teile && lage.teile[lage.teil] && lage.teile[lage.teil].art === "vok_abfrage"));
+  const comboErlaubt = () => !!lage && (!!lage.gym || (lage.teile && lage.teile[lage.teil] && ["vok_abfrage", "vok_bild"].includes(lage.teile[lage.teil].art)));
   const comboFlamme = () => (comboErlaubt() && richtigSerie >= COMBO_AB
     ? el("span", { class: "combo-flamme", style: `--n:${Math.min(richtigSerie - COMBO_AB, 8)}`, role: "status", "aria-label": T(`${richtigSerie} richtig in Folge`, `${richtigSerie} in a row`) },
         `🔥 ${richtigSerie}`, el("span", { class: "combo-ziel", "aria-hidden": "true" }, "🪙"))

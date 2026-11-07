@@ -308,6 +308,14 @@ def main():
                            "stimme": "mf"[stimme % 2], "audio": audio(f"audio/saetze/{z['id']}.mp3")}
         stimme += 1
     vokabeln, units = [], {"1": [], "2": [], "3": []}
+    # Symbole (7.11.2026, Bild → Wort): inhalte/klasse9/symbole.tsv – Emoji oder „svg:<name>“ (inhalte/klasse9/symbole/<name>.svg, eingebettet)
+    symbole = {}
+    for z in tsv("symbole.tsv"):
+        if z["symbol"].startswith("svg:"):
+            with open(os.path.join(INHALTE, "symbole", z["symbol"][4:] + ".svg"), encoding="utf-8") as f:
+                symbole[z["id"]] = {"svg": f.read().strip()}
+        else:
+            symbole[z["id"]] = {"symbol": z["symbol"]}
     verweise = []  # Vokabeln, deren Satz schon anderswo vertont ist (satz_id)
     for v in tsv("vokabeln.tsv"):
         sid = v["id"] + "_s"
@@ -318,8 +326,10 @@ def main():
                            "stimme": "mf"[stimme % 2], "audio": audio(f"audio/vokabeln/{sid}.mp3")}
         vokabeln.append({"id": v["id"], "unit": v["unit"], "en": v["englisch"], "de": v["deutsch"], "satz": sid,
                          "def": v["definition"] or None, "stimme": "mf"[stimme % 2],
-                         "audio": audio(f"audio/vokabeln/{v['id']}.mp3")})
+                         "audio": audio(f"audio/vokabeln/{v['id']}.mp3"), **symbole.get(v["id"], {})})
         stimme += 1
+    unbekannt = set(symbole) - {v["id"] for v in vokabeln}
+    assert not unbekannt, f"symbole.tsv: unbekannte Vokabel-IDs {sorted(unbekannt)}"
     # BE vs AE: amerikanischer Satz (Jeremy B./Jessica) mit britischem Gegenstück (Mr. Alex' Stimme)
     for z in tsv("beae.tsv"):
         saetze[z["id"]] = {"en": z["amerikanisch"], "de": z["deutsch"], "luecke": z["luecke"], "stimme": "mf"[stimme % 2],
@@ -383,7 +393,10 @@ def main():
         namen = ["Words"] + [f"Sentences · Step {i}" for i in (1, 2, 3)]
         if any(next(v for v in vokabeln if v["id"] == i)["def"] for i in ids):
             namen.append("Find the word")
-        return namen + ["EN → DE", "DE → EN"]
+        namen += ["EN → DE", "DE → EN"]
+        if sum(1 for i in ids if i in symbole) >= 2:  # Bild → Wort (hinten angehängt, damit ältere Teil-Nummern gleich bleiben)
+            namen.append("Picture → Word")
+        return namen
     def gruppen_von(k):
         g = [{"schluessel": f"u{u}:{x['name']}", "name": f"Unit {u} · {x['name']}", "teile": vok_teile(x["vokabeln"])} for u, xs in units.items() for x in xs] if k.get("vokabeln") else []
         g += [{"schluessel": x["name"], "name": x["name"], "teile": vok_teile(x["vokabeln"]) if x.get("vokabeln") else hausaufgaben.teile_namen(x["schritte"], [1, 2, 3], "Step")}

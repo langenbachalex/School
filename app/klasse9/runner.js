@@ -39,6 +39,8 @@
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
+   Welt „paris“ (7.11., Französisch-App „Paris Run“): Seine-Quai, Tour Eiffel wächst heran, Autos/Radrennfahrer, Colonnes Morris + Baguette-Kisten als Stufen, Boss Monsieur Gaston (Kellner), Tür = goldene Grille;
+   Texte Französisch, W.zurufe (Mr. Alex französisch), W.hinweise (Saute ! / Attention ! / Plus vite ! / À gauche ! über alexSagen), W.uebersetzung (Engine-Meldungen beim Zeichnen übersetzt, tx), Paris-Helden als Cameos.
    Mr. Alex' Zurufe (7.11.): ALEX_ZURUFE (Moment → Varianten), Option audio.alex = { key: Datei }, stimme.alex(text, key, { audio }) – hinter Held/Erzähler/Boss (warten), nie öfter als alle 20 s;
    Levelende/Game over stehen im Ergebnis (ergebnis.alex = { key, text, audio }) und spricht die App nach der Levelende-Ansage.
    Orts-Szenen (6.11.): window.Runner.szene(ziel, ortId, { text, titel, foto, quelle, onEnde }) spielt eine kurze Szene eines Orts mit den Zeichnungen der Welten (Runner.hatSzene(id), Runner.SZENEN_ORTE).
@@ -1687,7 +1689,7 @@
   const KABINE_W = 80;   // Kabinen-Plattform des London Eye (Welt 2 Klasse 6)
   const PARKBUS_W = 118, PARKBUS_H = 54;   // geparkter Doppeldecker an der Gabelung (fest, begehbar)
   // Fahrzeuge: Breite/Höhe, Tempo, Startabstand vor dem rechten Ende (auto/truck wie seit Welt 2; bus/cab Welt Westminster)
-  const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
+  const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 }, pauto: { w: 80, h: 40, tempo: 260, start: 180 }, velo: { w: 56, h: 50, tempo: 300, start: 170 } };
   // endeN = Zahl der Ende-Kristalle hinter dem Boss (Story: aus der Struktur, London 2, New York 4); sie liegen gleichmäßig zwischen stopX + 95 und tuerX − 25
   function levelBauen(muster, endeN = 2) {
     const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], sektionen:[], klappen:[], boote:[], treibgut:[], zapfen:[], spalten:[], tueren:[], baelle:[] };
@@ -1708,6 +1710,7 @@
       pfuetze: (dx, w = 90) => L.oel.push({ x:x + dx, w, art:'pfuetze' }),
       zelle: (dx) => { L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE, art:'zelle', teil:0 }, { x:x + dx, y:BODEN_Y - KISTE * 2, art:'zelle', teil:1 }); },
       post: (dx) => L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE, art:'post' }),
+      morris: (dx) => { L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE, art:'morris', teil:0 }, { x:x + dx, y:BODEN_Y - KISTE * 2, art:'morris', teil:1 }); },   // Welt Paris: Colonne Morris = zwei Blöcke
       stein: (dx) => L.steine.push({ x:x + dx }),
       bruecke: (dx, w) => { h.luecke(dx, w); L.bruecken.push({ x:x + dx, w }); },
       kaktus: (dx) => L.kakteen.push({ x:x + dx }),
@@ -1887,7 +1890,7 @@
     heldLauf = {};
     cameo = null; cameosGezeigt = 0; cameoEffekt = null; kenjiMit = 0; kenjiSprung = -1; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoK9Aus();
-    cameoPlan = cameoPlanBauen();
+    cameoPlan = cameoPlanBauen(); hinweisGesehen = new Set();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
     diaGesammelt = 0; film = null; storyNeu(); realmNeu();
   }
@@ -1972,7 +1975,7 @@
   const ALEX_ABSTAND = 20, ALEX_IMMER = ['ende', 'fail'];
   let alexLetzteZeit = -99, alexLetzterMoment = null, alexLetzterKey = {}, alexGesagt = [], alexHalb = false, toreSerie = 0;
   function alexSagen(moment) {
-    const liste = ALEX_ZURUFE[moment]; if (!liste || nurFilm) return null;
+    const liste = ((W && W.zurufe) || ALEX_ZURUFE)[moment]; if (!liste || nurFilm) return null;
     const immer = ALEX_IMMER.includes(moment);
     if (!immer && (moment === alexLetzterMoment || zeit - alexLetzteZeit < ALEX_ABSTAND)) return null;
     const wahl = liste.filter((z) => z[0] !== alexLetzterKey[moment]);
@@ -2009,6 +2012,17 @@
     holly: { satz: "Holly here. Take this – our road trip isn't over!", farbe: HELD_FARBE.holly, symbol: "❤️" },
     maya: { satz: "Maya here, darling. Let's float above it all.", farbe: HELD_FARBE.maya, symbol: "🦋" },
     sunny: { satz: "Sunny here! Everybody dance – off you go!", farbe: HELD_FARBE.sunny, symbol: "🎵" },
+    // Französisch-App Paris Run (7.11.): je Held seine Wendung aus inhalte/franz/wendungen_helden.tsv (Aufnahmen app/franz/audio/runner/cameo_<id>.mp3, Heldenstimmen)
+    lucie: { satz: "Lucie ! C'est très clair !", farbe: '#f2b705', symbol: "✨" },
+    gaspard: { satz: "Gaspard ! Vas-y ! Allez, viens !", farbe: '#ff6b35', symbol: "⚡" },
+    bruno: { satz: "Bruno ! Ça marche !", farbe: '#7f4f24', symbol: "💪" },
+    chloe: { satz: "Chloé ! Qu'est-ce que c'est que ce truc-là ?", farbe: '#6a4c93', symbol: "🦉" },
+    camille: { satz: "Camille ! Il y a quelqu'un ?", farbe: '#2ec4b6', symbol: "👻" },
+    robin: { satz: "Robin ! J'ai quelque chose pour toi !", farbe: '#577590', symbol: "🔧" },
+    coco: { satz: "Coco ! Cocorico ! C'est trop bien !", farbe: '#d62839', symbol: "📣" },
+    pierre: { satz: "Pierre ! N'importe quoi !", farbe: '#9b5de5', symbol: "🐦" },
+    horace: { satz: "Horace ! C'est pas vrai !", farbe: '#43aa8b', symbol: "⏱️" },
+    hector: { satz: "Hector ! Pas de souci !", farbe: '#277da1', symbol: "🛡️" },
   };
   const cameoInfo = (held) => CAMEO[held && held.id] || { satz: `${(held && held.name) || "A hero"} is here!`, farbe: "#1d3f8f", symbol: "⭐" };
   // 2–3 Auftritte je Lauf (höchstens so viele wie Helden übergeben): x-Marken bei 22/50/78 % der Strecke, nie direkt an einem Tor (dann 400 dahinter)
@@ -2069,6 +2083,17 @@
     else if ((id === 'holly') && leben < LEBEN_MAX) { leben++; hudPuls = 1; cameoEffekt = 'herz'; }
     else if (id === 'maya') { schweben = 4; cameoEffekt = 'schweben'; }
     else if (id === 'sunny') { wegZiel = { art: 'tanz', zeit: 5, alle: true }; cameoEffekt = 'tanz'; }
+    // Französisch-App Paris Run (7.11.): Kräfte der Paris-Helden mit den vorhandenen Effekten (Licht = Strahl bricht Hindernis, Tempo = Spur + Combo, Stärke = Ramme, Nachtsicht = nächstes Tor, unsichtbar, Erfinder = verpasster Diamant/Brücke, Superschrei = Gegner weg, Vögel tragen, Zeit anhalten = Eis, Bouclier = Schild)
+    else if (id === 'lucie') { brecher = 6; brecherArt = 'laser'; cameoEffekt = 'laser'; }
+    else if (id === 'gaspard') { if (!ruhig()) spur = Math.max(spur, 3); comboPlus(); cameoEffekt = 'combo'; }
+    else if (id === 'bruno') { brecher = 6; brecherArt = 'ramme'; cameoEffekt = 'ramme'; }
+    else if (id === 'chloe' && tore.some((t) => !t.erledigt && t.x > spieler.x)) { eule = tore.find((t) => !t.erledigt && t.x > spieler.x); cameoEffekt = 'eule'; }
+    else if (id === 'camille') { durchlaessig = 3; cameoEffekt = 'unsichtbar'; }
+    else if (id === 'robin') { if (brueckeBauen()) cameoEffekt = 'bruecke'; else { comboPlus(); cameoEffekt = 'combo'; } }
+    else if (id === 'coco') { wegZiel = { art: 'stampf', zeit: 5, alle: true }; cameoEffekt = 'stampf'; }
+    else if (id === 'pierre') { traegt = 5; cameoEffekt = 'traegt'; }
+    else if (id === 'horace') { eisZeit = 3; cameoEffekt = 'eis'; }
+    else if (id === 'hector') { schild = 5; cameoEffekt = 'schild'; }
     else { comboPlus(); cameoEffekt = 'combo'; }
     if (id === 'kenji') sprungArt = 'kenji';
   }
@@ -2779,6 +2804,7 @@
       if (tot > 0) { tot -= dt; if (tot <= 0) wiederbeleben(); return; }
       if (spieler.unverwundbar > 0) spieler.unverwundbar -= dt;
       cameoBewegen(dt);
+      hinweiseRunner();   // Paris: Runner-Hinweise (Saute ! Attention ! …)
       if (rutscht > 0) { rutscht = Math.max(0, rutscht - dt); if (rutscht === 0) halten = false; }
 
       // Welt 4: Windböe auslösen (Figur passiert die Marke), schiebt in der Phase schub mit 150/s zurück oder vorwärts
@@ -3381,6 +3407,7 @@
   }
   function autoZeichnen(c, a) {   // Verkehr fährt nach links: Front links, Scheinwerfer an, Räder drehen sich
     if (a.art === 'bus' || a.art === 'cab') return londonFahrzeug(c, a);   // Welt Westminster
+    if (a.art === 'pauto' || a.art === 'velo') return parisFahrzeug(c, a);   // Welt Paris
     const x = a.x - kamera, y = BODEN_Y;
     c.save(); c.translate(x, y);
     const karosse = a.art === 'truck' ? '#2a6cff' : ['#e63946', '#2e9e5b', '#ff9f1c', '#8a3ffc'][Math.abs(Math.round(a.von / 7)) % 4];
@@ -9368,7 +9395,7 @@
     }
     if (meldung) {
       c.font = 'bold 30px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillStyle = '#fff'; c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 5; c.strokeText(meldung.text, viewW / 2, 210); c.fillText(meldung.text, viewW / 2, 210);
+      c.fillStyle = '#fff'; c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 5; c.strokeText(tx(meldung.text), viewW / 2, 210); c.fillText(tx(meldung.text), viewW / 2, 210);
     }
     if (comboText) {   // Combo-Einblendung: springt auf, bleibt, blendet aus (reduced-motion: nur Text)
       const rest = comboText.zeit, auf = COMBO_TEXT_DAUER - rest;
@@ -9377,7 +9404,7 @@
       const farbe = comboText.stufe >= 8 ? '#ff4d1c' : '#ffd93d';
       c.save(); c.globalAlpha = Math.max(0, a); c.translate(viewW / 2, 250); c.scale(s, s);
       c.font = `bold ${comboText.stufe >= 5 ? 36 : 30}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillStyle = farbe; c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 6; c.strokeText(comboText.text, 0, 0); c.fillText(comboText.text, 0, 0);
+      c.fillStyle = farbe; c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 6; c.strokeText(tx(comboText.text), 0, 0); c.fillText(tx(comboText.text), 0, 0);
       c.restore();
     }
     // Banner der Zwischensequenz (Platzhalter für Mr. Alex' Stimme)
@@ -9387,7 +9414,7 @@
       c.fillStyle = 'rgba(24,33,58,.85)'; c.fillRect(0, 150, viewW, 100);
       c.fillStyle = '#e0a400'; c.fillRect(0, 150, viewW, 4); c.fillRect(0, 246, viewW, 4);
       c.font = `bold ${viewW < 700 ? 30 : 38}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillStyle = '#fff'; c.fillText(banner.text, viewW / 2, 192);
+      c.fillStyle = '#fff'; c.fillText(tx(banner.text), viewW / 2, 192);
       c.font = '600 15px system-ui, sans-serif'; c.fillStyle = '#ffd36b'; c.fillText('🎙 Mr. Alex', viewW / 2, 228);
       c.globalAlpha = 1;
     }
@@ -9493,6 +9520,216 @@
   // Kapitel 6: Kulisse/Boden/Grube/Kiste und Farben kommen vom Realm-Baustein unter der Figur (realm.sektion)
   const REALM6_TEILE = { realm: REALM_WELT, hoehle: REALM_WELT_3, eishalle: REALM_WELT_4, eisbruecke: REALM_WELT_5 };
   const realm6Teil = () => REALM6_TEILE[(realm && realm.sektion) || 'eisbruecke'] || REALM_WELT;
+  /* ---------- Welt „paris“ (7.11.2026, Französisch-App Klasse 5/6, Stufe 4 „Paris Run“): Quai an der Seine mit Bateaux-mouches, Haussmann-Häusern am anderen Ufer,
+     Sacré-Cœur in der Ferne, die Tour Eiffel wächst heran und leuchtet auf den letzten Metern; kleine Autos und Radrennfahrer (wie Autos), Pfützen, Baguette-Kisten und
+     Colonnes Morris als Stufen, Seine-Lücken, Taube/Maus/Eichhörnchen, Boss Monsieur Gaston (strenger Kellner vor seinem Café, zwirbelt den Schnurrbart), Tür = goldene Grille.
+     Alle Welt-Texte Französisch (Klassenniveau 5/6); Spielmeldungen übersetzt W.uebersetzung (tx), Mr. Alex' Zurufe W.zurufe (mit Runner-Hinweisen saute/attention/vite). */
+  const MUSTER_PARIS = [
+    (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                                   // 1 Aufwärmen (Baguette-Kiste)
+    (h) => { h.auto('pauto', 150, 950); h.dia(500, 250); h.vor(1000); },                                // 2 erstes Auto
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(950); },           // 3 Plattform + Taube
+    (h) => { h.kiste(200); h.morris(240); h.dia(260, 215); h.vor(750); },                               // 4 Kiste → Colonne Morris (Stufe)
+    (h) => { h.pfuetze(300); h.geg('maus', 500, 900); h.vor(1000); },                                   // 5 Pfütze + Maus
+    (h) => { h.luecke(250, 170); h.vor(950); },                                                         // 6 erste Seine-Lücke
+    (h) => { h.auto('velo', 100, 1000); h.plat(600, 230, 160); h.dia(680, 190); h.vor(1100); },         // 7 Radrennfahrer + Plattform
+    (h) => { h.geg('eichhoernchen', 150, 500); h.kiste(650); h.morris(690); h.dia(710, 190); h.vor(900); }, // 8 Eichhörnchen (Jardin du Luxembourg) + Stufe
+    (h) => { h.auto('pauto', 100, 900); h.pfuetze(550); h.vor(1000); },                                 // 9 Auto + Pfütze
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('taube', 450, 750); h.vor(1000); },                                       // 12 CHECKPOINT 1
+    (h) => { h.auto('pauto', 100, 1000); h.dia(500, 250); h.auto('velo', 1000, 1900); h.vor(2000); },   // 13 Rushhour
+    (h) => { h.morris(200); h.morris(240); h.geg('taube', 450, 850); h.vor(1000); },                    // 14 zwei Colonnes + Taube
+    (h) => { h.luecke(250, 160); h.pfuetze(600); h.vor(1000); },                                        // 15 Seine + Pfütze
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 16 Dreier-Plattform
+    (h) => { h.geg('eichhoernchen', 150, 450); h.auto('velo', 500, 1300); h.vor(1400); },               // 17 Eichhörnchen + Rad
+    (h) => { h.plat(200, 235, 200); h.dia(300, 195); h.kiste(650); h.vor(950); },                       // 18
+    (h) => { h.pfuetze(200); h.geg('maus', 450, 800); h.vor(1000); },                                   // 19 Pfütze + Maus
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 20
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 21 TOR 2
+    (h) => { h.cp(150); h.kiste(500); h.morris(540); h.vor(850); },                                     // 22 CHECKPOINT 2
+    (h) => { h.auto('pauto', 100, 1000); h.geg('taube', 1000, 1400); h.vor(1500); },                    // 23 Auto + Taube
+    (h) => { h.luecke(200, 190); h.plat(150, 230, 320); h.geg('maus', 650, 950); h.vor(1150); },        // 24 Plattform über der Seine
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.vor(750); }, // 25 Baguette-Pyramide
+    (h) => { h.pfuetze(150); h.auto('velo', 300, 1100); h.geg('eichhoernchen', 1150, 1400); h.vor(1500); }, // 26 Pfütze + Rad + Eichhörnchen
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('taube', 850, 1250); h.vor(1300); }, // 27
+    (h) => { h.luecke(200, 170); h.auto('pauto', 500, 1300); h.kiste(1350); h.vor(1500); },             // 28 Schluss: Seine + Auto
+  ];
+  const FR_BLAU = '#0055a4', FR_ROT = '#ef4135';
+  function hintergrundParis(c) {
+    const naehe = Math.min(1, kamera / level.ende);
+    const endeF = Math.max(0, Math.min(1, (kamera - (level.ende - 5200)) / 2600));   // auf den letzten Metern: Abendhimmel, die Tour Eiffel leuchtet
+    const g = c.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, mischFarbe('#79aee3', '#2b3a78', endeF)); g.addColorStop(0.62, mischFarbe('#e9f1f8', '#f0a873', endeF)); g.addColorStop(1, '#f3ead8');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    c.fillStyle = `rgba(255,255,255,${0.9 - 0.5 * endeF})`;   // Wolken (Parallaxe 0,06)
+    for (let i = 0; i < 5; i++) {
+      const n = viewW + 420, wx = ((i * 380 + 80 - kamera * 0.06) % n + n) % n - 210, wy = 46 + (i % 3) * 20;
+      c.beginPath(); c.arc(wx, wy, 18, 0, Math.PI * 2); c.arc(wx + 22, wy - 8, 24, 0, Math.PI * 2); c.arc(wx + 48, wy, 18, 0, Math.PI * 2); c.fill();
+    }
+    c.save(); c.globalAlpha = 0.75; pSacreCoeur(c, viewW * (0.2 - 0.12 * naehe) - kamera * 0.004, 232, 0.42); c.restore();   // Sacré-Cœur auf dem Hügel in der Ferne
+    c.fillStyle = '#c9c1b0';   // ferne Stadt (Parallaxe 0,08) mit grauen Mansarddächern
+    for (let i = 0; i < 36; i++) {
+      const n = viewW + 200, bx = ((i * 74 - kamera * 0.08) % n + n) % n - 100, bh = 20 + ((i * 37) % 34);
+      c.fillRect(bx, 250 - bh, 46, bh); c.fillStyle = '#a9b1b8'; c.fillRect(bx, 250 - bh - 6, 46, 6); c.fillStyle = '#c9c1b0';
+    }
+    const ex = viewW * (0.84 - 0.36 * naehe) - kamera * 0.01, gr = 0.36 + naehe * 0.42;   // Tour Eiffel wandert heran und wächst bis zum Boss
+    pHaeuser(c, 249, -viewW, viewW * 2, kamera * 0.15, 0.3);   // niedrige Haussmann-Häuser am anderen Ufer (Parallaxe 0,15)
+    pEiffel(c, ex, 252, gr, { licht: endeF, funkeln: endeF > 0.6 && !ruhig() ? zeit : null });   // vor den Häusern, damit sie gut sichtbar bleibt
+    c.fillStyle = '#5d8aa0'; c.fillRect(-viewW, 250, viewW * 3, H * 2);   // Seine
+    c.fillStyle = '#c2b59a'; c.fillRect(-viewW, 246, viewW * 3, 5);         // Quaimauer gegenüber
+    for (let i = 0; i < 8; i++) {   // am anderen Ufer: Laternen, ab und zu eine Trikolore
+      const n = viewW + 480, lx = ((i * 240 + 40 - kamera * 0.25) % n + n) % n - 240;
+      laterne(c, lx, 247, 0.6);
+      if (i % 3 === 1) { c.fillStyle = '#555'; c.fillRect(lx + 60, 206, 2, 40); [FR_BLAU, '#ffffff', FR_ROT].forEach((f, k) => { c.fillStyle = f; c.fillRect(lx + 62 + k * 6, 206, 6, 12); }); }
+    }
+    for (let i = 0; i < 3; i++) {   // Bateaux-mouches (Parallaxe 0,2, fahren langsam)
+      const n = viewW + 520, x = ((i * 610 + 260 + zeit * 12 - kamera * 0.2) % n + n) % n - 260, y = 282 + i * 12 + Math.sin(zeit * 1.4 + i) * 1.5;
+      pBoot(c, x, y, 0.45 + i * 0.06);
+    }
+    c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2;   // Wellen (Parallaxe 0,3)
+    for (let i = 0; i < 14; i++) { const n = viewW + 120, wx = ((i * 110 - kamera * 0.3 + Math.sin(zeit + i) * 6) % n + n) % n - 60, wy = 262 + (i % 4) * 16; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 10, wy - 4, wx + 20, wy); c.stroke(); }
+  }
+  function bodenParis(c, x0, w, a, b, links, rechts) {   // Boden: Quai mit Pflastersteinen (Pavés), heller Bordstein aus Kalkstein
+    c.fillStyle = '#9d968a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#e4dccb'; c.fillRect(x0, BODEN_Y, w, 9);
+    c.fillStyle = '#7a7366'; c.fillRect(x0, BODEN_Y + 9, w, 2);
+    c.fillStyle = 'rgba(0,0,0,.12)';
+    for (let r = 0; r < 3; r++) {
+      const y = BODEN_Y + 14 + r * 14, v = r % 2 ? 11 : 0;
+      for (let x = Math.max(Math.ceil((a - v) / 22) * 22 + v, Math.floor(links / 22) * 22 + v); x < Math.min(b, rechts); x += 22) { c.beginPath(); c.roundRect(x - kamera + 1, y, 19, 11, 4); c.fill(); }
+    }
+  }
+  function seine(c, a, b) {   // Lücke = Seine: Wasser mit Wellen, Quaimauern aus hellem Stein, ein Rettungsring
+    const x0 = a - kamera, w = b - a;
+    const g = c.createLinearGradient(0, BODEN_Y, 0, H); g.addColorStop(0, '#5d8aa0'); g.addColorStop(1, '#2a4a5c');
+    c.fillStyle = g; c.fillRect(x0, BODEN_Y + 10, w, H);
+    c.fillStyle = '#cbbfa3'; c.fillRect(x0 - 2, BODEN_Y, 7, H - BODEN_Y); c.fillRect(x0 + w - 5, BODEN_Y, 7, H - BODEN_Y);
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 2;
+    for (let i = 0; i < Math.ceil(w / 44); i++) { const wx = x0 + 8 + ((i * 44 + zeit * 40) % Math.max(1, w - 26)), wy = BODEN_Y + 22 + (i % 3) * 14; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 8, wy - 4, wx + 16, wy); c.stroke(); }
+    if (w > 165) { const rx = x0 + w / 2, ry = BODEN_Y + 34 + Math.sin(zeit * 2) * 2; c.strokeStyle = FR_ROT; c.lineWidth = 5; c.beginPath(); c.arc(rx, ry, 9, 0, Math.PI * 2); c.stroke();
+      c.strokeStyle = '#fff'; c.lineWidth = 5; for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(rx, ry, 9, k * Math.PI / 2, k * Math.PI / 2 + 0.4); c.stroke(); } }
+  }
+  function kisteParis(c, x, y, k) {   // Blöcke (40 × 40): Colonne Morris (zwei Teile, grüne Litfaßsäule mit Plakaten) oder Holzkiste voller Baguettes
+    if (k && k.art === 'morris') {
+      const oben = k.teil === 1;
+      c.fillStyle = '#2f6b4f'; c.beginPath(); c.roundRect(x + 4, y, KISTE - 8, KISTE, 3); c.fill();
+      c.fillStyle = '#25563f'; c.fillRect(x + 4, y, 5, KISTE);
+      const plakat = oben ? ['#f4e3b5', '#ef4135'] : ['#d6e8f5', '#0055a4'];
+      c.fillStyle = plakat[0]; c.fillRect(x + 10, y + 6, KISTE - 20, KISTE - 12);
+      c.fillStyle = plakat[1]; c.fillRect(x + 12, y + 9, KISTE - 24, 6); c.fillRect(x + 12, y + 19, (KISTE - 24) * 0.6, 3); c.fillRect(x + 12, y + 25, (KISTE - 24) * 0.8, 3);
+      if (oben) { c.fillStyle = '#2f6b4f'; c.beginPath(); c.moveTo(x + 1, y + 2); c.quadraticCurveTo(x + KISTE / 2, y - 16, x + KISTE - 1, y + 2); c.closePath(); c.fill();
+        c.fillStyle = '#e0b84a'; c.beginPath(); c.arc(x + KISTE / 2, y - 9, 3, 0, Math.PI * 2); c.fill(); }
+      else { c.fillStyle = '#25563f'; c.fillRect(x + 2, y + KISTE - 4, KISTE - 4, 4); }
+      return;
+    }
+    c.fillStyle = '#a8743f'; c.fillRect(x, y, KISTE, KISTE);   // Baguette-Kiste
+    pBaguette(c, x + 14, y + 4, 0.42, -1.25); pBaguette(c, x + 22, y + 2, 0.45, -1.4); pBaguette(c, x + 30, y + 5, 0.4, -1.75);
+    c.fillStyle = '#a8743f'; c.fillRect(x, y + 10, KISTE, KISTE - 10);
+    c.fillStyle = '#8b5e30'; c.fillRect(x, y + 10, KISTE, 3); c.fillRect(x, y + 24, KISTE, 3); c.fillRect(x, y + KISTE - 3, KISTE, 3);
+    c.fillStyle = '#f3ead2'; c.fillRect(x + 8, y + 15, KISTE - 16, 7);
+    c.fillStyle = FR_BLAU; c.font = 'bold 6px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('PAIN', x + KISTE / 2, y + 18.7);
+  }
+  function parisFahrzeug(c, a) {   // Welt Paris: kleines Auto (pAuto, fährt nach links) oder Radrennfahrer (pRad gespiegelt)
+    const x = a.x - kamera;
+    if (a.art === 'velo') { c.save(); c.translate(x + a.w / 2, BODEN_Y); c.scale(-1, 1); pRad(c, 0, 0, 1.25, ['#ffd23f', '#2a9d8f', '#e63946'][Math.abs(Math.round(a.von / 7)) % 3], zeit); c.restore(); return; }
+    pAuto(c, x + a.w / 2, BODEN_Y + 2, 2, ['#e63946', '#4fb3d9', '#f4d35e', '#8ac926'][Math.abs(Math.round(a.von / 7)) % 4], -1);
+  }
+  function cafeTerrasse(c, x, y) {   // hinter Monsieur Gaston: Café mit rot-weißer Markise, Schild „CAFÉ“, Bistrotisch mit zwei Stühlen
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#1f3b5a'; c.fillRect(-70, -200, 140, 200);
+    c.fillStyle = 'rgba(255,236,180,.85)'; c.fillRect(-58, -150, 50, 100); c.fillRect(8, -150, 50, 100);
+    c.fillStyle = '#16304a'; c.fillRect(-70, -200, 140, 26);
+    c.fillStyle = '#e0b84a'; c.font = 'bold 17px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('CAFÉ', 0, -186);
+    for (let k = 0; k < 7; k++) { c.fillStyle = k % 2 ? '#ffffff' : FR_ROT; c.beginPath(); c.moveTo(-74 + k * 21.2, -174); c.lineTo(-74 + (k + 1) * 21.2, -174); c.lineTo(-70 + (k + 1) * 21.2, -156); c.lineTo(-70 + k * 21.2, -156); c.fill(); }
+    c.restore();
+    c.save(); c.translate(x - 64, y);   // Bistrotisch + Stühle davor
+    c.strokeStyle = '#2b2b2b'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(0, -30); c.lineTo(0, 0); c.moveTo(-9, 0); c.lineTo(9, 0); c.stroke();
+    c.fillStyle = '#d9d4c7'; c.beginPath(); c.ellipse(0, -31, 15, 4, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#ffffff'; c.fillRect(-4, -40, 7, 8); c.fillStyle = '#6b3e1f'; c.fillRect(-3, -39, 5, 3);
+    for (const s of [-1, 1]) { c.strokeStyle = '#8b5e30'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(s * 22, 0); c.lineTo(s * 22, -18); c.lineTo(s * 30, -18); c.moveTo(s * 30, 0); c.lineTo(s * 30, -34); c.stroke(); }
+    c.restore();
+  }
+  function monsieurGaston(c, x, y) {   // Boss Welt Paris: strenger Kellner (Garçon) mit Zwirbelbart, Fliege, Weste und langer Schürze; hält ein Tablett mit Croissant und Café hoch
+    const auf = boss.sichtbar, weg = boss.weg;
+    const gx = x + (1 - auf) * 46 + weg * 240, schritt = weg > 0 && !ruhig() ? Math.sin(zeit * 9) : 0;
+    const fragt = zustand === 'boss' || zustand === 'sequenz', zwirbel = fragt && !ruhig() ? Math.sin(zeit * 6) * 0.25 : 0;
+    c.save(); c.translate(gx, y); c.globalAlpha = 1 - weg * 0.85;
+    for (const [bx, w] of [[-7, schritt], [7, -schritt]]) { c.fillStyle = '#1b1b1f'; c.fillRect(bx - 4 + w * 3, -44, 8, 40); c.beginPath(); c.roundRect(bx - 6 + w * 3, -6, 14, 6, 3); c.fill(); }
+    c.fillStyle = '#ffffff'; c.beginPath(); c.roundRect(-17, -98, 34, 60, 6); c.fill();   // Hemd
+    c.fillStyle = '#1b1b1f'; c.beginPath(); c.moveTo(-17, -96); c.lineTo(-6, -96); c.lineTo(0, -70); c.lineTo(6, -96); c.lineTo(17, -96); c.lineTo(17, -58); c.lineTo(-17, -58); c.closePath(); c.fill();   // Weste
+    c.fillStyle = '#f7f5ef'; c.beginPath(); c.moveTo(-18, -62); c.lineTo(18, -62); c.lineTo(20, -10); c.lineTo(-20, -10); c.closePath(); c.fill();   // Schürze
+    c.strokeStyle = 'rgba(0,0,0,.12)'; c.lineWidth = 1; c.beginPath(); c.moveTo(-6, -58); c.lineTo(-7, -12); c.moveTo(7, -58); c.lineTo(8, -12); c.stroke();
+    c.fillStyle = '#e8b98f'; c.beginPath(); c.roundRect(-4, -106, 8, 10, 2); c.fill();   // Hals
+    c.fillStyle = '#1b1b1f'; c.beginPath(); c.moveTo(-8, -101); c.lineTo(0, -98); c.lineTo(-8, -95); c.fill(); c.beginPath(); c.moveTo(8, -101); c.lineTo(0, -98); c.lineTo(8, -95); c.fill();   // Fliege
+    c.strokeStyle = '#ffffff'; c.lineWidth = 7; c.lineCap = 'round';   // linker Arm in die Hüfte, rechter Arm trägt das Tablett hoch
+    c.beginPath(); c.moveTo(-15, -90); c.lineTo(-27, -70); c.lineTo(-16, -58); c.stroke();
+    c.beginPath(); c.moveTo(15, -90); c.lineTo(28, -104); c.lineTo(30, -122); c.stroke();
+    c.fillStyle = '#e8b98f'; c.beginPath(); c.arc(-16, -58, 4, 0, Math.PI * 2); c.arc(30, -124, 4, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#b8bcc2'; c.beginPath(); c.ellipse(30, -128, 20, 4, 0, 0, Math.PI * 2); c.fill();   // Tablett mit Café und Croissant
+    c.fillStyle = '#ffffff'; c.fillRect(18, -140, 9, 10); c.fillStyle = '#6b3e1f'; c.fillRect(19, -139, 7, 3);
+    pCroissant(c, 38, -132, 0.55);
+    c.fillStyle = '#e8b98f'; c.beginPath(); c.arc(0, -120, 15, 0, Math.PI * 2); c.fill();   // Kopf
+    c.fillStyle = '#2b2b2b'; c.beginPath(); c.arc(0, -126, 15, Math.PI * 1.05, Math.PI * 1.95); c.fill(); c.fillRect(-13, -128, 4, 5);   // Haare mit Scheitel
+    const blick = fragt ? -2 : (Math.sin(zeit * 0.8) > 0.35 ? 2 : 0);
+    c.fillStyle = '#1b1b1f'; c.beginPath(); c.arc(-5 + blick, -122, 1.8, 0, Math.PI * 2); c.arc(5 + blick, -122, 1.8, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#1b1b1f'; c.lineWidth = 2; c.beginPath(); c.moveTo(-9, -127); c.lineTo(-2, -126); c.moveTo(9, -127); c.lineTo(2, -126); c.stroke();   // strenge Augenbrauen
+    c.fillStyle = '#d9a07a'; c.beginPath(); c.ellipse(0, -117, 3, 3.5, 0, 0, Math.PI * 2); c.fill();   // Nase
+    c.strokeStyle = '#2b2b2b'; c.lineWidth = 3; c.lineCap = 'round';   // Zwirbelbart (zwirbelt beim Fragen)
+    for (const s of [-1, 1]) { c.beginPath(); c.moveTo(0, -112); c.quadraticCurveTo(s * 9, -114, s * 13, -110 - zwirbel * 6); c.quadraticCurveTo(s * 17, -106, s * 14, -104); c.stroke(); }
+    c.restore();
+  }
+  function parisBoss(c, x, y) { cafeTerrasse(c, x - 6, y); monsieurGaston(c, x, y); }
+  function grilleParis(c, x, y) {   // Tür der Welt Paris: goldene Grille zwischen zwei Steinpfeilern mit Laterne, die Flügel schwingen auf; dahinter goldenes Licht
+    c.save(); c.translate(x, y);
+    const offen = tuer.offen;
+    if (offen > 0) { c.fillStyle = `rgba(255,236,170,${0.85 * offen})`; c.fillRect(-36, -118, 72, 118); }
+    for (const s of [-1, 1]) { c.fillStyle = '#e4dccb'; c.fillRect(s * 44 - 9, -140, 18, 140); c.fillStyle = '#cfc4ab'; c.fillRect(s * 44 - 11, -146, 22, 8);
+      c.fillStyle = '#1b1b1f'; c.fillRect(s * 44 - 1, -166, 2, 20); c.fillStyle = '#ffe27a'; c.beginPath(); c.roundRect(s * 44 - 6, -176, 12, 12, 3); c.fill(); }
+    for (const seite of [-1, 1]) {
+      c.save(); c.translate(seite * 35, 0); c.scale(Math.max(0.05, 1 - offen * 0.95), 1);
+      const x0 = seite > 0 ? -35 : 0;
+      pGoldtor(c, x0 + 2, x0 + 33, 0, 112);
+      c.restore();
+    }
+    c.fillStyle = '#e8b923'; c.beginPath(); c.arc(0, -128, 8, 0, Math.PI * 2); c.fill();   // goldenes Wappen mit „P“
+    c.fillStyle = FR_BLAU; c.font = 'bold 10px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('P', 0, -127.5);
+    c.restore();
+  }
+  // Spielmeldungen der Engine (Englisch) für Paris auf Französisch; tx() übersetzt beim Zeichnen (Meldung, Combo, Banner)
+  const UEBERSETZUNG_FR = {
+    'Shield! 🛡️': 'Bouclier ! 🛡️', 'Boing! 🦘': 'Hop ! 🦘', 'Whee! 🦅': 'Youpi ! 🐦', 'Laser! 💥': 'Lumière ! ✨', 'Smash! 🦬': 'Boum ! 🐻', 'Roll! 🌀': 'Et hop ! 🌀',
+    'Splish! 💦': 'Plic ploc ! 💦', 'Whoa! 🛢️': 'Oh là là ! 🛢️', 'Crash! 🚗': 'Aïe ! 🚗', 'Ouch!': 'Aïe !', 'Float! 🦋': 'Je vole ! 🦋', 'Mega jump! 🐾': 'Super saut ! 🐾',
+    'On fire! 🔥': 'En feu ! 🔥', 'Nothing to steal! 🐦': 'Rien à voler ! 🐦', 'My diamond! 🐦': 'Mon diamant ! 🐦',
+  };
+  // Mr. Alex' Zurufe in Paris (Französisch, kurz; Aufnahmen app/franz/audio/runner/<key>.mp3, Tag [French]) – dazu die Runner-Hinweise aus inhalte/franz/wendungen_helden.tsv (r01–r06)
+  const ALEX_ZURUFE_FR = {
+    start:   [["fr_start_1", "À droite ! On y va !"], ["fr_start_2", "Allez, à droite !"]],
+    combo3:  [["fr_combo3_1", "Bravo !"], ["fr_combo3_2", "Super !"]],
+    combo5:  [["fr_combo5_1", "Bravo ! Encore !"], ["fr_combo5_2", "Génial !"]],
+    combo8:  [["fr_combo8_1", "Incroyable !"], ["fr_combo8_2", "C'est trop bien !"]],
+    tore3:   [["fr_tore3_1", "Très bien !"]],
+    leben:   [["fr_leben_1", "Pas grave ! Encore !"], ["fr_leben_2", "Oups ! Allez !"]],
+    letztes: [["fr_letztes_1", "Attention !"]],
+    halb:    [["fr_halb_1", "Plus vite !"], ["fr_halb_2", "Allez, plus vite !"]],
+    boss:    [["fr_boss_1", "Attention ! Voilà Monsieur Gaston !"]],
+    ende:    [["fr_ende_1", "Bravo ! Encore !"], ["fr_ende_2", "Magnifique !"]],
+    fail:    [["fr_fail_1", "Presque ! Encore une fois !"]],
+    saute:   [["fr_saute_1", "Saute !"]],
+    attention: [["fr_attention_1", "Attention !"]],
+    gauche:  [["fr_gauche_1", "À gauche !"]],
+    vite:    [["fr_vite_1", "Plus vite !"]],
+  };
+  // Runner-Hinweise (nur Welten mit W.hinweise): „Saute !“ kurz vor einer Seine-Lücke, „Attention !“ vor Auto/Rad, „Plus vite !“ nach einem Checkpoint, „À gauche !“ wenn ein Gegner von links kommt
+  let hinweisGesehen = new Set();
+  function hinweiseRunner() {
+    if (!W.hinweise || zustand !== 'spiel' || tot > 0) return;
+    const x = spieler.x;
+    for (let i = 1; i < level.boden.length; i++) { const a = level.boden[i - 1][1]; if (a > x + 120 && a < x + 260 && !hinweisGesehen.has('l' + a)) { hinweisGesehen.add('l' + a); if (alexSagen('saute')) return; } }
+    for (const a of autos) { if (a.x > x + 140 && a.x < x + 360 && !hinweisGesehen.has('a' + a.von)) { hinweisGesehen.add('a' + a.von); if (alexSagen('attention')) return; } }
+    for (const k of level.checkpoints) { if (x > k.x + 60 && x < k.x + 200 && !hinweisGesehen.has('c' + k.x)) { hinweisGesehen.add('c' + k.x); if (alexSagen('vite')) return; } }
+    for (const g of gegner) { if (g && !g.tot && g.x < x && g.x > x - 160 && (g.richtung || 0) > 0 && !hinweisGesehen.has('g' + g.von)) { hinweisGesehen.add('g' + g.von); if (alexSagen('gauche')) return; } }
+  }
+  const tx = (text) => (W && W.uebersetzung && W.uebersetzung[text]) || text;
   const WELTEN = {
     ny: { id: 'ny', name: 'New York', staat: 'New York', ziel: 'Statue of Liberty', bossName: 'Mr. Alligator', bossSymbol: '🐊', banner: BANNER_TEXT, richtig: "Correct – the door opens!", falsch: "Not this time!", start: "Let's find the Statue of Liberty!", ende: "You made it to the Statue of Liberty!",
       sturz: 'Splash! 💦',
@@ -9556,6 +9793,12 @@
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WEMBLEY_STORY, musterStory: MUSTER_WEMBLEY_STORY, storyStruktur: STRUKTUR_WEMBLEY, sprechblaseHoehe: 240,
       kulisse: hintergrundWembley, boden: bodenWembley, grube: wembleyGrube, kiste: kisteWembley, hudSymbol: (c, x, y) => { c.save(); c.strokeStyle = '#1d3f8f'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 13, y + 10); c.quadraticCurveTo(x, y - 16, x + 13, y + 10); c.stroke(); c.fillStyle = '#1d3f8f'; c.fillRect(x - 12, y + 6, 24, 5); c.restore(); },
       boss: wembleyBoss, tuer: spielfeldTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
+    // Französisch-App „Paris Run“ (7.11., Stufe 4): Texte Französisch, Zurufe/Hinweise Mr. Alex (W.zurufe, W.hinweise), Engine-Meldungen übersetzt (W.uebersetzung)
+    paris: { id: 'paris', name: 'Paris', staat: 'Paris', ziel: 'Tour Eiffel', bossName: 'Monsieur Gaston', bossSymbol: '☕', banner: 'Attention ! Voilà Monsieur Gaston !', richtig: "Oui, c'est correct ! Entre !", falsch: 'Non, non, non !', start: 'On y va ! À la tour Eiffel !', ende: 'Bravo ! Tu es à la tour Eiffel !',
+      sturz: 'Plouf ! 🌊', zurufe: ALEX_ZURUFE_FR, hinweise: true, uebersetzung: UEBERSETZUNG_FR,
+      gegnerarten: ['taube', 'maus', 'eichhoernchen'], farben: { plattform: '#3d4f63', plattformOben: FR_BLAU, hud: FR_BLAU }, muster: MUSTER_PARIS, sprechblaseHoehe: 220,
+      kulisse: hintergrundParis, boden: bodenParis, grube: seine, kiste: kisteParis, hudSymbol: (c, x, y) => pEiffel(c, x, y + 14, 0.13),
+      boss: parisBoss, tuer: grilleParis, bossKlang: () => { klang.klingel(); klang.akkordeon(); } },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner, richtig: w.richtig, falsch: w.falsch, start: w.start, ende: w.ende }));
 
@@ -13883,5 +14126,7 @@
     get wahlOffen() { return zustand === 'wahl' && !!wahlGabel && !frageBox.hidden; },
   };
 
-  window.Runner = { heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, heldKarteZeichnen, heldKarteBild, heldKarteGlanz, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  // Gemeinsame Hilfe für andere Sprachen (7.11., Französisch-App: Paris Run, Bonus-Welten): Liste [{ fr, de, audio? }] → Runner-Wörter [{ en, de }] (das Feld en trägt das gezeigte Fremdwort)
+  const woerterAus = (liste, feld = 'fr') => (liste || []).filter((w) => w && w[feld]).map((w) => ({ en: String(w[feld]), de: String(w.de || '') }));
+  window.Runner = { woerterAus, heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, heldKarteZeichnen, heldKarteBild, heldKarteGlanz, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
 })();

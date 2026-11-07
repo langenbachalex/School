@@ -27,6 +27,21 @@ JUNGEN, MAEDCHEN = ("leo", "kenji", "felix", "max"), ("camilla", "ellie", "olivi
 CAMEO_STIMME = {h: f"h_{h}" for h in JUNGEN + MAEDCHEN}   # 7.11.: jeder Held eine eigene Stimme (audio_erzeugen.STIMMEN h_<id>)
 
 
+# Audio-Tags (7.11.2026, Mr. Alex: „lots of emotions", v4, Stabilität 0,3): nur im gesprochenen Text, nicht im Untertitel (helden.tsv / runner.js bleiben ohne Tags)
+HELD_TAGS = {"leo": "[energetic]", "camilla": "[proud]", "ellie": "[thoughtful]", "olivia": "[calm]", "kenji": "[excited]", "zara": "[playful]",
+             "penny": "[cheerful]", "felix": "[confident]", "tessa": "[warm]", "max": "[mischievous]"}
+HELD_INTRO_TAGS = {   # Film-Vorstellung mit Tags an passenden Stellen (Text wie Spalte intro in helden.tsv)
+    "leo": "[energetic] Hi, I'm Leo the Lion! My superpower is super speed. [fast] I can run faster than a car! [laughs]",
+    "camilla": "[proud] Hi, I'm Camilla the Camel! I'm super strong. [grunts] Look, I can carry a car on my back! [laughs]",
+    "ellie": "[thoughtful] Hi, I'm Ellie the Elephant! I never forget a word. [proud] I can remember every page of every book!",
+    "olivia": "[calm] Hi, I'm Olivia the Owl! I can see in the dark. [whispers] At night, I watch London and find lost things.",
+    "kenji": "[excited] Hi, I'm Kenji the Kangaroo! My superpower is super jump. [laughs] I can jump over houses!",
+    "zara": "[playful] Hi, I'm Zara the Zebra! I can become invisible. [whispers] Now you see me, [giggles] now you don't!",
+    "penny": "[cheerful] Hi, I'm Penny the Penguin! I have ice powers. [whispers] I can freeze water in one second! [giggles]",
+    "felix": "[confident] Hi, I'm Felix the Falcon! I can fly around the world in one day. [awe] I see everything from the sky!",
+    "tessa": "[warm] Hi, I'm Tessa the Turtle! I'm unbreakable. [chuckles] Nothing can hurt my shell!",
+    "max": "[mischievous] Hi, I'm Max the Monkey! I'm a genius inventor. [excited] I build a new gadget every day!",
+}
 HELD_RUFE = {   # Ausrufe in den Heldenfilmen (Sprechblase im Film = dieser Text)
     "ellie": "Every word!", "olivia": "Found it!", "kenji": "Boing!", "zara": "Surprise!",
     "penny": "Ice cream for everybody!", "felix": "Around the world in one day!", "tessa": "Bonk!", "max": "Homework done!",
@@ -61,15 +76,15 @@ def auftraege():
         for art in ARTEN:
             liste.append((6, APP6, f"audio/runner/{w}_{art}.mp3", {"start": "m1", "ende": "f1"}.get(art, "en"), welten[w][art]))
     for h in JUNGEN + MAEDCHEN:
-        liste.append((6, APP6, f"audio/runner/cameo_{h}.mp3", CAMEO_STIMME[h], cameo[h]))
+        liste.append((6, APP6, f"audio/runner/cameo_{h}.mp3", CAMEO_STIMME[h], f"{HELD_TAGS[h]} {cameo[h]}"))
     # Heldenfilme (6.11.2026): Selbstvorstellung je Held (Spalte intro in inhalte/helden.tsv), dieselbe Stimme wie sein Cameo
     import daten_bauen
     for z in daten_bauen.lesen("helden.tsv"):
         if z.get("intro"):
-            liste.append((6, APP6, f"audio/helden/intro_{z['id']}.mp3", CAMEO_STIMME[z["id"]], z["intro"]))
+            liste.append((6, APP6, f"audio/helden/intro_{z['id']}.mp3", CAMEO_STIMME[z["id"]], HELD_INTRO_TAGS.get(z["id"], z["intro"])))
     # Ausrufe in den Heldenfilmen (7.11.2026, Mr. Alex: auch sprechen) – dieselbe Stimme; Zeitpunkt steht in runner.js (Klang 'ruf')
     for h, text in HELD_RUFE.items():
-        liste.append((6, APP6, f"audio/helden/ruf_{h}.mp3", CAMEO_STIMME[h], text))
+        liste.append((6, APP6, f"audio/helden/ruf_{h}.mp3", CAMEO_STIMME[h], f"{HELD_TAGS[h]} {text}"))
     import klasse9_audio
     for pfad, stimme, text in klasse9_audio.auftraege():
         if pfad.startswith("audio/beae/w_"):

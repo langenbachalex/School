@@ -27,7 +27,7 @@ STIMMEN = {
     "m2":   ("qxjGnozOAtD4eqNuXms4", "en", "John Shaw – britisch, jung (2. Junge)"),
     "f1":   ("nDJIICjR9zfJExIFeSCN", "en", "Emmaline – britisches Mädchen (1. Mädchen)"),
     "f2":   ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britisch (2. Mädchen)"),
-    # Superhelden (7.11.2026, Mr. Alex: jeder Held eine eigene Stimme) – Cameo, Film-Intro und Ausruf
+    # Superhelden (7.11.2026, Mr. Alex: jeder Held eine eigene Stimme, v4 mit Audio-Tags und Stabilität 0,3 für viel Ausdruck) – Cameo, Film-Intro und Ausruf
     "h_leo":     ("SOYHLrjzK2X1ezoPC6cr", "en", "Harry – Fierce Warrior (Leo the Lion)"),
     "h_camilla": ("pFZP5JQG7iQjIQuC4Bku", "en", "Lily – Velvety Actress, britisch (Camilla the Camel)"),
     "h_ellie":   ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – Clear Educator, britisch (Ellie the Elephant)"),
@@ -47,7 +47,7 @@ MODELLE = {
     "m2":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
     "f1":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
     "f2":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
-    **{f"h_{h}": ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}) for h in ("leo", "camilla", "ellie", "olivia", "kenji", "zara", "penny", "felix", "tessa", "max")},
+    **{f"h_{h}": ("eleven_v4", {"stability": 0.3, "similarity_boost": 0.75}) for h in ("leo", "camilla", "ellie", "olivia", "kenji", "zara", "penny", "felix", "tessa", "max")},
 }
 ERSATZ = ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme (Ersatz)")
 MODELL = "eleven_multilingual_v2"

@@ -1817,6 +1817,7 @@
   // Cameos (Klasse 6): Liste der Helden (opt.cameos), geladene Kartenbilder, Auftrittsplan (x-Marken), laufender Auftritt, Effekte (Restzeit in s)
   let cameoListe = [], cameoPlan = [], cameo = null, cameosGezeigt = 0, cameoEffekt = null;
   let schild = 0, sprungBonus = 0, durchlaessig = 0, eisZeit = 0, traegt = 0, traegtAktiv = false, eule = null;
+  let kenjiMit = 0, kenjiSprung = -1;   // Cameo Kenji (7.11., Mr. Alex): Kenji hüpft neben der Figur mit (kenjiMit = Restzeit) und springt beim Bonus-Sprung mit ihr hoch (kenjiSprung = Zeit seit dem Absprung, −1 = am Boden)
   const CAMEO_DAUER = 2.5, CAMEO_EIN = 0.5, CAMEO_AUS = 0.45, CAMEO_R = 24;
   let autoKlangZeit = -9;
   let sequenz = null, zoom = 1, banner = null, bossSpruch = null;
@@ -1865,7 +1866,7 @@
     klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
     spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null; tuerAnsagen = 0; nyDurchsage = false; durchsagenGesprochen = [];   // The Tube, New York (U-Bahn-Durchsage)
     baelle = (level.baelle || []).map((b) => ({ ...b, phase: 'ruhe', rx: b.x, rot: 0, t: 0 })); koepfer = 0; ballTreffer = 0; tuerTritt = -1; rasenBetreten = false;   // Wembley
-    cameo = null; cameosGezeigt = 0; cameoEffekt = null; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
+    cameo = null; cameosGezeigt = 0; cameoEffekt = null; kenjiMit = 0; kenjiSprung = -1; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoPlan = cameoPlanBauen();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
     diaGesammelt = 0; film = null; storyNeu(); realmNeu();
@@ -1962,7 +1963,7 @@
     try { if (stimme.cameo) stimme.cameo(cameo.satz, held && held.id, { audio: (held && held.satz) ? null : audioDatei('cameo', held && held.id) }); } catch (e) { /* stumm */ }
     const id = held && held.id;
     if (id === 'leo') { if (!ruhig()) spur = Math.max(spur, 3); comboPlus(); cameoEffekt = 'combo'; }
-    else if (id === 'kenji') { sprungBonus = 5; cameoEffekt = 'sprung'; }
+    else if (id === 'kenji') { sprungBonus = 5; kenjiMit = 5 + CAMEO_DAUER; kenjiSprung = -1; cameoEffekt = 'sprung'; }
     else if (id === 'tessa') { schild = 5; cameoEffekt = 'schild'; }
     else if (id === 'felix') { traegt = 5; cameoEffekt = 'traegt'; }
     else if (id === 'olivia' && tore.some((t) => !t.erledigt && t.x > spieler.x)) { eule = tore.find((t) => !t.erledigt && t.x > spieler.x); cameoEffekt = 'eule'; }
@@ -1986,6 +1987,9 @@
     if (cameo) { cameo.t += dt; if (cameo.t >= CAMEO_DAUER) cameo = null; }
     if (schild > 0) schild = Math.max(0, schild - dt);
     if (sprungBonus > 0) sprungBonus = Math.max(0, sprungBonus - dt);
+    if (kenjiSprung >= 0) { kenjiSprung += dt; if (spieler.amBoden && kenjiSprung > 0.2) { kenjiSprung = -1; kenjiMit = Math.min(kenjiMit, 1.2); } }   // mitgesprungen: nach der Landung verabschiedet er sich
+    else if (kenjiMit > 0 && sprungBonus <= 0) kenjiMit = Math.max(0, kenjiMit - dt);   // Bonus verfallen oder verbraucht: Kenji hüpft noch kurz mit und geht
+    if (kenjiMit > 0 && sprungBonus > 0) kenjiMit = Math.max(kenjiMit, 0.001);
     if (durchlaessig > 0) durchlaessig = Math.max(0, durchlaessig - dt);
     if (eisZeit > 0) eisZeit = Math.max(0, eisZeit - dt);
     if (traegt > 0) traegt = Math.max(0, traegt - dt);
@@ -2359,7 +2363,7 @@
     if (rutscht > 0) return;                  // auf dem Ölfleck: kein Sprung möglich
     if (spieler.amBoden && tot <= 0) {
       spieler.vy = SPRUNG_V * (wind && wind.phase === 'schub' ? WIND_SPRUNG : 1); spieler.amBoden = false; halten = true; haltZeit = 0; spieler.sprang = true; klang.sprung();   // in der Windböe: halber Sprung; sprang = Landung macht in der Drachenhöhle Lärm
-      if (sprungBonus > 0) { spieler.vy *= 1.3; sprungBonus = 0; meldung = { text: 'Boing! 🦘', zeit: 0.7 }; }   // Cameo Kenji: einmal höher
+      if (sprungBonus > 0) { spieler.vy *= 1.3; sprungBonus = 0; kenjiSprung = 0; meldung = { text: 'Boing! 🦘', zeit: 0.7 }; }   // Cameo Kenji: einmal höher – Kenji springt mit
     }
   }
   function sprungEnde() { halten = false; }
@@ -7858,6 +7862,13 @@
       c.globalAlpha = blink ? 0.35 : durchlaessig > 0 ? 0.45 : 1;   // Cameo Zara: Figur halb unsichtbar
       if (schild > 0) { c.save(); c.globalAlpha = 0.35 + 0.1 * Math.sin(zeit * 6); c.strokeStyle = '#2e9e5b'; c.lineWidth = 4; c.beginPath(); c.ellipse(spieler.x - kamera, spieler.y - 44, 34, 52, 0, 0, Math.PI * 2); c.stroke(); c.restore(); }   // Cameo Tessa: Schutzschild
       if (traegtAktiv) falkeZeichnen(c, spieler.x - kamera, spieler.y - 96);   // Cameo Felix: Falke hält die Figur
+      if ((kenjiMit > 0 || kenjiSprung >= 0) && !(cameo && cameo.held && cameo.held.id === 'kenji') && HELDEN_ZEICHNUNG.kenji) {   // Cameo Kenji: hüpft links neben der Figur mit, springt beim Bonus-Sprung mit ihr hoch
+        c.save(); c.globalAlpha = 1;
+        const kx = spieler.x - kamera - 62;
+        if (kenjiSprung >= 0 && !spieler.amBoden) { const ph = 0.3 + Math.min(0.58, kenjiSprung * 0.7); heldZeichnen(c, 'kenji', kx, spieler.y + 6, 92, zeit, 'sprung', { gluehen: true, phase: ph, ohneHub: true, kraft: 1 }); }
+        else heldZeichnen(c, 'kenji', kx, BODEN_Y, 92, zeit, ruhig() ? 'steh' : 'lauf', { gluehen: true, kraft: 0.6 });
+        c.restore();
+      }
       const surfend = surft > 0 && spieler.amBoden && rutscht <= 0;
       if (surfend) surfbrett(c, spieler.x - kamera, spieler.y);   // Welt 5: Surfbrett unter der Figur, Figur lehnt sich nach vorn
       if (imEishalle() && spieler.y <= BODEN_Y + 1) spiegelbild(c, () => zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, ausdruckAktuell()));   // Spiegelboden: die Figur spiegelt sich
@@ -11616,7 +11627,7 @@
         kisten: level.kisten.filter((k) => k.art).map((k) => ({ x: k.x, y: k.y, art: k.art })), luecken: level.boden.length - 1,
         cameo: cameo ? { id: cameo.held && cameo.held.id, t: Math.round(cameo.t * 100) / 100, satz: cameo.satz } : null, cameosGezeigt, cameoEffekt,
         cameoPlan: cameoPlan.map((p) => ({ x: p.x, id: p.held && p.held.id, erledigt: p.erledigt })),
-        effekte: { schild: Math.round(schild * 100) / 100, sprungBonus: Math.round(sprungBonus * 100) / 100, durchlaessig: Math.round(durchlaessig * 100) / 100, eis: Math.round(eisZeit * 100) / 100, traegt: Math.round(traegt * 100) / 100, traegtAktiv, eule: eule ? eule.x : null },
+        effekte: { schild: Math.round(schild * 100) / 100, sprungBonus: Math.round(sprungBonus * 100) / 100, kenjiMit: Math.round(kenjiMit * 100) / 100, kenjiSprung: Math.round(kenjiSprung * 100) / 100, durchlaessig: Math.round(durchlaessig * 100) / 100, eis: Math.round(eisZeit * 100) / 100, traegt: Math.round(traegt * 100) / 100, traegtAktiv, eule: eule ? eule.x : null },
         tore: tore.map((t) => ({ x: t.x, wort: woerter[t.wort].en, erledigt: t.erledigt, steine: t.steine.map((x) => ({ y: x.y, richtig: x.richtig })) })),
         torHinweis: zustand === 'spiel' && torHinweis() ? torHinweis().de : null, vy: Math.round(spieler.vy), diamantenX: diamanten.map((d) => ({ x: Math.round(d.x), weg: d.weg, verpasst: !!d.verpasst })),
       };

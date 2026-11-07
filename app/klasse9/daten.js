@@ -9170,7 +9170,7 @@ window.DATEN = {
     "fakt": "Kentucky is famous for horses and the Kentucky Derby race. Mammoth Cave in Kentucky is the longest cave in the world. People know more than 680 kilometers of it.",
     "audio": "audio/staaten/KY.mp3",
     "foto": "bilder/staaten/KY.jpg",
-    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
+    "foto_quelle": "Foto: NPS Photo, Public domain, Wikimedia Commons"
    },
    {
     "id": "TN",

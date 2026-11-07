@@ -6500,7 +6500,7 @@ window.DATEN = {
     "fakt": "Notting Hill has colourful houses and a big street carnival every August.",
     "audio": "audio/london/notting_hill.mp3",
     "foto": "bilder/orte/notting_hill.jpg",
-    "foto_quelle": "Foto: Christopher Hilton, CC BY-SA 2.0, Wikimedia Commons"
+    "foto_quelle": "Foto: Papertree at English Wikipedia, CC BY-SA 3.0, Wikimedia Commons"
    },
    {
     "id": "greenwich",

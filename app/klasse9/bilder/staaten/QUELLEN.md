@@ -1,6 +1,6 @@
 # Quellen der Staaten-Fotos (Klasse 9, USA-Karte)
 
-Kleine Fotos am Ende der Staaten-Szenen. Meist aus dem Carol M. Highsmith Archive der Library of Congress (Prints and Photographs Division), gemeinfrei (no known restrictions on publication), über die loc.gov-JSON-API gesucht, auf 400 px Breite verkleinert, JPEG-Qualität 70. Einzelne Motive (7.11.: AR, MS) von Wikimedia Commons, freie Lizenz wie angegeben; Kurzzeile dann „Foto: Urheber, Lizenz, Wikimedia Commons“.
+Kleine Fotos am Ende der Staaten-Szenen. Meist aus dem Carol M. Highsmith Archive der Library of Congress (Prints and Photographs Division), gemeinfrei (no known restrictions on publication), über die loc.gov-JSON-API gesucht, auf 400 px Breite verkleinert, JPEG-Qualität 70. Einzelne Motive (7.11.: AR, MS, KY) von Wikimedia Commons, freie Lizenz wie angegeben; Kurzzeile dann „Foto: Urheber, Lizenz, Wikimedia Commons“.
 Kurzzeile in der App: „Foto: Carol M. Highsmith, Library of Congress (public domain)“. Daten für den Build: `inhalte/klasse9/staaten_fotos.tsv`.
 
 | Datei | Titel (LOC) | Fotografin | Lizenz | Größe | Link |
@@ -36,7 +36,6 @@ Kurzzeile in der App: „Foto: Carol M. Highsmith, Library of Congress (public d
 | MI.jpg | Scene on the often cold and blustery shore of Lake Huron, below the Fort Gratiot Light Station, a li | Carol M. Highsmith | public domain | 400x300, 16 KB | http://www.loc.gov/item/2020723046/ |
 | OH.jpg | Bust of Robert A. Taft, known as "Mr. Republican," outside the William Howard Taft National Historic | Carol M. Highsmith | public domain | 400x600, 37 KB | http://www.loc.gov/item/2016632778/ |
 | IN.jpg | Aerial view of the Indianapolis Motor Speedway, host track of the venerable Indianapolis 500 auto ra | Carol M. Highsmith | public domain | 400x259, 17 KB | http://www.loc.gov/item/2016631654/ |
-| KY.jpg | A mare and foal nibble together at Ashford Stud, breeding farm in Versailles, Kentucky, that is the | Carol M. Highsmith | public domain | 400x266, 25 KB | http://www.loc.gov/item/2020722143/ |
 | TN.jpg | Gates, Graceland, Memphis, Tennessee | Carol M. Highsmith | public domain | 400x233, 29 KB | http://www.loc.gov/item/2010630456/ |
 | GA.jpg | Sea of peach trees in a vast orchard near Trenton, South Carolina. Neighboring Georgia, the "Peach S | Carol M. Highsmith | public domain | 400x266, 16 KB | http://www.loc.gov/item/2017880006/ |
 | LA.jpg | Mardi Gras Parade, New Orleans, Louisiana | Carol M. Highsmith | public domain | 400x266, 28 KB | http://www.loc.gov/item/2011646934/ |
@@ -55,3 +54,4 @@ Kurzzeile in der App: „Foto: Carol M. Highsmith, Library of Congress (public d
 | NH.jpg | Mount Washington cog railway, New Hampshire | Carol M. Highsmith | public domain | 400x321, 26 KB | http://www.loc.gov/item/2011630192/ |
 | ME.jpg | Portland Head Lighthouse, Cape Elizabeth, Maine | Carol M. Highsmith | public domain | 400x317, 18 KB | http://www.loc.gov/item/2011630354/ |
 | MS.jpg | American Queen Steamboat at Natchez Under the Hill.jpg (Wikimedia Commons) | Ricky Idlett | CC BY 4.0 | 400x232, 21 KB | https://commons.wikimedia.org/wiki/File:American_Queen_Steamboat_at_Natchez_Under_the_Hill.jpg |
+| KY.jpg | Shower Bath Springs near Frozen Niagara in Mammoth Cave, NPS Photo (56229ed1-e46c-4288-835d-44ec4b573cc2).JPG (Wikimedia Commons) | NPS Photo | Public domain | 400x300, 20 KB | https://commons.wikimedia.org/wiki/File:Shower_Bath_Springs_near_Frozen_Niagara_in_Mammoth_Cave,_NPS_Photo_(56229ed1-e46c-4288-835d-44ec4b573cc2).JPG |

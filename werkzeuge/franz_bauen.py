@@ -88,6 +88,21 @@ def paris_runner():
     return raus
 
 
+def disco_runner():
+    """Disco Run Französisch (7.11.2026): DISCO_ZURUFE_FR + Welt „disco_fr“ aus app/klasse9/runner.js; Aufnahmen app/franz/audio/runner/disco_fr_<key>.mp3."""
+    with open(os.path.join(BASIS, "app", "klasse9", "runner.js"), encoding="utf-8") as f:
+        src = f.read()
+    raus = []
+    block = src.split("const DISCO_ZURUFE_FR = {", 1)[1].split("\n  };", 1)[0]
+    for key, text in re.findall(r'\["(disco_[a-z0-9_]+)", "([^"]+)"\]', block):
+        raus.append(("alex", key, text, f"audio/runner/fr_{key}.mp3", "alex"))
+    zeile = next(z for z in src.splitlines() if z.strip().startswith("disco_fr: { id: 'disco_fr'"))
+    for key in ("banner", "richtig", "falsch", "start", "ende"):
+        m = re.search(key + r": (['\"])(.*?)\1", zeile)
+        raus.append(("boss" if key in ("banner", "richtig", "falsch") else key, key, m.group(2), f"audio/runner/disco_fr_{key}.mp3", "alex"))
+    return raus
+
+
 def main():
     os.makedirs(os.path.join(APP, "icons"), exist_ok=True)
     info = {z["id"]: z for z in tsv("dialoge_info.tsv")}
@@ -146,7 +161,14 @@ def main():
             runner[gruppe] = rel
         else:
             runner[gruppe][key] = rel
-    daten = {"runner": runner, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    disco = {"alex": {}, "boss": {}}
+    for gruppe, key, _, rel, _ in disco_runner():
+        if vorhanden(rel):
+            if gruppe in ("start", "ende"):
+                disco[gruppe] = rel
+            else:
+                disco[gruppe][key] = rel
+    daten = {"runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:

@@ -9485,7 +9485,7 @@
     const liste = [];
     if (schild > 0) liste.push(['🛡️', schild / 5]);
     if (sprungBonus > 0) liste.push([sprungArt === 'puma' ? '🐾' : '🦘', sprungBonus / 5]);
-    if (brecher > 0) liste.push([brecherArt === 'laser' ? '💥' : brecherArt === 'rolle' ? '🌀' : '🦬', brecher / (brecherArt === 'rolle' ? 4 : 6)]);
+    if (brecher > 0) liste.push([brecherArt === 'laser' ? (W && W.uebersetzung ? '✨' : '💥') : brecherArt === 'rolle' ? '🌀' : '🦬', brecher / (brecherArt === 'rolle' ? 4 : 6)]);
     if (schweben > 0) liste.push(['🦋', schweben / 4]);
     if (heldBruecke) liste.push(['🌉', 1]);
     if (wegZiel) liste.push([wegZiel.art === 'welle' ? '🌊' : wegZiel.art === 'stampf' ? '🥁' : '🎵', wegZiel.zeit / (wegZiel.art === 'welle' ? 6 : 5)]);

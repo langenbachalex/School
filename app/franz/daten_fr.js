@@ -45,6 +45,28 @@ window.DATEN_FR = {
   "start": "audio/runner/paris_start.mp3",
   "ende": "audio/runner/paris_ende.mp3"
  },
+ "disco": {
+  "alex": {
+   "disco_halb_1": "audio/runner/fr_disco_halb_1.mp3",
+   "disco_halb_2": "audio/runner/fr_disco_halb_2.mp3",
+   "disco_combo3_1": "audio/runner/fr_disco_combo3_1.mp3",
+   "disco_combo3_2": "audio/runner/fr_disco_combo3_2.mp3",
+   "disco_combo5_1": "audio/runner/fr_disco_combo5_1.mp3",
+   "disco_combo5_2": "audio/runner/fr_disco_combo5_2.mp3",
+   "disco_leben_1": "audio/runner/fr_disco_leben_1.mp3",
+   "disco_leben_2": "audio/runner/fr_disco_leben_2.mp3",
+   "disco_boss_1": "audio/runner/fr_disco_boss_1.mp3",
+   "disco_ende_1": "audio/runner/fr_disco_ende_1.mp3",
+   "disco_fail_1": "audio/runner/fr_disco_fail_1.mp3"
+  },
+  "boss": {
+   "banner": "audio/runner/disco_fr_banner.mp3",
+   "richtig": "audio/runner/disco_fr_richtig.mp3",
+   "falsch": "audio/runner/disco_fr_falsch.mp3"
+  },
+  "start": "audio/runner/disco_fr_start.mp3",
+  "ende": "audio/runner/disco_fr_ende.mp3"
+ },
  "dialoge": [
   {
    "id": "d09",

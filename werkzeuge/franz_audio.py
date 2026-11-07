@@ -45,6 +45,8 @@ def auftraege():
     tags = {z["id"]: z["tags"] for z in fb.tsv("helden.tsv")}
     for gruppe, key, text, rel, stimme in fb.paris_runner():  # Paris Run (7.11.): Zurufe/Hinweise/Boss Mr. Alex mit [French], Cameo-Sätze mit Heldenstimme + Tag
         yield stimme, (f"{tags.get(key, '')} {text}".strip() if gruppe == "cameo" else "[French] " + text), rel
+    for _, _, text, rel, stimme in fb.disco_runner():  # Disco Run Französisch (7.11.): Mr. Alex, übertrieben wie im englischen Disco Run
+        yield stimme, "[French] [excited] " + text, rel
     for z in fb.tsv("woerter.tsv"):  # Wörter für den Paris Run: Mr. Alex' Stimme
         yield "alex", "[French] " + z["fr"] + ".", fb.audio_name("alex", z["fr"])
 

@@ -479,7 +479,7 @@
       wrapper: buehne, welt, titel: disco ? "Disco Run" : "Paris Run", skin: runSkin() || undefined,
       woerter: window.Runner.woerterAus(liste),
       cameos: helden.map((h) => ({ id: h.id, name: h.name, kraft: h.kraft })),
-      audio: disco ? { alex: (D.runner || {}).alex } : D.runner || {},   // Disco: noch keine eigenen Aufnahmen – Gerätestimme (fr-FR)
+      audio: disco ? Object.assign({}, D.disco || {}, { alex: Object.assign({}, (D.runner || {}).alex, (D.disco || {}).alex) }) : D.runner || {},   // Disco: eigene Aufnahmen (D.disco), sonst Paris-Zurufe/Gerätestimme
       texte: { tor: (de) => `Welcher Diamant heißt „${de}“?`, frage: (de) => `„Was heißt ‚${de}‘ auf Französisch?“`, bossTitel: disco ? "DJ Funky Flamingo fragt …" : "Monsieur Gaston fragt …", bossHinweis: disco ? "Richtig = du gewinnst das Tanzduell, der Glitzervorhang geht auf. Falsch = ein Leben weg." : "Richtig = die goldene Grille geht auf. Falsch = ein Leben weg." , ...(disco ? { tuer: "Le rideau est ouvert – vas-y !" } : {}) },
       stimme: {
         wort: (j, o) => { const w = liste[j % liste.length]; if (!runFrei && !(o && o.warten)) return; runSag(w.audio || { tts: w.fr }, true); },

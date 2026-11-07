@@ -2883,7 +2883,7 @@ window.DATEN_FR = {
    "stichwort": "scientifique",
    "de": "Wissenschaftler",
    "bild": "wm:Louis_Pasteur",
-   "foto": null,
+   "foto": "bilder/namen/pasteur.jpg",
    "ipa": [
     [
      "lwi"
@@ -2903,7 +2903,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/pasteur.mp3",
-   "quelle": null
+   "quelle": "Albert Edelfelt · Public domain · Wikimedia Commons"
   },
   {
    "gruppe": "histoire",

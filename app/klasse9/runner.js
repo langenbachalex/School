@@ -13883,5 +13883,335 @@
     get wahlOffen() { return zustand === 'wahl' && !!wahlGabel && !frageBox.hidden; },
   };
 
+  /* ---------- Spaß-Level „Silly Run“ (7.11.2026, Idee Mr. Alex 30.10., docs/ideenspeicher.md) – gleicher Code für Klasse 6 und 9 ----------
+     Runner.spass({ wrapper, woerter:[{en,de}], skin, klasse: 6|9, texte:{ tor(de), hinweis }, stimme:{ wort(i) }, onEnde(ergebnis) }) → { stopp }
+     Kurzer, bewusst alberner Bonuslauf (≈ 1½ Min.), der sich selbst nicht ernst nimmt: Figur mit Riesenkopf (wächst zwischendurch noch), alles wackelt
+     (Wackelpudding-Big-Ben bzw. -Freiheitsstatue, Sonne mit Sonnenbrille, Wolken mit Gesicht), Gegner Gummihuhn/Toaster/Stinkesocke (plattdrücken
+     oder drüber; Berührung = kurz schwindlig, kein Leben weg), „dramatische“ Zeitlupe vor jedem Tor, Mondsocken (wenig Schwerkraft), Kopfstand-Strecke
+     (nur das Bild steht kopf), Konfetti-Übertreibung, Sprechblasen mit albernen Sprüchen (Kl. 6 einfacher). Lernwert wie im Runner: 8 Wort-Tore
+     (deutsches Wort oben, die richtige englische Blase anspringen; Doppelsprung für die oberste) + Boss = beleidigter Kaktus mit 3 Fragen (die Blasen
+     fliegen auf die Figur zu). Kein Game over. Nach jeder Antwort spricht die App das Wort (stimme.wort(i)). Keine neuen Audiodateien: nur klang.*.
+     ergebnis = { spass: true, geschafft, richtig, fragen, platt, dauer, woerter: [{ en, de, richtig }] }. Läuft nie parallel zu start()/szene(). */
+  const SPASS_SPRUECHE = {
+    6: { boss: 'Sir Prickles', titel: 'THE SILLY RUN',
+      start: ['Hello! My head is very big today!', "Let's go! Big head, big brain!"],
+      richtig: ['Yes! I am a genius!', 'Super! My head is happy!', 'Wow! Confetti for me!', 'Yay! Banana power!', 'Right! I love English!'],
+      falsch: ['Oops! My head is too big!', 'Oh no! Silly me!', 'Hmm. My brain is on holiday.'],
+      platt: ['Squeak! Sorry, chicken!', 'Bye-bye, sock!', 'Boing!', 'Toast for breakfast!'],
+      aua: ['Ouch! My nose!', 'Help! A rubber chicken!', 'Ow! Bad toaster!', 'Eww! A smelly sock!'],
+      mond: 'Moon socks! I can fly!', kopf: 'Upside down! Where is my lunch?', riesig: 'Oh no! My head is growing!',
+      kaktus: ['I am Sir Prickles. Nobody hugs me!', 'Hmpf! That was easy.', 'Grrr! Stop it!', 'Fine! You win. I am NOT crying!'],
+      ende: 'The end. Thank you, chickens!' },
+    9: { boss: 'Cactus Carl', titel: 'THE SILLY RUN',
+      start: ['Is my head bigger today? Be honest.', 'Road trip! What could possibly go wrong?'],
+      richtig: ["Nailed it! I'm basically a dictionary.", 'Correct! My giant brain is glowing.', 'Boom! Somebody call the newspaper!', 'Yes! Even the chickens are impressed.', 'Easy. Next question, please.'],
+      falsch: ['Nope. My brain took a coffee break.', "Oops. Let's pretend that never happened.", 'Wrong bubble! It looked so friendly.'],
+      platt: ['Sorry, chicken. Nothing personal.', 'That sock had it coming.', 'Toaster down!', 'Squeak. Classic.'],
+      aua: ['Ouch! Who puts a toaster on a road?', 'A rubber chicken? Seriously?', "Ugh! That sock hasn't been washed since 1999."],
+      mond: 'Moon socks activated! Gravity is optional.', kopf: 'Upside-down mode. My lunch disagrees.', riesig: 'Is it just me, or is my head still growing?',
+      kaktus: ["I'm Cactus Carl, and I'm very offended!", 'Hmpf. Lucky guess.', 'Stop being so smart! It hurts my feelings!', "Fine. You win. I'm not crying, it's just cactus juice."],
+      ende: 'Best road trip ever. Ten out of ten chickens.' },
+  };
+  let spAktiv = null, kopfCv = null;
+  function spassStopp() { if (spAktiv) spAktiv.aus(); }
+  // Figur mit Riesenkopf: zeichneFigur in ein Hilfs-Canvas, darunter der Körper 1:1, darüber Kopf (alles oberhalb des Halses) um k vergrößert
+  function grossKopf(c, x, y, h, skin, pose, t, ausdruck, k, q) {
+    const u = h / 80, B = 130, oben = figurHoehe(skin) + 24, unten = 14, hals = 60 + (skin.hals === 'giraffe' ? 24 : 0);
+    const w = Math.ceil(B * u * q), hh = Math.ceil((oben + unten) * u * q);
+    if (!kopfCv) kopfCv = document.createElement('canvas');
+    if (kopfCv.width !== w || kopfCv.height !== hh) { kopfCv.width = w; kopfCv.height = hh; }
+    const k2 = kopfCv.getContext('2d');
+    k2.setTransform(1, 0, 0, 1, 0, 0); k2.clearRect(0, 0, w, hh); k2.setTransform(q, 0, 0, q, 0, 0);
+    zeichneFigur(k2, B * u / 2, oben * u, h, skin, pose, t, ausdruck);
+    const hy = (oben - hals) * u, ww = B * u, schnitt = Math.round(hy * q), oy = y - oben * u;
+    c.drawImage(kopfCv, 0, schnitt, w, hh - schnitt, x - ww / 2, oy + schnitt / q, ww, (hh - schnitt) / q);
+    const ay = oy + schnitt / q;
+    c.drawImage(kopfCv, 0, 0, w, schnitt, x - ww * k / 2, ay - (schnitt / q) * k, ww * k, (schnitt / q) * k);
+  }
+  function gummihuhn(c, x, y, t, platt) {   // gelbes Gummihuhn: Körper, langer Wackelhals, roter Kamm, oranger Schnabel; platt = X-Augen, flach
+    c.save(); c.translate(x, y); if (platt) c.scale(1.4, 0.3);
+    const n = Math.sin(t * 6) * 0.35;
+    c.fillStyle = '#ffd23a'; c.beginPath(); c.ellipse(0, -14, 18, 13, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#f0b400'; c.beginPath(); c.ellipse(-6, -14, 9, 6, -0.3, 0, Math.PI * 2); c.fill();   // Flügel
+    c.strokeStyle = '#ffd23a'; c.lineWidth = 7; c.lineCap = 'round';
+    const kx = 10 + Math.sin(n) * 16, ky = -28 - Math.cos(n) * 20;
+    c.beginPath(); c.moveTo(8, -20); c.quadraticCurveTo(14, -32, kx, ky); c.stroke();
+    c.fillStyle = '#ffd23a'; c.beginPath(); c.arc(kx, ky, 8, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#e8343a'; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(kx - 4 + i * 4, ky - 8, 3, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#ff8a1e'; c.beginPath(); c.moveTo(kx + 6, ky - 2); c.lineTo(kx + 16, ky + 1); c.lineTo(kx + 6, ky + 4); c.closePath(); c.fill();
+    c.strokeStyle = '#222'; c.lineWidth = 1.6; c.fillStyle = '#222';
+    if (platt) { c.beginPath(); c.moveTo(kx - 1, ky - 3); c.lineTo(kx + 4, ky + 2); c.moveTo(kx + 4, ky - 3); c.lineTo(kx - 1, ky + 2); c.stroke(); }
+    else { c.beginPath(); c.arc(kx + 2, ky - 1, 1.8, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#ff8a1e'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(-5, -2); c.lineTo(-7, 0); c.moveTo(5, -2); c.lineTo(7, 0); c.stroke();
+    c.restore();
+  }
+  function toaster(c, x, y, t, platt) {   // Toaster mit Gesicht; zwei Toastscheiben hüpfen heraus
+    c.save(); c.translate(x, y); if (platt) c.scale(1.3, 0.35);
+    const hoch = platt ? 0 : Math.max(0, Math.sin(t * 2.6)) * 26;
+    c.fillStyle = '#d9a35a'; [-8, 8].forEach((dx, i) => { c.beginPath(); c.roundRect(dx - 6, -30 - hoch * (i ? 1 : 0.8), 12, 16, 4); c.fill(); });
+    c.fillStyle = '#b9c3cf'; c.beginPath(); c.roundRect(-20, -30, 40, 30, 8); c.fill();
+    c.fillStyle = '#8f9aa8'; c.fillRect(-15, -30, 12, 3); c.fillRect(3, -30, 12, 3); c.fillRect(20, -20, 5, 3);
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(-7, -17, 4, 0, Math.PI * 2); c.arc(7, -17, 4, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#222'; c.beginPath(); c.arc(-6 + Math.sin(t * 3), -17, 2, 0, Math.PI * 2); c.arc(8 + Math.sin(t * 3), -17, 2, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#222'; c.lineWidth = 1.5; c.beginPath(); c.arc(0, -9, 4, 0.2, Math.PI - 0.2); c.stroke();
+    c.restore();
+  }
+  function socke(c, x, y, t, platt) {   // Stinkesocke: geringelt, mit Augen, grüne Duftwolken
+    c.save(); c.translate(x, y); if (platt) c.scale(1.4, 0.3);
+    c.fillStyle = '#e8343a'; c.beginPath(); c.roundRect(-8, -40, 16, 34, 6); c.roundRect(-8, -14, 26, 14, 7); c.fill();
+    c.fillStyle = '#fff'; for (let i = 0; i < 3; i++) c.fillRect(-8, -36 + i * 10, 16, 4);
+    c.beginPath(); c.arc(-3, -30, 3.5, 0, Math.PI * 2); c.arc(4, -30, 3.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#222'; c.beginPath(); c.arc(-3, -29, 1.6, 0, Math.PI * 2); c.arc(4, -29, 1.6, 0, Math.PI * 2); c.fill();
+    if (!platt) { c.strokeStyle = 'rgba(110,190,60,.75)'; c.lineWidth = 2; for (let i = 0; i < 3; i++) { const p = (t * 0.8 + i / 3) % 1; c.beginPath(); c.moveTo(-6 + i * 6, -44 - p * 26); c.quadraticCurveTo(-1 + i * 6 + Math.sin(t * 5 + i) * 4, -50 - p * 26, -6 + i * 6, -56 - p * 26); c.stroke(); } }
+    c.restore();
+  }
+  function beleidigterKaktus(c, x, y, t, aerger, wackel) {   // Boss: großer Saguaro mit Schmollmund; aerger 0–4 (Brauen, rote Backen, Tränen ab 3), wackel = Erschrecken
+    const sq = 1 + Math.sin(t * 3) * 0.03 + wackel * Math.sin(t * 40) * 0.05;
+    c.save(); c.translate(x, y); c.scale(1 / sq, sq);
+    c.fillStyle = '#3f8a3e'; c.beginPath(); c.roundRect(-30, -150, 60, 150, 30); c.fill();
+    const arm = (sx) => { c.beginPath(); c.roundRect(sx * 30, -88, sx * 30, 18, 9); c.roundRect(sx * 46 - 9, -128 + Math.sin(t * 2 + sx) * 3, 18, 52, 9); c.fill(); };
+    arm(-1); arm(1);
+    c.fillStyle = '#2f6b2e'; c.fillRect(-14, -140, 4, 130); c.fillRect(10, -140, 4, 130);
+    c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 1.4;
+    for (let i = 0; i < 9; i++) { const yy = -135 + i * 15; c.beginPath(); c.moveTo(-30, yy); c.lineTo(-37, yy - 3); c.moveTo(30, yy); c.lineTo(37, yy - 3); c.stroke(); }
+    c.fillStyle = '#ff5d8a'; const welk = Math.min(1, aerger / 3) * 0.9;   // Blüte lässt den Kopf hängen
+    c.save(); c.translate(0, -150); c.rotate(welk); for (let i = 0; i < 5; i++) { c.beginPath(); c.ellipse(Math.cos(i * 1.256) * 7, -6 + Math.sin(i * 1.256) * 7, 6, 4, i * 1.256, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#ffd23a'; c.beginPath(); c.arc(0, -6, 4, 0, Math.PI * 2); c.fill(); c.restore();
+    c.fillStyle = '#fff'; c.beginPath(); c.ellipse(-11, -112, 9, 10, 0, 0, Math.PI * 2); c.ellipse(11, -112, 9, 10, 0, 0, Math.PI * 2); c.fill();
+    const blick = Math.sin(t * 1.3) * 2;
+    c.fillStyle = '#222'; c.beginPath(); c.arc(-11 + blick, -110, 4, 0, Math.PI * 2); c.arc(11 + blick, -110, 4, 0, Math.PI * 2); c.fill();
+    const b = 0.25 + aerger * 0.12; c.lineWidth = 4; c.strokeStyle = '#1f3d1e'; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(-20, -126 - b * 10); c.lineTo(-3, -122 + b * 6); c.moveTo(20, -126 - b * 10); c.lineTo(3, -122 + b * 6); c.stroke();
+    if (aerger > 0) { c.fillStyle = `rgba(255,90,90,${Math.min(0.6, aerger * 0.18)})`; c.beginPath(); c.arc(-20, -96, 7, 0, Math.PI * 2); c.arc(20, -96, 7, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#1f3d1e'; c.lineWidth = 3; c.beginPath(); c.arc(0, -84, 9, Math.PI + 0.5, -0.5); c.stroke();   // Schmollmund (nach unten)
+    c.fillStyle = '#e56b8a'; c.beginPath(); c.ellipse(0, -88, 5, 3 + Math.max(0, Math.sin(t * 5)) * 1.5, 0, 0, Math.PI * 2); c.fill();   // Schmolllippe
+    if (aerger >= 3) { c.fillStyle = 'rgba(120,190,255,.9)'; [-1, 1].forEach((sx) => { const p = (t * 1.6 + (sx > 0 ? 0.5 : 0)) % 1; c.beginPath(); c.ellipse(sx * 14, -100 + p * 40, 3, 5, 0, 0, Math.PI * 2); c.fill(); }); }
+    c.restore();
+  }
+  function spass(o) {
+    o = o || {};
+    if (!o.wrapper) throw new Error('Runner.spass: wrapper fehlt');
+    stopp(); szeneStopp(); spassStopp();
+    const kl = String(o.klasse) === '6' ? 6 : 9, SPR = SPASS_SPRUECHE[kl];
+    const ws = (o.woerter || []).filter((w) => w && w.en).map((w) => ({ en: String(w.en), de: kurzDe(w.de) || String(w.de || '') }));
+    if (ws.length < 3) throw new Error('Runner.spass: zu wenig Wörter');
+    const st = Object.assign({ wort() {} }, o.stimme || {}), sk = Object.assign({}, SKIN_STANDARD, o.skin || {});
+    const torText = (o.texte && o.texte.tor) || ((de) => `Which bubble is „${de}“?`);
+    const hinweis = (o.texte && o.texte.hinweis) || 'Tap = jump · tap twice = double jump';
+    const still = ruhig(), zufall = (a) => a[Math.floor(Math.random() * a.length)];
+    const misch = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    const reihe = misch(ws.map((_, i) => i)), YS = [290, 200, 105];
+    const blasenTor = (nr, x, boss) => {
+      const i = reihe[nr % reihe.length], w = ws[i];
+      const andere = misch(ws.map((v) => v.en).filter((e, k, a) => a.indexOf(e) === k && e.toLowerCase() !== w.en.toLowerCase())).slice(0, 2);
+      const opts = misch([{ text: w.en, ok: true }].concat(andere.map((text) => ({ text, ok: false }))));
+      return { x, boss: !!boss, warte: boss ? 1.6 : 0, i, de: w.de, en: w.en, opts: opts.map((p, k) => ({ ...p, y: YS[k] })), fertig: false, wahl: -1, nach: 0 };
+    };
+    const V = 250, TOR0 = 1000, ABST = 1650, TORE = 8, BOSS_X = TOR0 + TORE * ABST + 450, HALT = BOSS_X - 330;
+    const zone = (k) => [TOR0 + k * ABST + 260, TOR0 + (k + 1) * ABST - 420];
+    const MOND = zone(1), KOPF = zone(3), RIESE = zone(5);
+    const tore = []; for (let k = 0; k < TORE; k++) tore.push(blasenTor(k, TOR0 + k * ABST));
+    const gegner = [{ x: 560, art: 'huhn', platt: 0, t: 0 }], arten = ['huhn', 'toaster', 'socke'];
+    for (let k = 0; k < TORE; k++) if (k !== 3) [560, 1080].forEach((d, j) => gegner.push({ x: TOR0 + k * ABST + d, art: arten[(k * 2 + j) % 3], platt: 0, t: Math.random() * 6 }));
+    const s = { px: 0, y: BODEN_Y, vy: 0, sprung: 0, boden: true, quetsch: 0, dizzy: 0, zeit: 0, phase: 'lauf', richtig: 0, fragen: 0, platt: 0, liste: [],
+      blase: null, kblase: null, banner: null, konf: [], kopf: 1.6, flip: 0, ende: 0, aerger: 0, wackel: 0, bossNr: 0, bossTor: null, bossT: 0, zonen: {}, jubel: 0 };
+    const sag = (text, d = 2.4) => { s.blase = { text, t: d }; };
+    const kaktusSagt = (text, d = 3) => { s.kblase = { text, t: d }; };
+    const banner = (text, d = 2.4) => { s.banner = { text, t: d, d }; };
+    const kl_ = (n) => { try { if (klang[n]) klang[n](); } catch (e) { /* stumm */ } };
+    const quietsch = () => { ton(900, 0.12, 'square', 0.05, 0, 1700); ton(1500, 0.1, 'square', 0.04, 0.1, 700); };
+    const boing = () => ton(180, 0.35, 'sine', 0.1, 0, 520);
+    const konfetti = (n, x, y) => { const f = ['#ff4d6d', '#ffd23a', '#38c172', '#3fa9f5', '#a66bff', '#ff8a1e']; for (let i = 0; i < (still ? n / 4 : n); i++) s.konf.push({ x: x != null ? x : Math.random() * viewW, y: y != null ? y : -10 - Math.random() * 60, vx: (Math.random() - 0.5) * (x != null ? 420 : 80), vy: x != null ? -150 - Math.random() * 320 : Math.random() * 60, f: zufall(f), r: Math.random() * 6, w: 4 + Math.random() * 4, t: 0 }); };
+    wrapper = o.wrapper; canvas = el('canvas', 'runner-canvas'); canvas.setAttribute('aria-label', o.titel || 'The Silly Run'); ctx = canvas.getContext('2d');
+    wrapper.append(canvas); groesseAnpassen(); audioAn();
+    let raf = 0, letzt = performance.now(), aus = false, gemeldet = false;
+    const springen = () => {
+      audioAn();
+      if (s.phase === 'ende') return;
+      if (s.boden) { s.vy = -660; s.boden = false; s.sprung = 1; kl_('sprung'); }
+      else if (s.sprung < 2) { s.vy = -600; s.sprung = 2; boing(); }
+    };
+    const pd = (e) => { e.preventDefault(); springen(); };
+    const kd = (e) => { if ((e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') && !e.repeat) { e.preventDefault(); springen(); } };
+    const rs = () => groesseAnpassen();
+    canvas.addEventListener('pointerdown', pd); window.addEventListener('keydown', kd); window.addEventListener('resize', rs);
+    const abschalten = () => {
+      if (aus) return; aus = true; if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener('keydown', kd); window.removeEventListener('resize', rs);
+      if (canvas) { canvas.removeEventListener('pointerdown', pd); canvas.remove(); }
+      canvas = ctx = null; spAktiv = null; audioAus();
+    };
+    spAktiv = { aus: abschalten };
+    const mitte = () => s.y - 48;
+    function torLoesen(tor) {
+      let k = 0; tor.opts.forEach((p, j) => { if (Math.abs(p.y - mitte()) < Math.abs(tor.opts[k].y - mitte())) k = j; });
+      tor.fertig = true; tor.wahl = k; tor.nach = 2.4; s.fragen++;
+      const ok = tor.opts[k].ok; s.liste.push({ en: tor.en, de: tor.de, richtig: ok });
+      const sy = tor.opts[k].y, sx = (tor.x - (s.px - 150));
+      if (ok) { s.richtig++; kl_('richtig'); konfetti(70, sx, sy); konfetti(40); sag(zufall(SPR.richtig)); s.jubel = 0.8; }
+      else { kl_('falsch'); sag(zufall(SPR.falsch)); }
+      try { st.wort(tor.i); } catch (e) { /* stumm */ }
+      if (tor.boss) {
+        s.bossNr++; s.wackel = 1; s.aerger = Math.min(4, s.aerger + (ok ? 1 : 0.5));
+        if (s.bossNr >= 3) { s.phase = 'ende'; s.ende = 5; s.aerger = 4; kaktusSagt(SPR.kaktus[3], 4); kl_('fanfare'); setTimeout(() => { if (!aus) kl_('applaus'); }, 900); konfetti(260); s.kopf = 1; }
+        else kaktusSagt(SPR.kaktus[Math.min(2, s.bossNr)], 2.6);
+      }
+    }
+    function bewegen(dt) {
+      s.zeit += dt;
+      if (s.zeit < 0.05 && !s.blase) { sag(zufall(SPR.start), 3); banner(SPR.titel, 2.6); }
+      // Tempo: Zeitlupe vor einem Tor (dramatisch), schwindlig = halbes Tempo, Boss = stehen
+      const naechst = tore.find((t) => !t.fertig);
+      let f = 1; if (naechst && naechst.x - s.px < 380 && naechst.x - s.px > -10) f = 0.5; if (s.dizzy > 0) f *= 0.5;
+      if (s.phase === 'lauf') { s.px = Math.min(HALT, s.px + V * f * dt); if (s.px >= HALT) { s.phase = 'boss'; s.bossT = 0; banner(`BOSS: ${SPR.boss} (very offended)`, 3); kaktusSagt(SPR.kaktus[0], 3.2); kl_('dramatik'); } }
+      // Zonen: Mondsocken, Kopfstand, Riesenkopf (Banner + Spruch einmal)
+      const inZ = (z) => s.px > z[0] && s.px < z[1];
+      [['mond', MOND], ['kopf', KOPF], ['riesig', RIESE]].forEach(([id, z]) => { if (inZ(z) && !s.zonen[id]) { s.zonen[id] = 1; sag(SPR[id], 2.8); banner(id === 'mond' ? 'LOW GRAVITY!' : id === 'kopf' ? 'UPSIDE DOWN!' : 'MEGA HEAD!', 2); kl_(id === 'mond' ? 'funkeln' : 'puff'); } });
+      const flipZiel = inZ(KOPF) && !still ? 1 : 0; s.flip += (flipZiel - s.flip) * Math.min(1, dt * 4);
+      const kopfZiel = s.phase === 'ende' ? 1 : inZ(RIESE) ? 2.5 : 1.6; s.kopf += (kopfZiel - s.kopf) * Math.min(1, dt * 3);
+      const g = inZ(MOND) ? 620 : 1900;
+      if (!s.boden) { s.vy += g * dt; s.y += s.vy * dt; if (s.y >= BODEN_Y) { s.y = BODEN_Y; s.vy = 0; s.boden = true; s.sprung = 0; s.quetsch = 0.3; } }
+      s.quetsch = Math.max(0, s.quetsch - dt); s.dizzy = Math.max(0, s.dizzy - dt); s.wackel = Math.max(0, s.wackel - dt * 1.5); s.jubel = Math.max(0, s.jubel - dt);
+      // Gegner
+      for (const gg of gegner) {
+        gg.t += dt; if (gg.platt) continue;
+        const hop = gg.art === 'socke' ? -Math.abs(Math.sin(gg.t * 3.5)) * 34 : 0, hoehe = gg.art === 'huhn' ? 34 : 32, top = BODEN_Y + hop - hoehe;
+        if (Math.abs(gg.x - s.px) < 26 && s.y > top + 2 && s.y - 64 < BODEN_Y + hop) {
+          if (s.vy > 0 && s.y - top < 20) { gg.platt = 1; s.platt++; s.vy = -480; s.boden = false; s.sprung = 1; kl_('plopp'); if (gg.art === 'huhn') quietsch(); else boing(); sag(zufall(SPR.platt), 1.8); konfetti(16, gg.x - (s.px - 150), top); }
+          else if (s.dizzy <= 0 && !gg.getroffen) { gg.getroffen = 1; s.dizzy = 1.1; kl_('aua'); if (gg.art === 'huhn') quietsch(); sag(zufall(SPR.aua), 2); }
+        }
+      }
+      // Tore im Lauf
+      for (const t of tore) { if (!t.fertig && t.x <= s.px + 4) torLoesen(t); if (t.nach > 0) t.nach -= dt; }
+      // Boss: drei Fragen, die Blasen fliegen vom Kaktus auf die Figur zu
+      if (s.phase === 'boss') {
+        s.bossT += dt;
+        if (!s.bossTor && s.bossT > 2.6) { s.bossTor = blasenTor(TORE + s.bossNr, BOSS_X - 70, true); kl_('trommel'); }
+        const bt = s.bossTor;
+        if (bt) {
+          if (!bt.fertig) { if (bt.warte > 0) bt.warte -= dt; else bt.x -= 150 * dt; if (bt.x <= s.px + 4) torLoesen(bt); }
+          else if ((bt.nach -= dt) <= 0 && s.phase === 'boss') s.bossTor = blasenTor(TORE + s.bossNr, BOSS_X - 70, true);
+        }
+      }
+      if (s.phase === 'ende') { s.ende -= dt; if (Math.random() < dt * 3) konfetti(30); if (s.ende < 3.2 && !s.endeSpruch) { s.endeSpruch = 1; sag(SPR.ende, 3.2); } if (s.ende <= 0) fertig(); }
+      for (const b of [s.blase, s.kblase, s.banner]) if (b) b.t -= dt;
+      if (s.blase && s.blase.t <= 0) s.blase = null; if (s.kblase && s.kblase.t <= 0) s.kblase = null; if (s.banner && s.banner.t <= 0) s.banner = null;
+      for (const p of s.konf) { p.t += dt; p.vy += 260 * dt; p.vx *= 1 - dt * 0.8; p.x += p.vx * dt; p.y += p.vy * dt; p.r += dt * 6; }
+      s.konf = s.konf.filter((p) => p.y < H + 20 && p.t < 6).slice(-700);
+    }
+    function fertig() {
+      if (gemeldet) return; gemeldet = true;
+      const e = { spass: true, geschafft: true, richtig: s.richtig, fragen: s.fragen, platt: s.platt, dauer: Math.round(s.zeit), woerter: s.liste.slice() };
+      abschalten();
+      try { if (o.onEnde) o.onEnde(e); } catch (err) { /* App */ }
+    }
+    // Sprech-/Textblase (aufrecht, auch bei Kopfstand); spitze = Richtung (x, y) des Sprechers
+    function blasePill(c, text, x, y, o2) {
+      o2 = o2 || {}; c.font = `bold ${o2.gr || 14}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      const w = Math.min(viewW - 20, c.measureText(text).width + 22), h = (o2.gr || 14) + 14;
+      const bx = Math.max(10 + w / 2, Math.min(viewW - 10 - w / 2, x));
+      c.fillStyle = o2.bg || '#fff'; c.strokeStyle = o2.rand || '#222'; c.lineWidth = 2;
+      c.beginPath(); c.roundRect(bx - w / 2, y - h / 2, w, h, h / 2); c.fill(); c.stroke();
+      if (o2.spitze) { c.beginPath(); c.moveTo(o2.spitze[0] - 7, y + h / 2 - 1); c.lineTo(o2.spitze[0], o2.spitze[1]); c.lineTo(o2.spitze[0] + 7, y + h / 2 - 1); c.closePath(); c.fill(); c.stroke(); c.fillRect(o2.spitze[0] - 6, y + h / 2 - 3, 12, 3); }
+      c.fillStyle = o2.farbe || '#222'; c.fillText(text, bx, y + 1, w - 14);
+    }
+    function zeichnen() {
+      const c = ctx, t = s.zeit, wa = still ? 0 : 1, cam = s.px - 150, f = s.flip;
+      c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = '#141a2e'; c.fillRect(0, 0, cssW, cssH);
+      c.setTransform(dpr * skala, 0, 0, dpr * skala, dpr * bereich.x, dpr * bereich.y);
+      c.save(); c.beginPath(); c.rect(0, 0, viewW, H); c.clip();
+      const sy = (y) => H / 2 + (y - H / 2) * (1 - 2 * f);   // Bildschirm-y bei Kopfstand
+      c.save(); if (f > 0.001) { c.translate(0, H / 2); c.scale(1, 1 - 2 * f); c.translate(0, -H / 2); }
+      const gr = c.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, kl === 6 ? '#8fd3ff' : '#ffb3d1'); gr.addColorStop(1, kl === 6 ? '#fff0a8' : '#ffe3a3');
+      c.fillStyle = gr; c.fillRect(0, -40, viewW, H + 80);
+      // Sonne mit Sonnenbrille, hüpft
+      const sx = viewW - 80, syy = 64 + Math.abs(Math.sin(t * 2)) * -10 * wa;
+      c.fillStyle = '#ffd23a'; c.beginPath(); c.arc(sx, syy, 30, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#ffd23a'; c.lineWidth = 4; for (let i = 0; i < 10; i++) { const a = i * 0.628 + t * wa; c.beginPath(); c.moveTo(sx + Math.cos(a) * 36, syy + Math.sin(a) * 36); c.lineTo(sx + Math.cos(a) * 46, syy + Math.sin(a) * 46); c.stroke(); }
+      c.fillStyle = '#222'; c.beginPath(); c.roundRect(sx - 22, syy - 8, 19, 10, 4); c.roundRect(sx + 3, syy - 8, 19, 10, 4); c.fill(); c.fillRect(sx - 4, syy - 6, 8, 3);
+      c.strokeStyle = '#222'; c.lineWidth = 2.5; c.beginPath(); c.arc(sx, syy + 6, 12, 0.3, Math.PI - 0.3); c.stroke();
+      // Wolken mit Gesicht
+      for (let i = 0; i < 4; i++) {
+        const wx = ((i * 260 - cam * 0.15) % (viewW + 300) + viewW + 300) % (viewW + 300) - 150, wy = 70 + (i % 2) * 40 + Math.sin(t * 2 + i) * 6 * wa;
+        c.fillStyle = '#fff'; c.beginPath(); c.arc(wx, wy, 22, 0, Math.PI * 2); c.arc(wx + 24, wy - 8, 26, 0, Math.PI * 2); c.arc(wx + 50, wy, 20, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#333'; c.beginPath(); c.arc(wx + 16, wy - 6, 2.5, 0, Math.PI * 2); c.arc(wx + 32, wy - 6, 2.5, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = '#333'; c.lineWidth = 2; c.beginPath(); c.arc(wx + 24, wy + 1, 6, 0.2, Math.PI - 0.2); c.stroke();
+      }
+      // Wackelpudding-Wahrzeichen (vorhandene Zeichnungen: bigBen Kl. 6, freiheitsstatue Kl. 9)
+      for (let i = 0; i < 3; i++) {
+        const lx = ((i * 520 + 200 - cam * 0.3) % 1560 + 1560) % 1560 - 200;
+        if (lx < -150 || lx > viewW + 150) continue;
+        c.save(); c.translate(lx, BODEN_Y); c.transform(1, 0, Math.sin(t * 4 + i) * 0.18 * wa, 1 + Math.sin(t * 8 + i) * 0.04 * wa, 0, 0);
+        try { if (kl === 6) bigBen(c, 0, 0, 0.95, '#c9b37a', { t }); else freiheitsstatue(c, 0, 0, 1.1, '#6fb7a0'); } catch (e) { /* ohne */ }
+        c.restore();
+      }
+      // Wackelboden
+      c.fillStyle = kl === 6 ? '#5cc45a' : '#e0a15a'; c.beginPath(); c.moveTo(0, H + 40);
+      for (let x = 0; x <= viewW + 20; x += 16) c.lineTo(x, BODEN_Y + Math.sin((x + cam) * 0.03 + t * 5) * 3 * wa);
+      c.lineTo(viewW + 20, H + 40); c.closePath(); c.fill();
+      c.fillStyle = kl === 6 ? '#47a845' : '#c98a45'; for (let x = -((cam * 1) % 60); x < viewW; x += 60) c.fillRect(x, BODEN_Y + 18, 30, 6);
+      // Gegner
+      for (const gg of gegner) {
+        const x = gg.x - cam; if (x < -60 || x > viewW + 60) continue;
+        const hop = gg.art === 'socke' && !gg.platt ? -Math.abs(Math.sin(gg.t * 3.5)) * 34 : 0;
+        (gg.art === 'huhn' ? gummihuhn : gg.art === 'toaster' ? toaster : socke)(c, x, BODEN_Y + hop, gg.t, gg.platt);
+      }
+      // Boss
+      const kx = BOSS_X - cam; if (kx < viewW + 120) beleidigterKaktus(c, kx, BODEN_Y, t, s.aerger, s.wackel);
+      // Figur (Riesenkopf, Quetschen beim Landen, Wackeln, schwindlig = Sternchen)
+      const fx = s.px - cam, q = s.quetsch / 0.3, jig = Math.sin(t * 9) * 0.04 * wa;
+      c.save(); c.translate(fx, s.y); c.scale(1 + q * 0.25 + jig, 1 - q * 0.22 - jig); if (s.dizzy > 0) c.rotate(Math.sin(t * 18) * 0.12);
+      const pose = s.phase === 'ende' ? 'jubel' : 'lauf', aus2 = s.dizzy > 0 ? 'erstaunt' : s.jubel > 0 ? 'zunge' : 'grinsend';
+      if (s.kopf <= 1.02) zeichneFigur(c, 0, 0, 70, sk, pose, t, aus2);
+      else grossKopf(c, 0, 0, 70, sk, pose, s.boden ? t : t * 1.6, aus2, s.kopf, Math.max(1, dpr * skala));
+      c.restore();
+      if (s.dizzy > 0) { c.fillStyle = '#ffd23a'; c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.09; c.fillText('★', fx + Math.cos(a) * 26, s.y - 70 - 28 * s.kopf + Math.sin(a) * 8); } }
+      c.restore();   // Ende Kopfstand: ab hier aufrecht (Blasen, Texte, Konfetti)
+      // Wort-Blasen (Tore)
+      const alle = tore.concat(s.bossTor ? [s.bossTor] : []);
+      for (const tor of alle) {
+        const x = tor.x - cam; if (x < -80 || x > viewW + 80 || (tor.fertig && tor.nach <= 0)) continue;
+        tor.opts.forEach((p, k) => {
+          const by = sy(p.y + Math.sin(t * 3 + k * 2) * 6 * wa), gew = tor.fertig && k === tor.wahl, zeigOk = tor.fertig && p.ok;
+          if (tor.fertig && !gew && !zeigOk) return;
+          const r = 30 + (gew ? Math.max(0, tor.nach - 1.9) * 16 : 0);
+          c.fillStyle = zeigOk ? 'rgba(56,193,114,.85)' : gew ? 'rgba(255,77,109,.75)' : 'rgba(255,255,255,.82)'; c.strokeStyle = '#3fa9f5'; c.lineWidth = 3;
+          c.beginPath(); c.arc(x, by, r, 0, Math.PI * 2); c.fill(); c.stroke();
+          c.fillStyle = 'rgba(255,255,255,.8)'; c.beginPath(); c.arc(x - r * 0.4, by - r * 0.45, r * 0.18, 0, Math.PI * 2); c.fill();
+          c.fillStyle = tor.fertig ? '#fff' : '#1b2a4a'; c.font = `bold ${p.text.length > 9 ? 11 : 13}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
+          c.fillText(p.text, x, by + 1, r * 2.6);
+        });
+      }
+      // Konfetti
+      for (const p of s.konf) { c.save(); c.translate(p.x, p.y); c.rotate(p.r); c.fillStyle = p.f; c.fillRect(-p.w / 2, -p.w / 4, p.w, p.w / 2); c.restore(); }
+      // Sprechblasen
+      const kopfY = sy(s.y - 70 - 30 * s.kopf);
+      if (s.blase) blasePill(c, s.blase.text, fx + 60, Math.max(22, kopfY - 26 * (f > 0.5 ? -1 : 1)), { gr: 13, spitze: f > 0.5 ? null : [fx + 14, kopfY - 4] });
+      if (s.kblase && kx < viewW + 40) blasePill(c, s.kblase.text, kx - 40, sy(BODEN_Y - 200), { gr: 13, bg: '#eaffea', spitze: [kx - 6, sy(BODEN_Y - 160)] });
+      // HUD: Frage oben, Zähler, Banner, Hinweis
+      const aktiv = alle.find((tt) => !tt.fertig && tt.x - s.px < viewW - 120);
+      if (aktiv) blasePill(c, torText(aktiv.de), viewW / 2, 26, { gr: 16, bg: '#1b2a4a', rand: '#ffd23a', farbe: '#fff' });
+      c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#1b2a4a';
+      c.fillText(`✔ ${s.richtig}/${s.fragen} · 🐔 ${s.platt}`, 12, aktiv ? 58 : 22);
+      if (s.banner) {
+        const b = s.banner, p = 1 - b.t / b.d, sc = 1 + Math.sin(Math.min(1, p * 4) * Math.PI) * 0.25 * wa;
+        c.save(); c.translate(viewW / 2, H * 0.42); c.scale(sc, sc); c.rotate(Math.sin(t * 7) * 0.05 * wa);
+        c.font = 'bold 34px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineWidth = 7; c.strokeStyle = '#1b2a4a'; c.strokeText(b.text, 0, 0, viewW - 30);
+        c.fillStyle = '#ffd23a'; c.fillText(b.text, 0, 0, viewW - 30); c.restore();
+      }
+      if (s.zeit < 6) { c.font = 'bold 13px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(27,42,74,.85)'; c.fillText(hinweis, viewW / 2, H - 18); }
+      c.restore();
+    }
+    function schleife(jetzt) {
+      if (aus) return;
+      const dt = Math.min(0.05, Math.max(0, (jetzt - letzt) / 1000)); letzt = jetzt;
+      bewegen(dt); if (!aus) zeichnen();
+      if (!aus) raf = requestAnimationFrame(schleife);
+    }
+    raf = requestAnimationFrame(schleife);
+    return { stopp: abschalten };
+  }
+
   window.Runner = { heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, heldKarteZeichnen, heldKarteBild, heldKarteGlanz, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  window.Runner.spass = spass; window.Runner.spassStopp = spassStopp;   // Spaß-Level „Silly Run“ (7.11.)
 })();

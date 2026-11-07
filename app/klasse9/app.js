@@ -72,7 +72,8 @@
      e Einheit/Station · m Spiel des Tages · h Homework-Bonus · bw/bf/bs/bq/bm Boni (Wochenende, Ferien, Serie, Woche, Monat) · k Kauf (Coins, negativ) ·
      w Warnung des Zeitlogs · r Startwert (Lehrer-Bereich, gekürztes Protokoll) · a Altbestand (Stand von vor dem Protokoll) ·
      x Stichproben-Abfrage (Lehrer-Bereich, +1 👍 / −1 👎, keine Punkte – zählt nicht zur Protokoll-Summe) ·
-     p Prüfung „Test yourself“ (2.11.: +30 beim ersten Bestehen einer Unit/Kategorie, sonst 0 – zählt zur Protokoll-Summe, nicht zum Wächter).
+     p Prüfung „Test yourself“ (2.11.: +30 beim ersten Bestehen einer Unit/Kategorie, sonst 0 – zählt zur Protokoll-Summe, nicht zum Wächter) ·
+     c Aufstieg einer Folien-Karte (7.11., immer 0 Punkte).
      Geschrieben wird nur in punkteDazu, im Shop und im Lehrer-Bereich. plausibilitaet() prüft beim Laden und markiert für den Lehrer-Bereich –
      nie sperren, nie Punkte ändern. */
   const PROTOKOLL_MAX = 500;
@@ -1915,7 +1916,7 @@
     } catch { svg.setAttribute("viewBox", "0 0 975 610"); }
   }
   // Reihenfolge (nie gleichzeitig): kleine Hinweise sofort · großes Pop-up mit Stimme zuerst · Stempel danach, wenn es still ist
-  const grossEreignis = (e) => e.art === "feier" || e.art === "karte";
+  const grossEreignis = (e) => e.art === "feier" || e.art === "karte" || e.art === "heldkarte";
   let stempelLaeuft = false;
   function zeigeEreignisse() {
     for (let i = 0; i < ereignisse.length;) { if (ereignisse[i].art === "toast") toast(ereignisse.splice(i, 1)[0].text); else i++; }
@@ -1971,13 +1972,102 @@
   }
   const KARTE_PX = 480;
   function heldKarteCanvas(h, o = {}) {
-    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? T("Noch nicht gesammelt", "Not collected yet") : `${h.name}: ${h.kraft}` });
-    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, h, o); } catch (e) { /* Karte bleibt leer */ }
+    const k = o.gesperrt ? null : karteVon(h.id), st = k ? k.s : 0;
+    const oo = Object.assign({ stufe: st, selten: !o.gesperrt && HKARTE.selten.includes(h.id) }, o);
+    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? T("Noch nicht gesammelt", "Not collected yet") : `${h.name}: ${h.kraft}${oo.stufe ? " · " + HKARTE.namen[oo.stufe] : ""}` });
+    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, h, oo); } catch (e) { /* Karte bleibt leer */ }
+    if (oo.stufe && window.Runner.heldKarteGlanz) glanzDazu(cv, oo.stufe);
     return cv;
   }
-  const heldenKarte = (h, gross) => el("figure", { class: "heldenkarte" + (gross ? " gross" : ""), lang: "en" }, heldKarteCanvas(h));
+  /* Folien-Karten (7.11.2026, Mr. Alex, große Version; übernommen aus Klasse 6, 354f921): Stufe je gesammeltem Held im Spielstand
+     stand.spiel.heldkarten[id] = { s, c, p } (eigener Schlüssel – stand.spiel.karten sind hier die Landmark-Karten; steckt mit stand.spiel im Siegel,
+     ältere Stände ohne den Schlüssel laden unverändert, der Eintrag entsteht beim ersten Zugriff).
+     s 0 normal · 1 Bronze (3 Cameo-Auftritte im Road Trip Run, Kraft hat gewirkt; der erste Auftritt, der die Karte freischaltet, zählt mit)
+     · 2 Silber (danach ein Lauf mit ihm: Level geschafft = Boss besiegt, oder 5er-Serie nach seinem Auftritt)
+     · 3 Gold (danach jeder Lauf mit ihm: „goldener Moment“ 1:15, seltene Helden 1:30; sicher: 3 perfekte Läufe (Trophäe Gold) mit ihm).
+     c = Auftritte, p = perfekte Läufe ab Silber. Höchstens ein Aufstieg je Held und Lauf (1 Cameo je Lauf); jeder Aufstieg steht im Protokoll (Art „c“, ±0 Punkte).
+     Seltene Helden (HKARTE.selten: Eddie, Holly): kleinere Gold-Chance, ✦ RARE auf der Karte, zählen doppelt im Sammelwert. Metallrahmen + Lichtreflex
+     (Runner.heldKarteGlanz, Zeit bzw. Neigen; bei „Bewegung reduzieren“ still), Enthüllung beim Aufstieg (Karte dreht sich, Held spricht seine Vorstellung). */
+  const HKARTE = { cameos: 3, serie: 5, chance: 15, chanceSelten: 30, perfekt: 3, selten: ["eddie", "holly"],
+    namen: ["", "Bronze", "Silver", "Gold"], symbol: ["", "🥉", "🥈", "🥇"] };
+  function karteVon(id) {
+    const sp = spielstand(), ks = (sp.heldkarten = sp.heldkarten && typeof sp.heldkarten === "object" && !Array.isArray(sp.heldkarten) ? sp.heldkarten : {});
+    return ks[id] || (ks[id] = { s: 0, c: 0, p: 0 });
+  }
+  const sammelwert = () => { const g = heldenGesehen(); return (SP.helden || []).filter((h) => g.includes(h.id)).reduce((n, h) => n + (HKARTE.selten.includes(h.id) ? 2 : 1), 0); };
+  function karteZiel(h) {   // nächster Schritt als kurzer Hinweis unter der Karte
+    const k = karteVon(h.id);
+    if (k.s === 0) return `🥉 ${Math.min(k.c, HKARTE.cameos)}/${HKARTE.cameos} cameos in the Road Trip Run`;
+    if (k.s === 1) return `🥈 Finish a level or get ${HKARTE.serie} in a row with ${h.name.split(" ")[0]}`;
+    if (k.s === 2) return `🥇 Golden moment – or ${Math.min(k.p, HKARTE.perfekt)}/${HKARTE.perfekt} perfect runs`;
+    return "🥇 Gold!";
+  }
+  // nach einem Road-Trip-Lauf: Auftritte zählen, höchstens ein Aufstieg je Held und Lauf (nur gesammelte Helden)
+  function kartenAuswerten(e, trophaee) {
+    const g = heldenGesehen();
+    (Array.isArray(e.helden) ? e.helden : []).forEach((x) => {
+      const h = (SP.helden || []).find((y) => y.id === (x && x.id));
+      if (!h || !g.includes(h.id)) return;
+      const k = karteVon(h.id), vorher = k.s;
+      k.c += Math.max(0, x.auftritte | 0);
+      if (k.s === 0 && k.c >= HKARTE.cameos) k.s = 1;
+      else if (k.s === 1 && (e.geschafft || (x.serie | 0) >= HKARTE.serie)) k.s = 2;
+      else if (k.s === 2) {
+        if (trophaee === "gold") k.p++;
+        const chance = HKARTE.selten.includes(h.id) ? HKARTE.chanceSelten : HKARTE.chance, moment = Math.random() * chance < 1;
+        if (moment || k.p >= HKARTE.perfekt) { k.s = 3; k.moment = moment ? 1 : 0; }
+      }
+      if (k.s > vorher) { protokolliere("c", 0); ereignisse.push({ art: "heldkarte", held: h, stufe: k.s, moment: k.s === 3 && !!k.moment }); }
+    });
+  }
+  // Lichtreflex: eine Schleife für alle sichtbaren Karten mit Stufe; Grundbild einmal gezeichnet, darüber je Bild der Glanz
+  const glanzKarten = new Set();
+  let glanzLaeuft = false, neigung = 0;
+  const bewegungRuhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
+  try { window.addEventListener("deviceorientation", (ev) => { if (ev && typeof ev.gamma === "number") neigung = Math.max(-1, Math.min(1, ev.gamma / 45)); }); } catch (e) { /* egal */ }
+  function glanzDazu(cv, stufe) {
+    const grund = document.createElement("canvas"); grund.width = cv.width; grund.height = cv.height;
+    grund.getContext("2d").drawImage(cv, 0, 0);
+    const g = { cv, grund, stufe, versatz: Math.random() };
+    if (bewegungRuhig()) { glanzMalen(g, 0.35); return; }
+    glanzKarten.add(g);
+    if (!glanzLaeuft) { glanzLaeuft = true; requestAnimationFrame(glanzBild); }
+  }
+  function glanzMalen(g, phase) {
+    const c = g.cv.getContext("2d");
+    c.clearRect(0, 0, g.cv.width, g.cv.height); c.drawImage(g.grund, 0, 0);
+    try { window.Runner.heldKarteGlanz(c, 0, 0, g.cv.width, g.stufe, phase); } catch (e) { /* ohne Glanz */ }
+  }
+  function glanzBild(ms) {
+    glanzKarten.forEach((g) => {
+      if (!g.cv.isConnected) { if (g.gesehen) glanzKarten.delete(g); return; }   // erst nach dem Einhängen zählen
+      g.gesehen = true;
+      glanzMalen(g, ms / (g.stufe === 3 ? 3200 : 4200) + g.versatz + neigung * 0.35);
+    });
+    if (glanzKarten.size) requestAnimationFrame(glanzBild); else glanzLaeuft = false;
+  }
+  function heldenKarte(h, gross, mitZiel, stufe) {
+    const st = stufe == null ? karteVon(h.id).s : stufe;
+    return el("figure", { class: "heldenkarte" + (gross ? " gross" : "") + (st ? " stufe-" + st : ""), lang: "en" }, heldKarteCanvas(h, stufe == null ? {} : { stufe }),
+      mitZiel && el("figcaption", {}, el("span", {}, karteZiel(h))));
+  }
+  // Aufstieg einer Folien-Karte: Karte dreht sich, Rahmen leuchtet auf (goldener Moment: Blitz), der Held spricht seine Vorstellung (vorhandene Aufnahme)
+  function karteEnthuellen(e) {
+    const h = e.held, st = e.stufe, ton = h.intro_audio || h.audio;
+    feier.classList.remove("tier-feier");
+    feier.replaceChildren(konfetti(), ...(e.moment ? [el("div", { class: "karte-blitz", "aria-hidden": "true" })] : []),
+      el("p", { class: "feier-klein", lang: "en" }, e.moment ? "⚡ Golden moment!" : `${HKARTE.symbol[st]} Level up!`),
+      el("h2", { id: "feier-titel", lang: "en" }, `${h.name}: ${HKARTE.namen[st]}`),
+      el("div", { class: "karte-dreh" }, heldenKarte(h, true, false, st)),
+      el("p", { class: "klein", lang: "en" }, st < 3 ? (st === karteVon(h.id).s ? "Next goal: " + karteZiel(h) : "") : "Top level – your card is gold!"),
+      el("div", { class: "knopfreihe" }, ton && knopf("🔊 Listen", () => spiele([ton])),
+        knopf("Next ➜", () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
+    feier.showModal();
+    if (ton) spiele([ton], { warten: true });
+  }
   function heldZeigen(h) {
-    feier.replaceChildren(heldenKarte(h, true), el("p", { class: "steckbrief", lang: "en" }, h.steckbrief),
+    feier.classList.remove("tier-feier");
+    feier.replaceChildren(heldenKarte(h, true, true), el("p", { class: "steckbrief", lang: "en" }, h.steckbrief),
       el("div", { class: "knopfreihe" }, heldHatFilm(h) && knopf("▶ Film", () => { feier.close(); stopp(); heldFilm(h, () => heldZeigen(h)); }, "leise"),
         knopf(T("Schließen", "Close"), () => { feier.close(); stopp(); }, "haupt")));
     feier.showModal();
@@ -1988,8 +2078,11 @@
     return el("section", { class: "satzkarte helden-sammlung" },
       el("h2", {}, `🦸 Superheroes (${frei} / ${SP.helden.length})`),
       el("p", { class: "klein" }, T("Triffst du einen Superhelden im Road Trip Run, bekommst du seine Karte. Tipp auf eine Karte!", "Meet a superhero in the Road Trip Run and you get their card. Tap a card!")),
+      frei > 0 && el("p", { class: "klein karten-zaehler", lang: "en" }, [3, 2, 1].map((st) => `${HKARTE.symbol[st]} ${g.filter((id) => SP.helden.some((h) => h.id === id) && karteVon(id).s === st).length} ${HKARTE.namen[st]}`).join(" · ")
+        + ` · ✦ Collector score ${sammelwert()}`),
+      frei > 0 && el("p", { class: "klein", lang: "en" }, "Foil cards: meet a hero again in the Road Trip Run and the card levels up – Bronze, Silver, Gold. ✦ RARE heroes count double."),
       el("div", { class: "heldenraster" }, SP.helden.map((h) => g.includes(h.id)
-        ? el("button", { class: "held-knopf", "data-held": h.id, onclick: () => { if (!heldFilm(h, () => heldZeigen(h))) heldZeigen(h); } }, heldenKarte(h))
+        ? el("button", { class: "held-knopf", "data-held": h.id, onclick: () => { if (!heldFilm(h, () => heldZeigen(h))) heldZeigen(h); } }, heldenKarte(h, false, true))
         : el("div", { class: "held-zu", "data-held": h.id }, heldKarteCanvas(h, { gesperrt: true }), el("small", { lang: "en" }, "Meet me in the Road Trip Run")))));
   }
   // Staaten-Szenen (6.11.2026, Staaten 1–10): gleiche Szene wie bei den Landmarks, Fakt als Untertitel, Voice-over audio/staaten/<id>.mp3, Foto (falls vorhanden) am Ende
@@ -2001,6 +2094,7 @@
     return !!sz;
   }
   function zeigeFeier(e) {
+    if (e.art === "heldkarte") return karteEnthuellen(e);   // Folien-Karten: Aufstieg einer Heldenkarte
     if (e.art === "karte" && !e.szeneFertig && hatSzene(e.karte)) { // neue Landmark-Karte: erst die Szene, danach die Karte wie bisher
       stempelLaeuft = true;
       if (ortSzene(e.karte, () => { e.szeneFertig = true; stempelLaeuft = false; zeigeFeier(e); })) return;
@@ -3390,6 +3484,7 @@
           text: T(`Neuer Runner-Titel: ${name}!`, `New runner title: ${name}!`), ton: waehleRuf("stark") });
       }
     }
+    kartenAuswerten(e, stufe);   // Folien-Karten: Cameos zählen, Aufstiege als Ereignis (auch bei Game over)
     if (storyPunkte > 0) punkteDazu(storyPunkte, { art: "s" }); // Zeitlog (mrAlexWacht) läuft in punkteDazu, damit Farmen im Road Trip Run auffällt
     speichern();
     const ruf = waehleRuf(e.geschafft ? "stark" : "fehler");
@@ -4021,7 +4116,7 @@
     const gesperrt = !!sp.gesperrt;
     // Stichprobe (31.10., Schutz-Paket 3): Protokoll-Summe, Warnzähler, Plausibilitätsmarker und die letzten 10 Ereignisse – nur lesen
     const pr = plausibilitaet(), w = warnZaehlerLies(), pl = Array.isArray(stand.protokoll) ? stand.protokoll : [];
-    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage", p: "Test" };
+    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage", p: "Test", c: "Folien-Karte" };
     const zeit = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; };
     const letzte = pl.slice(-10).reverse().map((e) => el("li", {}, e[1] === "x" ? `${zeit(e[0])} · Abfrage · ${e[2] > 0 ? "👍" : "👎"}`
       : `${zeit(e[0])} · ${ARTEN[e[1]] || e[1]} · ${e[2] > 0 && e[1] !== "r" && e[1] !== "a" ? "+" : ""}${e[2]}${e[1] === "k" ? " 🪙" : ""}`));
@@ -4211,6 +4306,7 @@
   }
   setInterval(updateHinweis, 3000);
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
+  if (LOKAL) window.__karteTest = { auswerten: kartenAuswerten, karteVon, zeige: zeigeEreignisse, sp: spielstand, gesehen: heldenGesehen, bereich: heldenBereich };   // nur Test-Build: Folien-Karten prüfen
   if (LOKAL) window.__staatEreignis = (id) => { ereignisse.push({ art: "staat", staat: SP.staaten.find((s) => s.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalten eines Staats (Szene, dann Stempel)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "karte", karte: SP.landmarks.find((l) => l.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Anzeige einer neuen Landmark-Karte (Orts-Szene/Karte) auslösen
   if (LOKAL) window.__heldenFrei = (ids) => { (ids || SP.helden.map((h) => h.id)).forEach(heldGesehen); if (ansicht === sammlung) sammlung(); }; // nur Test-Build: Heldenkarten freischalten (alle oder Liste)

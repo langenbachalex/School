@@ -1831,6 +1831,7 @@
   const TIPP_TEMPO = 24, STORY_STEHT = 3.5, STORY_AUS = 0.6, STORY_LUECKE = 0.3, STATION_MIN = 3, STATION_MAX = 40, STATION_SPERRE = 0.4;
   // Cameos (Klasse 6): Liste der Helden (opt.cameos), geladene Kartenbilder, Auftrittsplan (x-Marken), laufender Auftritt, Effekte (Restzeit in s)
   let cameoListe = [], cameoPlan = [], cameo = null, cameosGezeigt = 0, cameoEffekt = null;
+  let heldLauf = {};   // Folien-Karten (7.11.): je Held, der in diesem Lauf aufgetreten ist, { auftritte, serie } – geht im Ergebnis als helden an die App
   let schild = 0, sprungBonus = 0, durchlaessig = 0, eisZeit = 0, traegt = 0, traegtAktiv = false, eule = null;
   // Klasse 9 (7.11.): brecher = Restzeit, in der das nächste Hindernis zerbricht (brecherArt 'laser' Eddie / 'ramme' Bonnie, Benny ohne Lücke: einmal; 'rolle' Archie: alle bis Ablauf),
   // schweben = Maya (Fallen gebremst), heldBruecke = Bennys Brücke {x, w} über die nächste Lücke, wegZiel = { art, zeit, alle } Ally/Molly/Sunny nehmen Gegner aus dem Spiel, sprungArt 'kenji'|'puma'
@@ -1885,6 +1886,7 @@
     klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
     spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null; tuerAnsagen = 0; nyDurchsage = false; durchsagenGesprochen = [];   // The Tube, New York (U-Bahn-Durchsage)
     baelle = (level.baelle || []).map((b) => ({ ...b, phase: 'ruhe', rx: b.x, rot: 0, t: 0 })); koepfer = 0; ballTreffer = 0; tuerTritt = -1; rasenBetreten = false;   // Wembley
+    heldLauf = {};
     cameo = null; cameosGezeigt = 0; cameoEffekt = null; kenjiMit = 0; kenjiSprung = -1; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoK9Aus();
     cameoPlan = cameoPlanBauen();
@@ -1911,6 +1913,7 @@
     if (!echoWarteschlange.some((e) => e.wort === d.wort)) echoWarteschlange.push({ wort: d.wort, faellig: zeit + ECHO_MIN + Math.random() * (ECHO_MAX - ECHO_MIN) });   // nur ein Echo je Wort
     stimmeAufrufe++; if (story && story.aktiv) stimme.wort(d.wort, { warten: true }); else stimme.wort(d.wort);   // Story: das Wort wartet, bis der Erzähler fertig ist
     combo++; if (combo > maxCombo) maxCombo = combo; hudPuls = 1;
+    for (const k in heldLauf) if (combo > heldLauf[k].serie) heldLauf[k].serie = combo;   // Folien-Karten (7.11.): beste Serie nach dem Auftritt je Held
     const fx = spieler.x, fy = spieler.y - 40;
     if (combo === 3) {
       comboText = { text: "3× Combo!", zeit: COMBO_TEXT_DAUER, stufe: 3 }; klang.combo(3);
@@ -2024,6 +2027,7 @@
   }
   function comboPlus() {
     combo++; if (combo > maxCombo) maxCombo = combo; hudPuls = 1;
+    for (const k in heldLauf) if (combo > heldLauf[k].serie) heldLauf[k].serie = combo;   // Folien-Karten (7.11.): beste Serie nach dem Auftritt je Held
     funken(spieler.x, spieler.y - 50, 12, ["#ffd93d", "#fff6c0"], 200, 0.6);
     alexCombo();
   }
@@ -2031,6 +2035,7 @@
     const info = cameoInfo(held);
     cameo = { held, t: 0, satz: (held && held.satz) || info.satz, info };
     cameosGezeigt++; klang.cameo();
+    if (held && held.id) { const hl = heldLauf[held.id] || (heldLauf[held.id] = { auftritte: 0, serie: 0 }); hl.auftritte++; }
     try { if (stimme.cameo) stimme.cameo(cameo.satz, held && held.id, { audio: (held && held.satz) ? null : audioDatei('cameo', held && held.id) }); } catch (e) { /* stumm */ }
     const id = held && held.id;
     if (id === 'leo') { if (!ruhig()) spur = Math.max(spur, 3); comboPlus(); cameoEffekt = 'combo'; }
@@ -3095,6 +3100,7 @@
   const ergebnis = (geschafft) => Object.assign({
     geschafft, diamanten: gesammelt, max: (story ? diamanten.length : woerter.length) + level.tore.length,
     toreRichtig: torErgebnisse.filter(Boolean).length, leben, dauer: Math.round((performance.now() - startZeit) / 1000), maxCombo,
+    helden: Object.keys(heldLauf).map((id) => ({ id, auftritte: heldLauf[id].auftritte, serie: heldLauf[id].serie })),   // Folien-Karten: Cameos dieses Laufs (Kraft hat gewirkt) + beste Serie danach
   }, story ? {   // Story-Modus: Punkte-Diamanten (ohne Tore) und die Geschichte (ende = Wahl der Ende-Gabelung, vollständig = alle ♪ dieses Endes; London 12, New York 20; realm = verstecktes Tor)
     punkteDiamanten: diaGesammelt, diamantenMax: diamanten.length,
     story: { id: storyOpt.id || W.id, ende: endeWahl(), wahl: Object.assign({}, story.wahl), gesammelt: story.gesammelt.slice(), anzahl: story.gesammelt.length, max: struktur.anzahl,
@@ -7299,7 +7305,12 @@
   function heldKarteZeichnen(c, x, y, w, held, o = {}) {
     const id = held.id, u = w / 240, t = o.t == null ? 0.6 : o.t, zu = !!o.gesperrt, f = zu ? '#8a93a3' : HELD_FARBE[id] || '#1d3f8f';
     c.save(); c.translate(x, y); c.scale(u, u);   // Entwurfsmaß 240 × 320
-    hzRR(c, 0, 0, 240, 320, 18, f);
+    const st = zu ? 0 : Math.max(0, Math.min(3, o.stufe | 0));   // Folien-Karten (7.11.): 0 normal, 1 Bronze, 2 Silber, 3 Gold
+    if (st) {   // Metallrahmen: breiter Verlauf in der Stufenfarbe, darin schmaler Streifen der Heldenfarbe
+      const m = KARTE_METALL[st], mg = c.createLinearGradient(0, 0, 240, 320);
+      m.forEach((farbe, i) => mg.addColorStop(i / (m.length - 1), farbe));
+      hzRR(c, 0, 0, 240, 320, 18, mg); hzRR(c, 5, 5, 230, 310, 15, f);
+    } else hzRR(c, 0, 0, 240, 320, 18, f);
     const g = c.createRadialGradient(120, 130, 10, 120, 130, 150); g.addColorStop(0, zu ? '#3a3f4e' : '#2b2f4a'); g.addColorStop(1, zu ? '#22252f' : '#101326');
     c.fillStyle = g; c.beginPath(); c.roundRect(10, 10, 220, 232, 14); c.fill();
     for (let k = 0; k < 14; k++) hzEll(c, 18 + (k * 61) % 204, 18 + (k * 37) % 212, 1.3, 1.3, zu ? '#8a93a3' : '#fff');
@@ -7319,6 +7330,38 @@
       c.font = '15px system-ui, sans-serif'; c.lineWidth = 3.2; c.strokeText('⚡ ' + (held.kraft || ''), 120, 298); c.restore();
     }
     hzText(c, zu ? '???' : held.name || id, 120, 272, 18, '#fff'); hzText(c, zu ? '⚡ ?' : '⚡ ' + (held.kraft || ''), 120, 298, 15, '#fff', false);
+    if (st) {   // Stufen-Plakette oben links (B/S/G), seltene Helden zusätzlich ✦ RARE oben rechts
+      const m = KARTE_METALL[st], pg = c.createRadialGradient(28, 26, 2, 30, 30, 18); pg.addColorStop(0, m[1]); pg.addColorStop(1, m[3]);
+      c.fillStyle = pg; c.beginPath(); c.arc(30, 30, 16, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 2; c.stroke();
+      hzText(c, 'BSG'[st - 1], 30, 31, 16, st === 2 ? '#3a4150' : '#3b2205');
+    }
+    if (!zu && o.selten) {
+      c.fillStyle = 'rgba(16,19,38,.78)'; c.beginPath(); c.roundRect(158, 16, 66, 24, 12); c.fill();
+      c.strokeStyle = '#ffd36b'; c.lineWidth = 1.5; c.stroke(); hzText(c, '✦ RARE', 191, 29, 12, '#ffd36b');
+    }
+    c.restore();
+  }
+  const KARTE_METALL = { 1: ['#5a3210', '#e8a86a', '#a8642c', '#6e3c14', '#d99258'], 2: ['#6f7682', '#ffffff', '#b8c0cc', '#7d8593', '#e4e9f0'], 3: ['#7a4e00', '#fff1a8', '#e0a810', '#8a5a00', '#ffd84a'] };
+  // Holo-Schimmer (Folien-Karten, 7.11.): heller Lichtstreifen wandert schräg über die Karte (phase 0…1, z. B. aus der Zeit oder der Handy-Neigung),
+  // Gold zusätzlich mit Regenbogen-Schimmer; über eine fertig gezeichnete Karte legen (c im Kartenmaß, Breite w)
+  function heldKarteGlanz(c, x, y, w, stufe, phase) {
+    if (!stufe) return;
+    const u = w / 240, p = ((phase % 1) + 1) % 1, mitte = -120 + p * 480;
+    c.save(); c.translate(x, y); c.scale(u, u);
+    c.beginPath(); c.roundRect(0, 0, 240, 320, 18); c.clip();
+    c.globalCompositeOperation = 'lighter';
+    const g = c.createLinearGradient(mitte - 70, mitte - 160, mitte + 70, mitte + 20);
+    const a = stufe === 3 ? 0.42 : stufe === 2 ? 0.34 : 0.26;
+    g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.45, `rgba(255,255,255,${a * 0.5})`); g.addColorStop(0.5, `rgba(255,255,255,${a})`);
+    g.addColorStop(0.55, `rgba(255,255,255,${a * 0.5})`); g.addColorStop(1, 'rgba(255,255,255,0)');
+    c.fillStyle = g; c.fillRect(0, 0, 240, 320);
+    if (stufe === 3) {   // Gold: zarter Regenbogen, verschiebt sich mit
+      const r = c.createLinearGradient(0, 320 * (1 - p), 240, 320 * (0.4 - p));
+      ['rgba(255,80,80,.10)', 'rgba(255,220,60,.10)', 'rgba(80,255,140,.10)', 'rgba(70,170,255,.10)', 'rgba(200,90,255,.10)', 'rgba(255,80,80,.10)']
+        .forEach((f, i, l) => r.addColorStop(i / (l.length - 1), f));
+      c.fillStyle = r; c.fillRect(0, 0, 240, 320);
+    }
     c.restore();
   }
   // Karte als Bild (Data-URL, PNG) – z. B. für das Bild am Ende des Heldenfilms; o.breite = Pixelbreite (Standard 480)
@@ -13625,5 +13668,5 @@
     get wahlOffen() { return zustand === 'wahl' && !!wahlGabel && !frageBox.hidden; },
   };
 
-  window.Runner = { heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, heldKarteZeichnen, heldKarteBild, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  window.Runner = { heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, heldKarteZeichnen, heldKarteBild, heldKarteGlanz, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
 })();

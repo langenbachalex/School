@@ -604,3 +604,17 @@ dialog.feier.lehrer .lehrer-abfragen { font-weight: 700; }
 .zertifikate-titel { margin: 14px 0 6px; font-size: 1.05rem; }
 .abzeichen.zertifikate li span:last-child { display: flex; flex-direction: column; }
 .abzeichen.zertifikate small { color: var(--leise); font-size: .8rem; }
+/* Folien-Karten (7.11.): Stufenschein, Enthüllung (Karte dreht sich, Rahmen leuchtet), Blitz beim goldenen Moment */
+.heldenkarte.stufe-1 canvas { box-shadow: 0 4px 14px rgba(0,0,0,.25), 0 0 0 2px #c9864a; }
+.heldenkarte.stufe-2 canvas { box-shadow: 0 4px 14px rgba(0,0,0,.25), 0 0 10px 2px rgba(220,228,240,.9); }
+.heldenkarte.stufe-3 canvas { box-shadow: 0 4px 14px rgba(0,0,0,.25), 0 0 16px 4px rgba(255,205,60,.85); }
+.karten-zaehler { font-weight: 600; }
+.karte-dreh { perspective: 900px; }
+.karte-dreh .heldenkarte { animation: karte-dreh 1.1s cubic-bezier(.2,.7,.3,1) both; }
+.karte-dreh .heldenkarte canvas { animation: karte-leuchten 1.6s .9s ease-out both; }
+@keyframes karte-dreh { from { transform: rotateY(-540deg) scale(.6); opacity: 0; } 60% { opacity: 1; } to { transform: rotateY(0) scale(1); } }
+@keyframes karte-leuchten { 0% { filter: brightness(1); } 25% { filter: brightness(1.6); } 100% { filter: brightness(1); } }
+.karte-blitz { position: fixed; inset: 0; background: #fff8d0; pointer-events: none; animation: karte-blitz .9s ease-out both; z-index: 5; }
+@keyframes karte-blitz { 0% { opacity: 0; } 8% { opacity: .95; } 18% { opacity: .2; } 26% { opacity: .85; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .karte-dreh .heldenkarte, .karte-dreh .heldenkarte canvas, .karte-blitz { animation: none; } .karte-blitz { display: none; } }
+.held-knopf .heldenkarte figcaption { font-size: .72rem; line-height: 1.25; }

@@ -2323,6 +2323,86 @@ window.DATEN_FR = {
    "selten": false
   }
  ],
+ "regions": [
+  {
+   "id": "idf",
+   "name": "Île-de-France",
+   "chef_lieu": "Paris",
+   "symbol": "🗼"
+  },
+  {
+   "id": "hdf",
+   "name": "Hauts-de-France",
+   "chef_lieu": "Lille",
+   "symbol": "🏭"
+  },
+  {
+   "id": "ge",
+   "name": "Grand Est",
+   "chef_lieu": "Strasbourg",
+   "symbol": "🥨"
+  },
+  {
+   "id": "nor",
+   "name": "Normandie",
+   "chef_lieu": "Rouen",
+   "symbol": "🧀"
+  },
+  {
+   "id": "bre",
+   "name": "Bretagne",
+   "chef_lieu": "Rennes",
+   "symbol": "⚓"
+  },
+  {
+   "id": "pdl",
+   "name": "Pays de la Loire",
+   "chef_lieu": "Nantes",
+   "symbol": "🏰"
+  },
+  {
+   "id": "cvl",
+   "name": "Centre-Val de Loire",
+   "chef_lieu": "Orléans",
+   "symbol": "🌷"
+  },
+  {
+   "id": "bfc",
+   "name": "Bourgogne-Franche-Comté",
+   "chef_lieu": "Dijon",
+   "symbol": "🍇"
+  },
+  {
+   "id": "na",
+   "name": "Nouvelle-Aquitaine",
+   "chef_lieu": "Bordeaux",
+   "symbol": "🏄"
+  },
+  {
+   "id": "ara",
+   "name": "Auvergne-Rhône-Alpes",
+   "chef_lieu": "Lyon",
+   "symbol": "⛷️"
+  },
+  {
+   "id": "occ",
+   "name": "Occitanie",
+   "chef_lieu": "Toulouse",
+   "symbol": "✈️"
+  },
+  {
+   "id": "paca",
+   "name": "Provence-Alpes-Côte d'Azur",
+   "chef_lieu": "Marseille",
+   "symbol": "☀️"
+  },
+  {
+   "id": "cor",
+   "name": "Corse",
+   "chef_lieu": "Ajaccio",
+   "symbol": "🏝️"
+  }
+ ],
  "wendungen": [
   {
    "fr": "Comment tu t'appelles ?",

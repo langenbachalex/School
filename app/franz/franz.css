@@ -79,3 +79,8 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 .defi-wahl { flex-direction: column; margin: 12px 0; }
 .defi-wahl .wahl-knopf { width: 100%; text-align: left; font-size: 1.05rem; }
 .wahl-knopf.falsch { border-color: var(--fr-rot); opacity: .6; }
+
+/* Panthéon (7.11.): Niveau 2 – Régions als graue Chips, bis die Frankreich-Karte gebaut ist */
+.niveau2 { margin: 10px 0 18px; }
+.region-liste { display: flex; flex-wrap: wrap; gap: 6px; }
+.region-liste .chip { font-size: .85rem; padding: 4px 8px; border: 1px solid var(--linie); border-radius: 999px; opacity: .6; }

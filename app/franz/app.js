@@ -157,17 +157,14 @@
     zeige(
       el("header", { class: "gruss" },
         el("h1", { lang: "fr" }, "Français 🇫🇷"),
-        el("p", { class: "klein" }, "Salut ! Wähl eine Kachel. Was du geschafft hast, kommt ins Panthéon."),
+        el("p", { class: "klein" }, "Salut ! Wähl eine Kachel. Paris, Super-héros und Stars sammelst du im Panthéon."),
         el("div", { class: "statusleiste" }, el("span", {}, `⭐ ${stand.punkte} Punkte`), el("span", {}, `🗣️ ${namenFertig}/${D.namen.length} Namen`),
           knopf("🏛️ Panthéon", pantheon, "haupt"))),
       el("nav", { class: "kacheln", "aria-label": "Kacheln" },
         kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe),
         kachel("🗣️", "Prononciation", "Namen richtig aussprechen", prononciation),
         kachel("🎮", "Jeux", "Memory, Qui est-ce ?, Dans l'ordre", jeux),
-        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio),
-        kachel("🗼", "Paris", `${parisFrei()}/${D.paris.length} Orte · Karte mit Filmen`, parisSeite),
-        kachel("🦸", "Super-héros", `${heldenFrei()}/${D.helden.length} Helden gesammelt`, heldenSeite),
-        kachel("🏃", "Paris Run", "Lauf zur Tour Eiffel – mit deinen Wörtern", parisRun)));
+        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio)));
     if (parisFrei() > stand.paris || heldenFrei() > stand.helden) setTimeout(parisNeu, 700);
   }
   const kachel = (sym, titel, unter, fn, extra) => el("button", { type: "button", class: "kachel" + (extra || ""), onclick: fn },
@@ -530,7 +527,8 @@
       el("nav", { class: "kacheln" },
         kachel("🃏", "Memory", "Wendung und Bedeutung finden", memory),
         kachel("👂", "Qui est-ce ?", "Hör den Namen, tipp das Bild an", quiEstCe),
-        kachel("🔢", "Dans l'ordre", "Bring den Dialog in die richtige Reihenfolge", () => ordre())));
+        kachel("🔢", "Dans l'ordre", "Bring den Dialog in die richtige Reihenfolge", () => ordre()),
+        kachel("🏃", "Paris Run", "Lauf zur Tour Eiffel – mit deinen Wörtern", parisRun)));
   }
   function memory() {
     const paare = mischen(D.wendungen.filter((w, i, a) => a.findIndex((x) => x.de.toLowerCase() === w.de.toLowerCase()) === i)).slice(0, 6);
@@ -787,7 +785,7 @@
     [3, 2, 1].map((st) => `${KARTE.symbol[st]} ${gesammelt().filter((h) => karteVon(h.id).s === st).length} ${KARTE.namen[st]}`).join(" · ") + ` · ✦ Sammelwert ${sammelwert()}`);
   function heldenSeite() {
     const rest = HELD_PUNKTE - (stand.punkte % HELD_PUNKTE);
-    zeige(kopf("🦸 Super-héros", startseite, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${rest} ⭐ bis zum nächsten Helden` : "Alle Helden gesammelt – bravo !"),
+    zeige(kopf("🦸 Super-héros", pantheon, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${rest} ⭐ bis zum nächsten Helden` : "Alle Helden gesammelt – bravo !"),
       kartenZaehler(),
       el("p", { class: "klein helden-hinweis" }, "Tipp auf eine Karte: Der Held stellt sich vor. 🎯 Défi: drei Fragen zum Helden. Folien-Karten: Schau den Film ganz oder spiel das Défi – so steigt die Karte auf: Bronze, Silber, Gold. ✦ RARE-Helden zählen doppelt."),
       heldenRaster());
@@ -829,7 +827,7 @@
         el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)])), hatFilm(o) && knopf("▶ Film", () => parisFilm(o), "leise")));
       fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
-    zeige(kopf("🗼 Paris", startseite, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
+    zeige(kopf("🗼 Paris", pantheon, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
       parisKarte(frei, (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); }),
       el("p", { class: "klein" }, "Tipp auf einen Ort: kleiner Film mit Mr. Alex, danach der Text zum Nachlesen."),
       fakt,
@@ -839,25 +837,39 @@
   }
 
   /* ---------- 🏛️ Panthéon ---------- */
-  function pantheon() {
-    zeige(kopf("🏛️ Panthéon", startseite, "Deine Sammlung: geschaffte Dialoge und Namen. Gold = auch ohne Vorbild."),
-      el("h2", {}, "🏅 Dialogues"),
-      el("div", { class: "namen-raster" }, D.dialoge.map((d) => {
-        const n = schritteFertig(d);
-        return el("button", { type: "button", class: "namen-knopf" + (n === SCHRITTE.length ? " gold" : n ? "" : " gesperrt"), onclick: () => dialogSeite(d) },
-          el("span", { class: "medaille", "aria-hidden": "true" }, n === SCHRITTE.length ? "🏅" : n ? "💬" : "🔒"), el("span", { lang: "fr" }, d.titel), el("small", {}, `${n}/${SCHRITTE.length}`));
-      })),
+  function pantheon() {   // Hall of Fame (7.11.): Paris-Karte oben, dann Niveau 2 (Régions, vorbereitet), Super-héros, Stars, Dialogues
+    const frei = parisFrei(), rest = PARIS_PUNKTE - (stand.punkte % PARIS_PUNKTE), restH = HELD_PUNKTE - (stand.punkte % HELD_PUNKTE);
+    const fakt = el("section", { class: "karte paris-fakt", hidden: true });
+    const faktZeigen = (o) => {
+      fakt.hidden = false;
+      fakt.replaceChildren(el("h2", { lang: "fr" }, `${o.symbol} ${o.name}`), el("p", { class: "paris-fr", lang: "fr" }, o.fr), el("p", { class: "klein" }, o.de),
+        el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)])), hatFilm(o) && knopf("▶ Film", () => parisFilm(o), "leise")));
+      fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+    const ort = (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); };
+    zeige(kopf("🏛️ Panthéon", startseite, "Deine Hall of Fame: Paris, Super-héros, Stars und Dialogues."),
+      el("h2", {}, "🗼 Paris"),
+      el("p", { class: "klein" }, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort · tipp auf einen Ort: kleiner Film, danach der Text.` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
+      parisKarte(frei, ort),
+      fakt,
+      (D.regions || []).length ? el("section", { class: "karte niveau2" }, el("h3", {}, "🇫🇷 La France · Niveau 2"),
+        el("p", { class: "klein" }, `Bald: die Karte von Frankreich mit ${D.regions.length} Régions – nach Paris geht die Reise weiter.`),
+        el("div", { class: "region-liste" }, D.regions.map((r) => el("span", { class: "chip gesperrt", lang: "fr" }, `${r.symbol} ${r.name}`)))) : null,
+      el("h2", {}, "🦸 Super-héros"),
+      el("p", { class: "klein" }, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${restH} ⭐ bis zum nächsten Helden · tipp auf eine Karte: Vorstellung, Défi, Aufstieg.` : "Alle Helden gesammelt – bravo !"),
+      kartenZaehler(), heldenRaster(),
       Object.entries(D.gruppen).map(([g, titel]) => [el("h2", {}, titel),
         el("div", { class: "namen-raster" }, D.namen.filter((n) => n.gruppe === g).map((n) => {
           const s = namenStufe(n);
           return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : s ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
             bild(n, 64), el("span", { lang: "fr" }, s ? n.name : "?"));
         }))]),
-      el("h2", {}, "🦸 Super-héros"), kartenZaehler(), heldenRaster(),
-      el("h2", {}, "🗼 Paris"),
-      el("div", { class: "namen-raster" }, D.paris.map((o, i) => i < parisFrei()
-        ? el("button", { type: "button", class: "namen-knopf gold", onclick: () => parisFilm(o) }, el("span", { class: "medaille", "aria-hidden": "true" }, o.symbol), el("span", { lang: "fr" }, o.name))
-        : el("button", { type: "button", class: "namen-knopf gesperrt", onclick: parisSeite }, el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?")))));
+      el("h2", {}, "🏅 Dialogues"),
+      el("div", { class: "namen-raster" }, D.dialoge.map((d) => {
+        const n = schritteFertig(d);
+        return el("button", { type: "button", class: "namen-knopf" + (n === SCHRITTE.length ? " gold" : n ? "" : " gesperrt"), onclick: () => dialogSeite(d) },
+          el("span", { class: "medaille", "aria-hidden": "true" }, n === SCHRITTE.length ? "🏅" : n ? "💬" : "🔒"), el("span", { lang: "fr" }, d.titel), el("small", {}, `${n}/${SCHRITTE.length}`));
+      })));
   }
 
   leiste();

@@ -168,7 +168,9 @@ def main():
                 disco[gruppe] = rel
             else:
                 disco[gruppe][key] = rel
-    daten = {"runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    # Régions (7.11.): Frankreich-Karte als Niveau 2 im Panthéon, vorbereitet (regions.tsv: 13 Régions mit Chef-lieu und Symbol)
+    regions = tsv("regions.tsv") if os.path.exists(os.path.join(INHALT, "regions.tsv")) else []
+    daten = {"runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:

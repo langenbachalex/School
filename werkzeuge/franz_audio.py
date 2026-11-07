@@ -35,9 +35,9 @@ def auftraege():
             text = muster.sub(ersatz, text, count=1)
         yield z["wer"], text, fb.audio_name(z["wer"], z["fr"])
     for z in fb.tsv("namen.tsv"):
-        yield "alex", z["name"] + ".", f"audio/namen/{z['id']}.mp3"
+        yield "alex", "[French] " + z["name"] + ".", f"audio/namen/{z['id']}.mp3"  # 7.11. (Mr. Alex): Tag [French] erzwingt französische Aussprache (sonst z. B. „Kylian“ englisch)
     for z in fb.tsv("paris.tsv"):  # Paris-Karte: Text des Orts, Mr. Alex' Stimme (römische Zahl ausgeschrieben)
-        yield "alex", z["fr"].replace("Louis XIV", "Louis quatorze"), f"audio/paris/{z['id']}.mp3"
+        yield "alex", "[French] " + z["fr"].replace("Louis XIV", "Louis quatorze"), f"audio/paris/{z['id']}.mp3"
 
 
 def main():

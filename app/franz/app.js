@@ -22,7 +22,7 @@
   function laden() {
     let s = {};
     try { s = JSON.parse(localStorage.getItem(SPEICHER)) || {}; } catch (e) { s = {}; }
-    return Object.assign({ punkte: 0, dialoge: {}, namen: {}, spiele: {}, paris: 1, lese: "einfach", tempo: 1 }, s);
+    return Object.assign({ punkte: 0, dialoge: {}, namen: {}, spiele: {}, paris: 1, helden: 0, lese: "einfach", tempo: 1 }, s);
   }
   const stand = laden();
   function speichern() { try { localStorage.setItem(SPEICHER, JSON.stringify(stand)); } catch (e) { /* privater Modus: nur für diese Sitzung */ } }
@@ -59,7 +59,12 @@
     toast(`+${plus} ⭐ ${grund || zufall(LOB)}`);
     const neu = parisFrei();
     if (neu > stand.paris) setTimeout(() => toast(`🗼 Nouveau lieu à Paris : ${D.paris[neu - 1].name} !`), 1200);
+    const h = heldenFrei();
+    if (h > stand.helden) setTimeout(() => toast(`🦸 Nouveau super-héros : ${D.helden[h - 1].name} !`), 2400);
   }
+  /* Superhelden (Stufe 3): alle HELD_PUNKTE Punkte ein neuer Held; stand.helden = Zahl der Helden, deren Film schon lief */
+  const HELD_PUNKTE = 30;
+  const heldenFrei = () => Math.min((D.helden || []).length, Math.floor(stand.punkte / HELD_PUNKTE));
   /* Paris-Karte (Stufe 2): der erste Ort ist frei, danach alle PARIS_PUNKTE Punkte ein neuer Ort. stand.paris = Zahl der Orte, deren Szene schon lief;
      neue Orte zeigt die Startseite mit ihrer Szene (nicht mitten in einer Übung). */
   const PARIS_PUNKTE = 20;
@@ -160,8 +165,9 @@
         kachel("🗣️", "Prononciation", "Namen richtig aussprechen", prononciation),
         kachel("🎮", "Jeux", "Memory, Qui est-ce ?, Dans l'ordre", jeux),
         kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio),
-        kachel("🗼", "Paris", `${parisFrei()}/${D.paris.length} Orte · Karte mit Filmen`, parisSeite)));
-    if (parisFrei() > stand.paris) setTimeout(parisNeu, 700);
+        kachel("🗼", "Paris", `${parisFrei()}/${D.paris.length} Orte · Karte mit Filmen`, parisSeite),
+        kachel("🦸", "Super-héros", `${heldenFrei()}/${D.helden.length} Helden gesammelt`, heldenSeite)));
+    if (parisFrei() > stand.paris || heldenFrei() > stand.helden) setTimeout(parisNeu, 700);
   }
   const kachel = (sym, titel, unter, fn, extra) => el("button", { type: "button", class: "kachel" + (extra || ""), onclick: fn },
     el("span", { class: "sym", "aria-hidden": "true" }, sym), el("span", { class: "titel", lang: "fr" }, titel), unter && el("span", { class: "unter" }, unter));
@@ -523,12 +529,41 @@
     if (!sz && fertig) fertig();
     return !!sz;
   }
-  function parisNeu() { // neu freigeschaltete Orte nacheinander mit Film zeigen, danach zählen sie als gesehen
-    if (parisFrei() <= stand.paris || document.querySelector(".ortszene")) return;
+  function parisNeu() { // neu freigeschaltete Orte (danach Helden) nacheinander mit Film zeigen, danach zählen sie als gesehen
+    if (document.querySelector(".ortszene")) return;
+    if (parisFrei() <= stand.paris) return heldNeu();
     const o = D.paris[stand.paris];
     stand.paris++; speichern();
     toast(`🗼 ${o.name} – freigeschaltet !`);
     if (!parisFilm(o, () => setTimeout(parisNeu, 400))) setTimeout(parisNeu, 400);
+  }
+  /* ---------- 🦸 Super-héros (Stufe 3, 7.11.2026) ----------
+     10 Paris-Helden, gezeichnet in der Runner-Engine (Spielgrafik wie Englisch 6), je ein Film am Lieblingsort mit eigener Stimme; Sammelkarte = Runner.heldKarteBild. */
+  const karteBild = (h, gesperrt) => { try { return window.Runner.heldKarteBild({ id: h.id, name: h.name, kraft: h.kraft }, { breite: 240, gesperrt, hinweis: gesperrt ? `${HELD_PUNKTE} ⭐` : null }); } catch (e) { return ""; } };
+  function heldFilm(h, fertig) {
+    if (!(window.Runner && window.Runner.hatSzene && window.Runner.hatSzene("held_" + h.id))) { if (fertig) fertig(); return false; }
+    stopp();
+    const sz = window.Runner.szene(null, "held_" + h.id, { text: h.intro, textDe: h.intro_de, lang: "fr", titel: `🦸 ${h.name}`, foto: karteBild(h), quelle: `${h.name} · ${h.kraft} (${h.kraft_de})`,
+      voice: () => spiele([h.audio || { tts: h.intro }]), voiceStopp: stopp, voiceAudio: () => aktuell, onEnde: () => { if (fertig) fertig(); } });
+    if (!sz && fertig) fertig();
+    return !!sz;
+  }
+  function heldNeu() {
+    if (heldenFrei() <= stand.helden || document.querySelector(".ortszene")) return;
+    const h = D.helden[stand.helden];
+    stand.helden++; speichern();
+    toast(`🦸 ${h.name} – nouveau super-héros !`);
+    if (!heldFilm(h, () => setTimeout(heldNeu, 400))) setTimeout(heldNeu, 400);
+  }
+  const heldenRaster = () => el("div", { class: "helden-raster" }, D.helden.map((h, i) => {
+    const frei = i < heldenFrei();
+    return el("button", { type: "button", class: "held-karte" + (frei ? "" : " gesperrt"), "aria-label": frei ? h.name : "Noch nicht gesammelt", onclick: frei ? () => heldFilm(h) : null, disabled: !frei },
+      el("img", { src: karteBild(h, !frei), alt: "" }), frei && el("span", { class: "klein", lang: "fr" }, `« ${h.wendung} »`));
+  }));
+  function heldenSeite() {
+    const rest = HELD_PUNKTE - (stand.punkte % HELD_PUNKTE);
+    zeige(kopf("🦸 Super-héros", startseite, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${rest} ⭐ bis zum nächsten Helden` : "Alle Helden gesammelt – bravo !"),
+      el("p", { class: "klein" }, "Tipp auf eine Karte: Der Held stellt sich vor – mit seinem Lieblingssatz."), heldenRaster());
   }
   function parisKarte(frei, waehle) {
     const NS = "http://www.w3.org/2000/svg";
@@ -591,6 +626,7 @@
           return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : s ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
             bild(n, 64), el("span", { lang: "fr" }, s ? n.name : "?"));
         }))]),
+      el("h2", {}, "🦸 Super-héros"), heldenRaster(),
       el("h2", {}, "🗼 Paris"),
       el("div", { class: "namen-raster" }, D.paris.map((o, i) => i < parisFrei()
         ? el("button", { type: "button", class: "namen-knopf gold", onclick: () => parisFilm(o) }, el("span", { class: "medaille", "aria-hidden": "true" }, o.symbol), el("span", { lang: "fr" }, o.name))

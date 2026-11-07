@@ -7292,6 +7292,169 @@
   };
   // Hülle: Held id bei (x,y) = Fußpunkt, Höhe h, Pose; o.gluehen (true/0..1) = Glühen, o.blitz 0..1 = Leuchtrand (kurz bei Kraft-Auslösung),
   // o.kraft 0..1 = Stärke des Kraft-Effekts, o.phase = Sprungphase (Kenji), o.alpha, o.spiegel (Blick nach links)
+  // ===== Französisch-App (Stufe 3, 7.11.2026): 10 Paris-Helden (inhalte/franz/helden.tsv) =====
+  // Gemeinsamer Bauplan wie die Klasse-6-Helden: Umhang/Rückenteil, Beine, Körper mit Schulterband + Wappen, Kopf je Tier, Arme zuletzt, Kraft-Effekt.
+  // b = { id, fell, dunkel, bauch, zeichen, beinF, fuss, hinten(c,t,k,j), schwanz(c,t,k), muster(c), kopf(c,t,j,k), kraft(c,t,haende), armWinkel, kraftLauf, ohneUmhang, bizeps }
+  function hzParisHeld(c, t, pose, o, b) {
+    const j = pose === 'jubel', k = pose === 'kraft', F = HELD_FARBE[b.id], p = k && b.kraftLauf ? 'lauf' : pose;
+    if (b.hinten) b.hinten(c, t, k, j);
+    if (!b.ohneUmhang) hzUmhang(c, F, t, p === 'lauf', false, -54);
+    if (b.schwanz) b.schwanz(c, t, k);
+    hzBeine(c, p, t, 6, -22, 8, b.beinF || b.dunkel, b.beinF || b.fell, b.fuss || b.dunkel, 7, 3.5);
+    hzRR(c, -12, -54, 24, 38, 11, b.fell); if (b.muster) b.muster(c, t);
+    hzEll(c, 0, -33, 8, 10, b.bauch); hzRR(c, -14, -54, 28, 10, 5, '#1d3557'); hzWappen(c, 0, -40, F, b.zeichen);
+    b.kopf(c, t, j, k);
+    const haende = hzArme(c, p, t, j ? 18 : 13, -50, 13, 11, 7, b.arm || b.fell, 5.5, b.dunkel, k && b.armWinkel ? b.armWinkel : null, k ? b.bizeps || 0 : 0);
+    if (k && b.kraft) b.kraft(c, t, haende);
+    return haende;
+  }
+  const hzOhrRund = (c, x, y, r, f, innen) => { hzEll(c, x, y, r, r, f); if (innen) hzEll(c, x, y, r * 0.55, r * 0.55, innen); };
+  const hzStrahl = (c, x, y, w, l, f, a = 0.7) => { c.save(); c.globalAlpha *= a; const g = c.createLinearGradient(x, y, x + Math.cos(w) * l, y + Math.sin(w) * l); g.addColorStop(0, f); g.addColorStop(1, 'rgba(255,255,255,0)');
+    c.strokeStyle = g; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.cos(w) * l, y + Math.sin(w) * l); c.stroke(); c.restore(); };
+  Object.assign(HELD_FARBE, { lucie: '#f2b705', gaspard: '#ff6b35', bruno: '#7f4f24', chloe: '#6a4c93', camille: '#2ec4b6', robin: '#577590', coco: '#d62839', pierre: '#9b5de5', horace: '#43aa8b', hector: '#277da1' });
+  HZ_NEUSTIL.add('lucie');
+  Object.assign(CAMEO, {   // Paris-Helden: Wendung als Sprechblase im Film, Symbol für den Kraft-Chip
+    lucie: { satz: "C'est très clair !", farbe: HELD_FARBE.lucie, symbol: '✨' },
+    gaspard: { satz: 'Vas-y ! Allez, viens !', farbe: HELD_FARBE.gaspard, symbol: '⚡' },
+    bruno: { satz: 'Ça marche !', farbe: HELD_FARBE.bruno, symbol: '💪' },
+    chloe: { satz: "Qu'est-ce que c'est que ce truc-là ?", farbe: HELD_FARBE.chloe, symbol: '🔍' },
+    camille: { satz: "Il y a quelqu'un ?", farbe: HELD_FARBE.camille, symbol: '👻' },
+    robin: { satz: "J'ai quelque chose pour toi !", farbe: HELD_FARBE.robin, symbol: '🔧' },
+    coco: { satz: "C'est trop bien !", farbe: HELD_FARBE.coco, symbol: '📣' },
+    pierre: { satz: "N'importe quoi !", farbe: HELD_FARBE.pierre, symbol: '🐦' },
+    horace: { satz: "C'est pas vrai !", farbe: HELD_FARBE.horace, symbol: '⏱️' },
+    hector: { satz: 'Pas de souci !', farbe: HELD_FARBE.hector, symbol: '🛡️' },
+  });
+  Object.assign(HELDEN_ZEICHNUNG, {
+    // Lucie la Luciole – Licht: dunkler Insektenkörper, Flügel, Fühler mit Leuchtpunkten, leuchtender Hinterleib; Kraft = Lichtstrahlen aus beiden Händen
+    lucie(c, t, pose, o = {}) {
+      const leucht = 0.6 + 0.4 * Math.sin(t * 4);
+      hzParisHeld(c, t, pose, o, { id: 'lucie', fell: '#3d405b', dunkel: '#2b2d42', bauch: `rgba(255,224,102,${0.75 + 0.25 * leucht})`, zeichen: 'L', armWinkel: [[2.5, 2.9], [2.5, 2.9]],
+        hinten: (c, t, k) => { const fl = Math.sin(t * (k ? 30 : 8)) * 0.25; c.save(); c.globalAlpha *= 0.6; hzEll(c, -16, -58, 9, 18, '#cfe8ff', -0.6 + fl); hzEll(c, 16, -58, 9, 18, '#cfe8ff', 0.6 - fl); c.restore(); },
+        schwanz: (c) => { const g = c.createRadialGradient(0, -16, 2, 0, -16, 22); g.addColorStop(0, `rgba(255,230,120,${0.8 * leucht})`); g.addColorStop(1, 'rgba(255,230,120,0)'); c.fillStyle = g; c.beginPath(); c.arc(0, -16, 22, 0, Math.PI * 2); c.fill(); hzEll(c, 0, -18, 9, 7, '#ffe066'); },
+        kopf: (c, t, j, k) => {
+          c.strokeStyle = '#2b2d42'; c.lineWidth = 1.8; c.lineCap = 'round'; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 4, -78); c.quadraticCurveTo(s * 8, -92, s * 13, -94); c.stroke(); hzEll(c, s * 13, -94, 2.8, 2.8, '#ffe066'); }
+          hzEll(c, 0, -68, 12, 12, '#3d405b'); hzEll(c, 0, -63, 7, 5, '#565a7a'); hzMaske(c, 0, -71, 10, HELD_FARBE.lucie); hzAugen(c, 0, -71, 4.6, 2.5, k ? 0 : 0.6, j); hzLaecheln(c, 0, -62, 3, '#ffe066', j);
+        },
+        kraft: (c, t, haende) => { for (const [hx, hy] of haende) { const g = c.createRadialGradient(hx, hy, 1, hx, hy, 18); g.addColorStop(0, 'rgba(255,240,150,.95)'); g.addColorStop(1, 'rgba(255,240,150,0)'); c.fillStyle = g; c.beginPath(); c.arc(hx, hy, 18, 0, Math.PI * 2); c.fill();
+          for (let i = 0; i < 6; i++) hzStrahl(c, hx, hy, -Math.PI / 2 + (i - 2.5) * 0.35 + Math.sin(t * 3) * 0.1, 46 + Math.sin(t * 9 + i) * 6, '#fff3b0'); } } });
+    },
+    // Gaspard le Guépard – Supertempo: gelbes Fell mit Flecken, Tränenstreifen, langer Schwanz; Kraft = Laufhaltung mit Tempolinien
+    gaspard(c, t, pose, o = {}) {
+      const fell = '#e9b949', d = '#c99a2e', fleck = (c, pts) => pts.forEach(([x, y]) => hzEll(c, x, y, 1.8, 1.5, '#3a2a14'));
+      hzParisHeld(c, t, pose, o, { id: 'gaspard', fell, dunkel: d, bauch: '#fbe8b0', zeichen: 'G', kraftLauf: true,
+        schwanz: (c, t) => { c.strokeStyle = fell; c.lineWidth = 3.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(-10, -26); c.quadraticCurveTo(-30, -24 + Math.sin(t * 4) * 3, -32, -46); c.stroke(); hzEll(c, -32, -47, 3, 3, '#3a2a14'); },
+        muster: (c) => fleck(c, [[-8, -46], [7, -47], [-6, -26], [8, -24], [-9, -36], [9, -34]]),
+        kopf: (c, t, j, k) => {
+          hzOhrRund(c, -9, -79, 3.6, fell, '#3a2a14'); hzOhrRund(c, 9, -79, 3.6, fell, '#3a2a14');
+          hzEll(c, 0, -68, 12, 11.5, fell); fleck(c, [[-6, -77], [5, -78], [0, -80], [-10, -70], [10, -69]]); hzEll(c, 0, -62.5, 6, 4.5, '#fbe8b0'); hzEll(c, 0, -65, 2.2, 1.6, '#3a2210');
+          c.strokeStyle = '#2b1d10'; c.lineWidth = 1.4; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 2.5, -68); c.quadraticCurveTo(s * 4.5, -64, s * 3.5, -60.5); c.stroke(); }
+          hzLaecheln(c, 0, -61, 2.6, '#3a2210', j); hzMaske(c, 0, -71, 10, HELD_FARBE.gaspard); hzAugen(c, 0, -71, 4.6, 2.5, k ? 1.4 : 0.6, j);
+        },
+        kraft: (c, t) => { c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 2.2; c.lineCap = 'round'; for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(-30 - i * 3, -50 + i * 9); c.lineTo(-62 + (i % 2) * 8 + Math.sin(t * 20 + i) * 3, -50 + i * 9); c.stroke(); } hzBlitz(c, 18, -58, t, 1); } });
+    },
+    // Bruno l'Ours – Superstärke: braunes Fell, runde Ohren, helle Schnauze; Kraft = stemmt ein Auto über den Kopf, Bodenrisse
+    bruno(c, t, pose, o = {}) {
+      const fell = '#8d5524', d = '#6b3e1a';
+      hzParisHeld(c, t, pose, o, { id: 'bruno', fell, dunkel: d, bauch: '#c68b59', zeichen: 'B', armWinkel: [[2.5, 3.0], [2.5, 3.0]], bizeps: 4,
+        kopf: (c, t, j) => { hzOhrRund(c, -10, -79, 5, fell, '#c68b59'); hzOhrRund(c, 10, -79, 5, fell, '#c68b59'); hzEll(c, 0, -68, 13, 12.5, fell);
+          hzEll(c, 0, -62, 7, 5, '#d9a066'); hzEll(c, 0, -64.5, 3, 2, '#2b1a10'); hzLaecheln(c, 0, -61, 3, '#2b1a10', j); hzMaske(c, 0, -71, 11, HELD_FARBE.bruno); hzAugen(c, 0, -71, 4.8, 2.4, 0.6, j); },
+        kraft: (c, t, haende) => {
+          c.strokeStyle = 'rgba(70,50,30,.6)'; c.lineWidth = 1.6; for (const [x0, x1, x2] of [[-8, -22, -34], [10, 24, 38]]) { c.beginPath(); c.moveTo(x0, 0); c.lineTo(x1, 4); c.lineTo(x2, 2); c.stroke(); }
+          if (o.kraft === 0) return;   // im Film hebt er ein Auto aus der Szene
+          const fy = (haende[0][1] + haende[1][1]) / 2 - 2 + Math.sin(t * 4) * 1.5; pAuto(c, 0, fy, 1.15, '#2a8cff');
+          for (let i = 0; i < 3; i++) hzFunke(c, -26 + i * 26, fy - 30 + Math.sin(t * 6 + i) * 3, 2.5, '#fff'); } });
+    },
+    // Chloé la Chouette – Nachtsicht/Detektivin: Schneeeule mit Tupfen, Federohren, Karomütze; Kraft = grün leuchtende Augen + Lupe
+    chloe(c, t, pose, o = {}) {
+      const fell = '#eceff1', d = '#b0bec5', tupf = (c, pts) => pts.forEach(([x, y]) => hzEll(c, x, y, 1.6, 1.1, '#78909c'));
+      hzParisHeld(c, t, pose, o, { id: 'chloe', fell, dunkel: d, bauch: '#ffffff', zeichen: 'C', fuss: '#f4a261', armWinkel: [[0.35, 0.1], [1.25, 1.9]],
+        muster: (c) => tupf(c, [[-8, -48], [7, -46], [-8, -24], [8, -26]]),
+        kopf: (c, t, j, k) => {
+          hzEll(c, 0, -67, 14, 13, fell); tupf(c, [[-8, -77], [7, -78], [-11, -66], [11, -65]]);
+          c.fillStyle = fell; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 13, -72); c.lineTo(s * 12, -84); c.lineTo(s * 6, -77); c.fill(); }
+          hzRR(c, -13, -86, 26, 8, 4, '#8d6e63'); hzEll(c, 0, -86, 11, 5, '#8d6e63'); c.strokeStyle = '#6d4c41'; c.lineWidth = 0.8; for (let i = -10; i <= 10; i += 4) { c.beginPath(); c.moveTo(i, -91); c.lineTo(i, -78); c.stroke(); } hzRR(c, 8, -80, 12, 3, 1.5, '#6d4c41');   // Detektivmütze
+          hzMaske(c, 0, -70, 11, HELD_FARBE.chloe); hzAugen(c, 0, -70, 5.2, 2.8, 1, j);
+          if (k) { c.save(); c.globalAlpha = 0.6 + 0.3 * Math.sin(t * 8); hzEll(c, -5.2, -70, 4.5, 4.5, '#9dff9d'); hzEll(c, 5.2, -70, 4.5, 4.5, '#9dff9d'); c.restore(); }
+          c.fillStyle = '#f4a261'; c.beginPath(); c.moveTo(-3, -64); c.lineTo(3, -64); c.lineTo(0, -58); c.fill();
+        },
+        kraft: (c, t, haende) => { const [hx, hy] = haende[1], lx = hx + 8, ly = hy - 8;
+          c.strokeStyle = '#5d4037'; c.lineWidth = 3; c.beginPath(); c.moveTo(hx, hy); c.lineTo(lx, ly); c.stroke();
+          const g = c.createRadialGradient(lx + 5, ly - 5, 1, lx + 5, ly - 5, 10); g.addColorStop(0, 'rgba(200,255,200,.9)'); g.addColorStop(1, 'rgba(157,255,157,.25)'); c.fillStyle = g; c.beginPath(); c.arc(lx + 5, ly - 5, 8, 0, Math.PI * 2); c.fill();
+          c.strokeStyle = '#b8862b'; c.lineWidth = 2.2; c.stroke(); hzFunke(c, lx + 2, ly - 9, 2.5, '#fff'); } });
+    },
+    // Camille le Caméléon – unsichtbar: grüner Körper, Rollschwanz, Helmkamm, Kegelaugen; Kraft = wird durchsichtig und schillert in allen Farben
+    camille(c, t, pose, o = {}) {
+      const k = pose === 'kraft', fell = k ? `hsl(${(t * 90) % 360},60%,55%)` : '#6bbf59', d = k ? `hsl(${(t * 90 + 30) % 360},55%,42%)` : '#4a9a3c';
+      c.save(); if (k) c.globalAlpha *= 0.28 + 0.18 * Math.sin(t * 3);
+      hzParisHeld(c, t, pose, o, { id: 'camille', fell, dunkel: d, bauch: '#c5e8a5', zeichen: 'C', armWinkel: [[0.6, 1.6], [0.6, 1.6]],
+        schwanz: (c) => { c.strokeStyle = fell; c.lineWidth = 4.5; c.lineCap = 'round'; c.beginPath(); for (let i = 0; i <= 30; i++) { const w = i / 30 * Math.PI * 3.2, r = 12 - i * 0.33; const x = -24 + Math.cos(w) * r, y = -22 + Math.sin(w) * r; i ? c.lineTo(x, y) : c.moveTo(-10, -22); } c.stroke(); },
+        kopf: (c, t, j) => { c.fillStyle = d; c.beginPath(); c.moveTo(-10, -74); c.quadraticCurveTo(-4, -92, 8, -78); c.fill();
+          hzEll(c, 0, -67, 13, 11, fell); for (const s of [-1, 1]) { hzEll(c, s * 11, -69, 5.5, 5.5, d); hzEll(c, s * 11 + Math.sin(t * 2 + s) * 1.5, -69, 2.2, 2.2, '#1a1d26'); }
+          c.strokeStyle = '#2b4a22'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-8, -61); c.quadraticCurveTo(0, j ? -57 : -59, 9, -62); c.stroke();
+          hzMaske(c, 0, -71, 8, HELD_FARBE.camille); hzAugen(c, 0, -71, 4, 2.2, 0.6, j); } });
+      c.restore();
+      if (k) for (let i = 0; i < 6; i++) hzFunke(c, Math.cos(t * 2 + i) * 26, -50 + Math.sin(t * 2 + i) * 34, 2.5, '#ffffff');
+    },
+    // Robin le Raton laveur – Erfinder: graues Fell, schwarze Augenbinde, Ringelschwanz, Schutzbrille auf der Stirn; Kraft = Schraubenschlüssel + drehende Zahnräder
+    robin(c, t, pose, o = {}) {
+      const fell = '#9aa0a6', d = '#6c737a';
+      const zahnrad = (c, x, y, r, w, f) => { c.save(); c.translate(x, y); c.rotate(w); c.fillStyle = f; for (let i = 0; i < 8; i++) { c.rotate(Math.PI / 4); c.fillRect(-r * 0.22, -r * 1.25, r * 0.44, r * 0.5); } c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill(); hzEll(c, 0, 0, r * 0.38, r * 0.38, '#1d3557'); c.restore(); };
+      hzParisHeld(c, t, pose, o, { id: 'robin', fell, dunkel: d, bauch: '#d6d9dc', zeichen: 'R', armWinkel: [[0.35, 0.1], [1.6, 2.4]],
+        schwanz: (c, t) => { for (let i = 0; i < 6; i++) hzEll(c, -14 - i * 4, -24 - i * 4 + Math.sin(t * 3 + i * 0.4) * 1.5, 6, 5, i % 2 ? '#3a3f45' : '#c4c8cc', -0.7); },
+        kopf: (c, t, j) => { c.fillStyle = fell; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 5, -77); c.lineTo(s * 12, -88); c.lineTo(s * 13, -74); c.fill(); }
+          hzEll(c, 0, -68, 12.5, 12, fell); hzEll(c, 0, -63, 8, 6, '#eceff1'); hzRR(c, -13, -75, 26, 9, 4.5, '#2b2b2b');
+          for (const s of [-1, 1]) { c.strokeStyle = '#ffd166'; c.lineWidth = 2; c.beginPath(); c.arc(s * 5, -82, 4, 0, Math.PI * 2); c.stroke(); hzEll(c, s * 5, -82, 3, 3, 'rgba(160,220,255,.7)'); }
+          hzMaske(c, 0, -71, 8, HELD_FARBE.robin); hzAugen(c, 0, -71, 4.4, 2.3, 0.6, j); hzEll(c, 0, -64, 2.4, 1.8, '#1a1d26'); hzLaecheln(c, 0, -60.5, 2.6, '#1a1d26', j); },
+        kraft: (c, t, haende) => { const [hx, hy] = haende[1]; c.save(); c.translate(hx, hy); c.rotate(-0.6 + Math.sin(t * 8) * 0.4); hzRR(c, -2, -16, 4, 16, 2, '#adb5bd'); c.strokeStyle = '#adb5bd'; c.lineWidth = 3.5; c.beginPath(); c.arc(0, -18, 4.5, 0.6, Math.PI * 2 - 0.6); c.stroke(); c.restore();
+          zahnrad(c, 26, -88, 7, t * 3, '#ffb703'); zahnrad(c, 38, -76, 5, -t * 4.2, '#fb8500'); } });
+    },
+    // Coco le Coq – Superschrei: weißes Gefieder, roter Kamm + Kehllappen, gelber Schnabel, Schwanzfedern in Blau-Weiß-Rot; Kraft = Schallwellen + Noten
+    coco(c, t, pose, o = {}) {
+      const fell = '#f4f1de', d = '#d8cfa8';
+      hzParisHeld(c, t, pose, o, { id: 'coco', fell, dunkel: d, bauch: '#ffffff', zeichen: 'C', beinF: '#f4a261', fuss: '#e76f51', armWinkel: [[2.2, 2.7], [2.2, 2.7]],
+        hinten: (c, t) => { [['#0055a4', -0.9], ['#ffffff', -0.6], ['#ef4135', -0.3]].forEach(([f, w], i) => { c.save(); c.translate(-10, -36); c.rotate(w + Math.sin(t * 3 + i) * 0.06); hzEll(c, -14, -14, 7, 20, f, 0.2); c.restore(); }); },
+        kopf: (c, t, j, k) => { hzEll(c, 0, -68, 12, 12, fell); for (let i = 0; i < 3; i++) hzEll(c, -5 + i * 5, -82 + Math.abs(i - 1) * 2, 4, 5, '#d62839');
+          c.fillStyle = '#ffb703'; c.beginPath(); c.moveTo(9, -68); c.lineTo(20, k ? -69 : -66); c.lineTo(9, -63); c.fill(); if (k) { c.beginPath(); c.moveTo(9, -64); c.lineTo(19, -60); c.lineTo(9, -62); c.fill(); }
+          hzEll(c, 9, -58, 3, 5, '#d62839'); hzMaske(c, 0, -71, 9, HELD_FARBE.coco); hzAugen(c, 0, -71, 4.2, 2.3, 1, j); },
+        kraft: (c, t) => { c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineCap = 'round'; for (let i = 0; i < 4; i++) { const r = ((t * 40 + i * 14) % 56) + 8; c.globalAlpha = 1 - r / 64; c.lineWidth = 2.5; c.beginPath(); c.arc(16, -66, r, -0.6, 0.6); c.stroke(); } c.globalAlpha = 1;
+          hzText(c, '♪', 46 + Math.sin(t * 5) * 3, -92, 14, '#ffd60a'); hzText(c, '♫', 60, -76 + Math.sin(t * 4) * 3, 12, '#ffd60a'); } });
+    },
+    // Pierre le Pigeon – spricht mit Vögeln: blaugraues Gefieder, schillernder Hals, kleiner Schnabel, rosa Füße; Kraft = Flügel offen, Vögel kreisen
+    pierre(c, t, pose, o = {}) {
+      const fell = '#8e9aaf', d = '#6c7a91';
+      hzParisHeld(c, t, pose, o, { id: 'pierre', fell, dunkel: d, bauch: '#b8c0cc', zeichen: 'P', beinF: '#e5989b', fuss: '#e5989b', armWinkel: [[1.9, 2.3], [1.9, 2.3]],
+        muster: (c) => { const g = c.createLinearGradient(-12, -54, 12, -44); g.addColorStop(0, '#3a9e7a'); g.addColorStop(1, '#8a5aa8'); hzRR(c, -12, -54, 24, 8, 4, g); },
+        kopf: (c, t, j) => { hzEll(c, 0, -67, 11, 11, fell); c.fillStyle = '#3d3d46'; c.beginPath(); c.moveTo(8, -67); c.lineTo(16, -64); c.lineTo(8, -62); c.fill(); hzEll(c, 9, -67, 2, 1.4, '#f1f1f1');
+          hzMaske(c, 0, -70, 9, HELD_FARBE.pierre); hzAugen(c, 0, -70, 4, 2.2, 1, j); },
+        kraft: (c, t) => { for (let i = 0; i < 5; i++) { const w = t * 2.2 + i * Math.PI * 2 / 5, x = Math.cos(w) * 46, y = -64 + Math.sin(w) * 18, fl = Math.sin(t * 14 + i) * 4;
+          c.strokeStyle = i % 2 ? '#4a4e69' : '#9a8c98'; c.lineWidth = 2.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(x - 7, y - fl); c.quadraticCurveTo(x - 3, y - 4, x, y); c.quadraticCurveTo(x + 3, y - 4, x + 7, y - fl); c.stroke(); } } });
+    },
+    // Horace l'Escargot – Zeit anhalten: beige Haut, großes Spiralhaus auf dem Rücken, Fühler mit Kugeln; Kraft = Uhr steht still, blaue Zeitringe
+    horace(c, t, pose, o = {}) {
+      const fell = '#c9b79c', d = '#a8957a';
+      hzParisHeld(c, t, pose, o, { id: 'horace', fell, dunkel: d, bauch: '#e6dcc8', zeichen: 'H', ohneUmhang: false, armWinkel: [[0.35, 0.1], [1.7, 1.7]],
+        hinten: (c) => { hzEll(c, -14, -42, 19, 19, '#a0522d'); c.strokeStyle = '#6b3410'; c.lineWidth = 2.4; c.beginPath(); for (let i = 0; i <= 40; i++) { const w = i / 40 * Math.PI * 4, r = 17 - i * 0.4; i ? c.lineTo(-14 + Math.cos(w) * r, -42 + Math.sin(w) * r) : c.moveTo(3, -42); } c.stroke(); },
+        kopf: (c, t, j) => { c.strokeStyle = fell; c.lineWidth = 2.4; c.lineCap = 'round'; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 4, -77); c.lineTo(s * 9, -92 + Math.sin(t * 2 + s) * 1.5); c.stroke(); hzEll(c, s * 9, -93 + Math.sin(t * 2 + s) * 1.5, 3, 3, d); }
+          hzEll(c, 0, -68, 11, 11, fell); hzMaske(c, 0, -71, 9, HELD_FARBE.horace); hzAugen(c, 0, -71, 4.2, 2.2, 0.6, j); hzLaecheln(c, 0, -62, 3, '#5a3a1a', j); },
+        kraft: (c, t, haende) => { const [hx, hy] = haende[1], x = hx + 14, y = hy - 12;
+          c.save(); c.strokeStyle = 'rgba(120,200,255,.8)'; c.lineWidth = 2; for (let i = 0; i < 3; i++) { const r = 12 + ((t * 16 + i * 10) % 30); c.globalAlpha = 1 - r / 44; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.stroke(); } c.restore();
+          hzEll(c, x, y, 11, 11, '#fff'); c.strokeStyle = '#1d3557'; c.lineWidth = 2; c.beginPath(); c.arc(x, y, 11, 0, Math.PI * 2); c.stroke(); c.lineWidth = 1.6; c.beginPath(); c.moveTo(x, y); c.lineTo(x, y - 8); c.moveTo(x, y); c.lineTo(x + 5, y + 2); c.stroke(); hzText(c, '❚❚', x, y + 17, 8, '#1d3557'); } });
+    },
+    // Hector le Hérisson – Schutzschild: Stachelkleid, helles Gesicht mit spitzer Schnauze; Kraft = durchsichtige Schildkuppel mit Sechseckmuster
+    hector(c, t, pose, o = {}) {
+      const fell = '#c69c6d', d = '#8d6e4a';
+      hzParisHeld(c, t, pose, o, { id: 'hector', fell, dunkel: d, bauch: '#e8d3b0', zeichen: 'H', armWinkel: [[1.5, 1.5], [1.5, 1.5]],
+        hinten: (c, t, k) => { c.fillStyle = '#5d4037'; for (let i = 0; i < 14; i++) { const w = Math.PI * (0.55 + i * 0.075), r = 28 + (k ? 3 : 0), x = Math.cos(w) * r, y = -54 + Math.sin(w) * r * -1.1;
+          c.beginPath(); c.moveTo(x * 0.55, y * 0.8 - 6); c.lineTo(x * 1.35, y * 1.05 - 10); c.lineTo(x * 0.6 + 6, y * 0.85 - 2); c.fill(); } },
+        kopf: (c, t, j) => { hzEll(c, 0, -67, 12, 11, '#e0c097'); hzEll(c, 9, -63, 7, 4, '#e0c097', 0.15); hzEll(c, 15.5, -62, 2.4, 2, '#1a1d26');
+          hzMaske(c, 0, -70, 9.5, HELD_FARBE.hector); hzAugen(c, 0, -70, 4.2, 2.2, 1, j); hzLaecheln(c, 6, -60, 2.4, '#5a3a1a', j); },
+        kraft: (c, t) => { c.save(); const g = c.createRadialGradient(0, -46, 20, 0, -46, 62); g.addColorStop(0, 'rgba(72,202,228,.05)'); g.addColorStop(1, 'rgba(72,202,228,.35)'); c.fillStyle = g; c.beginPath(); c.arc(0, -46, 60, 0, Math.PI * 2); c.fill();
+          c.strokeStyle = `rgba(160,235,255,${0.6 + 0.3 * Math.sin(t * 6)})`; c.lineWidth = 2.5; c.stroke(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(200,245,255,.5)';
+          for (let x = -48; x <= 48; x += 16) for (let y = -96; y <= 4; y += 14) { const xx = x + ((y / 14) % 2 ? 8 : 0); if (Math.hypot(xx, y + 46) > 54) continue; c.beginPath(); for (let i = 0; i < 6; i++) { const w = i * Math.PI / 3; c.lineTo(xx + Math.cos(w) * 6, y + Math.sin(w) * 6); } c.closePath(); c.stroke(); }
+          c.restore(); } });
+    },
+  });
   function heldZeichnen(c, id, x, y, h, t, pose, o = {}) {
     const z = HELDEN_ZEICHNUNG[id]; if (!z) return;
     const f = HELD_FARBE[id] || '#1d3f8f', u = h / 80;
@@ -11466,6 +11629,22 @@
   function pKrone(c, x, y, s) { c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#e8b923'; c.beginPath(); c.moveTo(-22, 10); c.lineTo(-22, -10); c.lineTo(-11, 0); c.lineTo(0, -16); c.lineTo(11, 0); c.lineTo(22, -10); c.lineTo(22, 10); c.fill(); c.fillStyle = '#c0392b'; c.beginPath(); c.arc(0, 3, 3, 0, Math.PI * 2); c.fill(); c.fillStyle = '#2a5bd7'; c.beginPath(); c.arc(-12, 4, 2.5, 0, Math.PI * 2); c.arc(12, 4, 2.5, 0, Math.PI * 2); c.fill(); c.restore(); }
   const pNote = (c, x, y, f, farbe = '#ffd93d') => { if (f <= 0) return; c.save(); c.globalAlpha = Math.min(1, f); c.fillStyle = farbe; c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('♪', x, y); c.restore(); };
   const pBlink = (t, ab) => (t < ab ? 0 : sanft((t - ab) / 0.3) * Math.max(0, 1 - Math.max(0, t - ab - 1.2) / 0.4));   // Wort-Chip kurz ein- und wieder ausblenden
+  // Heldenfilm Paris (Französisch-App, 7.11.2026): Kulisse + Held (läuft 0–2,4 s ein, Kraft 3–7,6 s, danach Jubel), Kraft-Chip, Wendung (CAMEO[id].satz) als Sprechblase.
+  // o.kulisse(c, t) zeichnet den Ort, o.held(t) → { x, pose, links, tempo } überschreibt die Laufbahn (Gaspard), o.vorn(c, t) zeichnet vor dem Helden.
+  function szParisHeldFilm(id, kraft, klaenge, o) {
+    return { held: id, dauer: 11, klaenge: [[0.3, 'cameo'], ...klaenge, [7.8, 'applaus']],
+      zeichne(c, t) {
+        o.kulisse(c, t);
+        const s = 1.6, boden = 392, y = boden - 38 * s, eigen = o.held && o.held(t);
+        let x = 230, pose = t < 3 ? 'steh' : t < 7.6 ? 'kraft' : 'jubel', links = false;
+        if (eigen) ({ x, pose, links } = eigen); else if (t < 2.4) { x = lerp(-60, 230, t / 2.4); pose = 'lauf'; }
+        if (eigen && eigen.tempo) { szStaub(c, x, boden - 4, eigen.tempo); szTempo(c, x, y, eigen.tempo, 5, 90); }
+        szHeld(c, id, x, y - (pose === 'jubel' ? Math.abs(Math.sin((t - 7.6) * 5)) * 6 : 0), s, t, { pose, links, blitz: szBlitz(t, 3.0) });
+        if (o.vorn) o.vorn(c, t);
+        szHeldKraft(c, t, 3.2, id, kraft);
+        if (t > 8.2) szBlase(c, 320, 130, (CAMEO[id] || {}).satz || '', HELD_FARBE[id], (t - 8.2) / 0.35);
+      } };
+  }
   const SZENEN = {
     // Klasse 6 – London
     big_ben: { variante: () => KLANG_DATEI.chimes ? BIGBEN_CHIMES : null, dauer: 9.6, klaenge: [[0.4, 'klick'], [0.8, 'klick'], [1.2, 'klick'], [1.6, 'klick'], [1.9, 'viertel'], [4.6, 'glocke'], [6.0, 'glocke'], [7.4, 'glocke']],
@@ -13091,6 +13270,44 @@
       } },
     // Klasse 9 – Heldenfilme (7.11.2026, Etappe 3): held_<id> für die 13 US-Helden (HELD9_FILM, szHeld9)
     ...Object.fromEntries(Object.keys(HELD9_FILM).map((id) => ['held_' + id, szHeld9(id, HELD9_FILM[id])])),
+    // Französisch-App (Stufe 3, 7.11.2026): Heldenfilme in Paris (11 s) – der Held läuft ein, zeigt seine Kraft am Lieblingsort, jubelt; Wendung als Sprechblase
+    held_lucie: szParisHeldFilm('lucie', 'La lumière', [[3.2, 'lichtAn'], [4.4, 'funkeln'], [6.0, 'funkeln']], {
+      kulisse(c, t) { const a = sanft((t - 3) / 1.2); szHimmel(c, '#141c3d', '#c9724e'); pHaeuser(c, 340, -100, 760, 0, 0.8); szBoden(c, '#59704a', 336);
+        pEiffel(c, 470, 338, 0.85, { licht: a, funkeln: t > 4.2 ? t : null }); } }),
+    held_gaspard: szParisHeldFilm('gaspard', 'Super vitesse', [[0.6, 'klingel'], [3.0, 'wind'], [4.3, 'wind'], [5.6, 'wind'], [6.9, 'wind']], {
+      kulisse(c, t) { szHimmel(c, '#7fb2e2', '#eaf2f8'); pArc(c, 110, 300, 0.7, '#7d7466'); pHaeuser(c, 300, 180, 900, t * 20, 0.8); c.fillStyle = '#8a8277'; c.fillRect(0, 305, SZ_W, 100);
+        ['#e63946', '#2a8cff', '#ffd400'].forEach((f, k) => pRad(c, ((t * 60 + k * 70) % 760) - 60, 384 - (k % 2) * 12, 1.2, f, t)); },
+      held(t) { if (t < 3 || t >= 7.6) return null; const f = ((t - 3) * 1.4) % 1, dir = Math.floor((t - 3) * 1.4) % 2 ? -1 : 1; return { x: dir > 0 ? lerp(-80, 720, f) : lerp(720, -80, f), pose: 'kraft', links: dir < 0, tempo: dir }; } }),
+    held_bruno: szParisHeldFilm('bruno', 'Super force', [[3.2, 'rumpeln'], [3.6, 'jubel'], [6.4, 'rumpeln']], {
+      kulisse(c, t) { szHimmel(c, '#7fb2e2', '#eaf2f8'); pHaeuser(c, 260, -100, 760, 0, 0.75); pArc(c, 320, 300, 1.4, '#6f7378'); c.fillStyle = '#8b8f94'; c.fillRect(0, 300, SZ_W, 100);
+        if (t < 3) pAuto(c, lerp(720, 430, Math.min(1, t / 2.4)), 392, 1.7, '#2a8cff', -1); } }),
+    held_chloe: szParisHeldFilm('chloe', 'Vision de nuit', [[3.2, 'staunen'], [5.2, 'schritte'], [7.0, 'kristall']], {
+      kulisse(c, t) { c.fillStyle = '#2a1a1c'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#1a1012'; c.fillRect(0, 330, SZ_W, 70); pJoconde(c, 470, 170, 1.4, 1);
+        const n = sanft((t - 3) / 0.6) * (t < 7.6 ? 1 : 1 - sanft((t - 7.6) / 0.6)); if (n > 0) { c.save(); c.globalAlpha = n * 0.45; c.fillStyle = '#2dc653'; c.fillRect(0, 0, SZ_W, H); c.restore();
+          c.save(); c.globalAlpha = n; for (let k = 0; k < 6; k++) { c.fillStyle = '#d4ffb0'; c.beginPath(); c.ellipse(80 + k * 70, 360 + (k % 2) * 14, 7, 4, 0, 0, Math.PI * 2); c.fill(); } szBlase(c, 470, 300, '?', '#2dc653', 1); c.restore(); } } }),
+    held_camille: szParisHeldFilm('camille', 'Invisible', [[3.2, 'zug'], [5.0, 'gong'], [6.6, 'staunen']], {
+      kulisse(c, t) { c.fillStyle = '#efe9dc'; c.fillRect(0, 0, SZ_W, 300); c.fillStyle = '#ffffff'; for (let x = 0; x < SZ_W; x += 22) for (let y = 10; y < 240; y += 12) c.fillRect(x + (y % 24 ? 0 : 11), y, 20, 10);
+        c.fillStyle = '#1f3b5c'; c.fillRect(220, 40, 200, 34); hzText(c, 'Châtelet', 320, 57, 18); c.fillStyle = '#c9c4ba'; c.fillRect(0, 300, SZ_W, 100); c.fillStyle = '#fff'; c.fillRect(0, 300, SZ_W, 4);
+        pMetroZug(c, 20, 296, 0.95); [[120, '#e63946'], [520, '#2a8cff']].forEach(([x, f], k) => pPerson(c, x + Math.sin(t * 0.8 + k) * 14, 392, 1.3, { hemd: f, arm: t > 3.5 ? 2.6 : undefined })); } }),
+    held_robin: szParisHeldFilm('robin', 'Inventions', [[3.2, 'hammer'], [5.2, 'plopp'], [6.0, 'fanfare']], {
+      kulisse(c, t) { szHimmel(c, '#7fb2e2', '#eef4f8'); pPompidou(c, 320, 330, 1.3, [1, 1, 1, 1]); c.fillStyle = '#c9c0ab'; c.fillRect(0, 330, SZ_W, 100); },
+      vorn(c, t) { if (t < 5.2) return; const f = sanft((t - 5.2) / 0.5), y = 330 - Math.abs(Math.sin((t - 5.2) * 5)) * 30 * f;   // kleiner Roboter hüpft aus dem Geschenk
+        hzRR(c, 470, 350, 50, 40, 6, '#e63946'); c.fillStyle = '#ffd93d'; c.fillRect(492, 350, 6, 40); c.save(); c.globalAlpha = f; hzRR(c, 480, y - 6, 30, 26, 6, '#adb5bd'); hzEll(c, 489, y + 4, 3, 3, '#2a8cff'); hzEll(c, 501, y + 4, 3, 3, '#2a8cff'); c.fillStyle = '#555'; c.fillRect(494, y - 14, 2, 8); hzEll(c, 495, y - 15, 3, 3, '#e63946'); c.restore(); } }),
+    held_coco: szParisHeldFilm('coco', 'Super cri', [[3.2, 'gesang'], [4.2, 'jubel'], [6.0, 'jubel']], {
+      kulisse(c, t) { szHimmel(c, '#1b2550', '#3f5a8a'); c.save(); c.translate(0, -40); pStadion(c, t, t > 3.5); c.restore(); for (let k = 0; k < 4; k++) pFahne(c, 60 + k * 170, 110, 1, t + k); } }),
+    held_pierre: szParisHeldFilm('pierre', 'Parle aux oiseaux', [[3.0, 'taube'], [3.6, 'taube'], [4.4, 'vogel'], [6.0, 'gelaeut']], {
+      kulisse(c, t) { szHimmel(c, '#8cb8de', '#f0f4f6'); pNotreDame(c, 320, 330, 1.25, 0); c.fillStyle = '#b9ae96'; c.fillRect(0, 330, SZ_W, 70);
+        for (let k = 0; k < 6; k++) { const w = (t - 3) * 1.6 + k; const x = t < 3 ? 120 + k * 80 : 320 + Math.cos(w) * 200, y = t < 3 ? 380 : 170 + Math.sin(w) * 60; taubeBei(c, x, y, t * 10 + k, Math.cos(w) > 0 ? -1 : 1); } } }),
+    held_horace: szParisHeldFilm('horace', 'Arrêt du temps', [[3.2, 'zeitzeichen'], [4.6, 'klick'], [6.4, 'staunen']], {
+      kulisse(c, t) { c.fillStyle = '#3d4a42'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#d9d2c0'; c.fillRect(0, 330, SZ_W, 70);
+        const stop = t > 3.2 && t < 7.6; pUhr(c, 320, 170, 120, stop ? 3.2 * 6 : t * 6);
+        const bx = stop ? 200 : ((t * 120) % 760) - 60; taubeBei(c, bx, 120, stop ? 0 : t * 10, -1);
+        if (stop) { c.save(); c.globalAlpha = 0.25; c.fillStyle = '#7ec8ff'; c.fillRect(0, 0, SZ_W, H); c.restore(); } } }),
+    held_hector: szParisHeldFilm('hector', 'Bouclier', [[3.2, 'welle'], [3.8, 'platsch'], [5.0, 'platsch'], [6.4, 'jubel']], {
+      kulisse(c, t) { szHimmel(c, '#6f8fae', '#cfdbe6'); pHaeuser(c, 262, -60, 700, 0, 0.6); c.fillStyle = '#b9ae96'; c.fillRect(0, 258, SZ_W, 16); pWasser(c, 272, t, 0, SZ_W);
+        pBoot(c, 470, 340, 1.0); c.fillStyle = '#b9ae96'; c.fillRect(0, 374, 300, 30);
+        if (t > 3.2 && t < 7.6) { c.save(); c.strokeStyle = 'rgba(160,235,255,.8)'; c.lineWidth = 3; c.fillStyle = 'rgba(72,202,228,.18)'; c.beginPath(); c.arc(470, 330, 110, Math.PI, 0); c.fill(); c.stroke(); c.restore();
+          for (let k = 0; k < 10; k++) { const yy = ((t * 260 + k * 47) % 260) - 40, xx = 380 + k * 20; const hit = yy > 330 - Math.sqrt(Math.max(0, 110 * 110 - (xx - 470) ** 2)); c.fillStyle = '#9fb3c8'; if (!hit) { c.beginPath(); c.arc(xx, yy, 4, 0, Math.PI * 2); c.fill(); } } } } }),
     // Französisch – Paris (Französisch-App Klasse 5/6, Stufe 2, 7.11.2026; Texte inhalte/franz/paris.tsv, Stimme Mr. Alex)
     tour_eiffel: { dauer: 9.4, klaenge: [[0.4, 'akkordeon'], [5.2, 'lichtAn'], [6.0, 'funkeln'], [7.4, 'funkeln']],
       zeichne(c, t) {   // Tag → Abend: die Kamera fährt am Turm hinauf, das Licht geht an, dann funkelt der ganze Turm

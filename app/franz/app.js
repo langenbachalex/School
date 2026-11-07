@@ -11,7 +11,6 @@
   const LESE = ["einfach", "ipa", "aus"], LESE_TEXT = { einfach: "Aa einfach", ipa: "Aa IPA", aus: "Aa aus" };
   const SCHRITTE = [
     { sym: "🎧", name: "Écoute", unter: "Hören, mitlesen, nachsprechen" },
-    { sym: "✍️", name: "Abschreiben", unter: "Lücken mit Vorlage" },
     { sym: "🔑", name: "Wendungen", unter: "Lücken bei bekannten Wendungen" },
     { sym: "🆕", name: "Neue Wörter", unter: "Lücken bei den neuen Wörtern" },
     { sym: "📈", name: "Wachsend", unter: "Immer mehr Lücken, Zeile für Zeile" },
@@ -173,7 +172,7 @@
       el("nav", { class: "kacheln schritte-kacheln" }, SCHRITTE.map((s, i) => kachel(s.sym, `${i + 1}. ${s.name}`, s.unter + (ds[i + 1] ? " ✓" : ""),
         () => schritt(d, i + 1), ds[i + 1] ? " erledigt" : ""))));
   }
-  function schritt(d, nr) { [null, ecoute, (x) => luecken(x, 2), (x) => luecken(x, 3), (x) => luecken(x, 4), wachsend, parle][nr](d); }
+  function schritt(d, nr) { [null, ecoute, (x) => luecken(x, 3, 2), (x) => luecken(x, 4, 3), wachsend, parle][nr](d); }
   function schrittFertig(d, nr) {
     const ds = dialogStand(d);
     if (ds[nr]) return;
@@ -213,7 +212,7 @@
       weiterLeiste(d, 1));
   }
 
-  // Lücken finden: Wörter (für Abschreiben/Wachsend) oder feste Wendungen (längste zuerst, ohne Überlappung)
+  // Lücken finden: Wörter (für Wachsend) oder feste Wendungen (längste zuerst, ohne Überlappung)
   const WORT = /[A-Za-zÀ-ÿœŒ'’-]+/g;
   function woerter(text) { return [...text.matchAll(WORT)].map((m) => ({ von: m.index, bis: m.index + m[0].length, wort: m[0] })); }
   function treffer(text, liste) {
@@ -230,7 +229,6 @@
     return t.sort((a, b) => a.von - b.von);
   }
   function lueckenFuer(text, art, anteil) {
-    if (art === 2) { const w = woerter(text).filter((x) => x.wort.length >= 3); return w.length ? [w.reduce((a, b) => (b.wort.length > a.wort.length ? b : a))] : []; }
     if (art === 3) return treffer(text, D.wendungen.map((w) => w.fr.replace(/ [?!.]$/, "")));
     if (art === 4) return treffer(text, lueckenFuer.neu || []);
     const w = woerter(text), n = Math.max(1, Math.round(w.length * anteil));
@@ -269,7 +267,7 @@
   }
 
   // Schritte 2–4: der ganze Dialog mit Lücken, Wortkasten darüber
-  function luecken(d, art) {
+  function luecken(d, art, nr) { // art 3 = Wendungen, 4 = neue Wörter; nr = Schritt
     lueckenFuer.neu = d.neu;
     const box = rueckmeldung(), alle = [];
     const zeilen = d.zeilen.map((z) => {
@@ -281,17 +279,15 @@
     const kasten = wortkasten(alle, {
       richtig: (l, ende) => {
         if (!alle.some((x) => x.zeile === l.zeile && !x.fertig)) spiele([ton(l.zeile)]);
-        if (ende) { melde(box, "gut", `${zufall(LOB)} Alle Lücken gefüllt${fehler ? "" : " – ohne Fehler"}!`); schrittFertig(d, art); }
+        if (ende) { melde(box, "gut", `${zufall(LOB)} Alle Lücken gefüllt${fehler ? "" : " – ohne Fehler"}!`); schrittFertig(d, nr); }
       },
-      falsch: () => { fehler++; melde(box, "hilfe", `${zufall(FEHLER)} Schau noch mal${art === 2 ? " in die Vorlage" : ""}.`); }
+      falsch: () => { fehler++; melde(box, "hilfe", `${zufall(FEHLER)} Schau noch mal.`); }
     });
-    const vorlage = art === 2 && el("details", { class: "vorlage", open: true }, el("summary", {}, "📄 Vorlage (zum Abschreiben)"),
-      el("ol", { lang: "fr" }, d.zeilen.map((z) => el("li", {}, `${z.wer}: ${ohneKlammern(z.fr)}`))));
-    zeige(kopf(d.titel, () => dialogSeite(d), `${art}. ${SCHRITTE[art - 1].name} – tipp die Wörter in der richtigen Reihenfolge an.`),
-      el("section", { class: "satzkarte" }, vorlage, el("p", { class: "zaehler" }, "Wortkasten"), kasten, box,
+    zeige(kopf(d.titel, () => dialogSeite(d), `${nr}. ${SCHRITTE[nr - 1].name} – tipp die Wörter in der richtigen Reihenfolge an.`),
+      el("section", { class: "satzkarte" }, el("p", { class: "zaehler" }, "Wortkasten"), kasten, box,
         el("div", { class: "dialog" }, zeilen), alle.length === 0 && el("p", {}, "In diesem Dialog gibt es hier keine Lücken.")),
-      weiterLeiste(d, art));
-    if (!alle.length) schrittFertig(d, art);
+      weiterLeiste(d, nr));
+    if (!alle.length) schrittFertig(d, nr);
   }
 
   // Schritt 5: Zeile für Zeile, drei Runden mit wachsenden Lücken (ein Drittel → zwei Drittel → alle Wörter)
@@ -301,7 +297,7 @@
     const box = rueckmeldung(), weiter = knopf("Weiter ➜", () => {
       if (i + 1 < d.zeilen.length) wachsend(d, runde, i + 1);
       else if (runde + 1 < ANTEIL.length) { toast(`Runde ${runde + 2}: mehr Lücken!`); wachsend(d, runde + 1, 0); }
-      else { schrittFertig(d, 5); dialogSeite(d); }
+      else { schrittFertig(d, 4); dialogSeite(d); }
     }, "haupt");
     weiter.disabled = true;
     // Ablenker: in Runde 1 und 2 zwei Wörter aus anderen Zeilen dazu, damit es nicht zu leicht wird
@@ -310,7 +306,7 @@
       richtig: (l, ende) => { if (ende) { melde(box, "gut", zufall(LOB)); spiele([ton(z)]); weiter.disabled = false; weiter.focus(); } },
       falsch: () => melde(box, "hilfe", zufall(FEHLER))
     }, fremd);
-    zeige(kopf(d.titel, () => dialogSeite(d), "5. Wachsend – jede Runde mehr Lücken."),
+    zeige(kopf(d.titel, () => dialogSeite(d), "4. Wachsend – jede Runde mehr Lücken."),
       el("section", { class: "satzkarte" },
         el("p", { class: "zaehler" }, `Runde ${runde + 1}/3 · Zeile ${i + 1}/${d.zeilen.length}`),
         el("p", { class: "de-hinweis" }, werMarke(z), " ", ohneKlammern(z.de)),
@@ -349,9 +345,9 @@
       saetze.push(wahl);
       return el("div", { class: "parle-karte" }, satz, auswahl, el("div", { class: "knopfreihe" }, knopf("🔊 Hören", sprich), el("span", { class: "klein" }, "… und sag es laut!")));
     });
-    function fertigTest() { if (saetze.every((w) => w.every((x) => x.wert))) { melde(box, "gut", "Super ! Jetzt sag alle Sätze laut – am besten zu zweit."); schrittFertig(d, 6); } }
-    zeige(kopf(d.titel, () => dialogSeite(d), "6. Parle de toi – tipp die Lücke an und wähl dein Wort."),
-      el("section", { class: "satzkarte" }, karten, box), weiterLeiste(d, 6));
+    function fertigTest() { if (saetze.every((w) => w.every((x) => x.wert))) { melde(box, "gut", "Super ! Jetzt sag alle Sätze laut – am besten zu zweit."); schrittFertig(d, 5); } }
+    zeige(kopf(d.titel, () => dialogSeite(d), "5. Parle de toi – tipp die Lücke an und wähl dein Wort."),
+      el("section", { class: "satzkarte" }, karten, box), weiterLeiste(d, 5));
     const erste = saetze[0] && saetze[0][0];
     if (erste) erste.span.click();
   }

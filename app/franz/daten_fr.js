@@ -2709,7 +2709,7 @@ window.DATEN_FR = {
    "stichwort": "empereur",
    "de": "Kaiser",
    "bild": "wm:Napoléon_Ier",
-   "foto": null,
+   "foto": "bilder/namen/napoleon.jpg",
    "ipa": [
     [
      "na",
@@ -2737,7 +2737,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/napoleon.mp3",
-   "quelle": null
+   "quelle": "Jacques-Louis David · Public domain · Wikimedia Commons"
   },
   {
    "gruppe": "histoire",

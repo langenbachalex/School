@@ -1421,7 +1421,7 @@
 
   /* Memory: englisches Wort ↔ deutsche Bedeutung, 6 Paare, alle Karten auf einen Blick (.memory.gross).
      Wörter mit Symbol zeigen es auf der englischen Karte. Beim Aufdecken hört man das englische Wort. */
-  function memoryFeld(ws) {
+  function memoryFeld(ws, fertigText) { // fertigText(): Zusatz zur Schlussmeldung (Word Gym: eigene Tagesmarke), sonst Spiele-Punkte
     const karten = mischen(ws.flatMap((v) => [{ v, art: "en" }, { v, art: "de" }]));
     let offen = [], gefunden = 0, zuege = 0, wartet = false;
     const box = rueckmeldung();
@@ -1441,7 +1441,7 @@
         const [x, y] = offen; offen = [];
         if (x.c.v === y.c.v && x.c.art !== y.c.art) {
           x.b.classList.add("paar"); y.b.classList.add("paar"); x.b.disabled = y.b.disabled = true;
-          if (++gefunden === ws.length) melde(box, "gut", `${lob(true)} Alle ${ws.length} Paare in ${zuege} Zügen!${spielPunkte("memoryTag", true)}`);
+          if (++gefunden === ws.length) melde(box, "gut", `${lob(true)} Alle ${ws.length} Paare in ${zuege} Zügen!${fertigText ? fertigText() : spielPunkte("memoryTag", true)}`);
         } else {
           wartet = true;
           setTimeout(() => {
@@ -2014,6 +2014,7 @@
         }
       }
     }
+    goldPruefen(true); // goldene Akten (Regel B)
     punkteDazu(plus, { art: istGym ? "g" : "t", boni });
   }
   // Wiederholungsbonus für eine komplett wiederholte Station / einen komplett wiederholten Abschnitt (6.11.)
@@ -3005,9 +3006,9 @@
         m[1], el("span", { class: "akten-de", lang: "de" }, m[2]));
     });
   }
-  function aktenZeigen(a) {
+  function aktenZeigen(a, gold) {
     const gesehen = new Set(), lobBox = el("p", { class: "gym-lob", "aria-live": "polite" });
-    feier.classList.add("akte");
+    feier.classList.add("akte"); feier.classList.toggle("gold-akte", !!gold);
     feier.replaceChildren(
       el("h2", { lang: "en" }, a.titel),
       el("p", { class: "klein" }, "Tipp auf ein farbiges Wort: Dann siehst du die Bedeutung."),
@@ -3018,8 +3019,8 @@
         return el("li", {}, el("span", { lang: "en" }, f.frage), " ", knopf("Lösung", () => { lsg.hidden = false; gesehen.add(f); if (gesehen.size === a.fragen.length && !lobBox.textContent) lobBox.textContent = lob(true); }, "leise"), lsg);
       })),
       lobBox,
-      el("div", { class: "knopfreihe" }, knopf("Schließen", () => { feier.close(); feier.classList.remove("akte"); }, "haupt")));
-    feier.addEventListener("close", () => feier.classList.remove("akte"), { once: true });
+      el("div", { class: "knopfreihe" }, knopf("Schließen", () => { feier.close(); feier.classList.remove("akte", "gold-akte"); }, "haupt")));
+    feier.addEventListener("close", () => feier.classList.remove("akte", "gold-akte"), { once: true });
     feier.showModal();
   }
   function aktenBereich() {
@@ -3031,7 +3032,32 @@
             el("small", {}, `Du brauchst: ${(SP.helden.find((h) => h.id === a.figur) || {}).name} + ${(SP.orte.find((o) => o.id === a.ort) || {}).name}`));
     });
     return el("section", { class: "satzkarte" }, el("h2", {}, `🔒 Geheimakten (${SP.akten.filter((a) => spielstand().helden.includes(a.figur) && SP.orte.findIndex((o) => o.id === a.ort) < orteFrei()).length} von ${SP.akten.length})`),
-      el("p", { class: "klein" }, "Eine Akte öffnet sich, wenn du den Superhelden hast und seinen Ort in London freigeschaltet hast."), el("div", { class: "akten" }, kacheln));
+      el("p", { class: "klein" }, "Eine Akte öffnet sich, wenn du den Superhelden hast und seinen Ort in London freigeschaltet hast."), el("div", { class: "akten" }, kacheln), goldTeil());
+  }
+  /* Goldene Akten (Regel B, 7.11.2026, docs/secret-level/konzept-entwurf.md): SP.gold aus inhalte/goldakten.tsv.
+     art „serie“ = so viele Schultage am Stück (serie()), art „wochen“ = so viele perfekte Wochen insgesamt (sp.wochen).
+     Einmal erreicht, bleibt die Akte offen (sp.gold = [ids], im Siegel) – auch wenn die Serie später reißt. */
+  const goldText = (a) => a.art === "serie" ? `${a.ziel} Schultage am Stück` : `${a.ziel} perfekte Wochen`;
+  function goldPruefen(feiern) {
+    const sp = spielstand(), n = serie();
+    if (!Array.isArray(sp.gold)) sp.gold = [];
+    const neu = (SP.gold || []).filter((a) => !sp.gold.includes(a.id) && (a.art === "serie" ? n : sp.wochen.length) >= a.ziel);
+    for (const a of neu) {
+      sp.gold.push(a.id);
+      if (feiern) ereignisse.push({ art: "feier", symbol: "🌟", titel: "Gold File unlocked!", text: `${goldText(a)} – eine goldene Akte ist offen: „${a.titel.replace(/^.*? – /, "")}“. Du findest sie in deiner Sammlung.` });
+    }
+    return neu.length > 0;
+  }
+  function goldTeil() {
+    if (!(SP.gold || []).length) return null;
+    if (goldPruefen(false)) speichern();
+    const sp = spielstand();
+    return el("div", { class: "gold-akten" }, el("h3", {}, `🌟 Goldene Akten (${SP.gold.filter((a) => sp.gold.includes(a.id)).length} von ${SP.gold.length})`),
+      el("p", { class: "klein" }, "Besondere Geschichten für alle, die dranbleiben: nach einer Serie von Schultagen oder nach perfekten Wochen."),
+      el("div", { class: "akten" }, SP.gold.map((a) => sp.gold.includes(a.id)
+        ? el("button", { class: "akte-kachel offen gold", onclick: () => aktenZeigen(a, true) }, el("span", { "aria-hidden": "true" }, "🌟"), el("strong", { lang: "en" }, a.titel))
+        : el("div", { class: "akte-kachel zu gold" }, el("span", { "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, a.titel.replace(/ – .*/, "")),
+            el("small", {}, `Du brauchst: ${goldText(a)}`)))));
   }
 
  // Aufstieg einer Folien-Karte: Karte dreht sich, Rahmen leuchtet auf (Gold-Moment: Blitz), der Held spricht seine Vorstellung (vorhandene Aufnahme)
@@ -3173,6 +3199,7 @@
         el("p", { class: "klein" }, stand_), gesamt > 0 && punkte),
       el("div", { class: "gym-knoepfe" },
         knopf(plan.geschafft || gesamt === 0 ? "Ansehen" : fertig ? "▶ Weiter" : "▶ Los geht's", gymStart, plan.geschafft ? "" : "haupt"),
+        gymMemoryOffen() && knopf("🎲 Memory", gymMemory, "haupt"),
         el("button", { class: "knopf leise", "aria-label": "Pensum einstellen", "aria-expanded": "false",
           onclick: (e) => { einstellung.hidden = !einstellung.hidden; e.currentTarget.setAttribute("aria-expanded", String(!einstellung.hidden)); } }, "⚙")),
       einstellung);
@@ -3282,7 +3309,9 @@
         r && el("p", { class: "gym-lob" }, el("strong", { lang: "en" }, r.text), r.de && el("span", { lang: "de" }, " – " + r.de)),
         el("p", {}, alles ? "Alle Wörter von heute sind geübt. Morgen gibt es neue und die fälligen von heute kommen wieder."
           : "Erledigtes bleibt gespeichert. Komm später wieder und mach den Rest fertig."),
-        el("div", { class: "knopfreihe" }, knopf("Zur Startseite", startseite, "haupt"), knopf("🏆 Hall of Fame", sammlung))));
+        alles && gymMemoryOffen() && el("p", { class: "ansage" }, "🎲 Jetzt noch die Memory-Runde von heute: Finde die Paare mit deinen Gym-Wörtern!"),
+        el("div", { class: "knopfreihe" }, alles && gymMemoryOffen() ? knopf("🎲 Memory-Runde", gymMemory, "haupt") : knopf("Zur Startseite", startseite, "haupt"),
+          alles && gymMemoryOffen() && knopf("Zur Startseite", startseite), knopf("🏆 Hall of Fame", sammlung))));
       if (icon.heben) setTimeout(icon.heben, 400);
     };
     gym = null; lage = null;
@@ -3290,6 +3319,32 @@
     // erst belohnen (reiht Pop-ups ein), dann sprechen: das Pop-up wartet auf die Schlussstimme, statt sie abzuschneiden
     if (erstesMal) belohne(true, true, true);
     spiele([!ereignisse.some(grossEreignis) && r && r.audio, fini && fini.audio]);
+  }
+
+  /* Memory im Word Gym (7.11.2026): einmal pro Tag nach dem Pensum, 6 Paare aus den Wörtern von heute (fällig + neu),
+     aufgefüllt mit den nächsten fälligen Gym-Karten. Punkte (PUNKTE.spiel) einmal pro Tag über die eigene Marke gym.memGymTag –
+     unabhängig von gym.memoryTag (Memory in Station 5). Abbrechen und neu starten geht, Punkte gibt es nur für die erste fertige Runde. */
+  function gymMemoryWoerter() {
+    const plan = gymPlan(), g = gymStand(), heute_ = [...plan.wdh, ...plan.neu];
+    const rest = Object.entries(g.karten).filter(([id]) => !heute_.includes(id)).sort((a, b) => (a[1].f < b[1].f ? -1 : a[1].f > b[1].f ? 1 : 0)).map(([id]) => id);
+    const ok = (ids) => ids.map(vokabel).filter(memOk);
+    const ws = mischen(ok(heute_)).slice(0, 6);
+    for (const v of ok(rest)) { if (ws.length >= 6) break; if (!ws.some((w) => memKurz(w.de) === memKurz(v.de))) ws.push(v); }
+    return mischen(ws.filter((v, i) => ws.findIndex((w) => memKurz(w.de) === memKurz(v.de)) === i));
+  }
+  const gymMemoryOffen = () => { const plan = gymPlan(); return (plan.geschafft || !(plan.wdh.length + plan.neu.length)) && gymStand().memGymTag !== spielTag() && gymMemoryWoerter().length >= 3; };
+  function gymMemory() {
+    const ws = gymMemoryWoerter();
+    if (ws.length < 3 || gymStand().memGymTag === spielTag()) return startseite();
+    const m = memoryFeld(ws, () => {
+      const g = gymStand();
+      if (g.memGymTag === spielTag()) return "";
+      g.memGymTag = spielTag(); punkteDazu(PUNKTE.spiel, { art: "g", bonus: true }); // zeigt den Punkte-Toast selbst
+      return ` +${PUNKTE.spiel} ⭐ – Memory für heute geschafft!`;
+    });
+    lage = null;
+    zeige(gymKopf(), ansage("Find the pairs!", "Memory mit deinen Gym-Wörtern: Finde die Paare – englisches Wort und deutsche Bedeutung."),
+      karte(null, null, m.feld, m.zaehler, m.box, el("div", { class: "knopfreihe" }, knopf("Zur Startseite", startseite, "leise"))));
   }
 
   /* ---------- Fragen für Mr. Alex ---------- */

@@ -410,6 +410,18 @@ dialog.feier.akte { max-height: 88vh; overflow-y: auto; text-align: left; }
 .akten-wort.auf .akten-de { display: inline; margin-left: .3em; padding: 0 .35em; border-radius: 6px; background: var(--gelb, #ffd84a); color: #222; font-size: .9em; }
 .akten-fragen li { margin: 8px 0; }
 .akten-antwort { margin: 4px 0 0; color: var(--leise); }
+/* Goldene Akten (Regel B, 7.11.2026): goldener Rahmen und Schimmer */
+.gold-akten { margin-top: 14px; }
+.akte-kachel.gold { border-color: #d4a017; }
+.akte-kachel.offen.gold { background: linear-gradient(135deg, #fff6cf, #ffe27a 55%, #f5c542); color: #3a2c00; border-color: #b8860b; box-shadow: 0 0 0 2px rgba(212,160,23,.25), 0 4px 14px rgba(184,134,11,.3); position: relative; overflow: hidden; }
+.akte-kachel.offen.gold::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,.65) 50%, transparent 65%); transform: translateX(-100%); animation: gold-schimmer 3.5s ease-in-out infinite; pointer-events: none; }
+.akte-kachel.zu.gold { border-style: dashed; }
+@keyframes gold-schimmer { 0%, 55% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) { .akte-kachel.offen.gold::after { animation: none; } }
+dialog.feier.akte.gold-akte { border: 4px solid #d4a017; background: linear-gradient(180deg, #ffeeb0, #fff8dc 160px); color: #2a2000; }
+dialog.feier.akte.gold-akte .klein, dialog.feier.akte.gold-akte .akten-antwort { color: #5a4a1a; }
+dialog.feier.akte.gold-akte h2 { color: #8a6400; }
+dialog.feier.akte.gold-akte .akten-wort { color: #8a5a00; border-bottom-color: #b8860b; }
 .gym-lob:empty { display: none; }
 
 .speicher-warnung { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; background: #ffd84a; color: #222; font-size: .95rem; line-height: 1.4; }

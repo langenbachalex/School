@@ -6021,7 +6021,7 @@
     c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.4; c.lineCap = 'round'; c.beginPath(); c.moveTo(x - w - 0.3, y + 0.1); c.lineTo(x - w * 0.3, y - 1.2); c.lineTo(x + w + 0.3, y - 1); c.stroke();
   };
   // Neue Stil-Helden: Sammelkarte schreibt den Namen mit dunkler Kontur (lesbar auch auf heller Kartenfarbe, z. B. Sunny Gold)
-  const HZ_NEUSTIL = new Set(['eddie', 'sunny']);
+  const HZ_NEUSTIL = new Set(['eddie', 'sunny', 'cody']);
 
   const HELDEN_ZEICHNUNG = {
     // Leo the Lion – Super speed: Mähne, roter Umhang, ⚡; Kraft = Beinwirbel, Tempolinien, Blitze an den Fäusten
@@ -6260,71 +6260,76 @@
         for (let i = 0; i < 6; i++) { const w = t * 7 + i * 1.05, r = 12 + (t * 40 + i * 9) % 14; hzEll(c, Math.cos(w) * r, -96 + Math.sin(w) * r * 0.8, 1.3, 1.3, i % 2 ? '#ffd60a' : '#fff'); } }   // Funken
     },
     // ----- Klasse 9 (Road Trip USA, 7.11.2026, Etappe 1): 13 US-Helden, Daten in inhalte/klasse9/helden.tsv (Penny the Puma = id pennypuma, penny ist Kl.-6-Pinguin) -----
-    // Eddie the Eagle – Eagle eye (reifer Stil, Probe 7.11.): Weißkopfseeadler, breite Schultern, Navy-Bomberjacke mit Lammfellkragen, dunkle Jeans, Sneaker,
-    // Pilotenbrille (steh: hochgeschoben, halb geschlossene Augen + schiefes Grinsen); Neon-Akzent Rot; Kraft = roter Laserstrahl durch die Brillengläser
+    // Eddie the Eagle – Eagle eye (reifer Stil, Probe 2 7.11.): Weißkopfseeadler, Kopf in Dreiviertel-Ansicht (beide Augen, Hakenschnabel nach rechts),
+    // schwarze Biker-Lederjacke (schräger Reißverschluss, breite Revers, Gürtel, Metallic-Glanz), dunkle Jeans, Sneaker; Pilotenbrille mit zwei Gläsern
+    // (steh: auf den Kopf geschoben, halb geschlossene Augen + schiefes Grinsen); Neon-Akzent Rot; Kraft = rote Laserstrahlen aus beiden Brillengläsern
     eddie(c, t, pose, o = {}) {
       const j = pose === 'jubel', k = pose === 'kraft', l = pose === 'lauf', N = '#ff2a3d', p = t * 13;
-      const jacke = '#24324f', jackeD = '#141c30', jeans = '#2d3038', jeansD = '#1b1d23', weiss = '#f3f1ea', weissD = '#bfbbb0', braun = '#5b3a29', braunD = '#3a2419', gelb = '#f2b705', gelbD = '#c07f00';
+      const leder = '#24252c', lederD = '#0e0f13', glanz = '#9aa3b8', silber = '#d5dae3', jeans = '#2d3038', jeansD = '#1b1d23', weiss = '#f3f1ea', weissD = '#bfbbb0', gelb = '#f2b705', gelbD = '#c07f00';
       const bob = l ? -Math.abs(Math.sin(p)) * 1.6 : j ? -Math.max(0, Math.sin(t * 7)) * 2.5 : 0, hy = -35 + bob;
-      // Beine (Füße am Boden, Knie nach vorn)
       let fh, fv;
       if (l) { fh = [-2 + 13 * Math.sin(p), -Math.max(0, -Math.cos(p)) * 8]; fv = [2 + 13 * Math.sin(p + Math.PI), -Math.max(0, Math.cos(p)) * 8]; }
       else if (k) { fh = [-10, 0]; fv = [10, 0]; }
       else if (j) { fh = [-6, bob * 0.6]; fv = [6, bob * 0.6]; }
       else { fh = [-6, 0]; fv = [5, 0]; }
-      const bein = (hx, f, farbe, dunkel) => { const g = hzIK(hx, hy, f[0], f[1] - 4, 17, 16.5, -1); hzGlied(c, g, 6.2, farbe, dunkel); hzSneaker(c, f[0], f[1], '#e9ecf1', '#b3bac6', '#1b1d23', N); };
-      // Arme (Ärmel der Jacke, kantige Faust); Schultern breit
-      const arm = (sx, ziel, s, faust = true) => { const g = hzIK(sx, -55 + bob, ziel[0], ziel[1] + bob, 13.5, 13, s); hzGlied(c, g, 6.6, jacke, jackeD);
-        const [ex, ey] = g[1], [hx2, hy2] = g[2]; c.strokeStyle = N; c.lineWidth = 1.2; c.beginPath(); c.moveTo(ex + (hx2 - ex) * 0.72 - 2, ey + (hy2 - ey) * 0.72); c.lineTo(ex + (hx2 - ex) * 0.72 + 2, ey + (hy2 - ey) * 0.72 - 0.5); c.stroke();   // Neon-Streifen am Ärmel
-        if (faust) hzFaust(c, hx2, hy2, 3.1, braun, braunD); return g[2]; };
+      const bein = (hx, f) => { const g = hzIK(hx, hy, f[0], f[1] - 4, 17, 16.5, -1); hzGlied(c, g, 6.2, jeans, jeansD); hzSneaker(c, f[0], f[1], '#e9ecf1', '#b3bac6', '#1b1d23', N); };
+      // Ärmel aus Leder (Glanzlinie am Oberarm, Reißverschluss am Bündchen), kantige Faust
+      const arm = (sx, ziel, s, faust = true) => { const g = hzIK(sx, -55 + bob, ziel[0], ziel[1] + bob, 13.5, 13, s); hzGlied(c, g, 6.6, leder, lederD);
+        const [[ax, ay], [ex, ey], [hx2, hy2]] = g; c.lineCap = 'round'; c.strokeStyle = glanz; c.lineWidth = 1.1;
+        c.beginPath(); c.moveTo(ax + (ex - ax) * 0.2 + 1.2, ay + (ey - ay) * 0.2 - 1.2); c.lineTo(ax + (ex - ax) * 0.75 + 1.2, ay + (ey - ay) * 0.75 - 1.2); c.stroke();
+        c.strokeStyle = silber; c.lineWidth = 0.9; c.beginPath(); c.moveTo(ex + (hx2 - ex) * 0.62, ey + (hy2 - ey) * 0.62); c.lineTo(ex + (hx2 - ex) * 0.82 + 1.5, ey + (hy2 - ey) * 0.82 - 1.5); c.stroke();
+        if (faust) hzFaust(c, hx2, hy2, 3.1, '#5b3a29', '#3a2419'); return g[2]; };
       let zh, zv, sh = 1, sv = 1;
-      if (l) { zh = [-11 + 10 * Math.sin(p), -41 - 5 * Math.abs(Math.cos(p))]; zv = [11 + 10 * Math.sin(p + Math.PI), -41 - 5 * Math.abs(Math.cos(p))]; sh = 1; sv = 1; }
-      else if (j) { zh = [-27, -80]; zv = [27, -80]; sh = 1; sv = -1; }
-      else if (k) { zh = [-17, -38]; zv = [19, -50]; sh = 1; sv = 1; }
-      else { zh = [-14, -33]; zv = [10, -38]; sh = 1; sv = -1; }
+      if (l) { zh = [-11 + 10 * Math.sin(p), -41 - 5 * Math.abs(Math.cos(p))]; zv = [11 + 10 * Math.sin(p + Math.PI), -41 - 5 * Math.abs(Math.cos(p))]; }
+      else if (j) { zh = [-28, -79]; zv = [31, -76]; sh = 1; sv = 1; }   // Jubel: vordere Faust weit außen, Ellbogen tief → Arm bleibt frei vom Schnabel
+      else if (k) { zh = [-17, -38]; zv = [19, -50]; }
+      else { zh = [-14, -33]; zv = [10, -38]; sv = -1; }
       if (!j) arm(-11, zh, sh);
-      bein(-3, fh, jeans, jeansD); bein(3, fv, jeans, jeansD);
+      bein(-3, fh); bein(3, fv);
       c.save(); c.translate(0, bob);
       hzCel(c, [[-9, -40], [-17, -31], [-14, -29], [-11, -31], [-9, -27], [-5, -37]], weiss, weissD, [[-20, -33], [-4, -38], [-4, -25], [-20, -25]]);   // weiße Schwanzfedern
-      hzCel(c, [[-12, -59], [12, -59], [15, -55], [11, -44], [10, -35], [-10, -35], [-12, -44], [-16, -55]], jacke, jackeD, [[-20, -62], [-2, -62], [-4, -33], [-20, -33]]);   // Bomberjacke, V-Form
-      hzCel(c, [[2, -58], [8, -58], [6, -46], [4, -39]], braun, braunD, [[0, -60], [4, -60], [3, -38], [0, -38]], 1.2);   // offene Front: Brustfedern
-      c.strokeStyle = '#c9ced8'; c.lineWidth = 1; c.beginPath(); c.moveTo(6.6, -46); c.lineTo(5, -36); c.stroke();   // Reißverschluss (Metall)
-      hzCel(c, [[-10, -38.5], [10, -38.5], [10, -35], [-10, -35]], jackeD, jackeD, null, 1.3); c.strokeStyle = N; c.lineWidth = 0.8; c.beginPath(); c.moveTo(-9, -37); c.lineTo(9, -37); c.stroke();   // Bund mit Neon-Linie
-      hzPatch(c, -4.5, -50, 3.4, '#101522', N, 'E');
-      hzCel(c, [[-13, -58], [-8, -62.5], [-2, -59], [4, -59], [9, -62.5], [13, -58], [8, -55.5], [2, -57], [-5, -57], [-9, -55]], '#e9dcc0', '#b9a882', [[-15, -64], [-3, -64], [-3, -54], [-15, -54]], 1.4);   // Lammfellkragen
+      const rumpf = [[-12, -59], [12, -59], [15, -55], [11.5, -44], [10.5, -37], [-10.5, -37], [-12, -44], [-16, -55]];
+      hzCel(c, rumpf, leder, lederD, [[-20, -62], [-3, -62], [-5, -33], [-20, -33]]);   // Lederjacke
+      c.save(); hzPfad(c, rumpf); c.clip(); c.fillStyle = 'rgba(154,163,184,.5)'; hzPfad(c, [[6, -57], [9.5, -57], [7.5, -40], [4.5, -40]]); c.fill(); c.restore();   // Metallic-Glanz
+      hzCel(c, [[-2, -59], [5, -59], [3, -50]], N, '#9e1020', null, 1.1);   // rotes Shirt im Ausschnitt
+      hzCel(c, [[-11, -59], [-2, -59], [0.5, -52], [-3, -49.5], [-8, -54]], leder, lederD, [[-14, -62], [-6, -62], [-4, -46], [-14, -46]], 1.3);   // Revers links
+      hzCel(c, [[4, -59], [12.5, -58.5], [10, -51], [6, -49]], leder, lederD, null, 1.3);   // Revers rechts
+      c.strokeStyle = glanz; c.lineWidth = 0.9; c.beginPath(); c.moveTo(5.5, -57.6); c.lineTo(10.5, -57.4); c.stroke();
+      hzEll(c, -3.4, -50.8, 0.8, 0.8, silber); hzEll(c, 7.2, -50.6, 0.8, 0.8, silber);   // Druckknöpfe
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.9; c.beginPath(); c.moveTo(6, -49.5); c.lineTo(1.5, -37.5); c.stroke(); c.strokeStyle = silber; c.lineWidth = 0.9; c.stroke();   // Reißverschluss schräg
+      hzCel(c, [[-10.5, -40], [10.5, -40], [10.5, -37], [-10.5, -37]], lederD, lederD, null, 1.2);   // Gürtel
+      hzCel(c, [[-7.5, -40.3], [-4, -40.3], [-4, -36.7], [-7.5, -36.7]], silber, '#8c939e', null, 1);   // Schnalle
+      hzPatch(c, -5.5, -45.5, 2.9, '#101522', N, 'E');
       c.restore();
       if (!j) arm(10, zv, sv, !(pose === 'steh'));   // steh: Hand in der Jackentasche
-      // Kopf (≈ 1/4 der Höhe), kantig, weiß mit Federspitzen hinten
+      // Kopf in Dreiviertel-Ansicht: weiß, Federspitzen hinten, beide Augen, Hakenschnabel fest aus dem Gesicht nach rechts
       c.save(); c.translate(0, bob);
-      hzCel(c, [[0, -59.5], [-7, -60.5], [-10, -63.5], [-14.5, -65.5], [-10.5, -68], [-14.5, -71.5], [-9.5, -74], [-6, -79], [1, -81], [7, -79], [10.5, -74], [11, -67], [8, -62]], weiss, weissD,
-        [[-18, -84], [-4, -84], [-2, -66], [13, -64], [13, -56], [-18, -56]]);
-      // Hakenschnabel fest aus dem Kopf (kantig), untere Hälfte im Schatten
-      if (j) {
-        hzCel(c, [[7.5, -66.5], [15.5, -66], [13, -62.5], [7.5, -62.2]], gelb, gelbD, [[5, -64.5], [18, -64.5], [18, -60], [5, -60]], 1.3);   // Unterschnabel (offen)
-        hzPfad(c, [[8, -67.5], [16, -67], [8, -64.3]]); c.fillStyle = '#5a1018'; c.fill();
+      hzCel(c, [[-1, -59.5], [-7, -60.5], [-10, -63], [-14.5, -65], [-11, -67.5], [-15, -71], [-11, -73.5], [-9, -78.5], [-3, -82], [4, -82], [9, -79], [11.5, -74], [11.5, -67], [8.5, -62], [4, -60]], weiss, weissD,
+        [[-18, -85], [-6, -85], [-5, -67], [3, -60], [3, -56], [-18, -56]]);
+      if (j) {   // Schnabel offen
+        hzCel(c, [[3.5, -66], [15.5, -64.5], [13, -61], [5, -61.3]], gelb, gelbD, [[2, -63.5], [18, -63.5], [18, -58], [2, -58]], 1.3);
+        hzPfad(c, [[4, -67], [16.5, -66.5], [4.5, -63.5]]); c.fillStyle = '#5a1018'; c.fill();
       }
-      hzCel(c, [[7, -75], [13, -75.5], [17.5, -73], [19.5, -69.5], [19, -65], [17, -67], [15, -66.5], [8, -65.5]], gelb, gelbD, [[5, -69], [22, -70.5], [22, -60], [5, -60]], 1.5);
-      hzEll(c, 12.5, -72.6, 0.9, 0.6, '#5c3d00');   // Nasenloch
-      if (!j) { c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(16, -67); c.quadraticCurveTo(11.5, -66.4, 8.2, -68.8); c.stroke(); }   // schiefes Grinsen (Mundwinkel hinten hoch)
-      const glas = [[0.3, -75.2], [8.6, -75.4], [9, -72.2], [7, -69.4], [3.4, -69.6], [0.8, -71.8]];
-      const brilleAuf = !(pose === 'steh');
-      if (!brilleAuf) {   // Brille hochgeschoben: halb geschlossenes Auge + kantige Braue sichtbar
-        hzMandel(c, 4.6, -72.3, 3.1, '#d9a21b');
-        hzCel(c, [[-0.5, -75.2], [4.5, -76.6], [9.3, -75.4], [9, -74.3], [4.4, -75.1], [0, -74.1]], '#3b3631', '#3b3631', null, 0.8);
-        c.save(); c.translate(-1, -6.3); c.rotate(-0.06);
-        c.strokeStyle = '#b9922f'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(0.5, -74.5); c.lineTo(-8.5, -73); c.stroke();
-        hzGlas(c, glas, '#1b2638', '#7c96b8', '#e0bd63'); c.restore();
-      } else {
-        hzCel(c, [[-0.5, -76.4], [4.5, -77.8], [9.3, -76.6], [9, -75.5], [4.4, -76.3], [0, -75.3]], '#3b3631', '#3b3631', null, 0.8);   // Braue über dem Glas
-        c.strokeStyle = '#b9922f'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(0.4, -74.4); c.lineTo(-9, -72.6); c.moveTo(8.6, -74.6); c.lineTo(11.2, -74.6); c.stroke();   // Bügel + Steg
-        hzGlas(c, glas, k ? '#5a0610' : '#1b2638', k ? '#ff5a5a' : '#7c96b8', '#e0bd63', !k);
-      }
-      if (k && (o.kraft == null || o.kraft > 0)) {   // Laserstrahl durch das Glas
+      hzCel(c, [[2.5, -71], [7, -72.6], [12.5, -72.3], [16.8, -70], [18.8, -66.8], [18.2, -63.6], [16.4, -65.4], [14, -65], [6, -64.4], [2, -66.2]], gelb, gelbD, [[0, -67.5], [21, -68.5], [21, -60], [0, -60]], 1.5);
+      hzEll(c, 11.5, -69.8, 0.9, 0.6, '#5c3d00');   // Nasenloch
+      if (!j) { c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(16, -65.6); c.quadraticCurveTo(9, -65.4, 4, -67.6); c.stroke(); }   // schiefes Grinsen (Mundwinkel hinten hoch)
+      const gN = [[-6.6, -76], [2, -76.2], [2.4, -73.2], [0.6, -70.6], [-3.6, -70.6], [-6.2, -72.8]], gF = [[4.6, -76.4], [10, -76.6], [10.4, -73.8], [9.2, -71.2], [5.8, -71.2], [4.4, -73.2]];
+      const braue = (dy) => { hzCel(c, [[-6.8, -76.6 + dy], [-1.5, -78.2 + dy], [2.2, -77.2 + dy], [2, -76.2 + dy], [-1.6, -77 + dy], [-6.4, -75.6 + dy]], '#3b3631', '#3b3631', null, 0.8);
+        hzCel(c, [[4.6, -77.4 + dy], [7.6, -78.6 + dy], [10.6, -77.8 + dy], [10.4, -76.9 + dy], [7.6, -77.6 + dy], [4.8, -76.6 + dy]], '#3b3631', '#3b3631', null, 0.8); };
+      const brille = (rot, beam) => { c.strokeStyle = '#b9922f'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(-6.4, -75); c.lineTo(-11.5, -73.4); c.moveTo(2, -75.6); c.quadraticCurveTo(3.3, -76.6, 4.6, -75.8); c.stroke();
+        hzGlas(c, gN, rot ? '#5a0610' : '#1b2638', rot ? '#ff5a5a' : '#7c96b8', '#e0bd63', !beam); hzGlas(c, gF, rot ? '#5a0610' : '#1b2638', rot ? '#ff5a5a' : '#7c96b8', '#e0bd63', !beam); };
+      if (pose === 'steh') {   // Brille auf den Kopf geschoben: beide Augen halb geschlossen, kantige Brauen
+        hzMandel(c, -2, -73, 3.1, '#d9a21b'); hzMandel(c, 7.3, -73.4, 2.2, '#d9a21b'); braue(0);
+        c.save(); c.translate(0.5, -6); c.rotate(-0.05); brille(false, false); c.restore();
+      } else { braue(-0.6); brille(k, k); }
+      if (k && (o.kraft == null || o.kraft > 0)) {   // Laserstrahlen aus beiden Gläsern
         c.save(); c.globalCompositeOperation = 'lighter'; c.shadowColor = N; c.shadowBlur = 10;
-        const g = c.createLinearGradient(6, 0, 112, 0); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.12, 'rgba(255,50,60,.95)'); g.addColorStop(1, 'rgba(255,40,50,0)');
-        c.fillStyle = g; c.beginPath(); c.moveTo(6, -73.6); c.lineTo(112, -73); c.lineTo(112, -63); c.lineTo(6, -71); c.closePath(); c.fill();
-        c.fillStyle = 'rgba(255,255,255,.9)'; c.beginPath(); c.moveTo(6, -72.8); c.lineTo(90, -69.2); c.lineTo(6, -71.8); c.closePath(); c.fill();
-        c.restore(); hzFunke(c, 5.4, -72.4, 3 + Math.sin(t * 14) * 0.8, '#fff');
+        for (const [x0, y0, b] of [[-2, -73.4, 1], [7.4, -73.8, 0.8]]) {
+          const g = c.createLinearGradient(x0, 0, 112, 0); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.12, 'rgba(255,50,60,.9)'); g.addColorStop(1, 'rgba(255,40,50,0)');
+          c.fillStyle = g; c.beginPath(); c.moveTo(x0, y0 - 1.3 * b); c.lineTo(112, y0 + 0.5); c.lineTo(112, y0 + 9 * b); c.lineTo(x0, y0 + 1.3 * b); c.closePath(); c.fill();
+        }
+        c.fillStyle = 'rgba(255,255,255,.9)'; c.beginPath(); c.moveTo(7.4, -74.3); c.lineTo(90, -70.4); c.lineTo(7.4, -73.3); c.closePath(); c.fill();
+        c.restore(); hzFunke(c, -2, -73.4, 2.6 + Math.sin(t * 14) * 0.7, '#fff'); hzFunke(c, 7.4, -73.8, 2.2 + Math.cos(t * 14) * 0.6, '#fff');
       }
       c.restore();
       if (j) { arm(-11, zh, sh); arm(10, zv, sv); }   // Jubel: Arme nach dem Kopf
@@ -6378,28 +6383,93 @@
         for (let i = 0; i < 5; i++) { const w = Math.PI + 0.3 + i * 0.64 + Math.sin(t * 2 + i) * 0.08; hzFunke(c, 2 + Math.cos(w) * R, Math.sin(w) * R, 2.6, '#fff'); }
         c.restore(); }
     },
-    // Cody the Coyote – Super speed: sandfarben, hohe spitze Ohren, lange Schnauze, buschiger Schwanz, Orange; Kraft = Beinwirbel, Tempolinien (wie Leo)
+    // Cody the Coyote – Super speed (reifer Stil, Probe 2 7.11.): Kojote aus Arizona, Kopf in Dreiviertel-Ansicht (beide Augen, lange Schnauze nach rechts,
+    // hohe spitze Ohren), langer Staubmantel (Duster, flattert beim Laufen nach hinten), dunkles Shirt mit Aufnäher C, Halstuch in Neon-Orange, Jeans,
+    // Cowboystiefel (spitze Kappe, Absatz, Ziernaht); Sport-Sonnenbrille mit zwei Gläsern (steh: auf der Stirn); Kraft = Beinwirbel + Speed-Linien, Mantel weht
     cody(c, t, pose, o = {}) {
-      const j = pose === 'jubel', k = pose === 'kraft', fell = '#c9a27c', dunkel = '#a5805b', hell = '#f1e3cc', F = HELD_FARBE.cody;
-      hzUmhang(c, F, t, pose === 'lauf' || k, false);
-      c.save(); if (k) { c.translate(4, 0); c.rotate(0.18); }
-      c.save(); c.translate(-11, -28); c.rotate(0.95 + Math.sin(t * 3) * 0.1); hzEll(c, 0, 12, 5.5, 13, fell); hzEll(c, 0, 22, 4, 5, '#4a3a2a'); c.restore();   // buschiger Schwanz, dunkle Spitze
-      if (k) {   // Beinwirbel + Tempolinien
-        c.save(); c.translate(0, -12);
-        for (let i = 0; i < 6; i++) { c.save(); c.rotate(t * 30 + i * Math.PI / 3); c.globalAlpha = 0.45; hzRR(c, -4, 0, 8, 16, 4, fell); hzEll(c, 0, 16, 5.5, 3.2, dunkel); c.restore(); }
-        c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 2.5; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(0, 2, 15 + i * 4, 0.6 + i * 0.4, 2.6 + i * 0.4); c.stroke(); }
-        c.restore();
-        c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 2.2; for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(-30 - i * 3, -46 + i * 9); c.lineTo(-58 + (i % 2) * 8 + Math.sin(t * 20 + i) * 3, -46 + i * 9); c.stroke(); }
-      } else hzBeine(c, pose, t, 5, -22, 7.5, dunkel, fell, dunkel, 7, 3.5);
-      hzRR(c, -12, -54, 24, 38, 11, fell); hzEll(c, 0, -34, 8, 11, hell); hzRR(c, -14, -54, 28, 10, 5, '#1d3557'); hzWappen(c, 0, -40, F, 'C');
-      c.fillStyle = fell; c.beginPath(); c.moveTo(-10, -71); c.lineTo(-8, -89); c.lineTo(-1, -76); c.closePath(); c.moveTo(2, -77); c.lineTo(9, -90); c.lineTo(10, -71); c.closePath(); c.fill();   // hohe spitze Ohren
-      c.fillStyle = '#e8b59a'; c.beginPath(); c.moveTo(-7.8, -74); c.lineTo(-7, -84.5); c.lineTo(-3, -76); c.closePath(); c.moveTo(4, -77); c.lineTo(8.4, -85.5); c.lineTo(8.6, -74); c.closePath(); c.fill();
-      hzEll(c, 0, -67, 11, 10.5, fell); hzEll(c, 11, -63, 10, 4.6, fell, 0.12); hzEll(c, 12, -61.5, 8, 2.8, hell, 0.12); hzEll(c, 2, -61.5, 6, 3.6, hell);   // Kopf + lange Schnauze, helle Wange
-      hzEll(c, 20.5, -64.2, 2.4, 2, '#2a1a10');   // Nase an der Schnauzenspitze
-      c.strokeStyle = '#3a2210'; c.lineWidth = 1.3; c.lineCap = 'round'; c.beginPath(); c.moveTo(11.5, -60.6); c.quadraticCurveTo(14.5, -59, 17.5, -60.8); c.stroke();   // Mund auf der Schnauze
-      hzMaske(c, 0, -70, 10, F); hzAugen(c, 0, -70, 4.4, 2.3, k ? 1.3 : 1, j);
-      hzArme(c, pose, t, j ? 18 : 13, -50, 13, 11, 7, fell, 5, dunkel, k ? [[-1.0, -2.0], [1.3, 2.2]] : null);
+      const j = pose === 'jubel', k = pose === 'kraft', l = pose === 'lauf', N = '#ff7a1a', ND = '#c2500a', p = t * (k ? 26 : 13);
+      const fell = '#c99a68', fellD = '#94693f', hell = '#f0dfc4', mantel = '#6e4c31', mantelD = '#42291a', shirt = '#22252e', jeans = '#2b3446', jeansD = '#181e2a', stiefel = '#7b4a25', stiefelD = '#4d2c14';
+      const bob = l || k ? -Math.abs(Math.sin(p)) * 1.6 : j ? -Math.max(0, Math.sin(t * 7)) * 2.5 : 0, hy = -36 + bob;
+      const wind = k ? 1 : l ? 0.55 : 0.08, w = wind * (20 + Math.sin(t * (k ? 22 : 11)) * 4);   // wie weit der Mantel nach hinten weht
+      // Cowboystiefel am Knöchel (x, y = Boden), Spitze nach rechts
+      const boot = (x, y) => {
+        hzCel(c, [[x - 3.6, y - 11], [x + 3, y - 11], [x + 3.4, y - 4.6], [x + 7.5, y - 3.4], [x + 10.6, y - 1.6], [x + 10.2, y - 0.8], [x - 1.2, y - 0.8], [x - 4.6, y - 0.8], [x - 4.6, y - 5]], stiefel, stiefelD,
+          [[x - 6, y - 12], [x - 0.5, y - 12], [x + 1, y - 2.6], [x + 12, y - 2.2], [x + 12, y + 1], [x - 6, y + 1]], 1.4);
+        hzCel(c, [[x - 4.8, y - 1.2], [x - 1.4, y - 1.2], [x - 1.8, y], [x - 4.6, y]], stiefelD, stiefelD, null, 1.1);   // Absatz
+        c.strokeStyle = N; c.lineWidth = 0.8; c.lineCap = 'round'; c.beginPath(); c.moveTo(x - 2.4, y - 9.8); c.quadraticCurveTo(x + 0.4, y - 7, x - 0.6, y - 4.6); c.stroke();   // Ziernaht
+      };
+      let fh, fv;
+      if (l) { fh = [-2 + 13 * Math.sin(p), -Math.max(0, -Math.cos(p)) * 8]; fv = [2 + 13 * Math.sin(p + Math.PI), -Math.max(0, Math.cos(p)) * 8]; }
+      else if (j) { fh = [-6, bob * 0.6]; fv = [6, bob * 0.6]; }
+      else { fh = [-5, 0]; fv = [6, 0]; }
+      const bein = (hx, f) => { const g = hzIK(hx, hy, f[0], f[1] - 8, 15.5, 14, -1); hzGlied(c, g, 5.6, jeans, jeansD); boot(f[0], f[1]); };
+      const arm = (sx, ziel, s) => { const g = hzIK(sx, -55 + bob, ziel[0], ziel[1] + bob, 13, 12.5, s); hzGlied(c, g, 6, mantel, mantelD); hzFaust(c, g[2][0], g[2][1], 2.8, fell, fellD); return g[2]; };
+      // Duster: Rückenteil hinter den Beinen, Saum weht nach hinten (Wellen)
+      const saum = (x0, x1, y, n, ph) => { const q = []; for (let i = 0; i <= n; i++) { const f = i / n; q.push([x0 + (x1 - x0) * f, y + (i % 2 ? -3 : 0) + Math.sin(t * 14 + f * 6 + ph) * 1.5 * wind]); } return q; };
+      let zh, zv, sh = 1, sv = 1;
+      if (l || k) { const a = k ? 13 : 10; zh = [-11 + a * Math.sin(p), -42 - 5 * Math.abs(Math.cos(p))]; zv = [11 + a * Math.sin(p + Math.PI), -42 - 5 * Math.abs(Math.cos(p))]; }
+      else if (j) { zh = [-27, -80]; zv = [29, -79]; sh = 1; sv = 1; }
+      else { zh = [-12, -35]; zv = [6, -39]; sv = -1; }   // steh: Daumen im Gürtel
+      c.save();
+      if (k) c.rotate(0.14);   // Kraft: nach vorn gelehnt
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-11, -58], [7, -58], [8, -40], ...saum(9 - w * 0.5, -16 - w, -17 + w * 0.35, 6, 0), [-13, -40]], mantel, mantelD, [[-30 - w, -62], [8, -62], [8, -10], [-30 - w, -10]], 1.6);   // Rückenteil (Innenseite dunkel)
+      c.save(); c.translate(-9, -30); c.rotate(0.9 + Math.sin(t * 3) * 0.1 + wind * 0.4);   // buschiger Schwanz unter dem Mantel hervor
+      hzCel(c, [[-2.5, 0], [2.5, 0], [4.5, 9], [3, 16], [0, 19], [-3, 16], [-4.5, 9]], fell, fellD, [[-6, 4], [0, 4], [0, 22], [-6, 22]], 1.4); hzCel(c, [[-3, 15.5], [3, 15.5], [0, 19]], '#3a2a1c', '#3a2a1c', null, 1.2); c.restore();
       c.restore();
+      if (!j) arm(-10, zh, sh);
+      if (k) {   // Beinwirbel: Beine als Kreis aus Stiefeln + Wirbelbögen, Speed-Linien hinten
+        c.save(); c.translate(0, -15);
+        for (let i = 0; i < 6; i++) { c.save(); c.rotate(t * 30 + i * Math.PI / 3); c.globalAlpha = 0.5; hzGlied(c, [[0, 0], [0, 12]], 5, jeans, jeansD); c.translate(-1, 15.5); c.scale(0.7, 0.7); boot(0, 0); c.restore(); }
+        c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 2.4; c.lineCap = 'round'; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(0, 0, 13 + i * 4, 0.6 + i * 0.4 + t * 9, 2.6 + i * 0.4 + t * 9); c.stroke(); }
+        c.strokeStyle = N; c.lineWidth = 1.3; c.beginPath(); c.arc(0, 0, 21, 3.4 + t * 9, 4.6 + t * 9); c.stroke();
+        c.restore();
+      } else { bein(-3, fh); bein(3, fv); }
+      c.save(); c.translate(0, bob);
+      hzCel(c, [[-9, -58], [9, -58], [9.5, -37.5], [-9.5, -37.5]], shirt, '#121419', [[-14, -62], [-2, -62], [-3, -34], [-14, -34]], 1.4);   // Shirt
+      hzCel(c, [[-9.5, -40], [9.5, -40], [9.5, -37], [-9.5, -37]], '#3a2616', '#3a2616', null, 1.1); hzCel(c, [[0.5, -40.6], [4.5, -40.6], [4.5, -36.4], [0.5, -36.4]], '#d5dae3', '#8c939e', null, 1);   // Gürtel + Schnalle
+      hzPatch(c, 1.5, -48, 3, '#101219', N, 'C');
+      // Mantel-Vorderteile (offen), Saum weht nach hinten; Revers
+      hzCel(c, [[-12, -58.5], [-4, -58.5], [-3, -40], ...saum(-3 - w * 0.6, -15 - w * 0.9, -17 + w * 0.3, 3, 1), [-14, -40]], mantel, mantelD, [[-30 - w, -62], [-6, -62], [-7, -10], [-30 - w, -10]], 1.6);
+      hzCel(c, [[5.5, -58.5], [11, -58], [12, -40], ...saum(12 - w * 0.4, 7 - w * 1.1, -16.5 + w * 0.45, 2, 2), [7, -40]], mantel, mantelD, [[9, -62], [14, -62], [14, -10], [9, -10]], 1.6);
+      hzCel(c, [[-4, -58.5], [-0.5, -58], [-3, -49], [-5.5, -52]], mantelD, mantelD, null, 1.1); hzCel(c, [[5.5, -58.5], [9, -58], [8, -50], [6, -49]], mantelD, mantelD, null, 1.1);   // Revers
+      c.strokeStyle = '#9a7454'; c.lineWidth = 1; c.beginPath(); c.moveTo(-12.6, -50); c.lineTo(-4, -50.6); c.stroke();   // Schulterpasse (Cape-Kante des Dusters)
+      hzCel(c, [[-7, -60.5], [7, -60.5], [6.5, -57.5], [2.5, -52], [-1, -57.5], [-7, -57.5]], N, ND, [[-10, -58.5], [10, -58.5], [10, -50], [-10, -50]], 1.3);   // Halstuch (Neon-Orange)
+      c.restore();
+      if (!j) arm(9, zv, sv);
+      // Kopf in Dreiviertel-Ansicht: Ohren, Fell mit Wangenbüscheln, helle Gesichtspartie, lange Schnauze fest am Kopf
+      c.save(); c.translate(0, bob);
+      const ohrw = Math.sin(t * 3) * 0.6 - (k ? 2 : l ? 1 : 0);
+      hzCel(c, [[2.5, -77], [9 + ohrw, -91.5], [11.2, -72.5]], fell, fellD, [[8, -95], [14, -95], [14, -70], [8, -70]], 1.5); hzPfad(c, [[4.8, -77.5], [8.8 + ohrw, -87.5], [9.6, -75]]); c.fillStyle = '#e3b79a'; c.fill();   // hinteres Ohr
+      hzCel(c, [[-1, -59.5], [-6.5, -60.5], [-9, -62.5], [-12.5, -63.5], [-10, -66], [-12.5, -68.5], [-10.5, -71], [-9.5, -76], [-4, -80], [3, -80.5], [8, -78], [10.5, -73], [10.5, -66.5], [7.5, -61.5], [3, -59.5]], fell, fellD,
+        [[-16, -84], [-5, -84], [-4.5, -68], [3, -60], [3, -56], [-16, -56]]);
+      hzCel(c, [[-10, -72], [-9.5 + ohrw, -92], [-1.5, -79.5]], fell, fellD, [[-13, -95], [-6.5, -95], [-6.5, -70], [-13, -70]], 1.5); hzPfad(c, [[-8.3, -75.5], [-8.6 + ohrw, -87.8], [-3.6, -79.4]]); c.fillStyle = '#e3b79a'; c.fill();   // vorderes Ohr
+      hzPfad(c, [[-3, -66.5], [4, -69], [10, -67], [8.5, -61.5], [3, -60], [-2, -62.5]]); c.fillStyle = hell; c.fill();   // helle Gesichtspartie
+      if (j) {   // lacht: Maul offen
+        hzCel(c, [[3.5, -64.5], [18.5, -63.6], [15.5, -60], [5, -60.2]], hell, '#d4bd98', [[2, -62], [20, -62], [20, -57], [2, -57]], 1.3);
+        hzPfad(c, [[4, -65.5], [19.5, -65.3], [4.5, -62]]); c.fillStyle = '#5a1018'; c.fill(); hzEll(c, 13, -62.8, 2.6, 1.1, '#d5525e');
+      }
+      hzCel(c, [[2.5, -70.8], [8, -71.4], [14.5, -69.8], [20.5, -67.8], [21.2, -65.2], [19.5, -63.8], [12, -63.2], [4.5, -63.4], [1.8, -66.2]], fell, fellD, [[0, -66.6], [24, -66.2], [24, -60], [0, -60]], 1.5);   // lange Schnauze
+      hzPfad(c, [[4, -66.2], [19.5, -65.9], [19.2, -64.1], [12, -63.5], [4.5, -63.7]]); c.fillStyle = hell; c.fill();   // helle Unterseite
+      hzCel(c, [[18.6, -68.6], [21.8, -67.6], [22, -65.2], [19.4, -65.4]], '#1b1310', '#1b1310', null, 1);   // Nase an der Spitze
+      if (!j) { c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(19.6, -64.2); c.quadraticCurveTo(11, -63.8, 5.2, -66.4); c.stroke(); }   // schiefes Grinsen
+      const gN = [[-5.6, -75.6], [2.4, -75.2], [2.2, -72.2], [-1, -70.8], [-4.8, -72.2]], gF = [[4.6, -75.4], [11.2, -76.2], [10.8, -72.8], [8, -71.2], [4.9, -72.4]];
+      const brauen = (dy) => { hzCel(c, [[-5.6, -76.2 + dy], [-1.4, -77.8 + dy], [2.4, -76.8 + dy], [2.2, -75.9 + dy], [-1.4, -76.7 + dy], [-5.2, -75.3 + dy]], '#5a3e26', '#5a3e26', null, 0.8);
+        hzCel(c, [[4.6, -77 + dy], [7.8, -78.4 + dy], [10.8, -77.6 + dy], [10.6, -76.7 + dy], [7.8, -77.4 + dy], [4.8, -76.2 + dy]], '#5a3e26', '#5a3e26', null, 0.8); };
+      const brille = () => { c.strokeStyle = '#2b2d35'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-5.4, -74.4); c.lineTo(-10.5, -72.6); c.moveTo(2.4, -74.4); c.lineTo(4.6, -74.6); c.stroke();
+        hzGlas(c, gN, '#3a1300', '#ff9a3c', '#2b2d35'); hzGlas(c, gF, '#3a1300', '#ff9a3c', '#2b2d35'); };
+      if (pose === 'steh') {   // Brille auf der Stirn, beide Augen halb geschlossen
+        hzMandel(c, -1.6, -72.8, 3, '#e0a020'); hzMandel(c, 7.6, -73.2, 2.1, '#e0a020'); brauen(0);
+        c.save(); c.translate(0, -7.2); c.rotate(-0.04); brille(); c.restore();
+      } else { brauen(-1.2); brille(); }
+      c.restore();
+      if (j) { arm(-10, zh, sh); arm(9, zv, sv); }   // Jubel: Arme nach dem Kopf
+      c.restore();
+      if (k && (o.kraft == null || o.kraft > 0)) {   // Speed-Linien hinter ihm
+        c.lineCap = 'round'; for (let i = 0; i < 6; i++) { const y = -68 + i * 10, x0 = -18 - (i % 2) * 5 + Math.sin(t * 20 + i) * 2; c.strokeStyle = i % 3 === 1 ? N : 'rgba(255,255,255,.85)'; c.lineWidth = i % 3 === 1 ? 1.6 : 2.2;
+          c.beginPath(); c.moveTo(x0 - w * 0.3, y); c.lineTo(x0 - w * 0.3 - 14 - (i % 3) * 5, y); c.stroke(); }
+        for (let i = 0; i < 4; i++) { const f = (t * 2.2 + i * 0.25) % 1; c.globalAlpha = 1 - f; hzEll(c, -14 - f * 30, -3 - f * 6 - (i % 2) * 3, 3 + f * 4, 2 + f * 2, '#e8d2b0'); } c.globalAlpha = 1;   // Wüstenstaub
+      }
     },
     // Ally the Alligator – Water blast: grün, lange flache Schnauze mit Zähnen, Augenhöcker, Türkis; Kraft = Wasserstrahl aus beiden Händen spült einen Gegner weg
     ally(c, t, pose, o = {}) {
@@ -6599,12 +6669,13 @@
       hzArme(c, pose, t, j ? 17 : 12, -48, 11, 10, 4.5, '#4a4a55', 3.8, F, k ? [[1.55, 1.75], [1.55, 1.75]] : null);   // Kraft: Arme ausgebreitet (gleitet)
       c.restore();
     },
-    // Sunny the Songbird – Sound wave (reifer Stil, Probe 7.11.): Rotkardinal, Popstar, athletisch-schlank; Federschopf als hoher Pferdeschwanz mit Sidecut,
-    // schwarze Gesichtsmaske, Cat-Eye-Sonnenbrille, kurze Jacke (Anthrazit), Creolen, Headset-Mikro; Neon-Akzent Cyan; steh = Hand in der Hüfte, Brille im Schopf;
+    // Sunny the Songbird – Sound wave (reifer Stil, Probe 2 7.11.): Rotkardinal, Popstar, athletisch-schlank; Kopf in Dreiviertel-Ansicht (beide Augen, Schnabel
+    // nach rechts), Federschopf als hoher Pferdeschwanz mit Sidecut, schwarze Gesichtsmaske, Cat-Eye-Sonnenbrille mit zwei Gläsern, kurze Jacke (Anthrazit) mit
+    // rotem Kragen und roten Bündchen (mehr Kardinalrot, auch in Cameo-Größe), Creolen, Headset-Mikro; Neon-Akzent Cyan; steh = Hand in der Hüfte, Brille im Schopf;
     // Kraft = singt ins Headset: Schallwellen + Noten, ein kleiner Gegner tanzt davon (kompakt, ragt im Cameo nicht aus dem Bild)
     sunny(c, t, pose, o = {}) {
       const j = pose === 'jubel', k = pose === 'kraft', l = pose === 'lauf', N = '#25e8f5', p = t * 13;
-      const rot = '#d7263d', rotD = '#931225', jacke = '#2a2c38', jackeD = '#17181f', hose = '#2f3140', hoseD = '#1a1b24', gold = '#f2c84b', schnabel = '#f58a3a', schnabelD = '#c25a1c';
+      const rot = '#e3243e', rotD = '#9e1329', jacke = '#2a2c38', jackeD = '#17181f', hose = '#2f3140', hoseD = '#1a1b24', gold = '#f2c84b', schnabel = '#f58a3a', schnabelD = '#c25a1c';
       const bob = l ? -Math.abs(Math.sin(p)) * 1.6 : j ? -Math.max(0, Math.sin(t * 7)) * 2.5 : 0, hy = -36 + bob;
       let fh, fv;
       if (l) { fh = [-2 + 13 * Math.sin(p), -Math.max(0, -Math.cos(p)) * 8]; fv = [2 + 13 * Math.sin(p + Math.PI), -Math.max(0, Math.cos(p)) * 8]; }
@@ -6613,10 +6684,11 @@
       else { fh = [-1, 0]; fv = [5, 0]; }   // steh: Füße fast gekreuzt, Gewicht auf einem Bein
       const bein = (hx, f) => { const g = hzIK(hx, hy, f[0], f[1] - 5, 17, 16.5, -1); hzGlied(c, g, 4.8, hose, hoseD); hzSneaker(c, f[0], f[1], '#f2f3f6', '#b9bdc8', N, rot, 1.2); };
       const arm = (sx, ziel, s, hand = true) => { const g = hzIK(sx, -55 + bob, ziel[0], ziel[1] + bob, 12.5, 12, s); hzGlied(c, g, 4.6, jacke, jackeD);
-        if (hand) hzFaust(c, g[2][0], g[2][1], 2.4, rot, rotD); return g[2]; };
+        const [, [ex, ey], [hx2, hy2]] = g; c.lineCap = 'butt'; c.strokeStyle = rot; c.lineWidth = 4.2; c.beginPath(); c.moveTo(ex + (hx2 - ex) * 0.62, ey + (hy2 - ey) * 0.62); c.lineTo(ex + (hx2 - ex) * 0.86, ey + (hy2 - ey) * 0.86); c.stroke();   // rotes Bündchen
+        if (hand) hzFaust(c, hx2, hy2, 2.4, rot, rotD); return g[2]; };
       let zh, zv, sh = 1, sv = -1;
       if (l) { zh = [-9 + 9 * Math.sin(p), -41 - 5 * Math.abs(Math.cos(p))]; zv = [9 + 9 * Math.sin(p + Math.PI), -41 - 5 * Math.abs(Math.cos(p))]; sv = 1; }
-      else if (j) { zh = [-23, -79]; zv = [24, -78]; sh = 1; sv = -1; }
+      else if (j) { zh = [-24, -79]; zv = [27, -77]; sh = 1; sv = 1; }
       else if (k) { zh = [-6.5, -41]; zv = [21, -62]; sh = -1; sv = 1; }   // hintere Hand in der Hüfte, vordere Hand zum Publikum
       else { zh = [-10, -35]; zv = [6.5, -40]; sh = 1; sv = -1; }   // steh: vordere Hand in der Hüfte (Ellbogen nach außen)
       if (!j) arm(-8, zh, sh, !(k));
@@ -6625,43 +6697,43 @@
       c.save(); c.translate(0, bob);
       hzCel(c, [[-7, -42.5], [7, -42.5], [8, -36], [-8, -36]], hose, hoseD, [[-12, -44], [-1, -44], [-1, -34], [-12, -34]], 1.4);   // High-Waist-Hose
       c.strokeStyle = gold; c.lineWidth = 1.1; c.beginPath(); c.moveTo(-6.6, -41.6); c.lineTo(6.6, -41.6); c.stroke();   // Gürtel (Metall)
-      hzCel(c, [[-7, -59], [7, -59], [6, -47], [6.8, -42.5], [-6.8, -42.5], [-6, -47]], rot, rotD, [[-10, -62], [-1, -62], [-2, -40], [-10, -40]], 1.5);   // Federkörper (schlank, Taille)
+      hzCel(c, [[-7, -59], [7, -59], [6, -47], [6.8, -42.5], [-6.8, -42.5], [-6, -47]], rot, rotD, [[-10, -62], [-3, -62], [-3, -40], [-10, -40]], 1.5);   // Federkörper (schlank, Taille)
       hzCel(c, [[-9, -59.5], [8, -59.5], [10, -56], [8.5, -49], [3.5, -48.5], [2.5, -56], [-1, -56], [-2, -48.5], [-7.5, -49], [-11, -56]], jacke, jackeD, [[-14, -62], [-3, -62], [-3, -46], [-14, -46]]);   // kurze Jacke, offen
+      hzCel(c, [[-9.5, -59.8], [-1, -59.8], [-1.6, -56.6], [-4.5, -57.4], [-10.6, -56.4]], rot, rotD, null, 1.1); hzCel(c, [[2.5, -59.8], [8.5, -59.8], [9.6, -56.6], [3, -56.8]], rot, rotD, null, 1.1);   // roter Kragen
       c.strokeStyle = N; c.lineWidth = 1; c.beginPath(); c.moveTo(-7.3, -49.6); c.lineTo(-2.2, -49.2); c.moveTo(3.7, -49.2); c.lineTo(8.3, -49.6); c.stroke();   // Neon-Saum
-      hzPatch(c, -5, -54, 2.6, '#101219', N, 'S');
+      hzPatch(c, -5, -53.2, 2.6, '#101219', N, 'S');
       c.restore();
       if (!j && !k) arm(7, zv, sv);
-      // Kopf
+      // Kopf in Dreiviertel-Ansicht
       c.save(); c.translate(0, bob);
       hzCel(c, [[-3, -79], [1, -84.5], [-4, -86.5], [-12, -85.5], [-18.5, -81], [-21.5, -74], [-20, -66.5], [-17, -70.5], [-15.5, -76], [-8, -78]], rot, rotD, [[-24, -78], [-6, -86], [-6, -64], [-24, -64]]);   // Federschopf als hoher Pferdeschwanz
-      hzCel(c, [[0, -60], [-6, -61], [-9, -65], [-9, -73], [-5, -79], [2, -80.5], [7, -77.5], [9.5, -72.5], [9.5, -66], [7, -62]], rot, rotD, [[-13, -84], [-3, -84], [-1.5, -66], [12, -64.5], [12, -56], [-13, -56]]);
-      for (let i = 0; i < 3; i++) { c.strokeStyle = 'rgba(0,0,0,.45)'; c.lineWidth = 0.7; c.beginPath(); c.moveTo(-8.2 + i * 1.6, -73.5); c.lineTo(-7.3 + i * 1.6, -69); c.stroke(); }   // Sidecut (rasierte Linien)
-      hzCel(c, [[1, -74.2], [9.5, -74.5], [11, -68], [9.6, -63], [5, -62.2], [2.6, -65], [1, -70]], '#17171a', '#17171a', null, 1);   // schwarze Gesichtsmaske
+      hzCel(c, [[0, -60], [-6, -61], [-9.5, -65], [-9.5, -73], [-5.5, -79.5], [2, -81.5], [7.5, -78.5], [10.8, -73], [10.8, -66], [7.5, -62]], rot, rotD, [[-13, -84], [-5, -84], [-4.5, -66], [12, -64.5], [12, -56], [-13, -56]]);
+      for (let i = 0; i < 3; i++) { c.strokeStyle = 'rgba(0,0,0,.45)'; c.lineWidth = 0.7; c.beginPath(); c.moveTo(-8.6 + i * 1.5, -74); c.lineTo(-7.8 + i * 1.5, -69.5); c.stroke(); }   // Sidecut (rasierte Linien)
+      hzCel(c, [[-3.6, -74.6], [3, -75.2], [10.6, -75], [11.4, -68], [9.8, -62.8], [4, -61.8], [-1, -64.6], [-3.6, -69]], '#17171a', '#17171a', null, 1);   // schwarze Gesichtsmaske um beide Augen
       if (j || k) {   // singt / lacht: Schnabel offen
-        hzCel(c, [[9, -66.6], [14.5, -66], [12.3, -63.6], [8.6, -63.6]], schnabel, schnabelD, [[6, -65], [17, -65], [17, -60], [6, -60]], 1.3);
-        hzPfad(c, [[9, -68.2], [15.6, -68.2], [9, -64.6]]); c.fillStyle = '#4a0c14'; c.fill();
-        hzCel(c, [[8.5, -71.5], [13, -70.5], [16.8, -68.4], [9, -67.8]], schnabel, schnabelD, [[6, -69.2], [18, -69.2], [18, -66], [6, -66]], 1.4);
+        hzCel(c, [[3, -66.6], [15, -66], [12.5, -63], [4, -63]], schnabel, schnabelD, [[1, -64.8], [17, -64.8], [17, -60], [1, -60]], 1.3);
+        hzPfad(c, [[3.4, -68], [16.2, -68], [3.6, -64.4]]); c.fillStyle = '#4a0c14'; c.fill();
+        hzCel(c, [[2.5, -71], [8, -71.8], [13.5, -70.6], [17.6, -68.2], [3, -67.6]], schnabel, schnabelD, [[1, -69.2], [19, -69.2], [19, -66], [1, -66]], 1.4);
       } else {
-        hzCel(c, [[8.5, -71], [13, -70], [16.8, -67], [13, -65], [8.5, -64.5]], schnabel, schnabelD, [[6, -67.4], [18, -67.4], [18, -62], [6, -62]], 1.4);
-        c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.1; c.lineCap = 'round'; c.beginPath(); c.moveTo(15.2, -67.2); c.quadraticCurveTo(12, -66.7, 9, -68.4); c.stroke();   // schiefes Grinsen
+        hzCel(c, [[2.5, -70.2], [8, -71.2], [13.5, -69.6], [17.6, -66.8], [13.5, -64.6], [7, -63.8], [2.5, -65.5]], schnabel, schnabelD, [[0, -67.2], [19, -67.2], [19, -61], [0, -61]], 1.4);
+        c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.1; c.lineCap = 'round'; c.beginPath(); c.moveTo(15.8, -66.8); c.quadraticCurveTo(9, -66.6, 3.6, -68.6); c.stroke();   // schiefes Grinsen
       }
-      // Creole (Gold, metallisch) + Headset mit Mikro-Bügel
-      c.strokeStyle = HZ_KONTUR; c.lineWidth = 2.1; c.beginPath(); c.arc(-4.5, -62.6, 2.5, 0, Math.PI * 2); c.stroke(); c.strokeStyle = gold; c.lineWidth = 1; c.stroke();
-      hzCel(c, [[-6.2, -70.5], [-2.8, -70.5], [-2.8, -66.4], [-6.2, -66.4]], '#26272e', '#26272e', null, 1); hzEll(c, -4.5, -68.5, 0.8, 0.8, N);
-      c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.9; c.beginPath(); c.moveTo(-3, -67); c.quadraticCurveTo(1, -61.5, 8.2, -62); c.stroke(); c.strokeStyle = '#9aa1ad'; c.lineWidth = 0.8; c.stroke();
-      hzEll(c, 8.6, -62, 1.5, 1.2, '#26272e'); hzEll(c, 8.9, -62.2, 0.5, 0.5, N);
-      const glas = [[-1.8, -76.2], [1.2, -74.8], [8.8, -75], [9.2, -72.6], [7.4, -70], [3.4, -70.1], [1.3, -72]];
-      if (pose === 'steh') {   // Brille im Schopf, halb geschlossenes Auge mit Lidstrich-Spitze, kantige Braue
-        hzMandel(c, 5, -71.8, 2.9, '#5a2a16');
-        c.strokeStyle = HZ_KONTUR; c.lineWidth = 1; c.beginPath(); c.moveTo(2.2, -71.9); c.lineTo(0.4, -73.3); c.stroke();
-        hzCel(c, [[0.8, -75.6], [5, -76.8], [9.2, -75.6], [9, -74.7], [4.8, -75.5], [1.1, -74.7]], '#17171a', '#17171a', null, 0.7);
-        c.save(); c.translate(-2.2, -8.2); c.rotate(-0.1); c.strokeStyle = gold; c.lineWidth = 0.9; c.beginPath(); c.moveTo(-1.5, -75); c.lineTo(-9, -72.5); c.stroke();
-        hzGlas(c, glas, '#2a0b2c', '#c2427a', gold); c.restore();
-      } else {
-        c.strokeStyle = gold; c.lineWidth = 0.9; c.beginPath(); c.moveTo(-1.5, -75); c.lineTo(-7.5, -72); c.stroke();
-        hzGlas(c, glas, '#2a0b2c', '#c2427a', gold);
-        hzCel(c, [[0.8, -77.2], [5, -78.4], [9.2, -77.2], [9, -76.3], [4.8, -77.1], [1.1, -76.3]], '#17171a', '#17171a', null, 0.7);
-      }
+      // Creole (Gold, metallisch) + Headset mit Mikro-Bügel (hinten am Kopf)
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 2.1; c.beginPath(); c.arc(-6.6, -62.4, 2.5, 0, Math.PI * 2); c.stroke(); c.strokeStyle = gold; c.lineWidth = 1; c.stroke();
+      hzCel(c, [[-8.4, -70.5], [-5, -70.5], [-5, -66.4], [-8.4, -66.4]], '#26272e', '#26272e', null, 1); hzEll(c, -6.7, -68.5, 0.8, 0.8, N);
+      c.strokeStyle = HZ_KONTUR; c.lineWidth = 1.9; c.beginPath(); c.moveTo(-5.2, -67); c.quadraticCurveTo(-1, -60.8, 6.5, -61.4); c.stroke(); c.strokeStyle = '#9aa1ad'; c.lineWidth = 0.8; c.stroke();
+      hzEll(c, 7, -61.4, 1.5, 1.2, '#26272e'); hzEll(c, 7.3, -61.6, 0.5, 0.5, N);
+      const gN = [[-5, -76.8], [-2, -74.8], [2.4, -75], [2.6, -72.4], [1.2, -70.2], [-2, -70.2], [-3.9, -72.2]], gF = [[5, -75.2], [9.6, -75.4], [11.8, -77.4], [11.3, -72.6], [9.6, -70.4], [6, -70.4], [4.8, -72.4]];
+      const brauen = (dy) => { hzCel(c, [[-3.4, -76 + dy], [0, -77.3 + dy], [2.6, -76.6 + dy], [2.4, -75.7 + dy], [0, -76.4 + dy], [-3.2, -75.2 + dy]], '#17171a', '#17171a', null, 0.7);
+        hzCel(c, [[5, -76.7 + dy], [7.6, -77.7 + dy], [10.2, -77 + dy], [10, -76.2 + dy], [7.6, -76.8 + dy], [5.2, -75.9 + dy]], '#17171a', '#17171a', null, 0.7); };
+      const brille = () => { c.strokeStyle = gold; c.lineWidth = 0.9; c.beginPath(); c.moveTo(-4.5, -74.6); c.lineTo(-9.2, -72.4); c.moveTo(2.6, -74.2); c.quadraticCurveTo(3.7, -75.2, 4.9, -74.4); c.stroke();
+        hzGlas(c, gN, '#2a0b2c', '#c2427a', gold); hzGlas(c, gF, '#2a0b2c', '#c2427a', gold); };
+      if (pose === 'steh') {   // Brille im Schopf, beide Augen halb geschlossen mit Lidstrich-Spitze, kantige Brauen
+        hzMandel(c, -0.4, -72.4, 2.8, '#5a2a16'); hzMandel(c, 7.6, -72.7, 2, '#5a2a16');
+        c.strokeStyle = HZ_KONTUR; c.lineWidth = 1; c.beginPath(); c.moveTo(-3.1, -72.4); c.lineTo(-4.8, -73.8); c.moveTo(9.5, -73.6); c.lineTo(11, -74.8); c.stroke();
+        brauen(0);
+        c.save(); c.translate(-3.5, -8.6); c.rotate(-0.1); brille(); c.restore();
+      } else { brille(); brauen(-1.4); }
       c.restore();
       if (k) { arm(7, zv, sv); }
       if (j) { arm(-8, zh, sh); arm(7, zv, sv); }   // Jubel: Arme nach dem Kopf

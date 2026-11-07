@@ -1,9 +1,49 @@
 // AUTOMATISCH ERZEUGT von werkzeuge/franz_bauen.py aus inhalte/franz/ – hier nicht ändern.
 window.DATEN_FR = {
  "runner": {
-  "alex": {},
-  "boss": {},
-  "cameo": {}
+  "alex": {
+   "fr_start_1": "audio/runner/fr_start_1.mp3",
+   "fr_start_2": "audio/runner/fr_start_2.mp3",
+   "fr_combo3_1": "audio/runner/fr_combo3_1.mp3",
+   "fr_combo3_2": "audio/runner/fr_combo3_2.mp3",
+   "fr_combo5_1": "audio/runner/fr_combo5_1.mp3",
+   "fr_combo5_2": "audio/runner/fr_combo5_2.mp3",
+   "fr_combo8_1": "audio/runner/fr_combo8_1.mp3",
+   "fr_combo8_2": "audio/runner/fr_combo8_2.mp3",
+   "fr_tore3_1": "audio/runner/fr_tore3_1.mp3",
+   "fr_leben_1": "audio/runner/fr_leben_1.mp3",
+   "fr_leben_2": "audio/runner/fr_leben_2.mp3",
+   "fr_letztes_1": "audio/runner/fr_letztes_1.mp3",
+   "fr_halb_1": "audio/runner/fr_halb_1.mp3",
+   "fr_halb_2": "audio/runner/fr_halb_2.mp3",
+   "fr_boss_1": "audio/runner/fr_boss_1.mp3",
+   "fr_ende_1": "audio/runner/fr_ende_1.mp3",
+   "fr_ende_2": "audio/runner/fr_ende_2.mp3",
+   "fr_fail_1": "audio/runner/fr_fail_1.mp3",
+   "fr_saute_1": "audio/runner/fr_saute_1.mp3",
+   "fr_attention_1": "audio/runner/fr_attention_1.mp3",
+   "fr_gauche_1": "audio/runner/fr_gauche_1.mp3",
+   "fr_vite_1": "audio/runner/fr_vite_1.mp3"
+  },
+  "boss": {
+   "banner": "audio/runner/paris_banner.mp3",
+   "richtig": "audio/runner/paris_richtig.mp3",
+   "falsch": "audio/runner/paris_falsch.mp3"
+  },
+  "cameo": {
+   "lucie": "audio/runner/cameo_lucie.mp3",
+   "gaspard": "audio/runner/cameo_gaspard.mp3",
+   "bruno": "audio/runner/cameo_bruno.mp3",
+   "chloe": "audio/runner/cameo_chloe.mp3",
+   "camille": "audio/runner/cameo_camille.mp3",
+   "robin": "audio/runner/cameo_robin.mp3",
+   "coco": "audio/runner/cameo_coco.mp3",
+   "pierre": "audio/runner/cameo_pierre.mp3",
+   "horace": "audio/runner/cameo_horace.mp3",
+   "hector": "audio/runner/cameo_hector.mp3"
+  },
+  "start": "audio/runner/paris_start.mp3",
+  "ende": "audio/runner/paris_ende.mp3"
  },
  "dialoge": [
   {
@@ -4161,127 +4201,127 @@ window.DATEN_FR = {
     "fr": "le foot",
     "de": "Fußball",
     "symbol": "⚽",
-    "audio": null
+    "audio": "audio/dialoge/alex_c9af527d4b.mp3"
    },
    {
     "fr": "le basket",
     "de": "Basketball",
     "symbol": "🏀",
-    "audio": null
+    "audio": "audio/dialoge/alex_7c71f40456.mp3"
    },
    {
     "fr": "le tennis",
     "de": "Tennis",
     "symbol": "🎾",
-    "audio": null
+    "audio": "audio/dialoge/alex_7c7e6f9102.mp3"
    },
    {
     "fr": "le sport",
     "de": "Sport",
     "symbol": "🏃",
-    "audio": null
+    "audio": "audio/dialoge/alex_2c1952ec97.mp3"
    },
    {
     "fr": "la musique",
     "de": "Musik",
     "symbol": "🎵",
-    "audio": null
+    "audio": "audio/dialoge/alex_2a1c74ed97.mp3"
    },
    {
     "fr": "chanter",
     "de": "singen",
     "symbol": "🎤",
-    "audio": null
+    "audio": "audio/dialoge/alex_65fdd85287.mp3"
    },
    {
     "fr": "danser",
     "de": "tanzen",
     "symbol": "💃",
-    "audio": null
+    "audio": "audio/dialoge/alex_39271b71f1.mp3"
    },
    {
     "fr": "la console",
     "de": "die Konsole",
     "symbol": "🎮",
-    "audio": null
+    "audio": "audio/dialoge/alex_ae125d9121.mp3"
    },
    {
     "fr": "dessiner",
     "de": "zeichnen",
     "symbol": "✏️",
-    "audio": null
+    "audio": "audio/dialoge/alex_195a028517.mp3"
    },
    {
     "fr": "nager",
     "de": "schwimmen",
     "symbol": "🏊",
-    "audio": null
+    "audio": "audio/dialoge/alex_f05f0d0426.mp3"
    },
    {
     "fr": "lire",
     "de": "lesen",
     "symbol": "📖",
-    "audio": null
+    "audio": "audio/dialoge/alex_6c9a6ebfe9.mp3"
    },
    {
     "fr": "les devoirs",
     "de": "die Hausaufgaben",
     "symbol": "📚",
-    "audio": null
+    "audio": "audio/dialoge/alex_a2a3f1d7fe.mp3"
    },
    {
     "fr": "la télé",
     "de": "das Fernsehen",
     "symbol": "📺",
-    "audio": null
+    "audio": "audio/dialoge/alex_e933175877.mp3"
    },
    {
     "fr": "le cinéma",
     "de": "das Kino",
     "symbol": "🎬",
-    "audio": null
+    "audio": "audio/dialoge/alex_c74fc47d47.mp3"
    },
    {
     "fr": "les animaux",
     "de": "die Tiere",
     "symbol": "🐶",
-    "audio": null
+    "audio": "audio/dialoge/alex_98b725e3b0.mp3"
    },
    {
     "fr": "les vacances",
     "de": "die Ferien",
     "symbol": "🏖️",
-    "audio": null
+    "audio": "audio/dialoge/alex_067b62c145.mp3"
    },
    {
     "fr": "l'école",
     "de": "die Schule",
     "symbol": "🏫",
-    "audio": null
+    "audio": "audio/dialoge/alex_1efef53cab.mp3"
    },
    {
     "fr": "cuisiner",
     "de": "kochen",
     "symbol": "🍳",
-    "audio": null
+    "audio": "audio/dialoge/alex_1f3062f790.mp3"
    },
    {
     "fr": "faire du vélo",
     "de": "Rad fahren",
     "symbol": "🚲",
-    "audio": null
+    "audio": "audio/dialoge/alex_51c42a2265.mp3"
    },
    {
     "fr": "jouer au foot",
     "de": "Fußball spielen",
     "symbol": "⚽",
-    "audio": null
+    "audio": "audio/dialoge/alex_d0e5ca1318.mp3"
    },
    {
     "fr": "jouer à la console",
     "de": "Konsole spielen",
     "symbol": "🎮",
-    "audio": null
+    "audio": "audio/dialoge/alex_b88bd61035.mp3"
    }
   ],
   "zahl": [
@@ -4289,49 +4329,49 @@ window.DATEN_FR = {
     "fr": "dix",
     "de": "zehn",
     "symbol": "🔟",
-    "audio": null
+    "audio": "audio/dialoge/alex_c58afec95f.mp3"
    },
    {
     "fr": "onze",
     "de": "elf",
     "symbol": "",
-    "audio": null
+    "audio": "audio/dialoge/alex_e1d4293b1d.mp3"
    },
    {
     "fr": "douze",
     "de": "zwölf",
     "symbol": "",
-    "audio": null
+    "audio": "audio/dialoge/alex_b6c8093a10.mp3"
    },
    {
     "fr": "treize",
     "de": "dreizehn",
     "symbol": "",
-    "audio": null
+    "audio": "audio/dialoge/alex_c4f0392c56.mp3"
    },
    {
     "fr": "quatorze",
     "de": "vierzehn",
     "symbol": "",
-    "audio": null
+    "audio": "audio/dialoge/alex_827e2243ec.mp3"
    },
    {
     "fr": "quinze",
     "de": "fünfzehn",
     "symbol": "",
-    "audio": null
+    "audio": "audio/dialoge/alex_7dcd875e17.mp3"
    },
    {
     "fr": "seize",
     "de": "sechzehn",
     "symbol": "",
-    "audio": null
+    "audio": "audio/dialoge/alex_e0a95b055b.mp3"
    },
    {
     "fr": "vingt",
     "de": "zwanzig",
     "symbol": "",
-    "audio": null
+    "audio": "audio/dialoge/alex_d27a2f71c4.mp3"
    }
   ],
   "adj": [
@@ -4339,73 +4379,73 @@ window.DATEN_FR = {
     "fr": "super",
     "de": "super",
     "symbol": "👍",
-    "audio": null
+    "audio": "audio/dialoge/alex_2cc6c15ddd.mp3"
    },
    {
     "fr": "cool",
     "de": "cool",
     "symbol": "😎",
-    "audio": null
+    "audio": "audio/dialoge/alex_3dc8b2ede7.mp3"
    },
    {
     "fr": "génial",
     "de": "genial",
     "symbol": "🤩",
-    "audio": null
+    "audio": "audio/dialoge/alex_3f397be811.mp3"
    },
    {
     "fr": "nul",
     "de": "doof",
     "symbol": "👎",
-    "audio": null
+    "audio": "audio/dialoge/alex_e96f5e8e58.mp3"
    },
    {
     "fr": "drôle",
     "de": "witzig",
     "symbol": "😂",
-    "audio": null
+    "audio": "audio/dialoge/alex_8c27ff0f4e.mp3"
    },
    {
     "fr": "bien",
     "de": "gut",
     "symbol": "🙂",
-    "audio": null
+    "audio": "audio/dialoge/alex_641cbc6be2.mp3"
    },
    {
     "fr": "bon",
     "de": "gut",
     "symbol": "👌",
-    "audio": null
+    "audio": "audio/dialoge/alex_82ac059d4d.mp3"
    },
    {
     "fr": "vrai",
     "de": "wahr",
     "symbol": "✅",
-    "audio": null
+    "audio": "audio/dialoge/alex_828c83054c.mp3"
    },
    {
     "fr": "facile",
     "de": "leicht",
     "symbol": "🪶",
-    "audio": null
+    "audio": "audio/dialoge/alex_61faef69ce.mp3"
    },
    {
     "fr": "difficile",
     "de": "schwer",
     "symbol": "🧱",
-    "audio": null
+    "audio": "audio/dialoge/alex_c464811c74.mp3"
    },
    {
     "fr": "nouveau",
     "de": "neu",
     "symbol": "✨",
-    "audio": null
+    "audio": "audio/dialoge/alex_0adecd9ed4.mp3"
    },
    {
     "fr": "incroyable",
     "de": "unglaublich",
     "symbol": "😮",
-    "audio": null
+    "audio": "audio/dialoge/alex_3629f5f690.mp3"
    }
   ],
   "chant": [
@@ -4413,25 +4453,25 @@ window.DATEN_FR = {
     "fr": "bien",
     "de": "gut",
     "symbol": "🎶",
-    "audio": null
+    "audio": "audio/dialoge/alex_641cbc6be2.mp3"
    },
    {
     "fr": "très bien",
     "de": "sehr gut",
     "symbol": "🌟",
-    "audio": null
+    "audio": "audio/dialoge/alex_d0a5f2d14b.mp3"
    },
    {
     "fr": "très mal",
     "de": "sehr schlecht",
     "symbol": "🙉",
-    "audio": null
+    "audio": "audio/dialoge/alex_a46fa50440.mp3"
    },
    {
     "fr": "comme Angèle",
     "de": "wie Angèle",
     "symbol": "🎤",
-    "audio": null
+    "audio": "audio/dialoge/alex_93bec9f337.mp3"
    }
   ],
   "name": [
@@ -4439,37 +4479,37 @@ window.DATEN_FR = {
     "fr": "Mbappé",
     "de": "Mbappé",
     "symbol": "⚽",
-    "audio": null
+    "audio": "audio/dialoge/alex_36c32ca934.mp3"
    },
    {
     "fr": "Angèle",
     "de": "Angèle",
     "symbol": "🎤",
-    "audio": null
+    "audio": "audio/dialoge/alex_3fa12af78c.mp3"
    },
    {
     "fr": "Monsieur Alex",
     "de": "Monsieur Alex",
     "symbol": "👨‍🏫",
-    "audio": null
+    "audio": "audio/dialoge/alex_da9c639850.mp3"
    },
    {
     "fr": "Kanté",
     "de": "Kanté",
     "symbol": "⚽",
-    "audio": null
+    "audio": "audio/dialoge/alex_cf020ab596.mp3"
    },
    {
     "fr": "Marie",
     "de": "Marie",
     "symbol": "🙂",
-    "audio": null
+    "audio": "audio/dialoge/alex_878da4dd77.mp3"
    },
    {
     "fr": "Lucas",
     "de": "Lucas",
     "symbol": "🙂",
-    "audio": null
+    "audio": "audio/dialoge/alex_25c64e1e35.mp3"
    }
   ]
  },

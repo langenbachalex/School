@@ -107,7 +107,13 @@ def main():
         a, b = f"audio/paris/{z['id']}.mp3", f"bilder/paris/{z['id']}.jpg"
         paris.append({"id": z["id"], "name": z["name"], "symbol": z["symbol"], "x": int(z["x"]), "y": int(z["y"]), "fr": z["fr"], "de": z["de"],
                       "audio": a if vorhanden(a) else None, "foto": b if vorhanden(b) else None, "quelle": pquellen.get(z["id"]) if vorhanden(b) else None})
-    daten = {"dialoge": list(dialoge.values()), "paris": paris, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    # Superhelden (Stufe 3, 7.11.2026): gezeichnet in der Runner-Engine (HELDEN_ZEICHNUNG, Filme held_<id>), Stimme je Held audio/helden/intro_<id>.mp3
+    helden = []
+    for z in tsv("helden.tsv"):
+        a = f"audio/helden/intro_{z['id']}.mp3"
+        helden.append({"id": z["id"], "name": z["name"], "symbol": z["symbol"], "kraft": z["kraft"], "kraft_de": z["kraft_de"], "wendung": z["wendung"],
+                       "intro": z["intro_fr"], "intro_de": z["intro_de"], "audio": a if vorhanden(a) else None})
+    daten = {"dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:
@@ -145,8 +151,8 @@ self.addEventListener("fetch", (e) => {{
   e.respondWith(caches.match(e.request, {{ ignoreSearch: true }}).then((r) => r || fetch(e.request)));
 }});
 """)
-    fehlt = sum(1 for d in dialoge.values() for z in d["zeilen"] if not z["audio"]) + sum(1 for n in namen if not n["audio"]) + sum(1 for p in paris if not p["audio"])
-    print(f"daten_fr.js: {len(dialoge)} Dialoge, {len(namen)} Namen, {len(beats)} Beats, {len(paris)} Paris-Orte · fehlende Audios: {fehlt} · Offline-Dateien: {len(dateien)}")
+    fehlt = sum(1 for d in dialoge.values() for z in d["zeilen"] if not z["audio"]) + sum(1 for n in namen if not n["audio"]) + sum(1 for p in paris if not p["audio"]) + sum(1 for h in helden if not h["audio"])
+    print(f"daten_fr.js: {len(dialoge)} Dialoge, {len(namen)} Namen, {len(beats)} Beats, {len(paris)} Paris-Orte, {len(helden)} Helden · fehlende Audios: {fehlt} · Offline-Dateien: {len(dateien)}")
 
 
 if __name__ == "__main__":

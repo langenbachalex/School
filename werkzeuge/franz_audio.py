@@ -18,8 +18,10 @@ TAGS = [(re.compile(r"^Ha ha"), "[laughs] Ha ha"), (re.compile(r"« La la la laa
 
 
 def sprechen(stimme, text, ziel):
-    body = json.dumps({"text": text, "model_id": "eleven_v4", "language_code": "fr", "voice_settings": EINSTELLUNG}).encode()
-    req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{STIMMEN[stimme]}?output_format=mp3_44100_128",
+    # Helden (7.11.): eigene Stimme je Held (Voice-ID direkt aus helden.tsv), Stabilität 0,3 wie die Klasse-6-Helden
+    held = stimme.startswith("held:")
+    body = json.dumps({"text": text, "model_id": "eleven_v4", "language_code": "fr", "voice_settings": {"stability": 0.3, "similarity_boost": 0.75} if held else EINSTELLUNG}).encode()
+    req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{stimme[5:] if held else STIMMEN[stimme]}?output_format=mp3_44100_128",
                                  data=body, headers={"Content-Type": "application/json", "xi-api-key": "dummy"})
     with urllib.request.urlopen(req, timeout=120) as r:
         daten = r.read()
@@ -38,6 +40,8 @@ def auftraege():
         yield "alex", "[French] " + z["name"] + ".", f"audio/namen/{z['id']}.mp3"  # 7.11. (Mr. Alex): Tag [French] erzwingt französische Aussprache (sonst z. B. „Kylian“ englisch)
     for z in fb.tsv("paris.tsv"):  # Paris-Karte: Text des Orts, Mr. Alex' Stimme (römische Zahl ausgeschrieben)
         yield "alex", "[French] " + z["fr"].replace("Louis XIV", "Louis quatorze"), f"audio/paris/{z['id']}.mp3"
+    for z in fb.tsv("helden.tsv"):  # Superhelden: Selbstvorstellung mit Tag passend zum Charakter
+        yield "held:" + z["stimme"], f"{z['tags']} {z['intro_fr']}", f"audio/helden/intro_{z['id']}.mp3"
 
 
 def main():

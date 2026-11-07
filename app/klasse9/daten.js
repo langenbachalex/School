@@ -9202,7 +9202,7 @@ window.DATEN = {
     "fakt": "The Mississippi River is one of the longest rivers in North America. It is about 3,700 kilometers long. It flows from Minnesota all the way to the sea in Louisiana.",
     "audio": "audio/staaten/MS.mp3",
     "foto": "bilder/staaten/MS.jpg",
-    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
+    "foto_quelle": "Foto: Ricky Idlett, CC BY 4.0, Wikimedia Commons"
    },
    {
     "id": "AL",

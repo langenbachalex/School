@@ -1,6 +1,6 @@
 # Quellen der Staaten-Fotos (Klasse 9, USA-Karte)
 
-Kleine Fotos am Ende der Staaten-Szenen. Meist aus dem Carol M. Highsmith Archive der Library of Congress (Prints and Photographs Division), gemeinfrei (no known restrictions on publication), über die loc.gov-JSON-API gesucht, auf 400 px Breite verkleinert, JPEG-Qualität 70. Einzelne Motive (7.11.: AR) von Wikimedia Commons, freie Lizenz wie angegeben; Kurzzeile dann „Foto: Urheber, Lizenz, Wikimedia Commons“.
+Kleine Fotos am Ende der Staaten-Szenen. Meist aus dem Carol M. Highsmith Archive der Library of Congress (Prints and Photographs Division), gemeinfrei (no known restrictions on publication), über die loc.gov-JSON-API gesucht, auf 400 px Breite verkleinert, JPEG-Qualität 70. Einzelne Motive (7.11.: AR, MS) von Wikimedia Commons, freie Lizenz wie angegeben; Kurzzeile dann „Foto: Urheber, Lizenz, Wikimedia Commons“.
 Kurzzeile in der App: „Foto: Carol M. Highsmith, Library of Congress (public domain)“. Daten für den Build: `inhalte/klasse9/staaten_fotos.tsv`.
 
 | Datei | Titel (LOC) | Fotografin | Lizenz | Größe | Link |
@@ -40,7 +40,6 @@ Kurzzeile in der App: „Foto: Carol M. Highsmith, Library of Congress (public d
 | TN.jpg | Gates, Graceland, Memphis, Tennessee | Carol M. Highsmith | public domain | 400x233, 29 KB | http://www.loc.gov/item/2010630456/ |
 | GA.jpg | Sea of peach trees in a vast orchard near Trenton, South Carolina. Neighboring Georgia, the "Peach S | Carol M. Highsmith | public domain | 400x266, 16 KB | http://www.loc.gov/item/2017880006/ |
 | LA.jpg | Mardi Gras Parade, New Orleans, Louisiana | Carol M. Highsmith | public domain | 400x266, 28 KB | http://www.loc.gov/item/2011646934/ |
-| MS.jpg | Mississippi River at Natchez, Mississippi | Carol M. Highsmith | public domain | 400x323, 15 KB | http://www.loc.gov/item/2011630722/ |
 | AL.jpg | The U.S. Space & Rocket Center, Huntsville, Alabama | Carol M. Highsmith | public domain | 400x272, 21 KB | http://www.loc.gov/item/2010639638/ |
 | AR.jpg | Digging For Diamonds (2245556315).jpg (Wikimedia Commons) | Doug Wertman | CC BY 2.0 | 400x296, 28 KB | https://commons.wikimedia.org/wiki/File:Digging_For_Diamonds_(2245556315).jpg |
 | SC.jpg | Walls of Fort Sumter, [Charleston, South Carolina] | Carol M. Highsmith | public domain | 400x310, 24 KB | http://www.loc.gov/item/2011630916/ |
@@ -55,3 +54,4 @@ Kurzzeile in der App: „Foto: Carol M. Highsmith, Library of Congress (public d
 | VT.jpg | Farmer Burr Morse collects maple syrup from one of his thousands of trees in Montpelier, Vermont | Carol M. Highsmith | public domain | 400x499, 40 KB | http://www.loc.gov/item/2011631238/ |
 | NH.jpg | Mount Washington cog railway, New Hampshire | Carol M. Highsmith | public domain | 400x321, 26 KB | http://www.loc.gov/item/2011630192/ |
 | ME.jpg | Portland Head Lighthouse, Cape Elizabeth, Maine | Carol M. Highsmith | public domain | 400x317, 18 KB | http://www.loc.gov/item/2011630354/ |
+| MS.jpg | American Queen Steamboat at Natchez Under the Hill.jpg (Wikimedia Commons) | Ricky Idlett | CC BY 4.0 | 400x232, 21 KB | https://commons.wikimedia.org/wiki/File:American_Queen_Steamboat_at_Natchez_Under_the_Hill.jpg |

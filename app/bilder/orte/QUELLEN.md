@@ -28,3 +28,5 @@ Kurzzeile in der App: „Foto: Urheber, Lizenz, Wikimedia Commons“. Daten für
 | borough.jpg | Stalls at Borough Market 1.jpg | Edward (Hochlader; Urheber siehe Dateiseite) | CC BY 2.0 | 400x271, 22 KB | https://commons.wikimedia.org/wiki/File:Stalls_at_Borough_Market_1.jpg |
 | zoo.jpg | Penguin pool, London Zoo, England-24Oct2010.jpg | Chris Sampson | CC BY 2.0 | 400x268, 21 KB | https://commons.wikimedia.org/wiki/File:Penguin_pool,_London_Zoo,_England-24Oct2010.jpg |
 | globe.jpg | Restaurante The Swan, Londres, Inglaterra, 2014-08-11, DD 113.jpg | Diego Delso | CC BY-SA 4.0 | 400x315, 24 KB | https://commons.wikimedia.org/wiki/File:Restaurante_The_Swan,_Londres,_Inglaterra,_2014-08-11,_DD_113.jpg |
+| westminster.jpg | The West front of Westminster Abbey and Victoria Tower.jpg | Ozeye | CC BY-SA 3.0 | 400x300, 22 KB | https://commons.wikimedia.org/wiki/File:The_West_front_of_Westminster_Abbey_and_Victoria_Tower.jpg |
+| shard.jpg | Ayuntamiento y Shard, Londres, Inglaterra, 2014-08-11, DD 076.JPG | Diego Delso | CC BY-SA 4.0 | 400x246, 15 KB | https://commons.wikimedia.org/wiki/File:Ayuntamiento_y_Shard,_Londres,_Inglaterra,_2014-08-11,_DD_076.JPG |

@@ -5942,7 +5942,7 @@
         c.restore();
         c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 2.2; for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(-30 - i * 3, -46 + i * 9); c.lineTo(-58 + (i % 2) * 8 + Math.sin(t * 20 + i) * 3, -46 + i * 9); c.stroke(); }   // Tempolinien
       } else hzBeine(c, pose, t, 5, -22, 8, dunkel, fell, dunkel, 7, 3.5);
-      hzRR(c, -12, -54, 24, 38, 11, fell); hzEll(c, 0, -34, 8, 11, bauch); hzRR(c, -14, -54, 28, 10, 5, '#1d3557'); hzWappen(c, 0, -40, HELD_FARBE.leo, '⚡');
+      hzRR(c, -12, -54, 24, 38, 11, fell); hzEll(c, 0, -34, 8, 11, bauch); hzRR(c, -14, -54, 28, 10, 5, '#1d3557'); hzWappen(c, 0, -40, HELD_FARBE.leo, 'L');
       for (let i = 0; i < 12; i++) { const w = i / 12 * Math.PI * 2 + (k ? t * 0.5 : 0); hzEll(c, Math.cos(w) * 13, -68 + Math.sin(w) * 13, 7, 7, i % 2 ? '#8a4b14' : '#a85d1c'); }   // Mähne
       hzEll(c, 0, -68, 12, 12, '#e8b25a'); hzEll(c, 0, -63, 6, 4.5, bauch); hzEll(c, 0, -65.5, 2.4, 1.7, '#3a2210'); hzLaecheln(c, 0, -61, 3, '#3a2210', j);
       hzMaske(c, 0, -71, 10, HELD_FARBE.leo); hzAugen(c, 0, -71, 4.6, 2.5, k ? 1.2 : 0.6, j); hzEll(c, -8, -80, 3.5, 3.5, '#e8b25a'); hzEll(c, 8, -80, 3.5, 3.5, '#e8b25a');
@@ -5955,17 +5955,19 @@
     camilla(c, t, pose, o = {}) {
       const j = pose === 'jubel', k = pose === 'kraft', fell = '#dcb46e', dunkel = '#bd934c', hell = '#f3e2bb', F = HELD_FARBE.camilla;
       hzUmhang(c, F, t, pose === 'lauf', false, -54);
-      hzEll(c, -8, -58, 11, 10, dunkel); hzEll(c, -7, -57, 8, 7, fell);   // Höcker über dem Rücken
+      hzEll(c, -17, -52, 14, 14, dunkel); hzEll(c, -16, -51, 11, 11, fell);   // großer Höcker auf dem Rücken (hinter dem Körper, ragt links über die Schulter)
       if (k) { c.strokeStyle = 'rgba(70,50,30,.6)'; c.lineWidth = 1.6; c.lineCap = 'round';   // Bodenrisse unter den Füßen
         for (const [x0, y0, x1, y1, x2, y2] of [[-8, 0, -22, 4, -34, 3], [10, 1, 24, 5, 38, 2], [-4, 1, -10, 7, -18, 12], [6, 1, 14, 8, 16, 14]]) { c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.lineTo(x2, y2); c.stroke(); } }
       hzBeine(c, pose, t, 6, -22, 9, dunkel, fell, '#8a6a3a', 7, 3.5, { breit: k ? 4 : 0 });
       hzRR(c, -13, -52, 26, 36, 11, fell); hzEll(c, 0, -32, 8, 10, hell); hzRR(c, -15, -52, 30, 10, 5, '#2b4a6f'); hzWappen(c, 0, -39, F, 'C');
       c.strokeStyle = fell; c.lineWidth = 9; c.lineCap = 'round'; c.beginPath(); c.moveTo(0, -50); c.lineTo(3, -62); c.stroke();   // Hals
-      hzEll(c, 2, -70, 12, 10, fell); hzEll(c, 11, -67, 8, 6, hell); hzEll(c, 15, -66, 1.6, 1.3, '#5a3a1a');   // Kopf, Schnauze, Nüstern
-      c.strokeStyle = '#5a3a1a'; c.lineWidth = 1.4; c.beginPath(); c.arc(11, -64.5, 3.2, 0.1, Math.PI - 0.1); c.stroke();   // Schmunzeln
+      hzEll(c, 1, -71, 12, 10, fell);   // Kopf
+      hzEll(c, 12, -66, 11, 7, fell, 0.25); hzEll(c, 14, -64, 8, 4, hell, 0.25);   // lange, hängende Schnauze aus dem Kopfoval heraus, unten heller
+      hzEll(c, 17, -69, 2, 1.5, '#5a3a1a', 0.4); hzEll(c, 21, -67, 2, 1.5, '#5a3a1a', 0.4);   // große Nüstern auf der Schnauze
+      c.strokeStyle = '#5a3a1a'; c.lineWidth = 1.4; c.lineCap = 'round'; c.beginPath(); c.moveTo(9, -61); c.quadraticCurveTo(15, -58, 21, -61); c.stroke();   // Mund auf der Schnauze (hängende Lippe)
       hzEll(c, -8, -78, 3, 4, fell, -0.4); hzEll(c, 4, -79, 3, 4, fell, 0.3); hzEll(c, 0, -78, 7, 4, dunkel);   // Ohren, Haarschopf
-      hzMaske(c, 1, -72, 10, F); hzAugen(c, 1, -72, 4.4, 2.3, 1, j);
-      c.strokeStyle = '#3a2210'; c.lineWidth = 1; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(1 + s * 4.4 + s * 2, -76); c.lineTo(1 + s * 4.4 + s * 3.5, -78); c.stroke(); }   // Wimpern
+      hzMaske(c, 0, -73, 10, F); hzAugen(c, 0, -73, 4.4, 2.3, 1, j);
+      c.strokeStyle = '#3a2210'; c.lineWidth = 0.9; c.lineCap = 'round'; for (const s of [-1, 1]) for (let i = 0; i < 2; i++) { c.beginPath(); c.moveTo(s * 8.3, -74.5 + i * 1.6); c.lineTo(s * 10.4, -75.6 + i * 1.8); c.stroke(); }   // kleine Wimpern am äußeren Augenwinkel
       const haende = hzArme(c, pose, t, j ? 17 : 13, -48, k ? 17 : 13, k ? 15 : 11, 7.5, fell, 5.5, dunkel, k ? [[2.5, 3.0], [2.5, 3.0]] : null, k ? 4 : 0);
       if (k) {   // Felsbrocken (grau mit Rissen) auf den Händen, leicht wippend
         const fy = (haende[0][1] + haende[1][1]) / 2 - 10 + Math.sin(t * 4) * 1.5;
@@ -5988,9 +5990,14 @@
       kreis(false);
       hzEll(c, -19, -66, 10, 13, dunkel); hzEll(c, 19, -66, 10, 13, dunkel); hzEll(c, -19, -66, 6.5, 9, '#e6bfc7'); hzEll(c, 19, -66, 6.5, 9, '#e6bfc7');   // Ohren
       hzEll(c, 0, -66, 16, 15, grau);
-      c.strokeStyle = grau; c.lineWidth = 7; c.lineCap = 'round'; c.beginPath(); c.moveTo(3, -62); c.quadraticCurveTo(8, -50, 4 + (j ? 10 : 0), -44 - (j ? 6 : 0)); c.stroke();   // Rüssel (Jubel: hochgeschwungen)
-      c.strokeStyle = dunkel; c.lineWidth = 1; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(3 + i * 1.3, -57 + i * 4); c.lineTo(7 + i * 1.5, -57 + i * 4); c.stroke(); }
-      hzEll(c, -4, -73, 2, 2.6, '#e0dcd8', -0.3); hzEll(c, -6, -56, 3.5, 2, '#fff', 0.3);   // Stoßzahn-Spitze
+      hzEll(c, -6, -57, 4, 2, '#f4f1ea', 0.5); hzEll(c, 7, -57, 4, 2, '#f4f1ea', -0.5);   // kleine Stoßzähne am Rüsselansatz
+      // Rüssel: beginnt im Gesicht unter den Augen (gleiche Farbe wie der Kopf), lang, Schwung nach vorn-unten; Jubel: hochgeschwungen
+      const rx = j ? 16 : 14, ry = j ? -52 : -36;
+      c.strokeStyle = grau; c.lineCap = 'round'; c.lineWidth = 9; c.beginPath(); c.moveTo(1, -66); c.quadraticCurveTo(2, -48, rx, ry); c.stroke();
+      c.lineWidth = 6.5; c.beginPath(); c.moveTo(1, -60); c.quadraticCurveTo(3, -46, rx, ry); c.stroke();   // zur Spitze schmaler
+      hzEll(c, rx, ry, 3.6, 3.6, grau); hzEll(c, rx + 1, ry, 1.6, 1.6, dunkel);   // Rüsselspitze mit Nasenloch
+      c.strokeStyle = 'rgba(0,0,0,.14)'; c.lineWidth = 1; for (let i = 0; i < 4; i++) { const q = 0.3 + i * 0.16, px = (1 - q) * (1 - q) * 1 + 2 * (1 - q) * q * 2.5 + q * q * rx, py = (1 - q) * (1 - q) * -63 + 2 * (1 - q) * q * -47 + q * q * ry;
+        c.beginPath(); c.arc(px, py, 3.6, -Math.PI * 0.9, -Math.PI * 0.1); c.stroke(); }   // dezente Querfalten
       hzMaske(c, 0, -70, 12, F); hzAugen(c, 0, -70, 5.2, 2.5, 1, j);
       kreis(true);
       hzArme(c, pose, t, j ? 24 : 14, -48, 12, 11, 8, grau, 5.5, dunkel, k ? [[1.1, 2.3], [1.1, 2.3]] : null);   // Kraft: Hände an die Schläfen (nachdenken)
@@ -6004,7 +6011,7 @@
       hzBeine(c, pose, t, 5, -14, 5, '#d98a4a', '#f4a261', '#f4a261', 6, 3);
       hzEll(c, 0, -36, 18, 26, braun); hzEll(c, 0, -30, 11, 17, '#e9d8b8');
       c.strokeStyle = '#b89870'; c.lineWidth = 1.2; for (let i = 0; i < 3; i++) for (let s = 0; s < 2; s++) { c.beginPath(); c.arc(-4 + s * 8, -36 + i * 7, 3, 0.2, Math.PI - 0.2); c.stroke(); }
-      hzWappen(c, 0, -46, F, '👁');
+      hzWappen(c, 0, -46, F, 'O');
       hzEll(c, 0, -66, 15, 13, braun); c.fillStyle = braun; c.beginPath(); c.moveTo(-14, -72); c.lineTo(-12, -86); c.lineTo(-5, -76); c.fill(); c.beginPath(); c.moveTo(14, -72); c.lineTo(12, -86); c.lineTo(5, -76); c.fill();
       if (k) { c.save(); c.globalAlpha = 0.85; for (const s of [-1, 1]) { const g = c.createLinearGradient(s * 6.5, -67, s * 6.5 + 90, -47); g.addColorStop(0, '#9dff9d'); g.addColorStop(1, 'rgba(60,255,60,0)'); c.fillStyle = g; c.beginPath(); c.moveTo(s * 6.5, -70); c.lineTo(s * 6.5 + 95, -62); c.lineTo(s * 6.5 + 95, -50); c.lineTo(s * 6.5, -64); c.fill(); } c.restore(); }
       for (const s of [-1, 1]) { hzEll(c, s * 6.5, -67, 7.5, 7.5, '#2dc653');
@@ -6044,9 +6051,9 @@
       c.save(); c.translate(0, HY); c.rotate(neig); c.translate(0, -HY);
       hzEll(c, 0, -34, 15, 22, fell); hzEll(c, 3, -30, 9, 15, hell); hzWappen(c, 2, -38, F, 'K');
       hzEll(c, -1, -14, 11, 6, dunkel);   // Beutel-Kante
-      hzEll(c, 2, -64, 12, 13, fell); hzEll(c, 10, -60, 8, 6, hell);
+      hzEll(c, 2, -64, 12, 13, fell); hzEll(c, 11, -60, 9, 6.5, fell, 0.15); hzEll(c, 12, -59, 7, 4.5, hell, 0.15);   // Kopf + Schnauze als eine Form, unten heller
       hzEll(c, -5, -82, 4, 10, fell, -0.25 - (flug ? 0.3 : 0)); hzEll(c, 5, -83, 4, 10, fell, 0.2 - (flug ? 0.2 : 0)); hzEll(c, -5, -81, 2, 6, '#e8b58a', -0.25 - (flug ? 0.3 : 0)); hzEll(c, 5, -82, 2, 6, '#e8b58a', 0.2 - (flug ? 0.2 : 0));
-      hzMaske(c, 3, -66, 11, F); hzAugen(c, 3, -66, 5, 2.6, 1, j || (ph > 0.4 && ph < 0.7)); hzEll(c, 16, -60, 2.2, 1.8, '#3a2210'); hzLaecheln(c, 10, -57, 4, '#3a2210', j);
+      hzMaske(c, 3, -66, 11, F); hzAugen(c, 3, -66, 5, 2.6, 1, j || (ph > 0.4 && ph < 0.7)); hzEll(c, 18, -61.5, 2.4, 1.9, '#3a2210'); hzLaecheln(c, 12, -58, 4, '#3a2210', j);
       // Arme (nach dem Kopf): beide zur Vorderseite (Blick nach rechts), hinterer dunkler; Jubel = schräg hoch außen
       if (j) hzArme(c, pose, t, 16, -50, 11, 10, 6.5, fell, 5, '#e63946');
       else for (const [dx, farbe] of [[-9, dunkel], [9, fell]]) { const hinten = dx < 0 && a1 > 1 ? 0.6 : 0; hzArm(c, dx, -50 + hinten * 6, 1, a1 - hinten, 11, a2 - hinten, 10, 6.5, farbe, 5, '#e63946'); }   // hintere Pfote im Flug tiefer (vor der Brust, nicht vor dem Gesicht)
@@ -6070,9 +6077,13 @@
         hzEll(c, 0, -32, 7, 9, weiss); hzRR(c, -14, -54, 28, 10, 5, '#1d3557'); hzWappen(c, 0, -40, F, 'Z');
         for (let i = 0; i < 6; i++) hzEll(c, -6 + i * 2.2, -80 + Math.abs(i - 2.5) * 0.8, 2.4, 5, schwarz, (i - 2.5) * 0.12);   // Mähne (Bürste)
         hzEll(c, -8, -78, 3, 4.5, weiss, -0.3); hzEll(c, 6, -79, 3, 4.5, weiss, 0.25); hzEll(c, -8, -78, 1.5, 2.6, '#f0b0c0', -0.3); hzEll(c, 6, -79, 1.5, 2.6, '#f0b0c0', 0.25);
-        hzEll(c, 1, -68, 12, 11, weiss); hzEll(c, 10, -64, 7, 5, '#3a3a3a'); hzEll(c, 14, -65, 1.5, 1.2, '#111');   // Kopf, dunkle Schnauze
-        c.strokeStyle = schwarz; c.lineWidth = 2.2; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(-9 + i * 4, -76 + i * 1.5); c.quadraticCurveTo(-4 + i * 4, -70, -6 + i * 5, -60); c.stroke(); }   // Kopfstreifen
-        hzMaske(c, 1, -71, 10, F); hzAugen(c, 1, -71, 4.5, 2.4, 1, j); if (j) hzLaecheln(c, 10, -62, 2.5, '#fff', true);
+        hzEll(c, 0, -69, 12, 11, weiss); hzEll(c, 11, -64, 10, 6.5, weiss, 0.2);   // Kopf + längliche Schnauze aus dem Kopfoval heraus (eine Form)
+        c.save(); c.beginPath(); c.ellipse(0, -69, 12, 11, 0, 0, Math.PI * 2); c.ellipse(11, -64, 10, 6.5, 0.2, 0, Math.PI * 2); c.clip();   // Streifen laufen über Stirn und Schnauze weiter
+        c.strokeStyle = schwarz; c.lineWidth = 2; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(-8 + i * 4, -80); c.quadraticCurveTo(-5 + i * 4, -72, -7 + i * 4, -62); c.stroke(); }
+        for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(7 + i * 4, -71 + i); c.quadraticCurveTo(9 + i * 4, -66 + i, 6 + i * 4, -59 + i); c.stroke(); } c.restore();
+        hzEll(c, 19, -63, 3.6, 3, schwarz, 0.2); hzEll(c, 18, -64.5, 1, 0.8, '#666');   // schwarze Nasenspitze mit Nüster
+        c.strokeStyle = schwarz; c.lineWidth = 1.3; c.lineCap = 'round'; c.beginPath(); c.moveTo(12, -59.5); c.quadraticCurveTo(15, -57.5, 18, -60); c.stroke();   // Mund auf der Schnauze
+        hzMaske(c, 0, -72, 10, F); hzAugen(c, 0, -72, 4.5, 2.4, 1, j); if (j) hzLaecheln(c, 15, -59, 2.5, '#fff', true);
         hzArme(c, pose, t, j ? 17 : 13, -50, 13, 11, 7, weiss, 5, schwarz, k ? [[1.0, 2.2], [1.0, 2.2]] : null);   // Kraft: Hände vor dem Gesicht (jetzt siehst du mich nicht!)
       };
       if (!k) { figur(); return; }
@@ -6087,7 +6098,7 @@
       c.save(); if (l) { c.translate(0, -Math.abs(Math.sin(t * 13)) * 2); c.rotate(Math.sin(t * 13) * 0.1); }
       const p = t * 13, fl = l ? Math.sin(p) : 0;
       hzEll(c, -6 + (l ? fl * 3 : 0), -2, 7, 3.5, '#f4a261'); hzEll(c, 7 - (l ? fl * 3 : 0), -2, 7, 3.5, '#f4a261');   // Watschelfüße
-      hzEll(c, 0, -34, 17, 30, schwarz); hzEll(c, 2, -30, 11, 22, '#f8f9fb'); hzWappen(c, 2, -38, F, '❄');
+      hzEll(c, 0, -34, 17, 30, schwarz); hzEll(c, 2, -30, 11, 22, '#f8f9fb'); hzWappen(c, 2, -38, F, 'P');
       hzEll(c, 0, -62, 12, 11, schwarz); hzEll(c, 2, -59, 8, 7, '#f8f9fb'); hzEll(c, 9, -60, 5, 2.4, '#f4a261');
       hzMaske(c, 1, -64, 10, F); hzAugen(c, 1, -64, 4.4, 2.3, 1, j);
       // Flossen (nach dem Kopf): steh anliegend, lauf wippen, jubel schräg hoch außen, kraft = rechte Flosse vorgestreckt
@@ -6108,7 +6119,7 @@
       hzEll(c, 0, -36, 15, 24, grau); hzEll(c, 1, -30, 10, 17, '#f3f3f3'); c.fillStyle = '#6e7f99'; for (let i = 0; i < 8; i++) hzEll(c, -5 + (i % 3) * 5, -40 + ((i / 3) | 0) * 7 + (i % 2) * 2, 1.4, 2, '#8e9db3');
       hzWappen(c, 0, -46, F, 'F');
       hzEll(c, 0, -64, 12, 12, grau); hzEll(c, 2, -60, 8, 6, '#f3f3f3'); hzEll(c, -5, -60, 2.5, 5, dunkel, 0.2); hzEll(c, 7, -60, 2.5, 5, dunkel, -0.2);   // Kopf, helle Wange, Bartstreifen
-      c.fillStyle = '#f4c20d'; c.beginPath(); c.moveTo(-3, -62); c.lineTo(5, -62); c.lineTo(2, -55); c.closePath(); c.fill(); hzEll(c, 3, -56, 1.5, 1.5, '#2a2a2a');   // Hakenschnabel
+      hzEll(c, 1, -62.5, 4, 2, '#e0b000'); c.fillStyle = '#f4c20d'; c.beginPath(); c.moveTo(-3, -63); c.lineTo(5, -63); c.lineTo(3, -55); c.closePath(); c.fill(); hzEll(c, 1.5, -64, 1.2, 1, '#2a2a2a');   // Wachshaut + Hakenschnabel aus dem Kopf heraus
       hzMaske(c, 0, -67, 10, F); hzAugen(c, 0, -67, 4.4, 2.4, k ? 1.4 : 1, j);
       fluegel(-1, j ? 2.3 : k ? 1.55 : l ? 0.4 + Math.sin(t * 13) * 0.7 : 0.25); fluegel(1, j ? -2.3 : k ? -1.55 : l ? -0.4 - Math.sin(t * 13) * 0.7 : -0.25);   // Flügel nach dem Kopf
       c.restore();

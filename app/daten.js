@@ -6399,7 +6399,9 @@ window.DATEN = {
     "x": 186,
     "y": 152,
     "fakt": "Kings and queens get their crowns in Westminster Abbey. It is a church right next to the Palace of Westminster and Big Ben.",
-    "audio": "audio/london/westminster.mp3"
+    "audio": "audio/london/westminster.mp3",
+    "foto": "bilder/orte/westminster.jpg",
+    "foto_quelle": "Foto: Ozeye, CC BY-SA 3.0, Wikimedia Commons"
    },
    {
     "id": "camden",
@@ -6441,7 +6443,9 @@ window.DATEN = {
     "x": 276,
     "y": 146,
     "fakt": "The Shard is the tallest building in the UK. It is 310 metres tall. It looks like a giant piece of broken glass.",
-    "audio": "audio/london/shard.mp3"
+    "audio": "audio/london/shard.mp3",
+    "foto": "bilder/orte/shard.jpg",
+    "foto_quelle": "Foto: Diego Delso, CC BY-SA 4.0, Wikimedia Commons"
    },
    {
     "id": "wembley",

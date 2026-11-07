@@ -465,7 +465,11 @@ def staat_foto(sid):
     if not os.path.exists(os.path.join(INHALTE, "staaten_fotos.tsv")) or not os.path.exists(os.path.join(APP, "bilder", "staaten", f"{sid}.jpg")):
         return {}
     q = {z["id"]: z for z in tsv("staaten_fotos.tsv")}.get(sid)
-    return {"foto": f"bilder/staaten/{sid}.jpg", "foto_quelle": f"Foto: {q['urheber']}, Library of Congress ({q['lizenz']})"} if q else {}
+    if not q:
+        return {}
+    if "wikimedia.org" in q["link"]:  # 7.11.: einzelne bessere Motive von Wikimedia Commons
+        return {"foto": f"bilder/staaten/{sid}.jpg", "foto_quelle": f"Foto: {q['urheber']}, {q['lizenz']}, Wikimedia Commons"}
+    return {"foto": f"bilder/staaten/{sid}.jpg", "foto_quelle": f"Foto: {q['urheber']}, Library of Congress ({q['lizenz']})"}
 
 
 def spieldaten():

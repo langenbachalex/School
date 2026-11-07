@@ -1,0 +1,59 @@
+gruppe	id	name	stichwort	de	ipa	bild
+foot	mbappe	Kylian Mbappé	attaquant	Stürmer	ki.ljɑ̃ | ɛm.ba.pe	trikot:10
+foot	tchouameni	Aurélien Tchouaméni	milieu	Mittelfeld	o.ʁe.ljɛ̃ | tʃu.a.me.ni	trikot:8
+foot	ekitike	Hugo Ekitiké	attaquant	Stürmer	y.go | e.ki.ti.ke	trikot:12
+foot	dembele	Ousmane Dembélé	attaquant	Stürmer	us.man | dɛm.be.le	trikot:7
+foot	barcola	Bradley Barcola	attaquant	Stürmer	bʁad.lɛ | baʁ.kɔ.la	trikot:20
+foot	doue	Désiré Doué	attaquant	Stürmer	de.zi.ʁe | du.e	trikot:26
+foot	zaire_emery	Warren Zaïre-Emery	milieu	Mittelfeld	wa.ʁɛn | za.iʁ.ɛm.ʁi	trikot:18
+foot	olise	Michael Olise	attaquant	Stürmer	mi.ka.ɛl | ɔ.liz	trikot:11
+foot	lacroix	Maxence Lacroix	défenseur	Verteidiger	mak.sɑ̃s | la.kʁwa	trikot:3
+foot	kante	N'Golo Kanté	milieu	Mittelfeld	ɛn.go.lo | kɑ̃.te	trikot:13
+foot	saliba	William Saliba	défenseur	Verteidiger	wil.jam | sa.li.ba	trikot:17
+foot	kounde	Jules Koundé	défenseur	Verteidiger	ʒyl | kun.de	trikot:5
+foot	gusto	Malo Gusto	défenseur	Verteidiger	ma.lo | gys.to	trikot:2
+foot	t_hernandez	Théo Hernández	défenseur	Verteidiger	te.o | ɛʁ.nɑ̃.dɛz	trikot:22
+foot	l_hernandez	Lucas Hernández	défenseur	Verteidiger	ly.ka | ɛʁ.nɑ̃.dɛz	trikot:21
+foot	mateta	Jean-Philippe Mateta	attaquant	Stürmer	ʒɑ̃.fi.lip | ma.te.ta	trikot:9
+foot	kone	Manu Koné	milieu	Mittelfeld	ma.ny | ko.ne	trikot:6
+foot	rabiot	Adrien Rabiot	milieu	Mittelfeld	a.dʁi.jɛ̃ | ʁa.bjo	trikot:14
+foot	samba	Brice Samba	gardien	Torwart	bʁis | sɑ̃.ba	trikot:16
+foot	risser	Robin Risser	gardien	Torwart	ʁɔ.bɛ̃ | ʁi.sɛʁ	trikot:23
+foot	upamecano	Dayot Upamecano	défenseur	Verteidiger	da.jo | u.pa.me.ka.no	trikot:4
+histoire	napoleon	Napoléon Bonaparte	empereur	Kaiser	na.pɔ.le.ɔ̃ | bɔ.na.paʁt	wm:Napoléon_Ier
+histoire	charlemagne	Charlemagne	empereur	Kaiser (Karl der Große)	ʃaʁ.lə.maɲ	wm:Charlemagne
+histoire	vercingetorix	Vercingétorix	chef gaulois	Anführer der Gallier	vɛʁ.sɛ̃.ʒe.tɔ.ʁiks	wm:Vercingétorix
+histoire	jeanne	Jeanne d'Arc	héroïne	Heldin	ʒan.daʁk	wm:Jeanne_d'Arc
+histoire	louis14	Louis XIV	le Roi-Soleil	der Sonnenkönig	lwi | ka.tɔʁz	wm:Louis_XIV
+histoire	curie	Marie Curie	scientifique	Wissenschaftlerin	ma.ʁi | ky.ʁi	wm:Marie_Curie
+histoire	pasteur	Louis Pasteur	scientifique	Wissenschaftler	lwi | pas.tœʁ	wm:Louis_Pasteur
+histoire	braille	Louis Braille	inventeur	Erfinder (Blindenschrift)	lwi | bʁaj	wm:Louis_Braille
+histoire	lumiere	Les frères Lumière	inventeurs du cinéma	Erfinder des Kinos	le.fʁɛʁ | ly.mjɛʁ	wm:Auguste_et_Louis_Lumière
+histoire	eiffel	Gustave Eiffel	ingénieur	Ingenieur	gys.tav | ɛ.fɛl	wm:Gustave_Eiffel
+histoire	verne	Jules Verne	écrivain	Schriftsteller	ʒyl | vɛʁn	wm:Jules_Verne
+histoire	hugo	Victor Hugo	écrivain	Schriftsteller	vik.tɔʁ | y.go	wm:Victor_Hugo
+histoire	dumas	Alexandre Dumas	écrivain	Schriftsteller	a.lɛk.sɑ̃dʁ | dy.ma	wm:Alexandre_Dumas
+histoire	moliere	Molière	auteur de théâtre	Theaterautor	mɔ.ljɛʁ	wm:Molière
+histoire	saint_exupery	Antoine de Saint-Exupéry	écrivain et pilote	Schriftsteller und Pilot	ɑ̃.twan | də.sɛ̃.tɛg.zy.pe.ʁi	zeichen
+histoire	monet	Claude Monet	peintre	Maler	klod | mɔ.nɛ	wm:Claude_Monet
+histoire	chanel	Coco Chanel	styliste	Modedesignerin	ko.ko | ʃa.nɛl	zeichen
+histoire	piaf	Édith Piaf	chanteuse	Sängerin	e.dit | pjaf	zeichen
+histoire	cousteau	Jacques-Yves Cousteau	explorateur	Entdecker (Meer)	ʒak.iv | kus.to	zeichen
+histoire	coubertin	Pierre de Coubertin	père des Jeux olympiques	Vater der Olympischen Spiele	pjɛʁ | də.ku.bɛʁ.tɛ̃	wm:Pierre_de_Coubertin
+histoire	zidane	Zinédine Zidane	footballeur	Fußballer	zi.ne.din | zi.dan	trikot:10
+stars	macron	Emmanuel Macron	président	Präsident	e.ma.ny.ɛl | ma.kʁɔ̃	zeichen
+stars	angele	Angèle	chanteuse (Belgique)	Sängerin (Belgien)	ɑ̃.ʒɛl	zeichen
+stars	adenot	Sophie Adenot	astronaute	Astronautin	sɔ.fi | ad.no	zeichen
+lieux	metz	Metz	ville	Stadt	mɛs	ort
+lieux	forbach	Forbach	ville	Stadt	fɔʁ.bak	ort
+lieux	sarreguemines	Sarreguemines	ville	Stadt	saʁ.gə.min	ort
+lieux	moselle	Moselle	département	Département	mo.zɛl	ort
+lieux	alsace_lorraine	Alsace-Lorraine	région	Region	al.zas | lɔ.ʁɛn	ort
+lieux	sarralbe	Sarralbe	ville	Stadt	sa.ʁalb	ort
+lieux	saint_avold	Saint-Avold	ville	Stadt	sɛ̃.ta.vɔld	ort
+lieux	freyming	Freyming-Merlebach	ville	Stadt	fʁɛ.miŋ | mɛʁ.lə.bak	ort
+lieux	nouvelle_aquitaine	Nouvelle-Aquitaine	région	Region	nu.vɛ.la.ki.tɛn	ort
+lieux	auvergne	Auvergne-Rhône-Alpes	région	Region	o.vɛʁɲ | ʁon.alp	ort
+lieux	paca	Provence-Alpes-Côte-d'Azur	région	Region	pʁɔ.vɑ̃s | alp | kot.da.zyʁ	ort
+lieux	aix	Aix-en-Provence	ville	Stadt	ɛk.sɑ̃ | pʁɔ.vɑ̃s	ort
+lieux	chateauneuf	Châteauneuf-du-Pape	village	Dorf	ʃa.to.nœf | dy.pap	ort

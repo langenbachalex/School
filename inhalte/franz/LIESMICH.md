@@ -1,6 +1,6 @@
 # inhalte/franz/ – Inhalte der Französisch-App (Sprachkurs Klasse 5/6)
 
-Geplant (Stand 7.11.2026, noch nicht gebaut): `dialoge.tsv`, `namen.tsv` (Fußballer, Persönlichkeiten, Président/Stars, Orte, mit IPA), `vokabeln.tsv`, `helden.tsv`, `paris.tsv`. Build: `werkzeuge/franz_bauen.py` → `app/franz/daten_fr.js`. Quelle der Dialoge: `docs/archiv/2026-11-06_franzoesisch-dialog-datenbank.md`.
+Gebaut 7.11.2026 (Stufe 1): `dialoge.tsv` + `dialoge_info.tsv` (Titel, neue Wörter, Parle-Vorlagen), `wendungen.tsv`, `namen.tsv` (mit IPA: Silben mit Punkt, Sprechgruppen mit |), `woerter.tsv` (Wortkästen für „Parle de toi“), `beats.tsv`. Build: `werkzeuge/franz_bauen.py` → `app/franz/daten_fr.js`; Audio: `werkzeuge/franz_audio.py`. Quelle der Dialoge: `docs/archiv/2026-11-06_franzoesisch-dialog-datenbank.md`.
 
 ## audio_roh/ – Rohaufnahmen von Mr. Alex (7.11.)
 | Datei | Inhalt (Angabe Mr. Alex, nicht abgehört) |

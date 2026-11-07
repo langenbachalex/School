@@ -1,0 +1,68 @@
+/* Französisch-App: Ergänzungen zu ../style.css (gemeinsam mit Englisch Klasse 6) */
+:root { --fr-blau: #0055a4; --fr-rot: #ef4135; }
+.flagge { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.3rem; min-width: 48px; }
+.gruss h1 { color: var(--fr-blau); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .gruss h1 { color: var(--blau); } }
+.kopf h1 { font-size: 1.6rem; }
+.kachel.erledigt { border-color: var(--gruen); }
+.schritte-kacheln { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+
+/* Dialog: DE links / FR rechts */
+.dialog { display: grid; gap: 6px; }
+.dialog-kopf, .dialogzeile { display: grid; grid-template-columns: 2.2rem 1fr 1.25fr; gap: 10px; align-items: start; text-align: left; }
+.dialog-kopf { font-size: .85rem; color: var(--leise); font-weight: 700; }
+.dialogzeile { font: inherit; color: inherit; background: var(--karte); border: 2px solid var(--linie); border-radius: 14px; padding: 8px 10px; }
+button.dialogzeile { cursor: pointer; }
+.dialogzeile.aktiv { border-color: var(--blau); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blau) 25%, transparent); }
+.dialogzeile .de { color: var(--leise); font-size: .95rem; }
+.dialogzeile .fr { font-weight: 700; font-size: 1.1rem; }
+.wer { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; font: 600 1rem var(--display); color: #fff; }
+.wer-a { background: var(--fr-blau); } .wer-b { background: var(--fr-rot); }
+@media (max-width: 640px) {
+  .dialog-kopf { display: none; }
+  .dialogzeile { grid-template-columns: 2.2rem 1fr; }
+  .dialogzeile .de { grid-column: 2; grid-row: 2; }
+  .dialogzeile .fr { grid-column: 2; grid-row: 1; }
+}
+
+/* Lesehilfe: einfach / IPA / aus (Schalter oben) */
+.lesehilfe { display: block; font-weight: 400; font-size: .9rem; color: var(--leise); letter-spacing: .01em; }
+.lesehilfe b { color: var(--text); }
+.lese-ipa { font-family: "Doulos SIL", "Charis SIL", "Segoe UI", "DejaVu Sans", sans-serif; }
+body[data-lese="einfach"] .lese-ipa, body[data-lese="ipa"] .lese-einfach, body[data-lese="aus"] .lesehilfe { display: none; }
+.lese-gross .lesehilfe { font-size: 1.3rem; }
+
+/* Lücken und Wortkasten */
+.luecke-fr { display: inline-block; min-width: 3ch; padding: 0 .3em; border-bottom: 3px solid var(--leise); color: var(--leise); letter-spacing: .1em; }
+.luecke-fr.dran { border-color: var(--blau); background: color-mix(in srgb, var(--blau) 12%, transparent); }
+.luecke-fr.gefuellt { color: var(--gruen); letter-spacing: normal; border-color: var(--gruen); }
+button.wahl-luecke { font: inherit; background: transparent; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; letter-spacing: normal; color: var(--blau); }
+.wortkasten { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; border: 2px dashed var(--linie); border-radius: 16px; }
+.chip { font: 700 1.05rem var(--body); min-height: 44px; padding: 4px 14px; border-radius: 999px; border: 2px solid var(--blau); background: var(--karte); color: var(--text); cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; }
+.chip small { font-weight: 400; color: var(--leise); font-size: .8rem; }
+.chip.falsch { animation: wackeln .4s; border-color: var(--fr-rot); }
+@keyframes wackeln { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.vorlage { background: var(--bg); border-radius: 14px; padding: 8px 14px; }
+.vorlage summary { cursor: pointer; font-weight: 700; }
+.vorlage ol { margin: 6px 0 0; padding-left: 1.4em; }
+.gross-fr { font-size: 1.45rem; font-weight: 700; line-height: 1.8; }
+.de-hinweis { color: var(--leise); display: flex; align-items: center; gap: 8px; }
+.parle-karte { display: grid; gap: 10px; padding-bottom: 14px; border-bottom: 1px solid var(--linie); }
+.eingabe { font: inherit; padding: 8px 12px; border-radius: 12px; border: 2px solid var(--linie); min-height: 44px; }
+
+/* Namen */
+.namen-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: 10px; }
+.namen-knopf { position: relative; font: 700 .95rem var(--body); color: var(--text); background: var(--karte); border: 2px solid var(--linie); border-radius: 16px; padding: 10px 6px; display: grid; justify-items: center; gap: 6px; cursor: pointer; text-align: center; }
+.namen-knopf.erledigt { border-color: var(--gruen); }
+.namen-knopf.gold { border-color: #d4a017; box-shadow: 0 0 0 3px #f5d76e88; }
+.namen-knopf.falsch { border-color: var(--fr-rot); }
+.namen-knopf.gesperrt { filter: grayscale(1); opacity: .55; }
+.namen-knopf .haken { position: absolute; top: 6px; right: 8px; color: var(--gruen); }
+.namen-bild { border-radius: 16px; object-fit: cover; }
+.namen-karte { justify-items: center; text-align: center; }
+.name-gross { font-size: 2.2rem; }
+.quelle { font-size: .75rem; color: var(--leise); }
+.medaille { font-size: 2.4rem; }
+.ordre-liste { margin: 0; padding-left: 1.4em; font-weight: 700; display: grid; gap: 4px; }
+.beat audio { width: 100%; }
+.mitlauf { white-space: pre-wrap; font: 1.1rem/1.6 var(--body); margin: 0; }

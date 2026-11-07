@@ -13424,6 +13424,14 @@
     const ccZeigen = () => { cc.setAttribute('aria-pressed', String(ccAn)); cc.setAttribute('aria-label', ccAn ? 'Untertitel aus' : 'Untertitel an'); cc.style.opacity = ccAn ? '1' : '.55'; cc.style.textDecoration = ccAn ? 'none' : 'line-through'; };
     ccZeigen();
     if (!o.text) { unter.hidden = true; cc.hidden = true; }
+    // 7.11. (Mr. Alex, Französisch-App): o.textDe = Übersetzung – zweite Zeile (kleiner, gelblich) unter dem Untertitel, Satz für Satz passend
+    const teileDe = o.textDe ? untertitelTeile(o.textDe) : null;
+    const utSetzen = (nr) => {
+      if (!teileDe) { unter.textContent = teile[nr] || ''; return; }
+      const de = el('span', null, teileDe[Math.min(nr, teileDe.length - 1)] || ''); de.lang = 'de'; de.style.cssText = 'display:block;font-weight:500;font-size:.82em;color:#ffe9a8;';
+      unter.replaceChildren(document.createTextNode(teile[nr] || ''), de);
+    };
+    utSetzen(0);
     const foto = el('figure', 'ortszene-foto'); foto.hidden = true;
     // Foto am Ende (Etappe 2): poppt groß auf und füllt die ganze Szene (Seitenverhältnis bleibt, Rand dunkel), Quellenzeile als Leiste unten auf dem Bild
     foto.style.cssText = 'position:absolute;inset:0;margin:0;background:#0d1222;transform:scale(.55);transition:opacity .45s, transform .45s cubic-bezier(.2,1.4,.4,1);';
@@ -13492,7 +13500,7 @@
       if (anteil === null) anteil = A.mitStimme && !A.stimme ? 1 : A.t / (gesamtZ / 14);
       let nr = 0, z = 0; for (; nr < teile.length - 1; nr++) { z += teile[nr].length; if (anteil * gesamtZ < z) break; }
       A.utNr = Math.max(A.utNr, nr);
-      if (unter.textContent !== teile[A.utNr]) unter.textContent = teile[A.utNr];
+      if (unter.dataset.nr !== String(A.utNr)) { unter.dataset.nr = String(A.utNr); utSetzen(A.utNr); }
       unter.hidden = !ccAn || (A.phase === 'foto' && !A.stimme);
     };
     cc.addEventListener('click', (e) => { e.stopPropagation(); ccAn = !ccAn; untertitelMerken(ccAn); ccZeigen(); untertitel(); });

@@ -518,7 +518,7 @@
   function parisFilm(o, fertig) {
     if (!hatFilm(o)) { if (fertig) fertig(); return false; }
     stopp();
-    const sz = window.Runner.szene(null, o.id, { text: o.fr, lang: "fr", titel: `${o.symbol} ${o.name} · Paris`, foto: o.foto, quelle: o.quelle,
+    const sz = window.Runner.szene(null, o.id, { text: o.fr, textDe: o.de, lang: "fr", titel: `${o.symbol} ${o.name} · Paris`, foto: o.foto, quelle: o.quelle,
       voice: () => spiele([ton(o)]), voiceStopp: stopp, voiceAudio: () => aktuell, onEnde: () => { if (fertig) fertig(); } });
     if (!sz && fertig) fertig();
     return !!sz;

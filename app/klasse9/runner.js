@@ -14394,11 +14394,17 @@
     if (kopfCv.width !== w || kopfCv.height !== hh) { kopfCv.width = w; kopfCv.height = hh; }
     const k2 = kopfCv.getContext('2d');
     k2.setTransform(1, 0, 0, 1, 0, 0); k2.clearRect(0, 0, w, hh); k2.setTransform(q, 0, 0, q, 0, 0);
+    const hy = (oben - hals) * u, ww = B * u, schnitt = Math.round(hy * q), oy = y - oben * u, ay = oy + schnitt / q;
     zeichneFigur(k2, B * u / 2, oben * u, h, skin, pose, t, ausdruck);
-    const hy = (oben - hals) * u, ww = B * u, schnitt = Math.round(hy * q), oy = y - oben * u;
-    c.drawImage(kopfCv, 0, schnitt, w, hh - schnitt, x - ww / 2, oy + schnitt / q, ww, (hh - schnitt) / q);
-    const ay = oy + schnitt / q;
+    c.drawImage(kopfCv, 0, schnitt, w, hh - schnitt, x - ww / 2, ay, ww, (hh - schnitt) / q);
+    if (pose !== 'sprung') { c.drawImage(kopfCv, 0, 0, w, schnitt, x - ww * k / 2, ay - (schnitt / q) * k, ww * k, (schnitt / q) * k); return; }
+    // Sprung: Körper wie oben, der große Kopf aus einer Lauf-Pose (Arme unten), danach die hochgerissenen Arme neben dem kleinen Kopf obendrauf
+    const arme = document.createElement('canvas'); arme.width = w; arme.height = schnitt; arme.getContext('2d').drawImage(kopfCv, 0, 0);
+    k2.setTransform(1, 0, 0, 1, 0, 0); k2.clearRect(0, 0, w, hh); k2.setTransform(q, 0, 0, q, 0, 0);
+    zeichneFigur(k2, B * u / 2, oben * u, h, skin, 'lauf', 0, ausdruck);
     c.drawImage(kopfCv, 0, 0, w, schnitt, x - ww * k / 2, ay - (schnitt / q) * k, ww * k, (schnitt / q) * k);
+    const kb = Math.round(24 * u * q), ac = arme.getContext('2d'); ac.clearRect(w / 2 - kb, 0, kb * 2, schnitt);
+    c.drawImage(arme, 0, 0, w, schnitt, x - ww / 2, oy, ww, schnitt / q);
   }
   function gummihuhn(c, x, y, t, platt) {   // gelbes Gummihuhn: Körper, langer Wackelhals, roter Kamm, oranger Schnabel; platt = X-Augen, flach
     c.save(); c.translate(x, y); if (platt) c.scale(1.4, 0.3);
@@ -14633,7 +14639,7 @@
       // Figur (Riesenkopf, Quetschen beim Landen, Wackeln, schwindlig = Sternchen)
       const fx = s.px - cam, q = s.quetsch / 0.3, jig = Math.sin(t * 9) * 0.04 * wa;
       c.save(); c.translate(fx, s.y); c.scale(1 + q * 0.25 + jig, 1 - q * 0.22 - jig); if (s.dizzy > 0) c.rotate(Math.sin(t * 18) * 0.12);
-      const pose = s.phase === 'ende' ? 'jubel' : 'lauf', aus2 = s.dizzy > 0 ? 'erstaunt' : s.jubel > 0 ? 'zunge' : 'grinsend';
+      const pose = s.phase === 'ende' ? 'jubel' : s.boden ? 'lauf' : 'sprung', aus2 = s.dizzy > 0 ? 'erstaunt' : s.jubel > 0 ? 'zunge' : 'grinsend';
       if (s.kopf <= 1.02) zeichneFigur(c, 0, 0, 70, sk, pose, t, aus2);
       else grossKopf(c, 0, 0, 70, sk, pose, s.boden ? t : t * 1.6, aus2, s.kopf, Math.max(1, dpr * skala));
       c.restore();

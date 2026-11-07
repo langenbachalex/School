@@ -1421,7 +1421,7 @@
 
   /* Memory: englisches Wort ↔ deutsche Bedeutung, 6 Paare, alle Karten auf einen Blick (.memory.gross).
      Wörter mit Symbol zeigen es auf der englischen Karte. Beim Aufdecken hört man das englische Wort. */
-  function memoryFeld(ws) {
+  function memoryFeld(ws, fertigText) { // fertigText(): Zusatz zur Schlussmeldung (Word Gym: eigene Tagesmarke), sonst Spiele-Punkte
     const karten = mischen(ws.flatMap((v) => [{ v, art: "en" }, { v, art: "de" }]));
     let offen = [], gefunden = 0, zuege = 0, wartet = false;
     const box = rueckmeldung();
@@ -1441,7 +1441,7 @@
         const [x, y] = offen; offen = [];
         if (x.c.v === y.c.v && x.c.art !== y.c.art) {
           x.b.classList.add("paar"); y.b.classList.add("paar"); x.b.disabled = y.b.disabled = true;
-          if (++gefunden === ws.length) melde(box, "gut", `${lob(true)} Alle ${ws.length} Paare in ${zuege} Zügen!${spielPunkte("memoryTag", true)}`);
+          if (++gefunden === ws.length) melde(box, "gut", `${lob(true)} Alle ${ws.length} Paare in ${zuege} Zügen!${fertigText ? fertigText() : spielPunkte("memoryTag", true)}`);
         } else {
           wartet = true;
           setTimeout(() => {
@@ -2014,6 +2014,7 @@
         }
       }
     }
+    goldPruefen(true); // goldene Akten (Regel B)
     punkteDazu(plus, { art: istGym ? "g" : "t", boni });
   }
   // Wiederholungsbonus für eine komplett wiederholte Station / einen komplett wiederholten Abschnitt (6.11.)
@@ -2118,7 +2119,7 @@
     return box;
   }
   // Reihenfolge (nie gleichzeitig): kleine Hinweise sofort · großes Pop-up mit Stimme zuerst · Stempel danach, wenn es still ist
-  const grossEreignis = (e) => e.art === "feier" || e.art === "held";
+  const grossEreignis = (e) => e.art === "feier" || e.art === "held" || e.art === "karte";
   let stempelLaeuft = false;
   function zeigeEreignisse() {
     for (let i = 0; i < ereignisse.length;) { if (ereignisse[i].art === "toast") toast(ereignisse.splice(i, 1)[0].text); else i++; }
@@ -2180,6 +2181,7 @@
     });
   }
   function zeigeFeier(e) {
+    if (e.art === "karte") return karteEnthuellen(e);
     const ton = e.art === "held" ? e.held : e.ton, nachFilm = e.art === "held" && e.filmGezeigt && heldHatFilm(e.held);
     const inhalt = e.art === "held"
       ? [el("p", { class: "feier-klein" }, "⭐ Perfect week! Neuer Superheld:"), heldenKarte(e.held, true),
@@ -2241,13 +2243,84 @@
   const KARTE_PX = 480;
   function heldKarteCanvas(h, o = {}) {
     if (!(window.Runner && window.Runner.heldKarteZeichnen)) return el("img", { src: h.bild, alt: `${h.name}: ${h.kraft}`, loading: "lazy" });
-    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? "Noch nicht gesammelt" : `${h.name}: ${h.kraft}` });
-    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, h, o); } catch (e) { /* Karte bleibt leer */ }
+    const k = o.gesperrt ? null : karteVon(h.id), st = k ? k.s : 0;
+    const oo = Object.assign({ stufe: st, selten: !o.gesperrt && KARTE.selten.includes(h.id) }, o);
+    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? "Noch nicht gesammelt" : `${h.name}: ${h.kraft}${st ? " · " + KARTE.namen[st] : ""}` });
+    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, h, oo); } catch (e) { /* Karte bleibt leer */ }
+    if (oo.stufe && window.Runner.heldKarteGlanz) glanzDazu(cv, oo.stufe);
     return cv;
   }
+  /* Folien-Karten (7.11.2026, Mr. Alex, große Version): Stufe je gesammeltem Held im Spielstand (stand.spiel.karten[id] = { s, c, p }, im Siegel):
+     s 0 normal · 1 Bronze (3 Cameo-Auftritte im London Run, Kraft hat gewirkt) · 2 Silber (danach ein Lauf mit ihm: Level geschafft = Boss besiegt, oder 5er-Serie nach seinem Auftritt)
+     · 3 Gold (danach jeder Lauf mit ihm: „goldener Moment“ 1:15, seltene Helden 1:30; sicherer Weg: 3 perfekte Läufe mit ihm = Gold-Trophäe).
+     c = Auftritte, p = perfekte Läufe ab Silber. Höchstens ein Aufstieg je Lauf; jeder Aufstieg steht im Ereignisprotokoll (Art „c“, ±0 Punkte).
+     Seltene Helden (KARTE.selten): kleinere Gold-Chance, ✦ RARE auf der Karte, zählen doppelt im Sammelwert. Karte mit Metallrahmen + wanderndem Lichtreflex (Runner.heldKarteGlanz,
+     Zeit bzw. Neigen des Handys; bei „Bewegung reduzieren“ still), Enthüllung beim Aufstieg (Karte dreht sich, Rahmen leuchtet, Held spricht seine Vorstellung – vorhandene Aufnahme). */
+  const KARTE = { cameos: 3, serie: 5, chance: 15, chanceSelten: 30, perfekt: 3, selten: ["felix", "zara"],
+    namen: ["", "Bronze", "Silber", "Gold"], symbol: ["", "🥉", "🥈", "🥇"] };
+  function karteVon(id) {
+    const sp = spielstand(), ks = (sp.karten = sp.karten && typeof sp.karten === "object" ? sp.karten : {});
+    return ks[id] || (ks[id] = { s: 0, c: 0, p: 0 });
+  }
+  const sammelwert = () => SP.helden.filter((h) => spielstand().helden.includes(h.id)).reduce((n, h) => n + (KARTE.selten.includes(h.id) ? 2 : 1), 0);
+  function karteZiel(h) {   // nächster Schritt als kurzer Hinweis unter der Karte
+    const k = karteVon(h.id);
+    if (k.s === 0) return `🥉 ${Math.min(k.c, KARTE.cameos)}/${KARTE.cameos} Auftritte im London Run`;
+    if (k.s === 1) return `🥈 Level schaffen oder ${KARTE.serie}er-Serie mit ${h.name.split(" ")[0]}`;
+    if (k.s === 2) return `🥇 Goldener Moment – oder ${Math.min(k.p, KARTE.perfekt)}/${KARTE.perfekt} perfekte Läufe`;
+    return "🥇 Gold!";
+  }
+  // nach einem London-Run-Lauf: Auftritte zählen, höchstens ein Aufstieg je Held und Lauf (nur gesammelte Helden)
+  function kartenAuswerten(e, trophaee) {
+    const sp = spielstand();
+    (Array.isArray(e.helden) ? e.helden : []).forEach((x) => {
+      const h = SP.helden.find((y) => y.id === x.id);
+      if (!h || !sp.helden.includes(h.id)) return;
+      const k = karteVon(h.id), vorher = k.s;
+      k.c += Math.max(0, x.auftritte | 0);
+      if (k.s === 0 && k.c >= KARTE.cameos) k.s = 1;
+      else if (k.s === 1 && (e.geschafft || (x.serie | 0) >= KARTE.serie)) k.s = 2;
+      else if (k.s === 2) {
+        if (trophaee === "gold") k.p++;
+        const chance = KARTE.selten.includes(h.id) ? KARTE.chanceSelten : KARTE.chance, moment = Math.random() * chance < 1;
+        if (moment || k.p >= KARTE.perfekt) { k.s = 3; k.moment = moment ? 1 : 0; }
+      }
+      if (k.s > vorher) { protokolliere("c", 0); ereignisse.push({ art: "karte", held: h, stufe: k.s, moment: k.s === 3 && !!k.moment }); }
+    });
+  }
+  // Lichtreflex: eine Schleife für alle sichtbaren Karten mit Stufe; Grundbild einmal gezeichnet, darüber je Bild der Glanz
+  const glanzKarten = new Set();
+  let glanzLaeuft = false, neigung = 0;
+  const bewegungRuhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
+  try { window.addEventListener("deviceorientation", (ev) => { if (ev && typeof ev.gamma === "number") neigung = Math.max(-1, Math.min(1, ev.gamma / 45)); }); } catch (e) { /* egal */ }
+  function glanzDazu(cv, stufe) {
+    const grund = document.createElement("canvas"); grund.width = cv.width; grund.height = cv.height;
+    grund.getContext("2d").drawImage(cv, 0, 0);
+    const g = { cv, grund, stufe, versatz: Math.random() };
+    if (bewegungRuhig()) { glanzMalen(g, 0.35); return; }
+    glanzKarten.add(g);
+    if (!glanzLaeuft) { glanzLaeuft = true; requestAnimationFrame(glanzBild); }
+  }
+  function glanzMalen(g, phase) {
+    const c = g.cv.getContext("2d");
+    c.clearRect(0, 0, g.cv.width, g.cv.height); c.drawImage(g.grund, 0, 0);
+    try { window.Runner.heldKarteGlanz(c, 0, 0, g.cv.width, g.stufe, phase); } catch (e) { /* ohne Glanz */ }
+  }
+  function glanzBild(ms) {
+    let sichtbar = false;
+    glanzKarten.forEach((g) => {
+      if (!g.cv.isConnected) { if (g.gesehen) glanzKarten.delete(g); return; }   // erst nach dem Einhängen zählen
+      g.gesehen = true; sichtbar = true;
+      glanzMalen(g, ms / (g.stufe === 3 ? 3200 : 4200) + g.versatz + neigung * 0.35);
+    });
+    if (glanzKarten.size) requestAnimationFrame(glanzBild); else glanzLaeuft = false;
+    return sichtbar;
+  }
   const heldKarteBild = (h) => { try { return window.Runner && window.Runner.heldKarteBild ? window.Runner.heldKarteBild(h) : h.bild; } catch (e) { return h.bild; } };
-  function heldenKarte(h, gross) {
-    return el("figure", { class: "heldenkarte" + (gross ? " gross" : ""), lang: "en" }, heldKarteCanvas(h));
+  function heldenKarte(h, gross, mitZiel, stufe) {
+    const st = stufe == null ? karteVon(h.id).s : stufe;
+    return el("figure", { class: "heldenkarte" + (gross ? " gross" : "") + (st ? " stufe-" + st : ""), lang: "en" }, heldKarteCanvas(h, stufe == null ? {} : { stufe }),
+      mitZiel && el("figcaption", { lang: "de" }, el("span", {}, karteZiel(h))));
   }
 
   function sammlung() {
@@ -2280,7 +2353,7 @@
       faktZeigen(o, true);
     });
     const helden = el("div", { class: "heldenraster" }, SP.helden.map((h) => sp.helden.includes(h.id)
-      ? el("button", { class: "held-knopf", onclick: () => { if (!heldFilm(h, () => heldZeigen(h, false))) heldZeigen(h); } }, heldenKarte(h))   // mit Film: erst der Film, danach die Karte
+      ? el("button", { class: "held-knopf", onclick: () => { if (!heldFilm(h, () => heldZeigen(h, false))) heldZeigen(h); } }, heldenKarte(h, false, true))   // mit Film: erst der Film, danach die Karte
       : el("div", { class: "held-zu" }, heldKarteCanvas(h, { gesperrt: true, hinweis: "Perfect week" }))));
     zeige(
       el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Hall of Fame")),
@@ -2301,7 +2374,11 @@
         el("ol", { class: "wochenleiste" }, woche),
         el("p", { class: "klein" }, `🔥 ${serie()} Schultage am Stück · ⭐ ${sp.wochen.length} perfekte Wochen. Übst du an jedem Schultag, bekommst du einen neuen Superhelden! Ferien und Feiertage zählen nicht – deine Serie bleibt.`)),
       el("section", { class: "satzkarte" },
-        el("h2", {}, `🦸 Superhelden (${sp.helden.length} von ${SP.helden.length})`), helden),
+        el("h2", {}, `🦸 Superhelden (${sp.helden.length} von ${SP.helden.length})`),
+        sp.helden.length > 0 && el("p", { class: "klein karten-zaehler" }, [3, 2, 1].map((st) => `${KARTE.symbol[st]} ${sp.helden.filter((id) => karteVon(id).s === st).length} ${KARTE.namen[st]}`).join(" · ")
+          + ` · ✦ Sammelwert ${sammelwert()}`),
+        sp.helden.length > 0 && el("p", { class: "klein" }, "Folien-Karten: Hilft dir ein Held im London Run, steigt seine Karte auf – Bronze, Silber, Gold. ✦ RARE-Helden zählen doppelt."),
+        helden),
       runnerSammlung(),
       aktenBereich(),
       el("section", { class: "satzkarte" },
@@ -2532,8 +2609,16 @@
   const runnerAudio = (id) => (SP.runner_audio && SP.runner_audio[id]) || null;
   const runnerEndeText = (W) => { const rw = ((R() && R().WELTEN) || []).find((x) => x.id === W.id); return (rw && rw.ende) || `You found ${W.ziel}!`; };
   const HELD_STIMME = { leo: "m", kenji: "m", felix: "m", max: "m", camilla: "f", ellie: "f", olivia: "f", zara: "f", penny: "f", tessa: "f" }; // Geräte-Stimme, falls eine Cameo-Aufnahme fehlt
-  const runnerWeltOffen = (w) => { const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
-  const runnerWeltVon = (id) => RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0];
+  // 🪩 Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): nicht in der Welt-Reihe; einmalige Überraschung nach dem ersten geschafften Level (Feier), danach Knopf unter den Welten, Ticket wie immer
+  const RUNNER_DISCO = { id: "disco", name: "Disco Run", staat: "Bonus", ziel: "the disco ball", trophaee: "Disco Star", symbol: "🪩", boss: "DJ Funky Flamingo", tuer: "der Glitzervorhang", bonus: true, ab: 1 };
+  const runnerWeltOffen = (w) => { if (w && w.bonus) return (runnerStand().geschafft || 0) >= w.ab; const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
+  const runnerWeltVon = (id) => (id === RUNNER_DISCO.id ? RUNNER_DISCO : RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0]);
+  function discoFeier() {   // einmal: „Disco Run unlocked!“ (stand.spiel.runner.disco = 1)
+    const r = runnerStand(); if (r.disco || !runnerWeltOffen(RUNNER_DISCO)) return false;
+    r.disco = 1; speichern();
+    ereignisse.push({ art: "feier", symbol: "🪩", titel: "Disco Run unlocked!", text: "Überraschung! Ein Bonus-Level ist frei: 🪩 Disco Run – Tanzfläche, Discokugel und DJ Funky Flamingo. Du findest es im London Run unter den Welten.", ton: { audio: { tts: "Surprise! Disco Run unlocked! Let's dance!", lang: "en-GB", stimme: "m" } } });
+    return true;
+  }
   const R = () => window.Runner || null;
   function runnerStand() {
     const sp = spielstand();
@@ -2595,7 +2680,7 @@
     const sp = spielstand(), r = runnerStand(), gruppen = station(7).gruppen;
     if (!runnerWahl || !gruppen[runnerWahl.i]) runnerWahl = { i: 0, welt: runnerWahl && runnerWahl.welt };
     let W = runnerWeltVon(runnerWahl.welt);
-    if (!runnerWeltOffen(W)) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
+    if (!runnerWeltOffen(W) || W.bonus) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
     const tickets = r.tickets || 0, fehlt = runnerFehlt(), ws = runnerWoerter(runnerWahl.i), titel = runnerTitelName(r.titel);
     // Ohne Ticket führt der Hauptknopf in den Shop (Ticket hervorgehoben), damit klar ist, wo man hin muss
     const spielen = tickets > 0
@@ -2614,6 +2699,8 @@
     zeige(spielKopf("London Run", zeigeSpiele),
       el("section", { class: "satzkarte runner-start" },
         weltReiter, weltHinweis,
+        spassKnopf(),   // Spaß-Level (7.11.)
+        runnerWeltOffen(RUNNER_DISCO) && el("p", { class: "runner-kapitel6 runner-disco" }, knopf("🪩 Bonus · Disco Run", () => runnerSpiel(runnerWahl.i, RUNNER_DISCO.id), "leise"), " ", el("small", {}, `DJ Funky Flamingo wartet – 🏆 ${RUNNER_DISCO.trophaee}: ${trophaeenText(r.level.disco)}`)),
         el("div", { class: "runner-welt" },
           el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, W.symbol),
           el("div", {},
@@ -2640,6 +2727,7 @@
             : `Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Kauf erst ein Ticket, dann geht's los!`)
           : el("p", { class: "klein" }, "Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Coins zurück, dafür Trophäe und Runner-Titel. Punkte nur, wenn du das Level schaffst: 1 ⭐ je 💎, +10 ⭐ einmal je ganzer Geschichte (höchstens 30 ⭐ je Lauf)."),
         el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumRunnerShop))));
+    if (discoFeier()) setTimeout(zeigeEreignisse, 50);   // wer schon vorher ein Level geschafft hat
   }
   // Erklärtext der Startseite je Welt (deutsche Bedienung, englische Spielsätze)
   function runnerStartText(W) {
@@ -2700,7 +2788,7 @@
   }
   // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (neues Ticket) oder Startseite
   function runnerEnde(i, e, ws, welt) {
-    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
+    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = W.bonus ? null : RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
     let stufe = null, neuOffen = false, storyPunkte = 0, storyNeuFrei = false;
     if (e.geschafft) {
       r.geschafft++;
@@ -2726,6 +2814,8 @@
         ereignisse.push({ art: "feier", symbol: t === RUNNER.titel.length ? "🦸" : "🏃", titel: `London Run: ${name}`, text: `Neuer Runner-Titel: ${name}!`, ton: waehleRuf("stark") });
       }
     }
+    discoFeier();   // 🪩 nach dem ersten geschafften Level: Überraschung
+    kartenAuswerten(e, stufe);   // Folien-Karten: Cameos zählen, Aufstiege als Ereignis
     if (storyPunkte > 0) punkteDazu(storyPunkte, { art: "s" }); // Zeitlog (mrAlexWacht) läuft in punkteDazu, damit Farmen im London Run auffällt
     speichern();
     const r_ = waehleRuf(e.geschafft ? "stark" : "fehler");
@@ -2768,6 +2858,53 @@
     const alexTon = e.alex ? (e.alex.audio || { tts: e.alex.text, lang: "en-GB", stimme: "m" }) : null;   // Mr. Alex' Schlusswort (7.11.) nach der Ansage
     if (!ereignisse.some(grossEreignis) && (endeTon || alexTon || (r_ && r_.audio))) spiele([endeTon, alexTon, r_ && r_.audio]);
   }
+  // Spaß-Level „The Silly Run“ (7.11., Idee Mr. Alex): albernes Bonus-Level mit den Wörtern des gewählten Abschnitts (Engine Runner.spass).
+  // Einmal am Tag gratis mit Punkten (1 ⭐ je richtige Blase, höchstens 10 – wie ein Spiel), danach nur mit Ticket und ohne Punkte (keine Farm-Lücke).
+  const spassGratis = () => { const sl = runnerStand().spass; return !sl || sl.am !== iso(heute()); };
+  function spassKnopf() {
+    if (!R() || !R().spass) return null;
+    const gratis = spassGratis(), tickets = runnerStand().tickets || 0;
+    return el("p", { class: "runner-spass" }, knopf(`🤪 The Silly Run · ${gratis ? "heute gratis" : "🎟️ 1"}`, spassSpiel, "leise"), " ",
+      el("small", {}, gratis ? "Bonus-Level, total albern – einmal am Tag bis 10 ⭐" : tickets > 0 ? "noch mal mit Ticket, ohne Punkte" : "morgen wieder gratis"));
+  }
+  function spassSpiel() {
+    const r = runnerStand(), i = runnerWahl ? runnerWahl.i : 0, ws = runnerWoerter(i);
+    if (!R() || !R().spass || ws.length < 4) return runnerStart();
+    const gratis = spassGratis();
+    if (!gratis && !(r.tickets > 0)) { toast("Heute schon gespielt – morgen wieder gratis oder mit Ticket."); return; }
+    if (gratis) r.spass = { am: iso(heute()), n: ((r.spass && r.spass.n) || 0) + 1 };
+    else { r.tickets--; r.spass.n = (r.spass.n || 0) + 1; toast("🎟️ Ticket eingelöst"); }
+    speichern();
+    lage = null;
+    const buehne = el("div", { class: "runner-buehne" });
+    const abbruch = knopf("✕", () => frage("Abbrechen?", "Abbrechen", "Weiterspielen").then((ok) => { if (ok) runnerStart(); }), "runner-x");
+    abbruch.setAttribute("aria-label", "Spiel abbrechen");
+    zeige(buehne, abbruch);
+    document.body.classList.add("runner-aktiv");
+    runnerLauf = R().spass({ wrapper: buehne, skin: skinWirksam(), klasse: 6, titel: "The Silly Run",
+      woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
+      texte: { tor: (de) => `Welche Blase heißt „${de}“?`, hinweis: "Tippen = springen · 2× tippen = Doppelsprung" },
+      stimme: { wort: (j) => runnerWort([ws[j % ws.length].audio.en], {}) },
+      onEnde: (e) => spassEnde(e, ws, gratis) });
+  }
+  function spassEnde(e, ws, gratis) {
+    const punkte = gratis ? Math.min(10, e.richtig || 0) : 0;
+    if (punkte > 0) punkteDazu(punkte, { art: "s" }); else speichern();   // Protokoll + Siegel wie beim Runner (punkteDazu speichert)
+    const v = (en) => ws.find((x) => spielWort(x) === en);
+    lage = null;
+    zeige(spielKopf("The Silly Run", runnerStart),
+      el("section", { class: "geschafft runner-ende" },
+        el("div", { class: "runner-pokal", "aria-hidden": "true" }, "🤪"),
+        el("h2", { lang: "en" }, "Silly level complete!"),
+        el("p", {}, `✔ ${e.richtig} / ${e.fragen} richtig · 🐔 ${e.platt} platt · ⏱ ${e.dauer} s`),
+        el("p", { class: "runner-story-punkte" }, gratis ? `⭐ Punkte: ${punkte} (1 je richtige Blase, höchstens 10, einmal am Tag)` : "Mit Ticket gespielt: keine Punkte – nur Spaß.")),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, "Die Wörter"),
+        el("ul", { class: "wortliste runner-woerterliste" }, (e.woerter || []).map((w) => el("li", {},
+          v(w.en) && knopf("🔊", () => spiele([v(w.en).audio.en]), "leise"), w.richtig ? " ✅ " : " ❌ ", el("strong", { lang: "en" }, w.en), " – ", el("span", { lang: "de" }, w.de))))),
+      el("div", { class: "knopfreihe" }, knopf("🇬🇧 Zum London Run", runnerStart, "haupt"), knopf("Zur Startseite", startseite, "leise")));
+    setTimeout(zeigeEreignisse, 50);
+  }
   // Hall of Fame: Abschnitt in der Sammlung (eine Trophäe je Welt; seit Welt 5 Wembley (1.11.) gibt es keine „bald“-Welt mehr)
   function runnerSammlung() {
     const r = runnerStand(), naechste = RUNNER.ab[r.titel || 0];
@@ -2775,7 +2912,7 @@
       el("h2", {}, "🇬🇧 London Run – Hall of Fame"),
       el("p", {}, "Runner-Titel: ", el("strong", { lang: "en" }, runnerTitelName(r.titel) || "noch keiner"), ` · ${r.geschafft} Level geschafft · ${r.gespielt} Spiele`),
       naechste && el("p", { class: "klein" }, `Noch ${naechste - r.geschafft} ${naechste - r.geschafft === 1 ? "geschafftes Level" : "geschaffte Level"} bis „${RUNNER.titel[r.titel || 0]}“`),
-      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.map((w) => {
+      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.concat(runnerWeltOffen(RUNNER_DISCO) ? [RUNNER_DISCO] : []).map((w) => {
         const st = r.level[w.id];
         return el("li", { class: st ? "ok" : "", "data-welt": w.id },
           el("span", { "aria-hidden": "true" }, st === "gold" ? "🥇" : st === "silber" ? "🥈" : w.bald ? "🔒" : "🏆"),
@@ -2928,9 +3065,9 @@
         m[1], el("span", { class: "akten-de", lang: "de" }, m[2]));
     });
   }
-  function aktenZeigen(a) {
+  function aktenZeigen(a, gold) {
     const gesehen = new Set(), lobBox = el("p", { class: "gym-lob", "aria-live": "polite" });
-    feier.classList.add("akte");
+    feier.classList.add("akte"); feier.classList.toggle("gold-akte", !!gold);
     feier.replaceChildren(
       el("h2", { lang: "en" }, a.titel),
       el("p", { class: "klein" }, "Tipp auf ein farbiges Wort: Dann siehst du die Bedeutung."),
@@ -2941,8 +3078,8 @@
         return el("li", {}, el("span", { lang: "en" }, f.frage), " ", knopf("Lösung", () => { lsg.hidden = false; gesehen.add(f); if (gesehen.size === a.fragen.length && !lobBox.textContent) lobBox.textContent = lob(true); }, "leise"), lsg);
       })),
       lobBox,
-      el("div", { class: "knopfreihe" }, knopf("Schließen", () => { feier.close(); feier.classList.remove("akte"); }, "haupt")));
-    feier.addEventListener("close", () => feier.classList.remove("akte"), { once: true });
+      el("div", { class: "knopfreihe" }, knopf("Schließen", () => { feier.close(); feier.classList.remove("akte", "gold-akte"); }, "haupt")));
+    feier.addEventListener("close", () => feier.classList.remove("akte", "gold-akte"), { once: true });
     feier.showModal();
   }
   function aktenBereich() {
@@ -2954,11 +3091,50 @@
             el("small", {}, `Du brauchst: ${(SP.helden.find((h) => h.id === a.figur) || {}).name} + ${(SP.orte.find((o) => o.id === a.ort) || {}).name}`));
     });
     return el("section", { class: "satzkarte" }, el("h2", {}, `🔒 Geheimakten (${SP.akten.filter((a) => spielstand().helden.includes(a.figur) && SP.orte.findIndex((o) => o.id === a.ort) < orteFrei()).length} von ${SP.akten.length})`),
-      el("p", { class: "klein" }, "Eine Akte öffnet sich, wenn du den Superhelden hast und seinen Ort in London freigeschaltet hast."), el("div", { class: "akten" }, kacheln));
+      el("p", { class: "klein" }, "Eine Akte öffnet sich, wenn du den Superhelden hast und seinen Ort in London freigeschaltet hast."), el("div", { class: "akten" }, kacheln), goldTeil());
+  }
+  /* Goldene Akten (Regel B, 7.11.2026, docs/secret-level/konzept-entwurf.md): SP.gold aus inhalte/goldakten.tsv.
+     art „serie“ = so viele Schultage am Stück (serie()), art „wochen“ = so viele perfekte Wochen insgesamt (sp.wochen).
+     Einmal erreicht, bleibt die Akte offen (sp.gold = [ids], im Siegel) – auch wenn die Serie später reißt. */
+  const goldText = (a) => a.art === "serie" ? `${a.ziel} Schultage am Stück` : `${a.ziel} perfekte Wochen`;
+  function goldPruefen(feiern) {
+    const sp = spielstand(), n = serie();
+    if (!Array.isArray(sp.gold)) sp.gold = [];
+    const neu = (SP.gold || []).filter((a) => !sp.gold.includes(a.id) && (a.art === "serie" ? n : sp.wochen.length) >= a.ziel);
+    for (const a of neu) {
+      sp.gold.push(a.id);
+      if (feiern) ereignisse.push({ art: "feier", symbol: "🌟", titel: "Gold File unlocked!", text: `${goldText(a)} – eine goldene Akte ist offen: „${a.titel.replace(/^.*? – /, "")}“. Du findest sie in deiner Sammlung.` });
+    }
+    return neu.length > 0;
+  }
+  function goldTeil() {
+    if (!(SP.gold || []).length) return null;
+    if (goldPruefen(false)) speichern();
+    const sp = spielstand();
+    return el("div", { class: "gold-akten" }, el("h3", {}, `🌟 Goldene Akten (${SP.gold.filter((a) => sp.gold.includes(a.id)).length} von ${SP.gold.length})`),
+      el("p", { class: "klein" }, "Besondere Geschichten für alle, die dranbleiben: nach einer Serie von Schultagen oder nach perfekten Wochen."),
+      el("div", { class: "akten" }, SP.gold.map((a) => sp.gold.includes(a.id)
+        ? el("button", { class: "akte-kachel offen gold", onclick: () => aktenZeigen(a, true) }, el("span", { "aria-hidden": "true" }, "🌟"), el("strong", { lang: "en" }, a.titel))
+        : el("div", { class: "akte-kachel zu gold" }, el("span", { "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, a.titel.replace(/ – .*/, "")),
+            el("small", {}, `Du brauchst: ${goldText(a)}`)))));
   }
 
+ // Aufstieg einer Folien-Karte: Karte dreht sich, Rahmen leuchtet auf (Gold-Moment: Blitz), der Held spricht seine Vorstellung (vorhandene Aufnahme)
+  function karteEnthuellen(e) {
+    const h = e.held, st = e.stufe, ton = h.intro_audio || h.audio;
+    feier.classList.remove("tier-feier");
+    feier.replaceChildren(konfetti(), ...(e.moment ? [el("div", { class: "karte-blitz", "aria-hidden": "true" })] : []),
+      el("p", { class: "feier-klein" }, e.moment ? "⚡ Golden moment!" : `${KARTE.symbol[st]} Neue Stufe!`),
+      el("h2", { id: "feier-titel", lang: "en" }, `${h.name}: ${KARTE.namen[st]}`),
+      el("div", { class: "karte-dreh" }, heldenKarte(h, true, false, st)),
+      el("p", { class: "klein" }, st < 3 ? (st === karteVon(h.id).s ? "Nächstes Ziel: " + karteZiel(h) : "") : "Höchste Stufe – deine Karte glänzt in Gold!"),
+      el("div", { class: "knopfreihe" }, ton && knopf("🔊 Anhören", () => spiele([ton])),
+        knopf("Weiter ➜", () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
+    feier.showModal();
+    if (ton) spiele([ton], { warten: true });
+  }
   function heldZeigen(h, mitTon = true) {
-    feier.replaceChildren(heldenKarte(h, true), el("p", { class: "steckbrief", lang: "en" }, h.steckbrief),
+    feier.replaceChildren(heldenKarte(h, true, true), el("p", { class: "steckbrief", lang: "en" }, h.steckbrief),
       el("div", { class: "knopfreihe" }, h.audio && knopf("🔊 Anhören", () => spiele([h.audio])),
         heldHatFilm(h) && knopf("▶ Film", () => { feier.close(); stopp(); heldFilm(h, () => heldZeigen(h, false)); }, "leise"),
         knopf("Schließen", () => { feier.close(); stopp(); }, "haupt")));
@@ -3082,6 +3258,7 @@
         el("p", { class: "klein" }, stand_), gesamt > 0 && punkte),
       el("div", { class: "gym-knoepfe" },
         knopf(plan.geschafft || gesamt === 0 ? "Ansehen" : fertig ? "▶ Weiter" : "▶ Los geht's", gymStart, plan.geschafft ? "" : "haupt"),
+        gymMemoryOffen() && knopf("🎲 Memory", gymMemory, "haupt"),
         el("button", { class: "knopf leise", "aria-label": "Pensum einstellen", "aria-expanded": "false",
           onclick: (e) => { einstellung.hidden = !einstellung.hidden; e.currentTarget.setAttribute("aria-expanded", String(!einstellung.hidden)); } }, "⚙")),
       einstellung);
@@ -3191,7 +3368,9 @@
         r && el("p", { class: "gym-lob" }, el("strong", { lang: "en" }, r.text), r.de && el("span", { lang: "de" }, " – " + r.de)),
         el("p", {}, alles ? "Alle Wörter von heute sind geübt. Morgen gibt es neue und die fälligen von heute kommen wieder."
           : "Erledigtes bleibt gespeichert. Komm später wieder und mach den Rest fertig."),
-        el("div", { class: "knopfreihe" }, knopf("Zur Startseite", startseite, "haupt"), knopf("🏆 Hall of Fame", sammlung))));
+        alles && gymMemoryOffen() && el("p", { class: "ansage" }, "🎲 Jetzt noch die Memory-Runde von heute: Finde die Paare mit deinen Gym-Wörtern!"),
+        el("div", { class: "knopfreihe" }, alles && gymMemoryOffen() ? knopf("🎲 Memory-Runde", gymMemory, "haupt") : knopf("Zur Startseite", startseite, "haupt"),
+          alles && gymMemoryOffen() && knopf("Zur Startseite", startseite), knopf("🏆 Hall of Fame", sammlung))));
       if (icon.heben) setTimeout(icon.heben, 400);
     };
     gym = null; lage = null;
@@ -3199,6 +3378,32 @@
     // erst belohnen (reiht Pop-ups ein), dann sprechen: das Pop-up wartet auf die Schlussstimme, statt sie abzuschneiden
     if (erstesMal) belohne(true, true, true);
     spiele([!ereignisse.some(grossEreignis) && r && r.audio, fini && fini.audio]);
+  }
+
+  /* Memory im Word Gym (7.11.2026): einmal pro Tag nach dem Pensum, 6 Paare aus den Wörtern von heute (fällig + neu),
+     aufgefüllt mit den nächsten fälligen Gym-Karten. Punkte (PUNKTE.spiel) einmal pro Tag über die eigene Marke gym.memGymTag –
+     unabhängig von gym.memoryTag (Memory in Station 5). Abbrechen und neu starten geht, Punkte gibt es nur für die erste fertige Runde. */
+  function gymMemoryWoerter() {
+    const plan = gymPlan(), g = gymStand(), heute_ = [...plan.wdh, ...plan.neu];
+    const rest = Object.entries(g.karten).filter(([id]) => !heute_.includes(id)).sort((a, b) => (a[1].f < b[1].f ? -1 : a[1].f > b[1].f ? 1 : 0)).map(([id]) => id);
+    const ok = (ids) => ids.map(vokabel).filter(memOk);
+    const ws = mischen(ok(heute_)).slice(0, 6);
+    for (const v of ok(rest)) { if (ws.length >= 6) break; if (!ws.some((w) => memKurz(w.de) === memKurz(v.de))) ws.push(v); }
+    return mischen(ws.filter((v, i) => ws.findIndex((w) => memKurz(w.de) === memKurz(v.de)) === i));
+  }
+  const gymMemoryOffen = () => { const plan = gymPlan(); return (plan.geschafft || !(plan.wdh.length + plan.neu.length)) && gymStand().memGymTag !== spielTag() && gymMemoryWoerter().length >= 3; };
+  function gymMemory() {
+    const ws = gymMemoryWoerter();
+    if (ws.length < 3 || gymStand().memGymTag === spielTag()) return startseite();
+    const m = memoryFeld(ws, () => {
+      const g = gymStand();
+      if (g.memGymTag === spielTag()) return "";
+      g.memGymTag = spielTag(); punkteDazu(PUNKTE.spiel, { art: "g", bonus: true }); // zeigt den Punkte-Toast selbst
+      return ` +${PUNKTE.spiel} ⭐ – Memory für heute geschafft!`;
+    });
+    lage = null;
+    zeige(gymKopf(), ansage("Find the pairs!", "Memory mit deinen Gym-Wörtern: Finde die Paare – englisches Wort und deutsche Bedeutung."),
+      karte(null, null, m.feld, m.zaehler, m.box, el("div", { class: "knopfreihe" }, knopf("Zur Startseite", startseite, "leise"))));
   }
 
   /* ---------- Fragen für Mr. Alex ---------- */
@@ -3631,7 +3836,7 @@
     const gesperrt = !!sp.gesperrt;
     // Stichprobe (31.10., Schutz-Paket 3): Protokoll-Summe, Warnzähler, Plausibilitätsmarker und die letzten 10 Ereignisse – nur lesen
     const pr = plausibilitaet(), w = warnZaehlerLies(), pl = Array.isArray(stand.protokoll) ? stand.protokoll : [];
-    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage", p: "Test" };
+    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage", p: "Test", c: "Karte" };
     const zeit = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; };
     const letzte = pl.slice(-10).reverse().map((e) => el("li", {}, e[1] === "x" ? `${zeit(e[0])} · Abfrage · ${e[2] > 0 ? "👍" : "👎"}`
       : `${zeit(e[0])} · ${ARTEN[e[1]] || e[1]} · ${e[2] > 0 && e[1] !== "r" && e[1] !== "a" ? "+" : ""}${e[2]}${e[1] === "k" ? " 🪙" : ""}`));
@@ -3812,6 +4017,7 @@
   setInterval(updateHinweis, 3000);
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "ort", ort: SP.orte.find((o) => o.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalt-Anzeige eines Orts (Orts-Szene/Stempel) auslösen
+  if (LOKAL) window.__karteTest = { auswerten: kartenAuswerten, karteVon, zeige: zeigeEreignisse, sp: spielstand, sammlung };   // nur Test-Build: Folien-Karten prüfen
   if (LOKAL) window.__heldEreignis = (id) => { ereignisse.push({ art: "held", held: SP.helden.find((h) => h.id === id) }); zeigeEreignisse(); }; // nur Test-Build: neuer Superheld (Heldenfilm, danach Karte)
   if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
   if (LOKAL) window.__station = (nr) => { lage = { nr, gruppe: null, teil: 0 }; stationGeschafft(); }; // nur Test-Build: Station abschließen (Mega-Lob)

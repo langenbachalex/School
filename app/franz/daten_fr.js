@@ -1,5 +1,72 @@
 // AUTOMATISCH ERZEUGT von werkzeuge/franz_bauen.py aus inhalte/franz/ – hier nicht ändern.
 window.DATEN_FR = {
+ "runner": {
+  "alex": {
+   "fr_start_1": "audio/runner/fr_start_1.mp3",
+   "fr_start_2": "audio/runner/fr_start_2.mp3",
+   "fr_combo3_1": "audio/runner/fr_combo3_1.mp3",
+   "fr_combo3_2": "audio/runner/fr_combo3_2.mp3",
+   "fr_combo5_1": "audio/runner/fr_combo5_1.mp3",
+   "fr_combo5_2": "audio/runner/fr_combo5_2.mp3",
+   "fr_combo8_1": "audio/runner/fr_combo8_1.mp3",
+   "fr_combo8_2": "audio/runner/fr_combo8_2.mp3",
+   "fr_tore3_1": "audio/runner/fr_tore3_1.mp3",
+   "fr_leben_1": "audio/runner/fr_leben_1.mp3",
+   "fr_leben_2": "audio/runner/fr_leben_2.mp3",
+   "fr_letztes_1": "audio/runner/fr_letztes_1.mp3",
+   "fr_halb_1": "audio/runner/fr_halb_1.mp3",
+   "fr_halb_2": "audio/runner/fr_halb_2.mp3",
+   "fr_boss_1": "audio/runner/fr_boss_1.mp3",
+   "fr_ende_1": "audio/runner/fr_ende_1.mp3",
+   "fr_ende_2": "audio/runner/fr_ende_2.mp3",
+   "fr_fail_1": "audio/runner/fr_fail_1.mp3",
+   "fr_saute_1": "audio/runner/fr_saute_1.mp3",
+   "fr_attention_1": "audio/runner/fr_attention_1.mp3",
+   "fr_gauche_1": "audio/runner/fr_gauche_1.mp3",
+   "fr_vite_1": "audio/runner/fr_vite_1.mp3"
+  },
+  "boss": {
+   "banner": "audio/runner/paris_banner.mp3",
+   "richtig": "audio/runner/paris_richtig.mp3",
+   "falsch": "audio/runner/paris_falsch.mp3"
+  },
+  "cameo": {
+   "lucie": "audio/runner/cameo_lucie.mp3",
+   "gaspard": "audio/runner/cameo_gaspard.mp3",
+   "bruno": "audio/runner/cameo_bruno.mp3",
+   "chloe": "audio/runner/cameo_chloe.mp3",
+   "camille": "audio/runner/cameo_camille.mp3",
+   "robin": "audio/runner/cameo_robin.mp3",
+   "coco": "audio/runner/cameo_coco.mp3",
+   "pierre": "audio/runner/cameo_pierre.mp3",
+   "horace": "audio/runner/cameo_horace.mp3",
+   "hector": "audio/runner/cameo_hector.mp3"
+  },
+  "start": "audio/runner/paris_start.mp3",
+  "ende": "audio/runner/paris_ende.mp3"
+ },
+ "disco": {
+  "alex": {
+   "disco_halb_1": "audio/runner/fr_disco_halb_1.mp3",
+   "disco_halb_2": "audio/runner/fr_disco_halb_2.mp3",
+   "disco_combo3_1": "audio/runner/fr_disco_combo3_1.mp3",
+   "disco_combo3_2": "audio/runner/fr_disco_combo3_2.mp3",
+   "disco_combo5_1": "audio/runner/fr_disco_combo5_1.mp3",
+   "disco_combo5_2": "audio/runner/fr_disco_combo5_2.mp3",
+   "disco_leben_1": "audio/runner/fr_disco_leben_1.mp3",
+   "disco_leben_2": "audio/runner/fr_disco_leben_2.mp3",
+   "disco_boss_1": "audio/runner/fr_disco_boss_1.mp3",
+   "disco_ende_1": "audio/runner/fr_disco_ende_1.mp3",
+   "disco_fail_1": "audio/runner/fr_disco_fail_1.mp3"
+  },
+  "boss": {
+   "banner": "audio/runner/disco_fr_banner.mp3",
+   "richtig": "audio/runner/disco_fr_richtig.mp3",
+   "falsch": "audio/runner/disco_fr_falsch.mp3"
+  },
+  "start": "audio/runner/disco_fr_start.mp3",
+  "ende": "audio/runner/disco_fr_ende.mp3"
+ },
  "dialoge": [
   {
    "id": "d09",
@@ -2116,184 +2183,144 @@ window.DATEN_FR = {
  ],
  "helden": [
   {
-   "id": "loupe",
-   "name": "Loupe",
-   "kraft": "Le détective",
-   "kraft_de": "Der Detektiv",
-   "zeichnung": "molly",
-   "wendung": "Qu'est-ce que c'est que ce truc-là ?",
-   "wendung_de": "Was ist denn das für ein Ding da?",
-   "ab": 0
-  },
-  {
-   "id": "fantome",
-   "name": "Fantôme",
-   "kraft": "L'invisible",
-   "kraft_de": "Der Unsichtbare",
-   "zeichnung": "holly",
-   "wendung": "Il y a quelqu'un ?",
-   "wendung_de": "Ist da jemand?",
-   "ab": 1
-  },
-  {
-   "id": "gadget",
-   "name": "Gadget",
-   "kraft": "L'inventeur",
-   "kraft_de": "Der Erfinder",
-   "zeichnung": "archie",
-   "wendung": "J'ai quelque chose pour toi !",
-   "wendung_de": "Ich hab was für dich!",
-   "ab": 2
-  },
-  {
-   "id": "lumiere",
-   "name": "Lumière",
-   "kraft": "Le laser",
-   "kraft_de": "Der Laser-Held",
-   "zeichnung": "ally",
+   "id": "lucie",
+   "name": "Lucie la Luciole",
+   "symbol": "✨",
+   "kraft": "La lumière",
+   "kraft_de": "Licht",
    "wendung": "C'est très clair !",
+   "intro": "Salut ! Je suis Lucie la Luciole. Ma super-force, c'est la lumière. Le soir, j'allume la tour Eiffel. C'est très clair !",
+   "intro_de": "Hallo! Ich bin Lucie das Glühwürmchen. Meine Superkraft ist das Licht. Abends schalte ich den Eiffelturm an. Ganz klar!",
+   "audio": "audio/helden/intro_lucie.mp3",
    "wendung_de": "Ganz klar!",
-   "ab": 3
+   "ort": "tour_eiffel",
+   "selten": false
   },
   {
-   "id": "hourra",
-   "name": "Hourra",
-   "kraft": "La fête",
-   "kraft_de": "Der Jubel-Held",
-   "zeichnung": "rosie",
-   "wendung": "C'est trop bien !",
-   "wendung_de": "Das ist mega!",
-   "ab": 4
-  },
-  {
-   "id": "rigolo",
-   "name": "Rigolo",
-   "kraft": "Le clown",
-   "kraft_de": "Der Spaßvogel",
-   "zeichnung": "benny",
-   "wendung": "N'importe quoi !",
-   "wendung_de": "So ein Quatsch!",
-   "ab": 5
-  },
-  {
-   "id": "chrono",
-   "name": "Chrono",
-   "kraft": "Le temps",
-   "kraft_de": "Der Zeitstopper",
-   "zeichnung": "eddie",
-   "wendung": "C'est pas vrai !",
-   "wendung_de": "Das gibt's doch nicht!",
-   "ab": 6
-  },
-  {
-   "id": "eclair",
-   "name": "Éclair",
-   "kraft": "Le rapide",
-   "kraft_de": "Der Schnelle",
-   "zeichnung": "cody",
+   "id": "gaspard",
+   "name": "Gaspard le Guépard",
+   "symbol": "⚡",
+   "kraft": "Super vitesse",
+   "kraft_de": "Supertempo",
    "wendung": "Vas-y ! Allez, viens !",
+   "intro": "Salut ! Je suis Gaspard le Guépard. Je cours très, très vite, plus vite que le Tour de France ! Vas-y ! Allez, viens !",
+   "intro_de": "Hallo! Ich bin Gaspard der Gepard. Ich renne sehr, sehr schnell, schneller als die Tour de France! Los! Komm schon!",
+   "audio": "audio/helden/intro_gaspard.mp3",
    "wendung_de": "Los! Komm schon!",
-   "ab": 7
+   "ort": "champs_elysees",
+   "selten": false
   },
   {
-   "id": "costaud",
-   "name": "Costaud",
-   "kraft": "Le fort",
-   "kraft_de": "Der Starke",
-   "zeichnung": "gus",
+   "id": "bruno",
+   "name": "Bruno l'Ours",
+   "symbol": "💪",
+   "kraft": "Super force",
+   "kraft_de": "Superstärke",
    "wendung": "Ça marche !",
+   "intro": "Bonjour ! Je suis Bruno l'Ours. Je suis très fort. Une voiture ? Je la porte ! Ça marche !",
+   "intro_de": "Guten Tag! Ich bin Bruno der Bär. Ich bin sehr stark. Ein Auto? Ich trage es! Geht klar!",
+   "audio": "audio/helden/intro_bruno.mp3",
    "wendung_de": "Geht klar!",
-   "ab": 8
+   "ort": "arc_triomphe",
+   "selten": false
   },
   {
-   "id": "calme",
-   "name": "Calme",
-   "kraft": "Le protecteur",
-   "kraft_de": "Der Beschützer",
-   "zeichnung": "bonnie",
+   "id": "chloe",
+   "name": "Chloé la Chouette",
+   "symbol": "🔍",
+   "kraft": "Vision de nuit",
+   "kraft_de": "Nachtsicht",
+   "wendung": "Qu'est-ce que c'est que ce truc-là ?",
+   "intro": "Bonsoir ! Je suis Chloé la Chouette. La nuit, je vois tout. Au Louvre, il y a un mystère. Qu'est-ce que c'est que ce truc-là ?",
+   "intro_de": "Guten Abend! Ich bin Chloé die Eule. Nachts sehe ich alles. Im Louvre gibt es ein Rätsel. Was ist denn das für ein Ding da?",
+   "audio": "audio/helden/intro_chloe.mp3",
+   "wendung_de": "Was ist denn das für ein Ding da?",
+   "ort": "louvre",
+   "selten": false
+  },
+  {
+   "id": "camille",
+   "name": "Camille le Caméléon",
+   "symbol": "👻",
+   "kraft": "Invisible",
+   "kraft_de": "Unsichtbar",
+   "wendung": "Il y a quelqu'un ?",
+   "intro": "Coucou ! Je suis Camille le Caméléon. Regarde, je suis invisible ! Dans le métro, personne ne me voit. Il y a quelqu'un ?",
+   "intro_de": "Huhu! Ich bin Camille das Chamäleon. Schau, ich bin unsichtbar! In der Metro sieht mich niemand. Ist da jemand?",
+   "audio": "audio/helden/intro_camille.mp3",
+   "wendung_de": "Ist da jemand?",
+   "ort": "metro",
+   "selten": true
+  },
+  {
+   "id": "robin",
+   "name": "Robin le Raton laveur",
+   "symbol": "🔧",
+   "kraft": "Inventions",
+   "kraft_de": "Erfindungen",
+   "wendung": "J'ai quelque chose pour toi !",
+   "intro": "Salut ! Je suis Robin le Raton laveur. J'invente des machines au Centre Pompidou. J'ai quelque chose pour toi !",
+   "intro_de": "Hallo! Ich bin Robin der Waschbär. Ich erfinde Maschinen im Centre Pompidou. Ich hab was für dich!",
+   "audio": "audio/helden/intro_robin.mp3",
+   "wendung_de": "Ich hab was für dich!",
+   "ort": "pompidou",
+   "selten": false
+  },
+  {
+   "id": "coco",
+   "name": "Coco le Coq",
+   "symbol": "📣",
+   "kraft": "Super cri",
+   "kraft_de": "Superschrei",
+   "wendung": "C'est trop bien !",
+   "intro": "Cocorico ! Je suis Coco le Coq. Ma voix est super forte. Au Stade de France, je chante pour les Bleus. C'est trop bien !",
+   "intro_de": "Kikeriki! Ich bin Coco der Hahn. Meine Stimme ist superlaut. Im Stade de France singe ich für die Blauen. Das ist mega!",
+   "audio": "audio/helden/intro_coco.mp3",
+   "wendung_de": "Das ist mega!",
+   "ort": "stade_de_france",
+   "selten": false
+  },
+  {
+   "id": "pierre",
+   "name": "Pierre le Pigeon",
+   "symbol": "🐦",
+   "kraft": "Parle aux oiseaux",
+   "kraft_de": "Spricht mit Vögeln",
+   "wendung": "N'importe quoi !",
+   "intro": "Salut ! Je suis Pierre le Pigeon. Je parle avec tous les oiseaux de Paris. Un pigeon, c'est bête ? N'importe quoi !",
+   "intro_de": "Hallo! Ich bin Pierre die Taube. Ich spreche mit allen Vögeln von Paris. Eine Taube ist dumm? So ein Quatsch!",
+   "audio": "audio/helden/intro_pierre.mp3",
+   "wendung_de": "So ein Quatsch!",
+   "ort": "notre_dame",
+   "selten": false
+  },
+  {
+   "id": "horace",
+   "name": "Horace l'Escargot",
+   "symbol": "⏱️",
+   "kraft": "Arrêt du temps",
+   "kraft_de": "Zeit anhalten",
+   "wendung": "C'est pas vrai !",
+   "intro": "Bonjour… Je suis Horace l'Escargot. Je suis lent, mais j'arrête le temps ! Regarde l'horloge. C'est pas vrai !",
+   "intro_de": "Guten Tag … Ich bin Horace die Schnecke. Ich bin langsam, aber ich halte die Zeit an! Schau auf die Uhr. Das gibt's doch nicht!",
+   "audio": "audio/helden/intro_horace.mp3",
+   "wendung_de": "Das gibt's doch nicht!",
+   "ort": "orsay",
+   "selten": true
+  },
+  {
+   "id": "hector",
+   "name": "Hector le Hérisson",
+   "symbol": "🛡️",
+   "kraft": "Bouclier",
+   "kraft_de": "Schutzschild",
    "wendung": "Pas de souci !",
+   "intro": "Salut ! Je suis Hector le Hérisson. Je protège mes amis avec mon bouclier. Un problème sur la Seine ? Pas de souci !",
+   "intro_de": "Hallo! Ich bin Hector der Igel. Ich beschütze meine Freunde mit meinem Schild. Ein Problem auf der Seine? Kein Problem!",
+   "audio": "audio/helden/intro_hector.mp3",
    "wendung_de": "Kein Problem!",
-   "ab": 9
-  }
- ],
- "regions": [
-  {
-   "id": "idf",
-   "name": "Île-de-France",
-   "chef_lieu": "Paris",
-   "symbol": "🗼"
-  },
-  {
-   "id": "hdf",
-   "name": "Hauts-de-France",
-   "chef_lieu": "Lille",
-   "symbol": "🏭"
-  },
-  {
-   "id": "ge",
-   "name": "Grand Est",
-   "chef_lieu": "Strasbourg",
-   "symbol": "🥨"
-  },
-  {
-   "id": "nor",
-   "name": "Normandie",
-   "chef_lieu": "Rouen",
-   "symbol": "🧀"
-  },
-  {
-   "id": "bre",
-   "name": "Bretagne",
-   "chef_lieu": "Rennes",
-   "symbol": "⚓"
-  },
-  {
-   "id": "pdl",
-   "name": "Pays de la Loire",
-   "chef_lieu": "Nantes",
-   "symbol": "🏰"
-  },
-  {
-   "id": "cvl",
-   "name": "Centre-Val de Loire",
-   "chef_lieu": "Orléans",
-   "symbol": "🌷"
-  },
-  {
-   "id": "bfc",
-   "name": "Bourgogne-Franche-Comté",
-   "chef_lieu": "Dijon",
-   "symbol": "🍇"
-  },
-  {
-   "id": "na",
-   "name": "Nouvelle-Aquitaine",
-   "chef_lieu": "Bordeaux",
-   "symbol": "🏄"
-  },
-  {
-   "id": "ara",
-   "name": "Auvergne-Rhône-Alpes",
-   "chef_lieu": "Lyon",
-   "symbol": "⛷️"
-  },
-  {
-   "id": "occ",
-   "name": "Occitanie",
-   "chef_lieu": "Toulouse",
-   "symbol": "✈️"
-  },
-  {
-   "id": "paca",
-   "name": "Provence-Alpes-Côte d'Azur",
-   "chef_lieu": "Marseille",
-   "symbol": "☀️"
-  },
-  {
-   "id": "cor",
-   "name": "Corse",
-   "chef_lieu": "Ajaccio",
-   "symbol": "🏝️"
+   "ort": "seine",
+   "selten": false
   }
  ],
  "wendungen": [
@@ -4195,265 +4222,316 @@ window.DATEN_FR = {
    {
     "fr": "le foot",
     "de": "Fußball",
-    "symbol": "⚽"
+    "symbol": "⚽",
+    "audio": "audio/dialoge/alex_c9af527d4b.mp3"
    },
    {
     "fr": "le basket",
     "de": "Basketball",
-    "symbol": "🏀"
+    "symbol": "🏀",
+    "audio": "audio/dialoge/alex_7c71f40456.mp3"
    },
    {
     "fr": "le tennis",
     "de": "Tennis",
-    "symbol": "🎾"
+    "symbol": "🎾",
+    "audio": "audio/dialoge/alex_7c7e6f9102.mp3"
    },
    {
     "fr": "le sport",
     "de": "Sport",
-    "symbol": "🏃"
+    "symbol": "🏃",
+    "audio": "audio/dialoge/alex_2c1952ec97.mp3"
    },
    {
     "fr": "la musique",
     "de": "Musik",
-    "symbol": "🎵"
+    "symbol": "🎵",
+    "audio": "audio/dialoge/alex_2a1c74ed97.mp3"
    },
    {
     "fr": "chanter",
     "de": "singen",
-    "symbol": "🎤"
+    "symbol": "🎤",
+    "audio": "audio/dialoge/alex_65fdd85287.mp3"
    },
    {
     "fr": "danser",
     "de": "tanzen",
-    "symbol": "💃"
+    "symbol": "💃",
+    "audio": "audio/dialoge/alex_39271b71f1.mp3"
    },
    {
     "fr": "la console",
     "de": "die Konsole",
-    "symbol": "🎮"
+    "symbol": "🎮",
+    "audio": "audio/dialoge/alex_ae125d9121.mp3"
    },
    {
     "fr": "dessiner",
     "de": "zeichnen",
-    "symbol": "✏️"
+    "symbol": "✏️",
+    "audio": "audio/dialoge/alex_195a028517.mp3"
    },
    {
     "fr": "nager",
     "de": "schwimmen",
-    "symbol": "🏊"
+    "symbol": "🏊",
+    "audio": "audio/dialoge/alex_f05f0d0426.mp3"
    },
    {
     "fr": "lire",
     "de": "lesen",
-    "symbol": "📖"
+    "symbol": "📖",
+    "audio": "audio/dialoge/alex_6c9a6ebfe9.mp3"
    },
    {
     "fr": "les devoirs",
     "de": "die Hausaufgaben",
-    "symbol": "📚"
+    "symbol": "📚",
+    "audio": "audio/dialoge/alex_a2a3f1d7fe.mp3"
    },
    {
     "fr": "la télé",
     "de": "das Fernsehen",
-    "symbol": "📺"
+    "symbol": "📺",
+    "audio": "audio/dialoge/alex_e933175877.mp3"
    },
    {
     "fr": "le cinéma",
     "de": "das Kino",
-    "symbol": "🎬"
+    "symbol": "🎬",
+    "audio": "audio/dialoge/alex_c74fc47d47.mp3"
    },
    {
     "fr": "les animaux",
     "de": "die Tiere",
-    "symbol": "🐶"
+    "symbol": "🐶",
+    "audio": "audio/dialoge/alex_98b725e3b0.mp3"
    },
    {
     "fr": "les vacances",
     "de": "die Ferien",
-    "symbol": "🏖️"
+    "symbol": "🏖️",
+    "audio": "audio/dialoge/alex_067b62c145.mp3"
    },
    {
     "fr": "l'école",
     "de": "die Schule",
-    "symbol": "🏫"
+    "symbol": "🏫",
+    "audio": "audio/dialoge/alex_1efef53cab.mp3"
    },
    {
     "fr": "cuisiner",
     "de": "kochen",
-    "symbol": "🍳"
+    "symbol": "🍳",
+    "audio": "audio/dialoge/alex_1f3062f790.mp3"
    },
    {
     "fr": "faire du vélo",
     "de": "Rad fahren",
-    "symbol": "🚲"
+    "symbol": "🚲",
+    "audio": "audio/dialoge/alex_51c42a2265.mp3"
    },
    {
     "fr": "jouer au foot",
     "de": "Fußball spielen",
-    "symbol": "⚽"
+    "symbol": "⚽",
+    "audio": "audio/dialoge/alex_d0e5ca1318.mp3"
    },
    {
     "fr": "jouer à la console",
     "de": "Konsole spielen",
-    "symbol": "🎮"
+    "symbol": "🎮",
+    "audio": "audio/dialoge/alex_b88bd61035.mp3"
    }
   ],
   "zahl": [
    {
     "fr": "dix",
     "de": "zehn",
-    "symbol": "🔟"
+    "symbol": "🔟",
+    "audio": "audio/dialoge/alex_c58afec95f.mp3"
    },
    {
     "fr": "onze",
     "de": "elf",
-    "symbol": ""
+    "symbol": "",
+    "audio": "audio/dialoge/alex_e1d4293b1d.mp3"
    },
    {
     "fr": "douze",
     "de": "zwölf",
-    "symbol": ""
+    "symbol": "",
+    "audio": "audio/dialoge/alex_b6c8093a10.mp3"
    },
    {
     "fr": "treize",
     "de": "dreizehn",
-    "symbol": ""
+    "symbol": "",
+    "audio": "audio/dialoge/alex_c4f0392c56.mp3"
    },
    {
     "fr": "quatorze",
     "de": "vierzehn",
-    "symbol": ""
+    "symbol": "",
+    "audio": "audio/dialoge/alex_827e2243ec.mp3"
    },
    {
     "fr": "quinze",
     "de": "fünfzehn",
-    "symbol": ""
+    "symbol": "",
+    "audio": "audio/dialoge/alex_7dcd875e17.mp3"
    },
    {
     "fr": "seize",
     "de": "sechzehn",
-    "symbol": ""
+    "symbol": "",
+    "audio": "audio/dialoge/alex_e0a95b055b.mp3"
    },
    {
     "fr": "vingt",
     "de": "zwanzig",
-    "symbol": ""
+    "symbol": "",
+    "audio": "audio/dialoge/alex_d27a2f71c4.mp3"
    }
   ],
   "adj": [
    {
     "fr": "super",
     "de": "super",
-    "symbol": "👍"
+    "symbol": "👍",
+    "audio": "audio/dialoge/alex_2cc6c15ddd.mp3"
    },
    {
     "fr": "cool",
     "de": "cool",
-    "symbol": "😎"
+    "symbol": "😎",
+    "audio": "audio/dialoge/alex_3dc8b2ede7.mp3"
    },
    {
     "fr": "génial",
     "de": "genial",
-    "symbol": "🤩"
+    "symbol": "🤩",
+    "audio": "audio/dialoge/alex_3f397be811.mp3"
    },
    {
     "fr": "nul",
     "de": "doof",
-    "symbol": "👎"
+    "symbol": "👎",
+    "audio": "audio/dialoge/alex_e96f5e8e58.mp3"
    },
    {
     "fr": "drôle",
     "de": "witzig",
-    "symbol": "😂"
+    "symbol": "😂",
+    "audio": "audio/dialoge/alex_8c27ff0f4e.mp3"
    },
    {
     "fr": "bien",
     "de": "gut",
-    "symbol": "🙂"
+    "symbol": "🙂",
+    "audio": "audio/dialoge/alex_641cbc6be2.mp3"
    },
    {
     "fr": "bon",
     "de": "gut",
-    "symbol": "👌"
+    "symbol": "👌",
+    "audio": "audio/dialoge/alex_82ac059d4d.mp3"
    },
    {
     "fr": "vrai",
     "de": "wahr",
-    "symbol": "✅"
+    "symbol": "✅",
+    "audio": "audio/dialoge/alex_828c83054c.mp3"
    },
    {
     "fr": "facile",
     "de": "leicht",
-    "symbol": "🪶"
+    "symbol": "🪶",
+    "audio": "audio/dialoge/alex_61faef69ce.mp3"
    },
    {
     "fr": "difficile",
     "de": "schwer",
-    "symbol": "🧱"
+    "symbol": "🧱",
+    "audio": "audio/dialoge/alex_c464811c74.mp3"
    },
    {
     "fr": "nouveau",
     "de": "neu",
-    "symbol": "✨"
+    "symbol": "✨",
+    "audio": "audio/dialoge/alex_0adecd9ed4.mp3"
    },
    {
     "fr": "incroyable",
     "de": "unglaublich",
-    "symbol": "😮"
+    "symbol": "😮",
+    "audio": "audio/dialoge/alex_3629f5f690.mp3"
    }
   ],
   "chant": [
    {
     "fr": "bien",
     "de": "gut",
-    "symbol": "🎶"
+    "symbol": "🎶",
+    "audio": "audio/dialoge/alex_641cbc6be2.mp3"
    },
    {
     "fr": "très bien",
     "de": "sehr gut",
-    "symbol": "🌟"
+    "symbol": "🌟",
+    "audio": "audio/dialoge/alex_d0a5f2d14b.mp3"
    },
    {
     "fr": "très mal",
     "de": "sehr schlecht",
-    "symbol": "🙉"
+    "symbol": "🙉",
+    "audio": "audio/dialoge/alex_a46fa50440.mp3"
    },
    {
     "fr": "comme Angèle",
     "de": "wie Angèle",
-    "symbol": "🎤"
+    "symbol": "🎤",
+    "audio": "audio/dialoge/alex_93bec9f337.mp3"
    }
   ],
   "name": [
    {
     "fr": "Mbappé",
     "de": "Mbappé",
-    "symbol": "⚽"
+    "symbol": "⚽",
+    "audio": "audio/dialoge/alex_36c32ca934.mp3"
    },
    {
     "fr": "Angèle",
     "de": "Angèle",
-    "symbol": "🎤"
+    "symbol": "🎤",
+    "audio": "audio/dialoge/alex_3fa12af78c.mp3"
    },
    {
     "fr": "Monsieur Alex",
     "de": "Monsieur Alex",
-    "symbol": "👨‍🏫"
+    "symbol": "👨‍🏫",
+    "audio": "audio/dialoge/alex_da9c639850.mp3"
    },
    {
     "fr": "Kanté",
     "de": "Kanté",
-    "symbol": "⚽"
+    "symbol": "⚽",
+    "audio": "audio/dialoge/alex_cf020ab596.mp3"
    },
    {
     "fr": "Marie",
     "de": "Marie",
-    "symbol": "🙂"
+    "symbol": "🙂",
+    "audio": "audio/dialoge/alex_878da4dd77.mp3"
    },
    {
     "fr": "Lucas",
     "de": "Lucas",
-    "symbol": "🙂"
+    "symbol": "🙂",
+    "audio": "audio/dialoge/alex_25c64e1e35.mp3"
    }
   ]
  },

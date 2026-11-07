@@ -1,6 +1,6 @@
 /* Français Classe 5/6 – Sprachkurs-App (Mr. Alex)
    Kein Konto, keine Namen. Fortschritt bleibt nur auf diesem Gerät (localStorage, Schlüssel mit Präfix fr_).
-   Kacheln: 💬 Dialogues · 🗣️ Prononciation · 🎮 Jeux · 🎧 Beat-Studio · Panthéon = Hall of Fame: 🗼 Paris (Karte mit Szenen, Stufe 2) · Sammlung „Panthéon“.
+   Kacheln: 💬 Dialogues · 🗣️ Prononciation · 🎮 Jeux · 🎧 Beat-Studio · 🗼 Paris (Karte mit Szenen, Stufe 2) · 🦸 Super-héros · 🏃 Paris Run (Stufe 4) · Sammlung „Panthéon“.
    Inhalte: inhalte/franz/*.tsv → werkzeuge/franz_bauen.py → daten_fr.js. Grundsatz: Wird eine Lösung gezeigt, wird sie auch abgespielt. */
 (function () {
   "use strict";
@@ -59,7 +59,12 @@
     toast(`+${plus} ⭐ ${grund || zufall(LOB)}`);
     const neu = parisFrei();
     if (neu > stand.paris) setTimeout(() => toast(`🗼 Nouveau lieu à Paris : ${D.paris[neu - 1].name} !`), 1200);
+    const h = heldenFrei();
+    if (h > stand.helden) setTimeout(() => toast(`🦸 Nouveau super-héros : ${D.helden[h - 1].name} !`), 2400);
   }
+  /* Superhelden (Stufe 3): alle HELD_PUNKTE Punkte ein neuer Held; stand.helden = Zahl der Helden, deren Film schon lief */
+  const HELD_PUNKTE = 30;
+  const heldenFrei = () => Math.min((D.helden || []).length, Math.floor(stand.punkte / HELD_PUNKTE));
   /* Paris-Karte (Stufe 2): der erste Ort ist frei, danach alle PARIS_PUNKTE Punkte ein neuer Ort. stand.paris = Zahl der Orte, deren Szene schon lief;
      neue Orte zeigt die Startseite mit ihrer Szene (nicht mitten in einer Übung). */
   const PARIS_PUNKTE = 20;
@@ -152,16 +157,18 @@
     zeige(
       el("header", { class: "gruss" },
         el("h1", { lang: "fr" }, "Français 🇫🇷"),
-        el("p", { class: "klein" }, "Salut ! Wähl eine Kachel. Paris, Super-héros und Stars sammelst du im Panthéon."),
+        el("p", { class: "klein" }, "Salut ! Wähl eine Kachel. Was du geschafft hast, kommt ins Panthéon."),
         el("div", { class: "statusleiste" }, el("span", {}, `⭐ ${stand.punkte} Punkte`), el("span", {}, `🗣️ ${namenFertig}/${D.namen.length} Namen`),
           knopf("🏛️ Panthéon", pantheon, "haupt"))),
       el("nav", { class: "kacheln", "aria-label": "Kacheln" },
         kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe),
         kachel("🗣️", "Prononciation", "Namen richtig aussprechen", prononciation),
         kachel("🎮", "Jeux", "Memory, Qui est-ce ?, Dans l'ordre", jeux),
-        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio)));
-    if (parisFrei() > stand.paris) setTimeout(parisNeu, 700);
-    else if (heldenFrei() > (stand.helden || 0)) setTimeout(heldNeu, 700);
+        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio),
+        kachel("🗼", "Paris", `${parisFrei()}/${D.paris.length} Orte · Karte mit Filmen`, parisSeite),
+        kachel("🦸", "Super-héros", `${heldenFrei()}/${D.helden.length} Helden gesammelt`, heldenSeite),
+        kachel("🏃", "Paris Run", "Lauf zur Tour Eiffel – mit deinen Wörtern", parisRun)));
+    if (parisFrei() > stand.paris || heldenFrei() > stand.helden) setTimeout(parisNeu, 700);
   }
   const kachel = (sym, titel, unter, fn, extra) => el("button", { type: "button", class: "kachel" + (extra || ""), onclick: fn },
     el("span", { class: "sym", "aria-hidden": "true" }, sym), el("span", { class: "titel", lang: "fr" }, titel), unter && el("span", { class: "unter" }, unter));
@@ -418,6 +425,100 @@
       <text x="50" y="47" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="600" font-size="18" fill="${farbe}">${ini}</text>`);
   }
 
+  /* ---------- 🏃 Paris Run (Stufe 4, 7.11.2026) ----------
+     Runner-Engine (../runner.js, Welt „paris“) mit französischen Wörtern: Diamanten zeigen das Wort, Tore/Boss fragen „Welcher Diamant heißt …?“ (Deutsch → Französisch).
+     Kein Ticket, keine Coins (die Französisch-App hat nur Punkte): geschafft = einmal am Tag +10 ⭐ wie die anderen Spiele. Die Figur kommt aus der Englisch-App (nur gelesen), sonst Standard.
+     Gesammelte Paris-Helden springen als Cameos ein. Stimmen: Aufnahmen aus D.runner (Mr. Alex, Helden), fehlende spricht das Gerät (fr-FR). */
+  const RUN_GRUPPEN = [
+    { id: "hobby", name: "⚽ Hobbys", woerter: () => D.woerter.hobby || [] },
+    { id: "adj", name: "🌈 Adjectifs", woerter: () => D.woerter.adj || [] },
+    { id: "zahl", name: "🔢 Nombres", woerter: () => D.woerter.zahl || [] },
+    { id: "wendungen", name: "💬 Wendungen", woerter: () => D.wendungen.filter((w) => w.fr.length <= 22) }];
+  let runWahl = 0, runFrei = true, runKette = Promise.resolve();
+  function runStand() { return stand.parisRun || (stand.parisRun = { gespielt: 0, geschafft: 0, beste: 0 }); }
+  function runSkin() { try { return ((JSON.parse(localStorage.getItem("auffrischen-v1")) || {}).spiel || {}).skin || null; } catch (e) { return null; } }
+  // Haupttexte nacheinander (warten) oder sofort (Boss); Wörter nur, wenn gerade nichts läuft
+  function runSag(x, warten) {
+    if (!warten) { runFrei = false; return spiele([x]).then(() => { runFrei = true; }); }
+    runKette = runKette.then(() => { runFrei = false; return spiele([x]); }).then(() => { runFrei = true; });
+    return runKette;
+  }
+  function parisRun() {
+    const r = runStand(), g = RUN_GRUPPEN[runWahl], ws = g.woerter();
+    if (discoOffen() && !stand.disco) { stand.disco = 1; speichern(); setTimeout(() => toast("🪩 Überraschung: Disco Run débloqué !"), 600); }   // wer den Paris Run schon vorher geschafft hat
+    zeige(kopf("🏃 Paris Run", startseite, "Lauf zur Tour Eiffel! Sammle die Wörter, beantworte Monsieur Gaston."),
+      el("section", { class: "satzkarte" },
+        el("p", {}, "Tippen oder Leertaste = springen, länger halten = höher. Über Autos und Radfahrer springen, Kisten und Litfaßsäulen sind Stufen, in die Seine fällst du hinein. Mr. Alex ruft dir zu: « Saute ! » = Spring!, « Attention ! » = Achtung!, « Plus vite ! » = Schneller!, « À gauche ! » = Nach links (da kommt was von links)!"),
+        el("p", { class: "klein" }, `🎮 ${r.gespielt} Spiele · ${r.geschafft} geschafft · 🦸 ${heldenFrei()} Helden helfen mit`)),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, "Welche Wörter?"),
+        el("div", { class: "reiter" }, RUN_GRUPPEN.map((x, i) => el("button", { type: "button", class: "reiter-knopf", "aria-selected": String(i === runWahl), onclick: () => { runWahl = i; parisRun(); } }, x.name))),
+        el("p", { class: "klein", lang: "fr" }, ws.map((w) => w.fr).join(" · ")),
+        el("div", { class: "knopfreihe" }, knopf("▶ Los geht's !", () => parisRunSpiel(ws), "haupt"),
+          discoOffen() && knopf("🪩 Bonus : Disco Run", () => parisRunSpiel(ws, "disco_fr"), "leise"))));
+  }
+  /* 🪩 Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): gleiche Engine, Welt „disco_fr“ (Tanzfläche, DJ Funky Flamingo, Beat) mit denselben Wörtern.
+     Einmalige Überraschung nach dem ersten geschafften Paris Run (stand.disco = 1, Feier am Ende des Laufs), danach Knopf auf der Paris-Run-Seite; Punkte wie der Paris Run (einmal am Tag +10 ⭐). */
+  const DISCO_AB = 1;
+  const discoOffen = () => (runStand().geschafft || 0) >= DISCO_AB;
+  function parisRunSpiel(ws, welt = "paris") {
+    const disco = welt === "disco_fr";
+    if (!window.Runner || !window.Runner.start) { toast("Das Spiel ist noch nicht geladen."); return; }
+    if (ws.length < 4) { toast("Zu wenige Wörter."); return; }
+    const r = runStand(); r.gespielt++; speichern();
+    const liste = mischen(ws).slice(0, 12), helden = mischen(D.helden.slice(0, heldenFrei())).slice(0, 3);
+    const buehne = el("div", { class: "runner-buehne" });
+    const abbruch = el("button", { type: "button", class: "runner-x", "aria-label": "Spiel abbrechen", onclick: () => {
+      if (window.Runner.ueberspringen && window.Runner.ueberspringen()) return;
+      window.Runner.stopp(); stopp(); document.body.classList.remove("runner-aktiv"); parisRun(); } }, "✕");   // (Paris und Disco)
+    zeige(buehne, abbruch);
+    document.body.classList.add("runner-aktiv");
+    const tts = (text, o) => (o && o.audio) || { tts: text.replace(/\[[^\]]*\]\s*/g, "") };
+    runFrei = true; runKette = Promise.resolve();
+    window.Runner.start({
+      wrapper: buehne, welt, titel: disco ? "Disco Run" : "Paris Run", skin: runSkin() || undefined,
+      woerter: window.Runner.woerterAus(liste),
+      cameos: helden.map((h) => ({ id: h.id, name: h.name, kraft: h.kraft })),
+      audio: disco ? Object.assign({}, D.disco || {}, { alex: Object.assign({}, (D.runner || {}).alex, (D.disco || {}).alex) }) : D.runner || {},   // Disco: eigene Aufnahmen (D.disco), sonst Paris-Zurufe/Gerätestimme
+      texte: { tor: (de) => `Welcher Diamant heißt „${de}“?`, frage: (de) => `„Was heißt ‚${de}‘ auf Französisch?“`, bossTitel: disco ? "DJ Funky Flamingo fragt …" : "Monsieur Gaston fragt …", bossHinweis: disco ? "Richtig = du gewinnst das Tanzduell, der Glitzervorhang geht auf. Falsch = ein Leben weg." : "Richtig = die goldene Grille geht auf. Falsch = ein Leben weg." , ...(disco ? { tuer: "Le rideau est ouvert – vas-y !" } : {}) },
+      stimme: {
+        wort: (j, o) => { const w = liste[j % liste.length]; if (!runFrei && !(o && o.warten)) return; runSag(w.audio || { tts: w.fr }, true); },
+        boss: (text, o) => runSag(tts(text, o), false),
+        ansage: (text, o) => runSag(tts(text, o), true),
+        cameo: (text, id, o) => runSag(tts(text, o), true),
+        alex: (text, key, o) => runSag(tts(text, o), true),
+        erzaehler: (text, o) => runSag(tts(text, o), true),
+        still: () => stopp(),
+        beschaeftigt: () => !runFrei },
+      onEnde: (e) => parisRunEnde(e, liste, welt),
+    });
+  }
+  function parisRunEnde(e, liste, welt = "paris") {
+    const disco = welt === "disco_fr", warOffen = discoOffen();
+    window.Runner.stopp(); document.body.classList.remove("runner-aktiv");
+    const r = runStand();
+    let plus = "";
+    if (e.geschafft) { r.geschafft++; r.beste = Math.max(r.beste || 0, e.diamanten); plus = spielPunkte(disco ? "discorun" : "parisrun"); }
+    const discoNeu = !warOffen && discoOffen() && !stand.disco;   // Überraschung: Disco Run frei
+    if (discoNeu) { stand.disco = 1; setTimeout(() => { toast("🪩 Disco Run débloqué !"); klang(true); }, 900); }
+    speichern();
+    const zu = e.alex && (e.alex.audio || { tts: e.alex.text });
+    const endeText = disco ? "Bravo ! Tu es la star du disco !" : "Bravo ! Tu es à la tour Eiffel !";
+    setTimeout(() => spiele([e.geschafft ? (!disco && D.runner && D.runner.ende) || { tts: endeText } : { tts: "Presque ! Encore une fois !" }, zu, discoNeu && { tts: "Surprise ! Le Disco Run est débloqué !" }].filter(Boolean)), 300);
+    zeige(kopf(disco ? "🪩 Disco Run" : "🏃 Paris Run", parisRun),
+      discoNeu && el("section", { class: "geschafft disco-feier" },
+        el("h2", { lang: "fr" }, "🪩 Disco Run débloqué !"),
+        el("p", {}, "Überraschung! Ein Bonus-Level ist frei: Tanzfläche, Discokugel und DJ Funky Flamingo. Du findest es auf der Paris-Run-Seite."),
+        knopf("🪩 Jetzt tanzen !", () => parisRunSpiel(RUN_GRUPPEN[runWahl].woerter(), "disco_fr"), "haupt")),
+      el("section", { class: e.geschafft ? "geschafft" : "satzkarte" },
+        el("h2", { lang: "fr" }, e.geschafft ? (disco ? "🪩 " : "🗼 ") + endeText : "💤 Presque !"),
+        el("p", {}, e.geschafft ? `Geschafft!${plus}` : "Keine Leben mehr – beim nächsten Mal klappt es!"),
+        el("p", {}, `💎 ${e.diamanten} / ${e.max} · 🚪 ${e.toreRichtig} Tore richtig · ❤️ ${e.leben}` + (e.maxCombo > 0 ? ` · 🔥 ×${e.maxCombo}` : "")),
+        el("h3", {}, "Deine Wörter"),
+        el("ul", { class: "liste" }, liste.map((w) => el("li", {}, knopf(`🔊 ${w.fr}`, () => spiele([w.audio || { tts: w.fr }]), "leise"), ` – ${w.de}`))),
+        el("div", { class: "knopfreihe" }, knopf("↻ Noch mal", () => parisRunSpiel(RUN_GRUPPEN[runWahl].woerter(), welt), "haupt"), knopf("🏠 Start", startseite))));
+  }
+
   /* ---------- 🎮 Jeux ---------- */
   function spielPunkte(spiel) {
     if (stand.spiele[spiel] === heute()) return "";
@@ -523,12 +624,173 @@
     if (!sz && fertig) fertig();
     return !!sz;
   }
-  function parisNeu() { // neu freigeschaltete Orte nacheinander mit Film zeigen, danach zählen sie als gesehen
-    if (parisFrei() <= stand.paris || document.querySelector(".ortszene")) return;
+  function parisNeu() { // neu freigeschaltete Orte (danach Helden) nacheinander mit Film zeigen, danach zählen sie als gesehen
+    if (document.querySelector(".ortszene")) return;
+    if (parisFrei() <= stand.paris) return heldNeu();
     const o = D.paris[stand.paris];
     stand.paris++; speichern();
     toast(`🗼 ${o.name} – freigeschaltet !`);
     if (!parisFilm(o, () => setTimeout(parisNeu, 400))) setTimeout(parisNeu, 400);
+  }
+  /* ---------- 🦸 Super-héros (Stufe 3, 7.11.2026) ----------
+     10 Paris-Helden, gezeichnet in der Runner-Engine (Spielgrafik wie Englisch 6), je ein Film am Lieblingsort mit eigener Stimme; Sammelkarte = Runner.heldKarteZeichnen. */
+  /* Folien-Karten (7.11.2026, Mr. Alex, große Version, angepasst an die Französisch-App ohne Runner):
+     stand.karten[id] = { s, c, f, t, d } – s 0 normal · 1 Bronze · 2 Silber · 3 Gold; c = wie oft erlebt, f = fehlerfreie Défis ab Silber (je Tag einer), t = Tag des letzten gezählten Défis, d = Tag des letzten Aufstiegs.
+     Bronze = Held 3× erlebt (Film bis zum Ende geschaut oder Défi gespielt) · Silber = Défi des Helden fehlerfrei (Wendung, Kraft, Lieblingsort)
+     · Gold = danach je Tag ein fehlerfreies Défi mit „goldenem Moment“ 1:15 (seltene Helden 1:30) oder sicher nach 3 fehlerfreien Défis an verschiedenen Tagen.
+     Höchstens ein Aufstieg je Held und Tag. Seltene Helden (Spalte selten in helden.tsv): ✦ RARE, Sammelwert ×2. Keine Punkte für Défis (die Karte ist der Lohn). */
+  const KARTE = { erlebt: 3, chance: 15, chanceSelten: 30, fleiss: 3, namen: ["", "Bronze", "Silber", "Gold"], symbol: ["", "🥉", "🥈", "🥇"] };
+  function karteVon(id) {
+    const ks = (stand.karten = stand.karten && typeof stand.karten === "object" ? stand.karten : {});
+    return ks[id] || (ks[id] = { s: 0, c: 0, f: 0, t: "", d: "" });
+  }
+  const gesammelt = () => D.helden.slice(0, heldenFrei());
+  const sammelwert = () => gesammelt().reduce((n, h) => n + (h.selten ? 2 : 1), 0);
+  const ortVon = (h) => D.paris.find((o) => o.id === h.ort);
+  function karteZiel(h) {   // nächstes Ziel als kurzer Hinweis (Deutsch, wie die übrigen Hilfen)
+    const k = karteVon(h.id), vor = h.name.split(" ")[0];
+    if (k.s === 0) return `🥉 ${Math.min(k.c, KARTE.erlebt)}/${KARTE.erlebt}× erlebt (Film oder Défi)`;
+    if (k.s === 1) return `🥈 Défi mit ${vor} ohne Fehler`;
+    if (k.s === 2) return `🥇 Goldener Moment – oder ${Math.min(k.f, KARTE.fleiss)}/${KARTE.fleiss} Défis ohne Fehler (an verschiedenen Tagen)`;
+    return "🥇 Gold !";
+  }
+  // erlebt = Film bis zum Ende oder Défi gespielt; fehlerfrei = Défi ohne Fehler. Gibt die neue Stufe zurück (oder 0) und zeigt die Enthüllung.
+  function karteAuswerten(h, fehlerfrei, danach) {
+    if (!gesammelt().includes(h)) { if (danach) danach(); return 0; }
+    const k = karteVon(h.id), vorher = k.s, tag = heute(), frei = k.d !== tag;
+    let moment = false;
+    k.c++;
+    if (k.s === 0 && k.c >= KARTE.erlebt && frei) k.s = 1;
+    else if (k.s === 1 && fehlerfrei && frei) k.s = 2;
+    else if (k.s === 2 && fehlerfrei && k.t !== tag) {   // je Tag zählt ein Défi (kein Farmen der Gold-Chance)
+      k.t = tag; k.f++;
+      moment = frei && Math.random() * (h.selten ? KARTE.chanceSelten : KARTE.chance) < 1;
+      if (frei && (moment || k.f >= KARTE.fleiss)) k.s = 3;
+    }
+    if (k.s > vorher) { k.d = tag; if (k.s === 3) k.m = moment ? 1 : 0; }
+    speichern();
+    if (k.s > vorher) karteEnthuellen(h, k.s, moment && k.s === 3, danach); else if (danach) danach();
+    return k.s > vorher ? k.s : 0;
+  }
+  // Karte als Canvas (Metallrahmen, Plakette, ✦ RARE) – mit Stufe wandert ein Lichtreflex darüber (Zeit bzw. Neigen des Handys)
+  const KARTE_PX = 360;
+  function karteCanvas(h, o = {}) {
+    const st = o.gesperrt ? 0 : (o.stufe == null ? karteVon(h.id).s : o.stufe);
+    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? "Noch nicht gesammelt" : `${h.name}: ${h.kraft}${st ? " · " + KARTE.namen[st] : ""}${h.selten ? " · selten" : ""}` });
+    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, { id: h.id, name: h.name, kraft: h.kraft },
+      { gesperrt: !!o.gesperrt, hinweis: o.gesperrt ? `${HELD_PUNKTE} ⭐` : null, stufe: st, selten: !o.gesperrt && h.selten }); } catch (e) { /* Karte bleibt leer */ }
+    if (st && window.Runner && window.Runner.heldKarteGlanz) glanzDazu(cv, st);
+    return cv;
+  }
+  const glanzKarten = new Set();
+  let glanzLaeuft = false, neigung = 0;
+  const bewegungRuhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
+  try { window.addEventListener("deviceorientation", (ev) => { if (ev && typeof ev.gamma === "number") neigung = Math.max(-1, Math.min(1, ev.gamma / 45)); }); } catch (e) { /* egal */ }
+  function glanzDazu(cv, stufe) {
+    const grund = document.createElement("canvas"); grund.width = cv.width; grund.height = cv.height;
+    grund.getContext("2d").drawImage(cv, 0, 0);
+    const g = { cv, grund, stufe, versatz: Math.random() };
+    if (bewegungRuhig()) { glanzMalen(g, 0.35); return; }
+    glanzKarten.add(g);
+    if (!glanzLaeuft) { glanzLaeuft = true; requestAnimationFrame(glanzBild); }
+  }
+  function glanzMalen(g, phase) {
+    const c = g.cv.getContext("2d");
+    c.clearRect(0, 0, g.cv.width, g.cv.height); c.drawImage(g.grund, 0, 0);
+    try { window.Runner.heldKarteGlanz(c, 0, 0, g.cv.width, g.stufe, phase); } catch (e) { /* ohne Glanz */ }
+  }
+  function glanzBild(ms) {
+    glanzKarten.forEach((g) => {
+      if (!g.cv.isConnected) { if (g.gesehen) glanzKarten.delete(g); return; }   // erst nach dem Einhängen zählen
+      g.gesehen = true;
+      glanzMalen(g, ms / (g.stufe === 3 ? 3200 : 4200) + g.versatz + neigung * 0.35);
+    });
+    if (glanzKarten.size) requestAnimationFrame(glanzBild); else glanzLaeuft = false;
+  }
+  const karteBild = (h, gesperrt) => { try { return window.Runner.heldKarteBild({ id: h.id, name: h.name, kraft: h.kraft },
+    { breite: 240, gesperrt, hinweis: gesperrt ? `${HELD_PUNKTE} ⭐` : null, stufe: gesperrt ? 0 : karteVon(h.id).s, selten: !gesperrt && h.selten }); } catch (e) { return ""; } };
+  function heldFilm(h, fertig) {
+    if (!(window.Runner && window.Runner.hatSzene && window.Runner.hatSzene("held_" + h.id))) { if (fertig) fertig(); return false; }
+    stopp();
+    const sz = window.Runner.szene(null, "held_" + h.id, { text: h.intro, textDe: h.intro_de, lang: "fr", titel: `🦸 ${h.name}`, foto: karteBild(h), quelle: `${h.name} · ${h.kraft} (${h.kraft_de})`,
+      voice: () => spiele([h.audio || { tts: h.intro }]), voiceStopp: stopp, voiceAudio: () => aktuell,
+      onEnde: (r) => { if (r && r.uebersprungen) { if (fertig) fertig(); } else karteAuswerten(h, false, fertig); } });   // Folien-Karten: nur ganz geschaute Filme zählen
+    if (!sz && fertig) fertig();
+    return !!sz;
+  }
+  function heldNeu() {
+    if (heldenFrei() <= stand.helden || document.querySelector(".ortszene")) return;
+    const h = D.helden[stand.helden];
+    stand.helden++; speichern();
+    toast(`🦸 ${h.name} – nouveau super-héros !`);
+    if (!heldFilm(h, () => setTimeout(heldNeu, 400))) setTimeout(heldNeu, 400);
+  }
+  // Aufstieg: Karte dreht sich, Rahmen leuchtet (goldener Moment: Blitz), der Held spricht seine Vorstellung (vorhandene Aufnahme)
+  function karteEnthuellen(h, st, moment, danach) {
+    stopp();
+    const d = el("dialog", { class: "feier", "aria-labelledby": "karte-titel" });
+    const zu = () => { d.close(); };
+    d.addEventListener("close", () => { stopp(); d.remove(); if (danach) setTimeout(danach, 300); else if (app.querySelector(".helden-hinweis")) heldenSeite(); });
+    d.append(...[moment && el("div", { class: "karte-blitz", "aria-hidden": "true" }),
+      el("p", { class: "feier-klein" }, moment ? "⚡ Moment doré ! (goldener Moment)" : `${KARTE.symbol[st]} Nouveau niveau ! (neue Stufe)`),
+      el("h2", { id: "karte-titel", lang: "fr" }, `${h.name} : ${KARTE.namen[st]}`),
+      el("div", { class: "karte-dreh" }, el("figure", { class: "heldenkarte gross stufe-" + st }, karteCanvas(h, { stufe: st }))),
+      el("p", { class: "klein" }, st < 3 ? "Nächstes Ziel: " + karteZiel(h) : "Höchste Stufe – deine Karte glänzt in Gold !"),
+      el("div", { class: "knopfreihe" }, h.audio && knopf("🔊 Écoute", () => spiele([h.audio])), knopf("Weiter ➜", zu, "haupt"))].filter(Boolean));
+    document.body.append(d);
+    try { d.showModal(); } catch (e) { d.setAttribute("open", ""); }
+    if (h.audio) spiele([h.audio]);
+  }
+  /* Défi (Folien-Karten): drei kurze Fragen zum Helden, je 3 Antworten – Bedeutung seiner Wendung, seine Kraft, sein Lieblingsort in Paris.
+     Ohne Fehler = Leistung für Silber/Gold; gespielt = einmal erlebt. */
+  function defi(h) {
+    const andere = (feld) => mischen(D.helden.filter((x) => x.id !== h.id && x[feld])).slice(0, 2);
+    const ort = ortVon(h), orte = mischen(D.paris.filter((o) => o.id !== h.ort)).slice(0, 2);
+    const fragen = mischen([
+      { frage: `${h.name} sagt: « ${h.wendung} » – was bedeutet das?`, ton: { tts: h.wendung }, richtig: h.wendung_de, falsch: andere("wendung_de").map((x) => x.wendung_de), lang: "de" },
+      { frage: `Welche Kraft hat ${h.name}? (Quel est son pouvoir ?)`, richtig: `${h.kraft} (${h.kraft_de})`, falsch: andere("kraft").map((x) => `${x.kraft} (${x.kraft_de})`), lang: "fr" },
+      ort && { frage: `Wo ist ${h.name} in Paris zu Hause? (Où habite ${h.name.split(" ")[0]} ?)`, richtig: `${ort.symbol} ${ort.name}`, falsch: orte.map((o) => `${o.symbol} ${o.name}`), lang: "fr" },
+    ].filter((f) => f && f.richtig && f.falsch.length === 2));
+    let i = 0, fehler = 0;
+    const frage = () => {
+      if (i >= fragen.length) return ende();
+      const f = fragen[i], box = rueckmeldung();
+      let fertig = false;
+      const wahl = (text, b) => {
+        if (fertig) return;
+        if (text === f.richtig) { fertig = true; b.classList.add("richtig"); klang(true); melde(box, "gut", zufall(LOB)); i++; setTimeout(frage, 900); }
+        else { fehler++; b.classList.add("falsch"); b.disabled = true; klang(false); melde(box, "hilfe", zufall(FEHLER)); }
+      };
+      zeige(kopf(`🦸 Défi · ${h.name}`, heldenSeite, `Frage ${i + 1}/${fragen.length} · ${karteZiel(h)}`),
+        el("section", { class: "satzkarte" }, el("h2", {}, f.frage), f.ton && knopf("🔊 Écoute", () => spiele([f.ton]), "leise"),
+          el("div", { class: "wahl defi-wahl" }, mischen([f.richtig, ...f.falsch]).map((t) => { const b = el("button", { type: "button", class: "knopf wahl-knopf", lang: f.lang }, t); b.addEventListener("click", () => wahl(t, b)); return b; })),
+          box));
+      if (f.ton) spiele([f.ton]);
+    };
+    const ende = () => karteAuswerten(h, fehler === 0, endeSeite);   // Aufstieg: erst die Enthüllung, danach die Ergebnisseite mit neuer Stufe
+    const endeSeite = () => {
+      const ohne = fehler === 0;
+      zeige(kopf(`🦸 Défi · ${h.name}`, heldenSeite, ohne ? "Ohne Fehler – parfait !" : `${fehler} Fehler – encore une fois ?`),
+        el("section", { class: "satzkarte" }, el("div", { class: "heldenkarte gross stufe-" + karteVon(h.id).s }, karteCanvas(h)),
+          el("div", { class: "knopfreihe" }, knopf("🔁 Encore", () => defi(h), "leise"), knopf("Weiter ➜", heldenSeite, "haupt"))));
+    };
+    frage();
+  }
+  const heldenRaster = () => el("div", { class: "helden-raster" }, D.helden.map((h, i) => {
+    const frei = i < heldenFrei(), st = frei ? karteVon(h.id).s : 0;
+    return el("div", { class: "held-feld" },
+      el("button", { type: "button", class: "held-karte" + (frei ? "" : " gesperrt") + (st ? " stufe-" + st : ""), "aria-label": frei ? h.name : "Noch nicht gesammelt", onclick: frei ? () => heldFilm(h) : null, disabled: !frei },
+        karteCanvas(h, { gesperrt: !frei }), frei && el("span", { class: "klein", lang: "fr" }, `« ${h.wendung} »`), frei && el("span", { class: "klein karten-ziel" }, karteZiel(h))),
+      frei && knopf("🎯 Défi", () => defi(h), "leise"));
+  }));
+  const kartenZaehler = () => gesammelt().length > 0 && el("p", { class: "klein karten-zaehler" },
+    [3, 2, 1].map((st) => `${KARTE.symbol[st]} ${gesammelt().filter((h) => karteVon(h.id).s === st).length} ${KARTE.namen[st]}`).join(" · ") + ` · ✦ Sammelwert ${sammelwert()}`);
+  function heldenSeite() {
+    const rest = HELD_PUNKTE - (stand.punkte % HELD_PUNKTE);
+    zeige(kopf("🦸 Super-héros", startseite, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${rest} ⭐ bis zum nächsten Helden` : "Alle Helden gesammelt – bravo !"),
+      kartenZaehler(),
+      el("p", { class: "klein helden-hinweis" }, "Tipp auf eine Karte: Der Held stellt sich vor. 🎯 Défi: drei Fragen zum Helden. Folien-Karten: Schau den Film ganz oder spiel das Défi – so steigt die Karte auf: Bronze, Silber, Gold. ✦ RARE-Helden zählen doppelt."),
+      heldenRaster());
   }
   function parisKarte(frei, waehle) {
     const NS = "http://www.w3.org/2000/svg";
@@ -558,31 +820,7 @@
     });
     return el("div", { class: "london-rahmen" }, svg);
   }
-  /* ---------- 🏛️ Panthéon ---------- */
-  /* Super-héros (7.11.): Sammelkarten wie in den Englisch-Apps (Runner.heldKarteBild mit der Zeichnung aus Spalte zeichnung);
-     frei ab D.helden[i].ab geschafften Dialogen; stand.helden = Zahl der schon gezeigten Karten (neue zeigt die Startseite). */
-  const dialogeFertig = () => D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length;
-  const heldenFrei = () => (D.helden || []).filter((h) => h.ab <= dialogeFertig()).length;
-  const heldKarte = (h, zu) => { try { return window.Runner.heldKarteBild({ id: h.zeichnung, name: h.name, kraft: h.kraft }, { gesperrt: zu, breite: 240 }); } catch (e) { return null; } };
-  function heldKnopf(h, i) {
-    const zu = i >= heldenFrei(), b = heldKarte(h, zu);
-    return el("button", { type: "button", class: "held-knopf" + (zu ? " gesperrt" : ""), onclick: () => heldSeite(h, zu) },
-      b ? el("img", { src: b, alt: zu ? "Gesperrte Heldenkarte" : h.name, width: 120, height: 160 }) : el("span", { class: "medaille" }, zu ? "🔒" : "🦸"),
-      el("span", { lang: "fr" }, zu ? "?" : h.name));
-  }
-  function heldSeite(h, zu) {
-    const b = heldKarte(h, zu);
-    zeige(kopf(zu ? "🦸 ???" : `🦸 ${h.name}`, pantheon, zu ? `Frei ab ${h.ab} geschafften Dialogues (du hast ${dialogeFertig()}).` : `${h.kraft} · ${h.kraft_de}`),
-      el("section", { class: "karte held-gross" }, b && el("img", { src: b, alt: zu ? "Gesperrte Heldenkarte" : h.name, width: 240, height: 320 }),
-        !zu && el("p", { class: "paris-fr", lang: "fr" }, `« ${h.wendung} »`), !zu && el("p", { class: "klein" }, h.wendung_de),
-        !zu && el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([{ tts: h.wendung }])))));
-  }
-  function heldNeu() { // neu freigeschaltete Karte groß zeigen, danach zählen
-    const n = stand.helden || 0, frei = heldenFrei();
-    if (frei <= n) return;
-    stand.helden = n + 1; speichern(); toast(`🦸 Nouveau super-héros : ${D.helden[n].name} !`); heldSeite(D.helden[n], false);
-  }
-  function pantheon() {
+  function parisSeite() {
     const frei = parisFrei(), rest = PARIS_PUNKTE - (stand.punkte % PARIS_PUNKTE);
     const fakt = el("section", { class: "karte paris-fakt", hidden: true });
     const faktZeigen = (o) => {
@@ -591,30 +829,35 @@
         el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)])), hatFilm(o) && knopf("▶ Film", () => parisFilm(o), "leise")));
       fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
-    const ort = (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); };
-    zeige(kopf("🏛️ Panthéon", startseite, "Deine Hall of Fame: Paris, Super-héros, Stars und Dialogues."),
-      el("h2", {}, "🗼 Paris"),
-      el("p", { class: "klein" }, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort · tipp auf einen Ort: kleiner Film, danach der Text.` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
-      parisKarte(frei, ort),
+    zeige(kopf("🗼 Paris", startseite, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
+      parisKarte(frei, (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); }),
+      el("p", { class: "klein" }, "Tipp auf einen Ort: kleiner Film mit Mr. Alex, danach der Text zum Nachlesen."),
       fakt,
-      (D.regions || []).length ? el("section", { class: "karte niveau2" }, el("h3", {}, "🇫🇷 La France · Niveau 2"),
-        el("p", { class: "klein" }, `Bald: die Karte von Frankreich mit ${D.regions.length} Régions – nach Paris geht die Reise weiter.`),
-        el("div", { class: "region-liste" }, D.regions.map((r) => el("span", { class: "chip gesperrt", lang: "fr" }, `${r.symbol} ${r.name}`)))) : null,
-      el("h2", {}, "🦸 Super-héros"),
-      el("p", { class: "klein" }, `${heldenFrei()}/${(D.helden || []).length} Karten · jeder geschaffte Dialogue schaltet eine Karte frei.`),
-      el("div", { class: "helden-raster" }, (D.helden || []).map(heldKnopf)),
+      el("div", { class: "namen-raster" }, D.paris.map((o, i) => i < frei
+        ? el("button", { type: "button", class: "namen-knopf gold", onclick: () => { if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); } }, el("span", { class: "medaille", "aria-hidden": "true" }, o.symbol), el("span", { lang: "fr" }, o.name))
+        : el("button", { type: "button", class: "namen-knopf gesperrt", disabled: true }, el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?")))));
+  }
+
+  /* ---------- 🏛️ Panthéon ---------- */
+  function pantheon() {
+    zeige(kopf("🏛️ Panthéon", startseite, "Deine Sammlung: geschaffte Dialoge und Namen. Gold = auch ohne Vorbild."),
+      el("h2", {}, "🏅 Dialogues"),
+      el("div", { class: "namen-raster" }, D.dialoge.map((d) => {
+        const n = schritteFertig(d);
+        return el("button", { type: "button", class: "namen-knopf" + (n === SCHRITTE.length ? " gold" : n ? "" : " gesperrt"), onclick: () => dialogSeite(d) },
+          el("span", { class: "medaille", "aria-hidden": "true" }, n === SCHRITTE.length ? "🏅" : n ? "💬" : "🔒"), el("span", { lang: "fr" }, d.titel), el("small", {}, `${n}/${SCHRITTE.length}`));
+      })),
       Object.entries(D.gruppen).map(([g, titel]) => [el("h2", {}, titel),
         el("div", { class: "namen-raster" }, D.namen.filter((n) => n.gruppe === g).map((n) => {
           const s = namenStufe(n);
           return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : s ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
             bild(n, 64), el("span", { lang: "fr" }, s ? n.name : "?"));
         }))]),
-      el("h2", {}, "🏅 Dialogues"),
-      el("div", { class: "namen-raster" }, D.dialoge.map((d) => {
-        const n = schritteFertig(d);
-        return el("button", { type: "button", class: "namen-knopf" + (n === SCHRITTE.length ? " gold" : n ? "" : " gesperrt"), onclick: () => dialogSeite(d) },
-          el("span", { class: "medaille", "aria-hidden": "true" }, n === SCHRITTE.length ? "🏅" : n ? "💬" : "🔒"), el("span", { lang: "fr" }, d.titel), el("small", {}, `${n}/${SCHRITTE.length}`));
-      })));
+      el("h2", {}, "🦸 Super-héros"), kartenZaehler(), heldenRaster(),
+      el("h2", {}, "🗼 Paris"),
+      el("div", { class: "namen-raster" }, D.paris.map((o, i) => i < parisFrei()
+        ? el("button", { type: "button", class: "namen-knopf gold", onclick: () => parisFilm(o) }, el("span", { class: "medaille", "aria-hidden": "true" }, o.symbol), el("span", { lang: "fr" }, o.name))
+        : el("button", { type: "button", class: "namen-knopf gesperrt", onclick: parisSeite }, el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?")))));
   }
 
   leiste();

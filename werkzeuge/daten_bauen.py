@@ -241,6 +241,8 @@ def spieldaten():
         "orte": [dict(z, x=int(z["x"]), y=int(z["y"]), audio=a(f"audio/london/{z['id']}.mp3"), **orts_foto(z["id"])) for z in lesen("london.tsv")],
         "helden": [dict(z, bild=f"bilder/helden/{z['bild']}.jpg", audio=a(f"audio/helden/{z['id']}.mp3"), intro_audio=a(f"audio/helden/intro_{z['id']}.mp3")) for z in lesen("helden.tsv")],
         "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in lesen("geheimakten.tsv")],
+        # Goldene Akten (Regel B, 7.11.2026): Freischaltung nach Serie (art „serie“, ziel = Schultage am Stück) oder perfekten Wochen (art „wochen“, ziel = Anzahl)
+        "gold": [dict(z, ziel=int(z["ziel"]), absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in lesen("goldakten.tsv")],
         "frei": frei_saarland.als_daten(),
         "shop": SHOP,
         # London Run: Aufnahmen je Welt (Boss-Banner/-Sprüche, Levelstart/-ende, Cameo-Sätze; werkzeuge/runner_audio.py), fehlende = Geräte-Stimme

@@ -47,3 +47,7 @@ Schema und Anzeige: `docs/gamification/konzept.md`, Abschnitt „📝 Homework�
 ## helden.tsv – Superhelden (Cameos, noch nicht eingebunden)
 
 Spalten wie `inhalte/helden.tsv` (Klasse 6): `id	name	kraft	bild	steckbrief	intro` (Steckbrief + Ich-Vorstellung auf Englisch). Die Spielgrafik je `id` steht in `app/klasse9/runner.js` (`HELDEN_ZEICHNUNG`, Farbe `HELD_FARBE`). Penny the Puma hat die id `pennypuma` (`penny` ist der Pinguin aus Klasse 6). Stand 7.11.2026: nur Zeichnungen + Daten; `werkzeuge/klasse9_bauen.py` liest die Datei noch nicht.
+
+## symbole.tsv – Symbole für „Picture → Word“
+
+Spalten `id	wort	symbol`: `id` aus `vokabeln.tsv`, `wort` nur zur Übersicht, `symbol` = Emoji (auch 2–3 zusammen) oder `svg:<name>` für eine eigene Zeichnung in `symbole/<name>.svg` (viewBox 0 0 64 64, flacher Stil, wird in `daten.js` eingebettet). Ein Unit-Abschnitt mit mindestens zwei Symbol-Wörtern bekommt hinten den Teil „Picture → Word“ (G: Auswahl, E: eintippen); das Symbol erscheint auch auf der Lernkarte „Words“ und bei DE → EN.

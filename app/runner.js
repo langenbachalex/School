@@ -41,6 +41,8 @@
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
+   Welt „paris“ (7.11., Französisch-App „Paris Run“): Seine-Quai, Tour Eiffel wächst heran, Autos/Radrennfahrer, Colonnes Morris + Baguette-Kisten als Stufen, Boss Monsieur Gaston (Kellner), Tür = goldene Grille;
+   Texte Französisch, W.zurufe (Mr. Alex französisch), W.hinweise (Saute ! / Attention ! / Plus vite ! / À gauche ! über alexSagen), W.uebersetzung (Engine-Meldungen beim Zeichnen übersetzt, tx), Paris-Helden als Cameos.
    Mr. Alex' Zurufe (7.11.): ALEX_ZURUFE (Moment → Varianten), Option audio.alex = { key: Datei }, stimme.alex(text, key, { audio }) – hinter Held/Erzähler/Boss (warten), nie öfter als alle 20 s;
    Levelende/Game over stehen im Ergebnis (ergebnis.alex = { key, text, audio }) und spricht die App nach der Levelende-Ansage.
    Orts-Szenen (6.11.): window.Runner.szene(ziel, ortId, { text, titel, foto, quelle, onEnde }) spielt eine kurze Szene eines Orts mit den Zeichnungen der Welten (Runner.hatSzene(id), Runner.SZENEN_ORTE).
@@ -1074,6 +1076,32 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('fuchs', 850, 1250); h.vor(1300); }, // 27
     (h) => { h.luecke(200, 170); h.auto('bus', 500, 1300); h.post(1350); h.vor(1500); },                // 28 Schluss: Themse + Bus
   ];
+  // Disco Run (Bonus-Level „Albernes Spaß-Level“, Idee C, 7.11.2026, alle drei Apps): bewusst übertrieben – alles im Takt, Tanzfläche, Lautsprecher-Kisten, tanzende Gegner,
+  // Boss DJ Funky Flamingo (Tanzduell = Boss-Frage), 12 Diamanten + 2 Tore wie Westminster (Wort 4 und 10), nur allgemeine Bausteine (Kiste = Lautsprecher, Lücke = Nebelgrube)
+  const MUSTER_DISCO = [
+    (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                                   // 1 Aufwärmen: erster Lautsprecher
+    (h) => { h.kiste(250); h.kiste(290, 2); h.dia(300, 205); h.vor(800); },                             // 2 Lautsprecher-Treppe
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(950); },           // 3 Plattform + tanzende Taube
+    (h) => { h.kiste(200, 2); h.dia(220, 215); h.geg('maus', 450, 800); h.vor(900); },                  // 4 Turm + Disco-Maus
+    (h) => { h.luecke(250, 150); h.geg('fuchs', 600, 900); h.vor(1000); },                              // 5 Nebelgrube + Fuchs
+    (h) => { h.plat(120, 240, 140); h.plat(360, 185, 140); h.vor(700); },                               // 6 Doppelplattform
+    (h) => { h.geg('eichhoernchen', 150, 450); h.kiste(600); h.dia(610, 230); h.vor(850); },            // 7 Eichhörnchen + Lautsprecher
+    (h) => { h.luecke(200, 170); h.dia(285, 210); h.vor(800); },                                        // 8 Grube mit Diamant darüber
+    (h) => { h.geg('maus', 100, 400); h.geg('taube', 500, 800); h.vor(950); },                          // 9 Tanzpaar
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform hoch
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('fuchs', 550, 850); h.vor(1000); },                                       // 12 CHECKPOINT 1
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.dia(230, 170); h.vor(750); }, // 13 Lautsprecher-Pyramide
+    (h) => { h.luecke(250, 160); h.geg('eichhoernchen', 600, 900); h.vor(1000); },                      // 14 Grube + Eichhörnchen
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 15 Dreier-Plattform
+    (h) => { h.geg('taube', 150, 450); h.geg('maus', 550, 850); h.vor(1000); },             // 16 Polonaise
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 17 TOR 2
+    (h) => { h.cp(150); h.kiste(550); h.kiste(590, 2); h.vor(850); },                                   // 18 CHECKPOINT 2
+    (h) => { h.luecke(200, 190); h.plat(150, 230, 320); h.dia(310, 190); h.geg('fuchs', 650, 950); h.vor(1150); }, // 19 Plattform über der Grube
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 20
+    (h) => { h.geg('eichhoernchen', 150, 400); h.geg('taube', 450, 750); h.kiste(850); h.vor(1050); },  // 21 Tanzgruppe
+    (h) => { h.luecke(200, 170); h.kiste(550, 2); h.vor(900); },                                        // 22 Schluss: Grube + Turm
+  ];
   // Story-Modus London Welt 1 „The Guard Who Never Moved“ (31.10., docs/runner/story-london-01.md; nur mit Option story): dieselbe Strecke wie MUSTER_WESTMINSTER, dazu
   // 12 Story-Kristalle ♪ je Lauf (h.kristall(dx, y, nr, strang): Anfang 1–4 · Gabelung nach 4: A5 unten auf der Straße, B5 oben auf einem geparkten Doppeldecker (h.parkbus) ·
   // Strang A (unten) / B (oben) 6–8 an denselben Stellen · gemeinsam 9–10 · Ende 11–12 (strang 'E' = folgt dem Strang) hinter dem Boss im Finale),
@@ -1689,7 +1717,7 @@
   const KABINE_W = 80;   // Kabinen-Plattform des London Eye (Welt 2 Klasse 6)
   const PARKBUS_W = 118, PARKBUS_H = 54;   // geparkter Doppeldecker an der Gabelung (fest, begehbar)
   // Fahrzeuge: Breite/Höhe, Tempo, Startabstand vor dem rechten Ende (auto/truck wie seit Welt 2; bus/cab Welt Westminster)
-  const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 } };
+  const AUTO_MASSE = { auto: { w: 80, h: 34, tempo: 270, start: 180 }, truck: { w: 130, h: 48, tempo: 230, start: 260 }, bus: { w: 118, h: 54, tempo: 200, start: 250 }, cab: { w: 78, h: 36, tempo: 260, start: 180 }, pauto: { w: 80, h: 40, tempo: 260, start: 180 }, velo: { w: 56, h: 50, tempo: 300, start: 170 } };
   // endeN = Zahl der Ende-Kristalle hinter dem Boss (Story: aus der Struktur, London 2, New York 4); sie liegen gleichmäßig zwischen stopX + 95 und tuerX − 25
   function levelBauen(muster, endeN = 2) {
     const L = { boden:[], plattformen:[], kisten:[], gegner:[], diamanten:[], tore:[], checkpoints:[], autos:[], oel:[], steine:[], bruecken:[], kakteen:[], staemme:[], baeche:[], winde:[], hoehlen:[], nebel:[], seilbahnen:[], surfs:[], kristalle:[], parkbusse:[], deko:[], realmTore:[], gegenstaende:[], sektionen:[], klappen:[], boote:[], treibgut:[], zapfen:[], spalten:[], tueren:[], baelle:[] };
@@ -1710,6 +1738,7 @@
       pfuetze: (dx, w = 90) => L.oel.push({ x:x + dx, w, art:'pfuetze' }),
       zelle: (dx) => { L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE, art:'zelle', teil:0 }, { x:x + dx, y:BODEN_Y - KISTE * 2, art:'zelle', teil:1 }); },
       post: (dx) => L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE, art:'post' }),
+      morris: (dx) => { L.kisten.push({ x:x + dx, y:BODEN_Y - KISTE, art:'morris', teil:0 }, { x:x + dx, y:BODEN_Y - KISTE * 2, art:'morris', teil:1 }); },   // Welt Paris: Colonne Morris = zwei Blöcke
       stein: (dx) => L.steine.push({ x:x + dx }),
       bruecke: (dx, w) => { h.luecke(dx, w); L.bruecken.push({ x:x + dx, w }); },
       kaktus: (dx) => L.kakteen.push({ x:x + dx }),
@@ -1831,6 +1860,7 @@
   const TIPP_TEMPO = 24, STORY_STEHT = 3.5, STORY_AUS = 0.6, STORY_LUECKE = 0.3, STATION_MIN = 3, STATION_MAX = 40, STATION_SPERRE = 0.4;
   // Cameos (Klasse 6): Liste der Helden (opt.cameos), geladene Kartenbilder, Auftrittsplan (x-Marken), laufender Auftritt, Effekte (Restzeit in s)
   let cameoListe = [], cameoPlan = [], cameo = null, cameosGezeigt = 0, cameoEffekt = null;
+  let heldLauf = {};   // Folien-Karten (7.11.): je Held, der in diesem Lauf aufgetreten ist, { auftritte, serie } – geht im Ergebnis als helden an die App
   let schild = 0, sprungBonus = 0, durchlaessig = 0, eisZeit = 0, traegt = 0, traegtAktiv = false, eule = null;
   // Klasse 9 (7.11.): brecher = Restzeit, in der das nächste Hindernis zerbricht (brecherArt 'laser' Eddie / 'ramme' Bonnie, Benny ohne Lücke: einmal; 'rolle' Archie: alle bis Ablauf),
   // schweben = Maya (Fallen gebremst), heldBruecke = Bennys Brücke {x, w} über die nächste Lücke, wegZiel = { art, zeit, alle } Ally/Molly/Sunny nehmen Gegner aus dem Spiel, sprungArt 'kenji'|'puma'
@@ -1881,13 +1911,15 @@
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
     alexLetzteZeit = -99; alexLetzterMoment = null; alexLetzterKey = {}; alexGesagt = []; alexHalb = false; toreSerie = 0;
+    discoTanz = 0; discoSchritt = 0; discoNaechster = 0; discoStart = null;   // Disco Run
     trommelt = 0; dunkel = 0; radWinkel = 0; radRueck = 0; kameraHoch = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 60, y: BODEN_Y, flug: 0 } : null;
     klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
     spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null; tuerAnsagen = 0; nyDurchsage = false; durchsagenGesprochen = [];   // The Tube, New York (U-Bahn-Durchsage)
     baelle = (level.baelle || []).map((b) => ({ ...b, phase: 'ruhe', rx: b.x, rot: 0, t: 0 })); koepfer = 0; ballTreffer = 0; tuerTritt = -1; rasenBetreten = false;   // Wembley
+    heldLauf = {};
     cameo = null; cameosGezeigt = 0; cameoEffekt = null; kenjiMit = 0; kenjiSprung = -1; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
     cameoK9Aus();
-    cameoPlan = cameoPlanBauen();
+    cameoPlan = cameoPlanBauen(); hinweisGesehen = new Set();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
     diaGesammelt = 0; film = null; storyNeu(); realmNeu();
   }
@@ -1911,6 +1943,7 @@
     if (!echoWarteschlange.some((e) => e.wort === d.wort)) echoWarteschlange.push({ wort: d.wort, faellig: zeit + ECHO_MIN + Math.random() * (ECHO_MAX - ECHO_MIN) });   // nur ein Echo je Wort
     stimmeAufrufe++; if (story && story.aktiv) stimme.wort(d.wort, { warten: true }); else stimme.wort(d.wort);   // Story: das Wort wartet, bis der Erzähler fertig ist
     combo++; if (combo > maxCombo) maxCombo = combo; hudPuls = 1;
+    for (const k in heldLauf) if (combo > heldLauf[k].serie) heldLauf[k].serie = combo;   // Folien-Karten (7.11.): beste Serie nach dem Auftritt je Held
     const fx = spieler.x, fy = spieler.y - 40;
     if (combo === 3) {
       comboText = { text: "3× Combo!", zeit: COMBO_TEXT_DAUER, stufe: 3 }; klang.combo(3);
@@ -1971,7 +2004,7 @@
   const ALEX_ABSTAND = 20, ALEX_IMMER = ['ende', 'fail'];
   let alexLetzteZeit = -99, alexLetzterMoment = null, alexLetzterKey = {}, alexGesagt = [], alexHalb = false, toreSerie = 0;
   function alexSagen(moment) {
-    const liste = ALEX_ZURUFE[moment]; if (!liste || nurFilm) return null;
+    const liste = (W && W.zurufe && W.zurufe[moment]) || (W && W.zurufeNur ? null : ALEX_ZURUFE[moment]); if (!liste || nurFilm) return null;   // Disco Run: eigene Zurufe (Französisch nur diese)
     const immer = ALEX_IMMER.includes(moment);
     if (!immer && (moment === alexLetzterMoment || zeit - alexLetzteZeit < ALEX_ABSTAND)) return null;
     const wahl = liste.filter((z) => z[0] !== alexLetzterKey[moment]);
@@ -2008,6 +2041,17 @@
     holly: { satz: "Holly here. Take this – our road trip isn't over!", farbe: HELD_FARBE.holly, symbol: "❤️" },
     maya: { satz: "Maya here, darling. Let's float above it all.", farbe: HELD_FARBE.maya, symbol: "🦋" },
     sunny: { satz: "Sunny here! Everybody dance – off you go!", farbe: HELD_FARBE.sunny, symbol: "🎵" },
+    // Französisch-App Paris Run (7.11.): je Held seine Wendung aus inhalte/franz/wendungen_helden.tsv (Aufnahmen app/franz/audio/runner/cameo_<id>.mp3, Heldenstimmen)
+    lucie: { satz: "Lucie ! C'est très clair !", farbe: '#f2b705', symbol: "✨" },
+    gaspard: { satz: "Gaspard ! Vas-y ! Allez, viens !", farbe: '#ff6b35', symbol: "⚡" },
+    bruno: { satz: "Bruno ! Ça marche !", farbe: '#7f4f24', symbol: "💪" },
+    chloe: { satz: "Chloé ! Qu'est-ce que c'est que ce truc-là ?", farbe: '#6a4c93', symbol: "🦉" },
+    camille: { satz: "Camille ! Il y a quelqu'un ?", farbe: '#2ec4b6', symbol: "👻" },
+    robin: { satz: "Robin ! J'ai quelque chose pour toi !", farbe: '#577590', symbol: "🔧" },
+    coco: { satz: "Coco ! Cocorico ! C'est trop bien !", farbe: '#d62839', symbol: "📣" },
+    pierre: { satz: "Pierre ! N'importe quoi !", farbe: '#9b5de5', symbol: "🐦" },
+    horace: { satz: "Horace ! C'est pas vrai !", farbe: '#43aa8b', symbol: "⏱️" },
+    hector: { satz: "Hector ! Pas de souci !", farbe: '#277da1', symbol: "🛡️" },
   };
   const cameoInfo = (held) => CAMEO[held && held.id] || { satz: `${(held && held.name) || "A hero"} is here!`, farbe: "#1d3f8f", symbol: "⭐" };
   // 2–3 Auftritte je Lauf (höchstens so viele wie Helden übergeben): x-Marken bei 22/50/78 % der Strecke, nie direkt an einem Tor (dann 400 dahinter)
@@ -2024,6 +2068,7 @@
   }
   function comboPlus() {
     combo++; if (combo > maxCombo) maxCombo = combo; hudPuls = 1;
+    for (const k in heldLauf) if (combo > heldLauf[k].serie) heldLauf[k].serie = combo;   // Folien-Karten (7.11.): beste Serie nach dem Auftritt je Held
     funken(spieler.x, spieler.y - 50, 12, ["#ffd93d", "#fff6c0"], 200, 0.6);
     alexCombo();
   }
@@ -2031,6 +2076,7 @@
     const info = cameoInfo(held);
     cameo = { held, t: 0, satz: (held && held.satz) || info.satz, info };
     cameosGezeigt++; klang.cameo();
+    if (held && held.id) { const hl = heldLauf[held.id] || (heldLauf[held.id] = { auftritte: 0, serie: 0 }); hl.auftritte++; }
     try { if (stimme.cameo) stimme.cameo(cameo.satz, held && held.id, { audio: (held && held.satz) ? null : audioDatei('cameo', held && held.id) }); } catch (e) { /* stumm */ }
     const id = held && held.id;
     if (id === 'leo') { if (!ruhig()) spur = Math.max(spur, 3); comboPlus(); cameoEffekt = 'combo'; }
@@ -2066,6 +2112,17 @@
     else if ((id === 'holly') && leben < LEBEN_MAX) { leben++; hudPuls = 1; cameoEffekt = 'herz'; }
     else if (id === 'maya') { schweben = 4; cameoEffekt = 'schweben'; }
     else if (id === 'sunny') { wegZiel = { art: 'tanz', zeit: 5, alle: true }; cameoEffekt = 'tanz'; }
+    // Französisch-App Paris Run (7.11.): Kräfte der Paris-Helden mit den vorhandenen Effekten (Licht = Strahl bricht Hindernis, Tempo = Spur + Combo, Stärke = Ramme, Nachtsicht = nächstes Tor, unsichtbar, Erfinder = verpasster Diamant/Brücke, Superschrei = Gegner weg, Vögel tragen, Zeit anhalten = Eis, Bouclier = Schild)
+    else if (id === 'lucie') { brecher = 6; brecherArt = 'laser'; cameoEffekt = 'laser'; }
+    else if (id === 'gaspard') { if (!ruhig()) spur = Math.max(spur, 3); comboPlus(); cameoEffekt = 'combo'; }
+    else if (id === 'bruno') { brecher = 6; brecherArt = 'ramme'; cameoEffekt = 'ramme'; }
+    else if (id === 'chloe' && tore.some((t) => !t.erledigt && t.x > spieler.x)) { eule = tore.find((t) => !t.erledigt && t.x > spieler.x); cameoEffekt = 'eule'; }
+    else if (id === 'camille') { durchlaessig = 3; cameoEffekt = 'unsichtbar'; }
+    else if (id === 'robin') { if (brueckeBauen()) cameoEffekt = 'bruecke'; else { comboPlus(); cameoEffekt = 'combo'; } }
+    else if (id === 'coco') { wegZiel = { art: 'stampf', zeit: 5, alle: true }; cameoEffekt = 'stampf'; }
+    else if (id === 'pierre') { traegt = 5; cameoEffekt = 'traegt'; }
+    else if (id === 'horace') { eisZeit = 3; cameoEffekt = 'eis'; }
+    else if (id === 'hector') { schild = 5; cameoEffekt = 'schild'; }
     else { comboPlus(); cameoEffekt = 'combo'; }
     if (id === 'kenji') sprungArt = 'kenji';
   }
@@ -2762,6 +2819,7 @@
   let SOLIDE = [];
 
   function update(dt) {
+    if (discoWelt()) discoMusik();   // Disco Run: Beat vorausplanen
     if (zustand === 'film') { zeit += dt; filmBewegen(dt); return; }   // Story: Film am Ende (eigene Szene, keine Spielwelt)
     if (nurFilm) return;
     if (zustand === 'station') { stationBewegen(dt); return; }         // Story-Station: alles steht still
@@ -2776,6 +2834,7 @@
       if (tot > 0) { tot -= dt; if (tot <= 0) wiederbeleben(); return; }
       if (spieler.unverwundbar > 0) spieler.unverwundbar -= dt;
       cameoBewegen(dt);
+      hinweiseRunner();   // Paris: Runner-Hinweise (Saute ! Attention ! …)
       if (rutscht > 0) { rutscht = Math.max(0, rutscht - dt); if (rutscht === 0) halten = false; }
 
       // Welt 4: Windböe auslösen (Figur passiert die Marke), schiebt in der Phase schub mit 150/s zurück oder vorwärts
@@ -2994,6 +3053,9 @@
       boss.maul = 0.5 + 0.5 * Math.sin(zeit * 4);
     } else if (zustand === 'wahl') {   // Golden Gate: Gabelung 2 nach dem Boss – der Captain löst sich auf, Elena steht am Tor, das Tor bleibt zu, bis du gewählt hast
       boss.weg = Math.min(1, boss.weg + dt * 0.8); boss.maul = 0;
+    } else if (zustand === 'finale' && discoWelt() && discoTanz < DISCO_TANZ) {   // Disco Run: erst Siegestanz (Figur tanzt, Flamingo im Spagat), dann geht die Tür auf
+      discoTanz += dt; boss.maul = 0;
+      spieler.pose = ruhig() ? 'steh' : Math.floor(discoBeat() * 2) % 2 ? 'sprung' : 'steh';
     } else if (zustand === 'finale') {
       tuer.offen = Math.min(1, tuer.offen + dt * 1.2);
       boss.weg = Math.min(1, boss.weg + dt * 0.8);
@@ -3095,6 +3157,7 @@
   const ergebnis = (geschafft) => Object.assign({
     geschafft, diamanten: gesammelt, max: (story ? diamanten.length : woerter.length) + level.tore.length,
     toreRichtig: torErgebnisse.filter(Boolean).length, leben, dauer: Math.round((performance.now() - startZeit) / 1000), maxCombo,
+    helden: Object.keys(heldLauf).map((id) => ({ id, auftritte: heldLauf[id].auftritte, serie: heldLauf[id].serie })),   // Folien-Karten: Cameos dieses Laufs (Kraft hat gewirkt) + beste Serie danach
   }, story ? {   // Story-Modus: Punkte-Diamanten (ohne Tore) und die Geschichte (ende = Wahl der Ende-Gabelung, vollständig = alle ♪ dieses Endes; London 12, New York 20; realm = verstecktes Tor)
     punkteDiamanten: diaGesammelt, diamantenMax: diamanten.length,
     story: { id: storyOpt.id || W.id, ende: endeWahl(), wahl: Object.assign({}, story.wahl), gesammelt: story.gesammelt.slice(), anzahl: story.gesammelt.length, max: struktur.anzahl,
@@ -3377,6 +3440,7 @@
   }
   function autoZeichnen(c, a) {   // Verkehr fährt nach links: Front links, Scheinwerfer an, Räder drehen sich
     if (a.art === 'bus' || a.art === 'cab') return londonFahrzeug(c, a);   // Welt Westminster
+    if (a.art === 'pauto' || a.art === 'velo') return parisFahrzeug(c, a);   // Welt Paris
     const x = a.x - kamera, y = BODEN_Y;
     c.save(); c.translate(x, y);
     const karosse = a.art === 'truck' ? '#2a6cff' : ['#e63946', '#2e9e5b', '#ff9f1c', '#8a3ffc'][Math.abs(Math.round(a.von / 7)) % 4];
@@ -7286,6 +7350,169 @@
   };
   // Hülle: Held id bei (x,y) = Fußpunkt, Höhe h, Pose; o.gluehen (true/0..1) = Glühen, o.blitz 0..1 = Leuchtrand (kurz bei Kraft-Auslösung),
   // o.kraft 0..1 = Stärke des Kraft-Effekts, o.phase = Sprungphase (Kenji), o.alpha, o.spiegel (Blick nach links)
+  // ===== Französisch-App (Stufe 3, 7.11.2026): 10 Paris-Helden (inhalte/franz/helden.tsv) =====
+  // Gemeinsamer Bauplan wie die Klasse-6-Helden: Umhang/Rückenteil, Beine, Körper mit Schulterband + Wappen, Kopf je Tier, Arme zuletzt, Kraft-Effekt.
+  // b = { id, fell, dunkel, bauch, zeichen, beinF, fuss, hinten(c,t,k,j), schwanz(c,t,k), muster(c), kopf(c,t,j,k), kraft(c,t,haende), armWinkel, kraftLauf, ohneUmhang, bizeps }
+  function hzParisHeld(c, t, pose, o, b) {
+    const j = pose === 'jubel', k = pose === 'kraft', F = HELD_FARBE[b.id], p = k && b.kraftLauf ? 'lauf' : pose;
+    if (b.hinten) b.hinten(c, t, k, j);
+    if (!b.ohneUmhang) hzUmhang(c, F, t, p === 'lauf', false, -54);
+    if (b.schwanz) b.schwanz(c, t, k);
+    hzBeine(c, p, t, 6, -22, 8, b.beinF || b.dunkel, b.beinF || b.fell, b.fuss || b.dunkel, 7, 3.5);
+    hzRR(c, -12, -54, 24, 38, 11, b.fell); if (b.muster) b.muster(c, t);
+    hzEll(c, 0, -33, 8, 10, b.bauch); hzRR(c, -14, -54, 28, 10, 5, '#1d3557'); hzWappen(c, 0, -40, F, b.zeichen);
+    b.kopf(c, t, j, k);
+    const haende = hzArme(c, p, t, j ? 18 : 13, -50, 13, 11, 7, b.arm || b.fell, 5.5, b.dunkel, k && b.armWinkel ? b.armWinkel : null, k ? b.bizeps || 0 : 0);
+    if (k && b.kraft) b.kraft(c, t, haende);
+    return haende;
+  }
+  const hzOhrRund = (c, x, y, r, f, innen) => { hzEll(c, x, y, r, r, f); if (innen) hzEll(c, x, y, r * 0.55, r * 0.55, innen); };
+  const hzStrahl = (c, x, y, w, l, f, a = 0.7) => { c.save(); c.globalAlpha *= a; const g = c.createLinearGradient(x, y, x + Math.cos(w) * l, y + Math.sin(w) * l); g.addColorStop(0, f); g.addColorStop(1, 'rgba(255,255,255,0)');
+    c.strokeStyle = g; c.lineWidth = 3; c.lineCap = 'round'; c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.cos(w) * l, y + Math.sin(w) * l); c.stroke(); c.restore(); };
+  Object.assign(HELD_FARBE, { lucie: '#f2b705', gaspard: '#ff6b35', bruno: '#7f4f24', chloe: '#6a4c93', camille: '#2ec4b6', robin: '#577590', coco: '#d62839', pierre: '#9b5de5', horace: '#43aa8b', hector: '#277da1' });
+  HZ_NEUSTIL.add('lucie');
+  Object.assign(CAMEO, {   // Paris-Helden: Wendung als Sprechblase im Film, Symbol für den Kraft-Chip
+    lucie: { satz: "C'est très clair !", farbe: HELD_FARBE.lucie, symbol: '✨' },
+    gaspard: { satz: 'Vas-y ! Allez, viens !', farbe: HELD_FARBE.gaspard, symbol: '⚡' },
+    bruno: { satz: 'Ça marche !', farbe: HELD_FARBE.bruno, symbol: '💪' },
+    chloe: { satz: "Qu'est-ce que c'est que ce truc-là ?", farbe: HELD_FARBE.chloe, symbol: '🔍' },
+    camille: { satz: "Il y a quelqu'un ?", farbe: HELD_FARBE.camille, symbol: '👻' },
+    robin: { satz: "J'ai quelque chose pour toi !", farbe: HELD_FARBE.robin, symbol: '🔧' },
+    coco: { satz: "C'est trop bien !", farbe: HELD_FARBE.coco, symbol: '📣' },
+    pierre: { satz: "N'importe quoi !", farbe: HELD_FARBE.pierre, symbol: '🐦' },
+    horace: { satz: "C'est pas vrai !", farbe: HELD_FARBE.horace, symbol: '⏱️' },
+    hector: { satz: 'Pas de souci !', farbe: HELD_FARBE.hector, symbol: '🛡️' },
+  });
+  Object.assign(HELDEN_ZEICHNUNG, {
+    // Lucie la Luciole – Licht: dunkler Insektenkörper, Flügel, Fühler mit Leuchtpunkten, leuchtender Hinterleib; Kraft = Lichtstrahlen aus beiden Händen
+    lucie(c, t, pose, o = {}) {
+      const leucht = 0.6 + 0.4 * Math.sin(t * 4);
+      hzParisHeld(c, t, pose, o, { id: 'lucie', fell: '#3d405b', dunkel: '#2b2d42', bauch: `rgba(255,224,102,${0.75 + 0.25 * leucht})`, zeichen: 'L', armWinkel: [[2.5, 2.9], [2.5, 2.9]],
+        hinten: (c, t, k) => { const fl = Math.sin(t * (k ? 30 : 8)) * 0.25; c.save(); c.globalAlpha *= 0.6; hzEll(c, -16, -58, 9, 18, '#cfe8ff', -0.6 + fl); hzEll(c, 16, -58, 9, 18, '#cfe8ff', 0.6 - fl); c.restore(); },
+        schwanz: (c) => { const g = c.createRadialGradient(0, -16, 2, 0, -16, 22); g.addColorStop(0, `rgba(255,230,120,${0.8 * leucht})`); g.addColorStop(1, 'rgba(255,230,120,0)'); c.fillStyle = g; c.beginPath(); c.arc(0, -16, 22, 0, Math.PI * 2); c.fill(); hzEll(c, 0, -18, 9, 7, '#ffe066'); },
+        kopf: (c, t, j, k) => {
+          c.strokeStyle = '#2b2d42'; c.lineWidth = 1.8; c.lineCap = 'round'; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 4, -78); c.quadraticCurveTo(s * 8, -92, s * 13, -94); c.stroke(); hzEll(c, s * 13, -94, 2.8, 2.8, '#ffe066'); }
+          hzEll(c, 0, -68, 12, 12, '#3d405b'); hzEll(c, 0, -63, 7, 5, '#565a7a'); hzMaske(c, 0, -71, 10, HELD_FARBE.lucie); hzAugen(c, 0, -71, 4.6, 2.5, k ? 0 : 0.6, j); hzLaecheln(c, 0, -62, 3, '#ffe066', j);
+        },
+        kraft: (c, t, haende) => { for (const [hx, hy] of haende) { const g = c.createRadialGradient(hx, hy, 1, hx, hy, 18); g.addColorStop(0, 'rgba(255,240,150,.95)'); g.addColorStop(1, 'rgba(255,240,150,0)'); c.fillStyle = g; c.beginPath(); c.arc(hx, hy, 18, 0, Math.PI * 2); c.fill();
+          for (let i = 0; i < 6; i++) hzStrahl(c, hx, hy, -Math.PI / 2 + (i - 2.5) * 0.35 + Math.sin(t * 3) * 0.1, 46 + Math.sin(t * 9 + i) * 6, '#fff3b0'); } } });
+    },
+    // Gaspard le Guépard – Supertempo: gelbes Fell mit Flecken, Tränenstreifen, langer Schwanz; Kraft = Laufhaltung mit Tempolinien
+    gaspard(c, t, pose, o = {}) {
+      const fell = '#e9b949', d = '#c99a2e', fleck = (c, pts) => pts.forEach(([x, y]) => hzEll(c, x, y, 1.8, 1.5, '#3a2a14'));
+      hzParisHeld(c, t, pose, o, { id: 'gaspard', fell, dunkel: d, bauch: '#fbe8b0', zeichen: 'G', kraftLauf: true,
+        schwanz: (c, t) => { c.strokeStyle = fell; c.lineWidth = 3.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(-10, -26); c.quadraticCurveTo(-30, -24 + Math.sin(t * 4) * 3, -32, -46); c.stroke(); hzEll(c, -32, -47, 3, 3, '#3a2a14'); },
+        muster: (c) => fleck(c, [[-8, -46], [7, -47], [-6, -26], [8, -24], [-9, -36], [9, -34]]),
+        kopf: (c, t, j, k) => {
+          hzOhrRund(c, -9, -79, 3.6, fell, '#3a2a14'); hzOhrRund(c, 9, -79, 3.6, fell, '#3a2a14');
+          hzEll(c, 0, -68, 12, 11.5, fell); fleck(c, [[-6, -77], [5, -78], [0, -80], [-10, -70], [10, -69]]); hzEll(c, 0, -62.5, 6, 4.5, '#fbe8b0'); hzEll(c, 0, -65, 2.2, 1.6, '#3a2210');
+          c.strokeStyle = '#2b1d10'; c.lineWidth = 1.4; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 2.5, -68); c.quadraticCurveTo(s * 4.5, -64, s * 3.5, -60.5); c.stroke(); }
+          hzLaecheln(c, 0, -61, 2.6, '#3a2210', j); hzMaske(c, 0, -71, 10, HELD_FARBE.gaspard); hzAugen(c, 0, -71, 4.6, 2.5, k ? 1.4 : 0.6, j);
+        },
+        kraft: (c, t) => { c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 2.2; c.lineCap = 'round'; for (let i = 0; i < 5; i++) { c.beginPath(); c.moveTo(-30 - i * 3, -50 + i * 9); c.lineTo(-62 + (i % 2) * 8 + Math.sin(t * 20 + i) * 3, -50 + i * 9); c.stroke(); } hzBlitz(c, 18, -58, t, 1); } });
+    },
+    // Bruno l'Ours – Superstärke: braunes Fell, runde Ohren, helle Schnauze; Kraft = stemmt ein Auto über den Kopf, Bodenrisse
+    bruno(c, t, pose, o = {}) {
+      const fell = '#8d5524', d = '#6b3e1a';
+      hzParisHeld(c, t, pose, o, { id: 'bruno', fell, dunkel: d, bauch: '#c68b59', zeichen: 'B', armWinkel: [[2.5, 3.0], [2.5, 3.0]], bizeps: 4,
+        kopf: (c, t, j) => { hzOhrRund(c, -10, -79, 5, fell, '#c68b59'); hzOhrRund(c, 10, -79, 5, fell, '#c68b59'); hzEll(c, 0, -68, 13, 12.5, fell);
+          hzEll(c, 0, -62, 7, 5, '#d9a066'); hzEll(c, 0, -64.5, 3, 2, '#2b1a10'); hzLaecheln(c, 0, -61, 3, '#2b1a10', j); hzMaske(c, 0, -71, 11, HELD_FARBE.bruno); hzAugen(c, 0, -71, 4.8, 2.4, 0.6, j); },
+        kraft: (c, t, haende) => {
+          c.strokeStyle = 'rgba(70,50,30,.6)'; c.lineWidth = 1.6; for (const [x0, x1, x2] of [[-8, -22, -34], [10, 24, 38]]) { c.beginPath(); c.moveTo(x0, 0); c.lineTo(x1, 4); c.lineTo(x2, 2); c.stroke(); }
+          if (o.kraft === 0) return;   // im Film hebt er ein Auto aus der Szene
+          const fy = (haende[0][1] + haende[1][1]) / 2 - 2 + Math.sin(t * 4) * 1.5; pAuto(c, 0, fy, 1.15, '#2a8cff');
+          for (let i = 0; i < 3; i++) hzFunke(c, -26 + i * 26, fy - 30 + Math.sin(t * 6 + i) * 3, 2.5, '#fff'); } });
+    },
+    // Chloé la Chouette – Nachtsicht/Detektivin: Schneeeule mit Tupfen, Federohren, Karomütze; Kraft = grün leuchtende Augen + Lupe
+    chloe(c, t, pose, o = {}) {
+      const fell = '#eceff1', d = '#b0bec5', tupf = (c, pts) => pts.forEach(([x, y]) => hzEll(c, x, y, 1.6, 1.1, '#78909c'));
+      hzParisHeld(c, t, pose, o, { id: 'chloe', fell, dunkel: d, bauch: '#ffffff', zeichen: 'C', fuss: '#f4a261', armWinkel: [[0.35, 0.1], [1.25, 1.9]],
+        muster: (c) => tupf(c, [[-8, -48], [7, -46], [-8, -24], [8, -26]]),
+        kopf: (c, t, j, k) => {
+          hzEll(c, 0, -67, 14, 13, fell); tupf(c, [[-8, -77], [7, -78], [-11, -66], [11, -65]]);
+          c.fillStyle = fell; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 13, -72); c.lineTo(s * 12, -84); c.lineTo(s * 6, -77); c.fill(); }
+          hzRR(c, -13, -86, 26, 8, 4, '#8d6e63'); hzEll(c, 0, -86, 11, 5, '#8d6e63'); c.strokeStyle = '#6d4c41'; c.lineWidth = 0.8; for (let i = -10; i <= 10; i += 4) { c.beginPath(); c.moveTo(i, -91); c.lineTo(i, -78); c.stroke(); } hzRR(c, 8, -80, 12, 3, 1.5, '#6d4c41');   // Detektivmütze
+          hzMaske(c, 0, -70, 11, HELD_FARBE.chloe); hzAugen(c, 0, -70, 5.2, 2.8, 1, j);
+          if (k) { c.save(); c.globalAlpha = 0.6 + 0.3 * Math.sin(t * 8); hzEll(c, -5.2, -70, 4.5, 4.5, '#9dff9d'); hzEll(c, 5.2, -70, 4.5, 4.5, '#9dff9d'); c.restore(); }
+          c.fillStyle = '#f4a261'; c.beginPath(); c.moveTo(-3, -64); c.lineTo(3, -64); c.lineTo(0, -58); c.fill();
+        },
+        kraft: (c, t, haende) => { const [hx, hy] = haende[1], lx = hx + 8, ly = hy - 8;
+          c.strokeStyle = '#5d4037'; c.lineWidth = 3; c.beginPath(); c.moveTo(hx, hy); c.lineTo(lx, ly); c.stroke();
+          const g = c.createRadialGradient(lx + 5, ly - 5, 1, lx + 5, ly - 5, 10); g.addColorStop(0, 'rgba(200,255,200,.9)'); g.addColorStop(1, 'rgba(157,255,157,.25)'); c.fillStyle = g; c.beginPath(); c.arc(lx + 5, ly - 5, 8, 0, Math.PI * 2); c.fill();
+          c.strokeStyle = '#b8862b'; c.lineWidth = 2.2; c.stroke(); hzFunke(c, lx + 2, ly - 9, 2.5, '#fff'); } });
+    },
+    // Camille le Caméléon – unsichtbar: grüner Körper, Rollschwanz, Helmkamm, Kegelaugen; Kraft = wird durchsichtig und schillert in allen Farben
+    camille(c, t, pose, o = {}) {
+      const k = pose === 'kraft', fell = k ? `hsl(${(t * 90) % 360},60%,55%)` : '#6bbf59', d = k ? `hsl(${(t * 90 + 30) % 360},55%,42%)` : '#4a9a3c';
+      c.save(); if (k) c.globalAlpha *= 0.28 + 0.18 * Math.sin(t * 3);
+      hzParisHeld(c, t, pose, o, { id: 'camille', fell, dunkel: d, bauch: '#c5e8a5', zeichen: 'C', armWinkel: [[0.6, 1.6], [0.6, 1.6]],
+        schwanz: (c) => { c.strokeStyle = fell; c.lineWidth = 4.5; c.lineCap = 'round'; c.beginPath(); for (let i = 0; i <= 30; i++) { const w = i / 30 * Math.PI * 3.2, r = 12 - i * 0.33; const x = -24 + Math.cos(w) * r, y = -22 + Math.sin(w) * r; i ? c.lineTo(x, y) : c.moveTo(-10, -22); } c.stroke(); },
+        kopf: (c, t, j) => { c.fillStyle = d; c.beginPath(); c.moveTo(-10, -74); c.quadraticCurveTo(-4, -92, 8, -78); c.fill();
+          hzEll(c, 0, -67, 13, 11, fell); for (const s of [-1, 1]) { hzEll(c, s * 11, -69, 5.5, 5.5, d); hzEll(c, s * 11 + Math.sin(t * 2 + s) * 1.5, -69, 2.2, 2.2, '#1a1d26'); }
+          c.strokeStyle = '#2b4a22'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(-8, -61); c.quadraticCurveTo(0, j ? -57 : -59, 9, -62); c.stroke();
+          hzMaske(c, 0, -71, 8, HELD_FARBE.camille); hzAugen(c, 0, -71, 4, 2.2, 0.6, j); } });
+      c.restore();
+      if (k) for (let i = 0; i < 6; i++) hzFunke(c, Math.cos(t * 2 + i) * 26, -50 + Math.sin(t * 2 + i) * 34, 2.5, '#ffffff');
+    },
+    // Robin le Raton laveur – Erfinder: graues Fell, schwarze Augenbinde, Ringelschwanz, Schutzbrille auf der Stirn; Kraft = Schraubenschlüssel + drehende Zahnräder
+    robin(c, t, pose, o = {}) {
+      const fell = '#9aa0a6', d = '#6c737a';
+      const zahnrad = (c, x, y, r, w, f) => { c.save(); c.translate(x, y); c.rotate(w); c.fillStyle = f; for (let i = 0; i < 8; i++) { c.rotate(Math.PI / 4); c.fillRect(-r * 0.22, -r * 1.25, r * 0.44, r * 0.5); } c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill(); hzEll(c, 0, 0, r * 0.38, r * 0.38, '#1d3557'); c.restore(); };
+      hzParisHeld(c, t, pose, o, { id: 'robin', fell, dunkel: d, bauch: '#d6d9dc', zeichen: 'R', armWinkel: [[0.35, 0.1], [1.6, 2.4]],
+        schwanz: (c, t) => { for (let i = 0; i < 6; i++) hzEll(c, -14 - i * 4, -24 - i * 4 + Math.sin(t * 3 + i * 0.4) * 1.5, 6, 5, i % 2 ? '#3a3f45' : '#c4c8cc', -0.7); },
+        kopf: (c, t, j) => { c.fillStyle = fell; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 5, -77); c.lineTo(s * 12, -88); c.lineTo(s * 13, -74); c.fill(); }
+          hzEll(c, 0, -68, 12.5, 12, fell); hzEll(c, 0, -63, 8, 6, '#eceff1'); hzRR(c, -13, -75, 26, 9, 4.5, '#2b2b2b');
+          for (const s of [-1, 1]) { c.strokeStyle = '#ffd166'; c.lineWidth = 2; c.beginPath(); c.arc(s * 5, -82, 4, 0, Math.PI * 2); c.stroke(); hzEll(c, s * 5, -82, 3, 3, 'rgba(160,220,255,.7)'); }
+          hzMaske(c, 0, -71, 8, HELD_FARBE.robin); hzAugen(c, 0, -71, 4.4, 2.3, 0.6, j); hzEll(c, 0, -64, 2.4, 1.8, '#1a1d26'); hzLaecheln(c, 0, -60.5, 2.6, '#1a1d26', j); },
+        kraft: (c, t, haende) => { const [hx, hy] = haende[1]; c.save(); c.translate(hx, hy); c.rotate(-0.6 + Math.sin(t * 8) * 0.4); hzRR(c, -2, -16, 4, 16, 2, '#adb5bd'); c.strokeStyle = '#adb5bd'; c.lineWidth = 3.5; c.beginPath(); c.arc(0, -18, 4.5, 0.6, Math.PI * 2 - 0.6); c.stroke(); c.restore();
+          zahnrad(c, 26, -88, 7, t * 3, '#ffb703'); zahnrad(c, 38, -76, 5, -t * 4.2, '#fb8500'); } });
+    },
+    // Coco le Coq – Superschrei: weißes Gefieder, roter Kamm + Kehllappen, gelber Schnabel, Schwanzfedern in Blau-Weiß-Rot; Kraft = Schallwellen + Noten
+    coco(c, t, pose, o = {}) {
+      const fell = '#f4f1de', d = '#d8cfa8';
+      hzParisHeld(c, t, pose, o, { id: 'coco', fell, dunkel: d, bauch: '#ffffff', zeichen: 'C', beinF: '#f4a261', fuss: '#e76f51', armWinkel: [[2.2, 2.7], [2.2, 2.7]],
+        hinten: (c, t) => { [['#0055a4', -0.9], ['#ffffff', -0.6], ['#ef4135', -0.3]].forEach(([f, w], i) => { c.save(); c.translate(-10, -36); c.rotate(w + Math.sin(t * 3 + i) * 0.06); hzEll(c, -14, -14, 7, 20, f, 0.2); c.restore(); }); },
+        kopf: (c, t, j, k) => { hzEll(c, 0, -68, 12, 12, fell); for (let i = 0; i < 3; i++) hzEll(c, -5 + i * 5, -82 + Math.abs(i - 1) * 2, 4, 5, '#d62839');
+          c.fillStyle = '#ffb703'; c.beginPath(); c.moveTo(9, -68); c.lineTo(20, k ? -69 : -66); c.lineTo(9, -63); c.fill(); if (k) { c.beginPath(); c.moveTo(9, -64); c.lineTo(19, -60); c.lineTo(9, -62); c.fill(); }
+          hzEll(c, 9, -58, 3, 5, '#d62839'); hzMaske(c, 0, -71, 9, HELD_FARBE.coco); hzAugen(c, 0, -71, 4.2, 2.3, 1, j); },
+        kraft: (c, t) => { c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineCap = 'round'; for (let i = 0; i < 4; i++) { const r = ((t * 40 + i * 14) % 56) + 8; c.globalAlpha = 1 - r / 64; c.lineWidth = 2.5; c.beginPath(); c.arc(16, -66, r, -0.6, 0.6); c.stroke(); } c.globalAlpha = 1;
+          hzText(c, '♪', 46 + Math.sin(t * 5) * 3, -92, 14, '#ffd60a'); hzText(c, '♫', 60, -76 + Math.sin(t * 4) * 3, 12, '#ffd60a'); } });
+    },
+    // Pierre le Pigeon – spricht mit Vögeln: blaugraues Gefieder, schillernder Hals, kleiner Schnabel, rosa Füße; Kraft = Flügel offen, Vögel kreisen
+    pierre(c, t, pose, o = {}) {
+      const fell = '#8e9aaf', d = '#6c7a91';
+      hzParisHeld(c, t, pose, o, { id: 'pierre', fell, dunkel: d, bauch: '#b8c0cc', zeichen: 'P', beinF: '#e5989b', fuss: '#e5989b', armWinkel: [[1.9, 2.3], [1.9, 2.3]],
+        muster: (c) => { const g = c.createLinearGradient(-12, -54, 12, -44); g.addColorStop(0, '#3a9e7a'); g.addColorStop(1, '#8a5aa8'); hzRR(c, -12, -54, 24, 8, 4, g); },
+        kopf: (c, t, j) => { hzEll(c, 0, -67, 11, 11, fell); c.fillStyle = '#3d3d46'; c.beginPath(); c.moveTo(8, -67); c.lineTo(16, -64); c.lineTo(8, -62); c.fill(); hzEll(c, 9, -67, 2, 1.4, '#f1f1f1');
+          hzMaske(c, 0, -70, 9, HELD_FARBE.pierre); hzAugen(c, 0, -70, 4, 2.2, 1, j); },
+        kraft: (c, t) => { for (let i = 0; i < 5; i++) { const w = t * 2.2 + i * Math.PI * 2 / 5, x = Math.cos(w) * 46, y = -64 + Math.sin(w) * 18, fl = Math.sin(t * 14 + i) * 4;
+          c.strokeStyle = i % 2 ? '#4a4e69' : '#9a8c98'; c.lineWidth = 2.2; c.lineCap = 'round'; c.beginPath(); c.moveTo(x - 7, y - fl); c.quadraticCurveTo(x - 3, y - 4, x, y); c.quadraticCurveTo(x + 3, y - 4, x + 7, y - fl); c.stroke(); } } });
+    },
+    // Horace l'Escargot – Zeit anhalten: beige Haut, großes Spiralhaus auf dem Rücken, Fühler mit Kugeln; Kraft = Uhr steht still, blaue Zeitringe
+    horace(c, t, pose, o = {}) {
+      const fell = '#c9b79c', d = '#a8957a';
+      hzParisHeld(c, t, pose, o, { id: 'horace', fell, dunkel: d, bauch: '#e6dcc8', zeichen: 'H', ohneUmhang: false, armWinkel: [[0.35, 0.1], [1.7, 1.7]],
+        hinten: (c) => { hzEll(c, -14, -42, 19, 19, '#a0522d'); c.strokeStyle = '#6b3410'; c.lineWidth = 2.4; c.beginPath(); for (let i = 0; i <= 40; i++) { const w = i / 40 * Math.PI * 4, r = 17 - i * 0.4; i ? c.lineTo(-14 + Math.cos(w) * r, -42 + Math.sin(w) * r) : c.moveTo(3, -42); } c.stroke(); },
+        kopf: (c, t, j) => { c.strokeStyle = fell; c.lineWidth = 2.4; c.lineCap = 'round'; for (const s of [-1, 1]) { c.beginPath(); c.moveTo(s * 4, -77); c.lineTo(s * 9, -92 + Math.sin(t * 2 + s) * 1.5); c.stroke(); hzEll(c, s * 9, -93 + Math.sin(t * 2 + s) * 1.5, 3, 3, d); }
+          hzEll(c, 0, -68, 11, 11, fell); hzMaske(c, 0, -71, 9, HELD_FARBE.horace); hzAugen(c, 0, -71, 4.2, 2.2, 0.6, j); hzLaecheln(c, 0, -62, 3, '#5a3a1a', j); },
+        kraft: (c, t, haende) => { const [hx, hy] = haende[1], x = hx + 14, y = hy - 12;
+          c.save(); c.strokeStyle = 'rgba(120,200,255,.8)'; c.lineWidth = 2; for (let i = 0; i < 3; i++) { const r = 12 + ((t * 16 + i * 10) % 30); c.globalAlpha = 1 - r / 44; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.stroke(); } c.restore();
+          hzEll(c, x, y, 11, 11, '#fff'); c.strokeStyle = '#1d3557'; c.lineWidth = 2; c.beginPath(); c.arc(x, y, 11, 0, Math.PI * 2); c.stroke(); c.lineWidth = 1.6; c.beginPath(); c.moveTo(x, y); c.lineTo(x, y - 8); c.moveTo(x, y); c.lineTo(x + 5, y + 2); c.stroke(); hzText(c, '❚❚', x, y + 17, 8, '#1d3557'); } });
+    },
+    // Hector le Hérisson – Schutzschild: Stachelkleid, helles Gesicht mit spitzer Schnauze; Kraft = durchsichtige Schildkuppel mit Sechseckmuster
+    hector(c, t, pose, o = {}) {
+      const fell = '#c69c6d', d = '#8d6e4a';
+      hzParisHeld(c, t, pose, o, { id: 'hector', fell, dunkel: d, bauch: '#e8d3b0', zeichen: 'H', armWinkel: [[1.5, 1.5], [1.5, 1.5]],
+        hinten: (c, t, k) => { c.fillStyle = '#5d4037'; for (let i = 0; i < 14; i++) { const w = Math.PI * (0.55 + i * 0.075), r = 28 + (k ? 3 : 0), x = Math.cos(w) * r, y = -54 + Math.sin(w) * r * -1.1;
+          c.beginPath(); c.moveTo(x * 0.55, y * 0.8 - 6); c.lineTo(x * 1.35, y * 1.05 - 10); c.lineTo(x * 0.6 + 6, y * 0.85 - 2); c.fill(); } },
+        kopf: (c, t, j) => { hzEll(c, 0, -67, 12, 11, '#e0c097'); hzEll(c, 9, -63, 7, 4, '#e0c097', 0.15); hzEll(c, 15.5, -62, 2.4, 2, '#1a1d26');
+          hzMaske(c, 0, -70, 9.5, HELD_FARBE.hector); hzAugen(c, 0, -70, 4.2, 2.2, 1, j); hzLaecheln(c, 6, -60, 2.4, '#5a3a1a', j); },
+        kraft: (c, t) => { c.save(); const g = c.createRadialGradient(0, -46, 20, 0, -46, 62); g.addColorStop(0, 'rgba(72,202,228,.05)'); g.addColorStop(1, 'rgba(72,202,228,.35)'); c.fillStyle = g; c.beginPath(); c.arc(0, -46, 60, 0, Math.PI * 2); c.fill();
+          c.strokeStyle = `rgba(160,235,255,${0.6 + 0.3 * Math.sin(t * 6)})`; c.lineWidth = 2.5; c.stroke(); c.lineWidth = 0.8; c.strokeStyle = 'rgba(200,245,255,.5)';
+          for (let x = -48; x <= 48; x += 16) for (let y = -96; y <= 4; y += 14) { const xx = x + ((y / 14) % 2 ? 8 : 0); if (Math.hypot(xx, y + 46) > 54) continue; c.beginPath(); for (let i = 0; i < 6; i++) { const w = i * Math.PI / 3; c.lineTo(xx + Math.cos(w) * 6, y + Math.sin(w) * 6); } c.closePath(); c.stroke(); }
+          c.restore(); } });
+    },
+  });
   function heldZeichnen(c, id, x, y, h, t, pose, o = {}) {
     const z = HELDEN_ZEICHNUNG[id]; if (!z) return;
     const f = HELD_FARBE[id] || '#1d3f8f', u = h / 80;
@@ -7299,7 +7526,12 @@
   function heldKarteZeichnen(c, x, y, w, held, o = {}) {
     const id = held.id, u = w / 240, t = o.t == null ? 0.6 : o.t, zu = !!o.gesperrt, f = zu ? '#8a93a3' : HELD_FARBE[id] || '#1d3f8f';
     c.save(); c.translate(x, y); c.scale(u, u);   // Entwurfsmaß 240 × 320
-    hzRR(c, 0, 0, 240, 320, 18, f);
+    const st = zu ? 0 : Math.max(0, Math.min(3, o.stufe | 0));   // Folien-Karten (7.11.): 0 normal, 1 Bronze, 2 Silber, 3 Gold
+    if (st) {   // Metallrahmen: breiter Verlauf in der Stufenfarbe, darin schmaler Streifen der Heldenfarbe
+      const m = KARTE_METALL[st], mg = c.createLinearGradient(0, 0, 240, 320);
+      m.forEach((farbe, i) => mg.addColorStop(i / (m.length - 1), farbe));
+      hzRR(c, 0, 0, 240, 320, 18, mg); hzRR(c, 5, 5, 230, 310, 15, f);
+    } else hzRR(c, 0, 0, 240, 320, 18, f);
     const g = c.createRadialGradient(120, 130, 10, 120, 130, 150); g.addColorStop(0, zu ? '#3a3f4e' : '#2b2f4a'); g.addColorStop(1, zu ? '#22252f' : '#101326');
     c.fillStyle = g; c.beginPath(); c.roundRect(10, 10, 220, 232, 14); c.fill();
     for (let k = 0; k < 14; k++) hzEll(c, 18 + (k * 61) % 204, 18 + (k * 37) % 212, 1.3, 1.3, zu ? '#8a93a3' : '#fff');
@@ -7319,6 +7551,38 @@
       c.font = '15px system-ui, sans-serif'; c.lineWidth = 3.2; c.strokeText('⚡ ' + (held.kraft || ''), 120, 298); c.restore();
     }
     hzText(c, zu ? '???' : held.name || id, 120, 272, 18, '#fff'); hzText(c, zu ? '⚡ ?' : '⚡ ' + (held.kraft || ''), 120, 298, 15, '#fff', false);
+    if (st) {   // Stufen-Plakette oben links (B/S/G), seltene Helden zusätzlich ✦ RARE oben rechts
+      const m = KARTE_METALL[st], pg = c.createRadialGradient(28, 26, 2, 30, 30, 18); pg.addColorStop(0, m[1]); pg.addColorStop(1, m[3]);
+      c.fillStyle = pg; c.beginPath(); c.arc(30, 30, 16, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = 'rgba(255,255,255,.85)'; c.lineWidth = 2; c.stroke();
+      hzText(c, 'BSG'[st - 1], 30, 31, 16, st === 2 ? '#3a4150' : '#3b2205');
+    }
+    if (!zu && o.selten) {
+      c.fillStyle = 'rgba(16,19,38,.78)'; c.beginPath(); c.roundRect(158, 16, 66, 24, 12); c.fill();
+      c.strokeStyle = '#ffd36b'; c.lineWidth = 1.5; c.stroke(); hzText(c, '✦ RARE', 191, 29, 12, '#ffd36b');
+    }
+    c.restore();
+  }
+  const KARTE_METALL = { 1: ['#5a3210', '#e8a86a', '#a8642c', '#6e3c14', '#d99258'], 2: ['#6f7682', '#ffffff', '#b8c0cc', '#7d8593', '#e4e9f0'], 3: ['#7a4e00', '#fff1a8', '#e0a810', '#8a5a00', '#ffd84a'] };
+  // Holo-Schimmer (Folien-Karten, 7.11.): heller Lichtstreifen wandert schräg über die Karte (phase 0…1, z. B. aus der Zeit oder der Handy-Neigung),
+  // Gold zusätzlich mit Regenbogen-Schimmer; über eine fertig gezeichnete Karte legen (c im Kartenmaß, Breite w)
+  function heldKarteGlanz(c, x, y, w, stufe, phase) {
+    if (!stufe) return;
+    const u = w / 240, p = ((phase % 1) + 1) % 1, mitte = -120 + p * 480;
+    c.save(); c.translate(x, y); c.scale(u, u);
+    c.beginPath(); c.roundRect(0, 0, 240, 320, 18); c.clip();
+    c.globalCompositeOperation = 'lighter';
+    const g = c.createLinearGradient(mitte - 70, mitte - 160, mitte + 70, mitte + 20);
+    const a = stufe === 3 ? 0.42 : stufe === 2 ? 0.34 : 0.26;
+    g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.45, `rgba(255,255,255,${a * 0.5})`); g.addColorStop(0.5, `rgba(255,255,255,${a})`);
+    g.addColorStop(0.55, `rgba(255,255,255,${a * 0.5})`); g.addColorStop(1, 'rgba(255,255,255,0)');
+    c.fillStyle = g; c.fillRect(0, 0, 240, 320);
+    if (stufe === 3) {   // Gold: zarter Regenbogen, verschiebt sich mit
+      const r = c.createLinearGradient(0, 320 * (1 - p), 240, 320 * (0.4 - p));
+      ['rgba(255,80,80,.10)', 'rgba(255,220,60,.10)', 'rgba(80,255,140,.10)', 'rgba(70,170,255,.10)', 'rgba(200,90,255,.10)', 'rgba(255,80,80,.10)']
+        .forEach((f, i, l) => r.addColorStop(i / (l.length - 1), f));
+      c.fillStyle = r; c.fillRect(0, 0, 240, 320);
+    }
     c.restore();
   }
   // Karte als Bild (Data-URL, PNG) – z. B. für das Bild am Ende des Heldenfilms; o.breite = Pixelbreite (Standard 480)
@@ -8969,6 +9233,7 @@
       if (g.tot > 0.6) continue; const x = g.x - kamera; if (x < -60 || x > viewW + 60) continue;
       c.save(); c.translate(-kamera, 0);
       if (g.weg) { const b = gegnerBox(g), mx = b.x + b.w / 2, my = b.y + b.h / 2; c.translate(mx, my); c.rotate(g.weg.art === 'tanz' ? Math.sin(g.weg.t * 14) * 0.45 : g.weg.t * 9); c.translate(-mx, -my); c.globalAlpha = Math.max(0, 1 - g.weg.t / 1.2); }   // Kl. 9: wegfliegen / tanzen
+      else if (discoWelt() && g.tot <= 0 && !ruhig()) { const b = gegnerBox(g), mx = b.x + b.w / 2, my = b.y + b.h; c.translate(mx, my - Math.abs(discoWipp()) * 6); c.rotate(discoWipp() * 0.28); c.translate(-mx, -my); }   // Disco Run: Gegner tanzen im Takt
       (GEGNER_ZEICHNER[g.art] || waschbaer)(c, g);
       c.restore();
       if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut) {   // Cameo Penny: Eisblock um den Gegner
@@ -9030,7 +9295,10 @@
       if (surfend) surfbrett(c, spieler.x - kamera, spieler.y);   // Welt 5: Surfbrett unter der Figur, Figur lehnt sich nach vorn
       if (imEishalle() && spieler.y <= BODEN_Y + 1) spiegelbild(c, () => zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, ausdruckAktuell()));   // Spiegelboden: die Figur spiegelt sich
       if (rutscht > 0 || surfend) { c.save(); c.translate(spieler.x - kamera, spieler.y); c.rotate(surfend ? 0.16 : -0.22 - 0.06 * Math.sin(zeit * 30)); c.translate(-(spieler.x - kamera), -spieler.y); }   // rutscht: Figur kippt leicht nach hinten
+      const tanzt = discoWelt() && zustand === 'finale' && discoTanz < DISCO_TANZ && !ruhig();   // Disco Run: Siegestanz (hüpfen + hin und her wiegen)
+      if (tanzt) { const px = spieler.x - kamera, py = spieler.y; c.save(); c.translate(px, py - Math.abs(discoWipp()) * 10); c.rotate(discoWipp() * 0.2); c.translate(-px, -py); }
       zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, rutscht > 0 ? 'erstaunt' : surfend ? 'zunge' : ausdruckAktuell());
+      if (tanzt) c.restore();
       if (rutscht > 0 || surfend) c.restore();
       c.globalAlpha = 1;
     }
@@ -9164,7 +9432,7 @@
     }
     if (meldung) {
       c.font = 'bold 30px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillStyle = '#fff'; c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 5; c.strokeText(meldung.text, viewW / 2, 210); c.fillText(meldung.text, viewW / 2, 210);
+      c.fillStyle = '#fff'; c.strokeStyle = 'rgba(0,0,0,.5)'; c.lineWidth = 5; c.strokeText(tx(meldung.text), viewW / 2, 210); c.fillText(tx(meldung.text), viewW / 2, 210);
     }
     if (comboText) {   // Combo-Einblendung: springt auf, bleibt, blendet aus (reduced-motion: nur Text)
       const rest = comboText.zeit, auf = COMBO_TEXT_DAUER - rest;
@@ -9173,7 +9441,7 @@
       const farbe = comboText.stufe >= 8 ? '#ff4d1c' : '#ffd93d';
       c.save(); c.globalAlpha = Math.max(0, a); c.translate(viewW / 2, 250); c.scale(s, s);
       c.font = `bold ${comboText.stufe >= 5 ? 36 : 30}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillStyle = farbe; c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 6; c.strokeText(comboText.text, 0, 0); c.fillText(comboText.text, 0, 0);
+      c.fillStyle = farbe; c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 6; c.strokeText(tx(comboText.text), 0, 0); c.fillText(tx(comboText.text), 0, 0);
       c.restore();
     }
     // Banner der Zwischensequenz (Platzhalter für Mr. Alex' Stimme)
@@ -9183,7 +9451,7 @@
       c.fillStyle = 'rgba(24,33,58,.85)'; c.fillRect(0, 150, viewW, 100);
       c.fillStyle = '#e0a400'; c.fillRect(0, 150, viewW, 4); c.fillRect(0, 246, viewW, 4);
       c.font = `bold ${viewW < 700 ? 30 : 38}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillStyle = '#fff'; c.fillText(banner.text, viewW / 2, 192);
+      c.fillStyle = '#fff'; c.fillText(tx(banner.text), viewW / 2, 192);
       c.font = '600 15px system-ui, sans-serif'; c.fillStyle = '#ffd36b'; c.fillText('🎙 Mr. Alex', viewW / 2, 228);
       c.globalAlpha = 1;
     }
@@ -9219,7 +9487,7 @@
     const liste = [];
     if (schild > 0) liste.push(['🛡️', schild / 5]);
     if (sprungBonus > 0) liste.push([sprungArt === 'puma' ? '🐾' : '🦘', sprungBonus / 5]);
-    if (brecher > 0) liste.push([brecherArt === 'laser' ? '💥' : brecherArt === 'rolle' ? '🌀' : '🦬', brecher / (brecherArt === 'rolle' ? 4 : 6)]);
+    if (brecher > 0) liste.push([brecherArt === 'laser' ? (W && W.uebersetzung ? '✨' : '💥') : brecherArt === 'rolle' ? '🌀' : '🦬', brecher / (brecherArt === 'rolle' ? 4 : 6)]);
     if (schweben > 0) liste.push(['🦋', schweben / 4]);
     if (heldBruecke) liste.push(['🌉', 1]);
     if (wegZiel) liste.push([wegZiel.art === 'welle' ? '🌊' : wegZiel.art === 'stampf' ? '🥁' : '🎵', wegZiel.zeit / (wegZiel.art === 'welle' ? 6 : 5)]);
@@ -9272,6 +9540,195 @@
     rafId = requestAnimationFrame(schleife);
   }
 
+  /* ---------- Disco Run (Bonus-Level, 7.11.2026): alles im Takt – Web-Audio-Beat (discoMusik), Discokugel, Spotlights, blinkende Tanzfläche, Lautsprecher-Kisten,
+     tanzende Gegner (Wackeln im Beat), Boss DJ Funky Flamingo (Tanzduell, landet am Ende im Spagat), die Figur tanzt vor der Tür. Welten 'disco' (Englisch) und 'disco_fr' (Französisch). ---------- */
+  const DISCO_BPM = 120, DISCO_TANZ = 2.6;   // Tempo; so lange tanzt die Figur nach dem Sieg, bevor die Tür aufgeht
+  const DISCO_FARBEN = ['#ff3fa4', '#36f1ff', '#ffe14d', '#7dff5a', '#b35cff', '#ff8a2b'];
+  let discoNaechster = 0, discoSchritt = 0, discoStart = null, discoTanz = 0;
+  const discoWelt = () => !!(W && W.disco);
+  // Taktzähler (Viertel) – an der Musik ausgerichtet, sonst an der Spielzeit; schlag() = Puls 1 → 0 nach jedem Viertel
+  function discoBeat() { return actx && discoStart != null ? Math.max(0, (actx.currentTime - discoStart) * DISCO_BPM / 60) : (zeit || 0) * DISCO_BPM / 60; }
+  const discoSchlag = () => ruhig() ? 0 : Math.pow(1 - (discoBeat() % 1), 3);
+  const discoWipp = () => ruhig() ? 0 : Math.sin(discoBeat() * Math.PI);   // −1..1, ein Ausschlag je Viertel
+  function discoMusik() {   // Disco-Beat aus ton/rauschen: Bassdrum auf jedem Viertel, Clap auf 2 und 4, offene Hi-Hat, Oktav-Bass (A – C – G – D), Streicher-Stich
+    if (!actx || !discoWelt() || zustand === 'fertig' || zustand === 'gameover' || zustand === 'aus' || zustand === 'film') return;
+    const jetzt = actx.currentTime, s16 = 60 / DISCO_BPM / 4;
+    if (discoNaechster < jetzt) { discoNaechster = jetzt + 0.05; discoStart = discoNaechster - discoSchritt * s16; }
+    const leiser = zustand === 'boss' ? 0.6 : 1;   // während der Boss-Frage etwas leiser
+    while (discoNaechster < jetzt + 0.2) {
+      const st = discoSchritt % 16, t = discoNaechster - jetzt, takt = Math.floor(discoSchritt / 16) % 4, grund = [55, 65.41, 49, 73.42][takt];
+      if (st % 4 === 0) ton(120, 0.16, 'sine', 0.2 * leiser, t, 42);
+      if (st === 4 || st === 12) rauschen(0.1, 0.07 * leiser, t, { typ: 'bandpass', freq: 1700 });
+      if (st % 4 === 2) rauschen(0.07, 0.035 * leiser, t, { typ: 'highpass', freq: 7000 });
+      if (st % 2 === 0) ton(st % 4 === 0 ? grund : grund * 2, 0.12, 'triangle', 0.09 * leiser, t);
+      if (st === 6 || st === 14) [4, 5, 6].forEach((k) => ton(grund * k, 0.16, 'sawtooth', 0.012 * leiser, t));
+      discoNaechster += s16; discoSchritt++;
+    }
+  }
+  function discoKugel(c, x, y, r, dreh, ohneSchnur) {   // Discokugel mit Facetten, die sich drehen; Lichtpunkte blitzen
+    c.save();
+    if (!ohneSchnur) { c.strokeStyle = '#8a8fa6'; c.lineWidth = 2; c.beginPath(); c.moveTo(x, y - r - 60); c.lineTo(x, y - r); c.stroke(); }
+    c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.clip();
+    const g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, '#c9cfe0'); g.addColorStop(1, '#5d6480');
+    c.fillStyle = g; c.fillRect(x - r, y - r, r * 2, r * 2);
+    const f = Math.max(3, r / 5), ver = ((dreh * r) % f + f) % f;
+    for (let row = -r; row < r; row += f) for (let col = -r - f; col < r + f; col += f) {
+      const k = Math.floor((col - ver) / f) * 7 + Math.floor(row / f) * 13 + Math.floor(dreh * 3);
+      c.fillStyle = ((k % 5) + 5) % 5 === 0 ? 'rgba(255,255,255,.85)' : ((k % 3) + 3) % 3 === 0 ? 'rgba(40,45,70,.35)' : 'rgba(255,255,255,.12)';
+      c.fillRect(x + col + ver, y + row, f - 1, f - 1);
+    }
+    c.restore();
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 1; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.stroke();
+  }
+  function hintergrundDisco(c) {
+    const b = discoBeat(), puls = discoSchlag();
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#12072b'); g.addColorStop(0.6, '#2a0f4f'); g.addColorStop(1, '#3a1460');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    for (let i = 0; i < 40; i++) {   // Glitzer an der Decke (Parallaxe 0,03), blinkt im Takt
+      const n = viewW + 60, sx = ((i * 97 - kamera * 0.03) % n + n) % n - 30, sy = 12 + (i * 37) % 140, an = (i + Math.floor(b)) % 3 === 0;
+      c.fillStyle = an ? DISCO_FARBEN[i % 6] : 'rgba(255,255,255,.25)'; c.beginPath(); c.arc(sx, sy, an ? 2.4 : 1.2, 0, Math.PI * 2); c.fill();
+    }
+    // Rückwand: Equalizer-Balken (Parallaxe 0,1), springen mit dem Beat
+    for (let i = 0; i < 30; i++) {
+      const n = viewW + 300, ex = ((i * 34 - kamera * 0.1) % n + n) % n - 150, hoch = 20 + Math.abs(Math.sin(i * 1.7 + Math.floor(b * 2) * 0.9)) * 60 * (0.6 + 0.4 * puls);
+      for (let s = 0; s < hoch; s += 8) { c.fillStyle = s > 55 ? '#ff3fa4' : s > 35 ? '#ffe14d' : '#36f1ff'; c.globalAlpha = 0.45; c.fillRect(ex, 250 - s, 24, 6); }
+    }
+    c.globalAlpha = 1;
+    // Neon-Schild (Parallaxe 0,05), flackert im Takt
+    const nx = viewW * 0.55 - kamera * 0.05 % (viewW + 400);
+    for (const [dx, wort, farbe] of [[0, 'DISCO', '#ff3fa4'], [viewW + 400, 'DISCO', '#36f1ff']]) {
+      const x = ((nx + dx) % (viewW + 400) + viewW + 400) % (viewW + 400) - 200;
+      c.save(); c.font = 'bold 44px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.shadowColor = farbe; c.shadowBlur = 10 + 14 * puls; c.fillStyle = farbe; c.globalAlpha = 0.65 + 0.35 * puls; c.fillText(wort, x, 120); c.restore();
+    }
+    // Spotlights von der Decke (schwenken im Takt), additiv
+    c.save(); c.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 4; i++) {
+      const lx = viewW * (0.12 + i * 0.26), winkel = Math.sin(b * Math.PI / 2 + i * 1.3) * 0.5, fx = lx + Math.tan(winkel) * BODEN_Y, breite = 70;
+      const lg = c.createLinearGradient(lx, 0, fx, BODEN_Y); lg.addColorStop(0, DISCO_FARBEN[(i + Math.floor(b / 4)) % 6] + 'aa'); lg.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = lg; c.globalAlpha = 0.28; c.beginPath(); c.moveTo(lx - 6, 0); c.lineTo(lx + 6, 0); c.lineTo(fx + breite, BODEN_Y); c.lineTo(fx - breite, BODEN_Y); c.closePath(); c.fill();
+    }
+    c.restore();
+    discoKugel(c, viewW * 0.5, 66, 30, ruhig() ? 0 : zeit * 0.6);   // die Kugel hängt in der Mitte
+    if (!ruhig()) {   // Lichtpunkte der Kugel wandern über die Wand
+      c.fillStyle = 'rgba(255,255,255,.55)';
+      for (let i = 0; i < 18; i++) { const px = ((i * 71 + zeit * 60) % (viewW + 40)) - 20, py = 40 + (i * 53 + zeit * 25) % 230; c.fillRect(px, py, 3, 3); }
+    }
+    // Tanzende Menge hinten (Parallaxe 0,25): Arme hoch im Takt
+    c.save(); c.globalAlpha = 0.7;
+    for (let i = 0; i < 16; i++) {
+      const n = viewW + 300, px = ((i * 64 + 20 - kamera * 0.25) % n + n) % n - 150, hops = Math.abs(Math.sin((b + i * 0.5) * Math.PI)) * (ruhig() ? 0 : 5);
+      personKlein(c, px, 318 - hops, 0.9, i, { arme: ruhig() ? 0.5 : 0.5 + 0.5 * Math.sin((b + i * 0.25) * Math.PI) });
+    }
+    c.restore();
+  }
+  function bodenDisco(c, x0, w, a, b, links, rechts) {   // Tanzfläche: Leuchtkacheln (50 breit, zwei Reihen), wechseln auf jedem Viertel
+    c.fillStyle = '#1b0f30'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    const t = Math.floor(discoBeat()), puls = discoSchlag();
+    for (let x = Math.max(Math.ceil(a / 50) * 50, Math.floor(links / 50) * 50); x < Math.min(b, rechts); x += 50) {
+      for (let r = 0; r < 2; r++) {
+        const k = Math.floor(x / 50), h = (k * 7 + r * 3 + t * 5) % 11, an = h < 5, farbe = DISCO_FARBEN[(k + r + t) % 6];
+        c.fillStyle = an ? farbe : '#2a1a48'; c.globalAlpha = an ? 0.55 + 0.4 * puls : 1;
+        c.fillRect(x - kamera + 2, BODEN_Y + 4 + r * 32, 46, 29);
+      }
+    }
+    c.globalAlpha = 1;
+    c.fillStyle = '#ff3fa4'; c.fillRect(x0, BODEN_Y, w, 4);   // Neonkante
+  }
+  function discoGrube(c, a, b) {   // Lücke = Nebelgrube mit Neonrand (wer reinfällt, fällt in den Trockeneis-Nebel)
+    const x0 = a - kamera, w = b - a;
+    c.fillStyle = '#05010c'; c.fillRect(x0, BODEN_Y, w, H);
+    c.fillStyle = 'rgba(200,190,255,.18)';
+    for (let i = 0; i < Math.ceil(w / 30); i++) { const nx = x0 + 10 + ((i * 30 + zeit * 18) % Math.max(1, w - 20)), ny = BODEN_Y + 30 + Math.sin(zeit * 1.5 + i) * 6; c.beginPath(); c.arc(nx, ny, 16, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#36f1ff'; c.fillRect(x0 - 2, BODEN_Y, 5, H - BODEN_Y); c.fillRect(x0 + w - 3, BODEN_Y, 5, H - BODEN_Y);
+  }
+  function kisteDisco(c, x, y) {   // Block (40 × 40) = Lautsprecher-Box, die Membranen pumpen im Beat
+    const p = discoSchlag();
+    c.fillStyle = '#18151f'; c.beginPath(); c.roundRect(x, y, KISTE, KISTE, 4); c.fill();
+    c.strokeStyle = '#ff3fa4'; c.lineWidth = 2; c.beginPath(); c.roundRect(x + 1, y + 1, KISTE - 2, KISTE - 2, 4); c.stroke();
+    c.fillStyle = '#3a3448'; c.beginPath(); c.arc(x + 20, y + 26, 11 + p * 1.6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#0c0a10'; c.beginPath(); c.arc(x + 20, y + 26, 5 + p * 1.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#3a3448'; c.beginPath(); c.arc(x + 20, y + 9, 4.5 + p, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#36f1ff'; c.beginPath(); c.arc(x + 34, y + 6, 1.8, 0, Math.PI * 2); c.fill();
+  }
+  // DJ Funky Flamingo an (x, y = Boden): o = { wipp −1..1, sichtbar 0..1, spagat 0..1, weg 0..1 } – schaut nach links (zur Figur), Kopfhörer, Sonnenbrille, Goldkette mit „DJ“, Mini-Afro
+  function djFlamingo(c, x, y, o = {}) {
+    const w = o.wipp || 0, sp = o.spagat || 0, pink = '#ff7eb9', dunkel = '#e2559a', bein = '#f06ba8';
+    c.save(); c.translate(x, y); c.globalAlpha = (o.sichtbar == null ? 1 : o.sichtbar) * (1 - (o.weg || 0) * 0.9); c.scale(-1, 1);
+    const koerperY = -88 + sp * 62, hops = sp > 0 ? 0 : Math.abs(w) * 5;
+    c.translate(0, -hops); c.rotate(w * 0.08 * (1 - sp));
+    c.strokeStyle = bein; c.lineWidth = 4; c.lineCap = 'round'; c.lineJoin = 'round';
+    if (sp > 0) {   // Spagat: beide Beine waagerecht auf dem Boden
+      const l = 34 + 40 * sp; c.beginPath(); c.moveTo(-l, hops); c.lineTo(0, koerperY + 16); c.lineTo(l, hops); c.stroke();
+    } else {
+      c.beginPath(); c.moveTo(0, 0); c.lineTo(2, -36); c.lineTo(0, -72); c.stroke();   // Standbein
+      const knie = w * 6; c.beginPath(); c.moveTo(0, -72); c.lineTo(16 + knie, -52); c.lineTo(3, -46); c.stroke();   // Tanzbein (angewinkelt, wippt)
+      c.fillStyle = bein; c.beginPath(); c.ellipse(5, 0, 8, 2.5, 0, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = dunkel; c.beginPath(); c.moveTo(-26, koerperY - 4); c.lineTo(-46, koerperY - 14); c.lineTo(-42, koerperY + 2); c.closePath(); c.fill();   // Schwanzfedern
+    c.fillStyle = pink; c.beginPath(); c.ellipse(0, koerperY, 30, 20, 0.15, 0, Math.PI * 2); c.fill();
+    const fluegel = sp > 0 ? -0.6 : (w > 0 ? -1.1 : 0.2);   // „Saturday-Night“-Zeigeflügel: im Takt hoch und runter
+    c.save(); c.translate(6, koerperY - 6); c.rotate(fluegel); c.fillStyle = dunkel; c.beginPath(); c.ellipse(16, 0, 22, 9, 0, 0, Math.PI * 2); c.fill(); c.restore();
+    const hx = 12 + w * 3, hy = koerperY - 62 + sp * 8;
+    c.strokeStyle = pink; c.lineWidth = 9; c.beginPath(); c.moveTo(18, koerperY - 10); c.bezierCurveTo(34, koerperY - 30, -4, koerperY - 40, hx, hy + 6); c.stroke();   // S-Hals
+    c.strokeStyle = '#ffd34d'; c.lineWidth = 2.5; c.beginPath(); c.arc(16, koerperY - 14, 11, 0.2, Math.PI - 0.2); c.stroke();   // Goldkette
+    c.fillStyle = '#ffd34d'; c.beginPath(); c.arc(16, koerperY - 2, 6, 0, Math.PI * 2); c.fill();
+    c.save(); c.scale(-1, 1); c.fillStyle = '#5a3a00'; c.font = 'bold 6px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('DJ', -16, koerperY - 2); c.restore();
+    c.fillStyle = '#3a1a2a'; for (const [ax, ay] of [[-6, -10], [2, -14], [10, -11], [-2, -6], [8, -5]]) { c.beginPath(); c.arc(hx + ax, hy + ay, 6, 0, Math.PI * 2); c.fill(); }   // Mini-Afro
+    c.fillStyle = pink; c.beginPath(); c.arc(hx, hy, 11, 0, Math.PI * 2); c.fill();   // Kopf
+    c.fillStyle = '#f7f0e0'; c.beginPath(); c.moveTo(hx + 8, hy - 3); c.quadraticCurveTo(hx + 24, hy - 2, hx + 26, hy + 10); c.lineTo(hx + 20, hy + 9); c.quadraticCurveTo(hx + 16, hy + 3, hx + 8, hy + 4); c.closePath(); c.fill();   // Schnabel, fest am Kopf
+    c.fillStyle = '#222'; c.beginPath(); c.moveTo(hx + 20, hy + 1); c.quadraticCurveTo(hx + 25, hy + 1, hx + 26, hy + 10); c.lineTo(hx + 20, hy + 9); c.closePath(); c.fill();   // schwarze Spitze
+    c.save(); c.translate(hx + 2, hy - 2); c.rotate(sp > 0 ? 0.35 : 0); c.fillStyle = '#111'; c.beginPath(); c.roundRect(-3, -4, 13, 7, 3); c.fill();   // Sonnenbrille (rutscht beim Spagat)
+    c.fillStyle = 'rgba(255,90,200,.8)'; c.fillRect(0, -3, 4, 2); c.restore();
+    c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.arc(hx, hy, 13, Math.PI * 1.05, Math.PI * 1.95); c.stroke();   // Kopfhörer
+    c.fillStyle = '#36f1ff'; c.beginPath(); c.roundRect(hx - 15, hy - 5, 6, 10, 2); c.fill();
+    if (sp > 0.3 && !ruhig()) {   // Sternchen kreisen um den Kopf
+      c.fillStyle = '#ffe14d';
+      for (let k = 0; k < 3; k++) { const a = zeit * 5 + k * 2.1; diamantStern(c, hx + Math.cos(a) * 18, hy - 18 + Math.sin(a) * 5, 4); }
+    }
+    c.restore();
+  }
+  function diamantStern(c, x, y, r) { c.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rr = i % 2 ? r * 0.4 : r; c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } c.closePath(); c.fill(); }
+  function discoBoss(c, x, y) {   // Boss: kommt aus der Tür getanzt, tanzt während der Frage, verliert das Tanzduell (Spagat), tanzt davon
+    const auf = boss.sichtbar, sp = zustand === 'finale' ? Math.min(1, discoTanz / 0.5) : 0;
+    djFlamingo(c, x + (1 - auf) * 60 + boss.weg * 260, y, { wipp: zustand === 'boss' || zustand === 'sequenz' || sp === 0 ? discoWipp() : 0, sichtbar: auf, spagat: sp, weg: boss.weg });
+  }
+  function discoTuer(c, x, y) {   // Tür = Glitzervorhang mit Neonrahmen, öffnet sich zur Seite; Schild „VIP“
+    c.save(); c.translate(x, y);
+    const puls = discoSchlag(), offen = tuer.offen;
+    c.fillStyle = '#100820'; c.fillRect(-50, -170, 100, 170);
+    c.fillStyle = `rgba(255,240,190,${0.3 + 0.6 * offen})`; c.fillRect(-44, -164, 88, 164);
+    const halb = 44 * (1 - offen);
+    for (let s = 0; s < 2; s++) for (let i = 0; i < 9; i++) {   // Lamettastreifen
+      const sx = s === 0 ? -44 + i * halb / 9 : 44 - (i + 1) * halb / 9;
+      c.fillStyle = (i + s + Math.floor(discoBeat())) % 2 ? '#e8e8f8' : '#c9a5ff'; c.fillRect(sx, -164, Math.max(1, halb / 9 - 1), 164);
+    }
+    c.strokeStyle = '#36f1ff'; c.lineWidth = 4; c.shadowColor = '#36f1ff'; c.shadowBlur = 6 + 10 * puls; c.strokeRect(-48, -168, 96, 168);
+    c.shadowBlur = 0; c.fillStyle = '#ff3fa4'; c.beginPath(); c.roundRect(-26, -196, 52, 22, 6); c.fill();
+    c.fillStyle = '#fff'; c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('VIP', 0, -185);
+    c.restore();
+  }
+  function discoKlang() { trommelt++; ton(420, 0.14, 'sawtooth', 0.06, 0, 1300); ton(1300, 0.16, 'sawtooth', 0.06, 0.15, 260); [0.4, 0.62, 0.84].forEach((t) => { ton(466, 0.18, 'sawtooth', 0.07, t); ton(470, 0.18, 'square', 0.03, t); }); }   // Plattenkratzer + Air Horn
+  // Mr. Alex' Disco-Zurufe (ersetzen im Disco Run die normalen Zurufe dieses Moments; Französisch nur diese, keine englischen)
+  const DISCO_ZURUFE_EN = {
+    halb:   [["disco_halb_1", "Halfway there! Keep dancing!"], ["disco_halb_2", "Shake it, shake it!"]],
+    combo3: [["disco_combo3_1", "Groovy!"], ["disco_combo3_2", "Funky!"]],
+    combo5: [["disco_combo5_1", "Disco fever!"], ["disco_combo5_2", "Look at those moves!"]],
+    leben:  [["disco_leben_1", "Oops! Dance it off!"], ["disco_leben_2", "Never mind – keep on dancing!"]],
+    boss:   [["disco_boss_1", "Dance battle! Show him your best moves!"]],
+  };
+  const DISCO_ZURUFE_FR = {
+    halb:   [["disco_halb_1", "À mi-chemin ! On continue à danser !"], ["disco_halb_2", "Allez, on bouge !"]],
+    combo3: [["disco_combo3_1", "Trop cool !"], ["disco_combo3_2", "Quel groove !"]],
+    combo5: [["disco_combo5_1", "C'est la fête !"], ["disco_combo5_2", "Super, tu danses comme une star !"]],
+    leben:  [["disco_leben_1", "Oups ! Pas grave, on danse !"], ["disco_leben_2", "Allez, on continue !"]],
+    boss:   [["disco_boss_1", "Battle de danse ! Montre-lui tes meilleurs pas !"]],
+    ende:   [["disco_ende_1", "Bravo, tu es une star !"]],
+    fail:   [["disco_fail_1", "Presque ! Encore une fois !"]],
+  };
+  const DISCO_TEIL = { disco: true, gegnerarten: ['taube', 'maus', 'fuchs', 'eichhoernchen'], farben: { plattform: '#2a1f4a', plattformOben: '#ff3fa4', hud: '#ff3fa4' }, muster: MUSTER_DISCO, sprechblaseHoehe: 235,
+    kulisse: hintergrundDisco, boden: bodenDisco, grube: discoGrube, kiste: kisteDisco, hudSymbol: (c, x, y) => discoKugel(c, x, y, 10, ruhig() ? 0 : zeit * 0.6, true),
+    boss: discoBoss, tuer: discoTuer, bossKlang: discoKlang, zurufe: DISCO_ZURUFE_EN };
   /* ---------- Welten: je Welt Kulisse, Boden, Kisten, Gegnerarten, Boss (Zeichner + Klang), Tür, Banner, Level-Muster ---------- */
   const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler, moewe, seeloewe, skater, fuchs, wolf, ritter, rabe, maus };
   function bodenNY(c, x0, w, a, b, links, rechts) {
@@ -9289,6 +9746,216 @@
   // Kapitel 6: Kulisse/Boden/Grube/Kiste und Farben kommen vom Realm-Baustein unter der Figur (realm.sektion)
   const REALM6_TEILE = { realm: REALM_WELT, hoehle: REALM_WELT_3, eishalle: REALM_WELT_4, eisbruecke: REALM_WELT_5 };
   const realm6Teil = () => REALM6_TEILE[(realm && realm.sektion) || 'eisbruecke'] || REALM_WELT;
+  /* ---------- Welt „paris“ (7.11.2026, Französisch-App Klasse 5/6, Stufe 4 „Paris Run“): Quai an der Seine mit Bateaux-mouches, Haussmann-Häusern am anderen Ufer,
+     Sacré-Cœur in der Ferne, die Tour Eiffel wächst heran und leuchtet auf den letzten Metern; kleine Autos und Radrennfahrer (wie Autos), Pfützen, Baguette-Kisten und
+     Colonnes Morris als Stufen, Seine-Lücken, Taube/Maus/Eichhörnchen, Boss Monsieur Gaston (strenger Kellner vor seinem Café, zwirbelt den Schnurrbart), Tür = goldene Grille.
+     Alle Welt-Texte Französisch (Klassenniveau 5/6); Spielmeldungen übersetzt W.uebersetzung (tx), Mr. Alex' Zurufe W.zurufe (mit Runner-Hinweisen saute/attention/vite). */
+  const MUSTER_PARIS = [
+    (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                                   // 1 Aufwärmen (Baguette-Kiste)
+    (h) => { h.auto('pauto', 150, 950); h.dia(500, 250); h.vor(1000); },                                // 2 erstes Auto
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(950); },           // 3 Plattform + Taube
+    (h) => { h.kiste(200); h.morris(240); h.dia(260, 215); h.vor(750); },                               // 4 Kiste → Colonne Morris (Stufe)
+    (h) => { h.pfuetze(300); h.geg('maus', 500, 900); h.vor(1000); },                                   // 5 Pfütze + Maus
+    (h) => { h.luecke(250, 170); h.vor(950); },                                                         // 6 erste Seine-Lücke
+    (h) => { h.auto('velo', 100, 1000); h.plat(600, 230, 160); h.dia(680, 190); h.vor(1100); },         // 7 Radrennfahrer + Plattform
+    (h) => { h.geg('eichhoernchen', 150, 500); h.kiste(650); h.morris(690); h.dia(710, 190); h.vor(900); }, // 8 Eichhörnchen (Jardin du Luxembourg) + Stufe
+    (h) => { h.auto('pauto', 100, 900); h.pfuetze(550); h.vor(1000); },                                 // 9 Auto + Pfütze
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('taube', 450, 750); h.vor(1000); },                                       // 12 CHECKPOINT 1
+    (h) => { h.auto('pauto', 100, 1000); h.dia(500, 250); h.auto('velo', 1000, 1900); h.vor(2000); },   // 13 Rushhour
+    (h) => { h.morris(200); h.morris(240); h.geg('taube', 450, 850); h.vor(1000); },                    // 14 zwei Colonnes + Taube
+    (h) => { h.luecke(250, 160); h.pfuetze(600); h.vor(1000); },                                        // 15 Seine + Pfütze
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 16 Dreier-Plattform
+    (h) => { h.geg('eichhoernchen', 150, 450); h.auto('velo', 500, 1300); h.vor(1400); },               // 17 Eichhörnchen + Rad
+    (h) => { h.plat(200, 235, 200); h.dia(300, 195); h.kiste(650); h.vor(950); },                       // 18
+    (h) => { h.pfuetze(200); h.geg('maus', 450, 800); h.vor(1000); },                                   // 19 Pfütze + Maus
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 20
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 21 TOR 2
+    (h) => { h.cp(150); h.kiste(500); h.morris(540); h.vor(850); },                                     // 22 CHECKPOINT 2
+    (h) => { h.auto('pauto', 100, 1000); h.geg('taube', 1000, 1400); h.vor(1500); },                    // 23 Auto + Taube
+    (h) => { h.luecke(200, 190); h.plat(150, 230, 320); h.geg('maus', 650, 950); h.vor(1150); },        // 24 Plattform über der Seine
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.vor(750); }, // 25 Baguette-Pyramide
+    (h) => { h.pfuetze(150); h.auto('velo', 300, 1100); h.geg('eichhoernchen', 1150, 1400); h.vor(1500); }, // 26 Pfütze + Rad + Eichhörnchen
+    (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('taube', 850, 1250); h.vor(1300); }, // 27
+    (h) => { h.luecke(200, 170); h.auto('pauto', 500, 1300); h.kiste(1350); h.vor(1500); },             // 28 Schluss: Seine + Auto
+  ];
+  const FR_BLAU = '#0055a4', FR_ROT = '#ef4135';
+  function hintergrundParis(c) {
+    const naehe = Math.min(1, kamera / level.ende);
+    const endeF = Math.max(0, Math.min(1, (kamera - (level.ende - 5200)) / 2600));   // auf den letzten Metern: Abendhimmel, die Tour Eiffel leuchtet
+    const g = c.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, mischFarbe('#79aee3', '#2b3a78', endeF)); g.addColorStop(0.62, mischFarbe('#e9f1f8', '#f0a873', endeF)); g.addColorStop(1, '#f3ead8');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    c.fillStyle = `rgba(255,255,255,${0.9 - 0.5 * endeF})`;   // Wolken (Parallaxe 0,06)
+    for (let i = 0; i < 5; i++) {
+      const n = viewW + 420, wx = ((i * 380 + 80 - kamera * 0.06) % n + n) % n - 210, wy = 46 + (i % 3) * 20;
+      c.beginPath(); c.arc(wx, wy, 18, 0, Math.PI * 2); c.arc(wx + 22, wy - 8, 24, 0, Math.PI * 2); c.arc(wx + 48, wy, 18, 0, Math.PI * 2); c.fill();
+    }
+    c.save(); c.globalAlpha = 0.75; pSacreCoeur(c, viewW * (0.2 - 0.12 * naehe) - kamera * 0.004, 232, 0.42); c.restore();   // Sacré-Cœur auf dem Hügel in der Ferne
+    c.fillStyle = '#c9c1b0';   // ferne Stadt (Parallaxe 0,08) mit grauen Mansarddächern
+    for (let i = 0; i < 36; i++) {
+      const n = viewW + 200, bx = ((i * 74 - kamera * 0.08) % n + n) % n - 100, bh = 20 + ((i * 37) % 34);
+      c.fillRect(bx, 250 - bh, 46, bh); c.fillStyle = '#a9b1b8'; c.fillRect(bx, 250 - bh - 6, 46, 6); c.fillStyle = '#c9c1b0';
+    }
+    const ex = viewW * (0.84 - 0.36 * naehe) - kamera * 0.01, gr = 0.36 + naehe * 0.42;   // Tour Eiffel wandert heran und wächst bis zum Boss
+    pHaeuser(c, 249, -viewW, viewW * 2, kamera * 0.15, 0.3);   // niedrige Haussmann-Häuser am anderen Ufer (Parallaxe 0,15)
+    pEiffel(c, ex, 252, gr, { licht: endeF, funkeln: endeF > 0.6 && !ruhig() ? zeit : null });   // vor den Häusern, damit sie gut sichtbar bleibt
+    c.fillStyle = '#5d8aa0'; c.fillRect(-viewW, 250, viewW * 3, H * 2);   // Seine
+    c.fillStyle = '#c2b59a'; c.fillRect(-viewW, 246, viewW * 3, 5);         // Quaimauer gegenüber
+    for (let i = 0; i < 8; i++) {   // am anderen Ufer: Laternen, ab und zu eine Trikolore
+      const n = viewW + 480, lx = ((i * 240 + 40 - kamera * 0.25) % n + n) % n - 240;
+      laterne(c, lx, 247, 0.6);
+      if (i % 3 === 1) { c.fillStyle = '#555'; c.fillRect(lx + 60, 206, 2, 40); [FR_BLAU, '#ffffff', FR_ROT].forEach((f, k) => { c.fillStyle = f; c.fillRect(lx + 62 + k * 6, 206, 6, 12); }); }
+    }
+    for (let i = 0; i < 3; i++) {   // Bateaux-mouches (Parallaxe 0,2, fahren langsam)
+      const n = viewW + 520, x = ((i * 610 + 260 + zeit * 12 - kamera * 0.2) % n + n) % n - 260, y = 282 + i * 12 + Math.sin(zeit * 1.4 + i) * 1.5;
+      pBoot(c, x, y, 0.45 + i * 0.06);
+    }
+    c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2;   // Wellen (Parallaxe 0,3)
+    for (let i = 0; i < 14; i++) { const n = viewW + 120, wx = ((i * 110 - kamera * 0.3 + Math.sin(zeit + i) * 6) % n + n) % n - 60, wy = 262 + (i % 4) * 16; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 10, wy - 4, wx + 20, wy); c.stroke(); }
+  }
+  function bodenParis(c, x0, w, a, b, links, rechts) {   // Boden: Quai mit Pflastersteinen (Pavés), heller Bordstein aus Kalkstein
+    c.fillStyle = '#9d968a'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    c.fillStyle = '#e4dccb'; c.fillRect(x0, BODEN_Y, w, 9);
+    c.fillStyle = '#7a7366'; c.fillRect(x0, BODEN_Y + 9, w, 2);
+    c.fillStyle = 'rgba(0,0,0,.12)';
+    for (let r = 0; r < 3; r++) {
+      const y = BODEN_Y + 14 + r * 14, v = r % 2 ? 11 : 0;
+      for (let x = Math.max(Math.ceil((a - v) / 22) * 22 + v, Math.floor(links / 22) * 22 + v); x < Math.min(b, rechts); x += 22) { c.beginPath(); c.roundRect(x - kamera + 1, y, 19, 11, 4); c.fill(); }
+    }
+  }
+  function seine(c, a, b) {   // Lücke = Seine: Wasser mit Wellen, Quaimauern aus hellem Stein, ein Rettungsring
+    const x0 = a - kamera, w = b - a;
+    const g = c.createLinearGradient(0, BODEN_Y, 0, H); g.addColorStop(0, '#5d8aa0'); g.addColorStop(1, '#2a4a5c');
+    c.fillStyle = g; c.fillRect(x0, BODEN_Y + 10, w, H);
+    c.fillStyle = '#cbbfa3'; c.fillRect(x0 - 2, BODEN_Y, 7, H - BODEN_Y); c.fillRect(x0 + w - 5, BODEN_Y, 7, H - BODEN_Y);
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 2;
+    for (let i = 0; i < Math.ceil(w / 44); i++) { const wx = x0 + 8 + ((i * 44 + zeit * 40) % Math.max(1, w - 26)), wy = BODEN_Y + 22 + (i % 3) * 14; c.beginPath(); c.moveTo(wx, wy); c.quadraticCurveTo(wx + 8, wy - 4, wx + 16, wy); c.stroke(); }
+    if (w > 165) { const rx = x0 + w / 2, ry = BODEN_Y + 34 + Math.sin(zeit * 2) * 2; c.strokeStyle = FR_ROT; c.lineWidth = 5; c.beginPath(); c.arc(rx, ry, 9, 0, Math.PI * 2); c.stroke();
+      c.strokeStyle = '#fff'; c.lineWidth = 5; for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(rx, ry, 9, k * Math.PI / 2, k * Math.PI / 2 + 0.4); c.stroke(); } }
+  }
+  function kisteParis(c, x, y, k) {   // Blöcke (40 × 40): Colonne Morris (zwei Teile, grüne Litfaßsäule mit Plakaten) oder Holzkiste voller Baguettes
+    if (k && k.art === 'morris') {
+      const oben = k.teil === 1;
+      c.fillStyle = '#2f6b4f'; c.beginPath(); c.roundRect(x + 4, y, KISTE - 8, KISTE, 3); c.fill();
+      c.fillStyle = '#25563f'; c.fillRect(x + 4, y, 5, KISTE);
+      const plakat = oben ? ['#f4e3b5', '#ef4135'] : ['#d6e8f5', '#0055a4'];
+      c.fillStyle = plakat[0]; c.fillRect(x + 10, y + 6, KISTE - 20, KISTE - 12);
+      c.fillStyle = plakat[1]; c.fillRect(x + 12, y + 9, KISTE - 24, 6); c.fillRect(x + 12, y + 19, (KISTE - 24) * 0.6, 3); c.fillRect(x + 12, y + 25, (KISTE - 24) * 0.8, 3);
+      if (oben) { c.fillStyle = '#2f6b4f'; c.beginPath(); c.moveTo(x + 1, y + 2); c.quadraticCurveTo(x + KISTE / 2, y - 16, x + KISTE - 1, y + 2); c.closePath(); c.fill();
+        c.fillStyle = '#e0b84a'; c.beginPath(); c.arc(x + KISTE / 2, y - 9, 3, 0, Math.PI * 2); c.fill(); }
+      else { c.fillStyle = '#25563f'; c.fillRect(x + 2, y + KISTE - 4, KISTE - 4, 4); }
+      return;
+    }
+    c.fillStyle = '#a8743f'; c.fillRect(x, y, KISTE, KISTE);   // Baguette-Kiste
+    pBaguette(c, x + 14, y + 4, 0.42, -1.25); pBaguette(c, x + 22, y + 2, 0.45, -1.4); pBaguette(c, x + 30, y + 5, 0.4, -1.75);
+    c.fillStyle = '#a8743f'; c.fillRect(x, y + 10, KISTE, KISTE - 10);
+    c.fillStyle = '#8b5e30'; c.fillRect(x, y + 10, KISTE, 3); c.fillRect(x, y + 24, KISTE, 3); c.fillRect(x, y + KISTE - 3, KISTE, 3);
+    c.fillStyle = '#f3ead2'; c.fillRect(x + 8, y + 15, KISTE - 16, 7);
+    c.fillStyle = FR_BLAU; c.font = 'bold 6px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('PAIN', x + KISTE / 2, y + 18.7);
+  }
+  function parisFahrzeug(c, a) {   // Welt Paris: kleines Auto (pAuto, fährt nach links) oder Radrennfahrer (pRad gespiegelt)
+    const x = a.x - kamera;
+    if (a.art === 'velo') { c.save(); c.translate(x + a.w / 2, BODEN_Y); c.scale(-1, 1); pRad(c, 0, 0, 1.25, ['#ffd23f', '#2a9d8f', '#e63946'][Math.abs(Math.round(a.von / 7)) % 3], zeit); c.restore(); return; }
+    pAuto(c, x + a.w / 2, BODEN_Y + 2, 2, ['#e63946', '#4fb3d9', '#f4d35e', '#8ac926'][Math.abs(Math.round(a.von / 7)) % 4], -1);
+  }
+  function cafeTerrasse(c, x, y) {   // hinter Monsieur Gaston: Café mit rot-weißer Markise, Schild „CAFÉ“, Bistrotisch mit zwei Stühlen
+    c.save(); c.translate(x, y);
+    c.fillStyle = '#1f3b5a'; c.fillRect(-70, -200, 140, 200);
+    c.fillStyle = 'rgba(255,236,180,.85)'; c.fillRect(-58, -150, 50, 100); c.fillRect(8, -150, 50, 100);
+    c.fillStyle = '#16304a'; c.fillRect(-70, -200, 140, 26);
+    c.fillStyle = '#e0b84a'; c.font = 'bold 17px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('CAFÉ', 0, -186);
+    for (let k = 0; k < 7; k++) { c.fillStyle = k % 2 ? '#ffffff' : FR_ROT; c.beginPath(); c.moveTo(-74 + k * 21.2, -174); c.lineTo(-74 + (k + 1) * 21.2, -174); c.lineTo(-70 + (k + 1) * 21.2, -156); c.lineTo(-70 + k * 21.2, -156); c.fill(); }
+    c.restore();
+    c.save(); c.translate(x - 64, y);   // Bistrotisch + Stühle davor
+    c.strokeStyle = '#2b2b2b'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(0, -30); c.lineTo(0, 0); c.moveTo(-9, 0); c.lineTo(9, 0); c.stroke();
+    c.fillStyle = '#d9d4c7'; c.beginPath(); c.ellipse(0, -31, 15, 4, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#ffffff'; c.fillRect(-4, -40, 7, 8); c.fillStyle = '#6b3e1f'; c.fillRect(-3, -39, 5, 3);
+    for (const s of [-1, 1]) { c.strokeStyle = '#8b5e30'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(s * 22, 0); c.lineTo(s * 22, -18); c.lineTo(s * 30, -18); c.moveTo(s * 30, 0); c.lineTo(s * 30, -34); c.stroke(); }
+    c.restore();
+  }
+  function monsieurGaston(c, x, y) {   // Boss Welt Paris: strenger Kellner (Garçon) mit Zwirbelbart, Fliege, Weste und langer Schürze; hält ein Tablett mit Croissant und Café hoch
+    const auf = boss.sichtbar, weg = boss.weg;
+    const gx = x + (1 - auf) * 46 + weg * 240, schritt = weg > 0 && !ruhig() ? Math.sin(zeit * 9) : 0;
+    const fragt = zustand === 'boss' || zustand === 'sequenz', zwirbel = fragt && !ruhig() ? Math.sin(zeit * 6) * 0.25 : 0;
+    c.save(); c.translate(gx, y); c.globalAlpha = 1 - weg * 0.85;
+    for (const [bx, w] of [[-7, schritt], [7, -schritt]]) { c.fillStyle = '#1b1b1f'; c.fillRect(bx - 4 + w * 3, -44, 8, 40); c.beginPath(); c.roundRect(bx - 6 + w * 3, -6, 14, 6, 3); c.fill(); }
+    c.fillStyle = '#ffffff'; c.beginPath(); c.roundRect(-17, -98, 34, 60, 6); c.fill();   // Hemd
+    c.fillStyle = '#1b1b1f'; c.beginPath(); c.moveTo(-17, -96); c.lineTo(-6, -96); c.lineTo(0, -70); c.lineTo(6, -96); c.lineTo(17, -96); c.lineTo(17, -58); c.lineTo(-17, -58); c.closePath(); c.fill();   // Weste
+    c.fillStyle = '#f7f5ef'; c.beginPath(); c.moveTo(-18, -62); c.lineTo(18, -62); c.lineTo(20, -10); c.lineTo(-20, -10); c.closePath(); c.fill();   // Schürze
+    c.strokeStyle = 'rgba(0,0,0,.12)'; c.lineWidth = 1; c.beginPath(); c.moveTo(-6, -58); c.lineTo(-7, -12); c.moveTo(7, -58); c.lineTo(8, -12); c.stroke();
+    c.fillStyle = '#e8b98f'; c.beginPath(); c.roundRect(-4, -106, 8, 10, 2); c.fill();   // Hals
+    c.fillStyle = '#1b1b1f'; c.beginPath(); c.moveTo(-8, -101); c.lineTo(0, -98); c.lineTo(-8, -95); c.fill(); c.beginPath(); c.moveTo(8, -101); c.lineTo(0, -98); c.lineTo(8, -95); c.fill();   // Fliege
+    c.strokeStyle = '#ffffff'; c.lineWidth = 7; c.lineCap = 'round';   // linker Arm in die Hüfte, rechter Arm trägt das Tablett hoch
+    c.beginPath(); c.moveTo(-15, -90); c.lineTo(-27, -70); c.lineTo(-16, -58); c.stroke();
+    c.beginPath(); c.moveTo(15, -90); c.lineTo(28, -104); c.lineTo(30, -122); c.stroke();
+    c.fillStyle = '#e8b98f'; c.beginPath(); c.arc(-16, -58, 4, 0, Math.PI * 2); c.arc(30, -124, 4, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#b8bcc2'; c.beginPath(); c.ellipse(30, -128, 20, 4, 0, 0, Math.PI * 2); c.fill();   // Tablett mit Café und Croissant
+    c.fillStyle = '#ffffff'; c.fillRect(18, -140, 9, 10); c.fillStyle = '#6b3e1f'; c.fillRect(19, -139, 7, 3);
+    pCroissant(c, 38, -132, 0.55);
+    c.fillStyle = '#e8b98f'; c.beginPath(); c.arc(0, -120, 15, 0, Math.PI * 2); c.fill();   // Kopf
+    c.fillStyle = '#2b2b2b'; c.beginPath(); c.arc(0, -126, 15, Math.PI * 1.05, Math.PI * 1.95); c.fill(); c.fillRect(-13, -128, 4, 5);   // Haare mit Scheitel
+    const blick = fragt ? -2 : (Math.sin(zeit * 0.8) > 0.35 ? 2 : 0);
+    c.fillStyle = '#1b1b1f'; c.beginPath(); c.arc(-5 + blick, -122, 1.8, 0, Math.PI * 2); c.arc(5 + blick, -122, 1.8, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#1b1b1f'; c.lineWidth = 2; c.beginPath(); c.moveTo(-9, -127); c.lineTo(-2, -126); c.moveTo(9, -127); c.lineTo(2, -126); c.stroke();   // strenge Augenbrauen
+    c.fillStyle = '#d9a07a'; c.beginPath(); c.ellipse(0, -117, 3, 3.5, 0, 0, Math.PI * 2); c.fill();   // Nase
+    c.strokeStyle = '#2b2b2b'; c.lineWidth = 3; c.lineCap = 'round';   // Zwirbelbart (zwirbelt beim Fragen)
+    for (const s of [-1, 1]) { c.beginPath(); c.moveTo(0, -112); c.quadraticCurveTo(s * 9, -114, s * 13, -110 - zwirbel * 6); c.quadraticCurveTo(s * 17, -106, s * 14, -104); c.stroke(); }
+    c.restore();
+  }
+  function parisBoss(c, x, y) { cafeTerrasse(c, x - 6, y); monsieurGaston(c, x, y); }
+  function grilleParis(c, x, y) {   // Tür der Welt Paris: goldene Grille zwischen zwei Steinpfeilern mit Laterne, die Flügel schwingen auf; dahinter goldenes Licht
+    c.save(); c.translate(x, y);
+    const offen = tuer.offen;
+    if (offen > 0) { c.fillStyle = `rgba(255,236,170,${0.85 * offen})`; c.fillRect(-36, -118, 72, 118); }
+    for (const s of [-1, 1]) { c.fillStyle = '#e4dccb'; c.fillRect(s * 44 - 9, -140, 18, 140); c.fillStyle = '#cfc4ab'; c.fillRect(s * 44 - 11, -146, 22, 8);
+      c.fillStyle = '#1b1b1f'; c.fillRect(s * 44 - 1, -166, 2, 20); c.fillStyle = '#ffe27a'; c.beginPath(); c.roundRect(s * 44 - 6, -176, 12, 12, 3); c.fill(); }
+    for (const seite of [-1, 1]) {
+      c.save(); c.translate(seite * 35, 0); c.scale(Math.max(0.05, 1 - offen * 0.95), 1);
+      const x0 = seite > 0 ? -35 : 0;
+      pGoldtor(c, x0 + 2, x0 + 33, 0, 112);
+      c.restore();
+    }
+    c.fillStyle = '#e8b923'; c.beginPath(); c.arc(0, -128, 8, 0, Math.PI * 2); c.fill();   // goldenes Wappen mit „P“
+    c.fillStyle = FR_BLAU; c.font = 'bold 10px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('P', 0, -127.5);
+    c.restore();
+  }
+  // Spielmeldungen der Engine (Englisch) für Paris auf Französisch; tx() übersetzt beim Zeichnen (Meldung, Combo, Banner)
+  const UEBERSETZUNG_FR = {
+    'Shield! 🛡️': 'Bouclier ! 🛡️', 'Boing! 🦘': 'Hop ! 🦘', 'Whee! 🦅': 'Youpi ! 🐦', 'Laser! 💥': 'Lumière ! ✨', 'Smash! 🦬': 'Boum ! 🐻', 'Roll! 🌀': 'Et hop ! 🌀',
+    'Splish! 💦': 'Plic ploc ! 💦', 'Whoa! 🛢️': 'Oh là là ! 🛢️', 'Crash! 🚗': 'Aïe ! 🚗', 'Ouch!': 'Aïe !', 'Float! 🦋': 'Je vole ! 🦋', 'Mega jump! 🐾': 'Super saut ! 🐾',
+    'On fire! 🔥': 'En feu ! 🔥', 'Nothing to steal! 🐦': 'Rien à voler ! 🐦', 'My diamond! 🐦': 'Mon diamant ! 🐦',
+  };
+  // Mr. Alex' Zurufe in Paris (Französisch, kurz; Aufnahmen app/franz/audio/runner/<key>.mp3, Tag [French]) – dazu die Runner-Hinweise aus inhalte/franz/wendungen_helden.tsv (r01–r06)
+  const ALEX_ZURUFE_FR = {
+    start:   [["fr_start_1", "À droite ! On y va !"], ["fr_start_2", "Allez, à droite !"]],
+    combo3:  [["fr_combo3_1", "Bravo !"], ["fr_combo3_2", "Super !"]],
+    combo5:  [["fr_combo5_1", "Bravo ! Encore !"], ["fr_combo5_2", "Génial !"]],
+    combo8:  [["fr_combo8_1", "Incroyable !"], ["fr_combo8_2", "C'est trop bien !"]],
+    tore3:   [["fr_tore3_1", "Très bien !"]],
+    leben:   [["fr_leben_1", "Pas grave ! Encore !"], ["fr_leben_2", "Oups ! Allez !"]],
+    letztes: [["fr_letztes_1", "Attention !"]],
+    halb:    [["fr_halb_1", "Plus vite !"], ["fr_halb_2", "Allez, plus vite !"]],
+    boss:    [["fr_boss_1", "Attention ! Voilà Monsieur Gaston !"]],
+    ende:    [["fr_ende_1", "Bravo ! Encore !"], ["fr_ende_2", "Magnifique !"]],
+    fail:    [["fr_fail_1", "Presque ! Encore une fois !"]],
+    saute:   [["fr_saute_1", "Saute !"]],
+    attention: [["fr_attention_1", "Attention !"]],
+    gauche:  [["fr_gauche_1", "À gauche !"]],
+    vite:    [["fr_vite_1", "Plus vite !"]],
+  };
+  // Runner-Hinweise (nur Welten mit W.hinweise): „Saute !“ kurz vor einer Seine-Lücke, „Attention !“ vor Auto/Rad, „Plus vite !“ nach einem Checkpoint, „À gauche !“ wenn ein Gegner von links kommt
+  let hinweisGesehen = new Set();
+  function hinweiseRunner() {
+    if (!W.hinweise || zustand !== 'spiel' || tot > 0) return;
+    const x = spieler.x;
+    for (let i = 1; i < level.boden.length; i++) { const a = level.boden[i - 1][1]; if (a > x + 120 && a < x + 260 && !hinweisGesehen.has('l' + a)) { hinweisGesehen.add('l' + a); if (alexSagen('saute')) return; } }
+    for (const a of autos) { if (a.x > x + 140 && a.x < x + 360 && !hinweisGesehen.has('a' + a.von)) { hinweisGesehen.add('a' + a.von); if (alexSagen('attention')) return; } }
+    for (const k of level.checkpoints) { if (x > k.x + 60 && x < k.x + 200 && !hinweisGesehen.has('c' + k.x)) { hinweisGesehen.add('c' + k.x); if (alexSagen('vite')) return; } }
+    for (const g of gegner) { if (g && !g.tot && g.x < x && g.x > x - 160 && (g.richtung || 0) > 0 && !hinweisGesehen.has('g' + g.von)) { hinweisGesehen.add('g' + g.von); if (alexSagen('gauche')) return; } }
+  }
+  const tx = (text) => (W && W.uebersetzung && W.uebersetzung[text]) || text;
   const WELTEN = {
     ny: { id: 'ny', name: 'New York', staat: 'New York', ziel: 'Statue of Liberty', bossName: 'Mr. Alligator', bossSymbol: '🐊', banner: BANNER_TEXT, richtig: "Correct – the door opens!", falsch: "Not this time!", start: "Let's find the Statue of Liberty!", ende: "You made it to the Statue of Liberty!",
       sturz: 'Splash! 💦',
@@ -9352,6 +10019,17 @@
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WEMBLEY_STORY, musterStory: MUSTER_WEMBLEY_STORY, storyStruktur: STRUKTUR_WEMBLEY, sprechblaseHoehe: 240,
       kulisse: hintergrundWembley, boden: bodenWembley, grube: wembleyGrube, kiste: kisteWembley, hudSymbol: (c, x, y) => { c.save(); c.strokeStyle = '#1d3f8f'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 13, y + 10); c.quadraticCurveTo(x, y - 16, x + 13, y + 10); c.stroke(); c.fillStyle = '#1d3f8f'; c.fillRect(x - 12, y + 6, 24, 5); c.restore(); },
       boss: wembleyBoss, tuer: spielfeldTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
+    // Französisch-App „Paris Run“ (7.11., Stufe 4): Texte Französisch, Zurufe/Hinweise Mr. Alex (W.zurufe, W.hinweise), Engine-Meldungen übersetzt (W.uebersetzung)
+    paris: { id: 'paris', name: 'Paris', staat: 'Paris', ziel: 'Tour Eiffel', bossName: 'Monsieur Gaston', bossSymbol: '☕', banner: 'Attention ! Voilà Monsieur Gaston !', richtig: "Oui, c'est correct ! Entre !", falsch: 'Non, non, non !', start: 'On y va ! À la tour Eiffel !', ende: 'Bravo ! Tu es à la tour Eiffel !',
+      sturz: 'Plouf ! 🌊', zurufe: ALEX_ZURUFE_FR, hinweise: true, uebersetzung: UEBERSETZUNG_FR,
+      gegnerarten: ['taube', 'maus', 'eichhoernchen'], farben: { plattform: '#3d4f63', plattformOben: FR_BLAU, hud: FR_BLAU }, muster: MUSTER_PARIS, sprechblaseHoehe: 220,
+      kulisse: hintergrundParis, boden: bodenParis, grube: seine, kiste: kisteParis, hudSymbol: (c, x, y) => pEiffel(c, x, y + 14, 0.13),
+      boss: parisBoss, tuer: grilleParis, bossKlang: () => { klang.klingel(); klang.akkordeon(); } },
+    // Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): 'disco' für Klasse 6 und 9 (Englisch), 'disco_fr' für die Französisch-App; Texte spricht Mr. Alex (übertrieben, mit Tags)
+    disco: { id: 'disco', name: 'Disco Run', staat: 'Bonus', ziel: 'the disco ball', bossName: 'DJ Funky Flamingo', bossSymbol: '🦩', banner: 'Dance battle! DJ Funky Flamingo wants to dance!', richtig: "Oh no – your moves are better than mine!", falsch: "Ha! Not groovy enough!", start: "Welcome to the Disco Run! Dance, dance, dance!", ende: "You are the disco king! Or queen!",
+      sturz: 'Oops – off the dance floor! 🕺', ...DISCO_TEIL },
+    disco_fr: { id: 'disco_fr', name: 'Disco Run', staat: 'Bonus', ziel: 'la boule disco', bossName: 'DJ Funky Flamingo', bossSymbol: '🦩', banner: 'Battle de danse ! DJ Funky Flamingo veut danser !', richtig: "Oh non ! Tu danses mieux que moi !", falsch: "Ha ha ! Pas assez de groove !", start: "Bienvenue au Disco Run ! On danse !", ende: "Bravo ! Tu es la star du disco !",
+      sturz: 'Oups – hors de la piste ! 🕺', zurufeNur: true, hinweise: true, ...DISCO_TEIL, zurufe: Object.assign({}, ALEX_ZURUFE_FR, DISCO_ZURUFE_FR), uebersetzung: UEBERSETZUNG_FR },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner, richtig: w.richtig, falsch: w.falsch, start: w.start, ende: w.ende }));
 
@@ -11423,6 +12101,22 @@
   function pKrone(c, x, y, s) { c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#e8b923'; c.beginPath(); c.moveTo(-22, 10); c.lineTo(-22, -10); c.lineTo(-11, 0); c.lineTo(0, -16); c.lineTo(11, 0); c.lineTo(22, -10); c.lineTo(22, 10); c.fill(); c.fillStyle = '#c0392b'; c.beginPath(); c.arc(0, 3, 3, 0, Math.PI * 2); c.fill(); c.fillStyle = '#2a5bd7'; c.beginPath(); c.arc(-12, 4, 2.5, 0, Math.PI * 2); c.arc(12, 4, 2.5, 0, Math.PI * 2); c.fill(); c.restore(); }
   const pNote = (c, x, y, f, farbe = '#ffd93d') => { if (f <= 0) return; c.save(); c.globalAlpha = Math.min(1, f); c.fillStyle = farbe; c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('♪', x, y); c.restore(); };
   const pBlink = (t, ab) => (t < ab ? 0 : sanft((t - ab) / 0.3) * Math.max(0, 1 - Math.max(0, t - ab - 1.2) / 0.4));   // Wort-Chip kurz ein- und wieder ausblenden
+  // Heldenfilm Paris (Französisch-App, 7.11.2026): Kulisse + Held (läuft 0–2,4 s ein, Kraft 3–7,6 s, danach Jubel), Kraft-Chip, Wendung (CAMEO[id].satz) als Sprechblase.
+  // o.kulisse(c, t) zeichnet den Ort, o.held(t) → { x, pose, links, tempo } überschreibt die Laufbahn (Gaspard), o.vorn(c, t) zeichnet vor dem Helden.
+  function szParisHeldFilm(id, kraft, klaenge, o) {
+    return { held: id, dauer: 11, klaenge: [[0.3, 'cameo'], ...klaenge, [7.8, 'applaus']],
+      zeichne(c, t) {
+        o.kulisse(c, t);
+        const s = 1.6, boden = 392, y = boden - 38 * s, eigen = o.held && o.held(t);
+        let x = 230, pose = t < 3 ? 'steh' : t < 7.6 ? 'kraft' : 'jubel', links = false;
+        if (eigen) ({ x, pose, links } = eigen); else if (t < 2.4) { x = lerp(-60, 230, t / 2.4); pose = 'lauf'; }
+        if (eigen && eigen.tempo) { szStaub(c, x, boden - 4, eigen.tempo); szTempo(c, x, y, eigen.tempo, 5, 90); }
+        szHeld(c, id, x, y - (pose === 'jubel' ? Math.abs(Math.sin((t - 7.6) * 5)) * 6 : 0), s, t, { pose, links, blitz: szBlitz(t, 3.0) });
+        if (o.vorn) o.vorn(c, t);
+        szHeldKraft(c, t, 3.2, id, kraft);
+        if (t > 8.2) szBlase(c, 320, 130, (CAMEO[id] || {}).satz || '', HELD_FARBE[id], (t - 8.2) / 0.35);
+      } };
+  }
   const SZENEN = {
     // Klasse 6 – London
     big_ben: { variante: () => KLANG_DATEI.chimes ? BIGBEN_CHIMES : null, dauer: 9.6, klaenge: [[0.4, 'klick'], [0.8, 'klick'], [1.2, 'klick'], [1.6, 'klick'], [1.9, 'viertel'], [4.6, 'glocke'], [6.0, 'glocke'], [7.4, 'glocke']],
@@ -13048,6 +13742,44 @@
       } },
     // Klasse 9 – Heldenfilme (7.11.2026, Etappe 3): held_<id> für die 13 US-Helden (HELD9_FILM, szHeld9)
     ...Object.fromEntries(Object.keys(HELD9_FILM).map((id) => ['held_' + id, szHeld9(id, HELD9_FILM[id])])),
+    // Französisch-App (Stufe 3, 7.11.2026): Heldenfilme in Paris (11 s) – der Held läuft ein, zeigt seine Kraft am Lieblingsort, jubelt; Wendung als Sprechblase
+    held_lucie: szParisHeldFilm('lucie', 'La lumière', [[3.2, 'lichtAn'], [4.4, 'funkeln'], [6.0, 'funkeln']], {
+      kulisse(c, t) { const a = sanft((t - 3) / 1.2); szHimmel(c, '#141c3d', '#c9724e'); pHaeuser(c, 340, -100, 760, 0, 0.8); szBoden(c, '#59704a', 336);
+        pEiffel(c, 470, 338, 0.85, { licht: a, funkeln: t > 4.2 ? t : null }); } }),
+    held_gaspard: szParisHeldFilm('gaspard', 'Super vitesse', [[0.6, 'klingel'], [3.0, 'wind'], [4.3, 'wind'], [5.6, 'wind'], [6.9, 'wind']], {
+      kulisse(c, t) { szHimmel(c, '#7fb2e2', '#eaf2f8'); pArc(c, 110, 300, 0.7, '#7d7466'); pHaeuser(c, 300, 180, 900, t * 20, 0.8); c.fillStyle = '#8a8277'; c.fillRect(0, 305, SZ_W, 100);
+        ['#e63946', '#2a8cff', '#ffd400'].forEach((f, k) => pRad(c, ((t * 60 + k * 70) % 760) - 60, 384 - (k % 2) * 12, 1.2, f, t)); },
+      held(t) { if (t < 3 || t >= 7.6) return null; const f = ((t - 3) * 1.4) % 1, dir = Math.floor((t - 3) * 1.4) % 2 ? -1 : 1; return { x: dir > 0 ? lerp(-80, 720, f) : lerp(720, -80, f), pose: 'kraft', links: dir < 0, tempo: dir }; } }),
+    held_bruno: szParisHeldFilm('bruno', 'Super force', [[3.2, 'rumpeln'], [3.6, 'jubel'], [6.4, 'rumpeln']], {
+      kulisse(c, t) { szHimmel(c, '#7fb2e2', '#eaf2f8'); pHaeuser(c, 260, -100, 760, 0, 0.75); pArc(c, 320, 300, 1.4, '#6f7378'); c.fillStyle = '#8b8f94'; c.fillRect(0, 300, SZ_W, 100);
+        if (t < 3) pAuto(c, lerp(720, 430, Math.min(1, t / 2.4)), 392, 1.7, '#2a8cff', -1); } }),
+    held_chloe: szParisHeldFilm('chloe', 'Vision de nuit', [[3.2, 'staunen'], [5.2, 'schritte'], [7.0, 'kristall']], {
+      kulisse(c, t) { c.fillStyle = '#2a1a1c'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#1a1012'; c.fillRect(0, 330, SZ_W, 70); pJoconde(c, 470, 170, 1.4, 1);
+        const n = sanft((t - 3) / 0.6) * (t < 7.6 ? 1 : 1 - sanft((t - 7.6) / 0.6)); if (n > 0) { c.save(); c.globalAlpha = n * 0.45; c.fillStyle = '#2dc653'; c.fillRect(0, 0, SZ_W, H); c.restore();
+          c.save(); c.globalAlpha = n; for (let k = 0; k < 6; k++) { c.fillStyle = '#d4ffb0'; c.beginPath(); c.ellipse(80 + k * 70, 360 + (k % 2) * 14, 7, 4, 0, 0, Math.PI * 2); c.fill(); } szBlase(c, 470, 300, '?', '#2dc653', 1); c.restore(); } } }),
+    held_camille: szParisHeldFilm('camille', 'Invisible', [[3.2, 'zug'], [5.0, 'gong'], [6.6, 'staunen']], {
+      kulisse(c, t) { c.fillStyle = '#efe9dc'; c.fillRect(0, 0, SZ_W, 300); c.fillStyle = '#ffffff'; for (let x = 0; x < SZ_W; x += 22) for (let y = 10; y < 240; y += 12) c.fillRect(x + (y % 24 ? 0 : 11), y, 20, 10);
+        c.fillStyle = '#1f3b5c'; c.fillRect(220, 40, 200, 34); hzText(c, 'Châtelet', 320, 57, 18); c.fillStyle = '#c9c4ba'; c.fillRect(0, 300, SZ_W, 100); c.fillStyle = '#fff'; c.fillRect(0, 300, SZ_W, 4);
+        pMetroZug(c, 20, 296, 0.95); [[120, '#e63946'], [520, '#2a8cff']].forEach(([x, f], k) => pPerson(c, x + Math.sin(t * 0.8 + k) * 14, 392, 1.3, { hemd: f, arm: t > 3.5 ? 2.6 : undefined })); } }),
+    held_robin: szParisHeldFilm('robin', 'Inventions', [[3.2, 'hammer'], [5.2, 'plopp'], [6.0, 'fanfare']], {
+      kulisse(c, t) { szHimmel(c, '#7fb2e2', '#eef4f8'); pPompidou(c, 320, 330, 1.3, [1, 1, 1, 1]); c.fillStyle = '#c9c0ab'; c.fillRect(0, 330, SZ_W, 100); },
+      vorn(c, t) { if (t < 5.2) return; const f = sanft((t - 5.2) / 0.5), y = 330 - Math.abs(Math.sin((t - 5.2) * 5)) * 30 * f;   // kleiner Roboter hüpft aus dem Geschenk
+        hzRR(c, 470, 350, 50, 40, 6, '#e63946'); c.fillStyle = '#ffd93d'; c.fillRect(492, 350, 6, 40); c.save(); c.globalAlpha = f; hzRR(c, 480, y - 6, 30, 26, 6, '#adb5bd'); hzEll(c, 489, y + 4, 3, 3, '#2a8cff'); hzEll(c, 501, y + 4, 3, 3, '#2a8cff'); c.fillStyle = '#555'; c.fillRect(494, y - 14, 2, 8); hzEll(c, 495, y - 15, 3, 3, '#e63946'); c.restore(); } }),
+    held_coco: szParisHeldFilm('coco', 'Super cri', [[3.2, 'gesang'], [4.2, 'jubel'], [6.0, 'jubel']], {
+      kulisse(c, t) { szHimmel(c, '#1b2550', '#3f5a8a'); c.save(); c.translate(0, -40); pStadion(c, t, t > 3.5); c.restore(); for (let k = 0; k < 4; k++) pFahne(c, 60 + k * 170, 110, 1, t + k); } }),
+    held_pierre: szParisHeldFilm('pierre', 'Parle aux oiseaux', [[3.0, 'taube'], [3.6, 'taube'], [4.4, 'vogel'], [6.0, 'gelaeut']], {
+      kulisse(c, t) { szHimmel(c, '#8cb8de', '#f0f4f6'); pNotreDame(c, 320, 330, 1.25, 0); c.fillStyle = '#b9ae96'; c.fillRect(0, 330, SZ_W, 70);
+        for (let k = 0; k < 6; k++) { const w = (t - 3) * 1.6 + k; const x = t < 3 ? 120 + k * 80 : 320 + Math.cos(w) * 200, y = t < 3 ? 380 : 170 + Math.sin(w) * 60; taubeBei(c, x, y, t * 10 + k, Math.cos(w) > 0 ? -1 : 1); } } }),
+    held_horace: szParisHeldFilm('horace', 'Arrêt du temps', [[3.2, 'zeitzeichen'], [4.6, 'klick'], [6.4, 'staunen']], {
+      kulisse(c, t) { c.fillStyle = '#3d4a42'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#d9d2c0'; c.fillRect(0, 330, SZ_W, 70);
+        const stop = t > 3.2 && t < 7.6; pUhr(c, 320, 170, 120, stop ? 3.2 * 6 : t * 6);
+        const bx = stop ? 200 : ((t * 120) % 760) - 60; taubeBei(c, bx, 120, stop ? 0 : t * 10, -1);
+        if (stop) { c.save(); c.globalAlpha = 0.25; c.fillStyle = '#7ec8ff'; c.fillRect(0, 0, SZ_W, H); c.restore(); } } }),
+    held_hector: szParisHeldFilm('hector', 'Bouclier', [[3.2, 'welle'], [3.8, 'platsch'], [5.0, 'platsch'], [6.4, 'jubel']], {
+      kulisse(c, t) { szHimmel(c, '#6f8fae', '#cfdbe6'); pHaeuser(c, 262, -60, 700, 0, 0.6); c.fillStyle = '#b9ae96'; c.fillRect(0, 258, SZ_W, 16); pWasser(c, 272, t, 0, SZ_W);
+        pBoot(c, 470, 340, 1.0); c.fillStyle = '#b9ae96'; c.fillRect(0, 374, 300, 30);
+        if (t > 3.2 && t < 7.6) { c.save(); c.strokeStyle = 'rgba(160,235,255,.8)'; c.lineWidth = 3; c.fillStyle = 'rgba(72,202,228,.18)'; c.beginPath(); c.arc(470, 330, 110, Math.PI, 0); c.fill(); c.stroke(); c.restore();
+          for (let k = 0; k < 10; k++) { const yy = ((t * 260 + k * 47) % 260) - 40, xx = 380 + k * 20; const hit = yy > 330 - Math.sqrt(Math.max(0, 110 * 110 - (xx - 470) ** 2)); c.fillStyle = '#9fb3c8'; if (!hit) { c.beginPath(); c.arc(xx, yy, 4, 0, Math.PI * 2); c.fill(); } } } } }),
     // Französisch – Paris (Französisch-App Klasse 5/6, Stufe 2, 7.11.2026; Texte inhalte/franz/paris.tsv, Stimme Mr. Alex)
     tour_eiffel: { dauer: 9.4, klaenge: [[0.4, 'akkordeon'], [5.2, 'lichtAn'], [6.0, 'funkeln'], [7.4, 'funkeln']],
       zeichne(c, t) {   // Tag → Abend: die Kamera fährt am Turm hinauf, das Licht geht an, dann funkelt der ganze Turm
@@ -13625,5 +14357,343 @@
     get wahlOffen() { return zustand === 'wahl' && !!wahlGabel && !frageBox.hidden; },
   };
 
-  window.Runner = { heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, heldKarteZeichnen, heldKarteBild, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  /* ---------- Spaß-Level „Silly Run“ (7.11.2026, Idee Mr. Alex 30.10., docs/ideenspeicher.md) – gleicher Code für Klasse 6 und 9 ----------
+     Runner.spass({ wrapper, woerter:[{en,de}], skin, klasse: 6|9, texte:{ tor(de), hinweis }, stimme:{ wort(i) }, onEnde(ergebnis) }) → { stopp }
+     Kurzer, bewusst alberner Bonuslauf (≈ 1½ Min.), der sich selbst nicht ernst nimmt: Figur mit Riesenkopf (wächst zwischendurch noch), alles wackelt
+     (Wackelpudding-Big-Ben bzw. -Freiheitsstatue, Sonne mit Sonnenbrille, Wolken mit Gesicht), Gegner Gummihuhn/Toaster/Stinkesocke (plattdrücken
+     oder drüber; Berührung = kurz schwindlig, kein Leben weg), „dramatische“ Zeitlupe vor jedem Tor, Mondsocken (wenig Schwerkraft), Kopfstand-Strecke
+     (nur das Bild steht kopf), Konfetti-Übertreibung, Sprechblasen mit albernen Sprüchen (Kl. 6 einfacher). Lernwert wie im Runner: 8 Wort-Tore
+     (deutsches Wort oben, die richtige englische Blase anspringen; Doppelsprung für die oberste) + Boss = beleidigter Kaktus mit 3 Fragen (die Blasen
+     fliegen auf die Figur zu). Kein Game over. Nach jeder Antwort spricht die App das Wort (stimme.wort(i)). Keine neuen Audiodateien: nur klang.*.
+     ergebnis = { spass: true, geschafft, richtig, fragen, platt, dauer, woerter: [{ en, de, richtig }] }. Läuft nie parallel zu start()/szene(). */
+  const SPASS_SPRUECHE = {
+    6: { boss: 'Sir Prickles', titel: 'THE SILLY RUN',
+      start: ['Hello! My head is very big today!', "Let's go! Big head, big brain!"],
+      richtig: ['Yes! I am a genius!', 'Super! My head is happy!', 'Wow! Confetti for me!', 'Yay! Banana power!', 'Right! I love English!'],
+      falsch: ['Oops! My head is too big!', 'Oh no! Silly me!', 'Hmm. My brain is on holiday.'],
+      platt: ['Squeak! Sorry, chicken!', 'Bye-bye, sock!', 'Boing!', 'Toast for breakfast!'],
+      aua: ['Ouch! My nose!', 'Help! A rubber chicken!', 'Ow! Bad toaster!', 'Eww! A smelly sock!'],
+      mond: 'Moon socks! I can fly!', kopf: 'Upside down! Where is my lunch?', riesig: 'Oh no! My head is growing!',
+      kaktus: ['I am Sir Prickles. Nobody hugs me!', 'Hmpf! That was easy.', 'Grrr! Stop it!', 'Fine! You win. I am NOT crying!'],
+      ende: 'The end. Thank you, chickens!' },
+    9: { boss: 'Cactus Carl', titel: 'THE SILLY RUN',
+      start: ['Is my head bigger today? Be honest.', 'Road trip! What could possibly go wrong?'],
+      richtig: ["Nailed it! I'm basically a dictionary.", 'Correct! My giant brain is glowing.', 'Boom! Somebody call the newspaper!', 'Yes! Even the chickens are impressed.', 'Easy. Next question, please.'],
+      falsch: ['Nope. My brain took a coffee break.', "Oops. Let's pretend that never happened.", 'Wrong bubble! It looked so friendly.'],
+      platt: ['Sorry, chicken. Nothing personal.', 'That sock had it coming.', 'Toaster down!', 'Squeak. Classic.'],
+      aua: ['Ouch! Who puts a toaster on a road?', 'A rubber chicken? Seriously?', "Ugh! That sock hasn't been washed since 1999."],
+      mond: 'Moon socks activated! Gravity is optional.', kopf: 'Upside-down mode. My lunch disagrees.', riesig: 'Is it just me, or is my head still growing?',
+      kaktus: ["I'm Cactus Carl, and I'm very offended!", 'Hmpf. Lucky guess.', 'Stop being so smart! It hurts my feelings!', "Fine. You win. I'm not crying, it's just cactus juice."],
+      ende: 'Best road trip ever. Ten out of ten chickens.' },
+  };
+  let spAktiv = null, kopfCv = null;
+  function spassStopp() { if (spAktiv) spAktiv.aus(); }
+  // Figur mit Riesenkopf: zeichneFigur in ein Hilfs-Canvas, darunter der Körper 1:1, darüber Kopf (alles oberhalb des Halses) um k vergrößert
+  function grossKopf(c, x, y, h, skin, pose, t, ausdruck, k, q) {
+    const u = h / 80, B = 130, oben = figurHoehe(skin) + 24, unten = 14, hals = 60 + (skin.hals === 'giraffe' ? 24 : 0);
+    const w = Math.ceil(B * u * q), hh = Math.ceil((oben + unten) * u * q);
+    if (!kopfCv) kopfCv = document.createElement('canvas');
+    if (kopfCv.width !== w || kopfCv.height !== hh) { kopfCv.width = w; kopfCv.height = hh; }
+    const k2 = kopfCv.getContext('2d');
+    k2.setTransform(1, 0, 0, 1, 0, 0); k2.clearRect(0, 0, w, hh); k2.setTransform(q, 0, 0, q, 0, 0);
+    const hy = (oben - hals) * u, ww = B * u, schnitt = Math.round(hy * q), oy = y - oben * u, ay = oy + schnitt / q;
+    zeichneFigur(k2, B * u / 2, oben * u, h, skin, pose, t, ausdruck);
+    c.drawImage(kopfCv, 0, schnitt, w, hh - schnitt, x - ww / 2, ay, ww, (hh - schnitt) / q);
+    if (pose !== 'sprung') { c.drawImage(kopfCv, 0, 0, w, schnitt, x - ww * k / 2, ay - (schnitt / q) * k, ww * k, (schnitt / q) * k); return; }
+    // Sprung: Körper wie oben, der große Kopf aus einer Lauf-Pose (Arme unten), danach die hochgerissenen Arme neben dem kleinen Kopf obendrauf
+    const arme = document.createElement('canvas'); arme.width = w; arme.height = schnitt; arme.getContext('2d').drawImage(kopfCv, 0, 0);
+    k2.setTransform(1, 0, 0, 1, 0, 0); k2.clearRect(0, 0, w, hh); k2.setTransform(q, 0, 0, q, 0, 0);
+    zeichneFigur(k2, B * u / 2, oben * u, h, skin, 'lauf', 0, ausdruck);
+    c.drawImage(kopfCv, 0, 0, w, schnitt, x - ww * k / 2, ay - (schnitt / q) * k, ww * k, (schnitt / q) * k);
+    const kb = Math.round(24 * u * q), ac = arme.getContext('2d'); ac.clearRect(w / 2 - kb, 0, kb * 2, schnitt);
+    c.drawImage(arme, 0, 0, w, schnitt, x - ww / 2, oy, ww, schnitt / q);
+  }
+  function gummihuhn(c, x, y, t, platt) {   // gelbes Gummihuhn: Körper, langer Wackelhals, roter Kamm, oranger Schnabel; platt = X-Augen, flach
+    c.save(); c.translate(x, y); if (platt) c.scale(1.4, 0.3);
+    const n = Math.sin(t * 6) * 0.35;
+    c.fillStyle = '#ffd23a'; c.beginPath(); c.ellipse(0, -14, 18, 13, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#f0b400'; c.beginPath(); c.ellipse(-6, -14, 9, 6, -0.3, 0, Math.PI * 2); c.fill();   // Flügel
+    c.strokeStyle = '#ffd23a'; c.lineWidth = 7; c.lineCap = 'round';
+    const kx = 10 + Math.sin(n) * 16, ky = -28 - Math.cos(n) * 20;
+    c.beginPath(); c.moveTo(8, -20); c.quadraticCurveTo(14, -32, kx, ky); c.stroke();
+    c.fillStyle = '#ffd23a'; c.beginPath(); c.arc(kx, ky, 8, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#e8343a'; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(kx - 4 + i * 4, ky - 8, 3, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#ff8a1e'; c.beginPath(); c.moveTo(kx + 6, ky - 2); c.lineTo(kx + 16, ky + 1); c.lineTo(kx + 6, ky + 4); c.closePath(); c.fill();
+    c.strokeStyle = '#222'; c.lineWidth = 1.6; c.fillStyle = '#222';
+    if (platt) { c.beginPath(); c.moveTo(kx - 1, ky - 3); c.lineTo(kx + 4, ky + 2); c.moveTo(kx + 4, ky - 3); c.lineTo(kx - 1, ky + 2); c.stroke(); }
+    else { c.beginPath(); c.arc(kx + 2, ky - 1, 1.8, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#ff8a1e'; c.lineWidth = 2.5; c.beginPath(); c.moveTo(-5, -2); c.lineTo(-7, 0); c.moveTo(5, -2); c.lineTo(7, 0); c.stroke();
+    c.restore();
+  }
+  function toaster(c, x, y, t, platt) {   // Toaster mit Gesicht; zwei Toastscheiben hüpfen heraus
+    c.save(); c.translate(x, y); if (platt) c.scale(1.3, 0.35);
+    const hoch = platt ? 0 : Math.max(0, Math.sin(t * 2.6)) * 26;
+    c.fillStyle = '#d9a35a'; [-8, 8].forEach((dx, i) => { c.beginPath(); c.roundRect(dx - 6, -30 - hoch * (i ? 1 : 0.8), 12, 16, 4); c.fill(); });
+    c.fillStyle = '#b9c3cf'; c.beginPath(); c.roundRect(-20, -30, 40, 30, 8); c.fill();
+    c.fillStyle = '#8f9aa8'; c.fillRect(-15, -30, 12, 3); c.fillRect(3, -30, 12, 3); c.fillRect(20, -20, 5, 3);
+    c.fillStyle = '#fff'; c.beginPath(); c.arc(-7, -17, 4, 0, Math.PI * 2); c.arc(7, -17, 4, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#222'; c.beginPath(); c.arc(-6 + Math.sin(t * 3), -17, 2, 0, Math.PI * 2); c.arc(8 + Math.sin(t * 3), -17, 2, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#222'; c.lineWidth = 1.5; c.beginPath(); c.arc(0, -9, 4, 0.2, Math.PI - 0.2); c.stroke();
+    c.restore();
+  }
+  function socke(c, x, y, t, platt) {   // Stinkesocke: geringelt, mit Augen, grüne Duftwolken
+    c.save(); c.translate(x, y); if (platt) c.scale(1.4, 0.3);
+    c.fillStyle = '#e8343a'; c.beginPath(); c.roundRect(-8, -40, 16, 34, 6); c.roundRect(-8, -14, 26, 14, 7); c.fill();
+    c.fillStyle = '#fff'; for (let i = 0; i < 3; i++) c.fillRect(-8, -36 + i * 10, 16, 4);
+    c.beginPath(); c.arc(-3, -30, 3.5, 0, Math.PI * 2); c.arc(4, -30, 3.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#222'; c.beginPath(); c.arc(-3, -29, 1.6, 0, Math.PI * 2); c.arc(4, -29, 1.6, 0, Math.PI * 2); c.fill();
+    if (!platt) { c.strokeStyle = 'rgba(110,190,60,.75)'; c.lineWidth = 2; for (let i = 0; i < 3; i++) { const p = (t * 0.8 + i / 3) % 1; c.beginPath(); c.moveTo(-6 + i * 6, -44 - p * 26); c.quadraticCurveTo(-1 + i * 6 + Math.sin(t * 5 + i) * 4, -50 - p * 26, -6 + i * 6, -56 - p * 26); c.stroke(); } }
+    c.restore();
+  }
+  function beleidigterKaktus(c, x, y, t, aerger, wackel) {   // Boss: großer Saguaro mit Schmollmund; aerger 0–4 (Brauen, rote Backen, Tränen ab 3), wackel = Erschrecken
+    const sq = 1 + Math.sin(t * 3) * 0.03 + wackel * Math.sin(t * 40) * 0.05;
+    c.save(); c.translate(x, y); c.scale(1 / sq, sq);
+    c.fillStyle = '#3f8a3e'; c.beginPath(); c.roundRect(-30, -150, 60, 150, 30); c.fill();
+    const arm = (sx) => { c.beginPath(); c.roundRect(sx * 30, -88, sx * 30, 18, 9); c.roundRect(sx * 46 - 9, -128 + Math.sin(t * 2 + sx) * 3, 18, 52, 9); c.fill(); };
+    arm(-1); arm(1);
+    c.fillStyle = '#2f6b2e'; c.fillRect(-14, -140, 4, 130); c.fillRect(10, -140, 4, 130);
+    c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 1.4;
+    for (let i = 0; i < 9; i++) { const yy = -135 + i * 15; c.beginPath(); c.moveTo(-30, yy); c.lineTo(-37, yy - 3); c.moveTo(30, yy); c.lineTo(37, yy - 3); c.stroke(); }
+    c.fillStyle = '#ff5d8a'; const welk = Math.min(1, aerger / 3) * 0.9;   // Blüte lässt den Kopf hängen
+    c.save(); c.translate(0, -150); c.rotate(welk); for (let i = 0; i < 5; i++) { c.beginPath(); c.ellipse(Math.cos(i * 1.256) * 7, -6 + Math.sin(i * 1.256) * 7, 6, 4, i * 1.256, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#ffd23a'; c.beginPath(); c.arc(0, -6, 4, 0, Math.PI * 2); c.fill(); c.restore();
+    c.fillStyle = '#fff'; c.beginPath(); c.ellipse(-11, -112, 9, 10, 0, 0, Math.PI * 2); c.ellipse(11, -112, 9, 10, 0, 0, Math.PI * 2); c.fill();
+    const blick = Math.sin(t * 1.3) * 2;
+    c.fillStyle = '#222'; c.beginPath(); c.arc(-11 + blick, -110, 4, 0, Math.PI * 2); c.arc(11 + blick, -110, 4, 0, Math.PI * 2); c.fill();
+    const b = 0.25 + aerger * 0.12; c.lineWidth = 4; c.strokeStyle = '#1f3d1e'; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(-20, -126 - b * 10); c.lineTo(-3, -122 + b * 6); c.moveTo(20, -126 - b * 10); c.lineTo(3, -122 + b * 6); c.stroke();
+    if (aerger > 0) { c.fillStyle = `rgba(255,90,90,${Math.min(0.6, aerger * 0.18)})`; c.beginPath(); c.arc(-20, -96, 7, 0, Math.PI * 2); c.arc(20, -96, 7, 0, Math.PI * 2); c.fill(); }
+    c.strokeStyle = '#1f3d1e'; c.lineWidth = 3; c.beginPath(); c.arc(0, -84, 9, Math.PI + 0.5, -0.5); c.stroke();   // Schmollmund (nach unten)
+    c.fillStyle = '#e56b8a'; c.beginPath(); c.ellipse(0, -88, 5, 3 + Math.max(0, Math.sin(t * 5)) * 1.5, 0, 0, Math.PI * 2); c.fill();   // Schmolllippe
+    if (aerger >= 3) { c.fillStyle = 'rgba(120,190,255,.9)'; [-1, 1].forEach((sx) => { const p = (t * 1.6 + (sx > 0 ? 0.5 : 0)) % 1; c.beginPath(); c.ellipse(sx * 14, -100 + p * 40, 3, 5, 0, 0, Math.PI * 2); c.fill(); }); }
+    c.restore();
+  }
+  function spass(o) {
+    o = o || {};
+    if (!o.wrapper) throw new Error('Runner.spass: wrapper fehlt');
+    stopp(); szeneStopp(); spassStopp();
+    const kl = String(o.klasse) === '6' ? 6 : 9, SPR = SPASS_SPRUECHE[kl];
+    const ws = (o.woerter || []).filter((w) => w && w.en).map((w) => ({ en: String(w.en), de: kurzDe(w.de) || String(w.de || '') }));
+    if (ws.length < 3) throw new Error('Runner.spass: zu wenig Wörter');
+    const st = Object.assign({ wort() {} }, o.stimme || {}), sk = Object.assign({}, SKIN_STANDARD, o.skin || {});
+    const torText = (o.texte && o.texte.tor) || ((de) => `Which bubble is „${de}“?`);
+    const hinweis = (o.texte && o.texte.hinweis) || 'Tap = jump · tap twice = double jump';
+    const still = ruhig(), zufall = (a) => a[Math.floor(Math.random() * a.length)];
+    const misch = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    const reihe = misch(ws.map((_, i) => i)), YS = [290, 200, 105];
+    const blasenTor = (nr, x, boss) => {
+      const i = reihe[nr % reihe.length], w = ws[i];
+      const andere = misch(ws.map((v) => v.en).filter((e, k, a) => a.indexOf(e) === k && e.toLowerCase() !== w.en.toLowerCase())).slice(0, 2);
+      const opts = misch([{ text: w.en, ok: true }].concat(andere.map((text) => ({ text, ok: false }))));
+      return { x, boss: !!boss, warte: boss ? 1.6 : 0, i, de: w.de, en: w.en, opts: opts.map((p, k) => ({ ...p, y: YS[k] })), fertig: false, wahl: -1, nach: 0 };
+    };
+    const V = 250, TOR0 = 1000, ABST = 1650, TORE = 8, BOSS_X = TOR0 + TORE * ABST + 450, HALT = BOSS_X - 330;
+    const zone = (k) => [TOR0 + k * ABST + 260, TOR0 + (k + 1) * ABST - 420];
+    const MOND = zone(1), KOPF = zone(3), RIESE = zone(5);
+    const tore = []; for (let k = 0; k < TORE; k++) tore.push(blasenTor(k, TOR0 + k * ABST));
+    const gegner = [{ x: 560, art: 'huhn', platt: 0, t: 0 }], arten = ['huhn', 'toaster', 'socke'];
+    for (let k = 0; k < TORE; k++) if (k !== 3) [560, 1080].forEach((d, j) => gegner.push({ x: TOR0 + k * ABST + d, art: arten[(k * 2 + j) % 3], platt: 0, t: Math.random() * 6 }));
+    const s = { px: 0, y: BODEN_Y, vy: 0, sprung: 0, boden: true, quetsch: 0, dizzy: 0, zeit: 0, phase: 'lauf', richtig: 0, fragen: 0, platt: 0, liste: [],
+      blase: null, kblase: null, banner: null, konf: [], kopf: 1.6, flip: 0, ende: 0, aerger: 0, wackel: 0, bossNr: 0, bossTor: null, bossT: 0, zonen: {}, jubel: 0 };
+    const sag = (text, d = 2.4) => { s.blase = { text, t: d }; };
+    const kaktusSagt = (text, d = 3) => { s.kblase = { text, t: d }; };
+    const banner = (text, d = 2.4) => { s.banner = { text, t: d, d }; };
+    const kl_ = (n) => { try { if (klang[n]) klang[n](); } catch (e) { /* stumm */ } };
+    const quietsch = () => { ton(900, 0.12, 'square', 0.05, 0, 1700); ton(1500, 0.1, 'square', 0.04, 0.1, 700); };
+    const boing = () => ton(180, 0.35, 'sine', 0.1, 0, 520);
+    const konfetti = (n, x, y) => { const f = ['#ff4d6d', '#ffd23a', '#38c172', '#3fa9f5', '#a66bff', '#ff8a1e']; for (let i = 0; i < (still ? n / 4 : n); i++) s.konf.push({ x: x != null ? x : Math.random() * viewW, y: y != null ? y : -10 - Math.random() * 60, vx: (Math.random() - 0.5) * (x != null ? 420 : 80), vy: x != null ? -150 - Math.random() * 320 : Math.random() * 60, f: zufall(f), r: Math.random() * 6, w: 4 + Math.random() * 4, t: 0 }); };
+    wrapper = o.wrapper; canvas = el('canvas', 'runner-canvas'); canvas.setAttribute('aria-label', o.titel || 'The Silly Run'); ctx = canvas.getContext('2d');
+    wrapper.append(canvas); groesseAnpassen(); audioAn();
+    let raf = 0, letzt = performance.now(), aus = false, gemeldet = false;
+    const springen = () => {
+      audioAn();
+      if (s.phase === 'ende') return;
+      if (s.boden) { s.vy = -660; s.boden = false; s.sprung = 1; kl_('sprung'); }
+      else if (s.sprung < 2) { s.vy = -600; s.sprung = 2; boing(); }
+    };
+    const pd = (e) => { e.preventDefault(); springen(); };
+    const kd = (e) => { if ((e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') && !e.repeat) { e.preventDefault(); springen(); } };
+    const rs = () => groesseAnpassen();
+    canvas.addEventListener('pointerdown', pd); window.addEventListener('keydown', kd); window.addEventListener('resize', rs);
+    const abschalten = () => {
+      if (aus) return; aus = true; if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener('keydown', kd); window.removeEventListener('resize', rs);
+      if (canvas) { canvas.removeEventListener('pointerdown', pd); canvas.remove(); }
+      canvas = ctx = null; spAktiv = null; audioAus();
+    };
+    spAktiv = { aus: abschalten };
+    const mitte = () => s.y - 48;
+    function torLoesen(tor) {
+      let k = 0; tor.opts.forEach((p, j) => { if (Math.abs(p.y - mitte()) < Math.abs(tor.opts[k].y - mitte())) k = j; });
+      tor.fertig = true; tor.wahl = k; tor.nach = 2.4; s.fragen++;
+      const ok = tor.opts[k].ok; s.liste.push({ en: tor.en, de: tor.de, richtig: ok });
+      const sy = tor.opts[k].y, sx = (tor.x - (s.px - 150));
+      if (ok) { s.richtig++; kl_('richtig'); konfetti(70, sx, sy); konfetti(40); sag(zufall(SPR.richtig)); s.jubel = 0.8; }
+      else { kl_('falsch'); sag(zufall(SPR.falsch)); }
+      try { st.wort(tor.i); } catch (e) { /* stumm */ }
+      if (tor.boss) {
+        s.bossNr++; s.wackel = 1; s.aerger = Math.min(4, s.aerger + (ok ? 1 : 0.5));
+        if (s.bossNr >= 3) { s.phase = 'ende'; s.ende = 5; s.aerger = 4; kaktusSagt(SPR.kaktus[3], 4); kl_('fanfare'); setTimeout(() => { if (!aus) kl_('applaus'); }, 900); konfetti(260); s.kopf = 1; }
+        else kaktusSagt(SPR.kaktus[Math.min(2, s.bossNr)], 2.6);
+      }
+    }
+    function bewegen(dt) {
+      s.zeit += dt;
+      if (s.zeit < 0.05 && !s.blase) { sag(zufall(SPR.start), 3); banner(SPR.titel, 2.6); }
+      // Tempo: Zeitlupe vor einem Tor (dramatisch), schwindlig = halbes Tempo, Boss = stehen
+      const naechst = tore.find((t) => !t.fertig);
+      let f = 1; if (naechst && naechst.x - s.px < 380 && naechst.x - s.px > -10) f = 0.5; if (s.dizzy > 0) f *= 0.5;
+      if (s.phase === 'lauf') { s.px = Math.min(HALT, s.px + V * f * dt); if (s.px >= HALT) { s.phase = 'boss'; s.bossT = 0; banner(`BOSS: ${SPR.boss} (very offended)`, 3); kaktusSagt(SPR.kaktus[0], 3.2); kl_('dramatik'); } }
+      // Zonen: Mondsocken, Kopfstand, Riesenkopf (Banner + Spruch einmal)
+      const inZ = (z) => s.px > z[0] && s.px < z[1];
+      [['mond', MOND], ['kopf', KOPF], ['riesig', RIESE]].forEach(([id, z]) => { if (inZ(z) && !s.zonen[id]) { s.zonen[id] = 1; sag(SPR[id], 2.8); banner(id === 'mond' ? 'LOW GRAVITY!' : id === 'kopf' ? 'UPSIDE DOWN!' : 'MEGA HEAD!', 2); kl_(id === 'mond' ? 'funkeln' : 'puff'); } });
+      const flipZiel = inZ(KOPF) && !still ? 1 : 0; s.flip += (flipZiel - s.flip) * Math.min(1, dt * 4);
+      const kopfZiel = s.phase === 'ende' ? 1 : inZ(RIESE) ? 2.5 : 1.6; s.kopf += (kopfZiel - s.kopf) * Math.min(1, dt * 3);
+      const g = inZ(MOND) ? 620 : 1900;
+      if (!s.boden) { s.vy += g * dt; s.y += s.vy * dt; if (s.y >= BODEN_Y) { s.y = BODEN_Y; s.vy = 0; s.boden = true; s.sprung = 0; s.quetsch = 0.3; } }
+      s.quetsch = Math.max(0, s.quetsch - dt); s.dizzy = Math.max(0, s.dizzy - dt); s.wackel = Math.max(0, s.wackel - dt * 1.5); s.jubel = Math.max(0, s.jubel - dt);
+      // Gegner
+      for (const gg of gegner) {
+        gg.t += dt; if (gg.platt) continue;
+        const hop = gg.art === 'socke' ? -Math.abs(Math.sin(gg.t * 3.5)) * 34 : 0, hoehe = gg.art === 'huhn' ? 34 : 32, top = BODEN_Y + hop - hoehe;
+        if (Math.abs(gg.x - s.px) < 26 && s.y > top + 2 && s.y - 64 < BODEN_Y + hop) {
+          if (s.vy > 0 && s.y - top < 20) { gg.platt = 1; s.platt++; s.vy = -480; s.boden = false; s.sprung = 1; kl_('plopp'); if (gg.art === 'huhn') quietsch(); else boing(); sag(zufall(SPR.platt), 1.8); konfetti(16, gg.x - (s.px - 150), top); }
+          else if (s.dizzy <= 0 && !gg.getroffen) { gg.getroffen = 1; s.dizzy = 1.1; kl_('aua'); if (gg.art === 'huhn') quietsch(); sag(zufall(SPR.aua), 2); }
+        }
+      }
+      // Tore im Lauf
+      for (const t of tore) { if (!t.fertig && t.x <= s.px + 4) torLoesen(t); if (t.nach > 0) t.nach -= dt; }
+      // Boss: drei Fragen, die Blasen fliegen vom Kaktus auf die Figur zu
+      if (s.phase === 'boss') {
+        s.bossT += dt;
+        if (!s.bossTor && s.bossT > 2.6) { s.bossTor = blasenTor(TORE + s.bossNr, BOSS_X - 70, true); kl_('trommel'); }
+        const bt = s.bossTor;
+        if (bt) {
+          if (!bt.fertig) { if (bt.warte > 0) bt.warte -= dt; else bt.x -= 150 * dt; if (bt.x <= s.px + 4) torLoesen(bt); }
+          else if ((bt.nach -= dt) <= 0 && s.phase === 'boss') s.bossTor = blasenTor(TORE + s.bossNr, BOSS_X - 70, true);
+        }
+      }
+      if (s.phase === 'ende') { s.ende -= dt; if (Math.random() < dt * 3) konfetti(30); if (s.ende < 3.2 && !s.endeSpruch) { s.endeSpruch = 1; sag(SPR.ende, 3.2); } if (s.ende <= 0) fertig(); }
+      for (const b of [s.blase, s.kblase, s.banner]) if (b) b.t -= dt;
+      if (s.blase && s.blase.t <= 0) s.blase = null; if (s.kblase && s.kblase.t <= 0) s.kblase = null; if (s.banner && s.banner.t <= 0) s.banner = null;
+      for (const p of s.konf) { p.t += dt; p.vy += 260 * dt; p.vx *= 1 - dt * 0.8; p.x += p.vx * dt; p.y += p.vy * dt; p.r += dt * 6; }
+      s.konf = s.konf.filter((p) => p.y < H + 20 && p.t < 6).slice(-700);
+    }
+    function fertig() {
+      if (gemeldet) return; gemeldet = true;
+      const e = { spass: true, geschafft: true, richtig: s.richtig, fragen: s.fragen, platt: s.platt, dauer: Math.round(s.zeit), woerter: s.liste.slice() };
+      abschalten();
+      try { if (o.onEnde) o.onEnde(e); } catch (err) { /* App */ }
+    }
+    // Sprech-/Textblase (aufrecht, auch bei Kopfstand); spitze = Richtung (x, y) des Sprechers
+    function blasePill(c, text, x, y, o2) {
+      o2 = o2 || {}; c.font = `bold ${o2.gr || 14}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      const w = Math.min(viewW - 20, c.measureText(text).width + 22), h = (o2.gr || 14) + 14;
+      const bx = Math.max(10 + w / 2, Math.min(viewW - 10 - w / 2, x));
+      c.fillStyle = o2.bg || '#fff'; c.strokeStyle = o2.rand || '#222'; c.lineWidth = 2;
+      c.beginPath(); c.roundRect(bx - w / 2, y - h / 2, w, h, h / 2); c.fill(); c.stroke();
+      if (o2.spitze) { c.beginPath(); c.moveTo(o2.spitze[0] - 7, y + h / 2 - 1); c.lineTo(o2.spitze[0], o2.spitze[1]); c.lineTo(o2.spitze[0] + 7, y + h / 2 - 1); c.closePath(); c.fill(); c.stroke(); c.fillRect(o2.spitze[0] - 6, y + h / 2 - 3, 12, 3); }
+      c.fillStyle = o2.farbe || '#222'; c.fillText(text, bx, y + 1, w - 14);
+    }
+    function zeichnen() {
+      const c = ctx, t = s.zeit, wa = still ? 0 : 1, cam = s.px - 150, f = s.flip;
+      c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = '#141a2e'; c.fillRect(0, 0, cssW, cssH);
+      c.setTransform(dpr * skala, 0, 0, dpr * skala, dpr * bereich.x, dpr * bereich.y);
+      c.save(); c.beginPath(); c.rect(0, 0, viewW, H); c.clip();
+      const sy = (y) => H / 2 + (y - H / 2) * (1 - 2 * f);   // Bildschirm-y bei Kopfstand
+      c.save(); if (f > 0.001) { c.translate(0, H / 2); c.scale(1, 1 - 2 * f); c.translate(0, -H / 2); }
+      const gr = c.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, kl === 6 ? '#8fd3ff' : '#ffb3d1'); gr.addColorStop(1, kl === 6 ? '#fff0a8' : '#ffe3a3');
+      c.fillStyle = gr; c.fillRect(0, -40, viewW, H + 80);
+      // Sonne mit Sonnenbrille, hüpft
+      const sx = viewW - 80, syy = 64 + Math.abs(Math.sin(t * 2)) * -10 * wa;
+      c.fillStyle = '#ffd23a'; c.beginPath(); c.arc(sx, syy, 30, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = '#ffd23a'; c.lineWidth = 4; for (let i = 0; i < 10; i++) { const a = i * 0.628 + t * wa; c.beginPath(); c.moveTo(sx + Math.cos(a) * 36, syy + Math.sin(a) * 36); c.lineTo(sx + Math.cos(a) * 46, syy + Math.sin(a) * 46); c.stroke(); }
+      c.fillStyle = '#222'; c.beginPath(); c.roundRect(sx - 22, syy - 8, 19, 10, 4); c.roundRect(sx + 3, syy - 8, 19, 10, 4); c.fill(); c.fillRect(sx - 4, syy - 6, 8, 3);
+      c.strokeStyle = '#222'; c.lineWidth = 2.5; c.beginPath(); c.arc(sx, syy + 6, 12, 0.3, Math.PI - 0.3); c.stroke();
+      // Wolken mit Gesicht
+      for (let i = 0; i < 4; i++) {
+        const wx = ((i * 260 - cam * 0.15) % (viewW + 300) + viewW + 300) % (viewW + 300) - 150, wy = 70 + (i % 2) * 40 + Math.sin(t * 2 + i) * 6 * wa;
+        c.fillStyle = '#fff'; c.beginPath(); c.arc(wx, wy, 22, 0, Math.PI * 2); c.arc(wx + 24, wy - 8, 26, 0, Math.PI * 2); c.arc(wx + 50, wy, 20, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#333'; c.beginPath(); c.arc(wx + 16, wy - 6, 2.5, 0, Math.PI * 2); c.arc(wx + 32, wy - 6, 2.5, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = '#333'; c.lineWidth = 2; c.beginPath(); c.arc(wx + 24, wy + 1, 6, 0.2, Math.PI - 0.2); c.stroke();
+      }
+      // Wackelpudding-Wahrzeichen (vorhandene Zeichnungen: bigBen Kl. 6, freiheitsstatue Kl. 9)
+      for (let i = 0; i < 3; i++) {
+        const lx = ((i * 520 + 200 - cam * 0.3) % 1560 + 1560) % 1560 - 200;
+        if (lx < -150 || lx > viewW + 150) continue;
+        c.save(); c.translate(lx, BODEN_Y); c.transform(1, 0, Math.sin(t * 4 + i) * 0.18 * wa, 1 + Math.sin(t * 8 + i) * 0.04 * wa, 0, 0);
+        try { if (kl === 6) bigBen(c, 0, 0, 0.95, '#c9b37a', { t }); else freiheitsstatue(c, 0, 0, 1.1, '#6fb7a0'); } catch (e) { /* ohne */ }
+        c.restore();
+      }
+      // Wackelboden
+      c.fillStyle = kl === 6 ? '#5cc45a' : '#e0a15a'; c.beginPath(); c.moveTo(0, H + 40);
+      for (let x = 0; x <= viewW + 20; x += 16) c.lineTo(x, BODEN_Y + Math.sin((x + cam) * 0.03 + t * 5) * 3 * wa);
+      c.lineTo(viewW + 20, H + 40); c.closePath(); c.fill();
+      c.fillStyle = kl === 6 ? '#47a845' : '#c98a45'; for (let x = -((cam * 1) % 60); x < viewW; x += 60) c.fillRect(x, BODEN_Y + 18, 30, 6);
+      // Gegner
+      for (const gg of gegner) {
+        const x = gg.x - cam; if (x < -60 || x > viewW + 60) continue;
+        const hop = gg.art === 'socke' && !gg.platt ? -Math.abs(Math.sin(gg.t * 3.5)) * 34 : 0;
+        (gg.art === 'huhn' ? gummihuhn : gg.art === 'toaster' ? toaster : socke)(c, x, BODEN_Y + hop, gg.t, gg.platt);
+      }
+      // Boss
+      const kx = BOSS_X - cam; if (kx < viewW + 120) beleidigterKaktus(c, kx, BODEN_Y, t, s.aerger, s.wackel);
+      // Figur (Riesenkopf, Quetschen beim Landen, Wackeln, schwindlig = Sternchen)
+      const fx = s.px - cam, q = s.quetsch / 0.3, jig = Math.sin(t * 9) * 0.04 * wa;
+      c.save(); c.translate(fx, s.y); c.scale(1 + q * 0.25 + jig, 1 - q * 0.22 - jig); if (s.dizzy > 0) c.rotate(Math.sin(t * 18) * 0.12);
+      const pose = s.phase === 'ende' ? 'jubel' : s.boden ? 'lauf' : 'sprung', aus2 = s.dizzy > 0 ? 'erstaunt' : s.jubel > 0 ? 'zunge' : 'grinsend';
+      if (s.kopf <= 1.02) zeichneFigur(c, 0, 0, 70, sk, pose, t, aus2);
+      else grossKopf(c, 0, 0, 70, sk, pose, s.boden ? t : t * 1.6, aus2, s.kopf, Math.max(1, dpr * skala));
+      c.restore();
+      if (s.dizzy > 0) { c.fillStyle = '#ffd23a'; c.font = 'bold 16px system-ui, sans-serif'; c.textAlign = 'center'; for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.09; c.fillText('★', fx + Math.cos(a) * 26, s.y - 70 - 28 * s.kopf + Math.sin(a) * 8); } }
+      c.restore();   // Ende Kopfstand: ab hier aufrecht (Blasen, Texte, Konfetti)
+      // Wort-Blasen (Tore)
+      const alle = tore.concat(s.bossTor ? [s.bossTor] : []);
+      for (const tor of alle) {
+        const x = tor.x - cam; if (x < -80 || x > viewW + 80 || (tor.fertig && tor.nach <= 0)) continue;
+        tor.opts.forEach((p, k) => {
+          const by = sy(p.y + Math.sin(t * 3 + k * 2) * 6 * wa), gew = tor.fertig && k === tor.wahl, zeigOk = tor.fertig && p.ok;
+          if (tor.fertig && !gew && !zeigOk) return;
+          const r = 30 + (gew ? Math.max(0, tor.nach - 1.9) * 16 : 0);
+          c.fillStyle = zeigOk ? 'rgba(56,193,114,.85)' : gew ? 'rgba(255,77,109,.75)' : 'rgba(255,255,255,.82)'; c.strokeStyle = '#3fa9f5'; c.lineWidth = 3;
+          c.beginPath(); c.arc(x, by, r, 0, Math.PI * 2); c.fill(); c.stroke();
+          c.fillStyle = 'rgba(255,255,255,.8)'; c.beginPath(); c.arc(x - r * 0.4, by - r * 0.45, r * 0.18, 0, Math.PI * 2); c.fill();
+          c.fillStyle = tor.fertig ? '#fff' : '#1b2a4a'; c.font = `bold ${p.text.length > 9 ? 11 : 13}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle';
+          c.fillText(p.text, x, by + 1, r * 2.6);
+        });
+      }
+      // Konfetti
+      for (const p of s.konf) { c.save(); c.translate(p.x, p.y); c.rotate(p.r); c.fillStyle = p.f; c.fillRect(-p.w / 2, -p.w / 4, p.w, p.w / 2); c.restore(); }
+      // Sprechblasen
+      const kopfY = sy(s.y - 70 - 30 * s.kopf);
+      if (s.blase) blasePill(c, s.blase.text, fx + 60, Math.max(22, kopfY - 26 * (f > 0.5 ? -1 : 1)), { gr: 13, spitze: f > 0.5 ? null : [fx + 14, kopfY - 4] });
+      if (s.kblase && kx < viewW + 40) blasePill(c, s.kblase.text, kx - 40, sy(BODEN_Y - 200), { gr: 13, bg: '#eaffea', spitze: [kx - 6, sy(BODEN_Y - 160)] });
+      // HUD: Frage oben, Zähler, Banner, Hinweis
+      const aktiv = alle.find((tt) => !tt.fertig && tt.x - s.px < viewW - 120);
+      if (aktiv) blasePill(c, torText(aktiv.de), viewW / 2, 26, { gr: 16, bg: '#1b2a4a', rand: '#ffd23a', farbe: '#fff' });
+      c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = '#1b2a4a';
+      c.fillText(`✔ ${s.richtig}/${s.fragen} · 🐔 ${s.platt}`, 12, aktiv ? 58 : 22);
+      if (s.banner) {
+        const b = s.banner, p = 1 - b.t / b.d, sc = 1 + Math.sin(Math.min(1, p * 4) * Math.PI) * 0.25 * wa;
+        c.save(); c.translate(viewW / 2, H * 0.42); c.scale(sc, sc); c.rotate(Math.sin(t * 7) * 0.05 * wa);
+        c.font = 'bold 34px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.lineWidth = 7; c.strokeStyle = '#1b2a4a'; c.strokeText(b.text, 0, 0, viewW - 30);
+        c.fillStyle = '#ffd23a'; c.fillText(b.text, 0, 0, viewW - 30); c.restore();
+      }
+      if (s.zeit < 6) { c.font = 'bold 13px system-ui, sans-serif'; c.textAlign = 'center'; c.fillStyle = 'rgba(27,42,74,.85)'; c.fillText(hinweis, viewW / 2, H - 18); }
+      c.restore();
+    }
+    function schleife(jetzt) {
+      if (aus) return;
+      const dt = Math.min(0.05, Math.max(0, (jetzt - letzt) / 1000)); letzt = jetzt;
+      bewegen(dt); if (!aus) zeichnen();
+      if (!aus) raf = requestAnimationFrame(schleife);
+    }
+    raf = requestAnimationFrame(schleife);
+    return { stopp: abschalten };
+  }
+
+  // Gemeinsame Hilfe für andere Sprachen (7.11., Französisch-App: Paris Run, Bonus-Welten): Liste [{ fr, de, audio? }] → Runner-Wörter [{ en, de }] (das Feld en trägt das gezeigte Fremdwort)
+  const woerterAus = (liste, feld = 'fr') => (liste || []).filter((w) => w && w[feld]).map((w) => ({ en: String(w[feld]), de: String(w.de || '') }));
+  window.Runner = { woerterAus, heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, heldKarteZeichnen, heldKarteBild, heldKarteGlanz, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  window.Runner.spass = spass; window.Runner.spassStopp = spassStopp;   // Spaß-Level „Silly Run“ (7.11.)
 })();

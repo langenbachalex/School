@@ -72,7 +72,8 @@
      e Einheit/Station · m Spiel des Tages · h Homework-Bonus · bw/bf/bs/bq/bm Boni (Wochenende, Ferien, Serie, Woche, Monat) · k Kauf (Coins, negativ) ·
      w Warnung des Zeitlogs · r Startwert (Lehrer-Bereich, gekürztes Protokoll) · a Altbestand (Stand von vor dem Protokoll) ·
      x Stichproben-Abfrage (Lehrer-Bereich, +1 👍 / −1 👎, keine Punkte – zählt nicht zur Protokoll-Summe) ·
-     p Prüfung „Test yourself“ (2.11.: +30 beim ersten Bestehen einer Unit/Kategorie, sonst 0 – zählt zur Protokoll-Summe, nicht zum Wächter).
+     p Prüfung „Test yourself“ (2.11.: +30 beim ersten Bestehen einer Unit/Kategorie, sonst 0 – zählt zur Protokoll-Summe, nicht zum Wächter) ·
+     c Aufstieg einer Folien-Karte (7.11., immer 0 Punkte).
      Geschrieben wird nur in punkteDazu, im Shop und im Lehrer-Bereich. plausibilitaet() prüft beim Laden und markiert für den Lehrer-Bereich –
      nie sperren, nie Punkte ändern. */
   const PROTOKOLL_MAX = 500;
@@ -420,7 +421,7 @@
     return (monoton() - lage.start) / 1000 < laenge(teil) * proEintrag * eile();
   }
   const QUIZ_MIN = 2.5; // Quizteile: blindes Durchklicken (alle Antworten probieren) bringt keine Punkte
-  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, beae_quiz: QUIZ_MIN, vok_def: QUIZ_MIN, vok_abfrage: QUIZ_MIN };
+  const SPRECH_MIN = { lr: 2, vok_lernen: 1.5, verbform: QUIZ_MIN, auswahl: QUIZ_MIN, beae_quiz: QUIZ_MIN, vok_def: QUIZ_MIN, vok_abfrage: QUIZ_MIN, vok_bild: QUIZ_MIN };
   const istQuiz = (teil) => (SPRECH_MIN[teil.art] || 0) === QUIZ_MIN; // Sekunden pro Satz/Wort mindestens; Dialoge: „Weiter“ erst nach dem ganzen Dialog
   // Ansage: im G-Kurs Englisch + Deutsch, im E-Kurs nur Englisch
   const ansage = (en, de) => el("div", { class: "ansage" }, el("p", { lang: "en" }, en), !E() && de && el("p", { class: "ansage-de", lang: "de" }, de));
@@ -551,7 +552,7 @@
   let lage = null; // { nr, gruppe (Schlüssel), titel, teile, teil, pos, vok, reihe, vq, ende, abspielen, weiter, zurueckZu }
 
   function neueLage(werte) { lage = Object.assign({ teil: 0, pos: 0 }, werte); return lage; }
-  function teilZuruecksetzen() { lage.reihe = lage.vq = null; lage.hilfe = false; }
+  function teilZuruecksetzen() { lage.reihe = lage.vq = null; lage.hilfe = lage.ohneTippen = false; }
 
   // Vokabel-Abschnitt: Wörter, Sätze in 3 Stufen, Find the word, Abfrage in beide Richtungen
   function vokSchritte(vok) {
@@ -559,6 +560,7 @@
       { art: "lr", name: "Sentences", saetze: vok.map((v) => v.satz) }];
     if (vok.some((v) => v.def)) schritte.push({ art: "vok_def", name: "Find the word" });
     schritte.push({ art: "vok_abfrage", name: "EN → DE", richtung: "en_de" }, { art: "vok_abfrage", name: "DE → EN", richtung: "de_en" });
+    if (vok.filter(hatBild).length >= 2) schritte.push({ art: "vok_bild", name: "Picture → Word" }); // hinten, damit ältere Teil-Nummern bleiben
     return schritte;
   }
   function starteGruppe(k, i) {
@@ -797,7 +799,7 @@
     if (lage.startTeil !== lage.teil) { lage.startTeil = lage.teil; lage.start = monoton(); lage.tempoFaktor = tempoFaktor(lage.teil); }
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, auswahl: zeigeAuswahl, bilder: zeigeBilder,
-       vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition,
+       vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition, vok_bild: zeigeBildWort,
        beae_quiz: zeigeBeaeQuiz, hoeren: zeigeHoeren, dialog: zeigeDialog,
        mustertext: zeigeMustertext, schreiben: zeigeSchreiben })[teil.art](teil);
     navErgaenzen();
@@ -836,6 +838,7 @@
     if (teil.art === "beae_quiz") return teil.paare.length;
     if (teil.art === "vok_def") return lage.vok.filter((v) => v.def).length;
     if (teil.art === "vok_abfrage") return lage.vq ? lage.vq.length : lage.vok.length;
+    if (teil.art === "vok_bild") return lage.vok.filter(hatBild).length;
     return 1;
   }
 
@@ -1543,7 +1546,7 @@
     lage.abspielen = abspielen; lage.weiter = wennFrei(weiter, naechstes);
     zeige(kopf(k), ansage("Let's learn the words! Listen and repeat.", "Lernen wir die Wörter! Hör zu und sprich nach."),
       karte(T(`Wort ${lage.pos + 1} von ${lage.vok.length}`, `Word ${lage.pos + 1} of ${lage.vok.length}`),
-        el("div", { class: "vok" }, el("div", {}, el("p", { class: "vok-en", lang: "en" }, v.en), el("p", { class: "vok-de", lang: "de" }, v.de))),
+        el("div", { class: "vok" }, hatBild(v) && bildEl(v), el("div", {}, el("p", { class: "vok-en", lang: "en" }, v.en), el("p", { class: "vok-de", lang: "de" }, v.de))),
         balken,
         el("div", { class: "knopfreihe" }, knopf(T("🔊 Nochmal", "🔊 Again"), abspielen), weiter)));
     abspielen();
@@ -1606,6 +1609,7 @@
     if (!lage.vq) lage.vq = mischen(lage.vok.map((v) => v.id));
     const v = vokabel(lage.vq[lage.pos]);
     const enDe = teil.richtung === "en_de";
+    if (!enDe && mitTippen()) return zeigeAbfrageTippen(k, v);
     const frage = el("p", { class: "vok-en", lang: enDe ? "en" : "de" }, enDe ? v.en : v.de);
     const antwort = el("p", { class: "vok-de", lang: enDe ? "de" : "en", hidden: true }, enDe ? v.de : v.en);
     const satzZeile = el("p", { class: "klein", lang: "en", hidden: true }, D.saetze[v.satz].en);
@@ -1626,8 +1630,99 @@
       karte(T(`Wort ${lage.pos + 1} von ${lage.vq.length}`, `Word ${lage.pos + 1} of ${lage.vq.length}`),
         el("div", { class: "vok" }, el("div", {}, frage, antwort, satzZeile)),
         el("div", { class: "knopfreihe" }, knopf(T("🔊 Nochmal", "🔊 Again"), () => lage.abspielen()), loesung),
-        bewerten));
+        bewerten, !enDe && tippSchalter()));
     fragen();
+  }
+
+  /* ---------- Eintippen + Bild → Wort (7.11.2026, Mr. Alex; docs/ideenspeicher.md) ----------
+     E-Kurs: DE → EN und Bild → Wort werden eingetippt (wie Klasse 6: Groß/Klein und Satzzeichen egal, ab 6 Buchstaben 1 Tippfehler erlaubt).
+     💡 „Easier“ schaltet für den Rest des Teils auf Auswahl bzw. Selbstkontrolle zurück. G-Kurs: Auswahl/Selbstkontrolle bleibt,
+     Eintippen ist mit „⌨ Eintippen“ zuschaltbar (stand.tippen, gilt für das Gerät). Symbole: inhalte/klasse9/symbole.tsv (v.symbol Emoji, v.svg eingebettet). */
+  function hatBild(v) { return !!(v && (v.symbol || v.svg)); }
+  function bildEl(v, gross) {
+    const b = el("span", { class: "vok-bild" + (gross ? " gross" : "") + (v.svg ? " svg" : [...(v.symbol || "")].filter((c) => /\p{Extended_Pictographic}/u.test(c)).length > 1 ? " mehr" : ""), "aria-hidden": "true" });
+    if (v.svg) b.innerHTML = v.svg; else b.textContent = v.symbol; // SVG stammt aus dem Bauskript, nicht von Nutzern
+    return b;
+  }
+  function mitTippen() { return E() ? !(lage && lage.ohneTippen) : !!stand.tippen; }
+  function tippStufe(eingabe, v) { // 0 genau · 1 ein Tippfehler (Wort ab 6 Buchstaben) · 2 falsch
+    const e = normT(eingabe), ziele = [...testVarianten(v), grundform(v.en)].map(normT).filter(Boolean);
+    if (ziele.includes(e)) return 0;
+    return ziele.some((z) => z.replace(/\s/g, "").length >= 6 && abstand(e, z) <= 1) ? 1 : 2;
+  }
+  function tippMeldung(box, stufe, richtig) {
+    box.hidden = false;
+    if (stufe === 2) { comboBruch(); box.className = "rueckmeldung hilfe"; box.textContent = T(`Nicht ganz. So schreibt man es: ${richtig}`, `Not quite. This is how you spell it: ${richtig}`); return; }
+    comboTreffer(); box.className = "rueckmeldung gut";
+    box.textContent = lob() + (stufe === 1 ? T(` So schreibt man es genau: ${richtig}`, ` The exact spelling: ${richtig}`) : "");
+  }
+  // G-Kurs: Eintippen an/aus (kein Hilfe-Abzug); im E-Kurs nicht nötig
+  function tippSchalter() {
+    return !E() && el("div", { class: "knopfreihe" }, knopf(stand.tippen ? "☰ Lieber auswählen" : "⌨ Eintippen",
+      () => { stand.tippen = !stand.tippen; speichern(); zeigeTeil(); }, "leise"));
+  }
+  function einfacher(text, fn) { return E() && tipp(text, () => { lage.ohneTippen = true; fn(); }); }
+
+  function zeigeAbfrageTippen(k, v) {
+    const box = rueckmeldung(), weiter = weiterKnopf(); sperrt(weiter);
+    const antwort = el("p", { class: "vok-de", lang: "en", hidden: true }, v.en);
+    const satzZeile = el("p", { class: "klein", lang: "en", hidden: true }, D.saetze[v.satz].en);
+    let geloest = false;
+    const feld = tippFeld((text, ui) => {
+      if (geloest) return; geloest = true; ui.feld.disabled = ui.knopf.disabled = true;
+      const stufe = tippStufe(text, v);
+      tippMeldung(box, stufe, v.en);
+      if (stufe === 2) lage.vq.push(v.id); // kommt am Ende noch einmal
+      antwort.hidden = satzZeile.hidden = false;
+      entsperrt(weiter); lage.weiter = naechstes; lage.abspielen = () => spiele([tonWort(v)]); lage.abspielen();
+    });
+    lage.abspielen = null;
+    zeige(kopf(k), ansage("What's that in English? Type it.", "Was heißt das auf Englisch? Tipp es ein."),
+      karte(T(`Wort ${lage.pos + 1} von ${lage.vq.length}`, `Word ${lage.pos + 1} of ${lage.vq.length}`),
+        el("div", { class: "vok" }, hatBild(v) && bildEl(v), el("div", {}, el("p", { class: "vok-en", lang: "de" }, v.de), antwort, satzZeile)),
+        feld, box, el("div", { class: "knopfreihe" }, weiter),
+        einfacher("Easier: say it and check yourself", () => zeigeTeil()), tippSchalter()));
+    const f = feld.querySelector("input"); if (f) f.focus();
+  }
+
+  // Bild → Wort: Symbol sehen, englisches Wort wählen (G) oder eintippen (E bzw. G mit ⌨)
+  function zeigeBildWort(teil) {
+    const k = kategorie(lage.nr);
+    if (!lage.reihe) lage.reihe = mischen(lage.vok.filter(hatBild));
+    const v = lage.reihe[lage.pos];
+    let geloest = false;
+    const box = rueckmeldung(), weiter = weiterKnopf(); sperrt(weiter);
+    const wortZeile = el("p", { class: "vok-en ziel-satz", lang: "en", hidden: true }, v.en);
+    const geschafft = () => {
+      geloest = true; wortZeile.hidden = false;
+      entsperrt(weiter); lage.weiter = naechstes; lage.abspielen = () => spiele([tonWort(v)]); lage.abspielen();
+    };
+    const wahl = () => {
+      const gleich = (x) => x.id !== v.id && normT(x.en) !== normT(v.en) && hatBild(x);
+      let andere = mischen(D.vokabeln.filter((x) => gleich(x) && x.unit === v.unit)).slice(0, 3);
+      if (andere.length < 3) andere = andere.concat(mischen(D.vokabeln.filter((x) => gleich(x) && x.unit !== v.unit)).slice(0, 3 - andere.length));
+      return el("div", { class: "wahl", role: "group" }, mischen([v, ...andere]).map((x) => el("button", { class: "knopf wahl-knopf", lang: "en",
+        onclick: (e) => {
+          if (geloest) return;
+          if (x === v) { e.currentTarget.classList.add("richtig"); melde(box, "gut", lob()); comboTreffer(); geschafft(); }
+          else { e.currentTarget.disabled = true; melde(box, "hilfe", T(`Schau dir das Bild noch mal an. ${NOCHMAL()}`, `Look at the picture again. ${NOCHMAL()}`)); }
+        } }, x.en)));
+    };
+    const tippen = mitTippen();
+    let bereich;
+    if (!tippen) bereich = wahl();
+    else bereich = el("div", {}, tippFeld((text, ui) => {
+      if (geloest) return; ui.feld.disabled = ui.knopf.disabled = true;
+      tippMeldung(box, tippStufe(text, v), v.en); geschafft();
+    }), einfacher("Easier: show the word box", () => { if (!geloest) bereich.replaceWith(wahl()); }));
+    lage.abspielen = () => { if (geloest) spiele([tonWort(v)]); };
+    zeige(kopf(k),
+      tippen ? ansage("What's this? Type the English word.", "Was ist das? Tipp das englische Wort ein.")
+        : ansage("What's this? Choose the English word.", "Was ist das? Wähl das englische Wort."),
+      karte(T(`Bild ${lage.pos + 1} von ${lage.reihe.length}`, `Picture ${lage.pos + 1} of ${lage.reihe.length}`),
+        el("div", { class: "vok" }, bildEl(v, true)),
+        bereich, wortZeile, box, el("div", { class: "knopfreihe" }, weiter), tippSchalter()));
+    if (tippen) { const f = bereich.querySelector("input"); if (f) f.focus(); }
   }
 
   /* ---------- Belohnungen (docs/gamification/konzept.md) ----------
@@ -1798,6 +1893,7 @@
         }
       }
     }
+    goldPruefen(true); // Golden Files (Regel B)
     punkteDazu(plus, { art: istGym ? "g" : "t", boni });
   }
   // Wiederholungsbonus für eine komplett wiederholte Station / einen komplett wiederholten Abschnitt (6.11.)
@@ -1915,7 +2011,7 @@
     } catch { svg.setAttribute("viewBox", "0 0 975 610"); }
   }
   // Reihenfolge (nie gleichzeitig): kleine Hinweise sofort · großes Pop-up mit Stimme zuerst · Stempel danach, wenn es still ist
-  const grossEreignis = (e) => e.art === "feier" || e.art === "karte";
+  const grossEreignis = (e) => e.art === "feier" || e.art === "karte" || e.art === "heldkarte";
   let stempelLaeuft = false;
   function zeigeEreignisse() {
     for (let i = 0; i < ereignisse.length;) { if (ereignisse[i].art === "toast") toast(ereignisse.splice(i, 1)[0].text); else i++; }
@@ -1971,13 +2067,102 @@
   }
   const KARTE_PX = 480;
   function heldKarteCanvas(h, o = {}) {
-    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? T("Noch nicht gesammelt", "Not collected yet") : `${h.name}: ${h.kraft}` });
-    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, h, o); } catch (e) { /* Karte bleibt leer */ }
+    const k = o.gesperrt ? null : karteVon(h.id), st = k ? k.s : 0;
+    const oo = Object.assign({ stufe: st, selten: !o.gesperrt && HKARTE.selten.includes(h.id) }, o);
+    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? T("Noch nicht gesammelt", "Not collected yet") : `${h.name}: ${h.kraft}${oo.stufe ? " · " + HKARTE.namen[oo.stufe] : ""}` });
+    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, h, oo); } catch (e) { /* Karte bleibt leer */ }
+    if (oo.stufe && window.Runner.heldKarteGlanz) glanzDazu(cv, oo.stufe);
     return cv;
   }
-  const heldenKarte = (h, gross) => el("figure", { class: "heldenkarte" + (gross ? " gross" : ""), lang: "en" }, heldKarteCanvas(h));
+  /* Folien-Karten (7.11.2026, Mr. Alex, große Version; übernommen aus Klasse 6, 354f921): Stufe je gesammeltem Held im Spielstand
+     stand.spiel.heldkarten[id] = { s, c, p } (eigener Schlüssel – stand.spiel.karten sind hier die Landmark-Karten; steckt mit stand.spiel im Siegel,
+     ältere Stände ohne den Schlüssel laden unverändert, der Eintrag entsteht beim ersten Zugriff).
+     s 0 normal · 1 Bronze (3 Cameo-Auftritte im Road Trip Run, Kraft hat gewirkt; der erste Auftritt, der die Karte freischaltet, zählt mit)
+     · 2 Silber (danach ein Lauf mit ihm: Level geschafft = Boss besiegt, oder 5er-Serie nach seinem Auftritt)
+     · 3 Gold (danach jeder Lauf mit ihm: „goldener Moment“ 1:15, seltene Helden 1:30; sicher: 3 perfekte Läufe (Trophäe Gold) mit ihm).
+     c = Auftritte, p = perfekte Läufe ab Silber. Höchstens ein Aufstieg je Held und Lauf (1 Cameo je Lauf); jeder Aufstieg steht im Protokoll (Art „c“, ±0 Punkte).
+     Seltene Helden (HKARTE.selten: Eddie, Holly): kleinere Gold-Chance, ✦ RARE auf der Karte, zählen doppelt im Sammelwert. Metallrahmen + Lichtreflex
+     (Runner.heldKarteGlanz, Zeit bzw. Neigen; bei „Bewegung reduzieren“ still), Enthüllung beim Aufstieg (Karte dreht sich, Held spricht seine Vorstellung). */
+  const HKARTE = { cameos: 3, serie: 5, chance: 15, chanceSelten: 30, perfekt: 3, selten: ["eddie", "holly"],
+    namen: ["", "Bronze", "Silver", "Gold"], symbol: ["", "🥉", "🥈", "🥇"] };
+  function karteVon(id) {
+    const sp = spielstand(), ks = (sp.heldkarten = sp.heldkarten && typeof sp.heldkarten === "object" && !Array.isArray(sp.heldkarten) ? sp.heldkarten : {});
+    return ks[id] || (ks[id] = { s: 0, c: 0, p: 0 });
+  }
+  const sammelwert = () => { const g = heldenGesehen(); return (SP.helden || []).filter((h) => g.includes(h.id)).reduce((n, h) => n + (HKARTE.selten.includes(h.id) ? 2 : 1), 0); };
+  function karteZiel(h) {   // nächster Schritt als kurzer Hinweis unter der Karte
+    const k = karteVon(h.id);
+    if (k.s === 0) return `🥉 ${Math.min(k.c, HKARTE.cameos)}/${HKARTE.cameos} cameos in the Road Trip Run`;
+    if (k.s === 1) return `🥈 Finish a level or get ${HKARTE.serie} in a row with ${h.name.split(" ")[0]}`;
+    if (k.s === 2) return `🥇 Golden moment – or ${Math.min(k.p, HKARTE.perfekt)}/${HKARTE.perfekt} perfect runs`;
+    return "🥇 Gold!";
+  }
+  // nach einem Road-Trip-Lauf: Auftritte zählen, höchstens ein Aufstieg je Held und Lauf (nur gesammelte Helden)
+  function kartenAuswerten(e, trophaee) {
+    const g = heldenGesehen();
+    (Array.isArray(e.helden) ? e.helden : []).forEach((x) => {
+      const h = (SP.helden || []).find((y) => y.id === (x && x.id));
+      if (!h || !g.includes(h.id)) return;
+      const k = karteVon(h.id), vorher = k.s;
+      k.c += Math.max(0, x.auftritte | 0);
+      if (k.s === 0 && k.c >= HKARTE.cameos) k.s = 1;
+      else if (k.s === 1 && (e.geschafft || (x.serie | 0) >= HKARTE.serie)) k.s = 2;
+      else if (k.s === 2) {
+        if (trophaee === "gold") k.p++;
+        const chance = HKARTE.selten.includes(h.id) ? HKARTE.chanceSelten : HKARTE.chance, moment = Math.random() * chance < 1;
+        if (moment || k.p >= HKARTE.perfekt) { k.s = 3; k.moment = moment ? 1 : 0; }
+      }
+      if (k.s > vorher) { protokolliere("c", 0); ereignisse.push({ art: "heldkarte", held: h, stufe: k.s, moment: k.s === 3 && !!k.moment }); }
+    });
+  }
+  // Lichtreflex: eine Schleife für alle sichtbaren Karten mit Stufe; Grundbild einmal gezeichnet, darüber je Bild der Glanz
+  const glanzKarten = new Set();
+  let glanzLaeuft = false, neigung = 0;
+  const bewegungRuhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
+  try { window.addEventListener("deviceorientation", (ev) => { if (ev && typeof ev.gamma === "number") neigung = Math.max(-1, Math.min(1, ev.gamma / 45)); }); } catch (e) { /* egal */ }
+  function glanzDazu(cv, stufe) {
+    const grund = document.createElement("canvas"); grund.width = cv.width; grund.height = cv.height;
+    grund.getContext("2d").drawImage(cv, 0, 0);
+    const g = { cv, grund, stufe, versatz: Math.random() };
+    if (bewegungRuhig()) { glanzMalen(g, 0.35); return; }
+    glanzKarten.add(g);
+    if (!glanzLaeuft) { glanzLaeuft = true; requestAnimationFrame(glanzBild); }
+  }
+  function glanzMalen(g, phase) {
+    const c = g.cv.getContext("2d");
+    c.clearRect(0, 0, g.cv.width, g.cv.height); c.drawImage(g.grund, 0, 0);
+    try { window.Runner.heldKarteGlanz(c, 0, 0, g.cv.width, g.stufe, phase); } catch (e) { /* ohne Glanz */ }
+  }
+  function glanzBild(ms) {
+    glanzKarten.forEach((g) => {
+      if (!g.cv.isConnected) { if (g.gesehen) glanzKarten.delete(g); return; }   // erst nach dem Einhängen zählen
+      g.gesehen = true;
+      glanzMalen(g, ms / (g.stufe === 3 ? 3200 : 4200) + g.versatz + neigung * 0.35);
+    });
+    if (glanzKarten.size) requestAnimationFrame(glanzBild); else glanzLaeuft = false;
+  }
+  function heldenKarte(h, gross, mitZiel, stufe) {
+    const st = stufe == null ? karteVon(h.id).s : stufe;
+    return el("figure", { class: "heldenkarte" + (gross ? " gross" : "") + (st ? " stufe-" + st : ""), lang: "en" }, heldKarteCanvas(h, stufe == null ? {} : { stufe }),
+      mitZiel && el("figcaption", {}, el("span", {}, karteZiel(h))));
+  }
+  // Aufstieg einer Folien-Karte: Karte dreht sich, Rahmen leuchtet auf (goldener Moment: Blitz), der Held spricht seine Vorstellung (vorhandene Aufnahme)
+  function karteEnthuellen(e) {
+    const h = e.held, st = e.stufe, ton = h.intro_audio || h.audio;
+    feier.classList.remove("tier-feier");
+    feier.replaceChildren(konfetti(), ...(e.moment ? [el("div", { class: "karte-blitz", "aria-hidden": "true" })] : []),
+      el("p", { class: "feier-klein", lang: "en" }, e.moment ? "⚡ Golden moment!" : `${HKARTE.symbol[st]} Level up!`),
+      el("h2", { id: "feier-titel", lang: "en" }, `${h.name}: ${HKARTE.namen[st]}`),
+      el("div", { class: "karte-dreh" }, heldenKarte(h, true, false, st)),
+      el("p", { class: "klein", lang: "en" }, st < 3 ? (st === karteVon(h.id).s ? "Next goal: " + karteZiel(h) : "") : "Top level – your card is gold!"),
+      el("div", { class: "knopfreihe" }, ton && knopf("🔊 Listen", () => spiele([ton])),
+        knopf("Next ➜", () => { feier.close(); stopp(); setTimeout(zeigeEreignisse, 300); }, "haupt")));
+    feier.showModal();
+    if (ton) spiele([ton], { warten: true });
+  }
   function heldZeigen(h) {
-    feier.replaceChildren(heldenKarte(h, true), el("p", { class: "steckbrief", lang: "en" }, h.steckbrief),
+    feier.classList.remove("tier-feier");
+    feier.replaceChildren(heldenKarte(h, true, true), el("p", { class: "steckbrief", lang: "en" }, h.steckbrief),
       el("div", { class: "knopfreihe" }, heldHatFilm(h) && knopf("▶ Film", () => { feier.close(); stopp(); heldFilm(h, () => heldZeigen(h)); }, "leise"),
         knopf(T("Schließen", "Close"), () => { feier.close(); stopp(); }, "haupt")));
     feier.showModal();
@@ -1988,8 +2173,11 @@
     return el("section", { class: "satzkarte helden-sammlung" },
       el("h2", {}, `🦸 Superheroes (${frei} / ${SP.helden.length})`),
       el("p", { class: "klein" }, T("Triffst du einen Superhelden im Road Trip Run, bekommst du seine Karte. Tipp auf eine Karte!", "Meet a superhero in the Road Trip Run and you get their card. Tap a card!")),
+      frei > 0 && el("p", { class: "klein karten-zaehler", lang: "en" }, [3, 2, 1].map((st) => `${HKARTE.symbol[st]} ${g.filter((id) => SP.helden.some((h) => h.id === id) && karteVon(id).s === st).length} ${HKARTE.namen[st]}`).join(" · ")
+        + ` · ✦ Collector score ${sammelwert()}`),
+      frei > 0 && el("p", { class: "klein", lang: "en" }, "Foil cards: meet a hero again in the Road Trip Run and the card levels up – Bronze, Silver, Gold. ✦ RARE heroes count double."),
       el("div", { class: "heldenraster" }, SP.helden.map((h) => g.includes(h.id)
-        ? el("button", { class: "held-knopf", "data-held": h.id, onclick: () => { if (!heldFilm(h, () => heldZeigen(h))) heldZeigen(h); } }, heldenKarte(h))
+        ? el("button", { class: "held-knopf", "data-held": h.id, onclick: () => { if (!heldFilm(h, () => heldZeigen(h))) heldZeigen(h); } }, heldenKarte(h, false, true))
         : el("div", { class: "held-zu", "data-held": h.id }, heldKarteCanvas(h, { gesperrt: true }), el("small", { lang: "en" }, "Meet me in the Road Trip Run")))));
   }
   // Staaten-Szenen (6.11.2026, Staaten 1–10): gleiche Szene wie bei den Landmarks, Fakt als Untertitel, Voice-over audio/staaten/<id>.mp3, Foto (falls vorhanden) am Ende
@@ -2001,6 +2189,7 @@
     return !!sz;
   }
   function zeigeFeier(e) {
+    if (e.art === "heldkarte") return karteEnthuellen(e);   // Folien-Karten: Aufstieg einer Heldenkarte
     if (e.art === "karte" && !e.szeneFertig && hatSzene(e.karte)) { // neue Landmark-Karte: erst die Szene, danach die Karte wie bisher
       stempelLaeuft = true;
       if (ortSzene(e.karte, () => { e.szeneFertig = true; stempelLaeuft = false; zeigeFeier(e); })) return;
@@ -2207,7 +2396,7 @@
   /* ---------- Mini-Reward beim Vokabellernen (Word Gym, Vocabulary-Abfrage): ab 3 richtigen in Folge ----------
      Nur Show, keine Punkte. Im Wechsel: Flamme wächst · Münzen fliegen ins 🪙 · ein Auto flitzt vorbei. Bei prefers-reduced-motion nur Text. */
   const COMBO_AB = 3, COMBO_FAHRZEUG = "🚗";
-  const comboErlaubt = () => !!lage && (!!lage.gym || (lage.teile && lage.teile[lage.teil] && lage.teile[lage.teil].art === "vok_abfrage"));
+  const comboErlaubt = () => !!lage && (!!lage.gym || (lage.teile && lage.teile[lage.teil] && ["vok_abfrage", "vok_bild"].includes(lage.teile[lage.teil].art)));
   const comboFlamme = () => (comboErlaubt() && richtigSerie >= COMBO_AB
     ? el("span", { class: "combo-flamme", style: `--n:${Math.min(richtigSerie - COMBO_AB, 8)}`, role: "status", "aria-label": T(`${richtigSerie} richtig in Folge`, `${richtigSerie} in a row`) },
         `🔥 ${richtigSerie}`, el("span", { class: "combo-ziel", "aria-hidden": "true" }, "🪙"))
@@ -2252,9 +2441,9 @@
         m[1], el("span", { class: "akten-de", lang: "de" }, m[2]));
     });
   }
-  function aktenZeigen(a) {
+  function aktenZeigen(a, gold) {
     const gesehen = new Set(), lobBox = el("p", { class: "gym-lob", "aria-live": "polite" });
-    feier.classList.add("akte");
+    feier.classList.add("akte"); feier.classList.toggle("gold-akte", !!gold);
     feier.replaceChildren(
       el("h2", { lang: "en" }, a.titel),
       el("p", { class: "klein" }, T("Tipp auf ein farbiges Wort: Dann siehst du die Bedeutung.", "Tap a coloured word to see what it means.")),
@@ -2265,8 +2454,8 @@
         return el("li", {}, el("span", { lang: "en" }, f.frage), " ", knopf(T("Lösung", "Solution"), () => { lsg.hidden = false; gesehen.add(f); if (gesehen.size === a.fragen.length && !lobBox.textContent) lobBox.textContent = lob(true); }, "leise"), lsg);
       })),
       lobBox,
-      el("div", { class: "knopfreihe" }, knopf(T("Schließen", "Close"), () => { feier.close(); feier.classList.remove("akte"); }, "haupt")));
-    feier.addEventListener("close", () => feier.classList.remove("akte"), { once: true });
+      el("div", { class: "knopfreihe" }, knopf(T("Schließen", "Close"), () => { feier.close(); feier.classList.remove("akte", "gold-akte"); }, "haupt")));
+    feier.addEventListener("close", () => feier.classList.remove("akte", "gold-akte"), { once: true });
     feier.showModal();
   }
   function aktenBereich() {
@@ -2278,7 +2467,35 @@
             el("small", {}, T("Du brauchst: ", "You need: ") + (SP.landmarks.find((l) => l.id === a.figur) || {}).name + " + " + (SP.staaten.find((s) => s.id === a.ort) || {}).name));
     });
     return el("section", { class: "satzkarte" }, el("h2", {}, `🔒 Road Trip Files (${SP.akten.filter((a) => spielstand().karten.includes(a.figur) && SP.staaten.findIndex((s) => s.id === a.ort) < staatenFrei()).length} / ${SP.akten.length})`),
-      el("p", { class: "klein" }, T("Eine Akte öffnet sich, wenn du die Landmark-Karte hast und den Staat freigeschaltet hast.", "A file opens when you have the landmark card and have unlocked the state.")), el("div", { class: "akten" }, kacheln));
+      el("p", { class: "klein" }, T("Eine Akte öffnet sich, wenn du die Landmark-Karte hast und den Staat freigeschaltet hast.", "A file opens when you have the landmark card and have unlocked the state.")), el("div", { class: "akten" }, kacheln), goldTeil());
+  }
+  /* Golden Files (Regel B, 7.11.2026, docs/secret-level/konzept-entwurf.md): SP.gold aus inhalte/klasse9/goldakten.tsv.
+     art „serie“ = so viele Schultage am Stück (serie()), art „wochen“ = so viele perfekte Wochen insgesamt (sp.wochen).
+     Einmal erreicht, bleibt die Akte offen (sp.gold = [ids], im Siegel) – auch wenn die Serie später reißt. */
+  const goldText = (a) => a.art === "serie" ? T(`${a.ziel} Schultage am Stück`, `${a.ziel} school days in a row`) : T(`${a.ziel} perfekte Wochen`, `${a.ziel} perfect weeks`);
+  function goldPruefen(feiern) {
+    const sp = spielstand(), n = serie();
+    if (!Array.isArray(sp.gold)) sp.gold = [];
+    const neu = (SP.gold || []).filter((a) => !sp.gold.includes(a.id) && (a.art === "serie" ? n : sp.wochen.length) >= a.ziel);
+    for (const a of neu) {
+      sp.gold.push(a.id);
+      if (feiern) ereignisse.push({ art: "feier", symbol: "🌟", titel: "Golden File unlocked!",
+        text: T(`${goldText(a)} – eine goldene Akte ist offen: „${a.titel.replace(/^.*? – /, "")}“. Du findest sie in deiner Sammlung.`,
+          `${goldText(a)} – a golden file is open: “${a.titel.replace(/^.*? – /, "")}”. You can find it in your collection.`) });
+    }
+    return neu.length > 0;
+  }
+  function goldTeil() {
+    if (!(SP.gold || []).length) return null;
+    if (goldPruefen(false)) speichern();
+    const sp = spielstand();
+    return el("div", { class: "gold-akten" }, el("h3", {}, `🌟 Golden Files (${SP.gold.filter((a) => sp.gold.includes(a.id)).length} / ${SP.gold.length})`),
+      el("p", { class: "klein" }, T("Besondere Geschichten für alle, die dranbleiben: nach einer Serie von Schultagen oder nach perfekten Wochen.",
+        "Special stories for everyone who keeps going: after a streak of school days or after perfect weeks.")),
+      el("div", { class: "akten" }, SP.gold.map((a) => sp.gold.includes(a.id)
+        ? el("button", { class: "akte-kachel offen gold", onclick: () => aktenZeigen(a, true) }, el("span", { "aria-hidden": "true" }, "🌟"), el("strong", { lang: "en" }, a.titel))
+        : el("div", { class: "akte-kachel zu gold" }, el("span", { "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, a.titel.replace(/ – .*/, "")),
+            el("small", {}, T("Du brauchst: ", "You need: ") + goldText(a))))));
   }
 
   function karteZeigen(l) { // Karte mit Szene: erst die Szene, danach die Karte (ohne automatisches Vorlesen)
@@ -2940,8 +3157,10 @@
   // Welt n ist offen, wenn sie gebaut ist (nicht bald) und die Vorwelt mindestens Silber hat
   // Kapitel 6 (geheim, 2.11., docs/runner/story-usa-06.md): eigene Story-Welt im Realm, nicht in der Welt-Reihe; frei mit allen fünf Realm-Gegenständen, ohne Ticket
   const RUNNER_REALM6 = { id: "realm6", name: "The Keeper's Journal", staat: "The Realm", ziel: "sixth gate", trophaee: "✦ Keeper", symbol: "✦", boss: "Elena Cruz", geheim: true };
-  const runnerWeltOffen = (w) => { if (w && w.geheim) return realmAlle(); const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
-  const runnerWeltVon = (id) => (id === RUNNER_REALM6.id ? RUNNER_REALM6 : RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0]);
+  // 🪩 Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): nicht in der Welt-Reihe; einmalige Überraschung nach dem ersten geschafften Level (Feier), danach Knopf unter den Welten, Ticket wie immer
+  const RUNNER_DISCO = { id: "disco", name: "Disco Run", staat: "Bonus", ziel: "disco ball", trophaee: "Disco Star", symbol: "🪩", boss: "DJ Funky Flamingo", bonus: true, ab: 1 };
+  const runnerWeltOffen = (w) => { if (w && w.bonus) return (runnerStand().geschafft || 0) >= w.ab; if (w && w.geheim) return realmAlle(); const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
+  const runnerWeltVon = (id) => (id === RUNNER_DISCO.id ? RUNNER_DISCO : id === RUNNER_REALM6.id ? RUNNER_REALM6 : RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0]);
   const R = () => window.Runner || null;
   const spieleKategorie = () => D.kategorien.find((k) => k.spiele);
   function runnerStand() {
@@ -3000,7 +3219,7 @@
     const sp = spielstand(), r = runnerStand(), unit = aktuelleUnit(), gruppen = D.units[unit];
     if (!runnerWahl || runnerWahl.unit !== unit || !gruppen[runnerWahl.i]) runnerWahl = { unit, i: 0, welt: runnerWahl && runnerWahl.welt };
     let W = runnerWeltVon(runnerWahl.welt);
-    if (!runnerWeltOffen(W)) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
+    if (!runnerWeltOffen(W) || W.bonus) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
     const tickets = r.tickets || 0, fehlt = runnerFehlt(), ws = runnerWoerter(unit, runnerWahl.i), titel = runnerTitelName(r.titel);
     const zumShop = () => shop({ zurueck: () => runnerStart(k), artikel: "runner" });
     // Ohne Ticket führt der Hauptknopf in den Shop (Ticket hervorgehoben), damit klar ist, wo man hin muss
@@ -3023,6 +3242,8 @@
     zeige(spielKopf(k, "Road Trip Run", () => zeigeSpiele(k)),
       el("section", { class: "satzkarte runner-start" },
         weltReiter, weltHinweis,
+        spassKnopf(k),   // Spaß-Level (7.11.)
+        runnerWeltOffen(RUNNER_DISCO) && el("p", { class: "runner-kapitel6 runner-disco" }, knopf("🪩 Bonus · Disco Run", () => runnerSpiel(k, unit, runnerWahl.i, RUNNER_DISCO.id), "leise"), " ", el("small", {}, T(`DJ Funky Flamingo wartet – Ticket wie immer`, `DJ Funky Flamingo is waiting – ticket as usual`))),
         realmAlle() && el("p", { class: "runner-kapitel6" }, knopf("✦ Chapter 6 · The Keeper's Journal", () => runnerSpiel(k, unit, runnerWahl.i, RUNNER_REALM6.id), "leise"), " ", el("small", {}, T("geheimes Kapitel, ohne Ticket", "secret chapter, no ticket"))),
         el("div", { class: "runner-welt" },
           el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, W.symbol),
@@ -3084,6 +3305,14 @@
             : T("Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Punkte und keine Coins zurück, dafür Trophäe und Runner-Titel.",
             "One ticket is one run – even if you fail. No points and no coins back, but a trophy and a runner title.")),
         el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumShop))));
+    if (discoFeier()) setTimeout(zeigeEreignisse, 50);   // wer schon vorher ein Level geschafft hat
+  }
+  function discoFeier() {   // einmal: „Disco Run unlocked!“ (stand.spiel.runner.disco = 1)
+    const r = runnerStand(); if (r.disco || !runnerWeltOffen(RUNNER_DISCO)) return false;
+    r.disco = 1; speichern();
+    ereignisse.push({ art: "feier", symbol: "🪩", titel: "Disco Run unlocked!", text: T("Überraschung! Ein Bonus-Level ist frei: 🪩 Disco Run – Tanzfläche, Discokugel und DJ Funky Flamingo. Du findest es im Road Trip Run unter den Welten.", "Surprise! A bonus level is unlocked: 🪩 Disco Run – dance floor, disco ball and DJ Funky Flamingo. Find it in the Road Trip Run below the worlds."),
+      ton: { audio: { text: "Surprise! Disco Run unlocked! Let's dance!", stimme: "m" } } });
+    return true;
   }
   // Story-Modus New York „The Lost Map – Kapitel 1: Under the City“ (freigegeben 30.10., Text wörtlich aus docs/runner/story-usa-01.md; Erzähler Mr. Alex – bis zur Vertonung Geräte-Stimme).
   // Struktur (Abschnitte, Gabelungen, Stationen, Enden) liefert die Engine je Welt (WELTEN.ny.storyStruktur, passt zur Story-Strecke); story.struktur könnte sie hier überschreiben.
@@ -3356,7 +3585,7 @@
   const runnerEndeText = (W) => { const rw = ((R() && R().WELTEN) || []).find((x) => x.id === W.id); return (rw && rw.ende) || `You made it to the ${W.ziel}!`; };
   // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (wieder 100) oder Startseite
   function runnerEnde(k, unit, i, e, ws, welt) {
-    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = W.geheim ? null : RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
+    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = W.geheim || W.bonus ? null : RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
     let stufe = null, neuOffen = false, storyPunkte = 0, storyNeuFrei = false, realmNeu = false;
     const rm = e.story && e.story.realm;
     if (rm && rm.gefunden) { // verstecktes Tor ✦: Fund, R-Stücke und Frost Shard bleiben (auch bei Game over – keine Punkte)
@@ -3390,6 +3619,8 @@
           text: T(`Neuer Runner-Titel: ${name}!`, `New runner title: ${name}!`), ton: waehleRuf("stark") });
       }
     }
+    kartenAuswerten(e, stufe);   // Folien-Karten: Cameos zählen, Aufstiege als Ereignis (auch bei Game over)
+    discoFeier();   // 🪩 nach dem ersten geschafften Level: Überraschung
     if (storyPunkte > 0) punkteDazu(storyPunkte, { art: "s" }); // Zeitlog (mrAlexWacht) läuft in punkteDazu, damit Farmen im Road Trip Run auffällt
     speichern();
     const ruf = waehleRuf(e.geschafft ? "stark" : "fehler");
@@ -3438,6 +3669,55 @@
     const alexTon = e.alex ? (e.alex.audio || { text: e.alex.text, stimme: "m" }) : null;   // Mr. Alex' Schlusswort (7.11.) nach der Ansage
     if (!ereignisse.some(grossEreignis) && (endeTon || alexTon || (ruf && ruf.audio))) spiele([endeTon, alexTon, ruf && ruf.audio]);
   }
+  // Spaß-Level „The Silly Run“ (7.11., Idee Mr. Alex): albernes Bonus-Level mit den Wörtern des gewählten Abschnitts (Engine Runner.spass).
+  // Einmal am Tag gratis mit Punkten (1 ⭐ je richtige Blase, höchstens 10 – wie ein Spiel), danach nur mit Ticket und ohne Punkte (keine Farm-Lücke).
+  const spassGratis = () => { const sl = runnerStand().spass; return !sl || sl.am !== iso(heute()); };
+  function spassKnopf(k) {
+    if (!R() || !R().spass) return null;
+    const gratis = spassGratis(), tickets = runnerStand().tickets || 0;
+    return el("p", { class: "runner-spass" }, knopf(`🤪 The Silly Run · ${gratis ? T("heute gratis", "free today") : "🎟️ 1"}`, () => spassSpiel(k), "leise"), " ",
+      el("small", {}, gratis ? T("Bonus-Level, total albern – einmal am Tag bis 10 ⭐", "bonus level, totally silly – once a day up to 10 ⭐")
+        : tickets > 0 ? T("noch mal mit Ticket, ohne Punkte", "again with a ticket, no points") : T("morgen wieder gratis", "free again tomorrow")));
+  }
+  function spassSpiel(k) {
+    const r = runnerStand(), unit = aktuelleUnit(), i = runnerWahl && runnerWahl.unit === unit ? runnerWahl.i : 0, ws = runnerWoerter(unit, i);
+    if (!R() || !R().spass || ws.length < 4) return runnerStart(k);
+    const gratis = spassGratis();
+    if (!gratis && !(r.tickets > 0)) { toast(T("Heute schon gespielt – morgen wieder gratis oder mit Ticket.", "Already played today – free again tomorrow, or use a ticket.")); return; }
+    if (gratis) r.spass = { am: iso(heute()), n: ((r.spass && r.spass.n) || 0) + 1 };
+    else { r.tickets--; r.spass.n = (r.spass.n || 0) + 1; toast(T("🎟️ Ticket eingelöst", "🎟️ Ticket used")); }
+    speichern();
+    ansicht = null; lage = null;
+    const buehne = el("div", { class: "runner-buehne" });
+    const abbruch = knopf("✕", () => frage(T("Abbrechen?", "Quit?"), T("Abbrechen", "Quit"), T("Weiterspielen", "Keep playing")).then((ok) => { if (ok) runnerStart(k); }), "runner-x");
+    abbruch.setAttribute("aria-label", T("Spiel abbrechen", "Quit game"));
+    zeige(buehne, abbruch);
+    document.body.classList.add("runner-aktiv");
+    runnerLauf = R().spass({ wrapper: buehne, skin: skinWirksam(), klasse: 9, titel: "The Silly Run",
+      woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
+      texte: { tor: (de) => T(`Welche Blase heißt „${de}“?`, `Which bubble means “${de}”?`), hinweis: T("Tippen = springen · 2× tippen = Doppelsprung", "Tap = jump · tap twice = double jump") },
+      stimme: { wort: (j) => runnerWort([tonWort(ws[j % ws.length])], {}) },
+      onEnde: (e) => spassEnde(k, e, ws, gratis) });
+  }
+  function spassEnde(k, e, ws, gratis) {
+    const punkte = gratis ? Math.min(10, e.richtig || 0) : 0;
+    if (punkte > 0) punkteDazu(punkte, { art: "s" }); else speichern();   // Protokoll + Siegel wie beim Runner (punkteDazu speichert, mrAlexWacht)
+    const v = (en) => ws.find((x) => spielWort(x) === en);
+    const zeichne = () => zeige(spielKopf(k, "The Silly Run", () => runnerStart(k)),
+      el("section", { class: "geschafft runner-ende" },
+        el("div", { class: "runner-pokal", "aria-hidden": "true" }, "🤪"),
+        el("h2", { lang: "en" }, "Silly level complete!"),
+        el("p", {}, `✔ ${e.richtig} / ${e.fragen} · 🐔 ${e.platt} · ⏱ ${e.dauer} s`),
+        el("p", { class: "runner-story-punkte" }, gratis ? T(`⭐ Punkte: ${punkte} (1 je richtige Blase, höchstens 10, einmal am Tag)`, `⭐ Points: ${punkte} (1 per right bubble, max. 10, once a day)`)
+          : T("Mit Ticket gespielt: keine Punkte – nur Spaß.", "Played with a ticket: no points – just fun."))),
+      el("section", { class: "satzkarte" },
+        el("h2", {}, T("Die Wörter", "The words")),
+        el("ul", { class: "wortliste runner-woerterliste" }, (e.woerter || []).map((w) => el("li", {},
+          v(w.en) && knopf("🔊", () => spiele([tonWort(v(w.en))]), "leise"), w.richtig ? " ✅ " : " ❌ ", el("strong", { lang: "en" }, w.en), " – ", el("span", { lang: "de" }, w.de))))),
+      el("div", { class: "knopfreihe" }, knopf(T("Zum Road Trip Run", "To Road Trip Run"), () => runnerStart(k), "haupt"), knopf(T("Zur Startseite", "Home"), startseite, "leise")));
+    ansicht = zeichne; lage = null; zeichne();
+    setTimeout(zeigeEreignisse, 50);
+  }
   // Hall of Fame: Abschnitt in der Sammlung
   function runnerSammlung() {
     const r = runnerStand(), naechste = RUNNER.ab[r.titel || 0];
@@ -3446,7 +3726,7 @@
       el("p", {}, `${T("Runner-Titel", "Runner title")}: `, el("strong", { lang: "en" }, runnerTitelName(r.titel) || T("noch keiner", "none yet")),
         ` · ${r.geschafft} ${T("Level geschafft", "levels done")} · ${r.gespielt} ${T("Spiele", "games")}`),
       naechste && el("p", { class: "klein" }, T(`Noch ${naechste - r.geschafft} geschaffte Level bis „${RUNNER.titel[r.titel || 0]}“`, `${naechste - r.geschafft} more levels to “${RUNNER.titel[r.titel || 0]}”`)),
-      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.map((w) => {
+      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.concat(runnerWeltOffen(RUNNER_DISCO) ? [RUNNER_DISCO] : []).map((w) => {
         const st = r.level[w.id];
         return el("li", { class: st ? "ok" : "", "data-welt": w.id },
           el("span", { "aria-hidden": "true" }, st === "gold" ? "🥇" : st === "silber" ? "🥈" : w.bald ? "🔒" : "🏆"),
@@ -4021,7 +4301,7 @@
     const gesperrt = !!sp.gesperrt;
     // Stichprobe (31.10., Schutz-Paket 3): Protokoll-Summe, Warnzähler, Plausibilitätsmarker und die letzten 10 Ereignisse – nur lesen
     const pr = plausibilitaet(), w = warnZaehlerLies(), pl = Array.isArray(stand.protokoll) ? stand.protokoll : [];
-    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage", p: "Test" };
+    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage", p: "Test", c: "Folien-Karte" };
     const zeit = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; };
     const letzte = pl.slice(-10).reverse().map((e) => el("li", {}, e[1] === "x" ? `${zeit(e[0])} · Abfrage · ${e[2] > 0 ? "👍" : "👎"}`
       : `${zeit(e[0])} · ${ARTEN[e[1]] || e[1]} · ${e[2] > 0 && e[1] !== "r" && e[1] !== "a" ? "+" : ""}${e[2]}${e[1] === "k" ? " 🪙" : ""}`));
@@ -4211,6 +4491,7 @@
   }
   setInterval(updateHinweis, 3000);
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
+  if (LOKAL) window.__karteTest = { auswerten: kartenAuswerten, karteVon, zeige: zeigeEreignisse, sp: spielstand, gesehen: heldenGesehen, bereich: heldenBereich };   // nur Test-Build: Folien-Karten prüfen
   if (LOKAL) window.__staatEreignis = (id) => { ereignisse.push({ art: "staat", staat: SP.staaten.find((s) => s.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalten eines Staats (Szene, dann Stempel)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "karte", karte: SP.landmarks.find((l) => l.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Anzeige einer neuen Landmark-Karte (Orts-Szene/Karte) auslösen
   if (LOKAL) window.__heldenFrei = (ids) => { (ids || SP.helden.map((h) => h.id)).forEach(heldGesehen); if (ansicht === sammlung) sammlung(); }; // nur Test-Build: Heldenkarten freischalten (alle oder Liste)

@@ -3792,7 +3792,8 @@ window.DATEN = {
    "satz": "u2_001_s",
    "def": "a big wild cat from Africa with a lot of hair around its head",
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_001.mp3"
+   "audio": "audio/vokabeln/u2_001.mp3",
+   "symbol": "🦁"
   },
   {
    "id": "u2_002",
@@ -3822,7 +3823,8 @@ window.DATEN = {
    "satz": "u2_004_s",
    "def": "a person who takes pictures as a job",
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_004.mp3"
+   "audio": "audio/vokabeln/u2_004.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><circle cx=\"24\" cy=\"14\" r=\"9\" fill=\"#e9b98f\"/><path d=\"M15 12a9 9 0 0 1 18 0z\" fill=\"#5b3a29\"/><path d=\"M8 62c0-18 6-28 16-28s16 10 16 28z\" fill=\"#3d8fd6\"/><rect x=\"28\" y=\"26\" width=\"28\" height=\"18\" rx=\"3\" fill=\"#2f3542\"/><rect x=\"34\" y=\"22\" width=\"9\" height=\"5\" rx=\"1\" fill=\"#2f3542\"/><circle cx=\"42\" cy=\"35\" r=\"6.5\" fill=\"#9aa7bf\"/><circle cx=\"42\" cy=\"35\" r=\"3.5\" fill=\"#18213a\"/><rect x=\"49\" y=\"28\" width=\"5\" height=\"3\" fill=\"#ffd66b\"/><path d=\"M54 18l4-4M58 24h5M50 16l1-5\" stroke=\"#ffd66b\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg>"
   },
   {
    "id": "u2_005",
@@ -3882,7 +3884,8 @@ window.DATEN = {
    "satz": "u2_010_s",
    "def": "very, very old",
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_010.mp3"
+   "audio": "audio/vokabeln/u2_010.mp3",
+   "symbol": "🏺"
   },
   {
    "id": "u2_011",
@@ -3902,7 +3905,8 @@ window.DATEN = {
    "satz": "u2_012_s",
    "def": "a room or building where you can borrow books",
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_012.mp3"
+   "audio": "audio/vokabeln/u2_012.mp3",
+   "symbol": "🏛️📚"
   },
   {
    "id": "u2_013",
@@ -3952,7 +3956,8 @@ window.DATEN = {
    "satz": "u2_017_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_017.mp3"
+   "audio": "audio/vokabeln/u2_017.mp3",
+   "symbol": "♿"
   },
   {
    "id": "u2_018",
@@ -3972,7 +3977,8 @@ window.DATEN = {
    "satz": "u2_019_s",
    "def": "a machine that takes you up and down in a building",
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_019.mp3"
+   "audio": "audio/vokabeln/u2_019.mp3",
+   "symbol": "🛗"
   },
   {
    "id": "u2_020",
@@ -4002,7 +4008,8 @@ window.DATEN = {
    "satz": "u2_022_s",
    "def": "a small cupboard at school where you can lock away your things",
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_022.mp3"
+   "audio": "audio/vokabeln/u2_022.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><g fill=\"#3d8fd6\"><rect x=\"4\" y=\"6\" width=\"18\" height=\"54\" rx=\"1\"/><rect x=\"23\" y=\"6\" width=\"18\" height=\"54\" rx=\"1\"/><rect x=\"42\" y=\"6\" width=\"18\" height=\"54\" rx=\"1\"/></g><g fill=\"#2a6fae\"><rect x=\"8\" y=\"10\" width=\"10\" height=\"2\"/><rect x=\"8\" y=\"14\" width=\"10\" height=\"2\"/><rect x=\"8\" y=\"18\" width=\"10\" height=\"2\"/><rect x=\"27\" y=\"10\" width=\"10\" height=\"2\"/><rect x=\"27\" y=\"14\" width=\"10\" height=\"2\"/><rect x=\"27\" y=\"18\" width=\"10\" height=\"2\"/><rect x=\"46\" y=\"10\" width=\"10\" height=\"2\"/><rect x=\"46\" y=\"14\" width=\"10\" height=\"2\"/><rect x=\"46\" y=\"18\" width=\"10\" height=\"2\"/></g><g fill=\"#dfe6f0\"><rect x=\"17\" y=\"32\" width=\"2\" height=\"8\" rx=\"1\"/><rect x=\"36\" y=\"32\" width=\"2\" height=\"8\" rx=\"1\"/><rect x=\"55\" y=\"32\" width=\"2\" height=\"8\" rx=\"1\"/></g><circle cx=\"37\" cy=\"44\" r=\"2.5\" fill=\"#e8b33c\"/></svg>"
   },
   {
    "id": "u2_023",
@@ -4052,7 +4059,8 @@ window.DATEN = {
    "satz": "u2_027_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_027.mp3"
+   "audio": "audio/vokabeln/u2_027.mp3",
+   "symbol": "💰💸"
   },
   {
    "id": "u2_028",
@@ -4082,7 +4090,8 @@ window.DATEN = {
    "satz": "u2_030_s",
    "def": "to pay money to use something for a short time",
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_030.mp3"
+   "audio": "audio/vokabeln/u2_030.mp3",
+   "symbol": "🏠🔑💶"
   },
   {
    "id": "u2_031",
@@ -4102,7 +4111,8 @@ window.DATEN = {
    "satz": "u2_032_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_032.mp3"
+   "audio": "audio/vokabeln/u2_032.mp3",
+   "symbol": "💑"
   },
   {
    "id": "u2_033",
@@ -4132,7 +4142,8 @@ window.DATEN = {
    "satz": "u2_035_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_035.mp3"
+   "audio": "audio/vokabeln/u2_035.mp3",
+   "symbol": "✍️"
   },
   {
    "id": "u2_036",
@@ -4162,7 +4173,8 @@ window.DATEN = {
    "satz": "u2_038_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_038.mp3"
+   "audio": "audio/vokabeln/u2_038.mp3",
+   "symbol": "🍺🍷"
   },
   {
    "id": "u2_039",
@@ -4192,7 +4204,8 @@ window.DATEN = {
    "satz": "u2_041_s",
    "def": "a musical instrument that you hold to the side and blow into",
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_041.mp3"
+   "audio": "audio/vokabeln/u2_041.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><g transform=\"rotate(-30 32 32)\"><rect x=\"2\" y=\"28\" width=\"60\" height=\"8\" rx=\"3\" fill=\"#c9d1dc\"/><rect x=\"2\" y=\"28\" width=\"60\" height=\"3\" rx=\"1.5\" fill=\"#eef2f7\"/><rect x=\"14\" y=\"27\" width=\"2\" height=\"10\" fill=\"#9aa7bf\"/><rect x=\"48\" y=\"27\" width=\"2\" height=\"10\" fill=\"#9aa7bf\"/><g fill=\"#5b6478\"><circle cx=\"9\" cy=\"32\" r=\"1.8\"/><circle cx=\"24\" cy=\"32\" r=\"2\"/><circle cx=\"30\" cy=\"32\" r=\"2\"/><circle cx=\"36\" cy=\"32\" r=\"2\"/><circle cx=\"42\" cy=\"32\" r=\"2\"/><circle cx=\"54\" cy=\"32\" r=\"2\"/></g></g><g fill=\"#3d8fd6\"><path d=\"M48 8v10a3 3 0 1 1-2-2.8V8z\"/><path d=\"M56 4v10a3 3 0 1 1-2-2.8V4z\"/></g></svg>"
   },
   {
    "id": "u2_042",
@@ -4232,7 +4245,8 @@ window.DATEN = {
    "satz": "u2_045_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_045.mp3"
+   "audio": "audio/vokabeln/u2_045.mp3",
+   "symbol": "😴💭"
   },
   {
    "id": "u2_046",
@@ -4242,7 +4256,8 @@ window.DATEN = {
    "satz": "u2_046_s",
    "def": "a person who dances and shouts to support a sports team",
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_046.mp3"
+   "audio": "audio/vokabeln/u2_046.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><circle cx=\"32\" cy=\"14\" r=\"8\" fill=\"#e9b98f\"/><path d=\"M24 12a8 8 0 0 1 16 0c4 0 6 6 3 9-1-5-3-7-3-9z\" fill=\"#5b3a29\"/><path d=\"M26 24h12l3 18H23z\" fill=\"#c0503d\"/><path d=\"M23 42h18l4 8H19z\" fill=\"#fff\"/><path d=\"M27 24l-13-12M37 24l13-12\" stroke=\"#e9b98f\" stroke-width=\"4\" stroke-linecap=\"round\"/><path d=\"M28 50v12M36 50v12\" stroke=\"#e9b98f\" stroke-width=\"4\" stroke-linecap=\"round\"/><g fill=\"#ffd23f\"><circle cx=\"12\" cy=\"10\" r=\"8\"/><circle cx=\"52\" cy=\"10\" r=\"8\"/></g><g stroke=\"#f2b705\" stroke-width=\"1.5\"><path d=\"M6 6l12 8M6 14l12-8M12 2v16M46 6l12 8M46 14l12-8M52 2v16\"/></g><path d=\"M29 30h6\" stroke=\"#fff\" stroke-width=\"2\"/></svg>"
   },
   {
    "id": "u2_047",
@@ -4282,7 +4297,8 @@ window.DATEN = {
    "satz": "u2_050_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_050.mp3"
+   "audio": "audio/vokabeln/u2_050.mp3",
+   "symbol": "🎨"
   },
   {
    "id": "u2_051",
@@ -4322,7 +4338,8 @@ window.DATEN = {
    "satz": "u2_054_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_054.mp3"
+   "audio": "audio/vokabeln/u2_054.mp3",
+   "symbol": "💪"
   },
   {
    "id": "u2_055",
@@ -4402,7 +4419,8 @@ window.DATEN = {
    "satz": "u2_062_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_062.mp3"
+   "audio": "audio/vokabeln/u2_062.mp3",
+   "symbol": "🩳"
   },
   {
    "id": "u2_063",
@@ -4412,7 +4430,8 @@ window.DATEN = {
    "satz": "u2_063_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_063.mp3"
+   "audio": "audio/vokabeln/u2_063.mp3",
+   "symbol": "🧼✨"
   },
   {
    "id": "u2_064",
@@ -4442,7 +4461,8 @@ window.DATEN = {
    "satz": "u2_066_s",
    "def": "a store where you buy food",
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_066.mp3"
+   "audio": "audio/vokabeln/u2_066.mp3",
+   "symbol": "🛒"
   },
   {
    "id": "u2_067",
@@ -4502,7 +4522,8 @@ window.DATEN = {
    "satz": "u2_072_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_072.mp3"
+   "audio": "audio/vokabeln/u2_072.mp3",
+   "symbol": "🏃⏰"
   },
   {
    "id": "u2_073",
@@ -4512,7 +4533,8 @@ window.DATEN = {
    "satz": "u2_073_s",
    "def": "the feeling of being very happy and not calm because something good will happen",
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_073.mp3"
+   "audio": "audio/vokabeln/u2_073.mp3",
+   "symbol": "🥳"
   },
   {
    "id": "u2_074",
@@ -4522,7 +4544,8 @@ window.DATEN = {
    "satz": "u2_074_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_074.mp3"
+   "audio": "audio/vokabeln/u2_074.mp3",
+   "symbol": "🎬"
   },
   {
    "id": "u2_075",
@@ -4612,7 +4635,8 @@ window.DATEN = {
    "satz": "u2_083_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_083.mp3"
+   "audio": "audio/vokabeln/u2_083.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><path d=\"M14 2h36c2 20 4 40 0 60H14c-4-20-2-40 0-60z\" fill=\"#e9b98f\"/><path d=\"M14 2h36v10H14z\" fill=\"#3d8fd6\"/><path d=\"M14 54h36c0 3 0 5 0 8H14z\" fill=\"#2f3542\"/><ellipse cx=\"32\" cy=\"36\" rx=\"3\" ry=\"4\" fill=\"#b9805a\"/><path d=\"M30 34c1-1 3-1 4 0\" stroke=\"#8a5a3c\" stroke-width=\"1.5\" fill=\"none\"/><circle cx=\"32\" cy=\"36\" r=\"11\" fill=\"none\" stroke=\"#c0503d\" stroke-width=\"2.5\" stroke-dasharray=\"4 3\"/></svg>"
   },
   {
    "id": "u2_084",
@@ -4642,7 +4666,8 @@ window.DATEN = {
    "satz": "u2_086_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_086.mp3"
+   "audio": "audio/vokabeln/u2_086.mp3",
+   "symbol": "🔧"
   },
   {
    "id": "u2_087",
@@ -4652,7 +4677,8 @@ window.DATEN = {
    "satz": "u2_087_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_087.mp3"
+   "audio": "audio/vokabeln/u2_087.mp3",
+   "symbol": "🦷"
   },
   {
    "id": "u2_088",
@@ -4692,7 +4718,8 @@ window.DATEN = {
    "satz": "u2_091_s",
    "def": "information that somebody tells many people, for example at a station",
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_091.mp3"
+   "audio": "audio/vokabeln/u2_091.mp3",
+   "symbol": "📢"
   },
   {
    "id": "u2_092",
@@ -4712,7 +4739,8 @@ window.DATEN = {
    "satz": "u2_093_s",
    "def": "the things that you own and carry with you",
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_093.mp3"
+   "audio": "audio/vokabeln/u2_093.mp3",
+   "symbol": "🎒📱🔑"
   },
   {
    "id": "u2_094",
@@ -4772,7 +4800,8 @@ window.DATEN = {
    "satz": "u2_099_s",
    "def": "an American holiday on the fourth Thursday in November",
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_099.mp3"
+   "audio": "audio/vokabeln/u2_099.mp3",
+   "symbol": "🦃"
   },
   {
    "id": "u2_100",
@@ -4802,7 +4831,8 @@ window.DATEN = {
    "satz": "u2_102_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_102.mp3"
+   "audio": "audio/vokabeln/u2_102.mp3",
+   "symbol": "😡"
   },
   {
    "id": "u2_103",
@@ -4822,7 +4852,8 @@ window.DATEN = {
    "satz": "u2_104_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_104.mp3"
+   "audio": "audio/vokabeln/u2_104.mp3",
+   "symbol": "🚫"
   },
   {
    "id": "u2_105",
@@ -4862,7 +4893,8 @@ window.DATEN = {
    "satz": "u2_108_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u2_108.mp3"
+   "audio": "audio/vokabeln/u2_108.mp3",
+   "symbol": "🚬"
   },
   {
    "id": "u2_109",
@@ -4872,7 +4904,8 @@ window.DATEN = {
    "satz": "u2_109_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u2_109.mp3"
+   "audio": "audio/vokabeln/u2_109.mp3",
+   "symbol": "👗👔"
   },
   {
    "id": "u2_110",
@@ -4942,7 +4975,8 @@ window.DATEN = {
    "satz": "u1_002_s",
    "def": "a big animal with a long mouth and lots of teeth that lives in rivers",
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_002.mp3"
+   "audio": "audio/vokabeln/u1_002.mp3",
+   "symbol": "🐊"
   },
   {
    "id": "u1_003",
@@ -4952,7 +4986,8 @@ window.DATEN = {
    "satz": "u1_003_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_003.mp3"
+   "audio": "audio/vokabeln/u1_003.mp3",
+   "symbol": "🦬"
   },
   {
    "id": "u1_004",
@@ -4972,7 +5007,8 @@ window.DATEN = {
    "satz": "u1_005_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_005.mp3"
+   "audio": "audio/vokabeln/u1_005.mp3",
+   "symbol": "⭐"
   },
   {
    "id": "u1_006",
@@ -5012,7 +5048,8 @@ window.DATEN = {
    "satz": "u1_009_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_009.mp3"
+   "audio": "audio/vokabeln/u1_009.mp3",
+   "symbol": "🇪🇺"
   },
   {
    "id": "u1_010",
@@ -5062,7 +5099,8 @@ window.DATEN = {
    "satz": "u1_014_s",
    "def": "a very strong storm with a lot of wind and rain",
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_014.mp3"
+   "audio": "audio/vokabeln/u1_014.mp3",
+   "symbol": "🌀"
   },
   {
    "id": "u1_015",
@@ -5072,7 +5110,8 @@ window.DATEN = {
    "satz": "u1_015_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_015.mp3"
+   "audio": "audio/vokabeln/u1_015.mp3",
+   "symbol": "⚽"
   },
   {
    "id": "u1_016",
@@ -5082,7 +5121,8 @@ window.DATEN = {
    "satz": "u1_016_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_016.mp3"
+   "audio": "audio/vokabeln/u1_016.mp3",
+   "symbol": "🗽"
   },
   {
    "id": "u1_017",
@@ -5122,7 +5162,8 @@ window.DATEN = {
    "satz": "u1_020_s",
    "def": "a piece of land with water all around it",
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_020.mp3"
+   "audio": "audio/vokabeln/u1_020.mp3",
+   "symbol": "🏝️"
   },
   {
    "id": "u1_021",
@@ -5132,7 +5173,8 @@ window.DATEN = {
    "satz": "u1_021_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_021.mp3"
+   "audio": "audio/vokabeln/u1_021.mp3",
+   "symbol": "🏙️"
   },
   {
    "id": "u1_022",
@@ -5182,7 +5224,8 @@ window.DATEN = {
    "satz": "u1_026_s",
    "def": "a very, very tall building in a city",
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_026.mp3"
+   "audio": "audio/vokabeln/u1_026.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><rect x=\"0\" y=\"0\" width=\"64\" height=\"64\" fill=\"none\"/><path d=\"M32 2v8\" stroke=\"#5b6478\" stroke-width=\"2\"/><path d=\"M26 18l6-8 6 8z\" fill=\"#8c95a8\"/><rect x=\"22\" y=\"18\" width=\"20\" height=\"44\" fill=\"#6f7f9c\"/><rect x=\"12\" y=\"38\" width=\"10\" height=\"24\" fill=\"#9aa7bf\"/><rect x=\"42\" y=\"32\" width=\"10\" height=\"30\" fill=\"#9aa7bf\"/><g fill=\"#ffd66b\"><rect x=\"25\" y=\"22\" width=\"4\" height=\"4\"/><rect x=\"35\" y=\"22\" width=\"4\" height=\"4\"/><rect x=\"25\" y=\"30\" width=\"4\" height=\"4\"/><rect x=\"35\" y=\"30\" width=\"4\" height=\"4\"/><rect x=\"25\" y=\"38\" width=\"4\" height=\"4\"/><rect x=\"35\" y=\"38\" width=\"4\" height=\"4\"/><rect x=\"25\" y=\"46\" width=\"4\" height=\"4\"/><rect x=\"35\" y=\"46\" width=\"4\" height=\"4\"/><rect x=\"25\" y=\"54\" width=\"4\" height=\"4\"/><rect x=\"35\" y=\"54\" width=\"4\" height=\"4\"/></g><rect x=\"4\" y=\"62\" width=\"56\" height=\"2\" fill=\"#5b6478\"/></svg>"
   },
   {
    "id": "u1_027",
@@ -5192,7 +5235,8 @@ window.DATEN = {
    "satz": "u1_027_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_027.mp3"
+   "audio": "audio/vokabeln/u1_027.mp3",
+   "symbol": "🏗️"
   },
   {
    "id": "u1_028",
@@ -5232,7 +5276,8 @@ window.DATEN = {
    "satz": "u1_031_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_031.mp3"
+   "audio": "audio/vokabeln/u1_031.mp3",
+   "symbol": "👑"
   },
   {
    "id": "u1_032",
@@ -5242,7 +5287,8 @@ window.DATEN = {
    "satz": "u1_032_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_032.mp3"
+   "audio": "audio/vokabeln/u1_032.mp3",
+   "symbol": "👃"
   },
   {
    "id": "u1_033",
@@ -5262,7 +5308,8 @@ window.DATEN = {
    "satz": "u1_034_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_034.mp3"
+   "audio": "audio/vokabeln/u1_034.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><rect x=\"4\" y=\"12\" width=\"56\" height=\"40\" rx=\"2\" fill=\"#e08a3c\"/><g fill=\"none\" stroke=\"#fff\" stroke-width=\"1.6\"><rect x=\"6\" y=\"14\" width=\"52\" height=\"36\"/><path d=\"M32 14v36\"/><circle cx=\"32\" cy=\"32\" r=\"6\"/><rect x=\"6\" y=\"25\" width=\"10\" height=\"14\"/><rect x=\"48\" y=\"25\" width=\"10\" height=\"14\"/><path d=\"M6 18a16 14 0 0 1 0 28M58 18a16 14 0 0 0 0 28\"/></g></svg>"
   },
   {
    "id": "u1_035",
@@ -5272,7 +5319,8 @@ window.DATEN = {
    "satz": "u1_035_s",
    "def": "a place outside where children can play",
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_035.mp3"
+   "audio": "audio/vokabeln/u1_035.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><rect x=\"0\" y=\"56\" width=\"64\" height=\"8\" fill=\"#7cc26b\"/><path d=\"M8 56V24M24 56V24\" stroke=\"#c0503d\" stroke-width=\"3\"/><path d=\"M6 24h20\" stroke=\"#c0503d\" stroke-width=\"3\"/><path d=\"M24 30l24 26\" stroke=\"#3d8fd6\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M8 34h16\" stroke=\"#e8b33c\" stroke-width=\"3\"/><path d=\"M8 44h16\" stroke=\"#e8b33c\" stroke-width=\"3\"/><path d=\"M40 56V20M60 56V20M38 20h24\" stroke=\"#5b6478\" stroke-width=\"3\"/><path d=\"M46 20v22M54 20v22\" stroke=\"#5b6478\" stroke-width=\"1.5\"/><rect x=\"44\" y=\"42\" width=\"12\" height=\"3\" rx=\"1\" fill=\"#e8b33c\"/></svg>"
   },
   {
    "id": "u1_036",
@@ -5282,7 +5330,8 @@ window.DATEN = {
    "satz": "u1_036_s",
    "def": "a place where you can skate on ice",
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_036.mp3"
+   "audio": "audio/vokabeln/u1_036.mp3",
+   "symbol": "⛸️"
   },
   {
    "id": "u1_037",
@@ -5302,7 +5351,8 @@ window.DATEN = {
    "satz": "u1_038_s",
    "def": "a bridge that hangs on strong cables",
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_038.mp3"
+   "audio": "audio/vokabeln/u1_038.mp3",
+   "symbol": "🌉"
   },
   {
    "id": "u1_039",
@@ -5322,7 +5372,8 @@ window.DATEN = {
    "satz": "u1_040_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_040.mp3"
+   "audio": "audio/vokabeln/u1_040.mp3",
+   "symbol": "🔌"
   },
   {
    "id": "u1_041",
@@ -5402,7 +5453,8 @@ window.DATEN = {
    "satz": "u1_048_s",
    "def": "how you feel, for example happy or angry",
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_048.mp3"
+   "audio": "audio/vokabeln/u1_048.mp3",
+   "symbol": "🙂😢😠"
   },
   {
    "id": "u1_049",
@@ -5452,7 +5504,8 @@ window.DATEN = {
    "satz": "u1_053_s",
    "def": "making you feel silly in front of other people",
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_053.mp3"
+   "audio": "audio/vokabeln/u1_053.mp3",
+   "symbol": "😳"
   },
   {
    "id": "u1_054",
@@ -5472,7 +5525,8 @@ window.DATEN = {
    "satz": "u1_055_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_055.mp3"
+   "audio": "audio/vokabeln/u1_055.mp3",
+   "symbol": "😴"
   },
   {
    "id": "u1_056",
@@ -5482,7 +5536,8 @@ window.DATEN = {
    "satz": "u1_056_s",
    "def": "a train that goes under the ground in a city",
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_056.mp3"
+   "audio": "audio/vokabeln/u1_056.mp3",
+   "symbol": "🚇"
   },
   {
    "id": "u1_057",
@@ -5552,7 +5607,8 @@ window.DATEN = {
    "satz": "u1_063_s",
    "def": "a list of the food you can order in a restaurant",
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_063.mp3"
+   "audio": "audio/vokabeln/u1_063.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><rect x=\"14\" y=\"4\" width=\"36\" height=\"56\" rx=\"3\" fill=\"#c0503d\"/><rect x=\"18\" y=\"8\" width=\"28\" height=\"48\" rx=\"2\" fill=\"#fff6e3\"/><g stroke=\"#5b6478\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M27 14v8M30 14v8M33 14v8M27 22h6M30 22v6\"/><path d=\"M38 14c2 2 2 8 0 10v4\"/></g><g stroke=\"#9aa7bf\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M23 34h18M23 40h14M23 46h18M23 52h10\"/></g><g fill=\"#c0503d\"><circle cx=\"43\" cy=\"40\" r=\"1.5\"/><circle cx=\"43\" cy=\"52\" r=\"1.5\"/></g></svg>"
   },
   {
    "id": "u1_064",
@@ -5662,7 +5718,8 @@ window.DATEN = {
    "satz": "u1_074_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_074.mp3"
+   "audio": "audio/vokabeln/u1_074.mp3",
+   "symbol": "🛳️"
   },
   {
    "id": "u1_075",
@@ -5702,7 +5759,8 @@ window.DATEN = {
    "satz": "u1_078_s",
    "def": "looking like somebody who did something wrong",
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_078.mp3"
+   "audio": "audio/vokabeln/u1_078.mp3",
+   "symbol": "🤨"
   },
   {
    "id": "u1_079",
@@ -5712,7 +5770,8 @@ window.DATEN = {
    "satz": "u1_079_s",
    "def": "not guilty – you didn't do it",
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_079.mp3"
+   "audio": "audio/vokabeln/u1_079.mp3",
+   "symbol": "😇"
   },
   {
    "id": "u1_080",
@@ -5742,7 +5801,8 @@ window.DATEN = {
    "satz": "u1_082_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_082.mp3"
+   "audio": "audio/vokabeln/u1_082.mp3",
+   "symbol": "🧑‍🤝‍🧑"
   },
   {
    "id": "u1_083",
@@ -5792,7 +5852,8 @@ window.DATEN = {
    "satz": "u1_087_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_087.mp3"
+   "audio": "audio/vokabeln/u1_087.mp3",
+   "symbol": "🚗🚶"
   },
   {
    "id": "u1_088",
@@ -5802,7 +5863,8 @@ window.DATEN = {
    "satz": "u1_088_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_088.mp3"
+   "audio": "audio/vokabeln/u1_088.mp3",
+   "symbol": "😓"
   },
   {
    "id": "u1_089",
@@ -5912,7 +5974,8 @@ window.DATEN = {
    "satz": "u1_099_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_099.mp3"
+   "audio": "audio/vokabeln/u1_099.mp3",
+   "symbol": "🏳️"
   },
   {
    "id": "u1_100",
@@ -5922,7 +5985,8 @@ window.DATEN = {
    "satz": "u1_100_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_100.mp3"
+   "audio": "audio/vokabeln/u1_100.mp3",
+   "symbol": "🤷"
   },
   {
    "id": "u1_101",
@@ -6052,7 +6116,8 @@ window.DATEN = {
    "satz": "u1_113_s",
    "def": null,
    "stimme": "m",
-   "audio": "audio/vokabeln/u1_113.mp3"
+   "audio": "audio/vokabeln/u1_113.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><rect x=\"2\" y=\"16\" width=\"12\" height=\"40\" rx=\"4\" fill=\"#c0503d\"/><rect x=\"2\" y=\"40\" width=\"20\" height=\"10\" rx=\"3\" fill=\"#a8402f\"/><rect x=\"50\" y=\"16\" width=\"12\" height=\"40\" rx=\"4\" fill=\"#c0503d\"/><rect x=\"42\" y=\"40\" width=\"20\" height=\"10\" rx=\"3\" fill=\"#a8402f\"/><rect x=\"20\" y=\"30\" width=\"24\" height=\"5\" rx=\"1\" fill=\"#dfe6f0\"/><rect x=\"30\" y=\"35\" width=\"4\" height=\"21\" fill=\"#9aa7bf\"/><rect x=\"24\" y=\"54\" width=\"16\" height=\"3\" rx=\"1\" fill=\"#9aa7bf\"/><rect x=\"25\" y=\"24\" width=\"5\" height=\"6\" rx=\"1\" fill=\"#ffd23f\"/><circle cx=\"38\" cy=\"28\" r=\"2.5\" fill=\"#fff\"/><rect x=\"0\" y=\"58\" width=\"64\" height=\"6\" fill=\"#5b6478\"/></svg>"
   },
   {
    "id": "u1_114",
@@ -6062,7 +6127,8 @@ window.DATEN = {
    "satz": "u1_114_s",
    "def": null,
    "stimme": "f",
-   "audio": "audio/vokabeln/u1_114.mp3"
+   "audio": "audio/vokabeln/u1_114.mp3",
+   "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 64 64\"><ellipse cx=\"32\" cy=\"40\" rx=\"28\" ry=\"14\" fill=\"#dfe6f0\"/><ellipse cx=\"32\" cy=\"38\" rx=\"22\" ry=\"10\" fill=\"#fff\"/><g fill=\"#ffd23f\"><path d=\"M16 38c2-6 8-7 11-4 2-4 9-4 11 0 4-3 10-1 10 4 0 4-6 6-10 4-3 4-10 4-12 0-4 3-11 1-10-4z\"/></g><g fill=\"#f2b705\"><circle cx=\"24\" cy=\"38\" r=\"2.5\"/><circle cx=\"33\" cy=\"36\" r=\"3\"/><circle cx=\"41\" cy=\"39\" r=\"2.5\"/></g><g fill=\"#5fae4f\"><circle cx=\"28\" cy=\"34\" r=\"1\"/><circle cx=\"38\" cy=\"35\" r=\"1\"/><circle cx=\"31\" cy=\"41\" r=\"1\"/></g></svg>"
   },
   {
    "id": "u1_115",
@@ -9597,6 +9663,100 @@ window.DATEN = {
     ]
    }
   ],
+  "gold": [
+   {
+    "id": "gold_yearbook",
+    "art": "serie",
+    "ziel": 5,
+    "titel": "Golden File 01 – The Girl in the Yearbook",
+    "text": "Jessica is helping the {yearbook|das Jahrbuch} club after school. The club room at Lincoln High is full of old boxes. ¶ “Look at this,” Jeremy says. He is holding a yearbook from 1976. On page 12 there is a photo of a girl. She looks exactly like Jessica. ¶ “That’s {creepy|unheimlich},” Jessica says. Under the photo it says: “Jessie Miller – Most likely to {travel the world|die Welt bereisen}.” ¶ Mrs. Garcia, the club {advisor|die Betreuerin}, smiles. “Oh, Jessie! She was my best friend. After graduation she drove across the country in an old van.” ¶ “What happened to her?” Jeremy asks. ¶ Mrs. Garcia opens her desk {drawer|die Schublade}. It is full of postcards – almost fifty, from every state. “She sends me one every year.” ¶ The newest card arrived this week. It says: “The trick is easy. Keep going, one day at a time.” ¶ Jessica looks at Jeremy. “I think we’ve just found our {role model|das Vorbild}.”",
+    "fragen": [
+     {
+      "frage": "What is Jessica doing after school?",
+      "antwort": "She is helping the yearbook club."
+     },
+     {
+      "frage": "Who is the girl in the 1976 photo?",
+      "antwort": "Jessie Miller, Mrs. Garcia’s best friend."
+     },
+     {
+      "frage": "What is in Mrs. Garcia’s desk drawer?",
+      "antwort": "Almost fifty postcards from Jessie, from every state."
+     }
+    ],
+    "absaetze": [
+     "Jessica is helping the {yearbook|das Jahrbuch} club after school. The club room at Lincoln High is full of old boxes.",
+     "“Look at this,” Jeremy says. He is holding a yearbook from 1976. On page 12 there is a photo of a girl. She looks exactly like Jessica.",
+     "“That’s {creepy|unheimlich},” Jessica says. Under the photo it says: “Jessie Miller – Most likely to {travel the world|die Welt bereisen}.”",
+     "Mrs. Garcia, the club {advisor|die Betreuerin}, smiles. “Oh, Jessie! She was my best friend. After graduation she drove across the country in an old van.”",
+     "“What happened to her?” Jeremy asks.",
+     "Mrs. Garcia opens her desk {drawer|die Schublade}. It is full of postcards – almost fifty, from every state. “She sends me one every year.”",
+     "The newest card arrived this week. It says: “The trick is easy. Keep going, one day at a time.”",
+     "Jessica looks at Jeremy. “I think we’ve just found our {role model|das Vorbild}.”"
+    ]
+   },
+   {
+    "id": "gold_gold_rush",
+    "art": "wochen",
+    "ziel": 4,
+    "titel": "Golden File 02 – Gold Rush",
+    "text": "Jeremy and Jessica are in Coloma, California. In 1848, a man {discovered|entdeckte} gold in the river here. Thousands of people came to get rich. ¶ Today, tourists can {pan for gold|Gold waschen}. Jeremy is standing in the cold water with a metal pan. After ten minutes he says, “This is so boring.” ¶ An old man is sitting on a rock. “{Patience|Geduld}, kid,” he says. “I’ve been doing this for forty years.” ¶ “Did you ever find anything?” Jessica asks. The man shows them a tiny {nugget|das Goldkorn}. “About one a month. The river pays you if you keep coming back.” ¶ Jeremy keeps going. Twenty minutes. Thirty. Forty. Then something {shines|glänzt} in his pan. ¶ “No way!” he shouts. It is smaller than a grain of rice, but it’s real gold. ¶ The old man laughs. “Most people {give up|aufgeben} after five minutes. You didn’t. That’s the real gold, kid.”",
+    "fragen": [
+     {
+      "frage": "What happened in Coloma in 1848?",
+      "antwort": "A man discovered gold in the river."
+     },
+     {
+      "frage": "How long has the old man been panning for gold?",
+      "antwort": "For forty years."
+     },
+     {
+      "frage": "What is “the real gold”, says the old man?",
+      "antwort": "Not giving up – Jeremy kept going."
+     }
+    ],
+    "absaetze": [
+     "Jeremy and Jessica are in Coloma, California. In 1848, a man {discovered|entdeckte} gold in the river here. Thousands of people came to get rich.",
+     "Today, tourists can {pan for gold|Gold waschen}. Jeremy is standing in the cold water with a metal pan. After ten minutes he says, “This is so boring.”",
+     "An old man is sitting on a rock. “{Patience|Geduld}, kid,” he says. “I’ve been doing this for forty years.”",
+     "“Did you ever find anything?” Jessica asks. The man shows them a tiny {nugget|das Goldkorn}. “About one a month. The river pays you if you keep coming back.”",
+     "Jeremy keeps going. Twenty minutes. Thirty. Forty. Then something {shines|glänzt} in his pan.",
+     "“No way!” he shouts. It is smaller than a grain of rice, but it’s real gold.",
+     "The old man laughs. “Most people {give up|aufgeben} after five minutes. You didn’t. That’s the real gold, kid.”"
+    ]
+   },
+   {
+    "id": "gold_route66_radio",
+    "art": "serie",
+    "ziel": 10,
+    "titel": "Golden File 03 – Live on Route 66",
+    "text": "The road is long and empty. Jeremy and Jessica stop at an old {diner|das Imbiss-Restaurant} on Route 66 in Arizona. ¶ In the corner, a woman is talking into a microphone. It’s a tiny radio station! “Hey, travelers!” she says. “Come and tell my {listeners|die Zuhörer} your story.” ¶ Jessica’s face goes red. “No way. I hate talking in public.” ¶ Jeremy {whispers|flüstert}, “Remember the cheerleading tryout? You were scared then, too. And you were great.” ¶ Jessica takes the microphone. At first her voice is shaking. She talks about the last ferry, the Golden Gate Bridge and the desert. Soon she is laughing. ¶ After the show, the phone rings. A listener says, “That was the best story this week!” ¶ The woman gives Jessica a golden {badge|der Anstecker}. It says: “Route 66 Radio – Guest Star.” ¶ “Ten days on the road,” Jeremy says, “and every day you get a bit {braver|mutiger}.” Jessica smiles. “Every day counts.”",
+    "fragen": [
+     {
+      "frage": "Where do Jeremy and Jessica stop?",
+      "antwort": "At an old diner on Route 66 in Arizona."
+     },
+     {
+      "frage": "Why doesn’t Jessica want to talk at first?",
+      "antwort": "She hates talking in public."
+     },
+     {
+      "frage": "What does the woman give Jessica?",
+      "antwort": "A golden badge: “Route 66 Radio – Guest Star.”"
+     }
+    ],
+    "absaetze": [
+     "The road is long and empty. Jeremy and Jessica stop at an old {diner|das Imbiss-Restaurant} on Route 66 in Arizona.",
+     "In the corner, a woman is talking into a microphone. It’s a tiny radio station! “Hey, travelers!” she says. “Come and tell my {listeners|die Zuhörer} your story.”",
+     "Jessica’s face goes red. “No way. I hate talking in public.”",
+     "Jeremy {whispers|flüstert}, “Remember the cheerleading tryout? You were scared then, too. And you were great.”",
+     "Jessica takes the microphone. At first her voice is shaking. She talks about the last ferry, the Golden Gate Bridge and the desert. Soon she is laughing.",
+     "After the show, the phone rings. A listener says, “That was the best story this week!”",
+     "The woman gives Jessica a golden {badge|der Anstecker}. It says: “Route 66 Radio – Guest Star.”",
+     "“Ten days on the road,” Jeremy says, “and every day you get a bit {braver|mutiger}.” Jessica smiles. “Every day counts.”"
+    ]
+   }
+  ],
   "patrol": [
    {
     "id": "ba_01",
@@ -10794,6 +10954,15 @@ window.DATEN = {
      "sunny": "audio/runner/cameo_sunny.mp3"
     }
    },
+   "disco": {
+    "boss": {
+     "banner": "audio/runner/disco_banner.mp3",
+     "richtig": "audio/runner/disco_richtig.mp3",
+     "falsch": "audio/runner/disco_falsch.mp3"
+    },
+    "start": "audio/runner/disco_start.mp3",
+    "ende": "audio/runner/disco_ende.mp3"
+   },
    "alex": {
     "start_1": "audio/alex/start_1.mp3",
     "start_2": "audio/alex/start_2.mp3",
@@ -10819,7 +10988,16 @@ window.DATEN = {
     "ende_2": "audio/alex/ende_2.mp3",
     "ende_3": "audio/alex/ende_3.mp3",
     "fail_1": "audio/alex/fail_1.mp3",
-    "fail_2": "audio/alex/fail_2.mp3"
+    "fail_2": "audio/alex/fail_2.mp3",
+    "disco_halb_1": "audio/alex/disco_halb_1.mp3",
+    "disco_halb_2": "audio/alex/disco_halb_2.mp3",
+    "disco_combo3_1": "audio/alex/disco_combo3_1.mp3",
+    "disco_combo3_2": "audio/alex/disco_combo3_2.mp3",
+    "disco_combo5_1": "audio/alex/disco_combo5_1.mp3",
+    "disco_combo5_2": "audio/alex/disco_combo5_2.mp3",
+    "disco_leben_1": "audio/alex/disco_leben_1.mp3",
+    "disco_leben_2": "audio/alex/disco_leben_2.mp3",
+    "disco_boss_1": "audio/alex/disco_boss_1.mp3"
    }
   },
   "story_audio": [
@@ -11206,7 +11384,8 @@ window.DATEN = {
       "2|u1:USA – here we come · Part 1|3",
       "2|u1:USA – here we come · Part 1|4",
       "2|u1:USA – here we come · Part 1|5",
-      "2|u1:USA – here we come · Part 1|6"
+      "2|u1:USA – here we come · Part 1|6",
+      "2|u1:USA – here we come · Part 1|7"
      ]
     },
     {
@@ -11222,7 +11401,8 @@ window.DATEN = {
       "2|u1:USA – here we come · Part 2|3",
       "2|u1:USA – here we come · Part 2|4",
       "2|u1:USA – here we come · Part 2|5",
-      "2|u1:USA – here we come · Part 2|6"
+      "2|u1:USA – here we come · Part 2|6",
+      "2|u1:USA – here we come · Part 2|7"
      ]
     },
     {
@@ -11238,7 +11418,8 @@ window.DATEN = {
       "2|u1:Start|3",
       "2|u1:Start|4",
       "2|u1:Start|5",
-      "2|u1:Start|6"
+      "2|u1:Start|6",
+      "2|u1:Start|7"
      ]
     },
     {
@@ -11254,7 +11435,8 @@ window.DATEN = {
       "2|u1:Theme 1 · Part 1|3",
       "2|u1:Theme 1 · Part 1|4",
       "2|u1:Theme 1 · Part 1|5",
-      "2|u1:Theme 1 · Part 1|6"
+      "2|u1:Theme 1 · Part 1|6",
+      "2|u1:Theme 1 · Part 1|7"
      ]
     },
     {
@@ -11270,7 +11452,8 @@ window.DATEN = {
       "2|u1:Theme 1 · Part 2|3",
       "2|u1:Theme 1 · Part 2|4",
       "2|u1:Theme 1 · Part 2|5",
-      "2|u1:Theme 1 · Part 2|6"
+      "2|u1:Theme 1 · Part 2|6",
+      "2|u1:Theme 1 · Part 2|7"
      ]
     },
     {
@@ -11286,7 +11469,8 @@ window.DATEN = {
       "2|u1:Theme 2|3",
       "2|u1:Theme 2|4",
       "2|u1:Theme 2|5",
-      "2|u1:Theme 2|6"
+      "2|u1:Theme 2|6",
+      "2|u1:Theme 2|7"
      ]
     },
     {
@@ -11302,7 +11486,8 @@ window.DATEN = {
       "2|u1:Focus on language|3",
       "2|u1:Focus on language|4",
       "2|u1:Focus on language|5",
-      "2|u1:Focus on language|6"
+      "2|u1:Focus on language|6",
+      "2|u1:Focus on language|7"
      ]
     },
     {
@@ -11318,7 +11503,8 @@ window.DATEN = {
       "2|u1:Story · Part 1|3",
       "2|u1:Story · Part 1|4",
       "2|u1:Story · Part 1|5",
-      "2|u1:Story · Part 1|6"
+      "2|u1:Story · Part 1|6",
+      "2|u1:Story · Part 1|7"
      ]
     },
     {
@@ -11333,7 +11519,8 @@ window.DATEN = {
       "2|u1:Story · Part 2|2",
       "2|u1:Story · Part 2|3",
       "2|u1:Story · Part 2|4",
-      "2|u1:Story · Part 2|5"
+      "2|u1:Story · Part 2|5",
+      "2|u1:Story · Part 2|6"
      ]
     },
     {
@@ -11348,7 +11535,8 @@ window.DATEN = {
       "2|u1:Story · Part 3|2",
       "2|u1:Story · Part 3|3",
       "2|u1:Story · Part 3|4",
-      "2|u1:Story · Part 3|5"
+      "2|u1:Story · Part 3|5",
+      "2|u1:Story · Part 3|6"
      ]
     },
     {
@@ -11364,7 +11552,8 @@ window.DATEN = {
       "2|u1:Skills training|3",
       "2|u1:Skills training|4",
       "2|u1:Skills training|5",
-      "2|u1:Skills training|6"
+      "2|u1:Skills training|6",
+      "2|u1:Skills training|7"
      ]
     }
    ]
@@ -11388,7 +11577,8 @@ window.DATEN = {
       "2|u2:Start|3",
       "2|u2:Start|4",
       "2|u2:Start|5",
-      "2|u2:Start|6"
+      "2|u2:Start|6",
+      "2|u2:Start|7"
      ]
     },
     {
@@ -11404,7 +11594,8 @@ window.DATEN = {
       "2|u2:Theme 1 · Part 1|3",
       "2|u2:Theme 1 · Part 1|4",
       "2|u2:Theme 1 · Part 1|5",
-      "2|u2:Theme 1 · Part 1|6"
+      "2|u2:Theme 1 · Part 1|6",
+      "2|u2:Theme 1 · Part 1|7"
      ]
     },
     {
@@ -11420,7 +11611,8 @@ window.DATEN = {
       "2|u2:Theme 1 · Part 2|3",
       "2|u2:Theme 1 · Part 2|4",
       "2|u2:Theme 1 · Part 2|5",
-      "2|u2:Theme 1 · Part 2|6"
+      "2|u2:Theme 1 · Part 2|6",
+      "2|u2:Theme 1 · Part 2|7"
      ]
     },
     {
@@ -11436,7 +11628,8 @@ window.DATEN = {
       "2|u2:Theme 2 · Part 1|3",
       "2|u2:Theme 2 · Part 1|4",
       "2|u2:Theme 2 · Part 1|5",
-      "2|u2:Theme 2 · Part 1|6"
+      "2|u2:Theme 2 · Part 1|6",
+      "2|u2:Theme 2 · Part 1|7"
      ]
     },
     {
@@ -11452,7 +11645,8 @@ window.DATEN = {
       "2|u2:Theme 2 · Part 2|3",
       "2|u2:Theme 2 · Part 2|4",
       "2|u2:Theme 2 · Part 2|5",
-      "2|u2:Theme 2 · Part 2|6"
+      "2|u2:Theme 2 · Part 2|6",
+      "2|u2:Theme 2 · Part 2|7"
      ]
     },
     {
@@ -11468,7 +11662,8 @@ window.DATEN = {
       "2|u2:Focus on language · Part 1|3",
       "2|u2:Focus on language · Part 1|4",
       "2|u2:Focus on language · Part 1|5",
-      "2|u2:Focus on language · Part 1|6"
+      "2|u2:Focus on language · Part 1|6",
+      "2|u2:Focus on language · Part 1|7"
      ]
     },
     {
@@ -11484,7 +11679,8 @@ window.DATEN = {
       "2|u2:Focus on language · Part 2|3",
       "2|u2:Focus on language · Part 2|4",
       "2|u2:Focus on language · Part 2|5",
-      "2|u2:Focus on language · Part 2|6"
+      "2|u2:Focus on language · Part 2|6",
+      "2|u2:Focus on language · Part 2|7"
      ]
     },
     {
@@ -11500,7 +11696,8 @@ window.DATEN = {
       "2|u2:Story · Part 1|3",
       "2|u2:Story · Part 1|4",
       "2|u2:Story · Part 1|5",
-      "2|u2:Story · Part 1|6"
+      "2|u2:Story · Part 1|6",
+      "2|u2:Story · Part 1|7"
      ]
     },
     {
@@ -11516,7 +11713,8 @@ window.DATEN = {
       "2|u2:Story · Part 2|3",
       "2|u2:Story · Part 2|4",
       "2|u2:Story · Part 2|5",
-      "2|u2:Story · Part 2|6"
+      "2|u2:Story · Part 2|6",
+      "2|u2:Story · Part 2|7"
      ]
     },
     {
@@ -11531,7 +11729,8 @@ window.DATEN = {
       "2|u2:Story · Part 3|2",
       "2|u2:Story · Part 3|3",
       "2|u2:Story · Part 3|4",
-      "2|u2:Story · Part 3|5"
+      "2|u2:Story · Part 3|5",
+      "2|u2:Story · Part 3|6"
      ]
     },
     {
@@ -11547,7 +11746,8 @@ window.DATEN = {
       "2|u2:Skills training · Part 1|3",
       "2|u2:Skills training · Part 1|4",
       "2|u2:Skills training · Part 1|5",
-      "2|u2:Skills training · Part 1|6"
+      "2|u2:Skills training · Part 1|6",
+      "2|u2:Skills training · Part 1|7"
      ]
     },
     {
@@ -11563,7 +11763,8 @@ window.DATEN = {
       "2|u2:Skills training · Part 2|3",
       "2|u2:Skills training · Part 2|4",
       "2|u2:Skills training · Part 2|5",
-      "2|u2:Skills training · Part 2|6"
+      "2|u2:Skills training · Part 2|6",
+      "2|u2:Skills training · Part 2|7"
      ]
     },
     {

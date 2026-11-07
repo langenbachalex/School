@@ -67,6 +67,42 @@ def icon(groesse, ziel):
     img.save(ziel)
 
 
+def paris_runner():
+    """Paris Run (Stufe 4, 7.11.2026): Texte stehen nur in der Engine (app/klasse9/runner.js: ALEX_ZURUFE_FR, Welt „paris“, CAMEO der Paris-Helden).
+    Liefert (gruppe, key, text, datei, stimme) – stimme "alex" oder "held:<Voice-ID>"; Aufnahmen in app/franz/audio/runner/."""
+    with open(os.path.join(BASIS, "app", "klasse9", "runner.js"), encoding="utf-8") as f:
+        src = f.read()
+    raus = []
+    block = src.split("const ALEX_ZURUFE_FR = {", 1)[1].split("\n  };", 1)[0]
+    for key, text in re.findall(r'\["(fr_[a-z0-9_]+)", "([^"]+)"\]', block):
+        raus.append(("alex", key, text, f"audio/runner/{key}.mp3", "alex"))
+    zeile = next(z for z in src.splitlines() if z.strip().startswith("paris: { id: 'paris'"))
+    for key in ("banner", "richtig", "falsch", "start", "ende"):
+        m = re.search(key + r": (['\"])(.*?)\1", zeile)
+        raus.append(("boss" if key in ("banner", "richtig", "falsch") else key, key, m.group(2), f"audio/runner/paris_{key}.mp3", "alex"))
+    helden = {z["id"]: z for z in tsv("helden.tsv")}
+    cameo = src.split("const CAMEO = {", 1)[1].split("\n  };", 1)[0]
+    for hid, text in re.findall(r'^    ([a-z]+): \{ satz: "([^"]+)"', cameo, re.M):
+        if hid in helden:
+            raus.append(("cameo", hid, text, f"audio/runner/cameo_{hid}.mp3", "held:" + helden[hid]["stimme"]))
+    return raus
+
+
+def disco_runner():
+    """Disco Run Französisch (7.11.2026): DISCO_ZURUFE_FR + Welt „disco_fr“ aus app/klasse9/runner.js; Aufnahmen app/franz/audio/runner/disco_fr_<key>.mp3."""
+    with open(os.path.join(BASIS, "app", "klasse9", "runner.js"), encoding="utf-8") as f:
+        src = f.read()
+    raus = []
+    block = src.split("const DISCO_ZURUFE_FR = {", 1)[1].split("\n  };", 1)[0]
+    for key, text in re.findall(r'\["(disco_[a-z0-9_]+)", "([^"]+)"\]', block):
+        raus.append(("alex", key, text, f"audio/runner/fr_{key}.mp3", "alex"))
+    zeile = next(z for z in src.splitlines() if z.strip().startswith("disco_fr: { id: 'disco_fr'"))
+    for key in ("banner", "richtig", "falsch", "start", "ende"):
+        m = re.search(key + r": (['\"])(.*?)\1", zeile)
+        raus.append(("boss" if key in ("banner", "richtig", "falsch") else key, key, m.group(2), f"audio/runner/disco_fr_{key}.mp3", "alex"))
+    return raus
+
+
 def main():
     os.makedirs(os.path.join(APP, "icons"), exist_ok=True)
     info = {z["id"]: z for z in tsv("dialoge_info.tsv")}
@@ -85,7 +121,8 @@ def main():
                       "bild": z["bild"], "foto": b if vorhanden(b) else None, **lautung(z["ipa"]), "audio": a if vorhanden(a) else None})
     woerter = {}
     for z in tsv("woerter.tsv"):
-        woerter.setdefault(z["kasten"], []).append({"fr": z["fr"], "de": z["de"], "symbol": z["symbol"]})
+        a = audio_name("alex", z["fr"])  # Paris Run (7.11.): Wort mit Mr. Alex' Stimme, sonst Geräte-Stimme
+        woerter.setdefault(z["kasten"], []).append({"fr": z["fr"], "de": z["de"], "symbol": z["symbol"], "audio": a if vorhanden(a) else None})
     os.makedirs(os.path.join(APP, "audio", "beats"), exist_ok=True)
     beats = []
     for z in tsv("beats.tsv"):
@@ -107,11 +144,31 @@ def main():
         a, b = f"audio/paris/{z['id']}.mp3", f"bilder/paris/{z['id']}.jpg"
         paris.append({"id": z["id"], "name": z["name"], "symbol": z["symbol"], "x": int(z["x"]), "y": int(z["y"]), "fr": z["fr"], "de": z["de"],
                       "audio": a if vorhanden(a) else None, "foto": b if vorhanden(b) else None, "quelle": pquellen.get(z["id"]) if vorhanden(b) else None})
-    # Super-héros (7.11.): Sammelkarten im Panthéon, gezeichnet von der Runner-Engine (Spalte zeichnung = Held der Englisch-Apps, Entwurf);
-    # Spalte ab = Zahl der geschafften Dialoge, ab der die Karte frei ist. Régions (regions.tsv): Frankreich-Karte als Niveau 2, vorbereitet.
-    helden = [dict(z, ab=int(z["ab"])) for z in tsv("helden.tsv")] if os.path.exists(os.path.join(INHALT, "helden.tsv")) else []
-    regions = tsv("regions.tsv") if os.path.exists(os.path.join(INHALT, "regions.tsv")) else []
-    daten = {"dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    # Superhelden (Stufe 3, 7.11.2026): gezeichnet in der Runner-Engine (HELDEN_ZEICHNUNG, Filme held_<id>), Stimme je Held audio/helden/intro_<id>.mp3
+    helden = []
+    wde = {z["fr"]: z["de"] for z in tsv("wendungen_helden.tsv")}   # Folien-Karten (7.11.): deutsche Bedeutung der Wendung für die Défi-Fragen
+    for z in tsv("helden.tsv"):
+        a = f"audio/helden/intro_{z['id']}.mp3"
+        helden.append({"id": z["id"], "name": z["name"], "symbol": z["symbol"], "kraft": z["kraft"], "kraft_de": z["kraft_de"], "wendung": z["wendung"],
+                       "intro": z["intro_fr"], "intro_de": z["intro_de"], "audio": a if vorhanden(a) else None,
+                       "wendung_de": wde.get(z["wendung"], ""), "ort": z.get("ort", ""), "selten": z.get("selten") == "1"})
+    # Paris Run (Stufe 4): Aufnahmen für Runner.start({ audio }) – nur vorhandene Dateien (fehlende spricht das Gerät)
+    runner = {"alex": {}, "boss": {}, "cameo": {}}
+    for gruppe, key, _, rel, _ in paris_runner():
+        if not vorhanden(rel):
+            continue
+        if gruppe in ("start", "ende"):
+            runner[gruppe] = rel
+        else:
+            runner[gruppe][key] = rel
+    disco = {"alex": {}, "boss": {}}
+    for gruppe, key, _, rel, _ in disco_runner():
+        if vorhanden(rel):
+            if gruppe in ("start", "ende"):
+                disco[gruppe] = rel
+            else:
+                disco[gruppe][key] = rel
+    daten = {"runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:
@@ -120,7 +177,7 @@ def main():
     for g in (180, 192, 512):
         icon(g, os.path.join(APP, "icons", f"icon-{g}.png"))
     # Offline-Speicher: alle Dateien der App, Version = Prüfsumme
-    dateien, h = ["./", "../style.css", "../runner.js"], hashlib.sha1()  # style.css und die Runner-Engine (Paris-Szenen) teilt sich die App mit Englisch Klasse 6
+    dateien, h = ["./", "../style.css", "../london-run.css", "../runner.js"], hashlib.sha1()  # style.css und die Runner-Engine (Paris-Szenen) teilt sich die App mit Englisch Klasse 6
     for wurzel, _, namen_ in os.walk(APP):
         for n in sorted(namen_):
             rel = os.path.relpath(os.path.join(wurzel, n), APP).replace(os.sep, "/")
@@ -129,7 +186,7 @@ def main():
             dateien.append(rel)
             with open(os.path.join(wurzel, n), "rb") as f:
                 h.update(rel.encode() + f.read())
-    for geteilt in ("style.css", "runner.js"):
+    for geteilt in ("style.css", "london-run.css", "runner.js"):
         with open(os.path.join(BASIS, "app", geteilt), "rb") as f:
             h.update(f.read())
     dateien.sort()
@@ -149,8 +206,8 @@ self.addEventListener("fetch", (e) => {{
   e.respondWith(caches.match(e.request, {{ ignoreSearch: true }}).then((r) => r || fetch(e.request)));
 }});
 """)
-    fehlt = sum(1 for d in dialoge.values() for z in d["zeilen"] if not z["audio"]) + sum(1 for n in namen if not n["audio"]) + sum(1 for p in paris if not p["audio"])
-    print(f"daten_fr.js: {len(dialoge)} Dialoge, {len(namen)} Namen, {len(beats)} Beats, {len(paris)} Paris-Orte · fehlende Audios: {fehlt} · Offline-Dateien: {len(dateien)}")
+    fehlt = sum(1 for d in dialoge.values() for z in d["zeilen"] if not z["audio"]) + sum(1 for n in namen if not n["audio"]) + sum(1 for p in paris if not p["audio"]) + sum(1 for h in helden if not h["audio"]) + sum(1 for z in paris_runner() if not vorhanden(z[3]))
+    print(f"daten_fr.js: {len(dialoge)} Dialoge, {len(namen)} Namen, {len(beats)} Beats, {len(paris)} Paris-Orte, {len(helden)} Helden · fehlende Audios: {fehlt} · Offline-Dateien: {len(dateien)}")
 
 
 if __name__ == "__main__":

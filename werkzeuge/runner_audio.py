@@ -8,6 +8,8 @@ Texte: WELTEN und CAMEO in app/klasse9/runner.js (einzige Quelle). Ziele: app/kl
 app/audio/runner/westminster_<art>.mp3, app/audio/runner/cameo_<held>.mp3, app/klasse9/audio/beae/w_<id>_<be|ae>.mp3.
 Vorhandene Dateien werden nie überschrieben. Obergrenze je Lauf: GRENZE Zeichen (sonst wird nichts vertont).
 Heldenfilme (6.11.2026): app/audio/helden/intro_<held>.mp3 (Text: Spalte intro in inhalte/helden.tsv, Stimme wie das Cameo).
+Mr. Alex' Zurufe im Lauf (7.11.2026): Texte ALEX_ZURUFE in runner.js, Stimme en_alex (Mr. Alex, Stabilität 0,4) mit leichten Audio-Tags (ALEX_TAGS),
+einmal vertont nach app/audio/alex/<key>.mp3 (Klasse 6) und von dort nach app/klasse9/audio/alex/ kopiert (gleiche Zeilen für beide Klassen; --nur=audio/alex/).
 Aufruf: python3 werkzeuge/runner_audio.py --zaehlen   (nur zählen; --nur=<pfad-anfang> beschränkt auf diese Posten)
         python3 werkzeuge/runner_audio.py             (erzeugen, danach daten_bauen.py und klasse9_bauen.py)
 """
@@ -48,6 +50,26 @@ HELD_RUFE = {   # Ausrufe in den Heldenfilmen (Sprechblase im Film = dieser Text
     "leo": "Too fast for you!", "camilla": "Easy peasy!",
 }
 
+ALEX_TAGS = {"start": "[cheerful]", "combo3": "[cheerful]", "combo5": "[excited]", "combo8": "[excited]", "tore3": "[cheerful]", "leben": "[encouraging]",
+             "letztes": "[calm]", "halb": "[cheerful]", "boss": "[encouraging]", "ende": "[warm]", "fail": "[warm]"}   # leichte Tags je Moment (nur im gesprochenen Text)
+
+
+def alex_zurufe():
+    """[(key, text)] aus ALEX_ZURUFE in runner.js (einzige Textquelle)."""
+    js = open(ENGINE, encoding="utf-8").read()
+    block = js[js.index("const ALEX_ZURUFE = {"):js.index("const ALEX_ABSTAND")]
+    return re.findall(r'\["(\w+)", "([^"]+)"\]', block)
+
+
+def alex_kopieren():
+    """Die Zurufe gibt es einmal (Klasse 6); Klasse 9 bekommt Kopien (nur fehlende)."""
+    for key, _ in alex_zurufe():
+        q, z = os.path.join(APP6, "audio", "alex", f"{key}.mp3"), os.path.join(APP9, "audio", "alex", f"{key}.mp3")
+        if os.path.exists(q) and not os.path.exists(z):
+            os.makedirs(os.path.dirname(z), exist_ok=True)
+            import shutil; shutil.copyfile(q, z)
+
+
 def texte():
     """{welt: {banner, richtig, falsch, start, ende}}, {held: satz} aus der Engine."""
     js = open(ENGINE, encoding="utf-8").read()
@@ -85,6 +107,9 @@ def auftraege():
     # Ausrufe in den Heldenfilmen (7.11.2026, Mr. Alex: auch sprechen) – dieselbe Stimme; Zeitpunkt steht in runner.js (Klang 'ruf')
     for h, text in HELD_RUFE.items():
         liste.append((6, APP6, f"audio/helden/ruf_{h}.mp3", CAMEO_STIMME[h], f"{HELD_TAGS[h]} {text}"))
+    # Mr. Alex' Zurufe im Lauf (7.11.2026): einmal vertonen (Klasse 6), Kopie für Klasse 9 (alex_kopieren)
+    for key, text in alex_zurufe():
+        liste.append((6, APP6, f"audio/alex/{key}.mp3", "en_alex", f"{ALEX_TAGS[key.rsplit('_', 1)[0]]} {text}"))
     import klasse9_audio
     for pfad, stimme, text in klasse9_audio.auftraege():
         if pfad.startswith("audio/beae/w_"):
@@ -103,6 +128,7 @@ def daten(klasse):
         if klasse == 6:
             d["cameo"] = {h: a(f"audio/runner/cameo_{h}.mp3") for h in JUNGEN + MAEDCHEN}
         aus[w] = d
+    aus["alex"] = {key: a(f"audio/alex/{key}.mp3") for key, _ in alex_zurufe()}   # Mr. Alex' Zurufe (7.11.), beide Klassen dieselben Dateien
     return aus
 
 
@@ -141,6 +167,7 @@ def main():
         else:
             audio_erzeugen.sprechen(stimme, "en", text, ziel)
         print("  ✓", pfad)
+    alex_kopieren()
 
 
 if __name__ == "__main__":

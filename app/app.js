@@ -2681,7 +2681,7 @@
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
       wrapper: buehne, skin: skinWirksam(), welt: W.id, titel: "London Run", cameos: runnerCameos(), story: storyOption(W.id),   // Story (Welt 1–4; Welt 2–4 mit Varianten aus den vorigen Welten, Begleiter aus Welt 1)
-      audio: runnerAudio(W.id),   // Aufnahmen: Boss Mr. Alex, Levelstart Elrond, Cameos Jugendstimmen (fehlende = Geräte-Stimme)
+      audio: Object.assign({ alex: runnerAudio("alex") }, runnerAudio(W.id) || {}),   // Aufnahmen: Boss Mr. Alex, Levelstart Elrond, Cameos Jugendstimmen, Zurufe Mr. Alex (fehlende = Geräte-Stimme)
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: { bossTitel: `${W.boss} fragt …`, bossHinweis: `Richtig = ${W.tuer || "das Tor der Horse Guards"} geht auf. Falsch = ein Leben weg.` },
       // wort(j, { leise: true }) = Echo im Spiel: leiser und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
@@ -2690,6 +2690,8 @@
         boss: (text, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }], {}, true),
         ansage: (text, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }], { warten: true }),
         cameo: (text, id, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: HELD_STIMME[id] || "f" }], { warten: true }),
+        // Mr. Alex' Zurufe (7.11.): hinter Held/Erzähler/Boss und hinter einer laufenden Vokabel (warten), nie dazwischen
+        alex: (text, key, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }], { warten: true }),
         // U-Bahn-Durchsage („Please mind the doors.“): nur wenn gerade kein Haupttext läuft – nie störend
         durchsage: (text, o) => { if (!hauptLaeuft) hauptText([{ tts: text, lang: (o && o.lang) || "en-GB", stimme: "m" }], { warten: true }); } },
       onEnde: (e) => runnerEnde(i, e, ws, W.id),
@@ -2762,7 +2764,8 @@
     setTimeout(zeigeEreignisse, 50);
     // Levelende-Ansage (Emmaline) vor dem Lob; bei einer Feier (neuer Titel, Held) spricht die Feier
     const endeTon = e.geschafft ? ((runnerAudio(W.id) || {}).ende || { tts: runnerEndeText(W), lang: "en-GB", stimme: "f" }) : null;
-    if (!ereignisse.some(grossEreignis) && (endeTon || (r_ && r_.audio))) spiele([endeTon, r_ && r_.audio]);
+    const alexTon = e.alex ? (e.alex.audio || { tts: e.alex.text, lang: "en-GB", stimme: "m" }) : null;   // Mr. Alex' Schlusswort (7.11.) nach der Ansage
+    if (!ereignisse.some(grossEreignis) && (endeTon || alexTon || (r_ && r_.audio))) spiele([endeTon, alexTon, r_ && r_.audio]);
   }
   // Hall of Fame: Abschnitt in der Sammlung (eine Trophäe je Welt; seit Welt 5 Wembley (1.11.) gibt es keine „bald“-Welt mehr)
   function runnerSammlung() {

@@ -10597,6 +10597,33 @@ window.DATEN = {
     },
     "start": "audio/runner/realm6_start.mp3",
     "ende": "audio/runner/realm6_ende.mp3"
+   },
+   "alex": {
+    "start_1": "audio/alex/start_1.mp3",
+    "start_2": "audio/alex/start_2.mp3",
+    "start_3": "audio/alex/start_3.mp3",
+    "combo3_1": "audio/alex/combo3_1.mp3",
+    "combo3_2": "audio/alex/combo3_2.mp3",
+    "combo5_1": "audio/alex/combo5_1.mp3",
+    "combo5_2": "audio/alex/combo5_2.mp3",
+    "combo8_1": "audio/alex/combo8_1.mp3",
+    "combo8_2": "audio/alex/combo8_2.mp3",
+    "tore3_1": "audio/alex/tore3_1.mp3",
+    "tore3_2": "audio/alex/tore3_2.mp3",
+    "leben_1": "audio/alex/leben_1.mp3",
+    "leben_2": "audio/alex/leben_2.mp3",
+    "leben_3": "audio/alex/leben_3.mp3",
+    "letztes_1": "audio/alex/letztes_1.mp3",
+    "letztes_2": "audio/alex/letztes_2.mp3",
+    "halb_1": "audio/alex/halb_1.mp3",
+    "halb_2": "audio/alex/halb_2.mp3",
+    "boss_1": "audio/alex/boss_1.mp3",
+    "boss_2": "audio/alex/boss_2.mp3",
+    "ende_1": "audio/alex/ende_1.mp3",
+    "ende_2": "audio/alex/ende_2.mp3",
+    "ende_3": "audio/alex/ende_3.mp3",
+    "fail_1": "audio/alex/fail_1.mp3",
+    "fail_2": "audio/alex/fail_2.mp3"
    }
   },
   "story_audio": [

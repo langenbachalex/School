@@ -3291,11 +3291,13 @@
       }),
       // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
       // Aufnahmen der Welt (Boss-Banner/-Sprüche Mr. Alex, Levelstart Jeremy); fehlt eine Datei, spricht die Geräte-Stimme
-      audio: runnerAudio(W.id),
+      audio: Object.assign({ alex: runnerAudio("alex") }, runnerAudio(W.id) || {}),   // dazu Mr. Alex' Zurufe (7.11., audio/alex/<key>.mp3)
       stimme: { wort: (j, o) => runnerWort([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
         erzaehler: erzaehlerStimme, still: () => stopp(),
         boss: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], {}, true),
         ansage: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }),
+        // Mr. Alex' Zurufe (7.11.): hinter Erzähler/Boss und hinter einer laufenden Vokabel (warten), nie dazwischen
+        alex: (text, key, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }),
         // U-Bahn-Durchsage New York („Stand clear of the closing doors, please.“): nur wenn gerade kein Haupttext läuft – nie störend
         durchsage: (text) => { if (!hauptLaeuft) hauptText([{ text, stimme: "m" }], { warten: true }); } },
       onEnde: (e) => runnerEnde(k, unit, i, e, ws, W.id),
@@ -3385,7 +3387,8 @@
     setTimeout(zeigeEreignisse, 50);
     // Levelende-Ansage (Jessica) vor dem Lob; bei einer Feier (neuer Titel) spricht die Feier
     const endeTon = e.geschafft ? ((runnerAudio(W.id) || {}).ende || { text: runnerEndeText(W), stimme: "f" }) : null;
-    if (!ereignisse.some(grossEreignis) && (endeTon || (ruf && ruf.audio))) spiele([endeTon, ruf && ruf.audio]);
+    const alexTon = e.alex ? (e.alex.audio || { text: e.alex.text, stimme: "m" }) : null;   // Mr. Alex' Schlusswort (7.11.) nach der Ansage
+    if (!ereignisse.some(grossEreignis) && (endeTon || alexTon || (ruf && ruf.audio))) spiele([endeTon, alexTon, ruf && ruf.audio]);
   }
   // Hall of Fame: Abschnitt in der Sammlung
   function runnerSammlung() {

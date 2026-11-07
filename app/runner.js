@@ -38,6 +38,8 @@
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
+   Mr. Alex' Zurufe (7.11.): ALEX_ZURUFE (Moment → Varianten), Option audio.alex = { key: Datei }, stimme.alex(text, key, { audio }) – hinter Held/Erzähler/Boss (warten), nie öfter als alle 20 s;
+   Levelende/Game over stehen im Ergebnis (ergebnis.alex = { key, text, audio }) und spricht die App nach der Levelende-Ansage.
    Orts-Szenen (6.11.): window.Runner.szene(ziel, ortId, { text, titel, foto, quelle, onEnde }) spielt eine kurze Szene eines Orts mit den Zeichnungen der Welten (Runner.hatSzene(id), Runner.SZENEN_ORTE).
    Heldenfilme (6.11., Klasse 6): Runner.szene(ziel, 'held_<id>', { text: intro, foto: Sammelkarte (heldKarteBild), … }) – der Superheld als Spielgrafik (heldZeichnen, 7.11.) zeigt seine Kraft in London.
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
@@ -1864,6 +1866,7 @@
     sequenz = null; zoom = 1; banner = null; bossSpruch = null;
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
+    alexLetzteZeit = -99; alexLetzterMoment = null; alexLetzterKey = {}; alexGesagt = []; alexHalb = false; toreSerie = 0;
     trommelt = 0; dunkel = 0; radWinkel = 0; radRueck = 0; kameraHoch = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 60, y: BODEN_Y, flug: 0 } : null;
     klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
     spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null; tuerAnsagen = 0; nyDurchsage = false; durchsagenGesprochen = [];   // The Tube, New York (U-Bahn-Durchsage)
@@ -1906,6 +1909,7 @@
       if (combo === 8) { klang.combo(8); funken(fx, fy, 40, ["#ff4d1c", "#ff9f1c", "#ffd93d"], 320, 0.9); }
       onfire = !ruhig();
     }
+    alexCombo();
   }
   function gegnerPlatt(g) {
     if (g.art === 'bueffel' || g.art === 'ritter') return;   // Büffel (Welt 4) und Ritter (Realm) sind nicht plattzudrücken
@@ -1929,6 +1933,38 @@
      penny Gegner 3 s eingefroren · max holt den zuletzt verpassten Diamanten zurück (sonst Combo +1) · camilla +1 Herz (bei 4 Herzen Combo +1); unbekannte Helden: Combo +1 */
   // Heldenfarbe (7.11., Spielgrafik-Helden; auch Rahmen der Sammelkarte, Glühen, Sprechblasen-Rand)
   const HELD_FARBE = { leo: '#d62828', camilla: '#c8553d', ellie: '#3a86ff', olivia: '#7b2cbf', kenji: '#f77f00', zara: '#ff2d95', penny: '#48cae4', felix: '#0096c7', tessa: '#2e9e5b', max: '#f4b400' };
+  // Mr. Alex' eigene Stimme im Lauf (7.11.2026, Mr. Alex): kurze Zurufe an Schlüsselmomenten, je 2–3 Varianten (Zufall, nie zweimal dieselbe nacheinander),
+  // höchstens einer je ALEX_ABSTAND s und nie zwei nacheinander aus demselben Moment; Levelende/Game over immer (die App spricht sie nach der Levelende-Ansage).
+  // Die App spricht über stimme.alex(text, key, { audio }) als Haupttext mit warten (hinter Held, Erzähler, Boss; eine laufende Vokabel wird nicht abgeschnitten).
+  // Aufnahmen audio/alex/<key>.mp3 (werkzeuge/runner_audio.py liest die Texte hier), fehlt eine → Geräte-Stimme. Einzige Textquelle.
+  const ALEX_ZURUFE = {
+    start:   [["start_1", "Ready? Let's go!"], ["start_2", "Show me what you've got!"], ["start_3", "Off we go!"]],
+    combo3:  [["combo3_1", "Nice combo!"], ["combo3_2", "Keep it up!"]],
+    combo5:  [["combo5_1", "You're on fire!"], ["combo5_2", "Wow, five in a row!"]],
+    combo8:  [["combo8_1", "Unstoppable!"], ["combo8_2", "Incredible!"]],
+    tore3:   [["tore3_1", "Three in a row – brilliant!"], ["tore3_2", "Perfect answers!"]],
+    leben:   [["leben_1", "Never mind – keep going!"], ["leben_2", "Shake it off!"], ["leben_3", "Oops – you've got this!"]],
+    letztes: [["letztes_1", "Careful now – one life left!"], ["letztes_2", "Last life – focus!"]],
+    halb:    [["halb_1", "Halfway there!"], ["halb_2", "Half done – well done!"]],
+    boss:    [["boss_1", "Here comes the boss – you can do this!"], ["boss_2", "Boss time! Think carefully."]],
+    ende:    [["ende_1", "Well done, that's my student!"], ["ende_2", "Top job!"], ["ende_3", "Fantastic run!"]],
+    fail:    [["fail_1", "Good try – next time!"], ["fail_2", "Nearly! Try again."]],
+  };
+  const ALEX_ABSTAND = 20, ALEX_IMMER = ['ende', 'fail'];
+  let alexLetzteZeit = -99, alexLetzterMoment = null, alexLetzterKey = {}, alexGesagt = [], alexHalb = false, toreSerie = 0;
+  function alexSagen(moment) {
+    const liste = ALEX_ZURUFE[moment]; if (!liste || nurFilm) return null;
+    const immer = ALEX_IMMER.includes(moment);
+    if (!immer && (moment === alexLetzterMoment || zeit - alexLetzteZeit < ALEX_ABSTAND)) return null;
+    const wahl = liste.filter((z) => z[0] !== alexLetzterKey[moment]);
+    const [key, text] = wahl[Math.floor(Math.random() * wahl.length)];
+    alexLetzterKey[moment] = key; alexLetzterMoment = moment; alexLetzteZeit = zeit;
+    const z = { moment, key, text, audio: audioDatei('alex', key) };
+    alexGesagt.push({ moment, key });
+    if (!immer) try { if (stimme.alex) stimme.alex(text, key, { audio: z.audio }); } catch (e) { /* stumm */ }
+    return z;
+  }
+  function alexCombo() { if (combo === 3) alexSagen('combo3'); else if (combo === 5) alexSagen('combo5'); else if (combo === 8) alexSagen('combo8'); }
   const CAMEO = {
     leo: { satz: "Leo here! Go, go, go!", farbe: HELD_FARBE.leo, symbol: "⚡" },
     kenji: { satz: "Kenji here! Jump high!", farbe: HELD_FARBE.kenji, symbol: "🦘" },
@@ -1957,6 +1993,7 @@
   function comboPlus() {
     combo++; if (combo > maxCombo) maxCombo = combo; hudPuls = 1;
     funken(spieler.x, spieler.y - 50, 12, ["#ffd93d", "#fff6c0"], 200, 0.6);
+    alexCombo();
   }
   function cameoStart(held) {
     const info = cameoInfo(held);
@@ -2403,6 +2440,7 @@
     if (schild > 0 && grund !== 'wasser') { schild = 0; spieler.unverwundbar = 1.2; klang.schild(); meldung = { text: 'Shield! 🛡️', zeit: 1 }; return; }   // Cameo Tessa
     leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0; wind = null; surft = 0; aufGondel = null;
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
+    alexSagen(leben === 1 ? 'letztes' : 'leben');
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
   }
   const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵', zapfen: 'Icicle! 🧊', tuer: 'Mind the doors! 🚪', ball: 'Ball! ⚽' };
@@ -2742,8 +2780,8 @@
           if (ueberlappt(box.x, box.y, box.w, box.h, tor.x - 16, s.y - 18, 32, 36)) {
             tor.erledigt = true; torErgebnisse[ti] = s.richtig;
             const w = woerter[s.wort];
-            if (s.richtig) { klang.richtig(); popup = { en: w.en + ' ✓', de: tor.de, zeit: 2, art:'richtig' }; gesammelt++; }
-            else { klang.falsch(); popup = { en: w.en + ' ✗', de: kurzDe(w.de) + texte.richtigWaere + woerter[tor.wort].en, zeit: 2.4, art:'falsch' }; }
+            if (s.richtig) { klang.richtig(); popup = { en: w.en + ' ✓', de: tor.de, zeit: 2, art:'richtig' }; gesammelt++; toreSerie++; if (toreSerie === 3) alexSagen('tore3'); }
+            else { toreSerie = 0; klang.falsch(); popup = { en: w.en + ' ✗', de: kurzDe(w.de) + texte.richtigWaere + woerter[tor.wort].en, zeit: 2.4, art:'falsch' }; }
             if (story && story.aktiv) stimme.wort(tor.wort, { warten: true }); else stimme.wort(tor.wort);
             break;
           }
@@ -2814,7 +2852,7 @@
         else spieler.pose = 'steh';
         if (spieler.x >= level.stopX && sequenz.t >= SEQUENZ.zoom) { sequenz = { phase:'stand', t:0 }; spieler.pose = 'steh'; }
       } else if (ph === 'stand') {
-        if (sequenz.t >= SEQUENZ.stand) { sequenz = { phase:'banner', t:0 }; banner = { text:W.banner, zeit:SEQUENZ.banner }; try { stimme.boss(W.banner, { art: 'banner', audio: audioDatei('boss', 'banner') }); } catch (e) { /* stumm */ } }
+        if (sequenz.t >= SEQUENZ.stand) { sequenz = { phase:'banner', t:0 }; banner = { text:W.banner, zeit:SEQUENZ.banner }; try { stimme.boss(W.banner, { art: 'banner', audio: audioDatei('boss', 'banner') }); } catch (e) { /* stumm */ } alexSagen('boss'); }
       } else if (ph === 'banner') {
         banner.zeit -= dt;
         if (sequenz.t >= SEQUENZ.banner) { sequenz = { phase:'boss', t:0 }; banner = null; W.bossKlang(); }
@@ -2843,6 +2881,7 @@
         if (spieler.x > level.tuerX + 10) { zustand = 'fertig'; klang.fanfare(); if (story) filmStart(endeWahl() || gabelStandard(endeAbschnitt && endeAbschnitt.ende)); else zeigeEnde(true); }
       }
     }
+    if (!alexHalb && zustand === 'spiel' && !imRealm() && spieler.x >= level.stopX / 2) { alexHalb = true; alexSagen('halb'); }   // Hälfte der Strecke
     const ziel = Math.max(0, Math.min(spieler.x - viewW * (viewW < 450 ? 0.28 : 0.33), level.ende - viewW));
     kamera += (ziel - kamera) * Math.min(1, dt * 10);
   }
@@ -2904,7 +2943,7 @@
       klang.falsch(); leben--; comboReset(); erstauntZeit = 0.8;
       popup = { en: woerter[i].en + " ✗", de: woerter[i].de, zeit: 2, art: "falsch" };
       if (leben <= 0) { frageBox.hidden = true; bossFrage = null; zustand = "gameover"; zeigeEnde(false); }
-      else { bossFragen(); bossSagt(W.falsch || BOSS_FALSCH, 2.5, 'falsch'); }
+      else { bossFragen(); bossSagt(W.falsch || BOSS_FALSCH, 2.5, 'falsch'); alexSagen(leben === 1 ? 'letztes' : 'leben'); }
     }
   }
 
@@ -2942,6 +2981,7 @@
     endeGemeldet = true;
     if (imRealm()) realmZurueck(false);   // Game over im Realm: Ergebnis mit dem New-York-Level
     const e = ergebnis(gewonnen), mein = opt;
+    e.alex = alexSagen(gewonnen ? 'ende' : 'fail');   // Mr. Alex' Schlusswort: spricht die App nach der Levelende-Ansage
     setTimeout(() => { if (laeuft && opt === mein && typeof mein.onEnde === "function") mein.onEnde(e); }, gewonnen ? 900 : 500);
   }
 
@@ -8229,6 +8269,7 @@
     rafId = requestAnimationFrame(schleife);
     // Levelstart-Ansage beim Loslaufen (es gibt keinen Countdown); Wörter, Erzähler und Boss kommen erst später auf der Strecke
     try { if (stimme.ansage && W.start) stimme.ansage(W.start, { art: 'start', audio: audioDatei('start') }); } catch (e) { /* stumm */ }
+    alexSagen('start');   // Mr. Alex hinter der Ansage
     if (TESTBUILD) window.__runner = haken; // Test-Haken nur im Test-Build, nie auf der Live-Seite
     return { stopp };
   }
@@ -11628,6 +11669,7 @@
         trommelt, dunkel: Math.round(dunkel * 100) / 100, kabinen: level.plattformen.filter((p) => p.art === 'kabine').map((p) => ({ x: p.x, y: p.y, w: p.w })), maschinenraum: (level.deko || []).filter((d) => d.art === 'maschinenraum').map((d) => ({ x: d.x, w: d.w })),
         kisten: level.kisten.filter((k) => k.art).map((k) => ({ x: k.x, y: k.y, art: k.art })), luecken: level.boden.length - 1,
         cameo: cameo ? { id: cameo.held && cameo.held.id, t: Math.round(cameo.t * 100) / 100, satz: cameo.satz } : null, cameosGezeigt, cameoEffekt,
+        alexGesagt: alexGesagt.slice(), alexLetzterMoment,
         cameoPlan: cameoPlan.map((p) => ({ x: p.x, id: p.held && p.held.id, erledigt: p.erledigt })),
         effekte: { schild: Math.round(schild * 100) / 100, sprungBonus: Math.round(sprungBonus * 100) / 100, kenjiMit: Math.round(kenjiMit * 100) / 100, kenjiSprung: Math.round(kenjiSprung * 100) / 100, durchlaessig: Math.round(durchlaessig * 100) / 100, eis: Math.round(eisZeit * 100) / 100, traegt: Math.round(traegt * 100) / 100, traegtAktiv, eule: eule ? eule.x : null },
         tore: tore.map((t) => ({ x: t.x, wort: woerter[t.wort].en, erledigt: t.erledigt, steine: t.steine.map((x) => ({ y: x.y, richtig: x.richtig })) })),
@@ -11649,6 +11691,8 @@
     ballLoesen(i) { const b = baelle[i]; if (b) { b.phase = 'rollt'; b.rx = b.x; b.t = 0; } },   // Test: Ball i rollt sofort los
     setLeben(n) { leben = Math.max(1, Math.min(LEBEN_MAX, Number(n) || LEBEN_MAX)); },   // Test: Leben zurücksetzen, damit Teilprüfungen nicht am Game over scheitern
     setSkin(o) { Object.assign(skin, o); },
+    alexFrei() { alexLetzteZeit = -99; alexLetzterMoment = null; },   // Test: Abstand-Sperre der Zurufe aufheben
+    alex(moment) { this.alexFrei(); return alexSagen(moment); },         // Test: Zuruf sofort auslösen
     cameo(id) { if (zustand !== 'spiel') return false; const h = cameoListe.find((x) => x.id === id) || (id ? { id, name: id } : cameoListe[0]); if (!h) return false; cameo = null; cameoStart(h); return true; },   // Test: Cameo sofort auslösen
     sprechListe, get level() { return level; }, SEQUENZ, BANNER_TEXT, get welt() { return W.id; },
     // Story-Modus (Tests): Zustand, Sprung zur Gabelung, Kristall i einsammeln, Station weiter, Film starten/überspringen

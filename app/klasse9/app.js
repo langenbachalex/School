@@ -3280,7 +3280,8 @@
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
-      wrapper: buehne, skin: skinWirksam(), welt: W.id, story: storyOption(W.id), // Story-Modus in New York (Kapitel 1), Route 66 (Kapitel 2), Grand Canyon (Kapitel 3), Mount Rushmore (Kapitel 4) und Golden Gate (Kapitel 5, drei Enden nach Zählung), je mit Variante aus dem Vorkapitel
+      wrapper: buehne, skin: skinWirksam(), welt: W.id, story: storyOption(W.id),
+      cameos: runnerCameos(), cameoAnzahl: 1,   // Superhelden-Cameos (7.11.): genau 1 Auftritt je Lauf (seltener als Klasse 6), Held zufällig aus allen 13 (Sammeln kommt in Etappe 3) // Story-Modus in New York (Kapitel 1), Route 66 (Kapitel 2), Grand Canyon (Kapitel 3), Mount Rushmore (Kapitel 4) und Golden Gate (Kapitel 5, drei Enden nach Zählung), je mit Variante aus dem Vorkapitel
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: Object.assign(storyTexte(), {
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
@@ -3298,11 +3299,16 @@
         ansage: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }),
         // Mr. Alex' Zurufe (7.11.): hinter Erzähler/Boss und hinter einer laufenden Vokabel (warten), nie dazwischen
         alex: (text, key, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }),
+        // Cameo-Satz des Helden (US-Stimme, audio/runner/cameo_<id>.mp3); fehlt die Aufnahme, spricht die Geräte-Stimme
+        cameo: (text, id, o) => hauptText([(o && o.audio) || { text: text.replace(/[–—]/g, ","), stimme: HELD_STIMME[id] || "f" }], { warten: true }),
         // U-Bahn-Durchsage New York („Stand clear of the closing doors, please.“): nur wenn gerade kein Haupttext läuft – nie störend
         durchsage: (text) => { if (!hauptLaeuft) hauptText([{ text, stimme: "m" }], { warten: true }); } },
       onEnde: (e) => runnerEnde(k, unit, i, e, ws, W.id),
     });
   }
+  // Cameos (7.11.): bis zu 3 Helden gemischt (die Engine zeigt mit cameoAnzahl 1 nur den ersten); Geräte-Stimme je Held, falls eine Aufnahme fehlt
+  const HELD_STIMME = { eddie: "m", gus: "m", cody: "m", benny: "m", archie: "m", bonnie: "f", ally: "f", rosie: "f", pennypuma: "f", molly: "f", holly: "f", maya: "f", sunny: "f" };
+  const runnerCameos = () => mischen((SP.helden || []).slice()).slice(0, 3).map((h) => ({ id: h.id, name: h.name, kraft: h.kraft }));
   // Aufnahmen je Welt aus dem Bau (D.spiel.runner_audio) und Levelende-Text der Engine („You made it to …!“)
   const runnerAudio = (id) => (SP.runner_audio && SP.runner_audio[id]) || null;
   const runnerEndeText = (W) => { const rw = ((R() && R().WELTEN) || []).find((x) => x.id === W.id); return (rw && rw.ende) || `You made it to the ${W.ziel}!`; };

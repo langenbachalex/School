@@ -27,11 +27,16 @@ ARTEN = ("banner", "richtig", "falsch", "start", "ende")
 STIMME9 = {"realm6": {"richtig": "f", "falsch": "f"}}
 JUNGEN, MAEDCHEN = ("leo", "kenji", "felix", "max"), ("camilla", "ellie", "olivia", "zara", "penny", "tessa")
 CAMEO_STIMME = {h: f"h_{h}" for h in JUNGEN + MAEDCHEN}   # 7.11.: jeder Held eine eigene Stimme (audio_erzeugen.STIMMEN h_<id>)
+# Klasse 9 (7.11.2026, Etappe 2): 13 US-Helden (inhalte/klasse9/helden.tsv), je eine eigene amerikanische Stimme (audio_erzeugen.STIMMEN h_<id>), Ziel app/klasse9/audio/runner/cameo_<id>.mp3
+HELDEN9 = ("eddie", "bonnie", "gus", "cody", "ally", "rosie", "benny", "pennypuma", "archie", "molly", "holly", "maya", "sunny")
 
 
 # Audio-Tags (7.11.2026, Mr. Alex: „lots of emotions", v4, Stabilität 0,3): nur im gesprochenen Text, nicht im Untertitel (helden.tsv / runner.js bleiben ohne Tags)
 HELD_TAGS = {"leo": "[energetic]", "camilla": "[proud]", "ellie": "[thoughtful]", "olivia": "[calm]", "kenji": "[excited]", "zara": "[playful]",
-             "penny": "[cheerful]", "felix": "[confident]", "tessa": "[warm]", "max": "[mischievous]"}
+             "penny": "[cheerful]", "felix": "[confident]", "tessa": "[warm]", "max": "[mischievous]",
+             # Klasse 9 (7.11.): Pilot, Rockerin, Bodyguard, Cowboy, Surferin, Ninja, Baumeister, Parkour, Texas-Cowboy, Punk-Drummerin, Heilerin, Gala-Lady, Popstar
+             "eddie": "[confident]", "bonnie": "[excited]", "gus": "[calm]", "cody": "[energetic]", "ally": "[cheerful]", "rosie": "[whispers]",
+             "benny": "[cheerful]", "pennypuma": "[excited]", "archie": "[laid-back]", "molly": "[shouting]", "holly": "[warm]", "maya": "[elegant]", "sunny": "[excited]"}
 HELD_INTRO_TAGS = {   # Film-Vorstellung mit Tags an passenden Stellen (Text wie Spalte intro in helden.tsv)
     "leo": "[energetic] Hi, I'm Leo the Lion! My superpower is super speed. [fast] I can run faster than a car! [laughs]",
     "camilla": "[proud] Hi, I'm Camilla the Camel! I'm super strong. [grunts] Look, I can carry a car on my back! [laughs]",
@@ -52,7 +57,10 @@ HELD_RUFE = {   # Ausrufe in den Heldenfilmen (Sprechblase im Film = dieser Text
 
 # Regel Mr. Alex (7.11.2026): kurze Zurufe (bis ~4 Wörter), besonders mit R am Wortende („fire“), bekommen zusätzlich den Tag [British accent],
 # sonst spricht die Stimme das End-R amerikanisch. Gilt für alle kurzen englischen Zeilen (v4 kennt keinen language_code en-GB).
-def britisch(text):
+# Klasse 9 (Mr. Alex, 7.11.): US-Helden sprechen IMMER mit [American accent] (auch kurze Zeilen), nie britisch – britisch(text, klasse=9).
+def britisch(text, klasse=6):
+    if klasse == 9:
+        return " [American accent]"
     kurz = len(re.findall(r"[A-Za-z']+", text)) <= 4
     end_r = bool(re.search(r"[aeiou]r\b", text, re.I))
     return " [British accent]" if kurz or end_r else ""
@@ -107,6 +115,8 @@ def auftraege():
             liste.append((6, APP6, f"audio/runner/{w}_{art}.mp3", {"start": "m1", "ende": "f1"}.get(art, "en"), welten[w][art]))
     for h in JUNGEN + MAEDCHEN:
         liste.append((6, APP6, f"audio/runner/cameo_{h}.mp3", CAMEO_STIMME[h], f"{HELD_TAGS[h]} {cameo[h]}"))
+    for h in HELDEN9:   # Klasse 9: US-Stimme, [American accent] (britisch(…, 9))
+        liste.append((9, APP9, f"audio/runner/cameo_{h}.mp3", f"h_{h}", f"{HELD_TAGS[h]}{britisch(cameo[h], 9)} {cameo[h]}"))
     # Heldenfilme (6.11.2026): Selbstvorstellung je Held (Spalte intro in inhalte/helden.tsv), dieselbe Stimme wie sein Cameo
     import daten_bauen
     for z in daten_bauen.lesen("helden.tsv"):
@@ -133,8 +143,7 @@ def daten(klasse):
     for w in welten:
         d = {"boss": {art: a(f"audio/runner/{w}_{art}.mp3") for art in ("banner", "richtig", "falsch")},
              "start": a(f"audio/runner/{w}_start.mp3"), "ende": a(f"audio/runner/{w}_ende.mp3")}
-        if klasse == 6:
-            d["cameo"] = {h: a(f"audio/runner/cameo_{h}.mp3") for h in JUNGEN + MAEDCHEN}
+        d["cameo"] = {h: a(f"audio/runner/cameo_{h}.mp3") for h in (JUNGEN + MAEDCHEN if klasse == 6 else HELDEN9)}
         aus[w] = d
     aus["alex"] = {key: a(f"audio/alex/{key}.mp3") for key, _ in alex_zurufe()}   # Mr. Alex' Zurufe (7.11.), beide Klassen dieselben Dateien
     return aus
@@ -170,7 +179,7 @@ def main():
         if os.path.exists(ziel):
             continue
         os.makedirs(os.path.dirname(ziel), exist_ok=True)
-        if kl == 9:
+        if kl == 9 and not stimme.startswith("h_"):   # Klasse-9-Helden (h_<id>) über audio_erzeugen
             sprechen9(stimme, text, ziel)
         else:
             audio_erzeugen.sprechen(stimme, "en", text, ziel)

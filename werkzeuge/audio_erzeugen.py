@@ -39,6 +39,20 @@ STIMMEN = {
     "h_felix":   ("TX3LPaxmHKxFdv7VOQHJ", "en", "Liam – Energetic (Felix the Falcon)"),
     "h_tessa":   ("EXAVITQu4vr4xnSDxMaL", "en", "Sarah – Mature, Reassuring (Tessa the Turtle)"),
     "h_max":     ("N2lVS1w4EtoT3dr4eOWO", "en", "Callum – Husky Trickster (Max the Monkey)"),
+    # Klasse 9 (7.11.2026, Etappe 2): 13 US-Helden, je eine eigene AMERIKANISCHE Stimme aus der Voice Library (jung, passend zur Rolle; Cameo „Road Trip Run“), immer mit [American accent]
+    "h_eddie":     ("6IwYbsNENZgAB1dtBZDp", "en", "Jett – Gritty and Spunky Young Hero, US (Eddie the Eagle, Pilot)"),
+    "h_bonnie":    ("qjuLAJDfQb9pT33FphKb", "en", "Mia – Deep Raspy Californian, US (Bonnie the Bison, Rockerin)"),
+    "h_gus":       ("dtSEyYGNJqjrtBArPCVZ", "en", "Titan – Deep, Bold, Powerful, US (Gus the Grizzly, Bodyguard)"),
+    "h_cody":      ("BAa4mkwD2kJCAJebRztV", "en", "Alpha Texan – leichter Texas-Akzent, jung (Cody the Coyote, Cowboy)"),
+    "h_ally":      ("8DzKSPdgEQPaK5vKG0Rs", "en", "Vanessa – Beach Girl, US (Ally the Alligator, Surferin)"),
+    "h_rosie":     ("Z3R5wn05IrDiVCyEkUrK", "en", "Arabella – Mysterious and Emotive, US (Rosie the Raccoon, Ninja)"),
+    "h_benny":     ("q0IMILNRPxOgtBTS4taI", "en", "Drew – Casual, Curious & Fun, US (Benny the Beaver, Baumeister)"),
+    "h_pennypuma": ("XZUXLIpE3dqJ9aCZUj2R", "en", "Kristen – Upbeat, US (Penny the Puma, Parkour)"),
+    "h_archie":    ("Zg15Et3nnFl0MqqzwK3w", "en", "Hayden – Southern, Bold and Clear, Texas (Archie the Armadillo, Texas-Cowboy)"),
+    "h_molly":     ("TPPp5Y7VlA8wm6T8DFrK", "en", "Sloane Madison – Gen Z, Edgy & Playful, US (Molly the Moose, Punk-Drummerin)"),
+    "h_holly":     ("qBDvhofpxp92JgXJxDjB", "en", "Lily Wolff – Expressive and Kind, US (Holly the Hummingbird, Heilerin)"),
+    "h_maya":      ("TOXPlnYC7z5SQSV2Zgc5", "en", "Jade – Elegant, Calm, Emotive, US (Maya the Monarch, Gala-Lady)"),
+    "h_sunny":     ("5ArfLwnbSFfIMBPFkuFv", "en", "Alanna – Californian, energetic and poppy (Sunny the Songbird, Popstar)"),
 }
 # Modell und Einstellungen je Stimme (Alex: wie auf der ElevenLabs-Webseite eingestellt)
 MODELLE = {
@@ -49,7 +63,8 @@ MODELLE = {
     "m2":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
     "f1":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
     "f2":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
-    **{f"h_{h}": ("eleven_v4", {"stability": 0.3, "similarity_boost": 0.75}) for h in ("leo", "camilla", "ellie", "olivia", "kenji", "zara", "penny", "felix", "tessa", "max")},
+    **{f"h_{h}": ("eleven_v4", {"stability": 0.3, "similarity_boost": 0.75}) for h in ("leo", "camilla", "ellie", "olivia", "kenji", "zara", "penny", "felix", "tessa", "max",
+                                                                                     "eddie", "bonnie", "gus", "cody", "ally", "rosie", "benny", "pennypuma", "archie", "molly", "holly", "maya", "sunny")},
 }
 ERSATZ = ("JBFqnCBsd6RMkjVDRZzb", "en", "George – britische Männerstimme (Ersatz)")
 MODELL = "eleven_multilingual_v2"

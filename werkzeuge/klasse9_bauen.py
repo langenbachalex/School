@@ -483,6 +483,8 @@ def spieldaten():
                            # Orts-Szene (6.11.): Quellenzeile unter dem Foto am Ende der Szene (Fotos: Carol M. Highsmith, Library of Congress, gemeinfrei)
                            foto_quelle=f"Foto: {quellen[z['bild'] + '.jpg']['fotografin']}, Library of Congress (public domain)") for z in tsv("landmarks.tsv")],
         "karte": usa_karte.pfade(os.path.join(INHALTE, "karte", "states-albers-10m.json")),
+        # Superhelden (7.11.2026, Etappe 2): 13 US-Helden als Cameos im Road Trip Run (gezeichnet in runner.js HELDEN_ZEICHNUNG; Sammelkarten/Filme folgen in Etappe 3)
+        "helden": [{"id": z["id"], "name": z["name"], "kraft": z["kraft"]} for z in tsv("helden.tsv")],
         "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in tsv("geheimakten.tsv")],
         # Border Patrol (Games): Wortpaare britisch/amerikanisch; Einzelwort-Audios kommen nach Freigabe (sonst Geräte-Stimme)
         "patrol": [{"id": z["id"], "be": z["be_wort"], "ae": z["luecke"], "de": z["wort_de"],

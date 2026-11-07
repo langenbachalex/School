@@ -32,7 +32,8 @@
    Treffer = ein Leben), Geist auf allen Wegen (schwebend oder auf einer Bank), der Rabe nur in Variante B (tube.g1 = B, rabeMit); Boss Sergeant Bearskin am Spielfeldtor (Rabe auf der Mütze bei B),
    Tür = Spielfeldtor; drei Enden nach Zählung der guten Entscheidungen aus Welt 2–4 (Struktur ende 'zaehlung': E1 Sergeant schießt · E2 der Geist erschreckt den Torwart · E3 Ball prallt vom Hut), Film filmZeichnenWembley. Nationalspieler (nur Namen + Rückennummern, Kulisse auf dem Rasen + Film), Fan-Schilder, Fußballsprüche (1.11.).
    Cameos (31.10., Option cameos: [{ id, name, bild, kraft }]): 2–3 Gastauftritte der geheimen Superhelden je Lauf (rundes Kartenbild, Umhang, Sprechblase ≈ 2,5 s) mit kleinem Effekt (CAMEO);
-   ohne die Option (Klasse 9) gibt es keine Cameos. stimme.cameo(text, id, { audio }) spricht den Satz (optional).
+   ohne die Option gibt es keine Cameos. stimme.cameo(text, id, { audio }) spricht den Satz (optional). Option cameoAnzahl (7.11., Klasse 9: 1) = feste Zahl Auftritte je Lauf (sonst 2–3, Klasse 6);
+   Klasse 9 (Road Trip Run) übergibt die 13 US-Helden (inhalte/klasse9/helden.tsv) mit cameoAnzahl 1 – seltener als Klasse 6.
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
@@ -1819,6 +1820,9 @@
   // Cameos (Klasse 6): Liste der Helden (opt.cameos), geladene Kartenbilder, Auftrittsplan (x-Marken), laufender Auftritt, Effekte (Restzeit in s)
   let cameoListe = [], cameoPlan = [], cameo = null, cameosGezeigt = 0, cameoEffekt = null;
   let schild = 0, sprungBonus = 0, durchlaessig = 0, eisZeit = 0, traegt = 0, traegtAktiv = false, eule = null;
+  // Klasse 9 (7.11.): brecher = Restzeit, in der das nächste Hindernis zerbricht (brecherArt 'laser' Eddie / 'ramme' Bonnie, Benny ohne Lücke: einmal; 'rolle' Archie: alle bis Ablauf),
+  // schweben = Maya (Fallen gebremst), heldBruecke = Bennys Brücke {x, w} über die nächste Lücke, wegZiel = { art, zeit, alle } Ally/Molly/Sunny nehmen Gegner aus dem Spiel, sprungArt 'kenji'|'puma'
+  let cameoAnzahl = 0, brecher = 0, brecherArt = null, schweben = 0, heldBruecke = null, wegZiel = null, sprungArt = 'kenji', laserBlitz = 0;
   let kenjiMit = 0, kenjiSprung = -1;   // Cameo Kenji (7.11., Mr. Alex): Kenji hüpft neben der Figur mit (kenjiMit = Restzeit) und springt beim Bonus-Sprung mit ihr hoch (kenjiSprung = Zeit seit dem Absprung, −1 = am Boden)
   const CAMEO_DAUER = 2.5, CAMEO_EIN = 0.5, CAMEO_AUS = 0.45, CAMEO_R = 24;
   let autoKlangZeit = -9;
@@ -1870,6 +1874,7 @@
     spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null; tuerAnsagen = 0; nyDurchsage = false; durchsagenGesprochen = [];   // The Tube, New York (U-Bahn-Durchsage)
     baelle = (level.baelle || []).map((b) => ({ ...b, phase: 'ruhe', rx: b.x, rot: 0, t: 0 })); koepfer = 0; ballTreffer = 0; tuerTritt = -1; rasenBetreten = false;   // Wembley
     cameo = null; cameosGezeigt = 0; cameoEffekt = null; kenjiMit = 0; kenjiSprung = -1; schild = 0; sprungBonus = 0; durchlaessig = 0; eisZeit = 0; traegt = 0; traegtAktiv = false; eule = null;
+    cameoK9Aus();
     cameoPlan = cameoPlanBauen();
     blase = null; wortbank = []; echoWarteschlange = []; echo = null; echoLetzte = -9; echos = 0; stimmeAufrufe = 0;
     diaGesammelt = 0; film = null; storyNeu(); realmNeu();
@@ -1977,12 +1982,26 @@
     penny: { satz: "Penny here! Freeze!", farbe: HELD_FARBE.penny, symbol: "❄️" },
     max: { satz: "Max here! I've got a gadget!", farbe: HELD_FARBE.max, symbol: "🔧" },
     camilla: { satz: "Camilla here! Have an extra heart!", farbe: HELD_FARBE.camilla, symbol: "❤️" },
+    // Klasse 9 (Road Trip USA, „The Lost Map“, 7.11.): je Held ein kurzer Satz (Untertitel ohne Tags; Aufnahmen audio/runner/cameo_<id>.mp3, US-Stimmen)
+    eddie: { satz: "Eddie here. Eyes on the road – I've got this one!", farbe: HELD_FARBE.eddie, symbol: "💥" },
+    bonnie: { satz: "Bonnie here! Let me rock that out of your way!", farbe: HELD_FARBE.bonnie, symbol: "🦬" },
+    gus: { satz: "Gus here. Nobody touches you – or the map!", farbe: HELD_FARBE.gus, symbol: "🛡️" },
+    cody: { satz: "Cody here! Hold on to your hat – let's ride!", farbe: HELD_FARBE.cody, symbol: "⚡" },
+    ally: { satz: "Ally here! Surf's up – I'll wash them away!", farbe: HELD_FARBE.ally, symbol: "🌊" },
+    rosie: { satz: "Rosie here. Shh – they won't even see us.", farbe: HELD_FARBE.rosie, symbol: "🥷" },
+    benny: { satz: "Benny here! Don't worry, I'll fix the road!", farbe: HELD_FARBE.benny, symbol: "🌉" },
+    pennypuma: { satz: "Penny here! Ready? Jump higher than ever!", farbe: HELD_FARBE.pennypuma, symbol: "🐾" },
+    archie: { satz: "Archie here, all the way from Texas. Let's roll!", farbe: HELD_FARBE.archie, symbol: "🌀" },
+    molly: { satz: "Molly here! One, two, three, four – stomp!", farbe: HELD_FARBE.molly, symbol: "🥁" },
+    holly: { satz: "Holly here. Take this – our road trip isn't over!", farbe: HELD_FARBE.holly, symbol: "❤️" },
+    maya: { satz: "Maya here, darling. Let's float above it all.", farbe: HELD_FARBE.maya, symbol: "🦋" },
+    sunny: { satz: "Sunny here! Everybody dance – off you go!", farbe: HELD_FARBE.sunny, symbol: "🎵" },
   };
   const cameoInfo = (held) => CAMEO[held && held.id] || { satz: `${(held && held.name) || "A hero"} is here!`, farbe: "#1d3f8f", symbol: "⭐" };
   // 2–3 Auftritte je Lauf (höchstens so viele wie Helden übergeben): x-Marken bei 22/50/78 % der Strecke, nie direkt an einem Tor (dann 400 dahinter)
   function cameoPlanBauen() {
     if (!cameoListe.length) return [];
-    const n = Math.min(cameoListe.length, 2 + (Math.random() < 0.5 ? 1 : 0));
+    const n = Math.min(cameoListe.length, cameoAnzahl || 2 + (Math.random() < 0.5 ? 1 : 0));   // Klasse 9: cameoAnzahl 1
     const anteile = n === 1 ? [0.45] : n === 2 ? [0.3, 0.65] : [0.22, 0.5, 0.78];
     return anteile.map((f, i) => {
       let x = Math.round(level.sequenzX * f);
@@ -2021,8 +2040,50 @@
       d.x = zx; d.y = 290; d.verpasst = false; funken(d.x, d.y, 14, ["#39c6f0", "#bfefff", "#ffffff"], 180, 0.6); cameoEffekt = 'diamant';
     }
     else if (id === 'camilla' && leben < LEBEN_MAX) { leben++; hudPuls = 1; cameoEffekt = 'herz'; }
+    // Klasse 9 (7.11.): vorhandene Effekte wiederverwendet (Schild, Spur + Combo, durchlässig, Sprung, Herz), neu: Hindernis-Brecher, Gegner weg, Brücke, Schweben
+    else if (id === 'eddie') { brecher = 6; brecherArt = 'laser'; cameoEffekt = 'laser'; }
+    else if (id === 'bonnie') { brecher = 6; brecherArt = 'ramme'; cameoEffekt = 'ramme'; }
+    else if (id === 'gus') { schild = 5; cameoEffekt = 'schild'; }
+    else if (id === 'cody') { if (!ruhig()) spur = Math.max(spur, 3); comboPlus(); cameoEffekt = 'combo'; }
+    else if (id === 'ally') { wegZiel = { art: 'welle', zeit: 6, alle: false }; cameoEffekt = 'welle'; }
+    else if (id === 'rosie') { durchlaessig = 3; cameoEffekt = 'unsichtbar'; }
+    else if (id === 'benny') { if (brueckeBauen()) cameoEffekt = 'bruecke'; else { brecher = 6; brecherArt = 'ramme'; cameoEffekt = 'ramme'; } }
+    else if (id === 'pennypuma') { sprungBonus = 5; sprungArt = 'puma'; cameoEffekt = 'sprung'; }
+    else if (id === 'archie') { brecher = 4; brecherArt = 'rolle'; cameoEffekt = 'rolle'; }
+    else if (id === 'molly') { wegZiel = { art: 'stampf', zeit: 5, alle: true }; cameoEffekt = 'stampf'; }
+    else if ((id === 'holly') && leben < LEBEN_MAX) { leben++; hudPuls = 1; cameoEffekt = 'herz'; }
+    else if (id === 'maya') { schweben = 4; cameoEffekt = 'schweben'; }
+    else if (id === 'sunny') { wegZiel = { art: 'tanz', zeit: 5, alle: true }; cameoEffekt = 'tanz'; }
     else { comboPlus(); cameoEffekt = 'combo'; }
+    if (id === 'kenji') sprungArt = 'kenji';
   }
+  /* Klasse 9: Hilfen der neuen Cameo-Effekte */
+  function cameoK9Aus() {   // beim Neustart und vor dem Boss
+    brecher = 0; brecherArt = null; schweben = 0; wegZiel = null; sprungArt = 'kenji'; laserBlitz = 0;
+    if (heldBruecke) { SOLIDE = SOLIDE.filter((q) => !q.heldBruecke); heldBruecke = null; }
+  }
+  // Benny: Brücke über die nächste Lücke vor der Figur (höchstens 1600 weiter, höchstens 520 breit); false = keine Lücke in Reichweite
+  function brueckeBauen() {
+    const seg = level.boden.slice().sort((a, b) => a[0] - b[0]);
+    for (let i = 0; i < seg.length - 1; i++) {
+      const a = seg[i][1], b = seg[i + 1][0];
+      if (a < spieler.x + 30 || a > spieler.x + 1600 || a > level.sequenzX) continue;
+      if (b - a <= 0 || b - a > 520) continue;
+      heldBruecke = { x: a - 12, w: b - a + 24 };
+      SOLIDE.push({ x: heldBruecke.x, y: BODEN_Y, w: heldBruecke.w, h: 14, voll: false, heldBruecke: true });
+      funken(a + (b - a) / 2, BODEN_Y - 10, 16, ['#8d5a2b', '#c58b4a', '#ffffff'], 180, 0.6);
+      return true;
+    }
+    return false;
+  }
+  const WEG_FARBEN = { welle: ['#00a6a6', '#7fe6ff', '#ffffff'], stampf: ['#4361ee', '#a3b1ff', '#ffd93d'], tanz: ['#ffd23f', '#ff85a1', '#9d4edd'] };
+  function gegnerWeg(g, art) {   // Gegner fliegt weg (Welle: nach rechts gespült, Stampfer: hochgeschleudert, Tanz: tanzt davon) und ist harmlos
+    const b = gegnerBox(g);
+    g.weg = { art, t: 0, vx: art === 'welle' ? 520 : art === 'stampf' ? 120 : 260, vy: art === 'welle' ? -120 : art === 'stampf' ? -520 : -70 }; g.harmlos = true;
+    funken(b.x + b.w / 2, b.y + b.h / 2, 14, WEG_FARBEN[art], 200, 0.7, 'stern'); gegnerKlang('plopp');
+  }
+  const BRECHER_TEXT = { laser: 'Laser! 💥', ramme: 'Smash! 🦬', rolle: 'Roll! 🌀' }, BRECHER_FARBEN = { laser: ['#ff2d2d', '#ffb3b3', '#ffffff'], ramme: ['#8d5a2b', '#c9184a', '#ffd93d'], rolle: ['#e76f51', '#f4a261', '#ffffff'] };
+  const HINDERNIS_GRUND = ['auto', 'bus', 'cab', 'stein', 'kaktus', 'stamm', 'treibgut', 'tuer', 'ball', 'baer', 'feuer', 'zapfen'];
   function cameoBewegen(dt) {
     if (cameo) { cameo.t += dt; if (cameo.t >= CAMEO_DAUER) cameo = null; }
     if (schild > 0) schild = Math.max(0, schild - dt);
@@ -2033,6 +2094,17 @@
     if (durchlaessig > 0) durchlaessig = Math.max(0, durchlaessig - dt);
     if (eisZeit > 0) eisZeit = Math.max(0, eisZeit - dt);
     if (traegt > 0) traegt = Math.max(0, traegt - dt);
+    if (brecher > 0) { brecher = Math.max(0, brecher - dt); if (brecher <= 0) brecherArt = null; }
+    if (schweben > 0) schweben = Math.max(0, schweben - dt);
+    if (laserBlitz > 0) laserBlitz = Math.max(0, laserBlitz - dt);
+    if (heldBruecke && spieler.x > heldBruecke.x + heldBruecke.w + 500) { SOLIDE = SOLIDE.filter((q) => !q.heldBruecke); heldBruecke = null; }
+    if (wegZiel) {   // Ally: der nächste Gegner vor der Figur · Molly/Sunny: alle auf dem Bildschirm (sonst der nächste, der auftaucht)
+      wegZiel.zeit -= dt;
+      const bis = wegZiel.alle ? kamera + viewW + 20 : spieler.x + 480;
+      const ziele = gegner.filter((g) => g.tot <= 0 && !g.harmlos && !g.weg && !g.rollt && !g.klaut && (() => { const b = gegnerBox(g); return b.x + b.w > spieler.x - 40 && b.x < bis; })());
+      if (ziele.length) { (wegZiel.alle ? ziele : [ziele.sort((p, q) => p.x - q.x)[0]]).forEach((g) => gegnerWeg(g, wegZiel.art)); wegZiel = null; }
+      else if (wegZiel.zeit <= 0) wegZiel = null;
+    }
     if (eule && (eule.erledigt || spieler.x > eule.x + 40)) eule = null;
     if (!cameo && tot <= 0 && !popup) { const pl = cameoPlan.find((p) => !p.erledigt && spieler.x >= p.x); if (pl) { pl.erledigt = true; cameoStart(pl.held); } }
   }
@@ -2403,7 +2475,8 @@
     if (rutscht > 0) return;                  // auf dem Ölfleck: kein Sprung möglich
     if (spieler.amBoden && tot <= 0) {
       spieler.vy = SPRUNG_V * (wind && wind.phase === 'schub' ? WIND_SPRUNG : 1); spieler.amBoden = false; halten = true; haltZeit = 0; spieler.sprang = true; klang.sprung();   // in der Windböe: halber Sprung; sprang = Landung macht in der Drachenhöhle Lärm
-      if (sprungBonus > 0) { spieler.vy *= 1.3; sprungBonus = 0; kenjiSprung = 0; meldung = { text: 'Boing! 🦘', zeit: 0.7 }; }   // Cameo Kenji: einmal höher – Kenji springt mit
+      if (sprungBonus > 0 && sprungArt === 'puma') { spieler.vy *= 1.42; sprungBonus = 0; sprungArt = 'kenji'; meldung = { text: 'Mega jump! 🐾', zeit: 0.8 }; funken(spieler.x, spieler.y, 12, ['#06d6a0', '#b7f7e4', '#ffffff'], 180, 0.5); }   // Cameo Penny the Puma (Kl. 9): Mega-Sprung
+      else if (sprungBonus > 0) { spieler.vy *= 1.3; sprungBonus = 0; kenjiSprung = 0; meldung = { text: 'Boing! 🦘', zeit: 0.7 }; }   // Cameo Kenji: einmal höher – Kenji springt mit
     }
   }
   function sprungEnde() { halten = false; }
@@ -2438,6 +2511,13 @@
 
   function schaden(grund) {
     if (spieler.unverwundbar > 0 || tot > 0) return;
+    if (brecher > 0 && HINDERNIS_GRUND.includes(grund)) {   // Kl. 9 Eddie/Bonnie/Archie (Benny ohne Lücke): das Hindernis zerbricht, die Figur läuft hindurch
+      const art = brecherArt || 'ramme';
+      funken(spieler.x + 30, spieler.y - 30, 18, BRECHER_FARBEN[art], 230, 0.7, 'stern'); klang.schild(); meldung = { text: BRECHER_TEXT[art], zeit: 0.9 };
+      if (art === 'laser') laserBlitz = 0.35;
+      spieler.unverwundbar = art === 'rolle' ? 0.7 : 1.1; if (art !== 'rolle') { brecher = 0; brecherArt = null; }
+      return;
+    }
     if (schild > 0 && grund !== 'wasser') { schild = 0; spieler.unverwundbar = 1.2; klang.schild(); meldung = { text: 'Shield! 🛡️', zeit: 1 }; return; }   // Cameo Tessa
     leben--; klang.aua(); comboReset(); erstauntZeit = 0.8; rutscht = 0; wind = null; surft = 0; aufGondel = null;
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
@@ -2607,9 +2687,10 @@
   const kaktusBox = (k) => ({ x: k.x - KAKTUS_W / 2, y: BODEN_Y - KAKTUS_H, w: KAKTUS_W, h: KAKTUS_H });
   function gegnerBewegen(dt) {
     for (const g of gegner) {
-      if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut) continue;   // Cameo Penny: Gegner stehen eingefroren still
+      if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut && !g.weg) continue;   // Cameo Penny: Gegner stehen eingefroren still
       g.flug += dt;
       if (g.tot > 0) { g.tot += dt; continue; }
+      if (g.weg) { g.weg.t += dt; g.x += g.weg.vx * dt; g.y += g.weg.vy * dt; if (g.weg.art === 'stampf') g.weg.vy += 900 * dt; if (g.weg.t > 1.2) g.tot = 1; continue; }   // Kl. 9 Ally/Molly/Sunny: Gegner fliegt/tanzt davon
       if (g.rollt) { g.x += 420 * dt; g.roll = (g.roll || 0) + dt * 14; if (g.x > g.bis + 900) g.tot = 1; continue; }   // weggerollte Kugel: schnell nach rechts, dann weg
       if (g.klaut) { g.klaut += dt; g.x += 170 * dt; g.y -= 130 * dt; if (g.klaut > 1.6) g.tot = 1; continue; }   // Möwe mit Beute: fliegt nach oben rechts davon
       if (g.wartet) continue;   // wartender Ritter (Realm Kapitel 2): steht still, schaut nach links
@@ -2685,6 +2766,7 @@
         const g = (halten && spieler.vy < 0 && haltZeit < HALT_MAX) ? GRAV_HALT : GRAV;
         if (halten) haltZeit += dt;
         spieler.vy += g * dt;
+        if (schweben > 0 && spieler.vy > 110) spieler.vy = 110;   // Cameo Maya (Kl. 9): langsam herabschweben
       }
       const altY = spieler.y;
       spieler.y += spieler.vy * dt;
@@ -2841,7 +2923,7 @@
       gegnerKlaengeNaehe();
       // Boss-Sequenz beginnt
       if (spieler.x >= level.sequenzX && spieler.amBoden) {
-        zustand = 'sequenz'; sequenz = { phase:'zoom', t:0 }; halten = false; spieler.unverwundbar = 0; cameo = null; eule = null; traegtAktiv = false; schild = sprungBonus = durchlaessig = eisZeit = traegt = 0;   // Cameo-Effekte enden vor dem Boss
+        zustand = 'sequenz'; sequenz = { phase:'zoom', t:0 }; halten = false; spieler.unverwundbar = 0; cameo = null; eule = null; traegtAktiv = false; schild = sprungBonus = durchlaessig = eisZeit = traegt = 0; cameoK9Aus();   // Cameo-Effekte enden vor dem Boss
         klang.dramatik();
       }
     } else if (zustand === 'sequenz') {
@@ -8842,6 +8924,7 @@
     for (const g of gegner) {
       if (g.tot > 0.6) continue; const x = g.x - kamera; if (x < -60 || x > viewW + 60) continue;
       c.save(); c.translate(-kamera, 0);
+      if (g.weg) { const b = gegnerBox(g), mx = b.x + b.w / 2, my = b.y + b.h / 2; c.translate(mx, my); c.rotate(g.weg.art === 'tanz' ? Math.sin(g.weg.t * 14) * 0.45 : g.weg.t * 9); c.translate(-mx, -my); c.globalAlpha = Math.max(0, 1 - g.weg.t / 1.2); }   // Kl. 9: wegfliegen / tanzen
       (GEGNER_ZEICHNER[g.art] || waschbaer)(c, g);
       c.restore();
       if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut) {   // Cameo Penny: Eisblock um den Gegner
@@ -8873,9 +8956,23 @@
         c.save(); c.globalAlpha = nebelDichte; c.shadowColor = '#7fe6ff'; c.shadowBlur = 18; diamant(c, x, d.y + schweb, 14, '#39c6f0'); c.restore();
       }
     }
+    if (heldBruecke) {   // Cameo Benny (Kl. 9): Holzbrücke über die Lücke (Bretter + Geländerseil)
+      const bx = heldBruecke.x - kamera, bw = heldBruecke.w;
+      if (bx < viewW + 20 && bx + bw > -20) {
+        c.save(); c.fillStyle = '#8d5a2b'; c.fillRect(bx, BODEN_Y, bw, 12); c.fillStyle = '#c58b4a';
+        for (let px = bx + 2; px < bx + bw - 4; px += 18) c.fillRect(px, BODEN_Y + 1, 14, 9);
+        c.strokeStyle = '#5c3a1a'; c.lineWidth = 3; c.beginPath(); c.moveTo(bx, BODEN_Y - 26); c.quadraticCurveTo(bx + bw / 2, BODEN_Y - 12, bx + bw, BODEN_Y - 26); c.stroke();
+        c.fillStyle = '#5c3a1a'; c.fillRect(bx - 3, BODEN_Y - 30, 6, 32); c.fillRect(bx + bw - 3, BODEN_Y - 30, 6, 32); c.restore();
+      }
+    }
+    if (laserBlitz > 0 && tot <= 0) {   // Cameo Eddie (Kl. 9): roter Laserstrahl von oben auf das Hindernis vor der Figur
+      c.save(); c.globalAlpha = Math.min(1, laserBlitz / 0.2); c.strokeStyle = '#ff2d2d'; c.lineWidth = 5; c.shadowColor = '#ff2d2d'; c.shadowBlur = 14;
+      c.beginPath(); c.moveTo(spieler.x - kamera + 220, 40); c.lineTo(spieler.x - kamera + 40, spieler.y - 30); c.stroke(); c.restore();
+    }
     if (tot <= 0) {
       const blink = spieler.unverwundbar > 0 && Math.floor(zeit * 12) % 2 === 0;
       c.globalAlpha = blink ? 0.35 : durchlaessig > 0 ? 0.45 : 1;   // Cameo Zara: Figur halb unsichtbar
+      if (brecher > 0 || schweben > 0) { const fa = brecherArt === 'laser' ? '#ff2d2d' : brecherArt === 'rolle' ? HELD_FARBE.archie : brecherArt ? HELD_FARBE.bonnie : HELD_FARBE.maya; c.save(); c.globalAlpha = 0.3 + 0.12 * Math.sin(zeit * 7); c.strokeStyle = fa; c.lineWidth = 4; c.setLineDash(brecherArt === 'rolle' ? [10, 6] : []); c.beginPath(); c.ellipse(spieler.x - kamera, spieler.y - 44, 36, 54, brecherArt === 'rolle' ? zeit * 6 : 0, 0, Math.PI * 2); c.stroke(); c.restore(); }   // Kl. 9: Kraft-Ring (Laser/Ramme/Rolle/Schweben)
       if (schild > 0) { c.save(); c.globalAlpha = 0.35 + 0.1 * Math.sin(zeit * 6); c.strokeStyle = '#2e9e5b'; c.lineWidth = 4; c.beginPath(); c.ellipse(spieler.x - kamera, spieler.y - 44, 34, 52, 0, 0, Math.PI * 2); c.stroke(); c.restore(); }   // Cameo Tessa: Schutzschild
       if (traegtAktiv) falkeZeichnen(c, spieler.x - kamera, spieler.y - 96);   // Cameo Felix: Falke hält die Figur
       if ((kenjiMit > 0 || kenjiSprung >= 0) && !(cameo && cameo.held && cameo.held.id === 'kenji') && HELDEN_ZEICHNUNG.kenji) {   // Cameo Kenji: hüpft links neben der Figur mit, springt beim Bonus-Sprung mit ihr hoch
@@ -9068,7 +9165,11 @@
   function effektChips(c) {
     const liste = [];
     if (schild > 0) liste.push(['🛡️', schild / 5]);
-    if (sprungBonus > 0) liste.push(['🦘', sprungBonus / 5]);
+    if (sprungBonus > 0) liste.push([sprungArt === 'puma' ? '🐾' : '🦘', sprungBonus / 5]);
+    if (brecher > 0) liste.push([brecherArt === 'laser' ? '💥' : brecherArt === 'rolle' ? '🌀' : '🦬', brecher / (brecherArt === 'rolle' ? 4 : 6)]);
+    if (schweben > 0) liste.push(['🦋', schweben / 4]);
+    if (heldBruecke) liste.push(['🌉', 1]);
+    if (wegZiel) liste.push([wegZiel.art === 'welle' ? '🌊' : wegZiel.art === 'stampf' ? '🥁' : '🎵', wegZiel.zeit / (wegZiel.art === 'welle' ? 6 : 5)]);
     if (traegt > 0 || traegtAktiv) liste.push(['🦅', traegtAktiv ? 1 : traegt / 5]);
     if (durchlaessig > 0) liste.push(['👻', durchlaessig / 3]);
     if (eisZeit > 0) liste.push(['❄️', eisZeit / 3]);
@@ -9227,6 +9328,7 @@
     texte = Object.assign({}, TEXTE, { bossTitel: `${W.bossName} fragt …` }, opt.texte || {});
     // Cameos (nur wenn die App Helden übergibt): Kartenbilder vorab laden; Ladefehler → Kreis mit Initiale
     cameoListe = (Array.isArray(opt.cameos) ? opt.cameos : []).filter((h) => h && h.id).slice(0, 3);
+    cameoAnzahl = Math.max(0, Math.floor(Number(opt.cameoAnzahl) || 0));   // Klasse 9: 1 Auftritt je Lauf (ohne Option 2–3 wie Klasse 6)
     canvas = el("canvas", "runner-canvas"); canvas.setAttribute("aria-label", opt.titel || "Road Trip Run");
     ctx = canvas.getContext("2d");
     wrapper.append(canvas, frageBauen());

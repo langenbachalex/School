@@ -482,6 +482,8 @@ def staat_foto(sid):
         return {}
     if "wikimedia.org" in q["link"]:  # 7.11.: einzelne bessere Motive von Wikimedia Commons
         return {"foto": f"bilder/staaten/{sid}.jpg", "foto_quelle": f"Foto: {q['urheber']}, {q['lizenz']}, Wikimedia Commons"}
+    if "nps.gov" in q["link"]:  # 7.11.: Foto des National Park Service (gemeinfrei)
+        return {"foto": f"bilder/staaten/{sid}.jpg", "foto_quelle": f"Foto: National Park Service ({q['lizenz']})"}
     return {"foto": f"bilder/staaten/{sid}.jpg", "foto_quelle": f"Foto: {q['urheber']}, Library of Congress ({q['lizenz']})"}
 
 

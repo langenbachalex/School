@@ -8,7 +8,7 @@ Kurzzeile in der App: „Foto: Carol M. Highsmith, Library of Congress (public d
 | NY.jpg | View of the Manhattan (borough) skyline from the Empire State Building in New York City | Carol M. Highsmith | public domain | 400x300, 20 KB | http://www.loc.gov/item/2018699971/ |
 | MA.jpg | Aerial view of Harvard Stadium, Harvard University's football facility in Cambridge, Massachusetts | Carol M. Highsmith | public domain | 400x267, 28 KB | http://www.loc.gov/item/2019689665/ |
 | PA.jpg | Independence Hall, Philadelphia, Pennsylvania | Carol M. Highsmith | public domain | 400x309, 20 KB | http://www.loc.gov/item/2011630508/ |
-| FL.jpg | An alligator lurks in a channel of the Everglades, an ecosystem in South Florida | Carol M. Highsmith | public domain | 400x267, 31 KB | http://www.loc.gov/item/2020720572/ |
+| FL.jpg | A menacing-looking alligator at the Everglades Safari Park, Florida | Carol M. Highsmith | public domain | 400x267, 23 KB | http://www.loc.gov/item/2020720594/ |
 | TX.jpg | Longhorn cattle in rural Texas | Carol M. Highsmith | public domain | 400x310, 21 KB | http://www.loc.gov/item/2011632284/ |
 | CA.jpg | Golden Gate Bridge, San Francisco, California | Carol M. Highsmith | public domain | 400x266, 17 KB | http://www.loc.gov/item/2013630258/ |
 | IL.jpg | Aerial view of downtown Chicago, Illinois, from Lake Michigan | Carol M. Highsmith | public domain | 400x315, 19 KB | http://www.loc.gov/item/2011634502/ |
@@ -40,7 +40,7 @@ Kurzzeile in der App: „Foto: Carol M. Highsmith, Library of Congress (public d
 | GA.jpg | Sea of peach trees in a vast orchard near Trenton, South Carolina. Neighboring Georgia, the "Peach S | Carol M. Highsmith | public domain | 400x266, 16 KB | http://www.loc.gov/item/2017880006/ |
 | LA.jpg | Mardi Gras Parade, New Orleans, Louisiana | Carol M. Highsmith | public domain | 400x266, 28 KB | http://www.loc.gov/item/2011646934/ |
 | AL.jpg | The U.S. Space & Rocket Center, Huntsville, Alabama | Carol M. Highsmith | public domain | 400x272, 21 KB | http://www.loc.gov/item/2010639638/ |
-| AR.jpg | Digging For Diamonds (2245556315).jpg (Wikimedia Commons) | Doug Wertman | CC BY 2.0 | 400x296, 28 KB | https://commons.wikimedia.org/wiki/File:Digging_For_Diamonds_(2245556315).jpg |
+| AR.jpg | Crater of Diamonds State Park 004.jpg | Kathy | CC BY 2.0 | 400x300, 18 KB | https://commons.wikimedia.org/wiki/File:Crater_of_Diamonds_State_Park_004.jpg |
 | SC.jpg | Walls of Fort Sumter, [Charleston, South Carolina] | Carol M. Highsmith | public domain | 400x310, 24 KB | http://www.loc.gov/item/2011630916/ |
 | NC.jpg | The Wright Brothers National Memorial in Kitty Hawk, North Carolina commemorates Wilbur and Orville | Carol M. Highsmith | public domain | 400x266, 10 KB | http://www.loc.gov/item/2017880246/ |
 | VA.jpg | Mount Vernon garden in winter, Mount Vernon, Virginia | Carol M. Highsmith | public domain | 400x310, 25 KB | http://www.loc.gov/item/2011634505/ |
@@ -53,5 +53,7 @@ Kurzzeile in der App: „Foto: Carol M. Highsmith, Library of Congress (public d
 | VT.jpg | Farmer Burr Morse collects maple syrup from one of his thousands of trees in Montpelier, Vermont | Carol M. Highsmith | public domain | 400x499, 40 KB | http://www.loc.gov/item/2011631238/ |
 | NH.jpg | Mount Washington cog railway, New Hampshire | Carol M. Highsmith | public domain | 400x321, 26 KB | http://www.loc.gov/item/2011630192/ |
 | ME.jpg | Portland Head Lighthouse, Cape Elizabeth, Maine | Carol M. Highsmith | public domain | 400x317, 18 KB | http://www.loc.gov/item/2011630354/ |
-| MS.jpg | American Queen Steamboat at Natchez Under the Hill.jpg (Wikimedia Commons) | Ricky Idlett | CC BY 4.0 | 400x232, 21 KB | https://commons.wikimedia.org/wiki/File:American_Queen_Steamboat_at_Natchez_Under_the_Hill.jpg |
-| KY.jpg | Shower Bath Springs near Frozen Niagara in Mammoth Cave, NPS Photo (56229ed1-e46c-4288-835d-44ec4b573cc2).JPG (Wikimedia Commons) | NPS Photo | Public domain | 400x300, 20 KB | https://commons.wikimedia.org/wiki/File:Shower_Bath_Springs_near_Frozen_Niagara_in_Mammoth_Cave,_NPS_Photo_(56229ed1-e46c-4288-835d-44ec4b573cc2).JPG |
+| MS.jpg | The Spirit of Dubuque paddlewheel steamboat on the Mississippi River | Carol M. Highsmith | public domain | 400x267, 14 KB | http://www.loc.gov/item/2016630404/ |
+| KY.jpg | Frozen Niagara, a waterfall in Mammoth Cave, Kentucky | National Park Service | public domain | 400x225, 15 KB | https://www.nps.gov/maca/planyourvisit/cave-tours.htm |
+
+Ausnahmen (7.11.): KY = National Park Service (gemeinfrei, Werk der US-Bundesregierung), AR = Wikimedia Commons (CC BY 2.0). Die Quellenzeile in der App richtet sich nach dem Link (loc.gov / nps.gov / Commons).

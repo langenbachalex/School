@@ -10948,7 +10948,8 @@
     const texte = ['SHOW', 'NYC', 'BROADWAY', 'MUSIC', 'NEWS', 'PIZZA', 'DANCE', '24/7'];
     const block = (x0, w, tafeln) => {
       c.fillStyle = '#2a2f3e'; c.fillRect(x0, 40, w, 252); c.fillStyle = '#1e2230'; for (let x = x0 + 8; x < x0 + w - 8; x += 24) c.fillRect(x, 40, 3, 252);
-      tafeln.forEach(([tx, ty, tw, th], i) => { const k = i + (x0 > 300 ? 4 : 0), f = farben[k % 8];
+      const innen = x0 > 300 ? x0 : x0 + w;   // 7.11.: Tafeln zur Mitte hin gestaucht (x 0,82), damit sie beim Zoom ganz im Bild bleiben
+      tafeln.forEach(([tx0, ty, tw0, th], i) => { const k = i + (x0 > 300 ? 4 : 0), f = farben[k % 8], tw = tw0 * 0.82, tx = innen + (x0 + tx0 - innen) * 0.82 - x0;
         c.globalAlpha = an(k); c.fillStyle = '#111'; c.fillRect(x0 + tx - 3, ty - 3, tw + 6, th + 6); c.fillStyle = f; c.fillRect(x0 + tx, ty, tw, th);
         c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(x0 + tx, ty, tw, th * 0.35);
         c.fillStyle = '#fff'; c.font = `bold ${Math.min(22, th * 0.42, (tw - 10) / (texte[k % 8].length * 0.68))}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(texte[k % 8], x0 + tx + tw / 2, ty + th / 2 + 1);
@@ -12099,7 +12100,7 @@
         if (t > 1.6) { c.globalAlpha = sanft((t - 1.6) / 0.5); szText(c, 'Fort Sumter', 450, 120, 18, '#fff'); c.strokeStyle = '#fff'; c.lineWidth = 2; c.beginPath(); c.moveTo(450, 132); c.lineTo(450, 150); c.stroke(); c.globalAlpha = 1; }
         if (t > 8.2) { c.globalAlpha = sanft((t - 8.2) / 0.5); szText(c, 'the Civil War begins', 320, 72, 18, '#ffd93d'); c.globalAlpha = 1; }
       } },
-    NC: { dauer: 11.4, klaenge: [[0.3, 'wind'], [0.6, 'motor'], [2.2, 'motor'], [3.8, 'motor'], [5.4, 'motor'], [7.0, 'motor'], [8.6, 'motor'], [9.8, 'jubel']],
+    NC: { dauer: 15.4, klaenge: [[0.3, 'wind'], [0.6, 'motor'], [2.2, 'motor'], [3.8, 'motor'], [5.4, 'motor'], [7.0, 'motor'], [8.6, 'motor'], [10.2, 'motor'], [11.8, 'motor'], [13.4, 'motor'], [14.0, 'jubel']],
       zeichne(c, t) {   // Kitty Hawk 1903: Dünen am Meer, der Wright Flyer fährt auf der Holzschiene an, hebt ab und fliegt dicht über dem Sand, ein Bruder rennt mit; Zähler Sekunden bis 12 und Meter bis 37
         szHimmel(c, '#7ab0e0', '#eef4f8'); szWolken(c, t, [[0, 60], [380, 40]]);
         c.fillStyle = '#4a7aa8'; c.fillRect(0, 196, SZ_W, 36); c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 2; for (let k = 0; k < 10; k++) { const wx = (k * 83 - t * 14) % (SZ_W + 40) + 20, wy = 204 + (k % 3) * 9; c.beginPath(); c.moveTo(wx, wy); c.lineTo(wx + 18, wy); c.stroke(); }
@@ -12108,18 +12109,18 @@
         c.fillStyle = '#6a8a4a'; for (const gx of [30, 180, 420, 600]) for (let k = 0; k < 4; k++) c.fillRect(gx + k * 4, 296 - k * 2, 2, 8 + k * 2);
         c.fillStyle = '#7a5a3a'; c.fillRect(60, 326, 190, 5);
         c.fillStyle = '#5a3a22'; c.fillRect(26, 262, 4, 40); c.beginPath(); c.roundRect(4, 240, 140, 30, 5); c.fill(); c.fillStyle = '#f2e6c8'; c.font = 'bold 12px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('KITTY HAWK · 1903', 74, 255);
-        const T0 = 2.6, T1 = 9.6;
+        const T0 = 1.8, T1 = 13.8;   // 7.11.: Flug dauert echte 12 s (Zähler = Echtzeit)
         let x, y;
-        if (t < 1.6) { x = 150; y = 312; } else if (t < T0) { const u = (t - 1.6) / (T0 - 1.6); x = lerp(150, 230, u * u); y = 312; }
+        if (t < 0.8) { x = 150; y = 312; } else if (t < T0) { const u = (t - 0.8) / (T0 - 0.8); x = lerp(150, 230, u * u); y = 312; }
         else if (t < T1) { const u = (t - T0) / (T1 - T0); x = lerp(230, 440, u); y = 312 - Math.sin(Math.min(1, u * 1.15) * Math.PI) * 70 - (ruhig() ? 0 : Math.sin(t * 3) * 4) * Math.sin(u * Math.PI); }
         else { x = 440 + Math.min(1, (t - T1) / 0.6) * 12; y = 316; }
         if (t > T0) { const x0 = 230; c.strokeStyle = '#ffd93d'; c.lineWidth = 3; c.setLineDash([8, 6]); c.beginPath(); c.moveTo(x0, 340); c.lineTo(x, 340); c.stroke(); c.setLineDash([]); c.fillStyle = '#ffd93d'; c.fillRect(x0 - 1, 332, 3, 16); }
         if (t > T1 && t < T1 + 1.2) { const d = (t - T1) / 1.2; rauchWolke(c, 452, 326, 8 + d * 14, 0.6 * (1 - d), `rgba(232,212,160,${0.8 * (1 - d)})`); }
-        { const u = sanft((t - 1.6) / 1.8), wx = lerp(110, 300, u), stop = t > 3.4; personKlein(c, wx, 330, 0.9, 6, { schritt: stop || ruhig() ? 0 : Math.sin(t * 12) * 0.8, arme: t > T1 ? Math.abs(Math.sin(t * 4)) : stop ? 0.4 : 0.2 }); }
+        { const u = sanft((t - 0.8) / 2.2), wx = lerp(110, 300, u), stop = t > 3.0; personKlein(c, wx, 330, 0.9, 6, { schritt: stop || ruhig() ? 0 : Math.sin(t * 12) * 0.8, arme: t > T1 ? Math.abs(Math.sin(t * 4)) : stop ? 0.4 : 0.2 }); }
         wrightFlyer(c, x, y, 1.45, t, t);
         const fl = Math.min(1, Math.max(0, (t - T0) / (T1 - T0)));
-        szZaehler(c, `${Math.floor(12 * fl)} s · ${Math.round(37 * fl)} m`, '#ffd93d', 12, 200);
-        if (t < T0) szText(c, 'the first airplane', 320, 68, 16);
+        szZaehler(c, `${Math.min(12, Math.floor(t - T0 < 0 ? 0 : t - T0))} s · ${Math.round(37 * fl)} m`, '#ffd93d', 12, 200);
+        if (t < T0 + 1.2) szText(c, 'the first airplane', 320, 68, 16);
         if (t > T1 + 0.4) { c.globalAlpha = sanft((t - T1 - 0.4) / 0.5); szText(c, 'It flew!', 320, 70, 20, '#ffd93d'); c.globalAlpha = 1; }
       } },
     VA: { dauer: 11, klaenge: [[0.3, 'fanfare'], [1.4, 'plopp'], [2.0, 'plopp'], [2.6, 'plopp'], [3.2, 'plopp'], [3.8, 'plopp'], [4.4, 'plopp'], [5.0, 'plopp'], [5.6, 'plopp'], [7.0, 'klick'], [7.5, 'klick'], [8.0, 'klick'], [8.5, 'klick'], [9.0, 'klick'], [9.6, 'applaus']],
@@ -12218,7 +12219,7 @@
         szUeberblende(c, t, 5.0);
       } },
     NJ: { dauer: 11.8, klaenge: [[0.3, 'markt'], [1.2, 'plopp'], [2.0, 'plopp'], [2.8, 'plopp'], [3.6, 'plopp'], [4.4, 'staunen'], [6.4, 'schritte'], [7.4, 'klick'], [7.8, 'klick'], [8.2, 'lichtAn'], [9.2, 'staunen']],
-      zeichne(c, t) {   // erst zwei Quadrate von 1 km²: New Jersey füllt sich mit rund 490 Menschen, in Alaska steht nur ein Elch; dann Edisons Labor in Menlo Park: die Glühbirne flackert und leuchtet
+      zeichne(c, t) {   // erst zwei Quadrate von 1 km²: New Jersey füllt sich mit Menschen (die meisten pro km²), in Alaska steht nur ein Elch; dann Edisons Labor in Menlo Park: die Glühbirne flackert und leuchtet
         if (t < 5.8) {
           szHimmel(c, '#cfe6f6', '#eef6fb'); c.fillStyle = '#dfe8ee'; c.fillRect(0, 330, SZ_W, H);
           szZaehler(c, 'people in 1 km²', '#ffd93d', 12, 220);
@@ -12227,7 +12228,7 @@
           for (let i = 0; i < n; i++) { const gx = 66 + (i % 22) * 9.6, gy = 86 + Math.floor(i / 22) * 9.6; c.fillStyle = ['#2a6cff', '#e0a400', '#2e9e5b', '#e8467c', '#8a3ffc', '#ff7a1a'][i % 6]; c.fillRect(gx + 1, gy + 3, 5, 5); c.fillStyle = '#d9a070'; c.fillRect(gx + 2, gy, 3, 3); }
           elch(c, 470, 270, 0.55, t);
           szText(c, 'New Jersey', 170, 318, 18); szText(c, 'Alaska', 470, 318, 18);
-          szText(c, `≈ ${Math.round(n * 490 / 484)}`, 170, 60, 18, '#1d2a50'); if (t > 4.2) szText(c, '< 1', 470, 60, 18, '#1d2a50');
+          if (t > 4.2) { szText(c, 'the most people', 170, 68, 15, '#1d2a50'); szText(c, 'very few', 470, 68, 15, '#1d2a50'); }   // 7.11.: Wörter statt Zahlen (wie im gesprochenen Text)
         } else {
           c.fillStyle = '#7a5a3a'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#8a6a44'; for (let x = 0; x < SZ_W; x += 48) c.fillRect(x, 0, 44, 270);
           c.fillStyle = '#4a3220'; for (const y of [100, 170]) c.fillRect(0, y, SZ_W, 7);
@@ -12332,13 +12333,13 @@
         moeweFlug(c, (t * 40) % 760 - 60, 90, t, 1.2); moeweFlug(c, (t * 30 + 300) % 760 - 60, 120, t + 1, 1);
         if (t < 5.0) szZaehler(c, 'Maine lobster', '#ffd93d', 12, 200);
         else {
-          const g = sanft((t - 5.0) / 0.5); c.globalAlpha = g; c.fillStyle = 'rgba(24,33,58,.78)'; c.beginPath(); c.roundRect(40, 60, 560, 110, 12); c.fill();
-          for (let i = 0; i < 10; i++) { const x = 80 + i * 53, me = i < 8, an = t > 5.6 + i * 0.4; if (!an) continue; c.save(); if (!me) c.globalAlpha *= 0.35; hummer(c, x, 104, 0.3, t, -Math.PI / 2); c.restore(); szText(c, me ? 'ME' : 'other', x, 154, 12, me ? '#ffd93d' : '#c8ccd2'); }
+          const g = sanft((t - 5.0) / 0.5); c.globalAlpha = g; c.fillStyle = 'rgba(24,33,58,.78)'; c.beginPath(); c.roundRect(16, 60, 500, 110, 12); c.fill();   // 7.11.: Tafel links, der Leuchtturm (x 560) bleibt frei
+          for (let i = 0; i < 10; i++) { const x = 46 + i * 49, me = i < 8, an = t > 5.6 + i * 0.4; if (!an) continue; c.save(); if (!me) c.globalAlpha *= 0.35; hummer(c, x, 104, 0.3, t, -Math.PI / 2); c.restore(); szText(c, me ? 'ME' : 'other', x, 154, 12, me ? '#ffd93d' : '#c8ccd2'); }
           szZaehler(c, 'Most US lobsters: Maine', '#ffd93d', 12, 300); c.globalAlpha = 1;
         }
       } },
     // Klasse 9 – Landmarks, Etappe 3 (6.11.2026): Times Square, Niagara Falls, Old Faithful, White House (Schlüssel = Landmark-id, inhalte/klasse9/landmarks.tsv)
-    times_square: { dauer: 9, klaenge: [[0.2, 'verkehr'], [1.0, 'taxi'], [2.2, 'hupe'], [3.0, 'verkehr'], [3.6, 'klick'], [4.3, 'klick'], [5.0, 'klick'], [5.7, 'jubel'], [6.0, 'applaus'], [7.4, 'hupe']],
+    times_square: { dauer: 9, nachZoomMax: 1.04, klaenge: [[0.2, 'verkehr'], [1.0, 'taxi'], [2.2, 'hupe'], [3.0, 'verkehr'], [3.6, 'klick'], [4.3, 'klick'], [5.0, 'klick'], [5.7, 'jubel'], [6.0, 'applaus'], [7.4, 'hupe']],
       zeichne(c, t) {   // Times Square bei Nacht – nie dunkel: Leuchtwände blinken, gelbe Taxis, eine Menschenmenge; der Ball fällt am Mast herab (3, 2, 1), Mitternacht: HAPPY NEW YEAR! und Konfetti
         const z = lerp(1, 1.08, sanft(t / 9));
         c.save(); c.translate(SZ_W / 2, 300); c.scale(z, z); c.translate(-SZ_W / 2, -300);
@@ -12439,7 +12440,7 @@
         else if (t < 7.6) { x = lerp(349, 190, sanft((t - 6.6) / 1)); y = 262; }
         else if (t < 8.4) { x = 190; y = lerp(262, 424, sanft((t - 7.6) / 0.8)); }
         else { const f = sanft((t - 8.4) / 0.8); x = lerp(190, 450, f); y = lerp(424, 236, f) + (f >= 1 ? Math.sin(t * 4) * 3 : 0); }
-        const unten = t < 2.2 ? 388 : Math.min(388, y - 34), cx = t < 6.6 ? 300 : t < 7.6 ? x - 49 : 141;
+        const unten = t < 2.2 ? 388 : Math.min(388, y - 50), cx = t < 6.6 ? 300 : t < 7.6 ? x - 49 : 141;
         szHeld(c, 'camilla', x, y, 1.6, t, { pose: t < 2.2 ? 'steh' : t < 8.4 ? 'kraft' : 'jubel', kraft: 0, blitz: szBlitz(t, 2.2) });   // kraft: 0 = Arme hoch ohne Felsbrocken (sie hebt das Taxi)
         const traegt = t > 2.6 && t < 8.0;
         szFahrzeug(c, 'cab', cx, unten, t, 1.25, traegt ? Math.sin(t * 3) * 0.03 : 0);
@@ -12686,7 +12687,7 @@
     const bild = () => {
       c2.setTransform(1, 0, 0, 1, 0, 0); c2.fillStyle = '#18213a'; c2.fillRect(0, 0, cv.width, cv.height);
       c2.setTransform(massstab, 0, 0, massstab, 0, 0); c2.save(); c2.beginPath(); c2.rect(0, 0, SZ_W, H); c2.clip();
-      const nachZoom = A.t > S.dauer ? Math.min(1.15, 1 + 0.02 * (A.t - S.dauer)) : 1;   // 6.11.: spricht die Stimme länger als die Szene, zoomt das letzte Bild langsam heran (statt stillzustehen)
+      const nachZoom = A.t > S.dauer ? Math.min(S.nachZoomMax || 1.15, 1 + 0.02 * (A.t - S.dauer)) : 1;   // 6.11.: spricht die Stimme länger als die Szene, zoomt das letzte Bild langsam heran (statt stillzustehen)
       if (nachZoom > 1) { c2.translate(SZ_W / 2, H / 2); c2.scale(nachZoom, nachZoom); c2.translate(-SZ_W / 2, -H / 2); }
       try { S.zeichne(c2, Math.min(A.t, S.dauer)); } catch (e) { A.fehler = String(e && e.message || e); }
       c2.restore();

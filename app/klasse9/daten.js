@@ -9236,7 +9236,7 @@ window.DATEN = {
     "fakt": "Kentucky is famous for horses and the Kentucky Derby race. Mammoth Cave in Kentucky is the longest cave in the world. People know more than 680 kilometers of it.",
     "audio": "audio/staaten/KY.mp3",
     "foto": "bilder/staaten/KY.jpg",
-    "foto_quelle": "Foto: National Park Service (public domain)"
+    "foto_quelle": "Foto: NPS Photo, Public domain, Wikimedia Commons"
    },
    {
     "id": "TN",
@@ -9268,7 +9268,7 @@ window.DATEN = {
     "fakt": "The Mississippi River is one of the longest rivers in North America. It is about 3,700 kilometers long. It flows from Minnesota all the way to the sea in Louisiana.",
     "audio": "audio/staaten/MS.mp3",
     "foto": "bilder/staaten/MS.jpg",
-    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
+    "foto_quelle": "Foto: Ricky Idlett, CC BY 4.0, Wikimedia Commons"
    },
    {
     "id": "AL",
@@ -9284,7 +9284,7 @@ window.DATEN = {
     "fakt": "In Arkansas, there is a park where you can look for real diamonds. It is called Crater of Diamonds. If you find a diamond, you can keep it.",
     "audio": "audio/staaten/AR.mp3",
     "foto": "bilder/staaten/AR.jpg",
-    "foto_quelle": "Foto: Kathy, CC BY 2.0, Wikimedia Commons"
+    "foto_quelle": "Foto: Doug Wertman, CC BY 2.0, Wikimedia Commons"
    },
    {
     "id": "SC",

@@ -1,6 +1,6 @@
 /* Français Classe 5/6 – Sprachkurs-App (Mr. Alex)
    Kein Konto, keine Namen. Fortschritt bleibt nur auf diesem Gerät (localStorage, Schlüssel mit Präfix fr_).
-   Kacheln: 💬 Dialogues · 🗣️ Prononciation · 🎮 Jeux · 🎧 Beat-Studio · Sammlung „Panthéon“.
+   Kacheln: 💬 Dialogues · 🗣️ Prononciation · 🎮 Jeux · 🎧 Beat-Studio · 🗼 Paris (Karte mit Szenen, Stufe 2) · Sammlung „Panthéon“.
    Inhalte: inhalte/franz/*.tsv → werkzeuge/franz_bauen.py → daten_fr.js. Grundsatz: Wird eine Lösung gezeigt, wird sie auch abgespielt. */
 (function () {
   "use strict";
@@ -22,7 +22,7 @@
   function laden() {
     let s = {};
     try { s = JSON.parse(localStorage.getItem(SPEICHER)) || {}; } catch (e) { s = {}; }
-    return Object.assign({ punkte: 0, dialoge: {}, namen: {}, spiele: {}, lese: "einfach", tempo: 1 }, s);
+    return Object.assign({ punkte: 0, dialoge: {}, namen: {}, spiele: {}, paris: 1, lese: "einfach", tempo: 1 }, s);
   }
   const stand = laden();
   function speichern() { try { localStorage.setItem(SPEICHER, JSON.stringify(stand)); } catch (e) { /* privater Modus: nur für diese Sitzung */ } }
@@ -57,7 +57,13 @@
   function punkte(plus, grund) {
     stand.punkte += plus; speichern();
     toast(`+${plus} ⭐ ${grund || zufall(LOB)}`);
+    const neu = parisFrei();
+    if (neu > stand.paris) setTimeout(() => toast(`🗼 Nouveau lieu à Paris : ${D.paris[neu - 1].name} !`), 1200);
   }
+  /* Paris-Karte (Stufe 2): der erste Ort ist frei, danach alle PARIS_PUNKTE Punkte ein neuer Ort. stand.paris = Zahl der Orte, deren Szene schon lief;
+     neue Orte zeigt die Startseite mit ihrer Szene (nicht mitten in einer Übung). */
+  const PARIS_PUNKTE = 20;
+  const parisFrei = () => Math.min((D.paris || []).length, 1 + Math.floor(stand.punkte / PARIS_PUNKTE));
   function rueckmeldung() { return el("div", { class: "rueckmeldung", hidden: true, role: "status" }); }
   function melde(box, art, text) { box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text; }
   const kopf = (titel, zurueck, unter) => el("header", { class: "kopf" }, knopf("← Zurück", zurueck, "leise"),
@@ -153,7 +159,9 @@
         kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe),
         kachel("🗣️", "Prononciation", "Namen richtig aussprechen", prononciation),
         kachel("🎮", "Jeux", "Memory, Qui est-ce ?, Dans l'ordre", jeux),
-        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio)));
+        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio),
+        kachel("🗼", "Paris", `${parisFrei()}/${D.paris.length} Orte · Karte mit Filmen`, parisSeite)));
+    if (parisFrei() > stand.paris) setTimeout(parisNeu, 700);
   }
   const kachel = (sym, titel, unter, fn, extra) => el("button", { type: "button", class: "kachel" + (extra || ""), onclick: fn },
     el("span", { class: "sym", "aria-hidden": "true" }, sym), el("span", { class: "titel", lang: "fr" }, titel), unter && el("span", { class: "unter" }, unter));
@@ -502,6 +510,72 @@
         b.text ? el("pre", { class: "mitlauf", lang: "fr" }, b.text) : el("p", { class: "klein" }, "Mitlauftext folgt."))));
   }
 
+
+  /* ---------- 🗼 Paris (Stufe 2, 7.11.2026) ----------
+     Karte wie der London-Plan in Englisch 6: Orte schalten sich mit Punkten frei; je Ort ein kleiner Film (Runner.szene aus ../runner.js,
+     dieselbe Engine wie London Run), Mr. Alex spricht den Text, am Ende ein kleines Foto (falls vorhanden), danach der Text fr/de zum Nachlesen. */
+  const hatFilm = (o) => !!(o && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(o.id));
+  function parisFilm(o, fertig) {
+    if (!hatFilm(o)) { if (fertig) fertig(); return false; }
+    stopp();
+    const sz = window.Runner.szene(null, o.id, { text: o.fr, lang: "fr", titel: `${o.symbol} ${o.name} · Paris`, foto: o.foto, quelle: o.quelle,
+      voice: () => spiele([ton(o)]), voiceStopp: stopp, voiceAudio: () => aktuell, onEnde: () => { if (fertig) fertig(); } });
+    if (!sz && fertig) fertig();
+    return !!sz;
+  }
+  function parisNeu() { // neu freigeschaltete Orte nacheinander mit Film zeigen, danach zählen sie als gesehen
+    if (parisFrei() <= stand.paris || document.querySelector(".ortszene")) return;
+    const o = D.paris[stand.paris];
+    stand.paris++; speichern();
+    toast(`🗼 ${o.name} – freigeschaltet !`);
+    if (!parisFilm(o, () => setTimeout(parisNeu, 400))) setTimeout(parisNeu, 400);
+  }
+  function parisKarte(frei, waehle) {
+    const NS = "http://www.w3.org/2000/svg";
+    const s = (tag, attrs, ...kinder) => { const e = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v)); kinder.forEach((k) => e.append(k)); return e; };
+    const svg = s("svg", { viewBox: "0 0 400 200", class: "london", role: "img", "aria-label": "Karte von Paris" });
+    svg.append(
+      s("rect", { x: 0, y: 0, width: 400, height: 200, rx: 12, class: "l-land" }),
+      s("ellipse", { cx: 46, cy: 96, rx: 26, ry: 34, class: "l-park" }),        // Bois de Boulogne
+      s("ellipse", { cx: 198, cy: 98, rx: 14, ry: 6, class: "l-park" }),        // Tuileries
+      s("ellipse", { cx: 214, cy: 160, rx: 12, ry: 8, class: "l-park" }),       // Luxembourg
+      s("ellipse", { cx: 118, cy: 156, rx: 9, ry: 16, class: "l-park" }),       // Champ-de-Mars
+      s("path", { d: "M400,150 C360,148 320,140 290,134 C270,130 262,124 250,118 C232,108 214,104 196,104 C176,104 160,108 140,114 C118,120 100,128 84,140 C66,150 40,158 0,162", class: "l-fluss" }),
+      s("ellipse", { cx: 254, cy: 120, rx: 11, ry: 4, class: "l-land", transform: "rotate(28 254 120)" }),   // Île de la Cité
+      s("text", { x: 318, y: 156, class: "l-name" }, "La Seine"),
+      s("text", { x: 12, y: 170, class: "l-name" }, "↙ Versailles"));
+    D.paris.forEach((o, i) => {
+      const offen = i < frei;
+      const g = s("g", { class: "l-ort" + (offen ? " offen" : ""), transform: `translate(${o.x} ${o.y})`, tabindex: offen ? 0 : -1,
+        role: offen ? "button" : "img", "aria-label": offen ? o.name : "Noch nicht freigeschaltet" },
+        s("circle", { r: 12 }), s("text", { y: 4.5, "text-anchor": "middle" }, offen ? o.symbol : "?"));
+      if (offen) {
+        g.addEventListener("click", () => waehle(o));
+        g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); waehle(o); } });
+      }
+      svg.append(g);
+    });
+    return el("div", { class: "london-rahmen" }, svg);
+  }
+  function parisSeite() {
+    const frei = parisFrei(), rest = PARIS_PUNKTE - (stand.punkte % PARIS_PUNKTE);
+    const fakt = el("section", { class: "karte paris-fakt", hidden: true });
+    const faktZeigen = (o) => {
+      fakt.hidden = false;
+      fakt.replaceChildren(el("h2", { lang: "fr" }, `${o.symbol} ${o.name}`), el("p", { class: "paris-fr", lang: "fr" }, o.fr), el("p", { class: "klein" }, o.de),
+        el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)])), hatFilm(o) && knopf("▶ Film", () => parisFilm(o), "leise")));
+      fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+    zeige(kopf("🗼 Paris", startseite, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
+      parisKarte(frei, (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); }),
+      el("p", { class: "klein" }, "Tipp auf einen Ort: kleiner Film mit Mr. Alex, danach der Text zum Nachlesen."),
+      fakt,
+      el("div", { class: "namen-raster" }, D.paris.map((o, i) => i < frei
+        ? el("button", { type: "button", class: "namen-knopf gold", onclick: () => { if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); } }, el("span", { class: "medaille", "aria-hidden": "true" }, o.symbol), el("span", { lang: "fr" }, o.name))
+        : el("button", { type: "button", class: "namen-knopf gesperrt", disabled: true }, el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?")))));
+  }
+
   /* ---------- 🏛️ Panthéon ---------- */
   function pantheon() {
     zeige(kopf("🏛️ Panthéon", startseite, "Deine Sammlung: geschaffte Dialoge und Namen. Gold = auch ohne Vorbild."),
@@ -516,7 +590,11 @@
           const s = namenStufe(n);
           return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : s ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
             bild(n, 64), el("span", { lang: "fr" }, s ? n.name : "?"));
-        }))]));
+        }))]),
+      el("h2", {}, "🗼 Paris"),
+      el("div", { class: "namen-raster" }, D.paris.map((o, i) => i < parisFrei()
+        ? el("button", { type: "button", class: "namen-knopf gold", onclick: () => parisFilm(o) }, el("span", { class: "medaille", "aria-hidden": "true" }, o.symbol), el("span", { lang: "fr" }, o.name))
+        : el("button", { type: "button", class: "namen-knopf gesperrt", onclick: parisSeite }, el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?")))));
   }
 
   leiste();

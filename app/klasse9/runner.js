@@ -426,6 +426,13 @@
     kanone() { rauschen(0.6, 0.08, 0, { typ: "lowpass", freq: 400 }); ton(60, 0.7, "sine", 0.1, 0, 35); ton(120, 0.15, "square", 0.04); },   // Kanonenschuss
     trompete() { [[392, 0], [466, 0.2], [523, 0.4], [587, 0.6], [523, 0.95], [466, 1.15], [392, 1.4]].forEach(([f, s]) => { ton(f, 0.22, "sawtooth", 0.035, s); ton(f * 2, 0.22, "square", 0.008, s); }); },   // Jazz-Trompete: kleiner Lauf
     telefon() { for (let i = 0; i < 16; i++) { ton(1200, 0.04, "square", 0.025, i * 0.06); ton(1500, 0.04, "square", 0.02, i * 0.06 + 0.03); } },   // alte Wandklingel (1878): zwei Glöckchen schnarren
+    // Paris (Französisch-App, 7.11.2026)
+    akkordeon() { [[440, 0], [523, 0.3], [659, 0.6], [587, 0.9], [523, 1.2], [494, 1.5], [523, 1.8], [440, 2.1]].forEach(([f, s]) => { ton(f, 0.28, "square", 0.016, s); ton(f * 1.007, 0.28, "square", 0.016, s); ton(f / 2, 0.28, "triangle", 0.02, s); }); [0, 0.9, 1.8].forEach((s) => { ton(110, 0.22, "triangle", 0.05, s); ton(220, 0.18, "square", 0.012, s + 0.3); ton(220, 0.18, "square", 0.012, s + 0.6); }); },   // Musette-Walzer: zwei leicht verstimmte Zungen + Bass
+    funkeln() { for (let i = 0; i < 10; i++) ton(2000 + Math.random() * 2200, 0.09, "sine", 0.03, i * 0.07); },   // Glitzern (Eiffelturm, Gold)
+    klingel() { ton(2600, 0.3, "sine", 0.05); ton(3900, 0.2, "sine", 0.015); ton(2600, 0.3, "sine", 0.05, 0.18); ton(3900, 0.2, "sine", 0.015, 0.18); },   // Fahrradklingel
+    gong() { [[659, 0], [523, 0.38]].forEach(([f, s]) => { ton(f, 0.9, "sine", 0.06, s); ton(f * 2, 0.5, "sine", 0.015, s); }); },   // Zwei-Ton-Gong am Bahnsteig
+    oper() { [[784, 0, 0.45], [880, 0.45, 0.4], [988, 0.85, 1.0]].forEach(([f, s, d]) => { ton(f, d, "sine", 0.05, s); ton(f * 1.012, d, "triangle", 0.015, s); ton(f * 2, d, "sine", 0.008, s); }); },   // Sopran: drei Töne aufwärts
+    dampf() { ton(880, 0.8, "sine", 0.04); ton(1108, 0.8, "sine", 0.03); rauschen(1.0, 0.035, 0, { typ: "highpass", freq: 2500 }); },   // Dampfpfeife um 1900
   };
 
   /* ---------- Figur v2 (29.10.; Vorschlag docs/runner/figur-vorschlaege, Entscheidungen Mr. Alex) ---------- */
@@ -11098,6 +11105,322 @@
       szHeldKraft(c, t, 8.2, id, f.kraft);
     } };
   }
+  /* ---------- Paris (Französisch-App Klasse 5/6, Stufe 2, 7.11.2026) ----------
+     Zeichnungen für die Paris-Karte (inhalte/franz/paris.tsv, app/franz): flacher Vektor-Stil wie die London-Orte, (x, y) = Fußpunkt Mitte, s = Maßstab.
+     Szenen unten in SZENEN (Abschnitt „Französisch – Paris“), Klänge akkordeon/funkeln/klingel/gong/oper/dampf in klang. */
+  const pZahl = (k) => { const v = Math.sin(k * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };   // feste Pseudo-Zufallszahl 0–1 je k
+  function pHaeuser(c, y, x0, x1, kam = 0, s = 1) {   // Haussmann-Häuser: helle Fassade, graues Mansarddach mit Gauben, Schornstein, Balkonlinien; kam verschiebt (Parallaxe)
+    const b = 70 * s, erst = Math.floor((x0 + kam) / b) - 1;
+    for (let k = erst; k * b - kam < x1 + b; k++) {
+      const x = k * b - kam, h = (112 + Math.floor(pZahl(k) * 3) * 14) * s;
+      c.fillStyle = ['#efe4cf', '#e6d9bf', '#f3eadb'][Math.floor(pZahl(k + 9) * 3)]; c.fillRect(x, y - h, b - 2 * s, h);
+      c.fillStyle = '#7f8a94'; c.beginPath(); c.moveTo(x - 2 * s, y - h); c.lineTo(x + 7 * s, y - h - 22 * s); c.lineTo(x + b - 9 * s, y - h - 22 * s); c.lineTo(x + b, y - h); c.fill();
+      c.fillStyle = '#d6dde2'; c.fillRect(x + 16 * s, y - h - 17 * s, 8 * s, 11 * s); c.fillRect(x + 44 * s, y - h - 17 * s, 8 * s, 11 * s);
+      c.fillStyle = '#b5644a'; c.fillRect(x + 30 * s, y - h - 31 * s, 8 * s, 11 * s);
+      for (let r = 0; r < 4; r++) for (let w = 0; w < 3; w++) { c.fillStyle = '#5b7085'; c.fillRect(x + (9 + w * 20) * s, y - h + (12 + r * 25) * s, 10 * s, 15 * s); }
+      c.fillStyle = '#2b2b2b'; c.fillRect(x, y - h + 30 * s, b - 2 * s, 2 * s); c.fillRect(x, y - h + 80 * s, b - 2 * s, 2 * s);
+    }
+  }
+  function pGitter(c, pkt, farbe, hell) {   // gefülltes Vieleck mit Gitter-Streben (Eiffelturm)
+    c.save(); c.beginPath(); pkt.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.fillStyle = farbe; c.fill(); c.clip();
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity; for (const [x, y] of pkt) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    c.strokeStyle = hell; c.lineWidth = 1.2; const d = Math.max(6, (x1 - x0) / 6);
+    for (let k = x0 - (y1 - y0); k < x1 + (y1 - y0); k += d) { c.beginPath(); c.moveTo(k, y1); c.lineTo(k + (y1 - y0), y0); c.moveTo(k, y0); c.lineTo(k + (y1 - y0), y1); c.stroke(); }
+    c.restore();
+  }
+  function pEiffel(c, x, y, s, o = {}) {   // Eiffelturm (330 m): vier Beine mit Bogen, zwei Etagen, Spitze mit Antenne; o.licht 0–1 = goldenes Licht, o.funkeln = Glitzerzeit
+    const f = o.licht ? '#c98b3a' : '#7a5a3c', h = o.licht ? 'rgba(255,220,140,.75)' : 'rgba(255,255,255,.22)';
+    pGitter(c, [[x - 64 * s, y], [x - 38 * s, y], [x - 21 * s, y - 58 * s], [x - 37 * s, y - 58 * s]], f, h);
+    pGitter(c, [[x + 64 * s, y], [x + 38 * s, y], [x + 21 * s, y - 58 * s], [x + 37 * s, y - 58 * s]], f, h);
+    c.strokeStyle = f; c.lineWidth = 4 * s; c.beginPath(); c.ellipse(x, y - 8 * s, 30 * s, 40 * s, 0, Math.PI * 1.02, Math.PI * 1.98); c.stroke();
+    c.fillStyle = f; c.fillRect(x - 40 * s, y - 64 * s, 80 * s, 7 * s);
+    pGitter(c, [[x - 31 * s, y - 64 * s], [x + 31 * s, y - 64 * s], [x + 17 * s, y - 118 * s], [x - 17 * s, y - 118 * s]], f, h);
+    c.fillStyle = f; c.fillRect(x - 21 * s, y - 124 * s, 42 * s, 6 * s);
+    pGitter(c, [[x - 15 * s, y - 124 * s], [x + 15 * s, y - 124 * s], [x + 3.5 * s, y - 282 * s], [x - 3.5 * s, y - 282 * s]], f, h);
+    c.fillStyle = f; c.fillRect(x - 6 * s, y - 292 * s, 12 * s, 11 * s); c.fillRect(x - 1.2 * s, y - 326 * s, 2.4 * s, 36 * s);
+    if (o.licht) { c.save(); c.globalAlpha = 0.25 * o.licht; c.fillStyle = '#ffd27a'; c.beginPath(); c.ellipse(x, y - 150 * s, 80 * s, 190 * s, 0, 0, Math.PI * 2); c.fill(); c.restore(); }
+    if (o.funkeln != null) for (let k = 0; k < 40; k++) {   // Funkeln (jeden Abend zur vollen Stunde): weiße Blitzlichter über den ganzen Turm
+      if (pZahl(k + Math.floor(o.funkeln * 8) * 0.37) < 0.45) continue;
+      const hy = pZahl(k * 3.1) * 300, breite = hy < 58 ? 60 - hy * 0.4 : hy < 118 ? 30 - (hy - 58) * 0.22 : 15 - (hy - 118) * 0.07;
+      szFunkeln(c, x + (pZahl(k * 7.7) * 2 - 1) * breite * s, y - hy * s, 4 * s, o.funkeln + k);
+    }
+  }
+  function pArc(c, x, y, s, schatten = '#5d5446') {   // Arc de Triomphe: Block mit großem Bogen, Gesims, Attika, Reliefs
+    const w = 92 * s, h = 104 * s;
+    c.fillStyle = '#e4d6b6'; c.fillRect(x - w / 2, y - h, w, h);
+    c.fillStyle = schatten; c.beginPath(); c.moveTo(x - 17 * s, y); c.lineTo(x - 17 * s, y - 44 * s); c.arc(x, y - 44 * s, 17 * s, Math.PI, 0); c.lineTo(x + 17 * s, y); c.fill();
+    c.fillStyle = '#cdbd99'; c.fillRect(x - w / 2 - 3 * s, y - 78 * s, w + 6 * s, 5 * s); c.fillRect(x - w / 2 - 2 * s, y - h, w + 4 * s, 4 * s);
+    c.fillStyle = '#d6c7a5'; c.fillRect(x - w / 2, y - 96 * s, w, 14 * s);
+    c.fillStyle = '#bba982'; c.fillRect(x - 40 * s, y - 64 * s, 16 * s, 22 * s); c.fillRect(x + 24 * s, y - 64 * s, 16 * s, 22 * s);
+    c.fillStyle = '#cdbd99'; c.fillRect(x - w / 2, y - 6 * s, w, 6 * s);
+  }
+  function pAuto(c, x, y, s, farbe, dir = 1) {   // kleines Auto (Seitenansicht), y = Straße
+    c.save(); c.translate(x, y); c.scale(s * dir, s);
+    c.fillStyle = farbe; c.beginPath(); c.roundRect(-20, -14, 40, 10, 4); c.fill(); c.beginPath(); c.roundRect(-11, -22, 22, 9, [5, 5, 0, 0]); c.fill();
+    c.fillStyle = '#cfe6f5'; c.fillRect(-8, -20, 7, 6); c.fillRect(1, -20, 7, 6);
+    c.fillStyle = '#222'; c.beginPath(); c.arc(-11, -4, 4.5, 0, Math.PI * 2); c.arc(11, -4, 4.5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#ffe27a'; c.fillRect(17, -12, 3, 3); c.restore();
+  }
+  function pPerson(c, x, y, s, o = {}) {   // einfache Figur (Fußpunkt x, y): o.hemd, o.hose, o.haut, o.haare, o.muetze ('beret'|'helm'|'koch'), o.arm (Winkel rechter Arm), o.armL, o.lauf (Phase), o.kleid
+    const haut = o.haut || '#e8b98f', hemd = o.hemd || '#2a5bd7', hose = o.hose || '#2d3142';
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const b = o.lauf != null ? Math.sin(o.lauf) * 0.5 : 0;
+    c.strokeStyle = hose; c.lineWidth = 6; c.lineCap = 'round';
+    if (o.kleid) { c.fillStyle = o.kleid; c.beginPath(); c.moveTo(-6, -30); c.lineTo(6, -30); c.lineTo(14, -6); c.lineTo(-14, -6); c.fill(); c.strokeStyle = haut; c.lineWidth = 4; c.beginPath(); c.moveTo(-4, -6); c.lineTo(-4, 0); c.moveTo(4, -6); c.lineTo(4, 0); c.stroke(); }
+    else { c.beginPath(); c.moveTo(-3, -22); c.lineTo(-3 + Math.sin(b) * 9, 0); c.moveTo(3, -22); c.lineTo(3 - Math.sin(b) * 9, 0); c.stroke(); }
+    c.fillStyle = hemd; c.beginPath(); c.roundRect(-8, -44, 16, 24, 5); c.fill();
+    c.strokeStyle = hemd; c.lineWidth = 5;
+    const arm = (seite, w) => { c.beginPath(); c.moveTo(seite * 7, -40); c.lineTo(seite * 7 + Math.sin(w) * 14, -40 + Math.cos(w) * 14); c.stroke(); c.fillStyle = haut; c.beginPath(); c.arc(seite * 7 + Math.sin(w) * 15, -40 + Math.cos(w) * 15, 3, 0, Math.PI * 2); c.fill(); };
+    arm(-1, o.armL != null ? o.armL : -0.25 - b); arm(1, o.arm != null ? o.arm : 0.25 + b);
+    c.fillStyle = haut; c.beginPath(); c.arc(0, -52, 9, 0, Math.PI * 2); c.fill();
+    c.fillStyle = o.haare || '#4a2f1e'; c.beginPath(); c.arc(0, -55, 9, Math.PI * 1.05, Math.PI * 1.95); c.fill();
+    c.fillStyle = '#222'; c.beginPath(); c.arc(-3, -53, 1.2, 0, Math.PI * 2); c.arc(3, -53, 1.2, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#7a3a2a'; c.lineWidth = 1.2; c.beginPath(); c.arc(0, -50, 3, 0.2, Math.PI - 0.2); c.stroke();
+    if (o.muetze === 'beret') { c.fillStyle = '#1d1d2b'; c.beginPath(); c.ellipse(1, -61, 10, 4, -0.15, 0, Math.PI * 2); c.fill(); c.fillRect(0, -67, 2, 4); }
+    if (o.muetze === 'helm') { c.fillStyle = o.helm || '#ffd400'; c.beginPath(); c.arc(0, -56, 10, Math.PI, 0); c.fill(); }
+    if (o.muetze === 'koch') { c.fillStyle = '#fff'; c.fillRect(-7, -66, 14, 7); c.beginPath(); c.arc(-4, -68, 5, 0, Math.PI * 2); c.arc(4, -68, 5, 0, Math.PI * 2); c.arc(0, -71, 5, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function pRad(c, x, y, s, trikot, t) {   // Radrennfahrer (Seitenansicht nach rechts), y = Straße
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.strokeStyle = '#222'; c.lineWidth = 2; c.beginPath(); c.arc(-15, -9, 9, 0, Math.PI * 2); c.arc(15, -9, 9, 0, Math.PI * 2); c.stroke();
+    c.beginPath(); c.moveTo(-15, -9); c.lineTo(-3, -24); c.lineTo(12, -24); c.lineTo(15, -9); c.moveTo(-3, -24); c.lineTo(0, -9); c.lineTo(-15, -9); c.stroke();
+    const p = t * 12, fx = Math.cos(p) * 6, fy = Math.sin(p) * 6;
+    c.strokeStyle = '#2d3142'; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(-4, -28); c.lineTo(fx, -9 + fy); c.stroke();
+    c.fillStyle = trikot; c.beginPath(); c.ellipse(2, -34, 12, 6, -0.5, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = trikot; c.lineWidth = 4; c.beginPath(); c.moveTo(8, -38); c.lineTo(13, -26); c.stroke();
+    c.fillStyle = '#e8b98f'; c.beginPath(); c.arc(13, -42, 5.5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#e63946'; c.beginPath(); c.arc(13, -44, 6, Math.PI * 1.05, Math.PI * 1.95); c.fill();
+    c.restore();
+  }
+  function pPalast(c, x0, x1, y, h, o = {}) {   // langer Palast (Louvre, Versailles, Luxembourg): helle Fassade, Fensterreihen, graues Dach, optional Gold (o.gold)
+    c.fillStyle = o.farbe || '#eadfc6'; c.fillRect(x0, y - h, x1 - x0, h);
+    c.fillStyle = '#7f8a94'; c.beginPath(); c.moveTo(x0 - 3, y - h); c.lineTo(x0 + 10, y - h - 20); c.lineTo(x1 - 10, y - h - 20); c.lineTo(x1 + 3, y - h); c.fill();
+    for (let x = x0 + 10; x < x1 - 12; x += 22) for (let r = 0; r < 2; r++) { c.fillStyle = '#4f6476'; c.beginPath(); c.roundRect(x, y - h + 12 + r * (h / 2), 10, h / 2 - 22, [5, 5, 0, 0]); c.fill(); }
+    c.fillStyle = o.gold ? '#d9a521' : '#d2c5a8'; c.fillRect(x0, y - h, x1 - x0, 3); c.fillRect(x0, y - h / 2 - 2, x1 - x0, 3);
+    if (o.gold) for (let x = x0 + 21; x < x1 - 12; x += 44) { c.fillStyle = '#e8b923'; c.beginPath(); c.arc(x, y - h - 4, 3, 0, Math.PI * 2); c.fill(); }
+  }
+  function pPyramide(c, x, y, s) {   // Glaspyramide des Louvre: Rauten-Gitter
+    c.save(); c.beginPath(); c.moveTo(x - 70 * s, y); c.lineTo(x, y - 76 * s); c.lineTo(x + 70 * s, y); c.closePath();
+    const g = c.createLinearGradient(x - 70 * s, y - 76 * s, x + 70 * s, y); g.addColorStop(0, 'rgba(200,228,245,.92)'); g.addColorStop(1, 'rgba(120,165,200,.92)'); c.fillStyle = g; c.fill(); c.clip();
+    c.strokeStyle = 'rgba(60,80,100,.55)'; c.lineWidth = 1; for (let k = -10; k <= 10; k++) { c.beginPath(); c.moveTo(x + k * 14 * s - 80 * s, y + 4); c.lineTo(x + k * 14 * s + 80 * s, y - 80 * s); c.moveTo(x + k * 14 * s + 80 * s, y + 4); c.lineTo(x + k * 14 * s - 80 * s, y - 80 * s); c.stroke(); }
+    c.restore(); c.strokeStyle = '#4b5d6e'; c.lineWidth = 2; c.beginPath(); c.moveTo(x - 70 * s, y); c.lineTo(x, y - 76 * s); c.lineTo(x + 70 * s, y); c.stroke();
+  }
+  function pJoconde(c, x, y, s, laecheln) {   // Mona Lisa im Goldrahmen, Mitte (x, y); laecheln 0–1
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#b8862b'; c.fillRect(-38, -50, 76, 100); c.fillStyle = '#e0b04a'; c.fillRect(-34, -46, 68, 92);
+    const g = c.createLinearGradient(0, -42, 0, 42); g.addColorStop(0, '#6f7f5a'); g.addColorStop(1, '#4a4a2e'); c.fillStyle = g; c.fillRect(-30, -42, 60, 84);
+    c.fillStyle = '#2e2216'; c.beginPath(); c.moveTo(-22, 42); c.quadraticCurveTo(-20, 2, 0, 0); c.quadraticCurveTo(20, 2, 22, 42); c.fill();
+    c.fillStyle = '#2b1d12'; c.beginPath(); c.ellipse(0, -14, 15, 20, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#d9b27c'; c.beginPath(); c.ellipse(0, -14, 10, 14, 0, 0, Math.PI * 2); c.fill(); c.fillRect(-4, -2, 8, 6);
+    c.fillStyle = '#d9b27c'; c.beginPath(); c.ellipse(-4, 30, 9, 4, 0.2, 0, Math.PI * 2); c.ellipse(5, 31, 9, 4, -0.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#3a2a1c'; c.beginPath(); c.arc(-4, -16, 1.3, 0, Math.PI * 2); c.arc(4, -16, 1.3, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#7a4a32'; c.lineWidth = 1.1; c.beginPath(); c.moveTo(-4, -7); c.quadraticCurveTo(0, -7 + 2.5 * laecheln, 4, -7 - 0.6 * laecheln); c.stroke();
+    c.restore();
+  }
+  function pNotreDame(c, x, y, s, glocke = 0) {   // Westfassade: zwei Türme, Rosette, drei Portale, Spitze dahinter; glocke = Schwingwinkel der Glocken
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#5f6b76'; c.beginPath(); c.moveTo(-4, -96); c.lineTo(0, -196); c.lineTo(4, -96); c.fill();
+    c.fillStyle = '#d8ccb0'; c.fillRect(-76, -92, 152, 92); c.fillRect(-76, -146, 50, 56); c.fillRect(26, -146, 50, 56); c.fillRect(-26, -104, 52, 14);
+    c.fillStyle = '#c7b995'; c.fillRect(-78, -148, 54, 4); c.fillRect(24, -148, 54, 4); c.fillRect(-78, -94, 156, 4); c.fillRect(-78, -50, 156, 3);
+    for (const tx of [-51, 51]) { for (const dx of [-12, 4]) { c.fillStyle = '#3d3a36'; c.beginPath(); c.moveTo(tx + dx, -96); c.lineTo(tx + dx, -128); c.arc(tx + dx + 4, -128, 4, Math.PI, 0); c.lineTo(tx + dx + 8, -96); c.fill(); }
+      c.save(); c.translate(tx, -128); c.rotate(glocke * (tx < 0 ? 1 : -1)); c.fillStyle = '#b8862b'; c.beginPath(); c.moveTo(-6, 0); c.quadraticCurveTo(-6, -12, 0, -12); c.quadraticCurveTo(6, -12, 6, 0); c.lineTo(8, 4); c.lineTo(-8, 4); c.fill(); c.restore(); }
+    c.fillStyle = '#8f5d7a'; c.beginPath(); c.arc(0, -70, 16, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#d8ccb0'; c.lineWidth = 1.5;
+    for (let k = 0; k < 12; k++) { c.beginPath(); c.moveTo(0, -70); c.lineTo(Math.cos(k * Math.PI / 6) * 16, -70 + Math.sin(k * Math.PI / 6) * 16); c.stroke(); }
+    c.fillStyle = '#4a6fa5'; c.beginPath(); c.arc(0, -70, 5, 0, Math.PI * 2); c.fill();
+    for (const px of [-48, 0, 48]) { c.fillStyle = '#4a4540'; c.beginPath(); c.moveTo(px - 13, 0); c.lineTo(px - 13, -26); c.quadraticCurveTo(px, -44, px + 13, -26); c.lineTo(px + 13, 0); c.fill(); }
+    c.restore();
+  }
+  function pSacreCoeur(c, x, y, s) {   // weiße Basilika: große Kuppel mit Laterne, zwei kleine Kuppeln, Glockenturm
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const w = '#f6f3ec', sch = '#dcd6c8';
+    c.fillStyle = sch; c.fillRect(46, -150, 22, 110); c.fillStyle = w; c.beginPath(); c.ellipse(57, -150, 13, 17, 0, Math.PI, 0); c.fill(); c.fillRect(55, -176, 4, 12);
+    c.fillStyle = w; c.fillRect(-70, -60, 140, 60); c.fillStyle = sch; for (let k = -60; k <= 50; k += 22) c.fillRect(k, -46, 9, 30);
+    c.fillStyle = w; c.fillRect(-26, -104, 52, 46); c.beginPath(); c.moveTo(-28, -104); c.quadraticCurveTo(-30, -160, 0, -170); c.quadraticCurveTo(30, -160, 28, -104); c.fill();
+    c.fillStyle = sch; c.beginPath(); c.moveTo(6, -104); c.quadraticCurveTo(26, -150, 0, -170); c.quadraticCurveTo(22, -160, 28, -104); c.fill();
+    c.fillStyle = w; c.fillRect(-5, -186, 10, 18); c.beginPath(); c.arc(0, -186, 6, Math.PI, 0); c.fill(); c.fillRect(-1, -198, 2, 8);
+    for (const kx of [-50, 50]) { c.fillStyle = w; c.fillRect(kx - 12, -80, 24, 22); c.beginPath(); c.ellipse(kx, -80, 13, 18, 0, Math.PI, 0); c.fill(); }
+    c.fillStyle = '#7a8796'; for (let k = -18; k <= 14; k += 8) c.fillRect(k, -98, 4, 14);
+    c.restore();
+  }
+  function pStaffelei(c, x, y, s, p) {   // Staffelei mit Leinwand; p 0–1 = wie weit das Porträt gemalt ist
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.strokeStyle = '#8a5a2b'; c.lineWidth = 3; c.beginPath(); c.moveTo(-18, 0); c.lineTo(0, -80); c.lineTo(18, 0); c.moveTo(0, -80); c.lineTo(0, 0); c.stroke();
+    c.fillStyle = '#fbf7ee'; c.fillRect(-24, -76, 48, 56); c.strokeStyle = '#6d4a24'; c.lineWidth = 2; c.strokeRect(-24, -76, 48, 56);
+    if (p > 0.05) { c.strokeStyle = '#333'; c.lineWidth = 1.5; c.beginPath(); c.ellipse(0, -50, 11, 14, 0, 0, Math.PI * 2 * Math.min(1, p / 0.3)); c.stroke(); }
+    if (p > 0.35) { c.fillStyle = '#333'; c.beginPath(); c.arc(-4, -52, 1.6, 0, Math.PI * 2); c.arc(4, -52, 1.6, 0, Math.PI * 2); c.fill(); }
+    if (p > 0.5) { c.strokeStyle = '#c0392b'; c.beginPath(); c.arc(0, -46, 4, 0.2, Math.PI - 0.2); c.stroke(); }
+    if (p > 0.65) { c.fillStyle = 'rgba(122,74,40,.85)'; c.beginPath(); c.arc(0, -55, 12, Math.PI * 1.05, Math.PI * 1.95); c.fill(); }
+    if (p > 0.8) { c.fillStyle = 'rgba(42,91,215,.7)'; c.fillRect(-14, -34, 28, 12); }
+    c.restore();
+  }
+  function pWasser(c, y, t, x0 = -600, x1 = 1800) {   // Seine: blaugrünes Wasser mit Wellenstrichen
+    c.fillStyle = '#4f7f9e'; c.fillRect(x0, y, x1 - x0, 400); c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2;
+    for (let r = 0; r < 5; r++) for (let x = x0 + ((t * 20 * (r % 2 ? 1 : -1)) % 60); x < x1; x += 60) { c.beginPath(); c.moveTo(x, y + 10 + r * 14); c.quadraticCurveTo(x + 8, y + 6 + r * 14, x + 16, y + 10 + r * 14); c.stroke(); }
+  }
+  function pPont(c, x0, x1, y, h, boegen) {   // Steinbrücke mit Bögen über dem Wasser (y = Wasserlinie, h = Höhe der Fahrbahn über dem Wasser)
+    c.fillStyle = '#cbbd9e'; c.fillRect(x0, y - h - 10, x1 - x0, 14); c.fillStyle = '#b9aa88'; c.fillRect(x0, y - h - 14, x1 - x0, 4);
+    const b = (x1 - x0) / boegen; for (let k = 0; k < boegen; k++) { const bx = x0 + k * b; c.fillStyle = '#cbbd9e'; c.beginPath(); c.moveTo(bx, y - h + 4); c.lineTo(bx + b, y - h + 4); c.lineTo(bx + b, y + 20); c.lineTo(bx + b - 8, y + 20); c.quadraticCurveTo(bx + b / 2, y - h + 14, bx + 8, y + 20); c.lineTo(bx, y + 20); c.fill(); }
+    c.fillStyle = '#2b2b2b'; for (let x = x0; x < x1; x += 70) { c.fillRect(x + 30, y - h - 34, 3, 20); c.beginPath(); c.arc(x + 31.5, y - h - 36, 4, 0, Math.PI * 2); c.fill(); }
+  }
+  function pBoot(c, x, y, s) {   // Bateau-mouche: langer flacher Rumpf, Glasdach, Fahrgäste
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#f4f4f2'; c.beginPath(); c.moveTo(-90, -12); c.lineTo(84, -12); c.quadraticCurveTo(96, -12, 90, 0); c.lineTo(-86, 0); c.fill();
+    c.fillStyle = '#1f4e8c'; c.fillRect(-88, -5, 178, 4);
+    c.fillStyle = 'rgba(170,210,235,.9)'; c.beginPath(); c.roundRect(-70, -30, 130, 18, [8, 8, 0, 0]); c.fill();
+    c.strokeStyle = '#5f7f99'; c.lineWidth = 1; for (let k = -60; k < 60; k += 14) { c.beginPath(); c.moveTo(k, -30); c.lineTo(k, -12); c.stroke(); }
+    const farben = ['#e63946', '#ffd93d', '#2a8cff', '#2e9e5b', '#e8467c'];
+    for (let k = 0; k < 9; k++) { c.fillStyle = '#e8b98f'; c.beginPath(); c.arc(-62 + k * 14, -18, 3.5, 0, Math.PI * 2); c.fill(); c.fillStyle = farben[k % 5]; c.fillRect(-65 + k * 14, -15, 6, 3); }
+    c.fillStyle = '#0055a4'; c.fillRect(-92, -34, 3, 22); c.fillStyle = '#0055a4'; c.fillRect(-89, -34, 5, 8); c.fillStyle = '#fff'; c.fillRect(-84, -34, 5, 8); c.fillStyle = '#ef4135'; c.fillRect(-79, -34, 5, 8);
+    c.restore();
+  }
+  function pGuimard(c, x, y, s) {   // Métro-Eingang im Jugendstil (Guimard): grüne geschwungene Pfosten, orange Lampen, Schild „MÉTROPOLITAIN“
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#2b2b2b'; c.beginPath(); c.moveTo(-50, 0); c.lineTo(50, 0); c.lineTo(34, 16); c.lineTo(-34, 16); c.fill();
+    c.strokeStyle = '#2f6b4f'; c.lineWidth = 6; c.lineCap = 'round';
+    for (const d of [-1, 1]) { c.beginPath(); c.moveTo(d * 52, 0); c.bezierCurveTo(d * 52, -50, d * 60, -80, d * 46, -104); c.stroke(); c.fillStyle = '#ff9a2e'; c.beginPath(); c.ellipse(d * 44, -112, 7, 10, d * 0.4, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#e9e3c4'; c.beginPath(); c.roundRect(-44, -98, 88, 18, 4); c.fill(); c.strokeStyle = '#2f6b4f'; c.lineWidth = 3; c.stroke();
+    c.fillStyle = '#2f6b4f'; c.font = 'bold 10px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('MÉTROPOLITAIN', 0, -88);
+    c.strokeStyle = '#2f6b4f'; c.lineWidth = 2; for (let k = -44; k <= 44; k += 11) { c.beginPath(); c.moveTo(k, 0); c.lineTo(k, -24); c.stroke(); } c.beginPath(); c.moveTo(-50, -24); c.quadraticCurveTo(0, -34, 50, -24); c.stroke();
+    c.restore();
+  }
+  function pMetroZug(c, x, y, s) {   // Metrozug (zwei Wagen), linke Kante x, y = Bahnsteigkante
+    c.save(); c.translate(x, y); c.scale(s, s);
+    for (let w = 0; w < 2; w++) { const wx = w * 168;
+      c.fillStyle = '#f2f2f2'; c.beginPath(); c.roundRect(wx, -70, 162, 66, 10); c.fill(); c.fillStyle = '#1b8a6b'; c.fillRect(wx, -28, 162, 10);
+      c.fillStyle = '#26323d'; for (let k = 0; k < 4; k++) c.fillRect(wx + 12 + k * 38, -60, 26, 24);
+      c.fillStyle = '#9aa7b2'; c.fillRect(wx + 56, -62, 3, 58); c.fillRect(wx + 106, -62, 3, 58); }
+    c.fillStyle = '#ffd400'; c.beginPath(); c.arc(318, -60, 9, 0, Math.PI * 2); c.fill(); c.fillStyle = '#18213a'; c.font = 'bold 11px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('1', 318, -60);
+    c.restore();
+  }
+  function pPantheon(c, x, y, s) {   // Panthéon: Säulenvorhalle mit Giebel, Tambour mit Säulen, Kuppel, Laterne
+    c.save(); c.translate(x, y); c.scale(s, s);
+    const f = '#e7dcc2', d = '#cdbf9f';
+    c.fillStyle = f; c.fillRect(-96, -70, 192, 70);
+    c.fillStyle = f; c.fillRect(-40, -150, 80, 56); c.fillStyle = d; for (let k = -36; k <= 32; k += 9) c.fillRect(k, -146, 4, 48);
+    c.fillStyle = f; c.beginPath(); c.ellipse(0, -150, 44, 50, 0, Math.PI, 0); c.fill(); c.fillStyle = d; c.beginPath(); c.ellipse(10, -150, 30, 48, 0, Math.PI * 1.5, 0); c.fill();
+    c.fillStyle = f; c.fillRect(-7, -214, 14, 18); c.beginPath(); c.arc(0, -214, 8, Math.PI, 0); c.fill(); c.fillRect(-1, -230, 2, 10);
+    c.fillStyle = f; c.fillRect(-60, -92, 120, 10); c.beginPath(); c.moveTo(-64, -92); c.lineTo(0, -122); c.lineTo(64, -92); c.fill();
+    c.fillStyle = d; for (let k = -54; k <= 50; k += 15) c.fillRect(k, -82, 6, 82);
+    c.fillStyle = '#b8a77f'; c.fillRect(-66, -2, 132, 4);
+    c.restore();
+  }
+  function pPendel(c, x, y, laenge, winkel) {   // Foucaultsches Pendel: Seil von (x, y), Kugel, Kreis am Boden
+    const bx = x + Math.sin(winkel) * laenge, by = y + Math.cos(winkel) * laenge;
+    c.fillStyle = 'rgba(184,134,43,.35)'; c.beginPath(); c.ellipse(x, y + laenge + 12, 70, 14, 0, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#555'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x, y); c.lineTo(bx, by); c.stroke();
+    const g = c.createRadialGradient(bx - 4, by - 4, 2, bx, by, 13); g.addColorStop(0, '#ffe7a0'); g.addColorStop(1, '#b8862b'); c.fillStyle = g; c.beginPath(); c.arc(bx, by, 12, 0, Math.PI * 2); c.fill();
+  }
+  function pSegelboot(c, x, y, s, segel) {   // Spielzeug-Segelboot (Jardin du Luxembourg)
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#8a5a2b'; c.beginPath(); c.moveTo(-14, -4); c.lineTo(14, -4); c.lineTo(9, 3); c.lineTo(-9, 3); c.fill();
+    c.fillStyle = '#5a3a22'; c.fillRect(-1, -34, 2, 30); c.fillStyle = segel; c.beginPath(); c.moveTo(1, -33); c.lineTo(14, -8); c.lineTo(1, -8); c.fill(); c.globalAlpha = 0.85; c.beginPath(); c.moveTo(-1, -28); c.lineTo(-11, -8); c.lineTo(-1, -8); c.fill();
+    c.restore();
+  }
+  function pUhr(c, x, y, r, t) {   // große Glasuhr des Musée d'Orsay: Eisenrahmen, Ziffernstriche, Zeiger drehen sich
+    c.fillStyle = 'rgba(236,240,238,.85)'; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+    c.strokeStyle = '#3d4a42'; c.lineWidth = r * 0.06; c.stroke(); c.lineWidth = r * 0.02; c.beginPath(); c.arc(x, y, r * 0.78, 0, Math.PI * 2); c.stroke();
+    for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; c.lineWidth = r * 0.04; c.beginPath(); c.moveTo(x + Math.cos(a) * r * 0.82, y + Math.sin(a) * r * 0.82); c.lineTo(x + Math.cos(a) * r * 0.95, y + Math.sin(a) * r * 0.95); c.stroke();
+      c.lineWidth = r * 0.012; c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.cos(a) * r * 0.78, y + Math.sin(a) * r * 0.78); c.stroke(); }
+    const zeiger = (a, l, b) => { c.lineWidth = b; c.lineCap = 'round'; c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.sin(a) * l, y - Math.cos(a) * l); c.stroke(); };
+    c.strokeStyle = '#1d2520'; zeiger(t * 0.5, r * 0.45, r * 0.06); zeiger(t * 6, r * 0.68, r * 0.035);
+    c.fillStyle = '#1d2520'; c.beginPath(); c.arc(x, y, r * 0.05, 0, Math.PI * 2); c.fill();
+  }
+  function pDampflok(c, x, y, s) {   // Dampflok um 1900 (Silhouette), y = Gleis
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#2b2b30';
+    c.fillRect(-40, -34, 60, 24); c.fillRect(14, -50, 26, 40); c.fillRect(-34, -52, 10, 18); c.beginPath(); c.arc(-40, -22, 12, Math.PI / 2, Math.PI * 1.5); c.fill();
+    c.fillStyle = '#c0392b'; c.fillRect(-44, -10, 90, 4); c.fillStyle = '#111'; for (const rx of [-28, -6, 18]) { c.beginPath(); c.arc(rx, -4, 8, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function pOper(c, x, y, s) {   // Opéra Garnier: Bogen-Erdgeschoss, Säulenreihe, goldene Figuren, grüne Kuppel
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#5f9a82'; c.beginPath(); c.ellipse(0, -128, 46, 26, 0, Math.PI, 0); c.fill(); c.fillStyle = '#d9a521'; c.beginPath(); c.arc(0, -156, 5, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#e4d3ad'; c.fillRect(-110, -128, 220, 128);
+    c.fillStyle = '#5f9a82'; c.fillRect(-114, -132, 228, 6);
+    c.fillStyle = '#cbb68a'; c.fillRect(-110, -60, 220, 5);
+    c.fillStyle = '#6e5a3e'; for (let k = -88; k <= 72; k += 32) { c.beginPath(); c.moveTo(k, 0); c.lineTo(k, -30); c.arc(k + 8, -30, 8, Math.PI, 0); c.lineTo(k + 16, 0); c.fill(); }
+    c.fillStyle = '#efe2c2'; for (let k = -100; k <= 96; k += 16) c.fillRect(k, -120, 6, 58);
+    c.fillStyle = '#3e4d5a'; for (let k = -92; k <= 80; k += 32) c.fillRect(k, -112, 12, 40);
+    for (const gx of [-104, 104]) { c.fillStyle = '#e8b923'; c.beginPath(); c.arc(gx, -144, 7, 0, Math.PI * 2); c.fill(); c.beginPath(); c.moveTo(gx, -140); c.lineTo(gx - 14 * Math.sign(gx), -158); c.lineTo(gx - 4 * Math.sign(gx), -136); c.fill(); c.fillRect(gx - 4, -138, 8, 8); }
+    c.restore();
+  }
+  function pVorhang(c, x0, x1, y0, y1, auf) {   // roter Theatervorhang; auf 0–1 = geöffnet
+    const m = (x0 + x1) / 2, b = (m - x0) * (1 - auf * 0.85);
+    for (const [a, e] of [[x0, x0 + b], [x1 - b, x1]]) { c.fillStyle = '#a3192e'; c.fillRect(a, y0, e - a, y1 - y0); c.strokeStyle = 'rgba(0,0,0,.2)'; c.lineWidth = 3; for (let k = a + 8; k < e; k += 14) { c.beginPath(); c.moveTo(k, y0); c.lineTo(k, y1); c.stroke(); } }
+    c.fillStyle = '#7d1022'; c.fillRect(x0, y0, x1 - x0, 22); c.fillStyle = '#d9a521'; c.fillRect(x0, y0 + 22, x1 - x0, 4);
+  }
+  function pInvalides(c, x, y, s, glanz) {   // Dôme des Invalides: Bau mit Säulen, Tambour, goldene Kuppel mit Rippen, goldene Spitze; glanz = Glitzerzeit
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#e4d8bd'; c.fillRect(-90, -64, 180, 64); c.fillStyle = '#cfc2a2'; for (let k = -80; k <= 76; k += 16) c.fillRect(k, -58, 6, 58);
+    c.fillStyle = '#e4d8bd'; c.beginPath(); c.moveTo(-40, -64); c.lineTo(0, -88); c.lineTo(40, -64); c.fill();
+    c.fillStyle = '#e4d8bd'; c.fillRect(-44, -132, 88, 44); c.fillStyle = '#cfc2a2'; for (let k = -40; k <= 36; k += 10) c.fillRect(k, -128, 4, 38);
+    const g = c.createLinearGradient(-46, 0, 46, 0); g.addColorStop(0, '#9a6b14'); g.addColorStop(0.45, '#f4cf5a'); g.addColorStop(1, '#a8761a'); c.fillStyle = '#2f3a44'; c.beginPath(); c.ellipse(0, -132, 46, 56, 0, Math.PI, 0); c.fill();
+    c.strokeStyle = g; c.lineWidth = 4; for (let k = -3; k <= 3; k++) { c.beginPath(); c.moveTo(k * 13, -132); c.quadraticCurveTo(k * 10, -176, 0, -188); c.stroke(); }
+    c.fillStyle = g; c.fillRect(-8, -204, 16, 18); c.beginPath(); c.moveTo(-3, -204); c.lineTo(0, -236); c.lineTo(3, -204); c.fill();
+    if (glanz != null) for (let k = 0; k < 6; k++) szFunkeln(c, (pZahl(k + Math.floor(glanz * 3)) * 2 - 1) * 38, -140 - pZahl(k * 5 + Math.floor(glanz * 3)) * 60, 5, glanz + k, '#fff7c0');
+    c.restore();
+  }
+  function pZweispitz(c, x, y, s) {   // Napoléons Zweispitz mit Kokarde
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#18181c'; c.beginPath(); c.moveTo(-40, 6); c.quadraticCurveTo(0, -46, 40, 6); c.quadraticCurveTo(0, -6, -40, 6); c.fill();
+    c.fillStyle = '#0055a4'; c.beginPath(); c.arc(0, -16, 7, 0, Math.PI * 2); c.fill(); c.fillStyle = '#fff'; c.beginPath(); c.arc(0, -16, 4.5, 0, Math.PI * 2); c.fill(); c.fillStyle = '#ef4135'; c.beginPath(); c.arc(0, -16, 2, 0, Math.PI * 2); c.fill();
+    c.restore();
+  }
+  function pBaguette(c, x, y, s, rot) { c.save(); c.translate(x, y); c.rotate(rot || 0); c.scale(s, s); c.fillStyle = '#d99a4a'; c.beginPath(); c.roundRect(-30, -5, 60, 10, 5); c.fill(); c.strokeStyle = '#f3d398'; c.lineWidth = 1.5; for (let k = -20; k <= 20; k += 10) { c.beginPath(); c.moveTo(k - 4, 3); c.lineTo(k + 4, -3); c.stroke(); } c.restore(); }
+  function pCroissant(c, x, y, s) { c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#d9913c'; c.beginPath(); c.arc(0, 4, 14, Math.PI * 1.1, Math.PI * 1.9); c.arc(0, 4, 6, Math.PI * 1.9, Math.PI * 1.1, true); c.fill(); c.strokeStyle = '#a8651f'; c.lineWidth = 1.2; for (const a of [1.3, 1.5, 1.7]) { c.beginPath(); c.moveTo(Math.cos(Math.PI * a) * 6, 4 + Math.sin(Math.PI * a) * 6); c.lineTo(Math.cos(Math.PI * a) * 14, 4 + Math.sin(Math.PI * a) * 14); c.stroke(); } c.restore(); }
+  function pBoulangerie(c, x, y, s) {   // Ladenfront: dunkelblaues Holz, goldene Schrift, Markise, Schaufenster mit Baguettes und Croissants
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#1f3b5c'; c.fillRect(-120, -140, 240, 140); c.fillStyle = '#d9a521'; c.font = 'bold 20px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('BOULANGERIE', 0, -122);
+    for (let k = 0; k < 8; k++) { c.fillStyle = k % 2 ? '#fff' : '#c0392b'; c.beginPath(); c.moveTo(-120 + k * 30, -106); c.lineTo(-90 + k * 30, -106); c.lineTo(-86 + k * 30, -86); c.lineTo(-124 + k * 30, -86); c.fill(); }
+    c.fillStyle = '#f7e7c4'; c.fillRect(-108, -80, 120, 64); c.fillStyle = '#c9a36a'; c.fillRect(-108, -24, 120, 8);
+    for (let k = 0; k < 5; k++) pBaguette(c, -90 + k * 16, -48, 0.55, -1.1);
+    pCroissant(c, -20, -30, 0.9); pCroissant(c, 0, -32, 0.9);
+    c.fillStyle = '#3a2a1c'; c.fillRect(30, -80, 70, 80); c.fillStyle = '#f2d16b'; c.beginPath(); c.arc(88, -40, 3, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(255,240,200,.35)'; c.fillRect(36, -74, 58, 34);
+    c.restore();
+  }
+  function pPompidou(c, x, y, s, leuchten) {   // Centre Pompidou: weißes Stahlgerüst, bunte Rohre (blau, grün, rot, gelb); leuchten = [b, g, r, j] 0–1
+    c.save(); c.translate(x, y); c.scale(s, s);
+    c.fillStyle = '#d9e1e6'; c.fillRect(-150, -130, 300, 130); c.strokeStyle = '#fff'; c.lineWidth = 3;
+    for (let k = -150; k <= 150; k += 30) { c.beginPath(); c.moveTo(k, -130); c.lineTo(k, 0); c.stroke(); } for (let r = -130; r <= 0; r += 26) { c.beginPath(); c.moveTo(-150, r); c.lineTo(150, r); c.stroke(); }
+    c.strokeStyle = 'rgba(255,255,255,.7)'; c.lineWidth = 1; for (let k = -150; k < 150; k += 30) for (let r = -130; r < 0; r += 26) { c.beginPath(); c.moveTo(k, r); c.lineTo(k + 30, r + 26); c.moveTo(k + 30, r); c.lineTo(k, r + 26); c.stroke(); }
+    const farben = ['#1f6fd6', '#2e9e5b', '#e63946', '#ffd400'], L = leuchten || [1, 1, 1, 1];
+    const rohr = (i, fn) => { c.save(); c.globalAlpha = 0.45 + 0.55 * L[i]; c.strokeStyle = farben[i]; c.lineCap = 'round'; fn(); if (L[i] > 0.6) { c.globalAlpha = 0.35 * L[i]; c.lineWidth += 8; fn(); } c.restore(); };
+    rohr(0, () => { c.lineWidth = 12; for (const k of [-130, -100]) { c.beginPath(); c.moveTo(k, -4); c.lineTo(k, -126); c.stroke(); } c.beginPath(); c.arc(-115, -136, 14, 0, Math.PI * 2); c.stroke(); });
+    rohr(1, () => { c.lineWidth = 9; for (const k of [-60, -40, -20]) { c.beginPath(); c.moveTo(k, -4); c.lineTo(k, -120); c.stroke(); } });
+    rohr(2, () => { c.lineWidth = 11; c.beginPath(); c.moveTo(20, -4); c.lineTo(140, -124); c.stroke(); });
+    rohr(3, () => { c.lineWidth = 8; for (const k of [60, 90, 120]) { c.beginPath(); c.moveTo(k, -4); c.lineTo(k, -70); c.stroke(); } c.beginPath(); c.moveTo(56, -70); c.lineTo(124, -70); c.stroke(); });
+    c.restore();
+  }
+  function pStadion(c, t, jubel) {   // Stade de France von innen: Ränge mit Publikum in Blau-Weiß-Rot, Dach, Rasen mit Streifen
+    c.fillStyle = '#c9ced4'; c.beginPath(); c.moveTo(-300, 40); c.quadraticCurveTo(320, -20, 940, 40); c.lineTo(940, 240); c.lineTo(-300, 240); c.fill();
+    const f = ['#0055a4', '#ffffff', '#ef4135'];
+    for (let r = 0; r < 7; r++) for (let k = 0; k < 60; k++) { const x = -280 + k * 21 + (r % 2) * 10, y = 70 + r * 22 - Math.sin((x + 300) / 1240 * Math.PI) * 14 + (jubel ? -Math.abs(Math.sin(t * 8 + k + r)) * 4 : 0); c.fillStyle = f[(k + r * 2) % 3]; c.beginPath(); c.arc(x, y, 6, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#7d858d'; c.fillRect(-300, 30, 1240, 10);
+    for (let k = 0; k < 14; k++) { c.fillStyle = k % 2 ? '#3f9e4a' : '#46ab52'; c.fillRect(-300 + k * 90, 240, 90, 200); }
+    c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 3; c.beginPath(); c.moveTo(-300, 244); c.lineTo(940, 244); c.stroke();
+  }
+  function pTor(c, x, y) {   // Fußballtor (Seitenansicht, schräg), y = Rasen
+    c.strokeStyle = '#fff'; c.lineWidth = 5; c.beginPath(); c.moveTo(x, y); c.lineTo(x, y - 90); c.lineTo(x + 60, y - 70); c.lineTo(x + 60, y); c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 1; for (let k = 8; k < 60; k += 8) { c.beginPath(); c.moveTo(x + k, y - 90 + k / 3); c.lineTo(x + k, y); c.stroke(); } for (let r = 10; r < 90; r += 10) { c.beginPath(); c.moveTo(x, y - r); c.lineTo(x + 60, y - r * 70 / 90); c.stroke(); }
+  }
+  function pBall(c, x, y, r, rot) { c.save(); c.translate(x, y); c.rotate(rot); c.fillStyle = '#fff'; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill(); c.fillStyle = '#222'; c.beginPath(); for (let k = 0; k < 5; k++) { const a = k * Math.PI * 2 / 5; c.lineTo(Math.cos(a) * r * 0.42, Math.sin(a) * r * 0.42); } c.fill(); c.restore(); }
+  function pFahne(c, x, y, s, t) {   // Trikolore an einer Stange, weht
+    c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#555'; c.fillRect(-1, -60, 2, 60);
+    const f = ['#0055a4', '#ffffff', '#ef4135']; for (let k = 0; k < 3; k++) { c.fillStyle = f[k]; c.beginPath(); for (let i = 0; i <= 4; i++) { const xx = k * 12 + i * 3, w = Math.sin(t * 6 + xx * 0.15) * 3; c.lineTo(1 + xx, -60 + w); } for (let i = 4; i >= 0; i--) { const xx = k * 12 + i * 3, w = Math.sin(t * 6 + xx * 0.15) * 3; c.lineTo(1 + xx, -36 + w); } c.fill(); }
+    c.restore();
+  }
+  function pGoldtor(c, x0, x1, y, h) {   // goldenes Gitter mit Spitzen (Versailles)
+    c.fillStyle = '#1d1d22'; for (let x = x0; x <= x1; x += 9) c.fillRect(x, y - h, 3, h); c.fillRect(x0, y - h * 0.35, x1 - x0, 3); c.fillRect(x0, y - h * 0.9, x1 - x0, 3);
+    c.fillStyle = '#e8b923'; for (let x = x0; x <= x1; x += 9) { c.beginPath(); c.moveTo(x - 2, y - h); c.lineTo(x + 1.5, y - h - 9); c.lineTo(x + 5, y - h); c.fill(); }
+    for (let x = x0 + 20; x < x1; x += 40) { c.beginPath(); c.arc(x, y - h * 0.62, 5, 0, Math.PI * 2); c.fill(); }
+  }
+  function pSonne(c, x, y, r, t, gesicht) {   // Sonne mit Strahlen (Roi-Soleil), optional Gesicht
+    c.save(); c.translate(x, y); c.rotate(t * 0.3); c.fillStyle = '#ffcf3a'; for (let k = 0; k < 16; k++) { c.rotate(Math.PI / 8); c.beginPath(); c.moveTo(-r * 0.18, -r * 1.02); c.lineTo(0, -r * (k % 2 ? 1.45 : 1.7)); c.lineTo(r * 0.18, -r * 1.02); c.fill(); } c.restore();
+    const g = c.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r); g.addColorStop(0, '#fff3b0'); g.addColorStop(1, '#f2a81d'); c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill();
+    if (gesicht) { c.fillStyle = '#8a5a12'; c.beginPath(); c.arc(x - r * 0.3, y - r * 0.15, r * 0.08, 0, Math.PI * 2); c.arc(x + r * 0.3, y - r * 0.15, r * 0.08, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#8a5a12'; c.lineWidth = r * 0.06; c.beginPath(); c.arc(x, y + r * 0.1, r * 0.35, 0.3, Math.PI - 0.3); c.stroke(); }
+  }
+  function pKrone(c, x, y, s) { c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = '#e8b923'; c.beginPath(); c.moveTo(-22, 10); c.lineTo(-22, -10); c.lineTo(-11, 0); c.lineTo(0, -16); c.lineTo(11, 0); c.lineTo(22, -10); c.lineTo(22, 10); c.fill(); c.fillStyle = '#c0392b'; c.beginPath(); c.arc(0, 3, 3, 0, Math.PI * 2); c.fill(); c.fillStyle = '#2a5bd7'; c.beginPath(); c.arc(-12, 4, 2.5, 0, Math.PI * 2); c.arc(12, 4, 2.5, 0, Math.PI * 2); c.fill(); c.restore(); }
+  const pNote = (c, x, y, f, farbe = '#ffd93d') => { if (f <= 0) return; c.save(); c.globalAlpha = Math.min(1, f); c.fillStyle = farbe; c.font = 'bold 26px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('♪', x, y); c.restore(); };
+  const pBlink = (t, ab) => (t < ab ? 0 : sanft((t - ab) / 0.3) * Math.max(0, 1 - Math.max(0, t - ab - 1.2) / 0.4));   // Wort-Chip kurz ein- und wieder ausblenden
   const SZENEN = {
     // Klasse 6 – London
     big_ben: { variante: () => KLANG_DATEI.chimes ? BIGBEN_CHIMES : null, dauer: 9.6, klaenge: [[0.4, 'klick'], [0.8, 'klick'], [1.2, 'klick'], [1.6, 'klick'], [1.9, 'viertel'], [4.6, 'glocke'], [6.0, 'glocke'], [7.4, 'glocke']],
@@ -12723,6 +13046,328 @@
       } },
     // Klasse 9 – Heldenfilme (7.11.2026, Etappe 3): held_<id> für die 13 US-Helden (HELD9_FILM, szHeld9)
     ...Object.fromEntries(Object.keys(HELD9_FILM).map((id) => ['held_' + id, szHeld9(id, HELD9_FILM[id])])),
+    // Französisch – Paris (Französisch-App Klasse 5/6, Stufe 2, 7.11.2026; Texte inhalte/franz/paris.tsv, Stimme Mr. Alex)
+    tour_eiffel: { dauer: 9.4, klaenge: [[0.4, 'akkordeon'], [5.2, 'lichtAn'], [6.0, 'funkeln'], [7.4, 'funkeln']],
+      zeichne(c, t) {   // Tag → Abend: die Kamera fährt am Turm hinauf, das Licht geht an, dann funkelt der ganze Turm
+        const abend = sanft((t - 3.6) / 1.6);
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 260, 1.6], [3.6, 320, 120, 1.15], [6.2, 320, 170, 0.95], [9.4, 320, 175, 0.95]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, abend > 0.5 ? '#1b2550' : '#6fa6dc', abend > 0.5 ? '#d9825b' : '#e8f1f8');
+        if (abend > 0) { c.save(); c.globalAlpha = abend; szHimmel(c, '#141c3d', '#c9724e'); c.restore(); }
+        else szWolken(c, t, [[-80, 20], [460, -20]]);
+        pHaeuser(c, 340, -200, 860, 90, 0.9); szBoden(c, '#9db86a', 336);
+        pEiffel(c, 320, 338, 0.95, { licht: abend, funkeln: t > 5.8 ? t : null });
+        if (abend > 0.6) for (let k = 0; k < 30; k++) { c.fillStyle = 'rgba(255,240,180,.9)'; c.fillRect(-180 + (k * 37) % 980, 250 + (k * 13) % 70, 4, 6); }
+        c.restore();
+        szBlase(c, 470, 70, '330 m', '#c98b3a', sanft((t - 2.6) / 0.6));
+      } },
+    arc_triomphe: { dauer: 8.8, klaenge: [[0.3, 'verkehr'], [1.6, 'hupe'], [3.4, 'hupe'], [5.2, 'verkehr'], [6.2, 'hupe']],
+      zeichne(c, t) {   // der Kreisverkehr am Étoile: Autos kreisen ums Arc, zwölf Avenuen leuchten nacheinander auf
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 220, 1.2], [3, 320, 210, 1], [8.8, 320, 205, 0.98]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#7fb2e2', '#eaf2f8'); szWolken(c, t, [[-40, 30], [500, 0]]);
+        pHaeuser(c, 250, -220, 880, 0, 0.75);
+        c.fillStyle = '#8b8f94'; c.fillRect(-300, 250, 1240, 200);
+        const n = Math.min(12, Math.floor(Math.max(0, t - 3.4) / 0.25));
+        for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; c.strokeStyle = k < n ? '#ffd93d' : '#a6aaaf'; c.lineWidth = 10; c.beginPath(); c.moveTo(320 + Math.cos(a) * 200, 300 + Math.sin(a) * 60); c.lineTo(320 + Math.cos(a) * 520, 300 + Math.sin(a) * 160); c.stroke(); }
+        c.fillStyle = '#6f7378'; c.beginPath(); c.ellipse(320, 300, 230, 64, 0, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#c9d6a5'; c.beginPath(); c.ellipse(320, 300, 70, 20, 0, 0, Math.PI * 2); c.fill();
+        const farben = ['#e63946', '#2a8cff', '#ffd93d', '#2e9e5b', '#ffffff', '#8a3ffc', '#ff8c42', '#222'];
+        const autos = farben.map((f, k) => { const a = t * 0.9 + k * Math.PI * 2 / farben.length; return { f, a, x: 320 + Math.cos(a) * 160, y: 300 + Math.sin(a) * 42 }; });
+        for (const au of autos) if (Math.sin(au.a) < 0) pAuto(c, au.x, au.y + 6, 0.9, au.f, Math.cos(au.a) < 0 ? 1 : -1);
+        pArc(c, 320, 302, 1.15, '#6f7378');
+        for (const au of autos) if (Math.sin(au.a) >= 0) pAuto(c, au.x, au.y + 8, 1.1, au.f, Math.cos(au.a) < 0 ? 1 : -1);
+        c.restore();
+        szBlase(c, 320, 50, `${n} avenues`, '#ffd93d', n ? 1 : 0);
+      } },
+    champs_elysees: { dauer: 9, klaenge: [[0.3, 'jubel'], [1.2, 'klingel'], [2.6, 'klingel'], [5.0, 'fanfare'], [5.4, 'jubel']],
+      zeichne(c, t) {   // Tour de France: das Feld rast über die Champs-Élysées, der Fahrer im Gelben Trikot gewinnt, Konfetti
+        szHimmel(c, '#7fb2e2', '#eaf2f8'); szWolken(c, t, [[-60, 40], [420, 10]]);
+        pArc(c, 120, 300, 0.7, '#7d7466');
+        pHaeuser(c, 300, 180, 900, t * 30, 0.8);
+        for (let k = 0; k < 9; k++) { const x = ((k * 90 - t * 160) % 810 + 810) % 810 - 80; c.fillStyle = '#6b4a2b'; c.fillRect(x, 270, 5, 40); c.fillStyle = '#3d8a3a'; c.beginPath(); c.arc(x + 2, 262, 20, 0, Math.PI * 2); c.fill(); }
+        c.fillStyle = '#8a8277'; c.fillRect(0, 305, SZ_W, 100); c.fillStyle = 'rgba(255,255,255,.6)'; for (let x = ((-t * 200) % 60 + 60) % 60 - 60; x < SZ_W; x += 60) c.fillRect(x, 352, 30, 3);
+        const ziel = 520; c.fillStyle = '#fff'; c.fillRect(ziel, 305, 6, 95);
+        c.fillStyle = '#c0392b'; c.fillRect(ziel - 110, 160, 230, 26); c.fillStyle = '#555'; c.fillRect(ziel - 112, 160, 4, 150); c.fillRect(ziel + 118, 160, 4, 150);
+        c.fillStyle = '#fff'; c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('ARRIVÉE', ziel + 5, 174);
+        const trikots = ['#e63946', '#2a8cff', '#2e9e5b', '#ffffff', '#ff8c42'];
+        const fx = Math.min(ziel + 40, -60 + t * 100);
+        trikots.forEach((f, k) => pRad(c, fx - 50 - k * 34 - (t > 5 ? (t - 5) * 10 * k : 0), 372 - (k % 2) * 16, 1.3, f, t));
+        pRad(c, fx, 380, 1.4, '#ffd400', t);
+        if (t > 5.2) { c.fillStyle = '#ffd400'; szBlase(c, fx + 12, 300, 'Maillot jaune !', '#ffd400', sanft((t - 5.2) / 0.4)); szKonfetti(c, t, 60, 5.2); }
+      } },
+    louvre: { dauer: 9.6, klaenge: [[0.4, 'schritte'], [3.8, 'staunen'], [6.4, 'kristall'], [7.2, 'staunen']],
+      zeichne(c, t) {   // Pyramide im Hof des Louvre → die Kamera fährt hinein → die Mona Lisa lächelt immer mehr
+        const innen = sanft((t - 3.4) / 0.8);
+        if (innen < 1) {
+          const [kx, ky, kz] = szWeg(t, [[0, 320, 220, 1], [3.6, 320, 270, 2.6]]);
+          c.save(); szKam(c, kx, ky, kz);
+          szHimmel(c, '#7fb2e2', '#eef4f8'); szWolken(c, t, [[-60, 30], [460, 10]]);
+          pPalast(c, -260, 900, 300, 130); szBoden(c, '#d8d0bf', 300);
+          c.fillStyle = '#6fa3c6'; c.fillRect(40, 312, 120, 10); c.fillRect(480, 312, 120, 10);
+          pPyramide(c, 320, 320, 1.3); pPyramide(c, 150, 322, 0.35); pPyramide(c, 490, 322, 0.35);
+          for (let k = 0; k < 6; k++) pPerson(c, 60 + k * 100 + Math.sin(t + k) * 10, 380, 0.8, { hemd: ['#e63946', '#2a8cff', '#2e9e5b', '#ff8c42', '#8a3ffc', '#222'][k], lauf: t * 6 + k });
+          c.restore();
+        }
+        if (innen > 0) {
+          c.save(); c.globalAlpha = innen;
+          c.fillStyle = '#7a3b34'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#5e2c27'; c.fillRect(0, 330, SZ_W, 70);
+          const z = 1.6 + sanft((t - 4.5) / 4) * 0.9;
+          pJoconde(c, 320, 180, z, sanft((t - 5.6) / 1.6));
+          c.fillStyle = '#b8862b'; c.fillRect(140, 300, 360, 4);
+          for (let k = 0; k < 7; k++) { c.fillStyle = '#2d3142'; c.beginPath(); c.arc(60 + k * 85, 380, 24, Math.PI, 0); c.fill(); c.fillStyle = '#4a2f1e'; c.beginPath(); c.arc(60 + k * 85, 352, 14, 0, Math.PI * 2); c.fill(); }
+          szBlase(c, 320, 40, 'La Joconde', '#e0b04a', sanft((t - 6.2) / 0.5));
+          c.restore();
+        }
+      } },
+    notre_dame: { dauer: 9, klaenge: [[1.2, 'gelaeutTief'], [3.0, 'gelaeut'], [4.6, 'gelaeutTief'], [6.0, 'taube'], [6.3, 'taube']],
+      zeichne(c, t) {   // Westfassade an der Seine: die Glocken in beiden Türmen schwingen, Ding – dong, Tauben fliegen auf
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 230, 1], [2.4, 320, 170, 1.7], [5.4, 320, 180, 1.6], [9, 320, 210, 1.02]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#8cb8de', '#f0f4f6'); szWolken(c, t, [[-60, 30], [480, 10]]);
+        pWasser(c, 345, t); c.fillStyle = '#b9ae96'; c.fillRect(-300, 326, 1240, 20);
+        const sw = t < 1.1 ? 0 : Math.sin((t - 1.1) * 4.2) * 0.55 * (ruhig() ? 0.3 : 1);
+        pNotreDame(c, 320, 328, 1.15, sw);
+        szRinge(c, 320 - 51 * 1.15, 328 - 128 * 1.15, 1.2, t, 'rgba(255,235,170,1)'); szRinge(c, 320 + 51 * 1.15, 328 - 128 * 1.15, 3.0, t, 'rgba(255,235,170,1)'); szRinge(c, 320 - 51 * 1.15, 328 - 128 * 1.15, 4.6, t, 'rgba(255,235,170,1)');
+        for (let k = 0; k < 5; k++) { const d = Math.max(0, t - 6); taubeBei(c, 250 + k * 40 + d * (40 + k * 12), 250 - k * 6 - d * (50 + k * 8), t * 10 + k, 1); }
+        c.restore();
+        szBlase(c, 200, 60, 'Ding !', '#e0b04a', pBlink(t, 1.3)); szBlase(c, 440, 60, 'Dong !', '#e0b04a', pBlink(t, 3.1));
+      } },
+    sacre_coeur: { dauer: 9.2, klaenge: [[0.4, 'vogel'], [1.4, 'schritte'], [3.6, 'schritte'], [6.0, 'gelaeut'], [7.0, 'staunen']],
+      zeichne(c, t) {   // die weiße Basilika oben auf dem Hügel: ein Kind steigt die vielen Stufen hinauf, die Standseilbahn fährt daneben
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 260, 1.15], [6, 320, 170, 1.05], [9.2, 320, 160, 1]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#79b0e0', '#eef5fa'); szWolken(c, t, [[-60, 40], [480, 0]]);
+        c.fillStyle = '#5f9a4e'; c.beginPath(); c.moveTo(-300, 420); c.quadraticCurveTo(320, 60, 940, 420); c.fill();
+        pSacreCoeur(c, 320, 196, 0.85);
+        c.fillStyle = '#d8d0bf'; c.beginPath(); c.moveTo(290, 200); c.lineTo(350, 200); c.lineTo(400, 420); c.lineTo(240, 420); c.fill();
+        c.strokeStyle = 'rgba(120,110,95,.6)'; c.lineWidth = 1.5; for (let y = 206; y < 420; y += 8) { const f = (y - 200) / 220; c.beginPath(); c.moveTo(290 - f * 50, y); c.lineTo(350 + f * 50, y); c.stroke(); }
+        c.strokeStyle = '#555'; c.lineWidth = 3; c.beginPath(); c.moveTo(430, 420); c.lineTo(380, 206); c.stroke();
+        const fp = sanft((t - 0.6) / 6.5), fy = 410 - fp * 190; c.fillStyle = '#e0e6ea'; c.save(); c.translate(430 - (420 - fy) * 50 / 214, fy); c.rotate(-1.34 + Math.PI / 2); c.fillRect(-14, -18, 28, 18); c.fillStyle = '#26323d'; c.fillRect(-10, -14, 8, 8); c.fillRect(2, -14, 8, 8); c.restore();
+        const kp = Math.min(1, Math.max(0, (t - 0.8) / 6.2)), ky2 = 418 - kp * 212;
+        pPerson(c, 300 + Math.sin(kp * 30) * 8, ky2, 0.7, { hemd: '#e63946', lauf: t * 8 });
+        c.restore();
+        szBlase(c, 520, 340, `${Math.floor(kp * 222)} marches`, '#5f9a4e', t > 1 ? 1 : 0);
+      } },
+    montmartre: { dauer: 9.6, klaenge: [[0.2, 'akkordeon'], [3.4, 'akkordeon'], [6.6, 'akkordeon'], [8.4, 'applaus']],
+      zeichne(c, t) {   // Place du Tertre: rote Schirme, ein Maler mit Baskenmütze malt das Porträt eines Kindes, Akkordeonmusik
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 220, 1], [3, 300, 240, 1.35], [7.6, 300, 240, 1.35], [9.6, 320, 220, 1]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#86b6e0', '#f2f6f8'); pHaeuser(c, 300, -200, 860, 30, 0.85);
+        c.fillStyle = '#b3a993'; c.fillRect(-300, 300, 1240, 200); c.strokeStyle = 'rgba(80,70,60,.25)'; c.lineWidth = 1; for (let x = -300; x < 940; x += 18) { c.beginPath(); c.moveTo(x, 300); c.lineTo(x - 40, 420); c.stroke(); }
+        for (const sx of [80, 560]) { c.fillStyle = '#555'; c.fillRect(sx - 2, 190, 4, 120); c.fillStyle = '#c0392b'; c.beginPath(); c.moveTo(sx - 70, 200); c.quadraticCurveTo(sx, 150, sx + 70, 200); c.fill(); }
+        pStaffelei(c, 330, 360, 1.2, sanft((t - 1.2) / 6.4));
+        pPerson(c, 250, 362, 1.25, { hemd: '#1f3b5c', muetze: 'beret', haare: '#333', arm: 1.6 + Math.sin(t * 9) * 0.3 * (t > 1.2 && t < 7.6 ? 1 : 0) });
+        c.fillStyle = '#8a5a2b'; c.fillRect(420, 340, 30, 6); c.fillRect(424, 346, 4, 20); c.fillRect(442, 346, 4, 20);
+        pPerson(c, 436, 346, 1.1, { hemd: '#2a5bd7', haare: '#7a4a28' });
+        pPerson(c, 560, 370, 1.0, { hemd: '#2e9e5b', arm: 2.0 + Math.sin(t * 5) * 0.2, armL: -2.0 - Math.sin(t * 5) * 0.2 });
+        c.fillStyle = '#c0392b'; c.fillRect(548 + Math.sin(t * 5) * 3, 318, 24 - Math.sin(t * 5) * 6, 16); c.strokeStyle = '#fff'; c.lineWidth = 1; for (let k = 0; k < 4; k++) { c.beginPath(); c.moveTo(551 + k * 5, 318); c.lineTo(551 + k * 5, 334); c.stroke(); }
+        for (let k = 0; k < 3; k++) pNote(c, 590 + k * 16, 300 - ((t * 30 + k * 30) % 90), 1 - ((t * 30 + k * 30) % 90) / 90);
+        c.restore();
+      } },
+    seine: { dauer: 9, klaenge: [[0.3, 'welle'], [1.0, 'schiff'], [3.6, 'moewe'], [4.6, 'welle'], [6.4, 'schiff']],
+      zeichne(c, t) {   // Bateau-mouche fährt auf der Seine unter einer Steinbrücke durch, hinten der Eiffelturm; Brücken-Zähler bis 37
+        szHimmel(c, '#7fb2e2', '#eef4f8'); szWolken(c, t, [[-60, 30], [420, 0]]);
+        pEiffel(c, 110, 262, 0.55);
+        pHaeuser(c, 262, -60, 700, t * 8, 0.6);
+        c.fillStyle = '#b9ae96'; c.fillRect(0, 258, SZ_W, 16);
+        pWasser(c, 272, t, 0, SZ_W);
+        const bx = 760 - t * 95;
+        pBoot(c, bx, 322, 1.1);
+        pPont(c, 250, 470, 300, 30, 3);
+        c.fillStyle = '#4f7f9e'; c.fillRect(250, 324, 220, 76); c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 2; for (let x = 250 + (t * 20) % 60; x < 470; x += 60) { c.beginPath(); c.moveTo(x, 344); c.quadraticCurveTo(x + 8, 340, x + 16, 344); c.stroke(); }
+        if (bx < 250 + 90 && bx > 470 - 90) { c.save(); c.beginPath(); c.rect(250, 300, 220, 24); c.clip(); pBoot(c, bx, 322, 1.1); c.restore(); }
+        if (bx <= 250 + 90) pBoot(c, bx, 322, 1.1);
+        szBlase(c, 520, 60, `${Math.min(37, Math.max(1, Math.floor(t * 4.5)))} ponts`, '#4f7f9e', 1);
+      } },
+    metro: { dauer: 9.4, klaenge: [[0.4, 'verkehr'], [2.8, 'zug'], [4.6, 'gong'], [6.6, 'tuerZu'], [7.4, 'zug']],
+      zeichne(c, t) {   // Jugendstil-Eingang an der Straße → hinunter auf den Bahnsteig: der Zug kommt, Türen auf und zu; die Linien 1–14 (+3bis, 7bis) poppen auf
+        const unten = sanft((t - 2.0) / 0.8);
+        if (unten < 1) {
+          const [kx, ky, kz] = szWeg(t, [[0, 320, 210, 1], [2.2, 320, 300, 2.2]]);
+          c.save(); szKam(c, kx, ky, kz); c.globalAlpha = 1 - unten;
+          szHimmel(c, '#86b6e0', '#f2f6f8'); pHaeuser(c, 300, -200, 860, 0, 0.9);
+          c.fillStyle = '#c9c4ba'; c.fillRect(-300, 300, 1240, 30); c.fillStyle = '#4a4d52'; c.fillRect(-300, 330, 1240, 120);
+          pGuimard(c, 320, 312, 1.3);
+          c.restore();
+        }
+        if (unten > 0) {
+          c.save(); c.globalAlpha = unten;
+          c.fillStyle = '#efe9dc'; c.beginPath(); c.moveTo(0, 0); c.lineTo(SZ_W, 0); c.lineTo(SZ_W, 260); c.quadraticCurveTo(320, 220, 0, 260); c.fill();
+          c.fillStyle = '#ffffff'; for (let x = 0; x < SZ_W; x += 22) for (let y = 10; y < 240; y += 12) c.fillRect(x + (y % 24 ? 0 : 11), y, 20, 10);
+          c.fillStyle = '#1f3b5c'; c.fillRect(220, 40, 200, 34); c.fillStyle = '#fff'; c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Châtelet', 320, 57);
+          c.fillStyle = '#3a3d42'; c.fillRect(0, 300, SZ_W, 100); c.fillStyle = '#ffffff'; c.fillRect(0, 300, SZ_W, 4); c.fillStyle = '#c9c4ba'; c.fillRect(0, 304, SZ_W, 96);
+          const ankunft = 1 - sanft((t - 2.6) / 2.0), weg = sanft((t - 7.4) / 1.6);
+          const zx = 20 + ankunft * 720 - weg * 760;
+          const auf = t > 4.8 && t < 6.8 ? Math.min(1, (t - 4.8) * 3, (6.8 - t) * 3) : 0;
+          c.save(); c.beginPath(); c.rect(0, 0, SZ_W, 304); c.clip(); pMetroZug(c, zx, 296, 0.95);
+          if (auf > 0) { c.fillStyle = '#efe9dc'; for (let w = 0; w < 2; w++) for (const dx of [57, 107]) c.fillRect(zx + (w * 168 + dx - 10 * auf) * 0.95, 296 - 60 * 0.95, 20 * auf * 0.95, 56 * 0.95); }
+          c.restore();
+          const n = Math.min(16, Math.floor(Math.max(0, t - 1.6) * 3.2)), linien = ['1', '2', '3', '3b', '4', '5', '6', '7', '7b', '8', '9', '10', '11', '12', '13', '14'];
+          const lf = ['#ffcd00', '#003ca6', '#837902', '#6ec4e8', '#cf009e', '#ff7e2e', '#6eca97', '#fa9aba', '#6eca97', '#e19bdf', '#b6bd00', '#c9910d', '#704b1c', '#007852', '#6ec4e8', '#62259d'];
+          for (let k = 0; k < n; k++) { const x = 40 + k * 35, y = 350; c.fillStyle = lf[k]; c.beginPath(); c.arc(x, y, 14, 0, Math.PI * 2); c.fill(); c.fillStyle = k === 0 || k === 6 || k === 10 ? '#18213a' : '#fff'; c.font = 'bold 12px system-ui, sans-serif'; c.fillText(linien[k], x, y + 1); }
+          szBlase(c, 320, 110, '16 lignes', '#1b8a6b', n >= 16 ? 1 : 0);
+          c.restore();
+        }
+      } },
+    pantheon: { dauer: 10, klaenge: [[0.4, 'fanfare'], [3.2, 'klick'], [4.6, 'klick'], [6.0, 'klick'], [6.4, 'staunen'], [7.8, 'staunen']],
+      zeichne(c, t) {   // außen: Kuppel und Säulen → innen: das Foucault-Pendel schwingt, die Namen großer Franzosen erscheinen
+        const innen = sanft((t - 2.6) / 0.8);
+        if (innen < 1) {
+          const [kx, ky, kz] = szWeg(t, [[0, 320, 220, 1], [2.8, 320, 260, 2]]);
+          c.save(); szKam(c, kx, ky, kz); c.globalAlpha = 1 - innen;
+          szHimmel(c, '#7fb2e2', '#eef4f8'); szWolken(c, t, [[-40, 20], [480, 0]]);
+          pHaeuser(c, 330, -260, -10, 0, 0.8); pHaeuser(c, 330, 650, 900, 0, 0.8); szBoden(c, '#c9c0ab', 330);
+          pPantheon(c, 320, 332, 1.25);
+          c.restore();
+        }
+        if (innen > 0) {
+          c.save(); c.globalAlpha = innen;
+          c.fillStyle = '#efe6d2'; c.fillRect(0, 0, SZ_W, H); c.fillStyle = '#d9ccb0'; c.fillRect(0, 330, SZ_W, 70);
+          for (const sx of [60, 160, 480, 580]) { c.fillStyle = '#e2d6bb'; c.fillRect(sx - 18, 60, 36, 270); c.fillStyle = '#cbbd9e'; c.fillRect(sx - 22, 54, 44, 10); }
+          c.strokeStyle = '#cbbd9e'; c.lineWidth = 10; c.beginPath(); c.arc(320, 120, 230, Math.PI * 1.08, Math.PI * 1.92); c.stroke();
+          pPendel(c, 320, 0, 300, Math.sin((t - 2.6) * 1.6) * 0.32);
+          const namen = [['Marie Curie', 4.4, 190, 120], ['Victor Hugo', 5.8, 450, 120], ['Alexandre Dumas', 7.2, 190, 200], ['Louis Braille', 8.4, 450, 200]];
+          for (const [nm, ab, x, y] of namen) szBlase(c, x, y, nm, '#b8862b', sanft((t - ab) / 0.5));
+          c.restore();
+        }
+      } },
+    luxembourg: { dauer: 9, klaenge: [[0.3, 'vogel'], [1.2, 'brunnen'], [2.6, 'platsch'], [4.0, 'vogel'], [5.6, 'brunnen'], [7.2, 'jubel']],
+      zeichne(c, t) {   // großes Becken vor dem Palais du Luxembourg: Fontäne, Kinder schubsen kleine Segelboote mit Stöcken an
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 210, 1], [5, 320, 240, 1.2], [9, 320, 225, 1.08]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#7fb2e2', '#eef4f8'); szWolken(c, t, [[-40, 40], [460, 10]]);
+        pPalast(c, 120, 520, 220, 80); c.fillStyle = '#7f8a94'; c.beginPath(); c.ellipse(320, 140, 34, 26, 0, Math.PI, 0); c.fill();
+        for (let k = 0; k < 10; k++) { const x = -120 + k * 100; if (x > 100 && x < 540) continue; c.fillStyle = '#6b4a2b'; c.fillRect(x, 190, 6, 40); c.fillStyle = '#3d8a3a'; c.fillRect(x - 24, 150, 54, 46); }
+        c.fillStyle = '#d8cdb3'; c.fillRect(-300, 230, 1240, 200);
+        c.fillStyle = '#e8e0cc'; c.beginPath(); c.ellipse(320, 320, 250, 66, 0, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#5f93b5'; c.beginPath(); c.ellipse(320, 320, 236, 58, 0, 0, Math.PI * 2); c.fill();
+        c.fillStyle = 'rgba(255,255,255,.85)'; for (let k = 0; k < 14; k++) { const a = (t * 2 + k) % 1.4; c.beginPath(); c.arc(320 + Math.sin(k * 2.3) * 14 * a, 300 - a * 70 + a * a * 40, 3, 0, Math.PI * 2); c.fill(); }
+        c.fillStyle = '#e8e0cc'; c.fillRect(312, 296, 16, 18);
+        const boote = [['#e63946', 0], ['#2a8cff', 1.7], ['#ffd93d', 3.4], ['#2e9e5b', 4.9]];
+        for (const [f, p] of boote) { const a = t * 0.35 + p; pSegelboot(c, 320 + Math.cos(a) * 170, 324 + Math.sin(a) * 34, 1.1, f); }
+        pPerson(c, 120, 398, 1.1, { hemd: '#e63946', arm: 2.2 + Math.sin(t * 3) * 0.2 }); c.strokeStyle = '#8a5a2b'; c.lineWidth = 2; c.beginPath(); c.moveTo(134, 340); c.lineTo(170, 330); c.stroke();
+        pPerson(c, 520, 398, 1.1, { hemd: '#2a5bd7', haare: '#e0b04a', armL: -2.2 - Math.sin(t * 3) * 0.2 }); c.beginPath(); c.moveTo(506, 340); c.lineTo(470, 330); c.stroke();
+        c.restore();
+      } },
+    orsay: { dauer: 9.6, klaenge: [[0.3, 'dampf'], [0.8, 'zug'], [3.6, 'klick'], [4.4, 'klick'], [5.2, 'klick'], [6.0, 'klick'], [7.0, 'staunen']],
+      zeichne(c, t) {   // 1900: eine Dampflok fährt in die Bahnhofshalle → heute: Museum; die große Uhr dreht sich, durch das Glas sieht man Sacré-Cœur
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 220, 1], [3.6, 320, 190, 1.05], [7, 320, 170, 1.5], [9.6, 320, 175, 1.45]]);
+        const heute = sanft((t - 3.2) / 0.8);
+        c.save(); szKam(c, kx, ky, kz);
+        c.fillStyle = '#3d4a42'; c.fillRect(-300, -200, 1240, 700);
+        c.fillStyle = '#d9d2c0'; c.beginPath(); c.moveTo(-60, 330); c.lineTo(-60, 120); c.quadraticCurveTo(320, -120, 700, 120); c.lineTo(700, 330); c.fill();
+        c.strokeStyle = '#9a8f78'; c.lineWidth = 3; for (let k = 0; k < 9; k++) { c.beginPath(); c.moveTo(-60 + k * 95, 330); c.lineTo(-60 + k * 95, 120 - Math.sin(k / 8 * Math.PI) * 120); c.stroke(); }
+        c.fillStyle = 'rgba(170,200,220,.6)'; c.beginPath(); c.arc(320, 170, 92, 0, Math.PI * 2); c.fill();
+        c.save(); c.beginPath(); c.arc(320, 170, 90, 0, Math.PI * 2); c.clip(); c.globalAlpha = 0.45; pSacreCoeur(c, 330, 250, 0.45); c.restore();
+        pUhr(c, 320, 170, 92, t * (t > 3.4 ? 2.4 : 0.4));
+        if (heute < 1) { c.save(); c.globalAlpha = 1 - heute; c.fillStyle = '#6b6153'; c.fillRect(-300, 330, 1240, 100); c.fillStyle = '#3a3530'; c.fillRect(-300, 360, 1240, 5);
+          pDampflok(c, 760 - t * 140, 362, 1.3); c.fillStyle = 'rgba(240,240,240,.7)'; for (let k = 0; k < 6; k++) { c.beginPath(); c.arc(760 - t * 140 - 44 + k * 18, 280 - k * 12, 14 + k * 4, 0, Math.PI * 2); c.fill(); } c.restore(); }
+        if (heute > 0) { c.save(); c.globalAlpha = heute; c.fillStyle = '#e4ddcf'; c.fillRect(-300, 330, 1240, 100);
+          const bilder = [['#3b6e9e', '#f2c14e'], ['#5a8f4e', '#e8467c'], ['#c0392b', '#2a5bd7'], ['#e8a33d', '#3b6e9e']];
+          bilder.forEach(([a, b], k) => { const x = 40 + k * 160; c.fillStyle = '#b8862b'; c.fillRect(x, 270, 80, 58); c.fillStyle = a; c.fillRect(x + 5, 275, 70, 48); c.fillStyle = b; c.beginPath(); c.arc(x + 40, 296, 12, 0, Math.PI * 2); c.fill(); });
+          c.restore(); }
+        c.restore();
+        szBlase(c, 120, 50, heute < 0.5 ? '1900 : une gare' : "Aujourd'hui : un musée", '#3d4a42', 1);
+      } },
+    opera: { dauer: 9.6, klaenge: [[0.4, 'fanfare'], [3.0, 'applaus'], [4.2, 'oper'], [6.4, 'oper'], [8.4, 'applaus']],
+      zeichne(c, t) {   // Fassade mit goldenen Figuren und grüner Kuppel → im Saal geht der rote Vorhang auf: eine Sängerin singt, eine Tänzerin dreht sich
+        const innen = sanft((t - 2.4) / 0.8);
+        if (innen < 1) {
+          const [kx, ky, kz] = szWeg(t, [[0, 320, 230, 1], [2.6, 320, 280, 1.9]]);
+          c.save(); szKam(c, kx, ky, kz); c.globalAlpha = 1 - innen;
+          szHimmel(c, '#7fb2e2', '#eef4f8'); szWolken(c, t, [[-60, 20], [470, -10]]);
+          pHaeuser(c, 330, -260, 900, 0, 0.75); szBoden(c, '#bdb6a6', 330); pOper(c, 320, 332, 1.3);
+          c.restore();
+        }
+        if (innen > 0) {
+          c.save(); c.globalAlpha = innen;
+          c.fillStyle = '#5e1420'; c.fillRect(0, 0, SZ_W, H);
+          c.fillStyle = '#d9a521'; c.fillRect(70, 40, 500, 10); c.fillRect(70, 40, 10, 280); c.fillRect(560, 40, 10, 280);
+          c.fillStyle = '#3b2a20'; c.fillRect(80, 50, 480, 270); c.fillStyle = '#8a6b4a'; c.fillRect(80, 290, 480, 30);
+          const auf = sanft((t - 3.2) / 1.2);
+          if (auf > 0) { const spot = c.createRadialGradient(240, 220, 10, 240, 220, 140); spot.addColorStop(0, 'rgba(255,240,190,.55)'); spot.addColorStop(1, 'rgba(255,240,190,0)'); c.fillStyle = spot; c.fillRect(80, 50, 480, 270);
+            pPerson(c, 240, 296, 1.6, { kleid: '#2a5bd7', hemd: '#2a5bd7', haare: '#2b1d12', arm: 2.4, armL: -2.4 });
+            c.save(); c.translate(420, 296); c.scale(Math.cos(t * 6), 1); pPerson(c, 0, 0, 1.5, { kleid: '#f4c6d6', hemd: '#f4c6d6', haare: '#7a4a28', arm: 3.0, armL: -3.0 }); c.restore();
+            for (let k = 0; k < 4; k++) pNote(c, 260 + k * 18, 180 - ((t * 40 + k * 25) % 100), (1 - ((t * 40 + k * 25) % 100) / 100) * (t > 4.2 ? 1 : 0)); }
+          pVorhang(c, 80, 560, 50, 320, auf);
+          for (let k = 0; k < 12; k++) { c.fillStyle = '#1d1416'; c.beginPath(); c.arc(30 + k * 55, 386 + (t > 8.4 ? -Math.abs(Math.sin(t * 9 + k)) * 6 : 0), 24, Math.PI, 0); c.fill(); }
+          c.restore();
+          szBlase(c, 320, 26, 'Bravo !', '#d9a521', sanft((t - 8.4) / 0.4));
+        }
+      } },
+    invalides: { dauer: 9, klaenge: [[0.3, 'trommel'], [2.6, 'funkeln'], [4.4, 'trommel'], [5.4, 'fanfare'], [7.2, 'funkeln']],
+      zeichne(c, t) {   // der goldene Dom glänzt in der Sonne, dann erscheint Napoléons Zweispitz
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 230, 1], [3, 320, 160, 1.5], [6.4, 320, 180, 1.2], [9, 320, 200, 1.05]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#6fa6dc', '#eaf2f8'); szWolken(c, t, [[-60, 30], [470, 0]]);
+        c.fillStyle = '#6aa35a'; c.fillRect(-300, 330, 1240, 100);
+        for (let k = 0; k < 12; k++) { const x = -200 + k * 90; if (x > 200 && x < 440) continue; c.fillStyle = '#3d8a3a'; c.beginPath(); c.moveTo(x, 336); c.lineTo(x + 14, 296); c.lineTo(x + 28, 336); c.fill(); }
+        pInvalides(c, 320, 334, 1.15, t > 2.4 ? t : null);
+        c.restore();
+        const h = sanft((t - 5.2) / 0.6); if (h > 0) { c.save(); c.globalAlpha = h; pZweispitz(c, 320, 330 - h * 30, 1.6 * (0.6 + 0.4 * h)); c.restore(); szBlase(c, 320, 360, 'Napoléon', '#0055a4', h); }
+      } },
+    boulangerie: { dauer: 9.4, klaenge: [[0.4, 'akkordeon'], [1.6, 'tuer'], [4.8, 'plopp'], [5.4, 'plopp'], [6.0, 'plopp'], [7.0, 'tuer']],
+      zeichne(c, t) {   // ein Kind geht in die Bäckerei und kommt mit einer Baguette und zwei Croissants heraus
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 220, 1], [4, 320, 230, 1.15], [9.4, 320, 220, 1.05]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#86b6e0', '#f2f6f8'); pHaeuser(c, 200, -260, 900, 20, 0.7);
+        c.fillStyle = '#efe4cf'; c.fillRect(-300, 160, 1240, 170);
+        pBoulangerie(c, 320, 330, 1.25);
+        c.fillStyle = '#c9c4ba'; c.fillRect(-300, 330, 1240, 100);
+        const drin = t > 2.0 && t < 6.8;
+        if (!drin) { const raus = t >= 6.8; const x = raus ? 420 + (t - 6.8) * 70 : 140 + Math.min(1, t / 2) * 280; pPerson(c, x, 392, 1.25, { hemd: '#e63946', lauf: t * 8, arm: raus ? 1.2 : undefined }); if (raus) pBaguette(c, x + 10, 344, 0.7, -0.9); }
+        const k = [[4.8, 'Une baguette'], [5.4, 'un croissant'], [6.0, 'deux croissants']];
+        if (t > 4.8) { c.fillStyle = `rgba(255,255,255,${0.85 * sanft((t - 4.8) / 0.4)})`; c.beginPath(); c.roundRect(150, 84, 340, 64, 14); c.fill(); }
+        for (const [ab, w] of k) if (t > ab) { const f = sanft((t - ab) / 0.4); if (w === 'Une baguette') pBaguette(c, 200, 120 - f * 10, 1.2 * f, -0.2); else pCroissant(c, w === 'un croissant' ? 380 : 450, 120 - f * 10, 1.6 * f); }
+        c.restore();
+        szBlase(c, 320, 40, t < 5.4 ? 'Une baguette' : 'deux croissants', '#d9a521', sanft((t - 4.8) / 0.4));
+      } },
+    pompidou: { dauer: 9.2, klaenge: [[0.4, 'plopp'], [1.8, 'lichtAn'], [3.2, 'lichtAn'], [4.6, 'lichtAn'], [6.0, 'lichtAn'], [7.4, 'staunen']],
+      zeichne(c, t) {   // die bunten Rohre leuchten nacheinander auf: bleu, vert, rouge, jaune
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 220, 1.05], [7, 320, 200, 1.1], [9.2, 320, 210, 1]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#7fb2e2', '#eef4f8'); szWolken(c, t, [[-60, 30], [470, 0]]);
+        pHaeuser(c, 330, -260, 900, 0, 0.75); c.fillStyle = '#c9c0ab'; c.fillRect(-300, 330, 1240, 100);
+        const L = [1.8, 3.2, 4.6, 6.0].map((ab) => sanft((t - ab) / 0.5));
+        pPompidou(c, 320, 332, 1.45, L.map((x) => 0.15 + 0.85 * x));
+        for (let k = 0; k < 6; k++) pPerson(c, 80 + k * 100, 395, 0.8, { hemd: ['#e63946', '#2a8cff', '#2e9e5b', '#ff8c42', '#8a3ffc', '#222'][k], lauf: t * 5 + k });
+        c.restore();
+        const w = [['bleu', '#1f6fd6'], ['vert', '#2e9e5b'], ['rouge', '#e63946'], ['jaune', '#d9a521']];
+        w.forEach(([wort, f], k) => szBlase(c, 110 + k * 140, 44, wort, f, L[k]));
+      } },
+    stade_de_france: { dauer: 9, klaenge: [[0.3, 'gesang'], [1.4, 'pfeife'], [3.6, 'koepfer'], [4.4, 'jubel'], [5.0, 'gesang'], [7.0, 'jubel']],
+      zeichne(c, t) {   // Les Bleus: ein Spieler im blauen Trikot läuft an und schießt – BUT ! Das Stadion jubelt, Fahnen wehen
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 210, 1], [3.6, 380, 230, 1.15], [9, 340, 210, 1.02]]);
+        c.save(); szKam(c, kx, ky, kz);
+        szHimmel(c, '#1b2550', '#3f5a8a');
+        pStadion(c, t, t > 4.4);
+        pTor(c, 560, 330);
+        const lauf = Math.min(1, t / 3.4), sx = 120 + lauf * 240;
+        pPerson(c, sx, 330, 1.4, { hemd: '#0055a4', hose: '#ffffff', haut: '#8d5a3b', haare: '#1d1d1d', lauf: t < 3.4 ? t * 10 : 0, arm: t > 4.4 ? 2.8 : undefined, armL: t > 4.4 ? -2.8 : undefined });
+        c.fillStyle = '#fff'; c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('10', sx, 310);
+        const sch = Math.max(0, Math.min(1, (t - 3.4) / 0.9)), bx = t < 3.4 ? sx + 16 : lerp(sx + 16, 590, sch), by = t < 3.4 ? 324 : 324 - Math.sin(sch * Math.PI) * 70 - sch * 10;
+        pBall(c, bx, by, 7, t * 8);
+        for (let k = 0; k < 5; k++) pFahne(c, 30 + k * 140, 150, 1, t + k);
+        c.restore();
+        if (t > 4.4) { szBlase(c, 320, 60, 'BUT ! Allez les Bleus !', '#0055a4', sanft((t - 4.4) / 0.4)); szKonfetti(c, t, 50, 4.4); }
+      } },
+    versailles: { dauer: 9.6, klaenge: [[0.3, 'vogel'], [1.6, 'fanfare'], [4.2, 'funkeln'], [5.6, 'trompete'], [7.6, 'fanfare']],
+      zeichne(c, t) {   // die Sonne geht hinter dem riesigen Schloss auf (Roi-Soleil), das goldene Tor glänzt, eine Krone erscheint
+        const [kx, ky, kz] = szWeg(t, [[0, 320, 240, 1.2], [4, 320, 200, 0.92], [9.6, 320, 205, 0.95]]);
+        c.save(); szKam(c, kx, ky, kz);
+        const auf = sanft((t - 0.4) / 3.6);
+        szHimmel(c, auf > 0.5 ? '#78aee0' : '#f2b679', '#fbe8c8');
+        pSonne(c, 500, 230 - auf * 150, 40, t, t > 3);
+        pPalast(c, -240, 880, 300, 120, { gold: true, farbe: '#efe2c4' });
+        c.fillStyle = '#efe2c4'; c.fillRect(230, 150, 180, 150); c.fillStyle = '#7f8a94'; c.beginPath(); c.moveTo(226, 150); c.lineTo(320, 112); c.lineTo(414, 150); c.fill();
+        c.fillStyle = '#d9a521'; for (let k = 242; k < 400; k += 22) c.fillRect(k, 158, 10, 60);
+        c.fillStyle = '#d9cfb8'; c.fillRect(-300, 300, 1240, 140); c.strokeStyle = 'rgba(120,110,95,.35)'; c.lineWidth = 1; for (let x = -300; x < 940; x += 22) { c.beginPath(); c.moveTo(x, 300); c.lineTo(x + (x - 320) * 0.4, 420); c.stroke(); }
+        pGoldtor(c, -40, 680, 380, 60);
+        if (t > 4.2) for (let k = 0; k < 8; k++) szFunkeln(c, (k * 97) % 720 - 40, 318 + (k * 13) % 30, 5, t + k, '#fff3b0');
+        c.restore();
+        const kf = sanft((t - 5.6) / 0.6); if (kf > 0) { c.save(); c.globalAlpha = kf; pKrone(c, 320, 70, 1.6 * kf); c.restore(); szBlase(c, 320, 112, 'Louis XIV, le Roi-Soleil', '#d9a521', kf); }
+      } },
   };
   // Big Ben mit echter Aufnahme: 15,5 s; bis 14 s laufen die Westminster Chimes (Bild wie beim Nachbau bis kurz vor dem Schlag, langsamer), dann EIN Stundenschlag (Nachbau)
   const BIGBEN_CHIMES = { dauer: 15.5, klaenge: [[0.1, 'chimes'], [14.0, 'glocke']],
@@ -12732,7 +13377,7 @@
   function untertitelTeile(text) {
     const s = String(text || '').replace(/\s+/g, ' ').trim(); if (!s) return [];
     const saetze = []; let anf = 0;
-    const re = /[.!?]+["'”’)]*(?=\s)/g; let m;
+    const re = /[.!?]+(?:["'”’)]|\s»)*(?=\s|$)/g; let m;   // 7.11.: französisches „ ! »“ bleibt beim Satz
     while ((m = re.exec(s))) { const ende = m.index + m[0].length, stueck = s.slice(anf, ende); if (m[0][0] === '.' && UT_ABK.test(s.slice(anf, m.index + 1))) continue; saetze.push(stueck.trim()); anf = ende; }
     if (anf < s.length) saetze.push(s.slice(anf).trim());
     const aus = [];
@@ -12769,7 +13414,7 @@
     // Untertitel wie im Kino (6.11., Mr. Alex): schmaler halbdurchsichtiger Streifen unten, höchstens 2 Zeilen, Satz für Satz passend zur Stimme;
     // „CC“ oben rechts schaltet sie an/aus (je Gerät gemerkt, Standard an)
     const teile = untertitelTeile(o.text || '');
-    const unter = el('div', 'ortszene-text', teile[0] || ''); unter.lang = 'en'; unter.setAttribute('aria-live', 'polite');
+    const unter = el('div', 'ortszene-text', teile[0] || ''); unter.lang = o.lang || 'en'; unter.setAttribute('aria-live', 'polite');
     unter.style.cssText = 'position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:max-content;max-width:90%;box-sizing:border-box;padding:3px 10px;border-radius:6px;background:rgba(0,0,0,.55);color:#fff;font:600 clamp(13px,2.4vw,17px)/1.3 system-ui,sans-serif;text-align:center;text-shadow:0 1px 2px #000;pointer-events:none;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;z-index:1;';
     let ccAn = untertitelAn();
     const cc = el('button', 'ortszene-cc', 'CC'); cc.type = 'button';

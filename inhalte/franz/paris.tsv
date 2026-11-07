@@ -1,0 +1,19 @@
+id	name	symbol	x	y	fr	de
+tour_eiffel	La tour Eiffel	🗼	112	146	Voici la tour Eiffel. Elle a 330 mètres. Le soir, elle brille !	Hier ist der Eiffelturm. Er ist 330 Meter hoch. Abends funkelt er!
+arc_triomphe	L'Arc de Triomphe	🎖️	96	68	Voici l'Arc de Triomphe. Autour, il y a douze avenues et beaucoup de voitures !	Hier ist der Triumphbogen. Rundherum gibt es zwölf Straßen und viele Autos!
+champs_elysees	Les Champs-Élysées	🚴	140	80	Les Champs-Élysées, c'est une grande avenue. Ici, le Tour de France finit.	Die Champs-Élysées sind eine große Allee. Hier endet die Tour de France.
+louvre	Le Louvre	🖼️	214	86	Le Louvre est un grand musée. Ici, il y a la Joconde. Elle sourit !	Der Louvre ist ein großes Museum. Hier hängt die Mona Lisa. Sie lächelt!
+notre_dame	Notre-Dame	🔔	252	120	Voici Notre-Dame. Elle a deux tours et des cloches. Ding, dong !	Hier ist Notre-Dame. Sie hat zwei Türme und Glocken. Ding, dong!
+sacre_coeur	Le Sacré-Cœur	⛪	226	24	Le Sacré-Cœur est tout blanc. Il est en haut de la colline. Il y a beaucoup de marches !	Sacré-Cœur ist ganz weiß. Die Kirche steht oben auf dem Hügel. Es gibt viele Stufen!
+montmartre	Montmartre	🎨	196	40	À Montmartre, il y a des peintres. Ils dessinent ton portrait !	In Montmartre gibt es Maler. Sie zeichnen dein Porträt!
+seine	La Seine	🚢	300	140	La Seine traverse Paris. Il y a trente-sept ponts. Les bateaux passent dessous.	Die Seine fließt durch Paris. Es gibt 37 Brücken. Die Schiffe fahren darunter durch.
+metro	Le métro	🚇	270	66	Le métro de Paris a seize lignes. Attention à la fermeture des portes !	Die Pariser Metro hat 16 Linien. Achtung, die Türen schließen!
+pantheon	Le Panthéon	🏛️	244	160	Dans le Panthéon, il y a de grands Français, par exemple Marie Curie et Victor Hugo.	Im Panthéon liegen große Franzosen, zum Beispiel Marie Curie und Victor Hugo.
+luxembourg	Le jardin du Luxembourg	🌳	214	152	Au jardin du Luxembourg, les enfants jouent avec des petits bateaux sur l'eau.	Im Jardin du Luxembourg spielen die Kinder mit kleinen Booten auf dem Wasser.
+orsay	Le musée d'Orsay	🕰️	184	118	Le musée d'Orsay, c'est une ancienne gare. Il a une très grande horloge.	Das Musée d'Orsay ist ein alter Bahnhof. Es hat eine riesige Uhr.
+opera	L'Opéra Garnier	🎭	190	64	Voici l'Opéra Garnier. Ici, on chante et on danse. Bravo !	Hier ist die Opéra Garnier. Hier wird gesungen und getanzt. Bravo!
+invalides	Les Invalides	✨	148	132	Aux Invalides, il y a un dôme doré. Napoléon est ici.	Beim Invalidendom gibt es eine goldene Kuppel. Napoleon liegt hier.
+boulangerie	La boulangerie	🥖	300	96	À la boulangerie : « Une baguette et deux croissants, s'il vous plaît ! »	In der Bäckerei: „Ein Baguette und zwei Croissants, bitte!“
+pompidou	Le Centre Pompidou	🧩	262	100	Le Centre Pompidou a des tuyaux de toutes les couleurs : bleu, vert, rouge et jaune.	Das Centre Pompidou hat Rohre in allen Farben: blau, grün, rot und gelb.
+stade_de_france	Le Stade de France	⚽	304	22	Au Stade de France, l'équipe de France joue. Allez les Bleus !	Im Stade de France spielt die französische Nationalmannschaft. Los, ihr Blauen!
+versailles	Le château de Versailles	👑	30	184	Le château de Versailles est très grand. C'est le château de Louis XIV, le Roi-Soleil.	Das Schloss Versailles ist riesig. Es ist das Schloss von Ludwig XIV., dem Sonnenkönig.

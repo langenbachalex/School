@@ -1,7 +1,7 @@
 """Erzeugt fehlende Audios der Französisch-App mit ElevenLabs (Eleven v4).
 
 Dialoge: je Zeile eine Datei, A = Jules, B = Cécile (gleicher Satz + gleiche Stimme = eine Datei).
-Namen (Prononciation): Mr. Alex' eigene Stimme.
+Namen (Prononciation) und Paris-Orte: Mr. Alex' eigene Stimme.
 Vorhandene Dateien bleiben. Neu erzeugen: Datei löschen. Danach werkzeuge/franz_bauen.py laufen lassen.
 Aufruf: python3 werkzeuge/franz_audio.py [--zaehlen]
 """
@@ -36,6 +36,8 @@ def auftraege():
         yield z["wer"], text, fb.audio_name(z["wer"], z["fr"])
     for z in fb.tsv("namen.tsv"):
         yield "alex", z["name"] + ".", f"audio/namen/{z['id']}.mp3"
+    for z in fb.tsv("paris.tsv"):  # Paris-Karte: Text des Orts, Mr. Alex' Stimme (römische Zahl ausgeschrieben)
+        yield "alex", z["fr"].replace("Louis XIV", "Louis quatorze"), f"audio/paris/{z['id']}.mp3"
 
 
 def main():

@@ -99,7 +99,15 @@ def main():
         quellen = {z["id"]: z["quelle"] for z in tsv("namen_fotos.tsv")}
     for n in namen:
         n["quelle"] = quellen.get(n["id"]) if n["foto"] else None
-    daten = {"dialoge": list(dialoge.values()), "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    # Paris-Karte (Stufe 2, 7.11.2026): Orte mit Text (fr/de), Stimme Mr. Alex audio/paris/<id>.mp3, Foto bilder/paris/<id>.jpg (Quellen paris_fotos.tsv);
+    # die Szenen zeichnet die Runner-Engine (app/klasse9/runner.js, SZENEN „Französisch – Paris“, kopiert nach app/runner.js)
+    pquellen = {z["id"]: z["quelle"] for z in tsv("paris_fotos.tsv")} if os.path.exists(os.path.join(INHALT, "paris_fotos.tsv")) else {}
+    paris = []
+    for z in tsv("paris.tsv"):
+        a, b = f"audio/paris/{z['id']}.mp3", f"bilder/paris/{z['id']}.jpg"
+        paris.append({"id": z["id"], "name": z["name"], "symbol": z["symbol"], "x": int(z["x"]), "y": int(z["y"]), "fr": z["fr"], "de": z["de"],
+                      "audio": a if vorhanden(a) else None, "foto": b if vorhanden(b) else None, "quelle": pquellen.get(z["id"]) if vorhanden(b) else None})
+    daten = {"dialoge": list(dialoge.values()), "paris": paris, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:
@@ -108,7 +116,7 @@ def main():
     for g in (180, 192, 512):
         icon(g, os.path.join(APP, "icons", f"icon-{g}.png"))
     # Offline-Speicher: alle Dateien der App, Version = Prüfsumme
-    dateien, h = ["./", "../style.css"], hashlib.sha1()  # style.css teilt sich die App mit Englisch Klasse 6
+    dateien, h = ["./", "../style.css", "../runner.js"], hashlib.sha1()  # style.css und die Runner-Engine (Paris-Szenen) teilt sich die App mit Englisch Klasse 6
     for wurzel, _, namen_ in os.walk(APP):
         for n in sorted(namen_):
             rel = os.path.relpath(os.path.join(wurzel, n), APP).replace(os.sep, "/")
@@ -117,8 +125,9 @@ def main():
             dateien.append(rel)
             with open(os.path.join(wurzel, n), "rb") as f:
                 h.update(rel.encode() + f.read())
-    with open(os.path.join(BASIS, "app", "style.css"), "rb") as f:
-        h.update(f.read())
+    for geteilt in ("style.css", "runner.js"):
+        with open(os.path.join(BASIS, "app", geteilt), "rb") as f:
+            h.update(f.read())
     dateien.sort()
     with open(os.path.join(APP, "sw.js"), "w", encoding="utf-8") as f:
         f.write(f"""// AUTOMATISCH ERZEUGT von werkzeuge/franz_bauen.py – Offline-Speicher der Französisch-App
@@ -136,8 +145,8 @@ self.addEventListener("fetch", (e) => {{
   e.respondWith(caches.match(e.request, {{ ignoreSearch: true }}).then((r) => r || fetch(e.request)));
 }});
 """)
-    fehlt = sum(1 for d in dialoge.values() for z in d["zeilen"] if not z["audio"]) + sum(1 for n in namen if not n["audio"])
-    print(f"daten_fr.js: {len(dialoge)} Dialoge, {len(namen)} Namen, {len(beats)} Beats · fehlende Audios: {fehlt} · Offline-Dateien: {len(dateien)}")
+    fehlt = sum(1 for d in dialoge.values() for z in d["zeilen"] if not z["audio"]) + sum(1 for n in namen if not n["audio"]) + sum(1 for p in paris if not p["audio"])
+    print(f"daten_fr.js: {len(dialoge)} Dialoge, {len(namen)} Namen, {len(beats)} Beats, {len(paris)} Paris-Orte · fehlende Audios: {fehlt} · Offline-Dateien: {len(dateien)}")
 
 
 if __name__ == "__main__":

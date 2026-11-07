@@ -63,3 +63,5 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 .ordre-liste { margin: 0; padding-left: 1.4em; font-weight: 700; display: grid; gap: 4px; }
 .beat audio { width: 100%; }
 .mitlauf { white-space: pre-wrap; font: 1.1rem/1.6 var(--body); margin: 0; }
+.paris-fakt { margin-top: 12px; }
+.paris-fr { font-size: 1.25rem; font-weight: 700; margin: .3em 0; }

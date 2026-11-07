@@ -265,6 +265,10 @@
     const url = KLANG_DATEI[name]; if (!url || !actx || typeof Audio === "undefined") return false;
     try { const a = new Audio(url); a.volume = Math.min(1, laut * EFFEKT_LAUT * 1.5 * effektDaempf); if (ab) a.currentTime = ab; if (szAktiv) szAudio.push(a); const p = a.play(); klangDateiGespielt++; if (p && p.catch) p.catch(() => { if (ersatz) ersatz(); }); return true; } catch (e) { return false; }
   }
+  function heldRuf(held) {   // Heldenfilme (7.11.): gesprochener Ausruf des Helden (audio/helden/ruf_<held>.mp3, Klasse 6), nur bei eingeschaltetem Ton
+    if (!held || !actx || typeof Audio === "undefined") return;
+    try { const a = new Audio(`audio/helden/ruf_${held}.mp3`); if (szAktiv) szAudio.push(a); const p = a.play(); klangDateiGespielt++; if (p && p.catch) p.catch(() => {}); } catch (e) { /* ohne Ausruf */ }
+  }
   const klang = {
     sprung() { ton(300, 0.12, "square", 0.05); ton(520, 0.1, "square", 0.04, 0.05); },
     diamant() { ton(880, 0.1, "triangle", 0.1); ton(1320, 0.14, "triangle", 0.1, 0.08); ton(1760, 0.2, "triangle", 0.08, 0.16); },
@@ -10894,7 +10898,7 @@
         if (t > 2.8) { const n = Math.round(132 * hell); szZaehler(c, `${n} rooms`, '#ffd93d', 12, 170); }
       } },
     // Klasse 6 – Heldenfilme (6.11.2026): Schlüssel held_<id>; held = Kartenbild-Schlüssel (cameoBilder), geladen aus o.heldBild
-    held_leo: { held: 'leo', dauer: 11, klaenge: [[0.3, 'bus'], [1.1, 'wind'], [3.5, 'wind'], [5.9, 'wind'], [8.3, 'combo'], [9.0, 'cameo']],
+    held_leo: { held: 'leo', dauer: 11, klaenge: [[0.3, 'bus'], [1.1, 'wind'], [3.5, 'wind'], [5.9, 'wind'], [8.3, 'combo'], [8.5, 'ruf'], [9.0, 'cameo']],
       zeichne(c, t) {   // Westminster: Leo rast dreimal über die Straße (Staub, Speed-Linien), überholt Doppeldecker und Black Cab und bremst mitten im Bild
         szLondonStrasse(c, t, 11);
         szFahrzeug(c, 'cab', lerp(760, -140, Math.max(0, (t - 4.4) / 5.5)), 362, t, 1.05);
@@ -10911,9 +10915,10 @@
           szHeld(c, 'leo', x, y - (f >= 1 ? Math.sin((t - 9.2) * 4) * 3 : 0), 1.5, t);
           if (f >= 1) for (let k = 0; k < 4; k++) szFunkeln(c, 320 + Math.cos(k * 1.6 + t) * 62, y - 10 + Math.sin(k * 1.6 + t) * 40, 7, t + k, '#ffd93d');
         }
+        if (t > 8.5) szBlase(c, 320, 150, 'Too fast for you!', CAMEO.leo.farbe, (t - 8.5) / 0.35);
         szHeldKraft(c, t, 9.0, 'leo', 'Super speed');
       } },
-    held_camilla: { held: 'camilla', dauer: 11, klaenge: [[0.3, 'cameo'], [2.2, 'rumpeln'], [3.6, 'jubel'], [7.6, 'rumpeln'], [8.6, 'applaus']],
+    held_camilla: { held: 'camilla', dauer: 11, klaenge: [[0.3, 'cameo'], [2.2, 'rumpeln'], [3.6, 'jubel'], [7.6, 'rumpeln'], [8.2, 'ruf'], [8.6, 'applaus']],
       zeichne(c, t) {   // Westminster: Camilla taucht unter ein Black Cab, hebt es auf ihren Rücken, trägt es ein Stück und setzt es ab; danach fliegen Herzen
         szLondonStrasse(c, t, 11);
         let x = 349, y = 424;
@@ -10930,9 +10935,10 @@
         szFahrzeug(c, 'cab', cx, unten, t, 1.25, traegt ? Math.sin(t * 3) * 0.03 : 0);
         if (traegt) { c.save(); c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 3; for (const s of [-1, 1]) for (let k = 0; k < 3; k++) { c.beginPath(); c.moveTo(x + s * (52 + k * 4), y - 20 + k * 14); c.lineTo(x + s * (64 + k * 4), y - 24 + k * 14); c.stroke(); } c.restore(); }
         if (t > 8.8) for (let k = 0; k < 5; k++) { const d = ((t - 8.8 + k * 0.4) % 2) / 2; c.save(); c.globalAlpha = 1 - d; c.fillStyle = '#e63946'; c.font = '22px system-ui, sans-serif'; c.textAlign = 'center'; c.fillText('❤', 450 + Math.sin(k * 2 + t) * 50, 200 - d * 120); c.restore(); }
+        if (t > 8.2) szBlase(c, 320, 150, 'Easy peasy!', CAMEO.camilla.farbe, (t - 8.2) / 0.35);
         szHeldKraft(c, t, 9.0, 'camilla', 'Super strength');
       } },
-    held_ellie: { held: 'ellie', dauer: 11, klaenge: [[0.3, 'cameo'], [1.6, 'plopp'], [2.1, 'plopp'], [2.6, 'plopp'], [3.1, 'plopp'], [3.6, 'plopp'], [5.2, 'kristall'], [6.9, 'richtig'], [7.5, 'richtig'], [8.1, 'richtig']],
+    held_ellie: { held: 'ellie', dauer: 11, klaenge: [[0.3, 'cameo'], [1.6, 'plopp'], [2.1, 'plopp'], [2.6, 'plopp'], [3.1, 'plopp'], [3.6, 'plopp'], [5.2, 'kristall'], [6.9, 'richtig'], [7.5, 'richtig'], [8.1, 'richtig'], [8.1, 'ruf']],
       zeichne(c, t) {   // British Museum: Bücher fliegen zu Ellie und verschwinden in ihrem Gedächtnis (Seitenzähler), dann erscheinen die gemerkten Wörter
         szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[30, 40], [460, 60]]); szBoden(c, '#d8cfbc', 330); britishMuseum(c, 320, 330, 1); });
         const hx = 320, hy = t < 1.2 ? lerp(-60, 262, sanft(t / 1.2)) : 262 + Math.sin(t * 2.4) * 4;
@@ -10949,7 +10955,7 @@
         [['Big Ben ✓', 130, 170, 6.9], ['page 357 ✓', 510, 170, 7.5], ['every word ✓', 320, 140, 8.1]].forEach(([w, x, y, ab]) => szBlase(c, x, y, w, CAMEO.ellie.farbe, (t - ab) / 0.35));
         szHeldKraft(c, t, 9.0, 'ellie', 'Super memory');
       } },
-    held_olivia: { held: 'olivia', dauer: 11, klaenge: [[0.3, 'wind'], [1.2, 'cameo'], [3.0, 'klick'], [6.2, 'kristall'], [7.2, 'puff'], [8.6, 'richtig']],
+    held_olivia: { held: 'olivia', dauer: 11, klaenge: [[0.3, 'wind'], [1.2, 'cameo'], [3.0, 'klick'], [6.2, 'kristall'], [7.2, 'puff'], [8.6, 'richtig'], [8.6, 'ruf']],
       zeichne(c, t) {   // Westminster bei Nacht: alles dunkel, nur Olivias Nachtsicht-Kegel leuchtet grün; sie sucht die Straße ab und findet einen verlorenen Teddy
         szLondonStrasse(c, t, 11);
         const tx = 160, ty = 316;   // der verlorene Teddy auf dem Gehweg
@@ -10970,7 +10976,7 @@
         if (t > 8.6) szBlase(c, 320, 250, 'Found it!', CAMEO.olivia.farbe, (t - 8.6) / 0.35);
         szHeldKraft(c, t, 9.0, 'olivia', 'Night vision');
       } },
-    held_kenji: { held: 'kenji', dauer: 11, klaenge: [[1.0, 'sprung'], [2.5, 'sprung'], [4.0, 'sprung'], [5.5, 'sprung'], [7.2, 'sprung'], [8.9, 'plopp'], [9.1, 'jubel']],
+    held_kenji: { held: 'kenji', dauer: 11, klaenge: [[1.0, 'sprung'], [2.5, 'sprung'], [4.0, 'sprung'], [5.5, 'sprung'], [7.2, 'sprung'], [8.9, 'plopp'], [9.1, 'jubel'], [8.9, 'ruf']],
       zeichne(c, t) {   // Notting Hill: Kenji springt von Dach zu Dach über die bunten Häuser, zum Schluss ein riesiger Sprung bis vor die Häuser
         szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[40, 50], [420, 30]]); szBoden(c, '#9a948a', 330); nottingHillHaeuser(c, 320, 330, 1); c.fillStyle = '#4a4d52'; c.fillRect(0, 352, SZ_W, 60); });
         const dach = 118, punkte = [60, 200, 340, 480, 600];
@@ -10987,7 +10993,7 @@
         if (t > 8.9 && t < 10.4) szBlase(c, 320, 210, 'Boing!', CAMEO.kenji.farbe, (t - 8.9) / 0.3);
         szHeldKraft(c, t, 9.2, 'kenji', 'Super jump');
       } },
-    held_zara: { held: 'zara', dauer: 11, klaenge: [[0.3, 'cameo'], [2.6, 'puff'], [3.8, 'taube'], [4.9, 'taube'], [6.8, 'puff'], [7.0, 'jubel'], [7.3, 'taube']],
+    held_zara: { held: 'zara', dauer: 11, klaenge: [[0.3, 'cameo'], [2.6, 'puff'], [3.8, 'taube'], [4.9, 'taube'], [6.8, 'puff'], [7.0, 'jubel'], [7.3, 'taube'], [7.0, 'ruf']],
       zeichne(c, t) {   // Trafalgar Square: Zara wird unsichtbar (nur ein Flimmern), die Tauben suchen sie, dann taucht sie woanders auf – Surprise!
         szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[60, 40], [470, 70]]); szBoden(c, '#c9c0ae', 330); trafalgarPlatz(c, 320, 336, 1, { t }); });
         const fliegen = sanft((t - 7.0) / 2.4);
@@ -11004,7 +11010,7 @@
         if (t > 7.0) szBlase(c, 450, 160, 'Surprise!', CAMEO.zara.farbe, (t - 7.0) / 0.35);
         szHeldKraft(c, t, 9.0, 'zara', 'Invisibility');
       } },
-    held_penny: { held: 'penny', dauer: 11, klaenge: [[0.3, 'cameo'], [1.8, 'eiskristall'], [2.6, 'eiskristall'], [3.4, 'eiskristall'], [6.4, 'plopp'], [6.8, 'plopp'], [7.2, 'plopp'], [8.0, 'jubel']],
+    held_penny: { held: 'penny', dauer: 11, klaenge: [[0.3, 'cameo'], [1.8, 'eiskristall'], [2.6, 'eiskristall'], [3.4, 'eiskristall'], [6.4, 'plopp'], [6.8, 'plopp'], [7.2, 'plopp'], [8.0, 'jubel'], [8.0, 'ruf']],
       zeichne(c, t) {   // die Themse: Penny friert das Wasser in einer Sekunde ein – das Ausflugsboot steckt fest –, dann zaubert sie Eistüten aufs Eis
         const kam = lerp(30000, 30200, t / 11), px = 470, py = t < 1.4 ? lerp(-60, 240, sanft(t / 1.4)) : 240 + Math.sin(t * 2.4) * 4;
         const eis = sanft((t - 1.8) / 1.2), links = px - eis * 560, rechts = px + eis * 260;
@@ -11021,7 +11027,7 @@
         if (t > 8.0) szBlase(c, 300, 200, 'Ice cream for everybody!', CAMEO.penny.farbe, (t - 8.0) / 0.35);
         szHeldKraft(c, t, 9.2, 'penny', 'Ice powers');
       } },
-    held_felix: { held: 'felix', dauer: 11, klaenge: [[0.3, 'wind'], [1.2, 'cameo'], [3.0, 'adler'], [5.2, 'wind'], [7.4, 'wind'], [9.2, 'fanfare']],
+    held_felix: { held: 'felix', dauer: 11, klaenge: [[0.3, 'wind'], [1.2, 'cameo'], [3.0, 'adler'], [5.2, 'wind'], [7.4, 'wind'], [9.2, 'fanfare'], [8.0, 'ruf']],
       zeichne(c, t) {   // Felix fliegt über London (Big Ben, Parlament und London Eye ziehen unten vorbei), dann von weit oben einmal um die ganze Erde
         if (t < 7.4) {
           szWeltKulisse(c, t, 'westminster', 40000, 4000, 34000, 7.4);
@@ -11039,11 +11045,11 @@
           erdkugel(c, ex, ey, 110, t);
           if (Math.sin(a) >= 0) szHeld(c, 'felix', hx, hy, 1.1, t, { spiegel: Math.cos(a) < 0 });
           c.restore();
-          if (t > 8.0) szBlase(c, 320, 112, '🌍 one day!', CAMEO.felix.farbe, (t - 8.0) / 0.35);
+          if (t > 8.0) szBlase(c, 320, 112, 'Around the world in one day!', CAMEO.felix.farbe, (t - 8.0) / 0.35);
         }
         szHeldKraft(c, t, 9.2, 'felix', 'Super flight');
       } },
-    held_tessa: { held: 'tessa', dauer: 11, klaenge: [[0.3, 'cameo'], [2.4, 'schild'], [2.45, 'stein'], [4.4, 'schild'], [4.45, 'stein'], [6.4, 'schild'], [6.45, 'bruch'], [8.6, 'rabe']],
+    held_tessa: { held: 'tessa', dauer: 11, klaenge: [[0.3, 'cameo'], [2.4, 'schild'], [2.45, 'stein'], [4.4, 'schild'], [4.45, 'stein'], [6.4, 'schild'], [6.45, 'bruch'], [8.6, 'rabe'], [6.45, 'ruf']],
       zeichne(c, t) {   // Tower of London: drei Felsbrocken fallen auf Tessa – BONK! – sie prallen ab, der letzte zerbröselt; ihr passiert nichts, zum Schluss setzt sich ein Rabe auf sie
         c.save(); szKam(c, 960, 200, 1.0); szWelt({ zeit: t, kamera: 0 }, () => filmKulisseBridge(c, 0)); c.restore();
         const hx = 320, hy = t < 1.4 ? lerp(-60, 272, sanft(t / 1.4)) : 272;
@@ -11062,7 +11068,7 @@
         if (t > 8.0) { const f = sanft((t - 8.0) / 0.9); if (f < 1) rabeFlug(c, lerp(700, hx, f), lerp(110, hy - 52, f) - Math.sin(f * Math.PI) * 50, t, 0.8); else szWelt({ zeit: t, kamera: 0 }, () => rabeSitzt(c, hx, hy - 38, t)); }
         szHeldKraft(c, t, 9.2, 'tessa', 'Unbreakable');
       } },
-    held_max: { held: 'max', dauer: 11, klaenge: [[0.3, 'cameo'], [1.8, 'hammer'], [2.5, 'hammer'], [3.2, 'hammer'], [3.9, 'hammer'], [4.6, 'klick'], [5.4, 'lichtAn'], [8.6, 'fanfare']],
+    held_max: { held: 'max', dauer: 11, klaenge: [[0.3, 'cameo'], [1.8, 'hammer'], [2.5, 'hammer'], [3.2, 'hammer'], [3.9, 'hammer'], [4.6, 'klick'], [5.4, 'lichtAn'], [8.6, 'fanfare'], [8.6, 'ruf']],
       zeichne(c, t) {   // Covent Garden: Max baut in Sekunden einen Roboter (Teile fliegen heran, Funken), der Roboter schreibt die Hausaufgaben – Homework ✓
         szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[30, 40], [450, 60]]); szBoden(c, '#b9ae9c', 330); coventGarden(c, 320, 330, 1); });
         const mx = t < 1.4 ? lerp(-60, 160, sanft(t / 1.4)) : 160, my = t < 1.4 ? lerp(-40, 230, sanft(t / 1.4)) : 230 + Math.sin(t * 2.4) * 4;
@@ -11078,7 +11084,7 @@
         const funken = [1.8, 2.5, 3.2, 3.9, 4.6].find((x) => t >= x && t < x + 0.4);
         if (funken) for (let k = 0; k < 6; k++) szFunkeln(c, rx + Math.cos(k * 1.05) * (20 + (t - funken) * 120), ry - 70 - (teile - 1) * 18 + Math.sin(k * 1.05) * (20 + (t - funken) * 80), 8, t + k, '#ffd93d');
         if (t > 8.6) { c.save(); c.globalAlpha = sanft((t - 8.6) / 0.3); c.strokeStyle = '#2e9e5b'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(560, 282); c.lineTo(570, 294); c.lineTo(592, 258); c.stroke(); c.restore();
-          szBlase(c, 520, 220, 'Homework ✓', CAMEO.max.farbe, (t - 8.6) / 0.35); }
+          szBlase(c, 520, 220, 'Homework done! ✓', CAMEO.max.farbe, (t - 8.6) / 0.35); }
         szHeld(c, 'max', mx, my, 1.6, t);
         szHeldKraft(c, t, 9.2, 'max', 'Genius inventor');
       } },
@@ -11221,7 +11227,7 @@
       let dt = (now - A.letzte) / 1000; A.letzte = now; if (dt > 0.05) dt = 0.05; if (dt < 0) dt = 0;
       if (A.phase === 'szene') {
         A.t += dt;
-        for (const k of A.klaenge) if (!k.fertig && A.t >= k.t) { k.fertig = true; try { klang[k.k](); } catch (e) { /* ohne Klang */ } }
+        for (const k of A.klaenge) if (!k.fertig && A.t >= k.t) { k.fertig = true; try { if (k.k === 'ruf') heldRuf(S.held); else klang[k.k](); } catch (e) { /* ohne Klang */ } }
         for (const z of A.saetze) if (!z.fertig && A.t >= z.t) { z.fertig = true; sprich(z); }
         if (A.t >= S.dauer && (!A.stimme || A.t >= 25)) zumFoto();   // mit Voice-over: erst nach dem Ende der Stimme
       }

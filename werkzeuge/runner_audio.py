@@ -27,6 +27,12 @@ JUNGEN, MAEDCHEN = ("leo", "kenji", "felix", "max"), ("camilla", "ellie", "olivi
 CAMEO_STIMME = {h: ("m1", "m2")[i % 2] for i, h in enumerate(JUNGEN)} | {h: ("f1", "f2")[i % 2] for i, h in enumerate(MAEDCHEN)}
 
 
+HELD_RUFE = {   # Ausrufe in den Heldenfilmen (Sprechblase im Film = dieser Text)
+    "ellie": "Every word!", "olivia": "Found it!", "kenji": "Boing!", "zara": "Surprise!",
+    "penny": "Ice cream for everybody!", "felix": "Around the world in one day!", "tessa": "Bonk!", "max": "Homework done!",
+    "leo": "Too fast for you!", "camilla": "Easy peasy!",
+}
+
 def texte():
     """{welt: {banner, richtig, falsch, start, ende}}, {held: satz} aus der Engine."""
     js = open(ENGINE, encoding="utf-8").read()
@@ -61,6 +67,9 @@ def auftraege():
     for z in daten_bauen.lesen("helden.tsv"):
         if z.get("intro"):
             liste.append((6, APP6, f"audio/helden/intro_{z['id']}.mp3", CAMEO_STIMME[z["id"]], z["intro"]))
+    # Ausrufe in den Heldenfilmen (7.11.2026, Mr. Alex: auch sprechen) – dieselbe Stimme; Zeitpunkt steht in runner.js (Klang 'ruf')
+    for h, text in HELD_RUFE.items():
+        liste.append((6, APP6, f"audio/helden/ruf_{h}.mp3", CAMEO_STIMME[h], text))
     import klasse9_audio
     for pfad, stimme, text in klasse9_audio.auftraege():
         if pfad.startswith("audio/beae/w_"):

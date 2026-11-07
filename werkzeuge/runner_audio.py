@@ -72,6 +72,10 @@ HELD_RUFE = {   # Ausrufe in den Heldenfilmen (Sprechblase im Film = dieser Text
     "leo": "Too fast for you!", "camilla": "Easy peasy!",
 }
 
+HELD_RUFE9 = {   # Ausrufe in den Kl.-9-Heldenfilmen (gleicher Text wie HELD9_RUF in app/klasse9/runner.js)
+    "eddie": "Target locked!", "bonnie": "Rock on!", "gus": "Not on my watch!", "cody": "Yee-haw!", "ally": "Cowabunga!", "rosie": "Now you don't!", "benny": "Bridge is open!", "pennypuma": "Sky high!", "archie": "Rollin', y'all!", "molly": "Drum roll!", "holly": "All better now!", "maya": "Simply divine!", "sunny": "Encore!",
+}
+
 # Regel Mr. Alex (7.11.2026): kurze Zurufe (bis ~4 Wörter), besonders mit R am Wortende („fire“), bekommen zusätzlich den Tag [British accent],
 # sonst spricht die Stimme das End-R amerikanisch. Gilt für alle kurzen englischen Zeilen (v4 kennt keinen language_code en-GB).
 # Klasse 9 (Mr. Alex, 7.11.): US-Helden sprechen IMMER mit [American accent] (auch kurze Zeilen), nie britisch – britisch(text, klasse=9).
@@ -148,6 +152,8 @@ def auftraege():
     # Ausrufe in den Heldenfilmen (7.11.2026, Mr. Alex: auch sprechen) – dieselbe Stimme; Zeitpunkt steht in runner.js (Klang 'ruf')
     for h, text in HELD_RUFE.items():
         liste.append((6, APP6, f"audio/helden/ruf_{h}.mp3", CAMEO_STIMME[h], f"{HELD_TAGS[h]} {text}"))
+    for h, text in HELD_RUFE9.items():   # Klasse 9: immer [American accent]
+        liste.append((9, APP9, f"audio/helden/ruf_{h}.mp3", f"h_{h}", f"{HELD_TAGS[h]}{britisch(text, 9)} {text}"))
     # Mr. Alex' Zurufe im Lauf (7.11.2026): einmal vertonen (Klasse 6), Kopie für Klasse 9 (alex_kopieren)
     for key, text in alex_zurufe():
         liste.append((6, APP6, f"audio/alex/{key}.mp3", "en_alex", f"{ALEX_TAGS[key.rsplit('_', 1)[0]]}{britisch(text)} {text}"))

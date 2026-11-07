@@ -10981,7 +10981,7 @@
   // ===== Klasse 9 – Heldenfilme (7.11.2026, Mr. Alex, Etappe 3) =====
   // 13 US-Helden im reifen Comic-Stil (heldZeichnen, HZ_NEUSTIL) in der Kulisse einer Road-Trip-Welt; je Film drei Phasen mit eigener Pose:
   // Auftritt (lauf, Flieger schweben ein) → Kraft (Pose 'kraft', Leuchtrand-Blitz, großer Effekt in der Szene) → Jubel + Kraft-Chip; danach die Sammelkarte groß (foto).
-  // Keine Sprechblasen: in Klasse 9 spricht der Held nur seine Vorstellung (audio/helden/intro_<id>.mp3, Untertitel satzweise).
+  // Sprechblase nur für den Ausruf (HELD9_RUF, ab 7,7 s, gesprochen audio/helden/ruf_<id>.mp3); sonst spricht der Held seine Vorstellung (audio/helden/intro_<id>.mp3, Untertitel satzweise).
   const H9_Y = 273, H9_S = 1.5;   // Mitte der Figur: Fuß auf BODEN_Y (330) = H9_Y + 38 · H9_S
   const sz9Fels = (c, x, y, r, rot = 0, farbe = '#8a6f55') => {   // Felsbrocken (Unterkante y)
     c.save(); c.translate(x, y - r * 0.55); c.rotate(rot); c.fillStyle = farbe; c.strokeStyle = 'rgba(20,14,10,.55)'; c.lineWidth = 2.5;
@@ -11013,6 +11013,9 @@
   };
   const sz9Lauf = (t, bis = 2.2, x = 220) => (t < bis ? { x: lerp(-90, x, sanft(t / bis)), pose: 'lauf' } : null);   // Auftritt von links
   // je Held: welt (Kulisse), kam (Kameraposition), kraft (Chip-Text wie helden.tsv), ab (Kraft-Einsatz), klaenge, optional pos(t), hinten/vorn(c, t, p), flug (schwebt ein)
+  const HELD9_RUF = {   // Ausrufe in den Kl.-9-Heldenfilmen (7.11.2026): Sprechblase ab 7,7 s + gesprochen (audio/helden/ruf_<id>.mp3, werkzeuge/runner_audio.py HELD_RUFE9)
+    eddie: "Target locked!", bonnie: "Rock on!", gus: "Not on my watch!", cody: "Yee-haw!", ally: "Cowabunga!", rosie: "Now you don't!", benny: "Bridge is open!", pennypuma: "Sky high!", archie: "Rollin', y'all!", molly: "Drum roll!", holly: "All better now!", maya: "Simply divine!", sunny: "Encore!",
+  };
   const HELD9_FILM = {
     eddie: { welt: 'sd', kam: 9000, kraft: 'Eagle eye', flug: true, klaenge: [[0.3, 'cameo'], [0.9, 'adler'], [3.0, 'kristall'], [4.6, 'bruch'], [8.0, 'jubel']],
       vorn(c, t, p) {   // Laserstrahlen aus den Gläsern bis zum Felsen, der bei 4,6 s zerspringt
@@ -11082,7 +11085,7 @@
         for (let k = 0; k < 6; k++) { const f = ((t - 3) * 0.5 + k / 6) % 1; sz9Note(c, p.x + 60 + f * 380, p.y - 40 - Math.sin(f * 6 + k) * 40 - f * 60, 1.2, ['#ffd23f', '#25e8f5', '#ff5fa2'][k % 3]); } } },
   };
   function szHeld9(id, f) {
-    return { held: id, dauer: 11, klaenge: f.klaenge, zeichne(c, t) {
+    return { held: id, dauer: 11, klaenge: HELD9_RUF[id] ? [...f.klaenge, [7.7, 'ruf']] : f.klaenge, zeichne(c, t) {
       const w = f.wackeln ? f.wackeln(t) : 0; c.save(); if (w && !ruhig()) c.translate(w, Math.abs(w) * 0.4);
       szWeltKulisse(c, t, f.welt, 30000, f.kam, f.kam + 300, 11);
       const ab = f.ab == null ? 3 : f.ab;
@@ -11093,6 +11096,7 @@
       if (f.vorn) f.vorn(c, t, p);
       if (t >= 7.6) for (let k = 0; k < 4; k++) szFunkeln(c, p.x + Math.cos(k * 1.6 + t) * 66, p.y - 14 + Math.sin(k * 1.6 + t) * 46, 7, t + k, HELD_FARBE[id] || '#ffd93d');
       c.restore();
+      if (HELD9_RUF[id] && t > 7.7 && t < 9.6) szBlase(c, Math.max(150, Math.min(490, p.x)), Math.max(70, p.y - 150), HELD9_RUF[id], HELD_FARBE[id] || '#ffd93d', (t - 7.7) / 0.3);
       szHeldKraft(c, t, 8.2, id, f.kraft);
     } };
   }

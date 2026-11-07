@@ -2158,12 +2158,12 @@
       stimme: (text, lang) => hauptText([{ tts: text, lang: lang || "en-GB", stimme: "m" }], { warten: true }) });   // Durchsagen der Szene (Tube) mit der Geräte-Stimme
     return !!sz;
   }
-  // Heldenfilme (6.11.2026, Mr. Alex): kurzer Film je Superheld (Runner.szene 'held_<id>', der Held wie sein Cameo im London Run zeigt seine Kraft in London),
-  // Stimme = Selbstvorstellung (inhalte/helden.tsv, Spalte intro; Aufnahme audio/helden/intro_<id>.mp3), Untertitel Satz für Satz, am Ende die Heldenkarte groß
+  // Heldenfilme (6.11.2026, Mr. Alex): kurzer Film je Superheld (Runner.szene 'held_<id>', der Held als Spielgrafik wie im London Run zeigt seine Kraft in London),
+  // Stimme = Selbstvorstellung (inhalte/helden.tsv, Spalte intro; Aufnahme audio/helden/intro_<id>.mp3), Untertitel Satz für Satz, am Ende die Sammelkarte groß (Canvas-Bild, 7.11.)
   const heldHatFilm = (h) => !!(h && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene("held_" + h.id));
   function heldFilm(h, fertig) {
     if (!heldHatFilm(h)) return false;
-    const sz = window.Runner.szene(null, "held_" + h.id, { text: h.intro, titel: `🦸 ${h.name}`, heldBild: h.bild, foto: h.bild, quelle: `${h.name} · ${h.kraft}`, onEnde: () => { if (fertig) fertig(); },
+    const sz = window.Runner.szene(null, "held_" + h.id, { text: h.intro, titel: `🦸 ${h.name}`, foto: heldKarteBild(h), quelle: `${h.name} · ${h.kraft}`, onEnde: () => { if (fertig) fertig(); },
       voice: h.intro_audio ? () => hauptText([h.intro_audio], { warten: true }) : null, voiceStopp: () => stopp(), voiceAudio: () => stimmeAudio(h.intro_audio) });
     return !!sz;
   }
@@ -2236,10 +2236,18 @@
       knopf("🏆 Meine Sammlung", sammlung, "haupt"), knopf("🛍️ Shop", shop));
   }
 
+  // Heldenkarten (7.11.2026, Mr. Alex): Sammelkarte als Canvas-Zeichnung des Runners (Runner.heldKarteZeichnen: Sternenhimmel, Held in Kraftpose mit Glühen, Name + Kraft);
+  // gesperrte Helden als graue Silhouette mit „?“. Die alten Fotos bilder/helden/*.jpg bleiben nur noch als Ersatz, falls runner.js fehlt.
+  const KARTE_PX = 480;
+  function heldKarteCanvas(h, o = {}) {
+    if (!(window.Runner && window.Runner.heldKarteZeichnen)) return el("img", { src: h.bild, alt: `${h.name}: ${h.kraft}`, loading: "lazy" });
+    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? "Noch nicht gesammelt" : `${h.name}: ${h.kraft}` });
+    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, h, o); } catch (e) { /* Karte bleibt leer */ }
+    return cv;
+  }
+  const heldKarteBild = (h) => { try { return window.Runner && window.Runner.heldKarteBild ? window.Runner.heldKarteBild(h) : h.bild; } catch (e) { return h.bild; } };
   function heldenKarte(h, gross) {
-    return el("figure", { class: "heldenkarte" + (gross ? " gross" : "") },
-      el("img", { src: h.bild, alt: `${h.name}: ${h.kraft}`, loading: "lazy" }),
-      el("figcaption", { lang: "en" }, el("strong", {}, h.name), el("span", {}, h.kraft)));
+    return el("figure", { class: "heldenkarte" + (gross ? " gross" : ""), lang: "en" }, heldKarteCanvas(h));
   }
 
   function sammlung() {
@@ -2273,7 +2281,7 @@
     });
     const helden = el("div", { class: "heldenraster" }, SP.helden.map((h) => sp.helden.includes(h.id)
       ? el("button", { class: "held-knopf", onclick: () => { if (!heldFilm(h, () => heldZeigen(h, false))) heldZeigen(h); } }, heldenKarte(h))   // mit Film: erst der Film, danach die Karte
-      : el("div", { class: "held-zu", "aria-label": "Noch nicht gesammelt" }, el("span", {}, "?"), el("small", {}, "Perfect week"))));
+      : el("div", { class: "held-zu" }, heldKarteCanvas(h, { gesperrt: true, hinweis: "Perfect week" }))));
     zeige(
       el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, "🏆 Meine Sammlung")),
       el("section", { class: "satzkarte titel-karte" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() + tierAttr(t).klasse, style: tierAttr(t).stil },

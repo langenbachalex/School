@@ -254,12 +254,13 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
 .heldenraster { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); gap: 10px; }
 .held-knopf { padding: 0; border: 0; background: none; cursor: pointer; text-align: left; color: inherit; font: inherit; }
 .heldenkarte { margin: 0; display: grid; gap: 4px; }
-.heldenkarte img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; display: block; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.heldenkarte img, .heldenkarte canvas { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; display: block; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
 .heldenkarte figcaption { display: grid; font-size: .9rem; }
 .heldenkarte figcaption span { color: var(--leise); }
 .heldenkarte.gross { max-width: 300px; margin-inline: auto; }
 .heldenkarte.gross figcaption { text-align: center; font-size: 1.05rem; }
-.held-zu { aspect-ratio: 3 / 4; border-radius: 12px; border: 2px dashed var(--linie); display: grid; place-content: center; text-align: center; color: var(--leise); }
+.held-zu { aspect-ratio: 3 / 4; border-radius: 12px; display: grid; place-content: center; text-align: center; color: var(--leise); opacity: .85; }
+.held-zu canvas { width: 100%; aspect-ratio: 3 / 4; border-radius: 12px; display: block; }
 .held-zu span { font: 600 1.8rem var(--display); }
 .held-zu small { font-size: .7rem; }
 .london-rahmen { width: 100%; overflow: hidden; border-radius: 12px; }

@@ -37,7 +37,7 @@
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
    Orts-Szenen (6.11.): window.Runner.szene(ziel, ortId, { text, titel, foto, quelle, onEnde }) spielt eine kurze Szene eines Orts mit den Zeichnungen der Welten (Runner.hatSzene(id), Runner.SZENEN_ORTE).
-   Heldenfilme (6.11., Klasse 6): Runner.szene(ziel, 'held_<id>', { text: intro, heldBild, foto: Kartenbild, … }) – der Superheld wie im Cameo (heldFigur) zeigt seine Kraft in London.
+   Heldenfilme (6.11., Klasse 6): Runner.szene(ziel, 'held_<id>', { text: intro, foto: Sammelkarte (heldKarteBild), … }) – der Superheld als Spielgrafik (heldZeichnen, 7.11.) zeigt seine Kraft in London.
    window.Runner.stopp() beendet Schleife, Eingabe und Audio. Alle Klänge aus Web Audio (keine Dateien); Wörter spricht die App (stimme.wort).
    Stimmen-Vorrang (1.11., Mr. Alex): Haupttexte (ansage, erzaehler, boss, cameo) unterbricht keine Vokabel – stimme.wort wartet in der App dahinter
    (nur die zuletzt gesammelte; Umsetzung im App-Kleber hauptText()/runnerWort(), docs/runner/konzept-entwurf.md Abschnitt 24).
@@ -1815,7 +1815,7 @@
   let storyOpt = null, story = null, kristalle = [], diaGesammelt = 0, film = null, nurFilm = false;
   const TIPP_TEMPO = 24, STORY_STEHT = 3.5, STORY_AUS = 0.6, STORY_LUECKE = 0.3, STATION_MIN = 3, STATION_MAX = 40, STATION_SPERRE = 0.4;
   // Cameos (Klasse 6): Liste der Helden (opt.cameos), geladene Kartenbilder, Auftrittsplan (x-Marken), laufender Auftritt, Effekte (Restzeit in s)
-  let cameoListe = [], cameoBilder = {}, cameoPlan = [], cameo = null, cameosGezeigt = 0, cameoEffekt = null;
+  let cameoListe = [], cameoPlan = [], cameo = null, cameosGezeigt = 0, cameoEffekt = null;
   let schild = 0, sprungBonus = 0, durchlaessig = 0, eisZeit = 0, traegt = 0, traegtAktiv = false, eule = null;
   const CAMEO_DAUER = 2.5, CAMEO_EIN = 0.5, CAMEO_AUS = 0.45, CAMEO_R = 24;
   let autoKlangZeit = -9;
@@ -1924,17 +1924,19 @@
      Effekte (fair, nie mehr Diamanten als möglich): leo Funken-Spur + Combo +1 · kenji nächster Sprung höher (5 s) · tessa Schild gegen den nächsten Treffer (5 s, nicht beim Sturz)
      felix trägt über die nächste Lücke (5 s, einmal) · olivia zeigt die Frage des nächsten Tors sofort · ellie Echo des letzten Worts sofort · zara Gegner 3 s durchlässig
      penny Gegner 3 s eingefroren · max holt den zuletzt verpassten Diamanten zurück (sonst Combo +1) · camilla +1 Herz (bei 4 Herzen Combo +1); unbekannte Helden: Combo +1 */
+  // Heldenfarbe (7.11., Spielgrafik-Helden; auch Rahmen der Sammelkarte, Glühen, Sprechblasen-Rand)
+  const HELD_FARBE = { leo: '#d62828', camilla: '#c8553d', ellie: '#3a86ff', olivia: '#7b2cbf', kenji: '#f77f00', zara: '#ff2d95', penny: '#48cae4', felix: '#0096c7', tessa: '#2e9e5b', max: '#f4b400' };
   const CAMEO = {
-    leo: { satz: "Leo here! Go, go, go!", farbe: "#e0a400", symbol: "⚡" },
-    kenji: { satz: "Kenji here! Jump high!", farbe: "#ff7a1a", symbol: "🦘" },
-    tessa: { satz: "Tessa here! I've got your back!", farbe: "#2e9e5b", symbol: "🛡️" },
-    felix: { satz: "Felix here! I can carry you!", farbe: "#8a5a2b", symbol: "🦅" },
-    olivia: { satz: "Olivia here! I can see the next gate!", farbe: "#8a3ffc", symbol: "🦉" },
-    ellie: { satz: "Ellie here! Listen again!", farbe: "#7f8c9d", symbol: "🔁" },
-    zara: { satz: "Zara here! Now they can't see you!", farbe: "#18213a", symbol: "👻" },
-    penny: { satz: "Penny here! Freeze!", farbe: "#39c6f0", symbol: "❄️" },
-    max: { satz: "Max here! I've got a gadget!", farbe: "#c8283a", symbol: "🔧" },
-    camilla: { satz: "Camilla here! Have an extra heart!", farbe: "#d9a35a", symbol: "❤️" },
+    leo: { satz: "Leo here! Go, go, go!", farbe: HELD_FARBE.leo, symbol: "⚡" },
+    kenji: { satz: "Kenji here! Jump high!", farbe: HELD_FARBE.kenji, symbol: "🦘" },
+    tessa: { satz: "Tessa here! I've got your back!", farbe: HELD_FARBE.tessa, symbol: "🛡️" },
+    felix: { satz: "Felix here! I can carry you!", farbe: HELD_FARBE.felix, symbol: "🦅" },
+    olivia: { satz: "Olivia here! I can see the next gate!", farbe: HELD_FARBE.olivia, symbol: "🦉" },
+    ellie: { satz: "Ellie here! Listen again!", farbe: HELD_FARBE.ellie, symbol: "🔁" },
+    zara: { satz: "Zara here! Now they can't see you!", farbe: HELD_FARBE.zara, symbol: "👻" },
+    penny: { satz: "Penny here! Freeze!", farbe: HELD_FARBE.penny, symbol: "❄️" },
+    max: { satz: "Max here! I've got a gadget!", farbe: HELD_FARBE.max, symbol: "🔧" },
+    camilla: { satz: "Camilla here! Have an extra heart!", farbe: HELD_FARBE.camilla, symbol: "❤️" },
   };
   const cameoInfo = (held) => CAMEO[held && held.id] || { satz: `${(held && held.name) || "A hero"} is here!`, farbe: "#1d3f8f", symbol: "⭐" };
   // 2–3 Auftritte je Lauf (höchstens so viele wie Helden übergeben): x-Marken bei 22/50/78 % der Strecke, nie direkt an einem Tor (dann 400 dahinter)
@@ -5786,54 +5788,33 @@
     c.restore();
     filmUntertitel(c, f);
   }
-  function falkeZeichnen(c, x, y) {   // Cameo Felix: Falke über der Figur, Flügel schlagen, Krallen halten die Figur
+  function falkeZeichnen(c, x, y) {   // Cameo Felix: Felix (Spielgrafik, Flugpose) über der Figur, Krallen halten sie
     c.save(); c.translate(x, y);
-    const fl = Math.sin(zeit * 16) * 10;
     c.strokeStyle = '#4a3420'; c.lineWidth = 2; c.beginPath(); c.moveTo(-5, 6); c.lineTo(-6, 22); c.moveTo(5, 6); c.lineTo(6, 22); c.stroke();
-    c.fillStyle = '#8a5a2b'; c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(-22, -10 - fl, -44, -4 - fl); c.quadraticCurveTo(-22, 4, 0, 6); c.quadraticCurveTo(22, 4, 44, -4 - fl); c.quadraticCurveTo(22, -10 - fl, 0, 0); c.fill();
-    c.fillStyle = '#a8784a'; c.beginPath(); c.ellipse(0, 2, 8, 6, 0, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#e8d8c0'; c.beginPath(); c.arc(-6, -2, 4.5, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#e0a400'; c.beginPath(); c.moveTo(-10, -2); c.lineTo(-14, 0); c.lineTo(-10, 1); c.closePath(); c.fill();
+    heldZeichnen(c, 'felix', -6, 34, 72, zeit, 'kraft', { gluehen: 0.6 });
     c.restore();
   }
-  // Superheld wie im Cameo (auch in den Heldenfilmen, Runner.szene 'held_<id>'): Umhang in seiner Farbe, rundes Kartenbild (cameoBilder) mit weißem Rand; (0, 0) = Bildmitte, Radius CAMEO_R
-  // wehen = Umhang-Ausschlag; spiegel = Umhang weht nach links (Held fliegt/läuft nach rechts) – das Bild bleibt ungespiegelt
-  function heldFigur(c, id, name, farbe, wehen, spiegel) {
-    const R = CAMEO_R;
-    c.save(); if (spiegel) c.scale(-1, 1);
-    c.fillStyle = farbe; c.beginPath(); c.moveTo(-16, 12); c.quadraticCurveTo(-30, 34, -24 + wehen * 0.5, 56); c.quadraticCurveTo(8, 50 + wehen, 40 + wehen, 50); c.quadraticCurveTo(24, 30, 16, 12); c.closePath(); c.fill();
-    c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.moveTo(2, 14); c.quadraticCurveTo(14, 34, 40 + wehen, 50); c.quadraticCurveTo(24, 30, 16, 12); c.closePath(); c.fill();
-    c.restore();
-    const img = cameoBilder[id];
-    c.save(); c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.closePath(); c.clip();
-    if (img && img.complete && img.naturalWidth > 0) {
-      const s = Math.min(img.naturalWidth, img.naturalHeight), sx = (img.naturalWidth - s) / 2, sy = (img.naturalHeight - s) * 0.2;
-      c.drawImage(img, sx, sy, s, s, -R, -R, R * 2, R * 2);
-    } else {
-      c.fillStyle = farbe; c.fillRect(-R, -R, R * 2, R * 2);
-      c.fillStyle = '#fff'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(name || id || '?').charAt(0).toUpperCase(), 0, 1);
-    }
-    c.restore();
-    c.strokeStyle = '#fff'; c.lineWidth = 3; c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.stroke();
-    c.strokeStyle = farbe; c.lineWidth = 2; c.beginPath(); c.arc(0, 0, R + 2.5, 0, Math.PI * 2); c.stroke();
-  }
-  // Cameo: fliegt von oben rechts heran (0,5 s), schwebt neben der Figur (Sprechblase), fliegt wieder davon (0,45 s); runder Ausschnitt des Kartenbilds mit Umhang
+  // Cameo: fliegt von oben rechts heran (0,5 s), schwebt neben der Figur (Sprechblase), fliegt wieder davon (0,45 s); Held als Spielgrafik (heldZeichnen, 7.11.):
+  // Anflug Laufpose, Schweben Kraftpose mit Glühen + kurzem Leuchtrand-Blitz (sein Effekt wirkt in diesem Moment), Abflug Jubel; Blick zur Figur (gespiegelt)
   function cameoZeichnen(c) {
     const t = cameo.t, info = cameo.info, R = CAMEO_R;
-    const zx = Math.min(viewW - 60, Math.max(60, spieler.x - kamera + 150)), zy = Math.max(118, spieler.y - 195);   // rechts über der Figur, über ihrer Wort-Sprechblase
+    const zx = Math.min(viewW - 60, Math.max(60, spieler.x - kamera + 150)), zy = Math.max(132, spieler.y - 195);   // rechts über der Figur, über ihrer Wort-Sprechblase (Held 100 hoch + Glühen/Schild über dem Kopf)
     let px, py;
     if (t < CAMEO_EIN) { const f = 1 - Math.pow(1 - t / CAMEO_EIN, 3); px = viewW + 50 + (zx - viewW - 50) * f; py = -40 + (zy + 40) * f; }
     else if (t > CAMEO_DAUER - CAMEO_AUS) { const f = (t - (CAMEO_DAUER - CAMEO_AUS)) / CAMEO_AUS; px = zx + (viewW + 90 - zx) * f * f; py = zy - (zy + 90) * f * f; }
     else { px = zx; py = zy + (ruhig() ? 0 : Math.sin(t * 5) * 5); }
     c.save(); c.translate(px, py);
-    heldFigur(c, cameo.held && cameo.held.id, cameo.held && cameo.held.name, info.farbe, ruhig() ? 0 : Math.sin(zeit * 9) * 6);
+    const hid = cameo.held && cameo.held.id, mitte = t >= CAMEO_EIN && t < CAMEO_DAUER - CAMEO_AUS;
+    if (HELDEN_ZEICHNUNG[hid]) heldZeichnen(c, hid, 0, 50, 100, zeit, t < CAMEO_EIN ? 'lauf' : mitte ? (ruhig() ? 'steh' : 'kraft') : 'jubel', { gluehen: true, blitz: mitte ? Math.max(0, 1 - (t - CAMEO_EIN) / 0.4) : 0, kraft: 1, spiegel: true });
+    else { c.fillStyle = info.farbe; c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#fff'; c.lineWidth = 3; c.stroke();   // unbekannter Held: farbiger Kreis mit Anfangsbuchstaben
+      c.fillStyle = '#fff'; c.font = 'bold 24px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String((cameo.held && cameo.held.name) || hid || '?').charAt(0).toUpperCase(), 0, 1); }
     c.restore();
     if (t > CAMEO_EIN * 0.6 && t < CAMEO_DAUER - CAMEO_AUS * 0.4) {   // Sprechblase rechts vom Helden (reicht der Platz nicht: links)
       const text = `${info.symbol} ${cameo.satz}`;
       c.save(); c.font = 'bold 15px system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'center';
       const w = c.measureText(text).width + 22, h = 30;
-      let bx = px + R + 12, links = false;
-      if (bx + w > viewW - 6) { bx = Math.max(6, px - R - 12 - w); links = true; }
+      let bx = px + 40, links = false;
+      if (bx + w > viewW - 6) { bx = Math.max(6, px - 40 - w); links = true; }
       const by = py - h / 2;
       c.fillStyle = '#fff'; c.strokeStyle = info.farbe; c.lineWidth = 2;
       c.beginPath(); c.roundRect(bx, by, w, h, 10); c.fill(); c.stroke();
@@ -5849,8 +5830,7 @@
   // oben außen – immer NACH dem Kopf gezeichnet, nie dahinter), 'kraft' (Kraftpose mit Effekt), Kenji zusätzlich 'sprung' (o.phase 0..1 = Sprungzyklus).
   // Gliedmaßen sind zusammenhängende Linienzüge (Oberarm, Unterarm, Hand/Pfote in einem Zug, keine schwebenden Fäuste).
   // heldZeichnen(c, id, x, y, h, t, pose, { gluehen, kraft, blitz, phase, alpha, spiegel }): Hülle mit Glühen (weicher Schein in Heldenfarbe + ✦-Funken, Standard
-  // für alle Helden) und Leuchtrand (blitz 0..1, nur kurz, wenn eine Kraft auslöst). Farbe je Held: HELD_FARBE.
-  const HELD_FARBE = { leo: '#d62828', camilla: '#c8553d', ellie: '#3a86ff', olivia: '#7b2cbf', kenji: '#f77f00', zara: '#ff2d95', penny: '#48cae4', felix: '#0096c7', tessa: '#2e9e5b', max: '#f4b400' };
+  // für alle Helden) und Leuchtrand (blitz 0..1, nur kurz, wenn eine Kraft auslöst). Farbe je Held: HELD_FARBE (bei CAMEO definiert).
   const hzEll = (c, x, y, rx, ry, f, rot = 0) => { c.fillStyle = f; c.beginPath(); c.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); c.fill(); };
   const hzRR = (c, x, y, w, h, r, f) => { c.fillStyle = f; c.beginPath(); c.roundRect(x, y, w, h, r); c.fill(); };
   const hzText = (c, txt, x, y, px, f = '#fff', fett = true) => { c.fillStyle = f; c.font = `${fett ? 'bold ' : ''}${px}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, x, y); };
@@ -5951,10 +5931,10 @@
     },
     // Camilla the Camel – Super strength: Höcker, Terrakotta-Maske; Kraft = stemmt einen Felsbrocken über den Kopf, Bizeps, Bodenrisse
     camilla(c, t, pose, o = {}) {
-      const j = pose === 'jubel', k = pose === 'kraft', fell = '#dcb46e', dunkel = '#bd934c', hell = '#f3e2bb', F = HELD_FARBE.camilla;
+      const j = pose === 'jubel', k = pose === 'kraft', fell = '#dcb46e', dunkel = '#bd934c', hell = '#f3e2bb', F = HELD_FARBE.camilla, stemmt = k && o.kraft !== 0;   // kraft: 0 = Arme hoch ohne Felsbrocken (sie hebt etwas anderes)
       hzUmhang(c, F, t, pose === 'lauf', false, -54);
       hzEll(c, -17, -52, 14, 14, dunkel); hzEll(c, -16, -51, 11, 11, fell);   // großer Höcker auf dem Rücken (hinter dem Körper, ragt links über die Schulter)
-      if (k) { c.strokeStyle = 'rgba(70,50,30,.6)'; c.lineWidth = 1.6; c.lineCap = 'round';   // Bodenrisse unter den Füßen
+      if (stemmt) { c.strokeStyle = 'rgba(70,50,30,.6)'; c.lineWidth = 1.6; c.lineCap = 'round';   // Bodenrisse unter den Füßen
         for (const [x0, y0, x1, y1, x2, y2] of [[-8, 0, -22, 4, -34, 3], [10, 1, 24, 5, 38, 2], [-4, 1, -10, 7, -18, 12], [6, 1, 14, 8, 16, 14]]) { c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.lineTo(x2, y2); c.stroke(); } }
       hzBeine(c, pose, t, 6, -22, 9, dunkel, fell, '#8a6a3a', 7, 3.5, { breit: k ? 4 : 0 });
       hzRR(c, -13, -52, 26, 36, 11, fell); hzEll(c, 0, -32, 8, 10, hell); hzRR(c, -15, -52, 30, 10, 5, '#2b4a6f'); hzWappen(c, 0, -39, F, 'C');
@@ -5962,12 +5942,13 @@
       hzEll(c, 1, -71, 12, 10, fell);   // Kopf
       hzEll(c, 12, -66, 11, 7, fell, 0.25); hzEll(c, 14, -64, 8, 4, hell, 0.25);   // lange, hängende Schnauze aus dem Kopfoval heraus, unten heller
       hzEll(c, 17, -69, 2, 1.5, '#5a3a1a', 0.4); hzEll(c, 21, -67, 2, 1.5, '#5a3a1a', 0.4);   // große Nüstern auf der Schnauze
-      c.strokeStyle = '#5a3a1a'; c.lineWidth = 1.4; c.lineCap = 'round'; c.beginPath(); c.moveTo(9, -61); c.quadraticCurveTo(15, -58, 21, -61); c.stroke();   // Mund auf der Schnauze (hängende Lippe)
+      c.strokeStyle = '#5a3a1a'; c.lineWidth = 1.3; c.lineCap = 'round'; c.beginPath(); c.arc(19, -63.8, 2.6, 0.25, Math.PI - 0.25); c.stroke();   // kleiner freundlicher Lächelbogen mittig unter den Nüstern
+      hzEll(c, 16.4, -64.5, 0.6, 0.6, '#5a3a1a'); hzEll(c, 21.6, -64.5, 0.6, 0.6, '#5a3a1a');   // winzige Mundwinkel
       hzEll(c, -8, -78, 3, 4, fell, -0.4); hzEll(c, 4, -79, 3, 4, fell, 0.3); hzEll(c, 0, -78, 7, 4, dunkel);   // Ohren, Haarschopf
       hzMaske(c, 0, -73, 10, F); hzAugen(c, 0, -73, 4.4, 2.3, 1, j);
       c.strokeStyle = '#3a2210'; c.lineWidth = 0.9; c.lineCap = 'round'; for (const s of [-1, 1]) for (let i = 0; i < 2; i++) { c.beginPath(); c.moveTo(s * 8.3, -74.5 + i * 1.6); c.lineTo(s * 10.4, -75.6 + i * 1.8); c.stroke(); }   // kleine Wimpern am äußeren Augenwinkel
       const haende = hzArme(c, pose, t, j ? 17 : 13, -48, k ? 17 : 13, k ? 15 : 11, 7.5, fell, 5.5, dunkel, k ? [[2.5, 3.0], [2.5, 3.0]] : null, k ? 4 : 0);
-      if (k) {   // Felsbrocken (grau mit Rissen) auf den Händen, leicht wippend
+      if (stemmt) {   // Felsbrocken (grau mit Rissen) auf den Händen, leicht wippend
         const fy = (haende[0][1] + haende[1][1]) / 2 - 10 + Math.sin(t * 4) * 1.5;
         hzEll(c, 0, fy, 26, 10, '#7d8793'); hzEll(c, -6, fy - 2, 16, 7, '#9aa5b1'); c.strokeStyle = '#5a636e'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-14, fy - 6); c.lineTo(-8, fy); c.lineTo(-12, fy + 6); c.moveTo(10, fy - 7); c.lineTo(14, fy - 1); c.stroke();
         for (let i = 0; i < 3; i++) hzFunke(c, -30 + i * 30, fy - 14 + Math.sin(t * 6 + i) * 3, 2.5, '#fff');
@@ -6033,7 +6014,7 @@
       let a = KF[0], b = KF[1]; for (let i = 0; i < KF.length - 1; i++) if (ph >= KF[i][0] && ph <= KF[i + 1][0]) { a = KF[i]; b = KF[i + 1]; }
       const f = (ph - a[0]) / (b[0] - a[0] || 1), g = f * f * (3 - 2 * f), v = a.map((x, i) => x + (b[i] - x) * g);
       const [, dy, neig, kx, ky, ax, ay, zx, zy, sx, sy, a1, a2] = v, flug = ph > 0.32 && ph < 0.85;
-      c.save(); c.translate(0, dy);
+      c.save(); c.translate(0, o.ohneHub ? 0 : dy);
       hzUmhang(c, F, t, pose === 'lauf' || k, flug || j, -58);
       const HX = -2, HY = -34;
       // Schwanz (Gegengewicht): dick am Ansatz, zur Spitze dünner
@@ -6060,7 +6041,7 @@
       if (k || pose === 'sprung' || pose === 'lauf') {   // Effekte: Staubwolke bei Absprung/Landung, Bewegungsbögen im Flug
         const staub = (ph > 0.22 && ph < 0.42) ? 1 - Math.abs(ph - 0.32) / 0.1 : (ph > 0.84 && ph < 1) ? 1 - Math.abs(ph - 0.92) / 0.08 : 0;
         if (staub > 0) { c.save(); c.globalAlpha = staub * 0.8; for (let i = 0; i < 4; i++) hzEll(c, -14 + i * 10, -2 - i % 2 * 3, 7 + staub * 4, 4, '#e6dccb'); c.restore(); }
-        if (flug && k && dy < -16) { c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 2.5; c.lineCap = 'round'; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(0, dy - 8, 14 + i * 5, 0.5, 2.6); c.stroke(); } }
+        if (flug && k && dy < -16 && !o.ohneHub) { c.strokeStyle = 'rgba(255,255,255,.75)'; c.lineWidth = 2.5; c.lineCap = 'round'; for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(0, dy - 8, 14 + i * 5, 0.5, 2.6); c.stroke(); } }
       }
     },
     // Zara the Zebra – Invisibility: weiß mit schwarzen Streifen, Mähne, pinke Maske; Kraft = halbdurchsichtig mit Schimmer-Rand und Funken
@@ -6171,6 +6152,33 @@
     const zf = () => { c.save(); c.translate(x, y); c.scale(o.spiegel ? -u : u, u); if (o.alpha != null) c.globalAlpha *= o.alpha; z(c, t, pose || 'steh', o); c.restore(); };
     if (o.blitz > 0) { c.save(); c.shadowColor = f; c.shadowBlur = 18 * u * Math.min(1, o.blitz); zf(); zf(); c.restore(); }
     zf();
+  }
+  // Sammelkarte (Klasse 6, Phase 2): Rahmen in Heldenfarbe, Sternenhimmel, Held in Kraftpose mit Glühen, Name + Kraft; (x, y) = linke obere Ecke, Breite w, Höhe 4/3 w.
+  // held = { id, name, kraft }; o.gesperrt = graue Silhouette mit „?“ (noch nicht gesammelt, o.hinweis = Text darunter), o.t = Zeit (Animation), o.blitz = Leuchtrand
+  function heldKarteZeichnen(c, x, y, w, held, o = {}) {
+    const id = held.id, u = w / 240, t = o.t == null ? 0.6 : o.t, zu = !!o.gesperrt, f = zu ? '#8a93a3' : HELD_FARBE[id] || '#1d3f8f';
+    c.save(); c.translate(x, y); c.scale(u, u);   // Entwurfsmaß 240 × 320
+    hzRR(c, 0, 0, 240, 320, 18, f);
+    const g = c.createRadialGradient(120, 130, 10, 120, 130, 150); g.addColorStop(0, zu ? '#3a3f4e' : '#2b2f4a'); g.addColorStop(1, zu ? '#22252f' : '#101326');
+    c.fillStyle = g; c.beginPath(); c.roundRect(10, 10, 220, 232, 14); c.fill();
+    for (let k = 0; k < 14; k++) hzEll(c, 18 + (k * 61) % 204, 18 + (k * 37) % 212, 1.3, 1.3, zu ? '#8a93a3' : '#fff');
+    c.save(); c.beginPath(); c.roundRect(10, 10, 220, 232, 14); c.clip();
+    const hx = 120 - (id === 'penny' || id === 'olivia' ? 26 : 0), hy = id === 'kenji' ? 250 : 226;
+    if (zu) {   // Silhouette: Held auf eine Zwischenfläche zeichnen und grau füllen (source-atop), dann großes „?“
+      const tmp = document.createElement('canvas'); tmp.width = 480; tmp.height = 640; const tc = tmp.getContext('2d'); tc.scale(2, 2);
+      if (HELDEN_ZEICHNUNG[id]) heldZeichnen(tc, id, 120, 226, 150, t, 'steh', {});
+      tc.globalCompositeOperation = 'source-atop'; tc.fillStyle = '#5a6170'; tc.fillRect(0, 0, 240, 320);
+      c.drawImage(tmp, 0, 0, 480, 640, 0, 0, 240, 320);
+      hzText(c, '?', 120, 118, 84, '#fff'); if (o.hinweis) hzText(c, o.hinweis, 120, 220, 15, '#d8dde6', false);
+    } else if (HELDEN_ZEICHNUNG[id]) heldZeichnen(c, id, hx, hy, 150, t, 'kraft', { gluehen: true, blitz: o.blitz || 0, kraft: 1, phase: 0.5 });
+    c.restore();
+    hzText(c, zu ? '???' : held.name || id, 120, 272, 18, '#fff'); hzText(c, zu ? '⚡ ?' : '⚡ ' + (held.kraft || ''), 120, 298, 15, '#fff', false);
+    c.restore();
+  }
+  // Karte als Bild (Data-URL, PNG) – z. B. für das Bild am Ende des Heldenfilms; o.breite = Pixelbreite (Standard 480)
+  function heldKarteBild(held, o = {}) {
+    const w = o.breite || 480, cv = document.createElement('canvas'); cv.width = w; cv.height = Math.round(w * 4 / 3);
+    heldKarteZeichnen(cv.getContext('2d'), 0, 0, w, held, o); return cv.toDataURL('image/png');
   }
   // ===== HELDEN-ZEICHNUNGEN (Ende) =====
 
@@ -8192,7 +8200,6 @@
     texte = Object.assign({}, TEXTE, { bossTitel: `${W.bossName} fragt …` }, opt.texte || {});
     // Cameos (nur wenn die App Helden übergibt): Kartenbilder vorab laden; Ladefehler → Kreis mit Initiale
     cameoListe = (Array.isArray(opt.cameos) ? opt.cameos : []).filter((h) => h && h.id).slice(0, 3);
-    for (const h of cameoListe) if (h.bild && !cameoBilder[h.id]) { const img = new Image(); img.decoding = "async"; img.src = h.bild; cameoBilder[h.id] = img; }
     canvas = el("canvas", "runner-canvas"); canvas.setAttribute("aria-label", opt.titel || "Road Trip Run");
     ctx = canvas.getContext("2d");
     wrapper.append(canvas, frageBauen());
@@ -9678,13 +9685,14 @@
     c.fillStyle = 'rgba(255,255,255,.85)'; for (let x = v * 2; x < SZ_W; x += 96) c.fillRect(x, 350, 48, 4);   // Mittellinie
     c.fillStyle = '#e0a400'; c.fillRect(0, 327, SZ_W, 2); c.fillRect(0, 331, SZ_W, 2);   // doppelte gelbe Linie am Rand
   }
-  // Heldenfilme (Klasse 6, 6.11.2026, Mr. Alex): je Superheld ein kurzer Film (11 s, Runner.szene(ziel, 'held_<id>', { heldBild, … })) – der Held genau wie sein Cameo im London Run
-  // (heldFigur: Umhang + rundes Kartenbild), er zeigt seine Superkraft in einer London-Kulisse des Runners; Stimme = Selbstvorstellung (inhalte/helden.tsv, Spalte intro), am Ende die Heldenkarte groß
+  // Heldenfilme (Klasse 6, 6.11.2026, Mr. Alex): je Superheld ein kurzer Film (11 s, Runner.szene(ziel, 'held_<id>', { foto: Sammelkarte, … })) – der Held als Spielgrafik
+  // (heldZeichnen, 7.11.: Kraftpose zur Kraft, Kenji im Sprungzyklus, Jubel am Ende, Glühen an, Leuchtrand-Blitz beim Einsatz) zeigt seine Superkraft in einer London-Kulisse
+  // des Runners; Stimme = Selbstvorstellung (inhalte/helden.tsv, Spalte intro), am Ende die Sammelkarte groß.
+  // (x, y) = Mitte wie beim früheren Kartenbild, Maßstab s: Fußpunkt y + 38·s, Höhe 76·s; o.pose, o.phase (Kenji), o.blitz, o.kraft, o.alpha, o.links = Blick nach links
   const szHeld = (c, id, x, y, s, t, o = {}) => {
-    const info = CAMEO[id] || { farbe: '#1d3f8f' };
-    c.save(); c.translate(x, y); c.scale(s, s); if (o.alpha != null) c.globalAlpha = o.alpha;
-    heldFigur(c, id, id, info.farbe, (ruhig() ? 0 : Math.sin(t * 9) * 6) + (o.wehen || 0), o.spiegel); c.restore();
+    heldZeichnen(c, id, x, y + 38 * s, 76 * s, t, o.pose || 'steh', { gluehen: o.gluehen == null ? !ruhig() : o.gluehen, blitz: ruhig() ? 0 : (o.blitz || 0), kraft: o.kraft == null ? 1 : o.kraft, phase: o.phase, ohneHub: o.ohneHub, alpha: o.alpha, spiegel: !!o.links });
   };
+  const szBlitz = (t, ab, dauer = 0.5) => Math.max(0, Math.min(1, 1 - (t - ab) / dauer));   // Leuchtrand-Blitz ab Zeitpunkt „ab“ (1 → 0)
   const szHeldKraft = (c, t, ab, id, kraft) => {   // Chip oben in der Mitte: Symbol + Superkraft (ab „ab“ eingeblendet)
     const f = sanft((t - ab) / 0.5); if (f <= 0) return; const info = CAMEO[id] || {};
     c.save(); c.globalAlpha = f; c.font = 'bold 20px system-ui, sans-serif'; const text = `${info.symbol || '⭐'} ${kraft}`, w = c.measureText(text).width + 34;
@@ -11228,7 +11236,7 @@
         c.restore();
         if (t > 2.8) { const n = Math.round(132 * hell); szZaehler(c, `${n} rooms`, '#ffd93d', 12, 170); }
       } },
-    // Klasse 6 – Heldenfilme (6.11.2026): Schlüssel held_<id>; held = Kartenbild-Schlüssel (cameoBilder), geladen aus o.heldBild
+    // Klasse 6 – Heldenfilme (6.11.2026): Schlüssel held_<id>; held = Helden-Id (Spielgrafik heldZeichnen, Posen je Filmphase)
     held_leo: { held: 'leo', dauer: 11, klaenge: [[0.3, 'bus'], [1.1, 'wind'], [3.5, 'wind'], [5.9, 'wind'], [8.3, 'combo'], [8.5, 'ruf'], [9.0, 'cameo']],
       zeichne(c, t) {   // Westminster: Leo rast dreimal über die Straße (Staub, Speed-Linien), überholt Doppeldecker und Black Cab und bremst mitten im Bild
         szLondonStrasse(c, t, 11);
@@ -11238,12 +11246,12 @@
         for (const [t0, dir] of [[1.1, -1], [3.5, 1], [5.9, -1]]) {
           const f = (t - t0) / 0.9; if (f < 0 || f > 1) continue;
           const x = dir < 0 ? lerp(720, -90, f) : lerp(-90, 720, f);
-          szStaub(c, x, 378, dir); szTempo(c, x, y, dir, 5, 90); szHeld(c, 'leo', x, y, 1.5, t, { spiegel: dir > 0, wehen: 10 });
+          szStaub(c, x, 378, dir); szTempo(c, x, y, dir, 5, 90); szHeld(c, 'leo', x, y, 1.5, t, { pose: 'kraft', links: dir < 0, blitz: szBlitz(t, t0) });
         }
         if (t >= 8.3) {
           const f = Math.min(1, (t - 8.3) / 0.9), x = lerp(720, 320, 1 - Math.pow(1 - f, 3));
           szStaub(c, x, 378, -1, 1 - sanft((t - 9.2) / 1.5)); if (f < 1) szTempo(c, x, y, -1, 5, 90 * (1 - f));
-          szHeld(c, 'leo', x, y - (f >= 1 ? Math.sin((t - 9.2) * 4) * 3 : 0), 1.5, t);
+          szHeld(c, 'leo', x, y - (f >= 1 ? Math.sin((t - 9.2) * 4) * 3 : 0), 1.5, t, { pose: f < 1 ? 'kraft' : 'jubel', links: f < 1, blitz: szBlitz(t, 8.3) });
           if (f >= 1) for (let k = 0; k < 4; k++) szFunkeln(c, 320 + Math.cos(k * 1.6 + t) * 62, y - 10 + Math.sin(k * 1.6 + t) * 40, 7, t + k, '#ffd93d');
         }
         if (t > 8.5) szBlase(c, 320, 150, 'Too fast for you!', CAMEO.leo.farbe, (t - 8.5) / 0.35);
@@ -11261,7 +11269,7 @@
         else if (t < 8.4) { x = 190; y = lerp(262, 424, sanft((t - 7.6) / 0.8)); }
         else { const f = sanft((t - 8.4) / 0.8); x = lerp(190, 450, f); y = lerp(424, 236, f) + (f >= 1 ? Math.sin(t * 4) * 3 : 0); }
         const unten = t < 2.2 ? 388 : Math.min(388, y - 34), cx = t < 6.6 ? 300 : t < 7.6 ? x - 49 : 141;
-        szHeld(c, 'camilla', x, y, 1.6, t);
+        szHeld(c, 'camilla', x, y, 1.6, t, { pose: t < 2.2 ? 'steh' : t < 8.4 ? 'kraft' : 'jubel', kraft: 0, blitz: szBlitz(t, 2.2) });   // kraft: 0 = Arme hoch ohne Felsbrocken (sie hebt das Taxi)
         const traegt = t > 2.6 && t < 8.0;
         szFahrzeug(c, 'cab', cx, unten, t, 1.25, traegt ? Math.sin(t * 3) * 0.03 : 0);
         if (traegt) { c.save(); c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 3; for (const s of [-1, 1]) for (let k = 0; k < 3; k++) { c.beginPath(); c.moveTo(x + s * (52 + k * 4), y - 20 + k * 14); c.lineTo(x + s * (64 + k * 4), y - 24 + k * 14); c.stroke(); } c.restore(); }
@@ -11273,7 +11281,7 @@
       zeichne(c, t) {   // British Museum: Bücher fliegen zu Ellie und verschwinden in ihrem Gedächtnis (Seitenzähler), dann erscheinen die gemerkten Wörter
         szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[30, 40], [460, 60]]); szBoden(c, '#d8cfbc', 330); britishMuseum(c, 320, 330, 1); });
         const hx = 320, hy = t < 1.2 ? lerp(-60, 262, sanft(t / 1.2)) : 262 + Math.sin(t * 2.4) * 4;
-        szHeld(c, 'ellie', hx, hy, 1.7, t);
+        szHeld(c, 'ellie', hx, hy, 1.7, t, { pose: t < 1.4 ? 'steh' : t < 6.6 ? 'kraft' : t < 8.1 ? 'steh' : 'jubel', blitz: szBlitz(t, 1.4) });
         const farben = ['#e63946', '#2a8cff', '#2e9e5b', '#8a3ffc', '#ff7a1a', '#e0a400'];
         let gelesen = 0;
         for (let i = 0; i < 12; i++) {
@@ -11303,7 +11311,7 @@
         c.fillStyle = '#fff6c8'; c.beginPath(); c.arc(570, 110, 24, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(6,10,34,.84)'; c.beginPath(); c.arc(582, 102, 21, 0, Math.PI * 2); c.fill();
         if (t > 6.2 && geholt <= 0) for (let k = 0; k < 4; k++) szFunkeln(c, tx + Math.cos(k * 1.57 + t * 2) * 34, ty - 14 + Math.sin(k * 1.57 + t * 2) * 30, 8, t + k, '#ffd93d');
         if (geholt > 0) szTeddy(c, lerp(tx, ox + 46, geholt), lerp(ty, oy + 40, geholt) - Math.sin(geholt * Math.PI) * 60, lerp(1, 0.9, geholt));
-        szHeld(c, 'olivia', ox, oy, 1.6, t);
+        szHeld(c, 'olivia', ox, oy, 1.6, t, { pose: t < 1.6 ? 'steh' : t < 7.2 ? 'kraft' : t < 8.6 ? 'steh' : 'jubel', links: t < 8.6, blitz: szBlitz(t, 1.6) });   // Laser-Augen nach links zum Teddy
         if (t > 8.6) szBlase(c, 320, 250, 'Found it!', CAMEO.olivia.farbe, (t - 8.6) / 0.35);
         szHeldKraft(c, t, 9.0, 'olivia', 'Night vision');
       } },
@@ -11312,14 +11320,16 @@
         szWelt({ zeit: t, kamera: 0 }, () => { szHimmel(c, '#7fb2e0', '#eef4fa'); szWolken(c, t, [[40, 50], [420, 30]]); szBoden(c, '#9a948a', 330); nottingHillHaeuser(c, 320, 330, 1); c.fillStyle = '#4a4d52'; c.fillRect(0, 352, SZ_W, 60); });
         const dach = 118, punkte = [60, 200, 340, 480, 600];
         const pos = (tt) => {
-          for (let k = 0; k < 4; k++) { const t0 = 1.0 + k * 1.5; if (tt < t0) return [punkte[k], dach, 0]; const f = (tt - t0) / 0.9; if (f <= 1) return [lerp(punkte[k], punkte[k + 1], f), dach - 90 * 4 * f * (1 - f), 1]; }
+          for (let k = 0; k < 4; k++) { const t0 = 1.0 + k * 1.5; if (tt < t0) return [punkte[k], dach, 0]; const f = (tt - t0) / 0.9; if (f <= 1) return [lerp(punkte[k], punkte[k + 1], f), dach - 90 * 4 * f * (1 - f), 1, f]; }
           if (tt < 7.2) return [punkte[4], dach, 0];
-          const f = Math.min(1, (tt - 7.2) / 1.7); return [lerp(600, 320, f), lerp(dach, 300, f) - 190 * 4 * f * (1 - f), f < 1 ? 1 : 0];
+          const f = Math.min(1, (tt - 7.2) / 1.7); return [lerp(600, 320, f), lerp(dach, 300, f) - 190 * 4 * f * (1 - f), f < 1 ? 1 : 0, f];
         };
         for (let k = 6; k >= 1; k--) { const [px, py, fl] = pos(t - k * 0.06); if (!fl) continue; c.fillStyle = `rgba(255,255,255,${0.5 - k * 0.07})`; c.beginPath(); c.arc(px, py, 18 - k * 2, 0, Math.PI * 2); c.fill(); }
-        const [x, y, fliegt] = pos(t);
+        const [x, y, fliegt, ff = 0] = pos(t);
         const lande = t > 8.9 && t < 9.2 ? 1 - (t - 8.9) / 0.3 : 0;
-        c.save(); c.translate(x, y + 30); c.scale(1 + lande * 0.12, 1 - lande * 0.15); c.translate(-x, -y - 30); szHeld(c, 'kenji', x, y, 1.4, t, { wehen: fliegt ? 10 : 0 }); c.restore();
+        // Sprungzyklus: Absprung (0,3) → Flug → Landung (0,85) entlang der Flugkurve des Films (ohneHub: die Höhe macht der Film), danach Jubel
+        c.save(); c.translate(x, y + 30); c.scale(1 + lande * 0.12, 1 - lande * 0.15); c.translate(-x, -y - 30);
+        szHeld(c, 'kenji', x, y, 1.4, t, fliegt ? { pose: 'sprung', phase: 0.3 + 0.55 * ff, ohneHub: true, blitz: szBlitz(t, t - ff * 0.9) } : lande ? { pose: 'sprung', phase: 0.9, ohneHub: true } : { pose: t > 9.2 ? 'jubel' : 'steh' }); c.restore();
         if (t > 8.9) szRinge(c, 320, 330, 8.9, t, 'rgba(255,255,255,1)');
         if (t > 8.9 && t < 10.4) szBlase(c, 320, 210, 'Boing!', CAMEO.kenji.farbe, (t - 8.9) / 0.3);
         szHeldKraft(c, t, 9.2, 'kenji', 'Super jump');
@@ -11334,7 +11344,7 @@
         const zx = t < 1.4 ? lerp(700, 200, sanft(t / 1.4)) : t < 3.2 ? 200 : t < 6.6 ? lerp(200, 450, sanft((t - 3.2) / 3.4)) : 450;
         const zy = t < 1.4 ? lerp(-60, 240, sanft(t / 1.4)) : 240 + Math.sin(t * 2.2) * 4;
         const sicht = t < 2.6 ? 1 : t < 3.2 ? 1 - sanft((t - 2.6) / 0.6) : t < 6.8 ? 0 : sanft((t - 6.8) / 0.3);
-        if (sicht > 0) szHeld(c, 'zara', zx, zy, 1.6, t, { alpha: sicht });
+        if (sicht > 0) szHeld(c, 'zara', zx, zy, 1.6, t, { alpha: sicht, pose: sicht < 1 ? 'kraft' : t > 7.0 ? 'jubel' : 'steh', blitz: szBlitz(t, 2.6) });
         if (sicht < 1 && t > 2.6) { c.save(); c.setLineDash([6, 8]); c.lineDashOffset = -t * 30; c.strokeStyle = `rgba(255,255,255,${0.55 * (1 - sicht)})`; c.lineWidth = 2; c.beginPath(); c.arc(zx + Math.sin(t * 7) * 2, zy, 40, 0, Math.PI * 2); c.stroke(); c.restore();
           for (let k = 0; k < 3; k++) szFunkeln(c, zx + Math.cos(t * 2 + k * 2.1) * 46, zy + Math.sin(t * 2 + k * 2.1) * 46, 5, t + k, 'rgba(255,255,255,.7)'); }
         szRinge(c, 200, 240, 2.6, t, 'rgba(255,255,255,1)'); szRinge(c, 450, 240, 6.8, t, 'rgba(255,255,255,1)');
@@ -11354,7 +11364,7 @@
         });
         if (t > 1.6 && t < 3.8) for (let k = 0; k < 14; k++) { const d = ((t - 1.6) * 1.4 + k / 14) % 1, a = -2.6 + k * 0.18; szFunkeln(c, px + Math.cos(a) * d * 300, py + 30 + Math.sin(-a) * d * 30 + d * 90, 6, t + k, '#ffffff'); }
         [['#f7a8c8', 130, 6.4], ['#fff6e0', 310, 6.8], ['#8a5a3a', 580, 7.2]].forEach(([kg, x, ab]) => { const f = sanft((t - ab) / 0.35); if (f > 0) szEis(c, x, 384, 1.5 * f, kg); });
-        szHeld(c, 'penny', px, py, 1.6, t);
+        szHeld(c, 'penny', px, py, 1.6, t, { pose: t < 1.6 ? 'steh' : t < 3.8 ? 'kraft' : t < 8.0 ? 'steh' : 'jubel', links: t >= 1.6 && t < 8.0, blitz: szBlitz(t, 1.6) });   // Eisstrahl nach links über die Themse
         if (t > 8.0) szBlase(c, 300, 200, 'Ice cream for everybody!', CAMEO.penny.farbe, (t - 8.0) / 0.35);
         szHeldKraft(c, t, 9.2, 'penny', 'Ice powers');
       } },
@@ -11364,7 +11374,7 @@
           szWeltKulisse(c, t, 'westminster', 40000, 4000, 34000, 7.4);
           c.fillStyle = 'rgba(255,255,255,.85)'; for (let k = 0; k < 4; k++) { const x = SZ_W + 80 - ((t * 420 + k * 230) % (SZ_W + 200)), y = 70 + (k * 53) % 150; c.beginPath(); c.arc(x, y, 18, 0, Math.PI * 2); c.arc(x + 22, y - 8, 22, 0, Math.PI * 2); c.arc(x + 46, y, 16, 0, Math.PI * 2); c.fill(); }
           const fx = t < 1.2 ? lerp(-80, 290, sanft(t / 1.2)) : 290 + Math.sin(t * 1.3) * 30, fy = 160 + Math.sin(t * 2) * 14;
-          szTempo(c, fx, fy, 1, 5, 80); szHeld(c, 'felix', fx, fy, 1.6, t, { spiegel: true, wehen: 12 });
+          szTempo(c, fx, fy, 1, 5, 80); szHeld(c, 'felix', fx, fy, 1.6, t, { pose: 'kraft', blitz: szBlitz(t, 1.2) });
         }
         const b = sanft((t - 6.8) / 0.6);
         if (b > 0) {
@@ -11372,9 +11382,9 @@
           c.fillStyle = '#fff'; for (let k = 0; k < 40; k++) c.fillRect((k * 83) % SZ_W, (k * 47) % H, 2, 2);
           const a = (t - 7.2) * 2.0, ex = 320, ey = 236, hx = ex + Math.cos(a) * 170, hy = ey + Math.sin(a) * 62 - 10;
           c.strokeStyle = 'rgba(255,255,255,.45)'; c.setLineDash([5, 7]); c.lineWidth = 2; c.beginPath(); c.ellipse(ex, ey - 10, 170, 62, 0, 0, Math.PI * 2); c.stroke(); c.setLineDash([]);
-          if (Math.sin(a) < 0) szHeld(c, 'felix', hx, hy, 0.9, t, { spiegel: Math.cos(a) < 0 });
+          if (Math.sin(a) < 0) szHeld(c, 'felix', hx, hy, 0.9, t, { pose: 'kraft', links: Math.sin(a) > 0 });
           erdkugel(c, ex, ey, 110, t);
-          if (Math.sin(a) >= 0) szHeld(c, 'felix', hx, hy, 1.1, t, { spiegel: Math.cos(a) < 0 });
+          if (Math.sin(a) >= 0) szHeld(c, 'felix', hx, hy, 1.1, t, { pose: 'kraft', links: Math.sin(a) > 0 });
           c.restore();
           if (t > 8.0) szBlase(c, 320, 112, 'Around the world in one day!', CAMEO.felix.farbe, (t - 8.0) / 0.35);
         }
@@ -11392,8 +11402,8 @@
           if (k < 2) szStein(c, sx + dir * 220 * d, hy - 52 - 140 * d + 420 * d * d, 1.5, t * 6 + k);
           else for (let j = 0; j < 7; j++) { const a = -Math.PI * (0.1 + j * 0.13); szStein(c, sx + Math.cos(a) * 150 * d, hy - 52 + Math.sin(a) * 150 * d + 400 * d * d, 0.45, t * 8 + j); }
         }
-        szHeld(c, 'tessa', hx, hy, 1.7, t);
-        const blitz = t - treffer;
+        const blitz = t - treffer, schildAn = blitz >= 0 && blitz < 0.9;
+        szHeld(c, 'tessa', hx, hy, 1.7, t, { pose: schildAn ? 'kraft' : 'steh', kraft: schildAn ? 1 - blitz / 0.9 : 1, blitz: schildAn ? 1 - blitz / 0.9 : 0 });   // Schild-Blitz bei jedem Treffer
         if (blitz >= 0 && blitz < 0.9) { c.save(); c.globalAlpha = 1 - blitz / 0.9; c.strokeStyle = '#2e9e5b'; c.lineWidth = 6; c.beginPath(); c.ellipse(hx, hy + 20, 70 + blitz * 20, 84 + blitz * 20, 0, 0, Math.PI * 2); c.stroke(); c.restore();
           szBlase(c, hx + 120, hy - 70, 'BONK!', CAMEO.tessa.farbe, (0.9 - blitz) * 3); }
         if (t > 8.0) { const f = sanft((t - 8.0) / 0.9); if (f < 1) rabeFlug(c, lerp(700, hx, f), lerp(110, hy - 52, f) - Math.sin(f * Math.PI) * 50, t, 0.8); else szWelt({ zeit: t, kamera: 0 }, () => rabeSitzt(c, hx, hy - 38, t)); }
@@ -11416,7 +11426,7 @@
         if (funken) for (let k = 0; k < 6; k++) szFunkeln(c, rx + Math.cos(k * 1.05) * (20 + (t - funken) * 120), ry - 70 - (teile - 1) * 18 + Math.sin(k * 1.05) * (20 + (t - funken) * 80), 8, t + k, '#ffd93d');
         if (t > 8.6) { c.save(); c.globalAlpha = sanft((t - 8.6) / 0.3); c.strokeStyle = '#2e9e5b'; c.lineWidth = 6; c.lineCap = 'round'; c.beginPath(); c.moveTo(560, 282); c.lineTo(570, 294); c.lineTo(592, 258); c.stroke(); c.restore();
           szBlase(c, 520, 220, 'Homework done! ✓', CAMEO.max.farbe, (t - 8.6) / 0.35); }
-        szHeld(c, 'max', mx, my, 1.6, t);
+        szHeld(c, 'max', mx, my, 1.6, t, { pose: t < 1.6 ? 'steh' : t < 4.8 ? 'kraft' : t < 8.6 ? 'steh' : 'jubel', blitz: szBlitz(t, 1.6) });
         szHeldKraft(c, t, 9.2, 'max', 'Genius inventor');
       } },
   };
@@ -11451,7 +11461,6 @@
     const S = SZENEN[ortId] && ((SZENEN[ortId].variante && SZENEN[ortId].variante()) || SZENEN[ortId]);
     if (!S || laeuft) return null;
     szeneStopp();
-    if (S.held && o.heldBild && !(cameoBilder[S.held] && cameoBilder[S.held].naturalWidth > 0)) { const img = new Image(); img.decoding = 'async'; img.src = o.heldBild; cameoBilder[S.held] = img; }   // Heldenfilm: Kartenbild für heldFigur
     const eigene = !ziel;
     const ebene = eigene ? document.createElement('div') : null;
     if (ebene) { ebene.className = 'ortszene-ebene'; ebene.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:rgba(10,14,28,.82);display:flex;align-items:center;justify-content:center;padding:12px;'; document.body.append(ebene); }
@@ -11606,7 +11615,7 @@
         trommelt, dunkel: Math.round(dunkel * 100) / 100, kabinen: level.plattformen.filter((p) => p.art === 'kabine').map((p) => ({ x: p.x, y: p.y, w: p.w })), maschinenraum: (level.deko || []).filter((d) => d.art === 'maschinenraum').map((d) => ({ x: d.x, w: d.w })),
         kisten: level.kisten.filter((k) => k.art).map((k) => ({ x: k.x, y: k.y, art: k.art })), luecken: level.boden.length - 1,
         cameo: cameo ? { id: cameo.held && cameo.held.id, t: Math.round(cameo.t * 100) / 100, satz: cameo.satz } : null, cameosGezeigt, cameoEffekt,
-        cameoPlan: cameoPlan.map((p) => ({ x: p.x, id: p.held && p.held.id, erledigt: p.erledigt })), cameoBilder: Object.values(cameoBilder).filter((i) => i.complete && i.naturalWidth > 0).length,
+        cameoPlan: cameoPlan.map((p) => ({ x: p.x, id: p.held && p.held.id, erledigt: p.erledigt })),
         effekte: { schild: Math.round(schild * 100) / 100, sprungBonus: Math.round(sprungBonus * 100) / 100, durchlaessig: Math.round(durchlaessig * 100) / 100, eis: Math.round(eisZeit * 100) / 100, traegt: Math.round(traegt * 100) / 100, traegtAktiv, eule: eule ? eule.x : null },
         tore: tore.map((t) => ({ x: t.x, wort: woerter[t.wort].en, erledigt: t.erledigt, steine: t.steine.map((x) => ({ y: x.y, richtig: x.richtig })) })),
         torHinweis: zustand === 'spiel' && torHinweis() ? torHinweis().de : null, vy: Math.round(spieler.vy), diamantenX: diamanten.map((d) => ({ x: Math.round(d.x), weg: d.weg, verpasst: !!d.verpasst })),
@@ -11664,5 +11673,5 @@
     get wahlOffen() { return zustand === 'wahl' && !!wahlGabel && !frageBox.hidden; },
   };
 
-  window.Runner = { heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
+  window.Runner = { heldZeichnen, HELDEN_ZEICHNUNG, HELD_FARBE, heldKarteZeichnen, heldKarteBild, start, stopp, film: filmAlleinStart, ueberspringen, szene, hatSzene, szeneStopp, klangDatei, SZENEN_ORTE: Object.keys(SZENEN), zeichneFigur, figurHoehe, powerAnwenden, sprechText, sprechListe, skinFrei, skinArtikel, skinPreis, SKIN_PREIS, kurzDe, SKIN_GRUPPEN, SKIN_STANDARD, FARBEN, HAARFARBEN, level: LEVEL_NY, SEQUENZ, BANNER_TEXT, WELTEN: WELT_LISTE };
 })();

@@ -2114,6 +2114,188 @@ window.DATEN_FR = {
    "quelle": "Foto: Photochrom um 1890–1900 · Library of Congress (LC-DIG-ppmsc-05387) · gemeinfrei"
   }
  ],
+ "helden": [
+  {
+   "id": "loupe",
+   "name": "Loupe",
+   "kraft": "Le détective",
+   "kraft_de": "Der Detektiv",
+   "zeichnung": "molly",
+   "wendung": "Qu'est-ce que c'est que ce truc-là ?",
+   "wendung_de": "Was ist denn das für ein Ding da?",
+   "ab": 0
+  },
+  {
+   "id": "fantome",
+   "name": "Fantôme",
+   "kraft": "L'invisible",
+   "kraft_de": "Der Unsichtbare",
+   "zeichnung": "holly",
+   "wendung": "Il y a quelqu'un ?",
+   "wendung_de": "Ist da jemand?",
+   "ab": 1
+  },
+  {
+   "id": "gadget",
+   "name": "Gadget",
+   "kraft": "L'inventeur",
+   "kraft_de": "Der Erfinder",
+   "zeichnung": "archie",
+   "wendung": "J'ai quelque chose pour toi !",
+   "wendung_de": "Ich hab was für dich!",
+   "ab": 2
+  },
+  {
+   "id": "lumiere",
+   "name": "Lumière",
+   "kraft": "Le laser",
+   "kraft_de": "Der Laser-Held",
+   "zeichnung": "ally",
+   "wendung": "C'est très clair !",
+   "wendung_de": "Ganz klar!",
+   "ab": 3
+  },
+  {
+   "id": "hourra",
+   "name": "Hourra",
+   "kraft": "La fête",
+   "kraft_de": "Der Jubel-Held",
+   "zeichnung": "rosie",
+   "wendung": "C'est trop bien !",
+   "wendung_de": "Das ist mega!",
+   "ab": 4
+  },
+  {
+   "id": "rigolo",
+   "name": "Rigolo",
+   "kraft": "Le clown",
+   "kraft_de": "Der Spaßvogel",
+   "zeichnung": "benny",
+   "wendung": "N'importe quoi !",
+   "wendung_de": "So ein Quatsch!",
+   "ab": 5
+  },
+  {
+   "id": "chrono",
+   "name": "Chrono",
+   "kraft": "Le temps",
+   "kraft_de": "Der Zeitstopper",
+   "zeichnung": "eddie",
+   "wendung": "C'est pas vrai !",
+   "wendung_de": "Das gibt's doch nicht!",
+   "ab": 6
+  },
+  {
+   "id": "eclair",
+   "name": "Éclair",
+   "kraft": "Le rapide",
+   "kraft_de": "Der Schnelle",
+   "zeichnung": "cody",
+   "wendung": "Vas-y ! Allez, viens !",
+   "wendung_de": "Los! Komm schon!",
+   "ab": 7
+  },
+  {
+   "id": "costaud",
+   "name": "Costaud",
+   "kraft": "Le fort",
+   "kraft_de": "Der Starke",
+   "zeichnung": "gus",
+   "wendung": "Ça marche !",
+   "wendung_de": "Geht klar!",
+   "ab": 8
+  },
+  {
+   "id": "calme",
+   "name": "Calme",
+   "kraft": "Le protecteur",
+   "kraft_de": "Der Beschützer",
+   "zeichnung": "bonnie",
+   "wendung": "Pas de souci !",
+   "wendung_de": "Kein Problem!",
+   "ab": 9
+  }
+ ],
+ "regions": [
+  {
+   "id": "idf",
+   "name": "Île-de-France",
+   "chef_lieu": "Paris",
+   "symbol": "🗼"
+  },
+  {
+   "id": "hdf",
+   "name": "Hauts-de-France",
+   "chef_lieu": "Lille",
+   "symbol": "🏭"
+  },
+  {
+   "id": "ge",
+   "name": "Grand Est",
+   "chef_lieu": "Strasbourg",
+   "symbol": "🥨"
+  },
+  {
+   "id": "nor",
+   "name": "Normandie",
+   "chef_lieu": "Rouen",
+   "symbol": "🧀"
+  },
+  {
+   "id": "bre",
+   "name": "Bretagne",
+   "chef_lieu": "Rennes",
+   "symbol": "⚓"
+  },
+  {
+   "id": "pdl",
+   "name": "Pays de la Loire",
+   "chef_lieu": "Nantes",
+   "symbol": "🏰"
+  },
+  {
+   "id": "cvl",
+   "name": "Centre-Val de Loire",
+   "chef_lieu": "Orléans",
+   "symbol": "🌷"
+  },
+  {
+   "id": "bfc",
+   "name": "Bourgogne-Franche-Comté",
+   "chef_lieu": "Dijon",
+   "symbol": "🍇"
+  },
+  {
+   "id": "na",
+   "name": "Nouvelle-Aquitaine",
+   "chef_lieu": "Bordeaux",
+   "symbol": "🏄"
+  },
+  {
+   "id": "ara",
+   "name": "Auvergne-Rhône-Alpes",
+   "chef_lieu": "Lyon",
+   "symbol": "⛷️"
+  },
+  {
+   "id": "occ",
+   "name": "Occitanie",
+   "chef_lieu": "Toulouse",
+   "symbol": "✈️"
+  },
+  {
+   "id": "paca",
+   "name": "Provence-Alpes-Côte d'Azur",
+   "chef_lieu": "Marseille",
+   "symbol": "☀️"
+  },
+  {
+   "id": "cor",
+   "name": "Corse",
+   "chef_lieu": "Ajaccio",
+   "symbol": "🏝️"
+  }
+ ],
  "wendungen": [
   {
    "fr": "Comment tu t'appelles ?",

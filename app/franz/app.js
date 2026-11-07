@@ -1,6 +1,6 @@
 /* Français Classe 5/6 – Sprachkurs-App (Mr. Alex)
    Kein Konto, keine Namen. Fortschritt bleibt nur auf diesem Gerät (localStorage, Schlüssel mit Präfix fr_).
-   Kacheln: 💬 Dialogues · 🗣️ Prononciation · 🎮 Jeux · 🎧 Beat-Studio · 🗼 Paris (Karte mit Szenen, Stufe 2) · Sammlung „Panthéon“.
+   Kacheln: 💬 Dialogues · 🗣️ Prononciation · 🎮 Jeux · 🎧 Beat-Studio · Panthéon = Hall of Fame: 🗼 Paris (Karte mit Szenen, Stufe 2) · Sammlung „Panthéon“.
    Inhalte: inhalte/franz/*.tsv → werkzeuge/franz_bauen.py → daten_fr.js. Grundsatz: Wird eine Lösung gezeigt, wird sie auch abgespielt. */
 (function () {
   "use strict";
@@ -22,7 +22,7 @@
   function laden() {
     let s = {};
     try { s = JSON.parse(localStorage.getItem(SPEICHER)) || {}; } catch (e) { s = {}; }
-    return Object.assign({ punkte: 0, dialoge: {}, namen: {}, spiele: {}, paris: 1, lese: "einfach", tempo: 1 }, s);
+    return Object.assign({ punkte: 0, dialoge: {}, namen: {}, spiele: {}, paris: 1, helden: 0, lese: "einfach", tempo: 1 }, s);
   }
   const stand = laden();
   function speichern() { try { localStorage.setItem(SPEICHER, JSON.stringify(stand)); } catch (e) { /* privater Modus: nur für diese Sitzung */ } }
@@ -152,16 +152,16 @@
     zeige(
       el("header", { class: "gruss" },
         el("h1", { lang: "fr" }, "Français 🇫🇷"),
-        el("p", { class: "klein" }, "Salut ! Wähl eine Kachel. Was du geschafft hast, kommt ins Panthéon."),
+        el("p", { class: "klein" }, "Salut ! Wähl eine Kachel. Paris, Super-héros und Stars sammelst du im Panthéon."),
         el("div", { class: "statusleiste" }, el("span", {}, `⭐ ${stand.punkte} Punkte`), el("span", {}, `🗣️ ${namenFertig}/${D.namen.length} Namen`),
           knopf("🏛️ Panthéon", pantheon, "haupt"))),
       el("nav", { class: "kacheln", "aria-label": "Kacheln" },
         kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe),
         kachel("🗣️", "Prononciation", "Namen richtig aussprechen", prononciation),
         kachel("🎮", "Jeux", "Memory, Qui est-ce ?, Dans l'ordre", jeux),
-        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio),
-        kachel("🗼", "Paris", `${parisFrei()}/${D.paris.length} Orte · Karte mit Filmen`, parisSeite)));
+        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio)));
     if (parisFrei() > stand.paris) setTimeout(parisNeu, 700);
+    else if (heldenFrei() > (stand.helden || 0)) setTimeout(heldNeu, 700);
   }
   const kachel = (sym, titel, unter, fn, extra) => el("button", { type: "button", class: "kachel" + (extra || ""), onclick: fn },
     el("span", { class: "sym", "aria-hidden": "true" }, sym), el("span", { class: "titel", lang: "fr" }, titel), unter && el("span", { class: "unter" }, unter));
@@ -558,7 +558,31 @@
     });
     return el("div", { class: "london-rahmen" }, svg);
   }
-  function parisSeite() {
+  /* ---------- 🏛️ Panthéon ---------- */
+  /* Super-héros (7.11.): Sammelkarten wie in den Englisch-Apps (Runner.heldKarteBild mit der Zeichnung aus Spalte zeichnung);
+     frei ab D.helden[i].ab geschafften Dialogen; stand.helden = Zahl der schon gezeigten Karten (neue zeigt die Startseite). */
+  const dialogeFertig = () => D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length;
+  const heldenFrei = () => (D.helden || []).filter((h) => h.ab <= dialogeFertig()).length;
+  const heldKarte = (h, zu) => { try { return window.Runner.heldKarteBild({ id: h.zeichnung, name: h.name, kraft: h.kraft }, { gesperrt: zu, breite: 240 }); } catch (e) { return null; } };
+  function heldKnopf(h, i) {
+    const zu = i >= heldenFrei(), b = heldKarte(h, zu);
+    return el("button", { type: "button", class: "held-knopf" + (zu ? " gesperrt" : ""), onclick: () => heldSeite(h, zu) },
+      b ? el("img", { src: b, alt: zu ? "Gesperrte Heldenkarte" : h.name, width: 120, height: 160 }) : el("span", { class: "medaille" }, zu ? "🔒" : "🦸"),
+      el("span", { lang: "fr" }, zu ? "?" : h.name));
+  }
+  function heldSeite(h, zu) {
+    const b = heldKarte(h, zu);
+    zeige(kopf(zu ? "🦸 ???" : `🦸 ${h.name}`, pantheon, zu ? `Frei ab ${h.ab} geschafften Dialogues (du hast ${dialogeFertig()}).` : `${h.kraft} · ${h.kraft_de}`),
+      el("section", { class: "karte held-gross" }, b && el("img", { src: b, alt: zu ? "Gesperrte Heldenkarte" : h.name, width: 240, height: 320 }),
+        !zu && el("p", { class: "paris-fr", lang: "fr" }, `« ${h.wendung} »`), !zu && el("p", { class: "klein" }, h.wendung_de),
+        !zu && el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([{ tts: h.wendung }])))));
+  }
+  function heldNeu() { // neu freigeschaltete Karte groß zeigen, danach zählen
+    const n = stand.helden || 0, frei = heldenFrei();
+    if (frei <= n) return;
+    stand.helden = n + 1; speichern(); toast(`🦸 Nouveau super-héros : ${D.helden[n].name} !`); heldSeite(D.helden[n], false);
+  }
+  function pantheon() {
     const frei = parisFrei(), rest = PARIS_PUNKTE - (stand.punkte % PARIS_PUNKTE);
     const fakt = el("section", { class: "karte paris-fakt", hidden: true });
     const faktZeigen = (o) => {
@@ -567,34 +591,30 @@
         el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)])), hatFilm(o) && knopf("▶ Film", () => parisFilm(o), "leise")));
       fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
-    zeige(kopf("🗼 Paris", startseite, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
-      parisKarte(frei, (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); }),
-      el("p", { class: "klein" }, "Tipp auf einen Ort: kleiner Film mit Mr. Alex, danach der Text zum Nachlesen."),
+    const ort = (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); };
+    zeige(kopf("🏛️ Panthéon", startseite, "Deine Hall of Fame: Paris, Super-héros, Stars und Dialogues."),
+      el("h2", {}, "🗼 Paris"),
+      el("p", { class: "klein" }, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort · tipp auf einen Ort: kleiner Film, danach der Text.` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
+      parisKarte(frei, ort),
       fakt,
-      el("div", { class: "namen-raster" }, D.paris.map((o, i) => i < frei
-        ? el("button", { type: "button", class: "namen-knopf gold", onclick: () => { if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); } }, el("span", { class: "medaille", "aria-hidden": "true" }, o.symbol), el("span", { lang: "fr" }, o.name))
-        : el("button", { type: "button", class: "namen-knopf gesperrt", disabled: true }, el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?")))));
-  }
-
-  /* ---------- 🏛️ Panthéon ---------- */
-  function pantheon() {
-    zeige(kopf("🏛️ Panthéon", startseite, "Deine Sammlung: geschaffte Dialoge und Namen. Gold = auch ohne Vorbild."),
-      el("h2", {}, "🏅 Dialogues"),
-      el("div", { class: "namen-raster" }, D.dialoge.map((d) => {
-        const n = schritteFertig(d);
-        return el("button", { type: "button", class: "namen-knopf" + (n === SCHRITTE.length ? " gold" : n ? "" : " gesperrt"), onclick: () => dialogSeite(d) },
-          el("span", { class: "medaille", "aria-hidden": "true" }, n === SCHRITTE.length ? "🏅" : n ? "💬" : "🔒"), el("span", { lang: "fr" }, d.titel), el("small", {}, `${n}/${SCHRITTE.length}`));
-      })),
+      (D.regions || []).length ? el("section", { class: "karte niveau2" }, el("h3", {}, "🇫🇷 La France · Niveau 2"),
+        el("p", { class: "klein" }, `Bald: die Karte von Frankreich mit ${D.regions.length} Régions – nach Paris geht die Reise weiter.`),
+        el("div", { class: "region-liste" }, D.regions.map((r) => el("span", { class: "chip gesperrt", lang: "fr" }, `${r.symbol} ${r.name}`)))) : null,
+      el("h2", {}, "🦸 Super-héros"),
+      el("p", { class: "klein" }, `${heldenFrei()}/${(D.helden || []).length} Karten · jeder geschaffte Dialogue schaltet eine Karte frei.`),
+      el("div", { class: "helden-raster" }, (D.helden || []).map(heldKnopf)),
       Object.entries(D.gruppen).map(([g, titel]) => [el("h2", {}, titel),
         el("div", { class: "namen-raster" }, D.namen.filter((n) => n.gruppe === g).map((n) => {
           const s = namenStufe(n);
           return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : s ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
             bild(n, 64), el("span", { lang: "fr" }, s ? n.name : "?"));
         }))]),
-      el("h2", {}, "🗼 Paris"),
-      el("div", { class: "namen-raster" }, D.paris.map((o, i) => i < parisFrei()
-        ? el("button", { type: "button", class: "namen-knopf gold", onclick: () => parisFilm(o) }, el("span", { class: "medaille", "aria-hidden": "true" }, o.symbol), el("span", { lang: "fr" }, o.name))
-        : el("button", { type: "button", class: "namen-knopf gesperrt", onclick: parisSeite }, el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?")))));
+      el("h2", {}, "🏅 Dialogues"),
+      el("div", { class: "namen-raster" }, D.dialoge.map((d) => {
+        const n = schritteFertig(d);
+        return el("button", { type: "button", class: "namen-knopf" + (n === SCHRITTE.length ? " gold" : n ? "" : " gesperrt"), onclick: () => dialogSeite(d) },
+          el("span", { class: "medaille", "aria-hidden": "true" }, n === SCHRITTE.length ? "🏅" : n ? "💬" : "🔒"), el("span", { lang: "fr" }, d.titel), el("small", {}, `${n}/${SCHRITTE.length}`));
+      })));
   }
 
   leiste();

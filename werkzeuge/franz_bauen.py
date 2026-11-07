@@ -107,7 +107,11 @@ def main():
         a, b = f"audio/paris/{z['id']}.mp3", f"bilder/paris/{z['id']}.jpg"
         paris.append({"id": z["id"], "name": z["name"], "symbol": z["symbol"], "x": int(z["x"]), "y": int(z["y"]), "fr": z["fr"], "de": z["de"],
                       "audio": a if vorhanden(a) else None, "foto": b if vorhanden(b) else None, "quelle": pquellen.get(z["id"]) if vorhanden(b) else None})
-    daten = {"dialoge": list(dialoge.values()), "paris": paris, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    # Super-héros (7.11.): Sammelkarten im Panthéon, gezeichnet von der Runner-Engine (Spalte zeichnung = Held der Englisch-Apps, Entwurf);
+    # Spalte ab = Zahl der geschafften Dialoge, ab der die Karte frei ist. Régions (regions.tsv): Frankreich-Karte als Niveau 2, vorbereitet.
+    helden = [dict(z, ab=int(z["ab"])) for z in tsv("helden.tsv")] if os.path.exists(os.path.join(INHALT, "helden.tsv")) else []
+    regions = tsv("regions.tsv") if os.path.exists(os.path.join(INHALT, "regions.tsv")) else []
+    daten = {"dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:

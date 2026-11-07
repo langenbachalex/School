@@ -58,6 +58,12 @@ Gebaut und gepusht am 6./7.11.: alle 50 Staaten-Szenen mit längeren Texten, Voi
 5. **Kleine Mängel** – **behoben 7.11. (66f3fce):** Times Square (Tafeln schmaler, `nachZoomMax` 1,04), Camilla-Taxi 16 px höher, NC-Zähler echtzeit (Szene jetzt 15,4 s, Stimme 4 s früher fertig – Mr. Alex prüft), ME-Tafel nach links, NJ „the most people/very few“ statt Zahlen.
 6. **Sync-light** (Server-Spielstand): Entscheidungen offen.
 
+## Französisch-App: Panthéon = Hall of Fame (Umbau 7.11., Entscheidung Mr. Alex, Chat „Fotos“)
+- **Startseite:** nur vier Kacheln (Dialogues, Prononciation, Jeux, Beat-Studio); die Paris-Kachel ist weg, Paris liegt im Panthéon (Knopf oben wie „Hall of Fame“ in den Englisch-Apps).
+- **Panthéon, Reihenfolge:** 🗼 Paris-Karte (eingebettet, mit Film/Text je Ort) → 🇫🇷 La France · Niveau 2 (vorbereitet: `inhalte/franz/regions.tsv`, 13 Régions mit Chef-lieu als graue Chips; Karte und Freischaltung offen) → 🦸 Super-héros → ⚽ Footballeurs / 🏛️ Personnalités / ⭐ Stars / 📍 Lieux → 🏅 Dialogues.
+- **Super-héros (Entwurf):** `inhalte/franz/helden.tsv` – 10 Helden aus den Helden-Wendungen (`wendungen_helden.tsv`): Loupe (le détective), Fantôme (l'invisible), Gadget (l'inventeur), Lumière (le laser), Hourra (la fête), Rigolo (le clown), Chrono (le temps), Éclair (le rapide), Costaud (le fort), Calme (le protecteur); jede Karte trägt ihre Wendung (fr/de, Écoute = Geräte-Stimme). **Zeichnungen vorerst von den Klasse-9-Helden geliehen** (Spalte `zeichnung`: molly, holly, archie, ally, rosie, benny, eddie, cody, gus, bonnie) – eigene französische Helden-Zeichnungen, Stimmen und Filme sind offen (Regeln Briefing 7.11.). Freischaltung: Karte i frei ab i geschafften Dialogues (Spalte `ab`), erste Karte sofort; neue Karte zeigt die Startseite groß („Nouveau super-héros“), `stand.helden` zählt die gezeigten.
+- **Offen:** Mechanismus zum Freischalten der Fußballer/Persönlichkeiten im Panthéon (bisher über Prononciation; Idee: eine Karte je Spiel oder Zufallskarte – passt zu den Folien-Karten), Frankreich-Karte Niveau 2 zeichnen (SVG wie Paris) mit Freischaltung über Punkte.
+
 ## Idee 7.11.: Folien-Karten (Superhelden als Sammelkarten mit Bronze/Silber/Gold) – alle Apps (Kl. 6, Kl. 9, später Französisch)
 **Entscheidung Mr. Alex 7.11.: große Version bauen** (eigener Block `/load Folien-Karten`, OK vor dem Bau wie üblich). Status: offen, Konzept freigegeben.
 - **Stufe je Held im Spielstand** (0 normal, 1 Bronze, 2 Silber, 3 Gold), Aufstiege laufen über das Ereignisprotokoll (sichtbar im Lehrer-Bereich, nicht manipulierbar).

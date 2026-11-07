@@ -1798,6 +1798,7 @@
         }
       }
     }
+    goldPruefen(true); // Golden Files (Regel B)
     punkteDazu(plus, { art: istGym ? "g" : "t", boni });
   }
   // Wiederholungsbonus für eine komplett wiederholte Station / einen komplett wiederholten Abschnitt (6.11.)
@@ -2252,9 +2253,9 @@
         m[1], el("span", { class: "akten-de", lang: "de" }, m[2]));
     });
   }
-  function aktenZeigen(a) {
+  function aktenZeigen(a, gold) {
     const gesehen = new Set(), lobBox = el("p", { class: "gym-lob", "aria-live": "polite" });
-    feier.classList.add("akte");
+    feier.classList.add("akte"); feier.classList.toggle("gold-akte", !!gold);
     feier.replaceChildren(
       el("h2", { lang: "en" }, a.titel),
       el("p", { class: "klein" }, T("Tipp auf ein farbiges Wort: Dann siehst du die Bedeutung.", "Tap a coloured word to see what it means.")),
@@ -2265,8 +2266,8 @@
         return el("li", {}, el("span", { lang: "en" }, f.frage), " ", knopf(T("Lösung", "Solution"), () => { lsg.hidden = false; gesehen.add(f); if (gesehen.size === a.fragen.length && !lobBox.textContent) lobBox.textContent = lob(true); }, "leise"), lsg);
       })),
       lobBox,
-      el("div", { class: "knopfreihe" }, knopf(T("Schließen", "Close"), () => { feier.close(); feier.classList.remove("akte"); }, "haupt")));
-    feier.addEventListener("close", () => feier.classList.remove("akte"), { once: true });
+      el("div", { class: "knopfreihe" }, knopf(T("Schließen", "Close"), () => { feier.close(); feier.classList.remove("akte", "gold-akte"); }, "haupt")));
+    feier.addEventListener("close", () => feier.classList.remove("akte", "gold-akte"), { once: true });
     feier.showModal();
   }
   function aktenBereich() {
@@ -2278,7 +2279,35 @@
             el("small", {}, T("Du brauchst: ", "You need: ") + (SP.landmarks.find((l) => l.id === a.figur) || {}).name + " + " + (SP.staaten.find((s) => s.id === a.ort) || {}).name));
     });
     return el("section", { class: "satzkarte" }, el("h2", {}, `🔒 Road Trip Files (${SP.akten.filter((a) => spielstand().karten.includes(a.figur) && SP.staaten.findIndex((s) => s.id === a.ort) < staatenFrei()).length} / ${SP.akten.length})`),
-      el("p", { class: "klein" }, T("Eine Akte öffnet sich, wenn du die Landmark-Karte hast und den Staat freigeschaltet hast.", "A file opens when you have the landmark card and have unlocked the state.")), el("div", { class: "akten" }, kacheln));
+      el("p", { class: "klein" }, T("Eine Akte öffnet sich, wenn du die Landmark-Karte hast und den Staat freigeschaltet hast.", "A file opens when you have the landmark card and have unlocked the state.")), el("div", { class: "akten" }, kacheln), goldTeil());
+  }
+  /* Golden Files (Regel B, 7.11.2026, docs/secret-level/konzept-entwurf.md): SP.gold aus inhalte/klasse9/goldakten.tsv.
+     art „serie“ = so viele Schultage am Stück (serie()), art „wochen“ = so viele perfekte Wochen insgesamt (sp.wochen).
+     Einmal erreicht, bleibt die Akte offen (sp.gold = [ids], im Siegel) – auch wenn die Serie später reißt. */
+  const goldText = (a) => a.art === "serie" ? T(`${a.ziel} Schultage am Stück`, `${a.ziel} school days in a row`) : T(`${a.ziel} perfekte Wochen`, `${a.ziel} perfect weeks`);
+  function goldPruefen(feiern) {
+    const sp = spielstand(), n = serie();
+    if (!Array.isArray(sp.gold)) sp.gold = [];
+    const neu = (SP.gold || []).filter((a) => !sp.gold.includes(a.id) && (a.art === "serie" ? n : sp.wochen.length) >= a.ziel);
+    for (const a of neu) {
+      sp.gold.push(a.id);
+      if (feiern) ereignisse.push({ art: "feier", symbol: "🌟", titel: "Golden File unlocked!",
+        text: T(`${goldText(a)} – eine goldene Akte ist offen: „${a.titel.replace(/^.*? – /, "")}“. Du findest sie in deiner Sammlung.`,
+          `${goldText(a)} – a golden file is open: “${a.titel.replace(/^.*? – /, "")}”. You can find it in your collection.`) });
+    }
+    return neu.length > 0;
+  }
+  function goldTeil() {
+    if (!(SP.gold || []).length) return null;
+    if (goldPruefen(false)) speichern();
+    const sp = spielstand();
+    return el("div", { class: "gold-akten" }, el("h3", {}, `🌟 Golden Files (${SP.gold.filter((a) => sp.gold.includes(a.id)).length} / ${SP.gold.length})`),
+      el("p", { class: "klein" }, T("Besondere Geschichten für alle, die dranbleiben: nach einer Serie von Schultagen oder nach perfekten Wochen.",
+        "Special stories for everyone who keeps going: after a streak of school days or after perfect weeks.")),
+      el("div", { class: "akten" }, SP.gold.map((a) => sp.gold.includes(a.id)
+        ? el("button", { class: "akte-kachel offen gold", onclick: () => aktenZeigen(a, true) }, el("span", { "aria-hidden": "true" }, "🌟"), el("strong", { lang: "en" }, a.titel))
+        : el("div", { class: "akte-kachel zu gold" }, el("span", { "aria-hidden": "true" }, "🔒"), el("strong", { lang: "en" }, a.titel.replace(/ – .*/, "")),
+            el("small", {}, T("Du brauchst: ", "You need: ") + goldText(a))))));
   }
 
   function karteZeigen(l) { // Karte mit Szene: erst die Szene, danach die Karte (ohne automatisches Vorlesen)

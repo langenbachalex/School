@@ -492,6 +492,8 @@ def spieldaten():
         "helden": [{"id": z["id"], "name": z["name"], "kraft": z["kraft"], "steckbrief": z["steckbrief"], "intro": z["intro"],
                     "intro_audio": a(f"audio/helden/intro_{z['id']}.mp3")} for z in tsv("helden.tsv")],
         "akten": [dict(z, absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in tsv("geheimakten.tsv")],
+        # Goldene Akten (Regel B, 7.11.2026): Freischaltung nach Serie (art „serie“, ziel = Schultage am Stück) oder perfekten Wochen (art „wochen“, ziel = Anzahl)
+        "gold": [dict(z, ziel=int(z["ziel"]), absaetze=z["text"].split(" ¶ "), fragen=[dict(zip(("frage", "antwort"), f.split("|"))) for f in z["fragen"].split(";;")]) for z in tsv("goldakten.tsv")],
         # Border Patrol (Games): Wortpaare britisch/amerikanisch; Einzelwort-Audios kommen nach Freigabe (sonst Geräte-Stimme)
         "patrol": [{"id": z["id"], "be": z["be_wort"], "ae": z["luecke"], "de": z["wort_de"],
                     "audio_be": a(f"audio/beae/w_{z['id']}_be.mp3"), "audio_ae": a(f"audio/beae/w_{z['id']}_ae.mp3")} for z in tsv("beae.tsv")],

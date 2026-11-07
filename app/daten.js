@@ -6701,6 +6701,101 @@ window.DATEN = {
     ]
    }
   ],
+  "gold": [
+   {
+    "id": "gold_hero_club",
+    "art": "serie",
+    "ziel": 5,
+    "titel": "Gold File 01 – The Secret Club Under Big Ben",
+    "text": "Every day at {4 o’clock|4 Uhr}, the heroes meet. Nobody knows where. ¶ Under Big Ben, there is a {secret|geheim} door. Behind the door, there is a room with ten chairs. It is the Hero Club! ¶ Today Leo the Lion is the {boss|der Chef}. “We have a {problem|ein Problem},” he says. “We need a new {member|ein Mitglied}. Who practises every day?” ¶ Olivia the Owl opens her {notebook|das Notizbuch}. “I watch the city every night,” she says. “I know a kid. This kid practises English every school day. Five days {in a row|hintereinander}!” ¶ Max the Monkey jumps on his chair. “Five days? That’s {amazing|unglaublich}!” ¶ Leo smiles. “Then this kid gets the {golden key|der goldene Schlüssel}.” ¶ Tessa the Turtle writes a letter. It says: “Dear friend, welcome to the Hero Club. Our {password|das Passwort} is ‘Keep going!’ See you at 4 o’clock.” ¶ And who is the kid? Look at the letter. It’s you!",
+    "fragen": [
+     {
+      "frage": "When do the heroes meet?",
+      "antwort": "At 4 o’clock."
+     },
+     {
+      "frage": "Where is the Hero Club?",
+      "antwort": "Under Big Ben, behind a secret door."
+     },
+     {
+      "frage": "What is the password?",
+      "antwort": "“Keep going!”"
+     }
+    ],
+    "absaetze": [
+     "Every day at {4 o’clock|4 Uhr}, the heroes meet. Nobody knows where.",
+     "Under Big Ben, there is a {secret|geheim} door. Behind the door, there is a room with ten chairs. It is the Hero Club!",
+     "Today Leo the Lion is the {boss|der Chef}. “We have a {problem|ein Problem},” he says. “We need a new {member|ein Mitglied}. Who practises every day?”",
+     "Olivia the Owl opens her {notebook|das Notizbuch}. “I watch the city every night,” she says. “I know a kid. This kid practises English every school day. Five days {in a row|hintereinander}!”",
+     "Max the Monkey jumps on his chair. “Five days? That’s {amazing|unglaublich}!”",
+     "Leo smiles. “Then this kid gets the {golden key|der goldene Schlüssel}.”",
+     "Tessa the Turtle writes a letter. It says: “Dear friend, welcome to the Hero Club. Our {password|das Passwort} is ‘Keep going!’ See you at 4 o’clock.”",
+     "And who is the kid? Look at the letter. It’s you!"
+    ]
+   },
+   {
+    "id": "gold_teapot",
+    "art": "wochen",
+    "ziel": 4,
+    "titel": "Gold File 02 – The King’s Golden Teapot",
+    "text": "At Buckingham Palace, tea time is at {five o’clock|fünf Uhr}. Every day, the King drinks tea from a {golden teapot|eine goldene Teekanne}. ¶ But today the teapot isn’t there! The {guards|die Wachen} look in the kitchen. They look in the garden. No teapot. ¶ The King calls the Hero Club. Felix the Falcon flies over the palace. Zara the Zebra looks at every {footprint|der Fußabdruck}. ¶ “Look!” says Zara. “Small footprints. They go up to the {roof|das Dach}.” ¶ Kenji the Kangaroo jumps up on the roof. And there is Max the Monkey with the teapot! ¶ “Max! What are you doing?” asks Kenji. Max looks sad. “I want to make tea for you. It’s a {surprise|eine Überraschung}. You are a great team!” ¶ Everybody laughs. At five o’clock, everybody drinks tea on the roof. ¶ Then the King {holds up|hält hoch} a {golden cup|eine goldene Tasse}. “This cup is for our friend with four {perfect weeks|perfekte Wochen}!”",
+    "fragen": [
+     {
+      "frage": "When is tea time at the palace?",
+      "antwort": "At five o’clock."
+     },
+     {
+      "frage": "Where is the teapot?",
+      "antwort": "On the roof, with Max the Monkey."
+     },
+     {
+      "frage": "Why does Max take the teapot?",
+      "antwort": "He wants to make tea for his friends. It’s a surprise."
+     }
+    ],
+    "absaetze": [
+     "At Buckingham Palace, tea time is at {five o’clock|fünf Uhr}. Every day, the King drinks tea from a {golden teapot|eine goldene Teekanne}.",
+     "But today the teapot isn’t there! The {guards|die Wachen} look in the kitchen. They look in the garden. No teapot.",
+     "The King calls the Hero Club. Felix the Falcon flies over the palace. Zara the Zebra looks at every {footprint|der Fußabdruck}.",
+     "“Look!” says Zara. “Small footprints. They go up to the {roof|das Dach}.”",
+     "Kenji the Kangaroo jumps up on the roof. And there is Max the Monkey with the teapot!",
+     "“Max! What are you doing?” asks Kenji. Max looks sad. “I want to make tea for you. It’s a {surprise|eine Überraschung}. You are a great team!”",
+     "Everybody laughs. At five o’clock, everybody drinks tea on the roof.",
+     "Then the King {holds up|hält hoch} a {golden cup|eine goldene Tasse}. “This cup is for our friend with four {perfect weeks|perfekte Wochen}!”"
+    ]
+   },
+   {
+    "id": "gold_night_london",
+    "art": "serie",
+    "ziel": 10,
+    "titel": "Gold File 03 – The Night London Stops",
+    "text": "It is {eleven o’clock at night|elf Uhr nachts}. Olivia the Owl starts her {night shift|die Nachtschicht}. Suddenly, all the lights in London go out. ¶ The London Eye stops. The Tube stops. Big Ben is quiet. “Oh no,” says Olivia. “The city needs {light|das Licht}!” ¶ Olivia calls the heroes. They get up, but they are tired. Penny the Penguin brings hot chocolate. Ellie the Elephant brings a big {torch|die Taschenlampe}. ¶ Camilla the Camel knows the way to the {power station|das Kraftwerk}. It is far, but she walks and walks. Everybody follows her. ¶ In the power station, a big {wheel|das Rad} doesn’t turn. “It’s too {heavy|schwer},” says Kenji. ¶ “Together!” says Leo. Ten heroes {push|schieben}. One, two, three … The wheel turns! The lights come on again. ¶ Olivia looks at the city. “Every hero is important,” she says. “And every day is important. Ten days in a row – {that’s the secret|das ist das Geheimnis}.” ¶ At {midnight|Mitternacht}, the London Eye turns again. And tonight it {shines|leuchtet} in gold.",
+    "fragen": [
+     {
+      "frage": "What happens at eleven o’clock at night?",
+      "antwort": "All the lights in London go out."
+     },
+     {
+      "frage": "What does Penny bring?",
+      "antwort": "Hot chocolate."
+     },
+     {
+      "frage": "How do the heroes turn the wheel?",
+      "antwort": "They push together."
+     }
+    ],
+    "absaetze": [
+     "It is {eleven o’clock at night|elf Uhr nachts}. Olivia the Owl starts her {night shift|die Nachtschicht}. Suddenly, all the lights in London go out.",
+     "The London Eye stops. The Tube stops. Big Ben is quiet. “Oh no,” says Olivia. “The city needs {light|das Licht}!”",
+     "Olivia calls the heroes. They get up, but they are tired. Penny the Penguin brings hot chocolate. Ellie the Elephant brings a big {torch|die Taschenlampe}.",
+     "Camilla the Camel knows the way to the {power station|das Kraftwerk}. It is far, but she walks and walks. Everybody follows her.",
+     "In the power station, a big {wheel|das Rad} doesn’t turn. “It’s too {heavy|schwer},” says Kenji.",
+     "“Together!” says Leo. Ten heroes {push|schieben}. One, two, three … The wheel turns! The lights come on again.",
+     "Olivia looks at the city. “Every hero is important,” she says. “And every day is important. Ten days in a row – {that’s the secret|das ist das Geheimnis}.”",
+     "At {midnight|Mitternacht}, the London Eye turns again. And tonight it {shines|leuchtet} in gold."
+    ]
+   }
+  ],
   "frei": [
    {
     "von": "2026-10-05",

@@ -33,3 +33,6 @@ Eine Akte mit 150 Wörtern = etwa 900 Zeichen Audio. Die Wortaufnahmen gibt es g
 
 ## Gebaut (24.10.2026)
 Klasse 6 `inhalte/geheimakten.tsv`, Klasse 9 `inhalte/klasse9/geheimakten.tsv` (Texte: `probe-geschichten.md`). In „Meine Sammlung“ erscheint der Bereich Geheimakten; Akte offen = Superheld/Landmark-Karte und Ort/Staat frei (Regel A). Wörter im Text `{Wort|Bedeutung}` sind antippbar, 3 Fragen mit Lösung. Weitere Akten = neue Zeilen im TSV (Figur-ID, Ort-ID, Titel, Text, Fragen).
+
+## Gebaut (7.11.2026): Regel B – goldene Akten
+Zusätzlich zu Regel A je Klasse 3 goldene Akten (`inhalte/goldakten.tsv`, `inhalte/klasse9/goldakten.tsv`; Spalten id, art, ziel, titel, text, fragen). Freischaltung: art `serie` = so viele Schultage am Stück (5 bzw. 10), art `wochen` = so viele perfekte Wochen insgesamt (4). Einmal erreicht, bleibt die Akte offen (`stand.spiel.gold`), mit Feier beim Üben; Anzeige unter den Geheimakten/Road Trip Files in goldener Optik. Keine Audios.

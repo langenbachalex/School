@@ -9597,6 +9597,100 @@ window.DATEN = {
     ]
    }
   ],
+  "gold": [
+   {
+    "id": "gold_yearbook",
+    "art": "serie",
+    "ziel": 5,
+    "titel": "Golden File 01 – The Girl in the Yearbook",
+    "text": "Jessica is helping the {yearbook|das Jahrbuch} club after school. The club room at Lincoln High is full of old boxes. ¶ “Look at this,” Jeremy says. He is holding a yearbook from 1976. On page 12 there is a photo of a girl. She looks exactly like Jessica. ¶ “That’s {creepy|unheimlich},” Jessica says. Under the photo it says: “Jessie Miller – Most likely to {travel the world|die Welt bereisen}.” ¶ Mrs. Garcia, the club {advisor|die Betreuerin}, smiles. “Oh, Jessie! She was my best friend. After graduation she drove across the country in an old van.” ¶ “What happened to her?” Jeremy asks. ¶ Mrs. Garcia opens her desk {drawer|die Schublade}. It is full of postcards – almost fifty, from every state. “She sends me one every year.” ¶ The newest card arrived this week. It says: “The trick is easy. Keep going, one day at a time.” ¶ Jessica looks at Jeremy. “I think we’ve just found our {role model|das Vorbild}.”",
+    "fragen": [
+     {
+      "frage": "What is Jessica doing after school?",
+      "antwort": "She is helping the yearbook club."
+     },
+     {
+      "frage": "Who is the girl in the 1976 photo?",
+      "antwort": "Jessie Miller, Mrs. Garcia’s best friend."
+     },
+     {
+      "frage": "What is in Mrs. Garcia’s desk drawer?",
+      "antwort": "Almost fifty postcards from Jessie, from every state."
+     }
+    ],
+    "absaetze": [
+     "Jessica is helping the {yearbook|das Jahrbuch} club after school. The club room at Lincoln High is full of old boxes.",
+     "“Look at this,” Jeremy says. He is holding a yearbook from 1976. On page 12 there is a photo of a girl. She looks exactly like Jessica.",
+     "“That’s {creepy|unheimlich},” Jessica says. Under the photo it says: “Jessie Miller – Most likely to {travel the world|die Welt bereisen}.”",
+     "Mrs. Garcia, the club {advisor|die Betreuerin}, smiles. “Oh, Jessie! She was my best friend. After graduation she drove across the country in an old van.”",
+     "“What happened to her?” Jeremy asks.",
+     "Mrs. Garcia opens her desk {drawer|die Schublade}. It is full of postcards – almost fifty, from every state. “She sends me one every year.”",
+     "The newest card arrived this week. It says: “The trick is easy. Keep going, one day at a time.”",
+     "Jessica looks at Jeremy. “I think we’ve just found our {role model|das Vorbild}.”"
+    ]
+   },
+   {
+    "id": "gold_gold_rush",
+    "art": "wochen",
+    "ziel": 4,
+    "titel": "Golden File 02 – Gold Rush",
+    "text": "Jeremy and Jessica are in Coloma, California. In 1848, a man {discovered|entdeckte} gold in the river here. Thousands of people came to get rich. ¶ Today, tourists can {pan for gold|Gold waschen}. Jeremy is standing in the cold water with a metal pan. After ten minutes he says, “This is so boring.” ¶ An old man is sitting on a rock. “{Patience|Geduld}, kid,” he says. “I’ve been doing this for forty years.” ¶ “Did you ever find anything?” Jessica asks. The man shows them a tiny {nugget|das Goldkorn}. “About one a month. The river pays you if you keep coming back.” ¶ Jeremy keeps going. Twenty minutes. Thirty. Forty. Then something {shines|glänzt} in his pan. ¶ “No way!” he shouts. It is smaller than a grain of rice, but it’s real gold. ¶ The old man laughs. “Most people {give up|aufgeben} after five minutes. You didn’t. That’s the real gold, kid.”",
+    "fragen": [
+     {
+      "frage": "What happened in Coloma in 1848?",
+      "antwort": "A man discovered gold in the river."
+     },
+     {
+      "frage": "How long has the old man been panning for gold?",
+      "antwort": "For forty years."
+     },
+     {
+      "frage": "What is “the real gold”, says the old man?",
+      "antwort": "Not giving up – Jeremy kept going."
+     }
+    ],
+    "absaetze": [
+     "Jeremy and Jessica are in Coloma, California. In 1848, a man {discovered|entdeckte} gold in the river here. Thousands of people came to get rich.",
+     "Today, tourists can {pan for gold|Gold waschen}. Jeremy is standing in the cold water with a metal pan. After ten minutes he says, “This is so boring.”",
+     "An old man is sitting on a rock. “{Patience|Geduld}, kid,” he says. “I’ve been doing this for forty years.”",
+     "“Did you ever find anything?” Jessica asks. The man shows them a tiny {nugget|das Goldkorn}. “About one a month. The river pays you if you keep coming back.”",
+     "Jeremy keeps going. Twenty minutes. Thirty. Forty. Then something {shines|glänzt} in his pan.",
+     "“No way!” he shouts. It is smaller than a grain of rice, but it’s real gold.",
+     "The old man laughs. “Most people {give up|aufgeben} after five minutes. You didn’t. That’s the real gold, kid.”"
+    ]
+   },
+   {
+    "id": "gold_route66_radio",
+    "art": "serie",
+    "ziel": 10,
+    "titel": "Golden File 03 – Live on Route 66",
+    "text": "The road is long and empty. Jeremy and Jessica stop at an old {diner|das Imbiss-Restaurant} on Route 66 in Arizona. ¶ In the corner, a woman is talking into a microphone. It’s a tiny radio station! “Hey, travelers!” she says. “Come and tell my {listeners|die Zuhörer} your story.” ¶ Jessica’s face goes red. “No way. I hate talking in public.” ¶ Jeremy {whispers|flüstert}, “Remember the cheerleading tryout? You were scared then, too. And you were great.” ¶ Jessica takes the microphone. At first her voice is shaking. She talks about the last ferry, the Golden Gate Bridge and the desert. Soon she is laughing. ¶ After the show, the phone rings. A listener says, “That was the best story this week!” ¶ The woman gives Jessica a golden {badge|der Anstecker}. It says: “Route 66 Radio – Guest Star.” ¶ “Ten days on the road,” Jeremy says, “and every day you get a bit {braver|mutiger}.” Jessica smiles. “Every day counts.”",
+    "fragen": [
+     {
+      "frage": "Where do Jeremy and Jessica stop?",
+      "antwort": "At an old diner on Route 66 in Arizona."
+     },
+     {
+      "frage": "Why doesn’t Jessica want to talk at first?",
+      "antwort": "She hates talking in public."
+     },
+     {
+      "frage": "What does the woman give Jessica?",
+      "antwort": "A golden badge: “Route 66 Radio – Guest Star.”"
+     }
+    ],
+    "absaetze": [
+     "The road is long and empty. Jeremy and Jessica stop at an old {diner|das Imbiss-Restaurant} on Route 66 in Arizona.",
+     "In the corner, a woman is talking into a microphone. It’s a tiny radio station! “Hey, travelers!” she says. “Come and tell my {listeners|die Zuhörer} your story.”",
+     "Jessica’s face goes red. “No way. I hate talking in public.”",
+     "Jeremy {whispers|flüstert}, “Remember the cheerleading tryout? You were scared then, too. And you were great.”",
+     "Jessica takes the microphone. At first her voice is shaking. She talks about the last ferry, the Golden Gate Bridge and the desert. Soon she is laughing.",
+     "After the show, the phone rings. A listener says, “That was the best story this week!”",
+     "The woman gives Jessica a golden {badge|der Anstecker}. It says: “Route 66 Radio – Guest Star.”",
+     "“Ten days on the road,” Jeremy says, “and every day you get a bit {braver|mutiger}.” Jessica smiles. “Every day counts.”"
+    ]
+   }
+  ],
   "patrol": [
    {
     "id": "ba_01",

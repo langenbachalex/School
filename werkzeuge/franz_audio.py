@@ -1,7 +1,7 @@
 """Erzeugt fehlende Audios der Französisch-App mit ElevenLabs (Eleven v4).
 
 Dialoge: je Zeile eine Datei, A = Jules, B = Cécile (gleicher Satz + gleiche Stimme = eine Datei).
-Namen (Prononciation) und Paris-Orte: Mr. Alex' eigene Stimme.
+Namen (Prononciation), Paris-Orte, Paris-Run-Zurufe und -Wörter: Mr. Alex' eigene Stimme; Paris-Run-Cameos: Heldenstimmen.
 Vorhandene Dateien bleiben. Neu erzeugen: Datei löschen. Danach werkzeuge/franz_bauen.py laufen lassen.
 Aufruf: python3 werkzeuge/franz_audio.py [--zaehlen]
 """
@@ -42,6 +42,11 @@ def auftraege():
         yield "alex", "[French] " + z["fr"].replace("Louis XIV", "Louis quatorze"), f"audio/paris/{z['id']}.mp3"
     for z in fb.tsv("helden.tsv"):  # Superhelden: Selbstvorstellung mit Tag passend zum Charakter
         yield "held:" + z["stimme"], f"{z['tags']} {z['intro_fr']}", f"audio/helden/intro_{z['id']}.mp3"
+    tags = {z["id"]: z["tags"] for z in fb.tsv("helden.tsv")}
+    for gruppe, key, text, rel, stimme in fb.paris_runner():  # Paris Run (7.11.): Zurufe/Hinweise/Boss Mr. Alex mit [French], Cameo-Sätze mit Heldenstimme + Tag
+        yield stimme, (f"{tags.get(key, '')} {text}".strip() if gruppe == "cameo" else "[French] " + text), rel
+    for z in fb.tsv("woerter.tsv"):  # Wörter für den Paris Run: Mr. Alex' Stimme
+        yield "alex", "[French] " + z["fr"] + ".", fb.audio_name("alex", z["fr"])
 
 
 def main():

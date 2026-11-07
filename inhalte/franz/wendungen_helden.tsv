@@ -1,16 +1,16 @@
 id	art	fr	de	ipa	held_vorschlag	status
-w01	held	Qu'est-ce que c'est que ce truc-là ?	Was ist denn das für ein Ding da?	[kɛs kə sɛ kə sə tʁyk *la*]	der Neugierige / Detektiv	Vorschlag Mr. Alex
-w02	held	Il y a quelqu'un ?	Ist da jemand?	[i.l‿ja kɛl.*kœ̃*]	der Unsichtbare	Vorschlag Mr. Alex (quelqu'un)
-w03	held	J'ai quelque chose pour toi !	Ich hab was für dich!	[ʒe kɛl.kə ʃoz puʁ *twa*]	der Erfinder / Geschenke-Held	Vorschlag Mr. Alex (quelque)
-w04	held	C'est très clair !	Ganz klar!	[sɛ tʁɛ *klɛʁ*]	der Licht-/Laser-Held	Vorschlag Mr. Alex (très clair)
-w05	held	C'est trop bien !	Das ist mega!	[sɛ tʁo *bjɛ̃*]	der Jubel-Held	Vorschlag Claude
-w06	held	N'importe quoi !	So ein Quatsch!	[nɛ̃.pɔʁt *kwa*]	der Spaßvogel	Vorschlag Claude
-w07	held	C'est pas vrai !	Das gibt's doch nicht!	[sɛ pa *vʁɛ*]	der Staunende / Zeitstopper	Vorschlag Claude
-w08	held	Vas-y ! Allez, viens !	Los! Komm schon!	[va.*zi* | a.le *vjɛ̃*]	der Schnelle	Vorschlag Claude
-w09	held	Ça marche !	Geht klar!	[sa *maʁʃ*]	der Starke / Macher	Vorschlag Claude
-w10	held	Pas de souci !	Kein Problem!	[pa də su.*si*]	der Ruhige / Beschützer	Vorschlag Claude
-w11	held	Oh là là !	Oh je! / Wow!	[o la *la*]	Reserve	Vorschlag Claude
-w12	held	Attends !	Warte!	[a.*tɑ̃*]	Reserve	Vorschlag Claude
+w01	held	Qu'est-ce que c'est que ce truc-là ?	Was ist denn das für ein Ding da?	[kɛs kə sɛ kə sə tʁyk *la*]	der Neugierige / Detektiv	freigegeben 7.11.
+w02	held	Il y a quelqu'un ?	Ist da jemand?	[i.l‿ja kɛl.*kœ̃*]	der Unsichtbare	freigegeben 7.11.
+w03	held	J'ai quelque chose pour toi !	Ich hab was für dich!	[ʒe kɛl.kə ʃoz puʁ *twa*]	der Erfinder / Geschenke-Held	freigegeben 7.11.
+w04	held	C'est très clair !	Ganz klar!	[sɛ tʁɛ *klɛʁ*]	der Licht-/Laser-Held	freigegeben 7.11.
+w05	held	C'est trop bien !	Das ist mega!	[sɛ tʁo *bjɛ̃*]	der Jubel-Held	freigegeben 7.11.
+w06	held	N'importe quoi !	So ein Quatsch!	[nɛ̃.pɔʁt *kwa*]	der Spaßvogel	freigegeben 7.11.
+w07	held	C'est pas vrai !	Das gibt's doch nicht!	[sɛ pa *vʁɛ*]	der Staunende / Zeitstopper	freigegeben 7.11.
+w08	held	Vas-y ! Allez, viens !	Los! Komm schon!	[va.*zi* | a.le *vjɛ̃*]	der Schnelle	freigegeben 7.11.
+w09	held	Ça marche !	Geht klar!	[sa *maʁʃ*]	der Starke / Macher	freigegeben 7.11.
+w10	held	Pas de souci !	Kein Problem!	[pa də su.*si*]	der Ruhige / Beschützer	freigegeben 7.11.
+w11	held	Oh là là !	Oh je! / Wow!	[o la *la*]	Reserve	Reserve, freigegeben 7.11.
+w12	held	Attends !	Warte!	[a.*tɑ̃*]	Reserve	Reserve, freigegeben 7.11.
 r01	runner	À gauche !	Nach links!	[a *ɡoʃ*]	–	Idee Mr. Alex („A GUSCH“)
 r02	runner	À droite !	Nach rechts!	[a *dʁwat*]	–	Idee Mr. Alex
 r03	runner	Saute !	Spring!	[*sot*]	–	Vorschlag Claude

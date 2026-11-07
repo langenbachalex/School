@@ -1,5 +1,10 @@
 // AUTOMATISCH ERZEUGT von werkzeuge/franz_bauen.py aus inhalte/franz/ – hier nicht ändern.
 window.DATEN_FR = {
+ "runner": {
+  "alex": {},
+  "boss": {},
+  "cameo": {}
+ },
  "dialoge": [
   {
    "id": "d09",
@@ -4155,265 +4160,316 @@ window.DATEN_FR = {
    {
     "fr": "le foot",
     "de": "Fußball",
-    "symbol": "⚽"
+    "symbol": "⚽",
+    "audio": null
    },
    {
     "fr": "le basket",
     "de": "Basketball",
-    "symbol": "🏀"
+    "symbol": "🏀",
+    "audio": null
    },
    {
     "fr": "le tennis",
     "de": "Tennis",
-    "symbol": "🎾"
+    "symbol": "🎾",
+    "audio": null
    },
    {
     "fr": "le sport",
     "de": "Sport",
-    "symbol": "🏃"
+    "symbol": "🏃",
+    "audio": null
    },
    {
     "fr": "la musique",
     "de": "Musik",
-    "symbol": "🎵"
+    "symbol": "🎵",
+    "audio": null
    },
    {
     "fr": "chanter",
     "de": "singen",
-    "symbol": "🎤"
+    "symbol": "🎤",
+    "audio": null
    },
    {
     "fr": "danser",
     "de": "tanzen",
-    "symbol": "💃"
+    "symbol": "💃",
+    "audio": null
    },
    {
     "fr": "la console",
     "de": "die Konsole",
-    "symbol": "🎮"
+    "symbol": "🎮",
+    "audio": null
    },
    {
     "fr": "dessiner",
     "de": "zeichnen",
-    "symbol": "✏️"
+    "symbol": "✏️",
+    "audio": null
    },
    {
     "fr": "nager",
     "de": "schwimmen",
-    "symbol": "🏊"
+    "symbol": "🏊",
+    "audio": null
    },
    {
     "fr": "lire",
     "de": "lesen",
-    "symbol": "📖"
+    "symbol": "📖",
+    "audio": null
    },
    {
     "fr": "les devoirs",
     "de": "die Hausaufgaben",
-    "symbol": "📚"
+    "symbol": "📚",
+    "audio": null
    },
    {
     "fr": "la télé",
     "de": "das Fernsehen",
-    "symbol": "📺"
+    "symbol": "📺",
+    "audio": null
    },
    {
     "fr": "le cinéma",
     "de": "das Kino",
-    "symbol": "🎬"
+    "symbol": "🎬",
+    "audio": null
    },
    {
     "fr": "les animaux",
     "de": "die Tiere",
-    "symbol": "🐶"
+    "symbol": "🐶",
+    "audio": null
    },
    {
     "fr": "les vacances",
     "de": "die Ferien",
-    "symbol": "🏖️"
+    "symbol": "🏖️",
+    "audio": null
    },
    {
     "fr": "l'école",
     "de": "die Schule",
-    "symbol": "🏫"
+    "symbol": "🏫",
+    "audio": null
    },
    {
     "fr": "cuisiner",
     "de": "kochen",
-    "symbol": "🍳"
+    "symbol": "🍳",
+    "audio": null
    },
    {
     "fr": "faire du vélo",
     "de": "Rad fahren",
-    "symbol": "🚲"
+    "symbol": "🚲",
+    "audio": null
    },
    {
     "fr": "jouer au foot",
     "de": "Fußball spielen",
-    "symbol": "⚽"
+    "symbol": "⚽",
+    "audio": null
    },
    {
     "fr": "jouer à la console",
     "de": "Konsole spielen",
-    "symbol": "🎮"
+    "symbol": "🎮",
+    "audio": null
    }
   ],
   "zahl": [
    {
     "fr": "dix",
     "de": "zehn",
-    "symbol": "🔟"
+    "symbol": "🔟",
+    "audio": null
    },
    {
     "fr": "onze",
     "de": "elf",
-    "symbol": ""
+    "symbol": "",
+    "audio": null
    },
    {
     "fr": "douze",
     "de": "zwölf",
-    "symbol": ""
+    "symbol": "",
+    "audio": null
    },
    {
     "fr": "treize",
     "de": "dreizehn",
-    "symbol": ""
+    "symbol": "",
+    "audio": null
    },
    {
     "fr": "quatorze",
     "de": "vierzehn",
-    "symbol": ""
+    "symbol": "",
+    "audio": null
    },
    {
     "fr": "quinze",
     "de": "fünfzehn",
-    "symbol": ""
+    "symbol": "",
+    "audio": null
    },
    {
     "fr": "seize",
     "de": "sechzehn",
-    "symbol": ""
+    "symbol": "",
+    "audio": null
    },
    {
     "fr": "vingt",
     "de": "zwanzig",
-    "symbol": ""
+    "symbol": "",
+    "audio": null
    }
   ],
   "adj": [
    {
     "fr": "super",
     "de": "super",
-    "symbol": "👍"
+    "symbol": "👍",
+    "audio": null
    },
    {
     "fr": "cool",
     "de": "cool",
-    "symbol": "😎"
+    "symbol": "😎",
+    "audio": null
    },
    {
     "fr": "génial",
     "de": "genial",
-    "symbol": "🤩"
+    "symbol": "🤩",
+    "audio": null
    },
    {
     "fr": "nul",
     "de": "doof",
-    "symbol": "👎"
+    "symbol": "👎",
+    "audio": null
    },
    {
     "fr": "drôle",
     "de": "witzig",
-    "symbol": "😂"
+    "symbol": "😂",
+    "audio": null
    },
    {
     "fr": "bien",
     "de": "gut",
-    "symbol": "🙂"
+    "symbol": "🙂",
+    "audio": null
    },
    {
     "fr": "bon",
     "de": "gut",
-    "symbol": "👌"
+    "symbol": "👌",
+    "audio": null
    },
    {
     "fr": "vrai",
     "de": "wahr",
-    "symbol": "✅"
+    "symbol": "✅",
+    "audio": null
    },
    {
     "fr": "facile",
     "de": "leicht",
-    "symbol": "🪶"
+    "symbol": "🪶",
+    "audio": null
    },
    {
     "fr": "difficile",
     "de": "schwer",
-    "symbol": "🧱"
+    "symbol": "🧱",
+    "audio": null
    },
    {
     "fr": "nouveau",
     "de": "neu",
-    "symbol": "✨"
+    "symbol": "✨",
+    "audio": null
    },
    {
     "fr": "incroyable",
     "de": "unglaublich",
-    "symbol": "😮"
+    "symbol": "😮",
+    "audio": null
    }
   ],
   "chant": [
    {
     "fr": "bien",
     "de": "gut",
-    "symbol": "🎶"
+    "symbol": "🎶",
+    "audio": null
    },
    {
     "fr": "très bien",
     "de": "sehr gut",
-    "symbol": "🌟"
+    "symbol": "🌟",
+    "audio": null
    },
    {
     "fr": "très mal",
     "de": "sehr schlecht",
-    "symbol": "🙉"
+    "symbol": "🙉",
+    "audio": null
    },
    {
     "fr": "comme Angèle",
     "de": "wie Angèle",
-    "symbol": "🎤"
+    "symbol": "🎤",
+    "audio": null
    }
   ],
   "name": [
    {
     "fr": "Mbappé",
     "de": "Mbappé",
-    "symbol": "⚽"
+    "symbol": "⚽",
+    "audio": null
    },
    {
     "fr": "Angèle",
     "de": "Angèle",
-    "symbol": "🎤"
+    "symbol": "🎤",
+    "audio": null
    },
    {
     "fr": "Monsieur Alex",
     "de": "Monsieur Alex",
-    "symbol": "👨‍🏫"
+    "symbol": "👨‍🏫",
+    "audio": null
    },
    {
     "fr": "Kanté",
     "de": "Kanté",
-    "symbol": "⚽"
+    "symbol": "⚽",
+    "audio": null
    },
    {
     "fr": "Marie",
     "de": "Marie",
-    "symbol": "🙂"
+    "symbol": "🙂",
+    "audio": null
    },
    {
     "fr": "Lucas",
     "de": "Lucas",
-    "symbol": "🙂"
+    "symbol": "🙂",
+    "audio": null
    }
   ]
  },

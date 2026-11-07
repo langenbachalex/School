@@ -1076,6 +1076,32 @@
     (h) => { h.plat(150, 240, 150); h.plat(400, 180, 150); h.plat(650, 240, 150); h.geg('fuchs', 850, 1250); h.vor(1300); }, // 27
     (h) => { h.luecke(200, 170); h.auto('bus', 500, 1300); h.post(1350); h.vor(1500); },                // 28 Schluss: Themse + Bus
   ];
+  // Disco Run (Bonus-Level „Albernes Spaß-Level“, Idee C, 7.11.2026, alle drei Apps): bewusst übertrieben – alles im Takt, Tanzfläche, Lautsprecher-Kisten, tanzende Gegner,
+  // Boss DJ Funky Flamingo (Tanzduell = Boss-Frage), 12 Diamanten + 2 Tore wie Westminster (Wort 4 und 10), nur allgemeine Bausteine (Kiste = Lautsprecher, Lücke = Nebelgrube)
+  const MUSTER_DISCO = [
+    (h) => { h.dia(350); h.kiste(650); h.vor(900); },                                                   // 1 Aufwärmen: erster Lautsprecher
+    (h) => { h.kiste(250); h.kiste(290, 2); h.dia(300, 205); h.vor(800); },                             // 2 Lautsprecher-Treppe
+    (h) => { h.plat(150, 235, 160); h.dia(230, 195); h.geg('taube', 500, 720); h.vor(950); },           // 3 Plattform + tanzende Taube
+    (h) => { h.kiste(200, 2); h.dia(220, 215); h.geg('maus', 450, 800); h.vor(900); },                  // 4 Turm + Disco-Maus
+    (h) => { h.luecke(250, 150); h.geg('fuchs', 600, 900); h.vor(1000); },                              // 5 Nebelgrube + Fuchs
+    (h) => { h.plat(120, 240, 140); h.plat(360, 185, 140); h.vor(700); },                               // 6 Doppelplattform
+    (h) => { h.geg('eichhoernchen', 150, 450); h.kiste(600); h.dia(610, 230); h.vor(850); },            // 7 Eichhörnchen + Lautsprecher
+    (h) => { h.luecke(200, 170); h.dia(285, 210); h.vor(800); },                                        // 8 Grube mit Diamant darüber
+    (h) => { h.geg('maus', 100, 400); h.geg('taube', 500, 800); h.vor(950); },                          // 9 Tanzpaar
+    (h) => { h.plat(100, 245, 140); h.plat(380, 185, 140); h.dia(450, 145); h.vor(950); },              // 10 Doppelplattform hoch
+    (h) => { h.tor(400, 4, [5, 1]); h.vor(900); },                                                      // 11 TOR 1
+    (h) => { h.cp(150); h.geg('fuchs', 550, 850); h.vor(1000); },                                       // 12 CHECKPOINT 1
+    (h) => { h.kiste(150); h.kiste(190, 2); h.kiste(230, 3); h.kiste(270, 2); h.kiste(310); h.dia(230, 170); h.vor(750); }, // 13 Lautsprecher-Pyramide
+    (h) => { h.luecke(250, 160); h.geg('eichhoernchen', 600, 900); h.vor(1000); },                      // 14 Grube + Eichhörnchen
+    (h) => { h.plat(150, 240, 160); h.plat(400, 180, 160); h.plat(650, 240, 160); h.dia(480, 140); h.vor(1050); }, // 15 Dreier-Plattform
+    (h) => { h.geg('taube', 150, 450); h.geg('maus', 550, 850); h.vor(1000); },             // 16 Polonaise
+    (h) => { h.tor(350, 10, [7, 9]); h.vor(850); },                                                     // 17 TOR 2
+    (h) => { h.cp(150); h.kiste(550); h.kiste(590, 2); h.vor(850); },                                   // 18 CHECKPOINT 2
+    (h) => { h.luecke(200, 190); h.plat(150, 230, 320); h.dia(310, 190); h.geg('fuchs', 650, 950); h.vor(1150); }, // 19 Plattform über der Grube
+    (h) => { h.dia(200); h.plat(450, 240, 140); h.plat(700, 175, 140); h.dia(770, 135); h.vor(1050); }, // 20
+    (h) => { h.geg('eichhoernchen', 150, 400); h.geg('taube', 450, 750); h.kiste(850); h.vor(1050); },  // 21 Tanzgruppe
+    (h) => { h.luecke(200, 170); h.kiste(550, 2); h.vor(900); },                                        // 22 Schluss: Grube + Turm
+  ];
   // Story-Modus London Welt 1 „The Guard Who Never Moved“ (31.10., docs/runner/story-london-01.md; nur mit Option story): dieselbe Strecke wie MUSTER_WESTMINSTER, dazu
   // 12 Story-Kristalle ♪ je Lauf (h.kristall(dx, y, nr, strang): Anfang 1–4 · Gabelung nach 4: A5 unten auf der Straße, B5 oben auf einem geparkten Doppeldecker (h.parkbus) ·
   // Strang A (unten) / B (oben) 6–8 an denselben Stellen · gemeinsam 9–10 · Ende 11–12 (strang 'E' = folgt dem Strang) hinter dem Boss im Finale),
@@ -1885,6 +1911,7 @@
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
     alexLetzteZeit = -99; alexLetzterMoment = null; alexLetzterKey = {}; alexGesagt = []; alexHalb = false; toreSerie = 0;
+    discoTanz = 0; discoSchritt = 0; discoNaechster = 0; discoStart = null;   // Disco Run
     trommelt = 0; dunkel = 0; radWinkel = 0; radRueck = 0; kameraHoch = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 60, y: BODEN_Y, flug: 0 } : null;
     klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
     spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null; tuerAnsagen = 0; nyDurchsage = false; durchsagenGesprochen = [];   // The Tube, New York (U-Bahn-Durchsage)
@@ -1977,7 +2004,7 @@
   const ALEX_ABSTAND = 20, ALEX_IMMER = ['ende', 'fail'];
   let alexLetzteZeit = -99, alexLetzterMoment = null, alexLetzterKey = {}, alexGesagt = [], alexHalb = false, toreSerie = 0;
   function alexSagen(moment) {
-    const liste = ((W && W.zurufe) || ALEX_ZURUFE)[moment]; if (!liste || nurFilm) return null;
+    const liste = (W && W.zurufe && W.zurufe[moment]) || (W && W.zurufeNur ? null : ALEX_ZURUFE[moment]); if (!liste || nurFilm) return null;   // Disco Run: eigene Zurufe (Französisch nur diese)
     const immer = ALEX_IMMER.includes(moment);
     if (!immer && (moment === alexLetzterMoment || zeit - alexLetzteZeit < ALEX_ABSTAND)) return null;
     const wahl = liste.filter((z) => z[0] !== alexLetzterKey[moment]);
@@ -2792,6 +2819,7 @@
   let SOLIDE = [];
 
   function update(dt) {
+    if (discoWelt()) discoMusik();   // Disco Run: Beat vorausplanen
     if (zustand === 'film') { zeit += dt; filmBewegen(dt); return; }   // Story: Film am Ende (eigene Szene, keine Spielwelt)
     if (nurFilm) return;
     if (zustand === 'station') { stationBewegen(dt); return; }         // Story-Station: alles steht still
@@ -3025,6 +3053,9 @@
       boss.maul = 0.5 + 0.5 * Math.sin(zeit * 4);
     } else if (zustand === 'wahl') {   // Golden Gate: Gabelung 2 nach dem Boss – der Captain löst sich auf, Elena steht am Tor, das Tor bleibt zu, bis du gewählt hast
       boss.weg = Math.min(1, boss.weg + dt * 0.8); boss.maul = 0;
+    } else if (zustand === 'finale' && discoWelt() && discoTanz < DISCO_TANZ) {   // Disco Run: erst Siegestanz (Figur tanzt, Flamingo im Spagat), dann geht die Tür auf
+      discoTanz += dt; boss.maul = 0;
+      spieler.pose = ruhig() ? 'steh' : Math.floor(discoBeat() * 2) % 2 ? 'sprung' : 'steh';
     } else if (zustand === 'finale') {
       tuer.offen = Math.min(1, tuer.offen + dt * 1.2);
       boss.weg = Math.min(1, boss.weg + dt * 0.8);
@@ -9202,6 +9233,7 @@
       if (g.tot > 0.6) continue; const x = g.x - kamera; if (x < -60 || x > viewW + 60) continue;
       c.save(); c.translate(-kamera, 0);
       if (g.weg) { const b = gegnerBox(g), mx = b.x + b.w / 2, my = b.y + b.h / 2; c.translate(mx, my); c.rotate(g.weg.art === 'tanz' ? Math.sin(g.weg.t * 14) * 0.45 : g.weg.t * 9); c.translate(-mx, -my); c.globalAlpha = Math.max(0, 1 - g.weg.t / 1.2); }   // Kl. 9: wegfliegen / tanzen
+      else if (discoWelt() && g.tot <= 0 && !ruhig()) { const b = gegnerBox(g), mx = b.x + b.w / 2, my = b.y + b.h; c.translate(mx, my - Math.abs(discoWipp()) * 6); c.rotate(discoWipp() * 0.28); c.translate(-mx, -my); }   // Disco Run: Gegner tanzen im Takt
       (GEGNER_ZEICHNER[g.art] || waschbaer)(c, g);
       c.restore();
       if (eisZeit > 0 && g.tot <= 0 && !g.rollt && !g.klaut) {   // Cameo Penny: Eisblock um den Gegner
@@ -9263,7 +9295,10 @@
       if (surfend) surfbrett(c, spieler.x - kamera, spieler.y);   // Welt 5: Surfbrett unter der Figur, Figur lehnt sich nach vorn
       if (imEishalle() && spieler.y <= BODEN_Y + 1) spiegelbild(c, () => zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, ausdruckAktuell()));   // Spiegelboden: die Figur spiegelt sich
       if (rutscht > 0 || surfend) { c.save(); c.translate(spieler.x - kamera, spieler.y); c.rotate(surfend ? 0.16 : -0.22 - 0.06 * Math.sin(zeit * 30)); c.translate(-(spieler.x - kamera), -spieler.y); }   // rutscht: Figur kippt leicht nach hinten
+      const tanzt = discoWelt() && zustand === 'finale' && discoTanz < DISCO_TANZ && !ruhig();   // Disco Run: Siegestanz (hüpfen + hin und her wiegen)
+      if (tanzt) { const px = spieler.x - kamera, py = spieler.y; c.save(); c.translate(px, py - Math.abs(discoWipp()) * 10); c.rotate(discoWipp() * 0.2); c.translate(-px, -py); }
       zeichneFigur(c, spieler.x - kamera, spieler.y, 80, skin, spieler.pose, zeit, rutscht > 0 ? 'erstaunt' : surfend ? 'zunge' : ausdruckAktuell());
+      if (tanzt) c.restore();
       if (rutscht > 0 || surfend) c.restore();
       c.globalAlpha = 1;
     }
@@ -9505,6 +9540,195 @@
     rafId = requestAnimationFrame(schleife);
   }
 
+  /* ---------- Disco Run (Bonus-Level, 7.11.2026): alles im Takt – Web-Audio-Beat (discoMusik), Discokugel, Spotlights, blinkende Tanzfläche, Lautsprecher-Kisten,
+     tanzende Gegner (Wackeln im Beat), Boss DJ Funky Flamingo (Tanzduell, landet am Ende im Spagat), die Figur tanzt vor der Tür. Welten 'disco' (Englisch) und 'disco_fr' (Französisch). ---------- */
+  const DISCO_BPM = 120, DISCO_TANZ = 2.6;   // Tempo; so lange tanzt die Figur nach dem Sieg, bevor die Tür aufgeht
+  const DISCO_FARBEN = ['#ff3fa4', '#36f1ff', '#ffe14d', '#7dff5a', '#b35cff', '#ff8a2b'];
+  let discoNaechster = 0, discoSchritt = 0, discoStart = null, discoTanz = 0;
+  const discoWelt = () => !!(W && W.disco);
+  // Taktzähler (Viertel) – an der Musik ausgerichtet, sonst an der Spielzeit; schlag() = Puls 1 → 0 nach jedem Viertel
+  function discoBeat() { return actx && discoStart != null ? Math.max(0, (actx.currentTime - discoStart) * DISCO_BPM / 60) : (zeit || 0) * DISCO_BPM / 60; }
+  const discoSchlag = () => ruhig() ? 0 : Math.pow(1 - (discoBeat() % 1), 3);
+  const discoWipp = () => ruhig() ? 0 : Math.sin(discoBeat() * Math.PI);   // −1..1, ein Ausschlag je Viertel
+  function discoMusik() {   // Disco-Beat aus ton/rauschen: Bassdrum auf jedem Viertel, Clap auf 2 und 4, offene Hi-Hat, Oktav-Bass (A – C – G – D), Streicher-Stich
+    if (!actx || !discoWelt() || zustand === 'fertig' || zustand === 'gameover' || zustand === 'aus' || zustand === 'film') return;
+    const jetzt = actx.currentTime, s16 = 60 / DISCO_BPM / 4;
+    if (discoNaechster < jetzt) { discoNaechster = jetzt + 0.05; discoStart = discoNaechster - discoSchritt * s16; }
+    const leiser = zustand === 'boss' ? 0.6 : 1;   // während der Boss-Frage etwas leiser
+    while (discoNaechster < jetzt + 0.2) {
+      const st = discoSchritt % 16, t = discoNaechster - jetzt, takt = Math.floor(discoSchritt / 16) % 4, grund = [55, 65.41, 49, 73.42][takt];
+      if (st % 4 === 0) ton(120, 0.16, 'sine', 0.2 * leiser, t, 42);
+      if (st === 4 || st === 12) rauschen(0.1, 0.07 * leiser, t, { typ: 'bandpass', freq: 1700 });
+      if (st % 4 === 2) rauschen(0.07, 0.035 * leiser, t, { typ: 'highpass', freq: 7000 });
+      if (st % 2 === 0) ton(st % 4 === 0 ? grund : grund * 2, 0.12, 'triangle', 0.09 * leiser, t);
+      if (st === 6 || st === 14) [4, 5, 6].forEach((k) => ton(grund * k, 0.16, 'sawtooth', 0.012 * leiser, t));
+      discoNaechster += s16; discoSchritt++;
+    }
+  }
+  function discoKugel(c, x, y, r, dreh, ohneSchnur) {   // Discokugel mit Facetten, die sich drehen; Lichtpunkte blitzen
+    c.save();
+    if (!ohneSchnur) { c.strokeStyle = '#8a8fa6'; c.lineWidth = 2; c.beginPath(); c.moveTo(x, y - r - 60); c.lineTo(x, y - r); c.stroke(); }
+    c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.clip();
+    const g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, '#ffffff'); g.addColorStop(0.5, '#c9cfe0'); g.addColorStop(1, '#5d6480');
+    c.fillStyle = g; c.fillRect(x - r, y - r, r * 2, r * 2);
+    const f = Math.max(3, r / 5), ver = ((dreh * r) % f + f) % f;
+    for (let row = -r; row < r; row += f) for (let col = -r - f; col < r + f; col += f) {
+      const k = Math.floor((col - ver) / f) * 7 + Math.floor(row / f) * 13 + Math.floor(dreh * 3);
+      c.fillStyle = ((k % 5) + 5) % 5 === 0 ? 'rgba(255,255,255,.85)' : ((k % 3) + 3) % 3 === 0 ? 'rgba(40,45,70,.35)' : 'rgba(255,255,255,.12)';
+      c.fillRect(x + col + ver, y + row, f - 1, f - 1);
+    }
+    c.restore();
+    c.strokeStyle = 'rgba(255,255,255,.5)'; c.lineWidth = 1; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.stroke();
+  }
+  function hintergrundDisco(c) {
+    const b = discoBeat(), puls = discoSchlag();
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#12072b'); g.addColorStop(0.6, '#2a0f4f'); g.addColorStop(1, '#3a1460');
+    c.fillStyle = g; c.fillRect(-viewW, -H, viewW * 3, H * 3);
+    for (let i = 0; i < 40; i++) {   // Glitzer an der Decke (Parallaxe 0,03), blinkt im Takt
+      const n = viewW + 60, sx = ((i * 97 - kamera * 0.03) % n + n) % n - 30, sy = 12 + (i * 37) % 140, an = (i + Math.floor(b)) % 3 === 0;
+      c.fillStyle = an ? DISCO_FARBEN[i % 6] : 'rgba(255,255,255,.25)'; c.beginPath(); c.arc(sx, sy, an ? 2.4 : 1.2, 0, Math.PI * 2); c.fill();
+    }
+    // Rückwand: Equalizer-Balken (Parallaxe 0,1), springen mit dem Beat
+    for (let i = 0; i < 30; i++) {
+      const n = viewW + 300, ex = ((i * 34 - kamera * 0.1) % n + n) % n - 150, hoch = 20 + Math.abs(Math.sin(i * 1.7 + Math.floor(b * 2) * 0.9)) * 60 * (0.6 + 0.4 * puls);
+      for (let s = 0; s < hoch; s += 8) { c.fillStyle = s > 55 ? '#ff3fa4' : s > 35 ? '#ffe14d' : '#36f1ff'; c.globalAlpha = 0.45; c.fillRect(ex, 250 - s, 24, 6); }
+    }
+    c.globalAlpha = 1;
+    // Neon-Schild (Parallaxe 0,05), flackert im Takt
+    const nx = viewW * 0.55 - kamera * 0.05 % (viewW + 400);
+    for (const [dx, wort, farbe] of [[0, 'DISCO', '#ff3fa4'], [viewW + 400, 'DISCO', '#36f1ff']]) {
+      const x = ((nx + dx) % (viewW + 400) + viewW + 400) % (viewW + 400) - 200;
+      c.save(); c.font = 'bold 44px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.shadowColor = farbe; c.shadowBlur = 10 + 14 * puls; c.fillStyle = farbe; c.globalAlpha = 0.65 + 0.35 * puls; c.fillText(wort, x, 120); c.restore();
+    }
+    // Spotlights von der Decke (schwenken im Takt), additiv
+    c.save(); c.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 4; i++) {
+      const lx = viewW * (0.12 + i * 0.26), winkel = Math.sin(b * Math.PI / 2 + i * 1.3) * 0.5, fx = lx + Math.tan(winkel) * BODEN_Y, breite = 70;
+      const lg = c.createLinearGradient(lx, 0, fx, BODEN_Y); lg.addColorStop(0, DISCO_FARBEN[(i + Math.floor(b / 4)) % 6] + 'aa'); lg.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = lg; c.globalAlpha = 0.28; c.beginPath(); c.moveTo(lx - 6, 0); c.lineTo(lx + 6, 0); c.lineTo(fx + breite, BODEN_Y); c.lineTo(fx - breite, BODEN_Y); c.closePath(); c.fill();
+    }
+    c.restore();
+    discoKugel(c, viewW * 0.5, 66, 30, ruhig() ? 0 : zeit * 0.6);   // die Kugel hängt in der Mitte
+    if (!ruhig()) {   // Lichtpunkte der Kugel wandern über die Wand
+      c.fillStyle = 'rgba(255,255,255,.55)';
+      for (let i = 0; i < 18; i++) { const px = ((i * 71 + zeit * 60) % (viewW + 40)) - 20, py = 40 + (i * 53 + zeit * 25) % 230; c.fillRect(px, py, 3, 3); }
+    }
+    // Tanzende Menge hinten (Parallaxe 0,25): Arme hoch im Takt
+    c.save(); c.globalAlpha = 0.7;
+    for (let i = 0; i < 16; i++) {
+      const n = viewW + 300, px = ((i * 64 + 20 - kamera * 0.25) % n + n) % n - 150, hops = Math.abs(Math.sin((b + i * 0.5) * Math.PI)) * (ruhig() ? 0 : 5);
+      personKlein(c, px, 318 - hops, 0.9, i, { arme: ruhig() ? 0.5 : 0.5 + 0.5 * Math.sin((b + i * 0.25) * Math.PI) });
+    }
+    c.restore();
+  }
+  function bodenDisco(c, x0, w, a, b, links, rechts) {   // Tanzfläche: Leuchtkacheln (50 breit, zwei Reihen), wechseln auf jedem Viertel
+    c.fillStyle = '#1b0f30'; c.fillRect(x0, BODEN_Y, w, H - BODEN_Y + 200);
+    const t = Math.floor(discoBeat()), puls = discoSchlag();
+    for (let x = Math.max(Math.ceil(a / 50) * 50, Math.floor(links / 50) * 50); x < Math.min(b, rechts); x += 50) {
+      for (let r = 0; r < 2; r++) {
+        const k = Math.floor(x / 50), h = (k * 7 + r * 3 + t * 5) % 11, an = h < 5, farbe = DISCO_FARBEN[(k + r + t) % 6];
+        c.fillStyle = an ? farbe : '#2a1a48'; c.globalAlpha = an ? 0.55 + 0.4 * puls : 1;
+        c.fillRect(x - kamera + 2, BODEN_Y + 4 + r * 32, 46, 29);
+      }
+    }
+    c.globalAlpha = 1;
+    c.fillStyle = '#ff3fa4'; c.fillRect(x0, BODEN_Y, w, 4);   // Neonkante
+  }
+  function discoGrube(c, a, b) {   // Lücke = Nebelgrube mit Neonrand (wer reinfällt, fällt in den Trockeneis-Nebel)
+    const x0 = a - kamera, w = b - a;
+    c.fillStyle = '#05010c'; c.fillRect(x0, BODEN_Y, w, H);
+    c.fillStyle = 'rgba(200,190,255,.18)';
+    for (let i = 0; i < Math.ceil(w / 30); i++) { const nx = x0 + 10 + ((i * 30 + zeit * 18) % Math.max(1, w - 20)), ny = BODEN_Y + 30 + Math.sin(zeit * 1.5 + i) * 6; c.beginPath(); c.arc(nx, ny, 16, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#36f1ff'; c.fillRect(x0 - 2, BODEN_Y, 5, H - BODEN_Y); c.fillRect(x0 + w - 3, BODEN_Y, 5, H - BODEN_Y);
+  }
+  function kisteDisco(c, x, y) {   // Block (40 × 40) = Lautsprecher-Box, die Membranen pumpen im Beat
+    const p = discoSchlag();
+    c.fillStyle = '#18151f'; c.beginPath(); c.roundRect(x, y, KISTE, KISTE, 4); c.fill();
+    c.strokeStyle = '#ff3fa4'; c.lineWidth = 2; c.beginPath(); c.roundRect(x + 1, y + 1, KISTE - 2, KISTE - 2, 4); c.stroke();
+    c.fillStyle = '#3a3448'; c.beginPath(); c.arc(x + 20, y + 26, 11 + p * 1.6, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#0c0a10'; c.beginPath(); c.arc(x + 20, y + 26, 5 + p * 1.2, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#3a3448'; c.beginPath(); c.arc(x + 20, y + 9, 4.5 + p, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#36f1ff'; c.beginPath(); c.arc(x + 34, y + 6, 1.8, 0, Math.PI * 2); c.fill();
+  }
+  // DJ Funky Flamingo an (x, y = Boden): o = { wipp −1..1, sichtbar 0..1, spagat 0..1, weg 0..1 } – schaut nach links (zur Figur), Kopfhörer, Sonnenbrille, Goldkette mit „DJ“, Mini-Afro
+  function djFlamingo(c, x, y, o = {}) {
+    const w = o.wipp || 0, sp = o.spagat || 0, pink = '#ff7eb9', dunkel = '#e2559a', bein = '#f06ba8';
+    c.save(); c.translate(x, y); c.globalAlpha = (o.sichtbar == null ? 1 : o.sichtbar) * (1 - (o.weg || 0) * 0.9); c.scale(-1, 1);
+    const koerperY = -88 + sp * 62, hops = sp > 0 ? 0 : Math.abs(w) * 5;
+    c.translate(0, -hops); c.rotate(w * 0.08 * (1 - sp));
+    c.strokeStyle = bein; c.lineWidth = 4; c.lineCap = 'round'; c.lineJoin = 'round';
+    if (sp > 0) {   // Spagat: beide Beine waagerecht auf dem Boden
+      const l = 34 + 40 * sp; c.beginPath(); c.moveTo(-l, hops); c.lineTo(0, koerperY + 16); c.lineTo(l, hops); c.stroke();
+    } else {
+      c.beginPath(); c.moveTo(0, 0); c.lineTo(2, -36); c.lineTo(0, -72); c.stroke();   // Standbein
+      const knie = w * 6; c.beginPath(); c.moveTo(0, -72); c.lineTo(16 + knie, -52); c.lineTo(3, -46); c.stroke();   // Tanzbein (angewinkelt, wippt)
+      c.fillStyle = bein; c.beginPath(); c.ellipse(5, 0, 8, 2.5, 0, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = dunkel; c.beginPath(); c.moveTo(-26, koerperY - 4); c.lineTo(-46, koerperY - 14); c.lineTo(-42, koerperY + 2); c.closePath(); c.fill();   // Schwanzfedern
+    c.fillStyle = pink; c.beginPath(); c.ellipse(0, koerperY, 30, 20, 0.15, 0, Math.PI * 2); c.fill();
+    const fluegel = sp > 0 ? -0.6 : (w > 0 ? -1.1 : 0.2);   // „Saturday-Night“-Zeigeflügel: im Takt hoch und runter
+    c.save(); c.translate(6, koerperY - 6); c.rotate(fluegel); c.fillStyle = dunkel; c.beginPath(); c.ellipse(16, 0, 22, 9, 0, 0, Math.PI * 2); c.fill(); c.restore();
+    const hx = 12 + w * 3, hy = koerperY - 62 + sp * 8;
+    c.strokeStyle = pink; c.lineWidth = 9; c.beginPath(); c.moveTo(18, koerperY - 10); c.bezierCurveTo(34, koerperY - 30, -4, koerperY - 40, hx, hy + 6); c.stroke();   // S-Hals
+    c.strokeStyle = '#ffd34d'; c.lineWidth = 2.5; c.beginPath(); c.arc(16, koerperY - 14, 11, 0.2, Math.PI - 0.2); c.stroke();   // Goldkette
+    c.fillStyle = '#ffd34d'; c.beginPath(); c.arc(16, koerperY - 2, 6, 0, Math.PI * 2); c.fill();
+    c.save(); c.scale(-1, 1); c.fillStyle = '#5a3a00'; c.font = 'bold 6px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('DJ', -16, koerperY - 2); c.restore();
+    c.fillStyle = '#3a1a2a'; for (const [ax, ay] of [[-6, -10], [2, -14], [10, -11], [-2, -6], [8, -5]]) { c.beginPath(); c.arc(hx + ax, hy + ay, 6, 0, Math.PI * 2); c.fill(); }   // Mini-Afro
+    c.fillStyle = pink; c.beginPath(); c.arc(hx, hy, 11, 0, Math.PI * 2); c.fill();   // Kopf
+    c.fillStyle = '#f7f0e0'; c.beginPath(); c.moveTo(hx + 8, hy - 3); c.quadraticCurveTo(hx + 24, hy - 2, hx + 26, hy + 10); c.lineTo(hx + 20, hy + 9); c.quadraticCurveTo(hx + 16, hy + 3, hx + 8, hy + 4); c.closePath(); c.fill();   // Schnabel, fest am Kopf
+    c.fillStyle = '#222'; c.beginPath(); c.moveTo(hx + 20, hy + 1); c.quadraticCurveTo(hx + 25, hy + 1, hx + 26, hy + 10); c.lineTo(hx + 20, hy + 9); c.closePath(); c.fill();   // schwarze Spitze
+    c.save(); c.translate(hx + 2, hy - 2); c.rotate(sp > 0 ? 0.35 : 0); c.fillStyle = '#111'; c.beginPath(); c.roundRect(-3, -4, 13, 7, 3); c.fill();   // Sonnenbrille (rutscht beim Spagat)
+    c.fillStyle = 'rgba(255,90,200,.8)'; c.fillRect(0, -3, 4, 2); c.restore();
+    c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.arc(hx, hy, 13, Math.PI * 1.05, Math.PI * 1.95); c.stroke();   // Kopfhörer
+    c.fillStyle = '#36f1ff'; c.beginPath(); c.roundRect(hx - 15, hy - 5, 6, 10, 2); c.fill();
+    if (sp > 0.3 && !ruhig()) {   // Sternchen kreisen um den Kopf
+      c.fillStyle = '#ffe14d';
+      for (let k = 0; k < 3; k++) { const a = zeit * 5 + k * 2.1; diamantStern(c, hx + Math.cos(a) * 18, hy - 18 + Math.sin(a) * 5, 4); }
+    }
+    c.restore();
+  }
+  function diamantStern(c, x, y, r) { c.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rr = i % 2 ? r * 0.4 : r; c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } c.closePath(); c.fill(); }
+  function discoBoss(c, x, y) {   // Boss: kommt aus der Tür getanzt, tanzt während der Frage, verliert das Tanzduell (Spagat), tanzt davon
+    const auf = boss.sichtbar, sp = zustand === 'finale' ? Math.min(1, discoTanz / 0.5) : 0;
+    djFlamingo(c, x + (1 - auf) * 60 + boss.weg * 260, y, { wipp: zustand === 'boss' || zustand === 'sequenz' || sp === 0 ? discoWipp() : 0, sichtbar: auf, spagat: sp, weg: boss.weg });
+  }
+  function discoTuer(c, x, y) {   // Tür = Glitzervorhang mit Neonrahmen, öffnet sich zur Seite; Schild „VIP“
+    c.save(); c.translate(x, y);
+    const puls = discoSchlag(), offen = tuer.offen;
+    c.fillStyle = '#100820'; c.fillRect(-50, -170, 100, 170);
+    c.fillStyle = `rgba(255,240,190,${0.3 + 0.6 * offen})`; c.fillRect(-44, -164, 88, 164);
+    const halb = 44 * (1 - offen);
+    for (let s = 0; s < 2; s++) for (let i = 0; i < 9; i++) {   // Lamettastreifen
+      const sx = s === 0 ? -44 + i * halb / 9 : 44 - (i + 1) * halb / 9;
+      c.fillStyle = (i + s + Math.floor(discoBeat())) % 2 ? '#e8e8f8' : '#c9a5ff'; c.fillRect(sx, -164, Math.max(1, halb / 9 - 1), 164);
+    }
+    c.strokeStyle = '#36f1ff'; c.lineWidth = 4; c.shadowColor = '#36f1ff'; c.shadowBlur = 6 + 10 * puls; c.strokeRect(-48, -168, 96, 168);
+    c.shadowBlur = 0; c.fillStyle = '#ff3fa4'; c.beginPath(); c.roundRect(-26, -196, 52, 22, 6); c.fill();
+    c.fillStyle = '#fff'; c.font = 'bold 14px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('VIP', 0, -185);
+    c.restore();
+  }
+  function discoKlang() { trommelt++; ton(420, 0.14, 'sawtooth', 0.06, 0, 1300); ton(1300, 0.16, 'sawtooth', 0.06, 0.15, 260); [0.4, 0.62, 0.84].forEach((t) => { ton(466, 0.18, 'sawtooth', 0.07, t); ton(470, 0.18, 'square', 0.03, t); }); }   // Plattenkratzer + Air Horn
+  // Mr. Alex' Disco-Zurufe (ersetzen im Disco Run die normalen Zurufe dieses Moments; Französisch nur diese, keine englischen)
+  const DISCO_ZURUFE_EN = {
+    halb:   [["disco_halb_1", "Halfway there! Keep dancing!"], ["disco_halb_2", "Shake it, shake it!"]],
+    combo3: [["disco_combo3_1", "Groovy!"], ["disco_combo3_2", "Funky!"]],
+    combo5: [["disco_combo5_1", "Disco fever!"], ["disco_combo5_2", "Look at those moves!"]],
+    leben:  [["disco_leben_1", "Oops! Dance it off!"], ["disco_leben_2", "Never mind – keep on dancing!"]],
+    boss:   [["disco_boss_1", "Dance battle! Show him your best moves!"]],
+  };
+  const DISCO_ZURUFE_FR = {
+    halb:   [["disco_halb_1", "À mi-chemin ! On continue à danser !"], ["disco_halb_2", "Allez, on bouge !"]],
+    combo3: [["disco_combo3_1", "Trop cool !"], ["disco_combo3_2", "Quel groove !"]],
+    combo5: [["disco_combo5_1", "C'est la fête !"], ["disco_combo5_2", "Super, tu danses comme une star !"]],
+    leben:  [["disco_leben_1", "Oups ! Pas grave, on danse !"], ["disco_leben_2", "Allez, on continue !"]],
+    boss:   [["disco_boss_1", "Battle de danse ! Montre-lui tes meilleurs pas !"]],
+    ende:   [["disco_ende_1", "Bravo, tu es une star !"]],
+    fail:   [["disco_fail_1", "Presque ! Encore une fois !"]],
+  };
+  const DISCO_TEIL = { disco: true, gegnerarten: ['taube', 'maus', 'fuchs', 'eichhoernchen'], farben: { plattform: '#2a1f4a', plattformOben: '#ff3fa4', hud: '#ff3fa4' }, muster: MUSTER_DISCO, sprechblaseHoehe: 235,
+    kulisse: hintergrundDisco, boden: bodenDisco, grube: discoGrube, kiste: kisteDisco, hudSymbol: (c, x, y) => discoKugel(c, x, y, 10, ruhig() ? 0 : zeit * 0.6, true),
+    boss: discoBoss, tuer: discoTuer, bossKlang: discoKlang, zurufe: DISCO_ZURUFE_EN };
   /* ---------- Welten: je Welt Kulisse, Boden, Kisten, Gegnerarten, Boss (Zeichner + Klang), Tür, Banner, Level-Muster ---------- */
   const GEGNER_ZEICHNER = { taube, waschbaer, eichhoernchen, kojote, roadrunner, guerteltier, klapperschlange, geier, skorpion, bueffel, biber, adler, moewe, seeloewe, skater, fuchs, wolf, ritter, rabe, maus };
   function bodenNY(c, x0, w, a, b, links, rechts) {
@@ -9801,6 +10025,11 @@
       gegnerarten: ['taube', 'maus', 'eichhoernchen'], farben: { plattform: '#3d4f63', plattformOben: FR_BLAU, hud: FR_BLAU }, muster: MUSTER_PARIS, sprechblaseHoehe: 220,
       kulisse: hintergrundParis, boden: bodenParis, grube: seine, kiste: kisteParis, hudSymbol: (c, x, y) => pEiffel(c, x, y + 14, 0.13),
       boss: parisBoss, tuer: grilleParis, bossKlang: () => { klang.klingel(); klang.akkordeon(); } },
+    // Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): 'disco' für Klasse 6 und 9 (Englisch), 'disco_fr' für die Französisch-App; Texte spricht Mr. Alex (übertrieben, mit Tags)
+    disco: { id: 'disco', name: 'Disco Run', staat: 'Bonus', ziel: 'the disco ball', bossName: 'DJ Funky Flamingo', bossSymbol: '🦩', banner: 'Dance battle! DJ Funky Flamingo wants to dance!', richtig: "Oh no – your moves are better than mine!", falsch: "Ha! Not groovy enough!", start: "Welcome to the Disco Run! Dance, dance, dance!", ende: "You are the disco king! Or queen!",
+      sturz: 'Oops – off the dance floor! 🕺', ...DISCO_TEIL },
+    disco_fr: { id: 'disco_fr', name: 'Disco Run', staat: 'Bonus', ziel: 'la boule disco', bossName: 'DJ Funky Flamingo', bossSymbol: '🦩', banner: 'Battle de danse ! DJ Funky Flamingo veut danser !', richtig: "Oh non ! Tu danses mieux que moi !", falsch: "Ha ha ! Pas assez de groove !", start: "Bienvenue au Disco Run ! On danse !", ende: "Bravo ! Tu es la star du disco !",
+      sturz: 'Oups – hors de la piste ! 🕺', zurufeNur: true, hinweise: true, ...DISCO_TEIL, zurufe: Object.assign({}, ALEX_ZURUFE_FR, DISCO_ZURUFE_FR), uebersetzung: UEBERSETZUNG_FR },
   };
   const WELT_LISTE = Object.values(WELTEN).map((w) => ({ id: w.id, name: w.name, staat: w.staat, ziel: w.ziel, boss: w.bossName, bossSymbol: w.bossSymbol, banner: w.banner, richtig: w.richtig, falsch: w.falsch, start: w.start, ende: w.ende }));
 

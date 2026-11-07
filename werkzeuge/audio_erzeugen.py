@@ -21,6 +21,7 @@ STIMMEN = {
     # Mr. Alex' eigene Stimme – funktioniert nur mit Eleven v4 (mit v2/flash/turbo: Serverfehler 500, mit v3: klingt fremd)
     "en":   ("AK2WYGe96RmMwFKM5KEz", "en", "Alex Langenbach – Mr. Alex' eigene Stimme"),
     "en_alex": ("AK2WYGe96RmMwFKM5KEz", "en", "Mr. Alex – Zurufe im Runner (7.11.2026, v4 mit Audio-Tags, Stabilität 0,4 für etwas mehr Ausdruck)"),
+    "en_alex_disco": ("AK2WYGe96RmMwFKM5KEz", "en", "Mr. Alex – Disco Run (7.11.2026, v4, Stabilität 0,3, übertriebene Tags)"),
     "en_f": ("Xb7hH8MSUJpSbSDYk0k2", "en", "Alice – britische Frauenstimme (weibliche Personen in Hörtexten bis 28.10.)"),
     # Jugendstimmen für Hörtexte (Wahl von Mr. Alex, 29.10.2026, Hörprobe docs/klasse6/hoerprobe/jugend): alle Eleven v4.
     # Mr. Alex spricht in Hörtexten nur noch Lehrer/Interviewer "(alex)" und die Lösungs-Aussagen. Archiv: docs/stimmen.md
@@ -58,6 +59,7 @@ STIMMEN = {
 MODELLE = {
     "en":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
     "en_alex": ("eleven_v4", {"stability": 0.4, "similarity_boost": 0.75}),
+    "en_alex_disco": ("eleven_v4", {"stability": 0.3, "similarity_boost": 0.75}),   # Disco Run (7.11.): übertrieben
     "en_f": ("eleven_multilingual_v2", {"stability": 0.6, "similarity_boost": 0.75, "speed": 0.9}),
     "m1":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),
     "m2":   ("eleven_v4", {"stability": 0.5, "similarity_boost": 0.75}),

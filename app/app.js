@@ -2609,8 +2609,16 @@
   const runnerAudio = (id) => (SP.runner_audio && SP.runner_audio[id]) || null;
   const runnerEndeText = (W) => { const rw = ((R() && R().WELTEN) || []).find((x) => x.id === W.id); return (rw && rw.ende) || `You found ${W.ziel}!`; };
   const HELD_STIMME = { leo: "m", kenji: "m", felix: "m", max: "m", camilla: "f", ellie: "f", olivia: "f", zara: "f", penny: "f", tessa: "f" }; // Geräte-Stimme, falls eine Cameo-Aufnahme fehlt
-  const runnerWeltOffen = (w) => { const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
-  const runnerWeltVon = (id) => RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0];
+  // 🪩 Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): nicht in der Welt-Reihe; einmalige Überraschung nach dem ersten geschafften Level (Feier), danach Knopf unter den Welten, Ticket wie immer
+  const RUNNER_DISCO = { id: "disco", name: "Disco Run", staat: "Bonus", ziel: "the disco ball", trophaee: "Disco Star", symbol: "🪩", boss: "DJ Funky Flamingo", tuer: "der Glitzervorhang", bonus: true, ab: 1 };
+  const runnerWeltOffen = (w) => { if (w && w.bonus) return (runnerStand().geschafft || 0) >= w.ab; const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
+  const runnerWeltVon = (id) => (id === RUNNER_DISCO.id ? RUNNER_DISCO : RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0]);
+  function discoFeier() {   // einmal: „Disco Run unlocked!“ (stand.spiel.runner.disco = 1)
+    const r = runnerStand(); if (r.disco || !runnerWeltOffen(RUNNER_DISCO)) return false;
+    r.disco = 1; speichern();
+    ereignisse.push({ art: "feier", symbol: "🪩", titel: "Disco Run unlocked!", text: "Überraschung! Ein Bonus-Level ist frei: 🪩 Disco Run – Tanzfläche, Discokugel und DJ Funky Flamingo. Du findest es im London Run unter den Welten.", ton: { audio: { tts: "Surprise! Disco Run unlocked! Let's dance!", lang: "en-GB", stimme: "m" } } });
+    return true;
+  }
   const R = () => window.Runner || null;
   function runnerStand() {
     const sp = spielstand();
@@ -2672,7 +2680,7 @@
     const sp = spielstand(), r = runnerStand(), gruppen = station(7).gruppen;
     if (!runnerWahl || !gruppen[runnerWahl.i]) runnerWahl = { i: 0, welt: runnerWahl && runnerWahl.welt };
     let W = runnerWeltVon(runnerWahl.welt);
-    if (!runnerWeltOffen(W)) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
+    if (!runnerWeltOffen(W) || W.bonus) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
     const tickets = r.tickets || 0, fehlt = runnerFehlt(), ws = runnerWoerter(runnerWahl.i), titel = runnerTitelName(r.titel);
     // Ohne Ticket führt der Hauptknopf in den Shop (Ticket hervorgehoben), damit klar ist, wo man hin muss
     const spielen = tickets > 0
@@ -2692,6 +2700,7 @@
       el("section", { class: "satzkarte runner-start" },
         weltReiter, weltHinweis,
         spassKnopf(),   // Spaß-Level (7.11.)
+        runnerWeltOffen(RUNNER_DISCO) && el("p", { class: "runner-kapitel6 runner-disco" }, knopf("🪩 Bonus · Disco Run", () => runnerSpiel(runnerWahl.i, RUNNER_DISCO.id), "leise"), " ", el("small", {}, `DJ Funky Flamingo wartet – 🏆 ${RUNNER_DISCO.trophaee}: ${trophaeenText(r.level.disco)}`)),
         el("div", { class: "runner-welt" },
           el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, W.symbol),
           el("div", {},
@@ -2718,6 +2727,7 @@
             : `Zum Spielen brauchst du ein Ticket aus dem Shop (${RUNNER.preis} Coins). Kauf erst ein Ticket, dann geht's los!`)
           : el("p", { class: "klein" }, "Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Coins zurück, dafür Trophäe und Runner-Titel. Punkte nur, wenn du das Level schaffst: 1 ⭐ je 💎, +10 ⭐ einmal je ganzer Geschichte (höchstens 30 ⭐ je Lauf)."),
         el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumRunnerShop))));
+    if (discoFeier()) setTimeout(zeigeEreignisse, 50);   // wer schon vorher ein Level geschafft hat
   }
   // Erklärtext der Startseite je Welt (deutsche Bedienung, englische Spielsätze)
   function runnerStartText(W) {
@@ -2778,7 +2788,7 @@
   }
   // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (neues Ticket) oder Startseite
   function runnerEnde(i, e, ws, welt) {
-    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
+    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = W.bonus ? null : RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
     let stufe = null, neuOffen = false, storyPunkte = 0, storyNeuFrei = false;
     if (e.geschafft) {
       r.geschafft++;
@@ -2804,6 +2814,7 @@
         ereignisse.push({ art: "feier", symbol: t === RUNNER.titel.length ? "🦸" : "🏃", titel: `London Run: ${name}`, text: `Neuer Runner-Titel: ${name}!`, ton: waehleRuf("stark") });
       }
     }
+    discoFeier();   // 🪩 nach dem ersten geschafften Level: Überraschung
     kartenAuswerten(e, stufe);   // Folien-Karten: Cameos zählen, Aufstiege als Ereignis
     if (storyPunkte > 0) punkteDazu(storyPunkte, { art: "s" }); // Zeitlog (mrAlexWacht) läuft in punkteDazu, damit Farmen im London Run auffällt
     speichern();
@@ -2901,7 +2912,7 @@
       el("h2", {}, "🇬🇧 London Run – Hall of Fame"),
       el("p", {}, "Runner-Titel: ", el("strong", { lang: "en" }, runnerTitelName(r.titel) || "noch keiner"), ` · ${r.geschafft} Level geschafft · ${r.gespielt} Spiele`),
       naechste && el("p", { class: "klein" }, `Noch ${naechste - r.geschafft} ${naechste - r.geschafft === 1 ? "geschafftes Level" : "geschaffte Level"} bis „${RUNNER.titel[r.titel || 0]}“`),
-      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.map((w) => {
+      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.concat(runnerWeltOffen(RUNNER_DISCO) ? [RUNNER_DISCO] : []).map((w) => {
         const st = r.level[w.id];
         return el("li", { class: st ? "ok" : "", "data-welt": w.id },
           el("span", { "aria-hidden": "true" }, st === "gold" ? "🥇" : st === "silber" ? "🥈" : w.bald ? "🔒" : "🏆"),

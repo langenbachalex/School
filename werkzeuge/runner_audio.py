@@ -23,6 +23,9 @@ ENGINE = os.path.join(APP9, "runner.js")
 GRENZE = 2500
 WELTEN9, WELTEN6 = ("ny", "route66", "az", "sd", "ca", "realm6"), ("westminster", "londoneye", "towerbridge", "tube", "wembley")   # Klasse 6: Welt 4 The Tube (31.10.) und Welt 5 Wembley (1.11.) kennt das Skript, Dateien erst nach dem 13.11.
 ARTEN = ("banner", "richtig", "falsch", "start", "ende")
+# Disco Run (Bonus-Level, 7.11.2026): Mr. Alex spricht alles selbst, übertrieben (eleven_v4, Stabilität 0,3 = Stimme en_alex_disco), Kl. 6 britisch, Kl. 9 [American accent];
+# Ziele app/audio/runner/disco_<art>.mp3 bzw. app/klasse9/audio/runner/disco_<art>.mp3, Zurufe audio/alex/disco_<key>.mp3 (Texte DISCO_ZURUFE_EN in runner.js)
+DISCO_TAGS = {"banner": "[excited] [laughs]", "richtig": "[dramatic] [sobbing]", "falsch": "[laughs]", "start": "[excited] [shouting]", "ende": "[excited] [laughs]"}
 # Klasse 9 Kapitel 6 (geheim, 2.11., nur geplant – Vertonung nach dem 13.11.): Boss Elena Cruz spricht ihre Sprüche selbst (Jessica = f), das Banner bleibt beim Erzähler (Mr. Alex)
 STIMME9 = {"realm6": {"richtig": "f", "falsch": "f"}}
 JUNGEN, MAEDCHEN = ("leo", "kenji", "felix", "max"), ("camilla", "ellie", "olivia", "zara", "penny", "tessa")
@@ -98,6 +101,13 @@ def alex_zurufe():
     return re.findall(r'\["(\w+)", "([^"]+)"\]', block)
 
 
+def disco_zurufe():
+    """[(key, text)] aus DISCO_ZURUFE_EN in runner.js."""
+    js = open(ENGINE, encoding="utf-8").read()
+    block = js[js.index("const DISCO_ZURUFE_EN = {"):js.index("const DISCO_ZURUFE_FR")]
+    return re.findall(r'\["(\w+)", "([^"]+)"\]', block)
+
+
 def alex_kopieren():
     """Die Zurufe gibt es einmal (Klasse 6); Klasse 9 bekommt Kopien (nur fehlende)."""
     for key, _ in alex_zurufe():
@@ -119,6 +129,8 @@ def texte():
             m = re.search(r"\b%s: (?:\"([^\"]+)\"|'([^']+)'|([A-Z_]+))" % art, zeile)
             t[art] = m.group(1) or m.group(2) or konst[m.group(3)]
         welten[w] = t
+    zeile = re.search(r"\n    disco: \{ id: 'disco',(.*?)\n      [a-z]", js, re.S).group(1)
+    welten["disco"] = {art: re.search(r"\b%s: (?:\"([^\"]+)\"|'([^']+)')" % art, zeile).group(1) or re.search(r"\b%s: (?:\"([^\"]+)\"|'([^']+)')" % art, zeile).group(2) for art in ARTEN}
     block = js[js.index("const CAMEO = {"):js.index("const cameoInfo")]
     cameo = dict(re.findall(r"(\w+): \{ satz: \"([^\"]+)\"", block))
     return welten, cameo
@@ -157,6 +169,12 @@ def auftraege():
     # Mr. Alex' Zurufe im Lauf (7.11.2026): einmal vertonen (Klasse 6), Kopie für Klasse 9 (alex_kopieren)
     for key, text in alex_zurufe():
         liste.append((6, APP6, f"audio/alex/{key}.mp3", "en_alex", f"{ALEX_TAGS[key.rsplit('_', 1)[0]]}{britisch(text)} {text}"))
+    for kl, app in ((6, APP6), (9, APP9)):   # Disco Run: Mr. Alex, übertrieben
+        for art in ARTEN:
+            t = welten["disco"][art]
+            liste.append((kl, app, f"audio/runner/disco_{art}.mp3", "en_alex_disco", f"{DISCO_TAGS[art]}{britisch(t, kl)} {t}"))
+        for key, text in disco_zurufe():
+            liste.append((kl, app, f"audio/alex/{key}.mp3", "en_alex_disco", f"[excited]{britisch(text, kl)} {text}"))
     import klasse9_audio
     for pfad, stimme, text in klasse9_audio.auftraege():
         if pfad.startswith("audio/beae/w_"):
@@ -174,7 +192,9 @@ def daten(klasse):
              "start": a(f"audio/runner/{w}_start.mp3"), "ende": a(f"audio/runner/{w}_ende.mp3")}
         d["cameo"] = {h: a(f"audio/runner/cameo_{h}.mp3") for h in (JUNGEN + MAEDCHEN if klasse == 6 else HELDEN9)}
         aus[w] = d
-    aus["alex"] = {key: a(f"audio/alex/{key}.mp3") for key, _ in alex_zurufe()}   # Mr. Alex' Zurufe (7.11.), beide Klassen dieselben Dateien
+    aus["disco"] = {"boss": {art: a(f"audio/runner/disco_{art}.mp3") for art in ("banner", "richtig", "falsch")},
+                    "start": a("audio/runner/disco_start.mp3"), "ende": a("audio/runner/disco_ende.mp3")}   # Disco Run (Bonus)
+    aus["alex"] = {key: a(f"audio/alex/{key}.mp3") for key, _ in alex_zurufe() + disco_zurufe()}   # Mr. Alex' Zurufe (7.11.), beide Klassen dieselben Dateien
     return aus
 
 
@@ -208,7 +228,7 @@ def main():
         if os.path.exists(ziel):
             continue
         os.makedirs(os.path.dirname(ziel), exist_ok=True)
-        if kl == 9 and not stimme.startswith("h_"):   # Klasse-9-Helden (h_<id>) über audio_erzeugen
+        if kl == 9 and not stimme.startswith(("h_", "en_alex_disco")):   # Klasse-9-Helden (h_<id>) über audio_erzeugen
             sprechen9(stimme, text, ziel)
         else:
             audio_erzeugen.sprechen(stimme, "en", text, ziel)

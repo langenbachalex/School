@@ -10954,6 +10954,15 @@ window.DATEN = {
      "sunny": "audio/runner/cameo_sunny.mp3"
     }
    },
+   "disco": {
+    "boss": {
+     "banner": null,
+     "richtig": null,
+     "falsch": null
+    },
+    "start": null,
+    "ende": null
+   },
    "alex": {
     "start_1": "audio/alex/start_1.mp3",
     "start_2": "audio/alex/start_2.mp3",
@@ -10979,7 +10988,16 @@ window.DATEN = {
     "ende_2": "audio/alex/ende_2.mp3",
     "ende_3": "audio/alex/ende_3.mp3",
     "fail_1": "audio/alex/fail_1.mp3",
-    "fail_2": "audio/alex/fail_2.mp3"
+    "fail_2": "audio/alex/fail_2.mp3",
+    "disco_halb_1": null,
+    "disco_halb_2": null,
+    "disco_combo3_1": null,
+    "disco_combo3_2": null,
+    "disco_combo5_1": null,
+    "disco_combo5_2": null,
+    "disco_leben_1": null,
+    "disco_leben_2": null,
+    "disco_boss_1": null
    }
   },
   "story_audio": [

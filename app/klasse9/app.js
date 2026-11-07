@@ -3157,8 +3157,10 @@
   // Welt n ist offen, wenn sie gebaut ist (nicht bald) und die Vorwelt mindestens Silber hat
   // Kapitel 6 (geheim, 2.11., docs/runner/story-usa-06.md): eigene Story-Welt im Realm, nicht in der Welt-Reihe; frei mit allen fünf Realm-Gegenständen, ohne Ticket
   const RUNNER_REALM6 = { id: "realm6", name: "The Keeper's Journal", staat: "The Realm", ziel: "sixth gate", trophaee: "✦ Keeper", symbol: "✦", boss: "Elena Cruz", geheim: true };
-  const runnerWeltOffen = (w) => { if (w && w.geheim) return realmAlle(); const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
-  const runnerWeltVon = (id) => (id === RUNNER_REALM6.id ? RUNNER_REALM6 : RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0]);
+  // 🪩 Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): nicht in der Welt-Reihe; einmalige Überraschung nach dem ersten geschafften Level (Feier), danach Knopf unter den Welten, Ticket wie immer
+  const RUNNER_DISCO = { id: "disco", name: "Disco Run", staat: "Bonus", ziel: "disco ball", trophaee: "Disco Star", symbol: "🪩", boss: "DJ Funky Flamingo", bonus: true, ab: 1 };
+  const runnerWeltOffen = (w) => { if (w && w.bonus) return (runnerStand().geschafft || 0) >= w.ab; if (w && w.geheim) return realmAlle(); const i = RUNNER.welten.indexOf(w); return !w.bald && (i <= 0 || !!runnerStand().level[RUNNER.welten[i - 1].id]); };
+  const runnerWeltVon = (id) => (id === RUNNER_DISCO.id ? RUNNER_DISCO : id === RUNNER_REALM6.id ? RUNNER_REALM6 : RUNNER.welten.find((w) => w.id === id) || RUNNER.welten[0]);
   const R = () => window.Runner || null;
   const spieleKategorie = () => D.kategorien.find((k) => k.spiele);
   function runnerStand() {
@@ -3217,7 +3219,7 @@
     const sp = spielstand(), r = runnerStand(), unit = aktuelleUnit(), gruppen = D.units[unit];
     if (!runnerWahl || runnerWahl.unit !== unit || !gruppen[runnerWahl.i]) runnerWahl = { unit, i: 0, welt: runnerWahl && runnerWahl.welt };
     let W = runnerWeltVon(runnerWahl.welt);
-    if (!runnerWeltOffen(W)) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
+    if (!runnerWeltOffen(W) || W.bonus) { W = RUNNER.welten[0]; runnerWahl.welt = W.id; }
     const tickets = r.tickets || 0, fehlt = runnerFehlt(), ws = runnerWoerter(unit, runnerWahl.i), titel = runnerTitelName(r.titel);
     const zumShop = () => shop({ zurueck: () => runnerStart(k), artikel: "runner" });
     // Ohne Ticket führt der Hauptknopf in den Shop (Ticket hervorgehoben), damit klar ist, wo man hin muss
@@ -3241,6 +3243,7 @@
       el("section", { class: "satzkarte runner-start" },
         weltReiter, weltHinweis,
         spassKnopf(k),   // Spaß-Level (7.11.)
+        runnerWeltOffen(RUNNER_DISCO) && el("p", { class: "runner-kapitel6 runner-disco" }, knopf("🪩 Bonus · Disco Run", () => runnerSpiel(k, unit, runnerWahl.i, RUNNER_DISCO.id), "leise"), " ", el("small", {}, T(`DJ Funky Flamingo wartet – Ticket wie immer`, `DJ Funky Flamingo is waiting – ticket as usual`))),
         realmAlle() && el("p", { class: "runner-kapitel6" }, knopf("✦ Chapter 6 · The Keeper's Journal", () => runnerSpiel(k, unit, runnerWahl.i, RUNNER_REALM6.id), "leise"), " ", el("small", {}, T("geheimes Kapitel, ohne Ticket", "secret chapter, no ticket"))),
         el("div", { class: "runner-welt" },
           el("span", { class: "runner-welt-sym", "aria-hidden": "true" }, W.symbol),
@@ -3302,6 +3305,14 @@
             : T("Ein Ticket gilt für einen Durchgang – auch wenn du scheiterst. Keine Punkte und keine Coins zurück, dafür Trophäe und Runner-Titel.",
             "One ticket is one run – even if you fail. No points and no coins back, but a trophy and a runner title.")),
         el("div", { class: "knopfreihe" }, spielen, knopf("🛍️ Shop", zumShop))));
+    if (discoFeier()) setTimeout(zeigeEreignisse, 50);   // wer schon vorher ein Level geschafft hat
+  }
+  function discoFeier() {   // einmal: „Disco Run unlocked!“ (stand.spiel.runner.disco = 1)
+    const r = runnerStand(); if (r.disco || !runnerWeltOffen(RUNNER_DISCO)) return false;
+    r.disco = 1; speichern();
+    ereignisse.push({ art: "feier", symbol: "🪩", titel: "Disco Run unlocked!", text: T("Überraschung! Ein Bonus-Level ist frei: 🪩 Disco Run – Tanzfläche, Discokugel und DJ Funky Flamingo. Du findest es im Road Trip Run unter den Welten.", "Surprise! A bonus level is unlocked: 🪩 Disco Run – dance floor, disco ball and DJ Funky Flamingo. Find it in the Road Trip Run below the worlds."),
+      ton: { audio: { text: "Surprise! Disco Run unlocked! Let's dance!", stimme: "m" } } });
+    return true;
   }
   // Story-Modus New York „The Lost Map – Kapitel 1: Under the City“ (freigegeben 30.10., Text wörtlich aus docs/runner/story-usa-01.md; Erzähler Mr. Alex – bis zur Vertonung Geräte-Stimme).
   // Struktur (Abschnitte, Gabelungen, Stationen, Enden) liefert die Engine je Welt (WELTEN.ny.storyStruktur, passt zur Story-Strecke); story.struktur könnte sie hier überschreiben.
@@ -3574,7 +3585,7 @@
   const runnerEndeText = (W) => { const rw = ((R() && R().WELTEN) || []).find((x) => x.id === W.id); return (rw && rw.ende) || `You made it to the ${W.ziel}!`; };
   // Ende: Trophäe + Titel speichern (nur bei Erfolg), Wortliste mit 🔊, noch mal (wieder 100) oder Startseite
   function runnerEnde(k, unit, i, e, ws, welt) {
-    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = W.geheim ? null : RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
+    const r = runnerStand(), W = runnerWeltVon(welt), naechsteWelt = W.geheim || W.bonus ? null : RUNNER.welten[RUNNER.welten.indexOf(W) + 1];
     let stufe = null, neuOffen = false, storyPunkte = 0, storyNeuFrei = false, realmNeu = false;
     const rm = e.story && e.story.realm;
     if (rm && rm.gefunden) { // verstecktes Tor ✦: Fund, R-Stücke und Frost Shard bleiben (auch bei Game over – keine Punkte)
@@ -3609,6 +3620,7 @@
       }
     }
     kartenAuswerten(e, stufe);   // Folien-Karten: Cameos zählen, Aufstiege als Ereignis (auch bei Game over)
+    discoFeier();   // 🪩 nach dem ersten geschafften Level: Überraschung
     if (storyPunkte > 0) punkteDazu(storyPunkte, { art: "s" }); // Zeitlog (mrAlexWacht) läuft in punkteDazu, damit Farmen im Road Trip Run auffällt
     speichern();
     const ruf = waehleRuf(e.geschafft ? "stark" : "fehler");
@@ -3714,7 +3726,7 @@
       el("p", {}, `${T("Runner-Titel", "Runner title")}: `, el("strong", { lang: "en" }, runnerTitelName(r.titel) || T("noch keiner", "none yet")),
         ` · ${r.geschafft} ${T("Level geschafft", "levels done")} · ${r.gespielt} ${T("Spiele", "games")}`),
       naechste && el("p", { class: "klein" }, T(`Noch ${naechste - r.geschafft} geschaffte Level bis „${RUNNER.titel[r.titel || 0]}“`, `${naechste - r.geschafft} more levels to “${RUNNER.titel[r.titel || 0]}”`)),
-      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.map((w) => {
+      el("ul", { class: "abzeichen runner-trophaeen" }, RUNNER.welten.concat(runnerWeltOffen(RUNNER_DISCO) ? [RUNNER_DISCO] : []).map((w) => {
         const st = r.level[w.id];
         return el("li", { class: st ? "ok" : "", "data-welt": w.id },
           el("span", { "aria-hidden": "true" }, st === "gold" ? "🥇" : st === "silber" ? "🥈" : w.bald ? "🔒" : "🏆"),

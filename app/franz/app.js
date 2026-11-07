@@ -445,6 +445,7 @@
   }
   function parisRun() {
     const r = runStand(), g = RUN_GRUPPEN[runWahl], ws = g.woerter();
+    if (discoOffen() && !stand.disco) { stand.disco = 1; speichern(); setTimeout(() => toast("🪩 Überraschung: Disco Run débloqué !"), 600); }   // wer den Paris Run schon vorher geschafft hat
     zeige(kopf("🏃 Paris Run", startseite, "Lauf zur Tour Eiffel! Sammle die Wörter, beantworte Monsieur Gaston."),
       el("section", { class: "satzkarte" },
         el("p", {}, "Tippen oder Leertaste = springen, länger halten = höher. Über Autos und Radfahrer springen, Kisten und Litfaßsäulen sind Stufen, in die Seine fällst du hinein. Mr. Alex ruft dir zu: « Saute ! » = Spring!, « Attention ! » = Achtung!, « Plus vite ! » = Schneller!, « À gauche ! » = Nach links (da kommt was von links)!"),
@@ -453,9 +454,15 @@
         el("h2", {}, "Welche Wörter?"),
         el("div", { class: "reiter" }, RUN_GRUPPEN.map((x, i) => el("button", { type: "button", class: "reiter-knopf", "aria-selected": String(i === runWahl), onclick: () => { runWahl = i; parisRun(); } }, x.name))),
         el("p", { class: "klein", lang: "fr" }, ws.map((w) => w.fr).join(" · ")),
-        el("div", { class: "knopfreihe" }, knopf("▶ Los geht's !", () => parisRunSpiel(ws), "haupt"))));
+        el("div", { class: "knopfreihe" }, knopf("▶ Los geht's !", () => parisRunSpiel(ws), "haupt"),
+          discoOffen() && knopf("🪩 Bonus : Disco Run", () => parisRunSpiel(ws, "disco_fr"), "leise"))));
   }
-  function parisRunSpiel(ws) {
+  /* 🪩 Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): gleiche Engine, Welt „disco_fr“ (Tanzfläche, DJ Funky Flamingo, Beat) mit denselben Wörtern.
+     Einmalige Überraschung nach dem ersten geschafften Paris Run (stand.disco = 1, Feier am Ende des Laufs), danach Knopf auf der Paris-Run-Seite; Punkte wie der Paris Run (einmal am Tag +10 ⭐). */
+  const DISCO_AB = 1;
+  const discoOffen = () => (runStand().geschafft || 0) >= DISCO_AB;
+  function parisRunSpiel(ws, welt = "paris") {
+    const disco = welt === "disco_fr";
     if (!window.Runner || !window.Runner.start) { toast("Das Spiel ist noch nicht geladen."); return; }
     if (ws.length < 4) { toast("Zu wenige Wörter."); return; }
     const r = runStand(); r.gespielt++; speichern();
@@ -463,17 +470,17 @@
     const buehne = el("div", { class: "runner-buehne" });
     const abbruch = el("button", { type: "button", class: "runner-x", "aria-label": "Spiel abbrechen", onclick: () => {
       if (window.Runner.ueberspringen && window.Runner.ueberspringen()) return;
-      window.Runner.stopp(); stopp(); document.body.classList.remove("runner-aktiv"); parisRun(); } }, "✕");
+      window.Runner.stopp(); stopp(); document.body.classList.remove("runner-aktiv"); parisRun(); } }, "✕");   // (Paris und Disco)
     zeige(buehne, abbruch);
     document.body.classList.add("runner-aktiv");
     const tts = (text, o) => (o && o.audio) || { tts: text.replace(/\[[^\]]*\]\s*/g, "") };
     runFrei = true; runKette = Promise.resolve();
     window.Runner.start({
-      wrapper: buehne, welt: "paris", titel: "Paris Run", skin: runSkin() || undefined,
+      wrapper: buehne, welt, titel: disco ? "Disco Run" : "Paris Run", skin: runSkin() || undefined,
       woerter: window.Runner.woerterAus(liste),
       cameos: helden.map((h) => ({ id: h.id, name: h.name, kraft: h.kraft })),
-      audio: D.runner || {},
-      texte: { tor: (de) => `Welcher Diamant heißt „${de}“?`, frage: (de) => `„Was heißt ‚${de}‘ auf Französisch?“`, bossTitel: "Monsieur Gaston fragt …", bossHinweis: "Richtig = die goldene Grille geht auf. Falsch = ein Leben weg." },
+      audio: disco ? { alex: (D.runner || {}).alex } : D.runner || {},   // Disco: noch keine eigenen Aufnahmen – Gerätestimme (fr-FR)
+      texte: { tor: (de) => `Welcher Diamant heißt „${de}“?`, frage: (de) => `„Was heißt ‚${de}‘ auf Französisch?“`, bossTitel: disco ? "DJ Funky Flamingo fragt …" : "Monsieur Gaston fragt …", bossHinweis: disco ? "Richtig = du gewinnst das Tanzduell, der Glitzervorhang geht auf. Falsch = ein Leben weg." : "Richtig = die goldene Grille geht auf. Falsch = ein Leben weg." , ...(disco ? { tuer: "Le rideau est ouvert – vas-y !" } : {}) },
       stimme: {
         wort: (j, o) => { const w = liste[j % liste.length]; if (!runFrei && !(o && o.warten)) return; runSag(w.audio || { tts: w.fr }, true); },
         boss: (text, o) => runSag(tts(text, o), false),
@@ -483,25 +490,33 @@
         erzaehler: (text, o) => runSag(tts(text, o), true),
         still: () => stopp(),
         beschaeftigt: () => !runFrei },
-      onEnde: (e) => parisRunEnde(e, liste),
+      onEnde: (e) => parisRunEnde(e, liste, welt),
     });
   }
-  function parisRunEnde(e, liste) {
+  function parisRunEnde(e, liste, welt = "paris") {
+    const disco = welt === "disco_fr", warOffen = discoOffen();
     window.Runner.stopp(); document.body.classList.remove("runner-aktiv");
     const r = runStand();
     let plus = "";
-    if (e.geschafft) { r.geschafft++; r.beste = Math.max(r.beste || 0, e.diamanten); plus = spielPunkte("parisrun"); }
+    if (e.geschafft) { r.geschafft++; r.beste = Math.max(r.beste || 0, e.diamanten); plus = spielPunkte(disco ? "discorun" : "parisrun"); }
+    const discoNeu = !warOffen && discoOffen() && !stand.disco;   // Überraschung: Disco Run frei
+    if (discoNeu) { stand.disco = 1; setTimeout(() => { toast("🪩 Disco Run débloqué !"); klang(true); }, 900); }
     speichern();
     const zu = e.alex && (e.alex.audio || { tts: e.alex.text });
-    setTimeout(() => spiele([e.geschafft ? (D.runner && D.runner.ende) || { tts: "Bravo ! Tu es à la tour Eiffel !" } : { tts: "Presque ! Encore une fois !" }, zu]), 300);
-    zeige(kopf("🏃 Paris Run", parisRun),
+    const endeText = disco ? "Bravo ! Tu es la star du disco !" : "Bravo ! Tu es à la tour Eiffel !";
+    setTimeout(() => spiele([e.geschafft ? (!disco && D.runner && D.runner.ende) || { tts: endeText } : { tts: "Presque ! Encore une fois !" }, zu, discoNeu && { tts: "Surprise ! Le Disco Run est débloqué !" }].filter(Boolean)), 300);
+    zeige(kopf(disco ? "🪩 Disco Run" : "🏃 Paris Run", parisRun),
+      discoNeu && el("section", { class: "geschafft disco-feier" },
+        el("h2", { lang: "fr" }, "🪩 Disco Run débloqué !"),
+        el("p", {}, "Überraschung! Ein Bonus-Level ist frei: Tanzfläche, Discokugel und DJ Funky Flamingo. Du findest es auf der Paris-Run-Seite."),
+        knopf("🪩 Jetzt tanzen !", () => parisRunSpiel(RUN_GRUPPEN[runWahl].woerter(), "disco_fr"), "haupt")),
       el("section", { class: e.geschafft ? "geschafft" : "satzkarte" },
-        el("h2", { lang: "fr" }, e.geschafft ? "🗼 Bravo ! Tu es à la tour Eiffel !" : "💤 Presque !"),
+        el("h2", { lang: "fr" }, e.geschafft ? (disco ? "🪩 " : "🗼 ") + endeText : "💤 Presque !"),
         el("p", {}, e.geschafft ? `Geschafft!${plus}` : "Keine Leben mehr – beim nächsten Mal klappt es!"),
         el("p", {}, `💎 ${e.diamanten} / ${e.max} · 🚪 ${e.toreRichtig} Tore richtig · ❤️ ${e.leben}` + (e.maxCombo > 0 ? ` · 🔥 ×${e.maxCombo}` : "")),
         el("h3", {}, "Deine Wörter"),
         el("ul", { class: "liste" }, liste.map((w) => el("li", {}, knopf(`🔊 ${w.fr}`, () => spiele([w.audio || { tts: w.fr }]), "leise"), ` – ${w.de}`))),
-        el("div", { class: "knopfreihe" }, knopf("↻ Noch mal", () => parisRunSpiel(RUN_GRUPPEN[runWahl].woerter()), "haupt"), knopf("🏠 Start", startseite))));
+        el("div", { class: "knopfreihe" }, knopf("↻ Noch mal", () => parisRunSpiel(RUN_GRUPPEN[runWahl].woerter(), welt), "haupt"), knopf("🏠 Start", startseite))));
   }
 
   /* ---------- 🎮 Jeux ---------- */

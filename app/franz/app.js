@@ -62,7 +62,7 @@
     setTimeout(() => t.remove(), 2800);
   }
   function punkte(plus, grund) {
-    const vorN = namenFrei(), muenzen = Math.ceil(plus / 2);
+    const vorN = namenFrei(), vorF = franceFrei(), muenzen = Math.ceil(plus / 2);
     stand.punkte += plus; stand.coins += muenzen;
     const t = titelIndex(stand.punkte), neuerTitel = t > stand.titel;
     if (neuerTitel) stand.titel = t;
@@ -72,6 +72,8 @@
     for (let i = vorN; i < namenFrei(); i++) { const n = NAMEN_REIHE[i]; setTimeout(() => toast(`${D.gruppen[n.gruppe].split(" ")[0]} Nouvelle carte au Panthéon : ${n.name} !`), 1800 + 400 * (i - vorN)); }
     const neu = parisFrei();
     if (neu > stand.paris) setTimeout(() => toast(`🗼 Nouveau lieu à Paris : ${D.paris[neu - 1].name} !`), 1200);
+    const f = franceFrei();
+    if (f > vorF) setTimeout(() => toast(`🇫🇷 Nouveau lieu en France : ${D.france[f - 1].name} !`), 1500);
     const h = heldenFrei();
     if (h > stand.helden) setTimeout(() => toast(`🦸 Nouveau super-héros : ${D.helden[h - 1].name} !`), 2400);
   }
@@ -89,6 +91,11 @@
      neue Orte zeigt die Startseite mit ihrer Szene (nicht mitten in einer Übung). */
   const PARIS_PUNKTE = 20;
   const parisFrei = () => Math.min((D.paris || []).length, 1 + Math.floor(stand.punkte / PARIS_PUNKTE));
+  /* Frankreich-Karte Niveau 2 (7.11.): erst wenn alle Paris-Orte frei sind, danach im selben Abstand (PARIS_PUNKTE) ein Ort nach dem anderen (france.tsv).
+     Kein eigener Spielstand nötig – rein aus den Punkten berechnet, alte Stände bleiben gültig. */
+  const FRANCE_AB = (D.paris || []).length * PARIS_PUNKTE;   // Punkte für den ersten Ort in Frankreich
+  const franceFrei = () => (D.france || []).length && parisFrei() >= (D.paris || []).length
+    ? Math.max(0, Math.min(D.france.length, 1 + Math.floor((stand.punkte - FRANCE_AB) / PARIS_PUNKTE))) : 0;
   function rueckmeldung() { return el("div", { class: "rueckmeldung", hidden: true, role: "status" }); }
   function melde(box, art, text) { box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text; }
   const kopf = (titel, zurueck, unter) => el("header", { class: "kopf" }, knopf("← Zurück", zurueck, "leise"),
@@ -903,8 +910,61 @@
         : el("button", { type: "button", class: "namen-knopf gesperrt", disabled: true }, el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?")))));
   }
 
+  /* Frankreich-Karte (Niveau 2, 7.11.): 13 Régions als vereinfachte Umrisse (regions.tsv, selbst gezeichnet), Moselle-Orte in einer Lupe rechts.
+     Régions mit offenem Ort werden farbig; Paris ist als Ausgangspunkt markiert. Tipp auf einen Ort: Text fr/de, Écoute (Aufnahme oder Gerätestimme). */
+  function franceKarte(frei, waehle) {
+    const NS = "http://www.w3.org/2000/svg";
+    const s = (tag, attrs, ...kinder) => { const e = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v)); kinder.forEach((k) => e.append(k)); return e; };
+    const offenR = new Set(D.france.slice(0, frei).map((o) => o.region));
+    const svg = s("svg", { viewBox: "0 0 470 380", class: "london france", role: "img", "aria-label": "Karte von Frankreich mit 13 Régions" });
+    svg.append(s("rect", { x: 0, y: 0, width: 470, height: 380, rx: 12, class: "f-meer" }));
+    D.regions.forEach((r) => r.pfad && svg.append(s("path", { d: r.pfad, class: "f-region" + (offenR.has(r.id) ? " offen" : "") }, s("title", {}, r.name))));
+    D.regions.forEach((r) => r.pfad && svg.append(s("text", { x: r.lx, y: r.ly, class: "f-name", "text-anchor": "middle" },
+      ...r.kurz.split("|").map((t, i) => s("tspan", { x: r.lx, dy: i ? 8 : 0 }, t)))));
+    svg.append(s("rect", { x: 282, y: 79, width: 34, height: 20, rx: 3, class: "f-lupe-rand" }),   // Moselle auf der Karte → Lupe
+      s("path", { d: "M316,82 L350,40 M316,96 L350,126", class: "f-lupe-linie" }),
+      s("rect", { x: 350, y: 18, width: 112, height: 112, rx: 10, class: "f-lupe" }),
+      s("text", { x: 356, y: 30, class: "f-name" }, "🔍 Moselle"),
+      s("g", { class: "l-ort offen f-paris", transform: "translate(192 98)", role: "img", "aria-label": "Paris" }, s("circle", { r: 9 }), s("text", { y: 4, "text-anchor": "middle" }, "🗼")));
+    D.france.forEach((o, i) => {
+      const offen = i < frei;
+      const g = s("g", { class: "l-ort" + (offen ? " offen" : ""), transform: `translate(${o.x} ${o.y})`, tabindex: offen ? 0 : -1,
+        role: offen ? "button" : "img", "aria-label": offen ? o.name : "Noch nicht freigeschaltet" },
+        s("circle", { r: 11 }), s("text", { y: 4.5, "text-anchor": "middle" }, offen ? o.symbol : "?"));
+      if (offen) {
+        g.addEventListener("click", () => waehle(o));
+        g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); waehle(o); } });
+      }
+      svg.append(g);
+    });
+    return el("div", { class: "london-rahmen" }, svg);
+  }
+  function franceAbschnitt() {
+    const frei = franceFrei(), n = D.france.length, parisFertig = parisFrei() >= D.paris.length;
+    const rest = parisFertig ? PARIS_PUNKTE - ((stand.punkte - FRANCE_AB) % PARIS_PUNKTE) : FRANCE_AB - stand.punkte;
+    const fakt = el("section", { class: "karte paris-fakt", hidden: true });
+    const region = (o) => (D.regions.find((r) => r.id === o.region) || {}).name;
+    const zeigen = (o) => {
+      fakt.hidden = false;
+      fakt.replaceChildren(el("h2", { lang: "fr" }, `${o.symbol} ${o.name}`), region(o) && el("p", { class: "klein", lang: "fr" }, `📍 ${region(o)}`),
+        el("p", { class: "paris-fr", lang: "fr" }, o.fr), el("p", { class: "klein" }, o.de),
+        el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)]))));
+      fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    };
+    const info = !parisFertig ? `🔒 Erst alle ${D.paris.length} Paris-Orte – noch ${rest} ⭐ bis zum ersten Ort in Frankreich.`
+      : frei < n ? `${frei}/${n} Orte · noch ${rest} ⭐ bis zum nächsten Ort · tipp auf einen Ort: Text zum Lesen und Hören.` : `Alle ${n} Orte freigeschaltet – bravo !`;
+    return el("section", { class: "karte niveau2" }, el("h3", {}, "🇫🇷 La France · Niveau 2"),
+      el("p", { class: "klein france-info" }, info),
+      franceKarte(frei, zeigen),
+      el("div", { class: "region-liste" }, D.france.map((o, i) => i < frei
+        ? el("button", { type: "button", class: "chip offen", lang: "fr", onclick: () => zeigen(o) }, `${o.symbol} ${o.name}`)
+        : el("span", { class: "chip gesperrt" }, "🔒 ?"))),
+      fakt);
+  }
+
   /* ---------- 🏛️ Panthéon ---------- */
-  function pantheon() {   // Hall of Fame (7.11.): Paris-Karte oben, dann Niveau 2 (Régions, vorbereitet), Super-héros, Stars, Dialogues
+  function pantheon() {   // Hall of Fame (7.11.): Paris-Karte oben, dann Niveau 2 (Frankreich-Karte), Super-héros, Stars, Dialogues
     const frei = parisFrei(), rest = PARIS_PUNKTE - (stand.punkte % PARIS_PUNKTE), restH = HELD_PUNKTE - (stand.punkte % HELD_PUNKTE);
     const fakt = el("section", { class: "karte paris-fakt", hidden: true });
     const faktZeigen = (o) => {
@@ -921,9 +981,7 @@
       el("p", { class: "klein" }, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort · tipp auf einen Ort: kleiner Film, danach der Text.` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
       parisKarte(frei, ort),
       fakt,
-      (D.regions || []).length ? el("section", { class: "karte niveau2" }, el("h3", {}, "🇫🇷 La France · Niveau 2"),
-        el("p", { class: "klein" }, `Bald: die Karte von Frankreich mit ${D.regions.length} Régions – nach Paris geht die Reise weiter.`),
-        el("div", { class: "region-liste" }, D.regions.map((r) => el("span", { class: "chip gesperrt", lang: "fr" }, `${r.symbol} ${r.name}`)))) : null,
+      (D.regions || []).length && (D.france || []).length ? franceAbschnitt() : null,
       el("h2", {}, "🦸 Super-héros"),
       el("p", { class: "klein" }, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${restH} ⭐ bis zum nächsten Helden · tipp auf eine Karte: Vorstellung, Défi, Aufstieg.` : "Alle Helden gesammelt – bravo !"),
       kartenZaehler(), heldenRaster(),

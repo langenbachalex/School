@@ -89,3 +89,18 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 .ticket-zeile { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-weight: 700; }
 .ticket-zeile .knopf { min-height: 40px; padding: 4px 12px; }
 .titel-karte h2 { margin-bottom: 0; }
+/* Frankreich-Karte Niveau 2 (7.11.) */
+.f-meer { fill: #e4f0fb; }
+.f-region { fill: #eef1e6; stroke: #fff; stroke-width: 1.6; stroke-linejoin: round; }
+.f-region.offen { fill: #cfe7c0; }
+.f-name { font: italic 7px var(--body); fill: #5b6578; pointer-events: none; }
+.f-lupe { fill: #f6f8f1; stroke: #9aa3b5; stroke-width: 1; }
+.f-lupe-rand { fill: none; stroke: #9aa3b5; stroke-width: 1; stroke-dasharray: 2 2; }
+.f-lupe-linie { stroke: #9aa3b5; stroke-width: 1; stroke-dasharray: 2 2; fill: none; }
+.f-paris circle { stroke: #2f6fb0; }
+.f-paris text { font-size: 10px !important; }
+.region-liste { margin-top: 8px; }
+.region-liste button.chip { font: inherit; font-size: .85rem; padding: 4px 8px; border: 1px solid var(--linie); border-radius: 999px; background: none; color: inherit; cursor: pointer; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .f-meer { fill: #1a2438; } :root:not([data-theme="light"]) .f-region { fill: #2a3650; stroke: #1a2438; }
+  :root:not([data-theme="light"]) .f-region.offen { fill: #2f5a3a; } :root:not([data-theme="light"]) .f-lupe { fill: #23304a; } :root:not([data-theme="light"]) .f-name { fill: #b8c0d0; } }
+.region-liste .chip.offen { opacity: 1; border-color: #e2384d; }

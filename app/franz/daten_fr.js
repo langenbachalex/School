@@ -2400,79 +2400,243 @@ window.DATEN_FR = {
    "id": "idf",
    "name": "Île-de-France",
    "chef_lieu": "Paris",
-   "symbol": "🗼"
+   "symbol": "🗼",
+   "kurz": "Île-de-France",
+   "lx": 192.0,
+   "ly": 118.0,
+   "pfad": "M173.5,85.6 L198.2,88.5 L219.3,94.6 L219.3,112.6 L209.4,121.6 L190.8,123.4 L172.2,110.8 L169.8,100.0 Z"
   },
   {
    "id": "hdf",
    "name": "Hauts-de-France",
    "chef_lieu": "Lille",
-   "symbol": "🏭"
+   "symbol": "🏭",
+   "kurz": "Hauts-de-|France",
+   "lx": 205.7,
+   "ly": 51.4,
+   "pfad": "M168.5,55.0 L173.5,42.4 L173.5,24.4 L197.0,17.9 L213.1,29.8 L237.9,55.0 L234.2,76.6 L219.3,94.6 L198.2,88.5 L173.5,85.6 L177.2,67.6 Z"
   },
   {
    "id": "ge",
    "name": "Grand Est",
    "chef_lieu": "Strasbourg",
-   "symbol": "🥨"
+   "symbol": "🥨",
+   "kurz": "Grand Est",
+   "lx": 265.1,
+   "ly": 110.8,
+   "pfad": "M237.9,55.0 L254.0,53.2 L255.2,64.0 L277.5,73.0 L294.8,76.6 L303.5,84.9 L309.7,88.5 L322.1,89.9 L336.9,93.9 L327.0,110.8 L320.8,143.2 L309.7,146.8 L303.5,134.2 L280.0,134.2 L265.1,141.4 L240.3,134.2 L219.3,112.6 L219.3,94.6 L234.2,76.6 Z"
   },
   {
    "id": "nor",
    "name": "Normandie",
    "chef_lieu": "Rouen",
-   "symbol": "🧀"
+   "symbol": "🧀",
+   "kurz": "Normandie",
+   "lx": 133.8,
+   "ly": 92.8,
+   "pfad": "M168.5,55.0 L177.2,67.6 L173.5,85.6 L169.8,100.0 L154.9,116.2 L107.8,109.0 L95.4,105.4 L94.2,85.6 L88.0,67.6 L102.9,67.6 L106.6,78.4 L138.8,76.6 Z"
   },
   {
    "id": "bre",
    "name": "Bretagne",
    "chef_lieu": "Rennes",
-   "symbol": "⚓"
+   "symbol": "⚓",
+   "kurz": "Bretagne",
+   "lx": 59.5,
+   "ly": 121.6,
+   "pfad": "M107.8,109.0 L106.6,128.8 L94.2,137.8 L73.2,148.6 L54.6,141.4 L26.1,136.0 L16.2,116.2 L34.8,103.6 L59.5,100.0 L84.3,106.5 L95.4,105.4 Z"
   },
   {
    "id": "pdl",
    "name": "Pays de la Loire",
    "chef_lieu": "Nantes",
-   "symbol": "🏰"
+   "symbol": "🏰",
+   "kurz": "Pays de|la Loire",
+   "lx": 111.5,
+   "ly": 146.8,
+   "pfad": "M107.8,109.0 L154.9,116.2 L148.7,139.6 L136.3,161.2 L119.0,173.8 L104.1,190.0 L80.6,170.2 L79.4,159.4 L73.2,148.6 L94.2,137.8 L106.6,128.8 Z"
   },
   {
    "id": "cvl",
    "name": "Centre-Val de Loire",
    "chef_lieu": "Orléans",
-   "symbol": "🌷"
+   "symbol": "🌷",
+   "kurz": "Centre-|Val de Loire",
+   "lx": 174.7,
+   "ly": 154.0,
+   "pfad": "M169.8,100.0 L172.2,110.8 L190.8,123.4 L209.4,121.6 L210.6,143.2 L206.9,170.2 L190.8,186.4 L163.6,184.6 L136.3,161.2 L148.7,139.6 L154.9,116.2 Z"
   },
   {
    "id": "bfc",
    "name": "Bourgogne-Franche-Comté",
    "chef_lieu": "Dijon",
-   "symbol": "🍇"
+   "symbol": "🍇",
+   "kurz": "Bourgogne-|Franche-Comté",
+   "lx": 257.7,
+   "ly": 161.2,
+   "pfad": "M209.4,121.6 L219.3,112.6 L240.3,134.2 L265.1,141.4 L280.0,134.2 L303.5,134.2 L309.7,146.8 L293.6,166.6 L284.9,184.6 L268.8,190.0 L242.8,191.8 L226.7,184.6 L206.9,170.2 L210.6,143.2 Z"
   },
   {
    "id": "na",
    "name": "Nouvelle-Aquitaine",
    "chef_lieu": "Bordeaux",
-   "symbol": "🏄"
+   "symbol": "🏄",
+   "kurz": "Nouvelle-|Aquitaine",
+   "lx": 143.7,
+   "ly": 253.0,
+   "pfad": "M126.4,314.2 L99.2,299.8 L89.8,295.5 L97.9,254.8 L102.9,215.2 L104.1,190.0 L119.0,173.8 L136.3,161.2 L163.6,184.6 L190.8,186.4 L195.8,202.6 L194.5,220.6 L185.9,238.6 L173.5,242.2 L161.1,253.0 L153.7,269.2 L136.3,274.6 L131.4,294.4 Z"
   },
   {
    "id": "ara",
    "name": "Auvergne-Rhône-Alpes",
    "chef_lieu": "Lyon",
-   "symbol": "⛷️"
+   "symbol": "⛷️",
+   "kurz": "Auvergne-|Rhône-Alpes",
+   "lx": 215.6,
+   "ly": 226.0,
+   "pfad": "M206.9,170.2 L226.7,184.6 L242.8,191.8 L268.8,190.0 L284.9,184.6 L281.2,193.6 L302.3,200.8 L308.5,218.8 L304.7,236.8 L287.4,245.8 L270.1,256.6 L250.2,263.8 L232.9,256.6 L213.1,242.2 L185.9,238.6 L194.5,220.6 L195.8,202.6 L190.8,186.4 Z"
   },
   {
    "id": "occ",
    "name": "Occitanie",
    "chef_lieu": "Toulouse",
-   "symbol": "✈️"
+   "symbol": "✈️",
+   "kurz": "Occitanie",
+   "lx": 188.3,
+   "ly": 285.4,
+   "pfad": "M250.2,263.8 L251.5,269.2 L247.8,281.8 L242.8,292.6 L235.4,289.0 L215.6,299.8 L209.4,312.4 L211.9,328.6 L183.4,330.4 L168.5,323.2 L148.7,319.6 L126.4,314.2 L131.4,294.4 L136.3,274.6 L153.7,269.2 L161.1,253.0 L173.5,242.2 L185.9,238.6 L213.1,242.2 L232.9,256.6 Z"
   },
   {
    "id": "paca",
    "name": "Provence-Alpes-Côte d'Azur",
    "chef_lieu": "Marseille",
-   "symbol": "☀️"
+   "symbol": "☀️",
+   "kurz": "PACA",
+   "lx": 291.1,
+   "ly": 265.6,
+   "pfad": "M304.7,236.8 L307.2,263.8 L319.6,280.0 L304.7,289.0 L287.4,305.2 L267.6,301.6 L254.0,294.4 L242.8,292.6 L247.8,281.8 L251.5,269.2 L250.2,263.8 L270.1,256.6 L287.4,245.8 Z"
   },
   {
    "id": "cor",
    "name": "Corse",
    "chef_lieu": "Ajaccio",
-   "symbol": "🏝️"
+   "symbol": "🏝️",
+   "kurz": "Corse",
+   "lx": 358.0,
+   "ly": 343.0,
+   "pfad": "M366.7,308.8 L370.4,323.2 L370.4,341.2 L362.9,366.4 L353.0,359.2 L346.8,346.6 L346.8,332.2 L356.8,321.4 L364.2,319.6 Z"
+  }
+ ],
+ "france": [
+  {
+   "id": "metz",
+   "name": "Metz",
+   "region": "ge",
+   "symbol": "⛪",
+   "x": 365,
+   "y": 96,
+   "fr": "Voici Metz. C'est une grande ville en Moselle. La cathédrale est très haute et très belle !",
+   "de": "Hier ist Metz. Es ist eine große Stadt in der Moselle. Die Kathedrale ist sehr hoch und sehr schön!",
+   "audio": null
+  },
+  {
+   "id": "forbach",
+   "name": "Forbach",
+   "region": "ge",
+   "symbol": "🏰",
+   "x": 430,
+   "y": 44,
+   "fr": "Voici Forbach. La ville est tout près de l'Allemagne. Sur la colline, il y a un vieux château.",
+   "de": "Hier ist Forbach. Die Stadt ist ganz nah an Deutschland. Auf dem Hügel steht eine alte Burg.",
+   "audio": null
+  },
+  {
+   "id": "sarreguemines",
+   "name": "Sarreguemines",
+   "region": "ge",
+   "symbol": "🍽️",
+   "x": 440,
+   "y": 82,
+   "fr": "Voici Sarreguemines. La ville est sur la Sarre. Elle est connue pour ses belles assiettes !",
+   "de": "Hier ist Sarreguemines. Die Stadt liegt an der Saar. Sie ist bekannt für ihre schönen Teller (Fayence)!",
+   "audio": null
+  },
+  {
+   "id": "saint_avold",
+   "name": "Saint-Avold",
+   "region": "ge",
+   "symbol": "🌲",
+   "x": 392,
+   "y": 90,
+   "fr": "Voici Saint-Avold. Autour de la ville, il y a une grande forêt. On fait du vélo et on se promène.",
+   "de": "Hier ist Saint-Avold. Rund um die Stadt gibt es einen großen Wald. Man fährt Rad und geht spazieren.",
+   "audio": null
+  },
+  {
+   "id": "freyming",
+   "name": "Freyming-Merlebach",
+   "region": "ge",
+   "symbol": "⛏️",
+   "x": 404,
+   "y": 62,
+   "fr": "Voici Freyming-Merlebach. Avant, il y avait des mines de charbon. Les mineurs travaillaient sous la terre.",
+   "de": "Hier ist Freyming-Merlebach. Früher gab es hier Kohlebergwerke. Die Bergleute arbeiteten unter der Erde.",
+   "audio": null
+  },
+  {
+   "id": "sarralbe",
+   "name": "Sarralbe",
+   "region": "ge",
+   "symbol": "🏞️",
+   "x": 425,
+   "y": 114,
+   "fr": "Voici Sarralbe. Ici, il y a deux rivières : la Sarre et l'Albe. Sarre + Albe = Sarralbe !",
+   "de": "Hier ist Sarralbe. Hier gibt es zwei Flüsse: die Saar und die Albe. Saar + Albe = Sarralbe!",
+   "audio": null
+  },
+  {
+   "id": "nouvelle_aquitaine",
+   "name": "Nouvelle-Aquitaine",
+   "region": "na",
+   "symbol": "🏄",
+   "x": 139,
+   "y": 222,
+   "fr": "Voici la Nouvelle-Aquitaine. C'est la plus grande région de France. Il y a la mer, des plages et la ville de Bordeaux.",
+   "de": "Hier ist Nouvelle-Aquitaine. Es ist die größte Region Frankreichs. Es gibt das Meer, Strände und die Stadt Bordeaux.",
+   "audio": null
+  },
+  {
+   "id": "auvergne",
+   "name": "Auvergne-Rhône-Alpes",
+   "region": "ara",
+   "symbol": "⛷️",
+   "x": 255,
+   "y": 219,
+   "fr": "Voici l'Auvergne-Rhône-Alpes. Il y a des volcans, des montagnes et la ville de Lyon. En hiver, on fait du ski !",
+   "de": "Hier ist Auvergne-Rhône-Alpes. Es gibt Vulkane, Berge und die Stadt Lyon. Im Winter fährt man Ski!",
+   "audio": null
+  },
+  {
+   "id": "aix",
+   "name": "Aix-en-Provence",
+   "region": "paca",
+   "symbol": "⛲",
+   "x": 269,
+   "y": 291,
+   "fr": "Voici Aix-en-Provence. Dans la ville, il y a beaucoup de fontaines. Il fait souvent beau et chaud !",
+   "de": "Hier ist Aix-en-Provence. In der Stadt gibt es viele Brunnen. Es ist oft schön und warm!",
+   "audio": null
+  },
+  {
+   "id": "chateauneuf",
+   "name": "Châteauneuf-du-Pape",
+   "region": "paca",
+   "symbol": "🍇",
+   "x": 252,
+   "y": 269,
+   "fr": "Voici Châteauneuf-du-Pape. C'est un petit village en Provence. Le nom veut dire : le nouveau château du pape.",
+   "de": "Hier ist Châteauneuf-du-Pape. Es ist ein kleines Dorf in der Provence. Der Name bedeutet: das neue Schloss des Papstes.",
+   "audio": null
   }
  ],
  "wendungen": [

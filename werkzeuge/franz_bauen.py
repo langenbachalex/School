@@ -168,8 +168,22 @@ def main():
                 disco[gruppe] = rel
             else:
                 disco[gruppe][key] = rel
-    # Régions (7.11.): Frankreich-Karte als Niveau 2 im Panthéon, vorbereitet (regions.tsv: 13 Régions mit Chef-lieu und Symbol)
-    regions = tsv("regions.tsv") if os.path.exists(os.path.join(INHALT, "regions.tsv")) else []
+    # Frankreich-Karte Niveau 2 (7.11.): regions.tsv = 13 Régions mit vereinfachtem Umriss (lon,lat, selbst gezeichnet) und Namens-Platz;
+    # hier in SVG-Koordinaten (viewBox 0 0 470 380) umgerechnet. france.tsv = Stationen (x/y wie paris.tsv, Moselle-Orte in der Lupe), Text fr/de,
+    # Stimme audio/france/<id>.mp3 falls vorhanden, sonst Gerätestimme fr-FR. Freischaltung nach den Paris-Orten (app.js franceFrei).
+    def proj(lon, lat):
+        return round((lon + 5.0) * 36 * 0.688 + 10, 1), round((51.3 - lat) * 36 + 10, 1)
+    regions = []
+    for z in (tsv("regions.tsv") if os.path.exists(os.path.join(INHALT, "regions.tsv")) else []):
+        pkt = [proj(*map(float, p.split(","))) for p in z.get("umriss", "").split()]
+        lx, ly = proj(*map(float, z["label"].split(","))) if z.get("label") else (0, 0)
+        regions.append({"id": z["id"], "name": z["name"], "chef_lieu": z["chef_lieu"], "symbol": z["symbol"], "kurz": z.get("kurz") or z["name"],
+                        "lx": lx, "ly": ly, "pfad": ("M" + " L".join(f"{x},{y}" for x, y in pkt) + " Z") if pkt else ""})
+    france = []
+    for z in (tsv("france.tsv") if os.path.exists(os.path.join(INHALT, "france.tsv")) else []):
+        a = f"audio/france/{z['id']}.mp3"
+        france.append({"id": z["id"], "name": z["name"], "region": z["region"], "symbol": z["symbol"], "x": int(z["x"]), "y": int(z["y"]),
+                       "fr": z["fr"], "de": z["de"], "audio": a if vorhanden(a) else None})
     # Punkte, Coins, Titel (7.11., wie Englisch 6): Titel-Stufen (ab Punkten, Name fr, Hilfe de) und Boutique (Paris-Run-Ticket + Rahmen)
     titel = [{"ab": ab, "name": n, "de": de, "symbol": sym} for ab, n, de, sym in [
         (0, "Débutant", "Anfänger", "🐣"), (100, "Copain", "Kumpel", "🤝"), (300, "Apprenti héros", "Helden-Lehrling", "🦸"),
@@ -179,7 +193,7 @@ def main():
         {"id": "rahmen_rot", "symbol": "🎨", "name": "Cadre rouge", "unter": "Roter Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "rot"},
         {"id": "rahmen_blau", "symbol": "🎨", "name": "Cadre bleu", "unter": "Blauer Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "blau"},
         {"id": "rahmen_gruen", "symbol": "🎨", "name": "Cadre vert", "unter": "Grüner Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "gruen"}]
-    daten = {"titel": titel, "boutique": boutique, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    daten = {"titel": titel, "boutique": boutique, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "france": france, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:
@@ -218,7 +232,7 @@ self.addEventListener("fetch", (e) => {{
 }});
 """)
     fehlt = sum(1 for d in dialoge.values() for z in d["zeilen"] if not z["audio"]) + sum(1 for n in namen if not n["audio"]) + sum(1 for p in paris if not p["audio"]) + sum(1 for h in helden if not h["audio"]) + sum(1 for z in paris_runner() if not vorhanden(z[3]))
-    print(f"daten_fr.js: {len(dialoge)} Dialoge, {len(namen)} Namen, {len(beats)} Beats, {len(paris)} Paris-Orte, {len(helden)} Helden · fehlende Audios: {fehlt} · Offline-Dateien: {len(dateien)}")
+    print(f"daten_fr.js: {len(dialoge)} Dialoge, {len(namen)} Namen, {len(beats)} Beats, {len(paris)} Paris-Orte, {len(france)} France-Orte, {len(helden)} Helden · fehlende Audios: {fehlt} · Offline-Dateien: {len(dateien)}")
 
 
 if __name__ == "__main__":

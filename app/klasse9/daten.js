@@ -9218,7 +9218,7 @@ window.DATEN = {
     "fakt": "In Arkansas, there is a park where you can look for real diamonds. It is called Crater of Diamonds. If you find a diamond, you can keep it.",
     "audio": "audio/staaten/AR.mp3",
     "foto": "bilder/staaten/AR.jpg",
-    "foto_quelle": "Foto: Carol M. Highsmith, Library of Congress (public domain)"
+    "foto_quelle": "Foto: Doug Wertman, CC BY 2.0, Wikimedia Commons"
    },
    {
     "id": "SC",

@@ -1,0 +1,3074 @@
+{
+ "titel": "Französisch Sprachkurs Klasse 5 & 6.2 – Datenbank",
+ "stand": "2026-11-07",
+ "lehrer": "Monsieur Alex",
+ "lesehilfe_legende": "GROSS = betont · ã õ ẽ = durch die Nase (kein n hörbar) · ß = scharfes s · s = weiches s · sch = weiches sch (j, ge) · w = französisches v · ü/ö wie im Deutschen",
+ "dialoge": [
+  {
+   "id": "D1",
+   "titel": "Salut ! (Mbappé, 13 ans)",
+   "klasse": "6",
+   "woche": 1,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Salut !",
+     "de": "Hallo!",
+     "lesehilfe": "ßa-LÜ !"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Salut !",
+     "de": "Hallo!",
+     "lesehilfe": "ßa-LÜ !"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Comment tu t'appelles ?",
+     "de": "Wie heißt du?",
+     "lesehilfe": "ko-mã tü ta-PÄLL ?"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Je m'appelle... Kylian Mbappé !",
+     "de": "Ich heiße ... Kylian Mbappé!",
+     "lesehilfe": "schö ma-PÄLL ... ki-LJÃ m-ba-PE !"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Ah bon ? Et quel âge as-tu ?",
+     "de": "Ach ja? Und wie alt bist du?",
+     "lesehilfe": "a BÕ ? e käl ASCH a-TÜ ?"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "J'ai treize ans !",
+     "de": "Ich bin dreizehn!",
+     "lesehilfe": "sche trä-SÃ !"
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Treize ans ? Mais non !",
+     "de": "Dreizehn? Aber nein!",
+     "lesehilfe": "trä-SÃ ? mä NÕ !"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Non, maintenant... je m'appelle ___.",
+     "de": "Nein, jetzt ... heiße ich ___.",
+     "lesehilfe": "NÕ, mẽt-NÃ ... schö ma-PÄLL ___ ."
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "Ha ha, très drôle !",
+     "de": "Haha, sehr witzig!",
+     "lesehilfe": "ha ha, trä DROL !"
+    },
+    {
+     "nr": 10,
+     "sprecher": "B",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !"
+    },
+    {
+     "nr": 11,
+     "sprecher": "A",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !"
+    }
+   ],
+   "audio": null
+  },
+  {
+   "id": "D2",
+   "titel": "Salut ! (Mbappé)",
+   "klasse": "5",
+   "woche": 1,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Salut !",
+     "de": "Hallo!",
+     "lesehilfe": "ßa-LÜ !"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Salut !",
+     "de": "Hallo!",
+     "lesehilfe": "ßa-LÜ !"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Comment tu t'appelles ?",
+     "de": "Wie heißt du?",
+     "lesehilfe": "ko-mã tü ta-PÄLL ?"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Je m'appelle Mbappé.",
+     "de": "Ich heiße Mbappé.",
+     "lesehilfe": "schö ma-päll m-ba-PE."
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Et alors, au revoir !",
+     "de": "Na dann, tschüss!",
+     "lesehilfe": "e a-LOR, o rö-WUAR !"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !"
+    }
+   ],
+   "audio": null
+  },
+  {
+   "id": "D3",
+   "titel": "Bonjour ! (Dembélé)",
+   "klasse": "5",
+   "woche": 2,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Bonjour !",
+     "de": "Guten Tag!",
+     "lesehilfe": "bõ-SCHUR !"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Bonjour !",
+     "de": "Guten Tag!",
+     "lesehilfe": "bõ-SCHUR !"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Comment tu t'appelles ?",
+     "de": "Wie heißt du?",
+     "lesehilfe": "ko-mã tü ta-PÄLL ?"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Je m'appelle Dembélé.",
+     "de": "Ich heiße Dembélé.",
+     "lesehilfe": "schö ma-päll dã-be-LE."
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Et alors, au revoir !",
+     "de": "Na dann, tschüss!",
+     "lesehilfe": "e a-LOR, o rö-WUAR !"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !"
+    }
+   ],
+   "audio": null
+  },
+  {
+   "id": "D4",
+   "titel": "Vingt ans ? (Zaïre-Emery)",
+   "klasse": "6",
+   "woche": 2,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Bonjour, ça va ?",
+     "de": "Guten Tag, wie geht's?",
+     "lesehilfe": "bõ-SCHUR, ßa WA ?"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Bonjour, oui, ça va. Comment tu t'appelles ?",
+     "de": "Guten Tag, ja, gut. Wie heißt du?",
+     "lesehilfe": "bõ-SCHUR, WI, ßa WA. ko-mã tü ta-PÄLL ?"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Je m'appelle... Zaïre-Emery !",
+     "de": "Ich heiße ... Zaïre-Emery!",
+     "lesehilfe": "schö ma-PÄLL ... sa-ir äm-RI !"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Ha ha, très drôle ! Et quel âge as-tu ?",
+     "de": "Haha, sehr witzig! Und wie alt bist du?",
+     "lesehilfe": "ha ha, trä DROL ! e käl ASCH a-TÜ ?"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "J'ai... vingt ans !",
+     "de": "Ich bin ... zwanzig!",
+     "lesehilfe": "SCHE ... wẽ-TÃ !"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Vingt ans ? Mais non !",
+     "de": "Zwanzig? Aber nein!",
+     "lesehilfe": "wẽ-TÃ ? mä NÕ !"
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "D'accord, d'accord... je m'appelle ___.",
+     "de": "Okay, okay ... ich heiße ___.",
+     "lesehilfe": "da-KOR, da-KOR ... schö ma-PÄLL ___ ."
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !"
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !"
+    }
+   ],
+   "audio": null
+  },
+  {
+   "id": "D5",
+   "titel": "Tu viens d'où ? (Angèle)",
+   "klasse": "5",
+   "woche": 3,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Bonjour ! Ça va ?",
+     "de": "Guten Tag! Wie geht's?",
+     "lesehilfe": "bõ-SCHUR ! ßa WA ?"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va. Et toi ?",
+     "de": "Ja, gut. Und dir?",
+     "lesehilfe": "WI, ßa WA. e TUA ?"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va bien, merci. Comment tu t'appelles ?",
+     "de": "Mir geht's gut, danke. Wie heißt du?",
+     "lesehilfe": "ßa wa BJẼ, mär-ßI. ko-mã tü ta-PÄLL ?"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Je m'appelle... Angèle !",
+     "de": "Ich heiße ... Angèle!",
+     "lesehilfe": "schö ma-PÄLL ... ã-SCHÄL !"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Ha ha, très drôle ! Tu viens d'où ?",
+     "de": "Haha, sehr witzig! Woher kommst du?",
+     "lesehilfe": "ha ha, trä DROL ! tü wjẽ DU ?"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Je viens de France.",
+     "de": "Ich komme aus Frankreich.",
+     "lesehilfe": "schö wjẽ dö FRÃSS."
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !"
+    }
+   ],
+   "audio": null
+  },
+  {
+   "id": "D6",
+   "titel": "C'est qui, là ? (Sophie Adenot)",
+   "klasse": "6",
+   "woche": 3,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Bonjour ! Ça va ?",
+     "de": "Guten Tag! Wie geht's?",
+     "lesehilfe": "bõ-SCHUR ! ßa WA ?"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va, merci. Et toi ?",
+     "de": "Ja, gut, danke. Und dir?",
+     "lesehilfe": "WI, ßa WA, mär-ßI. e TUA ?"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va bien. Dis, c'est qui, là ?",
+     "de": "Mir geht's gut. Sag mal, wer ist das da?",
+     "lesehilfe": "ßa wa BJẼ. DI, ßä KI, LA ?"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Ça, c'est mon amie. Elle s'appelle... Sophie Adenot !",
+     "de": "Das ist meine Freundin. Sie heißt ... Sophie Adenot!",
+     "lesehilfe": "ßa, ßä mo-na-MI. äll ßa-PÄLL ... so-FI ad-NO !"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Ha ha, très drôle ! Elle a quel âge ?",
+     "de": "Haha, sehr witzig! Wie alt ist sie?",
+     "lesehilfe": "ha ha, trä DROL ! ä-la käl ASCH ?"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Elle a... vingt ans !",
+     "de": "Sie ist ... zwanzig!",
+     "lesehilfe": "ä-LA ... wẽ-TÃ !"
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Mais non ! Elle a treize ans, comme nous !",
+     "de": "Aber nein! Sie ist dreizehn, wie wir!",
+     "lesehilfe": "mä NÕ ! ä-la trä-SÃ, kom NU !"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "D'accord, d'accord... Au revoir !",
+     "de": "Okay, okay ... tschüss!",
+     "lesehilfe": "da-KOR, da-KOR ... o rö-WUAR !"
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !"
+    }
+   ],
+   "audio": null
+  },
+  {
+   "id": "D7",
+   "titel": "Tu viens d'où ? (Doué)",
+   "klasse": "5",
+   "woche": 5,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Bonjour ! Ça va ?",
+     "de": "Guten Tag! Wie geht's?",
+     "lesehilfe": "bõ-SCHUR ! ßa WA ?"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va. Et toi ?",
+     "de": "Ja, gut. Und dir?",
+     "lesehilfe": "WI, ßa WA. e TUA ?"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va bien, merci. Comment tu t'appelles ?",
+     "de": "Mir geht's gut, danke. Wie heißt du?",
+     "lesehilfe": "ßa wa BJẼ, mär-ßI. ko-mã tü ta-PÄLL ?"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Je m'appelle... Désiré Doué !",
+     "de": "Ich heiße ... Désiré Doué!",
+     "lesehilfe": "schö ma-PÄLL ... de-si-RE DUÄ !"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Ha ha, très drôle ! Tu viens d'où ?",
+     "de": "Haha, sehr witzig! Woher kommst du?",
+     "lesehilfe": "ha ha, trä DROL ! tü wjẽ DU ?"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Je viens de France.",
+     "de": "Ich komme aus Frankreich.",
+     "lesehilfe": "schö wjẽ dö FRÃSS."
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Bon, à bientôt !",
+     "de": "Na gut, bis bald!",
+     "lesehilfe": "bõ, a bjẽ-TO !"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "À bientôt, au revoir !",
+     "de": "Bis bald, tschüss!",
+     "lesehilfe": "a bjẽ-TO, o rö-WUAR !"
+    }
+   ],
+   "audio": null
+  },
+  {
+   "id": "D8",
+   "titel": "C'est qui, là ? (Kanté)",
+   "klasse": "6",
+   "woche": 5,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Bonjour ! Ça va ?",
+     "de": "Guten Tag! Wie geht's?",
+     "lesehilfe": "bõ-SCHUR ! ßa WA ?"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va, merci. Et toi ?",
+     "de": "Ja, gut, danke. Und dir?",
+     "lesehilfe": "WI, ßa WA, mär-ßI. e TUA ?"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va bien. Dis, c'est qui, là ?",
+     "de": "Mir geht's gut. Sag mal, wer ist das da?",
+     "lesehilfe": "ßa wa BJẼ. DI, ßä KI, LA ?"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Ça, c'est mon ami. Il s'appelle... N'Golo Kanté !",
+     "de": "Das ist mein Freund. Er heißt ... N'Golo Kanté!",
+     "lesehilfe": "ßa, ßä mo-na-MI. il ßa-PÄLL ... n-go-LO kã-TE !"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Ha ha, très drôle ! Il a quel âge ?",
+     "de": "Haha, sehr witzig! Wie alt ist er?",
+     "lesehilfe": "ha ha, trä DROL ! i-la käl ASCH ?"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Il a... vingt ans !",
+     "de": "Er ist ... zwanzig!",
+     "lesehilfe": "i-LA ... wẽ-TÃ !"
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Mais non ! Il a treize ans, comme nous !",
+     "de": "Aber nein! Er ist dreizehn, wie wir!",
+     "lesehilfe": "mä NÕ ! i-la trä-SÃ, kom NU !"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Bon, à bientôt !",
+     "de": "Na gut, bis bald!",
+     "lesehilfe": "bõ, a bjẽ-TO !"
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "À bientôt, au revoir !",
+     "de": "Bis bald, tschüss!",
+     "lesehilfe": "a bjẽ-TO, o rö-WUAR !"
+    }
+   ],
+   "audio": null
+  },
+  {
+   "id": "D9",
+   "titel": "Il y a deux Mbappé !",
+   "klasse": "5+6",
+   "woche": 7,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Bonjour ! Ça va ?",
+     "de": "Guten Tag! Wie geht's?",
+     "lesehilfe": "bõ-SCHUR ! ßa WA ?",
+     "audio": "audio/zeilen/D9_01.mp3"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va, merci. Et toi ?",
+     "de": "Ja, gut, danke. Und dir?",
+     "lesehilfe": "WI, ßa WA, mär-ßI. e TUA ?",
+     "audio": "audio/zeilen/D9_02.mp3"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va bien. Comment tu t'appelles ?",
+     "de": "Mir geht's gut. Wie heißt du?",
+     "lesehilfe": "ßa wa BJẼ. ko-mã tü ta-PÄLL ?",
+     "audio": "audio/zeilen/D9_03.mp3"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Je m'appelle... Mbappé !",
+     "de": "Ich heiße... Mbappé!",
+     "lesehilfe": "schö ma-PÄLL ... m-ba-PE !",
+     "audio": "audio/zeilen/D9_04.mp3"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Mais non ! Moi aussi, je m'appelle Mbappé !",
+     "de": "Aber nein! Ich heiße auch Mbappé!",
+     "lesehilfe": "mä NÕ ! mua o-ßI, schö ma-PÄLL m-ba-PE !",
+     "audio": "audio/zeilen/D9_05.mp3"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Toi aussi ? Alors... il y a deux Mbappé !",
+     "de": "Du auch? Dann gibt's ja zwei Mbappé!",
+     "lesehilfe": "tua o-ßI ? a-LOR ... il-ja DÖ m-ba-PE !",
+     "audio": "audio/zeilen/D9_06.mp3"
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Ha ha, incroyable !",
+     "de": "Haha, unglaublich!",
+     "lesehilfe": "ha ha, ẽ-krua-JABL !",
+     "audio": "audio/zeilen/D9_07.mp3"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Très drôle, non ?",
+     "de": "Sehr witzig, oder?",
+     "lesehilfe": "trä DROL, NÕ ?",
+     "audio": "audio/zeilen/D9_08.mp3"
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "D'accord, d'accord... à bientôt, Mbappé !",
+     "de": "Okay, okay... bis bald, Mbappé!",
+     "lesehilfe": "da-KOR, da-KOR ... a bjẽ-TO, m-ba-PE !",
+     "audio": "audio/zeilen/D9_09.mp3"
+    },
+    {
+     "nr": 10,
+     "sprecher": "B",
+     "fr": "À bientôt, Mbappé !",
+     "de": "Bis bald, Mbappé!",
+     "lesehilfe": "a bjẽ-TO, m-ba-PE !",
+     "audio": "audio/zeilen/D9_10.mp3"
+    },
+    {
+     "nr": 11,
+     "sprecher": "A",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !",
+     "audio": "audio/zeilen/D9_11.mp3"
+    },
+    {
+     "nr": 12,
+     "sprecher": "B",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !",
+     "audio": "audio/zeilen/D9_12.mp3"
+    }
+   ],
+   "audio": {
+    "stimmen": {
+     "A": "JULES – conversational (ElevenLabs, v4)",
+     "B": "Cécile – Interactive Customer Support (ElevenLabs, v4)"
+    },
+    "dialog": "audio/dialoge/D9_dialog.mp3",
+    "repete": "audio/dialoge/D9_repete.mp3"
+   }
+  },
+  {
+   "id": "D10",
+   "titel": "Chacun ses goûts ! (verworfen)",
+   "klasse": "5+6",
+   "woche": 8,
+   "verworfen": true,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Salut ! Ça va ?",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va bien, merci ! Et toi ?",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va. Qu'est-ce que tu aimes faire ?",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "J'adore jouer au foot ! Et toi ?",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Moi, je préfère la musique. J'adore chanter et danser !",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Ah bon ? Tu danses comme Angèle ?",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Non, non... je danse très mal ! Mais j'adore ça.",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Moi, je déteste danser. Je préfère jouer à la console.",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "Jouer à la console ? C'est cool aussi !",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 10,
+     "sprecher": "B",
+     "fr": "Oui ! Le foot, la console, le sport... j'aime tout, sauf la danse !",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 11,
+     "sprecher": "A",
+     "fr": "Ha ha, d'accord ! Chacun ses goûts !",
+     "de": null,
+     "lesehilfe": null
+    },
+    {
+     "nr": 12,
+     "sprecher": "B",
+     "fr": "Exactement !",
+     "de": null,
+     "lesehilfe": null
+    }
+   ],
+   "audio": null
+  },
+  {
+   "id": "D11",
+   "titel": "J'adore les devoirs !",
+   "klasse": "5+6",
+   "woche": 9,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Salut ! Ça va ?",
+     "de": "Hallo! Wie geht's?",
+     "lesehilfe": "ßa-LÜ ! ßa WA ?",
+     "audio": "audio/zeilen/D11_01.mp3"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va, merci. Et toi ?",
+     "de": "Ja, gut, danke. Und dir?",
+     "lesehilfe": "WI, ßa WA, mär-ßI. e TUA ?",
+     "audio": "audio/zeilen/D11_02.mp3"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va bien. Tu aimes jouer à la console ?",
+     "de": "Mir geht's gut. Spielst du gern Konsole?",
+     "lesehilfe": "ßa wa BJẼ. tü ÄM schu-E a la kõ-SOLL ?",
+     "audio": "audio/zeilen/D11_03.mp3"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Non, je déteste la console.",
+     "de": "Nein, ich hasse die Konsole.",
+     "lesehilfe": "nõ, schö de-TÄST la kõ-SOLL.",
+     "audio": "audio/zeilen/D11_04.mp3"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Mais non ! Qu'est-ce que tu aimes, alors ?",
+     "de": "Aber nein! Was magst du denn dann?",
+     "lesehilfe": "mä NÕ ! käß-kö tü ÄM, a-LOR ?",
+     "audio": "audio/zeilen/D11_05.mp3"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "J'adore... les devoirs !",
+     "de": "Ich liebe... Hausaufgaben!",
+     "lesehilfe": "scha-DOR ... le dö-WUAR !",
+     "audio": "audio/zeilen/D11_06.mp3"
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Ha ha, très drôle !",
+     "de": "Haha, sehr witzig!",
+     "lesehilfe": "ha ha, trä DROL !",
+     "audio": "audio/zeilen/D11_07.mp3"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Mais non, c'est vrai ! J'adore les devoirs de Monsieur Alex !",
+     "de": "Aber nein, das stimmt! Ich liebe die Hausaufgaben von Monsieur Alex!",
+     "lesehilfe": "mä NÕ, ßä WRÄ ! scha-dor le dö-wuar dö mö-ßJÖ a-LÄX !",
+     "audio": "audio/zeilen/D11_08.mp3"
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "D'accord, d'accord... alors moi aussi ! À bientôt !",
+     "de": "Okay, okay... dann ich auch! Bis bald!",
+     "lesehilfe": "da-KOR, da-KOR ... a-lor mua o-ßI ! a bjẽ-TO !",
+     "audio": "audio/zeilen/D11_09.mp3"
+    },
+    {
+     "nr": 10,
+     "sprecher": "B",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !",
+     "audio": "audio/zeilen/D11_10.mp3"
+    }
+   ],
+   "audio": {
+    "stimmen": {
+     "A": "JULES – conversational (ElevenLabs, v4)",
+     "B": "Cécile – Interactive Customer Support (ElevenLabs, v4)"
+    },
+    "dialog": "audio/dialoge/D11_dialog.mp3",
+    "repete": "audio/dialoge/D11_repete.mp3"
+   },
+   "abschreib_luecken": [
+    {
+     "de": "Hallo! Wie geht's?",
+     "fr": "Salut ! Ça ______ ?",
+     "loesung": "va"
+    },
+    {
+     "de": "Ja, gut, danke. Und dir?",
+     "fr": "Oui, ça va, merci. ______ ?",
+     "loesung": "Et toi"
+    },
+    {
+     "de": "Mir geht's gut. Spielst du gern Konsole?",
+     "fr": "Ça va bien. Tu ______ jouer à la console ?",
+     "loesung": "aimes"
+    },
+    {
+     "de": "Nein, ich hasse die Konsole.",
+     "fr": "Non, je ______ la console.",
+     "loesung": "déteste"
+    },
+    {
+     "de": "Aber nein! Was magst du denn dann?",
+     "fr": "______ ! Qu'est-ce que tu aimes, alors ?",
+     "loesung": "Mais non"
+    },
+    {
+     "de": "Ich liebe … Hausaufgaben!",
+     "fr": "J'______... les devoirs !",
+     "loesung": "adore"
+    },
+    {
+     "de": "Haha, sehr witzig!",
+     "fr": "Ha ha, très ______ !",
+     "loesung": "drôle"
+    },
+    {
+     "de": "Aber nein, das stimmt! Ich liebe die Hausaufgaben von Monsieur Alex!",
+     "fr": "Mais non, c'est ______ ! J'adore les devoirs de Monsieur Alex !",
+     "loesung": "vrai"
+    },
+    {
+     "de": "Okay, okay … dann ich auch! Bis bald!",
+     "fr": "______... alors moi aussi ! À bientôt !",
+     "loesung": "D'accord, d'accord"
+    },
+    {
+     "de": "Tschüss!",
+     "fr": "Au ______ !",
+     "loesung": "revoir"
+    }
+   ]
+  },
+  {
+   "id": "D12",
+   "titel": "Je chante comme Angèle !",
+   "klasse": "5+6",
+   "woche": 9,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Salut ! Ça va ?",
+     "de": "Hallo! Wie geht's?",
+     "lesehilfe": "ßa-LÜ ! ßa WA ?",
+     "audio": "audio/zeilen/D12_01.mp3"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va, merci. Et toi ?",
+     "de": "Ja, gut, danke. Und dir?",
+     "lesehilfe": "WI, ßa WA, mär-ßI. e TUA ?",
+     "audio": "audio/zeilen/D12_02.mp3"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va bien. Tu aimes la musique ?",
+     "de": "Mir geht's gut. Magst du Musik?",
+     "lesehilfe": "ßa wa BJẼ. tü äm la mü-SIK ?",
+     "audio": "audio/zeilen/D12_03.mp3"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Oui, j'adore la musique ! Et j'adore chanter !",
+     "de": "Ja, ich liebe Musik! Und ich singe total gern!",
+     "lesehilfe": "WI, scha-dor la mü-SIK ! e scha-dor schã-TE !",
+     "audio": "audio/zeilen/D12_04.mp3"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Ah bon ? Tu chantes bien ?",
+     "de": "Ach ja? Singst du gut?",
+     "lesehilfe": "a BÕ ? tü schãt BJẼ ?",
+     "audio": "audio/zeilen/D12_05.mp3"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Oui ! Écoute : « La la la laaaa... »",
+     "de": "Ja! Hör mal: „La la la laaaa...\"",
+     "lesehilfe": "WI ! e-KUT : la la la LAAA ...",
+     "audio": "audio/zeilen/D12_06.mp3"
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Ha ha, très drôle ! Tu chantes très mal !",
+     "de": "Haha, sehr witzig! Du singst ganz schlecht!",
+     "lesehilfe": "ha ha, trä DROL ! tü schãt trä MALL !",
+     "audio": "audio/zeilen/D12_07.mp3"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Mais non ! Je chante comme Angèle !",
+     "de": "Aber nein! Ich singe wie Angèle!",
+     "lesehilfe": "mä NÕ ! schö schãt kom ã-SCHÄL !",
+     "audio": "audio/zeilen/D12_08.mp3"
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "D'accord, d'accord... à bientôt, Angèle !",
+     "de": "Okay, okay... bis bald, Angèle!",
+     "lesehilfe": "da-KOR, da-KOR ... a bjẽ-TO, ã-SCHÄL !",
+     "audio": "audio/zeilen/D12_09.mp3"
+    },
+    {
+     "nr": 10,
+     "sprecher": "B",
+     "fr": "Au revoir !",
+     "de": "Tschüss!",
+     "lesehilfe": "o rö-WUAR !",
+     "audio": "audio/zeilen/D12_10.mp3"
+    }
+   ],
+   "audio": {
+    "stimmen": {
+     "A": "JULES – conversational (ElevenLabs, v4)",
+     "B": "Cécile – Interactive Customer Support (ElevenLabs, v4)"
+    },
+    "dialog": "audio/dialoge/D12_dialog.mp3",
+    "repete": "audio/dialoge/D12_repete.mp3"
+   }
+  },
+  {
+   "id": "D13",
+   "titel": "Chut ! Voilà Monsieur Alex !",
+   "klasse": "5+6",
+   "woche": 11,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Salut ! Ça va ?",
+     "de": "Hallo! Wie geht's?",
+     "lesehilfe": "ßa-LÜ ! ßa WA ?",
+     "audio": "audio/zeilen/D13_01.mp3"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va, merci. Et toi ?",
+     "de": "Ja, gut, danke. Und dir?",
+     "lesehilfe": "WI, ßa WA, mär-ßI. e TUA ?",
+     "audio": "audio/zeilen/D13_02.mp3"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va bien. Tu aimes les devoirs ?",
+     "de": "Mir geht's gut. Magst du Hausaufgaben?",
+     "lesehilfe": "ßa wa BJẼ. tü äm le dö-WUAR ?",
+     "audio": "audio/zeilen/D13_03.mp3"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Les devoirs ? Non, je déteste les devoirs !",
+     "de": "Hausaufgaben? Nein, ich hasse Hausaufgaben!",
+     "lesehilfe": "le dö-WUAR ? NÕ, schö de-täst le dö-WUAR !",
+     "audio": "audio/zeilen/D13_04.mp3"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Mais non ! Qu'est-ce que tu aimes, alors ?",
+     "de": "Aber nein! Was magst du denn dann?",
+     "lesehilfe": "mä NÕ ! käß-kö tü ÄM, a-LOR ?",
+     "audio": "audio/zeilen/D13_05.mp3"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "J'adore jouer à la console !",
+     "de": "Ich spiele total gern Konsole!",
+     "lesehilfe": "scha-dor schu-E a la kõ-SOLL !",
+     "audio": "audio/zeilen/D13_06.mp3"
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Chut ! Voilà Monsieur Alex !",
+     "de": "Psst! Da ist Monsieur Alex!",
+     "lesehilfe": "SCHÜT ! wua-LA mö-ßJÖ a-LÄX !",
+     "audio": "audio/zeilen/D13_07.mp3"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Euh... j'adore les devoirs de Monsieur Alex !",
+     "de": "Äh … ich liebe die Hausaufgaben von Monsieur Alex!",
+     "lesehilfe": "Ö ... scha-dor le dö-wuar dö mö-ßJÖ a-LÄX !",
+     "audio": "audio/zeilen/D13_08.mp3"
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "Ha ha, très drôle ! D'accord, d'accord... à bientôt !",
+     "de": "Haha, sehr witzig! Okay, okay … bis bald!",
+     "lesehilfe": "ha ha, trä DROL ! da-KOR, da-KOR ... a bjẽ-TO !",
+     "audio": "audio/zeilen/D13_09.mp3"
+    },
+    {
+     "nr": 10,
+     "sprecher": "B",
+     "fr": "Au revoir, Monsieur Alex !",
+     "de": "Tschüss, Monsieur Alex!",
+     "lesehilfe": "o rö-WUAR, mö-ßJÖ a-LÄX !",
+     "audio": "audio/zeilen/D13_10.mp3"
+    }
+   ],
+   "audio": {
+    "stimmen": {
+     "A": "JULES – conversational (ElevenLabs, v4)",
+     "B": "Cécile – Interactive Customer Support (ElevenLabs, v4)"
+    },
+    "dialog": "audio/dialoge/D13_dialog.mp3",
+    "repete": "audio/dialoge/D13_repete.mp3"
+   },
+   "abschreib_luecken": [
+    {
+     "de": "Hallo! Wie geht's?",
+     "fr": "Salut ! Ça ______ ?",
+     "loesung": "va"
+    },
+    {
+     "de": "Ja, gut, danke. Und dir?",
+     "fr": "Oui, ça va, merci. ______ ?",
+     "loesung": "Et toi"
+    },
+    {
+     "de": "Mir geht's gut. Magst du Hausaufgaben?",
+     "fr": "Ça va bien. Tu ______ les devoirs ?",
+     "loesung": "aimes"
+    },
+    {
+     "de": "Hausaufgaben? Nein, ich hasse Hausaufgaben!",
+     "fr": "Les devoirs ? Non, je ______ les devoirs !",
+     "loesung": "déteste"
+    },
+    {
+     "de": "Aber nein! Was magst du denn dann?",
+     "fr": "______ ! Qu'est-ce que tu aimes, alors ?",
+     "loesung": "Mais non"
+    },
+    {
+     "de": "Ich spiele total gern Konsole!",
+     "fr": "J'adore jouer à la ______ !",
+     "loesung": "console"
+    },
+    {
+     "de": "Psst! Da ist Monsieur Alex!",
+     "fr": "______ ! Voilà Monsieur Alex !",
+     "loesung": "Chut"
+    },
+    {
+     "de": "Äh … ich liebe die Hausaufgaben von Monsieur Alex!",
+     "fr": "Euh... j'adore les ______ de Monsieur Alex !",
+     "loesung": "devoirs"
+    },
+    {
+     "de": "Haha, sehr witzig! Okay, okay … bis bald!",
+     "fr": "Ha ha, très ______ ! D'accord, d'accord... à bientôt !",
+     "loesung": "drôle"
+    },
+    {
+     "de": "Tschüss, Monsieur Alex!",
+     "fr": "Au ______, Monsieur Alex !",
+     "loesung": "revoir"
+    }
+   ]
+  },
+  {
+   "id": "D14",
+   "titel": "Moi aussi !",
+   "klasse": "5+6",
+   "woche": 12,
+   "zeilen": [
+    {
+     "nr": 1,
+     "sprecher": "A",
+     "fr": "Salut ! Ça va ?",
+     "de": "Hallo! Wie geht's?",
+     "lesehilfe": "ßa-LÜ ! ßa WA ?",
+     "audio": "audio/zeilen/D14_01.mp3"
+    },
+    {
+     "nr": 2,
+     "sprecher": "B",
+     "fr": "Oui, ça va, merci. Et toi ?",
+     "de": "Ja, gut, danke. Und dir?",
+     "lesehilfe": "WI, ßa WA, mär-ßI. e TUA ?",
+     "audio": "audio/zeilen/D14_02.mp3"
+    },
+    {
+     "nr": 3,
+     "sprecher": "A",
+     "fr": "Ça va bien. Moi, j'adore [le foot] ! Et toi ?",
+     "de": "Mir geht's gut. Ich liebe [Fußball]! Und du?",
+     "lesehilfe": "ßa wa BJẼ. MUA, scha-DOR lö FUT ! e TUA ?",
+     "audio": "audio/zeilen/D14_03.mp3"
+    },
+    {
+     "nr": 4,
+     "sprecher": "B",
+     "fr": "Moi aussi, j'adore [le foot] !",
+     "de": "Ich auch, ich liebe [Fußball]!",
+     "lesehilfe": "mua o-ßI, scha-DOR lö FUT !",
+     "audio": "audio/zeilen/D14_04.mp3"
+    },
+    {
+     "nr": 5,
+     "sprecher": "A",
+     "fr": "Ah bon ? Et je déteste [danser] !",
+     "de": "Ach ja? Und ich hasse [Tanzen]!",
+     "lesehilfe": "a BÕ ? e schö de-TÄST dã-ßE !",
+     "audio": "audio/zeilen/D14_05.mp3"
+    },
+    {
+     "nr": 6,
+     "sprecher": "B",
+     "fr": "Moi aussi, je déteste [danser] !",
+     "de": "Ich auch, ich hasse [Tanzen]!",
+     "lesehilfe": "mua o-ßI, schö de-TÄST dã-ßE !",
+     "audio": "audio/zeilen/D14_06.mp3"
+    },
+    {
+     "nr": 7,
+     "sprecher": "A",
+     "fr": "Mais non ! Tu copies !",
+     "de": "Aber nein! Du machst mich nach!",
+     "lesehilfe": "mä NÕ ! tü ko-PI !",
+     "audio": "audio/zeilen/D14_07.mp3"
+    },
+    {
+     "nr": 8,
+     "sprecher": "B",
+     "fr": "Moi aussi !",
+     "de": "Ich auch!",
+     "lesehilfe": "mua o-ßI !",
+     "audio": "audio/zeilen/D14_08.mp3"
+    },
+    {
+     "nr": 9,
+     "sprecher": "A",
+     "fr": "Ha ha, très drôle ! D'accord, d'accord... au revoir !",
+     "de": "Haha, sehr witzig! Okay, okay … tschüss!",
+     "lesehilfe": "ha ha, trä DROL ! da-KOR, da-KOR ... o rö-WUAR !",
+     "audio": "audio/zeilen/D14_09.mp3"
+    },
+    {
+     "nr": 10,
+     "sprecher": "B",
+     "fr": "Moi aussi ! Au revoir !",
+     "de": "Ich auch! Tschüss!",
+     "lesehilfe": "mua o-ßI ! o rö-WUAR !",
+     "audio": "audio/zeilen/D14_10.mp3"
+    }
+   ],
+   "audio": {
+    "stimmen": {
+     "A": "JULES – conversational (ElevenLabs, v4)",
+     "B": "Cécile – Interactive Customer Support (ElevenLabs, v4)"
+    },
+    "dialog": "audio/dialoge/D14_dialog.mp3",
+    "repete": "audio/dialoge/D14_repete.mp3"
+   },
+   "abschreib_luecken": [
+    {
+     "de": "Hallo! Wie geht's?",
+     "fr": "Salut ! Ça ______ ?",
+     "loesung": "va"
+    },
+    {
+     "de": "Ja, gut, danke. Und dir?",
+     "fr": "Oui, ça va, merci. Et ______ ?",
+     "loesung": "toi"
+    },
+    {
+     "de": "Mir geht's gut. Ich liebe …! Und du?",
+     "fr": "Ça va bien. Moi, j'adore ______ ! Et toi ?",
+     "loesung": "DEIN Lieblingshobby"
+    },
+    {
+     "de": "Ich auch, ich liebe …!",
+     "fr": "Moi ______, j'adore ______ !",
+     "loesung": "aussi · dasselbe Hobby"
+    },
+    {
+     "de": "Ach ja? Und ich hasse …!",
+     "fr": "Ah bon ? Et je ______ ______ !",
+     "loesung": "déteste · ein Hobby, das DU hasst"
+    },
+    {
+     "de": "Ich auch, ich hasse …!",
+     "fr": "Moi aussi, je déteste ______ !",
+     "loesung": "dasselbe Hobby"
+    },
+    {
+     "de": "Aber nein! Du machst mich nach!",
+     "fr": "______ ! Tu copies !",
+     "loesung": "Mais non"
+    },
+    {
+     "de": "Ich auch!",
+     "fr": "Moi ______ !",
+     "loesung": "aussi"
+    },
+    {
+     "de": "Haha, sehr witzig! Okay, okay … tschüss!",
+     "fr": "Ha ha, très drôle ! ______... au revoir !",
+     "loesung": "D'accord, d'accord"
+    },
+    {
+     "de": "Ich auch! Tschüss!",
+     "fr": "Moi aussi ! Au ______ !",
+     "loesung": "revoir"
+    }
+   ],
+   "wahl_luecken": "Wörter in [ ] frei wählbar (Hobby-Tafel)"
+  }
+ ],
+ "lueckentexte": [
+  {
+   "woche": 9,
+   "titel": "Lückentext 1 : Les classiques",
+   "saetze": [
+    {
+     "de": "Hallo! Wie geht's?",
+     "fr": "Salut ! Ça ______ ?",
+     "loesung": "va"
+    },
+    {
+     "de": "Ja, gut, danke. Und dir?",
+     "fr": "Oui, ça va, merci. ______ ?",
+     "loesung": "Et toi"
+    },
+    {
+     "de": "Aber nein!",
+     "fr": "____________ !",
+     "loesung": "Mais non"
+    },
+    {
+     "de": "Haha, sehr witzig!",
+     "fr": "Ha ha, très ______ !",
+     "loesung": "drôle"
+    },
+    {
+     "de": "Okay, okay...",
+     "fr": "____________, ____________...",
+     "loesung": "D'accord, d'accord"
+    },
+    {
+     "de": "Ich auch!",
+     "fr": "Moi ______ !",
+     "loesung": "aussi"
+    },
+    {
+     "de": "Bis bald!",
+     "fr": "À ______ !",
+     "loesung": "bientôt"
+    },
+    {
+     "de": "Tschüss!",
+     "fr": "Au ______ !",
+     "loesung": "revoir"
+    }
+   ]
+  },
+  {
+   "woche": 9,
+   "titel": "Lückentext 2 : Les nouveaux mots",
+   "saetze": [
+    {
+     "de": "Spielst du gern Konsole?",
+     "fr": "Tu ______ jouer à la console ?",
+     "loesung": "aimes"
+    },
+    {
+     "de": "Nein, ich hasse die Konsole.",
+     "fr": "Non, je ______ la console.",
+     "loesung": "déteste"
+    },
+    {
+     "de": "Ich liebe... Hausaufgaben!",
+     "fr": "J'______... les devoirs !",
+     "loesung": "adore"
+    },
+    {
+     "de": "Das stimmt!",
+     "fr": "C'est ______ !",
+     "loesung": "vrai"
+    },
+    {
+     "de": "Magst du Musik?",
+     "fr": "Tu aimes la ______ ?",
+     "loesung": "musique"
+    },
+    {
+     "de": "Ich singe total gern!",
+     "fr": "J'adore ______ !",
+     "loesung": "chanter"
+    },
+    {
+     "de": "Hör mal!",
+     "fr": "______ !",
+     "loesung": "Écoute"
+    },
+    {
+     "de": "Du singst ganz schlecht!",
+     "fr": "Tu chantes très ______ !",
+     "loesung": "mal"
+    }
+   ]
+  },
+  {
+   "woche": 12,
+   "titel": "Lückentext 1 : Les classiques",
+   "saetze": [
+    {
+     "de": "Ich auch!",
+     "fr": "Moi ______ !",
+     "loesung": "aussi"
+    },
+    {
+     "de": "Du machst mich nach!",
+     "fr": "Tu ______ !",
+     "loesung": "copies"
+    },
+    {
+     "de": "Und du?",
+     "fr": "Et ______ ?",
+     "loesung": "toi"
+    },
+    {
+     "de": "Ich liebe Fußball!",
+     "fr": "J'______ le foot !",
+     "loesung": "adore"
+    },
+    {
+     "de": "Ich hasse Tanzen!",
+     "fr": "Je ______ danser !",
+     "loesung": "déteste"
+    },
+    {
+     "de": "Aber nein!",
+     "fr": "______ !",
+     "loesung": "Mais non"
+    },
+    {
+     "de": "Okay, okay …",
+     "fr": "______, ______...",
+     "loesung": "D'accord, d'accord"
+    },
+    {
+     "de": "Tschüss!",
+     "fr": "Au ______ !",
+     "loesung": "revoir"
+    }
+   ]
+  },
+  {
+   "woche": 12,
+   "titel": "Moi ! — Écris sur toi (offen)",
+   "saetze": [
+    {
+     "de": "Ich heiße …",
+     "fr": "Je m'appelle ____________ .",
+     "loesung": null
+    },
+    {
+     "de": "Ich bin … Jahre alt.",
+     "fr": "J'ai ______ ans.",
+     "loesung": null
+    },
+    {
+     "de": "Ich wohne in …",
+     "fr": "J'habite à ____________ .",
+     "loesung": null
+    },
+    {
+     "de": "Ich spreche … und …",
+     "fr": "Je parle ________ et ________ .",
+     "loesung": null
+    },
+    {
+     "de": "Ich liebe …",
+     "fr": "J'adore ____________ !",
+     "loesung": null
+    },
+    {
+     "de": "Ich hasse …, aber ich liebe …",
+     "fr": "Je déteste ________, mais j'adore ________ !",
+     "loesung": null
+    }
+   ]
+  }
+ ],
+ "vokabeln": [
+  {
+   "woche": 8,
+   "fr": "jouer au foot",
+   "de": "Fußball spielen",
+   "icon": null,
+   "thema": "les loisirs"
+  },
+  {
+   "woche": 8,
+   "fr": "la musique",
+   "de": "Musik",
+   "icon": null,
+   "thema": "les loisirs"
+  },
+  {
+   "woche": 8,
+   "fr": "danser",
+   "de": "tanzen",
+   "icon": null,
+   "thema": "les loisirs"
+  },
+  {
+   "woche": 8,
+   "fr": "le sport",
+   "de": "Sport",
+   "icon": null,
+   "thema": "les loisirs"
+  },
+  {
+   "woche": 8,
+   "fr": "jouer à la console",
+   "de": "Konsole spielen",
+   "icon": null,
+   "thema": "les loisirs"
+  },
+  {
+   "woche": 8,
+   "fr": "J'adore...",
+   "de": "Ich liebe ...",
+   "icon": null,
+   "thema": "les loisirs"
+  },
+  {
+   "woche": 8,
+   "fr": "J'aime...",
+   "de": "Ich mag ...",
+   "icon": null,
+   "thema": "les loisirs"
+  },
+  {
+   "woche": 8,
+   "fr": "Je préfère...",
+   "de": "Ich mag lieber ...",
+   "icon": null,
+   "thema": "les loisirs"
+  },
+  {
+   "woche": 8,
+   "fr": "Je déteste...",
+   "de": "Ich hasse ...",
+   "icon": null,
+   "thema": "les loisirs"
+  },
+  {
+   "woche": 9,
+   "fr": "j'aime",
+   "de": "ich mag",
+   "icon": "icons/aime.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 9,
+   "fr": "j'adore",
+   "de": "ich liebe",
+   "icon": "icons/adore.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 9,
+   "fr": "je déteste",
+   "de": "ich hasse",
+   "icon": "icons/deteste.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 9,
+   "fr": "la console",
+   "de": "die Konsole",
+   "icon": "icons/console.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 9,
+   "fr": "les devoirs",
+   "de": "die Hausaufgaben",
+   "icon": "icons/devoirs.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 9,
+   "fr": "C'est vrai !",
+   "de": "Das stimmt!",
+   "icon": "icons/vrai.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 9,
+   "fr": "la musique",
+   "de": "die Musik",
+   "icon": "icons/musique.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 9,
+   "fr": "chanter",
+   "de": "singen",
+   "icon": "icons/chanter.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 9,
+   "fr": "Écoute !",
+   "de": "Hör mal!",
+   "icon": "icons/ecoute.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 9,
+   "fr": "très mal",
+   "de": "sehr schlecht",
+   "icon": "icons/tresmal.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "le foot",
+   "de": "Fußball",
+   "icon": "icons/foot.png",
+   "thema": "hobby-tafel"
+  },
+  {
+   "woche": 12,
+   "fr": "le basket",
+   "de": "Basketball",
+   "icon": "icons/basket.png",
+   "thema": "hobby-tafel"
+  },
+  {
+   "woche": 12,
+   "fr": "la musique",
+   "de": "Musik",
+   "icon": "icons/musique.png",
+   "thema": "hobby-tafel"
+  },
+  {
+   "woche": 12,
+   "fr": "chanter",
+   "de": "singen",
+   "icon": "icons/chanter.png",
+   "thema": "hobby-tafel"
+  },
+  {
+   "woche": 12,
+   "fr": "danser",
+   "de": "tanzen",
+   "icon": "icons/danser.png",
+   "thema": "hobby-tafel"
+  },
+  {
+   "woche": 12,
+   "fr": "la console",
+   "de": "Konsole",
+   "icon": "icons/console.png",
+   "thema": "hobby-tafel"
+  },
+  {
+   "woche": 12,
+   "fr": "dessiner",
+   "de": "zeichnen",
+   "icon": "icons/dessiner.png",
+   "thema": "hobby-tafel"
+  },
+  {
+   "woche": 12,
+   "fr": "nager",
+   "de": "schwimmen",
+   "icon": "icons/nager.png",
+   "thema": "hobby-tafel"
+  },
+  {
+   "woche": 12,
+   "fr": "les devoirs",
+   "de": "Hausaufgaben",
+   "icon": "icons/devoirs.png",
+   "thema": "hobby-tafel"
+  },
+  {
+   "woche": 12,
+   "fr": "moi aussi",
+   "de": "ich auch",
+   "icon": "icons/moi.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "tu copies",
+   "de": "du machst nach",
+   "icon": "icons/copier.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "le foot",
+   "de": "Fußball",
+   "icon": "icons/foot.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "le basket",
+   "de": "Basketball",
+   "icon": "icons/basket.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "danser",
+   "de": "tanzen",
+   "icon": "icons/danser.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "dessiner",
+   "de": "zeichnen",
+   "icon": "icons/dessiner.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "nager",
+   "de": "schwimmen",
+   "icon": "icons/nager.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "je parle",
+   "de": "ich spreche",
+   "icon": "icons/parler.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "le froid",
+   "de": "die Kälte",
+   "icon": "icons/froid.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 12,
+   "fr": "la science",
+   "de": "die Wissenschaft",
+   "icon": "icons/science.png",
+   "thema": "vokabelfolie"
+  },
+  {
+   "woche": 1,
+   "fr": "Silence.",
+   "de": "Ruhe.",
+   "icon": null,
+   "thema": "les règles"
+  },
+  {
+   "woche": 1,
+   "fr": "Regardez Monsieur Alex.",
+   "de": "Schaut Monsieur Alex an.",
+   "icon": null,
+   "thema": "les règles"
+  },
+  {
+   "woche": 1,
+   "fr": "Écoutez le beat.",
+   "de": "Hört auf den Beat.",
+   "icon": null,
+   "thema": "les règles"
+  }
+ ],
+ "kernwendungen": [
+  {
+   "fr": "Au revoir !",
+   "de": "Tschüss!"
+  },
+  {
+   "fr": "Bonjour !",
+   "de": "Guten Tag!"
+  },
+  {
+   "fr": "Ça va ?",
+   "de": "Wie geht's?"
+  },
+  {
+   "fr": "Comment tu t'appelles ?",
+   "de": "Wie heißt du?"
+  },
+  {
+   "fr": "Je m'appelle...",
+   "de": "Ich heiße ..."
+  },
+  {
+   "fr": "Ha ha, très drôle !",
+   "de": "Haha, sehr witzig!"
+  },
+  {
+   "fr": "Oui, ça va, merci. Et toi ?",
+   "de": "Ja, gut, danke. Und dir?"
+  },
+  {
+   "fr": "Ça va bien.",
+   "de": "Mir geht's gut."
+  },
+  {
+   "fr": "Mais non !",
+   "de": "Aber nein!"
+  },
+  {
+   "fr": "D'accord, d'accord...",
+   "de": "Okay, okay ..."
+  },
+  {
+   "fr": "Quel âge as-tu ? / J'ai ... ans.",
+   "de": "Wie alt bist du? / Ich bin ... Jahre alt."
+  },
+  {
+   "fr": "À bientôt !",
+   "de": "Bis bald!"
+  },
+  {
+   "fr": "Salut !",
+   "de": "Hallo!"
+  },
+  {
+   "fr": "Alors...",
+   "de": "Also ..."
+  },
+  {
+   "fr": "Ah bon ?",
+   "de": "Ach ja?"
+  },
+  {
+   "fr": "Tu viens d'où ? / Je viens de France.",
+   "de": "Woher kommst du? / Ich komme aus Frankreich."
+  },
+  {
+   "fr": "C'est qui, là ? / Ça, c'est mon ami(e).",
+   "de": "Wer ist das da? / Das ist mein(e) Freund(in)."
+  },
+  {
+   "fr": "Il / Elle s'appelle...",
+   "de": "Er / Sie heißt ..."
+  },
+  {
+   "fr": "..., comme nous !",
+   "de": "..., wie wir!"
+  },
+  {
+   "fr": "Moi aussi ! / Toi aussi ?",
+   "de": "Ich auch! / Du auch?"
+  },
+  {
+   "fr": "incroyable !",
+   "de": "unglaublich!"
+  },
+  {
+   "fr": "Exactement !",
+   "de": "Genau!"
+  },
+  {
+   "fr": "Qu'est-ce que tu aimes, alors ?",
+   "de": "Was magst du denn dann?"
+  },
+  {
+   "fr": "C'est vrai !",
+   "de": "Das stimmt!"
+  },
+  {
+   "fr": "Chut ! Voilà ...",
+   "de": "Psst! Da ist ..."
+  },
+  {
+   "fr": "Tu copies !",
+   "de": "Du machst mich nach!"
+  }
+ ],
+ "zahlenreime": {
+  "audio": "audio/zahlenreime_julien.mp3",
+  "stimme": "Julien – Professional customer service (ElevenLabs, v4)",
+  "zahlen": [
+   {
+    "zahl": 1,
+    "fr": "un",
+    "lesehilfe": "Õ"
+   },
+   {
+    "zahl": 2,
+    "fr": "deux",
+    "lesehilfe": "DÖ"
+   },
+   {
+    "zahl": 3,
+    "fr": "trois",
+    "lesehilfe": "TRUA"
+   },
+   {
+    "zahl": 4,
+    "fr": "quatre",
+    "lesehilfe": "KATR"
+   },
+   {
+    "zahl": 5,
+    "fr": "cinq",
+    "lesehilfe": "ßẼK"
+   },
+   {
+    "zahl": 6,
+    "fr": "six",
+    "lesehilfe": "ßISS"
+   },
+   {
+    "zahl": 7,
+    "fr": "sept",
+    "lesehilfe": "ßÄT"
+   },
+   {
+    "zahl": 8,
+    "fr": "huit",
+    "lesehilfe": "WIT"
+   },
+   {
+    "zahl": 9,
+    "fr": "neuf",
+    "lesehilfe": "NÖF"
+   },
+   {
+    "zahl": 10,
+    "fr": "dix",
+    "lesehilfe": "DISS"
+   },
+   {
+    "zahl": 11,
+    "fr": "onze",
+    "lesehilfe": "ÕS"
+   },
+   {
+    "zahl": 12,
+    "fr": "douze",
+    "lesehilfe": "DUS"
+   },
+   {
+    "zahl": 13,
+    "fr": "treize",
+    "lesehilfe": "TRÄS"
+   },
+   {
+    "zahl": 14,
+    "fr": "quatorze",
+    "lesehilfe": "ka-TORS"
+   },
+   {
+    "zahl": 15,
+    "fr": "quinze",
+    "lesehilfe": "KẼS"
+   },
+   {
+    "zahl": 16,
+    "fr": "seize",
+    "lesehilfe": "ßÄS"
+   },
+   {
+    "zahl": 17,
+    "fr": "dix-sept",
+    "lesehilfe": "dis-ßÄT"
+   },
+   {
+    "zahl": 18,
+    "fr": "dix-huit",
+    "lesehilfe": "dis-WIT"
+   },
+   {
+    "zahl": 19,
+    "fr": "dix-neuf",
+    "lesehilfe": "dis-NÖF"
+   },
+   {
+    "zahl": 20,
+    "fr": "vingt",
+    "lesehilfe": "WẼ"
+   }
+  ],
+  "reime": [
+   {
+    "zahlen": "1–3",
+    "fr": "Un, deux, trois... Mbappé est roi !",
+    "de": "Eins, zwei, drei ... Mbappé ist König!",
+    "name": "Kylian Mbappé"
+   },
+   {
+    "zahlen": "4–6",
+    "fr": "Quatre, cinq, six... Barcola glisse !",
+    "de": "Vier, fünf, sechs ... Barcola rutscht!",
+    "name": "Bradley Barcola"
+   },
+   {
+    "zahlen": "7–9",
+    "fr": "Sept, huit, neuf... Doué aime le bœuf !",
+    "de": "Sieben, acht, neun ... Doué mag Rindfleisch!",
+    "name": "Désiré Doué"
+   },
+   {
+    "zahlen": "10–12",
+    "fr": "Dix, onze, douze... Saliba va à Toulouse !",
+    "de": "Zehn, elf, zwölf ... Saliba fährt nach Toulouse!",
+    "name": "William Saliba"
+   },
+   {
+    "zahlen": "13–16",
+    "fr": "Treize, quatorze, quinze, seize... Olise sur la chaise !",
+    "de": "Dreizehn, vierzehn, fünfzehn, sechzehn ... Olise auf dem Stuhl!",
+    "name": "Michael Olise"
+   },
+   {
+    "zahlen": "17–20",
+    "fr": "Dix-sept, dix-huit, dix-neuf, vingt... Tchouaméni, mon copain !",
+    "de": "Siebzehn, achtzehn, neunzehn, zwanzig ... Tchouaméni, mein Kumpel!",
+    "name": "Aurélien Tchouaméni"
+   }
+  ]
+ },
+ "namen": {
+  "fussballer": [
+   {
+    "name": "Kylian Mbappé",
+    "ipa": "[kiljɑ̃ mbape]",
+    "lesehilfe": "ki-LJÃ m-ba-PE",
+    "achtung": "m fast eigener Laut davor"
+   },
+   {
+    "name": "Aurélien Tchouaméni",
+    "ipa": "[oʁeljɛ̃ tʃwameni]",
+    "lesehilfe": "o-re-LJẼ tschua-me-NI",
+    "achtung": null
+   },
+   {
+    "name": "Hugo Ekitiké",
+    "ipa": "[yɡo ekitike]",
+    "lesehilfe": "ü-GO e-ki-ti-KE",
+    "achtung": "h stumm"
+   },
+   {
+    "name": "Ousmane Dembélé",
+    "ipa": "[usman dɑ̃bele]",
+    "lesehilfe": "us-MANN dã-be-LE",
+    "achtung": "Dem- nasal"
+   },
+   {
+    "name": "Bradley Barcola",
+    "ipa": "[bʁadlɛ baʁkɔla]",
+    "lesehilfe": "brad-LÄ bar-ko-LA",
+    "achtung": "französisch betont"
+   },
+   {
+    "name": "Désiré Doué",
+    "ipa": "[deziʁe dwe]",
+    "lesehilfe": "de-si-RE DUÄ",
+    "achtung": null
+   },
+   {
+    "name": "Warren Zaïre-Emery",
+    "ipa": "[waʁɛn zaiʁ ɛmʁi]",
+    "lesehilfe": "wa-RÄNN sa-IR äm-RI",
+    "achtung": "ï: a und i getrennt"
+   },
+   {
+    "name": "Michael Olise",
+    "ipa": "[mikaɛl ɔliz]",
+    "lesehilfe": "mi-ka-ÄL o-LIES",
+    "achtung": null
+   },
+   {
+    "name": "Maxence Lacroix",
+    "ipa": "[maksɑ̃s lakʁwa]",
+    "lesehilfe": "mak-SÃSS la-KRUA",
+    "achtung": "x am Ende stumm"
+   },
+   {
+    "name": "N'Golo Kanté",
+    "ipa": "[nɡɔlo kɑ̃te]",
+    "lesehilfe": "n-go-LO kã-TE",
+    "achtung": null
+   },
+   {
+    "name": "William Saliba",
+    "ipa": "[wiljam saliba]",
+    "lesehilfe": "wil-JAM sa-li-BA",
+    "achtung": null
+   },
+   {
+    "name": "Jules Koundé",
+    "ipa": "[ʒyl kunde]",
+    "lesehilfe": "schül kun-DE",
+    "achtung": null
+   },
+   {
+    "name": "Malo Gusto",
+    "ipa": "[malo ɡysto]",
+    "lesehilfe": "ma-LO güs-TO",
+    "achtung": "u = ü"
+   },
+   {
+    "name": "Théo Hernández",
+    "ipa": "[teo ɛʁnɑ̃dɛz]",
+    "lesehilfe": "te-O är-nã-DÄS",
+    "achtung": "h stumm, th = t"
+   },
+   {
+    "name": "Lucas Hernández",
+    "ipa": "[lyka ɛʁnɑ̃dɛz]",
+    "lesehilfe": "lü-KA är-nã-DÄS",
+    "achtung": "s von Lucas stumm"
+   },
+   {
+    "name": "Jean-Philippe Mateta",
+    "ipa": "[ʒɑ̃ filip mateta]",
+    "lesehilfe": "schã fi-LIPP ma-te-TA",
+    "achtung": null
+   },
+   {
+    "name": "Manu Koné",
+    "ipa": "[many kɔne]",
+    "lesehilfe": "ma-NÜ ko-NE",
+    "achtung": null
+   },
+   {
+    "name": "Adrien Rabiot",
+    "ipa": "[adʁijɛ̃ ʁabjo]",
+    "lesehilfe": "a-dri-JẼ ra-BJO",
+    "achtung": "t stumm"
+   },
+   {
+    "name": "Brice Samba",
+    "ipa": "[bʁis sɑ̃ba]",
+    "lesehilfe": "briß ßã-BA",
+    "achtung": "Sam- nasal"
+   },
+   {
+    "name": "Robin Risser",
+    "ipa": "[ʁɔbɛ̃ ʁisɛʁ]",
+    "lesehilfe": "ro-BẼ ri-ßÄR",
+    "achtung": "Robin nasal, kein n"
+   },
+   {
+    "name": "Dayot Upamecano",
+    "ipa": "[dajo ypamekano]",
+    "lesehilfe": "da-JO ü-pa-me-ka-NO",
+    "achtung": "t stumm"
+   }
+  ],
+  "praesident_stars": [
+   {
+    "name": "Emmanuel Macron",
+    "ipa": "[emanɥɛl makʁɔ̃]",
+    "lesehilfe": "e-ma-nü-ÄL ma-KRÕ",
+    "achtung": "-on nasal",
+    "stichwort": "président"
+   },
+   {
+    "name": "Angèle",
+    "ipa": "[ɑ̃ʒɛl]",
+    "lesehilfe": "ã-SCHÄL",
+    "achtung": null,
+    "stichwort": "chanteuse (Belgique)"
+   },
+   {
+    "name": "Sophie Adenot",
+    "ipa": "[sɔfi adəno]",
+    "lesehilfe": "so-FI ad-NO",
+    "achtung": "t stumm",
+    "stichwort": "astronaute"
+   }
+  ],
+  "orte": [
+   {
+    "name": "Metz",
+    "ipa": "[mɛs]",
+    "lesehilfe": "MÄSS",
+    "achtung": "tz = einfaches s"
+   },
+   {
+    "name": "Forbach",
+    "ipa": "[fɔʁbak]",
+    "lesehilfe": "for-BACK",
+    "achtung": "ch = k"
+   },
+   {
+    "name": "Sarreguemines",
+    "ipa": "[saʁɡəmin]",
+    "lesehilfe": "sar-gö-MIN",
+    "achtung": "s am Ende stumm"
+   },
+   {
+    "name": "la Moselle",
+    "ipa": "[la mozɛl]",
+    "lesehilfe": "la mo-SÄLL",
+    "achtung": null
+   },
+   {
+    "name": "l'Alsace-Lorraine",
+    "ipa": "[lalzas lɔʁɛn]",
+    "lesehilfe": "lal-SASS lo-RÄNN",
+    "achtung": null
+   },
+   {
+    "name": "Sarralbe",
+    "ipa": "[saʁalb]",
+    "lesehilfe": "sa-RALB",
+    "achtung": null
+   },
+   {
+    "name": "Saint-Avold",
+    "ipa": "[sɛ̃tavɔld]",
+    "lesehilfe": "ßẽ-ta-WOLD",
+    "achtung": "t gebunden, ld gesprochen"
+   },
+   {
+    "name": "Freyming-Merlebach",
+    "ipa": "[fʁɛmiŋ mɛʁləbak]",
+    "lesehilfe": "frä-MING mär-lö-BACK",
+    "achtung": null
+   },
+   {
+    "name": "la Nouvelle-Aquitaine",
+    "ipa": "[la nuvɛl akitɛn]",
+    "lesehilfe": "la nu-WÄLL a-ki-TÄNN",
+    "achtung": null
+   },
+   {
+    "name": "l'Auvergne-Rhône-Alpes",
+    "ipa": "[lovɛʁɲ ʁon alp]",
+    "lesehilfe": "lo-WÄRNJ RON ALP",
+    "achtung": "gn = nj"
+   },
+   {
+    "name": "Provence-Alpes-Côte-d'Azur",
+    "ipa": "[pʁɔvɑ̃s alp kot dazyʁ]",
+    "lesehilfe": "pro-WÃSS ALP koot da-SÜR",
+    "achtung": null
+   },
+   {
+    "name": "Aix-en-Provence",
+    "ipa": "[ɛks ɑ̃ pʁɔvɑ̃s]",
+    "lesehilfe": "äks ã pro-WÃSS",
+    "achtung": "x gesprochen"
+   },
+   {
+    "name": "Châteauneuf-du-Pape",
+    "ipa": "[ʃɑtonœf dy pap]",
+    "lesehilfe": "scha-to-NÖF dü PAPP",
+    "achtung": null
+   }
+  ],
+  "historische_personen": [
+   {
+    "name": "Napoléon Bonaparte",
+    "ipa": "[napɔleɔ̃ bɔnapaʁt]",
+    "lesehilfe": "na-po-le-ÕN bo-na-PART",
+    "achtung": "-éon nasal",
+    "stichwort": "empereur"
+   },
+   {
+    "name": "Charlemagne",
+    "ipa": "[ʃaʁləmaɲ]",
+    "lesehilfe": "schar-lö-MANJ",
+    "achtung": "gn = nj",
+    "stichwort": "empereur"
+   },
+   {
+    "name": "Vercingétorix",
+    "ipa": "[vɛʁsɛ̃ʒetɔʁiks]",
+    "lesehilfe": "wär-ßẽ-sche-to-RIX",
+    "achtung": "x gesprochen",
+    "stichwort": "chef gaulois"
+   },
+   {
+    "name": "Jeanne d'Arc",
+    "ipa": "[ʒan daʁk]",
+    "lesehilfe": "schann DARK",
+    "achtung": null,
+    "stichwort": "héroïne"
+   },
+   {
+    "name": "Louis XIV",
+    "ipa": "[lwi katɔʁz]",
+    "lesehilfe": "lu-I ka-TORS",
+    "achtung": "gesprochen „Louis Quatorze\"",
+    "stichwort": "le Roi-Soleil"
+   },
+   {
+    "name": "Marie Curie",
+    "ipa": "[maʁi kyʁi]",
+    "lesehilfe": "ma-RI kü-RI",
+    "achtung": null,
+    "stichwort": "scientifique"
+   },
+   {
+    "name": "Louis Pasteur",
+    "ipa": "[lwi pastœʁ]",
+    "lesehilfe": "lu-I pas-TÖR",
+    "achtung": null,
+    "stichwort": "scientifique"
+   },
+   {
+    "name": "Louis Braille",
+    "ipa": "[lwi bʁaj]",
+    "lesehilfe": "lu-I BRAJ",
+    "achtung": "-ille = j, kein l",
+    "stichwort": "inventeur"
+   },
+   {
+    "name": "Les frères Lumière",
+    "ipa": "[le fʁɛʁ lymjɛʁ]",
+    "lesehilfe": "le FRÄR lü-MJÄR",
+    "achtung": null,
+    "stichwort": "inventeurs du cinéma"
+   },
+   {
+    "name": "Gustave Eiffel",
+    "ipa": "[ɡystav ɛfɛl]",
+    "lesehilfe": "güs-TAW ä-FÄL",
+    "achtung": "nicht „Eifel\"",
+    "stichwort": "ingénieur"
+   },
+   {
+    "name": "Jules Verne",
+    "ipa": "[ʒyl vɛʁn]",
+    "lesehilfe": "schül WÄRN",
+    "achtung": null,
+    "stichwort": "écrivain"
+   },
+   {
+    "name": "Victor Hugo",
+    "ipa": "[viktɔʁ yɡo]",
+    "lesehilfe": "wik-TOR ü-GO",
+    "achtung": "h stumm",
+    "stichwort": "écrivain"
+   },
+   {
+    "name": "Alexandre Dumas",
+    "ipa": "[alɛksɑ̃dʁ dyma]",
+    "lesehilfe": "a-lek-ßÃDR dü-MA",
+    "achtung": "s stumm",
+    "stichwort": "écrivain"
+   },
+   {
+    "name": "Molière",
+    "ipa": "[mɔljɛʁ]",
+    "lesehilfe": "mo-LJÄR",
+    "achtung": null,
+    "stichwort": "auteur de théâtre"
+   },
+   {
+    "name": "Antoine de Saint-Exupéry",
+    "ipa": "[ɑ̃twan də sɛ̃tɛɡzypeʁi]",
+    "lesehilfe": "ã-TWAN dö ßẽ-tegg-sü-pe-RI",
+    "achtung": "t gebunden, x = gz",
+    "stichwort": null
+   },
+   {
+    "name": "Claude Monet",
+    "ipa": "[klod mɔnɛ]",
+    "lesehilfe": "klood mo-NÄ",
+    "achtung": "t stumm",
+    "stichwort": "peintre"
+   },
+   {
+    "name": "Coco Chanel",
+    "ipa": "[koko ʃanɛl]",
+    "lesehilfe": "ko-KO scha-NÄL",
+    "achtung": null,
+    "stichwort": "styliste"
+   },
+   {
+    "name": "Édith Piaf",
+    "ipa": "[edit pjaf]",
+    "lesehilfe": "e-DIT PJAF",
+    "achtung": "th = t",
+    "stichwort": "chanteuse"
+   },
+   {
+    "name": "Jacques-Yves Cousteau",
+    "ipa": "[ʒak iv kusto]",
+    "lesehilfe": "schack-IW ku-STO",
+    "achtung": "eau = o",
+    "stichwort": null
+   },
+   {
+    "name": "Pierre de Coubertin",
+    "ipa": "[pjɛʁ də kubɛʁtɛ̃]",
+    "lesehilfe": "pjär dö ku-bär-TẼ",
+    "achtung": "-tin nasal",
+    "stichwort": "père des Jeux olympiques"
+   },
+   {
+    "name": "Zinédine Zidane",
+    "ipa": "[zinedin zidan]",
+    "lesehilfe": "si-ne-DIN si-DANN",
+    "achtung": "z = weiches s",
+    "stichwort": "footballeur"
+   }
+  ]
+ },
+ "spotlights": [
+  {
+   "id": "Kante_Curie",
+   "personen": [
+    {
+     "name": "N'Golo Kanté",
+     "rolle": "footballeur",
+     "foto": {
+      "datei": "fotos/kante_sq.jpg",
+      "nachweis": "Foto: Amir Hosseini · CC BY 4.0 (Wikimedia Commons)"
+     },
+     "symbol": "icons/kante.png",
+     "saetze": [
+      {
+       "de": "Das ist N'Golo Kanté.",
+       "fr": "C'est N'Golo Kanté."
+      },
+      {
+       "de": "Seine Eltern kommen aus Mali.",
+       "fr": "Ses parents viennent du Mali."
+      },
+      {
+       "de": "Mit sieben Jahren sammelt er Müll für seine Familie.",
+       "fr": "À sept ans, il ramasse des déchets pour sa famille."
+      },
+      {
+       "de": "Er ist klein, aber sehr stark!",
+       "fr": "Il est petit, mais très fort !"
+      },
+      {
+       "de": "Er ist Weltmeister, aber sehr bescheiden!",
+       "fr": "Il est champion du monde, mais très modeste !"
+      }
+     ]
+    },
+    {
+     "name": "Marie Curie",
+     "rolle": "scientifique",
+     "foto": {
+      "datei": "fotos/curie_sq.jpg",
+      "nachweis": "Foto: Henri Manuel, um 1920 · gemeinfrei (Wikimedia Commons)"
+     },
+     "symbol": "icons/curie2.png",
+     "saetze": [
+      {
+       "de": "Das ist Marie Curie.",
+       "fr": "C'est Marie Curie."
+      },
+      {
+       "de": "Sie spricht Polnisch und Französisch.",
+       "fr": "Elle parle polonais et français."
+      },
+      {
+       "de": "Sie hat vier Geschwister.",
+       "fr": "Elle a quatre frères et sœurs."
+      },
+      {
+       "de": "Ihr ist kalt: Sie legt alle ihre Kleider aufs Bett!",
+       "fr": "Elle a froid : elle met tous ses vêtements sur son lit !"
+      },
+      {
+       "de": "Sie hasst die Kälte, aber sie liebt die Wissenschaft!",
+       "fr": "Elle déteste le froid, mais elle adore la science !"
+      }
+     ]
+    }
+   ],
+   "quiz": [
+    {
+     "fr": "Il est petit, mais très fort.",
+     "loesung": "N'Golo Kanté"
+    },
+    {
+     "fr": "Elle parle polonais.",
+     "loesung": "Marie Curie"
+    },
+    {
+     "fr": "Il ramasse des déchets.",
+     "loesung": "N'Golo Kanté"
+    },
+    {
+     "fr": "Elle a quatre frères et sœurs.",
+     "loesung": "Marie Curie"
+    },
+    {
+     "fr": "Elle déteste le froid.",
+     "loesung": "Marie Curie"
+    },
+    {
+     "fr": "Il est champion du monde.",
+     "loesung": "N'Golo Kanté"
+    }
+   ],
+   "audio": {
+    "stimme": "Alex Langenbach (eigene Stimme, ElevenLabs v4)",
+    "quiz": "audio/spotlight/Kante_Curie_quiz.mp3",
+    "loesung": "audio/spotlight/Kante_Curie_loesung.mp3",
+    "person_a": "audio/spotlight/Kante_Curie_kante.mp3",
+    "person_b": "audio/spotlight/Kante_Curie_curie.mp3",
+    "et_toi": "audio/spotlight/Kante_Curie_et_toi.mp3"
+   },
+   "et_toi": [
+    {
+     "fr": "Marie Curie déteste le froid. Et toi ?",
+     "de": "Marie Curie hasst die Kälte. Und du?",
+     "antwortrahmen": "Moi aussi ! / Moi, j'adore le froid !"
+    },
+    {
+     "fr": "Marie Curie adore la science. Et toi ?",
+     "de": "Marie Curie liebt die Wissenschaft. Und du?",
+     "antwortrahmen": "J'adore … / Je déteste la science !"
+    },
+    {
+     "fr": "Marie Curie parle polonais et français. Et toi ?",
+     "de": "Marie Curie spricht Polnisch und Französisch. Und du?",
+     "antwortrahmen": "Je parle ______ et ______ !"
+    },
+    {
+     "fr": "Marie Curie a quatre frères et sœurs. Et toi ?",
+     "de": "Marie Curie hat vier Geschwister. Und du?",
+     "antwortrahmen": "J'ai ______ frères et sœurs."
+    },
+    {
+     "fr": "N'Golo Kanté adore le foot. Et toi ?",
+     "de": "N'Golo Kanté liebt Fußball. Und du?",
+     "antwortrahmen": "Moi aussi ! / Je déteste le foot !"
+    }
+   ]
+  },
+  {
+   "id": "Mbappe_LouisXIV",
+   "personen": [
+    {
+     "name": "Kylian Mbappé",
+     "rolle": "footballeur",
+     "foto": {
+      "datei": "fotos/mbappe2_sq.jpg",
+      "nachweis": "Foto: Bryan Berlin · CC BY-SA 4.0 (Wikimedia Commons)"
+     },
+     "symbol": "icons/mbappe.png",
+     "saetze": [
+      {
+       "de": "Das ist Kylian Mbappé.",
+       "fr": "C'est Kylian Mbappé."
+      },
+      {
+       "de": "Er wächst in Bondy auf, bei Paris.",
+       "fr": "Il grandit à Bondy, près de Paris."
+      },
+      {
+       "de": "Als Kind hat er Poster von Cristiano Ronaldo in seinem Zimmer!",
+       "fr": "Petit, il a des posters de Cristiano Ronaldo dans sa chambre !"
+      },
+      {
+       "de": "Sein kleiner Bruder Ethan spielt auch Fußball.",
+       "fr": "Son petit frère Ethan joue au foot aussi."
+      },
+      {
+       "de": "Man sagt: „Mbappé ist König!“",
+       "fr": "On dit : « Mbappé est roi ! »"
+      }
+     ]
+    },
+    {
+     "name": "Louis XIV",
+     "rolle": "le Roi-Soleil",
+     "foto": {
+      "datei": "fotos/louis_sq.jpg",
+      "nachweis": "Gemälde: Hyacinthe Rigaud, 1701 · gemeinfrei (Wikimedia Commons)"
+     },
+     "symbol": "icons/louis.png",
+     "saetze": [
+      {
+       "de": "Das ist Ludwig XIV., der Sonnenkönig.",
+       "fr": "C'est Louis XIV, le Roi-Soleil."
+      },
+      {
+       "de": "Mit vier Jahren ist er König!",
+       "fr": "À quatre ans, il est roi !"
+      },
+      {
+       "de": "Er ist 72 Jahre lang König!",
+       "fr": "Il est roi pendant soixante-douze ans !"
+      },
+      {
+       "de": "Er wohnt in Versailles, einem riesigen Schloss.",
+       "fr": "Il habite à Versailles, un très grand château."
+      },
+      {
+       "de": "Er tanzt total gern!",
+       "fr": "Il adore danser !"
+      }
+     ]
+    }
+   ],
+   "quiz": [
+    {
+     "fr": "Il est roi à quatre ans.",
+     "loesung": "Louis XIV"
+    },
+    {
+     "fr": "Il a des posters de Ronaldo.",
+     "loesung": "Kylian Mbappé"
+    },
+    {
+     "fr": "Il adore danser.",
+     "loesung": "Louis XIV"
+    },
+    {
+     "fr": "Son petit frère joue au foot.",
+     "loesung": "Kylian Mbappé"
+    },
+    {
+     "fr": "Il habite à Versailles.",
+     "loesung": "Louis XIV"
+    },
+    {
+     "fr": "Il grandit à Bondy.",
+     "loesung": "Kylian Mbappé"
+    }
+   ]
+  },
+  {
+   "id": "Napoleon_Angele",
+   "personen": [
+    {
+     "name": "Napoléon Bonaparte",
+     "rolle": "empereur",
+     "foto": {
+      "datei": "fotos/napoleon_sq.jpg",
+      "nachweis": "Gemälde: Jacques-Louis David, 1812 · gemeinfrei (Wikimedia Commons)"
+     },
+     "symbol": "icons/napoleon.png",
+     "saetze": [
+      {
+       "de": "Das ist Napoléon Bonaparte.",
+       "fr": "C'est Napoléon Bonaparte."
+      },
+      {
+       "de": "Seine erste Sprache ist Korsisch.",
+       "fr": "Sa première langue, c'est le corse."
+      },
+      {
+       "de": "Französisch lernt er in der Schule.",
+       "fr": "Le français, il l'apprend à l'école."
+      },
+      {
+       "de": "Er hat sieben Geschwister.",
+       "fr": "Il a sept frères et sœurs."
+      },
+      {
+       "de": "Seine Brüder werden Könige!",
+       "fr": "Ses frères deviennent rois !"
+      }
+     ]
+    },
+    {
+     "name": "Angèle",
+     "rolle": "chanteuse",
+     "foto": {
+      "datei": "fotos/angele_sq.jpg",
+      "nachweis": "Foto: Joan Hernandez Mir · CC BY 2.0 (Wikimedia Commons)"
+     },
+     "symbol": "icons/angele.png",
+     "saetze": [
+      {
+       "de": "Das ist Angèle. Sie ist Belgierin.",
+       "fr": "C'est Angèle. Elle est belge."
+      },
+      {
+       "de": "Sie singt und spielt Klavier.",
+       "fr": "Elle chante et elle joue du piano."
+      },
+      {
+       "de": "Ihr Vater ist Sänger, ihre Mutter Schauspielerin.",
+       "fr": "Son père est chanteur, sa mère est actrice."
+      },
+      {
+       "de": "Ihr Bruder Roméo Elvis ist Rapper!",
+       "fr": "Son frère Roméo Elvis est rappeur !"
+      },
+      {
+       "de": "Die ganze Familie ist berühmt!",
+       "fr": "Toute la famille est célèbre !"
+      }
+     ]
+    }
+   ],
+   "quiz": [
+    {
+     "fr": "Elle joue du piano.",
+     "loesung": "Angèle"
+    },
+    {
+     "fr": "Il a sept frères et sœurs.",
+     "loesung": "Napoléon Bonaparte"
+    },
+    {
+     "fr": "Son frère est rappeur.",
+     "loesung": "Angèle"
+    },
+    {
+     "fr": "Ses frères deviennent rois.",
+     "loesung": "Napoléon Bonaparte"
+    },
+    {
+     "fr": "Sa première langue, c'est le corse.",
+     "loesung": "Napoléon Bonaparte"
+    },
+    {
+     "fr": "Elle est belge.",
+     "loesung": "Angèle"
+    }
+   ]
+  },
+  {
+   "id": "Zidane_Piaf",
+   "personen": [
+    {
+     "name": "Zinédine Zidane",
+     "rolle": "footballeur",
+     "foto": {
+      "datei": "fotos/zidane_sq.jpg",
+      "nachweis": "Foto: Raphaël Labbé · CC BY-SA 2.0 (Wikimedia Commons)"
+     },
+     "symbol": "icons/zidane.png",
+     "saetze": [
+      {
+       "de": "Das ist Zinédine Zidane, „Zizou“.",
+       "fr": "C'est Zinédine Zidane, « Zizou »."
+      },
+      {
+       "de": "Seine Eltern kommen aus Algerien.",
+       "fr": "Ses parents viennent d'Algérie."
+      },
+      {
+       "de": "Er wächst in Marseille auf, in einem armen Viertel.",
+       "fr": "Il grandit à Marseille, dans un quartier pauvre."
+      },
+      {
+       "de": "Er hat vier Geschwister und vier Söhne!",
+       "fr": "Il a quatre frères et sœurs, et quatre fils !"
+      },
+      {
+       "de": "Seine Söhne lieben Fußball!",
+       "fr": "Ses fils adorent le foot !"
+      }
+     ]
+    },
+    {
+     "name": "Édith Piaf",
+     "rolle": "chanteuse",
+     "foto": {
+      "datei": "fotos/piaf_sq.jpg",
+      "nachweis": "Foto: Eric Koch / Anefo, Nationaal Archief · CC0 (Wikimedia Commons)"
+     },
+     "symbol": "icons/piaf.png",
+     "saetze": [
+      {
+       "de": "Das ist Édith Piaf.",
+       "fr": "C'est Édith Piaf."
+      },
+      {
+       "de": "Als Kind singt sie auf der Straße.",
+       "fr": "Petite, elle chante dans la rue."
+      },
+      {
+       "de": "Sie ist sehr arm.",
+       "fr": "Elle est très pauvre."
+      },
+      {
+       "de": "„Piaf“ heißt kleiner Vogel (Spatz).",
+       "fr": "« Piaf », c'est un petit oiseau."
+      },
+      {
+       "de": "Sie ist sehr klein: 1,47 Meter!",
+       "fr": "Elle est très petite : un mètre quarante-sept !"
+      }
+     ]
+    }
+   ],
+   "quiz": [
+    {
+     "fr": "Il a quatre fils.",
+     "loesung": "Zinédine Zidane"
+    },
+    {
+     "fr": "Elle chante dans la rue.",
+     "loesung": "Édith Piaf"
+    },
+    {
+     "fr": "Ses parents viennent d'Algérie.",
+     "loesung": "Zinédine Zidane"
+    },
+    {
+     "fr": "Elle est très petite.",
+     "loesung": "Édith Piaf"
+    },
+    {
+     "fr": "Il grandit à Marseille.",
+     "loesung": "Zinédine Zidane"
+    },
+    {
+     "fr": "« Piaf », c'est un petit oiseau.",
+     "loesung": "Édith Piaf"
+    }
+   ]
+  },
+  {
+   "id": "Doue_JeanneDArc",
+   "personen": [
+    {
+     "name": "Désiré Doué",
+     "rolle": "footballeur",
+     "foto": {
+      "datei": "fotos/doue_sq.jpg",
+      "nachweis": "Foto: Bryan Berlin · CC BY-SA 4.0 (Wikimedia Commons)"
+     },
+     "symbol": "icons/doue.png",
+     "saetze": [
+      {
+       "de": "Das ist Désiré Doué.",
+       "fr": "C'est Désiré Doué."
+      },
+      {
+       "de": "Im Champions-League-Finale ist er 19 Jahre alt.",
+       "fr": "En finale de la Ligue des champions, il a dix-neuf ans."
+      },
+      {
+       "de": "Er schießt zwei Tore!",
+       "fr": "Il marque deux buts !"
+      },
+      {
+       "de": "Rekord: Er ist der Jüngste!",
+       "fr": "C'est un record : il est le plus jeune !"
+      },
+      {
+       "de": "Sein großer Bruder Guéla spielt auch Fußball.",
+       "fr": "Son grand frère Guéla joue au foot aussi."
+      }
+     ]
+    },
+    {
+     "name": "Jeanne d'Arc",
+     "rolle": "héroïne",
+     "foto": {
+      "datei": "fotos/jeanne_sq.jpg",
+      "nachweis": "Gemälde: Jean-Auguste-Dominique Ingres, 1854 · gemeinfrei (Wikimedia Commons)"
+     },
+     "symbol": "icons/jeanne.png",
+     "saetze": [
+      {
+       "de": "Das ist Jeanne d'Arc.",
+       "fr": "C'est Jeanne d'Arc."
+      },
+      {
+       "de": "Sie ist in Lothringen geboren, nicht weit von uns!",
+       "fr": "Elle est née en Lorraine, près de chez nous !"
+      },
+      {
+       "de": "Sie kann nicht lesen.",
+       "fr": "Elle ne sait pas lire."
+      },
+      {
+       "de": "Mit 17 Jahren führt sie eine Armee!",
+       "fr": "À dix-sept ans, elle est chef d'une armée !"
+      },
+      {
+       "de": "Sie ist sehr mutig!",
+       "fr": "Elle est très courageuse !"
+      }
+     ]
+    }
+   ],
+   "quiz": [
+    {
+     "fr": "Il marque deux buts.",
+     "loesung": "Désiré Doué"
+    },
+    {
+     "fr": "Elle ne sait pas lire.",
+     "loesung": "Jeanne d'Arc"
+    },
+    {
+     "fr": "Il a dix-neuf ans.",
+     "loesung": "Désiré Doué"
+    },
+    {
+     "fr": "Elle a dix-sept ans.",
+     "loesung": "Jeanne d'Arc"
+    },
+    {
+     "fr": "Son grand frère joue au foot.",
+     "loesung": "Désiré Doué"
+    },
+    {
+     "fr": "Elle est née en Lorraine.",
+     "loesung": "Jeanne d'Arc"
+    }
+   ]
+  },
+  {
+   "id": "Wembanyama_Eiffel",
+   "personen": [
+    {
+     "name": "Victor Wembanyama",
+     "rolle": "basketteur",
+     "foto": {
+      "datei": "fotos/wemby_sq.jpg",
+      "nachweis": "Foto: Thomas S · CC BY-SA 2.0 (Wikimedia Commons)"
+     },
+     "symbol": "icons/wemby.png",
+     "saetze": [
+      {
+       "de": "Das ist Victor Wembanyama, „Wemby“.",
+       "fr": "C'est Victor Wembanyama, « Wemby »."
+      },
+      {
+       "de": "Er spielt Basketball in den USA.",
+       "fr": "Il joue au basket aux États-Unis."
+      },
+      {
+       "de": "Er ist sehr groß: über 2,20 Meter!",
+       "fr": "Il est très grand : plus de deux mètres vingt !"
+      },
+      {
+       "de": "Seine Mutter spielt auch Basketball.",
+       "fr": "Sa mère joue au basket aussi."
+      },
+      {
+       "de": "Man nennt ihn „das Alien“!",
+       "fr": "On l'appelle « l'Alien » !"
+      }
+     ]
+    },
+    {
+     "name": "Gustave Eiffel",
+     "rolle": "ingénieur",
+     "foto": {
+      "datei": "fotos/eiffel_sq.jpg",
+      "nachweis": "Foto: Atelier Nadar · gemeinfrei (Wikimedia Commons)"
+     },
+     "symbol": "icons/eiffel.png",
+     "saetze": [
+      {
+       "de": "Das ist Gustave Eiffel.",
+       "fr": "C'est Gustave Eiffel."
+      },
+      {
+       "de": "Er baut den Eiffelturm.",
+       "fr": "Il construit la tour Eiffel."
+      },
+      {
+       "de": "Der Turm ist sehr groß: 330 Meter!",
+       "fr": "La tour est très grande : trois cent trente mètres !"
+      },
+      {
+       "de": "Am Anfang soll der Turm nur 20 Jahre stehen.",
+       "fr": "Au début, la tour est pour vingt ans seulement."
+      },
+      {
+       "de": "Im Sommer wird er bis zu 15 cm größer!",
+       "fr": "En été, elle est plus grande : quinze centimètres !"
+      }
+     ]
+    }
+   ],
+   "quiz": [
+    {
+     "fr": "Il joue au basket.",
+     "loesung": "Victor Wembanyama"
+    },
+    {
+     "fr": "Il construit une tour.",
+     "loesung": "Gustave Eiffel"
+    },
+    {
+     "fr": "On l'appelle « l'Alien ».",
+     "loesung": "Victor Wembanyama"
+    },
+    {
+     "fr": "La tour est pour vingt ans.",
+     "loesung": "Gustave Eiffel"
+    },
+    {
+     "fr": "Sa mère joue au basket.",
+     "loesung": "Victor Wembanyama"
+    },
+    {
+     "fr": "Trois cent trente mètres !",
+     "loesung": "Gustave Eiffel"
+    }
+   ]
+  },
+  {
+   "id": "Dembele_Chanel",
+   "personen": [
+    {
+     "name": "Ousmane Dembélé",
+     "rolle": "footballeur",
+     "foto": {
+      "datei": "fotos/dembele2_sq.jpg",
+      "nachweis": "Foto: Bryan Berlin · CC BY-SA 4.0 (Wikimedia Commons)"
+     },
+     "symbol": "icons/dembele.png",
+     "saetze": [
+      {
+       "de": "Das ist Ousmane Dembélé.",
+       "fr": "C'est Ousmane Dembélé."
+      },
+      {
+       "de": "Er wächst in Évreux in der Normandie auf.",
+       "fr": "Il grandit à Évreux, en Normandie."
+      },
+      {
+       "de": "Er spielt mit beiden Füßen gleich gut!",
+       "fr": "Il joue avec les deux pieds !"
+      },
+      {
+       "de": "Er bekommt den Ballon d'Or 2025.",
+       "fr": "Il a le Ballon d'or 2025."
+      },
+      {
+       "de": "Er weint und dankt seiner Mama.",
+       "fr": "Il pleure et il dit merci à sa maman."
+      }
+     ]
+    },
+    {
+     "name": "Coco Chanel",
+     "rolle": "styliste",
+     "foto": {
+      "datei": "fotos/chanel_sq.jpg",
+      "nachweis": "Foto: unbekannt · gemeinfrei (Wikimedia Commons)"
+     },
+     "symbol": "icons/chanel.png",
+     "saetze": [
+      {
+       "de": "Das ist Coco Chanel.",
+       "fr": "C'est Coco Chanel."
+      },
+      {
+       "de": "Als Kind lebt sie in einem Waisenhaus.",
+       "fr": "Petite, elle habite dans un orphelinat."
+      },
+      {
+       "de": "Dort lernt sie nähen.",
+       "fr": "Là, elle apprend à coudre."
+      },
+      {
+       "de": "Sie erfindet das kleine Schwarze.",
+       "fr": "Elle invente la petite robe noire."
+      },
+      {
+       "de": "Frauen in Hosen? Das ist Coco!",
+       "fr": "Les femmes en pantalon ? C'est Coco !"
+      }
+     ]
+    }
+   ],
+   "quiz": [
+    {
+     "fr": "Il joue avec les deux pieds.",
+     "loesung": "Ousmane Dembélé"
+    },
+    {
+     "fr": "Elle invente la petite robe noire.",
+     "loesung": "Coco Chanel"
+    },
+    {
+     "fr": "Il dit merci à sa maman.",
+     "loesung": "Ousmane Dembélé"
+    },
+    {
+     "fr": "Elle apprend à coudre.",
+     "loesung": "Coco Chanel"
+    },
+    {
+     "fr": "Il a le Ballon d'or.",
+     "loesung": "Ousmane Dembélé"
+    },
+    {
+     "fr": "Elle porte un pantalon.",
+     "loesung": "Coco Chanel"
+    }
+   ]
+  }
+ ]
+}

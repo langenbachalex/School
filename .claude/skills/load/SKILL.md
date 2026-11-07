@@ -1,6 +1,6 @@
 ---
-name: block
-description: Startet einen neuen Arbeitsblock in einem frischen Chat (Projekt School, Mr. Alex) – liest die Regeln und den Stand aus dem Repo, nennt die offenen Blöcke und fragt, welcher dran ist. Aufruf mit /block, optional mit Thema (z. B. /block Staaten-Fotos).
+name: load
+description: Startet einen neuen Arbeitsblock in einem frischen Chat (Projekt School, Mr. Alex) – liest die Regeln und den Stand aus dem Repo, nennt die offenen Blöcke und fragt, welcher dran ist. Aufruf mit /load, optional mit Thema (z. B. /load Staaten-Fotos).
 ---
 
 # Arbeitsblock starten
@@ -14,4 +14,4 @@ Du bist in einem neuen Chat für genau einen Arbeitsblock. Nichts aus früheren 
    - Falls ein Thema übergeben wurde: ein Vorschlag, wie dieser Block mit möglichst wenig Aufwand gebaut wird, plus schlankere Variante.
    - Frage: „Welcher Block, und gilt das OK gleich für den Push?“
 3. Danach gelten die festen Regeln: OK vor dem Bauen, Push nur nach ausdrücklichem OK, Commits nur mit den Dateien des Blocks, Tests gezielt, Antworten kurz, Subagenten nur für große Bauten.
-4. Am Ende des Blocks `/abschluss` ausführen (oder Mr. Alex erinnern, es zu sagen).
+4. Am Ende des Blocks `/save` ausführen (oder Mr. Alex erinnern, es zu sagen).

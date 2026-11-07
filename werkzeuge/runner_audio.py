@@ -50,6 +50,14 @@ HELD_RUFE = {   # Ausrufe in den Heldenfilmen (Sprechblase im Film = dieser Text
     "leo": "Too fast for you!", "camilla": "Easy peasy!",
 }
 
+# Regel Mr. Alex (7.11.2026): kurze Zurufe (bis ~4 Wörter), besonders mit R am Wortende („fire“), bekommen zusätzlich den Tag [British accent],
+# sonst spricht die Stimme das End-R amerikanisch. Gilt für alle kurzen englischen Zeilen (v4 kennt keinen language_code en-GB).
+def britisch(text):
+    kurz = len(re.findall(r"[A-Za-z']+", text)) <= 4
+    end_r = bool(re.search(r"[aeiou]r\b", text, re.I))
+    return " [British accent]" if kurz or end_r else ""
+
+
 ALEX_TAGS = {"start": "[cheerful]", "combo3": "[cheerful]", "combo5": "[excited]", "combo8": "[excited]", "tore3": "[cheerful]", "leben": "[encouraging]",
              "letztes": "[calm]", "halb": "[cheerful]", "boss": "[encouraging]", "ende": "[warm]", "fail": "[warm]"}   # leichte Tags je Moment (nur im gesprochenen Text)
 
@@ -109,7 +117,7 @@ def auftraege():
         liste.append((6, APP6, f"audio/helden/ruf_{h}.mp3", CAMEO_STIMME[h], f"{HELD_TAGS[h]} {text}"))
     # Mr. Alex' Zurufe im Lauf (7.11.2026): einmal vertonen (Klasse 6), Kopie für Klasse 9 (alex_kopieren)
     for key, text in alex_zurufe():
-        liste.append((6, APP6, f"audio/alex/{key}.mp3", "en_alex", f"{ALEX_TAGS[key.rsplit('_', 1)[0]]} {text}"))
+        liste.append((6, APP6, f"audio/alex/{key}.mp3", "en_alex", f"{ALEX_TAGS[key.rsplit('_', 1)[0]]}{britisch(text)} {text}"))
     import klasse9_audio
     for pfad, stimme, text in klasse9_audio.auftraege():
         if pfad.startswith("audio/beae/w_"):

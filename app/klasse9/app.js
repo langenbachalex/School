@@ -3302,7 +3302,8 @@
         // Cameo-Satz des Helden (US-Stimme, audio/runner/cameo_<id>.mp3); fehlt die Aufnahme, spricht die Geräte-Stimme
         cameo: (text, id, o) => hauptText([(o && o.audio) || { text: text.replace(/[–—]/g, ","), stimme: HELD_STIMME[id] || "f" }], { warten: true }),
         // U-Bahn-Durchsage New York („Stand clear of the closing doors, please.“): nur wenn gerade kein Haupttext läuft – nie störend
-        durchsage: (text) => { if (!hauptLaeuft) hauptText([{ text, stimme: "m" }], { warten: true }); } },
+        durchsage: (text) => { if (!hauptLaeuft) hauptText([{ text, stimme: "m" }], { warten: true }); },
+        beschaeftigt: () => hauptLaeuft },   // Runner 7.11.: läuft gerade ein Haupttext? (der Cameo-Auftritt wartet dahinter, höchstens ≈ 6 s)
       onEnde: (e) => runnerEnde(k, unit, i, e, ws, W.id),
     });
   }

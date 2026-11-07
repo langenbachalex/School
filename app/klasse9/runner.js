@@ -34,6 +34,8 @@
    Cameos (31.10., Option cameos: [{ id, name, bild, kraft }]): 2–3 Gastauftritte der geheimen Superhelden je Lauf (rundes Kartenbild, Umhang, Sprechblase ≈ 2,5 s) mit kleinem Effekt (CAMEO);
    ohne die Option gibt es keine Cameos. stimme.cameo(text, id, { audio }) spricht den Satz (optional). Option cameoAnzahl (7.11., Klasse 9: 1) = feste Zahl Auftritte je Lauf (sonst 2–3, Klasse 6);
    Klasse 9 (Road Trip Run) übergibt die 13 US-Helden (inhalte/klasse9/helden.tsv) mit cameoAnzahl 1 – seltener als Klasse 6.
+   Cameo-Feinschliff (7.11., Mr. Alex): Laser/Ramme/Rolle lassen das Hindernis in Splitter zerplatzen (aus der Liste, klang.krach); Maya hält im Schweben über Lücken die Höhe;
+   der Auftritt wartet auf eine laufende Ansage (stimme.beschaeftigt() der App, höchstens CAMEO_WARTEN_MAX = 6 s); die Sprechblase weicht den Effekt-Chips aus.
    Aufnahmen (31.10.): Option audio = { boss: { banner, richtig, falsch }, start, ende, cameo: { leo: … } } (Dateipfade der App, je Welt); die Engine reicht sie weiter:
    stimme.boss(text, { art: 'banner'|'richtig'|'falsch', audio }), stimme.cameo(text, id, { audio }), stimme.ansage(text, { art: 'start', audio }) beim Loslaufen.
    Fehlt eine Datei (audio null), spricht die App mit der Geräte-Stimme. Boss-Sprüche richtig/falsch und Levelstart/-ende-Texte je Welt in WELTEN (richtig, falsch, start, ende).
@@ -369,6 +371,7 @@
     // Drachenhöhle (Kapitel 3): Schnarchen = tiefes Anschwellen + Rauschen, kurzer Pfeifton beim Ausatmen; Flammenstoß = Rauschen (Zischen) mit tiefem Grollen
     schnarchen() { ton(70, 0.9, "sawtooth", 0.035, 0, 95); rauschen(0.8, 0.02, 0.05, { typ: "lowpass", freq: 260 }); ton(640, 0.5, "sine", 0.012, 1.05, 520); },
     zapfen() { for (let i = 0; i < 3; i++) ton(2400 + i * 300, 0.04, "square", 0.03, i * 0.12, 1800); rauschen(0.3, 0.025, 0, { typ: "highpass", freq: 3000 }); },   // Eiszapfen knackt (Warnung)
+    krach() { rauschen(0.18, 0.09, 0, { typ: "bandpass", freq: 700 }); ton(180, 0.22, "square", 0.06, 0, 55); rauschen(0.35, 0.05, 0.08, { typ: "lowpass", freq: 500 }); [1568, 1175, 1760].forEach((f, i) => ton(f, 0.07, "triangle", 0.035, 0.1 + i * 0.05)); },   // Kl. 9 Brecher: Hindernis zerplatzt (Krach + Splitter-Klirren)
     splittern() { rauschen(0.22, 0.06, 0, { typ: "highpass", freq: 2600 }); [3136, 2637, 3520].forEach((f, i) => ton(f, 0.12, "triangle", 0.05, i * 0.05)); },   // Eiszapfen zersplittert am Boden
     // Orts-Szene Big Ben (6.11.): Glockenschlag – echte Aufnahme, wenn die App eine Datei gesetzt hat (Runner.klangDatei('glocke', …)), sonst WebAudio-Nachbau:
     // Stundenglocke E (≈ 165 Hz) mit Glocken-Teiltönen (Hum, Prime, kleine Terz, Quinte, Nominal); davor im Szenen-Ablauf die Westminster-Viertelmelodie (viertel)
@@ -1822,9 +1825,9 @@
   let schild = 0, sprungBonus = 0, durchlaessig = 0, eisZeit = 0, traegt = 0, traegtAktiv = false, eule = null;
   // Klasse 9 (7.11.): brecher = Restzeit, in der das nächste Hindernis zerbricht (brecherArt 'laser' Eddie / 'ramme' Bonnie, Benny ohne Lücke: einmal; 'rolle' Archie: alle bis Ablauf),
   // schweben = Maya (Fallen gebremst), heldBruecke = Bennys Brücke {x, w} über die nächste Lücke, wegZiel = { art, zeit, alle } Ally/Molly/Sunny nehmen Gegner aus dem Spiel, sprungArt 'kenji'|'puma'
-  let cameoAnzahl = 0, brecher = 0, brecherArt = null, schweben = 0, heldBruecke = null, wegZiel = null, sprungArt = 'kenji', laserBlitz = 0;
+  let cameoAnzahl = 0, brecher = 0, brecherArt = null, schweben = 0, heldBruecke = null, wegZiel = null, sprungArt = 'kenji', laserBlitz = 0, mayaGleitet = false;
   let kenjiMit = 0, kenjiSprung = -1;   // Cameo Kenji (7.11., Mr. Alex): Kenji hüpft neben der Figur mit (kenjiMit = Restzeit) und springt beim Bonus-Sprung mit ihr hoch (kenjiSprung = Zeit seit dem Absprung, −1 = am Boden)
-  const CAMEO_DAUER = 2.5, CAMEO_EIN = 0.5, CAMEO_AUS = 0.45, CAMEO_R = 24;
+  const CAMEO_DAUER = 2.5, CAMEO_EIN = 0.5, CAMEO_AUS = 0.45, CAMEO_R = 24, CAMEO_WARTEN_MAX = 6;
   let autoKlangZeit = -9;
   let sequenz = null, zoom = 1, banner = null, bossSpruch = null;
   let halten = false, haltZeit = 0, sprungGedrueckt = false;
@@ -2059,7 +2062,7 @@
   }
   /* Klasse 9: Hilfen der neuen Cameo-Effekte */
   function cameoK9Aus() {   // beim Neustart und vor dem Boss
-    brecher = 0; brecherArt = null; schweben = 0; wegZiel = null; sprungArt = 'kenji'; laserBlitz = 0;
+    brecher = 0; brecherArt = null; schweben = 0; wegZiel = null; sprungArt = 'kenji'; laserBlitz = 0; mayaGleitet = false;
     if (heldBruecke) { SOLIDE = SOLIDE.filter((q) => !q.heldBruecke); heldBruecke = null; }
   }
   // Benny: Brücke über die nächste Lücke vor der Figur (höchstens 1600 weiter, höchstens 520 breit); false = keine Lücke in Reichweite
@@ -2106,7 +2109,16 @@
       else if (wegZiel.zeit <= 0) wegZiel = null;
     }
     if (eule && (eule.erledigt || spieler.x > eule.x + 40)) eule = null;
-    if (!cameo && tot <= 0 && !popup) { const pl = cameoPlan.find((p) => !p.erledigt && spieler.x >= p.x); if (pl) { pl.erledigt = true; cameoStart(pl.held); } }
+    // Stimme rechtzeitig (7.11., Mr. Alex): läuft gerade eine Ansage (Levelstart, Zuruf, Erzähler, Boss; stimme.beschaeftigt() der App), wartet der Auftritt, bis sie fertig ist –
+    // dann Sprechblase und Stimme gleichzeitig; Notbremse: nach CAMEO_WARTEN_MAX s trotzdem
+    if (!cameo && tot <= 0 && !popup) {
+      const pl = cameoPlan.find((p) => !p.erledigt && spieler.x >= p.x);
+      if (pl) {
+        let still = true; try { still = !(stimme.beschaeftigt && stimme.beschaeftigt()); } catch (e) { /* frei */ }
+        pl.warte = (pl.warte || 0) + dt;
+        if (still || pl.warte >= CAMEO_WARTEN_MAX) { pl.erledigt = true; cameoStart(pl.held); }
+      }
+    }
   }
   /* ---------- Story-Modus (Klasse 6, docs/runner/story-london-01.md): Kristalle ♪, Gabelung, Erzähl-Warteschlange, Stationen ----------
      Option story = { id, titel, teile: { "1"…"4", "A5"…"A8", "B5"…"B8", "9", "10", "A11", "A12", "B11", "B12": Text }, audio: { key: Datei } (optional, später) }.
@@ -2309,7 +2321,7 @@
       else if (z.phase === 'faellt') { z.vy += 2600 * dt; z.y += z.vy * dt; if (z.y + ZAPFEN_H >= BODEN_Y) { z.y = BODEN_Y - ZAPFEN_H; z.phase = 'steckt'; z.t = 0; if (!ruhig()) klang.stein(); funken(z.x, BODEN_Y - 6, 10, ['#e8f8ff', '#bfefff', '#ffffff'], 160, 0.5); } }
       else if (z.phase === 'steckt') { z.t += dt; if (z.t >= ZAPFEN_STECKT) { z.phase = 'weg'; if (!ruhig()) klang.splittern(); funken(z.x, BODEN_Y - 20, 14, ['#bfefff', '#ffffff', '#9fe3ff'], 200, 0.6); } }
       else if (z.phase === 'weg') { if (spieler.x < z.x - ZAPFEN_VORLAUF - 50) { z.phase = 'ruhe'; z.y = ZAPFEN_DECKE; } }
-      if ((z.phase === 'faellt' || z.phase === 'steckt') && ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, z.x - ZAPFEN_W / 2 + 3, z.y + 4, ZAPFEN_W - 6, ZAPFEN_H - 6)) { realm.zapfenTreffer++; schaden('zapfen'); }
+      if ((z.phase === 'faellt' || z.phase === 'steckt') && ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, z.x - ZAPFEN_W / 2 + 3, z.y + 4, ZAPFEN_W - 6, ZAPFEN_H - 6)) { if (brecher <= 0) realm.zapfenTreffer++; schaden('zapfen', z, { x: z.x - ZAPFEN_W / 2, y: z.y, w: ZAPFEN_W, h: ZAPFEN_H }); }
     }
     return false;
   }
@@ -2461,6 +2473,8 @@
       if (q.art === "stern") {
         c.beginPath(); for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2; c.moveTo(x, q.y); c.lineTo(x + Math.cos(a) * r * 2, q.y + Math.sin(a) * r * 2); }
         c.strokeStyle = q.farbe; c.lineWidth = 1.5; c.stroke();
+      } else if (q.art === "splitter") {   // Kl. 9 Brecher: eckiger Splitter, dreht sich im Flug
+        c.save(); c.translate(x, q.y); c.rotate(q.x * 0.08); c.fillRect(-r * 1.4, -r * 0.8, r * 2.8, r * 1.6); c.restore();
       } else { c.beginPath(); c.arc(x, q.y, Math.max(0.3, r), 0, Math.PI * 2); c.fill(); }
     }
     c.globalAlpha = 1;
@@ -2509,11 +2523,11 @@
   }
 
 
-  function schaden(grund) {
+  function schaden(grund, ding, dbox) {   // ding/dbox (Kl. 9 Brecher, 7.11.): getroffenes Hindernis und seine Box – es zerplatzt und verschwindet
     if (spieler.unverwundbar > 0 || tot > 0) return;
-    if (brecher > 0 && HINDERNIS_GRUND.includes(grund)) {   // Kl. 9 Eddie/Bonnie/Archie (Benny ohne Lücke): das Hindernis zerbricht, die Figur läuft hindurch
+    if (brecher > 0 && HINDERNIS_GRUND.includes(grund)) {   // Kl. 9 Eddie/Bonnie/Archie (Benny ohne Lücke): das Hindernis zerplatzt in Splitter und verschwindet, die Figur läuft hindurch
       const art = brecherArt || 'ramme';
-      funken(spieler.x + 30, spieler.y - 30, 18, BRECHER_FARBEN[art], 230, 0.7, 'stern'); klang.schild(); meldung = { text: BRECHER_TEXT[art], zeit: 0.9 };
+      funken(spieler.x + 30, spieler.y - 30, 12, BRECHER_FARBEN[art], 230, 0.7, 'stern'); hindernisZerplatzt(grund, ding, dbox); meldung = { text: BRECHER_TEXT[art], zeit: 0.9 };
       if (art === 'laser') laserBlitz = 0.35;
       spieler.unverwundbar = art === 'rolle' ? 0.7 : 1.1; if (art !== 'rolle') { brecher = 0; brecherArt = null; }
       return;
@@ -2523,6 +2537,16 @@
     if (leben <= 0) { zustand = 'gameover'; zeigeEnde(false); return; }
     alexSagen(leben === 1 ? 'letztes' : 'leben');
     tot = 0.9; meldung = { text: grund === 'wasser' ? W.sturz : TREFFER_TEXT[grund] || 'Ouch!', zeit: 1.2 };
+  }
+  const SPLITTER_FARBEN = { auto: ['#e63946', '#9aa5b1', '#2b2d42'], bus: ['#d62828', '#f1faee', '#2b2d42'], cab: ['#ffd60a', '#2b2d42', '#ffffff'], stein: ['#8d8d8d', '#5c5c5c', '#c2b8a3'], kaktus: ['#2d9b4e', '#1b6b34', '#8fd694'],
+    stamm: ['#8d5a2b', '#5e3a1a', '#c58b4a'], treibgut: ['#8d5a2b', '#a47148', '#5e3a1a'], tuer: ['#c9184a', '#d9d9d9', '#495057'], ball: ['#ffffff', '#222222', '#dddddd'], baer: ['#6b4226', '#3e2614', '#a0785a'], feuer: ['#ff7b00', '#ffd23f', '#e63946'], zapfen: ['#bfefff', '#ffffff', '#9fe3ff'] };
+  function hindernisZerplatzt(grund, ding, dbox) {   // Kl. 9 Brecher: Splitter in Hindernisfarbe, Krach, Hindernis aus seiner Liste (wie weggefegte Gegner)
+    const b = dbox || { x: spieler.x + 10, y: spieler.y - 50, w: 40, h: 50 };
+    funken(b.x + b.w / 2, b.y + b.h / 2, 26, SPLITTER_FARBEN[grund] || ['#8d8d8d', '#5c5c5c', '#ffffff'], 260, 0.9, 'splitter');
+    klang.krach();
+    if (!ding) return;
+    if (grund === 'zapfen' || grund === 'baer') { ding.phase = 'weg'; ding.t = 0; return; }   // Eiszapfen/Bärenpranke: Phase „weg“ (Respawn-Logik bleibt)
+    for (const l of [autos, steine, kakteen, treibgut, tueren, staemme, baelle]) { const i = l.indexOf(ding); if (i >= 0) { l.splice(i, 1); return; } }
   }
   const TREFFER_TEXT = { auto: 'Crash! 🚗', stein: 'Rock! 🪨', kaktus: 'Ouch! 🌵', stamm: 'Log! 🪵', baer: 'Grrr! 🐻', bueffel: 'Buffalo! 🦬', bus: 'Beep beep! 🚌', cab: 'Taxi! 🚕', ritter: 'Clang! 🛡️', feuer: 'Fire! 🔥', treibgut: 'Driftwood! 🪵', zapfen: 'Icicle! 🧊', tuer: 'Mind the doors! 🚪', ball: 'Ball! ⚽' };
   function wiederbeleben() {
@@ -2826,6 +2850,14 @@
         if (ueberLuecke && !spieler.amBoden && spieler.vy > 0 && spieler.y > BODEN_Y - 30) { if (!traegtAktiv) meldung = { text: 'Whee! 🦅', zeit: 0.8 }; spieler.y = BODEN_Y - 30; spieler.vy = 0; traegtAktiv = true; }
         else if (!ueberLuecke && traegtAktiv) { traegtAktiv = false; traegt = 0; }
       }
+      // Cameo Maya (Kl. 9, 7.11.): solange sie schwebt, hält die Figur über einer Lücke die Höhe (knapp über dem Boden-Niveau) und gleitet hinüber; der Effekt endet nicht mitten über der Lücke
+      if (schweben > 0 && !traegtAktiv) {
+        const ueberLuecke = !level.boden.some(([a, b]) => spieler.x >= a && spieler.x <= b) && !SOLIDE.some((s) => !s.voll && s.bruecke == null && s.gondel == null && spieler.x >= s.x && spieler.x <= s.x + s.w && s.y < BODEN_Y + 1 && s.y > spieler.y - 1);
+        if (ueberLuecke && !spieler.amBoden && spieler.vy > 0 && spieler.y > BODEN_Y - 12) {
+          if (!mayaGleitet) meldung = { text: 'Float! 🦋', zeit: 0.8 };
+          spieler.y = BODEN_Y - 12; spieler.vy = 0; mayaGleitet = true; schweben = Math.max(schweben, 0.05);
+        } else if (!ueberLuecke) mayaGleitet = false;
+      } else mayaGleitet = false;
       if (spieler.y > H + 20) { schaden('wasser'); return; }
       // Ölflecken: beim Betreten (am Boden) 0,6 s rutschen ohne Sprung; wirkt je Fleck einmal pro Überquerung
       for (const o of oel) {
@@ -2884,41 +2916,41 @@
       // Verkehr: Berührung = Leben weg, nicht plattzudrücken (drüberspringen!)
       for (const a of autos) {
         const ab = autoBox(a);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, ab.x + 4, ab.y + 2, ab.w - 8, ab.h - 2)) { schaden(a.art === 'bus' || a.art === 'cab' ? a.art : 'auto'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, ab.x + 4, ab.y + 2, ab.w - 8, ab.h - 2)) { schaden(a.art === 'bus' || a.art === 'cab' ? a.art : 'auto', a, ab); break; }
         if (zeit - autoKlangZeit > AUTO_KLANG_ABSTAND && ab.x - spieler.x > 0 && ab.x - spieler.x < 320) { autoKlangZeit = zeit; if (a.art === 'bus') klang.bus(); else klang.auto(); }
       }
       // Welt 3: fallende/liegende Steine und Kakteen – Berührung = Leben weg (drüberspringen!)
       for (const s of steine) {
         if (s.phase !== 'faellt' && s.phase !== 'liegt') continue;
         const sb = steinBox(s);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, sb.x + 4, sb.y + 4, sb.w - 8, sb.h - 4)) { schaden('stein'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, sb.x + 4, sb.y + 4, sb.w - 8, sb.h - 4)) { schaden('stein', s, sb); break; }
       }
       for (const k of kakteen) {
         const kb = kaktusBox(k);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, kb.x, kb.y + 2, kb.w, kb.h - 2)) { schaden('kaktus'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, kb.x, kb.y + 2, kb.w, kb.h - 2)) { schaden('kaktus', k, kb); break; }
       }
       for (const t of treibgut) {   // Tower Bridge: Treibgut auf der Themse (im Boot drüberspringen) – Berührung = Leben weg
         const tb = treibgutBox(t);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 4, tb.y + 4, tb.w - 8, tb.h - 4)) { schaden('treibgut'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 4, tb.y + 4, tb.w - 8, tb.h - 4)) { schaden('treibgut', t, tb); break; }
       }
       for (const t of tueren) {   // The Tube: geschlossene Zugtür – Berührung = Leben weg (rechtzeitig durch oder drüberspringen)
         if (!tuerZu(t)) continue;
         const tb = tuerBox(t);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 2, tb.y + 2, tb.w - 4, tb.h - 2)) { schaden('tuer'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, tb.x + 2, tb.y + 2, tb.w - 4, tb.h - 2)) { schaden('tuer', t, tb); break; }
       }
       // Welt 4: rollende Baumstämme (drüberspringen) und die Bären-Pranke vor der Höhle – Berührung = Leben weg
       for (const s of staemme) {
         if (s.phase !== 'rollt') continue;
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, s.rx - STAMM_R + 3, BODEN_Y - STAMM_R * 2 + 4, STAMM_R * 2 - 6, STAMM_R * 2 - 4)) { schaden('stamm'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, s.rx - STAMM_R + 3, BODEN_Y - STAMM_R * 2 + 4, STAMM_R * 2 - 6, STAMM_R * 2 - 4)) { schaden('stamm', s, { x: s.rx - STAMM_R, y: BODEN_Y - STAMM_R * 2, w: STAMM_R * 2, h: STAMM_R * 2 }); break; }
       }
       for (const b of baelle) {   // Wembley: rollender Ball – im Sprung von oben = Kopfball (platt), sonst Berührung = Leben weg (drüberspringen!)
         if (b.phase !== 'rollt') continue;
         const bb = ballBox(b);
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, bb.x + 3, bb.y + 3, bb.w - 6, bb.h - 3)) { if (spieler.vy > 0 && altY <= bb.y + 16) ballKoepfen(b); else { ballTreffer++; schaden('ball'); } break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, bb.x + 3, bb.y + 3, bb.w - 6, bb.h - 3)) { if (spieler.vy > 0 && altY <= bb.y + 16) ballKoepfen(b); else { if (brecher <= 0) ballTreffer++; schaden('ball', b, bb); } break; }
       }
       for (const h of hoehlen) {
         if (h.phase !== 'pranke') continue;
-        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, h.x - HOEHLE_W / 2, BODEN_Y - PRANKE_H, HOEHLE_W, PRANKE_H)) { schaden('baer'); break; }
+        if (ueberlappt(box.x + 4, box.y + 6, box.w - 8, box.h - 6, h.x - HOEHLE_W / 2, BODEN_Y - PRANKE_H, HOEHLE_W, PRANKE_H)) { schaden('baer', h, { x: h.x - HOEHLE_W / 2, y: BODEN_Y - PRANKE_H, w: HOEHLE_W, h: PRANKE_H }); break; }
       }
       gegnerKlaengeNaehe();
       // Boss-Sequenz beginnt
@@ -5926,8 +5958,8 @@
   // Cameo: fliegt von oben rechts heran (0,5 s), schwebt neben der Figur (Sprechblase), fliegt wieder davon (0,45 s); Held als Spielgrafik (heldZeichnen, 7.11.):
   // Anflug Laufpose, Schweben Kraftpose mit Glühen + kurzem Leuchtrand-Blitz (sein Effekt wirkt in diesem Moment), Abflug Jubel; Blick zur Figur (gespiegelt)
   function cameoZeichnen(c) {
-    const t = cameo.t, info = cameo.info, R = CAMEO_R;
-    const zx = Math.min(viewW - 60, Math.max(60, spieler.x - kamera + 150)), zy = Math.max(132, spieler.y - 195);   // rechts über der Figur, über ihrer Wort-Sprechblase (Held 100 hoch + Glühen/Schild über dem Kopf)
+    const t = cameo.t, info = cameo.info, R = CAMEO_R, chipN = effektListe().length;
+    const zx = Math.min(viewW - 60, Math.max(chipN ? 14 + chipN * 40 + 34 : 60, spieler.x - kamera + 150)), zy = Math.max(132, spieler.y - 195);   // rechts über der Figur, über ihrer Wort-Sprechblase (Held 100 hoch + Glühen/Schild über dem Kopf)
     let px, py;
     if (t < CAMEO_EIN) { const f = 1 - Math.pow(1 - t / CAMEO_EIN, 3); px = viewW + 50 + (zx - viewW - 50) * f; py = -40 + (zy + 40) * f; }
     else if (t > CAMEO_DAUER - CAMEO_AUS) { const f = (t - (CAMEO_DAUER - CAMEO_AUS)) / CAMEO_AUS; px = zx + (viewW + 90 - zx) * f * f; py = zy - (zy + 90) * f * f; }
@@ -5944,11 +5976,14 @@
       const w = c.measureText(text).width + 22, h = 30;
       let bx = px + 40, links = false;
       if (bx + w > viewW - 6) { bx = Math.max(6, px - 40 - w); links = true; }
-      const by = py - h / 2;
+      let by = py - h / 2;
+      const chipEnde = chipN ? 14 + chipN * 40 : 0;   // 7.11.: Blase überdeckt die Effekt-Chips unter den Herzen nicht – sonst unter die Chip-Zeile rücken
+      if (chipN && bx < chipEnde + 4 && by < CHIP_Y + CHIP_H + 4 && by + h > CHIP_Y - 4) by = CHIP_Y + CHIP_H + 6;
+      const my = by + h / 2;
       c.fillStyle = '#fff'; c.strokeStyle = info.farbe; c.lineWidth = 2;
       c.beginPath(); c.roundRect(bx, by, w, h, 10); c.fill(); c.stroke();
-      const sx = links ? bx + w : bx; c.beginPath(); c.moveTo(sx, py - 6); c.lineTo(sx + (links ? 9 : -9), py); c.lineTo(sx, py + 6); c.closePath(); c.fill();
-      c.fillStyle = '#18213a'; c.fillText(text, bx + w / 2, py + 1);
+      const sx = links ? bx + w : bx; c.beginPath(); c.moveTo(sx, my - 6); c.lineTo(sx + (links ? 9 : -9), my); c.lineTo(sx, my + 6); c.closePath(); c.fill();
+      c.fillStyle = '#18213a'; c.fillText(text, bx + w / 2, my + 1);
       c.restore();
     }
   }
@@ -9162,7 +9197,16 @@
     return tor || (eule && !eule.erledigt && spieler.x < eule.x + 40 ? eule : null);
   }
   // Cameo-Effekte als kleine Chips unter den Herzen (Symbol + Restzeit als Balken)
+  const CHIP_Y = 114, CHIP_H = 30;   // Chip-Zeile (7.11.: die Cameo-Sprechblase weicht ihr aus, s. cameoZeichnen)
   function effektChips(c) {
+    effektListe().forEach(([sym, f], i) => {
+      const x = 14 + i * 40, y = CHIP_Y;   // unter Wortbank (y 54) und Tor-Hinweis (72–106)
+      c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.roundRect(x, y, 34, CHIP_H, 9); c.fill();
+      c.font = '17px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText(sym, x + 17, y + 14);
+      c.fillStyle = '#2e9e5b'; c.fillRect(x + 4, y + 25, 26 * Math.max(0, Math.min(1, f)), 3);
+    });
+  }
+  function effektListe() {
     const liste = [];
     if (schild > 0) liste.push(['🛡️', schild / 5]);
     if (sprungBonus > 0) liste.push([sprungArt === 'puma' ? '🐾' : '🦘', sprungBonus / 5]);
@@ -9174,12 +9218,7 @@
     if (durchlaessig > 0) liste.push(['👻', durchlaessig / 3]);
     if (eisZeit > 0) liste.push(['❄️', eisZeit / 3]);
     if (eule) liste.push(['🦉', 1]);
-    liste.forEach(([sym, f], i) => {
-      const x = 14 + i * 40, y = 114;   // unter Wortbank (y 54) und Tor-Hinweis (72–106)
-      c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.roundRect(x, y, 34, 30, 9); c.fill();
-      c.font = '17px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#18213a'; c.fillText(sym, x + 17, y + 14);
-      c.fillStyle = '#2e9e5b'; c.fillRect(x + 4, y + 25, 26 * Math.max(0, Math.min(1, f)), 3);
-    });
+    return liste;
   }
   function herz(c, x, y, r) {
     c.beginPath(); c.moveTo(x, y + r);

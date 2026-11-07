@@ -2124,7 +2124,10 @@ window.DATEN_FR = {
    "wendung": "C'est très clair !",
    "intro": "Salut ! Je suis Lucie la Luciole. Ma super-force, c'est la lumière. Le soir, j'allume la tour Eiffel. C'est très clair !",
    "intro_de": "Hallo! Ich bin Lucie das Glühwürmchen. Meine Superkraft ist das Licht. Abends schalte ich den Eiffelturm an. Ganz klar!",
-   "audio": "audio/helden/intro_lucie.mp3"
+   "audio": "audio/helden/intro_lucie.mp3",
+   "wendung_de": "Ganz klar!",
+   "ort": "tour_eiffel",
+   "selten": false
   },
   {
    "id": "gaspard",
@@ -2135,7 +2138,10 @@ window.DATEN_FR = {
    "wendung": "Vas-y ! Allez, viens !",
    "intro": "Salut ! Je suis Gaspard le Guépard. Je cours très, très vite, plus vite que le Tour de France ! Vas-y ! Allez, viens !",
    "intro_de": "Hallo! Ich bin Gaspard der Gepard. Ich renne sehr, sehr schnell, schneller als die Tour de France! Los! Komm schon!",
-   "audio": "audio/helden/intro_gaspard.mp3"
+   "audio": "audio/helden/intro_gaspard.mp3",
+   "wendung_de": "Los! Komm schon!",
+   "ort": "champs_elysees",
+   "selten": false
   },
   {
    "id": "bruno",
@@ -2146,7 +2152,10 @@ window.DATEN_FR = {
    "wendung": "Ça marche !",
    "intro": "Bonjour ! Je suis Bruno l'Ours. Je suis très fort. Une voiture ? Je la porte ! Ça marche !",
    "intro_de": "Guten Tag! Ich bin Bruno der Bär. Ich bin sehr stark. Ein Auto? Ich trage es! Geht klar!",
-   "audio": "audio/helden/intro_bruno.mp3"
+   "audio": "audio/helden/intro_bruno.mp3",
+   "wendung_de": "Geht klar!",
+   "ort": "arc_triomphe",
+   "selten": false
   },
   {
    "id": "chloe",
@@ -2157,7 +2166,10 @@ window.DATEN_FR = {
    "wendung": "Qu'est-ce que c'est que ce truc-là ?",
    "intro": "Bonsoir ! Je suis Chloé la Chouette. La nuit, je vois tout. Au Louvre, il y a un mystère. Qu'est-ce que c'est que ce truc-là ?",
    "intro_de": "Guten Abend! Ich bin Chloé die Eule. Nachts sehe ich alles. Im Louvre gibt es ein Rätsel. Was ist denn das für ein Ding da?",
-   "audio": "audio/helden/intro_chloe.mp3"
+   "audio": "audio/helden/intro_chloe.mp3",
+   "wendung_de": "Was ist denn das für ein Ding da?",
+   "ort": "louvre",
+   "selten": false
   },
   {
    "id": "camille",
@@ -2168,7 +2180,10 @@ window.DATEN_FR = {
    "wendung": "Il y a quelqu'un ?",
    "intro": "Coucou ! Je suis Camille le Caméléon. Regarde, je suis invisible ! Dans le métro, personne ne me voit. Il y a quelqu'un ?",
    "intro_de": "Huhu! Ich bin Camille das Chamäleon. Schau, ich bin unsichtbar! In der Metro sieht mich niemand. Ist da jemand?",
-   "audio": "audio/helden/intro_camille.mp3"
+   "audio": "audio/helden/intro_camille.mp3",
+   "wendung_de": "Ist da jemand?",
+   "ort": "metro",
+   "selten": true
   },
   {
    "id": "robin",
@@ -2179,7 +2194,10 @@ window.DATEN_FR = {
    "wendung": "J'ai quelque chose pour toi !",
    "intro": "Salut ! Je suis Robin le Raton laveur. J'invente des machines au Centre Pompidou. J'ai quelque chose pour toi !",
    "intro_de": "Hallo! Ich bin Robin der Waschbär. Ich erfinde Maschinen im Centre Pompidou. Ich hab was für dich!",
-   "audio": "audio/helden/intro_robin.mp3"
+   "audio": "audio/helden/intro_robin.mp3",
+   "wendung_de": "Ich hab was für dich!",
+   "ort": "pompidou",
+   "selten": false
   },
   {
    "id": "coco",
@@ -2190,7 +2208,10 @@ window.DATEN_FR = {
    "wendung": "C'est trop bien !",
    "intro": "Cocorico ! Je suis Coco le Coq. Ma voix est super forte. Au Stade de France, je chante pour les Bleus. C'est trop bien !",
    "intro_de": "Kikeriki! Ich bin Coco der Hahn. Meine Stimme ist superlaut. Im Stade de France singe ich für die Blauen. Das ist mega!",
-   "audio": "audio/helden/intro_coco.mp3"
+   "audio": "audio/helden/intro_coco.mp3",
+   "wendung_de": "Das ist mega!",
+   "ort": "stade_de_france",
+   "selten": false
   },
   {
    "id": "pierre",
@@ -2201,7 +2222,10 @@ window.DATEN_FR = {
    "wendung": "N'importe quoi !",
    "intro": "Salut ! Je suis Pierre le Pigeon. Je parle avec tous les oiseaux de Paris. Un pigeon, c'est bête ? N'importe quoi !",
    "intro_de": "Hallo! Ich bin Pierre die Taube. Ich spreche mit allen Vögeln von Paris. Eine Taube ist dumm? So ein Quatsch!",
-   "audio": "audio/helden/intro_pierre.mp3"
+   "audio": "audio/helden/intro_pierre.mp3",
+   "wendung_de": "So ein Quatsch!",
+   "ort": "notre_dame",
+   "selten": false
   },
   {
    "id": "horace",
@@ -2212,7 +2236,10 @@ window.DATEN_FR = {
    "wendung": "C'est pas vrai !",
    "intro": "Bonjour… Je suis Horace l'Escargot. Je suis lent, mais j'arrête le temps ! Regarde l'horloge. C'est pas vrai !",
    "intro_de": "Guten Tag … Ich bin Horace die Schnecke. Ich bin langsam, aber ich halte die Zeit an! Schau auf die Uhr. Das gibt's doch nicht!",
-   "audio": "audio/helden/intro_horace.mp3"
+   "audio": "audio/helden/intro_horace.mp3",
+   "wendung_de": "Das gibt's doch nicht!",
+   "ort": "orsay",
+   "selten": true
   },
   {
    "id": "hector",
@@ -2223,7 +2250,10 @@ window.DATEN_FR = {
    "wendung": "Pas de souci !",
    "intro": "Salut ! Je suis Hector le Hérisson. Je protège mes amis avec mon bouclier. Un problème sur la Seine ? Pas de souci !",
    "intro_de": "Hallo! Ich bin Hector der Igel. Ich beschütze meine Freunde mit meinem Schild. Ein Problem auf der Seine? Kein Problem!",
-   "audio": "audio/helden/intro_hector.mp3"
+   "audio": "audio/helden/intro_hector.mp3",
+   "wendung_de": "Kein Problem!",
+   "ort": "seine",
+   "selten": false
   }
  ],
  "wendungen": [

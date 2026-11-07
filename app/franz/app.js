@@ -538,13 +538,88 @@
     if (!parisFilm(o, () => setTimeout(parisNeu, 400))) setTimeout(parisNeu, 400);
   }
   /* ---------- 🦸 Super-héros (Stufe 3, 7.11.2026) ----------
-     10 Paris-Helden, gezeichnet in der Runner-Engine (Spielgrafik wie Englisch 6), je ein Film am Lieblingsort mit eigener Stimme; Sammelkarte = Runner.heldKarteBild. */
-  const karteBild = (h, gesperrt) => { try { return window.Runner.heldKarteBild({ id: h.id, name: h.name, kraft: h.kraft }, { breite: 240, gesperrt, hinweis: gesperrt ? `${HELD_PUNKTE} ⭐` : null }); } catch (e) { return ""; } };
+     10 Paris-Helden, gezeichnet in der Runner-Engine (Spielgrafik wie Englisch 6), je ein Film am Lieblingsort mit eigener Stimme; Sammelkarte = Runner.heldKarteZeichnen. */
+  /* Folien-Karten (7.11.2026, Mr. Alex, große Version, angepasst an die Französisch-App ohne Runner):
+     stand.karten[id] = { s, c, f, t, d } – s 0 normal · 1 Bronze · 2 Silber · 3 Gold; c = wie oft erlebt, f = fehlerfreie Défis ab Silber (je Tag einer), t = Tag des letzten gezählten Défis, d = Tag des letzten Aufstiegs.
+     Bronze = Held 3× erlebt (Film bis zum Ende geschaut oder Défi gespielt) · Silber = Défi des Helden fehlerfrei (Wendung, Kraft, Lieblingsort)
+     · Gold = danach je Tag ein fehlerfreies Défi mit „goldenem Moment“ 1:15 (seltene Helden 1:30) oder sicher nach 3 fehlerfreien Défis an verschiedenen Tagen.
+     Höchstens ein Aufstieg je Held und Tag. Seltene Helden (Spalte selten in helden.tsv): ✦ RARE, Sammelwert ×2. Keine Punkte für Défis (die Karte ist der Lohn). */
+  const KARTE = { erlebt: 3, chance: 15, chanceSelten: 30, fleiss: 3, namen: ["", "Bronze", "Silber", "Gold"], symbol: ["", "🥉", "🥈", "🥇"] };
+  function karteVon(id) {
+    const ks = (stand.karten = stand.karten && typeof stand.karten === "object" ? stand.karten : {});
+    return ks[id] || (ks[id] = { s: 0, c: 0, f: 0, t: "", d: "" });
+  }
+  const gesammelt = () => D.helden.slice(0, heldenFrei());
+  const sammelwert = () => gesammelt().reduce((n, h) => n + (h.selten ? 2 : 1), 0);
+  const ortVon = (h) => D.paris.find((o) => o.id === h.ort);
+  function karteZiel(h) {   // nächstes Ziel als kurzer Hinweis (Deutsch, wie die übrigen Hilfen)
+    const k = karteVon(h.id), vor = h.name.split(" ")[0];
+    if (k.s === 0) return `🥉 ${Math.min(k.c, KARTE.erlebt)}/${KARTE.erlebt}× erlebt (Film oder Défi)`;
+    if (k.s === 1) return `🥈 Défi mit ${vor} ohne Fehler`;
+    if (k.s === 2) return `🥇 Goldener Moment – oder ${Math.min(k.f, KARTE.fleiss)}/${KARTE.fleiss} Défis ohne Fehler (an verschiedenen Tagen)`;
+    return "🥇 Gold !";
+  }
+  // erlebt = Film bis zum Ende oder Défi gespielt; fehlerfrei = Défi ohne Fehler. Gibt die neue Stufe zurück (oder 0) und zeigt die Enthüllung.
+  function karteAuswerten(h, fehlerfrei, danach) {
+    if (!gesammelt().includes(h)) { if (danach) danach(); return 0; }
+    const k = karteVon(h.id), vorher = k.s, tag = heute(), frei = k.d !== tag;
+    let moment = false;
+    k.c++;
+    if (k.s === 0 && k.c >= KARTE.erlebt && frei) k.s = 1;
+    else if (k.s === 1 && fehlerfrei && frei) k.s = 2;
+    else if (k.s === 2 && fehlerfrei && k.t !== tag) {   // je Tag zählt ein Défi (kein Farmen der Gold-Chance)
+      k.t = tag; k.f++;
+      moment = frei && Math.random() * (h.selten ? KARTE.chanceSelten : KARTE.chance) < 1;
+      if (frei && (moment || k.f >= KARTE.fleiss)) k.s = 3;
+    }
+    if (k.s > vorher) { k.d = tag; if (k.s === 3) k.m = moment ? 1 : 0; }
+    speichern();
+    if (k.s > vorher) karteEnthuellen(h, k.s, moment && k.s === 3, danach); else if (danach) danach();
+    return k.s > vorher ? k.s : 0;
+  }
+  // Karte als Canvas (Metallrahmen, Plakette, ✦ RARE) – mit Stufe wandert ein Lichtreflex darüber (Zeit bzw. Neigen des Handys)
+  const KARTE_PX = 360;
+  function karteCanvas(h, o = {}) {
+    const st = o.gesperrt ? 0 : (o.stufe == null ? karteVon(h.id).s : o.stufe);
+    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? "Noch nicht gesammelt" : `${h.name}: ${h.kraft}${st ? " · " + KARTE.namen[st] : ""}${h.selten ? " · selten" : ""}` });
+    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, { id: h.id, name: h.name, kraft: h.kraft },
+      { gesperrt: !!o.gesperrt, hinweis: o.gesperrt ? `${HELD_PUNKTE} ⭐` : null, stufe: st, selten: !o.gesperrt && h.selten }); } catch (e) { /* Karte bleibt leer */ }
+    if (st && window.Runner && window.Runner.heldKarteGlanz) glanzDazu(cv, st);
+    return cv;
+  }
+  const glanzKarten = new Set();
+  let glanzLaeuft = false, neigung = 0;
+  const bewegungRuhig = () => { try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) { return false; } };
+  try { window.addEventListener("deviceorientation", (ev) => { if (ev && typeof ev.gamma === "number") neigung = Math.max(-1, Math.min(1, ev.gamma / 45)); }); } catch (e) { /* egal */ }
+  function glanzDazu(cv, stufe) {
+    const grund = document.createElement("canvas"); grund.width = cv.width; grund.height = cv.height;
+    grund.getContext("2d").drawImage(cv, 0, 0);
+    const g = { cv, grund, stufe, versatz: Math.random() };
+    if (bewegungRuhig()) { glanzMalen(g, 0.35); return; }
+    glanzKarten.add(g);
+    if (!glanzLaeuft) { glanzLaeuft = true; requestAnimationFrame(glanzBild); }
+  }
+  function glanzMalen(g, phase) {
+    const c = g.cv.getContext("2d");
+    c.clearRect(0, 0, g.cv.width, g.cv.height); c.drawImage(g.grund, 0, 0);
+    try { window.Runner.heldKarteGlanz(c, 0, 0, g.cv.width, g.stufe, phase); } catch (e) { /* ohne Glanz */ }
+  }
+  function glanzBild(ms) {
+    glanzKarten.forEach((g) => {
+      if (!g.cv.isConnected) { if (g.gesehen) glanzKarten.delete(g); return; }   // erst nach dem Einhängen zählen
+      g.gesehen = true;
+      glanzMalen(g, ms / (g.stufe === 3 ? 3200 : 4200) + g.versatz + neigung * 0.35);
+    });
+    if (glanzKarten.size) requestAnimationFrame(glanzBild); else glanzLaeuft = false;
+  }
+  const karteBild = (h, gesperrt) => { try { return window.Runner.heldKarteBild({ id: h.id, name: h.name, kraft: h.kraft },
+    { breite: 240, gesperrt, hinweis: gesperrt ? `${HELD_PUNKTE} ⭐` : null, stufe: gesperrt ? 0 : karteVon(h.id).s, selten: !gesperrt && h.selten }); } catch (e) { return ""; } };
   function heldFilm(h, fertig) {
     if (!(window.Runner && window.Runner.hatSzene && window.Runner.hatSzene("held_" + h.id))) { if (fertig) fertig(); return false; }
     stopp();
     const sz = window.Runner.szene(null, "held_" + h.id, { text: h.intro, textDe: h.intro_de, lang: "fr", titel: `🦸 ${h.name}`, foto: karteBild(h), quelle: `${h.name} · ${h.kraft} (${h.kraft_de})`,
-      voice: () => spiele([h.audio || { tts: h.intro }]), voiceStopp: stopp, voiceAudio: () => aktuell, onEnde: () => { if (fertig) fertig(); } });
+      voice: () => spiele([h.audio || { tts: h.intro }]), voiceStopp: stopp, voiceAudio: () => aktuell,
+      onEnde: (r) => { if (r && r.uebersprungen) { if (fertig) fertig(); } else karteAuswerten(h, false, fertig); } });   // Folien-Karten: nur ganz geschaute Filme zählen
     if (!sz && fertig) fertig();
     return !!sz;
   }
@@ -555,15 +630,72 @@
     toast(`🦸 ${h.name} – nouveau super-héros !`);
     if (!heldFilm(h, () => setTimeout(heldNeu, 400))) setTimeout(heldNeu, 400);
   }
+  // Aufstieg: Karte dreht sich, Rahmen leuchtet (goldener Moment: Blitz), der Held spricht seine Vorstellung (vorhandene Aufnahme)
+  function karteEnthuellen(h, st, moment, danach) {
+    stopp();
+    const d = el("dialog", { class: "feier", "aria-labelledby": "karte-titel" });
+    const zu = () => { d.close(); };
+    d.addEventListener("close", () => { stopp(); d.remove(); if (danach) setTimeout(danach, 300); else if (app.querySelector(".helden-hinweis")) heldenSeite(); });
+    d.append(...[moment && el("div", { class: "karte-blitz", "aria-hidden": "true" }),
+      el("p", { class: "feier-klein" }, moment ? "⚡ Moment doré ! (goldener Moment)" : `${KARTE.symbol[st]} Nouveau niveau ! (neue Stufe)`),
+      el("h2", { id: "karte-titel", lang: "fr" }, `${h.name} : ${KARTE.namen[st]}`),
+      el("div", { class: "karte-dreh" }, el("figure", { class: "heldenkarte gross stufe-" + st }, karteCanvas(h, { stufe: st }))),
+      el("p", { class: "klein" }, st < 3 ? "Nächstes Ziel: " + karteZiel(h) : "Höchste Stufe – deine Karte glänzt in Gold !"),
+      el("div", { class: "knopfreihe" }, h.audio && knopf("🔊 Écoute", () => spiele([h.audio])), knopf("Weiter ➜", zu, "haupt"))].filter(Boolean));
+    document.body.append(d);
+    try { d.showModal(); } catch (e) { d.setAttribute("open", ""); }
+    if (h.audio) spiele([h.audio]);
+  }
+  /* Défi (Folien-Karten): drei kurze Fragen zum Helden, je 3 Antworten – Bedeutung seiner Wendung, seine Kraft, sein Lieblingsort in Paris.
+     Ohne Fehler = Leistung für Silber/Gold; gespielt = einmal erlebt. */
+  function defi(h) {
+    const andere = (feld) => mischen(D.helden.filter((x) => x.id !== h.id && x[feld])).slice(0, 2);
+    const ort = ortVon(h), orte = mischen(D.paris.filter((o) => o.id !== h.ort)).slice(0, 2);
+    const fragen = mischen([
+      { frage: `${h.name} sagt: « ${h.wendung} » – was bedeutet das?`, ton: { tts: h.wendung }, richtig: h.wendung_de, falsch: andere("wendung_de").map((x) => x.wendung_de), lang: "de" },
+      { frage: `Welche Kraft hat ${h.name}? (Quel est son pouvoir ?)`, richtig: `${h.kraft} (${h.kraft_de})`, falsch: andere("kraft").map((x) => `${x.kraft} (${x.kraft_de})`), lang: "fr" },
+      ort && { frage: `Wo ist ${h.name} in Paris zu Hause? (Où habite ${h.name.split(" ")[0]} ?)`, richtig: `${ort.symbol} ${ort.name}`, falsch: orte.map((o) => `${o.symbol} ${o.name}`), lang: "fr" },
+    ].filter((f) => f && f.richtig && f.falsch.length === 2));
+    let i = 0, fehler = 0;
+    const frage = () => {
+      if (i >= fragen.length) return ende();
+      const f = fragen[i], box = rueckmeldung();
+      let fertig = false;
+      const wahl = (text, b) => {
+        if (fertig) return;
+        if (text === f.richtig) { fertig = true; b.classList.add("richtig"); klang(true); melde(box, "gut", zufall(LOB)); i++; setTimeout(frage, 900); }
+        else { fehler++; b.classList.add("falsch"); b.disabled = true; klang(false); melde(box, "hilfe", zufall(FEHLER)); }
+      };
+      zeige(kopf(`🦸 Défi · ${h.name}`, heldenSeite, `Frage ${i + 1}/${fragen.length} · ${karteZiel(h)}`),
+        el("section", { class: "satzkarte" }, el("h2", {}, f.frage), f.ton && knopf("🔊 Écoute", () => spiele([f.ton]), "leise"),
+          el("div", { class: "wahl defi-wahl" }, mischen([f.richtig, ...f.falsch]).map((t) => { const b = el("button", { type: "button", class: "knopf wahl-knopf", lang: f.lang }, t); b.addEventListener("click", () => wahl(t, b)); return b; })),
+          box));
+      if (f.ton) spiele([f.ton]);
+    };
+    const ende = () => karteAuswerten(h, fehler === 0, endeSeite);   // Aufstieg: erst die Enthüllung, danach die Ergebnisseite mit neuer Stufe
+    const endeSeite = () => {
+      const ohne = fehler === 0;
+      zeige(kopf(`🦸 Défi · ${h.name}`, heldenSeite, ohne ? "Ohne Fehler – parfait !" : `${fehler} Fehler – encore une fois ?`),
+        el("section", { class: "satzkarte" }, el("div", { class: "heldenkarte gross stufe-" + karteVon(h.id).s }, karteCanvas(h)),
+          el("div", { class: "knopfreihe" }, knopf("🔁 Encore", () => defi(h), "leise"), knopf("Weiter ➜", heldenSeite, "haupt"))));
+    };
+    frage();
+  }
   const heldenRaster = () => el("div", { class: "helden-raster" }, D.helden.map((h, i) => {
-    const frei = i < heldenFrei();
-    return el("button", { type: "button", class: "held-karte" + (frei ? "" : " gesperrt"), "aria-label": frei ? h.name : "Noch nicht gesammelt", onclick: frei ? () => heldFilm(h) : null, disabled: !frei },
-      el("img", { src: karteBild(h, !frei), alt: "" }), frei && el("span", { class: "klein", lang: "fr" }, `« ${h.wendung} »`));
+    const frei = i < heldenFrei(), st = frei ? karteVon(h.id).s : 0;
+    return el("div", { class: "held-feld" },
+      el("button", { type: "button", class: "held-karte" + (frei ? "" : " gesperrt") + (st ? " stufe-" + st : ""), "aria-label": frei ? h.name : "Noch nicht gesammelt", onclick: frei ? () => heldFilm(h) : null, disabled: !frei },
+        karteCanvas(h, { gesperrt: !frei }), frei && el("span", { class: "klein", lang: "fr" }, `« ${h.wendung} »`), frei && el("span", { class: "klein karten-ziel" }, karteZiel(h))),
+      frei && knopf("🎯 Défi", () => defi(h), "leise"));
   }));
+  const kartenZaehler = () => gesammelt().length > 0 && el("p", { class: "klein karten-zaehler" },
+    [3, 2, 1].map((st) => `${KARTE.symbol[st]} ${gesammelt().filter((h) => karteVon(h.id).s === st).length} ${KARTE.namen[st]}`).join(" · ") + ` · ✦ Sammelwert ${sammelwert()}`);
   function heldenSeite() {
     const rest = HELD_PUNKTE - (stand.punkte % HELD_PUNKTE);
     zeige(kopf("🦸 Super-héros", startseite, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${rest} ⭐ bis zum nächsten Helden` : "Alle Helden gesammelt – bravo !"),
-      el("p", { class: "klein" }, "Tipp auf eine Karte: Der Held stellt sich vor – mit seinem Lieblingssatz."), heldenRaster());
+      kartenZaehler(),
+      el("p", { class: "klein helden-hinweis" }, "Tipp auf eine Karte: Der Held stellt sich vor. 🎯 Défi: drei Fragen zum Helden. Folien-Karten: Schau den Film ganz oder spiel das Défi – so steigt die Karte auf: Bronze, Silber, Gold. ✦ RARE-Helden zählen doppelt."),
+      heldenRaster());
   }
   function parisKarte(frei, waehle) {
     const NS = "http://www.w3.org/2000/svg";
@@ -626,7 +758,7 @@
           return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : s ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
             bild(n, 64), el("span", { lang: "fr" }, s ? n.name : "?"));
         }))]),
-      el("h2", {}, "🦸 Super-héros"), heldenRaster(),
+      el("h2", {}, "🦸 Super-héros"), kartenZaehler(), heldenRaster(),
       el("h2", {}, "🗼 Paris"),
       el("div", { class: "namen-raster" }, D.paris.map((o, i) => i < parisFrei()
         ? el("button", { type: "button", class: "namen-knopf gold", onclick: () => parisFilm(o) }, el("span", { class: "medaille", "aria-hidden": "true" }, o.symbol), el("span", { lang: "fr" }, o.name))

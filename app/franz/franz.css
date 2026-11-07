@@ -69,3 +69,13 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 .held-karte { border: 0; padding: 0; background: none; cursor: pointer; display: flex; flex-direction: column; gap: 4px; align-items: center; text-align: center; color: inherit; }
 .held-karte img { width: 100%; aspect-ratio: 3 / 4; border-radius: 12px; display: block; }
 .held-karte.gesperrt { cursor: default; opacity: .85; }
+/* Folien-Karten (7.11.): Karten als Canvas, Stufenschein, Défi-Knopf, Ziel unter der Karte (Rahmen/Enthüllung/Blitz aus ../style.css) */
+.held-feld { display: grid; gap: 6px; align-content: start; }
+.held-karte canvas { width: 100%; aspect-ratio: 3 / 4; border-radius: 12px; display: block; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.held-karte.stufe-1 canvas { box-shadow: 0 4px 14px rgba(0,0,0,.25), 0 0 0 2px #c9864a; }
+.held-karte.stufe-2 canvas { box-shadow: 0 4px 14px rgba(0,0,0,.25), 0 0 10px 2px rgba(220,228,240,.9); }
+.held-karte.stufe-3 canvas { box-shadow: 0 4px 14px rgba(0,0,0,.25), 0 0 16px 4px rgba(255,205,60,.85); }
+.karten-ziel { color: var(--leise); font-size: .75rem; line-height: 1.25; }
+.defi-wahl { flex-direction: column; margin: 12px 0; }
+.defi-wahl .wahl-knopf { width: 100%; text-align: left; font-size: 1.05rem; }
+.wahl-knopf.falsch { border-color: var(--fr-rot); opacity: .6; }

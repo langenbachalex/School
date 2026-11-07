@@ -109,10 +109,12 @@ def main():
                       "audio": a if vorhanden(a) else None, "foto": b if vorhanden(b) else None, "quelle": pquellen.get(z["id"]) if vorhanden(b) else None})
     # Superhelden (Stufe 3, 7.11.2026): gezeichnet in der Runner-Engine (HELDEN_ZEICHNUNG, Filme held_<id>), Stimme je Held audio/helden/intro_<id>.mp3
     helden = []
+    wde = {z["fr"]: z["de"] for z in tsv("wendungen_helden.tsv")}   # Folien-Karten (7.11.): deutsche Bedeutung der Wendung für die Défi-Fragen
     for z in tsv("helden.tsv"):
         a = f"audio/helden/intro_{z['id']}.mp3"
         helden.append({"id": z["id"], "name": z["name"], "symbol": z["symbol"], "kraft": z["kraft"], "kraft_de": z["kraft_de"], "wendung": z["wendung"],
-                       "intro": z["intro_fr"], "intro_de": z["intro_de"], "audio": a if vorhanden(a) else None})
+                       "intro": z["intro_fr"], "intro_de": z["intro_de"], "audio": a if vorhanden(a) else None,
+                       "wendung_de": wde.get(z["wendung"], ""), "ort": z.get("ort", ""), "selten": z.get("selten") == "1"})
     daten = {"dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}

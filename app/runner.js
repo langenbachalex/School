@@ -10977,6 +10977,124 @@
     c.fillStyle = 'rgba(255,255,255,.35)'; for (let k = 0; k < 9; k++) { c.beginPath(); c.ellipse((k * 83 + t * 20) % 700 - 30, 330 + (k % 3) * 18, 34, 5, 0, 0, Math.PI * 2); c.fill(); }
     for (let k = 0; k < 14; k++) { const x = 170 + k * 34, p = Math.sin(t * 1.6 + k) * 0.5 + 0.5; c.fillStyle = `rgba(255,255,255,${0.55 + 0.3 * p})`; c.beginPath(); c.arc(x, 292 - p * 14, 26 + p * 10, 0, Math.PI * 2); c.fill(); }
   }
+  // ===== Klasse 9 – Heldenfilme (7.11.2026, Mr. Alex, Etappe 3) =====
+  // 13 US-Helden im reifen Comic-Stil (heldZeichnen, HZ_NEUSTIL) in der Kulisse einer Road-Trip-Welt; je Film drei Phasen mit eigener Pose:
+  // Auftritt (lauf, Flieger schweben ein) → Kraft (Pose 'kraft', Leuchtrand-Blitz, großer Effekt in der Szene) → Jubel + Kraft-Chip; danach die Sammelkarte groß (foto).
+  // Keine Sprechblasen: in Klasse 9 spricht der Held nur seine Vorstellung (audio/helden/intro_<id>.mp3, Untertitel satzweise).
+  const H9_Y = 273, H9_S = 1.5;   // Mitte der Figur: Fuß auf BODEN_Y (330) = H9_Y + 38 · H9_S
+  const sz9Fels = (c, x, y, r, rot = 0, farbe = '#8a6f55') => {   // Felsbrocken (Unterkante y)
+    c.save(); c.translate(x, y - r * 0.55); c.rotate(rot); c.fillStyle = farbe; c.strokeStyle = 'rgba(20,14,10,.55)'; c.lineWidth = 2.5;
+    c.beginPath(); c.moveTo(-r, r * 0.5); c.quadraticCurveTo(-r * 1.05, -r * 0.5, -r * 0.2, -r * 0.62); c.quadraticCurveTo(r * 0.85, -r * 0.6, r, r * 0.5); c.closePath(); c.fill(); c.stroke();
+    c.fillStyle = 'rgba(255,255,255,.2)'; c.beginPath(); c.ellipse(-r * 0.35, -r * 0.25, r * 0.32, r * 0.13, -0.4, 0, Math.PI * 2); c.fill(); c.restore();
+  };
+  const sz9Kiste = (c, x, y, s = 1, rot = 0) => {   // Holzkiste (Mitte unten x, y)
+    c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s);
+    c.fillStyle = '#b7793d'; c.strokeStyle = '#5a3414'; c.lineWidth = 3; c.beginPath(); c.rect(-26, -52, 52, 52); c.fill(); c.stroke();
+    c.beginPath(); c.moveTo(-26, -52); c.lineTo(26, 0); c.moveTo(26, -52); c.lineTo(-26, 0); c.stroke(); c.restore();
+  };
+  const sz9Splitter = (c, x, y, d, farben, n = 10) => {   // Bruchstücke fliegen auseinander (d = Zeit seit dem Bruch)
+    if (d < 0 || d > 1.4) return;
+    c.save(); c.globalAlpha = Math.max(0, 1 - d / 1.4);
+    for (let k = 0; k < n; k++) { const a = -Math.PI * (0.1 + 0.8 * k / (n - 1)), v = 170 + (k % 3) * 60; c.fillStyle = farben[k % farben.length];
+      c.save(); c.translate(x + Math.cos(a) * v * d, y + Math.sin(a) * v * d + 260 * d * d); c.rotate(d * 8 + k); c.fillRect(-6, -4, 12, 8); c.restore(); }
+    c.restore();
+  };
+  const sz9Herz = (c, x, y, r, farbe) => { c.save(); c.fillStyle = farbe; c.beginPath(); c.moveTo(x, y + r * 0.9); c.bezierCurveTo(x - r * 1.6, y - r * 0.2, x - r * 0.6, y - r * 1.3, x, y - r * 0.4); c.bezierCurveTo(x + r * 0.6, y - r * 1.3, x + r * 1.6, y - r * 0.2, x, y + r * 0.9); c.fill(); c.restore(); };
+  const sz9Note = (c, x, y, s, farbe) => { c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe; c.strokeStyle = farbe; c.lineWidth = 3; c.beginPath(); c.ellipse(-6, 8, 7, 5, -0.4, 0, Math.PI * 2); c.fill(); c.beginPath(); c.moveTo(0, 7); c.lineTo(0, -18); c.quadraticCurveTo(8, -12, 12, -4); c.stroke(); c.restore(); };
+  const sz9Falter = (c, x, y, s, t, farbe) => { const f = 0.35 + 0.65 * Math.abs(Math.sin(t * 9)); c.save(); c.translate(x, y); c.scale(s, s); c.fillStyle = farbe; c.strokeStyle = '#1a1214'; c.lineWidth = 1.5;
+    for (const d of [-1, 1]) { c.beginPath(); c.ellipse(d * 7 * f, -3, 7 * f, 6, d * 0.4, 0, Math.PI * 2); c.fill(); c.stroke(); c.beginPath(); c.ellipse(d * 5 * f, 5, 5 * f, 4, -d * 0.4, 0, Math.PI * 2); c.fill(); c.stroke(); }
+    c.fillStyle = '#1a1214'; c.fillRect(-1, -7, 2, 14); c.restore(); };
+  const sz9Blume = (c, x, y, heil, farbe) => {   // welke (heil 0) bzw. blühende (heil 1) Blume, Fuß bei (x, y)
+    const neig = (1 - heil) * 1.1, kx = x + Math.sin(neig) * 34, ky = y - Math.cos(neig) * 34;
+    c.save(); c.strokeStyle = heil > 0.5 ? '#2e9e5b' : '#8a7a46'; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x, y - 20, kx, ky); c.stroke();
+    const r = 6 + heil * 6; c.fillStyle = heil > 0.5 ? farbe : '#a08c62'; for (let k = 0; k < 5; k++) { const a = k * 1.2566; c.beginPath(); c.ellipse(kx + Math.cos(a) * r, ky + Math.sin(a) * r, r * 0.75, r * 0.5, a, 0, Math.PI * 2); c.fill(); }
+    c.fillStyle = '#ffd93d'; c.beginPath(); c.arc(kx, ky, r * 0.55, 0, Math.PI * 2); c.fill(); c.restore();
+  };
+  const sz9Lauf = (t, bis = 2.2, x = 220) => (t < bis ? { x: lerp(-90, x, sanft(t / bis)), pose: 'lauf' } : null);   // Auftritt von links
+  // je Held: welt (Kulisse), kam (Kameraposition), kraft (Chip-Text wie helden.tsv), ab (Kraft-Einsatz), klaenge, optional pos(t), hinten/vorn(c, t, p), flug (schwebt ein)
+  const HELD9_FILM = {
+    eddie: { welt: 'sd', kam: 9000, kraft: 'Eagle eye', flug: true, klaenge: [[0.3, 'cameo'], [0.9, 'adler'], [3.0, 'kristall'], [4.6, 'bruch'], [8.0, 'jubel']],
+      vorn(c, t, p) {   // Laserstrahlen aus den Gläsern bis zum Felsen, der bei 4,6 s zerspringt
+        const kaputt = t >= 4.6; if (!kaputt) sz9Fels(c, 470, 332, 58, 0, t > 3.6 ? '#b0634a' : '#8a6f55');
+        if (t >= 3 && t < 4.7) { const f = sanft((t - 3) / 0.4), ey = p.y - 30, ex = p.x + 30; c.save(); c.lineCap = 'round';
+          for (const [b, fa] of [[10, 'rgba(255,42,61,.45)'], [4, '#ffd0d4']]) { c.strokeStyle = fa; c.lineWidth = b; c.beginPath(); c.moveTo(ex, ey); c.lineTo(lerp(ex, 450, f), lerp(ey, 300, f)); c.stroke(); } c.restore();
+          if (f >= 1) for (let k = 0; k < 4; k++) szFunkeln(c, 450 + Math.cos(t * 9 + k) * 18, 300 + Math.sin(t * 7 + k) * 14, 7, t + k, '#ffd93d'); }
+        sz9Splitter(c, 470, 300, t - 4.6, ['#8a6f55', '#6e5642', '#ff6a3d'], 14);
+      } },
+    bonnie: { welt: 'sd', kam: 15000, kraft: 'Super strength', klaenge: [[0.3, 'cameo'], [0.8, 'bueffel'], [3.0, 'rumpeln'], [4.1, 'krach'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t) || (t < 3 ? { x: 220, pose: 'steh' } : t < 4.1 ? { x: lerp(220, 360, sanft((t - 3) / 1.1)), pose: 'kraft' } : { x: 360, pose: t < 7.6 ? 'kraft' : 'jubel' }),
+      vorn(c, t) { const d = Math.max(0, t - 4.1); sz9Fels(c, 470 + d * 150, 332 - Math.abs(Math.sin(d * 5)) * 40 * Math.max(0, 1 - d / 2), 56, d * 4); if (t >= 4.1) szStaub(c, 420, 326, 1, Math.max(0, 1 - d)); } },
+    gus: { welt: 'az', kam: 12000, kraft: 'Force field', klaenge: [[0.3, 'cameo'], [0.9, 'baer'], [3.0, 'schild'], [3.9, 'stein'], [4.7, 'stein'], [5.5, 'stein'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 300) || { x: 300, pose: t < 3 ? 'steh' : t < 7.6 ? 'kraft' : 'jubel' },
+      vorn(c, t) { for (const [t0, dx] of [[3.0, -8], [3.8, 10], [4.6, -4]]) { const d = t - t0; if (d < 0) continue; const fall = Math.min(1, d / 0.9);
+        if (fall < 1) sz9Fels(c, 300 + dx, lerp(-30, 150, fall * fall), 18, d * 3, '#9a5a3a');
+        else { const e = d - 0.9; sz9Fels(c, 300 + dx + (dx >= 0 ? 1 : -1) * (40 + e * 260), 150 + e * 260 + e * e * 300, 18, d * 3, '#9a5a3a'); if (e < 0.3) szFunkeln(c, 300 + dx, 146, 14, t, '#bfe8ff'); } } } },
+    cody: { welt: 'az', kam: 20000, kraft: 'Super speed', klaenge: [[0.3, 'kojote'], [1.1, 'wind'], [3.5, 'wind'], [5.9, 'wind'], [8.3, 'combo'], [8.6, 'jubel']],
+      pos(t) { for (const [t0, dir] of [[1.1, -1], [3.5, 1], [5.9, -1]]) { const f = (t - t0) / 0.9; if (f >= 0 && f <= 1) return { x: dir < 0 ? lerp(720, -90, f) : lerp(-90, 720, f), pose: 'kraft', links: dir < 0, dir, blitz: t0 }; }
+        if (t >= 8.3) { const f = Math.min(1, (t - 8.3) / 0.9); return { x: lerp(720, 320, 1 - Math.pow(1 - f, 3)), pose: f < 1 ? 'kraft' : 'jubel', links: f < 1, dir: f < 1 ? -1 : 0, blitz: 8.3 }; }
+        return { x: -200, pose: 'steh' }; },
+      hinten(c, t, p) { if (p.dir) { szStaub(c, p.x, 326, p.dir); szTempo(c, p.x, p.y, p.dir, 5, 90); } } },
+    ally: { welt: 'ca', kam: 3000, kraft: 'Water blast', klaenge: [[0.3, 'cameo'], [3.0, 'platsch'], [3.4, 'welle'], [4.4, 'rutsch'], [8.0, 'jubel']],
+      vorn(c, t, p) { const d = Math.max(0, t - 4.4); sz9Kiste(c, 460 + d * 300, 330, 1.1, d * 2);
+        if (t >= 3 && t < 7.4) { const f = sanft((t - 3) / 0.5), sx = p.x + 40, sy = p.y - 6, zx = lerp(sx, 640, f); c.save(); c.globalAlpha = t > 7 ? (7.4 - t) / 0.4 : 1;
+          const g = c.createLinearGradient(sx, 0, zx, 0); g.addColorStop(0, '#bff3ff'); g.addColorStop(1, '#2a9df4'); c.fillStyle = g; c.beginPath(); c.moveTo(sx, sy - 8); c.quadraticCurveTo((sx + zx) / 2, sy - 26 - Math.sin(t * 14) * 4, zx, sy - 30); c.lineTo(zx, sy + 34); c.quadraticCurveTo((sx + zx) / 2, sy + 22, sx, sy + 8); c.fill();
+          c.fillStyle = 'rgba(255,255,255,.85)'; for (let k = 0; k < 10; k++) { const q = (t * 2 + k / 10) % 1; c.beginPath(); c.arc(lerp(sx, zx, q), sy - 20 + Math.sin(k * 3 + t * 9) * 26, 3, 0, Math.PI * 2); c.fill(); } c.restore(); } } },
+    rosie: { welt: 'ny', kam: 6000, kraft: 'Invisibility', ab: 3, klaenge: [[0.3, 'waschbaer'], [3.0, 'puff'], [3.6, 'schritte'], [7.6, 'puff'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 180) || (t < 3 ? { x: 180, pose: 'steh' } : t < 7.6 ? { x: lerp(180, 440, sanft((t - 3) / 4.6)), pose: 'kraft', alpha: 0.28 + 0.08 * Math.sin(t * 6) } : { x: 440, pose: 'jubel' }),
+      hinten(c, t) { const lx = 300 + Math.sin(t * 1.3) * 230; c.save(); c.fillStyle = 'rgba(255,240,170,.22)'; c.beginPath(); c.moveTo(lx - 10, -10); c.lineTo(lx + 10, -10); c.lineTo(lx + 70, 336); c.lineTo(lx - 70, 336); c.fill(); c.restore(); },
+      vorn(c, t, p) { for (const t0 of [3.0, 7.6]) { const d = t - t0; if (d >= 0 && d < 0.6) { c.save(); c.globalAlpha = 1 - d / 0.6; c.fillStyle = '#e8e4f4'; for (let k = 0; k < 7; k++) { c.beginPath(); c.arc(p.x + Math.cos(k) * (20 + d * 70), p.y + Math.sin(k) * (20 + d * 60), 14 - d * 10, 0, Math.PI * 2); c.fill(); } c.restore(); } }
+        if (t > 3 && t < 7.6) for (let k = 0; k < 3; k++) szFunkeln(c, p.x + Math.cos(t * 3 + k * 2) * 40, p.y - 30 + Math.sin(t * 4 + k * 2) * 40, 6, t + k, '#d6c8ff'); } },
+    benny: { welt: 'sd', kam: 3000, kraft: 'Bridge builder', klaenge: [[0.3, 'biber'], [3.4, 'hammer'], [4.0, 'hammer'], [4.6, 'hammer'], [5.2, 'hammer'], [5.8, 'hammer'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 250) || (t < 3 ? { x: 250, pose: 'steh' } : t < 6.4 ? { x: 250, pose: 'kraft' } : t < 7.6 ? { x: lerp(250, 470, sanft((t - 6.4) / 1.2)), pose: 'lauf' } : { x: 470, pose: 'jubel' }),
+      hinten(c, t) { c.fillStyle = '#2f7fb0'; c.fillRect(320, 330, 120, 70); c.fillStyle = 'rgba(255,255,255,.45)'; for (let k = 0; k < 4; k++) c.fillRect(326 + ((k * 31 + t * 40) % 100), 350 + (k % 2) * 18, 16, 3);
+        c.fillStyle = '#6b4a2b'; c.fillRect(314, 330, 8, 70); c.fillRect(438, 330, 8, 70);
+        const n = Math.max(0, Math.min(5, Math.floor((t - 3.4) / 0.6) + 1));
+        for (let k = 0; k < n; k++) { c.fillStyle = k % 2 ? '#a8733f' : '#b98348'; c.strokeStyle = '#5a3414'; c.lineWidth = 2; c.beginPath(); c.rect(318 + k * 25, 324, 25, 10); c.fill(); c.stroke(); } } },
+    pennypuma: { welt: 'sd', kam: 27000, kraft: 'Mega jump', klaenge: [[0.3, 'cameo'], [3.2, 'sprung'], [5.0, 'plopp'], [8.0, 'jubel']],
+      pos(t) { const l = sz9Lauf(t, 2.2, 190); if (l) return l; if (t < 3.2) return { x: 190, pose: 'steh' };
+        if (t < 5) { const f = (t - 3.2) / 1.8; return { x: lerp(190, 520, f), y: H9_Y - Math.sin(f * Math.PI) * 150, pose: 'kraft' }; } return { x: 520, pose: t < 7.6 ? 'steh' : 'jubel' }; },
+      hinten(c) { c.fillStyle = '#7b6a5c'; c.strokeStyle = '#3e342b'; c.lineWidth = 3; c.beginPath(); c.rect(330, 160, 70, 172); c.fill(); c.stroke(); c.strokeStyle = 'rgba(0,0,0,.25)'; c.lineWidth = 2;
+        for (let y = 184; y < 330; y += 24) { c.beginPath(); c.moveTo(330, y); c.lineTo(400, y); c.stroke(); } },
+      vorn(c, t) { if (t >= 3.2 && t < 4) szStaub(c, 190, 326, -1, 1 - (t - 3.2) / 0.8); if (t >= 5 && t < 5.8) { szStaub(c, 520, 326, 1, 1 - (t - 5) / 0.8); szStaub(c, 520, 326, -1, 1 - (t - 5) / 0.8); } } },
+    archie: { welt: 'route66', kam: 12000, kraft: 'Armour ball', klaenge: [[0.3, 'guerteltier'], [3.0, 'rollt'], [3.9, 'krach'], [5.0, 'krach'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 130) || (t < 3 ? { x: 130, pose: 'steh' } : t < 6 ? { x: lerp(130, 540, (t - 3) / 3), pose: 'kraft', dir: 1 } : { x: 540, pose: t < 7.6 ? 'steh' : 'jubel' }),
+      hinten(c, t, p) { if (p.dir) szStaub(c, p.x, 326, 1); },
+      vorn(c, t) { for (const [x, tb] of [[310, 3.9], [420, 5.0]]) { if (t < tb) sz9Kiste(c, x, 330, 1); sz9Splitter(c, x, 300, t - tb, ['#b7793d', '#8a5a2a', '#e0b070'], 12); } } },
+    molly: { welt: 'sd', kam: 4000, kraft: 'Thunder stomp', klaenge: [[0.3, 'cameo'], [3.2, 'trommel'], [3.4, 'grollen'], [4.6, 'trommel'], [5.8, 'trommel'], [8.0, 'jubel']],
+      wackeln: (t) => { for (const t0 of [3.4, 4.6, 5.8]) { const d = t - t0; if (d >= 0 && d < 0.35) return Math.sin(d * 90) * 6 * (1 - d / 0.35); } return 0; },
+      vorn(c, t, p) { for (const t0 of [3.4, 4.6, 5.8]) { const d = t - t0; if (d < 0 || d > 1.2) continue; c.save(); c.globalAlpha = 1 - d / 1.2; c.strokeStyle = '#4361ee'; c.lineWidth = 4;
+          for (let k = 0; k < 2; k++) { c.beginPath(); c.ellipse(p.x, 332, 30 + (d - k * 0.15) * 300, 6 + (d - k * 0.15) * 26, 0, 0, Math.PI * 2); c.stroke(); } c.restore();
+          for (const [x, r] of [[420, 14], [500, 18], [575, 12]]) sz9Fels(c, x, 332 - Math.sin(Math.min(1, d / 0.7) * Math.PI) * 50, r, d * 2, '#7f7468'); }
+        if (t < 3.4) for (const [x, r] of [[420, 14], [500, 18], [575, 12]]) sz9Fels(c, x, 332, r, 0, '#7f7468'); } },
+    holly: { welt: 'ca', kam: 8000, kraft: 'Healing', flug: true, klaenge: [[0.3, 'vogel'], [3.6, 'kristall'], [4.8, 'kristall'], [6.0, 'kristall'], [8.0, 'jubel']],
+      vorn(c, t, p) { [[400, 3.6, '#ff5fa2'], [470, 4.8, '#ffb703'], [540, 6.0, '#9d4edd']].forEach(([x, th, fa]) => {
+          sz9Blume(c, x, 332, sanft((t - th) / 0.6), fa); const d = t - (th - 0.8); if (d >= 0 && d < 0.8) sz9Herz(c, lerp(p.x + 30, x, d / 0.8), lerp(p.y - 20, 290, d / 0.8) - Math.sin(d / 0.8 * Math.PI) * 50, 9, '#ff5fa2');
+          if (t >= th && t < th + 0.8) for (let k = 0; k < 4; k++) szFunkeln(c, x + Math.cos(k * 1.6 + t * 4) * 22, 296 + Math.sin(k * 1.6 + t * 4) * 18, 6, t + k, '#fff0a8'); }); } },
+    maya: { welt: 'ca', kam: 10000, kraft: 'Floating', klaenge: [[0.3, 'cameo'], [3.0, 'feder'], [4.2, 'wind'], [8.0, 'jubel']],
+      pos: (t) => sz9Lauf(t, 2.2, 200) || (t < 3 ? { x: 200, pose: 'steh' } : t < 7.6 ? { x: lerp(200, 430, sanft((t - 3) / 4.6)), y: H9_Y - sanft((t - 3) / 1.2) * 90 + Math.sin(t * 2.4) * 8, pose: 'kraft' }
+        : { x: 430, y: H9_Y - 90 * (1 - sanft((t - 7.6) / 0.8)), pose: 'jubel' }),
+      vorn(c, t, p) { if (t < 3) return; for (let k = 0; k < 5; k++) { const a = t * 1.4 + k * 1.26; sz9Falter(c, p.x + Math.cos(a) * 70, p.y - 10 + Math.sin(a * 1.3) * 50, 1.1, t + k, k % 2 ? '#f28c28' : '#ffb347'); } } },
+    sunny: { welt: 'ny', kam: 14000, kraft: 'Sound wave', klaenge: [[0.3, 'cameo'], [3.0, 'gesang'], [4.0, 'gitarre'], [7.8, 'applaus']],
+      hinten(c, t) { if (t < 3) return; c.save(); c.globalAlpha = 0.22 * Math.min(1, (t - 3) / 0.5); for (const [x, fa, ph] of [[120, '#ff5fa2', 0], [320, '#25e8f5', 1.7], [520, '#ffd23f', 3.1]]) {
+          const a = Math.sin(t * 1.8 + ph) * 0.35; c.fillStyle = fa; c.beginPath(); c.moveTo(x, -10); c.lineTo(x + Math.sin(a) * 400 - 60, 340); c.lineTo(x + Math.sin(a) * 400 + 60, 340); c.fill(); } c.restore(); },
+      vorn(c, t, p) { if (t < 3 || t > 7.8) return; c.save(); c.strokeStyle = '#25e8f5'; c.lineWidth = 3; for (let k = 0; k < 3; k++) { const f = ((t - 3) * 0.9 + k / 3) % 1; c.globalAlpha = 1 - f; c.beginPath(); c.arc(p.x + 40, p.y - 20, 20 + f * 220, -0.6, 0.6); c.stroke(); } c.restore();
+        for (let k = 0; k < 6; k++) { const f = ((t - 3) * 0.5 + k / 6) % 1; sz9Note(c, p.x + 60 + f * 380, p.y - 40 - Math.sin(f * 6 + k) * 40 - f * 60, 1.2, ['#ffd23f', '#25e8f5', '#ff5fa2'][k % 3]); } } },
+  };
+  function szHeld9(id, f) {
+    return { held: id, dauer: 11, klaenge: f.klaenge, zeichne(c, t) {
+      const w = f.wackeln ? f.wackeln(t) : 0; c.save(); if (w && !ruhig()) c.translate(w, Math.abs(w) * 0.4);
+      szWeltKulisse(c, t, f.welt, 30000, f.kam, f.kam + 300, 11);
+      const ab = f.ab == null ? 3 : f.ab;
+      const p = Object.assign({ y: H9_Y }, (f.pos && f.pos(t)) || (t < 2.2 ? { x: lerp(-90, 220, sanft(t / 2.2)), y: f.flug ? H9_Y - 70 * (1 - sanft(t / 2.2)) : H9_Y, pose: 'lauf' } : { x: 220, pose: t < ab ? 'steh' : t < 7.6 ? 'kraft' : 'jubel' }));
+      if (p.pose === 'jubel') p.y -= Math.abs(Math.sin((t - 7.6) * 4)) * 4;
+      if (f.hinten) f.hinten(c, t, p);
+      szHeld(c, id, p.x, p.y, H9_S, t, { pose: p.pose, links: !!p.links, alpha: p.alpha, blitz: szBlitz(t, p.blitz != null ? p.blitz : ab) });
+      if (f.vorn) f.vorn(c, t, p);
+      if (t >= 7.6) for (let k = 0; k < 4; k++) szFunkeln(c, p.x + Math.cos(k * 1.6 + t) * 66, p.y - 14 + Math.sin(k * 1.6 + t) * 46, 7, t + k, HELD_FARBE[id] || '#ffd93d');
+      c.restore();
+      szHeldKraft(c, t, 8.2, id, f.kraft);
+    } };
+  }
   const SZENEN = {
     // Klasse 6 – London
     big_ben: { variante: () => KLANG_DATEI.chimes ? BIGBEN_CHIMES : null, dauer: 9.6, klaenge: [[0.4, 'klick'], [0.8, 'klick'], [1.2, 'klick'], [1.6, 'klick'], [1.9, 'viertel'], [4.6, 'glocke'], [6.0, 'glocke'], [7.4, 'glocke']],
@@ -12600,6 +12718,8 @@
         szHeld(c, 'max', mx, my, 1.6, t, { pose: t < 1.6 ? 'steh' : t < 4.8 ? 'kraft' : t < 8.6 ? 'steh' : 'jubel', blitz: szBlitz(t, 1.6) });
         szHeldKraft(c, t, 9.2, 'max', 'Genius inventor');
       } },
+    // Klasse 9 – Heldenfilme (7.11.2026, Etappe 3): held_<id> für die 13 US-Helden (HELD9_FILM, szHeld9)
+    ...Object.fromEntries(Object.keys(HELD9_FILM).map((id) => ['held_' + id, szHeld9(id, HELD9_FILM[id])])),
   };
   // Big Ben mit echter Aufnahme: 15,5 s; bis 14 s laufen die Westminster Chimes (Bild wie beim Nachbau bis kurz vor dem Schlag, langsamer), dann EIN Stundenschlag (Nachbau)
   const BIGBEN_CHIMES = { dauer: 15.5, klaenge: [[0.1, 'chimes'], [14.0, 'glocke']],

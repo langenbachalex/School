@@ -9466,67 +9466,106 @@ window.DATEN = {
    {
     "id": "eddie",
     "name": "Eddie the Eagle",
-    "kraft": "Eagle eye"
+    "kraft": "Eagle eye",
+    "steckbrief": "Eddie is a bald eagle from the mountains of Alaska. His eyes are so sharp that he can see a mouse from two miles away, and when he gets angry, they shoot red laser beams.",
+    "intro": "Hi, I'm Eddie the Eagle! I've been flying over Alaska since I was a little chick. Nothing escapes my eyes – and if I need to, I can fire laser beams with them!",
+    "intro_audio": null
    },
    {
     "id": "bonnie",
     "name": "Bonnie the Bison",
-    "kraft": "Super strength"
+    "kraft": "Super strength",
+    "steckbrief": "Bonnie is a bison from Yellowstone National Park in Wyoming. She is the strongest hero on the team and can push a truck off the road with her horns. She is calm most of the time, but don't stand in her way.",
+    "intro": "Hey, I'm Bonnie the Bison! I grew up on the wide prairies of Yellowstone. If something blocks your way, just call me – I'll push it out of the way!",
+    "intro_audio": null
    },
    {
     "id": "gus",
     "name": "Gus the Grizzly",
-    "kraft": "Force field"
+    "kraft": "Force field",
+    "steckbrief": "Gus is a grizzly bear from the forests of Montana. He can create a shining force field that protects everyone inside it. In his free time, he goes fishing for salmon.",
+    "intro": "Hi there, I'm Gus the Grizzly from Montana! I'm big, but I'm a gentle giant. When danger comes, I build a force field, and nothing can get through it.",
+    "intro_audio": null
    },
    {
     "id": "cody",
     "name": "Cody the Coyote",
-    "kraft": "Super speed"
+    "kraft": "Super speed",
+    "steckbrief": "Cody is a coyote from the desert of Arizona. He runs faster than a race car and leaves only a cloud of dust behind him. He has never been caught by anyone.",
+    "intro": "Yo, I'm Cody the Coyote! I live in the Arizona desert near the Grand Canyon. I'm the fastest runner in the West – if you blink, you'll miss me!",
+    "intro_audio": null
    },
    {
     "id": "ally",
     "name": "Ally the Alligator",
-    "kraft": "Water blast"
+    "kraft": "Water blast",
+    "steckbrief": "Ally is an alligator from the swamps of Florida. She can shoot a powerful jet of water from her hands and wash any villain away. She loves swimming in the Everglades at sunrise.",
+    "intro": "Hi, I'm Ally the Alligator! I come from the Everglades in Florida. Watch out, villains – one splash from me and you're gone!",
+    "intro_audio": null
    },
    {
     "id": "rosie",
     "name": "Rosie the Raccoon",
-    "kraft": "Invisibility"
+    "kraft": "Invisibility",
+    "steckbrief": "Rosie is a raccoon from the streets of New York City. She can become invisible and sneak past anyone without a sound. She already wears a mask, so nobody knows who she really is.",
+    "intro": "Psst, it's me, Rosie the Raccoon! I grew up in Central Park in New York. Now you see me – and now you don't!",
+    "intro_audio": null
    },
    {
     "id": "benny",
     "name": "Benny the Beaver",
-    "kraft": "Bridge builder"
+    "kraft": "Bridge builder",
+    "steckbrief": "Benny is a beaver from the lakes of Minnesota. With his strong teeth and lots of wood, he can build a bridge over any river in seconds. He has never met a problem he couldn't fix.",
+    "intro": "Hey, I'm Benny the Beaver from Minnesota, the land of ten thousand lakes! Is there a river in your way? No problem – I'll build you a bridge in no time.",
+    "intro_audio": null
    },
    {
     "id": "pennypuma",
     "name": "Penny the Puma",
-    "kraft": "Mega jump"
+    "kraft": "Mega jump",
+    "steckbrief": "Penny is a puma from the Rocky Mountains in Colorado. She can jump higher than a house and land softly on her paws. She is quiet and quick, and she always lands on her feet.",
+    "intro": "Hi, I'm Penny the Puma! I live high up in the Rocky Mountains of Colorado. One big jump and I'm over any wall – want to see?",
+    "intro_audio": null
    },
    {
     "id": "archie",
     "name": "Archie the Armadillo",
-    "kraft": "Armour ball"
+    "kraft": "Armour ball",
+    "steckbrief": "Archie is an armadillo from the dry plains of Texas. When things get dangerous, he rolls up into a hard armour ball and crashes through every obstacle. Nothing can break his shell.",
+    "intro": "Howdy, I'm Archie the Armadillo from Texas! My shell is tougher than steel. Watch me roll up into a ball and smash through everything!",
+    "intro_audio": null
    },
    {
     "id": "molly",
     "name": "Molly the Moose",
-    "kraft": "Thunder stomp"
+    "kraft": "Thunder stomp",
+    "steckbrief": "Molly is a moose from the forests of Maine. When she stomps on the ground, it shakes like thunder and every villain falls over. She is the tallest hero on the team.",
+    "intro": "Hi, I'm Molly the Moose from Maine! I'm tall and I'm strong. When I stomp my hooves, the whole ground shakes like thunder!",
+    "intro_audio": null
    },
    {
     "id": "holly",
     "name": "Holly the Hummingbird",
-    "kraft": "Healing"
+    "kraft": "Healing",
+    "steckbrief": "Holly is a hummingbird from the gardens of California. She is tiny, but her healing power is huge: she makes flowers rain down, and anyone who is hurt feels better again.",
+    "intro": "Hi, I'm Holly the Hummingbird! I zoom around the flower gardens of California. I'm small, but I can heal you in a heartbeat!",
+    "intro_audio": null
    },
    {
     "id": "maya",
     "name": "Maya the Monarch",
-    "kraft": "Floating"
+    "kraft": "Floating",
+    "steckbrief": "Maya is a monarch butterfly. Every year she flies thousands of miles from Canada across the USA to Mexico. She can float on the wind and carry others through the air on a cloud of glitter.",
+    "intro": "Hello, I'm Maya the Monarch! Every autumn I fly all the way across the USA to Mexico. Hold on tight – I'll let you float with me!",
+    "intro_audio": null
    },
    {
     "id": "sunny",
     "name": "Sunny the Songbird",
-    "kraft": "Sound wave"
+    "kraft": "Sound wave",
+    "steckbrief": "Sunny is a cardinal and a pop star from Nashville, Tennessee. When she sings, her voice becomes a sound wave, and every villain has to dance away. She has already sold a million songs.",
+    "intro": "Hey everyone, I'm Sunny the Songbird from Nashville! I'm a pop star and a superhero. When I sing, the bad guys just can't stop dancing!",
+    "intro_audio": null
    }
   ],
   "akten": [

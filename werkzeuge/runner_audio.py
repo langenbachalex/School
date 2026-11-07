@@ -49,6 +49,23 @@ HELD_INTRO_TAGS = {   # Film-Vorstellung mit Tags an passenden Stellen (Text wie
     "tessa": "[warm] Hi, I'm Tessa the Turtle! I'm unbreakable. [chuckles] Nothing can hurt my shell!",
     "max": "[mischievous] Hi, I'm Max the Monkey! I'm a genius inventor. [excited] I build a new gadget every day!",
 }
+# Klasse 9 – Heldenfilme (7.11.2026, Etappe 3): Vorstellung je US-Held (Spalte intro in inhalte/klasse9/helden.tsv), dieselbe Stimme wie sein Cameo (h_<id>),
+# immer [American accent]; Tags an passenden Stellen, ohne Tags muss der Text genau der Spalte intro entsprechen (Prüfung in auftraege)
+HELD_INTRO_TAGS9 = {
+    "eddie": "[confident] [American accent] Hi, I'm Eddie the Eagle! I've been flying over Alaska since I was a little chick. [serious] Nothing escapes my eyes – and if I need to, I can fire laser beams with them!",
+    "bonnie": "[excited] [American accent] Hey, I'm Bonnie the Bison! I grew up on the wide prairies of Yellowstone. [laughs] If something blocks your way, just call me – I'll push it out of the way!",
+    "gus": "[calm] [American accent] Hi there, I'm Gus the Grizzly from Montana! [chuckles] I'm big, but I'm a gentle giant. [serious] When danger comes, I build a force field, and nothing can get through it.",
+    "cody": "[energetic] [American accent] Yo, I'm Cody the Coyote! I live in the Arizona desert near the Grand Canyon. [fast] I'm the fastest runner in the West – if you blink, you'll miss me!",
+    "ally": "[cheerful] [American accent] Hi, I'm Ally the Alligator! I come from the Everglades in Florida. [playful] Watch out, villains – one splash from me and you're gone!",
+    "rosie": "[whispers] [American accent] Psst, it's me, Rosie the Raccoon! I grew up in Central Park in New York. [mischievously] Now you see me – and now you don't!",
+    "benny": "[cheerful] [American accent] Hey, I'm Benny the Beaver from Minnesota, the land of ten thousand lakes! [curious] Is there a river in your way? [confident] No problem – I'll build you a bridge in no time.",
+    "pennypuma": "[excited] [American accent] Hi, I'm Penny the Puma! I live high up in the Rocky Mountains of Colorado. [playful] One big jump and I'm over any wall – want to see?",
+    "archie": "[laid-back] [American accent] Howdy, I'm Archie the Armadillo from Texas! [proud] My shell is tougher than steel. [excited] Watch me roll up into a ball and smash through everything!",
+    "molly": "[playful] [American accent] Hi, I'm Molly the Moose from Maine! I'm tall and I'm strong. [shouting] When I stomp my hooves, the whole ground shakes like thunder!",
+    "holly": "[warm] [American accent] Hi, I'm Holly the Hummingbird! I zoom around the flower gardens of California. [gently] I'm small, but I can heal you in a heartbeat!",
+    "maya": "[elegant] [American accent] Hello, I'm Maya the Monarch! Every autumn I fly all the way across the USA to Mexico. [softly] Hold on tight – I'll let you float with me!",
+    "sunny": "[excited] [American accent] Hey everyone, I'm Sunny the Songbird from Nashville! I'm a pop star and a superhero. [laughs] When I sing, the bad guys just can't stop dancing!",
+}
 HELD_RUFE = {   # Ausrufe in den Heldenfilmen (Sprechblase im Film = dieser Text)
     "ellie": "Every word!", "olivia": "Found it!", "kenji": "Boing!", "zara": "Surprise!",
     "penny": "Ice cream for everybody!", "felix": "Around the world in one day!", "tessa": "Bonk!", "max": "Homework done!",
@@ -122,6 +139,12 @@ def auftraege():
     for z in daten_bauen.lesen("helden.tsv"):
         if z.get("intro"):
             liste.append((6, APP6, f"audio/helden/intro_{z['id']}.mp3", CAMEO_STIMME[z["id"]], HELD_INTRO_TAGS.get(z["id"], z["intro"])))
+    # Klasse 9 – Heldenfilme (7.11.2026, Etappe 3): app/klasse9/audio/helden/intro_<id>.mp3
+    import re
+    for z in daten_bauen.lesen(os.path.join("klasse9", "helden.tsv")):
+        text = HELD_INTRO_TAGS9.get(z["id"]) or f"{HELD_TAGS[z['id']]}{britisch(z['intro'], 9)} {z['intro']}"
+        assert re.sub(r"\[[^\]]+\] ?", "", text).strip() == z["intro"], f"Tags-Text weicht von intro ab: {z['id']}"
+        liste.append((9, APP9, f"audio/helden/intro_{z['id']}.mp3", f"h_{z['id']}", text))
     # Ausrufe in den Heldenfilmen (7.11.2026, Mr. Alex: auch sprechen) – dieselbe Stimme; Zeitpunkt steht in runner.js (Klang 'ruf')
     for h, text in HELD_RUFE.items():
         liste.append((6, APP6, f"audio/helden/ruf_{h}.mp3", CAMEO_STIMME[h], f"{HELD_TAGS[h]} {text}"))

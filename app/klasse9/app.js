@@ -1952,6 +1952,46 @@
       stimme: (text) => hauptText([{ text, stimme: "m" }], { warten: true }) });   // Durchsagen der Szene mit der Geräte-Stimme
     return !!sz;
   }
+  // Superhelden-Sammlung (7.11.2026, Etappe 3, Mr. Alex): Karte frei, sobald der Held einmal als Cameo im Road Trip Run aufgetreten ist (sp.runner.helden, im Siegel).
+  // Sammelkarte = Canvas-Zeichnung des Runners (heldKarteZeichnen, reifer K9-Stil), gesperrt = graue Silhouette mit „?“ und „Meet me in the Road Trip Run“.
+  // Tap auf eine freie Karte = Heldenfilm (Runner.szene 'held_<id>', Stimme audio/helden/intro_<id>.mp3, Untertitel satzweise), danach die Karte groß mit Steckbrief.
+  const heldenGesehen = () => { const r = runnerStand(); if (!Array.isArray(r.helden)) r.helden = []; return r.helden; };
+  function heldGesehen(id) {
+    const g = heldenGesehen();
+    if (!id || g.includes(id) || !(SP.helden || []).some((h) => h.id === id)) return;
+    g.push(id); speichern();
+  }
+  const heldHatFilm = (h) => !!(h && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene("held_" + h.id));
+  const heldKarteBild = (h) => { try { return window.Runner && window.Runner.heldKarteBild ? window.Runner.heldKarteBild(h) : null; } catch (e) { return null; } };
+  function heldFilm(h, fertig) {
+    if (!heldHatFilm(h)) return false;
+    const sz = window.Runner.szene(null, "held_" + h.id, { text: h.intro, titel: `🦸 ${h.name}`, foto: heldKarteBild(h), quelle: `${h.name} · ${h.kraft}`, onEnde: () => { if (fertig) fertig(); },
+      voice: () => hauptText([h.intro_audio || { text: h.intro.replace(/[–—]/g, ","), stimme: HELD_STIMME[h.id] || "f" }], { warten: true }), voiceStopp: () => stopp(), voiceAudio: () => stimmeAudio(h.intro_audio) });
+    return !!sz;
+  }
+  const KARTE_PX = 480;
+  function heldKarteCanvas(h, o = {}) {
+    const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? T("Noch nicht gesammelt", "Not collected yet") : `${h.name}: ${h.kraft}` });
+    try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, h, o); } catch (e) { /* Karte bleibt leer */ }
+    return cv;
+  }
+  const heldenKarte = (h, gross) => el("figure", { class: "heldenkarte" + (gross ? " gross" : ""), lang: "en" }, heldKarteCanvas(h));
+  function heldZeigen(h) {
+    feier.replaceChildren(heldenKarte(h, true), el("p", { class: "steckbrief", lang: "en" }, h.steckbrief),
+      el("div", { class: "knopfreihe" }, heldHatFilm(h) && knopf("▶ Film", () => { feier.close(); stopp(); heldFilm(h, () => heldZeigen(h)); }, "leise"),
+        knopf(T("Schließen", "Close"), () => { feier.close(); stopp(); }, "haupt")));
+    feier.showModal();
+  }
+  function heldenBereich() {
+    if (!(SP.helden || []).length || !(window.Runner && window.Runner.heldKarteZeichnen)) return null;
+    const g = heldenGesehen(), frei = SP.helden.filter((h) => g.includes(h.id)).length;
+    return el("section", { class: "satzkarte helden-sammlung" },
+      el("h2", {}, `🦸 Superheroes (${frei} / ${SP.helden.length})`),
+      el("p", { class: "klein" }, T("Triffst du einen Superhelden im Road Trip Run, bekommst du seine Karte. Tipp auf eine Karte!", "Meet a superhero in the Road Trip Run and you get their card. Tap a card!")),
+      el("div", { class: "heldenraster" }, SP.helden.map((h) => g.includes(h.id)
+        ? el("button", { class: "held-knopf", "data-held": h.id, onclick: () => { if (!heldFilm(h, () => heldZeigen(h))) heldZeigen(h); } }, heldenKarte(h))
+        : el("div", { class: "held-zu", "data-held": h.id }, heldKarteCanvas(h, { gesperrt: true }), el("small", { lang: "en" }, "Meet me in the Road Trip Run")))));
+  }
   // Staaten-Szenen (6.11.2026, Staaten 1–10): gleiche Szene wie bei den Landmarks, Fakt als Untertitel, Voice-over audio/staaten/<id>.mp3, Foto (falls vorhanden) am Ende
   const staatHatSzene = (s) => !!(s && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(s.id));
   function staatSzene(s, fertig) {
@@ -2080,6 +2120,7 @@
           `🔥 ${serie()} school days in a row · ⭐ ${sp.wochen.length} perfect weeks. Practise every school day and you get a new landmark card! Holidays don't count – your streak stays.`))),
       el("section", { class: "satzkarte" },
         el("h2", {}, `🏞️ Landmarks (${sp.karten.length} / ${SP.landmarks.length})`), karten),
+      heldenBereich(),
       runnerSammlung(),
       aktenBereich(),
       el("section", { class: "satzkarte" },
@@ -3281,7 +3322,7 @@
     document.body.classList.add("runner-aktiv");
     runnerLauf = R().start({
       wrapper: buehne, skin: skinWirksam(), welt: W.id, story: storyOption(W.id),
-      cameos: runnerCameos(), cameoAnzahl: 1,   // Superhelden-Cameos (7.11.): genau 1 Auftritt je Lauf (seltener als Klasse 6), Held zufällig aus allen 13 (Sammeln kommt in Etappe 3) // Story-Modus in New York (Kapitel 1), Route 66 (Kapitel 2), Grand Canyon (Kapitel 3), Mount Rushmore (Kapitel 4) und Golden Gate (Kapitel 5, drei Enden nach Zählung), je mit Variante aus dem Vorkapitel
+      cameos: runnerCameos(), cameoAnzahl: 1,   // Superhelden-Cameos (7.11.): genau 1 Auftritt je Lauf (seltener als Klasse 6), Held zufällig aus allen 13; der Auftritt schaltet seine Sammelkarte frei (heldGesehen, Etappe 3) // Story-Modus in New York (Kapitel 1), Route 66 (Kapitel 2), Grand Canyon (Kapitel 3), Mount Rushmore (Kapitel 4) und Golden Gate (Kapitel 5, drei Enden nach Zählung), je mit Variante aus dem Vorkapitel
       woerter: ws.map((v) => ({ en: spielWort(v), de: v.de })),
       texte: Object.assign(storyTexte(), {
         quer: T("Tipp: Handy quer halten 📱↔", "Tip: turn your phone sideways 📱↔"),
@@ -3300,7 +3341,7 @@
         // Mr. Alex' Zurufe (7.11.): hinter Erzähler/Boss und hinter einer laufenden Vokabel (warten), nie dazwischen
         alex: (text, key, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }),
         // Cameo-Satz des Helden (US-Stimme, audio/runner/cameo_<id>.mp3); fehlt die Aufnahme, spricht die Geräte-Stimme
-        cameo: (text, id, o) => hauptText([(o && o.audio) || { text: text.replace(/[–—]/g, ","), stimme: HELD_STIMME[id] || "f" }], { warten: true }),
+        cameo: (text, id, o) => (heldGesehen(id), hauptText([(o && o.audio) || { text: text.replace(/[–—]/g, ","), stimme: HELD_STIMME[id] || "f" }], { warten: true })),
         // U-Bahn-Durchsage New York („Stand clear of the closing doors, please.“): nur wenn gerade kein Haupttext läuft – nie störend
         durchsage: (text) => { if (!hauptLaeuft) hauptText([{ text, stimme: "m" }], { warten: true }); },
         beschaeftigt: () => hauptLaeuft },   // Runner 7.11.: läuft gerade ein Haupttext? (der Cameo-Auftritt wartet dahinter, höchstens ≈ 6 s)
@@ -4172,6 +4213,7 @@
   setTimeout(sperreZeigen, 300); // gesperrt geblieben (auch nach Neuladen)
   if (LOKAL) window.__staatEreignis = (id) => { ereignisse.push({ art: "staat", staat: SP.staaten.find((s) => s.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalten eines Staats (Szene, dann Stempel)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "karte", karte: SP.landmarks.find((l) => l.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Anzeige einer neuen Landmark-Karte (Orts-Szene/Karte) auslösen
+  if (LOKAL) window.__heldenFrei = (ids) => { (ids || SP.helden.map((h) => h.id)).forEach(heldGesehen); if (ansicht === sammlung) sammlung(); }; // nur Test-Build: Heldenkarten freischalten (alle oder Liste)
   if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
   if (LOKAL) window.__thema = (nr, gruppe) => { lage = { nr, gruppe, teil: 0, titel: gruppe, zurueckZu: startseite }; gruppeGeschafft(); }; // nur Test-Build: Thema abschließen (Mega-Lob)
   if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da

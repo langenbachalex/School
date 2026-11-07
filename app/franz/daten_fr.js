@@ -1966,8 +1966,8 @@ window.DATEN_FR = {
    "fr": "Le Sacré-Cœur est tout blanc. Il est en haut de la colline. Il y a beaucoup de marches !",
    "de": "Sacré-Cœur ist ganz weiß. Die Kirche steht oben auf dem Hügel. Es gibt viele Stufen!",
    "audio": "audio/paris/sacre_coeur.mp3",
-   "foto": null,
-   "quelle": null
+   "foto": "bilder/paris/sacre_coeur.jpg",
+   "quelle": "Foto: Postkarte um 1900 · Library of Congress (2025708028) · gemeinfrei"
   },
   {
    "id": "montmartre",
@@ -1978,8 +1978,8 @@ window.DATEN_FR = {
    "fr": "À Montmartre, il y a des peintres. Ils dessinent ton portrait !",
    "de": "In Montmartre gibt es Maler. Sie zeichnen dein Porträt!",
    "audio": "audio/paris/montmartre.mp3",
-   "foto": null,
-   "quelle": null
+   "foto": "bilder/paris/montmartre.jpg",
+   "quelle": "Foto: Postkarte um 1890 · Library of Congress (2025707920) · gemeinfrei"
   },
   {
    "id": "seine",
@@ -2002,8 +2002,8 @@ window.DATEN_FR = {
    "fr": "Le métro de Paris a seize lignes. Attention à la fermeture des portes !",
    "de": "Die Pariser Metro hat 16 Linien. Achtung, die Türen schließen!",
    "audio": "audio/paris/metro.mp3",
-   "foto": null,
-   "quelle": null
+   "foto": "bilder/paris/metro.jpg",
+   "quelle": "Foto: Postkarte um 1900 · Library of Congress (2025708066) · gemeinfrei"
   },
   {
    "id": "pantheon",
@@ -2038,8 +2038,8 @@ window.DATEN_FR = {
    "fr": "Le musée d'Orsay, c'est une ancienne gare. Il a une très grande horloge.",
    "de": "Das Musée d'Orsay ist ein alter Bahnhof. Es hat eine riesige Uhr.",
    "audio": "audio/paris/orsay.mp3",
-   "foto": null,
-   "quelle": null
+   "foto": "bilder/paris/orsay.jpg",
+   "quelle": "Foto: Entwurf Gare d'Orsay, Victor Laloux um 1895 · Library of Congress (LC-DIG-ppmsca-15644) · gemeinfrei"
   },
   {
    "id": "opera",

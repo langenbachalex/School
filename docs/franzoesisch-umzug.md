@@ -1,4 +1,7 @@
-# Französisch-App – umgezogen
+# Mon français (private App) – umgezogen
+
+**Achtung, nicht verwechseln:** Die **Schul-App „Französisch-App“ für den Sprachkurs Klasse 5/6** gehört in DIESES Repository (`app/franz/`, Planung im Ideenspeicher unter „Französisch-App“, Rohmaterial `inhalte/franz/`). Nur die private Lern-App „Mon français“ ist umgezogen.
+
 
 Die persönliche Französisch-App „Mon français“ liegt seit dem 13.10.2026 im eigenen Repository **`langenbachalex/Languages`**
 (Adresse: https://langenbachalex.github.io/Languages/francais/). Grund: Schul-Apps und private Apps sollen getrennt bleiben (Mr. Alex, 13.10.).

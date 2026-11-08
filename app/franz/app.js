@@ -867,11 +867,11 @@
   /* ---------- 🗼 Paris (Stufe 2, 7.11.2026) ----------
      Karte wie der London-Plan in Englisch 6: Orte schalten sich mit Punkten frei; je Ort ein kleiner Film (Runner.szene aus ../runner.js,
      dieselbe Engine wie London Run), Mr. Alex spricht den Text, am Ende ein kleines Foto (falls vorhanden), danach der Text fr/de zum Nachlesen. */
-  const hatFilm = (o) => !!(o && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(o.id));
+  const hatFilm = (o) => !!(o && window.Runner && window.Runner.hatSzene && window.Runner.hatSzene(o.film || o.id));   // France-Orte (8.11.): Film „fr_<id>“ (o.film)
   function parisFilm(o, fertig) {
     if (!hatFilm(o)) { if (fertig) fertig(); return false; }
     stopp();
-    const sz = window.Runner.szene(null, o.id, { text: o.fr, textDe: o.de, lang: "fr", titel: `${o.symbol} ${o.name} · Paris`, foto: o.foto, quelle: o.quelle,
+    const sz = window.Runner.szene(null, o.film || o.id, { text: o.fr, textDe: o.de, lang: "fr", titel: `${o.symbol} ${o.name} · ${o.region ? "France" : "Paris"}`, foto: o.foto, quelle: o.quelle,
       voice: () => spiele([ton(o)]), voiceStopp: stopp, voiceAudio: () => aktuell, onEnde: () => { if (fertig) fertig(); } });
     if (!sz && fertig) fertig();
     return !!sz;
@@ -1128,16 +1128,17 @@
       fakt.hidden = false;
       fakt.replaceChildren(el("h2", { lang: "fr" }, `${o.symbol} ${o.name}`), region(o) && el("p", { class: "klein", lang: "fr" }, `📍 ${region(o)}`),
         el("p", { class: "paris-fr", lang: "fr" }, o.fr), el("p", { class: "klein" }, o.de),
-        el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)]))));
+        el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)])), hatFilm(o) && knopf("▶ Film", () => parisFilm(o), "leise")));
       fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
+    const ort = (o) => { fakt.hidden = true; if (!parisFilm(o, () => zeigen(o))) zeigen(o); };   // 8.11.: erst der Film (wie Paris), danach der Text
     const info = !parisFertig ? `🔒 Erst alle ${D.paris.length} Paris-Orte freischalten, dann geht es in Frankreich weiter (ein Ort alle ${ORT_PUNKTE} ⭐).`
       : frei < n ? `${frei}/${n} Orte · ${restOrt()} · tipp auf einen Ort: Text zum Lesen und Hören.` : `Alle ${n} Orte freigeschaltet – bravo !`;
     return el("section", { class: "karte niveau2" }, el("h3", {}, "🇫🇷 La France · Niveau 2"),
       el("p", { class: "klein france-info" }, info),
-      franceKarte(frei, zeigen),
+      franceKarte(frei, ort),
       el("div", { class: "region-liste" }, D.france.map((o, i) => i < frei
-        ? el("button", { type: "button", class: "chip offen", lang: "fr", onclick: () => zeigen(o) }, `${o.symbol} ${o.name}`)
+        ? el("button", { type: "button", class: "chip offen", lang: "fr", onclick: () => ort(o) }, `${o.symbol} ${o.name}`)
         : el("span", { class: "chip gesperrt" }, "🔒 ?"))),
       fakt);
   }

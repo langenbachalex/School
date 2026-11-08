@@ -106,3 +106,6 @@ Rückmeldungen beim Bau der Spielgrafik-Helden in Klasse 6; so auch für Klasse 
 - **Französische Aussprache (7.11.):** Französische Texte mit Mr. Alex' Stimme (Namen, Paris-Orte) bekommen immer den Tag `[French]` vor dem Text, sonst klingen Namen wie „Kylian“ englisch (`werkzeuge/franz_audio.py`).
 - **Filme in der Französisch-App (7.11.):** Untertitel zweizeilig – oben Französisch, darunter Deutsch (Satz für Satz, `Runner.szene` mit `textDe`).
 - **Französisch-App: kein Abschreiben (7.11.):** Abschreiben ist ein Prinzip für den Unterricht, in der App (ERB) sinnlos – keine Abschreib-Schritte/-Lückentexte mit Vorlage in Apps bauen.
+
+## Regel Mr. Alex (8.11.2026): Vertonung wieder frei
+Die ElevenLabs-Credits sind aufgefrischt; die Sperre „nichts vertonen vor dem 13.11.“ ist aufgehoben. Weiter sparsam: kurze Texte, keine Wiederholungen schon vorhandener Aufnahmen. Für „Parle de toi“ (FR) wünscht Mr. Alex eine Jungen- und eine Mädchenstimme, ersatzweise Mann/Frau.

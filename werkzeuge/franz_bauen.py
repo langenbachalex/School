@@ -267,10 +267,10 @@ def main():
     dateien.sort()
     with open(os.path.join(APP, "sw.js"), "w", encoding="utf-8") as f:
         f.write(f"""// AUTOMATISCH ERZEUGT von werkzeuge/franz_bauen.py – Offline-Speicher der Französisch-App
-const VERSION = "mralex-fr-{h.hexdigest()[:10]}";
+const VERSION = "mralex-fr-{h.hexdigest()[:10]}r";  // r (8.11.): Update lädt alle Dateien frisch vom Server (cache: "reload"), sonst blieb eine neu vertonte mp3 alt
 const DATEIEN = {json.dumps(dateien)};
 self.addEventListener("install", (e) => {{
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN.map((u) => new Request(u, {{ cache: "reload" }})))).then(() => self.skipWaiting()));
 }});
 self.addEventListener("activate", (e) => {{
   e.waitUntil(caches.keys().then((alle) => Promise.all(alle.filter((k) => k.startsWith("mralex-fr-") && k !== VERSION).map((k) => caches.delete(k))))

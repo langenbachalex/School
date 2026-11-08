@@ -7,7 +7,7 @@ Die Nutzung (Tokens/Credits) ist knapp. Bei jeder neuen Eingabe zuerst prüfen, 
 - Tests gezielt: nur die betroffenen Tests laufen lassen, nicht die ganze Sammlung; Screenshots nur, wenn Mr. Alex etwas abnehmen soll.
 - Antworten kurz halten; Wiederholungen von Agenten-Berichten und Stop-Hook-Meldungen mit einem Satz beantworten.
 - Dateien nur in den Teilen lesen, die gebraucht werden.
-- Weitere Sparregeln: `docs/token-sparen.md`. Neuer Chat: `/load <Thema>` am Anfang, `/save` am Ende (Stand in den Ideenspeicher).
+- Weitere Sparregeln: `docs/token-sparen.md`. Neuer Chat: `/load <Thema>` am Anfang, `/save` am Ende (Stand in den Ideenspeicher) – **Claude führt `/save` am Ende jedes Blocks selbst aus** (Regel Mr. Alex 8.11.), ohne auf die Aufforderung zu warten.
 
 ## Orts-Szenen
 Jeder Ort hat drei Ebenen: Bild (Szene mit Runner-Zeichnungen), Ton (Geräusch oder Sprache), kleines Foto. Einzelheiten: `.claude/skills/orts-szenen/SKILL.md`.

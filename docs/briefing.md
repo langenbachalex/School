@@ -87,6 +87,10 @@ GLN 1 war am 30.09.2026 (Lead-in und Topic 1, S. 80 bis 85). Nach den Herbstferi
 ## Regel von Mr. Alex (2.11.2026) – sparsam arbeiten
 Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt werden kann; vor größeren Bauten kurz zurückfragen (Aufwand klein/mittel/groß, schlankere Variante). Einzelheiten in `CLAUDE.md` im Repo-Hauptordner.
 
+## Regel von Mr. Alex (8.11.2026) – Blockabschluss
+- Claude führt `/save` am Ende jedes Arbeitsblocks in allen Chats selbst aus (Stand in den Ideenspeicher, Commit, Push nach OK), ohne auf die Aufforderung zu warten.
+- Fotos, die Mr. Alex im Chat schickt, nur mit Urheber + Lizenz einbauen; Fotos von Anbieter-Webseiten ohne freie Lizenz nicht ins öffentliche Repo.
+
 ## Regeln von Mr. Alex (7.11.2026) – Superhelden, Stimmen, Fotos (gelten auch für Klasse 9)
 Rückmeldungen beim Bau der Spielgrafik-Helden in Klasse 6; so auch für Klasse 9 bauen, wo Superhelden-Cameos geplant sind (seltener als in Klasse 6).
 - **Helden als Spielgrafik, nicht als eingerahmte Bilder:** gezeichnet im flachen Vektor-Stil von `zeichneFigur` (runner.js, `HELDEN_ZEICHNUNG`/`heldZeichnen`), sie tun im Lauf wirklich etwas (Cameo mit sichtbarer Kraft). Sammelkarten werden gezeichnet (Sternenhimmel, Held in Kraftpose), gesperrte als graue Silhouette mit „?“.

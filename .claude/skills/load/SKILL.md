@@ -15,4 +15,4 @@ Du bist in einem neuen Chat für genau einen Arbeitsblock. Nichts aus früheren 
    - Frage: „Welcher Block, und gilt das OK gleich für den Push?“
 3. Danach gelten die festen Regeln: OK vor dem Bauen, Push nur nach ausdrücklichem OK, Commits nur mit den Dateien des Blocks, Tests gezielt, Antworten kurz, Subagenten nur für große Bauten.
 0. Vorab: `git fetch` und den aktuellsten `claude/...`-Branch nehmen (`git branch -r --sort=-committerdate | head -3`), nicht den Standard-Branch; sonst fehlt der Ideenspeicher. „Französisch-App“ = Schul-App Klasse 5/6 in diesem Repo (`app/franz/`), nicht „Mon français“ (Languages).
-4. Am Ende des Blocks `/save` ausführen (oder Mr. Alex erinnern, es zu sagen).
+4. Am Ende des Blocks `/save` selbst ausführen (Regel Mr. Alex 8.11.: nicht auf die Aufforderung warten).

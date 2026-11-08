@@ -92,40 +92,70 @@
     setTimeout(() => t.remove(), 2800);
   }
   function punkte(plus, grund) {
-    const vorN = namenFrei(), vorF = franceFrei(), muenzen = Math.ceil(plus / 2);
+    const muenzen = Math.ceil(plus / 2);
     stand.punkte += plus; stand.coins += muenzen;
     const t = titelIndex(stand.punkte), neuerTitel = t > stand.titel;
     if (neuerTitel) stand.titel = t;
     speichern();
     toast(`+${plus} ⭐ +${muenzen} 🪙 ${grund || zufall(LOB)}`);
     if (neuerTitel) { const ti = D.titel[t]; setTimeout(() => { toast(`${ti.symbol} Nouveau titre : ${ti.name} ! – Neuer Titel: ${ti.de}`); klang(true); }, 600); }
-    for (let i = vorN; i < namenFrei(); i++) { const n = NAMEN_REIHE[i]; setTimeout(() => toast(`${D.gruppen[n.gruppe].split(" ")[0]} Nouvelle carte au Panthéon : ${n.name} !`), 1800 + 400 * (i - vorN)); }
-    const neu = parisFrei();
-    if (neu > stand.paris) setTimeout(() => toast(`🗼 Nouveau lieu à Paris : ${D.paris[neu - 1].name} !`), 1200);
-    const f = franceFrei();
-    if (f > vorF) setTimeout(() => toast(`🇫🇷 Nouveau lieu en France : ${D.france[f - 1].name} !`), 1500);
-    const h = heldenFrei();
-    if (h > stand.helden) setTimeout(() => toast(`🦸 Nouveau super-héros : ${D.helden[h - 1].name} !`), 2400);
+    freischalten(true);
   }
-  /* Panthéon-Karten (7.11.): Fußballer + Persönlichkeiten in Folien-Reihenfolge (namen.tsv), alle NAMEN_PUNKTE ⭐ eine Karte.
+  /* Panthéon-Karten (7.11.): Fußballer + Persönlichkeiten in Folien-Reihenfolge (namen.tsv), alle KARTE_PUNKTE ⭐ eine Karte (8.11.: 100 ⭐, höchstens eine pro Tag).
      Offen ist eine Karte auch, wenn der Name in Prononciation schon geschafft ist (ältere Stände). Gold bleibt „ohne Vorbild“ = Niveau 2 in Prononciation. */
-  const NAMEN_PUNKTE = 25;
+  /* Freischalten (8.11., Mr. Alex: viel zu schnell → wie Englisch): Superheld nur für eine „Perfect week“ (an jedem Schultag der Woche geübt,
+     Ferien/Feiertage Saarland zählen nicht), Paris- und Frankreich-Orte alle ORT_PUNKTE ⭐, Panthéon-Karten alle KARTE_PUNKTE ⭐ –
+     von jeder Sorte höchstens eins pro Tag. stand.frei = schon freigeschaltet (bleibt), stand.freiTag = Tag der letzten Freischaltung je Sorte. */
+  const ORT_PUNKTE = 200, KARTE_PUNKTE = 100;
   const NAMEN_REIHE = D.namen.filter((n) => n.gruppe === "foot" || n.gruppe === "histoire");
-  const namenFrei = () => Math.min(NAMEN_REIHE.length, Math.floor(stand.punkte / NAMEN_PUNKTE));
+  const N_PARIS = (D.paris || []).length, N_FRANCE = (D.france || []).length, N_HELDEN = (D.helden || []).length;
+  const tagIso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const plusTage = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const montag = (d) => plusTage(d, -((d.getDay() + 6) % 7));
+  const istSchultag = (d) => d.getDay() >= 1 && d.getDay() <= 5 && !(D.frei || []).some((f) => tagIso(d) >= f.von && tagIso(d) <= f.bis);
+  const schultageDerWoche = (mo) => [0, 1, 2, 3, 4].map((i) => plusTage(mo, i)).filter(istSchultag);
+  if (!stand.frei) { // ältere Stände: was nach den alten Regeln (Ort 20, Karte 25, Held 30 ⭐) schon frei war, bleibt frei
+    const p = stand.punkte, alteParis = Math.min(N_PARIS, 1 + Math.floor(p / 20));
+    const alteFrance = alteParis >= N_PARIS ? Math.max(0, Math.min(N_FRANCE, 1 + Math.floor((p - N_PARIS * 20) / 20))) : 0;
+    stand.frei = { ort: alteParis + alteFrance, karte: Math.min(NAMEN_REIHE.length, Math.floor(p / 25)), held: Math.min(N_HELDEN, Math.floor(p / 30)) };
+  }
+  stand.freiTag = stand.freiTag || {}; stand.tage = stand.tage || {}; stand.wochen = stand.wochen || [];
+  const namenFrei = () => Math.min(NAMEN_REIHE.length, stand.frei.karte);
   const namenOffen = (n) => { const i = NAMEN_REIHE.indexOf(n); return (stand.namen[n.id] || 0) >= 1 || i < 0 || i < namenFrei(); };
   const rahmenKlasse = () => (stand.rahmen && stand.gekauft.includes("rahmen_" + stand.rahmen) ? " rahmen-" + stand.rahmen : "");
-  /* Superhelden (Stufe 3): alle HELD_PUNKTE Punkte ein neuer Held; stand.helden = Zahl der Helden, deren Film schon lief */
-  const HELD_PUNKTE = 30;
-  const heldenFrei = () => Math.min((D.helden || []).length, Math.floor(stand.punkte / HELD_PUNKTE));
-  /* Paris-Karte (Stufe 2): der erste Ort ist frei, danach alle PARIS_PUNKTE Punkte ein neuer Ort. stand.paris = Zahl der Orte, deren Szene schon lief;
-     neue Orte zeigt die Startseite mit ihrer Szene (nicht mitten in einer Übung). */
-  const PARIS_PUNKTE = 20;
-  const parisFrei = () => Math.min((D.paris || []).length, 1 + Math.floor(stand.punkte / PARIS_PUNKTE));
-  /* Frankreich-Karte Niveau 2 (7.11.): erst wenn alle Paris-Orte frei sind, danach im selben Abstand (PARIS_PUNKTE) ein Ort nach dem anderen (france.tsv).
-     Kein eigener Spielstand nötig – rein aus den Punkten berechnet, alte Stände bleiben gültig. */
-  const FRANCE_AB = (D.paris || []).length * PARIS_PUNKTE;   // Punkte für den ersten Ort in Frankreich
-  const franceFrei = () => (D.france || []).length && parisFrei() >= (D.paris || []).length
-    ? Math.max(0, Math.min(D.france.length, 1 + Math.floor((stand.punkte - FRANCE_AB) / PARIS_PUNKTE))) : 0;
+  const heldenFrei = () => Math.min(N_HELDEN, stand.frei.held);
+  const parisFrei = () => Math.min(N_PARIS, stand.frei.ort);
+  const franceFrei = () => Math.max(0, Math.min(N_FRANCE, stand.frei.ort - N_PARIS));
+  const naechsterOrtBei = () => stand.frei.ort * ORT_PUNKTE;        // ab so vielen ⭐ ist der nächste Ort fällig (der erste Paris-Ort ist frei)
+  const naechsteKarteBei = () => (stand.frei.karte + 1) * KARTE_PUNKTE;
+  // Hinweistexte: „noch X ⭐“ – oder „morgen“, wenn genug Punkte da sind, heute aber schon etwas freigeschaltet wurde
+  const restText = (bei, sorte, bis, morgen) => { const x = bei - stand.punkte; return x > 0 ? `noch ${x} ⭐ ${bis}` : `${morgen} kommt morgen (höchstens eins pro Tag)`; };
+  const restOrt = () => restText(naechsterOrtBei(), "ort", "bis zum nächsten Ort", "Der nächste Ort");
+  const restKarte = () => restText(naechsteKarteBei(), "karte", "bis zur nächsten Karte", "Die nächste Karte");
+  setTimeout(() => freischalten(false), 0);
+  const heldHinweis = () => { const mo = montag(new Date()), st = schultageDerWoche(mo); const ok = st.filter((d) => stand.tage[tagIso(d)]).length;
+    return `Perfect week: ${ok}/${st.length} Schultage diese Woche geübt → neuer Held`; };
+  // nach Punkten und beim Start: höchstens ein neuer Ort, eine neue Karte, ein neuer Held pro Tag
+  function freischalten(geuebt) {
+    const tag = tagIso(new Date()), jetzt = new Date();
+    if (geuebt) stand.tage[tag] = 1;   // Übungstag = an diesem Tag Punkte bekommen (für die Perfect week)
+    const meldungen = [];
+    if (stand.frei.ort < N_PARIS + N_FRANCE && stand.punkte >= naechsterOrtBei() && stand.freiTag.ort !== tag) {
+      stand.frei.ort++; stand.freiTag.ort = tag;
+      meldungen.push(stand.frei.ort <= N_PARIS ? `🗼 Nouveau lieu à Paris : ${D.paris[stand.frei.ort - 1].name} !` : `🇫🇷 Nouveau lieu en France : ${D.france[stand.frei.ort - N_PARIS - 1].name} !`);
+    }
+    if (stand.frei.karte < NAMEN_REIHE.length && stand.punkte >= naechsteKarteBei() && stand.freiTag.karte !== tag) {
+      const n = NAMEN_REIHE[stand.frei.karte]; stand.frei.karte++; stand.freiTag.karte = tag;
+      meldungen.push(`${D.gruppen[n.gruppe].split(" ")[0]} Nouvelle carte au Panthéon : ${n.name} !`);
+    }
+    const mo = montag(jetzt), woche = tagIso(mo), schultage = schultageDerWoche(mo);
+    if (schultage.length && schultage.every((d) => stand.tage[tagIso(d)]) && !stand.wochen.includes(woche) && stand.freiTag.held !== tag) {
+      stand.wochen.push(woche);
+      if (stand.frei.held < N_HELDEN) { stand.frei.held++; stand.freiTag.held = tag; meldungen.push(`⭐ Perfect week ! 🦸 Nouveau super-héros : ${D.helden[stand.frei.held - 1].name} !`); }
+    }
+    speichern();
+    meldungen.forEach((m, i) => setTimeout(() => toast(m), 1200 + 700 * i));
+  }
   function rueckmeldung() { return el("div", { class: "rueckmeldung", hidden: true, role: "status" }); }
   function melde(box, art, text) { box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text; }
   const kopf = (titel, zurueck, unter) => el("header", { class: "kopf" }, knopf("← Zurück", zurueck, "leise"),
@@ -781,7 +811,7 @@
     const st = o.gesperrt ? 0 : (o.stufe == null ? karteVon(h.id).s : o.stufe);
     const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? "Noch nicht gesammelt" : `${h.name}: ${h.kraft}${st ? " · " + KARTE.namen[st] : ""}${h.selten ? " · selten" : ""}` });
     try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, { id: h.id, name: h.name, kraft: h.kraft },
-      { gesperrt: !!o.gesperrt, hinweis: o.gesperrt ? `${HELD_PUNKTE} ⭐` : null, stufe: st, selten: !o.gesperrt && h.selten }); } catch (e) { /* Karte bleibt leer */ }
+      { gesperrt: !!o.gesperrt, hinweis: o.gesperrt ? "Perfect week" : null, stufe: st, selten: !o.gesperrt && h.selten }); } catch (e) { /* Karte bleibt leer */ }
     if (st && window.Runner && window.Runner.heldKarteGlanz) glanzDazu(cv, st);
     return cv;
   }
@@ -811,7 +841,7 @@
     if (glanzKarten.size) requestAnimationFrame(glanzBild); else glanzLaeuft = false;
   }
   const karteBild = (h, gesperrt) => { try { return window.Runner.heldKarteBild({ id: h.id, name: h.name, kraft: h.kraft },
-    { breite: 240, gesperrt, hinweis: gesperrt ? `${HELD_PUNKTE} ⭐` : null, stufe: gesperrt ? 0 : karteVon(h.id).s, selten: !gesperrt && h.selten }); } catch (e) { return ""; } };
+    { breite: 240, gesperrt, hinweis: gesperrt ? "Perfect week" : null, stufe: gesperrt ? 0 : karteVon(h.id).s, selten: !gesperrt && h.selten }); } catch (e) { return ""; } };
   function heldFilm(h, fertig) {
     if (!(window.Runner && window.Runner.hatSzene && window.Runner.hatSzene("held_" + h.id))) { if (fertig) fertig(); return false; }
     stopp();
@@ -889,8 +919,7 @@
   const kartenZaehler = () => gesammelt().length > 0 && el("p", { class: "klein karten-zaehler" },
     [3, 2, 1].map((st) => `${KARTE.symbol[st]} ${gesammelt().filter((h) => karteVon(h.id).s === st).length} ${KARTE.namen[st]}`).join(" · ") + ` · ✦ Sammelwert ${sammelwert()}`);
   function heldenSeite() {
-    const rest = HELD_PUNKTE - (stand.punkte % HELD_PUNKTE);
-    zeige(kopf("🦸 Super-héros", pantheon, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${rest} ⭐ bis zum nächsten Helden` : "Alle Helden gesammelt – bravo !"),
+    zeige(kopf("🦸 Super-héros", pantheon, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · ${heldHinweis()}` : "Alle Helden gesammelt – bravo !"),
       kartenZaehler(),
       el("p", { class: "klein helden-hinweis" }, "Tipp auf eine Karte: Der Held stellt sich vor. 🎯 Défi: drei Fragen zum Helden. Folien-Karten: Schau den Film ganz oder spiel das Défi – so steigt die Karte auf: Bronze, Silber, Gold. ✦ RARE-Helden zählen doppelt."),
       heldenRaster());
@@ -924,7 +953,7 @@
     return el("div", { class: "london-rahmen" }, svg);
   }
   function parisSeite() {
-    const frei = parisFrei(), rest = PARIS_PUNKTE - (stand.punkte % PARIS_PUNKTE);
+    const frei = parisFrei();
     const fakt = el("section", { class: "karte paris-fakt", hidden: true });
     const faktZeigen = (o) => {
       fakt.hidden = false;
@@ -932,7 +961,7 @@
         el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)])), hatFilm(o) && knopf("▶ Film", () => parisFilm(o), "leise")));
       fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
-    zeige(kopf("🗼 Paris", pantheon, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
+    zeige(kopf("🗼 Paris", pantheon, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · ${restOrt()}` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
       parisKarte(frei, (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); }),
       el("p", { class: "klein" }, "Tipp auf einen Ort: kleiner Film mit Mr. Alex, danach der Text zum Nachlesen."),
       fakt,
@@ -974,7 +1003,6 @@
   }
   function franceAbschnitt() {
     const frei = franceFrei(), n = D.france.length, parisFertig = parisFrei() >= D.paris.length;
-    const rest = parisFertig ? PARIS_PUNKTE - ((stand.punkte - FRANCE_AB) % PARIS_PUNKTE) : FRANCE_AB - stand.punkte;
     const fakt = el("section", { class: "karte paris-fakt", hidden: true });
     const region = (o) => (D.regions.find((r) => r.id === o.region) || {}).name;
     const zeigen = (o) => {
@@ -984,8 +1012,8 @@
         el("div", { class: "knopfreihe" }, knopf("🔊 Écoute", () => spiele([ton(o)]))));
       fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
-    const info = !parisFertig ? `🔒 Erst alle ${D.paris.length} Paris-Orte – noch ${rest} ⭐ bis zum ersten Ort in Frankreich.`
-      : frei < n ? `${frei}/${n} Orte · noch ${rest} ⭐ bis zum nächsten Ort · tipp auf einen Ort: Text zum Lesen und Hören.` : `Alle ${n} Orte freigeschaltet – bravo !`;
+    const info = !parisFertig ? `🔒 Erst alle ${D.paris.length} Paris-Orte freischalten, dann geht es in Frankreich weiter (ein Ort alle ${ORT_PUNKTE} ⭐).`
+      : frei < n ? `${frei}/${n} Orte · ${restOrt()} · tipp auf einen Ort: Text zum Lesen und Hören.` : `Alle ${n} Orte freigeschaltet – bravo !`;
     return el("section", { class: "karte niveau2" }, el("h3", {}, "🇫🇷 La France · Niveau 2"),
       el("p", { class: "klein france-info" }, info),
       franceKarte(frei, zeigen),
@@ -997,7 +1025,7 @@
 
   /* ---------- 🏛️ Panthéon ---------- */
   function pantheon() {   // Hall of Fame (7.11.): Paris-Karte oben, dann Niveau 2 (Frankreich-Karte), Super-héros, Stars, Dialogues
-    const frei = parisFrei(), rest = PARIS_PUNKTE - (stand.punkte % PARIS_PUNKTE), restH = HELD_PUNKTE - (stand.punkte % HELD_PUNKTE);
+    const frei = parisFrei();
     const fakt = el("section", { class: "karte paris-fakt", hidden: true });
     const faktZeigen = (o) => {
       fakt.hidden = false;
@@ -1006,22 +1034,21 @@
       fakt.scrollIntoView({ behavior: "smooth", block: "nearest" });
     };
     const ort = (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); };
-    const restN = NAMEN_PUNKTE - (stand.punkte % NAMEN_PUNKTE);
     zeige(kopf("🏛️ Panthéon", startseite, "Deine Hall of Fame: Paris, Super-héros, Stars und Dialogues."),
       titelKarte(),
       el("h2", {}, "🗼 Paris"),
-      el("p", { class: "klein" }, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · noch ${rest} ⭐ bis zum nächsten Ort · tipp auf einen Ort: kleiner Film, danach der Text.` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
+      el("p", { class: "klein" }, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · ${restOrt()} · tipp auf einen Ort: kleiner Film, danach der Text.` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
       parisKarte(frei, ort),
       fakt,
       (D.regions || []).length && (D.france || []).length ? franceAbschnitt() : null,
       el("h2", {}, "🦸 Super-héros"),
-      el("p", { class: "klein" }, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · noch ${restH} ⭐ bis zum nächsten Helden · tipp auf eine Karte: Vorstellung, Défi, Aufstieg.` : "Alle Helden gesammelt – bravo !"),
+      el("p", { class: "klein" }, heldenFrei() < D.helden.length ? `${heldenFrei()}/${D.helden.length} gesammelt · ${heldHinweis()} · tipp auf eine Karte: Vorstellung, Défi, Aufstieg.` : "Alle Helden gesammelt – bravo !"),
       kartenZaehler(), heldenRaster(),
       Object.entries(D.gruppen).map(([g, titel]) => [el("h2", {}, titel),
-        g === "foot" && el("p", { class: "klein" }, (namenFrei() < NAMEN_REIHE.length ? `${namenFrei()}/${NAMEN_REIHE.length} Karten · noch ${restN} ⭐ bis zur nächsten Karte` : "Alle Karten gesammelt – bravo !") + " · 🥇 Gold: Name in Prononciation auf Niveau 2 (sans modèle) sagen."),
+        g === "foot" && el("p", { class: "klein" }, (namenFrei() < NAMEN_REIHE.length ? `${namenFrei()}/${NAMEN_REIHE.length} Karten · ${restKarte()}` : "Alle Karten gesammelt – bravo !") + " · 🥇 Gold: Name in Prononciation auf Niveau 2 (sans modèle) sagen."),
         el("div", { class: "namen-raster" }, D.namen.filter((n) => n.gruppe === g).map((n) => {
           const s = namenStufe(n), reihe = NAMEN_REIHE.includes(n), offen = namenOffen(n);
-          if (reihe && !offen) return el("button", { type: "button", class: "namen-knopf gesperrt", "aria-label": "Gesperrte Karte", onclick: () => toast(`🔒 Noch ${restN} ⭐ bis zur nächsten Karte`) },
+          if (reihe && !offen) return el("button", { type: "button", class: "namen-knopf gesperrt", "aria-label": "Gesperrte Karte", onclick: () => toast(`🔒 ${restKarte()}`) },
             el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?"));
           return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : (reihe ? offen : s) ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
             bild(n, 64), el("span", { lang: "fr" }, (reihe ? offen : s) ? n.name : "?"));

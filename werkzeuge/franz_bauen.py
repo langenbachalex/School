@@ -6,6 +6,7 @@ Audios erzeugt werkzeuge/franz_audio.py (fehlt eine Datei, spricht die Geräte-S
 Aufruf: python3 werkzeuge/franz_bauen.py
 """
 import csv, hashlib, json, os, re, shutil
+import frei_saarland  # Ferien/Feiertage Saarland (Perfect week wie Englisch, 8.11.)
 from PIL import Image, ImageDraw, ImageFont
 
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -198,7 +199,7 @@ def main():
     for z in (tsv("lob.tsv") if os.path.exists(os.path.join(INHALT, "lob.tsv")) else []):
         a = f"audio/lob/{z['id']}.mp3"
         lob.setdefault(z["art"], []).append({"text": z["text"], "de": z["de"], "gruppe": [g for g in z["gruppe"].split(",") if g], "audio": a if vorhanden(a) else None})
-    daten = {"lob": lob, "titel": titel, "boutique": boutique, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "france": france, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    daten = {"lob": lob, "frei": frei_saarland.als_daten(), "titel": titel, "boutique": boutique, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "france": france, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:

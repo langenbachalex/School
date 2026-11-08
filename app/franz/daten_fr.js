@@ -1056,6 +1056,63 @@ window.DATEN_FR = {
    }
   ]
  },
+ "frei": [
+  {
+   "von": "2026-10-05",
+   "bis": "2026-10-11",
+   "name": "Herbstferien (ab 12.10. zählt jeder Wochentag – Wunsch Mr. Alex: App schon in den Ferien nutzbar)"
+  },
+  {
+   "von": "2026-12-21",
+   "bis": "2027-01-03",
+   "name": "Weihnachtsferien"
+  },
+  {
+   "von": "2027-02-08",
+   "bis": "2027-02-12",
+   "name": "Winterferien (Fastnacht)"
+  },
+  {
+   "von": "2027-03-26",
+   "bis": "2027-03-26",
+   "name": "Karfreitag"
+  },
+  {
+   "von": "2027-03-29",
+   "bis": "2027-04-09",
+   "name": "Ostermontag und Osterferien"
+  },
+  {
+   "von": "2027-05-06",
+   "bis": "2027-05-07",
+   "name": "Christi Himmelfahrt und beweglicher Ferientag"
+  },
+  {
+   "von": "2027-05-17",
+   "bis": "2027-05-17",
+   "name": "Pfingstmontag"
+  },
+  {
+   "von": "2027-05-27",
+   "bis": "2027-05-28",
+   "name": "Fronleichnam und beweglicher Ferientag"
+  },
+  {
+   "von": "2027-06-28",
+   "bis": "2027-08-06",
+   "name": "Sommerferien"
+  },
+  {
+   "von": "2027-10-04",
+   "bis": "2027-10-15",
+   "name": "Herbstferien"
+  },
+  {
+   "von": "2027-12-20",
+   "bis": "2027-12-31",
+   "name": "Weihnachtsferien"
+  }
+ ],
  "titel": [
   {
    "ab": 0,

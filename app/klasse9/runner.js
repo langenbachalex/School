@@ -14158,8 +14158,16 @@
     const teileDe = o.textDe ? untertitelTeile(o.textDe) : null;
     const utSetzen = (nr) => {
       if (!teileDe) { unter.textContent = teile[nr] || ''; return; }
+      // 8.11. (Mr. Alex): Französisch nutzt die volle Breite und bleibt einzeilig (Schrift wird bei Bedarf kleiner), Deutsch steht immer darunter
+      unter.style.webkitLineClamp = 'unset'; unter.style.display = 'block'; unter.style.width = '96%'; unter.style.maxWidth = '96%';
+      const fr = el('span', null, teile[nr] || ''); fr.style.cssText = 'display:block;white-space:nowrap;';
       const de = el('span', null, teileDe[Math.min(nr, teileDe.length - 1)] || ''); de.lang = 'de'; de.style.cssText = 'display:block;font-weight:500;font-size:.82em;color:#ffe9a8;';
-      unter.replaceChildren(document.createTextNode(teile[nr] || ''), de);
+      unter.replaceChildren(fr, de);
+      requestAnimationFrame(() => {
+        fr.style.fontSize = '';
+        const platz = unter.clientWidth - 20, breit = fr.scrollWidth;
+        if (breit > platz && platz > 0) { const px = parseFloat(getComputedStyle(fr).fontSize) * platz / breit; if (px >= 10) fr.style.fontSize = px + 'px'; else { fr.style.fontSize = '10px'; fr.style.whiteSpace = 'normal'; } }   // sehr lang (Handy): lieber umbrechen als winzig
+      });
     };
     utSetzen(0);
     const foto = el('figure', 'ortszene-foto'); foto.hidden = true;

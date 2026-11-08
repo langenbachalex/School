@@ -2213,8 +2213,8 @@ window.DATEN_FR = {
    "fr": "À la boulangerie : « Une baguette et deux croissants, s'il vous plaît ! »",
    "de": "In der Bäckerei: „Ein Baguette und zwei Croissants, bitte!“",
    "audio": "audio/paris/boulangerie.mp3",
-   "foto": null,
-   "quelle": null
+   "foto": "bilder/paris/boulangerie.jpg",
+   "quelle": "Foto: KoS · CC BY-SA 3.0 · Wikimedia Commons (Devanture Boulangerie 159 rue Ordener)"
   },
   {
    "id": "pompidou",
@@ -3682,7 +3682,7 @@ window.DATEN_FR = {
    "stichwort": "inventeurs du cinéma",
    "de": "Erfinder des Kinos",
    "bild": "wm:Auguste_et_Louis_Lumière",
-   "foto": null,
+   "foto": "bilder/namen/lumiere.jpg",
    "ipa": [
     [
      "le",
@@ -3704,7 +3704,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/lumiere.mp3",
-   "quelle": null
+   "quelle": "Foto: de Lanot · gemeinfrei · Wikimedia Commons / PICRYL"
   },
   {
    "gruppe": "histoire",

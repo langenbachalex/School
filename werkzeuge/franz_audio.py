@@ -16,7 +16,7 @@ STIMMEN = {"A": "8qnuneLiGjGrT4A62CCe",   # Jules – conversational
 EINSTELLUNG = {"stability": 0.5, "similarity_boost": 0.75}
 # Aussprache-Hilfen (7.11., Mr. Alex): stummes H bei „Hugo“ – sonst spricht die Stimme ein H
 SPRECH = {"hugo": "Victor Ugo", "ekitike": "Ugo Ekitiké", "t_hernandez": "Théo Ernandez", "l_hernandez": "Lucas Ernandez",
-          "metz": "Messe", "olise": "Maïkeul Olisse", "gusto": "Malo Gusteau", "kone": "Manue Koné", "rabiot": "Àdrien Rabiot"}  # 8.11. (Mr. Alex: „Mess“ [mɛs]) – neu vertont 8.11.
+          "metz": "Messe", "olise": "Maïkeul Olisse", "gusto": "Malo Gusteau", "kone": "Manue Koné", "rabiot": "Àdrien Rabiot", "risser": "Robain Rissère"}  # 8.11. (Mr. Alex: „Mess“ [mɛs]) – neu vertont 8.11.
 TAGS = [(re.compile(r"^Ha ha"), "[laughs] Ha ha"), (re.compile(r"« La la la laaaa"), "[sings] « La la la laaaa"), (re.compile(r"^Chut"), "[whispers] Chut")]
 
 

@@ -6,6 +6,7 @@ Audios erzeugt werkzeuge/franz_audio.py (fehlt eine Datei, spricht die Geräte-S
 Aufruf: python3 werkzeuge/franz_bauen.py
 """
 import csv, hashlib, json, os, re, shutil
+from runner_skins import skin_artikel  # Figur-Teile wie Englisch 6 (8.11.)
 import frei_saarland  # Ferien/Feiertage Saarland (Perfect week wie Englisch, 8.11.)
 from PIL import Image, ImageDraw, ImageFont
 
@@ -215,7 +216,7 @@ def main():
         {"id": "rahmen_rot", "symbol": "🎨", "name": "Cadre rouge", "unter": "Roter Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "rot"},
         {"id": "rahmen_blau", "symbol": "🎨", "name": "Cadre bleu", "unter": "Blauer Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "blau"},
         {"id": "rahmen_gruen", "symbol": "🎨", "name": "Cadre vert", "unter": "Grüner Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "gruen"},
-        {"id": "rahmen_gold", "symbol": "👑", "name": "Cadre doré", "unter": "Nicht zu kaufen: für einen Mois parfait (4 perfekte Wochen hintereinander)", "preis": 0, "rahmen": "gold", "verdient": "👑 Mois parfait"}]
+        {"id": "rahmen_gold", "symbol": "👑", "name": "Cadre doré", "unter": "Nicht zu kaufen: für einen Mois parfait (4 perfekte Wochen hintereinander)", "preis": 0, "rahmen": "gold", "verdient": "👑 Mois parfait"}] + skin_artikel(lambda g, e: g, "Figur im Paris Run")
     parle_audio = {w: {x: parle_name(w, x) for x in parle_stuecke() if vorhanden(parle_name(w, x))} for w in ("A", "B")}
     # Lob und Rückmeldungen (8.11.): inhalte/franz/lob.tsv → nach Art gruppiert (lob, stark, fehler, spiel, geschafft, voll, doch), Stimme audio/lob/<id>.mp3
     lob = {}

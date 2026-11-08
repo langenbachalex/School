@@ -108,3 +108,5 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 .rahmen-gold { border-color: #d4a017 !important; box-shadow: 0 0 0 3px #f5d76e; }
 .wochenleiste li.heute { outline: 2px solid var(--blau, #1f5fd1); outline-offset: 2px; }
 .stimm-wahl { align-items: center; margin: 0 0 8px; }
+.kachel.gesperrt { filter: grayscale(.8); opacity: .75; border-style: dashed; }
+.shop-gruppe { margin: 1.4rem 0 .4rem; }

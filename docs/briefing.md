@@ -88,6 +88,8 @@ GLN 1 war am 30.09.2026 (Lead-in und Topic 1, S. 80 bis 85). Nach den Herbstferi
 Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt werden kann; vor größeren Bauten kurz zurückfragen (Aufwand klein/mittel/groß, schlankere Variante). Einzelheiten in `CLAUDE.md` im Repo-Hauptordner.
 
 ## Regel von Mr. Alex (8.11.2026) – Blockabschluss
+- Französisch-App (Nebenfach) belohnt langsamer als bisher, aber leichter als Englisch: Superheld alle 3 Schultage am Stück (mit 🔥 Extra-Lob), Orte alle 200 ⭐, Panthéon-Karten alle 100 ⭐, von jeder Sorte höchstens eins pro Tag.
+- Lob und Rückmeldungen in der Französisch-App: idiomatisch französisch (wie man es wirklich sagt, auch Jugendsprache), nicht wörtlich übersetzt; vertont mit Mr. Alex' Stimme und Tag [French]. Aussprachefehler erst sammeln (Ideenspeicher), dann gemeinsam neu vertonen.
 - Claude führt `/save` am Ende jedes Arbeitsblocks in allen Chats selbst aus (Stand in den Ideenspeicher, Commit, Push nach OK), ohne auf die Aufforderung zu warten.
 - Fotos, die Mr. Alex im Chat schickt, nur mit Urheber + Lizenz einbauen; Fotos von Anbieter-Webseiten ohne freie Lizenz nicht ins öffentliche Repo.
 

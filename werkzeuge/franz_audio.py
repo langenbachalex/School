@@ -41,7 +41,7 @@ def auftraege():
         yield z["wer"], text, fb.audio_name(z["wer"], z["fr"])
     # Lob und Rückmeldungen (8.11., Mr. Alex): inhalte/franz/lob.tsv, seine Stimme mit [French]; starke Sprüche begeistert, Spiel-Sprüche gespielt verzweifelt
     for z in fb.tsv("lob.tsv"):
-        tag = "[French] [excited] " if z["art"] in ("stark", "geschafft", "voll", "doch") else "[French] [exasperated] " if z["art"] == "spiel" else "[French] "
+        tag = "[French] [excited] " if z["art"] in ("stark", "geschafft", "voll", "doch", "feuer3", "feuer6", "feuer9", "feuer", "wochenende", "ferien") else "[French] [exasperated] " if z["art"] == "spiel" else "[French] "
         yield "alex", tag + z["text"], f"audio/lob/{z['id']}.mp3"
     for z in fb.tsv("namen.tsv"):
         yield "alex", "[French] " + SPRECH.get(z["id"], z["name"]) + ".", f"audio/namen/{z['id']}.mp3"  # 7.11. (Mr. Alex): Tag [French] erzwingt französische Aussprache (sonst z. B. „Kylian“ englisch)

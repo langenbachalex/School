@@ -103,8 +103,8 @@
   }
   /* Panthéon-Karten (7.11.): Fußballer + Persönlichkeiten in Folien-Reihenfolge (namen.tsv), alle KARTE_PUNKTE ⭐ eine Karte (8.11.: 100 ⭐, höchstens eine pro Tag).
      Offen ist eine Karte auch, wenn der Name in Prononciation schon geschafft ist (ältere Stände). Gold bleibt „ohne Vorbild“ = Niveau 2 in Prononciation. */
-  /* Freischalten (8.11., Mr. Alex: viel zu schnell → wie Englisch): Superheld nur für eine „Perfect week“ (an jedem Schultag der Woche geübt,
-     Ferien/Feiertage Saarland zählen nicht), Paris- und Frankreich-Orte alle ORT_PUNKTE ⭐, Panthéon-Karten alle KARTE_PUNKTE ⭐ –
+  /* Freischalten (8.11., Mr. Alex: viel zu schnell → wie Englisch): Superheld alle 3 Schultage am Stück (Nebenfach: Woche wäre zu schwer;
+     Ferien/Feiertage Saarland unterbrechen die Serie nicht), dazu 🔥 Extra-Lob + 30 ⭐; Wochenende/Ferien geübt = Bonus 20 ⭐ (keine Pflicht); Paris- und Frankreich-Orte alle ORT_PUNKTE ⭐, Panthéon-Karten alle KARTE_PUNKTE ⭐ –
      von jeder Sorte höchstens eins pro Tag. stand.frei = schon freigeschaltet (bleibt), stand.freiTag = Tag der letzten Freischaltung je Sorte. */
   const ORT_PUNKTE = 200, KARTE_PUNKTE = 100;
   const NAMEN_REIHE = D.namen.filter((n) => n.gruppe === "foot" || n.gruppe === "histoire");
@@ -119,7 +119,14 @@
     const alteFrance = alteParis >= N_PARIS ? Math.max(0, Math.min(N_FRANCE, 1 + Math.floor((p - N_PARIS * 20) / 20))) : 0;
     stand.frei = { ort: alteParis + alteFrance, karte: Math.min(NAMEN_REIHE.length, Math.floor(p / 25)), held: Math.min(N_HELDEN, Math.floor(p / 30)) };
   }
-  stand.freiTag = stand.freiTag || {}; stand.tage = stand.tage || {}; stand.wochen = stand.wochen || [];
+  stand.freiTag = stand.freiTag || {}; stand.tage = stand.tage || {}; stand.feuer = stand.feuer || []; stand.bonusTage = stand.bonusTage || [];
+  // Serie: Schultage am Stück bis heute (heute noch nicht geübt: die Serie bis gestern zählt noch)
+  function serie() {
+    let d = new Date(), n = 0;
+    if (!stand.tage[tagIso(d)]) d = plusTage(d, -1);
+    for (let i = 0; i < 400; i++, d = plusTage(d, -1)) { if (!istSchultag(d)) continue; if (stand.tage[tagIso(d)]) n++; else break; }
+    return n;
+  }
   const namenFrei = () => Math.min(NAMEN_REIHE.length, stand.frei.karte);
   const namenOffen = (n) => { const i = NAMEN_REIHE.indexOf(n); return (stand.namen[n.id] || 0) >= 1 || i < 0 || i < namenFrei(); };
   const rahmenKlasse = () => (stand.rahmen && stand.gekauft.includes("rahmen_" + stand.rahmen) ? " rahmen-" + stand.rahmen : "");
@@ -133,13 +140,27 @@
   const restOrt = () => restText(naechsterOrtBei(), "ort", "bis zum nächsten Ort", "Der nächste Ort");
   const restKarte = () => restText(naechsteKarteBei(), "karte", "bis zur nächsten Karte", "Die nächste Karte");
   setTimeout(() => freischalten(false), 0);
-  const heldHinweis = () => { const mo = montag(new Date()), st = schultageDerWoche(mo); const ok = st.filter((d) => stand.tage[tagIso(d)]).length;
-    return `Perfect week: ${ok}/${st.length} Schultage diese Woche geübt → neuer Held`; };
+  const heldHinweis = () => { const n = serie(); return `🔥 ${n} Schultag${n === 1 ? "" : "e"} am Stück · alle 3 Schultage am Stück ein neuer Held`; };
   // nach Punkten und beim Start: höchstens ein neuer Ort, eine neue Karte, ein neuer Held pro Tag
   function freischalten(geuebt) {
     const tag = tagIso(new Date()), jetzt = new Date();
-    if (geuebt) stand.tage[tag] = 1;   // Übungstag = an diesem Tag Punkte bekommen (für die Perfect week)
+    const ersterDesTages = geuebt && !stand.tage[tag];
+    if (geuebt) stand.tage[tag] = 1;   // Übungstag = an diesem Tag Punkte bekommen
     const meldungen = [];
+    const bonus = (plus) => { stand.punkte += plus; stand.coins += Math.ceil(plus / 2); };
+    if (ersterDesTages) {
+      if (!istSchultag(jetzt)) {   // Wochenende/Ferien: Bonus, keine Pflicht (Serie läuft weiter)
+        const we = jetzt.getDay() === 0 || jetzt.getDay() === 6;
+        stand.bonusTage.push(tag); bonus(20); meldungen.push(`${we ? "🏖️" : "🌴"} ${ruf(we ? "wochenende" : "ferien")} +20 ⭐`);
+      } else {
+        const n = serie();
+        if (n >= 3 && n % 3 === 0 && !stand.feuer.includes(tag)) {   // 🔥 3, 6, 9 … Schultage am Stück: Extra-Lob, +30 ⭐, neuer Superheld
+          stand.feuer.push(tag); bonus(30);
+          meldungen.push(`🔥 ${ruf(n === 3 ? "feuer3" : n === 6 ? "feuer6" : n === 9 ? "feuer9" : "feuer")} ${n} jours de suite · +30 ⭐`);
+          if (stand.frei.held < N_HELDEN && stand.freiTag.held !== tag) { stand.frei.held++; stand.freiTag.held = tag; meldungen.push(`🦸 Nouveau super-héros : ${D.helden[stand.frei.held - 1].name} !`); }
+        }
+      }
+    }
     if (stand.frei.ort < N_PARIS + N_FRANCE && stand.punkte >= naechsterOrtBei() && stand.freiTag.ort !== tag) {
       stand.frei.ort++; stand.freiTag.ort = tag;
       meldungen.push(stand.frei.ort <= N_PARIS ? `🗼 Nouveau lieu à Paris : ${D.paris[stand.frei.ort - 1].name} !` : `🇫🇷 Nouveau lieu en France : ${D.france[stand.frei.ort - N_PARIS - 1].name} !`);
@@ -147,11 +168,6 @@
     if (stand.frei.karte < NAMEN_REIHE.length && stand.punkte >= naechsteKarteBei() && stand.freiTag.karte !== tag) {
       const n = NAMEN_REIHE[stand.frei.karte]; stand.frei.karte++; stand.freiTag.karte = tag;
       meldungen.push(`${D.gruppen[n.gruppe].split(" ")[0]} Nouvelle carte au Panthéon : ${n.name} !`);
-    }
-    const mo = montag(jetzt), woche = tagIso(mo), schultage = schultageDerWoche(mo);
-    if (schultage.length && schultage.every((d) => stand.tage[tagIso(d)]) && !stand.wochen.includes(woche) && stand.freiTag.held !== tag) {
-      stand.wochen.push(woche);
-      if (stand.frei.held < N_HELDEN) { stand.frei.held++; stand.freiTag.held = tag; meldungen.push(`⭐ Perfect week ! 🦸 Nouveau super-héros : ${D.helden[stand.frei.held - 1].name} !`); }
     }
     speichern();
     meldungen.forEach((m, i) => setTimeout(() => toast(m), 1200 + 700 * i));
@@ -247,7 +263,8 @@
         el("h1", { lang: "fr" }, "Français 🇫🇷"),
         el("p", { class: "klein" }, "Salut ! Wähl eine Kachel. Paris, Super-héros und Stars sammelst du im Panthéon."),
         el("div", { class: "statusleiste" + rahmenKlasse() }, el("span", { class: "status-titel", lang: "fr", title: D.titel[stand.titel].de }, `${D.titel[stand.titel].symbol} ${D.titel[stand.titel].name}`),
-          el("span", {}, `⭐ ${stand.punkte} Punkte`), el("span", { class: "status-coins", title: "Coins" }, `🪙 ${stand.coins}`), el("span", {}, `🗣️ ${namenFertig}/${D.namen.length} Namen`),
+          el("span", {}, `⭐ ${stand.punkte} Punkte`), el("span", { class: "status-coins", title: "Coins" }, `🪙 ${stand.coins}`),
+          serie() > 0 && el("span", { title: "Schultage am Stück – alle 3 ein neuer Superheld" }, `🔥 ${serie()} jour${serie() > 1 ? "s" : ""} de suite`), el("span", {}, `🗣️ ${namenFertig}/${D.namen.length} Namen`),
           knopf("🏛️ Panthéon", pantheon, "haupt"))),
       el("nav", { class: "kacheln", "aria-label": "Kacheln" },
         kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe),
@@ -811,7 +828,7 @@
     const st = o.gesperrt ? 0 : (o.stufe == null ? karteVon(h.id).s : o.stufe);
     const cv = el("canvas", { width: KARTE_PX, height: KARTE_PX * 4 / 3, role: "img", "aria-label": o.gesperrt ? "Noch nicht gesammelt" : `${h.name}: ${h.kraft}${st ? " · " + KARTE.namen[st] : ""}${h.selten ? " · selten" : ""}` });
     try { window.Runner.heldKarteZeichnen(cv.getContext("2d"), 0, 0, KARTE_PX, { id: h.id, name: h.name, kraft: h.kraft },
-      { gesperrt: !!o.gesperrt, hinweis: o.gesperrt ? "Perfect week" : null, stufe: st, selten: !o.gesperrt && h.selten }); } catch (e) { /* Karte bleibt leer */ }
+      { gesperrt: !!o.gesperrt, hinweis: o.gesperrt ? "3 jours de suite" : null, stufe: st, selten: !o.gesperrt && h.selten }); } catch (e) { /* Karte bleibt leer */ }
     if (st && window.Runner && window.Runner.heldKarteGlanz) glanzDazu(cv, st);
     return cv;
   }
@@ -841,7 +858,7 @@
     if (glanzKarten.size) requestAnimationFrame(glanzBild); else glanzLaeuft = false;
   }
   const karteBild = (h, gesperrt) => { try { return window.Runner.heldKarteBild({ id: h.id, name: h.name, kraft: h.kraft },
-    { breite: 240, gesperrt, hinweis: gesperrt ? "Perfect week" : null, stufe: gesperrt ? 0 : karteVon(h.id).s, selten: !gesperrt && h.selten }); } catch (e) { return ""; } };
+    { breite: 240, gesperrt, hinweis: gesperrt ? "3 jours de suite" : null, stufe: gesperrt ? 0 : karteVon(h.id).s, selten: !gesperrt && h.selten }); } catch (e) { return ""; } };
   function heldFilm(h, fertig) {
     if (!(window.Runner && window.Runner.hatSzene && window.Runner.hatSzene("held_" + h.id))) { if (fertig) fertig(); return false; }
     stopp();

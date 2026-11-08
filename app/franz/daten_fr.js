@@ -1054,6 +1054,90 @@ window.DATEN_FR = {
     ],
     "audio": "audio/lob/doch_tu_n_as_pas_lache_bravo.mp3"
    }
+  ],
+  "feuer3": [
+   {
+    "text": "Trois jours de suite ! Tu es en feu !",
+    "de": "Drei Tage am Stück! Du bist on fire!",
+    "gruppe": [
+     "feu"
+    ],
+    "audio": "audio/lob/feuer3_trois_jours_de_suite_tu_es_e.mp3"
+   },
+   {
+    "text": "Trois jours d'affilée ! Ça chauffe !",
+    "de": "Drei Tage hintereinander! Es wird heiß!",
+    "gruppe": [
+     "feu"
+    ],
+    "audio": "audio/lob/feuer3_trois_jours_d_affilee_ca_cha.mp3"
+   }
+  ],
+  "feuer6": [
+   {
+    "text": "Six jours d'affilée ! Rien ne t'arrête !",
+    "de": "Sechs Tage hintereinander! Nichts hält dich auf!",
+    "gruppe": [
+     "feu"
+    ],
+    "audio": "audio/lob/feuer6_six_jours_d_affilee_rien_ne_.mp3"
+   }
+  ],
+  "feuer9": [
+   {
+    "text": "Neuf jours sans pause ! Tu es une légende !",
+    "de": "Neun Tage ohne Pause! Du bist eine Legende!",
+    "gruppe": [
+     "feu"
+    ],
+    "audio": "audio/lob/feuer9_neuf_jours_sans_pause_tu_es_.mp3"
+   }
+  ],
+  "feuer": [
+   {
+    "text": "Encore trois jours de suite ! Toujours en feu !",
+    "de": "Wieder drei Tage am Stück! Immer noch on fire!",
+    "gruppe": [
+     "feu"
+    ],
+    "audio": "audio/lob/feuer_encore_trois_jours_de_suite_.mp3"
+   },
+   {
+    "text": "Quelle série ! Tu es inarrêtable !",
+    "de": "Was für eine Serie! Du bist nicht zu stoppen!",
+    "gruppe": [
+     "feu"
+    ],
+    "audio": "audio/lob/feuer_quelle_serie_tu_es_inarretab.mp3"
+   }
+  ],
+  "wochenende": [
+   {
+    "text": "Même le week-end ! Chapeau !",
+    "de": "Sogar am Wochenende! Hut ab!",
+    "gruppe": [
+     "weekend"
+    ],
+    "audio": "audio/lob/wochenende_meme_le_week_end_chapeau.mp3"
+   },
+   {
+    "text": "Le week-end aussi ? Respect !",
+    "de": "Auch am Wochenende? Respekt!",
+    "gruppe": [
+     "weekend"
+    ],
+    "audio": "audio/lob/wochenende_le_week_end_aussi_respect.mp3"
+   }
+  ],
+  "ferien": [
+   {
+    "text": "Même pendant les vacances ! Bravo !",
+    "de": "Sogar in den Ferien! Bravo!",
+    "gruppe": [
+     "vacances"
+    ],
+    "audio": "audio/lob/ferien_meme_pendant_les_vacances_br.mp3"
+   }
   ]
  },
  "frei": [

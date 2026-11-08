@@ -157,7 +157,7 @@ def main():
     namen = []
     for z in tsv("namen.tsv"):
         a, b = f"audio/namen/{z['id']}.mp3", f"bilder/namen/{z['id']}.jpg"
-        namen.append({"gruppe": z["gruppe"], "id": z["id"], "name": z["name"], "stichwort": z["stichwort"], "de": z["de"],
+        namen.append({"gruppe": z["gruppe"], "id": z["id"], "name": z["name"], "stichwort": z["stichwort"], "de": z["de"], "jahre": z.get("jahre") or None,  # Lebensdaten historischer Personen (8.11., Mr. Alex)
                       "bild": z["bild"], "foto": b if vorhanden(b) else None, **lautung(z["ipa"]), "audio": a if vorhanden(a) else None})
     woerter = {}
     for z in tsv("woerter.tsv"):

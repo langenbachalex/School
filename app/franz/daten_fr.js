@@ -4925,6 +4925,7 @@ window.DATEN_FR = {
    "name": "Kylian Mbappé",
    "stichwort": "attaquant",
    "de": "Stürmer",
+   "jahre": null,
    "bild": "trikot:10",
    "foto": null,
    "ipa": [
@@ -4958,6 +4959,7 @@ window.DATEN_FR = {
    "name": "Aurélien Tchouaméni",
    "stichwort": "milieu",
    "de": "Mittelfeld",
+   "jahre": null,
    "bild": "trikot:8",
    "foto": null,
    "ipa": [
@@ -4995,6 +4997,7 @@ window.DATEN_FR = {
    "name": "Hugo Ekitiké",
    "stichwort": "attaquant",
    "de": "Stürmer",
+   "jahre": null,
    "bild": "trikot:12",
    "foto": null,
    "ipa": [
@@ -5030,6 +5033,7 @@ window.DATEN_FR = {
    "name": "Ousmane Dembélé",
    "stichwort": "attaquant",
    "de": "Stürmer",
+   "jahre": null,
    "bild": "trikot:7",
    "foto": null,
    "ipa": [
@@ -5063,6 +5067,7 @@ window.DATEN_FR = {
    "name": "Bradley Barcola",
    "stichwort": "attaquant",
    "de": "Stürmer",
+   "jahre": null,
    "bild": "trikot:20",
    "foto": null,
    "ipa": [
@@ -5096,6 +5101,7 @@ window.DATEN_FR = {
    "name": "Désiré Doué",
    "stichwort": "attaquant",
    "de": "Stürmer",
+   "jahre": null,
    "bild": "trikot:26",
    "foto": null,
    "ipa": [
@@ -5129,6 +5135,7 @@ window.DATEN_FR = {
    "name": "Warren Zaïre-Emery",
    "stichwort": "milieu",
    "de": "Mittelfeld",
+   "jahre": null,
    "bild": "trikot:18",
    "foto": null,
    "ipa": [
@@ -5164,6 +5171,7 @@ window.DATEN_FR = {
    "name": "Michael Olise",
    "stichwort": "attaquant",
    "de": "Stürmer",
+   "jahre": null,
    "bild": "trikot:11",
    "foto": null,
    "ipa": [
@@ -5195,6 +5203,7 @@ window.DATEN_FR = {
    "name": "Maxence Lacroix",
    "stichwort": "défenseur",
    "de": "Verteidiger",
+   "jahre": null,
    "bild": "trikot:3",
    "foto": null,
    "ipa": [
@@ -5226,6 +5235,7 @@ window.DATEN_FR = {
    "name": "N'Golo Kanté",
    "stichwort": "milieu",
    "de": "Mittelfeld",
+   "jahre": null,
    "bild": "trikot:13",
    "foto": null,
    "ipa": [
@@ -5259,6 +5269,7 @@ window.DATEN_FR = {
    "name": "William Saliba",
    "stichwort": "défenseur",
    "de": "Verteidiger",
+   "jahre": null,
    "bild": "trikot:17",
    "foto": null,
    "ipa": [
@@ -5292,6 +5303,7 @@ window.DATEN_FR = {
    "name": "Jules Koundé",
    "stichwort": "défenseur",
    "de": "Verteidiger",
+   "jahre": null,
    "bild": "trikot:5",
    "foto": null,
    "ipa": [
@@ -5321,6 +5333,7 @@ window.DATEN_FR = {
    "name": "Malo Gusto",
    "stichwort": "défenseur",
    "de": "Verteidiger",
+   "jahre": null,
    "bild": "trikot:2",
    "foto": null,
    "ipa": [
@@ -5352,6 +5365,7 @@ window.DATEN_FR = {
    "name": "Théo Hernández",
    "stichwort": "défenseur",
    "de": "Verteidiger",
+   "jahre": null,
    "bild": "trikot:22",
    "foto": null,
    "ipa": [
@@ -5385,6 +5399,7 @@ window.DATEN_FR = {
    "name": "Lucas Hernández",
    "stichwort": "défenseur",
    "de": "Verteidiger",
+   "jahre": null,
    "bild": "trikot:21",
    "foto": null,
    "ipa": [
@@ -5418,6 +5433,7 @@ window.DATEN_FR = {
    "name": "Jean-Philippe Mateta",
    "stichwort": "attaquant",
    "de": "Stürmer",
+   "jahre": null,
    "bild": "trikot:9",
    "foto": null,
    "ipa": [
@@ -5453,6 +5469,7 @@ window.DATEN_FR = {
    "name": "Manu Koné",
    "stichwort": "milieu",
    "de": "Mittelfeld",
+   "jahre": null,
    "bild": "trikot:6",
    "foto": null,
    "ipa": [
@@ -5484,6 +5501,7 @@ window.DATEN_FR = {
    "name": "Adrien Rabiot",
    "stichwort": "milieu",
    "de": "Mittelfeld",
+   "jahre": null,
    "bild": "trikot:14",
    "foto": null,
    "ipa": [
@@ -5517,6 +5535,7 @@ window.DATEN_FR = {
    "name": "Brice Samba",
    "stichwort": "gardien",
    "de": "Torwart",
+   "jahre": null,
    "bild": "trikot:16",
    "foto": null,
    "ipa": [
@@ -5546,6 +5565,7 @@ window.DATEN_FR = {
    "name": "Robin Risser",
    "stichwort": "gardien",
    "de": "Torwart",
+   "jahre": null,
    "bild": "trikot:23",
    "foto": null,
    "ipa": [
@@ -5577,6 +5597,7 @@ window.DATEN_FR = {
    "name": "Dayot Upamecano",
    "stichwort": "défenseur",
    "de": "Verteidiger",
+   "jahre": null,
    "bild": "trikot:4",
    "foto": null,
    "ipa": [
@@ -5614,6 +5635,7 @@ window.DATEN_FR = {
    "name": "Napoléon Bonaparte",
    "stichwort": "empereur",
    "de": "Kaiser",
+   "jahre": "1769–1821",
    "bild": "wm:Napoléon_Ier",
    "foto": "bilder/namen/napoleon.jpg",
    "ipa": [
@@ -5651,6 +5673,7 @@ window.DATEN_FR = {
    "name": "Charlemagne",
    "stichwort": "empereur",
    "de": "Kaiser (Karl der Große)",
+   "jahre": "um 747–814",
    "bild": "wm:Charlemagne",
    "foto": "bilder/namen/charlemagne.jpg",
    "ipa": [
@@ -5676,6 +5699,7 @@ window.DATEN_FR = {
    "name": "Vercingétorix",
    "stichwort": "chef gaulois",
    "de": "Anführer der Gallier",
+   "jahre": "um 82–46 v. Chr.",
    "bild": "wm:Vercingétorix",
    "foto": "bilder/namen/vercingetorix.jpg",
    "ipa": [
@@ -5705,6 +5729,7 @@ window.DATEN_FR = {
    "name": "Jeanne d'Arc",
    "stichwort": "héroïne",
    "de": "Heldin",
+   "jahre": "um 1412–1431",
    "bild": "wm:Jeanne_d'Arc",
    "foto": "bilder/namen/jeanne.jpg",
    "ipa": [
@@ -5728,6 +5753,7 @@ window.DATEN_FR = {
    "name": "Louis XIV",
    "stichwort": "le Roi-Soleil",
    "de": "der Sonnenkönig",
+   "jahre": "1638–1715",
    "bild": "wm:Louis_XIV",
    "foto": "bilder/namen/louis14.jpg",
    "ipa": [
@@ -5757,6 +5783,7 @@ window.DATEN_FR = {
    "name": "Marie Curie",
    "stichwort": "scientifique",
    "de": "Wissenschaftlerin",
+   "jahre": "1867–1934",
    "bild": "wm:Marie_Curie",
    "foto": "bilder/namen/curie.jpg",
    "ipa": [
@@ -5788,6 +5815,7 @@ window.DATEN_FR = {
    "name": "Louis Pasteur",
    "stichwort": "scientifique",
    "de": "Wissenschaftler",
+   "jahre": "1822–1895",
    "bild": "wm:Louis_Pasteur",
    "foto": "bilder/namen/pasteur.jpg",
    "ipa": [
@@ -5817,6 +5845,7 @@ window.DATEN_FR = {
    "name": "Louis Braille",
    "stichwort": "inventeur",
    "de": "Erfinder (Blindenschrift)",
+   "jahre": "1809–1852",
    "bild": "wm:Louis_Braille",
    "foto": "bilder/namen/braille.jpg",
    "ipa": [
@@ -5844,6 +5873,7 @@ window.DATEN_FR = {
    "name": "Les frères Lumière",
    "stichwort": "inventeurs du cinéma",
    "de": "Erfinder des Kinos",
+   "jahre": "Auguste 1862–1954 · Louis 1864–1948",
    "bild": "wm:Auguste_et_Louis_Lumière",
    "foto": "bilder/namen/lumiere.jpg",
    "ipa": [
@@ -5875,6 +5905,7 @@ window.DATEN_FR = {
    "name": "Gustave Eiffel",
    "stichwort": "ingénieur",
    "de": "Ingenieur",
+   "jahre": "1832–1923",
    "bild": "wm:Gustave_Eiffel",
    "foto": "bilder/namen/eiffel.jpg",
    "ipa": [
@@ -5906,6 +5937,7 @@ window.DATEN_FR = {
    "name": "Jules Verne",
    "stichwort": "écrivain",
    "de": "Schriftsteller",
+   "jahre": "1828–1905",
    "bild": "wm:Jules_Verne",
    "foto": "bilder/namen/verne.jpg",
    "ipa": [
@@ -5933,6 +5965,7 @@ window.DATEN_FR = {
    "name": "Victor Hugo",
    "stichwort": "écrivain",
    "de": "Schriftsteller",
+   "jahre": "1802–1885",
    "bild": "wm:Victor_Hugo",
    "foto": "bilder/namen/hugo.jpg",
    "ipa": [
@@ -5964,6 +5997,7 @@ window.DATEN_FR = {
    "name": "Alexandre Dumas",
    "stichwort": "écrivain",
    "de": "Schriftsteller",
+   "jahre": "1802–1870",
    "bild": "wm:Alexandre_Dumas",
    "foto": "bilder/namen/dumas.jpg",
    "ipa": [
@@ -5997,6 +6031,7 @@ window.DATEN_FR = {
    "name": "Molière",
    "stichwort": "auteur de théâtre",
    "de": "Theaterautor",
+   "jahre": "1622–1673",
    "bild": "wm:Molière",
    "foto": "bilder/namen/moliere.jpg",
    "ipa": [
@@ -6020,6 +6055,7 @@ window.DATEN_FR = {
    "name": "Antoine de Saint-Exupéry",
    "stichwort": "écrivain et pilote",
    "de": "Schriftsteller und Pilot",
+   "jahre": "1900–1944",
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6059,6 +6095,7 @@ window.DATEN_FR = {
    "name": "Claude Monet",
    "stichwort": "peintre",
    "de": "Maler",
+   "jahre": "1840–1926",
    "bild": "wm:Claude_Monet",
    "foto": "bilder/namen/monet.jpg",
    "ipa": [
@@ -6088,6 +6125,7 @@ window.DATEN_FR = {
    "name": "Coco Chanel",
    "stichwort": "styliste",
    "de": "Modedesignerin",
+   "jahre": "1883–1971",
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6119,6 +6157,7 @@ window.DATEN_FR = {
    "name": "Édith Piaf",
    "stichwort": "chanteuse",
    "de": "Sängerin",
+   "jahre": "1915–1963",
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6148,6 +6187,7 @@ window.DATEN_FR = {
    "name": "Jacques-Yves Cousteau",
    "stichwort": "explorateur",
    "de": "Entdecker (Meer)",
+   "jahre": "1910–1997",
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6179,6 +6219,7 @@ window.DATEN_FR = {
    "name": "Pierre de Coubertin",
    "stichwort": "père des Jeux olympiques",
    "de": "Vater der Olympischen Spiele",
+   "jahre": "1863–1937",
    "bild": "wm:Pierre_de_Coubertin",
    "foto": "bilder/namen/coubertin.jpg",
    "ipa": [
@@ -6212,6 +6253,7 @@ window.DATEN_FR = {
    "name": "Zinédine Zidane",
    "stichwort": "footballeur",
    "de": "Fußballer",
+   "jahre": "* 1972",
    "bild": "trikot:10",
    "foto": null,
    "ipa": [
@@ -6245,6 +6287,7 @@ window.DATEN_FR = {
    "name": "Emmanuel Macron",
    "stichwort": "président",
    "de": "Präsident",
+   "jahre": null,
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6280,6 +6323,7 @@ window.DATEN_FR = {
    "name": "Angèle",
    "stichwort": "chanteuse (Belgique)",
    "de": "Sängerin (Belgien)",
+   "jahre": null,
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6303,6 +6347,7 @@ window.DATEN_FR = {
    "name": "Sophie Adenot",
    "stichwort": "astronaute",
    "de": "Astronautin",
+   "jahre": null,
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6334,6 +6379,7 @@ window.DATEN_FR = {
    "name": "Metz",
    "stichwort": "ville",
    "de": "Stadt",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6355,6 +6401,7 @@ window.DATEN_FR = {
    "name": "Forbach",
    "stichwort": "ville",
    "de": "Stadt",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6378,6 +6425,7 @@ window.DATEN_FR = {
    "name": "Sarreguemines",
    "stichwort": "ville",
    "de": "Stadt",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6403,6 +6451,7 @@ window.DATEN_FR = {
    "name": "Moselle",
    "stichwort": "département",
    "de": "Département",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6426,6 +6475,7 @@ window.DATEN_FR = {
    "name": "Alsace-Lorraine",
    "stichwort": "région",
    "de": "Region",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6457,6 +6507,7 @@ window.DATEN_FR = {
    "name": "Sarralbe",
    "stichwort": "ville",
    "de": "Stadt",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6480,6 +6531,7 @@ window.DATEN_FR = {
    "name": "Saint-Avold",
    "stichwort": "ville",
    "de": "Stadt",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6505,6 +6557,7 @@ window.DATEN_FR = {
    "name": "Freyming-Merlebach",
    "stichwort": "ville",
    "de": "Stadt",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6538,6 +6591,7 @@ window.DATEN_FR = {
    "name": "Nouvelle-Aquitaine",
    "stichwort": "région",
    "de": "Region",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6567,6 +6621,7 @@ window.DATEN_FR = {
    "name": "Auvergne-Rhône-Alpes",
    "stichwort": "région",
    "de": "Region",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6598,6 +6653,7 @@ window.DATEN_FR = {
    "name": "Provence-Alpes-Côte-d'Azur",
    "stichwort": "région",
    "de": "Region",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6637,6 +6693,7 @@ window.DATEN_FR = {
    "name": "Aix-en-Provence",
    "stichwort": "ville",
    "de": "Stadt",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6668,6 +6725,7 @@ window.DATEN_FR = {
    "name": "Châteauneuf-du-Pape",
    "stichwort": "village",
    "de": "Dorf",
+   "jahre": null,
    "bild": "ort",
    "foto": null,
    "ipa": [

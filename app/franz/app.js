@@ -597,8 +597,9 @@
         knopf("Niveau 2 · Sans modèle", () => { stand.stufe = 2; speichern(); namenGruppe(g, 2); }, stufe === 2 ? "haupt" : ""),
         knopf("▶ Alle der Reihe nach", () => namenKarte(l, 0, stufe))),
       el("div", { class: "namen-raster" }, l.map((n, i) => el("button", { type: "button", class: "namen-knopf" + (namenStufe(n) >= 2 ? " gold" : namenStufe(n) ? " erledigt" : ""), onclick: () => namenKarte(l, i, stufe) },
-        bild(n, 72), el("span", { lang: "fr" }, n.name), namenStufe(n) ? el("span", { class: "haken", "aria-hidden": "true" }, namenStufe(n) >= 2 ? "✓✓" : "✓") : null))));
+        bild(n, 72), el("span", { lang: "fr" }, n.name), jahre(n), namenStufe(n) ? el("span", { class: "haken", "aria-hidden": "true" }, namenStufe(n) >= 2 ? "✓✓" : "✓") : null))));
   }
+  const jahre = (n) => n.jahre ? el("span", { class: "jahre" }, n.jahre) : null;   // Lebensdaten historischer Personen (8.11.)
   function namenKarte(l, i, stufe) {
     const n = l[i], du = jetztDu(stufe === 1 ? "À toi ! Sprich nach." : "Sag den Namen zuerst selbst!");
     const weiter = knopf(i + 1 < l.length ? "Weiter ➜" : "Fertig ✓", () => (i + 1 < l.length ? namenKarte(l, i + 1, stufe) : namenGruppe(n.gruppe, stufe)), "haupt");
@@ -611,6 +612,7 @@
     zeige(kopf(D.gruppen[n.gruppe], () => namenGruppe(n.gruppe, stufe), `Niveau ${stufe} · ${i + 1}/${l.length}`),
       el("section", { class: "satzkarte namen-karte" }, bild(n, 180),
         el("h2", { lang: "fr", class: "name-gross" }, n.name),
+        n.jahre && el("p", { class: "jahre" }, n.jahre),
         el("p", { class: "lese-gross" }, lesehilfe(n)),
         el("p", { class: "klein" }, el("span", { lang: "fr" }, n.stichwort), " – ", n.de),
         n.quelle && el("p", { class: "quelle" }, "Bild: " + n.quelle),
@@ -857,7 +859,7 @@
           e.currentTarget.classList.add(gut ? "gold" : "falsch"); klang(gut);
           melde(box, gut ? "gut" : "hilfe", gut ? lob() : `${tadel(true)} Das war ${ziel.name}.`);
           nachRuf(() => quiEstCe(runde + 1, richtig + (gut ? 1 : 0)), gut ? 900 : 2200);
-        } }, bild(n, 72), el("span", { lang: "fr" }, n.name)))), box));
+        } }, bild(n, 72), el("span", { lang: "fr" }, n.name), jahre(n)))), box));
     spiele([ton(ziel)]);
   }
   function ordre(d) {
@@ -1211,7 +1213,7 @@
           if (reihe && !offen) return el("button", { type: "button", class: "namen-knopf gesperrt", "aria-label": "Gesperrte Karte", onclick: () => toast(`🔒 ${restKarte()}`) },
             el("span", { class: "medaille", "aria-hidden": "true" }, "🔒"), el("span", {}, "?"));
           return el("button", { type: "button", class: "namen-knopf" + (s >= 2 ? " gold" : (reihe ? offen : s) ? "" : " gesperrt"), onclick: () => { const l = D.namen.filter((x) => x.gruppe === g); namenKarte(l, l.indexOf(n), s >= 1 ? 2 : 1); } },
-            bild(n, 64), el("span", { lang: "fr" }, (reihe ? offen : s) ? n.name : "?"));
+            bild(n, 64), el("span", { lang: "fr" }, (reihe ? offen : s) ? n.name : "?"), (reihe ? offen : s) && jahre(n));
         }))]),
       el("h2", {}, "🏅 Dialogues"),
       el("div", { class: "namen-raster" }, D.dialoge.map((d) => {

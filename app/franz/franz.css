@@ -110,3 +110,5 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 .stimm-wahl { align-items: center; margin: 0 0 8px; }
 .kachel.gesperrt { filter: grayscale(.8); opacity: .75; border-style: dashed; }
 .shop-gruppe { margin: 1.4rem 0 .4rem; }
+.jahre { display: block; font-size: .8rem; color: var(--leise); font-weight: 400; }
+p.jahre { margin: -.2rem 0 .4rem; font-size: 1rem; }

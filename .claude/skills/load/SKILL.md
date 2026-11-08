@@ -11,6 +11,7 @@ Du bist in einem neuen Chat für genau einen Arbeitsblock. Nichts aus früheren 
 2. Antworte in höchstens 10 Zeilen:
    - Stand: letzte 3 Commits in je einer Zeile.
    - Offene Blöcke aus dem Ideenspeicher als nummerierte Liste (Titel + grobe Größe klein/mittel/groß).
+   - Thema `MASTER`: Dieser Chat ist der neue Master-Chat (Planen und Entscheiden, kein Bau). Dann statt eines Bauvorschlags: offene Entscheidungen aus dem Ideenspeicher nennen, Hinweis `/model claude-fable-5-1`, Name `School · MASTER`.
    - Falls ein Thema übergeben wurde: ein Vorschlag, wie dieser Block mit möglichst wenig Aufwand gebaut wird, plus schlankere Variante.
    - Vorschlag für den Chat-Namen nach dem Schema (App-Kürzel + Block + Datum).
    - Frage: „Welcher Block, und gilt das OK gleich für den Push?“

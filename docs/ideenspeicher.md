@@ -65,7 +65,8 @@ Neue Fächer/Apps: Zeile anhängen, Kürzel vergeben.
 | School · EN9 · Superhelden-Cameos | EN9 | Etappen 1–3 + Heldenfilme vertont | fertig 7.11. |
 | School · EN6+EN9 · Road to GLN | EN6, EN9 | Konzept freigegeben 8.11., Material kommt von Mr. Alex | offen |
 | School · ALLE · Folien-Karten | EN6, EN9 (FR hat sie schon) | große Version freigegeben 7.11. | offen |
-Fertige Chats archivieren; der Stand steht hier.
+Fertige Chats archivieren; der Stand steht hier (sie müssen nicht umbenannt werden). Chat-Name erfragen: `/name` oder „Wie heißt du?“.
+**Master-Wechsel** (Ziel: Kontext klein halten, Ressourcen sparen): alter Master `/save` → Zeile „School · MASTER · bis <Datum>“ hier eintragen, offene Entscheidungen darunter; neuer Chat: `/model claude-fable-5-1`, `/load MASTER`, Name `School · MASTER`. Alten Master archivieren.
 
 ## Stand 7.11.2026 (Master-Chat beendet, /save) – nächste Blöcke für /load
 Gebaut und gepusht am 6./7.11.: alle 50 Staaten-Szenen mit längeren Texten, Voice-over und Fotos · Orts-Szenen Etappe 3 (Times Square, Niagara, Old Faithful, White House) · Superhelden Klasse 6 als Spielgrafik (Phase 1 6853984/5ae2c92, Phase 2 a7a788a: Cameos mit Kraft-Effekt, Heldenfilme, gezeichnete Sammelkarten; Kenji springt mit 1c8a416) · Heldenfilme mit gesprochenen Ausrufen · je Held eigene Stimme, v4, Stabilität 0,3, Audio-Tags (5c95d13) · Mr. Alex' Zurufe im Lauf, beide Klassen (a6408f0, adcebbd) · Regeln von Mr. Alex 7.11. in `docs/briefing.md`, Sparregeln `docs/token-sparen.md`, Skills `/load` und `/save`.

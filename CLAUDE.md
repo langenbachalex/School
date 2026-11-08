@@ -13,6 +13,8 @@ Die Nutzung (Tokens/Credits) ist knapp. Bei jeder neuen Eingabe zuerst prüfen, 
 - **Master-Chat** = Planen und Entscheiden (Modell Fable); gebaut wird in Block-Chats. Jeder Block-Chat heißt `School · <App> · <Block> · <Datum>`; der Master heißt `School · MASTER`.
 - **App-Kürzel** (in Chat-Namen, Commit-Nachrichten und im Ideenspeicher immer nennen): `EN6` Englisch Klasse 6 (`app/`), `EN9` Englisch Klasse 9 (`app/klasse9/`), `FR` Französisch Klasse 5/6 (`app/franz/`), `ALLE` = app-übergreifend (Runner-Engine, Skills, Doku). Neue Fächer/Apps bekommen ein neues Kürzel und eine Zeile in der Tabelle „Apps“ im Ideenspeicher.
 - Chat-Übersicht (laufende und fertige Block-Chats) steht im Ideenspeicher; `/load` zeigt sie, `/save` trägt den eigenen Chat ein. Zwei Chats an derselben App: vor jedem Bau `git pull`.
+- `/name` oder „Wie heißt du?“: Claude nennt den Chat-Namen nach dem Schema als Kopiervorlage (Skill `name`). Fertige Blöcke müssen nicht umbenannt werden.
+- **Master-Wechsel** (wenn der Master-Chat voll wird, ca. ab 50–60 % Kontext): im alten Master `/save` (Zeile „School · MASTER · bis <Datum>“ in der Chat-Übersicht, offene Entscheidungen auflisten), neuen Chat öffnen, `/model claude-fable-5-1`, `/load MASTER`, in `School · MASTER` umbenennen; den alten in `School · MASTER · bis <Datum>` umbenennen und archivieren. Der Stand lebt im Repo, nicht im Chat.
 - Sicherung: Der Stop-Hook `.claude/hooks/save-pruefen.sh` meldet ungesicherte Arbeit; Claude führt dann `/save` aus.
 
 ## Orts-Szenen

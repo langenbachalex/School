@@ -2237,8 +2237,8 @@ window.DATEN_FR = {
    "fr": "Au Stade de France, l'équipe de France joue. Allez les Bleus !",
    "de": "Im Stade de France spielt die französische Nationalmannschaft. Los, ihr Blauen!",
    "audio": "audio/paris/stade_de_france.mp3",
-   "foto": null,
-   "quelle": null
+   "foto": "bilder/paris/stade_de_france.jpg",
+   "quelle": "Foto: Darthvadrouw · CC BY-SA 4.0 · Wikimedia Commons (StadeFranceNationsLeague2018)"
   },
   {
    "id": "versailles",

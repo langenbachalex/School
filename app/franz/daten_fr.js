@@ -2225,8 +2225,8 @@ window.DATEN_FR = {
    "fr": "Le Centre Pompidou a des tuyaux de toutes les couleurs : bleu, vert, rouge et jaune.",
    "de": "Das Centre Pompidou hat Rohre in allen Farben: blau, grün, rot und gelb.",
    "audio": "audio/paris/pompidou.mp3",
-   "foto": null,
-   "quelle": null
+   "foto": "bilder/paris/pompidou.jpg",
+   "quelle": "Foto: Jean-Pierre Dalbéra · CC BY 2.0 · Flickr 32113866984 (Le centre Georges Pompidou a 40 ans)"
   },
   {
    "id": "stade_de_france",

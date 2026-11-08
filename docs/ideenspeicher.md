@@ -48,6 +48,25 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | Hörverstehen 3 Klasse 6 „Talking about free time“ | Elrond, John Shaw, Emmaline, Alice (v4), Lösungen Mr. Alex | ≈ 1.500 | **vertont 29.10.** |
 | Hörübungen 01/02 Klasse 6 neu mit Jugendstimmen (Mia, Ben, Harry, Declan) | Elrond, John Shaw, Emmaline | ≈ 600 | offen – nur auf Wunsch |
 
+## Apps (Kürzel für Chats, Commits, Einträge)
+| Kürzel | App | Ordner | Build | Inhalte |
+|---|---|---|---|---|
+| EN6 | Englisch Klasse 6 (London Run) | `app/` | `werkzeuge/daten_bauen.py` | `inhalte/` |
+| EN9 | Englisch Klasse 9 (Road Trip USA) | `app/klasse9/` | `werkzeuge/klasse9_bauen.py` | `inhalte/klasse9/` |
+| FR | Französisch Klasse 5/6 (Paris) | `app/franz/` | `werkzeuge/franz_bauen.py` | `inhalte/franz/` |
+| ALLE | app-übergreifend (Runner-Engine `app/runner.js`, Skills, Doku, Hooks) | – | – | – |
+Neue Fächer/Apps: Zeile anhängen, Kürzel vergeben.
+
+## Chat-Übersicht (8.11.2026) – Namensschema `School · <App> · <Block> · <Datum>`
+| Chat | App | Block | Stand |
+|---|---|---|---|
+| School · MASTER | ALLE | Planen, Entscheiden, Konzepte (Modell Fable) | läuft – dieser Chat (bisher „Fotos + Konzepte 7.11.“) |
+| School · FR · Französisch-App | FR | Stufen 1–4 gebaut; nächster Block: Punkte/Coins/Titel, Boutique, Stars freischalten, Frankreich-Karte | läuft |
+| School · EN9 · Superhelden-Cameos | EN9 | Etappen 1–3 + Heldenfilme vertont | fertig 7.11. |
+| School · EN6+EN9 · Road to GLN | EN6, EN9 | Konzept freigegeben 8.11., Material kommt von Mr. Alex | offen |
+| School · ALLE · Folien-Karten | EN6, EN9 (FR hat sie schon) | große Version freigegeben 7.11. | offen |
+Fertige Chats archivieren; der Stand steht hier.
+
 ## Stand 7.11.2026 (Master-Chat beendet, /save) – nächste Blöcke für /load
 Gebaut und gepusht am 6./7.11.: alle 50 Staaten-Szenen mit längeren Texten, Voice-over und Fotos · Orts-Szenen Etappe 3 (Times Square, Niagara, Old Faithful, White House) · Superhelden Klasse 6 als Spielgrafik (Phase 1 6853984/5ae2c92, Phase 2 a7a788a: Cameos mit Kraft-Effekt, Heldenfilme, gezeichnete Sammelkarten; Kenji springt mit 1c8a416) · Heldenfilme mit gesprochenen Ausrufen · je Held eigene Stimme, v4, Stabilität 0,3, Audio-Tags (5c95d13) · Mr. Alex' Zurufe im Lauf, beide Klassen (a6408f0, adcebbd) · Regeln von Mr. Alex 7.11. in `docs/briefing.md`, Sparregeln `docs/token-sparen.md`, Skills `/load` und `/save`.
 **Offen (Reihenfolge nach Mr. Alex):**

@@ -9,6 +9,12 @@ Die Nutzung (Tokens/Credits) ist knapp. Bei jeder neuen Eingabe zuerst prüfen, 
 - Dateien nur in den Teilen lesen, die gebraucht werden.
 - Weitere Sparregeln: `docs/token-sparen.md`. Neuer Chat: `/load <Thema>` am Anfang, `/save` am Ende (Stand in den Ideenspeicher) – **Claude führt `/save` am Ende jedes Blocks selbst aus** (Regel Mr. Alex 8.11.), ohne auf die Aufforderung zu warten.
 
+## Chats und Apps (Regel Mr. Alex, 8.11.2026)
+- **Master-Chat** = Planen und Entscheiden (Modell Fable); gebaut wird in Block-Chats. Jeder Block-Chat heißt `School · <App> · <Block> · <Datum>`; der Master heißt `School · MASTER`.
+- **App-Kürzel** (in Chat-Namen, Commit-Nachrichten und im Ideenspeicher immer nennen): `EN6` Englisch Klasse 6 (`app/`), `EN9` Englisch Klasse 9 (`app/klasse9/`), `FR` Französisch Klasse 5/6 (`app/franz/`), `ALLE` = app-übergreifend (Runner-Engine, Skills, Doku). Neue Fächer/Apps bekommen ein neues Kürzel und eine Zeile in der Tabelle „Apps“ im Ideenspeicher.
+- Chat-Übersicht (laufende und fertige Block-Chats) steht im Ideenspeicher; `/load` zeigt sie, `/save` trägt den eigenen Chat ein. Zwei Chats an derselben App: vor jedem Bau `git pull`.
+- Sicherung: Der Stop-Hook `.claude/hooks/save-pruefen.sh` meldet ungesicherte Arbeit; Claude führt dann `/save` aus.
+
 ## Orts-Szenen
 Jeder Ort hat drei Ebenen: Bild (Szene mit Runner-Zeichnungen), Ton (Geräusch oder Sprache), kleines Foto. Einzelheiten: `.claude/skills/orts-szenen/SKILL.md`.
 

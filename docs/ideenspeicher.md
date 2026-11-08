@@ -64,7 +64,7 @@ Offene Blöcke in Reihenfolge; Befehl = erste Eingabe im jeweiligen Chat (neuer 
 | 1 | FR | Streaks + Wochenübersicht im Panthéon, Aussprache-Korrektur (Name von Mr. Alex), Parle de toi mit Jungen-/Mädchenstimme | `School · FR · Französisch-App · 7.11.` (läuft) | `/load Französisch-App` → „dringenden Block a–c laut Ideenspeicher bauen, OK gilt für den Push“ | **dringend, diese Woche** |
 | 2 | FR | Punkte/Coins/Titel, Boutique mit Run-Ticket, Stars freischalten, Frankreich-Karte Niveau 2 | derselbe Chat | danach dort: „nächsten Block 1–4 bauen“ | Plan freigegeben |
 | 3 | EN6+EN9 | Road to GLN (grüne Markierung, Kette, vier Boni) | neuer Chat `School · EN6+EN9 · Road to GLN · <Datum>` | `/load Road to GLN` + GLN-Material und Termine beider Klassen mitgeben | Konzept freigegeben |
-| 4 | EN6+EN9 | Folien-Karten (Bronze/Silber/Gold, Seltenheit) – FR hat sie schon | neuer Chat `School · ALLE · Folien-Karten · <Datum>` | `/load Folien-Karten` | große Version freigegeben |
+| – | ALLE | Folien-Karten (Bronze/Silber/Gold, Seltenheit) – EN6 354f921, EN9 bf415f0, FR 499e2f1, abgenommen 7.11. (485d9d8) | `School · ALLE · Folien-Karten · 8.11.` (nur Prüfung, nichts gebaut) | – | **fertig 7.11.**, Zeile war veraltet; Chat archivieren |
 | 5 | EN6 | Hausaufgabe nach dem Vokabeltest Mi 11.11. (`inhalte/hausaufgabe.tsv`) | neuer Chat `School · EN6 · Hausaufgabe · <Datum>` oder Master | `/load Hausaufgabe Klasse 6` + Inhalt von Mr. Alex | wartet auf Inhalt |
 | 6 | EN6+EN9 | Vorschauen (Artefakte) neu veröffentlichen | Master oder neuer Chat | `/load Vorschauen` | nur auf Wunsch |
 | 7 | ALLE | Sync light (Server-Spielstand) | Master | Entscheidungen: Hosting, Opt-in, Speicherdauer, Startklasse | wartet auf Mr. Alex |

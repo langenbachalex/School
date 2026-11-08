@@ -103,6 +103,7 @@
   if (!(stand.coins >= 0)) { stand.coins = Math.ceil(stand.punkte / 2); stand.ausgegeben = 0; }
   if (!(stand.titel >= 0)) stand.titel = titelIndex(stand.punkte);
   if (!Array.isArray(stand.gekauft)) stand.gekauft = [];
+  if (!stand.skin || typeof stand.skin !== "object") stand.skin = {};   // Figur im Paris Run (8.11.): { option: wert }, nur gekaufte Teile aus der Boutique
   speichern();
   function speichern() {
     try {
@@ -345,11 +346,12 @@
         el("div", { class: "statusleiste" + rahmenKlasse() }, el("span", { class: "status-titel", lang: "fr", title: D.titel[stand.titel].de }, `${D.titel[stand.titel].symbol} ${D.titel[stand.titel].name}`),
           el("span", {}, `⭐ ${stand.punkte} Punkte`), el("span", { class: "status-coins", title: "Coins" }, `🪙 ${stand.coins}`),
           serie() > 0 && el("span", { title: "Schultage am Stück – alle 3 ein neuer Superheld" }, `🔥 ${serie()} jour${serie() > 1 ? "s" : ""} de suite`), el("span", {}, `🗣️ ${namenFertig}/${D.namen.length} Namen`),
-          knopf("🏛️ Panthéon", pantheon, "haupt"))),
+          knopf("🏛️ Panthéon", pantheon, "haupt"), knopf("🛍️ Boutique", () => boutique(startseite), "haupt"))),
       el("nav", { class: "kacheln", "aria-label": "Kacheln" },
         kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe),
         kachel("🗣️", "Prononciation", "Namen richtig aussprechen", prononciation),
         kachel("🎮", "Jeux", "Memory, Qui est-ce ?, Dans l'ordre", jeux),
+        runKachel(startseite),
         kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio)));
     if (parisFrei() > stand.paris || heldenFrei() > stand.helden) setTimeout(parisNeu, 700);
   }
@@ -640,7 +642,11 @@
     { id: "wendungen", name: "💬 Wendungen", woerter: () => D.wendungen.filter((w) => w.fr.length <= 22) }];
   let runWahl = 0, runFrei = true, runKette = Promise.resolve();
   function runStand() { return stand.parisRun || (stand.parisRun = { gespielt: 0, geschafft: 0, beste: 0 }); }
-  function runSkin() { try { return ((JSON.parse(localStorage.getItem("auffrischen-v1")) || {}).spiel || {}).skin || null; } catch (e) { return null; } }
+  function runSkin() {   // Figur aus der Englisch-App (nur gelesen), darüber die in der Boutique angelegten Teile (8.11.)
+    let en = {}; try { en = ((JSON.parse(localStorage.getItem("auffrischen-v1")) || {}).spiel || {}).skin || {}; } catch (e) { en = {}; }
+    const s = Object.assign({}, en, stand.skin);
+    return Object.keys(s).length ? s : null;
+  }
   // Haupttexte nacheinander (warten) oder sofort (Boss); Wörter nur, wenn gerade nichts läuft
   function runSag(x, warten) {
     if (!warten) { runFrei = false; return spiele([x]).then(() => { runFrei = true; }); }
@@ -732,14 +738,20 @@
     stand.spiele[spiel] = heute(); speichern(); punkte(10, "Spiel geschafft!", "m");
     return " +10 ⭐";
   }
+  // Paris-Run-Kachel (8.11.): ohne Ticket gesperrt (🔒, grau) mit Hinweis auf die Boutique, mit Ticket offen
+  function runKachel(zurueck) {
+    const t = runStand().tickets || 0;
+    return t > 0 ? kachel("🏃", "Paris Run", `Lauf zur Tour Eiffel · 🎟️ ${t} Ticket${t > 1 ? "s" : ""}`, parisRun)
+      : kachel("🔒", "Paris Run", `Ticket nötig: ${ticketPreis()} 🪙 in der Boutique (du hast ${stand.coins} 🪙)`, () => boutique(zurueck), " gesperrt");
+  }
   function jeux() {
     zeige(kopf("🎮 Jeux", startseite, "Jeden Tag gibt es für jedes Spiel einmal Punkte."),
       el("nav", { class: "kacheln" },
         kachel("🃏", "Memory", "Wendung und Bedeutung finden", memory),
         kachel("👂", "Qui est-ce ?", "Hör den Namen, tipp das Bild an", quiEstCe),
         kachel("🔢", "Dans l'ordre", "Bring den Dialog in die richtige Reihenfolge", () => ordre()),
-        kachel("🏃", "Paris Run", `Lauf zur Tour Eiffel · 🎟️ Ticket ${ticketPreis()} 🪙 (du hast ${runStand().tickets || 0})`, parisRun),
-        kachel("🛍️", "Boutique", `🪙 ${stand.coins} Coins – Ticket und Rahmen`, () => boutique(jeux), " shop-kachel")));
+        runKachel(jeux),
+        kachel("🛍️", "Boutique", `🪙 ${stand.coins} Coins – Ticket, Rahmen, Figur`, () => boutique(jeux), " shop-kachel")));
   }
 
   /* ---------- 🛍️ Boutique (7.11., wie der Shop in Englisch 6): Artikel aus D.boutique; Ticket mehrfach kaufbar (1 Ticket = 1 Lauf), Rahmen einmal kaufen, dann anlegen.
@@ -749,19 +761,22 @@
     if (stand.coins < a.preis) { toast(`Il te manque ${a.preis - stand.coins} 🪙 – dir fehlen noch ${a.preis - stand.coins} Coins.`); return false; }
     stand.coins -= a.preis; protokolliere("k", -a.preis); stand.ausgegeben = (stand.ausgegeben || 0) + a.preis;
     if (a.ticket) runStand().tickets = (runStand().tickets || 0) + 1;
-    else { if (!stand.gekauft.includes(a.id)) stand.gekauft.push(a.id); if (a.rahmen) stand.rahmen = a.rahmen; }
+    else { if (!stand.gekauft.includes(a.id)) stand.gekauft.push(a.id); if (a.rahmen) stand.rahmen = a.rahmen; if (a.skin) stand.skin[a.skin[0]] = a.skin[1]; }
     speichern(); toast(`${a.symbol} Merci ! −${a.preis} 🪙`); klang(true);
     boutique(zurueck);
     return true;
   }
   function boutique(zurueck) {
     zurueck = typeof zurueck === "function" ? zurueck : startseite;
-    const tickets = runStand().tickets || 0;
+    const tickets = runStand().tickets || 0, skins = (D.boutique || []).filter((a) => a.skin);
     const artikel = (a) => {
       const hat = stand.gekauft.includes(a.id), fehlt = a.preis - stand.coins;
       const kauf = () => knopf(fehlt > 0 ? `Noch ${fehlt} 🪙` : "Acheter · Kaufen", () => kaufe(a, zurueck), fehlt > 0 ? "leise" : "haupt");
       let k;
       if (a.ticket) k = el("div", { class: "knopfreihe ticket-reihe" }, el("span", { class: "shop-hinweis" }, `🎟️ ${tickets} Tickets`), kauf(), tickets > 0 && knopf("▶ Paris Run", parisRun));
+      else if (hat && a.skin) k = stand.skin[a.skin[0]] === a.skin[1]
+        ? el("div", { class: "knopfreihe" }, el("span", { class: "shop-hinweis ok" }, "✓ Angelegt"), knopf("Ablegen", () => { delete stand.skin[a.skin[0]]; speichern(); boutique(zurueck); }, "leise"))
+        : knopf("Anlegen", () => { stand.skin[a.skin[0]] = a.skin[1]; speichern(); boutique(zurueck); });
       else if (hat) k = stand.rahmen === a.rahmen ? el("span", { class: "shop-hinweis ok" }, "✓ Angelegt") : knopf("Anlegen", () => { stand.rahmen = a.rahmen; speichern(); boutique(zurueck); });
       else if (a.verdient) k = el("span", { class: "shop-hinweis" }, a.verdient);
       else k = kauf();
@@ -771,7 +786,10 @@
     };
     zeige(kopf("🛍️ Boutique", zurueck, "Für 2 ⭐ gibt es 1 🪙. Deine Punkte bleiben – Coins gibst du hier aus."),
       el("section", { class: "satzkarte shop-stand" }, el("p", { class: "shop-coins" }, `🪙 ${stand.coins} Coins`)),
-      el("div", { class: "shop-raster" }, (D.boutique || []).map(artikel)),
+      el("div", { class: "shop-raster" }, (D.boutique || []).filter((a) => !a.skin).map(artikel)),
+      skins.length > 0 && el("h2", { class: "shop-gruppe" }, "🎨 Ta figure · Figur für den Paris Run"),
+      skins.length > 0 && el("p", { class: "klein" }, "Gekaufte Teile legst du an oder ab. Was du nicht anlegst, kommt von deiner Figur aus der Englisch-App."),
+      skins.length > 0 && el("div", { class: "shop-raster" }, skins.map(artikel)),
       el("div", { class: "knopfreihe" }, knopf("🏛️ Panthéon", pantheon)));
   }
   function titelKarte() {   // Titel-Schild im Panthéon: Titel (fr + de), Punkte, Coins, Fortschritt zum nächsten Titel

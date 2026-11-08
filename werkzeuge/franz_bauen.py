@@ -74,6 +74,23 @@ def parle_name(wer, text):
     return f"audio/parle/{wer.lower()}_{h}.mp3"
 
 
+# Feste Sätze, die die App sonst mit der Geräte-Stimme sagt (8.11., Mr. Alex: alles vertonen): Text → Datei; spiele() nimmt die Datei, wenn es sie gibt
+SAETZE_FEST = ["Bravo ! Tu es la star du disco !", "Bravo ! Tu es à la tour Eiffel !", "Presque ! Encore une fois !", "Surprise ! Le Disco Run est débloqué !"]
+
+
+def saetze():
+    """(stimme, text, datei): Helden-Wendungen mit der Heldenstimme, Memory-Wendungen und feste Sätze mit Mr. Alex' Stimme."""
+    for z in tsv("helden.tsv"):
+        yield "held:" + z["stimme"], z["wendung"], satz_name("held_" + z["id"], z["wendung"])
+    for t in [z["fr"] for z in tsv("wendungen.tsv")] + SAETZE_FEST:
+        yield "alex", t, satz_name("alex", t)
+
+
+def satz_name(wer, text):
+    h = hashlib.sha1(f"{wer}|{text}".encode()).hexdigest()[:10]
+    return f"audio/saetze/{wer.lower()}_{h}.mp3"
+
+
 def vorhanden(rel):
     return os.path.exists(os.path.join(APP, rel))
 
@@ -226,7 +243,7 @@ def main():
     for z in (tsv("lob.tsv") if os.path.exists(os.path.join(INHALT, "lob.tsv")) else []):
         a = f"audio/lob/{z['id']}.mp3"
         lob.setdefault(z["art"], []).append({"text": z["text"], "de": z["de"], "gruppe": [g for g in z["gruppe"].split(",") if g], "audio": a if vorhanden(a) else None})
-    daten = {"lob": lob, "frei": frei_saarland.als_daten(), "titel": titel, "boutique": boutique, "parleAudio": parle_audio, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "france": france, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    daten = {"lob": lob, "frei": frei_saarland.als_daten(), "titel": titel, "boutique": boutique, "parleAudio": parle_audio, "saetze": {t: d for _, t, d in saetze() if vorhanden(d) and not _.startswith("held:")}, "heldSatz": {d.split("/")[-1].split("_")[1]: d for _, t, d in saetze() if vorhanden(d) and _.startswith("held:")}, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "france": france, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:

@@ -46,6 +46,10 @@ def auftraege():
     for wer in ("A", "B"):  # Parle de toi (8.11.): Satzstücke und Chips einzeln, Jules (A) und Cécile (B); die App spielt sie hintereinander
         for x in fb.parle_stuecke():
             yield wer, x, fb.parle_name(wer, x)
+    tags_h = {z["id"]: z["tags"] for z in fb.tsv("helden.tsv")}
+    for stimme, text, rel in fb.saetze():  # 8.11.: Wendungen (Held mit eigener Stimme + Tag) und feste Sätze statt Geräte-Stimme
+        held = rel.split("/")[-1].split("_")[1] if stimme.startswith("held:") else None
+        yield stimme, (f"{tags_h.get(held, '')} {text}".strip() if held else "[French] " + text), rel
     for z in fb.tsv("namen.tsv"):
         yield "alex", "[French] " + SPRECH.get(z["id"], z["name"]) + ".", f"audio/namen/{z['id']}.mp3"  # 7.11. (Mr. Alex): Tag [French] erzwingt französische Aussprache (sonst z. B. „Kylian“ englisch)
     for z in fb.tsv("paris.tsv"):  # Paris-Karte: Text des Orts, Mr. Alex' Stimme (römische Zahl ausgeschrieben)

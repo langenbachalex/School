@@ -748,7 +748,7 @@
     zeige(kopf("🎮 Jeux", startseite, "Jeden Tag gibt es für jedes Spiel einmal Punkte."),
       el("nav", { class: "kacheln" },
         kachel("🃏", "Memory", "Wendung und Bedeutung finden", memory),
-        kachel("👂", "Qui est-ce ?", "Hör den Namen, tipp das Bild an", quiEstCe),
+        kachel("👂", "Qui est-ce ?", "Hör den Namen, tipp das Bild an", () => quiEstCe()),
         kachel("🔢", "Dans l'ordre", "Bring den Dialog in die richtige Reihenfolge", () => ordre()),
         runKachel(jeux),
         kachel("🛍️", "Boutique", `🪙 ${stand.coins} Coins – Ticket, Rahmen, Figur`, () => boutique(jeux), " shop-kachel")));

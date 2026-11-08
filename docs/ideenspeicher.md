@@ -57,18 +57,24 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | ALLE | app-übergreifend (Runner-Engine `app/runner.js`, Skills, Doku, Hooks) | – | – | – |
 Neue Fächer/Apps: Zeile anhängen, Kürzel vergeben.
 
-## Chat-Übersicht (8.11.2026) – Namensschema `School · <App> · <Block> · <Datum>`
-| Chat | App | Block | Stand |
-|---|---|---|---|
-| School · MASTER | ALLE | Planen, Entscheiden, Konzepte (Modell Fable) | läuft – dieser Chat (bisher „Fotos + Konzepte 7.11.“) |
-| School · FR · Französisch-App | FR | Stufen 1–4 gebaut; nächster Block: Punkte/Coins/Titel, Boutique, Stars freischalten, Frankreich-Karte | läuft |
-| School · EN9 · Superhelden-Cameos | EN9 | Etappen 1–3 + Heldenfilme vertont | fertig 7.11. |
-| School · EN6+EN9 · Road to GLN | EN6, EN9 | Konzept freigegeben 8.11., Material kommt von Mr. Alex | offen |
-| School · ALLE · Folien-Karten | EN6, EN9 (FR hat sie schon) | große Version freigegeben 7.11. | offen |
+## Chat-Übersicht (Stand 8.11.2026) – Namensschema `School · <App> · <Block> · <Datum>`
+Offene Blöcke in Reihenfolge; Befehl = erste Eingabe im jeweiligen Chat (neuer Chat: erst `/load …`).
+| Nr | App | Block | Chat | Befehl | Stand |
+|---|---|---|---|---|---|
+| 1 | FR | Streaks + Wochenübersicht im Panthéon, Aussprache-Korrektur (Name von Mr. Alex), Parle de toi mit Jungen-/Mädchenstimme | `School · FR · Französisch-App · 7.11.` (läuft) | `/load Französisch-App` → „dringenden Block a–c laut Ideenspeicher bauen, OK gilt für den Push“ | **dringend, diese Woche** |
+| 2 | FR | Punkte/Coins/Titel, Boutique mit Run-Ticket, Stars freischalten, Frankreich-Karte Niveau 2 | derselbe Chat | danach dort: „nächsten Block 1–4 bauen“ | Plan freigegeben |
+| 3 | EN6+EN9 | Road to GLN (grüne Markierung, Kette, vier Boni) | neuer Chat `School · EN6+EN9 · Road to GLN · <Datum>` | `/load Road to GLN` + GLN-Material und Termine beider Klassen mitgeben | Konzept freigegeben |
+| 4 | EN6+EN9 | Folien-Karten (Bronze/Silber/Gold, Seltenheit) – FR hat sie schon | neuer Chat `School · ALLE · Folien-Karten · <Datum>` | `/load Folien-Karten` | große Version freigegeben |
+| 5 | EN6 | Hausaufgabe nach dem Vokabeltest Mi 11.11. (`inhalte/hausaufgabe.tsv`) | neuer Chat `School · EN6 · Hausaufgabe · <Datum>` oder Master | `/load Hausaufgabe Klasse 6` + Inhalt von Mr. Alex | wartet auf Inhalt |
+| 6 | EN6+EN9 | Vorschauen (Artefakte) neu veröffentlichen | Master oder neuer Chat | `/load Vorschauen` | nur auf Wunsch |
+| 7 | ALLE | Sync light (Server-Spielstand) | Master | Entscheidungen: Hosting, Opt-in, Speicherdauer, Startklasse | wartet auf Mr. Alex |
+| – | ALLE | Planen, Entscheiden, Konzepte (Modell Fable) | `School · MASTER` (dieser Chat, Sitzung vom 7.11.) | – | läuft |
+| – | EN9 | Superhelden-Cameos Etappen 1–3 + Heldenfilme | `School · EN9 · Superhelden-Cameos · 7.11.` | – | fertig 7.11., archivieren |
+| – | EN9/EN6 | Fotos Wikimedia (alle sieben Motive) | im Master erledigt | – | fertig 7.11. |
 Fertige Chats archivieren; der Stand steht hier (sie müssen nicht umbenannt werden). Chat-Name erfragen: `/name` oder „Wie heißt du?“.
 **Master-Wechsel** (Ziel: Kontext klein halten, Ressourcen sparen): alter Master `/save` → Zeile „School · MASTER · bis <Datum>“ hier eintragen, offene Entscheidungen darunter; neuer Chat: `/model claude-fable-5-1`, `/load MASTER`, Name `School · MASTER`. Alten Master archivieren.
 
-## Stand 7.11.2026 (Master-Chat beendet, /save) – nächste Blöcke für /load
+## Stand 7.11.2026 (alter Master-Chat, /save) – Reihenfolge jetzt oben in der Chat-Übersicht – nächste Blöcke für /load
 Gebaut und gepusht am 6./7.11.: alle 50 Staaten-Szenen mit längeren Texten, Voice-over und Fotos · Orts-Szenen Etappe 3 (Times Square, Niagara, Old Faithful, White House) · Superhelden Klasse 6 als Spielgrafik (Phase 1 6853984/5ae2c92, Phase 2 a7a788a: Cameos mit Kraft-Effekt, Heldenfilme, gezeichnete Sammelkarten; Kenji springt mit 1c8a416) · Heldenfilme mit gesprochenen Ausrufen · je Held eigene Stimme, v4, Stabilität 0,3, Audio-Tags (5c95d13) · Mr. Alex' Zurufe im Lauf, beide Klassen (a6408f0, adcebbd) · Regeln von Mr. Alex 7.11. in `docs/briefing.md`, Sparregeln `docs/token-sparen.md`, Skills `/load` und `/save`.
 **Offen (Reihenfolge nach Mr. Alex):**
 1. **Fotos Wikimedia** – **fertig 7.11.** (Chat „Fotos“, Commits cae4fc2, 038c6da, 04ee09c): FL Alligator in den Everglades (Library of Congress), AR Digging For Diamonds, MS American Queen in Natchez, KY Mammoth Cave mit Wasserfall (NPS, gemeinfrei), London Westminster Abbey, The Shard, Notting Hill Portobello Road (Wikimedia, CC BY/CC BY-SA); Quellen in den TSV + QUELLEN.md, Build-Quellenzeile erkennt `wikimedia.org` im Link. KY und Notting Hill hat Mr. Alex selbst von Commons geladen und in den Chat gegeben (Zuordnung über die Bildgröße zu den Kandidaten). **Gelernt zu Wikimedia aus der Cloud:** Such-API geht; Vorschaubilder nur über `upload.wikimedia.org` (der API-Host `thumb.wikimedia.org` ist im Proxy gesperrt), Breite 500 px ohne `?utm`-Anhang, lokal auf 400 px verkleinern; die Sperre (429 „robot policy“) hängt an der geteilten Cloud-Adresse – fester Takt 150 s je Bild, bei 429 fünf Minuten warten, keine schnellen Wiederholungen; nach ≈ 10 Bildern ist für längere Zeit Schluss. **Schnellster Weg künftig:** Claude sucht die Kandidaten (Titel, Lizenz, Link), Mr. Alex lädt die gewählten Bilder selbst und gibt sie in den Chat. Schwarz-Weiß und Zeichnungen aussortieren (`Image.mode`).

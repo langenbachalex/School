@@ -15,7 +15,8 @@ STIMMEN = {"A": "8qnuneLiGjGrT4A62CCe",   # Jules – conversational
            "alex": "AK2WYGe96RmMwFKM5KEz"}  # Mr. Alex
 EINSTELLUNG = {"stability": 0.5, "similarity_boost": 0.75}
 # Aussprache-Hilfen (7.11., Mr. Alex): stummes H bei „Hugo“ – sonst spricht die Stimme ein H
-SPRECH = {"hugo": "Victor Ugo", "ekitike": "Ugo Ekitiké", "t_hernandez": "Théo Ernandez", "l_hernandez": "Lucas Ernandez"}
+SPRECH = {"hugo": "Victor Ugo", "ekitike": "Ugo Ekitiké", "t_hernandez": "Théo Ernandez", "l_hernandez": "Lucas Ernandez",
+          "metz": "Messe"}  # 8.11. gesammelt (Mr. Alex: „Mess“) – Datei erst beim nächsten Sammel-Durchgang löschen und neu erzeugen
 TAGS = [(re.compile(r"^Ha ha"), "[laughs] Ha ha"), (re.compile(r"« La la la laaaa"), "[sings] « La la la laaaa"), (re.compile(r"^Chut"), "[whispers] Chut")]
 
 

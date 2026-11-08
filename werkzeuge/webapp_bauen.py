@@ -84,10 +84,10 @@ def main(test=None):
     version = h.hexdigest()[:12]
     with open(os.path.join(APP, "sw.js"), "w", encoding="utf-8") as f:
         f.write(f"""// Automatisch erzeugt von werkzeuge/webapp_bauen.py – Offline-Speicher der App.
-const VERSION = "mralex-{version}";
+const VERSION = "mralex-{version}0";  // 8.11.: Update lädt alle Dateien frisch vom Server (cache: "reload"), sonst blieb eine neu vertonte mp3 alt
 const DATEIEN = {json.dumps(dateien)};
 self.addEventListener("install", (e) => {{
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN.map((u) => new Request(u, {{ cache: "reload" }})))).then(() => self.skipWaiting()));
 }});
 self.addEventListener("activate", (e) => {{
   // nur eigene alte Speicher löschen – nicht die von Klasse 9 (mralex9-) oder Französisch (mralex-fr-)

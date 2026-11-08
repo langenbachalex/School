@@ -559,10 +559,10 @@ def webapp():
     version = h.hexdigest()[:12]
     with open(os.path.join(APP, "sw.js"), "w", encoding="utf-8") as f:
         f.write(f"""// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – Offline-Speicher der App Klasse 9.
-const VERSION = "mralex9-{version}";
+const VERSION = "mralex9-{version}r";  // 8.11.: Update lädt alle Dateien frisch vom Server (cache: "reload"), sonst blieb eine neu vertonte mp3 alt
 const DATEIEN = {json.dumps(dateien)};
 self.addEventListener("install", (e) => {{
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN.map((u) => new Request(u, {{ cache: "reload" }})))).then(() => self.skipWaiting()));
 }});
 self.addEventListener("activate", (e) => {{
   e.waitUntil(caches.keys().then((alle) => Promise.all(alle.filter((k) => k.startsWith("mralex9-") && k !== VERSION).map((k) => caches.delete(k))))

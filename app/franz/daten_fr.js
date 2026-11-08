@@ -3892,8 +3892,8 @@ window.DATEN_FR = {
    "chef_lieu": "Toulouse",
    "symbol": "✈️",
    "kurz": "Occitanie",
-   "lx": 188.3,
-   "ly": 285.4,
+   "lx": 215.6,
+   "ly": 269.2,
    "pfad": "M178.2,324.3 L172.2,321.0 L170.5,321.4 L169.5,323.2 L167.5,318.9 L162.6,319.2 L161.3,317.1 L151.4,313.8 L149.7,316.7 L150.4,320.0 L142.8,318.9 L141.0,320.7 L138.3,318.2 L133.6,320.3 L131.4,318.9 L129.9,316.0 L126.2,314.2 L125.7,311.7 L126.9,311.3 L127.4,307.4 L128.9,307.4 L129.1,304.8 L130.9,302.3 L132.1,302.3 L132.1,300.9 L133.3,299.1 L132.6,298.0 L134.6,296.2 L133.6,295.5 L134.1,293.7 L132.1,293.3 L132.8,290.4 L131.4,287.9 L126.9,286.5 L127.6,283.2 L129.1,282.2 L128.1,279.6 L129.1,279.6 L129.1,277.1 L128.1,276.4 L132.8,273.5 L133.8,274.2 L133.3,275.3 L135.3,276.4 L135.8,273.5 L143.3,272.4 L148.2,269.9 L150.7,271.7 L153.7,267.4 L155.4,268.1 L155.1,266.0 L156.4,265.6 L157.4,263.1 L155.4,261.6 L156.1,259.1 L160.1,259.1 L158.1,253.0 L160.3,252.3 L162.3,248.7 L166.5,246.2 L166.0,244.0 L169.5,241.5 L168.8,236.4 L174.2,235.7 L177.7,239.7 L181.1,237.5 L184.9,237.5 L185.6,241.5 L187.6,243.6 L187.1,246.9 L188.6,250.5 L190.6,248.7 L195.3,249.4 L197.2,246.9 L198.2,242.6 L201.5,239.0 L202.4,239.7 L202.4,241.8 L204.7,241.5 L207.6,249.8 L210.9,240.8 L211.6,240.4 L212.6,241.8 L214.1,239.3 L217.1,237.9 L218.1,238.2 L220.0,243.6 L222.8,242.9 L223.7,241.1 L224.7,242.9 L226.5,242.6 L228.9,245.1 L230.2,250.5 L234.6,258.0 L234.2,261.3 L236.1,260.6 L239.4,263.4 L241.3,260.6 L242.6,260.2 L242.8,262.4 L243.6,262.4 L244.3,260.6 L245.3,260.6 L248.8,262.7 L250.7,266.0 L250.5,269.2 L253.7,272.4 L252.2,275.0 L248.8,277.5 L249.5,278.6 L248.5,284.0 L245.0,283.6 L243.6,286.5 L244.8,286.8 L244.1,287.9 L238.9,290.8 L238.6,292.2 L236.1,291.2 L236.4,289.7 L235.4,289.0 L233.2,289.0 L224.5,294.8 L220.8,299.1 L216.6,299.1 L212.6,302.7 L209.1,310.2 L209.1,320.3 L209.4,325.0 L211.6,326.4 L212.4,329.0 L210.4,329.3 L209.1,327.9 L206.9,327.5 L200.0,330.4 L200.0,332.6 L196.8,332.9 L189.8,329.0 L183.9,331.8 L181.9,328.6 L176.7,327.2 L176.9,325.0 Z"
   },
   {
@@ -3912,8 +3912,8 @@ window.DATEN_FR = {
    "chef_lieu": "Ajaccio",
    "symbol": "🏝️",
    "kurz": "Corse",
-   "lx": 358.0,
-   "ly": 343.0,
+   "lx": 361.7,
+   "ly": 323.2,
    "pfad": "M366.7,349.8 L366.4,357.0 L363.9,358.8 L365.9,359.2 L362.2,365.0 L362.9,366.0 L362.2,367.5 L359.0,366.4 L359.2,365.0 L357.7,363.9 L353.8,362.4 L351.3,359.6 L354.5,356.0 L349.1,353.8 L351.3,350.9 L351.3,347.7 L347.1,348.4 L346.8,346.6 L350.3,342.6 L346.3,339.0 L345.9,336.2 L349.1,334.7 L347.1,332.2 L345.6,332.2 L347.1,329.7 L348.3,329.7 L348.6,326.4 L352.0,323.2 L357.0,321.8 L359.7,318.5 L362.2,318.2 L363.9,320.7 L364.7,319.6 L365.2,316.0 L364.4,314.9 L365.7,308.4 L368.1,309.2 L368.9,316.4 L367.9,320.7 L369.9,324.3 L370.6,334.7 L370.4,341.2 L366.9,346.2 Z"
   }
  ],
@@ -3927,7 +3927,10 @@ window.DATEN_FR = {
    "y": 96,
    "fr": "Voici Metz. C'est une grande ville en Moselle. La cathédrale est très haute et très belle !",
    "de": "Hier ist Metz. Es ist eine große Stadt in der Moselle. Die Kathedrale ist sehr hoch und sehr schön!",
-   "audio": null
+   "audio": "audio/france/metz.mp3",
+   "film": "fr_metz",
+   "foto": "bilder/france/metz.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Porte des Allemands) · Library of Congress (LC-DIG-ppmsca-00001) · gemeinfrei"
   },
   {
    "id": "forbach",
@@ -3938,7 +3941,10 @@ window.DATEN_FR = {
    "y": 44,
    "fr": "Voici Forbach. La ville est tout près de l'Allemagne. Sur la colline, il y a un vieux château.",
    "de": "Hier ist Forbach. Die Stadt ist ganz nah an Deutschland. Auf dem Hügel steht eine alte Burg.",
-   "audio": null
+   "audio": "audio/france/forbach.mp3",
+   "film": "fr_forbach",
+   "foto": null,
+   "quelle": null
   },
   {
    "id": "sarreguemines",
@@ -3949,7 +3955,10 @@ window.DATEN_FR = {
    "y": 82,
    "fr": "Voici Sarreguemines. La ville est sur la Sarre. Elle est connue pour ses belles assiettes !",
    "de": "Hier ist Sarreguemines. Die Stadt liegt an der Saar. Sie ist bekannt für ihre schönen Teller (Fayence)!",
-   "audio": null
+   "audio": "audio/france/sarreguemines.mp3",
+   "film": "fr_sarreguemines",
+   "foto": null,
+   "quelle": null
   },
   {
    "id": "saint_avold",
@@ -3960,7 +3969,10 @@ window.DATEN_FR = {
    "y": 90,
    "fr": "Voici Saint-Avold. Autour de la ville, il y a une grande forêt. On fait du vélo et on se promène.",
    "de": "Hier ist Saint-Avold. Rund um die Stadt gibt es einen großen Wald. Man fährt Rad und geht spazieren.",
-   "audio": null
+   "audio": "audio/france/saint_avold.mp3",
+   "film": "fr_saint_avold",
+   "foto": null,
+   "quelle": null
   },
   {
    "id": "freyming",
@@ -3971,7 +3983,10 @@ window.DATEN_FR = {
    "y": 62,
    "fr": "Voici Freyming-Merlebach. Avant, il y avait des mines de charbon. Les mineurs travaillaient sous la terre.",
    "de": "Hier ist Freyming-Merlebach. Früher gab es hier Kohlebergwerke. Die Bergleute arbeiteten unter der Erde.",
-   "audio": null
+   "audio": "audio/france/freyming.mp3",
+   "film": "fr_freyming",
+   "foto": null,
+   "quelle": null
   },
   {
    "id": "sarralbe",
@@ -3982,7 +3997,10 @@ window.DATEN_FR = {
    "y": 114,
    "fr": "Voici Sarralbe. Ici, il y a deux rivières : la Sarre et l'Albe. Sarre + Albe = Sarralbe !",
    "de": "Hier ist Sarralbe. Hier gibt es zwei Flüsse: die Saar und die Albe. Saar + Albe = Sarralbe!",
-   "audio": null
+   "audio": "audio/france/sarralbe.mp3",
+   "film": "fr_sarralbe",
+   "foto": null,
+   "quelle": null
   },
   {
    "id": "bordeaux",
@@ -3993,7 +4011,10 @@ window.DATEN_FR = {
    "y": 243,
    "fr": "Voici Bordeaux. C'est une grande ville en Nouvelle-Aquitaine, la plus grande région de France. Devant la Place de la Bourse, il y a un grand miroir d'eau !",
    "de": "Hier ist Bordeaux. Es ist eine große Stadt in Nouvelle-Aquitaine, der größten Region Frankreichs. Vor dem Place de la Bourse gibt es einen großen Wasserspiegel!",
-   "audio": null
+   "audio": "audio/france/bordeaux.mp3",
+   "film": "fr_bordeaux",
+   "foto": "bilder/france/bordeaux.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (La Bourse) · Library of Congress (LC-DIG-ppmsca-52463) · gemeinfrei"
   },
   {
    "id": "lyon",
@@ -4004,7 +4025,10 @@ window.DATEN_FR = {
    "y": 209,
    "fr": "Voici Lyon, en Auvergne-Rhône-Alpes. C'est la troisième ville de France. Ici, il y a deux fleuves : le Rhône et la Saône. Le symbole de Lyon ? Un lion !",
    "de": "Hier ist Lyon, in Auvergne-Rhône-Alpes. Es ist die drittgrößte Stadt Frankreichs. Hier gibt es zwei Flüsse: die Rhône und die Saône. Das Wappentier von Lyon? Ein Löwe!",
-   "audio": null
+   "audio": "audio/france/lyon.mp3",
+   "film": "fr_lyon",
+   "foto": "bilder/france/lyon.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Place des Terreaux) · Library of Congress (LC-DIG-ppmsc-05083) · gemeinfrei"
   },
   {
    "id": "aix",
@@ -4015,7 +4039,10 @@ window.DATEN_FR = {
    "y": 291,
    "fr": "Voici Aix-en-Provence. Dans la ville, il y a beaucoup de fontaines. Il fait souvent beau et chaud !",
    "de": "Hier ist Aix-en-Provence. In der Stadt gibt es viele Brunnen. Es ist oft schön und warm!",
-   "audio": null
+   "audio": "audio/france/aix.mp3",
+   "film": "fr_aix",
+   "foto": "bilder/france/aix.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (La Rotonde) · Library of Congress (LC-DIG-ppmsc-05248) · gemeinfrei"
   },
   {
    "id": "chateauneuf",
@@ -4026,7 +4053,192 @@ window.DATEN_FR = {
    "y": 269,
    "fr": "Voici Châteauneuf-du-Pape. C'est un petit village en Provence. Le nom veut dire : le nouveau château du pape.",
    "de": "Hier ist Châteauneuf-du-Pape. Es ist ein kleines Dorf in der Provence. Der Name bedeutet: das neue Schloss des Papstes.",
-   "audio": null
+   "audio": "audio/france/chateauneuf.mp3",
+   "film": "fr_chateauneuf",
+   "foto": "bilder/france/chateauneuf.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Papstpalast in Avignon, nahe Châteauneuf) · Library of Congress (LC-DIG-ppmsc-05243) · gemeinfrei"
+  },
+  {
+   "id": "mont_saint_michel",
+   "name": "Mont-Saint-Michel",
+   "region": "nor",
+   "symbol": "⛪",
+   "x": 96,
+   "y": 106,
+   "fr": "Voici le Mont-Saint-Michel, en Normandie. C'est une petite île avec une abbaye tout en haut. Quand la mer monte, l'eau arrive très vite !",
+   "de": "Hier ist der Mont-Saint-Michel in der Normandie. Es ist eine kleine Insel mit einer Abtei ganz oben. Wenn die Flut kommt, ist das Wasser sehr schnell da!",
+   "audio": "audio/france/mont_saint_michel.mp3",
+   "film": "fr_mont_saint_michel",
+   "foto": "bilder/france/mont_saint_michel.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Südseite vom Damm) · Library of Congress (LC-DIG-ppmsc-05135) · gemeinfrei"
+  },
+  {
+   "id": "carnac",
+   "name": "Carnac",
+   "region": "bre",
+   "symbol": "🗿",
+   "x": 58,
+   "y": 144,
+   "fr": "Voici Carnac, en Bretagne. Ici, il y a plus de 3 000 menhirs. Ce sont de grandes pierres, très, très vieilles !",
+   "de": "Hier ist Carnac in der Bretagne. Hier gibt es mehr als 3.000 Menhire. Das sind große Steine, sehr, sehr alt!",
+   "audio": "audio/france/carnac.mp3",
+   "film": "fr_carnac",
+   "foto": "bilder/france/carnac.jpg",
+   "quelle": "Foto: Postkarte um 1900–1920 (Alignements de Kermario) · Library of Congress (2025705671) · gemeinfrei"
+  },
+  {
+   "id": "nantes",
+   "name": "Nantes",
+   "region": "pdl",
+   "symbol": "🐘",
+   "x": 95,
+   "y": 157,
+   "fr": "Voici Nantes, sur la Loire. Ici, il y a un grand éléphant en bois et en métal. Il marche, et des gens montent sur son dos !",
+   "de": "Hier ist Nantes an der Loire. Hier gibt es einen großen Elefanten aus Holz und Metall. Er läuft, und Leute steigen auf seinen Rücken!",
+   "audio": "audio/france/nantes.mp3",
+   "film": "fr_nantes",
+   "foto": "bilder/france/nantes.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Château des ducs de Bretagne) · Library of Congress (LC-DIG-ppmsc-05142) · gemeinfrei"
+  },
+  {
+   "id": "chambord",
+   "name": "Chambord",
+   "region": "cvl",
+   "symbol": "🏰",
+   "x": 171,
+   "y": 143,
+   "fr": "Voici Chambord, un château de la Loire. Il est très grand : il a 426 pièces ! Dans le grand escalier, deux personnes montent, mais elles ne se voient pas.",
+   "de": "Hier ist Chambord, ein Loire-Schloss. Es ist sehr groß: Es hat 426 Räume! Auf der großen Treppe steigen zwei Personen hinauf, aber sie sehen sich nicht.",
+   "audio": "audio/france/chambord.mp3",
+   "film": "fr_chambord",
+   "foto": "bilder/france/chambord.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Château de Chambord) · Library of Congress (LC-DIG-ppmsca-52470) · gemeinfrei"
+  },
+  {
+   "id": "dijon",
+   "name": "Dijon",
+   "region": "bfc",
+   "symbol": "🦉",
+   "x": 259,
+   "y": 153,
+   "fr": "Voici Dijon, en Bourgogne. La ville est connue pour sa moutarde. Dans une rue, il y a une petite chouette en pierre : on la touche, ça porte bonheur !",
+   "de": "Hier ist Dijon in Burgund. Die Stadt ist bekannt für ihren Senf. In einer Straße gibt es eine kleine Eule aus Stein: Man berührt sie, das bringt Glück!",
+   "audio": "audio/france/dijon.mp3",
+   "film": "fr_dijon",
+   "foto": "bilder/france/dijon.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Notre-Dame, Kirche mit der Chouette) · Library of Congress (LC-DIG-ppmsc-05016) · gemeinfrei"
+  },
+  {
+   "id": "lille",
+   "name": "Lille",
+   "region": "hdf",
+   "symbol": "🧇",
+   "x": 210,
+   "y": 34,
+   "fr": "Voici Lille, dans le nord de la France. Chaque année, il y a une très grande braderie : on vend et on achète de vieilles choses. Et on mange des gaufres !",
+   "de": "Hier ist Lille im Norden Frankreichs. Jedes Jahr gibt es einen riesigen Flohmarkt (Braderie): Man verkauft und kauft alte Sachen. Und man isst Waffeln!",
+   "audio": "audio/france/lille.mp3",
+   "film": "fr_lille",
+   "foto": "bilder/france/lille.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Grand-Place) · Library of Congress (LC-DIG-ppmsc-05072) · gemeinfrei"
+  },
+  {
+   "id": "strasbourg",
+   "name": "Strasbourg",
+   "region": "ge",
+   "symbol": "🎄",
+   "x": 326,
+   "y": 110,
+   "fr": "Voici Strasbourg, en Alsace. La cathédrale est très haute. En hiver, il y a un grand marché de Noël.",
+   "de": "Hier ist Strasbourg (Straßburg) im Elsass. Das Münster ist sehr hoch. Im Winter gibt es einen großen Weihnachtsmarkt.",
+   "audio": "audio/france/strasbourg.mp3",
+   "film": "fr_strasbourg",
+   "foto": "bilder/france/strasbourg.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Saint-Thomas und Münster) · Library of Congress (LC-DIG-ppmsca-52512) · gemeinfrei"
+  },
+  {
+   "id": "chamonix",
+   "name": "Chamonix",
+   "region": "ara",
+   "symbol": "🏔️",
+   "x": 304,
+   "y": 204,
+   "fr": "Voici Chamonix, dans les Alpes. Ici, il y a le mont Blanc, la plus haute montagne de France. En hiver, on fait du ski !",
+   "de": "Hier ist Chamonix in den Alpen. Hier ist der Mont Blanc, der höchste Berg Frankreichs. Im Winter fährt man Ski!",
+   "audio": "audio/france/chamonix.mp3",
+   "film": "fr_chamonix",
+   "foto": "bilder/france/chamonix.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Chamonix und Mont Blanc) · Library of Congress (LC-DIG-ppmsca-52907) · gemeinfrei"
+  },
+  {
+   "id": "marseille",
+   "name": "Marseille",
+   "region": "paca",
+   "symbol": "⛵",
+   "x": 254,
+   "y": 310,
+   "fr": "Voici Marseille, au bord de la mer Méditerranée. C'est la deuxième ville de France. Sur la colline, il y a une église : on l'appelle « la Bonne Mère ».",
+   "de": "Hier ist Marseille am Mittelmeer. Es ist die zweitgrößte Stadt Frankreichs. Auf dem Hügel steht eine Kirche: Man nennt sie „die gute Mutter“.",
+   "audio": "audio/france/marseille.mp3",
+   "film": "fr_marseille",
+   "foto": "bilder/france/marseille.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Hafen) · Library of Congress (LC-DIG-ppmsc-05117) · gemeinfrei"
+  },
+  {
+   "id": "nice",
+   "name": "Nice",
+   "region": "paca",
+   "symbol": "🏖️",
+   "x": 314,
+   "y": 284,
+   "fr": "Voici Nice, sur la Côte d'Azur. Le long de la mer, il y a la promenade des Anglais. Sur la plage, il n'y a pas de sable, mais des galets !",
+   "de": "Hier ist Nizza an der Côte d'Azur. Am Meer entlang führt die Promenade des Anglais. Am Strand gibt es keinen Sand, sondern Kieselsteine!",
+   "audio": "audio/france/nice.mp3",
+   "film": "fr_nice",
+   "foto": "bilder/france/nice.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Hafen) · Library of Congress (LC-DIG-ppmsc-09990) · gemeinfrei"
+  },
+  {
+   "id": "carcassonne",
+   "name": "Carcassonne",
+   "region": "occ",
+   "symbol": "🛡️",
+   "x": 192,
+   "y": 301,
+   "fr": "Voici Carcassonne, en Occitanie. La vieille ville est comme un château de chevaliers. Elle a deux grands murs et 52 tours !",
+   "de": "Hier ist Carcassonne in Okzitanien. Die Altstadt ist wie eine Ritterburg. Sie hat zwei große Mauern und 52 Türme!",
+   "audio": "audio/france/carcassonne.mp3",
+   "film": "fr_carcassonne",
+   "foto": "bilder/france/carcassonne.jpg",
+   "quelle": "Foto: Postkarte um 1900–1920 (La Cité, Haupteingang) · Library of Congress (2025707170) · gemeinfrei"
+  },
+  {
+   "id": "toulouse",
+   "name": "Toulouse",
+   "region": "occ",
+   "symbol": "✈️",
+   "x": 170,
+   "y": 287,
+   "fr": "Voici Toulouse, la « ville rose ». Beaucoup de maisons sont en briques roses. Ici, on construit de très grands avions !",
+   "de": "Hier ist Toulouse, die „rosa Stadt“. Viele Häuser sind aus rosa Ziegeln. Hier baut man sehr große Flugzeuge!",
+   "audio": "audio/france/toulouse.mp3",
+   "film": "fr_toulouse",
+   "foto": "bilder/france/toulouse.jpg",
+   "quelle": "Foto: Photochrom um 1890–1900 (Blick über die Stadt) · Library of Congress (LC-DIG-ppmsc-05369) · gemeinfrei"
+  },
+  {
+   "id": "ajaccio",
+   "name": "Ajaccio",
+   "region": "cor",
+   "symbol": "🏝️",
+   "x": 350,
+   "y": 348,
+   "fr": "Voici Ajaccio, en Corse. La Corse est une île dans la mer Méditerranée. Napoléon est né ici, en 1769.",
+   "de": "Hier ist Ajaccio auf Korsika. Korsika ist eine Insel im Mittelmeer. Napoleon wurde hier geboren, im Jahr 1769.",
+   "audio": "audio/france/ajaccio.mp3",
+   "film": "fr_ajaccio",
+   "foto": null,
+   "quelle": null
   }
  ],
  "wendungen": [

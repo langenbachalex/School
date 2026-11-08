@@ -201,11 +201,14 @@ def main():
         lx, ly = proj(*map(float, z["label"].split(","))) if z.get("label") else (0, 0)
         regions.append({"id": z["id"], "name": z["name"], "chef_lieu": z["chef_lieu"], "symbol": z["symbol"], "kurz": z.get("kurz") or z["name"],
                         "lx": lx, "ly": ly, "pfad": " ".join("M" + " L".join(f"{x},{y}" for x, y in pkt) + " Z" for pkt in teile)})
+    # 8.11.: Foto bilder/france/<id>.jpg (Quellen france_fotos.tsv, werkzeuge/france_fotos.py), Film = Runner.szene „fr_<id>“ (Abschnitt „Französisch – Frankreich“)
+    fquellen = {z["id"]: z["quelle"] for z in tsv("france_fotos.tsv")} if os.path.exists(os.path.join(INHALT, "france_fotos.tsv")) else {}
     france = []
     for z in (tsv("france.tsv") if os.path.exists(os.path.join(INHALT, "france.tsv")) else []):
-        a = f"audio/france/{z['id']}.mp3"
+        a, b = f"audio/france/{z['id']}.mp3", f"bilder/france/{z['id']}.jpg"
         france.append({"id": z["id"], "name": z["name"], "region": z["region"], "symbol": z["symbol"], "x": int(z["x"]), "y": int(z["y"]),
-                       "fr": z["fr"], "de": z["de"], "audio": a if vorhanden(a) else None})
+                       "fr": z["fr"], "de": z["de"], "audio": a if vorhanden(a) else None, "film": "fr_" + z["id"],
+                       "foto": b if vorhanden(b) else None, "quelle": fquellen.get(z["id"]) if vorhanden(b) else None})
     # Punkte, Coins, Titel (7.11., wie Englisch 6): Titel-Stufen (ab Punkten, Name fr, Hilfe de) und Boutique (Paris-Run-Ticket + Rahmen)
     titel = [{"ab": ab, "name": n, "de": de, "symbol": sym} for ab, n, de, sym in [
         (0, "Débutant", "Anfänger", "🐣"), (100, "Copain", "Kumpel", "🤝"), (300, "Apprenti héros", "Helden-Lehrling", "🦸"),

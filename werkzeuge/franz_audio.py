@@ -50,6 +50,8 @@ def auftraege():
         yield "alex", "[French] " + SPRECH.get(z["id"], z["name"]) + ".", f"audio/namen/{z['id']}.mp3"  # 7.11. (Mr. Alex): Tag [French] erzwingt französische Aussprache (sonst z. B. „Kylian“ englisch)
     for z in fb.tsv("paris.tsv"):  # Paris-Karte: Text des Orts, Mr. Alex' Stimme (römische Zahl ausgeschrieben)
         yield "alex", "[French] " + z["fr"].replace("Louis XIV", "Louis quatorze"), f"audio/paris/{z['id']}.mp3"
+    for z in fb.tsv("france.tsv"):  # Frankreich-Karte (8.11.): Text des Orts wie Paris; Metz = „Mess“ [mɛs], Zahl mit Leerzeichen ausgeschrieben
+        yield "alex", "[French] " + z["fr"].replace("Metz", "Messe").replace("3 000", "trois mille"), f"audio/france/{z['id']}.mp3"
     for z in fb.tsv("helden.tsv"):  # Superhelden: Selbstvorstellung mit Tag passend zum Charakter
         yield "held:" + z["stimme"], f"{z['tags']} {z['intro_fr']}", f"audio/helden/intro_{z['id']}.mp3"
     tags = {z["id"]: z["tags"] for z in fb.tsv("helden.tsv")}

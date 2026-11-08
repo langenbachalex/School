@@ -3655,7 +3655,7 @@ window.DATEN_FR = {
    "stichwort": "inventeur",
    "de": "Erfinder (Blindenschrift)",
    "bild": "wm:Louis_Braille",
-   "foto": null,
+   "foto": "bilder/namen/braille.jpg",
    "ipa": [
     [
      "lwi"
@@ -3673,7 +3673,7 @@ window.DATEN_FR = {
     ]
    ],
    "audio": "audio/namen/braille.mp3",
-   "quelle": null
+   "quelle": "Henri Thiriat · gemeinfrei · Wikimedia Commons"
   },
   {
    "gruppe": "histoire",

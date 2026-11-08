@@ -52,6 +52,27 @@ def lautung(ipa):
     return {"ipa": gruppen, "einfach": [[einfach(s) for s in g] for g in gruppen]}
 
 
+def parle_stueck(t):
+    """Parle de toi (8.11.): Schlüssel eines Satzstücks/Chips wie parleStueck() in app/franz/app.js – nur Satzzeichen → leer."""
+    x = re.sub(r"^[\s.,!?;:]+", "", t).strip()
+    return x if re.search(r"[^\W\d_]", x) else ""
+
+
+def parle_stuecke():
+    """Alle Satzstücke der Parle-Vorlagen (dialoge_info.tsv) und alle Chips (woerter.tsv) → je Stimme A/B eine Datei."""
+    stuecke = []
+    for z in tsv("dialoge_info.tsv"):
+        for vorlage in filter(None, z["parle"].split("|")):
+            stuecke += [parle_stueck(t) for t in re.split(r"\{\w+\}", vorlage)]
+    stuecke += [parle_stueck(z["fr"]) for z in tsv("woerter.tsv")]
+    return sorted({x for x in stuecke if x})
+
+
+def parle_name(wer, text):
+    h = hashlib.sha1(f"{wer}|{text}".encode()).hexdigest()[:10]
+    return f"audio/parle/{wer.lower()}_{h}.mp3"
+
+
 def vorhanden(rel):
     return os.path.exists(os.path.join(APP, rel))
 
@@ -193,13 +214,15 @@ def main():
         {"id": "ticket", "symbol": "🎟️", "name": "Ticket Paris Run", "unter": "Ein Ticket = ein Lauf", "preis": 150, "ticket": True},
         {"id": "rahmen_rot", "symbol": "🎨", "name": "Cadre rouge", "unter": "Roter Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "rot"},
         {"id": "rahmen_blau", "symbol": "🎨", "name": "Cadre bleu", "unter": "Blauer Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "blau"},
-        {"id": "rahmen_gruen", "symbol": "🎨", "name": "Cadre vert", "unter": "Grüner Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "gruen"}]
+        {"id": "rahmen_gruen", "symbol": "🎨", "name": "Cadre vert", "unter": "Grüner Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "gruen"},
+        {"id": "rahmen_gold", "symbol": "👑", "name": "Cadre doré", "unter": "Nicht zu kaufen: für einen Mois parfait (4 perfekte Wochen hintereinander)", "preis": 0, "rahmen": "gold", "verdient": "👑 Mois parfait"}]
+    parle_audio = {w: {x: parle_name(w, x) for x in parle_stuecke() if vorhanden(parle_name(w, x))} for w in ("A", "B")}
     # Lob und Rückmeldungen (8.11.): inhalte/franz/lob.tsv → nach Art gruppiert (lob, stark, fehler, spiel, geschafft, voll, doch), Stimme audio/lob/<id>.mp3
     lob = {}
     for z in (tsv("lob.tsv") if os.path.exists(os.path.join(INHALT, "lob.tsv")) else []):
         a = f"audio/lob/{z['id']}.mp3"
         lob.setdefault(z["art"], []).append({"text": z["text"], "de": z["de"], "gruppe": [g for g in z["gruppe"].split(",") if g], "audio": a if vorhanden(a) else None})
-    daten = {"lob": lob, "frei": frei_saarland.als_daten(), "titel": titel, "boutique": boutique, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "france": france, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    daten = {"lob": lob, "frei": frei_saarland.als_daten(), "titel": titel, "boutique": boutique, "parleAudio": parle_audio, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "france": france, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:

@@ -119,12 +119,18 @@
     const alteFrance = alteParis >= N_PARIS ? Math.max(0, Math.min(N_FRANCE, 1 + Math.floor((p - N_PARIS * 20) / 20))) : 0;
     stand.frei = { ort: alteParis + alteFrance, karte: Math.min(NAMEN_REIHE.length, Math.floor(p / 25)), held: Math.min(N_HELDEN, Math.floor(p / 30)) };
   }
-  stand.freiTag = stand.freiTag || {}; stand.tage = stand.tage || {}; stand.feuer = stand.feuer || []; stand.bonusTage = stand.bonusTage || [];
+  stand.freiTag = stand.freiTag || {}; stand.tage = stand.tage || {}; stand.feuer = stand.feuer || []; stand.bonusTage = stand.bonusTage || []; stand.wochen = stand.wochen || [];
   // Serie: Schultage am Stück bis heute (heute noch nicht geübt: die Serie bis gestern zählt noch)
   function serie() {
     let d = new Date(), n = 0;
     if (!stand.tage[tagIso(d)]) d = plusTage(d, -1);
     for (let i = 0; i < 400; i++, d = plusTage(d, -1)) { if (!istSchultag(d)) continue; if (stand.tage[tagIso(d)]) n++; else break; }
+    return n;
+  }
+  // Perfekte Wochen hintereinander bis zur Woche mo (Wochen ohne Schultage = Ferien halten an), wie Englisch 6
+  function wochenSerie(mo) {
+    let n = 0;
+    for (let w = mo, i = 0; i < 60; i++, w = plusTage(w, -7)) { if (!schultageDerWoche(w).length) continue; if (stand.wochen.includes(tagIso(w))) n++; else break; }
     return n;
   }
   const namenFrei = () => Math.min(NAMEN_REIHE.length, stand.frei.karte);
@@ -158,6 +164,18 @@
           stand.feuer.push(tag); bonus(30);
           meldungen.push(`🔥 ${ruf(n === 3 ? "feuer3" : n === 6 ? "feuer6" : n === 9 ? "feuer9" : "feuer")} ${n} jours de suite · +30 ⭐`);
           if (stand.frei.held < N_HELDEN && stand.freiTag.held !== tag) { stand.frei.held++; stand.freiTag.held = tag; meldungen.push(`🦸 Nouveau super-héros : ${D.helden[stand.frei.held - 1].name} !`); }
+        }
+        // ⭐ Perfect week (8.11., wie Englisch 6): jeden Schultag der Woche geübt → +100 ⭐; 👑 4 perfekte Wochen hintereinander → +200 ⭐ und goldener Rahmen
+        const mo = montag(jetzt);
+        if (schultageDerWoche(mo).every((x) => stand.tage[tagIso(x)]) && !stand.wochen.includes(tagIso(mo))) {
+          stand.wochen.push(tagIso(mo)); bonus(100);
+          meldungen.push(`⭐ ${ruf("woche")} Semaine parfaite · +100 ⭐`);
+          const ws = wochenSerie(mo);
+          if (ws >= 4 && ws % 4 === 0) {
+            bonus(200);
+            if (!stand.gekauft.includes("rahmen_gold")) { stand.gekauft.push("rahmen_gold"); stand.rahmen = "gold"; }
+            meldungen.push(`👑 ${ruf("monat")} Mois parfait · +200 ⭐ · goldener Rahmen`);
+          }
         }
       }
     }
@@ -201,7 +219,7 @@
     });
   }
   // spiele([Datei | {tts}]) → Promise mit Sprechdauer in Sekunden (null, wenn abgebrochen)
-  function spiele(liste) {
+  function spiele(liste, pause = 300) {
     if (vorLob) { liste = [vorLob, ...liste]; vorLob = null; }
     stopp();
     const mein = lauf;
@@ -211,7 +229,7 @@
       if (typeof x === "object") return geraet(x.tts).then((d) => { gesamt += d; setTimeout(fertig, 250); });
       const a = new Audio(x);
       aktuell = a; a.playbackRate = tempo(); a.preservesPitch = true;
-      a.onended = () => { gesamt += (a.duration || 0) / tempo(); setTimeout(fertig, 300); };
+      a.onended = () => { gesamt += (a.duration || 0) / tempo(); setTimeout(fertig, pause); };
       a.onerror = fertig;
       a.play().catch(fertig);
     })), Promise.resolve()).then(() => (mein === lauf ? gesamt : null));
@@ -434,6 +452,11 @@
 
   // Schritt 6: Parle de toi – Wahl-Lücken aus Wortkästen, dann vorlesen lassen (Geräte-Stimme) und selbst sagen
   const KASTEN_NAME = { hobby: "Hobby", zahl: "Zahl", adj: "Wie ist es?", chant: "Wie?", name: "Name" };
+  // Stimmen für Parle de toi (8.11.): keine passenden französischen Kinderstimmen bei ElevenLabs → Jules (Junge/Mann) und Cécile (Mädchen/Frau) wie in den Dialogen
+  const PARLE_STIMMEN = [["A", "👦 Jules"], ["B", "👧 Cécile"]];
+  const parleStimme = () => (stand.parleStimme === "B" ? "B" : "A");
+  // Schlüssel wie parle_stueck() in werkzeuge/franz_bauen.py: Satzzeichen vorne weg, Leerzeichen außen weg; nur Satzzeichen → nichts
+  const parleStueck = (t) => { const x = t.replace(/^[\s.,!?;:]+/, "").trim(); return /\p{L}/u.test(x) ? x : ""; };
   function parle(d) {
     const box = rueckmeldung(), saetze = [];
     const karten = d.parle.map((vorlage) => {
@@ -459,13 +482,29 @@
         const naechste = wahl.find((x) => !x.wert);
         if (naechste) oeffne(naechste); else { wahl.forEach((x) => x.span.classList.remove("dran")); fertigTest(); sprich(); }
       }
-      const sprich = () => { if (wahl.every((x) => x.wert)) { let k = 0; spiele([{ tts: teile.map((t) => (/^\{\w+\}$/.test(t) ? wahl[k++].wert : t)).join("") }]); } };
+      const sprich = () => {
+        if (!wahl.every((x) => x.wert)) return;
+        let k = 0;
+        const satzTeile = teile.map((t) => (/^\{\w+\}$/.test(t) ? { wert: wahl[k++].wert } : { text: t }));
+        // 8.11.: echte Stimme (Jules oder Cécile) – Satzstücke und Chips einzeln aufgenommen, hintereinander gespielt; nur der getippte Name = Geräte-Stimme
+        const db = (D.parleAudio || {})[parleStimme()] || {}, liste = [];
+        for (const x of satzTeile) {
+          const stueck = parleStueck(x.wert || x.text);
+          if (!stueck) continue;
+          if (db[stueck]) liste.push(db[stueck]);
+          else if (x.wert) liste.push({ tts: x.wert });
+          else return spiele([{ tts: satzTeile.map((y) => y.wert || y.text).join("") }]);   // Satzstück fehlt: ganzer Satz mit Geräte-Stimme
+        }
+        spiele(liste, 40);
+      };
       saetze.push(wahl);
       return el("div", { class: "parle-karte" }, satz, auswahl, el("div", { class: "knopfreihe" }, knopf("🔊 Hören", sprich), el("span", { class: "klein" }, "… und sag es laut!")));
     });
     function fertigTest() { if (saetze.every((w) => w.every((x) => x.wert))) { melde(box, "gut", "Super ! Jetzt sag alle Sätze laut – am besten zu zweit."); schrittFertig(d, 5); } }
+    const stimmWahl = el("div", { class: "knopfreihe stimm-wahl" }, el("span", { class: "klein" }, "Stimme:"),
+      PARLE_STIMMEN.map(([id, name]) => knopf(name, () => { stand.parleStimme = id; speichern(); stimmWahl.querySelectorAll("button").forEach((b, i) => b.classList.toggle("haupt", PARLE_STIMMEN[i][0] === id)); }, parleStimme() === id ? "haupt" : "leise")));
     zeige(kopf(d.titel, () => dialogSeite(d), "5. Parle de toi – tipp die Lücke an und wähl dein Wort."),
-      el("section", { class: "satzkarte" }, karten, box), weiterLeiste(d, 5));
+      stimmWahl, el("section", { class: "satzkarte" }, karten, box), weiterLeiste(d, 5));
     const erste = saetze[0] && saetze[0][0];
     if (erste) erste.span.click();
   }
@@ -662,10 +701,11 @@
       let k;
       if (a.ticket) k = el("div", { class: "knopfreihe ticket-reihe" }, el("span", { class: "shop-hinweis" }, `🎟️ ${tickets} Tickets`), kauf(), tickets > 0 && knopf("▶ Paris Run", parisRun));
       else if (hat) k = stand.rahmen === a.rahmen ? el("span", { class: "shop-hinweis ok" }, "✓ Angelegt") : knopf("Anlegen", () => { stand.rahmen = a.rahmen; speichern(); boutique(zurueck); });
+      else if (a.verdient) k = el("span", { class: "shop-hinweis" }, a.verdient);
       else k = kauf();
       return el("div", { class: "shop-artikel" + (hat ? " gekauft" : "") + (a.rahmen ? " rahmen-" + a.rahmen : ""), "data-artikel": a.id },
         el("span", { class: "sym", "aria-hidden": "true" }, a.symbol), el("strong", { lang: "fr" }, a.name), a.unter && el("span", { class: "unter" }, a.unter),
-        el("span", { class: "preis" }, `🪙 ${a.preis}`), k);
+        a.verdient ? "" : el("span", { class: "preis" }, `🪙 ${a.preis}`), k);
     };
     zeige(kopf("🛍️ Boutique", zurueck, "Für 2 ⭐ gibt es 1 🪙. Deine Punkte bleiben – Coins gibst du hier aus."),
       el("section", { class: "satzkarte shop-stand" }, el("p", { class: "shop-coins" }, `🪙 ${stand.coins} Coins`)),
@@ -1041,6 +1081,22 @@
   }
 
   /* ---------- 🏛️ Panthéon ---------- */
+  function wochenKarte() {   // 8.11. (wie Englisch 6): Mo–Fr-Zeile dieser Woche, Serie, Abzeichen
+    const mo = montag(new Date()), heuteIso = tagIso(new Date());
+    const woche = ["Lu", "Ma", "Me", "Je", "Ve"].map((name, i) => {
+      const d = plusTage(mo, i), frei = !istSchultag(d), ok = !!stand.tage[tagIso(d)];
+      return el("li", { class: (frei ? "frei" : ok ? "ok" : "") + (tagIso(d) === heuteIso ? " heute" : "") }, el("span", {}, name), el("b", {}, frei ? "–" : ok ? "🔥" : "○"));
+    });
+    const abz = [["🔥", "En feu", stand.feuer.length > 0], ["⭐", "Semaine parfaite", stand.wochen.length > 0], ["🏅", "5 × parfaite", stand.wochen.length >= 5],
+      ["👑", "Mois parfait", stand.gekauft.includes("rahmen_gold")], ["🏖️", "Héros du week-end", stand.bonusTage.some((t) => [0, 6].includes(new Date(t + "T12:00").getDay()))],
+      ["🌴", "Héros des vacances", stand.bonusTage.some((t) => ![0, 6].includes(new Date(t + "T12:00").getDay()))]];
+    const n = serie();
+    return el("section", { class: "satzkarte" },
+      el("h2", {}, "📅 Ta semaine"),
+      el("ul", { class: "wochenleiste" }, woche),
+      el("p", { class: "klein" }, `🔥 ${n} Schultag${n === 1 ? "" : "e"} am Stück · ⭐ ${stand.wochen.length} perfekte Woche${stand.wochen.length === 1 ? "" : "n"} · alle 3 Schultage ein neuer Held, jeden Schultag der Woche = ⭐ +100, vier perfekte Wochen hintereinander = 👑 +200 und goldener Rahmen. Ferien und Feiertage zählen nicht – deine Serie bleibt. Wochenende/Ferien üben = Bonus.`),
+      el("ul", { class: "abzeichen" }, abz.map(([sym, name, ok]) => el("li", { class: ok ? "ok" : "", title: name }, el("span", { "aria-hidden": "true" }, sym), el("small", { lang: "fr" }, name)))));
+  }
   function pantheon() {   // Hall of Fame (7.11.): Paris-Karte oben, dann Niveau 2 (Frankreich-Karte), Super-héros, Stars, Dialogues
     const frei = parisFrei();
     const fakt = el("section", { class: "karte paris-fakt", hidden: true });
@@ -1052,7 +1108,7 @@
     };
     const ort = (o) => { fakt.hidden = true; if (!parisFilm(o, () => faktZeigen(o))) faktZeigen(o); };
     zeige(kopf("🏛️ Panthéon", startseite, "Deine Hall of Fame: Paris, Super-héros, Stars und Dialogues."),
-      titelKarte(),
+      titelKarte(), wochenKarte(),
       el("h2", {}, "🗼 Paris"),
       el("p", { class: "klein" }, frei < D.paris.length ? `${frei}/${D.paris.length} Orte · ${restOrt()} · tipp auf einen Ort: kleiner Film, danach der Text.` : `Alle ${D.paris.length} Orte freigeschaltet – bravo !`),
       parisKarte(frei, ort),

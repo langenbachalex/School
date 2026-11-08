@@ -104,3 +104,7 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .f-meer { fill: #1a2438; } :root:not([data-theme="light"]) .f-region { fill: #2a3650; stroke: #1a2438; }
   :root:not([data-theme="light"]) .f-region.offen { fill: #2f5a3a; } :root:not([data-theme="light"]) .f-lupe { fill: #23304a; } :root:not([data-theme="light"]) .f-name { fill: #b8c0d0; } }
 .region-liste .chip.offen { opacity: 1; border-color: #e2384d; }
+/* 8.11.: goldener Rahmen (Mois parfait), Wochenleiste heute, Stimmwahl Parle de toi */
+.rahmen-gold { border-color: #d4a017 !important; box-shadow: 0 0 0 3px #f5d76e; }
+.wochenleiste li.heute { outline: 2px solid var(--blau, #1f5fd1); outline-offset: 2px; }
+.stimm-wahl { align-items: center; margin: 0 0 8px; }

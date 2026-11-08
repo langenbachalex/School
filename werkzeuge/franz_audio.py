@@ -16,7 +16,7 @@ STIMMEN = {"A": "8qnuneLiGjGrT4A62CCe",   # Jules – conversational
 EINSTELLUNG = {"stability": 0.5, "similarity_boost": 0.75}
 # Aussprache-Hilfen (7.11., Mr. Alex): stummes H bei „Hugo“ – sonst spricht die Stimme ein H
 SPRECH = {"hugo": "Victor Ugo", "ekitike": "Ugo Ekitiké", "t_hernandez": "Théo Ernandez", "l_hernandez": "Lucas Ernandez",
-          "metz": "Messe"}  # 8.11. gesammelt (Mr. Alex: „Mess“) – Datei erst beim nächsten Sammel-Durchgang löschen und neu erzeugen
+          "metz": "Messe"}  # 8.11. (Mr. Alex: „Mess“ [mɛs]) – neu vertont 8.11.
 TAGS = [(re.compile(r"^Ha ha"), "[laughs] Ha ha"), (re.compile(r"« La la la laaaa"), "[sings] « La la la laaaa"), (re.compile(r"^Chut"), "[whispers] Chut")]
 
 
@@ -41,8 +41,11 @@ def auftraege():
         yield z["wer"], text, fb.audio_name(z["wer"], z["fr"])
     # Lob und Rückmeldungen (8.11., Mr. Alex): inhalte/franz/lob.tsv, seine Stimme mit [French]; starke Sprüche begeistert, Spiel-Sprüche gespielt verzweifelt
     for z in fb.tsv("lob.tsv"):
-        tag = "[French] [excited] " if z["art"] in ("stark", "geschafft", "voll", "doch", "feuer3", "feuer6", "feuer9", "feuer", "wochenende", "ferien") else "[French] [exasperated] " if z["art"] == "spiel" else "[French] "
+        tag = "[French] [excited] " if z["art"] in ("stark", "geschafft", "voll", "doch", "feuer3", "feuer6", "feuer9", "feuer", "wochenende", "ferien", "woche", "monat") else "[French] [exasperated] " if z["art"] == "spiel" else "[French] "
         yield "alex", tag + z["text"], f"audio/lob/{z['id']}.mp3"
+    for wer in ("A", "B"):  # Parle de toi (8.11.): Satzstücke und Chips einzeln, Jules (A) und Cécile (B); die App spielt sie hintereinander
+        for x in fb.parle_stuecke():
+            yield wer, x, fb.parle_name(wer, x)
     for z in fb.tsv("namen.tsv"):
         yield "alex", "[French] " + SPRECH.get(z["id"], z["name"]) + ".", f"audio/namen/{z['id']}.mp3"  # 7.11. (Mr. Alex): Tag [French] erzwingt französische Aussprache (sonst z. B. „Kylian“ englisch)
     for z in fb.tsv("paris.tsv"):  # Paris-Karte: Text des Orts, Mr. Alex' Stimme (römische Zahl ausgeschrieben)

@@ -289,6 +289,7 @@
     let gesamt = 0;
     return liste.filter(Boolean).reduce((kette, x) => kette.then(() => new Promise((fertig) => {
       if (mein !== lauf) return fertig();
+      if (typeof x === "object" && (D.saetze || {})[x.tts]) x = D.saetze[x.tts];   // 8.11.: aufgenommener Satz statt Geräte-Stimme
       if (typeof x === "object") return geraet(x.tts).then((d) => { gesamt += d; setTimeout(fertig, 250); });
       const a = new Audio(x);
       aktuell = a; a.playbackRate = tempo(); a.preservesPitch = true;
@@ -299,6 +300,11 @@
   }
   const ton = (z) => z.audio || { tts: ohneKlammern(z.fr || z.name) };
   const warte = (s) => new Promise((r) => setTimeout(r, s * 1000));
+  // 8.11.: erst weiter, wenn das Lob (oder der Tadel) zu Ende gesprochen ist – sonst schneidet die nächste Seite es ab (zeige → stopp)
+  function nachRuf(fn, ms) {
+    const bis = Date.now() + ms + 5000;
+    setTimeout(function pruefe() { if (aktuell && !aktuell.paused && !aktuell.ended && Date.now() < bis) setTimeout(pruefe, 120); else fn(); }, ms);
+  }
   function klang(gut) { // kurzer Ton aus dem Browser (keine Stimme)
     try {
       const ac = klang.ac || (klang.ac = new (window.AudioContext || window.webkitAudioContext)());
@@ -850,7 +856,7 @@
           const gut = n === ziel;
           e.currentTarget.classList.add(gut ? "gold" : "falsch"); klang(gut);
           melde(box, gut ? "gut" : "hilfe", gut ? lob() : `${tadel(true)} Das war ${ziel.name}.`);
-          setTimeout(() => quiEstCe(runde + 1, richtig + (gut ? 1 : 0)), gut ? 900 : 2200);
+          nachRuf(() => quiEstCe(runde + 1, richtig + (gut ? 1 : 0)), gut ? 900 : 2200);
         } }, bild(n, 72), el("span", { lang: "fr" }, n.name)))), box));
     spiele([ton(ziel)]);
   }
@@ -1017,7 +1023,7 @@
     const andere = (feld) => mischen(D.helden.filter((x) => x.id !== h.id && x[feld])).slice(0, 2);
     const ort = ortVon(h), orte = mischen(D.paris.filter((o) => o.id !== h.ort)).slice(0, 2);
     const fragen = mischen([
-      { frage: `${h.name} sagt: « ${h.wendung} » – was bedeutet das?`, ton: { tts: h.wendung }, richtig: h.wendung_de, falsch: andere("wendung_de").map((x) => x.wendung_de), lang: "de" },
+      { frage: `${h.name} sagt: « ${h.wendung} » – was bedeutet das?`, ton: (D.heldSatz || {})[h.id] || { tts: h.wendung }, richtig: h.wendung_de, falsch: andere("wendung_de").map((x) => x.wendung_de), lang: "de" },
       { frage: `Welche Kraft hat ${h.name}? (Quel est son pouvoir ?)`, richtig: `${h.kraft} (${h.kraft_de})`, falsch: andere("kraft").map((x) => `${x.kraft} (${x.kraft_de})`), lang: "fr" },
       ort && { frage: `Wo ist ${h.name} in Paris zu Hause? (Où habite ${h.name.split(" ")[0]} ?)`, richtig: `${ort.symbol} ${ort.name}`, falsch: orte.map((o) => `${o.symbol} ${o.name}`), lang: "fr" },
     ].filter((f) => f && f.richtig && f.falsch.length === 2));
@@ -1028,7 +1034,7 @@
       let fertig = false;
       const wahl = (text, b) => {
         if (fertig) return;
-        if (text === f.richtig) { fertig = true; b.classList.add("richtig"); klang(true); melde(box, "gut", lob()); i++; setTimeout(frage, 900); }
+        if (text === f.richtig) { fertig = true; b.classList.add("richtig"); klang(true); melde(box, "gut", lob()); i++; nachRuf(frage, 900); }
         else { fehler++; b.classList.add("falsch"); b.disabled = true;  klang(false); melde(box, "hilfe", tadel(true)); }
       };
       zeige(kopf(`🦸 Défi · ${h.name}`, heldenSeite, `Frage ${i + 1}/${fragen.length} · ${karteZiel(h)}`),

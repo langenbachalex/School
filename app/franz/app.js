@@ -48,21 +48,71 @@
   }
   function tadel(imSpiel) { fehlerSerie++; richtigSerie = 0; return ruf(imSpiel && RUF.spiel && Math.random() < 0.3 ? "spiel" : "fehler"); }
 
-  /* ---------- Speicher ---------- */
+  /* ---------- Speicher (nur lokal) mit Schutz (8.11.2026, Mr. Alex: voller Schutz wie Englisch 6, docs/ideenspeicher.md „Schutz-Paket“) ----------
+     Siegel: der ganze Spielstand außer den Einstellungen trägt eine Prüfsumme. Wer den Speicher von Hand ändert, passt nicht mehr zum Siegel:
+     die App nimmt die Zweitkopie (-b) oder setzt Punkte und Fortschritt zurück (Einstellungen bleiben). Ein Hindernis, keine Festung.
+     Ältere, ungesiegelte Stände werden bis SIEGEL_BIS einmal übernommen (Altbestand), danach nur noch im Lehrer-Bereich. */
+  const EINSTELLUNGEN = ["lese", "tempo", "parleStimme", "rahmen"];
+  const SIEGEL_SALZ = "mrAlex·2026·fr·k8Vt", SIEGEL_V = 1, SIEGEL_BIS = Date.parse("2026-11-23");
+  function siegel(o) {
+    const t = SIEGEL_SALZ + JSON.stringify(Object.keys(o).filter((k) => k[0] !== "_" && !EINSTELLUNGEN.includes(k)).sort().map((k) => [k, o[k]]));
+    let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for (let i = 0; i < t.length; i++) { const c = t.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(36);
+  }
+  let manipuliert = false, altstandRoh = null, speicherLeer = false, altbestandNeu = false;
+  const lies = (key) => { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; } };
+  const echt = (o) => o && typeof o === "object" && o._s === siegel(o);
+  const GRUND = () => ({ punkte: 0, dialoge: {}, namen: {}, spiele: {}, paris: 1, helden: 0, lese: "einfach", tempo: 1 });
   function laden() {
-    let s = {};
-    try { s = JSON.parse(localStorage.getItem(SPEICHER)) || {}; } catch (e) { s = {}; }
-    return Object.assign({ punkte: 0, dialoge: {}, namen: {}, spiele: {}, paris: 1, helden: 0, lese: "einfach", tempo: 1 }, s);
+    const haupt = lies(SPEICHER), sicherung = lies(SPEICHER + "-b");
+    if (echt(haupt)) return Object.assign(GRUND(), haupt);
+    if (!haupt) speicherLeer = true;
+    if (!haupt || typeof haupt !== "object") return GRUND();
+    if (echt(sicherung)) { manipuliert = true; try { localStorage.setItem(SPEICHER, JSON.stringify(sicherung)); } catch (e) { /* egal */ } return Object.assign(GRUND(), sicherung); }
+    if (!haupt._s && Date.now() < SIEGEL_BIS) { altbestandNeu = true; return Object.assign(GRUND(), haupt); }   // älterer Stand: einmal übernehmen, ab jetzt gesiegelt
+    if (!haupt._s) altstandRoh = haupt;   // nach der Übergangszeit: nur im Lehrer-Bereich übernehmen
+    manipuliert = true;
+    const rest = GRUND(); EINSTELLUNGEN.forEach((k) => { if (haupt[k] != null) rest[k] = haupt[k]; });
+    return rest;
   }
   const stand = laden();
   /* Punkte, Coins, Titel (7.11., wie Englisch 6): 1 🪙 je 2 ⭐ (aufgerundet), Coins sinken nur in der Boutique; Titel-Stufen aus D.titel.
      Ältere Stände: Coins einmalig rückwirkend aus den Punkten (der Paris Run war vorher frei), Titel still auf die passende Stufe. */
+  /* Ereignisprotokoll: die letzten 500 Ereignisse [Minute, Art, Punkte] im Siegel. Arten: u Übung (Dialog-Schritt, Name) · m Spiel ·
+     e Dialog fertig · bw/bf/bs/bq/bm Boni (Wochenende, Ferien, Serie, Woche, Monat) · k Kauf (Coins) · w Warnung · r Startwert (Lehrer) ·
+     a Altbestand · x Stichprobe (±1, keine Punkte). Übungspunkte (u, m) zählen zum Wächter, Boni nie. */
+  const PROTOKOLL_MAX = 500;
+  function minuten() { return Math.floor(Date.now() / 60000); }
+  const protokollSumme = (pl) => pl.reduce((s, e) => (e[1] === "r" || e[1] === "a" ? e[2] : e[1] === "k" || e[1] === "w" || e[1] === "x" ? s : s + Math.max(0, e[2])), 0);
+  function protokolliere(art, p) {
+    const pl = (stand.protokoll = Array.isArray(stand.protokoll) ? stand.protokoll : []);
+    pl.push([minuten(), art, Math.round(p)]);
+    if (pl.length > PROTOKOLL_MAX) { const weg = pl.splice(0, pl.length - PROTOKOLL_MAX + 1); pl.unshift([weg[weg.length - 1][0], "r", protokollSumme(weg)]); }
+  }
+  if (!Array.isArray(stand.protokoll)) {
+    let schonMal = false;
+    try { schonMal = !!localStorage.getItem(SPEICHER + "-p"); } catch (e) { /* egal */ }
+    stand.protokoll = stand.punkte > 0 || altbestandNeu ? [[minuten(), "a", stand.punkte || 0, schonMal ? 1 : 0]] : [];
+  }
+  const warnZaehlerLies = () => lies(SPEICHER + "-w") || { n: 0, g: 0, t: 0 };   // zweiter Zähler, nur steigend, außerhalb des Spielstands
+  function warnZaehlerHoch(sperre) { const w = warnZaehlerLies(); try { localStorage.setItem(SPEICHER + "-w", JSON.stringify({ n: (w.n || 0) + 1, g: (w.g || 0) + (sperre ? 1 : 0), t: Date.now() })); } catch (e) { /* egal */ } }
   function titelIndex(p) { return (D.titel || []).reduce((i, t, k) => (p >= t.ab ? k : i), 0); }
   if (!(stand.coins >= 0)) { stand.coins = Math.ceil(stand.punkte / 2); stand.ausgegeben = 0; }
   if (!(stand.titel >= 0)) stand.titel = titelIndex(stand.punkte);
   if (!Array.isArray(stand.gekauft)) stand.gekauft = [];
   speichern();
-  function speichern() { try { localStorage.setItem(SPEICHER, JSON.stringify(stand)); } catch (e) { /* privater Modus: nur für diese Sitzung */ } }
+  function speichern() {
+    try {
+      stand._v = SIEGEL_V; stand._s = siegel(stand);
+      const neu = JSON.stringify(stand);
+      localStorage.setItem(SPEICHER + "-b", neu);   // Zweitkopie: wer nur den Hauptspeicher ändert, bekommt den letzten echten Stand zurück
+      localStorage.setItem(SPEICHER, neu);
+      if (!localStorage.getItem(SPEICHER + "-p")) localStorage.setItem(SPEICHER + "-p", String(minuten()));   // ab jetzt gibt es hier ein Protokoll
+    } catch (e) { /* privater Modus: nur für diese Sitzung */ }
+  }
   const heute = () => new Date().toISOString().slice(0, 10);
 
   /* ---------- Hilfen ---------- */
@@ -76,7 +126,11 @@
     for (const k of kinder.flat(Infinity)) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
     return e;
   }
-  const knopf = (text, fn, art) => el("button", { type: "button", class: "knopf" + (art ? " " + art : ""), onclick: fn }, text);
+  // Sperren gelten im Programm, nicht nur am Knopf: wer im Browser „disabled“ entfernt, kommt trotzdem nicht weiter (GESPERRT ist von außen nicht erreichbar)
+  const GESPERRT = new WeakSet();
+  const sperrt = (k) => { GESPERRT.add(k); k.disabled = true; return k; };
+  const entsperrt = (k) => { GESPERRT.delete(k); k.disabled = false; return k; };
+  const knopf = (text, fn, art) => el("button", { type: "button", class: "knopf" + (art ? " " + art : ""), onclick: (e) => { if (GESPERRT.has(e.currentTarget)) return; fn(e); } }, text);
   function zeige(...inhalt) { stopp(); app.replaceChildren(...inhalt.flat(Infinity).filter(Boolean)); window.scrollTo(0, 0); }
   function mischen(liste) {
     const a = liste.slice();
@@ -91,9 +145,11 @@
     setTimeout(() => t.classList.add("weg"), 2200);
     setTimeout(() => t.remove(), 2800);
   }
-  function punkte(plus, grund) {
+  function punkte(plus, grund, art = "u") {
     const muenzen = Math.ceil(plus / 2);
     stand.punkte += plus; stand.coins += muenzen;
+    protokolliere(art, plus);
+    if (art === "u" || art === "m") mrAlexWacht(plus);
     const t = titelIndex(stand.punkte), neuerTitel = t > stand.titel;
     if (neuerTitel) stand.titel = t;
     speichern();
@@ -153,26 +209,32 @@
     const ersterDesTages = geuebt && !stand.tage[tag];
     if (geuebt) stand.tage[tag] = 1;   // Übungstag = an diesem Tag Punkte bekommen
     const meldungen = [];
-    const bonus = (plus) => { stand.punkte += plus; stand.coins += Math.ceil(plus / 2); };
+    const bonus = (plus, art) => { stand.punkte += plus; stand.coins += Math.ceil(plus / 2); protokolliere(art, plus); };
     if (ersterDesTages) {
       if (!istSchultag(jetzt)) {   // Wochenende/Ferien: Bonus, keine Pflicht (Serie läuft weiter)
         const we = jetzt.getDay() === 0 || jetzt.getDay() === 6;
-        stand.bonusTage.push(tag); bonus(20); meldungen.push(`${we ? "🏖️" : "🌴"} ${ruf(we ? "wochenende" : "ferien")} +20 ⭐`);
+        stand.bonusTage.push(tag); bonus(20, we ? "bw" : "bf"); meldungen.push(`${we ? "🏖️" : "🌴"} ${ruf(we ? "wochenende" : "ferien")} +20 ⭐`);
       } else {
         const n = serie();
         if (n >= 3 && n % 3 === 0 && !stand.feuer.includes(tag)) {   // 🔥 3, 6, 9 … Schultage am Stück: Extra-Lob, +30 ⭐, neuer Superheld
-          stand.feuer.push(tag); bonus(30);
+          stand.feuer.push(tag); bonus(30, "bs");
           meldungen.push(`🔥 ${ruf(n === 3 ? "feuer3" : n === 6 ? "feuer6" : n === 9 ? "feuer9" : "feuer")} ${n} jours de suite · +30 ⭐`);
           if (stand.frei.held < N_HELDEN && stand.freiTag.held !== tag) { stand.frei.held++; stand.freiTag.held = tag; meldungen.push(`🦸 Nouveau super-héros : ${D.helden[stand.frei.held - 1].name} !`); }
+        }
+        // 🥇 Goldene Heldenkarte (8.11., Idee Mr. Alex): 10, 20, 30 … Schultage am Stück → eine gesammelte Heldenkarte wird Gold (die mit der höchsten Stufe zuerst)
+        if (n >= 10 && n % 10 === 0 && !(stand.goldTage || []).includes(tag)) {
+          const kandidaten = D.helden.slice(0, Math.min(N_HELDEN, stand.frei.held)).filter((h) => karteVon(h.id).s < 3).sort((a, b) => karteVon(b.id).s - karteVon(a.id).s);
+          (stand.goldTage = stand.goldTage || []).push(tag);
+          if (kandidaten.length) { const k = karteVon(kandidaten[0].id); k.s = 3; k.m = 0; k.d = tag; meldungen.push(`🥇 ${n} jours de suite ! Carte en or : ${kandidaten[0].name} !`); }
         }
         // ⭐ Perfect week (8.11., wie Englisch 6): jeden Schultag der Woche geübt → +100 ⭐; 👑 4 perfekte Wochen hintereinander → +200 ⭐ und goldener Rahmen
         const mo = montag(jetzt);
         if (schultageDerWoche(mo).every((x) => stand.tage[tagIso(x)]) && !stand.wochen.includes(tagIso(mo))) {
-          stand.wochen.push(tagIso(mo)); bonus(100);
+          stand.wochen.push(tagIso(mo)); bonus(100, "bq");
           meldungen.push(`⭐ ${ruf("woche")} Semaine parfaite · +100 ⭐`);
           const ws = wochenSerie(mo);
           if (ws >= 4 && ws % 4 === 0) {
-            bonus(200);
+            bonus(200, "bm");
             if (!stand.gekauft.includes("rahmen_gold")) { stand.gekauft.push("rahmen_gold"); stand.rahmen = "gold"; }
             meldungen.push(`👑 ${ruf("monat")} Mois parfait · +200 ⭐ · goldener Rahmen`);
           }
@@ -314,7 +376,7 @@
     if (ds[nr]) return;
     ds[nr] = heute(); speichern();
     punkte(10, `${SCHRITTE[nr - 1].name} geschafft!`);
-    if (schritteFertig(d) === SCHRITTE.length) setTimeout(() => punkte(20, `🏅 „${d.titel}“ im Panthéon!`), 900);
+    if (schritteFertig(d) === SCHRITTE.length) setTimeout(() => punkte(20, `🏅 „${d.titel}“ im Panthéon!`, "e"), 900);
   }
   const weiterLeiste = (d, nr) => el("div", { class: "knopfreihe" },
     nr < SCHRITTE.length && knopf(`Weiter: ${SCHRITTE[nr].sym} ${SCHRITTE[nr].name} ➜`, () => schritt(d, nr + 1), "haupt"),
@@ -435,11 +497,11 @@
       else if (runde + 1 < ANTEIL.length) { toast(`Runde ${runde + 2}: mehr Lücken!`); wachsend(d, runde + 1, 0); }
       else { schrittFertig(d, 4); dialogSeite(d); }
     }, "haupt");
-    weiter.disabled = true;
+    sperrt(weiter);
     // Ablenker: in Runde 1 und 2 zwei Wörter aus anderen Zeilen dazu, damit es nicht zu leicht wird
     const fremd = runde < 2 ? mischen([...new Set(d.zeilen.filter((x) => x !== z).flatMap((x) => woerter(ohneKlammern(x.fr)).map((w) => w.wort)))]).slice(0, 2) : [];
     const kasten = wortkasten(ls.luecken, {
-      richtig: (l, ende) => { if (ende) { melde(box, "gut", lob()); spiele([ton(z)]); weiter.disabled = false; weiter.focus(); } },
+      richtig: (l, ende) => { if (ende) { melde(box, "gut", lob()); spiele([ton(z)]); entsperrt(weiter); weiter.focus(); } },
       falsch: () => melde(box, "hilfe", tadel())
     }, fremd);
     zeige(kopf(d.titel, () => dialogSeite(d), "4. Wachsend – jede Runde mehr Lücken."),
@@ -533,9 +595,9 @@
     const n = l[i], du = jetztDu(stufe === 1 ? "À toi ! Sprich nach." : "Sag den Namen zuerst selbst!");
     const weiter = knopf(i + 1 < l.length ? "Weiter ➜" : "Fertig ✓", () => (i + 1 < l.length ? namenKarte(l, i + 1, stufe) : namenGruppe(n.gruppe, stufe)), "haupt");
     const kontrolle = knopf("🔊 Kontrolle", () => spiele([ton(n)]).then(geschafft));
-    weiter.disabled = true; kontrolle.hidden = stufe === 1;
+    sperrt(weiter); kontrolle.hidden = stufe === 1;
     function geschafft() {
-      weiter.disabled = false;
+      entsperrt(weiter);
       if (namenStufe(n) < stufe) { stand.namen[n.id] = stufe; speichern(); punkte(2, stufe === 2 ? `${n.name} ohne Vorbild!` : `${n.name} 🏛️`); }
     }
     zeige(kopf(D.gruppen[n.gruppe], () => namenGruppe(n.gruppe, stufe), `Niveau ${stufe} · ${i + 1}/${l.length}`),
@@ -667,7 +729,7 @@
   /* ---------- 🎮 Jeux ---------- */
   function spielPunkte(spiel) {
     if (stand.spiele[spiel] === heute()) return "";
-    stand.spiele[spiel] = heute(); speichern(); punkte(10, "Spiel geschafft!");
+    stand.spiele[spiel] = heute(); speichern(); punkte(10, "Spiel geschafft!", "m");
     return " +10 ⭐";
   }
   function jeux() {
@@ -685,7 +747,7 @@
   const ticketPreis = () => ((D.boutique || []).find((a) => a.ticket) || { preis: 150 }).preis;
   function kaufe(a, zurueck) {
     if (stand.coins < a.preis) { toast(`Il te manque ${a.preis - stand.coins} 🪙 – dir fehlen noch ${a.preis - stand.coins} Coins.`); return false; }
-    stand.coins -= a.preis; stand.ausgegeben = (stand.ausgegeben || 0) + a.preis;
+    stand.coins -= a.preis; protokolliere("k", -a.preis); stand.ausgegeben = (stand.ausgegeben || 0) + a.preis;
     if (a.ticket) runStand().tickets = (runStand().tickets || 0) + 1;
     else { if (!stand.gekauft.includes(a.id)) stand.gekauft.push(a.id); if (a.rahmen) stand.rahmen = a.rahmen; }
     speichern(); toast(`${a.symbol} Merci ! −${a.preis} 🪙`); klang(true);
@@ -1133,6 +1195,221 @@
           el("span", { class: "medaille", "aria-hidden": "true" }, n === SCHRITTE.length ? "🏅" : n ? "💬" : "🔒"), el("span", { lang: "fr" }, d.titel), el("small", {}, `${n}/${SCHRITTE.length}`));
       })));
   }
+
+  /* ---------- Schutz (8.11.2026, Mr. Alex: voller Schutz wie Englisch 6) ----------
+     Wächter „Mr. Alex is watching you“: mehr als 200 Übungspunkte in 10 Minuten → App gesperrt, bis Mr. Alex sie mit seiner Lehrer-PIN freischaltet.
+     Die Punkte bleiben. Sperre, Log und Warnungen stecken im Spielstand (Siegel) – Neuladen hebt die Sperre nicht auf. */
+  const WACHE = { fenster: 10 * 60000, grenze: 200 };
+  function mrAlexWacht(basis) {
+    const w = (stand.wache = stand.wache || {}), jetzt = Date.now();
+    w.log = (Array.isArray(w.log) ? w.log : []).filter((e) => Array.isArray(e) && e[0] <= jetzt && jetzt - e[0] < WACHE.fenster);
+    w.log.push([jetzt, basis]);
+    const summe = w.log.reduce((a, e) => a + e[1], 0);
+    if (summe > WACHE.grenze) {
+      w.gesperrt = jetzt; w.log = [];
+      (w.warnungen = Array.isArray(w.warnungen) ? w.warnungen : []).push(new Date(jetzt).toISOString());
+      warnZaehlerHoch(true); protokolliere("w", summe);
+      setTimeout(sperreZeigen, 900);
+    }
+  }
+  const gesperrt = () => !!(stand.wache && stand.wache.gesperrt);
+  /* Plausibilitätsprüfung: nur Markierungen für den Lehrer-Bereich, nie eine Sperre, nie geänderte Punkte.
+     summe = mehr Punkte als Startwert + Protokoll · datum = Tagesbonus doppelt · dichte = Übungspunkte über der Grenze ohne Warnung ·
+     zeit = Zeitsprung zurück / Zukunft · protokoll = Warnzähler höher als gespeicherte Warnungen · altbestand = Altbestand trotz Protokoll */
+  function plausibilitaet() {
+    const pl = Array.isArray(stand.protokoll) ? stand.protokoll : [], marker = [], w = warnZaehlerLies(), warnungen = (stand.wache && stand.wache.warnungen) || [];
+    let seit = null;
+    const merke = (m, t) => { if (!marker.includes(m)) marker.push(m); if (t != null && (seit == null || t < seit)) seit = t; };
+    if ((stand.punkte || 0) > protokollSumme(pl)) merke("summe", pl.length ? pl[pl.length - 1][0] : null);
+    const tage = new Set();
+    for (const e of pl) if (typeof e[1] === "string" && e[1][0] === "b") { const k = e[1] + "|" + tagIso(new Date(e[0] * 60000)); if (tage.has(k)) merke("datum", e[0]); tage.add(k); }
+    const ue = pl.filter((e) => e[1] === "u" || e[1] === "m"), warn = pl.filter((e) => e[1] === "w").map((e) => e[0]);
+    for (let i = 0; i < ue.length; i++) {
+      let s = 0;
+      for (let j = i; j < ue.length && ue[j][0] - ue[i][0] <= WACHE.fenster / 60000 - 1; j++) {
+        s += ue[j][2];
+        if (s > WACHE.grenze && !warn.some((t) => t >= ue[i][0] && t <= ue[j][0] + 1)) { merke("dichte", ue[i][0]); break; }
+      }
+    }
+    for (let i = 1; i < pl.length; i++) if (pl[i][0] < pl[i - 1][0] - 1440) merke("zeit", pl[i][0]);
+    if (pl.length && pl[pl.length - 1][0] > minuten() + 1440) merke("zeit", pl[pl.length - 1][0]);
+    for (const e of pl) if (e[1] === "a" && e[3]) merke("altbestand", e[0]);
+    let hinweis = "";
+    if ((w.n || 0) > warnungen.length) { if (speicherLeer) hinweis = "Speicher geleert"; else { merke("protokoll", w.t ? Math.floor(w.t / 60000) : null); hinweis = "protokoll"; } }
+    return { altbestand: pl.some((e) => e[1] === "a"), marker, seit, hinweis };
+  }
+  const sperreDialog = el("dialog", { class: "feier frage sperre" });
+  sperreDialog.addEventListener("cancel", (e) => e.preventDefault());
+  document.body.append(sperreDialog);
+  function sperreZeigen() {
+    if (!gesperrt()) return;
+    stopp();
+    sperreDialog.replaceChildren(el("div", { class: "feier-symbol", "aria-hidden": "true" }, "👀"),
+      el("h2", { lang: "fr" }, "Mr. Alex te surveille !"),
+      el("p", { class: "sperre-gross", lang: "fr" }, "Tu es génial … ou tu triches ? 😉"),
+      el("p", {}, "Du hast in sehr kurzer Zeit sehr viele Punkte gesammelt. Deine Punkte bleiben. Zeig die App Mr. Alex – er schaltet sie mit seiner PIN wieder frei."),
+      el("div", { class: "knopfreihe" }, knopf("👩‍🏫 Lehrer-PIN", () => { sperreDialog.close(); lehrerStart(); }, "haupt")));
+    if (!sperreDialog.open) sperreDialog.showModal();
+  }
+
+  // Lehrer-Bereich: 3 Sekunden auf den App-Titel drücken → Lehrer-PIN (dieselbe wie Englisch 6; im Code nur ein langsamer Prüfwert, PBKDF2-SHA-256)
+  // → Punkte/Coins ändern, Sperre aufheben, Stichprobe, Altstand übernehmen. Nach 3 falschen Versuchen 10 Minuten Pause.
+  const LEHRER = { runden: 150000, ziel: "header.gruss h1", salz: "196404a92f6b78cd4a4b22eba8c631f9", pruef: "3911b26ed4164fe1166e1f0dac313c943903e6d606ce04603e1a871702c8d619" };
+  async function lehrerPinOk(pin) {
+    try {
+      const bytes = new Uint8Array(LEHRER.salz.match(/../g).map((b) => parseInt(b, 16)));
+      const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(pin), "PBKDF2", false, ["deriveBits"]);
+      const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: bytes, iterations: LEHRER.runden }, k, 256);
+      return Array.from(new Uint8Array(bits), (b) => b.toString(16).padStart(2, "0")).join("") === LEHRER.pruef;
+    } catch (e) { return false; }
+  }
+  const lehrerDialog = el("dialog", { class: "feier frage lehrer" });
+  document.body.append(lehrerDialog);
+  const lehrerZu = () => { lehrerDialog.close(); if (gesperrt()) setTimeout(sperreZeigen, 50); };
+  const lehrerFenster = (...inhalt) => { lehrerDialog.replaceChildren(...inhalt.flat().filter(Boolean)); if (!lehrerDialog.open) lehrerDialog.showModal(); };
+  const lehrerLies = () => lies(SPEICHER + "-l") || {};
+  const lehrerSchreib = (o) => { try { localStorage.setItem(SPEICHER + "-l", JSON.stringify(o)); } catch (e) { /* egal */ } };
+  function lehrerStart() {
+    const sp = lehrerLies();
+    if (sp.bis && Date.now() < sp.bis) {
+      lehrerFenster(el("h2", {}, "👩‍🏫 Lehrer-Bereich"), el("p", {}, `🔒 Zu viele falsche Versuche. Bitte in ${Math.ceil((sp.bis - Date.now()) / 60000)} Minuten noch einmal.`),
+        el("div", { class: "knopfreihe" }, knopf("OK", lehrerZu, "haupt")));
+      return;
+    }
+    const feld = el("input", { type: "password", inputmode: "numeric", autocomplete: "off", maxlength: "10", minlength: "6", class: "lehrer-pin", "aria-label": "Lehrer-PIN" });
+    const info = el("p", { class: "klein lehrer-info" }, "");
+    let laeuft = false;
+    const pruefen = async () => {
+      if (laeuft) return;
+      const pin = feld.value.trim();
+      if (!/^\d{6,10}$/.test(pin)) { info.textContent = "Die PIN hat 6 bis 10 Stellen."; feld.focus(); return; }
+      laeuft = true; info.textContent = "Prüfe …";
+      const ok = await lehrerPinOk(pin);
+      laeuft = false;
+      if (ok) { lehrerSchreib({}); lehrerBereich(); return; }
+      const s = lehrerLies(), n = (s.n || 0) + 1;
+      lehrerSchreib(n >= 3 ? { n: 0, bis: Date.now() + 10 * 60000 } : { n });
+      if (n >= 3) { lehrerStart(); return; }
+      info.textContent = `Falsche PIN (${n} von 3).`; feld.value = ""; feld.focus();
+    };
+    feld.addEventListener("keydown", (e) => { if (e.key === "Enter") pruefen(); });
+    lehrerFenster(el("h2", {}, "👩‍🏫 Lehrer-Bereich"), el("p", {}, "Lehrer-PIN eingeben:"), feld, info,
+      el("div", { class: "knopfreihe" }, knopf("Weiter", pruefen, "haupt"), knopf("Abbrechen", lehrerZu, "leise")));
+    feld.focus();
+  }
+  const zwei = (n) => String(n).padStart(2, "0");
+  const zeitText = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; };
+  function lehrerBereich() {
+    const zahl = (wert, name) => el("input", { type: "number", min: "0", step: "1", inputmode: "numeric", value: String(wert), "aria-label": name, class: "lehrer-zahl" });
+    const p = zahl(stand.punkte, "Punkte"), c = zahl(stand.coins, "Coins");
+    const zeile = (text, feld) => el("label", { class: "lehrer-zeile" }, el("span", {}, text), feld);
+    const warnungen = ((stand.wache && stand.wache.warnungen) || []).slice(-8).reverse().map((t) => zeitText(Date.parse(t) / 60000));
+    const pr = plausibilitaet(), w = warnZaehlerLies(), pl = Array.isArray(stand.protokoll) ? stand.protokoll : [];
+    const ARTEN = { u: "Übung", m: "Spiel", e: "Dialog fertig", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage" };
+    const letzte = pl.slice(-10).reverse().map((e) => el("li", {}, e[1] === "x" ? `${zeitText(e[0])} · Abfrage · ${e[2] > 0 ? "👍" : "👎"}`
+      : `${zeitText(e[0])} · ${ARTEN[e[1]] || e[1]} · ${e[2] > 0 && e[1] !== "r" && e[1] !== "a" ? "+" : ""}${e[2]}${e[1] === "k" ? " 🪙" : ""}`));
+    const abfragen = pl.filter((e) => e[1] === "x"), hoch = abfragen.filter((e) => e[2] > 0).length;
+    const abfrageZeile = el("p", { class: "klein lehrer-abfragen" }, abfragen.length ? `🎲 Abfragen: ${hoch} 👍 / ${abfragen.length - hoch} 👎 (letzte ${zeitText(abfragen[abfragen.length - 1][0])})` : "🎲 Abfragen: noch keine Stichprobe.");
+    const stichprobe = el("div", { class: "lehrer-stichprobe" },
+      el("p", { class: "klein" }, `🔎 Stichprobe: ⭐ ${stand.punkte} · 🪙 ${stand.coins} · Protokoll-Summe ${protokollSumme(pl)} (${pl.length} Einträge) · Warnungen ${((stand.wache && stand.wache.warnungen) || []).length} (Zähler ${w.n || 0})`),
+      el("p", { class: "klein lehrer-marker" + (pr.marker.length ? " auffaellig" : "") }, (pr.altbestand ? "Altbestand (Stand von vor dem Protokoll). " : "")
+        + (pr.marker.length ? `Marker: ${pr.marker.join(", ")}` + (pr.seit ? ` (seit ${zeitText(pr.seit)})` : "") : "Keine Auffälligkeiten.") + (pr.hinweis ? ` · Hinweis: ${pr.hinweis}` : "")),
+      abfrageZeile, letzte.length ? el("ul", { class: "lehrer-liste" }, letzte) : null);
+    const sichern = () => {
+      const np = Math.max(0, Math.floor(Number(p.value) || 0)), nc = Math.max(0, Math.floor(Number(c.value) || 0));
+      stand.punkte = np; stand.coins = nc; stand.titel = titelIndex(np);
+      if (stand.wache) { delete stand.wache.gesperrt; stand.wache.log = []; }   // Speichern schaltet die App wieder frei
+      protokolliere("r", np); speichern(); lehrerZu();
+      toast(`👩‍🏫 Gespeichert: ⭐ ${np} · 🪙 ${nc}`);
+      if (!beschaeftigt()) startseite();
+    };
+    lehrerFenster(el("h2", {}, "👩‍🏫 Spielstand ändern"),
+      el("p", { class: "klein" }, "Gilt nur für dieses Gerät. Dialoge, Namen, Karten, Käufe und Einstellungen bleiben."),
+      zeile("⭐ Punkte", p), zeile("🪙 Coins", c),
+      el("p", { class: "klein lehrer-wache" }, warnungen.length ? `👀 Warnungen „Mr. Alex te surveille“ (${warnungen.length}): ${warnungen.join(" · ")}` : "👀 Keine Warnungen."),
+      gesperrt() && el("p", { class: "lehrer-sperre" }, "🔒 Die App ist gesperrt (zu viele Punkte in zu kurzer Zeit). „Speichern“ schaltet sie wieder frei – die Punkte oben kannst du vorher anpassen."),
+      manipuliert && el("p", { class: "lehrer-sperre" }, "⚠️ Beim Start passte der Spielstand nicht zum Siegel (von Hand geändert?) – die App hat die Sicherung genommen oder zurückgesetzt."),
+      stichprobe,
+      el("div", { class: "knopfreihe" }, knopf("🎲 Stichprobe", () => stichprobeStart(abfrageZeile), "leise"), knopf("Coins auf 0", () => { c.value = "0"; }, "leise"), knopf("Punkte auf 0", () => { p.value = "0"; }, "leise"),
+        altstandRoh && knopf("Alten Stand übernehmen", altstandUebernehmen, "leise")),
+      el("div", { class: "knopfreihe" }, knopf("Speichern", sichern, "haupt"), knopf("Abbrechen", lehrerZu, "leise")));
+  }
+  function altstandUebernehmen() {
+    if (!altstandRoh || typeof altstandRoh !== "object") return;
+    Object.assign(stand, altstandRoh); delete stand._s; delete stand._v;
+    stand.protokoll = [[minuten(), "a", stand.punkte || 0]];
+    altstandRoh = null; speichern(); lehrerZu(); location.reload();
+  }
+  /* 🎲 Stichprobe (wie Englisch 6): 3–5 Aufgaben aus dem, was der Schüler schon gemacht hat – Dialogzeile (deutsch → französisch sagen)
+     oder Name aus Prononciation (aussprechen). Lösung erst auf Tipp (mit Ton), Lehrer bewertet 👍/👎 → Protokoll „x“ (±1, keine Punkte). */
+  const stichprobeDialog = el("dialog", { class: "feier frage stichprobe" });
+  stichprobeDialog.addEventListener("cancel", (e) => e.preventDefault());
+  document.body.append(stichprobeDialog);
+  function stichprobeZiehen() {
+    const zeilen = D.dialoge.filter((d) => Object.keys(dialogStand(d)).length).flatMap((d) => d.zeilen.filter((z) => z.de && z.fr).map((z) => ({ frage: `Sag auf Französisch: „${z.de}“`, loesung: ohneKlammern(z.fr), ton: ton(z) })));
+    const namen = D.namen.filter((n) => namenStufe(n) >= 1).map((n) => ({ frage: `Sprich französisch aus: ${n.name}`, loesung: n.name, ton: ton(n) }));
+    const a = mischen(zeilen).slice(0, 3), b = mischen(namen).slice(0, 2);
+    return mischen([...a, ...b]).slice(0, Math.max(3, Math.min(5, a.length + b.length)));
+  }
+  function stichprobeStart(zeile) {
+    const liste = stichprobeZiehen();
+    if (liste.length < 1) { zeile.textContent = "🎲 Noch nichts zum Abfragen (keine Dialoge oder Namen geübt)."; return; }
+    lehrerDialog.close();
+    let i = 0, hoch = 0;
+    const zeigeAufgabe = () => {
+      if (i >= liste.length) { speichern(); stichprobeDialog.close(); toast(`🎲 Stichprobe: ${hoch} 👍 / ${liste.length - hoch} 👎`); lehrerBereich(); return; }
+      const q = liste[i], loesung = el("p", { class: "gross-fr", lang: "fr", hidden: true }, q.loesung);
+      const bewerten = (gut) => { protokolliere("x", gut ? 1 : -1); if (gut) hoch++; i++; zeigeAufgabe(); };
+      const urteil = el("div", { class: "knopfreihe", hidden: true }, knopf("👍", () => bewerten(true), "haupt"), knopf("👎", () => bewerten(false), "leise"));
+      stichprobeDialog.replaceChildren(el("p", { class: "klein" }, `🎲 Aufgabe ${i + 1} von ${liste.length}`), el("h2", {}, q.frage), loesung,
+        el("div", { class: "knopfreihe" }, knopf("Lösung zeigen", () => { loesung.hidden = false; urteil.hidden = false; spiele([q.ton]); }, "leise"), knopf("✕", () => { stichprobeDialog.close(); speichern(); lehrerBereich(); }, "leise")), urteil);
+      if (!stichprobeDialog.open) stichprobeDialog.showModal();
+    };
+    zeigeAufgabe();
+  }
+  let lehrerUhr = null;
+  document.addEventListener("pointerdown", (e) => { if (!(e.target && e.target.closest && e.target.closest(LEHRER.ziel))) return; clearTimeout(lehrerUhr); lehrerUhr = setTimeout(lehrerStart, 3000); });
+  for (const art of ["pointerup", "pointercancel", "scroll"]) document.addEventListener(art, () => clearTimeout(lehrerUhr), true);
+  document.addEventListener("contextmenu", (e) => { if (e.target && e.target.closest && e.target.closest(LEHRER.ziel)) e.preventDefault(); });
+
+  /* ---------- Updates (8.11., wie Englisch 6) ----------
+     Die App sucht beim Start, beim Zurückkommen und alle 15 Minuten nach einer neuen Version. Während einer Übung (oder im Paris Run) erscheint der
+     Hinweis erst danach; sonst ein Pop-up „Jetzt aktualisieren“, das man nicht wegdrücken kann. War die App länger als 1 Stunde offen, lädt sie beim
+     Zurückkommen neu (wenn gerade keine Übung läuft). Direkt nach dem Start wird eine neue Version ohne Pop-up geladen. */
+  const GELADEN = Date.now(), STUNDE = 3600 * 1000;
+  const beschaeftigt = () => !!app.querySelector(".rueckmeldung, .runner-buehne, .jetztdu") || stichprobeDialog.open || lehrerDialog.open;
+  let neueVersion = false, updateGezeigt = false;
+  const updateDialog = el("dialog", { class: "feier frage update" });
+  updateDialog.addEventListener("cancel", (e) => e.preventDefault());
+  document.body.append(updateDialog);
+  function updateHinweis() {
+    if (!neueVersion || updateGezeigt || beschaeftigt()) return;
+    updateGezeigt = true;
+    updateDialog.replaceChildren(el("div", { class: "feier-symbol", "aria-hidden": "true" }, "🔄"), el("h2", { lang: "fr" }, "Nouvelle version !"),
+      el("p", {}, "Es gibt eine neue Version der App. Dein Fortschritt ist gespeichert. Tippe auf „Jetzt aktualisieren“."),
+      el("div", { class: "knopfreihe" }, knopf("🔄 Jetzt aktualisieren", () => location.reload(), "haupt")));
+    if (sperreDialog.open) sperreDialog.close();
+    updateDialog.showModal();
+  }
+  setInterval(updateHinweis, 3000);
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    let hatteVersion = !!navigator.serviceWorker.controller, swReg = null, neuGeladen = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!hatteVersion) { hatteVersion = true; return; }   // allererste Installation: nichts zu tun
+      if (Date.now() - GELADEN < 8000 && !beschaeftigt()) { if (!neuGeladen) { neuGeladen = true; location.reload(); } return; }
+      neueVersion = true; updateHinweis();
+    });
+    navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then((r) => { swReg = r; return r.update(); }).catch(() => { /* ohne Offline-Speicher geht es trotzdem */ });
+    const suchen = () => { if (swReg && navigator.onLine !== false) swReg.update().catch(() => { /* offline: später */ }); };
+    setInterval(() => { if (document.visibilityState === "visible") suchen(); }, 15 * 60 * 1000);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState !== "visible") return;
+      if (Date.now() - GELADEN > STUNDE && !beschaeftigt()) { location.reload(); return; }
+      suchen();
+    });
+  }
+  if (manipuliert) setTimeout(() => toast("⚠️ Dein Spielstand war verändert – die App hat den letzten echten Stand genommen."), 800);
+  setTimeout(sperreZeigen, 300);   // gesperrt geblieben (auch nach Neuladen)
 
   leiste();
   startseite();

@@ -202,7 +202,7 @@ def main():
     for g in (180, 192, 512):
         icon(g, os.path.join(APP, "icons", f"icon-{g}.png"))
     # Offline-Speicher: alle Dateien der App, Version = Prüfsumme
-    dateien, h = ["./", "../style.css", "../london-run.css", "../runner.js"], hashlib.sha1()  # style.css und die Runner-Engine (Paris-Szenen) teilt sich die App mit Englisch Klasse 6
+    dateien, h = ["./", "../style.css", "../london-run.css", "../runner.js", "../schriften/TwemojiCountryFlags.woff2"], hashlib.sha1()  # style.css und die Runner-Engine (Paris-Szenen) teilt sich die App mit Englisch Klasse 6
     for wurzel, _, namen_ in os.walk(APP):
         for n in sorted(namen_):
             rel = os.path.relpath(os.path.join(wurzel, n), APP).replace(os.sep, "/")

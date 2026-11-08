@@ -410,6 +410,9 @@ def main():
         f.write("// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – bitte nicht von Hand ändern.\n")
         f.write("window.DATEN = " + json.dumps(daten, ensure_ascii=False, indent=1) + ";\n")
     shutil.copyfile(os.path.join(BASIS, "app", "style.css"), os.path.join(APP, "basis.css"))
+    os.makedirs(os.path.join(APP, "schriften"), exist_ok=True)  # Flaggen-Schrift (8.11.) für basis.css
+    for n in ("TwemojiCountryFlags.woff2", "LIZENZ-TwemojiCountryFlags.md"):
+        shutil.copyfile(os.path.join(BASIS, "app", "schriften", n), os.path.join(APP, "schriften", n))
     webapp()
     print("Klasse 9:", len(vokabeln), "Vokabeln,", len(saetze), "Sätze,",
           sum(1 for s in saetze.values() if s["audio"]), "mit Audio")

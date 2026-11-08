@@ -1,5 +1,1061 @@
 // AUTOMATISCH ERZEUGT von werkzeuge/franz_bauen.py aus inhalte/franz/ – hier nicht ändern.
 window.DATEN_FR = {
+ "lob": {
+  "lob": [
+   {
+    "text": "Bravo !",
+    "de": "Bravo!",
+    "gruppe": [
+     "bravo"
+    ],
+    "audio": "audio/lob/lob_bravo.mp3"
+   },
+   {
+    "text": "Super !",
+    "de": "Super!",
+    "gruppe": [
+     "super"
+    ],
+    "audio": "audio/lob/lob_super.mp3"
+   },
+   {
+    "text": "Génial !",
+    "de": "Genial!",
+    "gruppe": [
+     "genial"
+    ],
+    "audio": "audio/lob/lob_genial.mp3"
+   },
+   {
+    "text": "Top !",
+    "de": "Top!",
+    "gruppe": [
+     "top"
+    ],
+    "audio": "audio/lob/lob_top.mp3"
+   },
+   {
+    "text": "Parfait !",
+    "de": "Perfekt!",
+    "gruppe": [
+     "parfait"
+    ],
+    "audio": "audio/lob/lob_parfait.mp3"
+   },
+   {
+    "text": "Excellent !",
+    "de": "Ausgezeichnet!",
+    "gruppe": [
+     "excellent"
+    ],
+    "audio": "audio/lob/lob_excellent.mp3"
+   },
+   {
+    "text": "Impeccable !",
+    "de": "Einwandfrei!",
+    "gruppe": [
+     "impec"
+    ],
+    "audio": "audio/lob/lob_impeccable.mp3"
+   },
+   {
+    "text": "Impec !",
+    "de": "Einwandfrei! (kurz, locker)",
+    "gruppe": [
+     "impec"
+    ],
+    "audio": "audio/lob/lob_impec.mp3"
+   },
+   {
+    "text": "Nickel !",
+    "de": "Picobello!",
+    "gruppe": [
+     "nickel"
+    ],
+    "audio": "audio/lob/lob_nickel.mp3"
+   },
+   {
+    "text": "Bien joué !",
+    "de": "Gut gemacht!",
+    "gruppe": [
+     "joue"
+    ],
+    "audio": "audio/lob/lob_bien_joue.mp3"
+   },
+   {
+    "text": "Trop bien !",
+    "de": "Richtig gut!",
+    "gruppe": [
+     "trop"
+    ],
+    "audio": "audio/lob/lob_trop_bien.mp3"
+   },
+   {
+    "text": "Trop fort !",
+    "de": "Wie stark!",
+    "gruppe": [
+     "fort"
+    ],
+    "audio": "audio/lob/lob_trop_fort.mp3"
+   },
+   {
+    "text": "Très fort !",
+    "de": "Sehr stark!",
+    "gruppe": [
+     "fort"
+    ],
+    "audio": "audio/lob/lob_tres_fort.mp3"
+   },
+   {
+    "text": "Pile poil !",
+    "de": "Haargenau!",
+    "gruppe": [
+     "pile"
+    ],
+    "audio": "audio/lob/lob_pile_poil.mp3"
+   },
+   {
+    "text": "C'est ça !",
+    "de": "Genau das ist es!",
+    "gruppe": [
+     "ca"
+    ],
+    "audio": "audio/lob/lob_c_est_ca.mp3"
+   },
+   {
+    "text": "Exactement !",
+    "de": "Genau!",
+    "gruppe": [
+     "exact"
+    ],
+    "audio": "audio/lob/lob_exactement.mp3"
+   },
+   {
+    "text": "Tout à fait !",
+    "de": "Ganz genau!",
+    "gruppe": [
+     "exact"
+    ],
+    "audio": "audio/lob/lob_tout_a_fait.mp3"
+   },
+   {
+    "text": "Tout juste !",
+    "de": "Völlig richtig!",
+    "gruppe": [
+     "juste"
+    ],
+    "audio": "audio/lob/lob_tout_juste.mp3"
+   },
+   {
+    "text": "C'est juste !",
+    "de": "Das stimmt!",
+    "gruppe": [
+     "juste"
+    ],
+    "audio": "audio/lob/lob_c_est_juste.mp3"
+   },
+   {
+    "text": "Bien vu !",
+    "de": "Gut erkannt!",
+    "gruppe": [
+     "vu"
+    ],
+    "audio": "audio/lob/lob_bien_vu.mp3"
+   },
+   {
+    "text": "Mais oui !",
+    "de": "Aber ja!",
+    "gruppe": [
+     "oui"
+    ],
+    "audio": "audio/lob/lob_mais_oui.mp3"
+   },
+   {
+    "text": "Ouiii !",
+    "de": "Jaaa!",
+    "gruppe": [
+     "oui"
+    ],
+    "audio": "audio/lob/lob_ouiii.mp3"
+   },
+   {
+    "text": "Chapeau !",
+    "de": "Hut ab!",
+    "gruppe": [
+     "chapeau"
+    ],
+    "audio": "audio/lob/lob_chapeau.mp3"
+   },
+   {
+    "text": "Waouh !",
+    "de": "Wow!",
+    "gruppe": [
+     "waouh"
+    ],
+    "audio": "audio/lob/lob_waouh.mp3"
+   },
+   {
+    "text": "Magnifique !",
+    "de": "Wunderbar!",
+    "gruppe": [
+     "magnifique"
+    ],
+    "audio": "audio/lob/lob_magnifique.mp3"
+   },
+   {
+    "text": "Formidable !",
+    "de": "Großartig!",
+    "gruppe": [
+     "formidable"
+    ],
+    "audio": "audio/lob/lob_formidable.mp3"
+   },
+   {
+    "text": "Extra !",
+    "de": "Klasse!",
+    "gruppe": [
+     "extra"
+    ],
+    "audio": "audio/lob/lob_extra.mp3"
+   },
+   {
+    "text": "Au top !",
+    "de": "Spitze!",
+    "gruppe": [
+     "top"
+    ],
+    "audio": "audio/lob/lob_au_top.mp3"
+   },
+   {
+    "text": "La classe !",
+    "de": "Stark! (wörtlich: Die Klasse!)",
+    "gruppe": [
+     "classe"
+    ],
+    "audio": "audio/lob/lob_la_classe.mp3"
+   },
+   {
+    "text": "Trop cool !",
+    "de": "Voll cool!",
+    "gruppe": [
+     "cool"
+    ],
+    "audio": "audio/lob/lob_trop_cool.mp3"
+   },
+   {
+    "text": "Stylé !",
+    "de": "Stylisch! (Jugendsprache)",
+    "gruppe": [
+     "style"
+    ],
+    "audio": "audio/lob/lob_style.mp3"
+   },
+   {
+    "text": "C'est ouf !",
+    "de": "Irre! (Jugendsprache für „fou“)",
+    "gruppe": [
+     "ouf"
+    ],
+    "audio": "audio/lob/lob_c_est_ouf.mp3"
+   },
+   {
+    "text": "Ça déchire !",
+    "de": "Das rockt!",
+    "gruppe": [
+     "dechire"
+    ],
+    "audio": "audio/lob/lob_ca_dechire.mp3"
+   },
+   {
+    "text": "Énorme !",
+    "de": "Riesig! (= Wahnsinn!)",
+    "gruppe": [
+     "enorme"
+    ],
+    "audio": "audio/lob/lob_enorme.mp3"
+   },
+   {
+    "text": "Bingo !",
+    "de": "Bingo!",
+    "gruppe": [
+     "bingo"
+    ],
+    "audio": "audio/lob/lob_bingo.mp3"
+   },
+   {
+    "text": "Et voilà !",
+    "de": "Na bitte!",
+    "gruppe": [
+     "voila"
+    ],
+    "audio": "audio/lob/lob_et_voila.mp3"
+   },
+   {
+    "text": "Voilà !",
+    "de": "So ist's!",
+    "gruppe": [
+     "voila"
+    ],
+    "audio": "audio/lob/lob_voila.mp3"
+   },
+   {
+    "text": "Dans le mille !",
+    "de": "Volltreffer! (wörtlich: ins Tausend)",
+    "gruppe": [
+     "mille"
+    ],
+    "audio": "audio/lob/lob_dans_le_mille.mp3"
+   },
+   {
+    "text": "En plein dans le mille !",
+    "de": "Mitten ins Schwarze!",
+    "gruppe": [
+     "mille"
+    ],
+    "audio": "audio/lob/lob_en_plein_dans_le_mille.mp3"
+   },
+   {
+    "text": "Tu gères !",
+    "de": "Du hast's drauf!",
+    "gruppe": [
+     "geres"
+    ],
+    "audio": "audio/lob/lob_tu_geres.mp3"
+   },
+   {
+    "text": "Tu assures !",
+    "de": "Du bist spitze!",
+    "gruppe": [
+     "assures"
+    ],
+    "audio": "audio/lob/lob_tu_assures.mp3"
+   },
+   {
+    "text": "Ça roule !",
+    "de": "Läuft!",
+    "gruppe": [
+     "roule"
+    ],
+    "audio": "audio/lob/lob_ca_roule.mp3"
+   },
+   {
+    "text": "Ça marche !",
+    "de": "Passt!",
+    "gruppe": [
+     "marche"
+    ],
+    "audio": "audio/lob/lob_ca_marche.mp3"
+   },
+   {
+    "text": "Bien envoyé !",
+    "de": "Gut gekontert!",
+    "gruppe": [
+     "envoye"
+    ],
+    "audio": "audio/lob/lob_bien_envoye.mp3"
+   },
+   {
+    "text": "Joli !",
+    "de": "Schön!",
+    "gruppe": [
+     "joli"
+    ],
+    "audio": "audio/lob/lob_joli.mp3"
+   },
+   {
+    "text": "Joli coup !",
+    "de": "Schöner Treffer!",
+    "gruppe": [
+     "joli"
+    ],
+    "audio": "audio/lob/lob_joli_coup.mp3"
+   },
+   {
+    "text": "Pas mal du tout !",
+    "de": "Gar nicht schlecht!",
+    "gruppe": [
+     "pasmal"
+    ],
+    "audio": "audio/lob/lob_pas_mal_du_tout.mp3"
+   },
+   {
+    "text": "Très bien !",
+    "de": "Sehr gut!",
+    "gruppe": [
+     "bien"
+    ],
+    "audio": "audio/lob/lob_tres_bien.mp3"
+   },
+   {
+    "text": "C'est parfait !",
+    "de": "Das ist perfekt!",
+    "gruppe": [
+     "parfait"
+    ],
+    "audio": "audio/lob/lob_c_est_parfait.mp3"
+   },
+   {
+    "text": "Bon travail !",
+    "de": "Gute Arbeit!",
+    "gruppe": [
+     "travail"
+    ],
+    "audio": "audio/lob/lob_bon_travail.mp3"
+   },
+   {
+    "text": "Excellent travail !",
+    "de": "Ausgezeichnete Arbeit!",
+    "gruppe": [
+     "travail"
+    ],
+    "audio": "audio/lob/lob_excellent_travail.mp3"
+   },
+   {
+    "text": "Respect !",
+    "de": "Respekt!",
+    "gruppe": [
+     "respect"
+    ],
+    "audio": "audio/lob/lob_respect.mp3"
+   },
+   {
+    "text": "Ouah, la vache !",
+    "de": "Wow, Wahnsinn! (umgangssprachlich)",
+    "gruppe": [
+     "vache"
+    ],
+    "audio": "audio/lob/lob_ouah_la_vache.mp3"
+   },
+   {
+    "text": "Ça, c'est bien !",
+    "de": "Das ist gut!",
+    "gruppe": [
+     "bien"
+    ],
+    "audio": "audio/lob/lob_ca_c_est_bien.mp3"
+   },
+   {
+    "text": "Tu es en forme !",
+    "de": "Du bist gut drauf!",
+    "gruppe": [
+     "forme"
+    ],
+    "audio": "audio/lob/lob_tu_es_en_forme.mp3"
+   },
+   {
+    "text": "Quelle forme !",
+    "de": "Was für eine Form!",
+    "gruppe": [
+     "forme"
+    ],
+    "audio": "audio/lob/lob_quelle_forme.mp3"
+   },
+   {
+    "text": "Bien sûr !",
+    "de": "Na klar!",
+    "gruppe": [
+     "sur"
+    ],
+    "audio": "audio/lob/lob_bien_sur.mp3"
+   },
+   {
+    "text": "Évidemment !",
+    "de": "Selbstverständlich!",
+    "gruppe": [
+     "sur"
+    ],
+    "audio": "audio/lob/lob_evidemment.mp3"
+   },
+   {
+    "text": "Yes !",
+    "de": "Yes!",
+    "gruppe": [
+     "yes"
+    ],
+    "audio": "audio/lob/lob_yes.mp3"
+   },
+   {
+    "text": "Youpi !",
+    "de": "Juhu!",
+    "gruppe": [
+     "youpi"
+    ],
+    "audio": "audio/lob/lob_youpi.mp3"
+   },
+   {
+    "text": "Génialissime !",
+    "de": "Supergenial!",
+    "gruppe": [
+     "genial"
+    ],
+    "audio": "audio/lob/lob_genialissime.mp3"
+   },
+   {
+    "text": "Super, continue !",
+    "de": "Super, mach weiter!",
+    "gruppe": [
+     "continue"
+    ],
+    "audio": "audio/lob/lob_super_continue.mp3"
+   },
+   {
+    "text": "Continue comme ça !",
+    "de": "Mach weiter so!",
+    "gruppe": [
+     "continue"
+    ],
+    "audio": "audio/lob/lob_continue_comme_ca.mp3"
+   },
+   {
+    "text": "Tu as l'œil !",
+    "de": "Du hast ein gutes Auge!",
+    "gruppe": [
+     "oeil"
+    ],
+    "audio": "audio/lob/lob_tu_as_l_il.mp3"
+   },
+   {
+    "text": "Rien à redire !",
+    "de": "Nichts auszusetzen!",
+    "gruppe": [
+     "redire"
+    ],
+    "audio": "audio/lob/lob_rien_a_redire.mp3"
+   },
+   {
+    "text": "C'est carré !",
+    "de": "Sitzt perfekt! (umgangssprachlich)",
+    "gruppe": [
+     "carre"
+    ],
+    "audio": "audio/lob/lob_c_est_carre.mp3"
+   },
+   {
+    "text": "Bien raisonné !",
+    "de": "Gut überlegt!",
+    "gruppe": [
+     "raisonne"
+    ],
+    "audio": "audio/lob/lob_bien_raisonne.mp3"
+   },
+   {
+    "text": "Tu as tout compris !",
+    "de": "Du hast alles verstanden!",
+    "gruppe": [
+     "compris"
+    ],
+    "audio": "audio/lob/lob_tu_as_tout_compris.mp3"
+   }
+  ],
+  "stark": [
+   {
+    "text": "Tu es une star !",
+    "de": "Du bist ein Star!",
+    "gruppe": [
+     "star"
+    ],
+    "audio": "audio/lob/stark_tu_es_une_star.mp3"
+   },
+   {
+    "text": "C'est grandiose !",
+    "de": "Das ist grandios!",
+    "gruppe": [
+     "grandiose"
+    ],
+    "audio": "audio/lob/stark_c_est_grandiose.mp3"
+   },
+   {
+    "text": "Incroyable !",
+    "de": "Unglaublich!",
+    "gruppe": [
+     "incroyable"
+    ],
+    "audio": "audio/lob/stark_incroyable.mp3"
+   },
+   {
+    "text": "Phénoménal !",
+    "de": "Phänomenal!",
+    "gruppe": [
+     "phenomenal"
+    ],
+    "audio": "audio/lob/stark_phenomenal.mp3"
+   },
+   {
+    "text": "Spectaculaire !",
+    "de": "Spektakulär!",
+    "gruppe": [
+     "spectaculaire"
+    ],
+    "audio": "audio/lob/stark_spectaculaire.mp3"
+   },
+   {
+    "text": "Tu es un as !",
+    "de": "Du bist ein Ass!",
+    "gruppe": [
+     "as"
+    ],
+    "audio": "audio/lob/stark_tu_es_un_as.mp3"
+   },
+   {
+    "text": "Chapeau bas !",
+    "de": "Hut ab, wirklich!",
+    "gruppe": [
+     "chapeau"
+    ],
+    "audio": "audio/lob/stark_chapeau_bas.mp3"
+   },
+   {
+    "text": "Quel talent !",
+    "de": "Was für ein Talent!",
+    "gruppe": [
+     "talent"
+    ],
+    "audio": "audio/lob/stark_quel_talent.mp3"
+   },
+   {
+    "text": "Tu es imbattable !",
+    "de": "Du bist unschlagbar!",
+    "gruppe": [
+     "imbattable"
+    ],
+    "audio": "audio/lob/stark_tu_es_imbattable.mp3"
+   },
+   {
+    "text": "Rien ne t'arrête !",
+    "de": "Nichts hält dich auf!",
+    "gruppe": [
+     "arrete"
+    ],
+    "audio": "audio/lob/stark_rien_ne_t_arrete.mp3"
+   },
+   {
+    "text": "Tu es un vrai pro !",
+    "de": "Du bist ein echter Profi!",
+    "gruppe": [
+     "pro"
+    ],
+    "audio": "audio/lob/stark_tu_es_un_vrai_pro.mp3"
+   },
+   {
+    "text": "Là, tu m'épates !",
+    "de": "Jetzt verblüffst du mich!",
+    "gruppe": [
+     "epates"
+    ],
+    "audio": "audio/lob/stark_la_tu_m_epates.mp3"
+   },
+   {
+    "text": "Ça, c'est du grand art !",
+    "de": "Das ist große Kunst!",
+    "gruppe": [
+     "art"
+    ],
+    "audio": "audio/lob/stark_ca_c_est_du_grand_art.mp3"
+   },
+   {
+    "text": "Tu es au top du top !",
+    "de": "Du bist die Spitze der Spitze!",
+    "gruppe": [
+     "top"
+    ],
+    "audio": "audio/lob/stark_tu_es_au_top_du_top.mp3"
+   },
+   {
+    "text": "Tu cartonnes !",
+    "de": "Du räumst ab!",
+    "gruppe": [
+     "cartonnes"
+    ],
+    "audio": "audio/lob/stark_tu_cartonnes.mp3"
+   },
+   {
+    "text": "Tu es en feu !",
+    "de": "Du bist on fire!",
+    "gruppe": [
+     "feu"
+    ],
+    "audio": "audio/lob/stark_tu_es_en_feu.mp3"
+   },
+   {
+    "text": "Je suis trop fier de toi !",
+    "de": "Ich bin so stolz auf dich!",
+    "gruppe": [
+     "fier"
+    ],
+    "audio": "audio/lob/stark_je_suis_trop_fier_de_toi.mp3"
+   },
+   {
+    "text": "Tu es une machine !",
+    "de": "Du bist eine Maschine!",
+    "gruppe": [
+     "machine"
+    ],
+    "audio": "audio/lob/stark_tu_es_une_machine.mp3"
+   },
+   {
+    "text": "Là, c'est du lourd !",
+    "de": "Das ist echt stark! (Jugendsprache)",
+    "gruppe": [
+     "lourd"
+    ],
+    "audio": "audio/lob/stark_la_c_est_du_lourd.mp3"
+   },
+   {
+    "text": "Tu m'impressionnes !",
+    "de": "Du beeindruckst mich!",
+    "gruppe": [
+     "impressionnes"
+    ],
+    "audio": "audio/lob/stark_tu_m_impressionnes.mp3"
+   },
+   {
+    "text": "Personne ne t'arrête !",
+    "de": "Niemand hält dich auf!",
+    "gruppe": [
+     "arrete"
+    ],
+    "audio": "audio/lob/stark_personne_ne_t_arrete.mp3"
+   },
+   {
+    "text": "Sensationnel !",
+    "de": "Sensationell!",
+    "gruppe": [
+     "sensationnel"
+    ],
+    "audio": "audio/lob/stark_sensationnel.mp3"
+   }
+  ],
+  "fehler": [
+   {
+    "text": "Presque !",
+    "de": "Fast!",
+    "gruppe": [
+     "presque"
+    ],
+    "audio": "audio/lob/fehler_presque.mp3"
+   },
+   {
+    "text": "Tu y es presque !",
+    "de": "Du bist fast da!",
+    "gruppe": [
+     "presque"
+    ],
+    "audio": "audio/lob/fehler_tu_y_es_presque.mp3"
+   },
+   {
+    "text": "Pas tout à fait !",
+    "de": "Nicht ganz!",
+    "gruppe": [
+     "pas"
+    ],
+    "audio": "audio/lob/fehler_pas_tout_a_fait.mp3"
+   },
+   {
+    "text": "Pas grave !",
+    "de": "Nicht schlimm!",
+    "gruppe": [
+     "grave"
+    ],
+    "audio": "audio/lob/fehler_pas_grave.mp3"
+   },
+   {
+    "text": "Pas grave, on réessaie !",
+    "de": "Nicht schlimm, wir versuchen's noch mal!",
+    "gruppe": [
+     "grave"
+    ],
+    "audio": "audio/lob/fehler_pas_grave_on_reessaie.mp3"
+   },
+   {
+    "text": "Encore un petit effort !",
+    "de": "Noch ein kleiner Schritt!",
+    "gruppe": [
+     "effort"
+    ],
+    "audio": "audio/lob/fehler_encore_un_petit_effort.mp3"
+   },
+   {
+    "text": "Allez, encore une fois !",
+    "de": "Komm, noch einmal!",
+    "gruppe": [
+     "encore"
+    ],
+    "audio": "audio/lob/fehler_allez_encore_une_fois.mp3"
+   },
+   {
+    "text": "Oups !",
+    "de": "Hoppla!",
+    "gruppe": [
+     "oups"
+    ],
+    "audio": "audio/lob/fehler_oups.mp3"
+   },
+   {
+    "text": "Mince !",
+    "de": "Mist! (harmlos)",
+    "gruppe": [
+     "mince"
+    ],
+    "audio": "audio/lob/fehler_mince.mp3"
+   },
+   {
+    "text": "Zut !",
+    "de": "Mist!",
+    "gruppe": [
+     "zut"
+    ],
+    "audio": "audio/lob/fehler_zut.mp3"
+   },
+   {
+    "text": "Ah, dommage !",
+    "de": "Ach, schade!",
+    "gruppe": [
+     "dommage"
+    ],
+    "audio": "audio/lob/fehler_ah_dommage.mp3"
+   },
+   {
+    "text": "Réfléchis encore !",
+    "de": "Denk noch mal nach!",
+    "gruppe": [
+     "reflechis"
+    ],
+    "audio": "audio/lob/fehler_reflechis_encore.mp3"
+   },
+   {
+    "text": "Regarde bien !",
+    "de": "Schau genau hin!",
+    "gruppe": [
+     "regarde"
+    ],
+    "audio": "audio/lob/fehler_regarde_bien.mp3"
+   },
+   {
+    "text": "Non, ce n'est pas ça !",
+    "de": "Nein, das ist es nicht!",
+    "gruppe": [
+     "pas"
+    ],
+    "audio": "audio/lob/fehler_non_ce_n_est_pas_ca.mp3"
+   },
+   {
+    "text": "Ça arrive !",
+    "de": "Das passiert!",
+    "gruppe": [
+     "arrive"
+    ],
+    "audio": "audio/lob/fehler_ca_arrive.mp3"
+   },
+   {
+    "text": "On apprend en se trompant !",
+    "de": "Aus Fehlern lernt man!",
+    "gruppe": [
+     "apprend"
+    ],
+    "audio": "audio/lob/fehler_on_apprend_en_se_trompant.mp3"
+   },
+   {
+    "text": "La prochaine, c'est la bonne !",
+    "de": "Die nächste sitzt!",
+    "gruppe": [
+     "prochaine"
+    ],
+    "audio": "audio/lob/fehler_la_prochaine_c_est_la_bonne.mp3"
+   },
+   {
+    "text": "Essaie encore, tu peux le faire !",
+    "de": "Versuch's noch mal, du schaffst das!",
+    "gruppe": [
+     "essaie"
+    ],
+    "audio": "audio/lob/fehler_essaie_encore_tu_peux_le_fai.mp3"
+   },
+   {
+    "text": "Pas de panique !",
+    "de": "Keine Panik!",
+    "gruppe": [
+     "panique"
+    ],
+    "audio": "audio/lob/fehler_pas_de_panique.mp3"
+   },
+   {
+    "text": "T'inquiète, ça va venir !",
+    "de": "Keine Sorge, das kommt noch!",
+    "gruppe": [
+     "inquiete"
+    ],
+    "audio": "audio/lob/fehler_t_inquiete_ca_va_venir.mp3"
+   }
+  ],
+  "spiel": [
+   {
+    "text": "Oh là là !",
+    "de": "Oje, oje!",
+    "gruppe": [
+     "ohlala"
+    ],
+    "audio": "audio/lob/spiel_oh_la_la.mp3"
+   },
+   {
+    "text": "Aïe aïe aïe !",
+    "de": "Autsch!",
+    "gruppe": [
+     "aie"
+    ],
+    "audio": "audio/lob/spiel_aie_aie_aie.mp3"
+   },
+   {
+    "text": "Catastrophe !",
+    "de": "Katastrophe!",
+    "gruppe": [
+     "catastrophe"
+    ],
+    "audio": "audio/lob/spiel_catastrophe.mp3"
+   },
+   {
+    "text": "Non mais sérieux ?!",
+    "de": "Nee, echt jetzt?!",
+    "gruppe": [
+     "serieux"
+    ],
+    "audio": "audio/lob/spiel_non_mais_serieux.mp3"
+   },
+   {
+    "text": "Quoi ?! Encore ?!",
+    "de": "Was?! Schon wieder?!",
+    "gruppe": [
+     "encore"
+    ],
+    "audio": "audio/lob/spiel_quoi_encore.mp3"
+   },
+   {
+    "text": "C'est pas vrai !",
+    "de": "Das gibt's doch nicht!",
+    "gruppe": [
+     "vrai"
+    ],
+    "audio": "audio/lob/spiel_c_est_pas_vrai.mp3"
+   },
+   {
+    "text": "Oups, raté !",
+    "de": "Hoppla, daneben!",
+    "gruppe": [
+     "rate"
+    ],
+    "audio": "audio/lob/spiel_oups_rate.mp3"
+   },
+   {
+    "text": "Au secours !",
+    "de": "Hilfe!",
+    "gruppe": [
+     "secours"
+    ],
+    "audio": "audio/lob/spiel_au_secours.mp3"
+   }
+  ],
+  "geschafft": [
+   {
+    "text": "Tu l'as fait ! C'est fini !",
+    "de": "Du hast es geschafft! Fertig!",
+    "gruppe": [
+     "fait"
+    ],
+    "audio": "audio/lob/geschafft_tu_l_as_fait_c_est_fini.mp3"
+   },
+   {
+    "text": "Mission accomplie !",
+    "de": "Mission erfüllt!",
+    "gruppe": [
+     "mission"
+    ],
+    "audio": "audio/lob/geschafft_mission_accomplie.mp3"
+   },
+   {
+    "text": "Et voilà, terminé ! Bravo !",
+    "de": "Na bitte, fertig! Bravo!",
+    "gruppe": [
+     "voila"
+    ],
+    "audio": "audio/lob/geschafft_et_voila_termine_bravo.mp3"
+   },
+   {
+    "text": "C'était top, bravo !",
+    "de": "Das war spitze, bravo!",
+    "gruppe": [
+     "top"
+    ],
+    "audio": "audio/lob/geschafft_c_etait_top_bravo.mp3"
+   },
+   {
+    "text": "Bravo, tu as tout réussi !",
+    "de": "Bravo, du hast alles geschafft!",
+    "gruppe": [
+     "reussi"
+    ],
+    "audio": "audio/lob/geschafft_bravo_tu_as_tout_reussi.mp3"
+   }
+  ],
+  "voll": [
+   {
+    "text": "Sans faute ! Génial !",
+    "de": "Ohne Fehler! Genial!",
+    "gruppe": [
+     "genial"
+    ],
+    "audio": "audio/lob/voll_sans_faute_genial.mp3"
+   },
+   {
+    "text": "Zéro faute, chapeau !",
+    "de": "Null Fehler, Hut ab!",
+    "gruppe": [
+     "chapeau"
+    ],
+    "audio": "audio/lob/voll_zero_faute_chapeau.mp3"
+   },
+   {
+    "text": "Un sans-faute, du début à la fin !",
+    "de": "Fehlerfrei von Anfang bis Ende!",
+    "gruppe": [
+     "faute"
+    ],
+    "audio": "audio/lob/voll_un_sans_faute_du_debut_a_la_.mp3"
+   }
+  ],
+  "doch": [
+   {
+    "text": "Tu vois ? Tu y arrives !",
+    "de": "Siehst du? Du schaffst es!",
+    "gruppe": [
+     "vois"
+    ],
+    "audio": "audio/lob/doch_tu_vois_tu_y_arrives.mp3"
+   },
+   {
+    "text": "Et voilà, tu l'as eu !",
+    "de": "Na bitte, du hast es!",
+    "gruppe": [
+     "voila"
+    ],
+    "audio": "audio/lob/doch_et_voila_tu_l_as_eu.mp3"
+   },
+   {
+    "text": "Ah, tu vois, quand tu veux !",
+    "de": "Siehst du, wenn du willst!",
+    "gruppe": [
+     "vois"
+    ],
+    "audio": "audio/lob/doch_ah_tu_vois_quand_tu_veux.mp3"
+   },
+   {
+    "text": "Tu n'as pas lâché, bravo !",
+    "de": "Du bist drangeblieben, bravo!",
+    "gruppe": [
+     "bravo"
+    ],
+    "audio": "audio/lob/doch_tu_n_as_pas_lache_bravo.mp3"
+   }
+  ]
+ },
  "titel": [
   {
    "ab": 0,

@@ -193,7 +193,12 @@ def main():
         {"id": "rahmen_rot", "symbol": "🎨", "name": "Cadre rouge", "unter": "Roter Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "rot"},
         {"id": "rahmen_blau", "symbol": "🎨", "name": "Cadre bleu", "unter": "Blauer Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "blau"},
         {"id": "rahmen_gruen", "symbol": "🎨", "name": "Cadre vert", "unter": "Grüner Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "gruen"}]
-    daten = {"titel": titel, "boutique": boutique, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "france": france, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
+    # Lob und Rückmeldungen (8.11.): inhalte/franz/lob.tsv → nach Art gruppiert (lob, stark, fehler, spiel, geschafft, voll, doch), Stimme audio/lob/<id>.mp3
+    lob = {}
+    for z in (tsv("lob.tsv") if os.path.exists(os.path.join(INHALT, "lob.tsv")) else []):
+        a = f"audio/lob/{z['id']}.mp3"
+        lob.setdefault(z["art"], []).append({"text": z["text"], "de": z["de"], "gruppe": [g for g in z["gruppe"].split(",") if g], "audio": a if vorhanden(a) else None})
+    daten = {"lob": lob, "titel": titel, "boutique": boutique, "runner": runner, "disco": disco, "dialoge": list(dialoge.values()), "paris": paris, "helden": helden, "regions": regions, "france": france, "wendungen": [{"fr": z["fr"], "de": z["de"]} for z in tsv("wendungen.tsv")],
              "namen": namen, "woerter": woerter, "beats": beats,
              "gruppen": {"foot": "⚽ Footballeurs", "histoire": "🏛️ Personnalités", "stars": "⭐ Président & stars", "lieux": "📍 Lieux"}}
     with open(os.path.join(APP, "daten_fr.js"), "w", encoding="utf-8") as f:

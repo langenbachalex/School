@@ -15,8 +15,38 @@
     { sym: "🆕", name: "Neue Wörter", unter: "Lücken bei den neuen Wörtern" },
     { sym: "📈", name: "Wachsend", unter: "Immer mehr Lücken, Zeile für Zeile" },
     { sym: "🙋", name: "Parle de toi", unter: "Sprich über dich – wähl deine Wörter" }];
-  const LOB = ["Bravo !", "Super !", "Génial !", "Très bien !", "Excellent !", "Parfait !", "Magnifique !", "Incroyable !"];
-  const FEHLER = ["Presque !", "Encore une fois !", "Pas grave – noch mal!", "Oups !"];
+  // Lob und Rückmeldungen (8.11.) – gesprochen von Mr. Alex mit [French] (inhalte/franz/lob.tsv, idiomatisch statt übersetzt).
+  // Arten: lob, stark (jede 5. richtige Antwort in Folge), fehler, spiel (witzig, nur in Jeux), geschafft, voll (ohne Fehler), doch (nach Fehlern geschafft).
+  const RUF = D.lob || {};
+  const LOB = (RUF.lob || []).map((r) => r.text).concat(RUF.lob ? [] : ["Bravo !", "Super !", "Génial !"]);
+  // Gegen Wiederholung wie in der Englisch-App: derselbe Spruch erst nach 10 anderen derselben Art, kein Stichwort (gruppe) aus den letzten 3.
+  const verlauf = [];
+  function waehleRuf(art) {
+    const liste = RUF[art] || [];
+    if (!liste.length) return null;
+    const gleicheArt = verlauf.filter((v) => v.art === art).slice(-10).map((v) => v.r);
+    const nah = new Set(verlauf.slice(-3).flatMap((v) => v.r.gruppe || []));
+    const frisch = (x) => !gleicheArt.includes(x), andere = (x) => !(x.gruppe || []).some((g) => nah.has(g));
+    const pool = [liste.filter((x) => frisch(x) && andere(x)), liste.filter(frisch), liste].find((p) => p.length);
+    const x = pool[Math.floor(Math.random() * pool.length)];
+    verlauf.push({ art, r: x }); if (verlauf.length > 40) verlauf.shift();
+    return x;
+  }
+  let vorLob = null, fehlerSerie = 0, richtigSerie = 0;
+  // ruf(art) → Text; die Aufnahme läuft sofort bzw. vor dem nächsten spiele() (dort vorangestellt)
+  function ruf(art) {
+    const x = waehleRuf(art);
+    if (!x) return art === "fehler" || art === "spiel" ? "Presque !" : "Bravo !";
+    if (x.audio) { vorLob = x.audio; setTimeout(() => { if (vorLob === x.audio) { vorLob = null; spiele([x.audio]); } }, 0); }
+    return x.text;
+  }
+  function lob(stark) {
+    richtigSerie++;
+    const art = fehlerSerie >= 2 && RUF.doch ? "doch" : (stark || richtigSerie % 5 === 0) && RUF.stark ? "stark" : "lob";
+    fehlerSerie = 0;
+    return ruf(art);
+  }
+  function tadel(imSpiel) { fehlerSerie++; richtigSerie = 0; return ruf(imSpiel && RUF.spiel && Math.random() < 0.3 ? "spiel" : "fehler"); }
 
   /* ---------- Speicher ---------- */
   function laden() {
@@ -126,6 +156,7 @@
   }
   // spiele([Datei | {tts}]) → Promise mit Sprechdauer in Sekunden (null, wenn abgebrochen)
   function spiele(liste) {
+    if (vorLob) { liste = [vorLob, ...liste]; vorLob = null; }
     stopp();
     const mein = lauf;
     let gesamt = 0;
@@ -319,9 +350,9 @@
     const kasten = wortkasten(alle, {
       richtig: (l, ende) => {
         if (!alle.some((x) => x.zeile === l.zeile && !x.fertig)) spiele([ton(l.zeile)]);
-        if (ende) { melde(box, "gut", `${zufall(LOB)} Alle Lücken gefüllt${fehler ? "" : " – ohne Fehler"}!`); schrittFertig(d, nr); }
+        if (ende) { melde(box, "gut", `${ruf(fehler ? "geschafft" : "voll")} Alle Lücken gefüllt${fehler ? "" : " – ohne Fehler"}!`); schrittFertig(d, nr); }
       },
-      falsch: () => { fehler++; melde(box, "hilfe", `${zufall(FEHLER)} Schau noch mal.`); }
+      falsch: () => { fehler++; melde(box, "hilfe", `${tadel()} Schau noch mal.`); }
     });
     zeige(kopf(d.titel, () => dialogSeite(d), `${nr}. ${SCHRITTE[nr - 1].name} – tipp die Wörter in der richtigen Reihenfolge an.`),
       el("section", { class: "satzkarte" }, el("p", { class: "zaehler" }, "Wortkasten"), kasten, box,
@@ -343,8 +374,8 @@
     // Ablenker: in Runde 1 und 2 zwei Wörter aus anderen Zeilen dazu, damit es nicht zu leicht wird
     const fremd = runde < 2 ? mischen([...new Set(d.zeilen.filter((x) => x !== z).flatMap((x) => woerter(ohneKlammern(x.fr)).map((w) => w.wort)))]).slice(0, 2) : [];
     const kasten = wortkasten(ls.luecken, {
-      richtig: (l, ende) => { if (ende) { melde(box, "gut", zufall(LOB)); spiele([ton(z)]); weiter.disabled = false; weiter.focus(); } },
-      falsch: () => melde(box, "hilfe", zufall(FEHLER))
+      richtig: (l, ende) => { if (ende) { melde(box, "gut", lob()); spiele([ton(z)]); weiter.disabled = false; weiter.focus(); } },
+      falsch: () => melde(box, "hilfe", tadel())
     }, fremd);
     zeige(kopf(d.titel, () => dialogSeite(d), "4. Wachsend – jede Runde mehr Lücken."),
       el("section", { class: "satzkarte" },
@@ -622,7 +653,7 @@
         const [x, y] = offen; offen = [];
         if (x.c.p === y.c.p) {
           x.b.classList.add("paar"); y.b.classList.add("paar"); x.b.disabled = y.b.disabled = true; klang(true);
-          if (++gefunden === paare.length) melde(box, "gut", `${zufall(LOB)} Alle Paare in ${zuege} Zügen!${spielPunkte("memory")}`);
+          if (++gefunden === paare.length) melde(box, "gut", `${ruf("geschafft")} Alle Paare in ${zuege} Zügen!${spielPunkte("memory")}`);
         } else {
           wartet = true;
           setTimeout(() => { [x, y].forEach(({ b: k }) => { k.classList.remove("auf"); k.replaceChildren("?"); }); wartet = false; }, 1300);
@@ -637,7 +668,7 @@
     const RUNDEN = 10;
     if (runde === RUNDEN) {
       return zeige(kopf("👂 Qui est-ce ?", jeux), el("section", { class: "satzkarte" },
-        el("h2", {}, `${richtig} von ${RUNDEN} richtig!`), el("p", {}, richtig >= 7 ? zufall(LOB) + spielPunkte("qui") : "Noch mal? Ab 7 Treffern gibt es Punkte."),
+        el("h2", {}, `${richtig} von ${RUNDEN} richtig!`), el("p", {}, richtig >= 7 ? ruf(richtig === RUNDEN ? "voll" : "stark") + spielPunkte("qui") : "Noch mal? Ab 7 Treffern gibt es Punkte."),
         el("div", { class: "knopfreihe" }, knopf("Noch mal", () => quiEstCe(), "haupt"), knopf("Andere Spiele", jeux))));
     }
     const pool = D.namen.filter((n) => n.gruppe !== "lieux"), ziel = zufall(pool);
@@ -651,7 +682,7 @@
           fertig = true;
           const gut = n === ziel;
           e.currentTarget.classList.add(gut ? "gold" : "falsch"); klang(gut);
-          melde(box, gut ? "gut" : "hilfe", gut ? zufall(LOB) : `Das war ${ziel.name}.`);
+          melde(box, gut ? "gut" : "hilfe", gut ? lob() : `${tadel(true)} Das war ${ziel.name}.`);
           setTimeout(() => quiEstCe(runde + 1, richtig + (gut ? 1 : 0)), gut ? 900 : 2200);
         } }, bild(n, 72), el("span", { lang: "fr" }, n.name)))), box));
     spiele([ton(ziel)]);
@@ -665,8 +696,8 @@
       const b = el("button", { type: "button", class: "chip", lang: "fr", onclick: () => {
         if (z === zeilen[pos] || ohneKlammern(z.fr) === ohneKlammern(zeilen[pos].fr)) {
           pos++; b.remove(); liste.append(el("li", {}, `${z.wer}: ${ohneKlammern(z.fr)}`)); klang(true); spiele([ton(z)]);
-          if (pos === zeilen.length) melde(box, "gut", `${zufall(LOB)} Richtig sortiert!${spielPunkte("ordre")}`);
-        } else { b.classList.remove("falsch"); void b.offsetWidth; b.classList.add("falsch"); klang(false); melde(box, "hilfe", zufall(FEHLER)); }
+          if (pos === zeilen.length) melde(box, "gut", `${ruf("geschafft")} Richtig sortiert!${spielPunkte("ordre")}`);
+        } else { b.classList.remove("falsch"); void b.offsetWidth; b.classList.add("falsch");  klang(false); melde(box, "hilfe", tadel(true)); }
       } }, ohneKlammern(z.fr));
       return b;
     }));
@@ -830,8 +861,8 @@
       let fertig = false;
       const wahl = (text, b) => {
         if (fertig) return;
-        if (text === f.richtig) { fertig = true; b.classList.add("richtig"); klang(true); melde(box, "gut", zufall(LOB)); i++; setTimeout(frage, 900); }
-        else { fehler++; b.classList.add("falsch"); b.disabled = true; klang(false); melde(box, "hilfe", zufall(FEHLER)); }
+        if (text === f.richtig) { fertig = true; b.classList.add("richtig"); klang(true); melde(box, "gut", lob()); i++; setTimeout(frage, 900); }
+        else { fehler++; b.classList.add("falsch"); b.disabled = true;  klang(false); melde(box, "hilfe", tadel(true)); }
       };
       zeige(kopf(`🦸 Défi · ${h.name}`, heldenSeite, `Frage ${i + 1}/${fragen.length} · ${karteZiel(h)}`),
         el("section", { class: "satzkarte" }, el("h2", {}, f.frage), f.ton && knopf("🔊 Écoute", () => spiele([f.ton]), "leise"),

@@ -5122,20 +5122,18 @@ window.DATEN_FR = {
    "foto": null,
    "ipa": [
     [
-     "mi",
-     "ka",
-     "ɛl"
+     "maj",
+     "kœl"
     ],
     [
      "ɔ",
-     "liz"
+     "lis"
     ]
    ],
    "einfach": [
     [
-     "mi",
-     "ka",
-     "äl"
+     "maj",
+     "köl"
     ],
     [
      "o",

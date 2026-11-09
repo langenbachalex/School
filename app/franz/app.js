@@ -358,7 +358,7 @@
         kachel("🗣️", "Prononciation", "Namen richtig aussprechen", prononciation),
         kachel("🎮", "Jeux", "Memory, Qui est-ce ?, Dans l'ordre", jeux),
         runKachel(startseite),
-        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex", beatStudio)));
+        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex · +10 ⭐ je Beat", beatStudio)));
     if (parisFrei() > stand.paris || heldenFrei() > stand.helden) setTimeout(parisNeu, 700);
   }
   const kachel = (sym, titel, unter, fn, extra) => el("button", { type: "button", class: "kachel" + (extra || ""), onclick: fn },
@@ -881,12 +881,35 @@
   }
 
   /* ---------- 🎧 Beat-Studio ---------- */
+  /* 🎧 Beat-Studio: Punkte (9.11., Mr. Alex): +10 ⭐ je Beat, einmal am Tag (stand.beats[id] = Datum), nur wenn ganz angehört.
+     Gezählt werden nur normal abgespielte Sekunden (Springen zählt nicht) und die echte Laufzeit (gegen 2×-Tempo): beides ≥ 90 % der Länge. */
   function beatStudio() {
-    zeige(kopf("🎧 Beat-Studio", startseite, "Hör zu und mach mit – Mr. Alex auf dem Beat. Hier gibt es keine Punkte, nur Spaß."),
-      D.beats.map((b) => el("section", { class: "satzkarte beat" },
-        el("h2", { lang: "fr" }, "🎵 " + b.titel), el("p", { class: "klein" }, b.unter),
-        el("audio", { controls: true, preload: "none", src: b.audio, onplay: () => stopp() }),
-        b.text ? el("pre", { class: "mitlauf", lang: "fr" }, b.text) : el("p", { class: "klein" }, "Mitlauftext folgt."))));
+    if (!stand.beats || typeof stand.beats !== "object") stand.beats = {};
+    zeige(kopf("🎧 Beat-Studio", startseite, "Hör zu und mach mit – Mr. Alex auf dem Beat. Ganz angehört: +10 ⭐ je Beat, einmal am Tag."),
+      D.beats.map((b) => {
+        const fertig = () => stand.beats[b.id] === heute();
+        const info = el("p", { class: "klein beat-punkte" });
+        const zeigeInfo = () => { info.textContent = fertig() ? "✓ Heute schon gehört: +10 ⭐" : "🎧 Ganz anhören = +10 ⭐ (einmal am Tag)"; };
+        zeigeInfo();
+        let gehoert = 0, zuletzt = null, seit = null, echt = 0;
+        const a = el("audio", { controls: true, preload: "none", src: b.audio });
+        const halt = () => { if (seit != null) { echt += performance.now() - seit; seit = null; } };
+        a.addEventListener("play", () => { stopp(); if (a.currentTime < 1) { gehoert = 0; echt = 0; } zuletzt = a.currentTime; seit = performance.now(); });
+        a.addEventListener("timeupdate", () => { const t = a.currentTime; if (zuletzt != null && t > zuletzt && t - zuletzt < 1.5) gehoert += t - zuletzt; zuletzt = t; });
+        a.addEventListener("seeked", () => { zuletzt = a.currentTime; });
+        a.addEventListener("pause", halt);
+        a.addEventListener("ended", () => {
+          halt();
+          const d = a.duration || 0, ganz = d > 0 && gehoert >= 0.9 * d && echt >= 0.9 * d * 1000;
+          gehoert = 0; echt = 0; zuletzt = null;
+          if (fertig()) return;
+          if (!ganz) { toast("🎧 Für die Punkte den Beat ganz anhören – ohne Springen."); return; }
+          stand.beats[b.id] = heute(); speichern(); punkte(10, `Beat „${b.titel}“ ganz gehört!`, "m"); zeigeInfo();
+        });
+        return el("section", { class: "satzkarte beat" },
+          el("h2", { lang: "fr" }, "🎵 " + b.titel), el("p", { class: "klein" }, b.unter), info, a,
+          b.text ? el("pre", { class: "mitlauf", lang: "fr" }, b.text) : el("p", { class: "klein" }, "Mitlauftext folgt."));
+      }));
   }
 
 

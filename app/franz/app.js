@@ -600,6 +600,14 @@
         bild(n, 72), el("span", { lang: "fr" }, n.name), jahre(n), namenStufe(n) ? el("span", { class: "haken", "aria-hidden": "true" }, namenStufe(n) >= 2 ? "✓✓" : "✓") : null))));
   }
   const jahre = (n) => n.jahre ? el("span", { class: "jahre" }, n.jahre) : null;   // Lebensdaten historischer Personen (8.11.)
+  // 📖 Infotext zu den Personnalités (9.11., Mr. Alex): Französisch (Mr. Alex liest vor), Deutsch zum Aufklappen
+  function infoKarte(n) {
+    return el("section", { class: "satzkarte info-karte" },
+      el("h2", { lang: "fr" }, n.gruppe === "histoire" && !/^\*/.test(n.jahre || "") ? "📖 Qui était-ce ?" : "📖 Qui est-ce ?"),
+      el("p", { lang: "fr", class: "info-text" }, n.info.fr),
+      el("div", { class: "knopfreihe" }, knopf("🔊 Écouter", () => spiele([n.info.audio || { tts: n.info.fr }]), "leise")),
+      el("details", {}, el("summary", {}, "🇩🇪 Auf Deutsch"), el("p", { class: "klein" }, n.info.de)));
+  }
   function namenKarte(l, i, stufe) {
     const n = l[i], du = jetztDu(stufe === 1 ? "À toi ! Sprich nach." : "Sag den Namen zuerst selbst!");
     const weiter = knopf(i + 1 < l.length ? "Weiter ➜" : "Fertig ✓", () => (i + 1 < l.length ? namenKarte(l, i + 1, stufe) : namenGruppe(n.gruppe, stufe)), "haupt");
@@ -616,7 +624,8 @@
         el("p", { class: "lese-gross" }, lesehilfe(n)),
         el("p", { class: "klein" }, el("span", { lang: "fr" }, n.stichwort), " – ", n.de),
         n.quelle && el("p", { class: "quelle" }, "Bild: " + n.quelle),
-        du, el("div", { class: "knopfreihe" }, knopf("🔊 Hören", () => spiele([ton(n)])), kontrolle, weiter)));
+        du, el("div", { class: "knopfreihe" }, knopf("🔊 Hören", () => spiele([ton(n)])), kontrolle, weiter)),
+      n.info && infoKarte(n));
     if (stufe === 1) spiele([ton(n)]).then((t) => t !== null && balken(du, Math.max(2, t + 1)).then(geschafft));
     else balken(du, 3).then(() => { kontrolle.focus(); });
   }

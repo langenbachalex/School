@@ -34,6 +34,10 @@ def sprechen(stimme, text, ziel):
 
 
 def auftraege():
+    # Infotexte Personnalités (9.11., Mr. Alex): Mr. Alex erzählt, Aussprache-Hilfen nur für die Stimme
+    for z in fb.tsv("namen_info.tsv"):
+        t = z["fr"].replace("Louis XIV", "Louis Quatorze").replace("N° 5", "numéro cinq").replace("Hugo", "Ugo")
+        yield "alex", "[French] " + t, f"audio/info/{z['id']}.mp3"
     for z in fb.tsv("dialoge.tsv"):
         text = fb.ohne_klammern(z["fr"])
         for muster, ersatz in TAGS:

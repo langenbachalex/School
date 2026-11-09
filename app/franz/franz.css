@@ -112,3 +112,5 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 .shop-gruppe { margin: 1.4rem 0 .4rem; }
 .jahre { display: block; font-size: .8rem; color: var(--leise); font-weight: 400; }
 p.jahre { margin: -.2rem 0 .4rem; font-size: 1rem; }
+.info-karte .info-text { font-size: 1.1rem; line-height: 1.5; }
+.info-karte summary { cursor: pointer; color: var(--leise); }

@@ -155,9 +155,10 @@ def main():
         d["zeilen"].append({"wer": z["wer"], "fr": z["fr"], "de": z["de"], **lautung(z["ipa"]),
                             "audio": a if vorhanden(a) else None})
     namen = []
+    info = {z["id"]: z for z in tsv("namen_info.tsv")}  # Infotexte Personnalités (9.11.), Stimme audio/info/<id>.mp3
     for z in tsv("namen.tsv"):
         a, b = f"audio/namen/{z['id']}.mp3", f"bilder/namen/{z['id']}.jpg"
-        namen.append({"gruppe": z["gruppe"], "id": z["id"], "name": z["name"], "stichwort": z["stichwort"], "de": z["de"], "jahre": z.get("jahre") or None,  # Lebensdaten historischer Personen (8.11., Mr. Alex)
+        namen.append({"gruppe": z["gruppe"], "id": z["id"], "name": z["name"], "stichwort": z["stichwort"], "de": z["de"], "jahre": z.get("jahre") or None, "info": {"fr": info[z["id"]]["fr"], "de": info[z["id"]]["de"], "audio": f"audio/info/{z['id']}.mp3" if vorhanden(f"audio/info/{z['id']}.mp3") else None} if z["id"] in info else None,  # Lebensdaten historischer Personen (8.11., Mr. Alex)
                       "bild": z["bild"], "foto": b if vorhanden(b) else None, **lautung(z["ipa"]), "audio": a if vorhanden(a) else None})
     woerter = {}
     for z in tsv("woerter.tsv"):

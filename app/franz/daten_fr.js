@@ -4959,6 +4959,7 @@ window.DATEN_FR = {
    "stichwort": "attaquant",
    "de": "Stürmer",
    "jahre": null,
+   "info": null,
    "bild": "trikot:10",
    "foto": null,
    "ipa": [
@@ -4993,6 +4994,7 @@ window.DATEN_FR = {
    "stichwort": "milieu",
    "de": "Mittelfeld",
    "jahre": null,
+   "info": null,
    "bild": "trikot:8",
    "foto": null,
    "ipa": [
@@ -5031,6 +5033,7 @@ window.DATEN_FR = {
    "stichwort": "attaquant",
    "de": "Stürmer",
    "jahre": null,
+   "info": null,
    "bild": "trikot:12",
    "foto": null,
    "ipa": [
@@ -5067,6 +5070,7 @@ window.DATEN_FR = {
    "stichwort": "attaquant",
    "de": "Stürmer",
    "jahre": null,
+   "info": null,
    "bild": "trikot:7",
    "foto": null,
    "ipa": [
@@ -5101,6 +5105,7 @@ window.DATEN_FR = {
    "stichwort": "attaquant",
    "de": "Stürmer",
    "jahre": null,
+   "info": null,
    "bild": "trikot:20",
    "foto": null,
    "ipa": [
@@ -5135,6 +5140,7 @@ window.DATEN_FR = {
    "stichwort": "attaquant",
    "de": "Stürmer",
    "jahre": null,
+   "info": null,
    "bild": "trikot:26",
    "foto": null,
    "ipa": [
@@ -5169,6 +5175,7 @@ window.DATEN_FR = {
    "stichwort": "milieu",
    "de": "Mittelfeld",
    "jahre": null,
+   "info": null,
    "bild": "trikot:18",
    "foto": null,
    "ipa": [
@@ -5205,6 +5212,7 @@ window.DATEN_FR = {
    "stichwort": "attaquant",
    "de": "Stürmer",
    "jahre": null,
+   "info": null,
    "bild": "trikot:11",
    "foto": null,
    "ipa": [
@@ -5237,6 +5245,7 @@ window.DATEN_FR = {
    "stichwort": "défenseur",
    "de": "Verteidiger",
    "jahre": null,
+   "info": null,
    "bild": "trikot:3",
    "foto": null,
    "ipa": [
@@ -5269,6 +5278,7 @@ window.DATEN_FR = {
    "stichwort": "milieu",
    "de": "Mittelfeld",
    "jahre": null,
+   "info": null,
    "bild": "trikot:13",
    "foto": null,
    "ipa": [
@@ -5303,6 +5313,7 @@ window.DATEN_FR = {
    "stichwort": "défenseur",
    "de": "Verteidiger",
    "jahre": null,
+   "info": null,
    "bild": "trikot:17",
    "foto": null,
    "ipa": [
@@ -5337,6 +5348,7 @@ window.DATEN_FR = {
    "stichwort": "défenseur",
    "de": "Verteidiger",
    "jahre": null,
+   "info": null,
    "bild": "trikot:5",
    "foto": null,
    "ipa": [
@@ -5367,6 +5379,7 @@ window.DATEN_FR = {
    "stichwort": "défenseur",
    "de": "Verteidiger",
    "jahre": null,
+   "info": null,
    "bild": "trikot:2",
    "foto": null,
    "ipa": [
@@ -5399,6 +5412,7 @@ window.DATEN_FR = {
    "stichwort": "défenseur",
    "de": "Verteidiger",
    "jahre": null,
+   "info": null,
    "bild": "trikot:22",
    "foto": null,
    "ipa": [
@@ -5433,6 +5447,7 @@ window.DATEN_FR = {
    "stichwort": "défenseur",
    "de": "Verteidiger",
    "jahre": null,
+   "info": null,
    "bild": "trikot:21",
    "foto": null,
    "ipa": [
@@ -5467,6 +5482,7 @@ window.DATEN_FR = {
    "stichwort": "attaquant",
    "de": "Stürmer",
    "jahre": null,
+   "info": null,
    "bild": "trikot:9",
    "foto": null,
    "ipa": [
@@ -5503,6 +5519,7 @@ window.DATEN_FR = {
    "stichwort": "milieu",
    "de": "Mittelfeld",
    "jahre": null,
+   "info": null,
    "bild": "trikot:6",
    "foto": null,
    "ipa": [
@@ -5535,6 +5552,7 @@ window.DATEN_FR = {
    "stichwort": "milieu",
    "de": "Mittelfeld",
    "jahre": null,
+   "info": null,
    "bild": "trikot:14",
    "foto": null,
    "ipa": [
@@ -5569,6 +5587,7 @@ window.DATEN_FR = {
    "stichwort": "gardien",
    "de": "Torwart",
    "jahre": null,
+   "info": null,
    "bild": "trikot:16",
    "foto": null,
    "ipa": [
@@ -5599,6 +5618,7 @@ window.DATEN_FR = {
    "stichwort": "gardien",
    "de": "Torwart",
    "jahre": null,
+   "info": null,
    "bild": "trikot:23",
    "foto": null,
    "ipa": [
@@ -5631,6 +5651,7 @@ window.DATEN_FR = {
    "stichwort": "défenseur",
    "de": "Verteidiger",
    "jahre": null,
+   "info": null,
    "bild": "trikot:4",
    "foto": null,
    "ipa": [
@@ -5669,6 +5690,11 @@ window.DATEN_FR = {
    "stichwort": "empereur",
    "de": "Kaiser",
    "jahre": "1769–1821",
+   "info": {
+    "fr": "Napoléon Bonaparte est né en Corse en 1769. Simple officier au début, il est devenu empereur des Français en 1804. Il a gagné des batailles dans toute l'Europe, mais il a aussi laissé quelque chose de très pacifique : le Code civil, les lois que la France utilise encore aujourd'hui.",
+    "de": "Napoleon Bonaparte wurde 1769 auf Korsika geboren. Am Anfang war er ein einfacher Offizier, 1804 wurde er Kaiser der Franzosen. Er hat Schlachten in ganz Europa gewonnen, aber er hat auch etwas sehr Friedliches hinterlassen: den Code civil, die Gesetze, die Frankreich noch heute benutzt.",
+    "audio": "audio/info/napoleon.mp3"
+   },
    "bild": "wm:Napoléon_Ier",
    "foto": "bilder/namen/napoleon.jpg",
    "ipa": [
@@ -5707,6 +5733,11 @@ window.DATEN_FR = {
    "stichwort": "empereur",
    "de": "Kaiser (Karl der Große)",
    "jahre": "um 747–814",
+   "info": {
+    "fr": "Charlemagne était roi des Francs, et en l'an 800, le pape l'a couronné empereur. Son royaume était immense : la France, l'Allemagne, l'Italie… Lui-même ne savait presque pas écrire, mais il a ouvert des écoles partout. C'est pour ça qu'en France, on dit qu'il a « inventé l'école ».",
+    "de": "Karl der Große war König der Franken, und im Jahr 800 hat ihn der Papst zum Kaiser gekrönt. Sein Reich war riesig: Frankreich, Deutschland, Italien … Er selbst konnte kaum schreiben, aber er hat überall Schulen eröffnet. Deshalb sagt man in Frankreich, er habe „die Schule erfunden“.",
+    "audio": "audio/info/charlemagne.mp3"
+   },
    "bild": "wm:Charlemagne",
    "foto": "bilder/namen/charlemagne.jpg",
    "ipa": [
@@ -5733,6 +5764,11 @@ window.DATEN_FR = {
    "stichwort": "chef gaulois",
    "de": "Anführer der Gallier",
    "jahre": "um 82–46 v. Chr.",
+   "info": {
+    "fr": "Il y a plus de deux mille ans, la France s'appelait la Gaule. Vercingétorix était un jeune chef gaulois très courageux. Il a uni les tribus contre Jules César et l'armée romaine. À Alésia, il a perdu, mais aujourd'hui encore, c'est le symbole des Gaulois qui résistent.",
+    "de": "Vor mehr als zweitausend Jahren hieß Frankreich Gallien. Vercingetorix war ein junger, sehr mutiger gallischer Anführer. Er hat die Stämme gegen Julius Cäsar und die römische Armee vereint. In Alesia hat er verloren, aber noch heute ist er das Symbol der Gallier, die Widerstand leisten.",
+    "audio": "audio/info/vercingetorix.mp3"
+   },
    "bild": "wm:Vercingétorix",
    "foto": "bilder/namen/vercingetorix.jpg",
    "ipa": [
@@ -5763,6 +5799,11 @@ window.DATEN_FR = {
    "stichwort": "héroïne",
    "de": "Heldin",
    "jahre": "um 1412–1431",
+   "info": {
+    "fr": "Jeanne d'Arc était une jeune paysanne de Lorraine – pas loin de chez nous ! Elle disait qu'elle entendait des voix. À dix-sept ans, elle a pris une armure et elle a libéré la ville d'Orléans pendant la guerre contre les Anglais. Elle est morte très jeune, à dix-neuf ans. Aujourd'hui, c'est une héroïne nationale.",
+    "de": "Jeanne d'Arc war ein junges Bauernmädchen aus Lothringen – nicht weit von uns! Sie sagte, dass sie Stimmen hörte. Mit siebzehn hat sie eine Rüstung angelegt und im Krieg gegen die Engländer die Stadt Orléans befreit. Sie ist sehr jung gestorben, mit neunzehn. Heute ist sie eine Nationalheldin.",
+    "audio": "audio/info/jeanne.mp3"
+   },
    "bild": "wm:Jeanne_d'Arc",
    "foto": "bilder/namen/jeanne.jpg",
    "ipa": [
@@ -5787,6 +5828,11 @@ window.DATEN_FR = {
    "stichwort": "le Roi-Soleil",
    "de": "der Sonnenkönig",
    "jahre": "1638–1715",
+   "info": {
+    "fr": "Louis XIV est devenu roi à quatre ans seulement, et il a régné pendant soixante-douze ans : c'est un record en Europe ! On l'appelait le Roi-Soleil, parce que tout tournait autour de lui. Il a fait construire le château de Versailles, avec sa célèbre galerie des Glaces.",
+    "de": "Ludwig XIV. wurde schon mit vier Jahren König und hat zweiundsiebzig Jahre lang regiert: Das ist ein Rekord in Europa! Man nannte ihn den Sonnenkönig, weil sich alles um ihn drehte. Er hat das Schloss Versailles bauen lassen, mit seinem berühmten Spiegelsaal.",
+    "audio": "audio/info/louis14.mp3"
+   },
    "bild": "wm:Louis_XIV",
    "foto": "bilder/namen/louis14.jpg",
    "ipa": [
@@ -5817,6 +5863,11 @@ window.DATEN_FR = {
    "stichwort": "scientifique",
    "de": "Wissenschaftlerin",
    "jahre": "1867–1934",
+   "info": {
+    "fr": "Marie Curie est née en Pologne. À vingt-quatre ans, elle est venue à Paris pour étudier, parce qu'en Pologne, les femmes n'avaient pas le droit d'aller à l'université. Avec son mari Pierre, elle a découvert le radium. Elle a reçu deux fois le prix Nobel – la première femme de l'histoire !",
+    "de": "Marie Curie wurde in Polen geboren. Mit vierundzwanzig ist sie zum Studieren nach Paris gekommen, weil Frauen in Polen nicht an die Universität durften. Mit ihrem Mann Pierre hat sie das Radium entdeckt. Sie hat zweimal den Nobelpreis bekommen – als erste Frau der Geschichte!",
+    "audio": "audio/info/curie.mp3"
+   },
    "bild": "wm:Marie_Curie",
    "foto": "bilder/namen/curie.jpg",
    "ipa": [
@@ -5849,6 +5900,11 @@ window.DATEN_FR = {
    "stichwort": "scientifique",
    "de": "Wissenschaftler",
    "jahre": "1822–1895",
+   "info": {
+    "fr": "Louis Pasteur était un grand scientifique. Il a découvert que les microbes rendent malade. En 1885, il a sauvé un petit garçon, mordu par un chien, avec son vaccin contre la rage. Et le lait « pasteurisé » dans ton frigo ? Il porte son nom !",
+    "de": "Louis Pasteur war ein großer Wissenschaftler. Er hat entdeckt, dass Mikroben krank machen. 1885 hat er mit seinem Impfstoff gegen die Tollwut einen kleinen Jungen gerettet, den ein Hund gebissen hatte. Und die „pasteurisierte“ Milch in deinem Kühlschrank? Sie trägt seinen Namen!",
+    "audio": "audio/info/pasteur.mp3"
+   },
    "bild": "wm:Louis_Pasteur",
    "foto": "bilder/namen/pasteur.jpg",
    "ipa": [
@@ -5879,6 +5935,11 @@ window.DATEN_FR = {
    "stichwort": "inventeur",
    "de": "Erfinder (Blindenschrift)",
    "jahre": "1809–1852",
+   "info": {
+    "fr": "Quand il avait trois ans, Louis Braille s'est blessé à l'œil dans l'atelier de son père, et il est devenu aveugle. À quinze ans seulement, il a inventé une écriture avec six petits points en relief. Grâce à lui, des millions de personnes aveugles lisent avec les doigts.",
+    "de": "Als er drei Jahre alt war, hat sich Louis Braille in der Werkstatt seines Vaters am Auge verletzt und ist blind geworden. Mit nur fünfzehn Jahren hat er eine Schrift aus sechs erhabenen Punkten erfunden. Dank ihm lesen Millionen blinder Menschen mit den Fingern.",
+    "audio": "audio/info/braille.mp3"
+   },
    "bild": "wm:Louis_Braille",
    "foto": "bilder/namen/braille.jpg",
    "ipa": [
@@ -5907,6 +5968,11 @@ window.DATEN_FR = {
    "stichwort": "inventeurs du cinéma",
    "de": "Erfinder des Kinos",
    "jahre": "Auguste 1862–1954 · Louis 1864–1948",
+   "info": {
+    "fr": "Auguste et Louis Lumière étaient deux frères de Lyon. Ils ont inventé le cinématographe, une caméra qui pouvait aussi projeter les films. En 1895, à Paris, ils ont montré le premier film au public. On raconte que les spectateurs ont eu peur quand ils ont vu un train arriver sur l'écran !",
+    "de": "Auguste und Louis Lumière waren zwei Brüder aus Lyon. Sie haben den Kinematografen erfunden, eine Kamera, die Filme auch vorführen konnte. 1895 haben sie in Paris dem Publikum den ersten Film gezeigt. Man erzählt, dass die Zuschauer Angst bekamen, als sie einen Zug auf die Leinwand zufahren sahen!",
+    "audio": "audio/info/lumiere.mp3"
+   },
    "bild": "wm:Auguste_et_Louis_Lumière",
    "foto": "bilder/namen/lumiere.jpg",
    "ipa": [
@@ -5939,6 +6005,11 @@ window.DATEN_FR = {
    "stichwort": "ingénieur",
    "de": "Ingenieur",
    "jahre": "1832–1923",
+   "info": {
+    "fr": "Gustave Eiffel était ingénieur. Il a construit des ponts en fer dans le monde entier, et même la structure de la statue de la Liberté à New York. Pour l'Exposition universelle de 1889, il a construit la tour Eiffel. Au début, beaucoup de Parisiens la trouvaient horrible !",
+    "de": "Gustave Eiffel war Ingenieur. Er hat auf der ganzen Welt Brücken aus Eisen gebaut und sogar das Gerüst der Freiheitsstatue in New York. Für die Weltausstellung 1889 hat er den Eiffelturm gebaut. Am Anfang fanden ihn viele Pariser schrecklich!",
+    "audio": "audio/info/eiffel.mp3"
+   },
    "bild": "wm:Gustave_Eiffel",
    "foto": "bilder/namen/eiffel.jpg",
    "ipa": [
@@ -5971,6 +6042,11 @@ window.DATEN_FR = {
    "stichwort": "écrivain",
    "de": "Schriftsteller",
    "jahre": "1828–1905",
+   "info": {
+    "fr": "Jules Verne a écrit des romans d'aventure pleins de machines extraordinaires. Ses héros voyageaient sous la mer en sous-marin, faisaient le tour du monde en quatre-vingts jours ou partaient vers la Lune. À son époque, c'était de la science-fiction – aujourd'hui, beaucoup de ses idées existent vraiment.",
+    "de": "Jules Verne hat Abenteuerromane voller außergewöhnlicher Maschinen geschrieben. Seine Helden reisten im U-Boot unter dem Meer, fuhren in achtzig Tagen um die Welt oder flogen zum Mond. Zu seiner Zeit war das Science-Fiction – heute gibt es viele seiner Ideen wirklich.",
+    "audio": "audio/info/verne.mp3"
+   },
    "bild": "wm:Jules_Verne",
    "foto": "bilder/namen/verne.jpg",
    "ipa": [
@@ -5999,6 +6075,11 @@ window.DATEN_FR = {
    "stichwort": "écrivain",
    "de": "Schriftsteller",
    "jahre": "1802–1885",
+   "info": {
+    "fr": "Victor Hugo a été un des plus grands écrivains français. Il a écrit des poèmes, du théâtre et des romans célèbres, comme Les Misérables et Notre-Dame de Paris. Il s'est battu contre la pauvreté et pour l'école gratuite. Quand il est mort, deux millions de personnes ont suivi son cercueil dans Paris.",
+    "de": "Victor Hugo war einer der größten französischen Schriftsteller. Er hat Gedichte, Theaterstücke und berühmte Romane geschrieben, wie Die Elenden und Der Glöckner von Notre-Dame. Er hat gegen die Armut und für die kostenlose Schule gekämpft. Als er starb, sind zwei Millionen Menschen seinem Sarg durch Paris gefolgt.",
+    "audio": "audio/info/hugo.mp3"
+   },
    "bild": "wm:Victor_Hugo",
    "foto": "bilder/namen/hugo.jpg",
    "ipa": [
@@ -6031,6 +6112,11 @@ window.DATEN_FR = {
    "stichwort": "écrivain",
    "de": "Schriftsteller",
    "jahre": "1802–1870",
+   "info": {
+    "fr": "Alexandre Dumas a écrit des romans pleins d'aventures, de duels et d'amitié. Son livre le plus célèbre, Les Trois Mousquetaires, raconte l'histoire de d'Artagnan et de ses trois amis. Leur devise, tu la connais peut-être : « Un pour tous, tous pour un ! »",
+    "de": "Alexandre Dumas hat Romane voller Abenteuer, Duelle und Freundschaft geschrieben. Sein berühmtestes Buch, Die drei Musketiere, erzählt die Geschichte von d'Artagnan und seinen drei Freunden. Ihren Wahlspruch kennst du vielleicht: „Einer für alle, alle für einen!“",
+    "audio": "audio/info/dumas.mp3"
+   },
    "bild": "wm:Alexandre_Dumas",
    "foto": "bilder/namen/dumas.jpg",
    "ipa": [
@@ -6065,6 +6151,11 @@ window.DATEN_FR = {
    "stichwort": "auteur de théâtre",
    "de": "Theaterautor",
    "jahre": "1622–1673",
+   "info": {
+    "fr": "Molière était acteur et auteur de théâtre au temps de Louis XIV. Dans ses comédies, il se moquait des gens prétentieux, des faux médecins et des avares. Le roi adorait ses pièces. Il est si célèbre qu'on appelle le français « la langue de Molière ».",
+    "de": "Molière war Schauspieler und Theaterautor zur Zeit Ludwigs XIV. In seinen Komödien machte er sich über eingebildete Leute, falsche Ärzte und Geizhälse lustig. Der König liebte seine Stücke. Er ist so berühmt, dass man Französisch „die Sprache Molières“ nennt.",
+    "audio": "audio/info/moliere.mp3"
+   },
    "bild": "wm:Molière",
    "foto": "bilder/namen/moliere.jpg",
    "ipa": [
@@ -6089,6 +6180,11 @@ window.DATEN_FR = {
    "stichwort": "écrivain et pilote",
    "de": "Schriftsteller und Pilot",
    "jahre": "1900–1944",
+   "info": {
+    "fr": "Antoine de Saint-Exupéry était pilote : il transportait le courrier en avion au-dessus du désert et des montagnes. Un jour, son avion est tombé en panne dans le Sahara. Cette aventure lui a donné l'idée du Petit Prince, un des livres les plus lus du monde. En 1944, il a disparu en mer avec son avion.",
+    "de": "Antoine de Saint-Exupéry war Pilot: Er flog die Post über Wüste und Berge. Eines Tages hatte sein Flugzeug in der Sahara eine Panne. Dieses Abenteuer brachte ihn auf die Idee zum Kleinen Prinzen, einem der meistgelesenen Bücher der Welt. 1944 ist er mit seinem Flugzeug über dem Meer verschwunden.",
+    "audio": "audio/info/saint_exupery.mp3"
+   },
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6129,6 +6225,11 @@ window.DATEN_FR = {
    "stichwort": "peintre",
    "de": "Maler",
    "jahre": "1840–1926",
+   "info": {
+    "fr": "Claude Monet était peintre. Il aimait peindre dehors, pour attraper la lumière et les couleurs du moment. Un de ses tableaux s'appelle « Impression, soleil levant » : c'est de là que vient le mot « impressionnisme ». Dans son jardin à Giverny, il a peint ses nymphéas plus de deux cents fois.",
+    "de": "Claude Monet war Maler. Er malte gern draußen, um das Licht und die Farben des Augenblicks einzufangen. Eines seiner Bilder heißt „Impression, Sonnenaufgang“: Daher kommt das Wort „Impressionismus“. In seinem Garten in Giverny hat er seine Seerosen mehr als zweihundertmal gemalt.",
+    "audio": "audio/info/monet.mp3"
+   },
    "bild": "wm:Claude_Monet",
    "foto": "bilder/namen/monet.jpg",
    "ipa": [
@@ -6159,6 +6260,11 @@ window.DATEN_FR = {
    "stichwort": "styliste",
    "de": "Modedesignerin",
    "jahre": "1883–1971",
+   "info": {
+    "fr": "Coco Chanel a grandi dans un orphelinat, très pauvre. Plus tard, elle est devenue une des stylistes les plus célèbres du monde. Elle a libéré les femmes des corsets et leur a donné des vêtements confortables. Sa petite robe noire et son parfum, le N° 5, sont encore des stars aujourd'hui.",
+    "de": "Coco Chanel ist sehr arm in einem Waisenhaus aufgewachsen. Später wurde sie eine der berühmtesten Modedesignerinnen der Welt. Sie hat die Frauen vom Korsett befreit und ihnen bequeme Kleidung gegeben. Ihr kleines Schwarzes und ihr Parfüm, das N° 5, sind heute noch Stars.",
+    "audio": "audio/info/chanel.mp3"
+   },
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6191,6 +6297,11 @@ window.DATEN_FR = {
    "stichwort": "chanteuse",
    "de": "Sängerin",
    "jahre": "1915–1963",
+   "info": {
+    "fr": "Édith Piaf était toute petite – on l'appelait « la môme Piaf », le petit moineau. Elle a commencé à chanter dans la rue, à Paris. Mais quelle voix ! Elle est devenue la chanteuse française la plus célèbre du monde, avec des chansons comme La Vie en rose et Non, je ne regrette rien.",
+    "de": "Édith Piaf war ganz klein – man nannte sie „la môme Piaf“, den kleinen Spatz. Sie hat auf der Straße in Paris angefangen zu singen. Aber was für eine Stimme! Sie wurde die berühmteste französische Sängerin der Welt, mit Liedern wie La Vie en rose und Non, je ne regrette rien.",
+    "audio": "audio/info/piaf.mp3"
+   },
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6221,6 +6332,11 @@ window.DATEN_FR = {
    "stichwort": "explorateur",
    "de": "Entdecker (Meer)",
    "jahre": "1910–1997",
+   "info": {
+    "fr": "Jacques-Yves Cousteau était explorateur des océans. Il a aidé à inventer le scaphandre autonome, grâce auquel on peut respirer sous l'eau. Avec son bateau, la Calypso, il a filmé le monde sous-marin et il a montré à des millions de gens qu'il faut protéger la mer.",
+    "de": "Jacques-Yves Cousteau war ein Entdecker der Ozeane. Er hat geholfen, das Tauchgerät zu erfinden, mit dem man unter Wasser atmen kann. Mit seinem Schiff, der Calypso, hat er die Unterwasserwelt gefilmt und Millionen Menschen gezeigt, dass man das Meer schützen muss.",
+    "audio": "audio/info/cousteau.mp3"
+   },
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6253,6 +6369,11 @@ window.DATEN_FR = {
    "stichwort": "père des Jeux olympiques",
    "de": "Vater der Olympischen Spiele",
    "jahre": "1863–1937",
+   "info": {
+    "fr": "Pierre de Coubertin pensait que le sport rend les jeunes plus forts et qu'il peut rapprocher les peuples. Inspiré par la Grèce antique, il a relancé les Jeux olympiques : les premiers Jeux modernes ont eu lieu à Athènes en 1896. Et on lui attribue une phrase très célèbre : « L'important, c'est de participer. »",
+    "de": "Pierre de Coubertin dachte, dass Sport junge Menschen stärker macht und die Völker einander näherbringen kann. Inspiriert vom alten Griechenland hat er die Olympischen Spiele wiederbelebt: Die ersten modernen Spiele fanden 1896 in Athen statt. Und man schreibt ihm einen sehr berühmten Satz zu: „Dabei sein ist alles.“",
+    "audio": "audio/info/coubertin.mp3"
+   },
    "bild": "wm:Pierre_de_Coubertin",
    "foto": "bilder/namen/coubertin.jpg",
    "ipa": [
@@ -6287,6 +6408,11 @@ window.DATEN_FR = {
    "stichwort": "footballeur",
    "de": "Fußballer",
    "jahre": "* 1972",
+   "info": {
+    "fr": "Zinédine Zidane est né à Marseille, dans une famille venue d'Algérie. Enfant, il jouait au foot dans la rue de son quartier. En 1998, il a marqué deux buts de la tête en finale, et la France est devenue championne du monde pour la première fois. Aujourd'hui, il est le sélectionneur de l'équipe de France.",
+    "de": "Zinédine Zidane wurde in Marseille geboren, in einer Familie, die aus Algerien kam. Als Kind spielte er auf der Straße in seinem Viertel Fußball. 1998 hat er im Finale zwei Kopfballtore geschossen, und Frankreich wurde zum ersten Mal Weltmeister. Heute ist er Trainer der französischen Nationalmannschaft.",
+    "audio": "audio/info/zidane.mp3"
+   },
    "bild": "trikot:10",
    "foto": null,
    "ipa": [
@@ -6321,6 +6447,7 @@ window.DATEN_FR = {
    "stichwort": "président",
    "de": "Präsident",
    "jahre": null,
+   "info": null,
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6357,6 +6484,7 @@ window.DATEN_FR = {
    "stichwort": "chanteuse (Belgique)",
    "de": "Sängerin (Belgien)",
    "jahre": null,
+   "info": null,
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6381,6 +6509,7 @@ window.DATEN_FR = {
    "stichwort": "astronaute",
    "de": "Astronautin",
    "jahre": null,
+   "info": null,
    "bild": "zeichen",
    "foto": null,
    "ipa": [
@@ -6413,6 +6542,7 @@ window.DATEN_FR = {
    "stichwort": "ville",
    "de": "Stadt",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6435,6 +6565,7 @@ window.DATEN_FR = {
    "stichwort": "ville",
    "de": "Stadt",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6459,6 +6590,7 @@ window.DATEN_FR = {
    "stichwort": "ville",
    "de": "Stadt",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6485,6 +6617,7 @@ window.DATEN_FR = {
    "stichwort": "département",
    "de": "Département",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6509,6 +6642,7 @@ window.DATEN_FR = {
    "stichwort": "région",
    "de": "Region",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6541,6 +6675,7 @@ window.DATEN_FR = {
    "stichwort": "ville",
    "de": "Stadt",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6565,6 +6700,7 @@ window.DATEN_FR = {
    "stichwort": "ville",
    "de": "Stadt",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6591,6 +6727,7 @@ window.DATEN_FR = {
    "stichwort": "ville",
    "de": "Stadt",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6625,6 +6762,7 @@ window.DATEN_FR = {
    "stichwort": "région",
    "de": "Region",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6655,6 +6793,7 @@ window.DATEN_FR = {
    "stichwort": "région",
    "de": "Region",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6687,6 +6826,7 @@ window.DATEN_FR = {
    "stichwort": "région",
    "de": "Region",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6727,6 +6867,7 @@ window.DATEN_FR = {
    "stichwort": "ville",
    "de": "Stadt",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [
@@ -6759,6 +6900,7 @@ window.DATEN_FR = {
    "stichwort": "village",
    "de": "Dorf",
    "jahre": null,
+   "info": null,
    "bild": "ort",
    "foto": null,
    "ipa": [

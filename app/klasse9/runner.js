@@ -449,7 +449,7 @@
     const u = h / 80;
     c.save(); c.translate(x, y); c.scale(u, u);
     const haut = '#f1c27d', hautD = '#d9a866', wange = 'rgba(255,120,110,.28)';
-    const topF = FARBEN[s.topfarbe] || '#c8283a';
+    const topF = s.top === 'mariniere' ? '#f7f7f2' : (FARBEN[s.topfarbe] || '#c8283a');
     const schuhF = FARBEN[s.schuhe] || '#f4f4f4';
     const shortsF = '#2a4a8a';
     const p = pose === 'lauf' ? t * 13 : 0;
@@ -602,6 +602,15 @@
       c.strokeStyle = '#333'; c.lineWidth = 1.6; c.lineCap = 'round'; c.beginPath(); c.moveTo(rx0 + 3, ry0 - 1); c.quadraticCurveTo(rx0 + rw / 2, ry0 - 5, rx0 + rw - 3, ry0 - 1); c.stroke();   // Griff
     }
 
+    // ---- Paris-Teil (9.11., nur Französisch-Boutique): Baguette schräg auf dem Rücken, ragt über die Schulter
+    if (s.baguette === 'an') {
+      c.save(); c.translate(-6, -42); c.rotate(-0.85 + (pose === 'lauf' ? Math.sin(t * 13) * 0.04 : 0));
+      c.fillStyle = '#d99a3e'; c.beginPath(); c.roundRect(-4.5, -26, 9, 52, 4.5); c.fill();
+      c.fillStyle = '#b8772a'; c.beginPath(); c.roundRect(-4.5, 10, 9, 16, 4.5); c.fill();
+      c.strokeStyle = '#f3d9a4'; c.lineWidth = 1.4; c.lineCap = 'round'; c.beginPath();
+      [-19, -9, 1].forEach((k) => { c.moveTo(-2.5, k + 3); c.lineTo(2.5, k - 2); }); c.stroke();   // Einschnitte
+      c.restore();
+    }
     // ---- Hals (sichtbar, schmaler als die Schultern; Giraffenhals: lang mit Flecken)
     c.fillStyle = haut; c.beginPath(); c.roundRect(-4, HY + 10, 8.5, SCH + 1 - (HY + 10), 2); c.fill();
     if (giraffe) { c.fillStyle = 'rgba(140,80,20,.35)'; [[-2, HY + 18], [1.5, HY + 25], [-1.5, HY + 32], [1.5, HY + 39]].forEach(([fx, fy]) => { c.beginPath(); c.ellipse(fx, fy, 2.2, 2.6, 0, 0, Math.PI * 2); c.fill(); }); }
@@ -623,6 +632,13 @@
       c.beginPath(); c.ellipse(hw - 5, -38, 15, 13, 0, 0, Math.PI * 2); c.fill();
       c.fillStyle = 'rgba(255,255,255,.18)'; c.beginPath(); c.ellipse(hw + 1, -43, 5, 3.5, -0.4, 0, Math.PI * 2); c.fill();
       c.fillStyle = 'rgba(0,0,0,.2)'; c.beginPath(); c.arc(hw + 3, -36, 1.6, 0, Math.PI * 2); c.fill();   // Bauchnabel durchs Shirt
+    }
+    if (s.top === 'mariniere') {   // Paris-Teil (9.11.): weißes Ringelshirt mit marineblauen Streifen (auch über den Bauch)
+      c.save(); torso();
+      if (bauch === 2) c.ellipse(hw - 4, -37, 9, 8.5, 0, 0, Math.PI * 2);
+      if (bauch === 3) c.ellipse(hw - 5, -38, 15, 13, 0, 0, Math.PI * 2);
+      c.clip('nonzero'); c.fillStyle = '#1d2f6f'; for (let yy = SCH + 4; yy < -24; yy += 5) c.fillRect(-40, yy, 80, 2.4);
+      c.restore();
     }
     c.fillStyle = 'rgba(0,0,0,.18)'; c.beginPath(); c.ellipse(0, SCH, 6, 2.2, 0, 0, Math.PI); c.fill();   // Kragen
     if (s.top === 'hoodie') {
@@ -865,6 +881,13 @@
       c.beginPath(); c.ellipse(0, HY - 11, 21, 4.5, 0, 0, Math.PI * 2); c.fill();
       c.beginPath(); c.roundRect(-9.5, HY - 26, 19, 16, 4); c.fill();
       c.fillStyle = '#5a3a18'; c.fillRect(-9.5, HY - 14, 19, 3); c.restore();
+    } else if (s.hut === 'beret') {   // Paris-Teil (9.11.): schwarze Baskenmütze, schräg nach hinten, mit Zipfel
+      hutAn(); c.fillStyle = '#1b1b22';
+      c.beginPath(); c.ellipse(-3, HY - 11, 16, 6.5, -0.12, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.roundRect(-11, HY - 11, 20, 3.5, 1.7); c.fill();
+      c.strokeStyle = '#1b1b22'; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath(); c.moveTo(-2, HY - 17); c.lineTo(-1, HY - 21); c.stroke();
+      c.fillStyle = 'rgba(255,255,255,.12)'; c.beginPath(); c.ellipse(-6, HY - 14, 7, 2, -0.12, 0, Math.PI * 2); c.fill();
+      c.restore();
     } else if (s.hut === 'zylinder') {
       hutAn(); c.fillStyle = '#18213a';
       c.beginPath(); c.ellipse(0, HY - 11, 17, 3.5, 0, 0, Math.PI * 2); c.fill();
@@ -877,7 +900,7 @@
   function figurHoehe(s) {
     s = Object.assign({}, SKIN_STANDARD, s);
     const mitHut = !!s.hut && s.hut !== 'keiner';
-    const hutH = { cap: 8, cowboy: 13, zylinder: 19 }[s.hut] || 0;
+    const hutH = { cap: 8, cowboy: 13, zylinder: 19, beret: 10 }[s.hut] || 0;
     const haarH = ({ irokese: 20, mohawk: 30, riesenafro: 20, afro: 10, tolle: mitHut ? 0 : 17, dutt: mitHut ? 9 : 14, wuschel: mitHut ? 0 : 21, flattop: mitHut ? 0 : 13, dreihaare: mitHut ? 0 : 14, locken: 3 })[s.haar] || 0;
     if (s.haar === 'riesenafro' && mitHut) return 88 + (s.hals === 'giraffe' ? 24 : 0) + haarH + Math.round(hutH * 0.5); // Hütchen (0,5) oben auf der Afro-Kante
     return 88 + (s.hals === 'giraffe' ? 24 : 0) + Math.max(hutH, haarH);

@@ -236,7 +236,10 @@ def main():
         {"id": "rahmen_rot", "symbol": "🎨", "name": "Cadre rouge", "unter": "Roter Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "rot"},
         {"id": "rahmen_blau", "symbol": "🎨", "name": "Cadre bleu", "unter": "Blauer Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "blau"},
         {"id": "rahmen_gruen", "symbol": "🎨", "name": "Cadre vert", "unter": "Grüner Rahmen für dein Titel-Schild", "preis": 75, "rahmen": "gruen"},
-        {"id": "rahmen_gold", "symbol": "👑", "name": "Cadre doré", "unter": "Nicht zu kaufen: für einen Mois parfait (4 perfekte Wochen hintereinander)", "preis": 0, "rahmen": "gold", "verdient": "👑 Mois parfait"}] + skin_artikel(lambda g, e: g, "Figur im Paris Run")
+        {"id": "rahmen_gold", "symbol": "👑", "name": "Cadre doré", "unter": "Nicht zu kaufen: für einen Mois parfait (4 perfekte Wochen hintereinander)", "preis": 0, "rahmen": "gold", "verdient": "👑 Mois parfait"}] + skin_artikel(lambda g, e: g, "Figur im Paris Run") + [   # Paris-Teile (9.11.), nur hier: Zeichnungen in app/klasse9/runner.js (hut beret, top mariniere, baguette an)
+        {"id": "skin_hut_beret", "symbol": "🎨", "name": "Béret (Baskenmütze)", "unter": "Figur im Paris Run", "preis": 45, "skin": ["hut", "beret"]},
+        {"id": "skin_top_mariniere", "symbol": "🎨", "name": "Marinière (Ringelshirt)", "unter": "Figur im Paris Run", "preis": 45, "skin": ["top", "mariniere"]},
+        {"id": "skin_baguette_an", "symbol": "🥖", "name": "Baguette auf dem Rücken", "unter": "Figur im Paris Run", "preis": 90, "skin": ["baguette", "an"]}]
     parle_audio = {w: {x: parle_name(w, x) for x in parle_stuecke() if vorhanden(parle_name(w, x))} for w in ("A", "B")}
     # Lob und Rückmeldungen (8.11.): inhalte/franz/lob.tsv → nach Art gruppiert (lob, stark, fehler, spiel, geschafft, voll, doch), Stimme audio/lob/<id>.mp3
     lob = {}

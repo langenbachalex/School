@@ -1829,6 +1829,39 @@ window.DATEN_FR = {
     "handschuhe",
     "boxhandschuhe"
    ]
+  },
+  {
+   "id": "skin_hut_beret",
+   "symbol": "🎨",
+   "name": "Béret (Baskenmütze)",
+   "unter": "Figur im Paris Run",
+   "preis": 45,
+   "skin": [
+    "hut",
+    "beret"
+   ]
+  },
+  {
+   "id": "skin_top_mariniere",
+   "symbol": "🎨",
+   "name": "Marinière (Ringelshirt)",
+   "unter": "Figur im Paris Run",
+   "preis": 45,
+   "skin": [
+    "top",
+    "mariniere"
+   ]
+  },
+  {
+   "id": "skin_baguette_an",
+   "symbol": "🥖",
+   "name": "Baguette auf dem Rücken",
+   "unter": "Figur im Paris Run",
+   "preis": 90,
+   "skin": [
+    "baguette",
+    "an"
+   ]
   }
  ],
  "parleAudio": {

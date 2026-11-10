@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Lehrer-Übersicht</title>
+<!-- Sync Stufe A ohne Server (10.11.2026, Block 4d): liest die QR-Links der Apps (#d=…), speichert nur in diesem Browser.
+     Namen stehen nur hier (Code → Name), nie auf dem Schülergerät. Datenformat v1: siehe syncDaten() in app/app.js. -->
+<style>
+:root { --bg:#f6f7f9; --karte:#fff; --text:#1d232b; --leise:#5b6573; --linie:#d9dee5; --gruen:#1f8a4c; --gelb:#b7791f; --rot:#c0392b; --akzent:#2457c5; }
+@media (prefers-color-scheme: dark) { :root { --bg:#12161c; --karte:#1b2129; --text:#e7ebf0; --leise:#9aa5b3; --linie:#2c3540; --gruen:#3fbf75; --gelb:#e0a43a; --rot:#e5675a; --akzent:#7aa2ff; } }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font:15px/1.45 system-ui, sans-serif; }
+main { max-width:1100px; margin:0 auto; padding:16px; }
+h1 { font-size:22px; margin:4px 0 2px; } h2 { font-size:17px; margin:18px 0 8px; }
+.leise { color:var(--leise); font-size:13px; }
+.karte { background:var(--karte); border:1px solid var(--linie); border-radius:10px; padding:12px; margin:10px 0; }
+.meldung { border-left:4px solid var(--gruen); }
+.reihe { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+button, select, input { font:inherit; color:inherit; background:var(--karte); border:1px solid var(--linie); border-radius:8px; padding:6px 10px; }
+button { cursor:pointer; } button.haupt { background:var(--akzent); color:#fff; border-color:var(--akzent); }
+input.name { width:9em; padding:3px 6px; }
+.tabelle { overflow-x:auto; }
+table { border-collapse:collapse; width:100%; min-width:720px; }
+th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--linie); vertical-align:top; }
+th { font-size:13px; color:var(--leise); font-weight:600; }
+.tage { display:inline-flex; gap:2px; } .tage i { width:8px; height:14px; border-radius:2px; background:var(--linie); display:inline-block; }
+.tage i.ja { background:var(--gruen); }
+.ok { color:var(--gruen); font-weight:600; } .halb { color:var(--gelb); font-weight:600; } .nein { color:var(--rot); font-weight:600; }
+.wort { display:inline-block; border:1px solid var(--linie); border-radius:6px; padding:0 6px; margin:1px 2px; font-size:13px; }
+textarea { width:100%; min-height:5em; font:13px monospace; color:inherit; background:var(--karte); border:1px solid var(--linie); border-radius:8px; padding:6px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>👩‍🏫 Lehrer-Übersicht</h1>
+  <p class="leise">QR-Code im Lehrer-Bereich der App (📲 QR für Lehrer) mit der Kamera scannen. Alles bleibt in diesem Browser auf diesem Gerät, es gibt keinen Server. Immer denselben Browser benutzen.</p>
+  <div id="meldung"></div>
+  <div class="karte reihe">
+    <label>Gruppe <select id="gruppe"></select></label>
+    <button id="export">📄 Export als Text</button>
+    <button id="namenRaus">💾 Namen sichern</button>
+    <label><button id="namenReinKnopf" type="button">📂 Namen laden</button><input id="namenRein" type="file" accept=".json,application/json" hidden></label>
+  </div>
+  <div id="inhalt"></div>
+  <details class="karte"><summary>Link von Hand einfügen</summary>
+    <p class="leise">Falls die Kamera den Link in einem anderen Browser öffnet: den Link kopieren und hier einfügen.</p>
+    <div class="reihe"><input id="link" style="flex:1;min-width:14em" placeholder="https://…/lehrer/#d=…"><button id="linkOk" class="haupt">Übernehmen</button></div>
+  </details>
+  <details class="karte"><summary>Alles löschen</summary>
+    <p class="leise">Löscht alle gespeicherten Stände und Namen auf diesem Gerät.</p><button id="allesWeg">🗑️ Alles löschen</button>
+  </details>
+</main>
+<script>
+(() => {
+  "use strict";
+  const KEY = "mralex-lehrer-v1";
+  const $ = (id) => document.getElementById(id);
+  const lies = () => { try { const o = JSON.parse(localStorage.getItem(KEY) || "{}"); return { eintraege: o.eintraege || {}, namen: o.namen || {} }; } catch (e) { return { eintraege: {}, namen: {} }; } };
+  let db = lies();
+  const schreib = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { melde("⚠️ Speichern ging nicht (privates Fenster?).", true); } };
+  const schluessel = (x) => `${x.a}|${x.g}|${x.c}`;
+  const gruppeVon = (k) => k.split("|").slice(0, 2).join(" · ");
+  const esc = (s) => String(s).replace(/[&<>"]/g, (z) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[z]));
+  const zeit = (min) => { const d = new Date(min * 60000); return d.toLocaleDateString("de-DE", { day: "numeric", month: "numeric" }) + " " + d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }); };
+  const datum = (iso) => { const [, m, t] = String(iso).split("-"); return `${+t}.${+m}.`; };
+  function melde(text, fehler) { $("meldung").innerHTML = `<div class="karte meldung"${fehler ? ' style="border-left-color:var(--rot)"' : ""}>${esc(text)}</div>`; }
+
+  function aufnehmen(link) {
+    const m = String(link).match(/#d=([A-Za-z0-9_-]+)/);
+    if (!m) return false;
+    let x;
+    try { const b = m[1].replace(/-/g, "+").replace(/_/g, "/"); x = JSON.parse(decodeURIComponent(escape(atob(b + "===".slice((b.length + 3) % 4))))); }
+    catch (e) { melde("⚠️ Der QR-Code ließ sich nicht lesen.", true); return true; }
+    const kurz = (s) => /^[\w-]{1,8}$/.test(s);
+    if (!x || x.v !== 1 || !kurz(x.a) || !kurz(x.g) || !kurz(x.c) || !Array.isArray(x.d)) { melde("⚠️ Unbekanntes Format.", true); return true; }
+    const k = schluessel(x), alt = db.eintraege[k];
+    if (alt && alt.t > x.t) { melde(`ℹ️ ${x.a} · ${x.g} · Code ${x.c}: Hier liegt schon ein neuerer Stand (${zeit(alt.t)}).`); return true; }
+    x.s = Math.floor(Date.now() / 60000);
+    db.eintraege[k] = x; schreib();
+    melde(`✅ Gespeichert: ${x.a} · ${x.g} · Code ${x.c}${db.namen[k] ? " (" + db.namen[k] + ")" : ""} – ${x.d[0]} Übungen heute.`);
+    $("gruppe").dataset.wunsch = `${x.a} · ${x.g}`;
+    return true;
+  }
+
+  const hwText = (h) => !h ? "–" : `<span class="${h.z >= h.n ? "ok" : h.z > 0 ? "halb" : "nein"}">${h.z}/${h.n}</span> <span class="leise">(${datum(h.v)}–${datum(h.b)})</span>`;
+  const tageBild = (d) => `<span class="tage" title="14 Tage, links = Scan-Tag">${d.slice(0, 14).map((n) => `<i class="${n > 0 ? "ja" : ""}" title="${n} Übungen"></i>`).join("")}</span>`;
+
+  function zeigen() {
+    const sel = $("gruppe"), alle = Object.keys(db.eintraege);
+    const gruppen = [...new Set(alle.map(gruppeVon))].sort((a, b) => a.localeCompare(b, "de", { numeric: true }));
+    const wahl = sel.dataset.wunsch && gruppen.includes(sel.dataset.wunsch) ? sel.dataset.wunsch : gruppen.includes(sel.value) ? sel.value : gruppen[0];
+    delete sel.dataset.wunsch;
+    sel.innerHTML = gruppen.map((g) => `<option${g === wahl ? " selected" : ""}>${esc(g)}</option>`).join("");
+    if (!gruppen.length) { $("inhalt").innerHTML = `<div class="karte leise">Noch keine Daten. Im Lehrer-Bereich der App „📲 QR für Lehrer“ öffnen und den Code scannen.</div>`; return; }
+    const ks = alle.filter((k) => gruppeVon(k) === wahl).sort((a, b) => a.localeCompare(b, "de", { numeric: true }));
+    const woerter = {};
+    let geuebt = 0, hwFertig = 0;
+    for (const k of ks) { const x = db.eintraege[k]; if (x.d[0] > 0) geuebt++; if (x.h && x.h.z >= x.h.n) hwFertig++; for (const [w, n] of x.w || []) woerter[w] = (woerter[w] || 0) + n; }
+    const schwer = Object.entries(woerter).sort((a, b) => b[1] - a[1]).slice(0, 15);
+    const zeilen = ks.map((k) => {
+      const x = db.eintraege[k], tage = x.d.slice(0, 14).filter((n) => n > 0).length;
+      return `<tr><td><b>${esc(x.c)}</b></td><td><input class="name" data-k="${esc(k)}" value="${esc(db.namen[k] || "")}" placeholder="Name"></td>
+        <td>${zeit(x.t)}</td><td>${x.d[0]}</td><td>${tageBild(x.d)} ${tage}/14</td><td>${x.n}</td><td>${x.p}</td><td>${hwText(x.h)}</td>
+        <td>${(x.w || []).slice(0, 5).map(([w, n]) => `<span class="wort">${esc(w)} ×${n}</span>`).join("") || "–"}</td>
+        <td><button data-weg="${esc(k)}" title="Eintrag löschen">✕</button></td></tr>`;
+    }).join("");
+    $("inhalt").innerHTML = `
+      <div class="karte"><b>${esc(wahl)}</b>: ${ks.length} Geräte · heute geübt ${geuebt} · Hausaufgabe fertig ${hwFertig}
+        <div style="margin-top:6px">Schwere Wörter der Gruppe: ${schwer.map(([w, n]) => `<span class="wort">${esc(w)} ×${n}</span>`).join("") || '<span class="leise">noch keine</span>'}</div></div>
+      <div class="karte tabelle"><table><thead><tr><th>Code</th><th>Name</th><th>Stand</th><th>Heute</th><th>Geübt (14 Tage)</th><th>Teile</th><th>Punkte</th><th>Hausaufgabe</th><th>Schwere Wörter</th><th></th></tr></thead>
+      <tbody>${zeilen}</tbody></table>
+      <p class="leise">„Heute“ und „14 Tage“ zählen ab dem Stand (Zeitpunkt des QR-Codes). Namen stehen nur auf diesem Gerät.</p></div>`;
+  }
+
+  function exportText() {
+    const sel = $("gruppe").value, kopf = ["App", "Gruppe", "Code", "Name", "Stand", "Heute", "Tage geübt (14)", "Teile", "Punkte", "Hausaufgabe", "Schwere Wörter"];
+    const zeilen = Object.entries(db.eintraege).filter(([k]) => !sel || gruppeVon(k) === sel).map(([k, x]) =>
+      [x.a, x.g, x.c, db.namen[k] || "", zeit(x.t), x.d[0], x.d.slice(0, 14).filter((n) => n > 0).length, x.n, x.p, x.h ? `${x.h.z}/${x.h.n}` : "", (x.w || []).map(([w, n]) => `${w} ×${n}`).join(", ")].join("\t"));
+    laden(`uebersicht-${(sel || "alle").replace(/\W+/g, "-")}.txt`, [kopf.join("\t"), ...zeilen].join("\n"), "text/plain");
+  }
+  function laden(name, inhalt, typ) {
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([inhalt], { type: typ + ";charset=utf-8" })); a.download = name;
+    document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+
+  $("gruppe").addEventListener("change", zeigen);
+  $("export").addEventListener("click", exportText);
+  $("namenRaus").addEventListener("click", () => laden("namen-codes.json", JSON.stringify(db.namen, null, 1), "application/json"));
+  $("namenReinKnopf").addEventListener("click", () => $("namenRein").click());
+  $("namenRein").addEventListener("change", async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    try { const o = JSON.parse(await f.text()); let n = 0; for (const [k, v] of Object.entries(o)) if (typeof v === "string") { db.namen[k] = v.slice(0, 40); n++; } schreib(); melde(`✅ ${n} Namen geladen.`); zeigen(); }
+    catch (err) { melde("⚠️ Die Datei ließ sich nicht lesen.", true); }
+    e.target.value = "";
+  });
+  $("inhalt").addEventListener("change", (e) => { const k = e.target.dataset && e.target.dataset.k; if (!k) return; const v = e.target.value.trim().slice(0, 40); if (v) db.namen[k] = v; else delete db.namen[k]; schreib(); });
+  $("inhalt").addEventListener("click", (e) => { const k = e.target.dataset && e.target.dataset.weg; if (!k || !confirm("Eintrag löschen? (Der Name bleibt.)")) return; delete db.eintraege[k]; schreib(); zeigen(); });
+  $("linkOk").addEventListener("click", () => { if (!aufnehmen($("link").value)) melde("⚠️ Kein QR-Link (#d=…) gefunden.", true); $("link").value = ""; zeigen(); });
+  $("allesWeg").addEventListener("click", () => { if (!confirm("Wirklich alle Stände und Namen auf diesem Gerät löschen?")) return; db = { eintraege: {}, namen: {} }; schreib(); melde("Alles gelöscht."); zeigen(); });
+
+  if (aufnehmen(location.hash)) history.replaceState(null, "", location.pathname + location.search); // Daten nicht in der Adresszeile/Chronik lassen
+  zeigen();
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+})();
+</script>
+</body>
+</html>

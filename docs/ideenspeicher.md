@@ -76,6 +76,29 @@ Offene Blöcke in Reihenfolge; Befehl = erste Eingabe im jeweiligen Chat (neuer 
 Fertige Chats archivieren; der Stand steht hier (sie müssen nicht umbenannt werden). Chat-Name erfragen: `/name` oder „Wie heißt du?“.
 **Master-Wechsel** (Ziel: Kontext klein halten, Ressourcen sparen): alter Master `/save` → Zeile „School · MASTER · bis <Datum>“ hier eintragen, offene Entscheidungen darunter; neuer Chat: `/model claude-fable-5-1`, `/load MASTER`, Name `School · MASTER`. Alten Master archivieren.
 
+## Strategie (Master 10.11.2026, Mr. Alex): Grenzen, die ein Weltklasse-Team nicht sähe
+Reihenfolge nach Entscheidung Mr. Alex: zuerst Punkt 2.
+1. **Server/Sync light + Lehrer-Dashboard** (wer übt, welche Wörter kann die Klasse nicht, wer ist GLN-bereit) – Konzept liegt vor, Entscheidungen offen.
+2. **Persönliche Wiederholung** je Wort und Struktur aus den echten Antworten („Deine 5 Minuten“) – Konzept unten.
+3. **Sprechen prüfen** mit Spracherkennung auf dem Gerät (wurde der Satz gesagt, welches Wort hakt).
+4. **Freies Schreiben** mit Rückmeldung zu den Fehlern der Stufe (erst regelbasiert, später KI).
+5. **Eine Engine + Inhalts-Pipeline** statt drei kopierter Apps (neues Fach in Tagen, Verbesserungen gelten überall).
+6. **Zugehörigkeit:** Klassenziele, Team-Quests, Partneraufgaben, ohne Rangliste (braucht 1).
+7. **Messen, ob es wirkt:** App-Nutzung gegen GLN-Ergebnisse, schwere Wörter, Neuerungen an halben Klassen testen.
+Echte Grenzen: Datenschutz bei Minderjährigen (Pseudonyme, Schulleitung, Eltern-Info), Zeit für Freigaben, Token-Kosten.
+
+### Konzept Punkt 2: „Deine 5 Minuten“ – Word Gym 2.0 (ALLE, Entwurf 10.11., noch nicht freigegeben)
+Ausgangslage: Das Word Gym hat schon Boxen (Stufe 0–7, Intervalle 1·3·7·14·30·60·120 Tage, `docs/word-gym/konzept.md`), aber nur für Wörter, nur mit Selbsteinschätzung („Gewusst/Nochmal“), und die Antworten aus allen anderen Übungen fließen nicht ein. Teile werden nach Kalender fällig (Power Up).
+- **A Ein Gedächtnis für alles:** Boxen für Wörter **und** Sätze/Strukturen (Kernsätze, Grammatik wie 3. Person -s; FR: Wendungen, Dialogzeilen).
+- **B Beweis statt nur Selbsteinschätzung:** Jede Antwort überall füttert die Box – Abfrage, Lückensatz, Find the word, Bild → Wort, Treffer im Runner, Lehrer-Stichprobe. Falsch = zwei Stufen zurück, morgen fällig (nicht auf null). Ab Stufe 3 steigt ein Wort nur noch durch eine geprüfte Antwort (tippen/wählen), nicht durch „Gewusst“.
+- **C Tageskarte „Deine 5 Minuten“** statt reinem Word Gym: fällige Wörter + zwei fällige Sätze + Neues, feste Länge, endet mit einem sicheren Treffer; Pensum einstellbar wie heute.
+- **D Abrufform wächst mit der Stufe:** 0–1 hören und nachsprechen mit Satz · 2–3 erkennen (Auswahl) · 4–5 Wort produzieren (tippen, G-Kurs mit Hilfe) · 6–7 im Satz produzieren.
+- **E Tricky words:** dreimal falsch = eigene Liste mit Hilfe (Bild, Merksatz, Satz-Audio); im Lehrer-Bereich die schweren Wörter des Geräts (klassenweit erst mit Sync).
+- **F GLN-Kopplung:** 14 Tage vor dem GLN haben GLN-Items Vorrang, Intervalle höchstens 3 Tage; der Abschlusstest von Road to GLN füttert die Boxen.
+- **G Motivation ehrlich:** Anzeige „42 Wörter sicher“ (Stufe ≥ 5), Balken wächst; Verpasstes wartet ohne Strafe; Serie und Punkte bleiben.
+- **H Technik:** eine Funktion `merke(id, richtig, art)` an den Prüfstellen (Abfrage, Lücke, Definition, Bild, Runner-Ende, Stichprobe), bestehende Boxen bleiben; Protokoll-Art „g“. Größe: EN6 mittel, EN9 klein/mittel (gleiches Muster), FR mittel (hat noch kein Gym). **Schlank:** nur B + E (klein).
+- **Offene Entscheidungen Mr. Alex:** 1. Rückstufung bei Fehler (zwei Stufen oder auf null) · 2. „Gewusst“ ab Stufe 3 deckeln ja/nein · 3. Sätze von Anfang an im Training oder erst Wörter · 4. welche App zuerst.
+
 ## Stand 7.11.2026 (alter Master-Chat, /save) – Reihenfolge jetzt oben in der Chat-Übersicht – nächste Blöcke für /load
 Gebaut und gepusht am 6./7.11.: alle 50 Staaten-Szenen mit längeren Texten, Voice-over und Fotos · Orts-Szenen Etappe 3 (Times Square, Niagara, Old Faithful, White House) · Superhelden Klasse 6 als Spielgrafik (Phase 1 6853984/5ae2c92, Phase 2 a7a788a: Cameos mit Kraft-Effekt, Heldenfilme, gezeichnete Sammelkarten; Kenji springt mit 1c8a416) · Heldenfilme mit gesprochenen Ausrufen · je Held eigene Stimme, v4, Stabilität 0,3, Audio-Tags (5c95d13) · Mr. Alex' Zurufe im Lauf, beide Klassen (a6408f0, adcebbd) · Regeln von Mr. Alex 7.11. in `docs/briefing.md`, Sparregeln `docs/token-sparen.md`, Skills `/load` und `/save`.
 **Offen (Reihenfolge nach Mr. Alex):**

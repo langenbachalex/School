@@ -3347,7 +3347,7 @@
       gymMerke(v.id);
       lob(); if (letzterRuf) gymLobToast(letzterRuf);
     } else {
-      k.s = 0; k.f = gymFaellig(0); fehlerSerie++; comboBruch();
+      k.s = 0; k.f = gymFaellig(0); k.x = (k.x || 0) + 1; fehlerSerie++; // x: Fehler gesamt (Sync Stufe A: schwere Wörter) comboBruch();
       if (!gym.wieder.has(v.id)) { gym.wieder.add(v.id); gym.schlange.push(v.id); } else gymMerke(v.id);
       toast("Kein Problem – kommt gleich noch mal.");
     }
@@ -3871,9 +3871,64 @@
       el("p", { class: "klein lehrer-wache" }, warnungen.length ? `👀 Warnungen „Mr. Alex is watching you“ (${(sp.warnungen || []).length}): ${warnungen.join(" · ")}` : "👀 Keine Warnungen „Mr. Alex is watching you“."),
       gesperrt && el("p", { class: "lehrer-sperre" }, "🔒 Die App ist gesperrt (zu viele Punkte in zu kurzer Zeit). „Speichern“ schaltet sie wieder frei – die Punkte oben kannst du vorher anpassen."),
       stichprobe,
-      el("div", { class: "knopfreihe" }, knopf("🎲 Stichprobe", () => stichprobeStart(abfrageZeile), "leise"), knopf("Coins auf 0", () => { c.value = "0"; }, "leise"), knopf("Punkte auf 0", () => { p.value = "0"; }, "leise"),
+      el("div", { class: "knopfreihe" }, knopf("🎲 Stichprobe", () => stichprobeStart(abfrageZeile), "leise"), knopf("📲 QR für Lehrer", syncQrZeigen, "leise"), knopf("Coins auf 0", () => { c.value = "0"; }, "leise"), knopf("Punkte auf 0", () => { p.value = "0"; }, "leise"),
         altstandRoh && knopf("Alten Stand übernehmen", altstandUebernehmen, "leise")),
       el("div", { class: "knopfreihe" }, knopf("Speichern", sichern, "haupt"), knopf("Abbrechen", lehrerZu, "leise")));
+  }
+
+  /* ---------- 📲 Sync Stufe A ohne Server (10.11.2026, Block 4d, docs/ideenspeicher.md „Strategie“ Punkt 1) ----------
+     Nur im Lehrer-Bereich (nach PIN): Mr. Alex trägt je Gerät einmal Lerngruppe und einen pseudonymen Code ein (SPEICHER+"-c", nie ein Name).
+     Der QR-Code (qr.js, qrcode-generator von Kazuhiko Arase, MIT) enthält einen Link auf die Übersichtsseite lehrer/ mit den Daten im #-Teil:
+     Der #-Teil wird nicht an den Server geschickt – die Daten gehen nur über die Kamera des Lehrergeräts in dessen Browser.
+     Format v1 (Stufe B schickt später dasselbe an einen Server): { v:1, a: App, g: Lerngruppe, c: Code, t: Minuten seit 1970,
+     n: erledigte Teile, p: Punkte, d: [Übungsereignisse je Tag, heute zuerst, 14 Tage], h: { v, b, z, n } Hausaufgabe (von, bis, Ziele fertig, Ziele),
+     w: [[Wort, Fehler im Word Gym] …] die schwersten acht }. */
+  const SYNC = { app: "EN6", adresse: "https://langenbachalex.github.io/School/lehrer/" };
+  const syncKennLies = () => { try { return JSON.parse(localStorage.getItem(SPEICHER + "-c") || "{}") || {}; } catch (e) { return {}; } };
+  const syncKennSchreib = (o) => { try { localStorage.setItem(SPEICHER + "-c", JSON.stringify(o)); } catch (e) { /* egal */ } };
+  function syncDaten(kenn) {
+    const pl = Array.isArray(stand.protokoll) ? stand.protokoll : [];
+    const tage = [];
+    for (let i = 0; i < 14; i++) { const d = heute(); d.setDate(d.getDate() - i); tage.push(iso(d)); }
+    const d = tage.map(() => 0);
+    for (const e of pl) {
+      if (!"tgsemh".includes(e[1]) || e[1].length !== 1) continue; // nur Übungen (Teil, Word Gym, Story, Einheit, Spiel, Homework), keine Boni/Käufe/Warnungen
+      const i = tage.indexOf(iso(new Date(e[0] * 60000)));
+      if (i >= 0) d[i]++;
+    }
+    const t = iso(heute());
+    const h = (D.hausaufgaben || []).filter((x) => x.von <= t).sort((x, y) => (x.von < y.von ? 1 : -1))[0]; // aktuelle oder letzte Hausaufgabe
+    const karten = (stand.gym && stand.gym.karten) || {};
+    const w = Object.entries(karten).filter(([, k]) => k && k.x > 0).sort((x, y) => y[1].x - x[1].x).slice(0, 8)
+      .map(([id, k]) => { const v = D.vokabeln.find((x) => x.id === id); return v ? [v.en, k.x] : null; }).filter(Boolean);
+    return { v: 1, a: SYNC.app, g: kenn.g, c: kenn.c, t: Math.floor(Date.now() / 60000), n: Object.keys(stand.teile || {}).length,
+      p: spielstand().punkte, d, h: h ? { v: h.von, b: h.bis, z: h.ziele.filter((z) => hwZielFertig(h, z)).length, n: h.ziele.length } : null, w };
+  }
+  const syncLink = (daten) => SYNC.adresse + "#d=" + btoa(unescape(encodeURIComponent(JSON.stringify(daten)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  function syncQrZeigen() {
+    const kenn = syncKennLies();
+    const feld = (wert, name, platz) => el("input", { type: "text", value: wert || "", maxlength: "8", autocomplete: "off", "aria-label": name, placeholder: platz, class: "lehrer-zahl" });
+    const g = feld(kenn.g, "Lerngruppe", "z. B. 6a"), c = feld(kenn.c, "Code", "z. B. 07");
+    const zeile = (text, f) => el("label", { class: "lehrer-zeile" }, el("span", {}, text), f);
+    const bild = el("div", { class: "sync-qr" }), info = el("p", { class: "klein" }, "");
+    const zeichnen = () => {
+      const k = { g: g.value.trim(), c: c.value.trim() };
+      syncKennSchreib(k);
+      bild.replaceChildren();
+      if (!/^[\w.-]{1,8}$/.test(k.g) || !/^[\w.-]{1,8}$/.test(k.c)) { info.textContent = "Lerngruppe und Code eintragen (Buchstaben, Ziffern, Punkt, Bindestrich; kein Name)."; return; }
+      if (typeof qrcode !== "function") { info.textContent = "QR-Baustein fehlt (qr.js)."; return; }
+      const daten = syncDaten(k), qr = qrcode(0, "M");
+      qr.addData(syncLink(daten)); qr.make();
+      bild.append(el("img", { src: qr.createDataURL(5, 4), alt: "QR-Code für das Lehrergerät", style: "image-rendering:pixelated;width:min(80vw,320px);background:#fff" }));
+      info.textContent = `${SYNC.app} · ${k.g} · Code ${k.c} · ${daten.d[0]} Übungen heute, ${daten.d.filter((x) => x > 0).length} von 14 Tagen geübt`
+        + (daten.h ? ` · HW ${daten.h.z}/${daten.h.n}` : "") + ` · Stand ${new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`;
+    };
+    g.addEventListener("change", zeichnen); c.addEventListener("change", zeichnen);
+    lehrerFenster(el("h2", {}, "📲 QR für das Lehrergerät"),
+      el("p", { class: "klein" }, "Mit der Kamera des Lehrergeräts scannen: Der Link öffnet die Übersicht und speichert dort den Stand. Kein Server, keine Namen auf dem Schülergerät."),
+      zeile("Lerngruppe", g), zeile("Code", c), bild, info,
+      el("div", { class: "knopfreihe" }, knopf("Neu zeichnen", zeichnen, "haupt"), knopf("Zurück", lehrerReset, "leise"), knopf("Fertig", lehrerZu, "leise")));
+    zeichnen();
   }
 
   /* ---------- 🎲 Stichproben-Abfrage (1.11.2026, Idee Mr. Alex 31.10., docs/ideenspeicher.md „Prüfungsformate“ (1)) ----------

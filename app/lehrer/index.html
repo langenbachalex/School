@@ -73,7 +73,7 @@ textarea { width:100%; min-height:5em; font:13px monospace; color:inherit; backg
     let x;
     try { const b = m[1].replace(/-/g, "+").replace(/_/g, "/"); x = JSON.parse(decodeURIComponent(escape(atob(b + "===".slice((b.length + 3) % 4))))); }
     catch (e) { melde("⚠️ Der QR-Code ließ sich nicht lesen.", true); return true; }
-    const kurz = (s) => /^[\w-]{1,8}$/.test(s);
+    const kurz = (s) => /^[\w.-]{1,8}$/.test(s);
     if (!x || x.v !== 1 || !kurz(x.a) || !kurz(x.g) || !kurz(x.c) || !Array.isArray(x.d)) { melde("⚠️ Unbekanntes Format.", true); return true; }
     const k = schluessel(x), alt = db.eintraege[k];
     if (alt && alt.t > x.t) { melde(`ℹ️ ${x.a} · ${x.g} · Code ${x.c}: Hier liegt schon ein neuerer Stand (${zeit(alt.t)}).`); return true; }

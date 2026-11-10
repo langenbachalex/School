@@ -3915,7 +3915,7 @@
       const k = { g: g.value.trim(), c: c.value.trim() };
       syncKennSchreib(k);
       bild.replaceChildren();
-      if (!/^[\w-]{1,8}$/.test(k.g) || !/^[\w-]{1,8}$/.test(k.c)) { info.textContent = "Lerngruppe und Code eintragen (Buchstaben, Ziffern, Bindestrich; kein Name)."; return; }
+      if (!/^[\w.-]{1,8}$/.test(k.g) || !/^[\w.-]{1,8}$/.test(k.c)) { info.textContent = "Lerngruppe und Code eintragen (Buchstaben, Ziffern, Punkt, Bindestrich; kein Name)."; return; }
       if (typeof qrcode !== "function") { info.textContent = "QR-Baustein fehlt (qr.js)."; return; }
       const daten = syncDaten(k), qr = qrcode(0, "M");
       qr.addData(syncLink(daten)); qr.make();

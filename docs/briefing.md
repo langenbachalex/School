@@ -109,3 +109,6 @@ Rückmeldungen beim Bau der Spielgrafik-Helden in Klasse 6; so auch für Klasse 
 
 ## Regel Mr. Alex (8.11.2026): Vertonung wieder frei
 Die ElevenLabs-Credits sind aufgefrischt; die Sperre „nichts vertonen vor dem 13.11.“ ist aufgehoben. Weiter sparsam: kurze Texte, keine Wiederholungen schon vorhandener Aufnahmen. Für „Parle de toi“ (FR) wünscht Mr. Alex eine Jungen- und eine Mädchenstimme, ersatzweise Mann/Frau.
+
+## Regel Mr. Alex (10.11.2026): Immer Kontext
+Kein Wort ohne Satz: Vokabeln werden in allen Apps (EN6, EN9, FR, künftige Fächer) mit Beispielsatz eingeführt, geübt und wiederholt; reine Wortpaar-Schritte gelten als verschenkt. Neue Übungen und das Training „Deine 5 Minuten“ folgen diesem Prinzip.

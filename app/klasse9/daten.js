@@ -11561,8 +11561,8 @@ window.DATEN = {
   {
    "von": "2026-11-07",
    "bis": "2026-11-15",
-   "ziel": "2/u2; 3/1",
-   "text": "Vocabulary Unit 2 (alle Abschnitte) + Language: -ing form & prepositions (GLN 2 am 24.11.)",
+   "ziel": "2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2",
+   "text": "Vocabulary Unit 2: Start bis Theme 2 · Part 2 (GLN 2 am 24.11.)",
    "ziele": [
     {
      "ziel": "2/u2:Start",
@@ -11647,139 +11647,6 @@ window.DATEN = {
       "2|u2:Theme 2 · Part 2|5",
       "2|u2:Theme 2 · Part 2|6",
       "2|u2:Theme 2 · Part 2|7"
-     ]
-    },
-    {
-     "ziel": "2/u2:Focus on language · Part 1",
-     "nr": 2,
-     "gruppe": "u2:Focus on language · Part 1",
-     "teil": null,
-     "name": "Vocabulary · Unit 2 · Focus on language · Part 1",
-     "schluessel": [
-      "2|u2:Focus on language · Part 1|0",
-      "2|u2:Focus on language · Part 1|1",
-      "2|u2:Focus on language · Part 1|2",
-      "2|u2:Focus on language · Part 1|3",
-      "2|u2:Focus on language · Part 1|4",
-      "2|u2:Focus on language · Part 1|5",
-      "2|u2:Focus on language · Part 1|6",
-      "2|u2:Focus on language · Part 1|7"
-     ]
-    },
-    {
-     "ziel": "2/u2:Focus on language · Part 2",
-     "nr": 2,
-     "gruppe": "u2:Focus on language · Part 2",
-     "teil": null,
-     "name": "Vocabulary · Unit 2 · Focus on language · Part 2",
-     "schluessel": [
-      "2|u2:Focus on language · Part 2|0",
-      "2|u2:Focus on language · Part 2|1",
-      "2|u2:Focus on language · Part 2|2",
-      "2|u2:Focus on language · Part 2|3",
-      "2|u2:Focus on language · Part 2|4",
-      "2|u2:Focus on language · Part 2|5",
-      "2|u2:Focus on language · Part 2|6",
-      "2|u2:Focus on language · Part 2|7"
-     ]
-    },
-    {
-     "ziel": "2/u2:Story · Part 1",
-     "nr": 2,
-     "gruppe": "u2:Story · Part 1",
-     "teil": null,
-     "name": "Vocabulary · Unit 2 · Story · Part 1",
-     "schluessel": [
-      "2|u2:Story · Part 1|0",
-      "2|u2:Story · Part 1|1",
-      "2|u2:Story · Part 1|2",
-      "2|u2:Story · Part 1|3",
-      "2|u2:Story · Part 1|4",
-      "2|u2:Story · Part 1|5",
-      "2|u2:Story · Part 1|6",
-      "2|u2:Story · Part 1|7"
-     ]
-    },
-    {
-     "ziel": "2/u2:Story · Part 2",
-     "nr": 2,
-     "gruppe": "u2:Story · Part 2",
-     "teil": null,
-     "name": "Vocabulary · Unit 2 · Story · Part 2",
-     "schluessel": [
-      "2|u2:Story · Part 2|0",
-      "2|u2:Story · Part 2|1",
-      "2|u2:Story · Part 2|2",
-      "2|u2:Story · Part 2|3",
-      "2|u2:Story · Part 2|4",
-      "2|u2:Story · Part 2|5",
-      "2|u2:Story · Part 2|6",
-      "2|u2:Story · Part 2|7"
-     ]
-    },
-    {
-     "ziel": "2/u2:Story · Part 3",
-     "nr": 2,
-     "gruppe": "u2:Story · Part 3",
-     "teil": null,
-     "name": "Vocabulary · Unit 2 · Story · Part 3",
-     "schluessel": [
-      "2|u2:Story · Part 3|0",
-      "2|u2:Story · Part 3|1",
-      "2|u2:Story · Part 3|2",
-      "2|u2:Story · Part 3|3",
-      "2|u2:Story · Part 3|4",
-      "2|u2:Story · Part 3|5",
-      "2|u2:Story · Part 3|6"
-     ]
-    },
-    {
-     "ziel": "2/u2:Skills training · Part 1",
-     "nr": 2,
-     "gruppe": "u2:Skills training · Part 1",
-     "teil": null,
-     "name": "Vocabulary · Unit 2 · Skills training · Part 1",
-     "schluessel": [
-      "2|u2:Skills training · Part 1|0",
-      "2|u2:Skills training · Part 1|1",
-      "2|u2:Skills training · Part 1|2",
-      "2|u2:Skills training · Part 1|3",
-      "2|u2:Skills training · Part 1|4",
-      "2|u2:Skills training · Part 1|5",
-      "2|u2:Skills training · Part 1|6",
-      "2|u2:Skills training · Part 1|7"
-     ]
-    },
-    {
-     "ziel": "2/u2:Skills training · Part 2",
-     "nr": 2,
-     "gruppe": "u2:Skills training · Part 2",
-     "teil": null,
-     "name": "Vocabulary · Unit 2 · Skills training · Part 2",
-     "schluessel": [
-      "2|u2:Skills training · Part 2|0",
-      "2|u2:Skills training · Part 2|1",
-      "2|u2:Skills training · Part 2|2",
-      "2|u2:Skills training · Part 2|3",
-      "2|u2:Skills training · Part 2|4",
-      "2|u2:Skills training · Part 2|5",
-      "2|u2:Skills training · Part 2|6",
-      "2|u2:Skills training · Part 2|7"
-     ]
-    },
-    {
-     "ziel": "3/1",
-     "nr": 3,
-     "gruppe": "-ing form & prepositions",
-     "teil": null,
-     "name": "Language · -ing form & prepositions",
-     "schluessel": [
-      "3|-ing form & prepositions|0",
-      "3|-ing form & prepositions|1",
-      "3|-ing form & prepositions|2",
-      "3|-ing form & prepositions|3",
-      "3|-ing form & prepositions|4",
-      "3|-ing form & prepositions|5"
      ]
     }
    ]

@@ -540,11 +540,14 @@
 
   /* ---------- Teile und Lage ---------- */
   function teileVon(schritte) {
-    const t = [];
+    // nr = Nummer für den Fortschritt: übersprungene Stufen (ab, z. B. Sentences ab Stufe 2) zählen mit, damit Teil-Nummern bleiben
+    const t = []; let nr = 0;
     schritte.forEach((s) => {
-      if (s.art === "lr") (s.stufen || [1, 2, 3]).forEach((stufe) =>
-        t.push({ art: "lr", stufe, saetze: s.saetze, basis: s.name || "", name: (s.name ? s.name + " · " : "") + "Step " + stufe }));
-      else t.push(s);
+      if (s.art === "lr") (s.stufen || [1, 2, 3]).forEach((stufe) => {
+        if (stufe < (s.ab || 1)) { nr++; return; }
+        t.push({ art: "lr", stufe, saetze: s.saetze, basis: s.name || "", name: (s.name ? s.name + " · " : "") + "Step " + stufe, nr: nr++ });
+      });
+      else t.push(Object.assign({}, s, { nr: nr++ }));
     });
     return t;
   }
@@ -557,7 +560,7 @@
   // Vokabel-Abschnitt: Wörter, Sätze in 3 Stufen, Find the word, Abfrage in beide Richtungen
   function vokSchritte(vok) {
     const schritte = [{ art: "vok_lernen", name: "Words" },
-      { art: "lr", name: "Sentences", saetze: vok.map((v) => v.satz) }];
+      { art: "lr", name: "Sentences", saetze: vok.map((v) => v.satz), ab: 2 }]; // Stufe 1 steckt jetzt in „Words“ (Vokabeln im Kontext, 10.11.)
     if (vok.some((v) => v.def)) schritte.push({ art: "vok_def", name: "Find the word" });
     schritte.push({ art: "vok_abfrage", name: "EN → DE", richtung: "en_de" }, { art: "vok_abfrage", name: "DE → EN", richtung: "de_en" });
     if (vok.filter(hatBild).length >= 2) schritte.push({ art: "vok_bild", name: "Picture → Word" }); // hinten, damit ältere Teil-Nummern bleiben
@@ -581,7 +584,7 @@
 
   /* ---------- Fortschritt pro Teil ---------- */
   // stand.teile[schluessel] = { am: "JJJJ-MM-TT", s: Stufe } – Stufe steigt bei jedem Power Up (Wiederholung eines fälligen Teils)
-  function teilSchluessel(i) { return `${lage.nr}|${lage.gruppe}|${i}`; }
+  function teilSchluessel(i) { const t = lage.teile && lage.teile[i]; return `${lage.nr}|${lage.gruppe}|${t && t.nr != null ? t.nr : i}`; }
   function istFertig(i) { return !!(stand.teile && stand.teile[teilSchluessel(i)]); }
   const teilFaellig = (i) => faellig(stand.teile && stand.teile[teilSchluessel(i)]);
   function teilFertig(i, aufladen) {
@@ -1540,13 +1543,17 @@
   function zeigeVokabel(teil) {
     const k = kategorie(lage.nr);
     const v = lage.vok[lage.pos];
+    const s = D.saetze[v.satz]; const mitSatz = s && s.en ? s : null; // Vokabeln im Kontext: Wort → Satz → „Jetzt du“
     const balken = jetztDu();
     const weiter = sperre(weiterKnopf());
-    const abspielen = () => nachsprechen(balken, tonWort(v)).then((sek) => { if (sek) gibFrei(weiter, sek); });
+    const abspielen = () => nachsprechen(balken, gymTon(v, mitSatz)).then((sek) => { if (sek) gibFrei(weiter, sek); });
     lage.abspielen = abspielen; lage.weiter = wennFrei(weiter, naechstes);
     zeige(kopf(k), ansage("Let's learn the words! Listen and repeat.", "Lernen wir die Wörter! Hör zu und sprich nach."),
       karte(T(`Wort ${lage.pos + 1} von ${lage.vok.length}`, `Word ${lage.pos + 1} of ${lage.vok.length}`),
         el("div", { class: "vok" }, hatBild(v) && bildEl(v), el("div", {}, el("p", { class: "vok-en", lang: "en" }, v.en), el("p", { class: "vok-de", lang: "de" }, v.de))),
+        mitSatz && el("div", { class: "spalten" },
+          el("div", { class: "spalte", lang: "en" }, el("span", { class: "sprache" }, "Example"), el("p", { class: "satz" }, lueckenSatz(mitSatz, "voll"))),
+          el("div", { class: "spalte", lang: "de" }, el("span", { class: "sprache" }, "Deutsch"), el("p", { class: "satz de" }, mitSatz.de))),
         balken,
         el("div", { class: "knopfreihe" }, knopf(T("🔊 Nochmal", "🔊 Again"), abspielen), weiter)));
     abspielen();
@@ -3927,9 +3934,9 @@
   function testTeilSchluessel(ts) {
     const k = ts.k;
     if (!k || k.spiele || k.bald) return [];
-    if (ts.unit) return (D.units[ts.unit] || []).flatMap((g) => teileVon(vokSchritte(g.vokabeln.map(vokabel).filter(Boolean))).map((_, i) => `${k.nr}|u${ts.unit}:${g.name}|${i}`));
+    if (ts.unit) return (D.units[ts.unit] || []).flatMap((g) => teileVon(vokSchritte(g.vokabeln.map(vokabel).filter(Boolean))).map((t) => `${k.nr}|u${ts.unit}:${g.name}|${t.nr}`));
     return (k.gruppen || []).flatMap((g) => { const vok = g.vokabeln ? g.vokabeln.map(vokabel).filter(Boolean) : null;
-      return teileVon(vok ? vokSchritte(vok) : g.schritte).map((_, i) => `${k.nr}|${g.name}|${i}`); });
+      return teileVon(vok ? vokSchritte(vok) : g.schritte).map((t) => `${k.nr}|${g.name}|${t.nr}`); });
   }
   function testFortschritt(ts) {
     const alle = testTeilSchluessel(ts);
@@ -4380,7 +4387,7 @@
       vok = g.vokabeln ? g.vokabeln.map(vokabel).filter(Boolean) : null;
       teile = teileVon(vok ? vokSchritte(vok) : g.schritte);
     }
-    const teil = teile[i];
+    const teil = teile.find((t) => t.nr === i);
     if (!teil) return null;
     return { teil, vok, ort, gruppe: `${k.nr}|${gr}|${teil.art === "lr" ? "lr:" + teil.basis : vok ? "vok" : i}` };
   }

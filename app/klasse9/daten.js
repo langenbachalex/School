@@ -11561,8 +11561,8 @@ window.DATEN = {
   {
    "von": "2026-11-07",
    "bis": "2026-11-15",
-   "ziel": "2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2",
-   "text": "Vocabulary Unit 2: Start bis Theme 2 · Part 2 (GLN 2 am 24.11.)",
+   "ziel": "2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2; 3/1",
+   "text": "Vocabulary Unit 2: Start bis Theme 2 · Part 2 + Language: -ing form & prepositions (GLN 2 am 24.11.)",
    "ziele": [
     {
      "ziel": "2/u2:Start",
@@ -11647,6 +11647,21 @@ window.DATEN = {
       "2|u2:Theme 2 · Part 2|5",
       "2|u2:Theme 2 · Part 2|6",
       "2|u2:Theme 2 · Part 2|7"
+     ]
+    },
+    {
+     "ziel": "3/1",
+     "nr": 3,
+     "gruppe": "-ing form & prepositions",
+     "teil": null,
+     "name": "Language · -ing form & prepositions",
+     "schluessel": [
+      "3|-ing form & prepositions|0",
+      "3|-ing form & prepositions|1",
+      "3|-ing form & prepositions|2",
+      "3|-ing form & prepositions|3",
+      "3|-ing form & prepositions|4",
+      "3|-ing form & prepositions|5"
      ]
     }
    ]

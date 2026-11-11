@@ -51,3 +51,7 @@ Spalten wie `inhalte/helden.tsv` (Klasse 6): `id	name	kraft	bild	steckbrief	intr
 ## symbole.tsv – Symbole für „Picture → Word“
 
 Spalten `id	wort	symbol`: `id` aus `vokabeln.tsv`, `wort` nur zur Übersicht, `symbol` = Emoji (auch 2–3 zusammen) oder `svg:<name>` für eine eigene Zeichnung in `symbole/<name>.svg` (viewBox 0 0 64 64, flacher Stil, wird in `daten.js` eingebettet). Ein Unit-Abschnitt mit mindestens zwei Symbol-Wörtern bekommt hinten den Teil „Picture → Word“ (G: Auswahl, E: eintippen); das Symbol erscheint auch auf der Lernkarte „Words“ und bei DE → EN.
+
+## gln.tsv – 🏁 Road to GLN
+
+Wie in Klasse 6 (`inhalte/LIESMICH.md`, Abschnitt „gln.tsv“): Spalten `datum	ziel	text`, Fenster 14 Tage vor dem GLN, Kette nach dem Ziel-Schema oben. Das Datum steht außerdem in `TERMIN` (`werkzeuge/klasse9_bauen.py`).

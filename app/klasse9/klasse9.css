@@ -204,6 +204,7 @@
 .niveau-leiste .niveau { margin-left: 0; }
 .niveau-leiste .hw-knopf { margin-right: 10px; background: var(--karte); color: var(--hw); border-color: var(--hw); }
 .niveau-leiste .hw-knopf.fertig { color: var(--gruen); border-color: var(--gruen); background: var(--gruen-hell); }
+.niveau-leiste .hw-knopf.gln-knopf { background: var(--gln); color: var(--gln-text); border-color: var(--gln); } /* 🏁 Road to GLN */
 @media (max-width: 480px) { .niveau-leiste:has(.hw-knopf) .niveau-name { display: none; } }
 
 /* Games: Border Patrol */

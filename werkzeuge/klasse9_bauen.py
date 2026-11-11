@@ -405,7 +405,8 @@ def main():
     einheiten = [{"nr": k["nr"], "titel": k["titel"], "gruppen": gruppen_von(k), "teile": None} for k in KATEGORIEN]
     hw = hausaufgaben.lesen(os.path.join(INHALTE, "hausaufgabe.tsv"), einheiten)
     daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren,
-             "spiel": spieldaten(), "gym": GYM, "termin": TERMIN, "hausaufgaben": hw}
+             "spiel": spieldaten(), "gym": GYM, "termin": TERMIN, "hausaufgaben": hw,
+             "gln": hausaufgaben.lesen_gln(os.path.join(INHALTE, "gln.tsv"), einheiten)}  # 🏁 Road to GLN
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – bitte nicht von Hand ändern.\n")
         f.write("window.DATEN = " + json.dumps(daten, ensure_ascii=False, indent=1) + ";\n")

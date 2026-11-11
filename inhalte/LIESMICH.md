@@ -49,3 +49,4 @@ Eine Zeile je GLN, Spalten `datum	ziel	text`. Das Fenster läuft automatisch von
 - Ein Teil zählt, wenn er **im Fenster** gemacht wurde (Wiederholen ist der Sinn). Der Abschlusstest hängt automatisch am Ende der Kette (frei ab der Hälfte der Etappen).
 - Boni: doppelte Punkte je GLN-Teil · Abschlusstest bestanden = 100 Coins + Abzeichen „GLN Ready“ · 7 Tage in Folge = 50 Coins · Zeile im Lehrer-Bereich. Code: `app/app.js`, Abschnitt „🏁 Road to GLN“.
 - Das GLN-Datum steht außerdem in `TERMIN` (`werkzeuge/daten_bauen.py`, Countdown und Power Up) – beide zusammen ändern.
+- Die zwei GLN-Übungen (Lesen „Reihenfolge“ = `4/6`, Schreiben „…'s week“ = `2/12`) stehen mit ihren Texten in `werkzeuge/daten_bauen.py` (`TEXTFOLGE`, `WOCHEN`); je zwei Varianten, die App wechselt sie bei jedem Durchgang.

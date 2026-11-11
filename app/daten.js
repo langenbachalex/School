@@ -263,6 +263,258 @@ window.DATEN = {
        "hilfe": "Ganz besonders: have wird zu has."
       }
      ]
+    },
+    {
+     "art": "woche",
+     "name": "Schreiben: …'s week",
+     "wochen": [
+      {
+       "person": "Zoe",
+       "titel": "Zoe's week",
+       "kalender": [
+        {
+         "tag": "Monday",
+         "symbol": "🏊",
+         "notiz": "swimming club",
+         "wann": "in the afternoon",
+         "warum": "loves water"
+        },
+        {
+         "tag": "Wednesday",
+         "symbol": "🎸",
+         "notiz": "guitar lesson",
+         "wann": "at four o'clock",
+         "warum": ""
+        },
+        {
+         "tag": "Friday",
+         "symbol": "🍕",
+         "notiz": "pizza with Grandpa",
+         "wann": "in the evening",
+         "warum": "Grandpa is funny"
+        },
+        {
+         "tag": "Saturday",
+         "symbol": "⚽",
+         "notiz": "football",
+         "wann": "in the morning",
+         "warum": ""
+        }
+       ],
+       "saetze": [
+        {
+         "anfang": "On Monday",
+         "teile": [
+          "Zoe",
+          "goes",
+          "to swimming club",
+          "in the afternoon"
+         ],
+         "verb": "goes",
+         "falsch": "go",
+         "schluessel": [
+          "swimming",
+          "afternoon"
+         ]
+        },
+        {
+         "anfang": "She likes it because",
+         "teile": [
+          "she",
+          "loves",
+          "water"
+         ],
+         "verb": "loves",
+         "falsch": "love",
+         "schluessel": [
+          "water"
+         ]
+        },
+        {
+         "anfang": "On Wednesday",
+         "teile": [
+          "she",
+          "has",
+          "a guitar lesson",
+          "at four o'clock"
+         ],
+         "verb": "has",
+         "falsch": "have",
+         "schluessel": [
+          "guitar"
+         ]
+        },
+        {
+         "anfang": "On Friday",
+         "teile": [
+          "Zoe",
+          "eats",
+          "pizza",
+          "with her grandpa",
+          "in the evening"
+         ],
+         "verb": "eats",
+         "falsch": "eat",
+         "schluessel": [
+          "pizza",
+          "grandpa",
+          "evening"
+         ]
+        },
+        {
+         "anfang": "That's nice because",
+         "teile": [
+          "her grandpa",
+          "is",
+          "funny"
+         ],
+         "verb": "is",
+         "falsch": "are",
+         "schluessel": [
+          "grandpa",
+          "funny"
+         ]
+        },
+        {
+         "anfang": "On Saturday",
+         "teile": [
+          "she",
+          "plays",
+          "football",
+          "in the morning"
+         ],
+         "verb": "plays",
+         "falsch": "play",
+         "schluessel": [
+          "football",
+          "morning"
+         ]
+        }
+       ]
+      },
+      {
+       "person": "Sam",
+       "titel": "Sam's week",
+       "kalender": [
+        {
+         "tag": "Tuesday",
+         "symbol": "🥁",
+         "notiz": "drum lesson",
+         "wann": "after school",
+         "warum": "loves loud music"
+        },
+        {
+         "tag": "Thursday",
+         "symbol": "📚",
+         "notiz": "library",
+         "wann": "in the afternoon",
+         "warum": "likes comics"
+        },
+        {
+         "tag": "Saturday",
+         "symbol": "🚲",
+         "notiz": "bike tour with Mum",
+         "wann": "in the morning",
+         "warum": ""
+        },
+        {
+         "tag": "Sunday",
+         "symbol": "🎂",
+         "notiz": "Grandma's birthday party",
+         "wann": "in the afternoon",
+         "warum": ""
+        }
+       ],
+       "saetze": [
+        {
+         "anfang": "On Tuesday",
+         "teile": [
+          "Sam",
+          "has",
+          "a drum lesson",
+          "after school"
+         ],
+         "verb": "has",
+         "falsch": "have",
+         "schluessel": [
+          "drum",
+          "school"
+         ]
+        },
+        {
+         "anfang": "He likes it because",
+         "teile": [
+          "he",
+          "loves",
+          "loud music"
+         ],
+         "verb": "loves",
+         "falsch": "love",
+         "schluessel": [
+          "music"
+         ]
+        },
+        {
+         "anfang": "On Thursday",
+         "teile": [
+          "he",
+          "goes",
+          "to the library",
+          "in the afternoon"
+         ],
+         "verb": "goes",
+         "falsch": "go",
+         "schluessel": [
+          "library",
+          "afternoon"
+         ]
+        },
+        {
+         "anfang": "He often goes there because",
+         "teile": [
+          "he",
+          "likes",
+          "comics"
+         ],
+         "verb": "likes",
+         "falsch": "like",
+         "schluessel": [
+          "comics"
+         ]
+        },
+        {
+         "anfang": "On Saturday",
+         "teile": [
+          "Sam",
+          "cycles",
+          "with his mum",
+          "in the morning"
+         ],
+         "verb": "cycles",
+         "falsch": "cycle",
+         "schluessel": [
+          "mum",
+          "morning"
+         ]
+        },
+        {
+         "anfang": "On Sunday",
+         "teile": [
+          "he",
+          "eats",
+          "cake",
+          "at his grandma's birthday party"
+         ],
+         "verb": "eats",
+         "falsch": "eat",
+         "schluessel": [
+          "cake",
+          "birthday"
+         ]
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -578,6 +830,88 @@ window.DATEN = {
         }
        ],
        "hilfe": "fifteen wird hinten betont: fif-TEEN. fifty wird vorne betont: FIF-ty."
+      }
+     ]
+    },
+    {
+     "art": "textfolge",
+     "name": "Reihenfolge",
+     "texte": [
+      {
+       "titel": "Nilay's Saturday",
+       "text": "It is Saturday. Nilay gets up at half past eight. She has breakfast with her dad: toast and orange juice. After breakfast she feeds her rabbit. At ten o'clock her friend Tom rings the bell. They cycle to the sports centre together. Nilay loves badminton, so they play for an hour. Tom often wins, but today Nilay is the winner! After the game they are hungry. They buy sandwiches and eat them in the park. In the afternoon it starts to rain, so they go to Tom's house and play a board game. At five o'clock Nilay goes home. In the evening she watches a film with her family. She goes to bed at nine. What a great day!",
+       "ereignisse": [
+        {
+         "symbol": "⏰",
+         "satz": "Nilay gets up."
+        },
+        {
+         "symbol": "🐇",
+         "satz": "She feeds her rabbit."
+        },
+        {
+         "symbol": "🚲",
+         "satz": "Nilay and Tom cycle to the sports centre."
+        },
+        {
+         "symbol": "🏸",
+         "satz": "They play badminton."
+        },
+        {
+         "symbol": "🥪",
+         "satz": "They eat sandwiches in the park."
+        },
+        {
+         "symbol": "🎲",
+         "satz": "They play a board game at Tom's house."
+        },
+        {
+         "symbol": "🏠",
+         "satz": "Nilay goes home."
+        },
+        {
+         "symbol": "🎬",
+         "satz": "She watches a film with her family."
+        }
+       ]
+      },
+      {
+       "titel": "Finn's Tuesday",
+       "text": "On Tuesdays Finn's alarm clock rings at quarter to seven. He takes a shower and gets dressed. Then he makes his sandwiches for school. He walks to the bus stop with his sister Ruby. The bus is always full! School starts at eight. Finn's first lesson is maths. After the break he has art, his favourite subject. At one o'clock he has lunch in the canteen with his friends Amir and Lucy. After school Finn goes to drama club. They practise a play about a funny detective. At half past four he goes home and does his homework. Then he walks the dog. After dinner Finn reads a comic in bed. He is tired but happy.",
+       "ereignisse": [
+        {
+         "symbol": "🚿",
+         "satz": "Finn takes a shower."
+        },
+        {
+         "symbol": "🥪",
+         "satz": "He makes his sandwiches."
+        },
+        {
+         "symbol": "🚌",
+         "satz": "He walks to the bus stop with Ruby."
+        },
+        {
+         "symbol": "🎨",
+         "satz": "He has art."
+        },
+        {
+         "symbol": "🍽️",
+         "satz": "He has lunch in the canteen."
+        },
+        {
+         "symbol": "🎭",
+         "satz": "He goes to drama club."
+        },
+        {
+         "symbol": "🐕",
+         "satz": "He walks the dog."
+        },
+        {
+         "symbol": "📖",
+         "satz": "He reads a comic in bed."
+        }
+       ]
       }
      ]
     }
@@ -7827,7 +8161,7 @@ window.DATEN = {
    "datum": "2026-11-25",
    "von": "2026-11-11",
    "bis": "2026-11-25",
-   "ziel": "6/3; 6/1-2; 4; 7/1-6; 2; 3; 8/How often? (never … always); 8/Sports and hobbies",
+   "ziel": "6/3; 6/1-2; 4/1-5; 4/6; 7/1-6; 2/1-11; 3; 8/How often? (never … always); 8/Sports and hobbies; 2/12",
    "text": "GLN 2 · Unit 3 „My day“: Listening, Reading, Words, Writing",
    "ziele": [
     {
@@ -7852,17 +8186,27 @@ window.DATEN = {
      ]
     },
     {
-     "ziel": "4",
+     "ziel": "4/1-5",
      "nr": 4,
      "gruppe": null,
      "teil": null,
-     "name": "Station 4: Aufgaben verstehen",
+     "name": "Station 4: Aufgaben verstehen · true / false / not in the text bis Welches Wort?",
      "schluessel": [
       "4||0",
       "4||1",
       "4||2",
       "4||3",
       "4||4"
+     ]
+    },
+    {
+     "ziel": "4/6",
+     "nr": 4,
+     "gruppe": null,
+     "teil": 5,
+     "name": "Station 4: Aufgaben verstehen · Reihenfolge",
+     "schluessel": [
+      "4||5"
      ]
     },
     {
@@ -7904,11 +8248,11 @@ window.DATEN = {
      ]
     },
     {
-     "ziel": "2",
+     "ziel": "2/1-11",
      "nr": 2,
      "gruppe": null,
      "teil": null,
-     "name": "Station 2: he / she / it + s",
+     "name": "Station 2: he / she / it + s · Teil A · Stufe 1 bis Übung",
      "schluessel": [
       "2||0",
       "2||1",
@@ -7972,6 +8316,16 @@ window.DATEN = {
       "8|1|7",
       "8|1|8",
       "8|1|9"
+     ]
+    },
+    {
+     "ziel": "2/12",
+     "nr": 2,
+     "gruppe": null,
+     "teil": 11,
+     "name": "Station 2: he / she / it + s · Schreiben: …'s week",
+     "schluessel": [
+      "2||11"
      ]
     }
    ]

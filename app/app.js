@@ -832,7 +832,7 @@
     const teil = lage.teile[lage.teil];
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, hoeren: zeigeHoeren,
        vok_lernen: zeigeVokabel, vok_luecke: zeigeVokabel, vok_bild: zeigeVokabel, vok_abfrage: zeigeVokabel,
-       auswahl: zeigeAuswahl, reihenfolge: zeigeReihenfolge, lesen: zeigeLesen, hoerwahl: zeigeHoerwahl })[teil.art](teil);
+       auswahl: zeigeAuswahl, reihenfolge: zeigeReihenfolge, lesen: zeigeLesen, textfolge: zeigeTextfolge, woche: zeigeWoche, hoerwahl: zeigeHoerwahl })[teil.art](teil);
     navErgaenzen();
   }
 
@@ -1373,6 +1373,112 @@
     zeige(kopf(st),
       el("p", { class: "ansage" }, "Bring die Wörter in die richtige Reihenfolge: von „nie“ bis „immer“. Tipp sie nacheinander an!"),
       karte(teil, null, reihe, el("div", { class: "wahl" }, knoepfe), box, sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
+  }
+
+  /* ---------- 🏁 Road to GLN: zwei neue Übungen (11.11.2026) ----------
+     textfolge = Lesen „Reihenfolge“: Text lesen, acht Ereignisse der Reihe nach antippen (Lesezeit-Sperre wie bei Lesen).
+     woche = Schreiben „…'s week“: aus Kalender-Notizen Sätze bauen; Satzanfang vorgegeben. Ohne ⌨️ (G-Kurs): Bausteine der Reihe nach antippen,
+     ein Ablenker ist das Verb ohne -s. Mit ⌨️ (E-Kurs): Satz zu Ende tippen – geprüft werden Verbform mit -s und Schlüsselwörter, 1 Tippfehler je Wort
+     ist erlaubt; nach drei Versuchen kommt der Mustersatz. Beide haben zwei Varianten, die sich bei jedem Durchgang abwechseln (stand.var[Teilschlüssel]). */
+  function varianteVon(liste) {
+    const k = teilSchluessel(lage.teil), n = (stand.var && stand.var[k]) || 0;
+    return { v: liste[n % liste.length], gemacht: () => { (stand.var = stand.var || {})[k] = n + 1; } };
+  }
+  function zeigeTextfolge(teil) {
+    const st = station(lage.nr), { v, gemacht } = varianteVon(teil.texte), ev = v.ereignisse;
+    let naechster = 0;
+    const box = rueckmeldung();
+    const reihe = el("ol", { class: "reihe folge", "aria-label": "Deine Reihenfolge" }, ev.map((_, i) => el("li", { class: "platz" }, `${i + 1}.`)));
+    const weiter = knopf("Weiter ➜", () => { if (sperre_.bereit()) naechstes(); }, "haupt");
+    const sperre_ = arbeitsSperre(weiter, { sek: (v.text.split(/\s+/).length / LESE_WPM * 60 + ev.length * LESE_JE_AUSSAGE) * eile(), start: lage.start,
+      zeitText: (z) => `📖 Lies erst den Text genau. „Weiter“ geht in ${z}.`,
+      offen: () => (naechster < ev.length ? `✏️ Tipp die Ereignisse der Reihe nach an (noch ${ev.length - naechster}).` : "") });
+    const knoepfe = mischen(ev).map((e) => el("button", { class: "knopf wahl-knopf folge-knopf", lang: "en", onclick: (x) => {
+      if (naechster >= ev.length) return;
+      if (e === ev[naechster]) {
+        const platz = reihe.children[naechster];
+        platz.textContent = ""; platz.append(el("span", { class: "punkte", "aria-hidden": "true" }, e.symbol), ` ${naechster + 1}. ${e.satz}`);
+        platz.classList.add("voll"); x.currentTarget.hidden = true; box.hidden = true;
+        if (++naechster === ev.length) { gemacht(); melde(box, "gut", lob()); sperre_.bereit(); lage.weiter = () => { if (sperre_.bereit()) naechstes(); }; }
+      } else {
+        lage.hilfe = true; // Fehlversuch: kein „Ohne Hilfe“-Bonus
+        melde(box, "hilfe", naechster === 0 ? "Lies den Anfang noch einmal: Was passiert zuerst?" : `Schau im Text nach: Was passiert nach „${ev[naechster - 1].satz}“?`);
+      }
+    } }, el("span", { "aria-hidden": "true" }, e.symbol), " " + e.satz));
+    lage.abspielen = null;
+    zeige(kopf(st),
+      el("p", { class: "ansage" }, "Lies den Text. Bring dann die acht Ereignisse in die richtige Reihenfolge: Tipp sie nacheinander an!"),
+      karte(teil, null, el("h2", { lang: "en" }, v.titel), el("div", { class: "lesetext", lang: "en" }, el("p", {}, v.text)),
+        el("p", { class: "klein" }, "What happens first? What happens next?"), el("div", { class: "wahl folge-wahl" }, knoepfe), reihe, box, sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
+  }
+  // Getippter Satz (E-Kurs): Verb mit -s und Schlüsselwörter; gibt { ok } oder { hinweis } zurück
+  function wochePruefen(text, s) {
+    const w = normT(text).split(" ");
+    const nah = (ziel) => w.some((x) => (ziel.length <= 3 ? x === ziel : abstand(x, ziel) <= 1));
+    const verbOk = w.some((x) => x === s.verb || (s.verb.length > 3 && x !== s.falsch && x.endsWith("s") && abstand(x, s.verb) <= 1));
+    if (!verbOk) return { hinweis: w.includes(s.falsch) ? (s.verb === "is" ? "Eine Person: is, nicht are." : `he / she / it – das s muss mit: Wie heißt „${s.falsch}“ mit he/she/it?`)
+      : `Dein Satz braucht das Verb „${s.falsch}“ – in der Form für he / she / it.` };
+    const fehlt = s.schluessel.filter((k) => !nah(k));
+    if (fehlt.length) return { hinweis: `Schau in den Kalender – es fehlt noch: ${fehlt.join(", ")}.` };
+    return { ok: true };
+  }
+  function zeigeWoche(teil) {
+    const st = station(lage.nr), { v, gemacht } = varianteVon(teil.wochen), N = v.saetze.length;
+    let i = 0;
+    const box = rueckmeldung(), bereich = el("div", { class: "woche-bereich" });
+    const text = el("ol", { class: "woche-text", lang: "en", "aria-label": "Dein Text" });
+    const weiter = knopf("Weiter ➜", () => { if (sperre_.bereit()) naechstes(); }, "haupt");
+    const sperre_ = arbeitsSperre(weiter, { sek: N * 2 * QUIZ_MIN * eile(), start: lage.start,
+      zeitText: (z) => `✍️ Schreib in Ruhe. „Weiter“ geht in ${z}.`, offen: () => (i < N ? `✏️ Noch ${N - i} ${N - i === 1 ? "Satz" : "Sätze"}.` : "") });
+    const muster = (s) => `${s.anfang} ${s.teile.join(" ")}.`;
+    function geschafft(s, hinweis) {
+      text.append(el("li", {}, muster(s)));
+      if (++i < N) { aufgabe(); if (hinweis) melde(box, "hilfe", hinweis); return; }
+      gemacht(); bereich.replaceChildren(); melde(box, "gut", (hinweis ? hinweis + " " : "") + lob() + ` Das ist dein Text über ${v.person}'s week.`);
+      sperre_.bereit(); lage.weiter = () => { if (sperre_.bereit()) naechstes(); };
+    }
+    function aufgabe() {
+      const s = v.saetze[i];
+      box.hidden = true;
+      const kopfzeile = el("p", { class: "klein" }, `Satz ${i + 1} von ${N}`);
+      if (tippen()) { // E-Kurs: Satz zu Ende tippen
+        let versuche = 0;
+        const feld = tippFeld((eingabe, ui) => {
+          const r = wochePruefen(eingabe, s);
+          if (r.ok) return geschafft(s);
+          lage.hilfe = true;
+          if (++versuche >= 3) return geschafft(s, `So geht der Satz: ${muster(s)}`);
+          melde(box, "hilfe", r.hinweis); ui.feld.focus();
+        });
+        bereich.replaceChildren(kopfzeile, el("p", { class: "woche-satz", lang: "en" }, el("strong", {}, s.anfang), " …"),
+          el("p", { class: "klein" }, "Schreib den Satz zu Ende. Denk an he / she / it + s!"), feld);
+        return;
+      }
+      let n = 0; // G-Kurs: Bausteine der Reihe nach antippen
+      const zeile = el("p", { class: "woche-satz", lang: "en" }, el("strong", {}, s.anfang), " ");
+      const steine = mischen([...s.teile, s.falsch]).map((t) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (x) => {
+        if (n >= s.teile.length) return;
+        if (t === s.teile[n]) {
+          zeile.append(el("span", { class: "woche-stein" }, t), " "); x.currentTarget.hidden = true; box.hidden = true;
+          if (++n === s.teile.length) geschafft(s);
+        } else {
+          lage.hilfe = true;
+          melde(box, "hilfe", t === s.falsch ? (s.verb === "is" ? "Eine Person: is, nicht are." : "he / she / it – das s muss mit!")
+            : n === 0 ? "Wer macht etwas? Fang mit der Person an." : "Reihenfolge im Satz: wer? – macht – was? – wo? – wann?");
+        }
+      } }, t));
+      bereich.replaceChildren(kopfzeile, zeile, el("div", { class: "wahl" }, steine));
+    }
+    lage.abspielen = null;
+    aufgabe();
+    zeige(kopf(st),
+      el("p", { class: "ansage" }, tippen() ? `Das ist der Kalender von ${v.person}. Schreib über die Woche: Der Satzanfang steht schon da.`
+        : `Das ist der Kalender von ${v.person}. Bau die Sätze: Tipp die Bausteine in der richtigen Reihenfolge an. (Mit ⌨️ oben kannst du selbst schreiben.)`),
+      karte(teil, null, el("h2", { lang: "en" }, v.titel),
+        el("div", { class: "woche-kalender", lang: "en" }, v.kalender.map((k) => el("div", { class: "woche-tag" },
+          el("strong", {}, k.tag), el("span", { class: "woche-sym", "aria-hidden": "true" }, k.symbol), el("span", {}, k.notiz), el("span", { class: "klein" }, "🕒 " + k.wann),
+          k.warum ? el("span", { class: "klein" }, "💚 " + k.warum) : null))),
+        text, bereich, box, sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
   }
 
   /* ---------- Lesen: Text und alle Aussagen auf einer Seite (true / false / not in the text) ---------- */
@@ -3658,6 +3764,9 @@
       else if (teil.art === "auswahl") teil.aufgaben.forEach((a) => { if (a.frage && a.richtig && a.optionen) dazu("luecke", { typ: "luecke", form: "wahl", key: "s:" + a.satz, a, q, ansage: teil.ansage }); });
       else if (teil.art === "reihenfolge") teil.woerter.forEach((id) => satzDazu(id, q));
       else if (teil.art === "lesen") teil.aufgaben.forEach((a) => { if (D.saetze[a.satz] && D.saetze[teil.text]) dazu("lesen", { typ: "lesen", key: "s:" + a.satz, a, teil, q }); });
+      else if (teil.art === "textfolge") teil.texte.forEach((x, ti) => x.ereignisse.slice(0, -1).forEach((e, i) => dazu("lesen", { typ: "lesen", form: "folge", key: `f:${ti}:${i}`, x, i, q })));
+      else if (teil.art === "woche") teil.wochen.forEach((x, wi) => x.saetze.forEach((s, i) => { if (s.verb !== "is") dazu("luecke", { typ: "luecke", form: "wahl", key: `k:${wi}:${i}`, q, ansage: "Writing: Welche Form passt? (he / she / it)",
+        a: { frage: `${s.anfang} ${s.teile.join(" ")}.`.replace(` ${s.verb} `, " ___ "), richtig: s.verb, optionen: [s.verb, s.falsch, s.falsch.replace(/e$/, "") + "ing"], korrektur: true } }); }));
       else if (teil.art === "hoeren" && teil.uebung) {
         const u = teil.uebung;
         if (u.art === "true-false") u.aufgaben.forEach((a, i) => dazu("hoeren", { typ: "hoeren", form: "tf", key: `h:${u.titel}:${i}`, a, u, q }));
@@ -3699,6 +3808,11 @@
       const basis = { satz, wort: c.w, optionen: wahl(c.w, falsche), richtig: c.w, loesung: c.s.en, ort, schluessel };
       if (c.typ === "luecke") return Object.assign(basis, { typ: "luecke", anweisung: "Welches Wort passt in die Lücke?", frage: c.s.de });
       return Object.assign(basis, { typ: "hoeren", form: "luecke", anweisung: "Hör zu! Welches Wort hörst du in der Lücke?", audio: [c.s.audio.en], hoerKey: c.s.audio.en });
+    }
+    if (c.typ === "lesen" && c.form === "folge") { // Reading „Reihenfolge“: Was passiert direkt danach?
+      const ev = c.x.ereignisse, richtig = ev[c.i + 1].satz, falsche = mischen(ev.filter((_, j) => j !== c.i && j !== c.i + 1)).slice(0, 2).map((e) => e.satz);
+      return { typ: "lesen", form: "folge", anweisung: "Read the text. What happens next?", titel: c.x.titel, text: c.x.text, textKey: "f:" + c.x.titel,
+        frage: `${ev[c.i].satz} – What happens next?`, optionen: wahl(richtig, falsche), richtig, loesung: richtig, ort, schluessel };
     }
     if (c.typ === "lesen") {
       const text = D.saetze[c.teil.text];
@@ -4216,7 +4330,7 @@
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "ort", ort: SP.orte.find((o) => o.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalt-Anzeige eines Orts (Orts-Szene/Stempel) auslösen
   if (LOKAL) window.__karteTest = { auswerten: kartenAuswerten, karteVon, zeige: zeigeEreignisse, sp: spielstand, sammlung };   // nur Test-Build: Folien-Karten prüfen
   if (LOKAL) window.__heldEreignis = (id) => { ereignisse.push({ art: "held", held: SP.helden.find((h) => h.id === id) }); zeigeEreignisse(); }; // nur Test-Build: neuer Superheld (Heldenfilm, danach Karte)
-  if (LOKAL) window.__gln = { naechstes, lage: () => lage, stand: () => stand, lehrer: glnStandLehrer, aufgaben: () => testLauf && testLauf.aufgaben.map((a) => a.typ), // nur Test-Build: Road to GLN
+  if (LOKAL) window.__gln = { naechstes, zu: (k) => testZuTeil(k), lage: () => lage, stand: () => stand, lehrer: glnStandLehrer, aufgaben: () => testLauf && testLauf.aufgaben.map((a) => a.typ), // nur Test-Build: Road to GLN
     bestehen: () => { testLauf.antworten = testLauf.aufgaben.map(() => ({ richtig: true, antwort: "" })); testEnde(false); } };
   if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
   if (LOKAL) window.__station = (nr) => { lage = { nr, gruppe: null, teil: 0 }; stationGeschafft(); }; // nur Test-Build: Station abschließen (Mega-Lob)

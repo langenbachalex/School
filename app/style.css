@@ -649,3 +649,17 @@ dialog.feier.lehrer .lehrer-abfragen { font-weight: 700; }
 @keyframes karte-blitz { 0% { opacity: 0; } 8% { opacity: .95; } 18% { opacity: .2; } 26% { opacity: .85; } 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .karte-dreh .heldenkarte, .karte-dreh .heldenkarte canvas, .karte-blitz { animation: none; } .karte-blitz { display: none; } }
 .held-knopf .heldenkarte figcaption { font-size: .72rem; line-height: 1.25; }
+
+/* 🏁 Road to GLN: Lesen „Reihenfolge“ und Schreiben „…'s week“ */
+.reihe.folge { grid-template-columns: 1fr; }
+.reihe.folge .platz { min-height: 40px; justify-items: start; text-align: left; place-items: center start; padding: 6px 12px; }
+.folge-wahl .folge-knopf { text-align: left; }
+.woche-kalender { display: grid; grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); gap: 8px; }
+.woche-tag { display: grid; gap: 2px; padding: 10px 12px; border: 2px solid var(--linie); border-radius: 14px; background: var(--bg); }
+.woche-tag strong { border-bottom: 2px solid var(--gln); padding-bottom: 2px; }
+.woche-sym { font-size: 1.8rem; line-height: 1.2; }
+.woche-text { margin: 0; padding-left: 1.4em; display: grid; gap: 4px; font-size: 1.1rem; }
+.woche-text:empty { display: none; }
+.woche-satz { font-size: 1.25rem; min-height: 2.2em; margin: 6px 0; }
+.woche-stein { display: inline-block; padding: 2px 8px; border-radius: 8px; background: var(--gruen-hell); border: 1px solid var(--gruen); font-weight: 700; }
+.woche-bereich { display: grid; gap: 8px; }

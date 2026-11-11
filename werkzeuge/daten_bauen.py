@@ -178,6 +178,58 @@ TIERS = [
 ]
 titel_id = lambda n: re.sub(r"[^a-z0-9]+", "_", n.lower()).strip("_")
 # Nächster Termin für den Countdown auf der Startseite (in Wochen); nach dem Termin verschwindet er
+# 🏁 Road to GLN (11.11.2026): zwei neue Übungen mit eigenen Inhalten (andere Namen, Orte, Kalender als im Lehrwerk; noch ohne Ton).
+# Lesen „Reihenfolge“ (Station 4): Text lesen, acht Ereignisse ordnen. Die App wechselt bei jedem Durchgang die Variante.
+TEXTFOLGE = [
+    {"titel": "Nilay's Saturday",
+     "text": "It is Saturday. Nilay gets up at half past eight. She has breakfast with her dad: toast and orange juice. After breakfast she feeds her rabbit. "
+             "At ten o'clock her friend Tom rings the bell. They cycle to the sports centre together. Nilay loves badminton, so they play for an hour. "
+             "Tom often wins, but today Nilay is the winner! After the game they are hungry. They buy sandwiches and eat them in the park. "
+             "In the afternoon it starts to rain, so they go to Tom's house and play a board game. At five o'clock Nilay goes home. "
+             "In the evening she watches a film with her family. She goes to bed at nine. What a great day!",
+     "ereignisse": [["⏰", "Nilay gets up."], ["🐇", "She feeds her rabbit."], ["🚲", "Nilay and Tom cycle to the sports centre."],
+                    ["🏸", "They play badminton."], ["🥪", "They eat sandwiches in the park."], ["🎲", "They play a board game at Tom's house."],
+                    ["🏠", "Nilay goes home."], ["🎬", "She watches a film with her family."]]},
+    {"titel": "Finn's Tuesday",
+     "text": "On Tuesdays Finn's alarm clock rings at quarter to seven. He takes a shower and gets dressed. Then he makes his sandwiches for school. "
+             "He walks to the bus stop with his sister Ruby. The bus is always full! School starts at eight. Finn's first lesson is maths. "
+             "After the break he has art, his favourite subject. At one o'clock he has lunch in the canteen with his friends Amir and Lucy. "
+             "After school Finn goes to drama club. They practise a play about a funny detective. At half past four he goes home and does his homework. "
+             "Then he walks the dog. After dinner Finn reads a comic in bed. He is tired but happy.",
+     "ereignisse": [["🚿", "Finn takes a shower."], ["🥪", "He makes his sandwiches."], ["🚌", "He walks to the bus stop with Ruby."],
+                    ["🎨", "He has art."], ["🍽️", "He has lunch in the canteen."], ["🎭", "He goes to drama club."],
+                    ["🐕", "He walks the dog."], ["📖", "He reads a comic in bed."]]},
+]
+# Schreiben „…'s week“ (Station 2): Kalender-Notizen → Sätze. Je Satz: Satzanfang (vorgegeben), Bausteine in der richtigen Reihenfolge,
+# Verb mit -s, falsche Grundform (Ablenker) und Schlüsselwörter für die getippte Antwort (⌨️, E-Kurs).
+def _woche(person, pron, tage, saetze):
+    return {"person": person, "titel": f"{person}'s week",
+            "kalender": [{"tag": a, "symbol": b, "notiz": c, "wann": d, "warum": e} for a, b, c, d, e in tage],
+            "saetze": [{"anfang": a, "teile": b, "verb": c, "falsch": d, "schluessel": e} for a, b, c, d, e in saetze]}
+WOCHEN = [
+    _woche("Zoe", "she",
+           [("Monday", "🏊", "swimming club", "in the afternoon", "loves water"), ("Wednesday", "🎸", "guitar lesson", "at four o'clock", ""),
+            ("Friday", "🍕", "pizza with Grandpa", "in the evening", "Grandpa is funny"), ("Saturday", "⚽", "football", "in the morning", "")],
+           [("On Monday", ["Zoe", "goes", "to swimming club", "in the afternoon"], "goes", "go", ["swimming", "afternoon"]),
+            ("She likes it because", ["she", "loves", "water"], "loves", "love", ["water"]),
+            ("On Wednesday", ["she", "has", "a guitar lesson", "at four o'clock"], "has", "have", ["guitar"]),
+            ("On Friday", ["Zoe", "eats", "pizza", "with her grandpa", "in the evening"], "eats", "eat", ["pizza", "grandpa", "evening"]),
+            ("That's nice because", ["her grandpa", "is", "funny"], "is", "are", ["grandpa", "funny"]),
+            ("On Saturday", ["she", "plays", "football", "in the morning"], "plays", "play", ["football", "morning"])]),
+    _woche("Sam", "he",
+           [("Tuesday", "🥁", "drum lesson", "after school", "loves loud music"), ("Thursday", "📚", "library", "in the afternoon", "likes comics"),
+            ("Saturday", "🚲", "bike tour with Mum", "in the morning", ""), ("Sunday", "🎂", "Grandma's birthday party", "in the afternoon", "")],
+           [("On Tuesday", ["Sam", "has", "a drum lesson", "after school"], "has", "have", ["drum", "school"]),
+            ("He likes it because", ["he", "loves", "loud music"], "loves", "love", ["music"]),
+            ("On Thursday", ["he", "goes", "to the library", "in the afternoon"], "goes", "go", ["library", "afternoon"]),
+            ("He often goes there because", ["he", "likes", "comics"], "likes", "like", ["comics"]),
+            ("On Saturday", ["Sam", "cycles", "with his mum", "in the morning"], "cycles", "cycle", ["mum", "morning"]),
+            ("On Sunday", ["he", "eats", "cake", "at his grandma's birthday party"], "eats", "eat", ["cake", "birthday"])]),
+]
+# Ans Ende der Stationen gehängt, damit die bisherigen Teil-Nummern (Spielstände, Hausaufgaben) gleich bleiben
+next(s for s in STATIONEN if s["nr"] == 4)["schritte"].append(
+    {"art": "textfolge", "name": "Reihenfolge", "texte": [dict(x, ereignisse=[{"symbol": s, "satz": e} for s, e in x["ereignisse"]]) for x in TEXTFOLGE]})
+next(s for s in STATIONEN if s["nr"] == 2)["schritte"].append({"art": "woche", "name": "Schreiben: …'s week", "wochen": WOCHEN})
 TERMIN = {"name": "GLN 2", "datum": "2026-11-25", "powerup": True}  # powerup: 14 Tage vorher werden alle erledigten Teile fällig (⚡ Power Up)
 # Word Gym (docs/word-gym/konzept.md): Standard-Pensum und Boxen-Intervalle in Tagen
 GYM = {"pensum": {"neu": 3, "wdh": 6}, "grenzen": {"neu": [1, 6], "wdh": [4, 12]}, "intervalle": [1, 3, 7, 14, 30, 60, 120]}

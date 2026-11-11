@@ -873,7 +873,8 @@ window.DATEN = {
          "symbol": "🎬",
          "satz": "She watches a film with her family."
         }
-       ]
+       ],
+       "audio": "audio/gln/textfolge_1.mp3"
       },
       {
        "titel": "Finn's Tuesday",
@@ -911,7 +912,8 @@ window.DATEN = {
          "symbol": "📖",
          "satz": "He reads a comic in bed."
         }
-       ]
+       ],
+       "audio": "audio/gln/textfolge_2.mp3"
       }
      ]
     }

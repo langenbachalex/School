@@ -228,7 +228,9 @@ WOCHEN = [
 ]
 # Ans Ende der Stationen gehängt, damit die bisherigen Teil-Nummern (Spielstände, Hausaufgaben) gleich bleiben
 next(s for s in STATIONEN if s["nr"] == 4)["schritte"].append(
-    {"art": "textfolge", "name": "Reihenfolge", "texte": [dict(x, ereignisse=[{"symbol": s, "satz": e} for s, e in x["ereignisse"]]) for x in TEXTFOLGE]})
+    {"art": "textfolge", "name": "Reihenfolge", "texte": [dict(x, ereignisse=[{"symbol": s, "satz": e} for s, e in x["ereignisse"]],
+                                                            **({"audio": f"audio/gln/textfolge_{n}.mp3"} if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app", "audio", "gln", f"textfolge_{n}.mp3")) else {}))
+                                                       for n, x in enumerate(TEXTFOLGE, 1)]})  # Ton (Mr. Alex' Stimme, 11.11.): audio_erzeugen.sprechen("en", "en", Titel + Text, Ziel, 0.9); Datei löschen = neu vertonen
 next(s for s in STATIONEN if s["nr"] == 2)["schritte"].append({"art": "woche", "name": "Schreiben: …'s week", "wochen": WOCHEN})
 TERMIN = {"name": "GLN 2", "datum": "2026-11-25", "powerup": True}  # powerup: 14 Tage vorher werden alle erledigten Teile fällig (⚡ Power Up)
 # Word Gym (docs/word-gym/konzept.md): Standard-Pensum und Boxen-Intervalle in Tagen

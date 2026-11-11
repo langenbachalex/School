@@ -1405,10 +1405,12 @@
         melde(box, "hilfe", naechster === 0 ? "Lies den Anfang noch einmal: Was passiert zuerst?" : `Schau im Text nach: Was passiert nach „${ev[naechster - 1].satz}“?`);
       }
     } }, el("span", { "aria-hidden": "true" }, e.symbol), " " + e.satz));
-    lage.abspielen = null;
+    const hoeren = v.audio ? () => spiele([v.audio]) : null;
+    lage.abspielen = hoeren;
     zeige(kopf(st),
       el("p", { class: "ansage" }, "Lies den Text. Bring dann die acht Ereignisse in die richtige Reihenfolge: Tipp sie nacheinander an!"),
       karte(teil, null, el("h2", { lang: "en" }, v.titel), el("div", { class: "lesetext", lang: "en" }, el("p", {}, v.text)),
+        hoeren && el("div", { class: "knopfreihe" }, knopf("🔊 Text anhören", hoeren, "leise")),
         el("p", { class: "klein" }, "What happens first? What happens next?"), el("div", { class: "wahl folge-wahl" }, knoepfe), reihe, box, sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
   }
   // Getippter Satz (E-Kurs): Verb mit -s und Schlüsselwörter; gibt { ok } oder { hinweis } zurück

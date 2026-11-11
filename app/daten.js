@@ -7821,5 +7821,160 @@ window.DATEN = {
     }
    ]
   }
+ ],
+ "gln": [
+  {
+   "datum": "2026-11-25",
+   "von": "2026-11-11",
+   "bis": "2026-11-25",
+   "ziel": "6/3; 6/1-2; 4; 7/1-6; 2; 3; 8/How often? (never … always); 8/Sports and hobbies",
+   "text": "GLN 2 · Unit 3 „My day“: Listening, Reading, Words, Writing",
+   "ziele": [
+    {
+     "ziel": "6/3",
+     "nr": 6,
+     "gruppe": null,
+     "teil": 2,
+     "name": "Station 6: Hörverstehen · Hören 3",
+     "schluessel": [
+      "6||2"
+     ]
+    },
+    {
+     "ziel": "6/1-2",
+     "nr": 6,
+     "gruppe": null,
+     "teil": null,
+     "name": "Station 6: Hörverstehen · Hören 1 bis Hören 2",
+     "schluessel": [
+      "6||0",
+      "6||1"
+     ]
+    },
+    {
+     "ziel": "4",
+     "nr": 4,
+     "gruppe": null,
+     "teil": null,
+     "name": "Station 4: Aufgaben verstehen",
+     "schluessel": [
+      "4||0",
+      "4||1",
+      "4||2",
+      "4||3",
+      "4||4"
+     ]
+    },
+    {
+     "ziel": "7/1-6",
+     "nr": 7,
+     "gruppe": null,
+     "teil": null,
+     "name": "Station 7: Vokabeln · Unit 3: My day bis Topic 2 · Teil 2",
+     "schluessel": [
+      "7|0|0",
+      "7|0|1",
+      "7|0|2",
+      "7|0|3",
+      "7|0|4",
+      "7|1|0",
+      "7|1|1",
+      "7|1|2",
+      "7|1|3",
+      "7|1|4",
+      "7|2|0",
+      "7|2|1",
+      "7|2|2",
+      "7|2|3",
+      "7|2|4",
+      "7|3|0",
+      "7|3|1",
+      "7|3|2",
+      "7|3|3",
+      "7|3|4",
+      "7|4|0",
+      "7|4|1",
+      "7|4|2",
+      "7|4|3",
+      "7|4|4",
+      "7|5|0",
+      "7|5|1",
+      "7|5|2",
+      "7|5|3"
+     ]
+    },
+    {
+     "ziel": "2",
+     "nr": 2,
+     "gruppe": null,
+     "teil": null,
+     "name": "Station 2: he / she / it + s",
+     "schluessel": [
+      "2||0",
+      "2||1",
+      "2||2",
+      "2||3",
+      "2||4",
+      "2||5",
+      "2||6",
+      "2||7",
+      "2||8",
+      "2||9",
+      "2||10"
+     ]
+    },
+    {
+     "ziel": "3",
+     "nr": 3,
+     "gruppe": null,
+     "teil": null,
+     "name": "Station 3: Uhrzeiten",
+     "schluessel": [
+      "3||0",
+      "3||1",
+      "3||2",
+      "3||3",
+      "3||4",
+      "3||5"
+     ]
+    },
+    {
+     "ziel": "8/How often? (never … always)",
+     "nr": 8,
+     "gruppe": 0,
+     "teil": null,
+     "name": "Station 8: Neu · How often? (never … always)",
+     "schluessel": [
+      "8|0|0",
+      "8|0|1",
+      "8|0|2",
+      "8|0|3",
+      "8|0|4",
+      "8|0|5",
+      "8|0|6",
+      "8|0|7"
+     ]
+    },
+    {
+     "ziel": "8/Sports and hobbies",
+     "nr": 8,
+     "gruppe": 1,
+     "teil": null,
+     "name": "Station 8: Neu · Sports and hobbies",
+     "schluessel": [
+      "8|1|0",
+      "8|1|1",
+      "8|1|2",
+      "8|1|3",
+      "8|1|4",
+      "8|1|5",
+      "8|1|6",
+      "8|1|7",
+      "8|1|8",
+      "8|1|9"
+     ]
+    }
+   ]
+  }
  ]
 };

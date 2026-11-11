@@ -115,7 +115,7 @@
 
   /* ---------- Ereignisprotokoll (31.10.2026, Schutz-Paket 3) ----------
      stand.protokoll: die letzten 500 Ereignisse als [t (Minuten seit 1970), art, p], im Siegel. Arten: t Teil · g Word Gym · s Runner-Story ·
-     e Einheit/Station · m Spiel des Tages · h Homework-Bonus · bw/bf/bs/bq/bm Boni (Wochenende, Ferien, Serie, Woche, Monat) · k Kauf (Coins, negativ) ·
+     e Einheit/Station · m Spiel des Tages · h Homework-Bonus · gl Road-to-GLN-Bonus (doppelte Punkte) · gr „GLN ready“ (Abschlusstest bestanden, 100 Coins, 0 Punkte) · gs GLN-Serie 7 Tage (50 Coins, 0 Punkte) · bw/bf/bs/bq/bm Boni (Wochenende, Ferien, Serie, Woche, Monat) · k Kauf (Coins, negativ) ·
      w Warnung des Zeitlogs · r Startwert (Lehrer-Bereich, gekürztes Protokoll) · a Altbestand (Stand von vor dem Protokoll) ·
      x Stichproben-Abfrage (Lehrer-Bereich, +1 👍 / −1 👎, keine Punkte – zählt nicht zur Protokoll-Summe) ·
      p Prüfung „Test yourself“ (2.11.: +30 beim ersten Bestehen einer Station, sonst 0 – zählt zur Protokoll-Summe, nicht zum Wächter).
@@ -286,7 +286,7 @@
     for (const k of kinder.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
     return e;
   }
-  function zeige(...inhalt) { stopp(); runnerAus(); imSpiel = false; app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); hwLeiste(); }
+  function zeige(...inhalt) { stopp(); runnerAus(); imSpiel = false; app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); hwLeiste(); glnLeiste(); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -422,21 +422,21 @@
         el("h1", {}, "English Power Game"),
         el("p", { class: "klein" }, "Hallo! Wähl eine Station. Wenn du fertig bist, bekommt sie ein Häkchen."),
         statusleiste(), terminZeile()),
-      hwZeile(), gymKarte(),
+      hwZeile(), glnZeile(), gymKarte(),
       powerupZeile(),
       alleFertig && el("section", { class: "geschafft" },
         el("h2", {}, "Wahnsinn, du hast alles geschafft!"),
         el("p", {}, "Wenn etwas unklar ist, frag mich am Mittwoch – ich helfe dir gern. Dein Mr. Alex")),
       el("nav", { class: "kacheln", "aria-label": "Stationen" },
         D.stationen.map((s) => {
-          const auf = !s.spiele && faellige(s.nr + "|") > 0, fertig = !s.spiele && stand.erledigt.includes(s.nr) && !auf, hw = hwBei(s.nr);
-          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : "") + (hw ? " hw" : ""), onclick: () => starteStation(s.nr),
-            "aria-label": `Station ${s.nr}: ${s.titel}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}` },
+          const auf = !s.spiele && faellige(s.nr + "|") > 0, fertig = !s.spiele && stand.erledigt.includes(s.nr) && !auf, hw = hwBei(s.nr), gl = glnBei(s.nr);
+          return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : "") + (hw ? " hw" : "") + (gl ? " gln" : ""), onclick: () => starteStation(s.nr),
+            "aria-label": `Station ${s.nr}: ${s.titel}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}${gl ? " (Road to GLN)" : ""}` },
             el("span", { class: "sym", "aria-hidden": "true" }, s.symbol),
             el("span", { class: "nr" }, "Station " + s.nr),
             el("span", { class: "titel" }, s.titel),
             s.unter && el("span", { class: "unter" }, s.unter),
-            hw && hwSchild(), auf && powerupSchild(),
+            hw && hwSchild(), gl && glnSchild(), auf && powerupSchild(),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
       el("div", { class: "knopfreihe" }, knopf("✏️ Frage für meinen Lehrer", fragenOeffnen))
@@ -543,8 +543,8 @@
     return neu ? Math.ceil(basis / 2) : 0;
   }
   // Direktsprung zu einem Ziel: Station, Abschnitt oder Teil – bei ganzer Station/Abschnitt zum ersten offenen Abschnitt/Teil
-  function hwStart(z) {
-    const st = station(z.nr), offen = (k) => !(stand.teile && stand.teile[k]);
+  function hwStart(z, offenFn) {
+    const st = station(z.nr), offen = offenFn || ((k) => !(stand.teile && stand.teile[k]));
     let g = z.gruppe;
     if (g == null && st.gruppen) { // Abschnitte des Ziels: der erste mit offenen Teilen, sonst der erste
       const gs = st.gruppen.map((_, i) => i).filter((i) => z.schluessel.some((k) => k.startsWith(`${z.nr}|${i}|`)));
@@ -552,7 +552,7 @@
     }
     if (g != null) starteGruppe(st, g); else starteStation(z.nr);
     if (!lage) return;
-    const i = z.teil != null ? z.teil : lage.teile.findIndex((_, i) => z.schluessel.includes(teilSchluessel(i)) && !istFertig(i));
+    const i = z.teil != null ? z.teil : lage.teile.findIndex((_, i) => z.schluessel.includes(teilSchluessel(i)) && (offenFn ? offenFn(teilSchluessel(i)) : !istFertig(i)));
     if (i > 0) springe(i);
   }
   const hwWeiterStart = () => { const h = hwAktiv(), z = h && hwOffen(h); if (z) hwStart(z); };
@@ -603,9 +603,9 @@
   // Abschluss-Seiten: „Nächste Hausaufgabe ➜“, wenn der eben fertige Teil ein Ziel abgeschlossen hat und noch eins offen ist
   function hwWeiterKnopf(k) {
     const h = hwAktiv();
-    if (!h) return null;
+    if (!h) return glnWeiterKnopf(k);
     const ziele = h.ziele.filter((z) => z.schluessel.includes(k));
-    if (!ziele.length || !ziele.every((z) => hwZielFertig(h, z)) || !hwOffen(h)) return null;
+    if (!ziele.length || !ziele.every((z) => hwZielFertig(h, z)) || !hwOffen(h)) return glnWeiterKnopf(k);
     return knopf("📝 Nächste Hausaufgabe ➜", hwWeiterStart, "hw-weiter");
   }
 
@@ -613,6 +613,132 @@
   const TEMPO = [0.5, 0.35, 0.25];
   function tempoFaktor(i) { const e = stand.teile && stand.teile[teilSchluessel(i)]; return e ? TEMPO[Math.min(e.s || 0, 2)] : 1; }
   const eile = () => (lage && lage.tempoFaktor) || 1;
+
+  /* ---------- 🏁 Road to GLN (inhalte/gln.tsv → D.gln, Schema in inhalte/LIESMICH.md; 11.11.2026) ----------
+     Fenster: 14 Tage vor dem GLN bis zum GLN-Tag (g.von … g.bis, vom Bauskript berechnet). Nur dann: grüner Knopf „🏁 GLN“ in der Leiste,
+     grüne Zeile auf der Startseite, GLN-Schild an Kachel, Abschnitt und Teil. Kette wie bei der Hausaufgabe; ein Teil zählt, wenn er IM Fenster
+     gemacht wurde (Wiederholen ist der Sinn). Vier Boni: 1. doppelte Punkte je GLN-Teil (einmal je Teil, Protokoll „gl“) · 2. Abschlusstest
+     (Test yourself über alle GLN-Teile, frei ab der Hälfte der Ziele; bestanden = 100 Coins, Protokoll „gr“, Häkchen am Knopf, Abzeichen
+     „GLN Ready“ in der Statusleiste bis zum GLN; Ergebnis in stand.spiel.tests["gln:<Datum>"]) · 3. Streak: Tage mit mindestens einem GLN-Teil,
+     Flamme am Knopf, 7 Tage in Folge = 50 Coins (Protokoll „gs“) · 4. Zeile im Lehrer-Bereich.
+     Gespeichert in stand.hw (im Siegel seit v3, keine neue Siegel-Version): "gln|<Datum>" = [Teilschlüssel], "…|tage" = [Tage], "…|serie7", "…|fertig". */
+  const GLN = { testCoins: 100, serieTage: 7, serieCoins: 50 };
+  const glnAktiv = () => { const t = iso(heute()); return (D.gln || []).find((g) => g.von <= t && t <= g.bis) || null; };
+  const glnId = (g) => "gln|" + g.datum;
+  const glnGemacht = (g) => (stand.hw && stand.hw[glnId(g)]) || [];
+  const glnTeilFertig = (g, k) => { const e = stand.teile && stand.teile[k]; return glnGemacht(g).includes(k) || !!(e && typeof e === "object" && e.am >= g.von); };
+  const glnTrifft = (k) => { const g = glnAktiv(); return !!g && g.ziele.some((z) => z.schluessel.includes(k)); };
+  const glnBei = (nr, anfang) => { const g = glnAktiv(); return !!g && g.ziele.some((z) => z.nr === nr && (!anfang || z.schluessel.some((k) => k.startsWith(anfang)))); };
+  const glnZielFertig = (g, z) => z.schluessel.length > 0 && z.schluessel.every((k) => glnTeilFertig(g, k));
+  const glnOffen = (g) => g.ziele.find((z) => !glnZielFertig(g, z)) || null;
+  const glnFertigZahl = (g) => g.ziele.filter((z) => glnZielFertig(g, z)).length;
+  const glnZaehler = (g) => `${glnFertigZahl(g)}/${g.ziele.length}`;
+  const glnTestKey = (g) => "gln:" + g.datum;
+  const glnTestOk = (g) => { const e = testErgebnis(glnTestKey(g)); return !!(e && e.bestanden); };
+  const glnTestFrei = (g) => glnFertigZahl(g) * 2 >= g.ziele.length;
+  const glnNochTage = (g) => Math.round((new Date(g.datum + "T12:00:00") - new Date(iso(heute()) + "T12:00:00")) / 86400000);
+  const glnNochText = (g) => { const n = glnNochTage(g); return n <= 0 ? "heute!" : n === 1 ? "morgen!" : `noch ${n} Tage`; };
+  const glnTageListe = (g) => (stand.hw && stand.hw[glnId(g) + "|tage"]) || [];
+  // Tage in Folge mit GLN-Teil, endend heute (oder gestern, solange heute noch nichts gemacht ist)
+  function glnSerie(g) {
+    const tage = glnTageListe(g), d = heute();
+    if (!tage.includes(iso(d))) d.setDate(d.getDate() - 1);
+    let n = 0;
+    while (tage.includes(iso(d))) { n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+  const glnSchild = () => el("span", { class: "hw-schild gln-schild" }, "🏁 GLN");
+  function glnBonus(basis) {
+    const g = glnAktiv();
+    if (!g || !lage || !lage.teile) return 0;
+    const k = teilSchluessel(lage.teil);
+    if (!g.ziele.some((z) => z.schluessel.includes(k))) return 0;
+    stand.hw = stand.hw || {};
+    const neu = !glnGemacht(g).includes(k), id = glnId(g), t = iso(heute());
+    if (neu) stand.hw[id] = [...glnGemacht(g), k];
+    if (!glnTageListe(g).includes(t)) { // 🔥 Streak: erster GLN-Teil des Tages
+      stand.hw[id + "|tage"] = [...glnTageListe(g), t];
+      const n = glnSerie(g);
+      if (n >= 2) ereignisse.push({ art: "toast", text: `🔥 Road to GLN: ${n} Tage in Folge` });
+      if (n >= GLN.serieTage && !stand.hw[id + "|serie7"]) {
+        stand.hw[id + "|serie7"] = true; spielstand().coins += GLN.serieCoins; protokolliere("gs", 0);
+        ereignisse.push({ art: "feier", symbol: "🔥", titel: `${GLN.serieTage} days on the Road to GLN!`, text: `${GLN.serieTage} Tage in Folge geübt – +${GLN.serieCoins} Coins!`, ton: SP.texte.feuer });
+      }
+    }
+    if (!stand.hw[id + "|fertig"] && !glnOffen(g)) {
+      stand.hw[id + "|fertig"] = true;
+      ereignisse.push({ art: "feier", symbol: "🏁", titel: "Road to GLN complete!", text: glnTestOk(g) ? "Alle Etappen geschafft. Du bist bereit!" : "Alle Etappen geschafft. Jetzt noch der Abschlusstest!", ton: SP.texte.gym_fini });
+    }
+    return neu ? basis : 0;
+  }
+  const glnStart = (z) => { const g = glnAktiv(); if (g) hwStart(z, (k) => !glnTeilFertig(g, k)); };
+  const glnTestStart = () => { const g = glnAktiv(); if (!g) return; if (!glnTestFrei(g)) return toast(`Abschlusstest: erst die Hälfte der Etappen schaffen (${glnZaehler(g)}).`); testStart({ gln: g, nr: "GLN", titel: "Abschlusstest" }); };
+  // Nächster Schritt: erstes offenes Ziel, danach der Abschlusstest, danach die Übersicht
+  function glnWeiterStart() {
+    const g = glnAktiv(), z = g && glnOffen(g);
+    if (!g) return;
+    if (z) glnStart(z); else if (!glnTestOk(g)) glnTestStart(); else glnUebersicht();
+  }
+  function glnLeiste() {
+    const g = glnAktiv(), alt = document.getElementById("gln");
+    if (!g) { if (alt) alt.remove(); return; }
+    const ok = glnTestOk(g), n = glnSerie(g);
+    let lang = null, gehalten = false;
+    const k = alt || el("button", { id: "gln", type: "button", class: "tempo-knopf hw-knopf gln-knopf",
+      onpointerdown: () => { gehalten = false; clearTimeout(lang); lang = setTimeout(() => { gehalten = true; glnUebersicht(); }, 500); },
+      onpointerup: () => clearTimeout(lang), onpointerleave: () => clearTimeout(lang), onpointercancel: () => clearTimeout(lang),
+      oncontextmenu: (e) => e.preventDefault(),
+      onclick: () => { if (gehalten) { gehalten = false; return; } glnWeiterStart(); } });
+    k.textContent = "🏁 GLN" + (n ? ` 🔥${n}` : "") + (ok ? " ✓" : "");
+    k.setAttribute("aria-label", `Road to GLN: ${glnZaehler(g)} Etappen, ${glnNochText(g)}` + (n ? `, ${n} Tage in Folge` : "") + (ok ? ", Abschlusstest bestanden" : "") + " (lange drücken: Übersicht)");
+    if (!alt) { const t = document.getElementById("hw") || document.getElementById("tempo"); if (t) t.after(k); }
+  }
+  function glnZeile() {
+    const g = glnAktiv();
+    if (!g) return null;
+    const ok = glnTestOk(g);
+    return el("div", { class: "hw-zeile gln-zeile", role: "status" },
+      el("button", { class: "hw-chip gln-chip", onclick: glnWeiterStart, "aria-label": `Road to GLN öffnen (${glnZaehler(g)} Etappen erledigt)` }, `🏁 Road to GLN · ${glnZaehler(g)}${ok ? " ✓" : ""}`),
+      el("span", { class: "hw-text", title: g.text }, `${glnNochText(g)} · Punkte ×2 · ${g.text}`),
+      el("button", { class: "hw-liste-knopf", onclick: glnUebersicht, "aria-label": "Alle Etappen der Road to GLN zeigen" }, "▾"));
+  }
+  function glnUebersicht() {
+    const g = glnAktiv();
+    if (!g) return;
+    const zu = () => hwDialog.close(), ok = glnTestOk(g), frei = glnTestFrei(g), n = glnSerie(g), erg = testErgebnis(glnTestKey(g));
+    hwDialog.replaceChildren(
+      el("h2", {}, `🏁 Road to GLN · ${glnNochText(g)}`),
+      el("p", { class: "hw-liste-text" }, g.text),
+      el("p", { class: "klein" }, `Doppelte Punkte für jeden Teil · 🔥 ${n} ${n === 1 ? "Tag" : "Tage"} in Folge (${GLN.serieTage} Tage = +${GLN.serieCoins} Coins)`),
+      el("ul", { class: "hw-liste-ziele gln-liste" }, g.ziele.map((z) => { const f = glnZielFertig(g, z);
+        return el("li", { class: f ? "fertig" : "" },
+          el("span", { class: "hw-haken", "aria-label": f ? "erledigt" : "offen" }, f ? "✓" : "○"),
+          el("span", { class: "hw-name" }, z.name.replace(/^Station \d+: /, "")),
+          knopf("▶", () => { zu(); glnStart(z); }, "leise")); }),
+        el("li", { class: ok ? "fertig" : "" },
+          el("span", { class: "hw-haken", "aria-label": ok ? "bestanden" : "offen" }, ok ? "✓" : "🎯"),
+          el("span", { class: "hw-name" }, "Abschlusstest „GLN Ready“" + (ok ? ` · bestanden (${erg.best} %)` : frei ? ` · ab ${TEST.grenze} % +${GLN.testCoins} Coins` + (erg ? ` · bisher ${erg.best} %` : "") : " · frei ab der Hälfte der Etappen")),
+          frei ? knopf("▶", () => { zu(); glnTestStart(); }, "leise") : null)),
+      el("div", { class: "knopfreihe" }, knopf("Schließen", zu, "haupt")));
+    hwDialog.showModal();
+  }
+  // Abschluss-Seiten: weiter auf der Kette, wenn der eben fertige Teil ein Ziel abgeschlossen hat; am Ende zum Abschlusstest
+  function glnWeiterKnopf(k) {
+    const g = glnAktiv();
+    if (!g) return null;
+    const ziele = g.ziele.filter((z) => z.schluessel.includes(k));
+    if (!ziele.length || !ziele.every((z) => glnZielFertig(g, z))) return null;
+    if (glnOffen(g)) return knopf("🏁 Nächste Etappe ➜", glnWeiterStart, "hw-weiter gln-weiter");
+    return glnTestOk(g) ? null : knopf("🏁 Abschlusstest ➜", glnTestStart, "hw-weiter gln-weiter");
+  }
+  const glnAbzeichen = () => { const g = glnAktiv(); return g && glnTestOk(g) ? el("span", { class: "gln-ready", title: "Abschlusstest der Road to GLN bestanden" }, "🏁 GLN Ready") : null; };
+  // Lehrer-Bereich und QR: aktueller oder letzter GLN
+  function glnStandLehrer() {
+    const t = iso(heute()), g = (D.gln || []).filter((x) => x.von <= t).sort((x, y) => (x.datum < y.datum ? 1 : -1))[0];
+    if (!g) return null;
+    const e = testErgebnis(glnTestKey(g));
+    return { g, z: glnFertigZahl(g), n: g.ziele.length, test: e && e.bestanden ? e.am : null, best: e ? e.best : null, tage: glnTageListe(g).length, serie: glnSerie(g) };
+  }
 
   /* ---------- Springen, Vor und Zurück ---------- */
   function springe(i) {
@@ -658,6 +784,7 @@
       el("h1", {}, `Station ${st.nr}: ${st.titel}` + (lage && lage.gruppe != null ? ` · ${st.gruppen[lage.gruppe].name}` : "")),
       (!lage || lage.gruppe == null) && testKnopf(st), // 🎯 Test yourself: auf der Stations-Seite (nicht innerhalb eines Abschnitts)
       lage && lage.teile && !lage.ende && hwTrifft(teilSchluessel(lage.teil)) && hwSchild(),
+      lage && lage.teile && !lage.ende && glnTrifft(teilSchluessel(lage.teil)) && glnSchild(),
       lage && lage.teile && !lage.ende && teilFaellig(lage.teil) && powerupSchild(),
       lage && sprungleiste());
   }
@@ -667,11 +794,11 @@
     const nochNichts = !lage.teile.some((_, i) => istFertig(i));
     const ZIFFERN = ["①", "②", "③", "④", "⑤"];
     const sprung = (i, text) => {
-      const t = lage.teile[i], auf = teilFaellig(i), fertig = istFertig(i) && !auf, jetzt = i === lage.teil && !lage.ende, hw = hwTrifft(teilSchluessel(i));
+      const t = lage.teile[i], auf = teilFaellig(i), fertig = istFertig(i) && !auf, jetzt = i === lage.teil && !lage.ende, hw = hwTrifft(teilSchluessel(i)), gl = glnTrifft(teilSchluessel(i)), glOk = gl && glnTeilFertig(glnAktiv(), teilSchluessel(i));
       const start = nochNichts && i === 0;
-      return el("button", { class: "sprung" + (jetzt ? " jetzt" : "") + (fertig ? " fertig" : "") + (auf ? " powerup" : "") + (start ? " start" : "") + (hw ? " hw" : ""),
+      return el("button", { class: "sprung" + (jetzt ? " jetzt" : "") + (fertig ? " fertig" : "") + (auf ? " powerup" : "") + (start ? " start" : "") + (hw ? " hw" : "") + (gl ? " gln" : "") + (glOk ? " gln-ok" : ""),
         "aria-current": jetzt ? "step" : false, title: t.name,
-        "aria-label": `${t.name}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}${start ? " – hier starten" : ""}`,
+        "aria-label": `${t.name}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}${gl ? (glOk ? " (Road to GLN, erledigt)" : " (Road to GLN)") : ""}${start ? " – hier starten" : ""}`,
         onclick: () => springe(i) }, text);
     };
     const eintraege = [];
@@ -730,7 +857,7 @@
     const wiederholt = !erstesMal && !aufladen;
     const ohnePunkte = teil.art === "erklaerung" || wiederholt;
     if (!ohnePunkte) belohne(erstesMal, !lage.hilfe, false, null);
-    else { hwBonus(0); speichern(); setTimeout(zeigeEreignisse, 50); } // ohne Punkte zählt der Teil trotzdem für die Hausaufgabe (inkl. Feier „Homework done!“)
+    else { hwBonus(0); glnBonus(0); speichern(); setTimeout(zeigeEreignisse, 50); } // ohne Punkte zählt der Teil trotzdem für die Hausaufgabe (inkl. Feier „Homework done!“)
     if (!erstesMal && alleTeileFertig() && lage.wdhLauf.size < lage.teile.length) return teilWiederholt();
     if (alleTeileFertig()) return stationGeschafft();
     if (lage.teil + 1 < lage.teile.length) return zwischenstand();
@@ -790,14 +917,14 @@
       el("p", { class: "ansage" }, st.gruppen[0].vokabeln ? "Wähl einen Abschnitt. Die Wörter kommen in derselben Reihenfolge wie im Buch."
         : "Wähl ein Thema. Hier lernen wir Neues: erst die Erklärung, dann üben."),
       el("nav", { class: "kacheln gruppen", "aria-label": "Abschnitte" }, st.gruppen.map((g, i) => {
-        const auf = faellige(`${st.nr}|${i}|`) > 0, ok = fertig.includes(g.name) && !auf, hw = hwBei(st.nr, `${st.nr}|${i}|`);
-        return el("button", { class: "kachel" + (ok ? " erledigt" : "") + (auf ? " powerup" : "") + (hw ? " hw" : ""), onclick: () => starteGruppe(st, i),
+        const auf = faellige(`${st.nr}|${i}|`) > 0, ok = fertig.includes(g.name) && !auf, hw = hwBei(st.nr, `${st.nr}|${i}|`), gl = glnBei(st.nr, `${st.nr}|${i}|`);
+        return el("button", { class: "kachel" + (ok ? " erledigt" : "") + (auf ? " powerup" : "") + (hw ? " hw" : "") + (gl ? " gln" : ""), onclick: () => starteGruppe(st, i),
           "aria-label": `${g.name}${g.vokabeln ? `, ${g.vokabeln.length} Wörter` : ""}${ok ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}` },
           el("span", { class: "nr" }, g.vokabeln ? `${g.vokabeln.length} Wörter` : `Thema ${i + 1}`),
           el("span", { class: "titel" }, g.name),
           el("span", { class: "vorschau", "aria-hidden": "true" },
             g.symbol || g.vokabeln.slice(0, 5).map((id) => D.vokabeln.find((v) => v.id === id).symbol).join(" ")),
-          hw && hwSchild(), auf && powerupSchild(),
+          hw && hwSchild(), gl && glnSchild(), auf && powerupSchild(),
           ok && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
       })));
   }
@@ -1387,7 +1514,7 @@
     lage = null;
     const kachel = (sym, titel, unter, fn) => el("button", { class: "kachel", onclick: fn, "aria-label": titel },
       el("span", { class: "sym", "aria-hidden": "true" }, sym), el("span", { class: "titel", lang: "en" }, titel), el("span", { class: "unter" }, unter));
-    zeige(el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, `Station ${st.nr}: ${st.titel}`), hwBei(st.nr) && hwSchild()),
+    zeige(el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, `Station ${st.nr}: ${st.titel}`), hwBei(st.nr) && hwSchild(), glnBei(st.nr) && glnSchild()),
       ansage("Choose a game.", "Wähl ein Spiel. Jedes Spiel bringt dir einmal am Tag 10 Punkte."),
       el("nav", { class: "kacheln gruppen", "aria-label": "Spiele" },
         kachel("🎲", "Memory", "Wort und Bedeutung finden – 6 Paare", () => spielWahl("Memory", spielMemory)),
@@ -1984,6 +2111,8 @@
     if (erstesMal && ohneHilfe && !istGym) { plus += PUNKTE.ohneHilfe; ereignisse.push({ art: "toast", text: `💪 Ohne Hilfe +${PUNKTE.ohneHilfe}` }); }
     const bonus = istGym ? 0 : hwBonus(plus); // 📝 Homework: +50 % auf die Teil-Punkte (aufgerundet), je Teil einmal pro Hausaufgabe
     if (bonus) { plus += bonus; boni.push(["h", bonus]); ereignisse.push({ art: "toast", text: `📝 Homework +${bonus}` }); }
+    const gbonus = istGym ? 0 : glnBonus(plus - bonus); // 🏁 Road to GLN: doppelte Punkte auf die Teil-Punkte, je Teil einmal pro GLN
+    if (gbonus) { plus += gbonus; boni.push(["gl", gbonus]); ereignisse.push({ art: "toast", text: `🏁 Road to GLN ×2: +${gbonus}` }); }
     const ersterDesTages = !sp.tage[tag];
     sp.tage[tag] = (sp.tage[tag] || 0) + 1;
     if (orteFrei() > orteVorher) ereignisse.push({ art: "ort", ort: SP.orte[orteFrei() - 1] });
@@ -2231,7 +2360,7 @@
   function statusleiste() {
     const sp = spielstand(), t = SP.titel[sp.titel], n = serie(), ta = tierAttr(sp.titel);
     return el("div", { class: "statusleiste" + (sp.abzeichen.includes("monat") ? " gold" : "") + rahmenKlasse() + ta.klasse, style: ta.stil },
-      el("span", { class: "status-titel" }, t.symbol + " " + t.name),
+      el("span", { class: "status-titel" }, t.symbol + " " + t.name), glnAbzeichen(),
       el("span", {}, `⭐ ${sp.punkte} Punkte`),
       el("span", { class: "status-coins", title: "Coins" }, `🪙 ${sp.coins}`),
       el("span", { title: "Schultage am Stück" }, `🔥 ${n}`),
@@ -3436,13 +3565,16 @@
   const TEST = { anzahl: 10, sek: 8 * 60, punkte: 30, grenze: 80 };
   let testLauf = null; // { st, key, aufgaben, i, start, limit, antworten, gehoert, gelesen, takt }
   let testTempo = 1; // Faktor für die Mindestzeiten – nur der Test-Build ändert ihn (window.__testYourself)
-  const testKey = (st) => String(st.nr);
-  const testName = (key) => `Station ${key}`;
+  const testKey = (st) => (st.gln ? glnTestKey(st.gln) : String(st.nr)); // st.gln: Abschlusstest der Road to GLN (Pseudo-Station über alle GLN-Teile)
+  const testName = (key) => (String(key).startsWith("gln:") ? "GLN Ready" : `Station ${key}`);
+  const testTitel = (st) => (st.gln ? "🏁 Road to GLN · Abschlusstest" : `🎯 Test yourself · Station ${st.nr}`);
+  const testZurueck = (st) => (st.gln ? startseite() : starteStation(st.nr));
   const testErgebnis = (key) => (stand.spiel && stand.spiel.tests && stand.spiel.tests[key]) || null;
   const testDatum = (t) => { const d = new Date(t + "T12:00:00"); return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`; };
   // Alle Teil-Schlüssel einer Station (wie teilSchluessel: „Station|Gruppe|Index“)
   function testTeilSchluessel(st) {
     if (!st || st.spiele) return [];
+    if (st.gln) return [...new Set(st.gln.ziele.flatMap((z) => z.schluessel))];
     if (st.gruppen) return st.gruppen.flatMap((g, gi) => (g.schritte ? teileVon(g)
       : gruppenTeile(st, g.vokabeln.map((id) => D.vokabeln.find((v) => v.id === id)).filter(Boolean))).map((_, i) => `${st.nr}|${gi}|${i}`));
     return teileVon(st).map((_, i) => `${st.nr}||${i}`);
@@ -3596,7 +3728,7 @@
 
   function testStart(st) {
     const f = testFortschritt(st);
-    if (!testFrei(f)) return; // gilt im Programm, nicht nur am ausgegrauten Knopf
+    if (st.gln ? !glnTestFrei(st.gln) : !testFrei(f)) return; // gilt im Programm, nicht nur am ausgegrauten Knopf
     const aufgaben = testZiehen(st);
     if (!aufgaben.length) return toast("Für diese Station gibt es noch keine Testaufgaben.");
     lage = null;
@@ -3623,13 +3755,13 @@
     const L = testLauf;
     frage("Test abbrechen? Dein Ergebnis wird nicht gespeichert.", "Abbrechen", "Weiter testen").then((ja) => {
       if (!ja || testLauf !== L) return;
-      clearInterval(L.takt); testLauf = null; starteStation(L.st.nr);
+      clearInterval(L.takt); testLauf = null; testZurueck(L.st);
     });
   }
   function testKopf(st, laeuft) {
     return el("header", { class: "kopf test-kopf" },
-      laeuft ? knopf("✕ Abbrechen", testAbbrechen, "leise") : knopf("← Station", () => starteStation(st.nr), "leise"),
-      el("h1", {}, `🎯 Test yourself · Station ${st.nr}: ${st.titel}`));
+      laeuft ? knopf("✕ Abbrechen", testAbbrechen, "leise") : knopf(st.gln ? "← Start" : "← Station", () => testZurueck(st), "leise"),
+      el("h1", {}, st.gln ? testTitel(st) : `${testTitel(st)}: ${st.titel}`));
   }
   function testZeigen() {
     const L = testLauf, a = L.aufgaben[L.i], n = L.aufgaben.length;
@@ -3712,7 +3844,11 @@
     if (!sp.tests || typeof sp.tests !== "object") sp.tests = {};
     const alt = sp.tests[L.key] || null, bestanden = pct >= TEST.grenze, erstes = bestanden && !(alt && alt.bestanden);
     sp.tests[L.key] = { best: Math.max(pct, (alt && alt.best) || 0), am: !alt || pct >= (alt.best || 0) ? iso(heute()) : alt.am, bestanden: !!(alt && alt.bestanden) || bestanden };
-    if (erstes) {
+    if (erstes && L.st.gln) { // 🏁 GLN ready: 100 Coins (keine Punkte), Protokoll „gr“
+      sp.coins += GLN.testCoins; protokolliere("gr", 0);
+      ereignisse.push({ art: "feier", symbol: "🏁", titel: "GLN ready!", text: `Abschlusstest bestanden mit ${pct} % – +${GLN.testCoins} Coins und das Abzeichen „GLN Ready“!`, ton: SP.texte.gym_fini });
+      speichern(); setTimeout(zeigeEreignisse, 50);
+    } else if (erstes) {
       ereignisse.push({ art: "feier", symbol: "🎯", titel: `${testName(L.key)} bestanden`, text: `Zertifikat: ${pct} % im Test yourself – +${TEST.punkte} Punkte!` });
       punkteDazu(TEST.punkte, { art: "p" }); // Prüfung: Protokoll „p“ +30, zählt nicht zum Wächter
     } else { protokolliere("p", 0); speichern(); }
@@ -3722,12 +3858,13 @@
     const ueben = [...new Map(falsch.map(([a]) => [a.schluessel, a])).values()];
     zeige(testKopf(st, false),
       el("section", { class: "satzkarte test-ergebnis" + (bestanden ? " bestanden" : "") },
-        el("p", { class: "klein" }, `🎯 Test yourself · Station ${st.nr}`),
+        el("p", { class: "klein" }, testTitel(st)),
         el("p", { class: "test-prozent" }, `${pct} %`),
         el("p", {}, `${r} von ${n} richtig` + (abgelaufen ? " · ⏱️ Die Zeit ist abgelaufen – Offenes zählt als falsch." : "")),
         el("h2", {}, bestanden ? "Super, bestanden!" : "Noch nicht ganz – übe die markierten Teile und versuch's nochmal."),
-        el("p", { class: "test-punkte" }, erstes ? `+${TEST.punkte} Punkte und dein Zertifikat 🎯 ${testName(L.key)} bestanden!`
-          : bestanden ? `Bestanden! Die ${TEST.punkte} Punkte gab es schon beim ersten Mal. Bestes Ergebnis: ${t.best} %`
+        el("p", { class: "test-punkte" }, erstes && st.gln ? `+${GLN.testCoins} Coins und dein Abzeichen 🏁 GLN Ready!`
+          : erstes ? `+${TEST.punkte} Punkte und dein Zertifikat 🎯 ${testName(L.key)} bestanden!`
+          : bestanden ? `Bestanden! Die Belohnung gab es schon beim ersten Mal. Bestes Ergebnis: ${t.best} %`
           : t.bestanden ? `Dein Zertifikat hast du schon (bestes Ergebnis: ${t.best} %).` : `Ab ${TEST.grenze} % bestehst du. Bestes Ergebnis: ${t.best} %`)),
       falsch.length ? el("section", { class: "satzkarte" },
         el("h2", {}, `Falsch oder offen (${falsch.length})`),
@@ -3738,7 +3875,7 @@
           el("p", { class: "klein test-ort" }, "📍 " + a.ort))))) : null,
       ueben.length ? el("section", { class: "satzkarte" }, el("h2", {}, "Üben"),
         el("div", { class: "knopfreihe" }, ueben.map((a) => knopf("📍 " + a.ort.replace(/^Station \d+ · /, ""), () => testZuTeil(a.schluessel))))) : null,
-      el("div", { class: "knopfreihe" }, knopf("🎯 Nochmal testen", () => testStart(st), "haupt"), knopf("Zur Station", () => starteStation(st.nr)), knopf("Zur Startseite", startseite)));
+      el("div", { class: "knopfreihe" }, knopf("🎯 Nochmal testen", () => testStart(st), "haupt"), st.gln ? null : knopf("Zur Station", () => starteStation(st.nr)), knopf("Zur Startseite", startseite)));
   }
   // „Üben“: direkt in den Teil springen (wie starteStation/starteGruppe)
   function testZuTeil(schluessel) {
@@ -3836,7 +3973,7 @@
     const gesperrt = !!sp.gesperrt;
     // Stichprobe (31.10., Schutz-Paket 3): Protokoll-Summe, Warnzähler, Plausibilitätsmarker und die letzten 10 Ereignisse – nur lesen
     const pr = plausibilitaet(), w = warnZaehlerLies(), pl = Array.isArray(stand.protokoll) ? stand.protokoll : [];
-    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage", p: "Test", c: "Karte" };
+    const ARTEN = { t: "Teil", g: "Word Gym", s: "Runner-Story", e: "Einheit", m: "Spiel", h: "Homework", bw: "Wochenende", bf: "Ferien", bs: "Serie", bq: "Woche", bm: "Monat", gl: "Road to GLN ×2", gr: "GLN ready (100 Coins)", gs: "GLN-Serie (50 Coins)", k: "Kauf", w: "Warnung", r: "Startwert", a: "Altbestand", x: "Abfrage", p: "Test", c: "Karte" };
     const zeit = (t) => { const d = new Date(t * 60000); return `${d.getDate()}.${d.getMonth() + 1}. ${zwei(d.getHours())}:${zwei(d.getMinutes())}`; };
     const letzte = pl.slice(-10).reverse().map((e) => el("li", {}, e[1] === "x" ? `${zeit(e[0])} · Abfrage · ${e[2] > 0 ? "👍" : "👎"}`
       : `${zeit(e[0])} · ${ARTEN[e[1]] || e[1]} · ${e[2] > 0 && e[1] !== "r" && e[1] !== "a" ? "+" : ""}${e[2]}${e[1] === "k" ? " 🪙" : ""}`));
@@ -3851,11 +3988,15 @@
       ? `🎯 Tests: ${testsOk.length} bestanden` + (testsOk.length ? ` (${testsOk.map(([k, x]) => `${testName(k)} ${x.best} %`).join(", ")})` : "")
         + (testsOffen.length ? ` · nicht bestanden: ${testsOffen.map(([k, x]) => `${testName(k)} ${x.best} %`).join(", ")}` : "")
       : "🎯 Tests: noch keiner.");
+    const gs = glnStandLehrer();
+    const glnZeileL = gs ? el("p", { class: "klein lehrer-gln" }, `🏁 Road to GLN (${gs.g.datum.slice(8)}.${gs.g.datum.slice(5, 7)}.): ${gs.z}/${gs.n} · Abschlusstest `
+      + (gs.test ? `bestanden am ${testDatum(gs.test)} (${gs.best} %)` : gs.best != null ? `noch nicht bestanden (bestes Ergebnis ${gs.best} %)` : "noch nicht gemacht")
+      + ` · geübt an ${gs.tage} Tagen, Serie ${gs.serie}`) : null;
     const stichprobe = el("div", { class: "lehrer-stichprobe" },
       el("p", { class: "klein" }, `🔎 Stichprobe: ⭐ ${sp.punkte} · 🪙 ${sp.coins} · Protokoll-Summe ${protokollSumme(pl)} (${pl.length} Einträge) · Warnungen ${(Array.isArray(sp.warnungen) ? sp.warnungen : []).length} (Zähler ${w.n || 0})`),
       el("p", { class: "klein lehrer-marker" + (pr.marker.length ? " auffaellig" : "") }, (pr.altbestand ? "Altbestand (Stand von vor dem Protokoll). " : "")
         + (pr.marker.length ? `Marker: ${pr.marker.join(", ")}` + (pr.seit ? ` (seit ${zeit(pr.seit)})` : "") : "Keine Auffälligkeiten.") + (pr.hinweis ? ` · Hinweis: ${pr.hinweis}` : "")),
-      abfrageZeile, testZeile,
+      abfrageZeile, testZeile, glnZeileL,
       letzte.length ? el("ul", { class: "lehrer-liste" }, letzte) : null);
     const sichern = () => {
       const np = Math.max(0, Math.floor(Number(p.value) || 0)), nc = Math.max(0, Math.floor(Number(c.value) || 0));
@@ -3902,7 +4043,8 @@
     const w = Object.entries(karten).filter(([, k]) => k && k.x > 0).sort((x, y) => y[1].x - x[1].x).slice(0, 8)
       .map(([id, k]) => { const v = D.vokabeln.find((x) => x.id === id); return v ? [v.en, k.x] : null; }).filter(Boolean);
     return { v: 1, a: SYNC.app, g: kenn.g, c: kenn.c, t: Math.floor(Date.now() / 60000), n: Object.keys(stand.teile || {}).length,
-      p: spielstand().punkte, d, h: h ? { v: h.von, b: h.bis, z: h.ziele.filter((z) => hwZielFertig(h, z)).length, n: h.ziele.length } : null, w };
+      p: spielstand().punkte, d, h: h ? { v: h.von, b: h.bis, z: h.ziele.filter((z) => hwZielFertig(h, z)).length, n: h.ziele.length } : null, w,
+      r: ((s) => (s ? { z: s.z, n: s.n, t: s.test ? 1 : 0 } : null))(glnStandLehrer()) }; // r: Road to GLN (Ziele fertig, Ziele, Abschlusstest bestanden)
   }
   const syncLink = (daten) => SYNC.adresse + "#d=" + btoa(unescape(encodeURIComponent(JSON.stringify(daten)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   function syncQrZeigen() {
@@ -3921,7 +4063,7 @@
       qr.addData(syncLink(daten)); qr.make();
       bild.append(el("img", { src: qr.createDataURL(5, 4), alt: "QR-Code für das Lehrergerät", style: "image-rendering:pixelated;width:min(80vw,320px);background:#fff" }));
       info.textContent = `${SYNC.app} · ${k.g} · Code ${k.c} · ${daten.d[0]} Übungen heute, ${daten.d.filter((x) => x > 0).length} von 14 Tagen geübt`
-        + (daten.h ? ` · HW ${daten.h.z}/${daten.h.n}` : "") + ` · Stand ${new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`;
+        + (daten.h ? ` · HW ${daten.h.z}/${daten.h.n}` : "") + (daten.r ? ` · GLN ${daten.r.z}/${daten.r.n}${daten.r.t ? " ✓" : ""}` : "") + ` · Stand ${new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`;
     };
     g.addEventListener("change", zeichnen); c.addEventListener("change", zeichnen);
     lehrerFenster(el("h2", {}, "📲 QR für das Lehrergerät"),
@@ -4074,6 +4216,8 @@
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "ort", ort: SP.orte.find((o) => o.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalt-Anzeige eines Orts (Orts-Szene/Stempel) auslösen
   if (LOKAL) window.__karteTest = { auswerten: kartenAuswerten, karteVon, zeige: zeigeEreignisse, sp: spielstand, sammlung };   // nur Test-Build: Folien-Karten prüfen
   if (LOKAL) window.__heldEreignis = (id) => { ereignisse.push({ art: "held", held: SP.helden.find((h) => h.id === id) }); zeigeEreignisse(); }; // nur Test-Build: neuer Superheld (Heldenfilm, danach Karte)
+  if (LOKAL) window.__gln = { naechstes, lage: () => lage, stand: () => stand, lehrer: glnStandLehrer, aufgaben: () => testLauf && testLauf.aufgaben.map((a) => a.typ), // nur Test-Build: Road to GLN
+    bestehen: () => { testLauf.antworten = testLauf.aufgaben.map(() => ({ richtig: true, antwort: "" })); testEnde(false); } };
   if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
   if (LOKAL) window.__station = (nr) => { lage = { nr, gruppe: null, teil: 0 }; stationGeschafft(); }; // nur Test-Build: Station abschließen (Mega-Lob)
   if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da

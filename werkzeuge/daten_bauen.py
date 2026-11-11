@@ -382,7 +382,8 @@ def main():
     hw = hausaufgaben.lesen(os.path.join(INHALTE, "hausaufgabe.tsv"), einheiten)
     daten = {"stationen": STATIONEN, "saetze": saetze, "vokabeln": vokabeln, "lob": lob, "gym": GYM, "termin": TERMIN,
              "mittel": {k: symbole[k] for k in ("bus", "car", "bike", "train", "walk")},
-             "spiel": spieldaten(), "hausaufgaben": hw}
+             "spiel": spieldaten(), "hausaufgaben": hw,
+             "gln": hausaufgaben.lesen_gln(os.path.join(INHALTE, "gln.tsv"), einheiten)}  # 🏁 Road to GLN (inhalte/LIESMICH.md)
     ziel = os.path.join(BASIS, "app", "daten.js")
     with open(ziel, "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/daten_bauen.py – bitte nicht von Hand ändern.\n")

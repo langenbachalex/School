@@ -41,3 +41,11 @@ Beispielzeile:
 2026-11-02	2026-11-08	6/3; 8	Hörübung 3 + Neu: How often, Sports and hobbies, School clubs
 ```
 Schema und Anzeige: `docs/gamification/konzept.md`, Abschnitt „📝 Homework“.
+
+## gln.tsv – 🏁 Road to GLN
+
+Eine Zeile je GLN, Spalten `datum	ziel	text`. Das Fenster läuft automatisch von 14 Tagen vor dem GLN bis zum GLN-Tag; nur dann zeigt die App den grünen Knopf „🏁 GLN“, die Zeile „Road to GLN · 3/8 · noch 9 Tage“ und die GLN-Schilder.
+- `ziel`: Kette wie bei der Hausaufgabe (Schema oben). Zusätzlich gibt es Bereiche als **ein** Ziel: `7/1-6` (Abschnitte 1 bis 6 der Station 7), `6/1-2` (Teile 1 bis 2 einer Station ohne Abschnitte).
+- Ein Teil zählt, wenn er **im Fenster** gemacht wurde (Wiederholen ist der Sinn). Der Abschlusstest hängt automatisch am Ende der Kette (frei ab der Hälfte der Etappen).
+- Boni: doppelte Punkte je GLN-Teil · Abschlusstest bestanden = 100 Coins + Abzeichen „GLN Ready“ · 7 Tage in Folge = 50 Coins · Zeile im Lehrer-Bereich. Code: `app/app.js`, Abschnitt „🏁 Road to GLN“.
+- Das GLN-Datum steht außerdem in `TERMIN` (`werkzeuge/daten_bauen.py`, Countdown und Power Up) – beide zusammen ändern.

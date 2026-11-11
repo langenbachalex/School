@@ -102,7 +102,7 @@ textarea { width:100%; min-height:5em; font:13px monospace; color:inherit; backg
     const zeilen = ks.map((k) => {
       const x = db.eintraege[k], tage = x.d.slice(0, 14).filter((n) => n > 0).length;
       return `<tr><td><b>${esc(x.c)}</b></td><td><input class="name" data-k="${esc(k)}" value="${esc(db.namen[k] || "")}" placeholder="Name"></td>
-        <td>${zeit(x.t)}</td><td>${x.d[0]}</td><td>${tageBild(x.d)} ${tage}/14</td><td>${x.n}</td><td>${x.p}</td><td>${hwText(x.h)}</td>
+        <td>${zeit(x.t)}</td><td>${x.d[0]}</td><td>${tageBild(x.d)} ${tage}/14</td><td>${x.n}</td><td>${x.p}</td><td>${hwText(x.h)}${x.r ? ` · 🏁 ${x.r.z}/${x.r.n}${x.r.t ? " ✓" : ""}` : ""}</td>
         <td>${(x.w || []).slice(0, 5).map(([w, n]) => `<span class="wort">${esc(w)} ×${n}</span>`).join("") || "–"}</td>
         <td><button data-weg="${esc(k)}" title="Eintrag löschen">✕</button></td></tr>`;
     }).join("");

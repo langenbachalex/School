@@ -383,6 +383,23 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
 .sprung.hw { border-color: var(--hw); }
 .sprung.hw::after { content: " 📝"; }
 .sprung.hw.fertig::after { content: " 📝✓"; }
+/* 🏁 Road to GLN: dieselben Bausteine wie die Hausaufgabe, in Grün */
+:root { --gln: #14803f; --gln-text: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --gln: #5fd394; --gln-text: #06200f; } }
+:root[data-theme="dark"] { --gln: #5fd394; --gln-text: #06200f; }
+.gln-chip, .gln-knopf { border-color: var(--gln); color: var(--gln-text); background: var(--gln); }
+.gln-zeile .hw-text { color: var(--gln); }
+.gln-zeile .hw-liste-knopf { color: var(--gln); border-color: var(--gln); }
+.hw-schild.gln-schild { background: var(--gln); color: var(--gln-text); }
+.kachel.gln { border-color: var(--gln); }
+.kachel.hw.gln { border-color: var(--hw); box-shadow: 0 0 0 3px var(--gln); }
+.sprung.gln { border-color: var(--gln); }
+.sprung.gln::after { content: " 🏁"; }
+.sprung.gln.gln-ok::after { content: " 🏁✓"; }
+.sprung.hw.gln::after { content: " 📝🏁"; }
+.gln-liste .hw-haken { border-color: var(--gln); color: var(--gln); }
+.knopf.hw-weiter.gln-weiter { border-color: var(--gln); color: var(--gln-text); background: var(--gln); }
+.gln-ready { font-weight: 700; font-size: .8rem; padding: 2px 10px; border-radius: 999px; background: var(--gln); color: var(--gln-text); white-space: nowrap; }
 @media (max-width: 640px) { .raster9 .kachel .hw-schild { font-size: .65rem; padding: 1px 6px; } }
 
 /* Countdown bis zum nächsten Termin (GLN) */

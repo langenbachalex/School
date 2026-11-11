@@ -47,6 +47,21 @@ def _ziel(ziel, einheiten, gruppe_leer, pfad, n):
         if len(rest) > 1:
             fehler(pfad, n, f"ziel „{ziel}“: bei einer ganzen Unit kann kein Teil gewählt werden (dafür z. B. {nr}/{abschnitte[0]['schluessel']}/1)")
         return [_ziel(f"{nr}/{g['schluessel']}", einheiten, gruppe_leer, pfad, n)[0] for g in abschnitte]
+    if rest and re.match(r"^\d+-\d+$", rest[0]) and einheit.get("gruppen"):  # Bereich von Abschnitten als EIN Ziel: `7/1-6`
+        a, b = (int(x) for x in rest[0].split("-"))
+        if len(rest) > 1 or not (1 <= a < b <= len(einheit["gruppen"])):
+            fehler(pfad, n, f"ziel „{ziel}“: Bereich muss Abschnitt-von-bis sein (1 bis {len(einheit['gruppen'])}), ohne Teil")
+        gs = list(enumerate(einheit["gruppen"]))[a - 1:b]
+        return [{"ziel": ziel, "nr": nr, "gruppe": None, "teil": None,
+                 "name": f"{einheit['titel']} · {gs[0][1]['name']} bis {gs[-1][1]['name']}",
+                 "schluessel": [f"{nr}|{g['schluessel']}|{i}" for _, g in gs for i in range(len(g["teile"]))]}]
+    if rest and re.match(r"^\d+-\d+$", rest[0]) and not einheit.get("gruppen"):  # Bereich von Teilen als EIN Ziel: `6/1-2`
+        a, b = (int(x) for x in rest[0].split("-"))
+        namen = einheit.get("teile") or []
+        if len(rest) > 1 or not (1 <= a < b <= len(namen)):
+            fehler(pfad, n, f"ziel „{ziel}“: Bereich muss Teil-von-bis sein (1 bis {len(namen)})")
+        return [{"ziel": ziel, "nr": nr, "gruppe": None, "teil": None, "name": f"{einheit['titel']} · {namen[a - 1]} bis {namen[b - 1]}",
+                 "schluessel": [f"{nr}|{gruppe_leer}|{i}" for i in range(a - 1, b)]}]
     h = {"ziel": ziel, "nr": nr, "gruppe": None, "teil": None, "name": einheit["titel"]}
     gruppe_schluessel, teilnamen = gruppe_leer, einheit.get("teile")
     if einheit.get("gruppen"):
@@ -102,6 +117,33 @@ def lesen(pfad, einheiten, gruppe_leer=""):
             h["ziele"] += _ziel(z, einheiten, gruppe_leer, pfad, n)
         ergebnis.append(h)
     ergebnis.sort(key=lambda h: (h["von"], h["bis"]))
+    return ergebnis
+
+
+def lesen_gln(pfad, einheiten, gruppe_leer="", fenster=14):
+    """🏁 Road to GLN: liest gln.tsv (Spalten datum, ziel, text). Fenster = `fenster` Tage vor dem GLN bis zum GLN-Tag.
+    Je Zeile: {"datum", "von", "bis", "ziel", "text", "ziele": [...]} wie bei der Hausaufgabe."""
+    import datetime
+    if not os.path.exists(pfad):
+        return []
+    ergebnis = []
+    with open(pfad, encoding="utf-8") as f:
+        zeilen = list(csv.DictReader(f, delimiter="\t"))
+    for n, z in enumerate(zeilen, 2):
+        if not (z.get("datum") or "").strip() or z["datum"].startswith("#"):
+            continue
+        datum, ziel, text = (z.get(k, "").strip() for k in ("datum", "ziel", "text"))
+        if not DATUM.match(datum):
+            fehler(pfad, n, f"datum muss JJJJ-MM-TT sein (ist „{datum}“)")
+        ziele = [x.strip() for x in ziel.split(";") if x.strip()]
+        if not ziele or not text:
+            fehler(pfad, n, "ziel oder text fehlt")
+        von = (datetime.date.fromisoformat(datum) - datetime.timedelta(days=fenster)).isoformat()
+        g = {"datum": datum, "von": von, "bis": datum, "ziel": ziel, "text": text, "ziele": []}
+        for x in ziele:
+            g["ziele"] += _ziel(x, einheiten, gruppe_leer, pfad, n)
+        ergebnis.append(g)
+    ergebnis.sort(key=lambda g: g["datum"])
     return ergebnis
 
 

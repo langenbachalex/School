@@ -282,7 +282,9 @@ self.addEventListener("activate", (e) => {{
 }});
 self.addEventListener("fetch", (e) => {{
   if (e.request.method !== "GET") return;
-  e.respondWith(caches.match(e.request, {{ ignoreSearch: true }}).then((r) => r || fetch(e.request)));
+  // 11.11.2026: nur im EIGENEN Speicher suchen. caches.match() ohne Namen durchsucht alle Speicher der Seite in der Reihenfolge ihrer Entstehung –
+  // die Französisch-App speichert ../style.css mit, und ihr älterer Speicher lieferte der Englisch-App ein altes Stylesheet (Road to GLN rot statt grün).
+  e.respondWith(caches.open(VERSION).then((c) => c.match(e.request, {{ ignoreSearch: true }})).then((r) => r || fetch(e.request)));
 }});
 """)
     fehlt = sum(1 for d in dialoge.values() for z in d["zeilen"] if not z["audio"]) + sum(1 for n in namen if not n["audio"]) + sum(1 for p in paris if not p["audio"]) + sum(1 for h in helden if not h["audio"]) + sum(1 for z in paris_runner() if not vorhanden(z[3]))

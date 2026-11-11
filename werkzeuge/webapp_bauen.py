@@ -96,7 +96,9 @@ self.addEventListener("activate", (e) => {{
 }});
 self.addEventListener("fetch", (e) => {{
   if (e.request.method !== "GET") return;
-  e.respondWith(caches.match(e.request, {{ ignoreSearch: true }}).then((r) => r || fetch(e.request)));
+  // 11.11.2026: nur im EIGENEN Speicher suchen. caches.match() ohne Namen durchsucht alle Speicher der Seite in der Reihenfolge ihrer Entstehung –
+  // die Französisch-App speichert ../style.css mit, und ihr älterer Speicher lieferte der Englisch-App ein altes Stylesheet (Road to GLN rot statt grün).
+  e.respondWith(caches.open(VERSION).then((c) => c.match(e.request, {{ ignoreSearch: true }})).then((r) => r || fetch(e.request)));
 }});
 """)
     print("Web-App:", len(dateien), "Dateien, Version", version)

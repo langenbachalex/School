@@ -4339,6 +4339,19 @@
   if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da
 
   // Offline-Speicher (nur wenn die App über eine Webadresse läuft, nicht per Doppelklick)
+  // Selbstheilung (11.11.2026): Lief die App mit neuem Programm, aber altem Stylesheet aus dem Zwischenspeicher (Road to GLN war rot statt grün),
+  // fehlt die Farbe --gln. Dann das Stylesheet aus dem Offline-Speicher werfen, frisch vom Server holen und direkt einsetzen.
+  (async () => {
+    if (!location.protocol.startsWith("http") || getComputedStyle(document.documentElement).getPropertyValue("--gln").trim()) return;
+    for (const datei of ["style.css"]) {
+      try {
+        if (window.caches) for (const k of await caches.keys()) if (/^mralex-[0-9a-f]+$/.test(k)) await (await caches.open(k)).delete(datei, { ignoreSearch: true });
+        const css = await (await fetch(datei, { cache: "reload" })).text(), neu = document.createElement("style"), alt = document.querySelector(`link[href="${datei}"]`);
+        neu.textContent = css;
+        if (alt) alt.after(neu); else document.head.append(neu);
+      } catch (e) { /* offline: beim nächsten Start noch einmal */ }
+    }
+  })();
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
     // Neue Version veröffentlicht? Direkt nach dem Start einfach neu laden (wie bisher), später erst das Pop-up (siehe updateHinweis).
     let hatteVersion = !!navigator.serviceWorker.controller, swReg = null, neuGeladen = false;

@@ -618,7 +618,7 @@
      Fenster: 14 Tage vor dem GLN bis zum GLN-Tag (g.von … g.bis, vom Bauskript berechnet). Nur dann: grüner Knopf „🏁 GLN“ in der Leiste,
      grüne Zeile auf der Startseite, GLN-Schild an Kachel, Abschnitt und Teil. Kette wie bei der Hausaufgabe; ein Teil zählt, wenn er IM Fenster
      gemacht wurde (Wiederholen ist der Sinn). Vier Boni: 1. doppelte Punkte je GLN-Teil (einmal je Teil, Protokoll „gl“) · 2. Abschlusstest
-     (Test yourself über alle GLN-Teile, frei ab der Hälfte der Ziele; bestanden = 100 Coins, Protokoll „gr“, Häkchen am Knopf, Abzeichen
+     (Test yourself über alle GLN-Teile, frei ab 70 % der Ziele; bestanden = 100 Coins, Protokoll „gr“, Häkchen am Knopf, Abzeichen
      „GLN Ready“ in der Statusleiste bis zum GLN; Ergebnis in stand.spiel.tests["gln:<Datum>"]) · 3. Streak: Tage mit mindestens einem GLN-Teil,
      Flamme am Knopf, 7 Tage in Folge = 50 Coins (Protokoll „gs“) · 4. Zeile im Lehrer-Bereich.
      Gespeichert in stand.hw (im Siegel seit v3, keine neue Siegel-Version): "gln|<Datum>" = [Teilschlüssel], "…|tage" = [Tage], "…|serie7", "…|fertig". */
@@ -635,7 +635,7 @@
   const glnZaehler = (g) => `${glnFertigZahl(g)}/${g.ziele.length}`;
   const glnTestKey = (g) => "gln:" + g.datum;
   const glnTestOk = (g) => { const e = testErgebnis(glnTestKey(g)); return !!(e && e.bestanden); };
-  const glnTestFrei = (g) => glnFertigZahl(g) * 2 >= g.ziele.length;
+  const glnTestFrei = (g) => glnFertigZahl(g) * 10 >= g.ziele.length * 7; // frei ab 70 % der Etappen (Mr. Alex, 11.11.)
   const glnNochTage = (g) => Math.round((new Date(g.datum + "T12:00:00") - new Date(iso(heute()) + "T12:00:00")) / 86400000);
   const glnNochText = (g) => { const n = glnNochTage(g); return n <= 0 ? "heute!" : n === 1 ? "morgen!" : `noch ${n} Tage`; };
   const glnTageListe = (g) => (stand.hw && stand.hw[glnId(g) + "|tage"]) || [];
@@ -672,7 +672,7 @@
     return neu ? basis : 0;
   }
   const glnStart = (z) => { const g = glnAktiv(); if (g) hwStart(z, (k) => !glnTeilFertig(g, k)); };
-  const glnTestStart = () => { const g = glnAktiv(); if (!g) return; if (!glnTestFrei(g)) return toast(`Abschlusstest: erst die Hälfte der Etappen schaffen (${glnZaehler(g)}).`); testStart({ gln: g, nr: "GLN", titel: "Abschlusstest" }); };
+  const glnTestStart = () => { const g = glnAktiv(); if (!g) return; if (!glnTestFrei(g)) return toast(`Abschlusstest: erst 70 % der Etappen schaffen (${glnZaehler(g)}).`); testStart({ gln: g, nr: "GLN", titel: "Abschlusstest" }); };
   // Nächster Schritt: erstes offenes Ziel, danach der Abschlusstest, danach die Übersicht
   function glnWeiterStart() {
     const g = glnAktiv(), z = g && glnOffen(g);
@@ -717,7 +717,7 @@
           knopf("▶", () => { zu(); glnStart(z); }, "leise")); }),
         el("li", { class: ok ? "fertig" : "" },
           el("span", { class: "hw-haken", "aria-label": ok ? "bestanden" : "offen" }, ok ? "✓" : "🎯"),
-          el("span", { class: "hw-name" }, "Abschlusstest „GLN Ready“" + (ok ? ` · bestanden (${erg.best} %)` : frei ? ` · ab ${TEST.grenze} % +${GLN.testCoins} Coins` + (erg ? ` · bisher ${erg.best} %` : "") : " · frei ab der Hälfte der Etappen")),
+          el("span", { class: "hw-name" }, "Abschlusstest „GLN Ready“" + (ok ? ` · bestanden (${erg.best} %)` : frei ? ` · ab ${TEST.grenze} % +${GLN.testCoins} Coins` + (erg ? ` · bisher ${erg.best} %` : "") : " · frei ab 70 % der Etappen")),
           frei ? knopf("▶", () => { zu(); glnTestStart(); }, "leise") : null)),
       el("div", { class: "knopfreihe" }, knopf("Schließen", zu, "haupt")));
     hwDialog.showModal();

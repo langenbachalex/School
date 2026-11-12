@@ -59,6 +59,15 @@ Neue Fächer/Apps: Zeile anhängen, Kürzel vergeben.
 
 **Regel 12.11.: Baustopp für Neues bis nach dem 25.11. (nur Fehler; Ausnahme Road to GLN EN9), dauerhaft nur ein Bau-Chat gleichzeitig.** Geparkt bis dahin: 4 Folien-Karten EN6/EN9, 4c Deine 5 Minuten, Sync Stufe A für FR, Sync Stufe B. GLN-Formate aller bisherigen GLN: `docs/archiv/gln-formate.md` (EN6 GLN 1 + 2, EN9 GLN 1; EN9 GLN 2 folgt).
 
+## Übergabe Master (12.11.2026) – für `/load MASTER`
+Alter Master: `School · MASTER · bis 12.11.` (Sitzung vom 7.11., archivieren). Neuer Master: `School · MASTER` (Modell Fable, zurzeit `claude-fable-5-2`).
+**Läuft gerade (einziger Bau-Chat):** `School · EN6 · Road to GLN · 11.11.` – Reihenfolge: 1 Etappenplan EN6+EN9 · 2 EN9 Reading „Notice board“ · 3 EN9 Language in zwei Gruppen (-ing form, Prepositions; Regel am Ende) · 4 Grammar Patrol · 5 Chunk Sprint. Meldet sich nach jedem Schritt bei Mr. Alex; neue Sätze vor dem Vertonen zeigen.
+**Termine:** GLN 2 EN9 Di 24.11., EN6 Mi 25.11.; im GLN-Fenster ist die GLN-Kette die Hausaufgabe (keine neuen Hausaufgaben eintragen). Etappen-Termine: Abschnitt „Road to GLN“.
+**Regeln seit 8.11.** (alle in `CLAUDE.md`/`docs/briefing.md`): Baustopp für Neues bis nach dem 25.11. (Mr. Alex kann aufheben; aufgehoben für Grammar Patrol und Chunk Sprint) · nur ein Bau-Chat gleichzeitig · Immer Kontext (kein Wort ohne Satz) · erst Sprache, dann üben, dann Regel · GLN-Aufgaben nie ins Repo, Formate in `docs/archiv/gln-formate.md` · Vertonung wieder frei, sparsam.
+**Wartet auf Mr. Alex:** Road to GLN am eigenen Handy durchspielen (EN6, EN9) · Lehrer-QR-Code (Sync Stufe A, EN6+EN9 gebaut) ausprobieren – erst nach dem Gespräch nötig · Gespräch Schulleitung/DSB (Vorbereitung: https://claude.ai/artifact/X8R1xyStXSz2LdknCDeeJe) · Chat `School · EN6 · Deine 5 Minuten · 10.11.` wartet auf Start-OK (geparkt bis nach dem GLN) · Chat „Folien-Karten laden“ ist überholt (archivieren).
+**Geparkt bis nach dem 25.11.:** Deine 5 Minuten (EN6 → EN9 → FR) · Folien-Karten EN6/EN9 · Sync Stufe A für FR · Sync Stufe B (Server; Hosting: Schul-Webspace → Cloudflare EU) · Spiele Crazy Sentences, Memory-Stapel Prepositions, Runner-Tore, Dialog-Duell · EN9-Formate aus dem GLN-Archiv (Berichtigen im Listening, Multiple Choice im Reading, freies Schreiben) · Strategie-Punkte 3–7 (Sprechen prüfen, Schreiben, eine Engine, Klassenziele, Wirkung messen).
+**Nach den GLN im Master klären:** Was haben die Kinder genutzt, wo hingen sie (drei Beobachtungen von Mr. Alex) → daraus der nächste Block; Hausaufgaben wieder aufnehmen.
+
 ## Chat-Übersicht (Stand 8.11.2026) – Namensschema `School · <App> · <Block> · <Datum>`
 Offene Blöcke in Reihenfolge; Befehl = erste Eingabe im jeweiligen Chat (neuer Chat: erst `/load …`).
 | Nr | App | Block | Chat | Befehl | Stand |
@@ -74,7 +83,8 @@ Offene Blöcke in Reihenfolge; Befehl = erste Eingabe im jeweiligen Chat (neuer 
 | 5 | EN6 | Hausaufgabe nach dem Vokabeltest Mi 11.11. (`inhalte/hausaufgabe.tsv`) | neuer Chat `School · EN6 · Hausaufgabe · <Datum>` oder Master | `/load Hausaufgabe Klasse 6` + Inhalt von Mr. Alex | wartet auf Inhalt |
 | 6 | EN6+EN9 | Vorschauen (Artefakte) neu veröffentlichen | Master oder neuer Chat | `/load Vorschauen` | nur auf Wunsch |
 | 7 | ALLE | Sync Stufe B (Server): erst nach Gespräch mit Schulleitung/DSB; Hosting-Reihenfolge Schul-Webspace → Cloudflare EU | Master | Ergebnis des Gesprächs mitbringen | wartet auf Gespräch |
-| – | ALLE | Planen, Entscheiden, Konzepte (Modell Fable) | `School · MASTER` (dieser Chat, Sitzung vom 7.11.) | – | läuft |
+| – | ALLE | Planen, Entscheiden, Konzepte (Modell Fable) | `School · MASTER` (neu seit 12.11.) | `/load MASTER` | läuft |
+| – | ALLE | alter Master (Fotos, Strategie, Konzepte Sync/5 Minuten/GLN, GLN-Archiv) | `School · MASTER · bis 12.11.` | – | fertig 12.11., archivieren |
 | – | EN9 | Superhelden-Cameos Etappen 1–3 + Heldenfilme | `School · EN9 · Superhelden-Cameos · 7.11.` | – | fertig 7.11., archivieren |
 | – | EN9/EN6 | Fotos Wikimedia (alle sieben Motive) | im Master erledigt | – | fertig 7.11. |
 | – | EN9 | Staaten-Szenen + Vertonung (Prüfung: Mängel NC/ME/NJ, Fotos KY/AR/MS/FL, Story Kap. 4+5 – alles schon erledigt; nur Ideenspeicher berichtigt, 2df86f1, 13f11a2) | `School · EN9 · Staaten-Szenen + Vertonung · 10.11.` | – | **fertig 12.11.** |

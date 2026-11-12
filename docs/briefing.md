@@ -112,3 +112,6 @@ Die ElevenLabs-Credits sind aufgefrischt; die Sperre „nichts vertonen vor dem 
 
 ## Regel Mr. Alex (10.11.2026): Immer Kontext
 Kein Wort ohne Satz: Vokabeln werden in allen Apps (EN6, EN9, FR, künftige Fächer) mit Beispielsatz eingeführt, geübt und wiederholt; reine Wortpaar-Schritte gelten als verschenkt. Neue Übungen und das Training „Deine 5 Minuten“ folgen diesem Prinzip.
+
+## Regel Mr. Alex (12.11.2026): Baustopp und ein Bau-Chat
+Bis nach den GLN (25.11.2026) wird nichts Neues gebaut, nur Fehler behoben; Ausnahme Road to GLN EN9. Dauerhaft: immer nur ein Bau-Chat gleichzeitig, der nächste Block erst, wenn Mr. Alex den vorigen gesehen hat. Mr. Alex kann beides im Einzelfall aufheben. Grund: Es entsteht schneller, als er testen und im Unterricht einführen kann. GLN-Material: nur Formate ins Repo (`docs/archiv/gln-formate.md`), nie die Aufgaben.

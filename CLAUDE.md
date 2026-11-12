@@ -17,6 +17,12 @@ Die Nutzung (Tokens/Credits) ist knapp. Bei jeder neuen Eingabe zuerst prüfen, 
 - **Master-Wechsel** (wenn der Master-Chat voll wird, ca. ab 50–60 % Kontext): im alten Master `/save` (Zeile „School · MASTER · bis <Datum>“ in der Chat-Übersicht, offene Entscheidungen auflisten), neuen Chat öffnen, `/model claude-fable-5-1`, `/load MASTER`, in `School · MASTER` umbenennen; den alten in `School · MASTER · bis <Datum>` umbenennen und archivieren. Der Stand lebt im Repo, nicht im Chat.
 - Sicherung: Der Stop-Hook `.claude/hooks/save-pruefen.sh` meldet ungesicherte Arbeit; Claude führt dann `/save` aus.
 
+## Baustopp und Takt (Regel Mr. Alex, 12.11.2026)
+- **Baustopp für Neues bis nach den GLN (25.11.2026):** bis dahin nur Fehler beheben, die Mr. Alex oder den Kindern auffallen. Einzige Ausnahme: Road to GLN für EN9, sobald das Material da ist. Mr. Alex kann die Regel jederzeit aufheben („ich will das trotzdem bauen“) – dann bauen, ohne zu diskutieren.
+- **Immer nur ein Bau-Chat gleichzeitig** (gilt dauerhaft): Der nächste Block startet erst, wenn Mr. Alex den vorigen selbst gesehen hat. Schlägt ein Chat einen neuen Bau vor, zuerst auf diese Regel hinweisen.
+- Ideen zwischendurch: ein Satz in den Ideenspeicher, kein Bau. Entscheidungen möglichst gesammelt im Master.
+- GLN-Material: Formate stehen in `docs/archiv/gln-formate.md`; die Aufgaben selbst kommen nie ins Repo.
+
 ## Orts-Szenen
 Jeder Ort hat drei Ebenen: Bild (Szene mit Runner-Zeichnungen), Ton (Geräusch oder Sprache), kleines Foto. Einzelheiten: `.claude/skills/orts-szenen/SKILL.md`.
 

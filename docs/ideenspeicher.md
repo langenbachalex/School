@@ -57,6 +57,8 @@ Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13
 | ALLE | app-übergreifend (Runner-Engine `app/runner.js`, Skills, Doku, Hooks) | – | – | – |
 Neue Fächer/Apps: Zeile anhängen, Kürzel vergeben.
 
+**Regel 12.11.: Baustopp für Neues bis nach dem 25.11. (nur Fehler; Ausnahme Road to GLN EN9), dauerhaft nur ein Bau-Chat gleichzeitig.** Geparkt bis dahin: 4 Folien-Karten EN6/EN9, 4c Deine 5 Minuten, Sync Stufe A für FR, Sync Stufe B. GLN-Formate aller bisherigen GLN: `docs/archiv/gln-formate.md` (EN6 GLN 1 + 2, EN9 GLN 1; EN9 GLN 2 folgt).
+
 ## Chat-Übersicht (Stand 8.11.2026) – Namensschema `School · <App> · <Block> · <Datum>`
 Offene Blöcke in Reihenfolge; Befehl = erste Eingabe im jeweiligen Chat (neuer Chat: erst `/load …`).
 | Nr | App | Block | Chat | Befehl | Stand |

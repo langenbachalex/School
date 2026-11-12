@@ -19,3 +19,4 @@ Ablage: `docs/archiv/<JJJJ-MM-TT>_<kurzer-titel>.<endung>` (Originaldatei, falls
 | – | (Beide Inhaltsverzeichnisse liegen als Abschrift vor; Grammatik-Doppelseiten noch nicht fotografiert; Buchinhalte liegen nur als App-Daten in `inhalte/` und `app/daten.js`) | | | |
 
 **Hinweis zum Kopieren (31.10.2026):** Das Repo ist öffentlich. Verlagsmaterial (Cornelsen-Dokumente, Buchseiten) darf nicht hineinkopiert werden; Mr. Alex' eigene Decks enthalten teils Buchbilder. Deshalb steht hier nur der Index. Vorschlag: eigene Dateien in einen privaten Ordner/privates Repo legen und hier nur verlinken – Entscheidung Mr. Alex.
+- `gln-formate.md` – Formate und Anforderungen aller GLN (ohne die Aufgaben; die PDFs bleiben bei Mr. Alex, weil das Repo öffentlich ist).

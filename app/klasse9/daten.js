@@ -11594,6 +11594,35 @@ window.DATEN = {
      "audio/akten/liberty_ny_2.mp3",
      "audio/akten/liberty_ny_3.mp3",
      "audio/akten/liberty_ny_4.mp3"
+    ],
+    "gold_yearbook": [
+     "audio/akten/gold_yearbook_1.mp3",
+     "audio/akten/gold_yearbook_2.mp3",
+     "audio/akten/gold_yearbook_3.mp3",
+     "audio/akten/gold_yearbook_4.mp3",
+     "audio/akten/gold_yearbook_5.mp3",
+     "audio/akten/gold_yearbook_6.mp3",
+     "audio/akten/gold_yearbook_7.mp3",
+     "audio/akten/gold_yearbook_8.mp3"
+    ],
+    "gold_gold_rush": [
+     "audio/akten/gold_gold_rush_1.mp3",
+     "audio/akten/gold_gold_rush_2.mp3",
+     "audio/akten/gold_gold_rush_3.mp3",
+     "audio/akten/gold_gold_rush_4.mp3",
+     "audio/akten/gold_gold_rush_5.mp3",
+     "audio/akten/gold_gold_rush_6.mp3",
+     "audio/akten/gold_gold_rush_7.mp3"
+    ],
+    "gold_route66_radio": [
+     "audio/akten/gold_route66_radio_1.mp3",
+     "audio/akten/gold_route66_radio_2.mp3",
+     "audio/akten/gold_route66_radio_3.mp3",
+     "audio/akten/gold_route66_radio_4.mp3",
+     "audio/akten/gold_route66_radio_5.mp3",
+     "audio/akten/gold_route66_radio_6.mp3",
+     "audio/akten/gold_route66_radio_7.mp3",
+     "audio/akten/gold_route66_radio_8.mp3"
     ]
    },
    "skin": {

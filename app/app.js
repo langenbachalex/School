@@ -3251,7 +3251,7 @@
         b.querySelector(".haken").textContent = aktiv ? "✓ " : "";
       }
     };
-    const waehle = (o, w) => { skinSetzen(o.key, w); markiere(); vorschau.neuMalen(); spiele([{ tts: M.sprechText(skinWirksam(), o.key, w), lang: "en-GB", stimme: "m" }]); };
+    const waehle = (o, w) => { skinSetzen(o.key, w); markiere(); vorschau.neuMalen(); const t = M.sprechText(skinWirksam(), o.key, w); spiele([((SP.runner_audio || {}).skin || {})[t] || { tts: t, lang: "en-GB", stimme: "m" }]); };   // 12.11.: Aufnahme (Mr. Alex, britisch), sonst Geräte-Stimme
     const chip = (o, w) => {
       const frei = skinFrei(o.key, w), farbe = SKIN_FARBOPTION[o.key] && skinFarbe(M, o.key, w), preis = M.skinPreis(o.key, w);
       return el("button", { class: "knopf runner-wert" + (frei ? "" : " gesperrt"), "aria-pressed": "false", "data-skin": `${o.key}_${w}`, "data-key": o.key, "data-wert": w,

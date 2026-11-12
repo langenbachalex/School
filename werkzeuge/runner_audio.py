@@ -14,6 +14,9 @@ Vier Ton-Posten vom 12.11.2026 (Mr. Alex): Geheimakten (audio/akten/<id>_<nr>.mp
 Skin-Menü (app/klasse9/audio/skin/<wendung>.mp3, Jeremy/Jessica im Wechsel; Klasse 6 bleibt bei der Geräte-Stimme, siehe skin_wendungen),
 Combo-Sprüche beim Vokabellernen (COMBO_SPRUECHE, audio/alex/vok_<key>.mp3, Mr. Alex, Kopie für Klasse 9) und Grenzer-Sprüche in Border Patrol
 (GRENZER, app/klasse9/audio/grenzer/<key>.mp3: amerikanische Seite Jeremy, britische Seite Mr. Alex).
+Nachtrag 12.11.2026 (Mr. Alex): Skin-Menü Klasse 6 britisch mit Mr. Alex (app/audio/skin/<wendung>.mp3, en_alex, immer [British accent]) und
+Goldene Akten beider Klassen (audio/akten/<id>_<nr>.mp3 aus goldakten.tsv, Stimmen wie die Geheimakten; Klasse 9 je Absatz nach AKTEN9_STIMMEN).
+--nur= nimmt auch mehrere Pfad-Anfänge, mit Komma getrennt (für Läufe unter der Grenze).
 Aufruf: python3 werkzeuge/runner_audio.py --zaehlen   (nur zählen; --nur=<pfad-anfang> beschränkt auf diese Posten)
         python3 werkzeuge/runner_audio.py             (erzeugen, danach daten_bauen.py und klasse9_bauen.py)
 """
@@ -143,20 +146,22 @@ GRENZER = {
     "ende_zu_1": ("ende_zu", "alex", "[calm]", "The border is closed for today."),
 }
 # Geheimakten Klasse 9: Stimme je Absatz passend zur Figur im Absatz (m = Jeremy, f = Jessica); ohne Eintrag im Wechsel m/f
-AKTEN9_STIMMEN = {"liberty_ny": "fmmf"}
+AKTEN9_STIMMEN = {"liberty_ny": "fmmf", "gold_yearbook": "fmffmfmf", "gold_gold_rush": "fmmffmm", "gold_route66_radio": "mffmfmfm"}
 
 
 def akten(klasse):
-    """[(id, nr, sprechtext)] je Absatz aus inhalte[/klasse9]/geheimakten.tsv – Worthilfen {wort|deutsch} werden zu wort."""
+    """[(id, nr, sprechtext)] je Absatz aus inhalte[/klasse9]/geheimakten.tsv und goldakten.tsv (Goldene Akten, 12.11.) – Worthilfen {wort|deutsch} werden zu wort."""
     import daten_bauen
-    for z in daten_bauen.lesen("geheimakten.tsv" if klasse == 6 else os.path.join("klasse9", "geheimakten.tsv")):
-        for nr, absatz in enumerate(z["text"].split(" ¶ "), 1):
-            yield z["id"], nr, re.sub(r"\{([^|}]*)\|[^}]*\}", r"\1", absatz).strip()
+    for datei in ("geheimakten.tsv", "goldakten.tsv"):
+        for z in daten_bauen.lesen(datei if klasse == 6 else os.path.join("klasse9", datei)):
+            for nr, absatz in enumerate(z["text"].split(" ¶ "), 1):
+                yield z["id"], nr, re.sub(r"\{([^|}]*)\|[^}]*\}", r"\1", absatz).strip()
 
 
 def skin_wendungen():
     """Wendungen des Skin-Menüs aus SPRECH/FARBE_EN/TOP_EN in runner.js (wie sprechText(); „Power level n“ spricht das Menü nicht) → [(wendung, dateiname)].
-    Vertont nur für Klasse 9 (amerikanisch); Klasse 6 (britisch) behält die Geräte-Stimme, bis britische Aufnahmen freigegeben sind."""
+    Klasse 9: Jeremy/Jessica im Wechsel (amerikanisch); Klasse 6 (freigegeben 12.11.): Mr. Alex (en_alex), britisch – jede Wendung mit [British accent],
+    weil alle kurz sind (Regel 7.11.). SPRECH/FARBE_EN/TOP_EN sind in app/runner.js und app/klasse9/runner.js gleich."""
     js = open(ENGINE, encoding="utf-8").read()
     block = js[js.index("const SPRECH = {"):js.index("const FARBE_EN")]
     liste = re.findall(r': "([^"]+)"', block)
@@ -231,6 +236,8 @@ def auftraege():
         liste.append((9, APP9, f"audio/akten/{id_}_{nr}.mp3", (AKTEN9_STIMMEN.get(id_, "") + "mf" * 20)[nr - 1], text))
     for i, (wendung, datei) in enumerate(skin_wendungen()):
         liste.append((9, APP9, f"audio/skin/{datei}.mp3", "mf"[i % 2], wendung))
+    for wendung, datei in skin_wendungen():   # Klasse 6: Mr. Alex, britisch (Tag nur im gesprochenen Text)
+        liste.append((6, APP6, f"audio/skin/{datei}.mp3", "en_alex", f"[British accent] {wendung}"))
     for n, sprueche in COMBO_SPRUECHE.items():
         for key, text in sprueche:
             liste.append((6, APP6, f"audio/alex/vok_{key}.mp3", "en_alex", f"{ALEX_TAGS[f'combo{n}']}{britisch(text)} {text}"))
@@ -261,7 +268,7 @@ def daten(klasse):
     for id_, nr, _ in akten(klasse):
         aus["akten"].setdefault(id_, []).append(a(f"audio/akten/{id_}_{nr}.mp3"))
     aus["akten"] = {k: v for k, v in aus["akten"].items() if all(v)}   # eine Akte wird nur ganz vorgelesen
-    aus["skin"] = {w: f"audio/skin/{d}.mp3" for w, d in skin_wendungen() if a(f"audio/skin/{d}.mp3")} if klasse == 9 else {}
+    aus["skin"] = {w: f"audio/skin/{d}.mp3" for w, d in skin_wendungen() if a(f"audio/skin/{d}.mp3")}   # Klasse 9 Jeremy/Jessica, Klasse 6 Mr. Alex
     aus["vok_combo"] = {str(n): [p for p in (a(f"audio/alex/vok_{key}.mp3") for key, _ in l) if p] for n, l in COMBO_SPRUECHE.items()}
     if klasse == 9:
         aus["grenzer"] = {}
@@ -284,7 +291,7 @@ def sprechen9(stimme, text, ziel):
 
 
 def main():
-    nur = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--nur=")), None)   # z. B. --nur=audio/helden/intro_ (nur diese Posten)
+    nur = next((tuple(a.split("=", 1)[1].split(",")) for a in sys.argv if a.startswith("--nur=")), None)   # z. B. --nur=audio/helden/intro_ (nur diese Posten; mehrere Anfänge mit Komma)
     offen = [x for x in auftraege() if not os.path.exists(os.path.join(x[1], x[2])) and (not nur or x[2].startswith(nur))]
     summe = sum(len(x[4]) for x in offen)
     print(f"{len(offen)} Dateien offen, {summe} Zeichen (Grenze {GRENZE})")

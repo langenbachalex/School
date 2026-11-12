@@ -764,14 +764,15 @@ def webapp():
                           for g in (192, 512)]}
     with open(os.path.join(APP, "manifest.webmanifest"), "w", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=1)
-    dateien, h = ["./"], hashlib.sha1()
+    import sw_vorlage
+    dateien, h = {"./": sw_vorlage.pruefsumme(os.path.join(APP, "index.html"))}, hashlib.sha1()
     for wurzel, _, namen in sorted(os.walk(APP)):
         for n in sorted(namen):
             pfad = os.path.join(wurzel, n)
             rel = os.path.relpath(pfad, APP).replace(os.sep, "/")
             if rel in ("sw.js",) or n == "QUELLEN.md":  # Quellenliste der Fotos braucht die App offline nicht
                 continue
-            dateien.append(rel)
+            dateien[rel] = sw_vorlage.pruefsumme(pfad)
             with open(pfad, "rb") as f:
                 h.update(rel.encode() + f.read())
     version = h.hexdigest()[:12]
@@ -779,10 +780,7 @@ def webapp():
         f.write(f"""// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – Offline-Speicher der App Klasse 9.
 const VERSION = "mralex9-{version}r";  // 8.11.: Update lädt alle Dateien frisch vom Server (cache: "reload"), sonst blieb eine neu vertonte mp3 alt
 const DATEIEN = {json.dumps(dateien)};
-self.addEventListener("install", (e) => {{
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN.map((u) => new Request(u, {{ cache: "reload" }})))).then(() => self.skipWaiting()));
-}});
-self.addEventListener("activate", (e) => {{
+{sw_vorlage.einrichten_js('k.startsWith("mralex9-")')}self.addEventListener("activate", (e) => {{
   e.waitUntil(caches.keys().then((alle) => Promise.all(alle.filter((k) => k.startsWith("mralex9-") && k !== VERSION).map((k) => caches.delete(k))))
     .then(() => self.clients.claim()));
 }});

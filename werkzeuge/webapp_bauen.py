@@ -71,14 +71,15 @@ def main(test=None):
     with open(os.path.join(APP, "manifest.webmanifest"), "w", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=1)
     # Alle Dateien für den Offline-Speicher; die Version ändert sich, sobald sich eine Datei ändert
-    dateien, h = ["./"], hashlib.sha1()
+    import sw_vorlage
+    dateien, h = {"./": sw_vorlage.pruefsumme(os.path.join(APP, "index.html"))}, hashlib.sha1()
     for wurzel, _, namen in sorted(os.walk(APP)):
         for n in sorted(namen):
             pfad = os.path.join(wurzel, n)
             rel = os.path.relpath(pfad, APP).replace(os.sep, "/")
             if rel in ("sw.js", "LIESMICH.md") or n == "QUELLEN.md" or rel.startswith(("klasse9/", "franzoesisch/", "franz/", "lehrer/")):  # eigene Apps/Seiten mit eigenem Offline-Speicher
                 continue
-            dateien.append(rel)
+            dateien[rel] = sw_vorlage.pruefsumme(pfad)
             with open(pfad, "rb") as f:
                 h.update(rel.encode() + f.read())
     version = h.hexdigest()[:12]
@@ -86,10 +87,7 @@ def main(test=None):
         f.write(f"""// Automatisch erzeugt von werkzeuge/webapp_bauen.py – Offline-Speicher der App.
 const VERSION = "mralex-{version}0";  // 8.11.: Update lädt alle Dateien frisch vom Server (cache: "reload"), sonst blieb eine neu vertonte mp3 alt
 const DATEIEN = {json.dumps(dateien)};
-self.addEventListener("install", (e) => {{
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN.map((u) => new Request(u, {{ cache: "reload" }})))).then(() => self.skipWaiting()));
-}});
-self.addEventListener("activate", (e) => {{
+{sw_vorlage.einrichten_js('/^mralex-[0-9a-f]+$/.test(k)')}self.addEventListener("activate", (e) => {{
   // nur eigene alte Speicher löschen – nicht die von Klasse 9 (mralex9-) oder Französisch (mralex-fr-)
   e.waitUntil(caches.keys().then((alle) => Promise.all(alle.filter((k) => /^mralex-[0-9a-f]+$/.test(k) && k !== VERSION).map((k) => caches.delete(k))))
     .then(() => self.clients.claim()));

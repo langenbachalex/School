@@ -3501,7 +3501,7 @@
   /* ---------- Game „Crazy Sentences“ (12.11.2026, Mr. Alex) ----------
      Satz-Automat mit drei Walzen (D.spiel.grammar.crazy): Person · Ausdruck mit Präposition · Tätigkeit in der -ing-Form → ein alberner, aber richtiger Satz.
      Drehen, laut sagen, Partner (oder man selbst) bewertet 😂 / 😐. Walzen lassen sich festhalten (🔒), dann dreht nur der Rest. Eine Runde = 8 Sätze;
-     bewerten geht erst nach 3 Sekunden (Zeit zum Sprechen). Punkte (+10) einmal am Tag für eine ganze Runde (Tagesmarke gym.crazyTag, bester 😂-Wert gym.crazyRekord). */
+     bewerten geht erst nach 3 Sekunden (Zeit zum Sprechen). Keine Punkte (Sprechen lässt sich nicht prüfen); bester 😂-Wert in gym.crazyRekord. */
   const CRAZY = { saetze: 8, sprechSek: 3 };
   function spielCrazy(k) {
     lage = null; ansicht = null; stopp();
@@ -3554,11 +3554,11 @@
       urteil.hidden = true; dreh.hidden = false; hinweis.textContent = T("Tipp: Mit 🔓 hältst du eine Walze fest.", "Tip: use 🔓 to hold a reel.");
     }
     function ende() {
-      const tag = iso(heute()), punkte = g.crazyTag !== tag, alt = g.crazyRekord || 0;
+      const alt = g.crazyRekord || 0; // keine Punkte (Mr. Alex, 12.11.): Sprechen lässt sich nicht prüfen
       if (lacher > alt) g.crazyRekord = lacher;
-      if (punkte) { g.crazyTag = tag; punkteDazu(PUNKTE.spiel, { art: "m", bonus: true }); } else speichern();
+      speichern();
       const meldung = rueckmeldung();
-      melde(meldung, "gut", `${lob(true)} ${T(`${CRAZY.saetze} verrückte Sätze gesagt, ${lacher}-mal 😂.`, `${CRAZY.saetze} crazy sentences said, ${lacher} × 😂.`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)")}`);
+      melde(meldung, "gut", `${lob(true)} ${T(`${CRAZY.saetze} verrückte Sätze gesagt, ${lacher}-mal 😂.`, `${CRAZY.saetze} crazy sentences said, ${lacher} × 😂.`)}`);
       zeige(spielKopf(k, "Crazy Sentences", () => zeigeSpiele(k)),
         el("section", { class: "satzkarte sprint-ende" },
           el("h2", { lang: "en" }, "That was crazy!"),

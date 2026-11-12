@@ -38,8 +38,17 @@ Kein eigener Language-Teil; die Grammatik steckt im Writing.
 | Language „If I won a trip …“ | a) Verbformen einsetzen (sechs Sätze, je zwei Lücken) · b) sechs Sätze frei vollenden | a) richtige Form aus drei einkreisen · b) Satzhälften zuordnen | Conditional II (if + simple past, would + Infinitiv) | 12/9 | Language-Gruppen (Verbform, Auswahl) |
 | Writing „A New York City blog“ | Blogbeitrag, mindestens 120 Wörter, Thema wählen (Food, Fashion, Transport, People, Architecture) | gleich | zusammenhängender Text, simple past/present perfect, Wortschatz New York | 15/15 | fehlt (Strategie Punkt 4: freies Schreiben) |
 
-## EN9 · GLN 2 · 24.11.2026 · Unit 2
-Material folgt (Mr. Alex schickt es nach). Vorläufige Kette in `inhalte/klasse9/gln.tsv` aus der Hausaufgabe: Vocabulary Unit 2 bis Theme 2 · Part 2, Language -ing form & prepositions, Listening.
+## EN9 · GLN 2 · 24.11.2026 · Unit 2 (American high school) · E-Kurs 60 P, G-Kurs 50 P
+Deckblatt mit Selbsteinschätzung „Sonstige Mitarbeit“ (dort zählt auch „Hausaufgaben und Üben in der App“).
+| Bereich | E-Kurs | G-Kurs | Verlangt | P (E/G) | App |
+|---|---|---|---|---|---|
+| Listening „After-school activities“ | vier Interviews, acht Aufgaben mit Auswahl a–c | dieselben Interviews, acht Aussagen true/false | Clubs und Teams an der High School, Gründe („because …“) | 8/8 | Listening „After class at Lincoln High“ (gleiches Thema) |
+| Reading „Notice board“ | acht Aushänge A–H (Verkauf, Ankündigung, Suche, Angebot …); sechs Schüler mit Gedanken → passenden Aushang zuordnen | gleich, weniger Zuordnungen | Kurztexte überfliegen, Bedürfnis und Angebot zuordnen | 12/9 | Reading „Task words“; Zuordnen von Kurztexten fehlt |
+| Words „Find the word“ | a) Definition → Wort aus Kasten (drei Wörter zu viel) · b) zwei von drei Wörtern selbst erklären · c) Wort im Satz ergänzen, deutsches Wort als Hilfe | a) mit Anfangsbuchstabe, ein Wort zu viel · b) Wort der Definition zuordnen · c) deutsches Wort und Anfangsbuchstabe | Wortschatz Unit 2 aus Start, Theme 1, Theme 2 **und Focus on language** | 11/10 | Vocabulary Unit 2 („Find the word“, DE → EN) |
+| Language „After-class activities“ | sechs eigene Sätze aus zwei Kästen (like, enjoy, don't mind, good at, interested in, fun, easy + Tätigkeit) | gleich | -ing-Form nach Verben, Adjektiv + Präposition, als Subjekt | 9/6 | Language „-ing form & prepositions“ |
+| Language „Chatting with friends“ | Brief mit zehn Lücken: Präposition vor -ing-Form | gleich (kürzer bewertet) | nervous about, used to, worry about, way of, take part in, bad at, interested in, excited about, look forward to | 5/5 | „Which preposition?“ |
+| Writing „Information about your school“ | Infotext für Austauschschüler, ca. 100 Wörter, drei Inhaltspunkte, Anfang vorgegeben | gleich, mit Wendungen-Kasten | Schule, Stadt, Unterricht, AGs, wichtige Personen beschreiben | 15/12 | Writing „Our school and a US high school“ + „Check and correct“ |
+Kette in `inhalte/klasse9/gln.tsv` (12.11.): Listening → Reading → Vocabulary Unit 2 (Start bis Theme 2 · Part 2 und Focus on language · Part 1–2) → Language → Writing.
 
 ## Ideen für die Apps aus den Formaten
 - EN9: Listening mit „Berichtige die falsche Aussage“ (E-Kurs), Reading mit Multiple Choice a–d, Schreiben mit Mindestwortzahl und Themenwahl.

@@ -11672,8 +11672,8 @@ window.DATEN = {
    "datum": "2026-11-24",
    "von": "2026-11-10",
    "bis": "2026-11-24",
-   "ziel": "4; 3/1; 2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2",
-   "text": "GLN 2: Listening, Language (-ing form & prepositions), Vocabulary Unit 2",
+   "ziel": "4; 1; 2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2; 2/u2:Focus on language · Part 1; 2/u2:Focus on language · Part 2; 3/1; 5",
+   "text": "GLN 2: Listening, Reading, Vocabulary Unit 2, Language (-ing form & prepositions), Writing",
    "ziele": [
     {
      "ziel": "4",
@@ -11688,18 +11688,17 @@ window.DATEN = {
      ]
     },
     {
-     "ziel": "3/1",
-     "nr": 3,
-     "gruppe": "-ing form & prepositions",
+     "ziel": "1",
+     "nr": 1,
+     "gruppe": null,
      "teil": null,
-     "name": "Language · -ing form & prepositions",
+     "name": "Reading",
      "schluessel": [
-      "3|-ing form & prepositions|0",
-      "3|-ing form & prepositions|1",
-      "3|-ing form & prepositions|2",
-      "3|-ing form & prepositions|3",
-      "3|-ing form & prepositions|4",
-      "3|-ing form & prepositions|5"
+      "1|Task words|0",
+      "1|Task words|1",
+      "1|Task words|2",
+      "1|Task words|3",
+      "1|Task words|4"
      ]
     },
     {
@@ -11785,6 +11784,71 @@ window.DATEN = {
       "2|u2:Theme 2 · Part 2|5",
       "2|u2:Theme 2 · Part 2|6",
       "2|u2:Theme 2 · Part 2|7"
+     ]
+    },
+    {
+     "ziel": "2/u2:Focus on language · Part 1",
+     "nr": 2,
+     "gruppe": "u2:Focus on language · Part 1",
+     "teil": null,
+     "name": "Vocabulary · Unit 2 · Focus on language · Part 1",
+     "schluessel": [
+      "2|u2:Focus on language · Part 1|0",
+      "2|u2:Focus on language · Part 1|1",
+      "2|u2:Focus on language · Part 1|2",
+      "2|u2:Focus on language · Part 1|3",
+      "2|u2:Focus on language · Part 1|4",
+      "2|u2:Focus on language · Part 1|5",
+      "2|u2:Focus on language · Part 1|6",
+      "2|u2:Focus on language · Part 1|7"
+     ]
+    },
+    {
+     "ziel": "2/u2:Focus on language · Part 2",
+     "nr": 2,
+     "gruppe": "u2:Focus on language · Part 2",
+     "teil": null,
+     "name": "Vocabulary · Unit 2 · Focus on language · Part 2",
+     "schluessel": [
+      "2|u2:Focus on language · Part 2|0",
+      "2|u2:Focus on language · Part 2|1",
+      "2|u2:Focus on language · Part 2|2",
+      "2|u2:Focus on language · Part 2|3",
+      "2|u2:Focus on language · Part 2|4",
+      "2|u2:Focus on language · Part 2|5",
+      "2|u2:Focus on language · Part 2|6",
+      "2|u2:Focus on language · Part 2|7"
+     ]
+    },
+    {
+     "ziel": "3/1",
+     "nr": 3,
+     "gruppe": "-ing form & prepositions",
+     "teil": null,
+     "name": "Language · -ing form & prepositions",
+     "schluessel": [
+      "3|-ing form & prepositions|0",
+      "3|-ing form & prepositions|1",
+      "3|-ing form & prepositions|2",
+      "3|-ing form & prepositions|3",
+      "3|-ing form & prepositions|4",
+      "3|-ing form & prepositions|5"
+     ]
+    },
+    {
+     "ziel": "5",
+     "nr": 5,
+     "gruppe": null,
+     "teil": null,
+     "name": "Writing",
+     "schluessel": [
+      "5|Our school and a US high school|0",
+      "5|Our school and a US high school|1",
+      "5|Our school and a US high school|2",
+      "5|Our school and a US high school|3",
+      "5|Our school and a US high school|4",
+      "5|Check and correct|0",
+      "5|Check and correct|1"
      ]
     }
    ]

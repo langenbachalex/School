@@ -12146,9 +12146,7 @@ window.DATEN = {
     {
      "satz": "la_19",
      "prep": [],
-     "ing": [
-      "Maya is used to take the school bus."
-     ],
+     "ing": [],
      "extra": [
       "Maya is used at taking the school bus.",
       "Maya is used about taking the school bus.",

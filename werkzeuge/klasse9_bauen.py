@@ -633,6 +633,7 @@ GRAMMAR_AUS = {
     ("la_16", "at"), ("la_16", "for"),   # excited at / excited for – gibt es
     ("la_17", "for"), ("la_17", "of"), ("la_17", "at"),  # worry for / of / at – strittig
     ("la_19", "for"),                    # is used for taking – grammatisch (andere Bedeutung)
+    ("la_19", "grund"),                  # „Maya is used to take the school bus“ ist als Passiv lesbar (jemand setzt sie ein) – nicht eindeutig falsch, darum nie als Fehler zeigen (Mr. Alex, 12.11.)
     ("la_21", "for"), ("la_21", "to"), ("la_21", "in"),  # a way for / to / in … – strittig
     ("la_22", "about"), ("la_22", "on"),  # dreams about playing – richtig; dream on – gibt es
     ("la_06", "about"), ("la_18", "about"),  # good about / bad about doing – amerikanische Wendung

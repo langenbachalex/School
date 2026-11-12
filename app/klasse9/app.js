@@ -1874,20 +1874,27 @@
       const kn = el("button", { class: "knopf wahl-knopf paar-wort", lang: "en", "aria-pressed": "false", onclick: () => { if (!geloest[i]) { aktiv = i; markiere(); } } }, x.wort + " …");
       return { kn, zeile: el("li", { class: "paar" }, kn) };
     });
-    const markiere = () => zeilen.forEach(({ kn }, i) => kn.setAttribute("aria-pressed", String(i === aktiv && !geloest[i])));
+    // Die Präpositionen stehen direkt unter dem gewählten Ausdruck (12.11., Mr. Alex): keine klebende Leiste mehr, die auf dem Handy eine Zeile verdeckt
+    const markiere = () => {
+      zeilen.forEach(({ kn }, i) => kn.setAttribute("aria-pressed", String(i === aktiv && !geloest[i])));
+      if (aktiv >= 0 && !geloest[aktiv]) zeilen[aktiv].kn.after(prepsBox); else prepsBox.remove();
+    };
+    const schluss = el("div", {});
     const preps = teil.knoepfe.map((w) => el("button", { class: "knopf wahl-knopf paar-prep", lang: "en", onclick: () => {
       if (aktiv < 0 || geloest[aktiv]) return;
       const x = paare[aktiv], s = D.saetze[x.satz], { kn, zeile } = zeilen[aktiv];
-      if (w !== x.prep) { lage.hilfe = true; return melde(box, "hilfe", `${T(`„${x.wort} ${w}“ passt nicht.`, `“${x.wort} ${w}” is not right.`)} ${NOCHMAL()}`); }
+      if (w !== x.prep) { lage.hilfe = true; prepsBox.after(box); return melde(box, "hilfe", `${T(`„${x.wort} ${w}“ passt nicht.`, `“${x.wort} ${w}” is not right.`)} ${NOCHMAL()}`); }
       geloest[aktiv] = true;
       kn.textContent = `✓ ${x.wort} ${x.prep}`; kn.classList.add("richtig"); zeile.classList.add("ok");
       zeile.append(el("p", { class: "paar-satz", lang: "en" }, lueckenSatz(s, "voll", x.prep)), !E() && el("p", { class: "klein", lang: "de" }, s.de));
       spiele([tonSatz(s)]);
       aktiv = geloest.indexOf(false); markiere();
+      if (aktiv < 0) schluss.append(box); else zeile.append(box);
       if (aktiv < 0) { melde(box, "gut", `${lob()} ${T("Alle Paare gefunden!", "All pairs found!")}`); preps.forEach((p) => { p.disabled = true; }); lage.weiter = () => { if (sperre_.bereit()) naechstes(); }; }
       else melde(box, "gut", lob());
       sperre_.bereit();
     } }, w));
+    const prepsBox = el("div", { class: "paar-preps", role: "group", "aria-label": T("Präpositionen", "Prepositions") }, preps);
     const sperre_ = arbeitsSperre(weiter, { start: lage.start, sek: paare.length * QUIZ_MIN * eile(),
       zeitText: (z) => T(`⏱️ „Weiter“ geht in ${z}.`, `⏱️ “Next” opens in ${z}.`),
       offenZuerst: true, offen: () => { const n = geloest.filter((g) => !g).length; return n ? T(`🔗 Finde alle Paare (noch ${n}).`, `🔗 Find all the pairs (${n} to go).`) : ""; } });
@@ -1896,8 +1903,7 @@
       el("section", { class: "satzkarte" },
         ansage("Which preposition goes with the phrase? Tap the phrase, then the preposition.", "Welche Präposition gehört dazu? Tipp den Ausdruck an, dann die Präposition."),
         el("ol", { class: "paare" }, zeilen.map((z) => z.zeile)),
-        el("div", { class: "paar-preps", role: "group", "aria-label": T("Präpositionen", "Prepositions") }, preps),
-        box, sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
+        schluss, sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
   }
 
   /* ---------- Language: „Gap text“ (12.11.2026) ----------

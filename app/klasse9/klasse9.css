@@ -427,8 +427,10 @@ body.runner-aktiv .niveau-leiste { display: none; }
 .paar { display: grid; gap: 4px; justify-items: start; }
 .paar p { margin: 0; }
 .paar.ok .paar-wort { background: var(--gruen); border-color: var(--gruen); color: #fff; }
-.paar-preps { position: sticky; bottom: 8px; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 14px; border: 2px solid var(--blau); background: var(--karte); }
-.paar-prep { min-width: 52px; flex: 1 0 auto; }
+.paar-preps { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border-radius: 14px; border: 2px solid var(--blau); background: var(--karte); justify-self: stretch; }
+.paar .rueckmeldung { justify-self: stretch; }
+@media (min-width: 760px) { .paare { grid-template-columns: 1fr 1fr; gap: 12px 20px; align-items: start; } }
+.paar-prep { min-width: 48px; flex: 1 0 auto; padding: 0 8px; }
 .lt-text { margin: 0; line-height: 2.5; font-size: 1.1rem; }
 .lt-platz { white-space: nowrap; }
 .lt-luecke { display: inline-block; min-width: 4.2rem; min-height: 40px; padding: 2px 8px; font: inherit; font-weight: 700; text-align: center; vertical-align: middle;

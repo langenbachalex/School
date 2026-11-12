@@ -422,7 +422,7 @@
         el("h1", {}, "English Power Game"),
         el("p", { class: "klein" }, "Hallo! Wähl eine Station. Wenn du fertig bist, bekommt sie ein Häkchen."),
         statusleiste(), terminZeile()),
-      hwZeile(), glnZeile(), gymKarte(),
+      hwZeile(), glnZeile(), glnPlanZeile(), gymKarte(),
       powerupZeile(),
       alleFertig && el("section", { class: "geschafft" },
         el("h2", {}, "Wahnsinn, du hast alles geschafft!"),
@@ -647,6 +647,24 @@
     while (tage.includes(iso(d))) { n++; d.setDate(d.getDate() - 1); }
     return n;
   }
+  // Etappenplan (12.11.2026, g.plan aus gln.tsv): bis wann welche Etappen geschafft sein sollen – nur Anzeige (grün im Plan, gelb hinterher), keine Strafe
+  const glnPos = (g) => { const i = g.ziele.findIndex((z) => !glnZielFertig(g, z)); return i < 0 ? g.ziele.length : i; }; // so viele Etappen sind am Stück fertig
+  function glnPlan(g) {
+    const plan = g.plan || [];
+    if (!plan.length) return null;
+    const t = iso(heute()), pos = glnPos(g), geschafft = (m) => (m.test ? glnTestOk(g) : pos >= m.n);
+    const verpasst = plan.filter((m) => m.bis < t && !geschafft(m)), ziel = verpasst[0] || plan.find((m) => m.bis >= t && !geschafft(m)) || null;
+    if (!ziel) return { hinterher: false, text: "Alles im Plan geschafft ✓" };
+    const j = plan.indexOf(ziel), von = j > 0 ? plan[j - 1].n + 1 : 1;
+    const was = ziel.test ? "Abschlusstest" : von >= ziel.n ? `Etappe ${ziel.n}` : `Etappe ${von}–${ziel.n}`;
+    const wo = pos >= g.ziele.length ? "du bist beim Abschlusstest" : `du bist bei ${pos + 1}`;
+    return { hinterher: verpasst.length > 0, text: `${verpasst.length ? "War bis" : "Bis"} ${hwDatum(ziel.bis)}: ${was} · ${wo}` };
+  }
+  const glnPlanBis = (g, i) => { const m = (g.plan || []).find((x) => (i == null ? x.test : !x.test && i < x.n)); return m ? ` · ${"bis"} ${hwDatum(m.bis)}` : ""; };
+  function glnPlanZeile() {
+    const g = glnAktiv(), p = g && glnPlan(g);
+    return p ? el("p", { class: "gln-plan" + (p.hinterher ? " hinterher" : ""), role: "status" }, (p.hinterher ? "⏰ " : "🗓️ ") + p.text) : null;
+  }
   const glnSchild = () => el("span", { class: "hw-schild gln-schild" }, "🏁 GLN");
   function glnBonus(basis) {
     const g = glnAktiv();
@@ -710,14 +728,15 @@
       el("h2", {}, `🏁 Road to GLN · ${glnNochText(g)}`),
       el("p", { class: "hw-liste-text" }, g.text),
       el("p", { class: "klein" }, `Doppelte Punkte für jeden Teil · 🔥 ${n} ${n === 1 ? "Tag" : "Tage"} in Folge (${GLN.serieTage} Tage = +${GLN.serieCoins} Coins)`),
-      el("ul", { class: "hw-liste-ziele gln-liste" }, g.ziele.map((z) => { const f = glnZielFertig(g, z);
+      glnPlanZeile(),
+      el("ul", { class: "hw-liste-ziele gln-liste" }, g.ziele.map((z, zi) => { const f = glnZielFertig(g, z);
         return el("li", { class: f ? "fertig" : "" },
           el("span", { class: "hw-haken", "aria-label": f ? "erledigt" : "offen" }, f ? "✓" : "○"),
-          el("span", { class: "hw-name" }, z.name.replace(/^Station \d+: /, "")),
+          el("span", { class: "hw-name" }, `${zi + 1}. ${z.name.replace(/^Station \d+: /, "")}`, el("span", { class: "klein" }, glnPlanBis(g, zi))),
           knopf("▶", () => { zu(); glnStart(z); }, "leise")); }),
         el("li", { class: ok ? "fertig" : "" },
           el("span", { class: "hw-haken", "aria-label": ok ? "bestanden" : "offen" }, ok ? "✓" : "🎯"),
-          el("span", { class: "hw-name" }, "Abschlusstest „GLN Ready“" + (ok ? ` · bestanden (${erg.best} %)` : frei ? ` · ab ${TEST.grenze} % +${GLN.testCoins} Coins` + (erg ? ` · bisher ${erg.best} %` : "") : " · frei ab 70 % der Etappen")),
+          el("span", { class: "hw-name" }, "Abschlusstest „GLN Ready“" + (ok ? ` · bestanden (${erg.best} %)` : frei ? ` · ab ${TEST.grenze} % +${GLN.testCoins} Coins` + (erg ? ` · bisher ${erg.best} %` : "") : " · frei ab 70 % der Etappen"), el("span", { class: "klein" }, glnPlanBis(g, null))),
           frei ? knopf("▶", () => { zu(); glnTestStart(); }, "leise") : null)),
       el("div", { class: "knopfreihe" }, knopf("Schließen", zu, "haupt")));
     hwDialog.showModal();
@@ -737,7 +756,7 @@
     const t = iso(heute()), g = (D.gln || []).filter((x) => x.von <= t).sort((x, y) => (x.datum < y.datum ? 1 : -1))[0];
     if (!g) return null;
     const e = testErgebnis(glnTestKey(g));
-    return { g, z: glnFertigZahl(g), n: g.ziele.length, test: e && e.bestanden ? e.am : null, best: e ? e.best : null, tage: glnTageListe(g).length, serie: glnSerie(g) };
+    return { g, z: glnFertigZahl(g), n: g.ziele.length, test: e && e.bestanden ? e.am : null, best: e ? e.best : null, tage: glnTageListe(g).length, serie: glnSerie(g), plan: glnPlan(g) };
   }
 
   /* ---------- Springen, Vor und Zurück ---------- */
@@ -4107,7 +4126,7 @@
     const gs = glnStandLehrer();
     const glnZeileL = gs ? el("p", { class: "klein lehrer-gln" }, `🏁 Road to GLN (${gs.g.datum.slice(8)}.${gs.g.datum.slice(5, 7)}.): ${gs.z}/${gs.n} · Abschlusstest `
       + (gs.test ? `bestanden am ${testDatum(gs.test)} (${gs.best} %)` : gs.best != null ? `noch nicht bestanden (bestes Ergebnis ${gs.best} %)` : "noch nicht gemacht")
-      + ` · geübt an ${gs.tage} Tagen, Serie ${gs.serie}`) : null;
+      + ` · geübt an ${gs.tage} Tagen, Serie ${gs.serie}` + (gs.plan ? ` · ${gs.plan.hinterher ? "⏰ hinterher" : "im Plan"}` : "")) : null;
     const stichprobe = el("div", { class: "lehrer-stichprobe" },
       el("p", { class: "klein" }, `🔎 Stichprobe: ⭐ ${sp.punkte} · 🪙 ${sp.coins} · Protokoll-Summe ${protokollSumme(pl)} (${pl.length} Einträge) · Warnungen ${(Array.isArray(sp.warnungen) ? sp.warnungen : []).length} (Zähler ${w.n || 0})`),
       el("p", { class: "klein lehrer-marker" + (pr.marker.length ? " auffaellig" : "") }, (pr.altbestand ? "Altbestand (Stand von vor dem Protokoll). " : "")
@@ -4160,7 +4179,7 @@
       .map(([id, k]) => { const v = D.vokabeln.find((x) => x.id === id); return v ? [v.en, k.x] : null; }).filter(Boolean);
     return { v: 1, a: SYNC.app, g: kenn.g, c: kenn.c, t: Math.floor(Date.now() / 60000), n: Object.keys(stand.teile || {}).length,
       p: spielstand().punkte, d, h: h ? { v: h.von, b: h.bis, z: h.ziele.filter((z) => hwZielFertig(h, z)).length, n: h.ziele.length } : null, w,
-      r: ((s) => (s ? { z: s.z, n: s.n, t: s.test ? 1 : 0 } : null))(glnStandLehrer()) }; // r: Road to GLN (Ziele fertig, Ziele, Abschlusstest bestanden)
+      r: ((s) => (s ? { z: s.z, n: s.n, t: s.test ? 1 : 0, p: s.plan ? (s.plan.hinterher ? 0 : 1) : null } : null))(glnStandLehrer()) }; // r: Road to GLN (Ziele fertig, Ziele, Abschlusstest bestanden)
   }
   const syncLink = (daten) => SYNC.adresse + "#d=" + btoa(unescape(encodeURIComponent(JSON.stringify(daten)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   function syncQrZeigen() {
@@ -4179,7 +4198,7 @@
       qr.addData(syncLink(daten)); qr.make();
       bild.append(el("img", { src: qr.createDataURL(5, 4), alt: "QR-Code für das Lehrergerät", style: "image-rendering:pixelated;width:min(80vw,320px);background:#fff" }));
       info.textContent = `${SYNC.app} · ${k.g} · Code ${k.c} · ${daten.d[0]} Übungen heute, ${daten.d.filter((x) => x > 0).length} von 14 Tagen geübt`
-        + (daten.h ? ` · HW ${daten.h.z}/${daten.h.n}` : "") + (daten.r ? ` · GLN ${daten.r.z}/${daten.r.n}${daten.r.t ? " ✓" : ""}` : "") + ` · Stand ${new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`;
+        + (daten.h ? ` · HW ${daten.h.z}/${daten.h.n}` : "") + (daten.r ? ` · GLN ${daten.r.z}/${daten.r.n}${daten.r.t ? " ✓" : ""}${daten.r.p === 0 ? " ⏰" : ""}` : "") + ` · Stand ${new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`;
     };
     g.addEventListener("change", zeichnen); c.addEventListener("change", zeichnen);
     lehrerFenster(el("h2", {}, "📲 QR für das Lehrergerät"),

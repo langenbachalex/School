@@ -6771,6 +6771,180 @@ window.DATEN = {
        ]
       }
      ]
+    },
+    {
+     "name": "Notice board",
+     "symbol": "📌",
+     "schritte": [
+      {
+       "art": "aushang",
+       "name": "Notice board",
+       "tafeln": [
+        {
+         "titel": "Notice board at Riverside High",
+         "aushaenge": [
+          [
+           "🚲",
+           "FOR SALE",
+           "Mountain bike, blue, two years old, $60. Text Jamal after 4 p.m."
+          ],
+          [
+           "⚽",
+           "TRYOUTS",
+           "Girls' soccer team. Tuesday, 3:30 p.m., field 2. Bring water and sneakers."
+          ],
+          [
+           "➗",
+           "WANTED",
+           "Math tutor for a 9th grader. One hour a week. I pay $10. Ask for Priya in room 114."
+          ],
+          [
+           "🍪",
+           "BAKE SALE",
+           "Friday at lunch in the cafeteria. Cookies and brownies from $1. All the money goes to the animal shelter."
+          ],
+          [
+           "🧥",
+           "LOST",
+           "Black hoodie with a yellow tiger on it. I left it in the gym on Monday. Please take it to the school office."
+          ],
+          [
+           "🎭",
+           "DRAMA CLUB",
+           "We need actors and helpers for the spring musical. First meeting: Thursday, 3 p.m., auditorium."
+          ],
+          [
+           "🚗",
+           "RIDE WANTED",
+           "I live on Maple Street and need a ride to school at 7:30 a.m. I can share the gas money. – Elena"
+          ],
+          [
+           "📸",
+           "YEARBOOK",
+           "Photo day is on Wednesday. Wear your favorite school shirt. Sign up for your time online."
+          ]
+         ],
+         "personen": [
+          {
+           "name": "Mia",
+           "text": "I'm good at algebra and I'd like to earn some money.",
+           "passt": "C",
+           "g": true
+          },
+          {
+           "name": "Carlos",
+           "text": "I found a sweatshirt under the bleachers yesterday. Whose is it?",
+           "passt": "E",
+           "g": true
+          },
+          {
+           "name": "Aisha",
+           "text": "I love singing and I want to be on stage.",
+           "passt": "F",
+           "g": true
+          },
+          {
+           "name": "Tyler",
+           "text": "I need something to ride to school, but I don't have much money.",
+           "passt": "A",
+           "g": true
+          },
+          {
+           "name": "Hannah",
+           "text": "I drive to school every morning and I pass Maple Street.",
+           "passt": "G"
+          },
+          {
+           "name": "Noah",
+           "text": "I want to help dogs and cats – and I'm always hungry at noon.",
+           "passt": "D"
+          }
+         ]
+        },
+        {
+         "titel": "Notice board at Oakwood High",
+         "aushaenge": [
+          [
+           "📣",
+           "PEP RALLY",
+           "Friday, 2 p.m., in the gym. Wear green and white and cheer for our football team!"
+          ],
+          [
+           "💻",
+           "FOR SALE",
+           "Used laptop, works well, $120. The charger is included. Call Devon."
+          ],
+          [
+           "🌳",
+           "VOLUNTEERS NEEDED",
+           "Help clean up Lake Park on Saturday from 9 a.m. to noon. Gloves and snacks are free."
+          ],
+          [
+           "🥁",
+           "SCHOOL BAND",
+           "We are looking for a drummer. Practice is on Mondays and Wednesdays after school."
+          ],
+          [
+           "📿",
+           "FOUND",
+           "Silver bracelet near locker 208. Describe it at the school office and get it back."
+          ],
+          [
+           "🌮",
+           "SPANISH CLUB",
+           "Movie night with tacos! Thursday, 6 p.m., room 21. Beginners are welcome."
+          ],
+          [
+           "🛒",
+           "JOB",
+           "The school store needs a student helper during lunch break. $9 an hour. Talk to Ms. Carter."
+          ],
+          [
+           "🏀",
+           "BASKETBALL TRYOUTS",
+           "Boys' team, Monday, 4 p.m., main gym. No experience? Come anyway!"
+          ]
+         ],
+         "personen": [
+          {
+           "name": "Lena",
+           "text": "I lost my jewelry on Tuesday. My grandma gave it to me!",
+           "passt": "E",
+           "g": true
+          },
+          {
+           "name": "Marcus",
+           "text": "I've played the drums since I was eight.",
+           "passt": "D",
+           "g": true
+          },
+          {
+           "name": "Sofia",
+           "text": "I care about nature and I'm free this weekend.",
+           "passt": "C",
+           "g": true
+          },
+          {
+           "name": "Ben",
+           "text": "I need a computer for my homework, but new ones are too expensive.",
+           "passt": "B",
+           "g": true
+          },
+          {
+           "name": "Olivia",
+           "text": "I'd like to earn some money at school, but I only have time at noon.",
+           "passt": "G"
+          },
+          {
+           "name": "Jayden",
+           "text": "I just started learning a new language and I love Mexican food.",
+           "passt": "F"
+          }
+         ]
+        }
+       ]
+      }
+     ]
     }
    ]
   },
@@ -11672,7 +11846,7 @@ window.DATEN = {
    "datum": "2026-11-24",
    "von": "2026-11-10",
    "bis": "2026-11-24",
-   "ziel": "4; 1; 2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2; 2/u2:Focus on language · Part 1; 2/u2:Focus on language · Part 2; 3/1; 5",
+   "ziel": "4; 1/Task words; 2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2; 2/u2:Focus on language · Part 1; 2/u2:Focus on language · Part 2; 3/1; 1/Notice board; 5",
    "text": "GLN 2: Listening, Reading, Vocabulary Unit 2, Language (-ing form & prepositions), Writing",
    "ziele": [
     {
@@ -11688,11 +11862,11 @@ window.DATEN = {
      ]
     },
     {
-     "ziel": "1",
+     "ziel": "1/Task words",
      "nr": 1,
-     "gruppe": null,
+     "gruppe": "Task words",
      "teil": null,
-     "name": "Reading",
+     "name": "Reading · Task words",
      "schluessel": [
       "1|Task words|0",
       "1|Task words|1",
@@ -11836,6 +12010,16 @@ window.DATEN = {
      ]
     },
     {
+     "ziel": "1/Notice board",
+     "nr": 1,
+     "gruppe": "Notice board",
+     "teil": null,
+     "name": "Reading · Notice board",
+     "schluessel": [
+      "1|Notice board|0"
+     ]
+    },
+    {
      "ziel": "5",
      "nr": 5,
      "gruppe": null,
@@ -11850,6 +12034,29 @@ window.DATEN = {
       "5|Check and correct|0",
       "5|Check and correct|1"
      ]
+    }
+   ],
+   "plan": [
+    {
+     "bis": "2026-11-15",
+     "n": 4
+    },
+    {
+     "bis": "2026-11-18",
+     "n": 8
+    },
+    {
+     "bis": "2026-11-20",
+     "n": 11
+    },
+    {
+     "bis": "2026-11-22",
+     "n": 12
+    },
+    {
+     "bis": "2026-11-23",
+     "n": 12,
+     "test": true
     }
    ]
   }

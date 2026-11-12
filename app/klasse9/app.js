@@ -464,7 +464,7 @@
         el("h1", { lang: "en" }, "Hi! Let's practise together."),
         el("p", { class: "klein" }, T("Wähl eine Kategorie. Oben rechts stellst du deinen Kurs ein: G oder E. Dein Mr. Alex",
           "Choose a category. Top right: choose your course, G or E. Your Mr. Alex"))),
-      hwZeile(), glnZeile(), gymKarte(),
+      hwZeile(), glnZeile(), glnPlanZeile(), gymKarte(),
       neuZeile(), powerupZeile(),
       el("nav", { class: "kacheln raster9", "aria-label": T("Kategorien", "Categories") },
         D.kategorien.map((k) => {
@@ -771,6 +771,24 @@
     while (tage.includes(iso(d))) { n++; d.setDate(d.getDate() - 1); }
     return n;
   }
+  // Etappenplan (12.11.2026, g.plan aus gln.tsv): bis wann welche Etappen geschafft sein sollen – nur Anzeige (grün im Plan, gelb hinterher), keine Strafe
+  const glnPos = (g) => { const i = g.ziele.findIndex((z) => !glnZielFertig(g, z)); return i < 0 ? g.ziele.length : i; }; // so viele Etappen sind am Stück fertig
+  function glnPlan(g) {
+    const plan = g.plan || [];
+    if (!plan.length) return null;
+    const t = iso(heute()), pos = glnPos(g), geschafft = (m) => (m.test ? glnTestOk(g) : pos >= m.n);
+    const verpasst = plan.filter((m) => m.bis < t && !geschafft(m)), ziel = verpasst[0] || plan.find((m) => m.bis >= t && !geschafft(m)) || null;
+    if (!ziel) return { hinterher: false, text: T("Alles im Plan geschafft ✓", "Everything on your plan is done ✓") };
+    const j = plan.indexOf(ziel), von = j > 0 ? plan[j - 1].n + 1 : 1;
+    const was = ziel.test ? T("Abschlusstest", "final test") : von >= ziel.n ? T(`Etappe ${ziel.n}`, `stage ${ziel.n}`) : T(`Etappe ${von}–${ziel.n}`, `stages ${von}–${ziel.n}`);
+    const wo = pos >= g.ziele.length ? T("du bist beim Abschlusstest", "you are at the final test") : T(`du bist bei ${pos + 1}`, `you are at ${pos + 1}`);
+    return { hinterher: verpasst.length > 0, text: `${verpasst.length ? T("War bis", "Was due") : T("Bis", "By")} ${hwDatum(ziel.bis)}: ${was} · ${wo}` };
+  }
+  const glnPlanBis = (g, i) => { const m = (g.plan || []).find((x) => (i == null ? x.test : !x.test && i < x.n)); return m ? ` · ${T("bis", "by")} ${hwDatum(m.bis)}` : ""; };
+  function glnPlanZeile() {
+    const g = glnAktiv(), p = g && glnPlan(g);
+    return p ? el("p", { class: "gln-plan" + (p.hinterher ? " hinterher" : ""), role: "status" }, (p.hinterher ? "⏰ " : "🗓️ ") + p.text) : null;
+  }
   const glnSchild = () => el("span", { class: "hw-schild gln-schild" }, "🏁 GLN");
   function glnBonus(basis) {
     const g = glnAktiv();
@@ -834,14 +852,15 @@
       el("h2", {}, `🏁 Road to GLN · ${glnNochText(g)}`),
       el("p", { class: "hw-liste-text" }, g.text),
       el("p", { class: "klein" }, T(`Doppelte Punkte für jeden Teil · 🔥 ${n} ${n === 1 ? "Tag" : "Tage"} in Folge (${GLN.serieTage} Tage = +${GLN.serieCoins} Coins)`, `Double points for every part · 🔥 ${n} ${n === 1 ? "day" : "days"} in a row (${GLN.serieTage} days = +${GLN.serieCoins} coins)`)),
-      el("ul", { class: "hw-liste-ziele gln-liste" }, g.ziele.map((z) => { const f = glnZielFertig(g, z);
+      glnPlanZeile(),
+      el("ul", { class: "hw-liste-ziele gln-liste" }, g.ziele.map((z, zi) => { const f = glnZielFertig(g, z);
         return el("li", { class: f ? "fertig" : "" },
           el("span", { class: "hw-haken", "aria-label": f ? T("erledigt", "done") : T("offen", "open") }, f ? "✓" : "○"),
-          el("span", { class: "hw-name", lang: "en" }, z.name),
+          el("span", { class: "hw-name", lang: "en" }, `${zi + 1}. ${z.name}`, el("span", { class: "klein" }, glnPlanBis(g, zi))),
           knopf("▶", () => { zu(); glnStart(z); }, "leise")); }),
         el("li", { class: ok ? "fertig" : "" },
           el("span", { class: "hw-haken", "aria-label": ok ? T("bestanden", "passed") : T("offen", "open") }, ok ? "✓" : "🎯"),
-          el("span", { class: "hw-name" }, T("Abschlusstest „GLN Ready“", "Final test “GLN Ready”") + (ok ? T(` · bestanden (${erg.best} %)`, ` · passed (${erg.best} %)`) : frei ? T(` · ab ${TEST.grenze} % +${GLN.testCoins} Coins`, ` · ${TEST.grenze} % or more: +${GLN.testCoins} coins`) + (erg ? T(` · bisher ${erg.best} %`, ` · best so far ${erg.best} %`) : "") : T(" · frei ab 70 % der Etappen", " · opens at 70 % of the stages"))),
+          el("span", { class: "hw-name" }, T("Abschlusstest „GLN Ready“", "Final test “GLN Ready”") + (ok ? T(` · bestanden (${erg.best} %)`, ` · passed (${erg.best} %)`) : frei ? T(` · ab ${TEST.grenze} % +${GLN.testCoins} Coins`, ` · ${TEST.grenze} % or more: +${GLN.testCoins} coins`) + (erg ? T(` · bisher ${erg.best} %`, ` · best so far ${erg.best} %`) : "") : T(" · frei ab 70 % der Etappen", " · opens at 70 % of the stages")), el("span", { class: "klein" }, glnPlanBis(g, null))),
           frei ? knopf("▶", () => { zu(); glnTestStart(); }, "leise") : null)),
       el("div", { class: "knopfreihe" }, knopf(T("Schließen", "Close"), zu, "haupt")));
     hwDialog.showModal();
@@ -861,7 +880,7 @@
     const t = iso(heute()), g = (D.gln || []).filter((x) => x.von <= t).sort((x, y) => (x.datum < y.datum ? 1 : -1))[0];
     if (!g) return null;
     const e = testErgebnis(glnTestKey(g));
-    return { g, z: glnFertigZahl(g), n: g.ziele.length, test: e && e.bestanden ? e.am : null, best: e ? e.best : null, tage: glnTageListe(g).length, serie: glnSerie(g) };
+    return { g, z: glnFertigZahl(g), n: g.ziele.length, test: e && e.bestanden ? e.am : null, best: e ? e.best : null, tage: glnTageListe(g).length, serie: glnSerie(g), plan: glnPlan(g) };
   }
 
   /* ---------- Springen, Vor und Zurück ---------- */
@@ -931,7 +950,7 @@
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, auswahl: zeigeAuswahl, bilder: zeigeBilder,
        vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition, vok_bild: zeigeBildWort,
        beae_quiz: zeigeBeaeQuiz, hoeren: zeigeHoeren, dialog: zeigeDialog,
-       mustertext: zeigeMustertext, schreiben: zeigeSchreiben })[teil.art](teil);
+       mustertext: zeigeMustertext, schreiben: zeigeSchreiben, aushang: zeigeAushang })[teil.art](teil);
     navErgaenzen();
   }
   function naechstes() {
@@ -1663,6 +1682,63 @@
       el("section", { class: "satzkarte" },
         el("div", { class: "lesetext", lang: "en" }, el("p", {}, saetze)),
         el("div", { class: "knopfreihe" }, knopf(T("🔊 Text vorlesen", "🔊 Read the text to me"), vorlesen))),
+      el("section", { class: "satzkarte" }, sperre_.uhr, el("div", { class: "knopfreihe" }, pruef, weiter), ergebnis));
+  }
+
+  /* ---------- 🏁 Road to GLN: Reading „Notice board“ (12.11.2026) ----------
+     Acht kurze Aushänge A–H, dazu Gedanken von Schülern: zu jeder Person den passenden Aushang wählen (G-Kurs vier Personen, E-Kurs sechs);
+     zwei Aushänge bleiben übrig. Zwei Sätze, die sich bei jedem Durchgang abwechseln (stand.var[Teilschlüssel]). Lesezeit-Sperre wie bei „Pictures“. */
+  function zeigeAushang(teil) {
+    const k = kategorie(lage.nr), schluessel = teilSchluessel(lage.teil), nr = (stand.var && stand.var[schluessel]) || 0;
+    const v = teil.tafeln[nr % teil.tafeln.length], BUCHSTABEN = "ABCDEFGH";
+    const personen = v.personen.filter((p) => E() || p.g), wahl = personen.map(() => null);
+    let geloest = false;
+    const ergebnis = rueckmeldung();
+    const weiter = weiterKnopf(); weiter.hidden = true;
+    const zettel = v.aushaenge.map(([sym, kopfzeile, text], i) => el("div", { class: "aushang", lang: "en" },
+      el("span", { class: "aushang-buchstabe" }, BUCHSTABEN[i]), el("strong", {}, `${sym} ${kopfzeile}`), el("span", {}, text)));
+    const zeilen = personen.map((p, pi) => {
+      const knoepfe = v.aushaenge.map((_, i) => el("button", { class: "knopf wahl-knopf aushang-wahl", "aria-pressed": "false", "aria-label": `${p.name}: ${BUCHSTABEN[i]}`, onclick: () => {
+        if (geloest) return;
+        wahl[pi] = BUCHSTABEN[i];
+        knoepfe.forEach((x, j) => x.setAttribute("aria-pressed", String(j === i)));
+        sperre_.bereit();
+      } }, BUCHSTABEN[i]));
+      return { p, knoepfe, zeile: el("li", { class: "aushang-person" },
+        el("p", { lang: "en" }, el("strong", {}, p.name + ": "), `“${p.text}”`), el("div", { class: "wahl", role: "group", "aria-label": p.name }, knoepfe),
+        el("p", { class: "klein aushang-loesung", lang: "en", hidden: true })) };
+    });
+    function pruefen() {
+      if (geloest || !sperre_.bereit()) return;
+      sperre_.ende();
+      geloest = true; pruef.hidden = true; weiter.hidden = false; lage.weiter = naechstes;
+      let richtig = 0;
+      zeilen.forEach(({ p, knoepfe, zeile }, pi) => {
+        const ok = wahl[pi] === p.passt, i = BUCHSTABEN.indexOf(p.passt);
+        if (ok) richtig++;
+        zeile.classList.add(ok ? "ok" : "falsch");
+        knoepfe[i].classList.add("soll");
+        const l = zeile.querySelector(".aushang-loesung");
+        l.hidden = false; l.textContent = `${ok ? "✓" : "✗"} ${p.passt}: ${v.aushaenge[i][1]} – ${v.aushaenge[i][2]}`;
+      });
+      if (richtig < personen.length) lage.hilfe = true; // „ohne Hilfe“ nur, wenn alles richtig ist
+      (stand.var = stand.var || {})[schluessel] = nr + 1; // nächstes Mal der andere Satz
+      ergebnis.hidden = false;
+      ergebnis.className = "rueckmeldung " + (richtig === personen.length ? "gut" : "hilfe");
+      ergebnis.textContent = richtig === personen.length ? `${lob()} ${T("Alles richtig!", "All correct!")}`
+        : T(`${richtig} von ${personen.length} richtig. Lies bei den roten noch einmal den passenden Aushang.`, `${richtig} of ${personen.length} correct. Read the right notice again for the red ones.`);
+    }
+    const pruef = knopf(T("Lösung prüfen", "Check"), pruefen, "haupt");
+    const sperre_ = arbeitsSperre(pruef, { start: lage.start,
+      sek: (woerterIn(v.aushaenge.map((a) => a[2]).concat(personen.map((p) => p.text))) / LESE_WPM * 60 + personen.length * QUIZ_MIN) * eile(),
+      zeitText: (z) => T(`📖 Lies erst alle Aushänge genau. „Lösung prüfen“ geht in ${z}.`, `📖 Read all the notices carefully first. “Check” opens in ${z}.`),
+      offen: () => { const n = wahl.filter((w) => !w).length; return n ? T(`✏️ Wähl für jede Person einen Aushang (noch ${n}).`, `✏️ Choose a notice for every student (${n} to go).`) : ""; } });
+    zeige(kopf(k),
+      el("section", { class: "satzkarte" },
+        el("h2", { lang: "en" }, v.titel),
+        ansage("Read the notices. Which notice is right for each student? Two notices are left over.", "Lies die Aushänge. Welcher Aushang passt zu welcher Person? Zwei Aushänge bleiben übrig."),
+        el("div", { class: "aushaenge" }, zettel)),
+      el("section", { class: "satzkarte" }, el("ol", { class: "aushang-personen" }, zeilen.map((z) => z.zeile))),
       el("section", { class: "satzkarte" }, sperre_.uhr, el("div", { class: "knopfreihe" }, pruef, weiter), ergebnis));
   }
 
@@ -4458,7 +4534,7 @@
     const gs = glnStandLehrer();
     const glnZeileL = gs ? el("p", { class: "klein lehrer-gln" }, `🏁 Road to GLN (${gs.g.datum.slice(8)}.${gs.g.datum.slice(5, 7)}.): ${gs.z}/${gs.n} · Abschlusstest `
       + (gs.test ? `bestanden am ${testDatum(gs.test)} (${gs.best} %)` : gs.best != null ? `noch nicht bestanden (bestes Ergebnis ${gs.best} %)` : "noch nicht gemacht")
-      + ` · geübt an ${gs.tage} Tagen, Serie ${gs.serie}`) : null;
+      + ` · geübt an ${gs.tage} Tagen, Serie ${gs.serie}` + (gs.plan ? ` · ${gs.plan.hinterher ? "⏰ hinterher" : "im Plan"}` : "")) : null;
     const testZeile = el("p", { class: "klein lehrer-tests" }, tests.length
       ? `🎯 Tests: ${testsOk.length} bestanden` + (testsOk.length ? ` (${testsOk.map(([k, x]) => `${testName(k)} ${x.best} %`).join(", ")})` : "")
         + (testsOffen.length ? ` · nicht bestanden: ${testsOffen.map(([k, x]) => `${testName(k)} ${x.best} %`).join(", ")}` : "")
@@ -4515,7 +4591,7 @@
       .map(([id, k]) => { const v = D.vokabeln.find((x) => x.id === id); return v ? [v.en, k.x] : null; }).filter(Boolean);
     return { v: 1, a: SYNC.app, g: kenn.g, c: kenn.c, t: Math.floor(Date.now() / 60000), n: Object.keys(stand.teile || {}).length,
       p: spielstand().punkte, d, h: h ? { v: h.von, b: h.bis, z: h.ziele.filter((z) => hwZielFertig(h, z)).length, n: h.ziele.length } : null, w,
-      r: ((s) => (s ? { z: s.z, n: s.n, t: s.test ? 1 : 0 } : null))(glnStandLehrer()) }; // r: Road to GLN (Ziele fertig, Ziele, Abschlusstest bestanden)
+      r: ((s) => (s ? { z: s.z, n: s.n, t: s.test ? 1 : 0, p: s.plan ? (s.plan.hinterher ? 0 : 1) : null } : null))(glnStandLehrer()) }; // r: Road to GLN (Ziele fertig, Ziele, Abschlusstest bestanden)
   }
   const syncLink = (daten) => SYNC.adresse + "#d=" + btoa(unescape(encodeURIComponent(JSON.stringify(daten)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
   function syncQrZeigen() {
@@ -4534,7 +4610,7 @@
       qr.addData(syncLink(daten)); qr.make();
       bild.append(el("img", { src: qr.createDataURL(5, 4), alt: "QR-Code für das Lehrergerät", style: "image-rendering:pixelated;width:min(80vw,320px);background:#fff" }));
       info.textContent = `${SYNC.app} · ${k.g} · Code ${k.c} · ${daten.d[0]} Übungen heute, ${daten.d.filter((x) => x > 0).length} von 14 Tagen geübt`
-        + (daten.h ? ` · HW ${daten.h.z}/${daten.h.n}` : "") + (daten.r ? ` · GLN ${daten.r.z}/${daten.r.n}${daten.r.t ? " ✓" : ""}` : "") + ` · Stand ${new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`;
+        + (daten.h ? ` · HW ${daten.h.z}/${daten.h.n}` : "") + (daten.r ? ` · GLN ${daten.r.z}/${daten.r.n}${daten.r.t ? " ✓" : ""}${daten.r.p === 0 ? " ⏰" : ""}` : "") + ` · Stand ${new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })}`;
     };
     g.addEventListener("change", zeichnen); c.addEventListener("change", zeichnen);
     lehrerFenster(el("h2", {}, "📲 QR für das Lehrergerät"),
@@ -4698,7 +4774,7 @@
   if (LOKAL) window.__staatEreignis = (id) => { ereignisse.push({ art: "staat", staat: SP.staaten.find((s) => s.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalten eines Staats (Szene, dann Stempel)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "karte", karte: SP.landmarks.find((l) => l.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Anzeige einer neuen Landmark-Karte (Orts-Szene/Karte) auslösen
   if (LOKAL) window.__heldenFrei = (ids) => { (ids || SP.helden.map((h) => h.id)).forEach(heldGesehen); if (ansicht === sammlung) sammlung(); }; // nur Test-Build: Heldenkarten freischalten (alle oder Liste)
-  if (LOKAL) window.__gln = { naechstes, lage: () => lage, stand: () => stand, lehrer: glnStandLehrer, aufgaben: () => testLauf && testLauf.aufgaben.map((a) => a.typ), // nur Test-Build: Road to GLN
+  if (LOKAL) window.__gln = { naechstes, neu: () => zeigeTeil(), lage: () => lage, stand: () => stand, lehrer: glnStandLehrer, aufgaben: () => testLauf && testLauf.aufgaben.map((a) => a.typ), // nur Test-Build: Road to GLN
     bestehen: () => { testLauf.antworten = testLauf.aufgaben.map(() => ({ richtig: true, antwort: "" })); testEnde(false); } };
   if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
   if (LOKAL) window.__thema = (nr, gruppe) => { lage = { nr, gruppe, teil: 0, titel: gruppe, zurueckZu: startseite }; gruppeGeschafft(); }; // nur Test-Build: Thema abschließen (Mega-Lob)

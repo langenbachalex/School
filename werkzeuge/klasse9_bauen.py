@@ -110,6 +110,44 @@ KATEGORIEN = [
                    {"symbol": "🔐", "bild": "bilder/lesen/08-locker.jpg", "G": "den Spind öffnen", "E": "open the locker", "nur": "E"},
                ]},
           ]},
+         # 🏁 Road to GLN (12.11.2026): Reading „Notice board“ – Kurztexte zuordnen. Eigene Inhalte (andere Schulen, Namen, Anlässe als im Lehrwerk),
+         # zwei Sätze, die App wechselt sie bei jedem Durchgang. Je Satz acht Aushänge A–H und sechs Schüler; G-Kurs: die ersten vier ("g": True).
+         # Zwei Aushänge bleiben immer übrig.
+         {"name": "Notice board", "symbol": "📌",
+          "schritte": [{"art": "aushang", "name": "Notice board", "tafeln": [
+              {"titel": "Notice board at Riverside High", "aushaenge": [
+                  ["🚲", "FOR SALE", "Mountain bike, blue, two years old, $60. Text Jamal after 4 p.m."],
+                  ["⚽", "TRYOUTS", "Girls' soccer team. Tuesday, 3:30 p.m., field 2. Bring water and sneakers."],
+                  ["➗", "WANTED", "Math tutor for a 9th grader. One hour a week. I pay $10. Ask for Priya in room 114."],
+                  ["🍪", "BAKE SALE", "Friday at lunch in the cafeteria. Cookies and brownies from $1. All the money goes to the animal shelter."],
+                  ["🧥", "LOST", "Black hoodie with a yellow tiger on it. I left it in the gym on Monday. Please take it to the school office."],
+                  ["🎭", "DRAMA CLUB", "We need actors and helpers for the spring musical. First meeting: Thursday, 3 p.m., auditorium."],
+                  ["🚗", "RIDE WANTED", "I live on Maple Street and need a ride to school at 7:30 a.m. I can share the gas money. – Elena"],
+                  ["📸", "YEARBOOK", "Photo day is on Wednesday. Wear your favorite school shirt. Sign up for your time online."]],
+               "personen": [
+                   {"name": "Mia", "text": "I'm good at algebra and I'd like to earn some money.", "passt": "C", "g": True},
+                   {"name": "Carlos", "text": "I found a sweatshirt under the bleachers yesterday. Whose is it?", "passt": "E", "g": True},
+                   {"name": "Aisha", "text": "I love singing and I want to be on stage.", "passt": "F", "g": True},
+                   {"name": "Tyler", "text": "I need something to ride to school, but I don't have much money.", "passt": "A", "g": True},
+                   {"name": "Hannah", "text": "I drive to school every morning and I pass Maple Street.", "passt": "G"},
+                   {"name": "Noah", "text": "I want to help dogs and cats – and I'm always hungry at noon.", "passt": "D"}]},
+              {"titel": "Notice board at Oakwood High", "aushaenge": [
+                  ["📣", "PEP RALLY", "Friday, 2 p.m., in the gym. Wear green and white and cheer for our football team!"],
+                  ["💻", "FOR SALE", "Used laptop, works well, $120. The charger is included. Call Devon."],
+                  ["🌳", "VOLUNTEERS NEEDED", "Help clean up Lake Park on Saturday from 9 a.m. to noon. Gloves and snacks are free."],
+                  ["🥁", "SCHOOL BAND", "We are looking for a drummer. Practice is on Mondays and Wednesdays after school."],
+                  ["📿", "FOUND", "Silver bracelet near locker 208. Describe it at the school office and get it back."],
+                  ["🌮", "SPANISH CLUB", "Movie night with tacos! Thursday, 6 p.m., room 21. Beginners are welcome."],
+                  ["🛒", "JOB", "The school store needs a student helper during lunch break. $9 an hour. Talk to Ms. Carter."],
+                  ["🏀", "BASKETBALL TRYOUTS", "Boys' team, Monday, 4 p.m., main gym. No experience? Come anyway!"]],
+               "personen": [
+                   {"name": "Lena", "text": "I lost my jewelry on Tuesday. My grandma gave it to me!", "passt": "E", "g": True},
+                   {"name": "Marcus", "text": "I've played the drums since I was eight.", "passt": "D", "g": True},
+                   {"name": "Sofia", "text": "I care about nature and I'm free this weekend.", "passt": "C", "g": True},
+                   {"name": "Ben", "text": "I need a computer for my homework, but new ones are too expensive.", "passt": "B", "g": True},
+                   {"name": "Olivia", "text": "I'd like to earn some money at school, but I only have time at noon.", "passt": "G"},
+                   {"name": "Jayden", "text": "I just started learning a new language and I love Mexican food.", "passt": "F"}]},
+          ]}]},
      ]},
     {"nr": 2, "titel": "Vocabulary", "unter": {"G": "Wörter in ganzen Sätzen", "E": "Words in whole sentences"},
      "symbol": "🔤", "vokabeln": True,  # Units/Abschnitte entstehen in der App aus D.units; dazu feste Gruppen:

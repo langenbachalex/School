@@ -355,3 +355,16 @@ body.runner-aktiv .niveau-leiste { display: none; }
 .vok-bild.svg svg { width: 82%; height: 82%; display: block; }
 .vok-bild.mehr { font-size: 2.2rem; letter-spacing: -2px; }
 .vok-bild.gross.mehr { font-size: 3.4rem; }
+
+/* 🏁 Road to GLN: Reading „Notice board“ */
+.aushaenge { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 10px; }
+.aushang { position: relative; display: grid; gap: 4px; padding: 12px 14px 12px 44px; border: 2px solid var(--linie); border-radius: 10px; background: var(--bg); box-shadow: 2px 3px 0 var(--linie); }
+.aushang-buchstabe { position: absolute; left: 10px; top: 10px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: var(--blau); color: #fff; }
+.aushang-personen { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.aushang-person p { margin: 0 0 6px; }
+.aushang-person .wahl { gap: 6px; }
+.aushang-wahl { min-width: 44px; padding: 0 10px; }
+.aushang-wahl[aria-pressed="true"] { background: var(--blau); color: #fff; border-color: var(--blau); }
+.aushang-person.ok .aushang-wahl.soll, .aushang-person.falsch .aushang-wahl.soll { background: var(--gruen); border-color: var(--gruen); color: #fff; }
+.aushang-person.falsch .aushang-wahl[aria-pressed="true"]:not(.soll) { background: var(--hw); border-color: var(--hw); color: var(--hw-text); }
+.aushang-person.ok .aushang-loesung { color: var(--gruen); }

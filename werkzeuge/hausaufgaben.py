@@ -142,6 +142,17 @@ def lesen_gln(pfad, einheiten, gruppe_leer="", fenster=14):
         g = {"datum": datum, "von": von, "bis": datum, "ziel": ziel, "text": text, "ziele": []}
         for x in ziele:
             g["ziele"] += _ziel(x, einheiten, gruppe_leer, pfad, n)
+        # Etappenplan (12.11.2026): Spalte plan = „2026-11-15: 3; 2026-11-18: 5; 2026-11-24: test“ – bis zu diesem Tag sollen die Etappen bis Nr. n
+        # geschafft sein (test = Abschlusstest). Nur Anzeige (grün im Plan, gelb hinterher), keine Strafe.
+        g["plan"] = []
+        for stueck in [s.strip() for s in (z.get("plan") or "").split(";") if s.strip()]:
+            tag, _, wert = (x.strip() for x in stueck.partition(":"))
+            ist_test = wert.lower() == "test"
+            if not DATUM.match(tag) or not (ist_test or (wert.isdigit() and 1 <= int(wert) <= len(g["ziele"]))):
+                fehler(pfad, n, f"plan „{stueck}“: erwartet JJJJ-MM-TT: Etappennummer (1 bis {len(g['ziele'])}) oder test")
+            g["plan"].append({"bis": tag, "n": len(g["ziele"]) if ist_test else int(wert), **({"test": True} if ist_test else {})})
+        if g["plan"] != sorted(g["plan"], key=lambda m: (m["bis"], m["n"], "test" in m)):
+            fehler(pfad, n, "plan: Termine und Etappennummern müssen aufsteigend sein")
         ergebnis.append(g)
     ergebnis.sort(key=lambda g: g["datum"])
     return ergebnis

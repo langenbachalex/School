@@ -155,18 +155,11 @@ KATEGORIEN = [
                  beae("More words", [f"ba_{i:02d}" for i in range(9, 18)])]},
     {"nr": 3, "titel": "Language", "unter": {"G": "So funktioniert die Sprache", "E": "How English works"}, "symbol": "🧩",
      "gruppen": [
-         {"name": "-ing form & prepositions", "symbol": "➕ ing",
+         # Umbau 12.11.2026 (Mr. Alex): zwei Gruppen statt „-ing form & prepositions“; erst Sätze, dann üben, die Regel am Ende.
+         # Alter Fortschritt zieht in der App um (umbauLanguage in app.js). „-ing form“ bleibt die erste Gruppe (Ziel 3/1), „Prepositions“ ist 3/2.
+         {"name": "-ing form", "symbol": "➕ ing",
           "schritte": [
-              {"art": "erklaerung", "name": "Rules", "bloecke": [
-                  {"typ": "text", "G": "Die -ing-Form (gerund) ist ein Verb, das wie ein Nomen benutzt wird.",
-                   "E": "The -ing form (gerund) is a verb that we use like a noun."},
-                  {"typ": "regeln", "punkte": [
-                      [{"G": "Nach love, like, hate, enjoy, don't mind:", "E": "After love, like, hate, enjoy, don't mind:"}, "la_01"],
-                      [{"G": "Am Satzanfang (als Subjekt):", "E": "At the start of a sentence (as the subject):"}, "la_04"],
-                      [{"G": "Nach einer Präposition kommt immer -ing:", "E": "After a preposition, always use -ing:"}, "la_06"],
-                      [{"G": "Auch nach to in look forward to:", "E": "Also after to in look forward to:"}, "la_09"]]},
-                  {"typ": "merksatz", "G": "Präposition + Verb? Dann immer -ing!", "E": "Preposition + verb? Always -ing!"}]},
-              {"art": "lr", "name": "Sentences", "saetze": [f"la_{i:02d}" for i in range(1, 15)]},
+              {"art": "lr", "name": "Sentences", "saetze": ["la_01", "la_02", "la_03", "la_04", "la_05", "la_12"]},
               {"art": "verbform", "name": "-ing or not?", "ansage": {
                   "G": "Which form is right? – Welche Form passt? Tipp sie an!", "E": "Which form is right? Tap it!"},
                "aufgaben": [
@@ -180,6 +173,37 @@ KATEGORIEN = [
                   {"satz": "la_09", "luecke": "seeing", "richtig": "seeing", "falsch": ["see", "saw"]},
               ], "hilfe": {"G": "Nach enjoy, don't mind, hate, am Satzanfang und nach einer Präposition kommt die -ing-Form.",
                            "E": "After enjoy, don't mind, hate, at the start of a sentence and after a preposition we use the -ing form."}},
+              {"art": "eigener", "name": "Your sentence", "anzahl": 4,
+               "ausdruecke": [  # vorn: die -ing-Form steht am Satzanfang; falsch: zweiter Ablenker (to + Grundform wäre nach like und am Satzanfang richtig, darum dort to + -ing)
+                   {"en": "I like", "de": "Ich mag es, …", "falsch": "to_ing"},
+                   {"en": "I enjoy", "de": "Ich … gern", "falsch": "to"},
+                   {"en": "I don't mind", "de": "Es macht mir nichts aus, …", "falsch": "to"},
+                   {"en": "I'm good at", "de": "Ich kann gut …", "falsch": "to"},
+                   {"en": "is fun", "de": "… macht Spaß", "vorn": True, "falsch": "to_ing"},
+                   {"en": "is easy", "de": "… ist leicht", "vorn": True, "falsch": "to_ing"}],
+               "taetigkeiten": [  # [Symbol, Grundform, -ing-Form (fest, nicht berechnet), Deutsch]
+                   ["🎸", "play the guitar", "playing the guitar", "Gitarre spielen"],
+                   ["💃", "dance", "dancing", "tanzen"],
+                   ["🏊", "swim", "swimming", "schwimmen"],
+                   ["🏃", "run", "running", "laufen"],
+                   ["🎨", "draw pictures", "drawing pictures", "Bilder zeichnen"],
+                   ["🍪", "bake cookies", "baking cookies", "Kekse backen"],
+                   ["🎭", "act in the school play", "acting in the school play", "im Schultheater spielen"],
+                   ["✏️", "write stories", "writing stories", "Geschichten schreiben"]]},
+              {"art": "erklaerung", "name": "Rule", "bloecke": [
+                  {"typ": "text", "G": "Das kannst du jetzt schon. Hier steht es noch einmal kurz: Die -ing-Form (gerund) ist ein Verb, das wie ein Nomen benutzt wird.",
+                   "E": "You can already do this. Here it is again in short: the -ing form (gerund) is a verb that we use like a noun."},
+                  {"typ": "regeln", "punkte": [
+                      [{"G": "Nach love, like, hate, enjoy, don't mind:", "E": "After love, like, hate, enjoy, don't mind:"}, "la_01"],
+                      [{"G": "Am Satzanfang (als Subjekt):", "E": "At the start of a sentence (as the subject):"}, "la_04"],
+                      [{"G": "Nach einer Präposition (before, at, of …):", "E": "After a preposition (before, at, of …):"}, "la_12"]]},
+                  {"typ": "liste_de", "punkte": [{"G": "Achte auf die Schreibung:", "E": "Watch the spelling:"}]},
+                  {"typ": "liste", "punkte": ["dance → dancing · write → writing", "swim → swimming · run → running"]},
+                  {"typ": "merksatz", "G": "like, enjoy, don't mind + -ing. Und am Satzanfang: Dancing is fun.", "E": "like, enjoy, don't mind + -ing. And at the start: Dancing is fun."}]},
+          ]},
+         {"name": "Prepositions", "symbol": "🔗", "neu_ab": "2026-11-12",
+          "schritte": [
+              {"art": "lr", "name": "Sentences", "saetze": ["la_06", "la_07", "la_08", "la_09", "la_10", "la_11", "la_13", "la_14"] + [f"la_{i}" for i in range(15, 23)]},
               {"art": "verbform", "name": "Which preposition?", "ansage": {
                   "G": "Which preposition is right? – Welche Präposition passt?", "E": "Which preposition is right?"},
                "aufgaben": [
@@ -190,8 +214,52 @@ KATEGORIEN = [
                   {"satz": "la_11", "luecke": "of", "richtig": "of", "falsch": ["for", "in"]},
                   {"satz": "la_13", "luecke": "of", "richtig": "of", "falsch": ["at", "with"]},
                   {"satz": "la_14", "luecke": "for", "richtig": "for", "falsch": ["of", "with"]},
-              ], "hilfe": {"G": "Lerne die festen Paare: good at, interested in, afraid of, think about, instead of, tired of, thanks for.",
-                           "E": "Learn the pairs: good at, interested in, afraid of, think about, instead of, tired of, thanks for."}},
+                  {"satz": "la_15", "luecke": "about", "richtig": "about", "falsch": ["of", "at"]},
+                  {"satz": "la_16", "luecke": "about", "richtig": "about", "falsch": ["for", "in"]},
+                  {"satz": "la_17", "luecke": "about", "richtig": "about", "falsch": ["at", "of"]},
+                  {"satz": "la_18", "luecke": "at", "richtig": "at", "falsch": ["in", "about"]},
+                  {"satz": "la_19", "luecke": "to", "richtig": "to", "falsch": ["at", "for"]},
+                  {"satz": "la_20", "luecke": "in", "richtig": "in", "falsch": ["at", "of"]},
+                  {"satz": "la_21", "luecke": "of", "richtig": "of", "falsch": ["for", "about"]},
+                  {"satz": "la_22", "luecke": "of", "richtig": "of", "falsch": ["about", "in"]},
+              ], "hilfe": {"G": "Lerne die festen Paare: good at, bad at · interested in, take part in · nervous about, excited about, worry about, think about · afraid of, tired of, dream of, a way of, instead of · thanks for · be used to.",
+                           "E": "Learn the pairs: good at, bad at · interested in, take part in · nervous about, excited about, worry about, think about · afraid of, tired of, dream of, a way of, instead of · thanks for · be used to."}},
+              {"art": "paare", "name": "Pairs", "anzahl": 6, "knoepfe": ["at", "in", "about", "of", "to", "for", "on"],
+               "paare": [  # Ausdruck, Präposition, Beispielsatz (ganzer Satz erscheint und wird gesprochen)
+                   {"wort": "good", "prep": "at", "satz": "la_06"},
+                   {"wort": "bad", "prep": "at", "satz": "la_18"},
+                   {"wort": "interested", "prep": "in", "satz": "la_07"},
+                   {"wort": "take part", "prep": "in", "satz": "la_20"},
+                   {"wort": "afraid", "prep": "of", "satz": "la_08"},
+                   {"wort": "tired", "prep": "of", "satz": "la_13"},
+                   {"wort": "dream", "prep": "of", "satz": "la_22"},
+                   {"wort": "nervous", "prep": "about", "satz": "la_15"},
+                   {"wort": "excited", "prep": "about", "satz": "la_16"},
+                   {"wort": "look forward", "prep": "to", "satz": "la_09"},
+                   {"wort": "be used", "prep": "to", "satz": "la_19"},
+                   {"wort": "thanks", "prep": "for", "satz": "la_14"}]},
+              {"art": "lueckentext", "name": "Gap text", "kasten": ["about", "at", "for", "in", "of", "to"],
+               "texte": [  # eigene Texte; {…} = Lücke. Zwei Texte, die sich abwechseln (stand.var)
+                   {"titel": "Emma's message", "text": "Hi Grandma! My first week at Lincoln High is over. On Monday I was really nervous {about} meeting new people, but everyone is friendly. "
+                    "I'm already good {at} finding my classrooms. I'm interested {in} joining the art club, and I dream {of} playing on the soccer team. "
+                    "I'm still not used {to} getting up at six! Thanks {for} sending me the backpack. I'm looking forward {to} seeing you at Thanksgiving. Love, Emma"},
+                   {"titel": "Leo's message", "text": "Hey Ben! How's your new school? Mine is huge. I was afraid {of} getting lost, so a girl from my class showed me around. "
+                    "On Friday we're going to take part {in} decorating the gym. I'm excited {about} going to my first homecoming dance. "
+                    "I'm bad {at} dancing, but don't worry {about} me! Joining the band is a great way {of} making friends. "
+                    "Thanks {for} listening – I'm looking forward {to} hearing from you! Leo"}]},
+              {"art": "erklaerung", "name": "Rule", "bloecke": [
+                  {"typ": "text", "G": "Das kannst du jetzt schon. Hier ist die Übersicht: Viele Ausdrücke haben eine feste Präposition. Nach der Präposition steht das Verb in der -ing-Form.",
+                   "E": "You can already do this. Here is the overview: many phrases have a fixed preposition. After the preposition, the verb is in the -ing form."},
+                  {"typ": "regeln", "punkte": [
+                      [{"G": "at – good at, bad at:", "E": "at – good at, bad at:"}, "la_06"],
+                      [{"G": "in – interested in, take part in:", "E": "in – interested in, take part in:"}, "la_07"],
+                      [{"G": "about – nervous about, excited about, worry about, think about:", "E": "about – nervous about, excited about, worry about, think about:"}, "la_15"],
+                      [{"G": "of – afraid of, tired of, dream of, a way of, instead of:", "E": "of – afraid of, tired of, dream of, a way of, instead of:"}, "la_08"],
+                      [{"G": "for – thanks for:", "E": "for – thanks for:"}, "la_14"],
+                      [{"G": "to – look forward to. Achtung, Falle: Hier ist to eine Präposition, also -ing!", "E": "to – look forward to. Watch out: here to is a preposition, so use -ing!"}, "la_09"],
+                      [{"G": "to – be used to (etwas gewohnt sein), auch mit -ing:", "E": "to – be used to, also with -ing:"}, "la_19"]]},
+                  {"typ": "merksatz", "G": "Präposition + Verb? Dann immer -ing! Auch nach to in look forward to und be used to.",
+                   "E": "Preposition + verb? Always -ing! Also after to in look forward to and be used to."}]},
           ]},
      ]},
     {"nr": 4, "titel": "Listening", "unter": {"G": "Hörverstehen", "E": "Listening comprehension"}, "symbol": "🎧",
@@ -424,8 +492,21 @@ def main():
             for vid in g.get("vokabeln", []):
                 assert any(v["id"] == vid for v in vokabeln), vid
             for s in g.get("schritte", []):
-                for sid in s.get("saetze", []) + s.get("text", []) + s.get("paare", []) + [x[0] for x in s.get("zeilen", [])] + [a["satz"] for a in s.get("aufgaben", [])]:
+                paar_ids = [p["satz"] if isinstance(p, dict) else p for p in s.get("paare", [])]
+                for sid in s.get("saetze", []) + s.get("text", []) + paar_ids + [x[0] for x in s.get("zeilen", [])] + [a["satz"] for a in s.get("aufgaben", [])]:
                     assert sid in saetze, sid
+                for a in s.get("aufgaben", []) if s["art"] == "verbform" else []:  # Lücke muss als ganzes Wort im Satz stehen (lueckenSatz in app.js sucht ganze Wörter)
+                    w = a.get("luecke") or saetze[a["satz"]]["luecke"]
+                    m = re.search(r"(?<![A-Za-z'])" + re.escape(w) + r"(?![A-Za-z'])", saetze[a["satz"]]["en"])
+                    assert m, (a["satz"], w)
+                if s["art"] == "paare":
+                    for p in s["paare"]:
+                        assert p["prep"] in s["knoepfe"] and re.search(r"\b" + re.escape(p["wort"].split()[-1]) + r"\w* " + p["prep"] + r"\b", saetze[p["satz"]]["en"], re.I), p
+                if s["art"] == "lueckentext":
+                    for x in s["texte"]:
+                        luecken = re.findall(r"\{(\w+)\}", x["text"])
+                        assert 7 <= len(luecken) <= 8 and all(l in s["kasten"] for l in luecken), x["titel"]
+                        assert 60 <= len(x["text"].split()) <= 85, (x["titel"], len(x["text"].split()))
     # 📝 Hausaufgabe (inhalte/klasse9/hausaufgabe.tsv, Schema in inhalte/klasse9/LIESMICH.md): Ziele gegen die Teile prüfen, wie die App sie zählt
     def vok_teile(ids):  # wie vokSchritte() in der App
         namen = ["Words"] + [f"Sentences · Step {i}" for i in (1, 2, 3)]

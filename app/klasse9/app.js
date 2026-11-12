@@ -131,6 +131,34 @@
   }
   umbau();
 
+  // Umbau 12.11.2026 (Mr. Alex): Language „-ing form & prepositions“ ist jetzt zwei Gruppen („-ing form“, „Prepositions“), die Regel steht am Ende.
+  // Erledigte Teile der alten Gruppe ziehen einmalig um (stand.teile und alle Listen in stand.hw: Hausaufgaben, Road to GLN), vor dem Siegeln.
+  // Alt: 0 Rules · 1–3 Sentences · 4 -ing or not? · 5 Which preposition?   Neu A: 0–2 Sentences · 3 -ing or not? · 4 Your sentence · 5 Rule
+  // Neu B: 0–2 Sentences · 3 Which preposition? · 4 Pairs · 5 Gap text · 6 Rule. Die neuen Übungen bleiben offen. Idempotent über stand.umbau (2).
+  function umbauLanguage() {
+    if (stand.umbau >= 2) return;
+    const ALT = "3|-ing form & prepositions|", A = "3|-ing form|", B = "3|Prepositions|";
+    const ZIEL = { 0: [A + 5, B + 6], 1: [A + 0, B + 0], 2: [A + 1, B + 1], 3: [A + 2, B + 2], 4: [A + 3], 5: [B + 3] };
+    const teile = stand.teile || {};
+    for (const alt of Object.keys(teile)) {
+      if (!alt.startsWith(ALT)) continue;
+      (ZIEL[alt.slice(ALT.length)] || []).forEach((z) => { if (!teile[z]) teile[z] = teile[alt] && typeof teile[alt] === "object" ? Object.assign({}, teile[alt]) : teile[alt]; });
+      delete teile[alt];
+    }
+    for (const [id, liste] of Object.entries(stand.hw || {})) {
+      if (!Array.isArray(liste) || !liste.some((x) => typeof x === "string" && x.startsWith(ALT))) continue;
+      stand.hw[id] = [...new Set(liste.flatMap((x) => (typeof x === "string" && x.startsWith(ALT) ? ZIEL[x.slice(ALT.length)] || [] : [x])))];
+    }
+    const gr = stand.gruppen && stand.gruppen[3];
+    if (gr && gr.includes("-ing form & prepositions")) { // Thema und Kategorie haben jetzt neue, offene Übungen: die Haken der einzelnen Teile bleiben, Punkte auch
+      stand.gruppen[3] = gr.filter((g) => g !== "-ing form & prepositions");
+      stand.erledigt = stand.erledigt.filter((nr) => nr !== 3);
+    }
+    stand.umbau = 2;
+    speichern();
+  }
+  umbauLanguage();
+
   // Speicher-Wächter: Warnt, wenn der Fortschritt auf diesem Gerät nicht gespeichert werden kann (privater Modus, gesperrter Speicher),
   // und bittet den Browser, die Daten dauerhaft zu behalten (gegen automatisches Aufräumen).
   function speicherPruefen() {
@@ -950,7 +978,8 @@
     ({ lr: zeigeSatz, erklaerung: zeigeErklaerung, verbform: zeigeVerbform, auswahl: zeigeAuswahl, bilder: zeigeBilder,
        vok_lernen: zeigeVokabel, vok_abfrage: zeigeAbfrage, vok_def: zeigeDefinition, vok_bild: zeigeBildWort,
        beae_quiz: zeigeBeaeQuiz, hoeren: zeigeHoeren, dialog: zeigeDialog,
-       mustertext: zeigeMustertext, schreiben: zeigeSchreiben, aushang: zeigeAushang })[teil.art](teil);
+       mustertext: zeigeMustertext, schreiben: zeigeSchreiben, aushang: zeigeAushang,
+       eigener: zeigeEigener, paare: zeigePaare, lueckentext: zeigeLueckentext })[teil.art](teil);
     navErgaenzen();
   }
   function naechstes() {
@@ -1076,10 +1105,17 @@
     if (art === "hilfe") { fehlerSerie++; comboBruch(); text = `${ruf("fehler")} ${HILFE()} ${text}`; }
     box.hidden = false; box.className = "rueckmeldung " + art; box.textContent = text;
   }
+  // Stelle der Lücke im Satz: zuerst als ganzes Wort (sonst träfe „in“ das „in“ von „interested“, 12.11.), sonst die erste Fundstelle
+  function wortStelle(en, w) {
+    for (let i = en.indexOf(w); i >= 0; i = en.indexOf(w, i + 1)) {
+      if (!/[A-Za-z']/.test(en[i - 1] || " ") && !/[A-Za-z']/.test(en[i + w.length] || " ")) return i;
+    }
+    return en.indexOf(w);
+  }
   // Satz mit Lücke: art "voll" | "luecke" | "buchstabe" (erster Buchstabe jedes Lückenworts)
   function lueckenSatz(s, art, luecke) {
     const w = luecke || s.luecke;
-    const i = w ? s.en.indexOf(w) : -1;
+    const i = w ? wortStelle(s.en, w) : -1;
     if (i < 0) return [s.en];
     const mitte = art === "voll" ? el("strong", { class: "ziel" }, w)
       : el("span", { class: "luecke" + (art === "buchstabe" ? " mit-buchstaben" : ""), "aria-label": T("Lücke", "gap") },
@@ -1740,6 +1776,194 @@
         el("div", { class: "aushaenge" }, zettel)),
       el("section", { class: "satzkarte" }, el("ol", { class: "aushang-personen" }, zeilen.map((z) => z.zeile))),
       el("section", { class: "satzkarte" }, sperre_.uhr, el("div", { class: "knopfreihe" }, pruef, weiter), ergebnis));
+  }
+
+  /* ---------- Language: „Your sentence“ (12.11.2026) ----------
+     Zwei Kästen: Ausdruck (I like / I enjoy / … is fun) und Tätigkeit (Grundform mit Symbol). Die Schülerin baut teil.anzahl eigene Sätze.
+     G-Kurs: Ausdruck und Tätigkeit antippen, dann aus drei Fassungen die richtige wählen (-ing-Form; Ablenker Grundform und „to“).
+     E-Kurs: Satz selbst tippen – geprüft wird tolerant (1 Tippfehler je Wort), dass Ausdruck und -ing-Form vorkommen; nach 3 Fehlversuchen der Mustersatz.
+     Die -ing-Formen stehen fest in den Daten (dancing, swimming, running). Jede Tätigkeit nur einmal. */
+  function zeigeEigener(teil) {
+    const k = kategorie(lage.nr), ziel = teil.anzahl, fertig = [];
+    let aus = null, tat = null, versuche = 0;
+    const gross = (x) => x[0].toUpperCase() + x.slice(1);
+    const muster = (a, t) => (a.vorn ? `${gross(t[2])} ${a.en}.` : `${a.en} ${t[2]}.`);
+    const falsche = (a, t) => { const zwei = "to " + (a.falsch === "to_ing" ? t[2] : t[1]); return a.vorn ? [`${gross(t[1])} ${a.en}.`, `${gross(zwei)} ${a.en}.`] : [`${a.en} ${t[1]}.`, `${a.en} ${zwei}.`]; };
+    const regel = (a) => (a.vorn ? T("Am Satzanfang steht die -ing-Form.", "At the start of the sentence we use the -ing form.")
+      : T(`Nach „${a.en}“ kommt die -ing-Form.`, `After “${a.en}” we use the -ing form.`));
+    const box = rueckmeldung(), werk = el("div", { class: "eigen-werk" }), liste = el("ol", { class: "eigen-saetze", lang: "en" });
+    const weiter = weiterKnopf();
+    const mitDe = (en, de) => [el("span", { lang: "en" }, en), !E() && el("small", { lang: "de" }, de)];
+    const ausKnoepfe = teil.ausdruecke.map((a) => el("button", { class: "knopf wahl-knopf eigen-knopf", "aria-pressed": "false",
+      onclick: () => { if (fertig.length >= ziel) return; aus = a; versuche = 0; zeichne(); } }, mitDe(a.vorn ? "… " + a.en : a.en + " …", a.de)));
+    const tatKnoepfe = teil.taetigkeiten.map((t) => el("button", { class: "knopf wahl-knopf eigen-knopf", "aria-pressed": "false",
+      onclick: () => { if (fertig.length >= ziel) return; tat = t; versuche = 0; zeichne(); } }, mitDe(`${t[0]} ${t[1]}`, t[3])));
+    function geschafft(satz, text, art) {
+      fertig.push(satz); liste.append(el("li", {}, satz));
+      tatKnoepfe[teil.taetigkeiten.indexOf(tat)].disabled = true;
+      aus = tat = null; versuche = 0;
+      melde(box, art, text);
+      spiele([{ text: satz, stimme: "m" }]);
+      zeichne();
+      if (fertig.length >= ziel) { [...ausKnoepfe, ...tatKnoepfe].forEach((x) => { x.disabled = true; }); lage.weiter = () => { if (sperre_.bereit()) naechstes(); }; }
+      sperre_.bereit();
+    }
+    // E-Kurs: "" = richtig, "fast" = richtig mit Tippfehler, sonst Hinweis
+    function pruefeSatz(eingabe, a, t) {
+      const ein = normT(eingabe).split(" ").filter(Boolean);
+      const folge = (text) => { const ws = normT(text).split(" ");
+        for (let i = 0; i + ws.length <= ein.length; i++) if (ws.every((w, j) => pruefeTipp(ein[i + j], w) < 2)) return { i, genau: ws.every((w, j) => ein[i + j] === w) };
+        return null; };
+      const fIng = folge(t[2]), fAus = folge(a.en);
+      if (!fIng) return regel(a) + " " + T(`Die -ing-Form von „${t[1].split(" ")[0]}“ fehlt noch.`, `The -ing form of “${t[1].split(" ")[0]}” is missing.`);
+      if (!fAus) return T(`Benutze „${a.en}“ in deinem Satz.`, `Use “${a.en}” in your sentence.`);
+      if (ein[fIng.i - 1] === "to") return T("Hier kein „to“ vor der -ing-Form.", "No “to” before the -ing form here.");
+      if (a.vorn ? fIng.i > fAus.i : fAus.i > fIng.i) return a.vorn ? regel(a) : T(`Fang mit „${a.en}“ an.`, `Start with “${a.en}”.`);
+      return fIng.genau && fAus.genau ? "" : "fast";
+    }
+    function zeichne() {
+      ausKnoepfe.forEach((x, i) => x.setAttribute("aria-pressed", String(teil.ausdruecke[i] === aus)));
+      tatKnoepfe.forEach((x, i) => x.setAttribute("aria-pressed", String(teil.taetigkeiten[i] === tat)));
+      if (fertig.length >= ziel) return werk.replaceChildren(el("p", { class: "klein" }, T("Lies deine Sätze noch einmal laut.", "Read your sentences aloud once more.")));
+      if (!aus || !tat) return werk.replaceChildren(el("p", { class: "klein" }, !aus && !tat ? T("Tipp einen Ausdruck und eine Tätigkeit an.", "Tap a phrase and an activity.")
+        : !aus ? T("Jetzt noch einen Ausdruck aus Kasten 1.", "Now a phrase from box 1.") : T("Jetzt noch eine Tätigkeit aus Kasten 2.", "Now an activity from box 2.")));
+      const a = aus, t = tat, richtig = muster(a, t);
+      if (!E()) {
+        werk.replaceChildren(el("p", { class: "klein" }, "Welcher Satz ist richtig?"),
+          el("div", { class: "wahl senkrecht", role: "group" }, mischen([richtig, ...falsche(a, t)]).map((satz) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
+            if (satz === richtig) return geschafft(richtig, lob(), "gut");
+            e.currentTarget.disabled = true; lage.hilfe = true;
+            melde(box, "hilfe", `${regel(a)} ${NOCHMAL()}`);
+          } }, satz))));
+      } else {
+        const feld = tippFeld((wert, { feld }) => {
+          const r = pruefeSatz(wert, a, t);
+          if (!r) return geschafft(wert.trim().replace(/\s+/g, " "), lob(), "gut");
+          if (r === "fast") return geschafft(richtig, `Almost! Check the spelling: ${richtig}`, "gut");
+          lage.hilfe = true; versuche++;
+          if (versuche >= 3) return geschafft(richtig, `Here is the sentence: ${richtig}`, "hilfe");
+          melde(box, "hilfe", `${r} ${NOCHMAL()}`); feld.focus();
+        });
+        werk.replaceChildren(el("p", { class: "eigen-auftrag", lang: "en" }, el("strong", {}, a.vorn ? "… " + a.en : a.en + " …"), " + ", el("strong", {}, `${t[0]} ${t[1]}`)),
+          el("p", { class: "klein" }, "Write your sentence. Be careful with the verb form!"), feld);
+      }
+    }
+    const sperre_ = arbeitsSperre(weiter, { start: lage.start, sek: ziel * (E() ? 10 : 6) * eile(),
+      zeitText: (z) => T(`⏱️ Lass dir Zeit für deine Sätze. „Weiter“ geht in ${z}.`, `⏱️ Take your time. “Next” opens in ${z}.`),
+      offenZuerst: true, offen: () => { const n = ziel - fertig.length; return n > 0 ? T(`✏️ Bau ${ziel} Sätze (noch ${n}).`, `✏️ Make ${ziel} sentences (${n} to go).`) : ""; } });
+    zeichne();
+    zeige(kopf(k),
+      el("section", { class: "satzkarte" },
+        ansage(`Make ${ziel} sentences about you. Choose a phrase and an activity.`, `Bau ${ziel} eigene Sätze: Wähl einen Ausdruck und eine Tätigkeit.`),
+        el("div", { class: "eigen-kasten" }, el("h3", {}, T("Kasten 1: Ausdruck", "Box 1: phrase")), el("div", { class: "wahl", role: "group" }, ausKnoepfe)),
+        el("div", { class: "eigen-kasten" }, el("h3", {}, T("Kasten 2: Tätigkeit", "Box 2: activity")), el("div", { class: "wahl", role: "group" }, tatKnoepfe))),
+      el("section", { class: "satzkarte" }, el("h3", {}, T("Dein Satz", "Your sentence")), werk, box, liste,
+        sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
+  }
+
+  /* ---------- Language: „Pairs“ (12.11.2026) ----------
+     Ausdruck ↔ Präposition: teil.anzahl zufällige Paare je Durchgang. Ausdruck antippen (der erste offene ist schon gewählt), dann die Präposition.
+     Richtig → Paar grün, der ganze Beispielsatz erscheint und wird gesprochen. Falsch → Hinweis, kein „ohne Hilfe“-Bonus. */
+  function zeigePaare(teil) {
+    const k = kategorie(lage.nr);
+    if (!lage.reihe) lage.reihe = mischen(teil.paare).slice(0, teil.anzahl);
+    const paare = lage.reihe, geloest = paare.map(() => false);
+    let aktiv = 0;
+    const box = rueckmeldung(), weiter = weiterKnopf();
+    const zeilen = paare.map((x, i) => {
+      const kn = el("button", { class: "knopf wahl-knopf paar-wort", lang: "en", "aria-pressed": "false", onclick: () => { if (!geloest[i]) { aktiv = i; markiere(); } } }, x.wort + " …");
+      return { kn, zeile: el("li", { class: "paar" }, kn) };
+    });
+    const markiere = () => zeilen.forEach(({ kn }, i) => kn.setAttribute("aria-pressed", String(i === aktiv && !geloest[i])));
+    const preps = teil.knoepfe.map((w) => el("button", { class: "knopf wahl-knopf paar-prep", lang: "en", onclick: () => {
+      if (aktiv < 0 || geloest[aktiv]) return;
+      const x = paare[aktiv], s = D.saetze[x.satz], { kn, zeile } = zeilen[aktiv];
+      if (w !== x.prep) { lage.hilfe = true; return melde(box, "hilfe", `${T(`„${x.wort} ${w}“ passt nicht.`, `“${x.wort} ${w}” is not right.`)} ${NOCHMAL()}`); }
+      geloest[aktiv] = true;
+      kn.textContent = `✓ ${x.wort} ${x.prep}`; kn.classList.add("richtig"); zeile.classList.add("ok");
+      zeile.append(el("p", { class: "paar-satz", lang: "en" }, lueckenSatz(s, "voll", x.prep)), !E() && el("p", { class: "klein", lang: "de" }, s.de));
+      spiele([tonSatz(s)]);
+      aktiv = geloest.indexOf(false); markiere();
+      if (aktiv < 0) { melde(box, "gut", `${lob()} ${T("Alle Paare gefunden!", "All pairs found!")}`); preps.forEach((p) => { p.disabled = true; }); lage.weiter = () => { if (sperre_.bereit()) naechstes(); }; }
+      else melde(box, "gut", lob());
+      sperre_.bereit();
+    } }, w));
+    const sperre_ = arbeitsSperre(weiter, { start: lage.start, sek: paare.length * QUIZ_MIN * eile(),
+      zeitText: (z) => T(`⏱️ „Weiter“ geht in ${z}.`, `⏱️ “Next” opens in ${z}.`),
+      offenZuerst: true, offen: () => { const n = geloest.filter((g) => !g).length; return n ? T(`🔗 Finde alle Paare (noch ${n}).`, `🔗 Find all the pairs (${n} to go).`) : ""; } });
+    markiere();
+    zeige(kopf(k),
+      el("section", { class: "satzkarte" },
+        ansage("Which preposition goes with the phrase? Tap the phrase, then the preposition.", "Welche Präposition gehört dazu? Tipp den Ausdruck an, dann die Präposition."),
+        el("ol", { class: "paare" }, zeilen.map((z) => z.zeile)),
+        el("div", { class: "paar-preps", role: "group", "aria-label": T("Präpositionen", "Prepositions") }, preps),
+        box, sperre_.uhr, el("div", { class: "knopfreihe" }, weiter)));
+  }
+
+  /* ---------- Language: „Gap text“ (12.11.2026) ----------
+     Kurze Nachricht mit Lücken für Präpositionen ({…} im Text). G-Kurs: Wortkasten über dem Text, Lücke antippen und Wort wählen (die nächste freie Lücke ist schon gewählt);
+     E-Kurs: jede Lücke tippen (Hilfe: Wortkasten zuschalten). „Check“ erst, wenn alles gefüllt ist und nach der Lesezeit; danach richtig/falsch je Lücke mit Lösung.
+     Zwei Texte, die sich abwechseln (stand.var[Teilschlüssel], wie beim Notice board). */
+  function zeigeLueckentext(teil) {
+    const k = kategorie(lage.nr), schluessel = teilSchluessel(lage.teil), nr = (stand.var && stand.var[schluessel]) || 0;
+    const v = teil.texte[nr % teil.texte.length], mitKasten = !E() || lage.ohneTippen;
+    let geprueft = false, aktiv = 0;
+    const ergebnis = rueckmeldung(), weiter = weiterKnopf(); weiter.hidden = true;
+    const luecken = [];
+    const absatz = el("p", { class: "lt-text", lang: "en" }, v.text.split(/\{(\w+)\}/).map((stueck, i) => {
+      if (i % 2 === 0) return stueck;
+      const nrL = luecken.length, l = { soll: stueck, wert: "" };
+      l.el = mitKasten
+        ? el("button", { class: "lt-luecke", "aria-label": T(`Lücke ${nrL + 1}`, `Gap ${nrL + 1}`), onclick: () => { if (!geprueft) { aktiv = nrL; markiere(); } } }, " ")
+        : el("input", { type: "text", class: "lt-luecke lt-eingabe", lang: "en", size: 5, maxlength: 12, autocomplete: "off", autocapitalize: "off", autocorrect: "off", spellcheck: "false",
+          "aria-label": `Gap ${nrL + 1}`, oninput: (e) => { l.wert = e.target.value.trim(); sperre_.bereit(); },
+          onkeydown: (e) => { if (e.key === "Enter") { e.stopPropagation(); e.preventDefault(); const n = luecken[nrL + 1]; if (n) n.el.focus(); else pruefen(); } } });
+      luecken.push(l);
+      return el("span", { class: "lt-platz" }, l.el);
+    }));
+    const markiere = () => luecken.forEach((l, i) => l.el.classList.toggle("aktiv", mitKasten && !geprueft && i === aktiv));
+    const kasten = mitKasten && el("div", { class: "lt-kasten wahl", role: "group", "aria-label": T("Wortkasten", "Word box") }, teil.kasten.map((w) =>
+      el("button", { class: "knopf wahl-knopf", lang: "en", onclick: () => {
+        if (geprueft || aktiv < 0) return;
+        const l = luecken[aktiv]; l.wert = w; l.el.textContent = w; l.el.classList.add("voll");
+        const frei = luecken.findIndex((x, i) => i > aktiv && !x.wert), frei2 = frei >= 0 ? frei : luecken.findIndex((x) => !x.wert);
+        if (frei2 >= 0) aktiv = frei2;
+        markiere(); sperre_.bereit();
+      } }, w)));
+    function pruefen() {
+      if (geprueft || !sperre_.bereit()) return;
+      sperre_.ende();
+      geprueft = true; pruef.hidden = true; weiter.hidden = false; lage.weiter = naechstes;
+      let richtig = 0;
+      luecken.forEach((l) => {
+        const ok = pruefeTipp(l.wert, l.soll) < 2;
+        if (ok) richtig++;
+        l.el.disabled = true; l.el.classList.add(ok ? "ok" : "falsch");
+        if (!mitKasten && ok) l.el.value = l.soll;
+        if (!ok) l.el.parentNode.append(el("strong", { class: "lt-loesung" }, " ✓ " + l.soll));
+      });
+      markiere();
+      if (kasten) kasten.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+      if (richtig < luecken.length) lage.hilfe = true; // „ohne Hilfe“ nur, wenn alles richtig ist
+      (stand.var = stand.var || {})[schluessel] = nr + 1; // nächstes Mal der andere Text
+      ergebnis.hidden = false;
+      ergebnis.className = "rueckmeldung " + (richtig === luecken.length ? "gut" : "hilfe");
+      ergebnis.textContent = richtig === luecken.length ? `${lob()} ${T("Alles richtig!", "All correct!")}`
+        : T(`${richtig} von ${luecken.length} richtig. Die Lösung steht grün neben den roten Lücken – lies die Sätze noch einmal.`, `${richtig} of ${luecken.length} correct. The answers are in green next to the red gaps – read those sentences again.`);
+    }
+    const pruef = knopf(T("Lösung prüfen", "Check"), pruefen, "haupt");
+    const sperre_ = arbeitsSperre(pruef, { start: lage.start, sek: woerterIn([v.text]) / LESE_WPM * 60 * eile(),
+      zeitText: (z) => T(`📖 Lies erst die ganze Nachricht. „Lösung prüfen“ geht in ${z}.`, `📖 Read the whole message first. “Check” opens in ${z}.`),
+      offen: () => { const n = luecken.filter((l) => !l.wert).length; return n ? T(`✏️ Füll alle Lücken (noch ${n}).`, `✏️ Fill in all the gaps (${n} to go).`) : ""; } });
+    markiere();
+    zeige(kopf(k),
+      el("section", { class: "satzkarte" },
+        el("h2", { lang: "en" }, "💬 " + v.titel),
+        mitKasten ? ansage("Tap a gap, then choose the right preposition from the box. You need some words more than once.", "Tipp eine Lücke an und wähl die passende Präposition aus dem Kasten. Manche Wörter brauchst du mehrmals.")
+          : ansage("Type the right preposition in every gap."),
+        kasten, absatz,
+        !mitKasten && el("div", { class: "knopfreihe" }, einfacher("Easier: show a word box", () => zeigeTeil())),
+        sperre_.uhr, el("div", { class: "knopfreihe" }, pruef, weiter), ergebnis));
   }
 
   /* ---------- Vokabeln ---------- */
@@ -4219,6 +4443,7 @@
       if (teil.art === "lr") teil.saetze.forEach((id) => satzDazu(id, q));
       else if (teil.art === "verbform") teil.aufgaben.forEach((a) => { const s = D.saetze[a.satz]; if (s) satzDazu(a.satz, q, { luecke: a.luecke || s.luecke, richtig: a.richtig, falsch: a.falsch }); });
       else if (teil.art === "auswahl") teil.aufgaben.forEach((a) => { if (D.saetze[a.satz] && a.optionen && a.optionen.length >= 2) dazu("luecke", { typ: "luecke", form: "wahl", key: "s:" + a.satz, a, q }); });
+      else if (teil.art === "paare") teil.paare.forEach((x) => satzDazu(x.satz, q, { luecke: x.prep, richtig: x.prep, falsch: mischen(teil.knoepfe.filter((w) => w !== x.prep)).slice(0, 2) })); // Pairs: Präposition als Lücke; „Your sentence“ und „Gap text“ geben keine Testaufgaben
       else if (teil.art === "mustertext") teil.abschnitte.forEach((ab) => ab.saetze.forEach((id) => satzDazu(id, q)));
       else if (teil.art === "dialog") teil.zeilen.forEach((z) => satzDazu(z[0], q));
       else if (teil.art === "bilder") teil.bilder.forEach((b, i) => { if (!b.nur || b.nur === stand.niveau) dazu("lesen", { typ: "lesen", key: `b:${teil.titel}:${i}`, b, teil, q }); });
@@ -4252,7 +4477,7 @@
     }
     if (c.typ === "luecke" || (c.typ === "hoeren" && c.form === "luecke")) {
       const falsche = testAblenker(c.richtig, c.falsch, worte);
-      const i = c.s.en.indexOf(c.w), satz = [c.s.en.slice(0, i), c.s.en.slice(i + c.w.length)];
+      const i = wortStelle(c.s.en, c.w), satz = [c.s.en.slice(0, i), c.s.en.slice(i + c.w.length)];
       const basis = { satz, wort: c.w, optionen: wahl(c.richtig, falsche), richtig: c.richtig, loesung: c.s.en, ort, schluessel };
       if (c.typ === "luecke") return Object.assign(basis, { typ: "luecke", anweisung: ["Which word fits the gap?", "Welches Wort passt in die Lücke?"], frage: c.s.de || "" });
       return Object.assign(basis, { typ: "hoeren", form: "luecke", anweisung: ["Listen! Which word do you hear in the gap?", "Hör zu! Welches Wort hörst du in der Lücke?"],
@@ -4671,6 +4896,7 @@
     if (teil.art === "lr") a = satz(zufall(teil.saetze));
     else if (teil.art.startsWith("vok_") && vok && vok.length) { const v = zufall(vok); a = { typ: "Vokabel", frage: v.de, loesung: v.en, audio: tonWort(v) }; }
     else if (teil.art === "verbform" || teil.art === "auswahl") { const auf = zufall(teil.aufgaben); a = auf.satz ? satz(auf.satz) : null; }
+    else if (teil.art === "paare") a = satz(zufall(teil.paare).satz);
     else if (teil.art === "mustertext") a = satz(zufall(teil.abschnitte.flatMap((ab) => ab.saetze)));
     else if (teil.art === "dialog") a = satz(zufall(teil.zeilen)[0]);
     else if (teil.art === "beae_quiz") { const s = D.saetze[zufall(teil.paare)]; if (s && s.de) a = { typ: "Satz", frage: s.de, loesung: s.en, zusatz: s.be ? "BE: " + s.be.en : "", audio: tonSatz(s) }; }
@@ -4774,7 +5000,7 @@
   if (LOKAL) window.__staatEreignis = (id) => { ereignisse.push({ art: "staat", staat: SP.staaten.find((s) => s.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Freischalten eines Staats (Szene, dann Stempel)
   if (LOKAL) window.__ortEreignis = (id) => { ereignisse.push({ art: "karte", karte: SP.landmarks.find((l) => l.id === id) }); zeigeEreignisse(); }; // nur Test-Build: Anzeige einer neuen Landmark-Karte (Orts-Szene/Karte) auslösen
   if (LOKAL) window.__heldenFrei = (ids) => { (ids || SP.helden.map((h) => h.id)).forEach(heldGesehen); if (ansicht === sammlung) sammlung(); }; // nur Test-Build: Heldenkarten freischalten (alle oder Liste)
-  if (LOKAL) window.__gln = { naechstes, neu: () => zeigeTeil(), lage: () => lage, stand: () => stand, lehrer: glnStandLehrer, aufgaben: () => testLauf && testLauf.aufgaben.map((a) => a.typ), // nur Test-Build: Road to GLN
+  if (LOKAL) window.__gln = { naechstes, umbauLanguage: () => { stand.umbau = 1; umbauLanguage(); }, neu: () => zeigeTeil(), lage: () => lage, stand: () => stand, lehrer: glnStandLehrer, aufgaben: () => testLauf && testLauf.aufgaben.map((a) => a.typ), // nur Test-Build: Road to GLN
     bestehen: () => { testLauf.antworten = testLauf.aufgaben.map(() => ({ richtig: true, antwort: "" })); testEnde(false); } };
   if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
   if (LOKAL) window.__thema = (nr, gruppe) => { lage = { nr, gruppe, teil: 0, titel: gruppe, zurueckZu: startseite }; gruppeGeschafft(); }; // nur Test-Build: Thema abschließen (Mega-Lob)

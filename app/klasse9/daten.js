@@ -3642,6 +3642,62 @@ window.DATEN = {
    "stimme": "f",
    "audio": "audio/saetze/wn_11.mp3"
   },
+  "la_15": {
+   "en": "I'm nervous about meeting my new teachers.",
+   "de": "Ich bin nervös, weil ich meine neuen Lehrer kennenlerne.",
+   "luecke": "about meeting",
+   "stimme": "alex",
+   "audio": "audio/saetze/la_15.mp3"
+  },
+  "la_16": {
+   "en": "We're excited about going to the homecoming game.",
+   "de": "Wir freuen uns riesig darauf, zum Homecoming-Spiel zu gehen.",
+   "luecke": "about going",
+   "stimme": "alex",
+   "audio": "audio/saetze/la_16.mp3"
+  },
+  "la_17": {
+   "en": "Don't worry about making mistakes in class.",
+   "de": "Mach dir keine Sorgen darüber, im Unterricht Fehler zu machen.",
+   "luecke": "about making",
+   "stimme": "alex",
+   "audio": "audio/saetze/la_17.mp3"
+  },
+  "la_18": {
+   "en": "I'm bad at remembering my locker combination.",
+   "de": "Ich kann mir meine Schließfach-Kombination schlecht merken.",
+   "luecke": "at remembering",
+   "stimme": "alex",
+   "audio": "audio/saetze/la_18.mp3"
+  },
+  "la_19": {
+   "en": "Maya is used to taking the school bus.",
+   "de": "Maya ist es gewohnt, mit dem Schulbus zu fahren.",
+   "luecke": "to taking",
+   "stimme": "alex",
+   "audio": "audio/saetze/la_19.mp3"
+  },
+  "la_20": {
+   "en": "Do you want to take part in decorating the gym?",
+   "de": "Möchtest du dabei mitmachen, die Turnhalle zu schmücken?",
+   "luecke": "in decorating",
+   "stimme": "alex",
+   "audio": "audio/saetze/la_20.mp3"
+  },
+  "la_21": {
+   "en": "Joining a club is a great way of making friends.",
+   "de": "In eine AG zu gehen ist eine tolle Art, Freunde zu finden.",
+   "luecke": "of making",
+   "stimme": "alex",
+   "audio": "audio/saetze/la_21.mp3"
+  },
+  "la_22": {
+   "en": "Carlos dreams of playing on the football team.",
+   "de": "Carlos träumt davon, in der Footballmannschaft zu spielen.",
+   "luecke": "of playing",
+   "stimme": "alex",
+   "audio": "audio/saetze/la_22.mp3"
+  },
   "u1_019_s": {
    "en": "There's a great view from here.",
    "de": "Von hier hat man eine tolle Aussicht.",
@@ -7046,58 +7102,9 @@ window.DATEN = {
    "symbol": "🧩",
    "gruppen": [
     {
-     "name": "-ing form & prepositions",
+     "name": "-ing form",
      "symbol": "➕ ing",
      "schritte": [
-      {
-       "art": "erklaerung",
-       "name": "Rules",
-       "bloecke": [
-        {
-         "typ": "text",
-         "G": "Die -ing-Form (gerund) ist ein Verb, das wie ein Nomen benutzt wird.",
-         "E": "The -ing form (gerund) is a verb that we use like a noun."
-        },
-        {
-         "typ": "regeln",
-         "punkte": [
-          [
-           {
-            "G": "Nach love, like, hate, enjoy, don't mind:",
-            "E": "After love, like, hate, enjoy, don't mind:"
-           },
-           "la_01"
-          ],
-          [
-           {
-            "G": "Am Satzanfang (als Subjekt):",
-            "E": "At the start of a sentence (as the subject):"
-           },
-           "la_04"
-          ],
-          [
-           {
-            "G": "Nach einer Präposition kommt immer -ing:",
-            "E": "After a preposition, always use -ing:"
-           },
-           "la_06"
-          ],
-          [
-           {
-            "G": "Auch nach to in look forward to:",
-            "E": "Also after to in look forward to:"
-           },
-           "la_09"
-          ]
-         ]
-        },
-        {
-         "typ": "merksatz",
-         "G": "Präposition + Verb? Dann immer -ing!",
-         "E": "Preposition + verb? Always -ing!"
-        }
-       ]
-      },
       {
        "art": "lr",
        "name": "Sentences",
@@ -7107,15 +7114,7 @@ window.DATEN = {
         "la_03",
         "la_04",
         "la_05",
-        "la_06",
-        "la_07",
-        "la_08",
-        "la_09",
-        "la_10",
-        "la_11",
-        "la_12",
-        "la_13",
-        "la_14"
+        "la_12"
        ]
       },
       {
@@ -7200,6 +7199,182 @@ window.DATEN = {
        }
       },
       {
+       "art": "eigener",
+       "name": "Your sentence",
+       "anzahl": 4,
+       "ausdruecke": [
+        {
+         "en": "I like",
+         "de": "Ich mag es, …",
+         "falsch": "to_ing"
+        },
+        {
+         "en": "I enjoy",
+         "de": "Ich … gern",
+         "falsch": "to"
+        },
+        {
+         "en": "I don't mind",
+         "de": "Es macht mir nichts aus, …",
+         "falsch": "to"
+        },
+        {
+         "en": "I'm good at",
+         "de": "Ich kann gut …",
+         "falsch": "to"
+        },
+        {
+         "en": "is fun",
+         "de": "… macht Spaß",
+         "vorn": true,
+         "falsch": "to_ing"
+        },
+        {
+         "en": "is easy",
+         "de": "… ist leicht",
+         "vorn": true,
+         "falsch": "to_ing"
+        }
+       ],
+       "taetigkeiten": [
+        [
+         "🎸",
+         "play the guitar",
+         "playing the guitar",
+         "Gitarre spielen"
+        ],
+        [
+         "💃",
+         "dance",
+         "dancing",
+         "tanzen"
+        ],
+        [
+         "🏊",
+         "swim",
+         "swimming",
+         "schwimmen"
+        ],
+        [
+         "🏃",
+         "run",
+         "running",
+         "laufen"
+        ],
+        [
+         "🎨",
+         "draw pictures",
+         "drawing pictures",
+         "Bilder zeichnen"
+        ],
+        [
+         "🍪",
+         "bake cookies",
+         "baking cookies",
+         "Kekse backen"
+        ],
+        [
+         "🎭",
+         "act in the school play",
+         "acting in the school play",
+         "im Schultheater spielen"
+        ],
+        [
+         "✏️",
+         "write stories",
+         "writing stories",
+         "Geschichten schreiben"
+        ]
+       ]
+      },
+      {
+       "art": "erklaerung",
+       "name": "Rule",
+       "bloecke": [
+        {
+         "typ": "text",
+         "G": "Das kannst du jetzt schon. Hier steht es noch einmal kurz: Die -ing-Form (gerund) ist ein Verb, das wie ein Nomen benutzt wird.",
+         "E": "You can already do this. Here it is again in short: the -ing form (gerund) is a verb that we use like a noun."
+        },
+        {
+         "typ": "regeln",
+         "punkte": [
+          [
+           {
+            "G": "Nach love, like, hate, enjoy, don't mind:",
+            "E": "After love, like, hate, enjoy, don't mind:"
+           },
+           "la_01"
+          ],
+          [
+           {
+            "G": "Am Satzanfang (als Subjekt):",
+            "E": "At the start of a sentence (as the subject):"
+           },
+           "la_04"
+          ],
+          [
+           {
+            "G": "Nach einer Präposition (before, at, of …):",
+            "E": "After a preposition (before, at, of …):"
+           },
+           "la_12"
+          ]
+         ]
+        },
+        {
+         "typ": "liste_de",
+         "punkte": [
+          {
+           "G": "Achte auf die Schreibung:",
+           "E": "Watch the spelling:"
+          }
+         ]
+        },
+        {
+         "typ": "liste",
+         "punkte": [
+          "dance → dancing · write → writing",
+          "swim → swimming · run → running"
+         ]
+        },
+        {
+         "typ": "merksatz",
+         "G": "like, enjoy, don't mind + -ing. Und am Satzanfang: Dancing is fun.",
+         "E": "like, enjoy, don't mind + -ing. And at the start: Dancing is fun."
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Prepositions",
+     "symbol": "🔗",
+     "neu_ab": "2026-11-12",
+     "schritte": [
+      {
+       "art": "lr",
+       "name": "Sentences",
+       "saetze": [
+        "la_06",
+        "la_07",
+        "la_08",
+        "la_09",
+        "la_10",
+        "la_11",
+        "la_13",
+        "la_14",
+        "la_15",
+        "la_16",
+        "la_17",
+        "la_18",
+        "la_19",
+        "la_20",
+        "la_21",
+        "la_22"
+       ]
+      },
+      {
        "art": "verbform",
        "name": "Which preposition?",
        "ansage": {
@@ -7269,12 +7444,252 @@ window.DATEN = {
           "of",
           "with"
          ]
+        },
+        {
+         "satz": "la_15",
+         "luecke": "about",
+         "richtig": "about",
+         "falsch": [
+          "of",
+          "at"
+         ]
+        },
+        {
+         "satz": "la_16",
+         "luecke": "about",
+         "richtig": "about",
+         "falsch": [
+          "for",
+          "in"
+         ]
+        },
+        {
+         "satz": "la_17",
+         "luecke": "about",
+         "richtig": "about",
+         "falsch": [
+          "at",
+          "of"
+         ]
+        },
+        {
+         "satz": "la_18",
+         "luecke": "at",
+         "richtig": "at",
+         "falsch": [
+          "in",
+          "about"
+         ]
+        },
+        {
+         "satz": "la_19",
+         "luecke": "to",
+         "richtig": "to",
+         "falsch": [
+          "at",
+          "for"
+         ]
+        },
+        {
+         "satz": "la_20",
+         "luecke": "in",
+         "richtig": "in",
+         "falsch": [
+          "at",
+          "of"
+         ]
+        },
+        {
+         "satz": "la_21",
+         "luecke": "of",
+         "richtig": "of",
+         "falsch": [
+          "for",
+          "about"
+         ]
+        },
+        {
+         "satz": "la_22",
+         "luecke": "of",
+         "richtig": "of",
+         "falsch": [
+          "about",
+          "in"
+         ]
         }
        ],
        "hilfe": {
-        "G": "Lerne die festen Paare: good at, interested in, afraid of, think about, instead of, tired of, thanks for.",
-        "E": "Learn the pairs: good at, interested in, afraid of, think about, instead of, tired of, thanks for."
+        "G": "Lerne die festen Paare: good at, bad at · interested in, take part in · nervous about, excited about, worry about, think about · afraid of, tired of, dream of, a way of, instead of · thanks for · be used to.",
+        "E": "Learn the pairs: good at, bad at · interested in, take part in · nervous about, excited about, worry about, think about · afraid of, tired of, dream of, a way of, instead of · thanks for · be used to."
        }
+      },
+      {
+       "art": "paare",
+       "name": "Pairs",
+       "anzahl": 6,
+       "knoepfe": [
+        "at",
+        "in",
+        "about",
+        "of",
+        "to",
+        "for",
+        "on"
+       ],
+       "paare": [
+        {
+         "wort": "good",
+         "prep": "at",
+         "satz": "la_06"
+        },
+        {
+         "wort": "bad",
+         "prep": "at",
+         "satz": "la_18"
+        },
+        {
+         "wort": "interested",
+         "prep": "in",
+         "satz": "la_07"
+        },
+        {
+         "wort": "take part",
+         "prep": "in",
+         "satz": "la_20"
+        },
+        {
+         "wort": "afraid",
+         "prep": "of",
+         "satz": "la_08"
+        },
+        {
+         "wort": "tired",
+         "prep": "of",
+         "satz": "la_13"
+        },
+        {
+         "wort": "dream",
+         "prep": "of",
+         "satz": "la_22"
+        },
+        {
+         "wort": "nervous",
+         "prep": "about",
+         "satz": "la_15"
+        },
+        {
+         "wort": "excited",
+         "prep": "about",
+         "satz": "la_16"
+        },
+        {
+         "wort": "look forward",
+         "prep": "to",
+         "satz": "la_09"
+        },
+        {
+         "wort": "be used",
+         "prep": "to",
+         "satz": "la_19"
+        },
+        {
+         "wort": "thanks",
+         "prep": "for",
+         "satz": "la_14"
+        }
+       ]
+      },
+      {
+       "art": "lueckentext",
+       "name": "Gap text",
+       "kasten": [
+        "about",
+        "at",
+        "for",
+        "in",
+        "of",
+        "to"
+       ],
+       "texte": [
+        {
+         "titel": "Emma's message",
+         "text": "Hi Grandma! My first week at Lincoln High is over. On Monday I was really nervous {about} meeting new people, but everyone is friendly. I'm already good {at} finding my classrooms. I'm interested {in} joining the art club, and I dream {of} playing on the soccer team. I'm still not used {to} getting up at six! Thanks {for} sending me the backpack. I'm looking forward {to} seeing you at Thanksgiving. Love, Emma"
+        },
+        {
+         "titel": "Leo's message",
+         "text": "Hey Ben! How's your new school? Mine is huge. I was afraid {of} getting lost, so a girl from my class showed me around. On Friday we're going to take part {in} decorating the gym. I'm excited {about} going to my first homecoming dance. I'm bad {at} dancing, but don't worry {about} me! Joining the band is a great way {of} making friends. Thanks {for} listening – I'm looking forward {to} hearing from you! Leo"
+        }
+       ]
+      },
+      {
+       "art": "erklaerung",
+       "name": "Rule",
+       "bloecke": [
+        {
+         "typ": "text",
+         "G": "Das kannst du jetzt schon. Hier ist die Übersicht: Viele Ausdrücke haben eine feste Präposition. Nach der Präposition steht das Verb in der -ing-Form.",
+         "E": "You can already do this. Here is the overview: many phrases have a fixed preposition. After the preposition, the verb is in the -ing form."
+        },
+        {
+         "typ": "regeln",
+         "punkte": [
+          [
+           {
+            "G": "at – good at, bad at:",
+            "E": "at – good at, bad at:"
+           },
+           "la_06"
+          ],
+          [
+           {
+            "G": "in – interested in, take part in:",
+            "E": "in – interested in, take part in:"
+           },
+           "la_07"
+          ],
+          [
+           {
+            "G": "about – nervous about, excited about, worry about, think about:",
+            "E": "about – nervous about, excited about, worry about, think about:"
+           },
+           "la_15"
+          ],
+          [
+           {
+            "G": "of – afraid of, tired of, dream of, a way of, instead of:",
+            "E": "of – afraid of, tired of, dream of, a way of, instead of:"
+           },
+           "la_08"
+          ],
+          [
+           {
+            "G": "for – thanks for:",
+            "E": "for – thanks for:"
+           },
+           "la_14"
+          ],
+          [
+           {
+            "G": "to – look forward to. Achtung, Falle: Hier ist to eine Präposition, also -ing!",
+            "E": "to – look forward to. Watch out: here to is a preposition, so use -ing!"
+           },
+           "la_09"
+          ],
+          [
+           {
+            "G": "to – be used to (etwas gewohnt sein), auch mit -ing:",
+            "E": "to – be used to, also with -ing:"
+           },
+           "la_19"
+          ]
+         ]
+        },
+        {
+         "typ": "merksatz",
+         "G": "Präposition + Verb? Dann immer -ing! Auch nach to in look forward to und be used to.",
+         "E": "Preposition + verb? Always -ing! Also after to in look forward to and be used to."
+        }
+       ]
       }
      ]
     }
@@ -11826,16 +12241,16 @@ window.DATEN = {
     {
      "ziel": "3/1",
      "nr": 3,
-     "gruppe": "-ing form & prepositions",
+     "gruppe": "-ing form",
      "teil": null,
-     "name": "Language · -ing form & prepositions",
+     "name": "Language · -ing form",
      "schluessel": [
-      "3|-ing form & prepositions|0",
-      "3|-ing form & prepositions|1",
-      "3|-ing form & prepositions|2",
-      "3|-ing form & prepositions|3",
-      "3|-ing form & prepositions|4",
-      "3|-ing form & prepositions|5"
+      "3|-ing form|0",
+      "3|-ing form|1",
+      "3|-ing form|2",
+      "3|-ing form|3",
+      "3|-ing form|4",
+      "3|-ing form|5"
      ]
     }
    ]
@@ -11846,7 +12261,7 @@ window.DATEN = {
    "datum": "2026-11-24",
    "von": "2026-11-10",
    "bis": "2026-11-24",
-   "ziel": "4; 1/Task words; 2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2; 2/u2:Focus on language · Part 1; 2/u2:Focus on language · Part 2; 3/1; 1/Notice board; 5",
+   "ziel": "4; 1/Task words; 2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2; 2/u2:Focus on language · Part 1; 2/u2:Focus on language · Part 2; 3/1; 3/2; 1/Notice board; 5",
    "text": "GLN 2: Listening, Reading, Vocabulary Unit 2, Language (-ing form & prepositions), Writing",
    "ziele": [
     {
@@ -11997,16 +12412,32 @@ window.DATEN = {
     {
      "ziel": "3/1",
      "nr": 3,
-     "gruppe": "-ing form & prepositions",
+     "gruppe": "-ing form",
      "teil": null,
-     "name": "Language · -ing form & prepositions",
+     "name": "Language · -ing form",
      "schluessel": [
-      "3|-ing form & prepositions|0",
-      "3|-ing form & prepositions|1",
-      "3|-ing form & prepositions|2",
-      "3|-ing form & prepositions|3",
-      "3|-ing form & prepositions|4",
-      "3|-ing form & prepositions|5"
+      "3|-ing form|0",
+      "3|-ing form|1",
+      "3|-ing form|2",
+      "3|-ing form|3",
+      "3|-ing form|4",
+      "3|-ing form|5"
+     ]
+    },
+    {
+     "ziel": "3/2",
+     "nr": 3,
+     "gruppe": "Prepositions",
+     "teil": null,
+     "name": "Language · Prepositions",
+     "schluessel": [
+      "3|Prepositions|0",
+      "3|Prepositions|1",
+      "3|Prepositions|2",
+      "3|Prepositions|3",
+      "3|Prepositions|4",
+      "3|Prepositions|5",
+      "3|Prepositions|6"
      ]
     },
     {
@@ -12047,15 +12478,15 @@ window.DATEN = {
     },
     {
      "bis": "2026-11-20",
-     "n": 11
-    },
-    {
-     "bis": "2026-11-22",
      "n": 12
     },
     {
+     "bis": "2026-11-22",
+     "n": 13
+    },
+    {
      "bis": "2026-11-23",
-     "n": 12,
+     "n": 13,
      "test": true
     }
    ]

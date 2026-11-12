@@ -368,3 +368,30 @@ body.runner-aktiv .niveau-leiste { display: none; }
 .aushang-person.ok .aushang-wahl.soll, .aushang-person.falsch .aushang-wahl.soll { background: var(--gruen); border-color: var(--gruen); color: #fff; }
 .aushang-person.falsch .aushang-wahl[aria-pressed="true"]:not(.soll) { background: var(--hw); border-color: var(--hw); color: var(--hw-text); }
 .aushang-person.ok .aushang-loesung { color: var(--gruen); }
+
+/* Language (12.11.2026): „Your sentence“ (zwei Kästen), „Pairs“ (Ausdruck ↔ Präposition), „Gap text“ (Nachricht mit Lücken) */
+.eigen-kasten { display: grid; gap: 8px; padding: 12px; border: 2px dashed var(--linie); border-radius: 14px; }
+.eigen-kasten h3, .satzkarte > h3 { margin: 0; font-size: 1rem; }
+.eigen-knopf { display: grid; gap: 2px; text-align: left; }
+.eigen-knopf small { color: var(--leise); font-weight: 400; }
+.eigen-knopf[aria-pressed="true"], .paar-wort[aria-pressed="true"] { background: var(--blau); color: var(--blau-text); border-color: var(--blau); }
+.eigen-knopf[aria-pressed="true"] small { color: inherit; }
+.eigen-knopf:disabled { opacity: .45; }
+.eigen-auftrag { margin: 0; font-size: 1.1rem; }
+.eigen-saetze { margin: 0; padding-left: 1.4rem; display: grid; gap: 6px; font-weight: 700; color: var(--gruen); }
+.eigen-saetze:empty { display: none; }
+.paare { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.paar { display: grid; gap: 4px; justify-items: start; }
+.paar p { margin: 0; }
+.paar.ok .paar-wort { background: var(--gruen); border-color: var(--gruen); color: #fff; }
+.paar-preps { position: sticky; bottom: 8px; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 14px; border: 2px solid var(--blau); background: var(--karte); }
+.paar-prep { min-width: 52px; flex: 1 0 auto; }
+.lt-text { margin: 0; line-height: 2.5; font-size: 1.1rem; }
+.lt-platz { white-space: nowrap; }
+.lt-luecke { display: inline-block; min-width: 4.2rem; min-height: 40px; padding: 2px 8px; font: inherit; font-weight: 700; text-align: center; vertical-align: middle;
+  border: 2px solid var(--linie); border-bottom: 3px solid var(--blau); border-radius: 8px; background: var(--bg); color: var(--text); cursor: pointer; }
+.lt-eingabe { width: 5.2rem; cursor: text; }
+.lt-luecke.aktiv, .lt-eingabe:focus { outline: 3px solid var(--blau); outline-offset: 2px; }
+.lt-luecke.ok { border-color: var(--gruen); color: var(--gruen); opacity: 1; }
+.lt-luecke.falsch { border-color: #c8283a; color: #c8283a; text-decoration: line-through; opacity: 1; }
+.lt-loesung { color: var(--gruen); }

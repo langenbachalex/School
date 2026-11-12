@@ -3221,6 +3221,10 @@
           el("span", { class: "sym", "aria-hidden": "true" }, "🚧"),
           el("span", { class: "titel", lang: "en" }, "Grammar Patrol"),
           el("span", { class: "unter" }, T("Richtig oder falsch? Sätze durchwinken oder stoppen", "Right or wrong? Wave sentences through or stop them"))),
+        el("button", { class: "kachel", onclick: () => spielSprint(k), "aria-label": "Chunk Sprint" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🔥"),
+          el("span", { class: "titel", lang: "en" }, "Chunk Sprint"),
+          el("span", { class: "unter" }, T("60 Sekunden: Lücke füllen, Combo halten", "60 seconds: fill the gap, keep your combo"))),
         el("button", { class: "kachel", onclick: () => catchWahl(k), "aria-label": "Catch the Word" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🎯"),
           el("span", { class: "titel", lang: "en" }, "Catch the Word"),
@@ -3483,6 +3487,91 @@
     zeigeSatz();
   }
   if (LOKAL) window.__grammar = () => grammarLauf && { falsch: grammarLauf.falsch, richtig: grammarLauf.s.en, text: grammarLauf.text }; // nur Test-Build: aktueller Satz
+
+  /* ---------- Games: Chunk Sprint (12.11.2026, Mr. Alex) – 60 Sekunden, Satz mit Lücke (Präposition oder -ing-Form), eine von drei antippen ----------
+     Aufgaben: SP.grammar.sprint = [{ satz, luecke, richtig, falsch: [2] }] (Bauskript, aus den verbform-Schritten und den la_-Sätzen).
+     Richtige in Folge = Combo (🔥 ×2, ×3 …); ein Fehler setzt sie zurück und zeigt kurz die Lösung (die Uhr läuft weiter).
+     Rekord (Treffer) in gym.sprintRekord; Punkte (+10) beim ersten Durchgang des Tages mit mindestens 8 Treffern (Tagesmarke gym.sprintTag). */
+  const SPRINT = { sek: 60, ziel: 8, zeigen: 1500 };
+  let sprintLauf = null; // laufende Runde (monotone Uhr; nur für den Test-Haken von außen erreichbar)
+  function spielSprint(k) { // Startseite: Regeln, Rekord, Start
+    lage = null; ansicht = () => spielSprint(k);
+    const rekord = gymStand().sprintRekord || 0;
+    zeige(spielKopf(k, "Chunk Sprint", () => zeigeSpiele(k)),
+      ansage("60 seconds! Tap the word that fits the gap. Every correct answer in a row makes your combo grow.",
+        "60 Sekunden! Tipp das Wort an, das in die Lücke passt. Jede richtige Antwort in Folge lässt deine Combo wachsen."),
+      el("section", { class: "satzkarte sprint-ende" },
+        el("p", { class: "sprint-zahlen" }, el("span", {}, "⏱ 60 s"), el("span", {}, "🔥 Combo"), el("span", {}, `🏆 ${rekord}`)),
+        el("p", {}, rekord ? T(`Dein Rekord: ${rekord} Treffer. Schaffst du mehr?`, `Your record: ${rekord} correct. Can you beat it?`)
+          : T(`Ab ${SPRINT.ziel} Treffern gibt es einmal am Tag Punkte.`, `With ${SPRINT.ziel} correct answers you get points once a day.`)),
+        el("div", { class: "knopfreihe" }, knopf(T("▶ Start", "▶ Start"), () => sprintLos(k), "haupt"), knopf(T("Andere Spiele", "Other games"), () => zeigeSpiele(k)))));
+  }
+  function sprintLos(k) {
+    ansicht = null; lage = null; stopp();
+    const g = gymStand();
+    let reihe = [], letzter = null, treffer = 0, combo = 0, beste = 0, laeuft = true, sperre = false, warte = null, takt = null;
+    const L = sprintLauf = { start: monoton(), limit: SPRINT.sek, aufgabe: null };
+    const rest = () => Math.max(0, L.limit - (monoton() - L.start) / 1000);
+    const aus = () => { laeuft = false; clearInterval(takt); clearTimeout(warte); if (sprintLauf === L) sprintLauf = null; };
+    const zurueck = () => { aus(); zeigeSpiele(k); };
+    const uhr = el("span", { class: "sprint-uhr" }), zahl = el("span", {}), flamme = el("span", { class: "sprint-combo" });
+    const stand = el("p", { class: "patrol-stand sprint-stand", "aria-live": "off" }, uhr, flamme, zahl);
+    const fuell = el("span", {}), balken = el("div", { class: "sprint-balken", "aria-hidden": "true" }, fuell);
+    const satz = el("p", { class: "satz", lang: "en" }), de = el("p", { class: "satz de sprint-de", lang: "de", hidden: E() });
+    const wahl = el("div", { class: "wahl sprint-wahl", role: "group" });
+    const zeigeUhr = () => { const r = rest(); uhr.textContent = `⏱ ${Math.ceil(r)} s`; fuell.style.width = Math.min(100, r / SPRINT.sek * 100) + "%"; balken.classList.toggle("knapp", r <= 10); };
+    const zeigeStand = () => {
+      zahl.textContent = `✓ ${treffer}`;
+      flamme.textContent = combo >= 2 ? `🔥 ×${combo}` : "";
+      if (combo >= 2) { flamme.classList.remove("puls"); void flamme.offsetWidth; flamme.classList.add("puls"); }
+    };
+    function naechste() {
+      if (!reihe.length) { reihe = mischen(SP.grammar.sprint); if (letzter && reihe.length > 1 && reihe[reihe.length - 1].satz === letzter.satz) reihe.reverse(); }
+      const a = letzter = L.aufgabe = reihe.pop(), s = D.saetze[a.satz];
+      satz.replaceChildren(...lueckenSatz(s, "luecke", a.luecke)); de.textContent = s.de;
+      wahl.replaceChildren(...mischen([a.richtig, ...a.falsch]).map((form) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
+        if (!laeuft || sperre) return;
+        if (form === a.richtig) {
+          treffer++; combo++; beste = Math.max(beste, combo); trefferKlang(); zeigeStand(); naechste();
+        } else { // Fehler: Combo weg, kurz die Lösung zeigen
+          combo = 0; sperre = true; zeigeStand();
+          e.currentTarget.classList.add("falsch");
+          [...wahl.children].forEach((b) => { if (b.textContent === a.richtig) b.classList.add("richtig"); });
+          satz.replaceChildren(...lueckenSatz(s, "voll", a.luecke));
+          warte = setTimeout(() => { sperre = false; if (laeuft) naechste(); }, SPRINT.zeigen);
+        }
+      } }, form)));
+    }
+    function ende() {
+      if (!laeuft) return;
+      aus();
+      const alt = g.sprintRekord || 0, neu = treffer > alt;
+      if (neu) g.sprintRekord = treffer;
+      const geschafft = treffer >= SPRINT.ziel;
+      const tag = iso(heute()), punkte = geschafft && g.sprintTag !== tag;
+      if (punkte) { g.sprintTag = tag; punkteDazu(PUNKTE.spiel, { art: "m", bonus: true }); } else speichern();
+      const text = geschafft ? `${lob(true)} ${T(`${treffer} Treffer in 60 Sekunden!`, `${treffer} correct in 60 seconds!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : (g.sprintTag === tag ? T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)") : "")}`
+        : T(`${treffer} Treffer. Für Punkte brauchst du ${SPRINT.ziel}. Noch mal?`, `${treffer} correct. You need ${SPRINT.ziel} for points. Again?`);
+      const meldung = rueckmeldung(); melde(meldung, geschafft ? "gut" : "neutral", text);
+      zeige(spielKopf(k, "Chunk Sprint", () => zeigeSpiele(k)),
+        el("section", { class: "satzkarte sprint-ende" },
+          el("h2", { lang: "en" }, "Time's up!"),
+          el("p", { class: "sprint-zahlen" },
+            el("span", {}, `✓ ${treffer}`, el("small", {}, T("Treffer", "correct"))),
+            el("span", {}, `🔥 ×${beste}`, el("small", {}, T("beste Combo", "best combo"))),
+            el("span", {}, `🏆 ${Math.max(alt, treffer)}`, el("small", {}, neu && alt ? T("Neuer Rekord!", "New record!") : T("Rekord", "record")))),
+          meldung,
+          el("div", { class: "knopfreihe" }, knopf(T("↻ Nochmal", "↻ Again"), () => sprintLos(k), "haupt"), knopf(T("Andere Spiele", "Other games"), () => zeigeSpiele(k)), knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
+    }
+    zeigeUhr(); zeigeStand(); naechste();
+    zeige(spielKopf(k, "Chunk Sprint", zurueck),
+      el("section", { class: "satzkarte sprint" }, stand, balken, satz, de, wahl));
+    // Takt erst nach dem Anzeigen: Verlässt jemand die Seite (uhr nicht mehr im Dokument), hört die Uhr auf
+    takt = setInterval(() => { if (!uhr.isConnected) return aus(); zeigeUhr(); if (rest() <= 0) ende(); }, 200);
+  }
+  if (LOKAL) window.__sprint = { // nur Test-Build: Restzeit setzen, Lösung der aktuellen Aufgabe, läuft noch eine Runde?
+    zeit: (sek) => { if (sprintLauf) sprintLauf.limit = (monoton() - sprintLauf.start) / 1000 + sek; },
+    loesung: () => sprintLauf && sprintLauf.aufgabe && sprintLauf.aufgabe.richtig, laeuft: () => !!sprintLauf };
 
   /* ---------- Games: Catch the Word – ein Wort wird gesprochen, 4–6 Wörter des Abschnitts fallen, das richtige antippen ----------
      10 Runden, 3 Leben: falsches Wort angetippt oder das richtige durchgefallen kostet eins. Treffer = kurzer Klang, dann die deutsche Bedeutung.

@@ -257,6 +257,26 @@
 .gp-alt { color: #a01c2a; text-decoration: line-through; }
 .gp-fehler small { color: var(--leise); }
 @media (prefers-reduced-motion: reduce) { .gp-satz, .gp-satz.kommt { animation: none; transition: none; } }
+/* Games: Chunk Sprint (12.11.2026) – 60 Sekunden, Lücke füllen, Combo-Flamme */
+.sprint-stand { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 1.15rem; margin: 0; }
+.sprint-stand > :last-child { text-align: right; }
+.sprint-combo { min-width: 4.5rem; text-align: center; font-weight: 800; font-size: 1.35rem; color: #d9480f; }
+.sprint-combo.puls { animation: sprint-puls .3s ease-out; }
+@keyframes sprint-puls { from { transform: scale(1.5); } }
+.sprint-balken { height: 10px; border-radius: 999px; background: var(--linie); overflow: hidden; }
+.sprint-balken span { display: block; height: 100%; background: var(--blau); transition: width .2s linear; }
+.sprint-balken.knapp span { background: #c8283a; }
+.sprint .satz { min-height: 3.9em; }
+.sprint-de { font-size: 1.05rem !important; color: var(--leise); min-height: 2.6em; }
+.sprint-wahl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.sprint-wahl .wahl-knopf { min-width: 0; min-height: 72px; padding: 6px 4px; font-size: 1.15rem; white-space: normal; overflow-wrap: anywhere; }
+.sprint-ende { text-align: center; }
+.sprint-ende h2 { margin: 0; }
+.sprint-zahlen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; font: 700 1.5rem var(--display); }
+.sprint-zahlen span { display: grid; gap: 2px; padding: 12px 4px; border: 2px solid var(--linie); border-radius: 14px; }
+.sprint-zahlen small { font: 500 .85rem var(--body); color: var(--leise); }
+.sprint-ende .knopfreihe { justify-content: center; }
+@media (prefers-reduced-motion: reduce) { .sprint-combo.puls { animation: none; } }
 
 /* Games: Catch the Word */
 .catch-himmel { background: linear-gradient(#fff3c4, var(--karte)); height: 44vh; min-height: 300px; }

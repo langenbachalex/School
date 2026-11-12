@@ -75,6 +75,7 @@ Offene Blöcke in Reihenfolge; Befehl = erste Eingabe im jeweiligen Chat (neuer 
 | – | ALLE | Planen, Entscheiden, Konzepte (Modell Fable) | `School · MASTER` (dieser Chat, Sitzung vom 7.11.) | – | läuft |
 | – | EN9 | Superhelden-Cameos Etappen 1–3 + Heldenfilme | `School · EN9 · Superhelden-Cameos · 7.11.` | – | fertig 7.11., archivieren |
 | – | EN9/EN6 | Fotos Wikimedia (alle sieben Motive) | im Master erledigt | – | fertig 7.11. |
+| – | EN9 | Staaten-Szenen + Vertonung (Prüfung: Mängel NC/ME/NJ, Fotos KY/AR/MS/FL, Story Kap. 4+5 – alles schon erledigt; nur Ideenspeicher berichtigt, 2df86f1, 13f11a2) | `School · EN9 · Staaten-Szenen + Vertonung · 10.11.` | – | **fertig 12.11.** |
 Fertige Chats archivieren; der Stand steht hier (sie müssen nicht umbenannt werden). Chat-Name erfragen: `/name` oder „Wie heißt du?“.
 **Master-Wechsel** (Ziel: Kontext klein halten, Ressourcen sparen): alter Master `/save` → Zeile „School · MASTER · bis <Datum>“ hier eintragen, offene Entscheidungen darunter; neuer Chat: `/model claude-fable-5-1`, `/load MASTER`, Name `School · MASTER`. Alten Master archivieren.
 

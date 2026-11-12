@@ -11560,7 +11560,7 @@ window.DATEN = {
   },
   {
    "von": "2026-11-07",
-   "bis": "2026-11-15",
+   "bis": "2026-11-11",
    "ziel": "2/u2:Start; 2/u2:Theme 1 · Part 1; 2/u2:Theme 1 · Part 2; 2/u2:Theme 2 · Part 1; 2/u2:Theme 2 · Part 2; 3/1",
    "text": "Vocabulary Unit 2: Start bis Theme 2 · Part 2 + Language: -ing form & prepositions (GLN 2 am 24.11.)",
    "ziele": [

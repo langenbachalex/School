@@ -3231,6 +3231,10 @@
           el("span", { class: "sym", "aria-hidden": "true" }, "🔥"),
           el("span", { class: "titel", lang: "en" }, "Chunk Sprint"),
           el("span", { class: "unter" }, T("60 Sekunden: Lücke füllen, Combo halten", "60 seconds: fill the gap, keep your combo"))),
+        el("button", { class: "kachel", onclick: () => spielCrazy(k), "aria-label": "Crazy Sentences" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🎰"),
+          el("span", { class: "titel", lang: "en" }, "Crazy Sentences"),
+          el("span", { class: "unter" }, T("Satz-Automat: drehen, laut sagen, lachen", "Sentence machine: spin, say it, laugh"))),
         el("button", { class: "kachel", onclick: () => catchWahl(k), "aria-label": "Catch the Word" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🎯"),
           el("span", { class: "titel", lang: "en" }, "Catch the Word"),
@@ -3493,6 +3497,83 @@
     zeigeSatz();
   }
   if (LOKAL) window.__grammar = () => grammarLauf && { falsch: grammarLauf.falsch, richtig: grammarLauf.s.en, text: grammarLauf.text }; // nur Test-Build: aktueller Satz
+
+  /* ---------- Game „Crazy Sentences“ (12.11.2026, Mr. Alex) ----------
+     Satz-Automat mit drei Walzen (D.spiel.grammar.crazy): Person · Ausdruck mit Präposition · Tätigkeit in der -ing-Form → ein alberner, aber richtiger Satz.
+     Drehen, laut sagen, Partner (oder man selbst) bewertet 😂 / 😐. Walzen lassen sich festhalten (🔒), dann dreht nur der Rest. Eine Runde = 8 Sätze;
+     bewerten geht erst nach 3 Sekunden (Zeit zum Sprechen). Punkte (+10) einmal am Tag für eine ganze Runde (Tagesmarke gym.crazyTag, bester 😂-Wert gym.crazyRekord). */
+  const CRAZY = { saetze: 8, sprechSek: 3 };
+  function spielCrazy(k) {
+    lage = null; ansicht = null; stopp();
+    const C = D.spiel.grammar.crazy, g = gymStand(), WALZEN = ["person", "ausdruck", "taetigkeit"];
+    const wahl = WALZEN.map((w) => zufall(C[w])), fest = [false, false, false];
+    let nr = 0, lacher = 0, dreht = false, gedreht = false, frei = 0;
+    const kopfzeile = el("p", { class: "sprint-stand" });
+    const zeigeStand = () => kopfzeile.replaceChildren(el("span", {}, T(`Satz ${Math.min(nr + 1, CRAZY.saetze)} von ${CRAZY.saetze}`, `Sentence ${Math.min(nr + 1, CRAZY.saetze)} of ${CRAZY.saetze}`)), el("span", {}, `😂 ${lacher}`));
+    const text = (w, x) => (w === "ausdruck" ? `${x[0]} ${x[1]}` : x[0]);
+    const felder = WALZEN.map((w, i) => {
+      const inhalt = el("span", { class: "crazy-wort", lang: "en" }, "?");
+      const schloss = el("button", { class: "crazy-schloss", "aria-pressed": "false", "aria-label": T("Walze festhalten", "Hold this reel"), onclick: () => {
+        if (dreht || !gedreht) return;
+        fest[i] = !fest[i]; schloss.setAttribute("aria-pressed", String(fest[i])); schloss.textContent = fest[i] ? "🔒" : "🔓"; walze.classList.toggle("fest", fest[i]);
+      } }, "🔓");
+      const walze = el("div", { class: "crazy-walze" }, el("small", {}, [T("Wer?", "Who?"), T("Ausdruck", "Phrase"), T("Was?", "What?")][i]), inhalt, schloss);
+      return { walze, inhalt };
+    });
+    const satz = el("p", { class: "crazy-satz", lang: "en", "aria-live": "polite" }, T("Dreh den Automaten!", "Spin the machine!"));
+    const de = el("p", { class: "klein crazy-de", lang: "de" });
+    const hinweis = el("p", { class: "klein", role: "status" });
+    const zeigeSatz = () => {
+      const [p, a, t] = wahl;
+      satz.replaceChildren(`${p[0]} ${a[0]} `, el("strong", { class: "crazy-prep" }, a[1]), ` ${t[0]}${t[0].endsWith(".") ? "" : "."}`);
+      de.textContent = E() ? "" : `${p[1]} ${a[2].replace(" …", "")} ${t[1]}.`;
+    };
+    const lach = knopf("😂", () => bewerte(true), "crazy-urteil"), naja = knopf("😐", () => bewerte(false), "crazy-urteil");
+    const dreh = knopf(T("🎰 Drehen", "🎰 Spin"), drehen, "haupt");
+    const urteil = el("div", { class: "knopfreihe crazy-urteile", hidden: true }, lach, naja);
+    function drehen() {
+      if (dreht) return;
+      if (fest.every(Boolean)) { fest.fill(false); felder.forEach((f) => { f.walze.classList.remove("fest"); const s = f.walze.querySelector(".crazy-schloss"); s.textContent = "🔓"; s.setAttribute("aria-pressed", "false"); }); }
+      dreht = true; gedreht = true; urteil.hidden = true; dreh.hidden = true; hinweis.textContent = "";
+      satz.textContent = "…"; de.textContent = "";
+      let schritte = 0;
+      const takt = setInterval(() => {
+        if (!satz.isConnected) return clearInterval(takt); // Seite verlassen
+        WALZEN.forEach((w, i) => { if (!fest[i]) { let neu; do { neu = zufall(C[w]); } while (neu === wahl[i] && C[w].length > 1); wahl[i] = neu; felder[i].inhalt.textContent = text(w, neu); } });
+        if (++schritte < 9) return;
+        clearInterval(takt); dreht = false; zeigeSatz();
+        urteil.hidden = false; frei = monoton() + CRAZY.sprechSek * 1000;
+        hinweis.textContent = T("🗣️ Sag den Satz laut! Dann bewertet dein Partner: lustig oder na ja?", "🗣️ Say the sentence out loud! Then your partner decides: funny or so-so?");
+      }, 110);
+    }
+    function bewerte(lustig) {
+      if (dreht || monoton() < frei) { hinweis.textContent = T("🗣️ Erst laut sagen – dann bewerten.", "🗣️ Say it out loud first – then rate it."); return; }
+      if (lustig) lacher++;
+      nr++; zeigeStand();
+      if (nr >= CRAZY.saetze) return ende();
+      urteil.hidden = true; dreh.hidden = false; hinweis.textContent = T("Tipp: Mit 🔓 hältst du eine Walze fest.", "Tip: use 🔓 to hold a reel.");
+    }
+    function ende() {
+      const tag = iso(heute()), punkte = g.crazyTag !== tag, alt = g.crazyRekord || 0;
+      if (lacher > alt) g.crazyRekord = lacher;
+      if (punkte) { g.crazyTag = tag; punkteDazu(PUNKTE.spiel, { art: "m", bonus: true }); } else speichern();
+      const meldung = rueckmeldung();
+      melde(meldung, "gut", `${lob(true)} ${T(`${CRAZY.saetze} verrückte Sätze gesagt, ${lacher}-mal 😂.`, `${CRAZY.saetze} crazy sentences said, ${lacher} × 😂.`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)")}`);
+      zeige(spielKopf(k, "Crazy Sentences", () => zeigeSpiele(k)),
+        el("section", { class: "satzkarte sprint-ende" },
+          el("h2", { lang: "en" }, "That was crazy!"),
+          el("p", { class: "sprint-zahlen" }, el("span", {}, `🗣️ ${CRAZY.saetze}`, el("small", {}, T("Sätze", "sentences"))), el("span", {}, `😂 ${lacher}`, el("small", {}, T("Lacher", "laughs"))),
+            el("span", {}, `🏆 ${Math.max(alt, lacher)}`, el("small", {}, T("Rekord", "record")))),
+          meldung,
+          el("div", { class: "knopfreihe" }, knopf(T("↻ Nochmal", "↻ Again"), () => spielCrazy(k), "haupt"), knopf(T("Andere Spiele", "Other games"), () => zeigeSpiele(k)), knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
+    }
+    zeigeStand();
+    zeige(spielKopf(k, "Crazy Sentences", () => zeigeSpiele(k)),
+      ansage("Spin the machine, say the crazy sentence out loud – and your partner rates it. Works alone, in pairs or on the big screen.",
+        "Dreh den Automaten, sag den verrückten Satz laut – dein Partner bewertet ihn. Geht allein, zu zweit oder am Beamer."),
+      el("section", { class: "satzkarte crazy" }, kopfzeile, el("div", { class: "crazy-walzen" }, felder.map((f) => f.walze)), satz, de, hinweis,
+        el("div", { class: "knopfreihe" }, dreh), urteil));
+  }
 
   /* ---------- Games: Chunk Sprint (12.11.2026, Mr. Alex) – 60 Sekunden, Satz mit Lücke (Präposition oder -ing-Form), eine von drei antippen ----------
      Aufgaben: SP.grammar.sprint = [{ satz, luecke, richtig, falsch: [2] }] (Bauskript, aus den verbform-Schritten und den la_-Sätzen).

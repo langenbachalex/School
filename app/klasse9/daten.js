@@ -12524,7 +12524,158 @@ window.DATEN = {
       "to play"
      ]
     }
-   ]
+   ],
+   "crazy": {
+    "person": [
+     [
+      "My teacher",
+      "Mein Lehrer"
+     ],
+     [
+      "Our principal",
+      "Unsere Schulleiterin"
+     ],
+     [
+      "The school mascot",
+      "Das Schulmaskottchen"
+     ],
+     [
+      "My best friend",
+      "Mein bester Freund"
+     ],
+     [
+      "The bus driver",
+      "Die Busfahrerin"
+     ],
+     [
+      "A cheerleader",
+      "Eine Cheerleaderin"
+     ],
+     [
+      "My little brother",
+      "Mein kleiner Bruder"
+     ],
+     [
+      "Our coach",
+      "Unser Trainer"
+     ],
+     [
+      "My grandma",
+      "Meine Oma"
+     ],
+     [
+      "The new student",
+      "Die neue Schülerin"
+     ]
+    ],
+    "ausdruck": [
+     [
+      "is afraid",
+      "of",
+      "hat Angst davor, …"
+     ],
+     [
+      "is good",
+      "at",
+      "ist gut darin, …"
+     ],
+     [
+      "is bad",
+      "at",
+      "ist schlecht darin, …"
+     ],
+     [
+      "is interested",
+      "in",
+      "interessiert sich dafür, …"
+     ],
+     [
+      "dreams",
+      "of",
+      "träumt davon, …"
+     ],
+     [
+      "is tired",
+      "of",
+      "hat es satt, …"
+     ],
+     [
+      "is excited",
+      "about",
+      "freut sich riesig darauf, …"
+     ],
+     [
+      "is nervous",
+      "about",
+      "ist nervös davor, …"
+     ],
+     [
+      "is looking forward",
+      "to",
+      "freut sich darauf, …"
+     ],
+     [
+      "is used",
+      "to",
+      "ist es gewohnt, …"
+     ],
+     [
+      "is thinking",
+      "about",
+      "denkt darüber nach, …"
+     ]
+    ],
+    "taetigkeit": [
+     [
+      "dancing in the cafeteria",
+      "in der Mensa zu tanzen"
+     ],
+     [
+      "singing on the school bus",
+      "im Schulbus zu singen"
+     ],
+     [
+      "eating pizza in math class",
+      "in Mathe Pizza zu essen"
+     ],
+     [
+      "wearing pajamas to school",
+      "im Schlafanzug zur Schule zu kommen"
+     ],
+     [
+      "riding a skateboard in the hallway",
+      "im Flur Skateboard zu fahren"
+     ],
+     [
+      "kissing a frog",
+      "einen Frosch zu küssen"
+     ],
+     [
+      "sleeping in the gym",
+      "in der Turnhalle zu schlafen"
+     ],
+     [
+      "talking to squirrels",
+      "mit Eichhörnchen zu reden"
+     ],
+     [
+      "juggling hot dogs",
+      "mit Hot Dogs zu jonglieren"
+     ],
+     [
+      "doing homework at the prom",
+      "auf dem Abschlussball Hausaufgaben zu machen"
+     ],
+     [
+      "brushing a lion's teeth",
+      "einem Löwen die Zähne zu putzen"
+     ],
+     [
+      "playing the tuba at 6 a.m.",
+      "um 6 Uhr morgens Tuba zu spielen"
+     ]
+    ]
+   }
   }
  },
  "gym": {

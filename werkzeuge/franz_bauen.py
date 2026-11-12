@@ -256,27 +256,26 @@ def main():
     for g in (180, 192, 512):
         icon(g, os.path.join(APP, "icons", f"icon-{g}.png"))
     # Offline-Speicher: alle Dateien der App, Version = Prüfsumme
-    dateien, h = ["./", "../style.css", "../london-run.css", "../runner.js", "../schriften/TwemojiCountryFlags.woff2"], hashlib.sha1()  # style.css und die Runner-Engine (Paris-Szenen) teilt sich die App mit Englisch Klasse 6
+    import sw_vorlage  # 12.11.2026: robuste Einrichtung des Offline-Speichers (nur Geändertes laden), wie EN6 und EN9
+    dateien, h = {"./": sw_vorlage.pruefsumme(os.path.join(APP, "index.html")),
+                  **{g: sw_vorlage.pruefsumme(os.path.normpath(os.path.join(APP, g))) for g in ("../style.css", "../london-run.css", "../runner.js", "../schriften/TwemojiCountryFlags.woff2")}}, hashlib.sha1()  # style.css und die Runner-Engine (Paris-Szenen) teilt sich die App mit Englisch Klasse 6
     for wurzel, _, namen_ in os.walk(APP):
         for n in sorted(namen_):
             rel = os.path.relpath(os.path.join(wurzel, n), APP).replace(os.sep, "/")
             if rel in ("sw.js",) or n.endswith(".md"):
                 continue
-            dateien.append(rel)
+            dateien[rel] = sw_vorlage.pruefsumme(os.path.join(wurzel, n))
             with open(os.path.join(wurzel, n), "rb") as f:
                 h.update(rel.encode() + f.read())
     for geteilt in ("style.css", "london-run.css", "runner.js"):
         with open(os.path.join(BASIS, "app", geteilt), "rb") as f:
             h.update(f.read())
-    dateien.sort()
+    dateien = dict(sorted(dateien.items()))
     with open(os.path.join(APP, "sw.js"), "w", encoding="utf-8") as f:
         f.write(f"""// AUTOMATISCH ERZEUGT von werkzeuge/franz_bauen.py – Offline-Speicher der Französisch-App
 const VERSION = "mralex-fr-{h.hexdigest()[:10]}r";  // r (8.11.): Update lädt alle Dateien frisch vom Server (cache: "reload"), sonst blieb eine neu vertonte mp3 alt
 const DATEIEN = {json.dumps(dateien)};
-self.addEventListener("install", (e) => {{
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(DATEIEN.map((u) => new Request(u, {{ cache: "reload" }})))).then(() => self.skipWaiting()));
-}});
-self.addEventListener("activate", (e) => {{
+{sw_vorlage.einrichten_js('k.startsWith("mralex-fr-")')}self.addEventListener("activate", (e) => {{
   e.waitUntil(caches.keys().then((alle) => Promise.all(alle.filter((k) => k.startsWith("mralex-fr-") && k !== VERSION).map((k) => caches.delete(k))))
     .then(() => self.clients.claim()));
 }});

@@ -11909,7 +11909,578 @@ window.DATEN = {
    "audio/story/sd_Y19.mp3",
    "audio/story/sd_Y20.mp3",
    "audio/story/sd_sofar.mp3"
-  ]
+  ],
+  "grammar": {
+   "patrol": [
+    {
+     "satz": "la_01",
+     "prep": [],
+     "ing": [
+      "I enjoy play basketball after school.",
+      "I enjoy to play basketball after school."
+     ]
+    },
+    {
+     "satz": "la_02",
+     "prep": [],
+     "ing": [
+      "I don't mind walk to school.",
+      "I don't mind to walk to school."
+     ]
+    },
+    {
+     "satz": "la_03",
+     "prep": [],
+     "ing": [
+      "My brother hates get up early."
+     ]
+    },
+    {
+     "satz": "la_04",
+     "prep": [],
+     "ing": []
+    },
+    {
+     "satz": "la_05",
+     "prep": [],
+     "ing": [
+      "Learn a new language takes time."
+     ]
+    },
+    {
+     "satz": "la_06",
+     "prep": [
+      "She is really good in drawing.",
+      "She is really good of drawing.",
+      "She is really good to drawing.",
+      "She is really good on drawing."
+     ],
+     "ing": [
+      "She is really good at draw."
+     ]
+    },
+    {
+     "satz": "la_07",
+     "prep": [
+      "Are you interested at joining the drama club?",
+      "Are you interested of joining the drama club?",
+      "Are you interested to joining the drama club?",
+      "Are you interested for joining the drama club?",
+      "Are you interested on joining the drama club?"
+     ],
+     "ing": [
+      "Are you interested in join the drama club?"
+     ]
+    },
+    {
+     "satz": "la_08",
+     "prep": [
+      "I'm afraid at speaking in front of the class.",
+      "I'm afraid in speaking in front of the class.",
+      "I'm afraid to speaking in front of the class.",
+      "I'm afraid on speaking in front of the class."
+     ],
+     "ing": [
+      "I'm afraid of speak in front of the class."
+     ]
+    },
+    {
+     "satz": "la_09",
+     "prep": [
+      "We're looking forward at seeing you in New York.",
+      "We're looking forward in seeing you in New York.",
+      "We're looking forward about seeing you in New York.",
+      "We're looking forward of seeing you in New York.",
+      "We're looking forward for seeing you in New York.",
+      "We're looking forward on seeing you in New York."
+     ],
+     "ing": [
+      "We're looking forward to see you in New York."
+     ]
+    },
+    {
+     "satz": "la_10",
+     "prep": [
+      "I'm thinking at buying a new bike.",
+      "I'm thinking in buying a new bike.",
+      "I'm thinking to buying a new bike.",
+      "I'm thinking for buying a new bike."
+     ],
+     "ing": [
+      "I'm thinking about buy a new bike."
+     ]
+    },
+    {
+     "satz": "la_11",
+     "prep": [
+      "Instead at watching TV, let's go for a walk.",
+      "Instead in watching TV, let's go for a walk.",
+      "Instead about watching TV, let's go for a walk.",
+      "Instead to watching TV, let's go for a walk.",
+      "Instead for watching TV, let's go for a walk.",
+      "Instead on watching TV, let's go for a walk."
+     ],
+     "ing": [
+      "Instead of watch TV, let's go for a walk."
+     ]
+    },
+    {
+     "satz": "la_12",
+     "prep": [],
+     "ing": [
+      "Wash your hands before eat.",
+      "Wash your hands before to eat."
+     ]
+    },
+    {
+     "satz": "la_13",
+     "prep": [
+      "I'm tired at waiting for the bus.",
+      "I'm tired in waiting for the bus.",
+      "I'm tired about waiting for the bus.",
+      "I'm tired to waiting for the bus.",
+      "I'm tired for waiting for the bus.",
+      "I'm tired on waiting for the bus."
+     ],
+     "ing": [
+      "I'm tired of wait for the bus."
+     ]
+    },
+    {
+     "satz": "la_14",
+     "prep": [
+      "Thanks at helping me with my homework.",
+      "Thanks in helping me with my homework.",
+      "Thanks about helping me with my homework.",
+      "Thanks of helping me with my homework.",
+      "Thanks on helping me with my homework."
+     ],
+     "ing": [
+      "Thanks for help me with my homework."
+     ]
+    },
+    {
+     "satz": "la_15",
+     "prep": [
+      "I'm nervous in meeting my new teachers.",
+      "I'm nervous to meeting my new teachers.",
+      "I'm nervous on meeting my new teachers."
+     ],
+     "ing": [
+      "I'm nervous about meet my new teachers."
+     ]
+    },
+    {
+     "satz": "la_16",
+     "prep": [
+      "We're excited in going to the homecoming game.",
+      "We're excited of going to the homecoming game.",
+      "We're excited to going to the homecoming game.",
+      "We're excited on going to the homecoming game."
+     ],
+     "ing": [
+      "We're excited about go to the homecoming game."
+     ]
+    },
+    {
+     "satz": "la_17",
+     "prep": [
+      "Don't worry to making mistakes in class.",
+      "Don't worry on making mistakes in class."
+     ],
+     "ing": [
+      "Don't worry about make mistakes in class."
+     ]
+    },
+    {
+     "satz": "la_18",
+     "prep": [
+      "I'm bad in remembering my locker combination.",
+      "I'm bad of remembering my locker combination.",
+      "I'm bad to remembering my locker combination.",
+      "I'm bad on remembering my locker combination."
+     ],
+     "ing": [
+      "I'm bad at remember my locker combination."
+     ]
+    },
+    {
+     "satz": "la_19",
+     "prep": [
+      "Maya is used at taking the school bus.",
+      "Maya is used about taking the school bus.",
+      "Maya is used of taking the school bus.",
+      "Maya is used on taking the school bus."
+     ],
+     "ing": [
+      "Maya is used to take the school bus."
+     ]
+    },
+    {
+     "satz": "la_20",
+     "prep": [
+      "Do you want to take part at decorating the gym?",
+      "Do you want to take part about decorating the gym?",
+      "Do you want to take part of decorating the gym?",
+      "Do you want to take part to decorating the gym?",
+      "Do you want to take part for decorating the gym?",
+      "Do you want to take part on decorating the gym?"
+     ],
+     "ing": [
+      "Do you want to take part in decorate the gym?"
+     ]
+    },
+    {
+     "satz": "la_21",
+     "prep": [
+      "Joining a club is a great way at making friends.",
+      "Joining a club is a great way about making friends.",
+      "Joining a club is a great way on making friends."
+     ],
+     "ing": [
+      "Joining a club is a great way of make friends."
+     ]
+    },
+    {
+     "satz": "la_22",
+     "prep": [
+      "Carlos dreams at playing on the football team.",
+      "Carlos dreams in playing on the football team.",
+      "Carlos dreams to playing on the football team.",
+      "Carlos dreams for playing on the football team."
+     ],
+     "ing": [
+      "Carlos dreams of play on the football team."
+     ]
+    }
+   ],
+   "sprint": [
+    {
+     "satz": "la_01",
+     "luecke": "playing",
+     "richtig": "playing",
+     "falsch": [
+      "play",
+      "to playing"
+     ]
+    },
+    {
+     "satz": "la_02",
+     "luecke": "walking",
+     "richtig": "walking",
+     "falsch": [
+      "walk",
+      "walks"
+     ]
+    },
+    {
+     "satz": "la_03",
+     "luecke": "getting",
+     "richtig": "getting",
+     "falsch": [
+      "get",
+      "gets"
+     ]
+    },
+    {
+     "satz": "la_04",
+     "luecke": "Dancing",
+     "richtig": "Dancing",
+     "falsch": [
+      "Dance",
+      "Danced"
+     ]
+    },
+    {
+     "satz": "la_05",
+     "luecke": "Learning",
+     "richtig": "Learning",
+     "falsch": [
+      "Learn",
+      "Learns"
+     ]
+    },
+    {
+     "satz": "la_12",
+     "luecke": "eating",
+     "richtig": "eating",
+     "falsch": [
+      "eat",
+      "to eat"
+     ]
+    },
+    {
+     "satz": "la_14",
+     "luecke": "helping",
+     "richtig": "helping",
+     "falsch": [
+      "help",
+      "to help"
+     ]
+    },
+    {
+     "satz": "la_09",
+     "luecke": "seeing",
+     "richtig": "seeing",
+     "falsch": [
+      "see",
+      "saw"
+     ]
+    },
+    {
+     "satz": "la_06",
+     "luecke": "at",
+     "richtig": "at",
+     "falsch": [
+      "in",
+      "of"
+     ]
+    },
+    {
+     "satz": "la_07",
+     "luecke": "in",
+     "richtig": "in",
+     "falsch": [
+      "at",
+      "for"
+     ]
+    },
+    {
+     "satz": "la_08",
+     "luecke": "of",
+     "richtig": "of",
+     "falsch": [
+      "at",
+      "in"
+     ]
+    },
+    {
+     "satz": "la_10",
+     "luecke": "about",
+     "richtig": "about",
+     "falsch": [
+      "at",
+      "for"
+     ]
+    },
+    {
+     "satz": "la_11",
+     "luecke": "of",
+     "richtig": "of",
+     "falsch": [
+      "for",
+      "in"
+     ]
+    },
+    {
+     "satz": "la_13",
+     "luecke": "of",
+     "richtig": "of",
+     "falsch": [
+      "at",
+      "with"
+     ]
+    },
+    {
+     "satz": "la_14",
+     "luecke": "for",
+     "richtig": "for",
+     "falsch": [
+      "of",
+      "with"
+     ]
+    },
+    {
+     "satz": "la_15",
+     "luecke": "about",
+     "richtig": "about",
+     "falsch": [
+      "of",
+      "at"
+     ]
+    },
+    {
+     "satz": "la_16",
+     "luecke": "about",
+     "richtig": "about",
+     "falsch": [
+      "for",
+      "in"
+     ]
+    },
+    {
+     "satz": "la_17",
+     "luecke": "about",
+     "richtig": "about",
+     "falsch": [
+      "at",
+      "of"
+     ]
+    },
+    {
+     "satz": "la_18",
+     "luecke": "at",
+     "richtig": "at",
+     "falsch": [
+      "in",
+      "about"
+     ]
+    },
+    {
+     "satz": "la_19",
+     "luecke": "to",
+     "richtig": "to",
+     "falsch": [
+      "at",
+      "for"
+     ]
+    },
+    {
+     "satz": "la_20",
+     "luecke": "in",
+     "richtig": "in",
+     "falsch": [
+      "at",
+      "of"
+     ]
+    },
+    {
+     "satz": "la_21",
+     "luecke": "of",
+     "richtig": "of",
+     "falsch": [
+      "for",
+      "about"
+     ]
+    },
+    {
+     "satz": "la_22",
+     "luecke": "of",
+     "richtig": "of",
+     "falsch": [
+      "about",
+      "in"
+     ]
+    },
+    {
+     "satz": "la_06",
+     "luecke": "drawing",
+     "richtig": "drawing",
+     "falsch": [
+      "draw",
+      "to draw"
+     ]
+    },
+    {
+     "satz": "la_07",
+     "luecke": "joining",
+     "richtig": "joining",
+     "falsch": [
+      "join",
+      "to join"
+     ]
+    },
+    {
+     "satz": "la_08",
+     "luecke": "speaking",
+     "richtig": "speaking",
+     "falsch": [
+      "speak",
+      "to speak"
+     ]
+    },
+    {
+     "satz": "la_10",
+     "luecke": "buying",
+     "richtig": "buying",
+     "falsch": [
+      "buy",
+      "to buy"
+     ]
+    },
+    {
+     "satz": "la_11",
+     "luecke": "watching",
+     "richtig": "watching",
+     "falsch": [
+      "watch",
+      "to watch"
+     ]
+    },
+    {
+     "satz": "la_13",
+     "luecke": "waiting",
+     "richtig": "waiting",
+     "falsch": [
+      "wait",
+      "to wait"
+     ]
+    },
+    {
+     "satz": "la_15",
+     "luecke": "meeting",
+     "richtig": "meeting",
+     "falsch": [
+      "meet",
+      "to meet"
+     ]
+    },
+    {
+     "satz": "la_16",
+     "luecke": "going",
+     "richtig": "going",
+     "falsch": [
+      "go",
+      "to go"
+     ]
+    },
+    {
+     "satz": "la_17",
+     "luecke": "making",
+     "richtig": "making",
+     "falsch": [
+      "make",
+      "to make"
+     ]
+    },
+    {
+     "satz": "la_18",
+     "luecke": "remembering",
+     "richtig": "remembering",
+     "falsch": [
+      "remember",
+      "to remember"
+     ]
+    },
+    {
+     "satz": "la_20",
+     "luecke": "decorating",
+     "richtig": "decorating",
+     "falsch": [
+      "decorate",
+      "to decorate"
+     ]
+    },
+    {
+     "satz": "la_21",
+     "luecke": "making",
+     "richtig": "making",
+     "falsch": [
+      "make",
+      "to make"
+     ]
+    },
+    {
+     "satz": "la_22",
+     "luecke": "playing",
+     "richtig": "playing",
+     "falsch": [
+      "play",
+      "to play"
+     ]
+    }
+   ]
+  }
  },
  "gym": {
   "pensum": {

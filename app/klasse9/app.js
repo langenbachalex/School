@@ -3217,6 +3217,10 @@
           el("span", { class: "sym", "aria-hidden": "true" }, "🛂"),
           el("span", { class: "titel", lang: "en" }, "Border Patrol"),
           el("span", { class: "unter" }, T("Britisch oder amerikanisch? Wörter einsortieren", "British or American? Sort the words"))),
+        el("button", { class: "kachel", onclick: () => spielGrammar(k), "aria-label": "Grammar Patrol" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🚧"),
+          el("span", { class: "titel", lang: "en" }, "Grammar Patrol"),
+          el("span", { class: "unter" }, T("Richtig oder falsch? Sätze durchwinken oder stoppen", "Right or wrong? Wave sentences through or stop them"))),
         el("button", { class: "kachel", onclick: () => catchWahl(k), "aria-label": "Catch the Word" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🎯"),
           el("span", { class: "titel", lang: "en" }, "Catch the Word"),
@@ -3380,6 +3384,105 @@
         el("div", { class: "knopfreihe" }, knopf(T("↻ Noch mal", "↻ Play again"), () => spielPatrol(k)), knopf(T("Andere Spiele", "Other games"), zurueck), knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
     requestAnimationFrame(schritt);
   }
+
+  /* ---------- Games: Grammar Patrol (12.11.2026, Mr. Alex) – Border Patrol mit ganzen Sätzen: durchwinken ✅ oder stoppen 🛑 ----------
+     10 Sätze der Gruppen „-ing form“ und „Prepositions“, 4–6 davon mit Fehler (falsche Präposition, Grundform statt -ing; erzeugt im
+     Bauskript: SP.grammar.patrol = [{ satz, prep: [Fehlersätze], ing: [Fehlersätze] }]). Nach einem berechtigten Stopp die richtige
+     Fassung antippen. Punkte (+10) beim ersten Durchgang des Tages mit mindestens 7 richtigen (Tagesmarke gym.grammarTag). */
+  const GRAMMAR = { runde: 10, ziel: 7 };
+  let grammarLauf = null; // aktueller Satz (nur für den Test-Haken)
+  function spielGrammar(k) {
+    ansicht = null; lage = null; stopp();
+    const g = gymStand();
+    let nFalsch = 4 + Math.floor(Math.random() * 3);
+    const reihe = mischen(mischen(SP.grammar.patrol).slice(0, GRAMMAR.runde).map((p) => {
+      const s = D.saetze[p.satz], arten = [p.prep, p.ing].filter((l) => l.length);
+      if (p.prep.length + p.ing.length < 2 || nFalsch <= 0) return { s, text: s.en, falsch: false }; // mit nur einem Fehlersatz gäbe es nach dem Stopp keine Auswahl
+      nFalsch--;
+      const text = zufall(zufall(arten)); // erst die Fehlerart, dann der Satz – sonst käme fast nur „falsche Präposition“
+      // Fassungen nach dem Stopp: der richtige Satz und je Fehlerart ein anderer falscher
+      const andere = [p.prep, p.ing].map((l) => zufall(l.filter((x) => x !== text))).filter(Boolean);
+      if (andere.length < 2) andere.push(...mischen([...p.prep, ...p.ing].filter((x) => x !== text && !andere.includes(x))).slice(0, 2 - andere.length));
+      return { s, text, falsch: true, andere };
+    }));
+    let i = 0, richtig = 0, laeuft = true, entschieden = false;
+    const fehler = [];
+    const zurueck = () => { laeuft = false; stopp(); zeigeSpiele(k); };
+    const stand = el("p", { class: "patrol-stand", "aria-live": "polite" });
+    const zeigeStand = () => { stand.replaceChildren(el("span", {}, T(`Satz ${Math.min(i + 1, reihe.length)} von ${reihe.length}`, `Sentence ${Math.min(i + 1, reihe.length)} of ${reihe.length}`)), el("span", {}, `✓ ${richtig}`)); };
+    const pass = el("p", { class: "gp-satz", lang: "en" });
+    const himmel = el("div", { class: "patrol-himmel gp-himmel", role: "group", "aria-label": "Grammar Patrol" },
+      el("span", { class: "gp-schranke", "aria-hidden": "true" }, "🚧"), pass);
+    const box = rueckmeldung();
+    const zonen = el("div", { class: "patrol-zonen" }, [["ok", "✅", T("Durchwinken", "Wave through")], ["stop", "🛑", T("Stoppen", "Stop")]].map(([art, sym, name]) =>
+      el("button", { class: "patrol-zone gp-" + art, onclick: () => urteil(art === "stop") }, el("span", { class: "gp-sym", "aria-hidden": "true" }, sym), el("span", {}, name))));
+    const fassungen = el("div", { class: "wahl senkrecht gp-fassungen", role: "group", hidden: true });
+    const weiter = knopf(T("Weiter →", "Next →"), () => { i++; zeigeSatz(); }, "haupt"); weiter.hidden = true;
+    const ergebnis = el("div", { class: "gp-fehler", hidden: true });
+    function zeigeSatz() {
+      if (!laeuft) return;
+      if (i >= reihe.length) return ende();
+      entschieden = false; grammarLauf = reihe[i];
+      box.hidden = true; fassungen.hidden = true; fassungen.replaceChildren(); weiter.hidden = true; zonen.hidden = false;
+      pass.className = "gp-satz"; void pass.offsetWidth; pass.classList.add("kommt"); pass.textContent = reihe[i].text;
+      zeigeStand();
+    }
+    // Auflösung mit dem richtigen Satz (Text + vorhandene Aufnahme), dann „Weiter“
+    function aufloesen(a, ok, text, wie) {
+      if (ok) richtig++; else fehler.push({ a, wie });
+      zonen.hidden = true; pass.classList.add(ok ? "gut" : "schlecht");
+      box.hidden = false; box.className = "rueckmeldung " + (ok ? "gut" : "neutral");
+      box.replaceChildren(el("span", {}, text + " "), el("span", { class: "gp-richtig", lang: "en" }, a.s.en));
+      zeigeStand(); weiter.hidden = false;
+      spiele([tonSatz(a.s)]);
+    }
+    function urteil(stop) {
+      if (!laeuft || entschieden) return;
+      entschieden = true;
+      const a = reihe[i];
+      if (!a.falsch && !stop) { // richtig durchgewinkt: ohne Halt weiter
+        richtig++; pass.classList.add("durch"); zeigeStand();
+        setTimeout(() => { if (laeuft && reihe[i] === a) { i++; zeigeSatz(); } }, 600);
+        return;
+      }
+      if (!a.falsch) return aufloesen(a, false, T("Zu Unrecht gestoppt – der Satz war richtig:", "Stopped by mistake – this sentence was correct:"), T("zu Unrecht gestoppt", "stopped by mistake"));
+      if (!stop) return aufloesen(a, false, T("Da war ein Fehler! Richtig heißt es:", "There was a mistake! The correct sentence is:"), T("durchgewinkt", "waved through"));
+      zonen.hidden = true; pass.classList.add("gestoppt");
+      box.hidden = false; box.className = "rueckmeldung gut";
+      box.textContent = T("Gut gestoppt! Welche Fassung ist richtig?", "Good stop! Which version is correct?");
+      fassungen.hidden = false;
+      fassungen.replaceChildren(...mischen([a.s.en, ...a.andere]).map((t) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
+        if (a.fertig) return;
+        a.fertig = true;
+        [...fassungen.children].forEach((b) => { b.disabled = true; if (b.textContent === a.s.en) b.classList.add("richtig"); });
+        const ok = t === a.s.en;
+        if (!ok) e.currentTarget.classList.add("falsch");
+        aufloesen(a, ok, ok ? lob() : T("Nicht ganz. Richtig heißt es:", "Not quite. The correct sentence is:"), T("gestoppt, aber falsche Fassung gewählt", "stopped, but chose the wrong version"));
+      } }, t)));
+    }
+    function ende() {
+      laeuft = false; grammarLauf = null;
+      const geschafft = richtig >= GRAMMAR.ziel;
+      const tag = iso(heute()), punkte = geschafft && g.grammarTag !== tag;
+      if (punkte) { g.grammarTag = tag; punkteDazu(PUNKTE.spiel, { art: "m", bonus: true }); } else speichern();
+      const text = geschafft ? `${lob(true)} ${T(`${richtig} von ${reihe.length} Sätzen richtig kontrolliert!`, `${richtig} of ${reihe.length} sentences checked correctly!`)}${punkte ? ` +${PUNKTE.spiel} ⭐` : (g.grammarTag === tag ? T(" (Punkte gibt es einmal pro Tag.)", " (Points once a day.)") : "")}`
+        : T(`${richtig} von ${reihe.length} richtig. Für Punkte brauchst du ${GRAMMAR.ziel}. Noch mal?`, `${richtig} of ${reihe.length} correct. You need ${GRAMMAR.ziel} for points. Again?`);
+      himmel.hidden = true; zonen.hidden = true; fassungen.hidden = true; weiter.hidden = true;
+      stand.replaceChildren(el("span", {}, T("Ergebnis", "Result")), el("span", {}, `✓ ${richtig} / ${reihe.length}`));
+      melde(box, geschafft ? "gut" : "neutral", text);
+      ergebnis.hidden = false;
+      ergebnis.replaceChildren(el("h2", {}, fehler.length ? T("Deine Fehler", "Your mistakes") : T("Kein einziger Fehler!", "Not a single mistake!")),
+        fehler.length ? el("ul", {}, fehler.map(({ a, wie }) => el("li", {},
+          a.falsch && el("span", { class: "gp-alt", lang: "en" }, "✗ " + a.text), el("span", { class: "gp-richtig", lang: "en" }, "✓ " + a.s.en), el("small", {}, wie)))) : null);
+    }
+    zeige(spielKopf(k, "Grammar Patrol", zurueck),
+      ansage("Sentences at the border! Correct? Wave it through. A mistake? Stop it and choose the correct version.",
+        "Sätze an der Grenze! Richtig? Durchwinken. Ein Fehler? Stoppen und die richtige Fassung wählen."),
+      el("section", { class: "satzkarte patrol gp" }, stand, himmel, zonen, box, fassungen, weiter, ergebnis,
+        el("div", { class: "knopfreihe" }, knopf(T("↻ Noch mal", "↻ Play again"), () => spielGrammar(k)), knopf(T("Andere Spiele", "Other games"), zurueck), knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
+    zeigeSatz();
+  }
+  if (LOKAL) window.__grammar = () => grammarLauf && { falsch: grammarLauf.falsch, richtig: grammarLauf.s.en, text: grammarLauf.text }; // nur Test-Build: aktueller Satz
 
   /* ---------- Games: Catch the Word – ein Wort wird gesprochen, 4–6 Wörter des Abschnitts fallen, das richtige antippen ----------
      10 Runden, 3 Leben: falsches Wort angetippt oder das richtige durchgefallen kostet eins. Treffer = kurzer Klang, dann die deutsche Bedeutung.

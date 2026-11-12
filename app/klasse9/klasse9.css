@@ -234,6 +234,29 @@
 .patrol-wort { display: grid; justify-items: center; line-height: 1.1; padding: 6px 14px 5px; }
 .patrol-wort small { font: 500 .78rem var(--text-font, inherit); color: var(--leise); }
 .patrol-wort.aktiv small, .patrol-wort.falsch small { color: inherit; opacity: .8; }
+/* Games: Grammar Patrol (12.11.2026) – ein Satz kommt an die Grenze, durchwinken oder stoppen */
+.gp-himmel { height: auto; min-height: 160px; display: grid; place-items: center; padding: 34px 14px 18px; }
+.gp-schranke { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; opacity: .7; }
+.gp-satz { margin: 0; padding: 14px 16px; border-radius: 14px; border: 3px solid var(--blau); background: var(--karte); color: var(--text);
+  font: 600 1.35rem/1.3 var(--display); text-align: center; overflow-wrap: anywhere; transition: transform .5s, opacity .5s; }
+.gp-satz.kommt { animation: gp-kommt .45s ease-out; }
+@keyframes gp-kommt { from { transform: translateX(-110%); opacity: 0; } }
+.gp-satz.durch { transform: translateX(120%); opacity: 0; border-color: var(--gruen); background: var(--gruen-hell); }
+.gp-satz.gestoppt, .gp-satz.schlecht { border-color: #c8283a; }
+.gp-satz.gut { border-color: var(--gruen); }
+.gp .patrol-zone { min-height: 84px; cursor: pointer; }
+.gp .patrol-zone.gp-ok { border-color: var(--gruen); background: var(--gruen-hell); }
+.gp .patrol-zone.gp-stop { border-color: #c8283a; background: rgba(200, 40, 58, .08); }
+.gp-sym { font-size: 2rem; line-height: 1; }
+.gp-richtig { color: var(--gruen); font-weight: 700; }
+.rueckmeldung .gp-richtig { color: inherit; display: block; font-family: var(--display); font-size: 1.15rem; }
+.gp-fassungen .wahl-knopf.falsch, .sprint-wahl .wahl-knopf.falsch { border-color: #c8283a; background: #ffd7d7; color: #7a1010; opacity: 1; }
+.gp-fehler h2 { margin: 0 0 6px; font-size: 1.15rem; }
+.gp-fehler ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.gp-fehler li { display: grid; gap: 2px; padding: 8px 10px; border: 1px solid var(--linie); border-radius: 10px; }
+.gp-alt { color: #a01c2a; text-decoration: line-through; }
+.gp-fehler small { color: var(--leise); }
+@media (prefers-reduced-motion: reduce) { .gp-satz, .gp-satz.kommt { animation: none; transition: none; } }
 
 /* Games: Catch the Word */
 .catch-himmel { background: linear-gradient(#fff3c4, var(--karte)); height: 44vh; min-height: 300px; }

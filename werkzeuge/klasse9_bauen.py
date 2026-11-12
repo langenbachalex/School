@@ -524,7 +524,7 @@ def main():
     einheiten = [{"nr": k["nr"], "titel": k["titel"], "gruppen": gruppen_von(k), "teile": None} for k in KATEGORIEN]
     hw = hausaufgaben.lesen(os.path.join(INHALTE, "hausaufgabe.tsv"), einheiten)
     daten = {"lob": lob, "saetze": saetze, "vokabeln": vokabeln, "units": units, "kategorien": KATEGORIEN, "hoeren": hoeren,
-             "spiel": spieldaten(), "gym": GYM, "termin": TERMIN, "hausaufgaben": hw,
+             "spiel": dict(spieldaten(), grammar=grammar_spiele(saetze)), "gym": GYM, "termin": TERMIN, "hausaufgaben": hw,
              "gln": hausaufgaben.lesen_gln(os.path.join(INHALTE, "gln.tsv"), einheiten)}  # 🏁 Road to GLN
     with open(os.path.join(APP, "daten.js"), "w", encoding="utf-8") as f:
         f.write("// Automatisch erzeugt von werkzeuge/klasse9_bauen.py – bitte nicht von Hand ändern.\n")
@@ -608,6 +608,73 @@ def staat_foto(sid):
     if "nps.gov" in q["link"]:  # 7.11.: Foto des National Park Service (gemeinfrei)
         return {"foto": f"bilder/staaten/{sid}.jpg", "foto_quelle": f"Foto: National Park Service ({q['lizenz']})"}
     return {"foto": f"bilder/staaten/{sid}.jpg", "foto_quelle": f"Foto: {q['urheber']}, Library of Congress ({q['lizenz']})"}
+
+
+# Games „Grammar Patrol“ und „Chunk Sprint“ (12.11.2026, Mr. Alex): Daten aus den Sätzen la_01–la_22 (Gruppen „-ing form“ und „Prepositions“).
+# Grundform zum -ing-Wort jedes Satzes (steht sonst nirgends in den Daten; nicht in JS erraten).
+GRAMMAR_GRUND = {"la_01": "play", "la_02": "walk", "la_03": "get", "la_04": "Dance", "la_05": "Learn", "la_06": "draw", "la_07": "join",
+                 "la_08": "speak", "la_09": "see", "la_10": "buy", "la_11": "watch", "la_12": "eat", "la_13": "wait", "la_14": "help",
+                 "la_15": "meet", "la_16": "go", "la_17": "make", "la_18": "remember", "la_19": "take", "la_20": "decorate", "la_21": "make",
+                 "la_22": "play"}
+GRAMMAR_PREPS = ["at", "in", "about", "of", "to", "for", "on"]
+# Erzeugte Fehlersätze, die (auch) richtiges oder strittiges Englisch wären – nie als „falsch“ zeigen (einmal alle durchgesehen, 12.11.):
+# (Satz, falsche Präposition) bzw. (Satz, "grund") = Grundform statt -ing, (Satz, "to") bei reinen -ing-Sätzen = „to“ + Grundform.
+GRAMMAR_AUS = {
+    ("la_03", "to"),                     # hates to get up – richtig
+    ("la_04", "grund"), ("la_04", "to"),  # Dance is my favorite hobby / To dance is … – richtig
+    ("la_05", "to"),                     # To learn a new language takes time – richtig
+    ("la_06", "for"), ("la_18", "for"),  # good for / bad for – gibt es (andere Bedeutung)
+    ("la_07", "about"),                  # interested about – umgangssprachlich zu hören
+    ("la_08", "about"), ("la_08", "for"),  # afraid about / afraid for – strittig
+    ("la_10", "of"), ("la_10", "on"),    # thinking of buying – richtig; think on – veraltet
+    ("la_15", "of"), ("la_15", "at"),    # nervous of (britisch) – richtig; nervous at – strittig
+    ("la_16", "at"), ("la_16", "for"),   # excited at / excited for – gibt es
+    ("la_17", "for"), ("la_17", "of"), ("la_17", "at"),  # worry for / of / at – strittig
+    ("la_19", "for"),                    # is used for taking – grammatisch (andere Bedeutung)
+    ("la_21", "for"), ("la_21", "to"), ("la_21", "in"),  # a way for / to / in … – strittig
+    ("la_22", "about"), ("la_22", "on"),  # dreams about playing – richtig; dream on – gibt es
+    ("la_06", "about"), ("la_18", "about"),  # good about / bad about doing – amerikanische Wendung
+    ("la_14", "to"),                     # Thanks to helping … – „dank“, als Satzanfang möglich
+    ("la_15", "for"), ("la_17", "in"), ("la_19", "in"),  # nervous for / worry in / is used in taking – strittig
+}
+
+
+def grammar_spiele(saetze):
+    patrol, sprint = [], []
+    ersetze = lambda s, alt, neu: s["en"].replace(alt, neu, 1)
+    for nr in range(1, 23):
+        sid = f"la_{nr:02d}"
+        s, grund = saetze[sid], GRAMMAR_GRUND[sid]
+        teile = s["luecke"].split()
+        ing, prep = teile[-1], (teile[0] if len(teile) == 2 else None)
+        assert s["en"].count(s["luecke"]) == 1 and ing.lower().endswith("ing") and ing.lower().startswith(grund.lower()[:2]), sid
+        f_prep, f_ing = [], []
+        if prep in GRAMMAR_PREPS:  # falsche Präposition
+            f_prep = [ersetze(s, s["luecke"], f"{p} {ing}") for p in GRAMMAR_PREPS if p != prep and (sid, p) not in GRAMMAR_AUS]
+        if (sid, "grund") not in GRAMMAR_AUS:  # Grundform statt -ing (nach „to“: look forward to see / be used to take)
+            f_ing.append(ersetze(s, ing, grund))
+        if prep not in GRAMMAR_PREPS and (sid, "to") not in GRAMMAR_AUS:  # „to“ + Grundform statt -ing (nur ohne Präposition davor bzw. nach before)
+            f_ing.append(ersetze(s, ing, "to " + grund))
+        assert s["en"] not in f_prep + f_ing and len(set(f_prep + f_ing)) == len(f_prep + f_ing), sid
+        patrol.append({"satz": sid, "prep": f_prep, "ing": f_ing})
+    for k in KATEGORIEN:  # Chunk Sprint: die Aufgaben der verbform-Schritte beider Gruppen …
+        for g in k.get("gruppen", []):
+            if g["name"] in ("-ing form", "Prepositions"):
+                for st in g["schritte"]:
+                    if st["art"] == "verbform":
+                        sprint += [{"satz": a["satz"], "luecke": a.get("luecke") or saetze[a["satz"]]["luecke"], "richtig": a["richtig"], "falsch": a["falsch"]} for a in st["aufgaben"]]
+    for sid, grund in GRAMMAR_GRUND.items():  # … und die -ing-Lücke der übrigen Sätze (Grundform / „to“ + Grundform), außer direkt nach „to“
+        ing = saetze[sid]["luecke"].split()[-1]
+        if not any(a["satz"] == sid and a["richtig"] == ing for a in sprint) and not saetze[sid]["luecke"].startswith("to "):
+            sprint.append({"satz": sid, "luecke": ing, "richtig": ing, "falsch": [grund, "to " + grund]})
+    assert len(sprint) >= 30 and all(len(a["falsch"]) == 2 and a["richtig"] not in a["falsch"] for a in sprint)
+    if "--grammar" in sys.argv:  # Prüfliste: alle erzeugten Fehlersätze
+        for p in patrol:
+            print(p["satz"], "✓", saetze[p["satz"]]["en"])
+            for f in p["prep"] + p["ing"]:
+                print("      ✗", f)
+        print(len(sprint), "Sprint-Aufgaben")
+    return {"patrol": patrol, "sprint": sprint}
 
 
 def spieldaten():

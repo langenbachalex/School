@@ -11403,7 +11403,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/ny_banner.mp3",
      "richtig": "audio/runner/ny_richtig.mp3",
-     "falsch": "audio/runner/ny_falsch.mp3"
+     "falsch": "audio/runner/ny_falsch.mp3",
+     "frage": "audio/runner/ny_frage.mp3"
     },
     "start": "audio/runner/ny_start.mp3",
     "ende": "audio/runner/ny_ende.mp3",
@@ -11427,7 +11428,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/route66_banner.mp3",
      "richtig": "audio/runner/route66_richtig.mp3",
-     "falsch": "audio/runner/route66_falsch.mp3"
+     "falsch": "audio/runner/route66_falsch.mp3",
+     "frage": "audio/runner/route66_frage.mp3"
     },
     "start": "audio/runner/route66_start.mp3",
     "ende": "audio/runner/route66_ende.mp3",
@@ -11451,7 +11453,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/az_banner.mp3",
      "richtig": "audio/runner/az_richtig.mp3",
-     "falsch": "audio/runner/az_falsch.mp3"
+     "falsch": "audio/runner/az_falsch.mp3",
+     "frage": "audio/runner/az_frage.mp3"
     },
     "start": "audio/runner/az_start.mp3",
     "ende": "audio/runner/az_ende.mp3",
@@ -11475,7 +11478,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/sd_banner.mp3",
      "richtig": "audio/runner/sd_richtig.mp3",
-     "falsch": "audio/runner/sd_falsch.mp3"
+     "falsch": "audio/runner/sd_falsch.mp3",
+     "frage": "audio/runner/sd_frage.mp3"
     },
     "start": "audio/runner/sd_start.mp3",
     "ende": "audio/runner/sd_ende.mp3",
@@ -11499,7 +11503,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/ca_banner.mp3",
      "richtig": "audio/runner/ca_richtig.mp3",
-     "falsch": "audio/runner/ca_falsch.mp3"
+     "falsch": "audio/runner/ca_falsch.mp3",
+     "frage": "audio/runner/ca_frage.mp3"
     },
     "start": "audio/runner/ca_start.mp3",
     "ende": "audio/runner/ca_ende.mp3",
@@ -11523,7 +11528,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/realm6_banner.mp3",
      "richtig": "audio/runner/realm6_richtig.mp3",
-     "falsch": "audio/runner/realm6_falsch.mp3"
+     "falsch": "audio/runner/realm6_falsch.mp3",
+     "frage": "audio/runner/realm6_frage.mp3"
     },
     "start": "audio/runner/realm6_start.mp3",
     "ende": "audio/runner/realm6_ende.mp3",
@@ -11547,7 +11553,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/disco_banner.mp3",
      "richtig": "audio/runner/disco_richtig.mp3",
-     "falsch": "audio/runner/disco_falsch.mp3"
+     "falsch": "audio/runner/disco_falsch.mp3",
+     "frage": "audio/runner/disco_frage.mp3"
     },
     "start": "audio/runner/disco_start.mp3",
     "ende": "audio/runner/disco_ende.mp3"
@@ -11571,6 +11578,9 @@ window.DATEN = {
     "letztes_2": "audio/alex/letztes_2.mp3",
     "halb_1": "audio/alex/halb_1.mp3",
     "halb_2": "audio/alex/halb_2.mp3",
+    "tor_1": "audio/alex/tor_1.mp3",
+    "tor_2": "audio/alex/tor_2.mp3",
+    "tor_3": "audio/alex/tor_3.mp3",
     "boss_1": "audio/alex/boss_1.mp3",
     "boss_2": "audio/alex/boss_2.mp3",
     "ende_1": "audio/alex/ende_1.mp3",

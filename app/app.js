@@ -3044,7 +3044,8 @@
       // wort(j, { leise: true }) = Echo im Spiel: leiser und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
       stimme: { wort: (j, o) => runnerWort([ws[j % ws.length].audio.en], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
         erzaehler: erzaehlerStimme, still: () => stopp(),
-        boss: (text, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }], {}, true),
+        // Boss (12.11.): o.wort = erst die Wortaufnahme des richtigen Worts, dann der Spruch (eine Folge); o.warten = hinter Laufendem (Frage nach dem Banner)
+        boss: (text, o) => hauptText([o && o.wort != null && ws[o.wort % ws.length].audio.en, (o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }].filter(Boolean), o && o.warten ? { warten: true } : {}, true),
         ansage: (text, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: "m" }], { warten: true }),
         cameo: (text, id, o) => hauptText([(o && o.audio) || { tts: text, lang: "en-GB", stimme: HELD_STIMME[id] || "f" }], { warten: true }),
         // Mr. Alex' Zurufe (7.11.): hinter Held/Erzähler/Boss und hinter einer laufenden Vokabel (warten), nie dazwischen

@@ -4315,14 +4315,15 @@
         tor: (de) => T(`Welcher Diamant heißt „${de}“?`, `Which diamond means “${de}”?`), richtigWaere: T(" – richtig wäre: ", " – correct: "),
         sequenz: T("Zwischensequenz …", "Cutscene …"), boss: T("Boss! Beantworte die Frage.", "Boss! Answer the question."),
         bossTitel: T(`${W.boss} fragt …`, `${W.boss} asks …`), bossHinweis: W.id === "realm6" ? T("Richtig = die sechste Tür gehört dir. Falsch = ein Leben weg.", "Right = the sixth gate is yours. Wrong = you lose a life.") : W.id === "route66" ? T("Richtig = der Schlagbaum geht hoch. Falsch = ein Leben weg.", "Right = the barrier lifts. Wrong = you lose a life.") : W.id === "ca" ? T("Richtig = das Brückentor geht auf. Falsch = ein Leben weg.", "Right = the bridge gate opens. Wrong = you lose a life.") : W.id === "sd" ? T("Richtig = das Ranger-Tor geht auf. Falsch = ein Leben weg.", "Right = the ranger gate opens. Wrong = you lose a life.") : W.id === "az" ? T("Richtig = das Holztor geht auf. Falsch = ein Leben weg.", "Right = the wooden gate opens. Wrong = you lose a life.") : T("Richtig = die Tür geht auf. Falsch = ein Leben weg.", "Right = the door opens. Wrong = you lose a life."),
-        frage: (de) => T(`„Was heißt ‚${de}‘ auf Englisch?“`, `“What's ‘${de}’ in English?”`),
+        frage: (de) => `What's „${de}“ in English?`,   // 12.11.: Unterrichtswendung, in beiden Sprachen der Oberfläche englisch
       }),
       // wort(j, { leise: true }) = Echo im Spiel: leiser (0,6) und hinter einer laufenden Wiedergabe, statt sie abzuschneiden
       // Aufnahmen der Welt (Boss-Banner/-Sprüche Mr. Alex, Levelstart Jeremy); fehlt eine Datei, spricht die Geräte-Stimme
       audio: Object.assign({ alex: runnerAudio("alex") }, runnerAudio(W.id) || {}),   // dazu Mr. Alex' Zurufe (7.11., audio/alex/<key>.mp3)
       stimme: { wort: (j, o) => runnerWort([tonWort(ws[j % ws.length])], o && o.leise ? { laut: 0.6, warten: true } : o && o.warten ? { warten: true } : {}),
         erzaehler: erzaehlerStimme, still: () => stopp(),
-        boss: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], {}, true),
+        // Boss (12.11.): o.wort = erst die Wortaufnahme des richtigen Worts, dann der Spruch (eine Folge); o.warten = hinter Laufendem (Frage nach dem Banner)
+        boss: (text, o) => hauptText([o && o.wort != null && tonWort(ws[o.wort % ws.length]), (o && o.audio) || { text, stimme: "m" }].filter(Boolean), o && o.warten ? { warten: true } : {}, true),
         ansage: (text, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }),
         // Mr. Alex' Zurufe (7.11.): hinter Erzähler/Boss und hinter einer laufenden Vokabel (warten), nie dazwischen
         alex: (text, key, o) => hauptText([(o && o.audio) || { text, stimme: "m" }], { warten: true }),

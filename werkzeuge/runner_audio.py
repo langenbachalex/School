@@ -29,12 +29,12 @@ APP6, APP9 = os.path.join(BASIS, "app"), os.path.join(BASIS, "app", "klasse9")
 ENGINE = os.path.join(APP9, "runner.js")
 GRENZE = 2500
 WELTEN9, WELTEN6 = ("ny", "route66", "az", "sd", "ca", "realm6"), ("westminster", "londoneye", "towerbridge", "tube", "wembley")   # Klasse 6: Welt 4 The Tube (31.10.) und Welt 5 Wembley (1.11.) kennt das Skript, Dateien erst nach dem 13.11.
-ARTEN = ("banner", "richtig", "falsch", "start", "ende")
+ARTEN = ("banner", "richtig", "falsch", "start", "ende", "frage")   # frage (12.11.2026): der Boss fragt auf Englisch („… What's the English word?“), Stimme wie richtig/falsch
 # Disco Run (Bonus-Level, 7.11.2026): Mr. Alex spricht alles selbst, übertrieben (eleven_v4, Stabilität 0,3 = Stimme en_alex_disco), Kl. 6 britisch, Kl. 9 [American accent];
 # Ziele app/audio/runner/disco_<art>.mp3 bzw. app/klasse9/audio/runner/disco_<art>.mp3, Zurufe audio/alex/disco_<key>.mp3 (Texte DISCO_ZURUFE_EN in runner.js)
-DISCO_TAGS = {"banner": "[excited] [laughs]", "richtig": "[dramatic] [sobbing]", "falsch": "[laughs]", "start": "[excited] [shouting]", "ende": "[excited] [laughs]"}
+DISCO_TAGS = {"frage": "[excited]", "banner": "[excited] [laughs]", "richtig": "[dramatic] [sobbing]", "falsch": "[laughs]", "start": "[excited] [shouting]", "ende": "[excited] [laughs]"}
 # Klasse 9 Kapitel 6 (geheim, 2.11., nur geplant – Vertonung nach dem 13.11.): Boss Elena Cruz spricht ihre Sprüche selbst (Jessica = f), das Banner bleibt beim Erzähler (Mr. Alex)
-STIMME9 = {"realm6": {"richtig": "f", "falsch": "f"}}
+STIMME9 = {"realm6": {"richtig": "f", "falsch": "f", "frage": "f"}}
 JUNGEN, MAEDCHEN = ("leo", "kenji", "felix", "max"), ("camilla", "ellie", "olivia", "zara", "penny", "tessa")
 CAMEO_STIMME = {h: f"h_{h}" for h in JUNGEN + MAEDCHEN}   # 7.11.: jeder Held eine eigene Stimme (audio_erzeugen.STIMMEN h_<id>)
 # Klasse 9 (7.11.2026, Etappe 2): 13 US-Helden (inhalte/klasse9/helden.tsv), je eine eigene amerikanische Stimme (audio_erzeugen.STIMMEN h_<id>), Ziel app/klasse9/audio/runner/cameo_<id>.mp3
@@ -98,7 +98,7 @@ def britisch(text, klasse=6):
 
 
 ALEX_TAGS = {"start": "[cheerful]", "combo3": "[cheerful]", "combo5": "[excited]", "combo8": "[excited]", "tore3": "[cheerful]", "leben": "[encouraging]",
-             "letztes": "[calm]", "halb": "[cheerful]", "boss": "[encouraging]", "ende": "[warm]", "fail": "[warm]"}   # leichte Tags je Moment (nur im gesprochenen Text)
+             "letztes": "[calm]", "halb": "[cheerful]", "tor": "[encouraging]", "boss": "[encouraging]", "ende": "[warm]", "fail": "[warm]"}   # leichte Tags je Moment (nur im gesprochenen Text)
 
 
 def alex_zurufe():
@@ -256,11 +256,11 @@ def daten(klasse):
     a = lambda rel: rel if os.path.exists(os.path.join(app, rel)) else None
     aus = {}
     for w in welten:
-        d = {"boss": {art: a(f"audio/runner/{w}_{art}.mp3") for art in ("banner", "richtig", "falsch")},
+        d = {"boss": {art: a(f"audio/runner/{w}_{art}.mp3") for art in ("banner", "richtig", "falsch", "frage")},
              "start": a(f"audio/runner/{w}_start.mp3"), "ende": a(f"audio/runner/{w}_ende.mp3")}
         d["cameo"] = {h: a(f"audio/runner/cameo_{h}.mp3") for h in (JUNGEN + MAEDCHEN if klasse == 6 else HELDEN9)}
         aus[w] = d
-    aus["disco"] = {"boss": {art: a(f"audio/runner/disco_{art}.mp3") for art in ("banner", "richtig", "falsch")},
+    aus["disco"] = {"boss": {art: a(f"audio/runner/disco_{art}.mp3") for art in ("banner", "richtig", "falsch", "frage")},
                     "start": a("audio/runner/disco_start.mp3"), "ende": a("audio/runner/disco_ende.mp3")}   # Disco Run (Bonus)
     aus["alex"] = {key: a(f"audio/alex/{key}.mp3") for key, _ in alex_zurufe() + disco_zurufe()}   # Mr. Alex' Zurufe (7.11.), beide Klassen dieselben Dateien
     # Vier Ton-Posten vom 12.11.2026 – nur vorhandene Dateien (fehlt eine, bleibt es bei Geräte-Stimme bzw. Stille)

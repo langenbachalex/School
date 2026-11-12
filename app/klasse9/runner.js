@@ -202,7 +202,7 @@
     tuer: "The door is open – go!",
     bossTitel: "Mr. Alligator fragt …",
     bossHinweis: "Richtig = die Tür geht auf. Falsch = ein Leben weg.",
-    frage: (de) => `„Was heißt ‚${de}‘ auf Englisch?“`,
+    frage: (de) => `What's „${de}“ in English?`,   // 12.11.: Unterrichtswendung (Englisch-Apps); Französisch setzt eigene Texte (opt.texte)
   };
 
   /* ---------- Canvas / Skalierung (im Wrapper der App, nicht im Fenster) ---------- */
@@ -1932,7 +1932,7 @@
     combo = 0; maxCombo = 0; comboText = null; hudPuls = 0; spur = 0; onfire = false; partikel = []; spurPunkte = []; gegnerKlaenge = 0; erstauntZeit = 0; zungeZeit = 0;
     for (const k in gegnerKlangZeit) gegnerKlangZeit[k] = -9;
     alexLetzteZeit = -99; alexLetzterMoment = null; alexLetzterKey = {}; alexGesagt = []; alexHalb = false; toreSerie = 0;
-    discoTanz = 0; discoSchritt = 0; discoNaechster = 0; discoStart = null;   // Disco Run
+    finaleWarten = 0; discoTanz = 0; discoSchritt = 0; discoNaechster = 0; discoStart = null;   // Disco Run
     trommelt = 0; dunkel = 0; radWinkel = 0; radRueck = 0; kameraHoch = 0; begleiter = storyOpt && storyOpt.begleiter ? { art: storyOpt.begleiter === 'taube' ? 'taube' : 'fuchs', x: 60, y: BODEN_Y, flug: 0 } : null;
     klappen = (level.klappen || []).map((k) => ({ ...k, phase: 'ruhe', t: 0, winkel: 0 })); boote = (level.boote || []).map((b) => ({ ...b })); treibgut = (level.treibgut || []).map((t) => ({ ...t, bob: Math.random() * 6 })); hornt = 0; imBoot = null; ruderZeit = -9;   // Tower Bridge
     spalten = (level.spalten || []).map((s) => ({ ...s, gewarnt: false })); tueren = (level.tueren || []).map((t) => ({ ...t, phase: 'offen', t: 0, schluss: 0 })); durchsagen = 0; piept = 0; rabeMit = null; tuerAnsagen = 0; nyDurchsage = false; durchsagenGesprochen = [];   // The Tube, New York (U-Bahn-Durchsage)
@@ -2018,6 +2018,7 @@
     leben:   [["leben_1", "Never mind – keep going!"], ["leben_2", "Shake it off!"], ["leben_3", "Oops – you've got this!"]],
     letztes: [["letztes_1", "Careful now – one life left!"], ["letztes_2", "Last life – focus!"]],
     halb:    [["halb_1", "Halfway there!"], ["halb_2", "Half done – well done!"]],
+    tor:     [["tor_1", "Find the right word!"], ["tor_2", "Which word is it?"], ["tor_3", "Jump to the right word!"]],   // 12.11.: Ansage, wenn ein Wort-Tor in den Hinweis-Bereich kommt (einmal je Tor, s. torAnsage)
     boss:    [["boss_1", "Here comes the boss – you can do this!"], ["boss_2", "Boss time! Think carefully."]],
     ende:    [["ende_1", "Well done, that's my student!"], ["ende_2", "Top job!"], ["ende_3", "Fantastic run!"]],
     fail:    [["fail_1", "Good try – next time!"], ["fail_2", "Nearly! Try again."]],
@@ -2035,6 +2036,14 @@
     alexGesagt.push({ moment, key });
     if (!immer) try { if (stimme.alex) stimme.alex(text, key, { audio: z.audio }); } catch (e) { /* stumm */ }
     return z;
+  }
+  // Tor-Ansage (12.11., Mr. Alex): kommt ein offenes Wort-Tor in den Hinweis-Bereich (wie torHinweis, ohne Eule), ruft Mr. Alex einmal je Tor – über alexSagen
+  // (Drosselung, hinter Held/Erzähler/Boss). Nicht, solange im Story-Modus eine Ansage läuft (stimme.beschaeftigt), und nicht in Welten mit eigenen Hinweisen (Französisch).
+  function torAnsage() {
+    if (W.hinweise) return;
+    const tor = tore.find((t) => !t.erledigt && !t.angesagt && spieler.x > t.x - 520 && spieler.x < t.x + 40); if (!tor) return;
+    if (story && story.aktiv) { if (stimmeBeschaeftigt()) return; }   // Erzähler spricht: warten (solange das Tor im Bereich ist)
+    tor.angesagt = true; alexSagen('tor');
   }
   function alexCombo() { if (combo === 3) alexSagen('combo3'); else if (combo === 5) alexSagen('combo5'); else if (combo === 8) alexSagen('combo8'); }
   const CAMEO = {
@@ -3068,7 +3077,7 @@
         if (sequenz.t >= SEQUENZ.boss) { sequenz = { phase:'zurueck', t:0 }; }
       } else if (ph === 'zurueck') {
         zoom = 1.4 - 0.4 * Math.min(1, sequenz.t / SEQUENZ.zurueck);
-        if (sequenz.t >= SEQUENZ.zurueck) { zoom = 1; sequenz = null; zustand = 'boss'; bossFragen(); }
+        if (sequenz.t >= SEQUENZ.zurueck) { zoom = 1; sequenz = null; zustand = 'boss'; bossFragen(true); }
       }
     } else if (zustand === 'boss') {
       boss.maul = 0.5 + 0.5 * Math.sin(zeit * 4);
@@ -3085,27 +3094,32 @@
         spieler.pose = 'lauf';
         spieler.x += SPEED * 0.8 * dt;
         if (story) for (const k of kristalle) if (k.strang === 'E' && !k.weg && Math.abs(spieler.x - k.x) < 20) kristallSammeln(k, true);   // Ende 11–12 hinter dem Boss (erzählt im Film)
-        if (spieler.x > level.tuerX + 10) { zustand = 'fertig'; klang.fanfare(); if (story) filmStart(endeWahl() || gabelStandard(endeAbschnitt && endeAbschnitt.ende)); else zeigeEnde(true); }
+        // 12.11. (Englisch-Apps): Wort + Boss-Spruch ausreden lassen – die Figur wartet in der offenen Tür (höchstens FINALE_WARTEN_MAX s), erst dann Film bzw. Levelende (die sofort sprechen)
+        if (spieler.x > level.tuerX + 10 && W.frage && finaleWarten < FINALE_WARTEN_MAX && stimmeBeschaeftigt()) { finaleWarten += dt; spieler.x = level.tuerX + 10; spieler.pose = 'steh'; }
+        else if (spieler.x > level.tuerX + 10) { zustand = 'fertig'; klang.fanfare(); if (story) filmStart(endeWahl() || gabelStandard(endeAbschnitt && endeAbschnitt.ende)); else zeigeEnde(true); }
       }
     }
+    if (zustand === 'spiel' && !imRealm()) torAnsage();   // Tor-Ansage von Mr. Alex (12.11.)
     if (!alexHalb && zustand === 'spiel' && !imRealm() && spieler.x >= level.stopX / 2) { alexHalb = true; alexSagen('halb'); }   // Hälfte der Strecke
     const ziel = Math.max(0, Math.min(spieler.x - viewW * (viewW < 450 ? 0.28 : 0.33), level.ende - viewW));
     kamera += (ziel - kamera) * Math.min(1, dt * 10);
   }
 
   /* ---------- Boss-Frage (Overlay im Wrapper; Antworten antippen oder Tasten 1–3) ---------- */
-  let frageBox = null, frageText = null, antworten = null, spruchEl = null, frageTitel = null, frageZaehler = 0, wahlGabel = null;
+  let frageBox = null, frageText = null, antworten = null, spruchEl = null, loesungEl = null, frageTitel = null, frageZaehler = 0, wahlGabel = null;
   const el = (tag, klasse, text) => { const e = document.createElement(tag); if (klasse) e.className = klasse; if (text != null) e.textContent = text; return e; };
   function frageBauen() {
     frageBox = el("div", "runner-frage"); frageBox.hidden = true;
     const box = el("div", "runner-frage-box");
     frageTitel = el("h2", null, W.bossSymbol + " " + texte.bossTitel);
     box.append(frageTitel, el("p", "klein", texte.bossHinweis));
-    spruchEl = el("p", "spruch"); frageText = el("p", "frage-text"); antworten = el("div", "antworten");
-    box.append(spruchEl, frageText, antworten); frageBox.append(box);
+    spruchEl = el("p", "spruch"); loesungEl = el("p", "loesung"); loesungEl.hidden = true; loesungEl.style.cssText = "margin:0 0 4px;font-weight:700;font-size:.95rem;color:#18213a"; frageText = el("p", "frage-text"); antworten = el("div", "antworten");
+    box.append(spruchEl, loesungEl, frageText, antworten); frageBox.append(box);
     return frageBox;
   }
-  function bossFragen() {
+  // erste = erste Frage eines Kampfes: der Boss stellt sie dazu auf Englisch (W.frage, Aufnahme audio.boss.frage; 12.11.) – hinter dem Banner (warten).
+  // Nach einer falschen Antwort hat der Falsch-Spruch Vorrang (keine Wiederholung der Frage). Welten ohne W.frage (Französisch): wie bisher.
+  function bossFragen(erste = false) {
     const torWoerter = level.tore.map((t) => t.wort);
     const pool = woerter.map((w, i) => i).filter((i) => !torWoerter.includes(i));
     const richtig = pool[(frageZaehler * 3 + 1) % pool.length]; frageZaehler++;
@@ -3119,10 +3133,14 @@
       return b;
     }));
     frageBox.hidden = false;
+    if (erste) { loesungEl.textContent = ""; loesungEl.hidden = true; if (W.frage) bossSagt(W.frage, 3, 'frage', { warten: true }); }
   }
-  function bossSagt(text, dauer = 2.5, art = null) {
+  // extra.wort = Index des richtigen Worts: die App spricht erst die Wortaufnahme, dann den Spruch (eine Folge, nichts überlagert sich); extra.warten = hinter Laufendem
+  const FINALE_WARTEN_MAX = 4; let finaleWarten = 0;
+  const stimmeBeschaeftigt = () => { try { return !!(stimme.beschaeftigt && stimme.beschaeftigt()); } catch (e) { return false; } };
+  function bossSagt(text, dauer = 2.5, art = null, extra = null) {
     bossSpruch = { text, zeit: dauer }; spruchEl.textContent = W.bossSymbol + " " + text;
-    try { stimme.boss(text, { art, audio: audioDatei('boss', art) }); } catch (e) { /* stumm */ }
+    try { stimme.boss(text, Object.assign({ art, audio: audioDatei('boss', art) }, extra || {})); } catch (e) { /* stumm */ }
   }
   // Durchsagen im Runner (U-Bahn): über stimme.durchsage der App (Haupttext-Vorrang, nicht störend); ohne sie stumm
   const nyDurchsageBei = () => { const sub = (level.deko || []).find((d) => d.art === 'subway'); return sub ? sub.x - 260 : 700; };
@@ -3144,13 +3162,15 @@
       const wg = story ? gabeln.find((g) => g.nachBoss && !story.wahl[g.gabel]) : null;
       if (wg) { zustand = "wahl"; wahlZeigen(wg); }   // Golden Gate: erst entscheiden (Gabelung 2), dann geht das Tor auf
       popup = { en: woerter[i].en + " ✓", de: woerter[i].de, zeit: 2.5, art: "richtig" };
-      bossSagt(W.richtig || BOSS_RICHTIG, 3, 'richtig');
+      bossSagt(W.richtig || BOSS_RICHTIG, 3, 'richtig', W.frage ? { wort: i } : null);   // 12.11.: erst das richtige Wort hören, dann der Spruch
       if (W.id === 'wembley') meldung = { text: 'Kick-off! ⚽', zeit: 1.8 };   // Wembley: Fußballspruch zum Anpfiff (Mr. Alex 1.11.)
     } else {
       klang.falsch(); leben--; comboReset(); erstauntZeit = 0.8;
-      popup = { en: woerter[i].en + " ✗", de: woerter[i].de, zeit: 2, art: "falsch" };
-      if (leben <= 0) { frageBox.hidden = true; bossFrage = null; zustand = "gameover"; zeigeEnde(false); }
-      else { bossFragen(); bossSagt(W.falsch || BOSS_FALSCH, 2.5, 'falsch'); alexSagen(leben === 1 ? 'letztes' : 'leben'); }
+      const r = bossFrage.richtig, hilfe = !!W.frage;   // 12.11. (Englisch-Apps): wie bei den Toren zeigen und hören, welches Wort richtig gewesen wäre
+      popup = hilfe ? { en: woerter[i].en + " ✗", de: kurzDe(woerter[i].de) + texte.richtigWaere + woerter[r].en, zeit: 2.4, art: "falsch" } : { en: woerter[i].en + " ✗", de: woerter[i].de, zeit: 2, art: "falsch" };
+      if (hilfe) { loesungEl.textContent = `${woerter[i].en} ✗${texte.richtigWaere}${woerter[r].en} (${kurzDe(woerter[r].de)})`; loesungEl.hidden = false; }
+      if (leben <= 0) { frageBox.hidden = true; bossFrage = null; zustand = "gameover"; zeigeEnde(false); }   // letztes Leben: das Ende spricht sofort (Schlusswort) – hier keine Wortaufnahme, sie würde abgeschnitten
+      else { bossFragen(); bossSagt(W.falsch || BOSS_FALSCH, 2.5, 'falsch', hilfe ? { wort: r } : null); alexSagen(leben === 1 ? 'letztes' : 'leben'); }
     }
   }
 
@@ -9978,64 +9998,64 @@
   }
   const tx = (text) => (W && W.uebersetzung && W.uebersetzung[text]) || text;
   const WELTEN = {
-    ny: { id: 'ny', name: 'New York', staat: 'New York', ziel: 'Statue of Liberty', bossName: 'Mr. Alligator', bossSymbol: '🐊', banner: BANNER_TEXT, richtig: "Correct – the door opens!", falsch: "Not this time!", start: "Let's find the Statue of Liberty!", ende: "You made it to the Statue of Liberty!",
+    ny: { id: 'ny', name: 'New York', staat: 'New York', ziel: 'Statue of Liberty', bossName: 'Mr. Alligator', bossSymbol: '🐊', banner: BANNER_TEXT, richtig: "Correct – the door opens!", falsch: "Not this time!", frage: "Snap, snap! What's the English word?", start: "Let's find the Statue of Liberty!", ende: "You made it to the Statue of Liberty!",
       sturz: 'Splash! 💦',
       gegnerarten: ['taube', 'waschbaer', 'eichhoernchen'], farben: { plattform: '#8b5a2b', plattformOben: '#4fae5f', hud: '#1d3f8f' }, muster: MUSTER_NY, musterStory: MUSTER_NY_STORY, storyStruktur: STRUKTUR_NY, realmZurueck: 'Back in New York! 🗽', sprechblaseHoehe: 70,
       kulisse: hintergrundNY, boden: bodenNY, grube: null, kiste: kisteNY, hudSymbol: (c, x, y) => freiheitsstatue(c, x, y, 0.14, '#1d3f8f'),
       boss: (c, x, y) => { kanaldeckel(c, x, y); alligator(c, x, y); }, tuer: tuerZeichnen, bossKlang: () => klang.grollen() },
-    route66: { id: 'route66', name: 'Route 66', staat: 'Illinois', ziel: 'Route 66 sign', bossName: 'Big Rig Bob', bossSymbol: '🚚', banner: 'Here comes Big Rig Bob!', richtig: "Correct – the barrier goes up!", falsch: "Not this time, kid!", start: "Let's find Route 66!", ende: "You made it to Route 66!",
+    route66: { id: 'route66', name: 'Route 66', staat: 'Illinois', ziel: 'Route 66 sign', bossName: 'Big Rig Bob', bossSymbol: '🚚', banner: 'Here comes Big Rig Bob!', richtig: "Correct – the barrier goes up!", falsch: "Not this time, kid!", frage: "Hold it, kid! What's the English word?", start: "Let's find Route 66!", ende: "You made it to Route 66!",
       sturz: 'Crash! 🕳️',
       gegnerarten: ['kojote', 'roadrunner', 'guerteltier'], farben: { plattform: '#7a4a16', plattformOben: '#c99a6a', hud: '#c8283a' }, muster: MUSTER_ROUTE66, musterStory: MUSTER_ROUTE66_STORY, storyStruktur: STRUKTUR_ROUTE66, realmZurueck: 'Back on Route 66! 🛣️', sprechblaseHoehe: 150,
       kulisse: hintergrundRoute66, boden: strasseZeichnen, grube: baugrube, kiste: reifen, hudSymbol: (c, x, y) => schild66(c, x, y + 4, 0.28, '#c8283a', false),
       boss: bigRigBob, tuer: mautstation, bossKlang: () => { hupen++; klang.hupe(); klang.diesel(); } },
-    az: { id: 'az', name: 'Grand Canyon', staat: 'Arizona', ziel: 'Grand Canyon', bossName: 'Sheriff Rattlesnake', bossSymbol: '🐍', banner: 'Watch out – Sheriff Rattlesnake!', richtig: "Correct – the gate swings open, partner!", falsch: "Not this time, greenhorn!", start: "Let's find the Grand Canyon!", ende: "You made it to the Grand Canyon!",
+    az: { id: 'az', name: 'Grand Canyon', staat: 'Arizona', ziel: 'Grand Canyon', bossName: 'Sheriff Rattlesnake', bossSymbol: '🐍', banner: 'Watch out – Sheriff Rattlesnake!', richtig: "Correct – the gate swings open, partner!", falsch: "Not this time, greenhorn!", frage: "Not so fast, partner! What's the English word?", start: "Let's find the Grand Canyon!", ende: "You made it to the Grand Canyon!",
       sturz: 'Down the canyon! 🏜️',
       gegnerarten: ['klapperschlange', 'geier', 'skorpion'], farben: { plattform: '#8a3b1e', plattformOben: '#d9774a', hud: '#b4452a' }, muster: MUSTER_AZ, musterStory: MUSTER_AZ_STORY, storyStruktur: STRUKTUR_AZ, realmZurueck: 'Back at the Grand Canyon! 🏜️', sprechblaseHoehe: 230,
       kulisse: hintergrundCanyon, boden: felsboden, grube: schlucht, kiste: felsbrocken, hudSymbol: (c, x, y) => schildCanyon(c, x, y + 14, 0.34, false),
       boss: (c, x, y) => { felsspalt(c, x, y); sheriffRattlesnake(c, x, y); }, tuer: westernTor, bossKlang: () => { rasseln++; klang.rassel(); } },
-    sd: { id: 'sd', name: 'Mount Rushmore', staat: 'South Dakota', ziel: 'Mount Rushmore', bossName: 'Grizzly Grandpa', bossSymbol: '🐻', banner: 'Oh no – Grizzly Grandpa is awake!', richtig: "Correct – the ranger gate opens. Now let me sleep!", falsch: "Not this time, young ranger!", start: "Let's find Mount Rushmore!", ende: "You made it to Mount Rushmore!",
+    sd: { id: 'sd', name: 'Mount Rushmore', staat: 'South Dakota', ziel: 'Mount Rushmore', bossName: 'Grizzly Grandpa', bossSymbol: '🐻', banner: 'Oh no – Grizzly Grandpa is awake!', richtig: "Correct – the ranger gate opens. Now let me sleep!", falsch: "Not this time, young ranger!", frage: "Who woke me up? Tell me: what's the English word?", start: "Let's find Mount Rushmore!", ende: "You made it to Mount Rushmore!",
       sturz: 'Splash! 🏞️',
       gegnerarten: ['bueffel', 'biber', 'adler'], farben: { plattform: '#6b4a2e', plattformOben: '#5fa84a', hud: '#2e7d4f' }, muster: MUSTER_SD, musterStory: MUSTER_SD_STORY, storyStruktur: STRUKTUR_SD, realmZurueck: 'Back at Mount Rushmore! 🗿', sprechblaseHoehe: 200,
       kulisse: hintergrundRushmore, boden: waldboden, grube: bachZeichnen, kiste: holzstapel, stein: trittstein, hudSymbol: (c, x, y) => schildRushmore(c, x, y + 14, 0.34, false),
       boss: (c, x, y) => { baerenhoehleBoss(c, x, y); grizzlyGrandpa(c, x, y); }, tuer: rangerTor, bossKlang: () => { brummt++; klang.brummen(); } },
-    ca: { id: 'ca', name: 'Golden Gate', staat: 'California', ziel: 'Golden Gate Bridge', bossName: 'Captain Fog', bossSymbol: '👻', banner: 'Captain Fog is blocking the bridge!', richtig: "Correct – the bridge is yours, sailor!", falsch: "Not this time – lost in the fog!", start: "Let's find the Golden Gate Bridge!", ende: "You made it to the Golden Gate Bridge!",
+    ca: { id: 'ca', name: 'Golden Gate', staat: 'California', ziel: 'Golden Gate Bridge', bossName: 'Captain Fog', bossSymbol: '👻', banner: 'Captain Fog is blocking the bridge!', richtig: "Correct – the bridge is yours, sailor!", falsch: "Not this time – lost in the fog!", frage: "Ahoy, sailor! What's the English word?", start: "Let's find the Golden Gate Bridge!", ende: "You made it to the Golden Gate Bridge!",
       sturz: 'Splash! 🌊',
       gegnerarten: ['moewe', 'seeloewe', 'skater'], farben: { plattform: '#8e3220', plattformOben: '#e8714a', hud: '#c0462b' }, muster: MUSTER_CA, musterStory: MUSTER_CA_STORY, storyStruktur: STRUKTUR_CA, realmZurueck: 'Back at the Golden Gate! 🌉', sprechblaseHoehe: 240,
       kulisse: hintergrundGoldenGate, boden: promenade, grube: pazifik, kiste: hafenkiste, hudSymbol: (c, x, y) => goldenGateFern(c, x, y + 12, 0.11),
       boss: (c, x, y) => { nebelbank(c, x, y); captainFog(c, x, y); }, tuer: brueckenTor, bossKlang: () => { tutet++; klang.nebelhorn(); } },
     // Klasse 9 Kapitel 6 (geheim, 2.11.): „The Keeper's Journal“ – im Realm, kein Landmark; Strecke aus Eiswand → Drachenhöhle → Eishalle → Eisbrücke, Boss Elena Cruz an der sechsten Tür (nur Story)
-    realm6: { id: 'realm6', name: "The Keeper's Journal", staat: 'The Realm', ziel: 'sixth gate', bossName: 'Elena Cruz', bossSymbol: '🧭', banner: 'Elena Cruz is waiting at the sixth gate.', richtig: 'Correct – the gate is yours.', falsch: 'Not this time, keeper.', start: "Let's read Grandpa's journal!", ende: 'The sixth gate is closed forever.',
+    realm6: { id: 'realm6', name: "The Keeper's Journal", staat: 'The Realm', ziel: 'sixth gate', bossName: 'Elena Cruz', bossSymbol: '🧭', banner: 'Elena Cruz is waiting at the sixth gate.', richtig: 'Correct – the gate is yours.', falsch: 'Not this time, keeper.', frage: "One last question, keeper. What's the English word?", start: "Let's read Grandpa's journal!", ende: 'The sixth gate is closed forever.',
       get sturz() { return realm6Teil().sturz; }, get farben() { return realm6Teil().farben; },
       gegnerarten: ['wolf', 'ritter', 'skorpion'], muster: MUSTER_REALM6_STORY, musterStory: MUSTER_REALM6_STORY, storyStruktur: STRUKTUR_REALM6, sprechblaseHoehe: 70,
       kulisse: (c) => realm6Teil().kulisse(c), boden: (...a) => realm6Teil().boden(...a), grube: (...a) => { const g = realm6Teil().grube; if (g) g(...a); }, kiste: (...a) => realm6Teil().kiste(...a),
       hudSymbol: (c, x, y) => { c.font = 'bold 18px system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#b07cff'; c.fillText('✦', x, y - 6); },
       boss: elenaBoss, tuer: (c, x, y) => sechsteTuer(c, x, y, 0.35 + 0.65 * Math.min(1, (tuer && tuer.offen) || 0)), bossKlang: () => klang.portal() },
     // Klasse 6 „London Run“ (31.10.): Welt 1 Westminster · Big Ben
-    westminster: { id: 'westminster', name: 'Westminster', staat: 'London', ziel: 'Big Ben', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is on duty!', richtig: "Correct – the gate is open. Carry on!", falsch: "Not this time, soldier!", start: "Let's find Big Ben!", ende: "You found Big Ben!",
+    westminster: { id: 'westminster', name: 'Westminster', staat: 'London', ziel: 'Big Ben', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is on duty!', richtig: "Correct – the gate is open. Carry on!", falsch: "Not this time, soldier!", frage: "Halt! What's the English word?", start: "Let's find Big Ben!", ende: "You found Big Ben!",
       sturz: 'Splash! 🌊',
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WESTMINSTER, musterStory: MUSTER_WESTMINSTER_STORY, storyStruktur: STRUKTUR_LONDON, sprechblaseHoehe: 220,
       kulisse: hintergrundLondon, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => bigBen(c, x, y, 0.075, '#1d3f8f'),
       boss: (c, x, y) => { schilderhaus(c, x, y); sergeantBearskin(c, x, y); }, tuer: horseGuardsTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
     // Klasse 6 „London Run“ Welt 2 London Eye (31.10.): Kapitel 2 „The Wheel That Stopped“ – Boss Sergeant Bearskin in der obersten Kabine (Kamera fährt hoch: bossOben), Tür = Kabinentür; Möwe neu
-    londoneye: { id: 'londoneye', name: 'London Eye', staat: 'London', ziel: 'London Eye', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is stuck!', richtig: "Correct – now get me out of here!", falsch: "Not this time, soldier!", start: "Let's find the London Eye!", ende: "You found the London Eye!",
+    londoneye: { id: 'londoneye', name: 'London Eye', staat: 'London', ziel: 'London Eye', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is stuck!', richtig: "Correct – now get me out of here!", falsch: "Not this time, soldier!", frage: "Help me, soldier! What's the English word?", start: "Let's find the London Eye!", ende: "You found the London Eye!",
       sturz: 'Splash! 🌊',
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen', 'moewe'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_LONDONEYE_STORY, musterStory: MUSTER_LONDONEYE_STORY, storyStruktur: STRUKTUR_LONDONEYE, sprechblaseHoehe: 245, bossOben: BODEN_Y - 130,
       kulisse: hintergrundLondonEye, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => riesenrad(c, x, y - 2, 11, 0, { bodenY: y + 12, farbe: '#1d3f8f', speichenAlpha: 0.8, kabinen: false }),
       boss: eyeBoss, tuer: kabinenTuer, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
     // Klasse 6 „London Run“ Welt 3 Tower Bridge (31.10.): Kapitel 3 „Up Goes the Bridge“ – Brückenklappen, Raben, Boot-Abschnitte; Boss Sergeant Bearskin ohne Mütze vor der hochgeklappten Brücke, Tür = Brückentor
-    towerbridge: { id: 'towerbridge', name: 'Tower Bridge', staat: 'London', ziel: 'Tower Bridge', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin has lost his hat!', richtig: "Correct – the bridge is closing. Carry on!", falsch: "Not this time, soldier!", start: "Let's find Tower Bridge!", ende: "You found Tower Bridge!",
+    towerbridge: { id: 'towerbridge', name: 'Tower Bridge', staat: 'London', ziel: 'Tower Bridge', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin has lost his hat!', richtig: "Correct – the bridge is closing. Carry on!", falsch: "Not this time, soldier!", frage: "Where is my hat? And what's the English word?", start: "Let's find Tower Bridge!", ende: "You found Tower Bridge!",
       sturz: 'Splash! 🌊',
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen', 'moewe', 'rabe'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_TOWERBRIDGE_STORY, musterStory: MUSTER_TOWERBRIDGE_STORY, storyStruktur: STRUKTUR_TOWERBRIDGE, sprechblaseHoehe: 225,
       kulisse: hintergrundTowerBridge, boden: bodenLondon, grube: themse, kiste: kisteLondon, hudSymbol: (c, x, y) => { c.save(); c.translate(x, y + 12); c.scale(0.062, 0.062); c.fillStyle = '#1d3f8f'; c.fillRect(-150, -205, 300, 8); c.fillRect(-184, -200, 68, 200); c.fillRect(116, -200, 68, 200); c.fillRect(-116, -8, 232, 16); c.restore(); },
       boss: bridgeBoss, tuer: brueckenTorLondon, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
     // Klasse 6 „London Run“ Welt 4 The Tube (31.10.): Kapitel 4 „Mind the Gap“ – Spalt am Bahnsteig, Zugtüren, Mäuse, Koffer, Rolltreppen; Boss Sergeant Bearskin (Kissenabdruck) am Stadiontor von Wembley, Tür = Stadiontor
-    tube: { id: 'tube', name: 'The Tube', staat: 'London', ziel: 'Wembley Park', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is already here!', richtig: "Correct – the stadium gate opens. Carry on!", falsch: "Not this time, soldier!", start: "Let's find Wembley Park!", ende: "You found Wembley Park!",
+    tube: { id: 'tube', name: 'The Tube', staat: 'London', ziel: 'Wembley Park', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin is already here!', richtig: "Correct – the stadium gate opens. Carry on!", falsch: "Not this time, soldier!", frage: "Tickets, please! What's the English word?", start: "Let's find Wembley Park!", ende: "You found Wembley Park!",
       sturz: 'Ouch – the gap! 🚇',
       gegnerarten: ['taube', 'maus'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_TUBE_STORY, musterStory: MUSTER_TUBE_STORY, storyStruktur: STRUKTUR_TUBE, sprechblaseHoehe: 240,
       kulisse: hintergrundTube, boden: bodenTube, grube: gleisgrube, kiste: kisteTube, hudSymbol: (c, x, y) => { c.save(); c.strokeStyle = '#1d3f8f'; c.lineWidth = 3.5; c.beginPath(); c.arc(x, y + 1, 8, 0, Math.PI * 2); c.stroke(); c.fillStyle = '#1d3f8f'; c.fillRect(x - 14, y - 1.5, 28, 5); c.restore(); },
       boss: tubeBoss, tuer: stadionTor, bossKlang: () => { trommelt++; klang.trommel(); klang.signal(); } },
     // Klasse 6 „London Run“ Welt 5 Wembley (1.11.): Kapitel 5 „The Big Match“ – Fans und Stände, Tribünen (Weg A) oder Spielertunnel (Weg B), rollende Bälle auf dem Rasen; Boss Sergeant Bearskin am Spielfeldtor, Tür = Spielfeldtor, drei Enden nach Zählung
-    wembley: { id: 'wembley', name: 'Wembley', staat: 'London', ziel: 'Wembley Stadium', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin guards the pitch!', richtig: "Correct – the pitch gate opens. Kick-off!", falsch: "Not this time, soldier!", start: "Let's find Wembley Stadium!", ende: "You found Wembley Stadium!",
+    wembley: { id: 'wembley', name: 'Wembley', staat: 'London', ziel: 'Wembley Stadium', bossName: 'Sergeant Bearskin', bossSymbol: '💂', banner: 'Halt! Sergeant Bearskin guards the pitch!', richtig: "Correct – the pitch gate opens. Kick-off!", falsch: "Not this time, soldier!", frage: "No word, no match! What's the English word?", start: "Let's find Wembley Stadium!", ende: "You found Wembley Stadium!",
       sturz: 'Ouch – the pit! 🚧',
       gegnerarten: ['taube', 'fuchs', 'eichhoernchen'], farben: { plattform: '#3b4a5a', plattformOben: UK_ROT, hud: UK_ROT }, muster: MUSTER_WEMBLEY_STORY, musterStory: MUSTER_WEMBLEY_STORY, storyStruktur: STRUKTUR_WEMBLEY, sprechblaseHoehe: 240,
       kulisse: hintergrundWembley, boden: bodenWembley, grube: wembleyGrube, kiste: kisteWembley, hudSymbol: (c, x, y) => { c.save(); c.strokeStyle = '#1d3f8f'; c.lineWidth = 3; c.beginPath(); c.moveTo(x - 13, y + 10); c.quadraticCurveTo(x, y - 16, x + 13, y + 10); c.stroke(); c.fillStyle = '#1d3f8f'; c.fillRect(x - 12, y + 6, 24, 5); c.restore(); },
@@ -10047,7 +10067,7 @@
       kulisse: hintergrundParis, boden: bodenParis, grube: seine, kiste: kisteParis, hudSymbol: (c, x, y) => pEiffel(c, x, y + 14, 0.13),
       boss: parisBoss, tuer: grilleParis, bossKlang: () => { klang.klingel(); klang.akkordeon(); } },
     // Disco Run (Bonus-Level, 7.11.2026, Idee C von Mr. Alex): 'disco' für Klasse 6 und 9 (Englisch), 'disco_fr' für die Französisch-App; Texte spricht Mr. Alex (übertrieben, mit Tags)
-    disco: { id: 'disco', name: 'Disco Run', staat: 'Bonus', ziel: 'the disco ball', bossName: 'DJ Funky Flamingo', bossSymbol: '🦩', banner: 'Dance battle! DJ Funky Flamingo wants to dance!', richtig: "Oh no – your moves are better than mine!", falsch: "Ha! Not groovy enough!", start: "Welcome to the Disco Run! Dance, dance, dance!", ende: "You are the disco king! Or queen!",
+    disco: { id: 'disco', name: 'Disco Run', staat: 'Bonus', ziel: 'the disco ball', bossName: 'DJ Funky Flamingo', bossSymbol: '🦩', banner: 'Dance battle! DJ Funky Flamingo wants to dance!', richtig: "Oh no – your moves are better than mine!", falsch: "Ha! Not groovy enough!", frage: "Feel the beat! What's the English word?", start: "Welcome to the Disco Run! Dance, dance, dance!", ende: "You are the disco king! Or queen!",
       sturz: 'Oops – off the dance floor! 🕺', ...DISCO_TEIL },
     disco_fr: { id: 'disco_fr', name: 'Disco Run', staat: 'Bonus', ziel: 'la boule disco', bossName: 'DJ Funky Flamingo', bossSymbol: '🦩', banner: 'Battle de danse ! DJ Funky Flamingo veut danser !', richtig: "Oh non ! Tu danses mieux que moi !", falsch: "Ha ha ! Pas assez de groove !", start: "Bienvenue au Disco Run ! On danse !", ende: "Bravo ! Tu es la star du disco !",
       sturz: 'Oups – hors de la piste ! 🕺', zurufeNur: true, hinweise: true, ...DISCO_TEIL, zurufe: Object.assign({}, ALEX_ZURUFE_FR, DISCO_ZURUFE_FR), uebersetzung: UEBERSETZUNG_FR },

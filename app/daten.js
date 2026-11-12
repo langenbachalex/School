@@ -7745,7 +7745,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/westminster_banner.mp3",
      "richtig": "audio/runner/westminster_richtig.mp3",
-     "falsch": "audio/runner/westminster_falsch.mp3"
+     "falsch": "audio/runner/westminster_falsch.mp3",
+     "frage": "audio/runner/westminster_frage.mp3"
     },
     "start": "audio/runner/westminster_start.mp3",
     "ende": "audio/runner/westminster_ende.mp3",
@@ -7766,7 +7767,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/londoneye_banner.mp3",
      "richtig": "audio/runner/londoneye_richtig.mp3",
-     "falsch": "audio/runner/londoneye_falsch.mp3"
+     "falsch": "audio/runner/londoneye_falsch.mp3",
+     "frage": "audio/runner/londoneye_frage.mp3"
     },
     "start": "audio/runner/londoneye_start.mp3",
     "ende": "audio/runner/londoneye_ende.mp3",
@@ -7787,7 +7789,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/towerbridge_banner.mp3",
      "richtig": "audio/runner/towerbridge_richtig.mp3",
-     "falsch": "audio/runner/towerbridge_falsch.mp3"
+     "falsch": "audio/runner/towerbridge_falsch.mp3",
+     "frage": "audio/runner/towerbridge_frage.mp3"
     },
     "start": "audio/runner/towerbridge_start.mp3",
     "ende": "audio/runner/towerbridge_ende.mp3",
@@ -7808,7 +7811,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/tube_banner.mp3",
      "richtig": "audio/runner/tube_richtig.mp3",
-     "falsch": "audio/runner/tube_falsch.mp3"
+     "falsch": "audio/runner/tube_falsch.mp3",
+     "frage": "audio/runner/tube_frage.mp3"
     },
     "start": "audio/runner/tube_start.mp3",
     "ende": "audio/runner/tube_ende.mp3",
@@ -7829,7 +7833,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/wembley_banner.mp3",
      "richtig": "audio/runner/wembley_richtig.mp3",
-     "falsch": "audio/runner/wembley_falsch.mp3"
+     "falsch": "audio/runner/wembley_falsch.mp3",
+     "frage": "audio/runner/wembley_frage.mp3"
     },
     "start": "audio/runner/wembley_start.mp3",
     "ende": "audio/runner/wembley_ende.mp3",
@@ -7850,7 +7855,8 @@ window.DATEN = {
     "boss": {
      "banner": "audio/runner/disco_banner.mp3",
      "richtig": "audio/runner/disco_richtig.mp3",
-     "falsch": "audio/runner/disco_falsch.mp3"
+     "falsch": "audio/runner/disco_falsch.mp3",
+     "frage": "audio/runner/disco_frage.mp3"
     },
     "start": "audio/runner/disco_start.mp3",
     "ende": "audio/runner/disco_ende.mp3"
@@ -7874,6 +7880,9 @@ window.DATEN = {
     "letztes_2": "audio/alex/letztes_2.mp3",
     "halb_1": "audio/alex/halb_1.mp3",
     "halb_2": "audio/alex/halb_2.mp3",
+    "tor_1": "audio/alex/tor_1.mp3",
+    "tor_2": "audio/alex/tor_2.mp3",
+    "tor_3": "audio/alex/tor_3.mp3",
     "boss_1": "audio/alex/boss_1.mp3",
     "boss_2": "audio/alex/boss_2.mp3",
     "ende_1": "audio/alex/ende_1.mp3",

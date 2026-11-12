@@ -115,3 +115,6 @@ Kein Wort ohne Satz: Vokabeln werden in allen Apps (EN6, EN9, FR, künftige Fäc
 
 ## Regel Mr. Alex (12.11.2026): Baustopp und ein Bau-Chat
 Bis nach den GLN (25.11.2026) wird nichts Neues gebaut, nur Fehler behoben; Ausnahme Road to GLN EN9. Dauerhaft: immer nur ein Bau-Chat gleichzeitig, der nächste Block erst, wenn Mr. Alex den vorigen gesehen hat. Mr. Alex kann beides im Einzelfall aufheben. Grund: Es entsteht schneller, als er testen und im Unterricht einführen kann. GLN-Material: nur Formate ins Repo (`docs/archiv/gln-formate.md`), nie die Aufgaben.
+
+## Regel Mr. Alex (12.11.2026): Erst die Sprache, dann üben, dann die Regel
+In allen Apps und Fächern: Ein neues Sprachthema beginnt mit Beispielsätzen zweisprachig (Listen and repeat, Deutsch und Fremdsprache), dann kommen die Einzelübungen, **die Erklärung/Regel steht am Ende** als Zusammenfassung dessen, was die Kinder schon können. Nie mit „Rules“ beginnen. Jedes Thema bekommt eine eigene Gruppe (z. B. „-ing form“ und „Prepositions“ getrennt), damit nichts am Ende untergeht.

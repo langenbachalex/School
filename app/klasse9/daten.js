@@ -3646,56 +3646,56 @@ window.DATEN = {
    "en": "I'm nervous about meeting my new teachers.",
    "de": "Ich bin nervös, weil ich meine neuen Lehrer kennenlerne.",
    "luecke": "about meeting",
-   "stimme": "alex",
+   "stimme": "m",
    "audio": "audio/saetze/la_15.mp3"
   },
   "la_16": {
    "en": "We're excited about going to the homecoming game.",
    "de": "Wir freuen uns riesig darauf, zum Homecoming-Spiel zu gehen.",
    "luecke": "about going",
-   "stimme": "alex",
+   "stimme": "f",
    "audio": "audio/saetze/la_16.mp3"
   },
   "la_17": {
    "en": "Don't worry about making mistakes in class.",
    "de": "Mach dir keine Sorgen darüber, im Unterricht Fehler zu machen.",
    "luecke": "about making",
-   "stimme": "alex",
+   "stimme": "m",
    "audio": "audio/saetze/la_17.mp3"
   },
   "la_18": {
    "en": "I'm bad at remembering my locker combination.",
    "de": "Ich kann mir meine Schließfach-Kombination schlecht merken.",
    "luecke": "at remembering",
-   "stimme": "alex",
+   "stimme": "f",
    "audio": "audio/saetze/la_18.mp3"
   },
   "la_19": {
    "en": "Maya is used to taking the school bus.",
    "de": "Maya ist es gewohnt, mit dem Schulbus zu fahren.",
    "luecke": "to taking",
-   "stimme": "alex",
+   "stimme": "m",
    "audio": "audio/saetze/la_19.mp3"
   },
   "la_20": {
    "en": "Do you want to take part in decorating the gym?",
    "de": "Möchtest du dabei mitmachen, die Turnhalle zu schmücken?",
    "luecke": "in decorating",
-   "stimme": "alex",
+   "stimme": "f",
    "audio": "audio/saetze/la_20.mp3"
   },
   "la_21": {
    "en": "Joining a club is a great way of making friends.",
    "de": "In eine AG zu gehen ist eine tolle Art, Freunde zu finden.",
    "luecke": "of making",
-   "stimme": "alex",
+   "stimme": "m",
    "audio": "audio/saetze/la_21.mp3"
   },
   "la_22": {
    "en": "Carlos dreams of playing on the football team.",
    "de": "Carlos träumt davon, in der Footballmannschaft zu spielen.",
    "luecke": "of playing",
-   "stimme": "alex",
+   "stimme": "f",
    "audio": "audio/saetze/la_22.mp3"
   },
   "u1_019_s": {
@@ -7153,7 +7153,7 @@ window.DATEN = {
          "satz": "la_04",
          "richtig": "Dancing",
          "falsch": [
-          "Dance",
+          "Dances",
           "Danced"
          ]
         },
@@ -11918,7 +11918,8 @@ window.DATEN = {
      "ing": [
       "I enjoy play basketball after school.",
       "I enjoy to play basketball after school."
-     ]
+     ],
+     "extra": []
     },
     {
      "satz": "la_02",
@@ -11926,102 +11927,125 @@ window.DATEN = {
      "ing": [
       "I don't mind walk to school.",
       "I don't mind to walk to school."
-     ]
+     ],
+     "extra": []
     },
     {
      "satz": "la_03",
      "prep": [],
      "ing": [
       "My brother hates get up early."
+     ],
+     "extra": [
+      "My brother hates gets up early."
      ]
     },
     {
      "satz": "la_04",
      "prep": [],
-     "ing": []
+     "ing": [],
+     "extra": []
     },
     {
      "satz": "la_05",
      "prep": [],
      "ing": [
       "Learn a new language takes time."
+     ],
+     "extra": [
+      "Learns a new language takes time."
      ]
     },
     {
      "satz": "la_06",
      "prep": [
-      "She is really good in drawing.",
-      "She is really good of drawing.",
-      "She is really good to drawing.",
-      "She is really good on drawing."
+      "She is really good in drawing."
      ],
      "ing": [
       "She is really good at draw."
+     ],
+     "extra": [
+      "She is really good of drawing.",
+      "She is really good to drawing.",
+      "She is really good on drawing.",
+      "She is really good at to draw."
      ]
     },
     {
      "satz": "la_07",
      "prep": [
-      "Are you interested at joining the drama club?",
-      "Are you interested of joining the drama club?",
-      "Are you interested to joining the drama club?",
-      "Are you interested for joining the drama club?",
-      "Are you interested on joining the drama club?"
+      "Are you interested at joining the drama club?"
      ],
      "ing": [
       "Are you interested in join the drama club?"
+     ],
+     "extra": [
+      "Are you interested of joining the drama club?",
+      "Are you interested to joining the drama club?",
+      "Are you interested for joining the drama club?",
+      "Are you interested on joining the drama club?",
+      "Are you interested in to join the drama club?"
      ]
     },
     {
      "satz": "la_08",
-     "prep": [
+     "prep": [],
+     "ing": [
+      "I'm afraid of speak in front of the class."
+     ],
+     "extra": [
       "I'm afraid at speaking in front of the class.",
       "I'm afraid in speaking in front of the class.",
       "I'm afraid to speaking in front of the class.",
-      "I'm afraid on speaking in front of the class."
-     ],
-     "ing": [
-      "I'm afraid of speak in front of the class."
+      "I'm afraid on speaking in front of the class.",
+      "I'm afraid of to speak in front of the class."
      ]
     },
     {
      "satz": "la_09",
      "prep": [
+      "We're looking forward for seeing you in New York."
+     ],
+     "ing": [
+      "We're looking forward to see you in New York."
+     ],
+     "extra": [
       "We're looking forward at seeing you in New York.",
       "We're looking forward in seeing you in New York.",
       "We're looking forward about seeing you in New York.",
       "We're looking forward of seeing you in New York.",
-      "We're looking forward for seeing you in New York.",
       "We're looking forward on seeing you in New York."
-     ],
-     "ing": [
-      "We're looking forward to see you in New York."
      ]
     },
     {
      "satz": "la_10",
-     "prep": [
+     "prep": [],
+     "ing": [
+      "I'm thinking about buy a new bike."
+     ],
+     "extra": [
       "I'm thinking at buying a new bike.",
       "I'm thinking in buying a new bike.",
       "I'm thinking to buying a new bike.",
-      "I'm thinking for buying a new bike."
-     ],
-     "ing": [
-      "I'm thinking about buy a new bike."
+      "I'm thinking for buying a new bike.",
+      "I'm thinking about to buy a new bike."
      ]
     },
     {
      "satz": "la_11",
      "prep": [
-      "Instead at watching TV, let's go for a walk.",
-      "Instead in watching TV, let's go for a walk.",
-      "Instead about watching TV, let's go for a walk.",
-      "Instead to watching TV, let's go for a walk.",
-      "Instead for watching TV, let's go for a walk.",
-      "Instead on watching TV, let's go for a walk."
+      "Instead about watching TV, let's go for a walk."
      ],
      "ing": [
       "Instead of watch TV, let's go for a walk."
+     ],
+     "extra": [
+      "Instead at watching TV, let's go for a walk.",
+      "Instead in watching TV, let's go for a walk.",
+      "Instead to watching TV, let's go for a walk.",
+      "Instead for watching TV, let's go for a walk.",
+      "Instead on watching TV, let's go for a walk.",
+      "Instead of to watch TV, let's go for a walk."
      ]
     },
     {
@@ -12030,127 +12054,150 @@ window.DATEN = {
      "ing": [
       "Wash your hands before eat.",
       "Wash your hands before to eat."
-     ]
+     ],
+     "extra": []
     },
     {
      "satz": "la_13",
      "prep": [
-      "I'm tired at waiting for the bus.",
-      "I'm tired in waiting for the bus.",
-      "I'm tired about waiting for the bus.",
-      "I'm tired to waiting for the bus.",
-      "I'm tired for waiting for the bus.",
-      "I'm tired on waiting for the bus."
+      "I'm tired about waiting for the bus."
      ],
      "ing": [
       "I'm tired of wait for the bus."
+     ],
+     "extra": [
+      "I'm tired at waiting for the bus.",
+      "I'm tired in waiting for the bus.",
+      "I'm tired to waiting for the bus.",
+      "I'm tired for waiting for the bus.",
+      "I'm tired on waiting for the bus.",
+      "I'm tired of to wait for the bus."
      ]
     },
     {
      "satz": "la_14",
-     "prep": [
+     "prep": [],
+     "ing": [
+      "Thanks for help me with my homework."
+     ],
+     "extra": [
       "Thanks at helping me with my homework.",
       "Thanks in helping me with my homework.",
       "Thanks about helping me with my homework.",
       "Thanks of helping me with my homework.",
       "Thanks on helping me with my homework."
-     ],
-     "ing": [
-      "Thanks for help me with my homework."
      ]
     },
     {
      "satz": "la_15",
-     "prep": [
-      "I'm nervous in meeting my new teachers.",
-      "I'm nervous to meeting my new teachers.",
-      "I'm nervous on meeting my new teachers."
-     ],
+     "prep": [],
      "ing": [
       "I'm nervous about meet my new teachers."
+     ],
+     "extra": [
+      "I'm nervous in meeting my new teachers.",
+      "I'm nervous to meeting my new teachers.",
+      "I'm nervous on meeting my new teachers.",
+      "I'm nervous about to meet my new teachers."
      ]
     },
     {
      "satz": "la_16",
      "prep": [
-      "We're excited in going to the homecoming game.",
-      "We're excited of going to the homecoming game.",
-      "We're excited to going to the homecoming game.",
-      "We're excited on going to the homecoming game."
+      "We're excited of going to the homecoming game."
      ],
      "ing": [
       "We're excited about go to the homecoming game."
+     ],
+     "extra": [
+      "We're excited in going to the homecoming game.",
+      "We're excited to going to the homecoming game.",
+      "We're excited on going to the homecoming game.",
+      "We're excited about to go to the homecoming game."
      ]
     },
     {
      "satz": "la_17",
-     "prep": [
-      "Don't worry to making mistakes in class.",
-      "Don't worry on making mistakes in class."
-     ],
+     "prep": [],
      "ing": [
       "Don't worry about make mistakes in class."
+     ],
+     "extra": [
+      "Don't worry to making mistakes in class.",
+      "Don't worry on making mistakes in class.",
+      "Don't worry about to make mistakes in class."
      ]
     },
     {
      "satz": "la_18",
      "prep": [
-      "I'm bad in remembering my locker combination.",
-      "I'm bad of remembering my locker combination.",
-      "I'm bad to remembering my locker combination.",
-      "I'm bad on remembering my locker combination."
+      "I'm bad in remembering my locker combination."
      ],
      "ing": [
       "I'm bad at remember my locker combination."
+     ],
+     "extra": [
+      "I'm bad of remembering my locker combination.",
+      "I'm bad to remembering my locker combination.",
+      "I'm bad on remembering my locker combination.",
+      "I'm bad at to remember my locker combination."
      ]
     },
     {
      "satz": "la_19",
-     "prep": [
+     "prep": [],
+     "ing": [
+      "Maya is used to take the school bus."
+     ],
+     "extra": [
       "Maya is used at taking the school bus.",
       "Maya is used about taking the school bus.",
       "Maya is used of taking the school bus.",
       "Maya is used on taking the school bus."
-     ],
-     "ing": [
-      "Maya is used to take the school bus."
      ]
     },
     {
      "satz": "la_20",
      "prep": [
-      "Do you want to take part at decorating the gym?",
+      "Do you want to take part at decorating the gym?"
+     ],
+     "ing": [
+      "Do you want to take part in decorate the gym?"
+     ],
+     "extra": [
       "Do you want to take part about decorating the gym?",
       "Do you want to take part of decorating the gym?",
       "Do you want to take part to decorating the gym?",
       "Do you want to take part for decorating the gym?",
-      "Do you want to take part on decorating the gym?"
-     ],
-     "ing": [
-      "Do you want to take part in decorate the gym?"
+      "Do you want to take part on decorating the gym?",
+      "Do you want to take part in to decorate the gym?"
      ]
     },
     {
      "satz": "la_21",
      "prep": [
-      "Joining a club is a great way at making friends.",
-      "Joining a club is a great way about making friends.",
-      "Joining a club is a great way on making friends."
+      "Joining a club is a great way about making friends."
      ],
      "ing": [
       "Joining a club is a great way of make friends."
+     ],
+     "extra": [
+      "Joining a club is a great way at making friends.",
+      "Joining a club is a great way on making friends."
      ]
     },
     {
      "satz": "la_22",
-     "prep": [
+     "prep": [],
+     "ing": [
+      "Carlos dreams of play on the football team."
+     ],
+     "extra": [
       "Carlos dreams at playing on the football team.",
       "Carlos dreams in playing on the football team.",
       "Carlos dreams to playing on the football team.",
-      "Carlos dreams for playing on the football team."
-     ],
-     "ing": [
-      "Carlos dreams of play on the football team."
+      "Carlos dreams for playing on the football team.",
+      "Carlos dreams of to play on the football team."
      ]
     }
    ],
@@ -12187,7 +12234,7 @@ window.DATEN = {
      "luecke": "Dancing",
      "richtig": "Dancing",
      "falsch": [
-      "Dance",
+      "Dances",
       "Danced"
      ]
     },

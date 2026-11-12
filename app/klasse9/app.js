@@ -3401,12 +3401,12 @@
     let nFalsch = 4 + Math.floor(Math.random() * 3);
     const reihe = mischen(mischen(SP.grammar.patrol).slice(0, GRAMMAR.runde).map((p) => {
       const s = D.saetze[p.satz], arten = [p.prep, p.ing].filter((l) => l.length);
-      if (p.prep.length + p.ing.length < 2 || nFalsch <= 0) return { s, text: s.en, falsch: false }; // mit nur einem Fehlersatz gäbe es nach dem Stopp keine Auswahl
+      if (p.prep.length + p.ing.length < 1 || nFalsch <= 0) return { s, text: s.en, falsch: false }; // ohne Fehlersatz kommt der Satz nur richtig
       nFalsch--;
       const text = zufall(zufall(arten)); // erst die Fehlerart, dann der Satz – sonst käme fast nur „falsche Präposition“
       // Fassungen nach dem Stopp: der richtige Satz und je Fehlerart ein anderer falscher
       const andere = [p.prep, p.ing].map((l) => zufall(l.filter((x) => x !== text))).filter(Boolean);
-      if (andere.length < 2) andere.push(...mischen([...p.prep, ...p.ing].filter((x) => x !== text && !andere.includes(x))).slice(0, 2 - andere.length));
+      if (andere.length < 2) andere.push(...mischen([...p.prep, ...p.ing, ...(p.extra || [])].filter((x) => x !== text && !andere.includes(x))).slice(0, 2 - andere.length));
       return { s, text, falsch: true, andere };
     }));
     let i = 0, richtig = 0, laeuft = true, entschieden = false;

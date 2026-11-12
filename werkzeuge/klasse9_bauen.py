@@ -166,7 +166,7 @@ KATEGORIEN = [
                   {"satz": "la_01", "richtig": "playing", "falsch": ["play", "to playing"]},
                   {"satz": "la_02", "richtig": "walking", "falsch": ["walk", "walks"]},
                   {"satz": "la_03", "richtig": "getting", "falsch": ["get", "gets"]},
-                  {"satz": "la_04", "richtig": "Dancing", "falsch": ["Dance", "Danced"]},
+                  {"satz": "la_04", "richtig": "Dancing", "falsch": ["Dances", "Danced"]},
                   {"satz": "la_05", "richtig": "Learning", "falsch": ["Learn", "Learns"]},
                   {"satz": "la_12", "luecke": "eating", "richtig": "eating", "falsch": ["eat", "to eat"]},
                   {"satz": "la_14", "luecke": "helping", "richtig": "helping", "falsch": ["help", "to help"]},
@@ -617,6 +617,8 @@ GRAMMAR_GRUND = {"la_01": "play", "la_02": "walk", "la_03": "get", "la_04": "Dan
                  "la_15": "meet", "la_16": "go", "la_17": "make", "la_18": "remember", "la_19": "take", "la_20": "decorate", "la_21": "make",
                  "la_22": "play"}
 GRAMMAR_PREPS = ["at", "in", "about", "of", "to", "for", "on"]
+# Nur typische Verwechslungen als Fehler zeigen (Mr. Alex, 12.11.): at ↔ in, of ↔ about, for ↔ to – keine Fehler, die kein Kind macht („Thanks on helping“)
+GRAMMAR_TYPISCH = {"at": ["in"], "in": ["at"], "of": ["about"], "about": ["of"], "to": ["for"], "for": ["to"]}
 # Erzeugte Fehlersätze, die (auch) richtiges oder strittiges Englisch wären – nie als „falsch“ zeigen (einmal alle durchgesehen, 12.11.):
 # (Satz, falsche Präposition) bzw. (Satz, "grund") = Grundform statt -ing, (Satz, "to") bei reinen -ing-Sätzen = „to“ + Grundform.
 GRAMMAR_AUS = {
@@ -650,13 +652,21 @@ def grammar_spiele(saetze):
         assert s["en"].count(s["luecke"]) == 1 and ing.lower().endswith("ing") and ing.lower().startswith(grund.lower()[:2]), sid
         f_prep, f_ing = [], []
         if prep in GRAMMAR_PREPS:  # falsche Präposition
-            f_prep = [ersetze(s, s["luecke"], f"{p} {ing}") for p in GRAMMAR_PREPS if p != prep and (sid, p) not in GRAMMAR_AUS]
+            f_prep = [ersetze(s, s["luecke"], f"{p} {ing}") for p in GRAMMAR_TYPISCH.get(prep, []) if (sid, p) not in GRAMMAR_AUS]
         if (sid, "grund") not in GRAMMAR_AUS:  # Grundform statt -ing (nach „to“: look forward to see / be used to take)
             f_ing.append(ersetze(s, ing, grund))
         if prep not in GRAMMAR_PREPS and (sid, "to") not in GRAMMAR_AUS:  # „to“ + Grundform statt -ing (nur ohne Präposition davor bzw. nach before)
             f_ing.append(ersetze(s, ing, "to " + grund))
         assert s["en"] not in f_prep + f_ing and len(set(f_prep + f_ing)) == len(f_prep + f_ing), sid
-        patrol.append({"satz": sid, "prep": f_prep, "ing": f_ing})
+        # extra: weitere falsche Fassungen NUR als Auswahl nach dem Stopp (nie an der Grenze gezeigt), damit es immer etwas zu wählen gibt
+        extra = [ersetze(s, s["luecke"], f"{p} {ing}") for p in GRAMMAR_PREPS if prep in GRAMMAR_PREPS and p != prep and (sid, p) not in GRAMMAR_AUS]
+        if prep != "to" and (sid, "to") not in GRAMMAR_AUS:
+            extra.append(ersetze(s, ing, "to " + grund))
+        extra = [x for x in dict.fromkeys(extra) if x not in f_prep + f_ing and x != s["en"]]
+        if (f_prep + f_ing) and len(f_prep + f_ing + extra) < 2:  # Notnagel: Verb mit -s („hates gets up“) – eindeutig falsch
+            extra.append(ersetze(s, ing, grund + "s"))
+        assert not (f_prep + f_ing) or len(f_prep + f_ing + extra) >= 2, sid
+        patrol.append({"satz": sid, "prep": f_prep, "ing": f_ing, "extra": extra})
     for k in KATEGORIEN:  # Chunk Sprint: die Aufgaben der verbform-Schritte beider Gruppen …
         for g in k.get("gruppen", []):
             if g["name"] in ("-ing form", "Prepositions"):

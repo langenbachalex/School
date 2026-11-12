@@ -11587,6 +11587,144 @@ window.DATEN = {
     "disco_leben_1": "audio/alex/disco_leben_1.mp3",
     "disco_leben_2": "audio/alex/disco_leben_2.mp3",
     "disco_boss_1": "audio/alex/disco_boss_1.mp3"
+   },
+   "akten": {
+    "liberty_ny": [
+     "audio/akten/liberty_ny_1.mp3",
+     "audio/akten/liberty_ny_2.mp3",
+     "audio/akten/liberty_ny_3.mp3",
+     "audio/akten/liberty_ny_4.mp3"
+    ]
+   },
+   "skin": {
+    "Short hair": "audio/skin/short_hair.mp3",
+    "Long hair": "audio/skin/long_hair.mp3",
+    "Messy hair": "audio/skin/messy_hair.mp3",
+    "Ponytail": "audio/skin/ponytail.mp3",
+    "Curly": "audio/skin/curly.mp3",
+    "Afro": "audio/skin/afro.mp3",
+    "Mohawk": "audio/skin/mohawk.mp3",
+    "Quiff": "audio/skin/quiff.mp3",
+    "Pigtails": "audio/skin/pigtails.mp3",
+    "Bun": "audio/skin/bun.mp3",
+    "Flat top": "audio/skin/flat_top.mp3",
+    "Three hairs": "audio/skin/three_hairs.mp3",
+    "Giant afro": "audio/skin/giant_afro.mp3",
+    "Rainbow mohawk": "audio/skin/rainbow_mohawk.mp3",
+    "Brown hair": "audio/skin/brown_hair.mp3",
+    "Blond hair": "audio/skin/blond_hair.mp3",
+    "Pink hair": "audio/skin/pink_hair.mp3",
+    "Black hair": "audio/skin/black_hair.mp3",
+    "Red hair": "audio/skin/red_hair.mp3",
+    "Turquoise hair": "audio/skin/turquoise_hair.mp3",
+    "Purple hair": "audio/skin/purple_hair.mp3",
+    "Neon green hair": "audio/skin/neon_green_hair.mp3",
+    "Fire red hair": "audio/skin/fire_red_hair.mp3",
+    "Blue hair": "audio/skin/blue_hair.mp3",
+    "Silver hair": "audio/skin/silver_hair.mp3",
+    "Rainbow hair": "audio/skin/rainbow_hair.mp3",
+    "No hair accessory": "audio/skin/no_hair_accessory.mp3",
+    "Bow": "audio/skin/bow.mp3",
+    "Headband": "audio/skin/headband.mp3",
+    "No hat": "audio/skin/no_hat.mp3",
+    "Cap": "audio/skin/cap.mp3",
+    "Cowboy hat": "audio/skin/cowboy_hat.mp3",
+    "Top hat": "audio/skin/top_hat.mp3",
+    "Sunglasses off": "audio/skin/sunglasses_off.mp3",
+    "Sunglasses on": "audio/skin/sunglasses_on.mp3",
+    "Round nose": "audio/skin/round_nose.mp3",
+    "Pointy nose": "audio/skin/pointy_nose.mp3",
+    "Button nose": "audio/skin/button_nose.mp3",
+    "No beard": "audio/skin/no_beard.mp3",
+    "Moustache": "audio/skin/moustache.mp3",
+    "Handlebar moustache": "audio/skin/handlebar_moustache.mp3",
+    "Walrus moustache": "audio/skin/walrus_moustache.mp3",
+    "Goatee": "audio/skin/goatee.mp3",
+    "Unibrow and moustache": "audio/skin/unibrow_and_moustache.mp3",
+    "Fu Manchu": "audio/skin/fu_manchu.mp3",
+    "No jewelry": "audio/skin/no_jewelry.mp3",
+    "Earring": "audio/skin/earring.mp3",
+    "Necklace": "audio/skin/necklace.mp3",
+    "Earring and necklace": "audio/skin/earring_and_necklace.mp3",
+    "White shoes": "audio/skin/white_shoes.mp3",
+    "Red shoes": "audio/skin/red_shoes.mp3",
+    "Black shoes": "audio/skin/black_shoes.mp3",
+    "Roller skates": "audio/skin/roller_skates.mp3",
+    "Aura off": "audio/skin/aura_off.mp3",
+    "Super aura on": "audio/skin/super_aura_on.mp3",
+    "Normal neck": "audio/skin/normal_neck.mp3",
+    "Giraffe neck": "audio/skin/giraffe_neck.mp3",
+    "Slim belly": "audio/skin/slim_belly.mp3",
+    "Normal belly": "audio/skin/normal_belly.mp3",
+    "Big belly": "audio/skin/big_belly.mp3",
+    "Ball belly": "audio/skin/ball_belly.mp3",
+    "Narrow shoulders": "audio/skin/narrow_shoulders.mp3",
+    "Normal shoulders": "audio/skin/normal_shoulders.mp3",
+    "Broad shoulders": "audio/skin/broad_shoulders.mp3",
+    "Thin arms": "audio/skin/thin_arms.mp3",
+    "Normal arms": "audio/skin/normal_arms.mp3",
+    "Strong arms": "audio/skin/strong_arms.mp3",
+    "Hulk arms": "audio/skin/hulk_arms.mp3",
+    "Normal feet": "audio/skin/normal_feet.mp3",
+    "Giant feet": "audio/skin/giant_feet.mp3",
+    "Power body off": "audio/skin/power_body_off.mp3",
+    "Power body on": "audio/skin/power_body_on.mp3",
+    "No backpack": "audio/skin/no_backpack.mp3",
+    "Blue backpack": "audio/skin/blue_backpack.mp3",
+    "Red backpack": "audio/skin/red_backpack.mp3",
+    "Rainbow backpack": "audio/skin/rainbow_backpack.mp3",
+    "No gloves": "audio/skin/no_gloves.mp3",
+    "White gloves": "audio/skin/white_gloves.mp3",
+    "Black gloves": "audio/skin/black_gloves.mp3",
+    "Boxing gloves": "audio/skin/boxing_gloves.mp3",
+    "Red T-shirt": "audio/skin/red_t_shirt.mp3",
+    "Red hoodie": "audio/skin/red_hoodie.mp3",
+    "Blue T-shirt": "audio/skin/blue_t_shirt.mp3",
+    "Blue hoodie": "audio/skin/blue_hoodie.mp3",
+    "Yellow T-shirt": "audio/skin/yellow_t_shirt.mp3",
+    "Yellow hoodie": "audio/skin/yellow_hoodie.mp3",
+    "Green T-shirt": "audio/skin/green_t_shirt.mp3",
+    "Green hoodie": "audio/skin/green_hoodie.mp3"
+   },
+   "vok_combo": {
+    "3": [
+     "audio/alex/vok_combo3_1.mp3",
+     "audio/alex/vok_combo3_2.mp3"
+    ],
+    "5": [
+     "audio/alex/vok_combo5_1.mp3",
+     "audio/alex/vok_combo5_2.mp3"
+    ],
+    "8": [
+     "audio/alex/vok_combo8_1.mp3",
+     "audio/alex/vok_combo8_2.mp3"
+    ]
+   },
+   "grenzer": {
+    "start": [
+     "audio/grenzer/start_1.mp3",
+     "audio/grenzer/start_2.mp3"
+    ],
+    "ok_ae": [
+     "audio/grenzer/ok_ae_1.mp3",
+     "audio/grenzer/ok_ae_2.mp3"
+    ],
+    "ok_be": [
+     "audio/grenzer/ok_be_1.mp3",
+     "audio/grenzer/ok_be_2.mp3"
+    ],
+    "falsch_ae": [
+     "audio/grenzer/falsch_ae_1.mp3"
+    ],
+    "falsch_be": [
+     "audio/grenzer/falsch_be_1.mp3"
+    ],
+    "ende_gut": [
+     "audio/grenzer/ende_gut_1.mp3"
+    ],
+    "ende_zu": [
+     "audio/grenzer/ende_zu_1.mp3"
+    ]
    }
   },
   "story_audio": [

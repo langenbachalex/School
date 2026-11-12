@@ -196,6 +196,7 @@
   function stopp() {
     lauf++;
     if (aktuell) { aktuell.pause(); aktuell = null; }
+    if (nebenTon) { nebenTon.pause(); nebenTon = null; }
     if (window.speechSynthesis) speechSynthesis.cancel();
     audioEnde = Promise.resolve(); // die abgebrochene Wiedergabe meldet kein Ende mehr: spätere spiele(…, { warten }) dürfen nicht ewig dahinter hängen
     hauptLaeuft = false; wortWartet = null; // Runner: Seitenwechsel, Runner-Ende, Station übersprungen → wartende Vokabel verwerfen
@@ -229,6 +230,18 @@
   // Ende der zuletzt gestarteten Wiedergabe. spiele(…, { warten: true }) reiht sich dahinter ein, statt die laufende abzuschneiden
   // (für Belohnungs-Stimmen: Lob, Schlusssatz, Pop-up). Seitenwechsel oder „Weiter“ im Pop-up (stopp) bricht auch wartende ab.
   let audioEnde = Promise.resolve();
+  /* Neben-Ton (12.11.2026): kurze Sprüche (Combo beim Vokabellernen) auf einem eigenen Audio-Element. Startet nur, wenn gerade nichts spricht,
+     und jedes spiele()/stopp() schneidet ihn ab – die Vokabel-Aussprache hat immer Vorrang. */
+  let nebenTon = null;
+  const tonLaeuft = () => !!(aktuell && !aktuell.paused && !aktuell.ended) || !!(window.speechSynthesis && speechSynthesis.speaking);
+  function nebenSpiele(datei) {
+    if (!datei || nebenTon || tonLaeuft()) return false;
+    const a = new Audio(datei);
+    nebenTon = a;
+    a.onended = a.onerror = () => { if (nebenTon === a) nebenTon = null; };
+    a.play().catch(() => { if (nebenTon === a) nebenTon = null; });
+    return true;
+  }
   function spiele(dateien, opt = {}) {
     if (vorLob) { dateien = [vorLob, ...dateien]; vorLob = null; }
     if (!opt.warten) stopp();
@@ -3287,6 +3300,22 @@
     if (!comboErlaubt() || richtigSerie < COMBO_AB) return;
     const art = (richtigSerie - COMBO_AB) % 3;
     setTimeout(() => comboAnimation(art), 80); // die nächste Karte ist dann schon gezeichnet
+    comboSpruch(richtigSerie);
+  }
+  // Combo-Spruch von Mr. Alex (12.11.2026, nur Ton, keine Punkte): bei 3/5/8 richtigen in Folge zufällig einer, höchstens alle 20 s.
+  // Er wartet, bis Lob und Vokabel-Aussprache der nächsten Karte fertig sind; kommt vorher schon die nächste Vokabel, entfällt er.
+  const COMBO_SPRUCH_ABSTAND = 20000;
+  let comboSpruchZeit = -COMBO_SPRUCH_ABSTAND;
+  function comboSpruch(n) {
+    const liste = ((SP.runner_audio || {}).vok_combo || {})[n] || [];
+    if (!liste.length || monoton() - comboSpruchZeit < COMBO_SPRUCH_ABSTAND) return;
+    setTimeout(() => {
+      const meinLauf = lauf;
+      audioEnde.then(() => {
+        if (meinLauf !== lauf || !comboErlaubt() || monoton() - comboSpruchZeit < COMBO_SPRUCH_ABSTAND) return;
+        if (nebenSpiele(liste[Math.floor(Math.random() * liste.length)])) comboSpruchZeit = monoton();
+      });
+    }, 900);
   }
   function comboAnimation(art) {
     const flamme = app.querySelector(".combo-flamme");
@@ -3321,12 +3350,14 @@
         m[1], el("span", { class: "akten-de", lang: "de" }, m[2]));
     });
   }
+  const aktenTon = (a) => ((SP.runner_audio || {}).akten || {})[a.id] || null;   // Aufnahmen je Absatz (werkzeuge/runner_audio.py), sonst kein Knopf
   function aktenZeigen(a, gold) {
     const gesehen = new Set(), lobBox = el("p", { class: "gym-lob", "aria-live": "polite" });
     feier.classList.add("akte"); feier.classList.toggle("gold-akte", !!gold);
     feier.replaceChildren(
       el("h2", { lang: "en" }, a.titel),
       el("p", { class: "klein" }, "Tipp auf ein farbiges Wort: Dann siehst du die Bedeutung."),
+      aktenTon(a) && el("div", { class: "knopfreihe" }, knopf("🔊 Text vorlesen", () => spiele(aktenTon(a)), "leise")),   // 12.11.: Aufnahme je Absatz (Mr. Alex)
       ...a.absaetze.map((x) => el("p", { class: "akten-text", lang: "en" }, aktenWoerter(x))),
       el("h3", {}, "Questions"),
       el("ol", { class: "akten-fragen" }, a.fragen.map((f) => {
@@ -3335,7 +3366,7 @@
       })),
       lobBox,
       el("div", { class: "knopfreihe" }, knopf("Schließen", () => { feier.close(); feier.classList.remove("akte", "gold-akte"); }, "haupt")));
-    feier.addEventListener("close", () => feier.classList.remove("akte", "gold-akte"), { once: true });
+    feier.addEventListener("close", () => { feier.classList.remove("akte", "gold-akte"); if (aktenTon(a)) stopp(); }, { once: true });
     feier.showModal();
   }
   function aktenBereich() {

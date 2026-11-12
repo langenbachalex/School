@@ -10,6 +10,10 @@ Vorhandene Dateien werden nie überschrieben. Obergrenze je Lauf: GRENZE Zeichen
 Heldenfilme (6.11.2026): app/audio/helden/intro_<held>.mp3 (Text: Spalte intro in inhalte/helden.tsv, Stimme wie das Cameo).
 Mr. Alex' Zurufe im Lauf (7.11.2026): Texte ALEX_ZURUFE in runner.js, Stimme en_alex (Mr. Alex, Stabilität 0,4) mit leichten Audio-Tags (ALEX_TAGS),
 einmal vertont nach app/audio/alex/<key>.mp3 (Klasse 6) und von dort nach app/klasse9/audio/alex/ kopiert (gleiche Zeilen für beide Klassen; --nur=audio/alex/).
+Vier Ton-Posten vom 12.11.2026 (Mr. Alex): Geheimakten (audio/akten/<id>_<nr>.mp3, je Absatz; Klasse 6 Mr. Alex, Klasse 9 Jeremy/Jessica),
+Skin-Menü (app/klasse9/audio/skin/<wendung>.mp3, Jeremy/Jessica im Wechsel; Klasse 6 bleibt bei der Geräte-Stimme, siehe skin_wendungen),
+Combo-Sprüche beim Vokabellernen (COMBO_SPRUECHE, audio/alex/vok_<key>.mp3, Mr. Alex, Kopie für Klasse 9) und Grenzer-Sprüche in Border Patrol
+(GRENZER, app/klasse9/audio/grenzer/<key>.mp3: amerikanische Seite Jeremy, britische Seite Mr. Alex).
 Aufruf: python3 werkzeuge/runner_audio.py --zaehlen   (nur zählen; --nur=<pfad-anfang> beschränkt auf diese Posten)
         python3 werkzeuge/runner_audio.py             (erzeugen, danach daten_bauen.py und klasse9_bauen.py)
 """
@@ -110,11 +114,56 @@ def disco_zurufe():
 
 def alex_kopieren():
     """Die Zurufe gibt es einmal (Klasse 6); Klasse 9 bekommt Kopien (nur fehlende)."""
-    for key, _ in alex_zurufe():
+    for key in [k for k, _ in alex_zurufe()] + [f"vok_{k}" for l in COMBO_SPRUECHE.values() for k, _ in l]:
         q, z = os.path.join(APP6, "audio", "alex", f"{key}.mp3"), os.path.join(APP9, "audio", "alex", f"{key}.mp3")
         if os.path.exists(q) and not os.path.exists(z):
             os.makedirs(os.path.dirname(z), exist_ok=True)
             import shutil; shutil.copyfile(q, z)
+
+
+# Combo-Sprüche beim Vokabellernen (12.11.2026): Mini-Reward bei 3/5/8 richtigen in Folge (app.js comboPruefen), Mr. Alex (en_alex) mit leichten Tags.
+# Einzige Textquelle; kein Untertitel in der App. Einmal vertont nach app/audio/alex/vok_<key>.mp3, Kopie nach app/klasse9/audio/alex/ (alex_kopieren).
+COMBO_SPRUECHE = {
+    3: [("combo3_1", "Three in a row – nice!"), ("combo3_2", "Good start – keep going!")],
+    5: [("combo5_1", "Five in a row – great!"), ("combo5_2", "You know your words!")],
+    8: [("combo8_1", "Eight in a row – wow!"), ("combo8_2", "You are a word champion!")],
+}
+# Grenzer-Sprüche in Border Patrol (Klasse 9, 12.11.2026): (Moment, Stimme, Tag, Text) – amerikanische Seite Jeremy (m), britische Seite Mr. Alex (alex, mit [British accent]).
+# ok_<seite>: richtig einsortiert auf dieser Seite; falsch_<seite>: Wort fälschlich auf diese Seite geschoben (der Grenzer dieser Seite weist es ab).
+GRENZER = {
+    "start_1": ("start", "m", "[cheerful]", "Welcome to the border! Passports, please!"),
+    "start_2": ("start", "alex", "[cheerful]", "Border control! Where are your words from?"),
+    "ok_ae_1": ("ok_ae", "m", "[cheerful]", "Welcome to the USA!"),
+    "ok_ae_2": ("ok_ae", "m", "[cheerful]", "Go right ahead!"),
+    "ok_be_1": ("ok_be", "alex", "[cheerful]", "Welcome to Britain!"),
+    "ok_be_2": ("ok_be", "alex", "[warm]", "Lovely – come in!"),
+    "falsch_ae_1": ("falsch_ae", "m", "[surprised]", "Wrong side of the ocean!"),
+    "falsch_be_1": ("falsch_be", "alex", "[surprised]", "Sorry, that's not British!"),
+    "ende_gut_1": ("ende_gut", "m", "[excited]", "Great job, officer!"),
+    "ende_zu_1": ("ende_zu", "alex", "[calm]", "The border is closed for today."),
+}
+# Geheimakten Klasse 9: Stimme je Absatz passend zur Figur im Absatz (m = Jeremy, f = Jessica); ohne Eintrag im Wechsel m/f
+AKTEN9_STIMMEN = {"liberty_ny": "fmmf"}
+
+
+def akten(klasse):
+    """[(id, nr, sprechtext)] je Absatz aus inhalte[/klasse9]/geheimakten.tsv – Worthilfen {wort|deutsch} werden zu wort."""
+    import daten_bauen
+    for z in daten_bauen.lesen("geheimakten.tsv" if klasse == 6 else os.path.join("klasse9", "geheimakten.tsv")):
+        for nr, absatz in enumerate(z["text"].split(" ¶ "), 1):
+            yield z["id"], nr, re.sub(r"\{([^|}]*)\|[^}]*\}", r"\1", absatz).strip()
+
+
+def skin_wendungen():
+    """Wendungen des Skin-Menüs aus SPRECH/FARBE_EN/TOP_EN in runner.js (wie sprechText(); „Power level n“ spricht das Menü nicht) → [(wendung, dateiname)].
+    Vertont nur für Klasse 9 (amerikanisch); Klasse 6 (britisch) behält die Geräte-Stimme, bis britische Aufnahmen freigegeben sind."""
+    js = open(ENGINE, encoding="utf-8").read()
+    block = js[js.index("const SPRECH = {"):js.index("const FARBE_EN")]
+    liste = re.findall(r': "([^"]+)"', block)
+    farben = re.findall(r': "([^"]+)"', re.search(r"const FARBE_EN = \{(.*?)\};", js).group(1))
+    tops = re.findall(r': "([^"]+)"', re.search(r"const TOP_EN = \{(.*?)\};", js).group(1))
+    liste += [f"{f} {t}" for f in farben for t in tops]
+    return [(w, re.sub(r"[^a-z0-9]+", "_", w.lower()).strip("_")) for w in dict.fromkeys(liste)]
 
 
 def texte():
@@ -175,6 +224,18 @@ def auftraege():
             liste.append((kl, app, f"audio/runner/disco_{art}.mp3", "en_alex_disco", f"{DISCO_TAGS[art]}{britisch(t, kl)} {t}"))
         for key, text in disco_zurufe():
             liste.append((kl, app, f"audio/alex/{key}.mp3", "en_alex_disco", f"[excited]{britisch(text, kl)} {text}"))
+    # Vier Ton-Posten vom 12.11.2026: Geheimakten, Skin-Menü, Combo-Sprüche, Grenzer
+    for id_, nr, text in akten(6):
+        liste.append((6, APP6, f"audio/akten/{id_}_{nr}.mp3", "en", text))
+    for id_, nr, text in akten(9):
+        liste.append((9, APP9, f"audio/akten/{id_}_{nr}.mp3", (AKTEN9_STIMMEN.get(id_, "") + "mf" * 20)[nr - 1], text))
+    for i, (wendung, datei) in enumerate(skin_wendungen()):
+        liste.append((9, APP9, f"audio/skin/{datei}.mp3", "mf"[i % 2], wendung))
+    for n, sprueche in COMBO_SPRUECHE.items():
+        for key, text in sprueche:
+            liste.append((6, APP6, f"audio/alex/vok_{key}.mp3", "en_alex", f"{ALEX_TAGS[f'combo{n}']}{britisch(text)} {text}"))
+    for key, (_, stimme, tag, text) in GRENZER.items():
+        liste.append((9, APP9, f"audio/grenzer/{key}.mp3", stimme, f"{tag}{' [British accent]' if stimme == 'alex' else ''} {text}"))
     import klasse9_audio
     for pfad, stimme, text in klasse9_audio.auftraege():
         if pfad.startswith("audio/beae/w_"):
@@ -195,6 +256,18 @@ def daten(klasse):
     aus["disco"] = {"boss": {art: a(f"audio/runner/disco_{art}.mp3") for art in ("banner", "richtig", "falsch")},
                     "start": a("audio/runner/disco_start.mp3"), "ende": a("audio/runner/disco_ende.mp3")}   # Disco Run (Bonus)
     aus["alex"] = {key: a(f"audio/alex/{key}.mp3") for key, _ in alex_zurufe() + disco_zurufe()}   # Mr. Alex' Zurufe (7.11.), beide Klassen dieselben Dateien
+    # Vier Ton-Posten vom 12.11.2026 – nur vorhandene Dateien (fehlt eine, bleibt es bei Geräte-Stimme bzw. Stille)
+    aus["akten"] = {}
+    for id_, nr, _ in akten(klasse):
+        aus["akten"].setdefault(id_, []).append(a(f"audio/akten/{id_}_{nr}.mp3"))
+    aus["akten"] = {k: v for k, v in aus["akten"].items() if all(v)}   # eine Akte wird nur ganz vorgelesen
+    aus["skin"] = {w: f"audio/skin/{d}.mp3" for w, d in skin_wendungen() if a(f"audio/skin/{d}.mp3")} if klasse == 9 else {}
+    aus["vok_combo"] = {str(n): [p for p in (a(f"audio/alex/vok_{key}.mp3") for key, _ in l) if p] for n, l in COMBO_SPRUECHE.items()}
+    if klasse == 9:
+        aus["grenzer"] = {}
+        for key, (moment, *_rest) in GRENZER.items():
+            if a(f"audio/grenzer/{key}.mp3"):
+                aus["grenzer"].setdefault(moment, []).append(f"audio/grenzer/{key}.mp3")
     return aus
 
 
@@ -228,10 +301,22 @@ def main():
         if os.path.exists(ziel):
             continue
         os.makedirs(os.path.dirname(ziel), exist_ok=True)
-        if kl == 9 and not stimme.startswith(("h_", "en_alex_disco")):   # Klasse-9-Helden (h_<id>) über audio_erzeugen
-            sprechen9(stimme, text, ziel)
-        else:
-            audio_erzeugen.sprechen(stimme, "en", text, ziel)
+        for versuch in (1, 2, 3):   # bei API-Fehlern höchstens 3 Versuche je Datei, dann Abbruch (keine halben Dateien)
+            try:
+                if kl == 9 and not stimme.startswith(("h_", "en_alex_disco")):   # Klasse-9-Helden (h_<id>) über audio_erzeugen
+                    sprechen9(stimme, text, ziel)
+                else:
+                    audio_erzeugen.sprechen(stimme, "en", text, ziel)
+                break
+            except Exception as e:
+                print(f"  FEHLER ({versuch}/3) {pfad}: {e}")
+                if os.path.exists(ziel):
+                    os.remove(ziel)
+                if versuch == 3:
+                    print("Abbruch nach 3 Versuchen.")
+                    alex_kopieren()
+                    sys.exit(1)
+                import time; time.sleep(5 * versuch)
         print("  ✓", pfad)
     alex_kopieren()
 

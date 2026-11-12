@@ -265,6 +265,7 @@
   function stopp() {
     lauf++;
     if (aktuell) { aktuell.pause(); aktuell = null; }
+    if (nebenTon) { nebenTon.pause(); nebenTon = null; }
     if (window.speechSynthesis) speechSynthesis.cancel();
     audioEnde = Promise.resolve(); // die abgebrochene Wiedergabe meldet kein Ende mehr: spätere spiele(…, { warten }) dürfen nicht ewig dahinter hängen
     hauptLaeuft = false; wortWartet = null; // Runner: Seitenwechsel, Runner-Ende, Station übersprungen → wartende Vokabel verwerfen
@@ -297,6 +298,18 @@
   // (für Belohnungs-Stimmen: Lob, Schlusssatz, Pop-up). Seitenwechsel oder „Weiter“ im Pop-up (stopp) bricht auch wartende ab.
   // spiele(…, { laut: 0.6 }) spielt Dateien leiser (Runner-Echo); die Geräte-Stimme kennt keine Lautstärke und bleibt normal.
   let audioEnde = Promise.resolve();
+  /* Neben-Ton (12.11.2026): kurze Sprüche (Combo beim Vokabellernen, Grenzer in Border Patrol) auf einem eigenen Audio-Element. Startet nur, wenn gerade nichts spricht,
+     und jedes spiele()/stopp() schneidet ihn ab – die Vokabel-Aussprache hat immer Vorrang. */
+  let nebenTon = null;
+  const tonLaeuft = () => !!(aktuell && !aktuell.paused && !aktuell.ended) || !!(window.speechSynthesis && speechSynthesis.speaking);
+  function nebenSpiele(datei) {
+    if (!datei || leise || nebenTon || tonLaeuft()) return false;
+    const a = new Audio(datei);
+    nebenTon = a;
+    a.onended = a.onerror = () => { if (nebenTon === a) nebenTon = null; };
+    a.play().catch(() => { if (nebenTon === a) nebenTon = null; });
+    return true;
+  }
   function spiele(dateien, opt = {}) {
     if (leise) return Promise.resolve(null);
     if (vorLob) { dateien = [vorLob, ...dateien]; vorLob = null; }
@@ -2849,6 +2862,22 @@
     if (!comboErlaubt() || richtigSerie < COMBO_AB) return;
     const art = (richtigSerie - COMBO_AB) % 3;
     setTimeout(() => comboAnimation(art), 80); // die nächste Karte ist dann schon gezeichnet
+    comboSpruch(richtigSerie);
+  }
+  // Combo-Spruch von Mr. Alex (12.11.2026, nur Ton, keine Punkte): bei 3/5/8 richtigen in Folge zufällig einer, höchstens alle 20 s.
+  // Er wartet, bis Lob und Vokabel-Aussprache der nächsten Karte fertig sind; kommt vorher schon die nächste Vokabel, entfällt er.
+  const COMBO_SPRUCH_ABSTAND = 20000;
+  let comboSpruchZeit = -COMBO_SPRUCH_ABSTAND;
+  function comboSpruch(n) {
+    const liste = ((SP.runner_audio || {}).vok_combo || {})[n] || [];
+    if (!liste.length || leise || monoton() - comboSpruchZeit < COMBO_SPRUCH_ABSTAND) return;
+    setTimeout(() => {
+      const meinLauf = lauf;
+      audioEnde.then(() => {
+        if (meinLauf !== lauf || !comboErlaubt() || monoton() - comboSpruchZeit < COMBO_SPRUCH_ABSTAND) return;
+        if (nebenSpiele(liste[Math.floor(Math.random() * liste.length)])) comboSpruchZeit = monoton();
+      });
+    }, 900);
   }
   function comboAnimation(art) {
     const flamme = app.querySelector(".combo-flamme");
@@ -2883,12 +2912,14 @@
         m[1], el("span", { class: "akten-de", lang: "de" }, m[2]));
     });
   }
+  const aktenTon = (a) => ((SP.runner_audio || {}).akten || {})[a.id] || null;   // Aufnahmen je Absatz (werkzeuge/runner_audio.py), sonst kein Knopf
   function aktenZeigen(a, gold) {
     const gesehen = new Set(), lobBox = el("p", { class: "gym-lob", "aria-live": "polite" });
     feier.classList.add("akte"); feier.classList.toggle("gold-akte", !!gold);
     feier.replaceChildren(
       el("h2", { lang: "en" }, a.titel),
       el("p", { class: "klein" }, T("Tipp auf ein farbiges Wort: Dann siehst du die Bedeutung.", "Tap a coloured word to see what it means.")),
+      aktenTon(a) && el("div", { class: "knopfreihe" }, knopf(T("🔊 Text vorlesen", "🔊 Read aloud"), () => spiele(aktenTon(a)), "leise")),   // 12.11.: Aufnahme je Absatz (Jeremy/Jessica)
       ...a.absaetze.map((x) => el("p", { class: "akten-text", lang: "en" }, aktenWoerter(x))),
       el("h3", {}, "Questions"),
       el("ol", { class: "akten-fragen" }, a.fragen.map((f) => {
@@ -2897,7 +2928,7 @@
       })),
       lobBox,
       el("div", { class: "knopfreihe" }, knopf(T("Schließen", "Close"), () => { feier.close(); feier.classList.remove("akte", "gold-akte"); }, "haupt")));
-    feier.addEventListener("close", () => feier.classList.remove("akte", "gold-akte"), { once: true });
+    feier.addEventListener("close", () => { feier.classList.remove("akte", "gold-akte"); if (aktenTon(a)) stopp(); }, { once: true });
     feier.showModal();
   }
   function aktenBereich() {
@@ -3315,6 +3346,11 @@
     // Seit 31.10. mit den Einzelwort-Aufnahmen (britisch Mr. Alex, amerikanisch Jeremy); fehlt eine, wie vorher der ganze Satz
     const tonFuer = (w) => { const datei = w.seite === "be" ? w.p.audio_be : w.p.audio_ae; if (datei) return datei; const satz = D.saetze[w.p.id]; return w.seite === "be" ? (satz.be.audio || { text: satz.be.en, stimme: "m" }) : tonSatz(satz); };
     let pause = false;
+    // Grenzer-Sprüche (12.11.2026, nur Ton): amerikanische Seite Jeremy, britische Seite Mr. Alex. Eigenes Audio-Element (nebenSpiele): startet nur,
+    // wenn kein Wort gesprochen wird, und ein angetipptes Wort schneidet den Spruch ab. Lob-Sprüche höchstens alle 4 s, „falsch“ immer (wenn frei).
+    let grenzerZeit = -1e9;
+    const grenzerTon = (moment) => { const l = ((SP.runner_audio || {}).grenzer || {})[moment] || []; return l[Math.floor(Math.random() * l.length)] || null; };
+    const grenzer = (moment, immer) => { if (!immer && monoton() - grenzerZeit < 4000) return; if (nebenSpiele(grenzerTon(moment))) grenzerZeit = monoton(); };
     const wort = (w) => (w.seite === "be" ? w.p.be : w.p.ae);
     const flagge = (seite) => flaggeSvg(seite);
     const zonen = [["be", "British"], ["ae", "American"]].map(([seite, name]) =>
@@ -3324,9 +3360,9 @@
       if (!laeuft || w.fertig) return;
       w.fertig = true;
       if (seite === w.seite) {
-        richtig++; w.el.classList.add("weg-" + seite); richtigSerie++;
+        richtig++; w.el.classList.add("weg-" + seite); richtigSerie++; grenzer("ok_" + seite);
       } else {
-        leben--; w.el.classList.add("falsch"); w.el.append(flagge(w.seite));
+        leben--; w.el.classList.add("falsch"); w.el.append(flagge(w.seite)); grenzer("falsch_" + seite, true);
       }
       zeigeStand(); entferne(w); pruefeEnde();
     }
@@ -3387,6 +3423,11 @@
         : T(`${richtig} von ${reihe.length} richtig. Für Punkte brauchst du ${PATROL.ziel}. Noch mal?`, `${richtig} of ${reihe.length} correct. You need ${PATROL.ziel} for points. Again?`);
       melde(box, geschafft ? "gut" : "neutral", text);
       liste.hidden = false;
+      // Schlusswort des Grenzers: nach dem Lob (lob() hängt es über vorLob davor) bzw. nach einem noch laufenden Wort oder Grenzer-Spruch („falsch“ beim letzten Leben)
+      const schluss = geschafft ? grenzerTon("ende_gut") : leben <= 0 ? grenzerTon("ende_zu") : null;
+      const los = () => spiele([schluss], { warten: true });
+      if (schluss && geschafft && nebenTon) { nebenTon.pause(); nebenTon = null; }
+      if (schluss) { if (nebenTon) nebenTon.addEventListener("ended", los, { once: true }); else los(); }
     }
     const liste = el("details", { class: "patrol-liste", hidden: true }, el("summary", {}, T("Alle Paare ansehen", "Show all pairs")),
       el("table", {}, el("tbody", {}, SP.patrol.map((p) => el("tr", {}, el("td", { lang: "en" }, "🇬🇧 " + p.be), el("td", { lang: "en" }, "🇺🇸 " + p.ae), !E() && el("td", { lang: "de" }, p.de))))));
@@ -3397,6 +3438,7 @@
       el("section", { class: "satzkarte patrol" }, stand, himmel, el("div", { class: "patrol-zonen" }, ...zonen), box, liste,
         el("div", { class: "knopfreihe" }, knopf(T("↻ Noch mal", "↻ Play again"), () => spielPatrol(k)), knopf(T("Andere Spiele", "Other games"), zurueck), knopf(T("Zur Startseite", "Home"), startseite, "leise"))));
     requestAnimationFrame(schritt);
+    setTimeout(() => { if (laeuft) grenzer("start", true); }, 400);
   }
 
   /* ---------- Games: Grammar Patrol (12.11.2026, Mr. Alex) – Border Patrol mit ganzen Sätzen: durchwinken ✅ oder stoppen 🛑 ----------
@@ -4534,7 +4576,7 @@
         b.querySelector(".haken").textContent = aktiv ? "✓ " : "";
       }
     };
-    const waehle = (o, w) => { skinSetzen(o.key, w); markiere(); vorschau.neuMalen(); spiele([{ text: M.sprechText(skinWirksam(), o.key, w), stimme: "m" }]); };
+    const waehle = (o, w) => { skinSetzen(o.key, w); markiere(); vorschau.neuMalen(); const t = M.sprechText(skinWirksam(), o.key, w); spiele([((SP.runner_audio || {}).skin || {})[t] || { text: t, stimme: "m" }]); };   // 12.11.: Aufnahme (Jeremy/Jessica), sonst Geräte-Stimme
     const chip = (o, w) => {
       const frei = skinFrei(o.key, w), farbe = SKIN_FARBOPTION[o.key] && skinFarbe(M, o.key, w), preis = M.skinPreis(o.key, w);
       return el("button", { class: "knopf runner-wert" + (frei ? "" : " gesperrt"), "aria-pressed": "false", "data-skin": `${o.key}_${w}`, "data-key": o.key, "data-wert": w,

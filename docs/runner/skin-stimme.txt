@@ -1,5 +1,6 @@
 # Skin-Stimme – gesprochene Wendungen im Skin-Menü (Road Trip Run, en-US; Figur v2 vom 29.10.)
-# Eine Zeile je Wendung; Platzhalter per Geräte-TTS, später Jeremy/Jessica.
+# Eine Zeile je Wendung. Seit 12.11.2026 vertont für Klasse 9 (Jeremy/Jessica im Wechsel, app/klasse9/audio/skin/, werkzeuge/runner_audio.py skin_wendungen);
+# Klasse 6 und fehlende Dateien: Geräte-Stimme. „Power level n“ spricht das Menü nicht (nicht vertont).
 Short hair
 Long hair
 Messy hair

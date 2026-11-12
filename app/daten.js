@@ -7890,6 +7890,30 @@ window.DATEN = {
     "disco_leben_1": "audio/alex/disco_leben_1.mp3",
     "disco_leben_2": "audio/alex/disco_leben_2.mp3",
     "disco_boss_1": "audio/alex/disco_boss_1.mp3"
+   },
+   "akten": {
+    "leo_big_ben": [
+     "audio/akten/leo_big_ben_1.mp3",
+     "audio/akten/leo_big_ben_2.mp3",
+     "audio/akten/leo_big_ben_3.mp3",
+     "audio/akten/leo_big_ben_4.mp3",
+     "audio/akten/leo_big_ben_5.mp3"
+    ]
+   },
+   "skin": {},
+   "vok_combo": {
+    "3": [
+     "audio/alex/vok_combo3_1.mp3",
+     "audio/alex/vok_combo3_2.mp3"
+    ],
+    "5": [
+     "audio/alex/vok_combo5_1.mp3",
+     "audio/alex/vok_combo5_2.mp3"
+    ],
+    "8": [
+     "audio/alex/vok_combo8_1.mp3",
+     "audio/alex/vok_combo8_2.mp3"
+    ]
    }
   },
   "story_audio": [

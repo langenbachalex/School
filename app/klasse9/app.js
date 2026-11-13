@@ -1278,8 +1278,10 @@
         el("h3", { lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), name),
         fragen.flatMap((f) => [el("p", { class: "klein" }, frage(f)), umschalter(f.optionen, (w) => { antworten[i][f.key] = w; }, frage(f), f.key)]),
         box);
-      const feld = (f) => el("input", { type: "text", class: "eingabe", lang: "en", autocomplete: "off",
-        "aria-label": frage(f), placeholder: frage(f), oninput: (e) => { antworten[i][f.key] = e.target.value; if (sperre_) sperre_.bereit(); } });
+      // 13.11.2026 (Fehler Mr. Alex): Die Frage steht über dem Feld – als Platzhalter war sie am Handy abgeschnitten und verschwand beim Tippen.
+      const feld = (f) => el("label", { class: "hv-feld" }, el("span", { class: "hv-frage", lang: "en" }, frage(f)),
+        el("input", { type: "text", class: "eingabe", lang: "en", autocomplete: "off",
+          "aria-label": frage(f), placeholder: T("Deine Antwort …", "Your answer …"), oninput: (e) => { antworten[i][f.key] = e.target.value; if (sperre_) sperre_.bereit(); } }));
       return el("li", { class: "hv-zeile" },
         el("h3", { lang: "en" }, el("span", { class: "hv-nr" }, i + 1 + ". "), name),
         el("div", { class: "hv-tabelle" }, fragen.map(feld)),

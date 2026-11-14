@@ -3197,7 +3197,7 @@
   /* ---------- Ende: Ergebnis an die App ---------- */
   const ergebnis = (geschafft) => Object.assign({
     geschafft, diamanten: gesammelt, max: (story ? diamanten.length : woerter.length) + level.tore.length,
-    toreRichtig: torErgebnisse.filter(Boolean).length, leben, dauer: Math.round((performance.now() - startZeit) / 1000), maxCombo,
+    toreRichtig: torErgebnisse.filter(Boolean).length, torWoerter: tore.map((t, i) => ({ wort: t.wort, richtig: torErgebnisse[i] })), leben, dauer: Math.round((performance.now() - startZeit) / 1000), maxCombo,
     helden: Object.keys(heldLauf).map((id) => ({ id, auftritte: heldLauf[id].auftritte, serie: heldLauf[id].serie })),   // Folien-Karten: Cameos dieses Laufs (Kraft hat gewirkt) + beste Serie danach
   }, story ? {   // Story-Modus: Punkte-Diamanten (ohne Tore) und die Geschichte (ende = Wahl der Ende-Gabelung, vollständig = alle ♪ dieses Endes; London 12, New York 20; realm = verstecktes Tor)
     punkteDiamanten: diaGesammelt, diamantenMax: diamanten.length,

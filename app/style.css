@@ -332,6 +332,15 @@ textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; borde
 .gym-punkte span { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--blau); background: transparent; }
 .gym-punkte span.wdh { border-radius: 3px; }
 .gym-punkte span.fertig { background: var(--blau); }
+/* Deine 5 Minuten (14.11.): Sätze als Raute, Schluss-Treffer als Stern-Punkt, sichere Wörter mit Balken */
+.gym-punkte span.satz { border-radius: 2px; transform: rotate(45deg) scale(.85); }
+.gym-punkte span.schluss { border-color: var(--gruen); }
+.gym-punkte span.schluss.fertig { background: var(--gruen); }
+.gym-ueber { margin: 0; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.gym-sicher { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; }
+.gym-balken { height: 8px; border-radius: 4px; background: var(--linie); overflow: hidden; }
+.gym-balken span { display: block; height: 100%; min-width: 4px; background: var(--gruen); border-radius: 4px; transition: width .6s; }
+.gym-knoepfe .knopf.gym-tricky { font-size: 1rem; }
 .gym-knoepfe { display: flex; gap: 6px; align-items: center; }
 .gym-knoepfe .knopf.leise { min-width: 44px; padding: 0 8px; font-size: 1.3rem; }
 .gym-einstellung { grid-column: 1 / -1; display: grid; gap: 8px; padding-top: 8px; border-top: 1px solid var(--linie); }

@@ -1146,7 +1146,7 @@
     if (!lage.reihe) lage.reihe = mischen(teil.aufgaben);
     const a = lage.reihe[lage.pos];
     const s = D.saetze[a.satz];
-    let geloest = false;
+    let geloest = false, versucht = false;
     const satz = el("p", { class: "satz", lang: "en" }, lueckenSatz(s, true));
     const box = rueckmeldung();
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
@@ -1154,6 +1154,7 @@
     const wahl = el("div", { class: "wahl", role: "group", "aria-label": "Verbform wählen" },
       mischen([a.richtig, ...a.falsch]).map((form) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
         if (geloest) return;
+        if (!versucht) { versucht = true; merke("s:" + a.satz, form === a.richtig, "p"); } // erster Versuch füttert die Satz-Box
         if (form === a.richtig) {
           geloest = true;
           e.currentTarget.classList.add("richtig");
@@ -1337,7 +1338,7 @@
     const st = station(lage.nr);
     const a = teil.aufgaben[lage.pos];
     const s = D.saetze[a.satz];
-    let geloest = false;
+    let geloest = false, versucht = false;
     const box = rueckmeldung();
     const loesungZeile = el("p", { class: "satz ziel-satz", lang: "en", hidden: true }, s.en);
     const weiter = knopf("Weiter ➜", naechstes, "haupt");
@@ -1346,6 +1347,7 @@
     const wahl = el("div", { class: "wahl", role: "group", "aria-label": "Antwort wählen" },
       (a.korrektur ? a.optionen : mischen(a.optionen)).map((o) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
         if (geloest) return;
+        if (!versucht) { versucht = true; merke("s:" + a.satz, o === a.richtig, "p"); }
         if (o === a.richtig) {
           geloest = true;
           e.currentTarget.classList.add("richtig");
@@ -2010,8 +2012,9 @@
       const box = rueckmeldung();
       const weiter = knopf("Weiter ➜", naechstes, "haupt"); sperrt(weiter);
       const wortZeile = el("p", { class: "vok-en ziel-satz", lang: "en", hidden: true }, v.form);
-      let geloest = false;
+      let geloest = false, versucht = false;
       const geschafft = (stufe) => {
+        if (!versucht) { versucht = true; merke(v.id, stufe < 2, "p"); }
         geloest = true; wortZeile.hidden = false; entsperrt(weiter); lage.weiter = naechstes;
         tippRueckmeldung(box, stufe, v.form);
         lage.abspielen = () => spiele([v.audio.en]); lage.abspielen();
@@ -2024,7 +2027,7 @@
           el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
             if (geloest) return;
             if (x === v) { e.currentTarget.classList.add("richtig"); geschafft(0); }
-            else { e.currentTarget.disabled = true; melde(box, "hilfe", "Schau dir das Bild noch mal an. Probier's nochmal!"); }
+            else { if (!versucht) { versucht = true; merke(v.id, false, "p"); } e.currentTarget.disabled = true; melde(box, "hilfe", "Schau dir das Bild noch mal an. Probier's nochmal!"); }
           } }, x.form)));
       }
       lage.abspielen = null; lage.weiter = null;
@@ -2054,7 +2057,7 @@
       const loesung = sperre(knopf("Lösung", aufloesen));
       gibFrei(loesung, denkzeit(s.en), false);
       let bereich = null;
-      if (tippen()) bereich = tippFeld((text, u) => { if (geloest) return; ui = u; tippRueckmeldung(box, pruefeTipp(text, w), w); aufloesen(); });
+      if (tippen()) bereich = tippFeld((text, u) => { if (geloest) return; ui = u; const st = pruefeTipp(text, w); merke(v.id, st < 2, "p"); tippRueckmeldung(box, st, w); aufloesen(); });
       lage.abspielen = () => { if (geloest) spiele([s.audio.en]); };
       lage.weiter = wennFrei(weiter, naechstes);
       zeige(kopf(st), el("p", { class: "ansage" }, tippen() ? "Welches Wort fehlt? Tipp es ein. Du kannst auch „Lösung“ antippen."
@@ -2076,8 +2079,8 @@
     const bildPlatz = bild(false);
     const fragen = () => { if (enDe) spiele([v.audio.en]); };
     const bewerten = el("div", { class: "knopfreihe", hidden: true },
-      knopf("✓ Gewusst", () => { comboTreffer(); naechstes(); }, "haupt"),
-      knopf("↻ Nochmal üben", () => { comboBruch(); lage.vq.push(v.id); naechstes(); }));
+      knopf("✓ Gewusst", () => { merke(v.id, true, "s"); comboTreffer(); naechstes(); }, "haupt"),
+      knopf("↻ Nochmal üben", () => { merke(v.id, false, "s"); comboBruch(); lage.vq.push(v.id); naechstes(); }));
     const zeigeLoesung = () => {
       loesung.hidden = true; antwort.hidden = false; satzZeile.hidden = !s;
       bildPlatz.textContent = v.symbol;
@@ -2089,10 +2092,11 @@
     let bereich = null;
     const tippModus = tippen() && !enDe && v.tippbar;
     if (tippModus) {
-      const weiterT = knopf("Weiter ➜", null, "haupt"); weiterT.hidden = true;
+      const weiterT = knopf("Weiter ➜", () => {}, "haupt"); weiterT.hidden = true;
       bereich = el("div", {}, tippFeld((text, ui) => {
         ui.feld.disabled = ui.knopf.disabled = true; loesung.hidden = true;
         const stufe = pruefeTipp(text, [v.form, v.en]);
+        merke(v.id, stufe < 2, "p");
         tippRueckmeldung(box, stufe, v.form);
         zeigeLoesung();
         weiterT.hidden = false;
@@ -3084,6 +3088,8 @@
         ereignisse.push({ art: "feier", symbol: t === RUNNER.titel.length ? "🦸" : "🏃", titel: `London Run: ${name}`, text: `Neuer Runner-Titel: ${name}!`, ton: waehleRuf("stark") });
       }
     }
+    // Deine 5 Minuten (14.11.): jedes beantwortete Frage-Tor füttert die Box des Worts
+    (e.torWoerter || []).forEach((t) => { if (t && t.richtig != null && ws[t.wort]) merke(ws[t.wort].id, !!t.richtig, "p"); });
     discoFeier();   // 🪩 nach dem ersten geschafften Level: Überraschung
     kartenAuswerten(e, stufe);   // Folien-Karten: Cameos zählen, Aufstiege als Ereignis
     if (storyPunkte > 0) punkteDazu(storyPunkte, { art: "s" }); // Zeitlog (mrAlexWacht) läuft in punkteDazu, damit Farmen im London Run auffällt
@@ -3484,21 +3490,63 @@
     const p = gymStand().pensum, g = GYM.grenzen;
     return { neu: Math.min(g.neu[1], Math.max(g.neu[0], p.neu | 0)), wdh: Math.min(g.wdh[1], Math.max(g.wdh[0], p.wdh | 0)) };
   };
-  // Tagesplan: einmal pro Kalendertag (Ortszeit) berechnet und gespeichert
+  /* Deine 5 Minuten (Word Gym 2.0, 14.11.2026, docs/ideenspeicher.md „Konzept Punkt 2“): ein Gedächtnis für Wörter UND Sätze.
+     Karten-Schlüssel: Vokabel-Id oder "s:<Satz-Id>" (Kernsätze und Übungssätze der Stationen, immer mit Lücke und Audio).
+     merke(id, richtig, art) an allen Prüfstellen (art "p" = geprüft: wählen/tippen/Lehrer, "s" = Selbsteinschätzung „Gewusst“):
+     richtig + fällig → eine Stufe hoch („Gewusst“ höchstens bis Stufe 3; ab Stufe 3 nur geprüft) · richtig, aber nicht fällig → keine Änderung
+     (kein Hochjagen am selben Tag) · falsch → zwei Stufen zurück (nicht auf null), morgen fällig, x = Fehler gesamt (ab 3 = Tricky word).
+     Kein Protokoll-Eintrag (bringt keine Punkte; das Protokoll bleibt für Punkte). Bestehende Karten { s, f, x } bleiben gültig. */
+  const GYM_DECKEL = 3, GYM_SICHER = 5, GYM_TRICKY = 3, GYM_SAETZE = 2;
+  const SATZ_FALSCH = {};
+  const SATZ_POOL = (() => {
+    const ids = [];
+    for (const st of D.stationen) for (const t of st.schritte || []) {
+      if (t.art === "lr") ids.push(...[].concat(...t.saetze));
+      if (t.art === "verbform" || t.art === "auswahl") for (const a of t.aufgaben) if (a.satz) { ids.push(a.satz); if (t.art === "verbform" && a.falsch) SATZ_FALSCH[a.satz] = a.falsch; }
+    }
+    return [...new Set(ids)].filter((id) => { const s = D.saetze[id]; return s && s.en && s.de && s.luecke && s.audio && s.audio.en && s.en.includes(s.luecke); });
+  })();
+  const SATZ_IM_POOL = new Set(SATZ_POOL);
+  const istSatz = (id) => String(id).startsWith("s:");
+  const gymKennt = (id) => (istSatz(id) ? SATZ_IM_POOL.has(id.slice(2)) : GYM_REIHE[id] != null);
+  function merke(id, richtig, art) {
+    if (!id || !gymKennt(id)) return;
+    const g = gymStand(), t = iso(heute());
+    const k = g.karten[id] || (g.karten[id] = { s: 0, f: t });
+    if (richtig) {
+      if (k.f <= t) {
+        if (art !== "s" || k.s < GYM_DECKEL) k.s = Math.min(k.s + 1, GYM.intervalle.length);
+        k.f = gymFaellig(k.s);
+      }
+    } else { k.s = Math.max(0, k.s - 2); k.f = gymFaellig(0); k.x = (k.x || 0) + 1; }
+    speichern();
+  }
+  const gymSicher = () => Object.entries(gymStand().karten).filter(([id, k]) => !istSatz(id) && k.s >= GYM_SICHER).length;
+  const gymTrickyListe = () => Object.entries(gymStand().karten).filter(([id, k]) => (k.x || 0) >= GYM_TRICKY && k.s < GYM_SICHER && gymKennt(id))
+    .sort((a, b) => b[1].x - a[1].x).map(([id]) => id);
+  const gymReihe = (plan) => [...plan.wdh, ...(plan.saetze || []), ...plan.neu, ...(plan.schluss ? [plan.schluss] : [])];
+  // Tagesplan: einmal pro Kalendertag (Ortszeit) berechnet und gespeichert. Feste Länge: fällige Wörter (fehlen welche, füllen die
+  // nächsten – früh geübt, ohne Aufstieg) + zwei Sätze + Neues + zum Schluss ein sicherer Treffer ("!"+Id). Ein alter Plan von heute gilt weiter.
   function gymPlan() {
     const g = gymStand(), t = iso(heute());
     if (g.tag && g.tag.d === t) return g.tag;
-    const p = gymPensum();
-    const wdh = Object.entries(g.karten).filter(([, k]) => k.f <= t)
-      .sort((a, b) => (a[1].f < b[1].f ? -1 : a[1].f > b[1].f ? 1 : GYM_REIHE[a[0]] - GYM_REIHE[b[0]]))
+    const p = gymPensum(), alle = Object.entries(g.karten);
+    const nachF = (a, b) => (a[1].f < b[1].f ? -1 : a[1].f > b[1].f ? 1 : 0);
+    const woerter = alle.filter(([id]) => GYM_REIHE[id] != null);
+    const reihe = (a, b) => nachF(a, b) || GYM_REIHE[a[0]] - GYM_REIHE[b[0]];
+    const wdh = [...woerter.filter(([, k]) => k.f <= t).sort(reihe), ...woerter.filter(([, k]) => k.f > t).sort(reihe)]
       .map(([id]) => id).slice(0, p.wdh);
     const neu = D.vokabeln.map((v) => v.id).filter((id) => !g.karten[id]).slice(0, p.neu);
-    g.tag = { d: t, wdh, neu, fertig: [], geschafft: false };
+    const saetze = [...alle.filter(([id, k]) => istSatz(id) && gymKennt(id) && k.f <= t).sort(nachF).map(([id]) => id),
+      ...SATZ_POOL.map((id) => "s:" + id).filter((id) => !g.karten[id])].slice(0, GYM_SAETZE);
+    const sicher = woerter.filter(([id]) => !wdh.includes(id)).sort((a, b) => b[1].s - a[1].s || (a[1].x || 0) - (b[1].x || 0))[0];
+    const schluss = sicher ? "!" + sicher[0] : neu.length ? "!" + neu[0] : null;
+    g.tag = { d: t, wdh, saetze, neu, schluss, fertig: [], geschafft: false };
     speichern();
     return g.tag;
   }
   const gymFaellig = (stufe) => iso(plusTage(heute(), GYM.intervalle[Math.min(stufe, GYM.intervalle.length - 1)]));
-  const gymAlles = (plan) => [...plan.wdh, ...plan.neu].every((id) => plan.fertig.includes(id));
+  const gymAlles = (plan) => gymReihe(plan).every((id) => plan.fertig.includes(id));
 
   // Icon: Gewichtheber, die Hantel mit Büchern als Gewichten. gehoben = Pensum fertig; heben = einmal hochstemmen
   function gymIcon(gehoben, heben, groesse) {
@@ -3521,12 +3569,17 @@
   // Startkarte auf der Startseite
   function gymKarte() {
     const plan = gymPlan(), g = gymStand(), p = gymPensum();
-    const gesamt = plan.wdh.length + plan.neu.length, fertig = plan.fertig.length;
+    const alle = gymReihe(plan), gesamt = alle.length, fertig = alle.filter((id) => plan.fertig.includes(id)).length;
     const punkte = el("div", { class: "gym-punkte", "aria-hidden": "true" },
-      [...plan.wdh, ...plan.neu].map((id) => el("span", { class: (plan.wdh.includes(id) ? "wdh" : "neu") + (plan.fertig.includes(id) ? " fertig" : "") })));
+      alle.map((id) => el("span", { class: (id[0] === "!" ? "schluss" : istSatz(id) ? "satz" : plan.wdh.includes(id) ? "wdh" : "neu") + (plan.fertig.includes(id) ? " fertig" : "") })));
+    const nSaetze = (plan.saetze || []).length;
     const stand_ = gesamt === 0 ? "Heute ist nichts fällig – morgen geht's weiter!"
       : plan.geschafft ? "✓ Heute geschafft – bis morgen!"
-        : `${plan.neu.length} neu · ${plan.wdh.length} wiederholen · ${fertig} / ${gesamt} fertig`;
+        : `${plan.neu.length} neu · ${plan.wdh.length} wiederholen${nSaetze ? ` · ${nSaetze} Sätze` : ""} · ${fertig} / ${gesamt} fertig`;
+    // Motivation (G): sichere Wörter (Stufe ≥ 5) mit wachsendem Balken; Tricky words (dreimal falsch) als eigene Liste mit Hilfe
+    const nSicher = gymSicher(), tricky = gymTrickyListe();
+    const sicherZeile = el("div", { class: "gym-sicher" }, el("span", { class: "klein" }, `💪 ${nSicher} ${nSicher === 1 ? "Wort" : "Wörter"} sicher`),
+      el("span", { class: "gym-balken", "aria-hidden": "true" }, el("span", { style: `width:${Math.min(100, Math.round(100 * nSicher / D.vokabeln.length))}%` })));
     const einstellung = el("div", { class: "gym-einstellung", hidden: true });
     const wahl = (schluessel, label, grenzen) => {
       const sel = el("select", { "aria-label": label, onchange: () => {
@@ -3542,11 +3595,13 @@
     return el("section", { class: "gym-karte" + (plan.geschafft ? " fertig" : "") },
       gymIcon(plan.geschafft, false, 92),
       el("div", { class: "gym-text" },
-        el("h2", { lang: "en" }, "Word Gym"),
-        el("p", { class: "klein" }, stand_), gesamt > 0 && punkte),
+        el("p", { class: "gym-ueber klein", lang: "en" }, "Word Gym"),
+        el("h2", {}, "Deine 5 Minuten"),
+        el("p", { class: "klein" }, stand_), gesamt > 0 && punkte, sicherZeile),
       el("div", { class: "gym-knoepfe" },
         knopf(plan.geschafft || gesamt === 0 ? "Ansehen" : fertig ? "▶ Weiter" : "▶ Los geht's", gymStart, plan.geschafft ? "" : "haupt"),
         gymMemoryOffen() && knopf("🎲 Memory", gymMemory, "haupt"),
+        tricky.length > 0 && knopf(`🧩 Tricky (${tricky.length})`, gymTricky, "leise gym-tricky"),
         el("button", { class: "knopf leise", "aria-label": "Pensum einstellen", "aria-expanded": "false",
           onclick: (e) => { einstellung.hidden = !einstellung.hidden; e.currentTarget.setAttribute("aria-expanded", String(!einstellung.hidden)); } }, "⚙")),
       einstellung);
@@ -3559,7 +3614,7 @@
 
   function gymStart() {
     const plan = gymPlan();
-    gym = { schlange: [...plan.wdh, ...plan.neu].filter((id) => !plan.fertig.includes(id)), wieder: new Set(), pos: 0 };
+    gym = { schlange: gymReihe(plan).filter((id) => !plan.fertig.includes(id)), wieder: new Set(), pos: 0 };
     if (!gym.schlange.length) return gymEnde();
     gymZeige();
   }
@@ -3569,10 +3624,12 @@
   }
   function gymZeige() {
     const plan = gymPlan(), g = gymStand();
-    const id = gym.schlange[gym.pos], v = vokabel(id);
-    const s = gymSatzFuer(v);
+    const id = gym.schlange[gym.pos];
     lage = { gym: true, teil: "gym", pos: id, frei: gymFrei };
     const zaehler = `${gym.pos + 1} / ${gym.schlange.length}`;
+    if (id[0] === "!") return gymSchluss(vokabel(id.slice(1)), id, zaehler);
+    if (istSatz(id)) return gymSatzKarte(id, zaehler);
+    const v = vokabel(id), s = gymSatzFuer(v);
     if (plan.neu.includes(id) && !g.karten[id]) gymNeu(v, s, zaehler); else gymWiederholung(v, s, zaehler);
   }
   const gymMerke = (id) => { const plan = gymPlan(); if (!plan.fertig.includes(id)) plan.fertig.push(id); speichern(); };
@@ -3599,6 +3656,25 @@
     abspielen();
   }
 
+  // Geprüfte Antwort (ab Stufe 3, Abrufform wächst): aus vier wählen oder (⌨ an) eintippen; der erste Versuch zählt
+  function gymFrage(ziel, falsche, tippbar, box, fertig) {
+    const richtig = [].concat(ziel)[0];
+    if (tippen() && tippbar) return tippFeld((text, ui) => {
+      ui.feld.disabled = ui.knopf.disabled = true;
+      const st = pruefeTipp(text, ziel); tippRueckmeldung(box, st, richtig); fertig(st < 2);
+    });
+    const andere = [...new Set(falsche.filter((x) => x && normT(x) !== normT(richtig)))].slice(0, 3);
+    let fertig_ = false;
+    const knoepfe = mischen([richtig, ...andere]).map((o) => el("button", { class: "knopf wahl-knopf", lang: "en", onclick: (e) => {
+      if (fertig_) return; fertig_ = true;
+      const ok = o === richtig;
+      knoepfe.forEach((k) => { k.disabled = k !== e.currentTarget && k.textContent !== richtig; if (k.textContent === richtig) k.classList.add("richtig"); });
+      if (ok) melde(box, "gut", lob()); else melde(box, "hilfe", `Richtig ist: ${richtig}`);
+      fertig(ok);
+    } }, o));
+    return el("div", { class: "wahl", role: "group" }, knoepfe);
+  }
+
   function gymWiederholung(v, s, zaehler) {
     const k = gymStand().karten[v.id] || { s: 0 };
     const balken = jetztDu();
@@ -3606,9 +3682,26 @@
       el("div", {}, el("p", { class: "vok-en", lang: "de" }, v.de), s && el("p", { class: "satz de", lang: "de" }, s.de)));
     const antwort = el("div", { class: "gym-antwort", hidden: true },
       el("p", { class: "vok-en", lang: "en" }, v.en), gymSatz(s, "voll"));
+    const kopfzeile = `${zaehler} · Wiederholung · Box ${k.s + 1}`;
+    if (k.s >= GYM_DECKEL) { // ab Stufe 3: nur eine geprüfte Antwort bringt das Wort weiter
+      const box = rueckmeldung();
+      const weiter = knopf("Weiter ➜", () => {}, "haupt weiter"); weiter.hidden = true;
+      let ergebnis = false;
+      const bereich = gymFrage([v.form, v.en], mischen(D.vokabeln.filter((x) => x.id !== v.id)).map((x) => x.form), v.tippbar, box, (ok) => {
+        ergebnis = ok; antwort.hidden = false; weiter.hidden = false;
+        lage.abspielen = () => nachsprechen(balken, gymTon(v, s), GYM_SPRECH_MIN); lage.abspielen();
+        lage.weiter = () => weiter.click();
+      });
+      weiter.onclick = () => gymBewerte(v.id, ergebnis, "p", true);
+      lage.abspielen = null; lage.weiter = null;
+      zeige(gymKopf(),
+        el("p", { class: "ansage" }, tippen() && v.tippbar ? "Was heißt das auf Englisch? Tipp es ein." : "Was heißt das auf Englisch? Wähl das richtige Wort."),
+        karte(null, kopfzeile, frage, bereich, box, antwort, balken, el("div", { class: "knopfreihe" }, weiter)));
+      return;
+    }
     const bewerten = el("div", { class: "knopfreihe gym-bewerten", hidden: true },
-      knopf("😊 Gewusst", () => gymBewerte(v, true), "haupt"),
-      knopf("🔁 Nochmal", () => gymBewerte(v, false), "encore"));
+      knopf("😊 Gewusst", () => gymBewerte(v.id, true, "s"), "haupt"),
+      knopf("🔁 Nochmal", () => gymBewerte(v.id, false, "s"), "encore"));
     const loesung = sperre(knopf("Lösung", () => {
       loesung.hidden = true; antwort.hidden = false; bewerten.hidden = false;
       nachsprechen(balken, gymTon(v, s), GYM_SPRECH_MIN);
@@ -3618,8 +3711,85 @@
     lage.abspielen = null; lage.weiter = wennFrei(loesung, () => loesung.click());
     zeige(gymKopf(),
       el("p", { class: "ansage" }, "Was heißt das auf Englisch? Sag es laut! Dann tipp auf „Lösung“."),
-      karte(null, `${zaehler} · Wiederholung · Box ${k.s + 1}`,
+      karte(null, kopfzeile,
         frage, antwort, balken, el("div", { class: "knopfreihe" }, loesung), bewerten));
+  }
+
+  // Satz-Karte (A, Prinzip „immer Kontext“): deutscher Satz → englischer Satz mit Lücke; bis Stufe 2 sagen und selbst einschätzen,
+  // ab Stufe 3 das fehlende Wort wählen/tippen (bei Verbformen mit der typischen falschen Form)
+  function gymSatzKarte(id, zaehler) {
+    const sid = id.slice(2), s = D.saetze[sid], k = gymStand().karten[id] || { s: 0 };
+    const balken = jetztDu(), box = rueckmeldung();
+    const satz = el("p", { class: "satz", lang: "en" }, lueckenSatz(s, true));
+    const voll = () => {
+      satz.replaceChildren(...[].concat(lueckenSatz(s, false)));
+      lage.abspielen = () => nachsprechen(balken, [s.audio.en], GYM_SPRECH_MIN); lage.abspielen();
+    };
+    const oben = el("div", { class: "vok" }, el("span", { class: "vok-bild", "aria-hidden": "true" }, s.symbol || "💬"), el("p", { class: "satz de", lang: "de" }, s.de));
+    const kopfzeile = `${zaehler} · Satz · Box ${k.s + 1}`;
+    lage.abspielen = null; lage.weiter = null;
+    if (k.s >= GYM_DECKEL) {
+      const weiter = knopf("Weiter ➜", () => {}, "haupt weiter"); weiter.hidden = true;
+      let ergebnis = false;
+      const andere = [...(SATZ_FALSCH[sid] || []), ...mischen(SATZ_POOL.filter((x) => x !== sid)).map((x) => D.saetze[x].luecke)];
+      const bereich = gymFrage(s.luecke, andere, true, box, (ok) => { ergebnis = ok; voll(); weiter.hidden = false; lage.weiter = () => weiter.click(); });
+      weiter.onclick = () => gymBewerte(id, ergebnis, "p", true);
+      zeige(gymKopf(), el("p", { class: "ansage" }, tippen() ? "Welches Wort fehlt? Tipp es ein." : "Welches Wort fehlt? Wähl es aus."),
+        karte(null, kopfzeile, oben, satz, bereich, box, balken, el("div", { class: "knopfreihe" }, weiter)));
+      return;
+    }
+    const bewerten = el("div", { class: "knopfreihe gym-bewerten", hidden: true },
+      knopf("😊 Gewusst", () => gymBewerte(id, true, "s"), "haupt"),
+      knopf("🔁 Nochmal", () => gymBewerte(id, false, "s"), "encore"));
+    const loesung = sperre(knopf("Lösung", () => { loesung.hidden = true; bewerten.hidden = false; voll(); }, "haupt"));
+    gibFrei(loesung, denkzeit(s.en), false);
+    lage.weiter = wennFrei(loesung, () => loesung.click());
+    zeige(gymKopf(), el("p", { class: "ansage" }, "Sag den ganzen Satz auf Englisch! Dann tipp auf „Lösung“."),
+      karte(null, kopfzeile, oben, satz, balken, el("div", { class: "knopfreihe" }, loesung), bewerten));
+  }
+
+  // Zum Schluss ein sicherer Treffer (C): ein gut gekonntes Wort erkennen – das Training endet mit einem Erfolg
+  function gymSchluss(v, id, zaehler) {
+    const box = rueckmeldung(), s = gymSatzFuer(v);
+    const weiter = knopf("Fertig ➜", () => { gymMerke(id); gymWeiter(); }, "haupt weiter"); weiter.hidden = true;
+    const opt = mischen([v.de, ...mischen(D.vokabeln.filter((x) => x.id !== v.id && x.de !== v.de)).slice(0, 2).map((x) => x.de)]);
+    let fertig_ = false;
+    const knoepfe = opt.map((o) => el("button", { class: "knopf wahl-knopf", onclick: (e) => {
+      if (fertig_) return; fertig_ = true;
+      const ok = o === v.de;
+      knoepfe.forEach((k) => { k.disabled = k !== e.currentTarget && k.textContent !== v.de; if (k.textContent === v.de) k.classList.add("richtig"); });
+      merke(v.id, ok, "p");
+      if (ok) melde(box, "gut", lob(true)); else melde(box, "hilfe", `Es heißt: ${v.de}`);
+      weiter.hidden = false; lage.weiter = () => weiter.click();
+    } }, o));
+    lage.abspielen = () => spiele([v.audio.en, s && s.audio.en]); lage.weiter = null;
+    zeige(gymKopf(), el("p", { class: "ansage" }, "⭐ Zum Schluss ein leichtes: Was heißt das auf Deutsch?"),
+      karte(null, `${zaehler} · zum Schluss`,
+        el("div", { class: "vok" }, el("span", { class: "vok-bild", "aria-hidden": "true" }, v.symbol), el("p", { class: "vok-en", lang: "en" }, v.en)),
+        s && el("p", { class: "satz", lang: "en" }, lueckenSatz(s, false)),
+        el("div", { class: "wahl", role: "group" }, knoepfe), box,
+        el("div", { class: "knopfreihe" }, knopf("🔊 Nochmal", () => lage.abspielen()), weiter)));
+    lage.abspielen();
+  }
+
+  // Tricky words (E): dreimal falsch = eigene Liste mit Hilfe (Bild, Beispielsatz, Satz-Audio); verschwindet, sobald das Wort sicher ist (Stufe 5)
+  function gymTricky() {
+    lage = null;
+    const eintraege = gymTrickyListe().map((id) => {
+      if (istSatz(id)) {
+        const s = D.saetze[id.slice(2)];
+        return karte(null, "Satz", el("p", { class: "satz", lang: "en" }, lueckenSatz(s, false)), el("p", { class: "satz de", lang: "de" }, s.de),
+          el("div", { class: "knopfreihe" }, knopf("🔊 Anhören", () => spiele([s.audio.en]))));
+      }
+      const v = vokabel(id), s = gymSatzFuer(v);
+      return karte(null, null,
+        el("div", { class: "vok" }, el("span", { class: "vok-bild", "aria-hidden": "true" }, v.symbol),
+          el("div", {}, el("p", { class: "vok-en", lang: "en" }, v.en), el("p", { class: "vok-de", lang: "de" }, v.de))),
+        gymSatz(s, "voll"), el("div", { class: "knopfreihe" }, knopf("🔊 Anhören", () => spiele(gymTon(v, s).filter(Boolean)))));
+    });
+    zeige(gymKopf(), el("h2", {}, "🧩 Tricky words"),
+      el("p", { class: "ansage" }, "Diese Wörter waren schon dreimal schwer. Schau dir das Bild an, hör zu, lies den Satz und sprich nach! Im Word Gym kommen sie wieder."),
+      ...eintraege, el("div", { class: "knopfreihe" }, knopf("Zur Startseite", startseite, "haupt")));
   }
 
   function gymLobToast(r) {
@@ -3628,18 +3798,17 @@
     setTimeout(() => t.classList.add("weg"), 2600);
     setTimeout(() => t.remove(), 3200);
   }
-  function gymBewerte(v, gewusst) {
-    const g = gymStand(), k = g.karten[v.id] || (g.karten[v.id] = { s: 0, f: gymFaellig(0) });
-    if (gewusst) {
-      k.s = Math.min(k.s + 1, GYM.intervalle.length); k.f = gymFaellig(k.s);
-      gymMerke(v.id);
-      lob(); if (letzterRuf) gymLobToast(letzterRuf);
+  // Ergebnis einer Karte: merke() führt die Box; falsch = kommt im selben Training noch einmal ans Ende (höchstens einmal)
+  function gymBewerte(id, richtig, art, still) {
+    merke(id, richtig, art);
+    if (richtig) {
+      gymMerke(id);
+      if (!still) { lob(); if (letzterRuf) gymLobToast(letzterRuf); }
     } else {
-      k.s = 0; k.f = gymFaellig(0); k.x = (k.x || 0) + 1; fehlerSerie++; // x: Fehler gesamt (Sync Stufe A: schwere Wörter) comboBruch();
-      if (!gym.wieder.has(v.id)) { gym.wieder.add(v.id); gym.schlange.push(v.id); } else gymMerke(v.id);
+      if (!still) fehlerSerie++;
+      if (!gym.wieder.has(id)) { gym.wieder.add(id); gym.schlange.push(id); } else gymMerke(id);
       toast("Kein Problem – kommt gleich noch mal.");
     }
-    speichern();
     gymWeiter();
   }
 
@@ -4155,6 +4324,11 @@
       ? `🎯 Tests: ${testsOk.length} bestanden` + (testsOk.length ? ` (${testsOk.map(([k, x]) => `${testName(k)} ${x.best} %`).join(", ")})` : "")
         + (testsOffen.length ? ` · nicht bestanden: ${testsOffen.map(([k, x]) => `${testName(k)} ${x.best} %`).join(", ")}` : "")
       : "🎯 Tests: noch keiner.");
+    // 🧩 Schwere Wörter dieses Geräts (Deine 5 Minuten, 14.11.): mindestens dreimal falsch, häufigste zuerst
+    const schwer = Object.entries((stand.gym && stand.gym.karten) || {}).filter(([id, k]) => k && (k.x || 0) >= GYM_TRICKY && gymKennt(id)).sort((x, y) => y[1].x - x[1].x);
+    const schwerZeile = el("p", { class: "klein lehrer-schwer" }, schwer.length
+      ? "🧩 Schwere Wörter (≥ 3× falsch): " + schwer.map(([id, k]) => `${istSatz(id) ? "„" + D.saetze[id.slice(2)].en + "“" : vokabel(id).en} ${k.x}×${k.s >= GYM_SICHER ? " (jetzt sicher)" : ""}`).join(", ")
+      : "🧩 Schwere Wörter: noch keine (ab 3× falsch).");
     const gs = glnStandLehrer();
     const glnZeileL = gs ? el("p", { class: "klein lehrer-gln" }, `🏁 Road to GLN (${gs.g.datum.slice(8)}.${gs.g.datum.slice(5, 7)}.): ${gs.z}/${gs.n} · Abschlusstest `
       + (gs.test ? `bestanden am ${testDatum(gs.test)} (${gs.best} %)` : gs.best != null ? `noch nicht bestanden (bestes Ergebnis ${gs.best} %)` : "noch nicht gemacht")
@@ -4163,7 +4337,7 @@
       el("p", { class: "klein" }, `🔎 Stichprobe: ⭐ ${sp.punkte} · 🪙 ${sp.coins} · Protokoll-Summe ${protokollSumme(pl)} (${pl.length} Einträge) · Warnungen ${(Array.isArray(sp.warnungen) ? sp.warnungen : []).length} (Zähler ${w.n || 0})`),
       el("p", { class: "klein lehrer-marker" + (pr.marker.length ? " auffaellig" : "") }, (pr.altbestand ? "Altbestand (Stand von vor dem Protokoll). " : "")
         + (pr.marker.length ? `Marker: ${pr.marker.join(", ")}` + (pr.seit ? ` (seit ${zeit(pr.seit)})` : "") : "Keine Auffälligkeiten.") + (pr.hinweis ? ` · Hinweis: ${pr.hinweis}` : "")),
-      abfrageZeile, testZeile, glnZeileL,
+      abfrageZeile, testZeile, glnZeileL, schwerZeile,
       letzte.length ? el("ul", { class: "lehrer-liste" }, letzte) : null);
     const sichern = () => {
       const np = Math.max(0, Math.floor(Number(p.value) || 0)), nc = Math.max(0, Math.floor(Number(c.value) || 0));
@@ -4284,7 +4458,7 @@
     const satz = (id) => { const s = satzVon(id); return s && s.en && s.de ? { typ: "Satz", frage: s.de, symbol: s.symbol || "", loesung: s.en, audio: s.audio && s.audio.en } : null; };
     let a = null;
     if (teil.art === "lr") a = satz(zufall(teil.saetze));
-    else if (teil.art.startsWith("vok_") && vok && vok.length) { const v = zufall(vok); a = { typ: "Vokabel", frage: v.de, symbol: v.symbol || "", loesung: v.en, audio: v.audio && v.audio.en }; }
+    else if (teil.art.startsWith("vok_") && vok && vok.length) { const v = zufall(vok); a = { typ: "Vokabel", id: v.id, frage: v.de, symbol: v.symbol || "", loesung: v.en, audio: v.audio && v.audio.en }; }
     else if (teil.art === "verbform" || teil.art === "auswahl") { const auf = zufall(teil.aufgaben); a = auf.satz ? satz(auf.satz) : auf.frage ? { typ: "Aufgabe", frage: auf.frage, loesung: auf.richtig } : null; }
     else if (teil.art === "reihenfolge") a = satz(zufall(teil.woerter));
     else if (teil.art === "lesen") { const auf = zufall(teil.aufgaben), s = satzVon(auf.satz), text = satzVon(teil.text); if (s) a = { typ: "Lesen", frage: s.en, text: text && text.en, loesung: auf.loesung, hinweis: auf.hinweis }; }
@@ -4328,7 +4502,7 @@
       el("p", { class: "stichprobe-gross", lang: "en" }, a.loesung),
       a.zusatz && el("p", { class: "klein stichprobe-zusatz", lang: "en" }, a.zusatz), a.hinweis && el("p", { class: "klein stichprobe-zusatz" }, a.hinweis),
       !hoeren && anhoeren && el("div", { class: "knopfreihe" }, anhoeren));
-    const werten = (gut) => { protokolliere("x", gut ? 1 : -1); speichern(); if (gut) L.hoch++; else L.runter++; L.i++; stopp(); stichprobeZeigen(); }; // keine Punkte, keine Coins
+    const werten = (gut) => { protokolliere("x", gut ? 1 : -1); if (a.id) merke(a.id, gut, "p"); speichern(); if (gut) L.hoch++; else L.runter++; L.i++; stopp(); stichprobeZeigen(); }; // keine Punkte, keine Coins
     const daumen = el("div", { class: "knopfreihe stichprobe-daumen", hidden: true }, knopf("👍 Kann es", () => werten(true), "haupt"), knopf("👎 Kann es nicht", () => werten(false), "leise"));
     const zeigen = knopf("Lösung zeigen", () => { loesung.hidden = false; daumen.hidden = false; zeigen.hidden = true; }, "haupt");
     zeigen.setAttribute("autofocus", ""); // Fokus auf den Hauptknopf, nicht auf ✕
@@ -4385,6 +4559,7 @@
   if (LOKAL) window.__heldEreignis = (id) => { ereignisse.push({ art: "held", held: SP.helden.find((h) => h.id === id) }); zeigeEreignisse(); }; // nur Test-Build: neuer Superheld (Heldenfilm, danach Karte)
   if (LOKAL) window.__gln = { naechstes, zu: (k) => testZuTeil(k), lage: () => lage, stand: () => stand, lehrer: glnStandLehrer, aufgaben: () => testLauf && testLauf.aufgaben.map((a) => a.typ), // nur Test-Build: Road to GLN
     bestehen: () => { testLauf.antworten = testLauf.aufgaben.map(() => ({ richtig: true, antwort: "" })); testEnde(false); } };
+  if (LOKAL) window.__gym = { stand: gymStand, plan: gymPlan, merke, tricky: gymTrickyListe, saetze: SATZ_POOL }; // nur Test-Build: Deine 5 Minuten
   if (LOKAL) window.__punkte = (n) => punkteDazu(n, { art: "e", bonus: true }); // nur Test-Build: Bonuspunkte (Titel-Tiers)
   if (LOKAL) window.__station = (nr) => { lage = { nr, gruppe: null, teil: 0 }; stationGeschafft(); }; // nur Test-Build: Station abschließen (Mega-Lob)
   if (LOKAL) window.__updateTest = () => { neueVersion = true; updateHinweis(); }; // nur für Tests: tut so, als wäre eine neue Version da

@@ -3595,8 +3595,7 @@
     return el("section", { class: "gym-karte" + (plan.geschafft ? " fertig" : "") },
       gymIcon(plan.geschafft, false, 92),
       el("div", { class: "gym-text" },
-        el("p", { class: "gym-ueber klein", lang: "en" }, "Word Gym"),
-        el("h2", {}, "Deine 5 Minuten"),
+        el("h2", { lang: "en" }, "Word Gym"),
         el("p", { class: "klein" }, stand_), gesamt > 0 && punkte, sicherZeile),
       el("div", { class: "gym-knoepfe" },
         knopf(plan.geschafft || gesamt === 0 ? "Ansehen" : fertig ? "▶ Weiter" : "▶ Los geht's", gymStart, plan.geschafft ? "" : "haupt"),
@@ -3806,7 +3805,11 @@
       if (!still) { lob(); if (letzterRuf) gymLobToast(letzterRuf); }
     } else {
       if (!still) fehlerSerie++;
-      if (!gym.wieder.has(id)) { gym.wieder.add(id); gym.schlange.push(id); } else gymMerke(id);
+      if (!gym.wieder.has(id)) { // vor dem Schluss-Treffer einreihen, damit das Training mit einem Erfolg endet (wie EN9)
+        gym.wieder.add(id);
+        const ende = gym.schlange.length - 1;
+        if (gym.schlange[ende][0] === "!" && ende > gym.pos) gym.schlange.splice(ende, 0, id); else gym.schlange.push(id);
+      } else gymMerke(id);
       toast("Kein Problem – kommt gleich noch mal.");
     }
     gymWeiter();

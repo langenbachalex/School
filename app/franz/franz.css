@@ -114,3 +114,9 @@ button.wahl-luecke { font: inherit; background: transparent; border-top: 0; bord
 p.jahre { margin: -.2rem 0 .4rem; font-size: 1rem; }
 .info-karte .info-text { font-size: 1.1rem; line-height: 1.5; }
 .info-karte summary { cursor: pointer; color: var(--leise); }
+/* 💪 Muscu des mots (Word Gym, 14.11.): Grundformen aus ../style.css (.gym-*), hier nur FR-Ergänzungen */
+.gym-sym { font-size: 3rem; line-height: 1; }
+.gym-kontext { display: grid; gap: 4px; }
+.gym-kontext .gross-fr, .gym-treffer { overflow-wrap: anywhere; }
+.gym-treffer { color: var(--blau); }
+.gym-ende .feier-symbol { font-size: 3.5rem; }

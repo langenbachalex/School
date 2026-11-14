@@ -59,6 +59,7 @@ GLN 1 war am 30.09.2026 (Lead-in und Topic 1, S. 80 bis 85). Nach den Herbstferi
 
 
 ## Regeln von Mr. Alex (31.10.2026) – für alle Chats
+- **Nach jedem GLN (Regel Mr. Alex 14.11.):** Wenn Mr. Alex fragt bzw. sagt „Was waren die Probleme?“, fragt Claude automatisch auch nach seinen Rückschlüssen und trägt Probleme + Rückschlüsse in die GLN-Auswertung ein (Schwächentraining, `docs/ideenspeicher.md` „Idee 14.11.“).
 - **Sprache der Runner-Geschichten wächst mit dem Unterricht:** neue Sprache aus der App/dem Buch (Kl. 6 aktuell: Häufigkeitsadverbien, Sports and hobbies, School clubs; Adjektive) in jedes neue Kapitel einweben, alte wiederholen. Regel und Stand: `docs/runner/story-sprache.md`.
 - **Archiv:** Alle Dokumente, die Mr. Alex in den Chat gibt, kommen nach `docs/archiv/` (siehe LIESMICH dort) und bleiben erhalten.
 - Hinweis: Die Skill-Dateien von Mr. Alex (claude.ai, z. B. „app-inhalte-lesen“) liegen nicht im Repo; wer sie pflegt, ergänzt dort einen Satz mit Verweis auf `docs/runner/story-sprache.md` und `docs/archiv/`.

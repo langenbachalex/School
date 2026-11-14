@@ -132,7 +132,8 @@
   const sperrt = (k) => { GESPERRT.add(k); k.disabled = true; return k; };
   const entsperrt = (k) => { GESPERRT.delete(k); k.disabled = false; return k; };
   const knopf = (text, fn, art) => el("button", { type: "button", class: "knopf" + (art ? " " + art : ""), onclick: (e) => { if (GESPERRT.has(e.currentTarget)) return; fn(e); } }, text);
-  function zeige(...inhalt) { stopp(); app.replaceChildren(...inhalt.flat(Infinity).filter(Boolean)); window.scrollTo(0, 0); }
+  let seitenNr = 0; // zählt jeden Seitenwechsel (Freischalt-Film nur, solange die Startseite noch offen ist)
+  function zeige(...inhalt) { seitenNr++; stopp(); app.replaceChildren(...inhalt.flat(Infinity).filter(Boolean)); window.scrollTo(0, 0); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -360,7 +361,7 @@
         gymKachel(),
         runKachel(startseite),
         kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex · +10 ⭐ je Beat", beatStudio)));
-    if (parisFrei() > stand.paris || heldenFrei() > stand.helden) setTimeout(parisNeu, 700);
+    if (parisFrei() > stand.paris || heldenFrei() > stand.helden) { const nr = seitenNr; setTimeout(() => { if (nr === seitenNr) parisNeu(); }, 700); } // nicht über eine schon geöffnete Kachel legen
   }
   function gymKachel() {   // 💪 Muscu des mots (Word Gym): Stand von heute + sichere Wörter
     const plan = gymPlan(), alle = gymReihe(plan), rest = alle.filter((id) => !plan.fertig.includes(id)).length, n = gymSicher();

@@ -5,8 +5,9 @@
 //   node werkzeuge/testprogramm.js --ohne-update   ohne den langsamen Update-Test (Service Worker)
 //   node werkzeuge/testprogramm.js --format=handy  nur ein Format (laptop, handy, ipad; mehrere mit Komma)
 // Drei Formate (Mr. Alex 15.11.: heute Windows-Laptop, Handy muss gehen, künftig iPad): Laptop 1366×768 mit Maus,
-// Handy 360×740 mit Touch, iPad 820×1180 mit Touch. Hier läuft nur Chromium: das iPad wird in Größe, Touch und Kennung
-// nachgestellt, Safari selbst (WebKit) wird nicht geprüft.
+// Handy 360×740 mit Touch, iPad 820×1180 mit Touch. Laptop und Handy laufen in Chromium (Chrome/Edge), das iPad in WebKit (Safari-Technik).
+// Fehlt WebKit, installiert das Testprogramm es selbst (ca. 1 Min., braucht cdn.playwright.dev); klappt das nicht, läuft das iPad
+// ersatzweise in Chromium und am Ende steht ein deutlicher Hinweis.
 // Geprüft wird je App und Format: lädt ohne Konsolenfehler · die wichtigsten Wege (Start, eine Übung,
 // Runner-Start, Shop) · kein Feld breiter als der Bildschirm · ein Update kommt an (Service Worker).
 // Ändert keine Datei: der eingebaute Server liefert die App aus dem Repo, für den Update-Test nur im Speicher verändert.
@@ -15,13 +16,14 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
-const { chromium } = require("playwright");
+const { chromium, webkit } = require("playwright");
+const { spawnSync } = require("child_process");
 
 const WURZEL = path.resolve(__dirname, "..");
 const FORMATE = [
   { name: "Laptop", id: "laptop", viewport: { width: 1366, height: 768 }, isMobile: false, hasTouch: false },
   { name: "Handy", id: "handy", viewport: { width: 360, height: 740 }, isMobile: true, hasTouch: true },
-  { name: "iPad", id: "ipad", viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true,
+  { name: "iPad", id: "ipad", webkit: true, viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true,
     userAgent: "Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1" },
 ];
 const args = process.argv.slice(2);
@@ -189,18 +191,34 @@ async function updateTest(browser, basis, app) {
   return fehl;
 }
 
+/* ---------- WebKit fürs iPad: starten, sonst einmal installieren, sonst Chromium als Ersatz ---------- */
+const hinweise = [];
+async function webkitStarten() {
+  try { return await webkit.launch(); } catch (e) { /* fehlt wohl: installieren */ }
+  console.log("WebKit (Safari-Technik fürs iPad) fehlt – wird installiert, ca. 1 Minute …");
+  const cli = path.join(path.dirname(require.resolve("playwright/package.json")), "cli.js");
+  const erg = spawnSync(process.execPath, [cli, "install", "--with-deps", "webkit"], { stdio: "ignore", timeout: 10 * 60 * 1000 });
+  try { return await webkit.launch(); } catch (e) {
+    hinweise.push(`⚠ WebKit ließ sich nicht installieren (Code ${erg.status}) – iPad nur in Chromium nachgestellt, Safari ungeprüft. ` +
+      "Mögliche Ursache: cdn.playwright.dev ist im Netzwerk der Umgebung nicht freigegeben. Bitte Mr. Alex fragen.");
+    return null;
+  }
+}
+
 /* ---------- Ablauf ---------- */
 (async () => {
   const srv = server();
   await new Promise((ok) => srv.listen(0, "127.0.0.1", ok));
   const basis = `http://127.0.0.1:${srv.address().port}`;
   const browser = await chromium.launch();
+  const safari = formate.some((f) => f.webkit) ? await webkitStarten() : null;
   const alleFehler = [];
   try {
     for (const app of APPS) {
       const start = Date.now(), f = [];
       for (const fm of formate) {
-        const w = (titel, knoepfe, opt = {}) => weg(browser, basis, app, `${fm.name} · ${titel}`, knoepfe, Object.assign({ format: fm }, opt));
+        const b = fm.webkit && safari ? safari : browser, name = fm.webkit && !safari ? fm.name + " (Chromium)" : fm.name;
+        const w = (titel, knoepfe, opt = {}) => weg(b, basis, app, `${name} · ${titel}`, knoepfe, Object.assign({ format: fm }, opt));
         f.push(...await w("Start", []));
         f.push(...await w("Übung", app.uebung));
         f.push(...await w("Shop", app.shop));
@@ -218,8 +236,10 @@ async function updateTest(browser, basis, app) {
     }
   } finally {
     await browser.close();
+    if (safari) await safari.close();
     srv.close();
   }
+  for (const h of hinweise) console.log("\n" + h);
   console.log(alleFehler.length ? `\n${alleFehler.length} FEHLER` : "\nALLES OK");
   process.exit(alleFehler.length ? 1 : 0);
 })().catch((e) => { console.error("Testprogramm abgebrochen:", e); process.exit(2); });

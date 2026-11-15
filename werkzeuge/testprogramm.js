@@ -3,7 +3,11 @@
 //   node werkzeuge/testprogramm.js            alle drei Apps (EN6, EN9, FR)
 //   node werkzeuge/testprogramm.js EN9 FR     nur diese Apps
 //   node werkzeuge/testprogramm.js --ohne-update   ohne den langsamen Update-Test (Service Worker)
-// Geprüft wird je App, im Handy-Format 360 px: lädt ohne Konsolenfehler · die wichtigsten Wege (Start, eine Übung,
+//   node werkzeuge/testprogramm.js --format=handy  nur ein Format (laptop, handy, ipad; mehrere mit Komma)
+// Drei Formate (Mr. Alex 15.11.: heute Windows-Laptop, Handy muss gehen, künftig iPad): Laptop 1366×768 mit Maus,
+// Handy 360×740 mit Touch, iPad 820×1180 mit Touch. Hier läuft nur Chromium: das iPad wird in Größe, Touch und Kennung
+// nachgestellt, Safari selbst (WebKit) wird nicht geprüft.
+// Geprüft wird je App und Format: lädt ohne Konsolenfehler · die wichtigsten Wege (Start, eine Übung,
 // Runner-Start, Shop) · kein Feld breiter als der Bildschirm · ein Update kommt an (Service Worker).
 // Ändert keine Datei: der eingebaute Server liefert die App aus dem Repo, für den Update-Test nur im Speicher verändert.
 // Neue Fehler: zuerst hier einen Test ergänzen, der den Fehler zeigt (Regel in CLAUDE.md).
@@ -14,8 +18,15 @@ const path = require("path");
 const { chromium } = require("playwright");
 
 const WURZEL = path.resolve(__dirname, "..");
-const BREITE = 360;
+const FORMATE = [
+  { name: "Laptop", id: "laptop", viewport: { width: 1366, height: 768 }, isMobile: false, hasTouch: false },
+  { name: "Handy", id: "handy", viewport: { width: 360, height: 740 }, isMobile: true, hasTouch: true },
+  { name: "iPad", id: "ipad", viewport: { width: 820, height: 1180 }, isMobile: true, hasTouch: true,
+    userAgent: "Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1" },
+];
 const args = process.argv.slice(2);
+const fArg = (args.find((a) => a.startsWith("--format=")) || "").slice(9);
+const formate = fArg ? FORMATE.filter((f) => fArg.toLowerCase().split(",").includes(f.id)) : FORMATE;
 const OHNE_UPDATE = args.includes("--ohne-update");
 const gewaehlt = args.filter((a) => !a.startsWith("--")).map((a) => a.toUpperCase());
 
@@ -85,7 +96,8 @@ function server() {
 
 /* ---------- Prüfhilfen ---------- */
 async function zuBreit(pg) {
-  return pg.evaluate((B) => {
+  return pg.evaluate(() => {
+    const B = window.innerWidth;
     const raus = [];
     if (document.documentElement.scrollWidth > B + 1) raus.push(`Seite ${document.documentElement.scrollWidth} px breit`);
     for (const e of document.querySelectorAll("body *")) {
@@ -100,7 +112,7 @@ async function zuBreit(pg) {
       if (raus.length >= 5) break;
     }
     return raus;
-  }, BREITE);
+  });
 }
 async function klicke(pg, name) {
   const k = pg.getByRole("button", { name }).first();
@@ -108,8 +120,10 @@ async function klicke(pg, name) {
   await k.click();
   await pg.waitForTimeout(600);
 }
-async function neueSeite(browser, basis, app, tickets) {
-  const ctx = await browser.newContext({ viewport: { width: BREITE, height: 740 }, isMobile: true, hasTouch: true, serviceWorkers: "block" });
+const kontext = (browser, f, extra = {}) => browser.newContext(Object.assign({ viewport: f.viewport, isMobile: f.isMobile, hasTouch: f.hasTouch },
+  f.userAgent ? { userAgent: f.userAgent } : {}, extra));
+async function neueSeite(browser, basis, app, tickets, f) {
+  const ctx = await kontext(browser, f, { serviceWorkers: "block" });
   const pg = await ctx.newPage(), fehler = [];
   if (tickets) { // erst die App ihren Stand anlegen lassen, dann Tickets dazu
     await pg.goto(`${basis}/${app.pfad}/`); await pg.waitForTimeout(1200);
@@ -128,7 +142,7 @@ async function neueSeite(browser, basis, app, tickets) {
 /* ---------- Ein Weg: Seite öffnen, Knöpfe der Reihe nach, unterwegs 360 px prüfen ---------- */
 async function weg(browser, basis, app, titel, knoepfe, opt = {}) {
   const fehl = [];
-  const { ctx, pg, fehler } = await neueSeite(browser, basis, app, opt.tickets);
+  const { ctx, pg, fehler } = await neueSeite(browser, basis, app, opt.tickets, opt.format);
   try {
     for (const b of await zuBreit(pg)) fehl.push(`${titel}, Startseite: ${b}`);
     for (const k of knoepfe) {
@@ -146,7 +160,7 @@ async function weg(browser, basis, app, titel, knoepfe, opt = {}) {
 
 /* ---------- Update-Test: Service Worker installiert, neue Version veröffentlicht → kommt sie an? ---------- */
 async function updateTest(browser, basis, app) {
-  const ctx = await browser.newContext({ viewport: { width: BREITE, height: 740 } });
+  const ctx = await kontext(browser, formate[0]);
   const pg = await ctx.newPage(), fehl = [];
   // Die App lädt sich bei einem Update selbst neu – Navigationen dürfen sich überschneiden.
   const laden = () => pg.goto(`${basis}/${app.pfad}/`).catch(() => {});
@@ -185,15 +199,18 @@ async function updateTest(browser, basis, app) {
   try {
     for (const app of APPS) {
       const start = Date.now(), f = [];
-      f.push(...await weg(browser, basis, app, "Start", []));
-      f.push(...await weg(browser, basis, app, "Übung", app.uebung));
-      f.push(...await weg(browser, basis, app, "Shop", app.shop));
-      f.push(...await weg(browser, basis, app, "Runner", app.runner, { tickets: true, pruefe: async (pg) => {
-        await pg.waitForTimeout(1500);
-        await pg.mouse.click(180, 400); await pg.waitForTimeout(800); // einmal springen
-        const n = await pg.evaluate(() => [...document.querySelectorAll(".runner-buehne canvas")].filter((c) => c.offsetParent && c.width > 0).length);
-        return n ? null : "Runner startet nicht (keine Spielbühne mit Zeichenfläche)";
-      } }));
+      for (const fm of formate) {
+        const w = (titel, knoepfe, opt = {}) => weg(browser, basis, app, `${fm.name} · ${titel}`, knoepfe, Object.assign({ format: fm }, opt));
+        f.push(...await w("Start", []));
+        f.push(...await w("Übung", app.uebung));
+        f.push(...await w("Shop", app.shop));
+        f.push(...await w("Runner", app.runner, { tickets: true, pruefe: async (pg) => {
+          await pg.waitForTimeout(1500);
+          const vp = pg.viewportSize(); await pg.mouse.click(vp.width / 2, vp.height / 2); await pg.waitForTimeout(800); // einmal springen
+          const n = await pg.evaluate(() => [...document.querySelectorAll(".runner-buehne canvas")].filter((c) => c.offsetParent && c.width > 0).length);
+          return n ? null : "Runner startet nicht (keine Spielbühne mit Zeichenfläche)";
+        } }));
+      }
       if (!OHNE_UPDATE) f.push(...await updateTest(browser, basis, app));
       console.log(`${f.length ? "✗" : "✓"} ${app.kurz}  (${((Date.now() - start) / 1000).toFixed(0)} s)`);
       for (const x of f) console.log("    - " + x);

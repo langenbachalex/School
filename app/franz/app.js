@@ -355,13 +355,20 @@
           serie() > 0 && el("span", { title: "Schultage am Stück – alle 3 ein neuer Superheld" }, `🔥 ${serie()} jour${serie() > 1 ? "s" : ""} de suite`), el("span", {}, `🗣️ ${namenFertig}/${D.namen.length} Namen`),
           knopf("🏛️ Panthéon", pantheon, "haupt"), knopf("🛍️ Boutique", () => boutique(startseite), "haupt"))),
       el("nav", { class: "kacheln", "aria-label": "Kacheln" },
-        kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe),
-        kachel("🗣️", "Prononciation", "Namen richtig aussprechen", prononciation),
+        kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe,
+          D.dialoge.every((d) => schritteFertig(d) === SCHRITTE.length) ? " erledigt" : ""),
+        prononciationKachel(),
         kachel("🎮", "Jeux", "Memory, Qui est-ce ?, Dans l'ordre", jeux),
         gymKachel(),
         runKachel(startseite),
         kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex · +10 ⭐ je Beat", beatStudio)));
     if (parisFrei() > stand.paris || heldenFrei() > stand.helden) { const nr = seitenNr; setTimeout(() => { if (nr === seitenNr) parisNeu(); }, 700); } // nicht über eine schon geöffnete Kachel legen
+  }
+  // 16.11.2026 (Meldung eines Schülers): Die Kachel zeigt den Stand (fertige Gruppen + Namen) und wird grün, wenn alle Gruppen geschafft sind.
+  function prononciationKachel() {
+    const gruppen = Object.keys(D.gruppen), fertig = gruppen.filter((g) => D.namen.filter((n) => n.gruppe === g).every((n) => namenStufe(n) >= 1)).length;
+    const namen = D.namen.filter((n) => namenStufe(n) >= 1).length;
+    return kachel("🗣️", "Prononciation", `${fertig}/${gruppen.length} Gruppen · ${namen}/${D.namen.length} Namen`, prononciation, fertig === gruppen.length ? " erledigt" : "");
   }
   function gymKachel() {   // 💪 Muscu des mots (Word Gym): Stand von heute + sichere Wörter
     const plan = gymPlan(), alle = gymReihe(plan), rest = alle.filter((id) => !plan.fertig.includes(id)).length, n = gymSicher();

@@ -205,6 +205,27 @@ async function webkitStarten() {
   }
 }
 
+// FR (16.11.2026, Meldung eines Schülers über Mr. Alex): Wer in Prononciation eine Gruppe ganz durchgearbeitet hat,
+// muss die Gruppe in der Übersicht grün sehen – und auf der Startseite den Stand der Kachel Prononciation.
+async function frGruppeGruen(pg) {
+  for (let i = 0; i < 3; i++) {   // drei Namen: hören, Nachsprech-Balken abwarten, weiter
+    const k = pg.getByRole("button", { name: /^(Weiter ➜|Fertig ✓)$/ }).first();
+    try { await pg.waitForFunction(() => { const b = [...document.querySelectorAll("button")].find((x) => /^(Weiter ➜|Fertig ✓)/.test(x.textContent)); return b && !b.disabled && b.getAttribute("aria-disabled") !== "true"; }, null, { timeout: 25000 }); }
+    catch (e) { return `Name ${i + 1}: „Weiter“ wird nicht frei (Ton oder Nachsprech-Balken hängt)`; }
+    await k.click(); await pg.waitForTimeout(500);
+  }
+  await pg.getByRole("button", { name: /Prononciation|Zurück|←/ }).first().click(); await pg.waitForTimeout(500);
+  const gruppe = await pg.evaluate(() => { const k = [...document.querySelectorAll(".kachel")].find((x) => /stars/.test(x.textContent)); return k ? { text: k.textContent, gruen: k.classList.contains("erledigt") } : null; });
+  if (!gruppe) return "Übersicht Prononciation nicht erreicht";
+  if (!/3\/3 geschafft/.test(gruppe.text)) return `Gruppe zählt nicht 3/3 (${gruppe.text.slice(-20)})`;
+  if (!gruppe.gruen) return "Gruppe ist ganz geschafft, aber in der Übersicht nicht grün";
+  await pg.getByRole("button", { name: /Start|Accueil|←/ }).first().click(); await pg.waitForTimeout(500);
+  const start = await pg.evaluate(() => { const k = [...document.querySelectorAll(".kachel")].find((x) => /Prononciation/.test(x.textContent)); return k ? k.textContent : null; });
+  if (!start) return "Startseite nicht erreicht";
+  if (!/1\/4 Gruppen/.test(start)) return `Startseite: Kachel Prononciation zeigt den Stand nicht (${start})`;
+  return null;
+}
+
 /* ---------- Ablauf ---------- */
 (async () => {
   const srv = server();
@@ -228,6 +249,7 @@ async function webkitStarten() {
           const n = await pg.evaluate(() => [...document.querySelectorAll(".runner-buehne canvas")].filter((c) => c.offsetParent && c.width > 0).length);
           return n ? null : "Runner startet nicht (keine Spielbühne mit Zeichenfläche)";
         } }));
+        if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
       }
       if (!OHNE_UPDATE) f.push(...await updateTest(browser, basis, app));
       console.log(`${f.length ? "✗" : "✓"} ${app.kurz}  (${((Date.now() - start) / 1000).toFixed(0)} s)`);

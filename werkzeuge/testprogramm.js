@@ -46,12 +46,13 @@ function siegelAus(appJs, art) {
   return new Function(`${salz[0]}\n${v[0]}\n${fn[0]}\nreturn [siegel, SIEGEL_V];`)();
 }
 // Nimmt den Spielstand, den die App selbst angelegt hat, gibt Coins und Tickets dazu und siegelt neu.
-function mitTickets(app, roh) {
+function mitTickets(app, roh, patch) {
   const appJs = fs.readFileSync(path.join(WURZEL, app.pfad, "app.js"), "utf8");
   const s = roh ? JSON.parse(roh) : {};
   if (app.art === "fr") {
     const siegel = siegelAus(appJs, "fr");
     s.coins = 500; s.parisRun = Object.assign({ gespielt: 0, geschafft: 0, beste: 0 }, s.parisRun, { tickets: 3 });
+    if (patch) patch(s);
     s._s = siegel(s); return s;
   }
   const [siegel, V] = siegelAus(appJs, "en");
@@ -124,13 +125,13 @@ async function klicke(pg, name) {
 }
 const kontext = (browser, f, extra = {}) => browser.newContext(Object.assign({ viewport: f.viewport, isMobile: f.isMobile, hasTouch: f.hasTouch },
   f.userAgent ? { userAgent: f.userAgent } : {}, extra));
-async function neueSeite(browser, basis, app, tickets, f) {
+async function neueSeite(browser, basis, app, tickets, f, patch) {
   const ctx = await kontext(browser, f, { serviceWorkers: "block" });
   const pg = await ctx.newPage(), fehler = [];
   if (tickets) { // erst die App ihren Stand anlegen lassen, dann Tickets dazu
     await pg.goto(`${basis}/${app.pfad}/`); await pg.waitForTimeout(1200);
     const roh = await pg.evaluate((k) => localStorage.getItem(k), app.speicher);
-    const neu = JSON.stringify(mitTickets(app, roh));
+    const neu = JSON.stringify(mitTickets(app, roh, patch));
     await pg.evaluate(([k, s]) => { localStorage.setItem(k, s); localStorage.setItem(k + "-b", s); }, [app.speicher, neu]);
   }
   pg.on("console", (m) => { if (m.type() === "error") fehler.push("Konsole: " + m.text().slice(0, 200)); });
@@ -144,7 +145,7 @@ async function neueSeite(browser, basis, app, tickets, f) {
 /* ---------- Ein Weg: Seite öffnen, Knöpfe der Reihe nach, unterwegs 360 px prüfen ---------- */
 async function weg(browser, basis, app, titel, knoepfe, opt = {}) {
   const fehl = [];
-  const { ctx, pg, fehler } = await neueSeite(browser, basis, app, opt.tickets, opt.format);
+  const { ctx, pg, fehler } = await neueSeite(browser, basis, app, opt.tickets || !!opt.stand, opt.format, opt.stand);
   try {
     for (const b of await zuBreit(pg)) fehl.push(`${titel}, Startseite: ${b}`);
     for (const k of knoepfe) {
@@ -226,6 +227,24 @@ async function frGruppeGruen(pg) {
   return null;
 }
 
+// FR (16.11.2026, Mr. Alex: auch die anderen Kacheln prüfen): Spiele und Beats zählen einmal am Tag. Wer heute alles gemacht hat,
+// muss das auf der Startseite (Jeux, Beat-Studio) und in Jeux (Memory, Qui est-ce ?, Dans l'ordre) sehen – mit Stand und in Grün.
+function frHeuteAlles(s) {
+  const heute = new Date().toISOString().slice(0, 10), m = {};
+  new Function("window", fs.readFileSync(path.join(WURZEL, "app/franz/daten_fr.js"), "utf8"))(m);
+  s.spiele = Object.assign({}, s.spiele, { memory: heute, qui: heute, ordre: heute });
+  s.beats = {}; m.DATEN_FR.beats.forEach((b) => { s.beats[b.id] = heute; });
+}
+async function frKachelnHeute(pg) {
+  const lies = () => pg.evaluate(() => [...document.querySelectorAll(".kachel")].map((k) => ({ text: k.textContent, gruen: k.classList.contains("erledigt") })));
+  const fehlt = (liste, name, stand) => { const k = liste.find((x) => x.text.includes(name)); return !k ? `Kachel ${name} fehlt` : !k.gruen ? `Kachel ${name} ist heute fertig, aber nicht grün` : stand && !stand.test(k.text) ? `Kachel ${name} zeigt den Stand nicht (${k.text})` : null; };
+  let k = await lies();
+  const f1 = fehlt(k, "Jeux", /3\/3/) || fehlt(k, "Beat-Studio", /(\d+)\/\1/);
+  if (f1) return f1;
+  await klicke(pg, /Jeux/); k = await lies();
+  return fehlt(k, "Memory") || fehlt(k, "Qui est-ce") || fehlt(k, "Dans l'ordre");
+}
+
 /* ---------- Ablauf ---------- */
 (async () => {
   const srv = server();
@@ -250,6 +269,7 @@ async function frGruppeGruen(pg) {
           return n ? null : "Runner startet nicht (keine Spielbühne mit Zeichenfläche)";
         } }));
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
+        if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));
       }
       if (!OHNE_UPDATE) f.push(...await updateTest(browser, basis, app));
       console.log(`${f.length ? "✗" : "✓"} ${app.kurz}  (${((Date.now() - start) / 1000).toFixed(0)} s)`);

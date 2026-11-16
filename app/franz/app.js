@@ -358,10 +358,10 @@
         kachel("💬", "Dialogues", `${D.dialoge.filter((d) => schritteFertig(d) === SCHRITTE.length).length}/${D.dialoge.length} geschafft`, dialogListe,
           D.dialoge.every((d) => schritteFertig(d) === SCHRITTE.length) ? " erledigt" : ""),
         prononciationKachel(),
-        kachel("🎮", "Jeux", "Memory, Qui est-ce ?, Dans l'ordre", jeux),
+        jeuxKachel(),
         gymKachel(),
         runKachel(startseite),
-        kachel("🎧", "Beat-Studio", "Mitsingen mit Mr. Alex · +10 ⭐ je Beat", beatStudio)));
+        beatKachel()));
     if (parisFrei() > stand.paris || heldenFrei() > stand.helden) { const nr = seitenNr; setTimeout(() => { if (nr === seitenNr) parisNeu(); }, 700); } // nicht über eine schon geöffnete Kachel legen
   }
   // 16.11.2026 (Meldung eines Schülers): Die Kachel zeigt den Stand (fertige Gruppen + Namen) und wird grün, wenn alle Gruppen geschafft sind.
@@ -369,6 +369,17 @@
     const gruppen = Object.keys(D.gruppen), fertig = gruppen.filter((g) => D.namen.filter((n) => n.gruppe === g).every((n) => namenStufe(n) >= 1)).length;
     const namen = D.namen.filter((n) => namenStufe(n) >= 1).length;
     return kachel("🗣️", "Prononciation", `${fertig}/${gruppen.length} Gruppen · ${namen}/${D.namen.length} Namen`, prononciation, fertig === gruppen.length ? " erledigt" : "");
+  }
+  // 16.11.2026 (Mr. Alex: auch die anderen Kacheln): Spiele und Beats zählen einmal am Tag – die Kacheln zeigen den Stand von heute und werden grün.
+  const LERNSPIELE = ["memory", "qui", "ordre"];
+  const spielHeute = (id) => stand.spiele[id] === heute();
+  function jeuxKachel() {
+    const n = LERNSPIELE.filter(spielHeute).length;
+    return kachel("🎮", "Jeux", `Memory, Qui est-ce ?, Dans l'ordre · ${n}/${LERNSPIELE.length} heute`, jeux, n === LERNSPIELE.length ? " erledigt" : "");
+  }
+  function beatKachel() {
+    const n = D.beats.filter((b) => stand.beats && stand.beats[b.id] === heute()).length;
+    return kachel("🎧", "Beat-Studio", `Mitsingen mit Mr. Alex · ${n}/${D.beats.length} Beats heute`, beatStudio, n === D.beats.length ? " erledigt" : "");
   }
   function gymKachel() {   // 💪 Muscu des mots (Word Gym): Stand von heute + sichere Wörter
     const plan = gymPlan(), alle = gymReihe(plan), rest = alle.filter((id) => !plan.fertig.includes(id)).length, n = gymSicher();
@@ -1069,9 +1080,9 @@
   function jeux() {
     zeige(kopf("🎮 Jeux", startseite, "Jeden Tag gibt es für jedes Spiel einmal Punkte."),
       el("nav", { class: "kacheln" },
-        kachel("🃏", "Memory", "Wendung und Bedeutung finden", memory),
-        kachel("👂", "Qui est-ce ?", "Hör den Namen, tipp das Bild an", () => quiEstCe()),
-        kachel("🔢", "Dans l'ordre", "Bring den Dialog in die richtige Reihenfolge", () => ordre()),
+        kachel("🃏", "Memory", "Wendung und Bedeutung finden" + (spielHeute("memory") ? " · ✓ heute" : ""), memory, spielHeute("memory") ? " erledigt" : ""),
+        kachel("👂", "Qui est-ce ?", "Hör den Namen, tipp das Bild an" + (spielHeute("qui") ? " · ✓ heute" : ""), () => quiEstCe(), spielHeute("qui") ? " erledigt" : ""),
+        kachel("🔢", "Dans l'ordre", "Bring den Dialog in die richtige Reihenfolge" + (spielHeute("ordre") ? " · ✓ heute" : ""), () => ordre(), spielHeute("ordre") ? " erledigt" : ""),
         runKachel(jeux),
         kachel("🛍️", "Boutique", `🪙 ${stand.coins} Coins – Ticket, Rahmen, Figur`, () => boutique(jeux), " shop-kachel")));
   }

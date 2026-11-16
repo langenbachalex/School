@@ -509,12 +509,14 @@
       neuZeile(), powerupZeile(),
       el("nav", { class: "kacheln raster9", "aria-label": T("Kategorien", "Categories") },
         D.kategorien.map((k) => {
-          const auf = faellige(k.nr + "|") > 0, fertig = stand.erledigt.includes(k.nr) && !auf, neu = istNeu(k) || (k.gruppen || []).some(istNeu), hw = hwBei(k.nr), gl = glnBei(k.nr);
+          // Games (16.11.2026, Mr. Alex): zählen einmal am Tag – die Kachel zeigt den Stand von heute und wird grün, wenn heute alle gespielt sind (nur Anzeige).
+          const heuteSp = k.spiele ? SPIEL_MARKEN.filter(spielHeute).length : 0;
+          const auf = faellige(k.nr + "|") > 0, fertig = k.spiele ? heuteSp === SPIEL_MARKEN.length : stand.erledigt.includes(k.nr) && !auf, neu = istNeu(k) || (k.gruppen || []).some(istNeu), hw = hwBei(k.nr), gl = glnBei(k.nr);
           return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : "") + (k.bald ? " bald" : "") + (neu ? " frisch" : "") + (hw ? " hw" : "") + (gl ? " gln" : "") + (k.farbe ? " " + k.farbe : ""),
             onclick: () => starteKategorie(k.nr), "aria-label": `${k.nr} ${k.titel}${k.bald ? T(" (kommt bald)", " (coming soon)") : ""}${neu ? T(" (neu)", " (new)") : ""}${auf ? " (Power Up)" : ""}${hw ? " (Homework)" : ""}${fertig ? " ✓" : ""}` },
             el("span", { class: "sym", "aria-hidden": "true" }, k.symbol),
             el("span", { class: "titel", lang: "en" }, k.titel),
-            el("span", { class: "unter" }, tx(k.unter)),
+            el("span", { class: "unter" }, tx(k.unter) + (k.spiele ? ` · ${heuteSp}/${SPIEL_MARKEN.length} ${T("heute", "today")}` : "")),
             k.bald && el("span", { class: "bald-schild" }, T("kommt bald", "coming soon")),
             hw && hwSchild(), gl && glnSchild(), neu && neuSchild(), auf && powerupSchild(),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
@@ -564,13 +566,17 @@
 
   // Vocabulary: Unit wählen, dann Abschnitt; dahinter die festen Gruppen der Kategorie (BE vs AE)
   const aktuelleUnit = () => (stand.unit && D.units[stand.unit].length ? stand.unit : "2");
-  const unitReiter = (zeichne) => el("div", { class: "reiter", role: "tablist" }, Object.keys(D.units).map((u) =>
-    el("button", { class: "reiter-knopf", role: "tab", "aria-selected": String(u === aktuelleUnit()),
-      onclick: () => { stand.unit = u; speichern(); zeichne(); } }, "Unit " + u)));
+  // k (nur in Vocabulary, 16.11.2026): der Reiter trägt ein ✓, wenn alle Abschnitte der Unit grün sind (geschafft und nichts fällig) – nur Anzeige
+  const unitFertig = (k, u) => D.units[u].length > 0 && D.units[u].every((g) => gruppenFertig(k.nr).includes(`u${u}:${g.name}`) && !faellige(`${k.nr}|u${u}:${g.name}|`));
+  const unitReiter = (zeichne, k) => el("div", { class: "reiter", role: "tablist" }, Object.keys(D.units).map((u) => {
+    const ok = !!k && unitFertig(k, u);
+    return el("button", { class: "reiter-knopf", role: "tab", "aria-selected": String(u === aktuelleUnit()), "aria-label": "Unit " + u + (ok ? T(" (geschafft)", " (done)") : ""),
+      onclick: () => { stand.unit = u; speichern(); zeichne(); } }, "Unit " + u + (ok ? " ✓" : ""));
+  }));
   function zeigeUnits(k) {
     lage = null; ansicht = () => zeigeUnits(k);
     const unit = aktuelleUnit(), gruppen = D.units[unit];
-    zeige(kopf(k), unitReiter(() => zeigeUnits(k)),
+    zeige(kopf(k), unitReiter(() => zeigeUnits(k), k),
       gruppen.length ? ansage("Choose a part of the unit. The words come in the same order as in your book.",
         "Wähl einen Abschnitt. Die Wörter kommen in derselben Reihenfolge wie im Buch.")
         : ansage("Coming soon!", "Diese Unit kommt bald."),
@@ -3430,38 +3436,42 @@
   /* ---------- Games: Lernspiele (Kategorie mit „spiele“) – erstes Spiel: Memory mit den Wörtern eines Unit-Abschnitts ---------- */
   const spielKopf = (k, titel, zurueck) => el("header", { class: "kopf" },
     knopf(T("← Zurück", "← Back"), zurueck, "leise"), el("h1", { lang: "en" }, `${k.titel} · ${titel}`));
+  // Tagesmarken der Spiele mit Punkten (gym.memoryTag …; Crazy Sentences hat keine) – für die Anzeige „heute gespielt“ auf den Kacheln (16.11.2026)
+  const SPIEL_MARKEN = ["memoryTag", "patrolTag", "grammarTag", "sprintTag", "catchTag", "beeTag"];
+  const spielHeute = (marke) => gymStand()[marke] === iso(heute());
+  const heuteKlasse = (marke) => (spielHeute(marke) ? " erledigt" : ""), heuteText = (marke) => (spielHeute(marke) ? " · ✓ " + T("heute", "today") : "");
   function zeigeSpiele(k) {
     lage = null; ansicht = () => zeigeSpiele(k);
     zeige(kopf(k), ansage("Choose a game.", "Wähl ein Spiel."),
       el("nav", { class: "kacheln gruppen" },
-        el("button", { class: "kachel", onclick: () => memoryWahl(k), "aria-label": "Memory" },
+        el("button", { class: "kachel" + heuteKlasse("memoryTag"), onclick: () => memoryWahl(k), "aria-label": "Memory" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🎲"),
           el("span", { class: "titel", lang: "en" }, "Memory"),
-          el("span", { class: "unter" }, T("Wort und Bedeutung finden – 6 Paare", "Match word and meaning – 6 pairs"))),
-        el("button", { class: "kachel", onclick: () => spielPatrol(k), "aria-label": "Border Patrol" },
+          el("span", { class: "unter" }, T("Wort und Bedeutung finden – 6 Paare", "Match word and meaning – 6 pairs") + heuteText("memoryTag"))),
+        el("button", { class: "kachel" + heuteKlasse("patrolTag"), onclick: () => spielPatrol(k), "aria-label": "Border Patrol" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🛂"),
           el("span", { class: "titel", lang: "en" }, "Border Patrol"),
-          el("span", { class: "unter" }, T("Britisch oder amerikanisch? Wörter einsortieren", "British or American? Sort the words"))),
-        el("button", { class: "kachel", onclick: () => spielGrammar(k), "aria-label": "Grammar Patrol" },
+          el("span", { class: "unter" }, T("Britisch oder amerikanisch? Wörter einsortieren", "British or American? Sort the words") + heuteText("patrolTag"))),
+        el("button", { class: "kachel" + heuteKlasse("grammarTag"), onclick: () => spielGrammar(k), "aria-label": "Grammar Patrol" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🚧"),
           el("span", { class: "titel", lang: "en" }, "Grammar Patrol"),
-          el("span", { class: "unter" }, T("Richtig oder falsch? Sätze durchwinken oder stoppen", "Right or wrong? Wave sentences through or stop them"))),
-        el("button", { class: "kachel", onclick: () => spielSprint(k), "aria-label": "Chunk Sprint" },
+          el("span", { class: "unter" }, T("Richtig oder falsch? Sätze durchwinken oder stoppen", "Right or wrong? Wave sentences through or stop them") + heuteText("grammarTag"))),
+        el("button", { class: "kachel" + heuteKlasse("sprintTag"), onclick: () => spielSprint(k), "aria-label": "Chunk Sprint" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🔥"),
           el("span", { class: "titel", lang: "en" }, "Chunk Sprint"),
-          el("span", { class: "unter" }, T("60 Sekunden: Lücke füllen, Combo halten", "60 seconds: fill the gap, keep your combo"))),
+          el("span", { class: "unter" }, T("60 Sekunden: Lücke füllen, Combo halten", "60 seconds: fill the gap, keep your combo") + heuteText("sprintTag"))),
         el("button", { class: "kachel", onclick: () => spielCrazy(k), "aria-label": "Crazy Sentences" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🎰"),
           el("span", { class: "titel", lang: "en" }, "Crazy Sentences"),
           el("span", { class: "unter" }, T("Satz-Automat: drehen, laut sagen, lachen", "Sentence machine: spin, say it, laugh"))),
-        el("button", { class: "kachel", onclick: () => catchWahl(k), "aria-label": "Catch the Word" },
+        el("button", { class: "kachel" + heuteKlasse("catchTag"), onclick: () => catchWahl(k), "aria-label": "Catch the Word" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🎯"),
           el("span", { class: "titel", lang: "en" }, "Catch the Word"),
-          el("span", { class: "unter" }, T("Wort hören und fangen, bevor es unten ist", "Hear the word and catch it before it lands"))),
-        el("button", { class: "kachel", onclick: () => beeWahl(k), "aria-label": "Spelling Bee" },
+          el("span", { class: "unter" }, T("Wort hören und fangen, bevor es unten ist", "Hear the word and catch it before it lands") + heuteText("catchTag"))),
+        el("button", { class: "kachel" + heuteKlasse("beeTag"), onclick: () => beeWahl(k), "aria-label": "Spelling Bee" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🐝"),
           el("span", { class: "titel", lang: "en" }, "Spelling Bee"),
-          el("span", { class: "unter" }, T("Wort hören und richtig schreiben", "Hear the word and spell it"))),
+          el("span", { class: "unter" }, T("Wort hören und richtig schreiben", "Hear the word and spell it") + heuteText("beeTag"))),
         el("button", { class: "kachel runner-kachel", onclick: () => runnerStart(k), "aria-label": "Road Trip Run" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🏃"),
           el("span", { class: "titel", lang: "en" }, "Road Trip Run"),

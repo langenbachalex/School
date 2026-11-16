@@ -506,7 +506,7 @@ dialog.feier.akte.gold-akte .akten-wort { color: #8a5a00; border-bottom-color: #
 .ansage strong[lang="en"] { font-weight: 700; }
 .rueckmeldung.neutral { background: var(--gelb); color: var(--gelb-text); }
 /* Memory: 6 Paare, alle 12 Karten ohne Scrollen auf einem Bildschirm (4 × 3 Laptop, 3 × 4 Handy) */
-.memory.gross { gap: 12px; max-width: 560px; margin: 0 auto; }
+.memory.gross { gap: 12px; width: 100%; max-width: 560px; margin: 0 auto; }
 .memory.gross .mem-karte { aspect-ratio: 4 / 3; min-height: 0; max-height: 19vh; font-size: 1.6rem; }
 .memory.gross .mem-karte.auf { font-size: 1.2rem; gap: 2px; align-content: center; }
 .memory.gross .mem-karte.auf .mem-sym { font-size: 1.5rem; line-height: 1; }

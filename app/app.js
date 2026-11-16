@@ -442,13 +442,15 @@
         el("p", {}, "Wenn etwas unklar ist, frag mich am Mittwoch – ich helfe dir gern. Dein Mr. Alex")),
       el("nav", { class: "kacheln", "aria-label": "Stationen" },
         D.stationen.map((s) => {
-          const auf = !s.spiele && faellige(s.nr + "|") > 0, fertig = !s.spiele && stand.erledigt.includes(s.nr) && !auf, hw = hwBei(s.nr), gl = glnBei(s.nr);
+          // Spiele (16.11.2026, Mr. Alex): zählen einmal am Tag – die Kachel zeigt den Stand von heute und wird grün, wenn heute alle gespielt sind (nur Anzeige).
+          const heuteSp = s.spiele ? SPIEL_MARKEN.filter(spielHeute).length : 0;
+          const auf = !s.spiele && faellige(s.nr + "|") > 0, fertig = s.spiele ? heuteSp === SPIEL_MARKEN.length : stand.erledigt.includes(s.nr) && !auf, hw = hwBei(s.nr), gl = glnBei(s.nr);
           return el("button", { class: "kachel" + (fertig ? " erledigt" : "") + (auf ? " powerup" : "") + (hw ? " hw" : "") + (gl ? " gln" : ""), onclick: () => starteStation(s.nr),
-            "aria-label": `Station ${s.nr}: ${s.titel}${fertig ? " (geschafft)" : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}${gl ? " (Road to GLN)" : ""}` },
+            "aria-label": `Station ${s.nr}: ${s.titel}${fertig ? (s.spiele ? " (heute alle gespielt)" : " (geschafft)") : ""}${auf ? " (Power Up)" : ""}${hw ? " (Hausaufgabe)" : ""}${gl ? " (Road to GLN)" : ""}` },
             el("span", { class: "sym", "aria-hidden": "true" }, s.symbol),
             el("span", { class: "nr" }, "Station " + s.nr),
             el("span", { class: "titel" }, s.titel),
-            s.unter && el("span", { class: "unter" }, s.unter),
+            s.unter && el("span", { class: "unter" }, s.unter + (s.spiele ? ` · ${heuteSp}/${SPIEL_MARKEN.length} heute` : "")),
             hw && hwSchild(), gl && glnSchild(), auf && powerupSchild(),
             fertig && el("span", { class: "haken", "aria-hidden": "true" }, "✓"));
         })),
@@ -1645,6 +1647,9 @@
   const catchOk = (v) => v && spielWort(v).length >= 2 && spielWort(v).length <= 24;
   const beeOk = (v) => { if (!v || !v.tippbar) return false; const t = spielWort(v); return t.length >= 2 && t.length <= 20 && t.split(" ").length <= 3 && !/[()…,/]/.test(t); };
   const spielTag = () => iso(heute());
+  // Tagesmarken der vier Lernspiele (gym.memoryTag …) – für die Anzeige „heute gespielt“ auf den Kacheln (16.11.2026)
+  const SPIEL_MARKEN = ["memoryTag", "catchTag", "beeTag", "detektivTag"];
+  const spielHeute = (marke) => gymStand()[marke] === spielTag();
   // Punkte einmal pro Tag und Spiel: Tagesmarke setzen, Text für die Rückmeldung
   function spielPunkte(marke, geschafft) {
     const g = gymStand(), tag = spielTag(), punkte = geschafft && g[marke] !== tag;
@@ -1654,15 +1659,16 @@
   function zeigeSpiele() {
     const st = station(5);
     lage = null;
-    const kachel = (sym, titel, unter, fn) => el("button", { class: "kachel", onclick: fn, "aria-label": titel },
-      el("span", { class: "sym", "aria-hidden": "true" }, sym), el("span", { class: "titel", lang: "en" }, titel), el("span", { class: "unter" }, unter));
+    // marke: Tagesmarke des Spiels – heute schon gespielt (Punkte geholt) → „✓ heute“ und grün (16.11.2026, nur Anzeige)
+    const kachel = (sym, titel, unter, fn, marke) => el("button", { class: "kachel" + (spielHeute(marke) ? " erledigt" : ""), onclick: fn, "aria-label": titel },
+      el("span", { class: "sym", "aria-hidden": "true" }, sym), el("span", { class: "titel", lang: "en" }, titel), el("span", { class: "unter" }, unter + (spielHeute(marke) ? " · ✓ heute" : "")));
     zeige(el("header", { class: "kopf" }, knopf("← Start", startseite, "leise"), el("h1", {}, `Station ${st.nr}: ${st.titel}`), hwBei(st.nr) && hwSchild(), glnBei(st.nr) && glnSchild()),
       ansage("Choose a game.", "Wähl ein Spiel. Jedes Spiel bringt dir einmal am Tag 10 Punkte."),
       el("nav", { class: "kacheln gruppen", "aria-label": "Spiele" },
-        kachel("🎲", "Memory", "Wort und Bedeutung finden – 6 Paare", () => spielWahl("Memory", spielMemory)),
-        kachel("🎯", "Catch the Word", "Wort hören und fangen, bevor es unten ist", () => spielWahl("Catch the Word", spielCatch)),
-        kachel("🐝", "Spelling Bee", "Wort hören und richtig schreiben", () => spielWahl("Spelling Bee", spielBee)),
-        kachel("🔎", "-s-Detektiv", "Fehlt ein -s? Finde es und repariere den Satz", spielDetektiv),
+        kachel("🎲", "Memory", "Wort und Bedeutung finden – 6 Paare", () => spielWahl("Memory", spielMemory), "memoryTag"),
+        kachel("🎯", "Catch the Word", "Wort hören und fangen, bevor es unten ist", () => spielWahl("Catch the Word", spielCatch), "catchTag"),
+        kachel("🐝", "Spelling Bee", "Wort hören und richtig schreiben", () => spielWahl("Spelling Bee", spielBee), "beeTag"),
+        kachel("🔎", "-s-Detektiv", "Fehlt ein -s? Finde es und repariere den Satz", spielDetektiv, "detektivTag"),
         el("button", { class: "kachel runner-kachel", onclick: () => runnerStart(), "aria-label": "London Run" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🇬🇧"), el("span", { class: "titel", lang: "en" }, "London Run"),
           el("span", { class: "unter" }, `Jump'n'Run · 🎟️ Ticket ${RUNNER.preis} 🪙`)),

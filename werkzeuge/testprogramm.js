@@ -58,6 +58,7 @@ function mitTickets(app, roh, patch) {
   const [siegel, V] = siegelAus(appJs, "en");
   s.spiel = s.spiel || {}; s.spiel.coins = 500;
   s.spiel.runner = Object.assign({ level: {}, gespielt: 0, geschafft: 0, titel: 0 }, s.spiel.runner, { tickets: 3 });
+  if (patch) patch(s);
   s._v = V; s._s = siegel(s, V); return s;
 }
 
@@ -245,6 +246,91 @@ async function frKachelnHeute(pg) {
   return fehlt(k, "Memory") || fehlt(k, "Qui est-ce") || fehlt(k, "Dans l'ordre");
 }
 
+// EN6 + EN9 (16.11.2026, Mr. Alex: dieselbe Prüfung wie in FR): Hauptkette „alle Teile eines Bereichs fertig → Bereich in der Übersicht grün“.
+// Der eingespielte Stand hat alle Teile eines Bereichs bis auf einen Erklärteil; der wird im Browser gemacht (Erklärteile geben keine Punkte, zählen aber).
+// Danach muss die Kachel auf der Startseite grün sein. Dazu: Spiele zählen einmal am Tag – wer heute alle gespielt hat, sieht das an der Kachel
+// der Spiele (Stand „4/4 heute“, grün) und an jedem Spiel („✓ heute“, grün). EN9: Reiter „Unit 1“ trägt ein ✓, wenn alle Abschnitte der Unit geschafft sind.
+const tagLokal = () => { const d = new Date(), z = (n) => String(n).padStart(2, "0"); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`; };
+const EN_KETTE = {
+  EN6: { nr: 2, gruppe: null, stufen: [1, 2, 3, 4], offen: "Ausnahmen", marken: ["memoryTag", "catchTag", "beeTag", "detektivTag"],
+    bereich: /^Station 2:/, spiele: /^Station 5/, heute: /4\/4 heute/, haken: /✓ heute/, start: /Zur Startseite/,
+    spielNamen: ["Memory", "Catch the Word", "Spelling Bee", "-s-Detektiv"] },
+  EN9: { nr: 3, gruppe: "-ing form", stufen: [1, 2, 3], offen: "Rule", marken: ["memoryTag", "patrolTag", "grammarTag", "sprintTag", "catchTag", "beeTag"],
+    bereich: /^3 Language/, spiele: /^8 Games/, heute: /6\/6 (heute|today)/, haken: /✓ (heute|today)/, start: /Zur Startseite|Back to start/,
+    spielNamen: ["Memory", "Border Patrol", "Grammar Patrol", "Chunk Sprint", "Catch the Word", "Spelling Bee"] },
+};
+function enDaten(app) { const m = {}; new Function("window", fs.readFileSync(path.join(WURZEL, app.pfad, "daten.js"), "utf8"))(m); return m.DATEN; }
+// Teil-Nummern wie teileVon() in der App: ein Listen-and-Repeat-Schritt zählt je Stufe einen Teil
+function enTeile(schritte, stufen) { const t = []; schritte.forEach((x) => { if (x.art === "lr") (x.stufen || stufen).forEach(() => t.push(x)); else t.push(x); }); return t; }
+function enFastFertig(app) {
+  const K = EN_KETTE[app.kurz], D = enDaten(app), heute = tagLokal(), fertig = { am: heute, s: 0 };
+  return (s) => {
+    if (!s.gym) throw new Error("Testdaten: Die App hat noch keinen Word-Gym-Stand angelegt");
+    s.teile = s.teile || {}; K.marken.forEach((m) => { s.gym[m] = heute; });
+    const alle = (schritte, gruppe, ausser) => { // alle Teile fertig, bis auf den Erklärteil „ausser“
+      let da = !ausser;
+      enTeile(schritte, K.stufen).forEach((x, i) => { if (ausser && x.art === "erklaerung" && x.name === ausser) da = true; else s.teile[`${K.nr}|${gruppe == null ? "" : gruppe}|${i}`] = fertig; });
+      if (!da) throw new Error(`Testdaten passen nicht mehr: Erklärteil „${ausser}“ fehlt`);
+    };
+    if (app.kurz === "EN6") alle(D.stationen.find((x) => x.nr === K.nr).schritte, null, K.offen);
+    else {
+      const k = D.kategorien.find((x) => x.nr === K.nr);
+      k.gruppen.forEach((g) => alle(g.schritte, g.name, g.name === K.gruppe ? K.offen : null));
+      s.gruppen = Object.assign({}, s.gruppen, { [K.nr]: k.gruppen.map((g) => g.name).filter((n) => n !== K.gruppe), 2: D.units["1"].map((g) => "u1:" + g.name) });
+    }
+  };
+}
+async function enKetteGruen(app, pg) {
+  const K = EN_KETTE[app.kurz];
+  const lies = () => pg.evaluate(() => [...document.querySelectorAll(".kachel")].map((k) => ({ name: k.getAttribute("aria-label") || "", text: k.textContent, gruen: k.classList.contains("erledigt"),
+    knapp: k.scrollHeight > k.clientHeight + 2 || k.scrollWidth > k.clientWidth + 2 })));   // knapp: Text passt nicht in die Kachel
+  const kachel = async (re) => (await lies()).find((x) => re.test(x.name));
+  const zuVoll = async (wo) => { const x = (await lies()).find((y) => y.knapp); return x ? `${wo}: Text passt nicht in die Kachel ${x.name}` : null; };
+  const v1 = await zuVoll("Startseite"); if (v1) return v1;
+  let k = await kachel(K.bereich);
+  if (!k) return "Startseite: Kachel des Bereichs fehlt";
+  if (k.gruen) return "Bereich ist grün, obwohl noch ein Teil fehlt";
+  k = await kachel(K.spiele);
+  if (!k) return "Startseite: Kachel der Spiele fehlt";
+  if (!K.heute.test(k.text)) return `Kachel der Spiele zeigt den Stand von heute nicht (${k.text})`;
+  if (!k.gruen) return "Heute alle Spiele gespielt, aber die Kachel der Spiele ist nicht grün";
+  // den letzten offenen Teil (Erklärung) machen
+  try {
+    await klicke(pg, K.bereich);
+    if (K.gruppe) await klicke(pg, new RegExp("^" + K.gruppe));
+    await klicke(pg, new RegExp("^" + K.offen));
+    await klicke(pg, /^(Weiter|Next)/);
+  } catch (e) { return "Weg zum letzten offenen Teil klappt nicht: " + e.message.split("\n")[0]; }
+  await pg.waitForTimeout(800);
+  await pg.evaluate(() => document.querySelectorAll(".feier, .overlay, dialog[open]").forEach((x) => x.remove())); // Lob-Feier nicht abwarten
+  try { await klicke(pg, K.start); } catch (e) { return "Nach dem letzten Teil kommt die Seite „geschafft“ nicht (Knopf zur Startseite fehlt)"; }
+  k = await kachel(K.bereich);
+  if (!k) return "Startseite nach dem letzten Teil nicht erreicht";
+  if (!k.gruen) return "Alle Teile des Bereichs sind fertig, aber die Kachel auf der Startseite ist nicht grün";
+  if (K.gruppe) { // EN9: auch die Themen in der Übersicht der Kategorie
+    await klicke(pg, K.bereich);
+    const offen = (await lies()).filter((x) => !x.gruen);
+    if (offen.length) return `Thema ${offen[0].name} ist fertig, aber nicht grün`;
+    await klicke(pg, /^← /);
+    await klicke(pg, /^2 Vocabulary/);
+    const reiter = await pg.evaluate(() => [...document.querySelectorAll(".reiter-knopf")].map((b) => b.textContent));
+    if (!reiter.some((t) => /^Unit 1.*✓/.test(t))) return `Unit 1 ist ganz geschafft, aber der Reiter zeigt es nicht (${reiter.join(" | ")})`;
+    if (reiter.some((t) => /^Unit [23].*✓/.test(t))) return `Reiter zeigt ✓ für eine Unit, die nicht fertig ist (${reiter.join(" | ")})`;
+    for (const b of await zuBreit(pg)) return "Vocabulary: " + b;
+    await klicke(pg, /^← /);
+  }
+  await klicke(pg, K.spiele);
+  const spiele = await lies();
+  for (const n of K.spielNamen) {
+    const x = spiele.find((y) => y.name === n);
+    if (!x) return `Spiel ${n} fehlt`;
+    if (!K.haken.test(x.text)) return `Spiel ${n} ist heute gespielt, zeigt es aber nicht (${x.text})`;
+    if (!x.gruen) return `Spiel ${n} ist heute gespielt, aber nicht grün`;
+  }
+  for (const b of await zuBreit(pg)) return "Spiele: " + b;
+  return zuVoll("Spiele");
+}
+
 /* ---------- Ablauf ---------- */
 (async () => {
   const srv = server();
@@ -268,6 +354,7 @@ async function frKachelnHeute(pg) {
           const n = await pg.evaluate(() => [...document.querySelectorAll(".runner-buehne canvas")].filter((c) => c.offsetParent && c.width > 0).length);
           return n ? null : "Runner startet nicht (keine Spielbühne mit Zeichenfläche)";
         } }));
+        if (EN_KETTE[app.kurz]) f.push(...await w("Bereich wird grün, Spiele zeigen den Stand von heute", [], { stand: enFastFertig(app), pruefe: (pg) => enKetteGruen(app, pg) }));
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
         if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));
       }

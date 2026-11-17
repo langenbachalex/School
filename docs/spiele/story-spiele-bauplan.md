@@ -25,6 +25,9 @@ Wie beim Runner (`app/klasse9/runner.js`, eine Datei für alle drei Apps) entste
 6. **Reihenfolge danach:** Figuren · Mimik und Gestik · Außenszene am Tower für den Anfang · Feuer · zuletzt das stille Mitschreiben auf dem Gerät.
 7. **Bleibt nutzbar:** Texte, Ton, Spiellogik (`app/tower/tower.js`), Testprogramm-Weg; die Bildfassung bleibt vorerst bestehen (Kachel nur mit `?tower`).
 
+**Geräte und Bedienung (Mr. Alex 17.11.):** Zurzeit hat jedes Kind einen **HP ProBook, ein Hybrid-Laptop mit Touch-Bildschirm**; später steigt die Schule auf **iPads** um. Deshalb gilt: **Alle Bewegungen im Raum werden von Anfang an für Touch gebaut** – was mit dem Finger geht, geht auf beiden Geräten und bleibt beim Umstieg gültig. Maus und Touchpad müssen dasselbe können; nichts darf nur mit der Tastatur erreichbar sein.
+*Vorschlag des Masters dazu, noch nicht entschieden:* mit einem Finger ziehen = umsehen · Gegenstand antippen = ansehen/auslösen · auf den Boden oder einen markierten Punkt tippen = dorthin gehen (kein Steuerkreuz, keine Tastenbelegung) · zwei Finger = heranholen, nur wenn es sich bewährt · Maus: ziehen und klicken wie der Finger. Die technische Probe prüft genau diese Gesten auf dem ProBook (Touch und Touchpad) und auf einem iPad.
+
 **Risiken des neuen Wegs, vor dem Umbau mit der Probe klären:** Bildrate auf den Schul-Laptops (1366×768, eingebaute Grafik) und iPads · Größe je Raum (Modelle und gebackene Texturen statt 300 KB Bild; Kapitel weiter erst beim Betreten laden) · Bedienung mit Maus, Touchpad und Finger · das Testprogramm muss 3D ohne Grafikkarte prüfen können.
 
 ### Früherer Weg (bis 17.11., nur noch für die Bildfassung)

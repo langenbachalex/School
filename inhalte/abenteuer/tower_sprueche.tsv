@@ -1,0 +1,129 @@
+id	figur	anlass	selten	text	geste
+mrflex_01	mrflex	hallo	1	Mr. Flex. Wizard. Genius. Very modest.	nimmt die Sonnenbrille ab
+mrflex_02	mrflex	hallo	1	I am the greatest wizard in London. Well, in this tower. Well, in this room.	
+mrflex_03	mrflex	hallo	1	You called? Of course you did.	
+mrflex_04	mrflex	hallo	2	Yes, it is me. Try to stay calm.	
+mrflex_05	mrflex	hallo	2	Mr. Flex is here. The problem is as good as gone.	Fingerpistolen
+mrflex_06	mrflex	stil	1	Sunglasses at night? It is called style.	schiebt die Brille herunter, zwinkert
+mrflex_07	mrflex	stil	2	This cloak? It is called swag.	wirft den Umhang
+mrflex_08	mrflex	stil	2	A pointy hat? It is called fashion. Look it up.	
+mrflex_09	mrflex	stil	2	The beard is real. The muscles are magic.	
+mrflex_10	mrflex	stil	1	Boom. Magic muscles.	Bizeps-Pose mit beiden Armen
+mrflex_11	mrflex	stil	3	I woke up like this. Five hundred years ago.	
+mrflex_12	mrflex	tipp	1	A hint? From me? Lucky you.	
+mrflex_13	mrflex	tipp	1	Too easy. For me. For you? We will see.	
+mrflex_14	mrflex	tipp	2	I know the answer. I know all the answers. Here is a small one.	
+mrflex_15	mrflex	tipp	2	I know where the keys are. But where is the fun in that?	
+mrflex_16	mrflex	tipp	2	Watch and learn. Mostly learn.	
+mrflex_17	mrflex	falsch	1	Wrong. But beautifully wrong. Try again.	
+mrflex_18	mrflex	falsch	1	No. But I like your style.	
+mrflex_19	mrflex	falsch	2	Not quite. Even I was wrong once. In 1642.	
+mrflex_20	mrflex	falsch	2	Close! Well. Not close. But brave.	
+mrflex_21	mrflex	falsch	2	Hmm. Try the other one. No, the OTHER other one.	
+mrflex_22	mrflex	richtig	1	Yes! I knew it. I know everything.	
+mrflex_23	mrflex	richtig	1	Legend! … I mean me. But you too.	
+mrflex_24	mrflex	richtig	2	Correct! I taught you that. Probably.	
+mrflex_25	mrflex	richtig	2	Now THAT is magic. Almost as good as mine.	
+mrflex_26	mrflex	mralex	2	Outstanding! You're on fire! … Oh. Sorry. Wrong job.	räuspert sich
+mrflex_27	mrflex	mralex	2	Ka-ching! Nailed it! High five! … Sorry. Wrong game.	
+mrflex_28	mrflex	mralex	2	Fantastic! … Sorry. I say that a lot. It is my job.	
+mrflex_29	mrflex	mralex	2	I'm so proud of you! … Was that too much? That was too much.	
+mrflex_30	mrflex	mralex	3	Listen and repeat! … Sorry. Old habit.	
+mrflex_31	mrflex	mralex	3	Trust me. I am a teach– … a wizard.	
+mrflex_32	mrflex	mralex	3	Homework? In a game? I would never. … Well. Once.	
+mrflex_33	mrflex	mralex	3	Eyes on me, please! … Why did I say that?	
+mrflex_34	mrflex	mralex	3	Great work, everyone! … There is only one of you. Still great.	
+mrflex_35	mrflex	mralex	3	Capital letter. Full stop. … Sorry. I was marking.	tippt mit einem Stift
+mrflex_36	mrflex	gary	1	The orange dog is doing magic again. Stand back.	
+mrflex_37	mrflex	gary	2	He is not a wizard. He is a fox with a hat.	
+mrflex_38	mrflex	gary	3	Gary. Gary. Put the wand down. It is a spoon.	
+mrflex_39	mrflex	alexa	2	It is FLEX. Mister Flex.	nach: Alexa, lights on!
+mrflex_40	mrflex	alexa	3	I do not play music. I AM the music.	nach: Alexa, play a song!
+mrflex_41	mrflex	warten	1	Take your time. I have tea.	trinkt mit abgespreiztem Finger
+mrflex_42	mrflex	warten	2	Still there? Good. I was not sleeping. I was flexing.	
+mrflex_43	mrflex	warten	2	Slowly. Good things take time. Look at me.	
+mrflex_44	mrflex	warten	2	Nothing is lost. It is all in your chest. I checked. Twice.	
+mrflex_45	mrflex	selten	3	I made that feather. With these hands.	Pose
+mrflex_46	mrflex	selten	3	Do you know what is better than magic? Practice. … I hate that it is true.	
+mrflex_47	mrflex	selten	3	One more thing … no. I forgot. I never forget. I chose to forget.	
+mrflex_48	mrflex	klatschen	3	Your turn.	klatscht: lang, kurz, kurz, lang, lang – du klatschst nach
+mrflex_49	mrflex	klatschen	3	Perfect. Now everybody is quiet. I love it.	nach richtigem Rhythmus
+mrflex_50	mrflex	klatschen	3	Almost. Again. I can do this all day. I do.	nach falschem Rhythmus
+mrflex_51	mrflex	legende	4	That was the cloak. Not me.	Pose, der Ärmel reißt
+mrflex_52	mrflex	legende	4	Between us: you are doing really well. Do not tell the fox.	nimmt die Brille ab, ganz ernst und warm
+gary_01	gary	hallo	1	I am Gary the Great! The greatest wizard in London!	wirft den Umhang
+gary_02	gary	hallo	1	Gary the Great, at your service! Applause, please. … No? Later, then.	
+gary_03	gary	hallo	2	You again! My favourite detective. My only detective.	
+gary_04	gary	show	1	Abracadabra! … It needs a minute.	nichts passiert
+gary_05	gary	show	1	I can make this sandwich disappear. Watch. … Magic.	isst es
+gary_06	gary	show	2	Ladies and gentlemen … and Sergeant. Prepare to be amazed.	Ta-daa-Pfoten
+gary_07	gary	show	2	I will now open this door. With MAGIC. … Thank you. Thank you. No photos, please.	drückt die Klinke
+gary_08	gary	show	2	Behold! An empty hat! … Behold! A sandwich!	ein Sandwich fällt heraus
+gary_09	gary	show	2	Is this your card? … Is this your card?	du hast keine Karte gezogen
+gary_10	gary	show	2	I will make the Sergeant disappear. … He is gone!	hält sich die Augen zu
+gary_11	gary	show	2	Silence, please. The magic needs silence.	sein Bauch knurrt
+gary_12	gary	show	2	Ta-daa! … Where is the rabbit? I had a rabbit.	
+gary_13	gary	show	2	Hocus pocus … what comes next? I always forget.	
+gary_14	gary	show	3	And now: the grand finale! … That was the finale.	verbeugt sich, der Hut fällt
+gary_15	gary	show	3	I will now read your mind. … You are thinking: Wow, Gary.	starrt in die Ferne
+gary_16	gary	show	3	Nothing in my left paw. Nothing in my right paw. I have nothing. That is the trick.	
+gary_17	gary	show	3	For my next trick I need a volunteer. And a sandwich. Mostly a sandwich.	
+gary_18	gary	show	3	Pick a card. Any card. … Not that one.	
+gary_19	gary	panne	1	That was on purpose.	
+gary_20	gary	panne	1	Shh! I am being sneaky. … Shh, helmet! Cheeky helmet. Very loud helmet.	CLANG
+gary_21	gary	panne	2	I meant to fall. It is called a magic roll.	
+gary_22	gary	panne	2	My cape is stuck in the door. Again. It is a very clingy cape.	
+gary_23	gary	panne	2	Who put that wall there?	
+gary_24	gary	angst	1	I am not scared. You are scared. Hold my paw.	
+gary_25	gary	angst	1	Did you hear that? … Sorry. That was my tummy.	
+gary_26	gary	angst	2	You go first. I will protect you. From behind.	
+gary_27	gary	angst	2	It is dark. I like the dark. I like it from far away.	
+gary_28	gary	angst	3	Ghosts? Ha! … Is it behind me? Do not tell me.	
+gary_29	gary	essen	1	I love this case. Is there food in this case?	
+gary_30	gary	essen	1	I never take keys. Sandwiches, sometimes. Keys, never.	
+gary_31	gary	essen	2	A great wizard never tells his secrets. Or shares his sandwiches.	
+gary_32	gary	essen	3	Cheese and pickle. The king of sandwiches. I will not discuss this.	
+gary_33	gary	plan	1	I have a plan. It is a bad plan. I love it.	
+gary_34	gary	plan	2	Step one: we go in. Step two: … there is no step two.	
+gary_35	gary	plan	2	Trust me. I am almost a professional.	
+gary_36	gary	flex	2	Mr. Flex is not so great. Sunglasses! At night!	
+gary_37	gary	flex	2	I am NOT an orange dog. I am a ginger wizard.	
+gary_38	gary	flex	3	I can flex too. … Ow. My back.	Pose
+gary_39	gary	name	2	My name? Gary. Just Gary. Why? Who told you?	
+gary_40	gary	name	3	McFox– who? Never heard of him.	pfeift, schaut weg
+gary_41	gary	kommentar	1	I knew that. I knew that before you knew that.	
+gary_42	gary	kommentar	1	Ooh, shiny. No. Focus, Gary. … Ooh, shiny.	
+gary_43	gary	kommentar	2	Write that down, detective. I would. I cannot write.	
+gary_44	gary	selten	3	Dun-dun-dun-DAAA! … I do my own music.	
+gary_45	gary	selten	3	One day they will say: Gary the Great. And I will say: yes.	
+gary_46	gary	legende	4	It WORKED? IT WORKED! Did you see? Did EVERYBODY see?	ein Trick klappt wirklich: eine Blume erscheint
+sergeant_01	sergeant	befehl	1	Report, detective!	
+sergeant_02	sergeant	befehl	1	Detective! Stand up straight. Good. Now find my keys.	
+sergeant_03	sergeant	befehl	1	Nobody panic! That is an order!	
+sergeant_04	sergeant	befehl	2	Seven hundred years. Never late. Not on my watch!	
+sergeant_05	sergeant	befehl	2	Twenty minutes, detective. I am counting. I always count.	
+sergeant_06	sergeant	regel	1	Rule number one: no running. I am not running. I am walking fast.	marschiert auf der Stelle
+sergeant_07	sergeant	regel	1	I do not panic. I panic in an orderly way.	
+sergeant_08	sergeant	regel	2	Fun? We do not do fun here. We do duty.	
+sergeant_09	sergeant	regel	2	Left, right, left, right. Thinking is like marching.	
+sergeant_10	sergeant	regel	2	I never lose things. Things lose me.	
+sergeant_11	sergeant	regel	3	Tea is at four. Trouble is never.	
+sergeant_12	sergeant	hut	1	Where on earth is my hat?	er sitzt auf dem Kopf
+sergeant_13	sergeant	hut	2	Nobody touches my hat. Nobody.	
+sergeant_14	sergeant	hut	3	My hat is not funny. It is a very serious hat.	
+sergeant_15	sergeant	gary	1	FOX!	
+sergeant_16	sergeant	gary	2	FOX! Take off that cape.	
+sergeant_17	sergeant	gary	2	That is not magic. That is a door.	
+sergeant_18	sergeant	gary	3	I am not clapping. I am keeping my hands warm.	
+sergeant_19	sergeant	weich	2	I am not smiling. My face is cold.	der Schnurrbart zuckt
+sergeant_20	sergeant	weich	2	I do not dance. … That is my foot. Not me.	der Fuß wippt im Takt
+sergeant_21	sergeant	weich	2	That was a march. A very happy march.	
+sergeant_22	sergeant	weich	2	Is that cake? No. Duty first. Cake second. … A small piece.	
+sergeant_23	sergeant	weich	2	Good work. Do not tell anyone I said that.	
+sergeant_24	sergeant	weich	3	Mrs Crumb! I … good evening … I must go.	rote Ohren
+sergeant_25	sergeant	weich	3	I was never worried. My moustache was worried.	
+sergeant_26	sergeant	selten	3	I was not humming. That was the wind.	
+sergeant_27	sergeant	selten	3	When I was young, I was also … no. I was never young.	
+sergeant_28	sergeant	selten	3	One, two, three … do NOT move, I am counting!	
+sergeant_29	sergeant	legende	4	… You saw nothing.	er lächelt, eine Sekunde lang
+sergeant_30	sergeant	legende	4	Please.	nur zu Mrs Crumb

@@ -16,6 +16,7 @@ Pflege: Jede neue Idee aus einem Chat kommt hier hinein, auch wenn sie nicht gle
 | 17.11. | EN6 | Keys of the Tower: Erzähler, zweite Runde – 3 Stimmen × 3 Probezeilen (Daniel, Lily, Alice), nicht im Repo | 642 | 282 (Master, ausgezählt × 0,44) | 285 | +1 % | 0,444 |
 | 17.11. | EN6 | Keys of the Tower: Erzähler und Karten neu mit „Best Narrator“ (31 + 21 Zeilen, ohne Akzent-Tag) | 2.855 | 1.256 (Skript, ausgezählt × 0,44) | 1.262 | +0,5 % | 0,442 |
 | 17.11. | EN6 | Keys of the Tower: k1_r3a „Gary bows.“ neu (falsch wie „low“ gesprochen) | 33 | 15 (Skript) | 15 | 0 % | 0,45 |
+| 17.11. | EN6 | Keys of the Tower: k1_r3a, drei Aussprache-Versuche (bowz, bauz, mit Vorsatz „He takes a bow.“), nicht im Repo | 122 | 54 (Master, ausgezählt) | 54 | 0 % | 0,44 |
 
 Credits-Stand 29.10.: **6.000**. **Stand 31.10. (Mr. Alex): 2.000 Credits übrig** – größere Posten nur mit OK. Beobachtung: Eleven v4 kostet nach den Zwischenständen nur **≈ 0,4–0,5 Credits je Zeichen** (23.10.: 11.734 Zeichen → 4.347 Credits; danach 1.391 Zeichen → ≈ 650 Credits). Mit 6.000 Credits sind also grob **12.000 Zeichen** V4 möglich – vor dem 13.11. ist Spielraum für kleine Posten.
 Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13.11. nach Freigabe vertont (Erinnerung ist eingestellt).

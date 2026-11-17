@@ -95,6 +95,9 @@ Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt w
 - **Sprache als Spielmechanik**, vor allem Wendungen (Chunks) statt Einzelwörter; weiterhin: kein Wort ohne Satz, erst Sprache, dann üben, dann Regel (die Regel freiwillig, nicht als Pflichtseite).
 - **Neugier ja, Druck nein:** Geheimnisse, Sammelstücke, Cliffhanger, offene Türen für später; keine Strafen, kein Glücksspiel, keine Verlustangst.
 - **Haltung für Claude:** immer verstehen, was Mr. Alex will und was für seine Schüler das Beste ist; von sich aus das beste Werkzeug für die Aufgabe vorschlagen (Mr. Alex 17.11.: „always do the best job and think about the best tools“).
+- **Mädchen und Jungen mitdenken (Mr. Alex 17.11.):** Bei Mädchen verschiedener Altersstufen ist sehr beliebt, sich frei zu bewegen, die eigene Figur anzuziehen und Möbel aufzustellen. Das im Hinterkopf behalten und in jede Geschichte einbauen (Figur-Teile, eigenes Versteck/Zimmer zum Einrichten, freies Umsehen).
+- **Eine Prise Magie darf immer hinein**, als Andeutung (z. B. die Raben im Tower).
+- **Geheimnis funktioniert immer – always keep them hooked:** offene Fragen stehen lassen, jedes Kapitel endet mit einem Haken, Beliebtes aus Computer- und Handyspielen der Altersgruppe als Prinzip aufgreifen (nie ein bestimmtes Spiel nachbauen).
 - Konzept dazu: `docs/spiele/story-spiele-konzept.md`.
 
 ## Regel von Mr. Alex (8.11.2026) – Blockabschluss

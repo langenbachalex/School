@@ -177,4 +177,4 @@ Wer war die Frau? Warum sieben Haken? Warum ist die Feder warm? Wem gehört der 
 ## Offen für Mr. Alex
 1. Anfang neu (Auftrag „Find my keys“, Gary will den Fall „mit Zauberei“ lösen, Mr. Flex schickt ins Word Gym, eigene Figur mit Namen): trägt das jetzt?
 2. Stimmen die drei Stimmen in den festen Zeilen?
-3. Danach: Deutsch für die Feder (alle Zeilen), einfachere Zweitfassungen der Kernzeilen, dann Vertonung von Kapitel 1.
+3. **Entschieden 17.11.:** Sprüche (221) abgenommen; Deutsch für die Feder (alle Zeilen), einfachere Zweitfassungen der Kernzeilen und Regie-Spalte (Text für ElevenLabs mit Tags) werden gebaut, dann Vertonung von Kapitel 1.

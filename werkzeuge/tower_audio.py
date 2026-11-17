@@ -4,7 +4,8 @@ Quelle: inhalte/abenteuer/tower_kapitel1.tsv und tower_sprueche.tsv, Spalte `reg
 Nicht vertont: Zeilen ohne Regie und Zeilen mit `nur_text`. Zweitfassung (Spalte `einfach`): die Tags vom Anfang der Regie + der einfache Text.
 ` || ` in der Regie = zwei Teile, einzeln erzeugt. Taube: Stille am Ende von Teil 1 gekürzt, zusammengesetzt (Teil 1 Tempo 1,2, Teil 2 1,05).
 Garys Pannen (Mr. Alex 17.11.): zwei getrennte Dateien <id>_1.mp3 und <id>_2.mp3, damit im Spiel das Geräusch dazwischen passt.
-Ziel: app/audio/tower/k1_<id>.mp3, k1_<id>_einfach.mp3, <spruch-id>.mp3 – alle auf gleiche Lautheit gebracht (ffmpeg loudnorm).
+Ziel: app/audio/tower/k1_<id>.mp3, k1_<id>_einfach.mp3, <spruch-id>.mp3 – Lautheit in zwei Durchgängen angeglichen (messen, gezielt verstärken,
+Spitzen −1,5 dB): alle −16 LUFS, der Sergeant −14 (Mr. Alex 17.11.). `--lautheit` gleicht alles Vorhandene neu an (0 Credits), `--messen` misst nur.
 Vorhandene Dateien werden nie überschrieben; nach einem Abbruch einfach neu starten (bezahlte Rohteile bleiben in ROH liegen).
 Stimmen und Einstellungen: docs/spiele/keys-of-the-tower-figuren.md, Abschnitt Stimmen.
 Aufruf: python3 werkzeuge/tower_audio.py --zaehlen [--liste]      (kostet nichts)
@@ -29,7 +30,9 @@ STIMMEN = {  # Figur: (Voice-Id, Tempo)
 }
 TAUBE_TEILE = (1.2, 1.05)                         # Fassung B (Runde 5): Höhepunkt schneller als der Rest
 MODELL, EINSTELLUNGEN = "eleven_v4", {"stability": 0.3, "similarity_boost": 0.75}
-LAUTHEIT = "loudnorm=I=-16:TP=-1.5:LRA=11"
+# Lautheit (Mr. Alex 17.11.): jede Datei auf ±0,5 LU genau, der Sergeant 2 LU lauter als die anderen
+ZIEL_LUFS = {"sonst": -16.0, "sergeant": -14.0}
+SPITZE = 0.841                                    # Spitzenbegrenzung −1,5 dB
 STILLE_WEG = "areverse,silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.08,areverse"
 
 
@@ -110,15 +113,68 @@ def bauen(datei, figur, teile, rohnamen):
             with open(PROTOKOLL, "a", encoding="utf-8") as f:
                 f.write(f"{datei}\t{i}\t{len(text)}\t{'' if k is None else k}\n")
         roh.append(pfad)
-    fertig = os.path.join(ZIEL, datei)
-    aus = ["-ar", "44100", "-b:a", "128k", "-f", "mp3", fertig + ".teil"]
-    if len(roh) == 1:
-        ffmpeg("-i", roh[0], "-af", LAUTHEIT, *aus)
-    else:
-        ffmpeg("-i", roh[0], "-i", roh[1], "-filter_complex",
-               f"[0:a]{STILLE_WEG}[a];[a][1:a]concat=n=2:v=0:a=1,{LAUTHEIT}", *aus)
-    os.replace(fertig + ".teil", fertig)
+    angleichen(roh, os.path.join(ZIEL, datei), figur)
     return kosten, ohne_kopf
+
+
+def lautheit(pfad):
+    """gemessene Lautheit in LUFS (ebur128, ganze Datei)"""
+    aus = subprocess.run(["ffmpeg", "-nostats", "-i", pfad, "-af", "ebur128", "-f", "null", "-"],
+                         capture_output=True, text=True).stderr
+    werte = re.findall(r"I:\s+(-?[\d.]+) LUFS", aus[aus.rfind("Summary"):])
+    return float(werte[0]) if werte else None
+
+
+def angleichen(roh, fertig, figur):
+    """zwei Durchgänge: messen, dann gezielt verstärken (Spitzen höchstens −1,5 dB), nachmessen und nachstellen, bis ±0,3 LU erreicht sind"""
+    ziel = ZIEL_LUFS.get(figur, ZIEL_LUFS["sonst"])
+    wav, tmp = fertig + ".wav", fertig + ".teil"
+    if len(roh) == 1:
+        ffmpeg("-i", roh[0], "-ar", "44100", "-ac", "1", wav)
+    else:
+        ffmpeg("-i", roh[0], "-i", roh[1], "-filter_complex", f"[0:a]{STILLE_WEG}[a];[a][1:a]concat=n=2:v=0:a=1", "-ar", "44100", "-ac", "1", wav)
+    try:
+        ist = lautheit(wav)
+        gain = (ziel - ist) if ist is not None else 0.0
+        for _ in range(5):
+            ffmpeg("-i", wav, "-af", f"volume={gain:.2f}dB,alimiter=limit={SPITZE}:level=false:attack=2:release=40",
+                   "-ar", "44100", "-b:a", "128k", "-f", "mp3", tmp)
+            neu = lautheit(tmp)
+            if neu is None or abs(neu - ziel) <= 0.3:
+                break
+            gain += ziel - neu
+        os.replace(tmp, fertig)
+    finally:
+        os.remove(wav)
+    return neu
+
+
+def neu_angleichen(alle):
+    """--lautheit: alle vorhandenen Aufnahmen aus den Rohteilen neu angleichen (kostet nichts; überschreibt nur die Lautheit)"""
+    fehlt = []
+    for d, fig, t, rohnamen in alle:
+        roh = [os.path.join(ROH, r) for r in rohnamen]
+        fertig = os.path.join(ZIEL, d)
+        if not os.path.exists(fertig):
+            continue
+        if not all(os.path.exists(r) for r in roh):
+            roh = [fertig + ".alt.mp3"]              # Rohteil fehlt: die fertige Datei selbst als Quelle
+            os.replace(fertig, roh[0])
+            fehlt.append(d)
+        angleichen(roh, fertig, fig)
+        if d in fehlt:
+            os.remove(roh[0])
+    if fehlt:
+        print(f"{len(fehlt)} ohne Rohteil, aus der fertigen Datei angeglichen: {fehlt[:8]}")
+
+
+def messen(alle):
+    """--messen: Mittel und Spanne je Figur"""
+    for fig in STIMMEN:
+        w = [lautheit(os.path.join(ZIEL, d)) for d, f, _, _ in alle if f == fig and os.path.exists(os.path.join(ZIEL, d))]
+        w = [x for x in w if x is not None]
+        if w:
+            print(f"  {fig}: {len(w)} Dateien, Mittel {sum(w) / len(w):.1f} LUFS, Spanne {min(w):.1f} bis {max(w):.1f} (Ziel {ZIEL_LUFS.get(fig, ZIEL_LUFS['sonst'])})")
 
 
 def wert(name):
@@ -138,6 +194,10 @@ def main():
     zweit = [s for s in offen if s[0].endswith("_einfach.mp3")]
     print(f"  davon Zweitfassungen: {len(zweit)} offen, {sum(zeichen(s[2]) for s in zweit)} Zeichen;"
           f" in zwei Teilen: {len([s for s in offen if len(s[2]) == 2])}")
+    if "--lautheit" in sys.argv:
+        neu_angleichen(alle)
+    if "--lautheit" in sys.argv or "--messen" in sys.argv:
+        return messen(alle)
     if "--zaehlen" in sys.argv:
         if "--liste" in sys.argv:
             for d, fig, t, _ in offen:

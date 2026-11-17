@@ -249,12 +249,12 @@ Zusammen 221 Sprüche, ca. 9997 Zeichen englischer Text (mit Regie-Tags für Ele
   - *Ich habe nicht geschlafen. Ich habe mit geschlossenen Augen nachgedacht.*
 - `gary_55` · gelegentlich · Ow. Who left my tail there?
   - *Au. Wer hat meinen Schwanz da liegen lassen?*
-- `gary_70` · gelegentlich · Shh! I am sneaking. … The door started it.  *(läuft gegen die Tür: BONK)*
-  - *Pst! Ich schleiche. … Die Tür hat angefangen.*
-- `gary_71` · gelegentlich · Shh! Nobody move. … The bucket started it.  *(tritt in einen Eimer: CLONK)*
-  - *Pst! Keiner bewegt sich. … Der Eimer hat angefangen.*
-- `gary_72` · selten · Shh! I am invisible. … The Sergeant started it.  *(läuft gegen den Sergeant)*
-  - *Pst! Ich bin unsichtbar. … Der Sergeant hat angefangen.*
+- `gary_70` · gelegentlich · Shh! I am sneaking. … The door started it! It was the door!  *(läuft gegen die Tür: BONK)*
+  - *Pst! Ich schleiche. … Die Tür hat angefangen! Es war die Tür!*
+- `gary_71` · gelegentlich · Shh! Nobody move. … The bucket started it! It was the bucket!  *(tritt in einen Eimer: CLONK)*
+  - *Pst! Keiner bewegt sich. … Der Eimer hat angefangen! Es war der Eimer!*
+- `gary_72` · selten · Shh! I am invisible. … The Sergeant started it! It was the Sergeant!  *(läuft gegen den Sergeant)*
+  - *Pst! Ich bin unsichtbar. … Der Sergeant hat angefangen! Es war der Sergeant!*
 
 **angst**
 - `gary_24` · häufig · I am not scared. You are scared. Hold my paw.

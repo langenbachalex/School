@@ -45,6 +45,11 @@ def eintraege():
         dazu(f"k1_{z['id']}_einfach", z["sprecher"], z["einfach"], "Kapitel 1", "einfachere Fassung")
     for z in lesen("tower_sprueche.tsv"):
         zeile(z["id"], z["figur"], z["text"], z["regie"], "Sprüche")
+    proben = os.path.join(AUDIO, "proben")              # Proben zur Auswahl (Unterordner), Text steht in der Zeile ohne _A/_B/_C
+    texte = {z["id"]: z["text"] for z in lesen("tower_sprueche.tsv")}
+    for d in sorted(os.listdir(proben)) if os.path.isdir(proben) else []:
+        if d.endswith(".mp3"):
+            aus.append({"d": "proben/" + d[:-4], "f": d.split("_")[0], "t": texte.get(d[:-4].rsplit("_", 1)[0], ""), "g": "Proben", "h": "Probe " + d[:-4].rsplit("_", 1)[1]})
     for d in sorted(da - benutzt):
         aus.append({"d": d, "f": "?", "t": "(kein Text in den Tabellen gefunden)", "g": "Sonstige", "h": ""})
     return aus

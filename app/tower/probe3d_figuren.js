@@ -62,9 +62,14 @@ export async function ladeFiguren(lader, szene, orte) {
       gesten[knopf] = { a, dauer: a.getClip().duration, gewicht: 0 };
     }
     const kopf = knochen("head"), ruecken = [knochen("spine"), knochen("chest")];
+    // Messwerte fürs Testprogramm: wie weit Kopf und Rumpf aus der Grundhaltung gedreht sind (Grad), wie weit der Hut neben den Füßen steht (m)
+    const lage = (kind, eltern) => eltern.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(kind.getWorldQuaternion(new THREE.Quaternion()));
+    const kopfRuhe = lage(kopf, ruecken[1]), rumpfRuhe = lage(ruecken[1], m);
+    const grad = (q, ruhe) => +(q.angleTo(ruhe) * 180 / Math.PI).toFixed(1);
+    const mass = () => { const p = stueck.kopf.getWorldPosition(new THREE.Vector3()); return { kopfWinkel: grad(lage(kopf, ruecken[1]), kopfRuhe), rumpfWinkel: grad(lage(ruecken[1], m), rumpfRuhe), hutAbstand: +Math.hypot(p.x - anker.position.x, p.z - anker.position.z).toFixed(2) }; };
 
     figuren.push({
-      name, anker, modell: m, z0: ort.z, weg: 0, hin: 1, dreh: 0, modus: "stehen", geht: 0, redet: 0, seit: 0,
+      name, anker, mass, modell: m, z0: ort.z, weg: 0, hin: 1, dreh: 0, modus: "stehen", geht: 0, redet: 0, seit: 0,
       start(modus) { this.modus = modus; this.seit = 0; if (gesten[modus]) gesten[modus].a.reset().play(); },
       bewege(dt, t) {
         const g = this, geste = gesten[g.modus];
@@ -99,7 +104,7 @@ export async function ladeFiguren(lader, szene, orte) {
   }
 
   return {
-    liste: () => figuren.map((g) => ({ name: g.name, modus: g.modus, weg: +g.weg.toFixed(2), ort: [g.anker.position.x, g.anker.position.z] })),
+    liste: () => figuren.map((g) => ({ name: g.name, modus: g.modus, weg: +g.weg.toFixed(2), ort: [g.anker.position.x, g.anker.position.z], ...g.mass() })),
     befehl(modus) { for (const g of figuren) g.start(modus); },
     bewege(dt, t) { for (const g of figuren) g.bewege(dt, t); },
   };

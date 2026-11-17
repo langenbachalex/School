@@ -200,6 +200,17 @@ async function probe3dTest(browser, basis, app, name, fm) {
     }
     await pg.click('#figuren button[data-figur="gehen"]'); await pg.waitForTimeout(1500);
     if (!(await figuren()).every((g) => g.modus === "gehen" && g.weg > 0.05)) fehl.push(`${titel}: Gary geht nicht`);
+    // Fehler 17.11.: beim Reden drehte sich der Kopf in den Körper, beim Verbeugen rotierte der Oberkörper wild – Winkel über die Zeit messen
+    const messe = async (ms) => { const m = { k: 0, r: 0, h: 0 }; for (let z = 0; z < ms; z += 100) { await pg.evaluate(() => window.__probe3d.takt(6, 16.7)); const g = (await figuren())[0]; m.k = Math.max(m.k, g.kopfWinkel); m.r = Math.max(m.r, g.rumpfWinkel); m.h = Math.max(m.h, g.hutAbstand); } return m; };   // rechnet in Schritten wie bei 60 Bildern pro Sekunde, unabhängig vom Tempo des Testrechners
+    await pg.click('#figuren button[data-figur="stehen"]'); await pg.waitForTimeout(600);
+    await pg.click('#figuren button[data-figur="reden"]');
+    let w = await messe(3000);
+    if (w.k > 30 || w.r > 20 || w.h > 0.3) fehl.push(`${titel}: beim Reden dreht sich Gary zu weit (Kopf ${w.k}°, Rumpf ${w.r}°, Hut ${w.h} m neben den Füßen)`);
+    await pg.click('#figuren button[data-figur="verbeugen"]');
+    w = await messe(2600);
+    if (w.r > 80 || w.r < 25 || w.k > 30) fehl.push(`${titel}: Verbeugung stimmt nicht (Rumpf ${w.r}°, erwartet 25–80°; Kopf ${w.k}°)`);
+    await messe(800); w = await messe(500);
+    if (w.r > 20 || w.k > 30) fehl.push(`${titel}: nach der Verbeugung steht Gary nicht wieder gerade (Rumpf ${w.r}°, Kopf ${w.k}°)`);
     const ordner = path.join(__dirname, "..", app.pfad, "tower", "figuren");   // Körper und Bewegungen nur einmal, jede Datei unter 1 MB
     for (const d of fs.readdirSync(ordner)) if (d.endsWith(".glb") && fs.statSync(path.join(ordner, d)).size > 1e6) fehl.push(`${titel}: figuren/${d} ist größer als 1 MB`);
     for (const b of await zuBreit(pg)) fehl.push(`${titel}: ${b}`);

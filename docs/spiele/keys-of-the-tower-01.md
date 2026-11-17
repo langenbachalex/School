@@ -51,9 +51,11 @@
 | 14 | Wandschrank (nur mit Laterne sichtbar) | in the corner | There is a small door in the corner. It is locked. | Schlüsselloch in Form einer Feder – bleibt zu bis Kapitel 4 |
 
 ## C. Der Fuchs – dein Begleiter (frech, verspielt, übertrieben; kommentiert alles; Gegenstück zum strengen Sergeant)
-- F0. "Foxy McFoxface. Yes, that is my real name. Stop laughing."
-- Sprüche aus dem Vorrat (zufällig, sammelbar im Joke Book): "I have a plan. It is a bad plan. I love it." · "Shh! I am being sneaky." *(CLANG.)* "That was the helmet." · "Did you hear that? … Sorry. That was my tummy." · "I am not scared. You are scared. Hold my paw." · "Pew, pew! … What? Detectives say that."
-- Mit dem Sergeant: "FOX!" – "It's McFoxface, sir." – "I know. I am trying not to say it."
+- F0. "I am Gary the Great! The greatest wizard in London!" *(Aus seinem Hut fällt ein Sandwich.)* "That was on purpose."
+- Sprüche aus dem Vorrat (zufällig, sammelbar im Joke Book): "Watch this. Abracadabra!" *(Nichts passiert.)* "It needs a minute." · "I have a plan. It is a bad plan. I love it." · "Shh! I am being sneaky." *(CLANG.)* "That was the helmet." · "Did you hear that? … Sorry. That was my tummy." · "I am not scared. You are scared. Hold my paw."
+- Mit dem echten Zauberer: Der nennt ihn nur "the orange dog". – "I am a FOX. And a wizard!" – "You are a fox with a hat."
+- Mit dem Sergeant: "FOX!" – "It's Gary the Great, sir." – "It is not."
+- **Seitenstrang *The Fox's Real Name*:** Gary heißt in Wahrheit **Foxy McFoxface**. Seine Mutter hat den Namen im Internet gefunden. Das darf niemand wissen; Stück für Stück kommt es heraus (ein Brief von seiner Mutter, ein Namensschild, die Raben wissen es längst).
 - F1. "I never take keys. Sandwiches, sometimes. Keys, never."
 - F2. "Mr Pike is always here at nine. He is never late."
 - F3. "But tonight? No idea. That is very strange."

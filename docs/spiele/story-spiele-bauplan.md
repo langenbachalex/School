@@ -71,4 +71,4 @@ Raben nach König Artus' Hof (Arthur, Guinevere, Lancelot, Morgana, Gawain, Perc
 - **Erscheinen:** Kapitel werden freigespielt; Film mit Haken, dann Schlüssel (Konzept 7c).
 - **Wiederspielen** ist Pflichtbestandteil (Konzept 7d).
 - **Geräte:** Laptops und iPads. Handys spielen für dieses Spiel keine Rolle (Querformat, große Fläche).
-- **Der Fuchs:** Foxy McFoxface. **Der Zauberer:** nach einem Foto von Mr. Alex gezeichnet, etwas Gandalf/Dumbledore; der Name muss ohne Geschichtswissen an „Mr. Alex“ erinnern und zum Schmunzeln bringen – noch offen.
+- **Der Fuchs:** Gary the Great, der Möchtegern-Zauberer; wahrer Name Foxy McFoxface (Seitenstrang). **Für eine spätere Figur aufgehoben:** Colin, der Fuchs bzw. das Tier, das sich für einen Geheimagenten hält („Agent Colin to base. There is no base.“). **Der Zauberer:** nach einem Foto von Mr. Alex gezeichnet, etwas Gandalf/Dumbledore; der Name muss ohne Geschichtswissen an „Mr. Alex“ erinnern und zum Schmunzeln bringen – noch offen.

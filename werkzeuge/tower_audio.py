@@ -33,6 +33,8 @@ MODELL, EINSTELLUNGEN = "eleven_v4", {"stability": 0.3, "similarity_boost": 0.75
 # Lautheit (Mr. Alex 17.11.): jede Datei auf ±0,5 LU genau, der Sergeant 2 LU lauter als die anderen
 ZIEL_LUFS = {"sonst": -16.0, "sergeant": -14.0}
 SPITZE = 0.841                                    # Spitzenbegrenzung −1,5 dB
+# Nähte, die Mr. Alex beanstandet hat (17.11.: taube_18, Teil 2 setzte zu dicht und zu hart ein): zusätzliche Pause in Sekunden
+NAHT_PAUSE = {"taube_18.mp3": 0.14}
 STILLE_WEG = "areverse,silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.08,areverse"
 
 
@@ -132,7 +134,12 @@ def angleichen(roh, fertig, figur):
     if len(roh) == 1:
         ffmpeg("-i", roh[0], "-ar", "44100", "-ac", "1", wav)
     else:
-        ffmpeg("-i", roh[0], "-i", roh[1], "-filter_complex", f"[0:a]{STILLE_WEG}[a];[a][1:a]concat=n=2:v=0:a=1", "-ar", "44100", "-ac", "1", wav)
+        pause = NAHT_PAUSE.get(os.path.basename(fertig))
+        if pause:   # Naht nachgebessert: längere Pause, Teil 2 weich eingeblendet
+            kette = f"[0:a]{STILLE_WEG},apad=pad_dur={pause}[a];[1:a]afade=t=in:st=0:d=0.03[b];[a][b]concat=n=2:v=0:a=1"
+        else:
+            kette = f"[0:a]{STILLE_WEG}[a];[a][1:a]concat=n=2:v=0:a=1"
+        ffmpeg("-i", roh[0], "-i", roh[1], "-filter_complex", kette, "-ar", "44100", "-ac", "1", wav)
     try:
         ist = lautheit(wav)
         gain = (ziel - ist) if ist is not None else 0.0

@@ -436,6 +436,27 @@ async function enKetteGruen(app, pg) {
   return zuVoll("Spiele");
 }
 
+/* ---------- Offline-Speicher aktuell? (17.11.2026: 45 neue Tower-Aufnahmen waren hochgeladen, sw.js aber nicht neu gebaut –
+   die Anhör-Seite kam weiter alt aus dem Speicher). Jede mp3 unter audio/ muss in der Liste von sw.js stehen, jede gelistete Datei
+   muss es geben; die Anhör-Seite (nur für Mr. Alex, soll immer frisch sein) darf nicht im Speicher liegen. Ohne Browser. ---------- */
+function speicherTest(app) {
+  const fehl = [], wurzel = path.join(WURZEL, app.pfad), sw = path.join(wurzel, "sw.js");
+  if (!fs.existsSync(sw)) return fehl;
+  const m = fs.readFileSync(sw, "utf8").match(/const DATEIEN = (\{.*?\});/s);
+  if (!m) return ["Offline-Speicher: Dateiliste in sw.js nicht gefunden"];
+  const liste = JSON.parse(m[1]);
+  const fehlt = Object.keys(liste).filter((d) => d !== "./" && !fs.existsSync(path.join(wurzel, d)));
+  if (fehlt.length) fehl.push(`Offline-Speicher: ${fehlt.length} gelistete Dateien gibt es nicht (z. B. ${fehlt[0]}) – App neu bauen`);
+  const neu = [], lauf = (ordner) => { for (const e of fs.readdirSync(ordner, { withFileTypes: true })) {
+    const p = path.join(ordner, e.name);
+    if (e.isDirectory()) lauf(p); else if (e.name.endsWith(".mp3") && !(path.relative(wurzel, p).split(path.sep).join("/") in liste)) neu.push(e.name);
+  } };
+  if (fs.existsSync(path.join(wurzel, "audio"))) lauf(path.join(wurzel, "audio"));
+  if (neu.length) fehl.push(`Offline-Speicher: ${neu.length} Aufnahmen stehen nicht in sw.js (z. B. ${neu[0]}) – App neu bauen, sonst kommt kein Update an`);
+  if ("tower-anhoeren.html" in liste) fehl.push("Offline-Speicher: die Anhör-Seite liegt im Speicher und bleibt deshalb alt");
+  return fehl;
+}
+
 /* ---------- Ablauf ---------- */
 (async () => {
   const srv = server();
@@ -465,6 +486,7 @@ async function enKetteGruen(app, pg) {
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
         if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));
       }
+      f.push(...speicherTest(app));
       if (!OHNE_UPDATE) f.push(...await updateTest(browser, basis, app));
       console.log(`${f.length ? "✗" : "✓"} ${app.kurz}  (${((Date.now() - start) / 1000).toFixed(0)} s)`);
       for (const x of f) console.log("    - " + x);

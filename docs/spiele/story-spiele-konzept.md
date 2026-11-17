@@ -6,7 +6,7 @@ Dieses Dokument ist Stufe 1: Leitidee, beide Geschichten, Sprachplan, Zweisprach
 
 ## 0. Was Mr. Alex will (17.11.) – gilt für beide Spiele
 - **Erst das Spiel, dann das Lernen:** Abenteuer, Neugier, Witz. Nichts darf nach Arbeitsblatt aussehen; das Lernen ist unauffällig eingewebt. „Sonst baue ich ein Spiel, das niemand spielt.“
-- **Ganz englische Welt, ganz vertont;** Deutsch nur durch Antippen (Karte umdrehen) und durch die Besucher-Figur.
+- **Ganz englische Welt, ganz vertont;** Deutsch nur auf Wunsch (flüsternde Feder, Antippen).
 - **Abenteuer, Seitenstränge, Lacher, ein Hauch Romantik** (äußerst dezent, nie sexuell), **etwas Grusel ist erlaubt.**
 - **Sprache als Spielmechanik:** Türen, Kisten und Zeugen reagieren auf Wendungen. Keine Aufgaben-Überschriften, keine deutschen Arbeitsanweisungen. Die Regel („Detective's Notes“) steht freiwillig im Notizbuch.
 - **Neugier ja, Druck nein:** Geheimnisse, Sammelstücke, Cliffhanger; keine Strafen, kein Glücksspiel, keine Verlustangst (Haltung Trust, Support).
@@ -47,7 +47,7 @@ Rückmeldung Mr. Alex 17.11.: mehr Abenteuer, mehr Witz, Seitenstränge, ein Hau
 - **Akt 2 – The Seventh Raven.** Dann zählt jemand die Raben. Sechs. Es sind immer sieben. Die Legende: Verlassen die Raben den Tower, fällt das Königreich. Und die Tür zum Jewel House steht offen. Jetzt ist es ernst: Geheimtür hinter der Rüstung, ein Gang unter dem Tower, eingeritzte Zeichen alter Gefangener, eine Stimme im Dunkeln.
 - **Akt 3 – The Magpie.** Die Jagd führt zum Traitors' Gate und in einem Ruderboot auf die nächtliche Themse. Der Dieb ist „the Magpie“, die Elster, die alles Glänzende sammelt und nie in den Raven Club durfte – sie saß die ganze Zeit schwarz angemalt als „siebter Rabe“ unter den anderen (wer genau zugehört hat, konnte es merken). Auflösung warm: Sie wollte dazugehören. Um 9:53 die echte Zeremonie zum Mitsprechen („Halt! Who comes there?“ – „The keys.“ – „Whose keys?“ – „King Charles's keys.“ – „Pass. All's well.“), dann die Party, und der Raven Club bekommt ein achtes Mitglied.
 
-**Figuren:** du · **Toni**, Cousin/Cousine aus Saarbrücken (komischer Sidekick, wenige deutsche Zeilen, False Friends) · Sergeant Bearskin · der Fuchs („I rarely follow rules“) · die Taube · die sieben Raben, jeder mit eigenem Spruch · der Geist vom Ghost Club (wartet seit 1899) · Mr Pike · Mrs Crumb, die Köchin · the Magpie.
+**Figuren:** du · Sergeant Bearskin · der Fuchs („I rarely follow rules“) · die Taube · die sieben Raben mit keltischen Namen (Bran, Morrigan, Branwen, Taliesin, Rhiannon, Gwydion – und „Septimus“), jeder mit eigenem Spruch · der Geist vom Ghost Club (wartet seit 1899) · Mr Pike · Mrs Crumb, die Köchin · the Magpie.
 
 **Seitenstränge (freiwillig, zum Entdecken, Belohnung: Sammelstücke, Geheimnisse, Lacher)**
 1. **The Ghost's Letter** (Hauch Romantik, etwas unheimlich): Der Geist wartet seit 1899 – auf einen Brief von Ada, der nie ankam. Wer die Teile findet, liest ihn ihm vor.
@@ -55,7 +55,7 @@ Rückmeldung Mr. Alex 17.11.: mehr Abenteuer, mehr Witz, Seitenstränge, ein Hau
 3. **The Sandwich Thief:** Dem Fuchs fehlt in jedem Raum ein Sandwich. Laufender Witz mit Auflösung.
 4. **The Sergeant's Secret:** Er übt heimlich Tanzen für die Party – und wird rot, wenn Mrs Crumb vorbeikommt.
 5. **Prisoners' Marks:** eingeritzte Zeichen an den Wänden als Code-Rätsel.
-6. **Toni's Postcard:** Toni schreibt nach Hause und braucht deine Hilfe bei den Wendungen.
+6. **The Feather Door:** eine kleine verschlossene Tür im Guard Room mit einem Schlüsselloch in Federform.
 
 **Was neugierig macht (ohne Druck):** Türen, die man früh sieht und erst später öffnen kann · eine Karte, die sich aufdeckt · Sammlung mit „?“-Schatten · Cliffhanger am Ende jedes Raums · Geheimnisse, die nur findet, wer seltsame Dinge antippt · Entscheidungen, die die Szene ändern (wie im Story-Modus) · die Uhr läuft mit der Geschichte, nicht in echter Zeit. Keine Strafen, kein Glücksspiel, kein „Du verpasst etwas“.
 
@@ -74,9 +74,9 @@ Der Krimi passt genau zur Grammatik der Klasse: **present progressive ist die Al
 ### EN9 – „After Hours“ (New York, darf gruseln)
 Die Clique aus „The Lost Map“ (Maya, Jayden, Lucas) wird im **Hudson Museum of American History** eingeschlossen (erfunden, kein Nachbau eines Films). Um Mitternacht geht das Licht aus, irgendwo spielt eine Trompete, und eine Vitrine ist leer. Etwas läuft durch die Säle.
 
-- **Figuren:** Maya, Jayden, Lucas · **Jonas**, Austauschschüler aus Saarbrücken bei Mayas Familie (Sprachmittlung, False Friends) · die Exponate, je eines aus einem Staat (Jazz-Trompeter aus Harlem 1927, Goldgräber, Diner-Kellnerin von der Route 66, Leuchtturmwärter, Astronautenanzug) · „der Nachtwächter, der nie nach Hause ging“.
+- **Figuren:** Maya, Jayden, Lucas · die Exponate, je eines aus einem Staat (Jazz-Trompeter aus Harlem 1927, Goldgräber, Diner-Kellnerin von der Route 66, Leuchtturmwärter, Astronautenanzug) · „der Nachtwächter, der nie nach Hause ging“.
 - **Gleiche Leitlinien wie EN6 (Abschnitt 0):** Abenteuer, Seitenstränge, Lacher, dezente Romantik (z. B. Maya und Lucas, nur angedeutet); Ausarbeitung in Stufe 2.
-- **Grusel mit Maß:** Schritte, Dunkel, Stimmen; kein Blut, keine Gewalt. Humor über Jayden und Jonas.
+- **Grusel mit Maß:** Schritte, Dunkel, Stimmen; kein Blut, keine Gewalt. Humor über Jayden.
 - **Auflösung:** Die Exponate wollen niemandem Angst machen. Eines sucht seit Jahrzehnten etwas, das im Archiv falsch abgelegt wurde; die Clique findet es. Der „Nachtwächter“ ist der Schlüssel dazu. (Genaue Wendung in Stufe 2, mit Mr. Alex abstimmen.)
 - **Anbindung:** 50 Staaten und Landmarks der App, BE/AE (Border Patrol), „The Lost Map“.
 
@@ -100,13 +100,27 @@ Auch hier passt der Krimi zur Grammatik: **past progressive ist die Alibi-Zeit**
 
 Wiederholung ist eingebaut: Jeder Chunk kommt im Kapitel dreimal in verschiedenen Sätzen vor (Scene, Witness, Bericht) und später noch einmal in „The story so far“. Die Karten können in die Boxen des Word Gym wandern.
 
-## 4. Zweisprachig – fünf Bausteine
+## 4. Alle sollen mitkommen – Verstehenshilfen (Fassung 2, 17.11.)
+Mr. Alex: Die Sprache darf anspruchsvoller sein, aber auch schwächere Schüler müssen den Kern mitbekommen, ohne auszubrennen: wiederholen lassen, übersetzen lassen, manches von selbst. Ziel: alle hineinziehen – die einen sind sofort in der Geschichte, andere brauchen mehr Anstoß. Die Besucher-Figuren (Toni, Jonas) entfallen damit.
 
-1. **Sprachmittlung als Figur.** Toni (EN6) und Jonas (EN9) verstehen nicht alles: „Was sagt er?“ Du erklärst es auf Deutsch, oder du sagst dem Sergeant auf Englisch, was Toni will. Das ist Sprachmittlung, wie sie im Lehrplan steht, und macht Deutsch zu einem Teil der Handlung statt zu einer Hilfe am Rand.
-2. **Karte zum Umdrehen.** Jede englische Zeile lässt sich antippen und zeigt Deutsch. G: immer möglich. E: möglich, aber aus – Schalter „English only“.
-3. **Wachsende Lücken (Assimil).** Kapitel 1 zeigt Wendungen zweisprachig nebeneinander; von Kapitel zu Kapitel verschwindet das Deutsche, im Bericht verschwinden dann englische Wörter.
-4. **False Friend des Kapitels.** Toni/Jonas tappt hinein, und daraus wird ein Witz oder eine Spur: „It's a gift from the night guard.“ – „Gift?!“ · chips · become · handy · chef · also.
-5. **Notizbuch Deutsch links, Englisch rechts** (wie in der Französisch-App), mit Ton; das ist zugleich die Vokabel- und Chunk-Liste zum Lernen für den GLN.
+**Von selbst (niemand muss etwas tun)**
+1. **Dinge leuchten, wenn sie genannt werden** – Verstehen über das Bild.
+2. **„Previously …“** am Anfang jedes Kapitels und **„The story so far“** im Notizbuch: kurze Bildfolge in einfachem Englisch.
+3. **Leise Anpassung:** Wer oft nachfragt oder danebenliegt, bekommt unauffällig mehr Hilfe (Schlüsselwörter unter der Zeile, langsameres Tempo). Wer nie Hilfe braucht, bekommt das Angebot „English only“. Keine Stufen-Schilder, keine Bloßstellung. G/E-Niveau bleibt als Grundeinstellung.
+
+**Auf Wunsch, in der Spielwelt**
+4. **Die flüsternde Feder** (EN6) bzw. ein passender Gegenstand in EN9 (z. B. die Taschenlampe des Nachtwächters): an eine Zeile halten, und sie erscheint auf Deutsch. Magie statt Hilfeknopf.
+5. **„Sorry?“ – Again, please. – Slowly, please.** Die eigene Figur fragt nach, die andere wiederholt, beim zweiten Mal langsamer. Nachfragen ist selbst Englisch.
+6. **Ein Wort antippen:** Bild und deutsches Wort erscheinen kurz.
+7. **Kernzeilen in einfacheren Worten:** Bei den etwa acht handlungstragenden Zeilen je Kapitel sagt die Figur es beim Nachfragen noch einmal anders (zweite Aufnahme, nur dort).
+
+**Ohne Scheitern**
+8. Falsche Antwort → Witz und Hinweis; beim dritten Versuch leuchtet die richtige Karte. Nichts geht verloren.
+
+**Zweisprachig bleibt:** Notizbuch Deutsch links, Englisch rechts mit Ton; wachsende Lücken im Fall-Bericht; Deutsch immer nur einen Fingertipp entfernt, aber nie von selbst im Weg.
+
+## 4b. The Den – das eigene Zimmer (Seitenbereich für alle, die bauen und gestalten wollen)
+Ein Raum zum Zurückziehen, jederzeit erreichbar und unabhängig von der Geschichte: Figur umziehen, Zimmer vollständig einrichten (Möbel frei stellen, Farben, Fundstücke), frei bewegen. Möbel und Kleidung kommen aus der Geschichte und aus einem englischen Katalog gegen Coins; alles spricht beim Antippen. Gefundene Raben bzw. Exponate ziehen dort ein. Einzelheiten für EN6: `keys-of-the-tower-01.md`, Abschnitt I. EN9 entsprechend (Nachtlager im Museum).
 
 ## 5. GLN-Formate in der Handlung
 - **true / false / not in the text** wird zur **Zeugen-Probe**: „Hat der Zeuge das gesagt?“ – ja / nein / **hat er nicht gesagt**. Das übt genau die Falle des Formats.
@@ -121,7 +135,6 @@ Formate laut `docs/archiv/gln-formate.md`; GLN-Aufgaben selbst kommen nie ins Re
 > Tower of London. Saturday, quarter past nine.
 > Sergeant Bearskin never runs. Tonight he is running.
 > "The keys are gone!" he shouts. "And Mr Pike is gone too!"
-> Toni looks at you. „Was sagt er?“
 > "At 9:53 we lock the Tower. Every night. For 700 years."
 > "No keys, no ceremony," says the fox. He is eating a sandwich.
 > "Where is my hat?" asks the Sergeant. – "On your head, Sergeant."
@@ -133,14 +146,14 @@ Formate laut `docs/archiv/gln-formate.md`; GLN-Aufgaben selbst kommen nie ins Re
 > The Hudson Museum closed at six. At seven, we were still inside.
 > Jayden had been looking for the bathroom. For forty minutes.
 > "I'm not afraid of the dark," he said. "I'm afraid of what's in it."
-> „Sind wir eingeschlossen?“ Jonas whispered.
+> "Are we locked in?" Lucas whispered.
 > "Locked in," Maya said. "Great. I was looking forward to sleeping tonight."
 > Then the lights went out. Somewhere, a trumpet started playing.
 > The label said: "This trumpet was played in Harlem in 1927."
 > "It has not been played since."
 
 ## 7. Ton-Plan (Schätzung, vor dem Vertonen wird gezählt)
-- Erzähler Mr. Alex; Sergeant Bearskin, Fuchs, Geist wie in London 1–5; Maya/Frauenrollen Jessica, Jayden/Lucas Jeremy wie in „The Lost Map“. Neu zu besetzen: Toni und Jonas (wenige deutsche Zeilen), Mr Pike, die Exponate.
+- Erzähler Mr. Alex; Sergeant Bearskin, Fuchs, Geist wie in London 1–5; Maya/Frauenrollen Jessica, Jayden/Lucas Jeremy wie in „The Lost Map“. Neu zu besetzen: Mr Pike, Mrs Crumb, die Raben, the Magpie, die Exponate.
 - Je Kapitel etwa 2.000–2.500 Zeichen (EN6) bzw. 3.000–3.500 (EN9): Szene, Zeugenaussage, 12 Gegenstands-Sätze, Bericht.
 - Gesamt grob: EN6 7 Kapitel plus Seitenstränge ≈ 17.000–20.000 Zeichen, EN9 5 Kapitel ≈ 15.000–17.500 Zeichen. Bei 0,4–0,5 Credits je Zeichen zusammen rund 13.000–19.000 Credits. **Vorschlag: zuerst nur Kapitel 1 beider Spiele vertonen** (zusammen ≈ 5.500 Zeichen).
 - Werkzeuge: Texte mit `werkzeuge/wortcheck.py` gegen den Wortschatz prüfen; Vertonung mit den vorhandenen Skripten (`story_audio.py`, `story_audio9.py`), nie Vorhandenes überschreiben.
@@ -156,7 +169,7 @@ Formate laut `docs/archiv/gln-formate.md`; GLN-Aufgaben selbst kommen nie ins Re
 
 ## 9. Entscheidungen für Mr. Alex
 1. EN6 in Fassung 2 (drei Akte: Schlüssel → siebter Rabe → Magpie; sechs Seitenstränge) und EN9 (Museum mit Grusel, versöhnliches Ende) so?
-2. Sprachmittlungs-Figuren Toni und Jonas aus Saarbrücken – einverstanden, andere Namen oder Orte?
+2. Verstehenshilfen (Abschnitt 4) und The Den (4b) so?
 3. EN9: erfundenes Museum (empfohlen) oder ein echtes?
 4. Escape-Game-Material: Herkunft (eigenes Material → nachbauen; Verlag → nur Formate übernehmen).
 5. Stufe 2 starten: Kapitel 1 beider Spiele texten?

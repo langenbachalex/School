@@ -98,6 +98,9 @@ Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt w
 - **Mädchen und Jungen mitdenken (Mr. Alex 17.11.):** Bei Mädchen verschiedener Altersstufen ist sehr beliebt, sich frei zu bewegen, die eigene Figur anzuziehen und Möbel aufzustellen. Das im Hinterkopf behalten und in jede Geschichte einbauen (Figur-Teile, eigenes Versteck/Zimmer zum Einrichten, freies Umsehen).
 - **Eine Prise Magie darf immer hinein**, als Andeutung (z. B. die Raben im Tower).
 - **Geheimnis funktioniert immer – always keep them hooked:** offene Fragen stehen lassen, jedes Kapitel endet mit einem Haken, Beliebtes aus Computer- und Handyspielen der Altersgruppe als Prinzip aufgreifen (nie ein bestimmtes Spiel nachbauen).
+- **Alle sollen mitkommen (Mr. Alex 17.11.):** Die Sprache darf anspruchsvoll sein; schwächere Schüler müssen trotzdem den Kern verstehen, ohne auszubrennen – Zeilen wiederholen lassen, übersetzen lassen, manches von selbst (Bild, Rückblick, leise Anpassung). Die einen sind sofort in der Geschichte, andere brauchen mehr Anstoß: alle hineinziehen. Keine erklärenden Hilfsfiguren, die Deutsch sprechen, und keine False-Friend-Witze in Klasse 6 (verwirrt nur).
+- **Ein eigener Raum zum Zurückziehen** gehört dazu: Figur umziehen, Zimmer vollständig einrichten, frei erkunden – als Seitenbereich neben der Geschichte.
+- **Namen dürfen ausgefallen sein** (z. B. keltisch oder lateinisch für die Raben).
 - Konzept dazu: `docs/spiele/story-spiele-konzept.md`.
 
 ## Regel von Mr. Alex (8.11.2026) – Blockabschluss

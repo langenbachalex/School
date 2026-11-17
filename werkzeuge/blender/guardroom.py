@@ -129,6 +129,7 @@ EICHE_HELL = textur("eiche_hell", "dark_wood", "XZ", 0.9, (1.5, 1.05, 0.65))
 RUSS = mat("russ", (0.015, 0.012, 0.01), 1.0)
 EISEN = mat("eisen", (0.07, 0.07, 0.075), 0.5, 0.9)
 STAHL = mat("stahl", (0.70, 0.71, 0.74), 0.28, 1.0)
+SILBER = mat("silber", (0.86, 0.84, 0.80), 0.42, 1.0)
 MESSING = mat("messing", (0.90, 0.62, 0.20), 0.3, 1.0)
 LEDER = mat("leder_braun", (0.16, 0.08, 0.04), 0.45)
 SCHWARZ = mat("leder_schwarz", (0.03, 0.03, 0.035), 0.4)
@@ -533,7 +534,7 @@ modell("tea_set_01", (TXM - 0.50, TYM - 0.05, TZ), 1.9, dreh=R(90), grp="teekann
 for i, x in enumerate((TXM + 0.02, TXM + 0.56)):
     modell("tea_set_01", (x, TYM - 0.16, TZ), 1.9, grp="tassen", teile=["tea_set_01_saucer_circular_03"])
     modell("tea_set_01", (x, TYM - 0.16, TZ + 0.012), 1.9, dreh=R(40 + i * 100), grp="tassen", teile=["tea_set_01_cup_small_01"])
-modell("wooden_spoon", (TXM + 0.29, TYM - 0.24, TZ + 0.02), 1.7, dreh=R(80), grp="tassen", ersatz=STAHL)
+loeffel = modell("wooden_spoon", (TXM + 0.29, TYM - 0.24, TZ + 0.02), 2.1, dreh=R(45), grp="tassen", ersatz=SILBER)   # schraeg, damit man Stiel und Laffe sieht
 KEX, KEY = TXM + 0.30, TYM + 0.22
 modell("brass_candleholders", (KEX, KEY, TZ), 0.9, teile=["brass_candleholder_02"])
 cyl("kerze", 0.022, 0.16, (KEX, KEY, TZ + 0.43), WACHS, verts=12)
@@ -673,6 +674,11 @@ scene.render.use_file_extension = True
 # ---------- 1. Das Bild ----------
 if not NUR_IDS:
     t0 = time.time()
+    if os.environ.get("AUSSCHNITT"):   # z. B. AUSSCHNITT=0.32,0.52,0.33,0.47 (links, rechts, unten, oben): nur diesen Teil gross rechnen, zum Pruefen
+        x0, x1, y0, y1 = [float(v) for v in os.environ["AUSSCHNITT"].split(",")]
+        scene.render.use_border = scene.render.use_crop_to_border = True
+        scene.render.border_min_x, scene.render.border_max_x, scene.render.border_min_y, scene.render.border_max_y = x0, x1, y0, y1
+        scene.render.resolution_percentage = 250
     scene.render.engine = "CYCLES"
     scene.cycles.device = "CPU"
     scene.cycles.samples = SAMPLES
@@ -690,6 +696,8 @@ if not NUR_IDS:
     scene.render.filepath = os.path.join(OUT, "guardroom.jpg")
     bpy.ops.render.render(write_still=True)
     print(f"BILD fertig in {time.time() - t0:.1f} s", flush=True)
+    if os.environ.get("AUSSCHNITT"):
+        sys.exit(0)
 
 # ---------- 2. Tipp-Flaechen: jeder Gegenstand in seiner Farbe, alles andere schwarz ----------
 

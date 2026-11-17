@@ -167,6 +167,7 @@ Reihenfolge nach Mr. Alex: Figuren zuerst. Nach jedem Block gibt es etwas zum Au
 - **Eigene Figuren per Skript in Blender** (wie die Probe): ganz eigener Stil, volle Kontrolle, aber viel Arbeit, bis sie Charme haben.
 - **Freie Grundfiguren mit fertigem Gerüst und Bewegungen** (gemeinfreie Bibliotheken) als Basis, darauf eigene Köpfe, Kleidung und Farben: schneller auf hohem Niveau, dafür ein vorgegebener Grundstil.
 Empfehlung des Masters: beide an **einer** Figur nebeneinander zeigen (Gary), bevor alle gebaut werden – wie bei der Stimmenwahl.
+**Entschieden (Mr. Alex, 17.11., nach der Probe mit drei Garys):** alle Figuren bekommen einen Körper aus „KayKit Adventurers“ (gemeinfrei, 76 Bewegungen, Teile zum Ein- und Ausblenden) und einen eigenen Kopf, per Skript in Blender gebaut wie beim ersten Gary. Die Räume bleiben eigene.
 
 **Weitere Unsicherheiten:** iPad ist noch nicht gemessen · mehrere bewegte Figuren kosten Leistung (auf dem ProBook nachmessen) · der Hof ist größer als ein Raum (Größe der Dateien) · Vertonung der neuen Szenen (Auftakt, Hof) kostet Credits, vorher auszählen.
 

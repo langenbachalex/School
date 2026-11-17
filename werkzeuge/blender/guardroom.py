@@ -378,6 +378,21 @@ for i in range(11):
     box("steg_links", (0.06, 0.07, VH), (-B + 0.03, y, VH / 2), EICHE_S)
     box("steg_rechts", (0.06, 0.07, VH), (B - 0.03, y, VH / 2), EICHE_S)
 
+# Vierte Wand mit der Eingangstuer – nur in der 3D-Fassung (GLTF=1); im gerechneten Bild liegt sie hinter der Kamera
+if os.environ.get("GLTF"):
+    box("wand_vorn", (2 * B + 0.4, 0.2, H), (0, T - 0.1, H / 2), WAND_H)
+    box("taefel_vorn", (2 * B, 0.04, VH), (0, T + 0.02, VH / 2), EICHE_H)
+    box("leiste_vorn", (2 * B, 0.08, 0.07), (0, T + 0.04, VH), EICHE_H)
+    for i in range(12):
+        x = -B + 0.35 + i * 0.66
+        if abs(x) > 0.85:
+            box("steg_vorn", (0.07, 0.06, VH), (x, T + 0.03, VH / 2), EICHE_H)
+    box("eingang_rahmen", (1.55, 0.12, 2.40), (0, T + 0.06, 1.20), EICHE_H)
+    box("eingang_tuer", (1.25, 0.08, 2.20), (0, T + 0.11, 1.10), EICHE_HELL)
+    for z in (0.35, 1.10, 1.85):
+        box("eingang_band", (1.15, 0.09, 0.07), (0, T + 0.12, z), EISEN)
+    torus("eingang_ring", 0.07, 0.013, (0.42, T + 0.17, 1.05), MESSING, rot=(R(90), 0, 0))
+
 # ---------- Kamin mit flachem Tudor-Bogen, Feuer mit Tiefe ----------
 KT = 0.75   # Tiefe der Feuerstelle in den Raum
 box("kamin_l", (0.42, KT, 1.55), (-1.0, -KT / 2, 0.775), STEIN_H, "kamin")

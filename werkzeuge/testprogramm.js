@@ -173,15 +173,23 @@ async function probe3dTest(browser, basis, app, name, fm) {
     await pg.waitForSelector("#buehne[data-bereit]", { timeout: 40000 });
     await pg.evaluate(() => { window.__towerSchnell = true; });
     const ort = await pg.evaluate(() => window.__probe3d.ort("uhr"));
-    await pg.mouse.click(ort.x, ort.y); await pg.waitForTimeout(300);
+    await pg.mouse.click(ort.x, ort.y);   // die Figur geht erst hin (um die Möbel herum), dann spricht der Erzähler
+    await pg.waitForFunction(() => document.getElementById("buehne").dataset.zuletzt, null, { timeout: 20000 }).catch(() => {});
     const zuletzt = await pg.evaluate(() => document.getElementById("buehne").dataset.zuletzt);
-    if (zuletzt !== "uhr") fehl.push(`${titel}: Tipp auf die Uhr trifft „${zuletzt || "nichts"}“`);
+    if (zuletzt !== "uhr") fehl.push(`${titel}: Tipp auf die Uhr führt zu „${zuletzt || "nichts"}“`);
     if (!/clock/i.test(await pg.locator("#text").textContent())) fehl.push(`${titel}: kein Text zur angetippten Uhr`);
     // Boden antippen = dorthin gehen (Bauplan Abschnitt 3: alles geht mit Finger und Maus, nichts nur mit Tasten)
-    const vp = pg.viewportSize(), vorher = await pg.evaluate(() => window.__probe3d.stand());
-    await pg.mouse.click(vp.width * 0.3, vp.height * 0.93); await pg.waitForTimeout(1500);
+    const vorher = await pg.evaluate(() => window.__probe3d.stand());
+    const boden = await pg.evaluate(() => window.__probe3d.boden());
+    if (!boden) fehl.push(`${titel}: keine freie Bodenstelle im Bild`);
+    else await pg.mouse.click(boden.x, boden.y);
+    await pg.waitForTimeout(1500);
     const nachher = await pg.evaluate(() => window.__probe3d.stand());
-    if (Math.hypot(nachher[0] - vorher[0], nachher[1] - vorher[1]) < 0.2) fehl.push(`${titel}: Tipp auf den Boden bewegt die Kamera nicht`);
+    if (Math.hypot(nachher[0] - vorher[0], nachher[1] - vorher[1]) < 0.2) fehl.push(`${titel}: Tipp auf den Boden bewegt die Figur nicht`);
+    for (const k of ["puppenhaus", "augen", "hinten"]) {   // drei Kameras zum Vergleichen
+      await pg.click(`#kameras button[data-kamera="${k}"]`); await pg.waitForTimeout(200);
+      if ((await pg.evaluate(() => document.getElementById("buehne").dataset.kamera)) !== k) fehl.push(`${titel}: Kamera „${k}“ lässt sich nicht wählen`);
+    }
     for (const b of await zuBreit(pg)) fehl.push(`${titel}: ${b}`);
   } catch (e) {
     const meldung = await pg.locator("#laden").textContent().catch(() => "?");

@@ -6,7 +6,7 @@ Aufruf ueber guardroom.py mit GLTF=1 (baut den Raum wie immer, rechnet dann aber
 
 Was passiert:
   1. Alle Teile eines Gegenstands werden zu einem Objekt verbunden (Name = Kennung, z. B. "uhr");
-     der Rest des Raums wird zu "raum_gross" (Waende, Boden, Decke) und "raum_klein" (Moebel, Kleinteile).
+     der Rest des Raums wird zu "raum_gross" (Waende, Boden), "raum_decke" (Decke, Balken) und "raum_klein" (Moebel, Kleinteile).
   2. Jedes Objekt bekommt eine eigene Abwicklung, und Cycles brennt Licht, Schatten und Farbe
      in EINE Textur je Objekt ein. Im Browser muss dann kein Licht mehr gerechnet werden.
   3. Ausgabe: app/tower/raum3d/guardroom.glb (Three.js laedt das) und guardroom3d.json (Kamera, Dinge).
@@ -17,6 +17,7 @@ import os
 import time
 
 import bpy
+from mathutils import Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
@@ -39,6 +40,32 @@ def _dreiecke(ob):
     return sum(len(p.vertices) - 2 for p in ob.data.polygons)
 
 
+def _gehkarte(scene, zelle=0.125, rand=2):
+    """Wo kann die Figur stehen? Raster ueber den Boden: frei ist eine Zelle, wenn von 1,7 m Hoehe nach unten
+    zuerst der Boden kommt (kein Tisch, Stuhl, Kamin, Treppenloch). Hindernisse werden um die Figurbreite vergroessert."""
+    bpy.context.view_layer.update()
+    dg = bpy.context.evaluated_depsgraph_get()
+    raum = scene.objects["raum_gross"]
+    ecken = [raum.matrix_world @ Vector(e) for e in raum.bound_box]
+    x0, x1 = min(e.x for e in ecken), max(e.x for e in ecken)
+    y0, y1 = min(e.y for e in ecken), max(e.y for e in ecken)
+    nx, ny = int((x1 - x0) / zelle), int((y1 - y0) / zelle)
+    frei = [[False] * nx for _ in range(ny)]
+    for j in range(ny):
+        for i in range(nx):
+            hit, ort, *_ = scene.ray_cast(dg, Vector((x0 + (i + 0.5) * zelle, y0 + (j + 0.5) * zelle, 1.7)), Vector((0, 0, -1)))
+            frei[j][i] = bool(hit) and -0.05 < ort.z < 0.06
+    for _ in range(rand):
+        alt = [z[:] for z in frei]
+        for j in range(ny):
+            for i in range(nx):
+                if alt[j][i] and not all(0 <= j + dj < ny and 0 <= i + di < nx and alt[j + dj][i + di]
+                                         for dj in (-1, 0, 1) for di in (-1, 0, 1)):
+                    frei[j][i] = False
+    return {"x0": round(x0, 4), "y0": round(y0, 4), "zelle": zelle,
+            "zeilen": ["".join("1" if f else "0" for f in z) for z in frei]}
+
+
 def ausgeben(scene, cam, ziel, dinge):
     t0 = time.time()
     os.makedirs(OUT, exist_ok=True)
@@ -47,6 +74,9 @@ def ausgeben(scene, cam, ziel, dinge):
     bpy.context.view_layer.update()
     kamera = {"ort": list(cam.matrix_world.translation), "ziel": list(ziel.matrix_world.translation),
               "brennweite": cam.data.lens, "sensor": cam.data.sensor_width}
+
+    lichter = [{"name": o.name, "ort": [round(v, 3) for v in o.matrix_world.translation], "farbe": list(o.data.color), "watt": o.data.energy}
+               for o in scene.objects if o.type == "LIGHT" and o.data.type == "POINT"]
 
     # ---- 1. alles zu Gittern machen, Eltern loesen, je Gegenstand verbinden ----
     for o in scene.objects:                # Lichter heissen z. T. wie Gegenstaende ("laterne"): Namen freimachen
@@ -67,7 +97,10 @@ def ausgeben(scene, cam, ziel, dinge):
 
     gruppen = {}
     for o in geo:
-        g = o.get("gruppe") or ("raum_gross" if max(o.dimensions) > 2.5 else "raum_klein")
+        if o.name.startswith(("decke", "balken", "laengsbalken")):
+            g = "raum_decke"                 # eigene Gruppe: die Puppenhaus-Kamera blendet die Decke aus
+        else:
+            g = o.get("gruppe") or ("raum_gross" if max(o.dimensions) > 2.5 else "raum_klein")
         gruppen.setdefault(g, []).append(o)
     objekte = []
     for g, obs in gruppen.items():
@@ -81,6 +114,8 @@ def ausgeben(scene, cam, ziel, dinge):
     for o in list(scene.objects):          # Lichter bleiben (zum Einbrennen), leere Helfer koennen weg
         if o.type == "EMPTY" and o is not ziel:
             bpy.data.objects.remove(o)
+
+    gehkarte = _gehkarte(scene)
 
     # ---- 2. vereinfachen (nur wenn noetig), abwickeln, einbrennen ----
     scene.render.engine = "CYCLES"
@@ -104,7 +139,7 @@ def ausgeben(scene, cam, ziel, dinge):
     for ob in sorted(objekte, key=lambda o: o.name):
         t1 = time.time()
         raum = ob.name.startswith("raum_")
-        px = PX_RAUM if raum else PX_DING
+        px = (PX_RAUM // 2 if ob.name == "raum_decke" else PX_RAUM) if raum else PX_DING
         _waehle([ob])
         vorher = _dreiecke(ob)
         grenze = MAX_DREIECKE["raum" if raum else "ding"]
@@ -174,7 +209,7 @@ def ausgeben(scene, cam, ziel, dinge):
                               export_yup=True)
     namen = dict(dinge)
     with open(os.path.join(OUT, "guardroom3d.json"), "w", encoding="utf-8") as f:
-        json.dump({"raum": "guardroom", "modell": "guardroom.glb", "kamera": kamera,
+        json.dump({"raum": "guardroom", "modell": "guardroom.glb", "kamera": kamera, "lichter": lichter, "gehkarte": gehkarte,
                    "dinge": [{"id": k, "name": namen[k]} for k, _ in dinge if k in gruppen],
                    "dreiecke": sum(b[2] for b in bericht)}, f, ensure_ascii=False, indent=1)
     fehlt = [k for k, _ in dinge if k not in gruppen]

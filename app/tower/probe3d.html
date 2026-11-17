@@ -4,24 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Guard Room in 3D – technische Probe</title>
-<!-- Technische Probe 17.11.2026 (Keys of the Tower): der Guard Room als echtes 3D im Browser.
-     Raum: raum3d/guardroom.glb aus werkzeuge/blender/tower_gltf.py (Licht eingebrannt). Three.js liegt in lib/ (MIT-Lizenz).
-     Nicht in der App verlinkt; das Spiel selbst (tower.js) ist unveraendert. -->
+<title>Guard Room in 3D – Probe mit Figur und drei Kameras</title>
+<!-- Probe 17.11.2026 (Keys of the Tower): der Guard Room als echtes 3D im Browser, mit einer Spielfigur und drei Kameras zum Vergleichen.
+     Raum: raum3d/guardroom.glb + guardroom3d.json aus werkzeuge/blender/tower_gltf.py (Licht eingebrannt, Gehkarte, Lichter).
+     Figur: figuren/kind.glb aus werkzeuge/blender/tower_kind.py (Gelenke, die diese Seite selbst bewegt).
+     Three.js liegt in lib/ (MIT-Lizenz). Nicht in der App verlinkt; das Spiel selbst (tower.js) ist unveraendert. -->
 <style>
   html, body { margin: 0; height: 100%; background: #0b0705; color: #f3e6d0; font: 16px/1.4 system-ui, sans-serif; overflow: hidden; }
   [hidden] { display: none !important; }
   canvas { display: block; width: 100vw; height: 100vh; height: 100dvh; touch-action: none; cursor: grab; }
   .kasten { pointer-events: none; position: fixed; background: rgba(15, 9, 6, .78); border: 1px solid rgba(243, 230, 208, .25); border-radius: 10px; padding: 8px 12px; }
-  #mess { left: 10px; top: 10px; font-size: 14px; max-width: min(92vw, 420px); }
-  #mess b { font-size: 18px; }
-  #hilfe { left: 50%; transform: translateX(-50%); top: 10px; font-size: 14px; text-align: center; }
-  #text { left: 50%; transform: translateX(-50%); bottom: 18px; width: min(92vw, 640px); text-align: center; font-size: 19px; }
+  #mess { left: 10px; top: 10px; font-size: 13px; max-width: min(60vw, 380px); }
+  #mess b { font-size: 16px; }
+  #kameras { right: 10px; top: 10px; display: grid; gap: 6px; padding: 8px; pointer-events: auto; }
+  #kameras span { font-size: 13px; opacity: .8; }
+  #kameras button { min-height: 46px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
+  #kameras button[aria-pressed="true"] { background: #e9b45a; color: #1b1008; font-weight: 600; }
+  #hilfe { left: 10px; bottom: 18px; font-size: 13px; max-width: min(44vw, 300px); }
+  #text { left: 50%; transform: translateX(-50%); bottom: 18px; width: min(92vw, 560px); text-align: center; font-size: 19px; }
   #text small { display: block; opacity: .75; font-size: 14px; }
   #text:empty { display: none; }
   #laden { inset: 0; display: grid; place-items: center; font-size: 20px; border: 0; border-radius: 0; }
-  #hilfe { max-width: min(92vw, 520px); }
-  @media (max-width: 900px) { #hilfe { top: auto; bottom: 86px; } }
+  @media (max-width: 600px) { #mess { max-width: 46vw; font-size: 11px; } #mess b { font-size: 13px; } }
+  @media (max-width: 1100px) { #hilfe { display: none; } #kameras button { min-height: 44px; padding: 4px 10px; font-size: 14px; } }
 </style>
 <script type="importmap">{ "imports": { "three": "./lib/three.module.min.js" } }</script>
 </head>
@@ -29,7 +34,13 @@
 <canvas id="buehne" aria-label="Guard Room in 3D"></canvas>
 <div id="laden" class="kasten">Der Raum wird geladen …</div>
 <div id="mess" class="kasten" hidden></div>
-<div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = ansehen · zwei Finger oder Mausrad = heranholen</div>
+<div id="kameras" class="kasten" hidden>
+  <span>Kamera</span>
+  <button type="button" data-kamera="hinten" aria-pressed="true">1 · Hinter der Figur</button>
+  <button type="button" data-kamera="puppenhaus" aria-pressed="false">2 · Puppenhaus</button>
+  <button type="button" data-kamera="augen" aria-pressed="false">3 · Mit eigenen Augen</button>
+</div>
+<div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
 <script src="daten.js"></script>
 <script type="module">
@@ -38,7 +49,7 @@ import { GLTFLoader } from "./lib/GLTFLoader.js";
 
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
-const zeige = (fehler) => { $("laden").textContent = fehler; $("laden").hidden = false; };
+const M = THREE.MathUtils;
 
 try {
   const info = await (await fetch("raum3d/guardroom3d.json")).json();
@@ -49,12 +60,15 @@ try {
   const kamera = new THREE.PerspectiveCamera(50, 1, 0.05, 60);
   const ausBlender = ([x, y, z]) => new THREE.Vector3(x, z, -y);   // Blender: Z oben · Browser: Y oben
 
-  const gltf = await new GLTFLoader().loadAsync("raum3d/guardroom.glb");
+  const lader = new GLTFLoader();
+  const [gltf, kindGltf] = await Promise.all([lader.loadAsync("raum3d/guardroom.glb"), lader.loadAsync("figuren/kind.glb")]);
+
+  // ---- Raum: Licht ist eingebrannt, die Textur wird gezeigt, wie sie ist ----
   const dinge = new Map(info.dinge.map((d) => [d.id, d])), netze = [];
   let dreiecke = 0;
   gltf.scene.traverse((o) => {
     if (!o.isMesh) return;
-    const karte = o.material.map;                      // Licht ist eingebrannt: die Textur wird gezeigt, wie sie ist
+    const karte = o.material.map;
     if (karte) karte.anisotropy = renderer.capabilities.getMaxAnisotropy();
     o.material = new THREE.MeshBasicMaterial({ map: karte });
     o.userData.ding = dinge.has(o.name) ? o.name : (o.userData.gruppe && dinge.has(o.userData.gruppe) ? o.userData.gruppe : null);
@@ -62,39 +76,174 @@ try {
     netze.push(o);
   });
   szene.add(gltf.scene);
-
-  // ---- Kamera: Start wie im gerechneten Bild; Blick ueber Drehung (links/rechts) und Neigung (hoch/runter) ----
-  const ort = ausBlender(info.kamera.ort), ziel = ausBlender(info.kamera.ziel);
-  const blick = ziel.clone().sub(ort).normalize();
-  let drehung = Math.atan2(-blick.x, -blick.z), neigung = Math.asin(blick.y);
-  const waagrecht = 2 * Math.atan(info.kamera.sensor / (2 * info.kamera.brennweite));
   const raum = new THREE.Box3().setFromObject(szene.getObjectByName("raum_gross") || gltf.scene);
-  const grenze = { x0: raum.min.x + 0.5, x1: raum.max.x - 0.5, z0: raum.min.z + 0.6, z1: Math.max(raum.max.z - 0.5, ort.z) };
-  const richte = () => {
-    kamera.position.copy(ort);
-    kamera.rotation.set(neigung, drehung, 0, "YXZ");
+  const decke = szene.getObjectByName("raum_decke");
+  const innen = { x0: raum.min.x + 0.55, x1: raum.max.x - 0.55, y0: 0.35, y1: raum.max.y - 0.75, z0: raum.min.z + 0.55, z1: raum.max.z - 0.55 };
+
+  // ---- Gehkarte: wo die Figur stehen kann (aus Blender), Wegsuche um Tisch, Stuehle, Kamin und Treppenloch herum ----
+  const gk = info.gehkarte, NX = gk.zeilen[0].length, NY = gk.zeilen.length;
+  const frei = (i, j) => i >= 0 && j >= 0 && i < NX && j < NY && gk.zeilen[j][i] === "1";
+  const zuZelle = (x, z) => [Math.floor((x - gk.x0) / gk.zelle), Math.floor((-z - gk.y0) / gk.zelle)];
+  const zuOrt = (i, j) => ({ x: gk.x0 + (i + 0.5) * gk.zelle, z: -(gk.y0 + (j + 0.5) * gk.zelle) });
+  function naechsteFreie(x, z) {
+    const [ci, cj] = zuZelle(x, z);
+    let best = null, weit = Infinity;
+    for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
+      if (!frei(i, j)) continue;
+      const d = (i - ci) ** 2 + (j - cj) ** 2;
+      if (d < weit) { weit = d; best = [i, j]; }
+    }
+    return best;
+  }
+  function sicht(a, b) {                               // gerade Linie ohne Hindernis?
+    const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.z - a.z) / (gk.zelle / 2)));
+    for (let k = 0; k <= n; k++) {
+      const [i, j] = zuZelle(a.x + (b.x - a.x) * k / n, a.z + (b.z - a.z) * k / n);
+      if (!frei(i, j)) return false;
+    }
+    return true;
+  }
+  function suchWeg(von, zielZelle) {
+    const start = naechsteFreie(von.x, von.z), key = (i, j) => j * NX + i, zk = key(...zielZelle);
+    const kosten = new Map([[key(...start), 0]]), her = new Map(), offen = [[0, start[0], start[1]]];
+    while (offen.length) {
+      let m = 0;
+      for (let k = 1; k < offen.length; k++) if (offen[k][0] < offen[m][0]) m = k;
+      const [, i, j] = offen.splice(m, 1)[0], k0 = key(i, j);
+      if (k0 === zk) break;
+      for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]]) {
+        const a = i + di, b = j + dj;
+        if (!frei(a, b) || (di && dj && (!frei(i + di, j) || !frei(i, j + dj)))) continue;
+        const neu = kosten.get(k0) + (di && dj ? 1.414 : 1), k1 = key(a, b);
+        if (kosten.has(k1) && kosten.get(k1) <= neu) continue;
+        kosten.set(k1, neu); her.set(k1, k0);
+        offen.push([neu + Math.hypot(a - zielZelle[0], b - zielZelle[1]), a, b]);
+      }
+    }
+    if (!her.has(zk)) return [];
+    const punkte = [];
+    for (let k = zk; k !== undefined; k = her.get(k)) punkte.unshift(zuOrt(k % NX, Math.floor(k / NX)));
+    const glatt = [von];                                // Ecken abkuerzen, wo freie Sicht ist
+    let i = 0;
+    while (i < punkte.length - 1) {
+      let j = punkte.length - 1;
+      while (j > i + 1 && !sicht(glatt[glatt.length - 1], punkte[j])) j--;
+      glatt.push(punkte[j]); i = j;
+    }
+    return glatt.slice(1);
+  }
+
+  // ---- Figur: Gelenke aus kind.glb, bewegt werden sie hier ----
+  const kind = kindGltf.scene;
+  const g = Object.fromEntries(["huefte", "rumpf", "kopf", "bein_l", "bein_r", "knie_l", "knie_r", "arm_l", "arm_r", "ellbogen_l", "ellbogen_r"].map((n) => [n, kind.getObjectByName(n)]));
+  const hueftHoehe = g.huefte.position.y;
+  szene.add(kind);
+  const schatten = new THREE.Mesh(new THREE.CircleGeometry(0.3, 32), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.38, depthWrite: false }));
+  schatten.rotation.x = -Math.PI / 2; szene.add(schatten);
+  // Licht nur fuer die Figur (der Raum hat sein Licht eingebrannt): warmes Grundlicht plus Feuer, Laternen, Kerzen an ihren Plaetzen
+  szene.add(new THREE.HemisphereLight(0xffd2a0, 0x3a1c0c, 0.9));
+  for (const l of info.lichter) {
+    if (l.watt < 20) continue;
+    const p = new THREE.PointLight(new THREE.Color(...l.farbe), l.watt / 12, 0, 2);
+    p.position.copy(ausBlender(l.ort)); szene.add(p);
+  }
+  const startZelle = naechsteFreie(0, raum.max.z - 2.6), startOrt = zuOrt(...startZelle);
+  const figur = { x: startOrt.x, z: startOrt.z, dreh: Math.PI, pfad: [], phase: 0, geht: 0, dann: null, blick: null };
+  const winkelZu = (a, b) => { let d = (b - a) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; };
+
+  function bewegeFigur(dt, t) {
+    const tempo = window.__towerSchnell ? 14 : 1.55;
+    let unterwegs = false;
+    if (figur.pfad.length) {
+      const p = figur.pfad[0], dx = p.x - figur.x, dz = p.z - figur.z, rest = Math.hypot(dx, dz), schritt = tempo * dt;
+      if (rest <= schritt) { figur.x = p.x; figur.z = p.z; figur.pfad.shift(); }
+      else { figur.x += dx / rest * schritt; figur.z += dz / rest * schritt; figur.phase += schritt * 6.6; }
+      if (rest > 0.01) figur.dreh += winkelZu(figur.dreh, Math.atan2(dx, dz)) * Math.min(1, dt * 10);
+      unterwegs = true;
+      if (!figur.pfad.length) { ring.visible = false; if (figur.dann) { const f = figur.dann; figur.dann = null; f(); } }
+    } else if (figur.blick !== null) {
+      figur.dreh += winkelZu(figur.dreh, figur.blick) * Math.min(1, dt * 6);
+    }
+    figur.geht += ((unterwegs ? 1 : 0) - figur.geht) * Math.min(1, dt * 8);     // weich zwischen Stehen und Gehen
+    const s = Math.sin(figur.phase), w = figur.geht, ruhe = 1 - w;
+    g.bein_l.rotation.x = -0.62 * s * w; g.bein_r.rotation.x = 0.62 * s * w;
+    g.knie_l.rotation.x = Math.max(0, Math.cos(figur.phase)) * 0.9 * w; g.knie_r.rotation.x = Math.max(0, -Math.cos(figur.phase)) * 0.9 * w;
+    g.arm_l.rotation.x = 0.5 * s * w; g.arm_r.rotation.x = -0.5 * s * w;
+    g.arm_l.rotation.z = 0.10; g.arm_r.rotation.z = -0.10;
+    g.ellbogen_l.rotation.x = -0.35 * w - 0.08; g.ellbogen_r.rotation.x = -0.35 * w - 0.08;
+    g.huefte.position.y = hueftHoehe + Math.abs(Math.cos(figur.phase)) * 0.025 * w;
+    g.rumpf.rotation.x = 0.06 * w; g.rumpf.rotation.y = 0.10 * s * w;
+    g.rumpf.scale.y = 1 + Math.sin(t / 900) * 0.012 * ruhe;                                           // atmen
+    g.kopf.rotation.y = Math.sin(t / 2300) * 0.22 * ruhe; g.kopf.rotation.x = Math.sin(t / 3100) * 0.05 * ruhe;   // sich umsehen
+    kind.position.set(figur.x, 0, figur.z); kind.rotation.y = figur.dreh;
+    schatten.position.set(figur.x, 0.012, figur.z);
+  }
+
+  // ---- Drei Kameras zum Vergleichen ----
+  const KAMERAS = {
+    hinten: { abst: 3.7, min: 1.6, max: 5.5, hoehe: 1.4, drehung: 0, neigung: 0.3, nMin: -0.15, nMax: 1.2, weit: 74 },       // wie Roblox: nah hinter der Figur, frei drehbar
+    puppenhaus: { abst: 9, min: 5, max: 11, hoehe: 0.9, drehung: 0, neigung: 0.72, nMin: 0.45, nMax: 1.0, dMax: 0.7, weit: 48, mitte: 0.35, ohneDecke: true }, // wie Luigi's Mansion / Sims: von vorn oben in den Raum ohne Decke, gleitet mit
+    augen: { hoehe: 1.26, drehung: 0, neigung: 0, nMin: -1.1, nMax: 1.1, weit: 68 },                                            // wie ein Escape-Spiel: durch die Augen der Figur
   };
-  const groesse = () => {
+  let modus = "hinten";
+  const kamOrt = new THREE.Vector3(), kamZiel = new THREE.Vector3();
+  let kamFrisch = true;
+  function setzeKamera(dt) {
+    const k = KAMERAS[modus];
+    if (modus === "augen") {
+      if (k.schwenk) {                                   // nach dem Hingehen dreht sich der Blick von selbst zum Gegenstand
+        const f = Math.min(1, dt * 4);
+        k.drehung += winkelZu(k.drehung, k.schwenk.d) * f; k.neigung += (k.schwenk.n - k.neigung) * f;
+      }
+      kamera.position.set(figur.x, k.hoehe, figur.z);
+      kamera.rotation.set(-k.neigung, k.drehung, 0, "YXZ");
+      return;
+    }
+    const ziel = new THREE.Vector3(figur.x, k.hoehe, figur.z);
+    if (k.mitte) ziel.lerp(new THREE.Vector3((raum.min.x + raum.max.x) / 2, k.hoehe, (raum.min.z + raum.max.z) / 2), k.mitte);   // etwas zur Raummitte: der Raum bleibt im Bild
+    const hin = new THREE.Vector3(Math.sin(k.drehung) * Math.cos(k.neigung), Math.sin(k.neigung), Math.cos(k.drehung) * Math.cos(k.neigung));
+    let weit = k.abst;                                   // nicht durch Wand, Boden oder Decke: Abstand kuerzen
+    for (const [a, lo, hi] of [["x", innen.x0, innen.x1], ["y", innen.y0, k.ohneDecke ? 9 : innen.y1], ["z", innen.z0, innen.z1]]) {
+      if (hin[a] > 1e-4) weit = Math.min(weit, Math.max(0.4, (hi - ziel[a]) / hin[a]));
+      if (hin[a] < -1e-4) weit = Math.min(weit, Math.max(0.4, (lo - ziel[a]) / hin[a]));
+    }
+    const soll = ziel.clone().addScaledVector(hin, weit);
+    const weich = kamFrisch ? 1 : Math.min(1, dt * (modus === "puppenhaus" ? 3 : 12));   // Puppenhaus gleitet gemuetlich nach
+    kamOrt.lerp(soll, weich); kamZiel.lerp(ziel, weich); kamFrisch = false;
+    kamera.position.copy(kamOrt); kamera.lookAt(kamZiel);
+  }
+  function waehleKamera(neu) {
+    modus = neu; kamFrisch = true;
+    kind.visible = schatten.visible = neu !== "augen";
+    if (decke) decke.visible = !KAMERAS[neu].ohneDecke;     // Puppenhaus: von oben hineinschauen, wie bei den Sims
+    if (neu === "hinten") KAMERAS.hinten.drehung = figur.dreh + Math.PI;        // hinter den Ruecken
+    if (neu === "augen") KAMERAS.augen.drehung = figur.dreh + Math.PI;          // Blick wie die Figur
+    kamera.zoom = 1; groesse();
+    buehne.dataset.kamera = neu;
+    for (const b of document.querySelectorAll("#kameras button")) b.setAttribute("aria-pressed", String(b.dataset.kamera === neu));
+  }
+  for (const b of document.querySelectorAll("#kameras button")) b.addEventListener("click", () => waehleKamera(b.dataset.kamera));
+  function groesse() {
     const b = window.innerWidth, h = window.innerHeight;
     renderer.setSize(b, h, false);
     kamera.aspect = b / h;
-    const w = b >= h ? waagrecht : Math.min(waagrecht, 1.0);     // hochkant: nicht zu weit
-    kamera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(w / 2) / kamera.aspect));
-    if (b < h) kamera.fov = Math.min(kamera.fov, 75);
+    const w = M.degToRad(KAMERAS[modus].weit);          // Blickwinkel waagrecht; hochkant begrenzt
+    kamera.fov = Math.min(M.radToDeg(2 * Math.atan(Math.tan(w / 2) / kamera.aspect)), 78);
     kamera.updateProjectionMatrix();
-  };
+  }
   window.addEventListener("resize", groesse);
-  groesse(); richte();
 
-  // ---- Umsehen (ziehen), Antippen (kurzer Tipp ohne Ziehen) ----
-  const strahl = new THREE.Raycaster(), ton = new Audio();
-  // Gesten nach Bauplan Abschnitt 3 (Vorschlag, wird mit dieser Probe ausprobiert): alles geht mit Finger, Maus und Touchpad gleich.
-  const finger = new Map();
-  let zug = null, spreiz = 0, gehZiel = null;
+  // ---- Gesten (Bauplan Abschnitt 3, entschieden 17.11.): alles geht mit Finger, Maus und Touchpad gleich, kein Steuerkreuz ----
+  const strahl = new THREE.Raycaster(), ton = new Audio(), finger = new Map();
+  let zug = null, spreiz = 0;
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.16, 0.22, 40), new THREE.MeshBasicMaterial({ color: 0xffd58a, transparent: true, opacity: 0.85, depthTest: false }));
   ring.rotation.x = -Math.PI / 2; ring.visible = false; ring.renderOrder = 5; szene.add(ring);
   const abstand = () => { const [a, b] = [...finger.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
-  const hole = (faktor) => { kamera.zoom = THREE.MathUtils.clamp(kamera.zoom * faktor, 1, 3); kamera.updateProjectionMatrix(); };
+  const hole = (faktor) => {                             // naeher / weiter
+    const k = KAMERAS[modus];
+    if (modus === "augen") { kamera.zoom = M.clamp(kamera.zoom * faktor, 1, 3); kamera.updateProjectionMatrix(); }
+    else k.abst = M.clamp(k.abst / faktor, k.min, k.max);
+  };
   buehne.addEventListener("pointerdown", (e) => {
     finger.set(e.pointerId, { x: e.clientX, y: e.clientY });
     buehne.setPointerCapture(e.pointerId);
@@ -109,8 +258,12 @@ try {
     const dx = e.clientX - zug.x, dy = e.clientY - zug.y;
     zug.x = e.clientX; zug.y = e.clientY; zug.weg += Math.abs(dx) + Math.abs(dy);
     if (zug.weg < 8) return;
-    const tempo = THREE.MathUtils.degToRad(kamera.fov) / kamera.zoom / window.innerHeight;
-    drehung += dx * tempo; neigung = THREE.MathUtils.clamp(neigung + dy * tempo, -1.2, 1.2);
+    const k = KAMERAS[modus], tempo = (modus === "augen" ? M.degToRad(kamera.fov) / kamera.zoom : 2.6) / window.innerHeight;
+    if (modus === "augen") { k.schwenk = null; k.drehung += dx * tempo; k.neigung = M.clamp(k.neigung - dy * tempo, k.nMin, k.nMax); }
+    else {
+      k.drehung -= dx * tempo; k.neigung = M.clamp(k.neigung + dy * tempo, k.nMin, k.nMax);
+      if (k.dMax) k.drehung = M.clamp(k.drehung, -k.dMax, k.dMax);
+    }
   });
   const los = (e) => {
     const tipp = finger.size === 1 && zug && zug.weg < 8 && e.type === "pointerup";
@@ -120,19 +273,38 @@ try {
     strahl.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), kamera);
     const treffer = strahl.intersectObjects(netze, false)[0];
     if (!treffer) return;
-    if (treffer.object.userData.ding) return angetippt(treffer.object);
+    if (treffer.object.userData.ding) return geheZuDing(treffer.object);
     const oben = treffer.face.normal.clone().transformDirection(treffer.object.matrixWorld).y > 0.7;
-    if (oben && treffer.point.y < 0.25) {               // Boden: dorthin gehen (bis kurz davor, damit man die Stelle noch sieht)
-      const hin = new THREE.Vector3(treffer.point.x - ort.x, 0, treffer.point.z - ort.z), weit = Math.max(hin.length() - 0.9, 0);
-      hin.normalize().multiplyScalar(weit);
-      gehZiel = { x: THREE.MathUtils.clamp(ort.x + hin.x, grenze.x0, grenze.x1), z: THREE.MathUtils.clamp(ort.z + hin.z, grenze.z0, grenze.z1) };
-      ring.position.set(treffer.point.x, treffer.point.y + 0.02, treffer.point.z); ring.visible = true;
-    }
+    if (oben && treffer.point.y < 0.25) geheZu(treffer.point.x, treffer.point.z, null);
   };
   buehne.addEventListener("pointerup", los);
   buehne.addEventListener("pointercancel", los);
   buehne.addEventListener("wheel", (e) => { e.preventDefault(); hole(e.deltaY < 0 ? 1.1 : 1 / 1.1); }, { passive: false });
 
+  function geheZu(x, z, dann) {
+    const zelle = naechsteFreie(x, z), p = zuOrt(...zelle);
+    figur.pfad = suchWeg({ x: figur.x, z: figur.z }, zelle); figur.dann = dann; figur.blick = null; KAMERAS.augen.schwenk = null;
+    ring.position.set(p.x, 0.02, p.z); ring.visible = figur.pfad.length > 0;
+    if (!figur.pfad.length && dann) { figur.dann = null; dann(); }
+  }
+  function geheZuDing(netz) {                            // hingehen, sich dem Ding zuwenden, dann erst spricht der Erzaehler
+    const mitte = new THREE.Box3().setFromObject(netz).getCenter(new THREE.Vector3());
+    // Stehplatz mit etwas Abstand (bei hohen Dingen wie der Uhr weiter weg, damit man sie sieht), moeglichst nah an der Figur
+    const wunsch = 1.0 + Math.max(0, mitte.y - 1.2), [ci, cj] = zuZelle(mitte.x, mitte.z);
+    let platz = null, best = Infinity;
+    for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
+      if (!frei(i, j) || Math.abs(Math.hypot(i - ci, j - cj) * gk.zelle - wunsch) > 0.2) continue;
+      const p = zuOrt(i, j), d = Math.hypot(p.x - figur.x, p.z - figur.z);
+      if (d < best) { best = d; platz = p; }
+    }
+    if (!platz) platz = { x: mitte.x, z: mitte.z };
+    geheZu(platz.x, platz.z, () => {
+      const dx = mitte.x - figur.x, dz = mitte.z - figur.z;
+      figur.blick = Math.atan2(dx, dz);
+      KAMERAS.augen.schwenk = { d: figur.blick + Math.PI, n: M.clamp(-Math.atan2(mitte.y - KAMERAS.augen.hoehe, Math.hypot(dx, dz)), -1.1, 1.1) };
+      angetippt(netz);
+    });
+  }
   function angetippt(netz) {
     const id = netz.userData.ding, zeile = (window.TOWER_DATEN?.zeilen || []).find((z) => z.d === id && z.s === "erzaehler");
     buehne.dataset.zuletzt = id;
@@ -144,34 +316,19 @@ try {
     if (zeile && zeile.t === 1 && !window.__towerSchnell) { ton.src = `../audio/tower/k1_${zeile.id}.mp3`; ton.play().catch(() => {}); }
   }
 
-  // ---- Tastatur nur als Zugabe (Pfeile, W A S D); alles Noetige geht ohne sie ----
-  const taste = { vor: 0, dreh: 0 };
-  const tasten = { ArrowUp: ["vor", 1], KeyW: ["vor", 1], ArrowDown: ["vor", -1], KeyS: ["vor", -1], ArrowLeft: ["dreh", 1], KeyA: ["dreh", 1], ArrowRight: ["dreh", -1], KeyD: ["dreh", -1] };
-  window.addEventListener("keydown", (e) => { const t = tasten[e.code]; if (t) { taste[t[0]] = t[1]; e.preventDefault(); } });
-  window.addEventListener("keyup", (e) => { const t = tasten[e.code]; if (t) taste[t[0]] = 0; });
   // ---- Bild fuer Bild; nebenbei messen, wie fluessig es laeuft ----
-  let zuletzt = performance.now(), bilder = 0, seit = zuletzt, tiefst = Infinity, jetztWert = 0;
+  let zuletzt = performance.now(), bilder = 0, seit = zuletzt, tiefst = Infinity, jetztWert = 0, ladezeit = 0, bereitSeit = Infinity;
   let karteName = "unbekannt";
   try { const gl = renderer.getContext(), x = gl.getExtension("WEBGL_debug_renderer_info"); if (x) karteName = gl.getParameter(x.UNMASKED_RENDERER_WEBGL); } catch (e) { /* ohne Namen */ }
   const messe = () => {
     $("mess").innerHTML = `<b>${jetztWert} Bilder pro Sekunde</b> (tiefster Wert ${tiefst === Infinity ? "–" : tiefst})<br>` +
       `${Math.round(dreiecke / 1000)} Tsd. Dreiecke · ${window.innerWidth} × ${window.innerHeight} · geladen in ${ladezeit} s<br><small>${karteName}</small>`;
   };
-  let ladezeit = 0, bereitSeit = Infinity;
+  waehleKamera("hinten");
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1); zuletzt = t;
-    drehung += taste.dreh * 1.4 * dt;
-    if (gehZiel && !taste.vor) {
-      const dx = gehZiel.x - ort.x, dz = gehZiel.z - ort.z, rest = Math.hypot(dx, dz), schritt = 2.2 * dt;
-      if (rest <= schritt) { ort.x = gehZiel.x; ort.z = gehZiel.z; gehZiel = null; ring.visible = false; }
-      else { ort.x += dx / rest * schritt; ort.z += dz / rest * schritt; }
-    }
-    if (taste.vor) {
-      gehZiel = null; ring.visible = false;
-      ort.x = THREE.MathUtils.clamp(ort.x - Math.sin(drehung) * taste.vor * 1.8 * dt, grenze.x0, grenze.x1);
-      ort.z = THREE.MathUtils.clamp(ort.z - Math.cos(drehung) * taste.vor * 1.8 * dt, grenze.z0, grenze.z1);
-    }
-    richte();
+    bewegeFigur(dt, t);
+    setzeKamera(dt);
     renderer.render(szene, kamera);
     bilder++;
     if (t - seit >= 1000) {
@@ -182,16 +339,29 @@ try {
   });
 
   ladezeit = (performance.now() / 1000).toFixed(1); bereitSeit = performance.now();   // Zeit seit dem Aufruf der Seite
-  for (const id of ["mess", "hilfe"]) $(id).hidden = false;
+  for (const id of ["mess", "hilfe", "kameras"]) $(id).hidden = false;
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
-  // fuer das Testprogramm: wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { stand: () => [ort.x, ort.z], ort: (id) => {
+  // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
+  window.__probe3d = { stand: () => [figur.x, figur.z], boden: () => {      // eine freie, sichtbare Bodenstelle 1,5 bis 3 m neben der Figur
+    setzeKamera(0); kamera.updateMatrixWorld();
+    for (let j = 0; j < NY; j += 2) for (let i = 0; i < NX; i += 2) {
+      const p = zuOrt(i, j), d = Math.hypot(p.x - figur.x, p.z - figur.z);
+      if (!frei(i, j) || d < 1.5 || d > 3) continue;
+      const s = new THREE.Vector3(p.x, 0, p.z).project(kamera);
+      if (Math.abs(s.x) > 0.7 || Math.abs(s.y) > 0.7 || s.z > 1) continue;
+      strahl.setFromCamera(new THREE.Vector2(s.x, s.y), kamera);
+      const t = strahl.intersectObjects(netze, false)[0];
+      if (t && !t.object.userData.ding && t.point.y < 0.25 && Math.hypot(t.point.x - p.x, t.point.z - p.z) < 0.2) return { x: (s.x + 1) / 2 * window.innerWidth, y: (1 - s.y) / 2 * window.innerHeight };
+    }
+    return null;
+  }, ort: (id) => {
+    setzeKamera(0); kamera.updateMatrixWorld();
     const p = new THREE.Box3().setFromObject(szene.getObjectByName(id)).getCenter(new THREE.Vector3()).project(kamera);
     return { x: (p.x + 1) / 2 * window.innerWidth, y: (1 - p.y) / 2 * window.innerHeight };
   } };
 } catch (e) {
-  zeige("Der Raum lässt sich hier nicht in 3D zeigen: " + e.message);
+  $("laden").textContent = "Der Raum lässt sich hier nicht in 3D zeigen: " + e.message; $("laden").hidden = false;
   throw e;
 }
 </script>

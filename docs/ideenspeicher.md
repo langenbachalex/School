@@ -4,6 +4,12 @@ Hier landen alle Ideen und aufgeschobenen Entscheidungen, damit nichts verloren 
 Pflege: Jede neue Idee aus einem Chat kommt hier hinein, auch wenn sie nicht gleich gebaut wird.
 
 ## Audio-Vormerkliste (ElevenLabs) – **8.11.: Credits aufgefrischt (Mr. Alex), Vertonung wieder frei; die Sperre „erst nach dem 13.11.“ gilt nicht mehr**, sparsam bleiben
+**Credit-Abgleich (Regel Mr. Alex 17.11., `docs/briefing.md`): nach jedem Vertonungslauf eine Zeile – Prognose gegen Ist, damit die Prognosen genauer werden.** Aktueller Satz für die nächste Prognose: **0,44 Credits je Zeichen** (Eleven v4, Tags und Leerzeichen zählen mit).
+
+| Datum | App | Lauf | Zeichen | Prognose | Ist (`Character-Cost`) | Abweichung | Credits je Zeichen |
+|---|---|---|---|---|---|---|---|
+| 17.11. | EN6 | Keys of the Tower: Kapitel 1 + 221 Sprüche, 377 Aufnahmen (Stabilität 0,3, Tempo teils 1,05–1,2) | 28.916 | 12.723 (Skript, 0,44 je Zeichen); Master vorab: rund 12.450 + Zweitfassungen ≈ 12.730 | 12.724 | +0,01 % | 0,440 |
+
 Credits-Stand 29.10.: **6.000**. **Stand 31.10. (Mr. Alex): 2.000 Credits übrig** – größere Posten nur mit OK. Beobachtung: Eleven v4 kostet nach den Zwischenständen nur **≈ 0,4–0,5 Credits je Zeichen** (23.10.: 11.734 Zeichen → 4.347 Credits; danach 1.391 Zeichen → ≈ 650 Credits). Mit 6.000 Credits sind also grob **12.000 Zeichen** V4 möglich – vor dem 13.11. ist Spielraum für kleine Posten.
 Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13.11. nach Freigabe vertont (Erinnerung ist eingestellt).
 31.10. (Freigabe Mr. Alex, kleine Posten): 74 Dateien, **1.390 Zeichen** vertont mit `werkzeuge/runner_audio.py` (Zählen: `--zaehlen`, Grenze 2.500 je Lauf) – Boss 547, Levelstart/-ende 339 (Klasse 9: Start Jeremy, Ende Jessica), Cameos 279, Border Patrol 225. Dateien: `app/klasse9/audio/runner/`, `app/audio/runner/`, `app/klasse9/audio/beae/w_*`.

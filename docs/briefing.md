@@ -144,6 +144,9 @@ Rückmeldungen beim Bau der Spielgrafik-Helden in Klasse 6; so auch für Klasse 
 - **Filme in der Französisch-App (7.11.):** Untertitel zweizeilig – oben Französisch, darunter Deutsch (Satz für Satz, `Runner.szene` mit `textDe`).
 - **Französisch-App: kein Abschreiben (7.11.):** Abschreiben ist ein Prinzip für den Unterricht, in der App (ERB) sinnlos – keine Abschreib-Schritte/-Lückentexte mit Vorlage in Apps bauen.
 
+## Regel Mr. Alex (17.11.2026): Credit-Verbrauch mit der Prognose abgleichen (alle Apps, alle Chats)
+Vor jedem Vertonungslauf steht eine Prognose (Zeichen × Satz je Zeichen), nach dem Lauf der tatsächliche Verbrauch laut Antwortkopf `Character-Cost`. Beides kommt als neue Zeile in die Tabelle „Credit-Abgleich“ im Ideenspeicher (bei der Audio-Vormerkliste), mit Abweichung in Prozent; der Satz der letzten Zeilen dient als Grundlage der nächsten Prognose. Der Bau-Chat meldet Prognose und Ist an den Master. Jedes Vertonungs-Skript summiert `Character-Cost` mit.
+
 ## Regel Mr. Alex (8.11.2026): Vertonung wieder frei
 Die ElevenLabs-Credits sind aufgefrischt; die Sperre „nichts vertonen vor dem 13.11.“ ist aufgehoben. Weiter sparsam: kurze Texte, keine Wiederholungen schon vorhandener Aufnahmen. Für „Parle de toi“ (FR) wünscht Mr. Alex eine Jungen- und eine Mädchenstimme, ersatzweise Mann/Frau.
 

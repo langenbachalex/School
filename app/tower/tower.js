@@ -184,7 +184,7 @@
     const leuchten = el("canvas", { class: "tower-leuchten" });
     const tk = R.dinge.find((d) => d.id === "kleine_tuer");
     const ecke = el("div", { class: "tower-ecke" + (st.laterne ? " hell" : "") });
-    if (tk) Object.assign(ecke.style, { left: (tk.box[0] - 0.1) * 100 + "%", top: (tk.box[1] - 0.08) * 100 + "%", width: (tk.box[2] - tk.box[0] + 0.2) * 100 + "%", height: (tk.box[3] - tk.box[1] + 0.16) * 100 + "%" });
+    if (tk) Object.assign(ecke.style, { left: (tk.box[0] - 0.03) * 100 + "%", top: (tk.box[1] - 0.04) * 100 + "%", width: (tk.box[2] - tk.box[0] + 0.06) * 100 + "%", height: (tk.box[3] - tk.box[1] + 0.08) * 100 + "%" });
     const zaehler = rahmen(bild, ecke, leuchten);
     buehne.classList.add("raum"); // Textfeld oben an der Decke: unten liegen Dinge zum Antippen (Krümel)
     let pixel = null, breit = 0, hoch = 0, lichtAus = 0;

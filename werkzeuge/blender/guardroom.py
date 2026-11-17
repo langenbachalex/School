@@ -420,15 +420,21 @@ for a in range(0, 360, 45):    # Windrose
     box("karte_rose", (0.016, 0.006, lang), (KX + 0.62 + math.sin(R(a)) * lang / 2, KY, KZ - 0.20 + math.cos(R(a)) * lang / 2), TINTE, "karte", rot=(0, R(a), 0))
 schrift("N", (KX + 0.62, KY - 0.01, KZ - 0.05), 0.06, TINTE, "karte")
 
-# Rechts vom Kamin: Wappenschild, Laterne am Eisenarm, Eingangstuer, Partisane in der Ecke, Fass
+# Rechts vom Kamin: Wappenschild, Holzlaterne am Eisenarm, Eingangstuer (vor der Vertaefelung), Partisane in der Ecke, Fass
 modell("kite_shield", (1.80, -0.12, 1.75), 0.72)
-LX, LY, LZ = 2.42, -0.36, 1.22
-box("laterne_arm", (0.04, 0.42, 0.04), (LX, -0.20, LZ + 0.74), EISEN, "laterne")
-box("laterne_stuetze", (0.035, 0.035, 0.36), (LX, -0.05, LZ + 0.58), EISEN, "laterne", rot=(R(-35), 0, 0))
-torus("laterne_ring", 0.035, 0.008, (LX, LY, LZ + 0.70), EISEN, "laterne", rot=(R(90), 0, 0))
-modell("Lantern_01", (LX, LY, LZ), 2.3, grp="laterne")
-cone("laterne_flamme", 0.035, 0.13, (LX, LY, LZ + 0.26), FLAMME_KLEIN, "laterne", verts=12, glatt=True)
-modell("large_castle_door", (3.22, -0.06, 0.0), 0.60)
+LX, LY, LZ = 2.42, -0.40, 1.12
+box("laterne_arm", (0.04, 0.46, 0.04), (LX, -0.21, LZ + 0.84), EISEN, "laterne")
+box("laterne_stuetze", (0.035, 0.035, 0.38), (LX, -0.05, LZ + 0.68), EISEN, "laterne", rot=(R(-35), 0, 0))
+modell("wooden_lantern_01", (LX, LY, LZ), 1.55, grp="laterne")
+cyl("laterne_kerze", 0.03, 0.14, (LX, LY, LZ + 0.16), WACHS, "laterne", verts=12)
+cone("laterne_flamme", 0.03, 0.11, (LX, LY, LZ + 0.29), FLAMME_KLEIN, "laterne", verts=12, glatt=True)
+modell("large_castle_door", (3.22, -0.20, 0.0), 0.60)
+# Zweite, kleine Laterne an der linken Wand ueber der Truhe: hellt die Ecke auf
+EX, EY, EZ = -3.74, -0.95, 1.22
+box("ecklaterne_arm", (0.34, 0.035, 0.035), (-3.84, EY, EZ + 0.60), EISEN)
+modell("wooden_lantern_01", (EX, EY, EZ), 1.1, dreh=R(90))
+cyl("ecklaterne_kerze", 0.022, 0.10, (EX, EY, EZ + 0.11), WACHS, verts=12)
+cone("ecklaterne_flamme", 0.022, 0.08, (EX, EY, EZ + 0.20), FLAMME_KLEIN, verts=12, glatt=True)
 cyl("partisane_schaft", 0.022, 2.5, (3.90, -0.16, 1.22), EICHE_H, rot=(R(4), R(-3), 0), verts=10)
 cone("partisane_klinge", 0.07, 0.42, (3.965, -0.25, 2.66), STAHL, verts=4, rot=(R(4), R(-3), R(45)))
 ball("partisane_quaste", 0.05, (3.955, -0.235, 2.40), ROT, scale=(1, 1, 1.5))
@@ -494,20 +500,34 @@ for i in range(18):
 weich(box("kruste1", (0.20, 0.12, 0.05), (TXM - 0.1, TYM - 0.42, 0.026), BROT, "kruemel", rot=(0, 0, 0.5)), 0.015)
 weich(box("kruste2", (0.16, 0.10, 0.05), (TXM + 0.22, TYM - 0.28, 0.026), BROT, "kruemel", rot=(0, 0, -0.8)), 0.015)
 
-# Stuhl mit der Uniformjacke von Mr Pike ueber der Lehne (dunkelblau, scharlachrote Raender, Messingknoepfe)
-SX, SY = 1.08, -4.25
-modell("WoodenChair_01", (SX, SY, 0.0), 0.56)
-MY, JZ = SY + 0.10, 0.09
-weich(box("jacke", (0.36, 0.11, 0.44), (SX, MY, 0.93 + JZ), BLAU, "mantel"), 0.045)
-for dx in (-0.19, 0.19):
-    ball("jacke_schulter", 0.09, (SX + dx * 0.92, MY, 1.11 + JZ), BLAU, "mantel", scale=(1.1, 0.8, 0.8))
-    cyl("jacke_aermel", 0.062, 0.48, (SX + dx * 1.24, MY, 0.88 + JZ), BLAU, "mantel", rot=(0, R(8 if dx > 0 else -8), 0), verts=16)
-    cyl("jacke_aufschlag", 0.068, 0.09, (SX + dx * 1.41, MY, 0.66 + JZ), ROT, "mantel", rot=(0, R(8 if dx > 0 else -8), 0), verts=16)
-weich(box("jacke_kragen", (0.21, 0.13, 0.07), (SX, MY, 1.17 + JZ), ROT, "mantel"), 0.02)
-weich(box("jacke_saum", (0.365, 0.115, 0.05), (SX, MY, 0.725 + JZ), ROT, "mantel"), 0.015)
-box("jacke_leiste", (0.045, 0.115, 0.38), (SX, MY, 0.94 + JZ), ROT, "mantel")
+# Stuhl, leicht gedreht; die Uniformjacke von Mr Pike haengt ueber der Lehne (dunkelblau, scharlachrote Raender, Messingknoepfe)
+SX, SY, SW = 1.05, -4.25, R(-24)
+modell("WoodenChair_01", (SX, SY, 0.0), (0.80, 0.62, 0.52), dreh=SW)
+LY_ = SY + 0.20          # Ebene der Lehne (vor dem Drehen), Oberkante bei 1,18 m
+jacke = [
+    weich(box("jacke_vorn", (0.44, 0.05, 0.50), (SX, LY_ - 0.05, 0.94), BLAU, "mantel"), 0.02),
+    weich(box("jacke_falte", (0.46, 0.15, 0.06), (SX, LY_, 1.20), BLAU, "mantel"), 0.025),
+    weich(box("jacke_hinten", (0.44, 0.05, 0.42), (SX, LY_ + 0.05, 0.98), BLAU, "mantel"), 0.02),
+    weich(box("jacke_kragen", (0.22, 0.17, 0.06), (SX, LY_, 1.245), ROT, "mantel"), 0.02),
+    weich(box("jacke_saum", (0.445, 0.056, 0.05), (SX, LY_ - 0.05, 0.705), ROT, "mantel"), 0.012),
+    box("jacke_leiste", (0.045, 0.056, 0.44), (SX, LY_ - 0.052, 0.95), ROT, "mantel"),
+]
+for dx in (-1, 1):
+    jacke.append(ball("jacke_schulter", 0.075, (SX + dx * 0.23, LY_ - 0.02, 1.17), BLAU, "mantel", scale=(1.0, 1.0, 0.7)))
+    jacke.append(cyl("jacke_aermel", 0.058, 0.50, (SX + dx * 0.26, LY_ - 0.07, 0.92), BLAU, "mantel", rot=(R(5), R(dx * 5), 0), verts=16))
+    jacke.append(cyl("jacke_aufschlag", 0.064, 0.09, (SX + dx * 0.28, LY_ - 0.09, 0.69), ROT, "mantel", rot=(R(5), R(dx * 5), 0), verts=16))
 for k in range(4):
-    ball("jacke_knopf", 0.021, (SX + 0.05, MY - 0.06, 0.80 + JZ + k * 0.09), MESSING, "mantel")
+    jacke.append(ball("jacke_knopf", 0.02, (SX + 0.05, LY_ - 0.082, 0.80 + k * 0.10), MESSING, "mantel"))
+j_anker = bpy.data.objects.new("jacke_anker", None)
+scene.collection.objects.link(j_anker)
+j_anker.location = (SX, SY, 0)
+bpy.context.view_layer.update()
+for o in jacke:    # Jacke dreht sich mit dem Stuhl
+    mw = o.matrix_world.copy()
+    o.parent = j_anker
+    o.matrix_parent_inverse = j_anker.matrix_world.inverted()
+    o.matrix_world = mw
+j_anker.rotation_euler = (0, 0, SW)
 
 # Fenster in der rechten Wand: Bleirauten, tiefe Steinnische, Fensterbank fuer die Taube
 FY, FZ = -1.5, 2.05
@@ -580,7 +600,8 @@ def licht(name, typ, energie, farbe, loc, rot=(0, 0, 0), groesse=None, weich_=0.
 
 licht("feuer", "POINT", 330, (1.0, 0.34, 0.08), (0, -0.62, 0.72), weich_=0.3)
 licht("feuer_glut", "POINT", 60, (1.0, 0.14, 0.02), (0, -0.80, 0.18), weich_=0.2)
-licht("laterne", "POINT", 110, (1.0, 0.55, 0.20), (LX, LY - 0.22, LZ + 0.30))
+licht("laterne", "POINT", 110, (1.0, 0.55, 0.20), (LX, LY - 0.26, LZ + 0.30))
+licht("ecklaterne", "POINT", 42, (1.0, 0.55, 0.20), (EX + 0.24, EY, EZ + 0.22))
 licht("kerze", "POINT", 26, (1.0, 0.62, 0.25), (KEX, KEY - 0.04, TZ + 0.66), weich_=0.05)
 licht("wandkerze", "POINT", 48, (1.0, 0.58, 0.22), (WKX, -0.42, WKZ + 0.30), weich_=0.05)
 licht("raum", "AREA", 30, (1.0, 0.62, 0.38), (0, -5.0, 3.2), groesse=5.0)

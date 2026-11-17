@@ -2,6 +2,15 @@
 
 Entwurf des Masters nach der Vorgabe von Mr. Alex vom 17.11.: nichts Halbgares, ein richtiges Spiel mit einer Sandbox-Spielwelt, zuerst der Tower of London. Noch nicht freigegeben. Baut auf `story-spiele-konzept.md` (Geschichte, Hilfen, Frust-Regeln), `keys-of-the-tower-orte.md` (acht Orte), `keys-of-the-tower-figuren.md` (Figuren, Stimmen) und `story-spiele-bauplan.md` (Technik) auf und ersetzt nichts davon.
 
+## 0. Rückmeldung Mr. Alex (17.11., abends) – gilt vor dem Text darunter
+- **Der Aufbau trägt:** Hof als Mitte, Schlüssel öffnen die Welt.
+- **Der ganze Tower ist nur EIN Kapitel eines größeren London-Abenteuers.** Weitere Kapitel an anderen Orten: British Museum, Piccadilly Circus, Buckingham Palace und andere. Sprachregelung ab jetzt: **Kapitel = ein Ort in London** (Kapitel 1: Tower of London, „The Keys of the Tower“); die Räume darin (Guard Room, Küche …) heißen **Szenen**. Was bisher „Kapitel 1“ hieß, ist Szene 1 des Tower-Kapitels.
+- **Eigenes Zimmer: ja, schon im Test** – ein anderes Zimmer als der Guard Room. Spezifikation in Abschnitt 6b.
+- **Superhelden:** nicht als Gäste im Hof am Anfang, sondern sie kommen im Verlauf des Abenteuers dazu. Abschnitt 7 ist insoweit überholt.
+- **Kameras:** Die drei Kameras bleiben im Test so wählbar wie in der Probe; die Kinder probieren sie aus.
+- **Der Test:** Der Raum, wie er ist, trägt als Test. Die Kinder sollen den Anfang der Geschichte wirklich sehen und hineingezogen werden. Danach wird gemeinsam weiterentwickelt.
+- **Offen:** die Frage nach dem Weg zu den Figuren (Abschnitt 10) hat Mr. Alex nicht verstanden – neu und klar stellen.
+
 ## 1. Die Vision in drei Sätzen
 Du bist nachts im Tower of London, und er gehört für eine Nacht dir: Du gehst, wohin du willst, redest mit allen, findest Dinge, ziehst dich um und richtest dir ein Versteck ein. Eine Geschichte mit Geheimnis zieht dich von Ort zu Ort, und jeder gelöste Fall gibt dir einen Schlüssel, der ein neues Stück Tower öffnet. Englisch ist dabei kein Aufgabenblatt, sondern das, womit man in dieser Welt etwas erreicht.
 
@@ -42,6 +51,28 @@ Beide Kreise greifen ineinander: Die Geschichte öffnet neue Orte zum Sammeln, u
 - **Verdient und gefunden, nie gekauft:** die Rabenfeder für die Mütze, das Junior-Detective-Abzeichen, Rüstungsteile aus der Waffenkammer, ein Beefeater-Hut. Skins aus dem London Run können als Kleidung wiederkommen.
 - **Spiegel:** Überall, wo ein Spiegel hängt, kann man sich umziehen. Mr. Flex wohnt im Spiegel und hat dazu eine Meinung.
 - **The Den:** das eigene Zimmer unter dem Dach, zum Einrichten mit Fundstücken und Möbeln. Hinter der Federtür später ein zweites.
+
+## 6b. Das eigene Zimmer – „The Den“ (Spezifikation, Entwurf 17.11.)
+**Was es ist:** eine vergessene kleine Wachkammer unter dem Dach, direkt über dem Guard Room. Sie gehört dir und nur dir. Hier erzählt niemand eine Geschichte und niemand will etwas von dir.
+
+**Wie man hinkommt:** über eine schmale Leiter im Guard Room, die am Anfang hochgezogen ist. Am Ende der ersten Szene lässt der Sergeant sie herunter: „Every detective needs an office.“ Das Zimmer ist die Belohnung für den ersten gelösten Fall und der erste Schlüssel, der etwas öffnet. Über die Karte ist es von überall erreichbar.
+
+**Was am ersten Tag darin steht (Test-Fassung):**
+| Ding | Was man damit tut |
+|---|---|
+| Spiegel mit Kleiderhaken | Figur umziehen: Kopf, Oberteil, Hose oder Rock, Schuhe, ein Stück am Hut. Für den Test wenige Teile, darunter die Rabenfeder und das Abzeichen. |
+| Der alte Sessel | erste Möbel-Belohnung; hinsetzen |
+| Leeres Regal mit Vitrine | hier erscheinen die Fundstücke (Glänzendes der Elster, Karten der Orte) |
+| Rabenstange am Fenster | jeder gefundene Rabe sitzt hier; Arthur ist der erste |
+| Fenster | Blick über den Tower bei Nacht und auf die Lichter Londons |
+| Wand mit London-Karte | der Tower ist markiert, die anderen Orte sind „?“ – der Haken für die nächsten Kapitel |
+| Die Federtür | klein, verschlossen, Schlüsselloch in Federform – später das zweite Zimmer |
+
+**Einrichten:** In der Test-Fassung gibt es feste Stellplätze. Man tippt einen Platz an und wählt, was dort stehen soll (zum Beispiel Sessel hier oder dort). Das geht mit dem Finger sicher und sieht immer gut aus. Freies Schieben und Drehen, Farben und ein Katalog mit englischen Möbeln (jedes Stück spricht beim Antippen) kommen danach.
+
+**Wozu es im großen Spiel dient:** Das Zimmer ist dein Zuhause für das ganze London-Abenteuer, nicht nur für den Tower. Figur, Kleider, Fundstücke und Möbel aus allen Kapiteln landen hier. Die London-Karte an der Wand ist der Weg zu den anderen Orten. Besuch kommt von selbst: Gary probiert Tricks, später schauen auch die Superhelden vorbei.
+
+**Was es nicht ist:** kein Pflichtteil, keine Aufgabe, kein Shop. Wer nur die Geschichte will, muss nie hinein.
 
 ## 7. Sammeln
 | Was | Wo | Wozu |

@@ -43,6 +43,9 @@ Soll Mr. Alex selbst etwas am Rechner tun, bekommt er eine vollständige Schritt
 ## Nur ändern, was bemängelt wurde (Regel Mr. Alex, 17.11.2026)
 Bei jeder Überarbeitung (Bilder, Räume, Texte, App) genau die Punkte ändern, die Mr. Alex genannt hat, und sonst nichts. Was er gesehen und nicht beanstandet hat, gilt als abgenommen. Eigene Verbesserungsideen als Vorschlag in die Rückmeldung schreiben und auf sein OK warten. Sagt er „erst zurückmelden“, nichts bauen, nur antworten.
 
+## Anrede und Fragen (Regel Mr. Alex, 17.11.2026)
+Mr. Alex wird geduzt. Fragen an ihn sind ganze, klare Sätze, keine Stichworte oder Rumpfsätze: sagen, worum es geht, was die Möglichkeiten sind und was sie für ihn bedeuten. Keine Fachwörter ohne Erklärung.
+
 ## Orts-Szenen
 Jeder Ort hat drei Ebenen: Bild (Szene mit Runner-Zeichnungen), Ton (Geräusch oder Sprache), kleines Foto. Einzelheiten: `.claude/skills/orts-szenen/SKILL.md`.
 

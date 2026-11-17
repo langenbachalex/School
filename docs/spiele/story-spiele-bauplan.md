@@ -8,14 +8,26 @@ Wie beim Runner (`app/klasse9/runner.js`, eine Datei für alle drei Apps) entste
 ## 2. Die sechs Bausteine
 | Baustein | Was er tut | Woraus |
 |---|---|---|
-| **Raum-Ansicht** | breites Bild zum Schieben, Gegenstände antippbar, Leuchten beim Nennen | gerechnetes Bild aus Blender + automatisch erzeugte Tipp-Flächen |
+| **Raum-Ansicht** | **seit 17.11.: echter 3D-Raum zum Umsehen und Bewegen, Gegenstände direkt antippbar** (vorher: breites Bild zum Schieben) | glTF aus Blender mit eingebranntem Licht, Three.js (Abschnitt 3) |
 | **Zeilen-System** | spielt Zeilen mit Ton, zeigt Text; Feder (Deutsch), „Sorry?“ (noch einmal, langsamer), einfachere Zweitfassung bei Kernzeilen | eine Tabelle je Kapitel |
 | **Notizbuch** | Karten (Deutsch links, Englisch rechts, Ton), „The story so far“, Fall-Bericht mit Lücken, Detective's Notes | aus derselben Tabelle |
 | **Begleiter und Zauberer** | Fuchs kommentiert; Zauberer (Mr. Alex) im Zauberspiegel gibt auf Antippen Tipps | Zeilen mit Auslöser („wenn Gegenstand 3 angetippt“, „wenn 60 s nichts passiert“) |
 | **The Den** | eigenes Zimmer: Figur umziehen, Möbel stellen, Fundstücke | vorhandene Figur-Zeichnung (`zeichneFigur`, Skins), Möbelbilder aus Blender |
 | **Karte und Fortschritt** | Orte mit „?“, Seitenstränge, gefundene Raben, Entscheidungen | Spielstand im vorhandenen Siegel |
 
-## 3. Der Weg eines Raums (der wichtigste technische Trick)
+## 3. Der Weg eines Raums – NEU seit 17.11.: echtes 3D im Browser
+**Grundsatzentscheidung Mr. Alex 17.11.:** Die Räume laufen als echtes 3D im Browser (Three.js mit glTF-Modellen, Blender baut die Modelle) – wie am 15.11. ursprünglich geplant. Das gerechnete Standbild war nur ein Test. Die frühere Festlegung „gerechnete Bilder statt echtem 3D“ (unten, Abschnitte 2 und 7) kam vom Master aus Vorsicht wegen der Schul-Laptops und war nie seine Entscheidung („Die Laptops schaffen das schon“).
+1. **Blender, lokal auf AlexPC:** `werkzeuge/blender/guardroom.py` baut den Raum vollständig in 3D (Modelle und Texturen von Poly Haven, CC0, über `modelle_holen.py`); dazu `tower_jacke.py`, `tower_figuren.py`.
+2. **Licht vorrechnen und einbrennen:** Die Stimmung (Kerzen, Kamin, Fenster) wird in Blender gerechnet und in die Oberflächen gebacken; der Browser muss kein Licht rechnen.
+3. **Raum als glTF in den Browser:** frei umsehen und bewegen, Gegenstände direkt antippen (statt Tipp-Flächen auf einem Bild).
+4. **Figuren live:** mit Gerüst für Gesten und Gesichtsformen für Mimik. Mr. Alex: Die Figuren sind das Wichtigste, dann Mimik und Gestik.
+5. **Zuerst eine technische Probe** (`/load Keys of the Tower 3D`, neuer lokaler Chat): der jetzige Raum mit eingebranntem Licht im Browser, umsehen, einen Gegenstand antippen – auf Schul-Laptop und iPad ausprobieren, bevor etwas umgebaut wird. Three.js (frei, rund 1 MB) darf geladen werden.
+6. **Reihenfolge danach:** Figuren · Mimik und Gestik · Außenszene am Tower für den Anfang · Feuer · zuletzt das stille Mitschreiben auf dem Gerät.
+7. **Bleibt nutzbar:** Texte, Ton, Spiellogik (`app/tower/tower.js`), Testprogramm-Weg; die Bildfassung bleibt vorerst bestehen (Kachel nur mit `?tower`).
+
+**Risiken des neuen Wegs, vor dem Umbau mit der Probe klären:** Bildrate auf den Schul-Laptops (1366×768, eingebaute Grafik) und iPads · Größe je Raum (Modelle und gebackene Texturen statt 300 KB Bild; Kapitel weiter erst beim Betreten laden) · Bedienung mit Maus, Touchpad und Finger · das Testprogramm muss 3D ohne Grafikkarte prüfen können.
+
+### Früherer Weg (bis 17.11., nur noch für die Bildfassung)
 1. **Blender, lokal:** Raum aus freien Modellen (Kenney, Quaternius, Poly Haven – gemeinfrei) zusammenstellen, Licht setzen.
 2. **Ein Skript rechnet drei Dinge auf einmal:** das Bild · je Gegenstand eine Maske (für die Tipp-Fläche und das Leuchten) · eine kleine Datei mit Namen und Lage jedes Gegenstands. Niemand zeichnet Tipp-Flächen von Hand.
 3. **Im Handy ist es nur ein Bild mit Flächen:** läuft auf alten Geräten, bleibt klein (geschätzt 200–400 KB je Raum), geht offline.
@@ -55,7 +67,7 @@ Grundlage ist das Probe-Skript `werkzeuge/blender/bigben.py` (15.11.).
 | Zu viel Text, zu wenig Tun | je Zeile höchstens ein Satz am Stück, alle 20–30 Sekunden etwas zum Antippen |
 | Ton wird teuer | erst Kapitel 1; Zweitfassungen nur für Kernzeilen; vor jedem Lauf zählen |
 | App wird zu groß | Kapitel nachladen, Bilder klein halten |
-| Schwächere Schul-Laptops | gerechnete Bilder statt echtem 3D |
+| Schwächere Schul-Laptops | **seit 17.11.:** Licht vorrechnen und einbrennen, technische Probe auf Schul-Laptop und iPad vor jedem Umbau (vorher: gerechnete Bilder statt echtem 3D – aufgehoben von Mr. Alex) |
 | Aussprache der Namen | Probehören, Lautschrift |
 | Zu viele Baustellen gleichzeitig | ein Bau-Chat zur Zeit; der Den kommt nach der Probe |
 

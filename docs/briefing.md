@@ -118,6 +118,9 @@ Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt w
 - **Aus dem Unterricht ins Spiel:** z. B. der Klatsch-Rhythmus (lang, kurz, kurz, lang, lang) statt Schimpfen – als seltenes Ereignis.
 - **Jede Geschichte braucht einen Helden oder eine Heldin und einen klaren Auftrag** gleich am Anfang (z. B. „Find my keys“). Die Kinder wählen eine Figur (Mädchen oder Junge), passen sie an und geben ihr einen Namen; die Geschichte spricht sie passend an.
 - **Vor ElevenLabs liest Mr. Alex alle Texte**, und bei der Vertonung achtet er selbst darauf, dass der Ton der Figur stimmt (begeistert, sarkastisch, lässig, übertrieben – alles ist einstellbar).
+- **Akzente passend zum Ort (Mr. Alex 17.11.):** Geschichten in England nur mit englischen Stimmen (britisch, notfalls australisch), nie amerikanisch; Geschichten in den USA mit amerikanischen Stimmen. Bei falschem Akzent lässt sich der Ton nicht beurteilen.
+- **Stimmen wählen:** immer drei Proben je Stimme vorlegen, bei mehreren Stimmen dieselben drei Zeilen; besonders Zeilen mit Wendung (Pause vor der Pointe, Tonwechsel mitten im Satz) vorab testen.
+- **Namen für Figuren:** englische Namen nach heutiger Häufigkeit in England, keine fremden und keine, die deutsch wirken.
 - **„Hinterlegen“ (Wort von Mr. Alex)** = auf Englisch „keep it on file“: dauerhaft als Vorgabe festhalten und künftig von selbst beachten. Sagt Mr. Alex „hinterlegen“ oder „keep that in the back of your mind“, kommt es in dieses Briefing.
 - Konzept dazu: `docs/spiele/story-spiele-konzept.md`, Bauplan: `docs/spiele/story-spiele-bauplan.md`.
 

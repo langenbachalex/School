@@ -116,7 +116,7 @@ sergeant_16	sergeant	gary	2	FOX! Take off that cape.
 sergeant_17	sergeant	gary	2	That is not magic. That is a door.	
 sergeant_18	sergeant	gary	3	I am not clapping. I am keeping my hands warm.	
 sergeant_19	sergeant	weich	2	I am not smiling. My face is cold.	der Schnurrbart zuckt
-sergeant_20	sergeant	weich	2	I do not dance. … That is my foot. Not me.	der Fuß wippt im Takt
+sergeant_20	sergeant	weich	2	I do not dance. … That is my FOOT. Not me.	der Fuß wippt im Takt
 sergeant_21	sergeant	weich	2	That was a march. A very happy march.	
 sergeant_22	sergeant	weich	2	Is that cake? No. Duty first. Cake second. … A small piece.	
 sergeant_23	sergeant	weich	2	Good work. Do not tell anyone I said that.	
@@ -187,7 +187,7 @@ mrflex_70	mrflex	start	2	Get pumped up in the Word Gym first. Then solve the mys
 mrflex_71	mrflex	start	2	Back from the gym? I can see it. Look at that brain.	
 sergeant_39	sergeant	befehl	1	You. Can you find things? Good. Find my keys.	zeigt auf dich
 mrflex_72	mrflex	mralex	2	Good morning, everyone! … It is night. Never mind.	
-mrflex_73	mrflex	mralex	2	It's a no.	ganz ruhig, endgültig – wenn du nach der Lösung fragst
+mrflex_73	mrflex	mralex	2	It's a no. And it stays a no.	ganz ruhig, endgültig – wenn du nach der Lösung fragst
 mrflex_74	mrflex	mralex	3	Can I have the answer? It's a no. A hint? It's a yes.	
 mrflex_75	mrflex	mralex	3	Good morning, everyone! … Everyone is one fox and you. Good morning anyway.	
 gary_69	gary	detektiv	1	The keys are not in this barrel. I checked. Magic, I know.	

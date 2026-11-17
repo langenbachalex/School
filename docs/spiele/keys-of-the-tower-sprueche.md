@@ -64,7 +64,7 @@ Zusammen 221 Sprüche, ca. 9959 Zeichen. Bis auf zwölf Probe-Aufnahmen ist nich
 - `mrflex_63` · selten · Keep going! Keep it up! … I am not a poster. I am a wizard.
 - `mrflex_64` · selten · Hands up if you … no. No hands. Carry on.
 - `mrflex_72` · gelegentlich · Good morning, everyone! … It is night. Never mind.
-- `mrflex_73` · gelegentlich · It's a no.  *(ganz ruhig, endgültig – wenn du nach der Lösung fragst)*
+- `mrflex_73` · gelegentlich · It's a no. And it stays a no.  *(ganz ruhig, endgültig – wenn du nach der Lösung fragst)*
 - `mrflex_74` · selten · Can I have the answer? It's a no. A hint? It's a yes.
 - `mrflex_75` · selten · Good morning, everyone! … Everyone is one fox and you. Good morning anyway.
 
@@ -243,7 +243,7 @@ Zusammen 221 Sprüche, ca. 9959 Zeichen. Bis auf zwölf Probe-Aufnahmen ist nich
 
 **weich**
 - `sergeant_19` · gelegentlich · I am not smiling. My face is cold.  *(der Schnurrbart zuckt)*
-- `sergeant_20` · gelegentlich · I do not dance. … That is my foot. Not me.  *(der Fuß wippt im Takt)*
+- `sergeant_20` · gelegentlich · I do not dance. … That is my FOOT. Not me.  *(der Fuß wippt im Takt)*
 - `sergeant_21` · gelegentlich · That was a march. A very happy march.
 - `sergeant_22` · gelegentlich · Is that cake? No. Duty first. Cake second. … A small piece.
 - `sergeant_23` · gelegentlich · Good work. Do not tell anyone I said that.

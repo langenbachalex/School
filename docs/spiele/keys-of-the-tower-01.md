@@ -1,65 +1,74 @@
-# The Keys of the Tower – Kapitel 1 „It's gone!“ (Guard Room) · Textentwurf Fassung 2 vom 17.11.2026, noch nicht freigegeben
+# The Keys of the Tower – Kapitel 1 „It's gone!“ (Guard Room) · Textentwurf Fassung 3 vom 17.11.2026, noch nicht freigegeben
 
-**Status:** Entwurf des Masters zum Gegenlesen durch Mr. Alex. Nichts vertont, nichts gebaut. Konzept: `story-spiele-konzept.md`, Regeln: `docs/briefing.md` („Regeln 17.11. – Spiele“).
+**Status:** Entwurf des Masters zum Gegenlesen durch Mr. Alex. Nichts vertont, nichts gebaut. Figuren: `keys-of-the-tower-figuren.md` · Orte und Geschichte: `keys-of-the-tower-orte.md` · Vorrat an Sprüchen: `inhalte/abenteuer/tower_sprueche.tsv` · Konzept: `story-spiele-konzept.md`.
 
-**Geändert nach Rückmeldung Mr. Alex (17.11.):** Sprache etwas reicher · Toni und der „become“-Witz gestrichen · Verstehenshilfen in der Spielwelt (Feder, „Sorry?“) · Raben nach König Artus' Hof · Fuchs als frecher Begleiter · Zauberer mit der Stimme von Mr. Alex als Tippgeber · eigenes Zimmer zum Einrichten und Umziehen.
+**Fassung 3:** mit den neuen Stimmen (Sergeant Bearskin streng, Gary the Great als Begleiter, Mr. Flex als Tippgeber), freiem Anfang vor der ersten Tür, Truhe, Film mit Haken und dem Zufallsspiel zum Wiederkommen. Zeilen, die fest zur Handlung gehören, stehen hier; alles, was rotiert, kommt aus dem Vorrat.
 
-**Sprache in diesem Kapitel:** KERN Ortsangaben als Wendungen (on the wall, under the bench, next to, on the shelf, above the fireplace, behind the clock, between the cups, in the corner, at the window, down the stairs) · there is / there are · Uhrzeit. WIEDERHOLT: Häufigkeit (never, always, sometimes), he/she/it + s, do/does mit Kurzantwort, Adjektive. ALLTAGSWENDUNGEN neu: What's going on? · No idea. · Hurry up! · Guess what! · as always · How strange. · Sorry? · Again, please. · Slowly, please. DARÜBER HINAUS: present progressive in einigen Sätzen (is running, is eating, is sitting, is singing) als Vorgriff auf Kapitel 2.
+**Sprache in diesem Kapitel:** KERN Ortsangaben als Wendungen (on the wall, under the bench, next to, on the shelf, above the fireplace, behind the clock, between the cups, in the corner, at the window, down the stairs) · there is / there are · Uhrzeit. WIEDERHOLT: Häufigkeit (never, always, sometimes), he/she/it + s, do/does mit Kurzantwort, Adjektive. ALLTAGSWENDUNGEN: What a shame. · No idea. · Hurry up! · Guess what! · as always · How strange. · Watch this. · Sorry? · Again, please. · Slowly, please. DARÜBER HINAUS: present progressive in einigen Sätzen als Vorgriff auf Kapitel 2.
 
-**Was man im Raum tun kann:** frei umsehen (Raum lässt sich schieben), alles antippen, mit Fuchs und Taube reden, Dinge mitnehmen. Keine Aufgaben-Überschriften; die Namen der Abschnitte unten sind nur für uns.
+**Gilt überall:** Laptop und iPad im Querformat · gesprochene Zeilen sperren nie und werden nicht weggetippt – man kann weitermachen, während die Stimme spricht · das Spiel speichert nach jedem Schritt · keine Aufgaben-Überschriften (die Abschnittsnamen hier sind nur für uns).
 
-## A. Ankunft (Erzähler Mr. Alex; wörtliche Rede von den Figuren)
+## A. Vor der Tür – für alle frei (ca. 2 Minuten; Erzähler Mr. Alex, wörtliche Rede von den Figuren)
 1. Tower of London. Saturday night, quarter past nine.
 2. Sergeant Bearskin never runs. Tonight he is running like mad.
-3. "The keys are gone!" he shouts. "And nobody can find Mr Pike!"
-4. "What's going on?" asks the fox. He is eating a sandwich.
+3. "I am not running!" he shouts. "I am walking fast!"
+4. "The keys are gone! And nobody can find Mr Pike!"
 5. "At 9:53 we lock the Tower. Every single night."
-6. "For seven hundred years. We are never late. Not once."
-7. "No keys, no ceremony," says the fox. "What a shame."
-8. "Where on earth is my hat?" – "On your head, Sergeant."
-9. "Right. Here is your badge, detective. You have thirty-eight minutes."
-10. "Hurry up! And don't trust the fox."
-11. He runs out. The door slams. Something moves at the window.
-12. A black feather falls to the floor. You pick it up. It is warm.
+6. "For seven hundred years. Never late. Not on my watch!"
+7. A fox in a pointy hat jumps out of a barrel.
+8. "Ta-daa! Gary the Great! The greatest wizard in London!"
+9. "FOX! Get out of that barrel!" – "I am out, sir. That was the trick."
+10. "Where on earth is my hat?" – "On your head, sir."
+11. "Right. Here is your badge, detective. You have thirty-eight minutes."
+12. "And do NOT trust the fox." – "I am standing right here."
+13. He marches off. Fast. Something moves at the window.
+14. A black feather falls to the floor. You pick it up. It is warm.
 
-*Du bekommst das Abzeichen „Junior Detective“ und die **Feder** (siehe Verstehenshilfen).*
+*Du bekommst das Abzeichen „Junior Detective“ und die Feder.*
+
+**Der Spiegel an der Wand leuchtet auf – Mr. Flex** (Liegestuhl, Sonnenbrille, Tee):
+- M1. "Mr. Flex. Wizard. Genius. Very modest."
+- M2. "That feather? I made it. With these hands." *(Bizeps-Pose.)*
+- M3. "Hold it to any words. It whispers. You're welcome."
+- M4. "The door opens for people who train. One round of Word Gym. Off you go."
+- M5. "I will wait. I have tea."
+
+**Die erste Tür:** Der Guard Room ist zu. Der Schlüssel kostet eine Runde Word Gym heute oder die erledigte Hausaufgabe; ein Rabe bringt ihn. Hat man ihn: Gary stellt sich vor die Tür – "I will now open this door. With MAGIC." *(Du schließt auf.)* "Thank you. Thank you. No photos, please."
 
 ## Verstehenshilfen in diesem Kapitel (alle in der Spielwelt, nichts davon kostet etwas)
-- **Mr. Flex, der Zauberer (Stimme Mr. Alex) – immer antippbar:** Sein Bild sitzt in einem kleinen Zauberspiegel am Bildrand. Wer nicht weiterweiß, tippt ihn an und bekommt einen frechen Tipp, nie die Lösung. Beispiele: "I am the greatest wizard in London. Well, in this tower. Well, in this room." · "A hint? From me? Fine. Pigeons see everything. Ask one." · "Look behind things. People hide things behind things. I do."
-- **Die flüsternde Feder** (vom Zauberer gemacht): Halte die Feder an eine Zeile, und sie „flüstert“ sie auf Deutsch (Text erscheint). Das ist die Prise Magie und ersetzt Toni.
-- **„Sorry?“:** Deine Figur kann jederzeit nachfragen – *Sorry? · Again, please. · Slowly, please.* Die Figur wiederholt die Zeile, beim zweiten Mal langsamer.
-- **Dinge leuchten, wenn sie genannt werden:** Sagt jemand „behind the clock“, schimmert die Uhr kurz.
-- **Das Notizbuch erzählt mit:** „The story so far“ als kurze Bildfolge in einfachem Englisch, jederzeit nachzulesen.
-- **Kein Scheitern:** Bei einer falschen Antwort reagiert die Figur mit einem Witz und einem Hinweis; beim dritten Versuch leuchtet die richtige Karte.
+- **Mr. Flex – immer antippbar** im Spiegel am Bildrand: ein Tipp in drei Stufen, nie die Lösung (Leitern in Abschnitt G).
+- **Die flüsternde Feder:** an eine Zeile halten, und sie erscheint auf Deutsch.
+- **„Sorry?“** – *Again, please. · Slowly, please.* Die Figur wiederholt, beim zweiten Mal langsamer.
+- **Dinge leuchten, wenn sie genannt werden.**
+- **Die Truhe („your chest“)** steht im Raum: Alles Gefundene fliegt hinein und bleibt. Mr. Flex: "Nothing is lost. It is all in your chest. I checked. Twice."
+- **Kein Scheitern:** falsche Antwort → Witz und Hinweis; beim dritten Versuch leuchtet die richtige Karte.
 
-## B. Der Raum (antippen: erster Tipp = Satz, zweiter Tipp = Reaktion)
+## B. Der Raum (antippen: erster Tipp = Satz des Erzählers, zweiter Tipp = Reaktion)
 | Nr | Gegenstand | Wendung | Satz (gesprochen) | Zweiter Tipp / Folge |
 |---|---|---|---|---|
-| 1 | Schlüsselhaken | on the wall | There are seven hooks on the wall, but no keys. | Fox: "Seven hooks. Funny number, isn't it?" |
-| 2 | Stiefel | under the bench | There is a boot under the bench. Just one. | – |
-| 3 | Tanzschuh | next to the boot | Right next to the boot there is a dancing shoe. How strange. | Fox: "Don't look at me. I don't dance." → *The Sergeant's Secret* |
-| 4 | Helm | on the shelf | The helmet is on the shelf. It is five hundred years old. | Fox setzt ihn auf: "I can't see a thing!" |
-| 5 | Laterne | next to the door | There is a lantern next to the door. Take it with you. | Gegenstand: Laterne (leuchtet dunkle Ecken aus, öffnet später den Tunnel) |
-| 6 | Uhr | above the fireplace | The clock is above the fireplace. It says twenty past nine. | tickt lauter, je später es wird |
-| 7 | Teekanne | on the table | There is a teapot on the table. It is still warm. | "Still warm. Somebody was here a minute ago." |
-| 8 | Tassen | between the cups | There is a spoon between the cups. Two cups! | Fox: "Mr Pike never has visitors. Never." |
-| 9 | Krümel | under the table | There are crumbs under the table. Sandwich crumbs. | Fox: "Not mine. I never leave crumbs." → *The Sandwich Thief* |
-| 10 | Karte | on the wall | There is an old map of the Tower on the wall. | Karte öffnet sich: sieben Orte, sechs mit „?“ |
-| 11 | Mantel | on the chair | Mr Pike's coat is on the chair. His hat is missing. | – |
+| 1 | Schlüsselhaken | on the wall | There are seven hooks on the wall, but no keys. | Gary: "Seven hooks. Funny number, isn't it?" |
+| 2 | Stiefel | under the bench | There is a boot under the bench. Just one. | Gary: "One boot. A thief with one leg? Or a silly thief with two?" |
+| 3 | Tanzschuh | next to the boot | Right next to the boot there is a dancing shoe. How strange. | Gary: "Don't look at me. I don't dance. I do magic." → *The Sergeant's Secret* |
+| 4 | Helm | on the shelf | The helmet is on the shelf. It is five hundred years old. | Gary setzt ihn auf: "I can't see a thing! Is it MORE night now?" *(CLANG.)* "Shh, helmet! Cheeky helmet." |
+| 5 | Laterne | next to the door | There is a lantern next to the door. Take it with you. | Mr. Flex schnippt: "Watch this." *(Sie geht an.)* "You're welcome." – Gegenstand: Laterne |
+| 6 | Uhr | above the fireplace | The clock is above the fireplace. It says twenty past nine. | Der Sergeant ruft von draußen: "I am counting, detective! I always count!" |
+| 7 | Teekanne | on the table | There is a teapot on the table. It is still warm. | Gary: "Still warm. Somebody was here a minute ago. I am a genius." |
+| 8 | Tassen | between the cups | There is a spoon between the cups. Two cups! | Gary: "Mr Pike never has visitors. Never." |
+| 9 | Krümel | under the table | There are crumbs under the table. Sandwich crumbs. | Gary: "Not mine. I never leave crumbs. I eat the crumbs." → *The Sandwich Thief* |
+| 10 | Karte | on the wall | There is an old map of the Tower on the wall. | Karte öffnet sich: acht Orte, sieben mit „?“ |
+| 11 | Mantel | on the chair | Mr Pike's coat is on the chair. His hat is missing. | Gary: "No coat, but a hat. That is a man in a hurry." |
 | 12 | Fenster | at the window | A pigeon is sitting at the window. She looks excited. | Die Taube redet (Abschnitt D) |
 | 13 | Kamin | in the fireplace | There is a piece of paper in the fireplace. Very old paper. | Brief-Teil 1: "… wait for me at the gate. Yours for ever, A." → *The Ghost's Letter* |
-| 14 | Wandschrank (nur mit Laterne sichtbar) | in the corner | There is a small door in the corner. It is locked. | Schlüsselloch in Form einer Feder – bleibt zu bis Kapitel 4 |
+| 14 | Kleine Tür (nur mit Laterne sichtbar) | in the corner | There is a small door in the corner. It is locked. | Gary: "I will open it with magic." *(Nichts.)* "It needs a minute. Or a key." → *The Feather Door* |
+| 15 | Truhe | by the wall | This is your chest. What goes in, stays in. | öffnet die Sammlung |
 
-## C. Der Fuchs – dein Begleiter (frech, verspielt, übertrieben; kommentiert alles; Gegenstück zum strengen Sergeant)
-- F0. "I am Gary the Great! The greatest wizard in London!" *(Aus seinem Hut fällt ein Sandwich.)* "That was on purpose."
-- Sprüche aus dem Vorrat (zufällig, sammelbar im Joke Book): "Watch this. Abracadabra!" *(Nichts passiert.)* "It needs a minute." · "I have a plan. It is a bad plan. I love it." · "Shh! I am being sneaky." *(CLANG.)* "That was the helmet." · "Did you hear that? … Sorry. That was my tummy." · "I am not scared. You are scared. Hold my paw."
-- Mit dem echten Zauberer: Der nennt ihn nur "the orange dog". – "I am a FOX. And a wizard!" – "You are a fox with a hat."
-- Mit dem Sergeant: "FOX!" – "It's Gary the Great, sir." – "It is not."
-- **Seitenstrang *The Fox's Real Name*:** Gary heißt in Wahrheit **Foxy McFoxface**. Seine Mutter hat den Namen im Internet gefunden. Das darf niemand wissen; Stück für Stück kommt es heraus (ein Brief von seiner Mutter, ein Namensschild, die Raben wissen es längst).
+## C. Gary the Great – redet dazwischen, wann er will
+Feste Zeilen dieses Kapitels:
 - F1. "I never take keys. Sandwiches, sometimes. Keys, never."
 - F2. "Mr Pike is always here at nine. He is never late."
 - F3. "But tonight? No idea. That is very strange."
 - F4. "Ask the pigeon. She sees everything. Sadly, she never stops talking."
+Dazu zufällig aus dem Vorrat (Anlässe *show*, *panne*, *essen*, *kommentar*), z. B.: "Abracadabra! … It needs a minute." · "I can make this sandwich disappear. Watch. … Magic." · "Sniff, sniff. I smell a clue. Or cheese. Probably cheese."
 
 ## D. Die Taube am Fenster (Hören; sie redet schnell und gern)
 - P1. "Coo! I sit at this window every night. I see everything."
@@ -70,42 +79,63 @@
 - P6. "Then they go down the stairs. Down, not out!"
 - P7. "And guess what: he is singing. Mr Pike never sings!"
 
-**Der Fuchs glaubt ihr nicht** – "I don't trust pigeons. Does she really say that?" Drei Antworten: *Yes, she does. · No, she doesn't. · She doesn't say.*
-| Der Fuchs meint | Richtig |
-|---|---|
-| "Mr Pike has the keys in his hand." | Yes, she does. |
-| "The bag is on the table." | No, she doesn't. (on his back) |
-| "The woman is the cook." | She doesn't say. |
-| "He hides something under the clock." | No, she doesn't. (behind the clock) |
-| "They go down the stairs." | Yes, she does. |
+**Gary glaubt ihr nicht** – "I don't trust pigeons. They never clap. Does she really say that?" Drei Antworten: *Yes, she does. · No, she doesn't. · She doesn't say.*
+| Gary meint | Richtig | Die Taube danach |
+|---|---|---|
+| "Mr Pike has the keys in his hand." | Yes, she does. | "Thank you!" |
+| "The bag is on the table." | No, she doesn't. (on his back) | "On his BACK. Listen, fox!" |
+| "The woman is the cook." | She doesn't say. | "Did I say that? I did not say that." |
+| "He hides something under the clock." | No, she doesn't. (behind the clock) | "BEHIND. Coo!" |
+| "They go down the stairs." | Yes, she does. | "Down, not out!" |
 
 ## E. Hinter der Uhr
 - E1. There is a note behind the clock.
 - E2. "Don't look for the keys. Look for the cake. – P."
-- E3. "A cake? Now?" says the fox. "I like this case."
+- E3. "A cake? Now?" says Gary. "I love this case. Is there food in this case?"
+- E4. "There is! There is food in this case!"
 
 ## F. Der Rabe auf der Treppe (der Weg nach unten)
 - R1. A huge raven sits on the stairs. He does not move.
 - R2. "I am Arthur," he says. "First of the seven."
-- R3. "Where is the note? Tell me, and I let you pass."
+- R3. Gary bows. "Your Majesty. Would you like to see a trick?" – "Sit, fox."
+- R4. "Where is the note? Tell me, and I let you pass."
 *Du antwortest mit einer Karte aus dem Notizbuch. Richtig: **behind the clock**. Bei anderen Karten antwortet Arthur trocken, z. B. auf „under the bench“: "That is a boot. I am not a boot."*
-- R4. "Good," says Arthur. His eyes are gold.
-- R5. "Seven hooks. Seven ravens. Count us tonight."
-- R6. Then he is gone. Not through the window. Simply gone.
-- R7. The clock says half past nine. Twenty-three minutes left.
-- R8. Something smells good down there. Really good.
+- R5. "Good," says Arthur. His eyes are gold.
+- R6. "Seven hooks. Seven ravens. Count us tonight."
+- R7. Then he is gone. Not through the window. Simply gone.
+- R8. "I can do that too," says Gary. "I just don't want to."
 
-*Rabe 1 von 7 gefunden: **Arthur**. Entscheidung fürs nächste Kapitel: Nimmst du den Fuchs mit in die Küche, oder lässt du ihn Wache halten? (ändert Szene und Witze in Kapitel 2).*
+*Rabe 1 von 8 Orten gefunden: **Arthur**. Entscheidung fürs nächste Kapitel: Geht Gary in der Küche voraus („I will protect you. From behind.“), oder gehst du voraus? (ändert Szene und Witze in Kapitel 2).*
 
-## Die sieben Raben (entschieden Mr. Alex 17.11.: König Artus' Hof)
-**Arthur** („First of the seven“) · **Guinevere** · **Lancelot** · **Morgana** · **Gawain** · **Percival** – und **Mordred**, in der Sage der Verräter: die schwarz angemalte Elster. (Kein Rabe heißt Merlin, weil es einen eigenen Zauberer gibt.) Aussprache der Namen vor dem Vertonen einzeln anhören; notfalls Lautschrift-Feld wie bei den Vokabeln.
+## G. Tipp-Leitern von Mr. Flex (je drei Stufen)
+| Wo man hängt | 1 | 2 | 3 |
+|---|---|---|---|
+| Was tun im Raum? | "Touch things. All the things. I do." | "Someone saw everything. Someone with wings." | "The window. Go on. I have tea." |
+| Der Zettel | "Someone hides things behind things. I do." | "Ask the pigeon. Then look where she says." | "Behind the clock. Go on. I will wait." |
+| Arthurs Frage | "He wants a place. Not a thing." | "Where was the note? You know this." | "Behind the clock. Say it with style." |
 
-## G. Dein Notizbuch schreibt mit (Lücken mit den gefundenen Karten füllen)
+## H. Der Schluss-Film (15–25 Sekunden) und der Haken
+- S1. The clock says half past nine. Twenty-three minutes left.
+- S2. Something smells good down there. Really good.
+- S3. Down in the dark, somebody is singing. Badly.
+- S4. "That is not Mr Pike," says Gary. "… Is it?"
+*Bild: die Treppe hinunter, ein Lichtschein, der Umriss der Küche als Schatten. Dann die Tür: Für den Schlüssel fehlt eine Runde Word Gym oder die Hausaufgabe. Mr. Flex: "Too easy. For me. For you? We will see."*
+*Belohnung: Punkte (einmalig), der alte Sessel für dein Zimmer, die Rabenfeder für die Mütze.*
+
+## I. Zum Wiederkommen: „Who moved my things?“
+Der Sergeant stürmt herein: "Who moved my things?! Nobody touches my things!" Vier bis sechs Dinge liegen zufällig falsch; er sagt, wohin sie gehören, und du räumst auf:
+- "The boot is on the shelf! It lives under the bench!"
+- "The teapot is in the fireplace! Put it on the table!"
+- "My spoon is behind the clock! It goes between the cups!"
+- "Why is the helmet under the table? On the shelf, detective!"
+Jede Runde ist anders. Gary: "It was not me." *(Es war Gary.)* Dazu bei jedem Besuch zwei bis drei neue Fundstücke der Elster und neue Sprüche.
+
+## J. Dein Notizbuch schreibt mit (Lücken mit den gefundenen Karten füllen)
 > Case notes, half past nine. The keys are not **on the wall**. There is one boot **under the bench**. The teapot **on the table** is still warm. There is a spoon **between the cups** – two cups! Mr Pike hides a note **behind the clock**. Then he goes **down the stairs**.
 
 **Detective's Notes (freiwillig, eine Seite im Notizbuch):** *There is* one thing. *There are* two things or more.
 
-## H. Karten fürs Notizbuch (Deutsch links, Englisch rechts, mit Ton)
+## K. Karten fürs Notizbuch (Deutsch links, Englisch rechts, mit Ton)
 | Deutsch | Englisch |
 |---|---|
 | an der Wand | on the wall |
@@ -118,29 +148,25 @@
 | in der Ecke | in the corner |
 | am Fenster | at the window |
 | die Treppe hinunter | down the stairs |
-| Was ist hier los? | What's going on? |
+| Wie schade. | What a shame. |
 | Keine Ahnung. | No idea. |
 | Beeil dich! | Hurry up! |
 | Wie seltsam. | How strange. |
 | Rate mal! | Guess what! |
 | wie immer | as always |
+| Schau mal! | Watch this. |
 | Wie bitte? | Sorry? |
 | Noch einmal, bitte. | Again, please. |
 | Langsam, bitte. | Slowly, please. |
 | Such nach dem Kuchen. | Look for the cake. |
 
-## I. Dein Zimmer: The Den (Seitenbereich, jederzeit über die Karte erreichbar)
-Ein eigener alter Wachraum unter dem Dach, unabhängig vom Fortschritt der Geschichte – auch für alle, die nur das wollen.
-- **Umziehen:** Schrank mit den Teilen für die Figur (vorhandene Figur-Teile und Skins, dazu Fundstücke aus der Geschichte: Abzeichen, Rabenfeder, Warder-Mütze …).
-- **Einrichten:** Möbel frei stellen, Wandfarbe, Teppich, Lampen, Bilder. Möbel kommen aus der Geschichte (der alte Sessel nach Kapitel 1) und aus einem englischen Katalog gegen Coins; jedes Stück spricht beim Antippen seinen Satz.
-- **Was dort von selbst passiert:** Gefundene Raben sitzen auf der Stange am Fenster und sagen ihren Spruch; Brief-Teile hängen an der Wand; ab und zu schaut der Fuchs vorbei.
-- **Frei bewegen:** im Zimmer herumgehen, aus dem Fenster über den Tower schauen (Karte).
+## L. Dein Zimmer: The Den (Seitenbereich, jederzeit über die Karte erreichbar)
+Ein eigener alter Wachraum unter dem Dach, unabhängig vom Fortschritt der Geschichte – auch für alle, die nur das wollen. Umziehen (Schrank mit Figur-Teilen und Fundstücken), vollständig einrichten (Möbel frei stellen, Farben; Möbel aus der Geschichte und aus einem englischen Katalog, jedes Stück spricht beim Antippen), frei bewegen. Gefundene Raben sitzen auf der Stange am Fenster; ab und zu schaut Gary vorbei und probiert einen Trick. Hinter der Federtür wartet später das zweite Zimmer.
 
 ## Offene Fragen, die das Spiel bewusst stehen lässt
-Wer war die Frau? Warum sieben Haken? Warum ist die Feder warm, und warum kann sie flüstern? Wem gehört der Tanzschuh? Wer ist „A.“? Was ist hinter der kleinen Tür? Was riecht da so gut?
+Wer war die Frau? Warum sieben Haken? Warum ist die Feder warm? Wem gehört der Tanzschuh? Wer ist „A.“? Was ist hinter der kleinen Tür? Wer singt da unten?
 
 ## Offen für Mr. Alex
-1. Stimmt das Sprachniveau jetzt, oder noch reicher?
-2. Name des Zauberers (Vorschläge im Master-Chat 17.11.)?
-3. Feder und „Sorry?“ als Verstehenshilfen so?
-4. Deutsch für die Feder (alle Zeilen) schreibe ich, sobald das Englische steht.
+1. Trägt der Anfang – ist nach zwei Minuten klar, dass man weiterspielen will?
+2. Stimmen die drei Stimmen in den festen Zeilen?
+3. Danach: Deutsch für die Feder (alle Zeilen), einfachere Zweitfassungen der Kernzeilen, dann Vertonung von Kapitel 1.

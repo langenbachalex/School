@@ -679,6 +679,12 @@ box("gelaender", (0.08, TY1 - TY0 + 0.06, 0.07), (TX0 - 0.04, (TY0 + TY1) / 2, 0
 box("gelaender_h", (TX1 - TX0, 0.08, 0.07), ((TX0 + TX1) / 2, TY1, 0.88), EICHE_H, "treppe")
 box("gelaender_pfosten", (0.08, 0.08, 0.95), (TX1, TY1, 0.475), EICHE_S, "treppe")
 
+# ---------- Figuren-Probe (nur mit FIGUREN=1; das Bild fuer die App entsteht ohne) ----------
+if os.environ.get("FIGUREN"):
+    import tower_figuren
+    tower_figuren.gary(scene, (1.95, -4.95, 0.0), dreh=R(-18), mass=1.0)
+    tower_figuren.taube(scene, (B - 0.17, FY - 0.25, FZ - 0.735), dreh=R(-75), mass=1.25)
+
 # ---------- Kamera ----------
 cam_data = bpy.data.cameras.new("cam")
 cam_data.lens = 26

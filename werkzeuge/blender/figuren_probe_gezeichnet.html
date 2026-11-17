@@ -1,0 +1,62 @@
+<!doctype html>
+<!-- Probe 17.11.2026: Gary the Great und die Taube GEZEICHNET im flachen Vektor-Stil des Runners (Farben wie fuchs() und taube() in runner.js),
+     vor dem gerechneten Guard Room. Nur ein Probebild für Mr. Alex, kein Teil der App. Bild: werkzeuge/blender/figuren_probe.js -->
+<meta charset="utf-8">
+<style>html, body { margin: 0; background: #000; } canvas { display: block; }</style>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+const c = document.getElementById("c").getContext("2d");
+const O = "#d9692a", W = "#f6f2ea", S = "#1a1a1a";
+const ell = (x, y, rx, ry, f, rot = 0) => { c.fillStyle = f; c.beginPath(); c.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); c.fill(); };
+const drei = (p, f) => { c.fillStyle = f; c.beginPath(); c.moveTo(p[0], p[1]); c.lineTo(p[2], p[3]); c.lineTo(p[4], p[5]); c.closePath(); c.fill(); };
+const strich = (p, f, b) => { c.strokeStyle = f; c.lineWidth = b; c.lineCap = "round"; c.beginPath(); c.moveTo(p[0], p[1]); if (p.length === 6) c.quadraticCurveTo(p[2], p[3], p[4], p[5]); else c.lineTo(p[2], p[3]); c.stroke(); };
+function stern(x, y, r, f) { c.fillStyle = f; c.beginPath(); for (let i = 0; i < 10; i++) { const w = -Math.PI / 2 + i * Math.PI / 5, q = i % 2 ? r * 0.45 : r; c.lineTo(x + Math.cos(w) * q, y + Math.sin(w) * q); } c.closePath(); c.fill(); }
+
+function gary(x, y, h) {   // (x, y) = Mitte der Füße, h = Höhe mit Hut
+  const u = h / 128;
+  ell(x, y + 2, 40 * u, 7 * u, "rgba(0,0,0,.38)");   // Schatten am Boden
+  c.save(); c.translate(x, y); c.scale(u, u);
+  strich([12, -20, 56, -30, 50, -76], O, 22); strich([51, -64, 50, -78], W, 15);          // buschiger Schwanz, weiße Spitze
+  c.fillStyle = O; c.beginPath(); c.roundRect(-14, -24, 11, 24, 5); c.roundRect(3, -24, 11, 24, 5); c.fill();   // Beine
+  ell(-9, -2, 9, 4.5, S); ell(9, -2, 9, 4.5, S);                                           // Pfoten
+  strich([-15, -50, -34, -40], O, 9); ell(-36, -39, 5.5, 5.5, S);                          // linker Arm zur Seite: „Ta-daa!“
+  ell(0, -38, 19, 24, O); ell(0, -35, 10.5, 16, W);                                        // Rumpf, weißer Latz
+  strich([15, -52, 31, -70], O, 9);                                                        // rechter Arm erhoben
+  strich([32, -72, 42, -100], S, 3); strich([41, -97, 42, -100], W, 3.4); stern(43, -106, 6, "#ffd84a");   // Zauberstab mit Funke
+  ell(32, -72, 5.5, 5.5, S);
+  drei([-9, -56, 0, -52, -9, -48], "#c8283a"); drei([9, -56, 0, -52, 9, -48], "#c8283a"); ell(0, -52, 2.4, 2.4, "#ffd84a");   // Fliege
+  drei([-21, -84, -19, -103, -8, -88], O); drei([21, -84, 19, -103, 8, -88], O);           // Ohren, schwarze Spitzen
+  drei([-19.6, -97, -19, -103, -15.5, -97], S); drei([19.6, -97, 19, -103, 15.5, -97], S);
+  drei([-16, -76, -30, -68, -15, -64], O); drei([16, -76, 30, -68, 15, -64], O);           // Backenfell
+  ell(0, -74, 19, 16, O);                                                                  // Kopf
+  ell(-8, -67, 9, 7, W); ell(8, -67, 9, 7, W); ell(0, -66, 7, 6, W);                       // Schnauze fest am Kopf
+  ell(0, -70.5, 3.2, 2.5, S);                                                              // Nase auf der Schnauze
+  c.strokeStyle = S; c.lineWidth = 1.5; c.beginPath(); c.arc(0, -68, 6.5, 0.25, Math.PI - 0.25); c.stroke();   // Lächeln
+  ell(-7.5, -79, 3, 3.6, S); ell(7.5, -79, 3, 3.6, S); ell(-6.6, -80.2, 1, 1, "#fff"); ell(8.4, -80.2, 1, 1, "#fff");   // Augen
+  strich([-11, -85.5, -4.5, -84], S, 1.6); strich([11, -85.5, 4.5, -84], S, 1.6);          // freche Brauen
+  c.fillStyle = "#3b2a7a"; c.beginPath(); c.moveTo(-13, -88); c.lineTo(13, -88); c.quadraticCurveTo(8, -110, 12, -120); c.lineTo(6, -126); c.quadraticCurveTo(-4, -108, -13, -88); c.fill();   // Zauberhut, Spitze geknickt
+  ell(0, -88, 22, 4, "#3b2a7a"); c.fillStyle = "#ffd84a"; c.fillRect(-12.5, -93, 25, 3.2);  // Krempe, goldenes Band
+  stern(-3, -100, 3, "#ffd84a"); stern(5, -108, 2.3, "#ffd84a"); stern(2, -116, 1.8, "#ffd84a"); ell(11, -123, 2.6, 2.6, "#ffd84a");
+  c.restore();
+}
+
+function taube(x, y, b) {   // (x, y) = Füße, b = Breite; schaut nach links in den Raum
+  const u = b / 34;
+  ell(x, y + 1, 14 * u, 2.5 * u, "rgba(0,0,0,.35)");
+  c.save(); c.translate(x, y - 9 * u); c.scale(u, u);
+  c.fillStyle = "#5d6373"; for (let i = -1; i <= 1; i++) { c.beginPath(); c.moveTo(9, 1); c.lineTo(19, -1 + i * 4); c.lineTo(19, 3 + i * 4); c.closePath(); c.fill(); }   // Schwanzfedern
+  ell(0, 2, 12, 7.5, "#8d93a3"); ell(-2, 5, 8, 3.5, "#b9bdc8");                             // Körper, heller Bauch
+  c.fillStyle = "#6f7686"; c.beginPath(); c.moveTo(-3, -2); c.quadraticCurveTo(8, -6, 15, 2); c.quadraticCurveTo(6, 6, -1, 4); c.closePath(); c.fill();   // Flügel angelegt
+  strich([4, 1, 9, 4], "#3f4452", 1.6); strich([7, -1, 12, 2], "#3f4452", 1.6);            // zwei dunkle Binden
+  ell(-9, -2, 4.5, 4, "#5e9a7a", -0.3); ell(-10, -3, 3, 2.4, "rgba(160,90,200,.55)", -0.3);   // schillernder Hals
+  ell(-12, -7, 4.6, 4.6, "#7f8595");                                                       // Kopf
+  drei([-16, -8, -21, -6.5, -16, -5.5], "#3a3a3e"); ell(-16.2, -8, 1.3, 1, "#f1ede6");      // Schnabel fest am Kopf, Wachshaut
+  ell(-13, -8, 1.3, 1.3, "#e8742a"); ell(-13.2, -8, 0.6, 0.6, "#111");                      // Auge
+  strich([-3, 8, -3, 11], "#d8686c", 1.2); strich([2, 8, 2, 11], "#d8686c", 1.2);          // Beine
+  c.restore();
+}
+
+const bild = new Image();
+bild.onload = () => { c.drawImage(bild, 0, 0, 1920, 1080); gary(1546, 935, 385); taube(1668, 500, 66); document.title = "fertig"; };
+bild.src = "../../app/tower/raum/guardroom.jpg";
+</script>

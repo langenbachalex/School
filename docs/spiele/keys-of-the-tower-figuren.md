@@ -112,13 +112,14 @@ Mr. Alex ist Komponist und überlegt, Themen für Figuren oder Orte zu schreiben
 - **Mrs Crumb:** die Köchin; herzlich, laut, bewaffnet mit einem Kochlöffel. Der Sergeant wird rot.
 - **Der Geist:** höflich, traurig-komisch, wartet seit 1899 auf Adas Brief. "Hello again."
 
-## Stimmen (Stand 17.11., Probe-Runde 2 läuft)
+## Stimmen (Stand 17.11. nach Probe-Runde 2; Runde 3 liegt Mr. Alex vor)
 - **Akzent-Regel (Mr. Alex):** In der London-Geschichte nur englische Akzente (britisch; australisch bei Gary ist in Ordnung), keine amerikanischen. In EN9 (USA) umgekehrt.
-- **Mr. Flex:** Mr. Alex' Stimme. Regie: längere Pause vor der Pointe („Genius. … Very modest.“), der Rückzieher nach dem Lob lässig und trocken (nicht entschuldigend), „It's a no. And it stays a no.“ streng, „Sunglasses“ britisch und übertrieben vornehm.
-- **Sergeant Bearskin:** in diesem Spiel NICHT Mr. Alex' Stimme (im London Run bleibt sie), sondern eine eigene: ähnlich, laut, militärisch, britisch. Zur Wahl in Runde 2: Andy, Severin, Timothy. Betonung: „That is my FOOT. Not me.“
-- **Gary the Great:** Charlie (australisch) gefällt; zum Vergleich James und Bob.
-- **Arthur:** britisch, tief, geheimnisvoll. Zur Wahl: Saruman, Kiel, Daniel. **Taube:** zur Wahl Verity, Lizzie, Ruby B.
-- **Immer drei Proben je Stimme**, damit Mr. Alex vergleichen kann. Probe-Dateien liegen nicht im Repo.
+- **Sergeant Bearskin = Andy** (entschieden; ElevenLabs `kVBPcEMsUF1nsAO1oNWw`). Die Stimme ist leise: Lautheit beim Erzeugen angleichen (ffmpeg `loudnorm`). Betonung: „That is my FOOT. Not me.“ Im London Run bleibt Mr. Alex' Stimme.
+- **Gary the Great = Charlie** (entschieden; `IKne3meq5aSn9XLyUdCD`, australisch). Regie beim Helm: erst flüstern, dann plötzlich laut und empört die Schuld wegschieben („The HELMET started it!“).
+- **Arthur = Kiel** (entschieden; `FUdtnSGebmUJVfZnamcB`, „Raspy Deep British“).
+- **Mr. Flex = Mr. Alex' Stimme**, britisch: kein hörbares R in „wizard“ (Akzent-Tag oder Schreibweise – Runde 3 testet beides). „Mr. Flex.“ passt; „Wizard.“ gesteigert; „Genius!“ ist der Höhepunkt an Begeisterung und Selbstgefälligkeit; lange Pause; „Very modest.“ trocken. Rückzieher nach dem Lob lässig und trocken; „It's a no. And it stays a no.“ streng.
+- **Die Taube: noch offen.** Verity, Lizzie und Ruby B passten nicht (zu viel Knarren in der Stimme, zu langsam). Gesucht: sehr schnell, sprudelnd, aufgeregt, tratschend. In Runde 3: Blondie, Delilah, Flicker, mit höherem Tempo.
+- **Immer drei Proben je Stimme.** Probe-Dateien liegen nicht im Repo.
 - **Lippenbewegung zur Sprache:** Idee von Mr. Alex, jetzt kein Thema; für später notiert.
 
 ## Offen für Mr. Alex

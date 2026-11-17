@@ -40,6 +40,9 @@ Ist ein Werkzeug, Browser oder Paket nicht installiert, nicht aufgeben und nicht
 ## Anleitungen für Mr. Alex (Regel Mr. Alex, 17.11.2026)
 Soll Mr. Alex selbst etwas am Rechner tun, bekommt er eine vollständige Schritt-für-Schritt-Anleitung: nummeriert, ein Handgriff je Schritt, nichts voraussetzen (auch nicht „Repo klonen“ oder „Terminal öffnen“), jeder Befehl in einem eigenen Kasten zum Kopieren, nach jedem Abschnitt sagen, woran er erkennt, dass es geklappt hat. Erst fragen, welches Betriebssystem, wenn es darauf ankommt und nicht bekannt ist.
 
+## Nur ändern, was bemängelt wurde (Regel Mr. Alex, 17.11.2026)
+Bei jeder Überarbeitung (Bilder, Räume, Texte, App) genau die Punkte ändern, die Mr. Alex genannt hat, und sonst nichts. Was er gesehen und nicht beanstandet hat, gilt als abgenommen. Eigene Verbesserungsideen als Vorschlag in die Rückmeldung schreiben und auf sein OK warten. Sagt er „erst zurückmelden“, nichts bauen, nur antworten.
+
 ## Orts-Szenen
 Jeder Ort hat drei Ebenen: Bild (Szene mit Runner-Zeichnungen), Ton (Geräusch oder Sprache), kleines Foto. Einzelheiten: `.claude/skills/orts-szenen/SKILL.md`.
 

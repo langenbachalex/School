@@ -135,7 +135,10 @@ TINTE = mat("tinte", (0.18, 0.10, 0.05), 0.9)
 TINTE_ROT = mat("tinte_rot", (0.50, 0.08, 0.05), 0.9)
 WASSER = mat("tinte_blau", (0.22, 0.35, 0.48), 0.9)
 PAPIER = mat("papier", (0.88, 0.80, 0.62), 0.9)
-BROT = mat("kruemel", (0.86, 0.66, 0.34), 0.9)
+BROT = mat("kruemel", (0.90, 0.74, 0.46), 0.9)
+KRUSTE = mat("kruste", (0.50, 0.30, 0.12), 0.85)
+SCHINKEN = mat("schinken", (0.85, 0.42, 0.40), 0.6)
+SALAT = mat("salat", (0.30, 0.55, 0.15), 0.6)
 RINDE = mat("rinde", (0.12, 0.07, 0.04), 0.95)
 ZIFFER = mat("zifferblatt", (0.90, 0.84, 0.66), 0.6, emit=0.12)
 NACHT = mat("nacht", (0.07, 0.13, 0.36), 0.25, emit=0.9)
@@ -422,22 +425,22 @@ schrift("N", (KX + 0.62, KY - 0.01, KZ - 0.05), 0.06, TINTE, "karte")
 
 # Rechts vom Kamin: Wappenschild, Holzlaterne am Eisenarm, Eingangstuer (vor der Vertaefelung), Partisane in der Ecke, Fass
 modell("kite_shield", (1.80, -0.12, 1.75), 0.72)
-LX, LY, LZ = 2.42, -0.40, 1.12
-box("laterne_arm", (0.04, 0.46, 0.04), (LX, -0.21, LZ + 0.84), EISEN, "laterne")
-box("laterne_stuetze", (0.035, 0.035, 0.38), (LX, -0.05, LZ + 0.68), EISEN, "laterne", rot=(R(-35), 0, 0))
-modell("wooden_lantern_01", (LX, LY, LZ), 1.55, grp="laterne")
-cyl("laterne_kerze", 0.03, 0.14, (LX, LY, LZ + 0.16), WACHS, "laterne", verts=12)
-cone("laterne_flamme", 0.03, 0.11, (LX, LY, LZ + 0.29), FLAMME_KLEIN, "laterne", verts=12, glatt=True)
-modell("large_castle_door", (3.22, -0.20, 0.0), 0.60)
-# Zweite, kleine Laterne an der linken Wand ueber der Truhe: hellt die Ecke auf
-EX, EY, EZ = -3.74, -0.95, 1.22
-box("ecklaterne_arm", (0.34, 0.035, 0.035), (-3.84, EY, EZ + 0.60), EISEN)
-modell("wooden_lantern_01", (EX, EY, EZ), 1.1, dreh=R(90))
-cyl("ecklaterne_kerze", 0.022, 0.10, (EX, EY, EZ + 0.11), WACHS, verts=12)
-cone("ecklaterne_flamme", 0.022, 0.08, (EX, EY, EZ + 0.20), FLAMME_KLEIN, verts=12, glatt=True)
-cyl("partisane_schaft", 0.022, 2.5, (3.90, -0.16, 1.22), EICHE_H, rot=(R(4), R(-3), 0), verts=10)
-cone("partisane_klinge", 0.07, 0.42, (3.965, -0.25, 2.66), STAHL, verts=4, rot=(R(4), R(-3), R(45)))
-ball("partisane_quaste", 0.05, (3.955, -0.235, 2.40), ROT, scale=(1, 1, 1.5))
+LX, LY, LZ = 2.22, -0.36, 1.22
+box("laterne_arm", (0.04, 0.42, 0.04), (LX, -0.20, LZ + 0.74), EISEN, "laterne")
+box("laterne_stuetze", (0.035, 0.035, 0.36), (LX, -0.05, LZ + 0.58), EISEN, "laterne", rot=(R(-35), 0, 0))
+torus("laterne_ring", 0.035, 0.008, (LX, LY, LZ + 0.70), EISEN, "laterne", rot=(R(90), 0, 0))
+modell("Lantern_01", (LX, LY, LZ), 2.3, grp="laterne")
+cone("laterne_flamme", 0.035, 0.13, (LX, LY, LZ + 0.26), FLAMME_KLEIN, "laterne", verts=12, glatt=True)
+modell("large_castle_door", (3.22, -0.20, 0.0), 0.72)
+# Zweite, kleine Laterne (gleiches Modell) an der linken Wand ueber der Truhe: hellt die Ecke auf
+EX, EY, EZ = -3.74, -0.95, 1.25
+box("ecklaterne_arm", (0.34, 0.035, 0.035), (-3.84, EY, EZ + 0.50), EISEN)
+torus("ecklaterne_ring", 0.025, 0.006, (EX, EY, EZ + 0.48), EISEN, rot=(0, R(90), 0))
+modell("Lantern_01", (EX, EY, EZ), 1.6, dreh=R(90))
+cone("ecklaterne_flamme", 0.025, 0.09, (EX, EY, EZ + 0.18), FLAMME_KLEIN, verts=12, glatt=True)
+cyl("partisane_schaft", 0.022, 2.5, (3.90, -0.42, 1.22), EICHE_H, rot=(R(4), R(-3), 0), verts=10)
+cone("partisane_klinge", 0.07, 0.42, (3.965, -0.51, 2.66), STAHL, verts=4, rot=(R(4), R(-3), R(45)))
+ball("partisane_quaste", 0.05, (3.955, -0.495, 2.40), ROT, scale=(1, 1, 1.5))
 modell("wine_barrel_01", (3.45, -1.25, 0.0), 0.9)
 
 # Kleine Tuer in der dunklen Ecke hinten links (Rueckwand), mit dem Federschloss
@@ -493,12 +496,19 @@ KEX, KEY = TXM + 0.30, TYM + 0.22
 modell("brass_candleholders", (KEX, KEY, TZ), 0.9, teile=["brass_candleholder_02"])
 cyl("kerze", 0.022, 0.16, (KEX, KEY, TZ + 0.43), WACHS, verts=12)
 cone("kerze_flamme", 0.018, 0.075, (KEX, KEY, TZ + 0.56), FLAMME_KLEIN, verts=12, glatt=True)
-for i in range(18):
-    kx = TXM - 0.45 + ((i * 37) % 90) / 100.0
-    ky = TYM - 0.60 + ((i * 53) % 50) / 100.0
-    box(f"kruemel{i}", (0.07, 0.06, 0.035), (kx, ky, 0.018), BROT, "kruemel", rot=(0, 0, i))
-weich(box("kruste1", (0.20, 0.12, 0.05), (TXM - 0.1, TYM - 0.42, 0.026), BROT, "kruemel", rot=(0, 0, 0.5)), 0.015)
-weich(box("kruste2", (0.16, 0.10, 0.05), (TXM + 0.22, TYM - 0.28, 0.026), BROT, "kruemel", rot=(0, 0, -0.8)), 0.015)
+for i in range(34):   # Kruemel: flache, unregelmaessige Broeckchen, zum Sandwich hin dichter
+    w = i * 2.399963
+    rad = 0.06 + 0.42 * ((i * 0.618034) % 1.0) ** 1.4
+    g = 0.012 + 0.02 * ((i * 0.37) % 1.0)
+    ball(f"kruemel{i}", g, (TXM + 0.05 + math.cos(w) * rad * 1.15, TYM - 0.45 + math.sin(w) * rad * 1.25, g * 0.5), KRUSTE if i % 5 == 0 else BROT, "kruemel",
+         scale=(1.0 + (i % 3) * 0.35, 1.0, 0.55), rot=(0, 0, w))
+SWX, SWY = TXM + 0.05, TYM - 0.45   # angebissenes Sandwich: zwei Scheiben, Schinken und Salat dazwischen
+weich(box("sandwich_unten", (0.27, 0.19, 0.04), (SWX, SWY, 0.022), BROT, "kruemel", rot=(0, 0, R(25))), 0.01)
+weich(box("sandwich_schinken", (0.285, 0.20, 0.016), (SWX, SWY, 0.05), SCHINKEN, "kruemel", rot=(0, 0, R(29))), 0.004)
+weich(box("sandwich_salat", (0.295, 0.205, 0.012), (SWX + 0.005, SWY, 0.064), SALAT, "kruemel", rot=(0, 0, R(21))), 0.003)
+weich(box("sandwich_oben", (0.27, 0.19, 0.04), (SWX, SWY, 0.09), BROT, "kruemel", rot=(0, R(-5), R(25))), 0.01)
+for dx, dy in ((0.10, 0.02), (-0.10, -0.02)):   # Krustenkanten
+    box("sandwich_rinde", (0.016, 0.19, 0.042), (SWX + dx * math.cos(R(25)) * 1.36, SWY + dx * math.sin(R(25)) * 1.36, 0.09), KRUSTE, "kruemel", rot=(0, 0, R(25)))
 
 # Stuhl, leicht gedreht; die Uniformjacke von Mr Pike haengt ueber der Lehne (dunkelblau, scharlachrote Raender, Messingknoepfe)
 SX, SY, SW = 1.05, -4.25, R(-24)
@@ -600,8 +610,8 @@ def licht(name, typ, energie, farbe, loc, rot=(0, 0, 0), groesse=None, weich_=0.
 
 licht("feuer", "POINT", 330, (1.0, 0.34, 0.08), (0, -0.62, 0.72), weich_=0.3)
 licht("feuer_glut", "POINT", 60, (1.0, 0.14, 0.02), (0, -0.80, 0.18), weich_=0.2)
-licht("laterne", "POINT", 110, (1.0, 0.55, 0.20), (LX, LY - 0.26, LZ + 0.30))
-licht("ecklaterne", "POINT", 42, (1.0, 0.55, 0.20), (EX + 0.24, EY, EZ + 0.22))
+licht("laterne", "POINT", 110, (1.0, 0.55, 0.20), (LX, LY - 0.22, LZ + 0.30))
+licht("ecklaterne", "POINT", 42, (1.0, 0.55, 0.20), (EX + 0.22, EY, EZ + 0.20))
 licht("kerze", "POINT", 26, (1.0, 0.62, 0.25), (KEX, KEY - 0.04, TZ + 0.66), weich_=0.05)
 licht("wandkerze", "POINT", 48, (1.0, 0.58, 0.22), (WKX, -0.42, WKZ + 0.30), weich_=0.05)
 licht("raum", "AREA", 30, (1.0, 0.62, 0.38), (0, -5.0, 3.2), groesse=5.0)

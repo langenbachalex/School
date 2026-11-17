@@ -187,6 +187,7 @@ SALAT = mat("salat", (0.30, 0.55, 0.15), 0.6)
 RINDE = mat("rinde", (0.12, 0.07, 0.04), 0.95)
 ZIFFER = mat("zifferblatt", (0.90, 0.84, 0.66), 0.6, emit=0.12)
 NACHT = mat("nacht", (0.07, 0.13, 0.36), 0.25, emit=0.9)
+FENSTERSTEIN = mat("fensterstein", (0.30, 0.26, 0.21), 0.92)
 WACHS = mat("wachs", (0.92, 0.85, 0.65), 0.6, emit=0.15)
 
 
@@ -645,7 +646,7 @@ j_anker.rotation_euler = (0, 0, SW)
 
 # Fenster in der rechten Wand: Bleirauten, tiefe Steinnische, Fensterbank fuer die Taube
 FY, FZ = -1.5, 2.05
-box("fenster_nische", (0.08, 1.05, 1.45), (B - 0.04, FY, FZ), STEIN_S, "fenster")
+box("fenster_nische", (0.08, 1.05, 1.45), (B - 0.04, FY, FZ), FENSTERSTEIN, "fenster")
 box("fenster_glas", (0.04, 0.82, 1.22), (B - 0.09, FY, FZ), NACHT, "fenster")
 FB, FH, FW = 0.80, 1.20, R(35)   # Glasflaeche und Winkel der Bleirauten
 for i in range(-9, 10):         # Bleistege, sauber auf die Glasflaeche zugeschnitten
@@ -658,9 +659,9 @@ for i in range(-9, 10):         # Bleistege, sauber auf die Glasflaeche zugeschn
         lang = (z1 - z0) / math.cos(FW)
         box("fenster_blei", (0.012, 0.014, lang), (B - 0.115, FY + c + k * (z0 + z1) / 2, FZ + (z0 + z1) / 2), EISEN, "fenster", rot=(R(-s * 35), 0, 0))
 for dy in (-0.45, 0.45):
-    box("fenster_laibung", (0.10, 0.12, 1.44), (B - 0.10, FY + dy, FZ), STEIN_S, "fenster")
+    box("fenster_laibung", (0.10, 0.12, 1.44), (B - 0.10, FY + dy, FZ), FENSTERSTEIN, "fenster")
 for dz in (-0.66, 0.66):
-    box("fenster_laibung", (0.10, 1.02, 0.12), (B - 0.10, FY, FZ + dz), STEIN_S, "fenster")
+    box("fenster_laibung", (0.104, 0.78, 0.12), (B - 0.10, FY, FZ + dz), FENSTERSTEIN, "fenster")
 box("fensterbank", (0.32, 1.2, 0.07), (B - 0.16, FY, FZ - 0.77), STEIN_B, "fenster")
 
 # Treppe nach unten (Loch im Boden rechts) mit Eichengelaender
@@ -682,8 +683,9 @@ box("gelaender_pfosten", (0.08, 0.08, 0.95), (TX1, TY1, 0.475), EICHE_S, "treppe
 # ---------- Figuren-Probe (nur mit FIGUREN=1; das Bild fuer die App entsteht ohne) ----------
 if os.environ.get("FIGUREN"):
     import tower_figuren
-    tower_figuren.gary(scene, (1.95, -4.95, 0.0), dreh=R(-18), mass=1.0)
-    tower_figuren.taube(scene, (B - 0.17, FY - 0.25, FZ - 0.735), dreh=R(-75), mass=1.25)
+    tower_figuren.gary(scene, (1.95, -4.95, 0.0), dreh=R(-38), mass=1.0)
+    vogel = tower_figuren.taube(scene, (B - 0.17, FY - 0.25, FZ - 0.735), dreh=R(-75), mass=1.25)
+    OHNE_MOND = [o for o in vogel.children]
 
 # ---------- Kamera ----------
 cam_data = bpy.data.cameras.new("cam")
@@ -727,7 +729,17 @@ licht("wandkerze", "POINT", 48, (1.0, 0.58, 0.22), (WKX, -0.42, WKZ + 0.30), wei
 licht("raum", "AREA", 30, (1.0, 0.62, 0.38), (0, -5.0, 3.2), groesse=5.0)
 licht("vorn", "AREA", 95, (1.0, 0.60, 0.36), (-0.5, -9.3, 2.4), rot=(R(72), 0, 0), groesse=4.0)
 licht("bank", "POINT", 3, (1.0, 0.62, 0.38), (-2.2, BY - 1.6, 0.5))
-licht("mond", "AREA", 55, (0.50, 0.66, 1.0), (B - 0.35, FY, FZ), rot=(0, R(-90), 0), groesse=0.9)
+mond = licht("mond", "AREA", 55, (0.50, 0.66, 1.0), (B - 0.35, FY, FZ), rot=(0, R(-90), 0), groesse=0.9)
+if os.environ.get("FIGUREN"):
+    try:
+        ohne = bpy.data.collections.new("ohne_mond")
+        for o in OHNE_MOND:
+            ohne.objects.link(o)
+        mond.light_linking.receiver_collection = ohne
+        for eintrag in ohne.collection_objects:
+            eintrag.light_linking.link_state = "EXCLUDE"
+    except Exception as e:
+        print("Mondlicht liess sich nicht von der Taube trennen:", e, flush=True)
 
 world = bpy.data.worlds.new("dunkel")
 scene.world = world

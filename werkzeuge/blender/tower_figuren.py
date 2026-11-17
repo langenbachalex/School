@@ -141,105 +141,108 @@ def gary(scene, ort, dreh=0.0, mass=1.0):
     stabholz = _glatt("zauberstab", (0.05, 0.04, 0.04), 0.3)
     b = Bau(scene, "gary")
 
-    # Koerper in Orange: Rumpf, Kopf mit Backenfell, Ohren, Arme, Beine, buschiger Schwanz
+    # Koerper in Orange: Rumpf, Kopf mit Backenfell, grosse Ohren, schlanke Arme, Beine, Nasenruecken
     f = [
-        b.kugel((0, 0, 0.40), 0.20, (0.95, 0.85, 1.25)),                      # Rumpf, unten breiter
-        b.kugel((0, 0.01, 0.30), 0.19, (1.05, 0.95, 0.9)),
-        b.kugel((0, -0.02, 0.80), 0.17, (1.12, 0.98, 0.95)),                  # Kopf
-        b.kugel((0, -0.01, 0.63), 0.08, (1.0, 0.9, 1.1)),                     # Hals
-        b.kegel((-0.17, -0.02, 0.74), 0.09, 0.20, (0, R(-115), 0)),           # Backenfell links, rechts
-        b.kegel((0.17, -0.02, 0.74), 0.09, 0.20, (0, R(115), 0)),
-        b.kegel((-0.105, 0.0, 0.985), 0.07, 0.20, (0, R(-14), 0)),            # Ohren
-        b.kegel((0.105, 0.0, 0.985), 0.07, 0.20, (0, R(14), 0)),
-        b.kugel((0, -0.15, 0.775), 0.075, (0.95, 1.5, 0.75)),                 # Schnauze oben
-        b.kugel((-0.22, -0.02, 0.50), 0.055, (1.0, 1.0, 2.2), (0, R(-28), 0)),   # linker Arm (zur Seite, "Ta-daa")
-        b.kugel((-0.30, -0.04, 0.40), 0.05, (1.0, 1.0, 1.8), (0, R(-60), 0)),
-        b.kugel((0.22, -0.03, 0.60), 0.055, (1.0, 1.0, 2.2), (0, R(35), 0)),     # rechter Arm erhoben
-        b.kugel((0.31, -0.05, 0.76), 0.05, (1.0, 1.0, 2.0), (0, R(15), 0)),
-        b.kugel((-0.10, -0.01, 0.13), 0.075, (1.0, 1.05, 1.6)),               # Beine
-        b.kugel((0.10, -0.01, 0.13), 0.075, (1.0, 1.05, 1.6)),
+        b.kugel((0, 0, 0.42), 0.185, (0.92, 0.82, 1.25)),                     # Rumpf: Brust schmal, Bauch rund
+        b.kugel((0, 0.01, 0.30), 0.19, (1.02, 0.92, 0.88)),
+        b.kugel((0, -0.01, 0.63), 0.075, (1.0, 0.9, 1.1)),                    # Hals
+        b.kugel((0, -0.02, 0.80), 0.165, (1.12, 0.98, 0.95)),                 # Kopf
+        b.kegel((-0.17, -0.02, 0.745), 0.085, 0.20, (0, R(-112), 0)),         # Backenfell
+        b.kegel((0.17, -0.02, 0.745), 0.085, 0.20, (0, R(112), 0)),
+        b.kegel((-0.150, 0.01, 0.985), 0.082, 0.27, (R(-4), R(-24), 0)),      # Ohren: gross, nach aussen, neben dem Hut
+        b.kegel((0.150, 0.01, 0.985), 0.082, 0.27, (R(-4), R(24), 0)),
+        b.kugel((0, -0.165, 0.795), 0.06, (0.85, 1.7, 0.6)),                  # Nasenruecken
+        b.kugel((-0.215, -0.02, 0.52), 0.045, (1.0, 1.0, 2.3), (0, R(32), 0)),   # linker Arm zur Seite ("Ta-daa")
+        b.kugel((-0.315, -0.035, 0.405), 0.038, (1.0, 1.0, 2.2), (0, R(58), 0)),
+        b.kugel((0.215, -0.03, 0.60), 0.045, (1.0, 1.0, 2.3), (0, R(38), 0)),     # rechter Arm erhoben
+        b.kugel((0.30, -0.05, 0.765), 0.038, (1.0, 1.0, 2.3), (0, R(14), 0)),
+        b.kugel((-0.10, -0.01, 0.13), 0.07, (1.0, 1.05, 1.7)),                # Beine
+        b.kugel((0.10, -0.01, 0.13), 0.07, (1.0, 1.05, 1.7)),
     ]
-    for i in range(9):   # Schwanz: Bogen aus Kugeln, in der Mitte am dicksten
-        t = i / 8
-        w = R(20 + 115 * t)
-        r = 0.055 + 0.07 * math.sin(math.pi * min(1, t * 1.25)) ** 0.8
-        f.append(b.kugel((0.20 + 0.30 * math.sin(w) - 0.1, 0.20 + 0.06 * t, 0.16 + 0.42 * (1 - math.cos(w)) * 0.75), r))
+    schwanz_w = []
+    for i in range(18):   # Schwanz: weicher S-Bogen, buschig in der Mitte, zur Spitze schlank
+        t = i / 17
+        x = 0.13 + 0.34 * t ** 0.8 + 0.05 * math.sin(t * math.pi)
+        y = 0.17 + 0.07 * t
+        z = 0.20 + 0.68 * t ** 1.5 - 0.05 * math.sin(t * math.pi)
+        r = 0.05 + 0.085 * math.sin(math.pi * (0.12 + 0.88 * t) ** 0.85)
+        f.append(b.kugel((x, y, z), max(0.03, r)))
     b.koerper(f, orange)
 
-    # Weiss: Latz, Schnauze unten, Schwanzspitze, Innenohr
-    b.koerper([b.kugel((0, -0.10, 0.44), 0.13, (0.85, 0.6, 1.25)), b.kugel((0, -0.105, 0.60), 0.085, (1.0, 0.7, 0.9))], weiss, name="latz")
-    b.koerper([b.kugel((0, -0.165, 0.745), 0.07, (1.1, 1.45, 0.62)), b.kugel((-0.09, -0.10, 0.73), 0.07, (1.0, 0.8, 0.7)), b.kugel((0.09, -0.10, 0.73), 0.07, (1.0, 0.8, 0.7))], weiss, name="schnauze")
-    b.koerper([b.kugel((0.395, 0.275, 0.80), 0.085, (0.9, 0.9, 1.25), (0, R(-25), 0))], weiss, name="schwanzspitze")
+    # Weiss: Latz, Schnauze (vorn herausstehend, unter dem orangen Nasenruecken), Wangen, Schwanzspitze, Innenohr
+    b.koerper([b.kugel((0, -0.095, 0.45), 0.125, (0.82, 0.6, 1.25)), b.kugel((0, -0.10, 0.60), 0.08, (1.0, 0.7, 0.9))], weiss, name="latz")
+    b.koerper([b.kugel((0, -0.185, 0.752), 0.068, (1.0, 1.75, 0.72)),
+               b.kugel((-0.06, -0.125, 0.728), 0.042, (1.1, 0.9, 0.7)), b.kugel((0.06, -0.125, 0.728), 0.042, (1.1, 0.9, 0.7))], weiss, name="schnauze")
+    b.koerper([b.kugel((0.468, 0.236, 0.815), 0.074, (1.0, 1.0, 1.75), (0, R(14), 0))], weiss, name="schwanzspitze")
     for s in (-1, 1):
-        b.teil(b.kegel((s * 0.105, -0.028, 0.975), 0.04, 0.13, (R(8), R(s * 14), 0)), weiss, name="innenohr")
-        b.teil(b.kegel((s * 0.128, 0.0, 1.075), 0.022, 0.06, (0, R(s * 14), 0)), schwarz, name="ohrspitze")
-    # Schwarz: Pfoten, Nase, Mund
-    for ort_, m_ in (((-0.375, -0.05, 0.345), (1.1, 1.0, 0.9)), ((0.325, -0.06, 0.865), (1.0, 1.0, 1.1)), ((-0.10, -0.06, 0.04), (1.0, 1.7, 0.6)), ((0.10, -0.06, 0.04), (1.0, 1.7, 0.6))):
-        b.teil(b.kugel(ort_, 0.055, m_), schwarz, name="pfote")
-    b.teil(b.kugel((0, -0.265, 0.775), 0.03, (1.2, 0.9, 0.85)), pupille, name="nase")
-    mund = b.ring((0, -0.215, 0.735), 0.045, 0.007, (R(72), 0, 0))
-    mund.scale = (1.3, 1, 1)
-    b.teil(mund, schwarz, name="mund")
+        b.teil(b.kegel((s * 0.150, -0.022, 0.975), 0.048, 0.19, (R(4), R(s * 24), 0)), weiss, name="innenohr")
+        b.teil(b.kegel((s * 0.196, 0.003, 1.094), 0.028, 0.085, (R(-4), R(s * 24), 0)), schwarz, name="ohrspitze")
+    # Schwarz: kleine Pfoten, Nase an der Schnauzenspitze, Laecheln
+    for ort_, m_ in (((-0.395, -0.045, 0.362), (1.0, 1.0, 0.9)), ((0.318, -0.06, 0.865), (0.95, 0.95, 1.05)), ((-0.10, -0.055, 0.04), (1.0, 1.7, 0.6)), ((0.10, -0.055, 0.04), (1.0, 1.7, 0.6))):
+        b.teil(b.kugel(ort_, 0.048, m_), schwarz, name="pfote")
+    b.teil(b.kugel((0, -0.298, 0.775), 0.03, (1.25, 0.9, 0.85)), pupille, name="nase")
+    for s in (-1, 1):   # Laecheln: zwei kurze Boegen unter der Schnauzenspitze
+        b.teil(b.kugel((s * 0.028, -0.262, 0.722), 0.012, (2.4, 1.0, 0.55), (0, R(s * -22), R(s * 30))), schwarz, name="mund")
     # Augen: gross, wach, mit Glanzpunkt; freche Brauen
     for s in (-1, 1):
-        b.teil(b.kugel((s * 0.072, -0.150, 0.845), 0.042, (0.9, 0.6, 1.1)), auge, name="auge")
-        b.teil(b.kugel((s * 0.070, -0.175, 0.842), 0.023, (1.0, 0.5, 1.15)), pupille, name="pupille")
-        b.teil(b.kugel((s * 0.062, -0.188, 0.853), 0.007), glanz, name="glanz")
-        braue = b.kugel((s * 0.078, -0.150, 0.905), 0.02, (2.2, 0.6, 0.45), (0, R(s * -16), 0))
-        b.teil(braue, schwarz, name="braue")
+        b.teil(b.kugel((s * 0.074, -0.152, 0.855), 0.044, (0.9, 0.6, 1.12)), auge, name="auge")
+        b.teil(b.kugel((s * 0.070, -0.178, 0.852), 0.024, (1.0, 0.5, 1.15)), pupille, name="pupille")
+        b.teil(b.kugel((s * 0.061, -0.191, 0.864), 0.0075), glanz, name="glanz")
+        b.teil(b.kugel((s * 0.080, -0.152, 0.918), 0.02, (2.2, 0.6, 0.42), (0, R(s * -14), 0)), schwarz, name="braue")
 
-    # Zauberhut: hoher Kegel mit geknickter Spitze, Krempe, goldenes Band, leuchtende Sterne
-    b.teil(b.kegel((0, 0.0, 1.12), 0.15, 0.42, (R(-6), 0, 0), r2=0.05), hut, name="hut")
-    b.teil(b.kegel((0.035, 0.03, 1.40), 0.055, 0.22, (R(-12), R(28), 0)), hut, name="hutspitze")
-    krempe = b.kugel((0, 0.01, 0.925), 0.25, (1.0, 1.0, 0.07), (R(-6), 0, 0))
-    b.teil(krempe, hut, name="krempe")
-    b.teil(b.ring((0, 0.005, 0.955), 0.148, 0.018, (R(-6), 0, 0)), gold, name="hutband")
-    for w_, z_, r_ in ((R(-70), 1.05, 0.022), (R(-110), 1.17, 0.018), (R(-55), 1.24, 0.014), (R(-125), 0.995, 0.015), (R(-88), 1.30, 0.012)):
-        rad = 0.15 - (z_ - 0.92) * 0.26
-        b.teil(b.kugel((math.cos(w_) * rad, math.sin(w_) * rad - 0.012, z_), r_, (1, 0.35, 1)), stern, name="stern")
-    b.teil(b.kugel((0.085, 0.045, 1.505), 0.03), gold, name="hutkugel")
+    # Zauberhut: sitzt zwischen den Ohren, hoher Kegel mit geknickter Spitze, schmale Krempe, goldenes Band, leuchtende Sterne
+    b.teil(b.kegel((0, 0.0, 1.14), 0.115, 0.42, (R(-6), 0, 0), r2=0.045), hut, name="hut")
+    b.teil(b.kegel((0.035, 0.03, 1.42), 0.05, 0.22, (R(-12), R(28), 0)), hut, name="hutspitze")
+    b.teil(b.kugel((0, 0.01, 0.945), 0.165, (1.0, 1.0, 0.09), (R(-6), 0, 0)), hut, name="krempe")
+    b.teil(b.ring((0, 0.005, 0.975), 0.112, 0.016, (R(-6), 0, 0)), gold, name="hutband")
+    for w_, z_, r_ in ((R(-70), 1.07, 0.02), (R(-110), 1.19, 0.016), (R(-55), 1.26, 0.013), (R(-125), 1.02, 0.014), (R(-88), 1.32, 0.011)):
+        rad = 0.115 - (z_ - 0.94) * 0.17
+        b.teil(b.kugel((math.cos(w_) * rad, math.sin(w_) * rad - 0.014, z_), r_, (1, 0.35, 1)), stern, name="stern")
+    b.teil(b.kugel((0.085, 0.045, 1.525), 0.028), gold, name="hutkugel")
 
     # Zauberstab in der erhobenen rechten Pfote, an der Spitze ein Funke
-    b.teil(b.stab((0.365, -0.07, 1.01), 0.011, 0.34, (R(8), R(18), 0)), stabholz, name="stab")
-    b.teil(b.stab((0.413, -0.092, 1.165), 0.0125, 0.045, (R(8), R(18), 0)), auge, name="stabspitze")
-    b.teil(b.kugel((0.425, -0.097, 1.205), 0.022), stern, name="funke")
+    b.teil(b.stab((0.360, -0.07, 1.01), 0.011, 0.34, (R(8), R(18), 0)), stabholz, name="stab")
+    b.teil(b.stab((0.408, -0.092, 1.165), 0.0125, 0.045, (R(8), R(18), 0)), auge, name="stabspitze")
+    b.teil(b.kugel((0.420, -0.097, 1.205), 0.022), stern, name="funke")
     # Fliege in Scharlachrot
     rot = _fell("fliege", (0.70, 0.04, 0.05), staerke=0.1)
     for s in (-1, 1):
-        b.teil(b.kegel((s * 0.045, -0.155, 0.635), 0.04, 0.085, (0, R(s * 90), 0), ecken=4), rot, glatt=False, name="fliege")
-    b.teil(b.kugel((0, -0.16, 0.635), 0.018), gold, name="fliegenknopf")
+        b.teil(b.kegel((s * 0.045, -0.15, 0.635), 0.04, 0.085, (0, R(s * 90), 0), ecken=4), rot, glatt=False, name="fliege")
+    b.teil(b.kugel((0, -0.155, 0.635), 0.018), gold, name="fliegenknopf")
     return b.fertig(ort, dreh, mass)
 
 
 def taube(scene, ort, dreh=0.0, mass=1.0):
-    """Stadttaube: sitzt, Blick nach -y; grauer Koerper, schillernder Hals, zwei dunkle Fluegelbinden, rosa Fuesse."""
-    grau = _fell("taube_grau", (0.42, 0.45, 0.52), staerke=0.2)
-    dunkel = _fell("taube_dunkel", (0.16, 0.17, 0.21), staerke=0.2)
-    hell = _fell("taube_hell", (0.66, 0.68, 0.74), staerke=0.2)
-    hals = _glatt("taube_hals", (0.10, 0.45, 0.30), 0.35, 0.6)
-    lila = _glatt("taube_lila", (0.45, 0.20, 0.55), 0.35, 0.6)
-    schnabel = _glatt("schnabel", (0.25, 0.22, 0.22), 0.4)
-    wachs = _glatt("schnabelwachs", (0.92, 0.90, 0.86), 0.5)
-    auge = _glatt("taube_auge", (0.95, 0.42, 0.08), 0.2)
+    """Stadttaube: sitzt, Blick nach -y; blaugrauer Koerper, gruen-violett schillernder Hals, zwei dunkle Fluegelbinden, rosa Fuesse."""
+    grau = _fell("taube_grau", (0.22, 0.25, 0.32), staerke=0.2)
+    dunkel = _fell("taube_dunkel", (0.06, 0.065, 0.085), staerke=0.2)
+    hell = _fell("taube_hell", (0.36, 0.39, 0.46), staerke=0.2)
+    hals = _fell("taube_hals", (0.05, 0.30, 0.20), rau=0.45, staerke=0.1)
+    lila = _fell("taube_lila", (0.30, 0.10, 0.36), rau=0.45, staerke=0.1)
+    schnabel = _glatt("schnabel", (0.10, 0.09, 0.09), 0.4)
+    wachs = _glatt("schnabelwachs", (0.80, 0.78, 0.74), 0.5)
+    auge = _glatt("taube_auge", (0.90, 0.35, 0.05), 0.2)
     pupille = _glatt("pupille", (0.02, 0.015, 0.01), 0.1)
-    rosa = _glatt("taube_fuss", (0.85, 0.35, 0.38), 0.6)
+    rosa = _glatt("taube_fuss", (0.70, 0.25, 0.28), 0.6)
     b = Bau(scene, "taube")
-    b.koerper([b.kugel((0, 0.02, 0.105), 0.085, (0.95, 1.45, 0.92), (R(-18), 0, 0)),
-               b.kugel((0, -0.085, 0.215), 0.045, (1.0, 1.0, 1.05)),
-               b.kugel((0, -0.06, 0.165), 0.05, (1.0, 0.9, 1.2), (R(-25), 0, 0))], grau, voxel=0.006)
-    b.koerper([b.kugel((0, -0.075, 0.150), 0.052, (1.02, 0.75, 0.85), (R(-25), 0, 0))], hals, voxel=0.006, name="hals")
-    b.koerper([b.kugel((0, -0.090, 0.128), 0.045, (1.04, 0.6, 0.6), (R(-25), 0, 0))], lila, voxel=0.006, name="brust")
-    b.koerper([b.kugel((0, -0.03, 0.075), 0.07, (0.85, 1.2, 0.7), (R(-18), 0, 0))], hell, voxel=0.006, name="bauch")
-    for s in (-1, 1):   # Fluegel mit zwei dunklen Binden
-        b.teil(b.kugel((s * 0.072, 0.045, 0.115), 0.075, (0.28, 1.45, 0.72), (R(-22), 0, R(s * -6))), hell, name="fluegel")
-        for k, dy in enumerate((0.075, 0.115)):
-            b.teil(b.kugel((s * 0.079, dy, 0.092 - k * 0.012), 0.03, (0.22, 0.45, 1.5), (R(-40), 0, R(s * -6))), dunkel, name="binde")
-        b.teil(b.kugel((s * 0.036, -0.122, 0.228), 0.0085), auge, name="auge")
-        b.teil(b.kugel((s * 0.040, -0.125, 0.228), 0.0045), pupille, name="pupille")
+    # Koerper, Hals und Kopf als ein Stueck; die Farbflaechen liegen knapp darueber
+    b.koerper([b.kugel((0, 0.03, 0.105), 0.085, (0.92, 1.5, 0.9), (R(-16), 0, 0)),
+               b.kugel((0, -0.07, 0.165), 0.052, (1.0, 0.95, 1.25), (R(-28), 0, 0)),
+               b.kugel((0, -0.095, 0.222), 0.043, (1.0, 1.05, 1.0))], grau, voxel=0.005)
+    b.koerper([b.kugel((0, -0.074, 0.186), 0.052, (1.04, 0.99, 0.5), (R(-28), 0, 0))], hals, voxel=0.004, name="hals")
+    b.koerper([b.kugel((0, -0.066, 0.158), 0.052, (1.05, 1.0, 0.42), (R(-28), 0, 0))], lila, voxel=0.004, name="brust")
+    b.koerper([b.kugel((0, -0.01, 0.070), 0.072, (0.85, 1.25, 0.62), (R(-16), 0, 0))], hell, voxel=0.005, name="bauch")
+    for s in (-1, 1):   # angelegte Fluegel mit zwei dunklen Binden, Schwungfedern dunkel
+        b.teil(b.kugel((s * 0.070, 0.055, 0.118), 0.075, (0.26, 1.5, 0.74), (R(-20), 0, R(s * -7))), hell, name="fluegel")
+        for k, dy in enumerate((0.085, 0.125)):
+            b.teil(b.kugel((s * 0.079, dy, 0.094 - k * 0.012), 0.03, (0.2, 0.42, 1.5), (R(-42), 0, R(s * -7))), dunkel, name="binde")
+        b.teil(b.kugel((s * 0.060, 0.17, 0.090), 0.04, (0.2, 1.3, 0.4), (R(-16), 0, R(s * -10))), dunkel, name="schwungfedern")
+        b.teil(b.kugel((s * 0.034, -0.118, 0.232), 0.0085), auge, name="auge")
+        b.teil(b.kugel((s * 0.038, -0.121, 0.232), 0.0045), pupille, name="pupille")
         for zeh in (-0.5, 0, 0.5):
             b.teil(b.stab((s * 0.03 + zeh * 0.018, -0.045, 0.006), 0.004, 0.045, (R(90), 0, R(zeh * 35))), rosa, name="zeh")
         b.teil(b.stab((s * 0.03, -0.025, 0.02), 0.005, 0.04), rosa, name="bein")
-    b.teil(b.kugel((0, 0.16, 0.085), 0.05, (0.9, 1.6, 0.22), (R(-10), 0, 0)), dunkel, name="schwanz")
-    b.teil(b.kegel((0, -0.142, 0.210), 0.012, 0.04, (R(98), 0, 0)), schnabel, name="schnabel")
-    b.teil(b.kugel((0, -0.128, 0.219), 0.011, (1.0, 1.0, 0.7)), wachs, name="wachshaut")
+    b.teil(b.kugel((0, 0.185, 0.080), 0.05, (0.85, 1.5, 0.2), (R(-8), 0, 0)), dunkel, name="schwanz")
+    b.teil(b.kegel((0, -0.150, 0.214), 0.012, 0.042, (R(100), 0, 0)), schnabel, name="schnabel")
+    b.teil(b.kugel((0, -0.134, 0.223), 0.011, (1.0, 1.0, 0.7)), wachs, name="wachshaut")
     return b.fertig(ort, dreh, mass)

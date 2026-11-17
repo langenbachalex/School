@@ -7,11 +7,11 @@ a03c	sergeant	I am walking fast!	Ich gehe schnell!		[shouting, offended] I am wa
 a04	sergeant	The keys are gone! And nobody can find Mr Pike!	Die Schlüssel sind weg! Und niemand kann Mr Pike finden!	The keys are gone! Mr Pike is gone too!	[panicking, loud] The keys are gone! And nobody can find Mr Pike!		nach a03c
 a05	sergeant	At 9:53 we lock the Tower. Every single night.	Um 21:53 Uhr schließen wir den Tower ab. Jeden einzelnen Abend.	We lock the Tower at 9:53. Every night.	[stern, proud] At nine fifty-three we lock the Tower. Every. Single. Night.		nach a04
 a06	sergeant	For seven hundred years. Never late. Not on my watch!	Seit siebenhundert Jahren. Nie zu spät. Nicht, solange ich Wache habe!		[proud] For seven hundred years. Never late. [fierce] Not on MY watch!		nach a05
-a07a	erzaehler	He stops. He looks at you.	Er bleibt stehen. Er sieht dich an.		[British accent] He stops. He looks at you.		nach a06
+a07a	erzaehler	He stops. He looks at you.	Er bleibt stehen. Er sieht dich an.		He stops. He looks at you.		nach a06
 a07b	sergeant	You. Can you find things?	Du. Kannst du Dinge finden?		[stern, suspicious] You. Can you find things?		nach a07a
 a08	sergeant	Good. Here is your badge, detective. Find my keys.	Gut. Hier ist dein Abzeichen, Detective. Finde meine Schlüssel.	You are a detective now. Find my keys.	[stern, commanding] Good. Here is your badge, detective. Find my keys.	Abzeichen „Junior Detective“	nach a07b
 a09	sergeant	You have thirty-six and a half minutes. Hurry up!	Du hast sechsunddreißigeinhalb Minuten. Beeil dich!	You have 36 minutes. Hurry up!	[stern] You have thirty-six and a half minutes. [shouting] Hurry up!		nach a08
-a10	erzaehler	A fox in a pointy hat jumps out of a barrel.	Ein Fuchs mit spitzem Hut springt aus einem Fass.		[British accent] A fox in a pointy hat jumps out of a barrel.		nach a09
+a10	erzaehler	A fox in a pointy hat jumps out of a barrel.	Ein Fuchs mit spitzem Hut springt aus einem Fass.		A fox in a pointy hat jumps out of a barrel.		nach a09
 a11	gary	Ta-daa! Gary the Great! The greatest wizard in London!	Ta-daa! Gary the Great! Der größte Zauberer von London!		[excited, showman] Ta-daa! Gary the Great! The greatest wizard in London!		nach a10
 a12	gary	A mystery? I will solve it. With my magic skills!	Ein Rätsel? Ich löse es. Mit meinen Zauberkünsten!		[curious] A mystery? [confident] I will solve it. [dramatic] With my magic skills!		nach a11
 a13a	sergeant	FOX! Get out of that barrel!	FUCHS! Raus aus dem Fass!		[shouting, furious] FOX! Get out of that barrel!		nach a12
@@ -26,17 +26,17 @@ a17	erzaehler	He marches off. Fast. Something moves at the window.	Er marschiert
 a18	erzaehler	A black feather falls to the floor. You pick it up. It is warm.	Eine schwarze Feder fällt auf den Boden. Du hebst sie auf. Sie ist warm.		[British accent] [quiet, mysterious] A black feather falls to the floor. You pick it up. [pause] It is warm.	Feder	nach a17
 a19	bild	Find the keys before 9:53.	Finde die Schlüssel vor 21:53 Uhr.				Auftrag auf dem Bildschirm, nach a18
 m1	mrflex	Mr. Flex. Wizard. Genius. Very modest.	Mr. Flex. Zauberer. Genie. Sehr bescheiden.		[British accent] Mr. Flex. [prouder] Wizard. [delighted, very pleased with himself] Genius! [long pause] [charming, smiling] Very modest.		Spiegel leuchtet auf · Geste: nimmt die Sonnenbrille ab
-m2	mrflex	So. You are the hero. I can tell. I know everything.	So. Du bist der Held. Das sehe ich. Ich weiß alles.		[British accent] [smug, relaxed] So. You are the hero. I can tell. I know everything.		nach m1
-m3	mrflex	But heroes need muscles. Brain muscles.	Aber Helden brauchen Muskeln. Gehirnmuskeln.		[British accent] [smug] But heroes need muscles. [pause] Brain muscles.		nach m2 · Geste: Bizeps-Pose
+m2	mrflex	So. You are the hero. I can tell. I know everything.	So. Du bist der Held. Das sehe ich. Ich weiß alles.		[smug, relaxed] So. You are the hero. I can tell. I know everything.		nach m1
+m3	mrflex	But heroes need muscles. Brain muscles.	Aber Helden brauchen Muskeln. Gehirnmuskeln.		[smug] But heroes need muscles. [pause] Brain muscles.		nach m2 · Geste: Bizeps-Pose
 m4	mrflex	Get pumped up in the Word Gym first. Then solve the mystery.	Mach dich zuerst im Word Gym stark. Dann löse das Rätsel.	First go to the Word Gym. Then find the keys.	[British accent] [energetic, coach] Get pumped up in the Word Gym first. Then solve the mystery.		nach m3
 m5	mrflex	That feather? I made it. Hold it to any words. It whispers.	Die Feder da? Die habe ich gemacht. Halte sie an Wörter. Sie flüstert.	Hold the feather to the words. It helps you.	[British accent] [casual] That feather? I made it. Hold it to any words. [whispers] It whispers.	Feder	nach m4
-m6	mrflex	One round. Off you go. I will wait. I have tea.	Eine Runde. Los mit dir. Ich warte. Ich habe Tee.		[British accent] [relaxed] One round. Off you go. I will wait. [content] I have tea.		nach m5
+m6	mrflex	One round. Off you go. I will wait. I have tea.	Eine Runde. Los mit dir. Ich warte. Ich habe Tee.		[relaxed] One round. Off you go. I will wait. [content] I have tea.		nach m5
 t1	gary	I will now open this door. With MAGIC.	Ich öffne jetzt diese Tür. Mit ZAUBEREI.		[dramatic, showman] I will now open this door. [pause] With MAGIC.	Schlüssel Guard Room	erste Tür, Schlüssel ist da
 t2	gary	Thank you. Thank you. No photos, please.	Danke. Danke. Bitte keine Fotos.		[modest star, bowing] Thank you. Thank you. No photos, please.		Tür ist offen (du hast aufgeschlossen)
-h1	mrflex	Nothing is lost. It is all in your chest. I checked. Twice.	Nichts geht verloren. Alles ist in deiner Truhe. Ich habe nachgesehen. Zweimal.		[British accent] [reassuring, relaxed] Nothing is lost. It is all in your chest. I checked. [smug] Twice.	Truhe	erster Fund fliegt in die Truhe
-b01a	erzaehler	There are seven hooks on the wall, but no keys.	An der Wand sind sieben Haken, aber keine Schlüssel.		[British accent] There are seven hooks on the wall, but no keys.	Schlüsselhaken	erster Tipp
+h1	mrflex	Nothing is lost. It is all in your chest. I checked. Twice.	Nichts geht verloren. Alles ist in deiner Truhe. Ich habe nachgesehen. Zweimal.		[reassuring, relaxed] Nothing is lost. It is all in your chest. I checked. [smug] Twice.	Truhe	erster Fund fliegt in die Truhe
+b01a	erzaehler	There are seven hooks on the wall, but no keys.	An der Wand sind sieben Haken, aber keine Schlüssel.		There are seven hooks on the wall, but no keys.	Schlüsselhaken	erster Tipp
 b01b	gary	Seven hooks. Funny number, isn't it?	Sieben Haken. Komische Zahl, oder?		[thoughtful, sly] Seven hooks. Funny number, isn't it?	Schlüsselhaken	zweiter Tipp
-b02a	erzaehler	There is a boot under the bench. Just one.	Unter der Bank liegt ein Stiefel. Nur einer.		[British accent] There is a boot under the bench. Just one.	Stiefel	erster Tipp
+b02a	erzaehler	There is a boot under the bench. Just one.	Unter der Bank liegt ein Stiefel. Nur einer.		There is a boot under the bench. Just one.	Stiefel	erster Tipp
 b02b	gary	One boot. A thief with one leg? Or a silly thief with two?	Ein Stiefel. Ein Dieb mit einem Bein? Oder ein dummer Dieb mit zweien?		[detective voice, amused] One boot. A thief with one leg? Or a silly thief with two?	Stiefel	zweiter Tipp
 b03a	erzaehler	Right next to the boot there is a dancing shoe. How strange.	Direkt neben dem Stiefel liegt ein Tanzschuh. Wie seltsam.		[British accent] Right next to the boot there is a dancing shoe. How strange.	Tanzschuh	erster Tipp
 b03b	gary	Don't look at me. I don't dance. I do magic.	Sieh mich nicht an. Ich tanze nicht. Ich zaubere.		[defensive, proud] Don't look at me. I don't dance. I do magic.	Tanzschuh	zweiter Tipp → Seitenstrang „The Sergeant's Secret“
@@ -44,15 +44,15 @@ b04a	erzaehler	The helmet is on the shelf. It is five hundred years old.	Der Hel
 b04b	gary	Shh! Watch me. I am sneaking.	Pst! Schau mir zu. Ich schleiche.		[whispers] Shh! Watch me. I am sneaking.	Helm	zweiter Tipp · Geste: schleicht
 b04c	gary	The helmet started it! It was the helmet!	Der Helm hat angefangen! Es war der Helm!		[innocent, cheerful] The HELMET started it! It was the helmet!	Helm	nach dem CLANG (Gary läuft gegen den Helm)
 b05a	erzaehler	There is a lantern next to the door. Take it with you.	Neben der Tür steht eine Laterne. Nimm sie mit.		[British accent] There is a lantern next to the door. Take it with you.	Laterne	erster Tipp
-b05b	mrflex	Watch this.	Schau mal!		[British accent] [casual, showing off] Watch this.	Laterne	zweiter Tipp · Geste: schnippt, Laterne geht an
-b05c	mrflex	You're welcome.	Gern geschehen.		[British accent] [smug] You're welcome.	Laterne	Laterne brennt
+b05b	mrflex	Watch this.	Schau mal!		[casual, showing off] Watch this.	Laterne	zweiter Tipp · Geste: schnippt, Laterne geht an
+b05c	mrflex	You're welcome.	Gern geschehen.		[smug] You're welcome.	Laterne	Laterne brennt
 b06a	erzaehler	The clock is above the fireplace. It says twenty past nine.	Die Uhr hängt über dem Kamin. Es ist zwanzig nach neun.		[British accent] The clock is above the fireplace. It says twenty past nine.	Uhr	erster Tipp
 b06b	sergeant	I am counting, detective! I always count!	Ich zähle mit, Detective! Ich zähle immer mit!		[shouting from far away] I am counting, detective! I always count!	Uhr	zweiter Tipp · ruft von draußen
 b07a	erzaehler	There is a teapot on the table. It is still warm.	Auf dem Tisch steht eine Teekanne. Sie ist noch warm.		[British accent] There is a teapot on the table. It is still warm.	Teekanne	erster Tipp
 b07b	gary	Still warm. Somebody was here a minute ago. I am a genius.	Noch warm. Vor einer Minute war jemand hier. Ich bin ein Genie.		[detective voice] Still warm. Somebody was here a minute ago. [delighted] I am a genius.	Teekanne	zweiter Tipp
-b08a	erzaehler	There is a spoon between the cups. Two cups!	Zwischen den Tassen liegt ein Löffel. Zwei Tassen!		[British accent] There is a spoon between the cups. Two cups!	Tassen	erster Tipp
+b08a	erzaehler	There is a spoon between the cups. Two cups!	Zwischen den Tassen liegt ein Löffel. Zwei Tassen!		There is a spoon between the cups. Two cups!	Tassen	erster Tipp
 b08b	gary	Mr Pike never has visitors. Never.	Mr Pike hat nie Besuch. Nie.		[surprised, serious] Mr Pike never has visitors. Never.	Tassen	zweiter Tipp
-b09a	erzaehler	There are crumbs under the table. Sandwich crumbs.	Unter dem Tisch liegen Krümel. Sandwich-Krümel.		[British accent] There are crumbs under the table. Sandwich crumbs.	Krümel	erster Tipp
+b09a	erzaehler	There are crumbs under the table. Sandwich crumbs.	Unter dem Tisch liegen Krümel. Sandwich-Krümel.		There are crumbs under the table. Sandwich crumbs.	Krümel	erster Tipp
 b09b	gary	Not mine. I never leave crumbs. I eat the crumbs.	Nicht von mir. Ich lasse nie Krümel liegen. Ich esse die Krümel.		[quick, defensive] Not mine. I never leave crumbs. I eat the crumbs.	Krümel	zweiter Tipp → Seitenstrang „The Sandwich Thief“
 b10a	erzaehler	There is an old map of the Tower on the wall.	An der Wand hängt eine alte Karte vom Tower.		[British accent] There is an old map of the Tower on the wall.	Karte	erster Tipp
 b11a	erzaehler	Mr Pike's coat is on the chair. His hat is missing.	Mr Pikes Mantel hängt über dem Stuhl. Sein Hut fehlt.		[British accent] Mr Pike's coat is on the chair. His hat is missing.	Mantel	erster Tipp
@@ -63,34 +63,34 @@ b13b	erzaehler	… wait for me at the gate. Yours for ever, A.	… warte am Tor 
 b14a	erzaehler	There is a small door in the corner. It is locked.	In der Ecke ist eine kleine Tür. Sie ist abgeschlossen.		[British accent] There is a small door in the corner. It is locked.	Kleine Tür (nur mit Laterne sichtbar)	erster Tipp
 b14b	gary	I will open it with magic.	Ich öffne sie mit Zauberei.		[confident, showman] I will open it with magic.	Kleine Tür (nur mit Laterne sichtbar)	zweiter Tipp
 b14c	gary	It needs a minute. Or a key.	Sie braucht eine Minute. Oder einen Schlüssel.		[embarrassed pause] It needs a minute. [quietly] Or a key.	Kleine Tür (nur mit Laterne sichtbar)	nichts passiert → Seitenstrang „The Feather Door“
-b15a	erzaehler	This is your chest. What goes in, stays in.	Das ist deine Truhe. Was hineinkommt, bleibt drin.		[British accent] This is your chest. What goes in, stays in.	Truhe	erster Tipp
+b15a	erzaehler	This is your chest. What goes in, stays in.	Das ist deine Truhe. Was hineinkommt, bleibt drin.		This is your chest. What goes in, stays in.	Truhe	erster Tipp
 f1	gary	I never take keys. Sandwiches, sometimes. Keys, never.	Ich nehme nie Schlüssel. Sandwiches, manchmal. Schlüssel, nie.		[innocent, honest] I never take keys. Sandwiches, sometimes. Keys, never.		zwischendurch, Gary
 f2	gary	Mr Pike is always here at nine. He is never late.	Mr Pike ist um neun immer hier. Er kommt nie zu spät.		[thoughtful] Mr Pike is always here at nine. He is never late.		zwischendurch, Gary
 f3	gary	But tonight? No idea. That is very strange.	Aber heute Abend? Keine Ahnung. Das ist sehr seltsam.		[puzzled] But tonight? No idea. That is very strange.		nach f2
 f4	gary	Ask the pigeon. She sees everything. Sadly, she never stops talking.	Frag die Taube. Sie sieht alles. Leider hört sie nie auf zu reden.		[helpful] Ask the pigeon. She sees everything. [sighs] Sadly, she never stops talking.	Fenster	zwischendurch, vor der Taube
-p1	taube	Coo! I sit at this window every night. I see everything.	Gurr! Ich sitze jeden Abend an diesem Fenster. Ich sehe alles.		[British accent] [excited, gossiping] Coo! I sit at this window every night. I see everything.	Fenster	Fenster, zweiter Tipp
+p1	taube	Coo! I sit at this window every night. I see everything.	Gurr! Ich sitze jeden Abend an diesem Fenster. Ich sehe alles.		[excited, gossiping] Coo! I sit at this window every night. I see everything.	Fenster	Fenster, zweiter Tipp
 p2	taube	At nine o'clock Mr Pike is in the Guard Room, as always.	Um neun Uhr ist Mr Pike im Wachraum, wie immer.		[British accent] [excited, gossiping] At nine o'clock Mr Pike is in the Guard Room, as always.		nach p1
-p3	taube	He has the keys in his hand and a huge bag on his back.	Er hat die Schlüssel in der Hand und eine riesige Tasche auf dem Rücken.	He has the keys in his hand. He has a big bag on his back.	[British accent] [excited, gossiping] He has the keys in his hand and a huge bag on his back.		nach p2
+p3	taube	He has the keys in his hand and a huge bag on his back.	Er hat die Schlüssel in der Hand und eine riesige Tasche auf dem Rücken.	He has the keys in his hand. He has a big bag on his back.	[excited, gossiping] He has the keys in his hand and a huge bag on his back.		nach p2
 p4	taube	A woman is with him. They drink tea and whisper.	Eine Frau ist bei ihm. Sie trinken Tee und flüstern.		[British accent] [fast, gossiping] A woman is with him. They drink tea and [whispers] whisper.		nach p3
 p5	taube	At ten past nine he hides something behind the clock.	Um zehn nach neun versteckt er etwas hinter der Uhr.	He puts something behind the clock.	[British accent] [excited, gossiping] At ten past nine he hides something behind the clock.	Uhr	nach p4
 p6	taube	Then they go down the stairs. Down, not out!	Dann gehen sie die Treppe hinunter. Hinunter, nicht hinaus!	They go down the stairs.	[British accent] [fast, excited] Then they go down the stairs. DOWN, not out!	Treppe	nach p5
-p7	taube	And guess what: he is singing. Mr Pike never sings!	Und rate mal: Er singt. Mr Pike singt nie!		[British accent] [fast, thrilled] And guess what: || [British accent] [gossiping, amazed] he is singing. Mr Pike NEVER sings!		nach p6
+p7	taube	And guess what: he is singing. Mr Pike never sings!	Und rate mal: Er singt. Mr Pike singt nie!		[fast, thrilled] And guess what: || [gossiping, amazed] he is singing. Mr Pike NEVER sings!		nach p6
 q0	gary	I don't trust pigeons. They never clap. Does she really say that?	Ich traue Tauben nicht. Sie klatschen nie. Sagt sie das wirklich?		[suspicious] I don't trust pigeons. They never clap. [doubtful] Does she really say that?		nach p7, vor den fünf Fragen
 qa1	du	Yes, she does.	Ja, das sagt sie.				Antwortkarte
 qa2	du	No, she doesn't.	Nein, das sagt sie nicht.				Antwortkarte
 qa3	du	She doesn't say.	Dazu sagt sie nichts.				Antwortkarte
 q1a	gary	Mr Pike has the keys in his hand.	Mr Pike hat die Schlüssel in der Hand.		[doubtful, testing] Mr Pike has the keys in his hand.		Frage 1 · richtig: Yes, she does.
-q1b	taube	Thank you!	Danke!		[British accent] [excited, gossiping] Thank you!		nach der richtigen Antwort auf Frage 1
+q1b	taube	Thank you!	Danke!		[excited, gossiping] Thank you!		nach der richtigen Antwort auf Frage 1
 q2a	gary	The bag is on the table.	Die Tasche ist auf dem Tisch.		[doubtful, testing] The bag is on the table.		Frage 2 · richtig: No, she doesn't. (on his back)
-q2b	taube	On his BACK. Listen, fox!	Auf seinem RÜCKEN. Hör zu, Fuchs!		[British accent] [fast, indignant] On his BACK. Listen, fox!		nach der richtigen Antwort auf Frage 2
+q2b	taube	On his BACK. Listen, fox!	Auf seinem RÜCKEN. Hör zu, Fuchs!		[fast, indignant] On his BACK. Listen, fox!		nach der richtigen Antwort auf Frage 2
 q3a	gary	The woman is the cook.	Die Frau ist die Köchin.		[doubtful, testing] The woman is the cook.		Frage 3 · richtig: She doesn't say.
-q3b	taube	Did I say that? I did not say that.	Habe ich das gesagt? Das habe ich nicht gesagt.		[British accent] [fast, offended] Did I say that? I did NOT say that.		nach der richtigen Antwort auf Frage 3
+q3b	taube	Did I say that? I did not say that.	Habe ich das gesagt? Das habe ich nicht gesagt.		[fast, offended] Did I say that? I did NOT say that.		nach der richtigen Antwort auf Frage 3
 q4a	gary	He hides something under the clock.	Er versteckt etwas unter der Uhr.		[doubtful, testing] He hides something under the clock.		Frage 4 · richtig: No, she doesn't. (behind the clock)
-q4b	taube	BEHIND. Coo!	HINTER. Gurr!		[British accent] [fast, indignant] BEHIND. Coo!		nach der richtigen Antwort auf Frage 4
+q4b	taube	BEHIND. Coo!	HINTER. Gurr!		[fast, indignant] BEHIND. Coo!		nach der richtigen Antwort auf Frage 4
 q5a	gary	They go down the stairs.	Sie gehen die Treppe hinunter.		[doubtful, testing] They go down the stairs.		Frage 5 · richtig: Yes, she does.
-q5b	taube	Down, not out!	Hinunter, nicht hinaus!		[British accent] [fast, happy] DOWN, not out!		nach der richtigen Antwort auf Frage 5
-e1	erzaehler	There is a note behind the clock.	Hinter der Uhr steckt ein Zettel.		[British accent] There is a note behind the clock.	Zettel	Uhr antippen, nachdem die Taube geredet hat
-e2	erzaehler	Don't look for the keys. Look for the cake. – P.	Such nicht nach den Schlüsseln. Such nach dem Kuchen. – P.		[British accent] [reading a note, puzzled] Don't look for the keys. Look for the cake. [pause] P.	Zettel	nach e1 (der Zettel wird vorgelesen)
+q5b	taube	Down, not out!	Hinunter, nicht hinaus!		[fast, happy] DOWN, not out!		nach der richtigen Antwort auf Frage 5
+e1	erzaehler	There is a note behind the clock.	Hinter der Uhr steckt ein Zettel.		There is a note behind the clock.	Zettel	Uhr antippen, nachdem die Taube geredet hat
+e2	erzaehler	Don't look for the keys. Look for the cake. – P.	Such nicht nach den Schlüsseln. Such nach dem Kuchen. – P.		[reading a note, puzzled] Don't look for the keys. Look for the cake. [pause] P.	Zettel	nach e1 (der Zettel wird vorgelesen)
 e3a	gary	A cake? Now?	Ein Kuchen? Jetzt?		[astonished] A cake? Now?		nach e2
 e3b	erzaehler	says Gary.	sagt Gary.				nur_text
 e3c	gary	I love this case. Is there food in this case?	Ich liebe diesen Fall. Gibt es in diesem Fall etwas zu essen?		[delighted, hopeful] I love this case. Is there food in this case?		nach e3a
@@ -99,7 +99,7 @@ r1	erzaehler	A huge raven sits on the stairs. He does not move.	Ein riesiger Rab
 r2a	arthur	I am Arthur.	Ich bin Arthur.		[slow, calm] I am Arthur.		nach r1
 r2b	erzaehler	he says.	sagt er.				nur_text
 r2c	arthur	First of the seven.	Der Erste der Sieben.		[slow, calm] First of the seven.		nach r2a
-r3a	erzaehler	Gary bows.	Gary verbeugt sich.		[British accent] Gary bows.		nach r2c · Geste: Gary verbeugt sich
+r3a	erzaehler	Gary bows.	Gary verbeugt sich.		Gary bows.		nach r2c · Geste: Gary verbeugt sich
 r3b	gary	Your Majesty. Would you like to see a trick?	Eure Majestät. Möchtet Ihr einen Trick sehen?		[very polite, eager] Your Majesty. Would you like to see a trick?		nach r3a
 r3c	arthur	Sit, fox.	Sitz, Fuchs.		[dry, calm] Sit, fox.		nach r3b
 r4	arthur	Where was the note? Tell me, and I let you pass.	Wo war der Zettel? Sag es mir, und ich lasse dich durch.	Where was the note? Tell me.	[slow, calm] Where was the note? Tell me, and I let you pass.		nach r3c · Antwort mit einer Karte, richtig: behind the clock
@@ -107,28 +107,28 @@ r4x	arthur	That is a boot. I am not a boot.	Das ist ein Stiefel. Ich bin kein St
 r4y	arthur	No. Not there. Think, detective.	Nein. Nicht dort. Denk nach, Detective.		[dry, calm] No. Not there. Think, detective.		falsche Karte: alle anderen
 r5a	arthur	Good.	Gut.		[slow, calm] Good.		richtige Karte: behind the clock
 r5b	erzaehler	says Arthur.	sagt Arthur.				nur_text
-r5c	erzaehler	His eyes are gold.	Seine Augen sind golden.		[British accent] [quiet, mysterious] His eyes are gold.		nach r5a
+r5c	erzaehler	His eyes are gold.	Seine Augen sind golden.		[quiet, mysterious] His eyes are gold.		nach r5a
 r6	arthur	Seven hooks. Seven ravens. Count us tonight.	Sieben Haken. Sieben Raben. Zähl uns heute Nacht.		[slow, mysterious] Seven hooks. Seven ravens. Count us tonight.		nach r5c
-r7	erzaehler	Then he is gone. Not through the window. Simply gone.	Dann ist er weg. Nicht durchs Fenster. Einfach weg.		[British accent] [quiet, amazed] Then he is gone. Not through the window. [pause] Simply gone.	Rabe Arthur	nach r6
+r7	erzaehler	Then he is gone. Not through the window. Simply gone.	Dann ist er weg. Nicht durchs Fenster. Einfach weg.		[quiet, amazed] Then he is gone. Not through the window. [pause] Simply gone.	Rabe Arthur	nach r6
 r8a	gary	I can do that too.	Das kann ich auch.		[casual, unimpressed] I can do that too.		nach r7
 r8b	erzaehler	says Gary.	sagt Gary.				nur_text
 r8c	gary	I just don't want to.	Ich will nur nicht.		[casual, shrugging] I just don't want to.		nach r8a
-g1_1	mrflex	Touch things. All the things. I do.	Fass Dinge an. Alle Dinge. Mache ich auch.		[British accent] [smug, relaxed] Touch things. All the things. I do.		Tipp „Was tun im Raum?“, Stufe 1
-g1_2	mrflex	Someone saw everything. Someone with wings.	Jemand hat alles gesehen. Jemand mit Flügeln.		[British accent] [smug, relaxed] Someone saw everything. Someone with wings.		Tipp „Was tun im Raum?“, Stufe 2
-g1_3	mrflex	The window. Go on. I have tea.	Das Fenster. Na los. Ich habe Tee.		[British accent] [smug, relaxed] The window. Go on. I have tea.		Tipp „Was tun im Raum?“, Stufe 3
-g2_1	mrflex	Someone hides things behind things. I do.	Jemand versteckt Dinge hinter Dingen. Ich auch.		[British accent] [smug, relaxed] Someone hides things behind things. I do.		Tipp „Der Zettel“, Stufe 1
+g1_1	mrflex	Touch things. All the things. I do.	Fass Dinge an. Alle Dinge. Mache ich auch.		[smug, relaxed] Touch things. All the things. I do.		Tipp „Was tun im Raum?“, Stufe 1
+g1_2	mrflex	Someone saw everything. Someone with wings.	Jemand hat alles gesehen. Jemand mit Flügeln.		[smug, relaxed] Someone saw everything. Someone with wings.		Tipp „Was tun im Raum?“, Stufe 2
+g1_3	mrflex	The window. Go on. I have tea.	Das Fenster. Na los. Ich habe Tee.		[smug, relaxed] The window. Go on. I have tea.		Tipp „Was tun im Raum?“, Stufe 3
+g2_1	mrflex	Someone hides things behind things. I do.	Jemand versteckt Dinge hinter Dingen. Ich auch.		[smug, relaxed] Someone hides things behind things. I do.		Tipp „Der Zettel“, Stufe 1
 g2_2	mrflex	Ask the pigeon. Then look where she says.	Frag die Taube. Dann schau dort nach, wo sie sagt.		[British accent] [smug, relaxed] Ask the pigeon. Then look where she says.		Tipp „Der Zettel“, Stufe 2
-g2_3	mrflex	Behind the clock. Go on. I will wait.	Hinter der Uhr. Na los. Ich warte.		[British accent] [smug, relaxed] Behind the clock. Go on. I will wait.		Tipp „Der Zettel“, Stufe 3
-g3_1	mrflex	He wants a place. Not a thing.	Er will einen Ort. Kein Ding.		[British accent] [smug, relaxed] He wants a place. Not a thing.		Tipp „Arthurs Frage“, Stufe 1
-g3_2	mrflex	Where was the note? You know this.	Wo war der Zettel? Das weißt du.		[British accent] [smug, relaxed] Where was the note? You know this.		Tipp „Arthurs Frage“, Stufe 2
-g3_3	mrflex	Behind the clock. Say it with style.	Hinter der Uhr. Sag es mit Stil.		[British accent] [smug, relaxed] Behind the clock. Say it with style.		Tipp „Arthurs Frage“, Stufe 3
+g2_3	mrflex	Behind the clock. Go on. I will wait.	Hinter der Uhr. Na los. Ich warte.		[smug, relaxed] Behind the clock. Go on. I will wait.		Tipp „Der Zettel“, Stufe 3
+g3_1	mrflex	He wants a place. Not a thing.	Er will einen Ort. Kein Ding.		[smug, relaxed] He wants a place. Not a thing.		Tipp „Arthurs Frage“, Stufe 1
+g3_2	mrflex	Where was the note? You know this.	Wo war der Zettel? Das weißt du.		[smug, relaxed] Where was the note? You know this.		Tipp „Arthurs Frage“, Stufe 2
+g3_3	mrflex	Behind the clock. Say it with style.	Hinter der Uhr. Sag es mit Stil.		[smug, relaxed] Behind the clock. Say it with style.		Tipp „Arthurs Frage“, Stufe 3
 s1	erzaehler	The clock says half past nine. Twenty-three minutes left.	Die Uhr zeigt halb zehn. Noch dreiundzwanzig Minuten.		[British accent] The clock says half past nine. Twenty-three minutes left.	Uhr	Schluss-Film, Bild 1
-s2	erzaehler	Something smells good down there. Really good.	Da unten riecht etwas gut. Richtig gut.		[British accent] Something smells good down there. Really good.		nach s1
+s2	erzaehler	Something smells good down there. Really good.	Da unten riecht etwas gut. Richtig gut.		Something smells good down there. Really good.		nach s1
 s3	erzaehler	Down in the dark, somebody is singing. Badly.	Unten im Dunkeln singt jemand. Schlecht.		[British accent] [quiet, mysterious] Down in the dark, somebody is singing. [pause] [dry] Badly.		nach s2
 s4a	gary	That is not Mr Pike.	Das ist nicht Mr Pike.		[certain] That is not Mr Pike.		nach s3
 s4b	erzaehler	says Gary.	sagt Gary.				nur_text
 s4c	gary	… Is it?	… Oder?		[long pause] [suddenly unsure, quietly] … Is it?		nach s4a
-s5	mrflex	Too easy. For me. For you? We will see.	Zu leicht. Für mich. Für dich? Wir werden sehen.		[British accent] [smug] Too easy. For me. [teasing] For you? We will see.	Schlüssel Küche	nach dem Film, an der nächsten Tür
+s5	mrflex	Too easy. For me. For you? We will see.	Zu leicht. Für mich. Für dich? Wir werden sehen.		[smug] Too easy. For me. [teasing] For you? We will see.	Schlüssel Küche	nach dem Film, an der nächsten Tür
 i0	sergeant	Who moved my things?! Nobody touches my things!	Wer hat meine Sachen verstellt?! Niemand fasst meine Sachen an!		[shouting, outraged] Who moved my things?! Nobody touches my things!		Wiederbesuch, Sergeant stürmt herein
 i1	sergeant	The boot is on the shelf! It lives under the bench!	Der Stiefel steht auf dem Regal! Er wohnt unter der Bank!		[outraged] The boot is on the shelf! It lives under the bench!	Stiefel	Zufall: Stiefel liegt falsch
 i2	sergeant	The teapot is in the fireplace! Put it on the table!	Die Teekanne ist im Kamin! Stell sie auf den Tisch!		[outraged] The teapot is in the fireplace! Put it on the table!	Teekanne	Zufall: Teekanne liegt falsch
@@ -137,24 +137,24 @@ i4	sergeant	Why is the helmet under the table? On the shelf, detective!	Warum li
 i5	gary	It was not me.	Ich war es nicht.		[innocent, cheerful] It was not me.		während des Aufräumens (es war Gary)
 j1	notizbuch	Case notes, half past nine. The keys are not on the wall. There is one boot under the bench. The teapot on the table is still warm. There is a spoon between the cups – two cups! Mr Pike hides a note behind the clock. Then he goes down the stairs.	Notizen zum Fall, halb zehn. Die Schlüssel sind nicht an der Wand. Unter der Bank liegt ein Stiefel. Die Teekanne auf dem Tisch ist noch warm. Zwischen den Tassen liegt ein Löffel – zwei Tassen! Mr Pike versteckt einen Zettel hinter der Uhr. Dann geht er die Treppe hinunter.				Notizbuch · Lücken: on the wall, under the bench, on the table, between the cups, behind the clock, down the stairs
 j2	notizbuch	There is one thing. There are two things or more.	There is: ein Ding. There are: zwei Dinge oder mehr.				Detective's Notes (freiwillige Seite)
-k01	karte	on the wall	an der Wand		[British accent] on the wall		Karte im Notizbuch
-k02	karte	under the bench	unter der Bank		[British accent] under the bench		Karte im Notizbuch
+k01	karte	on the wall	an der Wand		on the wall		Karte im Notizbuch
+k02	karte	under the bench	unter der Bank		under the bench		Karte im Notizbuch
 k03	karte	right next to the door	direkt neben der Tür		[British accent] right next to the door		Karte im Notizbuch
-k04	karte	on the shelf	auf dem Regal		[British accent] on the shelf		Karte im Notizbuch
-k05	karte	above the fireplace	über dem Kamin		[British accent] above the fireplace		Karte im Notizbuch
-k06	karte	behind the clock	hinter der Uhr		[British accent] behind the clock		Karte im Notizbuch
-k07	karte	between the cups	zwischen den Tassen		[British accent] between the cups		Karte im Notizbuch
+k04	karte	on the shelf	auf dem Regal		on the shelf		Karte im Notizbuch
+k05	karte	above the fireplace	über dem Kamin		above the fireplace		Karte im Notizbuch
+k06	karte	behind the clock	hinter der Uhr		behind the clock		Karte im Notizbuch
+k07	karte	between the cups	zwischen den Tassen		between the cups		Karte im Notizbuch
 k08	karte	in the corner	in der Ecke		[British accent] in the corner		Karte im Notizbuch
-k09	karte	at the window	am Fenster		[British accent] at the window		Karte im Notizbuch
+k09	karte	at the window	am Fenster		at the window		Karte im Notizbuch
 k10	karte	down the stairs	die Treppe hinunter		[British accent] down the stairs		Karte im Notizbuch
-k11	karte	What a shame.	Wie schade.		[British accent] What a shame.		Karte im Notizbuch
-k12	karte	No idea.	Keine Ahnung.		[British accent] No idea.		Karte im Notizbuch
-k13	karte	Hurry up!	Beeil dich!		[British accent] Hurry up!		Karte im Notizbuch
-k14	karte	How strange.	Wie seltsam.		[British accent] How strange.		Karte im Notizbuch
-k15	karte	Guess what!	Rate mal!		[British accent] Guess what!		Karte im Notizbuch
-k16	karte	as always	wie immer		[British accent] as always		Karte im Notizbuch
-k17	karte	Watch this.	Schau mal!		[British accent] Watch this.		Karte im Notizbuch
-k18	karte	Sorry?	Wie bitte?		[British accent] Sorry?		Karte im Notizbuch
-k19	karte	Again, please.	Noch einmal, bitte.		[British accent] Again, please.		Karte im Notizbuch
-k20	karte	Slowly, please.	Langsam, bitte.		[British accent] Slowly, please.		Karte im Notizbuch
-k21	karte	Look for the cake.	Such nach dem Kuchen.		[British accent] Look for the cake.		Karte im Notizbuch
+k11	karte	What a shame.	Wie schade.		What a shame.		Karte im Notizbuch
+k12	karte	No idea.	Keine Ahnung.		No idea.		Karte im Notizbuch
+k13	karte	Hurry up!	Beeil dich!		Hurry up!		Karte im Notizbuch
+k14	karte	How strange.	Wie seltsam.		How strange.		Karte im Notizbuch
+k15	karte	Guess what!	Rate mal!		Guess what!		Karte im Notizbuch
+k16	karte	as always	wie immer		as always		Karte im Notizbuch
+k17	karte	Watch this.	Schau mal!		Watch this.		Karte im Notizbuch
+k18	karte	Sorry?	Wie bitte?		Sorry?		Karte im Notizbuch
+k19	karte	Again, please.	Noch einmal, bitte.		Again, please.		Karte im Notizbuch
+k20	karte	Slowly, please.	Langsam, bitte.		Slowly, please.		Karte im Notizbuch
+k21	karte	Look for the cake.	Such nach dem Kuchen.		Look for the cake.		Karte im Notizbuch

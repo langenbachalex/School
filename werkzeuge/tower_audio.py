@@ -1,6 +1,6 @@
 """Vertont EN6 „The Keys of the Tower“ (ElevenLabs, Eleven v4): Kapitel 1 und die 221 Sprüche.
 
-Quelle: inhalte/abenteuer/tower_kapitel1.tsv und tower_sprueche.tsv, Spalte `regie` – wörtlich, mit allen Tags (Mr. Alex 17.11.).
+Quelle: inhalte/abenteuer/tower_kapitel1.tsv, tower_hof_den.tsv und tower_sprueche.tsv, Spalte `regie` – wörtlich, mit allen Tags (Mr. Alex 17.11.).
 Nicht vertont: Zeilen ohne Regie und Zeilen mit `nur_text`. Zweitfassung (Spalte `einfach`): die Tags vom Anfang der Regie + der einfache Text.
 ` || ` in der Regie = zwei Teile, einzeln erzeugt. Taube: Stille am Ende von Teil 1 gekürzt, zusammengesetzt (Teil 1 Tempo 1,2, Teil 2 1,05).
 Garys Pannen (Mr. Alex 17.11.): zwei getrennte Dateien <id>_1.mp3 und <id>_2.mp3, damit im Spiel das Geräusch dazwischen passt.
@@ -9,7 +9,7 @@ Spitzen −1,5 dB): alle −16 LUFS, der Sergeant −14 (Mr. Alex 17.11.). `--la
 Vorhandene Dateien werden nie überschrieben; nach einem Abbruch einfach neu starten (bezahlte Rohteile liegen in audio-roh/tower/).
 Stimmen und Einstellungen: docs/spiele/keys-of-the-tower-figuren.md, Abschnitt Stimmen.
 Aufruf: python3 werkzeuge/tower_audio.py --zaehlen [--liste]      (kostet nichts)
-        python3 werkzeuge/tower_audio.py [--nur kapitel|sprueche] [--figur gary] [--hoechstens 5]
+        python3 werkzeuge/tower_audio.py [--nur kapitel|hofden|sprueche] [--figur gary] [--hoechstens 5]
 """
 import csv, json, os, re, subprocess, sys, tempfile, time, urllib.request, urllib.error
 
@@ -47,8 +47,10 @@ def tabelle(name):
 def stuecke(nur=None, figur=None):
     """liefert (Datei, Figur, [Teile])"""
     aus = []
-    if nur in (None, "kapitel"):
-        for z in tabelle("tower_kapitel1.tsv"):
+    for name, teil in (("tower_kapitel1.tsv", "kapitel"), ("tower_hof_den.tsv", "hofden")):   # Hof und The Den: gleiche Spalten, gleiche Namen k1_<id>
+        if nur not in (None, teil):
+            continue
+        for z in tabelle(name):
             regie = (z["regie"] or "").strip()
             if not regie or "nur_text" in z.values():
                 continue

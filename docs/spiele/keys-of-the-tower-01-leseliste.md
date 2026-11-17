@@ -7,7 +7,9 @@ Quelle: `inhalte/abenteuer/tower_kapitel1.tsv` (159 Zeilen, erzeugt aus `keys-of
 2. **Spalte „Einfacher“** – zehn Kernzeilen (a04, a05, a08, a09, m4, m5, p3, p5, p6, r4): Sind es die richtigen, und sind sie einfach genug?
 3. Korrekturen genügen als „Nr + neuer Text“.
 
-## Fragen an Mr. Alex
+**Entschieden Mr. Alex 17.11. (im Master): alle acht Punkte wie vorgeschlagen** – Einschübe nur als Text · „Detective“ bleibt im Deutschen · Helm lange Fassung · Arthur fragt „Where was the note?“ (geändert) · neue Zeile r4y übernommen · Zettel, Brief und Karten liest der Erzähler · Taube „And guess what:“ als eigener Teil · Uhrzeit ausgeschrieben. Noch offen: Gegenlesen der Spalten Deutsch und Einfacher.
+
+## Fragen an Mr. Alex (erledigt 17.11.)
 1. **Erzähler-Einschübe** („he shouts.“, „says Gary.“ – a03b, a14b, e3b, r2b, r5b, r8b, s4b): Vorschlag: nur als Text zeigen, nicht sprechen, weil die Stimme schon zeigt, wer redet. Einverstanden?
 2. **Anrede:** Im Deutschen bleibt „Detective“ stehen (passt für Mädchen und Jungen und zu „Detective Lena“). Recht so?
 3. **Helm (b04c):** Zeile nach deiner Regie-Entscheidung „The helmet started it! It was the helmet!“ – der Kapiteltext hatte noch die kurze Fassung.
@@ -156,7 +158,7 @@ Quelle: `inhalte/abenteuer/tower_kapitel1.tsv` (159 Zeilen, erzeugt aus `keys-of
 | r3a | erzaehler | Gary bows. | Gary verbeugt sich. |  |
 | r3b | gary | Your Majesty. Would you like to see a trick? | Eure Majestät. Möchtet Ihr einen Trick sehen? |  |
 | r3c | arthur | Sit, fox. | Sitz, Fuchs. |  |
-| r4 | arthur | Where is the note? Tell me, and I let you pass. | Wo ist der Zettel? Sag es mir, und ich lasse dich durch. | Where is the note? Tell me. |
+| r4 | arthur | Where was the note? Tell me, and I let you pass. | Wo war der Zettel? Sag es mir, und ich lasse dich durch. | Where was the note? Tell me. |
 | r4x | arthur | That is a boot. I am not a boot. | Das ist ein Stiefel. Ich bin kein Stiefel. |  |
 | r4y | arthur | No. Not there. Think, detective. | Nein. Nicht dort. Denk nach, Detective. |  |
 | r5a | arthur | Good. | Gut. |  |

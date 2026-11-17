@@ -106,7 +106,7 @@ Dazu zufällig aus dem Vorrat (Anlässe *show*, *panne*, *essen*, *kommentar*), 
 - R1. A huge raven sits on the stairs. He does not move.
 - R2. "I am Arthur," he says. "First of the seven."
 - R3. Gary bows. "Your Majesty. Would you like to see a trick?" – "Sit, fox."
-- R4. "Where is the note? Tell me, and I let you pass."
+- R4. "Where was the note? Tell me, and I let you pass."
 *Du antwortest mit einer Karte aus dem Notizbuch. Richtig: **behind the clock**. Bei anderen Karten antwortet Arthur trocken, z. B. auf „under the bench“: "That is a boot. I am not a boot."*
 - R5. "Good," says Arthur. His eyes are gold.
 - R6. "Seven hooks. Seven ravens. Count us tonight."

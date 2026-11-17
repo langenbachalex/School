@@ -102,9 +102,9 @@ r2c	arthur	First of the seven.	Der Erste der Sieben.		[deep, slow, calm] First o
 r3a	erzaehler	Gary bows.	Gary verbeugt sich.		[British accent] [calm, storytelling] Gary bows.		nach r2c · Geste: Gary verbeugt sich
 r3b	gary	Your Majesty. Would you like to see a trick?	Eure Majestät. Möchtet Ihr einen Trick sehen?		[very polite, eager] Your Majesty. Would you like to see a trick?		nach r3a
 r3c	arthur	Sit, fox.	Sitz, Fuchs.		[deep, dry, calm] Sit, fox.		nach r3b
-r4	arthur	Where is the note? Tell me, and I let you pass.	Wo ist der Zettel? Sag es mir, und ich lasse dich durch.	Where is the note? Tell me.	[deep, slow, calm] Where is the note? Tell me, and I let you pass.		nach r3c · Antwort mit einer Karte, richtig: behind the clock
+r4	arthur	Where was the note? Tell me, and I let you pass.	Wo war der Zettel? Sag es mir, und ich lasse dich durch.	Where was the note? Tell me.	[deep, slow, calm] Where was the note? Tell me, and I let you pass.		nach r3c · Antwort mit einer Karte, richtig: behind the clock
 r4x	arthur	That is a boot. I am not a boot.	Das ist ein Stiefel. Ich bin kein Stiefel.		[deep, dry, calm] That is a boot. I am not a boot.		falsche Karte: under the bench
-r4y	arthur	No. Not there. Think, detective.	Nein. Nicht dort. Denk nach, Detective.		[deep, dry, calm] No. Not there. Think, detective.		falsche Karte: alle anderen (NEU, Vorschlag)
+r4y	arthur	No. Not there. Think, detective.	Nein. Nicht dort. Denk nach, Detective.		[deep, dry, calm] No. Not there. Think, detective.		falsche Karte: alle anderen
 r5a	arthur	Good.	Gut.		[deep, slow, calm] Good.		richtige Karte: behind the clock
 r5b	erzaehler	says Arthur.	sagt Arthur.				nur_text
 r5c	erzaehler	His eyes are gold.	Seine Augen sind golden.		[British accent] [quiet, mysterious] His eyes are gold.		nach r5a

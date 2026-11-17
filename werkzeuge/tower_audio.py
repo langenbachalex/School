@@ -6,7 +6,7 @@ Nicht vertont: Zeilen ohne Regie und Zeilen mit `nur_text`. Zweitfassung (Spalte
 Garys Pannen (Mr. Alex 17.11.): zwei getrennte Dateien <id>_1.mp3 und <id>_2.mp3, damit im Spiel das Geräusch dazwischen passt.
 Ziel: app/audio/tower/k1_<id>.mp3, k1_<id>_einfach.mp3, <spruch-id>.mp3 – Lautheit in zwei Durchgängen angeglichen (messen, gezielt verstärken,
 Spitzen −1,5 dB): alle −16 LUFS, der Sergeant −14 (Mr. Alex 17.11.). `--lautheit` gleicht alles Vorhandene neu an (0 Credits), `--messen` misst nur.
-Vorhandene Dateien werden nie überschrieben; nach einem Abbruch einfach neu starten (bezahlte Rohteile bleiben in ROH liegen).
+Vorhandene Dateien werden nie überschrieben; nach einem Abbruch einfach neu starten (bezahlte Rohteile liegen in audio-roh/tower/).
 Stimmen und Einstellungen: docs/spiele/keys-of-the-tower-figuren.md, Abschnitt Stimmen.
 Aufruf: python3 werkzeuge/tower_audio.py --zaehlen [--liste]      (kostet nichts)
         python3 werkzeuge/tower_audio.py [--nur kapitel|sprueche] [--figur gary] [--hoechstens 5]
@@ -16,7 +16,7 @@ import csv, json, os, re, subprocess, sys, tempfile, time, urllib.request, urlli
 BASIS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 QUELLE = os.path.join(BASIS, "inhalte", "abenteuer")
 ZIEL = os.path.join(BASIS, "app", "audio", "tower")
-ROH = os.path.join(tempfile.gettempdir(), "tower_roh")           # unbearbeitete Teile, damit nichts doppelt bezahlt wird
+ROH = os.path.join(BASIS, "audio-roh", "tower")                  # unbearbeitete Teile, im Repo gesichert (nicht unter app/, wird nicht veröffentlicht)
 PROTOKOLL = os.path.join(QUELLE, "tower_audio_protokoll.tsv")    # Datei · Zeichen · Character-Cost
 CREDITS_JE_ZEICHEN = 0.44                                        # gemessen 17.11. (Eleven v4, Tags zählen mit)
 

@@ -37,6 +37,9 @@ Befehl: `node werkzeuge/testprogramm.js` (alle Apps, ca. 1–2 Min.; `EN6`/`EN9`
 ## Fehlt etwas? Nachfragen statt aufgeben (Regel Mr. Alex, 15.11.2026)
 Ist ein Werkzeug, Browser oder Paket nicht installiert, nicht aufgeben und nicht stillschweigend ausweichen: Mr. Alex Bescheid geben, was fehlt, was es ermöglichen würde und wie aufwendig die Installation ist, und fragen, ob installiert werden soll.
 
+## Anleitungen für Mr. Alex (Regel Mr. Alex, 17.11.2026)
+Soll Mr. Alex selbst etwas am Rechner tun, bekommt er eine vollständige Schritt-für-Schritt-Anleitung: nummeriert, ein Handgriff je Schritt, nichts voraussetzen (auch nicht „Repo klonen“ oder „Terminal öffnen“), jeder Befehl in einem eigenen Kasten zum Kopieren, nach jedem Abschnitt sagen, woran er erkennt, dass es geklappt hat. Erst fragen, welches Betriebssystem, wenn es darauf ankommt und nicht bekannt ist.
+
 ## Orts-Szenen
 Jeder Ort hat drei Ebenen: Bild (Szene mit Runner-Zeichnungen), Ton (Geräusch oder Sprache), kleines Foto. Einzelheiten: `.claude/skills/orts-szenen/SKILL.md`.
 

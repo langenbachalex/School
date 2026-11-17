@@ -45,6 +45,7 @@ Bei jeder Überarbeitung (Bilder, Räume, Texte, App) genau die Punkte ändern, 
 
 ## Anrede und Fragen (Regel Mr. Alex, 17.11.2026)
 Mr. Alex wird geduzt. Fragen an ihn sind ganze, klare Sätze, keine Stichworte oder Rumpfsätze: sagen, worum es geht, was die Möglichkeiten sind und was sie für ihn bedeuten. Keine Fachwörter ohne Erklärung.
+**Als Profi von der Vision her denken (Mr. Alex 17.11.):** Vor jeder Frage prüfen, ob die Vision sie schon beantwortet (`docs/spiele/keys-of-the-tower-vision.md` für die Story-Spiele); dann selbst entscheiden, begründen und weitermachen. Fragen nur, wenn es wirklich seine Entscheidung ist.
 
 ## Orts-Szenen
 Jeder Ort hat drei Ebenen: Bild (Szene mit Runner-Zeichnungen), Ton (Geräusch oder Sprache), kleines Foto. Einzelheiten: `.claude/skills/orts-szenen/SKILL.md`.

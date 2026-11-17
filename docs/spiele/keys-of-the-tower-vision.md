@@ -1,4 +1,4 @@
-# The Keys of the Tower – Vision und Konzept für das Testspiel (Master, 17.11.2026)
+# The Seven Keys of London / The Keys of the Tower – Vision und Konzept für das Testspiel (Master, 17.11.2026)
 
 Entwurf des Masters nach der Vorgabe von Mr. Alex vom 17.11.: nichts Halbgares, ein richtiges Spiel mit einer Sandbox-Spielwelt, zuerst der Tower of London. Noch nicht freigegeben. Baut auf `story-spiele-konzept.md` (Geschichte, Hilfen, Frust-Regeln), `keys-of-the-tower-orte.md` (acht Orte), `keys-of-the-tower-figuren.md` (Figuren, Stimmen) und `story-spiele-bauplan.md` (Technik) auf und ersetzt nichts davon.
 
@@ -8,8 +8,37 @@ Entwurf des Masters nach der Vorgabe von Mr. Alex vom 17.11.: nichts Halbgares, 
 - **Eigenes Zimmer: ja, schon im Test** – ein anderes Zimmer als der Guard Room. Spezifikation in Abschnitt 6b.
 - **Superhelden:** nicht als Gäste im Hof am Anfang, sondern sie kommen im Verlauf des Abenteuers dazu. Abschnitt 7 ist insoweit überholt.
 - **Kameras:** Die drei Kameras bleiben im Test so wählbar wie in der Probe; die Kinder probieren sie aus.
-- **Der Test:** Der Raum, wie er ist, trägt als Test. Die Kinder sollen den Anfang der Geschichte wirklich sehen und hineingezogen werden. Danach wird gemeinsam weiterentwickelt.
-- **Offen:** die Frage nach dem Weg zu den Figuren (Abschnitt 10) hat Mr. Alex nicht verstanden – neu und klar stellen.
+- **Der Test (klargestellt 17.11.): die erste Szene komplett, so wie in Abschnitt 9.** Sie beginnt draußen mit dem rennenden Sergeant; die Kinder sollen den Anfang der Geschichte wirklich sehen und hineingezogen werden. Danach wird gemeinsam weiterentwickelt.
+- **Figuren: Gary wird auf beide Arten gebaut** (eigene Figur per Skript und freie Grundfigur mit Gerüst und Bewegungen), Mr. Alex sieht beide nebeneinander und entscheidet dann für alle.
+- **Arbeitsweise (Mr. Alex 17.11.): als Profi von der ganzen Vision her denken**, selbst entscheiden und begründen, was die Vision schon beantwortet; die Geschichte des ganzen Abenteuers früh hinterlegen. Abschnitt 0b ist der erste Entwurf dazu.
+
+## 0b. Das große Abenteuer – Rahmenhandlung für ganz London (Entwurf des Masters, 17.11.)
+**Arbeitstitel: „The Seven Keys of London“.** Kapitel 1 ist „The Keys of the Tower“.
+
+**Der Kern in fünf Sätzen:** London hat sieben alte Schlüssel, einen an jedem großen Ort, und zu jedem gehört ein Hüter und ein kleines Ritual, das nie ausfallen darf. Die Hüter kennen sich: Sie sind der Key Club, und einmal im Jahr hängen alle sieben Schlüssel für eine Nacht an den sieben Haken im Guard Room des Towers. In diesem Jahr verschwindet einer nach dem anderen. Du, Gary und eine wachsende Truppe seltsamer Helfer folgen der Spur von Ort zu Ort. Am Ende hängen alle sieben wieder an ihren Haken – und erst dann zeigt sich, was sie zusammen öffnen.
+
+**Warum das schon im Tower angelegt ist (nichts muss umgeschrieben werden):** die **sieben leeren Haken** und Garys Satz „Seven hooks. Funny number, isn't it?“ · die **sieben Raben** · Mr Pike und der **Key Club** · die offene Frage „Warum sieben Haken?“ · Arthurs Schlusssatz **„There are other towers.“** · die **Federtür**, die keiner öffnen kann.
+
+**Der Haken am Ende des Tower-Kapitels:** Im Sack der Elster liegt zwischen Löffeln und Knöpfen ein Schlüssel, der nicht zum Tower gehört. Am Anhänger steht „B. M.“ Die Elster: „A gentleman gave me that. He pays in shiny things.“ Jemand sammelt Schlüssel – und die Elster war nur seine Botin.
+
+**Die Kapitel (Reihenfolge und Zahl offen, jedes ein kleiner Ort zum freien Erkunden mit eigenem Geheimnis):**
+| | Ort | Der Schlüssel und sein Ritual | Stimmung und Idee |
+|---|---|---|---|
+| 1 | **Tower of London** | die Schlüssel der Zeremonie um 9:53 | Krimi bei Kerzenlicht; Raben, Elster, Party |
+| 2 | **British Museum** | der Schlüssel zum Lesesaal; jede Nacht dreht der Wächter eine Runde | nachts allein unter Dingen aus aller Welt; ein Stein mit drei Schriften als Rätsel (Sprachen!), eine Katze, die hier wohnt |
+| 3 | **Piccadilly Circus** | der Schlüssel zum Lichtkasten; die Lichter gehen nie aus | bunt, laut, Straßenkünstler; Nachrichten auf den Leuchtwänden; unten die Tube |
+| 4 | **Buckingham Palace** | der Schlüssel zum Gartentor; Wachwechsel | der Wächter, der sich nie bewegt; Hunde, Teestunde, feine Manieren als Spiel |
+| 5–7 | z. B. **Big Ben**, **Tower Bridge**, **St Paul's** oder **Greenwich** | die Uhr, die Brücke, die Flüstergalerie, die Zeit | je nach Lust und Unterrichtsthema |
+
+**Wer dahintersteckt (Grundsatz statt fertiger Auflösung):** Wie bei der Elster gibt es keinen Bösewicht. Der „Gentleman“ will nichts stehlen, sondern etwas zurückhaben oder dazugehören; die Auflösung ist warm und ein wenig rührend. Wer es ist, bleibt bis zum Schluss offen und wird erst festgelegt, wenn zwei bis drei Kapitel stehen. Spuren führen bewusst in mehrere Richtungen – auch zu Mr. Flex, der zu allem „I knew that“ sagt.
+
+**Was durch alle Kapitel mitgeht:** deine Figur, dein Zimmer über dem Guard Room mit der London-Karte (jeder gefundene Schlüssel hängt an seinem Haken, jeder besuchte Ort leuchtet auf der Karte) · **Gary** als Begleiter · **Mr. Flex** in jedem Spiegel der Stadt · **die Taube**, die überall Verwandte hat und immer schon alles weiß · neue Hüter als Figuren je Ort.
+
+**Die Superhelden:** Sie stoßen im Lauf des Abenteuers dazu, je Kapitel einer oder zwei, passend zum Ort. Wer einen Helden im Runner freigespielt hat, erkennt ihn wieder und bekommt von ihm Hilfe und ein Kleidungsstück; wer ihn noch nicht hat, trifft eine maskierte Gestalt, die neugierig macht.
+
+**Sprache je Kapitel:** Jeder Ort bringt seine eigene Sprache mit (Tower: Ortsangaben und Alibi-Fragen; Museum: beschreiben und vergleichen; Piccadilly: Wege, Einkaufen, Verabreden; Palast: Höflichkeit und Tagesablauf). Zuordnung zu den Units, wenn das Kapitel geplant wird.
+
+**Bezug zum London Run:** Die Geschichten dort (der Wächter, der sich nie bewegt, das Rad, das stehen blieb, Mind the Gap, das große Spiel) spielen an denselben Orten und dürfen als Anspielungen wiederkommen.
 
 ## 1. Die Vision in drei Sätzen
 Du bist nachts im Tower of London, und er gehört für eine Nacht dir: Du gehst, wohin du willst, redest mit allen, findest Dinge, ziehst dich um und richtest dir ein Versteck ein. Eine Geschichte mit Geheimnis zieht dich von Ort zu Ort, und jeder gelöste Fall gibt dir einen Schlüssel, der ein neues Stück Tower öffnet. Englisch ist dabei kein Aufgabenblatt, sondern das, womit man in dieser Welt etwas erreicht.

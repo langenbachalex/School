@@ -115,6 +115,8 @@ Beide Kreise greifen ineinander: Die Geschichte öffnet neue Orte zum Sammeln, u
 | Kleidung und Möbel | Belohnung für Fälle und Funde | Figur und Zimmer |
 | Notizbuch-Karten | jede gefundene Wendung | Deutsch links, Englisch rechts, mit Ton |
 
+**Begleiter sammeln (Entscheidung Mr. Alex, 17.11. abends):** Begleiter („Companions“) sind selbst Sammelstücke. Heute gibt es zwei: Gary, den Fuchs, und die Taube. In späteren Szenen und Kapiteln kommen weitere dazu (Tiere und Leute, etwa aus dem London Zoo oder der Tube Station). Das Kind entscheidet selbst, wer es begleitet, und hört dann dessen Sprüche – nach eigener Vorliebe, jederzeit wechselbar. Folge für den Bau: Die Sprüche hängen an der Figur, nicht am Ort (so ist `tower_sprueche.tsv` schon angelegt); jeder neue Begleiter braucht einen eigenen Satz Sprüche mit Stimme.
+
 **Die Superhelden:** Wer im Runner Helden freigespielt hat, trifft sie hier wieder – als Gäste im Tower, nicht als Hauptfiguren. Vorschlag: Freigespielte Helden tauchen an festen Plätzen im Hof auf, haben einen Satz und ein kleines Geschenk (ein Kleidungsstück in ihrer Farbe). So lohnt sich das Freispielen in beiden Spielen, ohne dass die Geschichte davon abhängt.
 
 ## 8. Zwischensequenzen

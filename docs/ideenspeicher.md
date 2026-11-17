@@ -12,6 +12,7 @@ Pflege: Jede neue Idee aus einem Chat kommt hier hinein, auch wenn sie nicht gle
 | 17.11. | EN6 | Keys of the Tower, Nachbesserung: 3 Gary-Ausreden neu (204 Zeichen) + 3 Proben mrflex_01 (462 Zeichen) | 666 | Master: rund 530 Zeichen ≈ 235; mit der echten Zeichenzahl 666 × 0,44 = 293 | 294 | +25 % zur Master-Prognose (Zeichen zu niedrig geschätzt: Proben wiederholen die ganze Zeile), +0,3 % zur Zeichen-Rechnung | 0,441 |
 | 17.11. | EN6 | Keys of the Tower: acht neue Sprüche der Taube (taube_17–24, je zwei Teile) | 1.379 | 607 (Master, ausgezählt × 0,44) | 606 | −0,2 % | 0,439 |
 | 17.11. | EN6 | Keys of the Tower: taube_18 Teil 2 neu (hoher Störton am Anfang der Aufnahme, von Mr. Alex gehört; lag nicht an der Naht) | 112 | 49 (Master, ausgezählt × 0,44) | 49 | 0 % | 0,438 |
+| 17.11. | EN6 | Keys of the Tower: neuer Erzähler gesucht – 3 Stimmen × 3 Probezeilen (George, Best Narrator, Rachel), nicht im Repo | 642 | 282 (Master, ausgezählt × 0,44) | 285 | +1 % | 0,444 |
 
 Credits-Stand 29.10.: **6.000**. **Stand 31.10. (Mr. Alex): 2.000 Credits übrig** – größere Posten nur mit OK. Beobachtung: Eleven v4 kostet nach den Zwischenständen nur **≈ 0,4–0,5 Credits je Zeichen** (23.10.: 11.734 Zeichen → 4.347 Credits; danach 1.391 Zeichen → ≈ 650 Credits). Mit 6.000 Credits sind also grob **12.000 Zeichen** V4 möglich – vor dem 13.11. ist Spielraum für kleine Posten.
 Alles Neue wird **ohne Audio** gebaut; die Texte werden hier gesammelt und am 13.11. nach Freigabe vertont (Erinnerung ist eingestellt).

@@ -19,7 +19,7 @@ Die Nutzung (Tokens/Credits) ist knapp. Bei jeder neuen Eingabe zuerst prüfen, 
 - Chat-Übersicht (laufende und fertige Block-Chats) steht im Ideenspeicher; `/load` zeigt sie, `/save` trägt den eigenen Chat ein. Zwei Chats an derselben App: vor jedem Bau `git pull`.
 - `/name` oder „Wie heißt du?“: Claude nennt den Chat-Namen nach dem Schema als Kopiervorlage (Skill `name`). Fertige Blöcke müssen nicht umbenannt werden.
 - **Master-Wechsel** (wenn der Master-Chat voll wird, ca. ab 50–60 % Kontext): im alten Master `/save` (Zeile „School · MASTER · bis <Datum>“ in der Chat-Übersicht, offene Entscheidungen auflisten), neuen Chat öffnen, Modell Fable wählen (`/model`, zurzeit `claude-fable-5-2`), `/load MASTER`, in `School · MASTER` umbenennen; den alten in `School · MASTER · bis <Datum>` umbenennen und archivieren. Der Stand lebt im Repo, nicht im Chat.
-- **Kontext im Blick (Regel Mr. Alex, 17.11.2026):** Claude erinnert Mr. Alex von sich aus, sobald das Kontextfenster bei etwa 50 % ist (im Master und in jedem Block-Chat), und schlägt dann `/save` und einen neuen Chat vor.
+- **Kontext im Blick (Regel Mr. Alex, 17.11.2026):** Claude erinnert Mr. Alex von sich aus, sobald das Kontextfenster bei etwa 50 % ist (im Master und in jedem Block-Chat), und schlägt dann `/save` und einen neuen Chat vor. Nicht schätzen, sondern messen: `get_session` (ohne Kennung) zeigt unter `context_usage` die belegten und die möglichen Tokens (17.11.: der Master lag bei 30 %, als Claude „etwa 50 %“ annahm).
 - Sicherung: Der Stop-Hook `.claude/hooks/save-pruefen.sh` meldet ungesicherte Arbeit; Claude führt dann `/save` aus.
 
 ## Baustopp und Takt (Regel Mr. Alex, 12.11.2026)

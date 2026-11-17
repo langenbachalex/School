@@ -5,6 +5,7 @@ Nur ein Probebild fuer Mr. Alex; der Raum (guardroom.py) wird davon nicht veraen
 """
 import math
 import os
+import sys
 
 import bpy
 from mathutils import Vector
@@ -77,80 +78,12 @@ boden.modifiers.new("halt", "COLLISION")
 bpy.ops.mesh.primitive_plane_add(size=8, location=(0, 1.2, 2), rotation=(R(90), 0, 0))
 bpy.context.object.data.materials.append(WAND)
 
-# ---------- Jacke als flaches Stoffstueck (Rueckenteil mit zwei Aermeln), liegt waagrecht ueber der Lehne ----------
-ZELLE = 0.02
-BREIT, LANG = 0.29, 0.74          # halbe Breite des Rumpfs, Laenge Kragen -> Saum
-AERMEL, ARM_B = 0.56, 0.19        # Aermellaenge und -breite
-LINIE = 0.13                      # so weit unter dem Kragen liegt die Jacke auf der Lehne auf
-Y_LEHNE = HINTEN - 0.04
+# ---------- Jacke: gemeinsamer Baustein fuer Probe und Raum ----------
+sys.path.insert(0, HERE)
+import tower_jacke  # noqa: E402
 
-
-def drin(u, v):
-    if abs(u) <= BREIT and 0 <= v <= LANG:
-        return True
-    t = (abs(u) - BREIT) / AERMEL
-    return 0 <= t <= 1 and 0.01 + 0.10 * t <= v <= 0.01 + ARM_B + 0.10 * t
-
-
-def rot(u, v):
-    t = (abs(u) - BREIT) / AERMEL
-    return v > LANG - 0.06 or t > 0.84 or (v < 0.05 and abs(u) < 0.17) or (abs(u) < 0.025 and v > 0.05)
-
-
-nu, nv = int((BREIT + AERMEL) / ZELLE) + 1, int(LANG / ZELLE) + 1
-punkte, nummer, flaechen, farben = [], {}, [], []
-
-
-def punkt(i, j):
-    if (i, j) not in nummer:
-        u, v = i * ZELLE, j * ZELLE
-        nummer[(i, j)] = len(punkte)
-        punkte.append((SX + u, Y_LEHNE - (v - LINIE), OBEN + 0.03))
-    return nummer[(i, j)]
-
-
-for i in range(-nu, nu):
-    for j in range(0, nv):
-        u, v = (i + 0.5) * ZELLE, (j + 0.5) * ZELLE
-        if drin(u, v):
-            flaechen.append((punkt(i, j), punkt(i + 1, j), punkt(i + 1, j + 1), punkt(i, j + 1)))
-            farben.append(1 if rot(u, v) else 0)
-netz = bpy.data.meshes.new("jacke")
-netz.from_pydata(punkte, [], flaechen)
-netz.update()
-jacke = bpy.data.objects.new("jacke", netz)
-scene.collection.objects.link(jacke)
-netz.materials.append(BLAU)
-netz.materials.append(ROT)
-for p, f in zip(netz.polygons, farben):
-    p.material_index = f
-    p.use_smooth = True
-# Auf der Lehne festgehalten: eine Reihe quer ueber die Schultern (sonst rutscht die Jacke nach vorn herunter)
-fest = jacke.vertex_groups.new(name="fest")
-fest.add([n for (i, j), n in nummer.items() if abs(j * ZELLE - LINIE) < ZELLE * 0.6 and abs(i * ZELLE) <= BREIT - 0.03], 1.0, "REPLACE")
-
-stoff = jacke.modifiers.new("stoff", "CLOTH")
-stoff.settings.quality = 10
-stoff.settings.mass = 0.25
-stoff.settings.tension_stiffness = 12
-stoff.settings.compression_stiffness = 12
-stoff.settings.shear_stiffness = 6
-stoff.settings.bending_stiffness = 0.4
-stoff.settings.vertex_group_mass = "fest"
-stoff.collision_settings.collision_quality = 4
-stoff.collision_settings.distance_min = 0.012
-stoff.collision_settings.use_self_collision = True
-stoff.collision_settings.self_distance_min = 0.008
-stoff.point_cache.frame_start = 1
-stoff.point_cache.frame_end = BILDER
-glatt = jacke.modifiers.new("glatt", "SUBSURF")
-glatt.levels = glatt.render_levels = 1
-dick = jacke.modifiers.new("dick", "SOLIDIFY")
-dick.thickness = 0.007
-
-scene.frame_start, scene.frame_end = 1, BILDER
-for f in range(1, BILDER + 1):   # Stoff fallen lassen
-    scene.frame_set(f)
+MESSING = mat("messing", (0.90, 0.62, 0.20), 0.3, 1.0)
+tower_jacke.baue_jacke(scene, netze, SX, SY, {"blau": BLAU, "rot": ROT, "messing": MESSING}, bilder=BILDER)
 print("Stoff gefallen", flush=True)
 
 # ---------- Probebild ----------

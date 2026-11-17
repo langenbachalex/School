@@ -15,6 +15,7 @@ Licht warmroetlich von Feuer, Laterne und Kerze, Blau nur als Mond am Fenster.
 import json
 import math
 import os
+import random
 import sys
 import time
 
@@ -25,6 +26,10 @@ from mathutils import Vector
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(HERE))
 MODELLE = os.path.join(HERE, "modelle")
+sys.path.insert(0, HERE)
+import tower_jacke  # noqa: E402  (Uniformjacke als Stoff-Simulation)
+
+rnd = random.Random(7)   # fester Zufall: jedes Rechnen ergibt dasselbe Bild
 OUT = os.environ.get("OUT", os.path.join(REPO, "app", "tower", "raum"))
 RESX = int(os.environ.get("RESX", 1920))
 RESY = int(os.environ.get("RESY", 1080))
@@ -136,6 +141,7 @@ TINTE_ROT = mat("tinte_rot", (0.50, 0.08, 0.05), 0.9)
 WASSER = mat("tinte_blau", (0.22, 0.35, 0.48), 0.9)
 PAPIER = mat("papier", (0.88, 0.80, 0.62), 0.9)
 BROT = mat("kruemel", (0.90, 0.74, 0.46), 0.9)
+BROT_D = mat("kruemel_dunkel", (0.72, 0.52, 0.28), 0.9)
 KRUSTE = mat("kruste", (0.50, 0.30, 0.12), 0.85)
 SCHINKEN = mat("schinken", (0.85, 0.42, 0.40), 0.6)
 SALAT = mat("salat", (0.30, 0.55, 0.15), 0.6)
@@ -460,15 +466,51 @@ for y in (BY - 0.74, BY + 0.74):
     box("bank_strebe", (0.42, 0.05, 0.06), (-3.70, y, 0.16), EICHE_S)
 modell("rubber_boots", (-3.58, BY - 0.20, 0.0), 1.30, dreh=R(90), grp="stiefel", teile=["rubber_boots_l"], ersatz=LEDER)
 box("stiefel_stulpe", (0.20, 0.17, 0.06), (-3.70, BY - 0.20, 0.45), SCHWARZ, "stiefel")
-# Tanzschuh: rote Seide, spitze Kappe, Absatz, Riemen mit Messingschnalle (Seitenansicht zur Kamera)
-SCX, SCY = -3.54, BY + 0.36
-ball("tanzschuh_kappe", 0.07, (SCX + 0.10, SCY, 0.062), SEIDE, "tanzschuh", scale=(2.3, 0.85, 0.62))
-ball("tanzschuh_ferse", 0.062, (SCX - 0.14, SCY, 0.125), SEIDE, "tanzschuh", scale=(0.95, 0.9, 1.25))
-weich(box("tanzschuh_gelenk", (0.22, 0.10, 0.035), (SCX - 0.04, SCY, 0.075), SEIDE, "tanzschuh", rot=(0, R(22), 0)), 0.012)
-cone("tanzschuh_absatz", 0.045, 0.13, (SCX - 0.16, SCY, 0.06), SCHWARZ, "tanzschuh", verts=14, r2=0.022)
-ball("tanzschuh_innen", 0.045, (SCX - 0.11, SCY, 0.185), SCHWARZ, "tanzschuh", scale=(1.3, 0.75, 0.25))
-box("tanzschuh_riemen", (0.025, 0.13, 0.025), (SCX - 0.02, SCY, 0.15), SEIDE, "tanzschuh")
-box("tanzschuh_schnalle", (0.035, 0.045, 0.035), (SCX - 0.02, SCY - 0.065, 0.15), MESSING, "tanzschuh")
+# Tanzschuh (Seitenansicht zur Kamera): ein geformter Koerper mit spitzer Kappe, hoher Ferse, Absatz, Riemen und Schnalle
+def kurve(punkte, t):
+    for (t0, w0), (t1, w1) in zip(punkte, punkte[1:]):
+        if t <= t1:
+            return w0 + (w1 - w0) * (t - t0) / (t1 - t0)
+    return punkte[-1][1]
+
+
+SL = 0.44                                  # Laenge des Schuhs (groesser als echt, damit man ihn erkennt)
+SCX, SCY = -3.50, BY + 0.38                # Mitte
+S_BREIT = [(0, 0.03), (0.06, 0.10), (0.3, 0.115), (0.62, 0.135), (0.85, 0.085), (1, 0.012)]
+S_SOHLE = [(0, 0.27), (0.1, 0.25), (0.55, 0.03), (0.7, 0.0), (0.95, 0.0), (1, 0.02)]
+S_HOCH = [(0, 0.10), (0.06, 0.24), (0.3, 0.17), (0.55, 0.14), (0.75, 0.13), (1, 0.035)]
+SK, SM = 22, 18
+s_pkt, s_fl = [], []
+for k in range(SK + 1):
+    t = k / SK
+    hw, zb, hh = kurve(S_BREIT, t) * SL, kurve(S_SOHLE, t) * SL, kurve(S_HOCH, t) * SL
+    for m in range(SM):
+        w = 2 * math.pi * m / SM
+        sn = math.sin(w)
+        s_pkt.append((SCX - SL / 2 + t * SL, SCY + hw * math.cos(w), zb + hh / 2 + hh / 2 * math.copysign(abs(sn) ** 0.7, sn)))
+for k in range(SK):
+    for m in range(SM):
+        a, b = k * SM + m, k * SM + (m + 1) % SM
+        s_fl.append((a, b, b + SM, a + SM))
+s_fl.append(tuple(range(SM - 1, -1, -1)))
+s_fl.append(tuple(range(SK * SM, SK * SM + SM)))
+s_netz = bpy.data.meshes.new("tanzschuh")
+s_netz.from_pydata(s_pkt, [], s_fl)
+s_netz.update()
+schuh = bpy.data.objects.new("tanzschuh", s_netz)
+scene.collection.objects.link(schuh)
+for f in s_netz.polygons:
+    f.use_smooth = True
+schuh.modifiers.new("glatt", "SUBSURF").levels = 1
+fertig(schuh, "tanzschuh", SEIDE, "tanzschuh")
+cone("tanzschuh_absatz", 0.07 * SL, 0.26 * SL, (SCX - SL / 2 + 0.085 * SL, SCY, 0.13 * SL), SEIDE, "tanzschuh", verts=16, r2=0.035 * SL, rot=(R(180), 0, 0))
+ball("tanzschuh_oeffnung", 0.5, (SCX - SL / 2 + 0.30 * SL, SCY, (kurve(S_SOHLE, 0.3) + kurve(S_HOCH, 0.3)) * SL - 0.004), SCHWARZ, "tanzschuh",
+     scale=(0.24 * SL * 2, 0.085 * SL * 2, 0.02), rot=(0, R(32), 0))
+box("tanzschuh_riemen", (0.035 * SL, 0.25 * SL, 0.012), (SCX - SL / 2 + 0.44 * SL, SCY, (kurve(S_SOHLE, 0.44) + kurve(S_HOCH, 0.44)) * SL + 0.012), SEIDE, "tanzschuh")
+box("tanzschuh_schnalle", (0.07 * SL, 0.02, 0.06 * SL), (SCX - SL / 2 + 0.44 * SL, SCY - 0.125 * SL, (kurve(S_SOHLE, 0.44) + kurve(S_HOCH, 0.44) * 0.75) * SL), MESSING, "tanzschuh")
+for s_ in (-1, 1):
+    ball("tanzschuh_schleife", 0.045 * SL, (SCX - SL / 2 + 0.70 * SL, SCY + s_ * 0.05 * SL, 0.15 * SL), SEIDE, "tanzschuh", scale=(0.8, 1.3, 0.6))
+ball("tanzschuh_schleifenknopf", 0.022 * SL, (SCX - SL / 2 + 0.70 * SL, SCY, 0.16 * SL), MESSING, "tanzschuh")
 # Helm: Morion (Seitenansicht zur Kamera) – hohe Glocke, Kamm darueber, Krempe vorn und hinten spitz hochgezogen
 box("brett", (0.46, 1.5, 0.06), (-3.76, BY, 1.82), EICHE_B)
 for y in (BY - 0.6, BY + 0.6):
@@ -496,47 +538,46 @@ KEX, KEY = TXM + 0.30, TYM + 0.22
 modell("brass_candleholders", (KEX, KEY, TZ), 0.9, teile=["brass_candleholder_02"])
 cyl("kerze", 0.022, 0.16, (KEX, KEY, TZ + 0.43), WACHS, verts=12)
 cone("kerze_flamme", 0.018, 0.075, (KEX, KEY, TZ + 0.56), FLAMME_KLEIN, verts=12, glatt=True)
-for i in range(34):   # Kruemel: flache, unregelmaessige Broeckchen, zum Sandwich hin dichter
-    w = i * 2.399963
-    rad = 0.06 + 0.42 * ((i * 0.618034) % 1.0) ** 1.4
-    g = 0.012 + 0.02 * ((i * 0.37) % 1.0)
-    ball(f"kruemel{i}", g, (TXM + 0.05 + math.cos(w) * rad * 1.15, TYM - 0.45 + math.sin(w) * rad * 1.25, g * 0.5), KRUSTE if i % 5 == 0 else BROT, "kruemel",
-         scale=(1.0 + (i % 3) * 0.35, 1.0, 0.55), rot=(0, 0, w))
 SWX, SWY = TXM + 0.05, TYM - 0.45   # angebissenes Sandwich: zwei Scheiben, Schinken und Salat dazwischen
-weich(box("sandwich_unten", (0.27, 0.19, 0.04), (SWX, SWY, 0.022), BROT, "kruemel", rot=(0, 0, R(25))), 0.01)
-weich(box("sandwich_schinken", (0.285, 0.20, 0.016), (SWX, SWY, 0.05), SCHINKEN, "kruemel", rot=(0, 0, R(29))), 0.004)
-weich(box("sandwich_salat", (0.295, 0.205, 0.012), (SWX + 0.005, SWY, 0.064), SALAT, "kruemel", rot=(0, 0, R(21))), 0.003)
-weich(box("sandwich_oben", (0.27, 0.19, 0.04), (SWX, SWY, 0.09), BROT, "kruemel", rot=(0, R(-5), R(25))), 0.01)
-for dx, dy in ((0.10, 0.02), (-0.10, -0.02)):   # Krustenkanten
-    box("sandwich_rinde", (0.016, 0.19, 0.042), (SWX + dx * math.cos(R(25)) * 1.36, SWY + dx * math.sin(R(25)) * 1.36, 0.09), KRUSTE, "kruemel", rot=(0, 0, R(25)))
-
-# Stuhl, leicht gedreht; die Uniformjacke von Mr Pike haengt ueber der Lehne (dunkelblau, scharlachrote Raender, Messingknoepfe)
-SX, SY, SW = 1.05, -4.25, R(-24)
-modell("WoodenChair_01", (SX, SY, 0.0), (0.80, 0.62, 0.52), dreh=SW)
-LY_ = SY + 0.20          # Ebene der Lehne (vor dem Drehen), Oberkante bei 1,18 m
-jacke = [
-    weich(box("jacke_vorn", (0.44, 0.05, 0.50), (SX, LY_ - 0.05, 0.94), BLAU, "mantel"), 0.02),
-    weich(box("jacke_falte", (0.46, 0.15, 0.06), (SX, LY_, 1.20), BLAU, "mantel"), 0.025),
-    weich(box("jacke_hinten", (0.44, 0.05, 0.42), (SX, LY_ + 0.05, 0.98), BLAU, "mantel"), 0.02),
-    weich(box("jacke_kragen", (0.22, 0.17, 0.06), (SX, LY_, 1.245), ROT, "mantel"), 0.02),
-    weich(box("jacke_saum", (0.445, 0.056, 0.05), (SX, LY_ - 0.05, 0.705), ROT, "mantel"), 0.012),
-    box("jacke_leiste", (0.045, 0.056, 0.44), (SX, LY_ - 0.052, 0.95), ROT, "mantel"),
+BX, BY_ = SWX + 0.040, SWY - 0.086   # Mitte des Bisses an der vorderen Kante
+biss = []
+for dx, dy in ((-0.052, 0.008), (0.0, -0.012), (0.052, 0.008)):   # drei Boegen = Zahnabdruck
+    z = cyl("biss", 0.045, 0.4, (BX + dx, BY_ + dy, 0.05), BROT, verts=20)
+    z.hide_render = True
+    biss.append(z)
+sandwich = [
+    weich(box("sandwich_unten", (0.27, 0.19, 0.04), (SWX, SWY, 0.022), BROT, "kruemel", rot=(0, 0, R(25))), 0.01),
+    weich(box("sandwich_schinken", (0.285, 0.20, 0.016), (SWX, SWY, 0.05), SCHINKEN, "kruemel", rot=(0, 0, R(29))), 0.004),
+    weich(box("sandwich_salat", (0.295, 0.205, 0.012), (SWX + 0.005, SWY, 0.064), SALAT, "kruemel", rot=(0, 0, R(21))), 0.003),
+    weich(box("sandwich_oben", (0.27, 0.19, 0.04), (SWX, SWY, 0.09), BROT, "kruemel", rot=(0, R(-5), R(25))), 0.01),
 ]
-for dx in (-1, 1):
-    jacke.append(ball("jacke_schulter", 0.075, (SX + dx * 0.23, LY_ - 0.02, 1.17), BLAU, "mantel", scale=(1.0, 1.0, 0.7)))
-    jacke.append(cyl("jacke_aermel", 0.058, 0.50, (SX + dx * 0.26, LY_ - 0.07, 0.92), BLAU, "mantel", rot=(R(5), R(dx * 5), 0), verts=16))
-    jacke.append(cyl("jacke_aufschlag", 0.064, 0.09, (SX + dx * 0.28, LY_ - 0.09, 0.69), ROT, "mantel", rot=(R(5), R(dx * 5), 0), verts=16))
-for k in range(4):
-    jacke.append(ball("jacke_knopf", 0.02, (SX + 0.05, LY_ - 0.082, 0.80 + k * 0.10), MESSING, "mantel"))
-j_anker = bpy.data.objects.new("jacke_anker", None)
-scene.collection.objects.link(j_anker)
-j_anker.location = (SX, SY, 0)
+for dx in (0.10, -0.10):   # Krustenkanten
+    sandwich.append(box("sandwich_rinde", (0.016, 0.19, 0.042), (SWX + dx * math.cos(R(25)) * 1.36, SWY + dx * math.sin(R(25)) * 1.36, 0.09), KRUSTE, "kruemel", rot=(0, 0, R(25))))
+for teil in sandwich:
+    for z in biss:
+        m = teil.modifiers.new("biss", "BOOLEAN")
+        m.operation = "DIFFERENCE"
+        m.object = z
+for i in range(170):   # Kruemel: viele winzige, wenige grosse, kantig, dicht am Biss und vereinzelt weit weg
+    if rnd.random() < 0.72:
+        kx, ky = rnd.gauss(BX + 0.03, 0.20), rnd.gauss(BY_ - 0.05, 0.15)
+    else:
+        kx, ky = rnd.uniform(TXM - 0.85, TXM + 0.85), rnd.uniform(TYM - 0.85, TYM + 0.15)
+    if math.hypot(kx - SWX, ky - SWY) < 0.13:
+        continue
+    g = 0.006 + 0.034 * rnd.random() ** 3.2
+    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, radius=g, location=(kx, ky, g * 0.4), rotation=(rnd.uniform(0, 6.3), rnd.uniform(0, 6.3), rnd.uniform(0, 6.3)))
+    k = bpy.context.object
+    k.scale = (rnd.uniform(0.7, 1.5), rnd.uniform(0.6, 1.2), rnd.uniform(0.4, 0.9))
+    fertig(k, "kruemel", KRUSTE if rnd.random() < 0.22 else (BROT if rnd.random() < 0.65 else BROT_D), "kruemel")
+
+# Stuhl, leicht gedreht; die Uniformjacke von Mr Pike faellt als Stoff ueber die Lehne (tower_jacke.py)
+SX, SY, SW = 1.05, -4.25, R(-24)
+stuhl = modell("WoodenChair_01", (SX, SY, 0.0), (0.80, 0.62, 0.52))
 bpy.context.view_layer.update()
-for o in jacke:    # Jacke dreht sich mit dem Stuhl
-    mw = o.matrix_world.copy()
-    o.parent = j_anker
-    o.matrix_parent_inverse = j_anker.matrix_world.inverted()
-    o.matrix_world = mw
+j_anker = tower_jacke.baue_jacke(scene, [o for o in stuhl.children if o.type == "MESH"], SX, SY,
+                                 {"blau": BLAU, "rot": ROT, "messing": MESSING}, gruppe="mantel")
+stuhl.rotation_euler = (0, 0, SW)      # Stuhl und Jacke drehen sich gemeinsam
 j_anker.rotation_euler = (0, 0, SW)
 
 # Fenster in der rechten Wand: Bleirauten, tiefe Steinnische, Fensterbank fuer die Taube

@@ -199,6 +199,18 @@ async function towerTest(browser, basis, app, name, fm) {
     if (!/3\/14/.test(zaehler)) fehl.push(`${titel}: Zähler zeigt „${zaehler}“ statt 3/14`);
     if (!(await pg.locator(".tower-text .en").count())) fehl.push(`${titel}: kein Text zum angetippten Gegenstand`);
     for (const b of await zuBreit(pg)) fehl.push(`${titel}, Raum: ${b}`);
+    // Der Fall: Fenster zweimal (Taube erzählt, fünf Fragen) → Uhr (Zettel) → Treppe (Arthur, Ortskarte) → Film → Ende
+    const tippe = async (id) => { const d = raum.dinge.find((x) => x.id === id); await pg.mouse.click(kasten.x + d.mitte[0] * kasten.width, kasten.y + d.mitte[1] * kasten.height); await pg.waitForTimeout(250); };
+    await tippe("fenster"); await tippe("fenster");
+    for (const antwort of [/^Yes, she does\.$/, /^No, she doesn't\.$/, /^She doesn't say\.$/, /^No, she doesn't\.$/, /^Yes, she does\.$/]) await klicke(pg, antwort);
+    await pg.waitForSelector('.tower-buehne[data-taube="2"]', { timeout: 8000 });
+    await tippe("uhr");
+    await pg.waitForSelector('.tower-buehne[data-zettel="1"]', { timeout: 8000 });
+    await tippe("treppe");
+    await klicke(pg, /^under the bench$/);   // falsche Karte: Arthur fragt noch einmal
+    await klicke(pg, /^behind the clock$/);
+    await pg.getByRole("button", { name: /^Back to the Guard Room$/ }).waitFor({ state: "visible", timeout: 20000 });
+    for (const b of await zuBreit(pg)) fehl.push(`${titel}, Ende: ${b}`);
   } catch (e) {
     const sichtbar = await pg.evaluate(() => [...document.querySelectorAll("button")].filter((x) => x.offsetParent).map((x) => x.textContent.trim().slice(0, 24)).slice(0, 8).join(" | ")).catch(() => "?");
     fehl.push(`${titel}: ${String(e.message || e).split("\n")[0].slice(0, 160)} – sichtbare Knöpfe: ${sichtbar}`);

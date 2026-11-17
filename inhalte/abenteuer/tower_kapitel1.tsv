@@ -99,7 +99,7 @@ r1	erzaehler	A huge raven sits on the stairs. He does not move.	Ein riesiger Rab
 r2a	arthur	I am Arthur.	Ich bin Arthur.		[deep, slow, calm] I am Arthur.		nach r1
 r2b	erzaehler	he says.	sagt er.				nur_text
 r2c	arthur	First of the seven.	Der Erste der Sieben.		[deep, slow, calm] First of the seven.		nach r2a
-r3a	erzaehler	Gary bows.	Gary verbeugt sich.		[calm, storytelling] Gary boughs.		nach r2c · Geste: Gary verbeugt sich
+r3a	erzaehler	Gary bows.	Gary verbeugt sich.		[calm, storytelling] Gary bauz.		nach r2c · Geste: Gary verbeugt sich
 r3b	gary	Your Majesty. Would you like to see a trick?	Eure Majestät. Möchtet Ihr einen Trick sehen?		[very polite, eager] Your Majesty. Would you like to see a trick?		nach r3a
 r3c	arthur	Sit, fox.	Sitz, Fuchs.		[deep, dry, calm] Sit, fox.		nach r3b
 r4	arthur	Where was the note? Tell me, and I let you pass.	Wo war der Zettel? Sag es mir, und ich lasse dich durch.	Where was the note? Tell me.	[deep, slow, calm] Where was the note? Tell me, and I let you pass.		nach r3c · Antwort mit einer Karte, richtig: behind the clock

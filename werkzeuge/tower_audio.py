@@ -34,7 +34,7 @@ MODELL, EINSTELLUNGEN = "eleven_v4", {"stability": 0.3, "similarity_boost": 0.75
 ZIEL_LUFS = {"sonst": -16.0, "sergeant": -14.0}
 SPITZE = 0.841                                    # Spitzenbegrenzung −1,5 dB
 # Nähte, die Mr. Alex beanstandet hat (17.11.: taube_18, Teil 2 setzte zu dicht und zu hart ein): zusätzliche Pause in Sekunden
-NAHT_PAUSE = {"taube_18.mp3": 0.14}
+NAHT_PAUSE = {}   # taube_18: die Störung lag in der Aufnahme von Teil 2, nicht an der Naht – Teil 2 neu aufgenommen
 STILLE_WEG = "areverse,silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.08,areverse"
 
 

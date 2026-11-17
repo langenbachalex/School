@@ -51,7 +51,9 @@
 | 14 | Wandschrank (nur mit Laterne sichtbar) | in the corner | There is a small door in the corner. It is locked. | Schlüsselloch in Form einer Feder – bleibt zu bis Kapitel 4 |
 
 ## C. Der Fuchs – dein Begleiter (frech, verspielt, übertrieben; kommentiert alles; Gegenstück zum strengen Sergeant)
-- F0. "Lord Fox of Tower Hill, at your service. Mostly at my own service."
+- F0. "Foxy McFoxface. Yes, that is my real name. Stop laughing."
+- Sprüche aus dem Vorrat (zufällig, sammelbar im Joke Book): "I have a plan. It is a bad plan. I love it." · "Shh! I am being sneaky." *(CLANG.)* "That was the helmet." · "Did you hear that? … Sorry. That was my tummy." · "I am not scared. You are scared. Hold my paw." · "Pew, pew! … What? Detectives say that."
+- Mit dem Sergeant: "FOX!" – "It's McFoxface, sir." – "I know. I am trying not to say it."
 - F1. "I never take keys. Sandwiches, sometimes. Keys, never."
 - F2. "Mr Pike is always here at nine. He is never late."
 - F3. "But tonight? No idea. That is very strange."
@@ -137,6 +139,6 @@ Wer war die Frau? Warum sieben Haken? Warum ist die Feder warm, und warum kann s
 
 ## Offen für Mr. Alex
 1. Stimmt das Sprachniveau jetzt, oder noch reicher?
-2. Name des Fuchses („Lord Fox of Tower Hill“) und Name des Zauberers?
+2. Name des Zauberers (Vorschläge im Master-Chat 17.11.)?
 3. Feder und „Sorry?“ als Verstehenshilfen so?
 4. Deutsch für die Feder (alle Zeilen) schreibe ich, sobald das Englische steht.

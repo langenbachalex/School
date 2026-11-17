@@ -104,6 +104,11 @@ Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt w
 - **Humor von Mr. Alex (17.11.):** das arrogante Augenzwinkern, leicht, ein bisschen albern und kindisch, frech – nie erzwungen, nie belehrend. Gern eine Begleitfigur, die genau so ist (verspielt, übertrieben, etwas verrückt, kommentiert alles), als Gegenstück zu einer strengen, steifen Figur.
 - **Mr. Alex als Figur:** ein Zauberer mit seiner Stimme (Aussehen offen, evtl. mit seinen Zügen), als antippbarer Tippgeber. Namen dürfen englische Kultur tragen (Könige, Sagen, berühmte Leute); Aussprache ausgefallener Namen vor dem Vertonen prüfen.
 - **Arbeitsweise:** immer mitschreiben, was gedacht und entschieden wurde, und so lange nachfragen, bis völlig klar ist, was gebaut werden soll (Mr. Alex 17.11.).
+- **Frust vermeiden ist Pflicht (Mr. Alex 17.11.):** immer an möglichen Frust denken. Die Kinder merken es (Rückmeldung: kürzere Wartezeit bei „Listen and repeat“ und kürzere Übungen sind „viel besser“). Keine langen Sperrzeiten, nichts doppelt machen müssen, immer speichern, immer ein Weg weiter. Regeln: Konzept Abschnitt 7b.
+- **Verdient statt gekauft:** Neues wird nicht gegen Coins freigeschaltet, sondern durch eine kleine Lernleistung (eine Runde Word Gym oder die Hausaufgabe) – niedrige Schwelle.
+- **Wiederspielwert gehört in jedes Spiel:** neue Fundstücke, zufällige Aufträge, neue Sprüche bei jedem Besuch.
+- **Immer Haken auswerfen:** jedes Ende macht neugierig auf das Nächste (kurzer Film, offene Frage).
+- **Geräte für die Story-Spiele:** Laptops und iPads, keine Handys.
 - Konzept dazu: `docs/spiele/story-spiele-konzept.md`, Bauplan: `docs/spiele/story-spiele-bauplan.md`.
 
 ## Regel von Mr. Alex (8.11.2026) – Blockabschluss

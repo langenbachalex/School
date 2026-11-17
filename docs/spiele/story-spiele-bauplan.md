@@ -55,19 +55,20 @@ Grundlage ist das Probe-Skript `werkzeuge/blender/bigben.py` (15.11.).
 | Zu viel Text, zu wenig Tun | je Zeile höchstens ein Satz am Stück, alle 20–30 Sekunden etwas zum Antippen |
 | Ton wird teuer | erst Kapitel 1; Zweitfassungen nur für Kernzeilen; vor jedem Lauf zählen |
 | App wird zu groß | Kapitel nachladen, Bilder klein halten |
-| Alte Handys | gerechnete Bilder statt echtem 3D |
+| Schwächere Schul-Laptops | gerechnete Bilder statt echtem 3D |
 | Aussprache der Namen | Probehören, Lautschrift |
 | Zu viele Baustellen gleichzeitig | ein Bau-Chat zur Zeit; der Den kommt nach der Probe |
 
 ## 8. Entschieden (Mr. Alex, 17.11.)
 Raben nach König Artus' Hof (Arthur, Guinevere, Lancelot, Morgana, Gawain, Percival, Mordred = die Elster) · Zauberer mit seiner Stimme als antippbarer Tippgeber · der Fuchs als frecher Begleiter · Toni/Jonas gestrichen · Feder und „Sorry?“ als Hilfen · eigenes Zimmer The Den · Texte und Ton dürfen jetzt entstehen, gebaut wird nach den GLN.
 
-## 9. Offene Fragen an Mr. Alex
-1. **Probe zuerst** (Schritt C und D) – einverstanden, und in welcher Klasse?
-2. **Zugang:** frei für alle, oder wie der Runner hinter Coins?
-3. **Dauer:** Wie lang darf ein Kapitel sein (Vorschlag 10–15 Minuten), und soll man mitten im Kapitel aufhören können?
-4. **Belohnung:** Punkte und Coins für Kapitel, oder nur Fundstücke und Möbel?
-5. **Erscheinen:** alle Kapitel auf einmal oder eines pro Woche, mit Vorschau?
-6. **Der Zauberer:** Name, und soll er nach einem Foto von dir gezeichnet werden?
-7. **Der Fuchs:** Name „Lord Fox of Tower Hill“?
-8. **Geräte:** Welches ist das älteste Handy in der Klasse?
+## 9. Antworten Mr. Alex (17.11.) und was noch offen ist
+- **Probe:** ja, in Klasse 6.
+- **Zugang:** frei, nie hinter Coins; niedrige Schwelle, aber verdient – eine Runde Word Gym oder die Hausaufgabe öffnet das nächste Kapitel; die ersten zwei Minuten sind für alle frei.
+- **Dauer und Speichern:** 10–15 Minuten je Kapitel, überall unterbrechbar, von selbst gespeichert, sichtbar als Truhe (Konzept 7a). Ein Kapitel noch einmal machen zu müssen wäre der „Frust des Monats“.
+- **Frust vermeiden** ist ein eigenes Konzept (Konzept 7b).
+- **Belohnung:** Punkte, Fundstücke und Möbel.
+- **Erscheinen:** Kapitel werden freigespielt; Film mit Haken, dann Schlüssel (Konzept 7c).
+- **Wiederspielen** ist Pflichtbestandteil (Konzept 7d).
+- **Geräte:** Laptops und iPads. Handys spielen für dieses Spiel keine Rolle (Querformat, große Fläche).
+- **Der Fuchs:** Foxy McFoxface. **Der Zauberer:** nach einem Foto von Mr. Alex gezeichnet, etwas Gandalf/Dumbledore; der Name muss ohne Geschichtswissen an „Mr. Alex“ erinnern und zum Schmunzeln bringen – noch offen.

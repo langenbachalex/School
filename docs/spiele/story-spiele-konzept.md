@@ -47,7 +47,7 @@ Rückmeldung Mr. Alex 17.11.: mehr Abenteuer, mehr Witz, Seitenstränge, ein Hau
 - **Akt 2 – The Seventh Raven.** Dann zählt jemand die Raben. Sechs. Es sind immer sieben. Die Legende: Verlassen die Raben den Tower, fällt das Königreich. Und die Tür zum Jewel House steht offen. Jetzt ist es ernst: Geheimtür hinter der Rüstung, ein Gang unter dem Tower, eingeritzte Zeichen alter Gefangener, eine Stimme im Dunkeln.
 - **Akt 3 – The Magpie.** Die Jagd führt zum Traitors' Gate und in einem Ruderboot auf die nächtliche Themse. Der Dieb ist „the Magpie“, die Elster, die alles Glänzende sammelt und nie in den Raven Club durfte – sie saß die ganze Zeit schwarz angemalt als „siebter Rabe“ unter den anderen (wer genau zugehört hat, konnte es merken). Auflösung warm: Sie wollte dazugehören. Um 9:53 die echte Zeremonie zum Mitsprechen („Halt! Who comes there?“ – „The keys.“ – „Whose keys?“ – „King Charles's keys.“ – „Pass. All's well.“), dann die Party, und der Raven Club bekommt ein achtes Mitglied.
 
-**Figuren:** du · Sergeant Bearskin · **der Fuchs als Begleiter** („Lord Fox of Tower Hill“: frech, verspielt, übertrieben, kommentiert alles – Gegenstück zum strengen Sergeant) · die Taube · die sieben Raben nach König Artus' Hof (Arthur, Guinevere, Lancelot, Morgana, Gawain, Percival – und „Mordred“), jeder mit eigenem Spruch · **der Zauberer** mit der Stimme von Mr. Alex, immer antippbar als frecher Tippgeber (er hat auch die flüsternde Feder gemacht) · der Geist vom Ghost Club (wartet seit 1899) · Mr Pike · Mrs Crumb, die Köchin · the Magpie.
+**Figuren:** du · Sergeant Bearskin · **der Fuchs als Begleiter: Foxy McFoxface** (entschieden 17.11.; hasst seinen Namen, will ernst genommen werden, klappt nie; albern, kindisch, übertrieben – Gegenstück zum strengen Sergeant) · die Taube · die sieben Raben nach König Artus' Hof (Arthur, Guinevere, Lancelot, Morgana, Gawain, Percival – und „Mordred“), jeder mit eigenem Spruch · **der Zauberer** mit der Stimme von Mr. Alex, immer antippbar als frecher Tippgeber (er hat auch die flüsternde Feder gemacht) · der Geist vom Ghost Club (wartet seit 1899) · Mr Pike · Mrs Crumb, die Köchin · the Magpie.
 
 **Seitenstränge (freiwillig, zum Entdecken, Belohnung: Sammelstücke, Geheimnisse, Lacher)**
 1. **The Ghost's Letter** (Hauch Romantik, etwas unheimlich): Der Geist wartet seit 1899 – auf einen Brief von Ada, der nie ankam. Wer die Teile findet, liest ihn ihm vor.
@@ -157,6 +157,42 @@ Formate laut `docs/archiv/gln-formate.md`; GLN-Aufgaben selbst kommen nie ins Re
 - Je Kapitel etwa 2.000–2.500 Zeichen (EN6) bzw. 3.000–3.500 (EN9): Szene, Zeugenaussage, 12 Gegenstands-Sätze, Bericht.
 - Gesamt grob: EN6 7 Kapitel plus Seitenstränge ≈ 17.000–20.000 Zeichen, EN9 5 Kapitel ≈ 15.000–17.500 Zeichen. Bei 0,4–0,5 Credits je Zeichen zusammen rund 13.000–19.000 Credits. **Vorschlag: zuerst nur Kapitel 1 beider Spiele vertonen** (zusammen ≈ 5.500 Zeichen).
 - Werkzeuge: Texte mit `werkzeuge/wortcheck.py` gegen den Wortschatz prüfen; Vertonung mit den vorhandenen Skripten (`story_audio.py`, `story_audio9.py`), nie Vorhandenes überschreiben.
+
+## 7a. Nie verlieren, was man geschafft hat – Speichern (Mr. Alex 17.11.)
+- **Das Spiel speichert nach jedem Schritt von selbst** (welche Dinge angetippt, welche Karten gefunden, wo man steht). Der Stand ist winzig und liegt im vorhandenen gesiegelten Spielstand. Laptop zuklappen mitten im Satz kostet nichts. Technisch einfach.
+- **Sichtbar wird das als Truhe:** In jedem Raum steht „your chest“. Alles Gefundene fliegt hinein; sie steht auch im eigenen Zimmer. Die Truhe ist das Versprechen: Was drin ist, bleibt.
+- **Wiederkommen:** Die Kachel zeigt „Chapter 1 · Guard Room · 7 of 14“. Ein Tipp, 20 Sekunden „Previously …“, und man steht, wo man war.
+- **Ein Kapitel muss nie wiederholt werden.** Wiederholen ist immer freiwillig und bringt Neues (7d).
+- Grenze: Der Stand liegt wie bisher auf dem einen Gerät.
+
+## 7b. Frust vermeiden – feste Regeln für dieses Spiel und alle weiteren
+Anlass: Kinder haben Mr. Alex zurückgemeldet, dass die kürzere Wartezeit bei „Listen and repeat“ und kürzere Übungen viel besser sind. Sie merken das.
+1. **Nichts geht verloren, nichts muss doppelt gemacht werden.**
+2. **Keine Wartesperren.** Kein Zähler, der aussperrt. Jede Zeile lässt sich nach dem ersten Hören wegtippen; Wiederholen geht sofort.
+3. **Es gibt immer einen Weg weiter:** Zauberer antippen; nach dem dritten Fehlversuch leuchtet die Lösung; passiert 60 Sekunden nichts, schubst der Fuchs an.
+4. **Kurze Stücke:** höchstens 20–30 Sekunden Zuhören, dann wieder selbst etwas tun. Kapitel 10–15 Minuten, überall unterbrechbar.
+5. **Keine Strafen:** keine Leben, kein Punktabzug, kein „Game over“.
+6. **Faire Tür:** Die Sperre sagt genau, was fehlt, und ein Tipp führt dorthin. Mr. Alex kann im Lehrer-Bereich jede Tür öffnen.
+7. **Technik darf nie blockieren:** Fehlt ein Ton, steht der Text trotzdem da; das nächste Kapitel lädt, während der Film läuft.
+8. **Die Kinder fragen:** am Kapitelende ein Tipp 😀 / 😐 / 😤, sichtbar im Lehrer-Bereich. Vor jeder Veröffentlichung einmal diese Liste durchgehen.
+
+## 7c. Haken und Schlüssel – wie es von Kapitel zu Kapitel geht (entschieden 17.11.)
+- **Erster Kontakt:** Die ersten zwei Minuten sind für alle frei (der Sergeant rennt, die Schlüssel sind weg, die Feder fällt). Erst an der Tür des Guard Room kommt die erste Schwelle. Erst der Haken, dann die Leistung.
+- **Frei, aber verdient – nie gegen Coins:** Ein Schlüssel kostet **eine Runde Word Gym heute oder die erledigte Hausaufgabe**. Ein Rabe bringt den Schlüssel ins eigene Zimmer.
+- **Kapitelende:** kurzer Film (15–25 Sekunden) mit offenem Ende → das Bild des nächsten Raums als Schatten → durch die verschlossene Tür hört man schon etwas (z. B. jemand singt in der Küche) → die Tür sagt, was für den Schlüssel fehlt.
+- **Auch bei verschlossener Tür gibt es etwas zu tun:** das eigene Zimmer, alte Räume mit neuen Fundstücken, Seitenstränge.
+- **Belohnung je Kapitel:** Punkte (einmalig), Fundstücke und Möbel.
+
+## 7d. Wiederspielen – ein gespielter Raum ist nie „leer“ (Mr. Alex 17.11.)
+1. **Neue Fundstücke bei jedem Besuch:** Die Elster hat Glänzendes verloren (Knöpfe, Löffel, Münzen, Murmeln; eine Sammlung mit Seltenheit). Zwei bis drei liegen jedes Mal woanders.
+2. **„Who moved my things?“** Der Sergeant ist empört: Jemand hat die Sachen umgestellt. Dinge liegen zufällig neu („The boot is on the shelf!“), du stellst die Ordnung wieder her. Unendlich viele Runden, genau die Sprache des Kapitels. Jedes Kapitel bekommt so ein eigenes Zufallsspiel aus seiner Sprache.
+3. **Aufträge, die auftauchen:** Ein Rabe braucht etwas („Bring me the thing behind the clock“), der Fuchs versteckt sich („Where is Foxy?“), der Sergeant sucht wieder seinen Hut. Ein bis zwei Minuten, zufällig.
+4. **Die Figuren sagen Neues:** Der Fuchs hat einen Vorrat von Dutzenden Sprüchen; alle gehörten landen im „Joke Book“ zum Sammeln.
+5. **Andere Entscheidung, andere Szene:** „What if?“ – noch einmal mit der anderen Wahl.
+6. **Geheimnisse für später:** Mit Laterne oder Federschlüssel öffnen sich in alten Räumen neue Ecken.
+7. **Medaillen je Raum:** alles gefunden · „English only“ · ohne Feder · auf Zeit (freiwillig).
+8. **Raven Post:** kleine Aufträge im eigenen Zimmer; sie sammeln sich und verfallen nicht.
+9. **Anderes Licht:** Nacht, Morgengrauen, Nebel – mit anderen Sätzen.
 
 ## 8. Arbeitsstufen
 | Stufe | Inhalt | Wann |

@@ -77,7 +77,7 @@ def main(test=None):
         for n in sorted(namen):
             pfad = os.path.join(wurzel, n)
             rel = os.path.relpath(pfad, APP).replace(os.sep, "/")
-            if rel in ("sw.js", "LIESMICH.md") or n == "QUELLEN.md" or rel.startswith(("klasse9/", "franzoesisch/", "franz/", "lehrer/", "tower/raum3d/", "tower/lib/", "tower/probe3d")):  # eigene Apps/Seiten mit eigenem Offline-Speicher; 3D-Probe (gross) nicht für alle Kinder vorladen
+            if rel in ("sw.js", "LIESMICH.md") or n == "QUELLEN.md" or rel.startswith(("klasse9/", "franzoesisch/", "franz/", "lehrer/", "tower/raum3d/", "tower/lib/", "tower/figuren/", "tower/probe3d")):  # eigene Apps/Seiten mit eigenem Offline-Speicher; 3D-Probe (gross) nicht für alle Kinder vorladen
                 continue
             dateien[rel] = sw_vorlage.pruefsumme(pfad)
             with open(pfad, "rb") as f:

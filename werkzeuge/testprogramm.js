@@ -190,6 +190,13 @@ async function probe3dTest(browser, basis, app, name, fm) {
       await pg.click(`#kameras button[data-kamera="${k}"]`); await pg.waitForTimeout(200);
       if ((await pg.evaluate(() => document.getElementById("buehne").dataset.kamera)) !== k) fehl.push(`${titel}: Kamera „${k}“ lässt sich nicht wählen`);
     }
+    // Figuren-Probe: Gary auf drei Arten, alle können sich verbeugen und gehen
+    const garys = () => pg.evaluate(() => window.__probe3d.garys());
+    if ((await garys()).length !== 3) fehl.push(`${titel}: es stehen nicht drei Garys im Raum`);
+    await pg.click('#garys button[data-gary="verbeugen"]'); await pg.waitForTimeout(200);
+    if (!(await garys()).every((g) => g.modus === "verbeugen")) fehl.push(`${titel}: nicht alle Garys verbeugen sich`);
+    await pg.click('#garys button[data-gary="gehen"]'); await pg.waitForTimeout(1500);
+    if (!(await garys()).every((g) => g.modus === "gehen" && g.weg > 0.05)) fehl.push(`${titel}: nicht alle Garys gehen`);
     for (const b of await zuBreit(pg)) fehl.push(`${titel}: ${b}`);
   } catch (e) {
     const meldung = await pg.locator("#laden").textContent().catch(() => "?");

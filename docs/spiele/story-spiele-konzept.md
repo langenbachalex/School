@@ -11,6 +11,21 @@ Dieses Dokument ist Stufe 1: Leitidee, beide Geschichten, Sprachplan, Zweisprach
 - **Sprache als Spielmechanik:** Türen, Kisten und Zeugen reagieren auf Wendungen. Keine Aufgaben-Überschriften, keine deutschen Arbeitsanweisungen. Die Regel („Detective's Notes“) steht freiwillig im Notizbuch.
 - **Neugier ja, Druck nein:** Geheimnisse, Sammelstücke, Cliffhanger; keine Strafen, kein Glücksspiel, keine Verlustangst (Haltung Trust, Support).
 
+## 0b. Was die Kinder schon spielen – und was wir davon übernehmen (17.11.)
+Aus allgemeinem Wissen über beliebte Spiele dieser Altersgruppe, keine eigene Umfrage. Übernommen werden Spielprinzipien, nie Namen, Figuren oder Aussehen eines bestimmten Spiels. **Bester Abgleich: drei Fragen an die eigenen Klassen** (Was spielst du gerade? Was daran magst du? Was nervt?).
+
+| Was sie kennen | Was daran zieht | Bei uns |
+|---|---|---|
+| Spiele, in denen einer lügt (Verdächtige, Abstimmung) | „Wer war es?“, Misstrauen, Reden darüber | Einer der „Raben“ ist die schwarz angemalte Elster; Zeugen widersprechen sich, du entlarvst über das, was sie sagen |
+| Bau- und Sammelwelten | etwas Eigenes besitzen und einrichten | Detektiv-Versteck im Tower, mit Fundstücken eingerichtet (EN9: Spind/Nachtlager im Museum) |
+| Sammelfiguren mit Seltenheit und Stufen | „Den hab ich noch nicht“ | die sieben Raben, Exponate, seltene Fundstücke – Folien-Karten gibt es schon |
+| Abenteuerspiele mit Karte und Gegenständen | Türen, die erst später aufgehen | Laterne, Seil, Schlüsselring öffnen früher gesehene Wege |
+| Lebens-Simulationen mit Dorfbewohnern | Figuren mit Tagesablauf, Freundschaft wächst | Figuren reden mehr, je öfter man sie besucht – neue Wendungen als Belohnung |
+| Grusel-Nachtwächter-Spiele (EN9-Alter) | Dunkel, Kameras, „Was war das?“ | „After Hours“: Säle im Halbdunkel, Lichtschalter, Geräusche orten |
+| Chats und Kurznachrichten | vertraute Form, kurze Texte | Zeugen schreiben dir (Leseverstehen als Nachrichtenverlauf) |
+| Staffeln und Events | Vorfreude auf das Nächste | Kapitel erscheinen nacheinander, mit Vorschau auf das nächste |
+| Aussehen und Gesten zum Freischalten | sich zeigen | vorhandene Figur-Teile und Skins weiter nutzen |
+
 ## 1. Leitidee: Jeder Hinweis ist eine Wendung
 
 Ein Krimi in Räumen. Der Unterschied zu einem Wimmelbild: **Hinweise sind nie einzelne Wörter, sondern Wendungen im Satz** („next to the door“, „afraid of the dark“, „Don't look for the keys“). Wer den Fall lösen will, muss Wendungen hören, verstehen, wiederfinden und am Ende selbst benutzen.
@@ -30,7 +45,7 @@ Rückmeldung Mr. Alex 17.11.: mehr Abenteuer, mehr Witz, Seitenstränge, ein Hau
 **Die Geschichte in drei Akten**
 - **Akt 1 – The Keys.** Um 9:53 p.m. wird der Tower abgeschlossen (Ceremony of the Keys, seit rund 700 Jahren). Heute sind die Schlüssel weg, und Warder Mr Pike auch. Sergeant Bearskin rennt zum ersten Mal in seinem Leben. Die Spur führt zum Kuchen: Mr Pike und der Key Club planen eine Überraschungsparty für den Sergeant. Erleichterung, Gelächter.
 - **Akt 2 – The Seventh Raven.** Dann zählt jemand die Raben. Sechs. Es sind immer sieben. Die Legende: Verlassen die Raben den Tower, fällt das Königreich. Und die Tür zum Jewel House steht offen. Jetzt ist es ernst: Geheimtür hinter der Rüstung, ein Gang unter dem Tower, eingeritzte Zeichen alter Gefangener, eine Stimme im Dunkeln.
-- **Akt 3 – The Magpie.** Die Jagd führt zum Traitors' Gate und in einem Ruderboot auf die nächtliche Themse. Der Dieb ist „the Magpie“, die Elster, die alles Glänzende sammelt und nie in den Raven Club durfte. Auflösung warm: Sie wollte dazugehören. Um 9:53 die echte Zeremonie zum Mitsprechen („Halt! Who comes there?“ – „The keys.“ – „Whose keys?“ – „King Charles's keys.“ – „Pass. All's well.“), dann die Party, und der Raven Club bekommt ein achtes Mitglied.
+- **Akt 3 – The Magpie.** Die Jagd führt zum Traitors' Gate und in einem Ruderboot auf die nächtliche Themse. Der Dieb ist „the Magpie“, die Elster, die alles Glänzende sammelt und nie in den Raven Club durfte – sie saß die ganze Zeit schwarz angemalt als „siebter Rabe“ unter den anderen (wer genau zugehört hat, konnte es merken). Auflösung warm: Sie wollte dazugehören. Um 9:53 die echte Zeremonie zum Mitsprechen („Halt! Who comes there?“ – „The keys.“ – „Whose keys?“ – „King Charles's keys.“ – „Pass. All's well.“), dann die Party, und der Raven Club bekommt ein achtes Mitglied.
 
 **Figuren:** du · **Toni**, Cousin/Cousine aus Saarbrücken (komischer Sidekick, wenige deutsche Zeilen, False Friends) · Sergeant Bearskin · der Fuchs („I rarely follow rules“) · die Taube · die sieben Raben, jeder mit eigenem Spruch · der Geist vom Ghost Club (wartet seit 1899) · Mr Pike · Mrs Crumb, die Köchin · the Magpie.
 

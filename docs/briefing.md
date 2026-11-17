@@ -108,7 +108,10 @@ Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt w
 - **Verdient statt gekauft:** Neues wird nicht gegen Coins freigeschaltet, sondern durch eine kleine Lernleistung (eine Runde Word Gym oder die Hausaufgabe) – niedrige Schwelle.
 - **Wiederspielwert gehört in jedes Spiel:** neue Fundstücke, zufällige Aufträge, neue Sprüche bei jedem Besuch.
 - **Immer Haken auswerfen:** jedes Ende macht neugierig auf das Nächste (kurzer Film, offene Frage).
-- **Geräte für die Story-Spiele:** Laptops und iPads, keine Handys.
+- **Geräte für die Story-Spiele:** gebaut für Laptops und iPads; Handys sind nur die Notlösung, werden aber weiter mitgetestet.
+- **Gesprochene Zeilen sperren nie, werden aber auch nicht weggetippt:** Man kann weitermachen, während die Stimme spricht. So hetzt niemand durch, und niemand wartet.
+- **Reihenfolge beim Entwickeln einer Geschichte:** erst die Figuren klar, dann die Orte, dann die Grundgeschichte, dann die Kapitel.
+- **„Hinterlegen“ (Wort von Mr. Alex)** = auf Englisch „keep it on file“: dauerhaft als Vorgabe festhalten und künftig von selbst beachten. Sagt Mr. Alex „hinterlegen“ oder „keep that in the back of your mind“, kommt es in dieses Briefing.
 - Konzept dazu: `docs/spiele/story-spiele-konzept.md`, Bauplan: `docs/spiele/story-spiele-bauplan.md`.
 
 ## Regel von Mr. Alex (8.11.2026) – Blockabschluss

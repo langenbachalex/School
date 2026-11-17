@@ -43,6 +43,10 @@ def eintraege():
     for z in lesen("tower_kapitel1.tsv"):
         zeile("k1_" + z["id"], z["sprecher"], z["englisch"], z["regie"], "Kapitel 1")
         dazu(f"k1_{z['id']}_einfach", z["sprecher"], z["einfach"], "Kapitel 1", "einfachere Fassung")
+    for z in lesen("tower_hof_den.tsv"):                 # Auftakt, Hof, The Den (vertont 17.11.)
+        g = {"v": "Auftakt", "w": "Hof", "d": "The Den"}[z["id"][0]]
+        zeile("k1_" + z["id"], z["sprecher"], z["englisch"], z["regie"], g)
+        dazu(f"k1_{z['id']}_einfach", z["sprecher"], z["einfach"], g, "einfachere Fassung")
     for z in lesen("tower_sprueche.tsv"):
         zeile(z["id"], z["figur"], z["text"], z["regie"], "Sprüche")
     proben = os.path.join(AUDIO, "proben")              # Proben zur Auswahl (Unterordner), Text steht in der Zeile ohne _A/_B/_C

@@ -88,6 +88,15 @@ GLN 1 war am 30.09.2026 (Lead-in und Topic 1, S. 80 bis 85). Nach den Herbstferi
 ## Regel von Mr. Alex (2.11.2026) – sparsam arbeiten
 Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt werden kann; vor größeren Bauten kurz zurückfragen (Aufwand klein/mittel/groß, schlankere Variante). Einzelheiten in `CLAUDE.md` im Repo-Hauptordner.
 
+## Regeln von Mr. Alex (17.11.2026) – Spiele: erst Spiel, dann Lernen (gilt für alle Apps und alle Chats)
+- **Immer zuerst fragen: Würden die Kinder das freiwillig spielen?** „Sonst programmiere ich ein Spiel, das niemand spielt.“ Abenteuer, Neugier und Witz gehen vor; das Lernen wird unauffällig eingewebt, nichts darf nach Arbeitsblatt aussehen oder belehrend wirken.
+- **Story ist alles:** Rahmenhandlung mit Geheimnis und Abenteuer, Seitenstränge zum Entdecken, lustige Momente und laufende Witze, ein Hauch Romantik (äußerst dezent, nie sexuell), etwas Grusel ist erlaubt (Klasse 6 milder als Klasse 9).
+- **Englische bzw. amerikanische Welt, ganz englisch vertont.** Deutsch nur zum Antippen (Zeile umdrehen) – das gefällt Mr. Alex ausdrücklich – und durch Figuren in der Handlung.
+- **Sprache als Spielmechanik**, vor allem Wendungen (Chunks) statt Einzelwörter; weiterhin: kein Wort ohne Satz, erst Sprache, dann üben, dann Regel (die Regel freiwillig, nicht als Pflichtseite).
+- **Neugier ja, Druck nein:** Geheimnisse, Sammelstücke, Cliffhanger, offene Türen für später; keine Strafen, kein Glücksspiel, keine Verlustangst.
+- **Haltung für Claude:** immer verstehen, was Mr. Alex will und was für seine Schüler das Beste ist; von sich aus das beste Werkzeug für die Aufgabe vorschlagen (Mr. Alex 17.11.: „always do the best job and think about the best tools“).
+- Konzept dazu: `docs/spiele/story-spiele-konzept.md`.
+
 ## Regel von Mr. Alex (8.11.2026) – Blockabschluss
 - Französisch-App (Nebenfach) belohnt langsamer als bisher, aber leichter als Englisch: Superheld alle 3 Schultage am Stück (mit 🔥 Extra-Lob), Orte alle 200 ⭐, Panthéon-Karten alle 100 ⭐, von jeder Sorte höchstens eins pro Tag.
 - Lob und Rückmeldungen in der Französisch-App: idiomatisch französisch (wie man es wirklich sagt, auch Jugendsprache), nicht wörtlich übersetzt; vertont mit Mr. Alex' Stimme und Tag [French]. Aussprachefehler erst sammeln (Ideenspeicher), dann gemeinsam neu vertonen.

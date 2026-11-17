@@ -101,7 +101,10 @@ Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt w
 - **Alle sollen mitkommen (Mr. Alex 17.11.):** Die Sprache darf anspruchsvoll sein; schwächere Schüler müssen trotzdem den Kern verstehen, ohne auszubrennen – Zeilen wiederholen lassen, übersetzen lassen, manches von selbst (Bild, Rückblick, leise Anpassung). Die einen sind sofort in der Geschichte, andere brauchen mehr Anstoß: alle hineinziehen. Keine erklärenden Hilfsfiguren, die Deutsch sprechen, und keine False-Friend-Witze in Klasse 6 (verwirrt nur).
 - **Ein eigener Raum zum Zurückziehen** gehört dazu: Figur umziehen, Zimmer vollständig einrichten, frei erkunden – als Seitenbereich neben der Geschichte.
 - **Namen dürfen ausgefallen sein** (z. B. keltisch oder lateinisch für die Raben).
-- Konzept dazu: `docs/spiele/story-spiele-konzept.md`.
+- **Humor von Mr. Alex (17.11.):** das arrogante Augenzwinkern, leicht, ein bisschen albern und kindisch, frech – nie erzwungen, nie belehrend. Gern eine Begleitfigur, die genau so ist (verspielt, übertrieben, etwas verrückt, kommentiert alles), als Gegenstück zu einer strengen, steifen Figur.
+- **Mr. Alex als Figur:** ein Zauberer mit seiner Stimme (Aussehen offen, evtl. mit seinen Zügen), als antippbarer Tippgeber. Namen dürfen englische Kultur tragen (Könige, Sagen, berühmte Leute); Aussprache ausgefallener Namen vor dem Vertonen prüfen.
+- **Arbeitsweise:** immer mitschreiben, was gedacht und entschieden wurde, und so lange nachfragen, bis völlig klar ist, was gebaut werden soll (Mr. Alex 17.11.).
+- Konzept dazu: `docs/spiele/story-spiele-konzept.md`, Bauplan: `docs/spiele/story-spiele-bauplan.md`.
 
 ## Regel von Mr. Alex (8.11.2026) – Blockabschluss
 - Französisch-App (Nebenfach) belohnt langsamer als bisher, aber leichter als Englisch: Superheld alle 3 Schultage am Stück (mit 🔥 Extra-Lob), Orte alle 200 ⭐, Panthéon-Karten alle 100 ⭐, von jeder Sorte höchstens eins pro Tag.

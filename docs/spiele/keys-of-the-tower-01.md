@@ -2,7 +2,7 @@
 
 **Status:** Entwurf des Masters zum Gegenlesen durch Mr. Alex. Nichts vertont, nichts gebaut. Konzept: `story-spiele-konzept.md`, Regeln: `docs/briefing.md` („Regeln 17.11. – Spiele“).
 
-**Geändert nach Rückmeldung Mr. Alex (17.11.):** Sprache etwas reicher · Toni und der „become“-Witz gestrichen · Verstehenshilfen in der Spielwelt (Feder, „Sorry?“) · Raben mit keltischen Namen · eigenes Zimmer zum Einrichten und Umziehen.
+**Geändert nach Rückmeldung Mr. Alex (17.11.):** Sprache etwas reicher · Toni und der „become“-Witz gestrichen · Verstehenshilfen in der Spielwelt (Feder, „Sorry?“) · Raben nach König Artus' Hof · Fuchs als frecher Begleiter · Zauberer mit der Stimme von Mr. Alex als Tippgeber · eigenes Zimmer zum Einrichten und Umziehen.
 
 **Sprache in diesem Kapitel:** KERN Ortsangaben als Wendungen (on the wall, under the bench, next to, on the shelf, above the fireplace, behind the clock, between the cups, in the corner, at the window, down the stairs) · there is / there are · Uhrzeit. WIEDERHOLT: Häufigkeit (never, always, sometimes), he/she/it + s, do/does mit Kurzantwort, Adjektive. ALLTAGSWENDUNGEN neu: What's going on? · No idea. · Hurry up! · Guess what! · as always · How strange. · Sorry? · Again, please. · Slowly, please. DARÜBER HINAUS: present progressive in einigen Sätzen (is running, is eating, is sitting, is singing) als Vorgriff auf Kapitel 2.
 
@@ -25,7 +25,8 @@
 *Du bekommst das Abzeichen „Junior Detective“ und die **Feder** (siehe Verstehenshilfen).*
 
 ## Verstehenshilfen in diesem Kapitel (alle in der Spielwelt, nichts davon kostet etwas)
-- **Die flüsternde Feder:** Halte die Feder an eine Zeile, und sie „flüstert“ sie auf Deutsch (Text erscheint). Das ist die Prise Magie und ersetzt Toni.
+- **Der Zauberer (Stimme Mr. Alex) – immer antippbar:** Sein Bild sitzt in einem kleinen Zauberspiegel am Bildrand. Wer nicht weiterweiß, tippt ihn an und bekommt einen frechen Tipp, nie die Lösung. Beispiele: "I am the greatest wizard in London. Well, in this tower. Well, in this room." · "A hint? From me? Fine. Pigeons see everything. Ask one." · "Look behind things. People hide things behind things. I do."
+- **Die flüsternde Feder** (vom Zauberer gemacht): Halte die Feder an eine Zeile, und sie „flüstert“ sie auf Deutsch (Text erscheint). Das ist die Prise Magie und ersetzt Toni.
 - **„Sorry?“:** Deine Figur kann jederzeit nachfragen – *Sorry? · Again, please. · Slowly, please.* Die Figur wiederholt die Zeile, beim zweiten Mal langsamer.
 - **Dinge leuchten, wenn sie genannt werden:** Sagt jemand „behind the clock“, schimmert die Uhr kurz.
 - **Das Notizbuch erzählt mit:** „The story so far“ als kurze Bildfolge in einfachem Englisch, jederzeit nachzulesen.
@@ -49,7 +50,8 @@
 | 13 | Kamin | in the fireplace | There is a piece of paper in the fireplace. Very old paper. | Brief-Teil 1: "… wait for me at the gate. Yours for ever, A." → *The Ghost's Letter* |
 | 14 | Wandschrank (nur mit Laterne sichtbar) | in the corner | There is a small door in the corner. It is locked. | Schlüsselloch in Form einer Feder – bleibt zu bis Kapitel 4 |
 
-## C. Der Fuchs (antippen, Reihenfolge frei)
+## C. Der Fuchs – dein Begleiter (frech, verspielt, übertrieben; kommentiert alles; Gegenstück zum strengen Sergeant)
+- F0. "Lord Fox of Tower Hill, at your service. Mostly at my own service."
 - F1. "I never take keys. Sandwiches, sometimes. Keys, never."
 - F2. "Mr Pike is always here at nine. He is never late."
 - F3. "But tonight? No idea. That is very strange."
@@ -80,21 +82,19 @@
 
 ## F. Der Rabe auf der Treppe (der Weg nach unten)
 - R1. A huge raven sits on the stairs. He does not move.
-- R2. "I am Bran," he says. "First of the seven."
+- R2. "I am Arthur," he says. "First of the seven."
 - R3. "Where is the note? Tell me, and I let you pass."
-*Du antwortest mit einer Karte aus dem Notizbuch. Richtig: **behind the clock**. Bei anderen Karten antwortet Bran trocken, z. B. auf „under the bench“: "That is a boot. I am not a boot."*
-- R4. "Good," says Bran. His eyes are gold.
+*Du antwortest mit einer Karte aus dem Notizbuch. Richtig: **behind the clock**. Bei anderen Karten antwortet Arthur trocken, z. B. auf „under the bench“: "That is a boot. I am not a boot."*
+- R4. "Good," says Arthur. His eyes are gold.
 - R5. "Seven hooks. Seven ravens. Count us tonight."
 - R6. Then he is gone. Not through the window. Simply gone.
 - R7. The clock says half past nine. Twenty-three minutes left.
 - R8. Something smells good down there. Really good.
 
-*Rabe 1 von 7 gefunden: **Bran**. Entscheidung fürs nächste Kapitel: Nimmst du den Fuchs mit in die Küche, oder lässt du ihn Wache halten? (ändert Szene und Witze in Kapitel 2).*
+*Rabe 1 von 7 gefunden: **Arthur**. Entscheidung fürs nächste Kapitel: Nimmst du den Fuchs mit in die Küche, oder lässt du ihn Wache halten? (ändert Szene und Witze in Kapitel 2).*
 
-## Die sieben Raben (Namen, Vorschlag)
-Sechs keltische Namen und ein lateinischer – wer genau hinhört, merkt, dass einer nicht dazugehört:
-**Bran** (walisisch „Rabe“; nach der Sage liegt Brans Haupt unter dem Tower und schützt das Land) · **Morrigan** · **Branwen** · **Taliesin** · **Rhiannon** · **Gwydion** · und **Septimus** („der Siebte“) – die schwarz angemalte Elster.
-Variante ganz lateinisch: Corvinus, Umbra, Vesper, Nocturna, Aurelius, Tenebra, Septimus.
+## Die sieben Raben (entschieden Mr. Alex 17.11.: König Artus' Hof)
+**Arthur** („First of the seven“) · **Guinevere** · **Lancelot** · **Morgana** · **Gawain** · **Percival** – und **Mordred**, in der Sage der Verräter: die schwarz angemalte Elster. (Kein Rabe heißt Merlin, weil es einen eigenen Zauberer gibt.) Aussprache der Namen vor dem Vertonen einzeln anhören; notfalls Lautschrift-Feld wie bei den Vokabeln.
 
 ## G. Dein Notizbuch schreibt mit (Lücken mit den gefundenen Karten füllen)
 > Case notes, half past nine. The keys are not **on the wall**. There is one boot **under the bench**. The teapot **on the table** is still warm. There is a spoon **between the cups** – two cups! Mr Pike hides a note **behind the clock**. Then he goes **down the stairs**.
@@ -137,6 +137,6 @@ Wer war die Frau? Warum sieben Haken? Warum ist die Feder warm, und warum kann s
 
 ## Offen für Mr. Alex
 1. Stimmt das Sprachniveau jetzt, oder noch reicher?
-2. Rabennamen: keltisch mit Septimus als Ausreißer, oder ganz lateinisch?
+2. Name des Fuchses („Lord Fox of Tower Hill“) und Name des Zauberers?
 3. Feder und „Sorry?“ als Verstehenshilfen so?
 4. Deutsch für die Feder (alle Zeilen) schreibe ich, sobald das Englische steht.

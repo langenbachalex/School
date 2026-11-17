@@ -70,7 +70,7 @@ gary_16	gary	show	3	Nothing in my left paw. Nothing in my right paw. I have noth
 gary_17	gary	show	3	For my next trick I need a volunteer. And a sandwich. Mostly a sandwich.	
 gary_18	gary	show	3	Pick a card. Any card. … Not that one.	
 gary_19	gary	panne	1	That was on purpose.	
-gary_20	gary	panne	1	Shh! I am being sneaky. … Shh, helmet! Cheeky helmet. Very loud helmet.	CLANG
+gary_20	gary	panne	1	Shh! Watch me. I am sneaking. … The helmet started it.	er schleicht und läuft gegen den Helm: CLANG
 gary_21	gary	panne	2	I meant to fall. It is called a magic roll.	
 gary_22	gary	panne	2	My cape is stuck in the door. Again. It is a very clingy cape.	
 gary_23	gary	panne	2	Who put that wall there?	
@@ -175,3 +175,14 @@ arthur_02	arthur	raetsel	2	We do not answer questions. We ask them.
 arthur_03	arthur	gary	2	Sit, fox.	
 arthur_04	arthur	raetsel	1	Count us tonight.	goldene Augen
 arthur_05	arthur	gary	3	A raven never forgets. A fox never listens.	
+gary_63	gary	detektiv	1	A mystery? I will solve it. With my magic skills!	
+gary_64	gary	detektiv	1	First clue: it was not me. Second clue: … I am still looking.	
+gary_65	gary	detektiv	2	I am on the case! Where is the case? What is a case?	
+gary_66	gary	detektiv	2	Follow me! I know the way. I do not know the way.	
+gary_67	gary	detektiv	2	A real detective asks questions. Question one: is there cake?	
+gary_68	gary	detektiv	3	I will use my magic eye. … It is my normal eye. But I say magic.	hält eine Pfote über ein Auge
+mrflex_68	mrflex	start	1	So. You are the hero. I can tell. I know everything.	
+mrflex_69	mrflex	start	1	Heroes need muscles. Brain muscles.	Bizeps-Pose
+mrflex_70	mrflex	start	2	Get pumped up in the Word Gym first. Then solve the mystery.	
+mrflex_71	mrflex	start	2	Back from the gym? I can see it. Look at that brain.	
+sergeant_39	sergeant	befehl	1	You. Can you find things? Good. Find my keys.	zeigt auf dich

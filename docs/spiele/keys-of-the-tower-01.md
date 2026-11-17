@@ -8,30 +8,38 @@
 
 **Gilt überall:** Laptop und iPad im Querformat · gesprochene Zeilen sperren nie und werden nicht weggetippt – man kann weitermachen, während die Stimme spricht · das Spiel speichert nach jedem Schritt · keine Aufgaben-Überschriften (die Abschnittsnamen hier sind nur für uns).
 
+## Deine Figur (vor dem ersten Satz)
+Du wählst **eine von vier bis sechs fertigen Figuren** (Mädchen und Jungen) und passt sie an: Haare, Kleidung, Farben – mit den vorhandenen Figur-Teilen. Dann gibst du ihr **einen Namen**. Der Name steht in allen Texten („Detective Lena“); gesprochen sagen die Figuren „detective“ und „you“, weil sich frei gewählte Namen nicht vertonen lassen. Wo jemand über dich spricht, heißt es passend **she** oder **he** („Follow her!“ / „Follow him!“) – diese wenigen Zeilen je Kapitel gibt es in zwei Aufnahmen. Der Name bleibt auf dem Gerät.
+
 ## A. Vor der Tür – für alle frei (ca. 2 Minuten; Erzähler Mr. Alex, wörtliche Rede von den Figuren)
 1. Tower of London. Saturday night, quarter past nine.
-2. Sergeant Bearskin never runs. Tonight he is running like mad.
+2. Sergeant Bearskin never runs. Tonight he is running. In circles.
 3. "I am not running!" he shouts. "I am walking fast!"
 4. "The keys are gone! And nobody can find Mr Pike!"
 5. "At 9:53 we lock the Tower. Every single night."
 6. "For seven hundred years. Never late. Not on my watch!"
-7. A fox in a pointy hat jumps out of a barrel.
-8. "Ta-daa! Gary the Great! The greatest wizard in London!"
-9. "FOX! Get out of that barrel!" – "I am out, sir. That was the trick."
-10. "Where on earth is my hat?" – "On your head, sir."
-11. "Right. Here is your badge, detective. You have thirty-eight minutes."
-12. "And do NOT trust the fox." – "I am standing right here."
-13. He marches off. Fast. Something moves at the window.
-14. A black feather falls to the floor. You pick it up. It is warm.
+7. He stops. He looks at you. "You. Can you find things?"
+8. "Good. Here is your badge, detective. Find my keys."
+9. "You have thirty-eight minutes. Thirty-seven. Hurry up!"
+10. A fox in a pointy hat jumps out of a barrel.
+11. "Ta-daa! Gary the Great! The greatest wizard in London!"
+12. "A mystery? I will solve it. With my magic skills!"
+13. "FOX! Get out of that barrel!" – "I am out, sir. That was the trick."
+14. "First clue," says Gary. "The keys are not in this barrel. I checked."
+15. "Detective, find the keys. Fox, touch nothing."
+16. "Where on earth is my hat?" – "On your head, sir."
+17. He marches off. Fast. Something moves at the window.
+18. A black feather falls to the floor. You pick it up. It is warm.
 
-*Du bekommst das Abzeichen „Junior Detective“ und die Feder.*
+*Auf dem Bildschirm steht jetzt dein Auftrag: **Find the keys before 9:53.** Du bekommst das Abzeichen „Junior Detective“ und die Feder.*
 
 **Der Spiegel an der Wand leuchtet auf – Mr. Flex** (Liegestuhl, Sonnenbrille, Tee):
 - M1. "Mr. Flex. Wizard. Genius. Very modest."
-- M2. "That feather? I made it. With these hands." *(Bizeps-Pose.)*
-- M3. "Hold it to any words. It whispers. You're welcome."
-- M4. "The door opens for people who train. One round of Word Gym. Off you go."
-- M5. "I will wait. I have tea."
+- M2. "So. You are the hero. I can tell. I know everything."
+- M3. "But heroes need muscles. Brain muscles." *(Bizeps-Pose.)*
+- M4. "Get pumped up in the Word Gym first. Then solve the mystery."
+- M5. "That feather? I made it. Hold it to any words. It whispers."
+- M6. "One round. Off you go. I will wait. I have tea."
 
 **Die erste Tür:** Der Guard Room ist zu. Der Schlüssel kostet eine Runde Word Gym heute oder die erledigte Hausaufgabe; ein Rabe bringt ihn. Hat man ihn: Gary stellt sich vor die Tür – "I will now open this door. With MAGIC." *(Du schließt auf.)* "Thank you. Thank you. No photos, please."
 
@@ -49,7 +57,7 @@
 | 1 | Schlüsselhaken | on the wall | There are seven hooks on the wall, but no keys. | Gary: "Seven hooks. Funny number, isn't it?" |
 | 2 | Stiefel | under the bench | There is a boot under the bench. Just one. | Gary: "One boot. A thief with one leg? Or a silly thief with two?" |
 | 3 | Tanzschuh | next to the boot | Right next to the boot there is a dancing shoe. How strange. | Gary: "Don't look at me. I don't dance. I do magic." → *The Sergeant's Secret* |
-| 4 | Helm | on the shelf | The helmet is on the shelf. It is five hundred years old. | Gary setzt ihn auf: "I can't see a thing! Is it MORE night now?" *(CLANG.)* "Shh, helmet! Cheeky helmet." |
+| 4 | Helm | on the shelf | The helmet is on the shelf. It is five hundred years old. | Gary flüstert: "Shh! Watch me. I am sneaking." *(Er schleicht – und läuft genau gegen den Helm. CLANG!)* "… The helmet started it." |
 | 5 | Laterne | next to the door | There is a lantern next to the door. Take it with you. | Mr. Flex schnippt: "Watch this." *(Sie geht an.)* "You're welcome." – Gegenstand: Laterne |
 | 6 | Uhr | above the fireplace | The clock is above the fireplace. It says twenty past nine. | Der Sergeant ruft von draußen: "I am counting, detective! I always count!" |
 | 7 | Teekanne | on the table | There is a teapot on the table. It is still warm. | Gary: "Still warm. Somebody was here a minute ago. I am a genius." |
@@ -167,6 +175,6 @@ Ein eigener alter Wachraum unter dem Dach, unabhängig vom Fortschritt der Gesch
 Wer war die Frau? Warum sieben Haken? Warum ist die Feder warm? Wem gehört der Tanzschuh? Wer ist „A.“? Was ist hinter der kleinen Tür? Wer singt da unten?
 
 ## Offen für Mr. Alex
-1. Trägt der Anfang – ist nach zwei Minuten klar, dass man weiterspielen will?
+1. Anfang neu (Auftrag „Find my keys“, Gary will den Fall „mit Zauberei“ lösen, Mr. Flex schickt ins Word Gym, eigene Figur mit Namen): trägt das jetzt?
 2. Stimmen die drei Stimmen in den festen Zeilen?
 3. Danach: Deutsch für die Feder (alle Zeilen), einfachere Zweitfassungen der Kernzeilen, dann Vertonung von Kapitel 1.

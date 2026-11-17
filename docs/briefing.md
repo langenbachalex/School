@@ -116,6 +116,8 @@ Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt w
 - **Echte Orte zeigen:** Jede Geschichte ist eine Gelegenheit, den Kindern wirklich existierende Räume und Orte zu zeigen (im Tower z. B. das Jewel House).
 - **Musik:** Mr. Alex ist Komponist und denkt an eigene Themen für Figuren oder Orte; zurückgestellt, nicht drängen.
 - **Aus dem Unterricht ins Spiel:** z. B. der Klatsch-Rhythmus (lang, kurz, kurz, lang, lang) statt Schimpfen – als seltenes Ereignis.
+- **Jede Geschichte braucht einen Helden oder eine Heldin und einen klaren Auftrag** gleich am Anfang (z. B. „Find my keys“). Die Kinder wählen eine Figur (Mädchen oder Junge), passen sie an und geben ihr einen Namen; die Geschichte spricht sie passend an.
+- **Vor ElevenLabs liest Mr. Alex alle Texte**, und bei der Vertonung achtet er selbst darauf, dass der Ton der Figur stimmt (begeistert, sarkastisch, lässig, übertrieben – alles ist einstellbar).
 - **„Hinterlegen“ (Wort von Mr. Alex)** = auf Englisch „keep it on file“: dauerhaft als Vorgabe festhalten und künftig von selbst beachten. Sagt Mr. Alex „hinterlegen“ oder „keep that in the back of your mind“, kommt es in dieses Briefing.
 - Konzept dazu: `docs/spiele/story-spiele-konzept.md`, Bauplan: `docs/spiele/story-spiele-bauplan.md`.
 

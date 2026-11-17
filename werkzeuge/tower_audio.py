@@ -21,8 +21,9 @@ PROTOKOLL = os.path.join(QUELLE, "tower_audio_protokoll.tsv")    # Datei · Zeic
 CREDITS_JE_ZEICHEN = 0.44                                        # gemessen 17.11. (Eleven v4, Tags zählen mit)
 
 ALEX = "AK2WYGe96RmMwFKM5KEz"
+ERZAEHLER = "xzWQmpTSWiCLfroVrnh4"   # „Best Narrator“ (Mr. Alex 17.11.: er selbst ist nur noch Mr. Flex); britisch, daher ohne Akzent-Tag
 STIMMEN = {  # Figur: (Voice-Id, Tempo)
-    "erzaehler": (ALEX, None), "karte": (ALEX, None), "mrflex": (ALEX, None),
+    "erzaehler": (ERZAEHLER, None), "karte": (ERZAEHLER, None), "mrflex": (ALEX, None),
     "sergeant": ("kVBPcEMsUF1nsAO1oNWw", None),   # Andy (leise -> loudnorm)
     "gary": ("IKne3meq5aSn9XLyUdCD", None),       # Charlie
     "arthur": ("FUdtnSGebmUJVfZnamcB", None),     # Kiel

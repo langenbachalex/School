@@ -299,7 +299,7 @@
     for (const k of kinder.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
     return e;
   }
-  function zeige(...inhalt) { stopp(); runnerAus(); imSpiel = false; app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); hwLeiste(); glnLeiste(); }
+  function zeige(...inhalt) { stopp(); runnerAus(); if (window.Tower) Tower.aus(); imSpiel = false; app.replaceChildren(...inhalt.filter(Boolean)); window.scrollTo(0, 0); hwLeiste(); glnLeiste(); }
   function mischen(liste) {
     const a = liste.slice();
     for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
@@ -1672,10 +1672,23 @@
         el("button", { class: "kachel runner-kachel", onclick: () => runnerStart(), "aria-label": "London Run" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🇬🇧"), el("span", { class: "titel", lang: "en" }, "London Run"),
           el("span", { class: "unter" }, `Jump'n'Run · 🎟️ Ticket ${RUNNER.preis} 🪙`)),
+        towerAn() && el("button", { class: "kachel tower-kachel", onclick: () => towerStart(), "aria-label": "The Keys of the Tower" },
+          el("span", { class: "sym", "aria-hidden": "true" }, "🗝️"), el("span", { class: "titel", lang: "en" }, "The Keys of the Tower"),
+          el("span", { class: "unter" }, Tower.stand())),
         el("button", { class: "kachel shop-kachel", onclick: () => shop(), "aria-label": "Shop" },
           el("span", { class: "sym", "aria-hidden": "true" }, "🛍️"), el("span", { class: "titel", lang: "en" }, "Shop"),
           el("span", { class: "unter" }, `🪙 ${spielstand().coins} Coins – Rahmen und mehr`))));
     imSpiel = true;
+  }
+  // 🗝️ The Keys of the Tower (17.11.2026, Probe Kapitel 1): Story-Spiel in app/tower/tower.js. Die erste Tür ist echt:
+  // der Schlüssel kostet eine Runde Word Gym heute (Tagesplan geschafft); einmal geholt, bleibt die Tür offen.
+  // Bis zur Freigabe durch Mr. Alex sieht die Kachel nur, wer die App einmal mit „?tower“ am Ende der Adresse geöffnet hat (merkt sich das Gerät).
+  const towerAn = () => !!window.Tower && Tower.an();
+  function towerStart() {
+    const kasten = el("div", {});
+    zeige(kasten);
+    imSpiel = true;
+    Tower.start(kasten, { zurueck: zeigeSpiele, schluessel: () => !!gymPlan().geschafft, zumGym: gymStart });
   }
   // Abschnitt aus Station 7 wählen (Kacheln wie in Vocabulary), dann das Spiel mit diesen Wörtern
   function spielWahl(titel, spiel) {

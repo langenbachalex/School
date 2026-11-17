@@ -162,6 +162,53 @@ async function weg(browser, basis, app, titel, knoepfe, opt = {}) {
   return fehl;
 }
 
+/* ---------- EN6 „The Keys of the Tower“ (17.11.2026): Kachel → Figur → Anfang → Spiegel → verschlossene Tür; mit Schlüssel im Raum
+   einen Gegenstand antippen (Mitte aus guardroom.json) → Text erscheint, Zähler zählt. Ohne Ton (window.__towerSchnell). ---------- */
+async function towerTest(browser, basis, app, name, fm) {
+  const titel = `${name} · Keys of the Tower`, fehl = [];
+  const { ctx, pg, fehler } = await neueSeite(browser, basis, app, false, fm);
+  try {
+    await klicke(pg, /^Station 5/);
+    if (await pg.getByRole("button", { name: /^The Keys of the Tower$/ }).count()) fehl.push(`${titel}: Kachel ist ohne Freischaltung (?tower) sichtbar`);
+    await pg.goto(`${basis}/${app.pfad}/?tower`, { waitUntil: "load" }); await pg.waitForTimeout(800);
+    await pg.evaluate(() => { window.__towerSchnell = true; });
+    for (const k of [/^Station 5/, /^The Keys of the Tower$/]) await klicke(pg, k);
+    await klicke(pg, /^Alfie$/);
+    await klicke(pg, /^Start/);
+    await klicke(pg, /^Go on/);   // Anfang vor der Tür ist durch
+    await klicke(pg, /^Go on/);   // Mr. Flex im Spiegel ist durch
+    if (!(await pg.getByText("The Guard Room is locked.").count())) fehl.push(`${titel}: Tür ist ohne Word Gym nicht verschlossen`);
+    for (const b of await zuBreit(pg)) fehl.push(`${titel}, Tür: ${b}`);
+    // Schlüssel ist da (Stand gesetzt, wie nach einer Runde Word Gym) → Raum
+    await pg.evaluate(() => { const s = JSON.parse(localStorage.getItem("tower-k1")); s.schluessel = true; s.schritt = "raum"; localStorage.setItem("tower-k1", JSON.stringify(s)); });
+    await pg.reload({ waitUntil: "load" }); await pg.waitForTimeout(800);
+    await pg.evaluate(() => { window.__towerSchnell = true; });
+    for (const k of [/^Station 5/, /^The Keys of the Tower$/]) await klicke(pg, k);
+    await pg.waitForSelector(".tower-buehne[data-bereit]", { timeout: 8000 });
+    const raum = JSON.parse(fs.readFileSync(path.join(WURZEL, "app", "tower", "raum", "guardroom.json"), "utf8"));
+    const kasten = await pg.locator(".tower-buehne").boundingBox();
+    for (const id of ["uhr", "teekanne", "kruemel"]) {
+      const d = raum.dinge.find((x) => x.id === id);
+      await pg.mouse.click(kasten.x + d.mitte[0] * kasten.width, kasten.y + d.mitte[1] * kasten.height);
+      await pg.waitForTimeout(250);
+      const zuletzt = await pg.evaluate(() => document.querySelector(".tower-buehne").dataset.zuletzt);
+      if (zuletzt !== id) fehl.push(`${titel}: Tipp auf ${d.name} trifft nicht (getroffen: ${zuletzt || "nichts"})`);
+    }
+    await pg.waitForTimeout(400);
+    const zaehler = await pg.locator(".tower-zaehler").textContent();
+    if (!/3\/14/.test(zaehler)) fehl.push(`${titel}: Zähler zeigt „${zaehler}“ statt 3/14`);
+    if (!(await pg.locator(".tower-text .en").count())) fehl.push(`${titel}: kein Text zum angetippten Gegenstand`);
+    for (const b of await zuBreit(pg)) fehl.push(`${titel}, Raum: ${b}`);
+  } catch (e) {
+    const sichtbar = await pg.evaluate(() => [...document.querySelectorAll("button")].filter((x) => x.offsetParent).map((x) => x.textContent.trim().slice(0, 24)).slice(0, 8).join(" | ")).catch(() => "?");
+    fehl.push(`${titel}: ${String(e.message || e).split("\n")[0].slice(0, 160)} – sichtbare Knöpfe: ${sichtbar}`);
+  } finally {
+    fehl.push(...[...new Set(fehler)].map((f) => `${titel}: ${f}`));
+    await ctx.close();
+  }
+  return fehl;
+}
+
 /* ---------- Update-Test: Service Worker installiert, neue Version veröffentlicht → kommt sie an? ---------- */
 async function updateTest(browser, basis, app) {
   const ctx = await kontext(browser, formate[0]);
@@ -354,6 +401,7 @@ async function enKetteGruen(app, pg) {
           const n = await pg.evaluate(() => [...document.querySelectorAll(".runner-buehne canvas")].filter((c) => c.offsetParent && c.width > 0).length);
           return n ? null : "Runner startet nicht (keine Spielbühne mit Zeichenfläche)";
         } }));
+        if (app.kurz === "EN6") f.push(...await towerTest(b, basis, app, name, fm));
         if (EN_KETTE[app.kurz]) f.push(...await w("Bereich wird grün, Spiele zeigen den Stand von heute", [], { stand: enFastFertig(app), pruefe: (pg) => enKetteGruen(app, pg) }));
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
         if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));

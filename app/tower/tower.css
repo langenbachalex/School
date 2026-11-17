@@ -1,0 +1,45 @@
+/* The Keys of the Tower – Kapitel 1 (Probe). Querformat: Laptop und iPad. */
+.tower { max-width: 1280px; margin: 0 auto; color: #f4ead2; }
+.tower-kopf { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; color: inherit; }
+.tower-kopf h1 { font-size: 1.15rem; margin: 0; flex: 1; color: #23324d; }
+.tower-zaehler { font-weight: 700; color: #23324d; white-space: nowrap; }
+.tower-buehne { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #14100c; border-radius: 14px; overflow: hidden; touch-action: manipulation; user-select: none; }
+.tower-buehne img.tower-bild, .tower-buehne canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.tower-buehne canvas.tower-leuchten { pointer-events: none; opacity: 0; transition: opacity .25s; filter: blur(3px); mix-blend-mode: screen; }
+.tower-buehne canvas.tower-leuchten.an { opacity: .85; }
+.tower-buehne.zeiger { cursor: pointer; }
+.tower-ecke { position: absolute; left: 0; top: 30%; width: 26%; height: 55%; pointer-events: none; background: radial-gradient(ellipse at 45% 55%, rgba(8, 6, 4, .92) 0%, rgba(8, 6, 4, .75) 45%, rgba(8, 6, 4, 0) 75%); transition: opacity 1.2s; }
+.tower-ecke.hell { opacity: 0; }
+.tower-szene { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 1rem 1rem 22%; text-align: center; background: radial-gradient(ellipse at 50% 35%, #2b3a5c 0%, #141a2b 60%, #0a0d16 100%); }
+.tower-szene .tower-gesicht { font-size: clamp(3rem, 12vw, 8rem); line-height: 1; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .5)); }
+.tower-szene h2 { margin: 0; font-size: clamp(1.2rem, 3vw, 2rem); color: #ffd97a; }
+.tower-szene p { margin: 0; max-width: 40rem; }
+.tower-auftrag { font-size: clamp(1.1rem, 2.6vw, 1.7rem); font-weight: 700; color: #ffd97a; border: 2px solid #ffd97a; border-radius: 12px; padding: .5rem 1rem; }
+.tower-text { position: absolute; left: 2%; right: 2%; bottom: 3%; min-height: 15%; display: flex; gap: .7rem; align-items: center; padding: .5rem .8rem; border-radius: 12px; background: rgba(12, 10, 8, .82); border: 1px solid rgba(255, 217, 122, .35); }
+.tower-buehne.raum .tower-text { bottom: auto; top: 2%; min-height: 0; }
+.tower-text[hidden] { display: none; }
+.tower-text .wer { font-size: clamp(1.4rem, 3.4vw, 2.4rem); }
+.tower-text .was { flex: 1; text-align: left; }
+.tower-text .name { font-size: .8rem; font-weight: 700; color: #ffd97a; text-transform: uppercase; letter-spacing: .05em; }
+.tower-text .en { font-size: clamp(1rem, 2.2vw, 1.45rem); line-height: 1.25; }
+.tower-text .de { font-size: clamp(.85rem, 1.7vw, 1.1rem); color: #b9d4ff; font-style: italic; margin-top: .15rem; }
+.tower-text .hilfen { display: flex; flex-direction: column; gap: .3rem; }
+.tower-hilfe { font: inherit; font-size: .9rem; font-weight: 700; color: #1b1407; background: #ffd97a; border: 0; border-radius: 999px; padding: .3rem .7rem; min-height: 2.2rem; cursor: pointer; white-space: nowrap; }
+.tower-hilfe[disabled] { opacity: .35; cursor: default; }
+.tower-figuren { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .5rem; width: min(100%, 46rem); }
+.tower-figur { font: inherit; color: inherit; background: rgba(255, 255, 255, .08); border: 2px solid transparent; border-radius: 12px; padding: .5rem .2rem; cursor: pointer; }
+.tower-figur .bild { display: block; font-size: clamp(1.6rem, 5vw, 3rem); }
+.tower-figur[aria-pressed="true"] { border-color: #ffd97a; background: rgba(255, 217, 122, .18); }
+.tower-name { font: inherit; font-size: 1.1rem; padding: .45rem .7rem; border-radius: 10px; border: 2px solid #ffd97a; background: #0f1422; color: #fff; width: min(100%, 16rem); text-align: center; }
+.tower-gross { font: inherit; font-size: 1.1rem; font-weight: 700; color: #1b1407; background: #ffd97a; border: 0; border-radius: 12px; padding: .6rem 1.4rem; min-height: 2.8rem; cursor: pointer; }
+.tower-gross[disabled] { opacity: .4; cursor: default; }
+.tower-quer { display: none; color: #23324d; font-weight: 700; margin: .4rem 0; }
+@media (orientation: portrait) and (max-width: 700px) {
+  .tower-quer { display: block; }
+  /* Handy hochkant: Szenen ohne Raum bekommen Höhe, damit alle Knöpfe erreichbar sind; der Raum selbst bleibt 16:9 (quer drehen) */
+  .tower-buehne:not(.raum) { aspect-ratio: auto; min-height: 78vh; }
+  .tower-szene { padding-bottom: 7.5rem; gap: .6rem; }
+  .tower-figuren { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tower-text { min-height: 0; }
+}
+.kachel.tower-kachel { border-color: #b8860b; }

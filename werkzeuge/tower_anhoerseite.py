@@ -12,7 +12,8 @@ AUDIO = os.path.join(WURZEL, "app", "audio", "tower")
 ZIEL = os.path.join(WURZEL, "app", "tower-anhoeren.html")
 NAMEN = {"mrflex": "Mr. Flex", "erzaehler": "Erzähler", "karte": "Karten", "gary": "Gary",
          "sergeant": "Sergeant", "taube": "Taube", "arthur": "Arthur"}
-ZUERST = ["mrflex_01", "k1_p7", "taube_05", "gary_20", "gary_70", "gary_71", "gary_72", "sergeant_01"]
+ZUERST = ["mrflex_01", "k1_p7", "taube_05", "gary_20_1", "gary_20_2", "gary_70_1", "gary_70_2",
+          "gary_71_1", "gary_71_2", "gary_72_1", "gary_72_2", "sergeant_01"]
 
 
 def lesen(name):

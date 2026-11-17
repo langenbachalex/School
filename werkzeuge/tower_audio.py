@@ -2,7 +2,8 @@
 
 Quelle: inhalte/abenteuer/tower_kapitel1.tsv und tower_sprueche.tsv, Spalte `regie` – wörtlich, mit allen Tags (Mr. Alex 17.11.).
 Nicht vertont: Zeilen ohne Regie und Zeilen mit `nur_text`. Zweitfassung (Spalte `einfach`): die Tags vom Anfang der Regie + der einfache Text.
-` || ` in der Regie = zwei Teile, einzeln erzeugt, Stille am Ende von Teil 1 gekürzt, zusammengesetzt (Taube: Teil 1 Tempo 1,2, Teil 2 1,05).
+` || ` in der Regie = zwei Teile, einzeln erzeugt. Taube: Stille am Ende von Teil 1 gekürzt, zusammengesetzt (Teil 1 Tempo 1,2, Teil 2 1,05).
+Garys Pannen (Mr. Alex 17.11.): zwei getrennte Dateien <id>_1.mp3 und <id>_2.mp3, damit im Spiel das Geräusch dazwischen passt.
 Ziel: app/audio/tower/k1_<id>.mp3, k1_<id>_einfach.mp3, <spruch-id>.mp3 – alle auf gleiche Lautheit gebracht (ffmpeg loudnorm).
 Vorhandene Dateien werden nie überschrieben; nach einem Abbruch einfach neu starten (bezahlte Rohteile bleiben in ROH liegen).
 Stimmen und Einstellungen: docs/spiele/keys-of-the-tower-figuren.md, Abschnitt Stimmen.
@@ -52,8 +53,13 @@ def stuecke(nur=None, figur=None):
                 aus.append((f"k1_{z['id']}_einfach.mp3", z["sprecher"], [tags + einfach]))
     if nur in (None, "sprueche"):
         for z in tabelle("tower_sprueche.tsv"):
-            aus.append((f"{z['id']}.mp3", z["figur"], (z["regie"] or "").strip().split(" || ")))
-    fremd = sorted({f for _, f, _ in aus} - set(STIMMEN))
+            teile = (z["regie"] or "").strip().split(" || ")
+            if len(teile) == 2 and z["figur"] != "taube":      # Garys Pannen: zwei getrennte Dateien, das Geräusch (CLANG) kommt im Spiel dazwischen
+                aus += [(f"{z['id']}_{i + 1}.mp3", z["figur"], [t], [f"{z['id']}_{i}.mp3"]) for i, t in enumerate(teile)]
+            else:
+                aus.append((f"{z['id']}.mp3", z["figur"], teile))
+    aus = [s if len(s) == 4 else (*s, [f"{s[0][:-4]}_{i}.mp3" for i in range(len(s[2]))]) for s in aus]   # 4. Feld: Namen der Rohteile
+    fremd = sorted({s[1] for s in aus} - set(STIMMEN))
     if fremd:
         sys.exit(f"Keine Stimme für: {fremd}")
     return [s for s in aus if not figur or s[1] == figur]
@@ -90,13 +96,13 @@ def ffmpeg(*args):
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *args], check=True)
 
 
-def bauen(datei, figur, teile):
+def bauen(datei, figur, teile, rohnamen):
     """erzeugt die Rohteile (falls noch nicht da), setzt zusammen, gleicht die Lautheit an; gibt (Kosten, Kopf_fehlte) zurück"""
     voice, tempo = STIMMEN[figur]
     tempi = TAUBE_TEILE if figur == "taube" and len(teile) == 2 else [tempo] * len(teile)
     kosten, ohne_kopf, roh = 0, False, []
     for i, (text, t) in enumerate(zip(teile, tempi)):
-        pfad = os.path.join(ROH, f"{datei[:-4]}_{i}.mp3")
+        pfad = os.path.join(ROH, rohnamen[i])
         if not os.path.exists(pfad):
             k = erzeugen(voice, text, pfad, t)
             ohne_kopf |= k is None
@@ -122,28 +128,28 @@ def wert(name):
 def main():
     alle = stuecke(wert("--nur"), wert("--figur"))
     offen = [s for s in alle if not os.path.exists(os.path.join(ZIEL, s[0]))]
-    z = sum(zeichen(t) for _, _, t in offen)
+    z = sum(zeichen(s[2]) for s in offen)
     print(f"{len(alle)} Aufnahmen, {len(offen)} offen, {z} Zeichen offen, erwartet rund {round(z * CREDITS_JE_ZEICHEN)} Credits")
     for fig in STIMMEN:
         a = [s for s in alle if s[1] == fig]
         o = [s for s in offen if s[1] == fig]
         if a:
-            print(f"  {fig}: {len(a)} Aufnahmen, {len(o)} offen, {sum(zeichen(t) for _, _, t in o)} Zeichen")
+            print(f"  {fig}: {len(a)} Aufnahmen, {len(o)} offen, {sum(zeichen(s[2]) for s in o)} Zeichen")
     zweit = [s for s in offen if s[0].endswith("_einfach.mp3")]
-    print(f"  davon Zweitfassungen: {len(zweit)} offen, {sum(zeichen(t) for _, _, t in zweit)} Zeichen;"
+    print(f"  davon Zweitfassungen: {len(zweit)} offen, {sum(zeichen(s[2]) for s in zweit)} Zeichen;"
           f" in zwei Teilen: {len([s for s in offen if len(s[2]) == 2])}")
     if "--zaehlen" in sys.argv:
         if "--liste" in sys.argv:
-            for d, fig, t in offen:
+            for d, fig, t, _ in offen:
                 print(f"  {d} [{fig}] ({zeichen(t)}): {' || '.join(t)}")
         return
     os.makedirs(ZIEL, exist_ok=True)
     os.makedirs(ROH, exist_ok=True)
     grenze = int(wert("--hoechstens") or len(offen))
     summe, fehler, ohne_kopf = 0, [], 0
-    for n, (d, fig, t) in enumerate(offen[:grenze], 1):
+    for n, (d, fig, t, roh) in enumerate(offen[:grenze], 1):
         try:
-            k, fehlt = bauen(d, fig, t)
+            k, fehlt = bauen(d, fig, t, roh)
             summe += k
             ohne_kopf += fehlt
             print(f"  ✓ {n}/{min(grenze, len(offen))} {d} ({zeichen(t)} Zeichen, {k} Credits, Summe {summe})", flush=True)

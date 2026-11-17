@@ -9,7 +9,7 @@
 **Gilt überall:** Laptop und iPad im Querformat · gesprochene Zeilen sperren nie und werden nicht weggetippt – man kann weitermachen, während die Stimme spricht · das Spiel speichert nach jedem Schritt · keine Aufgaben-Überschriften (die Abschnittsnamen hier sind nur für uns).
 
 ## Deine Figur (vor dem ersten Satz)
-Du wählst **eine von vier bis sechs fertigen Figuren** (Mädchen und Jungen) und passt sie an: Haare, Kleidung, Farben – mit den vorhandenen Figur-Teilen. Dann gibst du ihr **einen Namen**. Der Name steht in allen Texten („Detective Lena“); gesprochen sagen die Figuren „detective“ und „you“, weil sich frei gewählte Namen nicht vertonen lassen. Wo jemand über dich spricht, heißt es passend **she** oder **he** („Follow her!“ / „Follow him!“) – diese wenigen Zeilen je Kapitel gibt es in zwei Aufnahmen. Der Name bleibt auf dem Gerät.
+Du wählst **eine von sechs fertigen Figuren** – drei Mädchen (Ruby, Daisy, Amara) und drei Jungen (Alfie, Oscar, Kai) – als Startpunkt. Dahinter steckt **ein einziges Baukasten-System**: Die sechs sind nur fertige Kombinationen, alles lässt sich danach ändern (Statur aus zwei bis drei Grundformen, Haare, Hautton, Kleidung, Farben – mit den vorhandenen Figur-Teilen). Wer nicht basteln will, tippt eine an und ist fertig; wer basteln will, hat alle Freiheit. Dann gibst du ihr **einen Namen** (der vorgeschlagene lässt sich ändern). Der Name steht in allen Texten („Detective Lena“); gesprochen sagen die Figuren „detective“ und „you“, weil sich frei gewählte Namen nicht vertonen lassen. Wo jemand über dich spricht, heißt es passend **she** oder **he** („Follow her!“ / „Follow him!“) – diese wenigen Zeilen je Kapitel gibt es in zwei Aufnahmen. Der Name bleibt auf dem Gerät.
 
 ## A. Vor der Tür – für alle frei (ca. 2 Minuten; Erzähler Mr. Alex, wörtliche Rede von den Figuren)
 1. Tower of London. Saturday night, quarter past nine.
@@ -20,12 +20,12 @@ Du wählst **eine von vier bis sechs fertigen Figuren** (Mädchen und Jungen) un
 6. "For seven hundred years. Never late. Not on my watch!"
 7. He stops. He looks at you. "You. Can you find things?"
 8. "Good. Here is your badge, detective. Find my keys."
-9. "You have thirty-eight minutes. Thirty-seven. Hurry up!"
+9. "You have thirty-six and a half minutes. Hurry up!"
 10. A fox in a pointy hat jumps out of a barrel.
 11. "Ta-daa! Gary the Great! The greatest wizard in London!"
 12. "A mystery? I will solve it. With my magic skills!"
 13. "FOX! Get out of that barrel!" – "I am out, sir. That was the trick."
-14. "First clue," says Gary. "The keys are not in this barrel. I checked."
+14. "First clue," says Gary. "The keys are not in this barrel. I checked. Magic, I know."
 15. "Detective, find the keys. Fox, touch nothing."
 16. "Where on earth is my hat?" – "On your head, sir."
 17. He marches off. Fast. Something moves at the window.

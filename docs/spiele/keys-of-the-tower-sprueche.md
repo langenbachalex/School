@@ -1,9 +1,9 @@
 # The Keys of the Tower – alle Sprüche zum Gegenlesen (erzeugt aus `inhalte/abenteuer/tower_sprueche.tsv`, Stand 17.11.2026)
 
-Zusammen 187 Sprüche, ca. 8331 Zeichen. Noch nichts vertont. Mr. Alex liest gegen, bevor etwas zu ElevenLabs geht; dort wird je Figur der Ton eingestellt (Vorschlag steht jeweils unter der Überschrift). Änderungen bitte mit der Kennung nennen (z. B. „gary_07 raus“).
+Zusammen 221 Sprüche, ca. 9959 Zeichen. Bis auf zwölf Probe-Aufnahmen ist nichts vertont. Mr. Alex liest gegen, bevor etwas zu ElevenLabs geht; dort wird je Figur der Ton eingestellt (Vorschlag steht jeweils unter der Überschrift). Änderungen bitte mit der Kennung nennen (z. B. „gary_07 raus“).
 
-## Mr. Flex – der Zauberer (Stimme Mr. Alex) – 71 Sprüche
-*Ton für ElevenLabs (Vorschlag): lässig, warm, selbstzufrieden, nie in Eile; bei den Mr.-Alex-Ausrutschern plötzlich echt begeistert, dann verlegen gemurmelt.*
+## Mr. Flex – der Zauberer (Stimme Mr. Alex) – 75 Sprüche
+*Ton für ElevenLabs (Vorschlag): lässig, warm, selbstzufrieden, nie in Eile; Wechsel mitten in der Zeile (z. B. erst selbstbewusst, dann trocken „Very modest.“); bei den Mr.-Alex-Ausrutschern plötzlich echt begeistert, dann verlegen gemurmelt; „It's a no.“ ganz ruhig und endgültig.*
 
 **hallo**
 - `mrflex_01` · häufig · Mr. Flex. Wizard. Genius. Very modest.  *(nimmt die Sonnenbrille ab)*
@@ -63,6 +63,10 @@ Zusammen 187 Sprüche, ca. 8331 Zeichen. Noch nichts vertont. Mr. Alex liest geg
 - `mrflex_62` · selten · Bingo! Bullseye! Ding ding ding! … I need a holiday.
 - `mrflex_63` · selten · Keep going! Keep it up! … I am not a poster. I am a wizard.
 - `mrflex_64` · selten · Hands up if you … no. No hands. Carry on.
+- `mrflex_72` · gelegentlich · Good morning, everyone! … It is night. Never mind.
+- `mrflex_73` · gelegentlich · It's a no.  *(ganz ruhig, endgültig – wenn du nach der Lösung fragst)*
+- `mrflex_74` · selten · Can I have the answer? It's a no. A hint? It's a yes.
+- `mrflex_75` · selten · Good morning, everyone! … Everyone is one fox and you. Good morning anyway.
 
 **gary**
 - `mrflex_36` · häufig · The orange dog is doing magic again. Stand back.
@@ -102,8 +106,8 @@ Zusammen 187 Sprüche, ca. 8331 Zeichen. Noch nichts vertont. Mr. Alex liest geg
 - `mrflex_70` · gelegentlich · Get pumped up in the Word Gym first. Then solve the mystery.
 - `mrflex_71` · gelegentlich · Back from the gym? I can see it. Look at that brain.
 
-## Gary the Great – der Fuchs – 68 Sprüche
-*Ton für ElevenLabs (Vorschlag): übertrieben theatralisch, schnell, große Bühne; bei Angst wird die Stimme dünn; nach jeder Panne trocken.*
+## Gary the Great – der Fuchs – 72 Sprüche
+*Ton für ElevenLabs (Vorschlag): übertrieben theatralisch, schnell, große Bühne; nach jeder Panne kippt die Stimme ins Trockene oder Kleinlaute; bei Angst dünn.*
 
 **hallo**
 - `gary_01` · häufig · I am Gary the Great! The greatest wizard in London!  *(wirft den Umhang)*
@@ -140,6 +144,9 @@ Zusammen 187 Sprüche, ca. 8331 Zeichen. Noch nichts vertont. Mr. Alex liest geg
 - `gary_23` · gelegentlich · Who put that wall there?
 - `gary_54` · gelegentlich · I was not sleeping. I was thinking with my eyes closed.
 - `gary_55` · gelegentlich · Ow. Who left my tail there?
+- `gary_70` · gelegentlich · Shh! I am sneaking. … The door started it.  *(läuft gegen die Tür: BONK)*
+- `gary_71` · gelegentlich · Shh! Nobody move. … The bucket started it.  *(tritt in einen Eimer: CLONK)*
+- `gary_72` · selten · Shh! I am invisible. … The Sergeant started it.  *(läuft gegen den Sergeant)*
 
 **angst**
 - `gary_24` · häufig · I am not scared. You are scared. Hold my paw.
@@ -196,6 +203,7 @@ Zusammen 187 Sprüche, ca. 8331 Zeichen. Noch nichts vertont. Mr. Alex liest geg
 - `gary_66` · gelegentlich · Follow me! I know the way. I do not know the way.
 - `gary_67` · gelegentlich · A real detective asks questions. Question one: is there cake?
 - `gary_68` · selten · I will use my magic eye. … It is my normal eye. But I say magic.  *(hält eine Pfote über ein Auge)*
+- `gary_69` · häufig · The keys are not in this barrel. I checked. Magic, I know.
 
 ## Sergeant Bearskin – 39 Sprüche
 *Ton für ElevenLabs (Vorschlag): zackig, laut, kurz angebunden; in den weichen Momenten leiser und steif verlegen.*
@@ -253,8 +261,8 @@ Zusammen 187 Sprüche, ca. 8331 Zeichen. Noch nichts vertont. Mr. Alex liest geg
 - `sergeant_29` · LEGENDÄR · … You saw nothing.  *(er lächelt, eine Sekunde lang)*
 - `sergeant_30` · LEGENDÄR · Please.  *(nur zu Mrs Crumb)*
 
-## Die Taube – 4 Sprüche
-*Ton für ElevenLabs (Vorschlag): schnell, atemlos, beleidigt.*
+## Die Taube – 16 Sprüche
+*Ton für ElevenLabs (Vorschlag): schnell, atemlos, aufgeregt, tratscht; das Gegenteil von Arthur.*
 
 **hallo**
 - `taube_01` · häufig · Coo! I see everything. EVERYTHING.
@@ -263,9 +271,25 @@ Zusammen 187 Sprüche, ca. 8331 Zeichen. Noch nichts vertont. Mr. Alex liest geg
 
 **beleidigt**
 - `taube_03` · gelegentlich · You don't believe me? Me? Coo!  *(plustert sich auf)*
+- `taube_15` · gelegentlich · Fine. Don't listen. Ask a raven. They say three words a year.
+- `taube_16` · selten · I am a very important bird. Ask anybody. Ask me.
 
-## Arthur, der Rabe – 5 Sprüche
-*Ton für ElevenLabs (Vorschlag): tief, langsam, würdevoll.*
+**klatsch**
+- `taube_05` · häufig · Guess what! Guess what! No, you will never guess. I will tell you.
+- `taube_06` · häufig · I never tell secrets. I tell them once. To everybody.
+- `taube_07` · gelegentlich · Did you hear about the cook? No? Good. I know nothing. I know EVERYTHING.
+- `taube_08` · gelegentlich · The Sergeant has new boots. Shiny! Nobody knows. Now you know.
+- `taube_09` · gelegentlich · I saw the fox eat four sandwiches. FOUR. Before breakfast.
+- `taube_10` · selten · Mrs Crumb and the Sergeant? Oh! I say nothing. Nothing! Coo!  *(kichert)*
+
+**aufgeregt**
+- `taube_11` · häufig · Oh! Oh! A detective! At MY window!
+- `taube_12` · häufig · Ask me! Ask me! I saw it! I see everything!  *(hüpft)*
+- `taube_13` · gelegentlich · Wait, wait, wait. I am not finished. I am never finished.
+- `taube_14` · gelegentlich · This is the best night of my life. And I have had many nights.
+
+## Arthur, der Rabe – 19 Sprüche
+*Ton für ElevenLabs (Vorschlag): tief, langsam, geheimnisvoll, leicht altertümlich; das Gegenteil der Taube.*
 
 **hallo**
 - `arthur_01` · häufig · I am Arthur. First of the seven.
@@ -273,7 +297,27 @@ Zusammen 187 Sprüche, ca. 8331 Zeichen. Noch nichts vertont. Mr. Alex liest geg
 **raetsel**
 - `arthur_02` · gelegentlich · We do not answer questions. We ask them.
 - `arthur_04` · häufig · Count us tonight.  *(goldene Augen)*
+- `arthur_06` · häufig · Hush. The old stones are listening.
+- `arthur_07` · häufig · Seek, and you shall find. But not where you seek.
+- `arthur_08` · gelegentlich · We were here before the kings. We shall be here after.
+- `arthur_09` · gelegentlich · Seven we are. Seven we must be. Remember that.
+- `arthur_10` · gelegentlich · The night is long, young one. The time is short.
+- `arthur_11` · gelegentlich · A true raven keeps no shiny thing. Think on that.
+- `arthur_12` · selten · I have seen nine hundred winters. This one is strange.
+- `arthur_13` · selten · Ask not what the raven knows. Ask what the raven saw.
 
 **gary**
 - `arthur_03` · gelegentlich · Sit, fox.
 - `arthur_05` · selten · A raven never forgets. A fox never listens.
+- `arthur_16` · gelegentlich · The fox talks much and says little.
+
+**lob**
+- `arthur_14` · gelegentlich · Well spoken, young one.  *(neigt den Kopf)*
+- `arthur_15` · selten · You have sharp eyes. For a human.
+
+**taube**
+- `arthur_17` · selten · The pigeon? She has told the whole city by now.
+
+**abgang**
+- `arthur_18` · häufig · We shall meet again.  *(verschwindet einfach)*
+- `arthur_19` · gelegentlich · Go now. The hour grows late.

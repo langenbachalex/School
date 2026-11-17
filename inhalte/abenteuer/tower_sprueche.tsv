@@ -1,5 +1,5 @@
 id	figur	anlass	selten	text	geste	deutsch	regie
-mrflex_01	mrflex	hallo	1	Mr. Flex. Wizard. Genius. Very modest.	nimmt die Sonnenbrille ab	Mr. Flex. Zauberer. Genie. Sehr bescheiden.	[British accent] Mr. Flex. [prouder] Wizard. [delighted, very pleased with himself] Genius! [long pause] [charming, smiling] Very modest.
+mrflex_01	mrflex	hallo	1	Mr. Flex. Wizard. Genius. Very modest.	nimmt die Sonnenbrille ab	Mr. Flex. Zauberer. Genie. Sehr bescheiden.	[British accent] Mr. Flex. [prouder] Wizard. [delighted, very pleased with himself] Genius! [long pause] [matter-of-fact, self-absorbed, proud] Very modest.
 mrflex_02	mrflex	hallo	1	I am the greatest wizard in London. Well, in this tower. Well, in this room.		Ich bin der größte Zauberer von London. Na ja, in diesem Turm. Na ja, in diesem Raum.	[British accent] [grand, boasting] I am the greatest wizard in London. [pause] [casual] Well, in this tower. [pause] [quieter, dry] Well, in this room.
 mrflex_03	mrflex	hallo	1	You called? Of course you did.		Du hast gerufen? Natürlich hast du das.	[British accent] [relaxed, smug] You called? [pleased with himself] Of course you did.
 mrflex_04	mrflex	hallo	2	Yes, it is me. Try to stay calm.		Ja, ich bin es. Versuch, ruhig zu bleiben.	[British accent] [smug, warm] Yes, it is me. [calm, amused] Try to stay calm.

@@ -108,7 +108,8 @@ PAPIER = mat("papier", (0.90, 0.85, 0.70), 0.9)
 BROT = mat("kruemel", (0.85, 0.68, 0.38), 0.9)
 ZIFFER = mat("zifferblatt", (0.95, 0.92, 0.80), 0.6, emit=0.25)
 NACHT = mat("nacht", (0.10, 0.18, 0.45), 0.3, emit=1.2)
-FEUER = mat("feuer", (1.0, 0.45, 0.08), emit=5.0)
+FEUER = mat("feuer", (1.0, 0.30, 0.04), emit=3.0)
+FEUER_KERN = mat("feuer_kern", (1.0, 0.75, 0.20), emit=7.0)
 GLUT = mat("glut", (1.0, 0.18, 0.02), emit=5.0)
 LATERNE_GLAS = mat("laterne_glas", (0.9, 0.8, 0.55), 0.2, emit=0.15)  # noch aus
 
@@ -176,8 +177,11 @@ box("kamin_loch", (1.55, 0.08, 1.5), (0, -0.05, 0.75), RUSS, "kamin")
 box("kamin_boden", (1.55, 0.5, 0.06), (0, -0.25, 0.03), RUSS, "kamin")
 for i, (x, rz) in enumerate([(-0.25, 0.3), (0.2, -0.4), (0.0, 1.2)]):
     cyl(f"scheit{i}", 0.07, 0.8, (x * 0.6, -0.26, 0.10 + 0.07 * (i == 2)), HOLZ_D, "kamin", rot=(0, R(90), rz), verts=10)
-for i, (x, h) in enumerate([(-0.28, 0.42), (-0.05, 0.62), (0.2, 0.48), (0.08, 0.34)]):
-    cone(f"flamme{i}", 0.13, h, (x, -0.26 - 0.03 * i, 0.2 + h / 2), FEUER, "kamin")
+for i, (x, h) in enumerate([(-0.30, 0.30), (-0.12, 0.46), (0.06, 0.54), (0.24, 0.36), (0.36, 0.24)]):
+    ball(f"flamme{i}", 0.11, (x, -0.24, 0.16 + h / 2), FEUER, "kamin", scale=(1, 0.7, h / 0.22))
+    ball(f"flamme_kern{i}", 0.06, (x, -0.30, 0.14 + h / 3), FEUER_KERN, "kamin", scale=(1, 0.7, h / 0.2))
+box("kamin_innen_l", (0.04, 0.45, 1.5), (-0.76, -0.25, 0.75), RUSS, "kamin")
+box("kamin_innen_r", (0.04, 0.45, 1.5), (0.76, -0.25, 0.75), RUSS, "kamin")
 box("glut", (0.9, 0.3, 0.04), (0, -0.26, 0.08), GLUT, "kamin")
 box("brief", (0.20, 0.14, 0.01), (0.56, -0.38, 0.075), PAPIER, "kamin", rot=(0, R(-12), R(25)))
 
@@ -258,20 +262,26 @@ for i in range(14):
     box(f"kruemel{i}", (0.035, 0.03, 0.02), (kx, ky, 0.01), BROT, "kruemel", rot=(0, 0, i))
 
 # Stuhl mit dem Mantel von Mr Pike (dunkelblau mit rotem Rand)
-SX, SY = 0.55, -4.25
+SX, SY = 1.05, -4.25
 box("stuhl_sitz", (0.46, 0.46, 0.05), (SX, SY, 0.46), HOLZ)
 for dx in (-0.2, 0.2):
     for dy in (-0.2, 0.2):
         box("stuhlbein", (0.05, 0.05, 0.46), (SX + dx, SY + dy, 0.23), HOLZ)
-box("stuhl_lehne", (0.05, 0.46, 0.60), (SX + 0.21, SY, 0.78), HOLZ)
-box("mantel_ruecken", (0.10, 0.56, 0.78), (SX + 0.25, SY, 0.72), BLAU, "mantel")
-box("mantel_schulter", (0.20, 0.60, 0.10), (SX + 0.21, SY, 1.10), BLAU, "mantel")
-box("mantel_rand", (0.105, 0.57, 0.05), (SX + 0.25, SY, 0.36), ROT, "mantel")
-box("mantel_kragen", (0.21, 0.30, 0.04), (SX + 0.21, SY, 1.16), ROT, "mantel")
-box("mantel_aermel", (0.12, 0.12, 0.62), (SX + 0.20, SY - 0.33, 0.78), BLAU, "mantel")
+box("stuhl_lehne", (0.46, 0.05, 0.62), (SX, SY + 0.21, 0.79), HOLZ)
+MY = SY + 0.16
+box("mantel_ruecken", (0.62, 0.08, 0.80), (SX, MY, 0.74), BLAU, "mantel")
+box("mantel_schulter", (0.70, 0.18, 0.08), (SX, MY + 0.04, 1.14), BLAU, "mantel")
+box("mantel_kragen", (0.30, 0.19, 0.07), (SX, MY + 0.04, 1.20), ROT, "mantel")
+box("mantel_saum", (0.63, 0.085, 0.07), (SX, MY, 0.375), ROT, "mantel")
+box("mantel_streifen", (0.07, 0.085, 0.66), (SX, MY, 0.74), ROT, "mantel")
+for dx in (-0.39, 0.39):
+    box("mantel_aermel", (0.14, 0.12, 0.66), (SX + dx, MY, 0.80), BLAU, "mantel")
+    box("mantel_aufschlag", (0.145, 0.125, 0.08), (SX + dx, MY, 0.50), ROT, "mantel")
+for k in range(4):
+    ball("mantel_knopf", 0.022, (SX + 0.09, MY - 0.045, 0.52 + k * 0.15), MESSING, "mantel")
 
 # Truhe vorn links (die Truhe des Kindes)
-CX, CY = 1.75, -5.7
+CX, CY = -2.6, -0.5
 box("truhe", (0.95, 0.55, 0.42), (CX, CY, 0.21), HOLZ, "truhe")
 cyl("truhe_deckel", 0.275, 0.95, (CX, CY, 0.42), HOLZ, "truhe", rot=(0, R(90), 0), verts=20)
 for dx in (-0.32, 0.32):
@@ -336,7 +346,7 @@ def licht(name, typ, energie, farbe, loc, rot=(0, 0, 0), groesse=None):
     return ob
 
 
-licht("feuer", "POINT", 500, (1.0, 0.55, 0.22), (0, -0.75, 0.55))
+licht("feuer", "POINT", 260, (1.0, 0.55, 0.22), (0, -0.95, 0.5))
 licht("raum", "AREA", 45, (1.0, 0.82, 0.60), (0, -5.0, 3.3), groesse=5.0)
 licht("vorn", "AREA", 30, (1.0, 0.85, 0.70), (0, -9.5, 2.6), rot=(R(75), 0, 0), groesse=4.0)
 licht("mond", "AREA", 160, (0.55, 0.70, 1.0), (B - 0.3, FY, FZ), rot=(0, R(-90), 0), groesse=0.9)

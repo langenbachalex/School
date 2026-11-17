@@ -63,7 +63,7 @@ Hält sich für den größten Zauberer Londons. Jeder Trick geht schief, und jed
 **Laufende Witze:** der Trick, der nicht klappt · das Sandwich im Hut · „That was on purpose“ · der Bauch, der knurrt.
 
 ## Mr. Flex – der Zauberer (Stimme und Gesicht: Mr. Alex; Name entschieden 17.11.)
-Sitzt im Zauberspiegel am Bildrand im Liegestuhl: Spitzhut, langer Bart, Sonnenbrille, Teetasse. Gibt an, wo er kann – und meint es mit einem Augenzwinkern. Wer nicht weiterweiß, tippt ihn an: ein Tipp, nie die Lösung. Er hat die flüsternde Feder gemacht. Nennt Gary nur „the orange dog“. Manchmal rutscht ihm der Lehrer heraus.
+Sitzt im Zauberspiegel am Bildrand im Liegestuhl: Spitzhut, langer Bart, Sonnenbrille, Teetasse. Gibt an, wo er kann (ein bisschen wie ein eitler Zauberlehrer aus den bekannten Büchern) – aber mit der echten Begeisterung von Mr. Alex: Er will, dass die Kinder dranbleiben, und freut sich wirklich. Wer nicht weiterweiß, tippt ihn an: ein Tipp, nie die Lösung. Er hat die flüsternde Feder gemacht. Nennt Gary nur „the orange dog“. Manchmal rutscht ihm der Lehrer heraus.
 - "Mr. Flex. Wizard. Genius. Very modest."
 - *(Bizeps-Pose mit beiden Armen; unter dem Mantel ist nichts zu sehen.)* "Boom. Magic muscles."
 - "I am the greatest wizard in London. Well, in this tower. Well, in this room."
@@ -90,6 +90,19 @@ Sitzt im Zauberspiegel am Bildrand im Liegestuhl: Spitzhut, langer Bart, Sonnenb
 **Gesten:** Bizeps-Pose mit beiden Armen (er ist Zauberer, kein Sportler – genau deshalb) · schiebt die Sonnenbrille herunter und zwinkert · trinkt Tee mit abgespreiztem kleinen Finger · wirbelt den Zauberstab und lässt ihn fallen · Fingerpistolen.
 **Tipp-Leiter (Beispiel Zettel hinter der Uhr):** 1. "Someone saw everything. Someone with wings." → 2. "Ask the pigeon. Then look where she says." → 3. "Behind the clock. Go on. I will wait. I have tea."
 **Laufende Witze:** die Pose · „Alexa“ · er hat angeblich alles vorher gewusst · der Tee wird nie leer · der Lehrer rutscht heraus.
+
+## Der Vorrat an Sprüchen (Mr. Alex 17.11.: so groß wie beim Lob, damit es rotiert)
+Quelle für alle Sprüche: **`inhalte/abenteuer/tower_sprueche.tsv`** – Stand 17.11.: Mr. Flex 52, Gary 46, Sergeant 30 (zusammen ca. 5.600 Zeichen). Spalten: Figur · Anlass · Seltenheit · Text · Geste. Der Vorrat wächst mit jedem Kapitel.
+- **Anlässe:** Begrüßung, Stil, vor einem Tipp, nach falsch, nach richtig, Mr.-Alex-Ausrutscher, über Gary, Alexa, Warten, Zaubershow, Panne, Angst, Essen, Plan, Kommentar, Befehl, Regel, Hut, weich.
+- **Vier Stufen Seltenheit:** 1 häufig · 2 gelegentlich · 3 selten (etwa jedes zehnte Mal) · 4 legendär (etwa jedes fünfzigste Mal). Derselbe Spruch kommt erst wieder, wenn zehn andere dran waren (wie beim Lob).
+- **Joke Book:** Jeder gehörte Spruch wird gesammelt; seltene und legendäre bekommen einen Rahmen. Wer alle hören will, muss wiederkommen – Wiederspielwert ohne neue Räume.
+- **Legendär, Beispiele:** Garys Trick klappt ein einziges Mal wirklich („It WORKED? IT WORKED!“) · Mr. Flex nimmt die Brille ab und lobt ganz ernst („Between us: you are doing really well. Do not tell the fox.“) · der Sergeant lächelt eine Sekunde („… You saw nothing.“).
+
+## Das Klatschen (seltenes Ereignis, Idee Mr. Alex)
+Wie im Unterricht: Statt zu schimpfen klatscht Mr. Flex einen Rhythmus – **lang, kurz, kurz, lang, lang** (4/4) – und du klatschst nach (Leertaste oder Tippen). Stimmt es: „Perfect. Now everybody is quiet. I love it.“ Stimmt es nicht: „Almost. Again. I can do this all day. I do.“ Gary klatscht immer falsch mit. Variante mit Satzzeichen („Capital letter. Full stop.“). Ton: Aufnahme von Mr. Alex oder ein erzeugter Klatsch-Klang – beides möglich.
+
+## Musik (zurückgestellt, Mr. Alex 17.11.)
+Mr. Alex ist Komponist und überlegt, Themen für Figuren oder Orte zu schreiben; viel Musik zu komponieren wäre zurzeit zu aufwendig. Bis dahin Geräusche und kurze Klänge wie im Runner. Nicht vergessen, nicht drängen.
 
 ## Die anderen (kurz)
 - **Die Taube:** Zeugin, redet ohne Punkt und Komma, beleidigt, wenn man ihr nicht glaubt. "Coo! I see everything!"

@@ -1,6 +1,6 @@
 # The Keys of the Tower – alle Sprüche zum Gegenlesen (erzeugt aus `inhalte/abenteuer/tower_sprueche.tsv`, Stand 17.11.2026)
 
-Zusammen 221 Sprüche, ca. 9997 Zeichen englischer Text (mit Regie-Tags für ElevenLabs ca. 18546). Der englische Text ist von Mr. Alex abgenommen und unverändert. Neu: unter jedem Spruch steht kursiv das **Deutsch für die flüsternde Feder** – bitte gegenlesen. Die Regie-Spalte (Text mit Tags für ElevenLabs) steht nur in der Tabelle. Bis auf zwölf Probe-Aufnahmen ist nichts vertont. Änderungen bitte mit der Kennung nennen (z. B. „gary_07 Deutsch: …“).
+Zusammen 229 Sprüche (221 + acht „Guess what!“-Sprüche der Taube vom 17.11., taube_17–24), ca. 9997 Zeichen englischer Text (mit Regie-Tags für ElevenLabs ca. 18546). Der englische Text ist von Mr. Alex abgenommen und unverändert. Neu: unter jedem Spruch steht kursiv das **Deutsch für die flüsternde Feder** – bitte gegenlesen. Die Regie-Spalte (Text mit Tags für ElevenLabs) steht nur in der Tabelle. Bis auf zwölf Probe-Aufnahmen ist nichts vertont. Änderungen bitte mit der Kennung nennen (z. B. „gary_07 Deutsch: …“).
 
 ## Mr. Flex – der Zauberer (Stimme Mr. Alex) – 75 Sprüche
 *Ton für ElevenLabs (Vorschlag): lässig, warm, selbstzufrieden, nie in Eile; Wechsel mitten in der Zeile (z. B. erst selbstbewusst, dann trocken „Very modest.“); bei den Mr.-Alex-Ausrutschern plötzlich echt begeistert, dann verlegen gemurmelt; „It's a no.“ ganz ruhig und endgültig.*
@@ -479,6 +479,22 @@ Zusammen 221 Sprüche, ca. 9997 Zeichen englischer Text (mit Regie-Tags für Ele
   - *Ich habe gesehen, wie der Fuchs vier Sandwiches isst. VIER. Vor dem Frühstück.*
 - `taube_10` · selten · Mrs Crumb and the Sergeant? Oh! I say nothing. Nothing! Coo!  *(kichert)*
   - *Mrs Crumb und der Sergeant? Oh! Ich sage nichts. Nichts! Gurr!*
+- `taube_17` · häufig · Guess what! Guess what! The Sergeant sings in the bath. Loudly. Badly.
+  - *Rate mal! Rate mal! Der Sergeant singt in der Badewanne. Laut. Schlecht.*
+- `taube_18` · häufig · Guess what! Guess what! Gary did a magic trick. Nothing happened. He bowed anyway.
+  - *Rate mal! Rate mal! Gary hat einen Zaubertrick gemacht. Nichts ist passiert. Er hat sich trotzdem verbeugt.*
+- `taube_19` · gelegentlich · Guess what! Guess what! Somebody ate the last scone. It was me. Don't tell anybody.
+  - *Rate mal! Rate mal! Jemand hat den letzten Scone gegessen. Ich war es. Sag es keinem.*
+- `taube_20` · gelegentlich · Guess what! Guess what! … I forgot. No, wait! I remember! … No. I forgot.
+  - *Rate mal! Rate mal! … Vergessen. Nein, warte! Ich weiß es wieder! … Nein. Vergessen.*
+- `taube_21` · gelegentlich · Guess what! Guess what! Mr. Flex has a mirror. He talks to it. It never answers. He doesn't mind.
+  - *Rate mal! Rate mal! Mr. Flex hat einen Spiegel. Er redet mit ihm. Er antwortet nie. Das stört ihn nicht.*
+- `taube_22` · häufig · Guess what! Guess what! You are my favourite detective. Guess why! You are the only one.
+  - *Rate mal! Rate mal! Du bist mein Lieblings-Detective. Rate, warum! Du bist der einzige.*
+- `taube_23` · gelegentlich · Guess what! Guess what! I flew over the palace today. The King waved. At me! Probably.
+  - *Rate mal! Rate mal! Ich bin heute über den Palast geflogen. Der König hat gewinkt. Mir! Wahrscheinlich.*
+- `taube_24` · häufig · Guess what! Guess what! Nothing happened today. Nothing! Isn't that exciting?
+  - *Rate mal! Rate mal! Heute ist nichts passiert. Nichts! Ist das nicht aufregend?*
 
 **aufgeregt**
 - `taube_11` · häufig · Oh! Oh! A detective! At MY window!

@@ -1,0 +1,85 @@
+{
+ "raum": "guardroom",
+ "modell": "guardroom.glb",
+ "kamera": {
+  "ort": [
+   0.0,
+   -9.399999618530273,
+   1.649999976158142
+  ],
+  "ziel": [
+   0.0,
+   0.0,
+   0.949999988079071
+  ],
+  "brennweite": 26.0,
+  "sensor": 36.0
+ },
+ "dinge": [
+  {
+   "id": "haken",
+   "name": "Schlüsselhaken"
+  },
+  {
+   "id": "stiefel",
+   "name": "Stiefel"
+  },
+  {
+   "id": "tanzschuh",
+   "name": "Tanzschuh"
+  },
+  {
+   "id": "helm",
+   "name": "Helm"
+  },
+  {
+   "id": "laterne",
+   "name": "Laterne"
+  },
+  {
+   "id": "uhr",
+   "name": "Uhr"
+  },
+  {
+   "id": "teekanne",
+   "name": "Teekanne"
+  },
+  {
+   "id": "tassen",
+   "name": "Tassen"
+  },
+  {
+   "id": "kruemel",
+   "name": "Krümel"
+  },
+  {
+   "id": "karte",
+   "name": "Karte"
+  },
+  {
+   "id": "mantel",
+   "name": "Mantel"
+  },
+  {
+   "id": "fenster",
+   "name": "Fenster"
+  },
+  {
+   "id": "kamin",
+   "name": "Kamin"
+  },
+  {
+   "id": "kleine_tuer",
+   "name": "Kleine Tür (nur mit Laterne sichtbar)"
+  },
+  {
+   "id": "truhe",
+   "name": "Truhe"
+  },
+  {
+   "id": "treppe",
+   "name": "Treppe"
+  }
+ ],
+ "dreiecke": 295353
+}

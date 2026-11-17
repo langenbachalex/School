@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Guard Room in 3D – technische Probe</title>
+<!-- Technische Probe 17.11.2026 (Keys of the Tower): der Guard Room als echtes 3D im Browser.
+     Raum: raum3d/guardroom.glb aus werkzeuge/blender/tower_gltf.py (Licht eingebrannt). Three.js liegt in lib/ (MIT-Lizenz).
+     Nicht in der App verlinkt; das Spiel selbst (tower.js) ist unveraendert. -->
+<style>
+  html, body { margin: 0; height: 100%; background: #0b0705; color: #f3e6d0; font: 16px/1.4 system-ui, sans-serif; overflow: hidden; }
+  [hidden] { display: none !important; }
+  canvas { display: block; width: 100vw; height: 100vh; height: 100dvh; touch-action: none; cursor: grab; }
+  .kasten { pointer-events: none; position: fixed; background: rgba(15, 9, 6, .78); border: 1px solid rgba(243, 230, 208, .25); border-radius: 10px; padding: 8px 12px; }
+  #mess { left: 10px; top: 10px; font-size: 14px; max-width: min(92vw, 420px); }
+  #mess b { font-size: 18px; }
+  #hilfe { left: 50%; transform: translateX(-50%); top: 10px; font-size: 14px; text-align: center; }
+  #text { left: 50%; transform: translateX(-50%); bottom: 18px; width: min(92vw, 640px); text-align: center; font-size: 19px; }
+  #text small { display: block; opacity: .75; font-size: 14px; }
+  #text:empty { display: none; }
+  #laden { inset: 0; display: grid; place-items: center; font-size: 20px; border: 0; border-radius: 0; }
+  #hilfe { max-width: min(92vw, 520px); }
+  @media (max-width: 900px) { #hilfe { top: auto; bottom: 86px; } }
+</style>
+<script type="importmap">{ "imports": { "three": "./lib/three.module.min.js" } }</script>
+</head>
+<body>
+<canvas id="buehne" aria-label="Guard Room in 3D"></canvas>
+<div id="laden" class="kasten">Der Raum wird geladen …</div>
+<div id="mess" class="kasten" hidden></div>
+<div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = ansehen · zwei Finger oder Mausrad = heranholen</div>
+<div id="text" class="kasten" role="status"></div>
+<script src="daten.js"></script>
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "./lib/GLTFLoader.js";
+
+const $ = (id) => document.getElementById(id);
+const buehne = $("buehne");
+const zeige = (fehler) => { $("laden").textContent = fehler; $("laden").hidden = false; };
+
+try {
+  const info = await (await fetch("raum3d/guardroom3d.json")).json();
+  const renderer = new THREE.WebGLRenderer({ canvas: buehne, antialias: true, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const szene = new THREE.Scene();
+  szene.background = new THREE.Color(0x0b0705);
+  const kamera = new THREE.PerspectiveCamera(50, 1, 0.05, 60);
+  const ausBlender = ([x, y, z]) => new THREE.Vector3(x, z, -y);   // Blender: Z oben · Browser: Y oben
+
+  const gltf = await new GLTFLoader().loadAsync("raum3d/guardroom.glb");
+  const dinge = new Map(info.dinge.map((d) => [d.id, d])), netze = [];
+  let dreiecke = 0;
+  gltf.scene.traverse((o) => {
+    if (!o.isMesh) return;
+    const karte = o.material.map;                      // Licht ist eingebrannt: die Textur wird gezeigt, wie sie ist
+    if (karte) karte.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    o.material = new THREE.MeshBasicMaterial({ map: karte });
+    o.userData.ding = dinge.has(o.name) ? o.name : (o.userData.gruppe && dinge.has(o.userData.gruppe) ? o.userData.gruppe : null);
+    dreiecke += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
+    netze.push(o);
+  });
+  szene.add(gltf.scene);
+
+  // ---- Kamera: Start wie im gerechneten Bild; Blick ueber Drehung (links/rechts) und Neigung (hoch/runter) ----
+  const ort = ausBlender(info.kamera.ort), ziel = ausBlender(info.kamera.ziel);
+  const blick = ziel.clone().sub(ort).normalize();
+  let drehung = Math.atan2(-blick.x, -blick.z), neigung = Math.asin(blick.y);
+  const waagrecht = 2 * Math.atan(info.kamera.sensor / (2 * info.kamera.brennweite));
+  const raum = new THREE.Box3().setFromObject(szene.getObjectByName("raum_gross") || gltf.scene);
+  const grenze = { x0: raum.min.x + 0.5, x1: raum.max.x - 0.5, z0: raum.min.z + 0.6, z1: Math.max(raum.max.z - 0.5, ort.z) };
+  const richte = () => {
+    kamera.position.copy(ort);
+    kamera.rotation.set(neigung, drehung, 0, "YXZ");
+  };
+  const groesse = () => {
+    const b = window.innerWidth, h = window.innerHeight;
+    renderer.setSize(b, h, false);
+    kamera.aspect = b / h;
+    const w = b >= h ? waagrecht : Math.min(waagrecht, 1.0);     // hochkant: nicht zu weit
+    kamera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(w / 2) / kamera.aspect));
+    if (b < h) kamera.fov = Math.min(kamera.fov, 75);
+    kamera.updateProjectionMatrix();
+  };
+  window.addEventListener("resize", groesse);
+  groesse(); richte();
+
+  // ---- Umsehen (ziehen), Antippen (kurzer Tipp ohne Ziehen) ----
+  const strahl = new THREE.Raycaster(), ton = new Audio();
+  // Gesten nach Bauplan Abschnitt 3 (Vorschlag, wird mit dieser Probe ausprobiert): alles geht mit Finger, Maus und Touchpad gleich.
+  const finger = new Map();
+  let zug = null, spreiz = 0, gehZiel = null;
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.16, 0.22, 40), new THREE.MeshBasicMaterial({ color: 0xffd58a, transparent: true, opacity: 0.85, depthTest: false }));
+  ring.rotation.x = -Math.PI / 2; ring.visible = false; ring.renderOrder = 5; szene.add(ring);
+  const abstand = () => { const [a, b] = [...finger.values()]; return Math.hypot(a.x - b.x, a.y - b.y); };
+  const hole = (faktor) => { kamera.zoom = THREE.MathUtils.clamp(kamera.zoom * faktor, 1, 3); kamera.updateProjectionMatrix(); };
+  buehne.addEventListener("pointerdown", (e) => {
+    finger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    buehne.setPointerCapture(e.pointerId);
+    if (finger.size === 1) zug = { x: e.clientX, y: e.clientY, weg: 0 };
+    else { zug = null; spreiz = abstand(); }
+  });
+  buehne.addEventListener("pointermove", (e) => {
+    if (!finger.has(e.pointerId)) return;
+    finger.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (finger.size === 2) { const d = abstand(); if (spreiz > 0) hole(d / spreiz); spreiz = d; return; }
+    if (!zug) return;
+    const dx = e.clientX - zug.x, dy = e.clientY - zug.y;
+    zug.x = e.clientX; zug.y = e.clientY; zug.weg += Math.abs(dx) + Math.abs(dy);
+    if (zug.weg < 8) return;
+    const tempo = THREE.MathUtils.degToRad(kamera.fov) / kamera.zoom / window.innerHeight;
+    drehung += dx * tempo; neigung = THREE.MathUtils.clamp(neigung + dy * tempo, -1.2, 1.2);
+  });
+  const los = (e) => {
+    const tipp = finger.size === 1 && zug && zug.weg < 8 && e.type === "pointerup";
+    finger.delete(e.pointerId); zug = null;
+    if (!tipp) return;
+    const r = buehne.getBoundingClientRect();
+    strahl.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), kamera);
+    const treffer = strahl.intersectObjects(netze, false)[0];
+    if (!treffer) return;
+    if (treffer.object.userData.ding) return angetippt(treffer.object);
+    const oben = treffer.face.normal.clone().transformDirection(treffer.object.matrixWorld).y > 0.7;
+    if (oben && treffer.point.y < 0.25) {               // Boden: dorthin gehen (bis kurz davor, damit man die Stelle noch sieht)
+      const hin = new THREE.Vector3(treffer.point.x - ort.x, 0, treffer.point.z - ort.z), weit = Math.max(hin.length() - 0.9, 0);
+      hin.normalize().multiplyScalar(weit);
+      gehZiel = { x: THREE.MathUtils.clamp(ort.x + hin.x, grenze.x0, grenze.x1), z: THREE.MathUtils.clamp(ort.z + hin.z, grenze.z0, grenze.z1) };
+      ring.position.set(treffer.point.x, treffer.point.y + 0.02, treffer.point.z); ring.visible = true;
+    }
+  };
+  buehne.addEventListener("pointerup", los);
+  buehne.addEventListener("pointercancel", los);
+  buehne.addEventListener("wheel", (e) => { e.preventDefault(); hole(e.deltaY < 0 ? 1.1 : 1 / 1.1); }, { passive: false });
+
+  function angetippt(netz) {
+    const id = netz.userData.ding, zeile = (window.TOWER_DATEN?.zeilen || []).find((z) => z.d === id && z.s === "erzaehler");
+    buehne.dataset.zuletzt = id;
+    $("text").innerHTML = "";
+    $("text").append(zeile ? zeile.en : dinge.get(id).name);
+    const klein = document.createElement("small"); klein.textContent = dinge.get(id).name; $("text").append(klein);
+    netz.material.color.setScalar(1.7);                 // kurz aufleuchten
+    setTimeout(() => netz.material.color.setScalar(1), 450);
+    if (zeile && zeile.t === 1 && !window.__towerSchnell) { ton.src = `../audio/tower/k1_${zeile.id}.mp3`; ton.play().catch(() => {}); }
+  }
+
+  // ---- Tastatur nur als Zugabe (Pfeile, W A S D); alles Noetige geht ohne sie ----
+  const taste = { vor: 0, dreh: 0 };
+  const tasten = { ArrowUp: ["vor", 1], KeyW: ["vor", 1], ArrowDown: ["vor", -1], KeyS: ["vor", -1], ArrowLeft: ["dreh", 1], KeyA: ["dreh", 1], ArrowRight: ["dreh", -1], KeyD: ["dreh", -1] };
+  window.addEventListener("keydown", (e) => { const t = tasten[e.code]; if (t) { taste[t[0]] = t[1]; e.preventDefault(); } });
+  window.addEventListener("keyup", (e) => { const t = tasten[e.code]; if (t) taste[t[0]] = 0; });
+  // ---- Bild fuer Bild; nebenbei messen, wie fluessig es laeuft ----
+  let zuletzt = performance.now(), bilder = 0, seit = zuletzt, tiefst = Infinity, jetztWert = 0;
+  let karteName = "unbekannt";
+  try { const gl = renderer.getContext(), x = gl.getExtension("WEBGL_debug_renderer_info"); if (x) karteName = gl.getParameter(x.UNMASKED_RENDERER_WEBGL); } catch (e) { /* ohne Namen */ }
+  const messe = () => {
+    $("mess").innerHTML = `<b>${jetztWert} Bilder pro Sekunde</b> (tiefster Wert ${tiefst === Infinity ? "–" : tiefst})<br>` +
+      `${Math.round(dreiecke / 1000)} Tsd. Dreiecke · ${window.innerWidth} × ${window.innerHeight} · geladen in ${ladezeit} s<br><small>${karteName}</small>`;
+  };
+  let ladezeit = 0, bereitSeit = Infinity;
+  renderer.setAnimationLoop((t) => {
+    const dt = Math.min((t - zuletzt) / 1000, 0.1); zuletzt = t;
+    drehung += taste.dreh * 1.4 * dt;
+    if (gehZiel && !taste.vor) {
+      const dx = gehZiel.x - ort.x, dz = gehZiel.z - ort.z, rest = Math.hypot(dx, dz), schritt = 2.2 * dt;
+      if (rest <= schritt) { ort.x = gehZiel.x; ort.z = gehZiel.z; gehZiel = null; ring.visible = false; }
+      else { ort.x += dx / rest * schritt; ort.z += dz / rest * schritt; }
+    }
+    if (taste.vor) {
+      gehZiel = null; ring.visible = false;
+      ort.x = THREE.MathUtils.clamp(ort.x - Math.sin(drehung) * taste.vor * 1.8 * dt, grenze.x0, grenze.x1);
+      ort.z = THREE.MathUtils.clamp(ort.z - Math.cos(drehung) * taste.vor * 1.8 * dt, grenze.z0, grenze.z1);
+    }
+    richte();
+    renderer.render(szene, kamera);
+    bilder++;
+    if (t - seit >= 1000) {
+      jetztWert = Math.round(bilder * 1000 / (t - seit)); bilder = 0; seit = t;
+      if (t - bereitSeit > 3000) tiefst = Math.min(tiefst, jetztWert);     // die ersten Sekunden zaehlen nicht (Laden)
+      messe();
+    }
+  });
+
+  ladezeit = (performance.now() / 1000).toFixed(1); bereitSeit = performance.now();   // Zeit seit dem Aufruf der Seite
+  for (const id of ["mess", "hilfe"]) $(id).hidden = false;
+  $("laden").hidden = true; messe();
+  buehne.dataset.bereit = "1";
+  // fuer das Testprogramm: wo liegt ein Gegenstand gerade auf dem Bildschirm?
+  window.__probe3d = { stand: () => [ort.x, ort.z], ort: (id) => {
+    const p = new THREE.Box3().setFromObject(szene.getObjectByName(id)).getCenter(new THREE.Vector3()).project(kamera);
+    return { x: (p.x + 1) / 2 * window.innerWidth, y: (1 - p.y) / 2 * window.innerHeight };
+  } };
+} catch (e) {
+  zeige("Der Raum lässt sich hier nicht in 3D zeigen: " + e.message);
+  throw e;
+}
+</script>
+</body>
+</html>

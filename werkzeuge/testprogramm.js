@@ -30,6 +30,7 @@ const args = process.argv.slice(2);
 const fArg = (args.find((a) => a.startsWith("--format=")) || "").slice(9);
 const formate = fArg ? FORMATE.filter((f) => fArg.toLowerCase().split(",").includes(f.id)) : FORMATE;
 const OHNE_UPDATE = args.includes("--ohne-update");
+const NUR_3D_AUS = args.includes("--ohne-3d");   // 3D-Probe auslassen (z. B. wenn tower/raum3d/ noch nicht gerechnet ist)
 const gewaehlt = args.filter((a) => !a.startsWith("--")).map((a) => a.toUpperCase());
 
 /* ---------- Spielstand mit gültigem Siegel (für Tickets): Siegel-Funktion wird aus der App gelesen, nicht nachgebaut ---------- */
@@ -156,6 +157,36 @@ async function weg(browser, basis, app, titel, knoepfe, opt = {}) {
     if (opt.pruefe) { const f = await opt.pruefe(pg); if (f) fehl.push(`${titel}: ${f}`); }
   } finally {
     await pg.waitForTimeout(300);
+    fehl.push(...[...new Set(fehler)].map((f) => `${titel}: ${f}`));
+    await ctx.close();
+  }
+  return fehl;
+}
+
+/* ---------- EN6 „The Keys of the Tower“, technische 3D-Probe (17.11.2026): tower/probe3d.html lädt den Raum als glTF,
+   die Uhr lässt sich antippen (Ort auf dem Bildschirm aus window.__probe3d), ein Tipp auf den Boden geht dorthin, nichts ist breiter als der Bildschirm. ---------- */
+async function probe3dTest(browser, basis, app, name, fm) {
+  const titel = `${name} · Keys of the Tower 3D-Probe`, fehl = [];
+  const { ctx, pg, fehler } = await neueSeite(browser, basis, app, false, fm);
+  try {
+    await pg.goto(`${basis}/${app.pfad}/tower/probe3d.html`, { waitUntil: "load" });
+    await pg.waitForSelector("#buehne[data-bereit]", { timeout: 40000 });
+    await pg.evaluate(() => { window.__towerSchnell = true; });
+    const ort = await pg.evaluate(() => window.__probe3d.ort("uhr"));
+    await pg.mouse.click(ort.x, ort.y); await pg.waitForTimeout(300);
+    const zuletzt = await pg.evaluate(() => document.getElementById("buehne").dataset.zuletzt);
+    if (zuletzt !== "uhr") fehl.push(`${titel}: Tipp auf die Uhr trifft „${zuletzt || "nichts"}“`);
+    if (!/clock/i.test(await pg.locator("#text").textContent())) fehl.push(`${titel}: kein Text zur angetippten Uhr`);
+    // Boden antippen = dorthin gehen (Bauplan Abschnitt 3: alles geht mit Finger und Maus, nichts nur mit Tasten)
+    const vp = pg.viewportSize(), vorher = await pg.evaluate(() => window.__probe3d.stand());
+    await pg.mouse.click(vp.width * 0.3, vp.height * 0.93); await pg.waitForTimeout(1500);
+    const nachher = await pg.evaluate(() => window.__probe3d.stand());
+    if (Math.hypot(nachher[0] - vorher[0], nachher[1] - vorher[1]) < 0.2) fehl.push(`${titel}: Tipp auf den Boden bewegt die Kamera nicht`);
+    for (const b of await zuBreit(pg)) fehl.push(`${titel}: ${b}`);
+  } catch (e) {
+    const meldung = await pg.locator("#laden").textContent().catch(() => "?");
+    fehl.push(`${titel}: ${String(e.message || e).split("\n")[0].slice(0, 160)} – Meldung auf der Seite: ${meldung}`);
+  } finally {
     fehl.push(...[...new Set(fehler)].map((f) => `${titel}: ${f}`));
     await ctx.close();
   }
@@ -414,6 +445,7 @@ async function enKetteGruen(app, pg) {
           return n ? null : "Runner startet nicht (keine Spielbühne mit Zeichenfläche)";
         } }));
         if (app.kurz === "EN6") f.push(...await towerTest(b, basis, app, name, fm));
+        if (app.kurz === "EN6" && !NUR_3D_AUS) f.push(...await probe3dTest(b, basis, app, name, fm));
         if (EN_KETTE[app.kurz]) f.push(...await w("Bereich wird grün, Spiele zeigen den Stand von heute", [], { stand: enFastFertig(app), pruefe: (pg) => enKetteGruen(app, pg) }));
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
         if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));

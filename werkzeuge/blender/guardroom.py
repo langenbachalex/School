@@ -747,6 +747,12 @@ world.use_nodes = True
 world.node_tree.nodes["Background"].inputs["Color"].default_value = (0.03, 0.015, 0.01, 1)
 world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.3
 
+# ---------- 3D-Fassung fuer den Browser (nur mit GLTF=1; dann wird kein Bild gerechnet) ----------
+if os.environ.get("GLTF"):
+    import tower_gltf
+    tower_gltf.ausgeben(scene, cam, ziel, DINGE)
+    sys.exit(0)
+
 os.makedirs(OUT, exist_ok=True)
 scene.render.resolution_percentage = 100
 scene.render.use_file_extension = True

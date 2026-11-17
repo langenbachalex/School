@@ -30,6 +30,8 @@ Entwurf des Masters nach der Vorgabe von Mr. Alex vom 17.11.: nichts Halbgares, 
 | 4 | **Buckingham Palace** | der Schlüssel zum Gartentor; Wachwechsel | der Wächter, der sich nie bewegt; Hunde, Teestunde, feine Manieren als Spiel |
 | 5–7 | z. B. **Big Ben**, **Tower Bridge**, **St Paul's** oder **Greenwich** | die Uhr, die Brücke, die Flüstergalerie, die Zeit | je nach Lust und Unterrichtsthema |
 
+**Der Tower als Mitte (Entscheidung Mr. Alex 17.11. abends):** Der Tower ist als mystischer Ort das Zentrum der ganzen Geschichte. Dorthin kehrt man immer wieder zurück: Der Hof ist die Mitte, dein Zimmer „The Den“ dein Zuhause. **Weitere Orte für spätere Kapitel**, zusätzlich zu denen in der Tabelle: **London Zoo** (mit Tieren) und eine **Tube Station**. Noch nicht ausgearbeitet.
+
 **Wer dahintersteckt (Grundsatz statt fertiger Auflösung):** Wie bei der Elster gibt es keinen Bösewicht. Der „Gentleman“ will nichts stehlen, sondern etwas zurückhaben oder dazugehören; die Auflösung ist warm und ein wenig rührend. Wer es ist, bleibt bis zum Schluss offen und wird erst festgelegt, wenn zwei bis drei Kapitel stehen. Spuren führen bewusst in mehrere Richtungen – auch zu Mr. Flex, der zu allem „I knew that“ sagt.
 
 **Was durch alle Kapitel mitgeht:** deine Figur, dein Zimmer über dem Guard Room mit der London-Karte (jeder gefundene Schlüssel hängt an seinem Haken, jeder besuchte Ort leuchtet auf der Karte) · **Gary** als Begleiter · **Mr. Flex** in jedem Spiegel der Stadt · **die Taube**, die überall Verwandte hat und immer schon alles weiß · neue Hüter als Figuren je Ort.

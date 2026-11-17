@@ -118,7 +118,8 @@ Mr. Alex ist Komponist und überlegt, Themen für Figuren oder Orte zu schreiben
 - **Gary the Great = Charlie** (entschieden; `IKne3meq5aSn9XLyUdCD`, australisch). Regie beim Helm: erst flüstern, dann plötzlich laut und empört die Schuld wegschieben („The HELMET started it!“).
 - **Arthur = Kiel** (entschieden; `FUdtnSGebmUJVfZnamcB`, „Raspy Deep British“).
 - **Mr. Flex = Mr. Alex' Stimme**, britisch: kein hörbares R in „wizard“ (Akzent-Tag oder Schreibweise – Runde 3 testet beides). „Mr. Flex.“ passt; „Wizard.“ gesteigert; „Genius!“ ist der Höhepunkt an Begeisterung und Selbstgefälligkeit; lange Pause; „Very modest.“ trocken. Rückzieher nach dem Lob lässig und trocken; „It's a no. And it stays a no.“ streng.
-- **Die Taube: noch offen.** Verity, Lizzie und Ruby B passten nicht (zu viel Knarren in der Stimme, zu langsam). Gesucht: sehr schnell, sprudelnd, aufgeregt, tratschend. In Runde 3: Blondie, Delilah, Flicker, mit höherem Tempo.
+- **Die Taube = Blondie** (entschieden; `YPbk892xlMnFoVOkxyGD`), immer mit britischem Akzent-Tag, schnell (Tempo 1,15), sprudelnd, tratschend. Mr. Alex liebt „Guess what! Guess what!“ – das wird ihr Markenzeichen.
+- **Regie-Entscheidungen aus Runde 3:** Für Mr. Flex genügt das Tag `[British accent]`. „Very modest.“ mit einem Lächeln, charmant (wie der eitle Zauberlehrer aus den Büchern), nicht nur trocken. Garys Helm-Zeile heißt „The helmet started it! It was the helmet!“ – unschuldig und charmant gesprochen: Er ist überzeugt, dass er damit durchkommt, und klingt kein bisschen schuldbewusst.
 - **Immer drei Proben je Stimme.** Probe-Dateien liegen nicht im Repo.
 - **Lippenbewegung zur Sprache:** Idee von Mr. Alex, jetzt kein Thema; für später notiert.
 

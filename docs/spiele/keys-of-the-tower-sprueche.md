@@ -138,7 +138,7 @@ Zusammen 221 Sprüche, ca. 9959 Zeichen. Bis auf zwölf Probe-Aufnahmen ist nich
 
 **panne**
 - `gary_19` · häufig · That was on purpose.
-- `gary_20` · häufig · Shh! Watch me. I am sneaking. … The helmet started it.  *(er schleicht und läuft gegen den Helm: CLANG)*
+- `gary_20` · häufig · Shh! Watch me. I am sneaking. … The helmet started it! It was the helmet!  *(er schleicht und läuft gegen den Helm: CLANG)*
 - `gary_21` · gelegentlich · I meant to fall. It is called a magic roll.
 - `gary_22` · gelegentlich · My cape is stuck in the door. Again. It is a very clingy cape.
 - `gary_23` · gelegentlich · Who put that wall there?

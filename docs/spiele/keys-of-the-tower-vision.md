@@ -123,6 +123,7 @@ Beide Kreise greifen ineinander: Die Geschichte öffnet neue Orte zum Sammeln, u
 - **Im Spiel selbst gerechnet,** keine Filme: Kamerafahrt, Figuren mit Gesten, Ton. Das hält die Dateien klein und sieht aus wie die Welt, in der man gleich wieder steht.
 - **Drei Sorten:** Auftakt eines Kapitels (wo bin ich, was ist los) · Wendepunkt (der Zettel, die leere Dose, die abgewaschene Farbe) · Haken am Ende (15–25 Sekunden, eine offene Frage).
 - **Regel:** kurz, mit Witz, nie länger als etwa 40 Sekunden am Stück; danach kann man sofort wieder selbst etwas tun.
+- **Stimmung zuerst (Mr. Alex, 17.11. abends):** Jeder Auftakt beginnt mit einem kurzen, geladenen Satz über den Ort, bevor etwas passiert – beim Tower: „Its history is ancient, and its story is legendary. Seven ravens sit on the old wall. They are watching.“ (Zeilen a01, v00, v01). Dazu Nebel und schönes Licht; die Ausleuchtung trägt die Stimmung mit.
 
 ## 9. Das Testspiel: Anfang und Kapitel 1
 Ziel des Tests: Die Kinder sollen in zehn bis fünfzehn Minuten spüren, was das ganze Spiel sein wird. Deshalb enthält der Ausschnitt von jeder Säule ein Stück – lieber klein und fertig als viel und roh.

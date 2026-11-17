@@ -10,6 +10,8 @@ Quelle: `inhalte/abenteuer/tower_hof_den.tsv` (36 neue Zeilen, gleiche Spalten w
 - **The Den:** Sergeant lässt die Leiter herunter („Every detective needs an office.“), dann die sieben Dinge aus Vision 6b, erstes Fundstück, eine Zeile fürs Wiederkommen.
 - **Sprache:** Ortsangaben (on the wall, next to you, under the roof, from the window), there is, Uhrzeit (twenty past nine), never/always; Satzlänge höchstens etwa 10 Wörter.
 
+- **Nachtrag Mr. Alex 17.11. abends (v00):** ein geladener Satz über den Ort gleich nach a01, im Film mit Nebel und schönem Licht – Stimmung aufbauen, bevor der Sergeant rennt. Kommt zur Vertonung dazu: 92 Zeichen ≈ 40 Credits (zusammen rund 1156).
+
 ## Bitte lesen
 1. **Englisch und Deutsch** – stimmt der Ton, ist es witzig genug, wie in Kapitel 1?
 2. **Spalte „Einfacher“** – sieben Kernzeilen (w01, w04a, w06a, w07, d03, d05, d08a): die richtigen?
@@ -22,6 +24,7 @@ Quelle: `inhalte/abenteuer/tower_hof_den.tsv` (36 neue Zeilen, gleiche Spalten w
 
 | Nr | Wer | Englisch | Deutsch (Feder) | Einfacher |
 |---|---|---|---|---|
+| v00 | erzaehler | Its history is ancient, and its story is legendary. | Seine Geschichte ist uralt, und was man von ihm erzählt, ist legendär. | It is very, very old. And it is full of stories. |
 | v01 | erzaehler | Seven ravens sit on the old wall. They are watching. | Sieben Raben sitzen auf der alten Mauer. Sie schauen zu. |  |
 | v02 | erzaehler | Everything here is old. And everything is always on time. | Hier ist alles alt. Und alles ist immer pünktlich. |  |
 

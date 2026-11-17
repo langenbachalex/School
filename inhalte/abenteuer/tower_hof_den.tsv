@@ -1,5 +1,6 @@
 id	sprecher	englisch	deutsch	einfach	regie	gegenstand	ausloeser
-v01	erzaehler	Seven ravens sit on the old wall. They are watching.	Sieben Raben sitzen auf der alten Mauer. Sie schauen zu.		[calm, storytelling] Seven ravens sit on the old wall. [mysterious] They are watching.		Auftakt-Film, nach a01, vor a02
+v00	erzaehler	Its history is ancient, and its story is legendary.	Seine Geschichte ist uralt, und was man von ihm erzählt, ist legendär.	It is very, very old. And it is full of stories.	[slow, mysterious, storytelling] Its history is ancient, [pause] and its story is legendary.		Auftakt-Film (Nebel, schönes Licht), nach a01, vor v01
+v01	erzaehler	Seven ravens sit on the old wall. They are watching.	Sieben Raben sitzen auf der alten Mauer. Sie schauen zu.		[calm, storytelling] Seven ravens sit on the old wall. [mysterious] They are watching.		Auftakt-Film, nach v00, vor v02
 v02	erzaehler	Everything here is old. And everything is always on time.	Hier ist alles alt. Und alles ist immer pünktlich.		[calm, storytelling] Everything here is old. [pause] And everything is always on time.		nach v01, dann a02
 w01	gary	Come on, detective! The door is over there.	Komm schon, Detective! Die Tür ist da drüben.	The door is there. Come on!	[cheerful, impatient] Come on, detective! The door is over there.		Hof, nach a19, wenn man 20 s nicht zur Tür geht
 w02a	erzaehler	An old barrel. It smells of apples. And fox.	Ein altes Fass. Es riecht nach Äpfeln. Und nach Fuchs.		[calm, storytelling] An old barrel. It smells of apples. [amused] And fox.	Fass	erster Tipp

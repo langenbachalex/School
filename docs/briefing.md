@@ -111,6 +111,7 @@ Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt w
 - **Geräte für die Story-Spiele:** gebaut für Laptops und iPads; Handys sind nur die Notlösung, werden aber weiter mitgetestet.
 - **Gesprochene Zeilen sperren nie, werden aber auch nicht weggetippt:** Man kann weitermachen, während die Stimme spricht. So hetzt niemand durch, und niemand wartet.
 - **Reihenfolge beim Entwickeln einer Geschichte:** erst die Figuren klar, dann die Orte, dann die Grundgeschichte, dann die Kapitel.
+- **Figuren leben von Gesten** (Mr. Alex 17.11.): jede Figur bekommt wiedererkennbare Gesten und laufende Witze (z. B. Bizeps-Pose des Zauberers, wippender Fuß des Sergeants). Humor auch durch Anspielung auf Bekanntes aus der App (das gespeicherte Lob).
 - **„Hinterlegen“ (Wort von Mr. Alex)** = auf Englisch „keep it on file“: dauerhaft als Vorgabe festhalten und künftig von selbst beachten. Sagt Mr. Alex „hinterlegen“ oder „keep that in the back of your mind“, kommt es in dieses Briefing.
 - Konzept dazu: `docs/spiele/story-spiele-konzept.md`, Bauplan: `docs/spiele/story-spiele-bauplan.md`.
 

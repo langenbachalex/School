@@ -71,5 +71,5 @@ Raben nach König Artus' Hof (Arthur, Guinevere, Lancelot, Morgana, Gawain, Perc
 - **Erscheinen:** Kapitel werden freigespielt; Film mit Haken, dann Schlüssel (Konzept 7c).
 - **Wiederspielen** ist Pflichtbestandteil (Konzept 7d).
 - **Geräte:** gebaut für Laptops und iPads (Querformat, große Fläche). Handys sind nur die Notlösung, werden aber weiter mitgetestet.
-- **Der Fuchs:** Gary the Great, der Möchtegern-Zauberer; wahrer Name Foxy McFoxface (Seitenstrang). **Für eine spätere Figur aufgehoben:** Colin, der Fuchs bzw. das Tier, das sich für einen Geheimagenten hält („Agent Colin to base. There is no base.“). **Der Zauberer heißt Mr. Relax** (entschieden 17.11.): nach einem Foto von Mr. Alex gezeichnet, etwas Gandalf/Dumbledore, mit Sonnenbrille.
+- **Der Fuchs:** Gary the Great, der Möchtegern-Zauberer; wahrer Name Foxy McFoxface (Seitenstrang). **Für eine spätere Figur aufgehoben:** Colin, der Fuchs bzw. das Tier, das sich für einen Geheimagenten hält („Agent Colin to base. There is no base.“). **Der Zauberer heißt Mr. Flex** (entschieden 17.11., zuerst Mr. Flex): nach einem Foto von Mr. Alex gezeichnet, etwas Gandalf/Dumbledore, mit Sonnenbrille.
 - **Arbeitsreihenfolge (Mr. Alex 17.11.):** erst die Figuren, dann die Orte, dann die Geschichte, dann die Kapitel. Figuren: `keys-of-the-tower-figuren.md`.

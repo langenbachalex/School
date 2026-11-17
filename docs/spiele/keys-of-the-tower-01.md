@@ -25,7 +25,7 @@
 *Du bekommst das Abzeichen „Junior Detective“ und die **Feder** (siehe Verstehenshilfen).*
 
 ## Verstehenshilfen in diesem Kapitel (alle in der Spielwelt, nichts davon kostet etwas)
-- **Mr. Relax, der Zauberer (Stimme Mr. Alex) – immer antippbar:** Sein Bild sitzt in einem kleinen Zauberspiegel am Bildrand. Wer nicht weiterweiß, tippt ihn an und bekommt einen frechen Tipp, nie die Lösung. Beispiele: "I am the greatest wizard in London. Well, in this tower. Well, in this room." · "A hint? From me? Fine. Pigeons see everything. Ask one." · "Look behind things. People hide things behind things. I do."
+- **Mr. Flex, der Zauberer (Stimme Mr. Alex) – immer antippbar:** Sein Bild sitzt in einem kleinen Zauberspiegel am Bildrand. Wer nicht weiterweiß, tippt ihn an und bekommt einen frechen Tipp, nie die Lösung. Beispiele: "I am the greatest wizard in London. Well, in this tower. Well, in this room." · "A hint? From me? Fine. Pigeons see everything. Ask one." · "Look behind things. People hide things behind things. I do."
 - **Die flüsternde Feder** (vom Zauberer gemacht): Halte die Feder an eine Zeile, und sie „flüstert“ sie auf Deutsch (Text erscheint). Das ist die Prise Magie und ersetzt Toni.
 - **„Sorry?“:** Deine Figur kann jederzeit nachfragen – *Sorry? · Again, please. · Slowly, please.* Die Figur wiederholt die Zeile, beim zweiten Mal langsamer.
 - **Dinge leuchten, wenn sie genannt werden:** Sagt jemand „behind the clock“, schimmert die Uhr kurz.

@@ -143,6 +143,44 @@ WASSER = mat("tinte_blau", (0.22, 0.35, 0.48), 0.9)
 PAPIER = mat("papier", (0.88, 0.80, 0.62), 0.9)
 BROT = mat("kruemel", (0.90, 0.74, 0.46), 0.9)
 BROT_D = mat("kruemel_dunkel", (0.72, 0.52, 0.28), 0.9)
+KAESE = mat("kaese", (0.95, 0.72, 0.15), 0.5)
+
+
+def brot_material(name, hell, dunkel, poren):
+    m = mat(name, hell, 0.95)
+    nt = m.node_tree
+    b = nt.nodes.get("Principled BSDF")
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    rausch = nt.nodes.new("ShaderNodeTexNoise")
+    rausch.inputs["Scale"].default_value = 35
+    rausch.inputs["Detail"].default_value = 6
+    zellen = nt.nodes.new("ShaderNodeTexVoronoi")
+    zellen.inputs["Scale"].default_value = poren
+    rampe = nt.nodes.new("ShaderNodeValToRGB")
+    rampe.color_ramp.elements[0].position = 0.0
+    rampe.color_ramp.elements[0].color = (*dunkel, 1)
+    rampe.color_ramp.elements[1].position = 0.22
+    rampe.color_ramp.elements[1].color = (*hell, 1)
+    mix = nt.nodes.new("ShaderNodeMix")
+    mix.data_type = "RGBA"
+    mix.blend_type = "MULTIPLY"
+    mix.inputs[0].default_value = 0.35
+    bump = nt.nodes.new("ShaderNodeBump")
+    bump.inputs["Strength"].default_value = 0.6
+    nt.links.new(tc.outputs["Object"], rausch.inputs["Vector"])
+    nt.links.new(tc.outputs["Object"], zellen.inputs["Vector"])
+    nt.links.new(zellen.outputs["Distance"], rampe.inputs["Fac"])
+    nt.links.new(rampe.outputs["Color"], mix.inputs[6])
+    nt.links.new(rausch.outputs["Color"], mix.inputs[7])
+    nt.links.new(mix.outputs[2], b.inputs["Base Color"])
+    nt.links.new(zellen.outputs["Distance"], bump.inputs["Height"])
+    nt.links.new(bump.outputs["Normal"], b.inputs["Normal"])
+    return m
+
+
+TOAST = brot_material("toast", (0.95, 0.84, 0.60), (0.62, 0.44, 0.22), 160)
+KRUME = brot_material("krume", (0.93, 0.80, 0.55), (0.60, 0.42, 0.20), 60)
+RINDE_B = brot_material("brotrinde", (0.55, 0.33, 0.13), (0.30, 0.16, 0.05), 120)
 KRUSTE = mat("kruste", (0.50, 0.30, 0.12), 0.85)
 SCHINKEN = mat("schinken", (0.85, 0.42, 0.40), 0.6)
 SALAT = mat("salat", (0.30, 0.55, 0.15), 0.6)
@@ -534,26 +572,50 @@ modell("tea_set_01", (TXM - 0.50, TYM - 0.05, TZ), 1.9, dreh=R(90), grp="teekann
 for i, x in enumerate((TXM + 0.02, TXM + 0.56)):
     modell("tea_set_01", (x, TYM - 0.16, TZ), 1.9, grp="tassen", teile=["tea_set_01_saucer_circular_03"])
     modell("tea_set_01", (x, TYM - 0.16, TZ + 0.012), 1.9, dreh=R(40 + i * 100), grp="tassen", teile=["tea_set_01_cup_small_01"])
-loeffel = modell("wooden_spoon", (TXM + 0.29, TYM - 0.24, TZ + 0.02), 2.1, dreh=R(45), grp="tassen", ersatz=SILBER)   # schraeg, damit man Stiel und Laffe sieht
+loeffel = modell("wooden_spoon", (TXM + 0.29, TYM - 0.24, TZ + 0.001), 2.1, dreh=R(45), grp="tassen", ersatz=SILBER)   # schraeg, damit man Stiel und Laffe sieht
 KEX, KEY = TXM + 0.30, TYM + 0.22
 modell("brass_candleholders", (KEX, KEY, TZ), 0.9, teile=["brass_candleholder_02"])
-cyl("kerze", 0.022, 0.16, (KEX, KEY, TZ + 0.43), WACHS, verts=12)
-cone("kerze_flamme", 0.018, 0.075, (KEX, KEY, TZ + 0.56), FLAMME_KLEIN, verts=12, glatt=True)
-SWX, SWY = TXM + 0.05, TYM - 0.45   # angebissenes Sandwich: zwei Scheiben, Schinken und Salat dazwischen
-BX, BY_ = SWX + 0.040, SWY - 0.086   # Mitte des Bisses an der vorderen Kante
+# Angebissenes Sandwich: dreieckig geschnittenes Toastbrot, Schnittkante mit Schinken, Kaese und Salat zeigt zur Kamera
+SWX, SWY, SWW, SWL = TXM + 0.05, TYM - 0.45, R(10), 0.44   # Mitte der Schnittkante, Drehung, Laenge der Schnittkante
+
+
+def sw_ort(x, y):
+    return (SWX + x * math.cos(SWW) - y * math.sin(SWW), SWY + x * math.sin(SWW) + y * math.cos(SWW))
+
+
+def dreieck(name, z0, hoehe, material, mass=1.0, fase=0.006):
+    a = SWL / 2 * mass
+    pkt = [(-a, 0, 0), (a, 0, 0), (0, a, 0), (-a, 0, hoehe), (a, 0, hoehe), (0, a, hoehe)]
+    netz = bpy.data.meshes.new(name)
+    netz.from_pydata(pkt, [], [(0, 2, 1), (3, 4, 5), (0, 1, 4, 3), (1, 2, 5, 4), (2, 0, 3, 5)])
+    netz.update()
+    ob = bpy.data.objects.new(name, netz)
+    scene.collection.objects.link(ob)
+    ob.location = (SWX, SWY, z0)
+    ob.rotation_euler = (0, 0, SWW)
+    m = ob.modifiers.new("fase", "BEVEL")
+    m.width = fase
+    m.segments = 2
+    return fertig(ob, name, material, "kruemel")
+
+
+sandwich = [
+    dreieck("sandwich_unten", 0.0, 0.042, TOAST),
+    dreieck("sandwich_schinken", 0.042, 0.012, SCHINKEN, 1.03, 0.003),
+    dreieck("sandwich_kaese", 0.054, 0.010, KAESE, 1.01, 0.003),
+    dreieck("sandwich_salat", 0.064, 0.010, SALAT, 1.07, 0.003),
+    dreieck("sandwich_oben", 0.074, 0.042, TOAST, 0.98),
+]
+for z in (0.021, 0.095):   # dunkle Rinde an den beiden Aussenkanten jeder Scheibe
+    for s_ in (-1, 1):
+        x, y = sw_ort(s_ * SWL / 4, SWL / 4)
+        sandwich.append(box("sandwich_rinde", (SWL / math.sqrt(2), 0.014, 0.04), (x, y, z), RINDE_B, "kruemel", rot=(0, 0, SWW - s_ * R(45))))
 biss = []
-for dx, dy in ((-0.052, 0.008), (0.0, -0.012), (0.052, 0.008)):   # drei Boegen = Zahnabdruck
-    z = cyl("biss", 0.045, 0.4, (BX + dx, BY_ + dy, 0.05), BROT, verts=20)
+BX, BY_ = sw_ort(SWL / 2 - 0.085, 0.02)   # Biss an der rechten Spitze: drei Boegen = Zahnabdruck
+for dx, dy in ((-0.055, -0.03), (0.0, 0.0), (0.03, 0.055), (0.07, -0.02), (0.11, 0.0)):   # die letzten zwei nehmen die Spitze ganz weg
+    z = cyl("biss", 0.05, 0.4, (BX + dx, BY_ + dy, 0.05), TOAST, verts=20)
     z.hide_render = True
     biss.append(z)
-sandwich = [
-    weich(box("sandwich_unten", (0.27, 0.19, 0.04), (SWX, SWY, 0.022), BROT, "kruemel", rot=(0, 0, R(25))), 0.01),
-    weich(box("sandwich_schinken", (0.285, 0.20, 0.016), (SWX, SWY, 0.05), SCHINKEN, "kruemel", rot=(0, 0, R(29))), 0.004),
-    weich(box("sandwich_salat", (0.295, 0.205, 0.012), (SWX + 0.005, SWY, 0.064), SALAT, "kruemel", rot=(0, 0, R(21))), 0.003),
-    weich(box("sandwich_oben", (0.27, 0.19, 0.04), (SWX, SWY, 0.09), BROT, "kruemel", rot=(0, R(-5), R(25))), 0.01),
-]
-for dx in (0.10, -0.10):   # Krustenkanten
-    sandwich.append(box("sandwich_rinde", (0.016, 0.19, 0.042), (SWX + dx * math.cos(R(25)) * 1.36, SWY + dx * math.sin(R(25)) * 1.36, 0.09), KRUSTE, "kruemel", rot=(0, 0, R(25))))
 for teil in sandwich:
     for z in biss:
         m = teil.modifiers.new("biss", "BOOLEAN")
@@ -564,13 +626,13 @@ for i in range(170):   # Kruemel: viele winzige, wenige grosse, kantig, dicht am
         kx, ky = rnd.gauss(BX + 0.03, 0.20), rnd.gauss(BY_ - 0.05, 0.15)
     else:
         kx, ky = rnd.uniform(TXM - 0.85, TXM + 0.85), rnd.uniform(TYM - 0.85, TYM + 0.15)
-    if math.hypot(kx - SWX, ky - SWY) < 0.13:
+    if math.hypot(kx - SWX, ky - SWY - 0.08) < 0.20:
         continue
-    g = 0.006 + 0.034 * rnd.random() ** 3.2
+    g = 0.005 + 0.021 * rnd.random() ** 2.6
     bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, radius=g, location=(kx, ky, g * 0.4), rotation=(rnd.uniform(0, 6.3), rnd.uniform(0, 6.3), rnd.uniform(0, 6.3)))
     k = bpy.context.object
     k.scale = (rnd.uniform(0.7, 1.5), rnd.uniform(0.6, 1.2), rnd.uniform(0.4, 0.9))
-    fertig(k, "kruemel", KRUSTE if rnd.random() < 0.22 else (BROT if rnd.random() < 0.65 else BROT_D), "kruemel")
+    fertig(k, "kruemel", RINDE_B if rnd.random() < 0.22 else (KRUME if rnd.random() < 0.65 else TOAST), "kruemel")
 
 # Stuhl, leicht gedreht; die Uniformjacke von Mr Pike faellt als Stoff ueber die Lehne (tower_jacke.py)
 SX, SY, SW = 1.05, -4.25, R(-24)
@@ -654,7 +716,7 @@ licht("feuer", "POINT", 330, (1.0, 0.34, 0.08), (0, -0.62, 0.72), weich_=0.3)
 licht("feuer_glut", "POINT", 60, (1.0, 0.14, 0.02), (0, -0.80, 0.18), weich_=0.2)
 licht("laterne", "POINT", 110, (1.0, 0.55, 0.20), (LX, LY - 0.22, LZ + 0.30))
 licht("ecklaterne", "POINT", 42, (1.0, 0.55, 0.20), (EX + 0.22, EY, EZ + 0.20))
-licht("kerze", "POINT", 26, (1.0, 0.62, 0.25), (KEX, KEY - 0.04, TZ + 0.66), weich_=0.05)
+licht("kerze", "POINT", 26, (1.0, 0.62, 0.25), (KEX, KEY - 0.06, TZ + 0.46), weich_=0.05)
 licht("wandkerze", "POINT", 48, (1.0, 0.58, 0.22), (WKX, -0.42, WKZ + 0.30), weich_=0.05)
 licht("raum", "AREA", 30, (1.0, 0.62, 0.38), (0, -5.0, 3.2), groesse=5.0)
 licht("vorn", "AREA", 95, (1.0, 0.60, 0.36), (-0.5, -9.3, 2.4), rot=(R(72), 0, 0), groesse=4.0)

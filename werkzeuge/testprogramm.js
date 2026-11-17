@@ -190,13 +190,18 @@ async function probe3dTest(browser, basis, app, name, fm) {
       await pg.click(`#kameras button[data-kamera="${k}"]`); await pg.waitForTimeout(200);
       if ((await pg.evaluate(() => document.getElementById("buehne").dataset.kamera)) !== k) fehl.push(`${titel}: Kamera „${k}“ lässt sich nicht wählen`);
     }
-    // Figuren-Probe: Gary auf drei Arten, alle können sich verbeugen und gehen
-    const garys = () => pg.evaluate(() => window.__probe3d.garys());
-    if ((await garys()).length !== 3) fehl.push(`${titel}: es stehen nicht drei Garys im Raum`);
-    await pg.click('#garys button[data-gary="verbeugen"]'); await pg.waitForTimeout(200);
-    if (!(await garys()).every((g) => g.modus === "verbeugen")) fehl.push(`${titel}: nicht alle Garys verbeugen sich`);
-    await pg.click('#garys button[data-gary="gehen"]'); await pg.waitForTimeout(1500);
-    if (!(await garys()).every((g) => g.modus === "gehen" && g.weg > 0.05)) fehl.push(`${titel}: nicht alle Garys gehen`);
+    // Figuren (Block A): Gary endgültig – KayKit-Körper mit eigenem Kopf; Stehen, Gehen, Reden, Verbeugen und drei Gesten
+    const figuren = () => pg.evaluate(() => window.__probe3d.figuren());
+    const namen = (await figuren()).map((g) => g.name).join(",");
+    if (namen !== "gary") fehl.push(`${titel}: im Raum stehen „${namen}“ statt nur Gary`);
+    for (const m of ["reden", "verbeugen", "zaubern", "tadaa", "schreck", "stehen"]) {
+      await pg.click(`#figuren button[data-figur="${m}"]`); await pg.waitForTimeout(200);
+      if (!(await figuren()).every((g) => g.modus === m)) fehl.push(`${titel}: Gary kann nicht „${m}“`);
+    }
+    await pg.click('#figuren button[data-figur="gehen"]'); await pg.waitForTimeout(1500);
+    if (!(await figuren()).every((g) => g.modus === "gehen" && g.weg > 0.05)) fehl.push(`${titel}: Gary geht nicht`);
+    const ordner = path.join(__dirname, "..", app.pfad, "tower", "figuren");   // Körper und Bewegungen nur einmal, jede Datei unter 1 MB
+    for (const d of fs.readdirSync(ordner)) if (d.endsWith(".glb") && fs.statSync(path.join(ordner, d)).size > 1e6) fehl.push(`${titel}: figuren/${d} ist größer als 1 MB`);
     for (const b of await zuBreit(pg)) fehl.push(`${titel}: ${b}`);
   } catch (e) {
     const meldung = await pg.locator("#laden").textContent().catch(() => "?");

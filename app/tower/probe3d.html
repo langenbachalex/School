@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Guard Room in 3D – Probe mit Figur, drei Kameras und drei Garys</title>
+<title>Guard Room in 3D – Probe mit Figur, drei Kameras und Gary</title>
 <!-- Probe 17.11.2026 (Keys of the Tower): der Guard Room als echtes 3D im Browser, mit einer Spielfigur und drei Kameras zum Vergleichen.
      Raum: raum3d/guardroom.glb + guardroom3d.json aus werkzeuge/blender/tower_gltf.py (Licht eingebrannt, Gehkarte, Lichter).
      Figur: figuren/kind.glb aus werkzeuge/blender/tower_kind.py (Gelenke, die diese Seite selbst bewegt).
@@ -20,9 +20,9 @@
   #kameras span { font-size: 13px; opacity: .8; }
   #kameras button { min-height: 46px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
   #kameras button[aria-pressed="true"] { background: #e9b45a; color: #1b1008; font-weight: 600; }
-  #garys { right: 10px; top: 228px; display: grid; gap: 6px; padding: 8px; pointer-events: auto; }
-  #garys span { font-size: 13px; opacity: .8; }
-  #garys button { min-height: 44px; padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
+  #figuren { right: 10px; top: 228px; display: grid; gap: 6px; padding: 8px; pointer-events: auto; }
+  #figuren span { font-size: 13px; opacity: .8; }
+  #figuren button { min-height: 44px; padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
   #hilfe { left: 10px; bottom: 18px; font-size: 13px; max-width: min(44vw, 300px); }
   #text { left: 50%; transform: translateX(-50%); bottom: 18px; width: min(92vw, 560px); text-align: center; font-size: 19px; }
   #text small { display: block; opacity: .75; font-size: 14px; }
@@ -43,11 +43,15 @@
   <button type="button" data-kamera="puppenhaus" aria-pressed="false">2 · Puppenhaus</button>
   <button type="button" data-kamera="augen" aria-pressed="false">3 · Mit eigenen Augen</button>
 </div>
-<div id="garys" class="kasten" hidden>
-  <span>Die drei Garys</span>
-  <button type="button" data-gary="stehen">Stehen</button>
-  <button type="button" data-gary="gehen">Gehen</button>
-  <button type="button" data-gary="verbeugen">Verbeugen</button>
+<div id="figuren" class="kasten" hidden>
+  <span>Gary the Great</span>
+  <button type="button" data-figur="stehen">Stehen</button>
+  <button type="button" data-figur="gehen">Gehen</button>
+  <button type="button" data-figur="reden">Reden</button>
+  <button type="button" data-figur="verbeugen">Verbeugen</button>
+  <button type="button" data-figur="zaubern">Zaubern</button>
+  <button type="button" data-figur="tadaa">Ta-daa!</button>
+  <button type="button" data-figur="schreck">Erschrecken</button>
 </div>
 <div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
@@ -55,7 +59,7 @@
 <script type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
-import { baueGarys } from "./probe3d_garys.js";
+import { ladeFiguren } from "./probe3d_figuren.js";
 
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
@@ -157,9 +161,9 @@ try {
     const p = new THREE.PointLight(new THREE.Color(...l.farbe), l.watt / 12, 0, 2);
     p.position.copy(ausBlender(l.ort)); szene.add(p);
   }
-  // Figuren-Probe: Gary auf drei Arten, rechts im Raum nebeneinander (Bahnen zum Gehen in Richtung Tür)
-  const garys = await baueGarys(lader, szene, [1.1, 2.1, 3.1].map((x) => zuOrt(...naechsteFreie(x, 6.0))));
-  for (const b of document.querySelectorAll("#garys button")) b.addEventListener("click", () => { garys.befehl(b.dataset.gary); buehne.dataset.gary = b.dataset.gary; });
+  // Figuren (Block A): Gary rechts im Raum, mit einer Bahn zum Gehen in Richtung Tür
+  const figuren = await ladeFiguren(lader, szene, { gary: zuOrt(...naechsteFreie(2.1, 6.0)) });
+  for (const b of document.querySelectorAll("#figuren button")) b.addEventListener("click", () => { figuren.befehl(b.dataset.figur); buehne.dataset.figur = b.dataset.figur; });
   const startZelle = naechsteFreie(0, raum.max.z - 2.6), startOrt = zuOrt(...startZelle);
   const figur = { x: startOrt.x, z: startOrt.z, dreh: Math.PI, pfad: [], phase: 0, geht: 0, dann: null, blick: null };
   const winkelZu = (a, b) => { let d = (b - a) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; };
@@ -343,7 +347,7 @@ try {
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1); zuletzt = t;
     bewegeFigur(dt, t);
-    garys.bewege(dt, t);
+    figuren.bewege(dt, t);
     setzeKamera(dt);
     renderer.render(szene, kamera);
     bilder++;
@@ -355,11 +359,11 @@ try {
   });
 
   ladezeit = (performance.now() / 1000).toFixed(1); bereitSeit = performance.now();   // Zeit seit dem Aufruf der Seite
-  for (const id of ["mess", "hilfe", "kameras", "garys"]) $(id).hidden = false;
+  for (const id of ["mess", "hilfe", "kameras", "figuren"]) $(id).hidden = false;
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, garys: () => garys.liste(), stand: () => [figur.x, figur.z], boden: () => {      // eine freie, sichtbare Bodenstelle 1,5 bis 3 m neben der Figur
+  window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), stand: () => [figur.x, figur.z], boden: () => {      // eine freie, sichtbare Bodenstelle 1,5 bis 3 m neben der Figur
     setzeKamera(0); kamera.updateMatrixWorld();
     for (let j = 0; j < NY; j += 2) for (let i = 0; i < NX; i += 2) {
       const p = zuOrt(i, j), d = Math.hypot(p.x - figur.x, p.z - figur.z);

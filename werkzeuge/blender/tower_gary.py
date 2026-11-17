@@ -1,11 +1,10 @@
-"""Gary the Great (Fuchs mit Zauberhut) fuer die Figuren-Probe 17.11.2026 – drei Arten nebeneinander.
+"""Gary the Great (Fuchs mit Zauberhut): Kopf und Schwanz fuer den KayKit-Koerper (Block A, 17.11.2026).
 
 Aufruf:  blender -b --python werkzeuge/blender/tower_gary.py      (wenige Sekunden)
-Ausgabe in app/tower/figuren/:
-  gary1.glb       Art 1: ganze Figur per Skript, an benannten Gelenken (wie kind.glb); der Browser bewegt die Gelenke.
-  gary_teile.glb  Fuchskopf mit Hut ("fuchskopf") und Schwanz ("fuchsschwanz") als Einzelteile. Die Probe-Seite steckt sie
-                  auf die Grundfiguren von Art 2 (Mixamo) und Art 3 (KayKit) – so wie spaeter Kleidung im Baukasten.
-Formen und Farben wie in tower_figuren.gary(). Die Figur schaut nach -y (im Browser nach vorn, +z).
+Ausgabe: app/tower/figuren/gary_teile.glb mit Fuchskopf samt Hut ("fuchskopf") und Schwanz ("fuchsschwanz").
+Der Browser (app/tower/probe3d_figuren.js) steckt beides auf den Koerper figuren/koerper_mage.glb – so wie spaeter Kleidung.
+Die ganze Figur per Skript (Art 1 der Probe, gary1.glb) ist seit der Entscheidung vom 17.11. entfallen; sie steht in der Git-Geschichte.
+Formen und Farben wie in tower_figuren.gary(). Die Teile schauen nach -y (im Browser nach vorn, +z).
 """
 import math
 import os
@@ -140,36 +139,7 @@ def ausgabe(datei):
     print(f"GARY {datei}: {os.path.getsize(ziel) / 1000:.0f} KB", flush=True)
 
 
-# ---------- Art 1: ganze Figur per Skript, Gelenke wie bei kind.glb ----------
-neu()
-f = farben()
-wurzel = gelenk("wurzel", None, (0, 0, 0))
-huefte = gelenk("huefte", wurzel, (0, 0, 0.345))
-kugel("becken", huefte, (0, 0.01, 0), (0.19, 0.17, 0.165), f["orange"])
-for seite, v in (("l", 1), ("r", -1)):
-    bein = gelenk("bein_" + seite, huefte, (0.10 * v, 0, -0.05))
-    kugel("oberschenkel", bein, (0, 0, -0.07), (0.07, 0.075, 0.10), f["orange"])
-    knie = gelenk("knie_" + seite, bein, (0, 0, -0.13))
-    kugel("unterschenkel", knie, (0, 0, -0.055), (0.06, 0.065, 0.085), f["orange"])
-    kugel("fuss", knie, (0, -0.05, -0.125), (0.062, 0.105, 0.04), f["schwarz"])
-rumpf = gelenk("rumpf", huefte, (0, 0, 0.04))
-kugel("brust", rumpf, (0, 0, 0.13), (0.17, 0.15, 0.23), f["orange"])
-kugel("latz", rumpf, (0, -0.085, 0.14), (0.105, 0.08, 0.17), f["weiss"])
-kugel("hals", rumpf, (0, -0.01, 0.33), (0.075, 0.068, 0.08), f["orange"])
-for seite, v in (("l", 1), ("r", -1)):
-    arm = gelenk("arm_" + seite, rumpf, (0.165 * v, 0, 0.25))
-    kugel("oberarm", arm, (0.015 * v, 0, -0.085), (0.045, 0.045, 0.105), f["orange"])
-    ell = gelenk("ellbogen_" + seite, arm, (0.02 * v, 0, -0.17))
-    kugel("unterarm", ell, (0, 0, -0.075), (0.038, 0.038, 0.09), f["orange"])
-    kugel("pfote", ell, (0, 0, -0.165), (0.045, 0.045, 0.045), f["schwarz"])
-    if seite == "r":   # Zauberstab in der rechten Pfote
-        stab("zauberstab", ell, (0, -0.13, -0.15), 0.011, 0.34, f["holz"], (R(98), 0, 0))
-        kugel("funke", ell, (0, -0.30, -0.125), (0.022, 0.022, 0.022), f["stern"])
-fuchskopf(rumpf, (0, 0, 0.40), name="kopf")
-fuchsschwanz(huefte, (0, 0.13, 0.02), name="schwanz")
-ausgabe("gary1.glb")
-
-# ---------- Einzelteile fuer Art 2 und 3 ----------
+# ---------- Kopf und Schwanz als Einzelteile ----------
 neu()
 fuchskopf(None)
 fuchsschwanz(None)

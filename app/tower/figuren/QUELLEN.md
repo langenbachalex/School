@@ -1,10 +1,14 @@
 # Figuren – Quellen und Lizenzen
 
+Entscheidung Mr. Alex (17.11.2026): Alle Figuren bekommen einen Körper aus „KayKit Adventurers“ und einen eigenen Kopf aus Blender. Körper und Bewegungen werden nur einmal geladen.
+
 | Datei | Herkunft | Lizenz |
 |---|---|---|
 | `kind.glb` | eigenes Skript `werkzeuge/blender/tower_kind.py` | eigenes Werk |
-| `gary1.glb`, `gary_teile.glb` | eigenes Skript `werkzeuge/blender/tower_gary.py` | eigenes Werk |
-| `gary3_kaykit_mage.glb` | „KayKit : Adventurers Character Pack (1.0)“ von Kay Lousberg, Figur „Mage“ mit 76 Bewegungen, unverändert; https://kaylousberg.itch.io/kaykit-adventurers, geladen von https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0 | CC0 (gemeinfrei) |
-| `gary2_mixamo_xbot.glb` | Mixamo-Figur „X Bot“ mit den Bewegungen idle, walk, run u. a., unverändert aus den Beispielen von three.js r170 (`examples/models/gltf/Xbot.glb`) | Mixamo (Adobe): frei nutzbar in eigenen Projekten; nur für diese Probe. Vor einem echten Einsatz die Mixamo-Bedingungen prüfen und eigene Figuren mit dem Adobe-Konto von Mr. Alex laden. |
+| `gary_teile.glb` | eigenes Skript `werkzeuge/blender/tower_gary.py` (Fuchskopf mit Zauberhut, Schwanz) | eigenes Werk |
+| `koerper_mage.glb` | „KayKit : Adventurers Character Pack (1.0)“ von Kay Lousberg, Figur „Mage“ ohne Kopf, Hut, Bücher und langen Stab; https://kaylousberg.itch.io/kaykit-adventurers, geladen von https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0 | CC0 (gemeinfrei) |
+| `kaykit_bewegungen.glb` | dasselbe Paket: Skelett und 12 der 76 Bewegungen (Idle, Walking_A, Running_A, Interact, Cheer, Hit_A, Spellcast_Long, Spellcast_Shoot, Use_Item, PickUp, Throw, Sit_Chair_Idle); gilt für Mage, Knight, Barbarian und Rogue | CC0 (gemeinfrei) |
 
-Kopf, Hut und Schwanz von Gary werden in `probe3d_garys.js` auf die Grundfiguren 2 und 3 gesteckt; die Dateien der Grundfiguren bleiben unverändert.
+Das unveränderte Original liegt in `werkzeuge/blender/quellen/kaykit_mage.glb` (nicht in der App). `node werkzeuge/glb_teilen.js` schneidet daraus die beiden Dateien oben; die Geometrie bleibt unverändert. Kopf und Schwanz steckt `probe3d_figuren.js` auf die Knochen des Körpers.
+
+Nicht mehr dabei (Probe vom 17.11., in der Git-Geschichte): `gary1.glb` (ganze Figur per Skript) und `gary2_mixamo_xbot.glb` (Mixamo-Grundfigur).

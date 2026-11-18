@@ -339,14 +339,28 @@ async function probe3dTest(browser, basis, app, name, fm) {
       await pg.click(`#bau button[data-bau="${art}"]`); await bauTakt(30);
       const reihe = []; for (let k = 0; k < 130; k++) reihe.push(await bauTakt(1));
       const tiefK = Math.min(...reihe.flatMap((x) => [x.fussL[0][0], x.fussR[0][0]])), tiefZ = Math.min(...reihe.flatMap((x) => [x.fussL[1][0], x.fussR[1][0]]));
-      let rutsch = 0, fest = 0;
+      let rutsch = 0, fest = 0, schwebt = 0, auf = 0, knieStand = 180, knieLuft = 180;
       for (let k = 1; k < reihe.length; k++) for (const s of ["L", "R"]) {
-        const [vor, nun] = [reihe[k - 1], reihe[k]].map((x) => ({ fest: x["stand" + s], knoechel: x["fuss" + s][0], zehen: x["fuss" + s][1] }));
+        const [vor, nun] = [reihe[k - 1], reihe[k]].map((x) => ({ fest: x["stand" + s], knoechel: x["fuss" + s][0], zehen: x["fuss" + s][1], ferse: x["ferse" + s], knie: x.knieGrad[s === "L" ? 0 : 1] }));
         const flach = (f) => f.knoechel[0] < tiefK + 0.01 && f.zehen[0] < tiefZ + 0.005;                  // der Fuß liegt flach auf dem Boden (unabhängig von der Meldung „fest“)
-        if ((vor.fest && nun.fest) || (flach(vor) && flach(nun))) rutsch = Math.max(rutsch, Math.abs(nun.knoechel[1] - vor.knoechel[1]));
+        const unten = { ferse: (f) => f.ferse[0] < 0.012, zehen: (f) => f.zehen[0] < tiefZ + 0.005 };
+        if (art === "gehen") {                                                                            // A9: der Fuß rollt ab – fest ist der Punkt, der gerade aufliegt (Ferse, dann Ballen)
+          for (const teil of ["ferse", "zehen"]) if (vor.fest && nun.fest && unten[teil](vor) && unten[teil](nun)) rutsch = Math.max(rutsch, Math.abs(nun[teil][1] - vor[teil][1]));
+          if (nun.fest && !unten.ferse(nun) && !unten.zehen(nun)) schwebt++;
+          if (flach(vor) && flach(nun)) rutsch = Math.max(rutsch, Math.abs(nun.knoechel[1] - vor.knoechel[1]));
+          if (!vor.fest && nun.fest) { auf++; if (nun.knie < 150) fehl.push(`${titel}: beim Gehen setzt der Fuß mit gebeugtem Knie auf (${nun.knie}°, verlangt mind. 150 – sonst wirkt der Gang stampfig)`);
+            if (!(unten.ferse(nun) && nun.zehen[0] > tiefZ + 0.02)) fehl.push(`${titel}: beim Gehen setzt der Fuß nicht mit der Ferse zuerst auf (Ferse ${nun.ferse[0]}, Zehen ${nun.zehen[0]} hoch)`); }
+          if (vor.fest && !nun.fest && !(vor.ferse[0] > 0.04 && unten.zehen(vor))) fehl.push(`${titel}: beim Gehen drückt sich der Fuß nicht über den Ballen ab (Ferse ${vor.ferse[0]}, Zehen ${vor.zehen[0]} hoch)`);
+          if (nun.fest) knieStand = Math.min(knieStand, nun.knie); else knieLuft = Math.min(knieLuft, nun.knie);
+        } else if ((vor.fest && nun.fest) || (flach(vor) && flach(nun))) rutsch = Math.max(rutsch, Math.abs(nun.knoechel[1] - vor.knoechel[1]));
         if (nun.fest) fest++;
       }
       if (rutsch > 0.012) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} gleitet der Standfuß der Probe-Figur über den Boden (${Math.round(rutsch * 1000)} mm in einem Bild, erlaubt 12)`);
+      if (art === "gehen") {
+        if (auf < 2) fehl.push(`${titel}: beim Gehen wurde kein Aufsetzen eines Fußes gemessen`);
+        if (schwebt > 0) fehl.push(`${titel}: beim Gehen liegt der Standfuß in ${schwebt} Bildern weder mit der Ferse noch mit dem Ballen auf`);
+        if (!(knieLuft < 130 && knieStand >= 130)) fehl.push(`${titel}: beim Gehen soll das Knie vor allem in der Schwungphase beugen (kleinster Kniewinkel in der Luft ${knieLuft}°, am Boden ${knieStand}°)`);
+      }
       if (fest / reihe.length < anteil) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} steht zu selten ein Fuß fest am Boden (${fest} von ${reihe.length} Bildern)`);
       let ruck = 0; for (let k = 2; k < reihe.length; k++) ruck = Math.max(ruck, Math.abs(reihe[k].huefte - 2 * reihe[k - 1].huefte + reihe[k - 2].huefte));
       if (ruck > ruckMax) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} ruckt die Hüfte der Probe-Figur (Sprung von ${(ruck * 1000).toFixed(1)} mm zwischen zwei Bildern, erlaubt ${ruckMax * 1000})`);
@@ -361,6 +375,11 @@ async function probe3dTest(browser, basis, app, name, fm) {
       for (let k = 0; k < 90; k++) { const x = await bauTakt(2); if (x.modus !== knopf) break; werte.push(lies(x)); }
       await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30); return werte;
     };
+    // A9 (Mr. Alex 18.11.): Hut von Mr. Flex – Zipfel steht spitz nach oben, Krempe fällt in einer Rundung ab, kein Band, eigene matte Farbe
+    const hm = (await bauTakt(1)).hutMass;
+    if (!hm || hm.hoch < 1.2 || hm.hinten > 0.2) fehl.push(`${titel}: der Zipfel am Hut der Probe-Figur steht nicht nach oben (${JSON.stringify(hm)}; verlangt Höhe ab 1,2, höchstens 0,2 hinter der Achse)`);
+    else if (hm.band || !hm.eigeneFarbe) fehl.push(`${titel}: der Hut der Probe-Figur hat noch Band oder die alte Farbe (${JSON.stringify(hm)})`);
+    else if (!(hm.bogen > 0.02 && hm.faellt > 0.1)) fehl.push(`${titel}: die Hutkrempe der Probe-Figur ist eine gerade Scheibe statt einer abfallenden Rundung (${JSON.stringify(hm)})`);
     const zehen = await ganz("wippen", (x) => x.zehe);
     if (Math.max(...zehen) - Math.min(...zehen) < 0.05) fehl.push(`${titel}: beim Fußwippen bewegt sich der Fuß nicht (Zehen heben sich nur ${Math.round((Math.max(...zehen) - Math.min(...zehen)) * 1000)} mm)`);
     await pg.click('#bau button[data-bau="mabu"]'); b = await bauTakt(50);

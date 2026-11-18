@@ -120,6 +120,18 @@ def ausgeben(scene, cam, ziel, dinge):
     # ---- 2. vereinfachen (nur wenn noetig), abwickeln, einbrennen ----
     scene.render.engine = "CYCLES"
     scene.cycles.device = "CPU"
+    if os.environ.get("GERAET") == "GPU":          # Einbrennen auf der Grafikkarte (AlexPC: Radeon ueber HIP, HIP RT bleibt aus); Standard bleibt der Prozessor
+        cp = bpy.context.preferences.addons["cycles"].preferences
+        cp.compute_device_type = "HIP"
+        cp.refresh_devices()
+        if hasattr(cp, "use_hiprt"):
+            cp.use_hiprt = False
+        karten = [d for d in cp.devices if d.type == "HIP"]
+        for d in cp.devices:
+            d.use = d.type == "HIP"
+        if karten:
+            scene.cycles.device = "GPU"
+        print("GERAET", scene.cycles.device, [d.name for d in karten], flush=True)
     scene.cycles.samples = SAMPLES
     scene.cycles.max_bounces = 5
     scene.cycles.use_denoising = True

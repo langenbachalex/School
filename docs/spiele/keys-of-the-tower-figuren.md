@@ -150,6 +150,7 @@ Entschieden: Gestik gehört zu allen Figuren (Probe an Gary „im Prinzip wirkli
 - Gang: eigenes Tempo und eigene Schrittlänge; Rennen je Figur.
 - Grundausdruck beim Reden (z. B. leichtes Lächeln).
 **Gary:** sehr fröhlich, unruhiger wacher Blick, hektisch, kurze schnelle Gesten, lächelt beim Reden, wird nach dem Zaubern stolz (Ausdruck „Stolz“: Kinn hoch, Augen halb zu, zufriedenes Lächeln). Erschrecken und Zaubern sind gut. Überrascht darf freudiger sein. Rennen eventuell schneller.
+**Gary abgenommen (Mr. Alex 18.11., Schritt 1e):** Das Gesicht mit seinen Teilenamen ist die Vorlage für alle Köpfe (Liste in `docs/ideenspeicher.md`, Zeile 10e, und im Kopf von `werkzeuge/blender/tower_gary.py`). Überrascht wirkt noch ein bisschen fröhlich – für Mr. Alex in Ordnung, nicht ändern. **Vorgemerkt, noch nicht bauen:** weitere Ausdrücke mit feinen Nuancen, z. B. „beleidigt“ · die Gestik beim Reden an die Rede anpassen (passende Rede-Gesten, Regie-Tags aus den Tabellen).
 **Noch offen (gemeinsam genauer durchgehen):** Profile für Sergeant (zackig), Arthur (sparsam, langsam), Taube (aufgeregt), Mr. Flex; echte Rede-Gesten (Winken, Zeigen, Achselzucken) – zuerst in den 133 KayKit-Bewegungen suchen, sonst fünf bis sechs selbst bauen; Ausdruck und Geste aus der Regie-Spalte der Texttabellen.
 
 ### Rivalität der zwei Zauberer – Ausbau, kein neues Modell (Mr. Alex 18.11., abgeglichen mit den Blättern oben)

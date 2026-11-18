@@ -328,14 +328,14 @@ async function probe3dTest(browser, basis, app, name, fm) {
     await pg.click('#bau button[data-bau="denken"]'); b = await bauTakt(70);
     if (!(b.flaecheL[2] > 0.42)) fehl.push(`${titel}: beim Nachdenken liegt die linke Hand nicht mit Abstand vor dem Bauch (Tiefe ${b.flaecheL[2]}, verlangt über 0,42)`);
     await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
-    for (const [pose, mindestens] of [["pubu", 0.8], ["mabu", 0.8], ["xubu", 0.8], ["spagat", 0.8], ["rolle", 0.8], ["kick", 0.45]]) {   // der Kick faltet das Knie ganz zusammen, dort reicht weniger
+    for (const [pose, mindestens] of [["pubu", 0.8], ["mabu", 0.8], ["xubu", 0.8], ["spagat", 0.8], ["rolle", 0.8], ["kick", 0.7]]) {   // A8: zwei Ringe am Knie (abgeschrägte Ecke); beim Kick ist das Knie ganz gefaltet, dort reicht etwas weniger
       await pg.click(`#bau button[data-bau="${pose}"]`); let duenn = 9;
       for (let k = 0; k < 40; k++) { b = await bauTakt(3); if (b.modus !== pose) break; duenn = Math.min(duenn, b.knieDick); }
       if (duenn < mindestens) fehl.push(`${titel}: bei „${pose}“ wird das Bein am Knie zu dünn (${Math.round(duenn * 100)} % der Dicke, verlangt ${mindestens * 100} %)`);
       await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
     }
     await pg.evaluate(() => window.__probe3d.bauBahn(60));                        // lange Strecke: ohne Wenden messen
-    for (const [art, anteil] of [["gehen", 0.6], ["rennen", 0.08]]) {
+    for (const [art, anteil, ruckMax] of [["gehen", 0.6, 0.006], ["rennen", 0.28, 0.016]]) {   // A8: beim Rennen längerer Bodenkontakt; die Hüfte läuft ohne Ruck
       await pg.click(`#bau button[data-bau="${art}"]`); await bauTakt(30);
       const reihe = []; for (let k = 0; k < 130; k++) reihe.push(await bauTakt(1));
       const tiefK = Math.min(...reihe.flatMap((x) => [x.fussL[0][0], x.fussR[0][0]])), tiefZ = Math.min(...reihe.flatMap((x) => [x.fussL[1][0], x.fussR[1][0]]));
@@ -348,11 +348,34 @@ async function probe3dTest(browser, basis, app, name, fm) {
       }
       if (rutsch > 0.012) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} gleitet der Standfuß der Probe-Figur über den Boden (${Math.round(rutsch * 1000)} mm in einem Bild, erlaubt 12)`);
       if (fest / reihe.length < anteil) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} steht zu selten ein Fuß fest am Boden (${fest} von ${reihe.length} Bildern)`);
+      let ruck = 0; for (let k = 2; k < reihe.length; k++) ruck = Math.max(ruck, Math.abs(reihe[k].huefte - 2 * reihe[k - 1].huefte + reihe[k - 2].huefte));
+      if (ruck > ruckMax) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} ruckt die Hüfte der Probe-Figur (Sprung von ${(ruck * 1000).toFixed(1)} mm zwischen zwei Bildern, erlaubt ${ruckMax * 1000})`);
       const strecke = reihe[reihe.length - 1].weg - reihe[0].weg, soll = reihe[0][art] * (reihe.length - 1) * 0.0167;
       if (Math.abs(strecke - soll) > 0.1 * soll) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} passt der Weg (${strecke.toFixed(2)} m) nicht zum Tempo (${soll.toFixed(2)} m)`);
     }
     await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
     await pg.evaluate(() => window.__probe3d.bauBahn(0));                         // zurück auf die Bahn im Raum
+    // A8 (Mr. Alex 18.11.): Ma Bu unter dem Kragen, Fußwippen wippt, nichts durch die Hutkrempe, Ellbogen hält sein Volumen, Hände außen herum an die Hüften
+    const ganz = async (knopf, lies) => {                                        // spielt eine Geste ganz durch und sammelt je Bild einen Wert
+      await pg.click(`#bau button[data-bau="${knopf}"]`); const werte = [];
+      for (let k = 0; k < 90; k++) { const x = await bauTakt(2); if (x.modus !== knopf) break; werte.push(lies(x)); }
+      await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30); return werte;
+    };
+    const zehen = await ganz("wippen", (x) => x.zehe);
+    if (Math.max(...zehen) - Math.min(...zehen) < 0.05) fehl.push(`${titel}: beim Fußwippen bewegt sich der Fuß nicht (Zehen heben sich nur ${Math.round((Math.max(...zehen) - Math.min(...zehen)) * 1000)} mm)`);
+    await pg.click('#bau button[data-bau="mabu"]'); b = await bauTakt(50);
+    for (const s of ["R", "L"]) if (!(b["hoch" + s][1] < b["hoch" + s][0] - 0.2 && b["hoch" + s][2] < b["hoch" + s][0] - 0.2)) fehl.push(`${titel}: im Ma Bu liegen die Arme nicht unter dem Kragen (Schulter, Ellbogen, Handgelenk ${s === "R" ? "rechts" : "links"}: ${b["hoch" + s].join(" / ")})`);
+    await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
+    for (const [knopf, erlaubt] of [["highfive", 0], ["salut", 0], ["mahnen", 0], ["bizeps", 0], ["abwinken", 0], ["stirn", 1], ["brille", 1]]) {   // Stirn und Brille: ein Finger liegt direkt unter der Krempe
+      const hut = Math.max(...(await ganz(knopf, (x) => x.hut)));
+      if (hut > erlaubt) fehl.push(`${titel}: bei „${knopf}“ geht die Hand durch den Hut der Probe-Figur (${hut} Messpunkte in Krempe oder Kappe)`);
+    }
+    for (const knopf of ["bizeps", "denken", "tee", "mabu", "highfive"]) {
+      const arm = Math.min(...(await ganz(knopf, (x) => x.armDick)));
+      if (arm < 0.9) fehl.push(`${titel}: bei „${knopf}“ wird der Arm am Ellbogen zu dünn (${Math.round(arm * 100)} % der Dicke, verlangt 90 %)`);
+    }
+    const mantel = Math.min(...(await ganz("hueften", (x) => Math.min(...["R", "L"].map((s) => (x["flaeche" + s][0] / 0.4) ** 2 + (x["flaeche" + s][2] / 0.34) ** 2)))));
+    if (mantel < 1) fehl.push(`${titel}: bei „Hände in die Hüften“ geht eine Hand auf dem Weg durch den Mantel (Maß ${mantel.toFixed(2)}, außerhalb ab 1)`);
     await pg.evaluate(() => window.__probe3d.halt(false));
     await pg.click('#bau button[data-hand="zeigen"]');
     if ((await bau()).wahl !== "zeigen") fehl.push(`${titel}: Hände der Probe-Figur lassen sich nicht wechseln`);

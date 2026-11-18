@@ -15,12 +15,17 @@ import * as THREE from "three";
 
 export const BAU_START = { arm: 1.8, bein: 3.0, kopf: 0.66, rumpf: 1.16, knie: 0.56 };   // endgültige Maße von Mr. Alex für Mr. Flex (18.11.)
 const HAND = 1.7, HALS = 0.785;                        // Handgröße (Mr. Alex 18.11.: die Dicke passt) · Halshöhe des ungestreckten Körpers wie bei Gary
-const STIEFEL = { kante: 0.335, knie: 0.42 };          // Mage-Körper: bis hier reicht der Stiefel · bis hier der Ring direkt über dem Knie (Höhen im ungestreckten Körper)
+const STIEFEL = { kante: 0.335, knie: 0.42, hose: 0.48 };          // Mage-Körper: bis hier reicht der Stiefel · bis hier der Ring direkt über dem Knie (Höhen im ungestreckten Körper)
 const MANTEL = { ab: 0.56, tief: 0.2, anteil: 0.8, vornAb: 0.84, vornTief: 0.46 };   // Mage-Körper: unterhalb `ab` folgt der Mantel den Oberschenkeln, am Saum mit `anteil`; vorn (Bauchteil) schon ab `vornAb`
 const PLAETZE = { tasche: [[-0.38, 0.53, 0.19], [-0.16, 0.77, 0.40]], buch: [[0.13, 0.53, 0.18], [0.38, 0.84, 0.41]] };   // Mage-Körper: Kästen [von, bis] um Gürteltasche und Buchhalter (x zur linken Seite, y hoch, z nach vorn)
 const GURT = { breit: 0.39, tief: 0.32, unten: 0.625, oben: 0.735, farbe: [0.69, 0.10] };   // Mage-Körper: Gürtel als Ellipse (halbe Breite, halbe Tiefe), Höhe des Bandes, Stelle der Gürtelfarbe im Körperbild
-export const KLEIDUNG_START = { tasche: false, buch: false };   // Mr. Flex trägt beides nicht – die Arme gingen bei vielen Gesten hindurch (Gary hat einen eigenen Körper und behält seine)
-const KNIE_BREIT = 2.2;                                // so viel breiter darf der Knie-Ring im tiefsten Knick höchstens werden
+export const KLEIDUNG_START = { tasche: false, buch: false, krempe: 0.4 };   // Mr. Flex trägt beides nicht – die Arme gingen bei vielen Gesten hindurch (Gary hat einen eigenen Körper und behält seine); krempe = Breite der Hutkrempe (1 = wie das Modell): Mr. Flex trägt einen Spitzhut mit schmaler Krempe, damit die Hände am Kopf nicht hindurchgehen
+const ARM_RING = [0.33, 0.5], ARM_MITTE = 0.42;                           // Mage-Körper: zwischen diesen Abständen von der Mitte liegen die zwei Ringe am Ellbogen
+const KNIE_BREIT = 1.45, KNIE_FASE = 0.07, ARM_FASE = 0.05;   // FASE: so weit vor und hinter dem Gelenk sitzen die zwei Ringe (abgeschrägte Ecke statt Spitze) //                               // so viel breiter dürfen die Ringe an Knie und Ellbogen im tiefsten Knick höchstens werden
+const KREMPE = { innen: 0.52, aussen: 1.11, oben: 0.15, unten: -0.15 };   // Mage-Hut (Maße des Hutes): Krempe von der Kappe (innen, oben) bis zum Rand (aussen, unten)
+const RENN_STAND = 2.2, HUEPF = 0.5, HOEHE_GLATT = { gehen: 14, rennen: 20 };    // Rennen: der Fuß gilt früher und länger als „am Boden“ · Anteil des Flugbogens · so schnell folgt die Höhe der Figur (je Sekunde)
+const MABU_HOCH = -0.12;                                  // Ma Bu: Höhe der Fäuste zur Brust (unter der Kragenkante)
+const SOHLE_FREI = { wippen: "r" };                       // dieser Fuß soll sich bewegen: keine flache Sohle (sonst wippt er nicht)
 const STAND_HOCH = 0.09;                               // so weit über seinem tiefsten Stand gilt der Knöchel noch als „am Boden“ (Maß des ungestreckten Körpers)
 const OHNE_SOHLE = ["gehen", "rennen", "rolle", "spagat"];   // hier bleibt der Fuß, wie die Bewegung ihn führt (Abrollen, Füße in der Luft)
 const R = "offen", Z = "zeigen", F = "faust";
@@ -51,7 +56,12 @@ const dabei = (u, ein0, ein1, aus0, aus1) => weich(u, ein0, ein1) * (1 - weich(u
    Mit `finger` und `flaeche` (Richtung der Finger und Blickrichtung der Handfläche) wird auch die Hand gedreht; das Ziel trifft dann die Mitte der Handfläche.
    pol = wohin der Ellenbogen zeigt. */
 const ZIELE = {
-  hueften: (s, u) => ({ knochen: "hips", ort: [s * 0.41, 0.30, 0.02], reich: 0.3, pol: [s, -0.1, -0.6], gewicht: dabei(u, 0.08, 0.2, 0.82, 0.96) }),   // auf der Kleidung, nicht darin
+  hueften: (s, u) => { const weg = 1 - dabei(u, 0.07, 0.22, 0.8, 0.95);          // A8: der Weg führt außen herum – erst seitlich hinaus, dann an die Hüfte (und so auch zurück)
+    return { knochen: "hips", ort: [s * (0.41 + 0.34 * weg), 0.30, 0.02 + 0.12 * weg], reich: 0.3, pol: [s, -0.1, -0.6], gewicht: dabei(u, 0.0, 0.08, 0.93, 1.0) }; },   // auf der Kleidung, nicht darin
+  /* Bizeps (A8): Die Fäuste stehen neben dem Kopf außerhalb der schmalen Krempe. */
+  bizeps: (s, u) => ({ knochen: "head", ort: [s * 0.98, 0.5, 0.02], reich: 0, pol: [s, -0.35, -0.1], gewicht: dabei(u, 0.1, 0.26, 0.82, 0.96) }),
+  /* Ma Bu (A8): Die Fäuste liegen unter der Kragenkante vor der Brust, Ellbogen nach unten – sonst kommen die Arme mitten aus dem Kragen. */
+  mabu: (s, u) => ({ knochen: "chest", ort: [s * 0.3, MABU_HOCH, 0.8], finger: [0, 0, 1], flaeche: [0, -1, 0], pol: [s * 0.5, -1, -0.3], gewicht: dabei(u, 0.13, 0.24, 0.76, 0.92) }),
   klatschen: (s, u, t) => ({ knochen: "chest", ort: [s * (0.04 + 0.13 * (0.5 - 0.5 * Math.cos((2 * Math.PI * (t - 0.32)) / 0.24))), 0.0, 0.62], finger: [0, 0.45, 0.9], flaeche: [-s, 0, 0],
     pol: [s * 0.7, -1, 0], gewicht: dabei(u, 0.1, 0.22, 0.84, 0.98) }),                                   // die Handflächen treffen sich (0,04 = halbe Handdicke)
   reiben: (s, u, t) => { const hin = 0.05 * Math.sin((2 * Math.PI * t) / 0.3) * s; return { knochen: "chest", ort: [s * 0.04, -0.2 + hin * 0.3, 0.6 + hin], finger: [0, 0.3, 0.95], flaeche: [-s, 0, 0],
@@ -67,29 +77,35 @@ const ZIELE = {
 
 /* Stiefel behalten ihre Länge: Alles unterhalb der Stiefelkante hängt an einem Hilfsknochen, der mit dem Unterschenkel nach unten wandert;
    die Hose über dem Knie gehört ganz zum Oberschenkel. So wächst nur die Hose.
-   Der Ring am Knie hängt an einem eigenen Knie-Gelenk (A7): Hinge er am Unterschenkel, stünde er im tiefen Knick quer zum Oberschenkel,
-   und das Bein würde dort dünn wie ein abgeknickter Schlauch (Pu Bu, Mr. Alex 18.11.). */
+   Der Ring am Knie und der unterste Ring der Hose hängen an zwei eigenen Knie-Gelenken (A7/A8): Hinge der Ring am Unterschenkel, stünde er
+   im tiefen Knick quer zum Oberschenkel, und das Bein würde dort dünn wie ein abgeknickter Schlauch (Pu Bu, Mr. Alex 18.11.). Mit nur einem
+   Gelenk auf halber Beuge blieb eine spitze Ecke; zwei Ringe kurz vor und kurz hinter dem Gelenk (ein Viertel und drei Viertel der Beuge) schrägen sie ab. */
 function stiefelFest(m, K) {
   const helfer = {};
   for (const [s, seite] of [["l", "Left"], ["r", "Right"]]) {
     let netz = null; m.traverse((o) => { if (o.isSkinnedMesh && o.name.endsWith("Leg" + seite)) netz = o; });
     if (!netz) continue;
     const alt = netz.skeleton, unter = K("lowerleg" + s), H = new THREE.Bone(); H.name = "stiefel" + s; unter.add(H);
-    const G = new THREE.Bone(); G.name = "knie" + s; G.matrixAutoUpdate = false; G.matrix.copy(unter.matrix); unter.parent.add(G);   // Knie-Gelenk: dreht nur halb mit (siehe knieRund)
+    const gelenk = (name) => { const G = new THREE.Bone(); G.name = name + s; G.matrixAutoUpdate = false; G.matrix.copy(unter.matrix); unter.parent.add(G); return G; };
+    const G = gelenk("knie"), G2 = gelenk("knieoben");                             // zwei Knie-Gelenke: sie drehen ein und zwei Drittel der Beuge mit (siehe knieRund)
     const kehrUnter = alt.boneInverses[alt.bones.indexOf(unter)];
-    const knochen = [...alt.bones, H, G], kehr = [...alt.boneInverses.map((x) => x.clone()), kehrUnter.clone(), kehrUnter.clone()];
-    const iO = knochen.indexOf(K("upperleg" + s)), iU = knochen.indexOf(unter), iH = knochen.length - 2, iG = knochen.length - 1;
+    const knochen = [...alt.bones, H, G, G2], kehr = [...alt.boneInverses.map((x) => x.clone()), kehrUnter.clone(), kehrUnter.clone(), kehrUnter.clone()];
+    const iO = knochen.indexOf(K("upperleg" + s)), iU = knochen.indexOf(unter), iH = knochen.length - 3, iG = knochen.length - 2, iG2 = knochen.length - 1;
     gewichte(netz, (y, x, z, w) => {
-      if (y >= STIEFEL.knie) return new Map([[iO, 1]]);
+      if (y >= STIEFEL.knie) return new Map([[y < STIEFEL.hose ? iG2 : iO, 1]]);
       if (y >= STIEFEL.kante) return new Map([[iG, 1]]);
       w.delete(iO); if (w.has(iU)) { w.set(iH, w.get(iU)); w.delete(iU); } if (!w.size) w.set(iH, 1);
       return w;
     });
     netz.bind(new THREE.Skeleton(knochen, kehr), netz.bindMatrix);
-    const P = netz.geometry.attributes.position, punkte = []; let vor = Infinity, hinter = -Infinity;
-    for (let i = 0; i < P.count; i++) if (P.getY(i) >= STIEFEL.kante && P.getY(i) < STIEFEL.knie) { punkte.push(i); vor = Math.min(vor, P.getZ(i)); hinter = Math.max(hinter, P.getZ(i)); }
-    helfer["knie" + s] = { gelenk: G, ruhe: unter.quaternion.clone() };
-    helfer[s] = H; helfer["ring" + s] = { netz, punkte, dick: hinter - vor };          // der Ring am Knie: daran wird gemessen, ob das Bein im Knick sein Volumen hält
+    const P = netz.geometry.attributes.position, punkte = [], oben = []; let vor = Infinity, hinter = -Infinity;
+    for (let i = 0; i < P.count; i++) {
+      if (P.getY(i) >= STIEFEL.kante && P.getY(i) < STIEFEL.knie) { punkte.push(i); vor = Math.min(vor, P.getZ(i)); hinter = Math.max(hinter, P.getZ(i)); }
+      else if (P.getY(i) >= STIEFEL.knie && P.getY(i) < STIEFEL.hose) oben.push(i);
+    }
+    helfer["knie" + s] = { gelenke: [[G2, 0.25, -1, ringMitte(netz, unter, (x, y) => y >= STIEFEL.knie && y < STIEFEL.hose)], [G, 0.75, 1, ringMitte(netz, unter, (x, y) => y >= STIEFEL.kante && y < STIEFEL.knie)]],
+      ruhe: unter.quaternion.clone(), unten: unter, kind: K("foot" + s), fase: KNIE_FASE };
+    helfer[s] = H; helfer["ring" + s] = { netz, punkte, oben, dick: hinter - vor };    // die zwei Ringe am Knie: daran wird gemessen, ob das Bein im Knick sein Volumen hält
   }
   return helfer;
 }
@@ -134,6 +150,48 @@ function kleidungAb(m, kleidung) {
   }
   P.needsUpdate = N.needsUpdate = UV.needsUpdate = true;
   return zahl;
+}
+/* Ellbogen (A8): wie am Knie – die zwei Ringe am Ellbogen hängen an zwei eigenen Gelenken, die ein und drei Viertel der Beuge mitdrehen; Oberarm und Unterarm
+   gehören darüber und darunter ganz ihrem Knochen. So bleibt der Arm im Knick dick. */
+function ellbogenFest(m, K) {
+  const aus = [];
+  for (const [s, seite] of [["l", "Left"], ["r", "Right"]]) {
+    let netz = null; m.traverse((o) => { if (o.isSkinnedMesh && o.name.endsWith("Arm" + seite)) netz = o; });
+    if (!netz) continue;
+    const alt = netz.skeleton, unter = K("lowerarm" + s), kehrUnter = alt.boneInverses[alt.bones.indexOf(unter)];
+    const gelenk = (name) => { const G = new THREE.Bone(); G.name = name + s; G.matrixAutoUpdate = false; G.matrix.copy(unter.matrix); unter.parent.add(G); return G; };
+    const G1 = gelenk("ellbogenoben"), G2 = gelenk("ellbogen");
+    const knochen = [...alt.bones, G1, G2], kehr = [...alt.boneInverses.map((x) => x.clone()), kehrUnter.clone(), kehrUnter.clone()];
+    const iO = knochen.indexOf(K("upperarm" + s)), iU = knochen.indexOf(unter), iG1 = knochen.length - 2, iG2 = knochen.length - 1;
+    gewichte(netz, (y, x, z, w) => {
+      const ab = Math.abs(x);
+      if (ab > ARM_RING[0] && ab < ARM_RING[1]) return new Map([[ab < ARM_MITTE ? iG1 : iG2, 1]]);
+      if (ab <= ARM_RING[0]) { w.delete(iU); if (!w.size) w.set(iO, 1); } else { w.delete(iO); if (!w.size) w.set(iU, 1); }
+      return w;
+    });
+    netz.bind(new THREE.Skeleton(knochen, kehr), netz.bindMatrix);
+    const ring = (von, bis) => ringMitte(netz, unter, (x) => Math.abs(x) > von && Math.abs(x) < bis);
+    aus.push({ gelenke: [[G1, 0.25, -1, ring(ARM_RING[0], ARM_MITTE)], [G2, 0.75, 1, ring(ARM_MITTE, ARM_RING[1])]], ruhe: unter.quaternion.clone(), unten: unter, kind: K("wrist" + s), fase: ARM_FASE });
+  }
+  return aus;
+}
+/* Schmale Hutkrempe (A8): Die Krempe wird beim Laden zur Kappe hin zusammengeschoben und etwas flacher – derselbe Hut, keine neue Datei. */
+function krempeSchmal(m, breit) {
+  let hut = null; m.traverse((o) => { if (o.isMesh && /_Hat$/.test(o.name)) hut = o; });
+  if (!hut || !(breit > 0) || breit === 1) return hut;
+  const P = hut.geometry.attributes.position;
+  for (let i = 0; i < P.count; i++) {
+    const x = P.getX(i), y = P.getY(i), z = P.getZ(i), r = Math.hypot(x, z); if (r <= KREMPE.innen) continue;
+    const k = (KREMPE.innen + (r - KREMPE.innen) * breit) / r;
+    P.setXYZ(i, x * k, y < KREMPE.oben ? KREMPE.oben + (y - KREMPE.oben) * (0.4 + 0.6 * breit) : y, z * k);
+  }
+  P.needsUpdate = true; hut.geometry.computeBoundingBox(); hut.geometry.computeBoundingSphere();
+  return hut;
+}
+function ringMitte(netz, knochen, drin) {                // Mitte der Punkte eines Rings, gesehen vom Gelenk-Knochen in Ruhe
+  const P = netz.geometry.attributes.position, mitte = new THREE.Vector3(); let n = 0;
+  for (let i = 0; i < P.count; i++) if (drin(P.getX(i), P.getY(i), P.getZ(i))) { mitte.add(new THREE.Vector3(P.getX(i), P.getY(i), P.getZ(i))); n++; }
+  return knochen.worldToLocal(netz.localToWorld(mitte.multiplyScalar(1 / Math.max(1, n))));
 }
 function gewichte(netz, regel) {                        // regel(Höhe, Seite, Tiefe, Gewichte je Knochen) → neue Gewichte; höchstens vier je Punkt
   const P = netz.geometry.attributes.position, I = netz.geometry.attributes.skinIndex, W = netz.geometry.attributes.skinWeight;
@@ -192,7 +250,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     h.updateMatrixWorld(true); gelenk.attach(h); halter[s] = h;
   }
   const kleidungPunkte = kleidungAb(m, kleidung);
-  const stiefel = stiefelFest(m, K);
+  const stiefel = stiefelFest(m, K), halbGelenke = [stiefel.kniel, stiefel.knier, ...ellbogenFest(m, K)].filter(Boolean), hut = krempeSchmal(m, kleidung.krempe);
   mantelFolgt(m, K);
   // Bizeps: eine Wölbung in der Farbe des Ärmels, die beim Anspannen wächst
   const muskel = {}, stoff = new THREE.MeshStandardMaterial({ color: aermelFarbe(m), roughness: 0.9 });
@@ -214,20 +272,22 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     for (const s of "lr") kasten.union(stueck.setFromObject(halter[s]));
     return kasten.min.y;
   };
-  /* Volumen am Knie halten: Das Knie-Gelenk dreht nur die halbe Beuge mit (der Ring steht dann auf der Winkelhalbierenden von Ober- und
-     Unterschenkel) und wird in der Beuge-Ebene um 1 / cos(halbe Beuge) breiter – so bleiben beide Beinröhren am Knie so dick wie am gestreckten Bein. */
-  const eins = Q(), halb = Q(), streck = new THREE.Matrix4(), ohne = v(1, 1, 1);
+  /* Volumen an Knie und Ellbogen halten, und zwar rund: Zwei Ringe sitzen kurz vor dem Gelenk (auf der Achse des oberen Glieds) und kurz dahinter
+     (auf der Achse des unteren), gedreht um ein Viertel und drei Viertel der Beuge und in der Beuge-Ebene um 1 / cos(ein Viertel der Beuge) breiter.
+     So wird aus der spitzen Ecke eine abgeschrägte, und die Röhren bleiben so dick wie am gestreckten Glied. */
+  const eins = Q(), stufe = Q(), streck = new THREE.Matrix4(), hilf = new THREE.Matrix4(), ohne = v(1, 1, 1), null3 = v();
   const knieRund = () => {
-    for (const s of "lr") {
-      const kn = stiefel["knie" + s]; if (!kn) continue;
-      const U = K("lowerleg" + s), f = ruhe.get(K("foot" + s)).clone().normalize(), beuge = kn.ruhe.clone().invert().multiply(U.quaternion);
-      halb.copy(eins).slerp(beuge, 0.5);
-      const quer = f.clone().applyQuaternion(halb).sub(f.clone().applyQuaternion(halb.clone().invert())), c = f.dot(f.clone().applyQuaternion(beuge));
-      kn.gelenk.matrix.compose(U.position, kn.ruhe.clone().multiply(halb), ohne);
-      if (quer.lengthSq() > 1e-6) {
-        quer.normalize(); const k = Math.min(KNIE_BREIT, 1 / Math.sqrt(Math.max(0.05, (1 + c) / 2))) - 1;
-        streck.set(1 + k * quer.x * quer.x, k * quer.x * quer.y, k * quer.x * quer.z, 0, k * quer.y * quer.x, 1 + k * quer.y * quer.y, k * quer.y * quer.z, 0, k * quer.z * quer.x, k * quer.z * quer.y, 1 + k * quer.z * quer.z, 0, 0, 0, 0, 1);
-        kn.gelenk.matrix.multiply(streck);
+    for (const kn of halbGelenke) {
+      const U = kn.unten, f = ruhe.get(kn.kind).clone().normalize(), beuge = kn.ruhe.clone().invert().multiply(U.quaternion);
+      stufe.copy(eins).slerp(beuge, 0.25);
+      const quer = f.clone().applyQuaternion(stufe).sub(f.clone().applyQuaternion(stufe.clone().invert())), c = f.dot(f.clone().applyQuaternion(stufe));
+      const k = quer.lengthSq() > 1e-8 ? Math.min(KNIE_BREIT, 1 / Math.max(0.3, c)) - 1 : 0; quer.normalize();
+      streck.set(1 + k * quer.x * quer.x, k * quer.x * quer.y, k * quer.x * quer.z, 0, k * quer.y * quer.x, 1 + k * quer.y * quer.y, k * quer.y * quer.z, 0, k * quer.z * quer.x, k * quer.z * quer.y, 1 + k * quer.z * quer.z, 0, 0, 0, 0, 1);
+      for (const [G, anteil, seite, mitte] of kn.gelenke) {
+        const ort = seite < 0 ? f.clone().multiplyScalar(-kn.fase) : f.clone().applyQuaternion(beuge).multiplyScalar(kn.fase);   // Mitte des Rings: vor dem Gelenk auf dem oberen Glied, dahinter auf dem unteren
+        G.matrix.compose(U.position, kn.ruhe, ohne).multiply(hilf.compose(ort, stufe.copy(eins).slerp(beuge, anteil), ohne));
+        if (k > 0) G.matrix.multiply(streck);
+        G.matrix.multiply(hilf.makeTranslation(-mitte.x, -mitte.y, -mitte.z));
       }
     }
   };
@@ -276,7 +336,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const welt = m.getWorldQuaternion(Q()).multiply(dreh).multiply(handRuhe[s]);
     W.quaternion.copy(w0.slerp(W.parent.getWorldQuaternion(Q()).invert().multiply(welt), gewicht)); W.updateMatrixWorld(true);
   };
-  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, laeuft: null, flug: 0, wendet: false, grund: 0 };
+  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0 };
   const ziele = () => {
     const regel = ZIELE[g.modus]; if (!regel || !g.laeuft) return;
     const dauer = g.laeuft.getClip().duration, t = Math.min(g.laeuft.time, dauer), qm = m.getWorldQuaternion(Q());
@@ -316,12 +376,13 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const hoehen = {}; let unten = Infinity;
     for (const s of "lr") { hoehen[s] = wo(K("foot" + s)); unten = Math.min(unten, hoehen[s].y); }
     for (const s of "lr") {
+      if (SOHLE_FREI[g.modus] === s) continue;
       const pf = hoehen[s], pk = wo(K("lowerleg" + s)), aufrecht = (pk.y - pf.y) / Math.max(1e-6, pk.distanceTo(pf));
       const w = (1 - weich(pf.y - unten, 0.03 * mass, 0.12 * mass)) * weich(aufrecht, 0.3, 0.6);
       if (w > 0.001) dreheWelt(K("foot" + s), Q().slerp(Q().setFromUnitVectors(sohlenHoch(s), v(0, 1, 0)), w));
     }
   };
-  const nach = (dt) => { strecke(); ziele(); fuesse(dt); knieRund(); sohle(); finger(dt); bizeps(); m.updateMatrixWorld(true); aufGang(); };
+  const nach = (dt) => { strecke(); ziele(); hoeheVor(dt); fuesse(dt); knieRund(); sohle(); finger(dt); bizeps(); m.updateMatrixWorld(true); aufGang(); };
   const grad = (x) => +((x * 180) / Math.PI).toFixed(1);
   const armLage = (s) => {                              // Ellbogenwinkel (180 = gestreckt), Richtung Schulter → Hand im Körper, Richtung der Finger zur Senkrechten
     const ps = wo(K("upperarm" + s)), pe = wo(K("lowerarm" + s)), pw = wo(K("wrist" + s)), qm = m.getWorldQuaternion(Q()).invert();
@@ -344,38 +405,52 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
      2. der Fuß am Boden wird festgehalten: Solange der Knöchel unten ist, bleibt er an seiner Stelle; Hüfte und Knie stellen sich danach (fuesse),
      3. ist kein Fuß am Boden (Rennen), fliegt die Figur in einem kleinen Bogen, statt über den Boden zu gleiten. */
   const gang = { gehen: { tempo: 1, boden: 0, unten: 0, flug: 0 }, rennen: { tempo: 2, boden: 0, unten: 0, flug: 0 } };
-  const stand = { l: { fest: false, z: 0, dz: 0 }, r: { fest: false, z: 0, dz: 0 } };
+  const stand = { l: { fest: false, z: 0, dz: 0, dy: 0 }, r: { fest: false, z: 0, dz: 0, dy: 0 } };
   const messeTempo = () => {
     const fuss = K("footl"), p = v();
     for (const art of ["gehen", "rennen"]) {
       const a = aktion[art], dauer = a.getClip().duration, N = 64, y = [], z = [], tiefe = []; let weg = 0, zeit = 0, boden = Infinity, luft = 0, laengste = 0;
       mixer.stopAllAction(); gesetzt.set(NaN, NaN, NaN); a.reset().play();
       for (let i = 0; i < N; i++) { a.time = (dauer * i) / N; mixer.update(0); strecke(); tiefe.push(tief()); anker.worldToLocal(fuss.getWorldPosition(p)); y.push(p.y); z.push(p.z); }
-      const unten = Math.min(...y), am = y.map((h) => h < unten + STAND_HOCH * mass), einer = (i) => am[i % N] || am[(i + N / 2) % N];   // der rechte Fuß macht dasselbe eine halbe Runde später
+      const hoch = STAND_HOCH * mass * (art === "rennen" ? RENN_STAND : 1);            // Rennen: längerer Bodenkontakt (Mr. Alex 18.11.: „etwas zu hüpfig“), das Tempo bleibt
+      const unten = Math.min(...y), am = y.map((h) => h < unten + STAND_HOCH * mass), fest = y.map((h) => h < unten + hoch), einer = (i) => fest[i % N] || fest[(i + N / 2) % N];   // der rechte Fuß macht dasselbe eine halbe Runde später
       for (let i = 0; i < N; i++) { if (am[i] && am[(i + 1) % N]) { weg += z[i] - z[(i + 1) % N]; zeit += dauer / N; } if (einer(i)) boden = Math.min(boden, tiefe[i]); }
       for (let i = 0; i < 2 * N; i++) { luft = einer(i) ? 0 : luft + 1; laengste = Math.max(laengste, luft); }
-      gang[art] = { tempo: zeit > 0 ? Math.max(0.3, weg / zeit) : 1, boden: -boden, unten, flug: (Math.min(laengste, N / 2) * dauer) / N };
+      gang[art] = { tempo: zeit > 0 ? Math.max(0.3, weg / zeit) : 1, boden: -boden, unten, hoch, flug: (Math.min(laengste, N / 2) * dauer) / N };
     }
-    mixer.stopAllAction(); gesetzt.set(NaN, NaN, NaN); for (const s of "lr") Object.assign(stand[s], { fest: false, dz: 0 });
+    mixer.stopAllAction(); gesetzt.set(NaN, NaN, NaN); for (const s of "lr") Object.assign(stand[s], { fest: false, dz: 0, dy: 0 });
+  };
+  /* Höhe beim Gehen und Rennen (A8, Mr. Alex 18.11.: „kleiner Ruck beim Aufsetzen, die Hüfte hebt und senkt die Figur“):
+     Die Hüfte läuft auf einer glatten Bahn (gedämpfte Feder zur Höhe, bei der der tiefste Punkt auf dem Boden läge);
+     der Fuß am Boden gleicht den Unterschied aus – Knie und Hüftgelenk geben nach, statt dass die ganze Figur springt. */
+  const hoeheVor = (dt) => {
+    const G = gang[g.modus]; if (!G) return;
+    const t = -tief(), hueftHoch = wo(hips).y;                                                        // beides bei Figur auf Höhe 0
+    if (stand.l.fest || stand.r.fest || g.wendet) g.grund = t;
+    const soll = Math.max(g.grund + HUEPF * Math.max(0, 4.9 * g.flug * (G.flug - g.flug)), t) + hueftHoch;   // kein Fuß am Boden: flacher Flugbogen
+    for (let rest = Math.min(dt, 0.1); rest > 1e-6; rest -= 1 / 120) {
+      const h = Math.min(rest, 1 / 120), w = HOEHE_GLATT[g.modus] || 14;
+      g.steigt += ((soll - g.hoehe) * w * w - 2 * w * g.steigt) * h; g.hoehe += g.steigt * h;
+    }
+    g.my = g.hoehe - hueftHoch; g.dy = Math.max(-0.15 * mass, Math.min(0.15 * mass, t - g.my));      // so viel muss der Standfuß ausgleichen
   };
   const fuesse = (dt) => {
     const G = gang[g.modus], frei = !G || g.wendet;
     for (const s of "lr") {
       const st = stand[s], F = K("foot" + s), ort = wo(F), q0 = F.getWorldQuaternion(Q());   // ein stehender Fuß bleibt etwas länger fest (Abrollen über die Zehen)
-      if (!frei && ort.y < G.unten + STAND_HOCH * mass * (st.fest ? 1.6 : 1) && (!st.fest || Math.abs(st.z - ort.z) < 0.5 * mass)) {
+      if (!frei && ort.y < G.unten + G.hoch * (st.fest ? 1.6 : 1) && (!st.fest || Math.abs(st.z - ort.z) < 0.5 * mass)) {
         if (!st.fest) { st.fest = true; st.z = ort.z + st.dz; }
-        st.dz = st.z - ort.z;
-      } else { st.fest = false; st.dz *= Math.exp(-dt * 14); }                   // losgelassen: der Rest klingt weich ab, der Fuß springt nicht
-      if (Math.abs(st.dz) < 0.001) continue;
-      zweiGelenke(K("upperleg" + s), K("lowerleg" + s), F, v(ort.x, ort.y, ort.z + st.dz), 0, null, 1);
+        st.dz = st.z - ort.z; st.dy += (g.dy - st.dy) * Math.min(1, dt * 30);
+      } else { st.fest = false; st.dz *= Math.exp(-dt * 14); st.dy *= Math.exp(-dt * 14); }   // losgelassen: der Rest klingt weich ab, der Fuß springt nicht
+      if (Math.abs(st.dz) + Math.abs(st.dy) < 0.001) continue;
+      zweiGelenke(K("upperleg" + s), K("lowerleg" + s), F, v(ort.x, ort.y + st.dy, ort.z + st.dz), 0, null, 1);
       F.quaternion.copy(F.parent.getWorldQuaternion(Q()).invert().multiply(q0)); F.updateMatrixWorld(true);   // der Fuß behält seine Richtung
     }
     g.flug = G && !frei && !stand.l.fest && !stand.r.fest ? g.flug + dt : 0;
   };
   const aufGang = () => {
-    const G = gang[g.modus]; if (!G) return aufBoden();
-    const t = -tief(); if (stand.l.fest || stand.r.fest || g.wendet) g.grund = t;                    // ein Fuß steht: der tiefste Punkt liegt auf dem Boden
-    m.position.y = Math.max(g.grund + Math.max(0, 4.9 * g.flug * (G.flug - g.flug)), t); anker.updateMatrixWorld(true);   // kein Fuß am Boden: Flugbogen wie ein kleiner Sprung
+    if (!gang[g.modus]) { aufBoden(); g.hoehe = wo(hips).y; g.steigt = 0; return; }
+    m.position.y = g.my; anker.updateMatrixWorld(true);
   };
   const zeigeHand = (form) => { g.hand = Array.isArray(form) ? form : [form, form]; };   // eine Handform für beide oder [rechts, links]; die Finger folgen weich
   const starte = (modus) => {
@@ -389,13 +464,34 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
 
   /* Hält das Bein am Knie sein Volumen? Dicke des Knie-Rings in der Beuge-Ebene, einmal quer zum Oberschenkel und einmal quer zum Unterschenkel
      gemessen, als Anteil der Dicke am gestreckten Bein (1 = voll; nahe 0 = das Bein knickt wie ein Schlauch ab). */
-  const knieDick = (s) => {
-    const ring = stiefel["ring" + s], a = wo(K("lowerleg" + s)).sub(wo(K("upperleg" + s))).normalize(), b = wo(K("foot" + s)).sub(wo(K("lowerleg" + s))).normalize(), c = a.dot(b);
+  const knieDick = (s) => dicke(stiefel["ring" + s], K("upperleg" + s), K("lowerleg" + s), K("foot" + s));
+  const armRing = {};                                   // die zwei Ringe am Ellbogen: daran wird gemessen, ob der Arm im Knick sein Volumen hält
+  for (const [s, seite] of [["l", "Left"], ["r", "Right"]]) {
+    let netz = null; m.traverse((o) => { if (o.isSkinnedMesh && o.name.endsWith("Arm" + seite)) netz = o; });
+    const P = netz.geometry.attributes.position, punkte = [], oben = []; let von = Infinity, bis = -Infinity;
+    for (let i = 0; i < P.count; i++) if (Math.abs(P.getX(i)) > ARM_RING[0] && Math.abs(P.getX(i)) < ARM_RING[1]) { (Math.abs(P.getX(i)) < ARM_MITTE ? oben : punkte).push(i); von = Math.min(von, P.getZ(i)); bis = Math.max(bis, P.getZ(i)); }
+    armRing[s] = { netz, punkte, oben, dick: bis - von };
+  }
+  const dicke = (ring, oben, mitte, unten) => {         // Dicke eines Gelenk-Rings in der Beuge-Ebene, quer zu beiden Röhren gemessen, als Anteil der Dicke am gestreckten Glied
+    const a = wo(mitte).sub(wo(oben)).normalize(), b = wo(unten).sub(wo(mitte)).normalize(), c = a.dot(b);
     if (!ring || c > 0.985) return 1;
     const quer = [b.clone().addScaledVector(a, -c).normalize(), a.clone().addScaledVector(b, -c).normalize()], von = [Infinity, Infinity], bis = [-Infinity, -Infinity], p = v();
-    for (const i of ring.punkte) { ring.netz.getVertexPosition(i, p).applyMatrix4(ring.netz.matrixWorld); for (let k = 0; k < 2; k++) { const d = p.dot(quer[k]); von[k] = Math.min(von[k], d); bis[k] = Math.max(bis[k], d); } }
+    [ring.oben, ring.punkte].forEach((liste, k) => {      // der obere Ring schließt das obere Glied ab, der untere beginnt das untere
+      for (const i of liste) { const d = ring.netz.getVertexPosition(i, p).applyMatrix4(ring.netz.matrixWorld).dot(quer[k]); von[k] = Math.min(von[k], d); bis[k] = Math.max(bis[k], d); }
+    });
     return +(Math.min(bis[0] - von[0], bis[1] - von[1]) / (ring.dick * mass)).toFixed(2);
   };
+  const armDick = (s) => dicke(armRing[s], K("upperarm" + s), K("lowerarm" + s), K("wrist" + s));
+  const hutNah = () => {                                // gehen Hand oder Finger durch Krempe oder Kappe? (Maße des Hutes, mit der Krempenbreite dieser Figur)
+    if (!hut) return 0;
+    const b = kleidung.krempe || 1, rand = KREMPE.innen + (KREMPE.aussen - KREMPE.innen) * b; let zahl = 0;
+    for (const s of "lr") for (const x of [0, -0.052, -0.12, -0.19]) {
+      const p = hut.worldToLocal(halter[s].localToWorld(v(x, 0, 0))), r = Math.hypot(p.x, p.z);
+      if (r < KREMPE.innen ? p.y > KREMPE.oben - 0.03 && p.y < 0.9 : r < rand && Math.abs(p.y - (KREMPE.oben + ((r - KREMPE.innen) / (rand - KREMPE.innen)) * (KREMPE.unten - KREMPE.oben) * (0.4 + 0.6 * b))) < 0.04) zahl++;
+    }
+    return zahl;
+  };
+  const armHoch = (s) => ["upperarm", "lowerarm", "wrist"].map((n) => +(wo(K(n + s)).y / mass).toFixed(3));   // Höhe von Schulter, Ellbogen, Handgelenk (Maß des Körpers)
   const fussOrt = (s) => [wo(K("foot" + s)), wo(K("toes" + s))].map((p) => [+p.y.toFixed(3), +p.z.toFixed(3)]);   // Knöchel und Zehen: Höhe und Ort längs der Bahn
   const imKoerper = (p) => m.worldToLocal(p).toArray().map((x) => +x.toFixed(3));   // Ort in den Maßen des Körpers (x zur linken Seite, y hoch, z nach vorn)
   const flaeche = (s) => halter[s].localToWorld(v(-0.052, 0, 0));                    // Mitte der Handfläche
@@ -433,7 +529,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       knie: +K("lowerlegl").getWorldPosition(v()).y.toFixed(3), stiefelOben: +(stiefel.l.getWorldPosition(v()).y + (STIEFEL.kante - 0.293) * mass).toFixed(3),
       faustR: K("wristr").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)), faustL: K("wristl").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)),
       flaecheR: imKoerper(flaeche("r")), flaecheL: imKoerper(flaeche("l")), handAbstand: +(flaeche("r").distanceTo(flaeche("l")) / mass).toFixed(3), muskel: muskel.r.visible ? +muskel.r.scale.x.toFixed(3) : 0,
-      knieDick: Math.min(knieDick("l"), knieDick("r")), fussL: fussOrt("l"), fussR: fussOrt("r"), kleidung: kleidungPunkte, zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
+      knieDick: Math.min(knieDick("l"), knieDick("r")), armDick: Math.min(armDick("l"), armDick("r")), hochR: armHoch("r"), hochL: armHoch("l"), huefte: +wo(hips).y.toFixed(4), hut: hutNah(), fussL: fussOrt("l"), fussR: fussOrt("r"), kleidung: kleidungPunkte, zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
       ort: [+anker.position.x.toFixed(2), +anker.position.z.toFixed(2)] }),
   };
 }

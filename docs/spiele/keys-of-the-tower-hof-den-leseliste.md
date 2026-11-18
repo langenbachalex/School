@@ -46,6 +46,21 @@ Quelle: `inhalte/abenteuer/tower_hof_den.tsv` (36 neue Zeilen, gleiche Spalten w
 | w06b | gary | Locked? No problem. We need a key. Or a very small fox. | Abgeschlossen? Kein Problem. Wir brauchen einen Schlüssel. Oder einen sehr kleinen Fuchs. |  |
 | w07 | erzaehler | A raven lands next to you. There is a key in his beak. | Ein Rabe landet neben dir. Er hat einen Schlüssel im Schnabel. | A raven brings you the key. |
 
+### Im Hof: der verirrte Tourist (ergänzt 18.11., von Mr. Alex abgenommen und vertont)
+
+Nebenfigur, kommt schon in den Test. Texaner, „goofy“: weiß alles, ist der Coolste, hat keine Ahnung und merkt es nie. Stimme Jeremy B., Regie „thick Texas accent, slow drawl, goofy“. Erster Tipp w08a–w08e, zweiter Tipp w08f–w08h (bei w08f zeigt er auf Garys Fass). 12 Aufnahmen `app/audio/tower/k1_w08*.mp3`, 499 + 45 Credits. w08e: Die Stimme sprach „Yep“ doppelt, das zweite ist herausgeschnitten.
+
+| Nr | Wer | Englisch | Deutsch (Feder) | Einfacher |
+|---|---|---|---|---|
+| w08a | erzaehler | A man with a big map. The map is upside down. | Ein Mann mit einem großen Stadtplan. Der Plan steht auf dem Kopf. | A man with a map. The map is wrong. |
+| w08b | tourist | Howdy, y'all! Relax. I know London. I have a map. | Howdy, Leute! Ganz ruhig. Ich kenne London. Ich hab einen Stadtplan. | Howdy! I know London. I have a map. |
+| w08c | tourist | I reckon this is Buckingham Palace. Right, partner? | Ich schätze, das ist der Buckingham Palace. Stimmt's, Partner? | This is Buckingham Palace, right? |
+| w08d | gary | No. This is the Tower of London. | Nein. Das ist der Tower of London. |  |
+| w08e | tourist | Yep. That's what I said. | Jep. Hab ich doch gesagt. |  |
+| w08f | tourist | The exit? Easy, dude. It's over there. | Der Ausgang? Ganz einfach, Kumpel. Der ist da drüben. |  |
+| w08g | gary | That is a barrel. My barrel. | Das ist ein Fass. Mein Fass. |  |
+| w08h | tourist | Nice barrel, little buddy. Is the gift shop in there? | Schönes Fass, kleiner Kumpel. Ist da drin der Souvenirladen? | Nice barrel. Is the shop in there? |
+
 ### Dein Zimmer – „The Den“ (nach dem Schluss)
 
 | Nr | Wer | Englisch | Deutsch (Feder) | Einfacher |

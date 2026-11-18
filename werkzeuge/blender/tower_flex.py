@@ -121,8 +121,8 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
     rel = lambda pkt: [(x, y + 0.13, zz - LZ) for x, y, zz in pkt]
     g.bogen_mit_formen("mundlinie", oberlippe, rel(lippenlinie(dz=0.0032)), formen(rel, dz=0.0032), 0.0040, f["lippe"], (0, 0, 0))
     zaehne = g.gelenk("zaehne", oberlippe, (0, 0, 0))
-    zahn = dict(dz=-0.0050, weit=0.86, vor=-0.0015)       # obere Zahnreihe: dicht unter der Oberlippe, etwas dahinter, biegt sich mit ihr
-    g.bogen_mit_formen("zahnreihe", zaehne, rel(lippenlinie(**zahn)), formen(rel, **zahn), 0.0055, f["zahn"], (0, 0, 0))
+    zahn = dict(dz=-0.0034, weit=0.86, vor=-0.0015)       # obere Zahnreihe: dicht unter der Oberlippe, etwas dahinter, biegt sich mit ihr
+    g.bogen_mit_formen("zahnreihe", zaehne, rel(lippenlinie(**zahn)), formen(rel, **zahn), 0.0037, f["zahn"], (0, 0, 0))   # schmal: darunter bleibt bei halb offenem Mund ein dunkler Spalt
     # blonder Schnurrbart: kraeftig, zwei Schwuenge von der Mitte nach aussen, der Mund darunter bleibt frei
     bart = g.gelenk("schnurrbart", oberlippe, (0, 0, 0))
     for s in (-1, 1):

@@ -117,7 +117,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
 import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt die komprimierten Formen der Raumdatei (werkzeuge/raum_verkleinern.js)
-import { ladeFiguren, mundAusZeiten, einsaetzeAus } from "./probe3d_figuren.js";
+import { ladeFiguren, mundAusZeiten, einsaetzeAus, MUNDFORMEN_MENSCH } from "./probe3d_figuren.js";
 import { ladeBauProbe, GESTEN, rundeOrt } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
 const $ = (id) => document.getElementById(id);
@@ -401,7 +401,7 @@ try {
     if (window.__towerTonTest) laut = 0.12 * Math.abs(Math.sin(zeit * 9));
     else if (klang && klang.mess) { klang.mess.getFloatTimeDomainData(pegelFeld); for (const v of pegelFeld) laut += v * v; laut = Math.sqrt(laut / pegelFeld.length); }
     pegel += (Math.min(1, Math.max(0, (laut - 0.012) * 7)) - pegel) * Math.min(1, dt * 22);
-    if (formen) { const m = mundAusZeiten(formen.zeiten, zeit + 0.07); return setze([m[0], m[1], m[2] || 0, m[3] || 0, pegel]); }   // Mr. Flex: der Mund ist einen Hauch vor dem Ton, die Lautstärke mischt mit
+    if (formen) { const m = mundAusZeiten(formen.zeiten, zeit + 0.07, MUNDFORMEN_MENSCH); return setze([m[0], m[1], m[2] || 0, m[3] || 0, pegel]); }   // Mr. Flex: der Mund ist einen Hauch vor dem Ton, die Lautstärke mischt mit
     setze([pegel, 1]);
   }
   let zug = null, spreiz = 0;

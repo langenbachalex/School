@@ -55,6 +55,10 @@ const FIGUREN = {
   },
 };
 
+/* Menschenmund (Mr. Alex 18.11.: bei „i“ – „Yes, it is me“ – wirkte der Mund geschlossen, man sah nur die Zähne): Bei B geht der Kiefer weiter auf,
+   damit unter der oberen Zahnreihe ein dunkler Spalt bleibt. Garys Schnauze behält die Werte oben. */
+export const MUNDFORMEN_MENSCH = { ...MUNDFORMEN, B: [0.52, 1.05] };
+
 /* Gestik beim Reden (Machbarkeitsprobe 18.11.): eine fertige Bewegung nur für Oberkörper und Arme, als Zugabe über Stehen oder Gehen gelegt.
    Die Beine behalten ihre Bewegung. „Zugabe“ heißt: gezählt wird nur der Unterschied zur Ruhehaltung (additive Bewegung). */
 const OBEN = /^(chest|upperarm|lowerarm|wrist|hand)[lr]?\.quaternion$/;
@@ -366,8 +370,8 @@ export async function ladeFiguren(lader, szene, orte, kamera) {
 }
 
 /* Mundform zu einem Zeitpunkt aus den vorab gerechneten Zeiten von Rhubarb: [[Beginn in s, Form], …] */
-export function mundAusZeiten(zeiten, zeit) {
+export function mundAusZeiten(zeiten, zeit, tabelle = MUNDFORMEN) {
   let form = "X";
   for (const [ab, f] of zeiten) { if (ab > zeit) break; form = f; }
-  return MUNDFORMEN[form] || MUNDFORMEN.X;
+  return tabelle[form] || tabelle.X;
 }

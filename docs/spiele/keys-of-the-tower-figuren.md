@@ -139,3 +139,15 @@ Mr. Alex ist Komponist und überlegt, Themen für Figuren oder Orte zu schreiben
 1. Fassung 2 nach Rückmeldung (Helm, Zaubershow, wippender Fuß, Mr. Flex mit Pose und App-Lob): passt der Ton?
 2. Sergeant und Mr. Flex beide mit deiner Stimme – oder bekommt der Sergeant eine andere?
 3. Danach: die Orte (sieben Räume mit je einem Geheimnis) und die Geschichte in einer Seite.
+
+## Mimik, Gestik, Gang – Wünsche und Ideen von Mr. Alex (18.11.2026, vom Master festgehalten)
+Entschieden: Gestik gehört zu allen Figuren (Probe an Gary „im Prinzip wirklich gut“); Mundformen aus Rhubarb sind Standard, Lautstärke die Reserve.
+**Regel für jeden Ausdruck:** Das ganze Gesicht und der Körper machen mit, und der Ausdruck muss erkennbar sein, wenn die Figur nur 100 Bildpunkte hoch ist. Vorbild Grimmig (klar durch Brauen, Mund, Pupillen). Für Fröhlich: Unterkante der Augen als Bogen, kleine Pupille mit Glanzpunkt und Augenweiß, Brauen als Bogen mit Abstand, Wangen schieben nach oben, breiter offener Mund mit hochgezogenen Mundwinkeln, Zunge und Zähne, heller Untergrund (Schnauze); Kopf geneigt, Arme offen, kleiner Hüpfer.
+**Ein Profil je Figur** (in der Tabelle `FIGUREN`), damit man Figuren an der Bewegung erkennt:
+- Blick: wie oft und wie schnell die Pupillen nach links und rechts gehen.
+- Tempo von Mimik und Gestik: schnell und kurz oder langsam und weit offen.
+- Gestik: Häufigkeit, Größe, Geschwindigkeit der Armbewegungen, Lieblingsgesten.
+- Gang: eigenes Tempo und eigene Schrittlänge; Rennen je Figur.
+- Grundausdruck beim Reden (z. B. leichtes Lächeln).
+**Gary:** sehr fröhlich, unruhiger wacher Blick, hektisch, kurze schnelle Gesten, lächelt beim Reden, wird nach dem Zaubern stolz (Ausdruck „Stolz“: Kinn hoch, Augen halb zu, zufriedenes Lächeln). Erschrecken und Zaubern sind gut. Überrascht darf freudiger sein. Rennen eventuell schneller.
+**Noch offen (gemeinsam genauer durchgehen):** Profile für Sergeant (zackig), Arthur (sparsam, langsam), Taube (aufgeregt), Mr. Flex; echte Rede-Gesten (Winken, Zeigen, Achselzucken) – zuerst in den 133 KayKit-Bewegungen suchen, sonst fünf bis sechs selbst bauen; Ausdruck und Geste aus der Regie-Spalte der Texttabellen.

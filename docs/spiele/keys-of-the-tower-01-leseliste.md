@@ -1,4 +1,6 @@
-# The Keys of the Tower – Kapitel 1 · Leseliste für Mr. Alex (17.11.2026)
+# The Keys of the Tower – Szene 1 (Guard Room) · Leseliste für Mr. Alex (17.11.2026)
+
+> **Sprachregelung (Mr. Alex 17.11., eingetragen vom Master 18.11.):** Kapitel = ein Ort in London (Kapitel 1 = Tower of London), die Räume darin heißen Szenen. Dieses Blatt ist älter: Wo hier „Kapitel 1“ steht, ist **Szene 1 (Guard Room) des Tower-Kapitels** gemeint, „Kapitel 2“ ist Szene 2 (Kitchen). Die Dateinamen (`tower_kapitel1.tsv`, `k1_…mp3`) bleiben, wie sie sind.
 
 Quelle: `inhalte/abenteuer/tower_kapitel1.tsv` (159 Zeilen, erzeugt aus `keys-of-the-tower-01.md`, Fassung 3). Nichts vertont, keine Credits verbraucht. Die Regie-Spalte (Text für ElevenLabs mit Tags, 146 Zeilen, rund 9.800 Zeichen) steht nur in der Tabelle.
 

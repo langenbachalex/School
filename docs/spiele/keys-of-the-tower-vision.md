@@ -128,7 +128,8 @@ Beide Kreise greifen ineinander: Die Geschichte öffnet neue Orte zum Sammeln, u
 - **Regel:** kurz, mit Witz, nie länger als etwa 40 Sekunden am Stück; danach kann man sofort wieder selbst etwas tun.
 - **Stimmung zuerst (Mr. Alex, 17.11. abends):** Jeder Auftakt beginnt mit einem kurzen, geladenen Satz über den Ort, bevor etwas passiert – beim Tower: „Its history is ancient, and its story is legendary. Seven ravens sit on the old wall. They are watching.“ (Zeilen a01, v00, v01). Dazu Nebel und schönes Licht; die Ausleuchtung trägt die Stimmung mit.
 
-## 9. Das Testspiel: Anfang und Kapitel 1
+## 9. Das Testspiel: Anfang und Szene 1 (Guard Room)
+*(Überschrift am 18.11. an die Sprachregelung angepasst; im Text darunter und in Abschnitt 10 meint „Kapitel 1“ noch die Szene 1 des Tower-Kapitels.)*
 Ziel des Tests: Die Kinder sollen in zehn bis fünfzehn Minuten spüren, was das ganze Spiel sein wird. Deshalb enthält der Ausschnitt von jeder Säule ein Stück – lieber klein und fertig als viel und roh.
 
 | | Szene | Was man tut | Was sie zeigen soll |

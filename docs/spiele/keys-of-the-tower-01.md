@@ -1,4 +1,6 @@
-# The Keys of the Tower – Kapitel 1 „It's gone!“ (Guard Room) · Textentwurf Fassung 3 vom 17.11.2026, noch nicht freigegeben
+# The Keys of the Tower – Szene 1 „It's gone!“ (Guard Room) · Textentwurf Fassung 3 vom 17.11.2026, noch nicht freigegeben
+
+> **Sprachregelung (Mr. Alex 17.11., eingetragen vom Master 18.11.):** Kapitel = ein Ort in London (Kapitel 1 = Tower of London), die Räume darin heißen Szenen. Dieses Blatt ist älter: Wo hier „Kapitel 1“ steht, ist **Szene 1 (Guard Room) des Tower-Kapitels** gemeint, „Kapitel 2“ ist Szene 2 (Kitchen). Die Dateinamen (`tower_kapitel1.tsv`, `k1_…mp3`) bleiben, wie sie sind.
 
 **Status:** Entwurf des Masters zum Gegenlesen durch Mr. Alex. Nichts vertont, nichts gebaut. Figuren: `keys-of-the-tower-figuren.md` · Orte und Geschichte: `keys-of-the-tower-orte.md` · Vorrat an Sprüchen: `inhalte/abenteuer/tower_sprueche.tsv` · Konzept: `story-spiele-konzept.md`.
 

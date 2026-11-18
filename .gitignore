@@ -1,1 +1,4 @@
 __pycache__/
+
+# fremde Werkzeuge, nur lokal (Rhubarb Lip Sync, BlenderMCP)
+werkzeuge/extern/

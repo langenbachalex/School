@@ -55,8 +55,8 @@ def _fertig(ob, name, eltern, ort, mass, material, dreh):
     return ob
 
 
-def kugel(name, eltern, ort, mass, material, dreh=(0, 0, 0)):
-    bpy.ops.mesh.primitive_uv_sphere_add(radius=1, segments=24, ring_count=14)
+def kugel(name, eltern, ort, mass, material, dreh=(0, 0, 0), fein=24):
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=1, segments=fein, ring_count=max(4, fein * 7 // 12))
     return _fertig(bpy.context.object, name, eltern, ort, mass, material, dreh)
 
 
@@ -80,6 +80,39 @@ def oben(ob):
     h = max(v.co.z for v in ob.data.vertices)
     ob.data.transform(Matrix.Translation((0, 0, -h)))
     ob.location.z += h
+    return ob
+
+
+def unten(ob):
+    """Ursprung an die Unterkante legen (Unterlid: schiebt sich von unten ueber das Auge – lachende Augen)."""
+    t = min(v.co.z for v in ob.data.vertices)
+    ob.data.transform(Matrix.Translation((0, 0, -t)))
+    ob.location.z += t
+    return ob
+
+
+def bogen(name, eltern, punkte, r, material):
+    """Ein glatter runder Strang durch die Punkte (Kurve mit Dicke, in ein Netz umgewandelt); der Ursprung liegt am ersten Punkt."""
+    kurve = bpy.data.curves.new(name + "_kurve", "CURVE")
+    kurve.dimensions = "3D"
+    kurve.bevel_depth = r
+    kurve.bevel_resolution = 2
+    kurve.use_fill_caps = True
+    linie = kurve.splines.new("POLY")
+    linie.points.add(len(punkte) - 1)
+    for p, q in zip(linie.points, punkte):
+        p.co = (q[0] - punkte[0][0], q[1] - punkte[0][1], q[2] - punkte[0][2], 1)
+    vor = bpy.data.objects.new(name + "_vor", kurve)
+    bpy.context.scene.collection.objects.link(vor)
+    netz = bpy.data.meshes.new_from_object(vor.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+    bpy.data.objects.remove(vor)
+    ob = bpy.data.objects.new(name, netz)
+    bpy.context.scene.collection.objects.link(ob)
+    for f in netz.polygons:
+        f.use_smooth = True
+    netz.materials.append(material)
+    ob.parent = eltern
+    ob.location = punkte[0]
     return ob
 
 
@@ -109,7 +142,17 @@ def fuchskopf(eltern, ort=(0, 0, 0), name="fuchskopf"):
         kugel("braue_" + seite, k, (s * 0.080, -0.152, 0.288), (0.044, 0.012, 0.0085), f["schwarz"], (0, R(s * -14), 0))
         kugel("mundwinkel_" + seite, k, (s * 0.028, -0.262, 0.092), (0.029, 0.012, 0.0066), f["schwarz"], (0, R(s * -22), R(s * 30)))
         oben(kugel("lid_" + seite, k, (s * 0.074, -0.152, 0.225), (0.045, 0.043, 0.054), f["orange"]))
+        unten(kugel("unterlid_" + seite, k, (s * 0.074, -0.150, 0.225), (0.044, 0.034, 0.054), f["orange"]))
     oben(kugel("mund", k, (0, -0.258, 0.066), (0.036, 0.030, 0.030), f["rachen"]))
+    # Laechelbogen fuer "froehlich": breit ueber die Schnauze, die Enden klar nach oben (im Browser sonst unsichtbar)
+    halb = []
+    for i in range(13):                                             # von der Mitte nach aussen, die Enden klar nach oben
+        x = i / 12 * 0.067
+        dz = -0.030 + 0.040 * (x / 0.067) ** 2.4
+        rest = max(0.03, 1 - (x / 0.070) ** 2 - (dz / 0.049) ** 2)
+        halb.append((x, -0.185 - 0.123 * rest ** 0.5, 0.122 + dz))
+    punkte = [(-x, y, z) for x, y, z in reversed(halb[1:])] + halb
+    bogen("laecheln", k, punkte, 0.0075, f["schwarz"])
     kugel("kiefer", k, (0, -0.205, 0.094), (0.050, 0.085, 0.022), f["weiss"])
     kugel("nasenruecken", k, (0, -0.165, 0.165), (0.051, 0.102, 0.036), f["orange"])
     kugel("schnauze", k, (0, -0.185, 0.122), (0.068, 0.119, 0.049), f["weiss"])

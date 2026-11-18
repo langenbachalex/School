@@ -51,6 +51,7 @@
   <button type="button" data-figur="gehen">Gehen</button>
   <button type="button" data-figur="rennen">Rennen</button>
   <button type="button" data-figur="reden">Reden</button>
+  <button type="button" data-figur="gestik">Reden mit Gestik</button>
   <button type="button" data-figur="verbeugen">Verbeugen</button>
   <button type="button" data-figur="zaubern">Zaubern</button>
   <button type="button" data-figur="tadaa">Ta-daa!</button>
@@ -61,9 +62,6 @@
   <button type="button" data-gesicht="erschrocken" aria-pressed="false">Erschrocken</button>
   <button type="button" data-gesicht="ueberrascht" aria-pressed="false">Überrascht</button>
   <button type="button" data-gesicht="grimmig" aria-pressed="false">Grimmig</button>
-  <span>Mund beim Reden</span>
-  <button type="button" data-mund="a" aria-pressed="true">a · Lautstärke</button>
-  <button type="button" data-mund="b" aria-pressed="false">b · Mundformen</button>
 </div>
 <div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
@@ -71,7 +69,7 @@
 <script type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
-import { ladeFiguren, mundAusZeiten } from "./probe3d_figuren.js";
+import { ladeFiguren, mundAusZeiten, einsaetzeAus } from "./probe3d_figuren.js";
 
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
@@ -179,18 +177,19 @@ try {
   while (bahnZellen * gk.zelle < 5.2 && frei(garyZelle[0], garyZelle[1] - bahnZellen - 1)) bahnZellen++;
   const figuren = await ladeFiguren(lader, szene, { gary: { ...zuOrt(...garyZelle), bahn: Math.max(1.2, bahnZellen * gk.zelle - 0.3) } });
   const mundZeiten = await fetch("figuren/mund_gary.json").then((r) => r.json()).catch(() => ({}));
-  const GARY_SAGT = Object.keys(mundZeiten);
-  let garyNr = 0, mundArt = "a";
+  const GARY_SAGT = ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"], GARY_GESTIK = "gary_06";
+  let garyNr = 0, ohneFormen = false;
   const druecke = (art, wert) => { for (const b of document.querySelectorAll(`#figuren button[data-${art}]`)) b.setAttribute("aria-pressed", String(b.dataset[art] === wert)); };
   for (const b of document.querySelectorAll("#figuren button[data-figur]")) b.addEventListener("click", () => {
     const m = b.dataset.figur;
     buehne.dataset.figur = m;
-    if (m !== "reden" || !GARY_SAGT.length) return figuren.befehl(m);
-    const id = GARY_SAGT[garyNr++ % GARY_SAGT.length];        // Reden: eine Aufnahme von Gary, der Mund bewegt sich dazu; läuft schon eine Aufnahme, wartet diese
-    spiele(`../audio/tower/${id}.mp3`, { wer: "gary", id, beginn: () => figuren.befehl("reden"), ende: () => { figuren.mund("gary", null); if (figuren.liste()[0].modus === "reden") figuren.befehl("stehen"); } });
+    if (m !== "reden" && m !== "gestik") return figuren.befehl(m);
+    const mitGestik = m === "gestik", id = mitGestik ? GARY_GESTIK : GARY_SAGT[garyNr++ % GARY_SAGT.length];   // Reden: eine Aufnahme von Gary, der Mund bewegt sich dazu; läuft schon eine Aufnahme, wartet diese
+    spiele(`../audio/tower/${id}.mp3`, { wer: "gary", id,
+      beginn: () => { figuren.befehl("reden"); if (mitGestik && mundZeiten[id]) figuren.rede("gary", { einsaetze: einsaetzeAus(mundZeiten[id].zeiten), zeit: () => (laeuft ? laeuft.zeit() : 1e9) }); },
+      ende: () => { figuren.mund("gary", null); figuren.rede("gary", null); if (figuren.liste()[0].modus === "reden") figuren.befehl("stehen"); } });
   });
   for (const b of document.querySelectorAll("#figuren button[data-gesicht]")) b.addEventListener("click", () => { figuren.ausdruck(b.dataset.gesicht); druecke("gesicht", b.dataset.gesicht); });
-  for (const b of document.querySelectorAll("#figuren button[data-mund]")) b.addEventListener("click", () => { mundArt = b.dataset.mund; druecke("mund", mundArt); buehne.dataset.mund = mundArt; });
   const startZelle = naechsteFreie(0, raum.max.z - 2.6), startOrt = zuOrt(...startZelle);
   const figur = { x: startOrt.x, z: startOrt.z, dreh: Math.PI, pfad: [], phase: 0, geht: 0, dann: null, blick: null };
   const winkelZu = (a, b) => { let d = (b - a) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; };
@@ -305,10 +304,10 @@ try {
     ton.onended = ton.onerror = fertig;
     ton.src = datei; ton.play().catch(fertig);
   }
-  function bewegeMund(dt) {                               // jedes Bild: Garys Mund folgt der laufenden Aufnahme – a nach Lautstärke, b nach den Mundformen von Rhubarb
+  function bewegeMund(dt) {                               // jedes Bild: Garys Mund folgt der laufenden Aufnahme – nach den Mundformen von Rhubarb; fehlen sie, als Reserve nach der Lautstärke (Mr. Alex 18.11.)
     if (!laeuft || laeuft.wer !== "gary") return;
-    const zeit = laeuft.zeit();
-    if (mundArt === "b") return figuren.mund("gary", mundAusZeiten(mundZeiten[laeuft.id].zeiten, zeit));
+    const zeit = laeuft.zeit(), formen = !ohneFormen && mundZeiten[laeuft.id];
+    if (formen) return figuren.mund("gary", mundAusZeiten(formen.zeiten, zeit));
     let laut = 0;
     if (window.__towerTonTest) laut = 0.12 * Math.abs(Math.sin(zeit * 9));
     else if (klang && klang.mess) { klang.mess.getFloatTimeDomainData(pegelFeld); for (const v of pegelFeld) laut += v * v; laut = Math.sqrt(laut / pegelFeld.length); }
@@ -428,7 +427,8 @@ try {
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter
+  window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
+    halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter
     takt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); figuren.bewege(ms / 1000, performance.now() + i * ms); } },   // Testprogramm: n Bilder im Abstand ms rechnen (wie 60 Bilder pro Sekunde)
      stand: () => [figur.x, figur.z], boden: () => {      // eine freie, sichtbare Bodenstelle 1,5 bis 3 m neben der Figur
     setzeKamera(0); kamera.updateMatrixWorld();

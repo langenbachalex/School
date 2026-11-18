@@ -1,6 +1,6 @@
 """Mundformen aus den Aufnahmen rechnen (Rhubarb Lip Sync, MIT) – einmal vorab, die App spielt nur ab.
 
-Aufruf:  python werkzeuge/tower_lippen.py            (fuenf Gary-Aufnahmen, wenige Sekunden)
+Aufruf:  python werkzeuge/tower_lippen.py            (alle Gary-Aufnahmen, etwa zwei Minuten)
 Ausgabe: app/tower/figuren/mund_gary.json   {"gary_01": {"dauer": 4.64, "zeiten": [[0.0, "X"], [0.07, "B"], ...]}, ...}
 Braucht (nur lokal, nicht im Repo):
   werkzeuge/extern/rhubarb/Rhubarb-Lip-Sync-*/rhubarb(.exe)  von https://github.com/DanielSWolf/rhubarb-lip-sync/releases
@@ -16,7 +16,8 @@ import sys
 import tempfile
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-AUFNAHMEN = {"gary": ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"]}
+FIGUREN = ["gary"]   # die uebrigen Figuren kommen mit Block B (Spiel in den 3D-Raum)
+AUFNAHMEN = {f: sorted(os.path.basename(d)[:-4] for d in glob.glob(os.path.join(REPO, "app", "audio", "tower", f + "_*.mp3"))) for f in FIGUREN}
 BLENDER = os.environ.get("BLENDER") or next(iter(sorted(glob.glob(r"C:\Program Files\Blender Foundation\Blender *\blender.exe"), reverse=True)), "blender")
 RHUBARB = next(iter(glob.glob(os.path.join(REPO, "werkzeuge", "extern", "rhubarb", "*", "rhubarb*"))), None)
 if not RHUBARB:
@@ -38,7 +39,8 @@ with tempfile.TemporaryDirectory() as tmp:
                 sys.exit(f"{i}: Umwandeln in WAV hat nicht geklappt")
             with open(txt, "w", encoding="utf-8") as f:
                 f.write(TEXTE.get(i, "").replace("…", " "))
-            r = subprocess.run([RHUBARB, "-f", "json", "--extendedShapes", "GHX", "-d", txt, wav], capture_output=True, text=True, check=True)
+            mit_text = ["-d", txt] if TEXTE.get(i) else []   # mehrteilige Aufnahmen (gary_20_1 …) haben keinen eigenen Text
+            r = subprocess.run([RHUBARB, "-f", "json", "--extendedShapes", "GHX", *mit_text, wav], capture_output=True, text=True, check=True)
             d = json.loads(r.stdout)
             aus[i] = {"dauer": d["metadata"]["duration"], "zeiten": [[c["start"], c["value"]] for c in d["mouthCues"]]}
             print(f"{i}: {d['metadata']['duration']} s, {len(d['mouthCues'])} Mundformen")

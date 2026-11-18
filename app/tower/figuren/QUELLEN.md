@@ -6,7 +6,7 @@ Entscheidung Mr. Alex (17.11.2026): Alle Figuren bekommen einen Körper aus „K
 |---|---|---|
 | `kind.glb` | eigenes Skript `werkzeuge/blender/tower_kind.py` | eigenes Werk |
 | `gary_teile.glb` | eigenes Skript `werkzeuge/blender/tower_gary.py` (Fuchskopf mit Zauberhut und beweglichen Gesichtsteilen, Schwanz, Bühnen-Zauberstab) | eigenes Werk |
-| `mund_gary.json` | Zeiten der Mundformen für fünf Gary-Aufnahmen, gerechnet mit `werkzeuge/tower_lippen.py` und Rhubarb Lip Sync 1.14.0 (https://github.com/DanielSWolf/rhubarb-lip-sync; das Programm selbst liegt nicht im Repo) | Daten: eigenes Werk; Rhubarb: MIT |
+| `mund_gary.json` | Zeiten der Mundformen für alle Gary-Aufnahmen, gerechnet mit `werkzeuge/tower_lippen.py` und Rhubarb Lip Sync 1.14.0 (https://github.com/DanielSWolf/rhubarb-lip-sync; das Programm selbst liegt nicht im Repo) | Daten: eigenes Werk; Rhubarb: MIT |
 | `koerper_mage.glb` | „KayKit : Adventurers Character Pack (1.0)“ von Kay Lousberg, Figur „Mage“ ohne Kopf, Hut, Bücher und langen Stab; https://kaylousberg.itch.io/kaykit-adventurers, geladen von https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0 | CC0 (gemeinfrei) |
 | `kaykit_bewegungen.glb` | dasselbe Paket: Skelett und 12 der 76 Bewegungen (Idle, Walking_A, Running_A, Interact, Cheer, Hit_A, Spellcast_Long, Spellcast_Shoot, Use_Item, PickUp, Throw, Sit_Chair_Idle); gilt für Mage, Knight, Barbarian und Rogue | CC0 (gemeinfrei) |
 

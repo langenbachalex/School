@@ -12,13 +12,15 @@ const weich = (x) => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * 
 const beuge = (z) => weich(z / 0.6) * (1 - weich((z - 1.6) / 0.8));   // 0 → 1 → halten → 0
 const HOCH = new THREE.Vector3(0, 1, 0), VORN = new THREE.Vector3(0, 0, 1);
 
-/* Ausdrücke: braueHoch −1…1 · braueDreh in rad (plus = grimmiges V) · lid 0 offen … 1 zu · pupille Größe · mund 0…1 offen · breit · winkel −1…1 */
+/* Ausdrücke: braueHoch −1…1 · braueDreh in rad (plus = grimmiges V) · lid 0 offen … 1 zu · unterlid 0…1 von unten (lachende Augen) · pupille Größe
+   · mund 0…1 offen · breit · winkel −1…1 · laecheln 0…1 (breiter Lächelbogen) */
+const NEUTRAL = { braueHoch: 0, braueDreh: 0, lid: 0, unterlid: 0, pupille: 1, mund: 0, breit: 1, winkel: 0, laecheln: 0 };
 const AUSDRUECKE = {
-  neutral: { braueHoch: 0, braueDreh: 0, lid: 0, pupille: 1, mund: 0, breit: 1, winkel: 0 },
-  froehlich: { braueHoch: 0.6, braueDreh: -0.2, lid: 0.12, pupille: 1.05, mund: 0.4, breit: 1.15, winkel: 1 },
-  erschrocken: { braueHoch: 1, braueDreh: -0.5, lid: 0, pupille: 0.55, mund: 1, breit: 0.9, winkel: -0.4 },
-  ueberrascht: { braueHoch: 0.9, braueDreh: -0.3, lid: 0, pupille: 0.85, mund: 0.55, breit: 0.6, winkel: 0 },
-  grimmig: { braueHoch: -0.7, braueDreh: 0.32, lid: 0.42, pupille: 0.9, mund: 0, breit: 1, winkel: -1 },
+  neutral: NEUTRAL,
+  froehlich: { ...NEUTRAL, braueHoch: 0.95, braueDreh: -0.24, unterlid: 0.36, pupille: 1.2, mund: 0.42, breit: 1.2, winkel: 1, laecheln: 1 },
+  erschrocken: { ...NEUTRAL, braueHoch: 1, braueDreh: -0.5, pupille: 0.55, mund: 1, breit: 0.9, winkel: -0.4 },
+  ueberrascht: { ...NEUTRAL, braueHoch: 0.9, braueDreh: -0.3, pupille: 0.85, mund: 0.55, breit: 0.6 },
+  grimmig: { ...NEUTRAL, braueHoch: -0.7, braueDreh: 0.32, lid: 0.42, pupille: 0.9, winkel: -1 },
 };
 /* Mundformen von Rhubarb Lip Sync (A–F Grundformen, G, H, X Zusatz): [offen, breit] */
 export const MUNDFORMEN = { X: [0, 1], A: [0.03, 0.9], B: [0.28, 1.05], C: [0.6, 1], D: [1, 1.1], E: [0.65, 0.72], F: [0.35, 0.5], G: [0.16, 0.95], H: [0.5, 0.8] };
@@ -30,9 +32,28 @@ const FIGUREN = {
     koerper: "koerper_mage", teileDatei: "gary_teile", hals: 0.785, weg: ["1H_Wand"], kieferWeg: 0.045,
     teile: { kopf: ["fuchskopf", "head", 1.0, [0, -0.03, 0]], schwanz: ["fuchsschwanz", "hips", 1.0, [0, 0, -0.10]] },
     hand: "zauberstab",
+    gestik: { haeufig: 1, gross: 1, lieblinge: ["Interact", "Spellcast_Shoot", "Cheer", "Throw", "Use_Item"] },   // Gestik-Profil: Gary gestikuliert viel und groß
     gesten: { zaubern: ["Spellcast_Long", "froehlich"], tadaa: ["Cheer", "froehlich"], schreck: ["Hit_A", "erschrocken"] },
   },
 };
+
+/* Gestik beim Reden (Machbarkeitsprobe 18.11.): eine fertige Bewegung nur für Oberkörper und Arme, als Zugabe über Stehen oder Gehen gelegt.
+   Die Beine behalten ihre Bewegung. „Zugabe“ heißt: gezählt wird nur der Unterschied zur Ruhehaltung (additive Bewegung). */
+const OBEN = /^(chest|upperarm|lowerarm|wrist|hand)[lr]?\.quaternion$/;
+function nurOberkoerper(clip, ruhe) {
+  const c = new THREE.AnimationClip(clip.name + "_oben", clip.duration, clip.tracks.filter((t) => OBEN.test(t.name)).map((t) => t.clone()));
+  return THREE.AnimationUtils.makeClipAdditive(c, 0, ruhe);
+}
+/* Einsätze für Gesten aus den Mundform-Zeiten: jeder Satzanfang nach einer Pause, in langen Sätzen zusätzlich eine weit offene Silbe (Betonung). */
+export function einsaetzeAus(zeiten) {
+  const aus = []; let pause = true, letzter = -9;
+  for (const [ab, form] of zeiten) {
+    if (form === "X") { pause = true; continue; }
+    if (pause || (form === "D" && ab - letzter > 1.5)) { aus.push(ab); letzter = ab; }
+    pause = false;
+  }
+  return aus;
+}
 
 /* Ein Teil (Kopf, Schwanz, später Kleidung) so auf einen Knochen stecken, dass es in der Grundhaltung aufrecht steht und in der Welt `mass` gross ist. */
 function steckeAuf(teil, knochen, figur, mass, versatz) {
@@ -49,8 +70,8 @@ function steckeAuf(teil, knochen, figur, mass, versatz) {
 /* Gesicht: sucht die benannten Teile im Kopf und bewegt sie weich auf den gewünschten Ausdruck zu; blinzelt von selbst. */
 function baueGesicht(kopf, kieferWeg) {
   const teil = (n) => { const o = kopf.getObjectByName(n); return o ? { o, ort: o.position.clone(), q: o.quaternion.clone() } : null; };
-  const t = Object.fromEntries(["braue_l", "braue_r", "lid_l", "lid_r", "pupille_l", "pupille_r", "mund", "kiefer", "mundwinkel_l", "mundwinkel_r"].map((n) => [n, teil(n)]));
-  const jetzt = { ...AUSDRUECKE.neutral }, dreh = new THREE.Quaternion();
+  const t = Object.fromEntries(["braue_l", "braue_r", "lid_l", "lid_r", "unterlid_l", "unterlid_r", "laecheln", "pupille_l", "pupille_r", "mund", "kiefer", "mundwinkel_l", "mundwinkel_r"].map((n) => [n, teil(n)]));
+  const jetzt = { ...NEUTRAL }, dreh = new THREE.Quaternion();
   let blinzeln = 2, zu = 0;
   return {
     wert: jetzt,
@@ -66,10 +87,13 @@ function baueGesicht(kopf, kieferWeg) {
         const b = t["braue_" + seite], l = t["lid_" + seite], p = t["pupille_" + seite], w = t["mundwinkel_" + seite];
         if (b) { b.o.position.y = b.ort.y + jetzt.braueHoch * 0.026; b.o.quaternion.copy(dreh.setFromAxisAngle(VORN, s * jetzt.braueDreh)).multiply(b.q); }
         if (l) { l.o.scale.y = Math.max(0.001, lid); l.o.visible = lid > 0.03; }
+        const u = t["unterlid_" + seite];
+        if (u) { u.o.scale.y = Math.max(0.001, jetzt.unterlid); u.o.visible = jetzt.unterlid > 0.03; }
         if (p) p.o.scale.setScalar(jetzt.pupille);
-        if (w) { w.o.position.y = w.ort.y + jetzt.winkel * 0.008 - offen * 0.004; w.o.visible = offen < 0.45; }
+        if (w) { w.o.position.y = w.ort.y + jetzt.winkel * 0.008 - offen * 0.004; w.o.visible = offen < 0.45 && jetzt.laecheln < 0.3; }
       }
       if (t.mund) { t.mund.o.visible = offen > 0.04; t.mund.o.scale.set(breit, Math.max(0.05, offen), 1); }
+      if (t.laecheln) { t.laecheln.o.visible = jetzt.laecheln > 0.08; t.laecheln.o.scale.setScalar(0.7 + 0.3 * jetzt.laecheln); }
       if (t.kiefer) t.kiefer.o.position.y = t.kiefer.ort.y - offen * kieferWeg;
     },
   };
@@ -163,6 +187,12 @@ export async function ladeFiguren(lader, szene, orte) {
       const a = clip(n); a.setLoop(THREE.LoopOnce); a.clampWhenFinished = true; a.setEffectiveWeight(0);
       gesten[knopf] = { a, dauer: a.getClip().duration, gewicht: 0, ausdruck };
     }
+    const profil = o.gestik || { haeufig: 0, gross: 1, lieblinge: [] }, ruheClip = bewegungen.find((a) => a.name === "Idle");
+    const gestik = profil.lieblinge.map((n) => {
+      const a = mixer.clipAction(nurOberkoerper(bewegungen.find((b) => b.name === n), ruheClip), undefined, THREE.AdditiveAnimationBlendMode);
+      a.setLoop(THREE.LoopOnce); a.clampWhenFinished = true; a.setEffectiveWeight(0);
+      return { a, name: n, dauer: a.getClip().duration };
+    });
     const kopf = knochen("head"), ruecken = [knochen("spine"), knochen("chest")];
     const zusatz = [kopf, ...ruecken].map((k) => [k, k.quaternion.clone()]);   // Knochen, über deren Bewegung Reden und Verbeugen gelegt werden
     // Messwerte fürs Testprogramm: wie weit Kopf und Rumpf aus der Grundhaltung gedreht sind (Grad), wie weit der Hut neben den Füßen steht (m)
@@ -173,11 +203,11 @@ export async function ladeFiguren(lader, szene, orte) {
     const sp = new THREE.Vector3(), ri = new THREE.Vector3(), sq = new THREE.Quaternion();
 
     figuren.push({
-      name, anker, modell: m, z0: platz.z, bahn: platz.bahn || 2.4, weg: 0, hin: 1, dreh: 0, modus: "stehen", gang: 0, tempo: 0, redet: 0, seit: 0, ausdruck: "neutral", mund: null, funken,
+      name, anker, modell: m, z0: platz.z, bahn: platz.bahn || 2.4, weg: 0, hin: 1, dreh: 0, modus: "stehen", gang: 0, tempo: 0, redet: 0, seit: 0, ausdruck: "neutral", mund: null, funken, rede: null, geste: null, gestenZahl: 0, gestenNr: 0,
       mass() {
         const h = stueck.kopf.getWorldPosition(new THREE.Vector3());
         return { kopfWinkel: grad(lage(kopf, ruecken[1]), kopfRuhe), rumpfWinkel: grad(lage(ruecken[1], m), rumpfRuhe), hutAbstand: +Math.hypot(h.x - anker.position.x, h.z - anker.position.z).toFixed(2),
-          tempo: +this.tempo.toFixed(2), mund: +(gesicht.offen || 0).toFixed(2), lid: +(gesicht.lid || 0).toFixed(2), braue: +gesicht.wert.braueHoch.toFixed(2), funken: funken ? funken.zahl() : 0 };
+          tempo: +this.tempo.toFixed(2), mund: +(gesicht.offen || 0).toFixed(2), lid: +(gesicht.lid || 0).toFixed(2), braue: +gesicht.wert.braueHoch.toFixed(2), laecheln: +gesicht.wert.laecheln.toFixed(2), funken: funken ? funken.zahl() : 0, gesten: this.gestenZahl, geste: this.geste ? this.geste.x.name : "" };
       },
       start(modus) { this.modus = modus; this.seit = 0; if (gesten[modus]) gesten[modus].a.reset().play(); },
       bewege(dt, t) {
@@ -204,6 +234,19 @@ export async function ladeFiguren(lader, szene, orte) {
         if (wG > 0.001 && !gehen.isRunning()) gehen.play();
         if (wR > 0.001 && !rennen.isRunning()) rennen.play();
         stehen.setEffectiveWeight(wS * rest); gehen.setEffectiveWeight(wG * rest); rennen.setEffectiveWeight(wR * rest);
+        if (g.rede && gestik.length) {                                             // Gestik: an jedem Einsatz der Aufnahme eine Geste aus dem Profil, eine nach der anderen
+          const zeit = g.rede.zeit();
+          while (g.rede.i < g.rede.einsaetze.length && g.rede.einsaetze[g.rede.i] <= zeit) {
+            g.rede.i++;
+            if (Math.random() < profil.haeufig) g.rede.offen = 1;                    // läuft noch eine Geste, rückt die nächste gleich danach nach
+          }
+          if (!g.geste && g.rede.offen) { g.rede.offen = 0; const x = gestik[g.gestenNr++ % gestik.length]; x.a.reset().play(); g.geste = { x, seit: 0 }; g.gestenZahl++; }
+        }
+        if (g.geste) {
+          const { x } = g.geste; g.geste.seit += dt;
+          x.a.setEffectiveWeight(profil.gross * Math.max(0, Math.min(1, g.geste.seit / 0.16, (x.dauer - g.geste.seit) / 0.3)));
+          if (g.geste.seit >= x.dauer) { x.a.stop(); g.geste = null; }
+        }
         for (const [k, q] of zusatz) k.quaternion.copy(q);   // Zusatzdrehungen vom letzten Bild zurücknehmen: der Mixer setzt Knochen nur neu, wenn sich die Bewegung ändert – sonst addieren sie sich auf
         mixer.update(dt);
         for (const [k, q] of zusatz) q.copy(k.quaternion);
@@ -211,7 +254,7 @@ export async function ladeFiguren(lader, szene, orte) {
         for (const k of ruecken) k.rotateX(0.5 * b + 0.03 * r * Math.sin(t / 310));           // Verbeugung: den Rücken nach vorn rollen
         kopf.rotateX(r * (0.07 * Math.sin(t / 190) + 0.04 * Math.sin(t / 433)));               // Reden: der Kopf nickt und neigt sich leicht
         kopf.rotateY(r * 0.10 * Math.sin(t / 610)); kopf.rotateZ(r * 0.05 * Math.sin(t / 370));
-        if (schwanzRuhe) stueck.schwanz.quaternion.copy(schwanzRuhe).multiply(sq.setFromAxisAngle(HOCH, Math.sin(t / 260) * (0.18 + 0.1 * g.gang + 0.15 * r)));
+        if (schwanzRuhe) stueck.schwanz.quaternion.copy(schwanzRuhe).multiply(sq.setFromAxisAngle(HOCH, Math.sin(t / 260) * (0.18 + 0.1 * g.gang + 0.15 * r) + Math.sin(t / 75) * 0.32 * gesicht.wert.laecheln));   // fröhlich: der Schwanz wedelt
         gesicht.bewege(dt, AUSDRUECKE[geste ? geste.ausdruck : g.ausdruck] || AUSDRUECKE.neutral, g.mund);
         if (funken) {
           m.updateMatrixWorld(true);
@@ -226,6 +269,7 @@ export async function ladeFiguren(lader, szene, orte) {
     liste: () => figuren.map((g) => ({ name: g.name, modus: g.modus, weg: +g.weg.toFixed(2), ort: [g.anker.position.x, g.anker.position.z], ausdruck: g.ausdruck, ...g.mass() })),
     befehl(modus) { for (const g of figuren) g.start(modus); },
     ausdruck(a) { for (const g of figuren) g.ausdruck = a; },
+    rede(name, r) { for (const g of figuren) if (g.name === name) g.rede = r ? { ...r, i: 0 } : null; },   // { einsaetze: [s, …], zeit: () => s } oder null
     mund(name, m) { for (const g of figuren) if (g.name === name) g.mund = m; },      // [offen, breit] aus der Lippenbewegung, null = schweigt
     bewege(dt, t) { for (const g of figuren) g.bewege(dt, t); },
   };

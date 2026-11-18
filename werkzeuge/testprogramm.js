@@ -232,15 +232,28 @@ async function probe3dTest(browser, basis, app, name, fm) {
     if (g.braue > 0.1 || g.mund > 0.1) fehl.push(`${titel}: Gesicht geht nicht auf „neutral“ zurück (Braue ${g.braue}, Mund ${g.mund})`);
     await stumm();
     await pg.evaluate(() => { window.__towerTonTest = 1500; });
-    for (const art of ["a", "b"]) {                         // Mund beim Reden: a folgt der Lautstärke, b den Mundformen von Rhubarb
-      await pg.click(`#figuren button[data-mund="${art}"]`);
+    for (const art of ["mit Mundformen", "ohne Mundformen (Reserve Lautstärke)"]) {   // Mund beim Reden: Mundformen von Rhubarb; fehlen sie, folgt der Mund der Lautstärke
+      await pg.evaluate((an) => window.__probe3d.mundformen(an), art === "mit Mundformen");
       await pg.click('#figuren button[data-figur="reden"]');
       let auf = 0;
       for (let i = 0; i < 12; i++) { auf = Math.max(auf, (await takt(3)).mund); await pg.waitForTimeout(80); }
-      if (auf < 0.15) fehl.push(`${titel}: beim Reden (Weg ${art}) bewegt sich Garys Mund nicht (höchstens ${auf})`);
+      if (auf < 0.15) fehl.push(`${titel}: beim Reden (${art}) bewegt sich Garys Mund nicht (höchstens ${auf})`);
       await stumm();
-      if ((await takt(40)).mund > 0.1) fehl.push(`${titel}: nach dem Reden (Weg ${art}) bleibt Garys Mund offen`);
+      if ((await takt(40)).mund > 0.1) fehl.push(`${titel}: nach dem Reden (${art}) bleibt Garys Mund offen`);
     }
+    await pg.evaluate(() => window.__probe3d.mundformen(true));
+    // Gestik beim Reden (Machbarkeitsprobe): an den Satzanfängen der Aufnahme laufen Gesten für Oberkörper und Arme
+    await pg.evaluate(() => { window.__towerTonTest = 4000; });
+    await pg.click('#figuren button[data-figur="gestik"]');
+    const vorGestik = (await figuren())[0].gesten;
+    let gesten = 0;
+    for (let i = 0; i < 25 && gesten < 2; i++) { gesten = (await takt(6)).gesten - vorGestik; await pg.waitForTimeout(100); }
+    if (gesten < 2) fehl.push(`${titel}: beim Reden mit Gestik laufen nur ${gesten} Gesten (erwartet mindestens 2)`);
+    await stumm();
+    // jede Gary-Aufnahme braucht vorab gerechnete Mundformen (wie beim Offline-Speicher: ein vergessener Rechenlauf soll auffallen)
+    const formen = JSON.parse(fs.readFileSync(path.join(__dirname, "..", app.pfad, "tower", "figuren", "mund_gary.json"), "utf8"));
+    const ohne = fs.readdirSync(path.join(__dirname, "..", app.pfad, "audio", "tower")).filter((d) => /^gary_.*\.mp3$/.test(d) && !formen[d.slice(0, -4)]);
+    if (ohne.length) fehl.push(`${titel}: ${ohne.length} Gary-Aufnahmen ohne Mundformen (${ohne.slice(0, 4).join(", ")} …) – python werkzeuge/tower_lippen.py laufen lassen`);
     const ton = () => pg.evaluate(() => { const d = document.getElementById("buehne").dataset; return [d.ton || "", d.wartet || ""]; });
     await pg.evaluate(() => { window.__towerTonTest = 5000; });
     await pg.click('#figuren button[data-figur="reden"]'); const [erste] = await ton();

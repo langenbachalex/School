@@ -1,0 +1,48 @@
+"""Mundformen aus den Aufnahmen rechnen (Rhubarb Lip Sync, MIT) – einmal vorab, die App spielt nur ab.
+
+Aufruf:  python werkzeuge/tower_lippen.py            (fuenf Gary-Aufnahmen, wenige Sekunden)
+Ausgabe: app/tower/figuren/mund_gary.json   {"gary_01": {"dauer": 4.64, "zeiten": [[0.0, "X"], [0.07, "B"], ...]}, ...}
+Braucht (nur lokal, nicht im Repo):
+  werkzeuge/extern/rhubarb/Rhubarb-Lip-Sync-*/rhubarb(.exe)  von https://github.com/DanielSWolf/rhubarb-lip-sync/releases
+  Blender (wandelt MP3 in WAV um, weil Rhubarb nur WAV und Ogg liest; ffmpeg ginge genauso).
+Mundformen: A–F Grundformen, G, H, X Zusatz; was sie im Gesicht bedeuten, steht in app/tower/probe3d_figuren.js (MUNDFORMEN).
+"""
+import csv
+import glob
+import json
+import os
+import subprocess
+import sys
+import tempfile
+
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+AUFNAHMEN = {"gary": ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"]}
+BLENDER = os.environ.get("BLENDER") or next(iter(sorted(glob.glob(r"C:\Program Files\Blender Foundation\Blender *\blender.exe"), reverse=True)), "blender")
+RHUBARB = next(iter(glob.glob(os.path.join(REPO, "werkzeuge", "extern", "rhubarb", "*", "rhubarb*"))), None)
+if not RHUBARB:
+    sys.exit("Rhubarb Lip Sync fehlt in werkzeuge/extern/rhubarb/ (siehe Kopf dieser Datei).")
+
+with open(os.path.join(REPO, "inhalte", "abenteuer", "tower_sprueche.tsv"), encoding="utf-8") as f:
+    TEXTE = {z["id"]: z["text"] for z in csv.DictReader(f, delimiter="\t")}
+
+with tempfile.TemporaryDirectory() as tmp:
+    for figur, ids in AUFNAHMEN.items():
+        aus = {}
+        for i in ids:
+            mp3 = os.path.join(REPO, "app", "audio", "tower", i + ".mp3").replace("\\", "/")
+            wav, txt = os.path.join(tmp, i + ".wav").replace("\\", "/"), os.path.join(tmp, i + ".txt")
+            # Blender meldet nach dem Schreiben manchmal einen Fehler beim letzten Tonstueck; die Datei ist trotzdem vollstaendig
+            code = f"import aud\ntry:\n    aud.Sound('{mp3}').write('{wav}', aud.RATE_48000, aud.CHANNELS_MONO, aud.FORMAT_S16, aud.CONTAINER_WAV, aud.CODEC_PCM)\nexcept Exception as e:\n    print('HINWEIS', e)\n"
+            subprocess.run([BLENDER, "-b", "--python-expr", code], capture_output=True, check=False)
+            if not os.path.exists(wav):
+                sys.exit(f"{i}: Umwandeln in WAV hat nicht geklappt")
+            with open(txt, "w", encoding="utf-8") as f:
+                f.write(TEXTE.get(i, "").replace("…", " "))
+            r = subprocess.run([RHUBARB, "-f", "json", "--extendedShapes", "GHX", "-d", txt, wav], capture_output=True, text=True, check=True)
+            d = json.loads(r.stdout)
+            aus[i] = {"dauer": d["metadata"]["duration"], "zeiten": [[c["start"], c["value"]] for c in d["mouthCues"]]}
+            print(f"{i}: {d['metadata']['duration']} s, {len(d['mouthCues'])} Mundformen")
+        ziel = os.path.join(REPO, "app", "tower", "figuren", f"mund_{figur}.json")
+        with open(ziel, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(aus, f, separators=(",", ":"))
+        print(f"{os.path.basename(ziel)}: {os.path.getsize(ziel)} Bytes")

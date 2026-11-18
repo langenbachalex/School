@@ -20,9 +20,11 @@
   #kameras span { font-size: 13px; opacity: .8; }
   #kameras button { min-height: 46px; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
   #kameras button[aria-pressed="true"] { background: #e9b45a; color: #1b1008; font-weight: 600; }
-  #figuren { right: 10px; top: 228px; display: grid; gap: 6px; padding: 8px; pointer-events: auto; }
+  #figuren { right: 10px; top: 228px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 8px; pointer-events: auto; max-width: min(62vw, 270px); }
+  #figuren span { grid-column: 1 / -1; }
+  #figuren button[aria-pressed="true"] { background: #e9b45a; color: #1b1008; font-weight: 600; }
   #figuren span { font-size: 13px; opacity: .8; }
-  #figuren button { min-height: 44px; padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
+  #figuren button { min-height: 44px; padding: 4px 8px; font-size: 14px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
   #hilfe { left: 10px; bottom: 18px; font-size: 13px; max-width: min(44vw, 300px); }
   #text { left: 50%; transform: translateX(-50%); bottom: 18px; width: min(92vw, 560px); text-align: center; font-size: 19px; }
   #text small { display: block; opacity: .75; font-size: 14px; }
@@ -47,11 +49,21 @@
   <span>Gary the Great</span>
   <button type="button" data-figur="stehen">Stehen</button>
   <button type="button" data-figur="gehen">Gehen</button>
+  <button type="button" data-figur="rennen">Rennen</button>
   <button type="button" data-figur="reden">Reden</button>
   <button type="button" data-figur="verbeugen">Verbeugen</button>
   <button type="button" data-figur="zaubern">Zaubern</button>
   <button type="button" data-figur="tadaa">Ta-daa!</button>
   <button type="button" data-figur="schreck">Erschrecken</button>
+  <span>Gesicht</span>
+  <button type="button" data-gesicht="neutral" aria-pressed="true">Neutral</button>
+  <button type="button" data-gesicht="froehlich" aria-pressed="false">Fröhlich</button>
+  <button type="button" data-gesicht="erschrocken" aria-pressed="false">Erschrocken</button>
+  <button type="button" data-gesicht="ueberrascht" aria-pressed="false">Überrascht</button>
+  <button type="button" data-gesicht="grimmig" aria-pressed="false">Grimmig</button>
+  <span>Mund beim Reden</span>
+  <button type="button" data-mund="a" aria-pressed="true">a · Lautstärke</button>
+  <button type="button" data-mund="b" aria-pressed="false">b · Mundformen</button>
 </div>
 <div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
@@ -59,7 +71,7 @@
 <script type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
-import { ladeFiguren } from "./probe3d_figuren.js";
+import { ladeFiguren, mundAusZeiten } from "./probe3d_figuren.js";
 
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
@@ -161,9 +173,24 @@ try {
     const p = new THREE.PointLight(new THREE.Color(...l.farbe), l.watt / 12, 0, 2);
     p.position.copy(ausBlender(l.ort)); szene.add(p);
   }
-  // Figuren (Block A): Gary rechts im Raum, mit einer Bahn zum Gehen in Richtung Tür
-  const figuren = await ladeFiguren(lader, szene, { gary: zuOrt(...naechsteFreie(2.1, 6.0)) });
-  for (const b of document.querySelectorAll("#figuren button")) b.addEventListener("click", () => { figuren.befehl(b.dataset.figur); buehne.dataset.figur = b.dataset.figur; });
+  // Figuren (Block A): Gary rechts im Raum, mit einer Bahn zum Gehen und Rennen in Richtung Tür (so lang, wie der Boden frei ist, höchstens 5 m)
+  const garyZelle = naechsteFreie(2.1, 6.0);
+  let bahnZellen = 0;
+  while (bahnZellen * gk.zelle < 5.2 && frei(garyZelle[0], garyZelle[1] - bahnZellen - 1)) bahnZellen++;
+  const figuren = await ladeFiguren(lader, szene, { gary: { ...zuOrt(...garyZelle), bahn: Math.max(1.2, bahnZellen * gk.zelle - 0.3) } });
+  const mundZeiten = await fetch("figuren/mund_gary.json").then((r) => r.json()).catch(() => ({}));
+  const GARY_SAGT = Object.keys(mundZeiten);
+  let garyNr = 0, mundArt = "a";
+  const druecke = (art, wert) => { for (const b of document.querySelectorAll(`#figuren button[data-${art}]`)) b.setAttribute("aria-pressed", String(b.dataset[art] === wert)); };
+  for (const b of document.querySelectorAll("#figuren button[data-figur]")) b.addEventListener("click", () => {
+    const m = b.dataset.figur;
+    buehne.dataset.figur = m;
+    if (m !== "reden" || !GARY_SAGT.length) return figuren.befehl(m);
+    const id = GARY_SAGT[garyNr++ % GARY_SAGT.length];        // Reden: eine Aufnahme von Gary, der Mund bewegt sich dazu; läuft schon eine Aufnahme, wartet diese
+    spiele(`../audio/tower/${id}.mp3`, { wer: "gary", id, beginn: () => figuren.befehl("reden"), ende: () => { figuren.mund("gary", null); if (figuren.liste()[0].modus === "reden") figuren.befehl("stehen"); } });
+  });
+  for (const b of document.querySelectorAll("#figuren button[data-gesicht]")) b.addEventListener("click", () => { figuren.ausdruck(b.dataset.gesicht); druecke("gesicht", b.dataset.gesicht); });
+  for (const b of document.querySelectorAll("#figuren button[data-mund]")) b.addEventListener("click", () => { mundArt = b.dataset.mund; druecke("mund", mundArt); buehne.dataset.mund = mundArt; });
   const startZelle = naechsteFreie(0, raum.max.z - 2.6), startOrt = zuOrt(...startZelle);
   const figur = { x: startOrt.x, z: startOrt.z, dreh: Math.PI, pfad: [], phase: 0, geht: 0, dann: null, blick: null };
   const winkelZu = (a, b) => { let d = (b - a) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; };
@@ -205,7 +232,7 @@ try {
   let modus = "hinten";
   const kamOrt = new THREE.Vector3(), kamZiel = new THREE.Vector3();
   let kamFrisch = true;
-  let pruefBlick = null;                                 // nur fuer Pruefbilder: fester Blick [von, nach]
+  let angehalten = false, pruefBlick = null;                                 // nur fuer Pruefbilder: fester Blick [von, nach]
   function setzeKamera(dt) {
     const k = KAMERAS[modus];
     if (pruefBlick) { kamera.position.set(...pruefBlick[0]); kamera.lookAt(...pruefBlick[1]); return; }
@@ -254,6 +281,40 @@ try {
 
   // ---- Gesten (Bauplan Abschnitt 3, entschieden 17.11.): alles geht mit Finger, Maus und Touchpad gleich, kein Steuerkreuz ----
   const strahl = new THREE.Raycaster(), ton = new Audio(), finger = new Map();
+  /* Ton: Eine Aufnahme wird immer zu Ende gesprochen (Mr. Alex 18.11.). Kommt währenddessen die nächste, wartet sie (höchstens eine, die letzte gewinnt).
+     Im Testprogramm (window.__towerSchnell) gibt es keinen Ton; mit window.__towerTonTest = Dauer in ms wird eine Aufnahme nur nachgestellt. */
+  let laeuft = null, wartend = null, klang = null, pegelFeld = null, pegel = 0;
+  function spiele(datei, o = {}) {
+    if (laeuft) { wartend = [datei, o]; buehne.dataset.wartet = datei; return; }
+    const probe = window.__towerTonTest, start = performance.now();
+    laeuft = { datei, ...o, zeit: () => (probe ? (performance.now() - start) / 1000 : ton.currentTime) };
+    buehne.dataset.ton = datei; delete buehne.dataset.wartet;
+    if (o.beginn) o.beginn();
+    const fertig = () => {
+      if (!laeuft || laeuft.datei !== datei) return;
+      laeuft = null; delete buehne.dataset.ton;
+      if (o.ende) o.ende();
+      if (wartend) { const w = wartend; wartend = null; spiele(...w); }
+    };
+    if (probe) return setTimeout(fertig, probe);
+    if (window.__towerSchnell) return fertig();
+    try {                                                 // Lautstärke mitlesen, damit der Mund ihr folgen kann (Weg a)
+      if (!klang) { klang = new AudioContext(); const quelle = klang.createMediaElementSource(ton), mess = klang.createAnalyser(); mess.fftSize = 512; quelle.connect(mess); mess.connect(klang.destination); pegelFeld = new Float32Array(mess.fftSize); klang.mess = mess; }
+      klang.resume();
+    } catch (e) { /* ohne Lautstärke-Messung bleibt der Mund bei Weg a zu, der Ton läuft trotzdem */ }
+    ton.onended = ton.onerror = fertig;
+    ton.src = datei; ton.play().catch(fertig);
+  }
+  function bewegeMund(dt) {                               // jedes Bild: Garys Mund folgt der laufenden Aufnahme – a nach Lautstärke, b nach den Mundformen von Rhubarb
+    if (!laeuft || laeuft.wer !== "gary") return;
+    const zeit = laeuft.zeit();
+    if (mundArt === "b") return figuren.mund("gary", mundAusZeiten(mundZeiten[laeuft.id].zeiten, zeit));
+    let laut = 0;
+    if (window.__towerTonTest) laut = 0.12 * Math.abs(Math.sin(zeit * 9));
+    else if (klang && klang.mess) { klang.mess.getFloatTimeDomainData(pegelFeld); for (const v of pegelFeld) laut += v * v; laut = Math.sqrt(laut / pegelFeld.length); }
+    pegel += (Math.min(1, Math.max(0, (laut - 0.012) * 7)) - pegel) * Math.min(1, dt * 22);
+    figuren.mund("gary", [pegel, 1]);
+  }
   let zug = null, spreiz = 0;
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.16, 0.22, 40), new THREE.MeshBasicMaterial({ color: 0xffd58a, transparent: true, opacity: 0.85, depthTest: false }));
   ring.rotation.x = -Math.PI / 2; ring.visible = false; ring.renderOrder = 5; szene.add(ring);
@@ -325,6 +386,11 @@ try {
     });
   }
   function angetippt(netz) {
+    const z0 = (window.TOWER_DATEN?.zeilen || []).find((z) => z.d === netz.userData.ding && z.s === "erzaehler");
+    if (z0 && z0.t === 1) spiele(`../audio/tower/k1_${z0.id}.mp3`, { beginn: () => zeigeDing(netz) });   // Text und Ton gehören zusammen: beides wartet, bis die laufende Aufnahme fertig ist
+    else zeigeDing(netz);
+  }
+  function zeigeDing(netz) {
     const id = netz.userData.ding, zeile = (window.TOWER_DATEN?.zeilen || []).find((z) => z.d === id && z.s === "erzaehler");
     buehne.dataset.zuletzt = id;
     $("text").innerHTML = "";
@@ -332,7 +398,6 @@ try {
     const klein = document.createElement("small"); klein.textContent = dinge.get(id).name; $("text").append(klein);
     netz.material.color.setScalar(1.7);                 // kurz aufleuchten
     setTimeout(() => netz.material.color.setScalar(1), 450);
-    if (zeile && zeile.t === 1 && !window.__towerSchnell) { ton.src = `../audio/tower/k1_${zeile.id}.mp3`; ton.play().catch(() => {}); }
   }
 
   // ---- Bild fuer Bild; nebenbei messen, wie fluessig es laeuft ----
@@ -347,7 +412,7 @@ try {
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1); zuletzt = t;
     bewegeFigur(dt, t);
-    figuren.bewege(dt, t);
+    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); }
     setzeKamera(dt);
     renderer.render(szene, kamera);
     bilder++;
@@ -363,7 +428,8 @@ try {
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), takt: (n, ms) => { for (let i = 0; i < n; i++) figuren.bewege(ms / 1000, performance.now() + i * ms); },   // Testprogramm: n Bilder im Abstand ms rechnen (wie 60 Bilder pro Sekunde)
+  window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter
+    takt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); figuren.bewege(ms / 1000, performance.now() + i * ms); } },   // Testprogramm: n Bilder im Abstand ms rechnen (wie 60 Bilder pro Sekunde)
      stand: () => [figur.x, figur.z], boden: () => {      // eine freie, sichtbare Bodenstelle 1,5 bis 3 m neben der Figur
     setzeKamera(0); kamera.updateMatrixWorld();
     for (let j = 0; j < NY; j += 2) for (let i = 0; i < NX; i += 2) {

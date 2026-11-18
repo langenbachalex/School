@@ -75,13 +75,22 @@ def stab(name, eltern, ort, r, laenge, material, dreh=(0, 0, 0)):
     return _fertig(bpy.context.object, name, eltern, ort, (1, 1, 1), material, dreh)
 
 
+def oben(ob):
+    """Ursprung an die Oberkante legen: der Browser macht das Teil dann nur hoeher oder flacher (Lid schliesst, Mund oeffnet nach unten)."""
+    h = max(v.co.z for v in ob.data.vertices)
+    ob.data.transform(Matrix.Translation((0, 0, -h)))
+    ob.location.z += h
+    return ob
+
+
 def farben():
     return dict(
         orange=farbe("fuchs_orange", (0.80, 0.32, 0.07), 0.9), weiss=farbe("fuchs_weiss", (0.93, 0.90, 0.84), 0.9),
         schwarz=farbe("fuchs_schwarz", (0.03, 0.025, 0.02), 0.8), hut=farbe("hut_stoff", (0.10, 0.06, 0.30), 0.85),
         gold=farbe("gold", (1.0, 0.72, 0.18), 0.3, 1.0), stern=farbe("stern", (1.0, 0.85, 0.35), 0.4, 0.0, 2.5),
         auge=farbe("auge_weiss", (0.95, 0.95, 0.92), 0.2), pupille=farbe("pupille", (0.02, 0.015, 0.01), 0.1),
-        holz=farbe("zauberstab", (0.05, 0.04, 0.04), 0.3))
+        holz=farbe("zauberstab", (0.02, 0.02, 0.025), 0.35), stabweiss=farbe("stab_weiss", (0.95, 0.94, 0.90), 0.4),
+        rachen=farbe("rachen", (0.16, 0.03, 0.04), 0.7))
 
 
 def fuchskopf(eltern, ort=(0, 0, 0), name="fuchskopf"):
@@ -89,16 +98,19 @@ def fuchskopf(eltern, ort=(0, 0, 0), name="fuchskopf"):
     f = farben()
     k = gelenk(name, eltern, ort)
     kugel("kopf_rund", k, (0, -0.02, 0.17), (0.185, 0.162, 0.157), f["orange"])
-    for s in (-1, 1):
+    for s, seite in ((-1, "r"), (1, "l")):
         kegel("backe", k, (s * 0.17, -0.02, 0.115), 0.085, 0.20, f["orange"], (0, R(s * 112), 0))
         kegel("ohr", k, (s * 0.150, 0.01, 0.355), 0.082, 0.27, f["orange"], (R(-4), R(s * 24), 0))
         kegel("innenohr", k, (s * 0.150, -0.022, 0.345), 0.048, 0.19, f["weiss"], (R(4), R(s * 24), 0))
         kegel("ohrspitze", k, (s * 0.196, 0.003, 0.464), 0.028, 0.085, f["schwarz"], (R(-4), R(s * 24), 0))
         kugel("wange", k, (s * 0.06, -0.125, 0.098), (0.046, 0.038, 0.029), f["weiss"])
         kugel("auge", k, (s * 0.074, -0.152, 0.225), (0.040, 0.026, 0.049), f["auge"])
-        kugel("pupille", k, (s * 0.070, -0.178, 0.222), (0.024, 0.012, 0.028), f["pupille"])
-        kugel("braue", k, (s * 0.080, -0.152, 0.288), (0.044, 0.012, 0.0085), f["schwarz"], (0, R(s * -14), 0))
-        kugel("mund", k, (s * 0.028, -0.262, 0.092), (0.029, 0.012, 0.0066), f["schwarz"], (0, R(s * -22), R(s * 30)))
+        kugel("pupille_" + seite, k, (s * 0.070, -0.178, 0.222), (0.024, 0.012, 0.028), f["pupille"])
+        kugel("braue_" + seite, k, (s * 0.080, -0.152, 0.288), (0.044, 0.012, 0.0085), f["schwarz"], (0, R(s * -14), 0))
+        kugel("mundwinkel_" + seite, k, (s * 0.028, -0.262, 0.092), (0.029, 0.012, 0.0066), f["schwarz"], (0, R(s * -22), R(s * 30)))
+        oben(kugel("lid_" + seite, k, (s * 0.074, -0.152, 0.225), (0.045, 0.043, 0.054), f["orange"]))
+    oben(kugel("mund", k, (0, -0.258, 0.066), (0.036, 0.030, 0.030), f["rachen"]))
+    kugel("kiefer", k, (0, -0.205, 0.094), (0.050, 0.085, 0.022), f["weiss"])
     kugel("nasenruecken", k, (0, -0.165, 0.165), (0.051, 0.102, 0.036), f["orange"])
     kugel("schnauze", k, (0, -0.185, 0.122), (0.068, 0.119, 0.049), f["weiss"])
     kugel("nase", k, (0, -0.298, 0.145), (0.0375, 0.027, 0.0255), f["pupille"])
@@ -126,6 +138,47 @@ def fuchsschwanz(eltern, ort=(0, 0, 0), name="fuchsschwanz"):
     return s
 
 
+def zauberstab(eltern, ort=(0, 0, 0), name="zauberstab"):
+    """Buehnen-Zauberstab, schwarz mit weissen Enden, in den Massen des KayKit-Handplatzes (Griff im Ursprung, Spitze nach oben).
+    Der Browser haengt ihn ohne Umrechnen an den Knochen "handslot.r"; "stabspitze" ist der Ort fuer die Funken."""
+    f = farben()
+    s = gelenk(name, eltern, ort)
+    stab("stab_schwarz", s, (0, 0, 0.24), 0.042, 0.56, f["holz"])
+    stab("stab_ende_unten", s, (0, 0, -0.10), 0.045, 0.13, f["stabweiss"])
+    stab("stab_ende_oben", s, (0, 0, 0.58), 0.045, 0.13, f["stabweiss"])
+    gelenk("stabspitze", s, (0, 0, 0.65))
+    return s
+
+
+def pruefbilder(datei):
+    """Selbstpruefung (Regel 18.11.): kleine Bilder aus festen Kameras ohne Fenster rechnen, dazu Pruefzahlen ausgeben."""
+    import bmesh
+    dreiecke = 0
+    for ob in bpy.context.scene.objects:
+        if ob.type == "MESH":
+            bm = bmesh.new(); bm.from_mesh(ob.data); dreiecke += len(bm.calc_loop_triangles()); bm.free()
+    sc = bpy.context.scene
+    sc.render.engine = "CYCLES"; sc.cycles.samples = 24; sc.cycles.device = "CPU"
+    sc.render.resolution_x = sc.render.resolution_y = 420
+    sc.world = bpy.data.worlds.new("hell"); sc.world.use_nodes = True
+    sc.world.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.5, 0.45, 1)
+    sonne = bpy.data.objects.new("sonne", bpy.data.lights.new("sonne", "SUN")); sonne.data.energy = 3; sonne.rotation_euler = (R(55), 0, R(-30)); sc.collection.objects.link(sonne)
+    kam = bpy.data.objects.new("kamera", bpy.data.cameras.new("kamera")); sc.collection.objects.link(kam); sc.camera = kam
+    kam.data.lens = 70
+    ziel = os.path.join(REPO, "werkzeuge", "blender", "frames")
+    os.makedirs(ziel, exist_ok=True)
+    for blick, ort in (("vorn", (0, -3.2, 0.42)), ("schraeg", (2.3, -2.3, 0.6)), ("seite", (3.2, 0, 0.42))):
+        kam.location = ort
+        kam.rotation_euler = (Matrix.Translation(ort).inverted() @ Matrix.Identity(4)).to_euler()
+        richtung = Matrix.Translation((0, 0, 0.42)).translation - kam.location
+        kam.rotation_euler = richtung.to_track_quat("-Z", "Y").to_euler()
+        sc.render.filepath = os.path.join(ziel, f"pruef_{datei}_{blick}.png")
+        bpy.ops.render.render(write_still=True)
+    for ob in (sonne, kam):
+        bpy.data.objects.remove(ob)
+    print(f"PRUEF {datei}: {dreiecke} Dreiecke", flush=True)
+
+
 def neu():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     _mats.clear()
@@ -143,4 +196,6 @@ def ausgabe(datei):
 neu()
 fuchskopf(None)
 fuchsschwanz(None)
+zauberstab(None, (0.9, 0, 0.15))
 ausgabe("gary_teile.glb")
+pruefbilder("gary_teile")

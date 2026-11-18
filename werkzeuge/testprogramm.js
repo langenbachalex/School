@@ -194,7 +194,9 @@ async function probe3dTest(browser, basis, app, name, fm) {
     const figuren = () => pg.evaluate(() => window.__probe3d.figuren());
     const namen = (await figuren()).map((g) => g.name).join(",");
     if (namen !== "gary") fehl.push(`${titel}: im Raum stehen „${namen}“ statt nur Gary`);
-    for (const m of ["reden", "verbeugen", "zaubern", "tadaa", "schreck", "stehen"]) {
+    await pg.evaluate(() => { window.__towerTonTest = 1200; });   // Aufnahmen werden nur nachgestellt: 1,2 s, ohne Ton
+    const stumm = () => pg.waitForFunction(() => !document.getElementById("buehne").dataset.ton, null, { timeout: 15000 });
+    for (const m of ["reden", "verbeugen", "zaubern", "tadaa", "schreck", "rennen", "stehen"]) {
       await pg.click(`#figuren button[data-figur="${m}"]`); await pg.waitForTimeout(200);
       if (!(await figuren()).every((g) => g.modus === m)) fehl.push(`${titel}: Gary kann nicht „${m}“`);
     }
@@ -202,7 +204,8 @@ async function probe3dTest(browser, basis, app, name, fm) {
     if (!(await figuren()).every((g) => g.modus === "gehen" && g.weg > 0.05)) fehl.push(`${titel}: Gary geht nicht`);
     // Fehler 17.11.: beim Reden drehte sich der Kopf in den Körper, beim Verbeugen rotierte der Oberkörper wild – Winkel über die Zeit messen
     const messe = async (ms) => { const m = { k: 0, r: 0, h: 0 }; for (let z = 0; z < ms; z += 100) { await pg.evaluate(() => window.__probe3d.takt(6, 16.7)); const g = (await figuren())[0]; m.k = Math.max(m.k, g.kopfWinkel); m.r = Math.max(m.r, g.rumpfWinkel); m.h = Math.max(m.h, g.hutAbstand); } return m; };   // rechnet in Schritten wie bei 60 Bildern pro Sekunde, unabhängig vom Tempo des Testrechners
-    await pg.click('#figuren button[data-figur="stehen"]'); await pg.waitForTimeout(600);
+    await pg.click('#figuren button[data-figur="stehen"]'); await stumm();
+    await pg.evaluate(() => { window.__towerTonTest = 6000; });
     await pg.click('#figuren button[data-figur="reden"]');
     let w = await messe(3000);
     if (w.k > 30 || w.r > 20 || w.h > 0.3) fehl.push(`${titel}: beim Reden dreht sich Gary zu weit (Kopf ${w.k}°, Rumpf ${w.r}°, Hut ${w.h} m neben den Füßen)`);
@@ -211,6 +214,40 @@ async function probe3dTest(browser, basis, app, name, fm) {
     if (w.r > 80 || w.r < 25 || w.k > 30) fehl.push(`${titel}: Verbeugung stimmt nicht (Rumpf ${w.r}°, erwartet 25–80°; Kopf ${w.k}°)`);
     await messe(800); w = await messe(500);
     if (w.r > 20 || w.k > 30) fehl.push(`${titel}: nach der Verbeugung steht Gary nicht wieder gerade (Rumpf ${w.r}°, Kopf ${w.k}°)`);
+    // Schritt 1b (18.11.): Rennen ist schneller als Gehen · Zaubern macht Funken · Gesicht · Mund auf zwei Wegen · Aufnahmen werden zu Ende gesprochen
+    const takt = async (n) => { await pg.evaluate((k) => window.__probe3d.takt(k, 16.7), n); return (await figuren())[0]; };
+    await pg.click('#figuren button[data-figur="gehen"]'); const gehen = (await takt(90)).tempo;
+    await pg.click('#figuren button[data-figur="rennen"]'); const rennen = (await takt(120)).tempo;
+    if (!(gehen > 0.3 && rennen > gehen * 1.5)) fehl.push(`${titel}: Rennen (${rennen} m/s) ist nicht deutlich schneller als Gehen (${gehen} m/s)`);
+    await pg.click('#figuren button[data-figur="zaubern"]');
+    const funken = (await takt(60)).funken;
+    if (funken < 5 || funken > 60) fehl.push(`${titel}: beim Zaubern fliegen ${funken} Funken (erwartet 5–60)`);
+    await pg.click('#figuren button[data-figur="stehen"]');
+    await stumm();                                          // die nachgestellte Aufnahme von oben muss fertig sein, sonst bewegt sie noch den Mund
+    await pg.click('#figuren button[data-gesicht="erschrocken"]');
+    let g = await takt(60);
+    if (g.braue < 0.6 || g.mund < 0.5) fehl.push(`${titel}: Ausdruck „erschrocken“ kommt nicht an (Braue ${g.braue}, Mund ${g.mund})`);
+    await pg.click('#figuren button[data-gesicht="neutral"]');
+    g = await takt(90);
+    if (g.braue > 0.1 || g.mund > 0.1) fehl.push(`${titel}: Gesicht geht nicht auf „neutral“ zurück (Braue ${g.braue}, Mund ${g.mund})`);
+    await stumm();
+    await pg.evaluate(() => { window.__towerTonTest = 1500; });
+    for (const art of ["a", "b"]) {                         // Mund beim Reden: a folgt der Lautstärke, b den Mundformen von Rhubarb
+      await pg.click(`#figuren button[data-mund="${art}"]`);
+      await pg.click('#figuren button[data-figur="reden"]');
+      let auf = 0;
+      for (let i = 0; i < 12; i++) { auf = Math.max(auf, (await takt(3)).mund); await pg.waitForTimeout(80); }
+      if (auf < 0.15) fehl.push(`${titel}: beim Reden (Weg ${art}) bewegt sich Garys Mund nicht (höchstens ${auf})`);
+      await stumm();
+      if ((await takt(40)).mund > 0.1) fehl.push(`${titel}: nach dem Reden (Weg ${art}) bleibt Garys Mund offen`);
+    }
+    const ton = () => pg.evaluate(() => { const d = document.getElementById("buehne").dataset; return [d.ton || "", d.wartet || ""]; });
+    await pg.evaluate(() => { window.__towerTonTest = 5000; });
+    await pg.click('#figuren button[data-figur="reden"]'); const [erste] = await ton();
+    await pg.click('#figuren button[data-figur="reden"]'); const [nochErste, wartet] = await ton();
+    if (!erste || nochErste !== erste || !wartet || wartet === erste) fehl.push(`${titel}: die zweite Aufnahme schneidet die erste ab (läuft „${nochErste}“, wartet „${wartet}“)`);
+    await pg.waitForFunction((w) => document.getElementById("buehne").dataset.ton === w, wartet, { timeout: 15000 }).catch(() => fehl.push(`${titel}: die wartende Aufnahme beginnt nicht, wenn die erste fertig ist`));
+    await stumm();
     const ordner = path.join(__dirname, "..", app.pfad, "tower", "figuren");   // Körper und Bewegungen nur einmal, jede Datei unter 1 MB
     for (const d of fs.readdirSync(ordner)) if (d.endsWith(".glb") && fs.statSync(path.join(ordner, d)).size > 1e6) fehl.push(`${titel}: figuren/${d} ist größer als 1 MB`);
     for (const b of await zuBreit(pg)) fehl.push(`${titel}: ${b}`);

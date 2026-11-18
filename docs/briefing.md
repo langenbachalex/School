@@ -88,6 +88,9 @@ GLN 1 war am 30.09.2026 (Lead-in und Topic 1, S. 80 bis 85). Nach den Herbstferi
 ## Regel von Mr. Alex (2.11.2026) – sparsam arbeiten
 Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt werden kann; vor größeren Bauten kurz zurückfragen (Aufwand klein/mittel/groß, schlankere Variante). Einzelheiten in `CLAUDE.md` im Repo-Hauptordner.
 
+## Regel von Mr. Alex (18.11.2026) – keine Geste, die wie ein Hitlergruß wirken kann
+In keiner App darf eine Figur einen Arm durchgestreckt schräg nach vorn oben halten, während die Hand flach ist (Anlass: die erste Fassung von „High five“). Ein High five ist eine Hand neben dem Kopf mit angewinkeltem Ellbogen, Handfläche nach vorn, Finger nach oben. Das Testprogramm prüft das bei allen Bewegungen der Figuren (`gruss()` in `app/tower/probe3d_bau.js`); neue Bewegungen kommen in diese Prüfung.
+
 ## Regel von Mr. Alex (18.11.2026) – kein Handy-Test für das Story-Spiel
 Die Tower-Tests (Story-Spiel und 3D-Probe) laufen nur noch in den Formaten Laptop und iPad; das Testprogramm lässt sie im Handy-Format von selbst aus. Die Lern-Apps EN6, EN9 und FR werden weiter auch im Handy-Format geprüft. Steht auch in `CLAUDE.md` unter „Testprogramm“.
 

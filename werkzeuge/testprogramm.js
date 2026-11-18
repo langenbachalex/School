@@ -287,10 +287,10 @@ async function probe3dTest(browser, basis, app, name, fm) {
     }
     // A5: Knie in der Mitte, Handziele (Berührung statt Durchdringen), Finger rollen weich ein, Bizeps wächst
     b = await bau();
-    if (Math.abs(b.knieAnteil - 0.52) > 0.02) fehl.push(`${titel}: das Knie der Probe-Figur liegt bei ${b.knieAnteil} der Hüfthöhe statt bei 0,52`);
+    if (Math.abs(b.knieAnteil - 0.56) > 0.02) fehl.push(`${titel}: das Knie der Probe-Figur liegt bei ${b.knieAnteil} der Hüfthöhe statt bei 0,56`);
     await regler("knie", 0.45);
     if (Math.abs((await bau()).knieAnteil - 0.45) > 0.02) fehl.push(`${titel}: der Regler „Knie“ ändert die Kniehöhe nicht`);
-    await regler("knie", 0.52);
+    await regler("knie", 0.56);
     await pg.evaluate(() => window.__probe3d.halt(true));   // für die genauen Messungen läuft die Zeit nur im Takt des Tests
     await pg.click('#bau button[data-bau="klatschen"]');
     let nah = 9, weit = 0; for (let k = 0; k < 26; k++) { const x = await bauTakt(3); if (k > 6 && k < 20) { nah = Math.min(nah, x.handAbstand); weit = Math.max(weit, x.handAbstand); } }
@@ -308,6 +308,19 @@ async function probe3dTest(browser, basis, app, name, fm) {
     let dick = 0; for (let k = 0; k < 20; k++) dick = Math.max(dick, (await bauTakt(4)).muskel);
     if (dick < 0.17) fehl.push(`${titel}: bei der Bizeps-Pose wächst kein Bizeps (${dick})`);
     await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
+    // A6 – WICHTIG (Mr. Alex 18.11.): High five ist eine Hand neben dem Kopf, Finger nach oben, Ellbogen angewinkelt – nie ein gestreckter Arm
+    await pg.click('#bau button[data-bau="highfive"]');
+    let gestreckt = 0, schief = 0; for (let k = 0; k < 24; k++) { const x = await bauTakt(3); gestreckt = Math.max(gestreckt, x.armR.ellbogen); if (k > 7 && k < 17) schief = Math.max(schief, x.armR.fingerHoch); }
+    if (gestreckt > 150) fehl.push(`${titel}: beim High five streckt die Probe-Figur den Arm durch (Ellbogen ${gestreckt}°, erlaubt höchstens 150°)`);
+    if (schief > 25) fehl.push(`${titel}: beim High five zeigen die Finger nicht nach oben (${schief}° zur Senkrechten)`);
+    await bauTakt(30);
+    const gruss = await pg.evaluate(() => window.__probe3d.bauGruss());   // alle Bewegungen: kein durchgestreckter Arm schräg nach vorn oben mit flacher Hand
+    if (gruss.length) fehl.push(`${titel}: Bewegung kann wie ein Gruß mit gestrecktem Arm wirken: ${gruss.map((x) => `${x.knopf} bei ${x.zeit} s`).join(", ")}`);
+    for (const [pose, seiten] of [["mabu", ["R", "L"]], ["pubu", ["L"]], ["xubu", ["L"]]]) {   // Standposen: die Sohle liegt flach auf (Pu Bu, Xu Bu: das Standbein)
+      await pg.click(`#bau button[data-bau="${pose}"]`); b = await bauTakt(50);
+      for (const s of seiten) if (b["sohle" + s] > 8) fehl.push(`${titel}: bei „${pose}“ liegt die Sohle nicht flach auf (${s === "R" ? "rechts" : "links"} ${b["sohle" + s]}°)`);
+      await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
+    }
     await pg.evaluate(() => window.__probe3d.halt(false));
     await pg.click('#bau button[data-hand="zeigen"]');
     if ((await bau()).wahl !== "zeigen") fehl.push(`${titel}: Hände der Probe-Figur lassen sich nicht wechseln`);

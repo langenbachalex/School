@@ -20,6 +20,7 @@ const srv = http.createServer((req, res) => {
   await seite.waitForFunction(() => document.title === "bereit", null, { timeout: 60000 }).catch(() => {});
   if (fehler.length) console.log("FEHLER auf der Seite:\n" + fehler.join("\n"));
   const szenen = await seite.evaluate(() => window.probe.szenen), masse = { szenen, verlauf: [] };
+  console.log("Gruß-Prüfung über alle Bewegungen:", JSON.stringify(await seite.evaluate(() => window.probe.gruss())));
   for (let i = 0; i < szenen.length; i++) {
     await seite.evaluate((k) => window.probe.setze(k), i);
     const n = Math.max(8, Math.round(szenen[i].dauer * FPS * (szenen[i].dauernd ? 2 : 1))), reihe = [];

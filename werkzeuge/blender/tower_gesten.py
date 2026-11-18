@@ -41,8 +41,8 @@ HUEFT = h(upperarm=(.85, -.3, -.6), lowerarm=(-.75, .45, -.45), chest=dict(vor=-
 STIRN = h(upperarm_r=(.1, .75, -.25), lowerarm_r=(-.5, .0, 1), head=dict(vor=22), chest=dict(vor=6))
 KLATSCH_A = h(upperarm=(.35, .6, -.8), lowerarm=(-.35, 1, .35))
 KLATSCH_B = h(upperarm=(.3, .6, -.8), lowerarm=(-.95, .85, .35))
-FIVE_A = h(upperarm_r=(.55, .25, -.75), lowerarm_r=(.05, .45, 1), chest=dict(vor=-4, dreh=-8))     # Arm angewinkelt, Hand neben der Schulter (Mr. Alex 18.11.)
-FIVE_B = h(upperarm_r=(.3, .9, .35), lowerarm_r=(.15, .9, .5), chest=dict(vor=8, dreh=10))          # vom Ellenbogen ausfahren, Arm lang nach vorn oben
+FIVE_A = h(upperarm_r=(.6, .2, -.7), lowerarm_r=(.05, .3, 1), chest=dict(vor=-3, dreh=-6))        # Arm angewinkelt, Hand neben dem Kopf (Mr. Alex 18.11.)
+FIVE_B = h(upperarm_r=(.6, .45, -.5), lowerarm_r=(.0, .4, 1), chest=dict(vor=5, dreh=8))           # kurzer Schwung nach vorn – der Ellbogen bleibt angewinkelt, der Arm wird NIE gestreckt
 NICK = h(head=dict(vor=16))
 NEIN_A, NEIN_B = h(head=dict(dreh=22)), h(head=dict(dreh=-22))
 

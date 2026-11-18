@@ -1,9 +1,11 @@
-"""The Keys of the Tower – wechselbare Hände für die Menschenfiguren (Probe A2, 18.11.2026).
+"""The Keys of the Tower – Hand mit beweglichen Fingern für die Menschenfiguren (A2 bis A5, 18.11.2026).
 
 Aufruf:  blender -b --python werkzeuge/blender/tower_haende.py      ->  app/tower/figuren/haende.glb   (wenige Sekunden)
 
-Drei schlichte Handformen im Stil der Figuren (vier Finger und Daumen – Mr. Alex 18.11. –, rund wie die Fäustlinge – Mr. Alex 18.11.: runder,
-aber nicht klobig, die Dicke bleibt): hand_offen, hand_zeigen, hand_faust.
+EINE Hand im Stil der Figuren: Handfläche, vier Finger aus je zwei Gliedern und ein Daumen, rund wie die Fäustlinge
+(Mr. Alex 18.11.: runder, nicht klobig, die Dicke bleibt; vier Finger; Finger sitzen an der Handfläche und eng beieinander).
+Die Glieder sind einzelne Teile mit dem Drehpunkt im Gelenk – die App rollt sie ein (offen, Zeigefinger, Faust mit weichem Übergang):
+  hand → flaeche, f1 … f4 (Grundglied, f1 = Zeigefinger) → f1b … f4b (Endglied), daumen
 Gebaut ist die RECHTE Hand bei seitlich ausgestrecktem Arm: Ursprung am Handgelenk, Finger zeigen nach -X (vom Körper weg),
 Handfläche nach unten, Daumen nach vorn. Die linke Hand entsteht in der App durch Spiegeln. Gary behält seine Pfoten.
 """
@@ -17,38 +19,28 @@ haut = bpy.data.materials.new("haut"); haut.use_nodes = True
 haut.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.80, 0.42, 0.28, 1)
 haut.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.8
 
-def kasten(mitte, mass, dreh=(0, 0, 0)):
+def teil(name, mitte, mass, gelenk, eltern=None, dreh=(0, 0, 0)):
     bpy.ops.mesh.primitive_cube_add(size=1)
-    o = bpy.context.object
+    o = bpy.context.object; o.name = name; o.data.name = name
     o.matrix_world = Matrix.Translation(mitte) @ Euler([math.radians(w) for w in dreh]).to_matrix().to_4x4() @ Matrix.Diagonal((*mass, 1))
-    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
     b = o.modifiers.new("kante", "BEVEL"); b.width = min(mass) * 0.42; b.segments = 3      # fast rund: Finger werden zu kleinen Walzen
     bpy.ops.object.modifier_apply(modifier="kante")
     for f in o.data.polygons: f.use_smooth = True
     o.data.materials.append(haut)
+    bpy.context.scene.cursor.location = gelenk; bpy.ops.object.origin_set(type="ORIGIN_CURSOR")   # Drehpunkt ins Gelenk
+    if eltern: o.parent = eltern; o.matrix_parent_inverse = eltern.matrix_world.inverted()
     return o
 
-FINGER_Y = (-0.048, -0.016, 0.016, 0.048)                 # Zeigefinger liegt auf der Daumenseite (-Y)
-def finger(y, gestreckt, faecher=0):
-    if gestreckt: return [kasten((-0.150, y + faecher * 0.010, 0), (0.095 - abs(faecher) * 0.008, 0.028, 0.028), (0, 0, faecher * 7))]
-    return [kasten((-0.112, y, -0.020), (0.032, 0.028, 0.052)), kasten((-0.086, y, -0.040), (0.050, 0.028, 0.026))]
-def daumen(offen):
-    if offen: return [kasten((-0.050, -0.088, 0), (0.030, 0.065, 0.028), (0, 0, 28))]
-    return [kasten((-0.088, -0.072, -0.016), (0.055, 0.026, 0.028), (0, 0, 8))]
-def hand(name, gestreckt, daumen_offen):
-    teile = [kasten((-0.052, 0, 0), (0.105, 0.130, 0.046))]
-    for i, y in enumerate(FINGER_Y): teile += finger(y, gestreckt[i], (i - 1.5) if all(gestreckt) else 0)
-    teile += daumen(daumen_offen)
-    bpy.ops.object.select_all(action="DESELECT")
-    for t in teile: t.select_set(True)
-    bpy.context.view_layer.objects.active = teile[0]
-    bpy.ops.object.join()
-    o = bpy.context.object; o.name = name; o.data.name = name
-    bpy.context.scene.cursor.location = (0, 0, 0); bpy.ops.object.origin_set(type="ORIGIN_CURSOR")
-    return o
-
-hand("hand_offen", (True, True, True, True), True)
-hand("hand_zeigen", (True, False, False, False), False)
-hand("hand_faust", (False, False, False, False), False)
+hand = bpy.data.objects.new("hand", None); bpy.context.scene.collection.objects.link(hand)
+bpy.context.view_layer.update()
+teil("flaeche", (-0.052, 0, 0), (0.105, 0.125, 0.046), (0, 0, 0), hand)
+KNOECHEL, GLIED, DICK = -0.090, 0.050, 0.027
+for i, y in enumerate((-0.0435, -0.0145, 0.0145, 0.0435)):                # f1 = Zeigefinger, auf der Daumenseite (-Y)
+    kurz = 0.006 if i in (0, 3) else 0.0                                   # Zeige- und kleiner Finger etwas kürzer
+    a = teil("f%d" % (i + 1), (KNOECHEL - GLIED / 2, y, 0), (GLIED + 0.012, DICK, DICK), (KNOECHEL, y, 0), hand)
+    bpy.context.view_layer.update()
+    teil("f%db" % (i + 1), (KNOECHEL - GLIED - (GLIED - kurz) / 2, y, 0), (GLIED - kurz + 0.012, DICK, DICK), (KNOECHEL - GLIED, y, 0), a)
+teil("daumen", (-0.050, -0.084, 0), (0.030, 0.066, 0.028), (-0.036, -0.056, 0), hand, (0, 0, 27))
 bpy.ops.export_scene.gltf(filepath=ZIEL, export_format="GLB", export_cameras=False, export_lights=False, export_animations=False, export_yup=True, export_texcoords=False)
 print("HAENDE", round(os.path.getsize(ZIEL) / 1000), "KB")

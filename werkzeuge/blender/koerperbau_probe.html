@@ -21,8 +21,8 @@ import { ladeBauProbe, GESTEN } from "./probe3d_bau.js";
 
 const q = new URLSearchParams(location.search);
 // Szene: [Knopf aus der Gesten-Tabelle, Stelle für das Standbild (0…1)]
-const SZENEN = [["stehen", .5], ["achselzucken", .5], ["zeigen", .5], ["mahnen", .5], ["kick", .3], ["kick", .47], ["mabu", .5], ["pubu", .5], ["xubu", .5], ["spagat", .5], ["rolle", .5],
-  ["denken", .5], ["bizeps", .6], ["brille", .5], ["salut", .5], ["gehen", .5]];
+const SZENEN = [["stehen", .5], ["gehen", .3], ["reiben", .5], ["klatschen", .25], ["klatschen", .34], ["hueften", .5], ["highfive", .33], ["highfive", .52], ["salut", .5],
+  ["bizeps", .5], ["kick", .32], ["kick", .47], ["mabu", .5], ["zeigen", .5], ["pubu", .5], ["spagat", .5]];
 
 const bild = new THREE.WebGLRenderer({ antialias: true }); bild.setSize(900, 560); document.body.prepend(bild.domElement);
 const szene = new THREE.Scene(); szene.background = new THREE.Color(0xcfc8bf);
@@ -45,7 +45,7 @@ async function heutige(x) {                             // der unveränderte Kö
 }
 const gary = await ladeFiguren(lader, szene, { gary: { x: -2.0, z: 0, bahn: 1.2 } }, kamera);
 const heute = await heutige(-0.2), flex = await ladeBauProbe(lader, szene, { x: 1.9, z: 0, bahn: 0.01 });
-for (const n of ["arm", "bein", "kopf", "rumpf"]) if (q.has(n)) flex.setze(n, +q.get(n));
+for (const n of ["arm", "bein", "kopf", "rumpf", "knie"]) if (q.has(n)) flex.setze(n, +q.get(n));
 let zeit = 0;
 window.probe = {
   szenen: SZENEN.map(([knopf, stelle]) => ({ titel: GESTEN[knopf][1], dauer: clips[GESTEN[knopf][0]].duration, stelle, dauernd: GESTEN[knopf][2] === "Grund" })),

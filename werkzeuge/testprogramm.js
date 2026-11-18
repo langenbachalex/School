@@ -285,6 +285,30 @@ async function probe3dTest(browser, basis, app, name, fm) {
       b = await bau();
       if (b.stiefelOben > b.knie - 0.05) fehl.push(`${titel}: bei Bein ${bein} enden die Stiefel nicht unter dem Knie (Stiefelkante ${b.stiefelOben} m, Knie ${b.knie} m)`);
     }
+    // A5: Knie in der Mitte, Handziele (Berührung statt Durchdringen), Finger rollen weich ein, Bizeps wächst
+    b = await bau();
+    if (Math.abs(b.knieAnteil - 0.52) > 0.02) fehl.push(`${titel}: das Knie der Probe-Figur liegt bei ${b.knieAnteil} der Hüfthöhe statt bei 0,52`);
+    await regler("knie", 0.45);
+    if (Math.abs((await bau()).knieAnteil - 0.45) > 0.02) fehl.push(`${titel}: der Regler „Knie“ ändert die Kniehöhe nicht`);
+    await regler("knie", 0.52);
+    await pg.evaluate(() => window.__probe3d.halt(true));   // für die genauen Messungen läuft die Zeit nur im Takt des Tests
+    await pg.click('#bau button[data-bau="klatschen"]');
+    let nah = 9, weit = 0; for (let k = 0; k < 26; k++) { const x = await bauTakt(3); if (k > 6 && k < 20) { nah = Math.min(nah, x.handAbstand); weit = Math.max(weit, x.handAbstand); } }
+    if (nah < 0.05 || nah > 0.14 || weit < 0.2) fehl.push(`${titel}: beim Klatschen treffen sich die Handflächen nicht (Abstand ${nah} bis ${weit}; Berührung bei etwa 0,08)`);
+    await bauTakt(30);
+    await pg.click('#bau button[data-bau="hueften"]'); b = await bauTakt(55);
+    if (Math.abs(b.flaecheR[0]) < 0.37 || Math.abs(b.flaecheL[0]) < 0.37) fehl.push(`${titel}: „Hände in die Hüften“ greift in die Kleidung (Handflächen bei ${b.flaecheR[0]} und ${b.flaecheL[0]}, Kleidung reicht bis 0,39)`);
+    await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(40);
+    await pg.click('#bau button[data-hand="faust"]'); b = await bauTakt(4);
+    if (!(b.krall > 0.05 && b.krall < 0.9)) fehl.push(`${titel}: die Finger springen zur Faust statt einzurollen (nach vier Bildern ${b.krall})`);
+    b = await bauTakt(50);
+    if (b.krall < 0.95) fehl.push(`${titel}: die Faust schließt sich nicht ganz (${b.krall})`);
+    await pg.click('#bau button[data-hand="offen"]');
+    await pg.click('#bau button[data-bau="bizeps"]');
+    let dick = 0; for (let k = 0; k < 20; k++) dick = Math.max(dick, (await bauTakt(4)).muskel);
+    if (dick < 0.17) fehl.push(`${titel}: bei der Bizeps-Pose wächst kein Bizeps (${dick})`);
+    await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
+    await pg.evaluate(() => window.__probe3d.halt(false));
     await pg.click('#bau button[data-hand="zeigen"]');
     if ((await bau()).wahl !== "zeigen") fehl.push(`${titel}: Hände der Probe-Figur lassen sich nicht wechseln`);
     await pg.click('#bau button[data-hand="offen"]');

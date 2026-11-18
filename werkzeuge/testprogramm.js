@@ -262,7 +262,9 @@ async function probe3dTest(browser, basis, app, name, fm) {
     if (kaesten[0][1] > kaesten[1][0] && kaesten[0][3] > kaesten[1][2] && kaesten[0][2] < kaesten[1][3]) fehl.push(`${titel}: der Kasten der Probe-Figur liegt über Garys Kasten`);
     const klappe = pg.locator("#bau .kopf"), klappbar = await klappe.isVisible();   // schmale Bildschirme: der Kasten ist eingeklappt und ersetzt offen Garys Kasten
     if (klappbar) { await klappe.click(); if (await pg.locator("#figuren").isVisible()) fehl.push(`${titel}: der offene Probe-Kasten verdeckt Garys Kasten nicht sauber`); }
-    await pg.click('#bau button[data-bau="gehen"]'); b = await bauTakt(150);
+    await pg.evaluate(() => window.__probe3d.halt(true));   // kurz und mit angehaltener Zeit messen – sonst ist die Figur nach einmal Hin und Zurück wieder am Start
+    await pg.click('#bau button[data-bau="gehen"]'); b = await bauTakt(40);
+    await pg.evaluate(() => window.__probe3d.halt(false));
     if (!(b.modus === "gehen" && b.weg > 0.3)) fehl.push(`${titel}: Probe-Figur geht nicht (Weg ${b.weg} m)`);
     await pg.click('#bau button[data-bau="kick"]');
     let hoch = 0, faust = false; for (let k = 0; k < 22; k++) { const x = await bauTakt(3); hoch = Math.max(hoch, x.zehe); faust = faust || x.hand[0] === "faust"; }

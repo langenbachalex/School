@@ -216,7 +216,7 @@ try {
   while (bahnZellen * gk.zelle < 5.2 && frei(garyZelle[0], garyZelle[1] - bahnZellen - 1)) bahnZellen++;
   const figuren = await ladeFiguren(lader, szene, { gary: { ...zuOrt(...garyZelle), bahn: Math.max(1.2, bahnZellen * gk.zelle - 0.3) } }, kamera);
   // PROBE A3: gestreckte Figur neben Gary, eigener Kasten mit Knöpfen, Hände-Schalter und vier Reglern für die Maße
-  const bauZelle = naechsteFreie(zuOrt(...garyZelle).x + 1.3, 6.0);
+  const bauZelle = naechsteFreie(-0.9, 6.4);   // freie Raummitte links vor der eigenen Figur (Mr. Alex 18.11.: nicht an der Wand, dort gingen die Gesten hinein); rundherum gut 2 m Platz
   let bauBahn = 0;
   while (bauBahn * gk.zelle < 5.2 && frei(bauZelle[0], bauZelle[1] - bauBahn - 1)) bauBahn++;
   const bauProbe = await ladeBauProbe(lader, szene, { ...zuOrt(...bauZelle), bahn: Math.max(1.2, bauBahn * gk.zelle - 0.3) });

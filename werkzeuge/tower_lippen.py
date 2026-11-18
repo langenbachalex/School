@@ -1,7 +1,7 @@
 """Mundformen aus den Aufnahmen rechnen (Rhubarb Lip Sync, MIT) – einmal vorab, die App spielt nur ab.
 
-Aufruf:  python werkzeuge/tower_lippen.py            (alle Gary-Aufnahmen, etwa zwei Minuten)
-Ausgabe: app/tower/figuren/mund_gary.json   {"gary_01": {"dauer": 4.64, "zeiten": [[0.0, "X"], [0.07, "B"], ...]}, ...}
+Aufruf:  python werkzeuge/tower_lippen.py [gary] [mrflex]   (ohne Angabe beide; Gary etwa zwei Minuten, Mr. Flex etwa zehn)
+Ausgabe: app/tower/figuren/mund_gary.json, mund_mrflex.json   {"gary_01": {"dauer": 4.64, "zeiten": [[0.0, "X"], [0.07, "B"], ...]}, ...}
 Braucht (nur lokal, nicht im Repo):
   werkzeuge/extern/rhubarb/Rhubarb-Lip-Sync-*/rhubarb(.exe)  von https://github.com/DanielSWolf/rhubarb-lip-sync/releases
   Blender (wandelt MP3 in WAV um, weil Rhubarb nur WAV und Ogg liest; ffmpeg ginge genauso).
@@ -16,7 +16,7 @@ import sys
 import tempfile
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FIGUREN = ["gary"]   # die uebrigen Figuren kommen mit Block B (Spiel in den 3D-Raum)
+FIGUREN = [f for f in ["gary", "mrflex"] if len(sys.argv) < 2 or f in sys.argv[1:]]   # python werkzeuge/tower_lippen.py mrflex = nur diese Figur; die uebrigen kommen mit Block B
 AUFNAHMEN = {f: sorted(os.path.basename(d)[:-4] for d in glob.glob(os.path.join(REPO, "app", "audio", "tower", f + "_*.mp3"))) for f in FIGUREN}
 BLENDER = os.environ.get("BLENDER") or next(iter(sorted(glob.glob(r"C:\Program Files\Blender Foundation\Blender *\blender.exe"), reverse=True)), "blender")
 RHUBARB = next(iter(glob.glob(os.path.join(REPO, "werkzeuge", "extern", "rhubarb", "*", "rhubarb*"))), None)

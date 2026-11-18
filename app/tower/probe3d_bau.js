@@ -39,6 +39,7 @@ const STAND_HOCH = 0.09;                               // so weit über seinem t
    wippen = Auf und Ab der Hüfte · streck = so weit streckt sich das Bein höchstens (Anteil der Beinlänge) · spur = Spurbreite (Anteil der Hüftbreite) */
 const GEHEN = { stand: 0.57, rollt: 0.08, flach: 0.31, ferse: 0.31, ballen: 0.66, heben: 0.11, wippen: 0.1, streck: 0.99, spur: 0.8, an: 0.25, hinten: 0 };
 const FERSE_Z = -0.11;                                 // Mage-Körper: dort liegt die Ferse auf (Tiefe im Maß des Körpers)
+const REDE_GESTEN = ["zeigen", "arme", "abwinken", "mahnen", "achselzucken", "pistolen"];   // Mr. Flex gestikuliert beim Reden groß
 const KOPF_SITZ = [0, -0.03, 0.0], FUNKEL = 0.6;        // eigener Kopf: Sitz über dem Kopfknochen (m) · Dauer des Funkelns (s)
 const OHNE_SOHLE = ["gehen", "rennen", "rolle", "spagat"];   // hier bleibt der Fuß, wie die Bewegung ihn führt (Abrollen, Füße in der Luft)
 const R = "offen", Z = "zeigen", F = "faust";
@@ -353,7 +354,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     kopfTeil.quaternion.copy(kq.invert().multiply(m.getWorldQuaternion(Q()))); kopfTeil.scale.setScalar(1 / ks);
     kopfTeil.position.copy(v(...KOPF_SITZ).applyQuaternion(kopfTeil.quaternion).multiplyScalar(1 / ks)); head.add(kopfTeil);
     if (hut) { hut.scale.multiplyScalar(kleidung.hutWeit || 1); hut.position.y += kleidung.hutHoch || 0; }
-    gesicht = baueGesicht(kopfTeil, 0.42, { mass: 0.6, flach: true });
+    gesicht = baueGesicht(kopfTeil, 0.19, { mass: 0.6, flach: true });
     const b = kopfTeil.getObjectByName("sonnenbrille"); if (b) brille = { o: b, ort: b.position.clone(), q: b.quaternion.clone() };
     const c = document.createElement("canvas"); c.width = c.height = 64; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.beginPath();   // vierzackiger Stern wie der Blitz an Garys Zahn
     for (let i = 0; i < 8; i++) { const r = i % 2 ? 4 : 31, w = (i * Math.PI) / 4; x.lineTo(32 + Math.cos(w) * r, 32 + Math.sin(w) * r); }
@@ -444,7 +445,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const welt = m.getWorldQuaternion(Q()).multiply(dreh).multiply(handRuhe[s]);
     W.quaternion.copy(w0.slerp(W.parent.getWorldQuaternion(Q()).invert().multiply(welt), gewicht)); W.updateMatrixWorld(true);
   };
-  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
+  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", mund: null, rede: null, redeGesten: 0, brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
   const ziele = () => {
     const regel = ZIELE[g.modus]; if (!regel || !g.laeuft) return;
     const dauer = g.laeuft.getClip().duration, t = Math.min(g.laeuft.time, dauer), qm = m.getWorldQuaternion(Q());
@@ -494,7 +495,14 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
      Funkeln: ein kurzer Stern an jedem Auge wie der Blitz an Garys Zahn; ist die Brille auf, funkelt es blau durch die Gläser. */
   const kopfLauf = (dt) => {
     if (!gesicht) return;
-    gesicht.bewege(dt, AUSDRUECKE[g.ausdruck] || NEUTRAL, null, 0, 1);
+    if (g.rede) {                                        // Reden mit Gestik: an jedem Einsatz der Aufnahme eine große Geste aus seinem Vorrat, eine nach der anderen
+      const zeit = g.rede.zeit(); let dran = false;
+      while (g.rede.i < g.rede.einsaetze.length && g.rede.einsaetze[g.rede.i] <= zeit) { g.rede.i++; dran = true; }
+      if (dran) g.rede.offen = true;
+      if (g.rede.offen && g.modus === "stehen") { g.rede.offen = false; starte(REDE_GESTEN[g.redeGesten++ % REDE_GESTEN.length]); }
+    }
+    const zeigt = g.mund && g.ausdruck === "neutral" ? "reden" : g.ausdruck;   // Grundausdruck beim Reden: echtes Lächeln
+    gesicht.bewege(dt, AUSDRUECKE[zeigt] || NEUTRAL, g.mund, 0, 1);
     g.brille += (g.brilleZiel - g.brille) * Math.min(1, dt * 9);
     if (brille) {
       const unten = weich(1 - g.brille, 0, 0.5), weg = weich(1 - g.brille, 0.5, 1);
@@ -688,6 +696,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const flaeche = (s) => halter[s].localToWorld(v(-0.052, 0, 0));                    // Mitte der Handfläche
   return {
     befehl: starte, kopf: kopfBefehl,
+    mund(form) { g.mund = form; },                         // [offen, breit] aus der Lippenbewegung, null = schweigt
+    rede(r) { g.rede = r ? { ...r, i: 0, offen: false } : null; },   // { einsaetze: [s, …], zeit: () => s } oder null
     bahn(lang) { g.gerade = lang > 0; g.bahn = lang || platz.bahn || 2.4; g.weg = 0; g.hin = 1; g.dreh = 0; anker.position.x = platz.x; },   // lang > 0: gerade Strecke statt Rundkurs;                                                // nur für das Testprogramm: lange Strecke, um Gehen und Rennen ohne Wenden zu messen
     haende(form) { g.wahl = form; zeigeHand(GESTEN[g.modus][3] || form); },
     setze(name, wert) { if (name in bau && wert > 0) { bau[name] = wert; const modus = g.modus; messeTempo(); g.laeuft = null; starte(DAUERND.includes(modus) ? modus : "stehen"); } },
@@ -730,7 +740,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       faustR: K("wristr").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)), faustL: K("wristl").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)),
       flaecheR: imKoerper(flaeche("r")), flaecheL: imKoerper(flaeche("l")), handAbstand: +(flaeche("r").distanceTo(flaeche("l")) / mass).toFixed(3), muskel: muskel.r.visible ? +muskel.r.scale.x.toFixed(3) : 0,
       knieDick: Math.min(knieDick("l"), knieDick("r")), armDick: Math.min(armDick("l"), armDick("r")), hochR: armHoch("r"), hochL: armHoch("l"), huefte: +wo(hips).y.toFixed(4), hut: hutNah(), knieGrad: [knieWinkel("l"), knieWinkel("r")], fussL: fussOrt("l"), fussR: fussOrt("r"), ferseL: fersenOrt("l"), ferseR: fersenOrt("r"), kleidung: kleidungPunkte, hutMass: hutMass(),
-      kopf: gesicht ? { teile: gesicht.teile, ausdruck: g.ausdruck, winkel: +gesicht.wert.winkel.toFixed(2), unterlid: +gesicht.wert.unterlid.toFixed(2), braue: +gesicht.wert.braueHoch.toFixed(2), brille: +g.brille.toFixed(2), brilleDa: !!brille, funkeln: +g.blinkt.toFixed(2), durchBrille: g.brille > 0.75 } : null, zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
+      kopf: gesicht ? { teile: gesicht.teile, ausdruck: g.ausdruck, winkel: +gesicht.wert.winkel.toFixed(2), unterlid: +gesicht.wert.unterlid.toFixed(2), braue: +gesicht.wert.braueHoch.toFixed(2), mund: +(gesicht.offen || 0).toFixed(2), redeGesten: g.redeGesten, brille: +g.brille.toFixed(2), brilleDa: !!brille, funkeln: +g.blinkt.toFixed(2), durchBrille: g.brille > 0.75 } : null, zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
       ort: [+anker.position.x.toFixed(2), +anker.position.z.toFixed(2)], runde: !!(g.runde && !g.gerade), richtung: +g.dreh.toFixed(2) }),
   };
 }

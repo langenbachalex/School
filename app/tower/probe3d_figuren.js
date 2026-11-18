@@ -93,7 +93,7 @@ export function baueGesicht(kopf, kieferWinkel, opt = {}) {
   const t = Object.fromEntries(["braue_l", "braue_r", "lid_l", "lid_r", "unterlid_l", "unterlid_r", "wange_l", "wange_r", "ohr_l", "ohr_r", "pupille_l", "pupille_r", "iris_l", "iris_r", "falte_l", "falte_r",
     "mund", "kiefer", "oberlippe", "mundlinie", "unterlippe", "zaehne", "zaehne_unten", "eckzahn_l", "eckzahn_r"].map((n) => [n, teil(n)]));
   const linie = t.mundlinie && t.mundlinie.o.morphTargetDictionary ? t.mundlinie.o : null;   // die Lippenlinie biegt sich (Formschlüssel hoch_l/r, tief_l/r)
-  const reihe = kopf.getObjectByName("zahnreihe"), biegsam = [linie, reihe && reihe.morphTargetDictionary ? reihe : null].filter(Boolean);   // die Zahnreihe folgt der Lippenlinie (Mr. Flex)
+  const biegsam = [linie, ...["zahnreihe", "unterlippe", "lippenhaut"].map((n) => kopf.getObjectByName(n)).filter((o) => o && o.morphTargetDictionary)].filter(Boolean);   // Zahnreihe und Unterlippe biegen sich mit der Lippenlinie (Mr. Flex)
   const form = (n, w) => { for (const o of biegsam) { const i = o.morphTargetDictionary[n]; if (i !== undefined) o.morphTargetInfluences[i] = Math.max(0, w); } };
   const jetzt = { ...NEUTRAL }, dreh = new THREE.Quaternion();
   let blinzeln = 2, zu = 0;
@@ -125,10 +125,14 @@ export function baueGesicht(kopf, kieferWinkel, opt = {}) {
         const wl = jetzt.winkel + jetzt.winkelSchief, wr = jetzt.winkel - jetzt.winkelSchief * 0.5;
         form("hoch_l", wl); form("tief_l", -wl); form("hoch_r", wr); form("tief_r", -wr);
       }
-      if (t.kiefer) { t.kiefer.o.quaternion.copy(dreh.setFromAxisAngle(QUER, offen * kieferWinkel)).multiply(t.kiefer.q); t.kiefer.o.scale.x = 0.7 + 0.3 * Math.min(1, breit); }
+      if (t.kiefer) { t.kiefer.o.quaternion.copy(dreh.setFromAxisAngle(QUER, offen * kieferWinkel)).multiply(t.kiefer.q); if (!opt.flach) t.kiefer.o.scale.x = 0.7 + 0.3 * Math.min(1, breit); }
+      if (opt.flach) {                                    // Menschenmund: der Kiefer ist die untere Gesichtshälfte und bleibt so breit; schmal oder breit werden die Lippen, und die Unterlippe zieht ihre Winkel beim Öffnen hinauf
+        const sx = 0.8 + 0.2 * Math.min(1.15, breit); form("auf", offen);
+        for (const o of biegsam) o.scale.x = sx;
+      }
       if (t.oberlippe) t.oberlippe.o.position.y = t.oberlippe.ort.y + offen * 0.004 * M;
-      if (t.mund) { t.mund.o.visible = offen > 0.05; if (opt.flach) t.mund.o.scale.y = Math.max(0.001, Math.min(1, offen * 1.3)); }
-      if (t.unterlippe) t.unterlippe.o.visible = offen > 0.08;
+      if (t.mund) t.mund.o.visible = offen > 0.05;
+      if (t.unterlippe) t.unterlippe.o.visible = !!opt.flach || offen > 0.08;
       if (t.zaehne) t.zaehne.o.visible = offen > 0.1;
       if (t.zaehne_unten) t.zaehne_unten.o.visible = offen > 0.7;
     },

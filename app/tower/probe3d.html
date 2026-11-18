@@ -107,6 +107,8 @@
   <button type="button" data-kopf="brille_ab">Brille ab</button>
   <button type="button" data-kopf="protzen">Brille ab + Funkeln</button>
   <button type="button" data-kopf="magisch">Funkeln durch die Brille</button>
+  <button type="button" data-kopfrede="reden">Reden</button>
+  <button type="button" data-kopfrede="gestik">Reden mit Gestik</button>
 </div>
 <div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
@@ -251,6 +253,17 @@ try {
     bauProbe.setze(r.dataset.mass, +r.value); r.parentElement.querySelector("output").textContent = (+r.value).toFixed(2).replace(".", ",");
   });
   const mundZeiten = await fetch("figuren/mund_gary.json").then((r) => r.json()).catch(() => ({}));
+  // Mr. Flex redet (Kopf-Probe 18.11.): seine Aufnahmen mit den Mundformen von Rhubarb; „Reden mit Gestik“ nimmt die längste der Auswahl
+  const mundFlex = await fetch("figuren/mund_mrflex.json").then((r) => r.json()).catch(() => ({}));
+  const FLEX_SAGT = ["mrflex_01", "mrflex_02", "mrflex_03", "mrflex_04", "mrflex_05", "mrflex_06", "mrflex_07", "mrflex_08"];
+  const FLEX_GESTIK = FLEX_SAGT.reduce((a, b) => ((mundFlex[b] || {}).dauer || 0) > ((mundFlex[a] || {}).dauer || 0) ? b : a);
+  let flexNr = 0;
+  for (const b of document.querySelectorAll("#bau button[data-kopfrede]")) b.addEventListener("click", () => {
+    const mitGestik = b.dataset.kopfrede === "gestik", id = mitGestik ? FLEX_GESTIK : FLEX_SAGT[flexNr++ % FLEX_SAGT.length];
+    spiele(`../audio/tower/${id}.mp3`, { wer: "flex", id,
+      beginn: () => { if (mitGestik && mundFlex[id]) bauProbe.rede({ einsaetze: einsaetzeAus(mundFlex[id].zeiten), zeit: () => (laeuft ? laeuft.zeit() : 1e9) }); },
+      ende: () => { bauProbe.mund(null); bauProbe.rede(null); } });
+  });
   const GARY_SAGT = ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"], GARY_GESTIK = "gary_06";
   let garyNr = 0, ohneFormen = false;
   const druecke = (art, wert) => { for (const b of document.querySelectorAll(`#figuren button[data-${art}]`)) b.setAttribute("aria-pressed", String(b.dataset[art] === wert)); };
@@ -380,14 +393,15 @@ try {
     ton.src = datei; ton.play().catch(fertig);
   }
   function bewegeMund(dt) {                               // jedes Bild: Garys Mund folgt der laufenden Aufnahme – nach den Mundformen von Rhubarb; fehlen sie, als Reserve nach der Lautstärke (Mr. Alex 18.11.)
-    if (!laeuft || laeuft.wer !== "gary") return;
-    const zeit = laeuft.zeit(), formen = !ohneFormen && mundZeiten[laeuft.id];
-    if (formen) return figuren.mund("gary", mundAusZeiten(formen.zeiten, zeit));
+    if (!laeuft || (laeuft.wer !== "gary" && laeuft.wer !== "flex")) return;
+    const flex = laeuft.wer === "flex", setze = (m) => (flex ? bauProbe.mund(m) : figuren.mund("gary", m));   // Mr. Flex (Probe-Figur) redet auf demselben Weg wie Gary
+    const zeit = laeuft.zeit(), formen = !ohneFormen && (flex ? mundFlex : mundZeiten)[laeuft.id];
+    if (formen) return setze(mundAusZeiten(formen.zeiten, zeit));
     let laut = 0;
     if (window.__towerTonTest) laut = 0.12 * Math.abs(Math.sin(zeit * 9));
     else if (klang && klang.mess) { klang.mess.getFloatTimeDomainData(pegelFeld); for (const v of pegelFeld) laut += v * v; laut = Math.sqrt(laut / pegelFeld.length); }
     pegel += (Math.min(1, Math.max(0, (laut - 0.012) * 7)) - pegel) * Math.min(1, dt * 22);
-    figuren.mund("gary", [pegel, 1]);
+    setze([pegel, 1]);
   }
   let zug = null, spreiz = 0;
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.16, 0.22, 40), new THREE.MeshBasicMaterial({ color: 0xffd58a, transparent: true, opacity: 0.85, depthTest: false }));
@@ -503,7 +517,7 @@ try {
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
   window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
-    bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) bauProbe.bewege(ms / 1000); },   // PROBE A3
+    bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3
     halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter
     takt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); figuren.bewege(ms / 1000, performance.now() + i * ms); } },   // Testprogramm: n Bilder im Abstand ms rechnen (wie 60 Bilder pro Sekunde)
      stand: () => [figur.x, figur.z], boden: () => {      // eine freie, sichtbare Bodenstelle 1,5 bis 3 m neben der Figur

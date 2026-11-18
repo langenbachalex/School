@@ -91,28 +91,33 @@ def unten(ob):
     return ob
 
 
-def bogen(name, eltern, punkte, r, material):
-    """Ein glatter runder Strang durch die Punkte (Kurve mit Dicke, in ein Netz umgewandelt); der Ursprung liegt am ersten Punkt."""
+def bogen(name, eltern, linien, r, material, ursprung=None):
+    """Glatte runde Straenge durch die Punkte (Kurve mit Dicke, in ein Netz umgewandelt). linien = eine Punktliste oder mehrere;
+    der Ursprung liegt am ersten Punkt oder an `ursprung` (dort dreht und waechst das Teil im Browser)."""
+    if not isinstance(linien[0][0], (tuple, list)):
+        linien = [linien]
+    u = ursprung or linien[0][0]
     kurve = bpy.data.curves.new(name + "_kurve", "CURVE")
     kurve.dimensions = "3D"
     kurve.bevel_depth = r
     kurve.bevel_resolution = 2
     kurve.use_fill_caps = True
-    linie = kurve.splines.new("POLY")
-    linie.points.add(len(punkte) - 1)
-    for p, q in zip(linie.points, punkte):
-        p.co = (q[0] - punkte[0][0], q[1] - punkte[0][1], q[2] - punkte[0][2], 1)
+    for punkte in linien:
+        linie = kurve.splines.new("POLY")
+        linie.points.add(len(punkte) - 1)
+        for pt, q in zip(linie.points, punkte):
+            pt.co = (q[0] - u[0], q[1] - u[1], q[2] - u[2], 1)
     vor = bpy.data.objects.new(name + "_vor", kurve)
     bpy.context.scene.collection.objects.link(vor)
     netz = bpy.data.meshes.new_from_object(vor.evaluated_get(bpy.context.evaluated_depsgraph_get()))
     bpy.data.objects.remove(vor)
     ob = bpy.data.objects.new(name, netz)
     bpy.context.scene.collection.objects.link(ob)
-    for f in netz.polygons:
-        f.use_smooth = True
+    for fl in netz.polygons:
+        fl.use_smooth = True
     netz.materials.append(material)
     ob.parent = eltern
-    ob.location = punkte[0]
+    ob.location = u
     return ob
 
 
@@ -123,40 +128,55 @@ def farben():
         gold=farbe("gold", (1.0, 0.72, 0.18), 0.3, 1.0), stern=farbe("stern", (1.0, 0.85, 0.35), 0.4, 0.0, 2.5),
         auge=farbe("auge_weiss", (0.95, 0.95, 0.92), 0.2), pupille=farbe("pupille", (0.02, 0.015, 0.01), 0.1),
         holz=farbe("zauberstab", (0.02, 0.02, 0.025), 0.35), stabweiss=farbe("stab_weiss", (0.95, 0.94, 0.90), 0.4),
-        rachen=farbe("rachen", (0.16, 0.03, 0.04), 0.7))
+        rachen=farbe("rachen", (0.20, 0.03, 0.05), 0.7), creme=farbe("fuchs_creme", (1.0, 0.93, 0.78), 0.85, 0.0, 0.28),
+        augenweiss=farbe("augenweiss", (1.0, 1.0, 0.97), 0.25, 0.0, 0.4), glanz=farbe("glanz", (1.0, 1.0, 1.0), 0.2, 0.0, 2.0),
+        zunge=farbe("zunge", (0.95, 0.42, 0.45), 0.6, 0.0, 0.15), zahn=farbe("zahn", (1.0, 1.0, 0.96), 0.3, 0.0, 0.35))
 
 
 def fuchskopf(eltern, ort=(0, 0, 0), name="fuchskopf"):
-    """Kopf mit Hut; Ursprung am Halsansatz, Kopfmitte 17 cm darueber."""
+    """Kopf mit Hut; Ursprung am Halsansatz, Kopfmitte 17 cm darueber.
+    Bewegliche Gesichtsteile (Namen gelten fuer alle Koepfe, der Browser bewegt sie): braue_l/r, lid_l/r, unterlid_l/r, pupille_l/r,
+    wange_l/r, ohr_l/r, mund (Mundhoehle, Ursprung oben), kiefer (mit Zunge), laecheln (hochgezogene Mundwinkel)."""
     f = farben()
     k = gelenk(name, eltern, ort)
     kugel("kopf_rund", k, (0, -0.02, 0.17), (0.185, 0.162, 0.157), f["orange"])
     for s, seite in ((-1, "r"), (1, "l")):
         kegel("backe", k, (s * 0.17, -0.02, 0.115), 0.085, 0.20, f["orange"], (0, R(s * 112), 0))
-        kegel("ohr", k, (s * 0.150, 0.01, 0.355), 0.082, 0.27, f["orange"], (R(-4), R(s * 24), 0))
-        kegel("innenohr", k, (s * 0.150, -0.022, 0.345), 0.048, 0.19, f["weiss"], (R(4), R(s * 24), 0))
-        kegel("ohrspitze", k, (s * 0.196, 0.003, 0.464), 0.028, 0.085, f["schwarz"], (R(-4), R(s * 24), 0))
-        kugel("wange", k, (s * 0.06, -0.125, 0.098), (0.046, 0.038, 0.029), f["weiss"])
-        kugel("auge", k, (s * 0.074, -0.152, 0.225), (0.040, 0.026, 0.049), f["auge"])
-        kugel("pupille_" + seite, k, (s * 0.070, -0.178, 0.222), (0.024, 0.012, 0.028), f["pupille"])
-        kugel("braue_" + seite, k, (s * 0.080, -0.152, 0.288), (0.044, 0.012, 0.0085), f["schwarz"], (0, R(s * -14), 0))
-        kugel("mundwinkel_" + seite, k, (s * 0.028, -0.262, 0.092), (0.029, 0.012, 0.0066), f["schwarz"], (0, R(s * -22), R(s * 30)))
-        oben(kugel("lid_" + seite, k, (s * 0.074, -0.152, 0.225), (0.045, 0.043, 0.054), f["orange"]))
-        unten(kugel("unterlid_" + seite, k, (s * 0.074, -0.150, 0.225), (0.044, 0.034, 0.054), f["orange"]))
-    oben(kugel("mund", k, (0, -0.258, 0.066), (0.036, 0.030, 0.030), f["rachen"]))
-    # Laechelbogen fuer "froehlich": breit ueber die Schnauze, die Enden klar nach oben (im Browser sonst unsichtbar)
-    halb = []
-    for i in range(13):                                             # von der Mitte nach aussen, die Enden klar nach oben
-        x = i / 12 * 0.067
-        dz = -0.030 + 0.040 * (x / 0.067) ** 2.4
-        rest = max(0.03, 1 - (x / 0.070) ** 2 - (dz / 0.049) ** 2)
-        halb.append((x, -0.185 - 0.123 * rest ** 0.5, 0.122 + dz))
-    punkte = [(-x, y, z) for x, y, z in reversed(halb[1:])] + halb
-    bogen("laecheln", k, punkte, 0.0075, f["schwarz"])
-    kugel("kiefer", k, (0, -0.205, 0.094), (0.050, 0.085, 0.022), f["weiss"])
-    kugel("nasenruecken", k, (0, -0.165, 0.165), (0.051, 0.102, 0.036), f["orange"])
-    kugel("schnauze", k, (0, -0.185, 0.122), (0.068, 0.119, 0.049), f["weiss"])
-    kugel("nase", k, (0, -0.298, 0.145), (0.0375, 0.027, 0.0255), f["pupille"])
+        # Ohr als eigenes Gelenk am Ansatz: stellt sich bei Freude auf
+        ansatz = (s * 0.095, 0.004, 0.232)
+        ohr = gelenk("ohr_" + seite, k, ansatz)
+        for teil, pos, r, h, farbname, dreh in (("ohr", (s * 0.150, 0.01, 0.355), 0.082, 0.27, "orange", (R(-4), R(s * 24), 0)),
+                                                ("innenohr", (s * 0.150, -0.022, 0.345), 0.048, 0.19, "creme", (R(4), R(s * 24), 0)),
+                                                ("ohrspitze", (s * 0.196, 0.003, 0.464), 0.028, 0.085, "schwarz", (R(-4), R(s * 24), 0))):
+            kegel(teil, ohr, tuple(a - b for a, b in zip(pos, ansatz)), r, h, f[farbname], dreh)
+        # Wangenpolster neben der Schnauze: schieben sich beim Laecheln nach oben gegen die Augen
+        kugel("wange_" + seite, k, (s * 0.092, -0.118, 0.128), (0.058, 0.052, 0.046), f["creme"])
+        # Auge: Augenweiss, kleine Pupille mit Glanzpunkt (vom Betrachter aus oben links)
+        kugel("auge", k, (s * 0.074, -0.152, 0.214), (0.043, 0.028, 0.050), f["augenweiss"])
+        pupille = kugel("pupille_" + seite, k, (s * 0.071, -0.178, 0.212), (0.019, 0.011, 0.023), f["pupille"])
+        kugel("glanz", pupille, (-0.0065, -0.008, 0.0085), (0.0062, 0.004, 0.0062), f["glanz"])
+        # Braue: Bogen mit Abstand ueber dem Auge, aussen leicht hoeher
+        bz = [(s * (0.030 + 0.090 * t), -0.176 + 0.050 * t ** 1.6, 0.276 + 0.018 * (1 - (2 * t - 0.9) ** 2) + 0.006 * t) for t in [i / 8 for i in range(9)]]
+        bogen("braue_" + seite, k, bz, 0.0078, f["schwarz"], ursprung=(s * 0.075, -0.160, 0.290))
+        oben(kugel("lid_" + seite, k, (s * 0.074, -0.152, 0.214), (0.047, 0.045, 0.054), f["orange"]))
+        unten(kugel("unterlid_" + seite, k, (s * 0.074, -0.150, 0.214), (0.047, 0.037, 0.054), f["orange"]))
+    # Schnauze (cremeweiss) und Unterkiefer; dazwischen oeffnet sich der Mund breit, mit Zahnreihe oben und Zunge unten
+    kugel("nasenruecken", k, (0, -0.165, 0.170), (0.051, 0.102, 0.036), f["orange"])
+    kugel("schnauze", k, (0, -0.185, 0.130), (0.078, 0.119, 0.044), f["creme"])
+    kugel("nase", k, (0, -0.298, 0.152), (0.0375, 0.027, 0.0255), f["pupille"])
+    zaehne = []
+    for i in range(11):
+        x = (i - 5) / 5 * 0.058
+        zaehne.append((x, -0.185 - 0.112 * max(0.05, 1 - (x / 0.078) ** 2) ** 0.5, 0.098))
+    bogen("zaehne", k, zaehne, 0.0075, f["zahn"])
+    oben(kugel("mund", k, (0, -0.212, 0.064), (0.066, 0.086, 0.038), f["rachen"]))
+    kiefer = kugel("kiefer", k, (0, -0.196, 0.094), (0.070, 0.104, 0.024), f["creme"])
+    kugel("zunge", kiefer, (0, -0.040, 0.019), (0.036, 0.052, 0.012), f["zunge"])
+    # hochgezogene Mundwinkel fuer das Laecheln: von den Seiten der Schnauze spitz nach oben bis unter die Augenmitte (sonst unsichtbar)
+    winkel = []
+    for s in (-1, 1):
+        winkel.append([(s * (0.030 + 0.052 * t), -0.292 + 0.150 * t ** 1.5, 0.098 + 0.062 * t ** 2.2) for t in [i / 10 for i in range(11)]])
+    bogen("laecheln", k, winkel, 0.0070, f["schwarz"], ursprung=(0, -0.25, 0.10))
     # Zauberhut zwischen den Ohren: hoher Kegel mit geknickter Spitze, Krempe, goldenes Band, Sterne
     kegel("hut", k, (0, 0.0, 0.51), 0.115, 0.42, f["hut"], (R(-6), 0, 0), r2=0.045)
     kegel("hutspitze", k, (0.035, 0.03, 0.79), 0.05, 0.22, f["hut"], (R(-12), R(28), 0))

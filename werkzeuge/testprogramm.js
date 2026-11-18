@@ -227,8 +227,17 @@ async function probe3dTest(browser, basis, app, name, fm) {
     await pg.click('#figuren button[data-gesicht="erschrocken"]');
     let g = await takt(60);
     if (g.braue < 0.6 || g.mund < 0.5) fehl.push(`${titel}: Ausdruck „erschrocken“ kommt nicht an (Braue ${g.braue}, Mund ${g.mund})`);
-    await pg.click('#figuren button[data-gesicht="neutral"]');
+    await pg.click('#figuren button[data-gesicht="froehlich"]');
     g = await takt(90);
+    if (g.laecheln < 0.8 || g.mund < 0.4 || g.zeigt !== "froehlich") fehl.push(`${titel}: Ausdruck „fröhlich“ kommt nicht an (Lächeln ${g.laecheln}, Mund ${g.mund})`);
+    await pg.click('#figuren button[data-gesicht="stolz"]');
+    g = await takt(90);
+    if (g.kinn < 0.02 || g.laecheln < 0.8 || g.kopfWinkel > 30) fehl.push(`${titel}: Ausdruck „stolz“ kommt nicht an (Kinn ${g.kinn}, Lächeln ${g.laecheln}, Kopf ${g.kopfWinkel}°)`);
+    await pg.click('#figuren button[data-gesicht="neutral"]');
+    await pg.click('#figuren button[data-figur="tadaa"]');   // nach dem Ta-daa! bleibt Gary zwei Sekunden stolz stehen
+    g = await takt(115);
+    if (g.zeigt !== "stolz") fehl.push(`${titel}: nach dem Ta-daa! zeigt Gary „${g.zeigt}“ statt „stolz“`);
+    g = await takt(240);
     if (g.braue > 0.1 || g.mund > 0.1) fehl.push(`${titel}: Gesicht geht nicht auf „neutral“ zurück (Braue ${g.braue}, Mund ${g.mund})`);
     await stumm();
     await pg.evaluate(() => { window.__towerTonTest = 1500; });

@@ -304,34 +304,10 @@ export function rundeOrt(ru, weg) {
    umfaerben: Körperteil → Farbfeld des Körperbilds (Spalte,Zeile von 8 × 4) → neues Feld. Aus der Rüstung wird die Uniform der Garde:
    roter Rock, weißer Gürtel, goldene Schnalle und Abzeichen, schwarze Hose und Stiefel. */
 const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
-export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, duenn: 0.5,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (duenn = Breite und Tiefe des Körpers, 1 = wie das Modell)
+export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, duenn: 0.6,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (duenn = Breite und Tiefe des Körpers, 1 = wie das Modell)
   kopf: "sergeantkopf",   // Kopf mit Bart, rothaarig (Wahl Mr. Alex 18.11.)
  
   umfaerben: { Body: { "3,0": ROT, "7,0": ROT, "7,1": SCHWARZ, "6,0": WEISS, "2,1": GOLD, "0,1": GOLD }, Arm: { "3,0": ROT, "4,0": ROT, "7,0": ROT, "6,0": ROT }, Leg: { "3,0": SCHWARZ, "7,0": SCHWARZ, "7,1": SCHWARZ, "6,0": SCHWARZ } } };
-/* Dünner Körper (Mr. Alex 18.11.: „rappeldürr, eine lange Bohnenstange“): Die Netze werden beim Laden um ihre Achse schmaler – Rumpf um die Körpermitte,
-   Arme um die Armachse, Beine um die Beinachse (der Fuß bleibt so lang, wie er ist) –, Schultern und Hüftgelenke rücken entsprechend zur Mitte.
-   Kopf und Hände hängen an Knochen und bleiben, wie sie sind. Rückgabe: die neuen Plätze der Schulter- und Hüftknochen (strecke() hält sie fest). */
-function duennMachen(m, K, d) {
-  m.traverse((o) => {
-    if (!o.isSkinnedMesh) return;
-    const P = o.geometry.attributes.position, art = /Arm/.test(o.name) ? "arm" : /Leg/.test(o.name) ? "bein" : /Body/.test(o.name) ? "rumpf" : ""; if (!art) return;
-    let a = 0, b = 0; for (let i = 0; i < P.count; i++) { a += P.getX(i); b += P.getY(i); } a /= P.count; b /= P.count;   // Achse: Mitte des Beins (x) bzw. Höhe des Arms (y)
-    for (let i = 0; i < P.count; i++) {
-      const x = P.getX(i), y = P.getY(i), z = P.getZ(i);
-      if (art === "rumpf") P.setXYZ(i, x * d, y, z * d);
-      else if (art === "arm") P.setXYZ(i, x, b + (y - b) * d, z * d);
-      else P.setXYZ(i, a * d + (x - a) * d, y, y < 0.12 ? z : z * d);
-    }
-    P.needsUpdate = true; o.geometry.computeBoundingBox(); o.geometry.computeBoundingSphere();
-  });
-  const plaetze = new Map();
-  for (const n of ["upperarml", "upperarmr", "upperlegl", "upperlegr"]) {
-    const k = K(n), ort = m.worldToLocal(k.getWorldPosition(v())); ort.x *= d;
-    k.position.copy(k.parent.worldToLocal(m.localToWorld(ort))); plaetze.set(k, k.position.clone());
-  }
-  m.updateMatrixWorld(true);
-  return plaetze;
-}
 function umfaerben(m, plan) {
   m.traverse((o) => {
     const teil = o.isSkinnedMesh && Object.keys(plan).find((k) => o.name.includes(k)); if (!teil) return;
@@ -353,8 +329,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const anker = new THREE.Group(); anker.add(m); anker.position.set(platz.x, 0, platz.z); szene.add(anker);
   m.updateMatrixWorld(true);
   const mass = HALS / K("head").getWorldPosition(v()).y;
-  m.scale.setScalar(mass); anker.updateMatrixWorld(true);
-  const schmal = figur.duenn ? duennMachen(m, K, figur.duenn) : new Map();
+  m.scale.setScalar(mass); if (figur.duenn) { m.scale.x *= figur.duenn; m.scale.z *= figur.duenn; } anker.updateMatrixWorld(true);   // die ganze Figur schmaler und flacher
   const schatten = new THREE.Mesh(new THREE.CircleGeometry(0.28, 32), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.38, depthWrite: false }));
   schatten.rotation.x = -Math.PI / 2; schatten.position.y = 0.012; anker.add(schatten);
 
@@ -396,7 +371,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     m.traverse((o) => { if (o.isSkinnedMesh && /_Head$/.test(o.name)) o.visible = false; });
     kopfTeil = kopfDatei.scene.getObjectByName(kleidung.kopf); kopfTeil.traverse((o) => { o.frustumCulled = false; });
     const kq = head.getWorldQuaternion(Q()), ks = mass * bau.kopf;   // der Kopf ist in Metern gebaut, für die Kopfgröße von Mr. Flex
-    kopfTeil.quaternion.copy(kq.invert().multiply(m.getWorldQuaternion(Q()))); kopfTeil.scale.setScalar(1 / ks);
+    kopfTeil.quaternion.copy(kq.invert().multiply(m.getWorldQuaternion(Q()))); kopfTeil.scale.setScalar(1 / ks); if (figur.duenn) { kopfTeil.scale.x /= figur.duenn; kopfTeil.scale.z /= figur.duenn; }   // der Kopf bleibt so breit, wie er gebaut ist
     kopfTeil.position.copy(v(...KOPF_SITZ).applyQuaternion(kopfTeil.quaternion).multiplyScalar(1 / ks)); head.add(kopfTeil);
     if (hut) { hut.scale.multiplyScalar(kleidung.hutWeit || 1); hut.position.y += kleidung.hutHoch || 0; }
     gesicht = baueGesicht(kopfTeil, 0.19, { mass: 0.6, flach: true });
@@ -450,7 +425,6 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     for (const [art, liste] of Object.entries(gruppen)) for (const k of liste) k.position.copy(ruhe.get(k)).multiplyScalar(bau[art]);
     for (const k of bein.ober) k.position.copy(ruhe.get(k)).multiplyScalar(b.ober);
     for (const k of bein.unter) k.position.copy(ruhe.get(k)).multiplyScalar(b.unter);
-    for (const [k, ort] of schmal) k.position.copy(ort);
     for (const s of "lr") if (stiefel[s]) stiefel[s].position.copy(ruhe.get(K("foot" + s))).multiplyScalar(b.unter - 1);
     knieRund();
     if (!hips.position.equals(gesetzt)) roh.copy(hips.position);

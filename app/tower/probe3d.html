@@ -59,10 +59,12 @@
   <span>Gesicht</span>
   <button type="button" data-gesicht="neutral" aria-pressed="true">Neutral</button>
   <button type="button" data-gesicht="froehlich" aria-pressed="false">Fröhlich</button>
+  <button type="button" data-gesicht="lachen" aria-pressed="false">Lachen</button>
   <button type="button" data-gesicht="erschrocken" aria-pressed="false">Erschrocken</button>
   <button type="button" data-gesicht="ueberrascht" aria-pressed="false">Überrascht</button>
   <button type="button" data-gesicht="grimmig" aria-pressed="false">Grimmig</button>
   <button type="button" data-gesicht="stolz" aria-pressed="false">Stolz</button>
+  <button type="button" data-blick="an" aria-pressed="true">Unruhiger Blick</button>
 </div>
 <div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
@@ -176,7 +178,7 @@ try {
   const garyZelle = naechsteFreie(2.1, 6.0);
   let bahnZellen = 0;
   while (bahnZellen * gk.zelle < 5.2 && frei(garyZelle[0], garyZelle[1] - bahnZellen - 1)) bahnZellen++;
-  const figuren = await ladeFiguren(lader, szene, { gary: { ...zuOrt(...garyZelle), bahn: Math.max(1.2, bahnZellen * gk.zelle - 0.3) } });
+  const figuren = await ladeFiguren(lader, szene, { gary: { ...zuOrt(...garyZelle), bahn: Math.max(1.2, bahnZellen * gk.zelle - 0.3) } }, kamera);
   const mundZeiten = await fetch("figuren/mund_gary.json").then((r) => r.json()).catch(() => ({}));
   const GARY_SAGT = ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"], GARY_GESTIK = "gary_06";
   let garyNr = 0, ohneFormen = false;
@@ -190,6 +192,7 @@ try {
       beginn: () => { figuren.befehl("reden"); if (mitGestik && mundZeiten[id]) figuren.rede("gary", { einsaetze: einsaetzeAus(mundZeiten[id].zeiten), zeit: () => (laeuft ? laeuft.zeit() : 1e9) }); },
       ende: () => { figuren.mund("gary", null); figuren.rede("gary", null); if (figuren.liste()[0].modus === "reden") figuren.befehl("stehen"); } });
   });
+  for (const b of document.querySelectorAll("#figuren button[data-blick]")) b.addEventListener("click", () => { const an = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(an)); figuren.unruhe(an); });
   for (const b of document.querySelectorAll("#figuren button[data-gesicht]")) b.addEventListener("click", () => { figuren.ausdruck(b.dataset.gesicht); druecke("gesicht", b.dataset.gesicht); });
   const startZelle = naechsteFreie(0, raum.max.z - 2.6), startOrt = zuOrt(...startZelle);
   const figur = { x: startOrt.x, z: startOrt.z, dreh: Math.PI, pfad: [], phase: 0, geht: 0, dann: null, blick: null };

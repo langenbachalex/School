@@ -229,10 +229,21 @@ async function probe3dTest(browser, basis, app, name, fm) {
     if (g.braue < 0.6 || g.mund < 0.5) fehl.push(`${titel}: Ausdruck „erschrocken“ kommt nicht an (Braue ${g.braue}, Mund ${g.mund})`);
     await pg.click('#figuren button[data-gesicht="froehlich"]');
     g = await takt(90);
-    if (g.laecheln < 0.8 || g.mund < 0.4 || g.zeigt !== "froehlich") fehl.push(`${titel}: Ausdruck „fröhlich“ kommt nicht an (Lächeln ${g.laecheln}, Mund ${g.mund})`);
+    if (g.winkel < 0.8 || g.mund > 0.2 || g.zeigt !== "froehlich") fehl.push(`${titel}: Ausdruck „fröhlich“ (geschlossenes Lächeln) kommt nicht an (Mundwinkel ${g.winkel}, Mund ${g.mund})`);
+    await pg.click('#figuren button[data-gesicht="lachen"]');
+    g = await takt(90);
+    if (g.winkel < 0.8 || g.mund < 0.4) fehl.push(`${titel}: Ausdruck „Lachen“ kommt nicht an (Mundwinkel ${g.winkel}, Mund ${g.mund})`);
+    // unruhiger Blick (Profil Gary): die Pupillen springen und bleiben im Augenweiß (Blick −1…1 entspricht höchstens 12,5 mm Weg)
+    await pg.click('#figuren button[data-gesicht="neutral"]');
+    let bMin = 0, bMax = 0;
+    for (let i = 0; i < 40; i++) { const b = (await takt(15)).blick; bMin = Math.min(bMin, b); bMax = Math.max(bMax, b); }
+    if (bMax - bMin < 0.4 || bMax > 1.001 || bMin < -1.001) fehl.push(`${titel}: unruhiger Blick stimmt nicht (Pupillen zwischen ${bMin} und ${bMax}, erwartet Bewegung innerhalb −1…1)`);
+    await pg.click('#figuren button[data-blick]');
+    if (Math.abs((await takt(60)).blick) > 0.05) fehl.push(`${titel}: Schalter „Unruhiger Blick“ schaltet nicht aus`);
+    await pg.click('#figuren button[data-blick]');
     await pg.click('#figuren button[data-gesicht="stolz"]');
     g = await takt(90);
-    if (g.kinn < 0.02 || g.laecheln < 0.8 || g.kopfWinkel > 30) fehl.push(`${titel}: Ausdruck „stolz“ kommt nicht an (Kinn ${g.kinn}, Lächeln ${g.laecheln}, Kopf ${g.kopfWinkel}°)`);
+    if (g.kinn < 0.02 || g.winkel < 0.4 || g.kopfWinkel > 30) fehl.push(`${titel}: Ausdruck „stolz“ kommt nicht an (Kinn ${g.kinn}, Mundwinkel ${g.winkel}, Kopf ${g.kopfWinkel}°)`);
     await pg.click('#figuren button[data-gesicht="neutral"]');
     await pg.click('#figuren button[data-figur="tadaa"]');   // nach dem Ta-daa! bleibt Gary zwei Sekunden stolz stehen
     g = await takt(115);

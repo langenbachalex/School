@@ -121,6 +121,21 @@ def bogen(name, eltern, linien, r, material, ursprung=None):
     return ob
 
 
+def bogen_mit_formen(name, eltern, linie, formen, r, material, ursprung):
+    """Wie bogen(), dazu Formschluessel (weiche Verformungen, im Browser "Morph Targets"): formen = {Name: Punktliste gleicher Laenge}.
+    Nur fuer die Lippenlinie – sie muss sich biegen koennen; alle anderen Gesichtsteile bleiben starr und beweglich."""
+    ob = bogen(name, eltern, linie, r, material, ursprung)
+    ob.shape_key_add(name="Basis")
+    for n, punkte in formen.items():
+        hilfe = bogen(name + "_hilfe", None, punkte, r, material, ursprung)
+        form = ob.shape_key_add(name=n)
+        form.value = 0
+        for ziel, quelle in zip(form.data, hilfe.data.vertices):
+            ziel.co = quelle.co
+        bpy.data.objects.remove(hilfe)
+    return ob
+
+
 def farben():
     return dict(
         orange=farbe("fuchs_orange", (0.80, 0.32, 0.07), 0.9), weiss=farbe("fuchs_weiss", (0.93, 0.90, 0.84), 0.9),
@@ -160,32 +175,86 @@ def fuchskopf(eltern, ort=(0, 0, 0), name="fuchskopf"):
         bogen("braue_" + seite, k, bz, 0.0078, f["schwarz"], ursprung=(s * 0.075, -0.160, 0.290))
         oben(kugel("lid_" + seite, k, (s * 0.074, -0.152, 0.214), (0.047, 0.045, 0.054), f["orange"]))
         unten(kugel("unterlid_" + seite, k, (s * 0.074, -0.150, 0.214), (0.047, 0.037, 0.054), f["orange"]))
-    # Schnauze (cremeweiss) und Unterkiefer; dazwischen oeffnet sich der Mund breit, mit Zahnreihe oben und Zunge unten
+    # ---- Schnauze und Mund (Schritt 1e, 18.11.): Oberlippe mit dunkler Lippenkante, Unterkiefer am Gelenk, Mundwinkel weit hinten ----
+    SN, SR = (0, -0.185, 0.130), (0.078, 0.119, 0.044)                 # Schnauze: Mitte und Halbachsen
+    LZ = 0.103                                                         # Hoehe der Lippennaht
     kugel("nasenruecken", k, (0, -0.165, 0.170), (0.051, 0.102, 0.036), f["orange"])
-    kugel("schnauze", k, (0, -0.185, 0.130), (0.078, 0.119, 0.044), f["creme"])
+    kugel("schnauze", k, SN, SR, f["creme"])
     kugel("nase", k, (0, -0.298, 0.152), (0.0375, 0.027, 0.0255), f["pupille"])
-    zaehne = []
-    for i in range(11):
-        x = (i - 5) / 5 * 0.058
-        zaehne.append((x, -0.185 - 0.112 * max(0.05, 1 - (x / 0.078) ** 2) ** 0.5, 0.098))
-    bogen("zaehne", k, zaehne, 0.0075, f["zahn"])
-    oben(kugel("mund", k, (0, -0.212, 0.064), (0.066, 0.086, 0.038), f["rachen"]))
-    kiefer = kugel("kiefer", k, (0, -0.196, 0.094), (0.070, 0.104, 0.024), f["creme"])
-    kugel("zunge", kiefer, (0, -0.040, 0.019), (0.036, 0.052, 0.012), f["zunge"])
-    # hochgezogene Mundwinkel fuer das Laecheln: von den Seiten der Schnauze spitz nach oben bis unter die Augenmitte (sonst unsichtbar)
-    winkel = []
-    for s in (-1, 1):
-        winkel.append([(s * (0.030 + 0.052 * t), -0.292 + 0.150 * t ** 1.5, 0.098 + 0.062 * t ** 2.2) for t in [i / 10 for i in range(11)]])
-    bogen("laecheln", k, winkel, 0.0070, f["schwarz"], ursprung=(0, -0.25, 0.10))
+
+    def rand(phi, z, weit=1.0):
+        """Punkt auf dem Umriss der Schnauze in Hoehe z; phi = 0 vorn, 90 Grad an der Seite."""
+        q = max(0.02, 1 - ((z - SN[2]) / SR[2]) ** 2) ** 0.5 * weit
+        return (SR[0] * q * math.sin(phi), SN[1] - SR[1] * q * math.cos(phi), z)
+
+    def lippenlinie(hoch_l=0.0, hoch_r=0.0):
+        """Lippenkante von Mundwinkel zu Mundwinkel: vorn das liegende "w" der Fuchsschnauze, an den Seiten laeuft sie in die Wange.
+        hoch = +1: Mundwinkel hoch und nach hinten (Laecheln, liegt auf dem hochgeschobenen Wangenpolster), -1: nach unten."""
+        def seite(sg, h):
+            pkt = []
+            for i in range(1, 13):                                     # von der Mitte zur Seite der Schnauze
+                phi = R(96) * i / 12
+                z = LZ - 0.008 * math.sin(math.pi * min(1, phi / R(62))) + (0.010 if h > 0 else 0.005) * h * (i / 12) ** 2
+                x, y, z = rand(phi, z, 1.035)
+                pkt.append((sg * x, y, z))
+            ex, ey, ez = pkt[-1]
+            ende = {1: (0.034, 0.004, 0.050), 0: (0.013, 0.012, -0.002), -1: (0.010, 0.010, -0.024)}
+            d = [ende[0][j] + (ende[1][j] - ende[0][j]) * h if h >= 0 else ende[0][j] + (ende[-1][j] - ende[0][j]) * -h for j in range(3)]
+            wm, wr = (0.092, -0.118, 0.128 + 0.030 * max(0, h)), [v * (1 + 0.1 * max(0, h)) for v in (0.058, 0.052, 0.046)]
+            for j in range(1, 9):                                      # Mundwinkel: weiter in die Wange
+                t = j / 8
+                x, z = abs(ex) + d[0] * t, ez + d[2] * t ** 1.7
+                y = ey + d[1] * t
+                q = 1 - ((x - wm[0]) / wr[0]) ** 2 - ((z - wm[2]) / wr[2]) ** 2
+                if q > 0:
+                    y = min(y, wm[1] - wr[1] * q ** 0.5 - 0.005)       # vor dem Wangenpolster bleiben, damit die Linie nie verschluckt wird
+                pkt.append((sg * x, y, z))
+            return pkt
+        mitte = rand(0, LZ, 1.035)
+        return list(reversed(seite(-1, hoch_r))) + [mitte] + seite(1, hoch_l)
+
+    oberlippe = gelenk("oberlippe", k, (0, -0.25, LZ))
+    rel = lambda pkt: [(x, y + 0.25, z - LZ) for x, y, z in pkt]
+    bogen_mit_formen("mundlinie", oberlippe, rel(lippenlinie()), {"hoch_l": rel(lippenlinie(1, 0)), "hoch_r": rel(lippenlinie(0, 1)),
+                     "tief_l": rel(lippenlinie(-1, 0)), "tief_r": rel(lippenlinie(0, -1))}, 0.0052, f["schwarz"], (0, 0, 0))
+    bogen("nasenrinne", oberlippe, rel([(0, -0.3015, 0.132), rand(0, 0.116, 1.03), rand(0, LZ, 1.035)]), 0.0042, f["schwarz"])
+    # obere Zahnreihe: acht kleine Zaehne mit Fugen, dazu zwei laengere spitze Eckzaehne (Fuchs)
+    zaehne = gelenk("zaehne", oberlippe, (0, 0, 0))
+    for w in (-56, -40, -24, -8, 8, 24, 40, 56):
+        x, y, z = rand(R(w), LZ, 0.90)
+        kugel("zahn", zaehne, (x, y + 0.25, -0.0055), (0.0062, 0.0046, 0.0068), f["zahn"], fein=8)
+    for sg, seite in ((-1, "r"), (1, "l")):
+        x, y, z = rand(R(sg * 72), LZ, 1.03)
+        bpy.ops.mesh.primitive_cone_add(radius1=0.0068, radius2=0.0, depth=0.024, vertices=12)
+        ez = bpy.context.object
+        ez.data.transform(Matrix.Rotation(math.pi, 4, "X"))
+        oben(_fertig(ez, "eckzahn_" + seite, oberlippe, (x, y + 0.25, -0.012), (1, 1, 1), f["zahn"], (0, 0, 0)))
+    kugel("mund", k, (0, -0.187, LZ - 0.001), (0.055, 0.086, 0.0045), f["rachen"])      # Gaumen: dunkles Dach des Mundraums
+    # Unterkiefer: klappt am Gelenk in Hoehe der Mundwinkel nach unten; oben flach, darauf Mundboden, Zunge, untere Zaehne
+    GY = -0.177
+    kiefer = gelenk("kiefer", k, (0, GY, LZ - 0.001))
+    kinn = kugel("kinn", kiefer, (0, -0.010, 0), (0.060, 0.092, 0.030), f["creme"])
+    for v in kinn.data.vertices:
+        v.co.z = min(v.co.z, 0.0)
+    kugel("mundboden", kiefer, (0, -0.010, -0.001), (0.053, 0.084, 0.004), f["rachen"])
+    kugel("zunge", kiefer, (0, -0.040, 0.003), (0.034, 0.048, 0.009), f["zunge"])
+    lippe_unten = [(0.061 * math.sin(R(w)), -0.010 - 0.0935 * math.cos(R(w)), 0.0) for w in range(-88, 89, 11)]
+    bogen("unterlippe", kiefer, lippe_unten, 0.0046, f["schwarz"])
+    unten_z = gelenk("zaehne_unten", kiefer, (0, 0, 0))
+    for w in (-40, -24, -8, 8, 24, 40):
+        kugel("zahn", unten_z, (0.052 * math.sin(R(w)), -0.010 - 0.080 * math.cos(R(w)), 0.004), (0.0055, 0.0042, 0.0055), f["zahn"], fein=8)
+    # Hutplatz (Kleidungsplatz): etwas hoeher und nach hinten gekippt, damit hochgezogene Brauen unter der Krempe sichtbar bleiben
+    h = gelenk("hutplatz", k, (0, 0.022, 0.012))
+    h.rotation_euler = (R(-7), 0, 0)
     # Zauberhut zwischen den Ohren: hoher Kegel mit geknickter Spitze, Krempe, goldenes Band, Sterne
-    kegel("hut", k, (0, 0.0, 0.51), 0.115, 0.42, f["hut"], (R(-6), 0, 0), r2=0.045)
-    kegel("hutspitze", k, (0.035, 0.03, 0.79), 0.05, 0.22, f["hut"], (R(-12), R(28), 0))
-    kugel("krempe", k, (0, 0.01, 0.315), (0.165, 0.165, 0.015), f["hut"], (R(-6), 0, 0))
-    ring("hutband", k, (0, 0.005, 0.345), 0.112, 0.016, f["gold"], (R(-6), 0, 0))
+    kegel("hut", h, (0, 0.0, 0.51), 0.115, 0.42, f["hut"], (R(-6), 0, 0), r2=0.045)
+    kegel("hutspitze", h, (0.035, 0.03, 0.79), 0.05, 0.22, f["hut"], (R(-12), R(28), 0))
+    kugel("krempe", h, (0, 0.01, 0.315), (0.165, 0.165, 0.015), f["hut"], (R(-6), 0, 0))
+    ring("hutband", h, (0, 0.005, 0.345), 0.112, 0.016, f["gold"], (R(-6), 0, 0))
     for w, z, r in ((R(-70), 0.44, 0.02), (R(-110), 0.56, 0.016), (R(-55), 0.63, 0.013), (R(-125), 0.39, 0.014), (R(-88), 0.69, 0.011)):
         rad = 0.115 - (z - 0.31) * 0.17
-        kugel("stern", k, (math.cos(w) * rad, math.sin(w) * rad - 0.014, z), (r, r * 0.35, r), f["stern"])
-    kugel("hutkugel", k, (0.085, 0.045, 0.895), (0.028, 0.028, 0.028), f["gold"])
+        kugel("stern", h, (math.cos(w) * rad, math.sin(w) * rad - 0.014, z), (r, r * 0.35, r), f["stern"])
+    kugel("hutkugel", h, (0.085, 0.045, 0.895), (0.028, 0.028, 0.028), f["gold"])
     return k
 
 

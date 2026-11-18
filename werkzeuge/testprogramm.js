@@ -323,6 +323,36 @@ async function probe3dTest(browser, basis, app, name, fm) {
       for (const s of seiten) if (b["sohle" + s] > 8) fehl.push(`${titel}: bei „${pose}“ liegt die Sohle nicht flach auf (${s === "R" ? "rechts" : "links"} ${b["sohle" + s]}°)`);
       await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
     }
+    // A7 (Mr. Alex 18.11.): Tasche und Buchhalter sind weg, das Knie hält im tiefen Knick sein Volumen, der Standfuß gleitet nicht
+    if (!(b.kleidung > 200)) fehl.push(`${titel}: die Probe-Figur trägt Gürteltasche und Buchhalter noch (eingezogene Punkte: ${b.kleidung})`);
+    await pg.click('#bau button[data-bau="denken"]'); b = await bauTakt(70);
+    if (!(b.flaecheL[2] > 0.42)) fehl.push(`${titel}: beim Nachdenken liegt die linke Hand nicht mit Abstand vor dem Bauch (Tiefe ${b.flaecheL[2]}, verlangt über 0,42)`);
+    await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
+    for (const [pose, mindestens] of [["pubu", 0.8], ["mabu", 0.8], ["xubu", 0.8], ["spagat", 0.8], ["rolle", 0.8], ["kick", 0.45]]) {   // der Kick faltet das Knie ganz zusammen, dort reicht weniger
+      await pg.click(`#bau button[data-bau="${pose}"]`); let duenn = 9;
+      for (let k = 0; k < 40; k++) { b = await bauTakt(3); if (b.modus !== pose) break; duenn = Math.min(duenn, b.knieDick); }
+      if (duenn < mindestens) fehl.push(`${titel}: bei „${pose}“ wird das Bein am Knie zu dünn (${Math.round(duenn * 100)} % der Dicke, verlangt ${mindestens * 100} %)`);
+      await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
+    }
+    await pg.evaluate(() => window.__probe3d.bauBahn(60));                        // lange Strecke: ohne Wenden messen
+    for (const [art, anteil] of [["gehen", 0.6], ["rennen", 0.08]]) {
+      await pg.click(`#bau button[data-bau="${art}"]`); await bauTakt(30);
+      const reihe = []; for (let k = 0; k < 130; k++) reihe.push(await bauTakt(1));
+      const tiefK = Math.min(...reihe.flatMap((x) => [x.fussL[0][0], x.fussR[0][0]])), tiefZ = Math.min(...reihe.flatMap((x) => [x.fussL[1][0], x.fussR[1][0]]));
+      let rutsch = 0, fest = 0;
+      for (let k = 1; k < reihe.length; k++) for (const s of ["L", "R"]) {
+        const [vor, nun] = [reihe[k - 1], reihe[k]].map((x) => ({ fest: x["stand" + s], knoechel: x["fuss" + s][0], zehen: x["fuss" + s][1] }));
+        const flach = (f) => f.knoechel[0] < tiefK + 0.01 && f.zehen[0] < tiefZ + 0.005;                  // der Fuß liegt flach auf dem Boden (unabhängig von der Meldung „fest“)
+        if ((vor.fest && nun.fest) || (flach(vor) && flach(nun))) rutsch = Math.max(rutsch, Math.abs(nun.knoechel[1] - vor.knoechel[1]));
+        if (nun.fest) fest++;
+      }
+      if (rutsch > 0.012) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} gleitet der Standfuß der Probe-Figur über den Boden (${Math.round(rutsch * 1000)} mm in einem Bild, erlaubt 12)`);
+      if (fest / reihe.length < anteil) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} steht zu selten ein Fuß fest am Boden (${fest} von ${reihe.length} Bildern)`);
+      const strecke = reihe[reihe.length - 1].weg - reihe[0].weg, soll = reihe[0][art] * (reihe.length - 1) * 0.0167;
+      if (Math.abs(strecke - soll) > 0.1 * soll) fehl.push(`${titel}: beim ${art === "gehen" ? "Gehen" : "Rennen"} passt der Weg (${strecke.toFixed(2)} m) nicht zum Tempo (${soll.toFixed(2)} m)`);
+    }
+    await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
+    await pg.evaluate(() => window.__probe3d.bauBahn(0));                         // zurück auf die Bahn im Raum
     await pg.evaluate(() => window.__probe3d.halt(false));
     await pg.click('#bau button[data-hand="zeigen"]');
     if ((await bau()).wahl !== "zeigen") fehl.push(`${titel}: Hände der Probe-Figur lassen sich nicht wechseln`);

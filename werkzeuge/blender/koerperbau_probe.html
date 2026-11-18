@@ -30,6 +30,7 @@ szene.add(new THREE.HemisphereLight(0xffffff, 0x8a7a6a, 1.5));
 const sonne = new THREE.DirectionalLight(0xffffff, 1.8); sonne.position.set(2, 4, 5); szene.add(sonne);
 const boden = new THREE.Mesh(new THREE.CircleGeometry(8, 48), new THREE.MeshBasicMaterial({ color: 0xbdb5aa })); boden.rotation.x = -Math.PI / 2; szene.add(boden);
 const kamera = new THREE.PerspectiveCamera(26, 900 / 560, 0.1, 60); kamera.position.set(4.2, 1.5, 8.6); kamera.lookAt(0.1, 0.95, 0);
+if (q.has("kamera")) { const k = q.get("kamera").split(",").map(Number); kamera.position.set(k[0], k[1], k[2]); kamera.lookAt(k[3], k[4], k[5]); }   // Nahaufnahme: ?kamera=x,y,z,zielx,ziely,zielz (die gestreckte Figur steht bei x 1,9)
 const lader = new GLTFLoader(); lader.setMeshoptDecoder(MeshoptDecoder);
 const clips = {};
 for (const d of ["kaykit_bewegungen", "gesten", "kungfu"]) for (const c of (await lader.loadAsync(`figuren/${d}.glb`)).animations) clips[c.name] = c;
@@ -44,10 +45,11 @@ async function heutige(x) {                             // der unveränderte Kö
   return { spiele(name) { mixer.stopAllAction(); mixer.clipAction(clips[name]).reset().play(); mixer.update(0); }, bewege(dt) { mixer.update(dt); } };
 }
 const gary = await ladeFiguren(lader, szene, { gary: { x: -2.0, z: 0, bahn: 1.2 } }, kamera);
-const heute = await heutige(-0.2), flex = await ladeBauProbe(lader, szene, { x: 1.9, z: 0, bahn: 0.01 });
+const heute = await heutige(-0.2), flex = await ladeBauProbe(lader, szene, { x: 1.9, z: 0, bahn: +(q.get("bahn") || 0.01) });   // ?bahn=30: lange Strecke, um Gehen und Rennen zu messen
 for (const n of ["arm", "bein", "kopf", "rumpf", "knie"]) if (q.has(n)) flex.setze(n, +q.get(n));
 let zeit = 0;
 window.probe = {
+  befehl(knopf) { flex.befehl(knopf); flex.bewege(0); bild.render(szene, kamera); }, flex,   // jede Bewegung aus der Gesten-Tabelle, für Nahaufnahmen
   gruss: () => flex.gruss(),
   szenen: SZENEN.map(([knopf, stelle]) => ({ titel: GESTEN[knopf][1], dauer: clips[GESTEN[knopf][0]].duration, stelle, dauernd: GESTEN[knopf][2] === "Grund" })),
   setze(i) { const [knopf] = SZENEN[i]; document.getElementById("unten").textContent = GESTEN[knopf][1]; heute.spiele(GESTEN[knopf][0]); flex.befehl(knopf); flex.bewege(0); bild.render(szene, kamera); },

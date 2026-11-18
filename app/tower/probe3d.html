@@ -489,7 +489,7 @@ try {
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
   window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
-    bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) bauProbe.bewege(ms / 1000); },   // PROBE A3
+    bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) bauProbe.bewege(ms / 1000); },   // PROBE A3
     halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter
     takt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); figuren.bewege(ms / 1000, performance.now() + i * ms); } },   // Testprogramm: n Bilder im Abstand ms rechnen (wie 60 Bilder pro Sekunde)
      stand: () => [figur.x, figur.z], boden: () => {      // eine freie, sichtbare Bodenstelle 1,5 bis 3 m neben der Figur

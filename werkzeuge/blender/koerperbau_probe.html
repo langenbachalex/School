@@ -1,0 +1,107 @@
+<!doctype html>
+<!-- Probe A2 (18.11.2026): Körperbau als Wert je Figur + wechselbare Hände. Keine Seite der App; wird von
+     werkzeuge/blender/koerperbau_probe.js unter /app/tower/koerperbau_probe.html ausgeliefert und aufgenommen. -->
+<meta charset="utf-8"><title>Körperbau-Probe</title>
+<style>
+  body { margin: 0; background: #cfc8bf; font: 15px/1.2 Arial, sans-serif; color: #222; width: 900px; height: 520px; overflow: hidden; position: relative; }
+  canvas { display: block; }
+  #oben { position: absolute; top: 8px; left: 0; width: 900px; display: flex; }
+  #oben div { flex: 1; text-align: center; }
+  #unten { position: absolute; bottom: 8px; left: 0; width: 900px; text-align: center; font-weight: bold; font-size: 18px; }
+</style>
+<div id="oben"><div>Gary – wie heute</div><div>Mage-Körper – wie heute</div><div>derselbe Körper – gestreckt, mit Händen</div></div>
+<div id="unten"></div>
+<script type="importmap">{ "imports": { "three": "./lib/three.module.min.js" } }</script>
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "./lib/GLTFLoader.js";
+import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";
+import { ladeFiguren } from "./probe3d_figuren.js";
+
+const q = new URLSearchParams(location.search), zahl = (n, d) => (q.has(n) ? +q.get(n) : d);
+/* Der Körperbau als Werte – so soll er später im Profil der Figur stehen (bau: arm, bein, kopf, hand) */
+const BAU_HEUTE = { arm: 1, bein: 1, kopf: 1, rumpf: 1 };
+const BAU_FLEX = { arm: zahl("arm", 1.6), bein: zahl("bein", 2.0), kopf: zahl("kopf", 0.72), rumpf: zahl("rumpf", 0.9), hand: zahl("hand", 1.7) };
+const DREH = zahl("dreh", -0.6);                       // die zwei Vergleichsfiguren stehen halb seitlich, damit man den Kick sieht
+const SZENEN = [["Stehen", "Idle", "offen", "offen"], ["Achselzucken (offene Hände)", "Geste_Achselzucken", "offen", "offen"], ["Kick", "KungFu_HoherKick", "faust", "faust"],
+  ["Zeigen (Zeigefinger)", "Geste_Zeigen", "zeigen", "offen"], ["Nachdenken (Hand ans Kinn)", "Geste_Nachdenken", "offen", "offen"], ["Bizeps", "Flex_Bizeps", "faust", "faust"],
+  ["Spagat", "KungFu_Spagat", "offen", "offen"], ["Gehen", "Walking_A", "offen", "offen"]];
+
+const bild = new THREE.WebGLRenderer({ antialias: true }); bild.setSize(900, 520); document.body.prepend(bild.domElement);
+const szene = new THREE.Scene(); szene.background = new THREE.Color(0xcfc8bf);
+szene.add(new THREE.HemisphereLight(0xffffff, 0x8a7a6a, 1.5));
+const sonne = new THREE.DirectionalLight(0xffffff, 1.8); sonne.position.set(2, 4, 5); szene.add(sonne);
+const boden = new THREE.Mesh(new THREE.CircleGeometry(6, 48), new THREE.MeshBasicMaterial({ color: 0xbdb5aa })); boden.rotation.x = -Math.PI / 2; szene.add(boden);
+const kamera = new THREE.PerspectiveCamera(26, 900 / 520, 0.1, 50); kamera.position.set(0, 1.25, 7.4); kamera.lookAt(0, 0.82, 0);
+const lader = new GLTFLoader(); lader.setMeshoptDecoder(MeshoptDecoder);
+
+const clips = {};
+for (const d of ["kaykit_bewegungen", "gesten", "kungfu"]) for (const c of (await lader.loadAsync(`figuren/${d}.glb`)).animations) clips[c.name] = c;
+const handFormen = (await lader.loadAsync("figuren/haende.glb")).scene;
+const v = () => new THREE.Vector3();
+
+async function figur(x, bau, mitHaenden) {
+  const m = (await lader.loadAsync("/werkzeuge/blender/quellen/kaykit_mage.glb")).scene, K = (n) => m.getObjectByName(n);
+  m.traverse((o) => { if (["Spellbook", "Spellbook_open", "1H_Wand", "2H_Staff"].includes(o.name)) o.visible = false; if (o.isMesh) o.frustumCulled = false; });
+  m.updateMatrixWorld(true);
+  const mass = 0.785 / K("head").getWorldPosition(v()).y;             // gleiche Körpergröße wie bei Gary
+  m.scale.setScalar(mass); m.position.x = x; m.rotation.y = DREH; szene.add(m); m.updateMatrixWorld(true);
+  const schatten = new THREE.Mesh(new THREE.CircleGeometry(0.3, 32), new THREE.MeshBasicMaterial({ color: 0, transparent: true, opacity: 0.3, depthWrite: false }));
+  schatten.rotation.x = -Math.PI / 2; schatten.position.set(x, 0.004, 0); szene.add(schatten);
+
+  // Strecken: der Abstand der Gelenke wird größer, die Haut zwischen den Gelenken zieht sich mit
+  const streck = [];
+  for (const s of "lr") {
+    for (const n of ["lowerarm", "wrist"]) streck.push([K(n + s), bau.arm]);
+    for (const n of ["lowerleg", "foot"]) streck.push([K(n + s), bau.bein]);
+  }
+  for (const n of ["spine", "chest", "head"]) streck.push([K(n), bau.rumpf]);
+  const ruhe = new Map(streck.map(([b]) => [b, b.position.clone()]));
+  const hips = K("hips"), head = K("head"), hueftHoehe = hips.getWorldPosition(v()).y / mass;
+  const beinPlus = (bau.bein - 1) * (K("lowerlegl").position.length() + K("footl").position.length());
+  const hoeher = (hueftHoehe + beinPlus) / hueftHoehe;                // um so viel steht die Hüfte höher = Schrittlänge (gang.schritt)
+
+  // Hände zum Wechseln: der Fäustling des Körpers schrumpft weg, am Handgelenk sitzt ein Halter mit den drei Formen
+  const halter = {};
+  if (mitHaenden) for (const [s, vz] of [["r", -1], ["l", 1]]) {
+    const gelenk = K("wrist" + s), ort = gelenk.getWorldPosition(v()), arm = ort.clone().sub(K("lowerarm" + s).getWorldPosition(v())).normalize();
+    const h = new THREE.Group(); szene.add(h);
+    h.position.copy(ort); h.quaternion.setFromUnitVectors(new THREE.Vector3(vz, 0, 0), arm); h.scale.set(-vz * mass * bau.hand, mass * bau.hand, mass * bau.hand);
+    for (const f of ["offen", "zeigen", "faust"]) { const t = handFormen.getObjectByName("hand_" + f).clone(); t.name = f; t.position.set(0, 0, 0); h.add(t); }
+    h.updateMatrixWorld(true); gelenk.attach(h); halter[s] = h;
+  }
+  const mixer = new THREE.AnimationMixer(m), roh = hips.position.clone(), gesetzt = v().set(NaN, NaN, NaN);
+  const nach = () => {
+    for (const [b, f] of streck) b.position.copy(ruhe.get(b)).multiplyScalar(f);
+    if (!hips.position.equals(gesetzt)) roh.copy(hips.position);      // der Mixer schreibt nur, wenn sich etwas ändert – sonst steht hier noch unser eigener Wert
+    hips.position.copy(roh).multiplyScalar(hoeher); gesetzt.copy(hips.position);
+    head.scale.setScalar(bau.kopf);
+    if (mitHaenden) for (const s of "lr") K("hand" + s).scale.setScalar(0.001);
+    m.updateMatrixWorld(true);
+  };
+  return {
+    hoeher,
+    spiele(name, r, l) {
+      mixer.stopAllAction(); gesetzt.set(NaN, NaN, NaN); mixer.clipAction(clips[name]).reset().play(); mixer.update(0); nach();
+      for (const [s, f] of [["r", r], ["l", l]]) if (halter[s]) for (const t of halter[s].children) t.visible = t.name === f;
+    },
+    bewege(dt) { mixer.update(dt); nach(); },
+    mass() {
+      const y = (n) => +K(n).getWorldPosition(v()).y.toFixed(3), hals = K("head").getWorldPosition(v()), hand = K("wristr").getWorldPosition(v());
+      return { hals: +hals.y.toFixed(3), handR: +hand.y.toFixed(3), handZumHals: +hand.distanceTo(hals).toFixed(3), zeheR: y("toesr"), zeheL: y("toesl"), huefte: y("hips"),
+        fussTief: Math.min(y("toesr"), y("toesl"), y("footr"), y("footl")) };
+    },
+  };
+}
+
+const gary = await ladeFiguren(lader, szene, { gary: { x: -1.7, z: 0, bahn: 1.2 } }, kamera);
+const heute = await figur(0, BAU_HEUTE, false), flex = await figur(1.7, BAU_FLEX, true);
+let zeit = 0;
+window.probe = {
+  szenen: SZENEN.map(([titel, clip]) => ({ titel, dauer: clips[clip].duration })), bau: BAU_FLEX, schritt: flex.hoeher,
+  setze(i) { const [titel, clip, r, l] = SZENEN[i]; document.getElementById("unten").textContent = titel; heute.spiele(clip); flex.spiele(clip, r, l); bild.render(szene, kamera); },
+  takt(dt) { zeit += dt; gary.bewege(dt, zeit * 1000); heute.bewege(dt); flex.bewege(dt); bild.render(szene, kamera); return { heute: heute.mass(), flex: flex.mass() }; },
+};
+window.probe.setze(0);
+document.title = "bereit";
+</script>

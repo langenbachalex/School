@@ -11,6 +11,10 @@ const BEWEGUNGEN = ["Idle", "Walking_A", "Running_A", "Interact", "Cheer", "Hit_
 const AUFTRAEGE = [
   { quelle: "kaykit_mage.glb", ziel: "kaykit_bewegungen.glb", bewegungen: BEWEGUNGEN, netze: false },
   { quelle: "kaykit_mage.glb", ziel: "koerper_mage.glb", bewegungen: [], ohne: ["Mage_Head", "Mage_Hat", "Spellbook", "Spellbook_open", "2H_Staff"] },
+  // Schritt 2 (18.11.): Körper ohne Kopf, Kopfbedeckung, Umhang, Waffen und Schilde – Köpfe kommen aus Blender
+  { quelle: "kaykit_knight.glb", ziel: "koerper_knight.glb", bewegungen: [], ohne: ["Knight_Head", "Knight_Helmet", "Knight_Cape", "1H_Sword_Offhand", "Badge_Shield", "Rectangle_Shield", "Round_Shield", "Spike_Shield", "1H_Sword", "2H_Sword"] },
+  { quelle: "kaykit_barbarian.glb", ziel: "koerper_barbarian.glb", bewegungen: [], ohne: ["Barbarian_Head", "Barbarian_Hat", "Barbarian_Cape", "1H_Axe_Offhand", "Barbarian_Round_Shield", "1H_Axe", "2H_Axe", "Mug"] },
+  { quelle: "kaykit_rogue.glb", ziel: "koerper_rogue.glb", bewegungen: [], ohne: ["Rogue_Head", "Rogue_Cape", "Knife_Offhand", "1H_Crossbow", "2H_Crossbow", "Knife", "Throwable"] },
 ];
 
 function lies(datei) {

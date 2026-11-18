@@ -62,6 +62,7 @@ export async function ladeFiguren(lader, szene, orte) {
       gesten[knopf] = { a, dauer: a.getClip().duration, gewicht: 0 };
     }
     const kopf = knochen("head"), ruecken = [knochen("spine"), knochen("chest")];
+    const zusatz = [kopf, ...ruecken].map((k) => [k, k.quaternion.clone()]);   // Knochen, über deren Bewegung Reden und Verbeugen gelegt werden
     // Messwerte fürs Testprogramm: wie weit Kopf und Rumpf aus der Grundhaltung gedreht sind (Grad), wie weit der Hut neben den Füßen steht (m)
     const lage = (kind, eltern) => eltern.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(kind.getWorldQuaternion(new THREE.Quaternion()));
     const kopfRuhe = lage(kopf, ruecken[1]), rumpfRuhe = lage(ruecken[1], m);
@@ -93,7 +94,9 @@ export async function ladeFiguren(lader, szene, orte) {
         }
         const rest = Math.max(0, 1 - summe);
         stehen.setEffectiveWeight((1 - g.geht) * rest); gehen.setEffectiveWeight(g.geht * rest);
+        for (const [k, q] of zusatz) k.quaternion.copy(q);   // Zusatzdrehungen vom letzten Bild zurücknehmen: der Mixer setzt Knochen nur neu, wenn sich die Bewegung ändert – sonst addieren sie sich auf
         mixer.update(dt);
+        for (const [k, q] of zusatz) q.copy(k.quaternion);
         const b = g.modus === "verbeugen" ? beuge(g.seit) : 0, r = g.redet;
         for (const k of ruecken) k.rotateX(0.5 * b + 0.04 * r * Math.sin(t / 310));          // Verbeugung: den Rücken nach vorn rollen
         kopf.rotateX(r * (0.10 * Math.sin(t / 95) + 0.07 * Math.sin(t / 233)));               // Reden: der Kopf nickt und wiegt sich lebhaft

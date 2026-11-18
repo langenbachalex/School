@@ -25,6 +25,23 @@
   #figuren button[aria-pressed="true"] { background: #e9b45a; color: #1b1008; font-weight: 600; }
   #figuren span { font-size: 13px; opacity: .8; }
   #figuren button { min-height: 44px; padding: 4px 8px; font-size: 14px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
+  #bau { left: 10px; top: 228px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 8px; pointer-events: auto; box-sizing: border-box; max-width: min(30vw, 250px); max-height: calc(100dvh - 250px); overflow-y: auto; }
+  #bau span, #bau label { grid-column: 1 / -1; font-size: 13px; }
+  #bau span { opacity: .8; }
+  #bau button { min-height: 44px; padding: 4px 8px; font-size: 14px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
+  #bau button[aria-pressed="true"] { background: #e9b45a; color: #1b1008; font-weight: 600; }
+  #bau label { display: grid; grid-template-columns: 3.2em 2.6em minmax(0, 1fr); align-items: center; gap: 4px; }
+  #bau input { width: 100%; min-width: 0; min-height: 34px; margin: 0; accent-color: #e9b45a; }
+  #bau output { font-weight: 600; font-size: 15px; }
+  @media (min-width: 1100px) { #bau { top: 118px; max-width: 320px; max-height: calc(100dvh - 225px); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #bau button { overflow-wrap: anywhere; } }   /* Laptop: drei Spalten, endet über dem Hilfe-Kasten */
+  #bau .kopf { display: none; grid-column: 1 / -1; font-weight: 600; }
+  @media (max-width: 600px) {     /* Handy: kein Platz für zwei Kästen – der Probe-Kasten ist eingeklappt; offen ersetzt er Garys Kasten */
+    #bau { top: 156px; max-width: min(62vw, 270px); max-height: calc(100dvh - 174px); }
+    #bau .kopf { display: block; } #bau .titel { display: none; }
+    #bau.zu > :not(.kopf) { display: none; }
+    body.bau-offen #figuren { display: none; }
+  }
   #hilfe { left: 10px; bottom: 18px; font-size: 13px; max-width: min(44vw, 300px); }
   #text { left: 50%; transform: translateX(-50%); bottom: 18px; width: min(92vw, 560px); text-align: center; font-size: 19px; }
   #text small { display: block; opacity: .75; font-size: 14px; }
@@ -66,6 +83,31 @@
   <button type="button" data-gesicht="stolz" aria-pressed="false">Stolz</button>
   <button type="button" data-blick="an" aria-pressed="true">Unruhiger Blick</button>
 </div>
+<div id="bau" class="kasten zu" hidden>
+  <button type="button" class="kopf" aria-expanded="false">PROBE Körperbau</button>
+  <span class="titel">PROBE Körperbau · vorläufiger Kopf</span>
+  <span>Maße (1 = wie heute)</span>
+  <label>Arm <output>1,60</output><input type="range" data-mass="arm" min="1" max="2.4" step="0.05" value="1.6" aria-label="Armlänge"></label>
+  <label>Bein <output>2,00</output><input type="range" data-mass="bein" min="1" max="3" step="0.05" value="2"  aria-label="Beinlänge"></label>
+  <label>Kopf <output>0,72</output><input type="range" data-mass="kopf" min="0.5" max="1" step="0.02" value="0.72" aria-label="Kopfgröße"></label>
+  <label>Rumpf <output>0,90</output><input type="range" data-mass="rumpf" min="0.7" max="1.3" step="0.02" value="0.9" aria-label="Rumpflänge"></label>
+  <span>Bewegungen</span>
+  <button type="button" data-bau="stehen">Stehen</button>
+  <button type="button" data-bau="gehen">Gehen</button>
+  <button type="button" data-bau="rennen">Rennen</button>
+  <button type="button" data-bau="achselzucken">Achselzucken</button>
+  <button type="button" data-bau="zeigen">Zeigen</button>
+  <button type="button" data-bau="abwinken">Abwinken</button>
+  <button type="button" data-bau="arme">Arme ausbreiten</button>
+  <button type="button" data-bau="kick">Kick</button>
+  <button type="button" data-bau="mabu">Ma Bu</button>
+  <button type="button" data-bau="pubu">Pu Bu</button>
+  <button type="button" data-bau="spagat">Spagat</button>
+  <span>Hände</span>
+  <button type="button" data-hand="offen" aria-pressed="true">Offen</button>
+  <button type="button" data-hand="zeigen" aria-pressed="false">Zeigefinger</button>
+  <button type="button" data-hand="faust" aria-pressed="false">Faust</button>
+</div>
 <div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
 <script src="daten.js"></script>
@@ -74,6 +116,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
 import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt die komprimierten Formen der Raumdatei (werkzeuge/raum_verkleinern.js)
 import { ladeFiguren, mundAusZeiten, einsaetzeAus } from "./probe3d_figuren.js";
+import { ladeBauProbe } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
@@ -181,6 +224,22 @@ try {
   let bahnZellen = 0;
   while (bahnZellen * gk.zelle < 5.2 && frei(garyZelle[0], garyZelle[1] - bahnZellen - 1)) bahnZellen++;
   const figuren = await ladeFiguren(lader, szene, { gary: { ...zuOrt(...garyZelle), bahn: Math.max(1.2, bahnZellen * gk.zelle - 0.3) } }, kamera);
+  // PROBE A3: gestreckte Figur neben Gary, eigener Kasten mit Knöpfen, Hände-Schalter und vier Reglern für die Maße
+  const bauZelle = naechsteFreie(zuOrt(...garyZelle).x + 1.3, 6.0);
+  let bauBahn = 0;
+  while (bauBahn * gk.zelle < 5.2 && frei(bauZelle[0], bauZelle[1] - bauBahn - 1)) bauBahn++;
+  const bauProbe = await ladeBauProbe(lader, szene, { ...zuOrt(...bauZelle), bahn: Math.max(1.2, bauBahn * gk.zelle - 0.3) });
+  $("bau").querySelector(".kopf").addEventListener("click", (e) => {
+    const zu = $("bau").classList.toggle("zu"); e.currentTarget.setAttribute("aria-expanded", String(!zu)); document.body.classList.toggle("bau-offen", !zu);
+  });
+  for (const b of document.querySelectorAll("#bau button[data-bau]")) b.addEventListener("click", () => bauProbe.befehl(b.dataset.bau));
+  for (const b of document.querySelectorAll("#bau button[data-hand]")) b.addEventListener("click", () => {
+    bauProbe.haende(b.dataset.hand);
+    for (const x of document.querySelectorAll("#bau button[data-hand]")) x.setAttribute("aria-pressed", String(x === b));
+  });
+  for (const r of document.querySelectorAll("#bau input[data-mass]")) r.addEventListener("input", () => {
+    bauProbe.setze(r.dataset.mass, +r.value); r.parentElement.querySelector("output").textContent = (+r.value).toFixed(2).replace(".", ",");
+  });
   const mundZeiten = await fetch("figuren/mund_gary.json").then((r) => r.json()).catch(() => ({}));
   const GARY_SAGT = ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"], GARY_GESTIK = "gary_06";
   let garyNr = 0, ohneFormen = false;
@@ -417,7 +476,7 @@ try {
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1); zuletzt = t;
     bewegeFigur(dt, t);
-    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); }
+    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); }
     setzeKamera(dt);
     renderer.render(szene, kamera);
     bilder++;
@@ -429,11 +488,12 @@ try {
   });
 
   ladezeit = (performance.now() / 1000).toFixed(1); bereitSeit = performance.now();   // Zeit seit dem Aufruf der Seite
-  for (const id of ["mess", "hilfe", "kameras", "figuren"]) $(id).hidden = false;
+  for (const id of ["mess", "hilfe", "kameras", "figuren", "bau"]) $(id).hidden = false;
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
   window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
+    bau: () => bauProbe.zustand(), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) bauProbe.bewege(ms / 1000); },   // PROBE A3
     halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter
     takt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); figuren.bewege(ms / 1000, performance.now() + i * ms); } },   // Testprogramm: n Bilder im Abstand ms rechnen (wie 60 Bilder pro Sekunde)
      stand: () => [figur.x, figur.z], boden: () => {      // eine freie, sichtbare Bodenstelle 1,5 bis 3 m neben der Figur
@@ -445,7 +505,9 @@ try {
       if (Math.abs(s.x) > 0.7 || Math.abs(s.y) > 0.7 || s.z > 1) continue;
       strahl.setFromCamera(new THREE.Vector2(s.x, s.y), kamera);
       const t = strahl.intersectObjects(netze, false)[0];
-      if (t && !t.object.userData.ding && t.point.y < 0.25 && Math.hypot(t.point.x - p.x, t.point.z - p.z) < 0.2) return { x: (s.x + 1) / 2 * window.innerWidth, y: (1 - s.y) / 2 * window.innerHeight };
+      const bx = (s.x + 1) / 2 * window.innerWidth, by = (1 - s.y) / 2 * window.innerHeight;
+      if (document.elementFromPoint(bx, by) !== renderer.domElement) continue;   // dort liegt ein Kasten über dem Bild
+      if (t && !t.object.userData.ding && t.point.y < 0.25 && Math.hypot(t.point.x - p.x, t.point.z - p.z) < 0.2) return { x: bx, y: by };
     }
     return null;
   }, ort: (id) => {

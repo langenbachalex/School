@@ -15,6 +15,8 @@ const AUFTRAEGE = [
   { quelle: "kaykit_knight.glb", ziel: "koerper_knight.glb", bewegungen: [], ohne: ["Knight_Head", "Knight_Helmet", "Knight_Cape", "1H_Sword_Offhand", "Badge_Shield", "Rectangle_Shield", "Round_Shield", "Spike_Shield", "1H_Sword", "2H_Sword"] },
   { quelle: "kaykit_barbarian.glb", ziel: "koerper_barbarian.glb", bewegungen: [], ohne: ["Barbarian_Head", "Barbarian_Hat", "Barbarian_Cape", "1H_Axe_Offhand", "Barbarian_Round_Shield", "1H_Axe", "2H_Axe", "Mug"] },
   { quelle: "kaykit_rogue.glb", ziel: "koerper_rogue.glb", bewegungen: [], ohne: ["Rogue_Head", "Rogue_Cape", "Knife_Offhand", "1H_Crossbow", "2H_Crossbow", "Knife", "Throwable"] },
+  // Probe A3 (18.11.): ganzer Mage mit vorläufigem Kopf und Hut für die Körperbau-Probe im Guard Room (fällt weg, wenn Mr. Flex seinen Kopf hat)
+  { quelle: "kaykit_mage.glb", ziel: "probe_mage_ganz.glb", bewegungen: [], ohne: ["Spellbook", "Spellbook_open", "2H_Staff", "1H_Wand"] },
   // eigene Bewegungen aus werkzeuge/blender/tower_gesten.py (18.11.): Rede- und Figuren-Gesten für alle, Kung-Fu nur für Mr. Flex
   { quelle: "tower_gesten_roh.glb", ziel: "gesten.glb", bewegungen: /^(Geste|Sgt|Flex)_/, netze: false },
   { quelle: "tower_gesten_roh.glb", ziel: "kungfu.glb", bewegungen: /^KungFu_/, netze: false },

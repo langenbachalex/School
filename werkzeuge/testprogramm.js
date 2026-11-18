@@ -250,6 +250,33 @@ async function probe3dTest(browser, basis, app, name, fm) {
     await pg.click('#figuren button[data-figur="tadaa"]');   // nach dem Ta-daa! bleibt Gary zwei Sekunden stolz stehen
     g = await takt(115);
     if (g.zeigt !== "stolz") fehl.push(`${titel}: nach dem Ta-daa! zeigt Gary „${g.zeigt}“ statt „stolz“`);
+    // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary – Kasten, Hände-Schalter, Regler für die Maße
+    const bau = () => pg.evaluate(() => window.__probe3d.bau()), bauTakt = async (n) => { await pg.evaluate((k) => window.__probe3d.bauTakt(k, 16.7), n); return bau(); };
+    let b = await bau();
+    if (!(b.hals > 0.9)) fehl.push(`${titel}: Probe-Figur ist nicht gestreckt (Hals in ${b.hals} m Höhe, ungestreckt 0,785)`);
+    const kaesten = await pg.evaluate(() => ["bau", "figuren"].map((id) => { const r = document.getElementById(id).getBoundingClientRect(); return [r.left, r.right, r.top, r.bottom]; }));
+    if (kaesten[0][1] > kaesten[1][0] && kaesten[0][3] > kaesten[1][2] && kaesten[0][2] < kaesten[1][3]) fehl.push(`${titel}: der Kasten der Probe-Figur liegt über Garys Kasten`);
+    const klappe = pg.locator("#bau .kopf"), klappbar = await klappe.isVisible();   // Handy: der Kasten ist eingeklappt und ersetzt offen Garys Kasten
+    if (klappbar) { await klappe.click(); if (await pg.locator("#figuren").isVisible()) fehl.push(`${titel}: der offene Probe-Kasten verdeckt Garys Kasten nicht sauber`); }
+    await pg.click('#bau button[data-bau="gehen"]'); b = await bauTakt(150);
+    if (!(b.modus === "gehen" && b.weg > 0.3)) fehl.push(`${titel}: Probe-Figur geht nicht (Weg ${b.weg} m)`);
+    if (b.fussTief < -0.01) fehl.push(`${titel}: Probe-Figur versinkt beim Gehen im Boden (${b.fussTief} m)`);
+    await pg.click('#bau button[data-bau="kick"]');
+    let hoch = 0; for (let k = 0; k < 20; k++) hoch = Math.max(hoch, (await bauTakt(3)).zehe);
+    if (hoch < b.hals * 0.9) fehl.push(`${titel}: der Kick der Probe-Figur bleibt niedrig (Fußspitze ${hoch} m, Hals ${b.hals} m)`);
+    b = await bauTakt(60);
+    if (b.modus !== "stehen") fehl.push(`${titel}: nach dem Kick steht die Probe-Figur nicht wieder (${b.modus})`);
+    await pg.click('#bau button[data-bau="spagat"]'); b = await bauTakt(60);
+    if (b.fussTief < -0.01) fehl.push(`${titel}: Probe-Figur versinkt im Spagat im Boden (${b.fussTief} m)`);
+    await pg.click('#bau button[data-hand="zeigen"]');
+    if ((await bau()).hand !== "zeigen") fehl.push(`${titel}: Hände der Probe-Figur lassen sich nicht wechseln`);
+    await pg.click('#bau button[data-bau="stehen"]'); const lang = (await bauTakt(30)).hals;
+    await pg.evaluate(() => { const r = document.querySelector('#bau input[data-mass="bein"]'); r.value = "1"; r.dispatchEvent(new Event("input", { bubbles: true })); });
+    b = await bauTakt(30);
+    if (!(b.hals < lang - 0.1) || b.bau.bein !== 1) fehl.push(`${titel}: der Regler „Bein“ ändert die Probe-Figur nicht (Hals ${lang} → ${b.hals} m)`);
+    if ((await pg.evaluate(() => document.querySelector('#bau input[data-mass="bein"]').parentElement.querySelector("output").textContent)) !== "1,00") fehl.push(`${titel}: der Regler „Bein“ zeigt seine Zahl nicht an`);
+    await pg.evaluate(() => { const r = document.querySelector('#bau input[data-mass="bein"]'); r.value = "2"; r.dispatchEvent(new Event("input", { bubbles: true })); });
+    if (klappbar) { await klappe.click(); if (!(await pg.locator("#figuren").isVisible())) fehl.push(`${titel}: nach dem Einklappen des Probe-Kastens fehlt Garys Kasten`); }
     g = await takt(240);
     if (g.braue > 0.1 || g.mund > 0.1) fehl.push(`${titel}: Gesicht geht nicht auf „neutral“ zurück (Braue ${g.braue}, Mund ${g.mund})`);
     await stumm();

@@ -2,7 +2,8 @@
 
 Aufruf:  blender -b --python werkzeuge/blender/tower_haende.py      ->  app/tower/figuren/haende.glb   (wenige Sekunden)
 
-Drei schlichte Handformen im Stil der Figuren (kantig, drei Finger und Daumen): hand_offen, hand_zeigen, hand_faust.
+Drei schlichte Handformen im Stil der Figuren (drei Finger und Daumen, rund wie die Fäustlinge – Mr. Alex 18.11.: runder,
+aber nicht klobig, die Dicke bleibt): hand_offen, hand_zeigen, hand_faust.
 Gebaut ist die RECHTE Hand bei seitlich ausgestrecktem Arm: Ursprung am Handgelenk, Finger zeigen nach -X (vom Körper weg),
 Handfläche nach unten, Daumen nach vorn. Die linke Hand entsteht in der App durch Spiegeln. Gary behält seine Pfoten.
 """
@@ -13,7 +14,7 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 ZIEL = os.path.join(REPO, "app", "tower", "figuren", "haende.glb")
 bpy.ops.wm.read_factory_settings(use_empty=True)
 haut = bpy.data.materials.new("haut"); haut.use_nodes = True
-haut.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.78, 0.52, 0.38, 1)
+haut.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.80, 0.42, 0.28, 1)
 haut.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.8
 
 def kasten(mitte, mass, dreh=(0, 0, 0)):
@@ -21,8 +22,9 @@ def kasten(mitte, mass, dreh=(0, 0, 0)):
     o = bpy.context.object
     o.matrix_world = Matrix.Translation(mitte) @ Euler([math.radians(w) for w in dreh]).to_matrix().to_4x4() @ Matrix.Diagonal((*mass, 1))
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    b = o.modifiers.new("kante", "BEVEL"); b.width = 0.007; b.segments = 1
+    b = o.modifiers.new("kante", "BEVEL"); b.width = min(mass) * 0.42; b.segments = 3      # fast rund: Finger werden zu kleinen Walzen
     bpy.ops.object.modifier_apply(modifier="kante")
+    for f in o.data.polygons: f.use_smooth = True
     o.data.materials.append(haut)
     return o
 
@@ -48,5 +50,5 @@ def hand(name, gestreckt, daumen_offen):
 hand("hand_offen", (True, True, True), True)
 hand("hand_zeigen", (True, False, False), False)
 hand("hand_faust", (False, False, False), False)
-bpy.ops.export_scene.gltf(filepath=ZIEL, export_format="GLB", export_cameras=False, export_lights=False, export_animations=False, export_yup=True)
+bpy.ops.export_scene.gltf(filepath=ZIEL, export_format="GLB", export_cameras=False, export_lights=False, export_animations=False, export_yup=True, export_texcoords=False)
 print("HAENDE", round(os.path.getsize(ZIEL) / 1000), "KB")

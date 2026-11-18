@@ -192,6 +192,27 @@ Ein Profil sagt, woran man eine Figur erkennt, auch wenn sie nur 100 Bildpunkte 
 - **Kinder:** Die eigene Figur soll normal und ruhig sein, weil die Kinder sich selbst darin sehen und die Verrückten um sie herum auffallen sollen; hier kommt der normale Gang mit locker mitschwingenden Armen hin.
 - **Nebenfigur:** sparsam – ein Körper, ein Merkmal, ein bis zwei Gesten, ein eigener Gang –, damit Nebenfiguren schnell entstehen. Wer dazukommt, plant der Master.
 
+### Liste der Nebenfiguren (Master, entschieden Mr. Alex 18.11.)
+Jede nach dem Muster „Nebenfigur“: ein Körper, ein Merkmal, ein bis zwei Gesten, ein eigener Gang.
+
+**A – stehen schon in der Geschichte, brauchen nur einen Körper**
+| Figur | Ort | Merkmal | Geste und Gang |
+|---|---|---|---|
+| Mr Pike, Warder | Küche, Party | riesiger Schlüsselring, leer | klopft die Taschen ab; schleicht auf Zehenspitzen |
+| Mrs Crumb, Köchin | Küche | Mehl im Haar, Kochlöffel | zeigt mit dem Löffel; schnelle kleine Schritte |
+| Sechs Raben und die Elster | überall | je ein Erkennungsstück (Rosine, Helm …) | ein Rabenkörper für alle, nur das Stück wechselt |
+| Der höfliche Geist | Tunnel | durchsichtig, Hut | lüftet den Hut; schwebt statt zu gehen |
+
+**B – neu**
+| Figur | Was sie bringt | Sprache | Ab wann |
+|---|---|---|---|
+| **Der verirrte Tourist** mit Stadtplan | seit der Schließung eingesperrt, taucht an jedem Ort auf und fragt nach dem Ausgang; laufender Witz, am Ende Gast auf der Party. Merkmal: Stadtplan verkehrt herum; Geste: dreht den Plan, zeigt in die falsche Richtung; Gang: zwei Schritte, stehen bleiben, umdrehen | Ortsangaben und Wege | **schon im Test, im Hof** (Mr. Alex 18.11.) |
+| **Tilly**, Tochter eines Warders, etwa zwölf | wohnt im Tower, Kind auf Augenhöhe, kennt Geheimwege, hilft beim Einrichten von The Den | Hobbys, Clubs, „I always / never …“ | ab der Küche |
+| **Pip und Pop**, Küchenhelfer, Zwillinge | **kein Wettbewerb** (den haben schon Gary und Mr. Flex, Mr. Alex 18.11.), sondern ein Herz und eine Seele: Einer fängt den Satz an, der andere beendet ihn; sie bewegen sich gleichzeitig. Spielidee: Fehlt einer, beendet das Kind den Satz. | Wendungen ergänzen, much/many, „is making“ | Küche |
+| **Der Wächter im Jewel House** | schläft im Stehen und behauptet „I never sleep.“ | Häufigkeitsadverbien | Jewel House |
+
+**Offen:** Maus als Sandwich-Dieb (erst wenn Mr. Alex die Auflösung des Seitenstrangs festlegt) · Ravenmaster entfällt, Mr Pike übernimmt das Zählen · Mr. Alex erinnert sich an eine frühere Idee zu den Zwillingen; sie steht nicht im Repo – er nennt sie, dann wird Pip und Pop daran angepasst.
+
 **Gesten und Bewegungen sind Sammelstücke (entschieden Mr. Alex 18.11.):** Das Kind schaltet für die eigene Figur Bewegungen frei, zum Beispiel einen Kung-Fu-Move von Mr. Flex als Belohnung. Alle Figuren teilen dasselbe Skelett, deshalb passt jede Bewegung auf jede Figur. Mr. Alex behält sich vor, über die Zeit weitere Bewegungen und Möglichkeiten einzubauen. **Dauerauftrag:** Wenn sich die Geschichte entwickelt, immer mitdenken, was daraus an Gestik, Mimik und Bewegungen nötig wird. (Auch in der Vision, Abschnitt 7.)
 
 **Maßstab im Guard Room (gemessen 18.11., nur gemeldet, nichts geändert):** Die Decke ist 3,04 m hoch, die Tischplatte 0,78 m, die kleine Tür 1,20 m. Für Mr. Flex (1,55 m, mit Hut gut 1,9 m) und die Kinder (1,41 m) passt die Decke; der Tisch reicht beiden etwa bis zur Hüfte und ist damit eher hoch, aber stimmig. Die große Tür und die Stühle stecken in der gemeinsamen Raumform und ließen sich nicht einzeln messen – beim Bau des Spiels im Raum (Block B) am Bild prüfen.

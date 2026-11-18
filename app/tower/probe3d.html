@@ -72,6 +72,7 @@
 <script type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
+import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt die komprimierten Formen der Raumdatei (werkzeuge/raum_verkleinern.js)
 import { ladeFiguren, mundAusZeiten, einsaetzeAus } from "./probe3d_figuren.js";
 
 const $ = (id) => document.getElementById(id);
@@ -88,6 +89,7 @@ try {
   const ausBlender = ([x, y, z]) => new THREE.Vector3(x, z, -y);   // Blender: Z oben · Browser: Y oben
 
   const lader = new GLTFLoader();
+  lader.setMeshoptDecoder(MeshoptDecoder);
   const [gltf, kindGltf] = await Promise.all([lader.loadAsync("raum3d/guardroom.glb"), lader.loadAsync("figuren/kind.glb")]);
 
   // ---- Raum: Licht ist eingebrannt, die Textur wird gezeigt, wie sie ist ----

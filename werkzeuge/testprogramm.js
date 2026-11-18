@@ -196,10 +196,12 @@ async function probe3dTest(browser, basis, app, name, fm) {
     if (namen !== "gary") fehl.push(`${titel}: im Raum stehen „${namen}“ statt nur Gary`);
     await pg.evaluate(() => { window.__towerTonTest = 1200; });   // Aufnahmen werden nur nachgestellt: 1,2 s, ohne Ton
     const stumm = () => pg.waitForFunction(() => !document.getElementById("buehne").dataset.ton, null, { timeout: 15000 });
+    await pg.evaluate(() => window.__probe3d.halt(true));   // Figuren anhalten und in festen Schritten rechnen: kurze Gesten (Erschrecken 0,5 s) hängen sonst vom Tempo des Testrechners ab
     for (const m of ["reden", "verbeugen", "zaubern", "tadaa", "schreck", "rennen", "stehen"]) {
-      await pg.click(`#figuren button[data-figur="${m}"]`); await pg.waitForTimeout(200);
+      await pg.click(`#figuren button[data-figur="${m}"]`); await pg.evaluate(() => window.__probe3d.takt(6, 16.7));
       if (!(await figuren()).every((g) => g.modus === m)) fehl.push(`${titel}: Gary kann nicht „${m}“`);
     }
+    await pg.evaluate(() => window.__probe3d.halt(false));
     await pg.click('#figuren button[data-figur="gehen"]'); await pg.waitForTimeout(1500);
     if (!(await figuren()).every((g) => g.modus === "gehen" && g.weg > 0.05)) fehl.push(`${titel}: Gary geht nicht`);
     // Fehler 17.11.: beim Reden drehte sich der Kopf in den Körper, beim Verbeugen rotierte der Oberkörper wild – Winkel über die Zeit messen
@@ -282,6 +284,8 @@ async function probe3dTest(browser, basis, app, name, fm) {
     await pg.waitForFunction((w) => document.getElementById("buehne").dataset.ton === w, wartet, { timeout: 15000 }).catch(() => fehl.push(`${titel}: die wartende Aufnahme beginnt nicht, wenn die erste fertig ist`));
     await stumm();
     const ordner = path.join(__dirname, "..", app.pfad, "tower", "figuren");   // Körper und Bewegungen nur einmal, jede Datei unter 1 MB
+    const raumGroesse = fs.statSync(path.join(__dirname, "..", app.pfad, "tower", "raum3d", "guardroom.glb")).size;   // Raumdatei verkleinert (werkzeuge/raum_verkleinern.js): vorher 14,7 MB
+    if (raumGroesse > 6e6) fehl.push(`${titel}: raum3d/guardroom.glb hat ${(raumGroesse / 1e6).toFixed(1)} MB (höchstens 6 MB) – node werkzeuge/raum_verkleinern.js laufen lassen`);
     for (const d of fs.readdirSync(ordner)) if (d.endsWith(".glb") && fs.statSync(path.join(ordner, d)).size > 1e6) fehl.push(`${titel}: figuren/${d} ist größer als 1 MB`);
     for (const b of await zuBreit(pg)) fehl.push(`${titel}: ${b}`);
   } catch (e) {

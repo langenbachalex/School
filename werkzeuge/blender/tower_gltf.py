@@ -9,7 +9,9 @@ Was passiert:
      der Rest des Raums wird zu "raum_gross" (Waende, Boden), "raum_decke" (Decke, Balken) und "raum_klein" (Moebel, Kleinteile).
   2. Jedes Objekt bekommt eine eigene Abwicklung, und Cycles brennt Licht, Schatten und Farbe
      in EINE Textur je Objekt ein. Im Browser muss dann kein Licht mehr gerechnet werden.
-  3. Ausgabe: app/tower/raum3d/guardroom.glb (Three.js laedt das) und guardroom3d.json (Kamera, Dinge).
+  3. Ausgabe: werkzeuge/blender/quellen/guardroom_roh.glb (Rohdatei) und app/tower/raum3d/guardroom3d.json (Kamera, Dinge).
+  4. Danach "node werkzeuge/raum_verkleinern.js": macht daraus app/tower/raum3d/guardroom.glb (Bilder 2048 und WebP, Formen komprimiert).
+  GERAET=GPU brennt auf der Grafikkarte ein (AlexPC: Radeon RX 6500 XT ueber HIP); ohne die Angabe rechnet der Prozessor.
 """
 import json
 import math
@@ -215,7 +217,9 @@ def ausgeben(scene, cam, ziel, dinge):
             bpy.data.objects.remove(o)
 
     # ---- 4. Ausgabe ----
-    glb = os.path.join(OUT, "guardroom.glb")
+    # Die Rohdatei (etwa 15 MB) geht in den Werkzeug-Ordner; fuer die App macht sie danach "node werkzeuge/raum_verkleinern.js" klein.
+    roh = not os.environ.get("OUT3D")
+    glb = os.path.join(HERE, "quellen", "guardroom_roh.glb") if roh else os.path.join(OUT, "guardroom.glb")
     bpy.ops.export_scene.gltf(filepath=glb, export_format="GLB", export_image_format="JPEG", export_jpeg_quality=85,
                               export_cameras=False, export_lights=False, export_extras=True, export_animations=False,
                               export_yup=True)
@@ -227,6 +231,8 @@ def ausgeben(scene, cam, ziel, dinge):
     fehlt = [k for k, _ in dinge if k not in gruppen]
     print(f"3D fertig in {time.time() - t0:.0f} s – {len(objekte)} Objekte, {sum(b[2] for b in bericht)} Dreiecke, "
           f"{os.path.getsize(glb) / 1e6:.1f} MB: {glb}", flush=True)
+    if roh:
+        print("Jetzt noch: node werkzeuge/raum_verkleinern.js   (schreibt app/tower/raum3d/guardroom.glb)", flush=True)
     if fehlt:
         print("FEHLER: ohne Geometrie: " + ", ".join(fehlt), flush=True)
         raise SystemExit(1)

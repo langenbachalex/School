@@ -32,7 +32,7 @@ export const AUSDRUECKE = {
   stolz: { ...NEUTRAL, braueHoch: 0.35, schief: 1, lid: 0.32, mund: 0.1, winkel: 0.55, winkelSchief: 0.5, kinn: 0.04, neig: -0.15, brust: 1, hueften: 1, kamera: true },
   reden: { ...NEUTRAL, braueHoch: 0.25, unterlid: 0.15, winkel: 0.65, wange: 0.45, ohr: 0.3 },   // Grundausdruck beim Reden: geschlossenes Lächeln
   // Mr. Flex (Kopf-Probe 18.11.): Schelmisch = breites Grinsen, Mundwinkel deutlich hoch, Wangen schieben nach oben, Augen schmal (Unterlider hoch), eine Braue höher
-  schelmisch: { ...NEUTRAL, braueHoch: 0.3, schief: 0.45, lid: 0.1, unterlid: 0.52, mund: 0.3, winkel: 1, wange: 1, neig: 0.08, kamera: true },
+  schelmisch: { ...NEUTRAL, braueHoch: 0.3, schief: 0.45, lid: 0.1, unterlid: 0.52, mund: 0.24, winkel: 1, wange: 1, neig: 0.08, kamera: true },
   // Ernst und geheimnisvoll: ruhiger gerader Blick, Brauen tief, halbe Lider, ganz leichtes Lächeln nur mit einem Mundwinkel
   geheimnisvoll: { ...NEUTRAL, braueHoch: -0.7, braueDreh: 0.14, lid: 0.3, winkel: 0.12, winkelSchief: 0.5, kamera: true },
 };
@@ -93,7 +93,8 @@ export function baueGesicht(kopf, kieferWinkel, opt = {}) {
   const t = Object.fromEntries(["braue_l", "braue_r", "lid_l", "lid_r", "unterlid_l", "unterlid_r", "wange_l", "wange_r", "ohr_l", "ohr_r", "pupille_l", "pupille_r", "iris_l", "iris_r", "falte_l", "falte_r",
     "mund", "kiefer", "oberlippe", "mundlinie", "unterlippe", "zaehne", "zaehne_unten", "eckzahn_l", "eckzahn_r"].map((n) => [n, teil(n)]));
   const linie = t.mundlinie && t.mundlinie.o.morphTargetDictionary ? t.mundlinie.o : null;   // die Lippenlinie biegt sich (Formschlüssel hoch_l/r, tief_l/r)
-  const form = (n, w) => { const i = linie.morphTargetDictionary[n]; if (i !== undefined) linie.morphTargetInfluences[i] = Math.max(0, w); };
+  const reihe = kopf.getObjectByName("zahnreihe"), biegsam = [linie, reihe && reihe.morphTargetDictionary ? reihe : null].filter(Boolean);   // die Zahnreihe folgt der Lippenlinie (Mr. Flex)
+  const form = (n, w) => { for (const o of biegsam) { const i = o.morphTargetDictionary[n]; if (i !== undefined) o.morphTargetInfluences[i] = Math.max(0, w); } };
   const jetzt = { ...NEUTRAL }, dreh = new THREE.Quaternion();
   let blinzeln = 2, zu = 0;
   return {

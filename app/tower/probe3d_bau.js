@@ -282,6 +282,23 @@ function aermelFarbe(m) {                               // Farbe des Ärmels aus
   } catch (e) { return new THREE.Color(0x463e7d); }
 }
 
+/* Rundkurs (Mr. Alex 18.11.: „Rennen kann man mehr beurteilen, wenn er nicht nur zwei, drei Schritte geradeaus macht und sich dann schon umdreht“):
+   ein Rechteck mit runden Ecken, x0…x1 und z0…z1, Eckenradius r; die Figur startet auf der Kante z0 und läuft ohne Wenden im Kreis.
+   Liefert Ort und Blickrichtung nach `weg` Metern (die Richtung läuft stetig weiter, ohne Sprung nach einer Runde) und die Länge einer Runde. */
+export function rundeOrt(ru, weg) {
+  const a = ru.x1 - ru.x0 - 2 * ru.r, b = ru.z1 - ru.z0 - 2 * ru.r, q = (Math.PI * ru.r) / 2, lang = 2 * (a + b) + 4 * q;
+  let s = weg + (ru.start || 0); const runden = Math.floor(s / lang); s -= runden * lang;
+  const ecken = [[ru.x1 - ru.r, ru.z0 + ru.r], [ru.x1 - ru.r, ru.z1 - ru.r], [ru.x0 + ru.r, ru.z1 - ru.r], [ru.x0 + ru.r, ru.z0 + ru.r]];
+  const anfang = [[ru.x0 + ru.r, ru.z0], [ru.x1, ru.z0 + ru.r], [ru.x1 - ru.r, ru.z1], [ru.x0, ru.z1 - ru.r]];
+  for (let k = 0; k < 4; k++) {
+    const w0 = Math.PI / 2 - (k * Math.PI) / 2, gerade = k % 2 ? b : a;
+    if (s < gerade) return { x: anfang[k][0] + Math.sin(w0) * s, z: anfang[k][1] + Math.cos(w0) * s, winkel: w0 - 2 * Math.PI * runden, lang };
+    s -= gerade;
+    if (s < q) { const w = w0 - s / ru.r; return { x: ecken[k][0] + ru.r * Math.cos(w), z: ecken[k][1] - ru.r * Math.sin(w), winkel: w - 2 * Math.PI * runden, lang }; }
+    s -= q;
+  }
+  return { x: anfang[0][0], z: anfang[0][1], winkel: Math.PI / 2 - 2 * Math.PI * (runden + 1), lang };
+}
 export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_START) {
   const lade = (n) => lader.loadAsync(`figuren/${n}.glb`), clips = {};
   const [koerper, haende, kopfDatei, ...dateien] = await Promise.all([lade("probe_mage_ganz"), lade("haende"), kleidung.kopf ? lade("flex_teile") : null, lade("kaykit_bewegungen"), lade("gesten"), lade("kungfu")]);
@@ -427,7 +444,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const welt = m.getWorldQuaternion(Q()).multiply(dreh).multiply(handRuhe[s]);
     W.quaternion.copy(w0.slerp(W.parent.getWorldQuaternion(Q()).invert().multiply(welt), gewicht)); W.updateMatrixWorld(true);
   };
-  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
+  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
   const ziele = () => {
     const regel = ZIELE[g.modus]; if (!regel || !g.laeuft) return;
     const dauer = g.laeuft.getClip().duration, t = Math.min(g.laeuft.time, dauer), qm = m.getWorldQuaternion(Q());
@@ -523,7 +540,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
      2. der Fuß am Boden wird festgehalten: Solange der Knöchel unten ist, bleibt er an seiner Stelle; Hüfte und Knie stellen sich danach (fuesse),
      3. ist kein Fuß am Boden (Rennen), fliegt die Figur in einem kleinen Bogen, statt über den Boden zu gleiten. */
   const gang = { gehen: { tempo: 1, boden: 0, unten: 0, flug: 0 }, rennen: { tempo: 2, boden: 0, unten: 0, flug: 0 } };
-  const stand = { l: { fest: false, z: 0, dz: 0, dy: 0 }, r: { fest: false, z: 0, dz: 0, dy: 0 } };
+  const stand = { l: { fest: false, x: 0, z: 0, dx: 0, dz: 0, dy: 0 }, r: { fest: false, x: 0, z: 0, dx: 0, dz: 0, dy: 0 } };
   const messeTempo = () => {
     const fuss = K("footl"), p = v();
     for (const art of ["gehen", "rennen"]) {
@@ -546,7 +563,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
         for (let u = 0; u <= D; u += 0.01) { const f = stehBahn(u, G); G.hoch = Math.min(G.hoch, f.y + Math.sqrt(Math.max(0, lang * lang - (f.z - mitte) ** 2)) + wippe(u) * wipp); }
       }
     }
-    mixer.stopAllAction(); gesetzt.set(NaN, NaN, NaN); for (const s of "lr") Object.assign(stand[s], { fest: false, dz: 0, dy: 0 });
+    mixer.stopAllAction(); gesetzt.set(NaN, NaN, NaN); for (const s of "lr") Object.assign(stand[s], { fest: false, dx: 0, dz: 0, dy: 0 });
   };
   /* Höhe beim Gehen und Rennen (A8, Mr. Alex 18.11.: „kleiner Ruck beim Aufsetzen, die Hüfte hebt und senkt die Figur“):
      Die Hüfte läuft auf einer glatten Bahn (gedämpfte Feder zur Höhe, bei der der tiefste Punkt auf dem Boden läge);
@@ -589,7 +606,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     g.my += (G.hoch - wippe(u0) * GEHEN.wippen * mass - hoch - g.my) * w; m.position.y = g.my; anker.updateMatrixWorld(true);
     for (const [s, seite] of [["l", 1], ["r", -1]]) {
       const u = (((u0 + (s === "r" ? 0.5 : 0)) % 1) + 1) % 1, f = fussBahn(u, G), F = K("foot" + s), Z = K("toes" + s);
-      zweiGelenke(K("upperleg" + s), K("lowerleg" + s), F, v(anker.position.x + seite * G.spur * g.hin, f.y, anker.position.z + g.hin * f.z), 0, vorn, w);
+      zweiGelenke(K("upperleg" + s), K("lowerleg" + s), F, v(anker.position.x + Math.cos(g.dreh) * seite * G.spur + Math.sin(g.dreh) * f.z, f.y, anker.position.z - Math.sin(g.dreh) * seite * G.spur + Math.cos(g.dreh) * f.z), 0, vorn, w);   // in Laufrichtung, auch auf dem Rundkurs
       const lage = (th, ruhe) => qm.clone().multiply(Q().setFromAxisAngle(quer, -th)).multiply(ruhe);
       F.quaternion.slerp(F.parent.getWorldQuaternion(Q()).invert().multiply(lage(f.th, fussRuhe[s])), w); F.updateMatrixWorld(true);
       Z.quaternion.slerp(F.getWorldQuaternion(Q()).invert().multiply(lage(f.th > 0 ? f.th : f.th * f.zeh, zehRuhe[s])), w); Z.updateMatrixWorld(true);   // beim Abdruck bleiben die Zehen flach am Boden
@@ -600,12 +617,12 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const G = gang[g.modus], frei = !G || g.wendet || g.modus === "gehen";
     for (const s of "lr") {
       const st = stand[s], F = K("foot" + s), ort = wo(F), q0 = F.getWorldQuaternion(Q());   // ein stehender Fuß bleibt etwas länger fest (Abrollen über die Zehen)
-      if (!frei && ort.y < G.unten + G.hoch * (st.fest ? 1.6 : 1) && (!st.fest || Math.abs(st.z - ort.z) < 0.5 * mass)) {
-        if (!st.fest) { st.fest = true; st.z = ort.z + st.dz; }
-        st.dz = st.z - ort.z; st.dy += (g.dy - st.dy) * Math.min(1, dt * 30);
-      } else { st.fest = false; st.dz *= Math.exp(-dt * 14); st.dy *= Math.exp(-dt * 14); }   // losgelassen: der Rest klingt weich ab, der Fuß springt nicht
-      if (Math.abs(st.dz) + Math.abs(st.dy) < 0.001) continue;
-      zweiGelenke(K("upperleg" + s), K("lowerleg" + s), F, v(ort.x, ort.y + st.dy, ort.z + st.dz), 0, null, 1);
+      if (!frei && ort.y < G.unten + G.hoch * (st.fest ? 1.6 : 1) && (!st.fest || Math.hypot(st.x - ort.x, st.z - ort.z) < 0.5 * mass)) {
+        if (!st.fest) { st.fest = true; st.x = ort.x + st.dx; st.z = ort.z + st.dz; }                 // der Fuß bleibt an seiner Stelle am Boden, in jeder Laufrichtung (Rundkurs)
+        st.dx = st.x - ort.x; st.dz = st.z - ort.z; st.dy += (g.dy - st.dy) * Math.min(1, dt * 30);
+      } else { st.fest = false; st.dx *= Math.exp(-dt * 14); st.dz *= Math.exp(-dt * 14); st.dy *= Math.exp(-dt * 14); }   // losgelassen: der Rest klingt weich ab, der Fuß springt nicht
+      if (Math.abs(st.dx) + Math.abs(st.dz) + Math.abs(st.dy) < 0.001) continue;
+      zweiGelenke(K("upperleg" + s), K("lowerleg" + s), F, v(ort.x + st.dx, ort.y + st.dy, ort.z + st.dz), 0, null, 1);
       F.quaternion.copy(F.parent.getWorldQuaternion(Q()).invert().multiply(q0)); F.updateMatrixWorld(true);   // der Fuß behält seine Richtung
     }
     g.flug = G && !frei && !stand.l.fest && !stand.r.fest ? g.flug + dt : 0;
@@ -671,20 +688,29 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const flaeche = (s) => halter[s].localToWorld(v(-0.052, 0, 0));                    // Mitte der Handfläche
   return {
     befehl: starte, kopf: kopfBefehl,
-    bahn(lang) { g.bahn = lang || platz.bahn || 2.4; g.weg = Math.min(g.weg, g.bahn); },                                                // nur für das Testprogramm: lange Strecke, um Gehen und Rennen ohne Wenden zu messen
+    bahn(lang) { g.gerade = lang > 0; g.bahn = lang || platz.bahn || 2.4; g.weg = 0; g.hin = 1; g.dreh = 0; anker.position.x = platz.x; },   // lang > 0: gerade Strecke statt Rundkurs;                                                // nur für das Testprogramm: lange Strecke, um Gehen und Rennen ohne Wenden zu messen
     haende(form) { g.wahl = form; zeigeHand(GESTEN[g.modus][3] || form); },
     setze(name, wert) { if (name in bau && wert > 0) { bau[name] = wert; const modus = g.modus; messeTempo(); g.laeuft = null; starte(DAUERND.includes(modus) ? modus : "stehen"); } },
     bewege(dt) {
-      const unterwegs = g.modus === "gehen" || g.modus === "rennen";
-      if (unterwegs) {
+      const unterwegs = g.modus === "gehen" || g.modus === "rennen", rund = g.runde && !g.gerade;
+      if (unterwegs && rund) g.weg += gang[g.modus].tempo * dt;                         // Rundkurs: immer weiter, ohne Wenden
+      else if (unterwegs) {
         g.weg += g.hin * gang[g.modus].tempo * dt;                                    // auf der Bahn hin und her, am Ende umdrehen (wie Gary)
         if (g.weg > g.bahn) { g.weg = g.bahn; g.hin = -1; }
         if (g.weg < 0) { g.weg = 0; g.hin = 1; }
       }
-      const soll = unterwegs && g.hin < 0 ? Math.PI : 0;
-      g.wendet = Math.abs(soll - g.dreh) > 0.05;
-      g.dreh += (soll - g.dreh) * Math.min(1, dt * 7);
-      anker.position.z = platz.z + g.weg; m.rotation.y = g.dreh;
+      if (rund) {
+        const p = rundeOrt(g.runde, g.weg), soll = unterwegs ? p.winkel : Math.round(g.dreh / (2 * Math.PI)) * 2 * Math.PI, ab = soll - g.dreh;   // im Stehen zur Tür gewandt
+        anker.position.x = p.x; anker.position.z = p.z;
+        if (unterwegs && Math.abs(ab) < 0.5) { g.dreh = soll; g.wendet = false; }      // unterwegs folgt die Figur der Bahn genau, auch durch die runden Ecken
+        else { g.wendet = Math.abs(ab) > 0.05; g.dreh += ab * Math.min(1, dt * 7); }
+      } else {
+        const soll = unterwegs && g.hin < 0 ? Math.PI : 0;
+        g.wendet = Math.abs(soll - g.dreh) > 0.05;
+        g.dreh += (soll - g.dreh) * Math.min(1, dt * 7);
+        anker.position.z = platz.z + g.weg;
+      }
+      m.rotation.y = g.dreh;
       mixer.update(dt); nach(dt);
     },
     /* Spielt jede Bewegung einmal ganz durch und meldet, wo ein Arm wie ein Gruß mit gestrecktem Arm aussehen kann (für das Testprogramm). */
@@ -705,6 +731,6 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       flaecheR: imKoerper(flaeche("r")), flaecheL: imKoerper(flaeche("l")), handAbstand: +(flaeche("r").distanceTo(flaeche("l")) / mass).toFixed(3), muskel: muskel.r.visible ? +muskel.r.scale.x.toFixed(3) : 0,
       knieDick: Math.min(knieDick("l"), knieDick("r")), armDick: Math.min(armDick("l"), armDick("r")), hochR: armHoch("r"), hochL: armHoch("l"), huefte: +wo(hips).y.toFixed(4), hut: hutNah(), knieGrad: [knieWinkel("l"), knieWinkel("r")], fussL: fussOrt("l"), fussR: fussOrt("r"), ferseL: fersenOrt("l"), ferseR: fersenOrt("r"), kleidung: kleidungPunkte, hutMass: hutMass(),
       kopf: gesicht ? { teile: gesicht.teile, ausdruck: g.ausdruck, winkel: +gesicht.wert.winkel.toFixed(2), unterlid: +gesicht.wert.unterlid.toFixed(2), braue: +gesicht.wert.braueHoch.toFixed(2), brille: +g.brille.toFixed(2), brilleDa: !!brille, funkeln: +g.blinkt.toFixed(2), durchBrille: g.brille > 0.75 } : null, zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
-      ort: [+anker.position.x.toFixed(2), +anker.position.z.toFixed(2)] }),
+      ort: [+anker.position.x.toFixed(2), +anker.position.z.toFixed(2)], runde: !!(g.runde && !g.gerade), richtung: +g.dreh.toFixed(2) }),
   };
 }

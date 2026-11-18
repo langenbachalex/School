@@ -35,7 +35,7 @@ def farben():
         schatten=f("flex_bartschatten", (0.79, 0.60, 0.52), 0.85), blond=f("flex_blond", (0.88, 0.68, 0.30), 0.7),
         bart=f("flex_schnurrbart", (0.93, 0.82, 0.52), 0.75), braue=f("flex_braue", (0.60, 0.44, 0.20), 0.8),
         lippe=f("flex_lippe", (0.36, 0.12, 0.10), 0.7), falte=f("flex_falte", (0.60, 0.38, 0.30), 0.8),
-        iris=f("flex_iris", (0.22, 0.58, 1.0), 0.2, 0.0, 0.9), augenweiss=f("augenweiss", (1.0, 1.0, 0.97), 0.25, 0.0, 0.4),
+        iris=f("flex_iris", (0.07, 0.30, 0.74), 0.2, 0.0, 0.55), augenweiss=f("augenweiss", (1.0, 1.0, 0.97), 0.25, 0.0, 0.4),
         pupille=f("pupille", (0.02, 0.015, 0.01), 0.1), glanz=f("glanz", (1.0, 1.0, 1.0), 0.2, 0.0, 2.0),
         rachen=f("rachen", (0.20, 0.03, 0.05), 0.7), zunge=f("zunge", (0.95, 0.42, 0.45), 0.6, 0.0, 0.15),
         zahn=f("zahn", (1.0, 1.0, 0.96), 0.3, 0.0, 0.35), glas=f("brille_glas", (0.015, 0.015, 0.025), 0.12, 0.4),
@@ -89,7 +89,11 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
     g.bogen_mit_formen("mundlinie", oberlippe, rel(lippenlinie()), {"hoch_l": rel(lippenlinie(1, 0)), "hoch_r": rel(lippenlinie(0, 1)),
                        "tief_l": rel(lippenlinie(-1, 0)), "tief_r": rel(lippenlinie(0, -1))}, 0.0042, f["lippe"], (0, 0, 0))
     zaehne = g.gelenk("zaehne", oberlippe, (0, 0, 0))
-    g.kugel("zahnreihe", zaehne, (0, haut_vorn(0, LZ - 0.008, 0.009) + 0.13, -0.0085), (0.036, 0.006, 0.0085), f["zahn"])   # eine helle Reihe: auch klein gut lesbar
+    def zahnlinie(hoch_l=0.0, hoch_r=0.0):
+        """Obere Zahnreihe: liegt direkt unter der Lippenlinie und biegt sich mit ihr (sonst steht beim Grinsen eine weisse Flaeche lose unter dem Mund)."""
+        return [(x * 0.86, haut_vorn(x * 0.86, z - 0.0085, 0.0045), z - 0.0085) for x, y, z in lippenlinie(hoch_l, hoch_r)]
+    g.bogen_mit_formen("zahnreihe", zaehne, rel(zahnlinie()), {"hoch_l": rel(zahnlinie(1, 0)), "hoch_r": rel(zahnlinie(0, 1)),
+                       "tief_l": rel(zahnlinie(-1, 0)), "tief_r": rel(zahnlinie(0, -1))}, 0.0062, f["zahn"], (0, 0, 0))
     # blonder Schnurrbart: kraeftig, zwei Schwuenge von der Mitte nach aussen, die Lippenlinie darunter bleibt frei
     bart = g.gelenk("schnurrbart", oberlippe, (0, 0, 0))
     for s in (-1, 1):
@@ -111,7 +115,7 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
     lippe_unten = [(0.060 * math.sin(R(w)), -0.050 - 0.066 * math.cos(R(w)), 0.0) for w in range(-60, 61, 10)]
     g.bogen("unterlippe", kiefer, lippe_unten, 0.003, f["lippe"])
     # ---- Haare: blond, schulterlang, unter dem Hut ----
-    g.kugel("haar_hinten", k, (0, 0.036, 0.170), (0.140, 0.134, 0.176), f["blond"], fein=32)
+    g.kugel("haar_hinten", k, (0, 0.036, 0.125), (0.139, 0.136, 0.160), f["blond"], fein=32)   # endet unter dem Hut, damit der Hinterkopf nicht durch die Kappe ragt
     g.kugel("haar_nacken", k, (0, 0.085, 0.010), (0.125, 0.062, 0.150), f["blond"])
     for s in (-1, 1):
         g.kugel("haar_seite", k, (s * 0.138, 0.014, 0.085), (0.034, 0.052, 0.170), f["blond"], (0, R(s * -5), 0))

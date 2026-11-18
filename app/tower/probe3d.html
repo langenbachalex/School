@@ -116,7 +116,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
 import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt die komprimierten Formen der Raumdatei (werkzeuge/raum_verkleinern.js)
 import { ladeFiguren, mundAusZeiten, einsaetzeAus } from "./probe3d_figuren.js";
-import { ladeBauProbe, GESTEN } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
+import { ladeBauProbe, GESTEN, rundeOrt } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
@@ -228,7 +228,11 @@ try {
   const bauZelle = naechsteFreie(-0.9, 6.4);   // freie Raummitte links vor der eigenen Figur (Mr. Alex 18.11.: nicht an der Wand, dort gingen die Gesten hinein); rundherum gut 2 m Platz
   let bauBahn = 0;
   while (bauBahn * gk.zelle < 5.2 && frei(bauZelle[0], bauZelle[1] - bauBahn - 1)) bauBahn++;
-  const bauProbe = await ladeBauProbe(lader, szene, { ...zuOrt(...bauZelle), bahn: Math.max(1.2, bauBahn * gk.zelle - 0.3) });
+  // Rundkurs durch den freien Teil des Raums (Mr. Alex 18.11.: längere Strecke, um Gehen und Rennen zu beurteilen); ist dort etwas im Weg, bleibt die kurze Bahn
+  const bauStart = zuOrt(...bauZelle);
+  let bauRunde = { x0: -3.2, x1: 1.3, z0: bauStart.z, z1: bauStart.z + 3.4, r: 1.2 }; bauRunde.start = bauStart.x - (bauRunde.x0 + bauRunde.r);
+  for (let s = 0, lang = rundeOrt(bauRunde, 0).lang; bauRunde && s < lang; s += 0.2) { const p = rundeOrt(bauRunde, s); if (!frei(...zuZelle(p.x, p.z))) bauRunde = null; }
+  const bauProbe = await ladeBauProbe(lader, szene, { ...bauStart, bahn: Math.max(1.2, bauBahn * gk.zelle - 0.3), runde: bauRunde });
   $("bau").querySelector(".kopf").addEventListener("click", (e) => {
     const zu = $("bau").classList.toggle("zu"); e.currentTarget.setAttribute("aria-expanded", String(!zu)); document.body.classList.toggle("bau-offen", !zu);
   });

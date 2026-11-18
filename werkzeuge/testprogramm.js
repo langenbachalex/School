@@ -334,6 +334,12 @@ async function probe3dTest(browser, basis, app, name, fm) {
       if (duenn < mindestens) fehl.push(`${titel}: bei „${pose}“ wird das Bein am Knie zu dünn (${Math.round(duenn * 100)} % der Dicke, verlangt ${mindestens * 100} %)`);
       await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
     }
+    // Rundkurs (Mr. Alex 18.11.): Rennen auf langer Strecke – die Probe-Figur läuft im Raum im Kreis und dreht nicht nach zwei, drei Schritten um
+    await pg.click('#bau button[data-bau="rennen"]'); await bauTakt(45);
+    { let lang = 0, wenden = 0, vor = null, rund = true;
+      for (let k = 0; k < 90; k++) { const x = await bauTakt(2); if (vor) lang += Math.hypot(x.ort[0] - vor[0], x.ort[1] - vor[1]); vor = x.ort; if (x.wendet) wenden++; rund = rund && x.runde; }
+      if (!rund || lang < 14 || wenden > 0) fehl.push(`${titel}: beim Rennen läuft die Probe-Figur keine lange Strecke am Stück (Rundkurs ${rund}, ${lang.toFixed(1)} m in 3 Sekunden, ${wenden} Bilder mit Wenden)`); }
+    await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(30);
     await pg.evaluate(() => window.__probe3d.bauBahn(60));                        // lange Strecke: ohne Wenden messen
     for (const [art, anteil, ruckMax] of [["gehen", 0.6, 0.006], ["rennen", 0.28, 0.016]]) {   // A8: beim Rennen längerer Bodenkontakt; die Hüfte läuft ohne Ruck
       await pg.click(`#bau button[data-bau="${art}"]`); await bauTakt(30);

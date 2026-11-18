@@ -36,6 +36,8 @@ Entwurf des Masters nach der Vorgabe von Mr. Alex vom 17.11.: nichts Halbgares, 
 
 **Was durch alle Kapitel mitgeht:** deine Figur, dein Zimmer über dem Guard Room mit der London-Karte (jeder gefundene Schlüssel hängt an seinem Haken, jeder besuchte Ort leuchtet auf der Karte) · **Gary** als Begleiter · **Mr. Flex** in jedem Spiegel der Stadt · **die Taube**, die überall Verwandte hat und immer schon alles weiß · neue Hüter als Figuren je Ort.
 
+**Gesten und Bewegungen sammeln (Entscheidung Mr. Alex, 18.11.):** Das Kind schaltet für die eigene Figur Bewegungen frei. Alle Figuren teilen dasselbe Skelett, deshalb passt jede Bewegung auf jede Figur. Mr. Alex behält sich vor, über die Zeit weitere Bewegungen und Möglichkeiten einzubauen. Dauerauftrag: Wenn sich die Geschichte entwickelt, immer mitdenken, was daraus an Gestik, Mimik und Bewegungen nötig wird. Einzelheiten im Figurenblatt, Abschnitt „Profile je Figur“.
+
 **Die Superhelden:** Sie stoßen im Lauf des Abenteuers dazu, je Kapitel einer oder zwei, passend zum Ort. Wer einen Helden im Runner freigespielt hat, erkennt ihn wieder und bekommt von ihm Hilfe und ein Kleidungsstück; wer ihn noch nicht hat, trifft eine maskierte Gestalt, die neugierig macht.
 
 **Sprache je Kapitel:** Jeder Ort bringt seine eigene Sprache mit (Tower: Ortsangaben und Alibi-Fragen; Museum: beschreiben und vergleichen; Piccadilly: Wege, Einkaufen, Verabreden; Palast: Höflichkeit und Tagesablauf). Zuordnung zu den Units, wenn das Kapitel geplant wird.
@@ -114,6 +116,7 @@ Beide Kreise greifen ineinander: Die Geschichte öffnet neue Orte zum Sammeln, u
 | Zeichen der Gefangenen | an Wänden | Code-Rätsel, Seitenstrang |
 | Kleidung und Möbel | Belohnung für Fälle und Funde | Figur und Zimmer |
 | Notizbuch-Karten | jede gefundene Wendung | Deutsch links, Englisch rechts, mit Ton |
+| Gesten und Bewegungen | Belohnung, z. B. ein Kung-Fu-Move von Mr. Flex | die eigene Figur kann sie danach selbst |
 
 **Begleiter sammeln (Entscheidung Mr. Alex, 17.11. abends):** Begleiter („Companions“) sind selbst Sammelstücke. Heute gibt es zwei: Gary, den Fuchs, und die Taube. In späteren Szenen und Kapiteln kommen weitere dazu (Tiere und Leute, etwa aus dem London Zoo oder der Tube Station). Das Kind entscheidet selbst, wer es begleitet, und hört dann dessen Sprüche – nach eigener Vorliebe, jederzeit wechselbar. Folge für den Bau: Die Sprüche hängen an der Figur, nicht am Ort (so ist `tower_sprueche.tsv` schon angelegt); jeder neue Begleiter braucht einen eigenen Satz Sprüche mit Stimme.
 

@@ -18,8 +18,8 @@ const HOCH = new THREE.Vector3(0, 1, 0), VORN = new THREE.Vector3(0, 0, 1), QUER
    · wange 0…1 (Wangenpolster schieben sich hoch) · ohr −1…1 (aufgestellt) · eckzahn 0…1 (Eckzähne stehen über die Unterlippe)
    Haltung: neig (Kopf zur Seite, rad) · kinn (Kinn hoch, rad) · brust (Brust raus) · arme (offen) · hueften (Hände in die Hüften)
    kamera: true = die Pupillen schauen zum Publikum, also in die Kamera */
-const NEUTRAL = { braueHoch: 0, braueDreh: 0, schief: 0, lid: 0, unterlid: 0, pupille: 1, mund: 0, breit: 1, winkel: 0, winkelSchief: 0, wange: 0, ohr: 0, eckzahn: 0, neig: 0, kinn: 0, brust: 0, arme: 0, hueften: 0 };
-const AUSDRUECKE = {
+export const NEUTRAL = { braueHoch: 0, braueDreh: 0, schief: 0, lid: 0, unterlid: 0, pupille: 1, mund: 0, breit: 1, winkel: 0, winkelSchief: 0, wange: 0, ohr: 0, eckzahn: 0, neig: 0, kinn: 0, brust: 0, arme: 0, hueften: 0 };
+export const AUSDRUECKE = {
   neutral: NEUTRAL,
   // Fröhlich in zwei Stufen (Mr. Alex 18.11.): geschlossenes Lächeln – die Mundlinie schwingt in die Wange hinauf …
   froehlich: { ...NEUTRAL, braueHoch: 0.4, braueDreh: -0.06, unterlid: 0.32, winkel: 1, wange: 0.85, ohr: 0.7, neig: 0.1 },
@@ -31,6 +31,10 @@ const AUSDRUECKE = {
   // Stolz = aufgesetzt, Pose zur Kamera: fast geschlossenes selbstzufriedenes Lächeln, ein Mundwinkel höher, halbe Lider, eine Braue höher, Hände in die Hüften
   stolz: { ...NEUTRAL, braueHoch: 0.35, schief: 1, lid: 0.32, mund: 0.1, winkel: 0.55, winkelSchief: 0.5, kinn: 0.04, neig: -0.15, brust: 1, hueften: 1, kamera: true },
   reden: { ...NEUTRAL, braueHoch: 0.25, unterlid: 0.15, winkel: 0.65, wange: 0.45, ohr: 0.3 },   // Grundausdruck beim Reden: geschlossenes Lächeln
+  // Mr. Flex (Kopf-Probe 18.11.): Schelmisch = breites Grinsen, Mundwinkel deutlich hoch, Wangen schieben nach oben, Augen schmal (Unterlider hoch), eine Braue höher
+  schelmisch: { ...NEUTRAL, braueHoch: 0.3, schief: 0.45, lid: 0.1, unterlid: 0.52, mund: 0.3, winkel: 1, wange: 1, neig: 0.08, kamera: true },
+  // Ernst und geheimnisvoll: ruhiger gerader Blick, Brauen tief, halbe Lider, ganz leichtes Lächeln nur mit einem Mundwinkel
+  geheimnisvoll: { ...NEUTRAL, braueHoch: -0.7, braueDreh: 0.14, lid: 0.3, winkel: 0.12, winkelSchief: 0.5, kamera: true },
 };
 /* Mundformen von Rhubarb Lip Sync (A–F Grundformen, G, H, X Zusatz): [offen, breit] */
 export const MUNDFORMEN = { X: [0, 1], A: [0.03, 0.9], B: [0.28, 1.05], C: [0.6, 1], D: [1, 1.1], E: [0.65, 0.72], F: [0.35, 0.5], G: [0.16, 0.95], H: [0.5, 0.8] };
@@ -81,16 +85,19 @@ function steckeAuf(teil, knochen, figur, mass, versatz) {
 }
 
 /* Gesicht: sucht die benannten Teile im Kopf und bewegt sie weich auf den gewünschten Ausdruck zu; blinzelt von selbst. */
-function baueGesicht(kopf, kieferWinkel) {
+/* opt (für Köpfe mit flachem Gesicht, zuerst Mr. Flex): mass = Wege der Teile im Verhältnis zu Garys Kopf · flach = die Mundhöhle wächst mit der Öffnung
+   (ohne Schnauze gibt es keinen Rachen, in den man hineinsieht). Neu für alle Köpfe: iris_l/r wandert mit der Pupille; falte_l/r = Lachfalten beim Grinsen. */
+export function baueGesicht(kopf, kieferWinkel, opt = {}) {
+  const M = opt.mass || 1;
   const teil = (n) => { const o = kopf.getObjectByName(n); return o ? { o, ort: o.position.clone(), q: o.quaternion.clone() } : null; };
-  const t = Object.fromEntries(["braue_l", "braue_r", "lid_l", "lid_r", "unterlid_l", "unterlid_r", "wange_l", "wange_r", "ohr_l", "ohr_r", "pupille_l", "pupille_r",
+  const t = Object.fromEntries(["braue_l", "braue_r", "lid_l", "lid_r", "unterlid_l", "unterlid_r", "wange_l", "wange_r", "ohr_l", "ohr_r", "pupille_l", "pupille_r", "iris_l", "iris_r", "falte_l", "falte_r",
     "mund", "kiefer", "oberlippe", "mundlinie", "unterlippe", "zaehne", "zaehne_unten", "eckzahn_l", "eckzahn_r"].map((n) => [n, teil(n)]));
   const linie = t.mundlinie && t.mundlinie.o.morphTargetDictionary ? t.mundlinie.o : null;   // die Lippenlinie biegt sich (Formschlüssel hoch_l/r, tief_l/r)
   const form = (n, w) => { const i = linie.morphTargetDictionary[n]; if (i !== undefined) linie.morphTargetInfluences[i] = Math.max(0, w); };
   const jetzt = { ...NEUTRAL }, dreh = new THREE.Quaternion();
   let blinzeln = 2, zu = 0;
   return {
-    wert: jetzt,
+    wert: jetzt, teile: Object.keys(t).filter((n) => t[n]),
     blinzle() { zu = 0.16; blinzeln = 1.5 + Math.random() * 3; },
     bewege(dt, ziel, mund, blick, tempo) {              // mund = [offen, breit] aus der Lippenbewegung oder null · blick −1…1 (Pupillen nach rechts … links)
       for (const k in jetzt) jetzt[k] += (ziel[k] - jetzt[k]) * Math.min(1, dt * 10 * tempo);
@@ -101,14 +108,16 @@ function baueGesicht(kopf, kieferWinkel) {
       const offen = mund ? Math.max(mund[0], jetzt.mund * 0.25) : jetzt.mund, breit = mund ? mund[1] : jetzt.breit;
       this.offen = offen; this.lid = lid;
       for (const [seite, s] of [["l", 1], ["r", -1]]) {
-        const b = t["braue_" + seite], l = t["lid_" + seite], u = t["unterlid_" + seite], p = t["pupille_" + seite], wa = t["wange_" + seite], oh = t["ohr_" + seite], ez = t["eckzahn_" + seite];
+        const b = t["braue_" + seite], l = t["lid_" + seite], u = t["unterlid_" + seite], p = t["pupille_" + seite], wa = t["wange_" + seite], oh = t["ohr_" + seite], ez = t["eckzahn_" + seite], ir = t["iris_" + seite], fa = t["falte_" + seite];
         const hoch = jetzt.braueHoch + (s > 0 ? jetzt.schief * 0.9 : 0);
-        if (b) { b.o.position.y = b.ort.y + hoch * 0.026; b.o.quaternion.copy(dreh.setFromAxisAngle(VORN, s * (jetzt.braueDreh - (s > 0 ? jetzt.schief * 0.18 : 0)))).multiply(b.q); }
-        if (wa) { wa.o.position.y = wa.ort.y + jetzt.wange * 0.030; wa.o.scale.setScalar(1 + jetzt.wange * 0.1); }
+        if (b) { b.o.position.y = b.ort.y + hoch * 0.026 * M; b.o.quaternion.copy(dreh.setFromAxisAngle(VORN, s * (jetzt.braueDreh - (s > 0 ? jetzt.schief * 0.18 : 0)))).multiply(b.q); }
+        if (wa) { wa.o.position.y = wa.ort.y + jetzt.wange * 0.030 * M; wa.o.scale.setScalar(1 + jetzt.wange * 0.1); }
         if (oh) oh.o.quaternion.copy(dreh.setFromAxisAngle(VORN, -s * jetzt.ohr * 0.22)).multiply(oh.q);
         if (l) { l.o.scale.y = Math.max(0.001, lid); l.o.visible = lid > 0.03; }
         if (u) { u.o.scale.y = Math.max(0.001, jetzt.unterlid); u.o.visible = jetzt.unterlid > 0.03; }
-        if (p) { p.o.scale.setScalar(jetzt.pupille); p.o.position.x = p.ort.x + blick * 0.0125; p.o.position.z = p.ort.z - Math.abs(blick) * 0.002; }
+        if (p) { p.o.scale.setScalar(jetzt.pupille); p.o.position.x = p.ort.x + blick * 0.0125 * M; p.o.position.z = p.ort.z - Math.abs(blick) * 0.002 * M; }
+        if (ir) { ir.o.position.x = ir.ort.x + blick * 0.0125 * M; ir.o.position.z = ir.ort.z - Math.abs(blick) * 0.002 * M; }
+        if (fa) fa.o.visible = jetzt.wange > 0.4;
         if (ez) { ez.o.visible = offen > 0.1 || jetzt.eckzahn > 0.1; ez.o.scale.y = 1 + 0.45 * jetzt.eckzahn; }
       }
       if (linie) {
@@ -116,8 +125,8 @@ function baueGesicht(kopf, kieferWinkel) {
         form("hoch_l", wl); form("tief_l", -wl); form("hoch_r", wr); form("tief_r", -wr);
       }
       if (t.kiefer) { t.kiefer.o.quaternion.copy(dreh.setFromAxisAngle(QUER, offen * kieferWinkel)).multiply(t.kiefer.q); t.kiefer.o.scale.x = 0.7 + 0.3 * Math.min(1, breit); }
-      if (t.oberlippe) t.oberlippe.o.position.y = t.oberlippe.ort.y + offen * 0.004;
-      if (t.mund) t.mund.o.visible = offen > 0.05;
+      if (t.oberlippe) t.oberlippe.o.position.y = t.oberlippe.ort.y + offen * 0.004 * M;
+      if (t.mund) { t.mund.o.visible = offen > 0.05; if (opt.flach) t.mund.o.scale.y = Math.max(0.001, Math.min(1, offen * 1.3)); }
       if (t.unterlippe) t.unterlippe.o.visible = offen > 0.08;
       if (t.zaehne) t.zaehne.o.visible = offen > 0.1;
       if (t.zaehne_unten) t.zaehne_unten.o.visible = offen > 0.7;

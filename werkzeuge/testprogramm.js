@@ -380,6 +380,27 @@ async function probe3dTest(browser, basis, app, name, fm) {
     if (!hm || hm.hoch < 1.2 || hm.hinten > 0.2) fehl.push(`${titel}: der Zipfel am Hut der Probe-Figur steht nicht nach oben (${JSON.stringify(hm)}; verlangt Höhe ab 1,2, höchstens 0,2 hinter der Achse)`);
     else if (hm.band || !hm.eigeneFarbe) fehl.push(`${titel}: der Hut der Probe-Figur hat noch Band oder die alte Farbe (${JSON.stringify(hm)})`);
     else if (!(hm.bogen > 0.02 && hm.faellt > 0.1)) fehl.push(`${titel}: die Hutkrempe der Probe-Figur ist eine gerade Scheibe statt einer abfallenden Rundung (${JSON.stringify(hm)})`);
+    // Kopf-Probe Mr. Flex (18.11.): eigener Kopf mit dem gemeinsamen Gesichtsaufbau und der neuen Iris, Ausdrücke, Sonnenbrille, Funkeln
+    const kopfKlick = async (was, takte) => { await pg.click(`#bau button[data-kopf="${was}"]`); return (await bauTakt(takte)).kopf; };
+    let kf = (await bauTakt(1)).kopf;
+    const fehlt = ["braue_l", "braue_r", "lid_l", "lid_r", "unterlid_l", "unterlid_r", "pupille_l", "pupille_r", "iris_l", "iris_r", "wange_l", "wange_r", "mund", "kiefer", "oberlippe", "mundlinie", "zaehne"].filter((n) => !kf || !kf.teile.includes(n));
+    if (!kf || fehlt.length || !kf.brilleDa) fehl.push(`${titel}: dem Kopf von Mr. Flex fehlen Gesichtsteile oder die Sonnenbrille (${fehlt.join(", ") || "Brille"})`);
+    else {
+      kf = await kopfKlick("schelmisch", 50);
+      if (!(kf.winkel > 0.8 && kf.unterlid > 0.4)) fehl.push(`${titel}: „Schelmisch“ zeigt kein Grinsen mit schmalen Augen (Mundwinkel ${kf.winkel}, Unterlid ${kf.unterlid})`);
+      kf = await kopfKlick("geheimnisvoll", 50);
+      if (!(kf.braue < -0.4 && kf.winkel < 0.4)) fehl.push(`${titel}: „Ernst-geheimnisvoll“ hat keine tiefen Brauen (Brauen ${kf.braue}, Mundwinkel ${kf.winkel})`);
+      kf = await kopfKlick("brille_unten", 50);
+      if (!(kf.brille > 0.4 && kf.brille < 0.6)) fehl.push(`${titel}: „Brille herunter“ schiebt die Sonnenbrille nicht auf die Nase (${kf.brille})`);
+      const hoehepunkt = async (was) => { await pg.click(`#bau button[data-kopf="${was}"]`); let best = { funkeln: 0 }; for (let k = 0; k < 40; k++) { const x = (await bauTakt(2)).kopf; if (x.funkeln > best.funkeln) best = x; } return best; };
+      let fu = await hoehepunkt("protzen");
+      if (!(fu.funkeln > 0.5 && !fu.durchBrille && fu.brille < 0.2)) fehl.push(`${titel}: „Brille ab + Funkeln“ – die Augen funkeln nicht ohne Brille (${JSON.stringify(fu)})`);
+      fu = await hoehepunkt("magisch");
+      if (!(fu.funkeln > 0.5 && fu.durchBrille)) fehl.push(`${titel}: „Funkeln durch die Brille“ funkelt nicht durch die Gläser (${JSON.stringify(fu)})`);
+      await kopfKlick("neutral", 20);
+    }
+    const kopfDatei = fs.statSync(path.join(__dirname, "..", "app", "tower", "figuren", "flex_teile.glb")).size;
+    if (kopfDatei > 1e6) fehl.push(`${titel}: die Kopf-Datei von Mr. Flex ist größer als 1 MB (${Math.round(kopfDatei / 1000)} KB)`);
     const zehen = await ganz("wippen", (x) => x.zehe);
     if (Math.max(...zehen) - Math.min(...zehen) < 0.05) fehl.push(`${titel}: beim Fußwippen bewegt sich der Fuß nicht (Zehen heben sich nur ${Math.round((Math.max(...zehen) - Math.min(...zehen)) * 1000)} mm)`);
     await pg.click('#bau button[data-bau="mabu"]'); b = await bauTakt(50);

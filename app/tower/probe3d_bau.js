@@ -12,6 +12,7 @@
    dort ankommt – egal wie lang die Arme sind.
    Boden: Nach jedem Bild wird der tiefste Punkt des Körpers auf den Boden gesetzt (auch im Spagat, bei jedem Maß). */
 import * as THREE from "three";
+import { baueGesicht, AUSDRUECKE, NEUTRAL } from "./probe3d_figuren.js";
 
 export const BAU_START = { arm: 1.8, bein: 3.0, kopf: 0.66, rumpf: 1.16, knie: 0.56 };   // endgültige Maße von Mr. Alex für Mr. Flex (18.11.)
 const HAND = 1.7, HALS = 0.785;                        // Handgröße (Mr. Alex 18.11.: die Dicke passt) · Halshöhe des ungestreckten Körpers wie bei Gary
@@ -19,7 +20,7 @@ const STIEFEL = { kante: 0.335, knie: 0.42, hose: 0.48 };          // Mage-Körp
 const MANTEL = { ab: 0.56, tief: 0.2, anteil: 0.8, vornAb: 0.84, vornTief: 0.46 };   // Mage-Körper: unterhalb `ab` folgt der Mantel den Oberschenkeln, am Saum mit `anteil`; vorn (Bauchteil) schon ab `vornAb`
 const PLAETZE = { tasche: [[-0.38, 0.53, 0.19], [-0.16, 0.77, 0.40]], buch: [[0.13, 0.53, 0.18], [0.38, 0.84, 0.41]] };   // Mage-Körper: Kästen [von, bis] um Gürteltasche und Buchhalter (x zur linken Seite, y hoch, z nach vorn)
 const GURT = { breit: 0.39, tief: 0.32, unten: 0.625, oben: 0.735, farbe: [0.69, 0.10] };   // Mage-Körper: Gürtel als Ellipse (halbe Breite, halbe Tiefe), Höhe des Bandes, Stelle der Gürtelfarbe im Körperbild
-export const KLEIDUNG_START = { tasche: false, buch: false, krempe: 0.4, krempeRund: 0.07, zipfel: "spitz", hutband: false, hutFarbe: 0x51627f };   // Mr. Flex trägt beides nicht – die Arme gingen bei vielen Gesten hindurch (Gary hat einen eigenen Körper und behält seine); krempe = Breite der Hutkrempe (1 = wie das Modell): Mr. Flex trägt einen Spitzhut mit schmaler Krempe, damit die Hände am Kopf nicht hindurchgehen
+export const KLEIDUNG_START = { tasche: false, buch: false, krempe: 0.4, krempeRund: 0.07, zipfel: "spitz", hutband: false, hutFarbe: 0x51627f, kopf: "flexkopf", hutWeit: 0.62, hutHoch: -0.03 };   // Mr. Flex trägt beides nicht – die Arme gingen bei vielen Gesten hindurch (Gary hat einen eigenen Körper und behält seine); krempe = Breite der Hutkrempe (1 = wie das Modell): Mr. Flex trägt einen Spitzhut mit schmaler Krempe, damit die Hände am Kopf nicht hindurchgehen
 const ARM_RING = [0.33, 0.5], ARM_MITTE = 0.42;                           // Mage-Körper: zwischen diesen Abständen von der Mitte liegen die zwei Ringe am Ellbogen
 const KNIE_BREIT = 1.45, KNIE_FASE = 0.07, ARM_FASE = 0.05;   // FASE: so weit vor und hinter dem Gelenk sitzen die zwei Ringe (abgeschrägte Ecke statt Spitze) //                               // so viel breiter dürfen die Ringe an Knie und Ellbogen im tiefsten Knick höchstens werden
 /* Hut je Figur (A9, Mr. Alex 18.11.): krempeRund = die Krempe fällt in einer weichen Rundung ab (0 = gerade Scheibe) · zipfel "spitz" = der Zipfel
@@ -38,6 +39,7 @@ const STAND_HOCH = 0.09;                               // so weit über seinem t
    wippen = Auf und Ab der Hüfte · streck = so weit streckt sich das Bein höchstens (Anteil der Beinlänge) · spur = Spurbreite (Anteil der Hüftbreite) */
 const GEHEN = { stand: 0.57, rollt: 0.08, flach: 0.31, ferse: 0.31, ballen: 0.66, heben: 0.11, wippen: 0.1, streck: 0.99, spur: 0.8, an: 0.25, hinten: 0 };
 const FERSE_Z = -0.11;                                 // Mage-Körper: dort liegt die Ferse auf (Tiefe im Maß des Körpers)
+const KOPF_SITZ = [0, -0.03, 0.0], FUNKEL = 0.6;        // eigener Kopf: Sitz über dem Kopfknochen (m) · Dauer des Funkelns (s)
 const OHNE_SOHLE = ["gehen", "rennen", "rolle", "spagat"];   // hier bleibt der Fuß, wie die Bewegung ihn führt (Abrollen, Füße in der Luft)
 const R = "offen", Z = "zeigen", F = "faust";
 const FINGER = { offen: [0, 0, 0, 0, 0, 0], zeigen: [0, 1, 1, 1, 1, 0], faust: [1, 1, 1, 1, 1, 0], gespreizt: [0, 0, 0, 0, 0, 1] };   // Einrollen von Zeige-, Mittel-, Ring-, kleinem Finger und Daumen · Spreizen
@@ -282,7 +284,7 @@ function aermelFarbe(m) {                               // Farbe des Ärmels aus
 
 export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_START) {
   const lade = (n) => lader.loadAsync(`figuren/${n}.glb`), clips = {};
-  const [koerper, haende, ...dateien] = await Promise.all([lade("probe_mage_ganz"), lade("haende"), lade("kaykit_bewegungen"), lade("gesten"), lade("kungfu")]);
+  const [koerper, haende, kopfDatei, ...dateien] = await Promise.all([lade("probe_mage_ganz"), lade("haende"), kleidung.kopf ? lade("flex_teile") : null, lade("kaykit_bewegungen"), lade("gesten"), lade("kungfu")]);
   for (const d of dateien) for (const c of d.animations) clips[c.name] = c;
   const m = koerper.scene, K = (n) => m.getObjectByName(n), bau = { ...BAU_START };
   const haut = []; m.traverse((o) => { if (o.isMesh) o.frustumCulled = false; if (o.isSkinnedMesh && !/Cape/.test(o.name)) haut.push(o); });
@@ -324,6 +326,23 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const kleidungPunkte = kleidungAb(m, kleidung);
   const stiefel = stiefelFest(m, K), halbGelenke = [stiefel.kniel, stiefel.knier, ...ellbogenFest(m, K)].filter(Boolean), hut = hutForm(m, kleidung);
   mantelFolgt(m, K);
+  /* Eigener Kopf (Kopf-Probe Mr. Flex, 18.11.): der Kopf aus Blender sitzt auf dem Kopfknochen, der Mage-Kopf wird ausgeblendet; der Hut bleibt
+     und wird auf den schmaleren Kopf angepasst (hutWeit, hutHoch je Figur). Gesicht wie bei Gary (baueGesicht), dazu Sonnenbrille und Funkeln. */
+  let kopfTeil = null, gesicht = null, brille = null; const sterne = [];
+  if (kopfDatei) {
+    m.traverse((o) => { if (o.isSkinnedMesh && /_Head$/.test(o.name)) o.visible = false; });
+    kopfTeil = kopfDatei.scene.getObjectByName(kleidung.kopf); kopfTeil.traverse((o) => { o.frustumCulled = false; });
+    const kq = head.getWorldQuaternion(Q()), ks = mass * BAU_START.kopf;   // der Kopf ist in Metern gebaut, für die Kopfgröße von Mr. Flex
+    kopfTeil.quaternion.copy(kq.invert().multiply(m.getWorldQuaternion(Q()))); kopfTeil.scale.setScalar(1 / ks);
+    kopfTeil.position.copy(v(...KOPF_SITZ).applyQuaternion(kopfTeil.quaternion).multiplyScalar(1 / ks)); head.add(kopfTeil);
+    if (hut) { hut.scale.multiplyScalar(kleidung.hutWeit || 1); hut.position.y += kleidung.hutHoch || 0; }
+    gesicht = baueGesicht(kopfTeil, 0.42, { mass: 0.6, flach: true });
+    const b = kopfTeil.getObjectByName("sonnenbrille"); if (b) brille = { o: b, ort: b.position.clone(), q: b.quaternion.clone() };
+    const c = document.createElement("canvas"); c.width = c.height = 64; const x = c.getContext("2d"); x.fillStyle = "#fff"; x.beginPath();   // vierzackiger Stern wie der Blitz an Garys Zahn
+    for (let i = 0; i < 8; i++) { const r = i % 2 ? 4 : 31, w = (i * Math.PI) / 4; x.lineTo(32 + Math.cos(w) * r, 32 + Math.sin(w) * r); }
+    x.fill(); const bild = new THREE.CanvasTexture(c);
+    for (const s of [-1, 1]) { const st = new THREE.Sprite(new THREE.SpriteMaterial({ map: bild, transparent: true, opacity: 0, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending })); st.renderOrder = 6; st.userData.seite = s; kopfTeil.add(st); sterne.push(st); }
+  }
   // Bizeps: eine Wölbung in der Farbe des Ärmels, die beim Anspannen wächst
   const muskel = {}, stoff = new THREE.MeshStandardMaterial({ color: aermelFarbe(m), roughness: 0.9 });
   for (const s of "lr") {
@@ -408,7 +427,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const welt = m.getWorldQuaternion(Q()).multiply(dreh).multiply(handRuhe[s]);
     W.quaternion.copy(w0.slerp(W.parent.getWorldQuaternion(Q()).invert().multiply(welt), gewicht)); W.updateMatrixWorld(true);
   };
-  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0 };
+  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
   const ziele = () => {
     const regel = ZIELE[g.modus]; if (!regel || !g.laeuft) return;
     const dauer = g.laeuft.getClip().duration, t = Math.min(g.laeuft.time, dauer), qm = m.getWorldQuaternion(Q());
@@ -454,7 +473,34 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       if (w > 0.001) dreheWelt(K("foot" + s), Q().slerp(Q().setFromUnitVectors(sohlenHoch(s), v(0, 1, 0)), w));
     }
   };
-  const nach = (dt) => { strecke(); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); m.updateMatrixWorld(true); aufGang(); };
+  /* Gesicht, Sonnenbrille, Funkeln. Brille: 1 = auf, 0,5 = auf die Nase heruntergeschoben (Augen frei), 0 = ab.
+     Funkeln: ein kurzer Stern an jedem Auge wie der Blitz an Garys Zahn; ist die Brille auf, funkelt es blau durch die Gläser. */
+  const kopfLauf = (dt) => {
+    if (!gesicht) return;
+    gesicht.bewege(dt, AUSDRUECKE[g.ausdruck] || NEUTRAL, null, 0, 1);
+    g.brille += (g.brilleZiel - g.brille) * Math.min(1, dt * 9);
+    if (brille) {
+      const unten = weich(1 - g.brille, 0, 0.5), weg = weich(1 - g.brille, 0.5, 1);
+      brille.o.position.copy(brille.ort).add(v(0, -0.034 * unten, 0.012 * unten)); brille.o.quaternion.copy(brille.q).multiply(Q().setFromAxisAngle(v(1, 0, 0), 0.22 * unten));
+      brille.o.scale.setScalar(Math.max(0.001, 1 - weg)); brille.o.visible = weg < 0.98;
+    }
+    if (g.funkelIn >= 0 && (g.funkelIn -= dt) < 0) { g.funkel = FUNKEL; g.funkelIn = -1; }
+    g.funkel = Math.max(0, g.funkel - dt);
+    const a = g.funkel > 0 ? Math.sin((1 - g.funkel / FUNKEL) * Math.PI) : 0, durch = g.brille > 0.75;   // durch die Brille: größer, blau, auf den Gläsern
+    g.blinkt = a;
+    for (const st of sterne) {
+      st.position.set(st.userData.seite * 0.0525, 0.172 - (durch ? 0.002 : 0), durch ? 0.172 : 0.152);
+      st.material.opacity = a; st.material.color.setHex(durch ? 0x3aa0ff : 0xcfeaff); st.material.rotation = g.funkel * 4; st.scale.setScalar((durch ? 0.03 : 0.018) + (durch ? 0.075 : 0.06) * a);
+    }
+  };
+  const kopfBefehl = (was) => {                          // Ausdruck, Brille oder Effekt
+    if (AUSDRUECKE[was]) g.ausdruck = was;
+    else if (was === "brille_auf") g.brilleZiel = 1; else if (was === "brille_unten") g.brilleZiel = 0.5; else if (was === "brille_ab") g.brilleZiel = 0;
+    else if (was === "funkeln") g.funkelIn = 0;
+    else if (was === "protzen") { g.ausdruck = "schelmisch"; g.brilleZiel = 0; g.funkelIn = 0.55; }      // „Brille ab + Funkeln“
+    else if (was === "magisch") { g.ausdruck = "geheimnisvoll"; g.brilleZiel = 1; g.funkelIn = 0.25; }   // „Funkeln durch die Brille“
+  };
+  const nach = (dt) => { strecke(); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); kopfLauf(dt); m.updateMatrixWorld(true); aufGang(); };
   const grad = (x) => +((x * 180) / Math.PI).toFixed(1);
   const armLage = (s) => {                              // Ellbogenwinkel (180 = gestreckt), Richtung Schulter → Hand im Körper, Richtung der Finger zur Senkrechten
     const ps = wo(K("upperarm" + s)), pe = wo(K("lowerarm" + s)), pw = wo(K("wrist" + s)), qm = m.getWorldQuaternion(Q()).invert();
@@ -624,7 +670,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const imKoerper = (p) => m.worldToLocal(p).toArray().map((x) => +x.toFixed(3));   // Ort in den Maßen des Körpers (x zur linken Seite, y hoch, z nach vorn)
   const flaeche = (s) => halter[s].localToWorld(v(-0.052, 0, 0));                    // Mitte der Handfläche
   return {
-    befehl: starte,
+    befehl: starte, kopf: kopfBefehl,
     bahn(lang) { g.bahn = lang || platz.bahn || 2.4; g.weg = Math.min(g.weg, g.bahn); },                                                // nur für das Testprogramm: lange Strecke, um Gehen und Rennen ohne Wenden zu messen
     haende(form) { g.wahl = form; zeigeHand(GESTEN[g.modus][3] || form); },
     setze(name, wert) { if (name in bau && wert > 0) { bau[name] = wert; const modus = g.modus; messeTempo(); g.laeuft = null; starte(DAUERND.includes(modus) ? modus : "stehen"); } },
@@ -657,7 +703,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       knie: +K("lowerlegl").getWorldPosition(v()).y.toFixed(3), stiefelOben: +(stiefel.l.getWorldPosition(v()).y + (STIEFEL.kante - 0.293) * mass).toFixed(3),
       faustR: K("wristr").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)), faustL: K("wristl").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)),
       flaecheR: imKoerper(flaeche("r")), flaecheL: imKoerper(flaeche("l")), handAbstand: +(flaeche("r").distanceTo(flaeche("l")) / mass).toFixed(3), muskel: muskel.r.visible ? +muskel.r.scale.x.toFixed(3) : 0,
-      knieDick: Math.min(knieDick("l"), knieDick("r")), armDick: Math.min(armDick("l"), armDick("r")), hochR: armHoch("r"), hochL: armHoch("l"), huefte: +wo(hips).y.toFixed(4), hut: hutNah(), knieGrad: [knieWinkel("l"), knieWinkel("r")], fussL: fussOrt("l"), fussR: fussOrt("r"), ferseL: fersenOrt("l"), ferseR: fersenOrt("r"), kleidung: kleidungPunkte, hutMass: hutMass(), zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
+      knieDick: Math.min(knieDick("l"), knieDick("r")), armDick: Math.min(armDick("l"), armDick("r")), hochR: armHoch("r"), hochL: armHoch("l"), huefte: +wo(hips).y.toFixed(4), hut: hutNah(), knieGrad: [knieWinkel("l"), knieWinkel("r")], fussL: fussOrt("l"), fussR: fussOrt("r"), ferseL: fersenOrt("l"), ferseR: fersenOrt("r"), kleidung: kleidungPunkte, hutMass: hutMass(),
+      kopf: gesicht ? { teile: gesicht.teile, ausdruck: g.ausdruck, winkel: +gesicht.wert.winkel.toFixed(2), unterlid: +gesicht.wert.unterlid.toFixed(2), braue: +gesicht.wert.braueHoch.toFixed(2), brille: +g.brille.toFixed(2), brilleDa: !!brille, funkeln: +g.blinkt.toFixed(2), durchBrille: g.brille > 0.75 } : null, zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
       ort: [+anker.position.x.toFixed(2), +anker.position.z.toFixed(2)] }),
   };
 }

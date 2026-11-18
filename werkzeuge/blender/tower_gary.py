@@ -325,9 +325,10 @@ def ausgabe(datei):
 
 
 # ---------- Kopf und Schwanz als Einzelteile ----------
-neu()
-fuchskopf(None)
-fuchsschwanz(None)
-zauberstab(None, (0.9, 0, 0.15))
-ausgabe("gary_teile.glb")
-pruefbilder("gary_teile")
+if __name__ == "__main__":                              # tower_flex.py holt sich von hier nur die Bau-Helfer
+    neu()
+    fuchskopf(None)
+    fuchsschwanz(None)
+    zauberstab(None, (0.9, 0, 0.15))
+    ausgabe("gary_teile.glb")
+    pruefbilder("gary_teile")

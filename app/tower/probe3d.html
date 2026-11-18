@@ -86,7 +86,7 @@
 </div>
 <div id="bau" class="kasten zu" hidden>
   <button type="button" class="kopf" aria-expanded="false">PROBE Körperbau</button>
-  <span class="titel">PROBE Körperbau · vorläufiger Kopf</span>
+  <span class="titel">PROBE Körperbau · Kopf-Probe Mr. Flex</span>
   <span>Maße (1 = wie heute)</span>
   <label>Arm <output>1,80</output><input type="range" data-mass="arm" min="1" max="2.6" step="0.05" value="1.8" aria-label="Armlänge"></label>
   <label>Bein <output>3,00</output><input type="range" data-mass="bein" min="1" max="4" step="0.05" value="3" aria-label="Beinlänge"></label>
@@ -98,6 +98,15 @@
   <button type="button" data-hand="offen" aria-pressed="true">Offen</button>
   <button type="button" data-hand="zeigen" aria-pressed="false">Zeigefinger</button>
   <button type="button" data-hand="faust" aria-pressed="false">Faust</button>
+  <span>Kopf</span>
+  <button type="button" data-kopf="neutral">Neutral</button>
+  <button type="button" data-kopf="schelmisch">Schelmisch</button>
+  <button type="button" data-kopf="geheimnisvoll">Ernst-geheimnisvoll</button>
+  <button type="button" data-kopf="brille_auf">Brille auf</button>
+  <button type="button" data-kopf="brille_unten">Brille herunter</button>
+  <button type="button" data-kopf="brille_ab">Brille ab</button>
+  <button type="button" data-kopf="protzen">Brille ab + Funkeln</button>
+  <button type="button" data-kopf="magisch">Funkeln durch die Brille</button>
 </div>
 <div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
@@ -229,6 +238,7 @@ try {
     const b = document.createElement("button"); b.type = "button"; b.dataset.bau = knopf; b.textContent = titel; $("bauKnoepfe").append(b);
   }
   for (const b of document.querySelectorAll("#bau button[data-bau]")) b.addEventListener("click", () => bauProbe.befehl(b.dataset.bau));
+  for (const b of document.querySelectorAll("#bau button[data-kopf]")) b.addEventListener("click", () => bauProbe.kopf(b.dataset.kopf));
   for (const b of document.querySelectorAll("#bau button[data-hand]")) b.addEventListener("click", () => {
     bauProbe.haende(b.dataset.hand);
     for (const x of document.querySelectorAll("#bau button[data-hand]")) x.setAttribute("aria-pressed", String(x === b));

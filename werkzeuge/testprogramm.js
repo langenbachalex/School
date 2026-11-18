@@ -250,32 +250,49 @@ async function probe3dTest(browser, basis, app, name, fm) {
     await pg.click('#figuren button[data-figur="tadaa"]');   // nach dem Ta-daa! bleibt Gary zwei Sekunden stolz stehen
     g = await takt(115);
     if (g.zeigt !== "stolz") fehl.push(`${titel}: nach dem Ta-daa! zeigt Gary „${g.zeigt}“ statt „stolz“`);
-    // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary – Kasten, Hände-Schalter, Regler für die Maße
+    // PROBE A3/A4 (18.11.): gestreckter Körper mit Händen neben Gary – Kasten mit allen Bewegungen, Hände-Schalter, Regler für die Maße
     const bau = () => pg.evaluate(() => window.__probe3d.bau()), bauTakt = async (n) => { await pg.evaluate((k) => window.__probe3d.bauTakt(k, 16.7), n); return bau(); };
+    const regler = (name, wert) => pg.evaluate(([n, w]) => { const r = document.querySelector('#bau input[data-mass="' + n + '"]'); r.value = String(w); r.dispatchEvent(new Event("input", { bubbles: true })); }, [name, wert]);
     let b = await bau();
-    if (!(b.hals > 0.9)) fehl.push(`${titel}: Probe-Figur ist nicht gestreckt (Hals in ${b.hals} m Höhe, ungestreckt 0,785)`);
+    if (!(b.hals > 1.1)) fehl.push(`${titel}: Probe-Figur ist nicht gestreckt (Hals in ${b.hals} m Höhe, ungestreckt 0,785)`);
+    if (b.stiefelOben > b.knie - 0.05) fehl.push(`${titel}: die Stiefel der Probe-Figur enden nicht unter dem Knie (Stiefelkante ${b.stiefelOben} m, Knie ${b.knie} m)`);
+    const knoepfe = await pg.locator("#bau button[data-bau]").count();
+    if (knoepfe !== 29) fehl.push(`${titel}: im Probe-Kasten stehen ${knoepfe} Bewegungen statt 29 (26 eigene + Stehen, Gehen, Rennen)`);
     const kaesten = await pg.evaluate(() => ["bau", "figuren"].map((id) => { const r = document.getElementById(id).getBoundingClientRect(); return [r.left, r.right, r.top, r.bottom]; }));
     if (kaesten[0][1] > kaesten[1][0] && kaesten[0][3] > kaesten[1][2] && kaesten[0][2] < kaesten[1][3]) fehl.push(`${titel}: der Kasten der Probe-Figur liegt über Garys Kasten`);
-    const klappe = pg.locator("#bau .kopf"), klappbar = await klappe.isVisible();   // Handy: der Kasten ist eingeklappt und ersetzt offen Garys Kasten
+    const klappe = pg.locator("#bau .kopf"), klappbar = await klappe.isVisible();   // schmale Bildschirme: der Kasten ist eingeklappt und ersetzt offen Garys Kasten
     if (klappbar) { await klappe.click(); if (await pg.locator("#figuren").isVisible()) fehl.push(`${titel}: der offene Probe-Kasten verdeckt Garys Kasten nicht sauber`); }
     await pg.click('#bau button[data-bau="gehen"]'); b = await bauTakt(150);
     if (!(b.modus === "gehen" && b.weg > 0.3)) fehl.push(`${titel}: Probe-Figur geht nicht (Weg ${b.weg} m)`);
-    if (b.fussTief < -0.01) fehl.push(`${titel}: Probe-Figur versinkt beim Gehen im Boden (${b.fussTief} m)`);
     await pg.click('#bau button[data-bau="kick"]');
-    let hoch = 0; for (let k = 0; k < 20; k++) hoch = Math.max(hoch, (await bauTakt(3)).zehe);
-    if (hoch < b.hals * 0.9) fehl.push(`${titel}: der Kick der Probe-Figur bleibt niedrig (Fußspitze ${hoch} m, Hals ${b.hals} m)`);
+    let hoch = 0, faust = false; for (let k = 0; k < 22; k++) { const x = await bauTakt(3); hoch = Math.max(hoch, x.zehe); faust = faust || x.hand[0] === "faust"; }
+    if (hoch < b.hals * 0.8) fehl.push(`${titel}: der Kick der Probe-Figur bleibt niedrig (Fußspitze ${hoch} m, Hals ${b.hals} m)`);
+    if (!faust) fehl.push(`${titel}: beim Kick ballt die Probe-Figur keine Faust`);
     b = await bauTakt(60);
-    if (b.modus !== "stehen") fehl.push(`${titel}: nach dem Kick steht die Probe-Figur nicht wieder (${b.modus})`);
-    await pg.click('#bau button[data-bau="spagat"]'); b = await bauTakt(60);
-    if (b.fussTief < -0.01) fehl.push(`${titel}: Probe-Figur versinkt im Spagat im Boden (${b.fussTief} m)`);
+    if (b.modus !== "stehen" || b.hand[0] !== "offen") fehl.push(`${titel}: nach dem Kick steht die Probe-Figur nicht wieder mit offenen Händen (${b.modus}, ${b.hand})`);
+    await pg.click('#bau button[data-bau="zeigen"]'); b = await bauTakt(25);   // die Handform wechselt mit der Geste: rechts Zeigefinger, links offen
+    if (b.hand[0] !== "zeigen" || b.hand[1] !== "offen") fehl.push(`${titel}: beim Zeigen streckt die Probe-Figur den Zeigefinger nicht aus (Hände ${b.hand})`);
+    await pg.click('#bau button[data-bau="mabu"]'); b = await bauTakt(50);     // Ma Bu: beide Fäuste gleich hoch und gleich weit vorn
+    if (Math.abs(b.faustR[1] - b.faustL[1]) > 0.06 || Math.abs(b.faustR[2] - b.faustL[2]) > 0.06) fehl.push(`${titel}: im Ma Bu sind die Fäuste nicht parallel (rechts ${b.faustR}, links ${b.faustL})`);
+    for (const bein of [3, 4]) {                                                 // tiefe Haltungen: der tiefste Punkt der Figur liegt nie unter dem Boden, bei jedem Maß
+      await regler("bein", bein);
+      for (const pose of ["spagat", "pubu", "mabu", "xubu", "rolle"]) {
+        await pg.click(`#bau button[data-bau="${pose}"]`);
+        let unten = 0; for (let k = 0; k < 12; k++) unten = Math.min(unten, (await bauTakt(5)).tief);
+        if (unten < -0.01) fehl.push(`${titel}: Probe-Figur versinkt bei „${pose}“ im Boden (${unten} m, Bein ${bein})`);
+        await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(15);
+      }
+      b = await bau();
+      if (b.stiefelOben > b.knie - 0.05) fehl.push(`${titel}: bei Bein ${bein} enden die Stiefel nicht unter dem Knie (Stiefelkante ${b.stiefelOben} m, Knie ${b.knie} m)`);
+    }
     await pg.click('#bau button[data-hand="zeigen"]');
-    if ((await bau()).hand !== "zeigen") fehl.push(`${titel}: Hände der Probe-Figur lassen sich nicht wechseln`);
-    await pg.click('#bau button[data-bau="stehen"]'); const lang = (await bauTakt(30)).hals;
-    await pg.evaluate(() => { const r = document.querySelector('#bau input[data-mass="bein"]'); r.value = "1"; r.dispatchEvent(new Event("input", { bubbles: true })); });
-    b = await bauTakt(30);
+    if ((await bau()).wahl !== "zeigen") fehl.push(`${titel}: Hände der Probe-Figur lassen sich nicht wechseln`);
+    await pg.click('#bau button[data-hand="offen"]');
+    const lang = (await bauTakt(30)).hals;
+    await regler("bein", 1); b = await bauTakt(30);
     if (!(b.hals < lang - 0.1) || b.bau.bein !== 1) fehl.push(`${titel}: der Regler „Bein“ ändert die Probe-Figur nicht (Hals ${lang} → ${b.hals} m)`);
     if ((await pg.evaluate(() => document.querySelector('#bau input[data-mass="bein"]').parentElement.querySelector("output").textContent)) !== "1,00") fehl.push(`${titel}: der Regler „Bein“ zeigt seine Zahl nicht an`);
-    await pg.evaluate(() => { const r = document.querySelector('#bau input[data-mass="bein"]'); r.value = "2"; r.dispatchEvent(new Event("input", { bubbles: true })); });
+    await regler("bein", 3);
     if (klappbar) { await klappe.click(); if (!(await pg.locator("#figuren").isVisible())) fehl.push(`${titel}: nach dem Einklappen des Probe-Kastens fehlt Garys Kasten`); }
     g = await takt(240);
     if (g.braue > 0.1 || g.mund > 0.1) fehl.push(`${titel}: Gesicht geht nicht auf „neutral“ zurück (Braue ${g.braue}, Mund ${g.mund})`);
@@ -597,8 +614,9 @@ function speicherTest(app) {
           const n = await pg.evaluate(() => [...document.querySelectorAll(".runner-buehne canvas")].filter((c) => c.offsetParent && c.width > 0).length);
           return n ? null : "Runner startet nicht (keine Spielbühne mit Zeichenfläche)";
         } }));
-        if (app.kurz === "EN6") f.push(...await towerTest(b, basis, app, name, fm));
-        if (app.kurz === "EN6" && !NUR_3D_AUS) f.push(...await probe3dTest(b, basis, app, name, fm));
+        const story = app.kurz === "EN6" && fm.id !== "handy";   // Story-Spiel: kein Handy-Test (Regel Mr. Alex 18.11.) – die Lern-Apps werden weiter auch im Handy-Format geprüft
+        if (story) f.push(...await towerTest(b, basis, app, name, fm));
+        if (story && !NUR_3D_AUS) f.push(...await probe3dTest(b, basis, app, name, fm));
         if (EN_KETTE[app.kurz]) f.push(...await w("Bereich wird grün, Spiele zeigen den Stand von heute", [], { stand: enFastFertig(app), pruefe: (pg) => enKetteGruen(app, pg) }));
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
         if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));

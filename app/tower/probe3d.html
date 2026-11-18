@@ -27,6 +27,7 @@
   #figuren button { min-height: 44px; padding: 4px 8px; font-size: 14px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
   #bau { left: 10px; top: 228px; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 8px; pointer-events: auto; box-sizing: border-box; max-width: min(30vw, 250px); max-height: calc(100dvh - 250px); overflow-y: auto; }
   #bau span, #bau label { grid-column: 1 / -1; font-size: 13px; }
+  #bauKnoepfe { display: contents; }
   #bau span { opacity: .8; }
   #bau button { min-height: 44px; padding: 4px 8px; font-size: 14px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
   #bau button[aria-pressed="true"] { background: #e9b45a; color: #1b1008; font-weight: 600; }
@@ -87,22 +88,11 @@
   <button type="button" class="kopf" aria-expanded="false">PROBE Körperbau</button>
   <span class="titel">PROBE Körperbau · vorläufiger Kopf</span>
   <span>Maße (1 = wie heute)</span>
-  <label>Arm <output>1,60</output><input type="range" data-mass="arm" min="1" max="2.4" step="0.05" value="1.6" aria-label="Armlänge"></label>
-  <label>Bein <output>2,00</output><input type="range" data-mass="bein" min="1" max="3" step="0.05" value="2"  aria-label="Beinlänge"></label>
-  <label>Kopf <output>0,72</output><input type="range" data-mass="kopf" min="0.5" max="1" step="0.02" value="0.72" aria-label="Kopfgröße"></label>
-  <label>Rumpf <output>0,90</output><input type="range" data-mass="rumpf" min="0.7" max="1.3" step="0.02" value="0.9" aria-label="Rumpflänge"></label>
-  <span>Bewegungen</span>
-  <button type="button" data-bau="stehen">Stehen</button>
-  <button type="button" data-bau="gehen">Gehen</button>
-  <button type="button" data-bau="rennen">Rennen</button>
-  <button type="button" data-bau="achselzucken">Achselzucken</button>
-  <button type="button" data-bau="zeigen">Zeigen</button>
-  <button type="button" data-bau="abwinken">Abwinken</button>
-  <button type="button" data-bau="arme">Arme ausbreiten</button>
-  <button type="button" data-bau="kick">Kick</button>
-  <button type="button" data-bau="mabu">Ma Bu</button>
-  <button type="button" data-bau="pubu">Pu Bu</button>
-  <button type="button" data-bau="spagat">Spagat</button>
+  <label>Arm <output>1,80</output><input type="range" data-mass="arm" min="1" max="2.6" step="0.05" value="1.8" aria-label="Armlänge"></label>
+  <label>Bein <output>3,00</output><input type="range" data-mass="bein" min="1" max="4" step="0.05" value="3" aria-label="Beinlänge"></label>
+  <label>Kopf <output>0,66</output><input type="range" data-mass="kopf" min="0.5" max="1" step="0.02" value="0.66" aria-label="Kopfgröße"></label>
+  <label>Rumpf <output>1,16</output><input type="range" data-mass="rumpf" min="0.7" max="1.5" step="0.02" value="1.16" aria-label="Rumpflänge"></label>
+  <div id="bauKnoepfe"></div>
   <span>Hände</span>
   <button type="button" data-hand="offen" aria-pressed="true">Offen</button>
   <button type="button" data-hand="zeigen" aria-pressed="false">Zeigefinger</button>
@@ -116,7 +106,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
 import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt die komprimierten Formen der Raumdatei (werkzeuge/raum_verkleinern.js)
 import { ladeFiguren, mundAusZeiten, einsaetzeAus } from "./probe3d_figuren.js";
-import { ladeBauProbe } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
+import { ladeBauProbe, GESTEN } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
@@ -232,6 +222,11 @@ try {
   $("bau").querySelector(".kopf").addEventListener("click", (e) => {
     const zu = $("bau").classList.toggle("zu"); e.currentTarget.setAttribute("aria-expanded", String(!zu)); document.body.classList.toggle("bau-offen", !zu);
   });
+  let bauGruppe = "";                                   // Knöpfe aus der Gesten-Tabelle, nach Gruppen
+  for (const [knopf, [, titel, gruppe]] of Object.entries(GESTEN)) {
+    if (gruppe !== bauGruppe) { const s = document.createElement("span"); s.textContent = gruppe === "Grund" ? "Bewegungen" : gruppe; $("bauKnoepfe").append(s); bauGruppe = gruppe; }
+    const b = document.createElement("button"); b.type = "button"; b.dataset.bau = knopf; b.textContent = titel; $("bauKnoepfe").append(b);
+  }
   for (const b of document.querySelectorAll("#bau button[data-bau]")) b.addEventListener("click", () => bauProbe.befehl(b.dataset.bau));
   for (const b of document.querySelectorAll("#bau button[data-hand]")) b.addEventListener("click", () => {
     bauProbe.haende(b.dataset.hand);

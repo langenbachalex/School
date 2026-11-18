@@ -30,7 +30,7 @@ Die Nutzung (Tokens/Credits) ist knapp. Bei jeder neuen Eingabe zuerst prüfen, 
 
 ## Testprogramm (Regel Mr. Alex, 15.11.2026)
 Befehl: `node werkzeuge/testprogramm.js` (alle Apps, ca. 1–2 Min.; `EN6`/`EN9`/`FR` = nur diese, `--ohne-update` = schneller ohne Service-Worker-Test). Prüft je App in drei Formaten – Windows-Laptop 1366×768, Handy 360×740, iPad 820×1180 (Mr. Alex 15.11.: heute Laptop, Handy muss gehen, künftig iPad) –: Laden ohne Konsolenfehler, Start, eine Übung, Runner-Start, Shop, nichts breiter als der Bildschirm, Update kommt an. `--format=handy` (oder `laptop`, `ipad`) = nur ein Format. Das iPad läuft in WebKit (Safari-Technik); fehlt es, installiert das Testprogramm es selbst (ca. 1 Min., `cdn.playwright.dev` ist seit 15.11. in der Default-Umgebung freigegeben).
-- **Kein Handy-Test mehr (Regel Mr. Alex, 18.11.2026):** Das Testprogramm läuft nur noch für Laptop und iPad (`--format=laptop`, dann `--format=ipad`), nicht mehr im Handy-Format. Ob das Handy-Format aus dem Standardlauf des Testprogramms entfernt wird, entscheidet der Master.
+- **Kein Handy-Test für das Story-Spiel (Regel Mr. Alex, 18.11.2026):** Die Tower-Tests (`towerTest`, `probe3dTest`) laufen nur in den Formaten Laptop und iPad; das Testprogramm lässt sie im Handy-Format von selbst aus. Die Lern-Apps EN6, EN9 und FR werden weiter auch im Handy-Format geprüft.
 - Bei jedem Fehler zuerst einen Test ins Testprogramm, der ihn zeigt, dann reparieren.
 - Fertig heißt: Testprogramm grün („ALLES OK“).
 - Nach jedem Bau läuft es (die betroffene App reicht); keinen eigenen Browser-Test neu schreiben, sondern das Testprogramm erweitern.

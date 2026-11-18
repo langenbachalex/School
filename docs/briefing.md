@@ -88,8 +88,8 @@ GLN 1 war am 30.09.2026 (Lead-in und Topic 1, S. 80 bis 85). Nach den Herbstferi
 ## Regel von Mr. Alex (2.11.2026) – sparsam arbeiten
 Bei jeder Eingabe zuerst prüfen, wie sie mit weniger Tokens/Credits umgesetzt werden kann; vor größeren Bauten kurz zurückfragen (Aufwand klein/mittel/groß, schlankere Variante). Einzelheiten in `CLAUDE.md` im Repo-Hauptordner.
 
-## Regel von Mr. Alex (18.11.2026) – kein Handy-Test mehr
-Das Testprogramm wird nicht mehr im Handy-Format gefahren, nur noch Laptop und iPad (`--format=laptop`, `--format=ipad`). Steht auch in `CLAUDE.md` unter „Testprogramm“.
+## Regel von Mr. Alex (18.11.2026) – kein Handy-Test für das Story-Spiel
+Die Tower-Tests (Story-Spiel und 3D-Probe) laufen nur noch in den Formaten Laptop und iPad; das Testprogramm lässt sie im Handy-Format von selbst aus. Die Lern-Apps EN6, EN9 und FR werden weiter auch im Handy-Format geprüft. Steht auch in `CLAUDE.md` unter „Testprogramm“.
 
 ## Regeln von Mr. Alex (17.11.2026) – Spiele: erst Spiel, dann Lernen (gilt für alle Apps und alle Chats)
 - **Immer zuerst fragen: Würden die Kinder das freiwillig spielen?** „Sonst programmiere ich ein Spiel, das niemand spielt.“ Abenteuer, Neugier und Witz gehen vor; das Lernen wird unauffällig eingewebt, nichts darf nach Arbeitsblatt aussehen oder belehrend wirken.

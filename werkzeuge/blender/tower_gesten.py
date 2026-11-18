@@ -59,10 +59,10 @@ PISTOL_A = h(upperarm=(.2, 1, -.2), lowerarm=(.1, 1, .2), chest=dict(vor=-8), he
 PISTOL_B = h(upperarm=(.2, 1, -.1), lowerarm=(.1, .7, .75), chest=dict(vor=-10), head=dict(seit=8))
 
 DECKUNG = dict(upperarm_l=(.3, .6, -.5), lowerarm_l=(-.2, .5, 1), upperarm_r=(.6, -.4, -.6), lowerarm_r=(.2, .3, .3))
-KICK_A = h(upperleg_r=(.1, .8, .35), lowerleg_r=(0, .1, -1), chest=dict(vor=-6), **DECKUNG)
-KICK_B = h(upperleg_r=(.1, .7, .85), lowerleg_r=(.1, .7, .85), foot_r=(0, .3, 1), chest=dict(vor=-20), hips=dict(vor=-10), **DECKUNG)
+KICK_A = h(upperleg_r=(.1, .75, .7), lowerleg_r=(0, -.35, -1), foot_r=(0, .5, -.8), chest=dict(vor=-4), **DECKUNG)      # Knie hoch, Unterschenkel angewinkelt
+KICK_B = h(upperleg_r=(.1, .72, .8), lowerleg_r=(.1, .8, .62), foot_r=(0, .3, 1), chest=dict(vor=-20), hips=dict(vor=-10), **DECKUNG)   # Unterschenkel und Fuß schnellen heraus
 MABU = h(upperleg=(1, .3, -.3), lowerleg=(.05, -.1, -1), foot=(.45, 1, 0),
-         upperarm_r=(.1, 1, .12), lowerarm_r=(.1, 1, .12), upperarm_l=(.6, .0, .8), lowerarm_l=(-.8, .1, .5), head=dict(dreh=0))
+         upperarm=(.12, 1, .1), lowerarm=(.04, 1, .1))                    # beide Fäuste parallel nach vorn (Mr. Alex 18.11.)
 MABU_ZU = h(upperleg=(1, .3, -.3), lowerleg=(.05, -.1, -1), foot=(.45, 1, 0),
             upperarm=(.5, -.5, -.6), lowerarm=(-.2, 1, .1))
 PUBU = h(upperleg_r=(1, .05, -.1), lowerleg_r=(1, .05, -.1), foot_r=(.4, 1, 0),
@@ -105,7 +105,7 @@ CLIPS = {
   "Flex_BrilleSchieben": [(0, S), (.3, BRILLE), (1.4, BRILLE), (1.7, S)],
   "Flex_Fingerpistolen": [(0, S), (.2, PISTOL_A), (.32, PISTOL_B), (.5, PISTOL_A), (.62, PISTOL_B), (.8, PISTOL_A), (1.2, PISTOL_A), (1.5, S)],
   # Kung-Fu
-  "KungFu_HoherKick":    [(0, S), (.2, KICK_A), (.33, KICK_B), (.5, KICK_B), (.65, KICK_A), (.9, S)],
+  "KungFu_HoherKick":    [(0, S), (.25, KICK_A), (.33, KICK_A), (.42, KICK_B), (.52, KICK_B), (.64, KICK_A), (.74, KICK_A), (1.0, S)],
   "KungFu_MaBu":         [(0, S), (.25, MABU_ZU), (.4, MABU), (1.4, MABU), (1.75, S)],
   "KungFu_PuBu":         [(0, S), (.4, PUBU), (1.5, PUBU), (1.9, S)],
   "KungFu_XuBu":         [(0, S), (.35, XUBU), (1.4, XUBU), (1.75, S)],

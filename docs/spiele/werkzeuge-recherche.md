@@ -190,6 +190,14 @@ Kurzer Blick in das, was schon da ist: `probe3d.html` lädt three.js r170 lokal 
 
 ## 6 Ton: Kenney, Freesound-CC0 und Sonniss; BBC bleibt draußen
 
+> **Entschieden von Mr. Alex am 18.11.2026 (Berichtigungen aus `geraeusche-recherche.md`, gehen diesem Abschnitt vor):**
+> 1. **Ins Repo nur:** selbst Gemachtes, CC0 und CC BY mit Nennung. **Nicht ins Repo:** Pixabay, Mixkit, Zapsplat, BBC, London Sound Survey. **Sonniss nur stark bearbeitet.** In jedem Tonordner liegt eine `QUELLEN.md` (Datei, Quelle, Lizenz, Bearbeitung).
+> 2. **iPad-Stummschalter wird beachtet** (`navigator.audioSession.type = 'ambient'`), damit „Ton aus“ im Unterricht am Gerät wirkt. Dafür beim Spielstart ein Hinweis „Ton an? 🔊“ mit Probeton zum Antippen, damit kein Kind aus Versehen stumm spielt.
+> 3. **Zeitpunkt:** Klang-Modul (Web Audio, vier Lautstärke-Schienen, Umgebung leiser unter der Stimme) und Schritte per Zeittabelle gehören schon in Block A/B; Raumklang und Feinschliff bleiben C und E.
+> 4. **Einzelne Dateien oder Sammeldateien je Ort** statt einer großen Sammeldatei (audiosprite); auf die MP3-Lücke bei Schleifen achten.
+> 5. **Vorläufig, am iPad prüfen:** Grundgeräusche −26 bis −30 LUFS (mindestens 6 LU unter der Stimme) statt „2 LU“; −16 LUFS nur für Stimmen und längere Geräusche, kurze Töne nach Spitze angleichen.
+
+
 | Fund | Bedingung | Stand | Quelle |
 |---|---|---|---|
 | **BBC Sound Effects (RemArc)** | Urheberrecht bleibt bei der BBC; nur „personal, educational or research“, nicht kommerziell; ob eine öffentliche Web-App darunter fällt und ob Bearbeitungen erlaubt sind, ist ungeklärt. **Meiden** | bestätigt (Nebenquellen) | [Podcaster News](https://podcasternews.com/2018/04/19/bbc-released-16000-sound-effects), [PRS for Music](https://www.prsformusic.com/m-magazine/news/bbc-releases-sample-library-with-thousands-of-sound-effects) |

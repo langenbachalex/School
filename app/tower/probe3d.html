@@ -118,7 +118,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
 import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt die komprimierten Formen der Raumdatei (werkzeuge/raum_verkleinern.js)
 import { ladeFiguren, mundAusZeiten, einsaetzeAus, MUNDFORMEN_MENSCH } from "./probe3d_figuren.js";
-import { ladeBauProbe, GESTEN, rundeOrt } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
+import { ladeBauProbe, GESTEN, rundeOrt, SERGEANT } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
@@ -235,6 +235,9 @@ try {
   let bauRunde = { x0: -3.2, x1: 1.3, z0: bauStart.z, z1: bauStart.z + 3.4, r: 1.2 }; bauRunde.start = bauStart.x - (bauRunde.x0 + bauRunde.r);
   for (let s = 0, lang = rundeOrt(bauRunde, 0).lang; bauRunde && s < lang; s += 0.2) { const p = rundeOrt(bauRunde, s); if (!frei(...zuZelle(p.x, p.z))) bauRunde = null; }
   const bauProbe = await ladeBauProbe(lader, szene, { ...bauStart, bahn: Math.max(1.2, bauBahn * gk.zelle - 0.3), runde: bauRunde });
+  // Teil C, Schritt 1 (18.11.): Sergeant Bearskin steht frei in der Raummitte (im Rundkurs von Mr. Flex); Mr. Alex hat den Kopf mit Bart gewählt
+  const sergeants = [];
+  for (const i of [0]) { const s = await ladeBauProbe(lader, szene, { x: bauStart.x - 1.0 + i, z: bauStart.z + 1.6 }, { kopf: SERGEANT.kopf }, SERGEANT); s.kopf("grimmig"); sergeants.push(s); }
   $("bau").querySelector(".kopf").addEventListener("click", (e) => {
     const zu = $("bau").classList.toggle("zu"); e.currentTarget.setAttribute("aria-expanded", String(!zu)); document.body.classList.toggle("bau-offen", !zu);
   });
@@ -501,7 +504,7 @@ try {
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1); zuletzt = t;
     bewegeFigur(dt, t);
-    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); }
+    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); for (const s of sergeants) s.bewege(dt); }
     setzeKamera(dt);
     renderer.render(szene, kamera);
     bilder++;
@@ -518,6 +521,7 @@ try {
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
   window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
+    sergeant: () => sergeants.map((s) => s.zustand()),
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3
     halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter
     takt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); figuren.bewege(ms / 1000, performance.now() + i * ms); } },   // Testprogramm: n Bilder im Abstand ms rechnen (wie 60 Bilder pro Sekunde)

@@ -29,8 +29,9 @@ def haut_vorn(x, z, vor=0.0):
     return -RY * max(0.02, 1 - (x / RX) ** 2 - ((z - CZ) / RZ) ** 2) ** 0.5 - vor
 
 
-def farben():
-    f = g.farbe
+def farben(vor="flex", **neu):
+    """vor = Vorsilbe der Materialnamen (je Kopf eigene Farben), neu = Name -> (r, g, b) ersetzt die Farbe von Mr. Flex."""
+    f = lambda name, rgb, *rest: g.farbe(name.replace("flex_", vor + "_"), neu.get(name[5:], rgb) if name.startswith("flex_") else rgb, *rest)
     return dict(
         haut=f("flex_haut", (0.86, 0.62, 0.50), 0.75), wange=f("flex_wange", (0.86, 0.615, 0.50), 0.75),
         schatten=f("flex_bartschatten", (0.79, 0.60, 0.52), 0.85), blond=f("flex_blond", (0.88, 0.68, 0.30), 0.7),
@@ -43,8 +44,10 @@ def farben():
         gestell=f("brille_gestell", (0.03, 0.03, 0.035), 0.4))
 
 
-def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
-    f = farben()
+def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, brille=True, bart=(0.060, 0.0095, -0.016), braue=0.0055):
+    """f = eigene Farben (farben(...)) · haare, brille = False laesst sie weg · bart = (Laenge, Dicke, Schwung der Enden: plus = nach oben) · braue = Dicke.
+    Andere Koepfe (tower_sergeant.py) setzen vorher die Masse des Moduls (RX, KR ...) und haengen ihre eigenen Teile an das Gelenk, das zurueckkommt."""
+    f = f or farben()
     k = g.gelenk(name, eltern, ort)
     g.kugel("kopf_rund", k, (0, 0, CZ), (RX, RY, RZ), f["haut"], fein=32)
     # Bartschatten um Mund und Kiefer, an der Lippennaht geteilt: der obere Teil gehoert zum Kopf, der untere ist der Unterkiefer (siehe Mund)
@@ -71,7 +74,7 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
         g.unten(g.kugel("unterlid_" + seite, k, (s * AX, ay, AZ), (0.031, 0.0180, 0.0200), f["haut"]))
         # Braue: Bogen ueber dem Auge
         bz = [(s * (0.022 + 0.062 * t), 0.203 + 0.010 * math.sin(math.pi * t * 0.8)) for t in [i / 8 for i in range(9)]]
-        g.bogen("braue_" + seite, k, [(x, haut_vorn(x, z, 0.004), z) for x, z in bz], 0.0055, f["braue"], ursprung=(s * 0.052, haut_vorn(s * 0.052, 0.207, 0.004), 0.207))
+        g.bogen("braue_" + seite, k, [(x, haut_vorn(x, z, 0.004), z) for x, z in bz], braue, f["braue"], ursprung=(s * 0.052, haut_vorn(s * 0.052, 0.207, 0.004), 0.207))
         # Lachfalten aussen am Auge (der Browser zeigt sie beim Grinsen)
         ex = s * 0.083
         falten = [[(ex, haut_vorn(ex, AZ, 0.002), AZ), (ex + s * 0.018 * math.cos(w), haut_vorn(ex + s * 0.018 * math.cos(w), AZ + 0.018 * math.sin(w), 0.002), AZ + 0.018 * math.sin(w))] for w in (R(38), R(4), R(-30))]
@@ -124,17 +127,17 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
     zahn = dict(dz=-0.0034, weit=0.86, vor=-0.0015)       # obere Zahnreihe: dicht unter der Oberlippe, etwas dahinter, biegt sich mit ihr
     g.bogen_mit_formen("zahnreihe", zaehne, rel(lippenlinie(**zahn)), formen(rel, **zahn), 0.0037, f["zahn"], (0, 0, 0))   # schmal: darunter bleibt bei halb offenem Mund ein dunkler Spalt
     # blonder Schnurrbart: kraeftig, zwei Schwuenge von der Mitte nach aussen, der Mund darunter bleibt frei
-    bart = g.gelenk("schnurrbart", oberlippe, (0, 0, 0))
+    bartgelenk = g.gelenk("schnurrbart", oberlippe, (0, 0, 0))
     for s in (-1, 1):
         straenge = []
         for versatz, dick in ((0.0078, 1.0), (0.0, 1.0), (-0.0078, 1.0), (0.0, 1.6)):
             linie = []
             for i in range(13):
                 t = i / 12
-                x, zz = s * (0.002 + 0.060 * t), 0.086 - 0.003 * t - 0.016 * t ** 3 + versatz * (1 - 0.75 * t)
+                x, zz = s * (0.002 + bart[0] * t), 0.086 - 0.003 * t + bart[2] * t ** 3 + versatz * (1 - 0.75 * t)
                 linie.append((x, vorn(x, zz, 0.008 + 0.004 * dick * (1 - t)) + 0.13, zz - LZ))
             straenge.append(linie)
-        g.bogen("bart", bart, straenge, 0.0095, f["bart"])
+        g.bogen("bart", bartgelenk, straenge, bart[1], f["bart"])
     g.kugel("mund", k, (0, -0.1095, LZ - 0.012), (0.045, 0.0257, 0.028), f["rachen"])                 # Mundhoehle hinter den Lippen: sichtbar, sobald der Kiefer aufklappt
     GJ = (0, 0.030, LZ + 0.012)                                                                       # Kiefergelenk: hinten bei den Ohren
     kiefer = g.gelenk("kiefer", k, GJ)
@@ -180,18 +183,20 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
         for ziel, q in zip(form.data, netz_aus(hautflaeche(**zusatz))[0]):
             ziel.co = q
     # ---- Haare: blond, schulterlang, unter dem Hut ----
-    g.kugel("haar_hinten", k, (0, 0.036, 0.125), (0.139, 0.136, 0.160), f["blond"], fein=32)   # endet unter dem Hut, damit der Hinterkopf nicht durch die Kappe ragt
-    g.kugel("haar_nacken", k, (0, 0.085, 0.010), (0.125, 0.062, 0.150), f["blond"])
-    for s in (-1, 1):
-        g.kugel("haar_seite", k, (s * 0.138, 0.014, 0.085), (0.034, 0.052, 0.170), f["blond"], (0, R(s * -5), 0))
+    if haare:
+        g.kugel("haar_hinten", k, (0, 0.036, 0.125), (0.139, 0.136, 0.160), f["blond"], fein=32)   # endet unter dem Hut, damit der Hinterkopf nicht durch die Kappe ragt
+        g.kugel("haar_nacken", k, (0, 0.085, 0.010), (0.125, 0.062, 0.150), f["blond"])
+        for s in (-1, 1):
+            g.kugel("haar_seite", k, (s * 0.138, 0.014, 0.085), (0.034, 0.052, 0.170), f["blond"], (0, R(s * -5), 0))
     # ---- Sonnenbrille: eigenes Gelenk an der Nasenwurzel, der Browser schiebt sie herunter oder blendet sie aus ----
-    b = g.gelenk("sonnenbrille", k, (0, -0.150, AZ))
-    for s, seite in ((-1, "r"), (1, "l")):
-        g.kugel("glas_" + seite, b, (s * AX, -0.008, -0.002), (0.034, 0.0045, 0.026), f["glas"])
-        g.stab("buegel", b, (s * 0.088, 0.070, 0.004), 0.003, 0.150, f["gestell"], (R(90), 0, R(s * -8)))
-    g.stab("steg", b, (0, -0.030, 0.006), 0.0035, 0.046, f["gestell"], (0, R(90), 0))
-    for s in (-1, 1):
-        g.stab("steg_seite", b, (s * 0.021, -0.020, 0.006), 0.003, 0.024, f["gestell"], (R(90), 0, R(s * 30)))
+    if brille:
+        b =g.gelenk("sonnenbrille", k, (0, -0.150, AZ))
+        for s, seite in ((-1, "r"), (1, "l")):
+            g.kugel("glas_" + seite, b, (s * AX, -0.008, -0.002), (0.034, 0.0045, 0.026), f["glas"])
+            g.stab("buegel", b, (s * 0.088, 0.070, 0.004), 0.003, 0.150, f["gestell"], (R(90), 0, R(s * -8)))
+        g.stab("steg", b, (0, -0.030, 0.006), 0.0035, 0.046, f["gestell"], (0, R(90), 0))
+        for s in (-1, 1):
+            g.stab("steg_seite", b, (s * 0.021, -0.020, 0.006), 0.003, 0.024, f["gestell"], (R(90), 0, R(s * 30)))
     return k
 
 

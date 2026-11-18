@@ -30,6 +30,7 @@ const args = process.argv.slice(2);
 const fArg = (args.find((a) => a.startsWith("--format=")) || "").slice(9);
 const formate = fArg ? FORMATE.filter((f) => fArg.toLowerCase().split(",").includes(f.id)) : FORMATE;
 const OHNE_UPDATE = args.includes("--ohne-update");
+const NUR_STORY = args.includes("--nur-story");   // nur das Story-Spiel prüfen (Tower-Test und 3D-Probe), ohne die Lern-App – für Bauten, die nur die Figuren betreffen
 const NUR_3D_AUS = args.includes("--ohne-3d");   // 3D-Probe auslassen (z. B. wenn tower/raum3d/ noch nicht gerechnet ist)
 const gewaehlt = args.filter((a) => !a.startsWith("--")).map((a) => a.toUpperCase());
 
@@ -254,6 +255,15 @@ async function probe3dTest(browser, basis, app, name, fm) {
     const bau = () => pg.evaluate(() => window.__probe3d.bau()), bauTakt = async (n) => { await pg.evaluate((k) => window.__probe3d.bauTakt(k, 16.7), n); return bau(); };
     const regler = (name, wert) => pg.evaluate(([n, w]) => { const r = document.querySelector('#bau input[data-mass="' + n + '"]'); r.value = String(w); r.dispatchEvent(new Event("input", { bubbles: true })); }, [name, wert]);
     let b = await bau();
+    // Teil C, Schritt 1 (18.11.): Sergeant Bearskin steht im Raum (Kopf mit Bart, Wahl Mr. Alex) – gestreckter Knight, eigener Kopf mit Gesicht, grimmig, Füße am Boden
+    const sgt = await pg.evaluate(() => window.__probe3d.sergeant());
+    if (sgt.length !== 1) fehl.push(`${titel}: es stehen ${sgt.length} Sergeants im Raum statt einem`);
+    for (const [i, z] of sgt.entries()) {
+      if (!z.kopf || !["braue_l", "lid_l", "kiefer", "oberlippe"].every((n) => z.kopf.teile.includes(n))) fehl.push(`${titel}: Sergeant ${i + 1} hat kein bewegliches Gesicht`);
+      else if (z.kopf.ausdruck !== "grimmig") fehl.push(`${titel}: Sergeant ${i + 1} schaut „${z.kopf.ausdruck}“ statt grimmig`);
+      if (Math.abs(z.bau.bein - 3.3) > 0.01 || Math.abs(z.bau.rumpf - 1.3) > 0.01 || !(z.hals > 1.4)) fehl.push(`${titel}: Sergeant ${i + 1} ist keine lange Bohnenstange (Bein ${z.bau.bein}, Rumpf ${z.bau.rumpf}, Hals ${z.hals} m)`);
+      if (Math.abs(z.tief) > 0.01) fehl.push(`${titel}: Sergeant ${i + 1} steht nicht auf dem Boden (${z.tief} m)`);
+    }
     if (!(b.hals > 1.1)) fehl.push(`${titel}: Probe-Figur ist nicht gestreckt (Hals in ${b.hals} m Höhe, ungestreckt 0,785)`);
     if (b.stiefelOben > b.knie - 0.05) fehl.push(`${titel}: die Stiefel der Probe-Figur enden nicht unter dem Knie (Stiefelkante ${b.stiefelOben} m, Knie ${b.knie} m)`);
     const knoepfe = await pg.locator("#bau button[data-bau]").count();
@@ -759,6 +769,7 @@ function speicherTest(app) {
       for (const fm of formate) {
         const b = fm.webkit && safari ? safari : browser, name = fm.webkit && !safari ? fm.name + " (Chromium)" : fm.name;
         const w = (titel, knoepfe, opt = {}) => weg(b, basis, app, `${name} · ${titel}`, knoepfe, Object.assign({ format: fm }, opt));
+        if (NUR_STORY) { if (app.kurz === "EN6" && fm.id !== "handy") { f.push(...await towerTest(b, basis, app, name, fm)); f.push(...await probe3dTest(b, basis, app, name, fm)); } continue; }
         f.push(...await w("Start", []));
         f.push(...await w("Übung", app.uebung));
         f.push(...await w("Shop", app.shop));

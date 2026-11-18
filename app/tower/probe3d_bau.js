@@ -445,7 +445,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const welt = m.getWorldQuaternion(Q()).multiply(dreh).multiply(handRuhe[s]);
     W.quaternion.copy(w0.slerp(W.parent.getWorldQuaternion(Q()).invert().multiply(welt), gewicht)); W.updateMatrixWorld(true);
   };
-  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", mund: null, rede: null, redeGesten: 0, brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
+  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", mund: null, rede: null, redeGesten: 0, redet: 0, akzent: 0, uhr: 0, nick: 0, brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
   const ziele = () => {
     const regel = ZIELE[g.modus]; if (!regel || !g.laeuft) return;
     const dauer = g.laeuft.getClip().duration, t = Math.min(g.laeuft.time, dauer), qm = m.getWorldQuaternion(Q());
@@ -502,7 +502,20 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       if (g.rede.offen && g.modus === "stehen") { g.rede.offen = false; starte(REDE_GESTEN[g.redeGesten++ % REDE_GESTEN.length]); }
     }
     const zeigt = g.mund && g.ausdruck === "neutral" ? "reden" : g.ausdruck;   // Grundausdruck beim Reden: echtes Lächeln
-    gesicht.bewege(dt, AUSDRUECKE[zeigt] || NEUTRAL, g.mund, 0, 1);
+    /* Kopf und Gesicht reden mit (Mr. Alex 18.11.): Der Kopf nickt und neigt sich leicht wie bei Gary, betonte (laute, weit offene) Silben heben
+       die Brauen und geben dem Kopf einen kleinen Nicker, die Wangen gehen mit dem Mund mit. */
+    g.uhr += dt; g.redet += ((g.mund ? 1 : 0) - g.redet) * Math.min(1, dt * 6);
+    const betont = g.mund ? Math.max(0, Math.min(1, ((g.mund[4] == null ? 0.5 : g.mund[4]) * g.mund[0] - 0.3) / 0.35)) : 0;
+    g.akzent += (betont - g.akzent) * Math.min(1, dt * (betont > g.akzent ? 16 : 5));
+    const basis = AUSDRUECKE[zeigt] || NEUTRAL, ziel = g.redet > 0.01 ? { ...basis, braueHoch: basis.braueHoch + 0.45 * g.akzent, wange: Math.min(1, basis.wange + 0.25 * g.akzent) } : basis;
+    gesicht.bewege(dt, ziel, g.mund, 0, 1);
+    // Der Mixer setzt den Kopfknochen nur neu, wenn sich die Bewegung ändert – darum die Zusatzdrehung vom letzten Bild erst zurücknehmen
+    if (g.kopfErgebnis && head.quaternion.equals(g.kopfErgebnis)) head.quaternion.copy(g.kopfBasis);
+    g.kopfBasis = head.quaternion.clone();
+    const r = g.redet, t = g.uhr * 1000;
+    head.rotateX(r * (0.06 * Math.sin(t / 190) + 0.035 * Math.sin(t / 433)) + 0.07 * g.akzent * r);
+    head.rotateY(r * 0.09 * Math.sin(t / 610)); head.rotateZ(r * 0.045 * Math.sin(t / 370));
+    g.kopfErgebnis = head.quaternion.clone(); g.nick = g.kopfBasis.angleTo(g.kopfErgebnis);
     g.brille += (g.brilleZiel - g.brille) * Math.min(1, dt * 9);
     if (brille) {
       const unten = weich(1 - g.brille, 0, 0.5), weg = weich(1 - g.brille, 0.5, 1);
@@ -740,7 +753,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       faustR: K("wristr").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)), faustL: K("wristl").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)),
       flaecheR: imKoerper(flaeche("r")), flaecheL: imKoerper(flaeche("l")), handAbstand: +(flaeche("r").distanceTo(flaeche("l")) / mass).toFixed(3), muskel: muskel.r.visible ? +muskel.r.scale.x.toFixed(3) : 0,
       knieDick: Math.min(knieDick("l"), knieDick("r")), armDick: Math.min(armDick("l"), armDick("r")), hochR: armHoch("r"), hochL: armHoch("l"), huefte: +wo(hips).y.toFixed(4), hut: hutNah(), knieGrad: [knieWinkel("l"), knieWinkel("r")], fussL: fussOrt("l"), fussR: fussOrt("r"), ferseL: fersenOrt("l"), ferseR: fersenOrt("r"), kleidung: kleidungPunkte, hutMass: hutMass(),
-      kopf: gesicht ? { teile: gesicht.teile, ausdruck: g.ausdruck, winkel: +gesicht.wert.winkel.toFixed(2), unterlid: +gesicht.wert.unterlid.toFixed(2), braue: +gesicht.wert.braueHoch.toFixed(2), mund: +(gesicht.offen || 0).toFixed(2), redeGesten: g.redeGesten, brille: +g.brille.toFixed(2), brilleDa: !!brille, funkeln: +g.blinkt.toFixed(2), durchBrille: g.brille > 0.75 } : null, zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
+      kopf: gesicht ? { teile: gesicht.teile, ausdruck: g.ausdruck, winkel: +gesicht.wert.winkel.toFixed(2), unterlid: +gesicht.wert.unterlid.toFixed(2), braue: +gesicht.wert.braueHoch.toFixed(2), mund: +(gesicht.offen || 0).toFixed(2), rund: +gesicht.lippen.rund.toFixed(2), breit: +gesicht.lippen.breit.toFixed(2), nick: +((g.nick * 180) / Math.PI).toFixed(1), redeGesten: g.redeGesten, brille: +g.brille.toFixed(2), brilleDa: !!brille, funkeln: +g.blinkt.toFixed(2), durchBrille: g.brille > 0.75 } : null, zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
       ort: [+anker.position.x.toFixed(2), +anker.position.z.toFixed(2)], runde: !!(g.runde && !g.gerade), richtung: +g.dreh.toFixed(2) }),
   };
 }

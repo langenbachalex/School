@@ -396,11 +396,12 @@ try {
     if (!laeuft || (laeuft.wer !== "gary" && laeuft.wer !== "flex")) return;
     const flex = laeuft.wer === "flex", setze = (m) => (flex ? bauProbe.mund(m) : figuren.mund("gary", m));   // Mr. Flex (Probe-Figur) redet auf demselben Weg wie Gary
     const zeit = laeuft.zeit(), formen = !ohneFormen && (flex ? mundFlex : mundZeiten)[laeuft.id];
-    if (formen) return setze(mundAusZeiten(formen.zeiten, zeit));
+    if (formen && !flex) return setze(mundAusZeiten(formen.zeiten, zeit));
     let laut = 0;
     if (window.__towerTonTest) laut = 0.12 * Math.abs(Math.sin(zeit * 9));
     else if (klang && klang.mess) { klang.mess.getFloatTimeDomainData(pegelFeld); for (const v of pegelFeld) laut += v * v; laut = Math.sqrt(laut / pegelFeld.length); }
     pegel += (Math.min(1, Math.max(0, (laut - 0.012) * 7)) - pegel) * Math.min(1, dt * 22);
+    if (formen) { const m = mundAusZeiten(formen.zeiten, zeit + 0.07); return setze([m[0], m[1], m[2] || 0, m[3] || 0, pegel]); }   // Mr. Flex: der Mund ist einen Hauch vor dem Ton, die Lautstärke mischt mit
     setze([pegel, 1]);
   }
   let zug = null, spreiz = 0;

@@ -86,7 +86,11 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
         q = max(0.0, 1 - (x / KR[0]) ** 2 - ((zz - KM[2]) / KR[2]) ** 2) ** 0.5
         return min(haut_vorn(x, zz), KM[1] - KR[1] * q) - vor
 
-    def lippenlinie(hoch_l=0.0, hoch_r=0.0, dz=0.0, auf=0.0, weit=1.0, vor=0.004, tief=None):
+    def lippenlinie(hoch_l=0.0, hoch_r=0.0, dz=0.0, auf=0.0, weit=1.0, vor=0.004, tief=None, mweit=1.0, ddz=0.0, dvor=0.0):
+        """mweit, ddz, dvor = Lippenform fuer einen Laut: schmaler oder breiter, hoeher oder tiefer, weiter nach vorn (siehe LAUTE)."""
+        weit, dz, vor = weit * mweit, dz + ddz, vor + dvor
+        if tief is not None:
+            tief -= dvor
         pkt = []
         for i in range(-8, 9):
             t = i / 8
@@ -103,8 +107,15 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
                 pkt.append((x - n[0] / l * tief, y - n[1] / l * tief, zz - n[2] / l * tief))
         return pkt
 
-    def formen(rel, **fest):
-        return {"hoch_l": rel(lippenlinie(1, 0, **fest)), "hoch_r": rel(lippenlinie(0, 1, **fest)), "tief_l": rel(lippenlinie(-1, 0, **fest)), "tief_r": rel(lippenlinie(0, -1, **fest))}
+    # Lippenformen je Laut (Lippensynchron, Mr. Alex 18.11.): "rund" = gespitzt und nach vorn (o, u, w) · "breit" = breit gezogen (i, e)
+    # · "f" = Unterlippe hoch unter die oberen Zaehne (f, v) – nur Unterlippe und Haut darunter
+    LAUTE = {"rund": dict(mweit=0.56, dvor=0.0065), "breit": dict(mweit=1.17, dvor=-0.001)}
+    LAUTE_UNTEN = {**LAUTE, "f": dict(ddz=0.0050, dvor=-0.0035)}
+    LAUTE_HAUT = {**LAUTE_UNTEN, "rund": dict(dvor=0.0040)}   # die Haut bleibt breit: neben gespitzten Lippen darf die Mundhoehle nicht hervorschauen
+
+    def formen(rel, laute=LAUTE, **fest):
+        return {"hoch_l": rel(lippenlinie(1, 0, **fest)), "hoch_r": rel(lippenlinie(0, 1, **fest)), "tief_l": rel(lippenlinie(-1, 0, **fest)), "tief_r": rel(lippenlinie(0, -1, **fest)),
+                **{n: rel(lippenlinie(**fest, **z)) for n, z in laute.items()}}
 
     oberlippe = g.gelenk("oberlippe", k, (0, -0.13, LZ))
     rel = lambda pkt: [(x, y + 0.13, zz - LZ) for x, y, zz in pkt]
@@ -135,7 +146,7 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
     g.kugel("mundboden", kiefer, (0, -0.075 - GJ[1], LZ - 0.0005 - GJ[2]), (0.042, 0.050, 0.003), f["rachen"])
     g.kugel("zunge", kiefer, (0, -0.098 - GJ[1], LZ + 0.001 - GJ[2]), (0.028, 0.030, 0.006), f["zunge"])
     unten = dict(dz=-0.0036)
-    mit_auf = lambda fest: {**{n: kr(q) for n, q in formen(lambda q: q, **fest).items()}, "auf": kr(lippenlinie(auf=1, **fest))}
+    mit_auf = lambda fest: {**{n: kr(q) for n, q in formen(lambda q: q, LAUTE_UNTEN, **fest).items()}, "auf": kr(lippenlinie(auf=1, **fest))}
     g.bogen_mit_formen("unterlippe", kiefer, kr(lippenlinie(**unten)), mit_auf(unten), 0.0046, f["lippe_unten"], (0, 0, 0))
     # Haut unter der Unterlippe: eine glatte Flaeche, die sich mit der Unterlippe biegt. Beim Oeffnen schliesst sie die Luecke zwischen den hochgezogenen
     # Mundwinkeln und dem Kieferrand – sonst schaut dort die Mundhoehle neben den Lippen hervor. Keine Straenge: die sahen aus wie weitere Lippen (Mr. Alex 18.11.).
@@ -163,7 +174,7 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf"):
     bpy.context.scene.collection.objects.link(lh)
     lh.parent = kiefer
     lh.shape_key_add(name="Basis")
-    for name, zusatz in (("hoch_l", dict(hoch_l=1)), ("hoch_r", dict(hoch_r=1)), ("tief_l", dict(hoch_l=-1)), ("tief_r", dict(hoch_r=-1)), ("auf", dict(auf=1))):
+    for name, zusatz in (("hoch_l", dict(hoch_l=1)), ("hoch_r", dict(hoch_r=1)), ("tief_l", dict(hoch_l=-1)), ("tief_r", dict(hoch_r=-1)), ("auf", dict(auf=1)), *LAUTE_HAUT.items()):
         form = lh.shape_key_add(name=name)
         form.value = 0
         for ziel, q in zip(form.data, netz_aus(hautflaeche(**zusatz))[0]):

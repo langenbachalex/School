@@ -409,14 +409,17 @@ async function probe3dTest(browser, basis, app, name, fm) {
       const tonVorher = await pg.evaluate(() => { const alt = window.__towerTonTest; window.__towerTonTest = 4000; return alt; });
       const gestenVor = (await bauTakt(1)).kopf.redeGesten;   // vor dem Klick lesen: die erste Geste beginnt gleich mit dem ersten Wort
       await pg.click('#bau button[data-kopfrede="gestik"]');
-      let mundMax = 0, gesten = 0;
-      for (let k = 0; k < 140 && !(gesten >= 1 && mundMax >= 0.2); k++) { const x = (await bauTakt(2)).kopf; mundMax = Math.max(mundMax, x.mund); gesten = x.redeGesten - gestenVor; await pg.waitForTimeout(25); }
+      let mundMax = 0, gesten = 0, lippeMax = 0, nickMax = 0;
+      for (let k = 0; k < 140 && !(gesten >= 1 && mundMax >= 0.2 && lippeMax > 0.3 && nickMax > 1); k++) { const x = (await bauTakt(2)).kopf; mundMax = Math.max(mundMax, x.mund); lippeMax = Math.max(lippeMax, x.rund, x.breit); nickMax = Math.max(nickMax, x.nick); gesten = x.redeGesten - gestenVor; await pg.waitForTimeout(25); }
+      if (lippeMax <= 0.3) fehl.push(`${titel}: beim Reden formen die Lippen von Mr. Flex keine Laute (weder gespitzt noch breit, größter Wert ${lippeMax})`);
+      if (nickMax <= 1) fehl.push(`${titel}: beim Reden bewegt Mr. Flex den Kopf nicht (${nickMax}°)`);
       if (mundMax < 0.2) fehl.push(`${titel}: beim Reden bewegt Mr. Flex den Mund nicht (größte Öffnung ${mundMax})`);
       if (gesten < 1) fehl.push(`${titel}: bei „Reden mit Gestik“ macht Mr. Flex keine Geste`);
       await pg.waitForFunction(() => !document.getElementById("buehne").dataset.ton, null, { timeout: 12000 }).catch(() => {});
       await pg.evaluate((alt) => { window.__towerTonTest = alt; }, tonVorher);
       await pg.click('#bau button[data-bau="stehen"]'); await bauTakt(40);
-      if ((await bauTakt(1)).kopf.mund > 0.05) fehl.push(`${titel}: nach dem Reden bleibt der Mund von Mr. Flex offen`);
+      const ruhe = (await bauTakt(1)).kopf;
+      if (ruhe.mund > 0.05 || ruhe.nick > 0.5) fehl.push(`${titel}: nach dem Reden bleibt der Mund von Mr. Flex offen oder der Kopf nickt weiter (Mund ${ruhe.mund}, Kopf ${ruhe.nick}°)`);
     }
     const kopfDatei = fs.statSync(path.join(__dirname, "..", "app", "tower", "figuren", "flex_teile.glb")).size;
     if (kopfDatei > 1e6) fehl.push(`${titel}: die Kopf-Datei von Mr. Flex ist größer als 1 MB (${Math.round(kopfDatei / 1000)} KB)`);

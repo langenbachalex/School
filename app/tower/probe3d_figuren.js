@@ -37,7 +37,8 @@ export const AUSDRUECKE = {
   geheimnisvoll: { ...NEUTRAL, braueHoch: -0.7, braueDreh: 0.14, lid: 0.3, winkel: 0.12, winkelSchief: 0.5, kamera: true },
 };
 /* Mundformen von Rhubarb Lip Sync (A–F Grundformen, G, H, X Zusatz): [offen, breit] */
-export const MUNDFORMEN = { X: [0, 1], A: [0.03, 0.9], B: [0.28, 1.05], C: [0.6, 1], D: [1, 1.1], E: [0.65, 0.72], F: [0.35, 0.5], G: [0.16, 0.95], H: [0.5, 0.8] };
+/* Dritte und vierte Zahl nur für Menschenmünder (Mr. Flex, 18.11.): G = Unterlippe unter den oberen Zähnen (f, v) · H = Zungenspitze oben (l). Gary liest nur die ersten zwei. */
+export const MUNDFORMEN = { X: [0, 1], A: [0.03, 0.9], B: [0.28, 1.05], C: [0.6, 1], D: [1, 1.1], E: [0.65, 0.72], F: [0.35, 0.5], G: [0.16, 0.95, 1, 0], H: [0.5, 0.8, 0, 1] };
 
 /* hals = Höhe des Halsansatzes über dem Boden (darauf wird der Körper verkleinert) · weg = Teile des Körpers, die nicht gezeigt werden
    teile = aufgesteckte Stücke [Name in der Teile-Datei, Knochen, Größe, Versatz] · hand = Stück für den Handplatz · gesten = Knopf → [Bewegung, Ausdruck] */
@@ -91,22 +92,33 @@ export function baueGesicht(kopf, kieferWinkel, opt = {}) {
   const M = opt.mass || 1;
   const teil = (n) => { const o = kopf.getObjectByName(n); return o ? { o, ort: o.position.clone(), q: o.quaternion.clone() } : null; };
   const t = Object.fromEntries(["braue_l", "braue_r", "lid_l", "lid_r", "unterlid_l", "unterlid_r", "wange_l", "wange_r", "ohr_l", "ohr_r", "pupille_l", "pupille_r", "iris_l", "iris_r", "falte_l", "falte_r",
-    "mund", "kiefer", "oberlippe", "mundlinie", "unterlippe", "zaehne", "zaehne_unten", "eckzahn_l", "eckzahn_r"].map((n) => [n, teil(n)]));
+    "mund", "kiefer", "zunge", "oberlippe", "mundlinie", "unterlippe", "zaehne", "zaehne_unten", "eckzahn_l", "eckzahn_r"].map((n) => [n, teil(n)]));
   const linie = t.mundlinie && t.mundlinie.o.morphTargetDictionary ? t.mundlinie.o : null;   // die Lippenlinie biegt sich (Formschlüssel hoch_l/r, tief_l/r)
   const biegsam = [linie, ...["zahnreihe", "unterlippe", "lippenhaut"].map((n) => kopf.getObjectByName(n)).filter((o) => o && o.morphTargetDictionary)].filter(Boolean);   // Zahnreihe und Unterlippe biegen sich mit der Lippenlinie (Mr. Flex)
   const form = (n, w) => { for (const o of biegsam) { const i = o.morphTargetDictionary[n]; if (i !== undefined) o.morphTargetInfluences[i] = Math.max(0, w); } };
   const jetzt = { ...NEUTRAL }, dreh = new THREE.Quaternion();
   let blinzeln = 2, zu = 0;
+  const lippen = { offen: 0, rund: 0, breit: 0, f: 0, l: 0 };   // Menschenmund: weich nachgeführte Lippenformen
   return {
-    wert: jetzt, teile: Object.keys(t).filter((n) => t[n]),
+    wert: jetzt, lippen, teile: Object.keys(t).filter((n) => t[n]),
     blinzle() { zu = 0.16; blinzeln = 1.5 + Math.random() * 3; },
-    bewege(dt, ziel, mund, blick, tempo) {              // mund = [offen, breit] aus der Lippenbewegung oder null · blick −1…1 (Pupillen nach rechts … links)
+    bewege(dt, ziel, mund, blick, tempo) {              // mund = [offen, breit, f, l, laut] aus der Lippenbewegung oder null · blick −1…1 (Pupillen nach rechts … links)
       for (const k in jetzt) jetzt[k] += (ziel[k] - jetzt[k]) * Math.min(1, dt * 10 * tempo);
       blinzeln -= dt;
       if (blinzeln < 0) this.blinzle();
       zu = Math.max(0, zu - dt);
       const lid = Math.max(jetzt.lid, zu > 0 ? Math.sin((zu / 0.16) * Math.PI) : 0);
-      const offen = mund ? Math.max(mund[0], jetzt.mund * 0.25) : jetzt.mund, breit = mund ? mund[1] : jetzt.breit;
+      let offen = mund ? Math.max(mund[0], jetzt.mund * 0.25) : jetzt.mund; const breit = mund ? mund[1] : jetzt.breit;
+      if (opt.flach) {
+        /* Menschenmund, lippensynchron (Mr. Alex 18.11.): Laute Silben öffnen weiter (laut 0…1). Der Kiefer geht schnell auf und langsamer zu,
+           die Lippen sind flinker als der Kiefer – beides läuft nicht starr im Gleichschritt. */
+        if (mund && mund[4] != null) offen *= 0.68 + 0.6 * mund[4];
+        const zu_ = (k, soll, rauf, runter) => { lippen[k] += (soll - lippen[k]) * Math.min(1, dt * (soll > lippen[k] ? rauf : runter)); };
+        zu_("offen", Math.min(1.15, offen), 24, 12);
+        zu_("rund", Math.min(1, Math.max(0, (1 - breit) / 0.36)), 30, 22); zu_("breit", Math.min(1, Math.max(0, (breit - 1) / 0.1)), 30, 22);
+        zu_("f", mund ? mund[2] || 0 : 0, 34, 24); zu_("l", mund ? mund[3] || 0 : 0, 34, 24);
+        offen = lippen.offen;
+      }
       this.offen = offen; this.lid = lid;
       for (const [seite, s] of [["l", 1], ["r", -1]]) {
         const b = t["braue_" + seite], l = t["lid_" + seite], u = t["unterlid_" + seite], p = t["pupille_" + seite], wa = t["wange_" + seite], oh = t["ohr_" + seite], ez = t["eckzahn_" + seite], ir = t["iris_" + seite], fa = t["falte_" + seite];
@@ -122,18 +134,19 @@ export function baueGesicht(kopf, kieferWinkel, opt = {}) {
         if (ez) { ez.o.visible = offen > 0.1 || jetzt.eckzahn > 0.1; ez.o.scale.y = 1 + 0.45 * jetzt.eckzahn; }
       }
       if (linie) {
-        const wl = jetzt.winkel + jetzt.winkelSchief, wr = jetzt.winkel - jetzt.winkelSchief * 0.5;
+        const spitz = opt.flach ? 1 - 0.85 * lippen.rund : 1;   // gespitzte Lippen (o, u, w) lächeln nicht
+        const wl = (jetzt.winkel + jetzt.winkelSchief) * spitz, wr = (jetzt.winkel - jetzt.winkelSchief * 0.5) * spitz;
         form("hoch_l", wl); form("tief_l", -wl); form("hoch_r", wr); form("tief_r", -wr);
       }
       if (t.kiefer) { t.kiefer.o.quaternion.copy(dreh.setFromAxisAngle(QUER, offen * kieferWinkel)).multiply(t.kiefer.q); if (!opt.flach) t.kiefer.o.scale.x = 0.7 + 0.3 * Math.min(1, breit); }
       if (opt.flach) {                                    // Menschenmund: der Kiefer ist die untere Gesichtshälfte und bleibt so breit; schmal oder breit werden die Lippen, und die Unterlippe zieht ihre Winkel beim Öffnen hinauf
-        const sx = 0.8 + 0.2 * Math.min(1.15, breit); form("auf", offen);
-        for (const o of biegsam) o.scale.x = sx;
+        form("auf", offen); form("rund", lippen.rund); form("breit", lippen.breit * (1 - lippen.rund)); form("f", lippen.f);
+        if (t.zunge) { t.zunge.o.position.y = t.zunge.ort.y + lippen.l * 0.011; t.zunge.o.position.z = t.zunge.ort.z + lippen.l * 0.008; }   // l: die Zungenspitze hebt sich hinter die oberen Zähne
       }
       if (t.oberlippe) t.oberlippe.o.position.y = t.oberlippe.ort.y + offen * 0.004 * M;
       if (t.mund) t.mund.o.visible = offen > 0.05;
       if (t.unterlippe) t.unterlippe.o.visible = !!opt.flach || offen > 0.08;
-      if (t.zaehne) t.zaehne.o.visible = offen > 0.1;
+      if (t.zaehne) t.zaehne.o.visible = offen > 0.1 && !(opt.flach && lippen.rund > 0.6);   // bei gespitzten Lippen sieht man die Zähne nicht
       if (t.zaehne_unten) t.zaehne_unten.o.visible = offen > 0.7;
     },
   };

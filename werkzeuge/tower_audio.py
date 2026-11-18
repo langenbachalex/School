@@ -28,6 +28,7 @@ STIMMEN = {  # Figur: (Voice-Id, Tempo)
     "gary": ("IKne3meq5aSn9XLyUdCD", None),       # Charlie
     "arthur": ("FUdtnSGebmUJVfZnamcB", None),     # Kiel
     "taube": ("YPbk892xlMnFoVOkxyGD", 1.15),      # Blondie
+    "tourist": ("btaSeNTVh1pGx4pjFzub", None),    # Jeremy B. (Mr. Alex 18.11., nach Stimmprobe gegen Hayden, Alpha Texan, Drew, Titan); Texas-Regie in der Tabelle
 }
 TAUBE_TEILE = (1.2, 1.05)                         # Fassung B (Runde 5): Höhepunkt schneller als der Rest
 MODELL, EINSTELLUNGEN = "eleven_v4", {"stability": 0.3, "similarity_boost": 0.75}

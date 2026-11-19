@@ -340,16 +340,23 @@ async function probe3dTest(browser, basis, app, name, fm) {
         // Breite Schulterpartie (Mr. Alex 19.11.): Die Arme schwingen beim Marsch außen am Körper vorbei, nicht hindurch (vorher bis 9 cm tief; am Ansatz der Schulter berühren sich Arm und Rumpf weiter).
         let durch = 9; for (let k = 0; k < 8; k++) { await pg.waitForTimeout(80); const a = await pg.evaluate(() => window.__probe3d.sergeantArme()); if (a) durch = Math.min(durch, a.l, a.r); }
         if (!(durch > -0.045)) fehl.push(`${titel}: beim Marsch gehen die Arme des Sergeants durch den Körper (${durch} m, Soll über −0,045)`);
-        if (!(sgt[0].schulterLinie.breit >= 0.24)) fehl.push(`${titel}: der Sergeant hat keine breite Schulterpartie (halbe Breite ${sgt[0].schulterLinie.breit}, Soll mindestens 0,24)`);
+        // Hals steckt tief im Rumpf (Mr. Alex 19.11.: beim Marsch war von hinten ein Spalt zu sehen; vorher 6 cm, jetzt 6 cm tiefer – bei beiden Köpfen); die Arme ragen nicht über die Schulterlinie
+        const hs = await pg.evaluate(() => ({ sgt: window.__probe3d.sergeantHals(), flex: window.__probe3d.bauHals() }));
+        if (!hs.sgt || !hs.flex || !(hs.sgt.tief >= 0.11) || !(hs.flex.tief >= 0.13)) fehl.push(`${titel}: der Hals steckt nicht tief genug im Rumpf (Sergeant ${hs.sgt && hs.sgt.tief} m, Soll 0,11; Mr. Flex ${hs.flex && hs.flex.tief} m, Soll 0,13)`);
+        if (hs.sgt && !(hs.sgt.armUeber <= -0.06)) fehl.push(`${titel}: die Arme des Sergeants ragen über die Schulterlinie (${hs.sgt.armUeber} m, Soll höchstens −0,06)`);
+        if (!(sgt[0].schulterLinie.breit >= 0.26)) fehl.push(`${titel}: der Sergeant hat keine breite Schulterpartie (halbe Breite ${sgt[0].schulterLinie.breit}, Soll mindestens 0,26)`);
         if (!anStelle) fehl.push(`${titel}: „Marsch auf der Stelle“ läuft beim Sergeant nicht in seinem Drill-Gang`);
         if (!(weg < 0.03)) fehl.push(`${titel}: beim Marsch auf der Stelle kommt der Sergeant ${weg.toFixed(2)} m vom Fleck`);
         if (!(knie > 0.8) || !(arm > 60)) fehl.push(`${titel}: beim Marsch auf der Stelle fehlt der Drill (höchstes Knie ${knie} der Hüfthöhe, Soll über 0,8; Arm bis ${arm}°, Soll über 60)`);
-        // Klarer Abschluss (Mr. Alex 19.11.): rechtes Knie hoch, der Fuß stampft auf, die Fellmütze wackelt, dann der Gruß – erst danach steht er.
-        let folge = [], halt = 180, wackelt = false, steht = false;
-        for (let k = 0; k < 200 && !steht; k++) { await pg.waitForTimeout(50); const z = await sg(); if (folge[folge.length - 1] !== z.modus) folge.push(z.modus); if (z.modus === "sgtHalt") halt = Math.min(halt, z.knieGrad[1]); wackelt = wackelt || z.wackel; steht = z.modus === "stehen"; }
+        // Klarer Abschluss (Mr. Alex 19.11.): Der letzte Schritt kommt aus der Marschbewegung heraus – das rechte Knie geht hoch, der Fuß stampft auf, die Fellmütze wackelt,
+        // dann der Gruß; kein Wechsel in eine andere Bewegung davor und kein Ruck in der Hüfte.
+        let folge = [], halt = 180, wackelt = false, steht = false, ruck = 0, vorH = null, letzter = false;
+        for (let k = 0; k < 240 && !steht; k++) { await pg.waitForTimeout(40); const z = await sg(); if (folge[folge.length - 1] !== z.modus) folge.push(z.modus); if (z.schluss === 2) { letzter = true; halt = Math.min(halt, z.knieGrad[1]); }
+          if (z.modus === "gehen" && vorH != null) ruck = Math.max(ruck, Math.abs(z.huefte - vorH)); vorH = z.modus === "gehen" ? z.huefte : null; wackelt = wackelt || z.wackel; steht = z.modus === "stehen"; }
         if (!steht) fehl.push(`${titel}: nach dem Marsch auf der Stelle bleibt der Sergeant nicht von selbst stehen`);
-        if (folge.join(">") !== "gehen>sgtHalt>salut>stehen") fehl.push(`${titel}: Abschluss des Marschs auf der Stelle ist nicht „Halt, Gruß, Stehen“ (${folge.join(" > ")})`);
-        else if (!(halt < 130) || !wackelt) fehl.push(`${titel}: beim Halt hebt der Sergeant das Knie nicht (kleinster Kniewinkel ${halt}°, Soll unter 130), oder die Fellmütze wackelt nicht`);
+        if (folge.join(">") !== "gehen>salut>stehen") fehl.push(`${titel}: Abschluss des Marschs auf der Stelle ist nicht „letzter Schritt aus dem Marsch, Gruß, Stehen“ (${folge.join(" > ")})`);
+        else if (!letzter || !(halt < 130) || !wackelt) fehl.push(`${titel}: beim letzten Schritt hebt der Sergeant das Knie nicht (kleinster Kniewinkel ${halt}°, Soll unter 130), oder die Fellmütze wackelt nicht`);
+        if (!(ruck < 0.03)) fehl.push(`${titel}: der Marsch auf der Stelle ruckelt vor dem Abschluss (Hüfte springt ${ruck.toFixed(3)} m zwischen zwei Bildern, Soll unter 0,03)`);
         // Stramm (Mr. Alex 19.11.): die Arme liegen außen am Körper, nicht darin (vorher 6 cm tief)
         await pg.waitForTimeout(700); const arme = await pg.evaluate(() => window.__probe3d.sergeantArme());
         if (!arme || !(arme.l > -0.035 && arme.r > -0.035)) fehl.push(`${titel}: im strammen Stand stecken die Arme des Sergeants im Körper (links ${arme && arme.l} m, rechts ${arme && arme.r} m, Soll über −0,035)`);

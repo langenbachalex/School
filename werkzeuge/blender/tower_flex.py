@@ -200,7 +200,7 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, ohr=None, haar
         nasenform(k, [(0.188, 0.002, 0.008), (0.174, 0.009, 0.012), (0.158, 0.017, 0.014), (0.142, 0.025, 0.015), (0.126, 0.034, 0.017), (0.112, 0.043, 0.022),
                       (0.100, 0.049, 0.027), (0.089, 0.045, 0.028), (0.080, 0.029, 0.023), (0.075, 0.008, 0.012)], f["haut"])
     # Hals (Mr. Alex 19.11.: Figuren ohne Kragen): hautfarbener Zylinder unter dem Kopf, steckt unten in der Schulterkappe des Koerpers (probe3d_bau.js, kragenWeg)
-    g.stab("hals", k, (0, 0.012, -0.060), 0.050, 0.150, f["haut"])
+    g.stab("hals", k, (0, 0.012, -0.090), 0.050, 0.210, f["haut"])   # 6 cm tiefer in den Rumpf (Mr. Alex 19.11.: beim Marsch war unter dem Hals ein Spalt zu sehen); oben unveraendert
     for s in (-1, 1):
         if ohr:                                           # ohr = (so weit steht es ab, Tiefe, Hoehe, Winkel): abstehende Ohren (Sergeant, Mr. Alex 19.11.)
             g.kugel("ohr", k, (s * (RX + ohr[0]), 0.004, 0.150), (0.009, ohr[1], ohr[2]), f["haut"], dreh=(0, 0, s * ohr[3]))

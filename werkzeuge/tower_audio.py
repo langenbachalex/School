@@ -30,6 +30,9 @@ STIMMEN = {  # Figur: (Voice-Id, Tempo)
     "taube": ("YPbk892xlMnFoVOkxyGD", 1.15),      # Blondie
     "tourist": ("btaSeNTVh1pGx4pjFzub", None),    # Jeremy B. (Mr. Alex 18.11., nach Stimmprobe gegen Hayden, Alpha Texan, Drew, Titan); Texas-Regie in der Tabelle
 }
+# Eigene Stabilität je Figur (19.11.): Beim Touristen (Regie „slow drawl, goofy“) sprach die Stimme bei 0,3 in 9 von 33 Aufnahmen
+# den Satzanfang doppelt („Yep. Yep.“, „You are, you are good“) – gefunden mit werkzeuge/tower_hoerpruefung.py. Mit 0,5 neu aufgenommen.
+STABIL = {"tourist": 0.5}
 TAUBE_TEILE = (1.2, 1.05)                         # Fassung B (Runde 5): Höhepunkt schneller als der Rest
 MODELL, EINSTELLUNGEN = "eleven_v4", {"stability": 0.3, "similarity_boost": 0.75}
 # Lautheit (Mr. Alex 17.11.): jede Datei auf ±0,5 LU genau, der Sergeant 2 LU lauter als die anderen
@@ -78,10 +81,10 @@ def zeichen(teile):
     return sum(len(t) for t in teile)
 
 
-def erzeugen(voice, text, ziel, tempo):
+def erzeugen(voice, text, ziel, tempo, stabil=None):
     """ein ElevenLabs-Aufruf; gibt die Kosten laut Antwortkopf zurück (None, wenn der Kopf fehlt)"""
     body = json.dumps({"text": text, "model_id": MODELL,
-                       "voice_settings": {**EINSTELLUNGEN, **({"speed": tempo} if tempo else {})}}).encode()
+                       "voice_settings": {**EINSTELLUNGEN, **({"stability": stabil} if stabil else {}), **({"speed": tempo} if tempo else {})}}).encode()
     req = urllib.request.Request(f"https://api.elevenlabs.io/v1/text-to-speech/{voice}?output_format=mp3_44100_128",
                                  data=body, headers={"Content-Type": "application/json"})
     for versuch in (1, 2):
@@ -113,7 +116,7 @@ def bauen(datei, figur, teile, rohnamen):
     for i, (text, t) in enumerate(zip(teile, tempi)):
         pfad = os.path.join(ROH, rohnamen[i])
         if not os.path.exists(pfad):
-            k = erzeugen(voice, text, pfad, t)
+            k = erzeugen(voice, text, pfad, t, STABIL.get(figur))
             ohne_kopf |= k is None
             kosten += k or 0
             with open(PROTOKOLL, "a", encoding="utf-8") as f:

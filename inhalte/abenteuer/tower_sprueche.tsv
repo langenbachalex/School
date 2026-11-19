@@ -232,19 +232,19 @@ tourist_01	tourist	hilf_frage	1	Howdy, partner! Where is the gate?	dreht den Sta
 tourist_02	tourist	hilf_frage	1	Hey, buddy. Where is the clock?	dreht den Stadtplan	Hey, Kumpel. Wo ist die Uhr?	[thick Texas accent, slow drawl, goofy, cheerful, curious] Hey, buddy. Where is the clock?
 tourist_03	tourist	hilf_frage	1	Excuse me. Where are the ravens?	dreht den Stadtplan	Entschuldigung. Wo sind die Raben?	[thick Texas accent, slow drawl, goofy, cheerful, curious] Excuse me. Where are the ravens?
 tourist_04	tourist	hilf_frage	1	Say, where is that cool barrel?	dreht den Stadtplan	Sag mal, wo ist dieses coole Fass?	[thick Texas accent, slow drawl, goofy, cheerful, curious] Say, where is that cool barrel?
-tourist_05	tourist	hilf_frage	1	Dude, where is the Guard Room?	dreht den Stadtplan	Kumpel, wo ist die Wachstube?	[thick Texas accent, slow drawl, goofy, cheerful, curious] Dude, where is the Guard Room?
+tourist_05	tourist	hilf_frage	1	Dude, where's the Guard Room?	dreht den Stadtplan	Kumpel, wo ist die Wachstube?	[thick Texas accent, slow drawl, goofy, cheerful, curious] Dude where's the Guard Room?
 tourist_06	tourist	hilf_frage	1	I reckon the exit is here. Right?	dreht den Stadtplan	Ich schätze, der Ausgang ist hier. Stimmt's?	[thick Texas accent, slow drawl, goofy, cheerful, curious] I reckon the exit is here. Right?
 tourist_07	tourist	hilf_frage	1	Quick question. Where am I?	dreht den Stadtplan	Kurze Frage. Wo bin ich?	[thick Texas accent, slow drawl, goofy, cheerful, curious] Quick question. Where am I?
 tourist_08	tourist	hilf_danke	1	Thanks, partner!		Danke, Partner!	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Thanks, partner!
 tourist_09	tourist	hilf_danke	1	Thank you kindly!		Herzlichen Dank!	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Thank you kindly!
 tourist_10	tourist	hilf_danke	1	Thanks a lot, buddy!		Vielen Dank, Kumpel!	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Thanks a lot, buddy!
-tourist_11	tourist	hilf_danke	1	Yep. That's what I thought.		Jep. Hab ich mir gedacht.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Yep. That's what I thought.
+tourist_11	tourist	hilf_danke	1	Yep. That's what I thought.		Jep. Hab ich mir gedacht.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Yep, that's what I thought.
 tourist_12	tourist	hilf_danke	1	I knew it. I have a map.		Wusste ich's doch. Ich hab einen Stadtplan.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] I knew it. I have a map.
 tourist_13	tourist	hilf_danke	2	Much obliged, little buddy.		Besten Dank, kleiner Kumpel.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Much obliged, little buddy.
-tourist_14	tourist	hilf_danke	2	Easy! London is easy.		Einfach! London ist einfach.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Easy! London is easy.
+tourist_14	tourist	hilf_danke	2	Easy! London is easy.		Einfach! London ist einfach.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Easy, London is easy!
 tourist_15	tourist	hilf_danke	2	Over there. Got it. … Which there?		Da drüben. Alles klar. … Welches da?	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Over there. Got it. … Which there?
 tourist_16	tourist	hilf_danke	3	You are good, dude. Almost as good as me.		Du bist gut, Kumpel. Fast so gut wie ich.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] You are good, dude. Almost as good as me.
-tourist_17	tourist	hilf_danke	3	Yeehaw! Now I know everything.		Jippie! Jetzt weiß ich alles.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Yeehaw! Now I know everything.
+tourist_17	tourist	hilf_danke	3	Yeehaw! Now I know everything.		Jippie! Jetzt weiß ich alles.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] Yeehaw, now I know everything!
 tourist_18	tourist	hilf_danke	4	In Texas, the gate is bigger. And the barrel. And the ravens.		In Texas ist das Tor größer. Und das Fass. Und die Raben.	[thick Texas accent, slow drawl, goofy, happy, pleased with himself] In Texas, the gate is bigger. And the barrel. And the ravens.
 tourist_19	tourist	hilf_weg	1	This way! I never get lost.	marschiert in die falsche Richtung	Hier lang! Ich verlaufe mich nie.	[thick Texas accent, slow drawl, goofy, confident, walking off] This way! I never get lost.
 tourist_20	tourist	hilf_weg	1	Left. Or right. One of them.	marschiert in die falsche Richtung	Links. Oder rechts. Eins von beiden.	[thick Texas accent, slow drawl, goofy, confident, walking off] Left. Or right. One of them.
@@ -253,10 +253,10 @@ tourist_22	tourist	hilf_weg	3	See you later, partner. I'm busy. Very busy.	marsc
 tourist_23	tourist	hilf_geschenk	1	Here. A postcard from Texas. For my best guide.	überreicht ein Geschenk	Hier. Eine Postkarte aus Texas. Für meinen besten Führer.	[thick Texas accent, slow drawl, goofy, warm, generous, proud] Here. A postcard from Texas. For my best guide.
 tourist_24	tourist	hilf_geschenk	1	Take this, buddy. Now you are a cowboy.	überreicht ein Geschenk	Nimm das, Kumpel. Jetzt bist du ein Cowboy.	[thick Texas accent, slow drawl, goofy, warm, generous, proud] Take this, buddy. Now you are a cowboy.
 tourist_25	tourist	hilf_geschenk	1	My second map. It is very good. I never use it.	überreicht ein Geschenk	Mein zweiter Stadtplan. Der ist sehr gut. Ich benutze ihn nie.	[thick Texas accent, slow drawl, goofy, warm, generous, proud] My second map. It is very good. I never use it.
-gary_73	gary	hilf_gary	1	No. The gate is over there.		Nein. Das Tor ist da drüben.	[flat, deadpan, patient] No. The gate is over there.
+gary_73	gary	hilf_gary	1	No. The gate is over there.		Nein. Das Tor ist da drüben.	[flat, deadpan, patient] No, the gate is over there.
 gary_74	gary	hilf_gary	1	No. The clock is on the tower.		Nein. Die Uhr ist am Turm.	[flat, deadpan, patient] No. The clock is on the tower.
 gary_75	gary	hilf_gary	1	No. The ravens are on the wall.		Nein. Die Raben sind auf der Mauer.	[flat, deadpan, patient] No. The ravens are on the wall.
 gary_76	gary	hilf_gary	1	No. The barrel is next to the door. My barrel.		Nein. Das Fass ist neben der Tür. Mein Fass.	[flat, deadpan, patient] No. The barrel is next to the door. My barrel.
-gary_77	gary	hilf_gary	1	No. The Guard Room is behind that door.		Nein. Die Wachstube ist hinter der Tür da.	[flat, deadpan, patient] No. The Guard Room is behind that door.
+gary_77	gary	hilf_gary	1	No. The Guard Room is behind that door.		Nein. Die Wachstube ist hinter der Tür da.	[flat, deadpan, patient] No, the Guard Room is behind that door.
 gary_78	gary	hilf_gary	1	No. The gate is locked. I tried. Twice.		Nein. Das Tor ist abgeschlossen. Ich hab's probiert. Zweimal.	[flat, deadpan, patient] No. The gate is locked. I tried. Twice.
 gary_79	gary	hilf_gary	1	No. This is the Tower of London. Again.		Nein. Das ist der Tower of London. Schon wieder.	[flat, deadpan, patient] No. This is the Tower of London. Again.

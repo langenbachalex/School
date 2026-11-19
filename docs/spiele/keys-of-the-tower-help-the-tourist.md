@@ -22,7 +22,7 @@ Die Ortsangaben müssen im gebauten Hof stimmen (Stand `app/tower/hof_bau.js`: F
 | h2 | Hey, buddy. Where is the clock? | On the tower. | Under the barrel. | Up there, on the tower. |
 | h3 | Excuse me. Where are the ravens? | On the wall. | In my pocket. | They are on the wall. |
 | h4 | Say, where is that cool barrel? | Next to the door. | On the wall. | Over there, next to the door. |
-| h5 | Dude, where is the Guard Room? | Behind that door. | In the sky. | Behind the door over there. |
+| h5 | Dude, where's the Guard Room? | Behind that door. | In the sky. | Behind the door over there. |
 | h6 | I reckon the exit is here. Right? | No. The gate is locked. | Yes. Goodbye! | No, sorry. It is locked tonight. |
 | h7 | Quick question. Where am I? | In the Tower of London. | In Buckingham Palace. | You are in the Tower of London. |
 

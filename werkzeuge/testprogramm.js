@@ -645,6 +645,85 @@ async function probe3dTest(browser, basis, app, name, fm) {
   return fehl;
 }
 
+/* ---------- EN6 „The Keys of the Tower“ – Hof-Rohbau (19.11.2026): der Hof (Tower Green) als eigener Abschnitt der 3D-Probe, drei Größen.
+   Geprüft werden Maße, Lage der Dinge aus w02–w08, Wege (Rundkurs, Kreis, lange Bahn), die drei Kameras und der Ort-Schalter – nicht das Aussehen. ---------- */
+async function hofTest(browser, basis, app, name, fm) {
+  const titel = `${name} · Keys of the Tower Hof`, fehl = [];
+  const { ctx, pg, fehler } = await neueSeite(browser, basis, app, false, fm);
+  const oeffne = async (gross) => { await pg.goto(`${basis}/${app.pfad}/tower/probe3d.html?ort=hof&gross=${gross}`, { waitUntil: "load" }); await pg.waitForSelector("#buehne[data-bereit]", { timeout: 40000 }); await pg.evaluate(() => { window.__towerSchnell = true; }); return pg.evaluate(() => window.__probe3d.hof()); };
+  try {
+    for (const [gross, B, T] of [["30x25", 30, 25], ["50x40", 50, 40], ["40x30", 40, 30]]) {
+      const plan = await oeffne(gross), t = `${titel} ${B} × ${T} m`;
+      if (!plan || plan.gross[0] !== B || plan.gross[1] !== T) { fehl.push(`${t}: der Hof hat nicht diese Größe`); continue; }
+      const namen = (await pg.evaluate(() => window.__probe3d.figuren())).map((g) => g.name).join(",");
+      if (namen !== "gary") fehl.push(`${t}: Gary fehlt im Hof`);
+      for (const wer of ["flex", "sergeant"]) { const o = (await pg.evaluate((w) => window.__probe3d.probe(w), wer)).ort; if (Math.abs(o[0]) > B / 2 || Math.abs(o[1]) > T / 2) fehl.push(`${t}: ${wer} steht außerhalb des Platzes`); }
+      // die Dinge aus w02–w08 stehen an ihrem Ort: Tür, Fass und Tor im Süden, Raben im Osten, Uhr im Südwesten oben, Tourist im Norden – und wandern mit der Größe mit
+      const s = T / 2, w = B / 2;
+      if (Math.abs(plan.tuer.z - s) > 0.01 || plan.tuer.x > 0) fehl.push(`${t}: die Tür zur Wachstube ist nicht an der Südseite links`);
+      if (plan.fass.z < s - 2 || plan.fass.z > s || Math.abs(plan.fass.x - plan.tuer.x) > 3) fehl.push(`${t}: das Fass steht nicht neben der Tür`);
+      if (Math.abs(plan.tor.z - s) > 0.01 || plan.tor.x < w - 10) fehl.push(`${t}: das Tor ist nicht in der Südostecke`);
+      if (plan.raben.length !== 7 || plan.raben.some((r) => r.x < w)) fehl.push(`${t}: keine sieben Rabenplätze auf der Ostmauer`);
+      if (plan.uhr.x > -w + 3 || plan.uhr.z < s - 3 || plan.uhr.y < 8) fehl.push(`${t}: die Turmuhr hängt nicht oben in der Südwestecke`);
+      if (plan.tourist.z > 0 || Math.abs(plan.tourist.x) > w - 3) fehl.push(`${t}: der Platz des Touristen liegt nicht im Norden des Platzes`);
+      // Wege: deutlich länger als im Raum (dort Rundkurs knapp 14 m, Bahn höchstens 5 m)
+      if (plan.laengen.rund < 55) fehl.push(`${t}: der Rundkurs ist nur ${plan.laengen.rund.toFixed(0)} m lang`);
+      if (plan.laengen.bahn < 15) fehl.push(`${t}: die lange Bahn ist nur ${plan.laengen.bahn.toFixed(0)} m lang`);
+      if (gross !== "40x30") continue;
+      const dinge = await pg.evaluate(() => ["hof_tuer", "hof_fass", "hof_uhr", "hof_tor", "hof_mauer", "hof_tourist"].map((id) => { try { const o = window.__probe3d.ort(id); return Number.isFinite(o.x) ? null : id; } catch (e) { return id; } }).filter(Boolean));
+      if (dinge.length) fehl.push(`${t}: im Hof fehlen ${dinge.join(", ")}`);
+      // Boden antippen = hingehen
+      const vorher = await pg.evaluate(() => window.__probe3d.stand()), boden = await pg.evaluate(() => window.__probe3d.boden());
+      if (!boden) fehl.push(`${t}: keine freie Bodenstelle im Bild`); else await pg.mouse.click(boden.x, boden.y);
+      await pg.waitForTimeout(1200);
+      const nachher = await pg.evaluate(() => window.__probe3d.stand());
+      if (Math.hypot(nachher[0] - vorher[0], nachher[1] - vorher[1]) < 0.2) fehl.push(`${t}: Tipp auf den Boden bewegt die Figur nicht`);
+      // drei Kameras: wählbar, über dem Boden, „hinter der Figur“ bleibt auf dem Platz
+      for (const k of ["puppenhaus", "augen", "hinten"]) {
+        await pg.click(`#kameras button[data-kamera="${k}"]`); await pg.waitForTimeout(300);
+        const o = await pg.evaluate(() => window.__probe3d.kameraOrt());
+        if ((await pg.evaluate(() => document.getElementById("buehne").dataset.kamera)) !== k) fehl.push(`${t}: Kamera „${k}“ lässt sich nicht wählen`);
+        if (!(o[1] > 0.3)) fehl.push(`${t}: Kamera „${k}“ liegt im Boden (Höhe ${o[1]} m)`);
+        if (k === "puppenhaus" && o[1] < 10) fehl.push(`${t}: das Puppenhaus zeigt nicht den Platz von oben (Kamera nur ${o[1]} m hoch)`);   // Fehler 19.11.: die Kamera klebte hinter der Figur an der Südwand
+        if (k !== "puppenhaus" && (Math.abs(o[0]) > w || Math.abs(o[2]) > s)) fehl.push(`${t}: Kamera „${k}“ steht außerhalb des Platzes`);
+      }
+      // Wege der Figuren: Mr. Flex läuft den Rundkurs ohne Wenden und bleibt auf dem Platz; der Sergeant marschiert im Kreis; Weg wechseln geht
+      const probe = (wer) => pg.evaluate((x) => window.__probe3d.probe(x), wer);
+      await pg.evaluate(() => { window.__probe3d.halt(true); document.querySelector('#bau button[data-bau="gehen"]').click(); });
+      let lang = 0, vor = (await probe("flex")).ort, draussen = false, wenden = 0;
+      for (let k = 0; k < 40; k++) { await pg.evaluate(() => window.__probe3d.bauTakt(60, 16.7)); const z = await probe("flex"); lang += Math.hypot(z.ort[0] - vor[0], z.ort[1] - vor[1]); vor = z.ort; if (z.wendet) wenden++; if (Math.abs(z.ort[0]) > w - 1 || Math.abs(z.ort[1]) > s - 1) draussen = true; }
+      if (lang < 40) fehl.push(`${t}: Mr. Flex kommt auf dem Rundkurs in 40 s nur ${lang.toFixed(1)} m weit`);
+      if (draussen) fehl.push(`${t}: der Rundkurs führt zu nah an die Mauer oder hinaus`);
+      if (wenden) fehl.push(`${t}: Mr. Flex wendet auf dem Rundkurs`);
+      await pg.evaluate(() => document.querySelector('#bau button[data-bau="stehen"]').click());
+      const kreis = await probe("sergeant");
+      if (!kreis.runde) fehl.push(`${t}: der Sergeant steht nicht auf seinem Kreis`);
+      await pg.evaluate(() => window.__probe3d.weg("sergeant", "bahn"));
+      const bahn = await probe("sergeant");
+      if (bahn.runde || Math.abs(bahn.ort[0] - plan.kurse.sergeant.bahn.x) > 0.01) fehl.push(`${t}: der Sergeant wechselt nicht auf die lange Bahn`);
+      await pg.evaluate(() => window.__probe3d.weg("sergeant", "rund"));
+      if (!(await probe("sergeant")).runde) fehl.push(`${t}: der Sergeant wechselt nicht auf den Rundkurs`);
+      await pg.evaluate(() => window.__probe3d.halt(false));
+      for (const b of await zuBreit(pg)) fehl.push(`${t}: ${b}`);
+      // Ort-Schalter: anderer Hof und zurück in den Raum
+      await pg.evaluate(() => { document.getElementById("bau").classList.remove("zu"); });
+      await Promise.all([pg.waitForNavigation(), pg.evaluate(() => document.querySelector('#bau button[data-ort="50x40"]').click())]);
+      await pg.waitForSelector("#buehne[data-bereit]", { timeout: 40000 });
+      if (((await pg.evaluate(() => window.__probe3d.hof())) || { gross: [] }).gross[0] !== 50) fehl.push(`${titel}: der Schalter „Hof 50 × 40 m“ wechselt nicht den Ort`);
+      await Promise.all([pg.waitForNavigation(), pg.evaluate(() => document.querySelector('#bau button[data-ort=""]').click())]);
+      await pg.waitForSelector("#buehne[data-bereit]", { timeout: 40000 });
+      if (await pg.evaluate(() => window.__probe3d.hof())) fehl.push(`${titel}: der Schalter „Raum“ führt nicht zurück in den Guard Room`);
+    }
+  } catch (e) {
+    const meldung = await pg.locator("#laden").textContent().catch(() => "?");
+    fehl.push(`${titel}: ${String(e.message || e).split("\n")[0].slice(0, 160)} – Meldung auf der Seite: ${meldung}`);
+  } finally {
+    fehl.push(...[...new Set(fehler)].map((f) => `${titel}: ${f}`));
+    await ctx.close();
+  }
+  return fehl;
+}
+
 /* ---------- EN6 „The Keys of the Tower“ (17.11.2026): Kachel → Figur → Anfang → Spiegel → verschlossene Tür; mit Schlüssel im Raum
    einen Gegenstand antippen (Mitte aus guardroom.json) → Text erscheint, Zähler zählt. Ohne Ton (window.__towerSchnell). ---------- */
 async function towerTest(browser, basis, app, name, fm) {
@@ -910,7 +989,7 @@ function speicherTest(app) {
       for (const fm of formate) {
         const b = fm.webkit && safari ? safari : browser, name = fm.webkit && !safari ? fm.name + " (Chromium)" : fm.name;
         const w = (titel, knoepfe, opt = {}) => weg(b, basis, app, `${name} · ${titel}`, knoepfe, Object.assign({ format: fm }, opt));
-        if (NUR_STORY) { if (app.kurz === "EN6" && fm.id !== "handy") { f.push(...await towerTest(b, basis, app, name, fm)); f.push(...await probe3dTest(b, basis, app, name, fm)); } continue; }
+        if (NUR_STORY) { if (app.kurz === "EN6" && fm.id !== "handy") { f.push(...await towerTest(b, basis, app, name, fm)); f.push(...await probe3dTest(b, basis, app, name, fm)); f.push(...await hofTest(b, basis, app, name, fm)); } continue; }
         f.push(...await w("Start", []));
         f.push(...await w("Übung", app.uebung));
         f.push(...await w("Shop", app.shop));
@@ -923,6 +1002,7 @@ function speicherTest(app) {
         const story = app.kurz === "EN6" && fm.id !== "handy";   // Story-Spiel: kein Handy-Test (Regel Mr. Alex 18.11.) – die Lern-Apps werden weiter auch im Handy-Format geprüft
         if (story) f.push(...await towerTest(b, basis, app, name, fm));
         if (story && !NUR_3D_AUS) f.push(...await probe3dTest(b, basis, app, name, fm));
+        if (story && !NUR_3D_AUS) f.push(...await hofTest(b, basis, app, name, fm));
         if (EN_KETTE[app.kurz]) f.push(...await w("Bereich wird grün, Spiele zeigen den Stand von heute", [], { stand: enFastFertig(app), pruefe: (pg) => enKetteGruen(app, pg) }));
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
         if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));

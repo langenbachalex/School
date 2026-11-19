@@ -89,6 +89,15 @@
   <span class="titel">PROBE Körperbau · Figur wählen</span>
   <button type="button" data-wahl="flex" aria-pressed="true">Mr. Flex</button>
   <button type="button" data-wahl="sergeant" aria-pressed="false">Sergeant</button>
+  <span>Ort</span>
+  <button type="button" data-ort="" aria-pressed="true">Raum</button>
+  <button type="button" data-ort="30x25" aria-pressed="false">Hof 30 × 25 m</button>
+  <button type="button" data-ort="40x30" aria-pressed="false">Hof 40 × 30 m</button>
+  <button type="button" data-ort="50x40" aria-pressed="false">Hof 50 × 40 m</button>
+  <span class="nurhof" hidden>Weg der Figur</span>
+  <button type="button" class="nurhof" data-weg="rund" aria-pressed="false" hidden>Rundkurs</button>
+  <button type="button" class="nurhof" data-weg="kreis" aria-pressed="false" hidden>Kreis</button>
+  <button type="button" class="nurhof" data-weg="bahn" aria-pressed="false" hidden>Lange Bahn</button>
   <span>Maße (1 = wie heute)</span>
   <label>Arm <output>1,80</output><input type="range" data-mass="arm" min="1" max="2.6" step="0.05" value="1.8" aria-label="Armlänge"></label>
   <label>Bein <output>3,00</output><input type="range" data-mass="bein" min="1" max="4" step="0.05" value="3" aria-label="Beinlänge"></label>
@@ -131,22 +140,26 @@ import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt 
 import { ladeFiguren, mundAusZeiten, einsaetzeAus, MUNDFORMEN_MENSCH } from "./probe3d_figuren.js";
 import { ladeBauProbe, GESTEN, rundeOrt, SERGEANT } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
+import { bauHof, HOF_GROESSEN, HOF_START } from "./hof_bau.js";   // Hof-Rohbau (19.11.): eigener Abschnitt, gewählt mit ?ort=hof&gross=40x30; ohne das bleibt der Guard Room
+
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
 const M = THREE.MathUtils;
 
 try {
-  const info = await (await fetch("raum3d/guardroom3d.json")).json();
+  const sucht = new URLSearchParams(location.search), hofGross = sucht.get("ort") === "hof" ? (HOF_GROESSEN[sucht.get("gross")] ? sucht.get("gross") : HOF_START) : null;
+  const hof = hofGross ? bauHof(hofGross) : null;
+  const info = hof ? hof.info : await (await fetch("raum3d/guardroom3d.json")).json();
   const renderer = new THREE.WebGLRenderer({ canvas: buehne, antialias: true, powerPreference: "high-performance" });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   const szene = new THREE.Scene();
-  szene.background = new THREE.Color(0x0b0705);
-  const kamera = new THREE.PerspectiveCamera(50, 1, 0.05, 60);
+  szene.background = new THREE.Color(hof ? 0x0a1020 : 0x0b0705);
+  const kamera = new THREE.PerspectiveCamera(50, 1, 0.05, hof ? 260 : 60);
   const ausBlender = ([x, y, z]) => new THREE.Vector3(x, z, -y);   // Blender: Z oben · Browser: Y oben
 
   const lader = new GLTFLoader();
   lader.setMeshoptDecoder(MeshoptDecoder);
-  const [gltf, kindGltf] = await Promise.all([lader.loadAsync("raum3d/guardroom.glb"), lader.loadAsync("figuren/kind.glb")]);
+  const [gltf, kindGltf] = await Promise.all([hof ? { scene: hof.scene } : lader.loadAsync("raum3d/guardroom.glb"), lader.loadAsync("figuren/kind.glb")]);
 
   // ---- Raum: Licht ist eingebrannt, die Textur wird gezeigt, wie sie ist ----
   const dinge = new Map(info.dinge.map((d) => [d.id, d])), netze = [];
@@ -155,7 +168,7 @@ try {
     if (!o.isMesh) return;
     const karte = o.material.map;
     if (karte) karte.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    o.material = new THREE.MeshBasicMaterial({ map: karte });
+    if (!hof) o.material = new THREE.MeshBasicMaterial({ map: karte });
     o.userData.ding = dinge.has(o.name) ? o.name : (o.userData.gruppe && dinge.has(o.userData.gruppe) ? o.userData.gruppe : null);
     dreiecke += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
     netze.push(o);
@@ -164,6 +177,7 @@ try {
   const raum = new THREE.Box3().setFromObject(szene.getObjectByName("raum_gross") || gltf.scene);
   const decke = szene.getObjectByName("raum_decke");
   const innen = { x0: raum.min.x + 0.55, x1: raum.max.x - 0.55, y0: 0.35, y1: raum.max.y - 0.75, z0: raum.min.z + 0.55, z1: raum.max.z - 0.55 };
+  if (hof) innen.y1 = 60;                               // freier Himmel
 
   // ---- Gehkarte: wo die Figur stehen kann (aus Blender), Wegsuche um Tisch, Stuehle, Kamin und Treppenloch herum ----
   const gk = info.gehkarte, NX = gk.zeilen[0].length, NY = gk.zeilen.length;
@@ -236,7 +250,7 @@ try {
   const garyZelle = naechsteFreie(2.1, 6.0);
   let bahnZellen = 0;
   while (bahnZellen * gk.zelle < 5.2 && frei(garyZelle[0], garyZelle[1] - bahnZellen - 1)) bahnZellen++;
-  const figuren = await ladeFiguren(lader, szene, { gary: { ...zuOrt(...garyZelle), bahn: Math.max(1.2, bahnZellen * gk.zelle - 0.3) } }, kamera);
+  const figuren = await ladeFiguren(lader, szene, { gary: hof ? hof.plan.gary : { ...zuOrt(...garyZelle), bahn: Math.max(1.2, bahnZellen * gk.zelle - 0.3) } }, kamera);
   // PROBE A3: gestreckte Figur neben Gary, eigener Kasten mit Knöpfen, Hände-Schalter und vier Reglern für die Maße
   const bauZelle = naechsteFreie(-0.9, 6.4);   // freie Raummitte links vor der eigenen Figur (Mr. Alex 18.11.: nicht an der Wand, dort gingen die Gesten hinein); rundherum gut 2 m Platz
   let bauBahn = 0;
@@ -245,7 +259,9 @@ try {
   const bauStart = zuOrt(...bauZelle);
   let bauRunde = { x0: -3.2, x1: 1.3, z0: bauStart.z, z1: bauStart.z + 3.4, r: 1.2 }; bauRunde.start = bauStart.x - (bauRunde.x0 + bauRunde.r);
   for (let s = 0, lang = rundeOrt(bauRunde, 0).lang; bauRunde && s < lang; s += 0.2) { const p = rundeOrt(bauRunde, s); if (!frei(...zuZelle(p.x, p.z))) bauRunde = null; }
-  const bauProbe = await ladeBauProbe(lader, szene, { ...bauStart, bahn: Math.max(1.2, bauBahn * gk.zelle - 0.3), runde: bauRunde });
+  // Hof: Platz und Weg jeder Figur kommen aus dem Plan des Hofs (hof_bau.js); der Schalter „Weg der Figur“ wechselt zwischen Rundkurs, Kreis und langer Bahn
+  const hofPlatz = (wer, weg = hof.plan.anfang[wer]) => { const k = hof.plan.kurse[wer][weg], p = k.runde ? rundeOrt(k.runde, 0) : k; return { x: p.x, z: p.z, bahn: hof.plan.laengen.bahn, runde: k.runde }; };
+  const bauProbe = await ladeBauProbe(lader, szene, hof ? hofPlatz("flex") : { ...bauStart, bahn: Math.max(1.2, bauBahn * gk.zelle - 0.3), runde: bauRunde });
   // Teil C, Schritt 1 (18.11.): Sergeant Bearskin steht frei in der Raummitte (im Rundkurs von Mr. Flex); Kopf mit Bart (Wahl Mr. Alex); 19.11.: Knollennase
   const sergeants = [];
   // Der Sergeant steht auf der hinteren Geraden desselben Rundkurses (19.11.): so marschiert er viele Schritte geradeaus, ohne zu wenden – nötig, um den Drill-Gang zu beurteilen.
@@ -256,6 +272,7 @@ try {
     const runde = { ...ru, start: ga + q + gb + q + 0.05 }   /* Anfang der hinteren Geraden */, p0 = rundeOrt(runde, 0);
     sgtPlatz = { x: p0.x, z: p0.z, runde };
   }
+  if (hof) sgtPlatz = hofPlatz("sergeant");
   for (const i of [0]) { const s = await ladeBauProbe(lader, szene, sgtPlatz, { kopf: SERGEANT.kopf }, SERGEANT); sergeants.push(s);   /* sein Grundausdruck „grimmig“ steht bei der Figur (SERGEANT.ausdruck) */ }
   /* Figur wählen (Mr. Alex 19.11.): alle Knöpfe des Kastens – Bewegungen, Gesten, Hände, Gesichter, Reden, Maße – gelten für die gewählte Figur.
      Weitere Figuren: ein Knopf data-wahl im Kasten und ein Eintrag hier. */
@@ -267,7 +284,19 @@ try {
     const z = aktiv.probe.zustand();                       // Regler und Hände zeigen den Stand der gewählten Figur
     for (const r of document.querySelectorAll("#bau input[data-mass]")) { r.value = z.bau[r.dataset.mass]; r.parentElement.querySelector("output").textContent = (+r.value).toFixed(2).replace(".", ","); }
     for (const x of document.querySelectorAll("#bau button[data-hand]")) x.setAttribute("aria-pressed", String(x.dataset.hand === z.wahl));
+    zeigeWeg();
   });
+  // Ort wählen (Raum oder Hof in drei Größen): lädt die Seite neu, jeder Ort ist ein eigener Abschnitt · Weg der gewählten Figur (nur im Hof)
+  for (const b of document.querySelectorAll("#bau button[data-ort]")) {
+    b.setAttribute("aria-pressed", String(b.dataset.ort === (hofGross || "")));
+    b.addEventListener("click", () => { location.search = b.dataset.ort ? `?ort=hof&gross=${b.dataset.ort}` : ""; });
+  }
+  for (const p of Object.values(PROBEN)) p.weg = hof ? hof.plan.anfang[p.wer] : null;
+  function zeigeWeg() { for (const x of document.querySelectorAll("#bau button[data-weg]")) x.setAttribute("aria-pressed", String(x.dataset.weg === aktiv.weg)); }
+  function waehleWeg(wer, weg) { const p = PROBEN[wer]; p.weg = weg; p.probe.kurs(hof.plan.kurse[wer][weg]); zeigeWeg(); }
+  for (const x of document.querySelectorAll("#bau .nurhof")) x.hidden = !hof;
+  for (const b of document.querySelectorAll("#bau button[data-weg]")) b.addEventListener("click", () => waehleWeg(aktiv.wer, b.dataset.weg));
+  zeigeWeg();
   $("bau").querySelector(".kopf").addEventListener("click", (e) => {
     const zu = $("bau").classList.toggle("zu"); e.currentTarget.setAttribute("aria-expanded", String(!zu)); document.body.classList.toggle("bau-offen", !zu);
   });
@@ -361,6 +390,10 @@ try {
     puppenhaus: { abst: 9, min: 5, max: 11, hoehe: 0.9, drehung: 0, neigung: 0.72, nMin: 0.45, nMax: 1.0, dMax: 0.7, weit: 48, mitte: 0.35, ohneDecke: true }, // wie Luigi's Mansion / Sims: von vorn oben in den Raum ohne Decke, gleitet mit
     augen: { hoehe: 1.26, drehung: 0, neigung: 0, nMin: -1.1, nMax: 1.1, weit: 68 },                                            // wie ein Escape-Spiel: durch die Augen der Figur
   };
+  if (hof) {                                             // großer Platz unter freiem Himmel: weiter weg erlaubt, Puppenhaus zeigt den ganzen Hof und dreht frei
+    Object.assign(KAMERAS.hinten, { max: 12 });
+    Object.assign(KAMERAS.puppenhaus, { abst: Math.max(...hof.plan.gross) * 1.15, min: 6, max: Math.max(...hof.plan.gross) * 1.7, drehung: Math.PI, nMax: 1.35, dMax: Infinity });   // Blick von Norden über die niedrige Mauer nach Süden: Haus, Tür und Tor bilden die Rückwand, nichts verdeckt die Figuren
+  }
   let modus = "hinten";
   const kamOrt = new THREE.Vector3(), kamZiel = new THREE.Vector3();
   let kamFrisch = true;
@@ -381,7 +414,8 @@ try {
     if (k.mitte) ziel.lerp(new THREE.Vector3((raum.min.x + raum.max.x) / 2, k.hoehe, (raum.min.z + raum.max.z) / 2), k.mitte);   // etwas zur Raummitte: der Raum bleibt im Bild
     const hin = new THREE.Vector3(Math.sin(k.drehung) * Math.cos(k.neigung), Math.sin(k.neigung), Math.cos(k.drehung) * Math.cos(k.neigung));
     let weit = k.abst;                                   // nicht durch Wand, Boden oder Decke: Abstand kuerzen
-    for (const [a, lo, hi] of [["x", innen.x0, innen.x1], ["y", innen.y0, k.ohneDecke ? 9 : innen.y1], ["z", innen.z0, innen.z1]]) {
+    for (const [a, lo, hi] of [["x", innen.x0, innen.x1], ["y", innen.y0, k.ohneDecke ? (hof ? 60 : 9) : innen.y1], ["z", innen.z0, innen.z1]]) {
+      if (hof && k.ohneDecke && a !== "y") continue;       // Hof: das Puppenhaus schaut von außen über die Mauern
       if (hin[a] > 1e-4) weit = Math.min(weit, Math.max(0.4, (hi - ziel[a]) / hin[a]));
       if (hin[a] < -1e-4) weit = Math.min(weit, Math.max(0.4, (lo - ziel[a]) / hin[a]));
     }
@@ -530,27 +564,29 @@ try {
     $("text").innerHTML = "";
     $("text").append(zeile ? zeile.en : dinge.get(id).name);
     const klein = document.createElement("small"); klein.textContent = dinge.get(id).name; $("text").append(klein);
+    if (hof) return;                                    // Rohbau: Klötze in Grundfarben, ohne Aufleuchten
     netz.material.color.setScalar(1.7);                 // kurz aufleuchten
     setTimeout(() => netz.material.color.setScalar(1), 450);
   }
 
   // ---- Bild fuer Bild; nebenbei messen, wie fluessig es laeuft ----
   let zuletzt = performance.now(), bilder = 0, seit = zuletzt, tiefst = Infinity, jetztWert = 0, ladezeit = 0, bereitSeit = Infinity;
-  let karteName = "unbekannt";
+  let karteName = "unbekannt", rechen = 0, rechenWert = 0;   // Rechenzeit je Bild (Bewegen und Zeichnen), Mittel über eine Sekunde
   try { const gl = renderer.getContext(), x = gl.getExtension("WEBGL_debug_renderer_info"); if (x) karteName = gl.getParameter(x.UNMASKED_RENDERER_WEBGL); } catch (e) { /* ohne Namen */ }
   const messe = () => {
     $("mess").innerHTML = `<b>${jetztWert} Bilder pro Sekunde</b> (tiefster Wert ${tiefst === Infinity ? "–" : tiefst})<br>` +
-      `${Math.round(dreiecke / 1000)} Tsd. Dreiecke · ${window.innerWidth} × ${window.innerHeight} · geladen in ${ladezeit} s<br><small>${karteName}</small>`;
+      (hof ? `Hof ${hof.plan.gross.join(" × ")} m · Rechenzeit ${rechenWert.toFixed(1)} ms je Bild · ` : "") + `${Math.round(dreiecke / 1000)} Tsd. Dreiecke · ${window.innerWidth} × ${window.innerHeight} · geladen in ${ladezeit} s<br><small>${karteName}</small>`;
   };
   waehleKamera("hinten");
   renderer.setAnimationLoop((t) => {
-    const dt = Math.min((t - zuletzt) / 1000, 0.1); zuletzt = t;
+    const dt = Math.min((t - zuletzt) / 1000, 0.1), t0 = performance.now(); zuletzt = t;
     bewegeFigur(dt, t);
     if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); for (const s of sergeants) s.bewege(dt); }
     setzeKamera(dt);
     renderer.render(szene, kamera);
-    bilder++;
+    bilder++; rechen += performance.now() - t0;
     if (t - seit >= 1000) {
+      rechenWert = rechen / bilder; rechen = 0;
       jetztWert = Math.round(bilder * 1000 / (t - seit)); bilder = 0; seit = t;
       if (t - bereitSeit > 3000) tiefst = Math.min(tiefst, jetztWert);     // die ersten Sekunden zaehlen nicht (Laden)
       messe();
@@ -562,7 +598,8 @@ try {
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
+  window.__probe3d = { hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
+    blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
     sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), sergeantArme: () => sergeants[0].arme(), sergeantHals: () => sergeants[0].halsSitz(), bauHals: () => bauProbe.halsSitz(), bauMund: (form) => bauProbe.mund(form), regie: (wer, id, zeit) => { const p = PROBEN[wer], schritte = id && regieSchritte(regieDaten[id], p.mund[id]); p.probe.regie(schritte ? { schritte, zeit: () => zeit } : null); return schritte; }, probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3
     halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter

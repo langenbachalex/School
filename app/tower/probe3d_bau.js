@@ -1038,6 +1038,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     rede(r) { g.rede = r ? { ...r, i: 0, offen: false } : null; },
     regie(r) { if (r) g.regie = { ...r, i: 0, vorher: g.regie ? g.regie.vorher : g.ausdruck }; else if (g.regie) { g.ausdruck = g.regie.vorher; g.regie = null; } },   // { schritte: [[s, Ausdruck], …], zeit: () => s } oder null = Satz zu Ende, zurück zum Ausdruck davor   // { einsaetze: [s, …], zeit: () => s } oder null
     bahn(lang) { g.gerade = lang > 0; g.bahn = lang || platz.bahn || 2.4; g.weg = 0; g.hin = 1; g.dreh = 0; anker.position.x = platz.x; },   // lang > 0: gerade Strecke statt Rundkurs;                                                // nur für das Testprogramm: lange Strecke, um Gehen und Rennen ohne Wenden zu messen
+    kurs(k) { g.runde = k.runde || null; if (!k.runde) { platz.x = k.x; platz.z = k.z; platz.bahn = k.bahn; anker.position.set(k.x, 0, k.z); } g.gerade = false; g.bahn = k.bahn || platz.bahn || 2.4; g.weg = 0; g.hin = 1; g.dreh = 0; },   // Hof (19.11.): Weg wechseln – { runde } = Rundkurs oder Kreis, { x, z, bahn } = gerade Bahn ab diesem Punkt
     haende(form) { g.wahl = form; zeigeHand(GESTEN[g.modus][3] || form); },
     setze(name, wert) { if (name in bau && wert > 0) { bau[name] = wert; const modus = g.modus; messeTempo(); g.laeuft = null; starte(DAUERND.includes(modus) ? modus : "stehen"); } },
     bewege(dt) {

@@ -29,7 +29,7 @@ export const VOEGEL = {
     /* Tempo aus den Filmen der Tower-Raben (Mr. Alex 19.11.: die erste Fassung war „viel zu langsam“): Flügel strecken im Sitzen rund 1 s,
        im Flug drei Schläge je Sekunde, beim Bremsen fünf */
     flug: { schlagDauer: 1.15, takt: 0.33, bremsTakt: 0.2, anflug: 1.3, bremsen: 0.55, setzen: 0.5, bremsweg: 1.4, bremsHoch: 0.5, neig: 0.75,
-      arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
+      arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, armLangJe: 0.07, woelb: -0.16, armWoelb: 0.14, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
     ring: RINGE.arthur,
     schaedel: 0.058,                                  // Halbe Höhe des Schädels (vor der Vergrößerung): die Kehlfedern am Rumpf müssen darunter bleiben
     datei: "figuren/rabe.glb",                        // Blender-Fassung (werkzeuge/blender/tower_rabe.py); ladeVogel nimmt sie, bauVogel baut die einfache Fassung im Programm
@@ -161,9 +161,9 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
       qSchlag.setFromAxisAngle(va.set(0, sn, c), w.v * schlag);
       w.F.quaternion.copy(qNull).slerp(qOffen, auf).premultiply(qSchlag);
       w.H.position.copy(w.handOrt).addScaledVector(w.e, FL.arm * auf);
-      w.H.quaternion.setFromAxisAngle(w.wn, -w.v * FL.hand * auf).premultiply(qSchlag.setFromAxisAngle(w.wd, -w.v * knick * auf));
+      w.H.quaternion.setFromAxisAngle(w.wn, -w.v * FL.hand * auf).premultiply(qSchlag.setFromAxisAngle(w.wd, -w.v * (knick + FL.woelb) * auf));   // FL.woelb: die Hand hängt immer ein wenig – der Flügel ist nach unten gewölbt
       w.haende.forEach((f, j) => { f.o.quaternion.setFromAxisAngle(w.wn, -w.v * (FL.faecher - j * FL.faecherJe) * auf).premultiply(qSchlag.setFromAxisAngle(w.wd, -w.v * biege * auf * (1 - j / 6))); f.o.scale.setScalar(1 + FL.handLang * auf); });
-      w.arme.forEach((f, i) => { f.o.position.copy(f.ort).addScaledVector(w.e, (0.05 + i * FL.armJe) * auf); f.o.quaternion.setFromAxisAngle(w.wn, -w.v * i * 0.05 * auf); f.o.scale.setScalar(1 + FL.armLang * auf); });
+      w.arme.forEach((f, i) => { f.o.position.copy(f.ort).addScaledVector(w.e, (0.05 + i * FL.armJe) * auf); f.o.quaternion.setFromAxisAngle(w.wn, -w.v * i * 0.05 * auf).premultiply(qSchlag.setFromAxisAngle(w.e, -w.v * FL.armWoelb * auf)); f.o.scale.setScalar(1 + (FL.armLang + i * FL.armLangJe) * auf); });   // armLangJe: nach außen werden die Armschwingen länger – die Hinterkante läuft rund in die Hand · armWoelb: die Hinterkante am Arm liegt etwas tiefer
       w.arm.visible = auf > 0.02; w.arm.scale.setScalar(Math.max(auf * FL.armDick, 0.001));
       w.breit.visible = auf > 0.02; w.breit.scale.setScalar(Math.max(auf, 0.001));          // die breite Hand wächst beim Ausbreiten aus dem Handgelenk
     }

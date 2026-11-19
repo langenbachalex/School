@@ -309,13 +309,26 @@ def rabe():
         # zehn breite Handschwingen samt Handdecken, fertig aufgefaechert; angelegt unsichtbar (der Browser macht sie klein), sie wachsen beim Ausbreiten
         # aus dem Handgelenk und schliessen die Hand an den Arm an. Die sieben schmalen Schwingen des angelegten Fluegels liegen darueber.
         breit = Teil("rabe_handoffen_" + seite, hand, hand.ort)
-        for k in range(10):
-            richtung = dreh(wd, wn, -v * (0.8 - k * 0.144))
-            ansatz = hand.ort + wd * (0.035 + k * 0.011) + e * (k * 0.005) - wn * (0.004 + 0.001 * k)
-            feder(breit, ansatz, richtung, wn, 0.41 - k * 0.013, 0.082, heben=0.0, glanz=1.15)
-        for k in range(9):
-            richtung = dreh(wd, wn, -v * (0.75 - k * 0.15))
-            feder(breit, hand.ort + wd * (0.03 + k * 0.012) + e * (k * 0.005) + wn * 0.006, richtung, wn, 0.14, 0.06, heben=0.01, glanz=1.0)
+        # Zweite Runde (Mr. Alex 19.11.): zwoelf statt zehn, in drei Lagen wie Dachziegel (Tiefe, auch von vorn), unordentlicher gefaechert,
+        # und nach unten gewoelbt – die Federn zeigen zur Spitze hin tiefer und sind selbst nach unten gebogen, die aeusseren am staerksten.
+        wirr = lambda weit: random.uniform(-weit, weit)
+        for k in range(12):
+            aussen = 1 - k / 11                                               # 1 = aeusserste Feder
+            richtung = dreh(wd, wn, -v * (0.8 - k * 0.095 + wirr(0.05))) - wn * (0.06 + 0.2 * aussen + wirr(0.03))   # die innersten zeigen wie die aeusseren Armschwingen: kein Sprung am Handgelenk
+            ansatz = hand.ort + wd * (0.03 + k * 0.0095) + e * (k * 0.0045) - wn * (0.004 + (k % 3) * 0.012 + wirr(0.004))
+            feder(breit, ansatz, richtung, wn + e * wirr(0.2), 0.42 - k * 0.012 + wirr(0.022), 0.082, heben=-(0.05 + 0.1 * aussen), glanz=1.15)
+        for reihe, (lang, hoch) in enumerate(((0.15, 0.006), (0.09, 0.013))):  # Handdecken, zwei Reihen
+            for k in range(10):
+                richtung = dreh(wd, wn, -v * (0.75 - k * 0.105 + wirr(0.05))) - wn * (0.05 + 0.1 * (1 - k / 9))
+                feder(breit, hand.ort + wd * (0.025 + k * 0.011) + e * (k * 0.005) + wn * (hoch + wirr(0.003)), richtung, wn, lang + wirr(0.012), 0.058, heben=-0.03, glanz=1.0)
+        # Zwischenlage ueber dem Handgelenk (Mr. Alex 19.11.: der Uebergang von Arm zu Hand war „zu abrupt“, in den Fotos ist er rund – wie die Zwischenlage am Schwanz):
+        # mittellange Federn, die vom Arm her ueber das Gelenk auf die Hand laufen und im Winkel zwischen beiden liegen
+        # Sie haengen am Arm, nicht an der Hand: sonst hebeln sie sich hoch, wenn die Hand haengt. Der Arm wird im Browser 1,25-fach vergroessert,
+        # deshalb sind Ort und Masse hier durch 1,25 geteilt. Ort = dort, wo das Handgelenk ausgebreitet liegt (0,3 weiter aussen).
+        for k in range(7):
+            richtung = dreh(wd, wn, -v * (-0.05 + k * 0.11 + wirr(0.05))) - wn * (0.05 + wirr(0.03))
+            feder(arm, S + (wd * (0.02 + k * 0.004) + e * (0.19 + k * 0.016) + wn * (0.016 + wirr(0.004))) / 1.25, richtung, wn + e * wirr(0.2), (0.25 + k * 0.012 + wirr(0.02)) / 1.25, 0.06, heben=-0.04, glanz=1.05)
+        arm.netz(gefieder)
         breit.netz(gefieder)
         random.setstate(merk)
 

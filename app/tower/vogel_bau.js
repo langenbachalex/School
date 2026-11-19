@@ -29,7 +29,7 @@ export const VOEGEL = {
     /* Tempo aus den Filmen der Tower-Raben (Mr. Alex 19.11.: die erste Fassung war „viel zu langsam“): Flügel strecken im Sitzen rund 1 s,
        im Flug drei Schläge je Sekunde, beim Bremsen fünf */
     flug: { schlagDauer: 1.55, takt: 0.33, bremsTakt: 0.2, anflug: 1.3, bremsen: 0.55, setzen: 0.95, bremsweg: 1.4, bremsHoch: 0.5, neig: 0.75,
-      ducken: 0.3, abstoss: 0.14, schlagOben: 0.16, schlagUnten: 0.38, hocke: 0.085, streck: 0.05, schenkel: 0.075, lauf: 0.118, abTakt: 0.17, steigen: 1.1, tempoAb: 4, tempo: 10, schlagen: 1.3, gleiten: 1.0, schraeg: 0.55, schraegMax: 0.6,   // freier Flug: Sekunden ducken · Sekunden bis zum Reiseflug · m/s beim Abheben und im Flug · Sekunden schlagen und gleiten im Wechsel · Schräglage je Kursänderung (rad je rad/s) und höchstens
+      ducken: 0.3, abstoss: 0.14, vorlauf: 0.04, schlagOben: 0.075, schlagHalt: 0.03, schlagAb: 0.07, hocke: 0.085, streck: 0.05, schenkel: 0.075, lauf: 0.118, abTakt: 0.17, steigen: 1.1, tempoAb: 4, tempo: 10, schlagen: 1.3, gleiten: 1.0, schraeg: 0.55, schraegMax: 0.6,   // freier Flug: Sekunden ducken · Sekunden bis zum Reiseflug · m/s beim Abheben und im Flug · Sekunden schlagen und gleiten im Wechsel · Schräglage je Kursänderung (rad je rad/s) und höchstens
       arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, armLangJe: 0.07, woelb: -0.07, armWoelb: 0.14, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
     ring: RINGE.arthur,
     schaedel: 0.058,                                  // Halbe Höhe des Schädels (vor der Vergrößerung): die Kehlfedern am Rumpf müssen darunter bleiben
@@ -141,7 +141,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
     return { v, F, H, arm, decke: g.figur.getObjectByName("rabe_decke_" + s), breit: g.figur.getObjectByName("rabe_handoffen_" + s), wd: vek("wd"), wn: vek("wn"), e: vek("e"), handOrt: H.position.clone(), arme: teile("as", 6), haende: teile("hs", 7) };
   }) : [];
   const flug = { tut: "sitzt", t: 0, auf: 0, schlag: 0, neig: 0, knick: 0, biege: 0, faecher: 0, senk: 0, beine: 0, ziel: null, von: null };
-  const mA = new THREE.Matrix4(), mB = new THREE.Matrix4(), qOffen = new THREE.Quaternion(), qSchlag = new THREE.Quaternion(), qNull = new THREE.Quaternion(), va = new THREE.Vector3(), vb = new THREE.Vector3(), vc = new THREE.Vector3();
+  const mA = new THREE.Matrix4(), mB = new THREE.Matrix4(), qOffen = new THREE.Quaternion(), qSchlag = new THREE.Quaternion(), qNull = new THREE.Quaternion(), qVor = new THREE.Quaternion(), va = new THREE.Vector3(), vb = new THREE.Vector3(), vc = new THREE.Vector3();
   /* Schwanz: jede Feder mit eigenem Gelenk (Angabe i = Platz im Fächer), der Bürzel dreht halb mit */
   const schwanzTn = seiten.length ? new THREE.Vector3(...g.schwanz.userData.tn) : null, buerzel = seiten.length ? g.figur.getObjectByName("rabe_buerzel") : null;
   const schwanzfedern = seiten.length ? g.schwanz.children.filter((o) => o.name.startsWith("rabe_sf_")).map((o) => ({ o, i: o.userData.i })) : [];
@@ -160,7 +160,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
       mB.makeBasis(va.set(w.v, 0, 0), vb.set(0, c, -sn), vc.set(0, -sn, -c));             // Ziel: zur Seite, oben, hinten (gegen die Neigung des Körpers gerechnet)
       qOffen.setFromRotationMatrix(mB.multiply(mA));
       qSchlag.setFromAxisAngle(va.set(0, sn, c), w.v * schlag);
-      w.F.quaternion.copy(qNull).slerp(qOffen, auf).premultiply(qSchlag);
+      w.F.quaternion.copy(qNull).slerp(qOffen, auf).premultiply(qSchlag); if (p.vor) w.F.quaternion.premultiply(qVor.setFromAxisAngle(vb.set(0, c, -sn), w.v * p.vor));   // vor: die Flügel schwingen im Abschlag nach vorn (Film: beim Abheben greifen sie vor den Körper)
       w.H.position.copy(w.handOrt).addScaledVector(w.e, FL.arm * auf);
       w.H.quaternion.setFromAxisAngle(w.wn, -w.v * FL.hand * auf).premultiply(qSchlag.setFromAxisAngle(w.wd, -w.v * (knick + FL.woelb) * auf));   // FL.woelb: die Hand hängt immer ein wenig – der Flügel ist nach unten gewölbt
       w.haende.forEach((f, j) => { f.o.quaternion.setFromAxisAngle(w.wn, -w.v * (FL.faecher - j * FL.faecherJe) * auf).premultiply(qSchlag.setFromAxisAngle(w.wd, -w.v * biege * auf * (1 - j / 6))); f.o.scale.setScalar(1 + FL.handLang * auf); });
@@ -217,9 +217,9 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
          ducken (tD) – die Fersen knicken nach hinten, der Körper sinkt und schiebt sich vor, Flügel angelegt · abstoßen (tP) – die Beine strecken sich schlagartig ·
          Sprung auf der Bahn: die Flügel gehen in EINEM Zug hoch (oben nach tO) und ziehen einmal tief durch (unten nach tU), die Beine hängen nach · erst dann schnelle Schläge.
          Die Flügel beginnen schon im Abstoßen und laufen ohne Halt durch den Absprung – kein Schnitt zwischen den Teilen. */
-      const tD = FL.ducken, tP = FL.abstoss, tO = FL.schlagOben, tU = FL.schlagUnten, tS = FL.steigen, tf = t - tD - tP;   // tf: Zeit, seit die Füße den Boden verlassen haben
-      const fl = t - tD - tP * 0.2, hoch1 = glatt(fl / (tO + tP * 0.8)), ab1 = glatt((tf - tO) / (tU - tO));
-      const erster = { auf: glatt(fl / (tO * 0.75 + tP * 0.8)), schlag: 1.2 * hoch1 - 1.95 * ab1, knick: -0.55 * Math.sin(Math.PI * hoch1) * (1 - ab1) + 0.45 * Math.sin(Math.PI * ab1), biege: 0.25 * hoch1 + 0.3 * Math.sin(Math.PI * ab1) };
+      const tD = FL.ducken, tP = FL.abstoss, tO = FL.schlagOben - FL.vorlauf + FL.schlagHalt, tU = tO + FL.schlagAb, tS = FL.steigen, tf = t - tD - tP;   // tf: Zeit, seit die Füße den Boden verlassen haben
+      const fl = tf + FL.vorlauf, hoch1 = glatt(fl / FL.schlagOben), ab1 = glatt((tf - tO) / (tU - tO));   // Zeiten Bild für Bild aus der Zeitlupe (4-fach): die Flügel öffnen sich einen Wimpernschlag vor dem Absprung, sind nach 0,06 s oben und nach weiteren 0,08 s unten
+      const erster = { auf: glatt(fl / (FL.schlagOben * 0.8)), schlag: 1.2 * hoch1 - 1.95 * ab1, knick: -0.55 * Math.sin(Math.PI * hoch1) * (1 - ab1) + 0.45 * Math.sin(Math.PI * ab1), biege: 0.25 * hoch1 + 0.3 * Math.sin(Math.PI * ab1), vor: -0.6 * Math.sin(Math.PI * Math.min(1, ab1 * 1.15)) };
       if (tf < 0) {                                                                          // noch am Boden: ducken, dann abstoßen
         const u = (t - tD) / tP, neig = 0.5 * glatt(t / tD) - 0.08 * glatt(u);
         pose({ ...erster, neig, faecher: 0, senk: 0, beine: 0 }); hocke(t < tD ? FL.hocke * glatt(t / tD) : FL.hocke - (FL.hocke + FL.streck) * u * u, neig); return;   // abstoßen: die Beine strecken sich ganz, der Körper hebt sich über die Sitzhöhe (die Schenkel kommen aus dem Gefieder)
@@ -231,7 +231,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
       const kurs = Math.atan2(ri.x, ri.z), dk = Math.atan2(Math.sin(kurs - flug.kurs), Math.cos(kurs - flug.kurs)); flug.kurs = kurs; wurzel.rotation.y = kurs;
       if (dt > 0) flug.roll += (Math.max(-FL.schraegMax, Math.min(FL.schraegMax, -dk / dt * FL.schraeg)) * start - flug.roll) * Math.min(1, dt * 3);   // Schräglage: in die Kurve gelegt
       g.figur.rotation.z = flug.roll;
-      const neig = Math.max(0.05, 0.42 - 0.14 * glatt(tf / tO) + (FL.neig - 0.28) * glatt((tf - tU) / 0.9) - ri.y * 0.5 * glatt(tf / 0.15)), beine = -0.5 * (1 - glatt((tf - tU) / 0.4));   // im Sprung Kopf voran schräg nach oben, die Beine hängen nach
+      const neig = Math.max(-0.3, 0.42 - 0.6 * glatt(tf / tO) + (FL.neig + 0.18) * glatt((tf - tU) / 0.9) - ri.y * 0.5 * glatt(tf / 0.15)),   /* Bild für Bild mit dem Film verglichen: im Sprung steht der Körper steil, Kopf oben, die Beine hängen fast gerade nach unten */ beine = -0.5 * (1 - glatt((tf - tU) / 0.4));   // im Sprung Kopf voran schräg nach oben, die Beine hängen nach
       if (tf < tU) pose({ ...erster, neig, faecher: 0.35 * hoch1, senk: 0, beine });
       else {
         flug.phi += dt / (FL.abTakt + (FL.takt - FL.abTakt) * start);

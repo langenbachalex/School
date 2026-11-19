@@ -693,6 +693,7 @@ async function hofTest(browser, basis, app, name, fm) {
       if (!ra.vorn) fehl.push(`${t}: Arthur fehlt im Hof`);
       else {
         if (ra.vorn.hoch < 0.58 || ra.vorn.hoch > 0.75) fehl.push(`${t}: Arthur ist ${ra.vorn.hoch} m hoch statt rund 0,65 m (Mr. Alex 19.11.: riesig, ehrfurchtgebietend)`);
+        if (ra.vorn.bau !== "blender") fehl.push(`${t}: Arthur ist nicht die Blender-Fassung (figuren/rabe.glb)`);
         if (Math.abs(ra.vorn.fuss) > 0.01) fehl.push(`${t}: Arthur steht nicht auf dem Boden (Füße bei ${ra.vorn.fuss} m)`);
         if (ra.vorn.sitzt !== "vorn" || Math.abs(ra.vorn.ort[0]) > B / 2 || Math.abs(ra.vorn.ort[2]) > T / 2 || !ra.vorn.klotz) fehl.push(`${t}: Arthur sitzt zu Beginn nicht vorn am Platz`);
         const rp = plan.raben[3];

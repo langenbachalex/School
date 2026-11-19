@@ -143,7 +143,7 @@ import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt 
 import { ladeFiguren, mundAusZeiten, einsaetzeAus, MUNDFORMEN_MENSCH } from "./probe3d_figuren.js";
 import { ladeBauProbe, GESTEN, rundeOrt, SERGEANT } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
-import { bauVogel } from "./vogel_bau.js";   // Figuren 7 (19.11.): Arthur, der Rabe – nur im Hof
+import { bauVogel, ladeVogel } from "./vogel_bau.js";   // Figuren 7 (19.11.): Arthur, der Rabe – nur im Hof
 import { bauHof, HOF_GROESSEN, HOF_START } from "./hof_bau.js";   // Hof-Rohbau (19.11.): eigener Abschnitt, gewählt mit ?ort=hof&gross=40x30; ohne das bleibt der Guard Room
 
 const $ = (id) => document.getElementById(id);
@@ -301,7 +301,7 @@ try {
   for (const x of document.querySelectorAll("#bau .nurhof")) x.hidden = !hof;
   for (const b of document.querySelectorAll("#bau button[data-weg]")) b.addEventListener("click", () => waehleWeg(aktiv.wer, b.dataset.weg));
   /* Arthur (Figuren 7, 19.11.): sitzt im Hof – zum Beurteilen vorn am Platz neben dem Startpunkt, oder an seinem Ort auf der Rabenmauer (Platz 4 von 7, w03a); dort ersetzt er den Platzhalter-Klotz */
-  const arthur = hof ? bauVogel("arthur") : null;
+  const arthur = hof ? (sucht.get("rabe") === "einfach" ? bauVogel("arthur") : await ladeVogel(lader, "arthur")) : null;   // ?rabe=einfach zeigt die erste, im Programm gebaute Fassung
   let rabeOrt = "vorn";
   function setzeRabe(wo) {
     rabeOrt = wo; const pl = hof.plan, platz = pl.raben[3], klotz = hof.scene.getObjectByName("hof_rabe4");

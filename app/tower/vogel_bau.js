@@ -12,6 +12,7 @@ export const VOEGEL = {
     /* Blick (Profil-Tabelle „Arthur“): fast reglos; dreht langsam den ganzen Kopf und legt ihn schief – jede Kopfdrehung zählt */
     blick: { pause: [6, 11], weit: 1.2, tempo: 0.8, schief: 0.35, schiefOft: 0.35 },   // Sekunden zwischen zwei Drehungen · Bogenmaß · Bogenmaß je Sekunde
     blinzeln: [5, 9],
+    datei: "figuren/rabe.glb",                        // Blender-Fassung (werkzeuge/blender/tower_rabe.py); ladeVogel nimmt sie, bauVogel baut die einfache Fassung im Programm
     stueck: null,                                     // Erkennungsstück: (anker) => Mesh an anker.hals / .schnabel / .bein / .kopf; Arthur hat keins (goldene Augen)
   },
 };
@@ -74,6 +75,22 @@ export function bauVogel(wer = "arthur") {
   }
   const g = { figur, koerper, hals, kopf, schnabel, schnabel_unten: unten, fluegel_l: fluegel.l, fluegel_r: fluegel.r, schwanz, bein_l: beine.l, bein_r: beine.r };
   if (P.stueck) P.stueck({ hals, kopf, schnabel, bein: beine.r });
+  return verhalten(wer, wurzel, g, augen);
+}
+
+/* Die Blender-Fassung laden: dieselben Gelenke (Namen rabe_…), dasselbe Verhalten */
+export async function ladeVogel(lader, wer = "arthur") {
+  const P = VOEGEL[wer], gltf = await lader.loadAsync(P.datei), teil = (n) => gltf.scene.getObjectByName("rabe_" + n);
+  const wurzel = new THREE.Group(); wurzel.name = "vogel_" + wer;
+  const figur = new THREE.Group(); figur.scale.setScalar(P.gross); figur.add(gltf.scene); wurzel.add(figur);
+  const g = { figur, koerper: teil("koerper"), kehle: teil("kehle"), kopf: teil("kopf"), schnabel_unten: teil("schnabel_unten"), fluegel_l: teil("fluegel_l"), fluegel_r: teil("fluegel_r"), hand_l: teil("hand_l"), hand_r: teil("hand_r"), schwanz: teil("schwanz"), bein_l: teil("bein_l"), bein_r: teil("bein_r") };
+  for (const [n, o] of Object.entries(g)) if (!o) throw new Error(`Rabe: Gelenk ${n} fehlt in ${P.datei}`);
+  if (P.stueck) P.stueck({ hals: g.koerper, kopf: g.kopf, schnabel: g.schnabel_unten, bein: g.bein_r });
+  return verhalten(wer, wurzel, g, [teil("auge_l"), teil("auge_r")], "blender");
+}
+
+function verhalten(wer, wurzel, g, augen, bau = "programm") {
+  const P = VOEGEL[wer], { koerper, kopf } = g;
 
   /* Sitzen: fast reglos. Nur der Atem, ein Blinzeln – und ab und zu dreht sich der ganze Kopf langsam in eine neue Richtung, manchmal legt er sich schief. */
   const z = { warte: zufall(P.blick.pause) / 2, zielY: 0, zielZ: 0, blinzel: zufall(P.blinzeln), zu: 0, zeit: 0, drehungen: 0 };
@@ -93,7 +110,7 @@ export function bauVogel(wer = "arthur") {
   const kasten = new THREE.Box3();
   function zustand() {
     wurzel.updateMatrixWorld(true); kasten.setFromObject(wurzel);
-    return { wer, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
+    return { wer, bau, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
       kopf: [+kopf.rotation.y.toFixed(4), +kopf.rotation.z.toFixed(4)], drehungen: z.drehungen, blick: P.blick };
   }
   /* setze: Ort der Füße und Blickrichtung (0 = nach Süden, +z) */

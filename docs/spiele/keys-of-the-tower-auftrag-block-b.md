@@ -1,4 +1,4 @@
-# The Keys of the Tower – Auftrag Block B „Spiel in den 3D-Raum“ (Entwurf des Masters, 19.11.2026, noch nicht freigegeben)
+# The Keys of the Tower – Auftrag Block B „Spiel in den 3D-Raum“ (Entwurf des Masters, 19.11.2026, freigegeben von Mr. Alex 19.11.)
 
 Grundlage: Vision 8b und 9, Drehbuch der ersten Szene (`keys-of-the-tower-drehbuch-szene1.md`), Sprüche-Blatt (`keys-of-the-tower-sprueche-hof.md`), Ton-Entscheidungen (`werkzeuge-recherche.md` §6, Punkte 1–7), „Help the tourist“ (`keys-of-the-tower-help-the-tourist.md`). Gebaut wird lokal auf AlexPC, erst nach dem OK von Mr. Alex und erst, wenn kein anderer Bau-Chat läuft.
 
@@ -64,8 +64,8 @@ Nach jedem Schritt: Testprogramm grün (Laptop und iPad), Mr. Alex zeigen, auf s
 ## Umfang und Reihenfolge
 Groß. Voraussichtlich drei Bau-Chats nacheinander: **B1 + B2** (Grundgerüst, Gespräche), **B3 + B4** (Welt, Sprüche), **B5 + B6** (Klang, Einbau). Jeder Chat endet mit etwas, das Mr. Alex selbst spielen kann. Schlankere Variante: nach B1–B3 testen und B4–B6 erst danach; dann fehlen beim ersten Blick wechselnde Sprüche und Raumklang.
 
-## Offen für Mr. Alex
-1. **Wann startet Block B?** Entweder gleich nach Figuren 8, dann stehen Taube und Tourist vorerst als Platzhalter im Hof und das Spiel ist früher spielbar. Oder erst nach allen Figuren, dann dauert es länger bis zum ersten Durchspielen. Empfehlung des Masters: gleich nach Figuren 8.
-2. **Filme zuerst als schlichte Ersatzfassung** (Balken, feste Kamera), die schöne Kamera erst in Block C – einverstanden? Empfehlung: ja, sonst ist die Szene bis Block C nicht durchspielbar.
-3. **Gary flüstert vor dem Auftrag aus dem wackelnden Fass** (offene Frage aus dem Drehbuch). Dafür wären zwei neue Zeilen zu schreiben und zu vertonen.
-4. **Geräusche der ersten Szene:** Sollen sie jetzt trocken erzeugt werden, damit B5 echtes Material hat? Der Master nennt vorher die Kosten in Credits.
+## Entschieden von Mr. Alex (19.11.2026, „Ja zu allen Vorschlägen“)
+1. **Block B startet gleich nach Figuren 8** (sobald Mr. Alex Figuren 8 gesehen hat); Taube und Tourist stehen vorerst als Platzhalter im Hof.
+2. **Filme in Block B als schlichte Ersatzfassung** (Balken, feste Kamera); die schöne Kamera kommt in Block C.
+3. **Gary flüstert vor dem Auftrag aus dem wackelnden Fass:** `gary_149` „Psst! Talk to the Sergeant!“ und `gary_150` „The tall one! With the big hat! … I am not here.“ (Anlass `tipp_fass`, vertont 19.11., 68 Credits, Hörprüfung in Ordnung; auf der Anhör-Seite in der Gruppe „Neu am 19.11. spät“).
+4. **Geräusche der ersten Szene werden trocken erzeugt.** Liste mit Aufforderungen: `inhalte/abenteuer/tower_geraeusche.tsv` (40 Geräusche, 110 Varianten, 236 Sekunden; rund 3.100 Credits bei 12 Credits je Sekunde plus 10 %, mit Auswahl aus je zwei Versuchen rund 6.200). Erzeugt wird im Bau-Chat auf AlexPC zu Beginn von B5, weil die Originale nicht ins öffentliche Repo dürfen und das Paket je Ort erst mit dem Klang-Modul entsteht. Nicht in der Liste: Turmuhr (vorhandene Aufnahme), Ticken und Glanz-Töne (im Programm erzeugt), The Den.

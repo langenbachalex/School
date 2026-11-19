@@ -1,0 +1,41 @@
+id	ort	wofuer	varianten	sekunden	schleife	aufforderung
+hof_wind	hof	Grundgeräusch Nacht	1	30	ja	soft night wind, light gusts, steady, dry, no reverb, seamless loop
+hof_stadt	hof	London ist nah	1	22	ja	very distant city hum at night, low and even, no sirens, no voices, dry, seamless loop
+hof_rabe_kraechzen	hof	Raben auf der Mauer	5	2		single raven croak, deep and hoarse, dry, close, no reverb
+hof_rabe_flattern	hof	Raben fliegen auf	3	2		large bird wings flapping, a few heavy beats, dry, close, no reverb
+hof_fahnenseil	hof	Leben am Rand	2	3		rope and metal clip tapping against a flagpole in light wind, dry, close, no reverb
+hof_fass	hof	Gary klettert aus dem Fass	2	2		wooden barrel lid thrown off and clattering on stone, dry, close, no reverb
+hof_fass_wackeln	hof	Fass wackelt (Tipp)	2	2		heavy wooden barrel wobbling on stone, short, dry, close, no reverb
+hof_tuer_zu	hof	Tür ist zu	2	2		old iron door handle rattling, locked heavy wooden door, dry, close, no reverb
+hof_tuer_auf	hof	Tür aufschließen	2	3		big old key turning in a heavy lock, then wooden door creaking open, dry, close, no reverb
+schritt_stein_stiefel	sergeant	Gang und Drill	6	1		single military boot step on cobblestone, firm, dry, close, no reverb
+sergeant_hacken	sergeant	Salut, stramm stehen	2	1		two boot heels clicking together sharply, dry, close, no reverb
+sergeant_muetze	sergeant	Mütze fällt	1	1		soft heavy fur hat dropping on the floor, dull flump, dry, close, no reverb
+schritt_stein_pfote	gary	Garys Gang draußen	4	1		single small soft paw step on stone, light, dry, close, no reverb
+schritt_holz_pfote	gary	Garys Gang drinnen	4	1		single small soft paw step on wooden floor, light, dry, close, no reverb
+gary_umhang	gary	Umhang werfen	3	1		short cloth cape swoosh, dry, close, no reverb
+gary_bauch	gary	Bauchknurren	2	2		funny stomach rumble, cartoonish, dry, close, no reverb
+schritt_stein_kind	kind	Schritte im Hof	5	1		single sneaker footstep on cobblestone, light, dry, close, no reverb
+schritt_holz_kind	kind	Schritte im Guard Room	5	1		single sneaker footstep on old wooden floorboards, light, dry, close, no reverb
+raum_feuer	guardroom	Grundgeräusch Kamin	1	30	ja	small fireplace crackling gently, steady, dry, close, no reverb, seamless loop
+raum_feuer_knack	guardroom	Knacker im Feuer	4	1		single wood crackle pop from a fire, dry, close, no reverb
+raum_holz_knarrt	guardroom	Einzelgeräusch	3	2		old wooden beam creaking once, dry, close, no reverb
+raum_wind_fenster	guardroom	Wind am Fenster	2	4		wind whistling softly through an old window frame, short gust, dry, no reverb
+ding_metall	guardroom	Dinge antippen	3	1		light tap on a small metal object, short ring, dry, close, no reverb
+ding_holz	guardroom	Dinge antippen	3	1		light knock on a wooden object, dry, close, no reverb
+ding_stoff	guardroom	Dinge antippen	3	1		hand brushing heavy cloth, short rustle, dry, close, no reverb
+ding_glas	guardroom	Dinge antippen	3	1		light tap on glass, short clink, dry, close, no reverb
+ding_papier	guardroom	Dinge antippen, Zettel	3	1		sheet of old paper being unfolded, short, dry, close, no reverb
+ding_leder	guardroom	Dinge antippen	3	1		hand patting an old leather object, short creak, dry, close, no reverb
+schluessel	alle	Schlüssel gefunden, genommen	2	2		old iron keys on a ring jingling briefly, dry, close, no reverb
+taube_gurren	taube	Erkennung	4	2		pigeon cooing, short phrase, dry, close, no reverb
+taube_picken	taube	pickt an die Scheibe	3	1		bird beak pecking on a window pane, three quick taps, dry, close, no reverb
+taube_flattern	taube	Bewegung	3	1		pigeon wings fluttering briefly, light and fast, dry, close, no reverb
+arthur_fluegel	arthur	Ankunft	2	2		one slow heavy wing beat of a very large bird, dry, close, no reverb
+arthur_plustern	arthur	Geste	2	2		big bird ruffling and shaking its feathers, dry, close, no reverb
+arthur_kraechzen	arthur	Würde, selten	2	2		very deep slow raven croak, old and dignified, dry, close, no reverb
+flex_glas	mrflex	Spiegel wird blank	2	2		finger rubbing clean glass, short squeak, then a soft glass chime, dry, close, no reverb
+flex_wusch	mrflex	Kung-Fu-Kick	3	1		fast martial arts whoosh through the air, dry, close, no reverb
+flex_stampfen	mrflex	Reiterstand	3	1		single firm foot stomp on a wooden floor, dry, close, no reverb
+flex_brille	mrflex	Sonnenbrille	2	1		sunglasses being flipped open with a small click, dry, close, no reverb
+flex_tasse	mrflex	Teetasse	2	1		porcelain teacup placed on a saucer, dry, close, no reverb

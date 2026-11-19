@@ -1,4 +1,6 @@
-# The Keys of the Tower – „Help the tourist“ (Textentwurf des Masters, 19.11.2026, noch nicht freigegeben, nichts vertont)
+# The Keys of the Tower – „Help the tourist“ (Text des Masters, 19.11.2026 – von Mr. Alex abgenommen und vertont)
+
+> **Stand 19.11.:** Abgenommen („passt“) und vertont. Die Zeilen stehen in `inhalte/abenteuer/tower_sprueche.tsv` (`tourist_01`–`tourist_25`, Anlässe `hilf_frage`, `hilf_danke`, `hilf_weg`, `hilf_geschenk`; Gary `gary_73`–`gary_79`, Anlass `hilf_gary`), die Aufnahmen in `app/audio/tower/`. Die Nummern h1, hr1 … unten sind die des Entwurfs; maßgeblich ist die Tabelle. Im Spiel eingebaut ist noch nichts (Block B).
 
 Spiel zum Wiederkommen im Hof (Entscheidung Mr. Alex 19.11.: weiterverfolgen). Sprachkern: **Ortsangaben als Wendungen** – genau das, was das Tower-Kapitel übt. Erster Baustein für „Sprache herauslocken“.
 
@@ -39,6 +41,8 @@ h7 greift seinen ersten Auftritt auf („This is Buckingham Palace, right?“). 
 | hr7 | You are good, dude. Almost as good as me. | Du bist gut, Kumpel. Fast so gut wie ich. | 3 |
 | hr8 | Yeehaw! Now I know everything. | Jippie! Jetzt weiß ich alles. | 3 |
 | hr9 | In Texas, the gate is bigger. And the barrel. And the ravens. | In Texas ist das Tor größer. Und das Fass. Und die Raben. | 4 |
+
+**Bedanken (Ergänzung Mr. Alex 19.11.):** Der Tourist bedankt sich jedes Mal – dafür gibt es zusätzlich „Thank you kindly!“ und „Thanks a lot, buddy!“ (beide häufig), sodass fünf der elf Sprüche ein echtes Danke sind. **Das Kind antwortet darauf** mit einem Knopf (Text, keine Aufnahme): „You're welcome!“ · „No problem!“ · „Anytime!“ – so übt es die ganze höfliche Runde: fragen, antworten, danken, erwidern. Alternativen für die Knöpfe: „My pleasure!“ · „Sure!“ · „That's okay!“
 
 **Wenn er losgeht (in die falsche Richtung)**
 | Nr | Englisch | Deutsch (Feder) | S |

@@ -29,7 +29,7 @@ export const VOEGEL = {
     /* Tempo aus den Filmen der Tower-Raben (Mr. Alex 19.11.: die erste Fassung war „viel zu langsam“): Flügel strecken im Sitzen rund 1 s,
        im Flug drei Schläge je Sekunde, beim Bremsen fünf */
     flug: { schlagDauer: 1.15, takt: 0.33, bremsTakt: 0.2, anflug: 1.3, bremsen: 0.55, setzen: 0.5, bremsweg: 1.4, bremsHoch: 0.5, neig: 0.75,
-      arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, armLangJe: 0.07, woelb: -0.16, armWoelb: 0.14, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
+      arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, armLangJe: 0.07, woelb: -0.1, armWoelb: 0.14, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
     ring: RINGE.arthur,
     schaedel: 0.058,                                  // Halbe Höhe des Schädels (vor der Vergrößerung): die Kehlfedern am Rumpf müssen darunter bleiben
     datei: "figuren/rabe.glb",                        // Blender-Fassung (werkzeuge/blender/tower_rabe.py); ladeVogel nimmt sie, bauVogel baut die einfache Fassung im Programm
@@ -174,7 +174,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
   if (seiten.length) pose(RUHE);
   const stufen = (u, punkte) => { for (let i = 1; i < punkte.length; i++) if (u <= punkte[i][0]) { const [u0, w0] = punkte[i - 1], [u1, w1] = punkte[i]; return w0 + (w1 - w0) * glatt((u - u0) / (u1 - u0)); } return punkte[punkte.length - 1][1]; };
   /* Ein Schlag im Flug: φ = 0 Flügel oben. Im Abschlag läuft die Hand nach (Spitzen oben), im Aufschlag hängt sie und der Flügel zieht sich etwas ein. */
-  const schlagen = (phi, weit, mitte) => { const w = 2 * Math.PI * phi, si = Math.sin(w); return { schlag: mitte + weit * Math.cos(w), knick: 0.45 * si, biege: 0.25 + 0.3 * Math.max(0, si), auf: 1 - 0.18 * Math.max(0, -si) }; };
+  const schlagen = (phi, weit, mitte) => { const w = 2 * Math.PI * phi, si = Math.sin(w); return { schlag: mitte + weit * Math.cos(w), knick: si > 0 ? 0.45 * si : 0.3 * si, biege: 0.25 + 0.3 * Math.max(0, si), auf: 1 - 0.18 * Math.max(0, -si) }; };
   /* Flügelschlag im Sitzen (Filme der Tower-Raben: rund eine Sekunde): hochreißen – die Handgelenke zuerst, „M“ –, steil zum V, ein kräftiger Schlag, anlegen */
   function fluegelschlag() { if (!seiten.length || flug.tut !== "sitzt") return false; flug.tut = "schlag"; flug.t = 0; z.zielY = z.zielZ = 0; return true; }
   /* Landen: tiefer, schneller Anflug von `von` auf `ziel` zu, dann hartes Bremsen – aufgerichtet, Flügel im V mit kurzen schnellen Schlägen,
@@ -195,7 +195,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
       if (t < tA) {                                                                        // Anflug: erst drei Schläge je Sekunde, dann mit gewölbten Flügeln gleiten
         const u = t / tA; weg = (weit - bremsweg) * u; hoch = FL.bremsHoch + (von.y - ziel.y - FL.bremsHoch) * (1 - glatt(u));
         const gleiten = glatt((u - 0.55) / 0.2), s = schlagen(t / FL.takt, 0.5, 0.05);
-        p = { auf: s.auf + (1 - s.auf) * gleiten, schlag: s.schlag + (0.24 - s.schlag) * gleiten, knick: s.knick + (-0.5 - s.knick) * gleiten, biege: s.biege + (0.75 - s.biege) * gleiten, neig: FL.neig, faecher: 0.35, senk: 0, beine: 0 };
+        p = { auf: s.auf + (1 - s.auf) * gleiten, schlag: s.schlag + (-0.06 - s.schlag) * gleiten, knick: s.knick + (-0.08 - s.knick) * gleiten, biege: s.biege + (0.5 - s.biege) * gleiten   /* Gleiten (Mr. Alex 19.11.: die Hand knickte „zu weit nach unten“, bei echten Raben ist es ein Bogen): der Arm fällt ab der Schulter leicht ab, am Handgelenk nur rund 10 Grad */, neig: FL.neig, faecher: 0.35, senk: 0, beine: 0 };
       } else if (t < tA + tB) {                                                            // Bremsen: aufrichten, Flügel hoch, kurze schnelle Schläge
         const u = (t - tA) / tB, s = schlagen((t - tA) / FL.bremsTakt, 0.38, 0.75);
         weg = weit - bremsweg * (1 - u) * (1 - u); hoch = FL.bremsHoch * (1 - Math.pow(u, 1.6));

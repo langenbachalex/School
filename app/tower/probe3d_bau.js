@@ -307,7 +307,6 @@ const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
 export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, duenn: 0.6,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (duenn = Breite und Tiefe des Körpers, 1 = wie das Modell)
   kopf: "sergeantkopf", hand: 0.72,   // Kopf mit Bart, rothaarig, Knollennase (Wahl Mr. Alex 18./19.11.) · hand = Handgröße gegenüber Mr. Flex
  
-  kragen: { ab: 1.1, eng: 0.62, flach: 0.25, felder: ["7,0", "7,1"] },   // kein Kragen (Mr. Alex 19.11.): der hohe Kragen der Rüstung wird eng an den Hals gezogen und flach gedrückt, in Rockfarbe – Schultern und Oberarme gingen sonst hindurch
   uniform: { saum: [0.70, 1.10, 0.02], knoepfe: [0.75, 0.82, 0.89, 0.96, 1.03], knopf: 0.026 },   // weißer Saum vorn (von, bis, halbe Breite) und silberne Knöpfe (Höhen, Größe), Maße des ungestreckten Körpers
   umfaerben: { Body: { "3,0": ROT, "7,0": ROT,   // kein schwarzer Kragen mehr (Mr. Alex 19.11.: bringt nur Probleme)
     "7,1": (y) => (y >= 1.1 ? ROT : SCHWARZ), "6,0": WEISS, "2,1": GOLD, "0,1": GOLD }, Arm: { "3,0": ROT, "4,0": ROT, "7,0": ROT, "6,0": ROT }, Leg: { "3,0": SCHWARZ, "7,0": SCHWARZ, "7,1": SCHWARZ, "6,0": SCHWARZ } } };
@@ -350,15 +349,56 @@ function uniformTeile(m, plan, duenn) {
   teil.name = "uniform"; teil.frustumCulled = false; teil.position.copy(rumpf.position); teil.quaternion.copy(rumpf.quaternion); teil.scale.copy(rumpf.scale);
   rumpf.parent.add(teil); teil.bind(rumpf.skeleton, rumpf.bindMatrix);
 }
-function kragenEng(m, plan) {                           // zieht die Punkte des Kragens (Farbfelder des Körperbilds, ab einer Höhe) zur Halsachse; unten weich, damit keine Stufe entsteht
+/* Kein Kragen (Mr. Alex 19.11.: Standard für alle Figuren, er bringt mehr Probleme, als er löst; nur besondere Figuren behalten ihn mit kragen: false).
+   Alle Flächen des Körpers über der Schulterhöhe (plan.ab, Maß des ungestreckten Körpers) werden gelöscht: Kragen und Halsstumpf. Das Loch schließt eine flache
+   Schulterkappe in der Farbe der Kleidung, die am Schnittrand ansetzt und dessen Knochen-Gewichte übernimmt; der Hals selbst gehört zum Kopf (tower_flex.py, "hals"). */
+const KRAGEN_WEG = { ab: 1.1 };
+function kragenWeg(m, plan) {
   m.traverse((o) => {
     if (!o.isSkinnedMesh || !/_Body$/.test(o.name)) return;
-    const P = o.geometry.attributes.position, UV = o.geometry.attributes.uv;
-    for (let i = 0; i < P.count; i++) {
-      const y = P.getY(i); if (y < plan.ab || !plan.felder.includes(Math.floor(UV.getX(i) * 8) + "," + Math.floor(UV.getY(i) * 4))) continue;
-      const f = 1 - (1 - plan.eng) * Math.min(1, (y - plan.ab) / 0.06); P.setX(i, P.getX(i) * f); P.setZ(i, P.getZ(i) * f); if (plan.flach) P.setY(i, plan.ab + (y - plan.ab) * plan.flach);
+    const g = o.geometry, P = g.attributes.position, alt = g.index.array, bleibt = [], rand = new Map();
+    for (let i = 0; i < alt.length; i += 3) {
+      const d = [alt[i], alt[i + 1], alt[i + 2]];
+      if (!d.some((e) => P.getY(e) > plan.ab)) { bleibt.push(...d); continue; }
+      for (const e of d) if (P.getY(e) <= plan.ab) rand.set([P.getX(e), P.getY(e), P.getZ(e)].map((x) => x.toFixed(3)).join(), e);   // Schnittrand, jede Stelle einmal
     }
-    P.needsUpdate = true;
+    const ring = [...rand.values()].sort((a, b) => Math.atan2(P.getZ(a), P.getX(a)) - Math.atan2(P.getZ(b), P.getX(b))), n = ring.length;
+    if (n < 3) return;
+    const felder = {}; for (const e of ring) { const k = Math.floor(g.attributes.uv.getX(e) * 8) + "," + Math.floor(g.attributes.uv.getY(e) * 4); felder[k] = (felder[k] || 0) + 1; }
+    const feld = Object.keys(felder).sort((a, b) => felder[b] - felder[a])[0].split(",").map(Number), uv = [(feld[0] + 0.5) / 8, (feld[1] + 0.5) / 4];   // die häufigste Farbe am Rand = Farbe der Kleidung
+    // drei Ringe (Schnittrand, halbe Höhe, Halsansatz) und die Mitte; jeder neue Punkt übernimmt die Gewichte seines Randpunkts
+    const STUFEN = [[0, 1, 0, 0.55], [0.034, 0.62, 0, 0.8], [0.056, 0, 0.085, 1]], neuP = [], neuN = [], neuVon = [];   // Höhe über ab · Anteil des Randradius · fester Radius · Normale nach oben
+    for (const [hoch, anteil, fest, auf] of STUFEN) for (const e of ring) {
+      const x = P.getX(e), z = P.getZ(e), r = Math.hypot(x, z) || 1, rn = r * anteil + fest, y = hoch ? plan.ab + hoch : P.getY(e);
+      neuP.push(x / r * rn, y, z / r * rn); const l = Math.hypot(1 - auf, auf); neuN.push(x / r * (1 - auf) / l, auf / l, z / r * (1 - auf) / l); neuVon.push(e);
+    }
+    neuP.push(0, plan.ab + 0.058, 0); neuN.push(0, 1, 0); neuVon.push(ring[0]);
+    const v0 = P.count, mitte = v0 + 3 * n, flaechen = [];
+    const dreieck = (a, b, c) => {                         // immer so herum, dass die Fläche nach außen und oben schaut
+      const p = (e) => [neuP[(e - v0) * 3], neuP[(e - v0) * 3 + 1], neuP[(e - v0) * 3 + 2]], [A, B, C] = [p(a), p(b), p(c)];
+      const u = [B[0] - A[0], B[1] - A[1], B[2] - A[2]], w = [C[0] - A[0], C[1] - A[1], C[2] - A[2]], nx = u[1] * w[2] - u[2] * w[1], ny = u[2] * w[0] - u[0] * w[2], nz = u[0] * w[1] - u[1] * w[0];
+      const sx = A[0] + B[0] + C[0], sz = A[2] + B[2] + C[2];
+      if (nx * sx + nz * sz + ny * 3 * Math.hypot(sx, sz) + ny * 0.001 >= 0) flaechen.push(a, b, c); else flaechen.push(a, c, b);
+    };
+    for (let i = 0; i < n; i++) {
+      const j = (i + 1) % n;
+      for (let s = 0; s < 2; s++) { const a = v0 + s * n + i, b = v0 + s * n + j, c = v0 + (s + 1) * n + i, d = v0 + (s + 1) * n + j; dreieck(a, b, d); dreieck(a, d, c); }
+      dreieck(v0 + 2 * n + i, v0 + 2 * n + j, mitte);
+    }
+    const mehr = neuVon.length, laenger = (name, fuellen) => {
+      const at = g.attributes[name], feldNeu = new at.array.constructor((at.count + mehr) * at.itemSize); feldNeu.set(at.array);
+      const neu = new THREE.BufferAttribute(feldNeu, at.itemSize, at.normalized);
+      for (let k = 0; k < mehr; k++) fuellen(neu, at.count + k, k, at);
+      g.setAttribute(name, neu);
+    };
+    for (const name of Object.keys(g.attributes)) {
+      if (name === "position") laenger(name, (neu, i, k) => neu.setXYZ(i, neuP[k * 3], neuP[k * 3 + 1], neuP[k * 3 + 2]));
+      else if (name === "normal") laenger(name, (neu, i, k) => neu.setXYZ(i, neuN[k * 3], neuN[k * 3 + 1], neuN[k * 3 + 2]));
+      else if (name === "uv") laenger(name, (neu, i) => neu.setXY(i, uv[0], uv[1]));
+      else laenger(name, (neu, i, k, at) => { for (let c = 0; c < at.itemSize; c++) neu.setComponent(i, c, at.getComponent(neuVon[k], c)); });   // Gewichte, Knochen, Farbe: wie der Randpunkt
+    }
+    g.setIndex([...bleibt, ...flaechen]); g.computeBoundingSphere(); g.computeBoundingBox();
+    o.userData.kragenWeg = { rand: n, geloescht: (alt.length - bleibt.length) / 3 };
   });
 }
 function drehung(o) { const q = o.quaternion.clone(); for (let p = o.parent; p; p = p.parent) q.premultiply(p.quaternion); return q; }   // Drehung in der Welt ohne die Maße der Eltern (für Teile, die nicht mitgequetscht werden sollen)
@@ -378,7 +418,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const [koerper, haende, kopfDatei, ...dateien] = await Promise.all([lade(figur.koerper || "probe_mage_ganz"), lade("haende"), kleidung.kopf ? lade(figur.teile || "flex_teile") : null, lade("kaykit_bewegungen"), lade("gesten"), lade("kungfu")]);
   for (const d of dateien) for (const c of d.animations) clips[c.name] = c;
   const m = koerper.scene, K = (n) => m.getObjectByName(n), bau = { ...BAU_START, ...figur.bau };
-  if (figur.kragen) kragenEng(m, figur.kragen);
+  if (figur.kragen !== false) kragenWeg(m, figur.kragen || KRAGEN_WEG);
   if (figur.umfaerben) umfaerben(m, figur.umfaerben);
   const handMass = HAND * (figur.hand || 1), handFolgt = [];
   const haut = []; m.traverse((o) => { if (o.isMesh) o.frustumCulled = false; if (o.isSkinnedMesh && !/Cape/.test(o.name)) haut.push(o); });
@@ -835,6 +875,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       faustR: K("wristr").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)), faustL: K("wristl").getWorldPosition(v()).toArray().map((x) => +x.toFixed(2)),
       flaecheR: imKoerper(flaeche("r")), flaecheL: imKoerper(flaeche("l")), handAbstand: +(flaeche("r").distanceTo(flaeche("l")) / mass).toFixed(3), muskel: muskel.r.visible ? +muskel.r.scale.x.toFixed(3) : 0,
       knieDick: Math.min(knieDick("l"), knieDick("r")), armDick: Math.min(armDick("l"), armDick("r")), hochR: armHoch("r"), hochL: armHoch("l"), huefte: +wo(hips).y.toFixed(4), hut: hutNah(), knieGrad: [knieWinkel("l"), knieWinkel("r")], fussL: fussOrt("l"), fussR: fussOrt("r"), ferseL: fersenOrt("l"), ferseR: fersenOrt("r"), kleidung: kleidungPunkte, hutMass: hutMass(),
+      ohneKragen: (() => { let k = null; m.traverse((o) => { if (o.userData.kragenWeg) k = o.userData.kragenWeg; }); const haut = kopfTeil && kopfTeil.getObjectByName("lippenhaut"); if (haut && !haut.geometry.boundingBox) haut.geometry.computeBoundingBox();
+        return k ? { ...k, hals: !!(kopfTeil && kopfTeil.getObjectByName("hals")), mundHaut: haut ? +(haut.geometry.boundingBox.max.x - haut.geometry.boundingBox.min.x).toFixed(3) : 0 } : null; })(),   // Testprogramm: Kragen gelöscht, Hals am Kopf, Breite der Haut unter der Unterlippe
       kette: kette.glieder.length ? { zahl: kette.glieder.length, kinn: +kette.glieder.reduce((a, b) => (b[2] > a[2] ? b : a))[0].position.y.toFixed(4) } : null,
       kopf: gesicht ? { teile: gesicht.teile, ausdruck: g.ausdruck, winkel: +gesicht.wert.winkel.toFixed(2), unterlid: +gesicht.wert.unterlid.toFixed(2), braue: +gesicht.wert.braueHoch.toFixed(2), mund: +(gesicht.offen || 0).toFixed(2), rund: +gesicht.lippen.rund.toFixed(2), breit: +gesicht.lippen.breit.toFixed(2), nick: +((g.nick * 180) / Math.PI).toFixed(1), redeGesten: g.redeGesten, brille: +g.brille.toFixed(2), brilleDa: !!brille, funkeln: +g.blinkt.toFixed(2), durchBrille: g.brille > 0.75 } : null, zeit: g.laeuft ? +g.laeuft.time.toFixed(3) : 0,
       ort: [+anker.position.x.toFixed(2), +anker.position.z.toFixed(2)], runde: !!(g.runde && !g.gerade), richtung: +g.dreh.toFixed(2) }),

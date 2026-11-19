@@ -192,6 +192,9 @@ Ein Profil sagt, woran man eine Figur erkennt, auch wenn sie nur 100 Bildpunkte 
 - **Kinder:** Die eigene Figur soll normal und ruhig sein, weil die Kinder sich selbst darin sehen und die Verrückten um sie herum auffallen sollen; hier kommt der normale Gang mit locker mitschwingenden Armen hin.
 - **Nebenfigur:** sparsam – ein Körper, ein Merkmal, ein bis zwei Gesten, ein eigener Gang –, damit Nebenfiguren schnell entstehen. Wer dazukommt, plant der Master.
 
+### Kein Kragen (Regel Mr. Alex, 19.11.2026)
+Figuren haben in der Regel **keinen Kragen**: Er bringt mehr Probleme, als er löst (Schultern und Arme stoßen hindurch, Falten). Der Körper endet in einer flachen Schulterkappe, der Hals gehört zum Kopf (`kragenWeg` in `app/tower/probe3d_bau.js`). Einen Kragen bekommen nur besondere Figuren, bei denen er zum Aussehen gehört (`kragen: false` in den Angaben der Figur).
+
 ### Liste der Nebenfiguren (Master, entschieden Mr. Alex 18.11.)
 Jede nach dem Muster „Nebenfigur“: ein Körper, ein Merkmal, ein bis zwei Gesten, ein eigener Gang.
 

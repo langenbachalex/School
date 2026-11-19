@@ -39,6 +39,21 @@ def gesicht_vorn(x, z):
     return min(haut_vorn(x, z), KM[1] - KR[1] * q)
 
 
+def hautfeld(p):
+    """Gesichtsflaeche als Feld: < 0 innen, > 0 aussen (m); weiche Vereinigung von Schaedel, Kiefer und Kinn – dieselbe Flaeche wie kopfhaut."""
+    werte = []
+    for c, r in (((0, 0, CZ), (RX, RY, RZ)), (KM, KR), KINN):
+        werte.append((sum(((p[n] - c[n]) / r[n]) ** 2 for n in range(3)) ** 0.5 - 1) * min(r))
+    return -WEICH * math.log(sum(math.exp(-w / WEICH) for w in werte))
+
+
+def mundloch(breiten):
+    """So weit seitlich (Winkel vom Kiefergelenk aus, Grad) ist die Kopfhaut am Mund offen; daneben liegt die Wange (Gitterlinie von kopfhaut)."""
+    mundrand = math.degrees(math.asin(min(1.0, 0.056 * MW / 0.155)))
+    schritt = 176 / (breiten - 1)
+    return min(-88 + schritt * i for i in range(breiten - 1) if -88 + schritt * (i + 0.5) >= mundrand)
+
+
 def kopfhaut(k, kiefer, f, breiten=25, laengen=72, kiefer_bis=-100):
     """Haut des Kopfes als EINE glatt verschmolzene Flaeche aus Schaedel, Kiefer und Kinn (Mr. Alex 19.11.: der Kiefer war deutlich abgesetzt,
     andere Helligkeit, zackige Grenzlinie). Zwei Netze auf derselben Flaeche: "kopfhaut" (fest) und "unterkiefer" (klappt am Gelenk GJ auf).
@@ -176,6 +191,8 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
     if nase:
         nasenform(k, [(0.188, 0.002, 0.008), (0.174, 0.009, 0.012), (0.158, 0.017, 0.014), (0.142, 0.025, 0.015), (0.126, 0.034, 0.017), (0.112, 0.043, 0.022),
                       (0.100, 0.049, 0.027), (0.089, 0.045, 0.028), (0.080, 0.029, 0.023), (0.075, 0.008, 0.012)], f["haut"])
+    # Hals (Mr. Alex 19.11.: Figuren ohne Kragen): hautfarbener Zylinder unter dem Kopf, steckt unten in der Schulterkappe des Koerpers (probe3d_bau.js, kragenWeg)
+    g.stab("hals", k, (0, 0.012, -0.060), 0.050, 0.150, f["haut"])
     for s in (-1, 1):
         g.kugel("ohr", k, (s * (RX + 0.002), 0.0, 0.150), (0.013, 0.026, 0.036), f["haut"])
     for s, seite in ((-1, "r"), (1, "l")):
@@ -210,15 +227,30 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
         return min(haut_vorn(x, zz), KM[1] - KR[1] * q) - vor
 
     def auf_kiefer(x, zz, tief):
-        """Punkt auf der Kieferflaeche bei (x, zz), senkrecht dazu um `tief` versenkt (minus = davor)."""
-        q = max(0.02, 1 - (x / KR[0]) ** 2 - ((zz - KM[2]) / KR[2]) ** 2) ** 0.5
-        y = KM[1] - KR[1] * 1.006 * q
-        n = (x / KR[0] ** 2, (y - KM[1]) / KR[1] ** 2, (zz - KM[2]) / KR[2] ** 2)
+        """Punkt auf der echten Gesichtsflaeche (Schaedel, Kiefer und Kinn weich verschmolzen, wie kopfhaut) bei (x, zz), senkrecht dazu um `tief`
+        versenkt (minus = davor). Bis 19.11. lag der Punkt auf der Kieferkugel allein: seitlich am Mundwinkel liegt die aber bis 1 cm hinter dem
+        Gesicht, dort tauchten Lippe und Haut ab und es blieb ein Spalt neben dem Mundwinkel (Mr. Alex 19.11.)."""
+        aussen, innen = -0.30, KM[1]
+        if hautfeld((x, innen, zz)) >= 0:                  # ausserhalb des Kopfes (kommt bei den Massen der Koepfe nicht vor): alte Rechnung
+            q = max(0.02, 1 - (x / KR[0]) ** 2 - ((zz - KM[2]) / KR[2]) ** 2) ** 0.5
+            return (x, KM[1] - KR[1] * 1.006 * q + tief, zz)
+        for _ in range(24):
+            m = (aussen + innen) / 2
+            if hautfeld((x, m, zz)) < 0:
+                innen = m
+            else:
+                aussen = m
+        p = (x, (aussen + innen) / 2, zz)
+        e = 0.0015
+        n = [hautfeld([p[m] + (e if m == a else 0) for m in range(3)]) - hautfeld([p[m] - (e if m == a else 0) for m in range(3)]) for a in range(3)]
         l = sum(c * c for c in n) ** 0.5
-        return (x - n[0] / l * tief, y - n[1] / l * tief, zz - n[2] / l * tief)
+        return tuple(p[a] - n[a] / l * tief for a in range(3))
 
-    def lippenlinie(hoch_l=0.0, hoch_r=0.0, dz=0.0, auf=0.0, weit=1.0, vor=0.004, tief=None, mweit=1.0, ddz=0.0, dvor=0.0):
-        """mweit, ddz, dvor = Lippenform fuer einen Laut: schmaler oder breiter, hoeher oder tiefer, weiter nach vorn (siehe LAUTE)."""
+    def lippenlinie(hoch_l=0.0, hoch_r=0.0, dz=0.0, auf=0.0, weit=1.0, vor=0.004, tief=None, mweit=1.0, ddz=0.0, dvor=0.0, spitz=0.8, ende=None, sanft=False):
+        """mweit, ddz, dvor = Lippenform fuer einen Laut: schmaler oder breiter, hoeher oder tiefer, weiter nach vorn (siehe LAUTE).
+        spitz = so stark laufen die Linien am Mundwinkel zusammen (Lippen 0.8; die Haut darunter 0: ihre Reihen bleiben auch am Mundwinkel untereinander).
+        ende = so tief liegt die Linie ganz am Mundwinkel in der Haut (Unterlippe: sie laeuft dort aus und verschwindet unter dem Ende der Oberlippe,
+        statt mit einem stumpfen Ende daneben zu stehen – Mr. Alex 19.11.)"""
         weit, dz, vor = weit * mweit, dz + ddz, vor + dvor
         if tief is not None:
             tief -= dvor
@@ -227,11 +259,12 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
             t = i / 8
             a, h = abs(t), (hoch_l if t > 0 else hoch_r)
             x = t * weit * MW * (0.050 + 0.020 * max(h, 0) * a)
-            zz = LZ + dz * (1 - 0.8 * a ** 3) - 0.002 * a * a + (0.021 * h * a ** 2.2 if h > 0 else 0.014 * h * a * a) + auf * 0.030 * a ** 1.6
+            zz = LZ + dz * (1 - spitz * a ** 3) - 0.002 * a * a + (0.021 * h * a ** 2.2 if h > 0 else 0.014 * h * a * a) + auf * 0.030 * a ** 1.6
             if tief is None:
                 pkt.append((x, vorn(x, min(zz, LZ + 0.004) if dz > 0 else zz, vor), zz))
             else:                                          # senkrecht zur Kieferflaeche um `tief` versenkt (ueberall gleich weit, auch an den Seiten)
-                pkt.append(auf_kiefer(x, zz, tief))
+                tf = tief + dvor * a * a if sanft else tief        # sanft (Haut): nur in der Mitte mit den gespitzten Lippen nach vorn, am Mundwinkel bleibt sie auf dem Gesicht – sonst schaut man hinter ihren Rand in den Mund
+                pkt.append(auf_kiefer(x, zz, tf if ende is None else tf + (ende - tf) * a ** 6))
         return pkt
 
     # Lippenformen je Laut (Lippensynchron, Mr. Alex 18.11.): "rund" = gespitzt und nach vorn (o, u, w) · "breit" = breit gezogen (i, e)
@@ -266,13 +299,14 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
     kr = lambda pkt: [(x, y - GJ[1], zz - GJ[2]) for x, y, zz in pkt]
     g.kugel("mundboden", kiefer, (0, KM[1] - KR[1] + 0.063 - GJ[1], LZ - 0.0005 - GJ[2]), (0.042 * MW, 0.050, 0.003), f["rachen"])
     g.kugel("zunge", kiefer, (0, KM[1] - KR[1] + 0.040 - GJ[1], LZ + 0.001 - GJ[2]), (0.028 * MW, 0.030, 0.006), f["zunge"])
-    unten = dict(dz=-0.0036, tief=-0.0015)   # auf der Kieferflaeche wie die Haut darunter (lippenhaut): sonst steht die Unterlippe bei offenem Mund vor dem Gesicht in der Luft (Mr. Alex 19.11.)
+    unten = dict(dz=-0.0036, tief=0.0015, ende=0.005, weit=0.95)   # leicht in die Gesichtsflaeche eingelassen: von der Seite steht die Unterlippe nicht weiter vor als die Oberlippe (Mr. Alex 19.11.) # auf der Kieferflaeche wie die Haut darunter (lippenhaut): sonst steht die Unterlippe bei offenem Mund vor dem Gesicht in der Luft (Mr. Alex 19.11.)
     mit_auf = lambda fest: {**{n: kr(q) for n, q in formen(lambda q: q, LAUTE_UNTEN, **fest).items()}, "auf": kr(lippenlinie(auf=1, **fest))}
     g.bogen_mit_formen("unterlippe", kiefer, kr(lippenlinie(**unten)), mit_auf(unten), 0.0046, f["lippe_unten"], (0, 0, 0))
     # Haut unter der Unterlippe: eine glatte Flaeche, die sich mit der Unterlippe biegt. Beim Oeffnen schliesst sie die Luecke zwischen den hochgezogenen
     # Mundwinkeln und dem Kieferrand – sonst schaut dort die Mundhoehle neben den Lippen hervor. Keine Straenge: die sahen aus wie weitere Lippen (Mr. Alex 18.11.).
-    reihen = [dict(dz=-0.0030 - 0.0050 * i, tief=-0.0007) for i in range(9)]   # ein Hauch vor dem Kiefer, vom Lippenrand bis unter den tiefsten Mundwinkel
+    reihen = [dict(dz=-0.0030 - 0.0050 * i, tief=-0.0014, spitz=2.6 if i == 0 else 0.0, sanft=True) for i in range(9)]   # Reihen bleiben am Mundwinkel untereinander: die Flaeche reicht dort vom Mundwinkel bis unter den Kieferrand und schliesst die Luecke neben der Lippe (Mr. Alex 19.11.) # ein Hauch vor dem Kiefer, vom Lippenrand bis unter den tiefsten Mundwinkel
 
+    LOCH = mundloch(round(24 * fein) + 1)
     AUSSEN = 0.074 * MW                                    # bis hierhin reicht die Haut seitlich, wie breit oder schmal die Lippen gerade sind
 
     def hautflaeche(**zusatz):
@@ -284,7 +318,13 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
             tief = h["tief"] - zusatz.get("dvor", 0.0)
             def weiter(ende, seite):
                 x0, z0 = abs(ende[0]), ende[2]
-                return [auf_kiefer(seite * (x0 + (max(AUSSEN, x0 + 0.006) - x0) * n / 3), z0, tief) for n in (1, 2, 3)]
+                punkte = []
+                for n in (1, 2, 3):
+                    q = auf_kiefer(seite * (x0 + (max(AUSSEN, x0 + 0.006) - x0) * n / 3), z0, h["tief"])
+                    if math.degrees(math.asin(min(1.0, abs(q[0]) / sum((q[m] - GJ[m]) ** 2 for m in range(3)) ** 0.5))) > LOCH + 1:
+                        q = auf_kiefer(q[0], z0, 0.0006)   # neben dem Mund liegt die Wange darueber: dort taucht die Haut knapp unter sie (sonst flimmern zwei Flaechen, beim Sergeant in zwei Farben)
+                    punkte.append(q)
+                return punkte   # neben dem Mund liegt die Haut wieder auf dem Gesicht, auch wenn die Lippen gespitzt nach vorn kommen
             zeilen.append(kr(weiter(linie[0], -1)[::-1] + linie + weiter(linie[-1], 1)))
         return zeilen
 

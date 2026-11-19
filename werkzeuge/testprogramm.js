@@ -264,6 +264,13 @@ async function probe3dTest(browser, basis, app, name, fm) {
       if (Math.abs(z.bau.bein - 3.3) > 0.01 || Math.abs(z.bau.rumpf - 1.3) > 0.01 || !(z.hals > 1.4)) fehl.push(`${titel}: Sergeant ${i + 1} ist keine lange Bohnenstange (Bein ${z.bau.bein}, Rumpf ${z.bau.rumpf}, Hals ${z.hals} m)`);
       if (Math.abs(z.tief) > 0.01) fehl.push(`${titel}: Sergeant ${i + 1} steht nicht auf dem Boden (${z.tief} m)`);
     }
+    // Kein Kragen (Mr. Alex 19.11., Standard für alle Figuren): Kragenflächen gelöscht, Schulterkappe geschlossen, der Hals gehört zum Kopf.
+    // Mund (19.11.): die Haut unter der Unterlippe reicht seitlich bis unter die Wange – sonst bleibt neben dem Mundwinkel ein Spalt.
+    for (const [wer, z, breit] of [["Mr. Flex", await pg.evaluate(() => window.__probe3d.bau()), 0.14], ["der Sergeant", sgt[0], 0.11]]) {
+      const k = z && z.ohneKragen;
+      if (!k || !(k.geloescht > 20 && k.rand >= 8)) fehl.push(`${titel}: ${wer} hat noch einen Kragen (${JSON.stringify(k)})`);
+      else { if (!k.hals) fehl.push(`${titel}: ${wer} hat ohne Kragen keinen Hals`); if (!(k.mundHaut >= breit)) fehl.push(`${titel}: bei ${wer} reicht die Haut neben dem Mund nicht bis zur Wange (${k.mundHaut} m) – Spalt am Mundwinkel`); }
+    }
     // Kinnkette der Fellmütze (19.11.): goldene Glieder am Kopf; öffnet er den Mund, geht das Glied am Kinn mit dem Unterkiefer nach unten
     if (sgt[0] && !(sgt[0].kette && sgt[0].kette.zahl > 20)) fehl.push(`${titel}: der Sergeant hat keine Kinnkette`);
     else if (sgt[0]) {
@@ -775,7 +782,9 @@ function speicherTest(app) {
   const srv = server();
   await new Promise((ok) => srv.listen(0, "127.0.0.1", ok));
   const basis = `http://127.0.0.1:${srv.address().port}`;
-  const browser = await chromium.launch();
+  // Windows (AlexPC): ohne diese Schalter zeichnet der Test-Browser die 3D-Szene ohne Grafikkarte (SwiftShader, 3 Bilder pro Sekunde im Laptop-Format) –
+  // der Laptop-Lauf des Story-Spiels brauchte dann weit über 20 Minuten (19.11.). Mit Grafikkarte sind es rund 57 Bilder pro Sekunde.
+  const browser = await chromium.launch(process.platform === "win32" ? { args: ["--use-angle=d3d11", "--enable-gpu", "--ignore-gpu-blocklist"] } : {});
   const safari = formate.some((f) => f.webkit) ? await webkitStarten() : null;
   const alleFehler = [];
   try {

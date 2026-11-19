@@ -128,6 +128,32 @@ Beide Kreise greifen ineinander: Die Geschichte öffnet neue Orte zum Sammeln, u
 - **Regel:** kurz, mit Witz, nie länger als etwa 40 Sekunden am Stück; danach kann man sofort wieder selbst etwas tun.
 - **Stimmung zuerst (Mr. Alex, 17.11. abends):** Jeder Auftakt beginnt mit einem kurzen, geladenen Satz über den Ort, bevor etwas passiert – beim Tower: „Its history is ancient, and its story is legendary. Seven ravens sit on the old wall. They are watching.“ (Zeilen a01, v00, v01). Dazu Nebel und schönes Licht; die Ausleuchtung trägt die Stimmung mit.
 
+## 8b. Filmsequenzen und Fortschritt der Geschichte (Wunsch Mr. Alex 19.11., Entwurf des Masters – noch kein Bau)
+**Worum es geht:** Manche Teile der Rahmenhandlung muss das Kind sehen. Dafür wird ihm kurz die Steuerung genommen; die Kamera ist „eingefroren“ und wird geführt: hinein auf das Entscheidende, wieder hinaus, hin und her, damit man alles mitbekommt. Das ergänzt Abschnitt 8.
+
+**Der Auftakt, wie Mr. Alex ihn sich vorstellt:** Aufblende aus Schwarz. Der Tower von oben im Nebel, langsam wird er hell. Dann hinunter in den Hof zu den Raben auf der Mauer und zum Sergeant, der im Kreis marschiert. Die Atmosphäre (Nebel, Licht) ist eine eigene Aufgabe in Block C.
+
+**Regeln**
+1. **Nie lange.** Richtwert aus Abschnitt 8: höchstens etwa 40 Sekunden am Stück; ist eine Sequenz länger, wird sie durch einen Augenblick geteilt, in dem das Kind etwas tut (antippen, weitergehen).
+2. **Man sieht, dass gerade Film ist:** schwarze Balken oben und unten, die Steuerknöpfe verschwinden. Am Ende gleitet die Kamera in die Spielkamera zurück, damit das Kind weiß, wo es steht.
+3. **Alles im Spiel gerechnet,** mit denselben Figuren, Gesten und Ausdrücken wie im Spiel (Regie-Spalte) – keine Filmdateien.
+4. **Die Sprache bleibt das Herz (Mr. Alex 19.11.): Stimmung ja, aber nie aus dem Blick verlieren, dass es um natürliche Sprache für die Kinder geht.** Jede Sequenz trägt wenige, klare, wiederverwendbare Wendungen; Feder (Deutsch zum Antippen) und „Sorry?“ (noch einmal, langsamer) gehen auch im Film. Stimmung darf nie ein Grund sein, Sprache schwerer oder schneller zu machen.
+5. **Überspringen:** beim ersten Mal nicht (sonst fehlt die Geschichte), aber jede Zeile lässt sich weitertippen, wenn man sie verstanden hat. Wer die Sequenz schon einmal gesehen hat, darf sie ganz überspringen; die Zeilen stehen dann im Notizbuch zum Nachhören. Ob ein Überspringen ohne Dialog überhaupt sinnvoll ist, hängt an Regel 6 – meist stellt sich die Frage nicht.
+6. **Jede Sequenz läuft in der Geschichte genau einmal.** Sie hängt an einem Fortschritts-Schritt, nicht am Ort. Wer wieder in den Hof kommt, sieht nicht noch einmal den Auftakt.
+
+**Fortschritt der Geschichte (was das Spiel sich merken muss)**
+- Ein **Stand der Geschichte** je Spielstand: eine Liste erledigter Schritte (Auftakt gesehen, Auftrag bekommen, Schlüssel 1, Guard Room offen, Arthur beantwortet …). Jede Sequenz, jede Zeile und jeder Gegenstand fragt diesen Stand ab.
+- **Orte haben Zustände.** Der Hof beim ersten Mal: Auftakt, Sergeant marschiert, Tür zu. Der Hof danach: Sergeant steht Wache und hat neue Sätze, Tourist steht woanders, offene Türen bleiben offen. Die Uhr rückt mit der Geschichte vor (9:15 → 9:20 → …), nicht mit der echten Zeit (Abschnitt 3).
+- **Zurückkommen lohnt sich:** Wer einen Ort wieder betritt, bekommt eine kurze neue Zeile statt einer Wiederholung (Vorrat aus den 221 Sprüchen), dazu neue Fundstücke.
+- **Noch einmal ansehen:** Gesehene Sequenzen lassen sich freiwillig wieder abspielen (z. B. über die Karte im Zimmer oder das Notizbuch) – zum Üben und Nachhören, nie als Zwang.
+- **Neu anfangen** ist eine bewusste Wahl im Menü (zweiter Spielstand), kein Zufall.
+
+**Sprache herauslocken (später, Mr. Alex 19.11.):** Kleine Spiele und Dialoge, in denen das Kind selbst spricht oder antwortet, können dazukommen – als eigene Bausteine nach dem ersten Kapitel. Die Filmsequenzen sollen dafür Stellen offen lassen (eine Figur stellt eine Frage, das Kind antwortet).
+
+**Was das für die Blöcke heißt:** Block B (Spiel in den 3D-Raum) bekommt den Stand der Geschichte und die Zustände der Orte als Grundgerüst – das ist die Voraussetzung für alles andere. Block C baut die Film-Kamera (Fahrt, Zoom, Blende, Balken) und den Auftakt mit Nebel und Licht. Vorher schreibt der Master ein Drehbuch je Sequenz (Einstellungen, Dauer, Zeilen, was das Kind danach als Erstes tut) und legt es Mr. Alex vor.
+
+**Die Sequenzen der ersten Szene (aus Abschnitt 9):** Auftakt (etwa 35 s, Zeilen a01, v00–v02, a02 ff.) · Gary klettert aus dem Fass (a10, kurz) · der Rabe bringt den Schlüssel (w07, kurz) · Schluss (Treppe, Kuchenduft, jemand singt – der Haken).
+
 ## 9. Das Testspiel: Anfang und Szene 1 (Guard Room)
 *(Überschrift am 18.11. an die Sprachregelung angepasst; im Text darunter und in Abschnitt 10 meint „Kapitel 1“ noch die Szene 1 des Tower-Kapitels.)*
 Ziel des Tests: Die Kinder sollen in zehn bis fünfzehn Minuten spüren, was das ganze Spiel sein wird. Deshalb enthält der Ausschnitt von jeder Säule ein Stück – lieber klein und fertig als viel und roh.

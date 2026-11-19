@@ -26,7 +26,7 @@ def sergeantkopf(name, ort, voll, nase="knolle"):
     vor = "sgt_bart" if voll else "sgt"
     f = fx.farben(vor, haut=HAUT, wange=HAUT, bartschatten=ROTBRAUN if voll else (0.78, 0.53, 0.45), schnurrbart=(0.88, 0.38, 0.06),
                   braue=(0.66, 0.24, 0.03), iris=(0.04, 0.80, 0.22), falte=(0.60, 0.34, 0.28))
-    k = fx.flexkopf(None, ort, name, f=f, haare=False, brille=False, bart=(0.060, 0.0125, 0.012), braue=0.0080, nase=False, wange=(0.062, 0.110, 0.036, 0.030))   # Wangen hautfarben wie bei Mr. Flex (Mr. Alex 19.11.)
+    k = fx.flexkopf(None, ort, name, f=f, haare=False, brille=False, bart=(0.060, 0.0125, 0.012), braue=0.0080, nase=False, wange=(0.062, 0.110, 0.036, 0.030), fein=2)   # Wangen hautfarben wie bei Mr. Flex (Mr. Alex 19.11.)
     R = fx.R
     # Die Nase ist EIN Stueck (Mr. Alex 19.11.: nicht aus Kugeln zusammengesetzt): Stationen von der Nasenwurzel bis unter die Spitze,
     # je (Hoehe, so weit steht der Nasenruecken vor dem Gesicht, halbe Breite). Haken = schmal mit Buckel, die Spitze haengt; Knolle = kurzer Ruecken, dicke runde Kugel.

@@ -307,10 +307,10 @@ const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
 export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, duenn: 0.6,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (duenn = Breite und Tiefe des Körpers, 1 = wie das Modell)
   kopf: "sergeantkopf", hand: 0.72,   // Kopf mit Bart, rothaarig, Knollennase (Wahl Mr. Alex 18./19.11.) · hand = Handgröße gegenüber Mr. Flex
  
-  kragen: { ab: 1.1, eng: 0.7, felder: ["7,0", "7,1"] },   // der hohe Kragen der Rüstung liegt enger am Hals (Mr. Alex 19.11.: Schultern und Oberarme gingen bei Armbewegungen hindurch)
+  kragen: { ab: 1.1, eng: 0.62, flach: 0.25, felder: ["7,0", "7,1"] },   // kein Kragen (Mr. Alex 19.11.): der hohe Kragen der Rüstung wird eng an den Hals gezogen und flach gedrückt, in Rockfarbe – Schultern und Oberarme gingen sonst hindurch
   uniform: { saum: [0.70, 1.10, 0.02], knoepfe: [0.75, 0.82, 0.89, 0.96, 1.03], knopf: 0.026 },   // weißer Saum vorn (von, bis, halbe Breite) und silberne Knöpfe (Höhen, Größe), Maße des ungestreckten Körpers
-  umfaerben: { Body: { "3,0": ROT, "7,0": (y) => (y >= 1.1 ? SCHWARZ : ROT),   // der hohe Kragen ist schwarz
-    "7,1": SCHWARZ, "6,0": WEISS, "2,1": GOLD, "0,1": GOLD }, Arm: { "3,0": ROT, "4,0": ROT, "7,0": ROT, "6,0": ROT }, Leg: { "3,0": SCHWARZ, "7,0": SCHWARZ, "7,1": SCHWARZ, "6,0": SCHWARZ } } };
+  umfaerben: { Body: { "3,0": ROT, "7,0": ROT,   // kein schwarzer Kragen mehr (Mr. Alex 19.11.: bringt nur Probleme)
+    "7,1": (y) => (y >= 1.1 ? ROT : SCHWARZ), "6,0": WEISS, "2,1": GOLD, "0,1": GOLD }, Arm: { "3,0": ROT, "4,0": ROT, "7,0": ROT, "6,0": ROT }, Leg: { "3,0": SCHWARZ, "7,0": SCHWARZ, "7,1": SCHWARZ, "6,0": SCHWARZ } } };
 /* Uniform (Mr. Alex 19.11., nach seinem Foto der Garde): weißer Saum vorn und silberne Knöpfe darauf. Die Teile liegen auf der Vorderseite des Körpernetzes
    (Strahl von vorn) und bekommen die Gewichte der Stelle, auf der sie liegen – so strecken, biegen und bewegen sie sich mit dem Rock. */
 function uniformTeile(m, plan, duenn) {
@@ -356,7 +356,7 @@ function kragenEng(m, plan) {                           // zieht die Punkte des 
     const P = o.geometry.attributes.position, UV = o.geometry.attributes.uv;
     for (let i = 0; i < P.count; i++) {
       const y = P.getY(i); if (y < plan.ab || !plan.felder.includes(Math.floor(UV.getX(i) * 8) + "," + Math.floor(UV.getY(i) * 4))) continue;
-      const f = 1 - (1 - plan.eng) * Math.min(1, (y - plan.ab) / 0.06); P.setX(i, P.getX(i) * f); P.setZ(i, P.getZ(i) * f);
+      const f = 1 - (1 - plan.eng) * Math.min(1, (y - plan.ab) / 0.06); P.setX(i, P.getX(i) * f); P.setZ(i, P.getZ(i) * f); if (plan.flach) P.setY(i, plan.ab + (y - plan.ab) * plan.flach);
     }
     P.needsUpdate = true;
   });

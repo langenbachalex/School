@@ -297,7 +297,7 @@ async function probe3dTest(browser, basis, app, name, fm) {
       await pg.evaluate(() => window.__probe3d.sergeantMund(null));
     }
     const knoepfe = await pg.locator("#bau button[data-bau]").count();
-    if (knoepfe !== 29) fehl.push(`${titel}: im Probe-Kasten stehen ${knoepfe} Bewegungen statt 29 (26 eigene + Stehen, Gehen, Rennen)`);
+    if (knoepfe !== 33) fehl.push(`${titel}: im Probe-Kasten stehen ${knoepfe} Bewegungen statt 33 (30 eigene + Stehen, Gehen, Rennen)`);
     const kaesten = await pg.evaluate(() => ["bau", "figuren"].map((id) => { const r = document.getElementById(id).getBoundingClientRect(); return [r.left, r.right, r.top, r.bottom]; }));
     if (kaesten[0][1] > kaesten[1][0] && kaesten[0][3] > kaesten[1][2] && kaesten[0][2] < kaesten[1][3]) fehl.push(`${titel}: der Kasten der Probe-Figur liegt über Garys Kasten`);
     const klappe = pg.locator("#bau .kopf"), klappbar = await klappe.isVisible();   // schmale Bildschirme: der Kasten ist eingeklappt und ersetzt offen Garys Kasten
@@ -328,7 +328,40 @@ async function probe3dTest(browser, basis, app, name, fm) {
         if (!(luecke >= 0.015)) fehl.push(`${titel}: beim schnellen Marsch greifen die Beine des Sergeants ineinander (kleinste Lücke ${luecke} m)`);
         if (!(knie > 0.8)) fehl.push(`${titel}: beim schnellen Marsch hebt der Sergeant das Knie nicht hoch (${knie} der Hüfthöhe)`);
       }
-      await pg.click('#bau button[data-bau="stehen"]'); await pg.click('#bau button[data-wahl="flex"]');
+      await pg.click('#bau button[data-bau="stehen"]');
+      // Figuren 6 (19.11.): eigene Gesten und Gesichter des Sergeants. Marsch auf der Stelle = sein Drill-Gang ohne Vorwärtsgehen (Mr. Alex 19.11.), er kommt von selbst wieder zum Stehen.
+      if (geht) {
+        const sg = () => pg.evaluate(() => window.__probe3d.sergeant()[0]);
+        await pg.waitForFunction(() => { const z = window.__probe3d.sergeant()[0]; return z.modus === "stehen" && !z.wendet; }, null, { timeout: 8000 }).catch(() => {});
+        await pg.waitForTimeout(400); const ort0 = (await sg()).ort;
+        await pg.click('#bau button[data-bau="marsch"]'); await pg.waitForTimeout(500);
+        let knie = 0, weg = 0, anStelle = true, arm = -99;
+        for (let k = 0; k < 14; k++) { await pg.waitForTimeout(70); const z = await sg(); anStelle = anStelle && z.stelle && z.modus === "gehen"; knie = Math.max(knie, z.drill.knieHoch); arm = Math.max(arm, z.drill.armR); weg = Math.max(weg, Math.hypot(z.ort[0] - ort0[0], z.ort[1] - ort0[1])); }
+        if (!anStelle) fehl.push(`${titel}: „Marsch auf der Stelle“ läuft beim Sergeant nicht in seinem Drill-Gang`);
+        if (!(weg < 0.03)) fehl.push(`${titel}: beim Marsch auf der Stelle kommt der Sergeant ${weg.toFixed(2)} m vom Fleck`);
+        if (!(knie > 0.8) || !(arm > 60)) fehl.push(`${titel}: beim Marsch auf der Stelle fehlt der Drill (höchstes Knie ${knie} der Hüfthöhe, Soll über 0,8; Arm bis ${arm}°, Soll über 60)`);
+        const steht = await pg.waitForFunction(() => window.__probe3d.sergeant()[0].modus === "stehen", null, { timeout: 12000 }).then(() => true).catch(() => false);
+        if (!steht) fehl.push(`${titel}: nach dem Marsch auf der Stelle bleibt der Sergeant nicht von selbst stehen`);
+        const mitte = async (knopf) => { await pg.click(`#bau button[data-bau="${knopf}"]`); await pg.waitForTimeout(900); const z = await sg(); await pg.waitForFunction(() => window.__probe3d.sergeant()[0].modus === "stehen", null, { timeout: 9000 }).catch(() => {}); return z; };
+        let z = await mitte("sgtUnten");
+        if (!(z.armR.ellbogen > 160 && z.armR.richtung[1] < -0.6 && z.armR.richtung[2] > 0.3) || z.hand[0] !== "zeigen") fehl.push(`${titel}: „Zeigen nach unten“ – der Sergeant zeigt nicht mit gestrecktem Arm vor die Füße (Ellbogen ${z.armR.ellbogen}°, Richtung ${z.armR.richtung})`);
+        z = await mitte("sgtSeite");
+        if (!(z.armR.ellbogen > 160 && z.armR.richtung[0] < -0.9) || !(z.blick < -0.7)) fehl.push(`${titel}: „Zeigen zur Seite“ – Arm nicht gestreckt zur Seite oder die Augen gehen nicht mit (Ellbogen ${z.armR.ellbogen}°, Richtung ${z.armR.richtung}, Blick ${z.blick})`);
+        z = await mitte("ruecken");
+        if (!(z.flaecheR[2] < -0.05 && z.flaecheL[2] < -0.05 && z.handAbstand < 0.45)) fehl.push(`${titel}: „Hände auf dem Rücken“ – die Hände liegen nicht hinter dem Körper beieinander (rechts ${z.flaecheR}, links ${z.flaecheL}, Abstand ${z.handAbstand})`);
+        if (!(Math.min(...z.knieGrad) > 168)) fehl.push(`${titel}: „Hände auf dem Rücken“ – der Sergeant steht dabei nicht stramm (Knie ${z.knieGrad.join(" und ")}°)`);
+        z = await mitte("hutsuchen");
+        if (!(z.faustR[1] > z.hals + 0.08 && z.faustL[1] > z.hals + 0.08) || !(Math.abs(z.blick) > 0.6)) fehl.push(`${titel}: „Hut suchen“ – die Hände sind nicht oben an der Mütze oder die Augen suchen nicht (Hände ${z.faustR[1]} und ${z.faustL[1]} m, Hals ${z.hals} m, Blick ${z.blick})`);
+        z = await sg();
+        if (!(z.bartDreh != null && z.ohren === 2)) fehl.push(`${titel}: der Kopf des Sergeants hat keinen beweglichen Schnurrbart oder keine zwei Ohren (Bart ${z.bartDreh}, Ohren ${z.ohren})`);
+        await pg.click('#bau button[data-kopf="seitenblick"]'); await pg.click('#bau button[data-kopf="bartzucken"]'); await pg.click('#bau button[data-kopf="rote_ohren"]');
+        let blick = 0, bart = 0, rot = 0, nick = 0;
+        for (let k = 0; k < 12; k++) { await pg.waitForTimeout(70); z = await sg(); blick = Math.min(blick, z.blick); bart = Math.max(bart, z.bartDreh); rot = Math.max(rot, z.ohrRot); nick = Math.max(nick, z.kopf.nick); }
+        if (!(blick < -0.8) || !(nick < 1)) fehl.push(`${titel}: Seitenblick – die Augen gehen nicht zur Seite, oder der Kopf dreht mit (Blick ${blick}, Kopf ${nick}°)`);
+        if (!(bart > 3)) fehl.push(`${titel}: der Bart des Sergeants zuckt nicht (${bart}°)`);
+        if (!(rot > 0.6)) fehl.push(`${titel}: die Ohren des Sergeants werden nicht rot (${rot})`);
+      }
+      await pg.click('#bau button[data-wahl="flex"]');
     }
     if (!(b.hals > 1.1)) fehl.push(`${titel}: Probe-Figur ist nicht gestreckt (Hals in ${b.hals} m Höhe, ungestreckt 0,785)`);
     if (b.stiefelOben > b.knie - 0.05) fehl.push(`${titel}: die Stiefel der Probe-Figur enden nicht unter dem Knie (Stiefelkante ${b.stiefelOben} m, Knie ${b.knie} m)`);

@@ -1,5 +1,7 @@
 # The Keys of the Tower – Sprüche für den Hof (Master, 19.11.2026, nichts vertont)
 
+> **Vertont am 19.11. abends:** alle 227 Sprüche, 10.393 Credits (+ 110 für zwei Neuaufnahmen). Kennungen in der Tabelle: G1–G69 = `gary_80`–`gary_148`, F1–F61 = `mrflex_76`–`mrflex_136`, A1–A26 = `arthur_20`–`arthur_45`, H1–H15 = `arthur_46`–`arthur_60`, T1–T24 = `taube_25`–`taube_48`, S1–S32 = `sergeant_40`–`sergeant_71`. Hörprüfung: zwei Doppelungen – `arthur_43` neu aufgenommen; `gary_136` sagt „Rawr, rawr“ (dreimal so gesprochen), der Text ist daran angepasst. G43 auf Deutsch: „Gary ist genial / Gary ist egal“ (Hinweis Mr. Alex: aus gut muss schlecht werden).
+>
 > **Stand:** Runde 1 (63 Sprüche, unten zuerst) ist von Mr. Alex abgenommen (19.11.: „alles in Ordnung“). Seine Rückmeldung dazu: noch zu sehr an der Sprache aufgehängt – **Runde 2 soll freier sein, mit mehr Witz, „silly“.** Runde 2 (67 Sprüche) steht am Ende und wartet auf die Abnahme.
 
 Grundlage: Vision 8b („Nichts ist schlimmer als Sprüche, die sich wiederholen“). Dieses Paket bringt **ortsbezogene Sprüche**, die nur im Hof fallen – 33 für Gary, 30 für Mr. Flex. Sie ergänzen die 147 allgemeinen Sprüche der beiden, kein vorhandener Spruch ist geändert.
@@ -110,7 +112,7 @@ Hier führt der Witz, nicht die Grammatik. Die Sätze bleiben kurz und gut zu ve
 | G54 | Tourist | 2 | He says everything is bigger in Texas. I want to see a Texas sandwich. |
 | G55 | Tourist | 2 | Howdy! … I am learning American. Howdy, howdy, howdy. |
 | G56 | Tourist | 3 | He asked me for the gift shop. I sold him a spoon. Magic spoon. Ten pounds. |
-| G57 | Nacht | 1 | I can see my breath. Look! I am a dragon. Rawr. |
+| G57 | Nacht | 1 | I can see my breath. Look! I am a dragon. Rawr, rawr. |
 | G58 | Nacht | 1 | Is it just me, or is that tower looking at us? … It is just me. |
 | G59 | Nacht | 1 | I am not lost. I know exactly where I am. I am here. |
 | G60 | Nacht | 2 | My hat is cold. My ears are in it. My ears are cold. |

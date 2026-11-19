@@ -14,8 +14,8 @@ NAMEN = {"mrflex": "Mr. Flex", "erzaehler": "Erzähler", "karte": "Karten", "gar
          "sergeant": "Sergeant", "taube": "Taube", "arthur": "Arthur", "tourist": "Tourist"}
 # Neue Aufnahmen, die Mr. Alex noch nicht gehört hat: eigene Gruppe ganz oben. Nach seiner Abnahme Muster und Titel
 # auf die nächste Lieferung setzen (oder NEU = re.compile("^$") für „nichts Neues“).
-NEU_TITEL = "Neu am 19.11. – Help the tourist und drei neu aufgenommene Zeilen (noch nicht angehört)"
-NEU = re.compile(r"^(tourist_\d+|gary_7[3-9]|k1_w00[ab]|k1_q3a|k1_r4y|k1_r5a)$")
+NEU_TITEL = "Neu am 19.11. abends – 227 Sprüche (Gary, Mr. Flex, Arthur, Taube, Sergeant), noch nicht angehört"
+NEU = re.compile(r"^(gary_(8\d|9\d|1[0-4]\d)|mrflex_(7[6-9]|[89]\d|1[0-3]\d)|arthur_([2-5]\d|60)|taube_(2[5-9]|[34]\d)|sergeant_([4-6]\d|7[01]))(_\d)?$")
 ZUERST = ["mrflex_01", "k1_p7", "taube_05", "gary_20_1", "gary_20_2", "gary_70_1", "gary_70_2",
           "gary_71_1", "gary_71_2", "gary_72_1", "gary_72_2", "sergeant_01"]
 

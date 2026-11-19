@@ -733,11 +733,13 @@ async function hofTest(browser, basis, app, name, fm) {
         if (!gleich(fl.ende, fl.ruhe) || Math.abs(fl.ende.fuss - fl.ruhe.fuss) > 0.01) fehl.push(`${t}: nach dem Landen sitzt Arthur nicht an seinem Platz wie vorher`);
       }
       // Figuren 8 (19.11., Wunsch Mr. Alex): freier Flug – abheben, eine Runde über den Hof mit Schräglage, landen am selben Platz
-      const rf = await pg.evaluate(() => { const p = window.__probe3d; p.vogelHalt(true); const ruhe = p.vogel(), ok = p.vogelRunde ? p.vogelRunde() : false, g = p.hof().gross; let n = 0, hoch = 0, roll = 0, draussen = 0, flog = false, landete = false;
-        while (ok && p.vogel().tut !== "sitzt" && n < 3000) { p.vogelTakt(1, 20); const v = p.vogel(); n++; hoch = Math.max(hoch, v.ort[1] - ruhe.ort[1]); roll = Math.max(roll, Math.abs(v.roll)); if (Math.abs(v.ort[0]) > g[0] / 2 || Math.abs(v.ort[2]) > g[1] / 2) draussen++; if (v.tut === "fliegt") flog = true; if (v.tut === "landet") landete = true; }
-        const ende = p.vogel(); p.vogelHalt(false); return { ok, ruhe, ende, dauer: n * 0.02, hoch, roll, draussen, flog, landete }; });
+      const rf = await pg.evaluate(() => { const p = window.__probe3d; p.vogelHalt(true); const ruhe = p.vogel(), ok = p.vogelRunde ? p.vogelRunde() : false, g = p.hof().gross; let n = 0, hoch = 0, roll = 0, draussen = 0, flog = false, landete = false, aufAmBoden = 0, nAb = 0, hochNachSprung = 0;
+        while (ok && p.vogel().tut !== "sitzt" && n < 3000) { p.vogelTakt(1, 20); const v = p.vogel(); n++; hoch = Math.max(hoch, v.ort[1] - ruhe.ort[1]); roll = Math.max(roll, Math.abs(v.roll)); if (Math.abs(v.ort[0]) > g[0] / 2 || Math.abs(v.ort[2]) > g[1] / 2) draussen++; if (v.tut === "fliegt") flog = true; if (v.tut === "landet") landete = true; if (!nAb) { if (v.ort[1] - ruhe.ort[1] > 0.001) nAb = n; else aufAmBoden = Math.max(aufAmBoden, v.auf); } else if (n - nAb === 20) hochNachSprung = v.ort[1] - ruhe.ort[1]; }
+        const ende = p.vogel(); p.vogelHalt(false); return { ok, ruhe, ende, dauer: n * 0.02, hoch, roll, draussen, flog, landete, aufAmBoden, hochNachSprung }; });
       if (!rf.ok || !rf.flog || !rf.landete) fehl.push(`${t}: Arthur fliegt keine Runde (Knopf „Runde fliegen“)`);
       else {
+        if (rf.aufAmBoden > 0.3) fehl.push(`${t}: Arthur breitet die Flügel schon am Boden aus (${rf.aufAmBoden}); im Film öffnen sie sich erst im Absprung (Mr. Alex 19.11.)`);
+        if (rf.hochNachSprung < 0.35) fehl.push(`${t}: Arthur ist 0,4 s nach dem Absprung erst ${rf.hochNachSprung.toFixed(2)} m hoch (erwartet ein kräftiger Sprung nach oben, mindestens 0,35 m)`);
         if (rf.hoch < 3 || rf.hoch > 8) fehl.push(`${t}: Arthurs Runde geht ${rf.hoch.toFixed(1)} m hoch (erwartet 3 bis 8 m)`);
         if (rf.roll < 0.2) fehl.push(`${t}: Arthur legt sich in den Kurven nicht schräg (höchstens ${rf.roll})`);
         if (rf.draussen) fehl.push(`${t}: Arthur verlässt auf seiner Runde den Hof (${rf.draussen} Schritte)`);

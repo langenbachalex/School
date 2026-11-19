@@ -29,7 +29,7 @@ export const VOEGEL = {
     /* Tempo aus den Filmen der Tower-Raben (Mr. Alex 19.11.: die erste Fassung war „viel zu langsam“): Flügel strecken im Sitzen rund 1 s,
        im Flug drei Schläge je Sekunde, beim Bremsen fünf */
     flug: { schlagDauer: 1.55, takt: 0.33, bremsTakt: 0.2, anflug: 1.3, bremsen: 0.55, setzen: 0.95, bremsweg: 1.4, bremsHoch: 0.5, neig: 0.75,
-      ducken: 0.28, steigen: 1.1, tempoAb: 2.5, tempo: 8, schlagen: 1.3, gleiten: 1.0, schraeg: 0.55, schraegMax: 0.6,   // freier Flug: Sekunden ducken · Sekunden bis zum Reiseflug · m/s beim Abheben und im Flug · Sekunden schlagen und gleiten im Wechsel · Schräglage je Kursänderung (rad je rad/s) und höchstens
+      ducken: 0.22, hochreissen: 0.09, abTakt: 0.17, steigen: 1.1, tempoAb: 4, tempo: 10, schlagen: 1.3, gleiten: 1.0, schraeg: 0.55, schraegMax: 0.6,   // freier Flug: Sekunden ducken · Sekunden bis zum Reiseflug · m/s beim Abheben und im Flug · Sekunden schlagen und gleiten im Wechsel · Schräglage je Kursänderung (rad je rad/s) und höchstens
       arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, armLangJe: 0.07, woelb: -0.07, armWoelb: 0.14, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
     ring: RINGE.arthur,
     schaedel: 0.058,                                  // Halbe Höhe des Schädels (vor der Vergrößerung): die Kehlfedern am Rumpf müssen darunter bleiben
@@ -201,19 +201,23 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
       if (u >= 1) { pose(RUHE); g.figur.position.y = 0; flug.tut = "sitzt"; z.warte = zufall(P.blick.pause) / 2; }
     } else if (flug.tut === "fliegt") {
       const tD = FL.ducken, tS = FL.steigen;
-      if (t < tD) { const u = glatt(t / tD); pose({ auf: 0.7 * u, schlag: 1.1 * u, knick: -0.6 * u, biege: 0, neig: 0.35 * u, faecher: 0.3 * u, senk: 0, beine: -0.25 * u }); return; }   // ducken: vorbeugen, Flügel hochreißen
-      const tf = t - tD, start = glatt(tf / tS);                                            // start 0…1: abheben mit schnellen Schlägen, dann Reiseflug
+      /* Abheben nach dem Zeitlupen-Film „Raven taking flight!“ (Mr. Alex 19.11.: er stößt sich aus den Füßen ab): ducken mit ANGELEGTEN Flügeln, Körper waagerecht nach vorn;
+         im Absprung gehen die Flügel in einem Zug steil nach oben, der Körper steigt Kopf voran schräg auf, die Beine hängen zwei Schläge lang nach; erste Schläge sehr schnell und tief */
+      if (t < tD) { const u = glatt(t / tD); pose({ auf: 0.12 * glatt((t / tD - 0.7) / 0.3), schlag: 0, knick: 0, biege: 0, neig: 0.5 * u, faecher: 0, senk: 0, beine: 0 }); return; }
+      const tf = t - tD, start = glatt(tf / tS), tH = FL.hochreissen;                       // start 0…1: abheben mit schnellen Schlägen, dann Reiseflug
       flug.weg += dt * (FL.tempoAb + (FL.tempo - FL.tempoAb) * start);
       if (flug.weg >= flug.lang) { const e = flug.bahn.getPointAt(1, va); lande(flug.ziel, { x: e.x, y: e.y, z: e.z }, { auf: flug.auf, schlag: flug.schlag, knick: flug.knick, biege: flug.biege }); bewegeFlug(0); return; }
       const k = flug.weg / flug.lang, ri = flug.bahn.getTangentAt(k, vb); wurzel.position.copy(flug.bahn.getPointAt(k, va));
       const kurs = Math.atan2(ri.x, ri.z), dk = Math.atan2(Math.sin(kurs - flug.kurs), Math.cos(kurs - flug.kurs)); flug.kurs = kurs; wurzel.rotation.y = kurs;
       if (dt > 0) flug.roll += (Math.max(-FL.schraegMax, Math.min(FL.schraegMax, -dk / dt * FL.schraeg)) * start - flug.roll) * Math.min(1, dt * 3);   // Schräglage: in die Kurve gelegt
       g.figur.rotation.z = flug.roll;
-      flug.phi += dt / (FL.bremsTakt + (FL.takt - FL.bremsTakt) * start);
+      const neig = Math.max(0.05, (tf < 0.12 ? 0.5 - 0.25 * glatt(tf / 0.12) : 0.25 + (FL.neig - 0.25) * glatt((tf - 0.3) / 0.9)) - ri.y * 0.5), beine = -0.5 * glatt(tf / 0.08) * (1 - glatt((tf - 0.4) / 0.4));
+      if (tf < tH) { const u = glatt(tf / tH); pose({ auf: 0.12 + 0.88 * u, schlag: 1.1 * u, knick: -0.5 * Math.sin(Math.PI * u), biege: 0, neig, faecher: 0.35 * u, senk: 0, beine }); return; }   // Flügel in einem Zug steil nach oben
+      flug.phi += dt / (FL.abTakt + (FL.takt - FL.abTakt) * start);
       const zyk = Math.max(0, tf - tS) % (FL.schlagen + FL.gleiten), gleiten = tf < tS ? 0 : glatt((zyk - FL.schlagen) / 0.25) * (1 - glatt((zyk - FL.schlagen - FL.gleiten + 0.25) / 0.25));
-      const s = schlagen(flug.phi, 0.75 - 0.15 * start, 0.2 - 0.15 * start);
+      const s = schlagen(flug.phi, 0.95 - 0.35 * start, 0.15 - 0.1 * start);
       pose({ auf: s.auf + (1 - s.auf) * gleiten, schlag: s.schlag + (-0.06 - s.schlag) * gleiten, knick: s.knick + (-0.05 - s.knick) * gleiten, biege: s.biege + (0.5 - s.biege) * gleiten,
-        neig: 0.35 + (FL.neig - 0.35) * start - ri.y * 0.5, faecher: 0.35, senk: 0, beine: 0 });
+        neig, faecher: 0.35, senk: 0, beine });
     } else if (flug.tut === "landet") {
       const { ziel, von } = flug, tA = FL.anflug, tB = FL.bremsen, tC = FL.setzen, weit = Math.hypot(ziel.x - von.x, ziel.z - von.z), bremsweg = Math.min(FL.bremsweg, weit * 0.4);
       let weg, hoch, p;

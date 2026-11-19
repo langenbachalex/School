@@ -318,8 +318,8 @@ try {
     let r = { x: a.z, z: -a.x }; if (r.x * -p.x + r.z * -p.z < 0) r = { x: -r.x, z: -r.z };
     const [B, T] = hof.plan.gross, grenze = (v, halb) => Math.max(-halb + 1.5, Math.min(halb - 1.5, v));
     const pt = (fa, ff, fr, y) => ({ x: grenze(p.x + a.x * fa + f.x * ff + r.x * fr, B / 2), y: p.y + y, z: grenze(p.z + a.z * fa + f.z * ff + r.z * fr, T / 2) });
-    return arthur.fliege([pt(0, 1.5, 2.5, 1.2), pt(-5, 0, 7, 2.8), pt(-14, 0, 11, 4.5), pt(-24, 0, 7, 5.2), pt(-27, 0, -3, 5),   // gleich nach dem Abheben zur Seite und nach Norden: die ganze Runde liegt vor dem Kind
-      { x: von.x - a.x * 9 - r.x * 2.5, y: von.y + 1.6, z: von.z - a.z * 9 - r.z * 2.5 }, { x: von.x - a.x * 4, y: von.y + 0.5, z: von.z - a.z * 4 }, von], p);
+    return arthur.fliege([pt(0, 1.2, 1.2, 1.3), pt(-3, 0, 8, 3.2), pt(-10, 0, 19, 5), pt(-20.5, 0, 24, 6), pt(-29, 0, 20.5, 6.5), pt(-32.5, 0, 12, 6.3), pt(-29, 0, 3.5, 5.2), pt(-21, 0, 0, 3.8),   // steil hoch, zur Seite und nach Norden, dann ein weiter Bogen (Halbmesser 12 m) über fast den ganzen Hof (Mr. Alex 19.11.: größer, 10 m/s)
+      { x: von.x - a.x * 4, y: von.y + 0.7, z: von.z - a.z * 4 }, von], p);
   }   // tief und auf das Kind zu (Foto 4 von Mr. Alex)
   function setzeRabe(wo) {
     rabeOrt = wo; rabeSitz = null; const pl = hof.plan, platz = pl.raben[3], klotz = hof.scene.getObjectByName("hof_rabe4");

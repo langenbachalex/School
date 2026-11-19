@@ -88,8 +88,9 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
         g.kugel("ohr", k, (s * 0.134, 0.0, 0.150), (0.013, 0.026, 0.036), f["haut"])
     for s, seite in ((-1, "r"), (1, "l")):
         # Wangenknochen: deutlich, schieben sich beim Laecheln nach oben
-        wy = haut_vorn(s * 0.078, 0.105) + 0.010
-        g.kugel("wange_" + seite, k, (s * 0.078, wy + 0.008, 0.105), (0.034, 0.017, 0.024), f["wange"])
+        # flach, breit und in Hautfarbe (Mr. Alex 19.11.: soll wie ein Teil des Gesichts aussehen, nicht wie ein angeklebter Klotz) – nur eine sanfte Woelbung
+        wy = haut_vorn(s * 0.074, 0.108)
+        g.kugel("wange_" + seite, k, (s * 0.074, wy + 0.0075, 0.108), (0.040, 0.0105, 0.031), f["haut"], fein=32)
         # Auge: Augenweiss, hellblaue Iris (neues Teil), kleine Pupille mit Glanzpunkt
         ay = haut_vorn(s * AX, AZ) + 0.012
         g.kugel("auge", k, (s * AX, ay, AZ), (0.028, 0.014, 0.0175), f["augenweiss"])

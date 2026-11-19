@@ -307,13 +307,54 @@ const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
 export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, duenn: 0.6,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (duenn = Breite und Tiefe des Körpers, 1 = wie das Modell)
   kopf: "sergeantkopf", hand: 0.72,   // Kopf mit Bart, rothaarig, Knollennase (Wahl Mr. Alex 18./19.11.) · hand = Handgröße gegenüber Mr. Flex
  
-  umfaerben: { Body: { "3,0": ROT, "7,0": ROT, "7,1": SCHWARZ, "6,0": WEISS, "2,1": GOLD, "0,1": GOLD }, Arm: { "3,0": ROT, "4,0": ROT, "7,0": ROT, "6,0": ROT }, Leg: { "3,0": SCHWARZ, "7,0": SCHWARZ, "7,1": SCHWARZ, "6,0": SCHWARZ } } };
+  uniform: { saum: [0.70, 1.10, 0.02], knoepfe: [0.75, 0.82, 0.89, 0.96, 1.03], knopf: 0.026 },   // weißer Saum vorn (von, bis, halbe Breite) und silberne Knöpfe (Höhen, Größe), Maße des ungestreckten Körpers
+  umfaerben: { Body: { "3,0": ROT, "7,0": (y) => (y >= 1.1 ? SCHWARZ : ROT),   // der hohe Kragen ist schwarz
+    "7,1": SCHWARZ, "6,0": WEISS, "2,1": GOLD, "0,1": GOLD }, Arm: { "3,0": ROT, "4,0": ROT, "7,0": ROT, "6,0": ROT }, Leg: { "3,0": SCHWARZ, "7,0": SCHWARZ, "7,1": SCHWARZ, "6,0": SCHWARZ } } };
+/* Uniform (Mr. Alex 19.11., nach seinem Foto der Garde): weißer Saum vorn und silberne Knöpfe darauf. Die Teile liegen auf der Vorderseite des Körpernetzes
+   (Strahl von vorn) und bekommen die Gewichte der Stelle, auf der sie liegen – so strecken, biegen und bewegen sie sich mit dem Rock. */
+function uniformTeile(m, plan, duenn) {
+  let rumpf = null; m.traverse((o) => { if (o.isSkinnedMesh && /_Body$/.test(o.name)) rumpf = o; }); if (!rumpf) return;
+  const G = rumpf.geometry, P = G.attributes.position, I = G.index, SI = G.attributes.skinIndex, SW = G.attributes.skinWeight;
+  const vorn = (x, y) => {                              // vorderster Punkt des Rumpfs bei (x, y): Tiefe und der nächste Eckpunkt
+    let best = null;
+    for (let t = 0; t < I.count; t += 3) {
+      const [a, b, c] = [I.getX(t), I.getX(t + 1), I.getX(t + 2)], ax = P.getX(a), ay = P.getY(a), bx = P.getX(b), by = P.getY(b), cx = P.getX(c), cy = P.getY(c);
+      const d = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy); if (Math.abs(d) < 1e-9) continue;
+      const u = ((by - cy) * (x - cx) + (cx - bx) * (y - cy)) / d, w = ((cy - ay) * (x - cx) + (ax - cx) * (y - cy)) / d, r = 1 - u - w; if (u < 0 || w < 0 || r < 0) continue;
+      const z = u * P.getZ(a) + w * P.getZ(b) + r * P.getZ(c); if (!best || z > best.z) best = { z, i: u >= w && u >= r ? a : w >= r ? b : c };
+    }
+    return best;
+  };
+  const ort = [], norm = [], farbe = [], si = [], sw = [], idx = [], WEISS_F = [0.93, 0.93, 0.91], SILBER = [0.74, 0.77, 0.82];
+  const punkt = (x, y, z, n, f, von) => { ort.push(x, y, z); norm.push(...n); farbe.push(...f); for (const k of "XYZW") { si.push(SI["get" + k](von)); sw.push(SW["get" + k](von)); } return ort.length / 3 - 1; };
+  const [von, bis, breit] = plan.saum, N = 20; let zuletzt = null, davor = null;
+  for (let k = 0; k <= N; k++) {
+    const y = von + ((bis - von) * k) / N, h = vorn(0, y) || zuletzt; if (!h) continue; zuletzt = h;
+    const l = punkt(breit / duenn, y, h.z + 0.007, [0, 0, 1], WEISS_F, h.i), r = punkt(-breit / duenn, y, h.z + 0.007, [0, 0, 1], WEISS_F, h.i);
+    if (davor) idx.push(davor[0], r, davor[1], davor[0], l, r); davor = [l, r];
+  }
+  for (const y of plan.knoepfe) {
+    const h = vorn(0, y); if (!h) continue;
+    const R = plan.knopf, ringe = 4, teile = 10, erste = ort.length / 3;
+    for (let a = 0; a <= ringe; a++) for (let b = 0; b < teile; b++) {
+      const hoch = (a / ringe) * (Math.PI / 2), rund = (b / teile) * 2 * Math.PI, n = [Math.cos(hoch) * Math.cos(rund), Math.cos(hoch) * Math.sin(rund), Math.sin(hoch)];
+      punkt((n[0] * R) / duenn, y + n[1] * R, h.z + 0.007 + n[2] * R * 0.6, n, SILBER, h.i);
+    }
+    for (let a = 0; a < ringe; a++) for (let b = 0; b < teile; b++) { const p = erste + a * teile + b, q = erste + a * teile + ((b + 1) % teile); idx.push(p, q, q + teile, p, q + teile, p + teile); }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.Float32BufferAttribute(ort, 3)); geo.setAttribute("normal", new THREE.Float32BufferAttribute(norm, 3)); geo.setAttribute("color", new THREE.Float32BufferAttribute(farbe, 3));
+  geo.setAttribute("skinIndex", new THREE.Uint16BufferAttribute(si, 4)); geo.setAttribute("skinWeight", new THREE.Float32BufferAttribute(sw, 4)); geo.setIndex(idx);
+  const teil = new THREE.SkinnedMesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.4, metalness: 0.15 }));
+  teil.name = "uniform"; teil.frustumCulled = false; teil.position.copy(rumpf.position); teil.quaternion.copy(rumpf.quaternion); teil.scale.copy(rumpf.scale);
+  rumpf.parent.add(teil); teil.bind(rumpf.skeleton, rumpf.bindMatrix);
+}
 function drehung(o) { const q = o.quaternion.clone(); for (let p = o.parent; p; p = p.parent) q.premultiply(p.quaternion); return q; }   // Drehung in der Welt ohne die Maße der Eltern (für Teile, die nicht mitgequetscht werden sollen)
 function umfaerben(m, plan) {
   m.traverse((o) => {
     const teil = o.isSkinnedMesh && Object.keys(plan).find((k) => o.name.includes(k)); if (!teil) return;
     const UV = o.geometry.attributes.uv;
-    for (let i = 0; i < UV.count; i++) { const u = UV.getX(i), w = UV.getY(i), su = Math.floor(u * 8), sw = Math.floor(w * 4), neu = plan[teil][su + "," + sw]; if (neu) UV.setXY(i, u + (neu[0] - su) / 8, w + (neu[1] - sw) / 4); }
+    for (let i = 0; i < UV.count; i++) { const u = UV.getX(i), w = UV.getY(i), su = Math.floor(u * 8), sw = Math.floor(w * 4), feld = plan[teil][su + "," + sw], neu = typeof feld === "function" ? feld(o.geometry.attributes.position.getY(i)) : feld; if (neu) UV.setXY(i, u + (neu[0] - su) / 8, w + (neu[1] - sw) / 4); }
     UV.needsUpdate = true;
   });
 }
@@ -368,6 +409,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const kleidungPunkte = kleidungAb(m, kleidung);
   const stiefel = stiefelFest(m, K), halbGelenke = [stiefel.kniel, stiefel.knier, ...ellbogenFest(m, K)].filter(Boolean), hut = hutForm(m, kleidung);
   mantelFolgt(m, K);
+  if (figur.uniform) uniformTeile(m, figur.uniform, figur.duenn || 1);
   /* Eigener Kopf (Kopf-Probe Mr. Flex, 18.11.): der Kopf aus Blender sitzt auf dem Kopfknochen, der Mage-Kopf wird ausgeblendet; der Hut bleibt
      und wird auf den schmaleren Kopf angepasst (hutWeit, hutHoch je Figur). Gesicht wie bei Gary (baueGesicht), dazu Sonnenbrille und Funkeln. */
   let kopfTeil = null, gesicht = null, brille = null; const sterne = [];

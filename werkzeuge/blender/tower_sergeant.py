@@ -26,7 +26,7 @@ def sergeantkopf(name, ort, voll, nase="knolle"):
     vor = "sgt_bart" if voll else "sgt"
     f = fx.farben(vor, haut=HAUT, wange=HAUT, bartschatten=ROTBRAUN if voll else (0.78, 0.53, 0.45), schnurrbart=(0.88, 0.38, 0.06),
                   braue=(0.66, 0.24, 0.03), iris=(0.04, 0.80, 0.22), falte=(0.60, 0.34, 0.28))
-    k = fx.flexkopf(None, ort, name, f=f, haare=False, brille=False, bart=(0.060, 0.0125, 0.012), braue=0.0080, nase=False, wange=(0.062, 0.110, 0.036, 0.030), fein=2)   # Wangen hautfarben wie bei Mr. Flex (Mr. Alex 19.11.)
+    k = fx.flexkopf(None, ort, name, f=f, haare=False, brille=False, bart=(0.060, 0.0125, 0.012), braue=0.0080, nase=False, wange=(0.062, 0.110, 0.036, 0.030), fein=1.5)   # Wangen hautfarben wie bei Mr. Flex (Mr. Alex 19.11.)
     R = fx.R
     # Die Nase ist EIN Stueck (Mr. Alex 19.11.: nicht aus Kugeln zusammengesetzt): Stationen von der Nasenwurzel bis unter die Spitze,
     # je (Hoehe, so weit steht der Nasenruecken vor dem Gesicht, halbe Breite). Haken = schmal mit Buckel, die Spitze haengt; Knolle = kurzer Ruecken, dicke runde Kugel.
@@ -47,7 +47,7 @@ def sergeantkopf(name, ort, voll, nase="knolle"):
         # Backenbart: der Bart laeuft vom Kiefer vor dem Ohr hinauf bis unter die Muetze (Mr. Alex 19.11.: Uebergang vom Kinn zum Backenbart)
         for s in (-1, 1):
             for x, y, z, dick in ((0.094, -0.066, 0.050, 0.026), (0.106, -0.056, 0.082, 0.025), (0.116, -0.046, 0.114, 0.023), (0.123, -0.038, 0.146, 0.021), (0.127, -0.032, 0.178, 0.019), (0.128, -0.028, 0.208, 0.018)):
-                g.kugel("backenbart", k, (s * x * fx.RX / 0.140, y, z), (dick * 0.8, dick * 1.5, dick * 1.25), f["schatten"])   # Kugelreihe: sieht aus wie ein geflochtener Bart (Mr. Alex 19.11.: so lassen)
+                g.kugel("backenbart", k, (s * x * fx.RX / 0.140, y, z), (dick * 0.8, dick * 1.5, dick * 1.25), f["schatten"], fein=14)   # Kugelreihe: sieht aus wie ein geflochtener Bart (Mr. Alex 19.11.: so lassen)
     # Kinnkette der Fellmuetze (Mr. Alex 19.11., nach seinem Foto): goldene Glieder von der Muetze an der Wange herunter und unter der Unterlippe ueber das Kinn.
     # Jedes Glied heisst kette_<Nr>_<Anteil>: mit diesem Anteil (0–100) geht es mit dem Unterkiefer mit (der Browser rechnet das, probe3d_bau.js) – oben an der Muetze 0, am Kinn 100.
     gold = g.farbe("sgt_gold", (0.95, 0.62, 0.08), 0.35, 0.2, 0.10)
@@ -66,7 +66,7 @@ def sergeantkopf(name, ort, voll, nase="knolle"):
             if s < 0 and x == 0:
                 continue
             anteil = max(0.0, min(1.0, (0.150 - z) / (0.150 - 0.035)))
-            g.kugel(f"kette_{nr:02d}_{round(anteil * 100):03d}", k, (s * x, y, z), (0.0085, 0.0085, 0.0085), gold, fein=10)
+            g.kugel(f"kette_{nr:02d}_{round(anteil * 100):03d}", k, (s * x, y, z), (0.0085, 0.0085, 0.0085), gold, fein=7)
             nr += 1
     return k
 

@@ -171,7 +171,7 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
     f = f or farben()
     k = g.gelenk(name, eltern, ort)
     kiefer = g.gelenk("kiefer", k, GJ)
-    kopfhaut(k, kiefer, f, 24 * fein + 1, 72 * fein)   # fein=2: feineres Gitter, wenn der Kiefer eine andere Farbe hat (Bart) – die Farbgrenze wird sonst eckig
+    kopfhaut(k, kiefer, f, round(24 * fein) + 1, round(72 * fein))   # fein=1.5: feineres Gitter, wenn der Kiefer eine andere Farbe hat (Bart) – die Farbgrenze wird sonst eckig
     # Nase: kraeftig und gerade, EIN Stueck (Mr. Alex 19.11.: keine Nase mehr aus mehreren Kugeln) – Stationen (Hoehe, vor dem Gesicht, halbe Breite)
     if nase:
         nasenform(k, [(0.188, 0.002, 0.008), (0.174, 0.009, 0.012), (0.158, 0.017, 0.014), (0.142, 0.025, 0.015), (0.126, 0.034, 0.017), (0.112, 0.043, 0.022),

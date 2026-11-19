@@ -198,6 +198,15 @@ Figuren haben in der Regel **keinen Kragen**: Er bringt mehr Probleme, als er l�
 ### Schulterlinie (Regel Mr. Alex, 19.11.2026)
 Jede Figur ohne Kragen hat einen **sichtbaren Hals**, und die **Schultern setzen tiefer an** – die Arme dürfen nicht aus dem Hals wachsen. Die Schultern sind immer deutlich breiter als der Hals, auch bei dünnen Figuren. Die Maße stehen an einer Stelle (`SCHULTER` in `app/tower/probe3d_bau.js`); einzelne Figuren können abweichen (`schulter` in den Angaben der Figur). Dünne Figuren werden schlank gebaut (`schlank`), nie gequetscht.
 
+### Hals bleibt in den Schultern (Regel Mr. Alex, 19.11.2026)
+Nickt oder neigt eine Figur den Kopf, bewegt sich nur der Kopf; der Hals bleibt zur Brust ausgerichtet und ragt hinten nicht heraus (`halsNach` in `app/tower/probe3d_bau.js`, gilt für jeden Kopf mit einem Teil „hals“).
+
+### Sprechen mit dem ganzen Gesicht (Mr. Alex, 19.11.2026)
+Beim Sprechen arbeiten Brauen und Augen mit: betonte Silben heben die Brauen und öffnen die Augen, an neuen Einsätzen hebt sich eine Braue allein, der Blick wandert kurz, in Pausen wird geblinzelt. Die Stärke steht je Figur im Profil `rede` (Standard `REDE`; Sergeant: starrer Blick, reißt bei lauten Silben die Augen auf). Der Ausdruck wechselt im Satz nach der Regie-Spalte der Texte (`werkzeuge/tower_regie.js` → `app/tower/figuren/regie.json`).
+
+### Sergeant: Gesten und weiche Augenblicke (gebaut 19.11.2026)
+Salutieren, Marsch auf der Stelle im Drill mit Halt (Fuß stampft, Mütze wackelt) und Gruß, Fußwippen, Zeigen nach unten und zur Seite, Hände auf dem Rücken, Hut suchen; Seitenblick, Bartzucken, rote abstehende Ohren. Schnurrbart-Enden laufen bei allen Köpfen spitz zu.
+
 ### Liste der Nebenfiguren (Master, entschieden Mr. Alex 18.11.)
 Jede nach dem Muster „Nebenfigur“: ein Körper, ein Merkmal, ein bis zwei Gesten, ein eigener Gang.
 

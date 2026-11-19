@@ -66,6 +66,9 @@ export const GESTEN = {
 };
 const DAUERND = ["stehen", "gehen", "rennen"];
 const RUECKEN = [0.0, 0.09];                            // Hände auf dem Rücken: Abstand der linken und der rechten Handfläche hinter dem Kreuz (Maß des Körpers)
+/* Sprechen mit dem ganzen Gesicht (Mr. Alex 19.11.): braue = so weit heben betonte Silben die Brauen · schief = an jedem neuen Einsatz hebt sich kurz eine Braue allein ·
+   blick = an jedem zweiten Einsatz schauen die Augen kurz zur Seite und zurück (0 = starrer Blick) · weit = betonte Silben öffnen die Augen. Je Figur änderbar (rede in den Angaben der Figur). */
+const REDE = { braue: 0.9, schief: 0.6, blick: 0.7, weit: 0.6 };
 const STRAMM_ARM = [0.18, 0.05];                          // stramme Haltung: so weit zeigen Ober- und Unterarm nach außen – die Arme liegen an der Hosennaht, nicht im Körper (Mr. Alex 19.11.)
 const STRAMM_BEI = ["salut", "sgtUnten", "sgtSeite", "ruecken", "hutsuchen", "sgtHalt"];
 const HALT = { hoch: 0.3, haelt: 0.42, unten: 0.5, winkel: 1.45 };   // Halt: bis hier ist das Knie oben · ab hier fällt es · hier stampft der Fuß auf (Anteile der Dauer) · Winkel des Oberschenkels (rad)
@@ -324,7 +327,7 @@ export function rundeOrt(ru, weg) {
    umfaerben: Körperteil → Farbfeld des Körperbilds (Spalte,Zeile von 8 × 4) → neues Feld. Aus der Rüstung wird die Uniform der Garde:
    roter Rock, weißer Gürtel, goldene Schnalle und Abzeichen, schwarze Hose und Stiefel. */
 const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
-export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, schlank: 0.6, fuss: 0.9, schulter: { hals: 0.025 }, stramm: true, ausdruck: "grimmig",
+export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, schlank: 0.6, fuss: 0.9, schulter: { hals: 0.025 }, stramm: true, ausdruck: "grimmig", rede: { braue: 0.6, schief: 0, blick: 0, weit: 0.85 },   // beim Reden: Blick starr, keine einzelne Braue – aber bei lauten Silben reißt er die Augen auf
   gang: { heben: 0.85, ferse: 0, rollt: 0.04, ballen: 0.35, wippen: 0.03, spur: 1, tempo: 1.3 }, drill: { vorn: 85, hinten: 30, schnell: 2.2 },   // britischer Drill (Figurenblatt): Knie hoch, der Fuß stampft flach auf, Arme gestreckt bis Schulterhöhe, 1,3 m/s; Spur = Hüftbreite, damit die Beine aneinander vorbeigehen
     // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (schlank = Breite und Tiefe von Rumpf, Armen und Beinen, 1 = wie das Modell; seit 19.11. sauber gebaut statt gequetscht, siehe schlankBauen · fuss = Länge der Füße: 0.9 ist die Hälfte länger als die gequetschten 0.6)
   kopf: "sergeantkopf", hand: 0.72,   // Kopf mit Bart, rothaarig, Knollennase (Wahl Mr. Alex 18./19.11.) · hand = Handgröße gegenüber Mr. Flex
@@ -633,7 +636,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const welt = m.getWorldQuaternion(Q()).multiply(dreh).multiply(handRuhe[s]);
     W.quaternion.copy(w0.slerp(W.parent.getWorldQuaternion(Q()).invert().multiply(welt), gewicht)); W.updateMatrixWorld(true);
   };
-  const g = { danach: null, hutBreit: null, wackel: -1, wackelU: 0, stelle: 0, stelleW: 0, blick: 0, blickZiel: 0, blickBis: 0, blickGeste: 0, zuck: 0, ohren: 0, ohrRot: 0, stramm: 0, strammArm: 0, drill: 0, eilig: false, modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: figur.ausdruck || "neutral", mund: null, rede: null, redeGesten: 0, redet: 0, akzent: 0, uhr: 0, nick: 0, brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
+  const g = { stille: 1, einsatz: 0, schief: 0, pauseBlinzel: true, regie: null, danach: null, hutBreit: null, wackel: -1, wackelU: 0, stelle: 0, stelleW: 0, blick: 0, blickZiel: 0, blickBis: 0, blickGeste: 0, zuck: 0, ohren: 0, ohrRot: 0, stramm: 0, strammArm: 0, drill: 0, eilig: false, modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: figur.ausdruck || "neutral", mund: null, rede: null, redeGesten: 0, redet: 0, akzent: 0, uhr: 0, nick: 0, brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
   /* Stramme Haltung (Sergeant, Mr. Alex 19.11.: er stand breitarmig und mit durchgedrückten Knien): Im Stehen richten sich Rumpf, Arme und Beine nach festen
      Richtungen aus – Rücken gerade, Arme gestreckt an der Hosennaht, Handflächen am Bein, Beine gestreckt, Fersen zusammen, Fußspitzen leicht nach außen.
      Die Haltung blendet weich ein, sobald er steht, und sofort aus, wenn eine Geste oder der Gang beginnt (figur.stramm). */
@@ -736,6 +739,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   };
   /* Gesicht, Sonnenbrille, Funkeln. Brille: 1 = auf, 0,5 = auf die Nase heruntergeschoben (Augen frei), 0 = ab.
      Funkeln: ein kurzer Stern an jedem Auge wie der Blitz an Garys Zahn; ist die Brille auf, funkelt es blau durch die Gläser. */
+  /* Ausdruck nach der Regie der Texte (Teil E): „grund“ = Grundausdruck der Figur, „verlegen“ = Grundausdruck und rote Ohren, sonst ein Ausdruck aus AUSDRUECKE. */
+  const regieSchritt = (a) => { const grund = figur.ausdruck || "neutral"; if (a === "verlegen") g.ohren = OHREN_DAUER; g.ausdruck = AUSDRUECKE[a] ? a : grund; };
   const kopfLauf = (dt) => {
     if (!gesicht) return;
     if (g.rede) {                                        // Reden mit Gestik: an jedem Einsatz der Aufnahme eine große Geste aus seinem Vorrat, eine nach der anderen
@@ -744,13 +749,20 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       if (dran) g.rede.offen = true;
       if (g.rede.offen && g.modus === "stehen") { g.rede.offen = false; starte(REDE_GESTEN[g.redeGesten++ % REDE_GESTEN.length]); }
     }
+    if (g.regie) { const zt = g.regie.zeit(); while (g.regie.i < g.regie.schritte.length && g.regie.schritte[g.regie.i][0] <= zt) regieSchritt(g.regie.schritte[g.regie.i++][1]); }   // Ausdruckswechsel im Satz
     const zeigt = g.mund && g.ausdruck === "neutral" ? "reden" : g.ausdruck;   // Grundausdruck beim Reden: echtes Lächeln
     /* Kopf und Gesicht reden mit (Mr. Alex 18.11.): Der Kopf nickt und neigt sich leicht wie bei Gary, betonte (laute, weit offene) Silben heben
        die Brauen und geben dem Kopf einen kleinen Nicker, die Wangen gehen mit dem Mund mit. */
     g.uhr += dt; g.redet += ((g.mund ? 1 : 0) - g.redet) * Math.min(1, dt * 6);
     const betont = g.mund ? Math.max(0, Math.min(1, ((g.mund[4] == null ? 0.5 : g.mund[4]) * g.mund[0] - 0.3) / 0.35)) : 0;
     g.akzent += (betont - g.akzent) * Math.min(1, dt * (betont > g.akzent ? 16 : 5));
-    const basis = AUSDRUECKE[zeigt] || NEUTRAL, ziel = g.redet > 0.01 ? { ...basis, braueHoch: basis.braueHoch + 0.45 * g.akzent, wange: Math.min(1, basis.wange + 0.25 * g.akzent) } : { ...basis };
+    /* Einsätze und Pausen: Nach einer Sprechpause beginnt ein neuer Einsatz – eine Braue hebt sich kurz, bei jedem zweiten wandert der Blick zur Seite und zurück; in der Pause blinzelt die Figur. */
+    const RD = { ...REDE, ...figur.rede }, laut = g.mund ? g.mund[0] : 0;
+    if (laut < 0.08) { g.stille += dt; if (g.stille > 0.3 && !g.pauseBlinzel) { gesicht.blinzle(); g.pauseBlinzel = true; } }
+    else { if (g.stille > 0.28) { g.einsatz++; g.schief = 1; if (RD.blick && g.einsatz % 2 === 0 && g.blickBis <= 0) { g.blickZiel = (g.einsatz % 4 === 0 ? 1 : -1) * RD.blick; g.blickBis = 0.45; } } g.stille = 0; g.pauseBlinzel = false; }
+    g.schief = Math.max(0, g.schief - dt / 0.7);
+    const basis = AUSDRUECKE[zeigt] || NEUTRAL, ziel = g.redet > 0.01 ? { ...basis, braueHoch: basis.braueHoch + RD.braue * g.akzent, schief: basis.schief + RD.schief * weich(g.schief, 0, 0.6) * g.redet,
+      lid: basis.lid * (1 - RD.weit * g.akzent), pupille: basis.pupille * (1 - 0.14 * RD.weit * g.akzent), wange: Math.min(1, basis.wange + 0.25 * g.akzent) } : { ...basis };
     /* Die weichen Augenblicke des Sergeants (Figurenblatt): Seitenblick nur aus den Augenwinkeln – der Kopf bleibt; der Bart zuckt, wenn er fast lächelt; rote Ohren. */
     g.blickBis = Math.max(0, g.blickBis - dt); g.zuck = Math.max(0, g.zuck - dt); g.ohren = Math.max(0, g.ohren - dt);
     const sucht = g.modus === "hutsuchen" && g.laeuft ? dabei(g.laeuft.time / g.laeuft.getClip().duration, 0.05, 0.1, 0.86, 0.95) * (Math.sin((2 * Math.PI * g.laeuft.time) / 1.3) > 0 ? -1 : 1) : 0;
@@ -1005,7 +1017,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       return erg;
     },
     mund(form) { g.mund = form; },                         // [offen, breit] aus der Lippenbewegung, null = schweigt
-    rede(r) { g.rede = r ? { ...r, i: 0, offen: false } : null; },   // { einsaetze: [s, …], zeit: () => s } oder null
+    rede(r) { g.rede = r ? { ...r, i: 0, offen: false } : null; },
+    regie(r) { if (r) g.regie = { ...r, i: 0, vorher: g.regie ? g.regie.vorher : g.ausdruck }; else if (g.regie) { g.ausdruck = g.regie.vorher; g.regie = null; } },   // { schritte: [[s, Ausdruck], …], zeit: () => s } oder null = Satz zu Ende, zurück zum Ausdruck davor   // { einsaetze: [s, …], zeit: () => s } oder null
     bahn(lang) { g.gerade = lang > 0; g.bahn = lang || platz.bahn || 2.4; g.weg = 0; g.hin = 1; g.dreh = 0; anker.position.x = platz.x; },   // lang > 0: gerade Strecke statt Rundkurs;                                                // nur für das Testprogramm: lange Strecke, um Gehen und Rennen ohne Wenden zu messen
     haende(form) { g.wahl = form; zeigeHand(GESTEN[g.modus][3] || form); },
     setze(name, wert) { if (name in bau && wert > 0) { bau[name] = wert; const modus = g.modus; messeTempo(); g.laeuft = null; starte(DAUERND.includes(modus) ? modus : "stehen"); } },
@@ -1044,7 +1057,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       }
       return fund;
     },
-    zustand: () => ({ modus: g.modus, eilig: !!g.eilig, stelle: g.stelle > 0, blick: +g.blick.toFixed(2), zuck: +g.zuck.toFixed(2), bartDreh: bart ? grad(bart.o.quaternion.angleTo(bart.q)) : null, ohrRot: +g.ohrRot.toFixed(2), ohren: ohren.length, halsLage: hals ? { kopfNeig: grad(2 * Math.acos(Math.min(1, Math.abs(hals.r.w)))), ort: K("chest").worldToLocal(hals.o.getWorldPosition(v())).toArray().map((x) => +x.toFixed(4)) } : null, wackel: g.wackel >= 0, hutBreit: +hutBreit().toFixed(3), handHut: ["r", "l"].map((s) => +Math.abs(head.worldToLocal(flaeche(s)).x).toFixed(3)),
+    zustand: () => ({ modus: g.modus, eilig: !!g.eilig, stelle: g.stelle > 0, einsatz: g.einsatz, schief: gesicht ? +gesicht.wert.schief.toFixed(2) : 0, lid: gesicht ? +gesicht.wert.lid.toFixed(2) : 0, blick: +g.blick.toFixed(2), zuck: +g.zuck.toFixed(2), bartDreh: bart ? grad(bart.o.quaternion.angleTo(bart.q)) : null, ohrRot: +g.ohrRot.toFixed(2), ohren: ohren.length, halsLage: hals ? { kopfNeig: grad(2 * Math.acos(Math.min(1, Math.abs(hals.r.w)))), ort: K("chest").worldToLocal(hals.o.getWorldPosition(v())).toArray().map((x) => +x.toFixed(4)) } : null, wackel: g.wackel >= 0, hutBreit: +hutBreit().toFixed(3), handHut: ["r", "l"].map((s) => +Math.abs(head.worldToLocal(flaeche(s)).x).toFixed(3)),
       armDreh: Object.fromEntries(["l", "r"].map((s) => [s, ["upperarm", "lowerarm", "wrist"].map((n) => grad(K(n + s).getWorldQuaternion(Q()).angleTo(m.getWorldQuaternion(Q()))))])), /* Testprogramm: Drehung der Armknochen gegen den Körper – bleibt in einer gehaltenen Geste gleich */ armR: armLage("r"), armL: armLage("l"), sohleR: grad(sohlenHoch("r").angleTo(v(0, 1, 0))), sohleL: grad(sohlenHoch("l").angleTo(v(0, 1, 0))), hand: g.hand, wahl: g.wahl, krall: +krall.r[1].toFixed(2), weg: +g.weg.toFixed(2), bau: { ...bau }, schritt: +hoeher().toFixed(2),
       gehen: +gang.gehen.tempo.toFixed(2), rennen: +gang.rennen.tempo.toFixed(2), standL: stand.l.fest, standR: stand.r.fest, wendet: !!g.wendet, knieAnteil: +beinTeile().anteil.toFixed(3),
       hals: +head.getWorldPosition(v()).y.toFixed(3), tief: +tief().toFixed(3), zehe: +Math.max(K("toesr").getWorldPosition(v()).y, K("toesl").getWorldPosition(v()).y).toFixed(3),

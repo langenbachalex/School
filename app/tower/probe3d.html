@@ -289,6 +289,14 @@ try {
   // Mr. Flex redet (Kopf-Probe 18.11.): seine Aufnahmen mit den Mundformen von Rhubarb; „Reden mit Gestik“ nimmt die längste der Auswahl
   const mundFlex = await fetch("figuren/mund_mrflex.json").then((r) => r.json()).catch(() => ({}));
   const mundSgt = await fetch("figuren/mund_sergeant.json").then((r) => r.json()).catch(() => ({}));
+  /* Ausdruckswechsel im Satz (Teil E, 19.11.): regie.json sagt, bei welchem Anteil des gesprochenen Textes welcher Ausdruck kommt (aus der Regie-Spalte, werkzeuge/tower_regie.js).
+     Der Anteil wird über die Lippenzeiten in Sekunden umgerechnet – Pausen (Form X) zählen nicht mit. */
+  const regieDaten = await fetch("figuren/regie.json").then((r) => r.json()).catch(() => ({}));
+  const regieSchritte = (wechsel, mund) => {
+    if (!wechsel || !mund) return null;
+    const z = mund.zeiten, stuecke = z.map(([t, form], i) => [t, (i + 1 < z.length ? z[i + 1][0] : mund.dauer) - t, form]).filter((x) => x[2] !== "X"), gesamt = stuecke.reduce((n, x) => n + x[1], 0);
+    return wechsel.map(([anteil, ausdruck]) => { let rest = anteil * gesamt; for (const [t, lang] of stuecke) { if (rest <= lang) return [t + rest, ausdruck]; rest -= lang; } return [mund.dauer, ausdruck]; });
+  };
   const MUND_PROBE = { flex: mundFlex, sergeant: mundSgt };
   for (const p of Object.values(PROBEN)) {               // je Figur die ersten acht Aufnahmen; „Reden mit Gestik“ nimmt die längste davon
     p.mund = MUND_PROBE[p.wer]; p.saetze = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `${p.sagt}_0${n}`);
@@ -297,8 +305,9 @@ try {
   for (const b of document.querySelectorAll("#bau button[data-kopfrede]")) b.addEventListener("click", () => {
     const p = aktiv, mitGestik = b.dataset.kopfrede === "gestik", id = mitGestik ? p.gestik : p.saetze[p.nr++ % p.saetze.length];
     spiele(`../audio/tower/${id}.mp3`, { wer: p.wer, id,
-      beginn: () => { if (mitGestik && p.mund[id]) p.probe.rede({ einsaetze: einsaetzeAus(p.mund[id].zeiten), zeit: () => (laeuft ? laeuft.zeit() : 1e9) }); },
-      ende: () => { p.probe.mund(null); p.probe.rede(null); } });
+      beginn: () => { if (mitGestik && p.mund[id]) p.probe.rede({ einsaetze: einsaetzeAus(p.mund[id].zeiten), zeit: () => (laeuft ? laeuft.zeit() : 1e9) });
+        const schritte = regieSchritte(regieDaten[id], p.mund[id]); if (schritte) p.probe.regie({ schritte, zeit: () => (laeuft ? laeuft.zeit() : 1e9) }); },
+      ende: () => { p.probe.mund(null); p.probe.rede(null); p.probe.regie(null); } });
   });
   const GARY_SAGT = ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"], GARY_GESTIK = "gary_06";
   let garyNr = 0, ohneFormen = false;
@@ -554,7 +563,7 @@ try {
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
   window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
-    sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), sergeantArme: () => sergeants[0].arme(), probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
+    sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), sergeantArme: () => sergeants[0].arme(), bauMund: (form) => bauProbe.mund(form), regie: (wer, id, zeit) => { const p = PROBEN[wer], schritte = id && regieSchritte(regieDaten[id], p.mund[id]); p.probe.regie(schritte ? { schritte, zeit: () => zeit } : null); return schritte; }, probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3
     halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter
     takt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); figuren.bewege(ms / 1000, performance.now() + i * ms); } },   // Testprogramm: n Bilder im Abstand ms rechnen (wie 60 Bilder pro Sekunde)

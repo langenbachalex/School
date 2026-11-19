@@ -378,6 +378,23 @@ async function probe3dTest(browser, basis, app, name, fm) {
         if (!(blick < -0.8) || !(nick < 1)) fehl.push(`${titel}: Seitenblick – die Augen gehen nicht zur Seite, oder der Kopf dreht mit (Blick ${blick}, Kopf ${nick}°)`);
         if (!(bart > 3)) fehl.push(`${titel}: der Bart des Sergeants zuckt nicht (${bart}°)`);
         if (!(rot > 0.6)) fehl.push(`${titel}: die Ohren des Sergeants werden nicht rot (${rot})`);
+        // Sprechen mit dem ganzen Gesicht (Mr. Alex 19.11.): betonte Silben heben die Brauen deutlich und öffnen die Augen; Mr. Flex hebt an neuen Einsätzen eine Braue allein
+        // und schaut kurz zur Seite, der Sergeant starrt geradeaus. Vier Einsätze: Pause, laute Silbe, Pause …
+        await pg.waitForTimeout(1800);
+        const rede = async (setze, lese) => { const ruhe = await lese(); let braue = -9, lid = 9, blickWeit = 0, schief = 0;
+          for (let n = 0; n < 4; n++) { await setze(null); await pg.waitForTimeout(380); await setze([1, 1, 0, 0, 1]); for (let k = 0; k < 6; k++) { await pg.waitForTimeout(60); const z = await lese(); braue = Math.max(braue, z.kopf.braue); lid = Math.min(lid, z.lid); blickWeit = Math.max(blickWeit, Math.abs(z.blick)); schief = Math.max(schief, z.schief); } }
+          const ende = await lese(); await setze(null); return { ruhe, braue, lid, blickWeit, schief, einsaetze: ende.einsatz - ruhe.einsatz }; };
+        const rs = await rede((m) => pg.evaluate((x) => window.__probe3d.sergeantMund(x), m), sg);
+        if (!(rs.braue - rs.ruhe.kopf.braue > 0.35) || !(rs.lid < rs.ruhe.lid - 0.15)) fehl.push(`${titel}: beim Sprechen bewegt der Sergeant Brauen und Augen kaum (Brauen ${rs.ruhe.kopf.braue} → ${rs.braue}, Lid ${rs.ruhe.lid} → ${rs.lid})`);
+        if (!(rs.blickWeit < 0.05) || !(rs.schief < 0.1)) fehl.push(`${titel}: der Blick des Sergeants bleibt beim Sprechen nicht starr (Blick ${rs.blickWeit}, einzelne Braue ${rs.schief})`);
+        const rf = await rede((m) => pg.evaluate((x) => window.__probe3d.bauMund(x), m), () => pg.evaluate(() => window.__probe3d.bau()));
+        if (!(rf.braue - rf.ruhe.kopf.braue > 0.6)) fehl.push(`${titel}: beim Sprechen hebt Mr. Flex die Brauen kaum (${rf.ruhe.kopf.braue} → ${rf.braue}, Soll über 0,6 mehr)`);
+        if (!(rf.einsaetze >= 3) || !(rf.blickWeit > 0.4) || !(rf.schief > 0.3)) fehl.push(`${titel}: Mr. Flex – an neuen Einsätzen fehlen der Blick zur Seite oder die einzelne Braue (Einsätze ${rf.einsaetze}, Blick ${rf.blickWeit}, Braue allein ${rf.schief})`);
+        // Ausdruckswechsel im Satz nach der Regie-Spalte (Teil E): „Nobody panic! That is an order!“ – erst erschrocken, dann grimmig; nach dem Satz wieder der Ausdruck davor
+        const schritte = await pg.evaluate(() => window.__probe3d.regie("sergeant", "sergeant_03", 0.05)); await pg.waitForTimeout(250); const a1 = (await sg()).kopf.ausdruck;
+        await pg.evaluate(() => window.__probe3d.regie("sergeant", "sergeant_03", 99)); await pg.waitForTimeout(250); const a2 = (await sg()).kopf.ausdruck;
+        await pg.evaluate(() => window.__probe3d.regie("sergeant", null)); await pg.waitForTimeout(150); const a3 = (await sg()).kopf.ausdruck;
+        if (!schritte || schritte.length < 2 || a1 !== "erschrocken" || a2 !== "grimmig" || a3 !== "grimmig") fehl.push(`${titel}: Ausdruckswechsel im Satz (Regie) kommt nicht an (${JSON.stringify(schritte)}; ${a1} → ${a2} → ${a3})`);
       }
       await pg.click('#bau button[data-wahl="flex"]');
     }

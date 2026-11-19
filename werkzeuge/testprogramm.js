@@ -269,6 +269,10 @@ async function probe3dTest(browser, basis, app, name, fm) {
     for (const [wer, z, breit] of [["Mr. Flex", await pg.evaluate(() => window.__probe3d.bau()), 0.14], ["der Sergeant", sgt[0], 0.11]]) {
       const k = z && z.ohneKragen;
       if (!k || !(k.geloescht > 20 && k.rand >= 8)) fehl.push(`${titel}: ${wer} hat noch einen Kragen (${JSON.stringify(k)})`);
+      // Schulterlinie (Standard, Mr. Alex 19.11.): sichtbarer Hals, Schultern tiefer und breiter als der Hals – die Arme wachsen nicht aus dem Hals; schlanke Figuren sind gebaut, nicht gequetscht
+      const sl = z && z.schulterLinie;
+      if (!sl || !(sl.hals >= 0.22) || !(sl.breit >= 0.16)) fehl.push(`${titel}: bei ${wer} setzen die Schultern zu hoch oder zu eng an (Kopf ${sl && sl.hals} über den Schultergelenken, halbe Breite ${sl && sl.breit}; Soll mindestens 0,22 und 0,16)`);
+      if (sl && sl.gequetscht) fehl.push(`${titel}: ${wer} ist gequetscht statt schlank gebaut (verzerrt gedrehte Glieder, die Hand zuckt beim Salutieren)`);
       else { if (!k.hals) fehl.push(`${titel}: ${wer} hat ohne Kragen keinen Hals`); if (!(k.mundHaut >= breit)) fehl.push(`${titel}: bei ${wer} reicht die Haut neben dem Mund nicht bis zur Wange (${k.mundHaut} m) – Spalt am Mundwinkel`); }
     }
     // Kinnkette der Fellmütze (19.11.): goldene Glieder am Kopf; öffnet er den Mund, geht das Glied am Kinn mit dem Unterkiefer nach unten

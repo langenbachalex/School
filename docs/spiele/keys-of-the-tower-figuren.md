@@ -195,6 +195,9 @@ Ein Profil sagt, woran man eine Figur erkennt, auch wenn sie nur 100 Bildpunkte 
 ### Kein Kragen (Regel Mr. Alex, 19.11.2026)
 Figuren haben in der Regel **keinen Kragen**: Er bringt mehr Probleme, als er löst (Schultern und Arme stoßen hindurch, Falten). Der Körper endet in einer flachen Schulterkappe, der Hals gehört zum Kopf (`kragenWeg` in `app/tower/probe3d_bau.js`). Einen Kragen bekommen nur besondere Figuren, bei denen er zum Aussehen gehört (`kragen: false` in den Angaben der Figur).
 
+### Schulterlinie (Regel Mr. Alex, 19.11.2026)
+Jede Figur ohne Kragen hat einen **sichtbaren Hals**, und die **Schultern setzen tiefer an** – die Arme dürfen nicht aus dem Hals wachsen. Die Schultern sind immer deutlich breiter als der Hals, auch bei dünnen Figuren. Die Maße stehen an einer Stelle (`SCHULTER` in `app/tower/probe3d_bau.js`); einzelne Figuren können abweichen (`schulter` in den Angaben der Figur). Dünne Figuren werden schlank gebaut (`schlank`), nie gequetscht.
+
 ### Liste der Nebenfiguren (Master, entschieden Mr. Alex 18.11.)
 Jede nach dem Muster „Nebenfigur“: ein Körper, ein Merkmal, ein bis zwei Gesten, ein eigener Gang.
 

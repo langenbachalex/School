@@ -685,6 +685,24 @@ async function hofTest(browser, basis, app, name, fm) {
       if (lauf[0]) fehl.push(`${t}: die Kinderfigur rennt schon bei einem nahen Ziel`);
       if (!lauf[1]) fehl.push(`${t}: die Kinderfigur rennt nicht zu einem Ziel in 15 m Entfernung`);
       await pg.waitForTimeout(1500);
+      // Arthur, der Rabe (Figuren 7, 19.11.): sitzt vorn am Platz oder auf der Mauer, riesig (rund 0,65 m), dreht den Kopf selten, langsam und deutlich
+      const ra = await pg.evaluate(() => { const p = window.__probe3d, vorn = p.vogel(); p.vogelOrt("mauer"); const mauer = p.vogel();
+        let schnell = 0, weit = 0, vor = p.vogel().kopf[0]; const d0 = mauer.drehungen;
+        for (let i = 0; i < 1500; i++) { p.vogelTakt(1, 40); const k = p.vogel().kopf[0]; schnell = Math.max(schnell, Math.abs(k - vor) / 0.04); weit = Math.max(weit, Math.abs(k)); vor = k; }   // eine Minute
+        const nach = p.vogel(); p.vogelOrt("vorn"); return { vorn, mauer, schnell, weit, drehungen: nach.drehungen - d0, zurueck: p.vogel() }; });
+      if (!ra.vorn) fehl.push(`${t}: Arthur fehlt im Hof`);
+      else {
+        if (ra.vorn.hoch < 0.58 || ra.vorn.hoch > 0.75) fehl.push(`${t}: Arthur ist ${ra.vorn.hoch} m hoch statt rund 0,65 m (Mr. Alex 19.11.: riesig, ehrfurchtgebietend)`);
+        if (Math.abs(ra.vorn.fuss) > 0.01) fehl.push(`${t}: Arthur steht nicht auf dem Boden (Füße bei ${ra.vorn.fuss} m)`);
+        if (ra.vorn.sitzt !== "vorn" || Math.abs(ra.vorn.ort[0]) > B / 2 || Math.abs(ra.vorn.ort[2]) > T / 2 || !ra.vorn.klotz) fehl.push(`${t}: Arthur sitzt zu Beginn nicht vorn am Platz`);
+        const rp = plan.raben[3];
+        if (Math.abs(ra.mauer.ort[1] - plan.masse.rabenmauer.hoch) > 0.01 || Math.abs(ra.mauer.ort[0] - rp.x) > 0.6 || Math.abs(ra.mauer.ort[2] - rp.z) > 0.01) fehl.push(`${t}: Arthur sitzt nicht auf der Rabenmauer (Platz 4)`);
+        if (ra.mauer.klotz) fehl.push(`${t}: auf der Mauer steht noch der Platzhalter-Klotz an Arthurs Platz`);
+        if (!ra.zurueck.klotz) fehl.push(`${t}: der Platzhalter-Klotz kommt nicht zurück, wenn Arthur wieder vorn sitzt`);
+        if (ra.drehungen < 4 || ra.drehungen > 12) fehl.push(`${t}: Arthur dreht den Kopf ${ra.drehungen}-mal in der Minute (erwartet 5 bis 10: selten)`);
+        if (ra.schnell > ra.mauer.blick.tempo + 0.01) fehl.push(`${t}: Arthur dreht den Kopf zu schnell (${ra.schnell.toFixed(2)} statt höchstens ${ra.mauer.blick.tempo} je Sekunde)`);
+        if (ra.weit < 0.5 || ra.weit > ra.mauer.blick.weit + 0.01) fehl.push(`${t}: Arthurs Kopfdrehung reicht ${ra.weit.toFixed(2)} weit (erwartet deutlich, höchstens ${ra.mauer.blick.weit})`);
+      }
       // drei Kameras: wählbar, über dem Boden, „hinter der Figur“ bleibt auf dem Platz
       for (const k of ["puppenhaus", "augen", "hinten"]) {
         await pg.click(`#kameras button[data-kamera="${k}"]`); await pg.waitForTimeout(300);

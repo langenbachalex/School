@@ -195,35 +195,129 @@ Arthur ist nie albern. Er spricht langsam, in kurzen, alten Sätzen, und lässt 
 
 A25 ist eine sehr seltene Andeutung auf die Elster, A26 auf sein Schlusswort und die weiteren Kapitel. A20 lässt ihn in den Barry-Witz hineinlaufen.
 
+## Arthur erzählt aus der Geschichte des Towers (Wunsch Mr. Alex 19.11.: historische Fakten, nicht zu grausam, im Stil von „There are more rooms in this Tower than doors.“) – Entwurf, 15 Sprüche
+Jeder Spruch trägt eine echte Tatsache, erzählt wie ein Geheimnis. **Die Fakten stammen aus dem Wissen des Masters und sind noch nicht nachgeschlagen – vor dem Vertonen prüft er Jahreszahlen und Namen nach.**
+
+| Nr | S | Englisch | Was dahintersteckt |
+|---|---|---|---|
+| H1 | 1 | A king from Normandy built the great tower. Nine hundred years ago. I watched. | Wilhelm der Eroberer, White Tower ab etwa 1078 |
+| H2 | 1 | They say: if the ravens leave, the Tower falls. So we stay. | die Raben-Legende |
+| H3 | 2 | They painted the great tower white. In 1240. Now you know its name. | Heinrich III. ließ ihn weiß tünchen: White Tower |
+| H4 | 2 | Once, lions lived here. And an elephant. This was a zoo before it was a museum. | königliche Menagerie, über 600 Jahre |
+| H5 | 3 | A white bear lived in this Tower. He went fishing in the river. On a long rope. | Eisbär, Geschenk aus Norwegen, 1252 |
+| H6 | 2 | They made the kingdom's coins here. For five hundred years. I never got one. | Royal Mint im Tower, etwa 1279–1810 |
+| H7 | 3 | A man called Newton looked after the coins here. He was good with numbers. And apples. | Isaac Newton, Leiter der Münze ab 1696 |
+| H8 | 2 | The crown sleeps in the Jewel House. A thief took it once. In 1671. He did not get far. | Colonel Blood, Kronjuwelen-Raub |
+| H9 | 3 | The first prisoner here climbed out of a window. On a rope. The rope came in a barrel. Tell the fox nothing. | Ranulf Flambard, 1101, Seil im Weinfass |
+| H10 | 2 | A great fire ate London. In 1666. It stopped before these walls. | Großer Brand von London |
+| H11 | 2 | There was water all around this Tower. They let it out in 1843. I miss the frogs. | der Wassergraben wurde trockengelegt |
+| H12 | 2 | The men in red have guarded this place since 1485. They still wear the old clothes. | Yeoman Warders, seit Heinrich VII. |
+| H13 | 3 | A prisoner lived here for thirteen years. He wrote a history of the world. He had time. | Sir Walter Raleigh, 1603–1616 |
+| H14 | 3 | Under your feet is a Roman wall. Older than the Tower. Older than me. | der Tower steht an der Ecke der römischen Stadtmauer |
+| H15 | 4 | A stargazer watched the sky from the great tower. They say we annoyed him. He moved to Greenwich. | John Flamsteed, erster königlicher Astronom – Legende; Greenwich ist ein möglicher späterer Ort |
+
+H4 und H5 führen zum London Zoo (dorthin kamen die Tiere, als die Menagerie schloss) – ein späterer Ort des Abenteuers. H9 spielt mit Garys Fass.
+
+## Die Taube – noch einmal so viel Klatsch (Wunsch Mr. Alex 19.11.: verdoppeln, ganz viel Gossip) – Entwurf, 24 Sprüche
+Sie weiß alles, erzählt alles und widerspricht sich im selben Atemzug. Einige Sprüche tragen kleine Hinweise auf die Geschichte (T6 Kuchen, T7 Mr Pike, T21 der Sergeant tanzt, T22 der glänzende „Rabe“).
+
+| Nr | S | Englisch |
+|---|---|---|
+| T1 | 2 | Guess what! Guess what! The fox named his barrel. Barry! I asked Barry. Barry said nothing. Very rude. |
+| T2 | 2 | The Sergeant polishes his boots at midnight. He talks to them. The left boot is his favourite. |
+| T3 | 2 | Have you heard? The cowboy thinks the ravens are small eagles. I will not tell him. I told everybody else. |
+| T4 | 2 | Mr. Flex was in a spoon yesterday. A SPOON. I saw it. I see everything. |
+| T5 | 1 | Arthur blinked today. Twice! It was in all the news. My news. |
+| T6 | 2 | Mrs Crumb is baking something big. Very big. I counted the eggs. Forty! Forty eggs! |
+| T7 | 2 | Mr Pike has a secret. I know it. I cannot tell you. … Ask me again. |
+| T8 | 3 | The Sergeant has a tiny comb. For his beard. It has its own pocket. |
+| T9 | 1 | I know who took the last biscuit. It was the wind. … It was me. |
+| T10 | 2 | The ravens have a club. Very secret. I am not in it. I do not want to be in it. … I want to be in it. |
+| T11 | 2 | Somebody was singing in the kitchen. Badly. Beautifully badly. |
+| T12 | 2 | The fox practises his bow. In front of the barrel. Every morning. The barrel never claps. |
+| T13 | 3 | The gate squeaks. Every night at the same time. I told the Sergeant. He oiled ME. |
+| T14 | 2 | I have a cousin in Trafalgar Square. She knows a pigeon who knows the King. So I basically know the King. |
+| T15 | 3 | My cousin at the museum says a cat lives there. A CAT. In a museum. I am never going. |
+| T16 | 1 | News! News! A man with a map walked into a wall. He said sorry. To the wall. |
+| T17 | 2 | The clock was one second late on Tuesday. ONE SECOND. The Sergeant did not sleep for a week. |
+| T18 | 3 | Mr. Flex says he is five hundred years old. My grandmother says six hundred. She was there. |
+| T19 | 2 | I heard the fox cannot read clocks. Do not tell him I told you. … Tell him. I want to see his face. |
+| T20 | 1 | Someone dropped a sandwich by the gate. I am not saying who ate it. Coo. … It was delicious. |
+| T21 | 3 | The Sergeant danced. In the dark. Alone. I have seen things, detective. Things. |
+| T22 | 4 | One raven is shinier than the others. Very shiny. Strange. … Anyway! Guess what else! |
+| T23 | 2 | I talk too much? Me? Who said that? Was it Arthur? He said a WORD? What word? |
+| T24 | 3 | Breaking news! I have no news. This is the first time. Write it down. |
+
+## Der Sergeant – mehr Sprüche, mit Klischee (Wunsch Mr. Alex 19.11.) – Entwurf, 32 Sprüche
+Der britische Feldwebel, wie er im Buche steht: Regeln, Haltung, Pünktlichkeit, Tee, Wetter, „in my day“, blanke Stiefel, Schlange stehen – und ganz selten rutscht ihm etwas Weiches heraus.
+
+| Nr | Thema | S | Englisch |
+|---|---|---|---|
+| S1 | Haltung | 1 | Chin up. Chest out. Shoulders back. That is how we look for keys. |
+| S2 | Regeln | 1 | There is a right way, a wrong way, and my way. We use my way. |
+| S3 | Regeln | 2 | Rule number three: no questions about rule number two. |
+| S4 | Regeln | 2 | A tidy tower is a happy tower. A happy tower is a quiet tower. |
+| S5 | Regeln | 2 | We queue here. One behind the other. Even if there is only one of you. |
+| S6 | Befehl | 1 | Eyes front, detective! … The other front. |
+| S7 | Befehl | 1 | At the double! That means fast. But no running. |
+| S8 | Befehl | 2 | Stand still! … Not you, detective. The fox. … Both of you. |
+| S9 | Befehl | 2 | Speak up! I cannot hear you over my own shouting. |
+| S10 | Tee | 1 | Keep calm. Carry on. Drink tea. In that order. |
+| S11 | Tee | 2 | Tea solves everything. Except missing keys. I tried. |
+| S12 | Tee | 2 | Milk first? Tea first? I do not discuss this on duty. |
+| S13 | Wetter | 1 | Fog again. Proper British weather. Lovely. |
+| S14 | Wetter | 2 | Cold? This is not cold. In my day, the fog had ice in it. |
+| S15 | Wetter | 3 | It is not raining. It is a wet sort of dry. |
+| S16 | früher | 2 | In my day, keys did not go missing. They did not dare. |
+| S17 | früher | 2 | In my day, we marched to school. Uphill. Both ways. |
+| S18 | früher | 3 | I have guarded this door for thirty years. It has never moved. Good door. |
+| S19 | Stiefel | 1 | Look at these boots. You can see your face in them. Do not look too long. |
+| S20 | Stiefel | 2 | A man is only as good as his boots. Mine are excellent. |
+| S21 | Hof | 1 | This courtyard has four corners. I have checked every one. Twice. |
+| S22 | Hof | 2 | Do not walk on the grass. It is very old grass. |
+| S23 | Hof, Raben | 2 | Seven ravens. All present. … Who is that grey one? |
+| S24 | Tourist | 1 | Sir! The gift shop is closed. The Tower is closed. Everything is closed. |
+| S25 | Tourist | 2 | He called me partner. I am nobody's partner. I am a Sergeant. |
+| S26 | Tourist | 3 | Howdy? What is howdy? Is it a rule? I do not know this rule. |
+| S27 | Gary | 2 | FOX! Stop naming things! |
+| S28 | Gary | 3 | Barry? Who is Barry? … I do not want to know. … Who is Barry? |
+| S29 | Hut | 2 | Under my hat is my head. Nothing else. Stop asking. |
+| S30 | weich | 3 | Jolly good. … I mean: acceptable. |
+| S31 | weich | 3 | I do not have a favourite detective. … It is you. Dismissed. |
+| S32 | weich | 4 | Sometimes I march just for fun. … That stays in this courtyard. |
+
 ## Laufende Witze – Register (wird mit jedem Paket fortgeschrieben)
 | Witz | Wer | Sprüche |
 |---|---|---|
-| Barry, das Fass | Gary, Mr. Flex, Arthur | G37, G38, F37, A20 |
-| Unter dem Hut des Sergeants | Gary, Mr. Flex | G53, F47 |
-| Mr. Flex in Pfütze, Scheibe, Löffel | Mr. Flex, Gary | F1–F5, F31–F35, G67, F60 |
+| Barry, das Fass | Gary, Mr. Flex, Arthur, Taube, Sergeant | G37, G38, F37, A20, T1, T12, S27, S28 |
+| Unter dem Hut des Sergeants | Gary, Mr. Flex, Sergeant | G53, F47, S29 |
+| Mr. Flex in Pfütze, Scheibe, Löffel | Mr. Flex, Gary, Taube | F1–F5, F31–F35, G67, F60, T4 |
 | Steve und Other Steve (so heißen die Muskeln von Mr. Flex) | Mr. Flex | F54 |
 | Gary lernt Amerikanisch | Gary | G55 |
 | Sandwiches und Käse | Gary | G40, G44, G54, G64, G66 und viele ältere |
 | Tee | Mr. Flex | F43 und viele ältere |
 | Der Lehrer rutscht durch | Mr. Flex | F27, F28, F53 und die Gruppe `mralex` |
-| Garys eigener Club (führt zum Raven Club) | Gary | G41 |
+| Der Raven Club (wer drin ist, wer nicht) | Gary, Taube | G41, T10 |
+| Die Taube zählt mit („Who is that grey one?“) | Gary, Mr. Flex, Sergeant | F40, S23 und w03b |
+| Garys Schwächen, die alle kennen (Uhr lesen, Verbeugung) | Gary, Taube | G19, T12, T19 |
+| „In my day“ | Sergeant | S14, S16, S17 |
 | Der Tourist verläuft sich und ist glücklich | Tourist, Gary, Mr. Flex, Arthur | G24–G26, G54–G56, F19–F21, F48–F50, A21 |
 
-## Wie viele Sprüche hat wer? (Stand 19.11., Mr. Alex: von allen genug)
-| Figur | in der Tabelle | dazu hier vorgelegt | zusammen | Einschätzung |
-|---|---|---|---|---|
-| Gary | 79 | 69 | 148 | reichlich |
-| Mr. Flex | 75 | 61 | 136 | reichlich |
-| Sergeant | 39 | 0 | 39 | **zu wenig, vor allem für den Hof** – nächstes Paket |
-| Tourist | 25 (+ 8 im Auftritt) | 0 | 33 | reicht für den Hof; wächst mit jedem Ort |
-| Arthur | 19 | 26 | 45 | gut; er soll selten sprechen |
-| Taube | 24 | 0 | 24 | **zu wenig für eine, die pausenlos redet** – nächstes Paket |
+## Wie viele Sprüche hat wer? (Stand 19.11. abends, Mr. Alex: von allen genug)
+| Figur | in der Tabelle | hier vorgelegt | zusammen |
+|---|---|---|---|
+| Gary | 79 | 69 | 148 |
+| Mr. Flex | 75 | 61 | 136 |
+| Sergeant | 39 | 32 | 71 |
+| Arthur | 19 | 26 + 15 | 60 |
+| Taube | 24 | 24 | 48 |
+| Tourist | 25 (+ 8 im Auftritt) | 0 | 33 |
 
 ## Umfang und Kosten
-Runde 1: 63 Zeilen, Runde 2: 67 Zeilen, Arthur 26 – zusammen **156 neue Sprüche für den Hof** (Gary 69, Mr. Flex 61, Arthur 26). Mit Regie geschätzt rund 17.000 Zeichen ≈ 7.500 Credits plus 10 % = **rund 8.300 Credits**; die genaue Zahl nennt das Skript, bevor etwas aufgenommen wird. Danach Hörprüfung, Anhör-Seite mit eigener Gruppe „Neu“, und der Bau-Chat rechnet die Mundformen.
+Zusammen **227 neue Sprüche** (Gary 69, Mr. Flex 61, Arthur 41, Sergeant 32, Taube 24). Mit Regie geschätzt rund 26.000 Zeichen ≈ 11.500 Credits plus 10 % = **rund 12.700 Credits** (knapp 2 % des Monatsguthabens); die genaue Zahl nennt das Skript, bevor etwas aufgenommen wird. Danach Hörprüfung, Anhör-Seite mit eigener Gruppe „Neu“, und der Bau-Chat rechnet die Mundformen.
 
 ## Offen für Mr. Alex
-Abgenommen 19.11.: Runde 1 und Runde 2 von Gary und Mr. Flex („Ich liebe die Sprüche alle, auch die laufenden Witze“).
-1. Arthur: Trifft das die Stimmung? Dürfen A25 (Elster) und A26 (andere Türme) so früh andeuten?
-2. Vertonen: Gary und Mr. Flex jetzt (130), Arthur nach der Abnahme – oder alles zusammen?
-3. Nächstes Paket: Sergeant und Taube für den Hof.
+Abgenommen 19.11.: Runde 1 und Runde 2 von Gary und Mr. Flex (130).
+1. Abnahme: Arthur Stimmung (26), Arthur Geschichte (15), Taube (24), Sergeant (32).
+2. Vor dem Vertonen prüft der Master die 15 historischen Angaben nach.
+3. Vertonen: alles zusammen oder zuerst die abgenommenen 130?

@@ -7,7 +7,7 @@ blauschwarzer Glanz. Der Glanz ist Farbe am Modell (Farbe je Punkt), damit er au
 
 Gebaut wird in den Massen des Browsers (x rechts, y oben, z vorn, Fuesse auf y = 0, Einheit Meter vor der Vergroesserung im Profil);
 B() rechnet in die Blender-Richtung um. Alle Gelenke sind ungedreht, die Form steckt in den Punkten.
-Gelenke: rabe > rabe_koerper > rabe_kehle, rabe_kopf (> rabe_schnabel_unten, rabe_auge_l/r), rabe_fluegel_l/r (> rabe_hand_l/r), rabe_schwanz · rabe > rabe_bein_l/r (> rabe_ring am rechten Bein).
+Gelenke: rabe > rabe_koerper > rabe_kehle, rabe_kopf (> rabe_schnabel_unten, rabe_auge_l/r), rabe_fluegel_l/r (> rabe_hand_l/r), rabe_schwanz (> rabe_sf_0…14, je Schwanzfeder), rabe_buerzel · Fluegel: rabe_as_l_0…5, rabe_hs_l_0…6 je Schwungfeder, rabe_arm_l · rabe > rabe_bein_l/r (> rabe_ring am rechten Bein).
 """
 import math
 import os
@@ -305,6 +305,18 @@ def rabe():
             for k in range(9):
                 feder(arm, S + e * (0.005 + k * 0.027 + (0.013 if reihe else 0)) + wd * dw + wn * (0.013 + 0.003 * reihe), wd + e * 0.1, wn, lang, 0.052, heben=0.01, glanz=1.0)
         arm.netz(gefieder)
+        # Breite Hand des ausgebreiteten Fluegels (Mr. Alex 19.11.: die Fluegelspitze war „zu duenn“, wie ein eigenes, ausgeduenntes Teil):
+        # zehn breite Handschwingen samt Handdecken, fertig aufgefaechert; angelegt unsichtbar (der Browser macht sie klein), sie wachsen beim Ausbreiten
+        # aus dem Handgelenk und schliessen die Hand an den Arm an. Die sieben schmalen Schwingen des angelegten Fluegels liegen darueber.
+        breit = Teil("rabe_handoffen_" + seite, hand, hand.ort)
+        for k in range(10):
+            richtung = dreh(wd, wn, -v * (0.8 - k * 0.144))
+            ansatz = hand.ort + wd * (0.035 + k * 0.011) + e * (k * 0.005) - wn * (0.004 + 0.001 * k)
+            feder(breit, ansatz, richtung, wn, 0.41 - k * 0.013, 0.082, heben=0.0, glanz=1.15)
+        for k in range(9):
+            richtung = dreh(wd, wn, -v * (0.75 - k * 0.15))
+            feder(breit, hand.ort + wd * (0.03 + k * 0.012) + e * (k * 0.005) + wn * 0.006, richtung, wn, 0.14, 0.06, heben=0.01, glanz=1.0)
+        breit.netz(gefieder)
         random.setstate(merk)
 
     # ---------- Schwanz: Keil aus neun Federn, flacher als der Koerper, damit er ueber dem Boden bleibt ----------
@@ -316,24 +328,39 @@ def rabe():
     # dazu Ober- und Unterschwanzdecken. Zweite Runde: die Mitte laenger (von oben ein Keil), vier Lagen mit mehr Abstand, im Profil hoeher
     # und unordentlicher – jede Feder weicht in Hoehe, Neigung und Laenge ein wenig ab. Der Faecher von oben bleibt, wie er war.
     wirr = lambda weit: random.uniform(-weit, weit)                       # dritte Runde (Mr. Alex 19.11.): Unordnung etwa verdoppelt
+    # Jede Schwanzfeder hat ein eigenes Gelenk am Ansatz (rabe_sf_0 …, Angabe i = Platz im Faecher): im Flug und beim Bremsen faechert der Schwanz auf
+    schwanz.ob["tn"], schwanzfedern = list(tn), []
+    def schwanzfeder(i, ansatz):
+        sf = Teil(f"rabe_sf_{len(schwanzfedern)}", schwanz, ansatz)
+        sf.ob["i"] = float(i)
+        schwanzfedern.append(sf)
+        return sf
     for i in (-5, 5, -4, 4, -3, 3, -2, 2, -1, 1, 0):
         lage = 0 if abs(i) <= 1 else 1 if abs(i) <= 3 else 2
-        feder(schwanz, T - td * 0.04 + X * (i * 0.009) + tn * (0.02 - lage * 0.016 + wirr(0.010)), dreh(td, tn, -i * 0.062 + wirr(0.02)) + tn * wirr(0.09), tn + X * (i * 0.22 + wirr(0.26)),
+        ansatz = T - td * 0.04 + X * (i * 0.009) + tn * (0.02 - lage * 0.016 + wirr(0.010))
+        sf = schwanzfeder(i, ansatz)
+        feder(sf, ansatz, dreh(td, tn, -i * 0.062 + wirr(0.02)) + tn * wirr(0.09), tn + X * (i * 0.22 + wirr(0.26)),
               0.465 - abs(i) * 0.026 + 0.023 * max(0.0, 1 - abs(i) / 4) + wirr(0.02 if abs(i) < 4 else 0.006), 0.078, glanz=1.1)   # Mitte noch 3 cm laenger, die Aussenfedern bleiben
+        sf.netz(gefieder)
     for i in (-3.5, 3.5, -1.5, 1.5):                                      # vierte Lage: haengt unter den anderen, von oben nicht zu sehen
-        feder(schwanz, T - td * 0.04 + X * (i * 0.009) + tn * (-0.03 + wirr(0.010)), dreh(td, tn, -i * 0.062 + wirr(0.03)) - tn * (0.07 + wirr(0.07)), tn + X * (i * 0.22 + wirr(0.3)),
+        ansatz = T - td * 0.04 + X * (i * 0.009) + tn * (-0.03 + wirr(0.010))
+        sf = schwanzfeder(i, ansatz)
+        feder(sf, ansatz, dreh(td, tn, -i * 0.062 + wirr(0.03)) - tn * (0.07 + wirr(0.07)), tn + X * (i * 0.22 + wirr(0.3)),
               0.37 - abs(i) * 0.02 + wirr(0.03), 0.07, glanz=0.9)
+        sf.netz(gefieder)
     for j in (-2, 2, -1, 1, 0):                                           # Unterschwanzdecken: vom Bauch hinauf zum Schwanz
         feder(schwanz, T - td * 0.06 - tn * (0.066 - abs(j) * 0.004 + wirr(0.004)) + X * (j * 0.02), td + tn * (0.14 + wirr(0.09)) + X * (j * 0.05 + wirr(0.03)), -tn + X * (j * 0.3 + wirr(0.2)), 0.19 + wirr(0.03), 0.062, glanz=0.9)
     for j in (-2, 2, -1, 1, 0):                                           # Oberschwanzdecken: vom Ruecken hinunter auf den Schwanz, setzen hoch an
         feder(schwanz, T - td * 0.10 + tn * (0.068 - abs(j) * 0.006 + wirr(0.004)) + X * (j * 0.02), td - tn * (0.13 + wirr(0.09)) + X * (j * 0.05 + wirr(0.03)), tn + X * (j * 0.3 + wirr(0.2)), 0.19 + wirr(0.03), 0.064, heben=0.03, glanz=1.0)
     # Zwischenlage vom Ruecken (Mr. Alex 19.11.: „vom Ruecken her gibt es eine zu starke Kante“): setzt hoeher an und liegt in einem Winkel zwischen
     # Ruecken (steil) und Schwanz (flach) – im Profil ein Bogen in Stufen statt eines Knicks
+    buerzel = Teil("rabe_buerzel", koerper, T)                           # eigenes Gelenk: dreht im Flug halb mit dem Schwanz mit
     for la, ln, steil, lang, zahl in ((-0.075, 0.088, 0.50, 0.26, 3), (-0.025, 0.096, 0.70, 0.17, 2)):
         zd, zn = V((0, -math.sin(steil), -math.cos(steil))), V((0, math.cos(steil), -math.sin(steil)))
         for j in sorted(range(-zahl, zahl + 1), key=lambda q: -abs(q)):
-            feder(schwanz, P(la, ln - abs(j) * 0.007 + wirr(0.004), j * 0.019), zd + X * (j * 0.07 + wirr(0.03)) + zn * wirr(0.07), zn + X * (j * 0.26 + wirr(0.2)), lang - abs(j) * 0.018 + wirr(0.025), 0.07, heben=0.02, glanz=1.0)
+            feder(buerzel, P(la, ln - abs(j) * 0.007 + wirr(0.004), j * 0.019), zd + X * (j * 0.07 + wirr(0.03)) + zn * wirr(0.07), zn + X * (j * 0.26 + wirr(0.2)), lang - abs(j) * 0.018 + wirr(0.025), 0.07, heben=0.02, glanz=1.0)
     schwanz.netz(gefieder)
+    buerzel.netz(gefieder)
     random.seed(23)                                                       # ab hier eigene Zufallsfolge: Aenderungen am Schwanz veraendern die Beinfedern nicht mehr
 
     # ---------- Beine: gefiederte „Hosen“, kraeftige Zehen, Krallen ----------

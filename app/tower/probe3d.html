@@ -306,9 +306,9 @@ try {
   /* Arthur (Figuren 7, 19.11.): sitzt im Hof – zum Beurteilen vorn am Platz neben dem Startpunkt, oder an seinem Ort auf der Rabenmauer (Platz 4 von 7, w03a); dort ersetzt er den Platzhalter-Klotz */
   const arthur = hof ? (sucht.get("rabe") === "einfach" ? bauVogel("arthur") : await ladeVogel(lader, "arthur")) : null;   // ?rabe=einfach zeigt die erste, im Programm gebaute Fassung
   let rabeOrt = "vorn", rabeSitz = null, rabeHalt = false;   // rabeHalt: Bilder und Prüfung stellen Arthur selbst in festen Schritten vor
-  /* Landen (w07: „A raven lands next to you.“): Arthur kommt aus der Luft zu seinem Platz – vorn von der Rabenmauer her (Nordosten), auf die Mauer vom Hof her */
+  /* Landen (w07: „A raven lands next to you.“): Arthur kommt tief angeflogen zu seinem Platz – vorn von Norden auf das Kind zu, auf die Mauer an ihr entlang */
   function landeRabe() { const p = rabeSitz || (rabeSitz = { x: arthur.wurzel.position.x, y: arthur.wurzel.position.y, z: arthur.wurzel.position.z, dreh: arthur.wurzel.rotation.y });
-    return arthur.lande(p, rabeOrt === "mauer" ? { x: p.x - 9, y: p.y + 4, z: p.z + 5 } : { x: p.x + 9, y: p.y + 5, z: p.z - 6 }); }
+    return arthur.lande(p, rabeOrt === "mauer" ? { x: p.x - 1.5, y: p.y + 1.6, z: p.z - 11 } : { x: p.x + 1.2, y: p.y + 1.7, z: p.z - 12 }); }   // tief und auf das Kind zu (Foto 4 von Mr. Alex)
   function setzeRabe(wo) {
     rabeOrt = wo; rabeSitz = null; const pl = hof.plan, platz = pl.raben[3], klotz = hof.scene.getObjectByName("hof_rabe4");
     if (wo === "mauer") arthur.setze(platz.x - 0.25, pl.masse.rabenmauer.hoch, platz.z, -Math.PI / 2);   // schaut nach Westen in den Hof

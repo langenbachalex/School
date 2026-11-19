@@ -709,22 +709,23 @@ async function hofTest(browser, basis, app, name, fm) {
       // Arthur: ein langsamer Flügelschlag im Sitzen und das Landen (w07 „A raven lands next to you.“) – danach sitzt er wieder genau wie vorher
       const fl = await pg.evaluate(() => { const p = window.__probe3d; p.vogelHalt(true); const ruhe = p.vogel(), ok = p.vogelSchlag(); let auf = 0, breit = 0, n = 0;
         while (p.vogel().tut === "schlag" && n < 400) { p.vogelTakt(1, 25); const v = p.vogel(); auf = Math.max(auf, v.auf); breit = Math.max(breit, v.breit); n++; }
-        const nachSchlag = p.vogel(), okL = p.vogelLande(); p.vogelTakt(1, 25); const start = p.vogel(); let steigt = 0, vorY = start.ort[1], m = 1, offen = 0;
-        while (p.vogel().tut === "landet" && m < 400) { p.vogelTakt(1, 25); const v = p.vogel(); if (v.ort[1] > vorY + 0.001) steigt++; vorY = v.ort[1]; offen = Math.max(offen, v.auf); m++; }
-        const ende = p.vogel(); p.vogelHalt(false); return { ruhe, ok, okL, auf, breit, dauer: n * 0.025, nachSchlag, start, steigt, offen, landeDauer: m * 0.025, ende }; });
-      const gleich = (x, y) => x.auf === 0 && x.tut === "sitzt" && Math.abs(x.hoch - y.hoch) < 0.012 && Math.abs(x.breit - y.breit) < 0.012 && Math.hypot(x.ort[0] - y.ort[0], x.ort[1] - y.ort[1], x.ort[2] - y.ort[2]) < 0.001 && Math.abs(x.dreh - y.dreh) < 0.001;
+        const nachSchlag = p.vogel(), okL = p.vogelLande(); p.vogelTakt(1, 25); const start = p.vogel(); let steigt = 0, vorY = start.ort[1], m = 1, offen = 0, schlaege = 0, hoch = start.schlag, tief = hoch, faellt = false;   // ein Schlag = die Flügel gehen nach einem Hoch um mehr als 0,2 nach unten
+        while (p.vogel().tut === "landet" && m < 800) { p.vogelTakt(1, 10); const v = p.vogel(); if (v.ort[1] > vorY + 0.001) steigt++; vorY = v.ort[1]; offen = Math.max(offen, v.auf); if (!faellt) { hoch = Math.max(hoch, v.schlag); if (hoch - v.schlag > 0.2) { schlaege++; faellt = true; tief = v.schlag; } } else { tief = Math.min(tief, v.schlag); if (v.schlag - tief > 0.2) { faellt = false; hoch = v.schlag; } } m++; }
+        const ende = p.vogel(); p.vogelHalt(false); return { ruhe, ok, okL, auf, breit, dauer: n * 0.025, nachSchlag, start, steigt, offen, landeDauer: 0.025 + (m - 1) * 0.01, schlaege, ende }; });
+      const gleich = (x, y) => x.angelegt && x.tut === "sitzt" && Math.hypot(x.ort[0] - y.ort[0], x.ort[1] - y.ort[1], x.ort[2] - y.ort[2]) < 0.001 && Math.abs(x.dreh - y.dreh) < 0.001;
       if (!fl.ok || fl.auf < 0.99) fehl.push(`${t}: Arthurs Flügelschlag breitet die Flügel nicht ganz aus`);
       else {
-        if (fl.breit < 1.3) fehl.push(`${t}: Arthurs ausgebreitete Flügel sind nur ${fl.breit} m weit (erwartet über 1,3 m)`);
-        if (fl.dauer < 2 || fl.dauer > 4.5) fehl.push(`${t}: Arthurs Flügelschlag dauert ${fl.dauer.toFixed(1)} s (erwartet langsam: 2 bis 4,5 s)`);
+        if (fl.breit < 1.6) fehl.push(`${t}: Arthurs ausgebreitete Flügel sind nur ${fl.breit} m weit (erwartet über 1,6 m)`);
+        if (fl.dauer < 0.8 || fl.dauer > 1.6) fehl.push(`${t}: Arthurs Flügelschlag dauert ${fl.dauer.toFixed(1)} s (erwartet rund 1 s wie bei den Tower-Raben; Mr. Alex 19.11.: 3 s waren viel zu langsam)`);
         if (!gleich(fl.nachSchlag, fl.ruhe)) fehl.push(`${t}: nach dem Flügelschlag sitzt Arthur nicht wieder wie vorher (Flügel angelegt, gleicher Ort)`);
       }
       if (!fl.okL) fehl.push(`${t}: Arthur kann nicht landen`);
       else {
-        if (fl.start.ort[1] < fl.ruhe.ort[1] + 3 || Math.hypot(fl.start.ort[0] - fl.ruhe.ort[0], fl.start.ort[2] - fl.ruhe.ort[2]) < 6) fehl.push(`${t}: Arthurs Anflug beginnt nicht hoch und weit weg`);
+        if (fl.start.ort[1] < fl.ruhe.ort[1] + 0.8 || fl.start.ort[1] > fl.ruhe.ort[1] + 3 || Math.hypot(fl.start.ort[0] - fl.ruhe.ort[0], fl.start.ort[2] - fl.ruhe.ort[2]) < 8) fehl.push(`${t}: Arthurs Anflug beginnt nicht tief (1 bis 3 m) und weit weg (über 8 m)`);
+        if (fl.schlaege < 4) fehl.push(`${t}: Arthur schlägt beim Landen nur ${fl.schlaege}-mal mit den Flügeln (erwartet schnell: mindestens 4 Schläge in gut 2 s)`);
         if (fl.steigt) fehl.push(`${t}: Arthur steigt im Anflug wieder (${fl.steigt} Schritte)`);
         if (fl.offen < 0.99) fehl.push(`${t}: Arthur fliegt ohne ausgebreitete Flügel an`);
-        if (fl.landeDauer < 2.5 || fl.landeDauer > 5) fehl.push(`${t}: Arthurs Landen dauert ${fl.landeDauer.toFixed(1)} s (erwartet 2,5 bis 5 s)`);
+        if (fl.landeDauer < 1.6 || fl.landeDauer > 3.2) fehl.push(`${t}: Arthurs Landen dauert ${fl.landeDauer.toFixed(1)} s (erwartet 1,6 bis 3,2 s)`);
         if (!gleich(fl.ende, fl.ruhe) || Math.abs(fl.ende.fuss - fl.ruhe.fuss) > 0.01) fehl.push(`${t}: nach dem Landen sitzt Arthur nicht an seinem Platz wie vorher`);
       }
       // drei Kameras: wählbar, über dem Boden, „hinter der Figur“ bleibt auf dem Platz

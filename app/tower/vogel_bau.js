@@ -26,7 +26,10 @@ export const VOEGEL = {
     blick: { pause: [6, 11], weit: 1.2, tempo: 0.8, schief: 0.35, schiefOft: 0.35 },   // Sekunden zwischen zwei Drehungen · Bogenmaß · Bogenmaß je Sekunde
     blinzeln: [5, 9],
     /* Flug: Flügelschlag im Sitzen langsam und schwer (Sekunden) · Landen · Takt der Schläge im Anflug · Neigung des Körpers im Flug · wie weit Arm, Hand und Federn sich öffnen */
-    flug: { schlagDauer: 3.0, landeDauer: 3.6, takt: 0.8, neig: 0.75, arm: 0.235, hand: 0.45, faecher: 0.7, faecherJe: 0.2 },
+    /* Tempo aus den Filmen der Tower-Raben (Mr. Alex 19.11.: die erste Fassung war „viel zu langsam“): Flügel strecken im Sitzen rund 1 s,
+       im Flug drei Schläge je Sekunde, beim Bremsen fünf */
+    flug: { schlagDauer: 1.15, takt: 0.33, bremsTakt: 0.2, anflug: 1.3, bremsen: 0.55, setzen: 0.5, bremsweg: 1.4, bremsHoch: 0.5, neig: 0.75,
+      arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
     ring: RINGE.arthur,
     schaedel: 0.058,                                  // Halbe Höhe des Schädels (vor der Vergrößerung): die Kehlfedern am Rumpf müssen darunter bleiben
     datei: "figuren/rabe.glb",                        // Blender-Fassung (werkzeuge/blender/tower_rabe.py); ladeVogel nimmt sie, bauVogel baut die einfache Fassung im Programm
@@ -134,13 +137,22 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
   const seiten = bau === "blender" ? [["l", 1], ["r", -1]].map(([s, v]) => {
     const F = g["fluegel_" + s], H = g["hand_" + s], arm = g.figur.getObjectByName("rabe_arm_" + s), vek = (n) => new THREE.Vector3(...F.userData[n]);
     const teile = (kurz, zahl) => Array.from({ length: zahl }, (_, i) => { const o = g.figur.getObjectByName("rabe_" + kurz + "_" + s + "_" + i); return { o, ort: o.position.clone() }; });
-    return { v, F, H, arm, wd: vek("wd"), wn: vek("wn"), e: vek("e"), handOrt: H.position.clone(), arme: teile("as", 6), haende: teile("hs", 7) };
+    return { v, F, H, arm, breit: g.figur.getObjectByName("rabe_handoffen_" + s), wd: vek("wd"), wn: vek("wn"), e: vek("e"), handOrt: H.position.clone(), arme: teile("as", 6), haende: teile("hs", 7) };
   }) : [];
-  const flug = { tut: "sitzt", t: 0, auf: 0, schlag: 0, neig: 0, ziel: null, von: null };
+  const flug = { tut: "sitzt", t: 0, auf: 0, schlag: 0, neig: 0, knick: 0, biege: 0, faecher: 0, senk: 0, beine: 0, ziel: null, von: null };
   const mA = new THREE.Matrix4(), mB = new THREE.Matrix4(), qOffen = new THREE.Quaternion(), qSchlag = new THREE.Quaternion(), qNull = new THREE.Quaternion(), va = new THREE.Vector3(), vb = new THREE.Vector3(), vc = new THREE.Vector3();
-  function fluegel(auf, schlag, neig) {
-    flug.auf = auf; flug.schlag = schlag; flug.neig = neig;
-    g.figur.rotation.x = neig; kopf.rotation.x = -neig * 0.85; g.bein_l.rotation.x = g.bein_r.rotation.x = neig * 1.25;
+  /* Schwanz: jede Feder mit eigenem Gelenk (Angabe i = Platz im Fächer), der Bürzel dreht halb mit */
+  const schwanzTn = seiten.length ? new THREE.Vector3(...g.schwanz.userData.tn) : null, buerzel = seiten.length ? g.figur.getObjectByName("rabe_buerzel") : null;
+  const schwanzfedern = seiten.length ? g.schwanz.children.filter((o) => o.name.startsWith("rabe_sf_")).map((o) => ({ o, i: o.userData.i })) : [];
+  const RUHE = { auf: 0, schlag: 0, neig: 0, knick: 0, biege: 0, faecher: 0, senk: 0, beine: 0 };
+  /* pose: die ganze Flughaltung aus acht Zahlen.
+     auf 0…1 ausgebreitet · schlag = Winkel der Flügel (+ oben) · neig = Körper nach vorn gekippt (waagerecht im Flug, negativ = zurückgelehnt beim Bremsen)
+     knick = Handgelenk (+ Spitzen oben, − Hand hängt: das „M“ beim Anheben, die Wölbung im Gleiten) · biege = die äußeren Handschwingen biegen sich hoch
+     faecher 0…1 Schwanz gefächert · senk = Schwanz nach unten gedrückt (Bremse) · beine = Beine nach vorn gestreckt */
+  function pose(p) {
+    Object.assign(flug, p);
+    const { auf, schlag, neig, knick, biege, faecher, senk, beine } = p;
+    g.figur.rotation.x = neig; kopf.rotation.x = -neig * 0.85; g.bein_l.rotation.x = g.bein_r.rotation.x = neig * 1.25 - beine;
     const c = Math.cos(neig), sn = Math.sin(neig);
     for (const w of seiten) {
       mA.makeBasis(w.e, w.wn, w.wd).transpose();                                         // angelegte Lage → Grundlage
@@ -149,33 +161,54 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
       qSchlag.setFromAxisAngle(va.set(0, sn, c), w.v * schlag);
       w.F.quaternion.copy(qNull).slerp(qOffen, auf).premultiply(qSchlag);
       w.H.position.copy(w.handOrt).addScaledVector(w.e, FL.arm * auf);
-      w.H.quaternion.setFromAxisAngle(w.wn, -w.v * FL.hand * auf);
-      w.haende.forEach((f, j) => f.o.quaternion.setFromAxisAngle(w.wn, -w.v * (FL.faecher - j * FL.faecherJe) * auf));
-      w.arme.forEach((f, i) => { f.o.position.copy(f.ort).addScaledVector(w.e, (0.05 + i * 0.016) * auf); f.o.quaternion.setFromAxisAngle(w.wn, -w.v * i * 0.06 * auf); f.o.scale.setScalar(1 + 0.4 * auf); });   // ausgebreitet sind die Armschwingen länger zu sehen
-      w.arm.visible = auf > 0.02; w.arm.scale.setScalar(Math.max(auf, 0.001));
+      w.H.quaternion.setFromAxisAngle(w.wn, -w.v * FL.hand * auf).premultiply(qSchlag.setFromAxisAngle(w.wd, -w.v * knick * auf));
+      w.haende.forEach((f, j) => { f.o.quaternion.setFromAxisAngle(w.wn, -w.v * (FL.faecher - j * FL.faecherJe) * auf).premultiply(qSchlag.setFromAxisAngle(w.wd, -w.v * biege * auf * (1 - j / 6))); f.o.scale.setScalar(1 + FL.handLang * auf); });
+      w.arme.forEach((f, i) => { f.o.position.copy(f.ort).addScaledVector(w.e, (0.05 + i * FL.armJe) * auf); f.o.quaternion.setFromAxisAngle(w.wn, -w.v * i * 0.05 * auf); f.o.scale.setScalar(1 + FL.armLang * auf); });
+      w.arm.visible = auf > 0.02; w.arm.scale.setScalar(Math.max(auf * FL.armDick, 0.001));
+      w.breit.visible = auf > 0.02; w.breit.scale.setScalar(Math.max(auf, 0.001));          // die breite Hand wächst beim Ausbreiten aus dem Handgelenk
     }
+    const lage = Math.max(0, Math.min(1, neig / FL.neig));                                // im Flug liegt der Schwanz in einer Linie mit dem Körper
+    g.schwanz.rotation.x = -FL.schwanzLinie * lage - senk; buerzel.rotation.x = g.schwanz.rotation.x * 0.5;
+    for (const f of schwanzfedern) f.o.quaternion.setFromAxisAngle(schwanzTn, -f.i * FL.schwanzFaecher * faecher);
   }
-  if (seiten.length) fluegel(0, 0, 0);
+  if (seiten.length) pose(RUHE);
   const stufen = (u, punkte) => { for (let i = 1; i < punkte.length; i++) if (u <= punkte[i][0]) { const [u0, w0] = punkte[i - 1], [u1, w1] = punkte[i]; return w0 + (w1 - w0) * glatt((u - u0) / (u1 - u0)); } return punkte[punkte.length - 1][1]; };
-  /* Ein langsamer Flügelschlag im Sitzen: ausbreiten und heben, einmal schwer nach unten, wieder anlegen */
+  /* Ein Schlag im Flug: φ = 0 Flügel oben. Im Abschlag läuft die Hand nach (Spitzen oben), im Aufschlag hängt sie und der Flügel zieht sich etwas ein. */
+  const schlagen = (phi, weit, mitte) => { const w = 2 * Math.PI * phi, si = Math.sin(w); return { schlag: mitte + weit * Math.cos(w), knick: 0.45 * si, biege: 0.25 + 0.3 * Math.max(0, si), auf: 1 - 0.18 * Math.max(0, -si) }; };
+  /* Flügelschlag im Sitzen (Filme der Tower-Raben: rund eine Sekunde): hochreißen – die Handgelenke zuerst, „M“ –, steil zum V, ein kräftiger Schlag, anlegen */
   function fluegelschlag() { if (!seiten.length || flug.tut !== "sitzt") return false; flug.tut = "schlag"; flug.t = 0; z.zielY = z.zielZ = 0; return true; }
-  /* Landen: kommt von `von` (Ort in der Luft) angeflogen, bremst mit hohen Flügeln, setzt bei `ziel` auf, legt die Flügel an */
+  /* Landen: tiefer, schneller Anflug von `von` auf `ziel` zu, dann hartes Bremsen – aufgerichtet, Flügel im V mit kurzen schnellen Schlägen,
+     Schwanz weit gefächert und nach unten, Beine nach vorn –, aufsetzen, anlegen */
   function lande(ziel, von) { if (!seiten.length) return false; flug.tut = "landet"; flug.t = 0; flug.ziel = ziel; flug.von = von; z.zielY = z.zielZ = 0; kopf.rotation.y = kopf.rotation.z = 0; return true; }
   function bewegeFlug(dt) {
-    flug.t += dt;
+    flug.t += dt; const t = flug.t;
     if (flug.tut === "schlag") {
-      const u = flug.t / FL.schlagDauer;
-      fluegel(stufen(u, [[0, 0], [0.28, 1], [0.68, 1], [1, 0]]), stufen(u, [[0, 0], [0.28, 0.6], [0.48, -0.45], [0.68, 0.2], [1, 0]]), 0);
-      g.figur.position.y = 0.03 * P.gross * stufen(u, [[0, 0], [0.3, 0], [0.48, 1], [0.7, 0], [1, 0]]);      // der Schlag hebt ihn ein wenig
-      if (u >= 1) { fluegel(0, 0, 0); g.figur.position.y = 0; flug.tut = "sitzt"; z.warte = zufall(P.blick.pause) / 2; }
+      const u = t / FL.schlagDauer;
+      pose({ auf: stufen(u, [[0, 0], [0.22, 0.75], [0.36, 1], [0.72, 1], [1, 0]]), schlag: stufen(u, [[0, 0], [0.22, 0.75], [0.38, 1.15], [0.58, -0.4], [0.74, 0.3], [1, 0]]),
+        knick: stufen(u, [[0, 0], [0.18, -0.7], [0.38, 0], [0.5, 0.5], [0.62, 0], [1, 0]]), biege: stufen(u, [[0, 0], [0.38, 0.3], [0.52, 0.6], [0.72, 0.2], [1, 0]]),
+        neig: 0, faecher: stufen(u, [[0, 0], [0.4, 0.45], [0.7, 0.45], [1, 0]]), senk: 0, beine: 0 });
+      g.figur.position.y = 0.04 * P.gross * stufen(u, [[0, 0], [0.4, 0], [0.58, 1], [0.78, 0], [1, 0]]);      // der Schlag hebt ihn ein wenig
+      if (u >= 1) { pose(RUHE); g.figur.position.y = 0; flug.tut = "sitzt"; z.warte = zufall(P.blick.pause) / 2; }
     } else if (flug.tut === "landet") {
-      const u = flug.t / FL.landeDauer, uf = Math.min(1, u / 0.8), { ziel, von } = flug, weg = 1 - (1 - uf) * (1 - uf);
-      wurzel.position.set(von.x + (ziel.x - von.x) * weg, ziel.y + (von.y - ziel.y) * Math.pow(1 - uf, 1.7), von.z + (ziel.z - von.z) * weg);
+      const { ziel, von } = flug, tA = FL.anflug, tB = FL.bremsen, tC = FL.setzen, weit = Math.hypot(ziel.x - von.x, ziel.z - von.z), bremsweg = Math.min(FL.bremsweg, weit * 0.4);
+      let weg, hoch, p;
+      if (t < tA) {                                                                        // Anflug: erst drei Schläge je Sekunde, dann mit gewölbten Flügeln gleiten
+        const u = t / tA; weg = (weit - bremsweg) * u; hoch = FL.bremsHoch + (von.y - ziel.y - FL.bremsHoch) * (1 - glatt(u));
+        const gleiten = glatt((u - 0.55) / 0.2), s = schlagen(t / FL.takt, 0.5, 0.05);
+        p = { auf: s.auf + (1 - s.auf) * gleiten, schlag: s.schlag + (0.24 - s.schlag) * gleiten, knick: s.knick + (-0.5 - s.knick) * gleiten, biege: s.biege + (0.75 - s.biege) * gleiten, neig: FL.neig, faecher: 0.35, senk: 0, beine: 0 };
+      } else if (t < tA + tB) {                                                            // Bremsen: aufrichten, Flügel hoch, kurze schnelle Schläge
+        const u = (t - tA) / tB, s = schlagen((t - tA) / FL.bremsTakt, 0.38, 0.75);
+        weg = weit - bremsweg * (1 - u) * (1 - u); hoch = FL.bremsHoch * (1 - Math.pow(u, 1.6));
+        p = { auf: s.auf, schlag: s.schlag, knick: s.knick, biege: s.biege, neig: FL.neig + (-0.3 - FL.neig) * glatt(u / 0.6), faecher: 0.35 + 0.65 * glatt(u / 0.4), senk: 0.45 * glatt(u / 0.5), beine: 0.55 * glatt(u / 0.5) };
+      } else {                                                                             // Aufsetzen: ein letzter halber Schlag, dann anlegen
+        const u = Math.min(1, (t - tA - tB) / tC); weg = weit; hoch = 0;
+        p = { auf: 1 - glatt((u - 0.3) / 0.7), schlag: stufen(u, [[0, 1.0], [0.3, 0.2], [1, 0]]), knick: stufen(u, [[0, 0.3], [0.4, -0.3], [1, 0]]), biege: 0.4 * (1 - u), neig: -0.3 * (1 - glatt(u / 0.6)), faecher: 1 - glatt(u / 0.8), senk: 0.45 * (1 - glatt(u / 0.6)), beine: 0.55 * (1 - glatt(u / 0.4)) };
+      }
+      const k = weit ? weg / weit : 1; wurzel.position.set(von.x + (ziel.x - von.x) * k, ziel.y + hoch, von.z + (ziel.z - von.z) * k);
       const flugDreh = Math.atan2(ziel.x - von.x, ziel.z - von.z); let d = (ziel.dreh - flugDreh) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI;
-      wurzel.rotation.y = flugDreh + d * glatt((uf - 0.7) / 0.3);
-      const bremse = glatt((uf - 0.6) / 0.4);                                             // am Ende richtet er sich auf und stellt die Flügel hoch
-      fluegel(u < 0.8 ? 1 : 1 - glatt((u - 0.8) / 0.2), u < 0.8 ? Math.sin(flug.t * 2 * Math.PI / FL.takt) * 0.45 * (1 - 0.5 * bremse) + 0.4 * bremse : 0.4 * (1 - glatt((u - 0.8) / 0.2)), FL.neig * (1 - bremse));
-      if (u >= 1) { fluegel(0, 0, 0); setze(ziel.x, ziel.y, ziel.z, ziel.dreh); flug.tut = "sitzt"; z.warte = zufall(P.blick.pause) / 2; }
+      wurzel.rotation.y = flugDreh + d * glatt((t - tA) / tB);
+      pose(p);
+      if (t >= tA + tB + tC) { pose(RUHE); setze(ziel.x, ziel.y, ziel.z, ziel.dreh); flug.tut = "sitzt"; z.warte = zufall(P.blick.pause) / 2; }
     }
   }
   const kasten = new THREE.Box3(), ort = new THREE.Vector3();
@@ -185,7 +218,8 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
     wurzel.updateMatrixWorld(true); kasten.setFromObject(wurzel);
     const kehleOben = g.kehle ? +kasten.clone().setFromObject(g.kehle).max.y.toFixed(3) : null, kopfUnten = +(kopf.getWorldPosition(ort).y - P.schaedel * P.gross).toFixed(3);
     const gr = kasten.getSize(ort.clone());
-    return { wer, bau, tut: flug.tut, auf: +flug.auf.toFixed(3), breit: +Math.max(gr.x, gr.z).toFixed(3), kehleOben, kopfUnten, ring: P.ring ? { name: P.ring.name, hoch: +g.ring.getWorldPosition(ort).y.toFixed(3) } : null, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
+    const angelegt = !seiten.length || (flug.auf === 0 && seiten.every((w) => Math.abs(w.F.quaternion.w) > 0.99999 && Math.abs(w.H.quaternion.w) > 0.99999) && Math.abs(g.schwanz.rotation.x) < 1e-6 && Math.abs(g.figur.rotation.x) < 1e-6);
+    return { wer, bau, tut: flug.tut, angelegt, schlag: +flug.schlag.toFixed(3), auf: +flug.auf.toFixed(3), breit: +Math.max(gr.x, gr.z).toFixed(3), kehleOben, kopfUnten, ring: P.ring ? { name: P.ring.name, hoch: +g.ring.getWorldPosition(ort).y.toFixed(3) } : null, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
       kopf: [+kopf.rotation.y.toFixed(4), +kopf.rotation.z.toFixed(4)], drehungen: z.drehungen, blick: P.blick };
   }
   /* setze: Ort der Füße und Blickrichtung (0 = nach Süden, +z) */

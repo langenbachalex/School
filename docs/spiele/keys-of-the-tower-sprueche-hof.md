@@ -1,4 +1,6 @@
-# The Keys of the Tower – Sprüche-Paket 1: der Hof (Textentwurf des Masters, 19.11.2026, noch nicht freigegeben, nichts vertont)
+# The Keys of the Tower – Sprüche für den Hof (Master, 19.11.2026, nichts vertont)
+
+> **Stand:** Runde 1 (63 Sprüche, unten zuerst) ist von Mr. Alex abgenommen (19.11.: „alles in Ordnung“). Seine Rückmeldung dazu: noch zu sehr an der Sprache aufgehängt – **Runde 2 soll freier sein, mit mehr Witz, „silly“.** Runde 2 (67 Sprüche) steht am Ende und wartet auf die Abnahme.
 
 Grundlage: Vision 8b („Nichts ist schlimmer als Sprüche, die sich wiederholen“). Dieses Paket bringt **ortsbezogene Sprüche**, die nur im Hof fallen – 33 für Gary, 30 für Mr. Flex. Sie ergänzen die 147 allgemeinen Sprüche der beiden, kein vorhandener Spruch ist geändert.
 
@@ -79,10 +81,90 @@ Grundlage: Vision 8b („Nichts ist schlimmer als Sprüche, die sich wiederholen
 
 Anmerkungen: F27 spielt mit dem Sergeant („I am not running!“). F29 und F30 sind sehr seltene Andeutungen auf seine Geschichte und die Federtür – wer sie hört, hat ein kleines Geheimnis. G32 deutet Garys Freundschaft mit Arthur an.
 
+## Runde 2 – freier und alberner (Wunsch Mr. Alex 19.11.: mehr Sprüche, freiere Sprache, mehr Witz, silly)
+Hier führt der Witz, nicht die Grammatik. Die Sätze bleiben kurz und gut zu verstehen; für alles andere gibt es die Feder. Neue laufende Witze: Garys Fass heißt Barry · unter dem Hut des Sergeants steckt noch etwas · Mr. Flex in Pfützen und Löffeln · seine Muskeln Steve und Other Steve · Gary lernt „Amerikanisch“.
+
+### Gary (36)
+| Nr | Stelle | S | Englisch |
+|---|---|---|---|
+| G34 | Fass | 2 | My barrel has a doorbell. It is me. Ding-dong. |
+| G35 | Fass | 2 | There is a second fox in the barrel. No, wait. That is my tail. |
+| G36 | Fass | 2 | It smells of apples in there. And socks. I do not wear socks. |
+| G37 | Fass | 3 | I named my barrel. His name is Barry. Barry the barrel. Say hello to Barry. |
+| G38 | Fass | 3 | Barry is shy. He never says hello back. |
+| G39 | Raben | 1 | Do ravens do homework? I bet they do not. Lucky birds. |
+| G40 | Raben | 2 | If I had wings, I would fly to the sandwich shop. Every day. Twice. |
+| G41 | Raben | 2 | The ravens have a club. I am not in it. I have my own club. It has one member. |
+| G42 | Raben | 2 | One raven winked at me. We are best friends now. He does not know yet. |
+| G43 | Raben | 3 | I taught a raven to say “Gary is great.” It says “Gary is late.” Close enough. |
+| G44 | Tor | 2 | Open sesame! … Open, please? … Open, pretty please with cheese on top? |
+| G45 | Tor | 2 | I could climb over. I am an excellent climber. I am scared of heights. |
+| G46 | Tor | 3 | I tried the magic word. The gate said no. Gates cannot talk. This is getting weird. |
+| G47 | Uhr | 2 | The clock says tick. I say tock. We are a band. |
+| G48 | Uhr | 2 | Nine o'clock is bedtime. Not for wizards. Wizards go to bed at … what comes after nine? |
+| G49 | Uhr | 3 | If the clock stops, do we all stop? … I just stopped. Did you notice? |
+| G50 | Sergeant | 1 | He said “FOX!” again. I think it means hello. |
+| G51 | Sergeant | 2 | His hat is taller than me. I measured. He was not happy. |
+| G52 | Sergeant | 2 | Left, right, left, right. I can do that. Left, left, ow. |
+| G53 | Sergeant | 3 | I think there is a second, smaller Sergeant under the hat. |
+| G54 | Tourist | 2 | He says everything is bigger in Texas. I want to see a Texas sandwich. |
+| G55 | Tourist | 2 | Howdy! … I am learning American. Howdy, howdy, howdy. |
+| G56 | Tourist | 3 | He asked me for the gift shop. I sold him a spoon. Magic spoon. Ten pounds. |
+| G57 | Nacht | 1 | I can see my breath. Look! I am a dragon. Rawr. |
+| G58 | Nacht | 1 | Is it just me, or is that tower looking at us? … It is just me. |
+| G59 | Nacht | 1 | I am not lost. I know exactly where I am. I am here. |
+| G60 | Nacht | 2 | My hat is cold. My ears are in it. My ears are cold. |
+| G61 | Nacht | 2 | Do you want to hear a joke? Knock, knock. … You have to say “Who is there?” … Never mind. |
+| G62 | Nacht | 2 | What do you call a fox with a wand? Sir. You call him Sir. |
+| G63 | Nacht | 2 | I am thinking of a number. It is seven. Do not guess, I told you. |
+| G64 | Nacht | 2 | If we find the keys, I want a medal. A big one. Made of cheese. |
+| G65 | Nacht | 2 | My tail is asleep. Shh. Do not wake it. |
+| G66 | Nacht | 2 | Abracadabra! … Nothing. Abraca-sandwich! … Still nothing. I am hungry now. |
+| G67 | Nacht | 3 | I stepped in a puddle. Mr. Flex was in it. I am not sorry. |
+| G68 | Nacht | 4 | Psst. I can do one real trick. Watch my ears. … Did they move? They moved! |
+| G69 | Nacht | 4 | When I grow up, I want to be a wizard. … I am grown up. Oh no. |
+
+### Mr. Flex (31)
+| Nr | Stelle | S | Englisch |
+|---|---|---|---|
+| F31 | Pfütze, Scheibe | 1 | This puddle is cold. And wet. Who designed puddles? |
+| F32 | Pfütze, Scheibe | 2 | Splash me again and I turn you into a teapot. A small one. |
+| F33 | Pfütze, Scheibe | 2 | Stop looking at yourself. Look at me. I am the better half. |
+| F34 | Pfütze, Scheibe | 3 | I am in a spoon now. Do not ask. It is roomy. |
+| F35 | Pfütze, Scheibe | 3 | A fish just swam past me. In a puddle. London is strange. |
+| F36 | Fass | 3 | I once lived in a teapot. For a week. Much nicer than a barrel. |
+| F37 | Fass | 3 | Barry the barrel? He named it? Of course he did. |
+| F38 | Raben | 2 | The ravens asked for my autograph. I said no. They have no pens. |
+| F39 | Raben | 2 | I speak Raven. “Kraa” means hello. “Kraa” also means goodbye. It is a simple language. |
+| F40 | Raben | 2 | One of them is a pigeon. Nobody tell her. |
+| F41 | Tor | 1 | I do not use gates. I use mirrors. And very clean windows. |
+| F42 | Tor | 2 | Knock three times and say my name. Nothing will happen. But I enjoy it. |
+| F43 | Uhr | 1 | Tea time is at four. And at five. And now. |
+| F44 | Uhr | 3 | I invented time. Not really. But I was there. |
+| F45 | Sergeant | 1 | He marches. I glide. We are not the same. |
+| F46 | Sergeant | 2 | I asked him to smile once. In 1987. I am still waiting. |
+| F47 | Sergeant | 3 | Under that hat is another hat. Trust me. |
+| F48 | Tourist | 2 | He called me “buddy.” Nobody calls me buddy. … I quite liked it. |
+| F49 | Tourist | 2 | He asked if I am the gift shop. I am a gift. Not a shop. |
+| F50 | Tourist | 3 | A cowboy in the Tower. Next week: a penguin. I can feel it. |
+| F51 | Nacht | 1 | I am not showing off. This is just my face. |
+| F52 | Nacht | 1 | Shall I flex? … You did not say no. Boom. |
+| F53 | Nacht | 1 | Please do not feed the fox. … Too late. |
+| F54 | Nacht | 2 | My muscles have muscles. Their names are Steve and Other Steve. |
+| F55 | Nacht | 2 | I do one push-up a day. One. Perfect. Push-up. |
+| F56 | Nacht | 2 | I tried being modest once. I was the best at it. |
+| F57 | Nacht | 2 | Magic word of the day: “biscuit.” It does nothing. I just like biscuits. |
+| F58 | Nacht | 2 | If you need me, shout. If you do not need me, shout anyway. I like attention. |
+| F59 | Nacht | 3 | My sunglasses have sunglasses. For very sunny days. |
+| F60 | Nacht | 4 | Do you want to know my real age? … So do I. I lost count in the spoon. |
+| F61 | Nacht | 4 | I am going to tell you a secret. Come closer. Closer. … I forgot it. Lovely to see you. |
+
+Zusammenspiel: G37/G38 und F37 (Barry) · G53 und F47 (unter dem Hut) · G67 und F32 (Pfütze) · G41 (Garys eigener Club) bereitet den Raven Club und die Elster vor.
+
 ## Umfang und Kosten
-63 Zeilen, rund 3.900 Zeichen Text; mit Regie geschätzt 6.500 Zeichen ≈ 2.900 Credits plus 10 % = rund 3.200. Die genaue Zahl nennt das Skript, bevor etwas aufgenommen wird. Danach Hörprüfung, Anhör-Seite mit eigener Gruppe „Neu“, und der Bau-Chat rechnet die Mundformen (jetzt in unter einer Minute).
+Runde 1: 63 Zeilen, Runde 2: 67 Zeilen – zusammen **130 neue Sprüche für den Hof** (Gary 69, Mr. Flex 61). Mit Regie geschätzt rund 14.500 Zeichen ≈ 6.400 Credits plus 10 % = **rund 7.000 Credits**; die genaue Zahl nennt das Skript, bevor etwas aufgenommen wird. Danach Hörprüfung, Anhör-Seite mit eigener Gruppe „Neu“, und der Bau-Chat rechnet die Mundformen.
 
 ## Offen für Mr. Alex
-1. Ton und Witz: Welche streichen, welche ändern, was fehlt?
-2. Stimmt die Verteilung der Seltenheit, oder sollen mehr Sprüche selten sein?
-3. Dürfen F29, F30 und G32 so viel andeuten?
+1. Runde 2: Trifft das „silly“? Welche streichen oder ändern?
+2. Sollen beide Runden zusammen vertont werden?
+3. Die Fragen zur Seltenheit und zu den Andeutungen aus Runde 1 gelten als beantwortet („alles in Ordnung“).

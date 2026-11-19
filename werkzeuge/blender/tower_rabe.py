@@ -7,7 +7,7 @@ blauschwarzer Glanz. Der Glanz ist Farbe am Modell (Farbe je Punkt), damit er au
 
 Gebaut wird in den Massen des Browsers (x rechts, y oben, z vorn, Fuesse auf y = 0, Einheit Meter vor der Vergroesserung im Profil);
 B() rechnet in die Blender-Richtung um. Alle Gelenke sind ungedreht, die Form steckt in den Punkten.
-Gelenke: rabe > rabe_koerper > rabe_kehle, rabe_kopf (> rabe_schnabel_unten, rabe_auge_l/r), rabe_fluegel_l/r (> rabe_hand_l/r), rabe_schwanz (> rabe_sf_0…14, je Schwanzfeder), rabe_buerzel · Fluegel: rabe_as_l_0…5, rabe_hs_l_0…6 je Schwungfeder, rabe_arm_l · rabe > rabe_bein_l/r (> rabe_ring am rechten Bein).
+Gelenke: rabe > rabe_koerper > rabe_kehle, rabe_kopf (> rabe_schnabel_unten, rabe_auge_l/r), rabe_fluegel_l/r (> rabe_hand_l/r), rabe_schwanz (> rabe_sf_0…14, je Schwanzfeder), rabe_buerzel · Fluegel: rabe_as_l_0…5, rabe_hs_l_0…6 je Schwungfeder, rabe_arm_l · rabe > rabe_bein_l/r > rabe_lauf_l/r (> rabe_ring am rechten Lauf) > rabe_fuss_l/r (Zehen).
 """
 import math
 import os
@@ -387,21 +387,26 @@ def rabe():
             r = V((math.sin(phi), 0, math.cos(phi)))
             feder(bein, ob + V((0, 0.07, 0)) + r * 0.028, V((0, -1, 0)) + r * 0.12, r, 0.085, 0.036, heben=0.05, glanz=0.8)
         bein.netz(gefieder)
+        # Figuren 8 (19.11., Mr. Alex: man soll das Abstossen aus den Fuessen sehen): der Lauf haengt an der Ferse (= Gelenk des Beins), die Zehen am Fuss –
+        # in Ruhe steht alles genau wie vorher; der Browser knickt die Ferse nach hinten und haelt den Fuss flach
+        lauf = Teil("rabe_lauf_" + seite, bein, ob)
         if seite == "r":
-            Teil("rabe_ring", bein, V((v * 0.045, 0.058, 0.0)))               # Ansatzpunkt fuer den farbigen Fussring (Kennzeichen je Rabe; die Farbe setzt der Browser)
+            Teil("rabe_ring", lauf, V((v * 0.045, 0.058, 0.0)))               # Ansatzpunkt fuer den farbigen Fussring (Kennzeichen je Rabe; die Farbe setzt der Browser)
         beinfarbe = lambda i, hoch: mix(BEIN, BEIN_HELL, max(0.0, hoch - 0.5) * 1.5)
         fuss = V((v * 0.045, 0.012, 0.0))
-        rohr(bein, [ob + V((0, 0.01, 0)), fuss], [(0.013, 0.013), (0.012, 0.012)], V((0, 0, 1)), beinfarbe, n=8)
+        rohr(lauf, [ob + V((0, 0.01, 0)), fuss], [(0.013, 0.013), (0.012, 0.012)], V((0, 0, 1)), beinfarbe, n=8)
+        lauf.netz(horn, True)
+        zehen = Teil("rabe_fuss_" + seite, lauf, fuss)
         krallen = []
         for wx, lang in ((-0.5, 0.075), (0, 0.085), (0.5, 0.075), (math.pi, 0.05)):   # drei Zehen nach vorn, eine nach hinten
             dh = V((math.sin(wx), 0, math.cos(wx)))
             ende = fuss + dh * lang + V((0, -0.004, 0))
-            rohr(bein, [fuss, fuss + dh * (lang * 0.5) + V((0, 0.004, 0)), ende], [(0.0085, 0.0085), (0.0075, 0.0075), (0.006, 0.006)], V((0, 1, 0)), beinfarbe, n=8)
+            rohr(zehen, [fuss, fuss + dh * (lang * 0.5) + V((0, 0.004, 0)), ende], [(0.0085, 0.0085), (0.0075, 0.0075), (0.006, 0.006)], V((0, 1, 0)), beinfarbe, n=8)
             krallen.append((ende, dh))
-        bein.netz(horn, True)
+        zehen.netz(horn, True)
         for ende, dh in krallen:
-            rohr(bein, [ende, ende + dh * 0.014 + V((0, 0.003, 0)), ende + dh * 0.027 + V((0, -0.0075, 0))], [(0.005, 0.005), (0.0035, 0.004), (0, 0)], V((0, 1, 0)), lambda i, hoch: KRALLE, n=6)
-        bein.netz(horn, True)
+            rohr(zehen, [ende, ende + dh * 0.014 + V((0, 0.003, 0)), ende + dh * 0.027 + V((0, -0.0075, 0))], [(0.005, 0.005), (0.0035, 0.004), (0, 0)], V((0, 1, 0)), lambda i, hoch: KRALLE, n=6)
+        zehen.netz(horn, True)
 
 
 def ausgabe(datei):

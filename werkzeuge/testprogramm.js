@@ -732,6 +732,18 @@ async function hofTest(browser, basis, app, name, fm) {
         if (fl.setzDauer < 0.8) fehl.push(`${t}: Arthur sitzt ${fl.setzDauer.toFixed(2)} s nach dem Aufsetzen schon still (erwartet mindestens 0,8 s: nachfedern, Flügel zurechtrücken)`);
         if (!gleich(fl.ende, fl.ruhe) || Math.abs(fl.ende.fuss - fl.ruhe.fuss) > 0.01) fehl.push(`${t}: nach dem Landen sitzt Arthur nicht an seinem Platz wie vorher`);
       }
+      // Figuren 8 (19.11., Wunsch Mr. Alex): freier Flug – abheben, eine Runde über den Hof mit Schräglage, landen am selben Platz
+      const rf = await pg.evaluate(() => { const p = window.__probe3d; p.vogelHalt(true); const ruhe = p.vogel(), ok = p.vogelRunde ? p.vogelRunde() : false, g = p.hof().gross; let n = 0, hoch = 0, roll = 0, draussen = 0, flog = false, landete = false;
+        while (ok && p.vogel().tut !== "sitzt" && n < 3000) { p.vogelTakt(1, 20); const v = p.vogel(); n++; hoch = Math.max(hoch, v.ort[1] - ruhe.ort[1]); roll = Math.max(roll, Math.abs(v.roll)); if (Math.abs(v.ort[0]) > g[0] / 2 || Math.abs(v.ort[2]) > g[1] / 2) draussen++; if (v.tut === "fliegt") flog = true; if (v.tut === "landet") landete = true; }
+        const ende = p.vogel(); p.vogelHalt(false); return { ok, ruhe, ende, dauer: n * 0.02, hoch, roll, draussen, flog, landete }; });
+      if (!rf.ok || !rf.flog || !rf.landete) fehl.push(`${t}: Arthur fliegt keine Runde (Knopf „Runde fliegen“)`);
+      else {
+        if (rf.hoch < 3 || rf.hoch > 8) fehl.push(`${t}: Arthurs Runde geht ${rf.hoch.toFixed(1)} m hoch (erwartet 3 bis 8 m)`);
+        if (rf.roll < 0.2) fehl.push(`${t}: Arthur legt sich in den Kurven nicht schräg (höchstens ${rf.roll})`);
+        if (rf.draussen) fehl.push(`${t}: Arthur verlässt auf seiner Runde den Hof (${rf.draussen} Schritte)`);
+        if (rf.dauer < 6 || rf.dauer > 20) fehl.push(`${t}: Arthurs Runde dauert ${rf.dauer.toFixed(1)} s (erwartet 6 bis 20 s)`);
+        if (!gleich(rf.ende, rf.ruhe)) fehl.push(`${t}: nach der Runde sitzt Arthur nicht wieder an seinem Platz`);
+      }
       // drei Kameras: wählbar, über dem Boden, „hinter der Figur“ bleibt auf dem Platz
       for (const k of ["puppenhaus", "augen", "hinten"]) {
         await pg.click(`#kameras button[data-kamera="${k}"]`); await pg.waitForTimeout(300);

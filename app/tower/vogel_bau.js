@@ -29,6 +29,7 @@ export const VOEGEL = {
     /* Tempo aus den Filmen der Tower-Raben (Mr. Alex 19.11.: die erste Fassung war „viel zu langsam“): Flügel strecken im Sitzen rund 1 s,
        im Flug drei Schläge je Sekunde, beim Bremsen fünf */
     flug: { schlagDauer: 1.55, takt: 0.33, bremsTakt: 0.2, anflug: 1.3, bremsen: 0.55, setzen: 0.95, bremsweg: 1.4, bremsHoch: 0.5, neig: 0.75,
+      ducken: 0.28, steigen: 1.1, tempoAb: 2.5, tempo: 8, schlagen: 1.3, gleiten: 1.0, schraeg: 0.55, schraegMax: 0.6,   // freier Flug: Sekunden ducken · Sekunden bis zum Reiseflug · m/s beim Abheben und im Flug · Sekunden schlagen und gleiten im Wechsel · Schräglage je Kursänderung (rad je rad/s) und höchstens
       arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, armLangJe: 0.07, woelb: -0.07, armWoelb: 0.14, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
     ring: RINGE.arthur,
     schaedel: 0.058,                                  // Halbe Höhe des Schädels (vor der Vergrößerung): die Kehlfedern am Rumpf müssen darunter bleiben
@@ -180,7 +181,14 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
   function fluegelschlag() { if (!seiten.length || flug.tut !== "sitzt") return false; flug.tut = "schlag"; flug.t = 0; z.zielY = z.zielZ = 0; return true; }
   /* Landen: tiefer, schneller Anflug von `von` auf `ziel` zu, dann hartes Bremsen – aufgerichtet, Flügel im V mit kurzen schnellen Schlägen,
      Schwanz weit gefächert und nach unten, Beine nach vorn –, aufsetzen, anlegen */
-  function lande(ziel, von) { if (!seiten.length) return false; flug.tut = "landet"; flug.t = 0; flug.ziel = ziel; flug.von = von; z.zielY = z.zielZ = 0; kopf.rotation.y = kopf.rotation.z = 0; return true; }
+  function lande(ziel, von, aus = null) { if (!seiten.length) return false; flug.tut = "landet"; flug.t = 0; flug.ziel = ziel; flug.von = von; flug.aus = aus; flug.roll = 0; g.figur.rotation.z = 0; z.zielY = z.zielZ = 0; kopf.rotation.y = kopf.rotation.z = 0; return true; }   // aus: Haltung, aus der er kommt (freier Flug) – der Anflug blendet weich über
+  /* Freier Flug (Figuren 8, Wunsch Mr. Alex 19.11.): kurz ducken, mit schnellen Schlägen abheben, dann die Bahn durch `punkte` fliegen – Schräglage in den Kurven,
+     Schlagen und Gleiten im Wechsel –, am letzten Punkt geht es in lande(ziel) über. Der letzte Punkt liegt tief und gut 10 m vor dem Ziel. */
+  function fliege(punkte, ziel) {
+    if (!seiten.length || flug.tut !== "sitzt") return false; const p = wurzel.position;
+    flug.bahn = new THREE.CatmullRomCurve3([p.clone(), ...punkte.map((q) => new THREE.Vector3(q.x, q.y, q.z))], false, "centripetal"); flug.lang = flug.bahn.getLength();
+    flug.weg = 0; flug.roll = 0; flug.phi = 0; flug.kurs = wurzel.rotation.y; flug.tut = "fliegt"; flug.t = 0; flug.ziel = ziel; z.zielY = z.zielZ = 0; kopf.rotation.y = kopf.rotation.z = 0; return true;
+  }
   function bewegeFlug(dt) {
     flug.t += dt; const t = flug.t;
     if (flug.tut === "schlag") {
@@ -191,6 +199,21 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
         neig: stufen(u, [[0, 0], [0.1, 0.07], [0.25, 0.2], [0.37, 0.04], [0.49, 0.18], [0.61, 0.03], [0.8, 0.06], [1, 0]]), faecher: stufen(u, [[0, 0], [0.25, 0.45], [0.66, 0.45], [1, 0]]), senk: stufen(u, [[0, 0], [0.25, 0], [0.37, 0.14], [0.49, 0], [0.61, 0.14], [0.78, 0], [1, 0]]), beine: 0 });
       g.figur.position.y = 0.04 * P.gross * stufen(u, [[0, 0], [0.25, 0], [0.37, 1], [0.49, 0.25], [0.61, 1], [0.76, 0], [1, 0]]);      // jeder Schlag hebt ihn ein wenig
       if (u >= 1) { pose(RUHE); g.figur.position.y = 0; flug.tut = "sitzt"; z.warte = zufall(P.blick.pause) / 2; }
+    } else if (flug.tut === "fliegt") {
+      const tD = FL.ducken, tS = FL.steigen;
+      if (t < tD) { const u = glatt(t / tD); pose({ auf: 0.7 * u, schlag: 1.1 * u, knick: -0.6 * u, biege: 0, neig: 0.35 * u, faecher: 0.3 * u, senk: 0, beine: -0.25 * u }); return; }   // ducken: vorbeugen, Flügel hochreißen
+      const tf = t - tD, start = glatt(tf / tS);                                            // start 0…1: abheben mit schnellen Schlägen, dann Reiseflug
+      flug.weg += dt * (FL.tempoAb + (FL.tempo - FL.tempoAb) * start);
+      if (flug.weg >= flug.lang) { const e = flug.bahn.getPointAt(1, va); lande(flug.ziel, { x: e.x, y: e.y, z: e.z }, { auf: flug.auf, schlag: flug.schlag, knick: flug.knick, biege: flug.biege }); bewegeFlug(0); return; }
+      const k = flug.weg / flug.lang, ri = flug.bahn.getTangentAt(k, vb); wurzel.position.copy(flug.bahn.getPointAt(k, va));
+      const kurs = Math.atan2(ri.x, ri.z), dk = Math.atan2(Math.sin(kurs - flug.kurs), Math.cos(kurs - flug.kurs)); flug.kurs = kurs; wurzel.rotation.y = kurs;
+      if (dt > 0) flug.roll += (Math.max(-FL.schraegMax, Math.min(FL.schraegMax, -dk / dt * FL.schraeg)) * start - flug.roll) * Math.min(1, dt * 3);   // Schräglage: in die Kurve gelegt
+      g.figur.rotation.z = flug.roll;
+      flug.phi += dt / (FL.bremsTakt + (FL.takt - FL.bremsTakt) * start);
+      const zyk = Math.max(0, tf - tS) % (FL.schlagen + FL.gleiten), gleiten = tf < tS ? 0 : glatt((zyk - FL.schlagen) / 0.25) * (1 - glatt((zyk - FL.schlagen - FL.gleiten + 0.25) / 0.25));
+      const s = schlagen(flug.phi, 0.75 - 0.15 * start, 0.2 - 0.15 * start);
+      pose({ auf: s.auf + (1 - s.auf) * gleiten, schlag: s.schlag + (-0.06 - s.schlag) * gleiten, knick: s.knick + (-0.05 - s.knick) * gleiten, biege: s.biege + (0.5 - s.biege) * gleiten,
+        neig: 0.35 + (FL.neig - 0.35) * start - ri.y * 0.5, faecher: 0.35, senk: 0, beine: 0 });
     } else if (flug.tut === "landet") {
       const { ziel, von } = flug, tA = FL.anflug, tB = FL.bremsen, tC = FL.setzen, weit = Math.hypot(ziel.x - von.x, ziel.z - von.z), bremsweg = Math.min(FL.bremsweg, weit * 0.4);
       let weg, hoch, p;
@@ -210,6 +233,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
       const k = weit ? weg / weit : 1; wurzel.position.set(von.x + (ziel.x - von.x) * k, ziel.y + hoch, von.z + (ziel.z - von.z) * k);
       const flugDreh = Math.atan2(ziel.x - von.x, ziel.z - von.z); let d = (ziel.dreh - flugDreh) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI;
       wurzel.rotation.y = flugDreh + d * glatt((t - tA) / tB);
+      if (flug.aus && t < 0.3) { const m = glatt(t / 0.3); for (const n in flug.aus) p[n] = flug.aus[n] + (p[n] - flug.aus[n]) * m; }   // aus dem freien Flug weich in den Anflug
       pose(p);
       if (t >= tA + tB + tC) { pose(RUHE); setze(ziel.x, ziel.y, ziel.z, ziel.dreh); flug.tut = "sitzt"; z.warte = zufall(P.blick.pause) / 2; }
     }
@@ -222,10 +246,10 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
     const kehleOben = g.kehle ? +kasten.clone().setFromObject(g.kehle).max.y.toFixed(3) : null, kopfUnten = +(kopf.getWorldPosition(ort).y - P.schaedel * P.gross).toFixed(3);
     const gr = kasten.getSize(ort.clone());
     const angelegt = !seiten.length || (flug.auf === 0 && seiten.every((w) => Math.abs(w.F.quaternion.w) > 0.99999 && Math.abs(w.H.quaternion.w) > 0.99999) && Math.abs(g.schwanz.rotation.x) < 1e-6 && Math.abs(g.figur.rotation.x) < 1e-6);
-    return { wer, bau, tut: flug.tut, angelegt, schlag: +flug.schlag.toFixed(3), neig: +flug.neig.toFixed(3), auf: +flug.auf.toFixed(3), breit: +Math.max(gr.x, gr.z).toFixed(3), kehleOben, kopfUnten, ring: P.ring ? { name: P.ring.name, hoch: +g.ring.getWorldPosition(ort).y.toFixed(3) } : null, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
+    return { wer, bau, tut: flug.tut, angelegt, schlag: +flug.schlag.toFixed(3), neig: +flug.neig.toFixed(3), roll: +(flug.roll || 0).toFixed(3), auf: +flug.auf.toFixed(3), breit: +Math.max(gr.x, gr.z).toFixed(3), kehleOben, kopfUnten, ring: P.ring ? { name: P.ring.name, hoch: +g.ring.getWorldPosition(ort).y.toFixed(3) } : null, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
       kopf: [+kopf.rotation.y.toFixed(4), +kopf.rotation.z.toFixed(4)], drehungen: z.drehungen, blick: P.blick };
   }
   /* setze: Ort der Füße und Blickrichtung (0 = nach Süden, +z) */
   const setze = (x, y, zz, dreh = 0) => { wurzel.position.set(x, y, zz); wurzel.rotation.y = dreh; };
-  return { wurzel, g, bewege, zustand, setze, schau, fluegelschlag, lande };
+  return { wurzel, g, bewege, zustand, setze, schau, fluegelschlag, lande, fliege };
 }

@@ -104,6 +104,7 @@
   <span class="nurhof" hidden>Arthur</span>
   <button type="button" class="nurhof" data-rabetut="schlag" hidden>Flügelschlag</button>
   <button type="button" class="nurhof" data-rabetut="landen" hidden>Landen</button>
+  <button type="button" class="nurhof" data-rabetut="runde" hidden>Runde fliegen</button>
   <span>Maße (1 = wie heute)</span>
   <label>Arm <output>1,80</output><input type="range" data-mass="arm" min="1" max="2.6" step="0.05" value="1.8" aria-label="Armlänge"></label>
   <label>Bein <output>3,00</output><input type="range" data-mass="bein" min="1" max="4" step="0.05" value="3" aria-label="Beinlänge"></label>
@@ -307,8 +308,19 @@ try {
   const arthur = hof ? (sucht.get("rabe") === "einfach" ? bauVogel("arthur") : await ladeVogel(lader, "arthur")) : null;   // ?rabe=einfach zeigt die erste, im Programm gebaute Fassung
   let rabeOrt = "vorn", rabeSitz = null, rabeHalt = false;   // rabeHalt: Bilder und Prüfung stellen Arthur selbst in festen Schritten vor
   /* Landen (w07: „A raven lands next to you.“): Arthur kommt tief angeflogen zu seinem Platz – vorn von Norden auf das Kind zu, auf die Mauer an ihr entlang */
-  function landeRabe() { const p = rabeSitz || (rabeSitz = { x: arthur.wurzel.position.x, y: arthur.wurzel.position.y, z: arthur.wurzel.position.z, dreh: arthur.wurzel.rotation.y });
-    return arthur.lande(p, rabeOrt === "mauer" ? { x: p.x - 1.5, y: p.y + 1.6, z: p.z - 11 } : { x: p.x + 1.2, y: p.y + 1.7, z: p.z - 12 }); }   // tief und auf das Kind zu (Foto 4 von Mr. Alex)
+  const sitzRabe = () => rabeSitz || (rabeSitz = { x: arthur.wurzel.position.x, y: arthur.wurzel.position.y, z: arthur.wurzel.position.z, dreh: arthur.wurzel.rotation.y });
+  const anflugRabe = (p) => (rabeOrt === "mauer" ? { x: p.x - 1.5, y: p.y + 1.6, z: p.z - 11 } : { x: p.x + 1.2, y: p.y + 1.7, z: p.z - 12 });
+  function landeRabe() { const p = sitzRabe(); return arthur.lande(p, anflugRabe(p)); }
+  /* Runde fliegen (Figuren 8, Wunsch Mr. Alex 19.11.): abheben in Blickrichtung, eine weite Runde über den Hof zur Hofmitte hin, von Norden zurück und landen wie oben.
+     a = Richtung des Anflugs, f = Blickrichtung, r = quer dazu, zur Hofmitte; alle Punkte bleiben 1,5 m vom Rand */
+  function rundeRabe() {
+    const p = sitzRabe(), von = anflugRabe(p), la = Math.hypot(p.x - von.x, p.z - von.z), a = { x: (p.x - von.x) / la, z: (p.z - von.z) / la }, f = { x: Math.sin(p.dreh), z: Math.cos(p.dreh) };
+    let r = { x: a.z, z: -a.x }; if (r.x * -p.x + r.z * -p.z < 0) r = { x: -r.x, z: -r.z };
+    const [B, T] = hof.plan.gross, grenze = (v, halb) => Math.max(-halb + 1.5, Math.min(halb - 1.5, v));
+    const pt = (fa, ff, fr, y) => ({ x: grenze(p.x + a.x * fa + f.x * ff + r.x * fr, B / 2), y: p.y + y, z: grenze(p.z + a.z * fa + f.z * ff + r.z * fr, T / 2) });
+    return arthur.fliege([pt(0, 1.5, 2.5, 1.2), pt(-5, 0, 7, 2.8), pt(-14, 0, 11, 4.5), pt(-24, 0, 7, 5.2), pt(-27, 0, -3, 5),   // gleich nach dem Abheben zur Seite und nach Norden: die ganze Runde liegt vor dem Kind
+      { x: von.x - a.x * 9 - r.x * 2.5, y: von.y + 1.6, z: von.z - a.z * 9 - r.z * 2.5 }, { x: von.x - a.x * 4, y: von.y + 0.5, z: von.z - a.z * 4 }, von], p);
+  }   // tief und auf das Kind zu (Foto 4 von Mr. Alex)
   function setzeRabe(wo) {
     rabeOrt = wo; rabeSitz = null; const pl = hof.plan, platz = pl.raben[3], klotz = hof.scene.getObjectByName("hof_rabe4");
     if (wo === "mauer") arthur.setze(platz.x - 0.25, pl.masse.rabenmauer.hoch, platz.z, -Math.PI / 2);   // schaut nach Westen in den Hof
@@ -317,7 +329,7 @@ try {
     for (const x of document.querySelectorAll("#bau button[data-rabe]")) x.setAttribute("aria-pressed", String(x.dataset.rabe === wo));
   }
   if (arthur) { szene.add(arthur.wurzel); setzeRabe("vorn"); for (const b of document.querySelectorAll("#bau button[data-rabe]")) b.addEventListener("click", () => setzeRabe(b.dataset.rabe));
-    for (const b of document.querySelectorAll("#bau button[data-rabetut]")) b.addEventListener("click", () => (b.dataset.rabetut === "schlag" ? arthur.fluegelschlag() : landeRabe())); }
+    for (const b of document.querySelectorAll("#bau button[data-rabetut]")) b.addEventListener("click", () => (b.dataset.rabetut === "schlag" ? arthur.fluegelschlag() : b.dataset.rabetut === "runde" ? rundeRabe() : landeRabe())); }
   zeigeWeg();
   $("bau").querySelector(".kopf").addEventListener("click", (e) => {
     const zu = $("bau").classList.toggle("zu"); e.currentTarget.setAttribute("aria-expanded", String(!zu)); document.body.classList.toggle("bau-offen", !zu);
@@ -627,7 +639,7 @@ try {
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
+  window.__probe3d = { vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
     blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
     sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), sergeantArme: () => sergeants[0].arme(), sergeantHals: () => sergeants[0].halsSitz(), bauHals: () => bauProbe.halsSitz(), bauMund: (form) => bauProbe.mund(form), regie: (wer, id, zeit) => { const p = PROBEN[wer], schritte = id && regieSchritte(regieDaten[id], p.mund[id]); p.probe.regie(schritte ? { schritte, zeit: () => zeit } : null); return schritte; }, probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3

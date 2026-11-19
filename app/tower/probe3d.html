@@ -353,16 +353,20 @@ try {
   for (const b of document.querySelectorAll("#figuren button[data-blick]")) b.addEventListener("click", () => { const an = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", String(an)); figuren.unruhe(an); });
   for (const b of document.querySelectorAll("#figuren button[data-gesicht]")) b.addEventListener("click", () => { figuren.ausdruck(b.dataset.gesicht); druecke("gesicht", b.dataset.gesicht); });
   const startZelle = naechsteFreie(0, raum.max.z - 2.6), startOrt = zuOrt(...startZelle);
-  const figur = { x: startOrt.x, z: startOrt.z, dreh: Math.PI, pfad: [], phase: 0, geht: 0, dann: null, blick: null };
+  const figur = { x: startOrt.x, z: startOrt.z, dreh: Math.PI, pfad: [], phase: 0, geht: 0, dann: null, blick: null, rennt: false, lauf: 0 };
+  /* Gehen und Rennen (Mr. Alex 19.11.): Auf dem großen Platz rennt die Kinderfigur von selbst, wenn das angetippte Ziel weiter als 8 m weg ist; nahe Ziele geht sie.
+     Nur im Hof – im Guard Room bleibt es beim Gehen. Vorgemerkt als Alternative: Doppeltipp = rennen (erst prüfen, ob das mit Finger und Maus gleich gut geht). */
+  const RENN_AB = 8, RENN_TEMPO = 4.2;
   const winkelZu = (a, b) => { let d = (b - a) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; };
 
   function bewegeFigur(dt, t) {
-    const tempo = window.__towerSchnell ? 14 : 1.55;
+    figur.lauf += ((figur.rennt && figur.pfad.length ? 1 : 0) - figur.lauf) * Math.min(1, dt * 5);   // 0 = gehen, 1 = rennen, weich dazwischen
+    const L = figur.lauf, tempo = window.__towerSchnell ? 14 : 1.55 + (RENN_TEMPO - 1.55) * L;
     let unterwegs = false;
     if (figur.pfad.length) {
       const p = figur.pfad[0], dx = p.x - figur.x, dz = p.z - figur.z, rest = Math.hypot(dx, dz), schritt = tempo * dt;
       if (rest <= schritt) { figur.x = p.x; figur.z = p.z; figur.pfad.shift(); }
-      else { figur.x += dx / rest * schritt; figur.z += dz / rest * schritt; figur.phase += schritt * 6.6; }
+      else { figur.x += dx / rest * schritt; figur.z += dz / rest * schritt; figur.phase += schritt * (6.6 - 2.6 * L); }   // beim Rennen längere Schritte
       if (rest > 0.01) figur.dreh += winkelZu(figur.dreh, Math.atan2(dx, dz)) * Math.min(1, dt * 10);
       unterwegs = true;
       if (!figur.pfad.length) { ring.visible = false; if (figur.dann) { const f = figur.dann; figur.dann = null; f(); } }
@@ -371,13 +375,14 @@ try {
     }
     figur.geht += ((unterwegs ? 1 : 0) - figur.geht) * Math.min(1, dt * 8);     // weich zwischen Stehen und Gehen
     const s = Math.sin(figur.phase), w = figur.geht, ruhe = 1 - w;
-    g.bein_l.rotation.x = -0.62 * s * w; g.bein_r.rotation.x = 0.62 * s * w;
+    const weit = 1 + 0.45 * L;                                                  // Rennen: Beine und Arme schwingen weiter, die Ellbogen sind angewinkelt, der Rumpf neigt sich vor
+    g.bein_l.rotation.x = -0.62 * s * w * weit; g.bein_r.rotation.x = 0.62 * s * w * weit;
     g.knie_l.rotation.x = Math.max(0, Math.cos(figur.phase)) * 0.9 * w; g.knie_r.rotation.x = Math.max(0, -Math.cos(figur.phase)) * 0.9 * w;
-    g.arm_l.rotation.x = 0.5 * s * w; g.arm_r.rotation.x = -0.5 * s * w;
+    g.arm_l.rotation.x = 0.5 * s * w * weit; g.arm_r.rotation.x = -0.5 * s * w * weit;
     g.arm_l.rotation.z = 0.10; g.arm_r.rotation.z = -0.10;
-    g.ellbogen_l.rotation.x = -0.35 * w - 0.08; g.ellbogen_r.rotation.x = -0.35 * w - 0.08;
+    g.ellbogen_l.rotation.x = g.ellbogen_r.rotation.x = -(0.35 + 0.9 * L) * w - 0.08;
     g.huefte.position.y = hueftHoehe + Math.abs(Math.cos(figur.phase)) * 0.025 * w;
-    g.rumpf.rotation.x = 0.06 * w; g.rumpf.rotation.y = 0.10 * s * w;
+    g.rumpf.rotation.x = (0.06 + 0.16 * L) * w; g.rumpf.rotation.y = 0.10 * s * w;
     g.rumpf.scale.y = 1 + Math.sin(t / 900) * 0.012 * ruhe;                                           // atmen
     g.kopf.rotation.y = Math.sin(t / 2300) * 0.22 * ruhe; g.kopf.rotation.x = Math.sin(t / 3100) * 0.05 * ruhe;   // sich umsehen
     kind.position.set(figur.x, 0, figur.z); kind.rotation.y = figur.dreh;
@@ -532,6 +537,8 @@ try {
   function geheZu(x, z, dann) {
     const zelle = naechsteFreie(x, z), p = zuOrt(...zelle);
     figur.pfad = suchWeg({ x: figur.x, z: figur.z }, zelle); figur.dann = dann; figur.blick = null; KAMERAS.augen.schwenk = null;
+    let lang = 0, vor = figur; for (const q of figur.pfad) { lang += Math.hypot(q.x - vor.x, q.z - vor.z); vor = q; }
+    figur.rennt = !!hof && lang > RENN_AB;
     ring.position.set(p.x, 0.02, p.z); ring.visible = figur.pfad.length > 0;
     if (!figur.pfad.length && dann) { figur.dann = null; dann(); }
   }
@@ -598,7 +605,7 @@ try {
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
+  window.__probe3d = { geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
     blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
     sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), sergeantArme: () => sergeants[0].arme(), sergeantHals: () => sergeants[0].halsSitz(), bauHals: () => bauProbe.halsSitz(), bauMund: (form) => bauProbe.mund(form), regie: (wer, id, zeit) => { const p = PROBEN[wer], schritte = id && regieSchritte(regieDaten[id], p.mund[id]); p.probe.regie(schritte ? { schritte, zeit: () => zeit } : null); return schritte; }, probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3

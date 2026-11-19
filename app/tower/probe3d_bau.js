@@ -305,9 +305,10 @@ export function rundeOrt(ru, weg) {
    roter Rock, weißer Gürtel, goldene Schnalle und Abzeichen, schwarze Hose und Stiefel. */
 const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
 export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, duenn: 0.6,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (duenn = Breite und Tiefe des Körpers, 1 = wie das Modell)
-  kopf: "sergeantkopf",   // Kopf mit Bart, rothaarig (Wahl Mr. Alex 18.11.)
+  kopf: "sergeantkopf", knolle: "sergeant_knolle_teile", hand: 0.72,   // Kopf mit Bart, rothaarig (Wahl Mr. Alex 18.11.) · zwei Nasen zur Wahl (19.11.): teile = Hakennase, knolle = Knollennase · hand = Handgröße gegenüber Mr. Flex
  
   umfaerben: { Body: { "3,0": ROT, "7,0": ROT, "7,1": SCHWARZ, "6,0": WEISS, "2,1": GOLD, "0,1": GOLD }, Arm: { "3,0": ROT, "4,0": ROT, "7,0": ROT, "6,0": ROT }, Leg: { "3,0": SCHWARZ, "7,0": SCHWARZ, "7,1": SCHWARZ, "6,0": SCHWARZ } } };
+function drehung(o) { const q = o.quaternion.clone(); for (let p = o.parent; p; p = p.parent) q.premultiply(p.quaternion); return q; }   // Drehung in der Welt ohne die Maße der Eltern (für Teile, die nicht mitgequetscht werden sollen)
 function umfaerben(m, plan) {
   m.traverse((o) => {
     const teil = o.isSkinnedMesh && Object.keys(plan).find((k) => o.name.includes(k)); if (!teil) return;
@@ -325,6 +326,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   for (const d of dateien) for (const c of d.animations) clips[c.name] = c;
   const m = koerper.scene, K = (n) => m.getObjectByName(n), bau = { ...BAU_START, ...figur.bau };
   if (figur.umfaerben) umfaerben(m, figur.umfaerben);
+  const handMass = HAND * (figur.hand || 1), handFolgt = [];
   const haut = []; m.traverse((o) => { if (o.isMesh) o.frustumCulled = false; if (o.isSkinnedMesh && !/Cape/.test(o.name)) haut.push(o); });
   const anker = new THREE.Group(); anker.add(m); anker.position.set(platz.x, 0, platz.z); szene.add(anker);
   m.updateMatrixWorld(true);
@@ -355,12 +357,14 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   for (const [s, vz] of [["r", -1], ["l", 1]]) {
     const gelenk = K("wrist" + s), ort = gelenk.getWorldPosition(v()), arm = ort.clone().sub(K("lowerarm" + s).getWorldPosition(v())).normalize();
     const h = new THREE.Group(); szene.add(h);
-    h.position.copy(ort); h.quaternion.setFromUnitVectors(v(vz, 0, 0), arm); h.scale.set(-vz * mass * HAND, mass * HAND, mass * HAND);
+    h.position.copy(ort); h.quaternion.setFromUnitVectors(v(vz, 0, 0), arm); h.scale.set(-vz * mass * handMass, mass * handMass, mass * handMass);
     const hand = haende.scene.getObjectByName("hand").clone(true); hand.position.set(0, 0, 0); h.add(hand);
     hand.traverse((o) => { o.frustumCulled = false; });
     glieder[s] = [1, 2, 3, 4].map((i) => [hand.getObjectByName("f" + i), hand.getObjectByName("f" + i + "b")]).concat([[hand.getObjectByName("daumen")]]);
-    h.updateMatrixWorld(true); gelenk.attach(h); halter[s] = h;
+    h.updateMatrixWorld(true); halter[s] = h;
+    if (figur.duenn) handFolgt.push([h, gelenk, drehung(gelenk).invert().multiply(h.quaternion)]); else gelenk.attach(h);   // schmale Figur: die Hand hängt nicht am Knochen (sie würde mitgequetscht), sie folgt ihm (haendeNach)
   }
+  const haendeNach = () => { for (const [h, gelenk, q] of handFolgt) { gelenk.getWorldPosition(h.position); h.quaternion.copy(drehung(gelenk)).multiply(q); h.updateMatrixWorld(true); } };
   const kleidungPunkte = kleidungAb(m, kleidung);
   const stiefel = stiefelFest(m, K), halbGelenke = [stiefel.kniel, stiefel.knier, ...ellbogenFest(m, K)].filter(Boolean), hut = hutForm(m, kleidung);
   mantelFolgt(m, K);
@@ -471,11 +475,11 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const dauer = g.laeuft.getClip().duration, t = Math.min(g.laeuft.time, dauer), qm = m.getWorldQuaternion(Q());
     for (const [s, seite] of [["r", -1], ["l", 1]]) {
       const z = regel(seite, t / dauer, t); if (!z || z.gewicht <= 0.001) continue;
-      const punkt = K(z.knochen).localToWorld(v(...z.ort)), pol = z.pol ? v(...z.pol).normalize().applyQuaternion(qm) : null, handLang = 0.19 * HAND * mass;
+      const punkt = K(z.knochen).localToWorld(v(...z.ort)), pol = z.pol ? v(...z.pol).normalize().applyQuaternion(qm) : null, handLang = 0.19 * handMass * mass;
       if (z.finger) {
         const finger = v(...z.finger).normalize(), flaeche = v(...z.flaeche).normalize();
         flaeche.sub(finger.clone().multiplyScalar(flaeche.dot(finger))).normalize();                // genau senkrecht zu den Fingern
-        greife(s, punkt.sub(finger.clone().applyQuaternion(qm).multiplyScalar(0.052 * HAND * mass)), 0, pol, z.gewicht);
+        greife(s, punkt.sub(finger.clone().applyQuaternion(qm).multiplyScalar(0.052 * handMass * mass)), 0, pol, z.gewicht);
         dreheHand(s, finger, flaeche, z.gewicht);
       } else greife(s, punkt, z.reich * handLang, pol, z.gewicht);
     }
@@ -558,7 +562,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     else if (was === "protzen") { g.ausdruck = "schelmisch"; g.brilleZiel = 0; g.funkelIn = 0.55; }      // „Brille ab + Funkeln“
     else if (was === "magisch") { g.ausdruck = "geheimnisvoll"; g.brilleZiel = 1; g.funkelIn = 0.25; }   // „Funkeln durch die Brille“
   };
-  const nach = (dt) => { strecke(); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); kopfLauf(dt); m.updateMatrixWorld(true); aufGang(); };
+  const nach = (dt) => { strecke(); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); kopfLauf(dt); m.updateMatrixWorld(true); aufGang(); haendeNach(); };
   const grad = (x) => +((x * 180) / Math.PI).toFixed(1);
   const armLage = (s) => {                              // Ellbogenwinkel (180 = gestreckt), Richtung Schulter → Hand im Körper, Richtung der Finger zur Senkrechten
     const ps = wo(K("upperarm" + s)), pe = wo(K("lowerarm" + s)), pw = wo(K("wrist" + s)), qm = m.getWorldQuaternion(Q()).invert();

@@ -235,9 +235,9 @@ try {
   let bauRunde = { x0: -3.2, x1: 1.3, z0: bauStart.z, z1: bauStart.z + 3.4, r: 1.2 }; bauRunde.start = bauStart.x - (bauRunde.x0 + bauRunde.r);
   for (let s = 0, lang = rundeOrt(bauRunde, 0).lang; bauRunde && s < lang; s += 0.2) { const p = rundeOrt(bauRunde, s); if (!frei(...zuZelle(p.x, p.z))) bauRunde = null; }
   const bauProbe = await ladeBauProbe(lader, szene, { ...bauStart, bahn: Math.max(1.2, bauBahn * gk.zelle - 0.3), runde: bauRunde });
-  // Teil C, Schritt 1 (18.11.): Sergeant Bearskin steht frei in der Raummitte (im Rundkurs von Mr. Flex); Mr. Alex hat den Kopf mit Bart gewählt
+  // Teil C, Schritt 1 (18.11.): Sergeant Bearskin steht frei in der Raummitte (im Rundkurs von Mr. Flex); Kopf mit Bart (Wahl Mr. Alex); 19.11.: zwei Nasen zur Wahl – links Hakennase, rechts Knollennase
   const sergeants = [];
-  for (const i of [0]) { const s = await ladeBauProbe(lader, szene, { x: bauStart.x - 1.0 + i, z: bauStart.z + 1.6 }, { kopf: SERGEANT.kopf }, SERGEANT); s.kopf("grimmig"); sergeants.push(s); }
+  for (const [i, teile] of [SERGEANT.teile, SERGEANT.knolle].entries()) { const s = await ladeBauProbe(lader, szene, { x: bauStart.x - 1.5 + i, z: bauStart.z + 1.6 }, { kopf: SERGEANT.kopf }, { ...SERGEANT, teile }); s.kopf("grimmig"); sergeants.push(s); }
   $("bau").querySelector(".kopf").addEventListener("click", (e) => {
     const zu = $("bau").classList.toggle("zu"); e.currentTarget.setAttribute("aria-expanded", String(!zu)); document.body.classList.toggle("bau-offen", !zu);
   });

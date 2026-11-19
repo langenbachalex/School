@@ -257,7 +257,7 @@ async function probe3dTest(browser, basis, app, name, fm) {
     let b = await bau();
     // Teil C, Schritt 1 (18.11.): Sergeant Bearskin steht im Raum (Kopf mit Bart, Wahl Mr. Alex) – gestreckter Knight, eigener Kopf mit Gesicht, grimmig, Füße am Boden
     const sgt = await pg.evaluate(() => window.__probe3d.sergeant());
-    if (sgt.length !== 1) fehl.push(`${titel}: es stehen ${sgt.length} Sergeants im Raum statt einem`);
+    if (sgt.length !== 2) fehl.push(`${titel}: es stehen ${sgt.length} Sergeants im Raum statt zwei (Hakennase und Knollennase zur Wahl)`);
     for (const [i, z] of sgt.entries()) {
       if (!z.kopf || !["braue_l", "lid_l", "kiefer", "oberlippe"].every((n) => z.kopf.teile.includes(n))) fehl.push(`${titel}: Sergeant ${i + 1} hat kein bewegliches Gesicht`);
       else if (z.kopf.ausdruck !== "grimmig") fehl.push(`${titel}: Sergeant ${i + 1} schaut „${z.kopf.ausdruck}“ statt grimmig`);

@@ -44,8 +44,8 @@ def farben(vor="flex", **neu):
         gestell=f("brille_gestell", (0.03, 0.03, 0.035), 0.4))
 
 
-def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, brille=True, bart=(0.060, 0.0095, -0.016), braue=0.0055):
-    """f = eigene Farben (farben(...)) · haare, brille = False laesst sie weg · bart = (Laenge, Dicke, Schwung der Enden: plus = nach oben) · braue = Dicke.
+def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, brille=True, bart=(0.060, 0.0095, -0.016), braue=0.0055, nase=True):
+    """f = eigene Farben (farben(...)) · haare, brille = False laesst sie weg · bart = (Laenge, Dicke, Schwung der Enden: plus = nach oben) · braue = Dicke · nase = False: der andere Kopf baut seine eigene Nase.
     Andere Koepfe (tower_sergeant.py) setzen vorher die Masse des Moduls (RX, KR ...) und haengen ihre eigenen Teile an das Gelenk, das zurueckkommt."""
     f = f or farben()
     k = g.gelenk(name, eltern, ort)
@@ -55,10 +55,12 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
     for v in ok.data.vertices:
         v.co.z = max(v.co.z, LZ - KM[2])
     # Nase: kraeftig und gerade
-    g.kugel("nasenruecken", k, (0, haut_vorn(0, 0.135) - 0.010, 0.135), (0.016, 0.022, 0.046), f["haut"])
-    g.kugel("nasenspitze", k, (0, -0.171, 0.098), (0.021, 0.022, 0.018), f["haut"])
+    if nase:
+        g.kugel("nasenruecken", k, (0, haut_vorn(0, 0.135) - 0.010, 0.135), (0.016, 0.022, 0.046), f["haut"])
+        g.kugel("nasenspitze", k, (0, -0.171, 0.098), (0.021, 0.022, 0.018), f["haut"])
     for s in (-1, 1):
-        g.kugel("nasenfluegel", k, (s * 0.018, -0.158, 0.094), (0.012, 0.014, 0.011), f["haut"])
+        if nase:
+            g.kugel("nasenfluegel", k, (s * 0.018, -0.158, 0.094), (0.012, 0.014, 0.011), f["haut"])
         g.kugel("ohr", k, (s * 0.134, 0.0, 0.150), (0.013, 0.026, 0.036), f["haut"])
     for s, seite in ((-1, "r"), (1, "l")):
         # Wangenknochen: deutlich, schieben sich beim Laecheln nach oben

@@ -738,6 +738,10 @@ async function hofTest(browser, basis, app, name, fm) {
       else {
         const ringe = rb.raben.filter((r) => r.ring).map((r) => r.ring.name), ohne = rb.raben.filter((r) => !r.ring).map((r) => r.name);
         if (new Set(ringe).size !== 5 || ringe.includes("gelb")) fehl.push(`${t}: die Ringe der Raben sind nicht fünf verschiedene Farben außer Arthurs Gelb (${ringe.join(", ")})`);
+        const arthurGross = await pg.evaluate(() => window.__probe3d.vogel().gross), zuGross = rb.raben.filter((r) => r.gross > arthurGross * 0.905).map((r) => r.name), kleinster = rb.raben.slice().sort((x, y) => x.gross - y.gross)[0];
+        if (zuGross.length) fehl.push(`${t}: Arthur ragt nicht genug heraus – zu groß sind ${zuGross.join(", ")} (Mr. Alex 19.11.: die anderen höchstens 90 %)`);
+        if (kleinster.name !== "Mordred" || Math.abs(kleinster.gross / arthurGross - 0.8) > 0.02) fehl.push(`${t}: der kleinste Rabe ist nicht Mordred mit 80 % von Arthur (${kleinster.name}, ${(kleinster.gross / arthurGross * 100).toFixed(0)} %)`);
+        if (new Set(rb.raben.map((r) => r.ton)).size !== 6 || rb.raben.some((r) => !r.ton)) fehl.push(`${t}: nicht jeder der sechs Raben hat seinen eigenen Farbton im Gefieder`);
         if (ohne.join() !== "Mordred") fehl.push(`${t}: ohne Ring ist nicht genau Mordred (${ohne.join(", ") || "keiner"})`);
         const schief = rb.raben.filter((r) => Math.abs(r.fuss - rb.hoch) > 0.03 || !r.angelegt || r.tut !== "sitzt").map((r) => r.name);
         if (schief.length) fehl.push(`${t}: diese Raben sitzen nicht ruhig auf der Mauer: ${schief.join(", ")}`);

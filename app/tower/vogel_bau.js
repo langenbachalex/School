@@ -40,15 +40,18 @@ export const VOEGEL = {
   },
 };
 
-/* Die sechs anderen Raben (Figuren 8, 19.11.): derselbe Körper wie Arthur, etwas kleiner als der König, jeder mit seinem Ring und eigener Ruhe im Blick.
-   Mordred, die Elster, die sich als siebter Rabe ausgibt: der Kleinste, ohne Ring, schaut am unruhigsten umher. Reihenfolge auf der Mauer: RABENREIHE (Arthur sitzt in der Mitte). */
+/* Die sechs anderen Raben (Figuren 8, 19.11., Tabelle von Mr. Alex abgenommen): derselbe Körper wie Arthur, deutlich kleiner als der König (82–90 %, Mordred 80 %),
+   jeder mit seinem Ring, eigener Gestalt, eigenem Farbton im Schwarz und eigenem Temperament.
+   gestalt: kehle = Kehlfedern (breit, lang) · schwanz, fluegel, kopf = Größe dieser Teile · koerper = [breit, hoch, lang] · neigung = Haltung (+ geduckt, − aufrecht) · ton = Schimmer des Gefieders
+   blick.ruck: wie ruckartig der Kopf dreht (3 = ruhig) · plusterOft: Sekunden zwischen zwei Malen Plustern von selbst
+   Mordred, die Elster, die sich als siebter Rabe ausgibt: der Kleinste, ohne Ring, langer Schwanz, blaugrüner Schimmer, schaut unruhig und ruckartig umher. */
 for (const [wer, mehr] of Object.entries({
-  guinevere: { name: "Guinevere", gross: 1.2, blick: { pause: [7, 12], weit: 1.0, tempo: 0.7, schief: 0.3, schiefOft: 0.45 } },
-  lancelot: { name: "Lancelot", gross: 1.26, blick: { pause: [5, 9], weit: 1.2, tempo: 0.9, schief: 0.3, schiefOft: 0.25 } },
-  morgana: { name: "Morgana", gross: 1.16, blick: { pause: [8, 14], weit: 0.9, tempo: 0.6, schief: 0.4, schiefOft: 0.5 } },
-  gawain: { name: "Gawain", gross: 1.24, blick: { pause: [6, 10], weit: 1.2, tempo: 0.85, schief: 0.3, schiefOft: 0.3 } },
-  percival: { name: "Percival", gross: 1.14, blick: { pause: [5, 10], weit: 1.1, tempo: 0.9, schief: 0.35, schiefOft: 0.4 } },
-  mordred: { name: "Mordred", gross: 1.08, blick: { pause: [3, 6], weit: 1.3, tempo: 1.2, schief: 0.3, schiefOft: 0.3 } },
+  guinevere: { name: "Guinevere", gross: 1.118, blick: { pause: [7, 12], weit: 1.0, tempo: 0.7, schief: 0.38, schiefOft: 0.7 }, gestalt: { kehle: [0.85, 0.8], schwanz: 1.18, fluegel: 1, kopf: 1, koerper: [0.93, 1, 1], neigung: 0, ton: 0x2a1208 } },                       // schlank, glatte Kehle, langer Schwanz, warmes Braun; legt den Kopf oft schief
+  lancelot: { name: "Lancelot", gross: 1.17, blick: { pause: [4, 7], weit: 1.2, tempo: 1.1, schief: 0.3, schiefOft: 0.2 }, gestalt: { kehle: [1.1, 1], schwanz: 1, fluegel: 1.04, kopf: 1, koerper: [1.1, 1, 1], neigung: -0.1, ton: 0x06162e } },                            // breite Brust, aufrecht, Stahlblau; wach, dreht zügig
+  morgana: { name: "Morgana", gross: 1.092, blick: { pause: [10, 17], weit: 0.9, tempo: 0.45, schief: 0.4, schiefOft: 0.4 }, gestalt: { kehle: [1.25, 1.45], schwanz: 1, fluegel: 1, kopf: 1, koerper: [1, 1, 1], neigung: 0.04, ton: 0x1c0830 } },                           // lange, zottige Kehlfedern, Violett; sehr langsam, lange Pausen
+  gawain: { name: "Gawain", gross: 1.144, blick: { pause: [6, 10], weit: 1.2, tempo: 0.85, schief: 0.3, schiefOft: 0.3 }, plusterOft: [9, 16], gestalt: { kehle: [1.15, 1.1], schwanz: 0.84, fluegel: 0.97, kopf: 1, koerper: [1.12, 1.03, 0.97], neigung: 0, ton: 0x06200c } },   // rundlich, kurzer Schwanz, grüner Glanz; plustert sich öfter
+  percival: { name: "Percival", gross: 1.066, blick: { pause: [3, 6], weit: 1.2, tempo: 1.0, schief: 0.4, schiefOft: 0.5 }, blinzeln: [1.5, 3.5], gestalt: { kehle: [0.9, 0.9], schwanz: 1, fluegel: 1, kopf: 0.9, koerper: [0.94, 1, 1], neigung: -0.04, ton: 0x1c1e22 } },   // kleiner Kopf, schlank, silbriges Grau; neugierig, blinzelt oft
+  mordred: { name: "Mordred", gross: 1.04, blick: { pause: [1, 3], weit: 1.4, tempo: 2.4, schief: 0.25, schiefOft: 0.25, ruck: 10 }, blinzeln: [2, 5], gestalt: { kehle: [0.85, 0.7], schwanz: 1.3, fluegel: 1, kopf: 1, koerper: [0.95, 1, 1], neigung: 0.12, ton: 0x04262a } },   // kürzere Kehlfedern, langer Schwanz, geduckt, blaugrüner Elsternglanz
 })) VOEGEL[wer] = { ...VOEGEL.arthur, ...mehr, ring: RINGE[wer] };
 export const RABENREIHE = ["guinevere", "lancelot", "morgana", "arthur", "gawain", "percival", "mordred"];
 const zufall = ([a, b]) => a + Math.random() * (b - a);
@@ -129,8 +132,15 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
 
   /* Sitzen: fast reglos. Nur der Atem, ein Blinzeln – und ab und zu dreht sich der ganze Kopf langsam in eine neue Richtung, manchmal legt er sich schief. */
   const z = { warte: zufall(P.blick.pause) / 2, zielY: 0, zielZ: 0, blinzel: zufall(P.blinzeln), zu: 0, zeit: 0, drehungen: 0 };
-  const hin = (wert, ziel, dt) => wert + Math.max(-P.blick.tempo * dt, Math.min(P.blick.tempo * dt, (ziel - wert) * Math.min(1, dt * 3)));
-  const pl = { t: -1, auf: 0 }, koerperDreh = koerper.rotation.y;
+  const hin = (wert, ziel, dt) => wert + Math.max(-P.blick.tempo * dt, Math.min(P.blick.tempo * dt, (ziel - wert) * Math.min(1, dt * (P.blick.ruck || 3))));
+  const pl = { t: -1, auf: 0, warte: P.plusterOft ? zufall(P.plusterOft) : Infinity }, koerperDreh = koerper.rotation.y;
+  /* Gestalt je Rabe: Teile strecken oder stauchen, Haltung, Schimmer im Gefieder – Arthur hat keine (er ist das Maß) */
+  const GE = P.gestalt || null, kMass = GE ? GE.koerper : [1, 1, 1], kehleMass = GE ? GE.kehle : [1, 1];
+  if (GE) {
+    if (g.kehle) g.kehle.scale.set(kehleMass[0], kehleMass[1], kehleMass[0]);
+    g.schwanz.scale.setScalar(GE.schwanz); kopf.scale.setScalar(GE.kopf); g.fluegel_l.scale.setScalar(GE.fluegel); g.fluegel_r.scale.setScalar(GE.fluegel); koerper.rotation.x += GE.neigung;
+    const fertig = new Set(); wurzel.traverse((o) => { if (o.isMesh && o.material && o.material.name === "gefieder" && !fertig.has(o.material)) { fertig.add(o.material); o.material.emissive = new THREE.Color(GE.ton); o.material.emissiveIntensity = 0.3; /* nur ein Hauch – sie bleiben schwarze Raben */ } });
+  }
   /* Plustern (Figuren 8): nur im Sitzen */
   function plustere() { if (flug.tut !== "sitzt" || pl.t >= 0) return false; pl.t = 0; return true; }
   /* Schlüssel im Schnabel (w07 „There is a key in his beak.“): ein alter goldener Schlüssel, quer gehalten; der Schnabel steht dafür einen Spalt offen */
@@ -152,10 +162,11 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
   function bewege(dt) {
     z.zeit += dt;
     if (flug.tut !== "sitzt") { bewegeFlug(dt); z.warte = Math.max(z.warte, 1); }
-    koerper.scale.setScalar(1 + Math.sin(z.zeit * 1.1) * 0.012);                        // atmen
+    { const atem = 1 + Math.sin(z.zeit * 1.1) * 0.012; koerper.scale.set(kMass[0] * atem, kMass[1] * atem, kMass[2] * atem); }   // atmen
+    if (flug.tut === "sitzt" && pl.t < 0 && (pl.warte -= dt) <= 0) { pl.warte = zufall(P.plusterOft); pl.t = 0; }   // manche plustern sich von selbst
     if (pl.t >= 0) {                                                                      // plustern: Kehlfedern stellen sich auf, der Körper wird runder, ein kurzes Schütteln, alles legt sich wieder
       pl.t += dt; const u = pl.t / P.pluster.dauer; pl.auf = u >= 1 ? 0 : stufen(u, [[0, 0], [0.22, 1], [0.7, 1], [1, 0]]); if (u >= 1) pl.t = -1;
-      koerper.scale.multiplyScalar(1 + P.pluster.koerper * pl.auf); if (g.kehle) g.kehle.scale.set(1 + P.pluster.kehle * pl.auf, 1 + P.pluster.kehle * 0.4 * pl.auf, 1 + P.pluster.kehle * pl.auf);
+      koerper.scale.multiplyScalar(1 + P.pluster.koerper * pl.auf); if (g.kehle) g.kehle.scale.set(kehleMass[0] * (1 + P.pluster.kehle * pl.auf), kehleMass[1] * (1 + P.pluster.kehle * 0.4 * pl.auf), kehleMass[0] * (1 + P.pluster.kehle * pl.auf));
       koerper.rotation.y = koerperDreh + (u < 1 ? Math.sin(pl.t * 34) * P.pluster.schuettel * glatt((u - 0.3) / 0.1) * (1 - glatt((u - 0.6) / 0.12)) : 0);
     }
     if ((z.warte -= dt) <= 0) {
@@ -312,7 +323,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
     const kehleOben = g.kehle ? +kasten.clone().setFromObject(g.kehle).max.y.toFixed(3) : null, kopfUnten = +(kopf.getWorldPosition(ort).y - P.schaedel * P.gross).toFixed(3);
     const gr = kasten.getSize(ort.clone());
     const angelegt = !seiten.length || (flug.auf === 0 && seiten.every((w) => Math.abs(w.F.quaternion.w) > 0.99999 && Math.abs(w.H.quaternion.w) > 0.99999) && Math.abs(g.schwanz.rotation.x) < 1e-6 && Math.abs(g.figur.rotation.x) < 1e-6 && Math.abs(koerper.position.y - koerperHoch) < 1e-6);
-    return { wer, bau, tut: flug.tut, angelegt, schlag: +flug.schlag.toFixed(3), neig: +flug.neig.toFixed(3), roll: +(flug.roll || 0).toFixed(3), pluster: +pl.auf.toFixed(3), schluessel: !!(schluesselTeil && schluesselTeil.visible), schluesselOrt: schluesselTeil && schluesselTeil.visible ? schluesselTeil.getWorldPosition(new THREE.Vector3()).toArray().map((v) => +v.toFixed(3)) : null, kopfOrt: kopf.getWorldPosition(new THREE.Vector3()).toArray().map((v) => +v.toFixed(3)), hocke: +(flug.hocke || 0).toFixed(3), auf: +flug.auf.toFixed(3), breit: +Math.max(gr.x, gr.z).toFixed(3), kehleOben, kopfUnten, ring: P.ring ? { name: P.ring.name, hoch: +g.ring.getWorldPosition(ort).y.toFixed(3) } : null, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
+    return { wer, bau, tut: flug.tut, angelegt, schlag: +flug.schlag.toFixed(3), neig: +flug.neig.toFixed(3), roll: +(flug.roll || 0).toFixed(3), pluster: +pl.auf.toFixed(3), gross: P.gross, ton: GE ? GE.ton : null, schluessel: !!(schluesselTeil && schluesselTeil.visible), schluesselOrt: schluesselTeil && schluesselTeil.visible ? schluesselTeil.getWorldPosition(new THREE.Vector3()).toArray().map((v) => +v.toFixed(3)) : null, kopfOrt: kopf.getWorldPosition(new THREE.Vector3()).toArray().map((v) => +v.toFixed(3)), hocke: +(flug.hocke || 0).toFixed(3), auf: +flug.auf.toFixed(3), breit: +Math.max(gr.x, gr.z).toFixed(3), kehleOben, kopfUnten, ring: P.ring ? { name: P.ring.name, hoch: +g.ring.getWorldPosition(ort).y.toFixed(3) } : null, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
       kopf: [+kopf.rotation.y.toFixed(4), +kopf.rotation.z.toFixed(4)], drehungen: z.drehungen, blick: P.blick };
   }
   /* setze: Ort der Füße und Blickrichtung (0 = nach Süden, +z) */

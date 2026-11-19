@@ -307,6 +307,7 @@ const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
 export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, duenn: 0.6,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (duenn = Breite und Tiefe des Körpers, 1 = wie das Modell)
   kopf: "sergeantkopf", hand: 0.72,   // Kopf mit Bart, rothaarig, Knollennase (Wahl Mr. Alex 18./19.11.) · hand = Handgröße gegenüber Mr. Flex
  
+  kragen: { ab: 1.1, eng: 0.7, felder: ["7,0", "7,1"] },   // der hohe Kragen der Rüstung liegt enger am Hals (Mr. Alex 19.11.: Schultern und Oberarme gingen bei Armbewegungen hindurch)
   uniform: { saum: [0.70, 1.10, 0.02], knoepfe: [0.75, 0.82, 0.89, 0.96, 1.03], knopf: 0.026 },   // weißer Saum vorn (von, bis, halbe Breite) und silberne Knöpfe (Höhen, Größe), Maße des ungestreckten Körpers
   umfaerben: { Body: { "3,0": ROT, "7,0": (y) => (y >= 1.1 ? SCHWARZ : ROT),   // der hohe Kragen ist schwarz
     "7,1": SCHWARZ, "6,0": WEISS, "2,1": GOLD, "0,1": GOLD }, Arm: { "3,0": ROT, "4,0": ROT, "7,0": ROT, "6,0": ROT }, Leg: { "3,0": SCHWARZ, "7,0": SCHWARZ, "7,1": SCHWARZ, "6,0": SCHWARZ } } };
@@ -349,6 +350,17 @@ function uniformTeile(m, plan, duenn) {
   teil.name = "uniform"; teil.frustumCulled = false; teil.position.copy(rumpf.position); teil.quaternion.copy(rumpf.quaternion); teil.scale.copy(rumpf.scale);
   rumpf.parent.add(teil); teil.bind(rumpf.skeleton, rumpf.bindMatrix);
 }
+function kragenEng(m, plan) {                           // zieht die Punkte des Kragens (Farbfelder des Körperbilds, ab einer Höhe) zur Halsachse; unten weich, damit keine Stufe entsteht
+  m.traverse((o) => {
+    if (!o.isSkinnedMesh || !/_Body$/.test(o.name)) return;
+    const P = o.geometry.attributes.position, UV = o.geometry.attributes.uv;
+    for (let i = 0; i < P.count; i++) {
+      const y = P.getY(i); if (y < plan.ab || !plan.felder.includes(Math.floor(UV.getX(i) * 8) + "," + Math.floor(UV.getY(i) * 4))) continue;
+      const f = 1 - (1 - plan.eng) * Math.min(1, (y - plan.ab) / 0.06); P.setX(i, P.getX(i) * f); P.setZ(i, P.getZ(i) * f);
+    }
+    P.needsUpdate = true;
+  });
+}
 function drehung(o) { const q = o.quaternion.clone(); for (let p = o.parent; p; p = p.parent) q.premultiply(p.quaternion); return q; }   // Drehung in der Welt ohne die Maße der Eltern (für Teile, die nicht mitgequetscht werden sollen)
 function umfaerben(m, plan) {
   m.traverse((o) => {
@@ -366,6 +378,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const [koerper, haende, kopfDatei, ...dateien] = await Promise.all([lade(figur.koerper || "probe_mage_ganz"), lade("haende"), kleidung.kopf ? lade(figur.teile || "flex_teile") : null, lade("kaykit_bewegungen"), lade("gesten"), lade("kungfu")]);
   for (const d of dateien) for (const c of d.animations) clips[c.name] = c;
   const m = koerper.scene, K = (n) => m.getObjectByName(n), bau = { ...BAU_START, ...figur.bau };
+  if (figur.kragen) kragenEng(m, figur.kragen);
   if (figur.umfaerben) umfaerben(m, figur.umfaerben);
   const handMass = HAND * (figur.hand || 1), handFolgt = [];
   const haut = []; m.traverse((o) => { if (o.isMesh) o.frustumCulled = false; if (o.isSkinnedMesh && !/Cape/.test(o.name)) haut.push(o); });

@@ -19,10 +19,12 @@ import tower_gary as g   # nur die Bau-Helfer (kugel, bogen, gelenk ...); Gary s
 
 R = math.radians
 CZ, RX, RY, RZ = 0.150, 0.132, 0.150, 0.185           # Schaedel: Hoehe der Mitte und Halbachsen (schmal und lang)
+LZ = 0.056                                            # Hoehe der Lippennaht
 KM, KR = (0, -0.012, 0.045), (0.097, 0.119, 0.088)    # Kiefer: Mitte und Halbachsen (unten nur wenig vor dem Schaedel, damit er glatt ins Gesicht uebergeht; bis 19.11. 0.126)
 MW = 1.0                                              # Mundbreite gegenueber Mr. Flex (schmale Gesichter: kleiner, sonst haengen die Lippen seitlich in der Luft)
-KINN = (0.017, 0.040)                                 # Kinn: so weit woelbt sich der Kiefer vorn unten vor, Breite der Woelbung
-LZ = 0.056                                            # Hoehe der Lippennaht
+KINN = ((0, -0.110, 0.000), (0.034, 0.026, 0.026))    # Kinn: Mitte und Halbachsen; verschmilzt mit dem Kiefer zu einer Flaeche (kopfhaut)
+GJ = (0, 0.030, LZ)                                   # Kiefergelenk: hinten bei den Ohren, auf Hoehe der Lippennaht
+WEICH = 0.008                                         # so weich gehen Schaedel, Kiefer und Kinn ineinander ueber (m)
 AX, AZ = 0.050, 0.172                                 # Augen: Abstand von der Mitte, Hoehe
 
 
@@ -35,6 +37,93 @@ def gesicht_vorn(x, z):
     """Vorderste Flaeche des Gesichts an der Stelle (x, z): Schaedel oder Kiefer."""
     q = max(0.0, 1 - (x / KR[0]) ** 2 - ((z - KM[2]) / KR[2]) ** 2) ** 0.5
     return min(haut_vorn(x, z), KM[1] - KR[1] * q)
+
+
+def kopfhaut(k, kiefer, f, breiten=25, laengen=72, kiefer_bis=-100):
+    """Haut des Kopfes als EINE glatt verschmolzene Flaeche aus Schaedel, Kiefer und Kinn (Mr. Alex 19.11.: der Kiefer war deutlich abgesetzt,
+    andere Helligkeit, zackige Grenzlinie). Zwei Netze auf derselben Flaeche: "kopfhaut" (fest) und "unterkiefer" (klappt am Gelenk GJ auf).
+    Das Gitter dreht sich um die Achse durch das Kiefergelenk: die Lippennaht (vorn, waagrecht) und der hintere Rand des Unterkiefers sind
+    Gitterlinien, die Raender passen genau aufeinander. Die Richtung der Flaeche (Normale) kommt aus der Formel, darum gibt es an den Raendern
+    keinen Helligkeitssprung. Unter dem Unterkiefer liegt eine etwas kleinere Innenflaeche, damit beim Oeffnen kein Loch entsteht."""
+    kugeln = [((0, 0, CZ), (RX, RY, RZ)), (KM, KR), KINN]
+
+    def teil(p, i):
+        c, r = kugeln[i]
+        return (sum(((p[n] - c[n]) / r[n]) ** 2 for n in range(3)) ** 0.5 - 1) * min(r)
+
+    def feld(p):                                          # < 0 innen, > 0 aussen; weiche Vereinigung der drei Kugeln
+        return -WEICH * math.log(sum(math.exp(-teil(p, i) / WEICH) for i in range(3)))
+
+    def richtung(p, e=0.0015):
+        n = [feld([p[m] + (e if m == a else 0) for m in range(3)]) - feld([p[m] - (e if m == a else 0) for m in range(3)]) for a in range(3)]
+        l = sum(c * c for c in n) ** 0.5
+        return tuple(c / l for c in n)
+
+    def rand(d):                                          # Abstand der Flaeche vom Gelenk in Richtung d
+        innen, aussen = 0.0, 0.45
+        for _ in range(26):
+            m = (innen + aussen) / 2
+            if feld([GJ[n] + d[n] * m for n in range(3)]) < 0:
+                innen = m
+            else:
+                aussen = m
+        return (innen + aussen) / 2
+
+    spalten = range(laengen)
+    winkel = lambda j: math.radians(j * 360 / laengen if j * 360 / laengen <= 180 else j * 360 / laengen - 360)   # 0 = nach vorn, plus = nach oben
+    im_kiefer = lambda j: kiefer_bis < math.degrees(winkel(j)) < 0
+    am_kiefer = lambda j: kiefer_bis <= math.degrees(winkel(j)) <= 0
+    lappen = lambda j: 0 < math.degrees(winkel(j)) <= 15   # seitlich reicht der Unterkiefer ein Stueck ueber die Lippennaht hinauf: klappt er auf, entsteht an der Wange kein Spalt
+    mundrand = math.degrees(math.asin(min(1.0, 0.056 * MW / 0.155)))   # so weit seitlich reicht der Mund (Winkel vom Gelenk aus); daneben ist die Wange geschlossen
+    seite = lambda i: abs(-88 + 176 * (i + 0.5) / (breiten - 1)) >= mundrand
+
+    def bauen(name, eltern, ursprung, welche, innen, material_fuer):
+        punkte, normalen, nr = [], [], {}
+        for i in range(breiten):
+            a = math.radians(-88 + 176 * i / (breiten - 1))
+            for j in welche:
+                w = winkel(j)
+                d = (math.sin(a), -math.cos(a) * math.cos(w), math.cos(a) * math.sin(w))
+                r = rand(d)
+                p = [GJ[n] + d[n] * r for n in range(3)]
+                normalen.append(richtung(p))
+                if innen and im_kiefer(j):
+                    p = [GJ[n] + d[n] * r * 0.955 for n in range(3)]
+                if not innen and lappen(j):
+                    p = [GJ[n] + d[n] * r * 1.006 for n in range(3)]
+                nr[(i, j)] = len(punkte)
+                punkte.append(tuple(p[n] - ursprung[n] for n in range(3)))
+        flaechen, stoffe = [], []
+        for i in range(breiten - 1):
+            for j in welche:
+                j2 = (j + 1) % laengen
+                if (i, j2) not in nr or (not innen and not ((am_kiefer(j) and am_kiefer(j2)) or (seite(i) and (am_kiefer(j) or lappen(j)) and lappen(j2)))):
+                    continue
+                if innen and -45 < math.degrees(winkel(j)) < 0 and not seite(i):
+                    continue                              # Loch in der Innenflaeche: dahinter liegt die Mundhoehle
+                flaechen.append((nr[(i, j)], nr[(i + 1, j)], nr[(i + 1, j2)], nr[(i, j2)]))
+                mitte = [sum(punkte[e][n] for e in flaechen[-1]) / 4 + ursprung[n] for n in range(3)]
+                stoffe.append(material_fuer(mitte))
+        netz = bpy.data.meshes.new(name)
+        netz.from_pydata(punkte, [], flaechen)
+        netz.update()
+        m0 = [sum(punkte[e][n] for e in flaechen[0]) / 4 + ursprung[n] - GJ[n] for n in range(3)]
+        if sum(netz.polygons[0].normal[n] * m0[n] for n in range(3)) < 0:
+            netz.flip_normals()
+        for fl, st in zip(netz.polygons, stoffe):
+            fl.use_smooth = True
+            fl.material_index = st
+        netz.materials.append(f["haut"])
+        netz.materials.append(f["schatten"])
+        netz.normals_split_custom_set_from_vertices(normalen)
+        ob = bpy.data.objects.new(name, netz)
+        bpy.context.scene.collection.objects.link(ob)
+        ob.parent = eltern
+        return ob
+
+    bart = lambda p: 1 if teil(p, 1) < teil(p, 0) + 0.004 or teil(p, 2) < teil(p, 0) else 0   # Kiefer und Kinn: Bartflaeche (bei Mr. Flex Hautfarbe)
+    bauen("kopfhaut", k, (0, 0, 0), spalten, True, lambda p: bart(p) if p[2] >= LZ - 0.002 else 0)
+    bauen("unterkiefer", kiefer, GJ, [j for j in spalten if am_kiefer(j) or lappen(j)], False, lambda p: bart(p) if p[2] >= LZ - 0.002 else 1)
 
 
 def nasenform(k, stationen, material, n=11):
@@ -81,11 +170,8 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
     Andere Koepfe (tower_sergeant.py) setzen vorher die Masse des Moduls (RX, KR ...) und haengen ihre eigenen Teile an das Gelenk, das zurueckkommt."""
     f = f or farben()
     k = g.gelenk(name, eltern, ort)
-    g.kugel("kopf_rund", k, (0, 0, CZ), (RX, RY, RZ), f["haut"], fein=32)
-    # Bartschatten um Mund und Kiefer, an der Lippennaht geteilt: der obere Teil gehoert zum Kopf, der untere ist der Unterkiefer (siehe Mund)
-    ok = g.kugel("oberkiefer", k, KM, KR, f["schatten"], fein=32)
-    for v in ok.data.vertices:
-        v.co.z = max(v.co.z, LZ - KM[2])
+    kiefer = g.gelenk("kiefer", k, GJ)
+    kopfhaut(k, kiefer, f)
     # Nase: kraeftig und gerade, EIN Stueck (Mr. Alex 19.11.: keine Nase mehr aus mehreren Kugeln) – Stationen (Hoehe, vor dem Gesicht, halbe Breite)
     if nase:
         nasenform(k, [(0.188, 0.002, 0.008), (0.174, 0.009, 0.012), (0.158, 0.017, 0.014), (0.142, 0.025, 0.015), (0.126, 0.034, 0.017), (0.112, 0.043, 0.022),
@@ -173,24 +259,10 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
             straenge.append(linie)
         g.bogen("bart", bartgelenk, straenge, bart[1], f["bart"])
     g.kugel("mund", k, (0, KM[1] - KR[1] + 0.0285, LZ - 0.012), (0.045 * MW, 0.0257, 0.028), f["rachen"])                 # Mundhoehle hinter den Lippen: sichtbar, sobald der Kiefer aufklappt
-    GJ = (0, 0.030, LZ + 0.012)                                                                       # Kiefergelenk: hinten bei den Ohren
-    kiefer = g.gelenk("kiefer", k, GJ)
     kr = lambda pkt: [(x, y - GJ[1], zz - GJ[2]) for x, y, zz in pkt]
-    uk = g.kugel("unterkiefer", kiefer, (KM[0] - GJ[0], KM[1] - GJ[1], KM[2] - GJ[2]), (KR[0] * 1.012, KR[1] * 1.006, KR[2]), f["schatten"], fein=32)   # eine Spur groesser: die Naht zum Oberkiefer ist eine saubere Kante
-    for v in uk.data.vertices:
-        v.co.z = min(v.co.z, LZ - KM[2])                                                               # oben flach: dort liegt die Lippennaht
-    # Kinn (Mr. Alex 19.11.: kein eigener „Pfropf“, ein Stueck wie die Nase): der Unterkiefer selbst woelbt sich vorn unten vor
-    ky, kz = -0.106, -0.045                               # Richtung vom Kiefermittelpunkt zum Kinn
-    kt = ((ky / KR[1]) ** 2 + (kz / KR[2]) ** 2) ** -0.5
-    kp, kl = (0.0, ky * kt, kz * kt), (ky * ky + kz * kz) ** 0.5
-    for v in uk.data.vertices:
-        if v.co.z < LZ - KM[2] - 0.004:
-            w = KINN[0] * math.exp(-((v.co.x - kp[0]) ** 2 + (v.co.y - kp[1]) ** 2 + (v.co.z - kp[2]) ** 2) / KINN[1] ** 2)
-            v.co.y += w * ky / kl
-            v.co.z += w * kz / kl
     g.kugel("mundboden", kiefer, (0, KM[1] - KR[1] + 0.063 - GJ[1], LZ - 0.0005 - GJ[2]), (0.042 * MW, 0.050, 0.003), f["rachen"])
     g.kugel("zunge", kiefer, (0, KM[1] - KR[1] + 0.040 - GJ[1], LZ + 0.001 - GJ[2]), (0.028 * MW, 0.030, 0.006), f["zunge"])
-    unten = dict(dz=-0.0036)
+    unten = dict(dz=-0.0036, tief=-0.0040)   # auf der Kieferflaeche wie die Haut darunter (lippenhaut): sonst steht die Unterlippe bei offenem Mund vor dem Gesicht in der Luft (Mr. Alex 19.11.)
     mit_auf = lambda fest: {**{n: kr(q) for n, q in formen(lambda q: q, LAUTE_UNTEN, **fest).items()}, "auf": kr(lippenlinie(auf=1, **fest))}
     g.bogen_mit_formen("unterlippe", kiefer, kr(lippenlinie(**unten)), mit_auf(unten), 0.0046, f["lippe_unten"], (0, 0, 0))
     # Haut unter der Unterlippe: eine glatte Flaeche, die sich mit der Unterlippe biegt. Beim Oeffnen schliesst sie die Luecke zwischen den hochgezogenen

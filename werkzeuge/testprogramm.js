@@ -661,6 +661,7 @@ async function hofTest(browser, basis, app, name, fm) {
       // die Dinge aus w02–w08 stehen an ihrem Ort: Tür, Fass und Tor im Süden, Raben im Osten, Uhr im Südwesten oben, Tourist im Norden – und wandern mit der Größe mit
       const s = T / 2, w = B / 2;
       if (Math.abs(plan.tuer.z - s) > 0.01 || plan.tuer.x > 0) fehl.push(`${t}: die Tür zur Wachstube ist nicht an der Südseite links`);
+      if (plan.masse.tuer.hoch !== 3) fehl.push(`${t}: die Tür zur Wachstube ist ${plan.masse.tuer.hoch} m hoch statt 3 m (Mr. Alex 19.11.: der Sergeant wirkte neben ihr zu groß)`);
       if (plan.fass.z < s - 2 || plan.fass.z > s || Math.abs(plan.fass.x - plan.tuer.x) > 3) fehl.push(`${t}: das Fass steht nicht neben der Tür`);
       if (Math.abs(plan.tor.z - s) > 0.01 || plan.tor.x < w - 10) fehl.push(`${t}: das Tor ist nicht in der Südostecke`);
       if (plan.raben.length !== 7 || plan.raben.some((r) => r.x < w)) fehl.push(`${t}: keine sieben Rabenplätze auf der Ostmauer`);

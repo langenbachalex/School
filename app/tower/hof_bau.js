@@ -11,7 +11,7 @@ export const HOF_START = "50x40";   // Entscheidung Mr. Alex 19.11.: die größt
 /* Rohbau-Maße in Metern (gestaucht gegenüber dem echten Tower) */
 export const HOF_MASSE = {
   haus: { hoch: 7, tief: 6 },                    // Queen's House, Südseite: darin die Wachstube
-  tuer: { breit: 1.1, hoch: 2.1 },               // Tür zur Wachstube
+  tuer: { breit: 1.1, hoch: 3 },                 // Tür zur Wachstube; 3 m hoch (Mr. Alex 19.11.: neben der Tür von 2,1 m wirkte der Sergeant zu groß)
   fass: { hoch: 1.0, dick: 0.7 },                // Garys Fass
   uhrturm: { hoch: 12, radius: 3.5, uhr: 2, uhrHoehe: 10 },   // Bell Tower, Südwestecke
   torturm: { breit: 10, tief: 8, hoch: 9 },      // Bloody Tower, Südostecke

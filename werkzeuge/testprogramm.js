@@ -319,6 +319,15 @@ async function probe3dTest(browser, basis, app, name, fm) {
         if (!(knie > 0.8)) fehl.push(`${titel}: beim Drill-Gang hebt der Sergeant das Knie nicht hoch (höchstes Knie auf ${knie} der Hüfthöhe, Soll über 0,8)`);
         if (!(beuge < 120)) fehl.push(`${titel}: beim Drill-Gang beugt der Sergeant das Knie kaum (kleinster Kniewinkel ${beuge}°) – wirkt wie ein Stechschritt`);
       }
+      // Der Sergeant rennt nie (Figurenblatt): „Rennen“ ist bei ihm derselbe Drill, nur rasend schnell – Knie hoch, Arme gestreckt, die Beine greifen auch dann nicht ineinander.
+      if (geht) {
+        await pg.click('#bau button[data-bau="rennen"]'); await pg.waitForTimeout(500);
+        let luecke = 9, knie = 0, eilig = true, modus = "";
+        for (let k = 0; k < 16; k++) { await pg.waitForTimeout(60); const z = (await pg.evaluate(() => window.__probe3d.sergeant()))[0]; eilig = eilig && z.eilig; modus = z.modus; luecke = Math.min(luecke, z.beine.luecke); knie = Math.max(knie, z.drill.knieHoch); }
+        if (!eilig || modus !== "gehen") fehl.push(`${titel}: der Sergeant rennt (Bewegung „${modus}“), statt im Drill schnell zu marschieren`);
+        if (!(luecke >= 0.015)) fehl.push(`${titel}: beim schnellen Marsch greifen die Beine des Sergeants ineinander (kleinste Lücke ${luecke} m)`);
+        if (!(knie > 0.8)) fehl.push(`${titel}: beim schnellen Marsch hebt der Sergeant das Knie nicht hoch (${knie} der Hüfthöhe)`);
+      }
       await pg.click('#bau button[data-bau="stehen"]'); await pg.click('#bau button[data-wahl="flex"]');
     }
     if (!(b.hals > 1.1)) fehl.push(`${titel}: Probe-Figur ist nicht gestreckt (Hals in ${b.hals} m Höhe, ungestreckt 0,785)`);

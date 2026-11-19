@@ -28,6 +28,22 @@ Zweiter Schritt nach den Figuren (`keys-of-the-tower-figuren.md`). Noch nicht fr
 | 7 | **Traitors' Gate und Themse**, 9:48 | Nebel, Lichter der Stadt, Tower Bridge | Boot steuern, Gary „zaubert“ beim Rudern | die Farbe geht ab: Mordred ist die Elster | Mordred enttarnt | Der Sack: lauter Glänzendes – und die Schlüssel. 9:51! |
 | 8 | **Tower Green**, 9:52 | Fackeln, alle warten | die Zeremonie mitsprechen, dann die Party | Garys wahrer Name; was hinter der Federtür ist | alle sieben, dann acht | Arthur: „There are other towers.“ |
 
+## Der echte Tower als Grundriss (Entscheidung Mr. Alex 19.11.)
+**Grundsatz: erkennbar, aber nicht maßstabsgetreu.** Echt sind die Lage und die Himmelsrichtungen der Gebäude zueinander und die Wahrzeichen; frei sind die Größen (gestaucht) und alle Einzelheiten. Abgenommen wird, ob man den Tower wiedererkennt, nicht ob jedes Fenster stimmt. Vorlagen: vier Bilder im Archiv (`docs/archiv/2026-11-19_tower-*.webp/.png`, `…white-tower-grundrisse.webp`); die Nummern unten stammen aus der Karte 2012.
+
+**Erstes begehbares Stück = Südwestecke des inneren Hofs:**
+| Im Spiel | Echter Ort (Nr. in der Karte 2012) |
+|---|---|
+| Hof | Tower Green (12) |
+| Wachstube (Guard Room) | am Queen's House (13) |
+| das große Tor, zu | Bloody Tower (25); dahinter Water Lane (37) und Traitors' Gate (36) |
+| Kulisse, noch nicht begehbar | White Tower (1) im Osten, Kapelle St Peter ad Vincula (2) im Norden, Beauchamp Tower (14) im Westen, Bell Tower (26) |
+| später: Jewel House | Waterloo Block (3) · Waffenkammer: White Tower (1) · Rabenhaus: Wiese südlich des White Tower |
+
+**Größe (Rückmeldung Master 19.11., Sorge Mr. Alex: nicht zu klein, aber noch zu rechnen):** Der echte innere Hof misst grob 170 × 170 m, die Südwestecke rund 80 × 120 m. Für das Spiel: **begehbarer Hof 40 × 30 m als Ausgangswert** (etwa halber echter Maßstab von Tower Green; quer gehen rund 35 s, rennen rund 9 s). Im Rohbau gibt es dafür einen **Schalter mit drei Größen (30 × 25, 40 × 30, 50 × 40 m)** – Mr. Alex entscheidet mit den Figuren auf dem Platz. **Abschnitte:** Die Fläche selbst kostet fast keine Rechenzeit; teuer sind Figuren, Gegenstände, Licht und Schatten im Bild. Deshalb ist jeder Innenraum (Guard Room, Küche …) ein eigener Abschnitt, der an der Tür geladen wird, und der ganze innere Hof wird später in drei bis vier Hof-Abschnitte geteilt, die an Toren wechseln (Tower Green · Platz vor dem Waterloo Block · Wiese der Raben · Water Lane), jeder etwa so groß wie Tower Green. Gebäude außerhalb des begehbaren Stücks stehen als schlichte Kulisse.
+
+**Geheime Räume nach historischen Plänen:** Der Plan „about 1597“ (Sands 1907) nennt in der Legende einen „Subway to Oubliette, discovered in 1899“, dazu einen normannischen Brunnen und eine Mauer, beide 1899 gefunden. Das ist das Vorbild für den Tunnel (Ort 6) – und passt zum Geist, der seit 1899 auf Adas Brief wartet. Die Angabe ist nicht nachgeprüft. Weitere geheime Räume dürfen sich an zerstörten Gebäuden des Plans orientieren (Great Wardrobe, Queen's Gallery, Great Hall). Die Grundrisse des White Tower sind die Vorlage für die Waffenkammer.
+
 ## Echte Orte im Tower, die die Kinder dabei sehen
 White Tower (die Waffenkammer mit den Rüstungen und Holzpferden der Könige) · Jewel House (Kronjuwelen) · die Unterkünfte der Raben · Traitors' Gate (das Wassertor zur Themse) · Tower Green · Beauchamp Tower (eingeritzte Zeichen der Gefangenen – Vorbild für den Gang) · die Yeoman Warders („Beefeaters“) und die Ceremony of the Keys. Zu jedem Ort eine Karte in der Sammlung mit echtem Foto (nur mit freier Lizenz) und zwei Sätzen.
 

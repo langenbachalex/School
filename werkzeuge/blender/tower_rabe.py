@@ -7,7 +7,7 @@ blauschwarzer Glanz. Der Glanz ist Farbe am Modell (Farbe je Punkt), damit er au
 
 Gebaut wird in den Massen des Browsers (x rechts, y oben, z vorn, Fuesse auf y = 0, Einheit Meter vor der Vergroesserung im Profil);
 B() rechnet in die Blender-Richtung um. Alle Gelenke sind ungedreht, die Form steckt in den Punkten.
-Gelenke: rabe > rabe_koerper > rabe_kehle, rabe_kopf (> rabe_schnabel_unten, rabe_auge_l/r), rabe_fluegel_l/r (> rabe_hand_l/r), rabe_schwanz · rabe > rabe_bein_l/r.
+Gelenke: rabe > rabe_koerper > rabe_kehle, rabe_kopf (> rabe_schnabel_unten, rabe_auge_l/r), rabe_fluegel_l/r (> rabe_hand_l/r), rabe_schwanz · rabe > rabe_bein_l/r (> rabe_ring am rechten Bein).
 """
 import math
 import os
@@ -228,11 +228,11 @@ def rabe():
     # ---------- Kehle: lange, spitze, zottige Federn wie ein Bart – eigenes Gelenk, damit sie sich plustern kann ----------
     G = (H + K) / 2 + V((0, -0.005, 0.012))
     kehle = Teil("rabe_kehle", koerper, G)
-    for zeile, (y, lang, heben) in enumerate(((0.03, 0.06, 0.04), (0.008, 0.08, 0.07), (-0.016, 0.095, 0.10), (-0.04, 0.105, 0.13))):
+    for zeile, (y, lang, heben) in enumerate(((-0.036, 0.07, 0.07), (-0.056, 0.085, 0.10), (-0.076, 0.095, 0.12), (-0.096, 0.105, 0.14))):   # beginnt erst unter dem Kopf (Mr. Alex 19.11.: der Kopf drehte sich durch die oberen Federn)
         for i in range(10):
             phi = math.radians(-81 + i * 18 + (9 if zeile % 2 else 0))
             r = V((math.sin(phi), 0, math.cos(phi)))
-            feder(kehle, G + r * 0.064 + V((0, y, 0)), V((0, -1, 0)) + r * 0.22, r, lang * (0.85 + 0.25 * math.cos(phi)), 0.024, heben=heben, glanz=1.15)
+            feder(kehle, G + r * (0.058 + (-0.036 - y) * 0.45) + V((0, y, 0)), V((0, -1, 0)) + r * 0.22, r, lang * (0.85 + 0.25 * math.cos(phi)), 0.024, heben=heben, glanz=1.15)
     kehle.netz(gefieder)
 
     # ---------- Kopf: flacher, langer Schaedel, schwere Brauen, Borsten ueber dem Schnabel ----------
@@ -244,13 +244,21 @@ def rabe():
     for v in (1, -1):
         ellipsoid(kopf, K + X * (v * 0.045) + u * 0.0225 + f * 0.04, X * 0.021, u * 0.011 + f * 0.003, f * 0.038 - u * 0.014, haut, n=10, m=6)   # schwere Braue, faellt nach vorn ab
     verschmelzen(kopf.netz(gefieder, True), 0.006, lambda co, no: mix(SCHWARZ, BLAU, 0.12 + 0.4 * max(0.0, no.z)))
+    for i in range(8):                                                    # Kinnreihe: haengt am Kopf und dreht sich mit, ueberdeckt die Naht zur Kehle
+        phi = math.radians(-84 + i * 24)
+        rr = V((math.sin(phi), 0, math.cos(phi)))
+        feder(kopf, K + rr * 0.05 - u * 0.03, -u + rr * 0.3 - f * 0.1, rr, 0.062 * (0.85 + 0.2 * math.cos(phi)), 0.026, heben=0.10, glanz=1.15)
+    kopf.netz(gefieder)
     sb = K + f * 0.05 - u * 0.004                                         # Oberschnabel: so lang wie der Kopf, oben gewoelbt, vorn ein Haken
-    hornfarbe = lambda i, hoch: mix(HORN, HORN_HELL, max(0.0, hoch - 0.55) * 1.6)
+    VORN, FIRST = (0.048, 0.070, 0.120), (0.075, 0.112, 0.185)            # nur der vordere Teil ist horngrau, der Ansatz unter den Borsten bleibt schwarz (Mr. Alex 19.11.)
+    def hornfarbe(i, hoch, dunkler=1.0, bis=3.0, ab=1.0):
+        tt = max(0.0, min(1.0, (i - ab) / bis))
+        return tuple(c * dunkler for c in mix(mix(HORN, VORN, tt), FIRST, max(0.0, hoch - 0.55) * 1.5 * (0.25 + 0.75 * tt)))
     rohr(kopf, [sb, sb + f * 0.04 + u * 0.005, sb + f * 0.08 + u * 0.003, sb + f * 0.115 - u * 0.004, sb + f * 0.138 - u * 0.014, sb + f * 0.147 - u * 0.023],
          [(0.026, 0.035), (0.024, 0.032), (0.019, 0.026), (0.013, 0.018), (0.007, 0.009), (0, 0)], u, hornfarbe)
     kopf.netz(horn, True)
     unten = Teil("rabe_schnabel_unten", kopf, K + f * 0.05 - u * 0.02)    # Unterschnabel: klappt (Reden, Schluessel)
-    rohr(unten, [unten.ort, unten.ort + f * 0.05 - u * 0.004, unten.ort + f * 0.098 - u * 0.002, unten.ort + f * 0.118 + u * 0.002], [(0.021, 0.012), (0.017, 0.010), (0.010, 0.006), (0, 0)], u, lambda i, hoch: HORN)
+    rohr(unten, [unten.ort, unten.ort + f * 0.05 - u * 0.004, unten.ort + f * 0.098 - u * 0.002, unten.ort + f * 0.118 + u * 0.002], [(0.021, 0.012), (0.017, 0.010), (0.010, 0.006), (0, 0)], u, lambda i, hoch: hornfarbe(i, 0.0, dunkler=0.8, bis=2.0, ab=0.5))
     unten.netz(horn, True)
     weiss = lambda p, aus: (1, 1, 1)
     for seite, v in (("l", 1), ("r", -1)):
@@ -285,10 +293,17 @@ def rabe():
     # ---------- Schwanz: Keil aus neun Federn, flacher als der Koerper, damit er ueber dem Boden bleibt ----------
     T = P(-0.15, -0.02)
     schwanz = Teil("rabe_schwanz", koerper, T)
-    FLACH = NEIG - 0.63
+    FLACH = NEIG - 0.68
     td, tn = V((0, -math.sin(FLACH), -math.cos(FLACH))), V((0, math.cos(FLACH), -math.sin(FLACH)))
-    for i in (-4, 4, -3, 3, -2, 2, -1, 1, 0):
-        feder(schwanz, T - td * 0.04 + X * (i * 0.009) + tn * (0.012 - abs(i) * 0.002), dreh(td, tn, -i * 0.075), tn, 0.37 - abs(i) * 0.016, 0.058, glanz=1.1)
+    # Mr. Alex 19.11.: von der Seite war der Schwanz „mickrig“ – jetzt drei Lagen wie Dachziegel, die aeusseren Federn fallen dachfoermig ab,
+    # dazu Ober- und Unterschwanzdecken: er setzt hoeher und tiefer an und fuellt den Raum zwischen Rumpf und Schwanz
+    for i in (-5, 5, -4, 4, -3, 3, -2, 2, -1, 1, 0):
+        lage = 0 if abs(i) <= 1 else 1 if abs(i) <= 3 else 2
+        feder(schwanz, T - td * 0.04 + X * (i * 0.009) + tn * (0.014 - lage * 0.011), dreh(td, tn, -i * 0.062), tn + X * (i * 0.22), 0.41 - abs(i) * 0.014, 0.078, glanz=1.1)
+    for j in (-2, 2, -1, 1, 0):                                           # Unterschwanzdecken: vom Bauch hinauf zum Schwanz
+        feder(schwanz, T - td * 0.06 - tn * (0.055 - abs(j) * 0.004) + X * (j * 0.02), td + tn * 0.16 + X * (j * 0.05), -tn + X * (j * 0.3), 0.17, 0.062, glanz=0.9)
+    for j in (-2, 2, -1, 1, 0):                                           # Oberschwanzdecken: vom Ruecken hinunter auf den Schwanz
+        feder(schwanz, T - td * 0.09 + tn * (0.05 - abs(j) * 0.005) + X * (j * 0.02), td - tn * 0.10 + X * (j * 0.05), tn + X * (j * 0.3), 0.17, 0.062, glanz=1.0)
     schwanz.netz(gefieder)
 
     # ---------- Beine: gefiederte „Hosen“, kraeftige Zehen, Krallen ----------
@@ -301,6 +316,8 @@ def rabe():
             r = V((math.sin(phi), 0, math.cos(phi)))
             feder(bein, ob + V((0, 0.07, 0)) + r * 0.028, V((0, -1, 0)) + r * 0.12, r, 0.085, 0.036, heben=0.05, glanz=0.8)
         bein.netz(gefieder)
+        if seite == "r":
+            Teil("rabe_ring", bein, V((v * 0.045, 0.058, 0.0)))               # Ansatzpunkt fuer den farbigen Fussring (Kennzeichen je Rabe; die Farbe setzt der Browser)
         beinfarbe = lambda i, hoch: mix(BEIN, BEIN_HELL, max(0.0, hoch - 0.5) * 1.5)
         fuss = V((v * 0.045, 0.012, 0.0))
         rohr(bein, [ob + V((0, 0.01, 0)), fuss], [(0.013, 0.013), (0.012, 0.012)], V((0, 0, 1)), beinfarbe, n=8)

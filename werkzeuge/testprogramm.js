@@ -694,6 +694,8 @@ async function hofTest(browser, basis, app, name, fm) {
       else {
         if (ra.vorn.hoch < 0.58 || ra.vorn.hoch > 0.75) fehl.push(`${t}: Arthur ist ${ra.vorn.hoch} m hoch statt rund 0,65 m (Mr. Alex 19.11.: riesig, ehrfurchtgebietend)`);
         if (ra.vorn.bau !== "blender") fehl.push(`${t}: Arthur ist nicht die Blender-Fassung (figuren/rabe.glb)`);
+        if (ra.vorn.kehleOben === null || ra.vorn.kehleOben > ra.vorn.kopfUnten + 0.003) fehl.push(`${t}: Arthurs Kehlfedern am Rumpf reichen bis in den Kopf (${ra.vorn.kehleOben} m, Schädel beginnt bei ${ra.vorn.kopfUnten} m) – der Kopf dreht sich durch sie hindurch (Mr. Alex 19.11.)`);
+        if (!ra.vorn.ring || ra.vorn.ring.name !== "gelb" || ra.vorn.ring.hoch < 0.04 || ra.vorn.ring.hoch > 0.13) fehl.push(`${t}: Arthur trägt keinen gelben Fußring am Bein (Kennzeichen je Rabe, Mr. Alex 19.11.)`);
         if (Math.abs(ra.vorn.fuss) > 0.01) fehl.push(`${t}: Arthur steht nicht auf dem Boden (Füße bei ${ra.vorn.fuss} m)`);
         if (ra.vorn.sitzt !== "vorn" || Math.abs(ra.vorn.ort[0]) > B / 2 || Math.abs(ra.vorn.ort[2]) > T / 2 || !ra.vorn.klotz) fehl.push(`${t}: Arthur sitzt zu Beginn nicht vorn am Platz`);
         const rp = plan.raben[3];

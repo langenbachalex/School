@@ -4,6 +4,18 @@
    Schritt 1 (schlanke Variante): Körper, Sitzen, langsame Kopfdrehung. Flügelschlag, Plustern, Landen, Schlüssel kommen nach der Abnahme. */
 import * as THREE from "three";
 
+/* Fußringe (Mr. Alex 19.11.): Jeder Rabe trägt wie die echten Tower-Raben einen farbigen Ring am rechten Bein – das feste Kennzeichen.
+   Die Farben sind fest zugeordnet; ein neuer Rabe nimmt seine Farbe von hier (ring: RINGE.name). Mordred, die Elster: noch offen (Vorschlag: kein Ring – eine Spur). */
+export const RINGE = {
+  arthur: { farbe: 0xf2c21a, name: "gelb" },        // Gold wie seine Augen; der König
+  guinevere: { farbe: 0xd8262e, name: "rot" },
+  lancelot: { farbe: 0x1f6fd6, name: "blau" },
+  morgana: { farbe: 0x8a3fc4, name: "violett" },
+  gawain: { farbe: 0x2e9d48, name: "grün" },         // der Grüne Ritter
+  percival: { farbe: 0xf2f2ec, name: "weiß" },
+  mordred: null,
+};
+
 export const VOEGEL = {
   arthur: {
     name: "Arthur",
@@ -12,6 +24,8 @@ export const VOEGEL = {
     /* Blick (Profil-Tabelle „Arthur“): fast reglos; dreht langsam den ganzen Kopf und legt ihn schief – jede Kopfdrehung zählt */
     blick: { pause: [6, 11], weit: 1.2, tempo: 0.8, schief: 0.35, schiefOft: 0.35 },   // Sekunden zwischen zwei Drehungen · Bogenmaß · Bogenmaß je Sekunde
     blinzeln: [5, 9],
+    ring: RINGE.arthur,
+    schaedel: 0.058,                                  // Halbe Höhe des Schädels (vor der Vergrößerung): die Kehlfedern am Rumpf müssen darunter bleiben
     datei: "figuren/rabe.glb",                        // Blender-Fassung (werkzeuge/blender/tower_rabe.py); ladeVogel nimmt sie, bauVogel baut die einfache Fassung im Programm
     stueck: null,                                     // Erkennungsstück: (anker) => Mesh an anker.hals / .schnabel / .bein / .kopf; Arthur hat keins (goldene Augen)
   },
@@ -73,7 +87,7 @@ export function bauVogel(wer = "arthur") {
       const kralle = an(b, new THREE.Mesh(new THREE.ConeGeometry(0.0055, 0.028, 4), stoff(0x0a0a0c)), Math.sin(wx) * (lang + 0.008), -0.118, Math.cos(wx) * (lang + 0.008)); kralle.rotation.order = "YXZ"; kralle.rotation.y = wx; kralle.rotation.x = Math.PI / 2 + 0.6;
     }
   }
-  const g = { figur, koerper, hals, kopf, schnabel, schnabel_unten: unten, fluegel_l: fluegel.l, fluegel_r: fluegel.r, schwanz, bein_l: beine.l, bein_r: beine.r };
+  const g = { ring: gruppe(beine.r, 0, -0.072, 0), figur, koerper, hals, kopf, schnabel, schnabel_unten: unten, fluegel_l: fluegel.l, fluegel_r: fluegel.r, schwanz, bein_l: beine.l, bein_r: beine.r };
   if (P.stueck) P.stueck({ hals, kopf, schnabel, bein: beine.r });
   return verhalten(wer, wurzel, g, augen);
 }
@@ -83,7 +97,7 @@ export async function ladeVogel(lader, wer = "arthur") {
   const P = VOEGEL[wer], gltf = await lader.loadAsync(P.datei), teil = (n) => gltf.scene.getObjectByName("rabe_" + n);
   const wurzel = new THREE.Group(); wurzel.name = "vogel_" + wer;
   const figur = new THREE.Group(); figur.scale.setScalar(P.gross); figur.add(gltf.scene); wurzel.add(figur);
-  const g = { figur, koerper: teil("koerper"), kehle: teil("kehle"), kopf: teil("kopf"), schnabel_unten: teil("schnabel_unten"), fluegel_l: teil("fluegel_l"), fluegel_r: teil("fluegel_r"), hand_l: teil("hand_l"), hand_r: teil("hand_r"), schwanz: teil("schwanz"), bein_l: teil("bein_l"), bein_r: teil("bein_r") };
+  const g = { figur, koerper: teil("koerper"), kehle: teil("kehle"), kopf: teil("kopf"), schnabel_unten: teil("schnabel_unten"), fluegel_l: teil("fluegel_l"), fluegel_r: teil("fluegel_r"), hand_l: teil("hand_l"), hand_r: teil("hand_r"), schwanz: teil("schwanz"), bein_l: teil("bein_l"), bein_r: teil("bein_r"), ring: teil("ring") };
   for (const [n, o] of Object.entries(g)) if (!o) throw new Error(`Rabe: Gelenk ${n} fehlt in ${P.datei}`);
   if (P.stueck) P.stueck({ hals: g.koerper, kopf: g.kopf, schnabel: g.schnabel_unten, bein: g.bein_r });
   return verhalten(wer, wurzel, g, [teil("auge_l"), teil("auge_r")], "blender");
@@ -91,6 +105,7 @@ export async function ladeVogel(lader, wer = "arthur") {
 
 function verhalten(wer, wurzel, g, augen, bau = "programm") {
   const P = VOEGEL[wer], { koerper, kopf } = g;
+  if (P.ring) { const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.0175, 0.0175, 0.017, 14), new THREE.MeshStandardMaterial({ color: P.ring.farbe, roughness: 0.45, emissive: P.ring.farbe, emissiveIntensity: 0.25 })); ring.name = "vogel_ring"; g.ring.add(ring); }
 
   /* Sitzen: fast reglos. Nur der Atem, ein Blinzeln – und ab und zu dreht sich der ganze Kopf langsam in eine neue Richtung, manchmal legt er sich schief. */
   const z = { warte: zufall(P.blick.pause) / 2, zielY: 0, zielZ: 0, blinzel: zufall(P.blinzeln), zu: 0, zeit: 0, drehungen: 0 };
@@ -107,13 +122,16 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
     if ((z.blinzel -= dt) <= 0) { z.blinzel = zufall(P.blinzeln); z.zu = 0.14; }
     z.zu = Math.max(0, z.zu - dt); for (const a of augen) a.scale.y = z.zu > 0 ? 0.12 : 1;
   }
-  const kasten = new THREE.Box3();
+  const kasten = new THREE.Box3(), ort = new THREE.Vector3();
+  /* schau: Kopf sofort in eine Richtung stellen und dort halten (Bilder, Prüfung) */
+  const schau = (y, schief = 0) => { z.zielY = kopf.rotation.y = y; z.zielZ = kopf.rotation.z = schief; z.warte = 30; };
   function zustand() {
     wurzel.updateMatrixWorld(true); kasten.setFromObject(wurzel);
-    return { wer, bau, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
+    const kehleOben = g.kehle ? +kasten.clone().setFromObject(g.kehle).max.y.toFixed(3) : null, kopfUnten = +(kopf.getWorldPosition(ort).y - P.schaedel * P.gross).toFixed(3);
+    return { wer, bau, kehleOben, kopfUnten, ring: P.ring ? { name: P.ring.name, hoch: +g.ring.getWorldPosition(ort).y.toFixed(3) } : null, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
       kopf: [+kopf.rotation.y.toFixed(4), +kopf.rotation.z.toFixed(4)], drehungen: z.drehungen, blick: P.blick };
   }
   /* setze: Ort der Füße und Blickrichtung (0 = nach Süden, +z) */
   const setze = (x, y, zz, dreh = 0) => { wurzel.position.set(x, y, zz); wurzel.rotation.y = dreh; };
-  return { wurzel, g, bewege, zustand, setze };
+  return { wurzel, g, bewege, zustand, setze, schau };
 }

@@ -216,6 +216,9 @@ Jede nach dem Muster „Nebenfigur“: ein Körper, ein Merkmal, ein bis zwei Ge
 | Mr Pike, Warder | Küche, Party | riesiger Schlüsselring, leer | klopft die Taschen ab; schleicht auf Zehenspitzen |
 | Mrs Crumb, Köchin | Küche | Mehl im Haar, Kochlöffel | zeigt mit dem Löffel; schnelle kleine Schritte |
 | Sechs Raben und die Elster | überall | je ein Erkennungsstück (Rosine, Helm …) | ein Rabenkörper für alle, nur das Stück wechselt |
+
+**Raben unterscheiden (Entscheidung Mr. Alex 19.11.):** Raben sehen sich ohnehin ähnlich – es reichen **farbige Bänder an den Füßen**, die Augenfarbe und gegebenenfalls eigene Bewegungen. Mehr (Proportionen, Form-Regler, Ansteckteile) hat keine Priorität und wird nicht vorbereitet. Offen für später, erst wenn die Themse-Szene dran ist: Die Elster „Mordred“ braucht weiße Flächen, die unter der schwarzen Farbe hervorkommen – dann entscheiden, ob das am Rabenkörper geht oder einen eigenen Bau braucht.
+
 | Der höfliche Geist | Tunnel | durchsichtig, Hut | lüftet den Hut; schwebt statt zu gehen |
 
 **B – neu**

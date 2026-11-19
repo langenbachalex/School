@@ -72,10 +72,51 @@ Danach frei (Vision Abschnitt 9, Szene 7). s5 von Mr. Flex kommt an der nächste
 
 **Wer den Hof wieder betritt,** findet ihn im Zustand des letzten Schritts vor und hört von den Figuren einen neuen kurzen Spruch statt der alten Zeilen. Bricht das Kind mitten in einem Gespräch ab (App zu), beginnt dieses Gespräch beim nächsten Mal von vorn; ein Film gilt erst als gesehen, wenn er zu Ende ist.
 
+## Die Uhren (Rückmeldung Mr. Alex 19.11.: gesagte Uhrzeit und Uhr müssen übereinstimmen)
+**Regel:** Alle Uhren der Welt (Turmuhr im Hof, Uhr über dem Kamin) zeigen dieselbe Zeit, und die kommt aus dem Stand der Geschichte, nie aus der echten Zeit. Die Zeiger springen nicht, sie laufen beim Schritt sichtbar ein Stück vor. Keine Zeile nennt eine Zeit, die die Uhr nicht zeigt.
+
+| Schritt der Geschichte | Uhr zeigt | Zeile, die dazu passt |
+|---|---|---|
+| Film 1 (Auftakt) | 9:15 – die Turmuhr schlägt die Viertelstunde (kein Stundenschlag) | a01 „quarter past nine“ |
+| `auftrag` | 9:16 | a09 „thirty-six and a half minutes“ (bis 9:53) |
+| `feder` bis `arthur` (Hof und Guard Room) | 9:20 | w05a Turmuhr „twenty past nine“, b06a Uhr über dem Kamin „twenty past nine“ |
+| Film 4 (Schluss) | 9:30 | s1 „half past nine. Twenty-three minutes left.“, Notizbuch j1 |
+
+Geprüft: Die abgenommenen Zeilen widersprechen sich nicht (9:53 − 36,5 min = 9:16; 9:53 − 23 min = 9:30). Die Zeiten der Taube (p2 „nine o'clock“, p5 „ten past nine“) liegen in der Vergangenheit und brauchen keine Uhr. Für spätere Szenen gilt die Zeitleiste aus dem Orte-Blatt (Kitchen 9:30, Raven House 9:35 …).
+
+## Antwort-Knöpfe: immer mit Alternativen (Mr. Alex 19.11.)
+Für jede Stelle, an der das Kind antwortet, legt der Master zwei bis drei Sätze von Knöpfen vor; Mr. Alex wählt. Für a07b „You. Can you find things?“:
+| | Knopf 1 | Knopf 2 | Knopf 3 |
+|---|---|---|---|
+| A | Yes, I can! | Sure! | Find what? |
+| B | Of course! | I think so. | Sorry? |
+| C | Yes, sir! | No problem! | What things? |
+Empfehlung des Masters: **„Yes, sir!“ · „I think so.“ · „Sorry?“** – höflich-zackig passt zum Sergeant, „I think so“ ist eine Wendung für jeden Tag, und „Sorry?“ ist dasselbe Wort wie das Hilfswerkzeug (noch einmal, langsamer): Er wiederholt dann a07b. Alle Antworten führen weiter, keine ist falsch.
+
+## Wenn es nicht weitergeht: Tipps (Mr. Alex 19.11.)
+**Regel:** Bleibt die Geschichte stehen, weil das Kind nicht weiß, wohin, kommt nach etwa 30 Sekunden ein Tipp – in drei Stufen, wie schon im Guard Room (g1_1 bis g1_3): erst ein Zeichen in der Welt, dann ein Wink, dann der klare Satz. Die Tipps geben **Mr. Flex** (aus jedem Spiegel, jeder Scheibe, jeder Pfütze) und **Gary**, sobald er dabei ist. Nie drängeln, nie Zeitdruck; der Tipp ist ein Angebot.
+
+| Stelle | Stufe 1 (Welt) | Stufe 2 und 3 | Stand |
+|---|---|---|---|
+| vor `auftrag`: das Kind spricht den Sergeant nicht an | der Sergeant marschiert enger am Kind vorbei und schielt herüber | Mr. Flex, noch nicht gesehen, als Stimme aus einer glänzenden Pfütze: „Psst. Why don't you talk to the Sergeant?“ · „The tall one. With the big hat. Go on.“ | **neu, zwei Zeilen zu schreiben und zu vertonen** – die Stimme vor dem Auftritt macht neugierig auf m1 „Mr. Flex. Wizard. Genius.“ |
+| nach `feder`: das Kind geht nicht zur Tür | – | w01 Gary „Come on, detective! The door is over there.“ | vorhanden |
+| Tür zu, kein Schlüssel | der Spiegel leuchtet auf | m1–m6 Mr. Flex schickt ins Word Gym | vorhanden |
+| im Guard Room | – | g1_1 bis g1_3 | vorhanden |
+| allgemein, wenn Gary dabei ist | Gary läuft ein Stück vor und schaut zurück | Gary: „Let's ask someone. I love asking.“ | **neu, eine Zeile** |
+
+## In jedem Raum ist Leben – auch ohne Fortschritt (Mr. Alex 19.11.)
+Der Hof ist nie nur Durchgang. Auch wer gerade kein Word Gym macht und die Geschichte nicht weitertreibt, findet etwas:
+- **Dinge antippen:** Fass, Mauer mit Raben, Tor, Turmuhr, Tür – je zwei Tipps mit Erzähler und Gary (w02–w06), dazu die Raben zählen (Seitenstrang „Seven Ravens“).
+- **Gespräche:** der Tourist (w08, zwei Tipps); der Sergeant hat nach dem Auftrag am Tor neue kurze Sätze aus dem Vorrat der Sprüche; Gary redet dazwischen.
+- **Figuren leben:** „lebendig im Stillstehen“ (Figurenblatt) – Umschauen, Standardgesten, die Raben plustern sich.
+- **Noch einmal spielen:** Jedes Gespräch lässt sich wiederholen (antippen), Filme über den Spiegel.
+- **Vorschlag für ein Spiel zum Wiederkommen im Hof, noch nicht geschrieben: „Help the tourist“.** Der Tourist fragt jedes Mal nach einem anderen Ort („Where is the gate?“), das Kind antwortet mit einer Ortsangabe (over there · next to the barrel · behind you). Das ist der Sprachkern des Tower-Kapitels, lässt sich beliebig oft spielen und ist ein erster Baustein für „Sprache herauslocken“. Braucht neue Zeilen und Aufnahmen.
+
 ## Filmarchiv
 Gesehene Filme und Gespräche merkt sich **Mr. Flex im Spiegel** in The Den („I remember everything.“). Dort kann man sie freiwillig noch einmal ansehen, mit Feder und „Sorry?“. Dafür wäre später eine kurze neue Zeile von Mr. Flex nötig.
 
 ## Offen für Mr. Alex
-1. Reicht der Auftakt mit 35 Sekunden, und stimmt die Reihenfolge der Bilder (Schwarz → Tower von oben → Raben → Uhr → Sergeant)?
-2. Die Antwort-Knöpfe in Gespräch 1 („Yes, I can!“ / „Sure!“ / „Find what?“) sind ein Vorschlag – andere Wendungen?
-3. Was soll geschehen, wenn ein Kind den Sergeant lange nicht anspricht? Vorschlag: nichts Neues aufnehmen; Gary gibt es an dieser Stelle noch nicht, also marschiert der Sergeant einfach näher an ihm vorbei.
+Beantwortet 19.11.: 35 Sekunden für den Auftakt reichen vorerst (zeigt sich beim Bau); Antwort-Knöpfe passen, künftig immer mit Alternativen; Tipps über Mr. Flex und Gary; Leben in jedem Raum.
+1. Welcher Satz Antwort-Knöpfe für a07b (A, B, C oder die Empfehlung)?
+2. Darf Mr. Flex vor seinem ersten Auftritt schon als Stimme aus der Pfütze einen Tipp geben?
+3. „Help the tourist“ als Spiel zum Wiederkommen im Hof – weiterverfolgen?

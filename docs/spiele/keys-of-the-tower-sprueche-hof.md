@@ -196,11 +196,11 @@ Arthur ist nie albern. Er spricht langsam, in kurzen, alten Sätzen, und lässt 
 A25 ist eine sehr seltene Andeutung auf die Elster, A26 auf sein Schlusswort und die weiteren Kapitel. A20 lässt ihn in den Barry-Witz hineinlaufen.
 
 ## Arthur erzählt aus der Geschichte des Towers (Wunsch Mr. Alex 19.11.: historische Fakten, nicht zu grausam, im Stil von „There are more rooms in this Tower than doors.“) – Entwurf, 15 Sprüche
-Jeder Spruch trägt eine echte Tatsache, erzählt wie ein Geheimnis. **Die Fakten stammen aus dem Wissen des Masters und sind noch nicht nachgeschlagen – vor dem Vertonen prüft er Jahreszahlen und Namen nach.**
+Jeder Spruch trägt eine echte Tatsache, erzählt wie ein Geheimnis. **Faktenprüfung 19.11. (Websuche, nur Suchauszüge – die Seiten von Historic Royal Palaces und Wikipedia waren in der Cloud gesperrt):** kein Spruch falsch; drei danach geändert – H1 („Almost a thousand years ago“, Baubeginn um 1078), H12 (Yeoman Warders seit 1485, die roten Röcke nur an Festtagen), H14 (die römische Mauer liegt im Tower, nicht überall unter den Füßen). Kleine Anmerkungen: H8 – die Juwelen lagen 1671 im Martin Tower; H9 – das Seil kam je nach Quelle in einem Weinfass oder Weinkrug; H2 und H15 sind Legenden („They say“).
 
 | Nr | S | Englisch | Was dahintersteckt |
 |---|---|---|---|
-| H1 | 1 | A king from Normandy built the great tower. Nine hundred years ago. I watched. | Wilhelm der Eroberer, White Tower ab etwa 1078 |
+| H1 | 1 | A king from Normandy built the great tower. Almost a thousand years ago. I watched. | Wilhelm der Eroberer, White Tower ab etwa 1078 |
 | H2 | 1 | They say: if the ravens leave, the Tower falls. So we stay. | die Raben-Legende |
 | H3 | 2 | They painted the great tower white. In 1240. Now you know its name. | Heinrich III. ließ ihn weiß tünchen: White Tower |
 | H4 | 2 | Once, lions lived here. And an elephant. This was a zoo before it was a museum. | königliche Menagerie, über 600 Jahre |
@@ -211,9 +211,9 @@ Jeder Spruch trägt eine echte Tatsache, erzählt wie ein Geheimnis. **Die Fakte
 | H9 | 3 | The first prisoner here climbed out of a window. On a rope. The rope came in a barrel. Tell the fox nothing. | Ranulf Flambard, 1101, Seil im Weinfass |
 | H10 | 2 | A great fire ate London. In 1666. It stopped before these walls. | Großer Brand von London |
 | H11 | 2 | There was water all around this Tower. They let it out in 1843. I miss the frogs. | der Wassergraben wurde trockengelegt |
-| H12 | 2 | The men in red have guarded this place since 1485. They still wear the old clothes. | Yeoman Warders, seit Heinrich VII. |
+| H12 | 2 | The Yeoman Warders have guarded this place since 1485. On great days they still wear the old red coats. | Yeoman Warders, seit Heinrich VII. |
 | H13 | 3 | A prisoner lived here for thirteen years. He wrote a history of the world. He had time. | Sir Walter Raleigh, 1603–1616 |
-| H14 | 3 | Under your feet is a Roman wall. Older than the Tower. Older than me. | der Tower steht an der Ecke der römischen Stadtmauer |
+| H14 | 3 | There is a Roman wall in this Tower. Older than the Tower. Older than me. | der Tower steht an der Ecke der römischen Stadtmauer |
 | H15 | 4 | A stargazer watched the sky from the great tower. They say we annoyed him. He moved to Greenwich. | John Flamsteed, erster königlicher Astronom – Legende; Greenwich ist ein möglicher späterer Ort |
 
 H4 und H5 führen zum London Zoo (dorthin kamen die Tiere, als die Menagerie schloss) – ein späterer Ort des Abenteuers. H9 spielt mit Garys Fass.

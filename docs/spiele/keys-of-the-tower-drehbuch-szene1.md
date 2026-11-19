@@ -91,14 +91,15 @@ Für jede Stelle, an der das Kind antwortet, legt der Master zwei bis drei Sätz
 | A | Yes, I can! | Sure! | Find what? |
 | B | Of course! | I think so. | Sorry? |
 | C | Yes, sir! | No problem! | What things? |
-Empfehlung des Masters: **„Yes, sir!“ · „I think so.“ · „Sorry?“** – höflich-zackig passt zum Sergeant, „I think so“ ist eine Wendung für jeden Tag, und „Sorry?“ ist dasselbe Wort wie das Hilfswerkzeug (noch einmal, langsamer): Er wiederholt dann a07b. Alle Antworten führen weiter, keine ist falsch.
+**Gewählt von Mr. Alex 19.11.: „Yes, sir!“ · „I think so.“ · „Sorry?“** – höflich-zackig passt zum Sergeant, „I think so“ ist eine Wendung für jeden Tag, und „Sorry?“ ist dasselbe Wort wie das Hilfswerkzeug (noch einmal, langsamer): Er wiederholt dann a07b. Alle Antworten führen weiter, keine ist falsch.
 
 ## Wenn es nicht weitergeht: Tipps (Mr. Alex 19.11.)
 **Regel:** Bleibt die Geschichte stehen, weil das Kind nicht weiß, wohin, kommt nach etwa 30 Sekunden ein Tipp – in drei Stufen, wie schon im Guard Room (g1_1 bis g1_3): erst ein Zeichen in der Welt, dann ein Wink, dann der klare Satz. Die Tipps geben **Mr. Flex** (aus jedem Spiegel, jeder Scheibe, jeder Pfütze) und **Gary**, sobald er dabei ist. Nie drängeln, nie Zeitdruck; der Tipp ist ein Angebot.
 
 | Stelle | Stufe 1 (Welt) | Stufe 2 und 3 | Stand |
 |---|---|---|---|
-| vor `auftrag`: das Kind spricht den Sergeant nicht an | der Sergeant marschiert enger am Kind vorbei und schielt herüber | Mr. Flex, noch nicht gesehen, als Stimme aus einer glänzenden Pfütze: „Psst. Why don't you talk to the Sergeant?“ · „The tall one. With the big hat. Go on.“ | **neu, zwei Zeilen zu schreiben und zu vertonen** – die Stimme vor dem Auftritt macht neugierig auf m1 „Mr. Flex. Wizard. Genius.“ |
+| vor `auftrag`: das Kind spricht den Sergeant nicht an | der Sergeant marschiert enger am Kind vorbei und schielt herüber | **Nur Gary hilft, Mr. Flex noch nicht (Entscheidung Mr. Alex 19.11.: kein Spoiler für seinen großen Auftritt).** Gary sitzt zu diesem Zeitpunkt noch im Fass – Vorschlag des Masters: Das Fass wackelt und flüstert mit Garys Stimme „Psst! Talk to the Sergeant!“ · „The tall one! With the big hat! … I am not here.“ Das bereitet seinen Sprung aus dem Fass vor (a10/a11) und passt zu a13a „FOX! Get out of that barrel!“. | **neu, zwei Zeilen zu schreiben und zu vertonen; Fass-Idee noch von Mr. Alex zu bestätigen** |
+| dieselbe Stelle bei einer Wiederholung (das Kind kennt Mr. Flex schon) | – | Mr. Flex als Stimme aus einer glänzenden Pfütze: „Psst. Why don't you talk to the Sergeant?“ | **später, eine Zeile** |
 | nach `feder`: das Kind geht nicht zur Tür | – | w01 Gary „Come on, detective! The door is over there.“ | vorhanden |
 | Tür zu, kein Schlüssel | der Spiegel leuchtet auf | m1–m6 Mr. Flex schickt ins Word Gym | vorhanden |
 | im Guard Room | – | g1_1 bis g1_3 | vorhanden |
@@ -116,7 +117,6 @@ Der Hof ist nie nur Durchgang. Auch wer gerade kein Word Gym macht und die Gesch
 Gesehene Filme und Gespräche merkt sich **Mr. Flex im Spiegel** in The Den („I remember everything.“). Dort kann man sie freiwillig noch einmal ansehen, mit Feder und „Sorry?“. Dafür wäre später eine kurze neue Zeile von Mr. Flex nötig.
 
 ## Offen für Mr. Alex
-Beantwortet 19.11.: 35 Sekunden für den Auftakt reichen vorerst (zeigt sich beim Bau); Antwort-Knöpfe passen, künftig immer mit Alternativen; Tipps über Mr. Flex und Gary; Leben in jedem Raum.
-1. Welcher Satz Antwort-Knöpfe für a07b (A, B, C oder die Empfehlung)?
-2. Darf Mr. Flex vor seinem ersten Auftritt schon als Stimme aus der Pfütze einen Tipp geben?
-3. „Help the tourist“ als Spiel zum Wiederkommen im Hof – weiterverfolgen?
+Entschieden 19.11.: Auftakt 35 Sekunden vorerst · Knöpfe „Yes, sir!“ / „I think so.“ / „Sorry?“ · vor dem Auftritt von Mr. Flex hilft nur Gary, die Pfütze erst bei einer Wiederholung · „Help the tourist“ weiterverfolgen.
+1. Gary flüstert vor dem Auftrag aus dem wackelnden Fass – einverstanden?
+2. „Help the tourist“: Der Master legt Fragen des Touristen und Antwort-Knöpfe als Text vor.

@@ -161,10 +161,69 @@ Hier führt der Witz, nicht die Grammatik. Die Sätze bleiben kurz und gut zu ve
 
 Zusammenspiel: G37/G38 und F37 (Barry) · G53 und F47 (unter dem Hut) · G67 und F32 (Pfütze) · G41 (Garys eigener Club) bereitet den Raven Club und die Elster vor.
 
+## Arthur – Stimmung und das Unheimliche (Wunsch Mr. Alex 19.11.: Kontrast zu Gary und Mr. Flex) – Entwurf, 26 Sprüche
+Arthur ist nie albern. Er spricht langsam, in kurzen, alten Sätzen, und lässt etwas offen. Unheimlich heißt hier: geheimnisvoll, nie bedrohlich – keine Angst, sondern Gänsehaut und Neugier. Sein einziger Witz ist, dass er alles ernst nimmt (A18–A20).
+
+| Nr | Stelle | S | Englisch |
+|---|---|---|---|
+| A1 | Mauer | 1 | From this wall I see everything. Almost everything. |
+| A2 | Mauer | 1 | The stones are cold tonight. They remember. |
+| A3 | Mauer | 2 | Seven on the wall. Count again. … Are you sure? |
+| A4 | Mauer | 2 | We sit. We watch. We wait. It is enough. |
+| A5 | Mauer | 3 | Something walked here before you. It left no footprints. |
+| A6 | Nacht | 1 | Listen. … The Tower is breathing. |
+| A7 | Nacht | 1 | The fog comes from the river. It brings old stories. |
+| A8 | Nacht | 2 | The dark hides nothing, young one. It only keeps things. For later. |
+| A9 | Nacht | 2 | A door opens somewhere. Not for you. Not yet. |
+| A10 | Nacht | 2 | The wind knows your name. I told it. |
+| A11 | Nacht | 3 | Some nights, the bell rings by itself. Tonight is such a night. |
+| A12 | Nacht | 3 | There are more rooms in this Tower than doors. |
+| A13 | Uhr | 1 | Time is a thief. It takes everything. Slowly. |
+| A14 | Uhr | 2 | The clock counts the minutes. I count the years. |
+| A15 | Uhr | 3 | At 9:53 the keys must turn. They have always turned. |
+| A16 | Tor | 2 | The gate remembers who went out. And who did not come back. |
+| A17 | Tor | 2 | Beyond the gate is the river. The river keeps secrets too. |
+| A18 | Gary, Fass | 1 | The fox sleeps in a barrel. The barrel does not complain. I do. |
+| A19 | Gary | 2 | He calls it magic. I call it noise. |
+| A20 | Gary, Fass | 3 | Barry. He named the barrel Barry. … Nine hundred winters, and now this. |
+| A21 | Tourist | 2 | The stranger holds his map upside down. He will go far. In the wrong direction. |
+| A22 | Sergeant | 2 | The tall one guards the door. We guard the Tower. |
+| A23 | zum Kind | 1 | You walk softly. Good. The stones like that. |
+| A24 | zum Kind | 2 | You are small. The Tower is old. Be patient with each other. |
+| A25 | Nacht | 4 | One of us is not a raven. … I have said too much. |
+| A26 | Nacht | 4 | There are other towers. … Forget that. For now. |
+
+A25 ist eine sehr seltene Andeutung auf die Elster, A26 auf sein Schlusswort und die weiteren Kapitel. A20 lässt ihn in den Barry-Witz hineinlaufen.
+
+## Laufende Witze – Register (wird mit jedem Paket fortgeschrieben)
+| Witz | Wer | Sprüche |
+|---|---|---|
+| Barry, das Fass | Gary, Mr. Flex, Arthur | G37, G38, F37, A20 |
+| Unter dem Hut des Sergeants | Gary, Mr. Flex | G53, F47 |
+| Mr. Flex in Pfütze, Scheibe, Löffel | Mr. Flex, Gary | F1–F5, F31–F35, G67, F60 |
+| Steve und Other Steve (so heißen die Muskeln von Mr. Flex) | Mr. Flex | F54 |
+| Gary lernt Amerikanisch | Gary | G55 |
+| Sandwiches und Käse | Gary | G40, G44, G54, G64, G66 und viele ältere |
+| Tee | Mr. Flex | F43 und viele ältere |
+| Der Lehrer rutscht durch | Mr. Flex | F27, F28, F53 und die Gruppe `mralex` |
+| Garys eigener Club (führt zum Raven Club) | Gary | G41 |
+| Der Tourist verläuft sich und ist glücklich | Tourist, Gary, Mr. Flex, Arthur | G24–G26, G54–G56, F19–F21, F48–F50, A21 |
+
+## Wie viele Sprüche hat wer? (Stand 19.11., Mr. Alex: von allen genug)
+| Figur | in der Tabelle | dazu hier vorgelegt | zusammen | Einschätzung |
+|---|---|---|---|---|
+| Gary | 79 | 69 | 148 | reichlich |
+| Mr. Flex | 75 | 61 | 136 | reichlich |
+| Sergeant | 39 | 0 | 39 | **zu wenig, vor allem für den Hof** – nächstes Paket |
+| Tourist | 25 (+ 8 im Auftritt) | 0 | 33 | reicht für den Hof; wächst mit jedem Ort |
+| Arthur | 19 | 26 | 45 | gut; er soll selten sprechen |
+| Taube | 24 | 0 | 24 | **zu wenig für eine, die pausenlos redet** – nächstes Paket |
+
 ## Umfang und Kosten
-Runde 1: 63 Zeilen, Runde 2: 67 Zeilen – zusammen **130 neue Sprüche für den Hof** (Gary 69, Mr. Flex 61). Mit Regie geschätzt rund 14.500 Zeichen ≈ 6.400 Credits plus 10 % = **rund 7.000 Credits**; die genaue Zahl nennt das Skript, bevor etwas aufgenommen wird. Danach Hörprüfung, Anhör-Seite mit eigener Gruppe „Neu“, und der Bau-Chat rechnet die Mundformen.
+Runde 1: 63 Zeilen, Runde 2: 67 Zeilen, Arthur 26 – zusammen **156 neue Sprüche für den Hof** (Gary 69, Mr. Flex 61, Arthur 26). Mit Regie geschätzt rund 17.000 Zeichen ≈ 7.500 Credits plus 10 % = **rund 8.300 Credits**; die genaue Zahl nennt das Skript, bevor etwas aufgenommen wird. Danach Hörprüfung, Anhör-Seite mit eigener Gruppe „Neu“, und der Bau-Chat rechnet die Mundformen.
 
 ## Offen für Mr. Alex
-1. Runde 2: Trifft das „silly“? Welche streichen oder ändern?
-2. Sollen beide Runden zusammen vertont werden?
-3. Die Fragen zur Seltenheit und zu den Andeutungen aus Runde 1 gelten als beantwortet („alles in Ordnung“).
+Abgenommen 19.11.: Runde 1 und Runde 2 von Gary und Mr. Flex („Ich liebe die Sprüche alle, auch die laufenden Witze“).
+1. Arthur: Trifft das die Stimmung? Dürfen A25 (Elster) und A26 (andere Türme) so früh andeuten?
+2. Vertonen: Gary und Mr. Flex jetzt (130), Arthur nach der Abnahme – oder alles zusammen?
+3. Nächstes Paket: Sergeant und Taube für den Hof.

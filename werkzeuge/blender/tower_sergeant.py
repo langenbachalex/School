@@ -24,9 +24,9 @@ MZ = 0.218                                             # Unterkante der Fellmuet
 def sergeantkopf(name, ort, voll, nase="knolle"):
     """voll = True: Vollbart (kurz, kantig) · False: nur der grosse Schnurrbart. nase = "haken" (lang, schmal, die Spitze haengt) oder "knolle" (dick, rund, rot)."""
     vor = "sgt_bart" if voll else "sgt"
-    f = fx.farben(vor, haut=HAUT, wange=(0.93, 0.50, 0.44), bartschatten=ROTBRAUN if voll else (0.78, 0.53, 0.45), schnurrbart=(0.88, 0.38, 0.06),
+    f = fx.farben(vor, haut=HAUT, wange=HAUT, bartschatten=ROTBRAUN if voll else (0.78, 0.53, 0.45), schnurrbart=(0.88, 0.38, 0.06),
                   braue=(0.66, 0.24, 0.03), iris=(0.04, 0.80, 0.22), falte=(0.60, 0.34, 0.28))
-    k = fx.flexkopf(None, ort, name, f=f, haare=False, brille=False, bart=(0.060, 0.0125, 0.012), braue=0.0080, nase=False, wange=(0.062, 0.110, 0.036, 0.030))   # Wangen leicht rot (Mr. Alex 19.11.)
+    k = fx.flexkopf(None, ort, name, f=f, haare=False, brille=False, bart=(0.060, 0.0125, 0.012), braue=0.0080, nase=False, wange=(0.062, 0.110, 0.036, 0.030))   # Wangen hautfarben wie bei Mr. Flex (Mr. Alex 19.11.)
     R = fx.R
     # Die Nase ist EIN Stueck (Mr. Alex 19.11.: nicht aus Kugeln zusammengesetzt): Stationen von der Nasenwurzel bis unter die Spitze,
     # je (Hoehe, so weit steht der Nasenruecken vor dem Gesicht, halbe Breite). Haken = schmal mit Buckel, die Spitze haengt; Knolle = kurzer Ruecken, dicke runde Kugel.
@@ -51,26 +51,29 @@ def sergeantkopf(name, ort, voll, nase="knolle"):
     # Kinnkette der Fellmuetze (Mr. Alex 19.11., nach seinem Foto): goldene Glieder von der Muetze an der Wange herunter und unter der Unterlippe ueber das Kinn.
     # Jedes Glied heisst kette_<Nr>_<Anteil>: mit diesem Anteil (0–100) geht es mit dem Unterkiefer mit (der Browser rechnet das, probe3d_bau.js) – oben an der Muetze 0, am Kinn 100.
     gold = g.farbe("sgt_gold", (0.95, 0.62, 0.08), 0.35, 0.2, 0.10)
-    weg = [(fx.RX * 0.87, MZ + 0.012), (fx.RX * 0.86, 0.170), (fx.RX * 0.79, 0.120), (fx.RX * 0.62, 0.078),   # oben weit aussen: Abstand zum Auge
-           (fx.RX * 0.40, 0.048), (fx.RX * 0.20, 0.036), (0.0, 0.033)]
+    # Verlauf (Mr. Alex 19.11.): seitlich zwischen Ohr und Bartzopf herunter, dann UNTER dem Kinn durch, deutlich unter dem Bart, leicht durchhaengend
+    r = fx.RX
+    weg = [(r + 0.008, -0.010, MZ + 0.010), (r + 0.009, -0.012, 0.150), (r + 0.004, -0.022, 0.095), (r - 0.016, -0.040, 0.035),
+           (r - 0.040, -0.070, -0.022), (0.036, -0.098, -0.047), (0.0, -0.108, -0.053)]
     glieder = []
     for i in range(len(weg) - 1):
-        for j in range(3):
-            t = j / 3
-            glieder.append((weg[i][0] + (weg[i + 1][0] - weg[i][0]) * t, weg[i][1] + (weg[i + 1][1] - weg[i][1]) * t))
+        for j in range(4):
+            t = j / 4
+            glieder.append(tuple(weg[i][c] + (weg[i + 1][c] - weg[i][c]) * t for c in range(3)))
     nr = 0
     for s in (-1, 1):
-        for x, z in glieder + ([weg[-1]] if s > 0 else []):
+        for x, y, z in glieder + ([weg[-1]] if s > 0 else []):
             if s < 0 and x == 0:
                 continue
-            anteil = max(0.0, min(1.0, (MZ - z) / (MZ - fx.LZ)))
-            g.kugel(f"kette_{nr:02d}_{round(anteil * 100):03d}", k, (s * x, fx.gesicht_vorn(x, z) - 0.005, z), (0.0088, 0.0072, 0.0088), gold, fein=10)
+            anteil = max(0.0, min(1.0, (0.150 - z) / (0.150 - 0.035)))
+            g.kugel(f"kette_{nr:02d}_{round(anteil * 100):03d}", k, (s * x, y, z), (0.0085, 0.0085, 0.0085), gold, fein=10)
             nr += 1
     return k
 
 
 if __name__ == "__main__":
-    fx.RX, fx.KR = 0.112, (0.086, 0.128, 0.093)         # schmales, langes Gesicht (Mr. Alex 19.11.: ein Fuenftel schmaler; vorher 0.140 und 0.108) (die Funktionen von tower_flex lesen diese Masse beim Bauen)
+    fx.MW = 0.80                                        # Mund so viel schmaler wie das Gesicht
+    fx.RX, fx.KR = 0.112, (0.086, 0.121, 0.093)         # schmales, langes Gesicht (Mr. Alex 19.11.: ein Fuenftel schmaler; vorher 0.140 und 0.108) (die Funktionen von tower_flex lesen diese Masse beim Bauen)
     g.neu()
     sergeantkopf("sergeantkopf", (0, 0, 0), True, "knolle")   # Mr. Alex: Kopf mit Bart, rothaarig (18.11.), Knollennase (19.11.) – gerade weil er so streng ist
     ziel = os.path.join(g.OUT, "sergeant_teile.glb")

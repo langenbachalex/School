@@ -19,7 +19,9 @@ import tower_gary as g   # nur die Bau-Helfer (kugel, bogen, gelenk ...); Gary s
 
 R = math.radians
 CZ, RX, RY, RZ = 0.150, 0.132, 0.150, 0.185           # Schaedel: Hoehe der Mitte und Halbachsen (schmal und lang)
-KM, KR = (0, -0.012, 0.045), (0.097, 0.126, 0.088)    # Kiefer und Bartschatten: Mitte und Halbachsen (unten etwas vor dem Schaedel)
+KM, KR = (0, -0.012, 0.045), (0.097, 0.119, 0.088)    # Kiefer: Mitte und Halbachsen (unten nur wenig vor dem Schaedel, damit er glatt ins Gesicht uebergeht; bis 19.11. 0.126)
+MW = 1.0                                              # Mundbreite gegenueber Mr. Flex (schmale Gesichter: kleiner, sonst haengen die Lippen seitlich in der Luft)
+KINN = (0.017, 0.040)                                 # Kinn: so weit woelbt sich der Kiefer vorn unten vor, Breite der Woelbung
 LZ = 0.056                                            # Hoehe der Lippennaht
 AX, AZ = 0.050, 0.172                                 # Augen: Abstand von der Mitte, Hoehe
 
@@ -64,7 +66,7 @@ def farben(vor="flex", **neu):
     f = lambda name, rgb, *rest: g.farbe(name.replace("flex_", vor + "_"), neu.get(name[5:], rgb) if name.startswith("flex_") else rgb, *rest)
     return dict(
         haut=f("flex_haut", (0.86, 0.62, 0.50), 0.75), wange=f("flex_wange", (0.86, 0.62, 0.50), 0.75),
-        schatten=f("flex_bartschatten", (0.79, 0.60, 0.52), 0.85), blond=f("flex_blond", (0.88, 0.68, 0.30), 0.7),
+        schatten=f("flex_bartschatten", (0.86, 0.62, 0.50), 0.75), blond=f("flex_blond", (0.88, 0.68, 0.30), 0.7),
         bart=f("flex_schnurrbart", (0.93, 0.82, 0.52), 0.75), braue=f("flex_braue", (0.60, 0.44, 0.20), 0.8),
         lippe=f("flex_lippe", (0.50, 0.22, 0.20), 0.7), lippe_unten=f("flex_lippe_unten", (0.64, 0.33, 0.30), 0.7), falte=f("flex_falte", (0.60, 0.38, 0.30), 0.8),
         iris=f("flex_iris", (0.07, 0.30, 0.74), 0.2, 0.0, 0.55), augenweiss=f("augenweiss", (1.0, 1.0, 0.97), 0.25, 0.0, 0.4),
@@ -130,7 +132,7 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
         for i in range(-8, 9):
             t = i / 8
             a, h = abs(t), (hoch_l if t > 0 else hoch_r)
-            x = t * weit * (0.050 + 0.020 * max(h, 0) * a)
+            x = t * weit * MW * (0.050 + 0.020 * max(h, 0) * a)
             zz = LZ + dz * (1 - 0.8 * a ** 3) - 0.002 * a * a + (0.021 * h * a ** 2.2 if h > 0 else 0.014 * h * a * a) + auf * 0.030 * a ** 1.6
             if tief is None:
                 pkt.append((x, vorn(x, min(zz, LZ + 0.004) if dz > 0 else zz, vor), zz))
@@ -170,16 +172,24 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
                 linie.append((x, vorn(x, zz, 0.008 + 0.004 * dick * (1 - t)) + 0.13, zz - LZ))
             straenge.append(linie)
         g.bogen("bart", bartgelenk, straenge, bart[1], f["bart"])
-    g.kugel("mund", k, (0, -0.1095, LZ - 0.012), (0.045, 0.0257, 0.028), f["rachen"])                 # Mundhoehle hinter den Lippen: sichtbar, sobald der Kiefer aufklappt
+    g.kugel("mund", k, (0, KM[1] - KR[1] + 0.0285, LZ - 0.012), (0.045 * MW, 0.0257, 0.028), f["rachen"])                 # Mundhoehle hinter den Lippen: sichtbar, sobald der Kiefer aufklappt
     GJ = (0, 0.030, LZ + 0.012)                                                                       # Kiefergelenk: hinten bei den Ohren
     kiefer = g.gelenk("kiefer", k, GJ)
     kr = lambda pkt: [(x, y - GJ[1], zz - GJ[2]) for x, y, zz in pkt]
     uk = g.kugel("unterkiefer", kiefer, (KM[0] - GJ[0], KM[1] - GJ[1], KM[2] - GJ[2]), (KR[0] * 1.012, KR[1] * 1.006, KR[2]), f["schatten"], fein=32)   # eine Spur groesser: die Naht zum Oberkiefer ist eine saubere Kante
     for v in uk.data.vertices:
         v.co.z = min(v.co.z, LZ - KM[2])                                                               # oben flach: dort liegt die Lippennaht
-    g.kugel("kinn", kiefer, (0, -0.118 - GJ[1], 0.000 - GJ[2]), (0.036, 0.026, 0.026), f["schatten"])  # deutliches Kinn
-    g.kugel("mundboden", kiefer, (0, -0.075 - GJ[1], LZ - 0.0005 - GJ[2]), (0.042, 0.050, 0.003), f["rachen"])
-    g.kugel("zunge", kiefer, (0, -0.098 - GJ[1], LZ + 0.001 - GJ[2]), (0.028, 0.030, 0.006), f["zunge"])
+    # Kinn (Mr. Alex 19.11.: kein eigener „Pfropf“, ein Stueck wie die Nase): der Unterkiefer selbst woelbt sich vorn unten vor
+    ky, kz = -0.106, -0.045                               # Richtung vom Kiefermittelpunkt zum Kinn
+    kt = ((ky / KR[1]) ** 2 + (kz / KR[2]) ** 2) ** -0.5
+    kp, kl = (0.0, ky * kt, kz * kt), (ky * ky + kz * kz) ** 0.5
+    for v in uk.data.vertices:
+        if v.co.z < LZ - KM[2] - 0.004:
+            w = KINN[0] * math.exp(-((v.co.x - kp[0]) ** 2 + (v.co.y - kp[1]) ** 2 + (v.co.z - kp[2]) ** 2) / KINN[1] ** 2)
+            v.co.y += w * ky / kl
+            v.co.z += w * kz / kl
+    g.kugel("mundboden", kiefer, (0, KM[1] - KR[1] + 0.063 - GJ[1], LZ - 0.0005 - GJ[2]), (0.042 * MW, 0.050, 0.003), f["rachen"])
+    g.kugel("zunge", kiefer, (0, KM[1] - KR[1] + 0.040 - GJ[1], LZ + 0.001 - GJ[2]), (0.028 * MW, 0.030, 0.006), f["zunge"])
     unten = dict(dz=-0.0036)
     mit_auf = lambda fest: {**{n: kr(q) for n, q in formen(lambda q: q, LAUTE_UNTEN, **fest).items()}, "auf": kr(lippenlinie(auf=1, **fest))}
     g.bogen_mit_formen("unterlippe", kiefer, kr(lippenlinie(**unten)), mit_auf(unten), 0.0046, f["lippe_unten"], (0, 0, 0))

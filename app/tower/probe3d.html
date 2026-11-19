@@ -86,7 +86,9 @@
 </div>
 <div id="bau" class="kasten zu" hidden>
   <button type="button" class="kopf" aria-expanded="false">PROBE Körperbau</button>
-  <span class="titel">PROBE Körperbau · Kopf-Probe Mr. Flex</span>
+  <span class="titel">PROBE Körperbau · Figur wählen</span>
+  <button type="button" data-wahl="flex" aria-pressed="true">Mr. Flex</button>
+  <button type="button" data-wahl="sergeant" aria-pressed="false">Sergeant</button>
   <span>Maße (1 = wie heute)</span>
   <label>Arm <output>1,80</output><input type="range" data-mass="arm" min="1" max="2.6" step="0.05" value="1.8" aria-label="Armlänge"></label>
   <label>Bein <output>3,00</output><input type="range" data-mass="bein" min="1" max="4" step="0.05" value="3" aria-label="Beinlänge"></label>
@@ -238,6 +240,17 @@ try {
   // Teil C, Schritt 1 (18.11.): Sergeant Bearskin steht frei in der Raummitte (im Rundkurs von Mr. Flex); Kopf mit Bart (Wahl Mr. Alex); 19.11.: Knollennase
   const sergeants = [];
   for (const i of [0]) { const s = await ladeBauProbe(lader, szene, { x: bauStart.x - 1.0 + i, z: bauStart.z + 1.6 }, { kopf: SERGEANT.kopf }, SERGEANT); s.kopf("grimmig"); sergeants.push(s); }
+  /* Figur wählen (Mr. Alex 19.11.): alle Knöpfe des Kastens – Bewegungen, Gesten, Hände, Gesichter, Reden, Maße – gelten für die gewählte Figur.
+     Weitere Figuren: ein Knopf data-wahl im Kasten und ein Eintrag hier. */
+  const PROBEN = { flex: { probe: bauProbe, wer: "flex", sagt: "mrflex", nr: 0 }, sergeant: { probe: sergeants[0], wer: "sergeant", sagt: "sergeant", nr: 0 } };
+  let aktiv = PROBEN.flex;
+  for (const b of document.querySelectorAll("#bau button[data-wahl]")) b.addEventListener("click", () => {
+    aktiv = PROBEN[b.dataset.wahl]; buehne.dataset.wahl = b.dataset.wahl;
+    for (const x of document.querySelectorAll("#bau button[data-wahl]")) x.setAttribute("aria-pressed", String(x === b));
+    const z = aktiv.probe.zustand();                       // Regler und Hände zeigen den Stand der gewählten Figur
+    for (const r of document.querySelectorAll("#bau input[data-mass]")) { r.value = z.bau[r.dataset.mass]; r.parentElement.querySelector("output").textContent = (+r.value).toFixed(2).replace(".", ","); }
+    for (const x of document.querySelectorAll("#bau button[data-hand]")) x.setAttribute("aria-pressed", String(x.dataset.hand === z.wahl));
+  });
   $("bau").querySelector(".kopf").addEventListener("click", (e) => {
     const zu = $("bau").classList.toggle("zu"); e.currentTarget.setAttribute("aria-expanded", String(!zu)); document.body.classList.toggle("bau-offen", !zu);
   });
@@ -246,26 +259,29 @@ try {
     if (gruppe !== bauGruppe) { const s = document.createElement("span"); s.textContent = gruppe === "Grund" ? "Bewegungen" : gruppe; $("bauKnoepfe").append(s); bauGruppe = gruppe; }
     const b = document.createElement("button"); b.type = "button"; b.dataset.bau = knopf; b.textContent = titel; $("bauKnoepfe").append(b);
   }
-  for (const b of document.querySelectorAll("#bau button[data-bau]")) b.addEventListener("click", () => bauProbe.befehl(b.dataset.bau));
-  for (const b of document.querySelectorAll("#bau button[data-kopf]")) b.addEventListener("click", () => bauProbe.kopf(b.dataset.kopf));
+  for (const b of document.querySelectorAll("#bau button[data-bau]")) b.addEventListener("click", () => aktiv.probe.befehl(b.dataset.bau));
+  for (const b of document.querySelectorAll("#bau button[data-kopf]")) b.addEventListener("click", () => aktiv.probe.kopf(b.dataset.kopf));
   for (const b of document.querySelectorAll("#bau button[data-hand]")) b.addEventListener("click", () => {
-    bauProbe.haende(b.dataset.hand);
+    aktiv.probe.haende(b.dataset.hand);
     for (const x of document.querySelectorAll("#bau button[data-hand]")) x.setAttribute("aria-pressed", String(x === b));
   });
   for (const r of document.querySelectorAll("#bau input[data-mass]")) r.addEventListener("input", () => {
-    bauProbe.setze(r.dataset.mass, +r.value); r.parentElement.querySelector("output").textContent = (+r.value).toFixed(2).replace(".", ",");
+    aktiv.probe.setze(r.dataset.mass, +r.value); r.parentElement.querySelector("output").textContent = (+r.value).toFixed(2).replace(".", ",");
   });
   const mundZeiten = await fetch("figuren/mund_gary.json").then((r) => r.json()).catch(() => ({}));
   // Mr. Flex redet (Kopf-Probe 18.11.): seine Aufnahmen mit den Mundformen von Rhubarb; „Reden mit Gestik“ nimmt die längste der Auswahl
   const mundFlex = await fetch("figuren/mund_mrflex.json").then((r) => r.json()).catch(() => ({}));
-  const FLEX_SAGT = ["mrflex_01", "mrflex_02", "mrflex_03", "mrflex_04", "mrflex_05", "mrflex_06", "mrflex_07", "mrflex_08"];
-  const FLEX_GESTIK = FLEX_SAGT.reduce((a, b) => ((mundFlex[b] || {}).dauer || 0) > ((mundFlex[a] || {}).dauer || 0) ? b : a);
-  let flexNr = 0;
+  const mundSgt = await fetch("figuren/mund_sergeant.json").then((r) => r.json()).catch(() => ({}));
+  const MUND_PROBE = { flex: mundFlex, sergeant: mundSgt };
+  for (const p of Object.values(PROBEN)) {               // je Figur die ersten acht Aufnahmen; „Reden mit Gestik“ nimmt die längste davon
+    p.mund = MUND_PROBE[p.wer]; p.saetze = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `${p.sagt}_0${n}`);
+    p.gestik = p.saetze.reduce((a, b) => ((p.mund[b] || {}).dauer || 0) > ((p.mund[a] || {}).dauer || 0) ? b : a);
+  }
   for (const b of document.querySelectorAll("#bau button[data-kopfrede]")) b.addEventListener("click", () => {
-    const mitGestik = b.dataset.kopfrede === "gestik", id = mitGestik ? FLEX_GESTIK : FLEX_SAGT[flexNr++ % FLEX_SAGT.length];
-    spiele(`../audio/tower/${id}.mp3`, { wer: "flex", id,
-      beginn: () => { if (mitGestik && mundFlex[id]) bauProbe.rede({ einsaetze: einsaetzeAus(mundFlex[id].zeiten), zeit: () => (laeuft ? laeuft.zeit() : 1e9) }); },
-      ende: () => { bauProbe.mund(null); bauProbe.rede(null); } });
+    const p = aktiv, mitGestik = b.dataset.kopfrede === "gestik", id = mitGestik ? p.gestik : p.saetze[p.nr++ % p.saetze.length];
+    spiele(`../audio/tower/${id}.mp3`, { wer: p.wer, id,
+      beginn: () => { if (mitGestik && p.mund[id]) p.probe.rede({ einsaetze: einsaetzeAus(p.mund[id].zeiten), zeit: () => (laeuft ? laeuft.zeit() : 1e9) }); },
+      ende: () => { p.probe.mund(null); p.probe.rede(null); } });
   });
   const GARY_SAGT = ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"], GARY_GESTIK = "gary_06";
   let garyNr = 0, ohneFormen = false;
@@ -396,9 +412,9 @@ try {
     ton.src = datei; ton.play().catch(fertig);
   }
   function bewegeMund(dt) {                               // jedes Bild: Garys Mund folgt der laufenden Aufnahme – nach den Mundformen von Rhubarb; fehlen sie, als Reserve nach der Lautstärke (Mr. Alex 18.11.)
-    if (!laeuft || (laeuft.wer !== "gary" && laeuft.wer !== "flex")) return;
-    const flex = laeuft.wer === "flex", setze = (m) => (flex ? bauProbe.mund(m) : figuren.mund("gary", m));   // Mr. Flex (Probe-Figur) redet auf demselben Weg wie Gary
-    const zeit = laeuft.zeit(), formen = !ohneFormen && (flex ? mundFlex : mundZeiten)[laeuft.id];
+    if (!laeuft || (laeuft.wer !== "gary" && !PROBEN[laeuft.wer])) return;
+    const probe = PROBEN[laeuft.wer], flex = !!probe, setze = (m) => (flex ? probe.probe.mund(m) : figuren.mund("gary", m));   // Mr. Flex (Probe-Figur) redet auf demselben Weg wie Gary
+    const zeit = laeuft.zeit(), formen = !ohneFormen && (flex ? probe.mund : mundZeiten)[laeuft.id];
     if (formen && !flex) return setze(mundAusZeiten(formen.zeiten, zeit));
     let laut = 0;
     if (window.__towerTonTest) laut = 0.12 * Math.abs(Math.sin(zeit * 9));

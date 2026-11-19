@@ -16,7 +16,7 @@ import sys
 import tempfile
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FIGUREN = [f for f in ["gary", "mrflex"] if len(sys.argv) < 2 or f in sys.argv[1:]]   # python werkzeuge/tower_lippen.py mrflex = nur diese Figur; die uebrigen kommen mit Block B
+FIGUREN = [f for f in ["gary", "mrflex", "sergeant"] if len(sys.argv) < 2 or f in sys.argv[1:]]   # python werkzeuge/tower_lippen.py mrflex = nur diese Figur; die uebrigen kommen mit Block B
 AUFNAHMEN = {f: sorted(os.path.basename(d)[:-4] for d in glob.glob(os.path.join(REPO, "app", "audio", "tower", f + "_*.mp3"))) for f in FIGUREN}
 BLENDER = os.environ.get("BLENDER") or next(iter(sorted(glob.glob(r"C:\Program Files\Blender Foundation\Blender *\blender.exe"), reverse=True)), "blender")
 RHUBARB = next(iter(glob.glob(os.path.join(REPO, "werkzeuge", "extern", "rhubarb", "*", "rhubarb*"))), None)

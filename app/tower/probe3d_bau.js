@@ -305,7 +305,7 @@ export function rundeOrt(ru, weg) {
    roter Rock, weißer Gürtel, goldene Schnalle und Abzeichen, schwarze Hose und Stiefel. */
 const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
 export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, duenn: 0.6,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (duenn = Breite und Tiefe des Körpers, 1 = wie das Modell)
-  kopf: "sergeantkopf", knolle: "sergeant_knolle_teile", hand: 0.72,   // Kopf mit Bart, rothaarig (Wahl Mr. Alex 18.11.) · zwei Nasen zur Wahl (19.11.): teile = Hakennase, knolle = Knollennase · hand = Handgröße gegenüber Mr. Flex
+  kopf: "sergeantkopf", hand: 0.72,   // Kopf mit Bart, rothaarig, Knollennase (Wahl Mr. Alex 18./19.11.) · hand = Handgröße gegenüber Mr. Flex
  
   umfaerben: { Body: { "3,0": ROT, "7,0": ROT, "7,1": SCHWARZ, "6,0": WEISS, "2,1": GOLD, "0,1": GOLD }, Arm: { "3,0": ROT, "4,0": ROT, "7,0": ROT, "6,0": ROT }, Leg: { "3,0": SCHWARZ, "7,0": SCHWARZ, "7,1": SCHWARZ, "6,0": SCHWARZ } } };
 function drehung(o) { const q = o.quaternion.clone(); for (let p = o.parent; p; p = p.parent) q.premultiply(p.quaternion); return q; }   // Drehung in der Welt ohne die Maße der Eltern (für Teile, die nicht mitgequetscht werden sollen)

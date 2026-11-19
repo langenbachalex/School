@@ -29,6 +29,32 @@ def haut_vorn(x, z, vor=0.0):
     return -RY * max(0.02, 1 - (x / RX) ** 2 - ((z - CZ) / RZ) ** 2) ** 0.5 - vor
 
 
+def nasenform(k, stationen, material, n=11):
+    """Ein Netz aus Ringen: jeder Ring ist ein halber Bogen von der linken Gesichtsflaeche ueber den Nasenruecken zur rechten."""
+    def gesicht(x, z):                                  # vorderste Flaeche: Schaedel oder Kiefer
+        q = max(0.0, 1 - (x / KR[0]) ** 2 - ((z - KM[2]) / KR[2]) ** 2) ** 0.5
+        return min(haut_vorn(x, z), KM[1] - KR[1] * q)
+    punkte = []
+    for z, vor, breit in stationen:
+        for i in range(n):
+            w = math.pi * i / (n - 1)
+            x = breit * math.cos(w)
+            punkte.append((x, gesicht(x, z) + 0.004 - (vor + 0.004) * math.sin(w) ** 0.8, z))
+    flaechen = [(r * n + c, r * n + c + 1, (r + 1) * n + c + 1, (r + 1) * n + c) for r in range(len(stationen) - 1) for c in range(n - 1)]
+    netz = bpy.data.meshes.new("nase")
+    netz.from_pydata(punkte, [], flaechen)
+    netz.update()
+    if netz.polygons[len(flaechen) // 2 + n // 2].normal.y > 0:   # die Flaeche muss nach vorn schauen (das Gesicht schaut nach -y)
+        netz.flip_normals()
+    for fl in netz.polygons:
+        fl.use_smooth = True
+    netz.materials.append(material)
+    ob = bpy.data.objects.new("nase", netz)
+    bpy.context.scene.collection.objects.link(ob)
+    ob.parent = k
+    return ob
+
+
 def farben(vor="flex", **neu):
     """vor = Vorsilbe der Materialnamen (je Kopf eigene Farben), neu = Name -> (r, g, b) ersetzt die Farbe von Mr. Flex."""
     f = lambda name, rgb, *rest: g.farbe(name.replace("flex_", vor + "_"), neu.get(name[5:], rgb) if name.startswith("flex_") else rgb, *rest)
@@ -54,13 +80,11 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
     ok = g.kugel("oberkiefer", k, KM, KR, f["schatten"], fein=32)
     for v in ok.data.vertices:
         v.co.z = max(v.co.z, LZ - KM[2])
-    # Nase: kraeftig und gerade
+    # Nase: kraeftig und gerade, EIN Stueck (Mr. Alex 19.11.: keine Nase mehr aus mehreren Kugeln) – Stationen (Hoehe, vor dem Gesicht, halbe Breite)
     if nase:
-        g.kugel("nasenruecken", k, (0, haut_vorn(0, 0.135) - 0.010, 0.135), (0.016, 0.022, 0.046), f["haut"])
-        g.kugel("nasenspitze", k, (0, -0.171, 0.098), (0.021, 0.022, 0.018), f["haut"])
+        nasenform(k, [(0.188, 0.002, 0.008), (0.174, 0.009, 0.012), (0.158, 0.017, 0.014), (0.142, 0.025, 0.015), (0.126, 0.034, 0.017), (0.112, 0.043, 0.022),
+                      (0.100, 0.049, 0.027), (0.089, 0.045, 0.028), (0.080, 0.029, 0.023), (0.075, 0.008, 0.012)], f["haut"])
     for s in (-1, 1):
-        if nase:
-            g.kugel("nasenfluegel", k, (s * 0.018, -0.158, 0.094), (0.012, 0.014, 0.011), f["haut"])
         g.kugel("ohr", k, (s * 0.134, 0.0, 0.150), (0.013, 0.026, 0.036), f["haut"])
     for s, seite in ((-1, "r"), (1, "l")):
         # Wangenknochen: deutlich, schieben sich beim Laecheln nach oben

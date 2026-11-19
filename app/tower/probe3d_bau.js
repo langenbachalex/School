@@ -304,7 +304,9 @@ export function rundeOrt(ru, weg) {
    umfaerben: Körperteil → Farbfeld des Körperbilds (Spalte,Zeile von 8 × 4) → neues Feld. Aus der Rüstung wird die Uniform der Garde:
    roter Rock, weißer Gürtel, goldene Schnalle und Abzeichen, schwarze Hose und Stiefel. */
 const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
-export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, schlank: 0.6, fuss: 0.9, schulter: { hals: 0.025 }, stramm: true,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (schlank = Breite und Tiefe von Rumpf, Armen und Beinen, 1 = wie das Modell; seit 19.11. sauber gebaut statt gequetscht, siehe schlankBauen · fuss = Länge der Füße: 0.9 ist die Hälfte länger als die gequetschten 0.6)
+export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, schlank: 0.6, fuss: 0.9, schulter: { hals: 0.025 }, stramm: true,
+  gang: { heben: 0.85, ferse: 0, rollt: 0.04, ballen: 0.35, wippen: 0.03, spur: 1, tempo: 1.3 }, drill: { vorn: 85, hinten: 30 },   // britischer Drill (Figurenblatt): Knie hoch, der Fuß stampft flach auf, Arme gestreckt bis Schulterhöhe, 1,3 m/s; Spur = Hüftbreite, damit die Beine aneinander vorbeigehen
+    // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (schlank = Breite und Tiefe von Rumpf, Armen und Beinen, 1 = wie das Modell; seit 19.11. sauber gebaut statt gequetscht, siehe schlankBauen · fuss = Länge der Füße: 0.9 ist die Hälfte länger als die gequetschten 0.6)
   kopf: "sergeantkopf", hand: 0.72,   // Kopf mit Bart, rothaarig, Knollennase (Wahl Mr. Alex 18./19.11.) · hand = Handgröße gegenüber Mr. Flex
  
   uniform: { saum: [0.70, 1.10, 0.02], knoepfe: [0.75, 0.82, 0.89, 0.96, 1.03], knopf: 0.026 },   // weißer Saum vorn (von, bis, halbe Breite) und silberne Knöpfe (Höhen, Größe), Maße des ungestreckten Körpers
@@ -454,6 +456,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   }
   // (gesetzt werden Schulter- und Hüftgelenke erst, wenn die Ringe an Knie und Ellbogen eingemessen sind – die brauchen den Körper in Ruhe; sonst sitzen sie versetzt und die Beine greifen am Knie ineinander)
   if (figur.schlank) for (const s of "lr") { const k = K("toes" + s), ort = knochenNach(m, k, (p) => { p.z *= fussLang; }); k.position.copy(ort); gelenkFest.push([k, ort]); }
+  const GANG = { ...GEHEN, ...figur.gang };            // Geh-Ablauf je Figur (Sergeant: britischer Drill)
   const FERSE = FERSE_Z * fussLang, halsHoch = figur.kragen !== false ? schulter.hals : 0;
   const handMass = HAND * (figur.hand || 1), handFolgt = [];
   const haut = []; m.traverse((o) => { if (o.isMesh) o.frustumCulled = false; if (o.isSkinnedMesh && !/Cape/.test(o.name)) haut.push(o); });
@@ -605,7 +608,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const welt = m.getWorldQuaternion(Q()).multiply(dreh).multiply(handRuhe[s]);
     W.quaternion.copy(w0.slerp(W.parent.getWorldQuaternion(Q()).invert().multiply(welt), gewicht)); W.updateMatrixWorld(true);
   };
-  const g = { stramm: 0, strammArm: 0, modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", mund: null, rede: null, redeGesten: 0, redet: 0, akzent: 0, uhr: 0, nick: 0, brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
+  const g = { stramm: 0, strammArm: 0, drill: 0, modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", mund: null, rede: null, redeGesten: 0, redet: 0, akzent: 0, uhr: 0, nick: 0, brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
   /* Stramme Haltung (Sergeant, Mr. Alex 19.11.: er stand breitarmig und mit durchgedrückten Knien): Im Stehen richten sich Rumpf, Arme und Beine nach festen
      Richtungen aus – Rücken gerade, Arme gestreckt an der Hosennaht, Handflächen am Bein, Beine gestreckt, Fersen zusammen, Fußspitzen leicht nach außen.
      Die Haltung blendet weich ein, sobald er steht, und sofort aus, wenn eine Geste oder der Gang beginnt (figur.stramm). */
@@ -622,6 +625,19 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const steht = g.modus === "stehen", gruss = g.modus === "salut";   // beim Salutieren bleibt der Körper stramm (Beine, linker Arm, Rücken) – nur der rechte Arm grüßt
     g.stramm += ((steht || gruss ? 1 : 0) - g.stramm) * Math.min(1, dt * (steht || gruss ? 7 : 14));
     g.strammArm += ((steht ? 1 : 0) - g.strammArm) * Math.min(1, dt * (steht ? 7 : 14));
+    g.drill += ((g.modus === "gehen" && !g.wendet ? 1 : 0) - g.drill) * Math.min(1, dt * 8);
+    if (g.drill > 0.01) {                                // Drill-Gang: Rücken starr und gerade, die Arme schwingen gestreckt bis Schulterhöhe, die Fäuste geschlossen (die Beine führt gehGang)
+      const d = g.drill, G = gang.gehen, u0 = G.dauer ? aktion.gehen.time / G.dauer - G.phase : 0, DR = figur.drill || {};
+      richte(K("spine"), K("chest"), v(0, 1, -0.02), d); richte(K("chest"), head, v(0, 1, 0.03), d);
+      for (const [s, seite] of [["r", -1], ["l", 1]]) {
+        const hin = Math.cos(2 * Math.PI * (u0 - (s === "l" ? 0.5 : 0))), mitte = ((DR.vorn ?? 85) - (DR.hinten ?? 30)) / 2, phi = ((mitte + ((DR.vorn ?? 85) - mitte) * hin) * Math.PI) / 180;   // der Arm ist vorn, wenn das andere Bein vorn ist
+        const arm = v(seite * 0.04, -Math.cos(phi), Math.sin(phi));
+        richte(K("upperarm" + s), K("lowerarm" + s), arm, d); richte(K("lowerarm" + s), K("wrist" + s), arm, d);
+        dreheHand(s, arm.clone(), v(-seite, 0, 0), d);
+      }
+      if (d > 0.5) g.hand = [F, F];
+      m.updateMatrixWorld(true);
+    }
     const w = g.stramm; if (w < 0.01) return;
     richte(K("spine"), K("chest"), v(0, 1, -0.02), w); richte(K("chest"), head, v(0, 1, 0.03), w);                       // Rücken gerade, Brust leicht heraus
     for (const [s, seite] of [["r", -1], ["l", 1]]) {
@@ -759,13 +775,13 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       const unten = Math.min(...y), am = y.map((h) => h < unten + STAND_HOCH * mass), fest = y.map((h) => h < unten + hoch), einer = (i) => fest[i % N] || fest[(i + N / 2) % N];   // der rechte Fuß macht dasselbe eine halbe Runde später
       for (let i = 0; i < N; i++) { if (am[i] && am[(i + 1) % N]) { weg += z[i] - z[(i + 1) % N]; zeit += dauer / N; } if (einer(i)) boden = Math.min(boden, tiefe[i]); }
       for (let i = 0; i < 2 * N; i++) { luft = einer(i) ? 0 : luft + 1; laengste = Math.max(laengste, luft); }
-      gang[art] = { tempo: zeit > 0 ? Math.max(0.3, weg / zeit) : 1, boden: -boden, unten, hoch, flug: (Math.min(laengste, N / 2) * dauer) / N };
+      gang[art] = { tempo: art === "gehen" && GANG.tempo ? GANG.tempo : zeit > 0 ? Math.max(0.3, weg / zeit) : 1, boden: -boden, unten, hoch, flug: (Math.min(laengste, N / 2) * dauer) / N };
       if (art === "gehen") {                                                           // Maße für den Geh-Ablauf (gehGang)
-        const G = gang.gehen, D = GEHEN.stand, b = beinTeile(), lang = (oberschenkel * b.ober + unterschenkel * b.unter) * mass * GEHEN.streck, wipp = GEHEN.wippen * mass;
+        const G = gang.gehen, D = GANG.stand, b = beinTeile(), lang = (oberschenkel * b.ober + unterschenkel * b.unter) * mass * GANG.streck, wipp = GANG.wippen * mass;
         let auf = 0; for (let i = 0; i < N; i++) if (!am[(i + N - 1) % N] && am[i]) auf = i;   // hier setzt der linke Fuß in der Bewegung auf: der Ablauf bleibt im Takt mit Armen und Rumpf
         let mitte = 0; for (let i = 0; i < N; i += 8) { a.time = (dauer * i) / N; mixer.update(0); strecke(); for (const s of "lr") mitte += (m.worldToLocal(K("upperleg" + s).getWorldPosition(p)).z * mass) / (2 * N / 8); }
-        Object.assign(G, { dauer, phase: auf / N - 0.04, weit: G.tempo * dauer, vorn: 0, spur: Math.abs(m.worldToLocal(K("upperlegl").getWorldPosition(p)).x) * mass * GEHEN.spur });
-        G.vorn = mitte - GEHEN.hinten * mass + (G.weit * D - stehBahn(0, G).z - (stehBahn(D, G).z + G.weit * D)) / 2;   // der Knöchel schwingt gleich weit vor und hinter die Hüfte
+        Object.assign(G, { dauer, phase: auf / N - 0.04, weit: G.tempo * dauer, vorn: 0, spur: Math.abs(m.worldToLocal(K("upperlegl").getWorldPosition(p)).x) * mass * GANG.spur });
+        G.vorn = mitte - GANG.hinten * mass + (G.weit * D - stehBahn(0, G).z - (stehBahn(D, G).z + G.weit * D)) / 2;   // der Knöchel schwingt gleich weit vor und hinter die Hüfte
         const e = 0.002, ende = stehBahn(D, G), davor = stehBahn(D - e, G); G.ab = [ende.z - davor.z, ende.y - davor.y, ende.th - davor.th].map((x) => (x / e) * (1 - D));   // Schwung am Ende der Standphase
         G.hoch = Infinity;                                                             // Hüftgelenk so hoch, dass das Bein beim Aufsetzen und Abdrücken fast gestreckt ist
         for (let u = 0; u <= D; u += 0.01) { const f = stehBahn(u, G); G.hoch = Math.min(G.hoch, f.y + Math.sqrt(Math.max(0, lang * lang - (f.z - mitte) ** 2)) + wippe(u) * wipp); }
@@ -794,24 +810,24 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const wippe = (u) => (1 - Math.cos(4 * Math.PI * (u - 0.3))) / 2;                 // 0 mitten im Stand (Hüfte oben), 1 wenn beide Füße am Boden sind
   const stehBahn = (u, G) => {                                                       // Knöchel (vor/hoch) und Winkel der Sohle (+ = Zehen oben), solange der Fuß steht
     const F = fussMass, zc = G.vorn - G.weit * u;                                     // die Ferse liegt fest am Boden
-    if (u < GEHEN.rollt) { const th = GEHEN.ferse * (1 - weich(u, 0, GEHEN.rollt)); return { z: zc + F.hb * Math.cos(th) - F.ha * Math.sin(th), y: F.hb * Math.sin(th) + F.ha * Math.cos(th), th }; }
-    const k = Math.max(0, (u - GEHEN.flach) / (GEHEN.stand - GEHEN.flach)), th = -GEHEN.ballen * k * k, dy = F.ha - F.ht;   // danach dreht der Fuß um das Zehengelenk
+    if (u < GANG.rollt) { const th = GANG.ferse * (1 - weich(u, 0, GANG.rollt)); return { z: zc + F.hb * Math.cos(th) - F.ha * Math.sin(th), y: F.hb * Math.sin(th) + F.ha * Math.cos(th), th }; }
+    const k = Math.max(0, (u - GANG.flach) / (GANG.stand - GANG.flach)), th = -GANG.ballen * k * k, dy = F.ha - F.ht;   // danach dreht der Fuß um das Zehengelenk
     return { z: zc + F.hb + F.bf - F.bf * Math.cos(th) - dy * Math.sin(th), y: F.ht - F.bf * Math.sin(th) + dy * Math.cos(th), th };
   };
   const bogen = (a, ma, b, mb, s) => { const s2 = s * s, s3 = s2 * s; return (2 * s3 - 3 * s2 + 1) * a + (s3 - 2 * s2 + s) * ma + (3 * s2 - 2 * s3) * b + (s3 - s2) * mb; };
   const fussBahn = (u, G) => {
-    if (u < GEHEN.stand) return { ...stehBahn(u, G), fest: true, zeh: 0 };
-    const s = (u - GEHEN.stand) / (1 - GEHEN.stand), a = stehBahn(GEHEN.stand, G), b = stehBahn(0, G);   // Schwung: vom Abdruck zum nächsten Aufsetzen
-    return { z: bogen(a.z, G.ab[0], b.z, -G.weit * (1 - GEHEN.stand), s), y: bogen(a.y, G.ab[1], b.y, 0, s) + GEHEN.heben * mass * Math.sin(Math.PI * Math.pow(s, 0.85)) ** 2,
+    if (u < GANG.stand) return { ...stehBahn(u, G), fest: true, zeh: 0 };
+    const s = (u - GANG.stand) / (1 - GANG.stand), a = stehBahn(GANG.stand, G), b = stehBahn(0, G);   // Schwung: vom Abdruck zum nächsten Aufsetzen
+    return { z: bogen(a.z, G.ab[0], b.z, -G.weit * (1 - GANG.stand), s), y: bogen(a.y, G.ab[1], b.y, 0, s) + GANG.heben * mass * Math.sin(Math.PI * Math.pow(s, 0.85)) ** 2,
       th: bogen(a.th, G.ab[2], b.th, 0, s), fest: false, zeh: weich(s, 0, 0.3) };
   };
   const quer = v(1, 0, 0);
   const gehGang = (dt) => {
     const G = gang.gehen, an = g.modus === "gehen" && !g.wendet;
-    g.geh = Math.min(1, Math.max(0, g.geh + ((an ? 1 : -1) * dt) / GEHEN.an)); if (g.geh <= 0 || !G.dauer) return;
+    g.geh = Math.min(1, Math.max(0, g.geh + ((an ? 1 : -1) * dt) / GANG.an)); if (g.geh <= 0 || !G.dauer) return;
     const w = weich(g.geh, 0, 1), u0 = aktion.gehen.time / G.dauer - G.phase, qm = m.getWorldQuaternion(Q()), vorn = v(0, 0, 1).applyQuaternion(qm);
     let hoch = 0; for (const s of "lr") hoch += wo(K("upperleg" + s)).y / 2;         // Hüfte: sanftes Auf und Ab, oben mitten im Stand
-    g.my += (G.hoch - wippe(u0) * GEHEN.wippen * mass - hoch - g.my) * w; m.position.y = g.my; anker.updateMatrixWorld(true);
+    g.my += (G.hoch - wippe(u0) * GANG.wippen * mass - hoch - g.my) * w; m.position.y = g.my; anker.updateMatrixWorld(true);
     for (const [s, seite] of [["l", 1], ["r", -1]]) {
       const u = (((u0 + (s === "r" ? 0.5 : 0)) % 1) + 1) % 1, f = fussBahn(u, G), F = K("foot" + s), Z = K("toes" + s);
       zweiGelenke(K("upperleg" + s), K("lowerleg" + s), F, v(anker.position.x + Math.cos(g.dreh) * seite * G.spur + Math.sin(g.dreh) * f.z, f.y, anker.position.z - Math.sin(g.dreh) * seite * G.spur + Math.cos(g.dreh) * f.z), 0, vorn, w);   // in Laufrichtung, auch auf dem Rundkurs
@@ -955,6 +971,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
         const luecken = links.map((x, n) => +(x - rechts[n]).toFixed(3)).filter((x) => Number.isFinite(x));
         return { luecke: Math.min(...luecken), luecken, huefte: +hl.distanceTo(hr).toFixed(3) };
       })(),
+      drill: figur.stramm ? { an: +g.drill.toFixed(2), armR: grad(Math.atan2(m.worldToLocal(wo(K("wristr"))).z - m.worldToLocal(wo(K("upperarmr"))).z, m.worldToLocal(wo(K("upperarmr"))).y - m.worldToLocal(wo(K("wristr"))).y)),
+        ellbogen: armLage("r").ellbogen, knieHoch: +(Math.max(wo(K("lowerlegl")).y, wo(K("lowerlegr")).y) / wo(K("upperlegl")).y).toFixed(2) } : null,   // Testprogramm: Drill-Gang – Winkel des rechten Arms (0 = hängt, 90 = waagrecht nach vorn), Ellbogen (180 = gestreckt), Höhe des höheren Knies gegenüber dem Hüftgelenk
       ohneKragen: (() => { let k = null; m.traverse((o) => { if (o.userData.kragenWeg) k = o.userData.kragenWeg; }); const haut = kopfTeil && kopfTeil.getObjectByName("lippenhaut"); if (haut && !haut.geometry.boundingBox) haut.geometry.computeBoundingBox();
         return k ? { ...k, hals: !!(kopfTeil && kopfTeil.getObjectByName("hals")), mundHaut: haut ? +(haut.geometry.boundingBox.max.x - haut.geometry.boundingBox.min.x).toFixed(3) : 0 } : null; })(),   // Testprogramm: Kragen gelöscht, Hals am Kopf, Breite der Haut unter der Unterlippe
       kette: kette.glieder.length ? { zahl: kette.glieder.length, kinn: +kette.glieder.reduce((a, b) => (b[2] > a[2] ? b : a))[0].position.y.toFixed(4) } : null,

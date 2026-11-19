@@ -307,6 +307,18 @@ async function probe3dTest(browser, basis, app, name, fm) {
       await pg.click('#bau button[data-wahl="sergeant"]'); await pg.click('#bau button[data-bau="gehen"]');
       const geht = await pg.waitForFunction(() => window.__probe3d.sergeant()[0].modus === "gehen" && window.__probe3d.bau().modus === "stehen", null, { timeout: 8000 }).then(() => true).catch(() => false);
       if (!geht) fehl.push(`${titel}: mit der Auswahl „Sergeant“ steuern die Knöpfe nicht den Sergeant`);
+      // Drill-Gang (19.11., Figurenblatt: britischer Drill – Knie hoch, Arme gestreckt bis Schulterhöhe, nie mit durchgestreckten Beinen) und Beine nebeneinander:
+      // über mehrere Schritte bleibt zwischen den Beinen eine Lücke (Mr. Alex: „die Beine dürfen nicht ineinandergreifen oder sich verschlingen“).
+      if (geht) {
+        let luecke = 9, armVorn = -99, armHinten = 99, knie = 0, krumm = 180, beuge = 180;
+        for (let k = 0; k < 24; k++) { await pg.waitForTimeout(70); const z = (await pg.evaluate(() => window.__probe3d.sergeant()))[0]; if (!z.drill || z.drill.an < 0.9) continue;
+          luecke = Math.min(luecke, z.beine.luecke); armVorn = Math.max(armVorn, z.drill.armR); armHinten = Math.min(armHinten, z.drill.armR); knie = Math.max(knie, z.drill.knieHoch); krumm = Math.min(krumm, z.drill.ellbogen); beuge = Math.min(beuge, ...z.knieGrad); }
+        if (!(luecke >= 0.015)) fehl.push(`${titel}: beim Drill-Gang greifen die Beine des Sergeants ineinander (kleinste Lücke ${luecke} m, Soll mindestens 0,015)`);
+        if (!(armVorn > 70 && armHinten < -15)) fehl.push(`${titel}: beim Drill-Gang schwingen die Arme nicht bis Schulterhöhe (vorn ${armVorn}°, hinten ${armHinten}°; Soll über 70 und unter −15)`);
+        if (!(krumm > 160)) fehl.push(`${titel}: beim Drill-Gang sind die Arme nicht gestreckt (Ellbogen ${krumm}°, Soll über 160)`);
+        if (!(knie > 0.8)) fehl.push(`${titel}: beim Drill-Gang hebt der Sergeant das Knie nicht hoch (höchstes Knie auf ${knie} der Hüfthöhe, Soll über 0,8)`);
+        if (!(beuge < 120)) fehl.push(`${titel}: beim Drill-Gang beugt der Sergeant das Knie kaum (kleinster Kniewinkel ${beuge}°) – wirkt wie ein Stechschritt`);
+      }
       await pg.click('#bau button[data-bau="stehen"]'); await pg.click('#bau button[data-wahl="flex"]');
     }
     if (!(b.hals > 1.1)) fehl.push(`${titel}: Probe-Figur ist nicht gestreckt (Hals in ${b.hals} m Höhe, ungestreckt 0,785)`);
@@ -516,7 +528,7 @@ async function probe3dTest(browser, basis, app, name, fm) {
     await pg.click('#figuren button[data-figur="gestik"]');
     const vorGestik = (await figuren())[0].gesten;
     let gesten = 0;
-    for (let i = 0; i < 25 && gesten < 2; i++) { gesten = (await takt(6)).gesten - vorGestik; await pg.waitForTimeout(100); }
+    for (let i = 0; i < 50 && gesten < 2; i++) { gesten = (await takt(6)).gesten - vorGestik; await pg.waitForTimeout(100); }   // bis etwa 6 s: die Gesten kommen zur echten Zeit der Aufnahme; seit der Test-Browser mit Grafikkarte läuft (19.11.), waren 25 Runden vor dem zweiten Satzanfang vorbei
     if (gesten < 2) fehl.push(`${titel}: beim Reden mit Gestik laufen nur ${gesten} Gesten (erwartet mindestens 2)`);
     await stumm();
     // jede Gary-Aufnahme braucht vorab gerechnete Mundformen (wie beim Offline-Speicher: ein vergessener Rechenlauf soll auffallen)

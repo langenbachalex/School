@@ -245,7 +245,15 @@ try {
   const bauProbe = await ladeBauProbe(lader, szene, { ...bauStart, bahn: Math.max(1.2, bauBahn * gk.zelle - 0.3), runde: bauRunde });
   // Teil C, Schritt 1 (18.11.): Sergeant Bearskin steht frei in der Raummitte (im Rundkurs von Mr. Flex); Kopf mit Bart (Wahl Mr. Alex); 19.11.: Knollennase
   const sergeants = [];
-  for (const i of [0]) { const s = await ladeBauProbe(lader, szene, { x: bauStart.x - 1.0 + i, z: bauStart.z + 1.6 }, { kopf: SERGEANT.kopf }, SERGEANT); s.kopf("grimmig"); sergeants.push(s); }
+  // Der Sergeant steht auf der hinteren Geraden desselben Rundkurses (19.11.): so marschiert er viele Schritte geradeaus, ohne zu wenden – nötig, um den Drill-Gang zu beurteilen.
+  // Ist der Rundkurs nicht frei, steht er wie bisher in der Raummitte und geht die kurze Bahn.
+  let sgtPlatz = { x: bauStart.x - 1.0, z: bauStart.z + 1.6 };
+  if (bauRunde) {
+    const ru = bauRunde, ga = ru.x1 - ru.x0 - 2 * ru.r, gb = ru.z1 - ru.z0 - 2 * ru.r, q = (Math.PI * ru.r) / 2;
+    const runde = { ...ru, start: ga + q + gb + q + 0.05 }   /* Anfang der hinteren Geraden */, p0 = rundeOrt(runde, 0);
+    sgtPlatz = { x: p0.x, z: p0.z, runde };
+  }
+  for (const i of [0]) { const s = await ladeBauProbe(lader, szene, sgtPlatz, { kopf: SERGEANT.kopf }, SERGEANT); s.kopf("grimmig"); sergeants.push(s); }
   /* Figur wählen (Mr. Alex 19.11.): alle Knöpfe des Kastens – Bewegungen, Gesten, Hände, Gesichter, Reden, Maße – gelten für die gewählte Figur.
      Weitere Figuren: ein Knopf data-wahl im Kasten und ein Eintrag hier. */
   const PROBEN = { flex: { probe: bauProbe, wer: "flex", sagt: "mrflex", nr: 0 }, sergeant: { probe: sergeants[0], wer: "sergeant", sagt: "sergeant", nr: 0 } };
@@ -543,7 +551,7 @@ try {
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
   window.__probe3d = { blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
-    sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
+    sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3
     halt: (an) => { angehalten = an; },   // Prüfbilder: Figuren stehen still, nur takt bewegt sie weiter
     takt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); figuren.bewege(ms / 1000, performance.now() + i * ms); } },   // Testprogramm: n Bilder im Abstand ms rechnen (wie 60 Bilder pro Sekunde)

@@ -12,6 +12,10 @@ AUDIO = os.path.join(WURZEL, "app", "audio", "tower")
 ZIEL = os.path.join(WURZEL, "app", "tower-anhoeren.html")
 NAMEN = {"mrflex": "Mr. Flex", "erzaehler": "Erzähler", "karte": "Karten", "gary": "Gary",
          "sergeant": "Sergeant", "taube": "Taube", "arthur": "Arthur", "tourist": "Tourist"}
+# Neue Aufnahmen, die Mr. Alex noch nicht gehört hat: eigene Gruppe ganz oben. Nach seiner Abnahme Muster und Titel
+# auf die nächste Lieferung setzen (oder NEU = re.compile("^$") für „nichts Neues“).
+NEU_TITEL = "Neu am 19.11. – Help the tourist (noch nicht angehört)"
+NEU = re.compile(r"^(tourist_\d+|gary_7[3-9]|k1_w00[ab])$")
 ZUERST = ["mrflex_01", "k1_p7", "taube_05", "gary_20_1", "gary_20_2", "gary_70_1", "gary_70_2",
           "gary_71_1", "gary_71_2", "gary_72_1", "gary_72_2", "sergeant_01"]
 
@@ -56,7 +60,8 @@ def eintraege():
             aus.append({"d": "proben/" + d[:-4], "f": d.split("_")[0], "t": texte.get(d[:-4].rsplit("_", 1)[0], ""), "g": "Proben", "h": "Probe " + d[:-4].rsplit("_", 1)[1]})
     for d in sorted(da - benutzt):
         aus.append({"d": d, "f": "?", "t": "(kein Text in den Tabellen gefunden)", "g": "Sonstige", "h": ""})
-    return aus
+    neu = [dict(e, g=NEU_TITEL) for e in aus if NEU.match(e["d"])]      # Neues steht als eigene Gruppe ganz oben
+    return neu + [e for e in aus if not NEU.match(e["d"])]
 
 
 SEITE = """<!doctype html>
@@ -194,7 +199,7 @@ def main():
     seite = (SEITE.replace("__ANZAHL__", str(len(e)))
              .replace("__DATEN__", json.dumps(e, ensure_ascii=False).replace("</", "<\\/"))
              .replace("__NAMEN__", json.dumps(NAMEN, ensure_ascii=False))
-             .replace("__ZUERST__", json.dumps(ZUERST)))
+             .replace("__ZUERST__", json.dumps([x["d"] for x in e if NEU.match(x["d"])] or ZUERST)))   # Vorauswahl „Zuerst anhören“ = das Neue; gibt es nichts Neues, die alte Liste
     with open(ZIEL, "w", encoding="utf-8") as f:
         f.write(seite)
     print(f"{len(e)} Aufnahmen -> {os.path.relpath(ZIEL, WURZEL)}")

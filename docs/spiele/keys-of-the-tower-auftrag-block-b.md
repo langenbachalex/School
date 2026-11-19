@@ -43,7 +43,7 @@ Nach jedem Schritt: Testprogramm grün (Laptop und iPad), Mr. Alex zeigen, auf s
 
 ### B4 – Sprüche aus dem Vorrat
 - Die Auswahl: zuerst Sprüche für genau diese Stelle, dann für den Ort, dann allgemeine. Seltenheit 1 (häufig) bis 4 (sehr selten). Nie derselbe Spruch zweimal hintereinander; zuletzt Gehörtes wird zurückgestellt und das Gerät merkt es sich über den Tag hinaus.
-- Die Spalte `ort` in `tower_sprueche.tsv` liefert der Master vor dem Start von B4.
+- Die Spalte `ort` steht seit 19.11. in `tower_sprueche.tsv` (letzte Spalte): `hof` = fällt nur im Hof (198 Sprüche: Gary 78, Mr. Flex 61, Arthur 26, Tourist 25, Sergeant 8), leer = überall (292). Die **Stelle** im Hof ist der Anlass: `hof_fass`, `hof_mauer`, `hof_raben`, `hof_tor`, `hof_uhr`, `hof_pfuetze`, `hof_sergeant`, `hof_tourist`, `hof_gary`, `hof_kind`; `hof_nacht`, `hof` und `hof_lehrer` gelten überall im Hof; `hof_tipp` und `tipp_fass` sind Tipps, `hilf_*` gehört zu „Help the tourist“. Neue Orte bekommen später ihr eigenes Kürzel (z. B. `guardroom`).
 - Mr. Flex spricht nur, wo etwas spiegelt (Spiegel, Scheibe, Pfütze), und im Hof erst, nachdem das Kind ihn kennengelernt hat.
 - Wer einen Ort wieder betritt, hört einen neuen kurzen Spruch statt der alten Zeilen.
 - „Help the tourist“ als Spiel zum Wiederkommen im Hof, wie im Blatt beschrieben.

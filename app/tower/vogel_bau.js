@@ -40,6 +40,17 @@ export const VOEGEL = {
   },
 };
 
+/* Die sechs anderen Raben (Figuren 8, 19.11.): derselbe Körper wie Arthur, etwas kleiner als der König, jeder mit seinem Ring und eigener Ruhe im Blick.
+   Mordred, die Elster, die sich als siebter Rabe ausgibt: der Kleinste, ohne Ring, schaut am unruhigsten umher. Reihenfolge auf der Mauer: RABENREIHE (Arthur sitzt in der Mitte). */
+for (const [wer, mehr] of Object.entries({
+  guinevere: { name: "Guinevere", gross: 1.2, blick: { pause: [7, 12], weit: 1.0, tempo: 0.7, schief: 0.3, schiefOft: 0.45 } },
+  lancelot: { name: "Lancelot", gross: 1.26, blick: { pause: [5, 9], weit: 1.2, tempo: 0.9, schief: 0.3, schiefOft: 0.25 } },
+  morgana: { name: "Morgana", gross: 1.16, blick: { pause: [8, 14], weit: 0.9, tempo: 0.6, schief: 0.4, schiefOft: 0.5 } },
+  gawain: { name: "Gawain", gross: 1.24, blick: { pause: [6, 10], weit: 1.2, tempo: 0.85, schief: 0.3, schiefOft: 0.3 } },
+  percival: { name: "Percival", gross: 1.14, blick: { pause: [5, 10], weit: 1.1, tempo: 0.9, schief: 0.35, schiefOft: 0.4 } },
+  mordred: { name: "Mordred", gross: 1.08, blick: { pause: [3, 6], weit: 1.3, tempo: 1.2, schief: 0.3, schiefOft: 0.3 } },
+})) VOEGEL[wer] = { ...VOEGEL.arthur, ...mehr, ring: RINGE[wer] };
+export const RABENREIHE = ["guinevere", "lancelot", "morgana", "arthur", "gawain", "percival", "mordred"];
 const zufall = ([a, b]) => a + Math.random() * (b - a);
 
 export function bauVogel(wer = "arthur") {

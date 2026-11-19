@@ -732,6 +732,16 @@ async function hofTest(browser, basis, app, name, fm) {
         if (fl.setzDauer < 0.8) fehl.push(`${t}: Arthur sitzt ${fl.setzDauer.toFixed(2)} s nach dem Aufsetzen schon still (erwartet mindestens 0,8 s: nachfedern, Flügel zurechtrücken)`);
         if (!gleich(fl.ende, fl.ruhe) || Math.abs(fl.ende.fuss - fl.ruhe.fuss) > 0.01) fehl.push(`${t}: nach dem Landen sitzt Arthur nicht an seinem Platz wie vorher`);
       }
+      // Figuren 8 (19.11.): die sechs anderen Raben sitzen auf der Mauer, jeder mit seinem Ring – Mordred ohne
+      const rb = await pg.evaluate(() => { const p = window.__probe3d; return p.raben ? { raben: p.raben(), hoch: p.hof().masse.rabenmauer.hoch } : null; });
+      if (!rb || rb.raben.length !== 6) fehl.push(`${t}: auf der Rabenmauer sitzen ${rb ? rb.raben.length : 0} andere Raben (erwartet 6)`);
+      else {
+        const ringe = rb.raben.filter((r) => r.ring).map((r) => r.ring.name), ohne = rb.raben.filter((r) => !r.ring).map((r) => r.name);
+        if (new Set(ringe).size !== 5 || ringe.includes("gelb")) fehl.push(`${t}: die Ringe der Raben sind nicht fünf verschiedene Farben außer Arthurs Gelb (${ringe.join(", ")})`);
+        if (ohne.join() !== "Mordred") fehl.push(`${t}: ohne Ring ist nicht genau Mordred (${ohne.join(", ") || "keiner"})`);
+        const schief = rb.raben.filter((r) => Math.abs(r.fuss - rb.hoch) > 0.03 || !r.angelegt || r.tut !== "sitzt").map((r) => r.name);
+        if (schief.length) fehl.push(`${t}: diese Raben sitzen nicht ruhig auf der Mauer: ${schief.join(", ")}`);
+      }
       // Figuren 8 (19.11.): Plustern – die Kehlfedern stellen sich auf und legen sich wieder; Schlüssel im Schnabel (w07) – sitzt vor dem Kopf und verschwindet wieder
       const ps = await pg.evaluate(() => { const p = window.__probe3d; if (!p.vogelPluster) return null; p.vogelHalt(true); const ruhe = p.vogel(), ok = p.vogelPluster(); let auf = 0, breit = 0, n = 0;
         do { p.vogelTakt(1, 25); const v = p.vogel(); auf = Math.max(auf, v.pluster); breit = Math.max(breit, v.breit); n++; } while (p.vogel().pluster > 0 && n < 400);

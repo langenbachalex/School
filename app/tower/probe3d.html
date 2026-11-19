@@ -149,7 +149,7 @@ import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt 
 import { ladeFiguren, mundAusZeiten, einsaetzeAus, MUNDFORMEN_MENSCH } from "./probe3d_figuren.js";
 import { ladeBauProbe, GESTEN, rundeOrt, SERGEANT } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
-import { bauVogel, ladeVogel } from "./vogel_bau.js";   // Figuren 7 (19.11.): Arthur, der Rabe – nur im Hof
+import { bauVogel, ladeVogel, RABENREIHE } from "./vogel_bau.js";   // Figuren 7 (19.11.): Arthur, der Rabe – nur im Hof
 import { bauHof, HOF_GROESSEN, HOF_START } from "./hof_bau.js";   // Hof-Rohbau (19.11.): eigener Abschnitt, gewählt mit ?ort=hof&gross=40x30; ohne das bleibt der Guard Room
 
 const $ = (id) => document.getElementById(id);
@@ -332,6 +332,10 @@ try {
   }
   if (arthur) { szene.add(arthur.wurzel); setzeRabe("vorn"); for (const b of document.querySelectorAll("#bau button[data-rabe]")) b.addEventListener("click", () => setzeRabe(b.dataset.rabe));
     for (const b of document.querySelectorAll("#bau button[data-rabetut]")) b.addEventListener("click", () => ({ schlag: () => arthur.fluegelschlag(), runde: rundeRabe, landen: landeRabe, pluster: () => arthur.plustere(), schluessel: () => b.setAttribute("aria-pressed", String(arthur.schluessel(b.getAttribute("aria-pressed") !== "true"))) })[b.dataset.rabetut]()); }
+  /* Die sechs anderen Raben (Figuren 8, 19.11.) sitzen auf ihren Plätzen auf der Rabenmauer und ersetzen dort die Platzhalter-Klötze; Arthurs Platz ist der vierte */
+  const andereRaben = arthur && sucht.get("rabe") !== "einfach" ? await Promise.all(RABENREIHE.map(async (wer, i) => { if (wer === "arthur") return null;
+    const r = await ladeVogel(lader, wer), platz = hof.plan.raben[i], klotz = hof.scene.getObjectByName("hof_rabe" + (i + 1));
+    r.setze(platz.x - 0.25, hof.plan.masse.rabenmauer.hoch, platz.z, -Math.PI / 2); szene.add(r.wurzel); if (klotz) klotz.visible = false; return r; })).then((l) => l.filter(Boolean)) : [];
   zeigeWeg();
   $("bau").querySelector(".kopf").addEventListener("click", (e) => {
     const zu = $("bau").classList.toggle("zu"); e.currentTarget.setAttribute("aria-expanded", String(!zu)); document.body.classList.toggle("bau-offen", !zu);
@@ -624,7 +628,7 @@ try {
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1), t0 = performance.now(); zuletzt = t;
     bewegeFigur(dt, t);
-    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); if (arthur && !rabeHalt) arthur.bewege(dt); for (const s of sergeants) s.bewege(dt); }
+    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); if (arthur && !rabeHalt) arthur.bewege(dt); for (const r of andereRaben) r.bewege(dt); for (const s of sergeants) s.bewege(dt); }
     setzeKamera(dt);
     renderer.render(szene, kamera);
     bilder++; rechen += performance.now() - t0;
@@ -641,7 +645,7 @@ try {
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), vogelPluster: () => arthur.plustere(), vogelSchluessel: (an) => arthur.schluessel(an), vogelDreh: (d) => { rabeSitz = null; arthur.setze(arthur.wurzel.position.x, arthur.wurzel.position.y, arthur.wurzel.position.z, d); }, vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
+  window.__probe3d = { vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), raben: () => andereRaben.map((r) => r.zustand()), vogelPluster: () => arthur.plustere(), vogelSchluessel: (an) => arthur.schluessel(an), vogelDreh: (d) => { rabeSitz = null; arthur.setze(arthur.wurzel.position.x, arthur.wurzel.position.y, arthur.wurzel.position.z, d); }, vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
     blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
     sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), sergeantArme: () => sergeants[0].arme(), sergeantHals: () => sergeants[0].halsSitz(), bauHals: () => bauProbe.halsSitz(), bauMund: (form) => bauProbe.mund(form), regie: (wer, id, zeit) => { const p = PROBEN[wer], schritte = id && regieSchritte(regieDaten[id], p.mund[id]); p.probe.regie(schritte ? { schritte, zeit: () => zeit } : null); return schritte; }, probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3

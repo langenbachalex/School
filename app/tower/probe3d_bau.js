@@ -69,7 +69,7 @@ const RUECKEN = [0.0, 0.09];                            // Hände auf dem Rücke
 /* Sprechen mit dem ganzen Gesicht (Mr. Alex 19.11.): braue = so weit heben betonte Silben die Brauen · schief = an jedem neuen Einsatz hebt sich kurz eine Braue allein ·
    blick = an jedem zweiten Einsatz schauen die Augen kurz zur Seite und zurück (0 = starrer Blick) · weit = betonte Silben öffnen die Augen. Je Figur änderbar (rede in den Angaben der Figur). */
 const REDE = { braue: 0.9, schief: 0.6, blick: 0.7, weit: 0.6 };
-const STRAMM_ARM = [0.18, 0.05];                          // stramme Haltung: so weit zeigen Ober- und Unterarm nach außen – die Arme liegen an der Hosennaht, nicht im Körper (Mr. Alex 19.11.)
+const STRAMM_ARM = [0.05, 0.03];                          // stramme Haltung: so weit zeigen Ober- und Unterarm nach außen – die Arme liegen an der Hosennaht, nicht im Körper (Mr. Alex 19.11.)
 const STRAMM_BEI = ["salut", "sgtUnten", "sgtSeite", "ruecken", "hutsuchen", "sgtHalt"];
 const HALT = { hoch: 0.3, haelt: 0.42, unten: 0.5, winkel: 1.45 };   // Halt: bis hier ist das Knie oben · ab hier fällt es · hier stampft der Fuß auf (Anteile der Dauer) · Winkel des Oberschenkels (rad)
 const WACKELT = { sgtHalt: HALT.unten, salut: 0.11 };                // in diesem Augenblick der Geste wackelt die Fellmütze (Figurenblatt: „wackelt beim Salutieren“)   // bei diesen Gesten bleibt eine stramme Figur stramm (Beine, Rücken, freier Arm)
@@ -327,7 +327,7 @@ export function rundeOrt(ru, weg) {
    umfaerben: Körperteil → Farbfeld des Körperbilds (Spalte,Zeile von 8 × 4) → neues Feld. Aus der Rüstung wird die Uniform der Garde:
    roter Rock, weißer Gürtel, goldene Schnalle und Abzeichen, schwarze Hose und Stiefel. */
 const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
-export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, schlank: 0.6, fuss: 0.9, schulter: { hals: 0.025 }, stramm: true, ausdruck: "grimmig", rede: { braue: 0.6, schief: 0, blick: 0, weit: 0.85 },   // beim Reden: Blick starr, keine einzelne Braue – aber bei lauten Silben reißt er die Augen auf
+export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, schlank: 0.6, fuss: 0.9, schulter: { hals: 0.025, breit: 0.25, tief: 0.1, rumpf: 1.3 }, stramm: true, ausdruck: "grimmig", rede: { braue: 0.6, schief: 0, blick: 0, weit: 0.85 },   // beim Reden: Blick starr, keine einzelne Braue – aber bei lauten Silben reißt er die Augen auf
   gang: { heben: 0.85, ferse: 0, rollt: 0.04, ballen: 0.35, wippen: 0.03, spur: 1, tempo: 1.3 }, drill: { vorn: 85, hinten: 30, schnell: 2.2 },   // britischer Drill (Figurenblatt): Knie hoch, der Fuß stampft flach auf, Arme gestreckt bis Schulterhöhe, 1,3 m/s; Spur = Hüftbreite, damit die Beine aneinander vorbeigehen
     // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (schlank = Breite und Tiefe von Rumpf, Armen und Beinen, 1 = wie das Modell; seit 19.11. sauber gebaut statt gequetscht, siehe schlankBauen · fuss = Länge der Füße: 0.9 ist die Hälfte länger als die gequetschten 0.6)
   kopf: "sergeantkopf", hand: 0.72,   // Kopf mit Bart, rothaarig, Knollennase (Wahl Mr. Alex 18./19.11.) · hand = Handgröße gegenüber Mr. Flex
@@ -430,11 +430,12 @@ function kragenWeg(m, plan) {
    deutlich breiter als der Hals. Maße des ungestreckten Körpers: hals = so viel höher sitzt der Kopf · tief = so viel tiefer sitzen die Schultergelenke
    · breit = Mindestabstand des Schultergelenks von der Mitte (auch bei schlanken Figuren). Einzelne Figuren können mit figur.schulter abweichen. */
 const SCHULTER = { hals: 0.05, tief: 0.045, breit: 0.165 };
+const SCHULTER_AB = 0.3;                                 // so weit unter dem Schultergelenk beginnt die breitere Schulterpartie (figur.schulter.rumpf, Maß des ungestreckten Körpers)
 const ARM_HOCH = 1.107, BEIN_X = 0.171, KNOECHEL = 0.145;   // KayKit-Körper in Ruhe: Höhe der Armachse (Arme waagrecht zur Seite) · Abstand der Beinachse von der Mitte · Höhe des Fußgelenks
 /* Schlanke Figur sauber gebaut (Mr. Alex 18./19.11.: bisher wurde die ganze Figur in Breite und Tiefe gequetscht – dann verzerrt sich jedes gedrehte Glied,
    die Hand zuckte beim Salutieren, und die Füße wurden kurz). Jetzt wird jedes Teil einmal um seine eigene Achse dünner gemacht: der Rumpf um die Körpermitte,
    die Arme um die Armachse, die Beine um die Beinachse; die Füße behalten ihre Länge (fuss). Die Gelenke rücken passend nach innen (gibt ihre neue Lage zurück). */
-function schlankBauen(m, d, fuss) {
+function schlankBauen(m, d, fuss, schulterWeit = 1) {   // schulterWeit: so viel breiter wird der Rumpf oben an den Schultern (Sergeant, Mr. Alex 19.11.: breite Schulterpartie, damit die Arme gerade herunterhängen)
   m.traverse((o) => {
     if (!o.isSkinnedMesh) return;
     const P = o.geometry.attributes.position, arm = /_Arm/.test(o.name), bein = /_Leg/.test(o.name);
@@ -443,7 +444,7 @@ function schlankBauen(m, d, fuss) {
       const x = P.getX(i), y = P.getY(i), z = P.getZ(i);
       if (arm) P.setXYZ(i, x, ARM_HOCH + (y - ARM_HOCH) * d, z * d);
       else if (bein) { const s = Math.sign(x) || 1, t = Math.min(1, Math.max(0, (y - KNOECHEL) / 0.06)); P.setXYZ(i, s * BEIN_X + (x - s * BEIN_X) * d, y, z * (fuss + (d - fuss) * t)); }
-      else P.setXYZ(i, x * d, y, z * d);
+      else P.setXYZ(i, x * d * (1 + (schulterWeit - 1) * weich(y, ARM_HOCH - SCHULTER_AB, ARM_HOCH - 0.04)), y, z * d);
     }
     P.needsUpdate = true; o.geometry.computeBoundingBox(); o.geometry.computeBoundingSphere();
   });
@@ -471,7 +472,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   if (figur.umfaerben) umfaerben(m, figur.umfaerben);
   // Schulterlinie und schlanker Körper: feste Lage der Gelenke, die sich nicht mit dem Körper strecken (strecke setzt sie in jedem Bild)
   const schulter = { ...SCHULTER, ...figur.schulter }, schlank = figur.schlank || 1, fussLang = figur.fuss || schlank, gelenkFest = [];
-  if (figur.schlank) schlankBauen(m, schlank, fussLang);
+  if (figur.schlank) schlankBauen(m, schlank, fussLang, schulter.rumpf || 1);
   for (const s of "lr") {
     const vz = s === "l" ? 1 : -1;
     if (figur.kragen !== false) gelenkFest.push([K("upperarm" + s), knochenNach(m, K("upperarm" + s), (p) => { p.x = vz * Math.max(Math.abs(p.x) * schlank, schulter.breit * Math.min(1, schlank / 0.6)); p.y -= schulter.tief; })]);
@@ -1004,14 +1005,15 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const flaeche = (s) => halter[s].localToWorld(v(-0.052, 0, 0));                    // Mitte der Handfläche
   return {
     befehl: starte, kopf: kopfBefehl,
-    /* Testprogramm: Lücke zwischen Arm und Rumpf (m), an den verformten Netzen in acht Höhen zwischen Handgelenk und Oberarm gemessen; unter 0 = der Arm steckt im Körper. */
+    /* Testprogramm: Lücke zwischen Arm und Rumpf (m), an den verformten Netzen in sechs Höhen vom Handgelenk bis unter die Schulterpartie gemessen; unter 0 = der Arm steckt im Körper. */
     arme() {
       const p = v(), netz = {}, erg = {}; m.traverse((o) => { if (!o.isSkinnedMesh) return; if (o.name.endsWith("_Body")) netz.k = o; else if (o.name.endsWith("ArmLeft")) netz.l = o; else if (o.name.endsWith("ArmRight")) netz.r = o; });
       if (!netz.k || !netz.l || !netz.r) return null;
       for (const [s, seite] of [["l", 1], ["r", -1]]) {
-        const oben = m.worldToLocal(wo(K("upperarm" + s))).y, von = m.worldToLocal(wo(K("wrist" + s))).y, bis = oben - 0.3 * (oben - von), N = 8, rumpf = Array(N).fill(-Infinity), arm = Array(N).fill(Infinity);
-        const sammle = (o, fn) => { for (let i = 0; i < o.geometry.attributes.position.count; i++) { o.getVertexPosition(i, p); m.worldToLocal(p.applyMatrix4(o.matrixWorld)); const n = Math.floor(((p.y - von) / (bis - von)) * N); if (n >= 0 && n < N) fn(n, p.x * seite); } };
-        sammle(netz.k, (n, x) => { rumpf[n] = Math.max(rumpf[n], x); }); sammle(netz[s], (n, x) => { arm[n] = Math.min(arm[n], x); });
+        const oben = m.worldToLocal(wo(K("upperarm" + s))).y, von = m.worldToLocal(wo(K("wrist" + s))).y, bis = oben - 0.45 * (oben - von), N = 6, rumpf = Array(N).fill(-Infinity), arm = Array(N).fill(Infinity), vorn = Array(N).fill(-Infinity), hinten = Array(N).fill(Infinity);
+        const sammle = (o, fn) => { for (let i = 0; i < o.geometry.attributes.position.count; i++) { o.getVertexPosition(i, p); m.worldToLocal(p.applyMatrix4(o.matrixWorld)); const n = Math.floor(((p.y - von) / (bis - von)) * N); if (n >= 0 && n < N) fn(n, p.x * seite, p.z); } };
+        sammle(netz[s], (n, x, z) => { arm[n] = Math.min(arm[n], x); vorn[n] = Math.max(vorn[n], z); hinten[n] = Math.min(hinten[n], z); });
+        sammle(netz.k, (n, x, z) => { if (z <= vorn[n] && z >= hinten[n]) rumpf[n] = Math.max(rumpf[n], x); });   // nur der Teil des Rumpfs, der in der Tiefe auf Höhe des Arms liegt
         erg[s] = +(Math.min(...arm.map((x, n) => x - rumpf[n]).filter((x) => Number.isFinite(x))) * m.scale.x).toFixed(3); erg[s + "Liste"] = arm.map((x, n) => +((x - rumpf[n]) * m.scale.x).toFixed(3));
       }
       return erg;

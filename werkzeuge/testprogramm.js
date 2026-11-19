@@ -337,6 +337,10 @@ async function probe3dTest(browser, basis, app, name, fm) {
         await pg.click('#bau button[data-bau="marsch"]'); await pg.waitForTimeout(500);
         let knie = 0, weg = 0, anStelle = true, arm = -99;
         for (let k = 0; k < 14; k++) { await pg.waitForTimeout(70); const z = await sg(); anStelle = anStelle && z.stelle && z.modus === "gehen"; knie = Math.max(knie, z.drill.knieHoch); arm = Math.max(arm, z.drill.armR); weg = Math.max(weg, Math.hypot(z.ort[0] - ort0[0], z.ort[1] - ort0[1])); }
+        // Breite Schulterpartie (Mr. Alex 19.11.): Die Arme schwingen beim Marsch außen am Körper vorbei, nicht hindurch (vorher bis 9 cm tief; am Ansatz der Schulter berühren sich Arm und Rumpf weiter).
+        let durch = 9; for (let k = 0; k < 8; k++) { await pg.waitForTimeout(80); const a = await pg.evaluate(() => window.__probe3d.sergeantArme()); if (a) durch = Math.min(durch, a.l, a.r); }
+        if (!(durch > -0.045)) fehl.push(`${titel}: beim Marsch gehen die Arme des Sergeants durch den Körper (${durch} m, Soll über −0,045)`);
+        if (!(sgt[0].schulterLinie.breit >= 0.24)) fehl.push(`${titel}: der Sergeant hat keine breite Schulterpartie (halbe Breite ${sgt[0].schulterLinie.breit}, Soll mindestens 0,24)`);
         if (!anStelle) fehl.push(`${titel}: „Marsch auf der Stelle“ läuft beim Sergeant nicht in seinem Drill-Gang`);
         if (!(weg < 0.03)) fehl.push(`${titel}: beim Marsch auf der Stelle kommt der Sergeant ${weg.toFixed(2)} m vom Fleck`);
         if (!(knie > 0.8) || !(arm > 60)) fehl.push(`${titel}: beim Marsch auf der Stelle fehlt der Drill (höchstes Knie ${knie} der Hüfthöhe, Soll über 0,8; Arm bis ${arm}°, Soll über 60)`);
@@ -348,7 +352,7 @@ async function probe3dTest(browser, basis, app, name, fm) {
         else if (!(halt < 130) || !wackelt) fehl.push(`${titel}: beim Halt hebt der Sergeant das Knie nicht (kleinster Kniewinkel ${halt}°, Soll unter 130), oder die Fellmütze wackelt nicht`);
         // Stramm (Mr. Alex 19.11.): die Arme liegen außen am Körper, nicht darin (vorher 6 cm tief)
         await pg.waitForTimeout(700); const arme = await pg.evaluate(() => window.__probe3d.sergeantArme());
-        if (!arme || !(arme.l > -0.04 && arme.r > -0.04)) fehl.push(`${titel}: im strammen Stand stecken die Arme des Sergeants im Körper (links ${arme && arme.l} m, rechts ${arme && arme.r} m, Soll über −0,04)`);
+        if (!arme || !(arme.l > -0.035 && arme.r > -0.035)) fehl.push(`${titel}: im strammen Stand stecken die Arme des Sergeants im Körper (links ${arme && arme.l} m, rechts ${arme && arme.r} m, Soll über −0,035)`);
         const mitte = async (knopf) => { await pg.click(`#bau button[data-bau="${knopf}"]`); await pg.waitForTimeout(900); const z = await sg(); await pg.waitForFunction(() => window.__probe3d.sergeant()[0].modus === "stehen", null, { timeout: 9000 }).catch(() => {}); return z; };
         let z = await mitte("sgtUnten");
         if (!(z.armR.ellbogen > 160 && z.armR.richtung[1] < -0.6 && z.armR.richtung[2] > 0.3) || z.hand[0] !== "zeigen") fehl.push(`${titel}: „Zeigen nach unten“ – der Sergeant zeigt nicht mit gestrecktem Arm vor die Füße (Ellbogen ${z.armR.ellbogen}°, Richtung ${z.armR.richtung})`);

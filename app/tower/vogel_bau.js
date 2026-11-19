@@ -5,7 +5,8 @@
 import * as THREE from "three";
 
 /* Fußringe (Mr. Alex 19.11.): Jeder Rabe trägt wie die echten Tower-Raben einen farbigen Ring am rechten Bein – das feste Kennzeichen.
-   Die Farben sind fest zugeordnet; ein neuer Rabe nimmt seine Farbe von hier (ring: RINGE.name). Mordred, die Elster: noch offen (Vorschlag: kein Ring – eine Spur). */
+   Die Farben sind fest zugeordnet und von Mr. Alex abgenommen (19.11.); ein neuer Rabe nimmt seine Farbe von hier (ring: RINGE.name).
+   Mordred, die Elster, trägt keinen Ring (entschieden Mr. Alex 19.11.) – eine Spur für aufmerksame Kinder. */
 export const RINGE = {
   arthur: { farbe: 0xf2c21a, name: "gelb" },        // Gold wie seine Augen; der König
   guinevere: { farbe: 0xd8262e, name: "rot" },

@@ -293,17 +293,23 @@ def rabe():
     # ---------- Schwanz: Keil aus neun Federn, flacher als der Koerper, damit er ueber dem Boden bleibt ----------
     T = P(-0.15, -0.02)
     schwanz = Teil("rabe_schwanz", koerper, T)
-    FLACH = NEIG - 0.68
+    FLACH = NEIG - 0.76                                                   # flacher gestellt, damit der laengere Schwanz ueber dem Boden bleibt
     td, tn = V((0, -math.sin(FLACH), -math.cos(FLACH))), V((0, math.cos(FLACH), -math.sin(FLACH)))
-    # Mr. Alex 19.11.: von der Seite war der Schwanz „mickrig“ – jetzt drei Lagen wie Dachziegel, die aeusseren Federn fallen dachfoermig ab,
-    # dazu Ober- und Unterschwanzdecken: er setzt hoeher und tiefer an und fuellt den Raum zwischen Rumpf und Schwanz
+    # Mr. Alex 19.11.: von der Seite war der Schwanz „mickrig“ – Lagen wie Dachziegel, die aeusseren Federn fallen dachfoermig ab,
+    # dazu Ober- und Unterschwanzdecken. Zweite Runde: die Mitte laenger (von oben ein Keil), vier Lagen mit mehr Abstand, im Profil hoeher
+    # und unordentlicher – jede Feder weicht in Hoehe, Neigung und Laenge ein wenig ab. Der Faecher von oben bleibt, wie er war.
+    wirr = lambda weit: random.uniform(-weit, weit)
     for i in (-5, 5, -4, 4, -3, 3, -2, 2, -1, 1, 0):
         lage = 0 if abs(i) <= 1 else 1 if abs(i) <= 3 else 2
-        feder(schwanz, T - td * 0.04 + X * (i * 0.009) + tn * (0.014 - lage * 0.011), dreh(td, tn, -i * 0.062), tn + X * (i * 0.22), 0.41 - abs(i) * 0.014, 0.078, glanz=1.1)
+        feder(schwanz, T - td * 0.04 + X * (i * 0.009) + tn * (0.02 - lage * 0.016 + wirr(0.005)), dreh(td, tn, -i * 0.062) + tn * wirr(0.045), tn + X * (i * 0.22 + wirr(0.12)),
+              0.465 - abs(i) * 0.026 + wirr(0.012), 0.078, glanz=1.1)
+    for i in (-3.5, 3.5, -1.5, 1.5):                                      # vierte Lage: haengt unter den anderen, von oben nicht zu sehen
+        feder(schwanz, T - td * 0.04 + X * (i * 0.009) + tn * (-0.03 + wirr(0.005)), dreh(td, tn, -i * 0.062) - tn * (0.07 + wirr(0.04)), tn + X * (i * 0.22 + wirr(0.15)),
+              0.37 - abs(i) * 0.02 + wirr(0.015), 0.07, glanz=0.9)
     for j in (-2, 2, -1, 1, 0):                                           # Unterschwanzdecken: vom Bauch hinauf zum Schwanz
-        feder(schwanz, T - td * 0.06 - tn * (0.055 - abs(j) * 0.004) + X * (j * 0.02), td + tn * 0.16 + X * (j * 0.05), -tn + X * (j * 0.3), 0.17, 0.062, glanz=0.9)
-    for j in (-2, 2, -1, 1, 0):                                           # Oberschwanzdecken: vom Ruecken hinunter auf den Schwanz
-        feder(schwanz, T - td * 0.09 + tn * (0.05 - abs(j) * 0.005) + X * (j * 0.02), td - tn * 0.10 + X * (j * 0.05), tn + X * (j * 0.3), 0.17, 0.062, glanz=1.0)
+        feder(schwanz, T - td * 0.06 - tn * (0.066 - abs(j) * 0.004 + wirr(0.004)) + X * (j * 0.02), td + tn * (0.14 + wirr(0.05)) + X * (j * 0.05), -tn + X * (j * 0.3), 0.19 + wirr(0.015), 0.062, glanz=0.9)
+    for j in (-2, 2, -1, 1, 0):                                           # Oberschwanzdecken: vom Ruecken hinunter auf den Schwanz, setzen hoch an
+        feder(schwanz, T - td * 0.10 + tn * (0.068 - abs(j) * 0.006 + wirr(0.004)) + X * (j * 0.02), td - tn * (0.13 + wirr(0.05)) + X * (j * 0.05), tn + X * (j * 0.3), 0.19 + wirr(0.015), 0.064, heben=0.03, glanz=1.0)
     schwanz.netz(gefieder)
 
     # ---------- Beine: gefiederte „Hosen“, kraeftige Zehen, Krallen ----------

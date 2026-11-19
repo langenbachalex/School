@@ -96,7 +96,7 @@ def bogen(name, eltern, linien, r, material, ursprung=None):
     der Ursprung liegt am ersten Punkt oder an `ursprung` (dort dreht und waechst das Teil im Browser)."""
     if not isinstance(linien[0][0], (tuple, list)):
         linien = [linien]
-    u = ursprung or linien[0][0]
+    u = tuple(ursprung or linien[0][0])[:3]
     kurve = bpy.data.curves.new(name + "_kurve", "CURVE")
     kurve.dimensions = "3D"
     kurve.bevel_depth = r
@@ -107,6 +107,8 @@ def bogen(name, eltern, linien, r, material, ursprung=None):
         linie.points.add(len(punkte) - 1)
         for pt, q in zip(linie.points, punkte):
             pt.co = (q[0] - u[0], q[1] - u[1], q[2] - u[2], 1)
+            if len(q) > 3:
+                pt.radius = q[3]                          # vierter Wert eines Punkts = Dicke an dieser Stelle (1 = voll): so laeuft ein Strang spitz zu
     vor = bpy.data.objects.new(name + "_vor", kurve)
     bpy.context.scene.collection.objects.link(vor)
     netz = bpy.data.meshes.new_from_object(vor.evaluated_get(bpy.context.evaluated_depsgraph_get()))

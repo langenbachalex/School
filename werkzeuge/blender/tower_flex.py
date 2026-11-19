@@ -188,7 +188,7 @@ def farben(vor="flex", **neu):
         gestell=f("brille_gestell", (0.03, 0.03, 0.035), 0.4))
 
 
-def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, brille=True, bart=(0.060, 0.0095, -0.016), braue=0.0055, nase=True, wange=(0.074, 0.108, 0.040, 0.031), fein=1):
+def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, ohr=None, haare=True, brille=True, bart=(0.060, 0.0095, -0.016), braue=0.0055, nase=True, wange=(0.074, 0.108, 0.040, 0.031), fein=1):
     """f = eigene Farben (farben(...)) · haare, brille = False laesst sie weg · bart = (Laenge, Dicke, Schwung der Enden: plus = nach oben) · braue = Dicke · nase = False: der andere Kopf baut seine eigene Nase · wange = (Abstand von der Mitte, Hoehe, halbe Breite, halbe Hoehe), Farbe ueber farben(wange=...).
     Andere Koepfe (tower_sergeant.py) setzen vorher die Masse des Moduls (RX, KR ...) und haengen ihre eigenen Teile an das Gelenk, das zurueckkommt."""
     f = f or farben()
@@ -202,7 +202,10 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
     # Hals (Mr. Alex 19.11.: Figuren ohne Kragen): hautfarbener Zylinder unter dem Kopf, steckt unten in der Schulterkappe des Koerpers (probe3d_bau.js, kragenWeg)
     g.stab("hals", k, (0, 0.012, -0.060), 0.050, 0.150, f["haut"])
     for s in (-1, 1):
-        g.kugel("ohr", k, (s * (RX + 0.002), 0.0, 0.150), (0.013, 0.026, 0.036), f["haut"])
+        if ohr:                                           # ohr = (so weit steht es ab, Tiefe, Hoehe, Winkel): abstehende Ohren (Sergeant, Mr. Alex 19.11.)
+            g.kugel("ohr", k, (s * (RX + ohr[0]), 0.004, 0.150), (0.009, ohr[1], ohr[2]), f["haut"], dreh=(0, 0, s * ohr[3]))
+        else:
+            g.kugel("ohr", k, (s * (RX + 0.002), 0.0, 0.150), (0.013, 0.026, 0.036), f["haut"])
     for s, seite in ((-1, "r"), (1, "l")):
         # Wangenknochen: deutlich, schieben sich beim Laecheln nach oben
         # flach, breit und in Hautfarbe (Mr. Alex 19.11.: soll wie ein Teil des Gesichts aussehen, nicht wie ein angeklebter Klotz) – nur eine sanfte Woelbung
@@ -299,8 +302,9 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
             linie = []
             for i in range(13):
                 t = i / 12
-                x, zz = s * (0.002 + bart[0] * t), 0.086 - 0.003 * t + bart[2] * t ** 3 + versatz * (1 - 0.75 * t)
-                linie.append((x, vorn(x, zz, 0.008 + 0.004 * dick * (1 - t)) + 0.13, zz - LZ))
+                spitze = 1 - 0.93 * max(0.0, (t - 0.5) / 0.5) ** 1.5      # die Enden laufen spitz zu (Mr. Alex 19.11.: „im Moment eine abgeschnittene Wurst“): die Straenge ruecken zusammen und werden duenn
+                x, zz = s * (0.002 + bart[0] * t), 0.086 - 0.003 * t + bart[2] * t ** 3 + versatz * (1 - 0.75 * t) * spitze
+                linie.append((x, vorn(x, zz, 0.008 + 0.004 * dick * (1 - t) * spitze) + 0.13, zz - LZ, spitze))
             straenge.append(linie)
         g.bogen("bart", bartgelenk, straenge, bart[1], f["bart"])
     g.kugel("mund", k, (0, KM[1] - KR[1] + 0.0285, LZ - 0.012), (0.045 * MW, 0.0257, 0.028), f["rachen"])                 # Mundhoehle hinter den Lippen: sichtbar, sobald der Kiefer aufklappt

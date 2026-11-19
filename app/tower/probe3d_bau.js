@@ -65,6 +65,7 @@ export const GESTEN = {
   spagat: ["KungFu_Spagat", "Spagat", "Kung-Fu", R], rolle: ["KungFu_RolleVorwaerts", "Rolle vorwärts", "Kung-Fu", F],
 };
 const DAUERND = ["stehen", "gehen", "rennen"];
+const RUECKEN = [0.0, 0.09];                            // Hände auf dem Rücken: Abstand der linken und der rechten Handfläche hinter dem Kreuz (Maß des Körpers)
 const STRAMM_ARM = [0.18, 0.05];                          // stramme Haltung: so weit zeigen Ober- und Unterarm nach außen – die Arme liegen an der Hosennaht, nicht im Körper (Mr. Alex 19.11.)
 const STRAMM_BEI = ["salut", "sgtUnten", "sgtSeite", "ruecken", "hutsuchen", "sgtHalt"];
 const HALT = { hoch: 0.3, haelt: 0.42, unten: 0.5, winkel: 1.45 };   // Halt: bis hier ist das Knie oben · ab hier fällt es · hier stampft der Fuß auf (Anteile der Dauer) · Winkel des Oberschenkels (rad)
@@ -102,7 +103,7 @@ const ZIELE = {
   /* Nachdenken (A7): Der linke Unterarm liegt quer vor dem Bauch – mit etwas Abstand, damit er nicht im Mantel versinkt. */
   denken: (s, u) => (s < 0 ? null : { knochen: "hips", ort: [-0.2, 0.42, 0.47], finger: [-1, 0, 0.15], flaeche: [0, 0.4, -1], pol: [0.7, -1, 0.2], gewicht: dabei(u, 0.06, 0.18, 0.84, 0.97) }),
   /* Hände auf dem Rücken (Sergeant): beide Hände übereinander im Kreuz, Ellbogen nach außen und hinten. */
-  ruecken: (s, u, t, schlank) => ({ knochen: "hips", ort: [s * 0.05, 0.3 + s * 0.03, -0.3 * schlank - 0.05], reich: 0.3, pol: [s, -0.2, -0.8], gewicht: dabei(u, 0.05, 0.14, 0.86, 0.95) }),
+  ruecken: (s, u, t, schlank) => ({ knochen: "hips", ort: [s * 0.02, 0.3, -0.3 * schlank - (s < 0 ? RUECKEN[1] : RUECKEN[0])], finger: [-s, -0.45, 0], flaeche: [0, 0, -1], pol: [s, -0.2, -0.8], gewicht: dabei(u, 0.05, 0.14, 0.86, 0.95) }),   // die rechte Hand liegt flach auf der linken, eine Handdicke weiter hinten – sie gehen nicht durcheinander (Mr. Alex 19.11.)
   /* Hut suchen (Sergeant): beide Hände tasten zweimal seitlich an die Mütze – die Augen suchen dabei rechts und links, der Kopf bleibt starr. */
   hutsuchen: (s, u, t, schlank, hut) => ({ knochen: "head", ort: [s * (hut + 0.045 + 0.035 * (0.5 + 0.5 * Math.sin((2 * Math.PI * t) / 0.5))), 1.0, 0.06], finger: [0, 1, 0], flaeche: [-s, 0, 0], pol: [s, 0.25, 0.05], gewicht: dabei(u, 0.05, 0.14, 0.86, 0.95) }),
   salut: (s, u) => (s > 0 ? null : { knochen: "head", ort: [-0.3, 0.52, 0.4], reich: 1, pol: [-1, 0.1, -0.3], gewicht: dabei(u, 0.05, 0.11, 0.88, 0.97) }),   // Fingerspitzen an die Stirn
@@ -523,7 +524,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   if (figur.uniform) uniformTeile(m, figur.uniform, 1);
   /* Eigener Kopf (Kopf-Probe Mr. Flex, 18.11.): der Kopf aus Blender sitzt auf dem Kopfknochen, der Mage-Kopf wird ausgeblendet; der Hut bleibt
      und wird auf den schmaleren Kopf angepasst (hutWeit, hutHoch je Figur). Gesicht wie bei Gary (baueGesicht), dazu Sonnenbrille und Funkeln. */
-  let kopfTeil = null, gesicht = null, brille = null, bart = null, muetze = null; const ohren = [], OHR_ROT = new THREE.Color(0.86, 0.12, 0.1); const sterne = [], kette = { glieder: [] }, kq = Q(), kein = Q();
+  let kopfTeil = null, gesicht = null, brille = null, bart = null, muetze = null, hals = null; const ohren = [], OHR_ROT = new THREE.Color(0.86, 0.12, 0.1); const sterne = [], kette = { glieder: [] }, kq = Q(), kein = Q();
   const ketteNach = () => { if (!kette.glieder.length) return; kq.copy(kette.kiefer.quaternion).multiply(kette.ruhe); for (const [o, ort, anteil] of kette.glieder) o.position.copy(ort).sub(kette.kiefer.position).applyQuaternion(kein.identity().slerp(kq, anteil)).add(kette.kiefer.position); };
   if (kopfDatei) {
     m.traverse((o) => { if (o.isSkinnedMesh && /_Head$/.test(o.name)) o.visible = false; });
@@ -533,6 +534,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     kopfTeil.position.copy(v(...KOPF_SITZ).applyQuaternion(kopfTeil.quaternion).multiplyScalar(1 / ks)); head.add(kopfTeil);
     if (hut) { hut.scale.multiplyScalar(kleidung.hutWeit || 1); hut.position.y += kleidung.hutHoch || 0; }
     gesicht = baueGesicht(kopfTeil, 0.19, { mass: 0.6, flach: true, wangeVor: 1.3 });
+    const hk = kopfTeil.getObjectByName("hals");        // der Hals bleibt in den Schultern stecken, auch wenn der Kopf nickt (halsNach)
+    if (hk) hals = { o: hk, ort: hk.position.clone(), q: hk.quaternion.clone(), c: K("chest").getWorldQuaternion(Q()).invert().multiply(kopfTeil.getWorldQuaternion(Q())), r: Q(), um: kopfTeil.worldToLocal(head.getWorldPosition(v())) };   // um = Gelenk des Kopfknochens: darum dreht der Hals zurück
     const kf = kopfTeil.getObjectByName("kiefer");      // Kinnkette (Sergeant): Glieder kette_<Nr>_<Anteil> gehen mit diesem Anteil mit dem Unterkiefer mit
     if (kf) { kette.kiefer = kf; kette.ruhe = kf.quaternion.clone().invert(); for (const o of kopfTeil.children) { const t = /^kette_\d+_(\d+)/.exec(o.name); if (t) kette.glieder.push([o, o.position.clone(), +t[1] / 100]); } }
     const fm = kopfTeil.getObjectByName("fellmuetze"); if (fm) muetze = { o: fm, q: fm.quaternion.clone() };
@@ -784,6 +787,13 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       st.material.opacity = a; st.material.color.setHex(durch ? 0x3aa0ff : 0xcfeaff); st.material.rotation = g.funkel * 4; st.scale.setScalar((durch ? 0.03 : 0.018) + (durch ? 0.075 : 0.06) * a);
     }
   };
+  /* Der Hals gehört zum Kopf, soll aber nicht mitnicken: Sein unteres Ende schwenkte sonst hinten aus den Schultern heraus (Mr. Alex 19.11., Nicken und Hand vor die Stirn).
+     Er dreht sich darum um den Halsansatz so weit zurück, dass er zur Brust ausgerichtet bleibt – nur der Kopf neigt sich. */
+  const halsNach = () => {
+    if (!hals) return;
+    hals.r.copy(kopfTeil.getWorldQuaternion(Q()).invert()).multiply(K("chest").getWorldQuaternion(Q())).multiply(hals.c);
+    hals.o.quaternion.copy(hals.r).multiply(hals.q); hals.o.position.copy(hals.ort).sub(hals.um).applyQuaternion(hals.r).add(hals.um);
+  };
   const kopfBefehl = (was) => {                          // Ausdruck, Brille oder Effekt
     if (AUSDRUECKE[was]) g.ausdruck = was;
     else if (was === "brille_auf") g.brilleZiel = 1; else if (was === "brille_unten") g.brilleZiel = 0.5; else if (was === "brille_ab") g.brilleZiel = 0;
@@ -800,7 +810,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const armeVor = () => { for (const a of armKnochen) { if (a.da && a.k.quaternion.equals(a.erg)) a.k.quaternion.copy(a.basis); a.basis.copy(a.k.quaternion); } };
   const armeNach = () => { for (const a of armKnochen) { a.erg.copy(a.k.quaternion); a.da = true; } };
   const nach = (dt) => { armeVor(); nachInnen(dt); armeNach(); };
-  const nachInnen = (dt) => { strecke(); stramm(dt); posen(); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); kopfLauf(dt); ketteNach(); m.updateMatrixWorld(true); aufGang(); haendeNach(); };
+  const nachInnen = (dt) => { strecke(); stramm(dt); posen(); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); kopfLauf(dt); halsNach(); ketteNach(); m.updateMatrixWorld(true); aufGang(); haendeNach(); };
   const grad = (x) => +((x * 180) / Math.PI).toFixed(1);
   const armLage = (s) => {                              // Ellbogenwinkel (180 = gestreckt), Richtung Schulter → Hand im Körper, Richtung der Finger zur Senkrechten
     const ps = wo(K("upperarm" + s)), pe = wo(K("lowerarm" + s)), pw = wo(K("wrist" + s)), qm = m.getWorldQuaternion(Q()).invert();
@@ -1034,7 +1044,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       }
       return fund;
     },
-    zustand: () => ({ modus: g.modus, eilig: !!g.eilig, stelle: g.stelle > 0, blick: +g.blick.toFixed(2), zuck: +g.zuck.toFixed(2), bartDreh: bart ? grad(bart.o.quaternion.angleTo(bart.q)) : null, ohrRot: +g.ohrRot.toFixed(2), ohren: ohren.length, wackel: g.wackel >= 0, hutBreit: +hutBreit().toFixed(3), handHut: ["r", "l"].map((s) => +Math.abs(head.worldToLocal(flaeche(s)).x).toFixed(3)),
+    zustand: () => ({ modus: g.modus, eilig: !!g.eilig, stelle: g.stelle > 0, blick: +g.blick.toFixed(2), zuck: +g.zuck.toFixed(2), bartDreh: bart ? grad(bart.o.quaternion.angleTo(bart.q)) : null, ohrRot: +g.ohrRot.toFixed(2), ohren: ohren.length, halsLage: hals ? { kopfNeig: grad(2 * Math.acos(Math.min(1, Math.abs(hals.r.w)))), ort: K("chest").worldToLocal(hals.o.getWorldPosition(v())).toArray().map((x) => +x.toFixed(4)) } : null, wackel: g.wackel >= 0, hutBreit: +hutBreit().toFixed(3), handHut: ["r", "l"].map((s) => +Math.abs(head.worldToLocal(flaeche(s)).x).toFixed(3)),
       armDreh: Object.fromEntries(["l", "r"].map((s) => [s, ["upperarm", "lowerarm", "wrist"].map((n) => grad(K(n + s).getWorldQuaternion(Q()).angleTo(m.getWorldQuaternion(Q()))))])), /* Testprogramm: Drehung der Armknochen gegen den Körper – bleibt in einer gehaltenen Geste gleich */ armR: armLage("r"), armL: armLage("l"), sohleR: grad(sohlenHoch("r").angleTo(v(0, 1, 0))), sohleL: grad(sohlenHoch("l").angleTo(v(0, 1, 0))), hand: g.hand, wahl: g.wahl, krall: +krall.r[1].toFixed(2), weg: +g.weg.toFixed(2), bau: { ...bau }, schritt: +hoeher().toFixed(2),
       gehen: +gang.gehen.tempo.toFixed(2), rennen: +gang.rennen.tempo.toFixed(2), standL: stand.l.fest, standR: stand.r.fest, wendet: !!g.wendet, knieAnteil: +beinTeile().anteil.toFixed(3),
       hals: +head.getWorldPosition(v()).y.toFixed(3), tief: +tief().toFixed(3), zehe: +Math.max(K("toesr").getWorldPosition(v()).y, K("toesl").getWorldPosition(v()).y).toFixed(3),

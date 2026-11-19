@@ -355,6 +355,12 @@ async function probe3dTest(browser, basis, app, name, fm) {
         z = await mitte("sgtSeite");
         if (!(z.armR.ellbogen > 160 && z.armR.richtung[0] < -0.9) || !(z.blick < -0.7)) fehl.push(`${titel}: „Zeigen zur Seite“ – Arm nicht gestreckt zur Seite oder die Augen gehen nicht mit (Ellbogen ${z.armR.ellbogen}°, Richtung ${z.armR.richtung}, Blick ${z.blick})`);
         z = await mitte("ruecken");
+        if (!(z.flaecheL[2] - z.flaecheR[2] > 0.05)) fehl.push(`${titel}: „Hände auf dem Rücken“ – die Hände liegen nicht flach übereinander, sie gehen durcheinander (Tiefe links ${z.flaecheL[2]}, rechts ${z.flaecheR[2]}, Soll mindestens 0,05 Abstand)`);
+        { // Der Hals bleibt in den Schultern, wenn der Kopf nickt (Mr. Alex 19.11.: er ragte hinten heraus)
+          const h0 = (await sg()).halsLage; await pg.click('#bau button[data-bau="nicken"]'); let neig = 0, weg = 0;
+          for (let k = 0; k < 14; k++) { await pg.waitForTimeout(60); const h = (await sg()).halsLage; if (!h || !h0) break; neig = Math.max(neig, h.kopfNeig); weg = Math.max(weg, Math.hypot(...h.ort.map((x, i) => x - h0.ort[i]))); }
+          if (!h0 || !(neig > 6) || !(weg < 0.012)) fehl.push(`${titel}: beim Nicken bleibt der Hals des Sergeants nicht in den Schultern (Kopf neigt sich ${neig}°, der Hals wandert ${weg.toFixed(3)})`);
+          await pg.waitForFunction(() => window.__probe3d.sergeant()[0].modus === "stehen", null, { timeout: 9000 }).catch(() => {}); }
         { await pg.click('#bau button[data-bau="ruecken"]'); await pg.waitForTimeout(1300); const a = (await sg()).armDreh; await pg.waitForTimeout(900); const b = (await sg()).armDreh;   // gehalten: kein Arm dreht sich weiter (Mr. Alex 19.11.)
           const dreh = Math.max(...["l", "r"].flatMap((x) => a[x].map((w, i) => Math.abs(w - b[x][i]))));
           if (!(dreh < 2)) fehl.push(`${titel}: „Hände auf dem Rücken“ – ein Arm dreht sich in der gehaltenen Geste weiter (${dreh.toFixed(1)}° in 0,9 s)`);

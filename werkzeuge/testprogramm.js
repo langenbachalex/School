@@ -275,6 +275,19 @@ async function probe3dTest(browser, basis, app, name, fm) {
       if (sl && sl.gequetscht) fehl.push(`${titel}: ${wer} ist gequetscht statt schlank gebaut (verzerrt gedrehte Glieder, die Hand zuckt beim Salutieren)`);
       else { if (!k.hals) fehl.push(`${titel}: ${wer} hat ohne Kragen keinen Hals`); if (!(k.mundHaut >= breit)) fehl.push(`${titel}: bei ${wer} reicht die Haut neben dem Mund nicht bis zur Wange (${k.mundHaut} m) – Spalt am Mundwinkel`); }
     }
+    // Stramme Haltung (Mr. Alex 19.11.): Im Stehen hängen die Arme des Sergeants gestreckt an der Hosennaht, die Beine sind gestreckt – nicht breitarmig, keine durchgedrückten Knie.
+    if (sgt[0] && sgt[0].modus === "stehen") {
+      const z = sgt[0], weit = Math.hypot(z.faustR[0] - z.faustL[0], z.faustR[2] - z.faustL[2]), tief = Math.max(z.faustR[1], z.faustL[1]);
+      if (!(weit < 0.45) || !(tief < z.hals - 0.5)) fehl.push(`${titel}: der Sergeant steht nicht stramm – die Hände sind ${weit.toFixed(2)} m auseinander (höchstens 0,45) und ${(z.hals - tief).toFixed(2)} m unter dem Hals (mindestens 0,5)`);
+      if (!(Math.min(...z.knieGrad) > 168)) fehl.push(`${titel}: der Sergeant steht nicht mit gestreckten Beinen (Knie ${z.knieGrad.join(" und ")} Grad, Soll über 168)`);
+    }
+    // Beine nebeneinander (Mr. Alex 19.11.: „die Beine dürfen nicht ineinandergreifen oder sich verschlingen“): Im Stehen bleibt zwischen den Beinen in jeder
+    // Höhe eine Lücke – gemessen an den verformten Netzen. (Die Ringe am Knie saßen versetzt, die Knie griffen 5 cm ineinander, obwohl die Knochen richtig standen.)
+    for (const [wer, z] of [["Mr. Flex", await pg.evaluate(() => window.__probe3d.bau())], ["der Sergeant", sgt[0]]]) {
+      const b = z && z.modus === "stehen" && z.beine;
+      if (b && !(b.luecke >= 0.02)) fehl.push(`${titel}: bei ${wer} greifen die Beine im Stehen ineinander (Lücke von unten nach oben: ${b.luecken.join(", ")} m; Soll überall mindestens 0,02)`);
+      else if (z && z.modus === "stehen" && !b) fehl.push(`${titel}: bei ${wer} lässt sich die Lücke zwischen den Beinen nicht messen`);
+    }
     // Kinnkette der Fellmütze (19.11.): goldene Glieder am Kopf; öffnet er den Mund, geht das Glied am Kinn mit dem Unterkiefer nach unten
     if (sgt[0] && !(sgt[0].kette && sgt[0].kette.zahl > 20)) fehl.push(`${titel}: der Sergeant hat keine Kinnkette`);
     else if (sgt[0]) {

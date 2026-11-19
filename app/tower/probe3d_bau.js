@@ -304,7 +304,7 @@ export function rundeOrt(ru, weg) {
    umfaerben: Körperteil → Farbfeld des Körperbilds (Spalte,Zeile von 8 × 4) → neues Feld. Aus der Rüstung wird die Uniform der Garde:
    roter Rock, weißer Gürtel, goldene Schnalle und Abzeichen, schwarze Hose und Stiefel. */
 const ROT = [0, 1], WEISS = [1, 1], GOLD = [4, 1], SCHWARZ = [2, 0];
-export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, schlank: 0.6, fuss: 0.9, schulter: { hals: 0.025 },   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (schlank = Breite und Tiefe von Rumpf, Armen und Beinen, 1 = wie das Modell; seit 19.11. sauber gebaut statt gequetscht, siehe schlankBauen · fuss = Länge der Füße: 0.9 ist die Hälfte länger als die gequetschten 0.6)
+export const SERGEANT = { koerper: "koerper_knight", teile: "sergeant_teile", bau: { arm: 1.9, bein: 3.3, kopf: 0.7, rumpf: 1.3 }, schlank: 0.6, fuss: 0.9, schulter: { hals: 0.025 }, stramm: true,   // Mr. Alex 18.11.: rappeldürr, eine lange Bohnenstange (schlank = Breite und Tiefe von Rumpf, Armen und Beinen, 1 = wie das Modell; seit 19.11. sauber gebaut statt gequetscht, siehe schlankBauen · fuss = Länge der Füße: 0.9 ist die Hälfte länger als die gequetschten 0.6)
   kopf: "sergeantkopf", hand: 0.72,   // Kopf mit Bart, rothaarig, Knollennase (Wahl Mr. Alex 18./19.11.) · hand = Handgröße gegenüber Mr. Flex
  
   uniform: { saum: [0.70, 1.10, 0.02], knoepfe: [0.75, 0.82, 0.89, 0.96, 1.03], knopf: 0.026 },   // weißer Saum vorn (von, bis, halbe Breite) und silberne Knöpfe (Höhen, Größe), Maße des ungestreckten Körpers
@@ -452,8 +452,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     if (figur.kragen !== false) gelenkFest.push([K("upperarm" + s), knochenNach(m, K("upperarm" + s), (p) => { p.x = vz * Math.max(Math.abs(p.x) * schlank, schulter.breit * Math.min(1, schlank / 0.6)); p.y -= schulter.tief; })]);
     if (figur.schlank) { gelenkFest.push([K("upperleg" + s), knochenNach(m, K("upperleg" + s), (p) => { p.x *= schlank; })]); }
   }
-  for (const [k, ort] of gelenkFest) k.position.copy(ort);
-  if (figur.schlank) for (const s of "lr") { const k = K("toes" + s), ort = knochenNach(m, k, (p) => { p.z *= fussLang; }); gelenkFest.push([k, ort]); k.position.copy(ort); }
+  // (gesetzt werden Schulter- und Hüftgelenke erst, wenn die Ringe an Knie und Ellbogen eingemessen sind – die brauchen den Körper in Ruhe; sonst sitzen sie versetzt und die Beine greifen am Knie ineinander)
+  if (figur.schlank) for (const s of "lr") { const k = K("toes" + s), ort = knochenNach(m, k, (p) => { p.z *= fussLang; }); k.position.copy(ort); gelenkFest.push([k, ort]); }
   const FERSE = FERSE_Z * fussLang, halsHoch = figur.kragen !== false ? schulter.hals : 0;
   const handMass = HAND * (figur.hand || 1), handFolgt = [];
   const haut = []; m.traverse((o) => { if (o.isMesh) o.frustumCulled = false; if (o.isSkinnedMesh && !/Cape/.test(o.name)) haut.push(o); });
@@ -496,6 +496,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const haendeNach = () => { for (const [h, gelenk, q] of handFolgt) { gelenk.getWorldPosition(h.position); h.quaternion.copy(drehung(gelenk)).multiply(q); h.updateMatrixWorld(true); } };
   const kleidungPunkte = kleidungAb(m, kleidung);
   const stiefel = stiefelFest(m, K), halbGelenke = [stiefel.kniel, stiefel.knier, ...ellbogenFest(m, K)].filter(Boolean), hut = hutForm(m, kleidung);
+  for (const [k, ort] of gelenkFest) k.position.copy(ort);
   mantelFolgt(m, K);
   if (figur.uniform) uniformTeile(m, figur.uniform, 1);
   /* Eigener Kopf (Kopf-Probe Mr. Flex, 18.11.): der Kopf aus Blender sitzt auf dem Kopfknochen, der Mage-Kopf wird ausgeblendet; der Hut bleibt
@@ -604,7 +605,34 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const welt = m.getWorldQuaternion(Q()).multiply(dreh).multiply(handRuhe[s]);
     W.quaternion.copy(w0.slerp(W.parent.getWorldQuaternion(Q()).invert().multiply(welt), gewicht)); W.updateMatrixWorld(true);
   };
-  const g = { modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", mund: null, rede: null, redeGesten: 0, redet: 0, akzent: 0, uhr: 0, nick: 0, brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
+  const g = { stramm: 0, strammArm: 0, modus: "stehen", wahl: R, hand: [R, R], weg: 0, hin: 1, dreh: 0, bahn: platz.bahn || 2.4, runde: platz.runde || null, gerade: false, laeuft: null, flug: 0, wendet: false, grund: 0, hoehe: 0, steigt: 0, my: 0, dy: 0, geh: 0, ausdruck: "neutral", mund: null, rede: null, redeGesten: 0, redet: 0, akzent: 0, uhr: 0, nick: 0, brille: 1, brilleZiel: 1, funkel: 0, funkelIn: -1, blinkt: 0 };
+  /* Stramme Haltung (Sergeant, Mr. Alex 19.11.: er stand breitarmig und mit durchgedrückten Knien): Im Stehen richten sich Rumpf, Arme und Beine nach festen
+     Richtungen aus – Rücken gerade, Arme gestreckt an der Hosennaht, Handflächen am Bein, Beine gestreckt, Fersen zusammen, Fußspitzen leicht nach außen.
+     Die Haltung blendet weich ein, sobald er steht, und sofort aus, wenn eine Geste oder der Gang beginnt (figur.stramm). */
+  const sq = Q(), sw = Q(), sp = Q(), sa = v(), sb = v();
+  const richte = (k, kind, nach, w) => {                // dreht den Knochen k, bis sein Kind in der Richtung `nach` (im Körper) liegt
+    k.updateWorldMatrix(true, true);
+    sa.copy(kind.getWorldPosition(sb)).sub(k.getWorldPosition(v())).normalize();
+    sq.setFromUnitVectors(sa, sb.copy(nach).normalize().applyQuaternion(m.getWorldQuaternion(sw)));
+    k.getWorldQuaternion(sw).premultiply(sq); k.parent.getWorldQuaternion(sp); sq.copy(sp).invert().multiply(sw);
+    k.quaternion.slerp(sq, w);
+  };
+  const stramm = (dt) => {
+    if (!figur.stramm) return;
+    const steht = g.modus === "stehen", gruss = g.modus === "salut";   // beim Salutieren bleibt der Körper stramm (Beine, linker Arm, Rücken) – nur der rechte Arm grüßt
+    g.stramm += ((steht || gruss ? 1 : 0) - g.stramm) * Math.min(1, dt * (steht || gruss ? 7 : 14));
+    g.strammArm += ((steht ? 1 : 0) - g.strammArm) * Math.min(1, dt * (steht ? 7 : 14));
+    const w = g.stramm; if (w < 0.01) return;
+    richte(K("spine"), K("chest"), v(0, 1, -0.02), w); richte(K("chest"), head, v(0, 1, 0.03), w);                       // Rücken gerade, Brust leicht heraus
+    for (const [s, seite] of [["r", -1], ["l", 1]]) {
+      const wa = s === "r" ? Math.min(w, g.strammArm) : w;
+      if (wa > 0.01) { richte(K("upperarm" + s), K("lowerarm" + s), v(seite * 0.05, -1, -0.02), wa); richte(K("lowerarm" + s), K("wrist" + s), v(-seite * 0.02, -1, 0.03), wa);   // Arme gestreckt an der Hosennaht
+        dreheHand(s, v(0, -1, 0.05), v(-seite, 0, 0), wa); }                                                                // Finger nach unten, Handfläche am Bein
+      richte(K("upperleg" + s), K("lowerleg" + s), v(0, -1, 0), w); richte(K("lowerleg" + s), K("foot" + s), v(0, -1, 0), w);   // Beine gestreckt und genau nebeneinander – nie nach innen: sie dürfen sich nicht berühren oder verschlingen (Mr. Alex 19.11.)
+      richte(K("foot" + s), K("toes" + s), v(seite * 0.24, -0.72, 0.66), w);                                             // Fußspitzen leicht nach außen
+    }
+    m.updateMatrixWorld(true);
+  };
   const ziele = () => {
     const regel = ZIELE[g.modus]; if (!regel || !g.laeuft) return;
     const dauer = g.laeuft.getClip().duration, t = Math.min(g.laeuft.time, dauer), qm = m.getWorldQuaternion(Q());
@@ -697,7 +725,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     else if (was === "protzen") { g.ausdruck = "schelmisch"; g.brilleZiel = 0; g.funkelIn = 0.55; }      // „Brille ab + Funkeln“
     else if (was === "magisch") { g.ausdruck = "geheimnisvoll"; g.brilleZiel = 1; g.funkelIn = 0.25; }   // „Funkeln durch die Brille“
   };
-  const nach = (dt) => { strecke(); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); kopfLauf(dt); ketteNach(); m.updateMatrixWorld(true); aufGang(); haendeNach(); };
+  const nach = (dt) => { strecke(); stramm(dt); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); kopfLauf(dt); ketteNach(); m.updateMatrixWorld(true); aufGang(); haendeNach(); };
   const grad = (x) => +((x * 180) / Math.PI).toFixed(1);
   const armLage = (s) => {                              // Ellbogenwinkel (180 = gestreckt), Richtung Schulter → Hand im Körper, Richtung der Finger zur Senkrechten
     const ps = wo(K("upperarm" + s)), pe = wo(K("lowerarm" + s)), pw = wo(K("wrist" + s)), qm = m.getWorldQuaternion(Q()).invert();
@@ -914,6 +942,19 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       knieDick: Math.min(knieDick("l"), knieDick("r")), armDick: Math.min(armDick("l"), armDick("r")), hochR: armHoch("r"), hochL: armHoch("l"), huefte: +wo(hips).y.toFixed(4), hut: hutNah(), knieGrad: [knieWinkel("l"), knieWinkel("r")], fussL: fussOrt("l"), fussR: fussOrt("r"), ferseL: fersenOrt("l"), ferseR: fersenOrt("r"), kleidung: kleidungPunkte, hutMass: hutMass(),
       schulterLinie: { hals: +((head.getWorldPosition(v()).y - K("upperarml").getWorldPosition(v()).y) / mass).toFixed(3), breit: +(K("upperarml").getWorldPosition(v()).distanceTo(K("upperarmr").getWorldPosition(v())) / 2 / mass).toFixed(3),
         gequetscht: Math.abs(m.scale.x - m.scale.y) > 1e-6, fuss: +(Math.abs(K("toesl").getWorldPosition(v()).distanceTo(K("footl").getWorldPosition(v()))) / mass).toFixed(3) },   // Testprogramm: Kopf über den Schultergelenken, halbe Schulterbreite, Fußlänge (Maße des Körpers), Figur nicht gequetscht
+      beine: (() => {                                     // Testprogramm: Lücke zwischen linkem und rechtem Bein, gemessen an den verformten Netzen in zehn Höhen (m; unter 0 = die Beine greifen ineinander)
+        const hl = K("upperlegl").getWorldPosition(v()), hr = K("upperlegr").getWorldPosition(v()), quer = hl.clone().sub(hr).normalize(), mitte = hl.clone().add(hr).multiplyScalar(0.5), hoch = hl.y, p = v();
+        const links = Array(10).fill(Infinity), rechts = Array(10).fill(-Infinity);
+        m.traverse((o) => {
+          const l = /_LegLeft$/.test(o.name); if (!o.isSkinnedMesh || (!l && !/_LegRight$/.test(o.name))) return;
+          for (let i = 0; i < o.geometry.attributes.position.count; i++) {
+            o.getVertexPosition(i, p); p.applyMatrix4(o.matrixWorld); const n = Math.floor((p.y / hoch) * 10); if (n < 0 || n > 9) continue;
+            const c = p.sub(mitte).dot(quer); if (l) links[n] = Math.min(links[n], c); else rechts[n] = Math.max(rechts[n], c);
+          }
+        });
+        const luecken = links.map((x, n) => +(x - rechts[n]).toFixed(3)).filter((x) => Number.isFinite(x));
+        return { luecke: Math.min(...luecken), luecken, huefte: +hl.distanceTo(hr).toFixed(3) };
+      })(),
       ohneKragen: (() => { let k = null; m.traverse((o) => { if (o.userData.kragenWeg) k = o.userData.kragenWeg; }); const haut = kopfTeil && kopfTeil.getObjectByName("lippenhaut"); if (haut && !haut.geometry.boundingBox) haut.geometry.computeBoundingBox();
         return k ? { ...k, hals: !!(kopfTeil && kopfTeil.getObjectByName("hals")), mundHaut: haut ? +(haut.geometry.boundingBox.max.x - haut.geometry.boundingBox.min.x).toFixed(3) : 0 } : null; })(),   // Testprogramm: Kragen gelöscht, Hals am Kopf, Breite der Haut unter der Unterlippe
       kette: kette.glieder.length ? { zahl: kette.glieder.length, kinn: +kette.glieder.reduce((a, b) => (b[2] > a[2] ? b : a))[0].position.y.toFixed(4) } : null,

@@ -118,7 +118,7 @@ def kopfhaut(k, kiefer, f, breiten=25, laengen=72, kiefer_bis=-100):
                     continue                              # Loch in der Innenflaeche: dahinter liegt die Mundhoehle
                 flaechen.append((nr[(i, j)], nr[(i + 1, j)], nr[(i + 1, j2)], nr[(i, j2)]))
                 mitte = [sum(punkte[e][n] for e in flaechen[-1]) / 4 + ursprung[n] for n in range(3)]
-                stoffe.append(material_fuer(mitte))
+                stoffe.append(material_fuer(mitte, i, j))
         netz = bpy.data.meshes.new(name)
         netz.from_pydata(punkte, [], flaechen)
         netz.update()
@@ -137,8 +137,16 @@ def kopfhaut(k, kiefer, f, breiten=25, laengen=72, kiefer_bis=-100):
         return ob
 
     bart = lambda p: 1 if teil(p, 1) < teil(p, 0) + 0.009 or teil(p, 2) < teil(p, 0) else 0   # Kiefer und Kinn: Bartflaeche (bei Mr. Flex Hautfarbe)
-    bauen("kopfhaut", k, (0, 0, 0), spalten, True, lambda p: bart(p) if p[2] >= LZ - 0.002 else 0)
-    bauen("unterkiefer", kiefer, GJ, [j for j in spalten if am_kiefer(j) or lappen(j)], False, lambda p: bart(p) if p[2] >= LZ - 0.002 else 1)
+    def bart_am_saum(i):                                  # traegt diese Spalte an der Lippennaht Bart?
+        a = math.radians(-88 + 176 * (i + 0.5) / (breiten - 1))
+        d = (math.sin(a), -math.cos(a), 0.0)
+        r = rand(d)
+        return bart([GJ[n] + d[n] * r for n in range(3)])
+
+    bauen("kopfhaut", k, (0, 0, 0), spalten, True, lambda p, i, j: bart(p) if p[2] >= LZ - 0.002 else 0)
+    # Die Klappe ueber der Lippennaht (lappen) traegt in Bart-Spalten ganz Bart: sonst wandert ihr hautfarbener oberer Rand beim Oeffnen als Streifen ueber den Bart (Sergeant, Mr. Alex 19.11.)
+    bauen("unterkiefer", kiefer, GJ, [j for j in spalten if am_kiefer(j) or lappen(j)], False,
+          lambda p, i, j: (1 if lappen(j) and bart_am_saum(i) else bart(p)) if p[2] >= LZ - 0.002 else 1)
 
 
 def nasenform(k, stationen, material, n=11):

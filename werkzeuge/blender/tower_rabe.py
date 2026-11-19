@@ -278,17 +278,34 @@ def rabe():
         wn = (wn - wd * wn.dot(wd)).normalized()                           # Aussenseite
         e = wd.cross(wn)
         e = e if e.dot(-n) > 0 else -e                                     # zur Bauchseite (Hinterkante)
+        fl.ob["wd"], fl.ob["wn"], fl.ob["e"] = list(wd), list(wn), list(e)   # Richtungen des angelegten Fluegels (Masse des Browsers): daraus rechnet vogel_bau.js das Ausbreiten
         ellipsoid(fl, S + wd * 0.11 + e * 0.02, wn * 0.02, e * 0.06, wd * 0.15, lambda p, aus: SCHWARZ, n=10, m=6)
-        for i in range(6):                                                 # Armschwingen
-            feder(fl, S + wd * 0.09 + e * (-0.03 + i * 0.018) + wn * 0.018, wd + e * (0.04 + i * 0.045), wn, 0.15, 0.04, heben=0.01)
+        for i in range(6):                                                 # Armschwingen: jede mit eigenem Gelenk am Ansatz (faechern sich beim Ausbreiten)
+            ansatz = S + wd * 0.09 + e * (-0.03 + i * 0.018) + wn * 0.018
+            schwinge = Teil(f"rabe_as_{seite}_{i}", fl, ansatz)
+            feder(schwinge, ansatz, wd + e * (0.04 + i * 0.045), wn, 0.15, 0.04, heben=0.01)
+            schwinge.netz(gefieder)
         for reihe, dr in enumerate((0.085, 0.045, 0.0)):                   # Deckfedern, drei Reihen, von hinten nach vorn uebereinander
             for i in range(5):
                 feder(fl, S + wd * (dr - 0.01) + e * (-0.035 + i * 0.02 + (0.01 if reihe % 2 else 0)) + wn * (0.02 + 0.003 * (2 - reihe)), wd + e * 0.15, wn, 0.075, 0.042, heben=0.02, glanz=1.1)
         fl.netz(gefieder)
         hand = Teil("rabe_hand_" + seite, fl, S + wd * 0.02 - e * 0.035 + wn * 0.012)
-        for j in range(7):                                                 # Handschwingen: lang und spitz, die vorderste am laengsten
-            feder(hand, hand.ort + wd * (0.05 + j * 0.012) + e * (j * 0.004) - wn * (0.002 * j), wd + e * (-0.05 + j * 0.045), wn, 0.30 - j * 0.022, 0.046, heben=0.0, glanz=1.2)
-        hand.netz(gefieder)
+        for j in range(7):                                                 # Handschwingen: lang und spitz, die vorderste am laengsten; jede mit eigenem Gelenk
+            ansatz = hand.ort + wd * (0.05 + j * 0.012) + e * (j * 0.004) - wn * (0.002 * j)
+            schwinge = Teil(f"rabe_hs_{seite}_{j}", hand, ansatz)
+            feder(schwinge, ansatz, wd + e * (-0.05 + j * 0.045), wn, 0.30 - j * 0.022, 0.046, heben=0.0, glanz=1.2)
+            schwinge.netz(gefieder)
+        # Arm des ausgebreiteten Fluegels: angelegt unsichtbar (der Browser macht ihn klein), ausgebreitet traegt er die Deckfedern bis zum Handgelenk.
+        # Eigene Zufallsfolge, damit das abgenommene Gefieder genau gleich bleibt.
+        merk = random.getstate()
+        random.seed(31 + v)
+        arm = Teil("rabe_arm_" + seite, fl, S)
+        ellipsoid(arm, S + e * 0.115 + wd * 0.015, e * 0.135, wn * 0.014, wd * 0.032, lambda p, aus: SCHWARZ, n=10, m=6)
+        for reihe, (dw, lang) in enumerate(((0.035, 0.11), (-0.005, 0.08))):
+            for k in range(9):
+                feder(arm, S + e * (0.005 + k * 0.027 + (0.013 if reihe else 0)) + wd * dw + wn * (0.013 + 0.003 * reihe), wd + e * 0.1, wn, lang, 0.052, heben=0.01, glanz=1.0)
+        arm.netz(gefieder)
+        random.setstate(merk)
 
     # ---------- Schwanz: Keil aus neun Federn, flacher als der Koerper, damit er ueber dem Boden bleibt ----------
     T = P(-0.15, -0.02)
@@ -348,7 +365,7 @@ def rabe():
 
 def ausgabe(datei):
     ziel = os.path.join(g.OUT, datei)
-    bpy.ops.export_scene.gltf(filepath=ziel, export_format="GLB", export_cameras=False, export_lights=False, export_animations=False, export_yup=True,
+    bpy.ops.export_scene.gltf(filepath=ziel, export_format="GLB", export_cameras=False, export_lights=False, export_animations=False, export_yup=True, export_extras=True,
                               export_vertex_color="MATERIAL")
     dreiecke = sum(len(p.vertices) - 2 for o in bpy.data.objects if o.type == "MESH" for p in o.data.polygons)
     print(f"RABE {datei}: {os.path.getsize(ziel) / 1000:.0f} KB, {dreiecke} Dreiecke", flush=True)

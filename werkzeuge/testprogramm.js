@@ -706,6 +706,27 @@ async function hofTest(browser, basis, app, name, fm) {
         if (ra.schnell > ra.mauer.blick.tempo + 0.01) fehl.push(`${t}: Arthur dreht den Kopf zu schnell (${ra.schnell.toFixed(2)} statt höchstens ${ra.mauer.blick.tempo} je Sekunde)`);
         if (ra.weit < 0.5 || ra.weit > ra.mauer.blick.weit + 0.01) fehl.push(`${t}: Arthurs Kopfdrehung reicht ${ra.weit.toFixed(2)} weit (erwartet deutlich, höchstens ${ra.mauer.blick.weit})`);
       }
+      // Arthur: ein langsamer Flügelschlag im Sitzen und das Landen (w07 „A raven lands next to you.“) – danach sitzt er wieder genau wie vorher
+      const fl = await pg.evaluate(() => { const p = window.__probe3d; p.vogelHalt(true); const ruhe = p.vogel(), ok = p.vogelSchlag(); let auf = 0, breit = 0, n = 0;
+        while (p.vogel().tut === "schlag" && n < 400) { p.vogelTakt(1, 25); const v = p.vogel(); auf = Math.max(auf, v.auf); breit = Math.max(breit, v.breit); n++; }
+        const nachSchlag = p.vogel(), okL = p.vogelLande(); p.vogelTakt(1, 25); const start = p.vogel(); let steigt = 0, vorY = start.ort[1], m = 1, offen = 0;
+        while (p.vogel().tut === "landet" && m < 400) { p.vogelTakt(1, 25); const v = p.vogel(); if (v.ort[1] > vorY + 0.001) steigt++; vorY = v.ort[1]; offen = Math.max(offen, v.auf); m++; }
+        const ende = p.vogel(); p.vogelHalt(false); return { ruhe, ok, okL, auf, breit, dauer: n * 0.025, nachSchlag, start, steigt, offen, landeDauer: m * 0.025, ende }; });
+      const gleich = (x, y) => x.auf === 0 && x.tut === "sitzt" && Math.abs(x.hoch - y.hoch) < 0.012 && Math.abs(x.breit - y.breit) < 0.012 && Math.hypot(x.ort[0] - y.ort[0], x.ort[1] - y.ort[1], x.ort[2] - y.ort[2]) < 0.001 && Math.abs(x.dreh - y.dreh) < 0.001;
+      if (!fl.ok || fl.auf < 0.99) fehl.push(`${t}: Arthurs Flügelschlag breitet die Flügel nicht ganz aus`);
+      else {
+        if (fl.breit < 1.3) fehl.push(`${t}: Arthurs ausgebreitete Flügel sind nur ${fl.breit} m weit (erwartet über 1,3 m)`);
+        if (fl.dauer < 2 || fl.dauer > 4.5) fehl.push(`${t}: Arthurs Flügelschlag dauert ${fl.dauer.toFixed(1)} s (erwartet langsam: 2 bis 4,5 s)`);
+        if (!gleich(fl.nachSchlag, fl.ruhe)) fehl.push(`${t}: nach dem Flügelschlag sitzt Arthur nicht wieder wie vorher (Flügel angelegt, gleicher Ort)`);
+      }
+      if (!fl.okL) fehl.push(`${t}: Arthur kann nicht landen`);
+      else {
+        if (fl.start.ort[1] < fl.ruhe.ort[1] + 3 || Math.hypot(fl.start.ort[0] - fl.ruhe.ort[0], fl.start.ort[2] - fl.ruhe.ort[2]) < 6) fehl.push(`${t}: Arthurs Anflug beginnt nicht hoch und weit weg`);
+        if (fl.steigt) fehl.push(`${t}: Arthur steigt im Anflug wieder (${fl.steigt} Schritte)`);
+        if (fl.offen < 0.99) fehl.push(`${t}: Arthur fliegt ohne ausgebreitete Flügel an`);
+        if (fl.landeDauer < 2.5 || fl.landeDauer > 5) fehl.push(`${t}: Arthurs Landen dauert ${fl.landeDauer.toFixed(1)} s (erwartet 2,5 bis 5 s)`);
+        if (!gleich(fl.ende, fl.ruhe) || Math.abs(fl.ende.fuss - fl.ruhe.fuss) > 0.01) fehl.push(`${t}: nach dem Landen sitzt Arthur nicht an seinem Platz wie vorher`);
+      }
       // drei Kameras: wählbar, über dem Boden, „hinter der Figur“ bleibt auf dem Platz
       for (const k of ["puppenhaus", "augen", "hinten"]) {
         await pg.click(`#kameras button[data-kamera="${k}"]`); await pg.waitForTimeout(300);

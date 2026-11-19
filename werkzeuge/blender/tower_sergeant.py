@@ -24,9 +24,9 @@ MZ = 0.218                                             # Unterkante der Fellmuet
 def sergeantkopf(name, ort, voll, nase="knolle"):
     """voll = True: Vollbart (kurz, kantig) · False: nur der grosse Schnurrbart. nase = "haken" (lang, schmal, die Spitze haengt) oder "knolle" (dick, rund, rot)."""
     vor = "sgt_bart" if voll else "sgt"
-    f = fx.farben(vor, haut=HAUT, wange=(0.86, 0.50, 0.42), bartschatten=ROTBRAUN if voll else (0.78, 0.53, 0.45), schnurrbart=(0.88, 0.38, 0.06),
+    f = fx.farben(vor, haut=HAUT, wange=(0.93, 0.50, 0.44), bartschatten=ROTBRAUN if voll else (0.78, 0.53, 0.45), schnurrbart=(0.88, 0.38, 0.06),
                   braue=(0.66, 0.24, 0.03), iris=(0.04, 0.80, 0.22), falte=(0.60, 0.34, 0.28))
-    k = fx.flexkopf(None, ort, name, f=f, haare=False, brille=False, bart=(0.070, 0.0125, 0.012), braue=0.0080, nase=False)
+    k = fx.flexkopf(None, ort, name, f=f, haare=False, brille=False, bart=(0.060, 0.0125, 0.012), braue=0.0080, nase=False, wange=(0.062, 0.110, 0.036, 0.030))   # Wangen leicht rot (Mr. Alex 19.11.)
     R = fx.R
     # Die Nase ist EIN Stueck (Mr. Alex 19.11.: nicht aus Kugeln zusammengesetzt): Stationen von der Nasenwurzel bis unter die Spitze,
     # je (Hoehe, so weit steht der Nasenruecken vor dem Gesicht, halbe Breite). Haken = schmal mit Buckel, die Spitze haengt; Knolle = kurzer Ruecken, dicke runde Kugel.
@@ -38,7 +38,7 @@ def sergeantkopf(name, ort, voll, nase="knolle"):
                       (0.102, 0.054, 0.017), (0.090, 0.053, 0.019), (0.080, 0.040, 0.018), (0.074, 0.022, 0.014), (0.071, 0.005, 0.008)], f["haut"])
     fell = g.farbe("sgt_fell", (0.025, 0.022, 0.022), 0.95)
     m = g.gelenk("fellmuetze", k, (0, 0, MZ))
-    for mitte, mass in (((0, 0.012, 0.150), (0.158, 0.172, 0.250)), ((0, -0.012, 0.215), (0.140, 0.150, 0.200))):   # hoher Fellkoerper, oben etwas nach vorn
+    for mitte, mass in (((0, 0.012, 0.150), (fx.RX + 0.018, 0.172, 0.250)), ((0, -0.012, 0.215), (fx.RX, 0.150, 0.200))):   # hoher Fellkoerper, oben etwas nach vorn
         teil = g.kugel("fell", m, mitte, mass, fell, fein=32)
         for p in teil.data.vertices:
             p.co.z = max(p.co.z, -mitte[2])                # unten gerade abgeschnitten
@@ -47,12 +47,30 @@ def sergeantkopf(name, ort, voll, nase="knolle"):
         # Backenbart: der Bart laeuft vom Kiefer vor dem Ohr hinauf bis unter die Muetze (Mr. Alex 19.11.: Uebergang vom Kinn zum Backenbart)
         for s in (-1, 1):
             for x, y, z, dick in ((0.094, -0.066, 0.050, 0.026), (0.106, -0.056, 0.082, 0.025), (0.116, -0.046, 0.114, 0.023), (0.123, -0.038, 0.146, 0.021), (0.127, -0.032, 0.178, 0.019), (0.128, -0.028, 0.208, 0.018)):
-                g.kugel("backenbart", k, (s * x, y, z), (dick * 0.8, dick * 1.5, dick * 1.25), f["schatten"])   # Kugelreihe: sieht aus wie ein geflochtener Bart (Mr. Alex 19.11.: so lassen)
+                g.kugel("backenbart", k, (s * x * fx.RX / 0.140, y, z), (dick * 0.8, dick * 1.5, dick * 1.25), f["schatten"])   # Kugelreihe: sieht aus wie ein geflochtener Bart (Mr. Alex 19.11.: so lassen)
+    # Kinnkette der Fellmuetze (Mr. Alex 19.11., nach seinem Foto): goldene Glieder von der Muetze an der Wange herunter und unter der Unterlippe ueber das Kinn.
+    # Jedes Glied heisst kette_<Nr>_<Anteil>: mit diesem Anteil (0–100) geht es mit dem Unterkiefer mit (der Browser rechnet das, probe3d_bau.js) – oben an der Muetze 0, am Kinn 100.
+    gold = g.farbe("sgt_gold", (0.95, 0.62, 0.08), 0.35, 0.2, 0.10)
+    weg = [(fx.RX * 0.87, MZ + 0.012), (fx.RX * 0.86, 0.170), (fx.RX * 0.79, 0.120), (fx.RX * 0.62, 0.078),   # oben weit aussen: Abstand zum Auge
+           (fx.RX * 0.40, 0.048), (fx.RX * 0.20, 0.036), (0.0, 0.033)]
+    glieder = []
+    for i in range(len(weg) - 1):
+        for j in range(3):
+            t = j / 3
+            glieder.append((weg[i][0] + (weg[i + 1][0] - weg[i][0]) * t, weg[i][1] + (weg[i + 1][1] - weg[i][1]) * t))
+    nr = 0
+    for s in (-1, 1):
+        for x, z in glieder + ([weg[-1]] if s > 0 else []):
+            if s < 0 and x == 0:
+                continue
+            anteil = max(0.0, min(1.0, (MZ - z) / (MZ - fx.LZ)))
+            g.kugel(f"kette_{nr:02d}_{round(anteil * 100):03d}", k, (s * x, fx.gesicht_vorn(x, z) - 0.005, z), (0.0088, 0.0072, 0.0088), gold, fein=10)
+            nr += 1
     return k
 
 
 if __name__ == "__main__":
-    fx.RX, fx.KR = 0.140, (0.108, 0.128, 0.093)         # breiter Schaedel, kantiger Kiefer (die Funktionen von tower_flex lesen diese Masse beim Bauen)
+    fx.RX, fx.KR = 0.112, (0.086, 0.128, 0.093)         # schmales, langes Gesicht (Mr. Alex 19.11.: ein Fuenftel schmaler; vorher 0.140 und 0.108) (die Funktionen von tower_flex lesen diese Masse beim Bauen)
     g.neu()
     sergeantkopf("sergeantkopf", (0, 0, 0), True, "knolle")   # Mr. Alex: Kopf mit Bart, rothaarig (18.11.), Knollennase (19.11.) – gerade weil er so streng ist
     ziel = os.path.join(g.OUT, "sergeant_teile.glb")

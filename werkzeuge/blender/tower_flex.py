@@ -29,11 +29,15 @@ def haut_vorn(x, z, vor=0.0):
     return -RY * max(0.02, 1 - (x / RX) ** 2 - ((z - CZ) / RZ) ** 2) ** 0.5 - vor
 
 
+def gesicht_vorn(x, z):
+    """Vorderste Flaeche des Gesichts an der Stelle (x, z): Schaedel oder Kiefer."""
+    q = max(0.0, 1 - (x / KR[0]) ** 2 - ((z - KM[2]) / KR[2]) ** 2) ** 0.5
+    return min(haut_vorn(x, z), KM[1] - KR[1] * q)
+
+
 def nasenform(k, stationen, material, n=11):
     """Ein Netz aus Ringen: jeder Ring ist ein halber Bogen von der linken Gesichtsflaeche ueber den Nasenruecken zur rechten."""
-    def gesicht(x, z):                                  # vorderste Flaeche: Schaedel oder Kiefer
-        q = max(0.0, 1 - (x / KR[0]) ** 2 - ((z - KM[2]) / KR[2]) ** 2) ** 0.5
-        return min(haut_vorn(x, z), KM[1] - KR[1] * q)
+    gesicht = gesicht_vorn
     punkte = []
     for z, vor, breit in stationen:
         for i in range(n):
@@ -59,7 +63,7 @@ def farben(vor="flex", **neu):
     """vor = Vorsilbe der Materialnamen (je Kopf eigene Farben), neu = Name -> (r, g, b) ersetzt die Farbe von Mr. Flex."""
     f = lambda name, rgb, *rest: g.farbe(name.replace("flex_", vor + "_"), neu.get(name[5:], rgb) if name.startswith("flex_") else rgb, *rest)
     return dict(
-        haut=f("flex_haut", (0.86, 0.62, 0.50), 0.75), wange=f("flex_wange", (0.86, 0.615, 0.50), 0.75),
+        haut=f("flex_haut", (0.86, 0.62, 0.50), 0.75), wange=f("flex_wange", (0.86, 0.62, 0.50), 0.75),
         schatten=f("flex_bartschatten", (0.79, 0.60, 0.52), 0.85), blond=f("flex_blond", (0.88, 0.68, 0.30), 0.7),
         bart=f("flex_schnurrbart", (0.93, 0.82, 0.52), 0.75), braue=f("flex_braue", (0.60, 0.44, 0.20), 0.8),
         lippe=f("flex_lippe", (0.50, 0.22, 0.20), 0.7), lippe_unten=f("flex_lippe_unten", (0.64, 0.33, 0.30), 0.7), falte=f("flex_falte", (0.60, 0.38, 0.30), 0.8),
@@ -70,8 +74,8 @@ def farben(vor="flex", **neu):
         gestell=f("brille_gestell", (0.03, 0.03, 0.035), 0.4))
 
 
-def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, brille=True, bart=(0.060, 0.0095, -0.016), braue=0.0055, nase=True):
-    """f = eigene Farben (farben(...)) · haare, brille = False laesst sie weg · bart = (Laenge, Dicke, Schwung der Enden: plus = nach oben) · braue = Dicke · nase = False: der andere Kopf baut seine eigene Nase.
+def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, brille=True, bart=(0.060, 0.0095, -0.016), braue=0.0055, nase=True, wange=(0.074, 0.108, 0.040, 0.031)):
+    """f = eigene Farben (farben(...)) · haare, brille = False laesst sie weg · bart = (Laenge, Dicke, Schwung der Enden: plus = nach oben) · braue = Dicke · nase = False: der andere Kopf baut seine eigene Nase · wange = (Abstand von der Mitte, Hoehe, halbe Breite, halbe Hoehe), Farbe ueber farben(wange=...).
     Andere Koepfe (tower_sergeant.py) setzen vorher die Masse des Moduls (RX, KR ...) und haengen ihre eigenen Teile an das Gelenk, das zurueckkommt."""
     f = f or farben()
     k = g.gelenk(name, eltern, ort)
@@ -85,12 +89,13 @@ def flexkopf(eltern=None, ort=(0, 0, 0), name="flexkopf", f=None, haare=True, br
         nasenform(k, [(0.188, 0.002, 0.008), (0.174, 0.009, 0.012), (0.158, 0.017, 0.014), (0.142, 0.025, 0.015), (0.126, 0.034, 0.017), (0.112, 0.043, 0.022),
                       (0.100, 0.049, 0.027), (0.089, 0.045, 0.028), (0.080, 0.029, 0.023), (0.075, 0.008, 0.012)], f["haut"])
     for s in (-1, 1):
-        g.kugel("ohr", k, (s * 0.134, 0.0, 0.150), (0.013, 0.026, 0.036), f["haut"])
+        g.kugel("ohr", k, (s * (RX + 0.002), 0.0, 0.150), (0.013, 0.026, 0.036), f["haut"])
     for s, seite in ((-1, "r"), (1, "l")):
         # Wangenknochen: deutlich, schieben sich beim Laecheln nach oben
         # flach, breit und in Hautfarbe (Mr. Alex 19.11.: soll wie ein Teil des Gesichts aussehen, nicht wie ein angeklebter Klotz) – nur eine sanfte Woelbung
-        wy = haut_vorn(s * 0.074, 0.108)
-        g.kugel("wange_" + seite, k, (s * 0.074, wy + 0.0075, 0.108), (0.040, 0.0105, 0.031), f["haut"], fein=32)
+        # In Ruhe liegt sie fast buendig in der Gesichtsflaeche; beim Laecheln hebt und woelbt der Browser sie (baueGesicht, opt.wangeVor). Lage und Groesse je Kopf.
+        wy = haut_vorn(s * wange[0], wange[1])
+        g.kugel("wange_" + seite, k, (s * wange[0], wy + 0.0092, wange[1]), (wange[2], 0.0105, wange[3]), f["wange"], fein=32)
         # Auge: Augenweiss, hellblaue Iris (neues Teil), kleine Pupille mit Glanzpunkt
         ay = haut_vorn(s * AX, AZ) + 0.012
         g.kugel("auge", k, (s * AX, ay, AZ), (0.028, 0.014, 0.0175), f["augenweiss"])

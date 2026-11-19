@@ -128,7 +128,7 @@ export function baueGesicht(kopf, kieferWinkel, opt = {}) {
         const b = t["braue_" + seite], l = t["lid_" + seite], u = t["unterlid_" + seite], p = t["pupille_" + seite], wa = t["wange_" + seite], oh = t["ohr_" + seite], ez = t["eckzahn_" + seite], ir = t["iris_" + seite], fa = t["falte_" + seite];
         const hoch = jetzt.braueHoch + (s > 0 ? jetzt.schief * 0.9 : 0);
         if (b) { b.o.position.y = b.ort.y + hoch * 0.026 * M; b.o.quaternion.copy(dreh.setFromAxisAngle(VORN, s * (jetzt.braueDreh - (s > 0 ? jetzt.schief * 0.18 : 0)))).multiply(b.q); }
-        if (wa) { wa.o.position.y = wa.ort.y + jetzt.wange * 0.030 * M; wa.o.scale.setScalar(1 + jetzt.wange * 0.1); }
+        if (wa) { wa.o.position.y = wa.ort.y + jetzt.wange * 0.030 * M; wa.o.scale.setScalar(1 + jetzt.wange * 0.1); if (opt.wangeVor) wa.o.scale.z = 1 + jetzt.wange * opt.wangeVor; }   // wangeVor (Menschenköpfe): in Ruhe bündig im Gesicht, beim Lächeln wölbt sich die Wange hervor
         if (oh) oh.o.quaternion.copy(dreh.setFromAxisAngle(VORN, -s * jetzt.ohr * 0.22)).multiply(oh.q);
         if (l) { l.o.scale.y = Math.max(0.001, lid); l.o.visible = lid > 0.03; }
         if (u) { u.o.scale.y = Math.max(0.001, jetzt.unterlid); u.o.visible = jetzt.unterlid > 0.03; }

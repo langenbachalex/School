@@ -264,6 +264,14 @@ async function probe3dTest(browser, basis, app, name, fm) {
       if (Math.abs(z.bau.bein - 3.3) > 0.01 || Math.abs(z.bau.rumpf - 1.3) > 0.01 || !(z.hals > 1.4)) fehl.push(`${titel}: Sergeant ${i + 1} ist keine lange Bohnenstange (Bein ${z.bau.bein}, Rumpf ${z.bau.rumpf}, Hals ${z.hals} m)`);
       if (Math.abs(z.tief) > 0.01) fehl.push(`${titel}: Sergeant ${i + 1} steht nicht auf dem Boden (${z.tief} m)`);
     }
+    // Kinnkette der Fellmütze (19.11.): goldene Glieder am Kopf; öffnet er den Mund, geht das Glied am Kinn mit dem Unterkiefer nach unten
+    if (sgt[0] && !(sgt[0].kette && sgt[0].kette.zahl > 20)) fehl.push(`${titel}: der Sergeant hat keine Kinnkette`);
+    else if (sgt[0]) {
+      const zu = sgt[0].kette.kinn; await pg.evaluate(() => window.__probe3d.sergeantMund([1, 0.5]));
+      const mit = await pg.waitForFunction((y) => window.__probe3d.sergeant()[0].kette.kinn < y - 0.004, zu, { timeout: 8000 }).then(() => true).catch(() => false);
+      if (!mit) fehl.push(`${titel}: die Kinnkette geht beim Sprechen nicht mit dem Unterkiefer mit`);
+      await pg.evaluate(() => window.__probe3d.sergeantMund(null));
+    }
     if (!(b.hals > 1.1)) fehl.push(`${titel}: Probe-Figur ist nicht gestreckt (Hals in ${b.hals} m Höhe, ungestreckt 0,785)`);
     if (b.stiefelOben > b.knie - 0.05) fehl.push(`${titel}: die Stiefel der Probe-Figur enden nicht unter dem Knie (Stiefelkante ${b.stiefelOben} m, Knie ${b.knie} m)`);
     const knoepfe = await pg.locator("#bau button[data-bau]").count();

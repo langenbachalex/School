@@ -10,7 +10,7 @@ Baustopp bis 25.11.: Alles hier sind Pläne und kleine Proben.
 
 ## Was wir jetzt tun sollten
 
-> **Entschieden von Mr. Alex am 19.11.2026:** (1) **Das Hauptthema schreibt er selbst, allein** – ohne KI-Musik dazu. (2) ElevenLabs Musik wird trotzdem einmal ausprobiert (Probe 1 über die Schnittstelle). (3) ElevenLabs läuft jetzt auf **Pro** (abgefragt 19.11.: 690.191 Credits im Monat statt 141.792 im Creator-Tarif). (4) Erster Versuch der Probe: Der Schlüssel „School“ hat kein Recht `music_generation` (Fehler 401 „missing_permissions“, 0 Credits verbraucht) – Mr. Alex ergänzt das Recht, dann läuft die Probe.
+> **Entschieden von Mr. Alex am 19.11.2026:** (1) **Das Hauptthema schreibt er selbst, allein** – ohne KI-Musik dazu. (2) ElevenLabs Musik wird trotzdem einmal ausprobiert (Probe 1 über die Schnittstelle). (3) ElevenLabs läuft jetzt auf **Pro** (abgefragt 19.11.: 690.191 Credits im Monat statt 141.792 im Creator-Tarif). (4) Der Schlüssel „School“ hat jetzt die Rechte Text to Speech, **Music Generation, Sound Effects und Voice Creation** (ergänzt von Mr. Alex 19.11.). (5) Probe 1 gemacht: 5-s-Einwurf und 30-s-Stück mit `music_v2_5`, nicht im Repo; die Credits ließen sich nicht messen, weil der Zähler der Schnittstelle bei 0 blieb.
 
 
 1. **Erst die Geräusche, dann die Musik.** Musik kommt frühestens in Block C (Hof und Auftakt) und richtig in Block E (Feinschliff). Das Klang-Modul aus dem Geräusche-Bericht bekommt dafür von Anfang an eine fünfte Lautstärke-Schiene „Musik“. Das ist nur eine Zeile mehr und erspart später einen Umbau.

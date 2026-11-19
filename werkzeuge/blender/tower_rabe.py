@@ -285,10 +285,12 @@ def rabe():
             schwinge = Teil(f"rabe_as_{seite}_{i}", fl, ansatz)
             feder(schwinge, ansatz, wd + e * (0.04 + i * 0.045), wn, 0.15, 0.04, heben=0.01)
             schwinge.netz(gefieder)
+        decke = Teil("rabe_decke_" + seite, fl, S)                         # eigenes Gelenk: beim Ausbreiten blendet der Browser sie aus (dann liegt die glatte Armdecke darueber)
         for reihe, dr in enumerate((0.085, 0.045, 0.0)):                   # Deckfedern, drei Reihen, von hinten nach vorn uebereinander
             for i in range(5):
-                feder(fl, S + wd * (dr - 0.01) + e * (-0.035 + i * 0.02 + (0.01 if reihe % 2 else 0)) + wn * (0.02 + 0.003 * (2 - reihe)), wd + e * 0.15, wn, 0.075, 0.042, heben=0.02, glanz=1.1)
+                feder(decke, S + wd * (dr - 0.01) + e * (-0.035 + i * 0.02 + (0.01 if reihe % 2 else 0)) + wn * (0.02 + 0.003 * (2 - reihe)), wd + e * 0.15, wn, 0.075, 0.042, heben=0.02, glanz=1.1)
         fl.netz(gefieder)
+        decke.netz(gefieder)
         hand = Teil("rabe_hand_" + seite, fl, S + wd * 0.02 - e * 0.035 + wn * 0.012)
         for j in range(7):                                                 # Handschwingen: lang und spitz, die vorderste am laengsten; jede mit eigenem Gelenk
             ansatz = hand.ort + wd * (0.05 + j * 0.012) + e * (j * 0.004) - wn * (0.002 * j)
@@ -301,9 +303,16 @@ def rabe():
         random.seed(31 + v)
         arm = Teil("rabe_arm_" + seite, fl, S)
         ellipsoid(arm, S + e * 0.115 + wd * 0.015, e * 0.135, wn * 0.014, wd * 0.032, lambda p, aus: SCHWARZ, n=10, m=6)
-        for reihe, (dw, lang) in enumerate(((0.035, 0.11), (-0.005, 0.08))):
-            for k in range(9):
-                feder(arm, S + e * (0.005 + k * 0.027 + (0.013 if reihe else 0)) + wd * dw + wn * (0.013 + 0.003 * reihe), wd + e * 0.1, wn, lang, 0.052, heben=0.01, glanz=1.0)
+        # Oberseite des Arms (Mr. Alex 19.11.: die oberen Federn am Arm machten „sehr viel Unruhe“): EINE glatte Decke aus kurzen, breiten Federn in zwei
+        # geordneten Reihen, ohne Abweichung in der Richtung; sie laeuft in einem Bogen ueber das Handgelenk in die Handdecken weiter.
+        # Der Arm wird im Browser 1,25-fach vergroessert, deshalb sind Ort und Laenge hier durch K geteilt. Handgelenk ausgebreitet bei e = 0,265.
+        K = 1.25
+        for reihe, (dw, lang, hoch) in enumerate(((0.05, 0.15, 0.012), (0.0, 0.1, 0.017))):   # grosse Armdecken, darueber die kleinen
+            for k in range(10):
+                feder(arm, S + (e * (0.012 + k * 0.027 + (0.013 if reihe else 0)) + wd * dw + wn * hoch) / K, wd + e * 0.08 - wn * 0.03, wn, lang / K, 0.054, heben=-0.02, glanz=1.0)
+            for k in range(1, 6):                                              # der Bogen ueber das Handgelenk: dieselbe Reihe dreht in fuenf Schritten zur Hand hin
+                richtung = dreh(wd, wn, -v * (k * 0.11)) + e * 0.08 - wn * 0.04
+                feder(arm, S + (e * (0.265 + k * 0.007) + wd * (dw + 0.02 - k * 0.004) + wn * hoch) / K, richtung, wn, (lang - k * 0.004) / K, 0.054, heben=-0.02, glanz=1.0)
         arm.netz(gefieder)
         # Breite Hand des ausgebreiteten Fluegels (Mr. Alex 19.11.: die Fluegelspitze war „zu duenn“, wie ein eigenes, ausgeduenntes Teil):
         # zehn breite Handschwingen samt Handdecken, fertig aufgefaechert; angelegt unsichtbar (der Browser macht sie klein), sie wachsen beim Ausbreiten
@@ -319,16 +328,8 @@ def rabe():
             feder(breit, ansatz, richtung, wn + e * wirr(0.2), 0.42 - k * 0.012 + wirr(0.022), 0.082, heben=-(0.05 + 0.1 * aussen), glanz=1.15)
         for reihe, (lang, hoch) in enumerate(((0.15, 0.006), (0.09, 0.013))):  # Handdecken, zwei Reihen
             for k in range(10):
-                richtung = dreh(wd, wn, -v * (0.75 - k * 0.105 + wirr(0.05))) - wn * (0.05 + 0.1 * (1 - k / 9))
-                feder(breit, hand.ort + wd * (0.025 + k * 0.011) + e * (k * 0.005) + wn * (hoch + wirr(0.003)), richtung, wn, lang + wirr(0.012), 0.058, heben=-0.03, glanz=1.0)
-        # Zwischenlage ueber dem Handgelenk (Mr. Alex 19.11.: der Uebergang von Arm zu Hand war „zu abrupt“, in den Fotos ist er rund – wie die Zwischenlage am Schwanz):
-        # mittellange Federn, die vom Arm her ueber das Gelenk auf die Hand laufen und im Winkel zwischen beiden liegen
-        # Sie haengen am Arm, nicht an der Hand: sonst hebeln sie sich hoch, wenn die Hand haengt. Der Arm wird im Browser 1,25-fach vergroessert,
-        # deshalb sind Ort und Masse hier durch 1,25 geteilt. Ort = dort, wo das Handgelenk ausgebreitet liegt (0,3 weiter aussen).
-        for k in range(7):
-            richtung = dreh(wd, wn, -v * (-0.05 + k * 0.11 + wirr(0.05))) - wn * (0.05 + wirr(0.03))
-            feder(arm, S + (wd * (0.02 + k * 0.004) + e * (0.19 + k * 0.016) + wn * (0.016 + wirr(0.004))) / 1.25, richtung, wn + e * wirr(0.2), (0.25 + k * 0.012 + wirr(0.02)) / 1.25, 0.06, heben=-0.04, glanz=1.05)
-        arm.netz(gefieder)
+                richtung = dreh(wd, wn, -v * (0.75 - k * 0.105 + wirr(0.015))) - wn * (0.05 + 0.1 * (1 - k / 9))
+                feder(breit, hand.ort + wd * (0.025 + k * 0.011) + e * (k * 0.005) + wn * (hoch + wirr(0.003)), richtung, wn, lang + wirr(0.004), 0.058, heben=-0.03, glanz=1.0)
         breit.netz(gefieder)
         random.setstate(merk)
 

@@ -29,7 +29,7 @@ export const VOEGEL = {
     /* Tempo aus den Filmen der Tower-Raben (Mr. Alex 19.11.: die erste Fassung war „viel zu langsam“): Flügel strecken im Sitzen rund 1 s,
        im Flug drei Schläge je Sekunde, beim Bremsen fünf */
     flug: { schlagDauer: 1.15, takt: 0.33, bremsTakt: 0.2, anflug: 1.3, bremsen: 0.55, setzen: 0.5, bremsweg: 1.4, bremsHoch: 0.5, neig: 0.75,
-      arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, armLangJe: 0.07, woelb: -0.1, armWoelb: 0.14, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
+      arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, armLangJe: 0.07, woelb: -0.07, armWoelb: 0.14, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
     ring: RINGE.arthur,
     schaedel: 0.058,                                  // Halbe Höhe des Schädels (vor der Vergrößerung): die Kehlfedern am Rumpf müssen darunter bleiben
     datei: "figuren/rabe.glb",                        // Blender-Fassung (werkzeuge/blender/tower_rabe.py); ladeVogel nimmt sie, bauVogel baut die einfache Fassung im Programm
@@ -137,7 +137,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
   const seiten = bau === "blender" ? [["l", 1], ["r", -1]].map(([s, v]) => {
     const F = g["fluegel_" + s], H = g["hand_" + s], arm = g.figur.getObjectByName("rabe_arm_" + s), vek = (n) => new THREE.Vector3(...F.userData[n]);
     const teile = (kurz, zahl) => Array.from({ length: zahl }, (_, i) => { const o = g.figur.getObjectByName("rabe_" + kurz + "_" + s + "_" + i); return { o, ort: o.position.clone() }; });
-    return { v, F, H, arm, breit: g.figur.getObjectByName("rabe_handoffen_" + s), wd: vek("wd"), wn: vek("wn"), e: vek("e"), handOrt: H.position.clone(), arme: teile("as", 6), haende: teile("hs", 7) };
+    return { v, F, H, arm, decke: g.figur.getObjectByName("rabe_decke_" + s), breit: g.figur.getObjectByName("rabe_handoffen_" + s), wd: vek("wd"), wn: vek("wn"), e: vek("e"), handOrt: H.position.clone(), arme: teile("as", 6), haende: teile("hs", 7) };
   }) : [];
   const flug = { tut: "sitzt", t: 0, auf: 0, schlag: 0, neig: 0, knick: 0, biege: 0, faecher: 0, senk: 0, beine: 0, ziel: null, von: null };
   const mA = new THREE.Matrix4(), mB = new THREE.Matrix4(), qOffen = new THREE.Quaternion(), qSchlag = new THREE.Quaternion(), qNull = new THREE.Quaternion(), va = new THREE.Vector3(), vb = new THREE.Vector3(), vc = new THREE.Vector3();
@@ -165,6 +165,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
       w.haende.forEach((f, j) => { f.o.quaternion.setFromAxisAngle(w.wn, -w.v * (FL.faecher - j * FL.faecherJe) * auf).premultiply(qSchlag.setFromAxisAngle(w.wd, -w.v * biege * auf * (1 - j / 6))); f.o.scale.setScalar(1 + FL.handLang * auf); });
       w.arme.forEach((f, i) => { f.o.position.copy(f.ort).addScaledVector(w.e, (0.05 + i * FL.armJe) * auf); f.o.quaternion.setFromAxisAngle(w.wn, -w.v * i * 0.05 * auf).premultiply(qSchlag.setFromAxisAngle(w.e, -w.v * FL.armWoelb * auf)); f.o.scale.setScalar(1 + (FL.armLang + i * FL.armLangJe) * auf); });   // armLangJe: nach außen werden die Armschwingen länger – die Hinterkante läuft rund in die Hand · armWoelb: die Hinterkante am Arm liegt etwas tiefer
       w.arm.visible = auf > 0.02; w.arm.scale.setScalar(Math.max(auf * FL.armDick, 0.001));
+      w.decke.visible = auf < 0.98; w.decke.scale.setScalar(Math.max(1 - auf, 0.001));    // die Deckfedern des angelegten Flügels weichen der glatten Armdecke
       w.breit.visible = auf > 0.02; w.breit.scale.setScalar(Math.max(auf, 0.001));          // die breite Hand wächst beim Ausbreiten aus dem Handgelenk
     }
     const lage = Math.max(0, Math.min(1, neig / FL.neig));                                // im Flug liegt der Schwanz in einer Linie mit dem Körper
@@ -195,7 +196,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
       if (t < tA) {                                                                        // Anflug: erst drei Schläge je Sekunde, dann mit gewölbten Flügeln gleiten
         const u = t / tA; weg = (weit - bremsweg) * u; hoch = FL.bremsHoch + (von.y - ziel.y - FL.bremsHoch) * (1 - glatt(u));
         const gleiten = glatt((u - 0.55) / 0.2), s = schlagen(t / FL.takt, 0.5, 0.05);
-        p = { auf: s.auf + (1 - s.auf) * gleiten, schlag: s.schlag + (-0.06 - s.schlag) * gleiten, knick: s.knick + (-0.08 - s.knick) * gleiten, biege: s.biege + (0.5 - s.biege) * gleiten   /* Gleiten (Mr. Alex 19.11.: die Hand knickte „zu weit nach unten“, bei echten Raben ist es ein Bogen): der Arm fällt ab der Schulter leicht ab, am Handgelenk nur rund 10 Grad */, neig: FL.neig, faecher: 0.35, senk: 0, beine: 0 };
+        p = { auf: s.auf + (1 - s.auf) * gleiten, schlag: s.schlag + (-0.06 - s.schlag) * gleiten, knick: s.knick + (-0.05 - s.knick) * gleiten, biege: s.biege + (0.5 - s.biege) * gleiten   /* Gleiten (Mr. Alex 19.11.: die Hand knickte „zu weit nach unten“, bei echten Raben ist es ein Bogen): der Arm fällt ab der Schulter leicht ab, am Handgelenk nur rund 7 Grad */, neig: FL.neig, faecher: 0.35, senk: 0, beine: 0 };
       } else if (t < tA + tB) {                                                            // Bremsen: aufrichten, Flügel hoch, kurze schnelle Schläge
         const u = (t - tA) / tB, s = schlagen((t - tA) / FL.bremsTakt, 0.38, 0.75);
         weg = weit - bremsweg * (1 - u) * (1 - u); hoch = FL.bremsHoch * (1 - Math.pow(u, 1.6));

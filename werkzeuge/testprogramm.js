@@ -732,6 +732,21 @@ async function hofTest(browser, basis, app, name, fm) {
         if (fl.setzDauer < 0.8) fehl.push(`${t}: Arthur sitzt ${fl.setzDauer.toFixed(2)} s nach dem Aufsetzen schon still (erwartet mindestens 0,8 s: nachfedern, Flügel zurechtrücken)`);
         if (!gleich(fl.ende, fl.ruhe) || Math.abs(fl.ende.fuss - fl.ruhe.fuss) > 0.01) fehl.push(`${t}: nach dem Landen sitzt Arthur nicht an seinem Platz wie vorher`);
       }
+      // Figuren 8 (19.11.): Plustern – die Kehlfedern stellen sich auf und legen sich wieder; Schlüssel im Schnabel (w07) – sitzt vor dem Kopf und verschwindet wieder
+      const ps = await pg.evaluate(() => { const p = window.__probe3d; if (!p.vogelPluster) return null; p.vogelHalt(true); const ruhe = p.vogel(), ok = p.vogelPluster(); let auf = 0, breit = 0, n = 0;
+        do { p.vogelTakt(1, 25); const v = p.vogel(); auf = Math.max(auf, v.pluster); breit = Math.max(breit, v.breit); n++; } while (p.vogel().pluster > 0 && n < 400);
+        const nach = p.vogel(); p.vogelSchluessel(true); const mit = p.vogel(); p.vogelSchluessel(false); const ohne = p.vogel(); p.vogelHalt(false); return { ok, ruhe, auf, breit, dauer: n * 0.025, nach, mit, ohne }; });
+      if (!ps || !ps.ok || ps.auf < 0.99) fehl.push(`${t}: Arthur plustert sich nicht auf (Knopf „Plustern“)`);
+      else {
+        if (ps.dauer < 1 || ps.dauer > 3) fehl.push(`${t}: Arthurs Plustern dauert ${ps.dauer.toFixed(1)} s (erwartet 1 bis 3 s)`);
+        if (ps.nach.pluster !== 0 || !ps.nach.angelegt || Math.abs(ps.nach.kehleOben - ps.ruhe.kehleOben) > 0.01) fehl.push(`${t}: nach dem Plustern ist Arthur nicht wieder glatt`);
+      }
+      if (!ps || !ps.mit.schluessel || !ps.mit.schluesselOrt) fehl.push(`${t}: Arthur hat keinen Schlüssel im Schnabel (Knopf „Schlüssel im Schnabel“)`);
+      else {
+        const so = ps.mit.schluesselOrt, ko = ps.mit.kopfOrt, weit = Math.hypot(so[0] - ko[0], so[1] - ko[1], so[2] - ko[2]);
+        if (weit < 0.05 || weit > 0.25) fehl.push(`${t}: Arthurs Schlüssel sitzt ${weit.toFixed(2)} m vom Kopf entfernt (erwartet im Schnabel, 0,05 bis 0,25 m)`);
+        if (ps.ohne.schluessel) fehl.push(`${t}: Arthurs Schlüssel lässt sich nicht wieder wegnehmen`);
+      }
       // Figuren 8 (19.11., Wunsch Mr. Alex): freier Flug – abheben, eine Runde über den Hof mit Schräglage, landen am selben Platz
       const rf = await pg.evaluate(() => { const p = window.__probe3d; p.vogelHalt(true); const ruhe = p.vogel(), ok = p.vogelRunde ? p.vogelRunde() : false, g = p.hof().gross; let n = 0, hoch = 0, roll = 0, draussen = 0, flog = false, landete = false, aufAmBoden = 0, nAb = 0, hochNachSprung = 0, hockt = 0, schlagImSprung = 9;
         while (ok && p.vogel().tut !== "sitzt" && n < 3000) { p.vogelTakt(1, 20); const v = p.vogel(); n++; hoch = Math.max(hoch, v.ort[1] - ruhe.ort[1]); roll = Math.max(roll, Math.abs(v.roll)); if (Math.abs(v.ort[0]) > g[0] / 2 || Math.abs(v.ort[2]) > g[1] / 2) draussen++; if (v.tut === "fliegt") flog = true; if (v.tut === "landet") landete = true; if (!nAb) { if (v.ort[1] - ruhe.ort[1] > 0.001) nAb = n; else { aufAmBoden = Math.max(aufAmBoden, v.auf); hockt = Math.max(hockt, v.hocke); } } if (nAb && n - nAb <= 19) schlagImSprung = Math.min(schlagImSprung, v.schlag); if (nAb && n - nAb === 19) { /* Ende des Sprungs */ } else if (n - nAb === 20) hochNachSprung = v.ort[1] - ruhe.ort[1]; }

@@ -31,6 +31,8 @@ export const VOEGEL = {
     flug: { schlagDauer: 1.55, takt: 0.33, bremsTakt: 0.2, anflug: 1.3, bremsen: 0.55, setzen: 0.95, bremsweg: 1.4, bremsHoch: 0.5, neig: 0.75,
       aufrichten: 0.2, ducken: 0.3, abstoss: 0.14, vorlauf: 0.04, schlagOben: 0.075, schlagHalt: 0.03, schlagAb: 0.07, hocke: 0.085, streck: 0.05, schenkel: 0.075, lauf: 0.118, abTakt: 0.17, steigen: 1.1, tempoAb: 4, tempo: 10, schlagen: 1.3, gleiten: 1.0, schraeg: 0.55, schraegMax: 0.6,   // freier Flug: Sekunden ducken · Sekunden bis zum Reiseflug · m/s beim Abheben und im Flug · Sekunden schlagen und gleiten im Wechsel · Schräglage je Kursänderung (rad je rad/s) und höchstens
       arm: 0.3, armJe: 0.03, armLang: 0.9, armDick: 1.25, hand: 0.45, handLang: 0.25, faecher: 0.8, faecherJe: 0.183, armLangJe: 0.07, woelb: -0.07, armWoelb: 0.14, schwanzLinie: 0.76, schwanzFaecher: 0.11 },
+    pluster: { dauer: 1.9, kehle: 0.45, koerper: 0.06, schuettel: 0.1 },   // Plustern: Sekunden · so viel weiter stehen die Kehlfedern ab · so viel runder wird der Körper · Schütteln (Bogenmaß)
+    schluessel: { vor: 0.095, hoch: -0.004, lang: 0.15, schnabel: 0.14 },      // Schlüssel quer im Schnabel (w07): Ort vor dem Gelenk des Unterschnabels · Länge · so weit steht der Schnabel offen
     ring: RINGE.arthur,
     schaedel: 0.058,                                  // Halbe Höhe des Schädels (vor der Vergrößerung): die Kehlfedern am Rumpf müssen darunter bleiben
     datei: "figuren/rabe.glb",                        // Blender-Fassung (werkzeuge/blender/tower_rabe.py); ladeVogel nimmt sie, bauVogel baut die einfache Fassung im Programm
@@ -117,10 +119,34 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
   /* Sitzen: fast reglos. Nur der Atem, ein Blinzeln – und ab und zu dreht sich der ganze Kopf langsam in eine neue Richtung, manchmal legt er sich schief. */
   const z = { warte: zufall(P.blick.pause) / 2, zielY: 0, zielZ: 0, blinzel: zufall(P.blinzeln), zu: 0, zeit: 0, drehungen: 0 };
   const hin = (wert, ziel, dt) => wert + Math.max(-P.blick.tempo * dt, Math.min(P.blick.tempo * dt, (ziel - wert) * Math.min(1, dt * 3)));
+  const pl = { t: -1, auf: 0 }, koerperDreh = koerper.rotation.y;
+  /* Plustern (Figuren 8): nur im Sitzen */
+  function plustere() { if (flug.tut !== "sitzt" || pl.t >= 0) return false; pl.t = 0; return true; }
+  /* Schlüssel im Schnabel (w07 „There is a key in his beak.“): ein alter goldener Schlüssel, quer gehalten; der Schnabel steht dafür einen Spalt offen */
+  let schluesselTeil = null;
+  function schluessel(an) {
+    const S = P.schluessel, unten = g.schnabel_unten;
+    if (an && !schluesselTeil) {
+      const gold = new THREE.MeshStandardMaterial({ color: 0xd9a520, roughness: 0.35, metalness: 0.6, emissive: 0x4a3200, emissiveIntensity: 0.6 });
+      const teil = (geo, x, y) => { const m = new THREE.Mesh(geo, gold); m.position.set(x, y, 0); schluesselTeil.add(m); return m; };
+      schluesselTeil = new THREE.Group(); schluesselTeil.name = "vogel_schluessel";
+      teil(new THREE.CylinderGeometry(0.006, 0.006, S.lang, 8), 0, 0).rotation.z = Math.PI / 2;                       // Schaft, quer
+      teil(new THREE.TorusGeometry(0.02, 0.006, 8, 16), -S.lang / 2 - 0.018, 0);                                      // Griff (Reide)
+      teil(new THREE.BoxGeometry(0.02, 0.03, 0.006), S.lang / 2 - 0.012, -0.015); teil(new THREE.BoxGeometry(0.01, 0.02, 0.006), S.lang / 2 - 0.032, -0.01);   // Bart
+      schluesselTeil.position.set(unten.position.x, unten.position.y + S.hoch, unten.position.z + S.vor); unten.parent.add(schluesselTeil);
+    }
+    if (schluesselTeil) schluesselTeil.visible = !!an;
+    unten.rotation.x = an ? S.schnabel : 0; return !!an;
+  }
   function bewege(dt) {
     z.zeit += dt;
     if (flug.tut !== "sitzt") { bewegeFlug(dt); z.warte = Math.max(z.warte, 1); }
     koerper.scale.setScalar(1 + Math.sin(z.zeit * 1.1) * 0.012);                        // atmen
+    if (pl.t >= 0) {                                                                      // plustern: Kehlfedern stellen sich auf, der Körper wird runder, ein kurzes Schütteln, alles legt sich wieder
+      pl.t += dt; const u = pl.t / P.pluster.dauer; pl.auf = u >= 1 ? 0 : stufen(u, [[0, 0], [0.22, 1], [0.7, 1], [1, 0]]); if (u >= 1) pl.t = -1;
+      koerper.scale.multiplyScalar(1 + P.pluster.koerper * pl.auf); if (g.kehle) g.kehle.scale.set(1 + P.pluster.kehle * pl.auf, 1 + P.pluster.kehle * 0.4 * pl.auf, 1 + P.pluster.kehle * pl.auf);
+      koerper.rotation.y = koerperDreh + (u < 1 ? Math.sin(pl.t * 34) * P.pluster.schuettel * glatt((u - 0.3) / 0.1) * (1 - glatt((u - 0.6) / 0.12)) : 0);
+    }
     if ((z.warte -= dt) <= 0) {
       z.warte = zufall(P.blick.pause); z.drehungen++;
       let neu; do { neu = (Math.random() * 2 - 1) * P.blick.weit; } while (Math.abs(neu - z.zielY) < 0.5);   // immer eine deutliche Drehung
@@ -275,10 +301,10 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
     const kehleOben = g.kehle ? +kasten.clone().setFromObject(g.kehle).max.y.toFixed(3) : null, kopfUnten = +(kopf.getWorldPosition(ort).y - P.schaedel * P.gross).toFixed(3);
     const gr = kasten.getSize(ort.clone());
     const angelegt = !seiten.length || (flug.auf === 0 && seiten.every((w) => Math.abs(w.F.quaternion.w) > 0.99999 && Math.abs(w.H.quaternion.w) > 0.99999) && Math.abs(g.schwanz.rotation.x) < 1e-6 && Math.abs(g.figur.rotation.x) < 1e-6 && Math.abs(koerper.position.y - koerperHoch) < 1e-6);
-    return { wer, bau, tut: flug.tut, angelegt, schlag: +flug.schlag.toFixed(3), neig: +flug.neig.toFixed(3), roll: +(flug.roll || 0).toFixed(3), hocke: +(flug.hocke || 0).toFixed(3), auf: +flug.auf.toFixed(3), breit: +Math.max(gr.x, gr.z).toFixed(3), kehleOben, kopfUnten, ring: P.ring ? { name: P.ring.name, hoch: +g.ring.getWorldPosition(ort).y.toFixed(3) } : null, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
+    return { wer, bau, tut: flug.tut, angelegt, schlag: +flug.schlag.toFixed(3), neig: +flug.neig.toFixed(3), roll: +(flug.roll || 0).toFixed(3), pluster: +pl.auf.toFixed(3), schluessel: !!(schluesselTeil && schluesselTeil.visible), schluesselOrt: schluesselTeil && schluesselTeil.visible ? schluesselTeil.getWorldPosition(new THREE.Vector3()).toArray().map((v) => +v.toFixed(3)) : null, kopfOrt: kopf.getWorldPosition(new THREE.Vector3()).toArray().map((v) => +v.toFixed(3)), hocke: +(flug.hocke || 0).toFixed(3), auf: +flug.auf.toFixed(3), breit: +Math.max(gr.x, gr.z).toFixed(3), kehleOben, kopfUnten, ring: P.ring ? { name: P.ring.name, hoch: +g.ring.getWorldPosition(ort).y.toFixed(3) } : null, name: P.name, ort: wurzel.position.toArray().map((v) => +v.toFixed(3)), dreh: +wurzel.rotation.y.toFixed(3), hoch: +(kasten.max.y - kasten.min.y).toFixed(3), fuss: +kasten.min.y.toFixed(3),
       kopf: [+kopf.rotation.y.toFixed(4), +kopf.rotation.z.toFixed(4)], drehungen: z.drehungen, blick: P.blick };
   }
   /* setze: Ort der Füße und Blickrichtung (0 = nach Süden, +z) */
   const setze = (x, y, zz, dreh = 0) => { wurzel.position.set(x, y, zz); wurzel.rotation.y = dreh; };
-  return { wurzel, g, bewege, zustand, setze, schau, fluegelschlag, lande, fliege };
+  return { wurzel, g, bewege, zustand, setze, schau, fluegelschlag, lande, fliege, plustere, schluessel };
 }

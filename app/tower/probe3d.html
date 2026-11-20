@@ -664,7 +664,14 @@ try {
   document.body.append(rabenSchild);
   let rabenName = null;
   const alleRaben = () => [arthur, ...andereRaben].filter(Boolean);
-  function zeigeRabenname(vogel) { const z = vogel.zustand(); rabenName = { vogel, bis: performance.now() + 3500, hoch: z.hoch }; rabenSchild.textContent = z.name; rabenSchild.hidden = false; buehne.dataset.rabenname = z.name; setzeRabenschild(); }
+  /* Mordred lügt (Figuren 10, Entscheidung Mr. Alex 20.11., Variante 3): die Elster zeigt nie „Mordred“, sondern den Namen eines echten Raben – jedes Mal einen anderen */
+  let luege = "";
+  function schildName(z) {
+    if (z.wer !== "mordred") return z.name;
+    const echte = alleRaben().map((v) => v.zustand()).filter((r) => r.wer !== "mordred" && r.name !== luege).map((r) => r.name);
+    return (luege = echte[Math.floor(Math.random() * echte.length)] || luege || "Arthur");
+  }
+  function zeigeRabenname(vogel) { const z = vogel.zustand(), name = schildName(z); rabenName = { vogel, bis: performance.now() + 3500, hoch: z.hoch }; rabenSchild.textContent = name; rabenSchild.hidden = false; buehne.dataset.rabenname = name; setzeRabenschild(); }
   function setzeRabenschild() {
     if (!rabenName) return; if (performance.now() > rabenName.bis) { rabenName = null; rabenSchild.hidden = true; delete buehne.dataset.rabenname; return; }
     const o = rabenName.vogel.wurzel.position, q = new THREE.Vector3(o.x, o.y + rabenName.hoch, o.z).project(kamera), r = buehne.getBoundingClientRect();

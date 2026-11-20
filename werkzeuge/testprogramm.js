@@ -945,6 +945,22 @@ async function hofTest(browser, basis, app, name, fm) {
         const name = await pg.evaluate(() => ({ daten: document.getElementById("buehne").dataset.rabenname || "", schild: document.getElementById("rabenname").hidden ? "" : document.getElementById("rabenname").textContent }));
         if (name.daten !== s.name || name.schild !== s.name) fehl.push(`${t}: Tipp auf den Raben ${s.name} zeigt „${name.schild || "nichts"}“ statt seines Namens`);
       }
+      // Mordred lügt (Figuren 10, 20.11.): die Elster zeigt beim Antippen nie „Mordred“, sondern den Namen eines echten Raben, jedes Mal einen anderen
+      {
+        const echte = await pg.evaluate(() => { const p = window.__probe3d; return [p.vogel(), ...p.raben()].filter((r) => r && r.wer !== "mordred").map((r) => r.name); });
+        const da = await pg.evaluate(() => { const p = window.__probe3d, v = p.raben().find((r) => r.wer === "mordred"); if (!v) return false; p.blick([v.ort[0] - 2.2, v.ort[1] + 0.9, v.ort[2] + 2.2], [v.ort[0], v.ort[1] + 0.4, v.ort[2]]); return true; });
+        if (!da) fehl.push(`${t}: die Elster fehlt für den Test „Mordred lügt“`);
+        else {
+          const gezeigt = [];
+          for (let i = 0; i < 4; i++) {
+            await pg.waitForTimeout(250); const s = await pg.evaluate(() => window.__probe3d.rabeAmSchirm("mordred"));
+            await pg.mouse.click(s.x, s.y); await pg.waitForTimeout(200);
+            gezeigt.push(await pg.evaluate(() => document.getElementById("rabenname").hidden ? "" : document.getElementById("rabenname").textContent));
+          }
+          if (gezeigt.some((n) => !echte.includes(n))) fehl.push(`${t}: die Elster zeigt beim Antippen „${gezeigt.join(", ")}“ – erwartet sind nur Namen echter Raben (${echte.join(", ")})`);
+          if (gezeigt.some((n, i) => i && n === gezeigt[i - 1])) fehl.push(`${t}: die Elster zeigt zweimal hintereinander denselben Namen (${gezeigt.join(", ")})`);
+        }
+      }
       await pg.evaluate(() => window.__probe3d.blick(null));
       // Die Taube (Figuren 9, 20.11.): halb so hoch wie Arthur; Tauben-Gang – sie trippelt schnell, der Kopf steht je Schritt still und schnellt dann vor, bleibt dabei waagerecht –,
       // „Guess what!“-Hüpfer mit flatternden Flügeln, Picken am Boden

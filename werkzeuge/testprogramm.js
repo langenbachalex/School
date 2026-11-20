@@ -957,6 +957,20 @@ async function hofTest(browser, basis, app, name, fm) {
         if (!tb.okP || tb.kopfTief > tb.ruhe.kopfOrt[1] * 0.6) fehl.push(`${t}: die Taube pickt nicht bis zum Boden (Kopf bei ${tb.kopfTief} m, in Ruhe ${tb.ruhe.kopfOrt[1]} m)`);
         if (tb.ende.tut !== "steht" || Math.abs(tb.ende.hals) > 0.01 || tb.ende.fluegel > 0.01) fehl.push(`${t}: nach Hüpfer und Picken steht die Taube nicht wieder ruhig`);
       }
+      // Der Tourist (Figuren 9, 20.11.): hält den kleinen Stadtplan in beiden Händen, latscht zwei Schritte, bleibt stehen, dreht den Plan und kehrt um; beim Zeigen lässt die rechte Hand los
+      const tr = await pg.evaluate(() => { const p = window.__probe3d; if (!p.touristPlan || !p.touristPlan()) return null; const a = p.touristPlan(), o0 = p.touristWo(); let weit = 0, ging = false, stand = false, eng = 9, breit = 0;
+        for (let i = 0; i < 700; i++) { p.touristTakt(1, 20); const o = p.touristWo(), s = p.touristPlan(); weit = Math.max(weit, Math.hypot(o.x - o0.x, o.z - o0.z)); if (s.modus === "gehen") ging = true; else if (ging) stand = true; eng = Math.min(eng, s.abstand); breit = Math.max(breit, s.abstand); }
+        const b = p.touristPlan(); p.touristTut("zeigen"); let los = 1; for (let i = 0; i < 40; i++) { p.touristTakt(1, 20); los = Math.min(los, p.touristPlan().haende); }
+        return { a, b, weit, ging, stand, eng, breit, los, kopf: p.tourist().kopf || null }; });
+      if (!tr) fehl.push(`${t}: der Tourist oder sein Stadtplan fehlt im Hof`);
+      else {
+        if (!tr.ging || !tr.stand) fehl.push(`${t}: der Tourist wechselt nicht zwischen Latschen und Stehenbleiben`);
+        if (tr.weit < 0.5 || tr.weit > 1.8) fehl.push(`${t}: der Tourist entfernt sich ${tr.weit.toFixed(2)} m von seinem Platz (erwartet zwei Schritte, 0,5 bis 1,8 m)`);
+        if (tr.b.dreh - tr.a.dreh < 3) fehl.push(`${t}: der Tourist dreht seinen Stadtplan nicht (Drehung ${(tr.b.dreh - tr.a.dreh).toFixed(2)})`);
+        if (tr.eng < 0.18 || tr.breit > 0.4) fehl.push(`${t}: die Hände des Touristen liegen nicht an den Rändern des Plans (Abstand ${tr.eng} bis ${tr.breit} m, Plan 0,3 m breit)`);
+        if (tr.b.ort[1] < 0.7 || tr.b.ort[1] > 1.3) fehl.push(`${t}: der Stadtplan des Touristen ist nicht vor dem Bauch (Höhe ${tr.b.ort[1]} m)`);
+        if (tr.los > 0.5) fehl.push(`${t}: beim Zeigen lässt die rechte Hand des Touristen den Plan nicht los (${tr.los})`);
+      }
       // drei Kameras: wählbar, über dem Boden, „hinter der Figur“ bleibt auf dem Platz
       for (const k of ["puppenhaus", "augen", "hinten"]) {
         await pg.click(`#kameras button[data-kamera="${k}"]`); await pg.waitForTimeout(300);

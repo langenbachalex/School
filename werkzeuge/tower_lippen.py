@@ -11,6 +11,8 @@ Braucht (nur lokal, nicht im Repo):
   werkzeuge/extern/rhubarb/Rhubarb-Lip-Sync-*/rhubarb(.exe)  von https://github.com/DanielSWolf/rhubarb-lip-sync/releases
   ffmpeg ODER Blender (wandelt MP3 in WAV um, weil Rhubarb nur WAV und Ogg liest; ist ffmpeg da, wird es genommen).
 Mundformen: A–F Grundformen, G, H, X Zusatz; was sie im Gesicht bedeuten, steht in app/tower/probe3d_figuren.js (MUNDFORMEN).
+Zeilen der Geschichte (Figuren 9, 20.11.): Aufnahmen k1_<id>.mp3 und k1_<id>_einfach.mp3 gehören zu der Figur, die in den Texttabellen
+         (tower_kapitel1.tsv, tower_hof_den.tsv, Spalte sprecher) spricht. Erfasst werden sie für die Figuren in MIT_GESCHICHTE – bisher nur der Tourist (k1_w08*).
 Zuständigkeit (Mr. Alex 19.11.): Wer Aufnahmen macht oder ändert, rechnet danach die Mundformen – dank „nur Neues“ in Sekunden.
 """
 import csv
@@ -29,6 +31,16 @@ ALLES = "--alles" in sys.argv
 FIGUREN = [f for f in ALLE_FIGUREN if not ARGS or f in ARGS]   # python werkzeuge/tower_lippen.py mrflex = nur diese Figur; die übrigen Dateien bleiben
 AUDIO = os.path.join(REPO, "app", "audio", "tower")
 AUFNAHMEN = {f: sorted(os.path.basename(d)[:-4] for d in glob.glob(os.path.join(AUDIO, f + "_*.mp3"))) for f in FIGUREN}
+MIT_GESCHICHTE = ["tourist"]   # für diese Figuren auch die Zeilen der Geschichte (k1_…); weitere Figuren hier eintragen, dann rechnet der nächste Lauf sie nach
+GESCHICHTE = {}                # Kennung der Aufnahme (k1_w08b, k1_w08b_einfach) -> (Sprecher, Text)
+for tabelle in ("tower_kapitel1.tsv", "tower_hof_den.tsv"):
+    with open(os.path.join(REPO, "inhalte", "abenteuer", tabelle), encoding="utf-8") as f:
+        for z in csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE):
+            GESCHICHTE["k1_" + z["id"]] = (z["sprecher"], z["englisch"])
+            GESCHICHTE["k1_" + z["id"] + "_einfach"] = (z["sprecher"], z.get("einfach") or z["englisch"])
+for f in FIGUREN:
+    if f in MIT_GESCHICHTE:
+        AUFNAHMEN[f] = sorted(AUFNAHMEN[f] + [k for k, (wer, _) in GESCHICHTE.items() if wer == f and os.path.exists(os.path.join(AUDIO, k + ".mp3"))])
 FFMPEG = shutil.which("ffmpeg")
 BLENDER = os.environ.get("BLENDER") or next(iter(sorted(glob.glob(r"C:\Program Files\Blender Foundation\Blender *\blender.exe"), reverse=True)), "blender")
 
@@ -59,6 +71,7 @@ def schreiben(ziel, daten):
 def main():
     with open(os.path.join(REPO, "inhalte", "abenteuer", "tower_sprueche.tsv"), encoding="utf-8") as f:
         texte = {z["id"]: z["text"] for z in csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE)}
+    texte.update({k: text for k, (_, text) in GESCHICHTE.items()})
     prog = None
     with tempfile.TemporaryDirectory() as tmp:
         for figur, ids in AUFNAHMEN.items():

@@ -127,6 +127,10 @@
   <button type="button" class="nurhof" data-rabetut="reihe" aria-pressed="false" hidden>Alle Raben in einer Reihe</button>
   <button type="button" class="nurhof" data-rabetut="mordred" hidden>Mordred hebt die Flügel</button>
   <button type="button" class="nurhof" data-rabetut="schluessel" aria-pressed="false" hidden>Schlüssel im Schnabel</button>
+  <span class="nurhof" hidden>Der Tourist</span>
+  <button type="button" class="nurhof" data-touristtut="laeuft" aria-pressed="true" hidden>Latscht hin und her</button>
+  <button type="button" class="nurhof" data-touristtut="drehen" hidden>Plan drehen</button>
+  <button type="button" class="nurhof" data-touristtut="zeigen" hidden>Zeigt (falsche Richtung)</button>
   <span class="nurhof" hidden>Die Taube</span>
   <button type="button" class="nurhof" data-taubetut="bahn" hidden>Lange Bahn gehen</button>
   <button type="button" class="nurhof" data-taubetut="huepfe" hidden>„Guess what!“</button>
@@ -176,7 +180,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
 import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt die komprimierten Formen der Raumdatei (werkzeuge/raum_verkleinern.js)
 import { ladeFiguren, mundAusZeiten, einsaetzeAus, MUNDFORMEN_MENSCH } from "./probe3d_figuren.js";
-import { ladeBauProbe, GESTEN, rundeOrt, SERGEANT } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
+import { ladeBauProbe, GESTEN, rundeOrt, SERGEANT, TOURIST } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
 import { bauVogel, ladeVogel, ladeTaube, RABENREIHE } from "./vogel_bau.js";   // Figuren 7 (19.11.): Arthur, der Rabe – nur im Hof
 import { machStand, SCHRITTE, SCHRITT_NAMEN, uhrText } from "./stand.js";   // Block B1 (20.11.): Stand der Geschichte – nur mit ?spiel=1, sonst bleibt die Probe, wie sie ist
@@ -375,6 +379,18 @@ try {
   const taubeBahn = () => { const p = taubePlatz(); return taube.gehe([{ x: p.x - 4, z: p.z - 1 }, { x: p.x + 8, z: p.z - 1 }, { x: p.x - 4, z: p.z - 1 }, p]); };
   if (taube) { const p = taubePlatz(); taube.setze(p.x, 0, p.z, 0); szene.add(taube.wurzel);
     for (const b of document.querySelectorAll("#bau button[data-taubetut]")) b.addEventListener("click", () => ({ bahn: taubeBahn, huepfe: () => taube.huepfe(), flattere: () => taube.flattere(), picke: () => taube.picke(), rede: () => b.setAttribute("aria-pressed", String(taube.rede(b.getAttribute("aria-pressed") !== "true"))) })[b.dataset.taubetut]()); }
+  /* Der Tourist (Figuren 9, 20.11.): steht zum Beurteilen frei links vor dem Startpunkt, neben der Taube; nicht im Spiel (?spiel=1) */
+  const tourist = hof && !sucht.has("spiel") ? await ladeBauProbe(lader, szene, { x: hof.plan.start.x - 5.2, z: hof.plan.start.z - 4.2, bahn: 1.45 }, { kopf: TOURIST.kopf }, TOURIST) : null;
+  /* Sein Gang im Figurenblatt: zwei Schritte, stehen bleiben, (Plan drehen), umdrehen. Die Bahn ist zwei Schritte lang; am Ende bleibt er stehen, dreht den Plan und geht zurück. */
+  const tou = { an: !sucht.has("touriststeht"), t: 1.5, stufe: "steht", dreht: -1 };
+  function bewegeTourist(dt) {
+    tourist.bewege(dt); if (tou.dreht > 0 && (tou.dreht -= dt) <= 0) tourist.planDrehen();
+    if (!tou.an || (tou.t -= dt) > 0) return;
+    if (tou.stufe === "steht") { tourist.befehl("gehen"); tou.stufe = "geht"; tou.t = 1.45 / TOURIST.gang.tempo; }
+    else { tourist.befehl("stehen"); tou.stufe = "steht"; tou.t = 3.4; tou.dreht = 1.1; }
+  }
+  const touristTut = (was) => { if (was === "laeuft") { tou.an = !tou.an; if (!tou.an) { tourist.befehl("stehen"); tou.stufe = "steht"; tou.t = 0.5; } return tou.an; } if (was === "drehen") return tourist.planDrehen(); if (was === "zeigen") { tou.t = Math.max(tou.t, 3); tou.stufe = "steht"; tourist.befehl("zeigen"); return true; } return false; };
+  if (tourist) for (const b of document.querySelectorAll("#bau button[data-touristtut]")) b.addEventListener("click", () => { const r = touristTut(b.dataset.touristtut); if (b.dataset.touristtut === "laeuft") b.setAttribute("aria-pressed", String(r)); });
   /* Zum Vergleichen (Mr. Alex: Figuren frei in die Mitte stellen): alle sieben in einer Reihe vor dem Kind, Arthur in der Mitte, Blick nach Süden – oder zurück auf die Mauer */
   const rabeTut = (wer, was) => { const r = andereRaben.find((x) => x.zustand().wer === wer); return r ? r[was]() : false; };
   function rabenReihe(an) {
@@ -682,7 +698,7 @@ try {
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1), t0 = performance.now(); zuletzt = t;
     bewegeFigur(dt, t);
-    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); if (arthur && !rabeHalt) arthur.bewege(dt); for (const r of andereRaben) r.bewege(dt); if (taube && !taubeHalt) taube.bewege(dt); for (const s of sergeants) s.bewege(dt); }
+    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); if (arthur && !rabeHalt) arthur.bewege(dt); for (const r of andereRaben) r.bewege(dt); if (taube && !taubeHalt) taube.bewege(dt); if (tourist) bewegeTourist(dt); for (const s of sergeants) s.bewege(dt); }
     if (geschichte) geschichte.bewege(dt);
     setzeKamera(dt);
     renderer.render(szene, kamera);
@@ -842,7 +858,7 @@ try {
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { taube: () => (taube ? taube.zustand() : null), taubeTut: (was, wert) => (was === "bahn" ? taubeBahn() : taube[was](wert)), taubeHalt: (an) => { taubeHalt = an; taube.halt(an); }, taubeTakt: (n, ms) => { for (let i = 0; i < n; i++) taube.bewege(ms / 1000); }, vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), rabenReihe: (an) => rabenReihe(an), rabeTut, raben: () => andereRaben.map((r) => r.zustand()), vogelPluster: () => arthur.plustere(), vogelSchluessel: (an) => arthur.schluessel(an), vogelDreh: (d) => { rabeSitz = null; arthur.setze(arthur.wurzel.position.x, arthur.wurzel.position.y, arthur.wurzel.position.z, d); }, vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
+  window.__probe3d = { tourist: () => (tourist ? tourist.zustand() : null), touristPlan: () => (tourist ? tourist.planStand() : null), touristTut: (was) => touristTut(was), touristTakt: (n, ms) => { for (let i = 0; i < n; i++) bewegeTourist(ms / 1000); }, touristWo: () => (tourist ? tourist.wo() : null), taube: () => (taube ? taube.zustand() : null), taubeTut: (was, wert) => (was === "bahn" ? taubeBahn() : taube[was](wert)), taubeHalt: (an) => { taubeHalt = an; taube.halt(an); }, taubeTakt: (n, ms) => { for (let i = 0; i < n; i++) taube.bewege(ms / 1000); }, vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), rabenReihe: (an) => rabenReihe(an), rabeTut, raben: () => andereRaben.map((r) => r.zustand()), vogelPluster: () => arthur.plustere(), vogelSchluessel: (an) => arthur.schluessel(an), vogelDreh: (d) => { rabeSitz = null; arthur.setze(arthur.wurzel.position.x, arthur.wurzel.position.y, arthur.wurzel.position.z, d); }, vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
     blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
     sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), sergeantArme: () => sergeants[0].arme(), sergeantHals: () => sergeants[0].halsSitz(), bauHals: () => bauProbe.halsSitz(), bauMund: (form) => bauProbe.mund(form), regie: (wer, id, zeit) => { const p = PROBEN[wer], schritte = id && regieSchritte(regieDaten[id], p.mund[id]); p.probe.regie(schritte ? { schritte, zeit: () => zeit } : null); return schritte; }, probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3

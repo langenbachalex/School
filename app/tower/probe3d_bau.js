@@ -461,6 +461,93 @@ function umfaerben(m, plan) {
     UV.needsUpdate = true;
   });
 }
+/* Färben nach dem Ort (Figuren 9, Tourist): statt der Farbfelder des Körperbilds bekommt ein Teil ein eigenes kleines Bild. plan[Teil] = { ort: (x, y, z) => [a, b], farbe: (a, b) => Farbe }:
+   ort legt jeden Punkt auf zwei Zahlen von 0 bis 1 (Maße des ungestreckten Körpers, Arme waagrecht zur Seite), farbe malt daraus das Bild. So gehen beliebige Farben und
+   scharfe Grenzen mitten im Teil (kurze Ärmel, Shorts, Socken, Sandalenriemen), auch wo das Netz dort keine Punkte hat. Läuft nach kragenWeg, damit auch die Schulterkappe Farbe bekommt. */
+function faerben(m, plan) {
+  const c = new THREE.Color(), B = 64, H = 512;
+  m.traverse((o) => {
+    const teil = o.isSkinnedMesh && Object.keys(plan).find((k) => o.name.includes(k)); if (!teil) return;
+    const P = o.geometry.attributes.position, UV = new Float32Array(P.count * 2), kl = (w) => Math.max(0.002, Math.min(0.998, w));
+    for (let i = 0; i < P.count; i++) { const [a, b] = plan[teil].ort(P.getX(i), P.getY(i), P.getZ(i)); UV[i * 2] = kl(a); UV[i * 2 + 1] = kl(b); }
+    o.geometry.setAttribute("uv", new THREE.BufferAttribute(UV, 2));
+    const bild = document.createElement("canvas"); bild.width = B; bild.height = H; const z = bild.getContext("2d");
+    for (let y = 0; y < H; y++) for (let x = 0; x < B; x++) { z.fillStyle = "#" + c.setHex(plan[teil].farbe((x + 0.5) / B, 1 - (y + 0.5) / H)).getHexString(); z.fillRect(x, y, 1, 1); }
+    const tex = new THREE.CanvasTexture(bild); tex.colorSpace = THREE.SRGBColorSpace; tex.magFilter = THREE.NearestFilter; tex.minFilter = THREE.LinearFilter; tex.generateMipmaps = false;
+    o.material = o.material.clone(); o.material.map = tex; o.material.color.set(0xffffff); o.material.needsUpdate = true;
+  });
+}
+/* Aufdruck auf dem T-Shirt (Tourist): „I ♥ LONDON“ mit rotem Doppeldeckerbus, gezeichnet auf eine kleine Fläche, die sich wie die Uniformteile des Sergeants
+   an die Vorderseite des Rumpfs legt und dessen Knochen-Gewichte übernimmt – sie wölbt sich über den Bauch und bewegt sich mit. */
+function hemdDruck(m, plan) {
+  let rumpf = null; m.traverse((o) => { if (o.isSkinnedMesh && /_Body$/.test(o.name)) rumpf = o; }); if (!rumpf) return;
+  const G = rumpf.geometry, P = G.attributes.position, I = G.index, SI = G.attributes.skinIndex, SW = G.attributes.skinWeight;
+  const vorn = (x, y) => { let best = null;
+    for (let t = 0; t < I.count; t += 3) {
+      const [a, b, c] = [I.getX(t), I.getX(t + 1), I.getX(t + 2)], ax = P.getX(a), ay = P.getY(a), bx = P.getX(b), by = P.getY(b), cx = P.getX(c), cy = P.getY(c);
+      const d = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy); if (Math.abs(d) < 1e-9) continue;
+      const u = ((by - cy) * (x - cx) + (cx - bx) * (y - cy)) / d, w = ((cy - ay) * (x - cx) + (ax - cx) * (y - cy)) / d, r = 1 - u - w; if (u < 0 || w < 0 || r < 0) continue;
+      const z = u * P.getZ(a) + w * P.getZ(b) + r * P.getZ(c); if (!best || z > best.z) best = { z, i: u >= w && u >= r ? a : w >= r ? b : c };
+    } return best; };
+  const N = 10, ort = [], uv = [], si = [], sw = [], idx = []; let zuletzt = vorn(0, (plan.von + plan.bis) / 2);
+  for (let j = 0; j <= N; j++) for (let i = 0; i <= N; i++) {
+    const x = -plan.breit + (2 * plan.breit * i) / N, y = plan.von + ((plan.bis - plan.von) * j) / N, h = vorn(x, y) || zuletzt; zuletzt = h;
+    ort.push(x, y, h.z + 0.008); uv.push(i / N, j / N); for (const k of "XYZW") { si.push(SI["get" + k](h.i)); sw.push(SW["get" + k](h.i)); }
+  }
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const a = j * (N + 1) + i, b = a + 1, c = a + N + 1, d = c + 1; idx.push(a, b, d, a, d, c); }
+  const bild = document.createElement("canvas"); bild.width = bild.height = 256; const z = bild.getContext("2d");
+  z.textAlign = "center"; z.textBaseline = "middle"; z.fillStyle = "#16233f"; z.font = "900 78px Arial, sans-serif"; z.fillText("I", 70, 50);
+  z.fillStyle = "#e0202c"; z.beginPath(); z.moveTo(150, 82); z.bezierCurveTo(96, 46, 122, 6, 150, 34); z.bezierCurveTo(178, 6, 204, 46, 150, 82); z.fill();   // Herz
+  z.fillStyle = "#16233f"; z.font = "900 58px Arial, sans-serif"; z.fillText("LONDON", 128, 124, 248);
+  z.fillStyle = "#d81f2a"; z.beginPath(); z.roundRect(38, 156, 180, 74, 10); z.fill();                                                                    // Doppeldeckerbus
+  z.fillStyle = "#cfe6f5"; for (let i = 0; i < 6; i++) { z.fillRect(48 + i * 28, 164, 20, 20); if (i < 5) z.fillRect(48 + i * 28, 194, 20, 20); }
+  z.fillStyle = "#f4f4f0"; z.fillRect(188, 192, 22, 34); z.fillStyle = "#1b1b1f"; for (const x of [78, 178]) { z.beginPath(); z.arc(x, 234, 13, 0, 2 * Math.PI); z.fill(); }
+  const tex = new THREE.CanvasTexture(bild); tex.colorSpace = THREE.SRGBColorSpace;
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.Float32BufferAttribute(ort, 3)); geo.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+  geo.setAttribute("skinIndex", new THREE.Uint16BufferAttribute(si, 4)); geo.setAttribute("skinWeight", new THREE.Float32BufferAttribute(sw, 4)); geo.setIndex(idx); geo.computeVertexNormals();
+  const teil = new THREE.SkinnedMesh(geo, new THREE.MeshStandardMaterial({ map: tex, transparent: true, roughness: 0.8, polygonOffset: true, polygonOffsetFactor: -2 }));
+  teil.name = "hemddruck"; teil.frustumCulled = false; teil.position.copy(rumpf.position); teil.quaternion.copy(rumpf.quaternion); teil.scale.copy(rumpf.scale);
+  rumpf.parent.add(teil); teil.bind(rumpf.skeleton, rumpf.bindMatrix);
+}
+/* Teile des Körpers weglassen (Tourist, Mr. Alex 20.11.: Gürtel weg): alle Flächen des Rumpfs, deren Punkte ganz in den genannten Farbfeldern des Körperbilds liegen (felder: Feld → Mindestabstand von der Körperachse)
+   (beim Rogue: Taschen, Riemen und Schnallen). Läuft vor dem Färben, solange die Farbfelder noch stimmen. */
+function teileWeg(m, felder) {
+  m.traverse((o) => {
+    if (!o.isSkinnedMesh || !/_Body$/.test(o.name)) return;
+    const UV = o.geometry.attributes.uv, P = o.geometry.attributes.position, alt = o.geometry.index.array, neu = [];
+    const weg = (e) => { const ab = felder[Math.floor(UV.getX(e) * 8) + "," + Math.floor(UV.getY(e) * 4)]; return ab !== undefined && Math.hypot(P.getX(e), P.getZ(e)) >= ab; };   // ab = erst ab diesem Abstand von der Körperachse (0 = alles)
+    for (let i = 0; i < alt.length; i += 3) if (!(weg(alt[i]) && weg(alt[i + 1]) && weg(alt[i + 2]))) neu.push(alt[i], alt[i + 1], alt[i + 2]);
+    o.geometry.setIndex(neu);
+  });
+}
+/* Bäuchlein (Tourist, Mr. Alex 20.11.: dünn, aber mit Bauch): die Vorderseite des Rumpfs wölbt sich um die Höhe `mitte` (± hoch) um `vor` nach vorn und wird dort etwas breiter. */
+function bauchBauen(m, b) {
+  m.traverse((o) => {
+    if (!o.isSkinnedMesh || !/_Body$/.test(o.name)) return;
+    const P = o.geometry.attributes.position; let zMax = 0; for (let i = 0; i < P.count; i++) zMax = Math.max(zMax, P.getZ(i));
+    for (let i = 0; i < P.count; i++) {
+      const x = P.getX(i), y = P.getY(i), z = P.getZ(i), f = Math.max(0, 1 - ((y - b.mitte) / b.hoch) ** 2); if (!f) continue;
+      const rund = f * f * (3 - 2 * f); P.setXYZ(i, x * (1 + b.breit * rund), y, z > 0 ? z + b.vor * rund * Math.sqrt(z / zMax) * Math.max(0, 1 - (x / 0.3) ** 2) : z);
+    }
+    P.needsUpdate = true; o.geometry.computeVertexNormals(); o.geometry.computeBoundingBox(); o.geometry.computeBoundingSphere();
+  });
+}
+/* Der verirrte Tourist (Figuren 9, 20.11., Aussehen nach Mr. Alex): KayKit-Rogue, schlaksig mit Bäuchlein („skinny fat“) – fast so lang wie der Sergeant, aber schlabberig statt stramm.
+   Weißes T-Shirt „I ♥ LONDON“ (Aufdruck folgt), darunter ein Streifen Bauch, Shorts bei jedem Wetter, blasse Beine, weiße Socken in Sandalen; Arme sonnenverbrannt wie das Gesicht.
+   Kopf aus tower_tourist.py: Sonnenbrand mit Brillenabdruck, orange Haare, zu kleine Union-Jack-Kappe. */
+const T_HEMD = 0xf2f0ea, T_HOSE = 0x2c5fb8, T_BRAND = 0xe2674f, T_BLASS = 0xf3cdb4, T_SOCKE = 0xf4f4f0, T_SANDALE = 0x151517, T_STREIF = 0x1f3f8f;
+export const TOURIST = { koerper: "koerper_rogue", teile: "tourist_teile", bau: { arm: 1.95, bein: 3.0, kopf: 0.68, rumpf: 1.2 }, schlank: 0.72, fuss: 1.25, bauch: { mitte: 0.68, hoch: 0.22, vor: 0.13, breit: 0.1 }, kopf: "touristkopf", hand: 0.85, druck: { von: 0.69, bis: 1.01, breit: 0.15 },   // druck: Aufdruck auf der Brust (Höhe von, bis · halbe Breite; Maße des ungestreckten Körpers)
+  /* Er latscht (Mr. Alex 20.11.: goofy, schlaksig, wackeliger Gang): die Sohle klatscht flach auf, die Füße heben sich kaum und zeigen nach außen (aussen, Bogenmaß),
+     die Knie bleiben weich (streck), breite Spur, er wippt stark und wiegt sich von Seite zu Seite (latsch.wiegen), der Rücken ist rund (latsch.krumm).
+     plan: der zu kleine Stadtplan (Meter), den er in beiden Händen vor sich hält – verkehrt herum. */
+  gang: { stand: 0.7, ferse: 0, rollt: 0.03, flach: 0.2, ballen: 0.22, heben: 0.02, wippen: 0.2, spur: 1.4, tempo: 0.5, streck: 0.94, aussen: 0.45 },   // Mr. Alex 20.11.: viel langsamer, er schlurft – die Füße heben sich kaum und bleiben lange am Boden
+  latsch: { wiegen: 0.09, krumm: 0.14 }, plan: { breit: 0.3, hoch: 0.2 },
+  ausdruck: "froehlich", ohne: { "3,0": 0, "6,0": 0.4 },   // Schnallen und die abstehenden Taschen des Rogue weg; Gürtelband und Riemen bleiben als Saum in Hemdfarbe (ohne sie hat der Rumpf Löcher)
+  faerben: { Body: { ort: (x, y) => [0.5, (y - 0.38) / 0.9], farbe: (a, b) => (b > 0.24 ? T_HEMD : b > 0.19 ? T_BLASS : T_HOSE) },                       // Hemd · ein Streifen Bauch · Hosenbund
+    Arm: { ort: (x) => [0.5, Math.abs(x) / 0.97], farbe: (a, b) => (b < 0.42 ? T_HEMD : T_BRAND) },                                                   // kurzer Ärmel, Arm sonnenverbrannt
+    Leg: { ort: (x, y, z) => [(z + 0.13) / 0.39, y / 0.53], farbe: (a, b) => { const y = b * 0.53, z = a * 0.39 - 0.13;                               // Shorts bis über das Knie · blasses Bein · weiße Socke mit zwei blauen Streifen · Sandale nach dem Foto von Mr. Alex (20.11.): schwarz, dicke Sohle, ein breiter Klettriemen über dem Fuß, einer um den Knöchel; Zehen und Ferse bleiben frei
+      return y > 0.37 ? T_HOSE : y > 0.24 ? T_BLASS : (y > 0.2 && y < 0.213) || (y > 0.176 && y < 0.189) ? T_STREIF : y < 0.045 || (y < 0.13 && z > 0.09 && z < 0.2) || (y > 0.085 && y < 0.15 && z < 0.09) ? T_SANDALE : T_SOCKE; } } } };
 const GELADEN = new Map();                             // Bewegungen, Hände und Köpfe nur einmal laden, auch wenn mehrere Figuren im Raum stehen (der Körper wird je Figur neu geladen)
 /* figur = eine andere Figur als Mr. Flex auf demselben Weg: { koerper, teile, bau, umfaerben } (siehe SERGEANT); ohne Angabe wie bisher Mr. Flex. */
 export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_START, figur = {}) {
@@ -471,9 +558,12 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const m = koerper.scene, K = (n) => m.getObjectByName(n), bau = { ...BAU_START, ...figur.bau };
   if (figur.kragen !== false) kragenWeg(m, figur.kragen || KRAGEN_WEG);
   if (figur.umfaerben) umfaerben(m, figur.umfaerben);
+  if (figur.ohne) teileWeg(m, figur.ohne);
+  if (figur.faerben) faerben(m, figur.faerben);
   // Schulterlinie und schlanker Körper: feste Lage der Gelenke, die sich nicht mit dem Körper strecken (strecke setzt sie in jedem Bild)
   const schulter = { ...SCHULTER, ...figur.schulter }, schlank = figur.schlank || 1, fussLang = figur.fuss || schlank, gelenkFest = [];
   if (figur.schlank) schlankBauen(m, schlank, fussLang, schulter.rumpf || 1);
+  if (figur.bauch) bauchBauen(m, figur.bauch);
   for (const s of "lr") {
     const vz = s === "l" ? 1 : -1;
     if (figur.kragen !== false) gelenkFest.push([K("upperarm" + s), knochenNach(m, K("upperarm" + s), (p) => { p.x = vz * Math.max(Math.abs(p.x) * schlank, schulter.breit * Math.min(1, schlank / 0.6)); p.y -= schulter.tief; })]);
@@ -527,6 +617,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   for (const [k, ort] of gelenkFest) k.position.copy(ort);
   mantelFolgt(m, K);
   if (figur.uniform) uniformTeile(m, figur.uniform, 1);
+  if (figur.druck) hemdDruck(m, figur.druck);
   /* Eigener Kopf (Kopf-Probe Mr. Flex, 18.11.): der Kopf aus Blender sitzt auf dem Kopfknochen, der Mage-Kopf wird ausgeblendet; der Hut bleibt
      und wird auf den schmaleren Kopf angepasst (hutWeit, hutHoch je Figur). Gesicht wie bei Gary (baueGesicht), dazu Sonnenbrille und Funkeln. */
   let kopfTeil = null, gesicht = null, brille = null, bart = null, muetze = null, hals = null; const ohren = [], OHR_ROT = new THREE.Color(0.86, 0.12, 0.1); const sterne = [], kette = { glieder: [] }, kq = Q(), kein = Q();
@@ -681,6 +772,42 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     }
     m.updateMatrixWorld(true);
   };
+  /* Tourist: Haltung mit dem Stadtplan (Figuren 9). Beide Hände halten den Plan vor dem Bauch, der Rücken ist rund, der Kopf vorgeschoben; im Gehen wiegt er sich.
+     Bei der Geste „zeigen“ lässt die rechte Hand los, der Plan bleibt in der linken. Der Plan selbst ist ein eigenes Teil in der Szene (planNach setzt ihn zwischen die Hände);
+     er steht auf dem Kopf (dreh = π), „Plan drehen“ dreht ihn um eine halbe Runde weiter – danach steht er wieder falsch herum. */
+  const pl = { r: 1, dreh: Math.PI, ziel: Math.PI, teil: null };
+  if (figur.plan) {
+    const blatt = (malen) => { const c = document.createElement("canvas"); c.width = 384; c.height = 256; malen(c.getContext("2d")); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
+    const aussen = blatt((z) => { z.fillStyle = "#f3ead2"; z.fillRect(0, 0, 384, 256); z.fillStyle = "#c8102e"; z.fillRect(0, 0, 384, 70); z.fillStyle = "#fff"; z.textAlign = "center"; z.textBaseline = "middle";
+      z.font = "900 54px Arial, sans-serif"; z.fillText("LONDON", 192, 37); z.fillStyle = "#16233f"; z.font = "900 60px Arial, sans-serif"; z.fillText("MAP", 192, 122);
+      z.strokeStyle = "#2f7fc1"; z.lineWidth = 16; z.beginPath(); z.moveTo(0, 215); z.bezierCurveTo(100, 160, 200, 250, 384, 190); z.stroke(); });   // Titelseite: sie zeigt zum Kind – auf dem Kopf
+    const innen = blatt((z) => { z.fillStyle = "#f3ead2"; z.fillRect(0, 0, 384, 256); z.strokeStyle = "#c9b98f"; z.lineWidth = 5; for (let i = 1; i < 8; i++) { z.beginPath(); z.moveTo(i * 48, 0); z.lineTo(i * 48 - 30, 256); z.stroke(); z.beginPath(); z.moveTo(0, i * 36); z.lineTo(384, i * 36 + 18); z.stroke(); }
+      z.strokeStyle = "#2f7fc1"; z.lineWidth = 18; z.beginPath(); z.moveTo(0, 150); z.bezierCurveTo(120, 80, 220, 220, 384, 120); z.stroke(); z.fillStyle = "#c8102e"; z.beginPath(); z.arc(250, 90, 12, 0, 7); z.fill(); });
+    pl.teil = new THREE.Group(); pl.teil.name = "stadtplan";
+    const seite = (bild, hinten) => { const f = new THREE.Mesh(new THREE.PlaneGeometry(figur.plan.breit, figur.plan.hoch), new THREE.MeshStandardMaterial({ map: bild, roughness: 0.9 })); if (hinten) f.rotation.y = Math.PI; f.position.z = hinten ? -0.001 : 0.001; pl.teil.add(f); };
+    seite(aussen, false); seite(innen, true); szene.add(pl.teil);
+  }
+  const planHaltung = (dt) => {
+    if (!figur.plan) return;
+    pl.r += ((g.modus === "zeigen" ? 0 : 1) - pl.r) * Math.min(1, dt * 9);
+    pl.dreh += Math.max(-dt * 5, Math.min(dt * 5, pl.ziel - pl.dreh));
+    const L = figur.latsch || {}, G = gang.gehen, u0 = G && G.dauer ? aktion.gehen.time / G.dauer - G.phase : 0, wieg = (L.wiegen || 0) * Math.sin(2 * Math.PI * u0) * (g.geh || 0);
+    richte(K("spine"), K("chest"), v(wieg, 1, L.krumm || 0), 1); richte(K("chest"), head, v(-wieg * 0.7, 1, (L.krumm || 0) * 2.2), 1);     // runder Rücken, Kopf vorgeschoben; im Gehen wiegt er sich, der Kopf pendelt nach
+    for (const [s, seite] of [["r", -1], ["l", 1]]) {
+      const wa = s === "r" ? pl.r : 1; if (wa < 0.01) continue;
+      richte(K("upperarm" + s), K("lowerarm" + s), v(seite * 0.22, -1, 0.18), wa); richte(K("lowerarm" + s), K("wrist" + s), v(-seite * 0.1, 0.5, 1), wa);
+      dreheHand(s, v(-seite * 0.1, 0.45, 1), v(-seite, 0.1, 0), wa);
+    }
+    if (g.modus !== "zeigen") g.hand = [F, F];
+    m.updateMatrixWorld(true);
+  };
+  const planNach = () => {
+    if (!pl.teil) return; pl.teil.visible = anker.visible;
+    const l = wo(K("wristl")), r = wo(K("wristr")), qm = m.getWorldQuaternion(Q()), rechts = v(-1, 0, 0).applyQuaternion(qm), mitte = l.clone().add(r).multiplyScalar(0.5);
+    const allein = l.clone().addScaledVector(rechts, figur.plan.breit * 0.42);                                   // nur die linke Hand hält: der Plan hängt an ihr
+    pl.teil.position.copy(allein.lerp(mitte, pl.r)).addScaledVector(v(0, 1, 0), figur.plan.hoch * 0.3).addScaledVector(v(0, 0, 1).applyQuaternion(qm), 0.05);
+    pl.teil.quaternion.copy(qm).multiply(Q().setFromAxisAngle(v(1, 0, 0), 0.4)).multiply(Q().setFromAxisAngle(v(0, 0, 1), pl.dreh));
+  };
   const hutBreit = () => {                              // halbe Breite der Mütze im Maß des Kopfknochens: die Hände tasten außen an das Fell, nicht hinein (Mr. Alex 19.11.)
     if (g.hutBreit == null) { let b = 0; const p = v();
       if (kopfTeil) kopfTeil.traverse((o) => { if (!o.isMesh || !/^fell/.test(o.name)) return; const P = o.geometry.attributes.position; for (let i = 0; i < P.count; i++) b = Math.max(b, Math.abs(head.worldToLocal(o.localToWorld(p.fromBufferAttribute(P, i))).x)); });
@@ -824,7 +951,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const armeVor = () => { for (const a of armKnochen) { if (a.da && a.k.quaternion.equals(a.erg)) a.k.quaternion.copy(a.basis); a.basis.copy(a.k.quaternion); } };
   const armeNach = () => { for (const a of armKnochen) { a.erg.copy(a.k.quaternion); a.da = true; } };
   const nach = (dt) => { armeVor(); nachInnen(dt); armeNach(); };
-  const nachInnen = (dt) => { strecke(); stramm(dt); posen(); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); kopfLauf(dt); halsNach(); ketteNach(); m.updateMatrixWorld(true); aufGang(); haendeNach(); };
+  const nachInnen = (dt) => { strecke(); stramm(dt); planHaltung(dt); posen(); ziele(); hoeheVor(dt); fuesse(dt); gehGang(dt); knieRund(); sohle(); finger(dt); bizeps(); kopfLauf(dt); halsNach(); ketteNach(); m.updateMatrixWorld(true); aufGang(); haendeNach(); planNach(); };
   const grad = (x) => +((x * 180) / Math.PI).toFixed(1);
   const armLage = (s) => {                              // Ellbogenwinkel (180 = gestreckt), Richtung Schulter → Hand im Körper, Richtung der Finger zur Senkrechten
     const ps = wo(K("upperarm" + s)), pe = wo(K("lowerarm" + s)), pw = wo(K("wrist" + s)), qm = m.getWorldQuaternion(Q()).invert();
@@ -923,7 +1050,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
         if (g.schluss === 2) { const t = (u - GANG.stand) / (1 - GANG.stand); f.y += SCHLUSS_HOCH * mass * weich(t, 0, 0.45) * (1 - weich(t, 0.82, 1)); }
       }
       zweiGelenke(K("upperleg" + s), K("lowerleg" + s), F, v(anker.position.x + Math.cos(g.dreh) * seite * G.spur + Math.sin(g.dreh) * f.z, f.y, anker.position.z - Math.sin(g.dreh) * seite * G.spur + Math.cos(g.dreh) * f.z), 0, vorn, w);   // in Laufrichtung, auch auf dem Rundkurs
-      const lage = (th, ruhe) => qm.clone().multiply(Q().setFromAxisAngle(quer, -th)).multiply(ruhe);
+      const lage = (th, ruhe) => qm.clone().multiply(Q().setFromAxisAngle(v(0, 1, 0), seite * (GANG.aussen || 0))).multiply(Q().setFromAxisAngle(quer, -th)).multiply(ruhe);   // aussen: Fußspitzen nach außen (Tourist)
       F.quaternion.slerp(F.parent.getWorldQuaternion(Q()).invert().multiply(lage(f.th, fussRuhe[s])), w); F.updateMatrixWorld(true);
       Z.quaternion.slerp(F.getWorldQuaternion(Q()).invert().multiply(lage(f.th > 0 ? f.th : f.th * f.zeh, zehRuhe[s])), w); Z.updateMatrixWorld(true);   // beim Abdruck bleiben die Zehen flach am Boden
       stand[s].fest = f.fest && w > 0.5;
@@ -1011,6 +1138,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const flaeche = (s) => halter[s].localToWorld(v(-0.052, 0, 0));                    // Mitte der Handfläche
   return {
     befehl: starte, kopf: kopfBefehl,
+    planDrehen() { if (!pl.teil) return false; pl.ziel += Math.PI; return true; },                                                // Tourist: dreht den Stadtplan um eine halbe Runde
+    planStand() { return pl.teil ? { dreh: +pl.dreh.toFixed(3), haende: +pl.r.toFixed(2), ort: pl.teil.position.toArray().map((x) => +x.toFixed(3)), abstand: +wo(K("wristl")).distanceTo(wo(K("wristr"))).toFixed(3), modus: g.modus } : null; },
     sichtbar(an) { anker.visible = !!an; },
     wo: () => ({ x: anker.position.x, z: anker.position.z }),   // Block B2: wo steht die Figur gerade?                // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
     /* Testprogramm: Lücke zwischen Arm und Rumpf (m), an den verformten Netzen in sechs Höhen vom Handgelenk bis unter die Schulterpartie gemessen; unter 0 = der Arm steckt im Körper. */

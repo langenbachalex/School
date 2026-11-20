@@ -1,0 +1,37 @@
+gespraech	art	ort	ausloeser	noetig	danach	zeile	knoepfe	tut	bild
+film1	film	hof	sofort	!auftakt	auftakt	a01			hof_oben
+						v00			hof_oben
+						v01			raben
+						v02			uhr
+						a02			sergeant_weit
+						a03a			sergeant
+						a03c			sergeant
+auftrag	gespraech	hof	nah:sergeant	auftakt,!auftrag		a04		sergeant:marsch	
+						a05		sergeant:marsch	
+						a06		sergeant:marsch	
+						a07a		sergeant:stehen	
+						a07b	Yes, sir! | I think so. | Sorry?		
+						a08		schritt:auftrag	
+						a09			
+film2	film	hof	sofort	auftrag,!gary		a10		gary:fass	fass
+						a11		gary:tadaa	fass
+gary	gespraech	hof	nach:film2	auftrag,!gary	gary	a12			
+						a13a			
+						a13b			
+						a14a			
+						a14c			
+						a15			
+						a16a			
+						a16b			
+						a17		feder:faellt	fenster
+feder	gespraech	hof	tipp:feder	gary,!feder	feder	a18			
+						a19			
+film3	film	hof	tipp:hof_tuer	feder,!schluessel1		w07		rabe:landet	rabe
+schluessel	gespraech	hof	tipp:rabe	feder,!schluessel1	schluessel1			rabe:gibt	
+tuer	gespraech	hof	tipp:hof_tuer	schluessel1,!tuer1		t1			
+						t2		schritt:tuer1	
+film4	film	guardroom	sofort	arthur,!schluss	schluss	s1			uhr
+						s2			treppe
+						s3			treppe
+						s4a			gary
+						s4c			gary

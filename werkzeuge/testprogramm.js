@@ -720,6 +720,79 @@ async function standTest(browser, basis, app, name, fm) {
   return fehl;
 }
 
+/* ---------- EN6 „The Keys of the Tower“ – Gespräche und Filme (Block B2, 20.11.2026): die Tabelle aus gespraeche_daten.js in der 3D-Probe mit ?spiel=1.
+   Geprüft wird: Film 1 läuft nach dem Start-Tipp von selbst (Balken, Steuerung aus, keine Knöpfe) · das Gespräch mit dem Sergeant beginnt beim Hingehen,
+   das Kind tippt weiter und antwortet mit Knöpfen („Sorry?“ wiederholt) · Film 2 und Gary folgen von selbst · ein abgebrochenes Gespräch beginnt von vorn ·
+   Feder aufheben, Deutsch zum Antippen · Rabe mit Schlüssel, Tür · Film 4 im Guard Room. Die Kamera-Feinheiten sind Block C. ---------- */
+async function gespraechTest(browser, basis, app, name, fm) {
+  const titel = `${name} · Keys of the Tower Gespräche und Filme`, fehl = [];
+  const { ctx, pg, fehler } = await neueSeite(browser, basis, app, false, fm);
+  const oeffne = async (zusatz, schnell = true) => { await pg.goto(`${basis}/${app.pfad}/tower/probe3d.html?${zusatz}`, { waitUntil: "load" }); await pg.waitForSelector("#buehne[data-bereit]", { timeout: 40000 }); await pg.evaluate((s) => { window.__towerSchnell = s; }, schnell); };
+  const lage = () => pg.evaluate(() => ({ ...window.__towerStand.gespraech.zustand(), ...window.__towerStand.welt(), erledigt: window.__towerStand.stand.erledigt().join(","), uhr: window.__towerStand.uhren()[0].soll,
+    sicht: window.__towerStand.sicht(), federDa: window.__towerStand.federDa(), rabeDa: window.__towerStand.rabeDa(), gesperrt: window.__towerStand.gesperrt(), balken: !document.querySelector(".film-balken").hidden, kasten: !document.querySelector(".rede").hidden }));
+  const bis = (bedingung, was) => pg.waitForFunction(bedingung, null, { timeout: 20000 }).catch(() => { throw new Error("wartet vergeblich: " + was); });
+  const weiter = async (n = 1) => { for (let i = 0; i < n; i++) await pg.click(".rede .rede-weiter"); };
+  const tippe = (id) => pg.evaluate((d) => window.__towerStand.tippe(d), id);
+  const pruef = (ok, text) => { if (!ok) fehl.push(`${titel}: ${text}`); };
+  try {
+    // 1. Vor dem Start-Tipp läuft nichts; danach Film 1 von selbst, mit Balken, ohne Knöpfe, die Figur steht still
+    await oeffne("ort=hof&spiel=1", false);
+    await pg.evaluate(() => { window.__towerTonTest = 250; });
+    await pg.waitForTimeout(400); let l = await lage();
+    pruef(l.laeuft === null && l.erledigt === "" && await pg.isVisible("#los"), "vor dem Start-Tipp läuft schon etwas");
+    await pg.click("#los"); await bis(() => window.__towerStand.gespraech.zustand().zeile === "v00", "Film 1, zweite Zeile");
+    l = await lage();
+    pruef(l.laeuft === "film1" && l.film && l.balken && l.gesperrt && l.knoepfe.length === 0 && l.sicht === "hof_oben", `Film 1 läuft nicht als Film (${JSON.stringify([l.laeuft, l.balken, l.gesperrt, l.knoepfe, l.sicht])})`);
+    pruef(l.satz === "Its history is ancient, and its story is legendary." && l.erledigt === "", "Film 1 zeigt die Zeile v00 nicht, oder der Auftakt gilt schon vor dem Ende als gesehen");
+    await bis(() => window.__towerStand.stand.ist("auftakt"), "Ende von Film 1");
+    l = await lage(); pruef(l.laeuft === null && !l.balken && !l.gesperrt && !l.kasten && l.sicht === "", "nach Film 1 sind Balken, Sperre oder Kamera noch da");
+    // 2. Zum Sergeant gehen: das Gespräch beginnt von selbst; weiter tippen, antworten
+    await pg.evaluate(() => { window.__towerTonTest = 0; window.__towerSchnell = true; const k = window.__probe3d.hof().kurse.sergeant.kreis.runde; window.__probe3d.geh((k.x0 + k.x1) / 2, (k.z0 + k.z1) / 2); });
+    await bis(() => window.__towerStand.gespraech.zustand().laeuft === "auftrag", "Gespräch mit dem Sergeant");
+    l = await lage();
+    pruef(l.zeile === "a04" && l.sicht === "nah:sergeant" && l.gesperrt && l.knoepfe.join("|") === "Sorry?|▶", `das Gespräch beginnt nicht richtig (${l.zeile}, ${l.sicht}, ${l.knoepfe.join("|")})`);
+    await weiter(4); l = await lage();
+    pruef(l.zeile === "a07b" && l.knoepfe.join("|") === "Yes, sir!|I think so.|Sorry?", `an der Frage des Sergeants fehlen die Antwort-Knöpfe (${l.zeile}: ${l.knoepfe.join("|")})`);
+    await pg.click('.rede .rede-antwort:text-is("Sorry?")'); l = await lage();
+    pruef(l.zeile === "a07b" && l.log.sorry === 1 && !l.abzeichenDa, "„Sorry?“ wiederholt die Frage nicht");
+    await pg.click('.rede .rede-antwort:text-is("I think so.")'); l = await lage();
+    pruef(l.zeile === "a08" && l.abzeichenDa && l.uhr === 556, `nach der Antwort kommt nicht a08 mit Abzeichen und 9:16 (${l.zeile}, ${l.uhr})`);
+    // 3. Film 2 und das Gespräch mit Gary folgen von selbst; Abbruch mittendrin: beim nächsten Mal von vorn
+    await weiter(2); await bis(() => window.__towerStand.gespraech.zustand().laeuft === "gary", "Film 2, dann Gespräch mit Gary");
+    l = await lage(); pruef(l.zeile === "a12" && l.gesehen.includes("film2") && l.erledigt === "auftakt,auftrag", `nach Film 2 beginnt das Gespräch mit Gary nicht (${l.zeile}, ${l.erledigt})`);
+    await weiter(3);
+    await oeffne("ort=hof&spiel=1"); await pg.click("#los"); await bis(() => window.__towerStand.gespraech.zustand().laeuft === "gary", "Wiederholung nach dem Abbruch");
+    l = await lage(); pruef(l.zeile === "a12" && l.erledigt === "auftakt,auftrag", `ein abgebrochenes Gespräch beginnt nicht von vorn (${l.zeile}, ${l.erledigt})`);
+    await weiter(9); l = await lage();
+    pruef(l.laeuft === null && l.erledigt === "auftakt,auftrag,gary" && l.federDa && l.sergeantTut === "wache" && l.garyDa, `nach dem Gespräch mit Gary stimmt der Hof nicht (${l.erledigt}, Feder ${l.federDa})`);
+    // 4. Feder antippen: aufheben, Auftrag lesen; ab jetzt gibt es Deutsch zum Antippen
+    await tippe("feder"); await bis(() => window.__towerStand.gespraech.zustand().laeuft === "feder", "Feder aufheben");
+    await weiter(1); l = await lage(); pruef(l.zeile === "a19" && l.satz === "Find the keys before 9:53.", `der Auftrag a19 erscheint nicht (${l.zeile})`);
+    await weiter(1); l = await lage(); pruef(l.erledigt.endsWith("feder") && !l.federDa && l.uhr === 560, "die Feder ist nach dem Aufheben nicht erledigt, oder die Uhr zeigt nicht 9:20");
+    // 5. Tür ohne Schlüssel: Film 3, der Rabe landet mit dem Schlüssel; Schlüssel nehmen; Tür aufschließen
+    await tippe("hof_tuer"); await bis(() => window.__towerStand.rabeDa() && window.__towerStand.gespraech.zustand().laeuft === null, "Film 3");
+    l = await lage(); pruef(l.gesehen.includes("film3") && !l.schluessel, "Film 3 ist nicht gelaufen");
+    await tippe("rabe"); await bis(() => window.__towerStand.stand.ist("schluessel1"), "Schlüssel nehmen");
+    l = await lage(); pruef(!l.rabeDa && l.schluessel && l.tuer1 === "zu", "nach dem Nehmen des Schlüssels stimmt der Stand nicht");
+    await tippe("hof_tuer"); await bis(() => window.__towerStand.gespraech.zustand().laeuft === "tuer", "Gespräch an der Tür");
+    l = await lage(); pruef(l.zeile === "t1" && l.knoepfe[0] === "🪶 Deutsch" && l.deutsch === null, `an der Tür fehlt die Feder (${l.knoepfe.join("|")})`);
+    await pg.click(".rede .rede-feder"); l = await lage(); pruef(l.deutsch === "Ich öffne jetzt diese Tür. Mit ZAUBEREI." && l.log.feder === 1, `die Feder zeigt das Deutsche nicht (${l.deutsch})`);
+    await weiter(1); l = await lage(); pruef(l.zeile === "t2" && l.tuer1 === "offen" && l.deutsch === null, "bei t2 geht die Tür nicht auf");
+    await weiter(1); l = await lage(); pruef(l.laeuft === null && l.erledigt.endsWith("tuer1"), "das Gespräch an der Tür endet nicht");
+    // 6. Guard Room: Film 4 läuft, sobald Arthur beantwortet ist; danach 9:30
+    await pg.evaluate(() => window.__towerStand.stand.setze("arthur"));
+    await oeffne("spiel=1"); await pg.click("#los"); await bis(() => window.__towerStand.stand.ist("schluss"), "Film 4");
+    l = await lage(); pruef(l.gesehen.includes("film4") && l.uhr === 570 && l.laeuft === null, "Film 4 endet nicht mit 9:30");
+  } catch (e) {
+    const meldung = await pg.locator("#laden").textContent().catch(() => "?");
+    fehl.push(`${titel}: ${String(e.message || e).split("\n")[0].slice(0, 160)} – Meldung auf der Seite: ${meldung}`);
+  } finally {
+    fehl.push(...[...new Set(fehler)].map((f) => `${titel}: ${f}`));
+    await ctx.close();
+  }
+  return fehl;
+}
+
 /* ---------- EN6 „The Keys of the Tower“ – Hof-Rohbau (19.11.2026): der Hof (Tower Green) als eigener Abschnitt der 3D-Probe, drei Größen.
    Geprüft werden Maße, Lage der Dinge aus w02–w08, Wege (Rundkurs, Kreis, lange Bahn), die drei Kameras und der Ort-Schalter – nicht das Aussehen. ---------- */
 async function hofTest(browser, basis, app, name, fm) {
@@ -1164,8 +1237,8 @@ function speicherTest(app) {
       for (const fm of formate) {
         const b = fm.webkit && safari ? safari : browser, name = fm.webkit && !safari ? fm.name + " (Chromium)" : fm.name;
         const w = (titel, knoepfe, opt = {}) => weg(b, basis, app, `${name} · ${titel}`, knoepfe, Object.assign({ format: fm }, opt));
-        if (NUR_STAND) { if (app.kurz === "EN6" && fm.id !== "handy") f.push(...await standTest(b, basis, app, name, fm)); continue; }
-        if (NUR_STORY) { if (app.kurz === "EN6" && fm.id !== "handy") { f.push(...await towerTest(b, basis, app, name, fm)); f.push(...await probe3dTest(b, basis, app, name, fm)); f.push(...await hofTest(b, basis, app, name, fm)); f.push(...await standTest(b, basis, app, name, fm)); } continue; }
+        if (NUR_STAND) { if (app.kurz === "EN6" && fm.id !== "handy") { f.push(...await standTest(b, basis, app, name, fm)); f.push(...await gespraechTest(b, basis, app, name, fm)); } continue; }
+        if (NUR_STORY) { if (app.kurz === "EN6" && fm.id !== "handy") { f.push(...await towerTest(b, basis, app, name, fm)); f.push(...await probe3dTest(b, basis, app, name, fm)); f.push(...await hofTest(b, basis, app, name, fm)); f.push(...await standTest(b, basis, app, name, fm)); f.push(...await gespraechTest(b, basis, app, name, fm)); } continue; }
         f.push(...await w("Start", []));
         f.push(...await w("Übung", app.uebung));
         f.push(...await w("Shop", app.shop));
@@ -1180,6 +1253,7 @@ function speicherTest(app) {
         if (story && !NUR_3D_AUS) f.push(...await probe3dTest(b, basis, app, name, fm));
         if (story && !NUR_3D_AUS) f.push(...await hofTest(b, basis, app, name, fm));
         if (story && !NUR_3D_AUS) f.push(...await standTest(b, basis, app, name, fm));
+        if (story && !NUR_3D_AUS) f.push(...await gespraechTest(b, basis, app, name, fm));
         if (EN_KETTE[app.kurz]) f.push(...await w("Bereich wird grün, Spiele zeigen den Stand von heute", [], { stand: enFastFertig(app), pruefe: (pg) => enKetteGruen(app, pg) }));
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
         if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));

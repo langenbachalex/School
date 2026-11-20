@@ -1011,7 +1011,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const flaeche = (s) => halter[s].localToWorld(v(-0.052, 0, 0));                    // Mitte der Handfläche
   return {
     befehl: starte, kopf: kopfBefehl,
-    sichtbar(an) { anker.visible = !!an; },                // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
+    sichtbar(an) { anker.visible = !!an; },
+    wo: () => ({ x: anker.position.x, z: anker.position.z }),   // Block B2: wo steht die Figur gerade?                // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
     /* Testprogramm: Lücke zwischen Arm und Rumpf (m), an den verformten Netzen in sechs Höhen vom Handgelenk bis unter die Schulterpartie gemessen; unter 0 = der Arm steckt im Körper. */
     /* Testprogramm: Steckt der Hals im Rumpf? tief = so weit liegt die Unterkante des Halses unter der Oberkante des Rumpfs rund um den Hals (m; unter 0 = Spalt zwischen Hals und Körper) ·
        armUeber = so weit ragen die Arme über die Schulterlinie des Rumpfs hinaus (m). */

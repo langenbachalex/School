@@ -291,7 +291,7 @@ export async function ladeFiguren(lader, szene, orte, kamera) {
         const soll = unterwegs && g.hin < 0 ? Math.PI : 0;                         // im Stehen zur Tür (zum Spieler) gewandt
         g.dreh += (soll - g.dreh) * Math.min(1, dt * 7);
         g.redet += ((g.modus === "reden" ? 1 : 0) - g.redet) * Math.min(1, dt * 6);
-        anker.position.z = g.z0 + g.weg; m.rotation.y = g.dreh;
+        anker.position.z = g.z0 + g.weg; m.rotation.y = g.dreh + (g.dreh0 || 0);
         let summe = 0;                                                             // Gesten weich ein- und ausblenden, der Rest teilt sich Stehen, Gehen, Rennen
         for (const [knopf, x] of Object.entries(gesten)) {
           x.gewicht += ((knopf === g.modus ? 1 : 0) - x.gewicht) * Math.min(1, dt * 8);
@@ -361,6 +361,8 @@ export async function ladeFiguren(lader, szene, orte, kamera) {
   return {
     liste: () => figuren.map((g) => ({ name: g.name, modus: g.modus, weg: +g.weg.toFixed(2), ort: [g.anker.position.x, g.anker.position.z], ausdruck: g.ausdruck, ...g.mass() })),
     befehl(modus) { for (const g of figuren) g.start(modus); },
+    setze(name, x, z, dreh = 0) { for (const g of figuren) if (g.name === name) { g.anker.position.x = x; g.anker.position.z = z; g.z0 = z; g.weg = 0; g.hin = 1; g.dreh0 = dreh; } },   // Block B2: fester Platz und Blickrichtung im Stehen (0 = nach Süden)
+    wo(name) { const g = figuren.find((f) => f.name === name); return g ? { x: g.anker.position.x, z: g.anker.position.z } : null; },
     sichtbar(name, an) { for (const g of figuren) if (g.name === name) g.anker.visible = !!an; },   // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
     ausdruck(a) { for (const g of figuren) g.ausdruck = a; },
     unruhe(an) { for (const g of figuren) g.unruhig = an; },

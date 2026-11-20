@@ -43,10 +43,24 @@
     #bau.zu > :not(.kopf) { display: none; }
     body.bau-offen #figuren { display: none; }
   }
-  #stand { left: 10px; top: 118px; display: grid; gap: 5px; padding: 8px; pointer-events: auto; max-width: 250px; max-height: calc(100dvh - 140px); overflow-y: auto; }
+  #stand { left: 10px; top: 118px; z-index: 10; display: grid; gap: 5px; padding: 8px; pointer-events: auto; max-width: 250px; max-height: calc(100dvh - 140px); overflow-y: auto; }
   #stand span { font-size: 13px; opacity: .8; } #stand b { font-size: 16px; }
   #stand button { min-height: 44px; padding: 4px 8px; font-size: 14px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
   #stand button[aria-pressed="true"] { background: #e9b45a; color: #1b1008; font-weight: 600; }
+  /* Block B2: Gespräche und Filme */
+  .rede { position: fixed; left: 50%; transform: translateX(-50%); bottom: 18px; width: min(94vw, 640px); box-sizing: border-box; background: rgba(15, 9, 6, .88); border: 1px solid rgba(243, 230, 208, .3); border-radius: 12px; padding: 12px 14px; z-index: 6; }
+  .rede-wer { font-size: 14px; font-weight: 600; color: #e9b45a; margin-bottom: 2px; }
+  .rede-satz { font-size: 21px; line-height: 1.35; } .rede-satz.erzaehlt { font-style: italic; }
+  .rede-deutsch { font-size: 16px; opacity: .85; margin-top: 4px; }
+  .rede-knoepfe { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; justify-content: flex-end; }
+  .rede-knoepfe button { min-height: 48px; min-width: 56px; padding: 6px 16px; border-radius: 10px; border: 1px solid rgba(243, 230, 208, .45); background: #2a1a10; color: inherit; font: inherit; font-size: 17px; }
+  .rede-knoepfe .rede-antwort, .rede-knoepfe .rede-weiter { background: #e9b45a; color: #1b1008; font-weight: 600; }
+  .rede-knoepfe .rede-feder { margin-right: auto; } .rede-knoepfe .rede-feder[aria-pressed="true"] { background: #f3e6d0; color: #1b1008; }
+  .rede.im-film { background: none; border: 0; text-align: center; bottom: 2.2vh; text-shadow: 0 1px 3px #000; }
+  .film-balken { position: fixed; left: 0; right: 0; height: 12vh; background: #000; z-index: 5; } .film-balken.oben { top: 0; } .film-balken.unten { bottom: 0; }
+  body.film #mess, body.film #kameras, body.film #stand, body.film #text { display: none; }
+  #los { position: fixed; inset: 0; z-index: 9; display: grid; place-items: center; background: rgba(8, 5, 3, .82); border: 0; color: inherit; font: inherit; font-size: 26px; font-weight: 600; }
+  #los small { display: block; font-size: 16px; font-weight: 400; opacity: .8; margin-top: 8px; }
   #hilfe { left: 10px; bottom: 18px; font-size: 13px; max-width: min(44vw, 300px); }
   #text { left: 50%; transform: translateX(-50%); bottom: 18px; width: min(92vw, 560px); text-align: center; font-size: 19px; }
   #text small { display: block; opacity: .75; font-size: 14px; }
@@ -146,9 +160,11 @@
   <button type="button" data-kopfrede="gestik">Reden mit Gestik</button>
 </div>
 <div id="stand" class="kasten" hidden></div>
+<button type="button" id="los" hidden><span>🗝️ The Keys of the Tower<small>Tippen, um anzufangen</small></span></button>
 <div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
 <script src="daten.js"></script>
+<script src="gespraeche_daten.js"></script>
 <script type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "./lib/GLTFLoader.js";
@@ -159,6 +175,7 @@ import { ladeBauProbe, GESTEN, rundeOrt, SERGEANT } from "./probe3d_bau.js";   /
 import { bauVogel, ladeVogel, RABENREIHE } from "./vogel_bau.js";   // Figuren 7 (19.11.): Arthur, der Rabe – nur im Hof
 import { machStand, SCHRITTE, SCHRITT_NAMEN, uhrText } from "./stand.js";   // Block B1 (20.11.): Stand der Geschichte – nur mit ?spiel=1, sonst bleibt die Probe, wie sie ist
 import { bauZeiger } from "./uhr.js";
+import { machGespraeche } from "./gespraech.js";   // Block B2 (20.11.): Gespräche und Filme aus der Tabelle in den Daten
 import { bauHof, HOF_GROESSEN, HOF_START } from "./hof_bau.js";   // Hof-Rohbau (19.11.): eigener Abschnitt, gewählt mit ?ort=hof&gross=40x30; ohne das bleibt der Guard Room
 
 const $ = (id) => document.getElementById(id);
@@ -466,6 +483,7 @@ try {
   function setzeKamera(dt) {
     const k = KAMERAS[modus];
     if (pruefBlick) { kamera.position.set(...pruefBlick[0]); kamera.lookAt(...pruefBlick[1]); return; }
+    if (geschichte) { const b = geschichte.blick(dt); if (b) { kamera.position.copy(b.von); kamera.lookAt(b.nach); kamOrt.copy(b.von); kamZiel.copy(b.nach); return; } }   // Block B2: Gespräch oder Film führt die Kamera, danach gleitet sie zurück hinter die Figur
     if (modus === "augen") {
       if (k.schwenk) {                                   // nach dem Hingehen dreht sich der Blick von selbst zum Gegenstand
         const f = Math.min(1, dt * 4);
@@ -582,6 +600,7 @@ try {
     const tipp = finger.size === 1 && zug && zug.weg < 8 && e.type === "pointerup";
     finger.delete(e.pointerId); zug = null;
     if (!tipp) return;
+    if (geschichte && geschichte.gesperrt()) return;      // Block B2: im Gespräch und im Film steht die Figur still
     const r = buehne.getBoundingClientRect();
     strahl.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), kamera);
     const treffer = strahl.intersectObjects(netze, false)[0];
@@ -621,6 +640,7 @@ try {
     });
   }
   function angetippt(netz) {
+    if (geschichte && geschichte.tipp(netz.userData.ding)) return;   // Block B2: gehört zu dem Ding jetzt ein Gespräch, läuft dieses statt der Erzähler-Zeile
     const z0 = (window.TOWER_DATEN?.zeilen || []).find((z) => z.d === netz.userData.ding && z.s === "erzaehler");
     if (z0 && z0.t === 1) spiele(`../audio/tower/k1_${z0.id}.mp3`, { beginn: () => zeigeDing(netz) });   // Text und Ton gehören zusammen: beides wartet, bis die laufende Aufnahme fertig ist
     else zeigeDing(netz);
@@ -706,12 +726,100 @@ try {
       buehne.dataset.schritt = stand.letzter() || "";
     };
     stand.beobachte(() => richte(false)); richte(true);
-    geschichte = { lokal, bewege(dt) {
-      for (const u of uhren) u.bewege(dt);
-      if (tuer && tuerAuf !== tuerSoll) { tuerAuf += Math.sign(tuerSoll - tuerAuf) * Math.min(Math.abs(tuerSoll - tuerAuf), dt / 1.2); stelleTuer(); }
-    } };
+    /* ---- Block B2 (20.11.2026): Gespräche und Filme. Die Tabelle steht in gespraeche_daten.js; hier ist nur, was der Ort dazu beiträgt:
+       wo jemand steht, was eine Handlung („sergeant:marsch“) bewirkt und wohin die Kamera bei einem Standpunkt („uhr“) schaut. ---- */
+    const V = (x, y, z) => new THREE.Vector3(x, y, z), kopfHoch = { sergeant: 1.75, gary: 0.85 };
+    const ortVon = (wer) => (wer === "sergeant" ? (hof ? sergeants[0].wo() : null) : wer === "gary" ? (garyDa || garyAuftritt ? figuren.wo("gary") : null) : null);
+    let gesperrt = false, sicht = null, sichtVon = V(0, 0, 0), sichtNach = V(0, 0, 0), sichtFrisch = false, garyAuftritt = false, gestartet = false;
+    // Feder und Rabe zum Antippen: eine unsichtbare Kugel als Ziel (leicht zu treffen), die nur da ist, solange es etwas zu holen gibt
+    const ziel = (id, radius) => { const n = new THREE.Mesh(new THREE.SphereGeometry(radius, 10, 8), new THREE.MeshBasicMaterial({ visible: false })); n.name = "ziel_" + id; n.userData.ding = id; return n; };
+    const zielAn = (n, an) => { const i = netze.indexOf(n); if (an && i < 0) { netze.push(n); szene.add(n); } if (!an && i >= 0) { netze.splice(i, 1); szene.remove(n); } };
+    const federOrt = hof ? { x: hof.plan.tuer.x - 1.6, z: hof.plan.tuer.z - 3.2 } : null, federZiel = ziel("feder", 0.45), rabeZiel = ziel("rabe", 0.6);
+    const feder = new THREE.Group(); feder.name = "feder";   // Platzhalter: schwarze Feder mit hellem Kiel, liegt vor der Tür
+    if (hof) { const fahne = new THREE.Mesh(new THREE.CircleGeometry(0.5, 20), new THREE.MeshBasicMaterial({ color: 0x08080c })), kiel = new THREE.Mesh(new THREE.PlaneGeometry(0.02, 0.5), new THREE.MeshBasicMaterial({ color: 0xcfc6ae }));
+      fahne.scale.set(0.12, 0.42, 1); kiel.position.z = 0.002; feder.add(fahne, kiel);
+      const schein = new THREE.Mesh(new THREE.RingGeometry(0.34, 0.4, 36), new THREE.MeshBasicMaterial({ color: 0xffd58a, transparent: true, opacity: 0.55 })); schein.position.z = -0.004; schein.name = "feder_schein"; feder.add(schein);   /* heller Ring, damit man die schwarze Feder am Boden findet */
+      feder.rotation.set(-Math.PI / 2, 0, 0.6); feder.position.set(federOrt.x, 0.03, federOrt.z); federZiel.position.set(federOrt.x, 0.2, federOrt.z); feder.visible = false; szene.add(feder); }
+    let rabeGelandet = false, federFall = null;           // federFall: Sekunden seit dem Loslassen (sie segelt aus 3,5 m herunter), null = liegt
+    const richteB2 = () => {
+      const w = stand.welt();
+      if (hof) {
+        const f = hof.plan.fass; figuren.setze("gary", f.x - 1.2, f.z - 1.3, Math.PI);   // Gary steht beim Fass neben der Tür und schaut in den Hof
+        const liegt = w.gary === "dabei" && !w.feder; feder.visible = liegt || (federFall !== null && !w.feder); zielAn(federZiel, liegt); if (w.sergeant !== "kreis") sgtGedreht = false;
+        if (stand.ist("schluessel1") && rabeGelandet) { rabeGelandet = false; zielAn(rabeZiel, false); arthur.schluessel(false); }
+      }
+      if (w.gary !== "dabei" && !garyAuftritt) figuren.sichtbar("gary", false);
+    };
+    /* Kamera-Standpunkte: [von, nach] in Metern; „nah:<wer>“ stellt sich seitlich neben das Kind und schaut den an, der spricht */
+    const STANDPUNKT = hof ? (() => { const pl = hof.plan, [B, T] = pl.gross, w = B / 2, s = T / 2, km = { x: (pl.kurse.sergeant.kreis.runde.x0 + pl.kurse.sergeant.kreis.runde.x1) / 2, z: (pl.kurse.sergeant.kreis.runde.z0 + pl.kurse.sergeant.kreis.runde.z1) / 2 };
+      return {
+        hof_oben: () => [V(0, 26, -s - 12), V(0, 0, 6)],
+        raben: () => [V(w - 8, 3.9, -1.5), V(w, 3.3, 0)],
+        uhr: () => [V(pl.uhr.x + 6.5, pl.uhr.y - 2.5, pl.uhr.z - 6.5), V(pl.uhr.x, pl.uhr.y, pl.uhr.z)],
+        sergeant_weit: () => [V(km.x - 3, 4.2, km.z - 10), V(km.x, 1.2, km.z)],
+        sergeant: () => { const p = sergeants[0].wo(); return [V(p.x - 1.2, 1.7, p.z - 4.2), V(p.x, 1.5, p.z)]; },
+        fass: () => [V(pl.fass.x - 2.2, 1.5, pl.fass.z - 4.5), V(pl.fass.x - 0.5, 0.8, pl.fass.z)],
+        fenster: () => [V(federOrt.x + 2.5, 2.4, federOrt.z - 7), V(federOrt.x, 1.6, federOrt.z + 1.5)],
+        rabe: () => [V(figur.x + 2.6, 1.5, figur.z - 3.4), V(figur.x + 0.6, 0.6, figur.z - 0.3)],
+      }; })() : (() => { const mitte = (id) => new THREE.Box3().setFromObject(szene.getObjectByName(id)).getCenter(V(0, 0, 0)), u = mitte("uhr"), t = mitte("treppe");
+      return {
+        uhr: () => [V(u.x + 0.5, u.y - 0.1, u.z + 1.9), u],
+        treppe: () => [V(t.x * 0.35, 2.1, t.z * 0.35 + 0.6), V(t.x, 0.3, t.z)],
+        gary: () => { const p = figuren.wo("gary"); return [V(p.x - 0.6, 1.2, p.z + 2.6), V(p.x, 0.8, p.z)]; },
+      }; })();
+    const zumKind = (p) => Math.atan2(figur.x - p.x, figur.z - p.z);
+    let sgtGedreht = false;                               // der Sergeant bleibt stehen, wo er gerade ist, und wendet sich dem Kind zu (einmal je Gespräch)
+    const sgtZumKind = () => { if (sgtGedreht || sgtTut !== "kreis") return; sgtGedreht = true; const p = sergeants[0].wo(); sergeants[0].kurs({ x: p.x, z: p.z, bahn: 2.4, dreh: zumKind(p) }); };
+    const nahBlick = (wer) => { const p = ortVon(wer); if (!p) return null;
+      const dx = figur.x - p.x, dz = figur.z - p.z, d = Math.hypot(dx, dz) || 1, hoch = kopfHoch[wer] || 1.2, weit = 2.3 + hoch;   // vom Sprecher aus zum Kind hin, etwas zur Seite: beide sind im Bild
+      return [V(p.x + (dx / d) * weit - (dz / d) * 1.3, hoch + 0.25, p.z + (dz / d) * weit + (dx / d) * 1.3), V(p.x, hoch * 0.85, p.z)]; };
+    const gespraeche = machGespraeche({ daten: window.TOWER_GESPRAECHE, stand, ort: hof ? "hof" : "guardroom", wurzel: document.body, welt: {
+      spiele(id, z, einfach, o) {
+        const wer = z.s === "sergeant" || z.s === "gary" ? z.s : null;
+        spiele(`../audio/tower/k1_${id}${einfach ? "_einfach" : ""}.mp3`, { wer, id: "k1_" + id,
+          beginn: () => { if (wer === "gary" && figuren.liste()[0].modus === "stehen") figuren.befehl("reden"); o.beginn(); },
+          ende: () => { if (wer === "gary") { figuren.mund("gary", null); if (figuren.liste()[0].modus === "reden") figuren.befehl("stehen"); } if (wer === "sergeant") sergeants[0].mund(null); o.ende(); } });
+      },
+      abstand(wer) { const p = ortVon(wer); return p ? Math.hypot(p.x - figur.x, p.z - figur.z) : null; },
+      sperre(an) { gesperrt = an; if (an) { figur.pfad = []; figur.dann = null; ring.visible = false; } },
+      sicht(name, hart) {
+        if (name && name.startsWith("nah:")) { const wer = name.slice(4), p = ortVon(wer); if (!p) return; figur.blick = Math.atan2(p.x - figur.x, p.z - figur.z); if (wer === "gary" && hof) figuren.setze("gary", p.x, p.z, zumKind(p)); sicht = () => nahBlick(wer); }
+        else sicht = name ? STANDPUNKT[name] || null : null;
+        if (name && !sicht) console.warn("Kamera-Standpunkt unbekannt:", name);
+        sichtFrisch = !!hart; buehne.dataset.sicht = sicht ? name : "";
+      },
+      tut(was) {
+        const tun = {
+          "sergeant:marsch": () => { sgtZumKind(); sergeants[0].befehl("marsch"); }, "sergeant:stehen": () => { sgtZumKind(); sergeants[0].befehl("stehen"); },
+          "feder:faellt": () => { federFall = 0; feder.visible = true; },
+          "gary:fass": () => { garyAuftritt = true; figuren.sichtbar("gary", true); }, "gary:tadaa": () => figuren.befehl("tadaa"),
+          "rabe:landet": () => { const p = { x: figur.x + 1.1, z: figur.z - 0.7 }; rabeOrt = "vorn"; rabeSitz = null; arthur.setze(p.x, 0, p.z, 0); arthur.schluessel(true); landeRabe(); rabeGelandet = true; rabeZiel.position.set(p.x, 0.4, p.z); zielAn(rabeZiel, true); },
+          "rabe:gibt": () => { arthur.schluessel(false); rabeGelandet = false; zielAn(rabeZiel, false); },
+        }[was];
+        if (tun) tun(); else console.warn("Handlung unbekannt:", was);
+      },
+    } });
+    stand.beobachte(richteB2); richteB2();
+    // Anfangen mit einem Tipp: erst danach darf der Browser Ton spielen (Block B5 macht daraus „Ton an? 🔊“)
+    $("los").hidden = false;
+    $("los").addEventListener("click", () => { $("los").hidden = true; gestartet = true; });
+    geschichte = { lokal, gesperrt: () => gesperrt, tipp: (ding) => gestartet && gespraeche.tipp(ding),
+      blick(dt) {
+        if (!sicht) return null;
+        const [von, nach] = sicht(), weich = sichtFrisch ? 1 : Math.min(1, dt * 3.5); sichtFrisch = false;
+        if (weich === 1) { sichtVon.copy(von); sichtNach.copy(nach); } else { if (sichtVon.lengthSq() === 0) { sichtVon.copy(kamera.position); sichtNach.copy(kamZiel); } sichtVon.lerp(von, weich); sichtNach.lerp(nach, weich); }
+        return { von: sichtVon, nach: sichtNach };
+      },
+      bewege(dt) {
+        for (const u of uhren) u.bewege(dt);
+        if (tuer && tuerAuf !== tuerSoll) { tuerAuf += Math.sign(tuerSoll - tuerAuf) * Math.min(Math.abs(tuerSoll - tuerAuf), dt / 1.2); stelleTuer(); }
+        if (!sicht) sichtVon.set(0, 0, 0);
+        if (federFall !== null) { federFall += dt; const u = Math.min(1, federFall / 2.4), schwebt = 1 - u; feder.position.set(federOrt.x + Math.sin(federFall * 3.2) * 0.5 * schwebt, 0.03 + 3.5 * schwebt * schwebt, federOrt.z); feder.rotation.z = 0.6 + Math.sin(federFall * 2.6) * 0.8 * schwebt; if (u >= 1) federFall = null; }
+        if (gestartet) gespraeche.pruefe();
+      } };
     // für das Testprogramm
     window.__towerStand = { stand, uhren: () => uhren.map((u) => ({ zeigt: u.zeigt(), soll: u.soll(), laeuft: u.laeuft() })), takt: (n, ms) => { for (let i = 0; i < n; i++) geschichte.bewege(ms / 1000); },
+      gespraech: gespraeche, los: () => $("los").click(), tippe: (id) => { const n = netze.find((x) => x.userData.ding === id); if (n) geheZuDing(n); return !!n; }, gesperrt: () => gesperrt, sicht: () => buehne.dataset.sicht || "", federDa: () => feder.visible, rabeDa: () => rabeGelandet,
       welt: () => ({ ...stand.welt(), abzeichenDa: abzeichen.visible, garyDa, tuerAuf: +tuerAuf.toFixed(2), sergeantTut: sgtTut, kasten: !kasten.hidden }) };
   }
 

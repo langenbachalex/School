@@ -1,140 +1,198 @@
-# The Seven Keys of London – Die große Geschichte (Master, Fassung 2 vom 20.11.2026)
+# The Seven Keys of London – Die große Geschichte (Master, Fassung 3 vom 20.11.2026)
 
-Dieses Blatt ist der Rahmen für alle Kapitel und geht jedem Drehbuch vor. **Entschieden von Mr. Alex am 20.11.2026:** Gesetz der Welt · Ende · Gegenspieler Mr Wren, genannt Mr Nobody · innerer Kreis · sieben Stationen und Nebenorte · die Schule heißt **The Raven School** (lang: **The Raven School of White Hill**) und hütet **the Word-Hoard** · zwei weitere Lehrlinge, ein Junge und ein Mädchen · Sprüche als Frage und Antwort aus echten Sätzen des Ortes · mehr Frauen, darunter eine Uhrmacherin. Alles mit **Vorschlag** wartet auf seine Abnahme. Vision 0b („Wer dahintersteckt … bleibt offen“) ist überholt.
-
-*Schreibweise: „hoard“ (Schatz, Hort), nicht „horde“ – „word-hoard“ ist das alte englische Wort für den Wortschatz.*
+Dieses Blatt ist der Rahmen für alle Kapitel und geht jedem Drehbuch vor. Grundlagen: `seven-keys-grundlagen.md` (Recherche und Handwerk), `seven-keys-recherche-bran-branwen-wortmagie.md`. **Fett mit „entschieden“** = von Mr. Alex am 20.11.2026 festgelegt. **Vorschlag** = wartet auf seine Abnahme. Was aus der Überlieferung stammt und was wir erfinden, steht in Abschnitt 13.
 
 ## 1. Die Geschichte in sechs Sätzen
-In London wirkt Magie durch alte Worte, die richtig gesprochen werden. Sieben Orte hüten je einen Schlüssel und ein Ritual; zusammen halten sie einen alten Zauber und eine verschlossene Tür im Tower. Ein stiller Herr, den alle nur Mr Nobody nennen, sammelt die Schlüssel, und ein Ritual nach dem anderen droht auszufallen. Ein Kind, ein Fuchs, der Zauberer sein will, und ein Zauberer hinter dem Glas folgen ihm von Ort zu Ort. Am Ende stehen alle vor der Federtür – und die Schlüssel allein öffnen sie nicht. Es braucht die Worte: die des Kindes, das sie gelernt hat, und den einen Satz, den Mr. Flex nie gesagt hat.
+In London wirkt Magie durch alte Worte, die richtig gesprochen und wirklich gehört werden. Sieben Orte hüten je einen Schlüssel und ein Ritual; zu jedem Hüter gehört ein Rabe. Ein stiller Herr, den alle nur Mr Nobody nennen, sammelt die Schlüssel, und ein Ritual nach dem anderen droht auszufallen. Drei Kinder, ein Fuchs, der Zauberer sein will, und ein Zauberer hinter dem Glas folgen ihm von Ort zu Ort. Am Ende stehen alle vor der Federtür im Tower – und die Schlüssel allein öffnen sie nicht. Es braucht die sieben Federn, die sich das Kind durch Zuhören verdient hat, die Worte – und den einen Satz, den Mr. Flex nie gesagt hat.
 
-## 2. Das Gesetz der Welt: Magie sind Worte
-- **Ein Zauber braucht drei Dinge: das Wort, den Klang, das Meinen.** Das richtige Wort; richtig gesprochen (Betonung, Rhythmus, Melodie); und ernst gemeint. Wahlspruch der Schule (Vorschlag): **„Say it. Sound it. Mean it.“**
-- **Ein Zauber braucht zwei Stimmen.** Jeder Spruch ist Frage und Antwort. Allein kann niemand zaubern – das ist der Grund für das Ende und für das Sprechen in der Klasse.
-- Die Rituale der Stadt sind solche Sprüche („Halt! Who comes there?“ – „The keys.“). Fällt eines aus, **reißt etwas**: Lichter flackern, Uhren zögern, die Raben werden unruhig.
-- **Gary** hört nicht zu und sagt die Worte falsch – und lacht darüber. **Das Kind** lernt sie wirklich: Word Gym, Feder und „Sorry?“ sind die Lehre.
+## 2. Das Gesetz der Welt (entschieden)
+- **Magie sind Worte.** Ein Zauber besteht aus drei Teilen: **Wort, Klang, Bedeutung.** Das richtige Wort; richtig gesprochen (Betonung, Rhythmus, Melodie); und gemeint. „Zauber“ ist das, was aus den dreien entsteht.
+- **Ein Zauber ist erst vollständig, wenn er gehört und beantwortet wird.** Ruf und Antwort gehören zusammen; die Antwort beweist, dass jemand zugehört hat. Deshalb sind die Rituale der Stadt Wechselrede („Halt! Who comes there?“ – „The keys.“).
+- **Geübt wird in drei Durchgängen:** erst das Wort, dann der Klang, dann die Bedeutung.
+- **Der Wahlspruch der Schule ist ein Abzählreim:** *„One for the word, two for the sound, three for the heart – and the key goes round.“* Gary hat eine eigene, falsche Fassung, die jedes Mal anders endet.
+- **Niemand wird auserwählt.** Die Feder wird warm, weil das Kind etwas getan hat: zugehört.
 - **Niemand wird für ein falsches Wort ausgelacht.** Das ist die Moral der ganzen Geschichte.
+- Fällt ein Ritual aus, **reißt etwas**: Lichter flackern, Uhren zögern, die Raben werden unruhig.
 - Magie ist klein und warm: Dinge leuchten, öffnen sich, antworten. Keine Kämpfe, keine Flüche.
 
-## 3. The Raven School of White Hill
-**Die Sage (echt, aus den walisischen Erzählungen):** Bran der Gesegnete war ein Riesenkönig; sein Name bedeutet „Rabe“. Sein Kopf wurde unter dem **Weißen Hügel** in London begraben – dort, wo heute der Tower steht –, um das Land zu schützen. Seine Schwester **Branwen** brachte einem Vogel das Sprechen bei und schickte ihn mit einer Nachricht übers Meer. Und es heißt bis heute: Verlassen die Raben den Tower, fällt das Königreich. Raben gehören zu den klügsten Tieren und können Menschenworte nachsprechen.
+## 3. The Raven School of White Hill (entschieden: Name, Hort, Kette des Weitergebens, Raben als Paare)
+**Kurz:** *The Raven School.* Sie hütet **the Word-Hoard**, den Hort aller Worte, die je dort gesprochen wurden.
 
-**Unsere Geschichte daraus (Vorschlag):**
-- **Die ersten Lehrer waren die Raben.** Sie hüteten die alten Worte auf dem Weißen Hügel. Das Krächzen ist das älteste Wort: Jeder Rabe hat seinen eigenen Ruf, und wer genau hinhört, hört Rhythmus und Tonhöhe.
-- **Branwen ist die erste Lehrerin:** Sie lehrte einen Vogel die Worte – der Anfang aller Wortmagie.
-- **Gegründet vor rund 700 Jahren,** im selben Jahr wie die Zeremonie der Schlüssel, von sieben Wortzauberern. Jeder trug einen Schlüssel an einen Ort der Stadt; das sind die Ahnen des Key Club.
-- **Was gelehrt wurde:** Worte aus allen Sprachen, die nach London kamen (Latein, Nordisch, Französisch und alle späteren), und wie man sie zum Klingen bringt. Unterricht war Sprechen, Singen und Zuhören.
-- **Keine Häuser, keine Klassen.** Drei Stufen nach dem Leben der Raben (Vorschlag): **Fledgling** (Lehrling, eben flügge) · **Flyer** · **Raven** (Meister). Jeder Fledgling bekommt eine Feder.
-- **Sieben Raben, sieben Schlüssel, sieben Orte.** Jeder Rabe auf der Mauer hütet einen der sieben Sprüche. Seit 1899 sind es nur noch sechs echte: **Der siebte Rabe ging mit Mr Wren** (Vorschlag) – deshalb konnte sich die schwarz angemalte Elster dazusetzen. Am Ende kommt er zurück.
-- **The Word-Hoard** ist, was hinter der Federtür liegt: alle Worte, die je an der Schule gesprochen wurden – ein Raum, in dem sie leise weiterklingen.
-- **1899:** die Vorführung, das Gelächter, die Schließung (Abschnitt 5).
+**Die Sage, die man sich in der Schule erzählt.** Bran, dessen Name „Rabe“ bedeutet, liegt unter dem Weißen Hügel und schützt das Land. Seine Schwester Branwen brachte einem Vogel Wörter bei. Sieben Gefährten trugen Brans Haupt nach London, unter ihnen der Barde Taliesin. Sie gründeten die Schule und schworen, den Hort zu bewachen – und als ihre Zeit um war, heißt es, wurden sie selbst zu Raben. Arthur erzählt das. Ob es stimmt, bleibt offen.
 
-## 4. Das Ende (fester Eckpunkt)
-1. Nach der letzten Station sind die sieben Haken im Guard Room leer: Mr Nobody hat alle sieben geholt. Das Kind hat sie für ihn an einem Ort gesammelt.
-2. Er steht mit den Schlüsseln vor der Federtür. Sie geht nicht auf: Es braucht die Worte, und er spricht nicht.
-3. Das Kind und die beiden anderen Lehrlinge sprechen die sieben Sprüche; die Raben antworten. Ein Schloss bleibt zu.
-4. Mr. Flex sagt aus dem Spiegel: **„It was you. I am sorry.“** Mr Wren spricht zum ersten Mal – ein Wort, stockend. Niemand lacht. Zwei Stimmen sprechen die Worte wieder zusammen.
-5. Die Tür geht auf. Mr. Flex tritt aus dem Glas. Der siebte Rabe landet auf der Mauer. Die Schule öffnet; die drei Kinder sind die ersten neuen Fledglings, Gary gelingt ein einziger echter Zauber.
+**Was wirklich gilt: Rabe und Mensch als Paar.**
+- **Die Raben waren die ersten Schüler** und sind deshalb die ältesten Lehrer. Die Schule ist eine Kette des Weitergebens.
+- **Zu jedem Meister gehört ein Rabe.** Der Mensch spricht den Ruf, der Rabe die Antwort. Die sieben Raben am Tower sind die Partner der sieben Hüter.
+- **Stirbt ein Hüter, wartet sein Rabe** auf den nächsten und ruft so lange mit der Stimme des alten.
+- **Keine Häuser, keine Ränge.** Drei Lebensalter: **Fledgling** (Lehrling, eben flügge) · **Flyer** · **Raven** (Meister).
+- **Sieben Federn (entschieden):** An jedem der sieben Orte bekommt das Kind eine Feder von einem der sieben Raben. Sieben Federn ergeben einen Flügel; dann wird aus dem Fledgling ein Flyer.
+- **Gegründet vor rund 700 Jahren,** zusammen mit der Zeremonie der Schlüssel. Jeder der Sieben trug einen Schlüssel an einen Ort der Stadt; das sind die Ahnen des Key Club.
+- **Gelehrt wurden** die Worte aller Sprachen, die nach London kamen, und wie man sie zum Klingen bringt: Sprechen, Singen, Zuhören.
+- **Niedergang (Vorschlag):** Seit 1899 ist die Schule zu. Was von ihr übrig ist: sieben Hüter, sechs Raben, eine Küche, in der noch Licht brennt.
+
+## 4. Das Ende (entschieden; Federtür und Flügel entschieden)
+1. Nach der letzten Station sind die sieben Haken im Guard Room leer: Mr Nobody hat alle sieben Schlüssel geholt. Die Kinder haben sie für ihn an einem Ort gesammelt.
+2. Er steht mit den Schlüsseln vor der **Federtür.** Ihr Schlüsselloch hat die Form einer Feder. Die Schlüssel passen nicht.
+3. Das Kind hat die sieben Federn. Zusammen sind sie ein Flügel – und der gehört in das Schlüsselloch. Die drei Kinder sprechen die sieben Sprüche; die Raben antworten. Ein Schloss bleibt zu.
+4. Mr. Flex sagt aus dem Spiegel: **„It was you. I am sorry.“** Mr Wren spricht zum ersten Mal – ein Wort, stockend. Niemand lacht. Der Ruf von 1899 bekommt seine Antwort.
+5. Die Tür geht auf. Mr. Flex tritt aus dem Glas; die Taube landet auf seiner Schulter. Merlin, der siebte Rabe, landet auf der Mauer. Die Schule öffnet; die drei Kinder sind die ersten neuen Schüler, Gary gelingt ein einziger echter Zauber.
 6. Um 9:53 die Zeremonie, diesmal mit allen. **Fortsetzungen** spielen in der wiedereröffneten Schule.
 
-## 5. Der Gegenspieler: Mr Wren, genannt Mr Nobody
-- **Name:** Der Zaunkönig (wren) ist der kleinste, unscheinbarste Vogel – mit überraschend großer Stimme. Christopher Wren baute St Paul's mit der Flüstergalerie. **Mr Nobody** nennen ihn seine Helfer: „He has no name. He never said one.“ Den Namen Wren erfährt man erst spät (Vorschlag: im Globe, Kapitel 4).
-- **Wer:** Mitschüler und bester Freund von Mr. Flex. Er konnte die Worte am besten, aber er stotterte.
-- **Die Wunde:** Bei der großen Vorführung 1899 gelang der Zauber durch ihn; verbeugt hat sich Mr. Flex. Als Wren selbst sprechen sollte, stockte er, und der Saal lachte. Er ging und hat seitdem kein Wort gesprochen.
-- **Die Folge:** Mit ihm ging die halbe Magie. Der Schulleiter schloss die Schule, „bis zwei Stimmen die Worte wieder zusammen sprechen“. Mr. Flex, der nur sich selbst ansah, blieb im Spiegel zurück.
+## 5. Der Gegenspieler: Mr Wren, genannt Mr Nobody (entschieden)
+- **Name:** Der Zaunkönig (wren) ist der kleinste, unscheinbarste Vogel mit überraschend großer Stimme. **Mr Nobody** nennen ihn seine Helfer, weil er nie einen Namen gesagt hat – nicht, weil man sich fürchtet, ihn zu nennen.
+- **Wer:** Mitschüler und bester Freund von Mr. Flex. Er konnte die Worte am besten, aber er stockte beim Sprechen.
+- **Die Wunde:** Bei der großen Vorführung 1899 gelang der Zauber durch ihn; verbeugt hat sich Mr. Flex. Als Wren selbst sprechen sollte, stockte er, und der Saal lachte, statt zuzuhören. Er ging – mit seinem Raben Merlin – und hat seitdem kein Wort gesprochen.
+- **Die Folge:** Ein Ruf blieb ohne Antwort. Der Schulleiter schloss die Schule. Mr. Flex, der nur sich selbst ansah, blieb im Spiegel zurück.
 - **Was er will:** zurück in die Schule – allein, ohne sprechen zu müssen. Er ist kein Dieb und nie grausam.
-- **Wie er auftritt:** Gestalt mit Hut und Schirm im Nebel, immer einen Schritt voraus, auf der Schulter manchmal ein Vogel. Er spricht nie; er schreibt Zettel und zahlt Helfer mit glänzenden Dingen.
-- **Gegenbild zu Mr. Flex:** Flex = Glanz, Applaus, große Worte ohne Mühe. Wren = Können, Lampenfieber, kein Wort.
+- **Wie er auftritt:** Gestalt mit Hut und Schirm im Nebel, immer einen Schritt voraus, manchmal ein Rabe auf der Schulter. Er schreibt Zettel und zahlt Helfer mit glänzenden Dingen.
+- **Sein Stocken ist eine echte Wunde,** nie eine Maske, nie ein komischer Zug. Man hört es nur in der Rückblende von 1899 und am Ende.
 
-## 6. Die Figuren
-Für jede Figur gilt wie im guten Roman: **erst hört man von ihr, dann sieht man sie · ein erstes Bild, das sitzt · eine erste Tat, die den Charakter zeigt · ein Ding und ein Satz, die wiederkehren.** Die Steckbriefe in dieser Form kommen ins Figurenblatt.
-
-**Die drei Lehrlinge**
-| Figur | Typ | Tiefe | Auftritt |
+## 6. Die sieben Raben (entschieden: Paare, Merlin; Zuordnung Vorschlag)
+| Rabe | Ort | Hüter | Merkmal |
 |---|---|---|---|
-| **das Kind** (Spieler) | der Neue, der Detektiv | von der Feder gewählt; lernt, dass Zuhören die halbe Magie ist | Kapitel 1 |
-| **Sami** (Vorschlag) | der Stille mit dem großen Wortschatz | spricht zu Hause drei Sprachen, traut sich auf Englisch kaum; liest eine der drei Schriften auf dem Stein. Sein Mut am Ende ist das Vorbild für Mr Wren | Kapitel 2, British Museum (seine Mutter ist dort Nachtwächterin) |
-| **Nell** (Vorschlag) | die Schnelle, die alles besser weiß | Enkelin der Uhrmacherin; baut und repariert alles, hört aber nie zu Ende zu. Erst Rivalin, dann Freundin | Kapitel 3 oder 5 (Big Ben) |
+| Arthur | Tower | Mr Pike | der Älteste, Torhüter; stellt die Prüfungsfragen |
+| Morgana | British Museum | die Nachtwächterin | geheimnisvoll, kennt die alten Schriften |
+| **Merlin** | St Paul's | – (gehört zu Mr Wren) | fehlt seit 1899 |
+| Guinevere | Globe | Dame Viola | stolz, liebt den großen Auftritt |
+| Gawain | Big Ben | Ada Bell | pünktlich, zählt mit |
+| Lancelot | Tower Bridge | Mr Spanner | der Mutige, fliegt bei jedem Wetter |
+| Percival | Greenwich | Dr Stella Noon | der Sucher, schaut immer nach oben |
 
-**Innerer Kreis (kennt die alte Schule)**
-| Figur | Typ | Rolle damals → heute | Entwicklung |
-|---|---|---|---|
-| Mr. Flex | Mentor mit Fehler | bester Schüler im Rampenlicht, letzter Lehrer → hinter dem Glas | muss zugeben, wem der Erfolg gehörte |
-| Mr Wren / Mr Nobody | der Schatten | der stille Freund → sammelt die Schlüssel | spricht am Ende |
-| Arthur, der Rabe | der alte Weise | Torhüter und Gedächtnis → auf der Mauer | prüft die Lehrlinge in jedem Kapitel mit einer Frage |
-| der Geist (Ghost Club) | die Vergangenheit | Schulleiter, der 1899 schloss → wartet | erzählt die Nacht von 1899; darf gehen |
-| Mrs Crumb | die Fürsorgliche | Köchin der Schule → Köchin im Tower | ihre Rezepte sind Sprüche; sie mochte den kleinen Wren |
-| die Taube | die Klatschtante | Nachfahrin der Brieftauben → überall | trägt Nachrichten, ohne zu begreifen, was sie weiß |
-| Mr Pike | der Bote | Hüter des Tower-Schlüssels → Keeper of the Keys | ahnt mehr als die anderen Hüter |
+- **Sechs sind am Tower, einer fehlt.** An seiner Stelle sitzt die schwarz angemalte Elster („Mordred“).
+- **St Paul's hat einen Hüter ohne Raben (Vorschlag):** Mr Wren sollte dort der nächste Hüter werden. Seit er ging, hütet der alte Küster Mr Hobbs den Schlüssel allein – deshalb wirkt dort nur noch das Flüstern.
+- **Die Taube** ist kein Rabe. Sie ist die Partnerin von Mr. Flex (Abschnitt 7).
 
-**Der Key Club – die sieben Hüter (Namen Vorschlag, vier Frauen)**
+## 7. Die Figuren
+Für jede Figur gilt: **erst hört man von ihr, dann sieht man sie · ein erstes Bild, das sitzt · eine erste Tat mit einem Widerspruch · ein Ding und ein Satz, die wiederkehren · Wunsch, Furcht, Schwäche · etwas, das wir noch nicht wissen.** Die vollständigen Steckbriefe stehen in Abschnitt 11.
+
+**Die drei Lehrlinge (entschieden)** – zusammen haben sie alles, was ein Zauber braucht.
+| Figur | steht für | wer |
+|---|---|---|
+| **das Kind** (Spieler) | **Bedeutung** | hört zu und meint, was es sagt; Detektiv, dann Fledgling |
+| **Sami** | **Wort** | Familie aus Ägypten; Arabisch zu Hause, etwas Koptisch vom Großvater, Englisch in der Schule. Großer Wortschatz, traut sich kaum zu sprechen. Erkennt im Museum ein Wort auf dem Stein. Sein Mut am Ende ist das Vorbild für Mr Wren. |
+| **Nell** | **Klang** | Enkelin der Uhrmacherin. Hört an einem Ticken, was einer Uhr fehlt; untrügliches Gefühl für Takt und Tonhöhe. Redet wenig, handelt sofort, wartet nie, bis ein Satz zu Ende ist. |
+
+**Innerer Kreis – kennt die alte Schule (entschieden)**
+| Figur | damals → heute | Entwicklung |
+|---|---|---|
+| Mr. Flex | bester Schüler im Rampenlicht, letzter Lehrer → hinter dem Glas | muss zugeben, wem der Erfolg gehörte |
+| die Taube | **Partnerin von Mr. Flex** (er war zu eitel, auf einen Raben zu warten) → blieb draußen, sieht und hört alles für ihn | findet am Ende zu ihm zurück |
+| Mr Wren / Mr Nobody | der stille Freund → sammelt die Schlüssel | spricht am Ende |
+| Arthur | Torhüter und Gedächtnis → auf der Mauer | prüft die Kinder an jedem Ort mit einer Frage |
+| der Geist (Ghost Club) | Schulleiter, der 1899 schloss → wartet | erzählt die ganze Nacht von 1899; darf gehen |
+| Mrs Crumb | Küchenmädchen der Schule → Köchin im Tower | sie hat 1899 gesehen, was geschah; ihre Rezepte sind Sprüche |
+| Mr Pike | **Chief Yeoman Warder**, Hüter des Tower-Schlüssels | ahnt mehr als die anderen Hüter |
+
+**Der Key Club – die sieben Hüter (Namen in Ordnung, Mr. Alex 20.11.)**
 | Ort | Hüter | in einem Satz |
 |---|---|---|
-| Tower | Mr Pike | nie zu spät, Kekse in der Tasche, singt schief, wenn er glücklich ist |
-| British Museum | Mrs Okoro, Nachtwächterin | Samis Mutter; kennt jeden Saal im Dunkeln |
-| St Paul's | Mr Hobbs, Küster | sehr alt, sehr leise, hört alles |
+| Tower | Mr Pike, Chief Yeoman Warder | nie zu spät, Kekse in der Tasche, singt schief, wenn er glücklich ist |
+| British Museum | die Nachtwächterin, Samis Mutter (Nachname noch zu wählen, z. B. Mrs Mansour) | kennt jeden Saal im Dunkeln |
+| St Paul's | Mr Hobbs, Küster | sehr alt, sehr leise, hört alles; der Hüter ohne Raben |
 | Globe | Dame Viola, Schauspielerin | große Geste, großes Herz; hat nie Lampenfieber – sagt sie |
 | Big Ben | Ada Bell, Uhrmacherin | Nells Großmutter; hört an einem Tick, was einer Uhr fehlt |
 | Tower Bridge | Mr Spanner, Brückenmeister | spricht nur in Kommandos |
-| Greenwich | Dr Stella Noon, Sternforscherin | pünktlich auf die Sekunde, verliert trotzdem dauernd ihre Brille |
+| Greenwich | Dr Stella Noon | trägt die genaue Zeit mit einer alten Uhr durch London (Vorbild: Ruth Belville) |
 
 **Nicht im Bund**
-| Figur | Typ | Entwicklung |
-|---|---|---|
-| Gary | der Narr | will Zauberer sein, nimmt Erfolge für sich; lernt zuzuhören; ein einziger echter Zauber am Ende |
-| Sergeant Bearskin | der Regelmensch | bewacht seit dreißig Jahren eine Tür, die er nicht versteht; weiche Seite wächst; am Ende erste Wache der Schule |
-| die Elster | die Außenseiterin | Helferin im Tower, achtes Mitglied des Raven Club; später Botin |
-| der Tourist | der Fremde | komische Entlastung; taucht an jedem Ort wieder auf, immer mit der Karte falsch herum |
+| Figur | Entwicklung |
+|---|---|
+| Gary | will Zauberer sein, nimmt Erfolge für sich, sagt die Worte falsch; lernt zuzuhören; ein einziger echter Zauber am Ende |
+| Sergeant Bearskin | bewacht seit dreißig Jahren eine Tür, die er nicht versteht; füttert heimlich einen Raben; am Ende erste Wache der Schule |
+| die Elster | Helferin im Tower, wollte dazugehören; achtes Mitglied des Raven Club |
+| der Tourist | taucht an jedem Ort wieder auf, immer mit der Karte falsch herum |
 
-## 7. Die Stationen
-Jedes Kapitel ist gleich gebaut: **ein Ort · ein Hüter · ein Ritual, das auszufallen droht · ein Spruch als Frage und Antwort · ein Helfer von Mr Nobody · genau ein Hinweis auf ihn · der Schlüssel kommt an seinen Haken im Guard Room.** Zwischen den Kapiteln ist das Kind im Tower.
+## 8. Die Stationen
+Jedes Kapitel ist gleich gebaut: **ein Ort · ein Hüter und sein Rabe · ein Ritual, das auszufallen droht · ein Spruch als Ruf und Antwort · ein Helfer von Mr Nobody · genau ein Hinweis auf ihn · eine Feder für das Kind · der Schlüssel kommt an seinen Haken im Guard Room.** Zwischen den Kapiteln ist das Kind im Tower. Orte und Nebenorte sind entschieden; Sprüche und Hinweise sind Vorschlag.
 
-| | Ort | Ritual | Spruch (Vorschlag) | Hinweis auf Mr Nobody (Vorschlag) |
+| | Ort | Ritual | Spruch | Hinweis auf Mr Nobody |
 |---|---|---|---|---|
 | 1 | Tower of London | Zeremonie um 9:53 | „Halt! Who comes there?“ – „The keys.“ | Die Elster hat einen fremden Schlüssel, Anhänger „B. M.“: „Mr Nobody gave me that. He never says a word.“ |
-| 2 | British Museum | Runde der Nachtwächterin | „What does it say?“ – „It says: welcome.“ | Am Stein mit den drei Schriften liegt ein Zettel in alter Handschrift. Er kennt die alten Worte – und schreibt sie. |
+| 2 | British Museum | Runde der Nachtwächterin | „What does it say?“ – „It says: welcome.“ | Am Stein mit den drei Schriften liegt ein Zettel in alter Handschrift. Sami kommt dazu. |
 | 3 | St Paul's Cathedral | die Flüstergalerie | „Can you hear me?“ – „I can hear you.“ | Ein altes Flüstern wandert noch um die Kuppel: eine Kinderstimme, die stockt – dann Gelächter. |
-| 4 | Shakespeare's Globe | die Vorstellung beginnt | „All the world's a stage.“ – „And we are the players.“ | Programmzettel von 1899: zwei Jungen, „Flex and Wren“. Einer im Licht, einer hinter dem Vorhang. Mr. Flex weicht aus. |
-| 5 | Big Ben | Schlag zu jeder Viertelstunde | „What time is it?“ – „It is time.“ | Der Geist erzählt die Nacht von 1899: Beim letzten Schlag wurde die Schule geschlossen. |
-| 6 | Tower Bridge | die Brücke hebt sich | „Open the bridge!“ – „The bridge is open. Pass!“ | Die Kinder stehen ihm gegenüber. Er hilft, statt zu schaden (er fängt Gary auf). Auf seiner Schulter: ein Rabe. |
+| 4 | Shakespeare's Globe | die Vorstellung beginnt | „All the world's a stage.“ – „And we are the players.“ | Programmzettel von 1899: „Flex and Wren“. Einer im Licht, einer hinter dem Vorhang. Mr. Flex weicht aus. |
+| 5 | Big Ben | Schlag zu jeder Viertelstunde | „What time is it?“ – „It is time.“ | Der Geist erzählt die Nacht von 1899. Nell kommt dazu. |
+| 6 | Tower Bridge | die Brücke hebt sich | „Open the bridge!“ – „The bridge is open. Pass!“ | Die Kinder stehen ihm gegenüber. Er hilft, statt zu schaden. Auf seiner Schulter: ein Rabe. |
 | 7 | Greenwich | der Zeitball fällt um eins | „Where does time begin?“ – „Here. Right here.“ | Rückblende mit dem ganzen Abend von 1899. Zurück im Tower: Die sieben Haken sind leer. |
 | – | Tower, Federtür | 9:53 | alle sieben | Das Ende (Abschnitt 4). |
 
 Reihenfolge 2–5 ist tauschbar (nach Unterrichtsthema); 1, 6, 7 und das Ende liegen fest.
-**Nebenorte ohne Schlüssel:** The Tube (der Weg zwischen den Orten; Reisespruch „Mind the gap.“) · London Zoo (neue Begleiter) · Buckingham Palace und Piccadilly Circus (Abstecher).
+**Nebenorte ohne Schlüssel (entschieden):** The Tube (der Weg zwischen den Orten; Reisespruch „Mind the gap.“) · London Zoo (neue Begleiter) · Buckingham Palace und Piccadilly Circus (Abstecher).
 
-## 8. Was sich dabei lernen lässt
-- **Sprache:** jeder Spruch eine Wendung für jeden Tag (wer, was, wann, wo, können); Betonung und Satzmelodie als „Klang“ des Zaubers; Herkunft englischer Wörter.
-- **Sprechen:** Sprüche sind Wechselrede – zu zweit, in Gruppen, als Sprechchor mit Rhythmus in der Klasse.
-- **Kultur:** je Station ein Stück London (Zeremonie der Schlüssel, Stein von Rosette, Flüstergalerie, Shakespeare, Westminster-Schlag, Brückenhub, Nullmeridian), dazu Sagen (Bran, Branwen, König Artus) und Tiere (Raben).
-- **Haltung:** Fehler gehören dazu; niemand wird ausgelacht; Zuhören ist die halbe Magie.
+## 9. Geheimnisse in drei Geschwindigkeiten (Vorschlag)
+- **Je Kapitel:** Wo ist der Schlüssel dieses Ortes?
+- **Über mehrere Kapitel:** Wer ist Mr Nobody? (Name in Kapitel 4, Gesicht in Kapitel 6.)
+- **Über alles:** Was ist hinter der Federtür, und warum sitzt Mr. Flex im Glas?
+- **Die Nacht von 1899 in vier Fassungen:** Mr. Flex (geschönt, früh) · die Taube (halb, als Klatsch) · Mrs Crumb (was sie sah) · der Geist (ganz, Kapitel 5 und 7).
+- **Jedes Kapitel** beantwortet eine alte Frage, stellt eine neue, bringt einen neuen Hinweis, ein Echo eines alten und eine falsche Fährte. Es endet auf einen Satz von höchstens fünf Wörtern.
 
-## 9. Was schon in Szene 1 liegen muss
-1. **Das ausgefallene Ritual ist ein Riss im Zauber:** Als um Viertel nach neun niemand kommt, flackern die Fackeln, und die Raben heben die Köpfe.
-2. **Die Feder wählt das Kind** und ist warm – die Feder des Fledglings. Später erfährt man: Mr. Flex hat sie geschickt.
-3. **Sieben Haken**, die Federtür, die keiner öffnen kann, und die Raben: Wer zählt, kommt auf sieben – einer davon ist nicht echt.
-4. **Der erste Blick auf Mr Nobody:** im Auftakt für eine Sekunde eine Gestalt mit Hut und Schirm jenseits des Tors im Nebel. Kein Wort dazu.
-5. **Gary nimmt an der Tür den Erfolg für sich** – das Thema im Kleinen.
-6. **Mr. Flex weicht aus,** wenn es um die Federtür geht („I knew that.“ – und wechselt das Thema).
-7. **Arthur prüft:** Seine Frage auf der Treppe ist die erste Prüfung.
-8. **Der erste Spruch:** „Halt! Who comes there?“ – „The keys.“ fällt schon früh einmal (der Sergeant übt ihn), damit er am Ende des Kapitels sitzt.
+## 10. Wer weiß was (Vorschlag)
+| Figur | dass es die Schule gab | was 1899 geschah | wer Mr Nobody ist | was hinter der Tür liegt |
+|---|---|---|---|---|
+| das Kind, Sami, Nell | ab Kapitel 2–3 in Bruchstücken | ganz ab Kapitel 7 | Name Kapitel 4, Gesicht Kapitel 6 | erst am Ende |
+| Gary | nein (hält alles für seine Magie) | nein | nein | nein |
+| Sergeant | nein | nein | nein | nein – er bewacht die Tür trotzdem |
+| Mr. Flex | ja | ja, erzählt es geschönt | ja, sagt es nicht | ja |
+| die Taube | ja | halb | hat ihn gesehen, versteht es nicht | nein |
+| Arthur und die Raben | ja | ja | ja | ja – sie antworten nur auf richtige Fragen |
+| Mr Pike | ja | vom Hörensagen | ahnt es | nein |
+| die anderen Hüter | nur ihr Ritual | nein | nein | nein |
+| Mrs Crumb | ja | sie hat es gesehen | sie erkennt ihn | ja, aus der Küche |
+| der Geist | ja | ja, er hat geschlossen | ja | ja |
+| die Elster | nein | nein | kennt ihn nur als Mr Nobody | nein |
 
-## 10. Regeln für die Stimmigkeit
+## 11. Steckbriefe (Vorschlag; vorhandene Sätze sind schon aufgenommen)
+| Figur | erste Erwähnung | erstes Bild | erste Tat mit Widerspruch | Ding | Satz | Wunsch · Furcht · Schwäche | was wir noch nicht wissen |
+|---|---|---|---|---|---|---|---|
+| Sergeant Bearskin | der Erzähler | reglos am Tor, riesige Mütze | steht stramm – und steckt einem Raben heimlich etwas zu | die Mütze | „Not on my watch!“ | Ordnung · versagen · Regeln vor Menschen | was er da eigentlich bewacht |
+| Gary | zwei Augen unter dem Fassdeckel | Fuchs mit spitzem Hut | will helfen – und nimmt den Erfolg für sich | das Fass | „Ta-daa!“ | ein echter Zauberer sein · ausgelacht werden · hört nicht zu | sein wahrer Name |
+| Mr. Flex | Gary schimpft über „den im Spiegel“ | Sonnenbrille bei Nacht, im Spiegel | gibt an – und hilft doch genau richtig | die Sonnenbrille | „I knew that.“ | Applaus · vergessen werden · sieht nur sich | warum er im Glas sitzt |
+| die Taube | Gary: „Ask the pigeon.“ | am Fenster, redet ohne Pause | weiß alles – und versteht nichts davon | das Fensterbrett | „I see everything.“ | gehört werden · übersehen werden · hört nie auf | zu wem sie gehört |
+| Arthur | der Erzähler: sieben Raben | dreht langsam den Kopf | antwortet nie – und hilft durch seine Fragen | der Fußring | „We do not answer questions. We ask them.“ | dass es wieder sieben sind · das Vergessen · Geduld bis zur Starre | wie alt er wirklich ist |
+| Mr Pike | der Sergeant ruft nach ihm | Mantel auf dem Stuhl, Hut fehlt | nie zu spät – und heute verschwunden | der Schlüsselbund | singt schief | allen eine Freude machen · den Sergeant enttäuschen · kann kein Geheimnis lange halten | was er vom Key Club weiß |
+| Mr Nobody / Mr Wren | die Elster: „He never says a word.“ | Hut und Schirm im Nebel | nimmt die Schlüssel – und hilft, wenn jemand fällt | Zettel in alter Handschrift | – (er spricht nicht) | zurück in die Schule · wieder ausgelacht werden · traut niemandem | alles |
+| Sami | seine Mutter spricht von ihm | sitzt nachts unter dem großen Stein und liest | sagt kaum ein Wort – und kennt das eine, das fehlt | ein Heft voller Wörter | flüstert, bevor er spricht | dazugehören · laut falsch sprechen · schweigt lieber | was er sich nicht traut |
+| Nell | die Uhrmacherin: „She never waits.“ | hängt kopfüber im Uhrwerk | repariert alles – und macht dabei etwas anderes kaputt | ein kleiner Schraubenzieher | klopft den Takt mit | es selbst schaffen · stillsitzen · hört nicht zu Ende | warum sie nie wartet |
+| Mrs Crumb | es riecht nach Kuchen | Mehl bis zu den Ellbogen | schimpft – und stellt jedem einen Teller hin | der Holzlöffel | Rezepte wie Sprüche | dass alle am Tisch sitzen · dass es wieder geschieht · sagt nicht, was sie weiß | dass sie 1899 dabei war |
+| der Geist | Mr Pike: „Don't mind the gentleman on the stairs.“ | ein Herr mit Taschenuhr, durchsichtig | sehr streng – und wartet seit über hundert Jahren auf eine Entschuldigung, die er selbst schuldet | die Taschenuhr | „Not yet.“ | die Schule öffnen · dass niemand mehr kommt · hat zu schnell geschlossen | dass er der Schulleiter war |
+
+## 12. Früh gelegt, spät gebraucht (Vorschlag – wird bei jedem Drehbuch abgehakt)
+| gelegt | wo | gebraucht |
+|---|---|---|
+| Ein Ruf bleibt ohne Antwort | Prolog 1899 | Finale: alle antworten |
+| Die warme Feder | Szene 1 | erste von sieben; der Flügel öffnet die Federtür |
+| Sieben Haken, federförmiges Schlüsselloch | Guard Room | Ende von Kapitel 7; Finale |
+| „Seven we are. Seven we must be.“ | Arthur, Kapitel 1 | die Elster (Kapitel 1), Merlin (Kapitel 6 und Finale) |
+| Gary nimmt an der Tür den Erfolg für sich | Kapitel 1 | Mr. Flex und 1899; Garys echter Zauber am Ende |
+| Mr. Flex weicht bei der Federtür aus | Kapitel 1 | Kapitel 4 (Programmzettel), Finale |
+| Die Taube sieht alles | Kapitel 1 | sie ist seine Partnerin (Kapitel 5–6), landet am Ende auf seiner Schulter |
+| Der Sergeant füttert heimlich einen Raben | Kapitel 1 | er wird erste Wache der Schule |
+| Jemand wird ausgelacht, das Kind lacht nicht mit | Kapitel 1 oder 2 | die Wunde von 1899; Sami spricht |
+| Gestalt mit Hut und Schirm im Nebel | Kapitel 1 | Kapitel 6 |
+| Der Abzählreim | Kapitel 1 (Arthur beginnt ihn, bricht ab) | je Kapitel eine Zeile; ganz im Finale |
+| Der erste Spruch „Halt! Who comes there?“ | der Sergeant übt ihn | Ende von Kapitel 1; Finale |
+
+## 13. Belegt oder erfunden
+- **Aus der Überlieferung:** Bran („Rabe“) unter dem Weißen Hügel; Branwen lehrt einen Vogel Wörter; sieben Überlebende, darunter Taliesin; der Kessel gibt Leben zurück, aber keine Sprache; Arthur lebt nach dem Volksglauben als Rabe weiter; Zauber wird gesungen und dreimal gesprochen; Worte als Schatz, den man aufschließt (word-hoard); Anruf und Antwort am Tor (Zeremonie der Schlüssel); ein Rabe ruft mit der Stimme des verlorenen Partners (Naturkunde).
+- **Spätere Deutung, die wir bewusst nutzen:** Der Weiße Hügel ist der Tower Hill; die Tower-Raben hängen mit Bran zusammen; „seit 700 Jahren“.
+- **Unsere Erfindung:** die Schule, der Key Club, die Paare aus Rabe und Mensch, die sieben Federn, die Federtür, 1899, alle Figuren.
+- **Abstand zum Vorbild-Buch** (Einzelheiten in `seven-keys-grundlagen.md`, Teil B5): Die Feder wird verdient, nicht verliehen · Mr Wrens Stocken ist echt · das Glas zeigt keine Wünsche und versteckt nichts · das Finale ist ein Sprechen, kein Hindernislauf · keine Punkte für Gruppen.
+
+## 14. Regeln für die Stimmigkeit
 - Jede Zeile antwortet auf etwas, das man gesehen oder gehört hat. Niemand sagt etwas ohne Anlass.
-- Jede Figur weiß nur, was in Abschnitt 6 steht. Der Sergeant, Gary und die Hüter außer Mr Pike wissen nichts von der Schule.
+- Jede Figur weiß nur, was in Abschnitt 10 steht.
 - Mr Nobody spricht vor dem Ende nie. Den Namen Wren kennt vor Kapitel 4 niemand.
+- Die Regeln der Magie (Abschnitt 2) werden nie für eine bequeme Lösung gebrochen.
 - Rückblenden haben immer denselben Look (blass, dunkler Rand, langsamer, gedämpft).
-- Fest: 1899 (Schließung), „seit 700 Jahren“ (Zeremonie und Gründung), sieben Raben/Schlüssel/Orte. Mr. Flex' „five hundred years ago“ ist Angeberei.
-- Jede neue Figur bekommt vor ihrem ersten Auftritt einen Steckbrief; neue Einfälle werden zuerst gegen dieses Blatt geprüft.
+- Fest: 9:53 · 1899 · „seit 700 Jahren“ · sieben Raben, Schlüssel, Orte, Federn. Mr. Flex' „five hundred years ago“ ist Angeberei; Arthurs „nine hundred winters“ stützt die Sage.
+- Jede neue Figur bekommt vor ihrem ersten Auftritt einen Steckbrief; jeder neue Einfall wird zuerst gegen dieses Blatt geprüft.
+- Am Ende bleibt nur offen, was vorher ausdrücklich gefragt wurde.
 
-## 11. Zu berichtigen
-- Drehbuch Fassung 2: Garys „Seven keys on one big ring“ ist falsch – dem Tower gehört einer der sieben.
-- Vision 0b: „Wer dahintersteckt“ durch dieses Blatt ersetzen; Kapitel-Tabelle angleichen.
-- Tower-Kapitel in drei Akten (`story-spiele-konzept.md`) bleibt; neu: die Elster arbeitet für Mr Nobody, der „siebte Rabe“ fehlt seit 1899.
-- Figurenblatt: Steckbriefe für Mr Pike, Mr Wren, den Geist, Mrs Crumb, Sami, Nell und die Hüter.
-
-## 12. Offen
-1. Namen der beiden Lehrlinge (Vorschlag Sami und Nell) und der Hüter.
-2. Die drei Stufen Fledgling – Flyer – Raven und der Wahlspruch „Say it. Sound it. Mean it.“
-3. Der siebte Rabe geht mit Mr Wren – ja oder nein?
-4. Die Helfer von Mr Nobody an den Orten 2 bis 7.
-5. Abriss je Kapitel (eine halbe Seite), sobald dieses Blatt abgenommen ist.
+## 15. Offen
+1. **Prolog in der Nacht von 1899** (aus der Sicht der jungen Mrs Crumb): vielversprechend, muss genau ausgearbeitet werden, bevor etwas entsteht. Der Sergeant bleibt, solange es der Geschichte dient.
+2. Zuordnung der Raben zu den Orten; St Paul's als Ort ohne Raben (Abschnitt 6).
+3. Nachname von Samis Mutter; Fakten zu Koptisch und dem Stein nachprüfen.
+4. Helfer von Mr Nobody an den Orten 2 bis 7.
+5. Abriss je Kapitel (je eine halbe Seite).
+6. Danach: die Eröffnung neu, von diesem Blatt her.
+7. Englische Wortlaute der Sage am Buch prüfen, bevor ein Zitat ins Spiel kommt.

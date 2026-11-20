@@ -35,6 +35,9 @@ Befehl: `node werkzeuge/testprogramm.js` (alle Apps, ca. 1–2 Min.; `EN6`/`EN9`
 - Fertig heißt: Testprogramm grün („ALLES OK“).
 - Nach jedem Bau läuft es (die betroffene App reicht); keinen eigenen Browser-Test neu schreiben, sondern das Testprogramm erweitern.
 
+## Erst spiegeln und fragen, dann weiterverfolgen (Regel Mr. Alex, 20.11.2026)
+Eine Idee, die Mr. Alex noch nicht abgenommen hat, wird nicht von selbst weiterverfolgt: keine Recherche, kein Agent, keine Ausarbeitung dazu starten. Zuerst zurückspiegeln, was verstanden wurde, die offenen Punkte fragen und sein OK abwarten. („Du hast gleich schon den Agenten gestartet. So etwas nervt mich.“)
+
 ## Fehlt etwas? Nachfragen statt aufgeben (Regel Mr. Alex, 15.11.2026)
 Ist ein Werkzeug, Browser oder Paket nicht installiert, nicht aufgeben und nicht stillschweigend ausweichen: Mr. Alex Bescheid geben, was fehlt, was es ermöglichen würde und wie aufwendig die Installation ist, und fragen, ob installiert werden soll.
 

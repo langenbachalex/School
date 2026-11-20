@@ -45,3 +45,49 @@ Danach beginnt die Gegenwart mit der Ordnung (Tower, Raben, Uhr, der Sergeant au
 1. Trägt der Prolog so? Vor allem: fast nur über den Ton erzählt, der Saal bleibt unsichtbar.
 2. Darf der halbe Abzählreim der Ruf sein, der 1899 ohne Antwort blieb?
 3. Die Tür ohne Schlüsselloch, mit dem Flügel als Riegel – ersetzt das „Schlüsselloch in Federform“.
+
+---
+
+## Prolog, Fassung 3 (Entwurf 20.11. nach Rückmeldung Mr. Alex – ersetzt die Tabelle oben)
+**Vorgaben Mr. Alex:** Der Erzähler erzählt die Geschichte und darf schöne, anspruchsvolle Sprache haben (keine Kindersprache; kurze, einfache Sätze nur in den Dialogen). Magie nicht erklären, sondern klingen lassen; was sie bewirkt, bleibt ein Geheimnis. Das Wort „magic“ gehört hinein. Zaubersprache: je ein altes Wort zum Abzählreim („Bramrag“, „Shimlag“ sind Platzhalter). Länge ist zweitrangig. Maßstab: Weltklasse.
+
+**Aufbau (wozu jeder Teil da ist):** 1 Haken: eine Tür ohne Schlüsselloch · 2 Versprechen: echte Magie · 3 Die Magie beginnt und klingt – ohne Erklärung · 4 Sie bricht · 5 Das Unrecht: Gelächter · 6 Flucht und der eine Ruf · 7 Die Tür schließt sich · 8 „Until tonight.“
+
+> **NARRATOR:** In the Tower of London there is a door that has no keyhole.
+> It is small, and it is very old, and no one alive has seen it open.
+> But once – long ago, when the lamps of London still burned with gas – it stood open every night. And every night, behind it, there was magic.
+> Real magic. Not tricks. Not smoke and mirrors. Magic made of words.
+>
+> One winter night the hall was full. A hundred candles. A hundred faces. And two boys, standing side by side.
+>
+> **BOY** *(proud, ringing):* One for the word – Bramrag!
+> *(Die Kerzen neigen sich. Ein Ton beginnt.)*
+> **BOY:** Two for the sound – Shimlag!
+> *(Ein zweiter Ton. Licht sammelt sich in der Luft und wartet.)*
+>
+> **NARRATOR:** The light rose. The air began to sing. And the whole room leaned towards the second boy – for the spell was only half made, and the other half was his.
+>
+> **SMALL VOICE:** Th– … th–
+>
+> **NARRATOR:** He knew the word. He knew it better than anyone in that hall. But that night it would not come.
+> The light trembled. The song faltered – and broke.
+> And into the silence came the cruellest sound in the world.
+> *(Gelächter. Ein ganzer Saal.)*
+> They did not wait. They did not listen. They laughed.
+>
+> So he ran. Out through the little door, down the dark stairs, out into the fog. A raven flew after him.
+>
+> **GIRL:** Wait! Come back!
+>
+> **NARRATOR:** One voice called after him. Only one. It was not enough.
+>
+> **OLD VOICE:** Close the door.
+>
+> **NARRATOR:** That night the magic went out of the Tower like a candle.
+> The door was shut. Seven feathers fell from it, and seven ravens carried them away across the sleeping city.
+> It has not opened since. Not for a hundred years. Not for anyone.
+> Until tonight.
+
+**Klang (Vorschlag):** Die zwei Zeilen des Jungen setzen zwei Töne eines Dreiklangs. Der dritte Ton – die Antwort, „three for the heart“ – kommt nicht. Der Akkord bleibt offen und kehrt als Motiv durch die ganze Geschichte wieder; erst im Finale erklingt der dritte Ton.
+**Die flüsternde Feder (Vorschlag):** Der Rabe des Jungen verliert auf der Schwelle eine Feder. Das Mädchen hebt sie auf und bewahrt sie. Das ist die Feder, die in Szene 1 aus dem Fenster des Guard Room fällt: die Feder vom Raben des Jungen, der nicht sprechen konnte – und sie hilft einem Kind mit den Worten.
+**Sprache der alten Wörter:** Die Sage ist in Mittelwalisisch überliefert (Handschriften um 1350 und 1400). „Cymraeg“ ist nur der walisische Name für Walisisch. Die Artus-Namen in unserer Geschichte sind die späteren französisch-englischen Formen ursprünglich walisischer Gestalten (Guinevere = Gwenhwyfar, Merlin = Myrddin, Gawain = Gwalchmai, Percival = Peredur, Mordred = Medrawd; Lancelot ist eine französische Zutat). Noch zu prüfen: welche walisischen Wörter sich gut sprechen lassen.

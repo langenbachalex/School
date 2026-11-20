@@ -936,6 +936,31 @@ async function hofTest(browser, basis, app, name, fm) {
         if (nahKind > 1.5) fehl.push(`${t}: das Kind kam im Test nicht bis zum Touristen (${nahKind.toFixed(2)} m) – die Kollision ließ sich nicht prüfen`);
         await pg.evaluate(() => window.__probe3d.touristTut("laeuft"));
       }
+      // Der Tourist redet (Figuren 10, 20.11.): Mund und Lippen folgen der Aufnahme, er bleibt dabei stehen, die rechte Hand macht Gesten (die linke hält die Karte), danach irrt er weiter
+      if (await pg.evaluate(() => !!window.__probe3d.touristRede())) {
+        await pg.waitForFunction(() => !document.getElementById("buehne").dataset.ton, null, { timeout: 15000 }).catch(() => {});
+        const tonVorher = await pg.evaluate(() => { const alt = window.__towerTonTest; window.__towerTonTest = 5000; return alt; });
+        await pg.click('#bau button[data-wahl="tourist"]'); await pg.click('#bau button[data-kopfrede="gestik"]');
+        let mundMax = 0, redete = false, anfang = 0, ort = null, wegMax = 0; const gesten = new Set();
+        for (let k = 0; k < 200; k++) {
+          const x = await pg.evaluate(() => ({ ...window.__probe3d.touristRede(), wo: window.__probe3d.touristWo(), jetzt: performance.now() }));
+          if (!x.redet) { if (redete) break; await pg.waitForTimeout(30); continue; }
+          if (!redete) { redete = true; anfang = x.jetzt; }
+          mundMax = Math.max(mundMax, x.kopf ? x.kopf.mund : 0); if (x.geste && x.gewicht > 0.5) gesten.add(x.geste);
+          if (x.jetzt - anfang > 1500) { if (!ort) ort = x.wo; wegMax = Math.max(wegMax, Math.hypot(x.wo.x - ort.x, x.wo.z - ort.z)); }
+          await pg.waitForTimeout(30);
+        }
+        if (!redete) fehl.push(`${t}: der Tourist beginnt bei „Reden mit Gestik“ nicht zu reden`);
+        else {
+          if (mundMax < 0.2) fehl.push(`${t}: beim Reden bewegt der Tourist den Mund nicht (größte Öffnung ${mundMax})`);
+          if (gesten.size < 1) fehl.push(`${t}: bei „Reden mit Gestik“ macht der Tourist keine Geste mit der freien Hand`);
+          if (wegMax > 0.1) fehl.push(`${t}: der Tourist läuft beim Reden weiter (${wegMax.toFixed(2)} m)`);
+        }
+        await pg.waitForFunction(() => !document.getElementById("buehne").dataset.ton, null, { timeout: 12000 }).catch(() => {});
+        if (await pg.evaluate(() => window.__probe3d.touristRede().redet)) fehl.push(`${t}: der Tourist bleibt nach dem Reden im Rede-Zustand stehen`);
+        await pg.evaluate((alt) => { window.__towerTonTest = alt; }, tonVorher);
+        await pg.click('#bau button[data-wahl="flex"]');
+      }
       // Raben zeigen beim Antippen ihren Namen (Figuren 9, Schritt 4): Arthur vorn am Platz und ein Rabe auf der Mauer
       for (const wer of ["arthur", "guinevere"]) {
         const ort = await pg.evaluate((w) => { const p = window.__probe3d, v = w === "arthur" ? p.vogel() : p.raben().find((r) => r.wer === w); if (!v) return null; p.blick([v.ort[0] - 2.2, v.ort[1] + 0.9, v.ort[2] + 2.2], [v.ort[0], v.ort[1] + 0.4, v.ort[2]]); return true; }, wer);

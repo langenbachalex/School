@@ -43,7 +43,7 @@ const REDE_GESTEN = ["zeigen", "arme", "abwinken", "mahnen", "achselzucken", "pi
 const KOPF_SITZ = [0, -0.03, 0.0], FUNKEL = 0.6;        // eigener Kopf: Sitz über dem Kopfknochen (m) · Dauer des Funkelns (s)
 const OHNE_SOHLE = ["gehen", "rennen", "rolle", "spagat"];   // hier bleibt der Fuß, wie die Bewegung ihn führt (Abrollen, Füße in der Luft)
 const R = "offen", Z = "zeigen", F = "faust";
-const FINGER = { offen: [0, 0, 0, 0, 0, 0], zeigen: [0, 1, 1, 1, 1, 0], faust: [1, 1, 1, 1, 1, 0], gespreizt: [0, 0, 0, 0, 0, 1], klemme: [0.45, 0.45, 0.45, 0.45, 0.3, 0] };   // klemme (Tourist): Finger leicht gekrümmt, Daumen gegenüber – so klemmt die Karte zwischen Fingern und Daumen   // Einrollen von Zeige-, Mittel-, Ring-, kleinem Finger und Daumen · Spreizen
+const FINGER = { offen: [0, 0, 0, 0, 0, 0], zeigen: [0, 1, 1, 1, 1, 0], faust: [1, 1, 1, 1, 1, 0], gespreizt: [0, 0, 0, 0, 0, 1], klemme: [0.45, 0.45, 0.45, 0.45, 0.3, 0], daumen: [1, 1, 1, 1, 0, 0] };   // klemme (Tourist): Finger leicht gekrümmt, Daumen gegenüber – so klemmt die Karte zwischen Fingern und Daumen   // Einrollen von Zeige-, Mittel-, Ring-, kleinem Finger und Daumen · Spreizen
 /* Gesten-Tabelle: Knopf → [Bewegung, Beschriftung, Gruppe, Handform]. Handform: eine für beide Hände oder [rechts, links];
    null = die Hände bleiben, wie sie am Schalter gewählt sind. Nach der Geste gilt wieder der Schalter. */
 export const GESTEN = {
@@ -582,7 +582,7 @@ function bauchBauen(m, b) {
    Weißes T-Shirt „I ♥ LONDON“ (Aufdruck folgt), darunter ein Streifen Bauch, Shorts bei jedem Wetter, blasse Beine, weiße Socken in Sandalen; Arme sonnenverbrannt wie das Gesicht.
    Kopf aus tower_tourist.py: Sonnenbrand mit Brillenabdruck, orange Haare, zu kleine Union-Jack-Kappe. */
 const T_HEMD = 0xf2f0ea, T_HOSE = 0x273f9a, T_BRAND = 0xffa295, T_BLASS = 0xf3cdb4, T_SOCKE = 0xf4f4f0, T_SCHUH = 0xd4202a, T_SOHLE = 0xf4f4f0, T_STREIF = 0x1f3f8f;
-export const TOURIST = { koerper: "koerper_rogue", teile: "tourist_teile", bau: { arm: 1.95, bein: 3.0, kopf: 0.68, rumpf: 1.2 }, schlank: 0.72, fuss: 1.9,   /* Mr. Alex 20.11.: lange Schuhe – 2.6 war zu lang, die Hälfte der Verlängerung von 1.25 aus */ haut: T_BRAND, bauch: { mitte: 0.68, hoch: 0.22, vor: 0.13, breit: 0.1 }, kopf: "touristkopf", hand: 0.85, druck: { von: 0.69, bis: 1.01, breit: 0.15 },   // druck: Aufdruck auf der Brust (Höhe von, bis · halbe Breite; Maße des ungestreckten Körpers)
+export const TOURIST = { redeGesten: ["tippen", "offen", "zeigen", "daumen"], koerper: "koerper_rogue", teile: "tourist_teile", bau: { arm: 1.95, bein: 3.0, kopf: 0.68, rumpf: 1.2 }, schlank: 0.72, fuss: 1.9,   /* Mr. Alex 20.11.: lange Schuhe – 2.6 war zu lang, die Hälfte der Verlängerung von 1.25 aus */ haut: T_BRAND, bauch: { mitte: 0.68, hoch: 0.22, vor: 0.13, breit: 0.1 }, kopf: "touristkopf", hand: 0.85, druck: { von: 0.69, bis: 1.01, breit: 0.15 },   // druck: Aufdruck auf der Brust (Höhe von, bis · halbe Breite; Maße des ungestreckten Körpers)
   /* Sein Gang (Mr. Alex 20.11., nach dem Film „Goofy Walk Cycle“, Bild für Bild angesehen): KEIN Schlurfen, sondern lange, federnde Schritte – das Bein schwingt gestreckt weit
      nach vorn, die Fußspitze zeigt dabei steil nach oben (ferse), er setzt auf der Hacke auf und rollt ab; im Durchschwung geht das Knie hoch (heben), der Körper hebt und
      senkt sich deutlich (wippen); der Oberkörper lehnt zurück (latsch.zurueck), die Arme schwingen lang und gegengleich (latsch.arme), die Füße zeigen leicht nach außen.
@@ -828,7 +828,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   /* Tourist: Haltung mit dem Stadtplan (Figuren 9). Beide Hände halten den Plan vor dem Bauch, der Rücken ist rund, der Kopf vorgeschoben; im Gehen wiegt er sich.
      Bei der Geste „zeigen“ lässt die rechte Hand los, der Plan bleibt in der linken. Der Plan selbst ist ein eigenes Teil in der Szene (planNach setzt ihn zwischen die Hände);
      er steht auf dem Kopf (dreh = π), „Plan drehen“ dreht ihn um eine halbe Runde weiter – danach steht er wieder falsch herum. */
-  const pl = { r: 1, teil: null, zeigT: 0, neigT: 0, neig: 0, schau: 0, schauZiel: 0, schauBis: 0, auto: 2, kopfY: 0, kopfX: 0, nick: 0, nickZiel: 0, nickBis: 0, frei: 0 }, ZEIG = 2.8, NEIG = 2.6;   // Sekunden: so lange zeigt er · so lange neigt er die Karte hin und her
+  const pl = { r: 1, teil: null, zeigT: 0, neigT: 0, neig: 0, schau: 0, schauZiel: 0, schauBis: 0, auto: 2, kopfY: 0, kopfX: 0, nick: 0, nickZiel: 0, nickBis: 0, frei: 0, gesteT: 0, geste: null }, ZEIG = 2.8, NEIG = 2.6, GESTE = 1.9;   // Sekunden: so lange zeigt er · so lange neigt er die Karte hin und her
   if (figur.plan) {
     const blatt = (malen) => { const c = document.createElement("canvas"); c.width = 384; c.height = 256; malen(c.getContext("2d")); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
     const aussen = blatt((z) => { z.fillStyle = "#f3ead2"; z.fillRect(0, 0, 384, 256); z.fillStyle = "#c8102e"; z.fillRect(0, 0, 384, 70); z.fillStyle = "#fff"; z.textAlign = "center"; z.textBaseline = "middle";
@@ -847,7 +847,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     /* Karte neigen (Mr. Alex 20.11., statt Drehen): etwa 20 Grad, erst rechts höher, dann links höher, dann wieder gerade */
     const nt = pl.neigT > 0 ? 1 - pl.neigT / NEIG : 1, neigSoll = pl.neigT > 0 ? 0.35 * (weich(nt, 0, 0.15) - 2 * weich(nt, 0.4, 0.55) + weich(nt, 0.85, 1)) : 0;
     pl.neig += (neigSoll - pl.neig) * Math.min(1, dt * 10);
-    pl.frei += ((g.modus !== "stehen" && g.modus !== "gehen" ? 1 : 0) - pl.frei) * Math.min(1, dt * 8); const halt = 1 - pl.frei; pl.r = (1 - zeig) * halt;   // frei: eine Geste (Achselzucken) führt die Arme, die Karte bleibt in der linken Hand
+    pl.frei += ((g.modus !== "stehen" && g.modus !== "gehen" ? 1 : 0) - pl.frei) * Math.min(1, dt * 8); const halt = 1 - pl.frei; pl.gesteT = Math.max(0, pl.gesteT - dt); const gt = GESTE - pl.gesteT, gw = pl.gesteT > 0 ? weich(gt, 0, 0.35) * (1 - weich(gt, GESTE - 0.45, GESTE)) * (1 - zeig) * halt : 0; pl.gw = gw;   /* Rede-Geste mit der freien rechten Hand (Figuren 10): hin, halten, zurück */
+    pl.r = (1 - zeig) * halt * (1 - gw);   // frei: eine Geste (Achselzucken) führt die Arme, die Karte bleibt in der linken Hand
     if ((pl.nickBis -= dt) <= 0) pl.nickZiel = 0; pl.nick += (pl.nickZiel - pl.nick) * Math.min(1, dt * 5);                                  // Kopf senken (+, in die Karte) oder heben (−, über die Karte hinweg)
     /* Umschauen (Mr. Alex 20.11.: er schaut sehr, sehr viel nach rechts und links): der Kopf dreht auf Befehl (kopfSchau) oder alle paar Sekunden von selbst zur Seite und kommt zurück */
     if ((pl.schauBis -= dt) <= 0) { pl.schauZiel = 0; if ((pl.auto -= dt) <= 0) { pl.auto = 1.6 + Math.random() * 2.2; pl.schauZiel = (Math.random() < 0.5 ? -1 : 1) * (0.35 + Math.random() * 0.35); pl.schauBis = 0.7 + Math.random() * 0.5; } }
@@ -870,10 +871,23 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       richte(K("upperarmr"), K("lowerarmr"), v(-1, 0.2, 0.3), zeig); richte(K("lowerarmr"), K("wristr"), v(-1, 0.28, 0.3), zeig); dreheHand("r", v(-1, 0.28, 0.3), v(0, -1, 0), zeig);
       richte(K("upperarml"), K("lowerarml"), v(0.42, -1, 0.08), zeig); richte(K("lowerarml"), K("wristl"), v(0.55, -0.15, 1), zeig);
     }
+    if (gw > 0.01) {   /* Rede-Gesten des Touristen (Figuren 10, 20.11.): die linke Hand hält die Karte, die rechte redet mit –
+         tippen: der Zeigefinger tippt auf die Karte („steht doch hier“) · offen: offene Hand zur Seite, Handfläche nach oben („That's what I said“) · daumen: Daumen hoch („alles im Griff“) */
+      if (pl.geste === "tippen") { const tip = 0.07 * Math.sin(gt * 13) * gw;
+        richte(K("upperarmr"), K("lowerarmr"), v(-0.4, -1, 0.35), gw); richte(K("lowerarmr"), K("wristr"), v(0.42, 0.3 + tip, 1), gw); dreheHand("r", v(0.55, -0.1 + tip, 1), v(0, -1, 0.2), gw);
+      } else if (pl.geste === "daumen") {
+        richte(K("upperarmr"), K("lowerarmr"), v(-0.55, -1, 0.4), gw); richte(K("lowerarmr"), K("wristr"), v(-0.25, 0.75, 1), gw); dreheHand("r", v(0, 0, 1), v(1, 0, 0), gw);
+      } else {
+        richte(K("upperarmr"), K("lowerarmr"), v(-0.6, -1, 0.25), gw); richte(K("lowerarmr"), K("wristr"), v(-0.8, 0.2, 0.8), gw); dreheHand("r", v(-0.8, 0.1, 0.8), v(0, 1, 0), gw);
+      }
+      if (pl.geste !== "tippen") { richte(K("upperarml"), K("lowerarml"), v(0.42, -1, 0.08), gw * 0.7); richte(K("lowerarml"), K("wristl"), v(0.55, -0.15, 1), gw * 0.7); }
+    }
     pl.kopfY = -0.75 * zeig + pl.schau * (1 - zeig); pl.kopfX = -0.25 * zeig + pl.nick * (1 - zeig);   // gedreht wird in kopfLauf, dort wo der Kopf jedes Bild neu von seiner Grundlage ausgeht
     if (halt > 0.5) g.hand = [zeig > 0.3 ? Z : geh > 0.5 ? R : "klemme", geh > 0.5 || zeig > 0.3 ? F : "klemme"];
+    if (gw > 0.3) g.hand = [pl.geste === "tippen" ? Z : pl.geste === "daumen" ? "daumen" : R, pl.geste === "tippen" ? "klemme" : F];
     m.updateMatrixWorld(true);
   };
+  const planGeste = (name) => { if (!pl.teil) return false; if (name === "zeigen") pl.zeigT = ZEIG; else { pl.geste = name; pl.gesteT = GESTE; } return true; };
   const planNach = () => {
     if (!pl.teil) return; pl.teil.visible = anker.visible;
     const geh = weich(g.geh || 0, 0.2, 0.8), l = wo(K("wristl")), qm = m.getWorldQuaternion(Q()), rechts = v(-1, 0, 0).applyQuaternion(qm);   // die Karte hängt an der linken Hand
@@ -950,7 +964,9 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
       const zeit = g.rede.zeit(); let dran = false;
       while (g.rede.i < g.rede.einsaetze.length && g.rede.einsaetze[g.rede.i] <= zeit) { g.rede.i++; dran = true; }
       if (dran) g.rede.offen = true;
-      if (g.rede.offen && g.modus === "stehen") { g.rede.offen = false; starte(REDE_GESTEN[g.redeGesten++ % REDE_GESTEN.length]); }
+      if (g.rede.offen && g.modus === "stehen") { g.rede.offen = false;
+        if (figur.plan) { if (pl.gesteT <= 0 && pl.zeigT <= 0) planGeste((figur.redeGesten || ["offen"])[g.redeGesten++ % (figur.redeGesten || ["offen"]).length]); }   // Tourist: eine Hand hält die Karte – eigene Gesten mit der rechten, eine nach der anderen, mit Pausen dazwischen
+        else starte(REDE_GESTEN[g.redeGesten++ % REDE_GESTEN.length]); }
     }
     if (g.regie) { const zt = g.regie.zeit(); while (g.regie.i < g.regie.schritte.length && g.regie.schritte[g.regie.i][0] <= zt) regieSchritt(g.regie.schritte[g.regie.i++][1]); }   // Ausdruckswechsel im Satz
     const zeigt = g.mund && g.ausdruck === "neutral" ? "reden" : g.ausdruck;   // Grundausdruck beim Reden: echtes Lächeln
@@ -1218,7 +1234,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   return {
     befehl: starte, kopf: kopfBefehl,
     planDrehen() { if (!pl.teil || pl.neigT > 0) return false; pl.neigT = NEIG; return true; },                                       // Tourist: neigt die Karte hin und her (der Name ist vom früheren Drehen geblieben)
-    zeige() { if (!pl.teil) return false; pl.zeigT = ZEIG; return true; },                                                          // Tourist: zeigt groß zur Seite (in die falsche Richtung)
+    zeige() { if (!pl.teil) return false; pl.zeigT = ZEIG; return true; },
+    planGeste, gesteStand: () => ({ geste: pl.gesteT > 0 ? pl.geste : pl.zeigT > 0 ? "zeigen" : null, gewicht: +(pl.gw || 0).toFixed(2) }),   // Tourist: Rede-Geste mit der rechten Hand (tippen, offen, daumen, zeigen)                                                          // Tourist: zeigt groß zur Seite (in die falsche Richtung)
     kopfSchau(winkel, dauer) { pl.schauZiel = winkel; pl.schauBis = dauer; pl.auto = Math.max(pl.auto, dauer + 1); },                // Kopf zur Seite drehen (+ = nach links) und nach `dauer` Sekunden zurück
     augen(z) { g.blickZiel = z * 1.1; g.blickBis = 0.7; },                                                                           // nur die Pupillen: +1 links, −1 rechts
     stopp() { if (g.modus === "gehen") { g.haltJetzt = true; starte("stehen"); g.haltJetzt = false; } },                                     // weiche Figuren: sofort stehen bleiben (jemand steht im Weg)

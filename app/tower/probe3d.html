@@ -107,6 +107,7 @@
   <span class="titel">PROBE Körperbau · Figur wählen</span>
   <button type="button" data-wahl="flex" aria-pressed="true">Mr. Flex</button>
   <button type="button" data-wahl="sergeant" aria-pressed="false">Sergeant</button>
+  <button type="button" class="nurhof" data-wahl="tourist" aria-pressed="false" hidden>Tourist</button>
   <span>Ort</span>
   <button type="button" data-ort="" aria-pressed="true">Raum</button>
   <button type="button" data-ort="30x25" aria-pressed="false">Hof 30 × 25 m</button>
@@ -131,6 +132,9 @@
   <button type="button" class="nurhof" data-touristtut="laeuft" aria-pressed="true" hidden>Irrt umher</button>
   <button type="button" class="nurhof" data-touristtut="drehen" hidden>Plan neigen</button>
   <button type="button" class="nurhof" data-touristtut="zeigen" hidden>Zeigt (falsche Richtung)</button>
+  <button type="button" class="nurhof" data-touristtut="tippen" hidden>Tippt auf die Karte</button>
+  <button type="button" class="nurhof" data-touristtut="offen" hidden>Offene Hand</button>
+  <button type="button" class="nurhof" data-touristtut="daumen" hidden>Daumen hoch</button>
   <span class="nurhof" hidden>Die Taube</span>
   <button type="button" class="nurhof" data-taubetut="bahn" hidden>Lange Bahn gehen</button>
   <button type="button" class="nurhof" data-taubetut="huepfe" hidden>„Guess what!“</button>
@@ -385,7 +389,9 @@ try {
      Jedes dritte Mal ein Fehlstart: zwei Schritte, abrupt stehen, ein Blick in die Karte, um ein Viertel drehen, dann erst richtig los. Weil das Feld klein ist, landet er immer wieder an derselben Stelle. */
   const TOU_MITTE = hof ? { x: hof.plan.start.x - 7, z: hof.plan.start.z - 7 } : null, TOU_HALB = 5;
   const tourist = hof && !sucht.has("spiel") ? await ladeBauProbe(lader, szene, { ...TOU_MITTE }, { kopf: TOURIST.kopf }, TOURIST) : null;
-  const tou = { an: !sucht.has("touriststeht"), t: 1.2, stufe: "steht", uhr: 0, i: 0, zahl: 0, fehl: null };
+  /* Der Tourist redet (Figuren 10, 20.11.): er lässt sich wie Mr. Flex und der Sergeant wählen; beim Reden bleibt er stehen und schaut von der Karte auf */
+  if (tourist) PROBEN.tourist = { probe: tourist, wer: "tourist", sagt: "tourist", nr: 0, weg: null }; else for (const b of document.querySelectorAll('#bau button[data-wahl="tourist"]')) b.remove();
+  const tou = { redet: false, an: !sucht.has("touriststeht"), t: 1.2, stufe: "steht", uhr: 0, i: 0, zahl: 0, fehl: null };
   const TOU_ABLAUF = tourist ? [[0.5, () => { tourist.planDrehen(); tourist.kopfHoch(0.2, 2.9); }], [3.4, () => tourist.kopfHoch(-0.22, 4.4)], [4.0, () => tourist.kopfSchau(-1.0, 1.5)], [5.8, () => tourist.kopfSchau(1.0, 1.5)],
     [7.6, () => tourist.kopf("goofyhoch")], [8.05, () => tourist.kopf("goofy")], [8.5, () => tourist.kopf("goofyhoch")], [8.95, () => tourist.kopf("goofy")], [9.5, () => {}]] : [];   // statt des Achselzuckens: die Brauen gehen zweimal hoch und runter
   /* Ausweichen (Mr. Alex 20.11.): Jede andere Figur und das Fass haben einen unsichtbaren Sperrkreis. Bevor er losgeht, sucht er eine Richtung, deren Weg keinen Kreis schneidet;
@@ -408,6 +414,7 @@ try {
     return null; };                                                                                                            // ringsum versperrt: stehen bleiben und gleich noch einmal schauen
   function bewegeTourist(dt) {
     tourist.bewege(dt); const w = tourist.wegStand();
+    if (tou.redet) { if (tou.stufe !== "steht") { tou.stufe = "steht"; tou.fehl = null; } tou.t = 1; return; }   // er redet: stehen bleiben, nicht weiterirren
     if (tou.stufe === "geht") {
       if (w.modus === "gehen" && !w.wendet && !touFrei(w.x, w.z, w.kurs, 0.9, 0.25)) { tourist.stopp(); tourist.kopfHoch(-0.2, 1.4); tou.fehl = null; tou.stufe = "stutzt"; tou.uhr = 0; tou.gestutzt = (tou.gestutzt || 0) + 1; return; }
       if (w.modus === "stehen") { tou.stufe = tou.fehl ? "fehl" : "schaut"; tou.uhr = 0; tou.i = 0; } return; }
@@ -422,7 +429,7 @@ try {
     tou.zahl++; if (tou.zahl % 3 === 0) { tou.fehl = { kurs }; tourist.geheNach(kurs, 0.85); } else tourist.geheNach(kurs, weit);
     tou.stufe = "geht";
   }
-  const touristTut = (was) => { if (was === "laeuft") { tou.an = !tou.an; if (!tou.an && tou.stufe === "geht") tourist.befehl("stehen"); return tou.an; } if (was === "drehen") return tourist.planDrehen(); if (was === "zeigen") { tou.t = Math.max(tou.t, 3.2); return tourist.zeige(); } return false; };
+  const touristTut = (was) => { if (was === "laeuft") { tou.an = !tou.an; if (!tou.an && tou.stufe === "geht") tourist.befehl("stehen"); return tou.an; } if (was === "drehen") return tourist.planDrehen(); if (was === "tippen" || was === "offen" || was === "daumen") { tou.t = Math.max(tou.t, 2.4); return tourist.planGeste(was); } if (was === "zeigen") { tou.t = Math.max(tou.t, 3.2); return tourist.zeige(); } return false; };
   if (tourist) for (const b of document.querySelectorAll("#bau button[data-touristtut]")) b.addEventListener("click", () => { const r = touristTut(b.dataset.touristtut); if (b.dataset.touristtut === "laeuft") b.setAttribute("aria-pressed", String(r)); });
   /* Zum Vergleichen (Mr. Alex: Figuren frei in die Mitte stellen): alle sieben in einer Reihe vor dem Kind, Arthur in der Mitte, Blick nach Süden – oder zurück auf die Mauer */
   const rabeTut = (wer, was) => { const r = andereRaben.find((x) => x.zustand().wer === wer); return r ? r[was]() : false; };
@@ -465,7 +472,8 @@ try {
     const z = mund.zeiten, stuecke = z.map(([t, form], i) => [t, (i + 1 < z.length ? z[i + 1][0] : mund.dauer) - t, form]).filter((x) => x[2] !== "X"), gesamt = stuecke.reduce((n, x) => n + x[1], 0);
     return wechsel.map(([anteil, ausdruck]) => { let rest = anteil * gesamt; for (const [t, lang] of stuecke) { if (rest <= lang) return [t + rest, ausdruck]; rest -= lang; } return [mund.dauer, ausdruck]; });
   };
-  const MUND_PROBE = { flex: mundFlex, sergeant: mundSgt };
+  const mundTourist = await fetch("figuren/mund_tourist.json").then((r) => r.json()).catch(() => ({}));
+  const MUND_PROBE = { flex: mundFlex, sergeant: mundSgt, tourist: mundTourist };
   for (const p of Object.values(PROBEN)) {               // je Figur die ersten acht Aufnahmen; „Reden mit Gestik“ nimmt die längste davon
     p.mund = MUND_PROBE[p.wer]; p.saetze = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `${p.sagt}_0${n}`);
     p.gestik = p.saetze.reduce((a, b) => ((p.mund[b] || {}).dauer || 0) > ((p.mund[a] || {}).dauer || 0) ? b : a);
@@ -473,9 +481,10 @@ try {
   for (const b of document.querySelectorAll("#bau button[data-kopfrede]")) b.addEventListener("click", () => {
     const p = aktiv, mitGestik = b.dataset.kopfrede === "gestik", id = mitGestik ? p.gestik : p.saetze[p.nr++ % p.saetze.length];
     spiele(`../audio/tower/${id}.mp3`, { wer: p.wer, id,
-      beginn: () => { if (mitGestik && p.mund[id]) p.probe.rede({ einsaetze: einsaetzeAus(p.mund[id].zeiten), zeit: () => (laeuft ? laeuft.zeit() : 1e9) });
+      beginn: () => { if (p.wer === "tourist") { const lang = ((p.mund[id] || {}).dauer || 4) + 0.5; tou.redet = true; tourist.stopp(); tourist.kopfHoch(-0.2, lang); tourist.kopfSchau(0, lang); }
+        if (mitGestik && p.mund[id]) p.probe.rede({ einsaetze: einsaetzeAus(p.mund[id].zeiten), zeit: () => (laeuft ? laeuft.zeit() : 1e9) });
         const schritte = regieSchritte(regieDaten[id], p.mund[id]); if (schritte) p.probe.regie({ schritte, zeit: () => (laeuft ? laeuft.zeit() : 1e9) }); },
-      ende: () => { p.probe.mund(null); p.probe.rede(null); p.probe.regie(null); } });
+      ende: () => { p.probe.mund(null); p.probe.rede(null); p.probe.regie(null); if (p.wer === "tourist") tou.redet = false; } });
   });
   const GARY_SAGT = ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"], GARY_GESTIK = "gary_06";
   let garyNr = 0, ohneFormen = false;
@@ -925,7 +934,7 @@ try {
   window.__probe3d = { luegeVorbei: () => { luegeBis = 0; },   // Testprogramm: die Minute der Elster ist um
     rabeAmSchirm: (wer) => { const v = alleRaben().find((x) => x.zustand().wer === wer); if (!v) return null; kamera.updateMatrixWorld(true); const k = v.zustand().kopfOrt, q = new THREE.Vector3(k[0], k[1], k[2]).project(kamera), r = buehne.getBoundingClientRect(); return { x: r.left + ((q.x + 1) / 2) * r.width, y: r.top + ((1 - q.y) / 2) * r.height, name: v.zustand().name }; },   // Testprogramm: wo ist der Kopf dieses Raben im Bild?
     tourist: () => (tourist ? tourist.zustand() : null), touristPlan: () => (tourist ? tourist.planStand() : null), touristWeg: () => (tourist ? { ...tourist.wegStand(), stufe: tou.stufe, gestutzt: tou.gestutzt || 0 } : null), touristSperre: (an) => { const w = tourist.wegStand(); tou.sperre = an ? { x: w.x + Math.sin(w.kurs) * 0.8, z: w.z + Math.cos(w.kurs) * 0.8, r: 0.5 } : null; return tou.sperre; },   // Testprogramm: ein Hindernis 0,8 m vor ihm
-    touristTut: (was) => touristTut(was), touristTakt: (n, ms) => { for (let i = 0; i < n; i++) bewegeTourist(ms / 1000); }, touristWo: () => (tourist ? tourist.wo() : null), taube: () => (taube ? taube.zustand() : null), taubeTut: (was, wert) => (was === "bahn" ? taubeBahn() : taube[was](wert)), taubeHalt: (an) => { taubeHalt = an; taube.halt(an); }, taubeTakt: (n, ms) => { for (let i = 0; i < n; i++) taube.bewege(ms / 1000); }, vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), rabenReihe: (an) => rabenReihe(an), rabeTut, raben: () => andereRaben.map((r) => r.zustand()), vogelPluster: () => arthur.plustere(), vogelSchluessel: (an) => arthur.schluessel(an), vogelDreh: (d) => { rabeSitz = null; arthur.setze(arthur.wurzel.position.x, arthur.wurzel.position.y, arthur.wurzel.position.z, d); }, vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
+    touristTut: (was) => touristTut(was), touristTakt: (n, ms) => { for (let i = 0; i < n; i++) bewegeTourist(ms / 1000); }, touristWo: () => (tourist ? tourist.wo() : null), touristRede: () => (tourist ? { ...tourist.gesteStand(), redet: tou.redet, kopf: tourist.zustand().kopf } : null), taube: () => (taube ? taube.zustand() : null), taubeTut: (was, wert) => (was === "bahn" ? taubeBahn() : taube[was](wert)), taubeHalt: (an) => { taubeHalt = an; taube.halt(an); }, taubeTakt: (n, ms) => { for (let i = 0; i < n; i++) taube.bewege(ms / 1000); }, vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), rabenReihe: (an) => rabenReihe(an), rabeTut, raben: () => andereRaben.map((r) => r.zustand()), vogelPluster: () => arthur.plustere(), vogelSchluessel: (an) => arthur.schluessel(an), vogelDreh: (d) => { rabeSitz = null; arthur.setze(arthur.wurzel.position.x, arthur.wurzel.position.y, arthur.wurzel.position.z, d); }, vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
     blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
     sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), sergeantArme: () => sergeants[0].arme(), sergeantHals: () => sergeants[0].halsSitz(), bauHals: () => bauProbe.halsSitz(), bauMund: (form) => bauProbe.mund(form), regie: (wer, id, zeit) => { const p = PROBEN[wer], schritte = id && regieSchritte(regieDaten[id], p.mund[id]); p.probe.regie(schritte ? { schritte, zeit: () => zeit } : null); return schritte; }, probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3

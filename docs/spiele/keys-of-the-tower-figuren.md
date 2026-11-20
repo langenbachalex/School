@@ -241,7 +241,7 @@ Für ihn gilt die Regel „genau ein Merkmal“ nicht: Er ist ein laufender Witz
 - **Zeigen (falsche Richtung):** Der rechte Arm streckt sich groß zur Seite, die linke Hand zieht die Karte zur Seite und nach unten, der Kopf geht ruhig mit und kommt zurück.
 - **Ausweichen:** Er spürt andere Figuren und das Kind einen knappen Meter voraus, bleibt verdutzt stehen, schaut hoch und geht woanders weiter. Das Kind kann ihm absichtlich in den Weg laufen, aber nicht durch ihn hindurch.
 - **Verworfen (nicht wieder vorschlagen):** Sonnenbrand mit Brillenabdruck, orange Haare, Locken, Tolle, Sandalen, Schlurfgang, Karte drehen oder schnippen, Achselzucken, hektisches Kopfdrehen beim Zeigen.
-- **Für später in der Geschichte vorgemerkt:** Er dreht die Karte um ein Viertel, nickt zufrieden und geht dorthin zurück, woher er kam; er zeigt überzeugt in eine Richtung und geht in eine andere. Noch nicht gebaut: Reden mit Lippen, Ausdruckswechsel und Gestik (eine Hand hält die Karte).
+- **Für später in der Geschichte vorgemerkt:** Er dreht die Karte um ein Viertel, nickt zufrieden und geht dorthin zurück, woher er kam; er zeigt überzeugt in eine Richtung und geht in eine andere. **Reden (gebaut 20.11. in Figuren 10, Abnahme steht aus):** Beim Reden bleibt er stehen und hebt den Kopf von der Karte; Lippen und Ausdruck folgen der Aufnahme. Die linke Hand hält die Karte, die rechte redet mit: auf die Karte tippen, offene Hand zur Seite („That's what I said“), groß zeigen, Daumen hoch.
 - Technik: Kopf `werkzeuge/blender/tower_tourist.py`, Profil `TOURIST` in `app/tower/probe3d_bau.js`, Ablauf in `app/tower/probe3d.html`.
 
 ### Die Taube, wie sie gebaut ist (Figuren 9, abgenommen Mr. Alex 20.11.2026)

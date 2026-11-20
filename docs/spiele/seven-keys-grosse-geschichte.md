@@ -9,6 +9,14 @@ Alles in diesem Abschnitt ist von Mr. Alex entschieden. Wo der Text weiter unten
 - Mr. Flex ist Mr. Alex, liebevoll selbstironisch überspitzt. Die Kinder erkennen ihn sofort (im Test mit Schülerinnen und Schülern: „Das sind Sie“, sobald die Kung-Fu-Pose und die Stimme kamen).
 - In der Figur stecken alle Seiten: das Alberne, das Protzige mit Humor und das Tiefe – er ist in die Geschichte verwoben und fehlerhaft. Im Kern ist er begeistert und leidenschaftlich; sein Perfektionismus lässt ihn übertreiben.
 
+**Gefahr – Richtung aus der Spannungs-Runde (Mr. Alex 20.11. spät; Richtung, noch nicht durchgeschrieben)**
+- **Das Gesetz der Gefahr: Die Stille breitet sich aus.** Ein ausgefallenes Ritual ist ein Ruf ohne Antwort; der Ort wird festgehalten wie die Zeugen von 1899 (Uhren stehen, Geräusche ersterben, Menschen verharren). Auch das Kind kann gebunden werden, wenn es ruft und niemand antwortet.
+- **Die große Frage: Die Tür ist aus gutem Grund zu.** Dahinter hängt der halbe Zauber von 1899; wer falsch öffnet (Schlüssel ohne Federn, Ruf ohne Antwort), lässt ihn los oder bindet alle davor. Erklärt das „Not yet“ des Geistes; Portal, trägt eine Fortsetzung (weitere Türen).
+- **Das Gelächter von 1899 wandert als Echo** und lässt Stimmen stocken – als Klang der Gefahr, **aber nicht als eigentlicher Gegner** (Mr. Alex: zu metaphorisch, zu kryptisch).
+- **Sichtbarer Zähler:** Nach jedem verlorenen Ritual verlässt ein Rabe die Mauer (Tower-Sage). **Augenblicke:** die Orte bei Nacht (eingeschlossen im Museum, Uhrwerk, Brücke, steigendes Wasser im Tunnel).
+- **Es fehlt ein Gegner als Person – ein richtiger Stinkstiefel, den niemand mag.** Bisher gibt es nur gute Leute. Kandidaten am 20.11. vorgelegt, Entscheidung offen.
+- **Belegt (Wikipedia „Tower of London“, 20.11.):** königliche Menagerie im Tower, erwähnt seit Heinrich III.; 1252 ein Eisbär, der an der Kette in der Themse fischte; 1254/55 ein Elefant; Verzeichnis von 1800: ein Tiger, Leoparden, eine Hyäne, Paviane, Affen, Wölfe; geschlossen nach 1830 auf Befehl des Duke of Wellington, Gebäude 1852 abgerissen; der Lion Tower hieß nach den Tieren. Anker für den Tiger, den Mr. Alex sich wünscht.
+
 **Der Zauber und sein Reim**
 - **Der Zauber selbst sind vier walisische Kraftwörter,** immer dieselben, in derselben Reihenfolge (im Wörterbuch geprüft 20.11. spät: alle vier sind echte walisische Wörter mit dieser Bedeutung; Aussprache ungefähr bar-DHON-jaith · so-ni-A-ris · HIER-aith · a-GOR-jad; „agoriad“ heißt Öffnung und in Nordwales Schlüssel): **Barddoniaeth** (Dichtung – das Wort) · **Soniarus** (klangvoll – der Klang) · **Hiraeth** (Sehnsucht – das Herz) · **Agoriad** (Öffnung, Schlüssel). Altenglisch ist ausgeschlossen.
 - **Der Kern ist ein Vierzeiler** (ersetzt den Wahlspruch in Abschnitt 2):

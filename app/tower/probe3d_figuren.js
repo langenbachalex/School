@@ -23,6 +23,8 @@ export const AUSDRUECKE = {
   neutral: NEUTRAL,
   // Fröhlich in zwei Stufen (Mr. Alex 18.11.): geschlossenes Lächeln – die Mundlinie schwingt in die Wange hinauf …
   froehlich: { ...NEUTRAL, braueHoch: 0.4, braueDreh: -0.06, unterlid: 0.32, winkel: 1, wange: 0.85, ohr: 0.7, neig: 0.1 },
+  // Goofy-Freundlichkeit (Tourist, Mr. Alex 20.11.): Brauen weit oben, Lider halb gesenkt, breites, leicht offenes Lächeln – gutmütig und ahnungslos
+  goofy: { ...NEUTRAL, braueHoch: 0.8, braueDreh: -0.12, lid: 0.3, unterlid: 0.22, mund: 0.2, winkel: 1, wange: 0.6, ohr: 0.5 },
   // … und Lachen: Mund offen, obere Zahnreihe, Zunge; das ganze Gesicht und der Körper machen mit
   lachen: { ...NEUTRAL, braueHoch: 0.55, braueDreh: -0.08, unterlid: 0.36, mund: 0.62, winkel: 1, wange: 1, ohr: 1, neig: 0.14, arme: 1 },
   erschrocken: { ...NEUTRAL, braueHoch: 0.9, braueDreh: -0.3, pupille: 0.6, mund: 1, breit: 0.8, winkel: -0.35, ohr: -0.5 },

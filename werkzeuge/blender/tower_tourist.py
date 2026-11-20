@@ -17,13 +17,15 @@ import tower_flex as fx
 import tower_gary as g
 from tower_rabe import stoff
 
-BRAND, BLASS, ORANGE = (1.0, 0.36, 0.30), (1.0, 0.90, 0.82), (0.95, 0.40, 0.03)   # Mr. Alex 20.11.: Haut roetlicher   # sonnenverbrannte Haut · helle Haut unter der Brille · Haare
+BRAND, BLASS, ORANGE = (1.0, 0.36, 0.30), (1.0, 0.90, 0.82), (0.19, 0.085, 0.03)   # Mr. Alex 20.11.: Haut roetlicher; Haare braun statt orange (der Name ORANGE ist geblieben)   # sonnenverbrannte Haut · helle Haut unter der Brille · Haare
 BLAU, ROT, WEISS = (0.02, 0.05, 0.32), (0.80, 0.03, 0.05), (0.95, 0.95, 0.93)
 
 
 def touristkopf(name="touristkopf", ort=(0, 0, 0)):
-    f = fx.farben("tou", haut=BRAND, wange=BRAND, bartschatten=BRAND, schnurrbart=BRAND, braue=(0.85, 0.36, 0.04), falte=(0.70, 0.24, 0.20))
+    f = fx.farben("tou", haut=BRAND, wange=BRAND, bartschatten=BRAND, schnurrbart=BRAND, braue=(0.16, 0.07, 0.025), iris=(0.22, 0.09, 0.02), falte=(0.70, 0.24, 0.20))
     k = fx.flexkopf(None, ort, name, f=f, ohr=(0.022, 0.030, 0.044, 0.9), haare=False, brille=False, bart=(0.004, 0.001, 0.0), braue=0.0065)
+    for sx in (-1, 1):                                    # Goofy-Freundlichkeit (Mr. Alex 20.11.): zwei grosse Schneidezaehne unter der Oberlippe
+        g.kugel("schneidezahn", k, (sx * 0.0115, fx.gesicht_vorn(0, fx.LZ) - 0.0005, fx.LZ - 0.011), (0.0105, 0.005, 0.016), f["zahn"], fein=12)
     for ob in k.children:                                 # viel weichere Wangen (Mr. Alex 20.11.): flacher, groesser, in Hautfarbe – sie heben sich kaum vom Gesicht ab
         if ob.name.startswith("wange"):
             for p in ob.data.vertices:                    # in den Punkten, nicht im Massstab: den setzt der Browser beim Laecheln neu

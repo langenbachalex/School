@@ -521,6 +521,21 @@ function teileWeg(m, felder) {
     o.geometry.setIndex(neu);
   });
 }
+/* Arme glätten (Tourist, Mr. Alex 20.11.: die Arme waren wulstig, „als hätte er einen Pullover unter dem Pullover“, „Klopapierrollen“ am Oberarm):
+   Zwischen Schulter und Handgelenk bekommt jeder Punkt des Arms den Abstand einer glatten, nach unten dünneren Röhre von der Armachse – Stulpen und Ärmelkanten verschwinden.
+   plan = { von, bis: Bereich entlang des Arms (Abstand von der Körpermitte) · dick: [an der Schulter, am Handgelenk] · rand: so weich läuft die Glättung an beiden Enden aus } */
+function armeGlatt(m, plan) {
+  m.traverse((o) => {
+    if (!o.isSkinnedMesh || !/_Arm/.test(o.name)) return;
+    const P = o.geometry.attributes.position;
+    for (let i = 0; i < P.count; i++) {
+      const x = P.getX(i), a = Math.abs(x), dy = P.getY(i) - ARM_HOCH, dz = P.getZ(i), r = Math.hypot(dy, dz); if (r < 1e-5) continue;
+      const t = Math.min(1, Math.max(0, (a - plan.von) / (plan.bis - plan.von))), stark = weich(a, plan.von - plan.rand, plan.von) * (1 - weich(a, plan.bis, plan.bis + plan.rand));
+      const neu = r + (plan.dick[0] + (plan.dick[1] - plan.dick[0]) * t - r) * stark; P.setXYZ(i, x, ARM_HOCH + (dy / r) * neu, (dz / r) * neu);
+    }
+    P.needsUpdate = true; o.geometry.computeVertexNormals(); o.geometry.computeBoundingBox(); o.geometry.computeBoundingSphere();
+  });
+}
 /* Bäuchlein (Tourist, Mr. Alex 20.11.: dünn, aber mit Bauch): die Vorderseite des Rumpfs wölbt sich um die Höhe `mitte` (± hoch) um `vor` nach vorn und wird dort etwas breiter. */
 function bauchBauen(m, b) {
   m.traverse((o) => {
@@ -536,19 +551,19 @@ function bauchBauen(m, b) {
 /* Der verirrte Tourist (Figuren 9, 20.11., Aussehen nach Mr. Alex): KayKit-Rogue, schlaksig mit Bäuchlein („skinny fat“) – fast so lang wie der Sergeant, aber schlabberig statt stramm.
    Weißes T-Shirt „I ♥ LONDON“ (Aufdruck folgt), darunter ein Streifen Bauch, Shorts bei jedem Wetter, blasse Beine, weiße Socken in Sandalen; Arme sonnenverbrannt wie das Gesicht.
    Kopf aus tower_tourist.py: Sonnenbrand mit Brillenabdruck, orange Haare, zu kleine Union-Jack-Kappe. */
-const T_HEMD = 0xf2f0ea, T_HOSE = 0x2c5fb8, T_BRAND = 0xee5a48, T_BLASS = 0xf3cdb4, T_SOCKE = 0xf4f4f0, T_SCHUH = 0xd4202a, T_SOHLE = 0xf4f4f0, T_STREIF = 0x1f3f8f;
-export const TOURIST = { koerper: "koerper_rogue", teile: "tourist_teile", bau: { arm: 1.95, bein: 3.0, kopf: 0.68, rumpf: 1.2 }, schlank: 0.72, fuss: 2.6,   /* Mr. Alex 20.11.: sehr lange Schuhe, mindestens doppelt so lang wie vorher (1.25) */ bauch: { mitte: 0.68, hoch: 0.22, vor: 0.13, breit: 0.1 }, kopf: "touristkopf", hand: 0.85, druck: { von: 0.69, bis: 1.01, breit: 0.15 },   // druck: Aufdruck auf der Brust (Höhe von, bis · halbe Breite; Maße des ungestreckten Körpers)
+const T_HEMD = 0xf2f0ea, T_HOSE = 0x273f9a, T_BRAND = 0xffa295, T_BLASS = 0xf3cdb4, T_SOCKE = 0xf4f4f0, T_SCHUH = 0xd4202a, T_SOHLE = 0xf4f4f0, T_STREIF = 0x1f3f8f;
+export const TOURIST = { koerper: "koerper_rogue", teile: "tourist_teile", bau: { arm: 1.95, bein: 3.0, kopf: 0.68, rumpf: 1.2 }, schlank: 0.72, fuss: 1.9,   /* Mr. Alex 20.11.: lange Schuhe – 2.6 war zu lang, die Hälfte der Verlängerung von 1.25 aus */ haut: T_BRAND, bauch: { mitte: 0.68, hoch: 0.22, vor: 0.13, breit: 0.1 }, kopf: "touristkopf", hand: 0.85, druck: { von: 0.69, bis: 1.01, breit: 0.15 },   // druck: Aufdruck auf der Brust (Höhe von, bis · halbe Breite; Maße des ungestreckten Körpers)
   /* Er latscht (Mr. Alex 20.11.: goofy, schlaksig, wackeliger Gang): die Sohle klatscht flach auf, die Füße heben sich kaum und zeigen nach außen (aussen, Bogenmaß),
      die Knie bleiben weich (streck), breite Spur, er wippt stark und wiegt sich von Seite zu Seite (latsch.wiegen), der Rücken ist rund (latsch.krumm).
      plan: der zu kleine Stadtplan (Meter), den er in beiden Händen vor sich hält – verkehrt herum. */
-  gang: { stand: 0.7, ferse: 0, rollt: 0.03, flach: 0.2, ballen: 0.22, heben: 0.02, wippen: 0.2, spur: 1.4, tempo: 0.5, streck: 0.94, aussen: 0.45, an: 0.55 },   // Mr. Alex 20.11.: viel langsamer, er schlurft – die Füße heben sich kaum und bleiben lange am Boden
+  gang: { stand: 0.7, ferse: 0, rollt: 0.03, flach: 0.2, ballen: 0.22, heben: 0.02, wippen: 0.2, spur: 1.8, tempo: 0.5, streck: 0.94, aussen: 0.32, an: 0.55 },   // breite Spur, damit die Hacken der langen Schuhe nicht zusammenstoßen (Mr. Alex 20.11.)   // Mr. Alex 20.11.: viel langsamer, er schlurft – die Füße heben sich kaum und bleiben lange am Boden
   latsch: { wiegen: 0.09, krumm: 0.14 }, plan: { breit: 0.3, hoch: 0.2 },
   weich: { zieht: 2.6, aus: 0.3, dreh: 2.0, blende: 0.55 },   // organisch loslaufen und stehen bleiben: so schnell fährt er an (1/s) · Tempo beim Auslaufen · Drehen mit kleinen Tritten (Bogenmaß/s) · Überblenden (s)
-  wangeVor: 0.25, ausdruck: "froehlich", ohne: { "3,0": 0, "6,0": 0.4 },   // Schnallen und die abstehenden Taschen des Rogue weg; Gürtelband und Riemen bleiben als Saum in Hemdfarbe (ohne sie hat der Rumpf Löcher)
+  armeGlatt: { von: 0.2, bis: 0.74, dick: [0.115, 0.08], rand: 0.08 }, wangeVor: 0.25, ausdruck: "goofy", ohne: { "3,0": 0, "6,0": 0.4 },   // Schnallen und die abstehenden Taschen des Rogue weg; Gürtelband und Riemen bleiben als Saum in Hemdfarbe (ohne sie hat der Rumpf Löcher)
   faerben: { Body: { ort: (x, y) => [0.5, (y - 0.38) / 0.9], farbe: (a, b) => (b > 0.24 ? T_HEMD : b > 0.19 ? T_BLASS : T_HOSE) },                       // Hemd · ein Streifen Bauch · Hosenbund
-    Arm: { ort: (x) => [0.5, Math.abs(x) / 0.97], farbe: (a, b) => (b < 0.42 ? T_HEMD : T_BRAND) },                                                   // kurzer Ärmel, Arm sonnenverbrannt
-    Leg: { ort: (x, y, z) => [(z + 0.13) / 0.39, y / 0.53], farbe: (a, b) => { const y = b * 0.53, z = a * 0.39 - 0.13;                               // Shorts bis über das Knie · blasses Bein · weiße Socke mit zwei blauen Streifen · rote Schuhe mit weißer Sohle (Mr. Alex 20.11.: die Sandalen waren nicht zu erkennen – rote, sehr lange Schuhe)
-      return y > 0.37 ? T_HOSE : y > 0.24 ? T_BLASS : (y > 0.2 && y < 0.213) || (y > 0.176 && y < 0.189) ? T_STREIF : y < 0.03 ? T_SOHLE : y < 0.15 ? T_SCHUH : T_SOCKE; } } } };
+    Arm: { ort: (x) => [0.5, Math.abs(x) / 0.97], farbe: (a, b) => (b < 0.3 ? T_HEMD : T_BRAND) },                                                   // kurzer Ärmel, Arm sonnenverbrannt
+    Leg: { ort: (x, y, z) => [(z + 0.13) / 0.39, y / 0.53], farbe: (a, b) => { const y = b * 0.53, z = a * 0.39 - 0.13;                               // Shorts, enden deutlich über dem Knie (Mr. Alex 20.11.), im Blau der Kappe · blasses Bein · weiße Socke mit zwei blauen Streifen · rote Schuhe mit weißer Sohle (Mr. Alex 20.11.: die Sandalen waren nicht zu erkennen – rote, sehr lange Schuhe)
+      return y > 0.44 ? T_HOSE : y > 0.24 ? T_BLASS : (y > 0.2 && y < 0.213) || (y > 0.176 && y < 0.189) ? T_STREIF : y < 0.03 ? T_SOHLE : y < 0.15 ? T_SCHUH : T_SOCKE; } } } };
 const GELADEN = new Map();                             // Bewegungen, Hände und Köpfe nur einmal laden, auch wenn mehrere Figuren im Raum stehen (der Körper wird je Figur neu geladen)
 /* figur = eine andere Figur als Mr. Flex auf demselben Weg: { koerper, teile, bau, umfaerben } (siehe SERGEANT); ohne Angabe wie bisher Mr. Flex. */
 export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_START, figur = {}) {
@@ -563,6 +578,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   if (figur.faerben) faerben(m, figur.faerben);
   // Schulterlinie und schlanker Körper: feste Lage der Gelenke, die sich nicht mit dem Körper strecken (strecke setzt sie in jedem Bild)
   const schulter = { ...SCHULTER, ...figur.schulter }, schlank = figur.schlank || 1, fussLang = figur.fuss || schlank, gelenkFest = [];
+  if (figur.armeGlatt) armeGlatt(m, figur.armeGlatt);
   if (figur.schlank) schlankBauen(m, schlank, fussLang, schulter.rumpf || 1);
   if (figur.bauch) bauchBauen(m, figur.bauch);
   for (const s of "lr") {
@@ -607,7 +623,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const h = new THREE.Group(); szene.add(h);
     h.position.copy(ort); h.quaternion.setFromUnitVectors(v(vz, 0, 0), arm); h.scale.set(-vz * mass * handMass, mass * handMass, mass * handMass);
     const hand = haende.scene.getObjectByName("hand").clone(true); hand.position.set(0, 0, 0); h.add(hand);
-    hand.traverse((o) => { o.frustumCulled = false; });
+    hand.traverse((o) => { o.frustumCulled = false; if (figur.haut && o.isMesh) { o.material = o.material.clone(); o.material.color.set(figur.haut); } });   // Hände in der Hautfarbe der Figur (Tourist: wie Gesicht und Arme)
     glieder[s] = [1, 2, 3, 4].map((i) => [hand.getObjectByName("f" + i), hand.getObjectByName("f" + i + "b")]).concat([[hand.getObjectByName("daumen")]]);
     h.updateMatrixWorld(true); halter[s] = h;
     gelenk.attach(h);

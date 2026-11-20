@@ -28,6 +28,10 @@ Angelegt vom Master am 20.11.2026 auf Wunsch von Mr. Alex. **Jeder Prüf-Agent l
 - **Gefahr und echte Spannung** gehören hinein, dazu kleine mysteriöse Hinweise. Es muss etwas auf dem Spiel stehen. Cheesy Auflösungen (eine Überraschungsparty) sind falsch.
 - Das Kind selbst muss in der Geschichte eine Rolle spielen. Es darf in einer Rückblende eine andere Figur spielen (wie in „Der Herr der Ringe Online“), solange später klar wird, dass es nicht diese Figur ist.
 
+- **Mystery ist gewollt** (Mr. Alex: „Ich stehe auf Mystery“): Augenblicke ohne Erklärung, Spuren, die das Kind selbst entdeckt, falsche Fährten – unregelmäßig verteilt, nicht eine je Kapitel.
+- **Nicht überpädagogisch.** Eine Spielmechanik darf nicht nach Übung riechen. Die Raben sind geheimnisvoll und stehen für Rätsel; sie sind kein Mittel, um Fragesätze zu üben.
+- Altersangemessen bleiben, auch wenn etwas unheimlich wird.
+
 ## 5. Was die Lerngruppe mag (Stand 20.11.)
 - Die Raben wirken auf sie geheimnisvoll, nicht wie Bilderbuch. Der Fuchs Gary sieht cool aus, ein bisschen übertrieben, mit Hütchen; er darf Zauberglanz versprühen, ohne dass ihm etwas gelingt.
 - Wiederspielbarkeit und etwas zum Vorzeigen sind geplant: Die Mädchen haben sich gewünscht, ihr Zimmer einzurichten, die Figur einzukleiden und zu schminken (Kleidung gewinnt man durch Wiederholen); für die Jungen eher Minispiele. Punkte wirken immer.

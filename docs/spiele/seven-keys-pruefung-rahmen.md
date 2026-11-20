@@ -144,6 +144,20 @@ Die Mechanik der Federtür mit hörbaren Klinken und Gegengewicht, die Elster al
 
 ---
 
+### Rückmeldung Mr. Alex zu Prüfung 3 (20.11.2026, spät)
+Ihm gefallen alle Vorschläge dieser Prüfung („Ich stehe auf Mystery, und das ist für die Kinder auch gut“). Im Einzelnen:
+- **Punkt 1 (Erratepunkt Kapitel 3, Bestätigung Kapitel 4; der Prolog verschweigt, wem der Zauber gehörte): ja.**
+- **Punkt 2 (der erstarrte Saal von 1899 hinter der Tür; Wrens erstes Wort gilt Mrs Crumb): ja** – aber noch Alternativen suchen, die ebenso logisch sind.
+- **Punkt 3 (die Regel früh erleben, Gary erstarrt halb; Foto von 1899; alter Klatsch der Taube): gut** – darauf achten, dass es altersangemessen bleibt.
+- **Punkt 4 (selbst entdecken): alle fünf weiterverfolgen** (Elster sagt nie „Merlin“, vierte Zeile ohne Zahl, Inschrift mit Lücken, wiedererkannte Stimme, Stocken „A– … Ag–“).
+- **Punkt 5 (Raben fragen nur): zurückhaltend.** Die Raben sind dazu da, geheimnisvoll zu sein, und stehen für Rätsel; sie können Rätsel stellen. Es muss folgerichtig zu ihrem Satz sein („We do not answer questions. We ask them.“), **aber nicht überpädagogisch** – keine Mechanik, die nach Fragesatz-Übung riecht.
+- **Punkt 6 (falsche Fährten): ja, und mehr davon** – nicht genau eine je Kapitel, denn auch das wäre wieder Regelmäßigkeit.
+- **Punkt 7 (die drei Sprüche öffnen je eine Fassung von 1899):** Er erinnert sich, dass es dazu schon eine Lösung gab. Sie steht in Abschnitt 0 des Rahmens (Auflösung Schritt 5: Mrs Crumb gibt die Erinnerung zurück, der Geist die Zeit, Mr. Flex die Wahrheit, je mit ihrem Spruch) und passt zum Vorschlag des Prüfers; beim Durchschreiben zusammenführen.
+- **Punkt 8 (Mystik ohne Erklärung): gefällt ihm sehr, vor allem „Hiraeth“.**
+- **Noch offen, von ihm ausdrücklich angemahnt:** Über die **Gefahr** ist noch nicht gesprochen.
+
+---
+
 ## Prüfung 4 – Die Figuren
 
 **Urteil:** Die Figuren haben ein starkes Fundament. Das Dreieck aus Sergeant, Gary und Mr. Flex ist lustig und gut zu unterscheiden, und Mr Wren hat eine echte, rührende Wunde. Die Schwächen liegen in der zweiten Reihe: Viele Figuren sind still, würdevoll oder alt, Sami und Nell reden beide wenig, und die sieben Hüter und sechs Raben sind bisher vor allem Namen. Dazu gibt es drei Widersprüche zwischen Abschnitt 0 und dem Text darunter, die vor Fassung 4 geklärt werden sollten.

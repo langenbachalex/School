@@ -17,14 +17,17 @@ import tower_flex as fx
 import tower_gary as g
 from tower_rabe import stoff
 
-BRAND, BLASS, ORANGE = (0.95, 0.47, 0.40), (1.0, 0.90, 0.82), (0.95, 0.40, 0.03)   # sonnenverbrannte Haut · helle Haut unter der Brille · Haare
+BRAND, BLASS, ORANGE = (1.0, 0.36, 0.30), (1.0, 0.90, 0.82), (0.95, 0.40, 0.03)   # Mr. Alex 20.11.: Haut roetlicher   # sonnenverbrannte Haut · helle Haut unter der Brille · Haare
 BLAU, ROT, WEISS = (0.02, 0.05, 0.32), (0.80, 0.03, 0.05), (0.95, 0.95, 0.93)
 
 
 def touristkopf(name="touristkopf", ort=(0, 0, 0)):
-    f = fx.farben("tou", haut=BRAND, wange=(0.96, 0.38, 0.33), bartschatten=BRAND, schnurrbart=BRAND, braue=(0.85, 0.36, 0.04), falte=(0.70, 0.24, 0.20))
+    f = fx.farben("tou", haut=BRAND, wange=BRAND, bartschatten=BRAND, schnurrbart=BRAND, braue=(0.85, 0.36, 0.04), falte=(0.70, 0.24, 0.20))
     k = fx.flexkopf(None, ort, name, f=f, ohr=(0.022, 0.030, 0.044, 0.9), haare=False, brille=False, bart=(0.004, 0.001, 0.0), braue=0.0065)
-    blass = g.farbe("tou_blass", BLASS, 0.75)
+    for ob in k.children:                                 # viel weichere Wangen (Mr. Alex 20.11.): flacher, groesser, in Hautfarbe – sie heben sich kaum vom Gesicht ab
+        if ob.name.startswith("wange"):
+            for p in ob.data.vertices:                    # in den Punkten, nicht im Massstab: den setzt der Browser beim Laecheln neu
+                p.co.x, p.co.y, p.co.z = p.co.x * 1.25, p.co.y * 0.4, p.co.z * 1.25
 
     def netz(name, eltern, punkte, flaechen, material, farben=None):
         me = bpy.data.meshes.new(name)
@@ -41,37 +44,30 @@ def touristkopf(name="touristkopf", ort=(0, 0, 0)):
         ob.parent = eltern
         return ob
 
-    # Abdruck der Sonnenbrille (Mr. Alex 20.11.: glatt): EINE helle Flaeche je Auge, die der Woelbung des Gesichts folgt und knapp ueber der Haut liegt;
-    # die Augenoeffnung bleibt frei. Dazu ein Steg ueber der Nasenwurzel.
-    for s in (-1, 1):
-        punkte, flaechen, N, M = [], [], 40, 5
-        for i in range(N):
-            w = 2 * math.pi * i / N
-            for j in range(M + 1):
-                t = j / M
-                dx, dz = math.cos(w) * (0.030 + 0.017 * t), math.sin(w) * (0.0185 + 0.0165 * t)
-                x, z = s * (fx.AX + 0.004) + dx, fx.AZ + 0.002 + dz
-                punkte.append((x, fx.haut_vorn(x, z) - 0.0016 * math.sin(math.pi * min(1, t * 1.15)), z))
-        for i in range(N):
-            for j in range(M):
-                a0, b0 = i * (M + 1) + j, ((i + 1) % N) * (M + 1) + j
-                flaechen.append((a0, b0, b0 + 1, a0 + 1))
-        ob = netz("brillenabdruck", k, punkte, flaechen, blass)
-        ob.data.materials[0].use_backface_culling = False
-    g.kugel("brillenabdruck", k, (0, fx.haut_vorn(0, fx.AZ + 0.006) + 0.002, fx.AZ + 0.006), (0.02, 0.01, 0.007), blass, fein=16)
-
-    # Haare: orange Locken, die rund um die zu kleine Kappe hervorquellen (Mr. Alex 20.11.: die Tolle spaltete die Kappe – zurueck zu den Locken).
-    # Alles bleibt unter dem Rand der Kappe oder in ihrer Kuppel, damit sie in einem Stueck auf dem Kopf sitzt.
-    haar = g.farbe("tou_haar", ORANGE, 0.8)
+    # Haare (Mr. Alex 20.11.: keine Wuelste, EIN Teil, die Muetze liegt darauf): eine glatte Haube wie ein Topfschnitt – orange, gerader Pony knapp ueber den Brauen,
+    # an den Seiten bis ueber die Ohren, hinten bis in den Nacken; der Rand ist leicht gewellt und nach innen umgeschlagen, damit die Haube Dicke hat.
+    haar = g.farbe("tou_haar", ORANGE, 0.7)
     oben = fx.CZ + fx.RZ
-    g.kugel("haar_hinten", k, (0, 0.03, fx.CZ + 0.012), (fx.RX + 0.006, fx.RY + 0.004, fx.RZ + 0.004), haar, fein=32)
-    for s in (-1, 1):
-        for x, y, z, dick, dreh in ((fx.RX + 0.012, 0.0, oben - 0.085, 0.036, 0.5), (fx.RX + 0.02, 0.03, oben - 0.115, 0.034, 0.9), (fx.RX - 0.03, -0.085, oben - 0.07, 0.03, 0.3), (0.045, -0.115, oben - 0.068, 0.03, 0.1),
-                                  (fx.RX - 0.01, 0.09, oben - 0.1, 0.034, 0.6), (0.05, 0.14, oben - 0.105, 0.034, 0.2)):
-            g.kugel("haar_bueschel", k, (s * x, y, z), (dick * 1.3, dick, dick * 0.8), haar, dreh=(0, s * -dreh, 0), fein=14)
+    hx, hy, hz, hcy, hcz = fx.RX + 0.014, fx.RY + 0.014, fx.RZ + 0.012, 0.006, fx.CZ + 0.004
+    punkte, flaechen, N, M = [], [], 72, 22
+    for i in range(N):
+        ph = 2 * math.pi * i / N
+        vorn, hinten = max(0.0, -math.sin(ph)), max(0.0, math.sin(ph))
+        rand = 0.168 + vorn ** 2 * 0.082 - hinten ** 2 * 0.075 + 0.005 * math.sin(7 * ph)   # Hoehe des Haarrands: Pony vorn, Ohren, Nacken
+        ende = math.acos(max(-1.0, min(1.0, (rand - hcz) / hz)))
+        for j in range(M + 1):
+            th = max(0.02, ende * j / M)
+            punkte.append((hx * math.sin(th) * math.cos(ph), hcy + hy * math.sin(th) * math.sin(ph), hcz + hz * math.cos(th)))
+        th = ende
+        punkte.append((0.9 * hx * math.sin(th) * math.cos(ph), hcy + 0.9 * hy * math.sin(th) * math.sin(ph), hcz + hz * math.cos(th) + 0.006))   # umgeschlagener Rand
+    for i in range(N):
+        for j in range(M + 1):
+            a0, b0 = i * (M + 2) + j, ((i + 1) % N) * (M + 2) + j
+            flaechen.append((a0, a0 + 1, b0 + 1, b0))
+    netz("haar_haube", k, punkte, flaechen, haar)
 
     # Kappe (Mr. Alex 20.11., nach seinen Bildern): eine richtige Baseballkappe, die Flagge gross ueber die ganze Kuppel, roter Schirm. Sie ist ihm zu klein und sitzt
-    # fest oben auf dem Kopf, leicht schief – rundum quellen die Locken darunter hervor. Eigenes Gelenk "kappe".
+    # fest oben auf der Haarhaube, leicht schief. Eigenes Gelenk "kappe".
     kap = g.gelenk("kappe", k, (0.004, 0.012, oben - 0.03))
     kap.rotation_euler = (math.radians(8), math.radians(4), 0)
     stoffbild, rot = stoff("tou_kappe", 0.75), g.farbe("tou_rot", ROT, 0.6)

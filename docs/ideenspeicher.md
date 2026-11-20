@@ -81,6 +81,13 @@ Neue Fächer/Apps: Zeile anhängen, Kürzel vergeben.
 
 **Regel 12.11.: Baustopp für Neues bis nach dem 25.11. (nur Fehler; Ausnahme Road to GLN EN9), dauerhaft nur ein Bau-Chat gleichzeitig.** Geparkt bis dahin: Sync Stufe A für FR, Sync Stufe B. GLN-Formate aller bisherigen GLN: `docs/archiv/gln-formate.md` (EN6 GLN 1 + 2, EN9 GLN 1; EN9 GLN 2 folgt).
 
+## Stand Master (20.11.2026, spät) – neuer Master `session_01SLMVvpMtF2JsxBSuXvt1Rt`; gilt vor der Übergabe darunter
+- **Erledigt:** Erinnerung nach den GLN neu gestellt (`trig_01MUNA6koCEjaKk4fCrdWZ9T`, Do 26.11., 16 Uhr; die alte `trig_01C9cPmstr4cwxDbFny86gEx` ließ sich nicht löschen und meldet sich zusätzlich im alten Master) · Bau-Chat Figuren 10 hat die neue Master-Kennung · OK für Doku-Pushes aus dem Master bestätigt.
+- **Entschieden Mr. Alex:** die sieben walisischen Wörter stehen (Barddoniaeth, Soniarus, Hiraeth, Agoriad; Erinnerung = atgofion, Zeit = curiad, Wahrheit = gwirionedd; im Wörterbuch geprüft, Einzelheiten in `seven-keys-grosse-geschichte.md` Abschnitt 0) · **Mr. Flex ist das Abbild von Mr. Alex** (dort Abschnitt 0).
+- **Vorgehen bei den Prüfberichten (Mr. Alex):** Schritt für Schritt, **je Antwort eine Prüfung komplett und ungekürzt im Chat** (keine Auszüge, kein „das Wichtigste“), dazu Fragen; er schreibt manches selbst in Ruhe aus. Danach die Geschichte **immer wieder von Prüf-Agenten prüfen lassen**. Zusätzliche Maßstäbe für jede Prüfung: Mr. Alex als Lehrer und als Figur (Mr. Flex), **Interaktion statt langer Filmszenen** (sein Lernmantra: kein stumpfer Konsum), Stimmigkeit bis in den großen Handlungsstrang, Potenzial für eine starke Fortsetzung.
+- **Idee Mr. Alex (noch nicht gebaut):** ein Blatt „Kernwissen für Prüf-Agenten“ – über ihn, die Lerngruppe, seine Sicht auf Geschichten und was eine gute Geschichte ausmacht –, das jeder Prüf-Agent zuerst liest; die Agenten vom 20.11. wussten nicht alles.
+- **Stand der Durchsicht:** Prüfung 1 (Sicht der Kinder) am 20.11. spät vorgelegt, Antwort von Mr. Alex steht aus; Prüfungen 2–4 folgen.
+
 ## Übergabe Master (20.11.2026, abends) – für `/load MASTER` – gilt vor allem darunter
 Alter Master: `School · MASTER · bis 20.11.` (`session_01SLMVvmGwEzzAoY59AYqYrP`, 19.–20.11., bei 54 % Kontext gesichert; archivieren, sobald die Erinnerung umgehängt ist). Neuer Master: `School · MASTER`, **von Mr. Alex selbst geöffnet**, Modell Fable (`claude-fable-5-2`).
 

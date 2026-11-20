@@ -1205,6 +1205,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     zeige() { if (!pl.teil) return false; pl.zeigT = ZEIG; return true; },                                                          // Tourist: zeigt groß zur Seite (in die falsche Richtung)
     kopfSchau(winkel, dauer) { pl.schauZiel = winkel; pl.schauBis = dauer; pl.auto = Math.max(pl.auto, dauer + 1); },                // Kopf zur Seite drehen (+ = nach links) und nach `dauer` Sekunden zurück
     augen(z) { g.blickZiel = z * 1.1; g.blickBis = 0.7; },                                                                           // nur die Pupillen: +1 links, −1 rechts
+    stopp() { if (g.modus === "gehen") { g.haltJetzt = true; starte("stehen"); g.haltJetzt = false; } },                                     // weiche Figuren: sofort stehen bleiben (jemand steht im Weg)
     kopfHoch(x, dauer) { pl.nickZiel = x; pl.nickBis = dauer; },                                                                    // Kopf senken (+) oder heben (−) und nach `dauer` Sekunden zurück
     /* Weiche Figuren gehen frei über den Platz: geheNach = in eine Richtung drehen (mit kleinen Tritten) und so weit gehen; dreheNach = nur drehen, dann stehen bleiben. kurs: 0 = nach Süden (+z), π/2 = nach Osten (+x) */
     geheNach(kurs, strecke) { g.kurs = kurs; g.rest = strecke; g.tritt = false; if (g.px === undefined) { g.px = anker.position.x; g.pz = anker.position.z; g.gesamt = 0; } starte("gehen"); },

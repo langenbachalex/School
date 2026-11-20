@@ -926,6 +926,16 @@ async function hofTest(browser, basis, app, name, fm) {
         if (rf.dauer < 6 || rf.dauer > 20) fehl.push(`${t}: Arthurs Runde dauert ${rf.dauer.toFixed(1)} s (erwartet 6 bis 20 s)`);
         if (!gleich(rf.ende, rf.ruhe)) fehl.push(`${t}: nach der Runde sitzt Arthur nicht wieder an seinem Platz`);
       }
+      // Raben zeigen beim Antippen ihren Namen (Figuren 9, Schritt 4): Arthur vorn am Platz und ein Rabe auf der Mauer
+      for (const wer of ["arthur", "guinevere"]) {
+        const ort = await pg.evaluate((w) => { const p = window.__probe3d, v = w === "arthur" ? p.vogel() : p.raben().find((r) => r.wer === w); if (!v) return null; p.blick([v.ort[0] - 2.2, v.ort[1] + 0.9, v.ort[2] + 2.2], [v.ort[0], v.ort[1] + 0.4, v.ort[2]]); return true; }, wer);
+        if (!ort) { fehl.push(`${t}: Rabe „${wer}“ fehlt für den Namens-Test`); continue; }
+        await pg.waitForTimeout(250); const s = await pg.evaluate((w) => window.__probe3d.rabeAmSchirm(w), wer);
+        await pg.mouse.click(s.x, s.y); await pg.waitForTimeout(200);
+        const name = await pg.evaluate(() => ({ daten: document.getElementById("buehne").dataset.rabenname || "", schild: document.getElementById("rabenname").hidden ? "" : document.getElementById("rabenname").textContent }));
+        if (name.daten !== s.name || name.schild !== s.name) fehl.push(`${t}: Tipp auf den Raben ${s.name} zeigt „${name.schild || "nichts"}“ statt seines Namens`);
+      }
+      await pg.evaluate(() => window.__probe3d.blick(null));
       // Die Taube (Figuren 9, 20.11.): halb so hoch wie Arthur; Tauben-Gang – sie trippelt schnell, der Kopf steht je Schritt still und schnellt dann vor, bleibt dabei waagerecht –,
       // „Guess what!“-Hüpfer mit flatternden Flügeln, Picken am Boden
       const tb = await pg.evaluate(() => { const p = window.__probe3d; if (!p.taube || !p.taube()) return null; p.taubeHalt(true); const ruhe = p.taube(), ok = p.taubeTut("bahn");
@@ -962,14 +972,20 @@ async function hofTest(browser, basis, app, name, fm) {
         let sprung = 0, langsam = 9, schnell = 0, vor = p.touristWeg(), dreh = 0, neig = 0, schau = 0, hoch = 0, haengt = 9;
         for (let i = 0; i < 1100; i++) { p.touristTakt(1, 20); const o = p.touristWo(), s = p.touristPlan(), w = p.touristWeg(); weit = Math.max(weit, Math.hypot(o.x - o0.x, o.z - o0.z)); if (s.modus === "gehen") ging = true; else if (ging) stand = true; if (s.modus === "stehen" && s.geh < 0.03 && s.haende > 0.98) { eng = Math.min(eng, s.abstand); breit = Math.max(breit, s.abstand); hoch = s.ort[1]; } if (s.geh > 0.97) haengt = s.ort[1]; neig = Math.max(neig, Math.abs(s.neig)); schau = Math.max(schau, Math.abs(s.schau));
           sprung = Math.max(sprung, Math.abs(w.weg - vor.weg)); if (w.modus === "gehen" && !w.wendet) { langsam = Math.min(langsam, w.fahrt); schnell = Math.max(schnell, w.fahrt); } if (w.wendet && w.modus === "gehen") dreh++; vor = w; }
+        let sperre = null, nah = 9, stutzt = false; for (let i = 0; i < 1500 && !sperre; i++) { p.touristTakt(1, 20); const w = p.touristWeg(); if (w.modus === "gehen" && !w.wendet && w.fahrt > 0.9 && w.rest > 1) sperre = p.touristSperre(true); }
+        if (sperre) for (let i = 0; i < 60; i++) { p.touristTakt(1, 20); const w = p.touristWeg(); nah = Math.min(nah, Math.hypot(w.x - sperre.x, w.z - sperre.z)); if (w.stufe === "stutzt") stutzt = true; }
+        p.touristSperre(false);
         const b = p.touristPlan(); p.touristTut("zeigen"); let los = 1; for (let i = 0; i < 40; i++) { p.touristTakt(1, 20); los = Math.min(los, p.touristPlan().haende); }
-        return { a, b, weit, ging, stand, eng, breit, los, sprung, langsam, schnell, dreh, neig, schau, hoch, haengt, kopf: p.tourist().kopf || null }; });
+        return { a, b, weit, ging, stand, eng, breit, los, sprung, langsam, schnell, dreh, neig, schau, hoch, haengt, sperre: !!sperre, nah, stutzt, kopf: p.tourist().kopf || null }; });
       if (!tr) fehl.push(`${t}: der Tourist oder sein Stadtplan fehlt im Hof`);
       else {
         if (!tr.ging || !tr.stand) fehl.push(`${t}: der Tourist wechselt nicht zwischen Latschen und Stehenbleiben`);
         // Mr. Alex 20.11.: Loslaufen und Stehenbleiben wirkten wie Teleportieren – er fährt an und läuft aus, springt nie und dreht sich mit Tritten im Gehen um
         if (tr.sprung > 0.03) fehl.push(`${t}: der Tourist springt beim Gehen (${tr.sprung.toFixed(3)} m in einem Bild)`);
         if (tr.langsam > 0.4 || tr.schnell < 0.9) fehl.push(`${t}: der Tourist fährt nicht an oder läuft nicht aus (Tempo zwischen ${tr.langsam} und ${tr.schnell} seines Gangs, erwartet unter 0,4 bis über 0,9)`);
+        // Ausweichen (Mr. Alex 20.11.): steht etwas im Weg, bleibt er verdutzt stehen und läuft nicht hinein
+        if (!tr.sperre) fehl.push(`${t}: der Tourist kam im Test nie in vollen Gang – das Ausweichen ließ sich nicht prüfen`);
+        else if (!tr.stutzt || tr.nah < 0.55) fehl.push(`${t}: der Tourist weicht einem Hindernis im Weg nicht aus (stutzt: ${tr.stutzt}, kam bis auf ${tr.nah.toFixed(2)} m heran; Sperrkreis 0,5 m)`);
         if (tr.dreh < 8) fehl.push(`${t}: der Tourist dreht sich nicht mit kleinen Tritten in eine neue Richtung (nur ${tr.dreh} Bilder)`);
         if (tr.weit < 0.8 || tr.weit > 12) fehl.push(`${t}: der Tourist entfernt sich ${tr.weit.toFixed(2)} m von seinem Platz (erwartet: er irrt über ein Feld von 10 × 10 m, mindestens 0,8 m weit)`);
         if (tr.neig < 0.25 || tr.neig > 0.5) fehl.push(`${t}: der Tourist neigt seinen Stadtplan nicht hin und her (höchstens ${tr.neig}; erwartet rund 20 Grad)`);

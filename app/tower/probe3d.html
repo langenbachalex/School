@@ -127,6 +127,12 @@
   <button type="button" class="nurhof" data-rabetut="reihe" aria-pressed="false" hidden>Alle Raben in einer Reihe</button>
   <button type="button" class="nurhof" data-rabetut="mordred" hidden>Mordred hebt die Flügel</button>
   <button type="button" class="nurhof" data-rabetut="schluessel" aria-pressed="false" hidden>Schlüssel im Schnabel</button>
+  <span class="nurhof" hidden>Die Taube</span>
+  <button type="button" class="nurhof" data-taubetut="bahn" hidden>Lange Bahn gehen</button>
+  <button type="button" class="nurhof" data-taubetut="huepfe" hidden>„Guess what!“</button>
+  <button type="button" class="nurhof" data-taubetut="flattere" hidden>Flattern</button>
+  <button type="button" class="nurhof" data-taubetut="picke" hidden>Picken</button>
+  <button type="button" class="nurhof" data-taubetut="rede" aria-pressed="false" hidden>Reden</button>
   <span>Maße (1 = wie heute)</span>
   <label>Arm <output>1,80</output><input type="range" data-mass="arm" min="1" max="2.6" step="0.05" value="1.8" aria-label="Armlänge"></label>
   <label>Bein <output>3,00</output><input type="range" data-mass="bein" min="1" max="4" step="0.05" value="3" aria-label="Beinlänge"></label>
@@ -172,7 +178,7 @@ import { MeshoptDecoder } from "./lib/meshopt_decoder.module.js";   // entpackt 
 import { ladeFiguren, mundAusZeiten, einsaetzeAus, MUNDFORMEN_MENSCH } from "./probe3d_figuren.js";
 import { ladeBauProbe, GESTEN, rundeOrt, SERGEANT } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
-import { bauVogel, ladeVogel, RABENREIHE } from "./vogel_bau.js";   // Figuren 7 (19.11.): Arthur, der Rabe – nur im Hof
+import { bauVogel, ladeVogel, ladeTaube, RABENREIHE } from "./vogel_bau.js";   // Figuren 7 (19.11.): Arthur, der Rabe – nur im Hof
 import { machStand, SCHRITTE, SCHRITT_NAMEN, uhrText } from "./stand.js";   // Block B1 (20.11.): Stand der Geschichte – nur mit ?spiel=1, sonst bleibt die Probe, wie sie ist
 import { bauZeiger } from "./uhr.js";
 import { machGespraeche } from "./gespraech.js";   // Block B2 (20.11.): Gespräche und Filme aus der Tabelle in den Daten
@@ -362,6 +368,13 @@ try {
   const andereRaben = arthur && sucht.get("rabe") !== "einfach" ? await Promise.all(RABENREIHE.map(async (wer, i) => { if (wer === "arthur") return null;
     const r = await ladeVogel(lader, wer), platz = hof.plan.raben[i], klotz = hof.scene.getObjectByName("hof_rabe" + (i + 1));
     r.setze(platz.x - 0.25, hof.plan.masse.rabenmauer.hoch, platz.z, -Math.PI / 2); szene.add(r.wurzel); if (klotz) klotz.visible = false; return r; })).then((l) => l.filter(Boolean)) : [];
+  /* Die Taube (Figuren 9, 20.11.): steht frei links neben dem Startpunkt; nicht im Spiel (?spiel=1), dort stellt sie später die Geschichte hin.
+     Lange Bahn (Mr. Alex: Gang auf langer gerader Strecke zeigen): 12 m quer vor dem Kind nach Osten und zurück */
+  const taube = hof && !sucht.has("spiel") ? await ladeTaube(lader) : null; let taubeHalt = false;
+  const taubePlatz = () => ({ x: hof.plan.start.x - 1.6, z: hof.plan.start.z - 3.2 });
+  const taubeBahn = () => { const p = taubePlatz(); return taube.gehe([{ x: p.x - 4, z: p.z - 1 }, { x: p.x + 8, z: p.z - 1 }, { x: p.x - 4, z: p.z - 1 }, p]); };
+  if (taube) { const p = taubePlatz(); taube.setze(p.x, 0, p.z, 0); szene.add(taube.wurzel);
+    for (const b of document.querySelectorAll("#bau button[data-taubetut]")) b.addEventListener("click", () => ({ bahn: taubeBahn, huepfe: () => taube.huepfe(), flattere: () => taube.flattere(), picke: () => taube.picke(), rede: () => b.setAttribute("aria-pressed", String(taube.rede(b.getAttribute("aria-pressed") !== "true"))) })[b.dataset.taubetut]()); }
   /* Zum Vergleichen (Mr. Alex: Figuren frei in die Mitte stellen): alle sieben in einer Reihe vor dem Kind, Arthur in der Mitte, Blick nach Süden – oder zurück auf die Mauer */
   const rabeTut = (wer, was) => { const r = andereRaben.find((x) => x.zustand().wer === wer); return r ? r[was]() : false; };
   function rabenReihe(an) {
@@ -669,7 +682,7 @@ try {
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1), t0 = performance.now(); zuletzt = t;
     bewegeFigur(dt, t);
-    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); if (arthur && !rabeHalt) arthur.bewege(dt); for (const r of andereRaben) r.bewege(dt); for (const s of sergeants) s.bewege(dt); }
+    if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); if (arthur && !rabeHalt) arthur.bewege(dt); for (const r of andereRaben) r.bewege(dt); if (taube && !taubeHalt) taube.bewege(dt); for (const s of sergeants) s.bewege(dt); }
     if (geschichte) geschichte.bewege(dt);
     setzeKamera(dt);
     renderer.render(szene, kamera);
@@ -829,7 +842,7 @@ try {
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), rabenReihe: (an) => rabenReihe(an), rabeTut, raben: () => andereRaben.map((r) => r.zustand()), vogelPluster: () => arthur.plustere(), vogelSchluessel: (an) => arthur.schluessel(an), vogelDreh: (d) => { rabeSitz = null; arthur.setze(arthur.wurzel.position.x, arthur.wurzel.position.y, arthur.wurzel.position.z, d); }, vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
+  window.__probe3d = { taube: () => (taube ? taube.zustand() : null), taubeTut: (was, wert) => (was === "bahn" ? taubeBahn() : taube[was](wert)), taubeHalt: (an) => { taubeHalt = an; taube.halt(an); }, taubeTakt: (n, ms) => { for (let i = 0; i < n; i++) taube.bewege(ms / 1000); }, vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), rabenReihe: (an) => rabenReihe(an), rabeTut, raben: () => andereRaben.map((r) => r.zustand()), vogelPluster: () => arthur.plustere(), vogelSchluessel: (an) => arthur.schluessel(an), vogelDreh: (d) => { rabeSitz = null; arthur.setze(arthur.wurzel.position.x, arthur.wurzel.position.y, arthur.wurzel.position.z, d); }, vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
     blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)
     sergeant: () => sergeants.map((s) => s.zustand()), sergeantKopf: (was) => sergeants.forEach((s) => s.kopf(was)), sergeantMund: (form) => sergeants.forEach((s) => s.mund(form)), sergeantBahn: (lang) => sergeants[0].bahn(lang), sergeantBefehl: (was) => sergeants[0].befehl(was), sergeantArme: () => sergeants[0].arme(), sergeantHals: () => sergeants[0].halsSitz(), bauHals: () => bauProbe.halsSitz(), bauMund: (form) => bauProbe.mund(form), regie: (wer, id, zeit) => { const p = PROBEN[wer], schritte = id && regieSchritte(regieDaten[id], p.mund[id]); p.probe.regie(schritte ? { schritte, zeit: () => zeit } : null); return schritte; }, probeKopf: (wer, was) => PROBEN[wer].probe.kopf(was), probeMund: (wer, form) => PROBEN[wer].probe.mund(form),   // Prüfbilder: Gesicht und Mund einer Probe-Figur stellen
     bau: () => bauProbe.zustand(), bauGruss: () => bauProbe.gruss(), bauBahn: (lang) => bauProbe.bahn(lang), bauTakt: (n, ms) => { for (let i = 0; i < n; i++) { bewegeMund(ms / 1000); bauProbe.bewege(ms / 1000); } },   // PROBE A3

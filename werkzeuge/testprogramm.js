@@ -926,6 +926,37 @@ async function hofTest(browser, basis, app, name, fm) {
         if (rf.dauer < 6 || rf.dauer > 20) fehl.push(`${t}: Arthurs Runde dauert ${rf.dauer.toFixed(1)} s (erwartet 6 bis 20 s)`);
         if (!gleich(rf.ende, rf.ruhe)) fehl.push(`${t}: nach der Runde sitzt Arthur nicht wieder an seinem Platz`);
       }
+      // Die Taube (Figuren 9, 20.11.): halb so hoch wie Arthur; Tauben-Gang – sie trippelt schnell, der Kopf steht je Schritt still und schnellt dann vor, bleibt dabei waagerecht –,
+      // „Guess what!“-Hüpfer mit flatternden Flügeln, Picken am Boden
+      const tb = await pg.evaluate(() => { const p = window.__probe3d; if (!p.taube || !p.taube()) return null; p.taubeHalt(true); const ruhe = p.taube(), ok = p.taubeTut("bahn");
+        let steht = 0, n = 0, schief = 0, tief = 0, vor = p.taube(), weg = 0;
+        for (let i = 0; i < 80; i++) p.taubeTakt(1, 10);                                        // erst in den Gang kommen und zur Bahn drehen
+        const start = p.taube(); vor = start;
+        for (let i = 0; i < 300; i++) { p.taubeTakt(1, 10); const v = p.taube(), k = Math.hypot(v.kopfOrt[0] - vor.kopfOrt[0], v.kopfOrt[2] - vor.kopfOrt[2]), kp = Math.hypot(v.ort[0] - vor.ort[0], v.ort[2] - vor.ort[2]);
+          n++; weg += kp; if (k < kp * 0.25) steht++; schief = Math.max(schief, Math.abs(v.kopfNeig)); tief = Math.min(tief, v.fussTief); vor = v; }
+        const geht = p.taube(); for (let i = 0; i < 9000 && p.taube().tut === "geht"; i++) p.taubeTakt(1, 20);
+        const zurueck = p.taube(), okH = p.taubeTut("huepfe"); let hoch = 0, fluegel = 0, m = 0;
+        while (p.taube().tut === "huepft" && m < 400) { p.taubeTakt(1, 10); const v = p.taube(); hoch = Math.max(hoch, v.ort[1] + v.fussTief); fluegel = Math.max(fluegel, v.fluegel); m++; }
+        const okP = p.taubeTut("picke"); let kopfTief = 9, q = 0; while (p.taube().tut === "pickt" && q < 400) { p.taubeTakt(1, 10); kopfTief = Math.min(kopfTief, p.taube().kopfOrt[1]); q++; }
+        for (let i = 0; i < 30; i++) p.taubeTakt(1, 10);
+        const ende = p.taube(); p.taubeHalt(false); return { ruhe, ok, start, geht, steht: steht / n, schief, tief, tempo: weg / 3, schritte: geht.schritte - start.schritte, zurueck, okH, hoch, fluegel, huepfDauer: m * 0.01, okP, kopfTief, ende }; });
+      if (!tb) fehl.push(`${t}: die Taube fehlt im Hof`);
+      else {
+        const ah = await pg.evaluate(() => window.__probe3d.vogel().hoch);
+        if (tb.ruhe.hoch < ah * 0.4 || tb.ruhe.hoch > ah * 0.6) fehl.push(`${t}: die Taube ist ${tb.ruhe.hoch} m hoch, Arthur ${ah} m (erwartet: halb so hoch wie Arthur)`);
+        if (Math.abs(tb.ruhe.fussTief) > 0.01) fehl.push(`${t}: die Taube steht nicht auf dem Boden (Füße bei ${tb.ruhe.fussTief} m)`);
+        if (!tb.ok || tb.geht.tut !== "geht") fehl.push(`${t}: die Taube geht nicht los (Knopf „Lange Bahn gehen“)`);
+        if (tb.schritte < 12 || tb.schritte > 20) fehl.push(`${t}: die Taube macht in 3 s ${tb.schritte} Schritte (erwartet 12 bis 20: sie trippelt sehr schnell)`);
+        if (tb.tempo < 0.3 || tb.tempo > 0.6) fehl.push(`${t}: die Taube geht ${tb.tempo.toFixed(2)} m/s (erwartet 0,3 bis 0,6)`);
+        if (tb.steht < 0.4 || tb.steht > 0.75) fehl.push(`${t}: Tauben-Gang – der Kopf steht nur in ${(tb.steht * 100).toFixed(0)} % der Zeit still (erwartet 40 bis 75 %: Kopf hält an, Körper läuft nach, dann schnellt der Kopf vor)`);
+        if (tb.schief > 0.02) fehl.push(`${t}: der Kopf der Taube kippt beim Nicken (${tb.schief}); er soll waagerecht bleiben`);
+        if (tb.tief < -0.02) fehl.push(`${t}: die Füße der Taube tauchen beim Gehen in den Boden (${tb.tief} m)`);
+        if (tb.zurueck.tut !== "steht" || Math.hypot(tb.zurueck.ort[0] - tb.ruhe.ort[0], tb.zurueck.ort[2] - tb.ruhe.ort[2]) > 0.05) fehl.push(`${t}: die Taube kommt von der langen Bahn nicht an ihren Platz zurück`);
+        if (!tb.okH || tb.hoch < 0.06 || tb.fluegel < 0.3) fehl.push(`${t}: „Guess what!“-Hüpfer der Taube fehlt oder ist zu klein (hoch ${tb.hoch.toFixed(2)} m, Flügel ${tb.fluegel})`);
+        if (tb.huepfDauer < 0.4 || tb.huepfDauer > 1) fehl.push(`${t}: der Hüpfer der Taube dauert ${tb.huepfDauer.toFixed(2)} s (erwartet 0,4 bis 1 s)`);
+        if (!tb.okP || tb.kopfTief > tb.ruhe.kopfOrt[1] * 0.6) fehl.push(`${t}: die Taube pickt nicht bis zum Boden (Kopf bei ${tb.kopfTief} m, in Ruhe ${tb.ruhe.kopfOrt[1]} m)`);
+        if (tb.ende.tut !== "steht" || Math.abs(tb.ende.hals) > 0.01 || tb.ende.fluegel > 0.01) fehl.push(`${t}: nach Hüpfer und Picken steht die Taube nicht wieder ruhig`);
+      }
       // drei Kameras: wählbar, über dem Boden, „hinter der Figur“ bleibt auf dem Platz
       for (const k of ["puppenhaus", "augen", "hinten"]) {
         await pg.click(`#kameras button[data-kamera="${k}"]`); await pg.waitForTimeout(300);

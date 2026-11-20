@@ -188,7 +188,7 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
   function bewege(dt) {
     z.zeit += dt;
     if (flug.tut !== "sitzt") { bewegeFlug(dt); z.warte = Math.max(z.warte, 1); }
-    { const atem = 1 + Math.sin(z.zeit * 1.1) * 0.012; koerper.scale.set(kMass[0] * atem, kMass[1] * atem, kMass[2] * atem); }   // atmen
+    { const atem = 1 + Math.sin(z.zeit * 1.1) * 0.012; koerper.scale.set(kMass[0] * atem, kMass[1] * atem, kMass[2] * atem); }   // atmen
     if (flug.tut === "sitzt" && pl.t < 0 && (pl.warte -= dt) <= 0) { pl.warte = zufall(P.plusterOft); pl.t = 0; }   // manche plustern sich von selbst
     if (pl.t >= 0) {                                                                      // plustern: Kehlfedern stellen sich auf, der Körper wird runder, ein kurzes Schütteln, alles legt sich wieder
       pl.t += dt; const u = pl.t / P.pluster.dauer; pl.auf = u >= 1 ? 0 : stufen(u, [[0, 0], [0.22, 1], [0.7, 1], [1, 0]]); if (u >= 1) pl.t = -1;
@@ -355,4 +355,107 @@ function verhalten(wer, wurzel, g, augen, bau = "programm") {
   /* setze: Ort der Füße und Blickrichtung (0 = nach Süden, +z) */
   const setze = (x, y, zz, dreh = 0) => { wurzel.position.set(x, y, zz); wurzel.rotation.y = dreh; };
   return { wurzel, g, bewege, zustand, setze, schau, fluegelschlag, lande, fliege, plustere, schluessel };
+}
+
+/* ---------- Die Taube (Figuren 9, 20.11.2026) ----------
+   Eigener Körper aus Blender (werkzeuge/blender/tower_taube.py), eigenes Verhalten – das genaue Gegenteil von Arthur (Figurenblatt):
+   der Kopf ruckt alle halbe Sekunde in eine neue Richtung, sie trippelt sehr schnell und nickt bei jedem Schritt, flattert beim Reden.
+   Der Tauben-Gang (Wunsch Mr. Alex 20.11.): Der Kopf schnellt vor und bleibt dann in der Luft stehen, während der Körper unter ihm nachläuft –
+   je Schritt einmal. Dafür kippt der Hals um sein Gelenk tief in der Brust, der Kopf dreht gegen und bleibt waagerecht.
+   gang: tempo m/s · schritt = Sekunden je Schritt · halt = Anteil des Schritts, in dem der Kopf steht · hals, bein = Längen im Modell (m) */
+export const TAUBE = {
+  name: "Die Taube", gross: 1.15, datei: "figuren/taube.glb",   // gut 0,37 m: halb so hoch wie Arthur
+  blick: { pause: [0.35, 0.8], weit: 1.1, schief: 0.3, schiefOft: 0.3, ruck: 22 },
+  blinzeln: [1.2, 3],
+  hell: { farbe: 0xc9d2dc, stark: 0.07 },                         // eigenes Hell des Gefieders (kühl), damit sie auch im Abendlicht fast weiß bleibt
+  gang: { tempo: 0.42, schritt: 0.19, halt: 0.62, hals: 0.114, bein: 0.078, wackel: 0.05, heben: 0.014, wenden: 7 },
+  flattern: { takt: 0.1, weit: 0.6, dauer: 0.7 },                // ein Flügelschlag (Sekunden) · wie weit die Flügel abstehen (Bogenmaß) · so lange flattert sie
+  huepfer: { dauer: 0.3, hoch: 0.1, zahl: 2 },                   // „Guess what! Guess what!“: zwei schnelle Hüpfer
+  picken: { dauer: 1.1, tief: 1.0, zahl: 2, pause: [6, 13] },    // am Boden picken: Sekunden · wie weit der Hals kippt · wie oft · Sekunden zwischen zwei Malen von selbst
+};
+
+export async function ladeTaube(lader) {
+  const P = TAUBE, G = P.gang, gltf = await lader.loadAsync(P.datei), teil = (n) => gltf.scene.getObjectByName("taube_" + n);
+  const wurzel = new THREE.Group(); wurzel.name = "vogel_taube";
+  const figur = new THREE.Group(); figur.scale.setScalar(P.gross); figur.add(gltf.scene); wurzel.add(figur);
+  const g = { figur, koerper: teil("koerper"), hals: teil("hals"), kopf: teil("kopf"), schnabel_unten: teil("schnabel_unten"), fluegel_l: teil("fluegel_l"), fluegel_r: teil("fluegel_r"), schwanz: teil("schwanz"), bein_l: teil("bein_l"), bein_r: teil("bein_r"), fuss_l: teil("fuss_l"), fuss_r: teil("fuss_r"), auge_l: teil("auge_l"), auge_r: teil("auge_r") };
+  for (const [n, o] of Object.entries(g)) if (!o) throw new Error(`Taube: Gelenk ${n} fehlt in ${P.datei}`);
+  for (const s of ["l", "r"]) for (const n of ["arm_", "handoffen_"]) { const o = teil(n + s); if (o) { o.visible = false; o.scale.setScalar(0.001); } }   // Teile des ausgebreiteten Flügels: erst fürs Auffliegen gebraucht
+  { const fertig = new Set(); wurzel.traverse((o) => { if (o.isMesh && o.material && o.material.name === "gefieder" && !fertig.has(o.material)) { fertig.add(o.material); o.material.emissive = new THREE.Color(P.hell.farbe); o.material.emissiveIntensity = P.hell.stark; } }); }   // im warmen Abendlicht des Hofs wirkte sie braun statt fast weiß: ein wenig eigenes Hell
+  const glatt = (x) => { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }, bruch = (x) => x - Math.floor(x);
+  const beine = [["l", 0], ["r", 0.5]].map(([s, versatz]) => ({ bein: g["bein_" + s], fuss: g["fuss_" + s], hoch: g["bein_" + s].position.y, versatz }));
+  const fluegel = [["l", 1], ["r", -1]].map(([s, v]) => ({ o: g["fluegel_" + s], v, achse: new THREE.Vector3(...g["fluegel_" + s].userData.wd).normalize(), kante: new THREE.Vector3(...g["fluegel_" + s].userData.e).normalize() }));
+  const qKante = new THREE.Quaternion();
+  const z = { zeit: 0, tut: "steht", t: 0, phi: 0, geht: 0, weg: [], warte: 0.3, zielY: 0, zielZ: 0, blinzel: zufall(P.blinzeln), zu: 0, flattert: 0, redet: false, pickWarte: zufall(P.picken.pause), drehungen: 0, schritte: 0, halt: false };
+  const amp = Math.asin(Math.min(0.9, G.tempo * G.schritt / P.gross / (2 * G.bein))), hub = G.tempo * G.schritt * G.halt / P.gross;   // so weit schwingt das Bein · so weit steht der Kopf je Schritt still (Modellmaß)
+  const drehZu = (ist, soll, weit) => { const d = Math.atan2(Math.sin(soll - ist), Math.cos(soll - ist)); return ist + Math.max(-weit, Math.min(weit, d)); };
+
+  function bewege(dt) {
+    z.zeit += dt; z.t += dt;
+    /* gehen: auf den nächsten Punkt zu drehen und trippeln */
+    if (z.tut === "geht") {
+      const p = wurzel.position, ziel = z.weg[0], dx = ziel.x - p.x, dz = ziel.z - p.z, weit = Math.hypot(dx, dz), schritt = Math.min(weit, G.tempo * dt);
+      wurzel.rotation.y = drehZu(wurzel.rotation.y, Math.atan2(dx, dz), G.wenden * dt);
+      if (weit > 1e-6) { p.x += dx / weit * schritt; p.z += dz / weit * schritt; }
+      const vor = Math.floor(z.phi); z.phi += dt / G.schritt; z.schritte += Math.floor(z.phi) - vor;
+      if (weit - schritt < 0.01) { z.weg.shift(); if (!z.weg.length) { z.tut = "steht"; z.t = 0; } }
+    }
+    z.geht += ((z.tut === "geht" ? 1 : 0) - z.geht) * Math.min(1, dt * 9);                 // weich in den Gang hinein und heraus
+    const u = bruch(z.phi), nick = hub * (u < G.halt ? 0.5 - u / G.halt : -0.5 + glatt((u - G.halt) / (1 - G.halt))) / G.hals * z.geht;   // Kopf steht (läuft im Körper zurück), dann schnellt er vor
+    let hals = nick, kopfX = 0, koerperX = 0, hoch = 0.004 * Math.abs(Math.sin(Math.PI * z.phi)) * z.geht, schnabel = 0, flatter = 0;
+    for (const b of beine) {
+      const c = bruch(z.phi / 2 + b.versatz), w = (c - 0.5) * 2, rot = (c < 0.5 ? -amp + 4 * amp * c : amp - 2 * amp * glatt(w)) * z.geht;   // Standbein läuft nach hinten, Schwungbein schnell nach vorn
+      b.bein.rotation.x = rot; b.bein.position.y = b.hoch + (c < 0.5 ? 0 : G.heben * Math.sin(Math.PI * w)) * z.geht;
+      b.fuss.rotation.x = -rot + (c < 0.5 ? 0 : 0.6 * Math.sin(Math.PI * w)) * z.geht;      // Fuß bleibt flach; im Schwung hängen die Zehen
+    }
+    g.koerper.rotation.z = G.wackel * Math.sin(Math.PI * z.phi) * z.geht;                   // sie wackelt von Seite zu Seite
+    g.schwanz.rotation.y = -1.6 * g.koerper.rotation.z;
+    /* „Guess what!“-Hüpfer: zwei schnelle Hüpfer, Flügel flattern, Schnabel offen, Kopf hoch */
+    if (z.tut === "huepft") {
+      const H = P.huepfer, k = z.t / H.dauer;
+      if (k >= H.zahl) { z.tut = "steht"; z.t = 0; } else { hoch += H.hoch * Math.sin(Math.PI * bruch(k)); hals -= 0.22; schnabel = 0.5; flatter = 1; }
+    }
+    /* picken: Körper und Hals kippen vor, der Kopf stößt zweimal nach unten */
+    if (z.tut === "pickt") {
+      const K = P.picken, k = z.t / K.dauer;
+      if (k >= 1) { z.tut = "steht"; z.t = 0; z.pickWarte = zufall(K.pause); }
+      else { const unten = glatt(k / 0.25) * (1 - glatt((k - 0.8) / 0.2)), stoss = Math.max(0, Math.sin(2 * Math.PI * K.zahl * (k - 0.25) / 0.55)) * (k > 0.25 && k < 0.8 ? 1 : 0);
+        koerperX = 0.4 * unten; hals += K.tief * unten * (0.75 + 0.25 * stoss); kopfX = (0.55 + 0.35 * stoss) * unten + K.tief * unten * (0.75 + 0.25 * stoss); schnabel = 0.25 * stoss; }
+    } else if (z.tut === "steht" && !z.redet && !z.halt && (z.pickWarte -= dt) <= 0) { z.tut = "pickt"; z.t = 0; }
+    /* reden: Schnabel klappt, die Flügel flattern in kurzen Stößen (Figurenblatt: „Flügel schlagen beim Reden“) */
+    if (z.redet) { schnabel = Math.max(schnabel, 0.12 + 0.3 * Math.abs(Math.sin(z.zeit * 19))); if (bruch(z.zeit / 1.4) < 0.45) flatter = Math.max(flatter, 0.7); }
+    if (z.flattert > 0) { z.flattert -= dt; flatter = Math.max(flatter, glatt(z.flattert / 0.15)); }
+    const auf = flatter * P.flattern.weit * (0.45 + 0.55 * Math.abs(Math.sin(Math.PI * z.zeit / P.flattern.takt)));
+    for (const f of fluegel) f.o.quaternion.setFromAxisAngle(f.achse, -f.v * auf).premultiply(qKante.setFromAxisAngle(f.kante, f.v * auf * 0.9));   // die angelegten Flügel klappen hoch und schwenken mit den Spitzen nach außen
+    figur.position.y = hoch; g.koerper.rotation.x = koerperX;
+    g.hals.rotation.z = -g.koerper.rotation.z;                                                // der Hals gleicht das Wackeln aus: der Kopf steht auch seitlich still
+    g.hals.rotation.x = hals; g.kopf.rotation.x = -hals + kopfX;                             // der Kopf bleibt waagerecht, auch wenn der Hals nickt
+    g.schnabel_unten.rotation.x = schnabel;
+    /* Blick: der Kopf ruckt alle halbe Sekunde in eine neue Richtung; im Gehen seltener und weniger weit */
+    if ((z.warte -= dt) <= 0) {
+      z.warte = zufall(P.blick.pause) * (z.tut === "geht" ? 2.5 : 1); z.drehungen++;
+      const weit = P.blick.weit * (z.tut === "geht" ? 0.35 : 1); let neu; do { neu = (Math.random() * 2 - 1) * weit; } while (Math.abs(neu - z.zielY) < weit * 0.3);
+      z.zielY = z.tut === "pickt" ? 0 : neu; z.zielZ = z.tut !== "pickt" && Math.random() < P.blick.schiefOft ? (Math.random() < 0.5 ? 1 : -1) * P.blick.schief : 0;
+    }
+    const ruck = Math.min(1, dt * P.blick.ruck); g.kopf.rotation.y += (z.zielY - g.kopf.rotation.y) * ruck; g.kopf.rotation.z += (z.zielZ - g.kopf.rotation.z) * ruck;
+    if ((z.blinzel -= dt) <= 0) { z.blinzel = zufall(P.blinzeln); z.zu = 0.1; }
+    z.zu = Math.max(0, z.zu - dt); g.auge_l.scale.y = g.auge_r.scale.y = z.zu > 0 ? 0.12 : 1;
+  }
+  const frei = () => z.tut === "steht";
+  /* gehe: der Reihe nach zu den Punkten {x, z} trippeln */
+  function gehe(punkte) { if (z.tut === "huepft" || !punkte.length) return false; z.weg = punkte.map((p) => ({ x: p.x, z: p.z })); z.tut = "geht"; z.t = 0; return true; }
+  function huepfe() { if (!frei()) return false; z.tut = "huepft"; z.t = 0; return true; }
+  function picke() { if (!frei()) return false; z.tut = "pickt"; z.t = 0; return true; }
+  function flattere() { z.flattert = P.flattern.dauer; return true; }
+  const rede = (an) => { z.redet = !!an; return z.redet; };
+  const setze = (x, y, zz, dreh = 0) => { wurzel.position.set(x, y, zz); wurzel.rotation.y = dreh; };
+  const kasten = new THREE.Box3(), ort = new THREE.Vector3();
+  function zustand() {
+    wurzel.updateMatrixWorld(true); kasten.setFromObject(wurzel);
+    return { wer: "taube", name: P.name, tut: z.tut, gross: P.gross, hoch: +(kasten.max.y - kasten.min.y).toFixed(3), ort: wurzel.position.toArray().map((v) => +v.toFixed(4)), dreh: +wurzel.rotation.y.toFixed(3), schritte: z.schritte, drehungen: z.drehungen,
+      kopfOrt: g.kopf.getWorldPosition(ort).toArray().map((v) => +v.toFixed(4)), kopfNeig: +(g.hals.rotation.x + g.kopf.rotation.x).toFixed(4), hals: +g.hals.rotation.x.toFixed(4), kopf: [+g.kopf.rotation.y.toFixed(4), +g.kopf.rotation.z.toFixed(4)],
+      fluegel: +(2 * Math.acos(Math.min(1, Math.abs(g.fluegel_l.quaternion.w)))).toFixed(3), schnabel: +g.schnabel_unten.rotation.x.toFixed(3), fussTief: +kasten.min.y.toFixed(3), redet: z.redet };
+  }
+  /* halt: nichts von selbst (kein Picken) – für Bilder und Prüfung */
+  return { wurzel, g, bewege, zustand, setze, gehe, huepfe, picke, flattere, rede, halt: (an) => { z.halt = !!an; } };
 }

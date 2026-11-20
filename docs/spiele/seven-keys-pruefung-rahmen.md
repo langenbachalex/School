@@ -96,6 +96,16 @@ Grundsatz: **Nichts vorschnell entscheiden – aus der Rückmeldung wird entwick
 
 ---
 
+### Rückmeldung Mr. Alex zu Prüfung 2 (20.11.2026, spät)
+- **Rangfolge (wichtig):** Zuerst wird die Geschichte spannend gemacht – Gefahr, Geheimnis, Überraschungen, vielleicht weitere verborgene Tore – und die Vorhersehbarkeit und übermäßige Regelmäßigkeit gelöst. **Erst danach werden Logiklöcher gestopft**, sonst baut man beim Stopfen neue ein.
+- **Nicht alles muss vollkommen logisch sein.** Hier und da darf ein Geheimnis oder auch ein Widerspruch stehen bleiben.
+- **Schwere Löcher (1–8): mit allen Befunden und Vorschlägen einverstanden**, er will sie nach der Spannungs-Runde aber noch einmal ansehen. Ausdrücklich so wie vorgeschlagen: wer festgehalten wird und wie langsam die Zeit vergeht (Punkt 1), Mr. Flex spricht die drei Zeilen aus dem Glas mit (Punkt 2), sechs Federn und Merlin (Punkte 3 und 10).
+- **Schlüssel (Punkt 4): wahrscheinlich ja, abwarten.** **Zeit je Kapitel (Punkt 7):** eher eine Spielentscheidung, kommt nach den offenen Story-Entscheidungen. **Punkte 13 und 15: im Prinzip ja.**
+- **Mittlere Löcher und die Liste „Fassung 4 muss ändern“: gut, aber erst nach der Spannungs-Runde.**
+- **Nächster Schritt nach der Durchsicht:** gemeinsam entwickeln, wie die Geschichte spannender wird; danach laufen die Prüf-Agenten erneut.
+
+---
+
 ## Prüfung 3 – Mystik, Rätsel, Verschachtelung
 
 **Urteil:** Der Rahmen trägt sieben Kapitel. Sein Kern, ein Kind wird ausgelacht und keiner antwortet, ist echt, warm und hat Gewicht. Die größte Schwäche: Der Prolog und Kapitel 1 verraten zusammen schon fast alles über Mr Nobody, und für die Auflösung bleibt keine echte Überraschung übrig. Dazu ist die Zahl der Bausteine für Elfjährige zu hoch. Es gibt vier Kraftwörter, drei weitere Sprüche, drei Fassungen des Verses, sieben Schlüssel, sieben Federn und sieben Schlösser, und die Teile greifen noch zu wenig ineinander.

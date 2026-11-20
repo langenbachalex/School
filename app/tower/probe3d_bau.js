@@ -1011,6 +1011,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const flaeche = (s) => halter[s].localToWorld(v(-0.052, 0, 0));                    // Mitte der Handfläche
   return {
     befehl: starte, kopf: kopfBefehl,
+    sichtbar(an) { anker.visible = !!an; },                // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
     /* Testprogramm: Lücke zwischen Arm und Rumpf (m), an den verformten Netzen in sechs Höhen vom Handgelenk bis unter die Schulterpartie gemessen; unter 0 = der Arm steckt im Körper. */
     /* Testprogramm: Steckt der Hals im Rumpf? tief = so weit liegt die Unterkante des Halses unter der Oberkante des Rumpfs rund um den Hals (m; unter 0 = Spalt zwischen Hals und Körper) ·
        armUeber = so weit ragen die Arme über die Schulterlinie des Rumpfs hinaus (m). */
@@ -1038,7 +1039,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     rede(r) { g.rede = r ? { ...r, i: 0, offen: false } : null; },
     regie(r) { if (r) g.regie = { ...r, i: 0, vorher: g.regie ? g.regie.vorher : g.ausdruck }; else if (g.regie) { g.ausdruck = g.regie.vorher; g.regie = null; } },   // { schritte: [[s, Ausdruck], …], zeit: () => s } oder null = Satz zu Ende, zurück zum Ausdruck davor   // { einsaetze: [s, …], zeit: () => s } oder null
     bahn(lang) { g.gerade = lang > 0; g.bahn = lang || platz.bahn || 2.4; g.weg = 0; g.hin = 1; g.dreh = 0; anker.position.x = platz.x; },   // lang > 0: gerade Strecke statt Rundkurs;                                                // nur für das Testprogramm: lange Strecke, um Gehen und Rennen ohne Wenden zu messen
-    kurs(k) { g.runde = k.runde || null; if (!k.runde) { platz.x = k.x; platz.z = k.z; platz.bahn = k.bahn; anker.position.set(k.x, 0, k.z); } g.gerade = false; g.bahn = k.bahn || platz.bahn || 2.4; g.weg = 0; g.hin = 1; g.dreh = 0; },   // Hof (19.11.): Weg wechseln – { runde } = Rundkurs oder Kreis, { x, z, bahn } = gerade Bahn ab diesem Punkt
+    kurs(k) { g.runde = k.runde || null; platz.dreh = k.dreh || 0;   /* dreh (Block B1): Blickrichtung im Stehen an einem festen Platz, 0 = nach Süden */ if (!k.runde) { platz.x = k.x; platz.z = k.z; platz.bahn = k.bahn; anker.position.set(k.x, 0, k.z); } g.gerade = false; g.bahn = k.bahn || platz.bahn || 2.4; g.weg = 0; g.hin = 1; g.dreh = 0; },   // Hof (19.11.): Weg wechseln – { runde } = Rundkurs oder Kreis, { x, z, bahn } = gerade Bahn ab diesem Punkt
     haende(form) { g.wahl = form; zeigeHand(GESTEN[g.modus][3] || form); },
     setze(name, wert) { if (name in bau && wert > 0) { bau[name] = wert; const modus = g.modus; messeTempo(); g.laeuft = null; starte(DAUERND.includes(modus) ? modus : "stehen"); } },
     bewege(dt) {
@@ -1059,7 +1060,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
         if (unterwegs && Math.abs(ab) < 0.5) { g.dreh = soll; g.wendet = false; }      // unterwegs folgt die Figur der Bahn genau, auch durch die runden Ecken
         else { g.wendet = Math.abs(ab) > 0.05; g.dreh += ab * Math.min(1, dt * 7); }
       } else {
-        const soll = unterwegs && g.hin < 0 ? Math.PI : 0;
+        const soll = (unterwegs && g.hin < 0 ? Math.PI : 0) + (platz.dreh || 0);
         g.wendet = Math.abs(soll - g.dreh) > 0.05;
         g.dreh += (soll - g.dreh) * Math.min(1, dt * 7);
         anker.position.z = platz.z + g.weg;

@@ -361,6 +361,7 @@ export async function ladeFiguren(lader, szene, orte, kamera) {
   return {
     liste: () => figuren.map((g) => ({ name: g.name, modus: g.modus, weg: +g.weg.toFixed(2), ort: [g.anker.position.x, g.anker.position.z], ausdruck: g.ausdruck, ...g.mass() })),
     befehl(modus) { for (const g of figuren) g.start(modus); },
+    sichtbar(name, an) { for (const g of figuren) if (g.name === name) g.anker.visible = !!an; },   // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
     ausdruck(a) { for (const g of figuren) g.ausdruck = a; },
     unruhe(an) { for (const g of figuren) g.unruhig = an; },
     rede(name, r) { for (const g of figuren) if (g.name === name) g.rede = r ? { ...r, i: 0 } : null; },   // { einsaetze: [s, …], zeit: () => s } oder null

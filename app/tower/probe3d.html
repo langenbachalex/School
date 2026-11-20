@@ -43,6 +43,10 @@
     #bau.zu > :not(.kopf) { display: none; }
     body.bau-offen #figuren { display: none; }
   }
+  #stand { left: 10px; top: 118px; display: grid; gap: 5px; padding: 8px; pointer-events: auto; max-width: 250px; max-height: calc(100dvh - 140px); overflow-y: auto; }
+  #stand span { font-size: 13px; opacity: .8; } #stand b { font-size: 16px; }
+  #stand button { min-height: 44px; padding: 4px 8px; font-size: 14px; border-radius: 8px; border: 1px solid rgba(243, 230, 208, .4); background: #2a1a10; color: inherit; font: inherit; text-align: left; }
+  #stand button[aria-pressed="true"] { background: #e9b45a; color: #1b1008; font-weight: 600; }
   #hilfe { left: 10px; bottom: 18px; font-size: 13px; max-width: min(44vw, 300px); }
   #text { left: 50%; transform: translateX(-50%); bottom: 18px; width: min(92vw, 560px); text-align: center; font-size: 19px; }
   #text small { display: block; opacity: .75; font-size: 14px; }
@@ -141,6 +145,7 @@
   <button type="button" data-kopfrede="reden">Reden</button>
   <button type="button" data-kopfrede="gestik">Reden mit Gestik</button>
 </div>
+<div id="stand" class="kasten" hidden></div>
 <div id="hilfe" class="kasten" hidden>Ziehen = umsehen · Boden antippen = hingehen · Gegenstand antippen = hingehen und ansehen · zwei Finger oder Mausrad = näher / weiter</div>
 <div id="text" class="kasten" role="status"></div>
 <script src="daten.js"></script>
@@ -152,6 +157,8 @@ import { ladeFiguren, mundAusZeiten, einsaetzeAus, MUNDFORMEN_MENSCH } from "./p
 import { ladeBauProbe, GESTEN, rundeOrt, SERGEANT } from "./probe3d_bau.js";   // PROBE A3 (18.11.): gestreckter Körper mit Händen neben Gary, vorläufig
 
 import { bauVogel, ladeVogel, RABENREIHE } from "./vogel_bau.js";   // Figuren 7 (19.11.): Arthur, der Rabe – nur im Hof
+import { machStand, SCHRITTE, SCHRITT_NAMEN, uhrText } from "./stand.js";   // Block B1 (20.11.): Stand der Geschichte – nur mit ?spiel=1, sonst bleibt die Probe, wie sie ist
+import { bauZeiger } from "./uhr.js";
 import { bauHof, HOF_GROESSEN, HOF_START } from "./hof_bau.js";   // Hof-Rohbau (19.11.): eigener Abschnitt, gewählt mit ?ort=hof&gross=40x30; ohne das bleibt der Guard Room
 
 const $ = (id) => document.getElementById(id);
@@ -637,11 +644,13 @@ try {
     $("mess").innerHTML = `<b>${jetztWert} Bilder pro Sekunde</b> (tiefster Wert ${tiefst === Infinity ? "–" : tiefst})<br>` +
       (hof ? `Hof ${hof.plan.gross.join(" × ")} m · Rechenzeit ${rechenWert.toFixed(1)} ms je Bild · ` : "") + `${Math.round(dreiecke / 1000)} Tsd. Dreiecke · ${window.innerWidth} × ${window.innerHeight} · geladen in ${ladezeit} s<br><small>${karteName}</small>`;
   };
+  let geschichte = null;                                // Block B1: nur mit ?spiel=1
   waehleKamera("hinten");
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1), t0 = performance.now(); zuletzt = t;
     bewegeFigur(dt, t);
     if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); if (arthur && !rabeHalt) arthur.bewege(dt); for (const r of andereRaben) r.bewege(dt); for (const s of sergeants) s.bewege(dt); }
+    if (geschichte) geschichte.bewege(dt);
     setzeKamera(dt);
     renderer.render(szene, kamera);
     bilder++; rechen += performance.now() - t0;
@@ -653,8 +662,62 @@ try {
     }
   });
 
+  /* ---- Block B1 (20.11.2026): Stand der Geschichte und Zustände der Orte. Aufruf mit ?spiel=1 (Hof: ?ort=hof&spiel=1).
+     Die Welt fragt nur stand.welt(): Uhren, Sergeant (Kreis oder Wache am Tor), Abzeichen, Gary, erste Tür. Ohne ?spiel=1 ändert sich an der Probe nichts.
+     Schalter zum Springen (Kasten „Stand der Geschichte“ und ?schritt=feder) nur auf dem eigenen Rechner. ---- */
+  if (sucht.has("spiel")) {
+    const stand = machStand(), lokal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || /\.(localhost|test)$/.test(location.hostname);
+    if (lokal && sucht.has("schritt")) stand.springe(SCHRITTE.includes(sucht.get("schritt")) ? sucht.get("schritt") : null);
+    const uhren = [];
+    if (hof) {                                             // Turmuhr: Zeiger vor der Scheibe, sie schaut nach Nordosten in den Hof
+      const u = hof.scene.getObjectByName("hof_uhr"), z = bauZeiger(hof.plan.masse.uhrturm.uhr / 2 * 0.92, { blatt: 0xe8dcb4 }), q = Math.SQRT1_2;
+      z.gruppe.position.set(u.position.x + q * 0.13, u.position.y, u.position.z - q * 0.13); z.gruppe.rotation.y = (3 * Math.PI) / 4; szene.add(z.gruppe); uhren.push(z);
+    } else if (szene.getObjectByName("uhr")) {            // Uhr über dem Kamin: Die Raumdatei hat „zwanzig nach neun“ fest eingezeichnet; ein eigenes Blatt mit Zeigern liegt davor
+      const k = new THREE.Box3().setFromObject(szene.getObjectByName("uhr")), halb = (k.max.x - k.min.x) / 2, z = bauZeiger(halb * 0.82, { blatt: 0xd9c9a0 });
+      z.gruppe.position.set((k.min.x + k.max.x) / 2, (k.min.y + k.max.y) / 2, k.max.z - 0.008); szene.add(z.gruppe); uhren.push(z);
+    }
+    const abzeichen = new THREE.Mesh(new THREE.CircleGeometry(0.034, 20), new THREE.MeshBasicMaterial({ color: 0xf2c230 }));   // Abzeichen des Detektivs: vorerst eine goldene Scheibe an der Brust (die Figur des Kindes ist noch ein Platzhalter)
+    abzeichen.name = "abzeichen"; abzeichen.position.set(-0.07, 0.22, 0.118); g.rumpf.add(abzeichen);
+    // Erste Tür im Hof: schwingt nach außen auf, dahinter eine dunkle, warme Öffnung
+    const tuer = hof ? hof.scene.getObjectByName("hof_tuer") : null, tuerZu = tuer ? tuer.position.clone() : null, TB = hof ? hof.plan.masse.tuer.breit : 0;
+    if (tuer) { const loch = new THREE.Mesh(new THREE.PlaneGeometry(TB, hof.plan.masse.tuer.hoch), new THREE.MeshBasicMaterial({ color: 0x2a1608 })); loch.name = "hof_tuerloch"; loch.rotation.y = Math.PI; loch.position.set(tuerZu.x, tuerZu.y, tuerZu.z - 0.02); szene.add(loch); }
+    let tuerAuf = 0, tuerSoll = 0, sgtTut = null, garyDa = null;
+    const stelleTuer = () => { const a = tuerAuf * 1.75; tuer.rotation.y = a; tuer.position.set(tuerZu.x - TB / 2 + Math.cos(a) * TB / 2, tuerZu.y, tuerZu.z - Math.sin(a) * TB / 2); };
+    // In der Geschichte lebt Mr. Flex im Spiegel und der Sergeant im Hof: die Probe-Figuren, die nicht hierher gehören, sind ausgeblendet; Arthur sitzt auf der Mauer
+    bauProbe.sichtbar(false); if (!hof) sergeants[0].sichtbar(false); if (arthur) setzeRabe("mauer");
+    const kasten = $("stand"), kopf = document.createElement("span"); kasten.append(kopf);
+    const knopf = (text, schritt) => { const b = document.createElement("button"); b.type = "button"; b.textContent = text; b.dataset.schritt = schritt || ""; b.addEventListener("click", () => stand.springe(schritt)); kasten.append(b); return b; };
+    knopf("↺ Ganz von vorn", null); SCHRITTE.forEach((s, i) => knopf(`${i + 1} · ${SCHRITT_NAMEN[s]}`, s));
+    const richte = (sofort) => {
+      const w = stand.welt();
+      for (const u of uhren) u.stelle(w.uhrzeit, sofort);
+      abzeichen.visible = w.abzeichen;
+      garyDa = w.gary === "dabei"; figuren.sichtbar("gary", garyDa);
+      if (hof) {
+        if (w.sergeant !== sgtTut) {
+          sgtTut = w.sergeant; const pl = hof.plan, sgt = sergeants[0];
+          if (sgtTut === "kreis") { sgt.kurs(pl.kurse.sergeant.kreis); sgt.befehl("rennen"); }                                   // schneller Drill im Kreis („I am walking fast!“)
+          else { sgt.kurs({ x: pl.tor.x - pl.masse.tor.breit / 2 - 1.2, z: pl.tor.z - 1.2, bahn: 2.4, dreh: Math.PI }); sgt.befehl("stehen"); }   // Wache links neben dem großen Tor, Blick in den Hof
+        }
+        tuerSoll = w.tuer1 === "offen" ? 1 : 0; if (sofort) { tuerAuf = tuerSoll; stelleTuer(); }
+      }
+      kopf.innerHTML = `Stand der Geschichte<br><b>Uhr ${uhrText(w.uhrzeit)}</b>`;
+      for (const b of kasten.querySelectorAll("button[data-schritt]")) if (b.dataset.schritt) b.setAttribute("aria-pressed", String(stand.ist(b.dataset.schritt)));
+      buehne.dataset.schritt = stand.letzter() || "";
+    };
+    stand.beobachte(() => richte(false)); richte(true);
+    geschichte = { lokal, bewege(dt) {
+      for (const u of uhren) u.bewege(dt);
+      if (tuer && tuerAuf !== tuerSoll) { tuerAuf += Math.sign(tuerSoll - tuerAuf) * Math.min(Math.abs(tuerSoll - tuerAuf), dt / 1.2); stelleTuer(); }
+    } };
+    // für das Testprogramm
+    window.__towerStand = { stand, uhren: () => uhren.map((u) => ({ zeigt: u.zeigt(), soll: u.soll(), laeuft: u.laeuft() })), takt: (n, ms) => { for (let i = 0; i < n; i++) geschichte.bewege(ms / 1000); },
+      welt: () => ({ ...stand.welt(), abzeichenDa: abzeichen.visible, garyDa, tuerAuf: +tuerAuf.toFixed(2), sergeantTut: sgtTut, kasten: !kasten.hidden }) };
+  }
+
   ladezeit = (performance.now() / 1000).toFixed(1); bereitSeit = performance.now();   // Zeit seit dem Aufruf der Seite
   for (const id of ["mess", "hilfe", "kameras", "figuren", "bau"]) $(id).hidden = false;
+  if (geschichte) { $("figuren").hidden = $("bau").hidden = true; $("stand").hidden = !geschichte.lokal; }   // in der Geschichte keine Probe-Kästen; der Schalter zum Springen nur auf dem eigenen Rechner
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?

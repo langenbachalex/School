@@ -30,6 +30,7 @@ const args = process.argv.slice(2);
 const fArg = (args.find((a) => a.startsWith("--format=")) || "").slice(9);
 const formate = fArg ? FORMATE.filter((f) => fArg.toLowerCase().split(",").includes(f.id)) : FORMATE;
 const OHNE_UPDATE = args.includes("--ohne-update");
+const NUR_STAND = args.includes("--nur-stand");   // nur den Test „Stand der Geschichte“ (Block B)
 const NUR_STORY = args.includes("--nur-story");   // nur das Story-Spiel prüfen (Tower-Test und 3D-Probe), ohne die Lern-App – für Bauten, die nur die Figuren betreffen
 const NUR_3D_AUS = args.includes("--ohne-3d");   // 3D-Probe auslassen (z. B. wenn tower/raum3d/ noch nicht gerechnet ist)
 const gewaehlt = args.filter((a) => !a.startsWith("--")).map((a) => a.toUpperCase());
@@ -645,6 +646,80 @@ async function probe3dTest(browser, basis, app, name, fm) {
   return fehl;
 }
 
+/* ---------- EN6 „The Keys of the Tower“ – Stand der Geschichte (Block B1, 20.11.2026): probe3d.html?spiel=1.
+   Geprüft wird das Grundgerüst: Schritte setzen und abfragen, Speichern über ein Neuladen hinweg, die Uhren aus dem Stand (9:15 → 9:16 → 9:20 → 9:30, die Zeiger laufen vor),
+   die Zustände im Hof (Sergeant im Kreis oder als Wache am Tor, Abzeichen, Gary, erste Tür), der Sprung-Schalter, die Übernahme des alten Spielstands –
+   und dass die Probe ohne ?spiel=1 bleibt, wie sie ist. ---------- */
+async function standTest(browser, basis, app, name, fm) {
+  const titel = `${name} · Keys of the Tower Stand der Geschichte`, fehl = [];
+  const { ctx, pg, fehler } = await neueSeite(browser, basis, app, false, fm);
+  const oeffne = async (zusatz) => { await pg.goto(`${basis}/${app.pfad}/tower/probe3d.html?${zusatz}`, { waitUntil: "load" }); await pg.waitForSelector("#buehne[data-bereit]", { timeout: 40000 }); await pg.evaluate(() => { window.__towerSchnell = true; }); };
+  const lage = () => pg.evaluate(() => ({ ...window.__towerStand.welt(), erledigt: window.__towerStand.stand.erledigt().join(","), uhren: window.__towerStand.uhren() }));
+  const setze = (schritt) => pg.evaluate((s) => { window.__towerStand.stand.setze(s); return { ...window.__towerStand.welt(), uhren: window.__towerStand.uhren() }; }, schritt);
+  const takt = (n) => pg.evaluate((k) => window.__towerStand.takt(k, 16), n);
+  const pruef = (ok, text) => { if (!ok) fehl.push(`${titel}: ${text}`); };
+  try {
+    // 1. Frischer Anfang im Hof: nichts erledigt, 9:15, der Sergeant marschiert im Kreis, kein Abzeichen, Gary noch im Fass, Tür zu
+    await oeffne("ort=hof&spiel=1");
+    let l = await lage();
+    pruef(l.erledigt === "", `am Anfang ist schon etwas erledigt (${l.erledigt})`);
+    pruef(l.uhren.length === 1 && l.uhren[0].zeigt === 555, `die Turmuhr zeigt am Anfang nicht 9:15 (${JSON.stringify(l.uhren)})`);
+    pruef(l.sergeantTut === "kreis" && !l.abzeichenDa && l.garyDa === false && l.tuerAuf === 0, `Anfangszustand im Hof stimmt nicht (${JSON.stringify(l)})`);
+    pruef(l.kasten, "der Schalter zum Springen fehlt auf dem eigenen Rechner");
+    pruef(await pg.evaluate(() => document.getElementById("bau").hidden && document.getElementById("figuren").hidden), "die Probe-Kästen sind in der Geschichte noch zu sehen");
+    const s1 = await pg.evaluate(() => window.__probe3d.sergeant()[0]); await pg.waitForTimeout(700); const s2 = await pg.evaluate(() => window.__probe3d.sergeant()[0]);
+    pruef(s1.runde && Math.hypot(s1.ort[0] - s2.ort[0], s1.ort[1] - s2.ort[1]) > 0.3, "der Sergeant marschiert am Anfang nicht im Kreis");
+    // 2. Auftakt ändert die Uhr nicht; der Auftrag stellt sie auf 9:16 (die Zeiger laufen vor, sie springen nicht) und bringt das Abzeichen
+    await pg.evaluate(() => window.__probe3d.halt(true));
+    l = await setze("auftakt"); pruef(l.uhren[0].soll === 555, "nach dem Auftakt zeigt die Uhr nicht mehr 9:15");
+    l = await setze("auftrag");
+    pruef(l.uhren[0].soll === 556 && l.uhren[0].zeigt < 556 && l.uhren[0].laeuft, `nach dem Auftrag läuft die Uhr nicht auf 9:16 vor (${JSON.stringify(l.uhren)})`);
+    pruef(l.abzeichenDa, "nach dem Auftrag fehlt das Abzeichen an der Figur");
+    await takt(120); l = await lage(); pruef(l.uhren[0].zeigt === 556 && !l.uhren[0].laeuft, "die Zeiger kommen nicht bei 9:16 an");
+    pruef(await pg.evaluate(() => { try { window.__towerStand.stand.setze("gibtsnicht"); return false; } catch (e) { return true; } }), "ein unbekannter Schritt wird ohne Fehler angenommen");
+    // 3. Neu laden: der Stand ist gespeichert, die Uhr zeigt sofort 9:16
+    await oeffne("ort=hof&spiel=1"); l = await lage();
+    pruef(l.erledigt === "auftakt,auftrag" && l.uhren[0].zeigt === 556 && l.abzeichenDa, `nach dem Neuladen ist der Stand nicht derselbe (${l.erledigt}, Uhr ${l.uhren[0].zeigt})`);
+    // 4. Gary: er ist da, der Sergeant steht Wache am Tor und schaut in den Hof
+    l = await setze("gary"); pruef(l.garyDa && l.sergeantTut === "wache", "nach dem Schritt „gary“ ist Gary nicht da oder der Sergeant steht nicht Wache");
+    await pg.waitForTimeout(1500);
+    const [w, plan] = await pg.evaluate(() => [window.__probe3d.sergeant()[0], window.__probe3d.hof()]);
+    pruef(!w.runde && Math.abs(w.ort[1] - (plan.tor.z - 1.2)) < 0.1 && Math.abs(w.ort[0] - plan.tor.x) < plan.masse.tor.breit / 2 + 2 && Math.abs(w.richtung - Math.PI) < 0.2, `der Sergeant steht nicht als Wache am Tor (${JSON.stringify(w.ort)}, Richtung ${w.richtung})`);
+    // 5. Feder 9:20, Tür geht auf und bleibt offen, Schluss 9:30
+    l = await setze("feder"); pruef(l.uhren[0].soll === 560 && l.feder, "nach der Feder zeigt die Uhr nicht 9:20");
+    l = await setze("schluessel1"); pruef(l.schluessel && l.tuer1 === "zu", "mit dem Schlüssel in der Hand ist die Tür nicht mehr zu");
+    l = await setze("tuer1"); await takt(120); l = await lage(); pruef(l.tuer1 === "offen" && l.tuerAuf === 1 && !l.schluessel, `die Tür ist nach dem Aufschließen nicht offen (${l.tuerAuf})`);
+    await setze("arthur"); l = await setze("schluss"); pruef(l.uhren[0].soll === 570 && l.den === "offen", "nach dem Schluss zeigt die Uhr nicht 9:30");
+    await oeffne("ort=hof&spiel=1"); l = await lage(); pruef(l.tuerAuf === 1 && l.uhren[0].zeigt === 570 && l.sergeantTut === "wache", "nach dem Neuladen ist die Tür nicht mehr offen oder die Uhr falsch");
+    // 6. Schalter zum Springen: direkt zu einem Schritt, auch zurück
+    await oeffne("ort=hof&spiel=1&schritt=feder"); l = await lage();
+    pruef(l.erledigt === "figur,auftakt,auftrag,gary,feder" && l.uhren[0].zeigt === 560 && l.tuerAuf === 0, `der Sprung zu „feder“ stimmt nicht (${l.erledigt})`);
+    await pg.click('#stand button[data-schritt="auftrag"]'); l = await lage();
+    pruef(l.erledigt === "figur,auftakt,auftrag" && l.uhren[0].zeigt === 556 && l.sergeantTut === "kreis" && l.garyDa === false, `der Knopf „Auftrag“ springt nicht zurück (${l.erledigt})`);
+    // 7. Guard Room: die Uhr über dem Kamin zeigt dieselbe Zeit aus demselben Stand
+    await pg.evaluate(() => window.__towerStand.stand.springe("tuer1"));
+    await oeffne("spiel=1"); l = await lage();
+    pruef(l.uhren.length === 1 && l.uhren[0].zeigt === 560 && l.garyDa && l.erledigt.endsWith("tuer1"), `im Guard Room stimmt die Uhr oder der Stand nicht (${JSON.stringify(l.uhren)}, ${l.erledigt})`);
+    // 8. Alter Spielstand aus dem bisherigen Spiel wird übernommen und bleibt liegen
+    const alt = JSON.stringify({ v: 1, schritt: "raum", figur: 2, name: "Daisy", feder: true, schluessel: true, arthur: false, tipps: { helm: 1 } });
+    await pg.evaluate((a) => { localStorage.removeItem("tower-stand"); localStorage.setItem("tower-k1", a); }, alt);
+    await oeffne("spiel=1"); l = await lage();
+    const u = await pg.evaluate(() => ({ uebernommen: window.__towerStand.stand.uebernommen, figur: window.__towerStand.stand.figur(), alt: localStorage.getItem("tower-k1") }));
+    pruef(l.erledigt === "figur,auftakt,auftrag,gary,feder,schluessel1,tuer1" && u.uebernommen && u.figur.name === "Daisy" && u.figur.figur === 2, `der alte Spielstand wird nicht richtig übernommen (${l.erledigt})`);
+    pruef(u.alt === alt, "der alte Spielstand wurde verändert oder gelöscht");
+    // 9. Ohne ?spiel=1 bleibt die Probe, wie sie ist
+    await oeffne("ort=hof");
+    pruef(await pg.evaluate(() => !window.__towerStand && !document.getElementById("bau").hidden && document.getElementById("stand").hidden), "ohne ?spiel=1 ist die Geschichte trotzdem an");
+  } catch (e) {
+    const meldung = await pg.locator("#laden").textContent().catch(() => "?");
+    fehl.push(`${titel}: ${String(e.message || e).split("\n")[0].slice(0, 160)} – Meldung auf der Seite: ${meldung}`);
+  } finally {
+    fehl.push(...[...new Set(fehler)].map((f) => `${titel}: ${f}`));
+    await ctx.close();
+  }
+  return fehl;
+}
+
 /* ---------- EN6 „The Keys of the Tower“ – Hof-Rohbau (19.11.2026): der Hof (Tower Green) als eigener Abschnitt der 3D-Probe, drei Größen.
    Geprüft werden Maße, Lage der Dinge aus w02–w08, Wege (Rundkurs, Kreis, lange Bahn), die drei Kameras und der Ort-Schalter – nicht das Aussehen. ---------- */
 async function hofTest(browser, basis, app, name, fm) {
@@ -1089,7 +1164,8 @@ function speicherTest(app) {
       for (const fm of formate) {
         const b = fm.webkit && safari ? safari : browser, name = fm.webkit && !safari ? fm.name + " (Chromium)" : fm.name;
         const w = (titel, knoepfe, opt = {}) => weg(b, basis, app, `${name} · ${titel}`, knoepfe, Object.assign({ format: fm }, opt));
-        if (NUR_STORY) { if (app.kurz === "EN6" && fm.id !== "handy") { f.push(...await towerTest(b, basis, app, name, fm)); f.push(...await probe3dTest(b, basis, app, name, fm)); f.push(...await hofTest(b, basis, app, name, fm)); } continue; }
+        if (NUR_STAND) { if (app.kurz === "EN6" && fm.id !== "handy") f.push(...await standTest(b, basis, app, name, fm)); continue; }
+        if (NUR_STORY) { if (app.kurz === "EN6" && fm.id !== "handy") { f.push(...await towerTest(b, basis, app, name, fm)); f.push(...await probe3dTest(b, basis, app, name, fm)); f.push(...await hofTest(b, basis, app, name, fm)); f.push(...await standTest(b, basis, app, name, fm)); } continue; }
         f.push(...await w("Start", []));
         f.push(...await w("Übung", app.uebung));
         f.push(...await w("Shop", app.shop));
@@ -1103,6 +1179,7 @@ function speicherTest(app) {
         if (story) f.push(...await towerTest(b, basis, app, name, fm));
         if (story && !NUR_3D_AUS) f.push(...await probe3dTest(b, basis, app, name, fm));
         if (story && !NUR_3D_AUS) f.push(...await hofTest(b, basis, app, name, fm));
+        if (story && !NUR_3D_AUS) f.push(...await standTest(b, basis, app, name, fm));
         if (EN_KETTE[app.kurz]) f.push(...await w("Bereich wird grün, Spiele zeigen den Stand von heute", [], { stand: enFastFertig(app), pruefe: (pg) => enKetteGruen(app, pg) }));
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
         if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));

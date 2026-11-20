@@ -664,10 +664,13 @@ try {
   document.body.append(rabenSchild);
   let rabenName = null;
   const alleRaben = () => [arthur, ...andereRaben].filter(Boolean);
-  /* Mordred lügt (Figuren 10, Entscheidung Mr. Alex 20.11., Variante 3): die Elster zeigt nie „Mordred“, sondern den Namen eines echten Raben – jedes Mal einen anderen */
-  let luege = "";
+  /* Mordred lügt (Figuren 10, Entscheidung Mr. Alex 20.11., Variante 3): die Elster zeigt nie „Mordred“, sondern den Namen eines echten Raben – jedes Mal einen anderen.
+     Die Lüge hält eine Minute (Mr. Alex 20.11.): wer fünfmal schnell tippt, sieht immer denselben Namen; erst danach wechselt er beim nächsten Tippen */
+  let luege = "", luegeBis = 0;
   function schildName(z) {
     if (z.wer !== "mordred") return z.name;
+    if (luege && performance.now() < luegeBis) return luege;
+    luegeBis = performance.now() + 60000;
     const echte = alleRaben().map((v) => v.zustand()).filter((r) => r.wer !== "mordred" && r.name !== luege).map((r) => r.name);
     return (luege = echte[Math.floor(Math.random() * echte.length)] || luege || "Arthur");
   }
@@ -919,7 +922,8 @@ try {
   $("laden").hidden = true; messe();
   buehne.dataset.bereit = "1";
   // fuer das Testprogramm: wo steht die Figur, wo liegt ein Gegenstand gerade auf dem Bildschirm?
-  window.__probe3d = { rabeAmSchirm: (wer) => { const v = alleRaben().find((x) => x.zustand().wer === wer); if (!v) return null; kamera.updateMatrixWorld(true); const k = v.zustand().kopfOrt, q = new THREE.Vector3(k[0], k[1], k[2]).project(kamera), r = buehne.getBoundingClientRect(); return { x: r.left + ((q.x + 1) / 2) * r.width, y: r.top + ((1 - q.y) / 2) * r.height, name: v.zustand().name }; },   // Testprogramm: wo ist der Kopf dieses Raben im Bild?
+  window.__probe3d = { luegeVorbei: () => { luegeBis = 0; },   // Testprogramm: die Minute der Elster ist um
+    rabeAmSchirm: (wer) => { const v = alleRaben().find((x) => x.zustand().wer === wer); if (!v) return null; kamera.updateMatrixWorld(true); const k = v.zustand().kopfOrt, q = new THREE.Vector3(k[0], k[1], k[2]).project(kamera), r = buehne.getBoundingClientRect(); return { x: r.left + ((q.x + 1) / 2) * r.width, y: r.top + ((1 - q.y) / 2) * r.height, name: v.zustand().name }; },   // Testprogramm: wo ist der Kopf dieses Raben im Bild?
     tourist: () => (tourist ? tourist.zustand() : null), touristPlan: () => (tourist ? tourist.planStand() : null), touristWeg: () => (tourist ? { ...tourist.wegStand(), stufe: tou.stufe, gestutzt: tou.gestutzt || 0 } : null), touristSperre: (an) => { const w = tourist.wegStand(); tou.sperre = an ? { x: w.x + Math.sin(w.kurs) * 0.8, z: w.z + Math.cos(w.kurs) * 0.8, r: 0.5 } : null; return tou.sperre; },   // Testprogramm: ein Hindernis 0,8 m vor ihm
     touristTut: (was) => touristTut(was), touristTakt: (n, ms) => { for (let i = 0; i < n; i++) bewegeTourist(ms / 1000); }, touristWo: () => (tourist ? tourist.wo() : null), taube: () => (taube ? taube.zustand() : null), taubeTut: (was, wert) => (was === "bahn" ? taubeBahn() : taube[was](wert)), taubeHalt: (an) => { taubeHalt = an; taube.halt(an); }, taubeTakt: (n, ms) => { for (let i = 0; i < n; i++) taube.bewege(ms / 1000); }, vogel: () => (arthur ? { ...arthur.zustand(), sitzt: rabeOrt, klotz: hof.scene.getObjectByName("hof_rabe4").visible } : null), vogelOrt: setzeRabe, vogelHalt: (an) => { rabeHalt = an; }, vogelSchlag: () => arthur.fluegelschlag(), vogelLande: () => landeRabe(), vogelRunde: () => rundeRabe(), rabenReihe: (an) => rabenReihe(an), rabeTut, raben: () => andereRaben.map((r) => r.zustand()), vogelPluster: () => arthur.plustere(), vogelSchluessel: (an) => arthur.schluessel(an), vogelDreh: (d) => { rabeSitz = null; arthur.setze(arthur.wurzel.position.x, arthur.wurzel.position.y, arthur.wurzel.position.z, d); }, vogelSchau: (y, schief) => arthur.schau(y, schief), vogelTakt: (n, ms) => { for (let i = 0; i < n; i++) arthur.bewege(ms / 1000); }, geh: (x, z) => geheZu(x, z, null), rennt: () => figur.rennt, hof: () => (hof ? hof.plan : null), bilder: () => ({ jetzt: jetztWert, tiefst: tiefst === Infinity ? null : tiefst, ms: +rechenWert.toFixed(2), karte: karteName }), weg: waehleWeg, kameraOrt: () => kamera.position.toArray().map((v) => +v.toFixed(2)), probe: (wer) => PROBEN[wer].probe.zustand(),   // Hof-Rohbau: Plan, Bildrate, Weg wechseln
     blick: (von, nach) => { pruefBlick = von ? [von, nach] : null; }, figuren: () => figuren.liste(), mundformen: (an) => { ohneFormen = !an; },   // Testprogramm: false = so tun, als fehlten die Mundformen (Reserve: Lautstärke)

@@ -129,6 +129,8 @@
   <button type="button" class="nurhof" data-rabetut="mordred" hidden>Mordred hebt die Flügel</button>
   <button type="button" class="nurhof" data-rabetut="schluessel" aria-pressed="false" hidden>Schlüssel im Schnabel</button>
   <span class="nurhof" hidden>Der Tourist</span>
+  <button type="button" class="nurhof" data-touristrede="reden" hidden>Redet</button>
+  <button type="button" class="nurhof" data-touristrede="gestik" hidden>Redet mit Gestik</button>
   <button type="button" class="nurhof" data-touristtut="laeuft" aria-pressed="true" hidden>Irrt umher</button>
   <button type="button" class="nurhof" data-touristtut="drehen" hidden>Plan neigen</button>
   <button type="button" class="nurhof" data-touristtut="zeigen" hidden>Zeigt (falsche Richtung)</button>
@@ -486,6 +488,8 @@ try {
         const schritte = regieSchritte(regieDaten[id], p.mund[id]); if (schritte) p.probe.regie({ schritte, zeit: () => (laeuft ? laeuft.zeit() : 1e9) }); },
       ende: () => { p.probe.mund(null); p.probe.rede(null); p.probe.regie(null); if (p.wer === "tourist") tou.redet = false; } });
   });
+  /* Der Tourist redet auf einen Klick (Mr. Alex 20.11.: die Knöpfe gehören zu seinen anderen): wählt ihn als Figur und drückt „Reden“ oder „Reden mit Gestik“ */
+  for (const b of document.querySelectorAll("#bau button[data-touristrede]")) b.addEventListener("click", () => { if (!PROBEN.tourist) return; document.querySelector('#bau button[data-wahl="tourist"]').click(); document.querySelector(`#bau button[data-kopfrede="${b.dataset.touristrede}"]`).click(); });
   const GARY_SAGT = ["gary_01", "gary_03", "gary_06", "gary_11", "gary_12"], GARY_GESTIK = "gary_06";
   let garyNr = 0, ohneFormen = false;
   const druecke = (art, wert) => { for (const b of document.querySelectorAll(`#figuren button[data-${art}]`)) b.setAttribute("aria-pressed", String(b.dataset[art] === wert)); };

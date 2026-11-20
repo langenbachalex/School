@@ -940,7 +940,7 @@ async function hofTest(browser, basis, app, name, fm) {
       if (await pg.evaluate(() => !!window.__probe3d.touristRede())) {
         await pg.waitForFunction(() => !document.getElementById("buehne").dataset.ton, null, { timeout: 15000 }).catch(() => {});
         const tonVorher = await pg.evaluate(() => { const alt = window.__towerTonTest; window.__towerTonTest = 5000; return alt; });
-        await pg.click('#bau button[data-wahl="tourist"]'); await pg.click('#bau button[data-kopfrede="gestik"]');
+        await pg.click('#bau button[data-touristrede="gestik"]');   // sein eigener Knopf wählt ihn und lässt ihn reden
         let mundMax = 0, redete = false, anfang = 0, ort = null, wegMax = 0; const gesten = new Set();
         for (let k = 0; k < 200; k++) {
           const x = await pg.evaluate(() => ({ ...window.__probe3d.touristRede(), wo: window.__probe3d.touristWo(), jetzt: performance.now() }));

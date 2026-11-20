@@ -873,8 +873,8 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     }
     if (gw > 0.01) {   /* Rede-Gesten des Touristen (Figuren 10, 20.11.): die linke Hand hält die Karte, die rechte redet mit –
          tippen: der Zeigefinger tippt auf die Karte („steht doch hier“) · offen: offene Hand zur Seite, Handfläche nach oben („That's what I said“) · daumen: Daumen hoch („alles im Griff“) */
-      if (pl.geste === "tippen") { const tip = 0.07 * Math.sin(gt * 13) * gw;
-        richte(K("upperarmr"), K("lowerarmr"), v(-0.4, -1, 0.35), gw); richte(K("lowerarmr"), K("wristr"), v(0.42, 0.3 + tip, 1), gw); dreheHand("r", v(0.55, -0.1 + tip, 1), v(0, -1, 0.2), gw);
+      if (pl.geste === "tippen") { const tip = Math.max(0, Math.sin(gt * 11)) * gw;   /* Mr. Alex 20.11.: er tippte durch die Karte – die Hand bleibt jetzt vor der Karte, nur die Fingerspitze kommt bis ans Papier */
+        richte(K("upperarmr"), K("lowerarmr"), v(-0.42, -1, 0.12), gw); richte(K("lowerarmr"), K("wristr"), v(0.5, 0.5, 0.42 + 0.16 * tip), gw); dreheHand("r", v(0.3, -0.05, 1), v(0, -1, 0.2), gw);
       } else if (pl.geste === "daumen") {
         richte(K("upperarmr"), K("lowerarmr"), v(-0.55, -1, 0.4), gw); richte(K("lowerarmr"), K("wristr"), v(-0.25, 0.75, 1), gw); dreheHand("r", v(0, 0, 1), v(1, 0, 0), gw);
       } else {

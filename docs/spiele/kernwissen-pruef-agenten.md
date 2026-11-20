@@ -32,6 +32,11 @@ Angelegt vom Master am 20.11.2026 auf Wunsch von Mr. Alex. **Jeder Prüf-Agent l
 - **Nicht überpädagogisch.** Eine Spielmechanik darf nicht nach Übung riechen. Die Raben sind geheimnisvoll und stehen für Rätsel; sie sind kein Mittel, um Fragesätze zu üben.
 - Altersangemessen bleiben, auch wenn etwas unheimlich wird.
 
+- **Die Raben bleiben still und geheimnisvoll.** Arthur ist ihr Sprachrohr, die anderen krächzen verschieden; Hinweise sind verdeckt und wirken zufällig. Nicht zu viele Stimmen, nicht zu viel zum Hören.
+- **Es geht um England und Englisch**, nicht um multikulturelles Lernen.
+- **Mr. Flex darf echte Fehler haben und lügen** – Mr. Alex steht zu seinen Fehlern.
+- Die Antworten des Kindes zeigen eine Haltung (mutig, witzig, vorsichtig), nicht richtig oder falsch.
+
 ## 5. Was die Lerngruppe mag (Stand 20.11.)
 - Die Raben wirken auf sie geheimnisvoll, nicht wie Bilderbuch. Der Fuchs Gary sieht cool aus, ein bisschen übertrieben, mit Hütchen; er darf Zauberglanz versprühen, ohne dass ihm etwas gelingt.
 - Wiederspielbarkeit und etwas zum Vorzeigen sind geplant: Die Mädchen haben sich gewünscht, ihr Zimmer einzurichten, die Figur einzukleiden und zu schminken (Kleidung gewinnt man durch Wiederholen); für die Jungen eher Minispiele. Punkte wirken immer.

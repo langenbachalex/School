@@ -212,3 +212,17 @@ Ihm gefallen alle Vorschläge dieser Prüfung („Ich stehe auf Mystery, und das
 
 **Am stärksten:** Sergeant Bearskin und Mr Wren.
 **Am schwächsten:** Mr Pike und Nell (solange sie Sami doppelt).
+
+### Rückmeldung Mr. Alex zu Prüfung 4 (20.11.2026, spät)
+- **Sami und Nell (Nell schnell und laut, Sami leise und genau): ja, aber vielleicht gibt es eine bessere Kombination.** Ihm fehlt noch **eine hilfsbereite Figur** – etwa ein Kind als freundliche „Klette“, das am Kind des Spielers hängt und immer helfen will. Noch einmal ansehen.
+- **Mr. Flex lügt bewusst („I made that feather“), Mrs Crumb deckt es auf: ja.** Das ist ein echter Fehler, und es zeigt auch von Mr. Alex selbst, dass er zu seinen Fehlern steht.
+- **Mrs Crumb handelt 1899 mit (lacht als Einzige nicht, rettet die Feder, öffnet Merlin die Tür): definitiv ja.**
+- **Eine Figur mit echter Angst: ja. Ein gleichaltriges Kind, das nicht an die Schule glaubt (Tilly) als kleine Gegenspielerin: ja** – als Kontrast zur hilfsbereiten Figur.
+- **Andere Herkunft bei Hütern: nicht wichtig**, ein bis zwei sind möglich. Es geht um England und Englisch, nicht um multikulturelles Lernen.
+- **Die sieben Hüter mit Merkmal und Satz: gut,** kann weiter ausgebaut werden.
+- **Die Raben: bleiben still.** Sieben sprechende Raben wären zu verwirrend und zu viel zum Hören. **Arthur ist das Sprachrohr; die anderen krächzen verschieden.** Ab und zu ein Wort, vielleicht sogar versehentlich ein halb ausgesprochenes Zauberwort: **verdeckte Hinweise, die zufällig wirken und die man nur bei genauem Hinhören erkennt.** Die Rabensätze des Prüfers fallen damit weg.
+- **Mr Wren:** Stehenbleiben, wenn jemand ausgelacht wird: ja. Er im Spiegel statt Mr. Flex: ja, und sein Auftauchen darf noch unheimlicher werden. Die Zettel mit durchgestrichenen Wörtern: fraglich. Die Jungenstimme als Rabenruf: nicht kommentiert.
+- **Das Kind: Antworten zeigen eine Haltung (mutig, witzig, vorsichtig) statt richtig oder falsch: ja, viel besser.** Ob es „Three for the heart“ allein spricht: nicht wichtig, später.
+- **Mr Pike bekommt die Angst vor dem Geist: ja. Der Geist wartet auf eine Entschuldigung;** „Adas Brief“ (stammt aus dem älteren Figurenblatt) fällt weg.
+- **Nicht kommentiert:** Samis flüsterndes Korrigieren, die Taube („He never looks at me“), Arthurs schwacher Moment, der weiße Fleck der Elster, der Tourist am Ende, die Beziehungen über alle Kapitel (Punkt 6).
+

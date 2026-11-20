@@ -128,8 +128,8 @@
   <button type="button" class="nurhof" data-rabetut="mordred" hidden>Mordred hebt die Flügel</button>
   <button type="button" class="nurhof" data-rabetut="schluessel" aria-pressed="false" hidden>Schlüssel im Schnabel</button>
   <span class="nurhof" hidden>Der Tourist</span>
-  <button type="button" class="nurhof" data-touristtut="laeuft" aria-pressed="true" hidden>Latscht hin und her</button>
-  <button type="button" class="nurhof" data-touristtut="drehen" hidden>Plan drehen</button>
+  <button type="button" class="nurhof" data-touristtut="laeuft" aria-pressed="true" hidden>Geht hin und her</button>
+  <button type="button" class="nurhof" data-touristtut="drehen" hidden>Plan neigen</button>
   <button type="button" class="nurhof" data-touristtut="zeigen" hidden>Zeigt (falsche Richtung)</button>
   <span class="nurhof" hidden>Die Taube</span>
   <button type="button" class="nurhof" data-taubetut="bahn" hidden>Lange Bahn gehen</button>
@@ -380,16 +380,21 @@ try {
   if (taube) { const p = taubePlatz(); taube.setze(p.x, 0, p.z, 0); szene.add(taube.wurzel);
     for (const b of document.querySelectorAll("#bau button[data-taubetut]")) b.addEventListener("click", () => ({ bahn: taubeBahn, huepfe: () => taube.huepfe(), flattere: () => taube.flattere(), picke: () => taube.picke(), rede: () => b.setAttribute("aria-pressed", String(taube.rede(b.getAttribute("aria-pressed") !== "true"))) })[b.dataset.taubetut]()); }
   /* Der Tourist (Figuren 9, 20.11.): steht zum Beurteilen frei links vor dem Startpunkt, neben der Taube; nicht im Spiel (?spiel=1) */
-  const tourist = hof && !sucht.has("spiel") ? await ladeBauProbe(lader, szene, { x: hof.plan.start.x - 5.2, z: hof.plan.start.z - 4.2, bahn: 1.2 }, { kopf: TOURIST.kopf }, TOURIST) : null;
-  /* Sein Gang im Figurenblatt: zwei Schritte, stehen bleiben, (Plan drehen), umdrehen. Die Bahn ist zwei Schritte lang; am Ende bleibt er stehen, dreht den Plan und geht zurück. */
-  const tou = { an: !sucht.has("touriststeht"), t: 1.5, stufe: "steht", dreht: -1 };
+  const tourist = hof && !sucht.has("spiel") ? await ladeBauProbe(lader, szene, { x: hof.plan.start.x - 5.2, z: hof.plan.start.z - 4.2, bahn: 2.4 }, { kopf: TOURIST.kopf }, TOURIST) : null;
+  /* Sein Ablauf (Mr. Alex 20.11.): ein paar lange Schritte, dann bleibt er stehen und ist verwirrt – Karte hoch und hin und her neigen, mit dem Kopf nach links und rechts schauen,
+     dann nur mit den Augen; ein paar Tritte in die eine Richtung, schauen, ein paar in die andere, schauen – und erst dann dreht er um und geht zurück. */
+  const tou = { an: !sucht.has("touriststeht"), t: 1.2, stufe: "steht", uhr: 0, i: 0 };
+  const TOU_ABLAUF = tourist ? [[0.9, () => tourist.planDrehen()], [3.7, () => tourist.kopfSchau(0.75, 0.9)], [4.8, () => tourist.kopfSchau(-0.75, 0.9)], [6.0, () => tourist.augen(1)], [6.8, () => tourist.augen(-1)],
+    [7.7, () => tourist.schau(0.9)], [8.3, () => tourist.kopfSchau(0.5, 0.9)], [9.6, () => tourist.schau(-0.9)], [10.2, () => tourist.kopfSchau(-0.5, 0.9)], [11.6, () => {}]] : [];
   function bewegeTourist(dt) {
-    tourist.bewege(dt); if (tou.dreht > 0 && (tou.dreht -= dt) <= 0) tourist.planDrehen();
-    const w = tourist.wegStand();
-    if (tou.stufe === "geht") { if (!w.wendet && (w.hin > 0 ? w.bahn - w.weg : w.weg) < 0.2) { tourist.befehl("stehen"); tou.stufe = "haelt"; } return; }   // kurz vor dem Ende der Bahn: Schritt zu Ende setzen und stehen bleiben
-    if (tou.stufe === "haelt") { if (w.modus === "stehen") { tou.stufe = "steht"; tou.t = 3.6; tou.dreht = 1.2; } return; }
+    tourist.bewege(dt); const w = tourist.wegStand(), rest = w.hin > 0 ? w.bahn - w.weg : w.weg;
+    if (tou.stufe === "geht") { if (!w.wendet && rest < 0.3) { tourist.befehl("stehen"); tou.stufe = "haelt"; } return; }   // kurz vor dem Ende der Bahn: Schritt zu Ende setzen und stehen bleiben
+    if (tou.stufe === "haelt") { if (w.modus === "stehen") { tou.stufe = "schaut"; tou.uhr = 0; tou.i = 0; } return; }
+    if (tou.stufe === "schaut") { if (w.modus !== "stehen") return;                                                           // während der kleinen Tritte wartet der Ablauf
+      tou.uhr += dt; while (tou.i < TOU_ABLAUF.length && TOU_ABLAUF[tou.i][0] <= tou.uhr) TOU_ABLAUF[tou.i++][1]();
+      if (tou.i >= TOU_ABLAUF.length) { tou.stufe = "steht"; tou.t = 0.3; } return; }
     if (!tou.an || (tou.t -= dt) > 0) return;
-    if ((w.hin > 0 ? w.bahn - w.weg : w.weg) < 0.5) tourist.kehrt();                                                                         // am Ende der Bahn: umdrehen (mit kleinen Tritten), dann zurück
+    tourist.gerade(); if (rest < 0.6) tourist.kehrt();                                                                         // am Ende der Bahn: umdrehen (mit kleinen Tritten), dann zurück
     tourist.befehl("gehen"); tou.stufe = "geht";
   }
   const touristTut = (was) => { if (was === "laeuft") { tou.an = !tou.an; if (!tou.an && tou.stufe === "geht") { tourist.befehl("stehen"); tou.stufe = "haelt"; } return tou.an; } if (was === "drehen") return tourist.planDrehen(); if (was === "zeigen") { tou.t = Math.max(tou.t, 3.2); return tourist.zeige(); } return false; };

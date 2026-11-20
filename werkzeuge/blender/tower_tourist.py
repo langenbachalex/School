@@ -23,13 +23,15 @@ BLAU, ROT, WEISS = (0.02, 0.05, 0.32), (0.80, 0.03, 0.05), (0.95, 0.95, 0.93)
 
 def touristkopf(name="touristkopf", ort=(0, 0, 0)):
     f = fx.farben("tou", haut=BRAND, wange=BRAND, bartschatten=BRAND, schnurrbart=BRAND, braue=(0.16, 0.07, 0.025), iris=(0.22, 0.09, 0.02), falte=(0.70, 0.24, 0.20))
-    k = fx.flexkopf(None, ort, name, f=f, ohr=(0.022, 0.030, 0.044, 0.9), haare=False, brille=False, bart=(0.004, 0.001, 0.0), braue=0.0065)
+    fx.KINN = ((0, -0.113, -0.012), (0.023, 0.023, 0.03))   # spitzeres Kinn (Mr. Alex 20.11.)
+    k = fx.flexkopf(None, ort, name, f=f, ohr=(0.007, 0.026, 0.038, 0.35),   # Ohren liegen mehr an (Mr. Alex 20.11.)
+                    haare=False, brille=False, bart=(0.004, 0.001, 0.0), braue=0.0065)
     for sx in (-1, 1):                                    # Goofy-Freundlichkeit (Mr. Alex 20.11.): zwei grosse Schneidezaehne unter der Oberlippe
         g.kugel("schneidezahn", k, (sx * 0.0115, fx.gesicht_vorn(0, fx.LZ) - 0.0005, fx.LZ - 0.011), (0.0105, 0.005, 0.016), f["zahn"], fein=12)
     for ob in k.children:                                 # viel weichere Wangen (Mr. Alex 20.11.): flacher, groesser, in Hautfarbe – sie heben sich kaum vom Gesicht ab
         if ob.name.startswith("wange"):
             for p in ob.data.vertices:                    # in den Punkten, nicht im Massstab: den setzt der Browser beim Laecheln neu
-                p.co.x, p.co.y, p.co.z = p.co.x * 1.25, p.co.y * 0.4, p.co.z * 1.25
+                p.co.x, p.co.y, p.co.z = p.co.x * 1.2, p.co.y * 0.5, p.co.z * 1.2
 
     def netz(name, eltern, punkte, flaechen, material, farben=None):
         me = bpy.data.meshes.new(name)
@@ -70,10 +72,10 @@ def touristkopf(name="touristkopf", ort=(0, 0, 0)):
 
     # Kappe (Mr. Alex 20.11., nach seinen Bildern): eine richtige Baseballkappe, die Flagge gross ueber die ganze Kuppel, roter Schirm. Sie ist ihm zu klein und sitzt
     # fest oben auf der Haarhaube, leicht schief. Eigenes Gelenk "kappe".
-    kap = g.gelenk("kappe", k, (0.004, 0.012, oben - 0.03))
-    kap.rotation_euler = (math.radians(8), math.radians(4), 0)
+    kap = g.gelenk("kappe", k, (0.003, 0.006, oben - 0.04))   # sitzt genau auf der Haarhaube und ragt hinten nicht mehr heraus (Mr. Alex 20.11.)
+    kap.rotation_euler = (math.radians(4), math.radians(3), 0)
     stoffbild, rot = stoff("tou_kappe", 0.75), g.farbe("tou_rot", ROT, 0.6)
-    KX, KY, KZ = 0.116, 0.124, 0.092
+    KX, KY, KZ = 0.108, 0.12, 0.092
 
     def flagge(u, v):                                     # u quer, v nach vorn (je -1..1): rotes Kreuz mit weissem Rand, weisse Schraegen mit rotem Kern, blaue Felder
         au, av = abs(u), abs(v)

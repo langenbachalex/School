@@ -536,6 +536,22 @@ function armeGlatt(m, plan) {
     P.needsUpdate = true; o.geometry.computeVertexNormals(); o.geometry.computeBoundingBox(); o.geometry.computeBoundingSphere();
   });
 }
+/* Rumpf glätten (Tourist, Mr. Alex 20.11.: kein „Ritter-Rüstungsstil“, kein Gürtelumriss an der Hüfte; Brust dünner, Bauch wie bisher):
+   Jeder Punkt des Rumpfs zwischen von und bis bekommt den Abstand einer glatten Ellipse von der Körperachse; profil = [[Höhe, halbe Breite, halbe Tiefe], …]
+   (Maße des ungestreckten Körpers). Kragen, Westenkante, Gürtel und Taschen verschwinden in einer weichen T-Shirt-Form. */
+function rumpfGlatt(m, plan) {
+  const mass = (y) => { const pr = plan.profil; for (let i = 1; i < pr.length; i++) if (y <= pr[i][0] || i === pr.length - 1) { const t = Math.min(1, Math.max(0, (y - pr[i - 1][0]) / (pr[i][0] - pr[i - 1][0]))); return [pr[i - 1][1] + (pr[i][1] - pr[i - 1][1]) * t, pr[i - 1][2] + (pr[i][2] - pr[i - 1][2]) * t]; } };
+  m.traverse((o) => {
+    if (!o.isSkinnedMesh || !/_Body$/.test(o.name)) return;
+    const P = o.geometry.attributes.position;
+    for (let i = 0; i < P.count; i++) {
+      const x = P.getX(i), y = P.getY(i), z = P.getZ(i), stark = weich(y, plan.von - plan.rand, plan.von) * (1 - weich(y, plan.bis, plan.bis + plan.rand)); if (!stark) continue;
+      const [rx, rz] = mass(y), w = Math.atan2(z, x), k = 1 / Math.hypot(Math.cos(w) / rx, Math.sin(w) / rz);   // Abstand der Ellipse in dieser Richtung
+      P.setXYZ(i, x + (Math.cos(w) * k - x) * stark, y, z + (Math.sin(w) * k - z) * stark);
+    }
+    P.needsUpdate = true; o.geometry.computeVertexNormals(); o.geometry.computeBoundingBox(); o.geometry.computeBoundingSphere();
+  });
+}
 /* Bäuchlein (Tourist, Mr. Alex 20.11.: dünn, aber mit Bauch): die Vorderseite des Rumpfs wölbt sich um die Höhe `mitte` (± hoch) um `vor` nach vorn und wird dort etwas breiter. */
 function bauchBauen(m, b) {
   m.traverse((o) => {
@@ -553,13 +569,16 @@ function bauchBauen(m, b) {
    Kopf aus tower_tourist.py: Sonnenbrand mit Brillenabdruck, orange Haare, zu kleine Union-Jack-Kappe. */
 const T_HEMD = 0xf2f0ea, T_HOSE = 0x273f9a, T_BRAND = 0xffa295, T_BLASS = 0xf3cdb4, T_SOCKE = 0xf4f4f0, T_SCHUH = 0xd4202a, T_SOHLE = 0xf4f4f0, T_STREIF = 0x1f3f8f;
 export const TOURIST = { koerper: "koerper_rogue", teile: "tourist_teile", bau: { arm: 1.95, bein: 3.0, kopf: 0.68, rumpf: 1.2 }, schlank: 0.72, fuss: 1.9,   /* Mr. Alex 20.11.: lange Schuhe – 2.6 war zu lang, die Hälfte der Verlängerung von 1.25 aus */ haut: T_BRAND, bauch: { mitte: 0.68, hoch: 0.22, vor: 0.13, breit: 0.1 }, kopf: "touristkopf", hand: 0.85, druck: { von: 0.69, bis: 1.01, breit: 0.15 },   // druck: Aufdruck auf der Brust (Höhe von, bis · halbe Breite; Maße des ungestreckten Körpers)
-  /* Er latscht (Mr. Alex 20.11.: goofy, schlaksig, wackeliger Gang): die Sohle klatscht flach auf, die Füße heben sich kaum und zeigen nach außen (aussen, Bogenmaß),
-     die Knie bleiben weich (streck), breite Spur, er wippt stark und wiegt sich von Seite zu Seite (latsch.wiegen), der Rücken ist rund (latsch.krumm).
-     plan: der zu kleine Stadtplan (Meter), den er in beiden Händen vor sich hält – verkehrt herum. */
-  gang: { stand: 0.7, ferse: 0, rollt: 0.03, flach: 0.2, ballen: 0.22, heben: 0.02, wippen: 0.2, spur: 1.8, tempo: 0.5, streck: 0.94, aussen: 0.32, an: 0.55 },   // breite Spur, damit die Hacken der langen Schuhe nicht zusammenstoßen (Mr. Alex 20.11.)   // Mr. Alex 20.11.: viel langsamer, er schlurft – die Füße heben sich kaum und bleiben lange am Boden
-  latsch: { wiegen: 0.09, krumm: 0.14 }, plan: { breit: 0.3, hoch: 0.2 },
+  /* Sein Gang (Mr. Alex 20.11., nach dem Film „Goofy Walk Cycle“, Bild für Bild angesehen): KEIN Schlurfen, sondern lange, federnde Schritte – das Bein schwingt gestreckt weit
+     nach vorn, die Fußspitze zeigt dabei steil nach oben (ferse), er setzt auf der Hacke auf und rollt ab; im Durchschwung geht das Knie hoch (heben), der Körper hebt und
+     senkt sich deutlich (wippen); der Oberkörper lehnt zurück (latsch.zurueck), die Arme schwingen lang und gegengleich (latsch.arme), die Füße zeigen leicht nach außen.
+     plan: der zu kleine Stadtplan (Meter) – im Gehen hängt er in der linken Hand, im Stehen hält er ihn mit beiden Händen verkehrt herum vor sich. */
+  gang: { stand: 0.56, ferse: 0.7, rollt: 0.14, flach: 0.3, ballen: 0.7, heben: 0.2, wippen: 0.24, spur: 1.5, tempo: 0.72, streck: 0.99, aussen: 0.25, an: 0.55 },
+  latsch: { wiegen: 0.07, krumm: 0.14, zurueck: 0.22, arme: 0.75 }, plan: { breit: 0.3, hoch: 0.2 },
   weich: { zieht: 2.6, aus: 0.3, dreh: 2.0, blende: 0.55 },   // organisch loslaufen und stehen bleiben: so schnell fährt er an (1/s) · Tempo beim Auslaufen · Drehen mit kleinen Tritten (Bogenmaß/s) · Überblenden (s)
-  armeGlatt: { von: 0.2, bis: 0.74, dick: [0.115, 0.08], rand: 0.08 }, wangeVor: 0.25, ausdruck: "goofy", ohne: { "3,0": 0, "6,0": 0.4 },   // Schnallen und die abstehenden Taschen des Rogue weg; Gürtelband und Riemen bleiben als Saum in Hemdfarbe (ohne sie hat der Rumpf Löcher)
+  armeGlatt: { von: 0.2, bis: 0.74, dick: [0.115, 0.08], rand: 0.08 },
+  rumpfGlatt: { von: 0.44, bis: 1.075, rand: 0.03, profil: [[0.4, 0.3, 0.24], [0.62, 0.31, 0.25], [0.82, 0.26, 0.19], [1.0, 0.235, 0.16], [1.1, 0.22, 0.15]] },   // Hüfte und Bauch wie bisher, zur Brust hin schmaler
+  wangeVor: 0.25, ausdruck: "goofy", ohne: { "3,0": 0, "6,0": 0.4 },   // Schnallen und die abstehenden Taschen des Rogue weg; Gürtelband und Riemen bleiben als Saum in Hemdfarbe (ohne sie hat der Rumpf Löcher)
   faerben: { Body: { ort: (x, y) => [0.5, (y - 0.38) / 0.9], farbe: (a, b) => (b > 0.24 ? T_HEMD : b > 0.19 ? T_BLASS : T_HOSE) },                       // Hemd · ein Streifen Bauch · Hosenbund
     Arm: { ort: (x) => [0.5, Math.abs(x) / 0.97], farbe: (a, b) => (b < 0.3 ? T_HEMD : T_BRAND) },                                                   // kurzer Ärmel, Arm sonnenverbrannt
     Leg: { ort: (x, y, z) => [(z + 0.13) / 0.39, y / 0.53], farbe: (a, b) => { const y = b * 0.53, z = a * 0.39 - 0.13;                               // Shorts, enden deutlich über dem Knie (Mr. Alex 20.11.), im Blau der Kappe · blasses Bein · weiße Socke mit zwei blauen Streifen · rote Schuhe mit weißer Sohle (Mr. Alex 20.11.: die Sandalen waren nicht zu erkennen – rote, sehr lange Schuhe)
@@ -579,6 +598,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   // Schulterlinie und schlanker Körper: feste Lage der Gelenke, die sich nicht mit dem Körper strecken (strecke setzt sie in jedem Bild)
   const schulter = { ...SCHULTER, ...figur.schulter }, schlank = figur.schlank || 1, fussLang = figur.fuss || schlank, gelenkFest = [];
   if (figur.armeGlatt) armeGlatt(m, figur.armeGlatt);
+  if (figur.rumpfGlatt) rumpfGlatt(m, figur.rumpfGlatt);
   if (figur.schlank) schlankBauen(m, schlank, fussLang, schulter.rumpf || 1);
   if (figur.bauch) bauchBauen(m, figur.bauch);
   for (const s of "lr") {
@@ -792,7 +812,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   /* Tourist: Haltung mit dem Stadtplan (Figuren 9). Beide Hände halten den Plan vor dem Bauch, der Rücken ist rund, der Kopf vorgeschoben; im Gehen wiegt er sich.
      Bei der Geste „zeigen“ lässt die rechte Hand los, der Plan bleibt in der linken. Der Plan selbst ist ein eigenes Teil in der Szene (planNach setzt ihn zwischen die Hände);
      er steht auf dem Kopf (dreh = π), „Plan drehen“ dreht ihn um eine halbe Runde weiter – danach steht er wieder falsch herum. */
-  const pl = { r: 1, dreh: Math.PI, ziel: Math.PI, von: Math.PI, teil: null, zeigT: 0, schnipp: 0 }, ZEIG = 2.8, SCHNIPP = 1.1;   // Sekunden: so lange zeigt er · so lange dauert das Drehen der Karte
+  const pl = { r: 1, teil: null, zeigT: 0, neigT: 0, neig: 0, schau: 0, schauZiel: 0, schauBis: 0, auto: 2, kopfY: 0, kopfX: 0 }, ZEIG = 2.8, NEIG = 2.6;   // Sekunden: so lange zeigt er · so lange neigt er die Karte hin und her
   if (figur.plan) {
     const blatt = (malen) => { const c = document.createElement("canvas"); c.width = 384; c.height = 256; malen(c.getContext("2d")); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
     const aussen = blatt((z) => { z.fillStyle = "#f3ead2"; z.fillRect(0, 0, 384, 256); z.fillStyle = "#c8102e"; z.fillRect(0, 0, 384, 70); z.fillStyle = "#fff"; z.textAlign = "center"; z.textBaseline = "middle";
@@ -806,31 +826,43 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   }
   const planHaltung = (dt) => {
     if (!figur.plan) return;
-    pl.zeigT = Math.max(0, pl.zeigT - dt); pl.schnipp = Math.max(0, pl.schnipp - dt);
+    pl.zeigT = Math.max(0, pl.zeigT - dt); pl.neigT = Math.max(0, pl.neigT - dt);
     const zt = ZEIG - pl.zeigT, zeig = pl.zeigT > 0 ? weich(zt, 0, 0.45) * (1 - weich(zt, ZEIG - 0.6, ZEIG)) : 0;                       // Zeigen: hin in einer knappen halben Sekunde, halten, zurück
-    /* Karte drehen (Mr. Alex 20.11.: nicht „magisch“; Variante C): die linke Hand hält, die rechte schiebt die Ecke nach oben weg – die Karte dreht eine halbe Runde – und greift wieder zu */
-    const sn = pl.schnipp > 0 ? 1 - pl.schnipp / SCHNIPP : 1, hoch = pl.schnipp > 0 ? Math.sin(Math.PI * weich(sn, 0.03, 0.9)) : 0;
-    pl.dreh = pl.von + (pl.ziel - pl.von) * weich(sn, 0.14, 0.74); pl.r = 1 - zeig;
-    const L = figur.latsch || {}, G = gang.gehen, u0 = G && G.dauer ? aktion.gehen.time / G.dauer - G.phase : 0, wieg = (L.wiegen || 0) * Math.sin(2 * Math.PI * u0) * (g.geh || 0);
-    richte(K("spine"), K("chest"), v(wieg, 1, L.krumm || 0), 1); richte(K("chest"), head, v(-wieg * 0.7, 1, (L.krumm || 0) * 2.2 * (1 - 0.6 * zeig)), 1);     // runder Rücken, Kopf vorgeschoben; im Gehen wiegt er sich, der Kopf pendelt nach
-    for (const [s, seite] of [["r", -1], ["l", 1]]) {                                                                                 // Grundhaltung: beide Hände an den Rändern der Karte
-      richte(K("upperarm" + s), K("lowerarm" + s), v(seite * 0.22, -1, 0.18), 1); richte(K("lowerarm" + s), K("wrist" + s), v(-seite * 0.1, 0.5, 1), 1);
-      dreheHand(s, v(-seite * 0.1, 0.45, 1), v(-seite, 0.1, 0), 1);
+    /* Karte neigen (Mr. Alex 20.11., statt Drehen): etwa 20 Grad, erst rechts höher, dann links höher, dann wieder gerade */
+    const nt = pl.neigT > 0 ? 1 - pl.neigT / NEIG : 1, neigSoll = pl.neigT > 0 ? 0.35 * (weich(nt, 0, 0.15) - 2 * weich(nt, 0.4, 0.55) + weich(nt, 0.85, 1)) : 0;
+    pl.neig += (neigSoll - pl.neig) * Math.min(1, dt * 10); pl.r = 1 - zeig;
+    /* Umschauen (Mr. Alex 20.11.: er schaut sehr, sehr viel nach rechts und links): der Kopf dreht auf Befehl (kopfSchau) oder alle paar Sekunden von selbst zur Seite und kommt zurück */
+    if ((pl.schauBis -= dt) <= 0) { pl.schauZiel = 0; if ((pl.auto -= dt) <= 0) { pl.auto = 1.6 + Math.random() * 2.2; pl.schauZiel = (Math.random() < 0.5 ? -1 : 1) * (0.35 + Math.random() * 0.35); pl.schauBis = 0.7 + Math.random() * 0.5; } }
+    pl.schau += (pl.schauZiel - pl.schau) * Math.min(1, dt * 5);
+    const L = figur.latsch || {}, G = gang.gehen, geh = g.geh || 0, u0 = G && G.dauer ? aktion.gehen.time / G.dauer - G.phase : 0, wieg = (L.wiegen || 0) * Math.sin(2 * Math.PI * u0) * geh;
+    /* Im Stehen: runder Rücken, Kopf über der Karte. Im Gehen: der Oberkörper lehnt zurück (L.zurueck), das Becken schiebt vor, er wiegt sich, der Kopf pendelt nach. */
+    richte(K("spine"), K("chest"), v(wieg, 1, (L.krumm || 0) * (1 - geh) - (L.zurueck || 0) * geh), 1);
+    richte(K("chest"), head, v(-wieg * 0.7, 1, (L.krumm || 0) * 2.2 * (1 - 0.6 * zeig) * (1 - geh)), 1);
+    for (const [s, seite] of [["r", -1], ["l", 1]]) {
+      /* Stehen: beide Hände fassen die Karte an den Rändern – Finger hinter der Karte, Daumen davor (offene Hand, Handfläche zu ihm); die Ellbogen weit auseinander und vor dem Körper */
+      richte(K("upperarm" + s), K("lowerarm" + s), v(seite * 0.5, -1, 0.3), 1); richte(K("lowerarm" + s), K("wrist" + s), v(-seite * 0.2, 0.45 - seite * pl.neig * 0.45, 1), 1);
+      dreheHand(s, v(-seite * 0.2, 1, 0.15), v(0, -0.25, 1), 1);
+      /* Gehen: die Arme baumeln lang und gegengleich zu den Beinen, der Unterarm schwingt nach; die Karte hängt in der linken Hand */
+      if (geh > 0.01) {
+        const hin = Math.cos(2 * Math.PI * (u0 - (s === "l" ? 0.5 : 0))), phi = (L.arme || 0.7) * hin, arm = v(seite * 0.16, -Math.cos(phi), Math.sin(phi)), unter = v(seite * 0.1, -Math.cos(phi + 0.4), Math.sin(phi + 0.4));
+        richte(K("upperarm" + s), K("lowerarm" + s), arm, geh); richte(K("lowerarm" + s), K("wrist" + s), unter, geh); dreheHand(s, unter.clone(), v(-seite, 0, 0), geh);
+      }
     }
-    if (hoch > 0.01) { richte(K("upperarmr"), K("lowerarmr"), v(-0.2, -0.7, 0.55), hoch); richte(K("lowerarmr"), K("wristr"), v(0.32, 1, 0.7), hoch); dreheHand("r", v(0.45, 1, 0.45), v(1, 0, 0.2), hoch); }
-    if (zeig > 0.01) {                                                                                                              // Zeigen (Mr. Alex 20.11.): der rechte Arm streckt sich groß zur Seite, die linke Hand zieht die Karte zur Seite und nach unten, der Kopf dreht mit und schaut in die Ferne
+    if (zeig > 0.01) {                                                                                                              // Zeigen (Mr. Alex 20.11.): der rechte Arm streckt sich groß zur Seite, die linke Hand zieht die Karte zur Seite und nach unten, der Kopf geht ruhig mit und kommt zurück
       richte(K("upperarmr"), K("lowerarmr"), v(-1, 0.2, 0.3), zeig); richte(K("lowerarmr"), K("wristr"), v(-1, 0.28, 0.3), zeig); dreheHand("r", v(-1, 0.28, 0.3), v(0, -1, 0), zeig);
       richte(K("upperarml"), K("lowerarml"), v(0.42, -1, 0.08), zeig); richte(K("lowerarml"), K("wristl"), v(0.55, -0.15, 1), zeig);
-      head.rotateY(-0.8 * zeig); head.rotateX(-0.28 * zeig);
     }
-    g.hand = [zeig > 0.3 ? Z : F, F];
+    pl.kopfY = -0.75 * zeig + pl.schau * (1 - zeig); pl.kopfX = -0.25 * zeig;   // gedreht wird in kopfLauf, dort wo der Kopf jedes Bild neu von seiner Grundlage ausgeht
+    g.hand = [zeig > 0.3 ? Z : R, geh > 0.5 || zeig > 0.3 ? F : R];
     m.updateMatrixWorld(true);
   };
   const planNach = () => {
     if (!pl.teil) return; pl.teil.visible = anker.visible;
-    const l = wo(K("wristl")), qm = m.getWorldQuaternion(Q()), rechts = v(-1, 0, 0).applyQuaternion(qm);                          // die Karte hängt an der linken Hand: sie bleibt ruhig, wenn die rechte loslässt
-    pl.teil.position.copy(l).addScaledVector(rechts, figur.plan.breit * 0.46).addScaledVector(v(0, 1, 0), figur.plan.hoch * 0.3).addScaledVector(v(0, 0, 1).applyQuaternion(qm), 0.05);
-    pl.teil.quaternion.copy(qm).multiply(Q().setFromAxisAngle(v(1, 0, 0), 0.4)).multiply(Q().setFromAxisAngle(v(0, 0, 1), pl.dreh));
+    const geh = weich(g.geh || 0, 0.2, 0.8), l = wo(K("wristl")), qm = m.getWorldQuaternion(Q()), rechts = v(-1, 0, 0).applyQuaternion(qm);   // die Karte hängt an der linken Hand
+    const allein = l.clone().addScaledVector(rechts, figur.plan.breit * 0.5), steht = allein.lerp(l.clone().add(wo(K("wristr"))).multiplyScalar(0.5), pl.r).addScaledVector(v(0, 1, 0), figur.plan.hoch * 0.42).addScaledVector(v(0, 0, 1).applyQuaternion(qm), -0.012);   // zwischen beiden Händen; lässt die rechte los, hängt sie an der linken
+    pl.teil.position.copy(steht.lerp(l.clone().addScaledVector(v(0, 1, 0), -figur.plan.breit * 0.42), geh));                                 // im Gehen baumelt sie hochkant unter der Hand
+    const qSteht = qm.clone().multiply(Q().setFromAxisAngle(v(1, 0, 0), 0.4)).multiply(Q().setFromAxisAngle(v(0, 0, 1), Math.PI + pl.neig));   // steht auf dem Kopf (π), dazu die Neigung
+    pl.teil.quaternion.copy(qSteht).slerp(qm.clone().multiply(Q().setFromAxisAngle(v(0, 1, 0), Math.PI / 2)).multiply(Q().setFromAxisAngle(v(0, 0, 1), Math.PI / 2)), geh);
   };
   const hutBreit = () => {                              // halbe Breite der Mütze im Maß des Kopfknochens: die Hände tasten außen an das Fell, nicht hinein (Mr. Alex 19.11.)
     if (g.hutBreit == null) { let b = 0; const p = v();
@@ -933,6 +965,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     // Der Mixer setzt den Kopfknochen nur neu, wenn sich die Bewegung ändert – darum die Zusatzdrehung vom letzten Bild erst zurücknehmen
     if (g.kopfErgebnis && head.quaternion.equals(g.kopfErgebnis)) head.quaternion.copy(g.kopfBasis);
     g.kopfBasis = head.quaternion.clone();
+    if (figur.plan) { head.rotateY(pl.kopfY || 0); head.rotateX(pl.kopfX || 0); }
     const r = g.redet, t = g.uhr * 1000;
     head.rotateX(r * (0.06 * Math.sin(t / 190) + 0.035 * Math.sin(t / 433)) + 0.07 * g.akzent * r);
     head.rotateY(r * 0.09 * Math.sin(t / 610)); head.rotateZ(r * 0.045 * Math.sin(t / 370));
@@ -1063,7 +1096,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const w = weich(g.geh, 0, 1), u0 = aktion.gehen.time / G.dauer - G.phase, qm = m.getWorldQuaternion(Q()), vorn = v(0, 0, 1).applyQuaternion(qm);
     let hoch = 0; for (const s of "lr") hoch += wo(K("upperleg" + s)).y / 2;         // Hüfte: sanftes Auf und Ab, oben mitten im Stand
     /* Marsch auf der Stelle (Mr. Alex 19.11.: im selben Drill wie sein Gang): derselbe Ablauf, aber die Füße bleiben unter der Hüfte und setzen flach auf. */
-    g.stelleW += ((g.stelle > 0 || (figur.weich && g.wendet && an) ? 1 : an ? 0 : g.stelleW) - g.stelleW) * Math.min(1, dt * 10); const sw = g.stelleW;
+    g.stelleW += ((g.stelle > 0 || (figur.weich && (g.wendet || g.tritt) && an) ? 1 : an ? 0 : g.stelleW) - g.stelleW) * Math.min(1, dt * 10); const sw = g.stelleW;
     g.my += (G.hoch - wippe(u0) * GANG.wippen * mass + (G.stehHoch - G.hoch) * sw - hoch - g.my) * w; m.position.y = g.my; anker.updateMatrixWorld(true);
     for (const [s, seite] of [["l", 1], ["r", -1]]) {
       const u = (((u0 + (s === "r" ? 0.5 : 0)) % 1) + 1) % 1, f = fussBahn(u, G), F = K("foot" + s), Z = K("toes" + s);
@@ -1166,11 +1199,15 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const flaeche = (s) => halter[s].localToWorld(v(-0.052, 0, 0));                    // Mitte der Handfläche
   return {
     befehl: starte, kopf: kopfBefehl,
-    planDrehen() { if (!pl.teil || pl.schnipp > 0) return false; pl.von = pl.ziel; pl.ziel += Math.PI; pl.schnipp = SCHNIPP; return true; },
+    planDrehen() { if (!pl.teil || pl.neigT > 0) return false; pl.neigT = NEIG; return true; },                                       // Tourist: neigt die Karte hin und her (der Name ist vom früheren Drehen geblieben)
     zeige() { if (!pl.teil) return false; pl.zeigT = ZEIG; return true; },                                                          // Tourist: zeigt groß zur Seite (in die falsche Richtung)
+    kopfSchau(winkel, dauer) { pl.schauZiel = winkel; pl.schauBis = dauer; pl.auto = Math.max(pl.auto, dauer + 1); },                // Kopf zur Seite drehen (+ = nach links) und nach `dauer` Sekunden zurück
+    augen(z) { g.blickZiel = z * 1.1; g.blickBis = 0.7; },                                                                           // nur die Pupillen: +1 links, −1 rechts
+    schau(winkel) { g.seit = winkel; g.tritt = true; if (g.modus !== "gehen") starte("gehen"); },                                    // weiche Figuren: mit kleinen Tritten auf der Stelle in eine Richtung drehen, dann stehen bleiben
+    gerade() { g.seit = 0; },
     kehrt() { g.hin = -g.hin; },                                                                                                  // weiche Figuren (figur.weich): Richtung wechseln – beim nächsten Gehen dreht er sich mit kleinen Tritten um
     wegStand() { return { weg: +g.weg.toFixed(3), bahn: g.bahn, hin: g.hin, wendet: !!g.wendet, modus: g.modus, fahrt: +(g.fahrt || 0).toFixed(2) }; },                                                // Tourist: dreht den Stadtplan um eine halbe Runde
-    planStand() { return pl.teil ? { dreh: +pl.dreh.toFixed(3), haende: +pl.r.toFixed(2), ort: pl.teil.position.toArray().map((x) => +x.toFixed(3)), abstand: +wo(K("wristl")).distanceTo(wo(K("wristr"))).toFixed(3), modus: g.modus } : null; },
+    planStand() { return pl.teil ? { geh: +(g.geh || 0).toFixed(2), neig: +pl.neig.toFixed(3), schau: +pl.schau.toFixed(3), haende: +pl.r.toFixed(2), ort: pl.teil.position.toArray().map((x) => +x.toFixed(3)), abstand: +wo(K("wristl")).distanceTo(wo(K("wristr"))).toFixed(3), modus: g.modus } : null; },
     sichtbar(an) { anker.visible = !!an; },
     wo: () => ({ x: anker.position.x, z: anker.position.z }),   // Block B2: wo steht die Figur gerade?                // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
     /* Testprogramm: Lücke zwischen Arm und Rumpf (m), an den verformten Netzen in sechs Höhen vom Handgelenk bis unter die Schulterpartie gemessen; unter 0 = der Arm steckt im Körper. */
@@ -1213,11 +1250,12 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
         g.fahrt = (g.fahrt || 0) + ((g.haltWunsch ? W.aus : 1) - (g.fahrt || 0)) * Math.min(1, dt * W.zieht); aktion.gehen.timeScale = Math.max(0.05, g.fahrt);   // Schritte und Weg laufen im selben Maß langsamer: der Fuß gleitet nicht
         if (g.haltWunsch && !g.wendet && g.uVor !== undefined && ((g.uVor < 0.5 && u >= 0.5) || u < g.uVor)) { g.haltJetzt = true; starte("stehen"); g.haltJetzt = false; }   // ein Fuß hat gerade aufgesetzt: jetzt bleibt er stehen
         g.uVor = u;
+        if (g.tritt && Math.abs((g.hin < 0 ? Math.PI : 0) + (platz.dreh || 0) + (g.seit || 0) - g.dreh) <= 0.05) { g.tritt = false; g.haltWunsch = true; }   // fertig gedreht: Schritt zu Ende setzen und stehen bleiben
       }
       const unterwegs = (g.modus === "gehen" || g.modus === "rennen") && !(g.stelle > 0), rund = g.runde && !g.gerade;
       if (unterwegs && rund) g.weg += gang[g.modus].tempo * (g.eilig ? figur.drill.schnell : 1) * dt;                         // Rundkurs: immer weiter, ohne Wenden
       else if (unterwegs) {
-        g.weg += g.hin * gang[g.modus].tempo * (g.eilig ? figur.drill.schnell : 1) * (figur.weich ? (g.wendet ? 0 : g.fahrt || 0) : 1) * dt;                                    // auf der Bahn hin und her, am Ende umdrehen (wie Gary)
+        g.weg += g.hin * gang[g.modus].tempo * (g.eilig ? figur.drill.schnell : 1) * (figur.weich ? (g.wendet || g.tritt ? 0 : g.fahrt || 0) : 1) * dt;                                    // auf der Bahn hin und her, am Ende umdrehen (wie Gary)
         if (g.weg > g.bahn) { g.weg = g.bahn; g.hin = -1; }
         if (g.weg < 0) { g.weg = 0; g.hin = 1; }
       }
@@ -1227,7 +1265,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
         if (unterwegs && Math.abs(ab) < 0.5) { g.dreh = soll; g.wendet = false; }      // unterwegs folgt die Figur der Bahn genau, auch durch die runden Ecken
         else { g.wendet = Math.abs(ab) > 0.05; g.dreh += ab * Math.min(1, dt * 7); }
       } else {
-        const soll = ((figur.weich ? g.hin < 0 : unterwegs && g.hin < 0) ? Math.PI : 0) + (platz.dreh || 0);   // weiche Figuren bleiben stehen, wie sie gegangen sind, und drehen sich erst beim Losgehen
+        const soll = ((figur.weich ? g.hin < 0 : unterwegs && g.hin < 0) ? Math.PI : 0) + (platz.dreh || 0) + (figur.weich ? g.seit || 0 : 0);   // weiche Figuren bleiben stehen, wie sie gegangen sind, und drehen sich erst beim Losgehen
         g.wendet = Math.abs(soll - g.dreh) > 0.05;
         if (figur.weich) g.dreh += Math.sign(soll - g.dreh) * Math.min(Math.abs(soll - g.dreh), dt * (unterwegs ? figur.weich.dreh : 0)); else g.dreh += (soll - g.dreh) * Math.min(1, dt * 7);
         anker.position.z = platz.z + g.weg;

@@ -1220,7 +1220,8 @@
         let gehoert = 0, zuletzt = null, seit = null, echt = 0;
         const a = el("audio", { controls: true, preload: "none", src: b.audio });
         const halt = () => { if (seit != null) { echt += performance.now() - seit; seit = null; } };
-        a.addEventListener("play", () => { stopp(); if (a.currentTime < 1) { gehoert = 0; echt = 0; } zuletzt = a.currentTime; seit = performance.now(); });
+        a.addEventListener("play", () => { stopp(); document.querySelectorAll(".beat audio").forEach((x) => { if (x !== a) x.pause(); });   // nur ein Beat gleichzeitig (Mr. Alex 20.11.)
+          if (a.currentTime < 1) { gehoert = 0; echt = 0; } zuletzt = a.currentTime; seit = performance.now(); });
         a.addEventListener("timeupdate", () => { const t = a.currentTime; if (zuletzt != null && t > zuletzt && t - zuletzt < 1.5) gehoert += t - zuletzt; zuletzt = t; });
         a.addEventListener("seeked", () => { zuletzt = a.currentTime; });
         a.addEventListener("pause", halt);

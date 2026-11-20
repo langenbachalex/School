@@ -1115,6 +1115,20 @@ async function frKachelnHeute(pg) {
   return fehlt(k, "Memory") || fehlt(k, "Qui est-ce") || fehlt(k, "Dans l'ordre");
 }
 
+// FR (20.11.2026, Mr. Alex): Im Beat-Studio ließen sich alle vier Hörbeispiele gleichzeitig abspielen. Startet ein Beat, müssen die anderen anhalten.
+async function frBeatNurEiner(pg) {
+  return pg.evaluate(() => {
+    const a = [...document.querySelectorAll(".beat audio")];
+    if (a.length < 2) return "Beat-Studio: weniger als zwei Hörbeispiele gefunden";
+    const angehalten = a.map(() => false);
+    a.forEach((x, i) => { x.pause = () => { angehalten[i] = true; }; });
+    a[1].dispatchEvent(new Event("play"));
+    const offen = a.map((x, i) => i).filter((i) => i !== 1 && !angehalten[i]);
+    if (offen.length) return `Beat-Studio: Startet Beat 2, laufen ${offen.length} andere weiter (alle Beats gleichzeitig abspielbar)`;
+    return angehalten[1] ? "Beat-Studio: Der gestartete Beat hält sich selbst an" : null;
+  });
+}
+
 // EN6 + EN9 (16.11.2026, Mr. Alex: dieselbe Prüfung wie in FR): Hauptkette „alle Teile eines Bereichs fertig → Bereich in der Übersicht grün“.
 // Der eingespielte Stand hat alle Teile eines Bereichs bis auf einen Erklärteil; der wird im Browser gemacht (Erklärteile geben keine Punkte, zählen aber).
 // Danach muss die Kachel auf der Startseite grün sein. Dazu: Spiele zählen einmal am Tag – wer heute alle gespielt hat, sieht das an der Kachel
@@ -1257,6 +1271,7 @@ function speicherTest(app) {
         if (EN_KETTE[app.kurz]) f.push(...await w("Bereich wird grün, Spiele zeigen den Stand von heute", [], { stand: enFastFertig(app), pruefe: (pg) => enKetteGruen(app, pg) }));
         if (app.kurz === "FR") f.push(...await w("Prononciation grün", [/Prononciation/, /Président & stars/, /Alle der Reihe nach/], { pruefe: frGruppeGruen }));
         if (app.kurz === "FR") f.push(...await w("Kacheln zeigen den Stand von heute", [], { stand: frHeuteAlles, pruefe: frKachelnHeute }));
+        if (app.kurz === "FR") f.push(...await w("Beat-Studio: nur ein Beat gleichzeitig", [/Beat-Studio/], { pruefe: frBeatNurEiner }));
       }
       f.push(...speicherTest(app));
       if (!OHNE_UPDATE) f.push(...await updateTest(browser, basis, app));

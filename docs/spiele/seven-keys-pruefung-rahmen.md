@@ -35,6 +35,25 @@ Auftrag Mr. Alex 20.11.: vier unabhängige Prüfer lesen `seven-keys-grosse-gesc
 
 ---
 
+### Rückmeldung Mr. Alex zu Prüfung 1 (20.11.2026, spät)
+Grundsatz: **Nichts vorschnell entscheiden – aus der Rückmeldung wird entwickelt, auf Plausibilität geprüft, dann entschieden.** „Einverstanden“ heißt hier: Die Richtung stimmt.
+
+- **Gesamturteil: einverstanden.** Zu viel Film, die Kinder tun zu wenig, es steht zu wenig auf dem Spiel. Die Tür, die seit hundert Jahren zu ist, gefällt ihm besonders: **Portale in andere Welten weiterverfolgen und verstärken.** Das Kind selbst spielt in der Geschichte noch keine Rolle; das ist einzuweben.
+- **Punkt 1 (erste zwei Minuten): einverstanden, mit Korrektur.** Nicht alles muss verstanden werden, aber genug. Sein Satz: Schöne Sprache trägt nur, wenn Interaktion dabei ist, auch in einfacher Sprache. **Der Erzähler wird nicht auf fünf Sätze und 45 Sekunden gekürzt**; er kann voll bleiben, aber die Handlungen führt das Kind aus (anklopfen, die Tür geht auf, man sieht hindurch, darf noch nicht eintreten; Leuchten oder ein Lichtstrahl wie aus Garys Zauberstab). Spätestens nach 20 Sekunden ein eigener Handgriff. **Der Lichtflügel kommt zurück** – als ein Flügel, von dem das Kind einen Teil erhascht.
+- **Das Kind als Küchenmädchen im Prolog: gute Idee, noch auf Plausibilität zu prüfen.** Es braucht eine logische Verbindung zu heute, und später muss klar werden, dass das Kind nicht das Küchenmädchen ist (Vorbild: Rückblenden in „Der Herr der Ringe Online“).
+- **Punkt 2 (Haken): einverstanden.** Bisher Aufgaben, kein Geheimnis. Das Geheimnis muss im Kind entstehen, nicht durch Fragen der Figuren. „Wer beobachtet mich?“ ist wichtig.
+- **Punkt 3 (cool oder peinlich): teils zurückgewiesen.** Der Vers ist kein Grundschul-Abzählreim: Die Klasse kennt Listen & Repeat mit Rhythmus und Beat; das wird cool, vielleicht auch eine Rap-Fassung. Der Fuchs sieht cool aus und darf Zauberglanz versprühen, ohne dass ihm etwas gelingt. Die Raben sind geheimnisvoll, nicht Bilderbuch; die Elster ist ein verkappter Rabe. Die Taube kann nerven, ist aber kein Problem. Später können Gefährten aus dem Zoo dazukommen (etwa ein gefährlicher Tiger). **Die Überraschungsparty fällt weg** (cheesy, cringe). Mehr Gefahr.
+- **Punkt 4 (Muster der sieben Kapitel): einverstanden.**
+- **Punkt 5 (Gefühl): einverstanden;** „Agoriad“ wird sich nicht wie ein Stuhlkreis anfühlen.
+- **Punkt 6 (Mitmachen): zurückgewiesen, wo der Prüfer die Klasse falsch einschätzt.** Gerade die Coolen machen mit, es klingt nie nach Singsang. Mr. Alex stolpert nicht über die walisischen Wörter, er zeigt ihre Kraft. Der Stadion-Schlachtruf ist ohnehin seine Methode. Aber: Das Spiel wird allein gespielt, ein Mikrofon ist nicht geplant; „die Klasse ruft“ ist noch zu klären.
+- **Punkt 7 (was fehlt): einverstanden.** Mehr Gefahr, mehr Gegner – nicht nur Mr Wren; Trittbrettfahrer könnten auftauchen und Gefahr vortäuschen. Humor fein abstimmen (Dreigestirn Gary, Sergeant, Mr. Flex). Zum Vorzeigen ist mehr geplant: Kapitel wieder spielbar, Zimmer einrichten, Figur einkleiden und schminken (Wunsch der Mädchen), Minispiele, Punkte. **Freundschaft muss ein großes Thema werden** (Harry Potter; Frodo und Sam). Tempo: Erzählung und eigenes Handeln verweben.
+- **Punkt 8 (Figuren):** Die Kinder wollen sich selbst spielen – das nimmt er sehr ernst; heimlich auf der Seite von Mr Wren zu stehen, gefällt ihm.
+- **Änderung 1 (Prolog spielen): ja**, auszuarbeiten wie oben. **Änderung 2 (Tower-Sage als Druckmittel): gut, eine Möglichkeit;** weitere Wege, Gefahr spürbar zu machen, sind zu prüfen. **Änderung 3 (Mr Wren früh zeigen): ja, ganz klar.** **Änderung 4 (Muster brechen): noch genau ansehen,** auf Plausibilität prüfen. **Änderung 5 (Schlachtruf): im Kern ohnehin seine Methode;** die stille Wahl, wenn Sami stockt, hat er nicht kommentiert.
+- **Ende von Kapitel 1:** Die Party wird ersetzt. Wie, wird erst festgelegt, wenn die Figuren und der Aufbau aller Kapitel ausgearbeitet sind.
+- **Für alle künftigen Prüfungen:** Die Agenten lesen zuerst `kernwissen-pruef-agenten.md`; geprüft wird nach jeder Fassung wieder.
+
+---
+
 ## Prüfung 2 – Logiklöcher
 
 **Prüfbericht: Logiklöcher in „The Seven Keys of London“** (gelesen: große Geschichte Fassung 3 mit Abschnitt 0, Prolog Fassung 4)

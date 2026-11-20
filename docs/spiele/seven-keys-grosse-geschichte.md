@@ -2,6 +2,48 @@
 
 Dieses Blatt ist der Rahmen für alle Kapitel und geht jedem Drehbuch vor. Grundlagen: `seven-keys-grundlagen.md` (Recherche und Handwerk), `seven-keys-recherche-bran-branwen-wortmagie.md`. **Fett mit „entschieden“** = von Mr. Alex am 20.11.2026 festgelegt. **Vorschlag** = wartet auf seine Abnahme. Was aus der Überlieferung stammt und was wir erfinden, steht in Abschnitt 13.
 
+## 0. Stand 20.11.2026 abends – Entscheidungen, die Fassung 3 ergänzen oder ändern (gehen dem Text darunter vor)
+Alles in diesem Abschnitt ist von Mr. Alex entschieden. Wo der Text weiter unten etwas anderes sagt, gilt dieser Abschnitt. Eine durchgeschriebene Fassung 4 folgt nach der Prüfung.
+
+**Der Zauber und sein Reim**
+- **Der Zauber selbst sind vier walisische Kraftwörter,** immer dieselben, in derselben Reihenfolge (Schreibweise und Aussprache noch im Wörterbuch zu prüfen): **Barddoniaeth** (Dichtung – das Wort) · **Soniarus** (klangvoll – der Klang) · **Hiraeth** (Sehnsucht – das Herz) · **Agoriad** (Öffnung, Schlüssel). Altenglisch ist ausgeschlossen.
+- **Der Kern ist ein Vierzeiler** (ersetzt den Wahlspruch in Abschnitt 2):
+  > One for the word – Barddoniaeth!
+  > Two for the sound – Soniarus!
+  > Three for the heart – Hiraeth!
+  > Agoriad, agoriad – and the key goes round!
+- **Ein Zauber, drei Überlieferungen.** Die englischen Verse sind nicht der Zauber, sondern die Art, wie er bewahrt wurde: (1) der **Abzählreim der Schule** für die Kinder (oben) – so lernt man, was jedes Wort bedeutet; (2) das **Rätsel der Raben**, das Arthur spricht: „One, and the word is woken. / Two, and the air is strung. / Three, and the heart is open. / Turn, and the lock is sprung.“ – danach werden die vier Kraftwörter gerufen; (3) die **Inschrift der Federtür**: „One: a word in the night. / Two: a sound takes flight. / Three: a heart burns bright. / Thus the wing is whole and dark is light.“ – anfangs unter Staub nur in Bruchstücken lesbar.
+- **Der Vierzeiler ist selbst Ruf und Antwort.** Die ersten drei Zeilen sind der Ruf; **die vierte Zeile („Agoriad“) ist die Antwort und gehört Mr Wren.** 1899 sprach der stolze Junge die drei Zeilen; der andere stockte bei der vierten. Das doppelte „Agoriad, agoriad“: einmal er allein, einmal alle mit ihm.
+- **Drei weitere Zaubersprüche** (walisisch, Wörter noch zu wählen und zu prüfen; Kandidaten: Erinnerung – atgofion oder ysgrifen · Zeit – curiad oder caniad · Wahrheit – gwirionedd oder gwawrio). Jeder bewirkt etwas Sichtbares und wird an der Tür noch einmal gebraucht: **Erinnerung** macht eine Erinnerung sichtbar (das ist der Grund für die Rückblenden) · **Zeit** bringt etwas Stehengebliebenes wieder in Gang (die Uhr des Geistes) · **Wahrheit** zeigt, was wirklich ist (wäscht der Elster die Farbe ab; Mr. Flex kann nicht mehr ausweichen). Das Kind findet sie im British Museum, im Big Ben und in Greenwich. Sieben Wörter als Reim gibt es nicht; die Sieben tragen Orte, Raben, Schlüssel und Federn.
+- **Musik und Klanggestaltung macht Mr. Alex selbst.**
+
+**Die Federtür (Mechanik)**
+- Kein Schlüsselloch. Ein geschnitzter Rabe, der Flügel quer über die Tür ist der **Riegel**. Ein **Gegengewicht** im Rahmen zieht ihn ständig nach oben; **sieben verdeckte Sperrklinken** halten ihn unten. Die **sieben Federn sind aus Metall** (geschwärztes Silber), jede mit eigenem Profil am Kiel; jede drückt eine Klinke weg (sattes Klack; eine falsche klemmt). Nach der siebten fällt hörbar das Gegengewicht, der Flügel hebt sich. Darunter liegen **sieben gewöhnliche Schlüssellöcher** für die sieben alten Schlüssel.
+- 1899 wurden die sieben Federn aus dem Flügel genommen; die Raben trugen sie an die sieben Orte. **Sechs Raben haben sechs Federn; die siebte hat Merlin**, der mit Mr Wren ging.
+- **Die flüsternde Feder** aus Szene 1 ist eine echte Rabenfeder und gehört nicht zu den sieben: Merlin verlor sie 1899 auf der Schwelle; das Küchenmädchen (die junge Mrs Crumb) hob sie auf und bewahrte sie. Sie wird warm, weil das Kind zugehört hat.
+
+**Was 1899 mit den Menschen machte**
+- **Festgehalten vom Ruf:** Wer in jener Nacht dabei war, wird vom unbeantworteten Ruf festgehalten; solange die Antwort aussteht, vergeht für diese Menschen die Zeit kaum (Mr Wren, Mrs Crumb, Mr. Flex, die Taube). Der Schulleiter ist gestorben und wartet als Geist.
+- **Mr. Flex war der beste Schüler, nicht Lehrer.** Er sitzt im Glas, weil gilt: **Wer ruft, bleibt gebunden, bis ihm geantwortet wird.** Er rief 1899 und bekam keine Antwort; seitdem sieht und hört er nur sich selbst. Als Mr Wren „Agoriad“ sagt, ist er frei. Er bildet das Kind heimlich aus und holt nach, was er selbst nie zu Ende gelernt hat.
+
+**Warum die Schlüssel im Tower landen**
+- Der Key Club trifft sich seit 1899 nicht mehr; die sieben Schlüssel kommen von selbst nie zusammen. Jeder alte Schlüssel bedient an seinem Ort eine Sache und passt in eines der sieben Schlösser der Tür. Mr Wren lässt sie deshalb einzeln holen. Das Kind bringt jeden zurück; die Hüter beschließen, die geretteten Schlüssel im Tower unter die Wache des Sergeants zu stellen (die sieben Haken). Mr Wren begreift, dass das Kind für ihn sammelt, und hört auf zu stehlen – deshalb hilft er auf der Tower Bridge. Am Ende nimmt er alle sieben von den Haken.
+
+**Die Auflösung, Schritt für Schritt (ersetzt Abschnitt 4)**
+1. Das Kind legt sechs Federn ein. Der Flügel bleibt unten.
+2. Mr Wren kommt mit den sieben Schlüsseln und findet keine Schlösser.
+3. Merlin gibt die siebte Feder. Der Flügel hebt sich, die sieben Schlösser erscheinen, die Schlüssel passen. Keiner hätte es allein gekonnt.
+4. Sami (Wort), Nell (Klang) und das Kind (Herz) sprechen die drei Zeilen.
+5. Die Zeugen von 1899 geben Mr Wren zurück, was verloren ging, je mit ihrem Spruch: Mrs Crumb die Erinnerung („I called after you“), der Geist die Zeit (er schloss zu schnell; „It is time“), Mr. Flex die Wahrheit (wem der Zauber gehörte; sein Satz wird noch länger als „It was you. I am sorry.“).
+6. Mr Wren stockt bei „Agoriad“. Niemand lacht. Alle sprechen es mit.
+7. Die Tür geht auf. Mr. Flex ist frei, die Taube landet bei ihm, Merlin setzt sich als siebter Rabe auf die Mauer, der Geist darf gehen. Die Schule öffnet; um 9:53 die Zeremonie mit allen.
+
+**Weiteres**
+- **Mr Pike ist Chief Yeoman Warder** (der Titel darf öfter fallen), nicht „Keeper of the Keys“.
+- **Die Elster lügt beim Antippen:** Sie zeigt den Namen eines echten Raben, jedes Mal einen anderen; „Mordred“ fällt erst bei der Auflösung.
+- **Prolog „1899“:** Entwurf in `seven-keys-prolog-1899.md` (Fassung 4). Noch anzupassen: Der stolze Junge spricht drei Zeilen, der andere stockt bei der vierten; das Bild deutet nur an (Glühen im Türspalt, Geräusche, höchstens ein kleiner Teil eines Lichtflügels, kein Lichtvogel). Der Erzähler hat eine schöne, anspruchsvolle Sprache; einfach sind nur die Dialoge.
+- **Ideen, noch nicht festgelegt:** der Sergeant auch am Buckingham Palace · der Doppeldeckerbus als Verbindung zwischen den Orten · Fußball im Hof des Towers (siehe Ideenspeicher).
+
 ## 1. Die Geschichte in sechs Sätzen
 In London wirkt Magie durch alte Worte, die richtig gesprochen und wirklich gehört werden. Sieben Orte hüten je einen Schlüssel und ein Ritual; zu jedem Hüter gehört ein Rabe. Ein stiller Herr, den alle nur Mr Nobody nennen, sammelt die Schlüssel, und ein Ritual nach dem anderen droht auszufallen. Drei Kinder, ein Fuchs, der Zauberer sein will, und ein Zauberer hinter dem Glas folgen ihm von Ort zu Ort. Am Ende stehen alle vor der Federtür im Tower – und die Schlüssel allein öffnen sie nicht. Es braucht die sieben Federn, die sich das Kind durch Zuhören verdient hat, die Worte – und den einen Satz, den Mr. Flex nie gesagt hat.
 

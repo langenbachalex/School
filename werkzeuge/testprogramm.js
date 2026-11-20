@@ -960,7 +960,7 @@ async function hofTest(browser, basis, app, name, fm) {
       // Der Tourist (Figuren 9, 20.11.): hält den kleinen Stadtplan in beiden Händen, latscht zwei Schritte, bleibt stehen, dreht den Plan und kehrt um; beim Zeigen lässt die rechte Hand los
       const tr = await pg.evaluate(() => { const p = window.__probe3d; if (!p.touristPlan || !p.touristPlan()) return null; const a = p.touristPlan(), o0 = p.touristWo(); let weit = 0, ging = false, stand = false, eng = 9, breit = 0;
         let sprung = 0, langsam = 9, schnell = 0, vor = p.touristWeg(), dreh = 0, neig = 0, schau = 0, hoch = 0, haengt = 9;
-        for (let i = 0; i < 1100; i++) { p.touristTakt(1, 20); const o = p.touristWo(), s = p.touristPlan(), w = p.touristWeg(); weit = Math.max(weit, Math.hypot(o.x - o0.x, o.z - o0.z)); if (s.modus === "gehen") ging = true; else if (ging) stand = true; if (s.modus === "stehen" && s.geh < 0.03) { eng = Math.min(eng, s.abstand); breit = Math.max(breit, s.abstand); hoch = s.ort[1]; } if (s.geh > 0.97) haengt = s.ort[1]; neig = Math.max(neig, Math.abs(s.neig)); schau = Math.max(schau, Math.abs(s.schau));
+        for (let i = 0; i < 1100; i++) { p.touristTakt(1, 20); const o = p.touristWo(), s = p.touristPlan(), w = p.touristWeg(); weit = Math.max(weit, Math.hypot(o.x - o0.x, o.z - o0.z)); if (s.modus === "gehen") ging = true; else if (ging) stand = true; if (s.modus === "stehen" && s.geh < 0.03 && s.haende > 0.98) { eng = Math.min(eng, s.abstand); breit = Math.max(breit, s.abstand); hoch = s.ort[1]; } if (s.geh > 0.97) haengt = s.ort[1]; neig = Math.max(neig, Math.abs(s.neig)); schau = Math.max(schau, Math.abs(s.schau));
           sprung = Math.max(sprung, Math.abs(w.weg - vor.weg)); if (w.modus === "gehen" && !w.wendet) { langsam = Math.min(langsam, w.fahrt); schnell = Math.max(schnell, w.fahrt); } if (w.wendet && w.modus === "gehen") dreh++; vor = w; }
         const b = p.touristPlan(); p.touristTut("zeigen"); let los = 1; for (let i = 0; i < 40; i++) { p.touristTakt(1, 20); los = Math.min(los, p.touristPlan().haende); }
         return { a, b, weit, ging, stand, eng, breit, los, sprung, langsam, schnell, dreh, neig, schau, hoch, haengt, kopf: p.tourist().kopf || null }; });
@@ -970,8 +970,8 @@ async function hofTest(browser, basis, app, name, fm) {
         // Mr. Alex 20.11.: Loslaufen und Stehenbleiben wirkten wie Teleportieren – er fährt an und läuft aus, springt nie und dreht sich mit Tritten im Gehen um
         if (tr.sprung > 0.03) fehl.push(`${t}: der Tourist springt beim Gehen (${tr.sprung.toFixed(3)} m in einem Bild)`);
         if (tr.langsam > 0.4 || tr.schnell < 0.9) fehl.push(`${t}: der Tourist fährt nicht an oder läuft nicht aus (Tempo zwischen ${tr.langsam} und ${tr.schnell} seines Gangs, erwartet unter 0,4 bis über 0,9)`);
-        if (tr.dreh < 20) fehl.push(`${t}: der Tourist dreht sich nicht im Gehen um (nur ${tr.dreh} Bilder; erwartet eine gute Sekunde mit kleinen Tritten)`);
-        if (tr.weit < 0.8 || tr.weit > 2.8) fehl.push(`${t}: der Tourist entfernt sich ${tr.weit.toFixed(2)} m von seinem Platz (erwartet ein paar lange Schritte, 0,8 bis 2,8 m)`);
+        if (tr.dreh < 8) fehl.push(`${t}: der Tourist dreht sich nicht mit kleinen Tritten in eine neue Richtung (nur ${tr.dreh} Bilder)`);
+        if (tr.weit < 0.8 || tr.weit > 12) fehl.push(`${t}: der Tourist entfernt sich ${tr.weit.toFixed(2)} m von seinem Platz (erwartet: er irrt über ein Feld von 10 × 10 m, mindestens 0,8 m weit)`);
         if (tr.neig < 0.25 || tr.neig > 0.5) fehl.push(`${t}: der Tourist neigt seinen Stadtplan nicht hin und her (höchstens ${tr.neig}; erwartet rund 20 Grad)`);
         if (tr.schau < 0.6) fehl.push(`${t}: der Tourist schaut sich im Stehen nicht nach links und rechts um (Kopf höchstens ${tr.schau})`);
         if (tr.eng < 0.28 || tr.breit > 0.45) fehl.push(`${t}: die Hände des Touristen liegen nicht an den Rändern des Plans (Abstand ${tr.eng} bis ${tr.breit} m, Plan 0,3 m breit)`);

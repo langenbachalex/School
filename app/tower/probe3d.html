@@ -128,7 +128,7 @@
   <button type="button" class="nurhof" data-rabetut="mordred" hidden>Mordred hebt die Flügel</button>
   <button type="button" class="nurhof" data-rabetut="schluessel" aria-pressed="false" hidden>Schlüssel im Schnabel</button>
   <span class="nurhof" hidden>Der Tourist</span>
-  <button type="button" class="nurhof" data-touristtut="laeuft" aria-pressed="true" hidden>Geht hin und her</button>
+  <button type="button" class="nurhof" data-touristtut="laeuft" aria-pressed="true" hidden>Irrt umher</button>
   <button type="button" class="nurhof" data-touristtut="drehen" hidden>Plan neigen</button>
   <button type="button" class="nurhof" data-touristtut="zeigen" hidden>Zeigt (falsche Richtung)</button>
   <span class="nurhof" hidden>Die Taube</span>
@@ -379,25 +379,32 @@ try {
   const taubeBahn = () => { const p = taubePlatz(); return taube.gehe([{ x: p.x - 4, z: p.z - 1 }, { x: p.x + 8, z: p.z - 1 }, { x: p.x - 4, z: p.z - 1 }, p]); };
   if (taube) { const p = taubePlatz(); taube.setze(p.x, 0, p.z, 0); szene.add(taube.wurzel);
     for (const b of document.querySelectorAll("#bau button[data-taubetut]")) b.addEventListener("click", () => ({ bahn: taubeBahn, huepfe: () => taube.huepfe(), flattere: () => taube.flattere(), picke: () => taube.picke(), rede: () => b.setAttribute("aria-pressed", String(taube.rede(b.getAttribute("aria-pressed") !== "true"))) })[b.dataset.taubetut]()); }
-  /* Der Tourist (Figuren 9, 20.11.): steht zum Beurteilen frei links vor dem Startpunkt, neben der Taube; nicht im Spiel (?spiel=1) */
-  const tourist = hof && !sucht.has("spiel") ? await ladeBauProbe(lader, szene, { x: hof.plan.start.x - 5.2, z: hof.plan.start.z - 4.2, bahn: 2.4 }, { kopf: TOURIST.kopf }, TOURIST) : null;
-  /* Sein Ablauf (Mr. Alex 20.11.): ein paar lange Schritte, dann bleibt er stehen und ist verwirrt – Karte hoch und hin und her neigen, mit dem Kopf nach links und rechts schauen,
-     dann nur mit den Augen; ein paar Tritte in die eine Richtung, schauen, ein paar in die andere, schauen – und erst dann dreht er um und geht zurück. */
-  const tou = { an: !sucht.has("touriststeht"), t: 1.2, stufe: "steht", uhr: 0, i: 0 };
-  const TOU_ABLAUF = tourist ? [[0.9, () => tourist.planDrehen()], [3.7, () => tourist.kopfSchau(0.75, 0.9)], [4.8, () => tourist.kopfSchau(-0.75, 0.9)], [6.0, () => tourist.augen(1)], [6.8, () => tourist.augen(-1)],
-    [7.7, () => tourist.schau(0.9)], [8.3, () => tourist.kopfSchau(0.5, 0.9)], [9.6, () => tourist.schau(-0.9)], [10.2, () => tourist.kopfSchau(-0.5, 0.9)], [11.6, () => {}]] : [];
+  /* Der Tourist (Figuren 9, 20.11.): irrt links vor dem Startpunkt über ein Feld von 10 × 10 m (Mr. Alex); nicht im Spiel (?spiel=1), dort stellt ihn später die Geschichte hin.
+     Sein Ablauf: Er marschiert überzeugt ein paar lange Schritte in eine zufällige Richtung, bleibt stehen, schaut in die Karte und schiebt sie hin und her, hebt den Kopf,
+     schaut weit nach rechts und bleibt kurz, weit nach links und bleibt kurz, zuckt ahnungslos mit den Schultern – und marschiert in eine neue Richtung los.
+     Jedes dritte Mal ein Fehlstart: zwei Schritte, abrupt stehen, ein Blick in die Karte, um ein Viertel drehen, dann erst richtig los. Weil das Feld klein ist, landet er immer wieder an derselben Stelle. */
+  const TOU_MITTE = hof ? { x: hof.plan.start.x - 7, z: hof.plan.start.z - 7 } : null, TOU_HALB = 5;
+  const tourist = hof && !sucht.has("spiel") ? await ladeBauProbe(lader, szene, { ...TOU_MITTE }, { kopf: TOURIST.kopf }, TOURIST) : null;
+  const tou = { an: !sucht.has("touriststeht"), t: 1.2, stufe: "steht", uhr: 0, i: 0, zahl: 0, fehl: null };
+  const TOU_ABLAUF = tourist ? [[0.5, () => { tourist.planDrehen(); tourist.kopfHoch(0.2, 2.9); }], [3.4, () => tourist.kopfHoch(-0.22, 4.4)], [4.0, () => tourist.kopfSchau(-1.0, 1.5)], [5.8, () => tourist.kopfSchau(1.0, 1.5)],
+    [7.7, () => tourist.befehl("achselzucken")], [9.7, () => {}]] : [];
+  const touKurs = (weit) => { const w = tourist.wegStand(); let kurs = Math.random() * 2 * Math.PI; const x = w.x + Math.sin(kurs) * weit, z = w.z + Math.cos(kurs) * weit;
+    if (Math.abs(x - TOU_MITTE.x) > TOU_HALB || Math.abs(z - TOU_MITTE.z) > TOU_HALB) kurs = Math.atan2(TOU_MITTE.x - w.x, TOU_MITTE.z - w.z) + (Math.random() - 0.5) * 1.2;   // am Rand: ungefähr zur Mitte zurück
+    return kurs; };
   function bewegeTourist(dt) {
-    tourist.bewege(dt); const w = tourist.wegStand(), rest = w.hin > 0 ? w.bahn - w.weg : w.weg;
-    if (tou.stufe === "geht") { if (!w.wendet && rest < 0.3) { tourist.befehl("stehen"); tou.stufe = "haelt"; } return; }   // kurz vor dem Ende der Bahn: Schritt zu Ende setzen und stehen bleiben
-    if (tou.stufe === "haelt") { if (w.modus === "stehen") { tou.stufe = "schaut"; tou.uhr = 0; tou.i = 0; } return; }
-    if (tou.stufe === "schaut") { if (w.modus !== "stehen") return;                                                           // während der kleinen Tritte wartet der Ablauf
-      tou.uhr += dt; while (tou.i < TOU_ABLAUF.length && TOU_ABLAUF[tou.i][0] <= tou.uhr) TOU_ABLAUF[tou.i++][1]();
-      if (tou.i >= TOU_ABLAUF.length) { tou.stufe = "steht"; tou.t = 0.3; } return; }
+    tourist.bewege(dt); const w = tourist.wegStand();
+    if (tou.stufe === "geht") { if (w.modus === "stehen") { tou.stufe = tou.fehl ? "fehl" : "schaut"; tou.uhr = 0; tou.i = 0; } return; }
+    if (tou.stufe === "fehl") { tou.uhr += dt;                                                                                          // Fehlstart: Blick in die Karte, dann ein Viertel drehen und richtig los
+      if (!tou.fehl.plan && tou.uhr > 0.3) { tou.fehl.plan = true; tourist.planDrehen(); tourist.kopfHoch(0.2, 1.7); }
+      if (tou.uhr > 2.3) { const kurs = tou.fehl.kurs + (Math.random() < 0.5 ? 1 : -1) * Math.PI / 2; tou.fehl = null; tourist.geheNach(kurs, 1.4 + Math.random()); tou.stufe = "geht"; } return; }
+    if (tou.stufe === "schaut") { tou.uhr += dt; while (tou.i < TOU_ABLAUF.length && TOU_ABLAUF[tou.i][0] <= tou.uhr) TOU_ABLAUF[tou.i++][1]();
+      if (tou.i >= TOU_ABLAUF.length) { tou.stufe = "steht"; tou.t = 0.2; } return; }
     if (!tou.an || (tou.t -= dt) > 0) return;
-    tourist.gerade(); if (rest < 0.6) tourist.kehrt();                                                                         // am Ende der Bahn: umdrehen (mit kleinen Tritten), dann zurück
-    tourist.befehl("gehen"); tou.stufe = "geht";
+    tou.zahl++; const weit = 1.3 + Math.random() * 1.3, kurs = touKurs(weit);
+    if (tou.zahl % 3 === 0) { tou.fehl = { kurs }; tourist.geheNach(kurs, 0.85); } else tourist.geheNach(kurs, weit);
+    tou.stufe = "geht";
   }
-  const touristTut = (was) => { if (was === "laeuft") { tou.an = !tou.an; if (!tou.an && tou.stufe === "geht") { tourist.befehl("stehen"); tou.stufe = "haelt"; } return tou.an; } if (was === "drehen") return tourist.planDrehen(); if (was === "zeigen") { tou.t = Math.max(tou.t, 3.2); return tourist.zeige(); } return false; };
+  const touristTut = (was) => { if (was === "laeuft") { tou.an = !tou.an; if (!tou.an && tou.stufe === "geht") tourist.befehl("stehen"); return tou.an; } if (was === "drehen") return tourist.planDrehen(); if (was === "zeigen") { tou.t = Math.max(tou.t, 3.2); return tourist.zeige(); } return false; };
   if (tourist) for (const b of document.querySelectorAll("#bau button[data-touristtut]")) b.addEventListener("click", () => { const r = touristTut(b.dataset.touristtut); if (b.dataset.touristtut === "laeuft") b.setAttribute("aria-pressed", String(r)); });
   /* Zum Vergleichen (Mr. Alex: Figuren frei in die Mitte stellen): alle sieben in einer Reihe vor dem Kind, Arthur in der Mitte, Blick nach Süden – oder zurück auf die Mauer */
   const rabeTut = (wer, was) => { const r = andereRaben.find((x) => x.zustand().wer === wer); return r ? r[was]() : false; };

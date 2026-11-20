@@ -43,7 +43,7 @@ const REDE_GESTEN = ["zeigen", "arme", "abwinken", "mahnen", "achselzucken", "pi
 const KOPF_SITZ = [0, -0.03, 0.0], FUNKEL = 0.6;        // eigener Kopf: Sitz über dem Kopfknochen (m) · Dauer des Funkelns (s)
 const OHNE_SOHLE = ["gehen", "rennen", "rolle", "spagat"];   // hier bleibt der Fuß, wie die Bewegung ihn führt (Abrollen, Füße in der Luft)
 const R = "offen", Z = "zeigen", F = "faust";
-const FINGER = { offen: [0, 0, 0, 0, 0, 0], zeigen: [0, 1, 1, 1, 1, 0], faust: [1, 1, 1, 1, 1, 0], gespreizt: [0, 0, 0, 0, 0, 1] };   // Einrollen von Zeige-, Mittel-, Ring-, kleinem Finger und Daumen · Spreizen
+const FINGER = { offen: [0, 0, 0, 0, 0, 0], zeigen: [0, 1, 1, 1, 1, 0], faust: [1, 1, 1, 1, 1, 0], gespreizt: [0, 0, 0, 0, 0, 1], klemme: [0.45, 0.45, 0.45, 0.45, 0.3, 0] };   // klemme (Tourist): Finger leicht gekrümmt, Daumen gegenüber – so klemmt die Karte zwischen Fingern und Daumen   // Einrollen von Zeige-, Mittel-, Ring-, kleinem Finger und Daumen · Spreizen
 /* Gesten-Tabelle: Knopf → [Bewegung, Beschriftung, Gruppe, Handform]. Handform: eine für beide Hände oder [rechts, links];
    null = die Hände bleiben, wie sie am Schalter gewählt sind. Nach der Geste gilt wieder der Schalter. */
 export const GESTEN = {
@@ -812,7 +812,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   /* Tourist: Haltung mit dem Stadtplan (Figuren 9). Beide Hände halten den Plan vor dem Bauch, der Rücken ist rund, der Kopf vorgeschoben; im Gehen wiegt er sich.
      Bei der Geste „zeigen“ lässt die rechte Hand los, der Plan bleibt in der linken. Der Plan selbst ist ein eigenes Teil in der Szene (planNach setzt ihn zwischen die Hände);
      er steht auf dem Kopf (dreh = π), „Plan drehen“ dreht ihn um eine halbe Runde weiter – danach steht er wieder falsch herum. */
-  const pl = { r: 1, teil: null, zeigT: 0, neigT: 0, neig: 0, schau: 0, schauZiel: 0, schauBis: 0, auto: 2, kopfY: 0, kopfX: 0 }, ZEIG = 2.8, NEIG = 2.6;   // Sekunden: so lange zeigt er · so lange neigt er die Karte hin und her
+  const pl = { r: 1, teil: null, zeigT: 0, neigT: 0, neig: 0, schau: 0, schauZiel: 0, schauBis: 0, auto: 2, kopfY: 0, kopfX: 0, nick: 0, nickZiel: 0, nickBis: 0, frei: 0 }, ZEIG = 2.8, NEIG = 2.6;   // Sekunden: so lange zeigt er · so lange neigt er die Karte hin und her
   if (figur.plan) {
     const blatt = (malen) => { const c = document.createElement("canvas"); c.width = 384; c.height = 256; malen(c.getContext("2d")); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; };
     const aussen = blatt((z) => { z.fillStyle = "#f3ead2"; z.fillRect(0, 0, 384, 256); z.fillStyle = "#c8102e"; z.fillRect(0, 0, 384, 70); z.fillStyle = "#fff"; z.textAlign = "center"; z.textBaseline = "middle";
@@ -830,7 +830,9 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     const zt = ZEIG - pl.zeigT, zeig = pl.zeigT > 0 ? weich(zt, 0, 0.45) * (1 - weich(zt, ZEIG - 0.6, ZEIG)) : 0;                       // Zeigen: hin in einer knappen halben Sekunde, halten, zurück
     /* Karte neigen (Mr. Alex 20.11., statt Drehen): etwa 20 Grad, erst rechts höher, dann links höher, dann wieder gerade */
     const nt = pl.neigT > 0 ? 1 - pl.neigT / NEIG : 1, neigSoll = pl.neigT > 0 ? 0.35 * (weich(nt, 0, 0.15) - 2 * weich(nt, 0.4, 0.55) + weich(nt, 0.85, 1)) : 0;
-    pl.neig += (neigSoll - pl.neig) * Math.min(1, dt * 10); pl.r = 1 - zeig;
+    pl.neig += (neigSoll - pl.neig) * Math.min(1, dt * 10);
+    pl.frei += ((g.modus !== "stehen" && g.modus !== "gehen" ? 1 : 0) - pl.frei) * Math.min(1, dt * 8); const halt = 1 - pl.frei; pl.r = (1 - zeig) * halt;   // frei: eine Geste (Achselzucken) führt die Arme, die Karte bleibt in der linken Hand
+    if ((pl.nickBis -= dt) <= 0) pl.nickZiel = 0; pl.nick += (pl.nickZiel - pl.nick) * Math.min(1, dt * 5);                                  // Kopf senken (+, in die Karte) oder heben (−, über die Karte hinweg)
     /* Umschauen (Mr. Alex 20.11.: er schaut sehr, sehr viel nach rechts und links): der Kopf dreht auf Befehl (kopfSchau) oder alle paar Sekunden von selbst zur Seite und kommt zurück */
     if ((pl.schauBis -= dt) <= 0) { pl.schauZiel = 0; if ((pl.auto -= dt) <= 0) { pl.auto = 1.6 + Math.random() * 2.2; pl.schauZiel = (Math.random() < 0.5 ? -1 : 1) * (0.35 + Math.random() * 0.35); pl.schauBis = 0.7 + Math.random() * 0.5; } }
     pl.schau += (pl.schauZiel - pl.schau) * Math.min(1, dt * 5);
@@ -840,26 +842,26 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     richte(K("chest"), head, v(-wieg * 0.7, 1, (L.krumm || 0) * 2.2 * (1 - 0.6 * zeig) * (1 - geh)), 1);
     for (const [s, seite] of [["r", -1], ["l", 1]]) {
       /* Stehen: beide Hände fassen die Karte an den Rändern – Finger hinter der Karte, Daumen davor (offene Hand, Handfläche zu ihm); die Ellbogen weit auseinander und vor dem Körper */
-      richte(K("upperarm" + s), K("lowerarm" + s), v(seite * 0.5, -1, 0.3), 1); richte(K("lowerarm" + s), K("wrist" + s), v(-seite * 0.2, 0.45 - seite * pl.neig * 0.45, 1), 1);
-      dreheHand(s, v(-seite * 0.2, 1, 0.15), v(0, -0.25, 1), 1);
+      richte(K("upperarm" + s), K("lowerarm" + s), v(seite * 0.5, -1, 0.3), halt); richte(K("lowerarm" + s), K("wrist" + s), v(-seite * 0.27, 0.45 - seite * pl.neig * 0.45, 1), halt);
+      dreheHand(s, v(-seite * 0.2, 0.3, 1), v(-seite, 0, 0.15), halt);   // Mr. Alex 20.11.: die Handflächen zeigen zueinander, die Karte steckt dazwischen – Finger hinter der Karte, Daumen davor
       /* Gehen: die Arme baumeln lang und gegengleich zu den Beinen, der Unterarm schwingt nach; die Karte hängt in der linken Hand */
       if (geh > 0.01) {
         const hin = Math.cos(2 * Math.PI * (u0 - (s === "l" ? 0.5 : 0))), phi = (L.arme || 0.7) * hin, arm = v(seite * 0.16, -Math.cos(phi), Math.sin(phi)), unter = v(seite * 0.1, -Math.cos(phi + 0.4), Math.sin(phi + 0.4));
-        richte(K("upperarm" + s), K("lowerarm" + s), arm, geh); richte(K("lowerarm" + s), K("wrist" + s), unter, geh); dreheHand(s, unter.clone(), v(-seite, 0, 0), geh);
+        richte(K("upperarm" + s), K("lowerarm" + s), arm, geh * halt); richte(K("lowerarm" + s), K("wrist" + s), unter, geh * halt); dreheHand(s, unter.clone(), v(-seite, 0, 0), geh * halt);
       }
     }
     if (zeig > 0.01) {                                                                                                              // Zeigen (Mr. Alex 20.11.): der rechte Arm streckt sich groß zur Seite, die linke Hand zieht die Karte zur Seite und nach unten, der Kopf geht ruhig mit und kommt zurück
       richte(K("upperarmr"), K("lowerarmr"), v(-1, 0.2, 0.3), zeig); richte(K("lowerarmr"), K("wristr"), v(-1, 0.28, 0.3), zeig); dreheHand("r", v(-1, 0.28, 0.3), v(0, -1, 0), zeig);
       richte(K("upperarml"), K("lowerarml"), v(0.42, -1, 0.08), zeig); richte(K("lowerarml"), K("wristl"), v(0.55, -0.15, 1), zeig);
     }
-    pl.kopfY = -0.75 * zeig + pl.schau * (1 - zeig); pl.kopfX = -0.25 * zeig;   // gedreht wird in kopfLauf, dort wo der Kopf jedes Bild neu von seiner Grundlage ausgeht
-    g.hand = [zeig > 0.3 ? Z : R, geh > 0.5 || zeig > 0.3 ? F : R];
+    pl.kopfY = -0.75 * zeig + pl.schau * (1 - zeig); pl.kopfX = -0.25 * zeig + pl.nick * (1 - zeig);   // gedreht wird in kopfLauf, dort wo der Kopf jedes Bild neu von seiner Grundlage ausgeht
+    if (halt > 0.5) g.hand = [zeig > 0.3 ? Z : geh > 0.5 ? R : "klemme", geh > 0.5 || zeig > 0.3 ? F : "klemme"];
     m.updateMatrixWorld(true);
   };
   const planNach = () => {
     if (!pl.teil) return; pl.teil.visible = anker.visible;
     const geh = weich(g.geh || 0, 0.2, 0.8), l = wo(K("wristl")), qm = m.getWorldQuaternion(Q()), rechts = v(-1, 0, 0).applyQuaternion(qm);   // die Karte hängt an der linken Hand
-    const allein = l.clone().addScaledVector(rechts, figur.plan.breit * 0.5), steht = allein.lerp(l.clone().add(wo(K("wristr"))).multiplyScalar(0.5), pl.r).addScaledVector(v(0, 1, 0), figur.plan.hoch * 0.42).addScaledVector(v(0, 0, 1).applyQuaternion(qm), -0.012);   // zwischen beiden Händen; lässt die rechte los, hängt sie an der linken
+    const allein = l.clone().addScaledVector(rechts, figur.plan.breit * 0.5), steht = allein.lerp(l.clone().add(wo(K("wristr"))).multiplyScalar(0.5), pl.r).addScaledVector(v(0, 1, 0), figur.plan.hoch * 0.2).addScaledVector(v(0, 0, 1).applyQuaternion(qm), 0.06);   // zwischen beiden Händen; lässt die rechte los, hängt sie an der linken
     pl.teil.position.copy(steht.lerp(l.clone().addScaledVector(v(0, 1, 0), -figur.plan.breit * 0.42), geh));                                 // im Gehen baumelt sie hochkant unter der Hand
     const qSteht = qm.clone().multiply(Q().setFromAxisAngle(v(1, 0, 0), 0.4)).multiply(Q().setFromAxisAngle(v(0, 0, 1), Math.PI + pl.neig));   // steht auf dem Kopf (π), dazu die Neigung
     pl.teil.quaternion.copy(qSteht).slerp(qm.clone().multiply(Q().setFromAxisAngle(v(0, 1, 0), Math.PI / 2)).multiply(Q().setFromAxisAngle(v(0, 0, 1), Math.PI / 2)), geh);
@@ -1203,10 +1205,11 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     zeige() { if (!pl.teil) return false; pl.zeigT = ZEIG; return true; },                                                          // Tourist: zeigt groß zur Seite (in die falsche Richtung)
     kopfSchau(winkel, dauer) { pl.schauZiel = winkel; pl.schauBis = dauer; pl.auto = Math.max(pl.auto, dauer + 1); },                // Kopf zur Seite drehen (+ = nach links) und nach `dauer` Sekunden zurück
     augen(z) { g.blickZiel = z * 1.1; g.blickBis = 0.7; },                                                                           // nur die Pupillen: +1 links, −1 rechts
-    schau(winkel) { g.seit = winkel; g.tritt = true; if (g.modus !== "gehen") starte("gehen"); },                                    // weiche Figuren: mit kleinen Tritten auf der Stelle in eine Richtung drehen, dann stehen bleiben
-    gerade() { g.seit = 0; },
-    kehrt() { g.hin = -g.hin; },                                                                                                  // weiche Figuren (figur.weich): Richtung wechseln – beim nächsten Gehen dreht er sich mit kleinen Tritten um
-    wegStand() { return { weg: +g.weg.toFixed(3), bahn: g.bahn, hin: g.hin, wendet: !!g.wendet, modus: g.modus, fahrt: +(g.fahrt || 0).toFixed(2) }; },                                                // Tourist: dreht den Stadtplan um eine halbe Runde
+    kopfHoch(x, dauer) { pl.nickZiel = x; pl.nickBis = dauer; },                                                                    // Kopf senken (+) oder heben (−) und nach `dauer` Sekunden zurück
+    /* Weiche Figuren gehen frei über den Platz: geheNach = in eine Richtung drehen (mit kleinen Tritten) und so weit gehen; dreheNach = nur drehen, dann stehen bleiben. kurs: 0 = nach Süden (+z), π/2 = nach Osten (+x) */
+    geheNach(kurs, strecke) { g.kurs = kurs; g.rest = strecke; g.tritt = false; if (g.px === undefined) { g.px = anker.position.x; g.pz = anker.position.z; g.gesamt = 0; } starte("gehen"); },
+    dreheNach(kurs) { g.kurs = kurs; g.tritt = true; if (g.px === undefined) { g.px = anker.position.x; g.pz = anker.position.z; g.gesamt = 0; g.rest = 0; } starte("gehen"); },
+    wegStand() { return { weg: +(g.gesamt || 0).toFixed(3), rest: +(g.rest || 0).toFixed(2), wendet: !!g.wendet, modus: g.modus, fahrt: +(g.fahrt || 0).toFixed(2), x: +anker.position.x.toFixed(3), z: +anker.position.z.toFixed(3), kurs: +(g.kurs === undefined ? g.dreh : g.kurs).toFixed(3) }; },
     planStand() { return pl.teil ? { geh: +(g.geh || 0).toFixed(2), neig: +pl.neig.toFixed(3), schau: +pl.schau.toFixed(3), haende: +pl.r.toFixed(2), ort: pl.teil.position.toArray().map((x) => +x.toFixed(3)), abstand: +wo(K("wristl")).distanceTo(wo(K("wristr"))).toFixed(3), modus: g.modus } : null; },
     sichtbar(an) { anker.visible = !!an; },
     wo: () => ({ x: anker.position.x, z: anker.position.z }),   // Block B2: wo steht die Figur gerade?                // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
@@ -1250,11 +1253,17 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
         g.fahrt = (g.fahrt || 0) + ((g.haltWunsch ? W.aus : 1) - (g.fahrt || 0)) * Math.min(1, dt * W.zieht); aktion.gehen.timeScale = Math.max(0.05, g.fahrt);   // Schritte und Weg laufen im selben Maß langsamer: der Fuß gleitet nicht
         if (g.haltWunsch && !g.wendet && g.uVor !== undefined && ((g.uVor < 0.5 && u >= 0.5) || u < g.uVor)) { g.haltJetzt = true; starte("stehen"); g.haltJetzt = false; }   // ein Fuß hat gerade aufgesetzt: jetzt bleibt er stehen
         g.uVor = u;
-        if (g.tritt && Math.abs((g.hin < 0 ? Math.PI : 0) + (platz.dreh || 0) + (g.seit || 0) - g.dreh) <= 0.05) { g.tritt = false; g.haltWunsch = true; }   // fertig gedreht: Schritt zu Ende setzen und stehen bleiben
+        if (g.px === undefined) { g.px = anker.position.x; g.pz = anker.position.z; g.kurs = g.dreh; g.gesamt = 0; g.rest = 0; }
+        const ab = Math.atan2(Math.sin(g.kurs - g.dreh), Math.cos(g.kurs - g.dreh));
+        if (g.tritt) { if (Math.abs(ab) <= 0.05) { g.tritt = false; g.haltWunsch = true; } }                                     // fertig gedreht: Schritt zu Ende setzen und stehen bleiben
+        else if (Math.abs(ab) <= 0.05) {                                                                                         // frei über den Platz (Mr. Alex 20.11.: er läuft verirrt): geradeaus in Blickrichtung, bis die Strecke um ist
+          const d = G.tempo * g.fahrt * dt; g.px += Math.sin(g.dreh) * d; g.pz += Math.cos(g.dreh) * d; g.gesamt += d; g.rest -= d;
+          if (g.rest <= 0.25 && !g.haltWunsch) g.haltWunsch = true;
+        }
       }
       const unterwegs = (g.modus === "gehen" || g.modus === "rennen") && !(g.stelle > 0), rund = g.runde && !g.gerade;
       if (unterwegs && rund) g.weg += gang[g.modus].tempo * (g.eilig ? figur.drill.schnell : 1) * dt;                         // Rundkurs: immer weiter, ohne Wenden
-      else if (unterwegs) {
+      else if (unterwegs && !figur.weich) {
         g.weg += g.hin * gang[g.modus].tempo * (g.eilig ? figur.drill.schnell : 1) * (figur.weich ? (g.wendet || g.tritt ? 0 : g.fahrt || 0) : 1) * dt;                                    // auf der Bahn hin und her, am Ende umdrehen (wie Gary)
         if (g.weg > g.bahn) { g.weg = g.bahn; g.hin = -1; }
         if (g.weg < 0) { g.weg = 0; g.hin = 1; }
@@ -1265,10 +1274,10 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
         if (unterwegs && Math.abs(ab) < 0.5) { g.dreh = soll; g.wendet = false; }      // unterwegs folgt die Figur der Bahn genau, auch durch die runden Ecken
         else { g.wendet = Math.abs(ab) > 0.05; g.dreh += ab * Math.min(1, dt * 7); }
       } else {
-        const soll = ((figur.weich ? g.hin < 0 : unterwegs && g.hin < 0) ? Math.PI : 0) + (platz.dreh || 0) + (figur.weich ? g.seit || 0 : 0);   // weiche Figuren bleiben stehen, wie sie gegangen sind, und drehen sich erst beim Losgehen
+        const soll = figur.weich ? g.dreh + (g.kurs === undefined ? 0 : Math.atan2(Math.sin(g.kurs - g.dreh), Math.cos(g.kurs - g.dreh))) : (unterwegs && g.hin < 0 ? Math.PI : 0) + (platz.dreh || 0);   // weiche Figuren bleiben stehen, wie sie gegangen sind, und drehen sich erst beim Losgehen
         g.wendet = Math.abs(soll - g.dreh) > 0.05;
         if (figur.weich) g.dreh += Math.sign(soll - g.dreh) * Math.min(Math.abs(soll - g.dreh), dt * (unterwegs ? figur.weich.dreh : 0)); else g.dreh += (soll - g.dreh) * Math.min(1, dt * 7);
-        anker.position.z = platz.z + g.weg;
+        if (figur.weich && g.px !== undefined) { anker.position.x = g.px; anker.position.z = g.pz; } else anker.position.z = platz.z + g.weg;
       }
       m.rotation.y = g.dreh;
       mixer.update(dt); nach(dt);

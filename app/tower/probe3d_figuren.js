@@ -25,6 +25,7 @@ export const AUSDRUECKE = {
   froehlich: { ...NEUTRAL, braueHoch: 0.4, braueDreh: -0.06, unterlid: 0.32, winkel: 1, wange: 0.85, ohr: 0.7, neig: 0.1 },
   // Goofy-Freundlichkeit (Tourist, Mr. Alex 20.11.): Brauen weit oben, Lider halb gesenkt, breites, leicht offenes Lächeln – gutmütig und ahnungslos
   goofy: { ...NEUTRAL, braueHoch: 0.8, braueDreh: -0.12, lid: 0.3, unterlid: 0.22, mund: 0.2, winkel: 1, wange: 0.6, ohr: 0.5 },
+  goofyhoch: { ...NEUTRAL, braueHoch: 1.35, braueDreh: -0.2, lid: 0, unterlid: 0.1, mund: 0.12, winkel: 0.6, wange: 0.4, ohr: 0.5 },   // dasselbe Gesicht mit hochgezogenen Brauen: „keine Ahnung“ (statt des Achselzuckens, Mr. Alex 20.11.)
   // … und Lachen: Mund offen, obere Zahnreihe, Zunge; das ganze Gesicht und der Körper machen mit
   lachen: { ...NEUTRAL, braueHoch: 0.55, braueDreh: -0.08, unterlid: 0.36, mund: 0.62, winkel: 1, wange: 1, ohr: 1, neig: 0.14, arme: 1 },
   erschrocken: { ...NEUTRAL, braueHoch: 0.9, braueDreh: -0.3, pupille: 0.6, mund: 1, breit: 0.8, winkel: -0.35, ohr: -0.5 },
@@ -365,7 +366,7 @@ export async function ladeFiguren(lader, szene, orte, kamera) {
     befehl(modus) { for (const g of figuren) g.start(modus); },
     setze(name, x, z, dreh = 0) { for (const g of figuren) if (g.name === name) { g.anker.position.x = x; g.anker.position.z = z; g.z0 = z; g.weg = 0; g.hin = 1; g.dreh0 = dreh; } },   // Block B2: fester Platz und Blickrichtung im Stehen (0 = nach Süden)
     wo(name) { const g = figuren.find((f) => f.name === name); return g ? { x: g.anker.position.x, z: g.anker.position.z } : null; },
-    sichtbar(name, an) { for (const g of figuren) if (g.name === name) g.anker.visible = !!an; },   // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
+    sichtbar(name, an) { for (const g of figuren) if (g.name === name) g.anker.visible = !!an; }, istSichtbar(name) { const g = figuren.find((f) => f.name === name); return !!(g && g.anker.visible); },   // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
     ausdruck(a) { for (const g of figuren) g.ausdruck = a; },
     unruhe(an) { for (const g of figuren) g.unruhig = an; },
     rede(name, r) { for (const g of figuren) if (g.name === name) g.rede = r ? { ...r, i: 0 } : null; },   // { einsaetze: [s, …], zeit: () => s } oder null

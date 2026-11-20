@@ -536,6 +536,20 @@ function armeGlatt(m, plan) {
     P.needsUpdate = true; o.geometry.computeVertexNormals(); o.geometry.computeBoundingBox(); o.geometry.computeBoundingSphere();
   });
 }
+/* Beine glätten (Tourist, Mr. Alex 20.11.: die Beine waren noch wulstig): wie bei den Armen – zwischen von und bis (Höhe) bekommt jeder Punkt den Abstand einer glatten,
+   nach unten dünneren Röhre von der Beinachse. Der Fuß darunter bleibt, wie er ist. */
+function beineGlatt(m, plan) {
+  m.traverse((o) => {
+    if (!o.isSkinnedMesh || !/_Leg/.test(o.name)) return;
+    const P = o.geometry.attributes.position;
+    for (let i = 0; i < P.count; i++) {
+      const x = P.getX(i), y = P.getY(i), z = P.getZ(i), mx = (Math.sign(x) || 1) * BEIN_X, dx = x - mx, r = Math.hypot(dx, z); if (r < 1e-5) continue;
+      const t = Math.min(1, Math.max(0, (y - plan.von) / (plan.bis - plan.von))), stark = weich(y, plan.von - plan.rand, plan.von) * (1 - weich(y, plan.bis, plan.bis + plan.rand));
+      const neu = r + (plan.dick[0] + (plan.dick[1] - plan.dick[0]) * t - r) * stark; P.setXYZ(i, mx + (dx / r) * neu, y, (z / r) * neu);
+    }
+    P.needsUpdate = true; o.geometry.computeVertexNormals(); o.geometry.computeBoundingBox(); o.geometry.computeBoundingSphere();
+  });
+}
 /* Rumpf glätten (Tourist, Mr. Alex 20.11.: kein „Ritter-Rüstungsstil“, kein Gürtelumriss an der Hüfte; Brust dünner, Bauch wie bisher):
    Jeder Punkt des Rumpfs zwischen von und bis bekommt den Abstand einer glatten Ellipse von der Körperachse; profil = [[Höhe, halbe Breite, halbe Tiefe], …]
    (Maße des ungestreckten Körpers). Kragen, Westenkante, Gürtel und Taschen verschwinden in einer weichen T-Shirt-Form. */
@@ -577,6 +591,7 @@ export const TOURIST = { koerper: "koerper_rogue", teile: "tourist_teile", bau: 
   latsch: { wiegen: 0.07, krumm: 0.14, zurueck: 0.22, arme: 0.75 }, plan: { breit: 0.3, hoch: 0.2 },
   weich: { zieht: 2.6, aus: 0.3, dreh: 2.0, blende: 0.55 },   // organisch loslaufen und stehen bleiben: so schnell fährt er an (1/s) · Tempo beim Auslaufen · Drehen mit kleinen Tritten (Bogenmaß/s) · Überblenden (s)
   armeGlatt: { von: 0.2, bis: 0.74, dick: [0.115, 0.08], rand: 0.08 },
+  beineGlatt: { von: 0.2, bis: 0.5, dick: [0.075, 0.105], rand: 0.035 },   // dick: [unten am Knöchel, oben an der Hüfte]
   rumpfGlatt: { von: 0.44, bis: 1.075, rand: 0.03, profil: [[0.4, 0.3, 0.24], [0.62, 0.31, 0.25], [0.82, 0.26, 0.19], [1.0, 0.235, 0.16], [1.1, 0.22, 0.15]] },   // Hüfte und Bauch wie bisher, zur Brust hin schmaler
   wangeVor: 0.25, ausdruck: "goofy", ohne: { "3,0": 0, "6,0": 0.4 },   // Schnallen und die abstehenden Taschen des Rogue weg; Gürtelband und Riemen bleiben als Saum in Hemdfarbe (ohne sie hat der Rumpf Löcher)
   faerben: { Body: { ort: (x, y) => [0.5, (y - 0.38) / 0.9], farbe: (a, b) => (b > 0.24 ? T_HEMD : b > 0.19 ? T_BLASS : T_HOSE) },                       // Hemd · ein Streifen Bauch · Hosenbund
@@ -599,6 +614,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
   const schulter = { ...SCHULTER, ...figur.schulter }, schlank = figur.schlank || 1, fussLang = figur.fuss || schlank, gelenkFest = [];
   if (figur.armeGlatt) armeGlatt(m, figur.armeGlatt);
   if (figur.rumpfGlatt) rumpfGlatt(m, figur.rumpfGlatt);
+  if (figur.beineGlatt) beineGlatt(m, figur.beineGlatt);
   if (figur.schlank) schlankBauen(m, schlank, fussLang, schulter.rumpf || 1);
   if (figur.bauch) bauchBauen(m, figur.bauch);
   for (const s of "lr") {
@@ -1212,7 +1228,7 @@ export async function ladeBauProbe(lader, szene, platz, kleidung = KLEIDUNG_STAR
     dreheNach(kurs) { g.kurs = kurs; g.tritt = true; if (g.px === undefined) { g.px = anker.position.x; g.pz = anker.position.z; g.gesamt = 0; g.rest = 0; } starte("gehen"); },
     wegStand() { return { weg: +(g.gesamt || 0).toFixed(3), rest: +(g.rest || 0).toFixed(2), wendet: !!g.wendet, modus: g.modus, fahrt: +(g.fahrt || 0).toFixed(2), x: +anker.position.x.toFixed(3), z: +anker.position.z.toFixed(3), kurs: +(g.kurs === undefined ? g.dreh : g.kurs).toFixed(3) }; },
     planStand() { return pl.teil ? { geh: +(g.geh || 0).toFixed(2), neig: +pl.neig.toFixed(3), schau: +pl.schau.toFixed(3), haende: +pl.r.toFixed(2), ort: pl.teil.position.toArray().map((x) => +x.toFixed(3)), abstand: +wo(K("wristl")).distanceTo(wo(K("wristr"))).toFixed(3), modus: g.modus } : null; },
-    sichtbar(an) { anker.visible = !!an; },
+    sichtbar(an) { anker.visible = !!an; }, istSichtbar: () => anker.visible,
     wo: () => ({ x: anker.position.x, z: anker.position.z }),   // Block B2: wo steht die Figur gerade?                // Block B1: der Stand der Geschichte blendet eine Figur ein oder aus
     /* Testprogramm: Lücke zwischen Arm und Rumpf (m), an den verformten Netzen in sechs Höhen vom Handgelenk bis unter die Schulterpartie gemessen; unter 0 = der Arm steckt im Körper. */
     /* Testprogramm: Steckt der Hals im Rumpf? tief = so weit liegt die Unterkante des Halses unter der Oberkante des Rumpfs rund um den Hals (m; unter 0 = Spalt zwischen Hals und Körper) ·

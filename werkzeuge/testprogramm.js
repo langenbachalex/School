@@ -926,6 +926,16 @@ async function hofTest(browser, basis, app, name, fm) {
         if (rf.dauer < 6 || rf.dauer > 20) fehl.push(`${t}: Arthurs Runde dauert ${rf.dauer.toFixed(1)} s (erwartet 6 bis 20 s)`);
         if (!gleich(rf.ende, rf.ruhe)) fehl.push(`${t}: nach der Runde sitzt Arthur nicht wieder an seinem Platz`);
       }
+      // Kollision des Kindes (Mr. Alex 20.11.): es kann nicht durch eine andere Figur laufen – hier geradewegs auf den stehenden Touristen zu
+      if (await pg.evaluate(() => !!(window.__probe3d.touristPlan && window.__probe3d.touristPlan()))) {
+        await pg.evaluate(() => window.__probe3d.touristTut("laeuft"));
+        await pg.waitForFunction(() => window.__probe3d.touristPlan().modus === "stehen", null, { timeout: 15000 }).catch(() => {});
+        const nahKind = await pg.evaluate(async () => { const p = window.__probe3d, o = p.touristWo(); p.geh(o.x, o.z); let nah = 9;
+          for (let i = 0; i < 90; i++) { await new Promise((r) => setTimeout(r, 100)); const k = p.stand(), w = p.touristWo(); nah = Math.min(nah, Math.hypot(k[0] - w.x, k[1] - w.z)); } return nah; });
+        if (nahKind < 0.55) fehl.push(`${t}: das Kind läuft durch den Touristen (kam bis auf ${nahKind.toFixed(2)} m heran; Sperrkreis 0,6 m)`);
+        if (nahKind > 1.5) fehl.push(`${t}: das Kind kam im Test nicht bis zum Touristen (${nahKind.toFixed(2)} m) – die Kollision ließ sich nicht prüfen`);
+        await pg.evaluate(() => window.__probe3d.touristTut("laeuft"));
+      }
       // Raben zeigen beim Antippen ihren Namen (Figuren 9, Schritt 4): Arthur vorn am Platz und ein Rabe auf der Mauer
       for (const wer of ["arthur", "guinevere"]) {
         const ort = await pg.evaluate((w) => { const p = window.__probe3d, v = w === "arthur" ? p.vogel() : p.raben().find((r) => r.wer === w); if (!v) return null; p.blick([v.ort[0] - 2.2, v.ort[1] + 0.9, v.ort[2] + 2.2], [v.ort[0], v.ort[1] + 0.4, v.ort[2]]); return true; }, wer);

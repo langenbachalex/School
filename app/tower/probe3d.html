@@ -381,13 +381,13 @@ try {
     for (const b of document.querySelectorAll("#bau button[data-taubetut]")) b.addEventListener("click", () => ({ bahn: taubeBahn, huepfe: () => taube.huepfe(), flattere: () => taube.flattere(), picke: () => taube.picke(), rede: () => b.setAttribute("aria-pressed", String(taube.rede(b.getAttribute("aria-pressed") !== "true"))) })[b.dataset.taubetut]()); }
   /* Der Tourist (Figuren 9, 20.11.): irrt links vor dem Startpunkt über ein Feld von 10 × 10 m (Mr. Alex); nicht im Spiel (?spiel=1), dort stellt ihn später die Geschichte hin.
      Sein Ablauf: Er marschiert überzeugt ein paar lange Schritte in eine zufällige Richtung, bleibt stehen, schaut in die Karte und schiebt sie hin und her, hebt den Kopf,
-     schaut weit nach rechts und bleibt kurz, weit nach links und bleibt kurz, zuckt ahnungslos mit den Schultern – und marschiert in eine neue Richtung los.
+     schaut weit nach rechts und bleibt kurz, weit nach links und bleibt kurz, zieht zweimal ratlos die Brauen hoch – und marschiert in eine neue Richtung los.
      Jedes dritte Mal ein Fehlstart: zwei Schritte, abrupt stehen, ein Blick in die Karte, um ein Viertel drehen, dann erst richtig los. Weil das Feld klein ist, landet er immer wieder an derselben Stelle. */
   const TOU_MITTE = hof ? { x: hof.plan.start.x - 7, z: hof.plan.start.z - 7 } : null, TOU_HALB = 5;
   const tourist = hof && !sucht.has("spiel") ? await ladeBauProbe(lader, szene, { ...TOU_MITTE }, { kopf: TOURIST.kopf }, TOURIST) : null;
   const tou = { an: !sucht.has("touriststeht"), t: 1.2, stufe: "steht", uhr: 0, i: 0, zahl: 0, fehl: null };
   const TOU_ABLAUF = tourist ? [[0.5, () => { tourist.planDrehen(); tourist.kopfHoch(0.2, 2.9); }], [3.4, () => tourist.kopfHoch(-0.22, 4.4)], [4.0, () => tourist.kopfSchau(-1.0, 1.5)], [5.8, () => tourist.kopfSchau(1.0, 1.5)],
-    [7.7, () => tourist.befehl("achselzucken")], [9.7, () => {}]] : [];
+    [7.6, () => tourist.kopf("goofyhoch")], [8.05, () => tourist.kopf("goofy")], [8.5, () => tourist.kopf("goofyhoch")], [8.95, () => tourist.kopf("goofy")], [9.5, () => {}]] : [];   // statt des Achselzuckens: die Brauen gehen zweimal hoch und runter
   /* Ausweichen (Mr. Alex 20.11.): Jede andere Figur und das Fass haben einen unsichtbaren Sperrkreis. Bevor er losgeht, sucht er eine Richtung, deren Weg keinen Kreis schneidet;
      im Gehen schaut er laufend einen knappen Meter voraus – steht dort jemand (auch das Kind, das ihm absichtlich in den Weg läuft), bleibt er verdutzt stehen, schaut hoch und geht woanders weiter. */
   const touHindernisse = () => {
@@ -744,7 +744,13 @@ try {
   renderer.setAnimationLoop((t) => {
     const dt = Math.min((t - zuletzt) / 1000, 0.1), t0 = performance.now(); zuletzt = t;
     bewegeFigur(dt, t);
-    if (tourist) { const o = tourist.wo(), dx = figur.x - o.x, dz = figur.z - o.z, d = Math.hypot(dx, dz); if (d < 0.6) { figur.x = o.x + (dx / (d || 1)) * 0.6; figur.z = o.z + (dz / (d || 1)) * 0.6; figur.pfad = []; } }   // das Kind kann nicht durch den Touristen laufen (Mr. Alex 20.11.)
+    /* Kollision des Kindes (Mr. Alex 20.11.): es kann durch keine andere Figur laufen. Jede hat einen Sperrkreis – beim Sergeant und bei Gary klein, damit das Kind in der Geschichte
+       nah herankommt, ohne dass sich die Figuren überlappen. Das Kind gleitet am Kreis entlang; liegt sein Wegpunkt selbst im Kreis, gilt er als erreicht. */
+    { const kreise = [], dazu = (o, r) => { if (o) kreise.push([o.x, o.z, r]); };
+      if (bauProbe.istSichtbar()) dazu(bauProbe.wo(), 0.45); if (sergeants[0] && sergeants[0].istSichtbar()) dazu(sergeants[0].wo(), 0.4); if (figuren.istSichtbar("gary")) dazu(figuren.wo("gary"), 0.4);
+      if (tourist) dazu(tourist.wo(), 0.6); if (taube) dazu(taube.wurzel.position, 0.3); if (arthur && arthur.wurzel.position.y < 0.5) dazu(arthur.wurzel.position, 0.45);
+      for (const [kx, kz, r] of kreise) { const dx = figur.x - kx, dz = figur.z - kz, d = Math.hypot(dx, dz); if (d >= r) continue;
+        figur.x = kx + (dx / (d || 1)) * r; figur.z = kz + (dz / (d || 1)) * r; const p = figur.pfad[0]; if (p && Math.hypot(p.x - kx, p.z - kz) < r + 0.05) figur.pfad.shift(); } }
     if (!angehalten) { bewegeMund(dt); figuren.bewege(dt, t); bauProbe.bewege(dt); if (arthur && !rabeHalt) arthur.bewege(dt); for (const r of andereRaben) r.bewege(dt); if (taube && !taubeHalt) taube.bewege(dt); if (tourist) bewegeTourist(dt); for (const s of sergeants) s.bewege(dt); }
     if (geschichte) geschichte.bewege(dt);
     setzeKamera(dt);

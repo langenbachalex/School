@@ -233,6 +233,24 @@ def ausgeben(scene):
     for o in geo:                                           # mehrfach benutzte Netze (Laternen, Baum-Kopien) eigenstaendig machen
         if o.data.users > 1:
             o.data = o.data.copy()
+    # Fensterglas rechnet seinen Kerzenschein-Verlauf in den Koordinaten des einzelnen Fensters. Die gehen beim Verbinden verloren:
+    # deshalb je Eckpunkt merken ("eigen") und die Materialien darauf umstellen.
+    for mt in bpy.data.materials:
+        if not mt.use_nodes:
+            continue
+        nt = mt.node_tree
+        for tc in [n for n in nt.nodes if n.type == "TEX_COORD" and n.outputs["Object"].links]:
+            at = nt.nodes.new("ShaderNodeAttribute")
+            at.attribute_name = "eigen"
+            for l in list(tc.outputs["Object"].links):
+                nt.links.new(at.outputs["Vector"], l.to_socket)
+            mt["eigen"] = 1
+    for o in geo:
+        if any(sl.material and sl.material.get("eigen") for sl in o.material_slots):
+            at = o.data.attributes.new("eigen", "FLOAT_VECTOR", "POINT")
+            co = np.empty(len(o.data.vertices) * 3, dtype=np.float32)
+            o.data.vertices.foreach_get("co", co)
+            at.data.foreach_set("vector", co)
     _waehle(geo)
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     print(f"aufgeraeumt: {len(geo)} Teile ({time.time() - t0:.0f} s)", flush=True)

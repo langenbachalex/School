@@ -3,7 +3,7 @@
 Quelle: Office for National Statistics, „Baby names for boys/girls in England and Wales: 2025“, veröffentlicht am 9. Juli 2026 (Tabelle 1; Open Government Licence). Abgerufen vom Master am 21.11.2026 für die Namen der Kinder in „The Seven Keys of London“. Rang · Name · Zahl der Kinder.
 
 ## Vormerkungen von Mr. Alex (21.11.2026) – er kommt darauf zurück
-- **Gefallen ihm aus der Liste:** Jungen – Noah, Arthur, Archie, Alfie, Rory. Mädchen – Lily, Freya, Poppy, Willow und ein weiterer Name, der im Diktat unklar blieb („eiligen“ – vielleicht Evelyn oder Isla; nachfragen).
+- **Gefallen ihm aus der Liste:** Jungen – Noah, Arthur, Archie, Alfie, Rory. Mädchen – Lily, Freya, Poppy, Ivy, Willow.
 - **Sein Gedanke:** Aus den Top 100 lässt sich besser eine Namens-Verbindung zu den Raben bauen.
 - Bisher vermerkt (kein Endstand): Barnaby/„Bran“, Robyn, Rafferty, Gwen oder Jennifer, Mason, Brody.
 

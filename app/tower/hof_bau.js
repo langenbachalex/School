@@ -128,7 +128,7 @@ export function bauHof(gross) {
    Sie liegt über dem Rohbau der Größe 50 × 40 m. Der Rohbau bleibt als unsichtbares Gerüst: An seinen Teilen hängen Plan, Wege, Tür, Uhr und die Tipp-Ziele.
    Das Laub trägt sein Licht je Eckpunkt (Farbe am Eckpunkt mal Blatt-Textur). Fehlt die Datei, bleibt der Rohbau sichtbar (Rückgabe null). */
 export const HOF_FEIN = "50x40";
-export const HOF_FEIN_DA = false;   // erst true, wenn raum3d/hof.glb fertig gerechnet und eingecheckt ist; bis dahin zeigt nur ?fein=1 die gebaute Umgebung
+export const HOF_FEIN_DA = true;    // raum3d/hof.glb ist eingecheckt (21.11.); ?rohbau=1 zeigt weiter nur den Rohbau
 export const HOF_NEBEL = { farbe: 0x16203a, dichte: 0.014 };
 const LAUB_HELL = 1.0;
 export async function ladeHofFein(lader, hof, anisotropie = 1) {

@@ -472,7 +472,6 @@ for k, sch in enumerate(schneider):
     bpy.context.view_layer.objects.active = turm
     bpy.ops.object.modifier_apply(modifier=mo.name)
     bpy.data.objects.remove(sch, do_unlink=True)
-platte("nische_bank", 0, -1.42, 0.22, NB + 0.3, 0.14, 0.5, KALKSTEIN)
 bpy.ops.mesh.primitive_torus_add(major_radius=1.06, minor_radius=0.07, location=UM + N_ * 0.03, rotation=(R(90), 0, R(-45)), major_segments=64)
 fertig(bpy.context.object, "uhr_ring", KALKSTEIN)
 cyl("uhr_blatt", 1.02, 0.06, UM + N_ * 0.02, BLATT, rot=(R(90), 0, R(-45)), verts=64)

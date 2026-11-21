@@ -193,7 +193,8 @@ maehstreifen(RASEN)
 RINDE = textur("rinde", "dark_wood", 0.5, (0.42, 0.40, 0.34), relief=0.8)
 PLATTEN = textur("platten", "monastery_stone_floor", 0.30, (1.15, 1.08, 0.95), relief=0.5)     # grosse helle Steinplatten
 KIES = textur("kies", "gravel_floor_02", 0.5, (0.62, 0.56, 0.48), relief=0.4)
-BACKSTEIN = textur("backstein", "dark_brick_wall", 0.55, (0.62, 0.50, 0.44), relief=0.4)
+HAUSTON = {"alt": (0.62, 0.50, 0.44), "dunkel": (0.36, 0.30, 0.27), "stein": (0.60, 0.56, 0.50)}[os.environ.get("HAUS", "alt")]
+BACKSTEIN = textur("backstein", "dark_brick_wall", 0.55, HAUSTON, relief=0.4)
 LAUB = mat("laub", (0.035, 0.07, 0.025), 0.75)
 GITTER = mat("gitter", (0.012, 0.012, 0.014), 0.45, 0.8)
 PUTZ = textur("putz", "plastered_stone_wall", 0.45, (2.2, 1.95, 1.6))                 # gekalkt wie die Waende im Guard Room
@@ -741,18 +742,18 @@ for k, tx in enumerate((WBX0, (WBX0 + WBX1) / 2 - 5, (WBX0 + WBX1) / 2 + 5, WBX1
         box(f"waterloo_turm_zinne{k}{i}", (0.8, 0.5, 0.8), (tx + 2.0 * math.cos(w_), WBY + 2.0 * math.sin(w_), WBH + 4.9), STEIN_WATERLOO, rot=(0, 0, w_ + R(90)))
 
 # ---------- Westen: dunkle Backsteinhaeuser mit weissen Schiebefenstern und blauer Tuer (Rundgang CyArk), vor der Westmauer ----------
-HX, HY0, HY1, HH = -W + 0.12, -17.0, 1.5, 9.5
+HX, HY0, HY1, HH = -W - 3.0, -17.0, 1.5, 11.5   # Mr. Alex 21.11.: Haus 3 m HINTER der Westmauer, schaut ueber die Zinnen
 box("backsteinhaus", (6.0, HY1 - HY0, HH), (HX - 3.0, (HY0 + HY1) / 2, HH / 2), BACKSTEIN)
 box("backsteinhaus_bruestung", (6.2, HY1 - HY0 + 0.2, 0.18), (HX - 3.0, (HY0 + HY1) / 2, HH + 0.05), KALKSTEIN)
-box("backsteinhaus_band", (0.12, HY1 - HY0, 0.2), (HX + 0.03, (HY0 + HY1) / 2, 3.45), KALKSTEIN)
+box("backsteinhaus_band", (0.12, HY1 - HY0, 0.2), (HX + 0.03, (HY0 + HY1) / 2, 8.95), KALKSTEIN)
 for k, sy in enumerate((HY0 + 3.0, (HY0 + HY1) / 2, HY1 - 3.0)):
     box(f"backsteinhaus_schornstein{k}", (0.9, 1.3, 2.2), (HX - 3.0, sy, HH + 1.0), BACKSTEIN)
 TUER_BAY = 3
 for bay in range(6):
     by_ = HY0 + 1.8 + bay * 3.0
-    for reihe, (hz, hh_) in enumerate(((1.9, 1.9), (5.0, 1.9), (7.8, 1.4))):
-        if reihe == 0 and bay == TUER_BAY:
-            continue
+    for reihe, (hz, hh_) in enumerate(((1.9, 1.9), (7.8, 1.7), (10.0, 1.4))):
+        if reihe == 0:
+            continue                       # Erdgeschoss liegt hinter der Mauer
         an = (bay, reihe) in ((1, 0), (4, 1), (2, 2))
         box(f"hausfenster_rahmen{bay}{reihe}", (0.1, 1.25, hh_ + 0.15), (HX + 0.02, by_, hz), WEISS)
         box(f"hausfenster_glas{bay}{reihe}", (0.12, 1.05, hh_ - 0.05), (HX + 0.03, by_, hz), HAUS_WARM if an else GLAS_DUNKEL)
@@ -761,14 +762,6 @@ for bay in range(6):
             box(f"hausfenster_sprosse{bay}{reihe}{sy}", (0.14, 0.035, hh_ - 0.05), (HX + 0.04, by_ + sy, hz), WEISS)
         if an:
             licht(f"hausfenster_schein{bay}{reihe}", "POINT", 35, WARM, (HX + 0.8, by_, hz), weich_=0.4)
-ty_ = HY0 + 1.8 + TUER_BAY * 3.0
-box("haustuer_vorbau", (0.35, 1.9, 3.0), (HX + 0.15, ty_, 1.5), WEISS)
-box("haustuer_giebel", (0.5, 2.2, 0.22), (HX + 0.2, ty_, 3.1), WEISS)
-box("haustuer", (0.1, 1.05, 2.3), (HX + 0.34, ty_, 1.2), BLAU_TUER)
-box("haustuer_stufe", (0.9, 2.0, 0.14), (HX + 0.5, ty_, 0.05), PLATTEN)
-modell("Lantern_01", (HX + 0.7, ty_ + 1.5, 2.3), hoehe=0.5)
-box("haus_laterne_arm", (0.7, 0.04, 0.04), (HX + 0.35, ty_ + 1.5, 2.92), EISEN)
-licht("haus_laterne", "POINT", 170, WARM, (HX + 0.8, ty_ + 1.5, 2.5), weich_=0.08)
 
 # ---------- Kopfplatanen am Rasenrand (Rundgang CyArk): gerade, helle, fleckige Staemme, oben gekappt mit Astknoten ----------
 def platanenrinde():

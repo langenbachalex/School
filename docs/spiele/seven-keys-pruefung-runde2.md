@@ -223,3 +223,79 @@ Befund: Das Blatt nennt Spuren, aber keine Staffelung.
 3. Nur Schüler können den Zauber vollenden, und nur der Geist kann aufnehmen (Befund 1).
 4. Die Elster als Shrikes gebundener Vogel (Befund 4).
 5. Die alte Schuld zwischen dem Kind, das die Raben nicht mehr hört, und einem der sechs (Befund 8), dazu Wren in Masons Videos (Befund 7).
+
+---
+
+## Prüfung D – Logik und Prämisse
+
+Anlass (Mr. Alex 21.11.): „Ein Kind wurde ausgelacht. 1899. Wie lief das denn an der Schule vorher? Ehrenkodex? Wenn die ganze Prämisse zusammenfällt, müssen wir anders ansetzen.“
+
+### Urteil zur Prämisse
+
+Die Prämisse fällt nicht zusammen, aber sie trägt in der heutigen Fassung nur mit Reparaturen. Drei Stellen sind offen: wer im Saal saß, warum aus einem Gelächter 127 Jahre werden, und wo die Regel „Wer ruft, bleibt gebunden“ endet. Für alle drei liegt das Material schon im Stand, es ist nur nicht verbunden. Alles Folgende sind Befunde und Vorschläge, nichts ist entschieden.
+
+### Teil 1: Die Prämisse
+
+**1. Der lachende Saal widerspricht der Schule (Stand 3; Prolog: „A hundred faces“).**
+Befund: Nirgends steht, wer die hundert Gesichter sind. Sind es Schüler und Lehrer, lacht eine Schule über ihre eigene Lehre. Dass in 700 Jahren nie ein Schüler stockte, glaubt kein Kind.
+*Vorschlag:* Gestockt und gelacht wurde immer. Neu war 1899 nur, dass das Lachen mitten in einen offenen Zauber fiel, zwischen Ruf und Antwort. Der Ehrenkodex steht schon im Prolog: „They did not wait.“ Die Regel der Schule hieß also Warten, bis die Antwort kommt. Mr Shrike brach sie als Erster, der Saal folgte.
+
+**2. Ursache und Wirkung stehen nicht im Verhältnis (Stand 1 und 3).**
+Befund: „Ausgelacht, also Schule zu“ ist zu wenig. Ein Schulleiter hätte am nächsten Morgen weitergemacht.
+*Vorschlag:* Zwei entschiedene Regeln ergeben zusammen den Grund. Wer auslacht, hört die Raben nicht mehr – der Saal lachte, also konnte nach dieser Nacht dort niemand mehr einen Raben hören. Dazu hängt der halbe Zauber hinter der Tür.
+
+**3. Die Regel hält der Kinderfrage nicht stand (Stand 2).**
+Befund: Bindet jeder unbeantwortete Ruf, wäre die halbe Welt gebunden. „Speak up!“ und „Come back!“ sind zudem keine Zauberworte. Die Stille [R] weitet die Regel noch aus.
+*Vorschlag:* Gebunden wird nur, wer in einen offenen Zauber hineinruft. 1899 stand der Zauber offen, als Mr Shrike und Mrs Crumb riefen. Heute gilt dasselbe an Orten, an denen ein Ritual ausgefallen ist. Ein „Hallo“ auf der Straße bindet niemanden.
+
+**4. 127 Jahre lang löst niemand etwas, und es fehlt der Auslöser für „jetzt“.**
+Befund: Wren lebt in London, Mrs Crumb in der Küche, der Geist auf der Treppe. Ein Besuch hätte genügt. Offen ist auch, ob die Gebundenen 127 Jahre erleben oder nur dreizehn.
+*Vorschlag:* Jeder Gebundene wiederholt, was er in jener Nacht tat. Mr. Flex sieht sich an, Wren schweigt, Mrs Crumb wartet, Mr Shrike spottet, der Geist sagt „Not yet“. Den ersten Schritt kann nur ein Ungebundener tun, deshalb braucht es Kinder. Außerdem kennt jeder nur seine Fassung der Nacht; die drei Sprüche atgofion, curiad und gwirionedd geben das schon her. Für „jetzt“ braucht es ein einziges Ereignis: Entweder beginnt Mr Shrike, und Wren sammelt die Schlüssel, um ihm zuvorzukommen. Oder das Kind aus Wrens Familie kommt zum ersten Mal an den Tower.
+
+**5. Wren sammelt Schlüssel, obwohl ein Wort genügt (Stand 6).**
+Befund: Der Saal ist leer. Was will er dort „allein, ohne sprechen zu müssen“?
+*Vorschlag:* Er will das Wort dort sagen, wo es niemand hört. Das ist genau der Irrtum der Geschichte, denn ein Zauber muss gehört werden.
+
+**6. Schlüssel, Federn und Worte** sind in Prüfung 2 geklärt und angenommen.
+Befund: Neu ist nur ein Widerspruch in Stand 4. Die Schlösser liegen unter den Klinken, also sind „Schlüssel ohne Federn“ gar nicht benutzbar. Die Gefahr des falschen Öffnens gibt es so nicht.
+*Vorschlag:* Falsch öffnet, wer die Federn nimmt statt sie anvertraut zu bekommen, oder wer ruft, ohne dass Wren antwortet.
+
+### Wege, die Prämisse zu verankern
+
+- **Weg A – Die Schule verlor in einer Nacht ihr Gehör.** Im Saal saßen Schüler und Lehrer, und wer lachte, hörte danach keinen Raben mehr. Schließen war dann die Folge und keine Strafe. Kosten: Die Regel muss sagen, ob man das Hören zurückbekommt, und der Prolog braucht ein Bild dafür.
+- **Weg B – Das Gelächter war der Funke, der halbe Zauber ist die Ursache.** Die Schule ist zu, weil etwas Unfertiges hinter der Tür hängt, das nur Wren beenden kann. Kosten: Man muss sagen, was der Zauber öffnen sollte. Das legt die Fortsetzung fest, und der Kern rückt vom Auslachen zum Unfall.
+- **Weg C – Die Schule war schon krank.** Der Abend war eine Vorführung vor Gästen; Mr. Flex stand im Rampenlicht, Wren lieferte nur die Worte. Die Schule hatte Applaus an die Stelle der Antwort gesetzt, und der Schulleiter schloss aus Scham. Kosten: Der Schulleiter wird mitschuldig, und die 127 Jahre erklärt dieser Weg allein nicht.
+
+Meine Einschätzung: C beantwortet „Wie konnte das geschehen?“, A beantwortet „Warum blieb sie zu?“. B ist als [R] schon halb da.
+
+### Teil 2: Die neuen Bausteine
+
+- **Die Stille.** 1899 heißt Gebundensein: langsam altern und frei herumgehen. Heute heißt es: Uhren stehen, Menschen verharren. Das ist dieselbe Regel mit zwei Wirkungen, und ein Kind bemerkt das. Die Form muss eine sein, etwa: Wer gebunden ist, wird nicht mehr gehört. Gut passt, dass die Schlüsselzeremonie im Tower wörtlich Ruf und Antwort ist.
+- **Mr Shrike als Gebundener.** Der Saal lachte mit ihm, also bekam er doch eine Antwort, wird ein Kind sagen. Tragfähig ist es, wenn sein Zuruf Wren galt. Dann hängen alle drei Rufe an Wren, und Mr Shrikes Vorwurf ist sachlich richtig. Was er 127 Jahre tat, fehlt ganz.
+- **Nicht altern, ohne aufzufallen.** Mrs Crumb steht 127 Jahre in der Küche, und kein Warder wundert sich. Möglich: Gebundene werden übersehen. Das stößt sich aber mit Mr Shrike als beliebtem Mann.
+- **„Wer auslacht, hört sie nicht mehr.“** Es fehlt, ob das für immer gilt. Naheliegend: bis man dem Ausgelachten geantwortet hat. Mr Shrike hört demnach keine Raben und braucht eine Quelle für sein Wissen.
+- **Sechs Raben, sechs Kinder.** Dass sechs Raben gleichzeitig je ein Kind finden, braucht ein gemeinsames Zeichen, zum Beispiel Merlins Feder beim Hauptkind. Offen ist auch, warum die Raben Federn aus der Hand geben, die 1899 die Tür sichern sollten.
+- **Herkunft.** Sie trägt. Wren hat seine Schwester nie besucht; das passt zu seiner Scham und darf wehtun.
+- **Alter.** Die Rechnung stimmt: 127 Jahre sind knapp dreizehn gelebte.
+- **Mr. Flex im Spiegel.** Warum sitzt nur er im Glas? Der Vorschlag aus Befund 4 beantwortet das und führt zugleich die Zauberwelt ein.
+
+### Teil 3: Die Vorschläge der Runde 2
+
+- **Barnaby wird gebunden:** tragfähig mit Bedingung. Mrs Crumbs Ruf darf nach 127 Jahren noch beantwortet werden; also muss feststehen, warum man Barnaby nicht eine Minute später antwortet. In der Stille ersterben Geräusche, das wäre der Grund.
+- **Kern aus drei Kindern:** tragfähig. Sechs Federn brauchen weiter sechs Träger.
+- **Mr Shrike beliebt und zuerst Wohltäter:** tragfähig mit Bedingung. Mrs Crumb, Arthur und der Geist kennen sein Gesicht und dürfen ihm vor der Wende nicht begegnen.
+- **Seine Waffe „wen er lächerlich macht, der hört die Raben nicht mehr“:** reißt ein Loch. Die Regel trifft den Lacher, nicht das Opfer; Wren hat Merlin behalten. Tragfähig wäre: Er bringt Kinder dazu, übereinander zu lachen.
+- **Shrikes Irrtum über das Blut:** tragfähig. Er muss Wrens Familie aus der Schulzeit kennen.
+- **Die Elster als Shrikes Vogel:** tragfähig mit Bedingung. Malt Mrs Crumb sie an, setzt sie wissentlich den Vogel des Spötters an den Tower. Besser malt er sie selbst an.
+- **Nur Schüler vollenden, nur der Geist nimmt auf:** tragfähig mit Bedingung. Wren und Mr. Flex sind selbst noch Schüler. Die Kinder brauchen also eine eigene Aufgabe, etwa der Saal zu sein, der diesmal zuhört.
+- **Die zweite Tür:** tragfähig mit Bedingung. Es braucht einen Grund, warum Schüler vor vollem Saal einen Öffnungszauber sprechen durften.
+- **Rituale als Schlösser:** tragfähig als Spur. Dann öffnet Wrens Schlüsselraub selbst Tore. Der Vorschlag verträgt sich schlecht mit Prüfung 2, Punkt 4 (das Ritual läuft danach ohne Schlüssel).
+- **Mason hörte die Raben früher:** tragfähig, sobald feststeht, ob man das Hören zurückgewinnt.
+
+### Was vor jeder weiteren Entwicklung geklärt sein muss
+
+1. Wer saß im Saal, und was war das für ein Abend (Weg A, B oder C)?
+2. Wo endet die Regel des Bindens, und wie sieht Gebundensein aus – 1899 und heute gleich?
+3. Welches eine Ereignis setzt nach 127 Jahren alles in Gang?
+4. Was will Wren hinter der Tür, und was heißt „falsch öffnen“?
+5. Gilt „wer auslacht, hört die Raben nicht mehr“ für immer?

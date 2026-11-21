@@ -255,6 +255,7 @@ MESSING = mat("messing", (0.90, 0.62, 0.20), 0.3, 1.0)
 FLAMME = mat("flamme", (1.0, 0.55, 0.14), emit=14.0)
 LICHT_AN = rautenglas("fenster_an", (1.0, 0.42, 0.10), 1.5)
 LICHT_SCHWACH = rautenglas("fenster_schwach", (1.0, 0.40, 0.10), 0.5)
+LICHT_ALTAR = rautenglas("fenster_altar", (1.0, 0.41, 0.10), 0.9)
 LICHT_AUS = rautenglas("fenster_aus", (0.10, 0.16, 0.34), 0.10, kerze=False)
 
 # ---------- Formen ----------
@@ -448,16 +449,16 @@ for k, gx in enumerate(GIEBEL):
     balken(f"giebel_pfosten{k}", (gx, TRAUFE + 1.25), (gx, TRAUFE + GH - 0.1), 0.13, y=yo)
     for sx in (-1, 1):
         balken(f"giebel_st{k}{sx}", (gx + sx * 0.75, TRAUFE), (gx + sx * 0.75, TRAUFE + 1.25), 0.13, y=yo)
-    fenster(f"giebelfenster{k}", gx, TRAUFE + 0.62, 0.9, 0.75, OBEN, LICHT_AUS if k != 1 else LICHT_SCHWACH)
+    fenster(f"giebelfenster{k}", gx, TRAUFE + 0.62, 0.9, 0.75, OBEN, LICHT_AUS)
 for k, sx in enumerate((-15.0, -5.0, 5.0)):   # Schornsteine aus Ziegeln
     box(f"schornstein{k}", (1.1, 0.9, 2.4), (sx, FIRST_Y - 0.4, FIRST_Z + 0.5), ZIEGEL)
     box(f"schornstein_kopf{k}", (1.3, 1.1, 0.2), (sx, FIRST_Y - 0.4, FIRST_Z + 1.7), ZIEGEL)
 
 # Fenster: oben unter jedem Giebel ein breites, unten kleinere; nur wenige sind erleuchtet
-OBEN_AN = {1: LICHT_AN, 2: LICHT_SCHWACH}
+OBEN_AN = {1: LICHT_AN}        # Regel Mr. Alex 21.11.: ein Raum = ein Licht; hell sind nur die Wachstube (beide Fenster an der Tuer) und eine Stube oben
 for k, gx in enumerate(GIEBEL):
     fenster(f"fenster_o{k}", gx, 4.45, 2.4, 1.15, OBEN, OBEN_AN.get(k, LICHT_AUS))
-UNTEN = [(-22.0, LICHT_AUS), (-17.5, LICHT_SCHWACH), (-8.0, LICHT_AN), (-3.0, LICHT_AUS), (3.0, LICHT_AUS), (8.0, LICHT_SCHWACH), (12.5, LICHT_AUS)]
+UNTEN = [(-22.0, LICHT_AUS), (-17.5, LICHT_AN), (-8.0, LICHT_AN), (-3.0, LICHT_AUS), (3.0, LICHT_AUS), (8.0, LICHT_AUS), (12.5, LICHT_AUS)]
 for k, (fx, glas) in enumerate(UNTEN):
     fenster(f"fenster_u{k}", fx, 1.95, 1.25, 1.2, FRONT, glas)
 
@@ -661,7 +662,7 @@ netz("kapelle_dach", [(KX - KB / 2, KY + 0.4, KH), (KX + KB / 2, KY + 0.4, KH), 
                       (KX - KB / 2, KY + KT - 0.4, KH), (KX + KB / 2, KY + KT - 0.4, KH)], [(0, 1, 2, 3), (3, 2, 5, 4)], BLEI)
 for k in range(5):                              # fuenf breite Tudor-Fenster mit flachem Bogen; in zweien brennt Kerzenlicht
     fx = KX - KB / 2 + 3.4 + k * 3.5
-    glas = LICHT_AN if k == 3 else (LICHT_SCHWACH if k == 1 else GLAS_DUNKEL)
+    glas = LICHT_ALTAR if k == 4 else LICHT_SCHWACH     # ein grosser Raum: alle Fenster schwach erleuchtet, am Altar im Osten etwas heller
     box(f"kapelle_fassung{k}", (2.5, 0.1, 2.6), (fx, KY - 0.02, 2.9), KALKSTEIN)
     bo = cyl(f"kapelle_fassung_bogen{k}", 1.25, 0.1, (fx, KY - 0.02, 4.2), KALKSTEIN, rot=(R(90), 0, 0))
     bo.scale = (1, 0.45, 1)                   # flacher Tudor-Bogen (der Zylinder liegt: seine y-Achse zeigt nach oben)
@@ -677,8 +678,8 @@ for k in range(5):                              # fuenf breite Tudor-Fenster mit
     box(f"kapelle_tropfleiste{k}", (3.0, 0.16, 0.1), (fx, KY - 0.06, 4.92), KALKSTEIN)
     for sx in (-1.45, 1.45):
         box(f"kapelle_tropf{k}{sx}", (0.1, 0.16, 0.5), (fx + sx, KY - 0.06, 4.7), KALKSTEIN)
-    if glas is LICHT_AN:
-        licht(f"kapelle_schein{k}", "POINT", 60, WARM, (fx, KY - 0.8, 2.9), weich_=0.5)
+    if True:
+        licht(f"kapelle_schein{k}", "POINT", 40 if k == 4 else 18, WARM, (fx, KY - 0.8, 2.9), weich_=0.5)
 TKX = KX - KB / 2 + 1.2                        # Tuer: vor dem Sockel (der lag vorher davor), mit Steinfassung
 box("kapelle_tuer_fassung", (1.7, 0.3, 2.45), (TKX, KY - 0.08, 1.22), KALKSTEIN)
 cyl("kapelle_tuer_fassung_bogen", 0.85, 0.3, (TKX, KY - 0.08, 2.45), KALKSTEIN, rot=(R(90), 0, 0))
@@ -733,7 +734,7 @@ for i in range(15):
     fx = WBX0 + 3.5 + i * 3.8
     for reihe, hz in enumerate((3.0, 7.6)):
         box(f"waterloo_fassung{reihe}{i}", (1.5, 0.1, 2.4), (fx, WBY - 0.02, hz), KALK_HELL)
-        box(f"waterloo_fenster{reihe}{i}", (1.1, 0.12, 2.0), (fx, WBY - 0.03, hz), LICHT_SCHWACH if (i * 7 + reihe * 3) % 11 == 0 else GLAS_DUNKEL)
+        box(f"waterloo_fenster{reihe}{i}", (1.1, 0.12, 2.0), (fx, WBY - 0.03, hz), LICHT_SCHWACH if (reihe == 0 and i in (4, 5, 6)) else GLAS_DUNKEL)
 for k, tx in enumerate((WBX0, (WBX0 + WBX1) / 2 - 5, (WBX0 + WBX1) / 2 + 5, WBX1)):
     cyl(f"waterloo_turm{k}", 2.3, WBH + 4.5, (tx, WBY, (WBH + 4.5) / 2), STEIN_WATERLOO, verts=8)
     cyl(f"waterloo_turm_gesims{k}", 2.5, 0.25, (tx, WBY, WBH + 3.9), KALK_HELL, verts=8)
@@ -761,7 +762,7 @@ for bay in range(6):
     for reihe, (hz, hh_) in enumerate(((1.9, 1.9), (7.8, 1.7), (10.0, 1.4))):
         if reihe == 0:
             continue                       # Erdgeschoss liegt hinter der Mauer
-        an = (bay, reihe) in ((1, 0), (4, 1), (2, 2))
+        an = (bay, reihe) in ((3, 1), (4, 1))        # ein Zimmer: zwei Fenster nebeneinander
         box(f"hausfenster_rahmen{bay}{reihe}", (0.1, 1.25, hh_ + 0.15), (HX + 0.02, by_, hz), WEISS)
         box(f"hausfenster_glas{bay}{reihe}", (0.12, 1.05, hh_ - 0.05), (HX + 0.03, by_, hz), HAUS_WARM if an else GLAS_DUNKEL)
         box(f"hausfenster_quer{bay}{reihe}", (0.14, 1.05, 0.05), (HX + 0.04, by_, hz), WEISS)

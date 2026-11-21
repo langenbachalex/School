@@ -622,16 +622,21 @@ for k in range(5):                              # fuenf breite Tudor-Fenster mit
     glas = LICHT_AN if k == 3 else (LICHT_SCHWACH if k == 1 else GLAS_DUNKEL)
     box(f"kapelle_fassung{k}", (2.5, 0.1, 2.6), (fx, KY - 0.02, 2.9), KALKSTEIN)
     bo = cyl(f"kapelle_fassung_bogen{k}", 1.25, 0.1, (fx, KY - 0.02, 4.2), KALKSTEIN, rot=(R(90), 0, 0))
-    bo.scale = (1, 1, 0.45)
+    bo.scale = (1, 0.45, 1)                   # flacher Tudor-Bogen (der Zylinder liegt: seine y-Achse zeigt nach oben)
     box(f"kapelle_fenster{k}", (2.1, 0.14, 2.4), (fx, KY - 0.03, 2.9), glas)
     bg = cyl(f"kapelle_fenster_bogen{k}", 1.05, 0.14, (fx, KY - 0.03, 4.1), glas, rot=(R(90), 0, 0))
-    bg.scale = (1, 1, 0.42)
+    bg.scale = (1, 0.42, 1)
     for sx in (-0.35, 0.35):
         box(f"kapelle_pfosten{k}{sx}", (0.1, 0.18, 2.8), (fx + sx, KY - 0.04, 3.05), KALKSTEIN)
     if glas is LICHT_AN:
         licht(f"kapelle_schein{k}", "POINT", 60, WARM, (fx, KY - 0.8, 2.9), weich_=0.5)
-box("kapelle_tuer", (1.3, 0.12, 2.3), (KX - KB / 2 + 1.2, KY - 0.03, 1.15), EICHE_TOR)
-cyl("kapelle_tuer_bogen", 0.65, 0.12, (KX - KB / 2 + 1.2, KY - 0.03, 2.3), EICHE_TOR, rot=(R(90), 0, 0))
+TKX = KX - KB / 2 + 1.2                        # Tuer: vor dem Sockel (der lag vorher davor), mit Steinfassung
+box("kapelle_tuer_fassung", (1.7, 0.3, 2.45), (TKX, KY - 0.08, 1.22), KALKSTEIN)
+cyl("kapelle_tuer_fassung_bogen", 0.85, 0.3, (TKX, KY - 0.08, 2.45), KALKSTEIN, rot=(R(90), 0, 0))
+box("kapelle_tuer", (1.3, 0.3, 2.3), (TKX, KY - 0.12, 1.15), EICHE_TOR)
+cyl("kapelle_tuer_bogen", 0.65, 0.3, (TKX, KY - 0.12, 2.3), EICHE_TOR, rot=(R(90), 0, 0))
+for hz in (0.6, 1.7):
+    box(f"kapelle_tuer_band{hz}", (1.2, 0.02, 0.09), (TKX, KY - 0.28, hz), EISEN)
 laterne("laterne_kapelle", KX - KB / 2 + 2.4, KY - 0.75, 2.5, energie=200, wand=KY)
 laterne("laterne_kapelle_ost", KX + KB / 2 - 0.9, KY - 0.75, 2.6, energie=160, wand=KY)
 # Glockentuermchen am Westende: viereckiger Steinturm, obenauf eine kleine weisse Holzlaterne mit Bleihaube
@@ -790,6 +795,41 @@ for k, (gx0, gx1) in enumerate([(-20.5, -11.5), (11.5, 20.5)]):
     for j, hz in enumerate((0.5, 0.92)):
         cyl(f"gitter{k}_holm{j}", 0.02, gx1 - gx0, ((gx0 + gx1) / 2, GY, hz), GITTER, rot=(0, R(90), 0), verts=8)
 
+# ---------- Nebel (abschaltbar: NEBEL=1 schaltet ihn ein): duenner Schleier, am Boden dichter, um die Laternen ein Schein ----------
+NEBEL = float(os.environ.get("NEBEL", 0))      # 0 = aus, 1 = normal, 2 = dicht
+if NEBEL:
+    nb = box("nebel", (170, 170, 30), (5, 5, 15), mat("nebel_leer", (1, 1, 1)))
+    nm_ = bpy.data.materials.new("nebel")
+    nm_.use_nodes = True
+    nt = nm_.node_tree
+    nt.nodes.clear()
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(geo.outputs["Position"], sep.inputs[0])
+    hoehe_ = nt.nodes.new("ShaderNodeMapRange")       # am Boden voll, in 9 m Hoehe nur noch ein Achtel
+    hoehe_.inputs["From Min"].default_value, hoehe_.inputs["From Max"].default_value = 0.0, 9.0
+    hoehe_.inputs["To Min"].default_value, hoehe_.inputs["To Max"].default_value = 1.0, 0.12
+    nt.links.new(sep.outputs["Z"], hoehe_.inputs["Value"])
+    schwaden = nt.nodes.new("ShaderNodeTexNoise")       # leichte Schwaden statt einer gleichmaessigen Wand
+    schwaden.inputs["Scale"].default_value = 0.09
+    nt.links.new(geo.outputs["Position"], schwaden.inputs["Vector"])
+    mal1 = nt.nodes.new("ShaderNodeMath")
+    mal1.operation = "MULTIPLY"
+    nt.links.new(hoehe_.outputs["Result"], mal1.inputs[0])
+    nt.links.new(schwaden.outputs[0], mal1.inputs[1])
+    mal2 = nt.nodes.new("ShaderNodeMath")
+    mal2.operation = "MULTIPLY"
+    nt.links.new(mal1.outputs[0], mal2.inputs[0])
+    mal2.inputs[1].default_value = 0.032 * NEBEL
+    streu = nt.nodes.new("ShaderNodeVolumeScatter")
+    streu.inputs["Color"].default_value = (0.80, 0.86, 1.0, 1)
+    streu.inputs["Anisotropy"].default_value = 0.35
+    nt.links.new(mal2.outputs[0], streu.inputs["Density"])
+    aus = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(streu.outputs[0], aus.inputs["Volume"])
+    nb.data.materials.clear()
+    nb.data.materials.append(nm_)
+
 # ---------- Licht: Nacht. Kuehler Mond von Nordosten, warm nur Laternen und Fenster ----------
 licht("mond", "SUN", 1.1, (0.52, 0.66, 1.0), (0, 0, 30), rot=(R(-52), 0, R(28)))
 world = bpy.data.worlds.new("nacht")
@@ -871,6 +911,6 @@ for nr in os.environ.get("ANSICHT", "1,2,3,4,5,6,7,8").split(","):
     name, ort, blick, brennweite = ANSICHTEN[nr.strip()]
     cam.location, ziel.location, cam_data.lens = ort, blick, brennweite
     t0 = time.time()
-    scene.render.filepath = os.path.join(OUT, f"hof_sued_{nr.strip()}_{name}" + ("" if BAUM == "eigen" else "_" + BAUM) + ".jpg")
+    scene.render.filepath = os.path.join(OUT, f"hof_sued_{nr.strip()}_{name}" + ("" if BAUM == "eigen" else "_" + BAUM) + ("_nebel" if NEBEL else "") + ".jpg")
     bpy.ops.render.render(write_still=True)
     print(f"BILD {name} fertig in {time.time() - t0:.1f} s", flush=True)

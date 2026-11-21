@@ -131,13 +131,17 @@ export const HOF_FEIN = "50x40";
 export const HOF_FEIN_DA = true;    // raum3d/hof.glb ist eingecheckt (21.11.); ?rohbau=1 zeigt weiter nur den Rohbau
 export const HOF_NEBEL = { farbe: 0x16203a, dichte: 0.014 };
 const LAUB_HELL = 1.0;
-export async function ladeHofFein(lader, hof, anisotropie = 1) {
+/* baum (Messhilfe, Mr. Alex 21.11.): "kahl" blendet die Blätter aus, "stamm" Blätter und Zweige – um auf dem Schülergerät zu messen, was das Laub kostet. */
+export async function ladeHofFein(lader, hof, anisotropie = 1, baum = "") {
   let json, gltf;
   try { json = await (await fetch("raum3d/hof3d.json")).json(); gltf = await lader.loadAsync("raum3d/" + json.modell); } catch (e) { console.warn("Hof-Umgebung nicht geladen, der Rohbau bleibt:", e.message); return null; }
   const gruppe = gltf.scene; gruppe.name = "hof_fein";
+  let dreiecke = 0;
   gruppe.traverse((o) => {
     if (!o.isMesh) return;
-    const karte = o.material.map, laub = o.name.startsWith("laub");
+    const karte = o.material.map, laub = o.name.startsWith("laub"), blatt = laub && /leaves/.test(o.material.name);
+    if (laub && (baum === "stamm" || (baum === "kahl" && blatt))) { o.visible = false; return; }
+    dreiecke += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
     if (karte) karte.anisotropy = anisotropie;
     o.material = new THREE.MeshBasicMaterial(laub ? { map: karte, vertexColors: true, side: THREE.DoubleSide, color: new THREE.Color().setScalar(LAUB_HELL) } : { map: karte });
   });
@@ -151,5 +155,5 @@ export async function ladeHofFein(lader, hof, anisotropie = 1) {
   const u = hof.scene.getObjectByName("hof_uhr"), [ux, uy, uz] = json.uhr.ort, [vx, vy] = json.uhr.vor;
   if (u) { u.position.set(ux - vx * 0.08, uz, -(uy - vy * 0.08)); hof.plan.uhr = { x: u.position.x, y: u.position.y, z: u.position.z }; }
   hof.info.gehkarte = json.gehkarte; hof.info.lichter = json.lichter;
-  return { gruppe, json, dreiecke: json.dreiecke };
+  return { gruppe, json, dreiecke };
 }

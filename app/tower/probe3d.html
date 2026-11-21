@@ -228,7 +228,7 @@ try {
   });
   szene.add(gltf.scene);
   // Hof 50 × 40 m: die in Blender gebaute Umgebung mit eingebranntem Licht liegt über dem Rohbau (hof_bau.js, ladeHofFein); ?rohbau=1 zeigt nur den Rohbau
-  const hofFein = hof && hofGross === HOF_FEIN && sucht.get("rohbau") !== "1" && (HOF_FEIN_DA || sucht.get("fein") === "1") ? await ladeHofFein(lader, hof, renderer.capabilities.getMaxAnisotropy()) : null;
+  const hofFein = hof && hofGross === HOF_FEIN && sucht.get("rohbau") !== "1" && (HOF_FEIN_DA || sucht.get("fein") === "1") ? await ladeHofFein(lader, hof, renderer.capabilities.getMaxAnisotropy(), sucht.get("baum") || "") : null;   // ?baum=kahl oder ?baum=stamm: Messhilfe ohne Blätter bzw. ohne Blätter und Zweige
   if (hofFein) { szene.add(hofFein.gruppe); dreiecke += hofFein.dreiecke; }
   // Nebel (nur in der gebauten Umgebung): Schalter „Nebel“ oder ?nebel=0
   const nebel = hofFein ? new THREE.FogExp2(HOF_NEBEL.farbe, HOF_NEBEL.dichte) : null;

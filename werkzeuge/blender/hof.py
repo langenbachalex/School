@@ -290,7 +290,7 @@ def balken(name, p0, p1, dick, material=None, y=None):
     return box(name, (lang, 0.09, dick), ((x0 + x1) / 2, y, (z0 + z1) / 2), material or EICHE, rot=(0, -math.atan2(z1 - z0, x1 - x0), 0))
 
 
-def modell(name, ort, hoehe=None, breite=None, dreh=0.0):
+def modell(name, ort, hoehe=None, breite=None, dreh=0.0, weit=1.0):
     """Poly-Haven-Modell laden, auf hoehe (und breite) bringen und mit der Unterkante seiner Mitte auf ort stellen."""
     vorher = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=os.path.join(MODELLE, name, name + ".gltf"))
@@ -320,7 +320,8 @@ def modell(name, ort, hoehe=None, breite=None, dreh=0.0):
     kz = hoehe / (hi[2] - lo[2]) if hoehe else 1.0
     kx = breite / (hi[0] - lo[0]) if breite else kz
     anker.location = ort
-    anker.scale = (kx, kx if breite else kz, kz)
+    anker.scale = (kx * weit, (kx if breite else kz) * weit, kz)      # weit > 1: breiter und dicker bei gleicher Hoehe
+    anker["netze"] = [o.name for o in netze]
     anker.rotation_euler = (0, 0, dreh)
     print(f"MODELL {name}: {hi[0] - lo[0]:.2f} x {hi[1] - lo[1]:.2f} x {hi[2] - lo[2]:.2f} m", flush=True)
     return anker
@@ -651,6 +652,37 @@ for k, (bx, by, bh, bb) in enumerate(BAEUME):
         baum(f"baum{k}", bx, by, bh, bb)
     else:   # "mischung" = drei verschiedene alte Baeume: dicker, knorriger Stamm · breite Krone · gedrehte Staemme
         art = ["island_tree_01", "jacaranda_tree", "island_tree_02"][k] if BAUM == "mischung" else BAUM
+        if BAUM == "mischung" and k == 0:
+            # Der grosse alte Baum (Mr. Alex 21.11.: mindestens einer richtig gross und dick, Krone viel breiter und wuchtiger –
+            # Vorbild: die alten Platanen auf Tower Green). Zwei ineinander gestellte, verdrehte Staemme ergeben einen
+            # dicken, unregelmaessigen Stamm und eine dichte, breite Krone; dazu helle, fleckige Platanenrinde.
+            teile = [modell(art, (bx, by, -0.1), hoehe=18.5, dreh=0.4, weit=1.45),
+                     modell(art, (bx + 0.5, by - 0.3, -0.1), hoehe=16.5, dreh=2.9, weit=1.6)]
+            for teil in teile:
+                for nm in teil["netze"]:
+                    for platz in bpy.data.objects[nm].material_slots:
+                        m_ = platz.material
+                        if m_ and not m_.get("platane") and "leaves" not in m_.name.lower() and "branches" not in m_.name.lower():   # nur der Stamm, nicht Zweige und Laub
+                            m_["platane"] = 1
+                            nt = m_.node_tree
+                            b = nt.nodes.get("Principled BSDF")
+                            if not b or not b.inputs["Base Color"].links:
+                                continue
+                            alt = b.inputs["Base Color"].links[0].from_socket
+                            geo = nt.nodes.new("ShaderNodeNewGeometry")
+                            fleck = nt.nodes.new("ShaderNodeTexVoronoi")
+                            fleck.inputs["Scale"].default_value = 1.3
+                            nt.links.new(geo.outputs["Position"], fleck.inputs["Vector"])
+                            stufe = nt.nodes.new("ShaderNodeValToRGB")
+                            stufe.color_ramp.elements[0].position, stufe.color_ramp.elements[1].position = 0.38, 0.5
+                            nt.links.new(fleck.outputs["Color"], stufe.inputs[0])
+                            hell = nt.nodes.new("ShaderNodeMix")
+                            hell.data_type = "RGBA"
+                            nt.links.new(stufe.outputs["Color"], hell.inputs[0])
+                            nt.links.new(alt, hell.inputs[6])
+                            hell.inputs[7].default_value = (0.62, 0.58, 0.44, 1)
+                            nt.links.new(hell.outputs[2], b.inputs["Base Color"])
+            continue
         modell(art, (bx, by, -0.05), hoehe=bh + 2.0, dreh=k * 2.1)
 
 # ---------- Schwarzes Eisengitter an der Rasenkante (wie auf den Fotos). Nur zwei Stuecke: dazwischen und aussen laufen die Wege der Figuren ----------
@@ -715,6 +747,7 @@ ANSICHTEN = {   # Nr.: (Name, Ort der Kamera, Blickziel, Brennweite)
     "2": ("tuer", (-7.8, FRONT + 7.5, 1.5), (TUER_X + 0.6, FRONT, 1.9), 28),   # Tuer zur Wachstube, Fass, Laterne (Hoehe eines Kindes)
     "4": ("whitetower", (-4.0, FRONT + 3.0, 1.5), (W + 12.0, 3.0, 8.0), 20),   # vom Start nach Nordosten: Rabenmauer und White Tower
     "5": ("rasen", (-12.0, FRONT + 1.6, 1.5), (9.0, 4.0, 5.0), 19),   # von der Tuer ueber das Gruen: Baeume, Maehstreifen, Gitter, White Tower
+    "6": ("grosser_baum", (3.0, FRONT + 4.0, 1.5), (-14.5, -3.0, 6.5), 17),   # der grosse alte Baum im Westen
     "3": ("uhr", (-12.0, FRONT + 12.0, 1.5), (UTX + 2.5, UTY + 2.5, 7.6), 24), # Bell Tower mit der Uhr
 }
 os.makedirs(OUT, exist_ok=True)
@@ -739,7 +772,7 @@ mw_.data.spot_size, mw_.data.spot_blend = R(40), 0.6
 zw = mw_.constraints.new("TRACK_TO")
 zw.target = bpy.data.objects["whitetower"]
 zw.track_axis, zw.up_axis = "TRACK_NEGATIVE_Z", "UP_Y"
-for nr in os.environ.get("ANSICHT", "1,2,3,4,5").split(","):
+for nr in os.environ.get("ANSICHT", "1,2,3,4,5,6").split(","):
     name, ort, blick, brennweite = ANSICHTEN[nr.strip()]
     cam.location, ziel.location, cam_data.lens = ort, blick, brennweite
     t0 = time.time()

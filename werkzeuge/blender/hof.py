@@ -247,6 +247,7 @@ KALK_HELL = mat("kalk_hell", (0.72, 0.69, 0.60), 0.9)       # glatter weisser We
 BLAU_TUER = mat("tuer_blau", (0.03, 0.10, 0.22), 0.5)
 WEISS = mat("weiss_lack", (0.70, 0.68, 0.62), 0.6)
 WARM_GLATT = mat("fenster_warm_glatt", (1.0, 0.50, 0.16), emit=1.1)
+HAUS_WARM = mat("fenster_haus_warm", (1.0, 0.42, 0.10), emit=0.35)   # Backsteinhaus: gedaempfter Kerzenschein (Mr. Alex 21.11.: nicht weiss)
 FLAGGE = mat("flagge", (0.5, 0.03, 0.04), 0.8)
 KALKSTEIN = mat("kalkstein", (0.40, 0.37, 0.31), 0.92)   # glatter, heller Werkstein fuer Uhrtafel und Laterne (ohne Textur: schraege Flaechen verziehen sie)
 MESSING = mat("messing", (0.90, 0.62, 0.20), 0.3, 1.0)
@@ -754,7 +755,7 @@ for bay in range(6):
             continue
         an = (bay, reihe) in ((1, 0), (4, 1), (2, 2))
         box(f"hausfenster_rahmen{bay}{reihe}", (0.1, 1.25, hh_ + 0.15), (HX + 0.02, by_, hz), WEISS)
-        box(f"hausfenster_glas{bay}{reihe}", (0.12, 1.05, hh_ - 0.05), (HX + 0.03, by_, hz), WARM_GLATT if an else GLAS_DUNKEL)
+        box(f"hausfenster_glas{bay}{reihe}", (0.12, 1.05, hh_ - 0.05), (HX + 0.03, by_, hz), HAUS_WARM if an else GLAS_DUNKEL)
         box(f"hausfenster_quer{bay}{reihe}", (0.14, 1.05, 0.05), (HX + 0.04, by_, hz), WEISS)
         for sy in (-0.18, 0.18):
             box(f"hausfenster_sprosse{bay}{reihe}{sy}", (0.14, 0.035, hh_ - 0.05), (HX + 0.04, by_ + sy, hz), WEISS)
@@ -824,9 +825,25 @@ def kopfplatane(name, x, y, hoch):
         ver.texture, ver.strength, ver.texture_coords = wolke_p, 0.7, "GLOBAL"
 
 
-for k, (px_, py_, ph_) in enumerate([(-17.0, RY0 + 0.9, 8.5), (-13.5, RY0 + 0.9, 9.5), (13.5, RY0 + 0.9, 9.0), (16.8, RY0 + 0.9, 8.0),
-                                     (-15.0, RY1 - 0.9, 9.0), (-5.0, RY1 - 0.9, 8.5), (5.0, RY1 - 0.9, 9.5), (14.0, RY1 - 0.9, 8.5)]):
-    kopfplatane(f"platane{k}", px_, py_, ph_)
+# Mr. Alex 21.11.: Kopfplatanen nur als gerade Reihe vor der Kapelle, alle 7 m; Suedrand frei (Blick auf Fassade und Uhr)
+for k, (px_, ph_) in enumerate([(-17.5, 9.0), (-10.5, 8.5), (-3.5, 9.5), (3.5, 8.5), (10.5, 9.5), (17.5, 8.5)]):
+    kopfplatane(f"platane{k}", px_, RY1 - 0.9, ph_)
+
+
+def laternenmast(name, x, y, energie=210):
+    """Schwarzer Laternenmast am Weg (wie im echten Hof), 3 m, warmes Licht."""
+    cyl(name + "_fuss", 0.11, 0.5, (x, y, 0.25), EISEN, verts=12)
+    cyl(name + "_mast", 0.045, 2.6, (x, y, 1.8), EISEN, verts=12)
+    box(name + "_quer", (0.5, 0.04, 0.04), (x, y, 2.75), EISEN)
+    modell("Lantern_01", (x, y, 3.1), hoehe=0.6)
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=0.04, location=(x, y, 3.35))
+    fertig(bpy.context.object, name + "_flamme", FLAMME)
+    licht(name, "POINT", energie, WARM, (x, y, 3.75), weich_=0.1)
+
+
+for k, (mx_, my_) in enumerate([(RX0 + 0.5, RY0 + 0.5), (RX1 - 0.5, RY0 + 0.5),
+                                (RX0 + 0.5, RY1 - 0.5), (RX1 - 0.5, RY1 - 0.5)]):
+    laternenmast(f"mast{k}", mx_, my_)
 
 # ---------- Alte Baeume auf dem Rasen (Mr. Alex 21.11.): knorrige Staemme, breite Kronen, Mondschatten auf dem Gruen ----------
 import random
@@ -870,7 +887,7 @@ def baum(name, x, y, hoch=11.0, breit=5.0):
 
 
 # Plaetze innerhalb des Rundkurses, neben den Wegen der Figuren (hof_bau.js): nicht auf x = 0, x = +-9, nicht im Kreis des Sergeants
-BAEUME = [(-15.5, -2.0, 12.0, 5.5), (4.5, 6.0, 13.0, 6.0), (16.0, -3.5, 10.5, 5.0)]
+BAEUME = [(-15.5, 4.0, 12.0, 5.5), (4.5, 6.0, 13.0, 6.0), (16.0, -3.5, 10.5, 5.0)]
 BAUM = os.environ.get("BAUM", "eigen")       # "eigen" = selbst gebaut; sonst ein Poly-Haven-Modell (CC0), z. B. jacaranda_tree, island_tree_02
 for k, (bx, by, bh, bb) in enumerate(BAEUME):
     if BAUM == "eigen":
@@ -1004,7 +1021,7 @@ if NEBEL:
     nb.data.materials.append(nm_)
 
 # ---------- Licht: Nacht. Kuehler Mond von Nordosten, warm nur Laternen und Fenster ----------
-licht("mond", "SUN", 1.1, (0.52, 0.66, 1.0), (0, 0, 30), rot=(R(-52), 0, R(28)))
+licht("mond", "SUN", 2.2, (0.52, 0.66, 1.0), (0, 0, 30), rot=(R(-52), 0, R(28)))
 world = bpy.data.worlds.new("nacht")
 scene.world = world
 world.use_nodes = True

@@ -97,7 +97,7 @@ def textur(name, ordner, mass=0.5, ton=(1, 1, 1), relief=0.35):
     return m
 
 
-def rautenglas(name, farbe, staerke, kerze=True):
+def rautenglas(name, farbe, staerke, kerze=True, raute=True, quer="X"):
     """Fenster mit Bleirauten wie im Guard Room; farbe leuchtet (warm = Licht im Haus, dunkelblau = kein Licht)."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
@@ -133,7 +133,7 @@ def rautenglas(name, farbe, staerke, kerze=True):
         tc = nt.nodes.new("ShaderNodeTexCoord")
         eig = nt.nodes.new("ShaderNodeSeparateXYZ")
         nt.links.new(tc.outputs["Object"], eig.inputs[0])
-        weg = rechne("SQRT", rechne("ADD", rechne("POWER", rechne("SUBTRACT", eig.outputs["X"], 0.12), 2.0), rechne("POWER", rechne("ADD", eig.outputs["Z"], 0.36), 2.0)))
+        weg = rechne("SQRT", rechne("ADD", rechne("POWER", rechne("SUBTRACT", eig.outputs[quer], 0.12), 2.0), rechne("POWER", rechne("ADD", eig.outputs["Z"], 0.36), 2.0)))
         schein = rechne("POWER", rechne("MAXIMUM", rechne("SUBTRACT", 1.0, rechne("MULTIPLY", weg, 1.2)), 0.0), 1.7)
         ton = nt.nodes.new("ShaderNodeValToRGB")
         ton.color_ramp.elements[0].color = (farbe[0] * 0.85, farbe[1] * 0.55, farbe[2] * 0.4, 1)
@@ -146,7 +146,10 @@ def rautenglas(name, farbe, staerke, kerze=True):
     dunkel = nt.nodes.new("ShaderNodeBsdfDiffuse")
     dunkel.inputs["Color"].default_value = (0.02, 0.02, 0.02, 1)
     misch = nt.nodes.new("ShaderNodeMixShader")
-    nt.links.new(blei, misch.inputs[0])
+    if raute:
+        nt.links.new(blei, misch.inputs[0])
+    else:
+        misch.inputs[0].default_value = 0.0      # glatte Scheibe (Sprossenfenster), nur der Kerzenschein
     nt.links.new(glas.outputs[0], misch.inputs[1])
     nt.links.new(dunkel.outputs[0], misch.inputs[2])
     aus = nt.nodes.new("ShaderNodeOutputMaterial")
@@ -248,7 +251,6 @@ KALK_HELL = mat("kalk_hell", (0.72, 0.69, 0.60), 0.9)       # glatter weisser We
 BLAU_TUER = mat("tuer_blau", (0.03, 0.10, 0.22), 0.5)
 WEISS = mat("weiss_lack", (0.70, 0.68, 0.62), 0.6)
 WARM_GLATT = mat("fenster_warm_glatt", (1.0, 0.50, 0.16), emit=1.1)
-HAUS_WARM = mat("fenster_haus_warm", (1.0, 0.30, 0.04), emit=0.05)   # Backsteinhaus: gedaempfter Kerzenschein (Mr. Alex 21.11.: nicht weiss)
 FLAGGE = mat("flagge", (0.5, 0.03, 0.04), 0.8)
 KALKSTEIN = mat("kalkstein", (0.40, 0.37, 0.31), 0.92)   # glatter, heller Werkstein fuer Uhrtafel und Laterne (ohne Textur: schraege Flaechen verziehen sie)
 MESSING = mat("messing", (0.90, 0.62, 0.20), 0.3, 1.0)
@@ -256,6 +258,7 @@ FLAMME = mat("flamme", (1.0, 0.55, 0.14), emit=14.0)
 LICHT_AN = rautenglas("fenster_an", (1.0, 0.42, 0.10), 1.5)
 LICHT_SCHWACH = rautenglas("fenster_schwach", (1.0, 0.40, 0.10), 0.5)
 LICHT_ALTAR = rautenglas("fenster_altar", (1.0, 0.41, 0.10), 0.9)
+HAUS_WARM = rautenglas("fenster_haus_warm", (1.0, 0.42, 0.10), 0.9, raute=False, quer="Y")   # Backsteinhaus: Kerzenschein mit Verlauf wie am Fachwerk (Mr. Alex 21.11.)
 LICHT_AUS = rautenglas("fenster_aus", (0.10, 0.16, 0.34), 0.10, kerze=False)
 
 # ---------- Formen ----------

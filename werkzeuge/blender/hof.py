@@ -191,6 +191,9 @@ def maehstreifen(m, breit=2.2):
 
 maehstreifen(RASEN)
 RINDE = textur("rinde", "dark_wood", 0.5, (0.42, 0.40, 0.34), relief=0.8)
+PLATTEN = textur("platten", "monastery_stone_floor", 0.30, (1.15, 1.08, 0.95), relief=0.5)     # grosse helle Steinplatten
+KIES = textur("kies", "gravel_floor_02", 0.5, (0.62, 0.56, 0.48), relief=0.4)
+BACKSTEIN = textur("backstein", "dark_brick_wall", 0.55, (0.62, 0.50, 0.44), relief=0.4)
 LAUB = mat("laub", (0.035, 0.07, 0.025), 0.75)
 GITTER = mat("gitter", (0.012, 0.012, 0.014), 0.45, 0.8)
 PUTZ = textur("putz", "plastered_stone_wall", 0.45, (2.2, 1.95, 1.6))                 # gekalkt wie die Waende im Guard Room
@@ -240,6 +243,11 @@ GLAS_DUNKEL = mat("glas_dunkel", (0.01, 0.014, 0.03), 0.25)
 ZIFFER_ALT = mat("ziffer_alt", (0.035, 0.03, 0.028), 0.8)
 STEIN_HELL = textur("bruchstein_hell", "castle_wall_slates", 0.30, (2.7, 2.55, 2.3))   # White Tower: heller als die Mauern
 UHR_SCHWARZ = mat("uhr_schwarz", (0.012, 0.012, 0.016), 0.45)
+KALK_HELL = mat("kalk_hell", (0.72, 0.69, 0.60), 0.9)       # glatter weisser Werkstein (White Tower: Ecken, Pfeiler, Fassungen)
+BLAU_TUER = mat("tuer_blau", (0.03, 0.10, 0.22), 0.5)
+WEISS = mat("weiss_lack", (0.70, 0.68, 0.62), 0.6)
+WARM_GLATT = mat("fenster_warm_glatt", (1.0, 0.50, 0.16), emit=1.1)
+FLAGGE = mat("flagge", (0.5, 0.03, 0.04), 0.8)
 KALKSTEIN = mat("kalkstein", (0.40, 0.37, 0.31), 0.92)   # glatter, heller Werkstein fuer Uhrtafel und Laterne (ohne Textur: schraege Flaechen verziehen sie)
 MESSING = mat("messing", (0.90, 0.62, 0.20), 0.3, 1.0)
 FLAMME = mat("flamme", (1.0, 0.55, 0.14), emit=14.0)
@@ -380,11 +388,16 @@ def zinnen_gerade(name, x0, x1, y, z, material, tief=0.6, entlang_y=False):
 
 
 # ---------- Boden: Pflaster vor dem Haus, dahinter der Rasen (Tower Green) ----------
-PFL = 9.0                                    # Tiefe des Pflasters vor der Hauswand
-box("pflaster", (B + 4, PFL + 2, 0.2), (0, FRONT + PFL / 2 - 1, -0.1), PFLASTER)
-box("rasen", (B + 4, T - PFL + 30, 0.2), (0, FRONT + PFL + (T - PFL + 30) / 2, -0.07), RASEN)
-box("kante", (B + 4, 0.28, 0.14), (0, FRONT + PFL, 0.0), QUADER)
-box("grund", (300, 300, 0.1), (0, 0, -0.3), mat("grund", (0.02, 0.025, 0.03), 1.0))
+PFL = 9.0                                    # Tiefe des gepflasterten Streifens vor der Hauswand
+# Wie im echten Hof (Rundgang CyArk, 21.11.): Wege aus grossen hellen Steinplatten, der Rasen als gefasstes Rechteck mit einem
+# schmalen Band aus Kopfsteinpflaster ringsum, Kopfstein auch am Hausfuss, vor dem White Tower eine Kiesflaeche.
+RX0, RX1, RY0, RY1 = -20.0, 18.0, FRONT + PFL, S - 4.5        # der Rasen
+box("platten", (B + 14, T + 12, 0.2), (0, 2, -0.1), PLATTEN)
+box("pflaster_band", (RX1 - RX0 + 2.4, RY1 - RY0 + 2.4, 0.2), ((RX0 + RX1) / 2, (RY0 + RY1) / 2, -0.085), PFLASTER)
+box("rasen", (RX1 - RX0, RY1 - RY0, 0.2), ((RX0 + RX1) / 2, (RY0 + RY1) / 2, -0.07), RASEN)
+box("pflaster_haus", (B, 1.6, 0.2), (0, FRONT + 0.8, -0.088), PFLASTER)
+box("kies", (W - RX1 - 1.2 + 0.0, T, 0.2), ((RX1 + 1.2 + W) / 2, 0, -0.092), KIES)
+box("grund", (300, 300, 0.1), (0, 0, -0.3), KIES)
 
 # ---------- Queen's House: Steinsockel, Fachwerk, Obergeschoss kragt vor, Ziegeldach mit vier Giebeln ----------
 hm, hb = (HAUS_X0 + HAUS_X1) / 2, HAUS_X1 - HAUS_X0
@@ -397,18 +410,18 @@ box("kragbalken", (hb, 0.55, 0.30), (hm, FRONT + 0.22, GESCHOSS), EICHE)
 balken("rahm", (HAUS_X0, TRAUFE - 0.12), (HAUS_X1, TRAUFE - 0.12), 0.24, y=yo)
 balken("riegel_unten", (HAUS_X0, 2.0), (HAUS_X1, 2.0), 0.14, y=yu)
 balken("riegel_oben", (HAUS_X0, 4.35), (HAUS_X1, 4.35), 0.14, y=yo)
-n_st = int(hb / 1.25)
+n_st = int(hb / 0.62)                        # viele schmale, eng stehende Staender wie am echten Queens House
 for i in range(n_st + 1):
     x = HAUS_X0 + 0.1 + i * (hb - 0.2) / n_st
     if abs(x - TUER_X) > 1.3:
-        balken(f"staender_u{i}", (x, 0.86), (x, GESCHOSS), 0.17, y=yu)
-    balken(f"staender_o{i}", (x, GESCHOSS), (x, TRAUFE), 0.17, y=yo)
-    if i % 2 == 0:                            # Knaggen unter dem vorkragenden Geschoss
+        balken(f"staender_u{i}", (x, 0.86), (x, GESCHOSS), 0.11, y=yu)
+    balken(f"staender_o{i}", (x, GESCHOSS), (x, TRAUFE), 0.11, y=yo)
+    if i % 4 == 0:                            # Knaggen unter dem vorkragenden Geschoss
         box(f"knagge{i}", (0.16, 0.45, 0.16), (x, FRONT + 0.2, GESCHOSS - 0.3), EICHE, rot=(R(40), 0, 0))
-    if i % 4 == 1 and i < n_st:               # Streben
-        x2 = x + (hb - 0.2) / n_st
-        balken(f"strebe_o{i}", (x, GESCHOSS + 0.15), (x2, 4.35), 0.13, y=yo)
-        balken(f"strebe_p{i}", (x2 + (hb - 0.2) / n_st, GESCHOSS + 0.15), (x2, 4.35), 0.13, y=yo)
+    if i % 8 == 2 and i < n_st - 2:           # Streben ueber zwei Felder
+        x2 = x + 2 * (hb - 0.2) / n_st
+        balken(f"strebe_o{i}", (x, GESCHOSS + 0.15), (x2, 4.35), 0.11, y=yo)
+        balken(f"strebe_p{i}", (x2 + 2 * (hb - 0.2) / n_st, GESCHOSS + 0.15), (x2, 4.35), 0.11, y=yo)
 
 # Dach: Satteldach laengs, First bei z = 8.4
 FIRST_Y, FIRST_Z = FRONT - 3.0, 8.4
@@ -565,16 +578,41 @@ for reihe, hz in enumerate((0.42 * WH, 0.73 * WH)):
     for k, fx in enumerate(FX):
         bogenfenster(f"wt_fenster_s{reihe}{k}", (fx, WY0 - 0.02, hz), False, GLAS_DUNKEL)
 for k, py in enumerate([(FY[i] + FY[i + 1]) / 2 for i in range(4)]):          # flache Wandpfeiler
-    box(f"wt_pfeiler_w{k}", (0.3, 0.7, WH - 0.6), (WX0 - 0.12, py, WH / 2), STEIN_HELL)
+    box(f"wt_pfeiler_w{k}", (0.3, 0.7, WH - 0.6), (WX0 - 0.12, py, WH / 2), KALK_HELL)
 for k, px in enumerate([(FX[i] + FX[i + 1]) / 2 for i in range(4)]):
-    box(f"wt_pfeiler_s{k}", (0.7, 0.3, WH - 0.6), (px, WY0 - 0.12, WH / 2), STEIN_HELL)
+    box(f"wt_pfeiler_s{k}", (0.7, 0.3, WH - 0.6), (px, WY0 - 0.12, WH / 2), KALK_HELL)
+for k, fy in enumerate(FY):                   # dritte Reihe: kleine Doppelfenster unter den Zinnen
+    box(f"wt_fassung3_w{k}", (0.1, 1.5, 1.0), (WX0 - 0.02, fy, 0.90 * WH), KALK_HELL)
+    for sy in (-0.35, 0.35):
+        box(f"wt_fenster3_w{k}{sy}", (0.12, 0.42, 0.75), (WX0 - 0.03, fy + sy, 0.90 * WH), GLAS_DUNKEL)
+for k, fx in enumerate(FX):
+    box(f"wt_fassung3_s{k}", (1.5, 0.1, 1.0), (fx, WY0 - 0.02, 0.90 * WH), KALK_HELL)
+    for sx in (-0.35, 0.35):
+        box(f"wt_fenster3_s{k}{sx}", (0.42, 0.12, 0.75), (fx + sx, WY0 - 0.03, 0.90 * WH), GLAS_DUNKEL)
+# Holztreppe an der Suedseite zum Eingang im ersten Stock
+TPX, TPZ = WX0 + 12.0, 5.0
+box("wt_podest", (4.0, 2.4, 0.2), (TPX, WY0 - 1.2, TPZ), EICHE_TOR)
+box("wt_eingang_fassung", (2.0, 0.1, 3.0), (TPX, WY0 - 0.02, TPZ + 1.5), KALK_HELL)
+box("wt_eingang", (1.5, 0.15, 2.6), (TPX, WY0 - 0.03, TPZ + 1.4), EICHE_TOR)
+lauf = math.hypot(9.0, TPZ)
+box("wt_treppe", (lauf, 1.8, 0.22), (TPX - 2.0 - 4.5, WY0 - 1.2, TPZ / 2), EICHE_TOR, rot=(0, -math.atan2(TPZ, 9.0), 0))
+box("wt_treppe_gelaender", (lauf, 0.08, 0.1), (TPX - 2.0 - 4.5, WY0 - 2.1, TPZ / 2 + 1.0), EICHE_TOR, rot=(0, -math.atan2(TPZ, 9.0), 0))
+for i in range(7):
+    tx = TPX + 2.0 - i * 2.0
+    th = TPZ if tx >= TPX - 2.0 else TPZ * (tx - (TPX - 11.0)) / 9.0
+    if th > 0.4:
+        for sy in (-0.3, -2.1):
+            box(f"wt_treppe_pfosten{i}{sy}", (0.16, 0.16, th), (tx, WY0 + sy, th / 2), EICHE_TOR)
 TURM_H = WH + 5.5
 for k, (ex, ey) in enumerate([(WX0 + 1.2, WY0 + 1.2), (WX0 + 1.2, WY1 - 1.2), (WX1 - 1.2, WY0 + 1.2), (WX1 - 1.2, WY1 - 1.2)]):
     if k == 3:                                 # das runde Tuermchen im Nordosten
         cyl(f"wt_eckturm{k}", 1.6, TURM_H, (ex, ey, TURM_H / 2), STEIN_HELL)
     else:
         box(f"wt_eckturm{k}", (2.8, 2.8, TURM_H), (ex, ey, TURM_H / 2), STEIN_HELL)
-    box(f"wt_eckturm_gesims{k}", (3.2, 3.2, 0.25), (ex, ey, TURM_H - 0.1), KALKSTEIN)
+    if k != 3:                                 # glatte helle Eckquader
+        for qa, qb in ((1, 1), (1, -1), (-1, 1), (-1, -1)):
+            box(f"wt_eckquader{k}{qa}{qb}", (0.4, 0.4, TURM_H), (ex + qa * 1.3, ey + qb * 1.3, TURM_H / 2), KALK_HELL)
+    box(f"wt_eckturm_gesims{k}", (3.2, 3.2, 0.25), (ex, ey, TURM_H - 0.1), KALK_HELL)
     bpy.ops.mesh.primitive_uv_sphere_add(radius=1.3, location=(ex, ey, TURM_H + 0.35), segments=32, ring_count=16)
     haube = fertig(bpy.context.object, f"wt_haube{k}", BLEI)
     haube.scale = (1, 1, 1.25)
@@ -582,6 +620,8 @@ for k, (ex, ey) in enumerate([(WX0 + 1.2, WY0 + 1.2), (WX0 + 1.2, WY1 - 1.2), (W
     cone(f"wt_haube_spitze{k}", 0.45, 1.3, (ex, ey, TURM_H + 2.35), BLEI, verts=16)
     cyl(f"wt_stange{k}", 0.03, 1.4, (ex, ey, TURM_H + 3.5), GOLD, verts=8)
     box(f"wt_fahne{k}", (0.55, 0.02, 0.3), (ex + 0.28, ey, TURM_H + 3.95), GOLD)
+box("wt_flagge", (1.6, 0.02, 0.9), (WX0 + 1.2 + 0.9, WY0 + 1.2, TURM_H + 6.0), FLAGGE)
+cyl("wt_flaggenmast", 0.04, 4.0, (WX0 + 1.2, WY0 + 1.2, TURM_H + 4.6), GITTER, verts=8)
 licht("mond_whitetower", "SPOT", 30000, (0.55, 0.68, 1.0), (5, 30, 45), rot=(0, 0, 0))
 
 # ---------- Bloody Tower mit dem grossen Tor (Suedostecke) ----------
@@ -628,6 +668,13 @@ for k in range(5):                              # fuenf breite Tudor-Fenster mit
     bg.scale = (1, 0.42, 1)
     for sx in (-0.35, 0.35):
         box(f"kapelle_pfosten{k}{sx}", (0.1, 0.18, 2.8), (fx + sx, KY - 0.04, 3.05), KALKSTEIN)
+    box(f"kapelle_kaempfer{k}", (2.1, 0.2, 0.09), (fx, KY - 0.05, 3.72), KALKSTEIN)           # Masswerk: drei Bahnen mit kleinen Boegen
+    for sx in (-0.7, 0.0, 0.7):
+        bpy.ops.mesh.primitive_torus_add(major_radius=0.3, minor_radius=0.045, location=(fx + sx, KY - 0.06, 3.9), rotation=(R(90), 0, 0), major_segments=24, minor_segments=8)
+        fertig(bpy.context.object, f"kapelle_masswerk{k}{sx}", KALKSTEIN)
+    box(f"kapelle_tropfleiste{k}", (3.0, 0.16, 0.1), (fx, KY - 0.06, 4.92), KALKSTEIN)
+    for sx in (-1.45, 1.45):
+        box(f"kapelle_tropf{k}{sx}", (0.1, 0.16, 0.5), (fx + sx, KY - 0.06, 4.7), KALKSTEIN)
     if glas is LICHT_AN:
         licht(f"kapelle_schein{k}", "POINT", 60, WARM, (fx, KY - 0.8, 2.9), weich_=0.5)
 TKX = KX - KB / 2 + 1.2                        # Tuer: vor dem Sockel (der lag vorher davor), mit Steinfassung
@@ -637,6 +684,12 @@ box("kapelle_tuer", (1.3, 0.3, 2.3), (TKX, KY - 0.12, 1.15), EICHE_TOR)
 cyl("kapelle_tuer_bogen", 0.65, 0.3, (TKX, KY - 0.12, 2.3), EICHE_TOR, rot=(R(90), 0, 0))
 for hz in (0.6, 1.7):
     box(f"kapelle_tuer_band{hz}", (1.2, 0.02, 0.09), (TKX, KY - 0.28, hz), EISEN)
+for i, (bb_, tt_) in enumerate(((2.8, 1.5), (2.3, 1.0), (1.9, 0.55))):      # drei Steinstufen vor der Tuer
+    box(f"kapelle_stufe{i}", (bb_, tt_, 0.1), (TKX, KY - 0.2 - tt_ / 2, 0.04 + i * 0.07), PLATTEN)
+GRX = KX - KB / 2 + 5.15                       # altes Steingrab an der Wand, zwischen dem ersten und zweiten Fenster
+box("steingrab_sockel", (2.3, 1.1, 0.25), (GRX, KY - 0.6, 0.12), QUADER)
+box("steingrab", (1.9, 0.8, 0.8), (GRX, KY - 0.6, 0.65), KALKSTEIN)
+box("steingrab_platte", (2.1, 1.0, 0.1), (GRX, KY - 0.6, 1.1), KALKSTEIN)
 laterne("laterne_kapelle", KX - KB / 2 + 2.4, KY - 0.75, 2.5, energie=200, wand=KY)
 laterne("laterne_kapelle_ost", KX + KB / 2 - 0.9, KY - 0.75, 2.6, energie=160, wand=KY)
 # Glockentuermchen am Westende: viereckiger Steinturm, obenauf eine kleine weisse Holzlaterne mit Bleihaube
@@ -666,8 +719,114 @@ for i in range(16):
     w_ = i * 2 * math.pi / 16
     box(f"beauchamp_zinne{i}", (0.95, 0.6, 0.9), (BTX + (BTR - 0.25) * math.cos(w_), BTY + (BTR - 0.25) * math.sin(w_), BTH + 0.45), STEIN, rot=(0, 0, w_ + R(90)))
 box("beauchamp_fenster", (0.2, 0.5, 1.3), (BTX + BTR + 0.02, BTY, 5.2), LICHT_SCHWACH)
-box("aussenmauer_nord", (B + 70, 2.0, 9.0), (8, NY + 16.0, 4.5), STEIN)
-zinnen_gerade("aussenmauer_zinne", -W - 27, W + 43, NY + 15.3, 9.0, STEIN)
+box("aussenmauer_nord", (56, 2.0, 9.0), (-26, NY + 16.0, 4.5), STEIN)
+zinnen_gerade("aussenmauer_zinne", -54, 2, NY + 15.3, 9.0, STEIN)
+# Waterloo Block im Nordosten: langer heller Bau mit Zinnen und achteckigen Tuermen (Rundgang CyArk)
+STEIN_WATERLOO = textur("stein_waterloo", "castle_wall_slates", 0.22, (1.9, 1.8, 1.6), relief=0.2)
+WBX0, WBX1, WBY, WBH = 4.0, 64.0, NY + 15.0, 12.0
+box("waterloo", (WBX1 - WBX0, 12, WBH), ((WBX0 + WBX1) / 2, WBY + 6, WBH / 2), STEIN_WATERLOO)
+box("waterloo_gesims", (WBX1 - WBX0 + 0.3, 12.3, 0.25), ((WBX0 + WBX1) / 2, WBY + 6, WBH - 0.6), KALK_HELL)
+zinnen_gerade("waterloo_zinne", WBX0, WBX1, WBY + 0.3, WBH, STEIN_WATERLOO)
+for i in range(15):
+    fx = WBX0 + 3.5 + i * 3.8
+    for reihe, hz in enumerate((3.0, 7.6)):
+        box(f"waterloo_fassung{reihe}{i}", (1.5, 0.1, 2.4), (fx, WBY - 0.02, hz), KALK_HELL)
+        box(f"waterloo_fenster{reihe}{i}", (1.1, 0.12, 2.0), (fx, WBY - 0.03, hz), LICHT_SCHWACH if (i * 7 + reihe * 3) % 11 == 0 else GLAS_DUNKEL)
+for k, tx in enumerate((WBX0, (WBX0 + WBX1) / 2 - 5, (WBX0 + WBX1) / 2 + 5, WBX1)):
+    cyl(f"waterloo_turm{k}", 2.3, WBH + 4.5, (tx, WBY, (WBH + 4.5) / 2), STEIN_WATERLOO, verts=8)
+    cyl(f"waterloo_turm_gesims{k}", 2.5, 0.25, (tx, WBY, WBH + 3.9), KALK_HELL, verts=8)
+    for i in range(8):
+        w_ = (i + 0.5) * math.pi / 4
+        box(f"waterloo_turm_zinne{k}{i}", (0.8, 0.5, 0.8), (tx + 2.0 * math.cos(w_), WBY + 2.0 * math.sin(w_), WBH + 4.9), STEIN_WATERLOO, rot=(0, 0, w_ + R(90)))
+
+# ---------- Westen: dunkle Backsteinhaeuser mit weissen Schiebefenstern und blauer Tuer (Rundgang CyArk), vor der Westmauer ----------
+HX, HY0, HY1, HH = -W - 0.02, -17.0, 1.5, 9.5
+box("backsteinhaus", (6.0, HY1 - HY0, HH), (HX - 3.0, (HY0 + HY1) / 2, HH / 2), BACKSTEIN)
+box("backsteinhaus_bruestung", (6.2, HY1 - HY0 + 0.2, 0.18), (HX - 3.0, (HY0 + HY1) / 2, HH + 0.05), KALKSTEIN)
+box("backsteinhaus_band", (0.12, HY1 - HY0, 0.2), (HX + 0.03, (HY0 + HY1) / 2, 3.45), KALKSTEIN)
+for k, sy in enumerate((HY0 + 3.0, (HY0 + HY1) / 2, HY1 - 3.0)):
+    box(f"backsteinhaus_schornstein{k}", (0.9, 1.3, 2.2), (HX - 3.0, sy, HH + 1.0), BACKSTEIN)
+TUER_BAY = 3
+for bay in range(6):
+    by_ = HY0 + 1.8 + bay * 3.0
+    for reihe, (hz, hh_) in enumerate(((1.9, 1.9), (5.0, 1.9), (7.8, 1.4))):
+        if reihe == 0 and bay == TUER_BAY:
+            continue
+        an = (bay, reihe) in ((1, 0), (4, 1), (2, 2))
+        box(f"hausfenster_rahmen{bay}{reihe}", (0.1, 1.25, hh_ + 0.15), (HX + 0.02, by_, hz), WEISS)
+        box(f"hausfenster_glas{bay}{reihe}", (0.12, 1.05, hh_ - 0.05), (HX + 0.03, by_, hz), WARM_GLATT if an else GLAS_DUNKEL)
+        box(f"hausfenster_quer{bay}{reihe}", (0.14, 1.05, 0.05), (HX + 0.04, by_, hz), WEISS)
+        for sy in (-0.18, 0.18):
+            box(f"hausfenster_sprosse{bay}{reihe}{sy}", (0.14, 0.035, hh_ - 0.05), (HX + 0.04, by_ + sy, hz), WEISS)
+        if an:
+            licht(f"hausfenster_schein{bay}{reihe}", "POINT", 35, WARM, (HX + 0.8, by_, hz), weich_=0.4)
+ty_ = HY0 + 1.8 + TUER_BAY * 3.0
+box("haustuer_vorbau", (0.35, 1.9, 3.0), (HX + 0.15, ty_, 1.5), WEISS)
+box("haustuer_giebel", (0.5, 2.2, 0.22), (HX + 0.2, ty_, 3.1), WEISS)
+box("haustuer", (0.1, 1.05, 2.3), (HX + 0.34, ty_, 1.2), BLAU_TUER)
+box("haustuer_stufe", (0.9, 2.0, 0.14), (HX + 0.5, ty_, 0.05), PLATTEN)
+modell("Lantern_01", (HX + 0.7, ty_ + 1.5, 2.3), hoehe=0.5)
+box("haus_laterne_arm", (0.7, 0.04, 0.04), (HX + 0.35, ty_ + 1.5, 2.92), EISEN)
+licht("haus_laterne", "POINT", 170, WARM, (HX + 0.8, ty_ + 1.5, 2.5), weich_=0.08)
+
+# ---------- Kopfplatanen am Rasenrand (Rundgang CyArk): gerade, helle, fleckige Staemme, oben gekappt mit Astknoten ----------
+def platanenrinde():
+    m = mat("platanenrinde", (0.5, 0.47, 0.36), 0.85)
+    nt = m.node_tree
+    b = nt.nodes.get("Principled BSDF")
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    lang = nt.nodes.new("ShaderNodeMapping")
+    lang.inputs["Scale"].default_value = (1.0, 1.0, 0.3)
+    nt.links.new(geo.outputs["Position"], lang.inputs["Vector"])
+    fleck = nt.nodes.new("ShaderNodeTexNoise")
+    fleck.inputs["Scale"].default_value = 3.0
+    fleck.inputs["Detail"].default_value = 3.0
+    nt.links.new(lang.outputs["Vector"], fleck.inputs["Vector"])
+    ton = nt.nodes.new("ShaderNodeValToRGB")
+    ton.color_ramp.elements[0].position, ton.color_ramp.elements[0].color = 0.44, (0.16, 0.15, 0.11, 1)
+    ton.color_ramp.elements[1].position, ton.color_ramp.elements[1].color = 0.56, (0.60, 0.57, 0.44, 1)
+    nt.links.new(fleck.outputs[0], ton.inputs[0])
+    nt.links.new(ton.outputs["Color"], b.inputs["Base Color"])
+    return m
+
+
+def ast(name, a, b, r0, r1):
+    a, b = Vector(a), Vector(b)
+    ri = b - a
+    bpy.ops.mesh.primitive_cone_add(radius1=r0, radius2=r1, depth=ri.length, location=(a + b) / 2, vertices=12)
+    ob = fertig(bpy.context.object, name, RINDE)
+    ob.rotation_euler = ri.to_track_quat("Z", "Y").to_euler()
+    return ob
+
+
+PLATANE = platanenrinde()
+zufall_p = __import__("random").Random(5)
+wolke_p = bpy.data.textures.new("laubwolke_klein", "CLOUDS")
+wolke_p.noise_scale = 0.3
+
+
+def kopfplatane(name, x, y, hoch):
+    ast(name + "_stamm", (x, y, 0), (x + 0.1, y + 0.05, hoch), 0.36, 0.25).data.materials[0] = PLATANE
+    cyl(name + "_kranz", 0.8, 0.06, (x, y, 0.02), PFLASTER, verts=16)
+    for i in range(4):
+        w_ = i * math.pi / 2 + zufall_p.uniform(-0.5, 0.5)
+        ende = (x + 1.3 * math.cos(w_), y + 1.3 * math.sin(w_), hoch + zufall_p.uniform(0.9, 1.9))
+        ast(f"{name}_arm{i}", (x + 0.1, y + 0.05, hoch - 0.3), ende, 0.2, 0.15).data.materials[0] = PLATANE
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=0.3, location=ende)
+        fertig(bpy.context.object, f"{name}_knoten{i}", PLATANE)
+        for j in range(5):
+            spitze = (ende[0] + zufall_p.uniform(-0.9, 0.9), ende[1] + zufall_p.uniform(-0.9, 0.9), ende[2] + zufall_p.uniform(1.0, 2.2))
+            ast(f"{name}_trieb{i}{j}", ende, spitze, 0.035, 0.008).data.materials[0] = PLATANE
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3, radius=1.0, location=(ende[0], ende[1], ende[2] + 1.0))
+        bueschel = fertig(bpy.context.object, f"{name}_laub{i}", LAUB)
+        bpy.ops.object.shade_smooth()
+        ver = bueschel.modifiers.new("laub", "DISPLACE")
+        ver.texture, ver.strength, ver.texture_coords = wolke_p, 0.7, "GLOBAL"
+
+
+for k, (px_, py_, ph_) in enumerate([(-17.0, RY0 + 0.9, 8.5), (-13.5, RY0 + 0.9, 9.5), (13.5, RY0 + 0.9, 9.0), (16.8, RY0 + 0.9, 8.0),
+                                     (-15.0, RY1 - 0.9, 9.0), (-5.0, RY1 - 0.9, 8.5), (5.0, RY1 - 0.9, 9.5), (14.0, RY1 - 0.9, 8.5)]):
+    kopfplatane(f"platane{k}", px_, py_, ph_)
 
 # ---------- Alte Baeume auf dem Rasen (Mr. Alex 21.11.): knorrige Staemme, breite Kronen, Mondschatten auf dem Gruen ----------
 import random
@@ -784,16 +943,30 @@ for k, (bx, by, bh, bb) in enumerate(BAEUME):
         modell(art, (bx, by, -0.05), hoehe=bh + 2.0, dreh=k * 2.1)
 
 # ---------- Schwarzes Eisengitter an der Rasenkante (wie auf den Fotos). Nur zwei Stuecke: dazwischen und aussen laufen die Wege der Figuren ----------
-GY = FRONT + PFL + 0.25
+GY = RY0 - 0.6                                  # auf dem Pflasterband
+def stab(name, a, b, r, material):
+    a, b = Vector(a), Vector(b)
+    ri = b - a
+    bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=ri.length, location=(a + b) / 2, vertices=8)
+    ob = fertig(bpy.context.object, name, material)
+    ob.rotation_euler = ri.to_track_quat("Z", "Y").to_euler()
+    return ob
+
+
+GH = 0.6                                        # kniehoch (echt), ein Holm oben, darunter flache Boegen von Pfosten zu Pfosten
 for k, (gx0, gx1) in enumerate([(-20.5, -11.5), (11.5, 20.5)]):
     n_ = int((gx1 - gx0) / 1.5)
+    schritt_ = (gx1 - gx0) / n_
     for i in range(n_ + 1):
-        px = gx0 + i * (gx1 - gx0) / n_
-        cyl(f"gitter{k}_pfosten{i}", 0.035, 1.05, (px, GY, 0.52), GITTER, verts=10)
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.06, location=(px, GY, 1.08), segments=12, ring_count=8)
+        px = gx0 + i * schritt_
+        cyl(f"gitter{k}_pfosten{i}", 0.03, GH, (px, GY, GH / 2), GITTER, verts=10)
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.05, location=(px, GY, GH + 0.04), segments=12, ring_count=8)
         fertig(bpy.context.object, f"gitter{k}_knauf{i}", GITTER)
-    for j, hz in enumerate((0.5, 0.92)):
-        cyl(f"gitter{k}_holm{j}", 0.02, gx1 - gx0, ((gx0 + gx1) / 2, GY, hz), GITTER, rot=(0, R(90), 0), verts=8)
+        if i < n_:
+            pkt = [(px + t * schritt_, GY, 0.12 + 0.30 * (1 - (2 * t - 1) ** 2)) for t in [j / 8 for j in range(9)]]
+            for j in range(8):
+                stab(f"gitter{k}_bogen{i}_{j}", pkt[j], pkt[j + 1], 0.012, GITTER)
+    cyl(f"gitter{k}_holm", 0.018, gx1 - gx0, ((gx0 + gx1) / 2, GY, GH - 0.05), GITTER, rot=(0, R(90), 0), verts=8)
 
 # ---------- Nebel (abschaltbar: NEBEL=1 schaltet ihn ein): duenner Schleier, am Boden dichter, um die Laternen ein Schein ----------
 NEBEL = float(os.environ.get("NEBEL", 0))      # 0 = aus, 1 = normal, 2 = dicht
@@ -883,6 +1056,7 @@ ANSICHTEN = {   # Nr.: (Name, Ort der Kamera, Blickziel, Brennweite)
     "6": ("grosser_baum", (6.0, FRONT + 3.0, 1.5), (-14.5, -3.0, 7.5), 16),   # der grosse alte Baum im Westen
     "7": ("nord", (2.0, FRONT + 2.6, 1.5), (-5.0, S + 4.0, 4.5), 17),   # vom Start nach Norden: Rasen, Kapelle, Glockentuermchen
     "8": ("kapelle", (-3.0, 3.0, 1.5), (KX - 2.5, KY, 5.0), 21),   # vom Rasen auf die Kapelle
+    "9": ("west", (2.0, -9.0, 1.5), (-25.0, -7.5, 4.0), 19),   # nach Westen: Backsteinhaeuser, Beauchamp Tower
     "3": ("uhr", (-12.0, FRONT + 12.0, 1.5), (UTX + 2.5, UTY + 2.5, 7.6), 24), # Bell Tower mit der Uhr
 }
 os.makedirs(OUT, exist_ok=True)
@@ -907,7 +1081,7 @@ mw_.data.spot_size, mw_.data.spot_blend = R(40), 0.6
 zw = mw_.constraints.new("TRACK_TO")
 zw.target = bpy.data.objects["whitetower"]
 zw.track_axis, zw.up_axis = "TRACK_NEGATIVE_Z", "UP_Y"
-for nr in os.environ.get("ANSICHT", "1,2,3,4,5,6,7,8").split(","):
+for nr in os.environ.get("ANSICHT", "1,2,3,4,5,6,7,8,9").split(","):
     name, ort, blick, brennweite = ANSICHTEN[nr.strip()]
     cam.location, ziel.location, cam_data.lens = ort, blick, brennweite
     t0 = time.time()

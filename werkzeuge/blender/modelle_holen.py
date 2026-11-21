@@ -22,7 +22,8 @@ MODELLE = [
 #   python -c "import modelle_holen as m; ..."  bzw. Namen voruebergehend in MODELLE eintragen. Quelle wie oben: polyhaven.com/a/<name>, CC0.
 BAEUME_HOF = ["jacaranda_tree", "island_tree_02", "island_tree_01"]   # geprueft und verworfen: island_tree_03, tree_small_02
 TEXTUREN = ["medieval_blocks_02", "old_wood_floor", "dark_wood", "plastered_stone_wall",
-            "cobblestone_floor_08", "leafy_grass", "castle_wall_slates", "clay_roof_tiles_02"]   # zweite Zeile: Hof (hof.py, 21.11.)
+            "cobblestone_floor_08", "leafy_grass", "castle_wall_slates", "clay_roof_tiles_02",
+            "monastery_stone_floor", "gravel_floor_02", "dark_brick_wall"]   # zweite Zeile: Hof (hof.py, 21.11.)
 KARTEN = {"Diffuse": "diff", "nor_gl": "nor", "Rough": "rough"}
 
 

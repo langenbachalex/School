@@ -45,6 +45,7 @@ Angelegt vom Master am 20.11.2026 auf Wunsch von Mr. Alex. **Jeder Prüf-Agent l
 
 ## 6. Für die Prüfung selbst
 - **Rangfolge der Prüfung (Mr. Alex 20.11.):** zuerst, was Jugendliche gut und cool finden und wie Spannung entsteht, damit sie dranbleiben – Gefahr, Geheimnis, Überraschung, keine Vorhersehbarkeit, keine übermäßige Regelmäßigkeit. Danach die Qualität der Geschichte. Die Logik kommt zuletzt: Nicht alles muss vollkommen logisch sein, ein Geheimnis oder ein Widerspruch darf stehen bleiben.
+- **Eigener Prüfer „Mystery“ (Wunsch Mr. Alex 21.11.):** Ein Agent sucht gezielt nach Möglichkeiten für Geheimnis und Überraschung – verborgene Zusammenhänge, Beziehungen zwischen den Personen, Rätsel, Wendungen, die im Rückblick zwingend sind – und meldet, wo die Geschichte solche Gelegenheiten verschenkt.
 - **Immer anzeigen:** alles, was cheesy, kitschig oder langweilig ist („Oh, was ein Scheiß“) – ausdrücklich mit Stelle.
 - Befunde belegen (Stelle im Rahmen nennen), Vorschläge von Befunden trennen, nichts als entschieden darstellen.
 - Was Mr. Alex schon entschieden oder zurückgewiesen hat, nicht noch einmal als Mangel melden – nur, wenn es einen neuen, stichhaltigen Grund gibt.

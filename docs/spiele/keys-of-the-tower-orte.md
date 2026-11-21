@@ -72,3 +72,19 @@ Dazu überall: neue Fundstücke der Elster, neue Sprüche von Gary, Aufträge de
 1. Trägt die Geschichte so, vor allem die Wendung mit der leeren Kuchendose?
 2. Acht Orte in dieser Reihenfolge?
 3. Schluss-Haken „There are other towers“ als Tür für eine Fortsetzung?
+
+## Der echte Hof – Eindrücke aus dem Rundgang von CyArk (hinterlegt 21.11.2026, Auftrag Mr. Alex)
+Quelle: https://www.cyark.org/projects/tower-of-london/panorama-tour (Rundum-Fotos, läuft im Browser ohne Zusatzprogramm; rund acht Standpunkte, vier bei Tower Green und der Kapelle, vier beim White Tower). Angesehen: zwei Standpunkte an der Kapelle, je einmal ringsum; aufgenommen im Winter, die Bäume sind kahl. Die Bilder sind nicht frei – nur als Vorlage, nichts davon ins Repo. Maßstab bleibt: erkennbar, nicht maßstabsgetreu.
+
+- **Boden:** große, helle Steinplatten (grau-beige, unregelmäßig rechteckig) als Wege und vor der Kapelle; daneben kleines, dunkleres Kopfsteinpflaster in Feldern; vor dem White Tower eine weite Fläche aus Kies oder Splitt, grau-braun. Der Rasen liegt als sauber gefasstes Rechteck dazwischen.
+- **Gitter am Rasen:** niedrig (etwa kniehoch bis 60 cm), schwarze Pfosten mit Kugelknauf, **ein** durchlaufender Holm, zwischen den Pfosten teils Bögen. An Treppen und Kellerabgängen hohe schwarze Stabgitter mit Handlauf.
+- **Bäume:** Platanen mit sehr hellen, glatten, fleckigen Stämmen, gerade und hoch; mehrere sind gekappt („Kopfbäume“) und tragen oben nur Astknoten und Büschel. Sie stehen am Rand des Rasens, nicht mitten darauf.
+- **Queen's House (Süden):** schwarz-weißes Fachwerk mit vielen schmalen, eng stehenden Ständern, mehrere Giebel nebeneinander, Sprossenfenster weiß; davor Blumentöpfe. Wirkt eher klein und wohnlich als wuchtig.
+- **Westseite:** neben dem Fachwerk dunkle Backsteinhäuser (fast schwarzbraun) mit weißen Schiebefenstern, weißem Türvorbau und blauer Tür; dahinter der Beauchamp Tower aus hellem Stein mit Zinnen.
+- **Kapelle St Peter ad Vincula (Norden):** heller, gelblich-grauer Bruchstein mit glatten hellen Eckquadern; breite Fenster mit sehr flachem Bogen, Steinmaßwerk (drei Bahnen mit kleinen Bögen oben) und Bleiverglasung; niedriger Bau mit Brüstung; an der Wand ein altes Steingrab; Eingang über drei Steinstufen, schwere Eichentür mit langen Eisenbändern; schwarzer Aushangkasten; an der Hausecke eine blaue Laterne am Wandarm. Innen: dunkle Balkendecke, Messingleuchter, Stuhlreihen.
+- **Waterloo Block (Nordosten):** langer Bau aus hellem, glattem Stein mit Erkern, Zinnen und achteckigen Ecktürmen; davor Holzbänke und niedrige schwarze Poller mit Kette.
+- **White Tower (Osten):** deutlich heller als alles andere, fast weißgrau; Ecken, Wandpfeiler und Fensterfassungen aus glattem weißem Stein; Rundbogenfenster in drei Reihen, oben paarweise; Zinnen; vier Ecktürme mit dunklen Zwiebelhauben aus Blei und goldenen Wetterfahnen; an der Südseite eine Holztreppe zum Eingang im ersten Stock.
+- **Laternen:** schwarze oder dunkelblaue Masten mit sechseckigen Glaslaternen und Krone; Wandlaternen an geschwungenen Eisenarmen.
+- **Kleinigkeiten, die den Ort ausmachen:** schwarze Abfallkörbe, Holzbänke, Hinweistafeln auf schwarzem Grund, Blumenkübel vor den Häusern, in der Ferne Tower Bridge und die Hochhäuser der City über den Mauern.
+
+**Unterschiede zu unserem Hof (Stand 21.11., `werkzeuge/blender/hof.py`):** Unser Pflaster ist überall gleiches Kopfsteinpflaster (echt: Platten und Kies) · unser Gitter hat zwei Holme und ist höher · unsere Bäume stehen mitten auf dem Rasen und sind belaubt (echt: am Rand, helle gerade Stämme, teils gekappt) · unser Fachwerk hat weniger und breitere Ständer · Backsteinhäuser im Westen fehlen (bei uns Mauer) · die Kapellenfenster haben noch kein Maßwerk · dem White Tower fehlen die weißen Eckquader, die dritte Fensterreihe und die Holztreppe · Waterloo Block fehlt (bei uns dunkle Außenmauer).

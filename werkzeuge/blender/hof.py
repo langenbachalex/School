@@ -645,8 +645,12 @@ def baum(name, x, y, hoch=11.0, breit=5.0):
 
 # Plaetze innerhalb des Rundkurses, neben den Wegen der Figuren (hof_bau.js): nicht auf x = 0, x = +-9, nicht im Kreis des Sergeants
 BAEUME = [(-15.5, -2.0, 12.0, 5.5), (4.5, 6.0, 13.0, 6.0), (16.0, -3.5, 10.5, 5.0)]
+BAUM = os.environ.get("BAUM", "eigen")       # "eigen" = selbst gebaut; sonst ein Poly-Haven-Modell (CC0), z. B. jacaranda_tree, island_tree_02
 for k, (bx, by, bh, bb) in enumerate(BAEUME):
-    baum(f"baum{k}", bx, by, bh, bb)
+    if BAUM == "eigen":
+        baum(f"baum{k}", bx, by, bh, bb)
+    else:
+        modell(BAUM, (bx, by, -0.05), hoehe=bh + 2.0, dreh=k * 2.1)
 
 # ---------- Schwarzes Eisengitter an der Rasenkante (wie auf den Fotos). Nur zwei Stuecke: dazwischen und aussen laufen die Wege der Figuren ----------
 GY = FRONT + PFL + 0.25
@@ -738,6 +742,6 @@ for nr in os.environ.get("ANSICHT", "1,2,3,4,5").split(","):
     name, ort, blick, brennweite = ANSICHTEN[nr.strip()]
     cam.location, ziel.location, cam_data.lens = ort, blick, brennweite
     t0 = time.time()
-    scene.render.filepath = os.path.join(OUT, f"hof_sued_{nr.strip()}_{name}.jpg")
+    scene.render.filepath = os.path.join(OUT, f"hof_sued_{nr.strip()}_{name}" + ("" if BAUM == "eigen" else "_" + BAUM) + ".jpg")
     bpy.ops.render.render(write_still=True)
     print(f"BILD {name} fertig in {time.time() - t0:.1f} s", flush=True)

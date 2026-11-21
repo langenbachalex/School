@@ -8,8 +8,11 @@
    Braucht: npm install -g @gltf-transform/cli            (MIT; nur auf dem Baurechner, nicht in der App) */
 const fs = require("fs"), path = require("path"), os = require("os"), { execFileSync } = require("child_process");
 const REPO = path.join(__dirname, "..");
-const RAEUME = [{ quelle: "werkzeuge/blender/quellen/guardroom_roh.glb", ziel: "app/tower/raum3d/guardroom.glb" }];
-const MAX_PX = 2048, WEBP_GUETE = 88;
+const ALLE = [{ name: "guardroom", quelle: "werkzeuge/blender/quellen/guardroom_roh.glb", ziel: "app/tower/raum3d/guardroom.glb", px: 2048 },
+  { name: "hof", quelle: "werkzeuge/blender/quellen/hof_roh.glb", ziel: "app/tower/raum3d/hof.glb", px: 4096 },            // Hof: erst gut bauen (Mr. Alex 21.11.), verkleinert wird nach der Messung auf dem Schul-Laptop
+  { name: "hof_klein", quelle: "werkzeuge/blender/quellen/hof_roh_klein.glb", ziel: "app/tower/raum3d/hof.glb", px: 4096 }];   // schneller Probelauf (GLTF_KLEIN=1)
+const RAEUME = ALLE.filter((r) => r.name === (process.argv[2] || "guardroom"));   // Aufruf: node werkzeuge/raum_verkleinern.js [guardroom|hof]
+const WEBP_GUETE = 88;
 
 function lauf(...teile) { execFileSync("gltf-transform", teile, { stdio: ["ignore", "ignore", "inherit"], shell: process.platform === "win32" }); }
 
@@ -30,9 +33,9 @@ for (const r of RAEUME) {
   const quelle = path.join(REPO, r.quelle), ziel = path.join(REPO, r.ziel), tmp = fs.mkdtempSync(path.join(os.tmpdir(), "raum-"));
   const a = path.join(tmp, "a.glb"), b = path.join(tmp, "b.glb");
   console.log(`vorher:  ${bericht(quelle)}`);
-  lauf("resize", quelle, a, "--width", MAX_PX, "--height", MAX_PX);
+  lauf("resize", quelle, a, "--width", r.px, "--height", r.px);
   lauf("webp", a, b, "--quality", WEBP_GUETE);
-  lauf("meshopt", b, ziel, "--level", "medium");
+  lauf("meshopt", b, ziel, "--level", "medium", "--quantize-color", 16);   // Farbe am Eckpunkt (Licht im Laub) fein genug für die dunkle Nacht
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`nachher: ${bericht(ziel)}`);
 }

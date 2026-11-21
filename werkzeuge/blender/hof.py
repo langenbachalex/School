@@ -1103,6 +1103,14 @@ mw_.data.spot_size, mw_.data.spot_blend = R(40), 0.6
 zw = mw_.constraints.new("TRACK_TO")
 zw.target = bpy.data.objects["whitetower"]
 zw.track_axis, zw.up_axis = "TRACK_NEGATIVE_Z", "UP_Y"
+if os.environ.get("GLTF"):      # 3D-Fassung fuer den Browser (werkzeuge/blender/hof_gltf.py); dann wird kein Bild gerechnet
+    sys.path.insert(0, HERE)
+    import hof_gltf
+    if os.environ["GLTF"] == "liste":
+        hof_gltf.liste(scene)
+    else:
+        hof_gltf.ausgeben(scene)
+    sys.exit(0)
 for nr in os.environ.get("ANSICHT", "1,2,3,4,5,6,7,8,9").split(","):
     name, ort, blick, brennweite = ANSICHTEN[nr.strip()]
     cam.location, ziel.location, cam_data.lens = ort, blick, brennweite

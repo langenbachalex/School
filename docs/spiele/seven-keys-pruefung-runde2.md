@@ -299,3 +299,140 @@ Meine Einschätzung: C beantwortet „Wie konnte das geschehen?“, A beantworte
 3. Welches eine Ereignis setzt nach 127 Jahren alles in Gang?
 4. Was will Wren hinter der Tür, und was heißt „falsch öffnen“?
 5. Gilt „wer auslacht, hört die Raben nicht mehr“ für immer?
+
+---
+
+## Prüfung E – Dramaturgische Beurteilung (Storytelling-Profi)
+
+### Urteil
+Umbauen, nicht neu ansetzen. Welt, Magie-Regel (Ruf und Antwort), Tür, Raben, Wren und Mr. Flex sind eigenständig und tragfähig. Zwei Dinge tragen noch nicht. Das auslösende Ereignis ist so, wie es heute formuliert ist, zu klein und widerspricht der Schule. Und die Geschichte gehört den Erwachsenen von 1899. Beides lässt sich aus dem Vorhandenen heraus lösen. Dein Zweifel ist berechtigt, aber er trifft die Formulierung, nicht das Fundament.
+
+### 1. Die Prämisse
+**Heute lautet sie:** 1899 wurde an einer Zauberschule ein Junge ausgelacht, ein Zauber blieb halb, seither ist die Schule zu. Kinder von heute, die den Raben zuhören, sollen die Tür öffnen, bevor es der Spötter von damals tut.
+
+**Stark** ist der Satz darunter: Ein Zauber ist erst ganz, wenn ihm geantwortet wird, und wer ruft, bleibt gebunden. Das ist neu und spielbar, und es ist zugleich Englischunterricht, ohne danach zu riechen.
+
+**Sie wackelt an drei Stellen:**
+- Ursache und Folge stehen im falschen Verhältnis. In jeder Schule wird gelacht; 127 Jahre Schließung wirken wie eine Überreaktion.
+- Eine Schule, deren Lehre das Zuhören ist, lacht geschlossen über einen Stotternden. Entweder war sie schon vorher faul, oder die Szene ist unglaubwürdig. Deine Frage nach dem Ehrenkodex trifft genau das.
+- Niemand weiß, was der Zauber bewirken sollte. „Agoriad“ heißt Öffnung, aber von was? Ohne das ist „der halbe Zauber“ nur ein Wort.
+
+**Ansatz A – behält fast alles: Das Lachen ist der Anlass, nicht der Grund.**
+- Die Schule bewacht etwas, eine ältere Tür im Saal (Prüfer C, Befund 2).
+- Es gibt ein einziges Gesetz, das jeder Schüler bei der Aufnahme verspricht: Wer spricht, wird gehört.
+- In jener Nacht wurde der gefährlichste Zauber der Schule gesprochen. Das Lachen brach das Gesetz mitten im Ruf, und der Zauber blieb offen hängen.
+- Der Schulleiter schloss nicht als Strafe, sondern als Notverschluss. Seine Schuld: Er hatte aus der Schule eine Bühne für Glanzschüler gemacht.
+- Erhalten bleibt alles Entschiedene. Verloren geht nur die Schlichtheit „ein Junge wurde ausgelacht“.
+
+**Ansatz B – tiefer: „Er wurde ausgelacht“ ist die Legende, nicht die Wahrheit.**
+- Die drei Fassungen der Nacht (atgofion, curiad, gwirionedd) sind schon entschieden. Sie bekommen damit eine Aufgabe: Jede Fassung dreht das Bild.
+- Die letzte zeigt, dass Shrike das Lachen gemacht hat, weil er die Antwort selbst sprechen wollte, und dass auch Mr. Flex und Mrs Crumb etwas verschwiegen haben.
+- Erhalten bleiben alle Figuren. Verloren geht Shrike als bloßer Spötter; er wird ein Dieb des letzten Wortes. Das halte ich für einen Gewinn.
+
+**Ansatz C – mutig anders: Die Stille ist kein Zustand, sondern etwas, das von drüben kommt.**
+- 1899 haben Schüler die innere Tür einen Spalt geöffnet. Was hereinkam, nimmt Stimmen; Auslachen ist seine Wirkung in Menschen.
+- Gewonnen wäre ein großer Gegner. Verloren gingen die Eigenart, Wrens Rolle als Mitte der Vorgeschichte und die Verankerung im Sprechen.
+- Es wäre die dunkle Macht hinter der Tür, die jeder kennt. Davon rate ich ab.
+
+**Empfehlung:** A und B zusammen. Von C nur das Schlussbild, dass von drüben etwas antwortet.
+
+### 2. Wessen Geschichte ist es?
+Heute ist es Wrens Geschichte. Das Hauptkind ist Bote.
+
+Die zentrale Frage aus Sicht des Kindes könnte heißen: **Antworte ich, wenn es mich etwas kostet?**
+- **Es will** seinen Freund zurück, der gebunden wurde, weil es selbst nicht antwortete.
+- **Es braucht** den Mut, vor anderen zu sprechen und zu jemandem zu stehen, auch wenn gelacht wird.
+- **Es kann verlieren:** den Freund und das Hören selbst, wenn es einmal mitlacht.
+
+1899 sollte Spiegel und unerledigte Last sein, nicht Erbe durch Blut. Die Kinder geraten in dieselbe Lage (ein Stolzer, ein Stockender, ein Spötter, eine, die zu spät ruft) und müssen sie anders ausgehen lassen. Dazu passt der Prolog: Das Kind spielt Mrs Crumb, deren Ruf zu spät kam.
+
+Der Grund, warum es Kinder braucht, liegt in der Regel selbst: Gebundene können einander nicht antworten. Die Erwachsenen werden gerettet, sie retten nicht. Die Herkunft aus Wrens Familie würde ich klein und spät halten.
+
+### 3. Thema
+Das Thema ist nicht Zuhören, sondern **Antworten**: Wer gehört hat, schuldet etwas. Auslachen ist die falsche Antwort auf einen Ruf. So gefasst hängen Magie, Gegner und Finale am selben Nagel.
+
+Getragen wird das Thema bisher von der Magie und von 1899. Vom Gegner und vom Finale wird es nur behauptet.
+
+**Moral statt Geschichte droht an vier Stellen:**
+- Die Regel „Wer auslacht, hört die Raben nicht mehr“ wirkt als Strafautomat. Besser als Verlust zeigen, den man an Mason und Tilly sieht.
+- Mason ist eine Stunde gegen Cybermobbing.
+- Das Chor-Ende „Niemand lacht. Alle sprechen es mit.“ ist cheesy.
+- Der Kernsatz selbst ist eine Schulregel und kein Thema.
+
+Übersehen ist ein Widerspruch: Das Spiel lebt vom Lachen (Gary, Sergeant, Mr. Flex). Darin liegt eine Chance. Mr. Flex lacht über sich selbst, und wer das kann, den trifft Shrike nicht. Damit wäre dein Abbild im Kern verankert und nicht nur Komik.
+
+### 4. Gegner und Einsatz
+Shrike trägt sieben Kapitel nur, wenn fünf Dinge dazukommen:
+- **Eine Gestalt heute:** der beliebte Wohltäter, dem alle Erwachsenen glauben.
+- **Eine Waffe aus der Magie:** Wen er lächerlich macht, der hört nichts mehr.
+- **Ein Sieg in der Mitte.**
+- **Ein Ziel als Bild:** Er will selbst das letzte Wort sprechen und braucht dafür Kinder, die ihm antworten. Applaus ist seine gefälschte Antwort.
+- **Ein Stück Recht:** Auch ihm hat nie jemand geantwortet.
+
+Die Stille ist gute Stimmung, aber kein Gegner. Sie braucht eine sichtbare Uhr, und die ist schon da: die Raben, die die Mauer verlassen. Außerdem braucht sie eine Verbindung zu Shrike, der die Rituale ausfallen lässt.
+
+Cheesy sind „verspricht Zauberkraft“ und der Geist, der auf eine Entschuldigung wartet.
+
+### 5. Bau
+1. **Auftakt (Kapitel 1, Tower):** Prolog gespielt; heute mit Freund; der Keeper. Bei der Schlüsselzeremonie bleibt „Halt! Who comes there?“ ohne Antwort, der Ort beginnt zu erstarren, und das Kind antwortet selbst.
+2. **Kapitel 2:** Der Kern findet sich. Shrike hilft, Wren wirkt wie der Verfolger.
+3. **Erster Wendepunkt:** Der Geist nimmt die Kinder als Schüler auf (das Versprechen). Die Tür darf nicht einfach aufgehen; aus der Suche wird ein Auftrag.
+4. **Kapitel 3:** Erste Fassung der Nacht. Raff bekommt bei Shrike die Bühne.
+5. **Mitte (Kapitel 4):** Das Kind erkennt Shrikes Stimme aus dem Prolog. Zugleich gewinnt er: Raff geht, und der Freund wird gebunden, weil das Kind nicht antwortete.
+6. **Kapitel 5:** Ein Ritual geht wirklich verloren. Wren wird stummer Verbündeter, Tilly wechselt die Seite.
+7. **Tiefpunkt (Kapitel 6):** Das Kind lacht einmal mit und hört nur noch Krächzen. Shrike hat Federn und Schlüssel. Die Wahrheit der Nacht kommt heraus.
+8. **Finale (Kapitel 7):** Shrike öffnet falsch. Antworten kann nur, wer das Ausgelachtwerden riskiert, und das sind die Kinder. Wren antwortet, der Freund ist frei, und das Kind entscheidet, ob Shrike eine Antwort bekommt.
+9. **Nachklang:** Im Saal steht die zweite Tür. Etwas antwortet.
+
+**Was Kapitel 1 leisten muss:**
+- die Regel erleben lassen statt sie zu erklären;
+- einen Freund zeigen, den man mag;
+- eine echte Gefahr bieten;
+- ein Bild liefern, das am nächsten Tag erzählt wird (Tiger, erstarrender Warder);
+- eine Tat des Kindes enthalten, die zählt;
+- mit höchstens sechs Figuren auskommen;
+- kein Feder-Schema einführen.
+
+### 6. Die Widersprüche der Prüfer
+- **Barnaby oder Raff:** Beide, in getrennten Rollen. Der treue Freund ist ein umgebauter Barnaby: gleich alt, witzig, ohne Hüter-Verwandtschaft, glaubt dem Kind, bevor er selbst etwas hört. Raff ist der Bewunderte, der geht. Legt man beides auf Raff, fehlt der Sam.
+- **Verrat:** Raffs Weggang darf man kommen sehen; Bangen ist stärker als Überraschung. Die Überraschung ist die eigene Schuld des Hauptkindes. Barnaby, der arglos plaudert, macht ihn nur dumm.
+- **Mason:** eine Figur mit dem Kind, das die Raben früher hörte (Prüfer B). Das gibt einen Verlust statt einer Lehre und einen Namen weniger. Er sollte früher mit Sami befreundet gewesen sein (Prüfer C, Befund 8).
+- **Sechs oder drei:** Sechs Federträger können bleiben, aber nur drei tragen die Geschichte: Hauptkind, Freund und ein handelndes, spöttisches Mädchen mit Robyns Lügen-Ohr. Raff ist der bewegliche Vierte. Sami und Gwen würde ich zusammenlegen.
+
+### 7. Gold und Fallen
+**Übernehmen:**
+1. Shrike zuerst als Wohltäter; die Wende kommt über die wiedererkannte Stimme (C5, mit A7).
+2. Der Freund wird gebunden, weil das Kind nicht antwortete (A1 und A5) – aber in der Mitte.
+3. Nur Schüler können vollenden, und der Geist nimmt auf (C1). Das ist dein Ehrenkodex.
+4. Die Fassungen der Nacht werden gespielt, einmal mit dem Knopf zum Mitlachen (B9).
+5. Die zweite Tür im Saal; die Rituale als Schlösser nur als Spur (C2 und C3).
+
+Knapp dahinter: der Keeper in Kapitel 1 und Wren in Masons Videos.
+
+**Warnen:**
+1. Barnaby schon in Kapitel 1 binden (B1). Man kennt ihn dann eine Viertelstunde, und er fehlt sechs Kapitel lang.
+2. Shrikes Irrtum über das Blut (C6). Das macht die Herkunft zum Motor und untergräbt „niemand ist auserwählt“.
+3. Masons Vorgeschichte „wurde selbst gefilmt“ (A8). Das ist Küchenpsychologie. Dazu die Neigung, alles mit allem zu verknüpfen, etwa dass Mrs Crumb die Elster angemalt hat: Die Welt wird dadurch klein.
+
+### 8. Fortsetzung
+**Geschlossen sein muss:**
+- der Freund ist frei;
+- Wren hat geantwortet;
+- Mr. Flex ist aus dem Spiegel;
+- die Wahrheit über 1899 ist heraus;
+- die Schule ist offen.
+
+**Offen bleiben sollte:**
+- was hinter der zweiten Tür geantwortet hat;
+- Shrike, der ohne Antwort verschwindet;
+- die anderen Türen in der Stadt;
+- beide Banden in derselben Klasse.
+
+Ein Preis sollte bleiben, etwa dass Merlin nicht zurückkommt. Der Sieg darf nicht durch einen Cliffhanger entwertet werden.
+
+### Die drei Entscheidungen, die zuerst fallen müssen
+1. **Was geschah 1899 wirklich?** Was sollte „Agoriad“ öffnen, was versprach ein Schüler bei der Aufnahme, und ist das Lachen Anlass oder Ursache?
+2. **Wer ist der Freund, und was verliert das Hauptkind?** Daran hängen Mitte, Tiefpunkt und Finale.
+3. **Wer ist Shrike heute, und was will er als Bild?** Daran hängt, ob die Gegenkraft sieben Kapitel trägt.
+
+Erst danach lohnt sich die Arbeit an Besetzung, Kapitelplan und Kapitel 1.

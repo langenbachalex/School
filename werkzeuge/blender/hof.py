@@ -762,7 +762,7 @@ for bay in range(6):
     for reihe, (hz, hh_) in enumerate(((1.9, 1.9), (7.8, 1.7), (10.0, 1.4))):
         if reihe == 0:
             continue                       # Erdgeschoss liegt hinter der Mauer
-        an = (bay, reihe) in ((3, 1), (4, 1))        # ein Zimmer: zwei Fenster nebeneinander
+        an = (bay, reihe) in ((0, 2), (1, 2))        # ein Zimmer: zwei Fenster nebeneinander
         # Mr. Alex 21.11.: Glas liegt zurueckgesetzt hinter dem weissen Rahmen (nicht davor), Schein gedaempft, kein Licht vor dem Fenster
         for sy in (-1, 1):
             box(f"hausfenster_rahmen_s{bay}{reihe}{sy}", (0.16, 0.1, hh_ + 0.15), (HX + 0.08, by_ + sy * 0.575, hz), WEISS)

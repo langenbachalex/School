@@ -157,7 +157,42 @@ def rautenglas(name, farbe, staerke, kerze=True):
 STEIN = textur("bruchstein", "castle_wall_slates", 0.30, (0.82, 0.76, 0.68))          # Mauern und Tuerme
 QUADER = textur("quader", "medieval_blocks_02", 0.55, (0.24, 0.22, 0.20), relief=0.5)   # wie der Kamin im Guard Room
 PFLASTER = textur("pflaster", "cobblestone_floor_08", 0.42, (0.80, 0.72, 0.62), relief=0.6)
-RASEN = textur("rasen", "leafy_grass", 0.45, (0.50, 0.62, 0.36), relief=0.2)
+RASEN = textur("rasen", "leafy_grass", 0.45, (0.85, 1.05, 0.55), relief=0.2)
+
+
+def maehstreifen(m, breit=2.2):
+    """Helle und dunkle Bahnen von Nord nach Sued, wie auf dem echten Tower Green."""
+    nt = m.node_tree
+    b = nt.nodes.get("Principled BSDF")
+    alt = b.inputs["Base Color"].links[0].from_socket
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(geo.outputs["Position"], sep.inputs[0])
+
+    def rechne(op, a, wert):
+        n = nt.nodes.new("ShaderNodeMath")
+        n.operation = op
+        nt.links.new(a, n.inputs[0])
+        n.inputs[1].default_value = wert
+        return n.outputs[0]
+
+    bahn = rechne("GREATER_THAN", rechne("FRACT", rechne("MULTIPLY", sep.outputs["X"], 0.5 / breit), 0), 0.5)
+    ton = nt.nodes.new("ShaderNodeValToRGB")
+    ton.color_ramp.elements[0].color = (0.55, 0.60, 0.55, 1)
+    ton.color_ramp.elements[1].color = (1.0, 1.0, 1.0, 1)
+    nt.links.new(bahn, ton.inputs[0])
+    mal = nt.nodes.new("ShaderNodeMix")
+    mal.data_type, mal.blend_type = "RGBA", "MULTIPLY"
+    mal.inputs[0].default_value = 1.0
+    nt.links.new(alt, mal.inputs[6])
+    nt.links.new(ton.outputs["Color"], mal.inputs[7])
+    nt.links.new(mal.outputs[2], b.inputs["Base Color"])
+
+
+maehstreifen(RASEN)
+RINDE = textur("rinde", "dark_wood", 0.5, (0.42, 0.40, 0.34), relief=0.8)
+LAUB = mat("laub", (0.035, 0.07, 0.025), 0.75)
+GITTER = mat("gitter", (0.012, 0.012, 0.014), 0.45, 0.8)
 PUTZ = textur("putz", "plastered_stone_wall", 0.45, (2.2, 1.95, 1.6))                 # gekalkt wie die Waende im Guard Room
 EICHE = textur("eiche", "dark_wood", 0.9, (0.30, 0.21, 0.15))                          # Fachwerk, fast schwarz
 EICHE_TOR = textur("eiche_tor", "dark_wood", 0.6, (0.55, 0.38, 0.26))
@@ -503,7 +538,7 @@ licht("uhr_laterne", "POINT", 75, WARM, LO + HOCH * 0.2 + N_ * 0.2, weich_=0.08)
 # ---------- Osten: die Mauer der Raben, dahinter der White Tower (Wahrzeichen: heller Stein, vier Ecktuermchen mit Bleihauben) ----------
 box("rabenmauer", (1.2, T, 3.0), (W + 0.6, 0, 1.5), STEIN)
 box("rabenmauer_krone", (1.4, T, 0.14), (W + 0.6, 0, 3.05), KALKSTEIN)
-WX0, WX1, WY0, WY1, WH = W + 8.0, W + 26.0, -6.0, 10.0, 14.0
+WX0, WX1, WY0, WY1, WH = W + 3.0, W + 29.0, -10.0, 14.0, 19.0   # groesser und naeher an der Mauer (Mr. Alex 21.11.; Rohbau: 18 x 16 x 14 m, 8 m dahinter)
 box("whitetower", (WX1 - WX0, WY1 - WY0, WH), ((WX0 + WX1) / 2, (WY0 + WY1) / 2, WH / 2), STEIN_HELL)
 box("whitetower_sockel", (WX1 - WX0 + 0.5, WY1 - WY0 + 0.5, 1.4), ((WX0 + WX1) / 2, (WY0 + WY1) / 2, 0.7), STEIN_HELL)
 zinnen_gerade("wt_zinne_w", WY0 + 3, WY1 - 3, WX0 + 0.3, WH, STEIN_HELL, entlang_y=True)
@@ -520,16 +555,18 @@ def bogenfenster(name, ort, nach_x, glas):
     cyl(name + "_bogen", 0.45, 0.12, (x, y, z + 0.75), glas, rot=dreh)
 
 
-for reihe, hz in enumerate((5.6, 10.0)):
-    for k, fy in enumerate((-1.5, 1.0, 3.5, 6.0)):
+FY = [WY0 + 4.5 + i * (WY1 - WY0 - 9.0) / 4 for i in range(5)]
+FX = [WX0 + 4.5 + i * (WX1 - WX0 - 9.0) / 4 for i in range(5)]
+for reihe, hz in enumerate((0.42 * WH, 0.73 * WH)):
+    for k, fy in enumerate(FY):
         bogenfenster(f"wt_fenster_w{reihe}{k}", (WX0 - 0.02, fy, hz), True, LICHT_SCHWACH if (reihe, k) == (0, 2) else GLAS_DUNKEL)
-    for k, fx in enumerate((WX0 + 5, WX0 + 9, WX0 + 13)):
+    for k, fx in enumerate(FX):
         bogenfenster(f"wt_fenster_s{reihe}{k}", (fx, WY0 - 0.02, hz), False, GLAS_DUNKEL)
-for k, py in enumerate((-2.75, -0.25, 2.25, 4.75, 7.25)):          # flache Wandpfeiler
+for k, py in enumerate([(FY[i] + FY[i + 1]) / 2 for i in range(4)]):          # flache Wandpfeiler
     box(f"wt_pfeiler_w{k}", (0.3, 0.7, WH - 0.6), (WX0 - 0.12, py, WH / 2), STEIN_HELL)
-for k, px in enumerate((WX0 + 3, WX0 + 7, WX0 + 11, WX0 + 15)):
+for k, px in enumerate([(FX[i] + FX[i + 1]) / 2 for i in range(4)]):
     box(f"wt_pfeiler_s{k}", (0.7, 0.3, WH - 0.6), (px, WY0 - 0.12, WH / 2), STEIN_HELL)
-TURM_H = 18.5
+TURM_H = WH + 5.5
 for k, (ex, ey) in enumerate([(WX0 + 1.2, WY0 + 1.2), (WX0 + 1.2, WY1 - 1.2), (WX1 - 1.2, WY0 + 1.2), (WX1 - 1.2, WY1 - 1.2)]):
     if k == 3:                                 # das runde Tuermchen im Nordosten
         cyl(f"wt_eckturm{k}", 1.6, TURM_H, (ex, ey, TURM_H / 2), STEIN_HELL)
@@ -543,7 +580,7 @@ for k, (ex, ey) in enumerate([(WX0 + 1.2, WY0 + 1.2), (WX0 + 1.2, WY1 - 1.2), (W
     cone(f"wt_haube_spitze{k}", 0.45, 1.3, (ex, ey, TURM_H + 2.35), BLEI, verts=16)
     cyl(f"wt_stange{k}", 0.03, 1.4, (ex, ey, TURM_H + 3.5), GOLD, verts=8)
     box(f"wt_fahne{k}", (0.55, 0.02, 0.3), (ex + 0.28, ey, TURM_H + 3.95), GOLD)
-licht("mond_whitetower", "SPOT", 16000, (0.55, 0.68, 1.0), (5, 30, 45), rot=(0, 0, 0))
+licht("mond_whitetower", "SPOT", 30000, (0.55, 0.68, 1.0), (5, 30, 45), rot=(0, 0, 0))
 
 # ---------- Bloody Tower mit dem grossen Tor (Suedostecke) ----------
 TX, TB, TT, TH = W - 5.0, 10.0, 8.0, 9.0
@@ -564,6 +601,64 @@ box("torturm_fenster", (0.5, 0.1, 1.4), (TX, FRONT + 0.02, 6.6), LICHT_SCHWACH)
 # ---------- Westmauer (nur damit der Blick nach Westen nicht ins Leere geht) ----------
 box("westmauer", (1.5, T, 6.0), (-W - 0.75, 0, 3.0), STEIN)
 zinnen_gerade("westmauer_zinne", -S + 3, S, -W - 0.3, 6.0, STEIN, entlang_y=True)
+
+# ---------- Alte Baeume auf dem Rasen (Mr. Alex 21.11.): knorrige Staemme, breite Kronen, Mondschatten auf dem Gruen ----------
+import random
+zufall = random.Random(11)
+wolke = bpy.data.textures.new("laubwolke", "CLOUDS")
+wolke.noise_scale = 0.45
+wolke.noise_depth = 3
+
+
+def ast(name, a, b, r0, r1):
+    a, b = Vector(a), Vector(b)
+    ri = b - a
+    bpy.ops.mesh.primitive_cone_add(radius1=r0, radius2=r1, depth=ri.length, location=(a + b) / 2, vertices=12)
+    ob = fertig(bpy.context.object, name, RINDE)
+    ob.rotation_euler = ri.to_track_quat("Z", "Y").to_euler()
+    return ob
+
+
+def baum(name, x, y, hoch=11.0, breit=5.0):
+    stamm = hoch * 0.30
+    ast(name + "_stamm", (x, y, 0), (x + 0.25, y - 0.15, stamm), 0.62, 0.42)
+    cyl(name + "_fuss", 0.75, 0.3, (x, y, 0.1), RINDE, verts=14)
+    for i in range(8):
+        w_ = i * 2 * math.pi / 8 + zufall.uniform(-0.4, 0.4)
+        aus = zufall.uniform(0.3, 0.9) * breit
+        ende = (x + aus * math.cos(w_), y + aus * math.sin(w_), stamm + zufall.uniform(0.18, 0.55) * hoch)
+        ast(f"{name}_ast{i}", (x + 0.25, y - 0.15, stamm - 0.3), ende, 0.26, 0.06)
+        for j in range(3):
+            r = zufall.uniform(0.22, 0.38) * breit
+            bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=4, radius=r, location=(ende[0] + zufall.uniform(-1.3, 1.3), ende[1] + zufall.uniform(-1.3, 1.3), ende[2] + zufall.uniform(-0.6, 1.6)))
+            bpy.ops.object.shade_smooth()
+            krone = fertig(bpy.context.object, f"{name}_laub{i}{j}", LAUB)
+            krone.scale = (1, 1, zufall.uniform(0.8, 1.05))
+            ver = krone.modifiers.new("laub", "DISPLACE")
+            ver.texture, ver.strength, ver.texture_coords = wolke, 0.9, "GLOBAL"
+    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=4, radius=0.42 * breit, location=(x, y, hoch * 0.88))
+    bpy.ops.object.shade_smooth()
+    mitte = fertig(bpy.context.object, name + "_laub_mitte", LAUB)
+    ver = mitte.modifiers.new("laub", "DISPLACE")
+    ver.texture, ver.strength, ver.texture_coords = wolke, 0.9, "GLOBAL"
+
+
+# Plaetze innerhalb des Rundkurses, neben den Wegen der Figuren (hof_bau.js): nicht auf x = 0, x = +-9, nicht im Kreis des Sergeants
+BAEUME = [(-15.5, -2.0, 12.0, 5.5), (4.5, 6.0, 13.0, 6.0), (16.0, -3.5, 10.5, 5.0)]
+for k, (bx, by, bh, bb) in enumerate(BAEUME):
+    baum(f"baum{k}", bx, by, bh, bb)
+
+# ---------- Schwarzes Eisengitter an der Rasenkante (wie auf den Fotos). Nur zwei Stuecke: dazwischen und aussen laufen die Wege der Figuren ----------
+GY = FRONT + PFL + 0.25
+for k, (gx0, gx1) in enumerate([(-20.5, -11.5), (11.5, 20.5)]):
+    n_ = int((gx1 - gx0) / 1.5)
+    for i in range(n_ + 1):
+        px = gx0 + i * (gx1 - gx0) / n_
+        cyl(f"gitter{k}_pfosten{i}", 0.035, 1.05, (px, GY, 0.52), GITTER, verts=10)
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.06, location=(px, GY, 1.08), segments=12, ring_count=8)
+        fertig(bpy.context.object, f"gitter{k}_knauf{i}", GITTER)
+    for j, hz in enumerate((0.5, 0.92)):
+        cyl(f"gitter{k}_holm{j}", 0.02, gx1 - gx0, ((gx0 + gx1) / 2, GY, hz), GITTER, rot=(0, R(90), 0), verts=8)
 
 # ---------- Licht: Nacht. Kuehler Mond von Nordosten, warm nur Laternen und Fenster ----------
 licht("mond", "SUN", 1.1, (0.52, 0.66, 1.0), (0, 0, 30), rot=(R(-52), 0, R(28)))
@@ -614,6 +709,7 @@ ANSICHTEN = {   # Nr.: (Name, Ort der Kamera, Blickziel, Brennweite)
     "1": ("ganz", (-4.0, -5.0, 1.6), (-7.0, FRONT, 4.6), 18),          # von der Platzmitte auf die ganze Suedseite
     "2": ("tuer", (-7.8, FRONT + 7.5, 1.5), (TUER_X + 0.6, FRONT, 1.9), 28),   # Tuer zur Wachstube, Fass, Laterne (Hoehe eines Kindes)
     "4": ("whitetower", (-4.0, FRONT + 3.0, 1.5), (W + 12.0, 3.0, 8.0), 20),   # vom Start nach Nordosten: Rabenmauer und White Tower
+    "5": ("rasen", (-12.0, FRONT + 1.6, 1.5), (9.0, 4.0, 5.0), 19),   # von der Tuer ueber das Gruen: Baeume, Maehstreifen, Gitter, White Tower
     "3": ("uhr", (-12.0, FRONT + 12.0, 1.5), (UTX + 2.5, UTY + 2.5, 7.6), 24), # Bell Tower mit der Uhr
 }
 os.makedirs(OUT, exist_ok=True)
@@ -634,11 +730,11 @@ try:
 except Exception as e:
     print("Farbabstimmung AgX nicht gesetzt:", e, flush=True)
 mw_ = bpy.data.objects["mond_whitetower"]      # ein Streifen Mondlicht nur auf den White Tower
-mw_.data.spot_size, mw_.data.spot_blend = R(28), 0.6
+mw_.data.spot_size, mw_.data.spot_blend = R(40), 0.6
 zw = mw_.constraints.new("TRACK_TO")
 zw.target = bpy.data.objects["whitetower"]
 zw.track_axis, zw.up_axis = "TRACK_NEGATIVE_Z", "UP_Y"
-for nr in os.environ.get("ANSICHT", "1,2,3,4").split(","):
+for nr in os.environ.get("ANSICHT", "1,2,3,4,5").split(","):
     name, ort, blick, brennweite = ANSICHTEN[nr.strip()]
     cam.location, ziel.location, cam_data.lens = ort, blick, brennweite
     t0 = time.time()

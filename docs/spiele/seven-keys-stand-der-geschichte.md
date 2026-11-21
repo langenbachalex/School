@@ -77,6 +77,7 @@ Merlins Ort ist St Paul's – der Ort mit dem Hüter ohne Raben. Ob St Paul's da
 - **Geheimnis entsteht im Kind,** nicht durch Fragen der Figuren: falsche Fährten in unregelmäßiger Folge, Spuren zum Selbst-Entdecken (die Elster sagt nie „Merlin“; die vierte Zeile hat keine Zahl; die Inschrift mit Lücken; eine wiedererkannte Stimme; das Stocken „A– … Ag–“), Augenblicke ohne Erklärung. Erraten kann man Mr Nobody frühestens in Kapitel 3. [E]
 - **Kein stumpfer Konsum.** Keine langen Filmszenen; spätestens nach 20 Sekunden ein eigener Handgriff. Der Erzähler darf reich erzählen, die Handlungen führt das Kind aus. Der Prolog wird gespielt. [E]
 - **Die Überraschungsparty am Ende von Kapitel 1 fällt weg.** [E]
+- **Jahreszeit: Herbst bis Spätherbst, kein Schnee** – Nebel, frühe Dunkelheit, wenig Laub (Mr. Alex 21.11.). [E]
 
 ## 9. Das Ende, soweit es steht
 Sechs Federn, sieben Schlüssel, die siebte Feder von Merlin, sobald Wren Hilfe annimmt. Die drei Zeilen des Rufs; die Zeugen von 1899 geben Wren zurück, was verloren ging – Mrs Crumb die Erinnerung, der Geist die Zeit, Mr. Flex die Wahrheit. Wren stockt bei „Agoriad“. Niemand lacht. Alle sprechen es mit. Sein erstes Wort gilt Mrs Crumb. Die Tür geht auf, Mr. Flex ist frei. [E, aus dem Stand vom 20.11.]

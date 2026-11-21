@@ -193,7 +193,7 @@ maehstreifen(RASEN)
 RINDE = textur("rinde", "dark_wood", 0.5, (0.42, 0.40, 0.34), relief=0.8)
 PLATTEN = textur("platten", "monastery_stone_floor", 0.30, (1.15, 1.08, 0.95), relief=0.5)     # grosse helle Steinplatten
 KIES = textur("kies", "gravel_floor_02", 0.5, (0.62, 0.56, 0.48), relief=0.4)
-HAUSTON = {"alt": (0.62, 0.50, 0.44), "dunkel": (0.36, 0.30, 0.27), "stein": (0.60, 0.56, 0.50)}[os.environ.get("HAUS", "alt")]
+HAUSTON = {"alt": (0.62, 0.50, 0.44), "dunkel": (0.36, 0.30, 0.27), "stein": (0.60, 0.56, 0.50)}[os.environ.get("HAUS", "dunkel")]
 BACKSTEIN = textur("backstein", "dark_brick_wall", 0.55, HAUSTON, relief=0.4)
 LAUB = mat("laub", (0.035, 0.07, 0.025), 0.75)
 GITTER = mat("gitter", (0.012, 0.012, 0.014), 0.45, 0.8)
@@ -745,6 +745,13 @@ for k, tx in enumerate((WBX0, (WBX0 + WBX1) / 2 - 5, (WBX0 + WBX1) / 2 + 5, WBX1
 HX, HY0, HY1, HH = -W - 3.0, -17.0, 1.5, 11.5   # Mr. Alex 21.11.: Haus 3 m HINTER der Westmauer, schaut ueber die Zinnen
 box("backsteinhaus", (6.0, HY1 - HY0, HH), (HX - 3.0, (HY0 + HY1) / 2, HH / 2), BACKSTEIN)
 box("backsteinhaus_bruestung", (6.2, HY1 - HY0 + 0.2, 0.18), (HX - 3.0, (HY0 + HY1) / 2, HH + 0.05), KALKSTEIN)
+mh = licht("mond_haus", "SPOT", 12000, (0.55, 0.68, 1.0), (-10, -14, 38))   # Mr. Alex 21.11.: ein Streifen Mondlicht auf das Backsteinhaus hinter der Mauer
+mh.data.spot_size, mh.data.spot_blend = R(26), 0.7
+zh = bpy.data.objects.new("ziel_haus", None)
+scene.collection.objects.link(zh)
+zh.location = (HX, (HY0 + HY1) / 2, 9.5)
+th = mh.constraints.new("TRACK_TO")
+th.target, th.track_axis, th.up_axis = zh, "TRACK_NEGATIVE_Z", "UP_Y"
 box("backsteinhaus_band", (0.12, HY1 - HY0, 0.2), (HX + 0.03, (HY0 + HY1) / 2, 8.95), KALKSTEIN)
 for k, sy in enumerate((HY0 + 3.0, (HY0 + HY1) / 2, HY1 - 3.0)):
     box(f"backsteinhaus_schornstein{k}", (0.9, 1.3, 2.2), (HX - 3.0, sy, HH + 1.0), BACKSTEIN)

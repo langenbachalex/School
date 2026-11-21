@@ -3,7 +3,7 @@
 Angelegt vom Master am 20.11.2026 auf Wunsch von Mr. Alex. **Jeder Prüf-Agent liest dieses Blatt zuerst**, danach den Rahmen (`seven-keys-grosse-geschichte.md`, Abschnitt 0 geht vor) und die Rückmeldungen von Mr. Alex in `seven-keys-pruefung-rahmen.md`. Geprüft wird nach jeder neuen Fassung wieder. Das Blatt wächst: Jede Rückmeldung von Mr. Alex, die über den Einzelfall hinaus gilt, kommt hier hinein.
 
 ## 1. Wofür das Spiel da ist
-- Story-Spiel für den Englischunterricht Klasse 6 (zweites Lernjahr, elf bis dreizehn Jahre), später weitere Kapitel und eine Fortsetzung. **Gespielt wird allein am Gerät** (Laptop, iPad); ein Mikrofon ist bisher nicht geplant. Formen für die ganze Klasse sind möglich, aber noch nicht entschieden.
+- Story-Spiel für den Englischunterricht Klasse 6 (zweites Lernjahr, elf bis dreizehn Jahre, eher frühreif), später weitere Kapitel und eine Fortsetzung. **Gespielt wird allein am Gerät** (Laptop, iPad); ein Mikrofon ist bisher nicht geplant. Formen für die ganze Klasse sind möglich, aber noch nicht entschieden.
 - **Lernmantra von Mr. Alex: kein stumpfer Konsum.** Lange Filmszenen sind falsch. Erzählung und eigenes Handeln sind verwoben: Der Erzähler darf bleiben und reich erzählen, aber die Handlungen führt das Kind aus (anklopfen, die Tür geht auf, etwas fangen, aufheben). Spätestens nach 20 Sekunden ein eigener Handgriff.
 - **Sprache:** Der Erzähler hat eine schöne, anspruchsvolle Sprache; einfach sind die Dialoge. Die Kinder müssen nicht alles verstehen (Mr. Alex liebte Tolkien und Shakespeare, bevor er alles verstand), aber es müssen immer genug Teile da sein, die sie verstehen. Sein Maßstab: **Schöne Sprache trägt nur, wenn Interaktion dabei ist, und zwar auch in einfacher Sprache.**
 - Magie wird gezeigt und klingt, sie wird nicht erklärt. **Ein Geheimnis muss im Kind selbst entstehen** – nicht dadurch, dass Figuren im Spiel Fragen stellen und so tun, als sei etwas mysteriös.
@@ -37,6 +37,13 @@ Angelegt vom Master am 20.11.2026 auf Wunsch von Mr. Alex. **Jeder Prüf-Agent l
 - **Es geht um England und Englisch**, nicht um multikulturelles Lernen.
 - **Mr. Flex darf echte Fehler haben und lügen** – Mr. Alex steht zu seinen Fehlern.
 - Die Antworten des Kindes zeigen eine Haltung (mutig, witzig, vorsichtig), nicht richtig oder falsch.
+
+- **Die Magie muss in der Welt leuchten (Mr. Alex 21.11.):** Es muss klar sein, was man zaubern kann und wofür – keine „Zauberschule für einen Zauber“. Welt, Schule und sprechende Tiere brauchen einen plausiblen Hintergrund; Lücken sind erwünscht, die wesentlichen Eckpunkte müssen stimmig sein.
+- **Das Portal zieht immer** – die Ebene hinter der Ebene, eine Tür in eine andere Welt, auch wenn es abgegriffen wirkt.
+- **Beliebte, charmante Gegner tragen:** Das Thema Ungerechtigkeit („Wieso haben die Erfolg?“) zieht bei Jugendlichen stark. Niemand ist moralisch einfach weiß.
+- **Jede Antwort öffnet eine größere Frage; Subtilität ist King.** Nicht alles muss unerwartet sein.
+- **Kinderhumor ist anders als Erwachsenenhumor:** überschwängliche Heiterkeit, Albernheit, Naivität, Furchtlosigkeit. Wundervoll an Kindern: sich ins Abenteuer stürzen, Vorfreude und Lebensfreude, seltsame Blickwinkel, Unschuld, Gerechtigkeitssinn.
+- Prüf-Fragen für jede Runde: Was ist Magie, und leuchtet sie? Zieht die Geschichte wirklich in Bann?
 
 ## 5. Was die Lerngruppe mag (Stand 20.11.)
 - Die Raben wirken auf sie geheimnisvoll, nicht wie Bilderbuch. Der Fuchs Gary sieht cool aus, ein bisschen übertrieben, mit Hütchen; er darf Zauberglanz versprühen, ohne dass ihm etwas gelingt.

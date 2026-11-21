@@ -658,6 +658,34 @@ for k, (bx, by, bh, bb) in enumerate(BAEUME):
             # dicken, unregelmaessigen Stamm und eine dichte, breite Krone; dazu helle, fleckige Platanenrinde.
             teile = [modell(art, (bx, by, -0.1), hoehe=18.5, dreh=0.4, weit=1.45),
                      modell(art, (bx + 0.5, by - 0.3, -0.1), hoehe=16.5, dreh=2.9, weit=1.6)]
+            # Krone noch breiter und geschlossener (Mr. Alex 21.11.): zwei weitere Kronen ohne Stamm, weiter ausladend
+            import bmesh
+            for dreh_, hoch_, weit_ in ((1.6, 17.5, 1.9), (4.4, 16.0, 2.05)):
+                kr = modell(art, (bx, by, 0.6), hoehe=hoch_, dreh=dreh_, weit=weit_)
+                for nm in kr["netze"]:
+                    ob_ = bpy.data.objects[nm]
+                    weg = [i for i, pl in enumerate(ob_.material_slots) if "leaves" not in pl.material.name.lower() and "branches" not in pl.material.name.lower()]
+                    if weg:
+                        ob_.data = ob_.data.copy()
+                        bm = bmesh.new()
+                        bm.from_mesh(ob_.data)
+                        bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index in weg], context="FACES")
+                        bm.to_mesh(ob_.data)
+                        bm.free()
+            mb = licht("mond_baum", "SPOT", 14000, (0.55, 0.68, 1.0), (bx - 14, by + 26, 40))   # ein Streifen Mondlicht auf Stamm und Krone
+            mb.data.spot_size, mb.data.spot_blend = R(34), 0.7
+            zb = bpy.data.objects.new("ziel_baum", None)
+            scene.collection.objects.link(zb)
+            zb.location = (bx, by, 7.0)
+            tb = mb.constraints.new("TRACK_TO")
+            tb.target, tb.track_axis, tb.up_axis = zb, "TRACK_NEGATIVE_Z", "UP_Y"
+            # eine Laterne an einer Kette vom Ast: warmes Licht auf die Rinde und von unten in die Krone
+            lx, ly, lz = bx + 2.6, by - 2.4, 2.5
+            cyl("baum_kette", 0.012, 2.6, (lx, ly, lz + 0.5 + 1.3), EISEN, verts=6)
+            modell("Lantern_01", (lx, ly, lz), hoehe=0.55)
+            bpy.ops.mesh.primitive_uv_sphere_add(radius=0.04, location=(lx, ly, lz + 0.22))
+            fertig(bpy.context.object, "baum_laterne_flamme", FLAMME)
+            licht("baum_laterne", "POINT", 420, WARM, (lx, ly, lz + 0.22), weich_=0.1)
             for teil in teile:
                 for nm in teil["netze"]:
                     for platz in bpy.data.objects[nm].material_slots:
@@ -670,12 +698,16 @@ for k, (bx, by, bh, bb) in enumerate(BAEUME):
                                 continue
                             alt = b.inputs["Base Color"].links[0].from_socket
                             geo = nt.nodes.new("ShaderNodeNewGeometry")
-                            fleck = nt.nodes.new("ShaderNodeTexVoronoi")
-                            fleck.inputs["Scale"].default_value = 1.3
-                            nt.links.new(geo.outputs["Position"], fleck.inputs["Vector"])
+                            lang = nt.nodes.new("ShaderNodeMapping")          # weiche, laengliche Flecken (in der Hoehe gestreckt)
+                            lang.inputs["Scale"].default_value = (1.0, 1.0, 0.35)
+                            nt.links.new(geo.outputs["Position"], lang.inputs["Vector"])
+                            fleck = nt.nodes.new("ShaderNodeTexNoise")
+                            fleck.inputs["Scale"].default_value = 1.5
+                            fleck.inputs["Detail"].default_value = 3.0
+                            nt.links.new(lang.outputs["Vector"], fleck.inputs["Vector"])
                             stufe = nt.nodes.new("ShaderNodeValToRGB")
-                            stufe.color_ramp.elements[0].position, stufe.color_ramp.elements[1].position = 0.38, 0.5
-                            nt.links.new(fleck.outputs["Color"], stufe.inputs[0])
+                            stufe.color_ramp.elements[0].position, stufe.color_ramp.elements[1].position = 0.50, 0.62
+                            nt.links.new(fleck.outputs[0], stufe.inputs[0])
                             hell = nt.nodes.new("ShaderNodeMix")
                             hell.data_type = "RGBA"
                             nt.links.new(stufe.outputs["Color"], hell.inputs[0])
@@ -747,7 +779,7 @@ ANSICHTEN = {   # Nr.: (Name, Ort der Kamera, Blickziel, Brennweite)
     "2": ("tuer", (-7.8, FRONT + 7.5, 1.5), (TUER_X + 0.6, FRONT, 1.9), 28),   # Tuer zur Wachstube, Fass, Laterne (Hoehe eines Kindes)
     "4": ("whitetower", (-4.0, FRONT + 3.0, 1.5), (W + 12.0, 3.0, 8.0), 20),   # vom Start nach Nordosten: Rabenmauer und White Tower
     "5": ("rasen", (-12.0, FRONT + 1.6, 1.5), (9.0, 4.0, 5.0), 19),   # von der Tuer ueber das Gruen: Baeume, Maehstreifen, Gitter, White Tower
-    "6": ("grosser_baum", (3.0, FRONT + 4.0, 1.5), (-14.5, -3.0, 6.5), 17),   # der grosse alte Baum im Westen
+    "6": ("grosser_baum", (6.0, FRONT + 3.0, 1.5), (-14.5, -3.0, 7.5), 16),   # der grosse alte Baum im Westen
     "3": ("uhr", (-12.0, FRONT + 12.0, 1.5), (UTX + 2.5, UTY + 2.5, 7.6), 24), # Bell Tower mit der Uhr
 }
 os.makedirs(OUT, exist_ok=True)

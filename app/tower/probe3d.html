@@ -113,6 +113,7 @@
   <button type="button" data-ort="30x25" aria-pressed="false">Hof 30 × 25 m</button>
   <button type="button" data-ort="40x30" aria-pressed="false">Hof 40 × 30 m</button>
   <button type="button" data-ort="50x40" aria-pressed="false">Hof 50 × 40 m</button>
+  <button type="button" class="nurhof" data-nebel aria-pressed="true" hidden>Nebel</button>
   <span class="nurhof" hidden>Weg der Figur</span>
   <button type="button" class="nurhof" data-weg="rund" aria-pressed="false" hidden>Rundkurs</button>
   <button type="button" class="nurhof" data-weg="kreis" aria-pressed="false" hidden>Kreis</button>
@@ -192,7 +193,7 @@ import { bauVogel, ladeVogel, ladeTaube, RABENREIHE } from "./vogel_bau.js";   /
 import { machStand, SCHRITTE, SCHRITT_NAMEN, uhrText } from "./stand.js";   // Block B1 (20.11.): Stand der Geschichte – nur mit ?spiel=1, sonst bleibt die Probe, wie sie ist
 import { bauZeiger } from "./uhr.js";
 import { machGespraeche } from "./gespraech.js";   // Block B2 (20.11.): Gespräche und Filme aus der Tabelle in den Daten
-import { bauHof, HOF_GROESSEN, HOF_START } from "./hof_bau.js";   // Hof-Rohbau (19.11.): eigener Abschnitt, gewählt mit ?ort=hof&gross=40x30; ohne das bleibt der Guard Room
+import { bauHof, ladeHofFein, HOF_GROESSEN, HOF_START, HOF_FEIN, HOF_FEIN_DA, HOF_NEBEL } from "./hof_bau.js";   // Hof-Rohbau (19.11.): eigener Abschnitt, gewählt mit ?ort=hof&gross=40x30; ohne das bleibt der Guard Room
 
 const $ = (id) => document.getElementById(id);
 const buehne = $("buehne");
@@ -226,6 +227,14 @@ try {
     netze.push(o);
   });
   szene.add(gltf.scene);
+  // Hof 50 × 40 m: die in Blender gebaute Umgebung mit eingebranntem Licht liegt über dem Rohbau (hof_bau.js, ladeHofFein); ?rohbau=1 zeigt nur den Rohbau
+  const hofFein = hof && hofGross === HOF_FEIN && sucht.get("rohbau") !== "1" && (HOF_FEIN_DA || sucht.get("fein") === "1") ? await ladeHofFein(lader, hof, renderer.capabilities.getMaxAnisotropy()) : null;
+  if (hofFein) { szene.add(hofFein.gruppe); dreiecke += hofFein.dreiecke; }
+  // Nebel (nur in der gebauten Umgebung): Schalter „Nebel“ oder ?nebel=0
+  const nebel = hofFein ? new THREE.FogExp2(HOF_NEBEL.farbe, HOF_NEBEL.dichte) : null;
+  function setzeNebel(an) { if (!nebel) return; szene.fog = an ? nebel : null; const b = document.querySelector("#bau button[data-nebel]"); if (b) b.setAttribute("aria-pressed", String(an)); }
+  setzeNebel(sucht.get("nebel") !== "0");
+  { const b = document.querySelector("#bau button[data-nebel]"); if (b) b.addEventListener("click", () => setzeNebel(!szene.fog)); }
   const raum = new THREE.Box3().setFromObject(szene.getObjectByName("raum_gross") || gltf.scene);
   const decke = szene.getObjectByName("raum_decke");
   const innen = { x0: raum.min.x + 0.55, x1: raum.max.x - 0.55, y0: 0.35, y1: raum.max.y - 0.75, z0: raum.min.z + 0.55, z1: raum.max.z - 0.55 };
@@ -292,7 +301,8 @@ try {
   const schatten = new THREE.Mesh(new THREE.CircleGeometry(0.3, 32), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.38, depthWrite: false }));
   schatten.rotation.x = -Math.PI / 2; szene.add(schatten);
   // Licht nur fuer die Figur (der Raum hat sein Licht eingebrannt): warmes Grundlicht plus Feuer, Laternen, Kerzen an ihren Plaetzen
-  szene.add(new THREE.HemisphereLight(0xffd2a0, 0x3a1c0c, 0.9));
+  szene.add(hofFein ? new THREE.HemisphereLight(0x7f9be0, 0x1c2434, 0.75) : new THREE.HemisphereLight(0xffd2a0, 0x3a1c0c, 0.9));   // gebauter Hof: kühles Nachtlicht statt des warmen Raumlichts
+  if (hofFein) { const mond = new THREE.DirectionalLight(0x86a8ff, 0.9); mond.position.set(-0.37, 0.62, -0.7); szene.add(mond); }   // Mond aus derselben Richtung wie in Blender
   for (const l of info.lichter) {
     if (l.watt < 20) continue;
     const p = new THREE.PointLight(new THREE.Color(...l.farbe), l.watt / 12, 0, 2);
@@ -796,7 +806,7 @@ try {
     if (lokal && sucht.has("schritt")) stand.springe(SCHRITTE.includes(sucht.get("schritt")) ? sucht.get("schritt") : null);
     const uhren = [];
     if (hof) {                                             // Turmuhr: Zeiger vor der Scheibe, sie schaut nach Nordosten in den Hof
-      const u = hof.scene.getObjectByName("hof_uhr"), z = bauZeiger(hof.plan.masse.uhrturm.uhr / 2 * 0.92, { blatt: 0xe8dcb4 }), q = Math.SQRT1_2;
+      const u = hof.scene.getObjectByName("hof_uhr"), z = bauZeiger(hof.plan.masse.uhrturm.uhr / 2 * 0.92, hofFein ? {} : { blatt: 0xe8dcb4 }), q = Math.SQRT1_2;
       z.gruppe.position.set(u.position.x + q * 0.13, u.position.y, u.position.z - q * 0.13); z.gruppe.rotation.y = (3 * Math.PI) / 4; szene.add(z.gruppe); uhren.push(z);
     } else if (szene.getObjectByName("uhr")) {            // Uhr über dem Kamin: Die Raumdatei hat „zwanzig nach neun“ fest eingezeichnet; ein eigenes Blatt mit Zeigern liegt davor
       const k = new THREE.Box3().setFromObject(szene.getObjectByName("uhr")), halb = (k.max.x - k.min.x) / 2, z = bauZeiger(halb * 0.82, { blatt: 0xd9c9a0 });

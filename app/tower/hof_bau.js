@@ -123,3 +123,33 @@ export function bauHof(gross) {
   const dinge = [["hof_tuer", "Tür zur Wachstube"], ["hof_fass", "Garys Fass"], ["hof_uhr", "Turmuhr"], ["hof_tor", "das große Tor"], ["hof_mauer", "Mauer mit den Raben"], ["hof_tourist", "Platz für den Touristen"]].map(([id, name]) => ({ id, name }));
   return { scene, info: { gehkarte: { x0: -w, y0: -s, zelle, zeilen }, dinge, lichter: [] }, plan };
 }
+
+/* Die in Blender gebaute Umgebung (werkzeuge/blender/hof.py und hof_gltf.py, Übergabe 21.11.2026): Mondlicht, Laternen und Fenster sind eingebrannt.
+   Sie liegt über dem Rohbau der Größe 50 × 40 m. Der Rohbau bleibt als unsichtbares Gerüst: An seinen Teilen hängen Plan, Wege, Tür, Uhr und die Tipp-Ziele.
+   Das Laub trägt sein Licht je Eckpunkt (Farbe am Eckpunkt mal Blatt-Textur). Fehlt die Datei, bleibt der Rohbau sichtbar (Rückgabe null). */
+export const HOF_FEIN = "50x40";
+export const HOF_FEIN_DA = false;   // erst true, wenn raum3d/hof.glb fertig gerechnet und eingecheckt ist; bis dahin zeigt nur ?fein=1 die gebaute Umgebung
+export const HOF_NEBEL = { farbe: 0x16203a, dichte: 0.014 };
+const LAUB_HELL = 1.0;
+export async function ladeHofFein(lader, hof, anisotropie = 1) {
+  let json, gltf;
+  try { json = await (await fetch("raum3d/hof3d.json")).json(); gltf = await lader.loadAsync("raum3d/" + json.modell); } catch (e) { console.warn("Hof-Umgebung nicht geladen, der Rohbau bleibt:", e.message); return null; }
+  const gruppe = gltf.scene; gruppe.name = "hof_fein";
+  gruppe.traverse((o) => {
+    if (!o.isMesh) return;
+    const karte = o.material.map, laub = o.name.startsWith("laub");
+    if (karte) karte.anisotropy = anisotropie;
+    o.material = new THREE.MeshBasicMaterial(laub ? { map: karte, vertexColors: true, side: THREE.DoubleSide, color: new THREE.Color().setScalar(LAUB_HELL) } : { map: karte });
+  });
+  // Rohbau unsichtbar machen (er bleibt antippbar); nur die Platzhalter der Raben bleiben stehen
+  hof.scene.traverse((o) => { if ((o.isMesh || o.isLine) && !o.name.startsWith("hof_rabe")) for (const m of [].concat(o.material)) m.visible = false; });
+  // Tür: das gebaute Türblatt hängt am Rohbau-Blatt und schwingt mit ihm auf
+  hof.scene.updateMatrixWorld(true); gruppe.updateMatrixWorld(true);
+  const blatt = gruppe.getObjectByName("hof_tuerblatt"), tuer = hof.scene.getObjectByName("hof_tuer");
+  if (blatt && tuer) tuer.attach(blatt);
+  // Uhr: die Zeiger des Spiels sitzen vor dem gebauten Zifferblatt (in der Nische des Bell Towers)
+  const u = hof.scene.getObjectByName("hof_uhr"), [ux, uy, uz] = json.uhr.ort, [vx, vy] = json.uhr.vor;
+  if (u) { u.position.set(ux - vx * 0.08, uz, -(uy - vy * 0.08)); hof.plan.uhr = { x: u.position.x, y: u.position.y, z: u.position.z }; }
+  hof.info.gehkarte = json.gehkarte; hof.info.lichter = json.lichter;
+  return { gruppe, json, dreiecke: json.dreiecke };
+}

@@ -169,7 +169,41 @@ HOLZ_WEISS = mat("holz_weiss", (0.62, 0.58, 0.50), 0.8)
 ZIFFER = mat("zifferblatt", (0.90, 0.84, 0.66), 0.6, emit=0.22)
 ZEIGER = mat("zeiger", (0.02, 0.02, 0.02), 0.5)
 GOLD = mat("gold", (0.80, 0.56, 0.20), 0.4, 1.0, emit=0.04)
-BLATT = mat("uhr_blatt_alt", (0.50, 0.45, 0.34), 0.85, emit=0.05)   # verwittertes, helles Zifferblatt
+def altes_blatt():
+    """Verwittertes Zifferblatt: Stein bis Elfenbein, fleckig, mit feinen Rissen – nicht weiss, nicht glatt."""
+    m = mat("uhr_blatt_alt", (0.4, 0.36, 0.28), 0.9)
+    nt = m.node_tree
+    b = nt.nodes.get("Principled BSDF")
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    fleck = nt.nodes.new("ShaderNodeTexNoise")
+    fleck.inputs["Scale"].default_value = 2.2
+    fleck.inputs["Detail"].default_value = 6.0
+    riss = nt.nodes.new("ShaderNodeTexVoronoi")
+    riss.feature = "DISTANCE_TO_EDGE"
+    riss.inputs["Scale"].default_value = 3.5
+    for n in (fleck, riss):
+        nt.links.new(geo.outputs["Position"], n.inputs["Vector"])
+    ton = nt.nodes.new("ShaderNodeValToRGB")
+    ton.color_ramp.elements[0].position, ton.color_ramp.elements[0].color = 0.32, (0.17, 0.14, 0.10, 1)
+    ton.color_ramp.elements[1].position, ton.color_ramp.elements[1].color = 0.68, (0.50, 0.45, 0.33, 1)
+    nt.links.new(fleck.outputs[0], ton.inputs[0])
+    kante = nt.nodes.new("ShaderNodeMath")
+    kante.operation = "LESS_THAN"
+    kante.inputs[1].default_value = 0.012
+    nt.links.new(riss.outputs["Distance"], kante.inputs[0])
+    misch = nt.nodes.new("ShaderNodeMix")
+    misch.data_type = "RGBA"
+    nt.links.new(kante.outputs[0], misch.inputs[0])
+    nt.links.new(ton.outputs["Color"], misch.inputs[6])
+    misch.inputs[7].default_value = (0.10, 0.08, 0.06, 1)
+    nt.links.new(misch.outputs[2], b.inputs["Base Color"])
+    return m
+
+
+BLATT = altes_blatt()
+GLAS_DUNKEL = mat("glas_dunkel", (0.01, 0.014, 0.03), 0.25)
+ZIFFER_ALT = mat("ziffer_alt", (0.035, 0.03, 0.028), 0.8)
+STEIN_HELL = textur("bruchstein_hell", "castle_wall_slates", 0.30, (2.7, 2.55, 2.3))   # White Tower: heller als die Mauern
 UHR_SCHWARZ = mat("uhr_schwarz", (0.012, 0.012, 0.016), 0.45)
 KALKSTEIN = mat("kalkstein", (0.40, 0.37, 0.31), 0.92)   # glatter, heller Werkstein fuer Uhrtafel und Laterne (ohne Textur: schraege Flaechen verziehen sie)
 MESSING = mat("messing", (0.90, 0.62, 0.20), 0.3, 1.0)
@@ -402,8 +436,8 @@ for k, (wi, hz, glas) in enumerate([(R(20), 4.2, LICHT_SCHWACH), (R(75), 7.4, LI
     box(f"turmfenster{k}", (0.45, 0.2, 1.3), (UTX + (UR + 0.02) * math.cos(wi), UTY + (UR + 0.02) * math.sin(wi), hz), glas, rot=(0, 0, wi + R(90)))
 # die Uhr schaut schraeg in den Hof (Nordosten), Mitte in 10 m Hoehe, 2 m gross
 N_ = Vector((q, q, 0))
-TW, TZ0, TZ1 = 3.3, UH - 0.2, UH + 5.1          # Uhrtuermchen: Breite, Unter- und Oberkante
-UM = Vector((UTX, UTY, UH + 3.35)) + N_ * (TW / 2)   # Mitte des Zifferblatts, auf der Hofseite des Tuermchens
+NT = 3.15                                    # Abstand der Nischen-Rueckwand von der Turmachse
+UM = Vector((UTX, UTY, 10.1)) + N_ * NT       # Mitte des Zifferblatts: an der abgenommenen Stelle, in die Mauer eingelassen
 RECHTS = Vector((-q, q, 0))                    # vom Betrachter aus rechts
 HOCH = Vector((0, 0, 1))
 
@@ -427,47 +461,90 @@ def platte(name, rechts, hoch, vor, breit, hoehe, tief, material):
     return ob
 
 
-# Uhrtuermchen (Mr. Alex 21.11.: die Uhr organisch eingefasst wie am Somerset House): viereckig, aus dem Stein des Turms gewachsen,
-# helle Eckquader und Gesimse, das Blatt in einer runden Steinfassung, obenauf eine Bleikuppel mit Wetterfahne
-TM = Vector((UTX, UTY, 0))
-DREH = R(-45)                                  # eine Seite schaut nach Nordosten in den Hof
-box("uhrturm_aufsatz", (TW, TW, TZ1 - TZ0), TM + HOCH * (TZ0 + TZ1) / 2, STEIN, rot=(0, 0, DREH))
-for k, (a_, b_) in enumerate([(1, 1), (1, -1), (-1, 1), (-1, -1)]):      # Eckquader
-    box(f"aufsatz_ecke{k}", (0.42, 0.42, TZ1 - TZ0), TM + (RECHTS * a_ + N_ * b_) * (TW / 2 - 0.12) + HOCH * (TZ0 + TZ1) / 2, KALKSTEIN, rot=(0, 0, DREH))
-box("aufsatz_sockel", (TW + 0.3, TW + 0.3, 0.3), TM + HOCH * (UH + 0.35), KALKSTEIN, rot=(0, 0, DREH))
-box("aufsatz_gesims", (TW + 0.5, TW + 0.5, 0.22), TM + HOCH * (TZ1 - 0.05), KALKSTEIN, rot=(0, 0, DREH))
-box("aufsatz_gesims2", (TW + 0.25, TW + 0.25, 0.16), TM + HOCH * (TZ1 - 0.24), KALKSTEIN, rot=(0, 0, DREH))
-bpy.ops.mesh.primitive_uv_sphere_add(radius=TW / 2 + 0.05, location=TM + HOCH * (TZ1 + 0.02), segments=40, ring_count=20)
-kuppel = fertig(bpy.context.object, "aufsatz_kuppel", BLEI)
-kuppel.scale = (1, 1, 0.8)
-bpy.ops.object.shade_smooth()
-cyl("aufsatz_knauf", 0.22, 0.3, TM + HOCH * (TZ1 + 1.42), BLEI, verts=16)
-cyl("aufsatz_stange", 0.03, 1.3, TM + HOCH * (TZ1 + 2.1), GOLD, verts=8)
-bpy.ops.mesh.primitive_uv_sphere_add(radius=0.13, location=TM + HOCH * (TZ1 + 1.75))
-fertig(bpy.context.object, "aufsatz_kugel", GOLD)
-box("aufsatz_fahne", (0.5, 0.02, 0.22), TM + HOCH * (TZ1 + 2.55) + Vector((0.2, 0.12, 0)), GOLD, rot=(0, 0, R(30)))
-for k, sx in enumerate((-1, 1)):               # die Nachbarseiten: schmale dunkle Schalloeffnungen statt einer Uhr
-    box(f"aufsatz_luke{k}", (0.06, 0.6, 1.5), TM + RECHTS * sx * (TW / 2) + HOCH * (UH + 3.35), UHR_SCHWARZ, rot=(0, 0, DREH))
-# das Zifferblatt liegt vertieft in einer runden Fassung aus hellem Stein
-cyl("uhr_fassung", 1.3, 0.24, UM + N_ * 0.0, KALKSTEIN, rot=(R(90), 0, R(-45)), verts=64)
-cyl("uhr_blatt", 1.12, 0.1, UM + N_ * 0.09, BLATT, rot=(R(90), 0, R(-45)), verts=64)
-bpy.ops.mesh.primitive_torus_add(major_radius=1.14, minor_radius=0.06, location=UM + N_ * 0.13, rotation=(R(90), 0, R(-45)), major_segments=64)
-fertig(bpy.context.object, "uhr_wulst", KALKSTEIN)
+# Die Uhr ist in die Turmwand eingelassen (Mr. Alex 21.11.: nichts Aufgesetztes): flache Nische mit Rundbogen, aus dem Turm geschnitten
+turm = bpy.data.objects["uhrturm"]
+NB, NR = 2.5, 1.25                              # Breite der Nische, Radius des Bogens
+schneider = [platte("nische_kasten", 0, -0.675, 1.0, NB, 1.35, 2.0, STEIN),
+             cyl("nische_bogen", NR, 2.0, UM + N_ * 1.0, STEIN, rot=(R(90), 0, R(-45)), verts=48)]
+for k, sch in enumerate(schneider):
+    mo = turm.modifiers.new(f"nische{k}", "BOOLEAN")
+    mo.operation, mo.object = "DIFFERENCE", sch
+    bpy.context.view_layer.objects.active = turm
+    bpy.ops.object.modifier_apply(modifier=mo.name)
+    bpy.data.objects.remove(sch, do_unlink=True)
+platte("nische_bank", 0, -1.42, 0.22, NB + 0.3, 0.14, 0.5, KALKSTEIN)
+bpy.ops.mesh.primitive_torus_add(major_radius=1.06, minor_radius=0.07, location=UM + N_ * 0.03, rotation=(R(90), 0, R(-45)), major_segments=64)
+fertig(bpy.context.object, "uhr_ring", KALKSTEIN)
+cyl("uhr_blatt", 1.02, 0.06, UM + N_ * 0.02, BLATT, rot=(R(90), 0, R(-45)), verts=64)
 ZIFFERN = ["XII", "I", "II", "III", "IIII", "V", "VI", "VII", "VIII", "IX", "X", "XI"]
 for i, zf in enumerate(ZIFFERN):
     a_ = i * math.pi / 6
     cu = bpy.data.curves.new("ziffer", "FONT")
-    cu.body, cu.align_x, cu.align_y, cu.size, cu.extrude = zf, "CENTER", "CENTER", 0.26, 0.008
-    cu.materials.append(ZEIGER)
+    cu.body, cu.align_x, cu.align_y, cu.size, cu.extrude = zf, "CENTER", "CENTER", 0.25, 0.004
+    cu.materials.append(ZIFFER_ALT)
     ob = bpy.data.objects.new(f"uhr_ziffer{i}", cu)
     scene.collection.objects.link(ob)
-    ob.matrix_world = Matrix.Translation(UM + N_ * 0.145 + (HOCH * math.cos(a_) + RECHTS * math.sin(a_)) * 0.84) @ BASIS @ Matrix.Rotation(-a_, 4, "Z") @ Matrix.Diagonal((0.8, 1.0, 1.0, 1))
+    ob.matrix_world = Matrix.Translation(UM + N_ * 0.056 + (HOCH * math.cos(a_) + RECHTS * math.sin(a_)) * 0.76) @ BASIS @ Matrix.Rotation(-a_, 4, "Z") @ Matrix.Diagonal((0.78, 1.0, 1.0, 1))
 for i in range(60):
-    an_der_uhr(f"uhr_strich{i}", i * math.pi / 30, 1.01 if i % 5 else 0.99, 1.06, 0.012 if i % 5 else 0.03, ZEIGER, 0.145)
-an_der_uhr("uhr_minute", R(90), -0.16, 0.92, 0.05, ZEIGER, 0.19)        # Viertel nach neun (im Spiel laeuft die Uhr von selbst)
-an_der_uhr("uhr_stunde", R(277.5), -0.12, 0.56, 0.085, ZEIGER, 0.17)
-cyl("uhr_nabe", 0.07, 0.08, UM + N_ * 0.2, ZEIGER, rot=(R(90), 0, R(-45)), verts=24)
-licht("uhr_lampe", "POINT", 26, WARM, UM + N_ * 1.6 + HOCH * 0.2, weich_=0.3)
+    an_der_uhr(f"uhr_strich{i}", i * math.pi / 30, 0.93 if i % 5 else 0.91, 0.97, 0.01 if i % 5 else 0.028, ZIFFER_ALT, 0.056)
+an_der_uhr("uhr_minute", R(90), -0.14, 0.86, 0.045, EISEN, 0.10)        # Viertel nach neun (im Spiel laeuft die Uhr von selbst)
+an_der_uhr("uhr_stunde", R(277.5), -0.10, 0.40, 0.06, EISEN, 0.085)
+an_der_uhr("uhr_stunde_spaten", R(277.5), 0.36, 0.50, 0.15, EISEN, 0.085)   # Spatenspitze
+an_der_uhr("uhr_stunde_spitze", R(277.5), 0.50, 0.58, 0.05, EISEN, 0.085)
+cyl("uhr_nabe", 0.06, 0.06, UM + N_ * 0.11, EISEN, rot=(R(90), 0, R(-45)), verts=24)
+# kleine Laterne am Eisenarm neben der Nische: die Uhr ist nachts lesbar, ohne selbst zu leuchten
+LO = UM - RECHTS * 1.75 + HOCH * 0.55 + N_ * 0.85
+platte("uhr_arm", -1.75, 1.2, 0.35, 0.05, 0.05, 1.1, EISEN)
+platte("uhr_kette", -1.75, 1.1, 0.85, 0.02, 0.2, 0.02, EISEN)
+modell("Lantern_01", LO, hoehe=0.5)
+bpy.ops.mesh.primitive_uv_sphere_add(radius=0.035, location=LO + HOCH * 0.2)
+fertig(bpy.context.object, "uhr_laterne_flamme", FLAMME)
+licht("uhr_laterne", "POINT", 75, WARM, LO + HOCH * 0.2 + N_ * 0.2, weich_=0.08)
+
+# ---------- Osten: die Mauer der Raben, dahinter der White Tower (Wahrzeichen: heller Stein, vier Ecktuermchen mit Bleihauben) ----------
+box("rabenmauer", (1.2, T, 3.0), (W + 0.6, 0, 1.5), STEIN)
+box("rabenmauer_krone", (1.4, T, 0.14), (W + 0.6, 0, 3.05), KALKSTEIN)
+WX0, WX1, WY0, WY1, WH = W + 8.0, W + 26.0, -6.0, 10.0, 14.0
+box("whitetower", (WX1 - WX0, WY1 - WY0, WH), ((WX0 + WX1) / 2, (WY0 + WY1) / 2, WH / 2), STEIN_HELL)
+box("whitetower_sockel", (WX1 - WX0 + 0.5, WY1 - WY0 + 0.5, 1.4), ((WX0 + WX1) / 2, (WY0 + WY1) / 2, 0.7), STEIN_HELL)
+zinnen_gerade("wt_zinne_w", WY0 + 3, WY1 - 3, WX0 + 0.3, WH, STEIN_HELL, entlang_y=True)
+zinnen_gerade("wt_zinne_s", WX0 + 3, WX1 - 3, WY0 + 0.3, WH, STEIN_HELL)
+
+
+def bogenfenster(name, ort, nach_x, glas):
+    """Rundbogenfenster mit heller Steinfassung; nach_x = die Wand schaut nach Westen (sonst nach Sueden)."""
+    x, y, z = ort
+    gr, gr2, dreh = ((0.12, 0.9, 1.5), (0.1, 1.2, 1.8), (0, R(90), 0)) if nach_x else ((0.9, 0.12, 1.5), (1.2, 0.1, 1.8), (R(90), 0, 0))
+    box(name + "_fassung", gr2, (x, y, z), KALKSTEIN)
+    cyl(name + "_fassung_bogen", 0.6, 0.1, (x, y, z + 0.9), KALKSTEIN, rot=dreh)
+    box(name, gr, (x, y, z), glas)
+    cyl(name + "_bogen", 0.45, 0.12, (x, y, z + 0.75), glas, rot=dreh)
+
+
+for reihe, hz in enumerate((5.6, 10.0)):
+    for k, fy in enumerate((-1.5, 1.0, 3.5, 6.0)):
+        bogenfenster(f"wt_fenster_w{reihe}{k}", (WX0 - 0.02, fy, hz), True, LICHT_SCHWACH if (reihe, k) == (0, 2) else GLAS_DUNKEL)
+    for k, fx in enumerate((WX0 + 5, WX0 + 9, WX0 + 13)):
+        bogenfenster(f"wt_fenster_s{reihe}{k}", (fx, WY0 - 0.02, hz), False, GLAS_DUNKEL)
+for k, py in enumerate((-2.75, -0.25, 2.25, 4.75, 7.25)):          # flache Wandpfeiler
+    box(f"wt_pfeiler_w{k}", (0.3, 0.7, WH - 0.6), (WX0 - 0.12, py, WH / 2), STEIN_HELL)
+for k, px in enumerate((WX0 + 3, WX0 + 7, WX0 + 11, WX0 + 15)):
+    box(f"wt_pfeiler_s{k}", (0.7, 0.3, WH - 0.6), (px, WY0 - 0.12, WH / 2), STEIN_HELL)
+TURM_H = 18.5
+for k, (ex, ey) in enumerate([(WX0 + 1.2, WY0 + 1.2), (WX0 + 1.2, WY1 - 1.2), (WX1 - 1.2, WY0 + 1.2), (WX1 - 1.2, WY1 - 1.2)]):
+    if k == 3:                                 # das runde Tuermchen im Nordosten
+        cyl(f"wt_eckturm{k}", 1.6, TURM_H, (ex, ey, TURM_H / 2), STEIN_HELL)
+    else:
+        box(f"wt_eckturm{k}", (2.8, 2.8, TURM_H), (ex, ey, TURM_H / 2), STEIN_HELL)
+    box(f"wt_eckturm_gesims{k}", (3.2, 3.2, 0.25), (ex, ey, TURM_H - 0.1), KALKSTEIN)
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=1.3, location=(ex, ey, TURM_H + 0.35), segments=32, ring_count=16)
+    haube = fertig(bpy.context.object, f"wt_haube{k}", BLEI)
+    haube.scale = (1, 1, 1.25)
+    bpy.ops.object.shade_smooth()
+    cone(f"wt_haube_spitze{k}", 0.45, 1.3, (ex, ey, TURM_H + 2.35), BLEI, verts=16)
+    cyl(f"wt_stange{k}", 0.03, 1.4, (ex, ey, TURM_H + 3.5), GOLD, verts=8)
+    box(f"wt_fahne{k}", (0.55, 0.02, 0.3), (ex + 0.28, ey, TURM_H + 3.95), GOLD)
+licht("mond_whitetower", "SPOT", 16000, (0.55, 0.68, 1.0), (5, 30, 45), rot=(0, 0, 0))
 
 # ---------- Bloody Tower mit dem grossen Tor (Suedostecke) ----------
 TX, TB, TT, TH = W - 5.0, 10.0, 8.0, 9.0
@@ -537,7 +614,8 @@ tr.up_axis = "UP_Y"
 ANSICHTEN = {   # Nr.: (Name, Ort der Kamera, Blickziel, Brennweite)
     "1": ("ganz", (-4.0, -5.0, 1.6), (-7.0, FRONT, 4.6), 18),          # von der Platzmitte auf die ganze Suedseite
     "2": ("tuer", (-7.8, FRONT + 7.5, 1.5), (TUER_X + 0.6, FRONT, 1.9), 28),   # Tuer zur Wachstube, Fass, Laterne (Hoehe eines Kindes)
-    "3": ("uhr", (-10.0, FRONT + 14.0, 1.5), (UTX + 2.5, UTY + 2.5, 8.6), 22), # Bell Tower mit der Uhr
+    "4": ("whitetower", (-4.0, FRONT + 3.0, 1.5), (W + 12.0, 3.0, 8.0), 20),   # vom Start nach Nordosten: Rabenmauer und White Tower
+    "3": ("uhr", (-12.0, FRONT + 12.0, 1.5), (UTX + 2.5, UTY + 2.5, 7.6), 24), # Bell Tower mit der Uhr
 }
 os.makedirs(OUT, exist_ok=True)
 scene.render.engine = "CYCLES"
@@ -556,7 +634,12 @@ try:
     scene.view_settings.exposure = float(os.environ.get("HELL", 0.0))
 except Exception as e:
     print("Farbabstimmung AgX nicht gesetzt:", e, flush=True)
-for nr in os.environ.get("ANSICHT", "1,2,3").split(","):
+mw_ = bpy.data.objects["mond_whitetower"]      # ein Streifen Mondlicht nur auf den White Tower
+mw_.data.spot_size, mw_.data.spot_blend = R(28), 0.6
+zw = mw_.constraints.new("TRACK_TO")
+zw.target = bpy.data.objects["whitetower"]
+zw.track_axis, zw.up_axis = "TRACK_NEGATIVE_Z", "UP_Y"
+for nr in os.environ.get("ANSICHT", "1,2,3,4").split(","):
     name, ort, blick, brennweite = ANSICHTEN[nr.strip()]
     cam.location, ziel.location, cam_data.lens = ort, blick, brennweite
     t0 = time.time()

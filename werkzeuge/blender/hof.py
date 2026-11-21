@@ -347,14 +347,15 @@ def licht(name, typ, energie, farbe, loc, rot=(0, 0, 0), groesse=None, weich_=0.
 WARM = (1.0, 0.55, 0.20)
 
 
-def laterne(name, x, y, z, energie=260):
+def laterne(name, x, y, z, energie=260, wand=None):
     """Laterne an einem eisernen Arm (wie die Laternen im Guard Room), haengt bei (x, y, z) vor der Wand."""
-    box(name + "_arm", (0.05, abs(y - (FRONT)) + 0.1, 0.05), (x, (y + FRONT) / 2, z + 0.62), EISEN)
+    wand = FRONT if wand is None else wand
+    box(name + "_arm", (0.05, abs(y - wand) + 0.1, 0.05), (x, (y + wand) / 2, z + 0.62), EISEN)
     box(name + "_kette", (0.02, 0.02, 0.14), (x, y, z + 0.55), EISEN)
     modell("Lantern_01", (x, y, z), hoehe=0.5)
     bpy.ops.mesh.primitive_uv_sphere_add(radius=0.035, location=(x, y, z + 0.2))
     fertig(bpy.context.object, name + "_flamme", FLAMME)
-    licht(name, "POINT", energie, WARM, (x, y + 0.25, z + 0.2), weich_=0.08)
+    licht(name, "POINT", energie, WARM, (x, y + (0.25 if y > wand else -0.25), z + 0.2), weich_=0.08)
 
 
 def fenster(name, x, z, breit, hoch, y, glas):
@@ -603,6 +604,66 @@ box("torturm_fenster", (0.5, 0.1, 1.4), (TX, FRONT + 0.02, 6.6), LICHT_SCHWACH)
 box("westmauer", (1.5, T, 6.0), (-W - 0.75, 0, 3.0), STEIN)
 zinnen_gerade("westmauer_zinne", -S + 3, S, -W - 0.3, 6.0, STEIN, entlang_y=True)
 
+# ---------- Norden: niedrige Mauer, dahinter die Kapelle St Peter ad Vincula mit dem Glockentuermchen; Westen: Beauchamp Tower ----------
+NY = S                                          # Nordkante des Platzes
+box("nordmauer", (B, 0.4, 1.2), (0, NY + 0.2, 0.6), STEIN)
+box("nordmauer_krone", (B, 0.55, 0.1), (0, NY + 0.2, 1.25), KALKSTEIN)
+STEIN_KAPELLE = textur("stein_kapelle", "castle_wall_slates", 0.30, (1.7, 1.6, 1.4))
+KX, KB, KT, KH = -B / 8, 20.0, 8.0, 6.0        # Mitte, Breite, Tiefe, Hoehe wie im Rohbau
+KY = NY + 3.0                                   # Suedwand der Kapelle (schaut in den Hof)
+box("kapelle", (KB, KT, KH), (KX, KY + KT / 2, KH / 2), STEIN_KAPELLE)
+box("kapelle_sockel", (KB + 0.3, KT + 0.3, 0.7), (KX, KY + KT / 2, 0.35), QUADER)
+box("kapelle_gesims", (KB + 0.3, KT + 0.3, 0.2), (KX, KY + KT / 2, KH - 0.5), KALKSTEIN)
+box("kapelle_bruestung", (KB + 0.1, KT + 0.1, 0.12), (KX, KY + KT / 2, KH + 0.04), KALKSTEIN)
+netz("kapelle_dach", [(KX - KB / 2, KY + 0.4, KH), (KX + KB / 2, KY + 0.4, KH), (KX + KB / 2, KY + KT / 2, KH + 1.1), (KX - KB / 2, KY + KT / 2, KH + 1.1),
+                      (KX - KB / 2, KY + KT - 0.4, KH), (KX + KB / 2, KY + KT - 0.4, KH)], [(0, 1, 2, 3), (3, 2, 5, 4)], BLEI)
+for k in range(5):                              # fuenf breite Tudor-Fenster mit flachem Bogen; in zweien brennt Kerzenlicht
+    fx = KX - KB / 2 + 3.4 + k * 3.5
+    glas = LICHT_AN if k == 3 else (LICHT_SCHWACH if k == 1 else GLAS_DUNKEL)
+    box(f"kapelle_fassung{k}", (2.5, 0.1, 2.6), (fx, KY - 0.02, 2.9), KALKSTEIN)
+    bo = cyl(f"kapelle_fassung_bogen{k}", 1.25, 0.1, (fx, KY - 0.02, 4.2), KALKSTEIN, rot=(R(90), 0, 0))
+    bo.scale = (1, 1, 0.45)
+    box(f"kapelle_fenster{k}", (2.1, 0.14, 2.4), (fx, KY - 0.03, 2.9), glas)
+    bg = cyl(f"kapelle_fenster_bogen{k}", 1.05, 0.14, (fx, KY - 0.03, 4.1), glas, rot=(R(90), 0, 0))
+    bg.scale = (1, 1, 0.42)
+    for sx in (-0.35, 0.35):
+        box(f"kapelle_pfosten{k}{sx}", (0.1, 0.18, 2.8), (fx + sx, KY - 0.04, 3.05), KALKSTEIN)
+    if glas is LICHT_AN:
+        licht(f"kapelle_schein{k}", "POINT", 60, WARM, (fx, KY - 0.8, 2.9), weich_=0.5)
+box("kapelle_tuer", (1.3, 0.12, 2.3), (KX - KB / 2 + 1.2, KY - 0.03, 1.15), EICHE_TOR)
+cyl("kapelle_tuer_bogen", 0.65, 0.12, (KX - KB / 2 + 1.2, KY - 0.03, 2.3), EICHE_TOR, rot=(R(90), 0, 0))
+laterne("laterne_kapelle", KX - KB / 2 + 2.4, KY - 0.75, 2.5, energie=200, wand=KY)
+laterne("laterne_kapelle_ost", KX + KB / 2 - 0.9, KY - 0.75, 2.6, energie=160, wand=KY)
+# Glockentuermchen am Westende: viereckiger Steinturm, obenauf eine kleine weisse Holzlaterne mit Bleihaube
+GTX, GTY = KX - KB / 2 - 1.2, KY + 2.0
+box("glockenturm", (3.0, 3.0, 10.0), (GTX, GTY, 5.0), STEIN_KAPELLE)
+box("glockenturm_gesims", (3.3, 3.3, 0.2), (GTX, GTY, 9.9), KALKSTEIN)
+box("glockenturm_luke", (0.7, 0.1, 1.3), (GTX, GTY - 1.5, 8.2), UHR_SCHWARZ)
+box("glockenstube", (1.5, 1.5, 1.6), (GTX, GTY, 10.8), HOLZ_WEISS)
+for k in range(4):
+    w_ = k * math.pi / 2
+    box(f"glockenstube_bogen{k}", (0.7, 0.06, 1.0), (GTX + 0.75 * math.sin(w_), GTY - 0.75 * math.cos(w_), 10.85), UHR_SCHWARZ, rot=(0, 0, w_))
+box("glockenstube_gesims", (1.8, 1.8, 0.12), (GTX, GTY, 11.65), HOLZ_WEISS)
+cone("glockenstube_haube", 1.15, 1.3, (GTX, GTY, 12.35), BLEI, verts=4, rot=(0, 0, R(45)))
+cyl("glockenstube_stange", 0.025, 0.9, (GTX, GTY, 13.4), GOLD, verts=8)
+mk = licht("mond_kapelle", "SPOT", 11000, (0.55, 0.68, 1.0), (KX - 6, NY - 14.0, 34))   # ein Streifen Mondlicht auf Kapelle und Glockentuermchen
+mk.data.spot_size, mk.data.spot_blend = R(30), 0.7
+zk = bpy.data.objects.new("ziel_kapelle", None)
+scene.collection.objects.link(zk)
+zk.location = (KX - 3, KY + 2, 5.0)
+tk = mk.constraints.new("TRACK_TO")
+tk.target, tk.track_axis, tk.up_axis = zk, "TRACK_NEGATIVE_Z", "UP_Y"
+# Beauchamp Tower an der Westmauer (Rohbau: rund, 9 m hoch) und eine dunkle Aussenmauer im Norden als Abschluss
+BTX, BTY, BTR, BTH = -W - 4.2, T / 6, 4.0, 9.0
+cyl("beauchamp", BTR, BTH, (BTX, BTY, BTH / 2), STEIN, verts=48)
+cyl("beauchamp_gesims", BTR + 0.15, 0.25, (BTX, BTY, BTH - 0.5), QUADER, verts=48)
+for i in range(16):
+    w_ = i * 2 * math.pi / 16
+    box(f"beauchamp_zinne{i}", (0.95, 0.6, 0.9), (BTX + (BTR - 0.25) * math.cos(w_), BTY + (BTR - 0.25) * math.sin(w_), BTH + 0.45), STEIN, rot=(0, 0, w_ + R(90)))
+box("beauchamp_fenster", (0.2, 0.5, 1.3), (BTX + BTR + 0.02, BTY, 5.2), LICHT_SCHWACH)
+box("aussenmauer_nord", (B + 70, 2.0, 9.0), (8, NY + 16.0, 4.5), STEIN)
+zinnen_gerade("aussenmauer_zinne", -W - 27, W + 43, NY + 15.3, 9.0, STEIN)
+
 # ---------- Alte Baeume auf dem Rasen (Mr. Alex 21.11.): knorrige Staemme, breite Kronen, Mondschatten auf dem Gruen ----------
 import random
 zufall = random.Random(11)
@@ -780,6 +841,8 @@ ANSICHTEN = {   # Nr.: (Name, Ort der Kamera, Blickziel, Brennweite)
     "4": ("whitetower", (-4.0, FRONT + 3.0, 1.5), (W + 12.0, 3.0, 8.0), 20),   # vom Start nach Nordosten: Rabenmauer und White Tower
     "5": ("rasen", (-12.0, FRONT + 1.6, 1.5), (9.0, 4.0, 5.0), 19),   # von der Tuer ueber das Gruen: Baeume, Maehstreifen, Gitter, White Tower
     "6": ("grosser_baum", (6.0, FRONT + 3.0, 1.5), (-14.5, -3.0, 7.5), 16),   # der grosse alte Baum im Westen
+    "7": ("nord", (2.0, FRONT + 2.6, 1.5), (-5.0, S + 4.0, 4.5), 17),   # vom Start nach Norden: Rasen, Kapelle, Glockentuermchen
+    "8": ("kapelle", (-3.0, 3.0, 1.5), (KX - 2.5, KY, 5.0), 21),   # vom Rasen auf die Kapelle
     "3": ("uhr", (-12.0, FRONT + 12.0, 1.5), (UTX + 2.5, UTY + 2.5, 7.6), 24), # Bell Tower mit der Uhr
 }
 os.makedirs(OUT, exist_ok=True)
@@ -804,7 +867,7 @@ mw_.data.spot_size, mw_.data.spot_blend = R(40), 0.6
 zw = mw_.constraints.new("TRACK_TO")
 zw.target = bpy.data.objects["whitetower"]
 zw.track_axis, zw.up_axis = "TRACK_NEGATIVE_Z", "UP_Y"
-for nr in os.environ.get("ANSICHT", "1,2,3,4,5,6").split(","):
+for nr in os.environ.get("ANSICHT", "1,2,3,4,5,6,7,8").split(","):
     name, ort, blick, brennweite = ANSICHTEN[nr.strip()]
     cam.location, ziel.location, cam_data.lens = ort, blick, brennweite
     t0 = time.time()

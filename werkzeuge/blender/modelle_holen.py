@@ -18,7 +18,8 @@ MODELLE = [
     "tea_set_01", "wooden_spoon", "Lantern_01", "treasure_chest", "WoodenTable_01", "WoodenChair_01", "painted_wooden_bench",
     "mantel_clock_01", "kite_shield", "brass_candleholders", "large_castle_door", "rubber_boots", "wine_barrel_01", "wooden_lantern_01",
 ]
-TEXTUREN = ["medieval_blocks_02", "old_wood_floor", "dark_wood", "plastered_stone_wall"]
+TEXTUREN = ["medieval_blocks_02", "old_wood_floor", "dark_wood", "plastered_stone_wall",
+            "cobblestone_floor_08", "leafy_grass", "castle_wall_slates", "clay_roof_tiles_02"]   # zweite Zeile: Hof (hof.py, 21.11.)
 KARTEN = {"Diffuse": "diff", "nor_gl": "nor", "Rough": "rough"}
 
 

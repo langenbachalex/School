@@ -247,7 +247,7 @@ KALK_HELL = mat("kalk_hell", (0.72, 0.69, 0.60), 0.9)       # glatter weisser We
 BLAU_TUER = mat("tuer_blau", (0.03, 0.10, 0.22), 0.5)
 WEISS = mat("weiss_lack", (0.70, 0.68, 0.62), 0.6)
 WARM_GLATT = mat("fenster_warm_glatt", (1.0, 0.50, 0.16), emit=1.1)
-HAUS_WARM = mat("fenster_haus_warm", (1.0, 0.42, 0.10), emit=0.35)   # Backsteinhaus: gedaempfter Kerzenschein (Mr. Alex 21.11.: nicht weiss)
+HAUS_WARM = mat("fenster_haus_warm", (1.0, 0.30, 0.04), emit=0.12)   # Backsteinhaus: gedaempfter Kerzenschein (Mr. Alex 21.11.: nicht weiss)
 FLAGGE = mat("flagge", (0.5, 0.03, 0.04), 0.8)
 KALKSTEIN = mat("kalkstein", (0.40, 0.37, 0.31), 0.92)   # glatter, heller Werkstein fuer Uhrtafel und Laterne (ohne Textur: schraege Flaechen verziehen sie)
 MESSING = mat("messing", (0.90, 0.62, 0.20), 0.3, 1.0)
@@ -741,7 +741,7 @@ for k, tx in enumerate((WBX0, (WBX0 + WBX1) / 2 - 5, (WBX0 + WBX1) / 2 + 5, WBX1
         box(f"waterloo_turm_zinne{k}{i}", (0.8, 0.5, 0.8), (tx + 2.0 * math.cos(w_), WBY + 2.0 * math.sin(w_), WBH + 4.9), STEIN_WATERLOO, rot=(0, 0, w_ + R(90)))
 
 # ---------- Westen: dunkle Backsteinhaeuser mit weissen Schiebefenstern und blauer Tuer (Rundgang CyArk), vor der Westmauer ----------
-HX, HY0, HY1, HH = -W - 0.02, -17.0, 1.5, 9.5
+HX, HY0, HY1, HH = -W + 0.12, -17.0, 1.5, 9.5
 box("backsteinhaus", (6.0, HY1 - HY0, HH), (HX - 3.0, (HY0 + HY1) / 2, HH / 2), BACKSTEIN)
 box("backsteinhaus_bruestung", (6.2, HY1 - HY0 + 0.2, 0.18), (HX - 3.0, (HY0 + HY1) / 2, HH + 0.05), KALKSTEIN)
 box("backsteinhaus_band", (0.12, HY1 - HY0, 0.2), (HX + 0.03, (HY0 + HY1) / 2, 3.45), KALKSTEIN)

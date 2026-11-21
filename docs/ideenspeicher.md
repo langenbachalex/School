@@ -81,6 +81,10 @@ Neue Fächer/Apps: Zeile anhängen, Kürzel vergeben.
 
 **Regel 12.11.: Baustopp für Neues bis nach dem 25.11. (nur Fehler; Ausnahme Road to GLN EN9), dauerhaft nur ein Bau-Chat gleichzeitig.** Geparkt bis dahin: Sync Stufe A für FR, Sync Stufe B. GLN-Formate aller bisherigen GLN: `docs/archiv/gln-formate.md` (EN6 GLN 1 + 2, EN9 GLN 1; EN9 GLN 2 folgt).
 
+## Stand Master (21.11.2026, spät) – neuer Master `session_01SLMVvn6kr3B9sGK9pmNTut`; gilt vor der Übergabe darunter
+- **Master-Wechsel erledigt:** Erinnerung 26.11., 16:00 Uhr hängt am neuen Master (`trig_01No3PVuK86o5H1CgK8Rb72D`); die alte `trig_01MUNA6koCEjaKk4fCrdWZ9T` ist gelöscht, `trig_01C9cPmstr4cwxDbFny86gEx` löscht Mr. Alex selbst in der App (Rechteprüfung sperrt). Bau-Chat „Hof im Herbst“ kennt die neue Master-Kennung. OK für Doku-Pushes im neuen Master: Mr. Alex 21.11.
+- **EN6, The Seven Keys of London, Schritt 2 erledigt (Mr. Alex 21.11.: „Starte die drei Entwürfe“):** drei unabhängige Agenten, je ein Entwurf für Magie und Welt: `docs/spiele/seven-keys-entwurf-1-nah-am-vorhandenen.md` · `seven-keys-entwurf-2-von-der-sprache-her.md` · `seven-keys-entwurf-3-vom-portal-her.md`. Mr. Alex ungekürzt vorgelegt; **offen: seine Wahl und Rückmeldung**, danach Schritt 3 (neues Blatt „Stand der Geschichte“).
+
 ## Übergabe Master (21.11.2026, abends) – für `/load MASTER` – gilt vor allem darunter
 Alter Master: `School · MASTER · bis 21.11.` (`session_01SLMVvpMtF2JsxBSuXvt1Rt`, 20.–21.11., bei 46 % Kontext gesichert; archivieren, sobald die Erinnerung umgehängt ist). Neuer Master: `School · MASTER`, **von Mr. Alex selbst geöffnet**, Modell Fable (`claude-fable-5-2`).
 

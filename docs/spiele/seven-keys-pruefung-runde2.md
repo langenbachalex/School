@@ -436,3 +436,49 @@ Ein Preis sollte bleiben, etwa dass Merlin nicht zurückkommt. Der Sieg darf nic
 3. **Wer ist Shrike heute, und was will er als Bild?** Daran hängt, ob die Gegenkraft sieben Kapitel trägt.
 
 Erst danach lohnt sich die Arbeit an Besetzung, Kapitelplan und Kapitel 1.
+
+---
+
+## Rückmeldung Mr. Alex zur zweiten Runde (21.11.2026, abends) – Prüfungen A, B und C; D und E noch nicht besprochen
+
+Er geht die Berichte der Reihe nach durch und fasst danach selbst zusammen. Er will sich nicht nur auf Berichte verlassen, sondern seine eigenen Fragen stellen. **Er hat Zweifel, ob ihn die Geschichte wirklich in Bann zieht.**
+
+### Seine eigenen Grundfragen (stehen über allem – „der größte Logikknackpunkt“)
+1. **Was ist Magie in dieser Welt überhaupt?** Es gibt Wörter, es braucht Wort, Klang und Bedeutung – aber **was kann gezaubert werden?** Das taucht bisher nirgends auf. Solange es nichts Magisches gibt, das Kraft hat, hat die Magie keine Bedeutung und keine Funktion. Im Moment dreht sich die Magie nur darum, etwas von 1899 rückgängig zu machen: „eine Zauberschule für einen Zauber“. Der Zauber muss in der Welt **leuchten**.
+2. **Wo sind wir, was ist die Welt, was ist der Hintergrund?** Ist es unsere Welt oder eine leicht abgewandelte? Gibt es eine Parallelwelt (nicht wie bei Harry Potter, wo man durch Portale läuft)? Über die Spielwelt müssen Entscheidungen fallen.
+3. **Sprechende Tiere brauchen eine Erklärung.** Die Raben sind in die Mystik eingefasst (krächzen, sprechen), die Taube ebenso. Aber ein Fuchs, der spricht, ist etwas Besonderes und muss begründet sein.
+4. **Die Schule ist ungeklärt:** was dort gezaubert wird, welche Regeln gelten, wer hineinkommt. Nicht alles muss erklärt werden, Lücken sind erwünscht, **aber die wesentlichen Eckpunkte müssen stimmig sein.**
+5. Warum Kinder eine besondere Rolle haben, lässt sich erst beantworten, wenn die Magie geklärt ist.
+
+### Zu Prüfung A (Hauptfiguren und Beziehungen)
+- Urteil: einverstanden, die Kinder sind unterrepräsentiert; „Kinder gehören in die Mitte“.
+- **A1: ja, Priorität** – die Hauptperson hat nichts zu verlieren. **A2: richtig**, im Moment ist es eine Enkelgeschichte; hängt an den Grundfragen zur Schule. **A3: ja**, ein Kern von drei Kindern trägt, die anderen sind in der Peripherie, aber näher dran. **A4: Robyn umbauen klingt spannend.** **A5: bisher der stärkste Vorschlag dieses Prüfers** (Barnaby als „Sam“; man will den nervenden Kleinen erst loswerden, später wird er ein starker Freund). **A9: gut**, es braucht auch Anführerinnen. **A10: einverstanden.**
+- Korrektur: Die Kinder sind **elf bis dreizehn und eher frühreif.**
+- Die fünf Änderungen: 1 „wirklich stark“, 2 stark; Mr Shrike muss mehr auftauchen und ist **attraktiver, wenn er beliebt ist und mit Charme arbeitet.**
+
+### Zu Prüfung B (Sicht der Kinder)
+- **B3:** Das Hauptkind braucht eigene Motivationen **und Fähigkeiten.** **B4: schön.**
+- **B5: ja – Mason und das Kind, das die Raben früher hörte, werden eine Figur;** er soll beliebt und witzig sein. Beliebte Bösewichte sind gut: Das Thema Ungerechtigkeit trägt bei Jugendlichen stark („Wieso haben die Erfolg mit den fiesen Machenschaften?“).
+- **B6: in Ordnung.** **B7: besonders stark.** Bisher gibt es nur Erwachsenenhumor (seinen eigenen); **Kinderhumor ist anders und muss hinein:** überschwängliche Heiterkeit, Albernheit, Naivität, Furchtlosigkeit. Es sind Eigenschaften auszuarbeiten, die an Kindern wundervoll sind: sich ins Abenteuer stürzen, riesige Vorfreude und Lebensfreude (sein Sohn), ganz seltsame Blickwinkel auf etwas, Unschuld, Gerechtigkeit.
+- **B8: sehr schöne Idee.** **B11: „etwas sehr Geniales“** – Individualisierung, ausbauen; die Zauberwörter bekommen zusätzlichen Zauber, brauchen aber einen stabilen Kern, und es ist genau festzulegen, was variabel ist.
+- Die Liste „Cheesy“ nimmt er ernst. Die fünf Änderungen aus B erscheinen ihm sehr plausibel.
+
+### Zu Prüfung C (Mystery)
+- **C1:** Die Frage ist offen; der Vorschlag hängt daran, was Magie ist und warum Kinder eine besondere Rolle haben.
+- **C2: „Jetzt kommen wir dem nahe, was ich möchte.“** Die Ebene hinter der Ebene, die andere Welt, das Portal: Das Motiv zieht immer, so abgegriffen es sein mag; Kinder lieben es, durch eine Tür in eine andere Welt zu gehen – auch wenn es ein ganzes Spiel dauert, bis man hinkommt. **Die Schule als Wachhaus, und dahinter kommt etwas vielleicht viel Größeres: Da ist Potenzial.**
+- **C3:** Ausfallende Rituale und stille Orte sind ihm noch nicht stark genug, weil die Magie nicht geklärt ist; weitere Tore findet er gut.
+- **C4: gefällt gut** – die Verbindungen mit den Raben, und dass niemand moralisch einfach weiß ist; alle haben Fehler.
+- **C5: der stärkste Vorschlag dieses Berichts** (Mr Shrike zuerst freundlich, Wren wirkt wie der Verfolger; Täter-und-Opfer-Umkehr; etwas klischeehaft, aber voller Gerechtigkeit und Gefühl; manche werden den einen verteidigen, manche den anderen).
+- **C6:** abwarten, wie die Verbindungen überhaupt wichtig werden. **C7: in Ordnung.** **C8:** die Lösung aus B gefällt ihm besser. **C9: wunderbar – „Subtilität ist King“.** **C10: gut**, sehen, wie die Fäden am Ende zusammenkommen. **C11: „absolut genial“** – jede Antwort öffnet eine größere Frage, Staffelung vom Kleinen ins Große.
+- Die fünf Gelegenheiten: die ersten vier ja; bei der fünften fand er die Lösung aus B stärker.
+
+### Zu den Widersprüchen und Fragen
+- **Barnaby: der „Sam“ überzeugt**, samt dem Anfang, dass der Spieler ihn loswerden will, weil er nervt.
+- **Raff:** noch ansehen. Nicht alles muss unerwartet sein; wer immer das Unerwartete tut, wird auch vorhersehbar.
+- **Mason:** wie in B (eine Figur).
+- **Tilly nach vorn:** könnte interessant werden, in der nächsten Runde ansehen.
+- **Mr Shrike:** Er neigt zu C5 (anfangs freundlich, will die Schule öffnen; Wren wirkt wie der Verfolger).
+- **Warum Kinder:** noch auszuarbeiten. **Die zweite Tür (C2): auf jeden Fall wichtig.**
+
+### Wie es weitergehen soll (Mr. Alex)
+Zuerst die Grundfragen klären. Dann eine nächste Runde, in der noch einmal alle Prüfer laufen – diesmal auch mit den Fragen: Was ist Magie? Was ist die Motivation der Geschichte? Zieht sie wirklich in Bann? Danach wieder Logik. Der Master schlägt das Vorgehen vor.

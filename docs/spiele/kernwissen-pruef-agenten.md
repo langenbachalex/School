@@ -24,6 +24,7 @@ Angelegt vom Master am 20.11.2026 auf Wunsch von Mr. Alex. **Jeder Prüf-Agent l
 - **Alles ist im Kern verankert** (Regeln der Magie, Motiv jeder Figur). Keine bequemen Lösungen; lieber verwerfen als anbauen. Jeder Vorschlag wird auf Plausibilität geprüft.
 - Die Geschichte muss stimmig sein bis in den großen Handlungsstrang und **das Potenzial für eine starke Fortsetzung** haben.
 - **Portale in andere Welten** (die Tür, die seit über hundert Jahren zu ist) tragen für Kinder, Jugendliche und Erwachsene. Weiterverfolgen und verstärken.
+- **Kinder gehören in die Mitte** (Vorbild Harry Potter: Kinder und eine Schule mit anderen Kindern). Eine kleine, feine Fellowship von Kindern; Kinder, die mit dem Herzen zuhören. Prüfen, ob die Kinder ausgeleuchtet sind oder halbgar.
 - **Freundschaft muss ein großes Thema sein** (Vorbilder: Harry Potter; Frodo und Sam).
 - **Gefahr und echte Spannung** gehören hinein, dazu kleine mysteriöse Hinweise. Es muss etwas auf dem Spiel stehen. Cheesy Auflösungen (eine Überraschungsparty) sind falsch.
 - Das Kind selbst muss in der Geschichte eine Rolle spielen. Es darf in einer Rückblende eine andere Figur spielen (wie in „Der Herr der Ringe Online“), solange später klar wird, dass es nicht diese Figur ist.

@@ -19,6 +19,11 @@ Alles in diesem Abschnitt ist von Mr. Alex entschieden. Wo der Text weiter unten
 - **Kleinere Gegner: ja, aber andere entwickeln** – die ersten beiden Vorschläge (Beamter, Händler) haben nicht überzeugt. Brauchbar daran: ein falscher Mr Nobody, versteckt unter den Trittbrettfahrern; ein Geschäftemacher nur im Kleinen.
 - **Belegt (Wikipedia „Tower of London“, 20.11.):** königliche Menagerie im Tower, erwähnt seit Heinrich III.; 1252 ein Eisbär, der an der Kette in der Themse fischte; 1254/55 ein Elefant; Verzeichnis von 1800: ein Tiger, Leoparden, eine Hyäne, Paviane, Affen, Wölfe; geschlossen nach 1830 auf Befehl des Duke of Wellington, Gebäude 1852 abgerissen; der Lion Tower hieß nach den Tieren. Anker für den Tiger, den Mr. Alex sich wünscht.
 
+**Kinder – ganz wichtig (Mr. Alex 21.11.; Richtung, Wege noch zu entwickeln)**
+- **Der Geschichte fehlen Kinder.** Bisher gibt es das unausgeleuchtete Kind des Spielers und ein paar halbgare Kinder. Vorbild Harry Potter: Es geht um Kinder und um eine Schule mit anderen Kindern; dieser Gedanke fehlt bei uns ganz. (Auch in „Game of Thrones“ bekommen Kinder eigene Kapitel.)
+- **Seine Ansätze:** Wenn es eine Schule gibt, gibt es andere Kinder, die dorthin wollen und am selben Rätsel arbeiten – eine Verstrickung. Man trifft unterwegs mehr Kinder (nicht an jedem Ort). **Es entsteht eine Fellowship, klein, aber fein.** Darunter können Kinder der Hauptfiguren sein. Oder: Kinder haben besondere magische Fähigkeiten, oder es wird nach besonderen Kindern gesucht, **die mit dem Herzen zuhören** – „moralisch kraftvolle Geschichten“.
+- Hängt zusammen mit: Freundschaft als großes Thema, die hilfsbereite „Klette“, Tilly als Zweiflerin, das Kind des Spielers.
+
 **Der Zauber und sein Reim**
 - **Der Zauber selbst sind vier walisische Kraftwörter,** immer dieselben, in derselben Reihenfolge (im Wörterbuch geprüft 20.11. spät: alle vier sind echte walisische Wörter mit dieser Bedeutung; Aussprache ungefähr bar-DHON-jaith · so-ni-A-ris · HIER-aith · a-GOR-jad; „agoriad“ heißt Öffnung und in Nordwales Schlüssel): **Barddoniaeth** (Dichtung – das Wort) · **Soniarus** (klangvoll – der Klang) · **Hiraeth** (Sehnsucht – das Herz) · **Agoriad** (Öffnung, Schlüssel). Altenglisch ist ausgeschlossen.
 - **Der Kern ist ein Vierzeiler** (ersetzt den Wahlspruch in Abschnitt 2):

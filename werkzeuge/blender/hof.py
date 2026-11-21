@@ -248,7 +248,7 @@ KALK_HELL = mat("kalk_hell", (0.72, 0.69, 0.60), 0.9)       # glatter weisser We
 BLAU_TUER = mat("tuer_blau", (0.03, 0.10, 0.22), 0.5)
 WEISS = mat("weiss_lack", (0.70, 0.68, 0.62), 0.6)
 WARM_GLATT = mat("fenster_warm_glatt", (1.0, 0.50, 0.16), emit=1.1)
-HAUS_WARM = mat("fenster_haus_warm", (1.0, 0.30, 0.04), emit=0.12)   # Backsteinhaus: gedaempfter Kerzenschein (Mr. Alex 21.11.: nicht weiss)
+HAUS_WARM = mat("fenster_haus_warm", (1.0, 0.30, 0.04), emit=0.05)   # Backsteinhaus: gedaempfter Kerzenschein (Mr. Alex 21.11.: nicht weiss)
 FLAGGE = mat("flagge", (0.5, 0.03, 0.04), 0.8)
 KALKSTEIN = mat("kalkstein", (0.40, 0.37, 0.31), 0.92)   # glatter, heller Werkstein fuer Uhrtafel und Laterne (ohne Textur: schraege Flaechen verziehen sie)
 MESSING = mat("messing", (0.90, 0.62, 0.20), 0.3, 1.0)
@@ -763,13 +763,14 @@ for bay in range(6):
         if reihe == 0:
             continue                       # Erdgeschoss liegt hinter der Mauer
         an = (bay, reihe) in ((3, 1), (4, 1))        # ein Zimmer: zwei Fenster nebeneinander
-        box(f"hausfenster_rahmen{bay}{reihe}", (0.1, 1.25, hh_ + 0.15), (HX + 0.02, by_, hz), WEISS)
-        box(f"hausfenster_glas{bay}{reihe}", (0.12, 1.05, hh_ - 0.05), (HX + 0.03, by_, hz), HAUS_WARM if an else GLAS_DUNKEL)
-        box(f"hausfenster_quer{bay}{reihe}", (0.14, 1.05, 0.05), (HX + 0.04, by_, hz), WEISS)
+        # Mr. Alex 21.11.: Glas liegt zurueckgesetzt hinter dem weissen Rahmen (nicht davor), Schein gedaempft, kein Licht vor dem Fenster
+        for sy in (-1, 1):
+            box(f"hausfenster_rahmen_s{bay}{reihe}{sy}", (0.16, 0.1, hh_ + 0.15), (HX + 0.08, by_ + sy * 0.575, hz), WEISS)
+            box(f"hausfenster_rahmen_q{bay}{reihe}{sy}", (0.16, 1.25, 0.1), (HX + 0.08, by_, hz + sy * (hh_ / 2 + 0.025)), WEISS)
+        box(f"hausfenster_glas{bay}{reihe}", (0.02, 1.05, hh_ - 0.05), (HX + 0.012, by_, hz), HAUS_WARM if an else GLAS_DUNKEL)
+        box(f"hausfenster_quer{bay}{reihe}", (0.08, 1.05, 0.05), (HX + 0.06, by_, hz), WEISS)
         for sy in (-0.18, 0.18):
-            box(f"hausfenster_sprosse{bay}{reihe}{sy}", (0.14, 0.035, hh_ - 0.05), (HX + 0.04, by_ + sy, hz), WEISS)
-        if an:
-            licht(f"hausfenster_schein{bay}{reihe}", "POINT", 35, WARM, (HX + 0.8, by_, hz), weich_=0.4)
+            box(f"hausfenster_sprosse{bay}{reihe}{sy}", (0.08, 0.035, hh_ - 0.05), (HX + 0.06, by_ + sy, hz), WEISS)
 
 # ---------- Kopfplatanen am Rasenrand (Rundgang CyArk): gerade, helle, fleckige Staemme, oben gekappt mit Astknoten ----------
 def platanenrinde():

@@ -649,8 +649,9 @@ BAUM = os.environ.get("BAUM", "eigen")       # "eigen" = selbst gebaut; sonst ei
 for k, (bx, by, bh, bb) in enumerate(BAEUME):
     if BAUM == "eigen":
         baum(f"baum{k}", bx, by, bh, bb)
-    else:
-        modell(BAUM, (bx, by, -0.05), hoehe=bh + 2.0, dreh=k * 2.1)
+    else:   # "mischung" = drei verschiedene alte Baeume: dicker, knorriger Stamm · breite Krone · gedrehte Staemme
+        art = ["island_tree_01", "jacaranda_tree", "island_tree_02"][k] if BAUM == "mischung" else BAUM
+        modell(art, (bx, by, -0.05), hoehe=bh + 2.0, dreh=k * 2.1)
 
 # ---------- Schwarzes Eisengitter an der Rasenkante (wie auf den Fotos). Nur zwei Stuecke: dazwischen und aussen laufen die Wege der Figuren ----------
 GY = FRONT + PFL + 0.25

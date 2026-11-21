@@ -38,6 +38,9 @@ Befehl: `node werkzeuge/testprogramm.js` (alle Apps, ca. 1–2 Min.; `EN6`/`EN9`
 ## Erst spiegeln und fragen, dann weiterverfolgen (Regel Mr. Alex, 20.11.2026)
 Eine Idee, die Mr. Alex noch nicht abgenommen hat, wird nicht von selbst weiterverfolgt: keine Recherche, kein Agent, keine Ausarbeitung dazu starten. Zuerst zurückspiegeln, was verstanden wurde, die offenen Punkte fragen und sein OK abwarten. („Du hast gleich schon den Agenten gestartet. So etwas nervt mich.“)
 
+## Verifizieren, nicht raten (Regel Mr. Alex, 21.11.2026)
+Aussagen über Geräte, Leistung, Grenzen und Dateigrößen werden vorher nachgeschlagen (Datenblatt des Herstellers, Websuche) oder gemessen, nicht geschätzt. In der Antwort trennen: gemessen · nachgeschlagen (mit Quelle) · nicht bekannt. Keine Bauten, Vereinfachungen oder Testläufe auf der Grundlage von Vermutungen: erst prüfen, dann vorschlagen. („Hör auf mit dem Schätzen. Das ist jetzt schon öfter passiert.“) Schülergerät: HP ProBook x360 435 G10.
+
 ## Fehlt etwas? Nachfragen statt aufgeben (Regel Mr. Alex, 15.11.2026)
 Ist ein Werkzeug, Browser oder Paket nicht installiert, nicht aufgeben und nicht stillschweigend ausweichen: Mr. Alex Bescheid geben, was fehlt, was es ermöglichen würde und wie aufwendig die Installation ist, und fragen, ob installiert werden soll.
 
